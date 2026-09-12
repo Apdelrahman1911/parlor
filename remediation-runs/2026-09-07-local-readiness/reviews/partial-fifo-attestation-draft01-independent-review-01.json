@@ -1,0 +1,216 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/release_fix_review",
+  "author": "/root/factory_review",
+  "reviewed_at": "2026-09-08T00:06:35.106644+00:00",
+  "decision": "APPROVE EXACT DRAFT FOR FOCUSED RED/GREEN CONTROLS; conditional source approval only. No test execution, adoption, native run or complete race elimination asserted.",
+  "manifest": {
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/partial-fifo-attestation-draft-01/manifest.json",
+    "sha256": "ce992810aa4ea6f07c3399c95a0adec608a0579be46971ecf43cbc078c535ef1"
+  },
+  "source_identity": {
+    "branch": "fix/local-readiness-2026-09-07",
+    "commit": "b6e1947c62661631d0593038db7f64dbf25f720e",
+    "tree": "f03ad1b302d951d0ca9811b1efab2751a8be6978",
+    "scope": "Exact two canonical files and frozen draft hashes, not authorization of other concurrent source changes."
+  },
+  "reviewed_sources": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/secondary_fifo.py",
+      "sha256": "080622194e19ef5d3ffb561e134ab8cf91e3e3ccef1e29197f59781154a7ffcc",
+      "line_ranges": [
+        [
+          1,
+          205
+        ]
+      ],
+      "coverage": "complete baseline reopened"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/test_secondary_fifo.py",
+      "sha256": "2d685ebcbef9930f43f1f644c5ed6fc3b5a5c5d07d975cc218a9165273bfb826",
+      "line_ranges": [
+        [
+          1,
+          249
+        ]
+      ],
+      "coverage": "complete baseline test bodies/assertions reopened"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/partial-fifo-attestation-draft-01/secondary_fifo.py",
+      "sha256": "170586ec941b02866acfa4b8e54aa3dd0842dbc7bc9c4b50410bca4b1149440a",
+      "line_ranges": [
+        [
+          1,
+          252
+        ]
+      ],
+      "coverage": "complete draft"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/partial-fifo-attestation-draft-01/test_secondary_fifo.py",
+      "sha256": "02b82b6662b735316fe303f6ba7d7affb203090374cacadd8c67909a174ff99e",
+      "line_ranges": [
+        [
+          1,
+          401
+        ]
+      ],
+      "coverage": "complete; unchanged first27 methods read in baseline and independently AST-compared; all12 additions read in full draft file/diff"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/partial-fifo-attestation-draft-01/partial-fifo-attestation.patch",
+      "sha256": "fb5c79dbd17164f8e58236ab9b0868438ad684d732f080ad74e17754041851cd",
+      "line_ranges": [
+        [
+          1,
+          299
+        ]
+      ],
+      "coverage": "complete two-file diff"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/partial-fifo-attestation-draft-01/README.md",
+      "sha256": "a86e409cb5fdc84e1ed81e772b56e6487901233946b1551a5d80cbbdbed884e6",
+      "line_ranges": [
+        [
+          1,
+          32
+        ]
+      ],
+      "coverage": "complete applicability/limits"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/run_ios_readiness.py",
+      "sha256": "85283be9681be14c18b76ef1657b596e837b4f97f978917f25ac693ae72d0ca8",
+      "line_ranges": [
+        [
+          278,
+          315
+        ],
+        [
+          921,
+          927
+        ]
+      ],
+      "coverage": "caller catches/retains first attestation error; no failed-lifetime retry; final ledger cleanup path"
+    }
+  ],
+  "root_cause_verified": {
+    "source": "Baseline secondary_fifo.py:107-124 skips repeated UID check only after BOTH paths have records; a successfully UID/argv-verified partial pair redoes the subprocess-based proof on next observation.",
+    "actual_evidence": [
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-09/secondary-fifo-ownership-final.json",
+        "sha256": "8645acb761687bfe6144a8cf6c3508f310efa81ab6c7716ab1ba625b0ddc7a6d"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-09/secondary-fifo-errors.json",
+        "sha256": "80fcf698958a9ebfa9ada802c344c53a9117bb1ac0fc81b27a45db0396daae37"
+      }
+    ],
+    "scope": "native09 retained one exact record plus one exact pending leaf and a post-UID snapshot mismatch. Exact mismatch cause remains unknown. The repair removes redundant UID querying for an already independently evidenced live partial pair; it does not promise every short-lived worker is observed."
+  },
+  "path_review": [
+    {
+      "lines": "draft:96-122",
+      "conclusion": "All original current child/membership/start/parent executable and exact pair/canonical no-symlink constraints remain before cache use. No new path can be authorized from name or old member argv alone."
+    },
+    {
+      "lines": "draft:63-73,131-144",
+      "conclusion": "Cache identity holds immutable childPID/start/parentPID/start/current child argv/current parent argv. Cached state is a deepcopy of exact per-path record/pending values, not aliases. Changed identity, dropped/mutated nested record or malformed pending state cannot reuse proof. A fresh proof still requires both UIDs and post-UID live identity."
+    },
+    {
+      "lines": "draft:147-158",
+      "conclusion": "Validated pending claims are retained before later metadata work. A persistence failure may leave conservative in-memory pending claims, but does not publish inode ownership. This is intentionally not rollback of all pending safety state."
+    },
+    {
+      "lines": "draft:159-187",
+      "conclusion": "New inode promotions staged in local dictionaries. All sibling and parent metadata checks complete before publication. Any new inode also requires current_processes() to still match full defined identity after metadata. First UID failure, post-UID mismatch, interruption, bad sibling/parent and post-metadata death cannot create new ownership."
+    },
+    {
+      "lines": "draft:188-199",
+      "conclusion": "Only exactly one record plus one disjoint pending path creates a partial proof. Cache128 and path256 bounds remain finite. Durable snapshot publication occurs before installing records/pending/proof in memory. When complete, partial proof is removed. Runtime-only cache is not reconstructed from serialized JSON."
+    },
+    {
+      "lines": "draft:201-252",
+      "conclusion": "Cleanup AST identical to original: late pending existence blocks, worker/reused PIDs and holders block, identities/no-symlinks/unknown contents checked, only exact FIFO unlink and empty parent rmdir, no recursive deletion or weakened failure classification."
+    }
+  ],
+  "counter_evidence_and_limits": [
+    "New live check after metadata deliberately may reject an otherwise owned short-lived worker that exits before this check; this is fail-closed, not a reason to adopt its late leaf.",
+    "Existing fully-attested-pair shortcut is retained; this patch adds stronger identity+state cache only for partial pairs, not a generalized process-proof redesign. No new inode is authorized merely by the full-record shortcut.",
+    "Parent ppid/pgid are not extra cache fields. The defined authority already rests on task-owned parentPID/start and exact current parent argv plus current child parent binding; no new process ownership is adopted from the cache.",
+    "Pending safety claims can change before a failed persistence call, while uncommitted inode promotions cannot. The report does not claim all observer state is transactionally rolled back.",
+    "Private cache is memory-only and not durable recovery authority. Original schema1 remains unchanged because cleanup relies on recorded inode/claim evidence, not importing this cache.",
+    "AppHostOwnership still retains an attestation error and suppresses further observation for that failed process lifetime. This fix does not silently clear prior errors or rewrite native09.",
+    "Shared owned_lane.lsof_pids warning visibility is separately assigned to root and independently reviewed as a separate diff; this approval does not waive that sibling safety issue.",
+    "Python identity snapshots and stat checks do not provide immunity against hostile same-UID races or exact creator-PID forensic proof."
+  ],
+  "test_review": {
+    "original_methods_AST_identical": true,
+    "canonical_argument_and_cleanup_AST_identical": true,
+    "declared_tests": 39,
+    "existing_tests": 27,
+    "added_tests": 12,
+    "test_ids": [
+      "SecondaryFifoSafetyTest.test_attested_pair_removed_only_after_workers_stop",
+      "SecondaryFifoSafetyTest.test_unowned_child_cannot_attest_from_name_alone",
+      "SecondaryFifoSafetyTest.test_pid_reuse_during_observation_rejected",
+      "SecondaryFifoSafetyTest.test_pid_reuse_during_cleanup_preserves_files",
+      "SecondaryFifoSafetyTest.test_stale_preexisting_fifo_is_not_owned",
+      "SecondaryFifoSafetyTest.test_process_uid_mismatch_is_not_owned",
+      "SecondaryFifoSafetyTest.test_inode_uid_mismatch_is_not_owned",
+      "SecondaryFifoSafetyTest.test_preexisting_parent_birthtime_rejects_new_fifo",
+      "SecondaryFifoSafetyTest.test_holder_query_error_never_becomes_empty_holder_success",
+      "SecondaryFifoSafetyTest.test_symlink_fifo_not_followed_or_deleted",
+      "SecondaryFifoSafetyTest.test_symlink_parent_not_followed",
+      "SecondaryFifoSafetyTest.test_replaced_inode_rejected",
+      "SecondaryFifoSafetyTest.test_unknown_directory_contents_preserve_all",
+      "SecondaryFifoSafetyTest.test_unknown_root_contents_preserve_all",
+      "SecondaryFifoSafetyTest.test_file_holder_prevents_any_unlink",
+      "SecondaryFifoSafetyTest.test_timeout_or_cancellation_cleanup_uses_same_attestation",
+      "SecondaryFifoSafetyTest.test_missing_unattested_then_late_created_fifo_blocks_cleanup",
+      "SecondaryFifoSafetyTest.test_unknown_external_argument_is_rejected",
+      "SecondaryFifoSafetyTest.test_missing_or_duplicate_flags_rejected",
+      "SecondaryFifoSafetyTest.test_fully_attested_same_identity_and_pair_avoids_redundant_uid_query",
+      "SecondaryFifoSafetyTest.test_initial_uid_query_failure_never_attests_or_deletes_paths",
+      "SecondaryFifoSafetyTest.test_partial_record_or_pending_claim_cannot_use_cached_uid",
+      "SecondaryFifoSafetyTest.test_current_new_pair_cannot_hide_behind_members_old_argv",
+      "SecondaryFifoSafetyTest.test_changed_child_or_parent_start_cannot_use_attested_pair",
+      "SecondaryFifoSafetyTest.test_cached_pair_still_rechecks_changed_inode",
+      "SecondaryFifoSafetyTest.test_cached_pair_still_rechecks_inode_uid_and_symlink",
+      "SecondaryFifoSafetyTest.test_new_pair_argv_change_during_uid_attestation_is_rejected",
+      "SecondaryFifoSafetyTest.test_partial_pair_reuses_its_completed_live_identity_without_requerying_uid",
+      "SecondaryFifoSafetyTest.test_partial_pair_new_inode_requires_identity_still_live_after_metadata",
+      "SecondaryFifoSafetyTest.test_partial_pair_cannot_attest_a_leaf_first_seen_after_worker_exit",
+      "SecondaryFifoSafetyTest.test_partial_pair_changed_child_or_parent_command_needs_fresh_identity",
+      "SecondaryFifoSafetyTest.test_partial_pair_record_or_claim_mutation_cannot_reuse_its_proof",
+      "SecondaryFifoSafetyTest.test_partial_pair_initial_uid_or_post_uid_failure_never_creates_cached_proof",
+      "SecondaryFifoSafetyTest.test_partial_pair_bad_sibling_does_not_publish_new_leaf",
+      "SecondaryFifoSafetyTest.test_partial_pair_replaced_parent_is_not_accepted_from_cached_identity",
+      "SecondaryFifoSafetyTest.test_partial_pair_interrupted_metadata_keeps_pending_unpromoted",
+      "SecondaryFifoSafetyTest.test_partial_pair_failed_publication_keeps_pending_unpromoted",
+      "SecondaryFifoSafetyTest.test_fresh_metadata_failure_retains_claims_without_publishing_inode_ownership",
+      "SecondaryFifoSafetyTest.test_partial_identity_proof_ledger_is_bounded_without_promoting_paths"
+    ],
+    "positive": "Partial pair first proves both UID calls, then creates missing FIFO, deliberately makes future UID call fail and verifies successful second observation, two records/no pending/no proof, cleanup after fake process stop.",
+    "negative": "First-proof UID/post-UID failure; changed argv; stale current vs empty fresh snapshot; post-exit leaf; missing/nested-mutated/malformed prior state; bad sibling/parent; KeyboardInterrupt; failed final persistence; first metadata failure; cache bound.",
+    "test_scope": "Only Darwin birthtime-dependent TemporaryDirectory FIFO fixtures and dictionary fake process state. No native process queries/signals/builds/app data. Complete old test assertions retained.",
+    "missing_execution": "No test executed by reviewer. Root must prove draft import identity and exact39 execution. Red must import unchanged canonical source while running only positive new regression, not accidentally import draft."
+  },
+  "required_next_steps": [
+    "Execute root-owned focused red witness against baseline and record genuine failure at redundant UID callback, with module.__file__ and hashes.",
+    "Run exact39 draft controls and preserve exact discovery/results including failures/errors/skips and fixture/worker cleanup.",
+    "Independently reconcile actual focused results before adopting exactly two files.",
+    "After adoption and separate lsof repair, refresh source/control manifest and run applicable combined controls; original native09 FAIL remains immutable.",
+    "New native-cycle approval requires completed owned cleanup and fresh binding; this source report alone is not native10 authorization."
+  ],
+  "reviewer_activity": {
+    "repository_executable_import_or_tests": false,
+    "native_process_or_file_operations": false,
+    "builds_workers_outputs": false,
+    "source_edits": false,
+    "only_write": "This additive review; root/factory own code and execution."
+  }
+}

@@ -1,0 +1,54 @@
+--- reviewed/HostImageProbe.m
++++ owned/HostImageProbe.m
+@@ -53,9 +53,9 @@
+         NSOperatingSystemVersion version = NSProcessInfo.processInfo.operatingSystemVersion;
+         NSMutableDictionary *record = [@{@"schema": @1, @"kind": @"host-image-predicate-diagnostic",
+             @"collection_status": @"FAIL", @"failure": @"none", @"binding": @{
+-                @"run_token": @__HOST_IMAGE_TOKEN__, @"source_sha": @__HOST_IMAGE_SOURCE__,
+-                @"control_sha256": @__HOST_IMAGE_CONTROLS__, @"run_id": @__HOST_IMAGE_RUN_ID__,
+-                @"run_attempt": @__HOST_IMAGE_RUN_ATTEMPT__},
++                @"run_token": @"120b86de8ae24564a2811b1a4fb831ac", @"source_sha": @"25cd7f57b031bebdcfb4931615782b906610703f",
++                @"control_sha256": @"6537d41f499b4635df3f1cfc80be3d84d07b619fa92790bb83ae0973ee9419e8", @"run_id": @"34606946362",
++                @"run_attempt": @"1"},
+             @"process_id": @(getpid()), @"uid": @(getuid()),
+             @"runtime_version": @[@(version.majorVersion), @(version.minorVersion), @(version.patchVersion)],
+             @"production_snapshots_observed": @NO, @"protection_qualified": @NO, @"original_guard_changed": @NO,
+--- reviewed/ProtectionSampler.m
++++ owned/ProtectionSampler.m
+@@ -12,6 +12,12 @@
+ #include <sys/mount.h>
+ #include <sys/stat.h>
+ #include <unistd.h>
++
++// Diagnostic declaration in the owned HOST copy only; no shipping change.
++#if !TARGET_OS_OSX || TARGET_OS_SIMULATOR || TARGET_OS_MACCATALYST || !defined(__arm64__)
++#error Host image predicate diagnostics require arm64 macOS.
++#endif
++extern void ParlorHostImageCapture(NSDictionary *observation);
+ 
+ static void demand(BOOL value, NSString *reason) {
+     if (!value) @throw [NSException exceptionWithName:@"ProtectionBoundary" reason:reason userInfo:nil];
+@@ -69,6 +75,23 @@
+         }
+         offset += command->cmdsize;
+     }
++    // Observe the exact original values, then execute the unchanged guard.
++    NSString *diagnosticName = [[NSString stringWithUTF8String:info.dli_fname] lastPathComponent];
++    ParlorHostImageCapture(@{
++        @"predicates": @{
++            @"command_bytes_complete": offset == header->sizeofcmds ? @YES : @NO,
++            @"uuid_present": uuid != nil ? @YES : @NO,
++            @"single_platform": platforms.count == 1 ? @YES : @NO,
++            @"executable_address": executableAddress ? @YES : @NO,
++            @"address_not_before_header": (uintptr_t)address >= (uintptr_t)header ? @YES : @NO},
++        @"platforms": [platforms copy], @"platform_count": @(platforms.count),
++        @"uuid": uuid ? (id)uuid : NSNull.null,
++        @"image_basename": diagnosticName ? (id)diagnosticName : NSNull.null,
++        @"cputype": @(header->cputype), @"cpusubtype": @(header->cpusubtype),
++        @"command_bytes_consumed": @(offset), @"command_bytes_declared": @(header->sizeofcmds),
++        @"relative_offset": (uintptr_t)address >= (uintptr_t)header &&
++            (uintptr_t)address - (uintptr_t)header < (1ULL << 40) ?
++            @((uint64_t)((uintptr_t)address - (uintptr_t)header)) : NSNull.null});
+     demand(offset == header->sizeofcmds && uuid && platforms.count == 1 && executableAddress &&
+            (uintptr_t)address >= (uintptr_t)header, @"image-executable-address");
+     NSString *name = [[NSString stringWithUTF8String:info.dli_fname] lastPathComponent];

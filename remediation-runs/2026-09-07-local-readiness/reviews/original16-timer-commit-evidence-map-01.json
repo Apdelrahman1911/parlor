@@ -1,0 +1,2731 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/release_fix_review",
+  "created_at": "2026-09-07T21:34:57.748805+00:00",
+  "task": "Bounded read-only final-report evidence reconciliation; no fresh build/test/native/CI execution and no production change",
+  "baseline": {
+    "repository": "/Users/abdelrahman/Projects/parlor",
+    "branch": "fix/local-readiness-2026-09-07",
+    "commit": "b6e1947c62661631d0593038db7f64dbf25f720e",
+    "tree": "f03ad1b302d951d0ca9811b1efab2751a8be6978",
+    "tracked_status": "",
+    "working_tree_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "campaign_range": "3625d0663ba6eb51338cbd5f9dc45f859ec18846..b6e1947c62661631d0593038db7f64dbf25f720e",
+    "campaign_full_git_diff_sha256": "35bbf627ddaec6821223efc12ee4c1841aace6987e2dd284cb1c45ff342b81dc"
+  },
+  "counting": {
+    "original_independently_confirmed_scope": 16,
+    "canonical_alias": "MF-C1 and M-C01 are one finding",
+    "separately_authorized_timer_policy": 1,
+    "new_defect_count_asserted_by_this_map": null,
+    "scope_mapping_completeness": "16/16 approved IDs have actual committed mechanism, independent dossier and selected executed regressions mapped. This is100% mapping of those16, NOT100% application source review/readiness.",
+    "primary_commit_fact": "All16 first scoped repairs were committed in85ded004, not16 separate commits. Later root extensions are explicitly bound below.",
+    "do_not_inflate": [
+      "ST-C1 later recognized-current retention correction extends ST-C1.",
+      "WD-C2 content manifestations remain one content-coherence family.",
+      "Host/peer/factory cancellation paths extend SN-C2, not three counted defects.",
+      "Later compact-layout/black-cover manifestations are grouped; test harness fixes and evidence enhancements are separated from application defects.",
+      "Rejected/intentional/unconfirmed candidates are excluded from confirmed repair count."
+    ]
+  },
+  "initial_fix_commit": {
+    "sha": "85ded00435b4f8327ce32d3b7f5062c4438ae174",
+    "subject": "fix: complete sixteen independently verified audit repairs",
+    "kind": "one actual commit containing all original16 scoped repairs",
+    "complete_git_show_diff_sha256": "3b1b4683b6e115aa107593ac97385fa51a39e9ef1fe81c7bb5f2e8642919f88d",
+    "changed_paths": [
+      "composeApp/build.gradle.kts",
+      "composeApp/src/desktopTest/kotlin/com/parlor/app/ProductionUiAccessibilityContractTest.kt",
+      "composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSnapshotFileSystem.kt",
+      "composeApp/src/iosTest/kotlin/com/parlor/app/storage/IosLegacySnapshotBackupTest.kt",
+      "docs/MAFIA_RULES.md",
+      "docs/PRE_RELEASE_COMPATIBILITY.md",
+      "docs/PRODUCTION_ARCHITECTURE.md",
+      "docs/RELEASE_AUTOMATION.md",
+      "docs/WHODUNIT_TEST_CONTENT.md",
+      "game-modes/mafia/build.gradle.kts",
+      "game-modes/mafia/src/commonMain/composeResources/values-ar/strings.xml",
+      "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/snapshot/MafiaSnapshotRecovery.kt",
+      "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaMultiDevicePhaseRouter.kt",
+      "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/passandplay/MafiaPassAndPlayPhaseRouter.kt",
+      "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/night/DoctorTargetEligibility.kt",
+      "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/postgame/PostGameScreen.kt",
+      "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaSetupScreen.kt",
+      "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/domain/MafiaDoctorRulesTest.kt",
+      "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/multidevice/MafiaDoctorLanTest.kt",
+      "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/snapshot/MafiaDoctorHistoryRecoveryTest.kt",
+      "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/testing/MafiaDoctorFixture.kt",
+      "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaHostLanguageContinuityTest.kt",
+      "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/night/DoctorTargetEligibilityTest.kt",
+      "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/postgame/PostGameScreenLayoutTest.kt",
+      "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaDoctorSettingUiTest.kt",
+      "game-modes/whodunit/src/commonMain/composeResources/files/cases/jasmine-ring.json",
+      "game-modes/whodunit/src/commonMain/composeResources/files/cases/khan-el-khalili.json",
+      "game-modes/whodunit/src/commonMain/composeResources/files/cases/last-dinner.json",
+      "game-modes/whodunit/src/commonMain/composeResources/files/cases/layla-halabi.json",
+      "game-modes/whodunit/src/commonMain/composeResources/values-ar/strings.xml",
+      "game-modes/whodunit/src/commonMain/composeResources/values/strings.xml",
+      "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/state/WhodunitStateValidator.kt",
+      "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitGameFlow.kt",
+      "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitPhaseRouter.kt",
+      "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/TestingStoryChronologyTest.kt",
+      "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/TestingStoryCompatibilityTest.kt",
+      "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/TestingStoryGameTraceTest.kt",
+      "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/WhodunitContentIdentityTest.kt",
+      "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/domain/WhodunitRulesInvariantTest.kt",
+      "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/snapshot/WhodunitCaseBindingTest.kt",
+      "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/snapshot/WhodunitFinalTwoRecoveryTest.kt",
+      "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/snapshot/WhodunitResumeReconstructionTest.kt",
+      "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/PeerReadinessRemountTest.kt",
+      "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitRecoveryInteractionTest.kt",
+      "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/multiplayer/WhodunitHostLanguageContinuityTest.kt",
+      "iosApp/iosApp.xcodeproj/project.pbxproj",
+      "iosApp/iosApp/ComposeContainerViewController.swift",
+      "iosApp/iosApp/ContentView.swift",
+      "iosApp/iosAppUITests/ComposeContainerViewControllerTests.swift",
+      "scripts/release/PrepareAndroidUploadTrust.java",
+      "scripts/release/store_api.py",
+      "scripts/release/tests/test_android_artifact_size.py",
+      "scripts/release/tests/test_android_upload_signature.py",
+      "scripts/release/tests/test_google_promotion_edit.py",
+      "scripts/release/tests/test_store_api.py",
+      "scripts/release/tests/test_xcode_framework_phase.py",
+      "scripts/release/validate_android_artifact.sh",
+      "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/HostDisconnectedOverlay.kt",
+      "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/ParlorButton.kt",
+      "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/ParlorToastHost.kt",
+      "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/ReconnectingOverlay.kt",
+      "shared/design-system/src/commonTest/kotlin/com/parlor/designsystem/components/ParlorToastStateTest.kt",
+      "shared/design-system/src/desktopTest/kotlin/com/parlor/designsystem/components/ParlorToastConcurrencyTest.kt",
+      "shared/design-system/src/desktopTest/kotlin/com/parlor/designsystem/components/ParlorToastLifetimeTest.kt",
+      "shared/design-system/src/desktopTest/kotlin/com/parlor/designsystem/components/RecoveryActionContrastTest.kt",
+      "shared/design-system/src/iosMain/kotlin/com/parlor/designsystem/localization/IosLanguageOverrideOwner.kt",
+      "shared/design-system/src/iosMain/kotlin/com/parlor/designsystem/localization/LocalAppLocale.ios.kt",
+      "shared/design-system/src/iosTest/kotlin/com/parlor/designsystem/localization/IosLanguageOverrideOwnerTest.kt",
+      "shared/networking-testing/src/commonMain/kotlin/com/parlor/networking/testing/ControlledStartRoom.kt",
+      "shared/session/src/commonMain/kotlin/com/parlor/session/multidevice/SessionStartHandshake.kt",
+      "shared/session/src/commonTest/kotlin/com/parlor/session/multidevice/SessionStartCommitDeadlineTest.kt",
+      "shared/transport-p2p/src/androidMain/kotlin/com/parlor/transport/p2p/P2pTransportModule.android.kt",
+      "shared/transport-p2p/src/commonMain/kotlin/com/parlor/transport/p2p/AppLifecycleRoomCoordinator.kt",
+      "shared/transport-p2p/src/commonMain/kotlin/com/parlor/transport/p2p/P2pKitCreation.kt",
+      "shared/transport-p2p/src/commonMain/kotlin/com/parlor/transport/p2p/P2pKitRoomTransport.kt",
+      "shared/transport-p2p/src/commonTest/kotlin/com/parlor/transport/p2p/AppLifecycleRoomRegistrationTest.kt",
+      "shared/transport-p2p/src/desktopMain/kotlin/com/parlor/transport/p2p/P2pTransportModule.desktop.kt",
+      "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/HostOpeningCancellationTest.kt",
+      "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/JupiterDiscoveryContractTest.kt",
+      "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitCreationTest.kt",
+      "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitRoomTransportLifecycleTest.kt",
+      "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitRoomTransportLoopbackTest.kt",
+      "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/PeerOpeningCancellationTest.kt",
+      "shared/transport-p2p/src/iosMain/kotlin/com/parlor/transport/p2p/P2pTransportModule.ios.kt"
+    ]
+  },
+  "original_register_locators": [
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/final/issues-continued.json",
+      "sha256": "fcdf977fcdf9d1be7693142aab2152ae713ba9cfecc1ee02b1d1cfc832324c10",
+      "warning": "Historical14/16status is superseded by subsequent authorized policy/evidence; not a current status source"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/final/issues.json",
+      "sha256": "9cc579e04a8ab2839e927a7462f1c6e6a719d42a38f69e34551ebc1b4f2d6bad",
+      "warning": "Historical16status and initial1.0.1content table; current source/versions/reviews bound here"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/AUTHORIZATION.md",
+      "sha256": "75e8cb210880b34ff5531f0f55801f9a469f05d777adb76671efaaeb08ff9f00"
+    }
+  ],
+  "execution_binding": {
+    "ci_run_id": 34152138368,
+    "ci_attempt": 1,
+    "executed_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+    "executed_tree": "c65463bdf1f3656f90dfe6e6dbe1d94b3c588dac",
+    "all_current_mechanism_and_selected_test_sources_same_bytes_as_ci": true,
+    "current_sha_ci_executed": false,
+    "post_ci_changed_paths": [
+      "docs/review/INDEPENDENT_REVIEW_INVENTORY.csv",
+      "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/README.md",
+      "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/normal_launch_receipts.py",
+      "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_control_tests.py",
+      "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_xcode26_repetitions.py",
+      "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/xcresult-26.5-repetitions.json.in",
+      "scripts/verification/ios-readiness/L08StorageProbe.kt.in",
+      "scripts/verification/ios-readiness/l08_receipts.py",
+      "scripts/verification/ios-readiness/test_l08_diagnostics.py"
+    ],
+    "meaning": "The targeted application mechanisms and tests are unchanged from actual CI89dbe8. Subsequent verification-parser/L08diagnostic/inventory changes are NOT validated by claiming that old run was on currentb6e1947. Final exact-SHA CI and ongoing native07/08 evidence remain root-owned.",
+    "descriptor_ledger": {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/original16-timer-regression-descriptors-01.json",
+      "sha256": "b2fee80c8d9210fb44ab8b226a97912d30f381bc3eeea7ec9d4cb1a0e8d7e7af"
+    },
+    "independent_combined_reviews": {
+      "final-production-check-02-independent-01.json": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/final-production-check-02-independent-01.json",
+        "sha256": "48677e84630791162da7a1706bea0270ba40265fbb03ab2de48428819ac7b65e"
+      },
+      "fresh-ci-34152138368-independent-01.json": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/fresh-ci-34152138368-independent-01.json",
+        "sha256": "b8c35c710fa83e411f03d3eefc005c856a4065e81e2ca798ca162332b8d786fd"
+      },
+      "fresh-ci-34152138368-c05-independent-supplement-01.json": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/fresh-ci-34152138368-c05-independent-supplement-01.json",
+        "sha256": "f5996ee52f2889f5617b07444a723b1946d8e3e34a232f41cbfb26cd51934caf"
+      },
+      "ios-readiness04-exact-evidence-independent-review-01.json": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ios-readiness04-exact-evidence-independent-review-01.json",
+        "sha256": "63ef44cb0ed88129c0b1e20bb0128f1c3469dbe8b1faeee3ef744f7f80d5d01b"
+      },
+      "tsa-positive-runtime-independent-review-01.json": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/tsa-positive-runtime-independent-review-01.json",
+        "sha256": "1b1a00f625e30bb6f3d34bad8f28ba0315bcf35307a125a4d967bb23e1679d17"
+      },
+      "final-input-dependency-notice-reconciliation-01.json": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/final-input-dependency-notice-reconciliation-01.json",
+        "sha256": "092c5a6d2f83b58b9e5cf18a6ff9a2afc2b76c96ce467775bc236e8b9fae8455"
+      }
+    }
+  },
+  "original16": [
+    {
+      "finding_id": "ST-C1",
+      "aliases": [],
+      "correction": "Backup-exclude and verify legacy storage before every listing/read/migration; retain the excluded last copy after failed authentication, missing/unreadable key or cancellation. Current protected bytes retain precedence; deletion only follows successful decrypt/migration or explicit Discard.",
+      "primary_commit": "85ded00435b4f8327ce32d3b7f5062c4438ae174",
+      "followup_commits": [
+        {
+          "sha": "c91cf94802c1c0e34d98b9958fb14e941127b65c",
+          "subject": "fix(storage): retain excluded legacy saves on protected-read failure",
+          "kind": "Residual correction within ST-C1: recognized-current failure must not delete the excluded legacy last copy",
+          "complete_git_show_diff_sha256": "d7aa2fed33c5db7b78eaca5af44b9eab33e1ca299873b976f7b47fef60c9c86f",
+          "changed_paths": [
+            "composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSnapshotFileSystem.kt",
+            "composeApp/src/iosTest/kotlin/com/parlor/app/storage/IosLegacySnapshotBackupTest.kt",
+            "composeApp/src/iosTest/kotlin/com/parlor/app/storage/IosStorageSafetyTest.kt",
+            "docs/PRODUCTION_ARCHITECTURE.md"
+          ]
+        }
+      ],
+      "fix_authorship": "/root/session_cont",
+      "original_independent_reviewer": "native_fix_review",
+      "independent_evidence": [
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/independent-review.json",
+          "sha256": "f2daf4d18fc856bbe2ae45f269c6e612f7d63e4ab9253fb36c75a2809e0cd334",
+          "role": "original independent approval / scope and red-green evidence"
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/INDEPENDENT_REVIEW.md",
+          "sha256": "3b23002f8a347aa22a8c70bd797d791cc08fcbc921ba4a6015297340608fce46",
+          "role": "original independent approval / scope and red-green evidence"
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/reviews/stc1-recognized-current-last-copy-independent-01.json",
+          "sha256": "c79472a1ceaaa9fb8b606dc38468ea5d67ee78342700be0c397f4c4ab355841d",
+          "role": "later independent review or scoped execution reconciliation"
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/reviews/stc1-recognized-current-last-copy-erratum-01.json",
+          "sha256": "027d6e9eb4514b69dd0fd9b3d20174a44287bcda6c7342071cdd3de28495b47a",
+          "role": "later independent review or scoped execution reconciliation"
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/reviews/stc1-recognized-current-retention-fix-independent-01.json",
+          "sha256": "65ca8ecec1f58eddf5412f8281d0bd6f40ec5c22c9f9df6433f449d88b832fa8",
+          "role": "later independent review or scoped execution reconciliation"
+        }
+      ],
+      "current_mechanism_sources": [
+        {
+          "path": "composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSnapshotFileSystem.kt",
+          "sha256": "c2852fafb293a693be830171f4674947289fafb07f8ecdbafa5c0aaae6d1bf8b",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSnapshotFileSystem.kt",
+          "lines": 500,
+          "same_bytes_as_ci": true,
+          "mechanism_one_based_lines": [
+            [
+              152,
+              228
+            ],
+            [
+              401,
+              419
+            ]
+          ],
+          "purpose": "Guard legacy listing/direct reads/migration; verify backup exclusion via fresh URL; failed migration retains the old record."
+        }
+      ],
+      "regression_descriptors": [
+        {
+          "key": "C05:com.parlor.app.storage.IosLegacySnapshotBackupTest",
+          "task": ":composeApp:iosSimulatorArm64Test",
+          "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+          "outcomes": {
+            "PASS": 14,
+            "FAIL": 0,
+            "SKIP": 0
+          }
+        },
+        {
+          "key": "C05:com.parlor.app.storage.IosStorageSafetyTest",
+          "task": ":composeApp:iosSimulatorArm64Test",
+          "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+          "outcomes": {
+            "PASS": 6,
+            "FAIL": 0,
+            "SKIP": 0
+          }
+        }
+      ],
+      "compatibility": "No snapshot/encryption format or key change; OS exclusion is guidance, not never-backed-up guarantee.",
+      "retained_evidence_disposition": "Original scoped correction has independent approval and actual retained regression execution. This retrospective map does not substitute for final current-SHA combined CI or certify all external gates.",
+      "scope_limits": [
+        "14 IosLegacySnapshotBackupTest and6 IosStorageSafetyTest native Foundation/Crypto cases really executed in C05. Synthetic key/crypto seams are explicitly test-only.",
+        "No claim of actual iCloud backup/restore or arbitrary device protection states. Separate L08/IOS-R1 investigation is not cleared by these fixtures."
+      ]
+    },
+    {
+      "finding_id": "SN-C1",
+      "aliases": [],
+      "correction": "Move accepted irreversible start commit outside receive timeout before separately bounded best-effort ACK; preserve caller cancellation.",
+      "primary_commit": "85ded00435b4f8327ce32d3b7f5062c4438ae174",
+      "followup_commits": [],
+      "fix_authorship": "/root/session_cont",
+      "original_independent_reviewer": "root",
+      "independent_evidence": [
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/root/SN-C1-independent-fix-review-01.json",
+          "sha256": "a42e2f920214d4ff464b4dddf3f7baa8f6789c415c668b169754fbfe6100a4c3",
+          "role": "original independent approval / scope and red-green evidence"
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/reviews/independent-session-readiness-fresh-01.json",
+          "sha256": "6b1fee29ad0f6b04f3eaf184380700fb819cdbc330b8fa112b314fa91c20b88c",
+          "role": "later independent review or scoped execution reconciliation"
+        }
+      ],
+      "current_mechanism_sources": [
+        {
+          "path": "shared/session/src/commonMain/kotlin/com/parlor/session/multidevice/SessionStartHandshake.kt",
+          "sha256": "eab3e1743484280bbdf1731f033b9984ad0b9e1d2aea31a94e40a6c29fe17512",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/session/src/commonMain/kotlin/com/parlor/session/multidevice/SessionStartHandshake.kt",
+          "lines": 397,
+          "same_bytes_as_ci": true,
+          "mechanism_one_based_lines": [
+            [
+              255,
+              264
+            ],
+            [
+              278,
+              290
+            ],
+            [
+              359,
+              372
+            ]
+          ],
+          "purpose": "Matching validated commit exits receive deadline before separately bounded ACK; genuine cancellation rethrows."
+        }
+      ],
+      "regression_descriptors": [
+        {
+          "key": "C01:com.parlor.session.multidevice.SessionStartCommitDeadlineTest",
+          "task": ":shared:session:desktopTest",
+          "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+          "outcomes": {
+            "PASS": 9,
+            "FAIL": 0,
+            "SKIP": 0
+          }
+        },
+        {
+          "key": "C05:com.parlor.session.multidevice.SessionStartCommitDeadlineTest",
+          "task": ":shared:session:iosSimulatorArm64Test",
+          "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+          "outcomes": {
+            "PASS": 9,
+            "FAIL": 0,
+            "SKIP": 0
+          }
+        }
+      ],
+      "compatibility": "Protocol4.2 and reducer/projection/persistence compatibility unchanged.",
+      "retained_evidence_disposition": "Original scoped correction has independent approval and actual retained regression execution. This retrospective map does not substitute for final current-SHA combined CI or certify all external gates.",
+      "scope_limits": [
+        "9 production-handshake deadline/cancellation/ACK regressions executed on Desktop and native Simulator. In-memory transport/virtual scheduling is not physical LAN evidence."
+      ]
+    },
+    {
+      "finding_id": "SN-C2",
+      "aliases": [],
+      "correction": "Cancellation-safe ownership from synchronous kit creation through host/peer registration and transfer; cleanup unreturned rooms and exact registration in NonCancellable.",
+      "primary_commit": "85ded00435b4f8327ce32d3b7f5062c4438ae174",
+      "followup_commits": [],
+      "fix_authorship": "session_cont + root",
+      "original_independent_reviewer": "factory_review",
+      "independent_evidence": [
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/factory_review/SN-C2-independent-remediation-review-02.json",
+          "sha256": "4d5f1113d9265a0b86abc1483c609cc6029cedb1ad73895d0dbf063dc5ad001d",
+          "role": "original independent approval / scope and red-green evidence"
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/factory_review/SN-C2-independent-remediation-review-02.md",
+          "sha256": "49718eece1cc2f8b1aafd1a6d6964148a7ef63183013733838a533ff76f7f5ee",
+          "role": "original independent approval / scope and red-green evidence"
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/reviews/independent-session-readiness-fresh-01.json",
+          "sha256": "6b1fee29ad0f6b04f3eaf184380700fb819cdbc330b8fa112b314fa91c20b88c",
+          "role": "later independent review or scoped execution reconciliation"
+        }
+      ],
+      "current_mechanism_sources": [
+        {
+          "path": "shared/transport-p2p/src/commonMain/kotlin/com/parlor/transport/p2p/P2pKitCreation.kt",
+          "sha256": "e924988dfcbde7eb1ac2eae763e5078a28bdd568ca1b05e4ece6284a3183a95e",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/commonMain/kotlin/com/parlor/transport/p2p/P2pKitCreation.kt",
+          "lines": 39,
+          "same_bytes_as_ci": true,
+          "mechanism_one_based_lines": [
+            [
+              1,
+              39
+            ]
+          ],
+          "purpose": "Synchronous creation records ownership before cancellable dispatcher return."
+        },
+        {
+          "path": "shared/transport-p2p/src/commonMain/kotlin/com/parlor/transport/p2p/AppLifecycleRoomCoordinator.kt",
+          "sha256": "7761d49b0de180d34daa32f790768a541f2af8d0de98b94eeb89ab20bf2d1e68",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/commonMain/kotlin/com/parlor/transport/p2p/AppLifecycleRoomCoordinator.kt",
+          "lines": 76,
+          "same_bytes_as_ci": true,
+          "mechanism_one_based_lines": [
+            [
+              44,
+              69
+            ]
+          ],
+          "purpose": "Cancellation-safe exact lifecycle registration rollback."
+        },
+        {
+          "path": "shared/transport-p2p/src/commonMain/kotlin/com/parlor/transport/p2p/P2pKitRoomTransport.kt",
+          "sha256": "a5e2536e41c81c54b58ec27da135ea9046969db9cb80084e2a0da3b15ddde7c7",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/commonMain/kotlin/com/parlor/transport/p2p/P2pKitRoomTransport.kt",
+          "lines": 4811,
+          "same_bytes_as_ci": true,
+          "mechanism_one_based_lines": [
+            [
+              276,
+              325
+            ],
+            [
+              531,
+              593
+            ],
+            [
+              622,
+              635
+            ],
+            [
+              765,
+              838
+            ],
+            [
+              1607,
+              1630
+            ],
+            [
+              1842,
+              1843
+            ],
+            [
+              3571,
+              3572
+            ]
+          ],
+          "purpose": "Host, join and cold-resume ownership transfer; close unreturned peer without explicit-Leave credential revocation."
+        },
+        {
+          "path": "shared/transport-p2p/src/androidMain/kotlin/com/parlor/transport/p2p/P2pTransportModule.android.kt",
+          "sha256": "280b7f13d26939972416c805a184efe8fb8041f48db219f2e41797adbe456a11",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/androidMain/kotlin/com/parlor/transport/p2p/P2pTransportModule.android.kt",
+          "lines": 97,
+          "same_bytes_as_ci": true,
+          "mechanism_one_based_lines": [
+            [
+              43,
+              66
+            ]
+          ],
+          "purpose": "Android factory uses common creation owner."
+        },
+        {
+          "path": "shared/transport-p2p/src/iosMain/kotlin/com/parlor/transport/p2p/P2pTransportModule.ios.kt",
+          "sha256": "bea599aa4d6dd9820477f2cbee57c213a9988da33e51eada0eb061d25fd77753",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/iosMain/kotlin/com/parlor/transport/p2p/P2pTransportModule.ios.kt",
+          "lines": 71,
+          "same_bytes_as_ci": true,
+          "mechanism_one_based_lines": [
+            [
+              28,
+              54
+            ]
+          ],
+          "purpose": "iOS factory uses common creation owner."
+        },
+        {
+          "path": "shared/transport-p2p/src/desktopMain/kotlin/com/parlor/transport/p2p/P2pTransportModule.desktop.kt",
+          "sha256": "7bb0e36a15dfde7e193c74f1ab2a3d10f35c01e04c0fb3ba4e08a8a8cf88d3cb",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/desktopMain/kotlin/com/parlor/transport/p2p/P2pTransportModule.desktop.kt",
+          "lines": 94,
+          "same_bytes_as_ci": true,
+          "mechanism_one_based_lines": [
+            [
+              36,
+              59
+            ]
+          ],
+          "purpose": "Desktop factory uses common creation owner."
+        }
+      ],
+      "regression_descriptors": [
+        {
+          "key": "C01:com.parlor.transport.p2p.AppLifecycleRoomRegistrationTest",
+          "task": ":shared:transport-p2p:desktopTest",
+          "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+          "outcomes": {
+            "PASS": 3,
+            "FAIL": 0,
+            "SKIP": 0
+          }
+        },
+        {
+          "key": "C01:com.parlor.transport.p2p.HostOpeningCancellationTest",
+          "task": ":shared:transport-p2p:desktopTest",
+          "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+          "outcomes": {
+            "PASS": 5,
+            "FAIL": 0,
+            "SKIP": 0
+          }
+        },
+        {
+          "key": "C01:com.parlor.transport.p2p.P2pKitCreationTest",
+          "task": ":shared:transport-p2p:desktopTest",
+          "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+          "outcomes": {
+            "PASS": 9,
+            "FAIL": 0,
+            "SKIP": 0
+          }
+        },
+        {
+          "key": "C01:com.parlor.transport.p2p.PeerOpeningCancellationTest",
+          "task": ":shared:transport-p2p:desktopTest",
+          "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+          "outcomes": {
+            "PASS": 12,
+            "FAIL": 0,
+            "SKIP": 0
+          }
+        },
+        {
+          "key": "C05:com.parlor.transport.p2p.AppLifecycleRoomRegistrationTest",
+          "task": ":shared:transport-p2p:iosSimulatorArm64Test",
+          "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+          "outcomes": {
+            "PASS": 3,
+            "FAIL": 0,
+            "SKIP": 0
+          }
+        }
+      ],
+      "compatibility": "Protocol4.2, credential/snapshot versions, original same-seat membership and both game authority unchanged.",
+      "retained_evidence_disposition": "Original scoped correction has independent approval and actual retained regression execution. This retrospective map does not substitute for final current-SHA combined CI or certify all external gates.",
+      "scope_limits": [
+        "29 factory/host/peer/lifecycle methods executed on Desktop; lifecycle3 also native. Host/peer creation ownership are one original root, not three new defects.",
+        "Physical radio lifecycle/cancellation still requires controlled devices."
+      ]
+    },
+    {
+      "finding_id": "WD-C1",
+      "aliases": [],
+      "correction": "Read current authoritative own-player readiness in remount-safe effect with session/phase/seat/generation keys.",
+      "primary_commit": "85ded00435b4f8327ce32d3b7f5062c4438ae174",
+      "followup_commits": [],
+      "fix_authorship": "/root/whodunit_cont",
+      "original_independent_reviewer": "root",
+      "independent_evidence": [
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/root/WD-C1-independent-fix-review-01.json",
+          "sha256": "df7ba7e34da2d34e88ee6937c6838a0f8d061ca0bc4f1375e8b185788ddebf3f",
+          "role": "original independent approval / scope and red-green evidence"
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/reviews/independent-session-readiness-fresh-01.json",
+          "sha256": "6b1fee29ad0f6b04f3eaf184380700fb819cdbc330b8fa112b314fa91c20b88c",
+          "role": "later independent review or scoped execution reconciliation"
+        }
+      ],
+      "current_mechanism_sources": [
+        {
+          "path": "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitPhaseRouter.kt",
+          "sha256": "eeb3395e84e467ef1e23cc5a8e7f6d6ae5bad76225c8931f004039db7d634dc6",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitPhaseRouter.kt",
+          "lines": 1139,
+          "same_bytes_as_ci": true,
+          "mechanism_one_based_lines": [
+            [
+              341,
+              362
+            ]
+          ],
+          "purpose": "Read current own-private StateFlow readiness inside keyed remount effect; no speculative state mutation."
+        }
+      ],
+      "regression_descriptors": [
+        {
+          "key": "C01:com.parlor.games.whodunit.ui.flow.PeerReadinessRemountTest",
+          "task": ":game-modes:whodunit:desktopTest",
+          "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+          "outcomes": {
+            "PASS": 12,
+            "FAIL": 0,
+            "SKIP": 0
+          }
+        }
+      ],
+      "compatibility": "No optimistic canonical writes, no command/revision/protocol validation relaxation.",
+      "retained_evidence_disposition": "Original scoped correction has independent approval and actual retained regression execution. This retrospective map does not substitute for final current-SHA combined CI or certify all external gates.",
+      "scope_limits": [
+        "12 actual Compose-router remount tests with synthetic controllers executed. This is not physical reconnect proof."
+      ]
+    },
+    {
+      "finding_id": "IOS-B1",
+      "aliases": [],
+      "correction": "Fail actual Xcode embed shell immediately on failed cd/Gradle; normalize only after success.",
+      "primary_commit": "85ded00435b4f8327ce32d3b7f5062c4438ae174",
+      "followup_commits": [],
+      "fix_authorship": "/root",
+      "original_independent_reviewer": "session_cont",
+      "independent_evidence": [
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/session_cont/IOS-B1-independent-remediation-review-01.json",
+          "sha256": "3e04f4aeed79ba9f7528357fe18136386abcb90c5fe84abb86f3b76e64e236ab",
+          "role": "original independent approval / scope and red-green evidence"
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/session_cont/IOS-B1-independent-remediation-review-01.md",
+          "sha256": "8d0f2eb8693356379329e17e134d63a991ef37d0111a6a7df472a4ee41e82b01",
+          "role": "original independent approval / scope and red-green evidence"
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/session_cont/IOS-B1-independent-remediation-review-02-green.md",
+          "sha256": "6dd99298c8d85295227f1a3435ba1fd8f271e7fd4ec155b7110ea36fc98c52c9",
+          "role": "original independent approval / scope and red-green evidence"
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-release-foundations-rebind-01.json",
+          "sha256": "62e49d3380fab87cdee8888d05cbfe3b330eba37dfcb716c11b73f895052a5da",
+          "role": "original independent approval / scope and red-green evidence"
+        }
+      ],
+      "current_mechanism_sources": [
+        {
+          "path": "iosApp/iosApp.xcodeproj/project.pbxproj",
+          "sha256": "625103b4676a017beb4619c61b705efc84c2be47b71603bddd840c1d3856ea9d",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/iosApp/iosApp.xcodeproj/project.pbxproj",
+          "lines": 539,
+          "same_bytes_as_ci": true,
+          "mechanism_one_based_lines": [
+            [
+              253,
+              253
+            ]
+          ],
+          "purpose": "Actual shellScript starts set -e; cd/build failure cannot reach normalizer; old location246 is stale."
+        },
+        {
+          "path": "scripts/release/tests/test_xcode_framework_phase.py",
+          "sha256": "3033307b0a029d87ab9c8c14d3b3b4d3a0d4db9d183012d6da58fb1e8b5c4a73",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_xcode_framework_phase.py",
+          "lines": 99,
+          "same_bytes_as_ci": true,
+          "mechanism_one_based_lines": [
+            [
+              1,
+              99
+            ]
+          ],
+          "purpose": "Tests execute extracted real shell including failed-cd/failed-Gradle stale-output cases."
+        }
+      ],
+      "regression_descriptors": [
+        {
+          "key": "C01:test_xcode_framework_phase",
+          "task": "verifyReleaseSystem/Python unittest discovery (actual productionCheck release suite)",
+          "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+          "outcomes": {
+            "PASS": 5,
+            "FAIL": 0,
+            "SKIP": 0
+          }
+        }
+      ],
+      "compatibility": "No application identity/signing/embedding task/version changes beyond error propagation.",
+      "retained_evidence_disposition": "Original scoped correction has independent approval and actual retained regression execution. This retrospective map does not substitute for final current-SHA combined CI or certify all external gates.",
+      "scope_limits": [
+        "5 tests execute the exact shell extracted from current project.pbxproj, including stale-output and failed-cd/failed-Gradle paths; C01 Linux raw log binds actual passes.",
+        "Actual C05 Xcode26.3 build/runtime is additional evidence, not proof of original historical first-four-launch cause or Store signing."
+      ]
+    },
+    {
+      "finding_id": "ROOT-T3",
+      "aliases": [],
+      "correction": "Add explicit Unit result to10 annotated methods and actual compiled-signature discovery guard.",
+      "primary_commit": "85ded00435b4f8327ce32d3b7f5062c4438ae174",
+      "followup_commits": [
+        {
+          "sha": "0787b0fade803f3b8f2213b89f2fccb52a822279",
+          "subject": "test(transport): align loopback fixtures with host admission",
+          "kind": "Physical fixture admission alignment; remains ignored, no physical PASS",
+          "complete_git_show_diff_sha256": "29f0a01d0d5e9d33a8a38af1b3204aefc045c1452c2cb78cb974cbdae25019bb",
+          "changed_paths": [
+            "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/LoopbackDeviceFixture.kt",
+            "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/LoopbackFixtureContractTest.kt",
+            "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitRoomTransportLoopbackTest.kt"
+          ]
+        }
+      ],
+      "fix_authorship": "/root",
+      "original_independent_reviewer": "session_cont",
+      "independent_evidence": [
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/session_cont/ROOT-T3-independent-remediation-review-01.json",
+          "sha256": "875e0723d0175ff193f7fee77a38333597a8114bf943aafc0eb837b0a604c199",
+          "role": "original independent approval / scope and red-green evidence"
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/session_cont/ROOT-T3-independent-remediation-review-01.md",
+          "sha256": "20c958f269669878dc68a58c6ab8a5eeaf5a7702b6591f3b74327771fc3aa85e",
+          "role": "original independent approval / scope and red-green evidence"
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-release-foundations-rebind-01.json",
+          "sha256": "62e49d3380fab87cdee8888d05cbfe3b330eba37dfcb716c11b73f895052a5da",
+          "role": "original independent approval / scope and red-green evidence"
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/reviews/independent-session-readiness-fresh-01.json",
+          "sha256": "6b1fee29ad0f6b04f3eaf184380700fb819cdbc330b8fa112b314fa91c20b88c",
+          "role": "later independent review or scoped execution reconciliation"
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/reviews/factory-test-additions-root-review-01.json",
+          "sha256": "ba0ce13d287befb095c31b394b929756602302f4f2dfc1d2900c3e914625bd31",
+          "role": "later independent review or scoped execution reconciliation"
+        }
+      ],
+      "current_mechanism_sources": [
+        {
+          "path": "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/JupiterDiscoveryContractTest.kt",
+          "sha256": "94682d196381d97a37f6c5e925b63646f102b864d76eb55252cfbd082abcb305",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/JupiterDiscoveryContractTest.kt",
+          "lines": 40,
+          "same_bytes_as_ci": true,
+          "mechanism_one_based_lines": [
+            [
+              1,
+              40
+            ]
+          ],
+          "purpose": "Compiled annotated-method return signatures checked, including intentionally disabled methods."
+        },
+        {
+          "path": "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitRoomTransportLifecycleTest.kt",
+          "sha256": "947a86aebdca10d7d9cfa97a5677c1a79733601dca887effc6c218280a098b1b",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitRoomTransportLifecycleTest.kt",
+          "lines": 5466,
+          "same_bytes_as_ci": true,
+          "purpose": "Actual corrected annotated signatures; selected executable descriptors and intentionally skipped physical methods included in raw ledger"
+        },
+        {
+          "path": "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitRoomTransportLoopbackTest.kt",
+          "sha256": "21451bf407d791ec85066227a2670ccf61d3506efaae47375c0bba557fe3be73",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitRoomTransportLoopbackTest.kt",
+          "lines": 242,
+          "same_bytes_as_ci": true,
+          "purpose": "Actual corrected annotated signatures; selected executable descriptors and intentionally skipped physical methods included in raw ledger"
+        }
+      ],
+      "regression_descriptors": [
+        {
+          "key": "C01:com.parlor.transport.p2p.JupiterDiscoveryContractTest",
+          "task": ":shared:transport-p2p:desktopTest",
+          "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+          "outcomes": {
+            "PASS": 1,
+            "FAIL": 0,
+            "SKIP": 0
+          }
+        },
+        {
+          "key": "C01:com.parlor.transport.p2p.P2pKitRoomTransportLifecycleTest",
+          "task": ":shared:transport-p2p:desktopTest",
+          "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+          "outcomes": {
+            "PASS": 8,
+            "FAIL": 0,
+            "SKIP": 0
+          }
+        },
+        {
+          "key": "C01:com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest",
+          "task": ":shared:transport-p2p:desktopTest",
+          "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+          "outcomes": {
+            "PASS": 1,
+            "FAIL": 0,
+            "SKIP": 3
+          }
+        }
+      ],
+      "compatibility": "No assertions/ignores weakened; no physical tests enabled.",
+      "retained_evidence_disposition": "Original scoped correction has independent approval and actual retained regression execution. This retrospective map does not substitute for final current-SHA combined CI or certify all external gates.",
+      "scope_limits": [
+        "Eight enabled corrected lifecycle methods and compiled Jupiter-signature guard actually executed. Two corrected ignored methods remain skipped, plus one other pre-existing physical test; advertisement-only PASS is not peer delivery.",
+        "Signature guard covers compiled transport test classes, not an invented repository-wide signature scanner."
+      ]
+    },
+    {
+      "finding_id": "MF-C1",
+      "aliases": [
+        "M-C01"
+      ],
+      "correction": "Bind nonterminal Doctor private previous protection to newest canonical night record regardless of repeat setting/death/history cap. Reuse existing setting and shared Mafia-only UI predicate.",
+      "primary_commit": "85ded00435b4f8327ce32d3b7f5062c4438ae174",
+      "followup_commits": [
+        {
+          "sha": "de96f23025781339664bf8b14f118dfce89b22e9",
+          "subject": "test(core): exercise engine and Doctor contracts across targets",
+          "kind": "Moves deterministic Doctor rules/recovery tests and fixture to commonTest for actual native/Android execution",
+          "complete_git_show_diff_sha256": "0b649acf8086468cdbce5f2f16f77cbdf89cc781a538f975463817b0a5fab265",
+          "changed_paths": [
+            "game-modes/mafia/src/commonTest/kotlin/com/parlor/games/mafia/domain/MafiaDoctorRulesTest.kt",
+            "game-modes/mafia/src/commonTest/kotlin/com/parlor/games/mafia/snapshot/MafiaDoctorHistoryRecoveryTest.kt",
+            "game-modes/mafia/src/commonTest/kotlin/com/parlor/games/mafia/testing/MafiaDoctorFixture.kt",
+            "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/domain/MafiaDoctorRulesTest.kt",
+            "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/snapshot/MafiaDoctorHistoryRecoveryTest.kt",
+            "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/testing/MafiaDoctorFixture.kt",
+            "shared/engine/src/commonTest/kotlin/com/parlor/engine/registry/GameRegistryTest.kt",
+            "shared/engine/src/commonTest/kotlin/com/parlor/engine/snapshot/GameSnapshotTest.kt"
+          ]
+        }
+      ],
+      "fix_authorship": "/root/mafia_cont",
+      "original_independent_reviewer": "whodunit_cont",
+      "independent_evidence": [
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/whodunit/MF-C1-M-C03-independent-evidence.json",
+          "sha256": "08b7012c575315873f0822d3dbaa6bb46c205e1b71e71f3d7f59a3f3b172ae91",
+          "role": "original independent approval / scope and red-green evidence"
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/whodunit/MF-C1-M-C03-independent-review.md",
+          "sha256": "ae821d8d7b8f8480b5691e9f60c3dd657c80f756512c5e43ffb46f57cd6bdff9",
+          "role": "original independent approval / scope and red-green evidence"
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/factory_review/mafia-detekt-review-01/independent-followup-approval-01.json",
+          "sha256": "c61312b439ba1198e229d9b47ec133b77c629aa5496164e6e82c3065d9f1c32d",
+          "role": "original independent approval / scope and red-green evidence"
+        }
+      ],
+      "current_mechanism_sources": [
+        {
+          "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/snapshot/MafiaSnapshotRecovery.kt",
+          "sha256": "64525b0d14b07d87e99729c3707dd0af4a083f8f4a98a5a948575755482ea3fd",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/snapshot/MafiaSnapshotRecovery.kt",
+          "lines": 535,
+          "same_bytes_as_ci": true,
+          "mechanism_one_based_lines": [
+            [
+              354,
+              365
+            ],
+            [
+              478,
+              489
+            ]
+          ],
+          "purpose": "Nonterminal Doctor previous field equals latest canonical effective protection; retained-repeat validation remains setting-aware."
+        },
+        {
+          "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/night/DoctorTargetEligibility.kt",
+          "sha256": "e6f616148cd77a6832c08175b769c31885e7b8b16bfb272d19729dc507bcb34a",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/night/DoctorTargetEligibility.kt",
+          "lines": 14,
+          "same_bytes_as_ci": true,
+          "mechanism_one_based_lines": [
+            [
+              1,
+              14
+            ]
+          ],
+          "purpose": "One Mafia-local target predicate reused by local/LAN UI; reducer still authoritative."
+        },
+        {
+          "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaSetupScreen.kt",
+          "sha256": "4b98a283b3d92bcfbbdeaa699a8c3e552b38440b90874795273a8edb0dada3dd",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaSetupScreen.kt",
+          "lines": 529,
+          "same_bytes_as_ci": true,
+          "mechanism_one_based_lines": [
+            [
+              161,
+              176
+            ]
+          ],
+          "purpose": "Existing switch remains default OFF; setup accepts the selected settings, not mid-game edits."
+        },
+        {
+          "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaMultiDevicePhaseRouter.kt",
+          "sha256": "09de10c3735f1afeb7b36550dca57c4e9fd190d985faf6ff0eae8c0b8d21a784",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaMultiDevicePhaseRouter.kt",
+          "lines": 628,
+          "same_bytes_as_ci": true,
+          "mechanism_one_based_lines": [
+            [
+              563,
+              583
+            ]
+          ],
+          "purpose": "LAN living/retained-seat target filtering delegates Doctor settings."
+        },
+        {
+          "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/passandplay/MafiaPassAndPlayPhaseRouter.kt",
+          "sha256": "1371eb747579362548f3962a520c2c3f3c2f6225ef551bad93e3e690e08a1fe6",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/passandplay/MafiaPassAndPlayPhaseRouter.kt",
+          "lines": 751,
+          "same_bytes_as_ci": true,
+          "mechanism_one_based_lines": [
+            [
+              389,
+              401
+            ]
+          ],
+          "purpose": "Local Doctor choices use the same predicate."
+        },
+        {
+          "path": "game-modes/mafia/src/commonMain/composeResources/values-ar/strings.xml",
+          "sha256": "a9416283c7bf130d9ca98b4ff0e08ae420bad4b935f476ed7166178c42c3bdcc",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/composeResources/values-ar/strings.xml",
+          "lines": 307,
+          "same_bytes_as_ci": true,
+          "mechanism_one_based_lines": [
+            [
+              77,
+              77
+            ]
+          ],
+          "purpose": "Arabic now explicitly says consecutive nights, not exactly two nights."
+        },
+        {
+          "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/settings/MafiaSettings.kt",
+          "sha256": "beaa58c17c44a8ff552e52e838171deedf17f8dadd76258caaef8dd2b5a336f5",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/settings/MafiaSettings.kt",
+          "lines": 133,
+          "same_bytes_as_ci": true,
+          "purpose": "Existing setting/reducer/resolution/peer validation/setup propagation: unchanged implementation inspected for requirement; not a newly introduced flag"
+        },
+        {
+          "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/reducer/MafiaReducer.kt",
+          "sha256": "2ff9754d497b8258613badb057ab915a6d457786c56b0d5e725f2ba0053e56e2",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/reducer/MafiaReducer.kt",
+          "lines": 1054,
+          "same_bytes_as_ci": true,
+          "purpose": "Existing setting/reducer/resolution/peer validation/setup propagation: unchanged implementation inspected for requirement; not a newly introduced flag"
+        },
+        {
+          "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/rules/NightResolution.kt",
+          "sha256": "86f1078d5db7c23aec6da15c09625e37d0041c6a78fcb1e26f234d4e5ed26000",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/rules/NightResolution.kt",
+          "lines": 115,
+          "same_bytes_as_ci": true,
+          "purpose": "Existing setting/reducer/resolution/peer validation/setup propagation: unchanged implementation inspected for requirement; not a newly introduced flag"
+        },
+        {
+          "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/state/MafiaPeerSnapshotValidator.kt",
+          "sha256": "8df30438d0b5a4f6e9666de6e1863ab4c1faf8c3664126be6343c293ff8e383c",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/state/MafiaPeerSnapshotValidator.kt",
+          "lines": 292,
+          "same_bytes_as_ci": true,
+          "purpose": "Existing setting/reducer/resolution/peer validation/setup propagation: unchanged implementation inspected for requirement; not a newly introduced flag"
+        },
+        {
+          "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaSetupDraft.kt",
+          "sha256": "e91e3e9d17bab4f725117c83e42096b5e9086809108a933ab5e48df4b9fb7a16",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaSetupDraft.kt",
+          "lines": 66,
+          "same_bytes_as_ci": true,
+          "purpose": "Existing setting/reducer/resolution/peer validation/setup propagation: unchanged implementation inspected for requirement; not a newly introduced flag"
+        },
+        {
+          "path": "game-modes/mafia/src/commonMain/composeResources/values/strings.xml",
+          "sha256": "8f46afd35f71ad31e3d5b72cac1587e21dfc9e9a903b362e69eb79c6b33b551f",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/composeResources/values/strings.xml",
+          "lines": 307,
+          "same_bytes_as_ci": true,
+          "mechanism_one_based_lines": [
+            [
+              76,
+              77
+            ]
+          ],
+          "purpose": "English consecutive nights wording already correct"
+        }
+      ],
+      "regression_descriptors": [
+        {
+          "key": "C01:com.parlor.games.mafia.domain.MafiaDoctorRulesTest",
+          "task": ":game-modes:mafia:desktopTest",
+          "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+          "outcomes": {
+            "PASS": 8,
+            "FAIL": 0,
+            "SKIP": 0
+          }
+        },
+        {
+          "key": "C01:com.parlor.games.mafia.multidevice.MafiaDoctorLanTest",
+          "task": ":game-modes:mafia:desktopTest",
+          "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+          "outcomes": {
+            "PASS": 2,
+            "FAIL": 0,
+            "SKIP": 0
+          }
+        },
+        {
+          "key": "C01:com.parlor.games.mafia.snapshot.MafiaDoctorHistoryRecoveryTest",
+          "task": ":game-modes:mafia:desktopTest",
+          "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+          "outcomes": {
+            "PASS": 15,
+            "FAIL": 0,
+            "SKIP": 0
+          }
+        },
+        {
+          "key": "C01:com.parlor.games.mafia.ui.screens.night.DoctorTargetEligibilityTest",
+          "task": ":game-modes:mafia:desktopTest",
+          "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+          "outcomes": {
+            "PASS": 2,
+            "FAIL": 0,
+            "SKIP": 0
+          }
+        },
+        {
+          "key": "C01:com.parlor.games.mafia.ui.screens.setup.MafiaDoctorSettingUiTest",
+          "task": ":game-modes:mafia:desktopTest",
+          "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+          "outcomes": {
+            "PASS": 2,
+            "FAIL": 0,
+            "SKIP": 0
+          }
+        },
+        {
+          "key": "C05:com.parlor.games.mafia.domain.MafiaDoctorRulesTest",
+          "task": ":game-modes:mafia:iosSimulatorArm64Test",
+          "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+          "outcomes": {
+            "PASS": 8,
+            "FAIL": 0,
+            "SKIP": 0
+          }
+        },
+        {
+          "key": "C05:com.parlor.games.mafia.snapshot.MafiaDoctorHistoryRecoveryTest",
+          "task": ":game-modes:mafia:iosSimulatorArm64Test",
+          "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+          "outcomes": {
+            "PASS": 15,
+            "FAIL": 0,
+            "SKIP": 0
+          }
+        }
+      ],
+      "compatibility": "Existing default OFF, existing serialized flag, snapshot schema/protocol4.2 preserved; legitimate ON saves accepted, malformed mismatches rejected; host history not sent to peers.",
+      "retained_evidence_disposition": "Original scoped correction has independent approval and actual retained regression execution. This retrospective map does not substitute for final current-SHA combined CI or certify all external gates.",
+      "scope_limits": [
+        "29 focused Desktop methods: rules8, recovery15, LAN2, eligibility2, setupUI2;23 common rules/recovery methods also executed on native Simulator and Android unit targets.",
+        "LAN replay/rejoin uses synthetic transport and real controllers/projections, not physical P2pKit. Host-only resolved history is not sent to peers."
+      ]
+    },
+    {
+      "finding_id": "WD-C3",
+      "aliases": [],
+      "correction": "Reject active Elimination Round/TiedRevote states with at most two living survivors; retain legitimate terminal states.",
+      "primary_commit": "85ded00435b4f8327ce32d3b7f5062c4438ae174",
+      "followup_commits": [],
+      "fix_authorship": "/root/whodunit_cont",
+      "original_independent_reviewer": "root",
+      "independent_evidence": [
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/root/WD-C3-independent-fix-review-01.json",
+          "sha256": "32b0b19e68baa5f72f2c9e169cf66206490ce97b8dc72ac5b2378549314577fe",
+          "role": "original independent approval / scope and red-green evidence"
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/factory_review/whodunit-detekt-review-01/independent-followup-approval-01.json",
+          "sha256": "881d34fc9faf770f8a944ecbf0da774a99767075acc18dc577fe2625358e8ee4",
+          "role": "original independent approval / scope and red-green evidence"
+        }
+      ],
+      "current_mechanism_sources": [
+        {
+          "path": "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/state/WhodunitStateValidator.kt",
+          "sha256": "c391101ba10792d4ba81eb0aa3a21771162c458e075b90bfbf06d4cb33d139c1",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/state/WhodunitStateValidator.kt",
+          "lines": 1092,
+          "same_bytes_as_ci": true,
+          "mechanism_one_based_lines": [
+            [
+              626,
+              633
+            ]
+          ],
+          "purpose": "Active Elimination Round/TiedRevote cannot retain final two; PostGame remains valid."
+        }
+      ],
+      "regression_descriptors": [
+        {
+          "key": "C01:com.parlor.games.whodunit.snapshot.WhodunitFinalTwoRecoveryTest",
+          "task": ":game-modes:whodunit:desktopTest",
+          "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+          "outcomes": {
+            "PASS": 9,
+            "FAIL": 0,
+            "SKIP": 0
+          }
+        },
+        {
+          "key": "C01:com.parlor.games.whodunit.snapshot.WhodunitSnapshotValidationTest",
+          "task": ":game-modes:whodunit:desktopTest",
+          "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+          "outcomes": {
+            "PASS": 46,
+            "FAIL": 0,
+            "SKIP": 0
+          }
+        }
+      ],
+      "compatibility": "No schema/content/protocol version change; fail closed instead of repairing malformed state.",
+      "retained_evidence_disposition": "Original scoped correction has independent approval and actual retained regression execution. This retrospective map does not substitute for final current-SHA combined CI or certify all external gates.",
+      "scope_limits": [
+        "9 targeted final-two recovery tests plus46 broader snapshot tests execute on Desktop. Active impossible states fail closed; terminal recovery/replay remains allowed."
+      ]
+    },
+    {
+      "finding_id": "M-C03",
+      "aliases": [],
+      "correction": "Use full-width name-over-role Column in shared Mafia final-results composable.",
+      "primary_commit": "85ded00435b4f8327ce32d3b7f5062c4438ae174",
+      "followup_commits": [],
+      "fix_authorship": "/root/mafia_cont",
+      "original_independent_reviewer": "whodunit_cont",
+      "independent_evidence": [
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/whodunit/MF-C1-M-C03-independent-evidence.json",
+          "sha256": "08b7012c575315873f0822d3dbaa6bb46c205e1b71e71f3d7f59a3f3b172ae91",
+          "role": "original independent approval / scope and red-green evidence"
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/whodunit/MF-C1-M-C03-independent-review.md",
+          "sha256": "ae821d8d7b8f8480b5691e9f60c3dd657c80f756512c5e43ffb46f57cd6bdff9",
+          "role": "original independent approval / scope and red-green evidence"
+        }
+      ],
+      "current_mechanism_sources": [
+        {
+          "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/postgame/PostGameScreen.kt",
+          "sha256": "2ebe210da47584cd0ed1105a921b4b2884cde23227b6cfb0086f25f3aec70aa9",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/postgame/PostGameScreen.kt",
+          "lines": 102,
+          "same_bytes_as_ci": true,
+          "mechanism_one_based_lines": [
+            [
+              63,
+              82
+            ]
+          ],
+          "purpose": "Full-width name-over-role column preserves readable role line without shrinking font or truncating valid names."
+        }
+      ],
+      "regression_descriptors": [
+        {
+          "key": "C01:com.parlor.games.mafia.ui.screens.postgame.PostGameScreenLayoutTest",
+          "task": ":game-modes:mafia:desktopTest",
+          "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+          "outcomes": {
+            "PASS": 6,
+            "FAIL": 0,
+            "SKIP": 0
+          }
+        }
+      ],
+      "compatibility": "Only final intentional public-role layout; no game-rule or private-state change.",
+      "retained_evidence_disposition": "Original scoped correction has independent approval and actual retained regression execution. This retrospective map does not substitute for final current-SHA combined CI or certify all external gates.",
+      "scope_limits": [
+        "6 real Desktop Compose layout methods cover compact/landscape EN/AR and large text. Native screen-reader and physical layout certification remain separate."
+      ]
+    },
+    {
+      "finding_id": "DS-C01",
+      "aliases": [],
+      "correction": "Ownership-aware iOS language overrides restore only the exact Parlor-owned preference to its previous application-domain value or absence across System selection and restart; preserve unowned OS choices. Owner-approved pre-release policy excludes ambiguous unmarked old internal build migration. Stable UIKit containment prevents outer SwiftUI semantics from overwriting the retained Compose child direction; no navigation engine or language-keyed session recreation.",
+      "primary_commit": "85ded00435b4f8327ce32d3b7f5062c4438ae174",
+      "followup_commits": [
+        {
+          "sha": "cf49b57258c138cefc4a0743a1142a73ac253a72",
+          "subject": "test(localization): await public Compose scene idleness",
+          "kind": "Test-only public Compose scene-idleness synchronization; not a new application language defect",
+          "complete_git_show_diff_sha256": "af7c6336a6281f7b300c306c883e2970a2b3567aa35cee11ff3c311285757993",
+          "changed_paths": [
+            "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/RtlFormattingTest.kt",
+            "shared/design-system/src/desktopTest/kotlin/com/parlor/designsystem/localization/ProvideAppLanguageDesktopTest.kt"
+          ]
+        }
+      ],
+      "fix_authorship": "/root",
+      "original_independent_reviewer": "/root/native_fix_review (ownership source), /root/release_fix_review (container/current runtime and host fixtures), /root/factory_review (prior native results; not own fixture-design approval)",
+      "independent_evidence": [
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/independent-review.json",
+          "sha256": "f2daf4d18fc856bbe2ae45f269c6e612f7d63e4ab9253fb36c75a2809e0cd334",
+          "role": "original independent approval / scope and red-green evidence"
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/INDEPENDENT_REVIEW.md",
+          "sha256": "3b23002f8a347aa22a8c70bd797d791cc08fcbc921ba4a6015297340608fce46",
+          "role": "original independent approval / scope and red-green evidence"
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/DS-C01-source-contract-review-03.json",
+          "sha256": "28b7723ede03eeb10302dbf4a6aa64649774529b6b8c719844aa31dc75d4e076",
+          "role": "original independent approval / scope and red-green evidence"
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/DS-C01-source-contract-green-review-04.json",
+          "sha256": "fbe3a4d016e12baeeeaba20a3adf516868aa6f3b77f9fb399ef6be26e89e20ba",
+          "role": "original independent approval / scope and red-green evidence"
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-baseline-dsc01-applicability-01.json",
+          "sha256": "9ea35d4ac5c48419b2770237378282ae43f68bdc343a443c7c2cce420d023f14",
+          "role": "original independent approval / scope and red-green evidence"
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-dsc01-swift-container-source-01.json",
+          "sha256": "e1842a06d3c82e1dd75d56e40b816e0f92a81dca667dc2cd2670d2d9a2bc56a6",
+          "role": "original independent approval / scope and red-green evidence"
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-host-continuity-focused02-01.json",
+          "sha256": "6ff9d3da74883406549ec393f91dcb7a1003d700d9f8ca81a0c2f4f8e9a6b938",
+          "role": "original independent approval / scope and red-green evidence"
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-dsc01-apphost04-outcome-01.json",
+          "sha256": "48569c8643c1b877de2104cddc3ba1a8082ced978522048fc2e6bef22bf3502f",
+          "role": "original independent approval / scope and red-green evidence"
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-ios-wrapper-smoke01-outcome-01.json",
+          "sha256": "622ef6da86af7595c9c0753d053d712dd2ff5ee306ce523b7706c337a657d48c",
+          "role": "original independent approval / scope and red-green evidence"
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-dsc01-apphost10-outcome-01.json",
+          "sha256": "4bca1750842bd8057bafe758a4c518b51566861e8e6c0ea16cda5e3af2783fa3",
+          "role": "original independent approval / scope and red-green evidence"
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/reviews/ios-readiness04-exact-evidence-independent-review-01.json",
+          "sha256": "63ef44cb0ed88129c0b1e20bb0128f1c3469dbe8b1faeee3ef744f7f80d5d01b",
+          "role": "later independent review or scoped execution reconciliation"
+        }
+      ],
+      "current_mechanism_sources": [
+        {
+          "path": "shared/design-system/src/iosMain/kotlin/com/parlor/designsystem/localization/IosLanguageOverrideOwner.kt",
+          "sha256": "959ab1a8cb955e484c806c8ce5af65ca841a20cfcd9b1f205443a1cfe768da20",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/iosMain/kotlin/com/parlor/designsystem/localization/IosLanguageOverrideOwner.kt",
+          "lines": 61,
+          "same_bytes_as_ci": true,
+          "mechanism_one_based_lines": [
+            [
+              16,
+              54
+            ]
+          ],
+          "purpose": "Only release a provenance-attested app override when exact installed value still matches; external/OS values win."
+        },
+        {
+          "path": "shared/design-system/src/iosMain/kotlin/com/parlor/designsystem/localization/LocalAppLocale.ios.kt",
+          "sha256": "0e0783ca3e38634bd3469760f5dbfa5ade8509b976d0ec676202f4513cd8e098",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/iosMain/kotlin/com/parlor/designsystem/localization/LocalAppLocale.ios.kt",
+          "lines": 83,
+          "same_bytes_as_ci": true,
+          "mechanism_one_based_lines": [
+            [
+              23,
+              48
+            ]
+          ],
+          "purpose": "Apply/release owner at locale lifecycle and update semantics without language-keyed session recreation."
+        },
+        {
+          "path": "iosApp/iosApp/ContentView.swift",
+          "sha256": "5881b354ccc45340100356fbf37480e94efdcc2e8fe823f0bb6b5b60f8ccaa87",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/iosApp/iosApp/ContentView.swift",
+          "lines": 62,
+          "same_bytes_as_ci": true,
+          "mechanism_one_based_lines": [
+            [
+              1,
+              62
+            ]
+          ],
+          "purpose": "SwiftUI representable creates one production Compose child wrapped by stable UIKit container."
+        },
+        {
+          "path": "iosApp/iosApp/ComposeContainerViewController.swift",
+          "sha256": "9bdeeaf67a569f4016bc5359ae865b6df9eeaa2a9f6ee36e01041bf79000a903",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/iosApp/iosApp/ComposeContainerViewController.swift",
+          "lines": 48,
+          "same_bytes_as_ci": true,
+          "mechanism_one_based_lines": [
+            [
+              1,
+              48
+            ]
+          ],
+          "purpose": "Separate outer SwiftUI semantics from child direction; full bounds and child system-decoration policy."
+        },
+        {
+          "path": "iosApp/iosAppUITests/ComposeContainerViewControllerTests.swift",
+          "sha256": "a4730b77ad93d01df60a4b6fde558bfea264f71b19ee5aa6c4a08d33480eacc8",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/iosApp/iosAppUITests/ComposeContainerViewControllerTests.swift",
+          "lines": 104,
+          "same_bytes_as_ci": true,
+          "mechanism_one_based_lines": [
+            [
+              1,
+              104
+            ]
+          ],
+          "purpose": "Four production-container UIKit fixture tests, not four real Compose lifecycle tests."
+        }
+      ],
+      "regression_descriptors": [
+        {
+          "key": "C01:com.parlor.games.mafia.ui.flow.multidevice.MafiaHostLanguageContinuityTest",
+          "task": ":game-modes:mafia:desktopTest",
+          "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+          "outcomes": {
+            "PASS": 2,
+            "FAIL": 0,
+            "SKIP": 0
+          }
+        },
+        {
+          "key": "C01:com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostLanguageContinuityTest",
+          "task": ":game-modes:whodunit:desktopTest",
+          "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+          "outcomes": {
+            "PASS": 2,
+            "FAIL": 0,
+            "SKIP": 0
+          }
+        },
+        {
+          "key": "C01:com.parlor.designsystem.localization.ProvideAppLanguageDesktopTest",
+          "task": ":shared:design-system:desktopTest",
+          "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+          "outcomes": {
+            "PASS": 1,
+            "FAIL": 0,
+            "SKIP": 0
+          }
+        },
+        {
+          "key": "C05:com.parlor.designsystem.localization.IosLanguageOverrideOwnerTest",
+          "task": ":shared:design-system:iosSimulatorArm64Test",
+          "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+          "outcomes": {
+            "PASS": 11,
+            "FAIL": 0,
+            "SKIP": 0
+          }
+        }
+      ],
+      "compatibility": "App unpublished: pre-owner unmarked AppleLanguages values have no supported migration and remain preserved. Exact external preference changes win; NSUserDefaults durability is asynchronous, not acknowledged. Existing saved-game/protocol/settings/navigation/session identities unchanged.",
+      "retained_evidence_disposition": "Original scoped correction has independent approval and actual retained regression execution. This retrospective map does not substitute for final current-SHA combined CI or certify all external gates.",
+      "scope_limits": [
+        "11 native ownership tests,5 Desktop locale/host-continuity methods; currentC05 separately executed four Swift production-container tests.",
+        "Actual owned ios-readiness04 OS Settings created and retained present [ar-EG,en-EG] preferences across English->System->restart. That exact f5ea804 source + copy-only probes/Xcode26.5 is separately bound, not current-SHA clean-source execution.",
+        "Owner-authorized unpublished-app policy preserves ambiguous unmarked legacy values rather than inventing migration. NSUserDefaults is asynchronous, not durable-write acknowledgement. No user phone/profile touched by this review."
+      ]
+    },
+    {
+      "finding_id": "DS-C02",
+      "aliases": [],
+      "correction": "Reserve distinct toast lifetimes independently of live queue and key presentation by owner+identity.",
+      "primary_commit": "85ded00435b4f8327ce32d3b7f5062c4438ae174",
+      "followup_commits": [],
+      "fix_authorship": "/root",
+      "original_independent_reviewer": "whodunit_cont",
+      "independent_evidence": [
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/whodunit/DS-C02-C03-independent-evidence.json",
+          "sha256": "1f0b7e23936e89091983b7728bba968e0c958d5dacc7c3ecff28c80df35da21d",
+          "role": "original independent approval / scope and red-green evidence"
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/whodunit/DS-C02-C03-independent-review.md",
+          "sha256": "18f751fa243ff134a25725cb284363f7af0990a4f374cc183a1ea3415bad55c0",
+          "role": "original independent approval / scope and red-green evidence"
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/whodunit/DS-C02-additional-tests-execution-approval.json",
+          "sha256": "059db45339be3d0b7f7096fd296b5e2326ac069e618b71652983d5abc5404513",
+          "role": "original independent approval / scope and red-green evidence"
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/DS-C02-dispatch-review-01/independent-followup-approval-01.json",
+          "sha256": "9022ae4cc48bbcddc45b4658044fc1a854c5c9cb25630c188197d471ece6dd2c",
+          "role": "original independent approval / scope and red-green evidence"
+        }
+      ],
+      "current_mechanism_sources": [
+        {
+          "path": "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/ParlorToastHost.kt",
+          "sha256": "ea4e554c099511942e13e07281df48419c333948be7a64d65a72b7dd49ea25b0",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/ParlorToastHost.kt",
+          "lines": 230,
+          "same_bytes_as_ci": true,
+          "mechanism_one_based_lines": [
+            [
+              80,
+              92
+            ],
+            [
+              179,
+              179
+            ]
+          ],
+          "purpose": "Monotonic per-state lifetime reservation outside retryable queue update; presentation key includes state owner and id."
+        }
+      ],
+      "regression_descriptors": [
+        {
+          "key": "C01:com.parlor.designsystem.components.ParlorToastConcurrencyTest",
+          "task": ":shared:design-system:desktopTest",
+          "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+          "outcomes": {
+            "PASS": 2,
+            "FAIL": 0,
+            "SKIP": 0
+          }
+        },
+        {
+          "key": "C01:com.parlor.designsystem.components.ParlorToastLifetimeTest",
+          "task": ":shared:design-system:desktopTest",
+          "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+          "outcomes": {
+            "PASS": 3,
+            "FAIL": 0,
+            "SKIP": 0
+          }
+        },
+        {
+          "key": "C01:com.parlor.designsystem.components.ParlorToastStateTest",
+          "task": ":shared:design-system:desktopTest",
+          "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+          "outcomes": {
+            "PASS": 4,
+            "FAIL": 0,
+            "SKIP": 0
+          }
+        }
+      ],
+      "compatibility": "Queue4/coalescing/stale dismissal/expiry retained; bounded concurrency evidence not proof of all schedules.",
+      "retained_evidence_disposition": "Original scoped correction has independent approval and actual retained regression execution. This retrospective map does not substitute for final current-SHA combined CI or certify all external gates.",
+      "scope_limits": [
+        "4 state+3 Compose lifetime+2 concurrency methods execute on Desktop. Fixed-sized waves and flood bounds are evidence, not proof over every scheduling possibility."
+      ]
+    },
+    {
+      "finding_id": "DS-C03",
+      "aliases": [],
+      "correction": "Add CoverGhost using cover foreground for black recovery surfaces, leave ordinary Ghost unchanged.",
+      "primary_commit": "85ded00435b4f8327ce32d3b7f5062c4438ae174",
+      "followup_commits": [],
+      "fix_authorship": "/root",
+      "original_independent_reviewer": "whodunit_cont",
+      "independent_evidence": [
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/whodunit/DS-C02-C03-independent-evidence.json",
+          "sha256": "1f0b7e23936e89091983b7728bba968e0c958d5dacc7c3ecff28c80df35da21d",
+          "role": "original independent approval / scope and red-green evidence"
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/whodunit/DS-C02-C03-independent-review.md",
+          "sha256": "18f751fa243ff134a25725cb284363f7af0990a4f374cc183a1ea3415bad55c0",
+          "role": "original independent approval / scope and red-green evidence"
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/whodunit/DS-C02-additional-tests-execution-approval.json",
+          "sha256": "059db45339be3d0b7f7096fd296b5e2326ac069e618b71652983d5abc5404513",
+          "role": "original independent approval / scope and red-green evidence"
+        }
+      ],
+      "current_mechanism_sources": [
+        {
+          "path": "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/ParlorButton.kt",
+          "sha256": "06ac462915e5371344abb953d29eab22bb9b622c800c70c5ebc96cca96efac0b",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/ParlorButton.kt",
+          "lines": 193,
+          "same_bytes_as_ci": true,
+          "mechanism_one_based_lines": [
+            [
+              41,
+              44
+            ],
+            [
+              73,
+              82
+            ],
+            [
+              96,
+              96
+            ],
+            [
+              181,
+              185
+            ]
+          ],
+          "purpose": "CoverGhost uses appropriate cover foreground including disabled/pressed contrast; ordinary Ghost unchanged."
+        },
+        {
+          "path": "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/HostDisconnectedOverlay.kt",
+          "sha256": "a4cf551ee4846b8529b7ba1352a92a286d28831ecff086ef3a5a1ea3a30c450d",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/HostDisconnectedOverlay.kt",
+          "lines": 91,
+          "same_bytes_as_ci": true,
+          "mechanism_one_based_lines": [
+            [
+              87,
+              87
+            ]
+          ],
+          "purpose": "Black host-loss surface opts into cover-specific action style."
+        },
+        {
+          "path": "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/ReconnectingOverlay.kt",
+          "sha256": "587a0b4c7f8af7b7d0b762035855beee02cf4d1e9b4f4b532862b5f9821a10b5",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/ReconnectingOverlay.kt",
+          "lines": 116,
+          "same_bytes_as_ci": true,
+          "mechanism_one_based_lines": [
+            [
+              112,
+              112
+            ]
+          ],
+          "purpose": "Black recovery surface opts into cover-specific action style."
+        }
+      ],
+      "regression_descriptors": [
+        {
+          "key": "C01:com.parlor.designsystem.components.RecoveryActionContrastTest",
+          "task": ":shared:design-system:desktopTest",
+          "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+          "outcomes": {
+            "PASS": 3,
+            "FAIL": 0,
+            "SKIP": 0
+          }
+        }
+      ],
+      "compatibility": "No privacy-cover/back/callback semantics or ordinary light-theme button color regression identified.",
+      "retained_evidence_disposition": "Original scoped correction has independent approval and actual retained regression execution. This retrospective map does not substitute for final current-SHA combined CI or certify all external gates.",
+      "scope_limits": [
+        "3 Desktop cover-action/ordinary-button contrast regressions pass. Later Mafia/Whodunit black-cover palette manifestations grouped below, not new privacy leaks."
+      ]
+    },
+    {
+      "finding_id": "WD-C2",
+      "aliases": [],
+      "correction": "Original four chronology contradictions corrected under subsequently approved testing-content policy, with follow-up coherence corrections across all seven bundles. Require exact stored version+canonical digest; incompatible, identity-less and retired-Solo local records are rejected and retained until explicit discard. No silent migration.",
+      "primary_commit": "85ded00435b4f8327ce32d3b7f5062c4438ae174",
+      "followup_commits": [
+        {
+          "sha": "1f809b87c15a4deb079809bc14718a58cf0fe451",
+          "subject": "fix(content): align bundled testing-story facts and preserve strict identities",
+          "kind": "Seven-story coherent factual/reference followups, preserving strict identity binding",
+          "complete_git_show_diff_sha256": "979682cedf52661a50e1869182685db2388ab5c78f61d4ab2de81f9db418774c",
+          "changed_paths": [
+            "docs/WHODUNIT_TEST_CONTENT.md",
+            "game-modes/whodunit/src/commonMain/composeResources/files/cases/iskenderia-corniche.json",
+            "game-modes/whodunit/src/commonMain/composeResources/files/cases/jasmine-ring.json",
+            "game-modes/whodunit/src/commonMain/composeResources/files/cases/khan-el-khalili.json",
+            "game-modes/whodunit/src/commonMain/composeResources/files/cases/last-dinner.json",
+            "game-modes/whodunit/src/commonMain/composeResources/files/cases/layla-halabi.json",
+            "game-modes/whodunit/src/commonMain/composeResources/files/cases/saidi-inheritance.json",
+            "game-modes/whodunit/src/commonMain/composeResources/files/cases/zamalek-ramadan.json",
+            "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/TestingStoryChronologyTest.kt",
+            "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/TestingStoryCompatibilityTest.kt",
+            "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/TestingStoryFollowupChronologyTest.kt",
+            "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/TestingStoryGameTraceTest.kt"
+          ]
+        },
+        {
+          "sha": "50218095d63d24248045df5a2490159a701ebc59",
+          "subject": "fix(content): resolve final testing chronology inconsistencies",
+          "kind": "Final owner-approved Jasmine will/shop and guilty Captain timing choices",
+          "complete_git_show_diff_sha256": "126a0619437c865e05ec2d07856b714f9c419025e145e8d3c2f4dba82661ed16",
+          "changed_paths": [
+            "docs/WHODUNIT_TEST_CONTENT.md",
+            "game-modes/whodunit/src/commonMain/composeResources/files/cases/iskenderia-corniche.json",
+            "game-modes/whodunit/src/commonMain/composeResources/files/cases/jasmine-ring.json",
+            "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/TestingStoryChronologyTest.kt",
+            "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/TestingStoryCompatibilityTest.kt",
+            "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/TestingStoryRemainingChronologyTest.kt"
+          ]
+        },
+        {
+          "sha": "bc23064969686864382565bef4b8e5571b5b36e2",
+          "subject": "test(whodunit): verify retry preserves recovered session",
+          "kind": "Recovery Retry verification extension, not a new production defect",
+          "complete_git_show_diff_sha256": "a763fdbea19af8d01a35ba3b479c745abacf08d60eb5ce3a093913da1163778d",
+          "changed_paths": [
+            "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitRecoveryInteractionTest.kt"
+          ]
+        }
+      ],
+      "fix_authorship": "/root/factory_review (chronology/content/recovery draft); /root (follow-up compatibility/UI/retired-Solo preservation refinements)",
+      "original_independent_reviewer": "/root/release_fix_review (all content/recovery); /root/factory_review (root-authored retired-Solo follow-up only)",
+      "independent_evidence": [
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-wdc2-remediation-focused-01.json",
+          "sha256": "563998b215bc002f3902bd035fda8e0db913f22497628ff5e74c42dceb73b631",
+          "role": "original independent approval / scope and red-green evidence"
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-retired-solo-preservation-01.json",
+          "sha256": "4c1809d5a103c0a35c9ee88b0426887d37b53341fb0714d09f3d6c9ee85db7e0",
+          "role": "original independent approval / scope and red-green evidence"
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-wdc2-retired-save-green-01.json",
+          "sha256": "fd8a08793765eea0f5f7cdb408b5358ce4f161b2337a519cbc0b26f4a8e59914",
+          "role": "original independent approval / scope and red-green evidence"
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-wdc2-retired-save-range-correction-01.json",
+          "sha256": "de31c86830c965db935e5d464e81b9d2f6334c713122aaf59aa18c742425f789",
+          "role": "original independent approval / scope and red-green evidence"
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/reviews/story-followup-final-independent-review-11.json",
+          "sha256": "395d872266ca28976534bea59a85b37892d563bdf40559191bca0297d61beafb",
+          "role": "later independent review or scoped execution reconciliation"
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/reviews/story-final-editorial-independent-review-12.json",
+          "sha256": "9b87c8f03375f9be21adf5a80317d5b0a259700e21d13aef3cf625490996827e",
+          "role": "later independent review or scoped execution reconciliation"
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/reviews/story-final-editorial-independent-supplement-12.json",
+          "sha256": "3fed3ebcaa4c0b5330b8d6c3ae7354ca8638398c2784bbafd525656eaf90726e",
+          "role": "later independent review or scoped execution reconciliation"
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/reviews/story-final-green-independent-review-13.json",
+          "sha256": "02bd2cf130098636f99f809c1e3ba711ab5eb423249c728ef334e20ab10825a5",
+          "role": "later independent review or scoped execution reconciliation"
+        }
+      ],
+      "current_mechanism_sources": [
+        {
+          "path": "game-modes/whodunit/src/commonMain/composeResources/files/cases/last-dinner.json",
+          "sha256": "28f5695ad9188fcba9177147fa898cb827f1a8472aa554bb495310a7fa01d9eb",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/composeResources/files/cases/last-dinner.json",
+          "lines": 391,
+          "same_bytes_as_ci": true,
+          "mechanism_one_based_lines": [
+            [
+              1,
+              391
+            ]
+          ],
+          "purpose": "Shipped story resource; complete current bytes are hash-bound, source reading is documented by content reviewers rather than asserted anew here"
+        },
+        {
+          "path": "game-modes/whodunit/src/commonMain/composeResources/files/cases/layla-halabi.json",
+          "sha256": "83cf702d60d6dfb285c158c2032eaf9bbf4c57a84bd0e619bd42ae565bf1544e",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/composeResources/files/cases/layla-halabi.json",
+          "lines": 345,
+          "same_bytes_as_ci": true,
+          "mechanism_one_based_lines": [
+            [
+              1,
+              345
+            ]
+          ],
+          "purpose": "Shipped story resource; complete current bytes are hash-bound, source reading is documented by content reviewers rather than asserted anew here"
+        },
+        {
+          "path": "game-modes/whodunit/src/commonMain/composeResources/files/cases/jasmine-ring.json",
+          "sha256": "ff529b1a329d226e8745cf86a848ae16fbd798e6ef413c2b55694d92c3e32720",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/composeResources/files/cases/jasmine-ring.json",
+          "lines": 342,
+          "same_bytes_as_ci": true,
+          "mechanism_one_based_lines": [
+            [
+              1,
+              342
+            ]
+          ],
+          "purpose": "Shipped story resource; complete current bytes are hash-bound, source reading is documented by content reviewers rather than asserted anew here"
+        },
+        {
+          "path": "game-modes/whodunit/src/commonMain/composeResources/files/cases/khan-el-khalili.json",
+          "sha256": "c940dd9fe230f996999ec359e688550c974f93e733e7d8ee64d93894c9271f6b",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/composeResources/files/cases/khan-el-khalili.json",
+          "lines": 348,
+          "same_bytes_as_ci": true,
+          "mechanism_one_based_lines": [
+            [
+              1,
+              348
+            ]
+          ],
+          "purpose": "Shipped story resource; complete current bytes are hash-bound, source reading is documented by content reviewers rather than asserted anew here"
+        },
+        {
+          "path": "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitGameFlow.kt",
+          "sha256": "73f75eb87e2636e5e616c9bbade054fd0f44ed8bcd9ad158b930eba99fd8aa14",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitGameFlow.kt",
+          "lines": 1432,
+          "same_bytes_as_ci": true,
+          "mechanism_one_based_lines": [
+            [
+              413,
+              487
+            ]
+          ],
+          "purpose": "Exact current case identity required; identity-less/incompatible/retired-Solo save is retained, not rewritten/deleted, until explicit selected discard."
+        },
+        {
+          "path": "docs/PRE_RELEASE_COMPATIBILITY.md",
+          "sha256": "32ae112de9fd761636191c3308faf28fa5a3a8f3fd694064bbeaf3f2ffe69060",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/docs/PRE_RELEASE_COMPATIBILITY.md",
+          "lines": 59,
+          "same_bytes_as_ci": true,
+          "mechanism_one_based_lines": [
+            [
+              1,
+              59
+            ]
+          ],
+          "purpose": "Owner-authorized unpublished-app compatibility/retention contract."
+        },
+        {
+          "path": "docs/WHODUNIT_TEST_CONTENT.md",
+          "sha256": "e10fc5f4d8d5024c5a9f1fcf51d1bf30a9a1fda410843ed51e42d66186cd5a33",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/docs/WHODUNIT_TEST_CONTENT.md",
+          "lines": 135,
+          "same_bytes_as_ci": true,
+          "mechanism_one_based_lines": [
+            [
+              1,
+              135
+            ]
+          ],
+          "purpose": "Testing-content intent/version corrections, not final editorial or legal approval."
+        },
+        {
+          "path": "game-modes/whodunit/src/commonMain/composeResources/files/cases/saidi-inheritance.json",
+          "sha256": "89c547e21d1eece8b4ae75ce7a36279d62747250cc1d53b6fcbc439f4b27d6da",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/composeResources/files/cases/saidi-inheritance.json",
+          "lines": 348,
+          "same_bytes_as_ci": true,
+          "purpose": "Later same WD-C2 content-coherence family; authorial choices and strict identities independently reviewed"
+        },
+        {
+          "path": "game-modes/whodunit/src/commonMain/composeResources/files/cases/iskenderia-corniche.json",
+          "sha256": "53f9b8089509b2540beea6effbe898b2e98c1da49dd7b3421433b0bad306135c",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/composeResources/files/cases/iskenderia-corniche.json",
+          "lines": 348,
+          "same_bytes_as_ci": true,
+          "purpose": "Later same WD-C2 content-coherence family; authorial choices and strict identities independently reviewed"
+        },
+        {
+          "path": "game-modes/whodunit/src/commonMain/composeResources/files/cases/zamalek-ramadan.json",
+          "sha256": "098a19c4bef18e643e2fcbdc06bd9c498adc57c8594d45a5602bf61291d75158",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/composeResources/files/cases/zamalek-ramadan.json",
+          "lines": 348,
+          "same_bytes_as_ci": true,
+          "purpose": "Later same WD-C2 content-coherence family; authorial choices and strict identities independently reviewed"
+        }
+      ],
+      "regression_descriptors": [
+        {
+          "key": "C01:com.parlor.games.whodunit.content.TestingStoryChronologyTest",
+          "task": ":game-modes:whodunit:desktopTest",
+          "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+          "outcomes": {
+            "PASS": 5,
+            "FAIL": 0,
+            "SKIP": 0
+          }
+        },
+        {
+          "key": "C01:com.parlor.games.whodunit.content.TestingStoryCompatibilityTest",
+          "task": ":game-modes:whodunit:desktopTest",
+          "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+          "outcomes": {
+            "PASS": 4,
+            "FAIL": 0,
+            "SKIP": 0
+          }
+        },
+        {
+          "key": "C01:com.parlor.games.whodunit.content.TestingStoryFollowupChronologyTest",
+          "task": ":game-modes:whodunit:desktopTest",
+          "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+          "outcomes": {
+            "PASS": 13,
+            "FAIL": 0,
+            "SKIP": 0
+          }
+        },
+        {
+          "key": "C01:com.parlor.games.whodunit.content.TestingStoryGameTraceTest",
+          "task": ":game-modes:whodunit:desktopTest",
+          "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+          "outcomes": {
+            "PASS": 1,
+            "FAIL": 0,
+            "SKIP": 0
+          }
+        },
+        {
+          "key": "C01:com.parlor.games.whodunit.content.TestingStoryRemainingChronologyTest",
+          "task": ":game-modes:whodunit:desktopTest",
+          "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+          "outcomes": {
+            "PASS": 3,
+            "FAIL": 0,
+            "SKIP": 0
+          }
+        },
+        {
+          "key": "C01:com.parlor.games.whodunit.ui.flow.WhodunitRecoveryInteractionTest",
+          "task": ":game-modes:whodunit:desktopTest",
+          "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+          "outcomes": {
+            "PASS": 9,
+            "FAIL": 0,
+            "SKIP": 0
+          }
+        }
+      ],
+      "compatibility": "Current versions and file hashes are in content_inventory below. All7bundles still exactly6players / Classic Vote+Elimination. Protocol4.2, content schema1, minimumAppVersion1.0.0, game identity and snapshot envelope unchanged. Thirteen earlier canonical identities are not rewritten; mismatches/missing identities/retired Solo retained until explicit discard. Testing prose decisions are not final editorial/legal approval.",
+      "retained_evidence_disposition": "Original scoped correction has independent approval and actual retained regression execution. This retrospective map does not substitute for final current-SHA combined CI or certify all external gates.",
+      "scope_limits": [
+        "35 selected Desktop descriptors across chronology5+13+3, compatibility4, gameTrace1, recoveryUI9. The one full-game descriptor loops84case/killer/mode combinations, each repeated with codec and loaded-case recovery checks after every action.",
+        "One deterministic victory/replay path for each combination is not every possible action trace, human playtest, final content-rights approval, or physical LAN match."
+      ]
+    },
+    {
+      "finding_id": "RL-C1",
+      "aliases": [],
+      "correction": "Replace both BSD/GNU stat fallbacks with one strict portable Python regular-file size guard.",
+      "primary_commit": "85ded00435b4f8327ce32d3b7f5062c4438ae174",
+      "followup_commits": [],
+      "fix_authorship": "/root",
+      "original_independent_reviewer": "mafia_cont + release_fix_review",
+      "independent_evidence": [
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/mafia/rl-c1-independent-fix-review-01.json",
+          "sha256": "623d83ad4b20674179887f49c2e733026f0149bd831e91f3ab3ae100e94f941f",
+          "role": "original independent approval / scope and red-green evidence"
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/release_fix_review/release-docs-interactions-01.json",
+          "sha256": "bd900c84f3e0949c0ae3dd04cc1173c171e24150e2e8f78bb36ba64d74386201",
+          "role": "original independent approval / scope and red-green evidence"
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/release_fix_review/release-docs-approval-02.json",
+          "sha256": "e4d58a9ea4131b7399347ff38b5858630a9c8068f6ddf9683ca2f68e20ed5e30",
+          "role": "original independent approval / scope and red-green evidence"
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-release-foundations-rebind-01.json",
+          "sha256": "62e49d3380fab87cdee8888d05cbfe3b330eba37dfcb716c11b73f895052a5da",
+          "role": "original independent approval / scope and red-green evidence"
+        }
+      ],
+      "current_mechanism_sources": [
+        {
+          "path": "scripts/release/validate_android_artifact.sh",
+          "sha256": "e0100ed6274e41113e18d1cdaa5310242f749d2f337fdb0c5b85920a011cece6",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/scripts/release/validate_android_artifact.sh",
+          "lines": 295,
+          "same_bytes_as_ci": true,
+          "mechanism_one_based_lines": [
+            [
+              20,
+              48
+            ]
+          ],
+          "purpose": "Portable strict regular-file sizes for both AAB512MiB and report10MiB; no stat text fallback."
+        }
+      ],
+      "regression_descriptors": [
+        {
+          "key": "C01:test_android_artifact_size",
+          "task": "verifyReleaseSystem/Python unittest discovery (actual productionCheck release suite)",
+          "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+          "outcomes": {
+            "PASS": 7,
+            "FAIL": 0,
+            "SKIP": 0
+          }
+        }
+      ],
+      "compatibility": "Existing512MiB/10MiB bounds, digest/identity/signature safeguards preserved; publication remains disabled.",
+      "retained_evidence_disposition": "Original scoped correction has independent approval and actual retained regression execution. This retrospective map does not substitute for final current-SHA combined CI or certify all external gates.",
+      "scope_limits": [
+        "7 real shell preflight fixtures pass on actual Linux C01, including GNU-shaped fallback witness, both exact/over-limit inputs and invalid-file cases. Not full signed-AAB pipeline evidence."
+      ]
+    },
+    {
+      "finding_id": "RL-C2",
+      "aliases": [],
+      "correction": "Verify each signed payload and approved leaf; validate self-signed certificate policy before ephemeral public trust, then require strict jarsigner. Separate TSA trust.",
+      "primary_commit": "85ded00435b4f8327ce32d3b7f5062c4438ae174",
+      "followup_commits": [],
+      "fix_authorship": "/root",
+      "original_independent_reviewer": "release_fix_review",
+      "independent_evidence": [
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/release_fix_review/RL-C2-independent-remediation-review-01.json",
+          "sha256": "0dfb26b45804abd11dcea5d3f5fce4c5b168822f01a9598cd774935cf968bbdb",
+          "role": "original independent approval / scope and red-green evidence"
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/release_fix_review/RL-C2-independent-remediation-review-01.md",
+          "sha256": "f2d0d7ac7f7cb40ef66e50bf6ba8b0df619dff1f4d112d711dbcf3bc3be40554",
+          "role": "original independent approval / scope and red-green evidence"
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-release-foundations-rebind-01.json",
+          "sha256": "62e49d3380fab87cdee8888d05cbfe3b330eba37dfcb716c11b73f895052a5da",
+          "role": "original independent approval / scope and red-green evidence"
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/reviews/tsa-positive-independent-source-review-01.json",
+          "sha256": "83335b7073dc001f0c1d7a5c843ea6e8a5572ab05b3bd051936337b6beec320f",
+          "role": "later independent review or scoped execution reconciliation"
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/reviews/tsa-positive-runtime-independent-review-01.json",
+          "sha256": "1b1a00f625e30bb6f3d34bad8f28ba0315bcf35307a125a4d967bb23e1679d17",
+          "role": "later independent review or scoped execution reconciliation"
+        }
+      ],
+      "current_mechanism_sources": [
+        {
+          "path": "scripts/release/PrepareAndroidUploadTrust.java",
+          "sha256": "a74b92902839047353aa4b5816bc226e43526960da7c4d2df117e25c9375c211",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/scripts/release/PrepareAndroidUploadTrust.java",
+          "lines": 181,
+          "same_bytes_as_ci": true,
+          "mechanism_one_based_lines": [
+            [
+              1,
+              181
+            ]
+          ],
+          "purpose": "Authenticate each payload/signing certificate and policy before temporary public upload trust; separately validate TSA trust."
+        },
+        {
+          "path": "scripts/release/validate_android_artifact.sh",
+          "sha256": "e0100ed6274e41113e18d1cdaa5310242f749d2f337fdb0c5b85920a011cece6",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/scripts/release/validate_android_artifact.sh",
+          "lines": 295,
+          "same_bytes_as_ci": true,
+          "mechanism_one_based_lines": [
+            [
+              55,
+              90
+            ]
+          ],
+          "purpose": "Prepare trust succeeds before mandatory strict jarsigner; temporary public-only trust cleaned."
+        }
+      ],
+      "regression_descriptors": [
+        {
+          "key": "C01:test_android_upload_signature",
+          "task": "verifyReleaseSystem/Python unittest discovery (actual productionCheck release suite)",
+          "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+          "outcomes": {
+            "PASS": 21,
+            "FAIL": 0,
+            "SKIP": 0
+          }
+        }
+      ],
+      "compatibility": "No blanket exit4 waiver, no weak-algorithm/fingerprint/unsigned-payload bypass; Java helper is release tooling only.",
+      "retained_evidence_disposition": "Original scoped correction has independent approval and actual retained regression execution. This retrospective map does not substitute for final current-SHA combined CI or certify all external gates.",
+      "scope_limits": [
+        "21 C01 synthetic signing/negative-policy/owned-worker tests pass with real JDK21 tools. Separately authorized actual RFC3161 synthetic positive fixture passed strict production signature fragment, with negative fingerprint/tamper witnesses.",
+        "No private Store signing credentials/candidate, real Play acceptance, or blanket exit4 waiver. Positive timestamp fixture did not execute the entire AAB validation pipeline."
+      ]
+    },
+    {
+      "finding_id": "RL-C3",
+      "aliases": [],
+      "correction": "Read/validate source,destination and bundle digest within the same edit used for mutation/commit; cleanup attempted, no blind mutation retry.",
+      "primary_commit": "85ded00435b4f8327ce32d3b7f5062c4438ae174",
+      "followup_commits": [],
+      "fix_authorship": "/root",
+      "original_independent_reviewer": "mafia_cont + release_fix_review",
+      "independent_evidence": [
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/mafia/rl-c3-independent-fix-review-01.json",
+          "sha256": "2911a5629eb8b16f34936834301a59c883b1913597a42fa2cd7ecbd49e3c322b",
+          "role": "original independent approval / scope and red-green evidence"
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/release_fix_review/release-docs-interactions-01.json",
+          "sha256": "bd900c84f3e0949c0ae3dd04cc1173c171e24150e2e8f78bb36ba64d74386201",
+          "role": "original independent approval / scope and red-green evidence"
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/release_fix_review/release-docs-approval-02.json",
+          "sha256": "e4d58a9ea4131b7399347ff38b5858630a9c8068f6ddf9683ca2f68e20ed5e30",
+          "role": "original independent approval / scope and red-green evidence"
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-release-foundations-rebind-01.json",
+          "sha256": "62e49d3380fab87cdee8888d05cbfe3b330eba37dfcb716c11b73f895052a5da",
+          "role": "original independent approval / scope and red-green evidence"
+        }
+      ],
+      "current_mechanism_sources": [
+        {
+          "path": "scripts/release/store_api.py",
+          "sha256": "95ba5a18b5e78d85eb15c8764f011db76293d0bdcf8ee088151321ad5d6b7012",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/scripts/release/store_api.py",
+          "lines": 1834,
+          "same_bytes_as_ci": true,
+          "mechanism_one_based_lines": [
+            [
+              641,
+              703
+            ]
+          ],
+          "purpose": "Read both tracks and artifact digest in exact edit used for mutation/validation/commit; same-edit protection plus post-commit readback. Failed/unneeded edit cleanup attempted; no blind mutation retry."
+        }
+      ],
+      "regression_descriptors": [
+        {
+          "key": "C01:test_google_promotion_edit",
+          "task": "verifyReleaseSystem/Python unittest discovery (actual productionCheck release suite)",
+          "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+          "outcomes": {
+            "PASS": 9,
+            "FAIL": 0,
+            "SKIP": 0
+          }
+        }
+      ],
+      "compatibility": "Staged-rollout/digest/idempotency/identity/disabled-publication safeguards preserved.",
+      "retained_evidence_disposition": "Original scoped correction has independent approval and actual retained regression execution. This retrospective map does not substitute for final current-SHA combined CI or certify all external gates.",
+      "scope_limits": [
+        "9 actual production-helper tests with mocked HTTP pass, exercising same-edit/digest/staged-rollout/external invalidation/cleanup/no-blind-retry. No Google Play mutation, credentials, Store state or publication operation performed by this review."
+      ]
+    }
+  ],
+  "doctor_requirement_confirmation": {
+    "existing_not_new": "doctorCanProtectSamePlayerConsecutively remains serialized with defaultfalse; reused existing setup switch.",
+    "on": "Rules test actually protects/saves the same eligible living target four consecutive nights at every supported player count5..16 and reaches Night5; repeats are not capped at2.",
+    "off": "Same target rejected next night, legal alternation accepted; explicit skip consumes submission and clears effective previous protection.",
+    "self_protection": "Independent doctorCanSelfHeal false/true combinations tested; repeat flag does not permit illegal self target, dead target, wrong actor, duplicate submission or resurrection.",
+    "recovery": "15current recovery methods bind previousDoctorProtect to retained newest resolved night outside intentional PostGame cleanup, covering wrong/nullforgery, firstnight, no/dead Doctor, revotes, bounded history, legitimateONrepetition,OFFrestriction, local load and own-private peer projections.",
+    "ui_lan": "TwoEN/AR setup tests+two shared-predicate tests+two syntheticLAN/rejoin tests actually execute.23rules/recovery tests also run natively.",
+    "privacy_compatibility": "No duplicate setting, snapshot-schema migration, protocol4.2change, seed change, or host-only history transmission."
+  },
+  "content_inventory": [
+    {
+      "path": "game-modes/whodunit/src/commonMain/composeResources/files/cases/iskenderia-corniche.json",
+      "sha256": "53f9b8089509b2540beea6effbe898b2e98c1da49dd7b3421433b0bad306135c",
+      "case_id": "iskenderia-corniche",
+      "version": "1.0.2",
+      "schema_version": 1,
+      "minimum_app_version": "1.0.0",
+      "supported_player_counts": [
+        6,
+        6
+      ],
+      "supported_modes": [
+        "classic-vote",
+        "elimination"
+      ],
+      "language": "ar"
+    },
+    {
+      "path": "game-modes/whodunit/src/commonMain/composeResources/files/cases/jasmine-ring.json",
+      "sha256": "ff529b1a329d226e8745cf86a848ae16fbd798e6ef413c2b55694d92c3e32720",
+      "case_id": "jasmine-ring",
+      "version": "1.0.3",
+      "schema_version": 1,
+      "minimum_app_version": "1.0.0",
+      "supported_player_counts": [
+        6,
+        6
+      ],
+      "supported_modes": [
+        "classic-vote",
+        "elimination"
+      ],
+      "language": "ar"
+    },
+    {
+      "path": "game-modes/whodunit/src/commonMain/composeResources/files/cases/khan-el-khalili.json",
+      "sha256": "c940dd9fe230f996999ec359e688550c974f93e733e7d8ee64d93894c9271f6b",
+      "case_id": "khan-el-khalili",
+      "version": "1.0.2",
+      "schema_version": 1,
+      "minimum_app_version": "1.0.0",
+      "supported_player_counts": [
+        6,
+        6
+      ],
+      "supported_modes": [
+        "classic-vote",
+        "elimination"
+      ],
+      "language": "ar"
+    },
+    {
+      "path": "game-modes/whodunit/src/commonMain/composeResources/files/cases/last-dinner.json",
+      "sha256": "28f5695ad9188fcba9177147fa898cb827f1a8472aa554bb495310a7fa01d9eb",
+      "case_id": "last-dinner",
+      "version": "1.0.2",
+      "schema_version": 1,
+      "minimum_app_version": "1.0.0",
+      "supported_player_counts": [
+        6,
+        6
+      ],
+      "supported_modes": [
+        "classic-vote",
+        "elimination"
+      ],
+      "language": "en"
+    },
+    {
+      "path": "game-modes/whodunit/src/commonMain/composeResources/files/cases/layla-halabi.json",
+      "sha256": "83cf702d60d6dfb285c158c2032eaf9bbf4c57a84bd0e619bd42ae565bf1544e",
+      "case_id": "layla-halabi",
+      "version": "1.0.2",
+      "schema_version": 1,
+      "minimum_app_version": "1.0.0",
+      "supported_player_counts": [
+        6,
+        6
+      ],
+      "supported_modes": [
+        "classic-vote",
+        "elimination"
+      ],
+      "language": "ar"
+    },
+    {
+      "path": "game-modes/whodunit/src/commonMain/composeResources/files/cases/saidi-inheritance.json",
+      "sha256": "89c547e21d1eece8b4ae75ce7a36279d62747250cc1d53b6fcbc439f4b27d6da",
+      "case_id": "saidi-inheritance",
+      "version": "1.0.1",
+      "schema_version": 1,
+      "minimum_app_version": "1.0.0",
+      "supported_player_counts": [
+        6,
+        6
+      ],
+      "supported_modes": [
+        "classic-vote",
+        "elimination"
+      ],
+      "language": "ar"
+    },
+    {
+      "path": "game-modes/whodunit/src/commonMain/composeResources/files/cases/zamalek-ramadan.json",
+      "sha256": "098a19c4bef18e643e2fcbdc06bd9c498adc57c8594d45a5602bf61291d75158",
+      "case_id": "zamalek-ramadan",
+      "version": "1.0.1",
+      "schema_version": 1,
+      "minimum_app_version": "1.0.0",
+      "supported_player_counts": [
+        6,
+        6
+      ],
+      "supported_modes": [
+        "classic-vote",
+        "elimination"
+      ],
+      "language": "ar"
+    }
+  ],
+  "timer_policy": {
+    "finding_id": "WD-C4",
+    "classification": "SEPARATELY AUTHORIZED PRODUCT POLICY / REGRESSION-GAP COMPLETION, NOT A17TH CONFIRMED ORIGINAL DEFECT",
+    "policy": "Leave-confirmation time is excluded from Discussion for local organizer and LAN host; existing presentation-owned ticker behavior preserved. Stay does not release manual/session/lifecycle pauses and does not catch up modal time. Peer Leave never grants clock authority.",
+    "policy_and_test_commit": {
+      "sha": "b4f0ece464aa44819044dd78d2f2fd137d88c91d",
+      "subject": "test(whodunit): lock in leave-confirmation timer exclusion",
+      "kind": "Policy documentation/comments and six local+four host regression tests; no new runtime timer semantics",
+      "complete_git_show_diff_sha256": "d11c64d68d69461ee13aedecdcad8569a9cb8fb58d92b8949ff1291ba456ed20",
+      "changed_paths": [
+        "docs/WHODUNIT_DISCUSSION_TIMING.md",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitGameFlow.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitPhaseRouter.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/multiplayer/WhodunitHostSessionFlow.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/timer/DiscussionTickerLoop.kt",
+        "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitDiscussionFixture.kt",
+        "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitLocalLeaveTimerTest.kt",
+        "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/multiplayer/WhodunitHostLeaveTimerTest.kt",
+        "shared/networking-testing/src/commonMain/kotlin/com/parlor/networking/testing/ControlledStartRoom.kt"
+      ]
+    },
+    "test_followups": [
+      {
+        "sha": "875d849e0079452557374690b14e42c546ba2c06",
+        "subject": "test(whodunit): assert non-null timer state without unsafe calls",
+        "kind": "Safer null assertions in tests",
+        "complete_git_show_diff_sha256": "ce5d7bec0722aaada1530a86ead0060834d3a05752193177599a25ce5e5baa80",
+        "changed_paths": [
+          "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitLocalLeaveTimerTest.kt",
+          "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/multiplayer/WhodunitHostLeaveTimerTest.kt"
+        ]
+      },
+      {
+        "sha": "d453f80586ae76d37fba953731758e20f5c4bd67",
+        "subject": "test(whodunit): bound modal timer fixture rendering",
+        "kind": "Bound repeated modal fixture rendering after actual CI timeout; not an app timer-rule repair",
+        "complete_git_show_diff_sha256": "3055b5a4ffcbb7fb496513673578fb222c5ef5680dcba91d182da9bf44861841",
+        "changed_paths": [
+          "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitLocalLeaveTimerTest.kt",
+          "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/multiplayer/WhodunitHostLeaveTimerTest.kt"
+        ]
+      }
+    ],
+    "independent_reviews": [
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/independent-session-readiness-fresh-01.json",
+        "sha256": "6b1fee29ad0f6b04f3eaf184380700fb819cdbc330b8fa112b314fa91c20b88c"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/timer-test-null-assertions-independent-review.json",
+        "sha256": "b9651ff71c32627689beb4ce271c5b55d785a95cec5fa8d269eb9bc0334a3834"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/whodunit-timer-resource-fixtures-independent-01.json",
+        "sha256": "1b6e981e256aad2603eea99b97c082f82d5f6836159263b099124e875fe06245"
+      }
+    ],
+    "source": {
+      "path": "docs/WHODUNIT_DISCUSSION_TIMING.md",
+      "sha256": "877084e47d0e823278057da1f0881fbab0a52e5a8e57aa48eec5fbabc49cece1",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/docs/WHODUNIT_DISCUSSION_TIMING.md",
+      "lines": 39,
+      "same_bytes_as_ci": true,
+      "mechanism_one_based_lines": [
+        [
+          1,
+          39
+        ]
+      ]
+    },
+    "regression_descriptors": [
+      {
+        "key": "C01:com.parlor.games.whodunit.ui.flow.WhodunitLocalLeaveTimerTest",
+        "task": ":game-modes:whodunit:desktopTest",
+        "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+        "outcomes": {
+          "PASS": 6,
+          "FAIL": 0,
+          "SKIP": 0
+        }
+      },
+      {
+        "key": "C01:com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostLeaveTimerTest",
+        "task": ":game-modes:whodunit:desktopTest",
+        "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+        "outcomes": {
+          "PASS": 4,
+          "FAIL": 0,
+          "SKIP": 0
+        }
+      }
+    ],
+    "limits": [
+      "Real retained host/local controller/reducer/codec with virtual Compose time and synthetic transport; no actual platform Back gesture or physical LAN claim.",
+      "This resolved policy should not remain listed as an unanswered product decision in the final report, but broader lifecycle/gesture gates are separate."
+    ]
+  },
+  "later_ui_manifestations": [
+    {
+      "manifestation_id": "FOLLOWUP-MAFIA-TOGGLE",
+      "counting_family": "bounded_width_presentation",
+      "description": "Long setup labels measured before Switch could consume its width; weight label and retain horizontal spacing/full switch target.",
+      "commit": {
+        "sha": "373f1a513aed862dc8a38ae8d749a8849cdef63d",
+        "subject": "fix(mafia): reserve setup switch space beside long labels",
+        "kind": "later independently reviewed UI manifestation",
+        "complete_git_show_diff_sha256": "c44323827e92b598c817037193627a982e18d2d498672f2d8ba5563d39542849",
+        "changed_paths": [
+          "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaSetupScreen.kt",
+          "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaSetupToggleLayoutTest.kt"
+        ]
+      },
+      "current_production_sources": [
+        {
+          "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaSetupScreen.kt",
+          "sha256": "4b98a283b3d92bcfbbdeaa699a8c3e552b38440b90874795273a8edb0dada3dd",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaSetupScreen.kt",
+          "lines": 529,
+          "same_bytes_as_ci": true
+        }
+      ],
+      "independent_reviews": [
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/reviews/mafia-toggle-fix-independent-review-01.json",
+          "sha256": "b202e861afcd51d53b0f8a1a7657efdae8d665c2930b12f9f503a6d7b785f473"
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/reviews/mafia-toggle-fix-green02-supplement.json",
+          "sha256": "8379c3bcc69317c69773726d6ba74be8aad835000fe3dbf3e807eb6de036b5dd"
+        }
+      ],
+      "regression_descriptors": [
+        {
+          "key": "C01:com.parlor.games.mafia.ui.screens.setup.MafiaSetupToggleLayoutTest",
+          "task": ":game-modes:mafia:desktopTest",
+          "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+          "outcomes": {
+            "PASS": 4,
+            "FAIL": 0,
+            "SKIP": 0
+          }
+        }
+      ],
+      "counting_note": "Distinct repaired path and focused regression, not an addition to original16 denominator. Group sibling causes; do not derive a new total by summing these five rows."
+    },
+    {
+      "manifestation_id": "FOLLOWUP-MAFIA-STEPPER",
+      "counting_family": "bounded_width_presentation",
+      "description": "Role/revote label could starve grouped minus/count/plus controls; FlowRow wraps intact controls instead of shrinking them.",
+      "commit": {
+        "sha": "bea2f03e3c1140e9132cdd700ebcd807c3356317",
+        "subject": "fix(mafia): wrap compact setup steppers without shrinking controls",
+        "kind": "later independently reviewed UI manifestation",
+        "complete_git_show_diff_sha256": "ac1dd74d83fd6193471705a946cea85d606bb1d27b3dcac02cdc032932b5bd23",
+        "changed_paths": [
+          "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaSetupScreen.kt",
+          "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaSetupStepperLayoutTest.kt"
+        ]
+      },
+      "current_production_sources": [
+        {
+          "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaSetupScreen.kt",
+          "sha256": "4b98a283b3d92bcfbbdeaa699a8c3e552b38440b90874795273a8edb0dada3dd",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaSetupScreen.kt",
+          "lines": 529,
+          "same_bytes_as_ci": true
+        }
+      ],
+      "independent_reviews": [
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/reviews/mafia-stepper-production-fix-independent-review-01.json",
+          "sha256": "e53f0a7636de71172f29f358155599b015ff0b11d50725550c2b44a62555405e"
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/reviews/mafia-stepper-flowrow-independent-review-01.json",
+          "sha256": "ee4b7f998961951fbf8bdf4ec4f3b815e2980f9a0a21ba123833ff881e0671cb"
+        }
+      ],
+      "regression_descriptors": [
+        {
+          "key": "C01:com.parlor.games.mafia.ui.screens.setup.MafiaSetupStepperLayoutTest",
+          "task": ":game-modes:mafia:desktopTest",
+          "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+          "outcomes": {
+            "PASS": 4,
+            "FAIL": 0,
+            "SKIP": 0
+          }
+        }
+      ],
+      "counting_note": "Distinct repaired path and focused regression, not an addition to original16 denominator. Group sibling causes; do not derive a new total by summing these five rows."
+    },
+    {
+      "manifestation_id": "M-READINESS-TALLY",
+      "counting_family": "bounded_width_presentation",
+      "description": "Long names could consume day-vote and Mafia-revote tally number width; weight names and reserve numeric siblings. Read-only civilian count added as counter-evidence test, not a third production defect.",
+      "commit": {
+        "sha": "2085367999a1b6e998567e83e978785f02607b3d",
+        "subject": "fix(mafia): reserve readable space for vote totals",
+        "kind": "later independently reviewed UI manifestation",
+        "complete_git_show_diff_sha256": "d94c67b0979e2745db11e0c5f2409780b21e404303019d6e0c6bc3bf57dd02e0",
+        "changed_paths": [
+          "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/night/MafiaKillVoteScreen.kt",
+          "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/vote/VoteCastScreen.kt",
+          "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/MafiaCountAssertions.kt",
+          "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/MafiaTallyLayoutTest.kt",
+          "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaSetupReadOnlyCountLayoutTest.kt"
+        ]
+      },
+      "current_production_sources": [
+        {
+          "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/night/MafiaKillVoteScreen.kt",
+          "sha256": "729be6c5c48fce2224d1701bb8b80f980298e17d727587a9a37567e77bb3e767",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/night/MafiaKillVoteScreen.kt",
+          "lines": 96,
+          "same_bytes_as_ci": true
+        },
+        {
+          "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/vote/VoteCastScreen.kt",
+          "sha256": "2402bb7ba945f1a6f1487bb756b4db8bf8af0806cc4325c08f056c06bc5fdd70",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/vote/VoteCastScreen.kt",
+          "lines": 173,
+          "same_bytes_as_ci": true
+        }
+      ],
+      "independent_reviews": [
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/reviews/mafia-tally-fix-independent-review-01.json",
+          "sha256": "9404fca34246070fe549d6eff897e1536bfa670b411bf87f98435e3673d85478"
+        }
+      ],
+      "regression_descriptors": [
+        {
+          "key": "C01:com.parlor.games.mafia.ui.screens.MafiaTallyLayoutTest",
+          "task": ":game-modes:mafia:desktopTest",
+          "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+          "outcomes": {
+            "PASS": 8,
+            "FAIL": 0,
+            "SKIP": 0
+          }
+        },
+        {
+          "key": "C01:com.parlor.games.mafia.ui.screens.setup.MafiaSetupReadOnlyCountLayoutTest",
+          "task": ":game-modes:mafia:desktopTest",
+          "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+          "outcomes": {
+            "PASS": 4,
+            "FAIL": 0,
+            "SKIP": 0
+          }
+        }
+      ],
+      "counting_note": "Distinct repaired path and focused regression, not an addition to original16 denominator. Group sibling causes; do not derive a new total by summing these five rows."
+    },
+    {
+      "manifestation_id": "M-READINESS-COVER",
+      "counting_family": "black_cover_palette",
+      "description": "Mafia private handoff EyebrowLabel used ordinary light-theme foreground on black; use cover foreground without private role disclosure.",
+      "commit": {
+        "sha": "711dd4163f4afa97954f47eddc98fd1a4df0b4ae",
+        "subject": "fix(mafia): keep private handoff instructions readable",
+        "kind": "later independently reviewed UI manifestation",
+        "complete_git_show_diff_sha256": "28e8020a929b5b72fe61148c9638f1764dafe09ac199b2d9440a87241dc51ddb",
+        "changed_paths": [
+          "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/components/MafiaCover.kt",
+          "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/components/MafiaCoverContrastTest.kt"
+        ]
+      },
+      "current_production_sources": [
+        {
+          "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/components/MafiaCover.kt",
+          "sha256": "73b9e3e5bbf79ff1cb002b9f1205da59e4711d16c71a8b8c6b6fb618a7518b42",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/components/MafiaCover.kt",
+          "lines": 185,
+          "same_bytes_as_ci": true
+        }
+      ],
+      "independent_reviews": [
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/reviews/mafia-handoff-cover-fix-independent-review-01.json",
+          "sha256": "69816429873009321e53c287ba2d41b00bc56eb87488c10cd7d70abee9ff9f94"
+        }
+      ],
+      "regression_descriptors": [
+        {
+          "key": "C01:com.parlor.games.mafia.ui.components.MafiaCoverContrastTest",
+          "task": ":game-modes:mafia:desktopTest",
+          "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+          "outcomes": {
+            "PASS": 8,
+            "FAIL": 0,
+            "SKIP": 0
+          }
+        }
+      ],
+      "counting_note": "Distinct repaired path and focused regression, not an addition to original16 denominator. Group sibling causes; do not derive a new total by summing these five rows."
+    },
+    {
+      "manifestation_id": "FOLLOWUP-WHODUNIT-PEER-COVER",
+      "counting_family": "black_cover_palette",
+      "description": "Whodunit host-paused peer cover title/body used ordinary/accent colors on black; use cover-specific foregrounds.",
+      "commit": {
+        "sha": "75cd74578c00956fc6d329718cc300be73c4cc14",
+        "subject": "fix(whodunit): preserve peer pause cover contrast in light theme",
+        "kind": "later independently reviewed UI manifestation",
+        "complete_git_show_diff_sha256": "ecf15183acee46bff70c3a62618dce5a8d19bc8ab7b65be7add805c01e2de340",
+        "changed_paths": [
+          "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitGameFlow.kt",
+          "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/PeerPausedCoverContrastTest.kt"
+        ]
+      },
+      "current_production_sources": [
+        {
+          "path": "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitGameFlow.kt",
+          "sha256": "73f75eb87e2636e5e616c9bbade054fd0f44ed8bcd9ad158b930eba99fd8aa14",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitGameFlow.kt",
+          "lines": 1432,
+          "same_bytes_as_ci": true
+        }
+      ],
+      "independent_reviews": [
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/reviews/peer-paused-cover-fix-independent-review-01.json",
+          "sha256": "7ab870b0eafa5847ff76c3b3216a82efe0c994718c85254eb60ace706cab1266"
+        }
+      ],
+      "regression_descriptors": [
+        {
+          "key": "C01:com.parlor.games.whodunit.ui.flow.PeerPausedCoverContrastTest",
+          "task": ":game-modes:whodunit:desktopTest",
+          "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+          "outcomes": {
+            "PASS": 4,
+            "FAIL": 0,
+            "SKIP": 0
+          }
+        }
+      ],
+      "counting_note": "Distinct repaired path and focused regression, not an addition to original16 denominator. Group sibling causes; do not derive a new total by summing these five rows."
+    }
+  ],
+  "grouping_recommendation": [
+    {
+      "family": "bounded_width_presentation",
+      "original_id": "M-C03",
+      "later_manifestations": [
+        "FOLLOWUP-MAFIA-TOGGLE",
+        "FOLLOWUP-MAFIA-STEPPER",
+        "M-READINESS-TALLY"
+      ],
+      "note": "Different components required different minimal corrections; report their independent regressions, not a manufactured count of every clipped label/role/number."
+    },
+    {
+      "family": "black_cover_palette",
+      "original_id": "DS-C03",
+      "later_manifestations": [
+        "M-READINESS-COVER",
+        "FOLLOWUP-WHODUNIT-PEER-COVER"
+      ],
+      "note": "Scope extends cover-appropriate colors; neither manifestation proves secret leakage."
+    }
+  ],
+  "later_confirmed_verification_tooling_repairs": [
+    {
+      "id": "CI-NATIVE-UID-01",
+      "classification": "CONFIRMED CI WORKER-INVENTORY DEFECT, NOT APPLICATION RUNTIME BUG",
+      "commit": {
+        "sha": "8c04d5e2294c40fc3341b1dbeb1711b3721145c8",
+        "subject": "fix(ci): enumerate Apple workers by effective user",
+        "kind": "Kernel effective-UID process enumeration / byte-count bounds; retain fail-closed identity and attested signals",
+        "complete_git_show_diff_sha256": "0726d4cbe29c1f60131a703aec489324b8ca06d7da11a2f679306b60de484a8e",
+        "changed_paths": [
+          "scripts/ci/darwin_worker_identity.py",
+          "scripts/release/tests/test_apple_ci_hygiene.py"
+        ]
+      },
+      "review": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/darwin-ci-uid-inventory-independent-02.json",
+        "sha256": "ac4e4021cde60b361d3ecb2a9c60beffae4b6f1513362e92f4269ff0ed353520"
+      },
+      "actual_regression_log": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/101836439057.log",
+        "sha256": "80dbdb299846b9b41835e4b436f12213dd8cbf5f0075b36a99c3eb62728bed7a"
+      },
+      "actual_new_regression_descriptors": [
+        {
+          "line": 1726,
+          "text": "2026-09-07T18:40:41.4719291Z test_constructor_binds_uid_selector_and_byte_buffer_pointer_abi (test_apple_ci_hygiene.NativeInventoryAndBasicInfoTest.test_constructor_binds_uid_selector_and_byte_buffer_pointer_abi) ... ok"
+        },
+        {
+          "line": 1727,
+          "text": "2026-09-07T18:40:41.4720946Z test_denial_short_record_and_wrong_pid_remain_explicit_numeric_failures (test_apple_ci_hygiene.NativeInventoryAndBasicInfoTest.test_denial_short_record_and_wrong_pid_remain_explicit_numeric_failures) ... ok"
+        },
+        {
+          "line": 1728,
+          "text": "2026-09-07T18:40:41.4722808Z test_denied_selected_candidate_never_becomes_missing_or_cleanup_success (test_apple_ci_hygiene.NativeInventoryAndBasicInfoTest.test_denied_selected_candidate_never_becomes_missing_or_cleanup_success) ... ok"
+        },
+        {
+          "line": 1729,
+          "text": "2026-09-07T18:40:41.4750305Z test_exact_maximum_is_accepted_but_full_buffer_truncation_is_not (test_apple_ci_hygiene.NativeInventoryAndBasicInfoTest.test_exact_maximum_is_accepted_but_full_buffer_truncation_is_not) ... ok"
+        },
+        {
+          "line": 1730,
+          "text": "2026-09-07T18:40:41.4811029Z test_failed_zero_negative_unaligned_and_over_capacity_counts_fail_closed (test_apple_ci_hygiene.NativeInventoryAndBasicInfoTest.test_failed_zero_negative_unaligned_and_over_capacity_counts_fail_closed) ... ok"
+        },
+        {
+          "line": 1731,
+          "text": "2026-09-07T18:40:41.4840300Z test_inventory_diagnostic_retains_only_numeric_boundary_failure (test_apple_ci_hygiene.NativeInventoryAndBasicInfoTest.test_inventory_diagnostic_retains_only_numeric_boundary_failure) ... ok"
+        },
+        {
+          "line": 1732,
+          "text": "2026-09-07T18:40:41.4860829Z test_inventory_uses_effective_uid_and_byte_count_not_global_scan (test_apple_ci_hygiene.NativeInventoryAndBasicInfoTest.test_inventory_uses_effective_uid_and_byte_count_not_global_scan) ... ok"
+        },
+        {
+          "line": 1733,
+          "text": "2026-09-07T18:40:41.4930413Z test_lifetimes_reads_only_kernel_uid_selected_processes (test_apple_ci_hygiene.NativeInventoryAndBasicInfoTest.test_lifetimes_reads_only_kernel_uid_selected_processes) ... ok"
+        },
+        {
+          "line": 1734,
+          "text": "2026-09-07T18:40:41.4982051Z test_negative_and_duplicate_pid_records_are_not_normalized_away (test_apple_ci_hygiene.NativeInventoryAndBasicInfoTest.test_negative_and_duplicate_pid_records_are_not_normalized_away) ... ok"
+        },
+        {
+          "line": 1735,
+          "text": "2026-09-07T18:40:41.5010394Z test_only_actual_absence_or_zombie_can_be_no_basic_identity (test_apple_ci_hygiene.NativeInventoryAndBasicInfoTest.test_only_actual_absence_or_zombie_can_be_no_basic_identity) ... ok"
+        },
+        {
+          "line": 1736,
+          "text": "2026-09-07T18:40:41.5040240Z test_self_only_inventory_is_a_valid_empty_worker_set (test_apple_ci_hygiene.NativeInventoryAndBasicInfoTest.test_self_only_inventory_is_a_valid_empty_worker_set) ... ok"
+        },
+        {
+          "line": 1737,
+          "text": "2026-09-07T18:40:41.5042231Z test_snapshot_preserves_baseline_exclusion_and_full_identity_read (test_apple_ci_hygiene.NativeInventoryAndBasicInfoTest.test_snapshot_preserves_baseline_exclusion_and_full_identity_read) ... ok"
+        },
+        {
+          "line": 1738,
+          "text": "2026-09-07T18:40:41.5043813Z test_uid_change_after_kernel_selection_is_still_excluded (test_apple_ci_hygiene.NativeInventoryAndBasicInfoTest.test_uid_change_after_kernel_selection_is_still_excluded) ... ok"
+        }
+      ],
+      "current_source": {
+        "path": "scripts/ci/darwin_worker_identity.py",
+        "sha256": "939ac6c98628046f9f45547135cbc439f217403e60c7e4033db5f541ab017ecc",
+        "absolute_path": "/Users/abdelrahman/Projects/parlor/scripts/ci/darwin_worker_identity.py",
+        "lines": 273,
+        "same_bytes_as_ci": true,
+        "mechanism_one_based_lines": [
+          [
+            191,
+            217
+          ]
+        ]
+      },
+      "runtime_limit": "13new synthetic ctypes boundary methods pass within50Apple+22generalcontrols; actual later C05 successful ownership cleanup is separately recorded. No unrelated task process signalled by reviewer."
+    },
+    {
+      "id": "XCODE26-REPETITION-PARSER",
+      "classification": "CONFIRMED LOCAL VERIFICATION-HARNESS DEFECT, NOT EVIDENCE OF APP LAUNCH CRASH",
+      "commit": {
+        "sha": "75f29dcd9f1777a70a307bb9522e055ea8cc6e29",
+        "subject": "fix(verification): validate Xcode 26 leaf repetition receipts",
+        "kind": "Accept and strictly validate actual Xcode26 leaf-Repetition schema without weakening run/destination/count binding",
+        "complete_git_show_diff_sha256": "b5f87df13bf2a7f1eca035cc026514d12904aeaf5dc981f56e3cae214a6379b5",
+        "changed_paths": [
+          "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/README.md",
+          "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/normal_launch_receipts.py",
+          "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_control_tests.py",
+          "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_xcode26_repetitions.py",
+          "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/xcresult-26.5-repetitions.json.in"
+        ]
+      },
+      "review": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/normal-xcode26-parser-fix-independent-review-01.json",
+        "sha256": "9f2dddfba4303dba7eb8b758380e85b1b178c813a58225048abc34592e497c7c"
+      },
+      "proof": "Native06 Xcodebuild exited0/eight execution leaves passed; old parser compared one unique test method against8executions then missed direct Repetition leaves. Raw schema preserved as synthetic regression.",
+      "actual_local_regression": "Original actual-schema red and corrected full control green02 retained in cited independent review; no new test run by this map. Current-SHA native normal-launch rerun belongs to root sharedlane."
+    }
+  ],
+  "other_verification_only_followups": [
+    {
+      "commits": [
+        "30bea221a6433a55b1daf6b5708c89aa8f1f10f2",
+        "21c354d003ecb681f24a0c53c248fa3b37073180",
+        "cf49b57258c138cefc4a0743a1142a73ac253a72",
+        "ab35b1dafc298ffc15b0acf79112645d33720f35",
+        "0787b0fade803f3b8f2213b89f2fccb52a822279"
+      ],
+      "description": "WindowsCRLF source-contract normalization; Kotlin CI-owned-simulator expectation alignment; public Compose test-idleness; exact-artifact verification assertion binding; ignored physical fixture admission alignment. Test/harness portability or verification quality, not demonstrated new application defects.",
+      "independent_evidence_locator": "Current reviews/ corresponding source/control approvals; final combined CI raw evidence above executes applicable nonphysical checks."
+    },
+    {
+      "commits": [
+        "2250007173bbf9ca7c441f1c46802d84c1b478ba"
+      ],
+      "description": "Pinned Kotlin advisory research/KAPT applicability guard: do not reclassify an unreachable KAPT advisory as confirmed app vulnerability."
+    },
+    {
+      "commits": [
+        "849234edb91eef98d9ef1a85d966a6b0c09aaab8",
+        "dadf3cc857bb8d2c99bf2af9c174d83fbdacf00d",
+        "7464b3e868f602813b6e0ef8528ea82cc03a2f03",
+        "fd69f23ead08e42c0df8c111ed1c9e1f75b15d04"
+      ],
+      "description": "Dependency graph/license inventory, shipped notices and package-binding validation: compliance/evidence completion. See separate dependency reconciliation; no guessed extra application-defect count."
+    },
+    {
+      "commits": [
+        "bca3e2d9fce4b8b47bf17ddd4bb9fdceb7b40d6e"
+      ],
+      "description": "L08numeric failure-boundary diagnostics only. NOT a confirmed storage repair; active independent native investigation and IOS-R1classification remain explicit."
+    }
+  ],
+  "remaining_final_report_cautions": [
+    "Do not claim a fresh currentb6e1947CI run from actual89dbe8receipts.",
+    "L08/IOS-R1 remaining native evidence must be classified by the independent native reviewers/root; this mapping does not convert failed/unclassified controls toPASS.",
+    "Physical Android/iOS LAN, real signing/Store setup, collision-free owner identities, accessibility/human playtests/content legal approval remain separate evidence gates. Publication-disablement/collision safeguards remain intact.",
+    "Reading these indexed reports is not a substitute for the original detailed source-review ledgers, nor proof of absence of other defects."
+  ],
+  "preservation_cleanup": {
+    "writes": "Only additive reports under this campaign reviews/",
+    "application_tests_configuration_or_docs_changed_by_reviewer": false,
+    "build_test_native_or_background_processes_started": false,
+    "git_changes_by_reviewer": false,
+    "cleanup_needed": "No reviewer-owned generated build/native outputs or persistent workers. Only synchronous Git/source/XML/JSON readers and required reports. Root shared build lane untouched; do not stop its processes.",
+    "original_audit_material": "All referenced review/evidence files preserved; historical hashes verified, no overwrite.",
+    "parser_limitation": "Default python3 Homebrew3.14.6 failed to load pyexpat due to missing system libexpat symbol. Parsing rerun successfully with /usr/bin/python3 3.9.6; no environment changes or application/build inference."
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "author": "/root/release_fix_review",
+  "scope": "Exact installed JDK source; no network/signing/test execution",
+  "conclusion": "Use setFollowRedirects(false), not maxRedirects alone. retryPost=false stops response-side POST retry but JDK failed-write retry remains independent. Root authorized one bounded jarsigner invocation, not exactly one POST.",
+  "records": [
+    {
+      "source": "installed Homebrew OpenJDK21.0.11 lib/src.zip!/java.base/java/net/HttpURLConnection.java",
+      "read_at": "2026-09-07T06:10:00.686181+00:00",
+      "sha256": "78f1780538b6e79631591befda7029061e25e0da5a158b9202455a4c92bd619c",
+      "reviewed_excerpts": [
+        {
+          "from": 340,
+          "to": 359,
+          "text": "340:     /* do we automatically follow redirects? The default is true. */\n341:     private static boolean followRedirects = true;\n342: \n343:     /**\n344:      * If {@code true}, the protocol will automatically follow redirects.\n345:      * If {@code false}, the protocol will not automatically follow\n346:      * redirects.\n347:      * <p>\n348:      * This field is set by the {@code setInstanceFollowRedirects}\n349:      * method. Its value is returned by the {@code getInstanceFollowRedirects}\n350:      * method.\n351:      * <p>\n352:      * Its default value is based on the value of the static followRedirects\n353:      * at HttpURLConnection construction time.\n354:      *\n355:      * @see     java.net.HttpURLConnection#setInstanceFollowRedirects(boolean)\n356:      * @see     java.net.HttpURLConnection#getInstanceFollowRedirects()\n357:      * @see     java.net.HttpURLConnection#setFollowRedirects(boolean)\n358:      */\n359:     protected boolean instanceFollowRedirects = followRedirects;"
+        },
+        {
+          "from": 374,
+          "to": 413,
+          "text": "374:     /**\n375:      * Sets whether HTTP redirects  (requests with response code 3xx) should\n376:      * be automatically followed by this class.  True by default.  Applets\n377:      * cannot change this variable.\n378:      * <p>\n379:      * If there is a security manager, this method first calls\n380:      * the security manager's {@code checkSetFactory} method\n381:      * to ensure the operation is allowed.\n382:      * This could result in a SecurityException.\n383:      *\n384:      * @param set a {@code boolean} indicating whether or not\n385:      * to follow HTTP redirects.\n386:      * @throws     SecurityException  if a security manager exists and its\n387:      *             {@code checkSetFactory} method doesn't\n388:      *             allow the operation.\n389:      * @see        SecurityManager#checkSetFactory\n390:      * @see #getFollowRedirects()\n391:      */\n392:     public static void setFollowRedirects(boolean set) {\n393:         @SuppressWarnings(\"removal\")\n394:         SecurityManager sec = System.getSecurityManager();\n395:         if (sec != null) {\n396:             // seems to be the best check here...\n397:             sec.checkSetFactory();\n398:         }\n399:         followRedirects = set;\n400:     }\n401: \n402:     /**\n403:      * Returns a {@code boolean} indicating\n404:      * whether or not HTTP redirects (3xx) should\n405:      * be automatically followed.\n406:      *\n407:      * @return {@code true} if HTTP redirects should\n408:      * be automatically followed, {@code false} if not.\n409:      * @see #setFollowRedirects(boolean)\n410:      */\n411:     public static boolean getFollowRedirects() {\n412:         return followRedirects;\n413:     }"
+        }
+      ]
+    },
+    {
+      "source": "installed Homebrew OpenJDK21.0.11 lib/src.zip!/java.base/sun/net/www/protocol/http/HttpURLConnection.java",
+      "read_at": "2026-09-07T06:10:00.686924+00:00",
+      "sha256": "a35c10a43e94fae3b71d691fa5dfd2c23c4b99321a5c082cbef02d2339175dee",
+      "reviewed_excerpts": [
+        {
+          "from": 752,
+          "to": 784,
+          "text": "752: \n753:             // get applicable cookies based on the uri and request headers\n754:             // add them to the existing request headers\n755:             setCookieHeader();\n756: \n757:             setRequests=true;\n758:         }\n759:         if (logger.isLoggable(PlatformLogger.Level.FINE)) {\n760:             logger.fine(requests.toString());\n761:         }\n762:         http.writeRequests(requests, poster, streaming());\n763:         if (ps.checkError()) {\n764:             String proxyHost = http.getProxyHostUsed();\n765:             int proxyPort = http.getProxyPortUsed();\n766:             disconnectInternal();\n767:             if (failedOnce) {\n768:                 throw new IOException(\"Error writing to server\");\n769:             } else { // try once more\n770:                 failedOnce=true;\n771:                 if (proxyHost != null) {\n772:                     setProxiedClient(url, proxyHost, proxyPort);\n773:                 } else {\n774:                     setNewClient (url);\n775:                 }\n776:                 ps = (PrintStream) http.getOutputStream();\n777:                 connected=true;\n778:                 responses = new MessageHeader(maxHeaderSize);\n779:                 setRequests=false;\n780:                 writeRequests();\n781:             }\n782:         }\n783:     }\n784: "
+        },
+        {
+          "from": 1956,
+          "to": 1971,
+          "text": "1956:                 // a flag need to clean\n1957:                 needToCheck = true;\n1958: \n1959:                 if (followRedirect()) {\n1960:                     /* if we should follow a redirect, then the followRedirects()\n1961:                      * method will disconnect() and re-connect us to the new\n1962:                      * location\n1963:                      */\n1964:                     redirects++;\n1965: \n1966:                     // redirecting HTTP response may have set cookie, so\n1967:                     // need to re-generate request header\n1968:                     setCookieHeader();\n1969: \n1970:                     continue;\n1971:                 }"
+        },
+        {
+          "from": 2796,
+          "to": 2808,
+          "text": "2796:      * resets the url, re-connects, and resets the request\n2797:      * property.\n2798:      */\n2799:     @SuppressWarnings(\"removal\")\n2800:     private boolean followRedirect() throws IOException {\n2801:         if (!getInstanceFollowRedirects()) {\n2802:             return false;\n2803:         }\n2804: \n2805:         final int stat = getResponseCode();\n2806:         if (stat < 300 || stat > 307 || stat == 306\n2807:                                 || stat == HTTP_NOT_MODIFIED) {\n2808:             return false;"
+        },
+        {
+          "from": 2918,
+          "to": 2941,
+          "text": "2918:                  * We will do the incorrect thing (POST-->GET) by default.\n2919:                  * We will provide the capability to do the \"right\" thing\n2920:                  * (POST-->POST) by a system property, \"http.strictPostRedirect=true\"\n2921:                  */\n2922: \n2923:                 requests = new MessageHeader();\n2924:                 setRequests = false;\n2925:                 super.setRequestMethod(\"GET\"); // avoid the connecting check\n2926:                 poster = null;\n2927:                 if (!checkReuseConnection())\n2928:                     connect();\n2929: \n2930:                 if (!sameDestination(prevURL, url)) {\n2931:                     // Ensures pre-redirect user-set cookie will not be reset.\n2932:                     // CookieHandler, if any, will be queried to determine\n2933:                     // cookies for redirected URL, if any.\n2934:                     userCookies = null;\n2935:                     userCookies2 = null;\n2936:                 }\n2937:             } else {\n2938:                 if (!checkReuseConnection())\n2939:                     connect();\n2940:                 /* Even after a connect() call, http variable still can be\n2941:                  * null, if a ResponseCache has been installed and it returns"
+        }
+      ]
+    },
+    {
+      "source": "installed Homebrew OpenJDK21.0.11 lib/src.zip!/java.base/sun/security/timestamp/HttpTimestamper.java",
+      "read_at": "2026-09-07T06:10:00.687290+00:00",
+      "sha256": "06a7fb4a49a1dd68d91b50be4a6a83c36cb8b174c6547b7504d5f8c5a254a13c",
+      "reviewed_excerpts": [
+        {
+          "from": 91,
+          "to": 101,
+          "text": "91:     public TSResponse generateTimestamp(TSRequest tsQuery) throws IOException {\n92: \n93:         HttpURLConnection connection =\n94:             (HttpURLConnection) tsaURI.toURL().openConnection();\n95:         connection.setDoOutput(true);\n96:         connection.setUseCaches(false); // ignore cache\n97:         connection.setRequestProperty(\"Content-Type\", TS_QUERY_MIME_TYPE);\n98:         connection.setRequestMethod(\"POST\");\n99:         // Avoids the \"hang\" when a proxy is required but none has been set.\n100:         connection.setConnectTimeout(CONNECT_TIMEOUT);\n101: "
+        }
+      ]
+    },
+    {
+      "source": "installed Homebrew OpenJDK21.0.11 lib/src.zip!/jdk.jartool/sun/security/tools/jarsigner/Main.java",
+      "read_at": "2026-09-07T06:10:00.687697+00:00",
+      "sha256": "179db252f16ca8dfc7ec2cf843afec458654c99a56318c3b5c9b86d74738e61e",
+      "reviewed_excerpts": [
+        {
+          "from": 134,
+          "to": 141,
+          "text": "134:     static final JavaUtilZipFileAccess JUZFA = SharedSecrets.getJavaUtilZipFileAccess();\n135: \n136:     // Attention:\n137:     // This is the entry that get launched by the security tool jarsigner.\n138:     public static void main(String args[]) throws Exception {\n139:         Main js = new Main();\n140:         js.run(args);\n141:     }"
+        }
+      ]
+    }
+  ]
+}

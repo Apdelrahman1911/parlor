@@ -1,0 +1,54 @@
+{
+  "activity": "Read-only source/Git and stdlib hash/JSON inspection only; wrote this report exclusively. No historical511-file re-review, project imports, tests/builds/network/Actions/source edits or cleanup resources created. C05/fullD not run.",
+  "cleanup": "Existing C lane immediately runs ./gradlew --stop on each cycle then exact owned worker/output/scratch cleanup; inspect receipt and independent absence. No extra clean if precise cleanup passed. D requires actual per-cycle stop/Apple-resource receipts, main upload before final owned-output cleanup, and all five cleanup artifacts.",
+  "current_dirty_17_control_manifest_sha256": "ad0b2226fccd4842ca382e53ba970991cc2a66316d55ede4c384f06e08bfa417",
+  "current_workflow_sha256": "84888fae00e1add37dd8f39c5a86a9600c2a95b5e3bca794133c3fc28147b46c",
+  "executable_recipe": {
+    "1_export_after_final_source_admission": "/usr/bin/python3 -B \"$C/run_gradle_cycle.py\" final-dependency-export-linux-05 writeResolvedDependencyInventory -I scripts/verification/resolved_dependencies.init.gradle -Pparlor.dependencyInventoryDir=\"$ROOT/$C/evidence/final-dependency-export-linux-05/raw-graphs\"",
+    "2_render_after_export_evidence_and_cleanup": "/usr/bin/python3 -B \"$C/run_gradle_cycle.py\" final-dependency-render-linux-05 --command /usr/bin/python3 -B scripts/verification/dependency_inventory.py \"$C/evidence/final-dependency-export-linux-05/raw-graphs\" \"$ROOT/$C/evidence/final-dependency-render-linux-05/report\"",
+    "3_candidate_after_fresh_binding05_review_and_immediate_admission": "/usr/bin/python3 -B \"$C/run_gradle_cycle.py\" final-candidate-input-linux-05 --command /usr/bin/python3 -B \"$N/controls/run_candidate_with_schema.py\" \"$BINDING\" \"$REVIEWED_SHA\"",
+    "4_full_only_after_root_final_admission": "gh workflow run production-verification.yml --repo Apdelrahman1911/parlor --ref fix/local-readiness-2026-09-07 -f verification_scope=full",
+    "setup": [
+      "C=remediation-runs/2026-09-07-local-readiness",
+      "N=remediation-runs/2026-09-08-continuation",
+      "ROOT=$(pwd -P)",
+      "BINDING=\"$N/candidate-input-binding-05.json\"",
+      "export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64",
+      "export GIT_OPTIONAL_LOCKS=0"
+    ]
+  },
+  "findings": [
+    "No material guard error or source correction identified. All14 C control pins and unchanged full workflow bytes independently rehashed; all five proposed C05 output/binding paths absent at inspection, not reserved.",
+    "Lane argv expansion matches strict exporter and exact renderer command checks in candidate consumer. ROOT must remain pwd-P checkout, raw graph input repository-relative and report child absolute. -B/bootstrap LinuxCPython3.12/JDK21/TMPDIR requirements align.",
+    "Exporter resolves exactly AndroidRelease/iosArm64/iosSimulatorArm64/iosX64 external-module graphs without application compile; renderer outputs four new source-bound BOMs and public declaration evidence. Candidate requires exact9-key binding, clean4-key source, matching producer source/runner objects and sequential cleanup times.",
+    "Consumer does not recapture Git: retain fresh final-source author/reviewer/immediate-admission identities plus candidate outer before/after equality. Never reuse one-shot04 admission constants or old511 input counts.",
+    "Full17 controls:16 byte-identical to reviewed packet; only native_continuation current labels differ. Full validate-scope does not instantiate focused runner. Workflow retains five platform jobs, expected five main/five cleanup artifacts, Linux full history, strict root aggregates and five declared ordinary UIKit tests.",
+    "Full dispatch omits focused-only binding inputs and does not enforce frozen_source_sha. Immediately bind actual final remote/head/run/attempt; same-ref cancel-in-progress requires needed focused run finished. Full does not replace A/B fixtures or C05."
+  ],
+  "reopened_wiring": [
+    "run_gradle_cycle.py:164-195,293-397",
+    "resolved_dependencies.init.gradle:10-112",
+    "dependency_inventory.py:234-267",
+    "candidate_consumer.py:267-314",
+    "run_candidate_with_schema.py:85-104,246-281",
+    "run_candidate_input_01.py:37-91",
+    "production-verification.yml:14-48,61-74,120,249,335,431,516-520,654-830",
+    "build.gradle.kts:20-34,65-70,121-149",
+    "ordinary iosAppUITests:1 cold-launch +4 container methods"
+  ],
+  "review_independence": "Independent review of dependency_chain C05 recipe; D is a current-wiring recheck, not independent review of my own prior D preparation. Existing independent full-packet review remains scoped reference.",
+  "reviewed_reports": [
+    {
+      "file": "candidate-c05-execution-prep-01.json",
+      "sha256": "1c2bb53a303ffd58418b9940f05a866de7277ba2ae5d442c0c883f32a5d61824"
+    },
+    {
+      "file": "final-d-0303-preparation-01.json",
+      "sha256": "8ff30d3078ad0b1f8987ef8496dfdb625f77794c1589339931074c7a1e31ee18"
+    }
+  ],
+  "reviewer": "/root/ci_review",
+  "schema_version": 1,
+  "source_observation": "HEAD0303a76771794c52ea96a7d7f47eb689f5b236ba; current three tracked label/guide/test edits mean no clean-source admission here.",
+  "status": "REUSABLE_RECIPE_ACCEPTED_NOT_EXECUTION_OR_FROZEN_SOURCE_APPROVAL"
+}

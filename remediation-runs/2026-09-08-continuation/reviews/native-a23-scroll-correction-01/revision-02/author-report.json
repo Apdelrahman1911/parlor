@@ -1,0 +1,141 @@
+{
+  "schema_version": 1,
+  "kind": "native-a23-scroll-correction-author-revision",
+  "revision": 2,
+  "recorded_at": "2026-09-09T04:44:34.340534+00:00",
+  "author": "/root/l08_fixture",
+  "status": "DRAFT_HELD_FOR_INDEPENDENT_REVIEW",
+  "independent_approval": null,
+  "readiness": "NOT_READY",
+  "scope": "Test-oracle corrections only to first held draft. Identical copy-only Swift proposal; still no canonical edits, tests, builds, API calls or native execution.",
+  "previous_held_outputs_preserved": [
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-a23-scroll-correction-01/L08StorageFunctionalUITests.swift.in",
+      "sha256": "750dbb70d879ba4cc41908103699457557e8723e4d67d2c27cbab133b202cac3",
+      "bytes": 26023
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-a23-scroll-correction-01/test_single_tap_fixture_review.py",
+      "sha256": "1ee870c576b7d5212d3b14b93514a7ba973c07065493a33bfc4a2b8dca73e5e2",
+      "bytes": 45184
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-a23-scroll-correction-01/author-report.json",
+      "sha256": "2c2233f4d71b327c1f1abd2500393c3ff6bdeaee0c739e0c59b1bb49ff5be667",
+      "bytes": 34317
+    }
+  ],
+  "revised_outputs": [
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-a23-scroll-correction-01/revision-02/L08StorageFunctionalUITests.swift.in",
+      "sha256": "750dbb70d879ba4cc41908103699457557e8723e4d67d2c27cbab133b202cac3",
+      "bytes": 26023
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-a23-scroll-correction-01/revision-02/test_single_tap_fixture_review.py",
+      "sha256": "73db8287ce46c0579368b8322f3fca93faef909fbf1a75ffb98239b5eef19862",
+      "bytes": 48179
+    }
+  ],
+  "supersedes": "First author-report controls/test-path/count portions only. First draft investigation, raw evidence, unchanged Swift750dbb70 policy, protected helper identities, source/pin closure, native limitations and required promotion order remain applicable; first files are not overwritten.",
+  "peer_findings_and_corrections": [
+    {
+      "id": "F01",
+      "finding": "After canonical SWIFT remapping, comparing the fixture against a fresh read of that same canonical fixture would become a tautology.",
+      "correction": "Replace the live canonical comparison with seven immutable literal SHA256 values for the existing parameter/body-slice convention. The new baseline test hashes only the actual candidate slices against these independently rechecked expected digests.",
+      "verification": "Reviewer /root/fixture_review independently recomputed all seven baseline/draft raw slices, exact prefix and six Foundation direct pins, and confirmed them by message. Formal final revision/source approval remains pending."
+    },
+    {
+      "id": "F02",
+      "finding": "Existing read-only stable/post-tap deny sets omitted newly introduced swipeDown; exact main list gesture literals alone did not reject an extra app.swipeDown in main or another helper.",
+      "correction": "Add swipeDown to both existing read-only deny sets. After local helper checks, require exactly one swipeUp and one swipeDown token across main, all activation/readiness helpers, the public diagnostic and recovery observer. The required literal main sites still locate those two gestures before fresh-zero.",
+      "negative_witnesses": [
+        "Inject app.swipeDown into the stable geometry polling loop and require its read-only denial reason.",
+        "Inject app.swipeDown into the post-tap acknowledgement loop and require its read-only denial reason.",
+        "Inject an extra app.swipeDown in main immediately after the fresh-zero call and require the global two-site census denial reason.",
+        "Inject an extra app.swipeDown into l08HomeGeometry and require the global two-site census denial reason.",
+        "Inject an extra app.swipeDown into l08PublicControlObservation and require the global two-site census denial reason."
+      ],
+      "limits": "Witness methods were authored and AST-parsed, not executed. They do not establish Swift/XCTest behavior."
+    }
+  ],
+  "immutable_baseline": {
+    "commit": "08d1adfbd7284f190fbab5f7baa846944bca5b68",
+    "fixture": {
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/L08StorageFunctionalUITests.swift.in",
+      "sha256": "5d81dfb0b5accc127a4f5510a23d610ba73efd2fc8b19a0ff12395912e2d0c59",
+      "bytes": 19846
+    },
+    "slice_convention": "UTF8 SHA256 of source.split('func '+name+'(',1)[1].split('\\n    }\\n',1)[0]; comments/whitespace included. Names/brace structure are checked separately by assert_fixture_contract. No live baseline reread after promotion.",
+    "helper_slice_sha256": {
+      "l08HomeGeometryNear": "218095d62d6f0d78ff892ccc782f95c63d8027d070421069f33d8bd3a1630252",
+      "l08WaitStableHomeGeometry": "219c73596391ff7c270a2028d7fca05c8443fa83f3342d8bb1ccc26a156a4443",
+      "l08RequireHomeZeroBeforeTap": "a56a66792ca42f52483e6b5c82a24b5292b47ae9af61596940444b50effa1105",
+      "l08WaitHomeOneAfterTap": "234dbf02625cecd654381c6ef0fb3a68a99b1b9b8cb1a6028fbed76f529547e5",
+      "l08ReadHomeCounters": "9c49648ab4c3ecaf1c6f55c8dc957f20e02e5b9ec78d34eb8573c708c86fa8ec",
+      "l08HomeActivationDiagnostic": "c09ceefb51f2ee1bf44ab438b5732fc0da34328ac6203b53bed0823e88e73b44",
+      "l08WaitRecovery": "3048d3f303d9c8da57f50552a2ee97de7a3e40d86ea346782e07ffb640b4ccd3"
+    },
+    "prefix": {
+      "byte_equal": true,
+      "sha256": "b7788b8547813c0982a5f4da63833620fd08c6b7941ecab33cccee9706b7f7ef"
+    },
+    "independent_reviewer": "/root/fixture_review",
+    "confirmation_scope": "All seven literal slice hashes and source boundary only, not execution."
+  },
+  "declared_controls": {
+    "count": 25,
+    "inherited_methods": 14,
+    "new_methods": 11,
+    "method_names": [
+      "test_actual_a23_trajectory_is_conditional_geometry_not_callback_proof",
+      "test_transient_visibility_and_drift_cannot_trigger_next_gesture",
+      "test_settling_nil_resets_and_complete_window_is_bounded",
+      "test_geometry_policy_rejects_nonfinite_overflow_and_malformed_containment",
+      "test_overlay_requires_whole_card_band_and_never_chooses_tap_point",
+      "test_direction_policy_mutations_are_source_bound",
+      "test_scroll_bounds_and_single_activation_retries_remain_rejected",
+      "test_settling_cannot_guess_ambiguous_invalid_or_disappeared_target",
+      "test_every_home_hittability_site_follows_geometry_without_fabricated_false",
+      "test_final_six_anchor_zero_one_recovery_parameter_body_bytes_match_frozen_baseline",
+      "test_only_reviewed_main_scrolling_sites_allow_downward_gestures",
+      "test_actual_swift_matches_independently_reviewed_contract",
+      "test_swift_for_argument_label_is_not_an_activation_loop",
+      "test_all_thirteen_boot_callers_and_storage_assertions_are_unchanged",
+      "test_shared_geometry_helpers_have_strict_tolerance_and_runloop_wait",
+      "test_repeat_activation_and_direct_callback_mutations_rejected",
+      "test_pre_scroll_zero_and_missing_fresh_resample_mutations_rejected",
+      "test_geometry_visibility_uniqueness_and_bounds_mutations_rejected",
+      "test_counter_freshness_and_schema_mutations_rejected",
+      "test_after_tap_polling_cannot_reactivate_or_be_unbounded",
+      "test_private_or_unbounded_or_overclaiming_diagnostic_mutations_rejected",
+      "test_actual_counter_seam_and_observer_stay_byte_identical",
+      "test_shipping_home_callback_and_card_are_not_replaced",
+      "test_counter_guard_precedes_actual_controller_attachment",
+      "test_source_scanner_does_not_accept_comment_laundering"
+    ],
+    "static_ast_parse": "PASS",
+    "execution": "NOT_RUN",
+    "native_compilation": "NOT_RUN",
+    "native_runtime": "NOT_RUN",
+    "path_remapping_on_canonical_promotion": "This revision lives one level deeper: ROOT parents[5] must become parents[3]; SWIFT sibling selection must become COMPANION / L08StorageFunctionalUITests.swift.in. Exact integrated test/source bytes and fixed25-count admissions require independent review before root execution.",
+    "interpretation": "Reference geometry/settling model remains synthetic and source-token-bound, not Swift execution. A23 public diagnostics do not provide app.frame; modeled readiness at attempt1 is conditional and not proof of the later failed native subpredicate."
+  },
+  "fixture_delta_from_first_held": "NONE; exactly identical26023bytes/SHA750dbb70d879ba4cc41908103699457557e8723e4d67d2c27cbab133b202cac3.",
+  "test_delta_unified": "--- remediation-runs/2026-09-08-continuation/reviews/native-a23-scroll-correction-01/test_single_tap_fixture_review.py\n+++ remediation-runs/2026-09-08-continuation/reviews/native-a23-scroll-correction-01/revision-02/test_single_tap_fixture_review.py\n@@ -23,7 +23,7 @@\n import unittest\n \n \n-ROOT = Path(__file__).resolve().parents[4]\n+ROOT = Path(__file__).resolve().parents[5]\n COMPANION = ROOT / \"remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02\"\n SWIFT = Path(__file__).with_name(\"L08StorageFunctionalUITests.swift.in\")\n A23 = ROOT / \"remediation-runs/2026-09-08-continuation/actions/34303850578/native-evidence/ios-readiness-23\"\n@@ -117,6 +117,7 @@\n     \"l08HomeGeometry\", \"l08HomeGeometryNear\", \"l08WaitStableHomeGeometry\",\n     \"l08RequireHomeZeroBeforeTap\", \"l08WaitHomeOneAfterTap\", \"l08ReadHomeCounters\",\n     \"l08HomeActivationDiagnostic\", \"l08HomeScrollDirection\", \"l08SettleHomeScrollDecision\",\n+    \"l08PublicControlObservation\", \"l08WaitRecovery\",\n )\n \n \n@@ -206,7 +207,7 @@\n         \"All four measured public frames must remain near\")\n \n     stable = helpers[\"l08WaitStableHomeGeometry\"]\n-    require(not set(tokens(stable)).intersection({\"tap\", \"swipeUp\", \"press\", \"activate\", \"while\", \"repeat\"}),\n+    require(not set(tokens(stable)).intersection({\"tap\", \"swipeUp\", \"swipeDown\", \"press\", \"activate\", \"while\", \"repeat\"}),\n             \"Readiness polling cannot interact with the app\")\n     require(fragment(stable, \"for attempt in 0..<24 {\"), \"Geometry polling must be bounded\")\n     require(fragment(stable, \"if let frames { \"\n@@ -255,7 +256,7 @@\n     ):\n         require(fragment(after, predicate), \"After-tap acknowledgement cannot weaken exact counters or bounds\")\n     require(tokens(after).count(\"l08TapExactPublicControl\") == 1 and tokens(after).count(\"return\") == 1 and\n-            not set(tokens(after)).intersection({\"tap\", \"swipeUp\", \"while\", \"repeat\"}),\n+            not set(tokens(after)).intersection({\"tap\", \"swipeUp\", \"swipeDown\", \"while\", \"repeat\"}),\n             \"Only fresh observer reads may repeat after activation\")\n     require(after.index('identifier: \"l08-ui-observe\"') < after.index(\"let counters\") <\n             after.index(\"guard (0...1)\") < after.index('if counters[\"resume_taps\"] == 1'),\n@@ -291,10 +292,27 @@\n         require(fragment(diagnostic, predicate), \"Diagnostic schema, budgets and limited claim must remain closed\")\n     require(not set(tokens(diagnostic)).intersection({\"value\", \"localizedDescription\", \"error\", \"seed\", \"role\"}),\n             \"Diagnostics cannot print UI/private/error contents\")\n+    require(tokens(joined).count(\"swipeUp\") == 1 and tokens(joined).count(\"swipeDown\") == 1,\n+            \"Only the two reviewed main scrolling sites may gesture\")\n \n \n \n A23_LOG_SHA256 = '80d4223592c3bb95690fe088adcaccdfddd13a54abd022883574a9b243bb77c9'\n+\n+# Immutable source-only baseline: canonical fixture at08d1adfb, SHA256\n+# 5d81dfb0b5accc127a4f5510a23d610ba73efd2fc8b19a0ff12395912e2d0c59.\n+# These raw parameter/body slices include comments and whitespace; they never\n+# reread the future canonical fixture as their own expected result.\n+FROZEN_HELPER_SLICE_SHA256 = {\n+    \"l08HomeGeometryNear\": \"218095d62d6f0d78ff892ccc782f95c63d8027d070421069f33d8bd3a1630252\",\n+    \"l08WaitStableHomeGeometry\": \"219c73596391ff7c270a2028d7fca05c8443fa83f3342d8bb1ccc26a156a4443\",\n+    \"l08RequireHomeZeroBeforeTap\": \"a56a66792ca42f52483e6b5c82a24b5292b47ae9af61596940444b50effa1105\",\n+    \"l08WaitHomeOneAfterTap\": \"234dbf02625cecd654381c6ef0fb3a68a99b1b9b8cb1a6028fbed76f529547e5\",\n+    \"l08ReadHomeCounters\": \"9c49648ab4c3ecaf1c6f55c8dc957f20e02e5b9ec78d34eb8573c708c86fa8ec\",\n+    \"l08HomeActivationDiagnostic\": \"c09ceefb51f2ee1bf44ab438b5732fc0da34328ac6203b53bed0823e88e73b44\",\n+    \"l08WaitRecovery\": \"3048d3f303d9c8da57f50552a2ee97de7a3e40d86ea346782e07ffb640b4ccd3\"\n+}\n+\n \n DIRECTION_BODY = \"\"\"\n     guard frames.count == 4, frames.allSatisfy(dsc01CatalogFinite),\n@@ -591,17 +609,48 @@\n             'if hittabilityQueried { row[\"hittable\"] = node.isHittable }',\n             'row[\"hittable\"] = false')\n \n-    def test_final_six_anchor_zero_one_and_recovery_helpers_are_byte_unchanged(self):\n-        canonical = (COMPANION / 'L08StorageFunctionalUITests.swift.in').read_text()\n-        for name in ('l08HomeGeometryNear', 'l08WaitStableHomeGeometry', 'l08RequireHomeZeroBeforeTap',\n-                     'l08WaitHomeOneAfterTap', 'l08ReadHomeCounters', 'l08HomeActivationDiagnostic', 'l08WaitRecovery'):\n+    def test_final_six_anchor_zero_one_recovery_parameter_body_bytes_match_frozen_baseline(self):\n+        for name, expected in FROZEN_HELPER_SLICE_SHA256.items():\n             with self.subTest(name=name):\n-                self.assertEqual(function(self.source, name), function(canonical, name))\n-                # These ordinary four-space-indented helpers have no nested\n-                # function declarations; compare comments/whitespace as well.\n+                # Structural/name checks are enforced independently by the\n+                # baseline contract; the literal digest is not a live reread.\n+                function(self.source, name)\n                 header = 'func ' + name + '('\n-                self.assertEqual(self.source.split(header, 1)[1].split('\\n    }\\n', 1)[0],\n-                                 canonical.split(header, 1)[1].split('\\n    }\\n', 1)[0])\n+                self.assertEqual(self.source.count(header), 1)\n+                raw_slice = self.source.split(header, 1)[1].split('\\n    }\\n', 1)[0]\n+                self.assertEqual(hashlib.sha256(raw_slice.encode()).hexdigest(), expected)\n+\n+    def test_only_reviewed_main_scrolling_sites_allow_downward_gestures(self):\n+        clean = without_comments(self.source)\n+        for name, reason in (\n+            ('l08WaitStableHomeGeometry', 'Readiness polling cannot interact with the app'),\n+            ('l08WaitHomeOneAfterTap', 'Only fresh observer reads may repeat after activation'),\n+        ):\n+            with self.subTest(helper=name):\n+                original = function(clean, name)\n+                anchor = 'for attempt in 0..<24 {'\n+                self.assertEqual(original.count(anchor), 1)\n+                mutated = original.replace(anchor, anchor + ' app.swipeDown(velocity: .slow)', 1)\n+                altered = clean.replace(original, mutated, 1)\n+                self.assertNotEqual(altered, clean)\n+                with self.assertRaisesRegex(ValueError, reason):\n+                    assert_fixture_contract(altered)\n+        # Existing literal ordering would miss app.swipeDown outside the two\n+        # exact list gesture sites. These witnesses must hit the global census.\n+        for name, anchor in (\n+            ('l08TapExactPublicControl', 'try l08RequireHomeZeroBeforeTap(app, identifier: identifier)'),\n+            ('l08HomeGeometry', 'return frames'),\n+            ('l08PublicControlObservation', 'return row'),\n+        ):\n+            with self.subTest(helper=name):\n+                original = function(clean, name)\n+                self.assertEqual(original.count(anchor), 1)\n+                replacement = (anchor + '; app.swipeDown(velocity: .slow)' if name == 'l08TapExactPublicControl'\n+                               else 'app.swipeDown(velocity: .slow); ' + anchor)\n+                altered = clean.replace(original, original.replace(anchor, replacement, 1), 1)\n+                self.assertNotEqual(altered, clean)\n+                with self.assertRaisesRegex(ValueError, 'Only the two reviewed main scrolling sites may gesture'):\n+                    assert_fixture_contract(altered)\n \n class SingleTapFixtureContractTests(unittest.TestCase):\n     def setUp(self):\n",
+  "canonical_promotion_targets": [
+    "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/L08StorageFunctionalUITests.swift.in",
+    "remediation-runs/2026-09-08-continuation/controls/test_single_tap_fixture_review.py"
+  ],
+  "composition_source_scope": "Same as first report: no direct Foundation PINS or driver/source changes. Promoted companion.in is dynamically included in composition manifest and requires new frozen source/control/image bindings; no evidence reuse authorization.",
+  "ownership_and_cleanup": {
+    "canonical_files_edited": false,
+    "first_held_files_rewritten": false,
+    "project_modules_imported": false,
+    "tests_or_builds_run": 0,
+    "actions_or_api_calls": 0,
+    "worker_or_fixture_created": false,
+    "cleanup": "No build/test/native cycle started; only assigned draft files created. Root alone owns execution/cleanup/adoption."
+  },
+  "remaining": "Independent final source/regression review and root-authorized integration/execution/freeze. Functional legacy/recovery/retained-host completion and strict protection remain unproved/unresolved; no Store/device/runtime success claim."
+}

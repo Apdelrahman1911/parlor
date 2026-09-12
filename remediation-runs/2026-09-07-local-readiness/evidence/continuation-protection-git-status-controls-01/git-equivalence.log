@@ -1,0 +1,69 @@
+$ /usr/bin/git --version
+git version 2.43.0
+
+$ /usr/bin/git init --initial-branch=fixture --template=/tmp/parlor-git-status-controls-n356_kjj/templates
+Initialized empty Git repository in /tmp/parlor-git-status-controls-n356_kjj/repository/.git/
+
+$ /usr/bin/git add tracked.txt
+
+$ /usr/bin/git -c user.name=Parlor Synthetic Fixture -c user.email=fixture@example.invalid -c commit.gpgsign=false commit -qm synthetic baseline
+
+$ /usr/bin/git config core.preloadIndex true
+
+$ /usr/bin/git rev-parse HEAD
+7576972661ec5df3c2db6698534a897c22528331
+
+$ /usr/bin/git status --porcelain=v1 --untracked-files=no
+
+$ /usr/bin/git -c core.preloadIndex=false status --porcelain=v1 --untracked-files=no
+
+$ /usr/bin/git status --porcelain=v1 --untracked-files=no
+
+$ /usr/bin/git -c core.preloadIndex=false status --porcelain=v1 --untracked-files=no
+
+$ /usr/bin/git add tracked.txt
+
+$ /usr/bin/git status --porcelain=v1 --untracked-files=no
+M  tracked.txt
+
+$ /usr/bin/git -c core.preloadIndex=false status --porcelain=v1 --untracked-files=no
+M  tracked.txt
+
+$ /usr/bin/git restore --source=HEAD --staged --worktree -- tracked.txt
+
+$ /usr/bin/git status --porcelain=v1 --untracked-files=no
+ M tracked.txt
+
+$ /usr/bin/git -c core.preloadIndex=false status --porcelain=v1 --untracked-files=no
+ M tracked.txt
+
+$ /usr/bin/git restore --source=HEAD --staged --worktree -- tracked.txt
+
+$ /usr/bin/git status --porcelain=v1 --untracked-files=no
+ D tracked.txt
+
+$ /usr/bin/git -c core.preloadIndex=false status --porcelain=v1 --untracked-files=no
+ D tracked.txt
+
+$ /usr/bin/git restore --source=HEAD --staged --worktree -- tracked.txt
+
+$ /usr/bin/git hash-object -w --stdin
+180b47c18ba7e484fc0d7350bc6cad8ec3423ea0
+
+$ /usr/bin/git hash-object -w --stdin
+b19a1e93bec1317dc6097229e12afaffbfa74dc2
+
+$ /usr/bin/git hash-object -w --stdin
+950b81b7eee953d050aa05a641f8e056c85dd1bd
+
+$ /usr/bin/git update-index --index-info
+
+$ /usr/bin/git status --porcelain=v1 --untracked-files=no
+UU tracked.txt
+
+$ /usr/bin/git -c core.preloadIndex=false status --porcelain=v1 --untracked-files=no
+UU tracked.txt
+
+$ /usr/bin/git rev-parse HEAD
+7576972661ec5df3c2db6698534a897c22528331
+

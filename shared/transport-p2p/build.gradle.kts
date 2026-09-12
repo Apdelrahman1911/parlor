@@ -44,7 +44,12 @@ tasks.named("desktopTest") {
         rootProject.file("iosApp/iosAppUITests/IOSAppLaunchUITests.swift"),
         rootProject.file("whodunit-game-design.md"),
         rootProject.file("settings.gradle.kts"),
+        rootProject.file("build-logic/settings.gradle.kts"),
+        rootProject.fileTree("build-logic/convention/src/main/kotlin") {
+            include("**/*.kt", "**/*.kts")
+        },
         rootProject.file("gradle.properties"),
+        rootProject.file("config/android-lint-accepted-warnings.txt"),
         rootProject.fileTree(".") {
             include("**/build.gradle.kts")
             exclude("**/build/**")

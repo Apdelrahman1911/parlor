@@ -1,0 +1,98 @@
+{
+  "status": "APPROVED_EXACT_TWO_FILE_CORRECTION_AND_ONE_ACTUAL_TEST_PENDING_NEW_FREEZE",
+  "reviewer": "/root/ci_workflow",
+  "author": "/root",
+  "reviewed_at": "2026-09-09T21:32:04.353033+00:00",
+  "base_commit": "f5d3100dc92d7d1f3415a2be8c0ef6ccc93d3aac",
+  "base_tree": "99ac631b9a51a8f181dfde1926c7aa6ec60ff11e",
+  "findings": [],
+  "scope": {
+    "scripts/release/tests/test_native_process_probe.py": {
+      "sha256": "32280e091ea19838812d815962094b67417cba7b2498d456d8f075dd5357c41d",
+      "exact_replacements": [
+        [
+          "{\"l08\": \"ios-readiness-31\", \"normal\": \"ios-readiness-32\"}",
+          "{\"l08\": \"ios-readiness-33\", \"normal\": \"ios-readiness-34\"}"
+        ]
+      ]
+    },
+    "scripts/ci/NATIVE_CONTINUATION.md": {
+      "sha256": "d19d47462f2feb49dd379509b8c6c7d89e2129b1266e8ad63c6c720f53523b9c",
+      "exact_replacements": [
+        [
+          "next cycle `ios-readiness-31`",
+          "next cycle `ios-readiness-33`"
+        ],
+        [
+          "`ios-readiness-32`, explicit",
+          "`ios-readiness-34`, explicit"
+        ],
+        [
+          "With `l08-only`, B32",
+          "With `l08-only`, B34"
+        ]
+      ]
+    }
+  },
+  "source_review": [
+    "Independently reconstructed each whole working-tree file from its f5d Git blob using exactly the four stated literal replacements; no other changes.",
+    "Test AST parses. Existing unconditional assertEqual remains exact and independent of the adapter: only expected31/32 becomes33/34; no guard removed or weakened.",
+    "Guide changes current A/B labels only; historical B30 and prior failure labels remain. No application, adapter, runner, fixture, workflow, Gradle or protocol input changed.",
+    "Previously inspected transport-p2p repositoryContractFiles and source references: neither changed path is an input; docs glob is limited to docs/, not scripts/ci/. No transport check trigger."
+  ],
+  "actual_execution": {
+    "executor": "/root, not reviewer",
+    "evidence_directory": "remediation-runs/2026-09-07-local-readiness/evidence/a33-cycle-label-focused-linux-01",
+    "command": [
+      "/usr/bin/python3",
+      "-B",
+      "-m",
+      "unittest",
+      "-v",
+      "scripts.release.tests.test_native_process_probe.ProbeSourceContractTest.test_full_non_app_scope_is_explicit_and_cycles_do_not_reuse_failed_labels"
+    ],
+    "tests": {
+      "executed": 1,
+      "passed": 1,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0
+    },
+    "status": "PASS",
+    "exit_code": 0,
+    "started_at": "2026-09-09T21:12:54.025175+00:00",
+    "finished_at": "2026-09-09T21:12:55.536200+00:00",
+    "evidence_sha256": {
+      "receipt.json": "b601eb023f851c753a1bc19852996b5d9eb51c25de0e384590f6d4baf88b76a9",
+      "gradle.log": "b6c42af9add74670e9e1abdb64cdd0e27199b7cc8768d73977200e4636fca6e0",
+      "stop.log": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+      "test-receipts.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "artifact-receipts.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    "binding": "source_before == source_after; runner_before == runner_after;829 source rows; both corrected file hashes independently matched bound rows.",
+    "source_manifest_sha256": "10830dba2b0611d0065fd7f7b37ac9110ed324ac267128e576c955be2cd355b8",
+    "limitation": "One actual affected unittest PASS, not a full suite, validator, Gradle/JVM/app build or native-runtime run.",
+    "sufficiency": "Only one expected literal changed executable code; that unchanged exact assertion method passed. No transport/126-control/full-validator replay required for this correction."
+  },
+  "cleanup": {
+    "stop_exit_code": 0,
+    "stopped_at": "2026-09-09T21:12:56.336165+00:00",
+    "stop_log": "No Gradle daemons are running.",
+    "completed_at": "2026-09-09T21:12:56.431472+00:00",
+    "remaining_owned_workers": [],
+    "remaining_owned_artifact_workers": [],
+    "removed_outputs": [],
+    "retained_outputs": [],
+    "remaining_outputs": [],
+    "errors": [],
+    "reviewer_resources": "None created; stdlib/read-only inspection plus this assigned report only."
+  },
+  "admission": {
+    "closed": "Working-tree D-A33-LABEL-CONTRACT only.",
+    "preserved_prior_finding": "remediation-runs/2026-09-08-continuation/reviews/full-d-f5d-source-scope-admission-independent-01.json",
+    "prior_finding_sha256": "4e0ce7e6e5c9122480ec61f43e6c4c7aa60f3dd05038129a30165d6d5521f98a",
+    "required_next": "Root must commit reviewed correction, regenerate/commit mechanical inventory, freeze and obtain fresh preflight. Unchanged f5d remains NOT admitted.",
+    "full_d": "Conditional on final-source admission, immediate remote/source equality and no active needed same-ref run; no Actions dispatch or native execution performed by reviewer.",
+    "readiness": "NOT_READY; independent of unresolved A/strict protection, C06, fullD, physical-device, Store and owner/legal obligations."
+  }
+}

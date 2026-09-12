@@ -1,0 +1,364 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/factory_review",
+  "at": "2026-09-07T12:39:08.989684+00:00",
+  "decision": "APPROVED \u2014 exact self-contained44-control review chain and the bounded actual ios-readiness-04 evidence claims below. Not a whole-project, current-tree runtime, physical-device, or Store verdict.",
+  "scope": "Independent source/control and raw-result verification requested by root. Original actual04 receipt remains immutable. No application/control edits or runtime execution by reviewer.",
+  "exact_runtime_source": {
+    "commit": "f5ea8045bd903c255041b198f54aca67e893612f",
+    "tree": "b109c8ec6ec579b9197f449b36bda2c39105a652",
+    "branch": "fix/local-readiness-2026-09-07",
+    "tracked_status": "",
+    "diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "source_manifest_sha256": "61e22ba3c507e0cb2e7d88017004cbac38c4431e6563b2a7af6bd6ec4c3e345d"
+  },
+  "runtime_source_manifest_rows": 729,
+  "source_binding_file": {
+    "path": "remediation-runs/2026-09-07-local-readiness/ios-readiness-source-04.json",
+    "sha256": "7491d984a16cfa1e7637b0e59623383d4b06e9ae3dd134e8406720578d0c60ce"
+  },
+  "control_binding_sha256": "08bfed356d8c358f3a2e1baebc22ab82baa431e1d5084bbac414f94042ab99e2",
+  "controls": 44,
+  "binding_entries": 45,
+  "control_coverage": {
+    "path": "remediation-runs/2026-09-07-local-readiness/reviews/ios-readiness04-exact-controls-coverage-01.json",
+    "sha256": "ce9dd2b7a26d990b4e9574c9c64d70db110699b681cb02f546c1a1f75e975478",
+    "current_lines": 9911,
+    "gap02_author": "/root/factory_review",
+    "gap02_independent_approval": "Root independently read complete1740-line diff+11-line update against matching fully reviewed freeze04 bases. This report does not substitute self-approval for root approval."
+  },
+  "binding_verification": [
+    "Independently recomputed all45 current control/binding file hashes and canonical digest08bfed\u2026; identical to input-manifest and before/after runtime guard.",
+    "Source-before, source-after, input manifest and explicit binding identities exactly equal; independently recomputed729-row digest61e22\u2026.",
+    "672 frozen source inputs preserved their original hashes in copied manifest; exactly3 observer additions and12 allowlisted source transformations. All675 copied post-build expected/observed hashes agree; no missing/extra inputs or source symlinks.",
+    "Copied diff, before manifest and after-build manifest raw hashes match receipt; source-only transform implementation reopened completely. Normal application startup/DI/reducers are retained, but this is an instrumented temporary-copy build\u2014not uninstrumented app evidence."
+  ],
+  "current_checkout_observation": {
+    "commit": "2250007173bbf9ca7c441f1c46802d84c1b478ba",
+    "tree": "b506da5b778a3220f81e07674dcd85d381c49cb6",
+    "tracked_status": "",
+    "files_changed_since_runtime_binding": [
+      {
+        "path": "composeApp/src/desktopTest/kotlin/com/parlor/app/ProductionUiAccessibilityContractTest.kt",
+        "runtime_sha256": "00e0d9c8af2d59562ae1a68cc514382f6e017b0c63613ac43810ad407a9d4ba6",
+        "current_sha256": "830f077ec2f61747339310051f609d4f95fa79979a5da543620358b72742db31"
+      },
+      {
+        "path": "config/android-lint-accepted-warnings.txt",
+        "runtime_sha256": "e196948d55ae455b7d59a4532b9a8f680e109daef5a704b555d1b903afb9ecbd",
+        "current_sha256": "4fe091a88dc1cec1849c0076790fa5db25608cf16ff094a30441ac99a84277d7"
+      },
+      {
+        "path": "docs/ANDROID_LINT_TRIAGE.md",
+        "runtime_sha256": "425d39b620add895c1f8f43c502b2012dd0f5f5a57688a9d9f937f4d923ee209",
+        "current_sha256": "cc5ccc1396aa806f2b2f21dfd71095e82a847c352f02170daec9ae0b65fd1ac8"
+      },
+      {
+        "path": "shared/transport-p2p/build.gradle.kts",
+        "runtime_sha256": "ac439a069b3c99d1bef803bbc053580c4b99cbd7f4775a98d98a2b40482d96d7",
+        "current_sha256": "6ce2fd726bd41031a5b26d0d30f8ee8f693b4dc942da90bdc48b40fbf040c3b7"
+      },
+      {
+        "path": "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/AndroidReleaseLintContractTest.kt",
+        "runtime_sha256": "649d3d91daffa9f8a2df92a373d6ba0729d591cfc158abeb0a62df78270b0fc2",
+        "current_sha256": "ebcb71cc9433aca72a87046224227c29a992bc193096a86289a831167e2032b9"
+      }
+    ],
+    "claim": "Later source differences are listed; do not silently relabel actual04 as runtime execution of a later tree."
+  },
+  "verification": {
+    "actual_xctest": {
+      "status": "PASS",
+      "platform": "iOS Simulator26.5 ARM64 / iPhone17Pro, selected Xcode26.5; not Store-qualified26.3",
+      "count": 5,
+      "failed": 0,
+      "skipped": 0,
+      "expected_failures": 0,
+      "methods": [
+        "ComposeContainerViewControllerTests/testChildUsesFullBoundsAcrossSizesAndOpposingSemanticDirections()",
+        "ComposeContainerViewControllerTests/testDefaultAppearanceForwardingReachesTheSameChildExactlyOnce()",
+        "ComposeContainerViewControllerTests/testOneStableChildKeepsItsExplicitSemanticsIndependentOfTheOuterView()",
+        "ComposeContainerViewControllerTests/testSystemDecorationAndOrientationPoliciesStillBelongToTheChild()",
+        "IOSAppLaunchUITests/testDSC01ActualSettingsLocalSessionsAndOSInvestigation()"
+      ],
+      "independent_evidence": "Both raw xcresult JSONs and xcodebuild start/pass records read; TEST SUCCEEDED and exit0. Four actual production-container source tests plus ONE expanded matrix method. Eight internal launches are not eight XCTest methods."
+    },
+    "pure_controls": {
+      "status": "PASS",
+      "cycle": "evidence/native-path-controls-01",
+      "receipt_sha256": "593bcb67a346ca842df0d8c5696cb6b3025053f6cd79c7bd8bad63b742179ebc",
+      "log_sha256": "e4ad17cfb678c4b0b09639dc5346a5d7c34de8021d654010b05a5f1fd92d2dfe",
+      "actual_methods": 98,
+      "skipped": 0,
+      "errors": 0,
+      "failures": 0,
+      "independent_check": "Current AST98 equals98 declared/discovered IDs equals98 raw method descriptors;97 ordinary ok lines+one multiline Swift-fixture ok.44 control before/after hashes independently match current files and recorded imports resolve to current directory. Driver51 lines reopened.",
+      "scope": "Synthetic Python controls include actual host-Foundation helper subprocesses.18 host-path subcases belong to ONE method. These are not98 app/Android/iOS simulator tests."
+    },
+    "cold_launch": {
+      "status": "PASS",
+      "launches": 8,
+      "unique_process_boots": 8,
+      "samples_per_launch": 6,
+      "sample_spans_ms": [
+        28133,
+        28267,
+        28144,
+        28163,
+        28014,
+        28137,
+        28210,
+        28107
+      ],
+      "source": "NativeReadinessUITests.swift.in1\u201372, NativeReadinessLaunch.swift.in1\u2013340, raw8 boot files, raw PARLOR_NATIVE_COLD_LAUNCH rows and74 readiness observations",
+      "checked": "Each boot ID/token/mode/frame origin agrees between durable app receipt and XCTest row. Every referenced sample has one stable outer/Compose controller+view+window, full raw geometry, foreground and no native alert, one probe activation.",
+      "not_claimed": "Fresh reinstall per launch, uninstrumented startup, no possible crashes, or diagnosis of the historical first-four failures."
+    },
+    "native_binary_provenance": {
+      "status": "PASS WITH EXPLICIT ORIGIN LIMITATION",
+      "built_and_installed_inventory_sha256": "82214f41bf29ed1a14318c1858541bac4a9f29e461ca3cbcb535c70ecf3f2146",
+      "loaded_app_images": [
+        "Parlor",
+        "Parlor.debug.dylib"
+      ],
+      "runtime_framework_origin": "owned-copy-build",
+      "runtime_framework_relative_path": "xcode-frameworks/Debug/iphonesimulator26.5/ComposeApp.framework/ComposeApp",
+      "runtime_framework_sha256": "bd1a0526256f9958eadf22989ce5254744ae285856ec77139dfd47828adfb40d",
+      "runtime_framework_bytes": 82696136,
+      "memory_uuid": "08d77f1a-93d7-3fdf-a19b-2be82303195e",
+      "embedded_framework_sha256": "b9442edc52048113ea3f90ada70b9980f6a01af71b1e688c35bc3d2bad61ac43",
+      "same_bytes_as_embedded": false,
+      "check": "All8 app/XCTest observations bind to owned external KGP product hash/size/UUID. Raw dwarfdump origin logs match. Built/installed app inventories exactly equal, including stub and debug dylib. Source validates origin before fingerprinting; POSIX canonical paths avoid Foundation alias mismatch.",
+      "limits": "Not a hash of mapped pages, atomic dyld census, installed-framework-only execution, or Store signature. Artifacts cleaned after preserved inventories; reviewer independently checks retained receipts, not deleted binaries."
+    },
+    "storage": {
+      "status": "PASS FOR OBSERVED SYNTHETIC BACKING DURABILITY",
+      "source": "Actual Koin PlatformKeyedSecureStorage/IosSecureKeyValueBacking and FileBackedSnapshotStore/IosSnapshotFileSystem; copy-only call-site coroutine-context numeric attribution, preserving actual queries/guards/cancellation.",
+      "history": [
+        "Boot1: exact credential-read errSecItemNotFound(-25300), file absent; credential update-25300/add0 and file writeok.",
+        "Boot2: credential read0 and both synthetic byte values match prior write; credential update0 and file overwriteok.",
+        "Boot3: read0/both second values match; credential delete0 and file removeok.",
+        "Boot4\u20138: exact credential-read-25300 and file absent.",
+        "Separate Home pipeline rerun in all8 boots sees absent local/rejoin sources, unavailablefalse; these are explicitly not the original Home invocation."
+      ],
+      "limits": [
+        "Only synthetic UUID key/64-byte values and safe .native-readiness file; no production player data.",
+        "Does not validate full snapshot envelope, save/recovery game semantics, hardware Keychain protection, or Store entitlements.",
+        "IOS-R1 and historical launch root causes remain unresolved evidence gaps; no errors hidden or entitlements added."
+      ]
+    },
+    "local_sessions": {
+      "status": "PASS FOR STATED SAME-PROCESS WINDOWS",
+      "games": {
+        "whodunit": {
+          "events": 97,
+          "first_checkpoint_sequence": 9,
+          "phase": "public-intro"
+        },
+        "mafia": {
+          "events": 99,
+          "first_checkpoint_sequence": 11,
+          "phase": "role-assignment"
+        }
+      },
+      "each_game": {
+        "passive_windows": 12,
+        "passive_samples": 72,
+        "background_foreground_cycles": 4,
+        "session_disposals": 0,
+        "canonical_controller_flow_reference_value_and_phase_unchanged": true
+      },
+      "geometry": "Independently recomputed raw rectangle/safe-area equality for every non-before-App observation. Portrait402x874 [62,0,34,0]; landscape874x402 [0,62,20,62]. EN-LTR and AR-RTL rotation windows6samples each; all post-lifecycle native and Compose direction observations agree.",
+      "language_path": "Initial EN via actual Settings UI, zero synthetic commands before checkpoint. Active-game AR/EN/System are explicitly synthetic calls into the real Koin SettingsStore, not an in-game settings route.",
+      "limits": "Early local phases only, not complete games, navigation-gesture proof, multiplayer retention, recovery/resume, physical LAN, or large-text/accessibility certification. Observer overlays may perturb SwiftUI outside passive windows."
+    },
+    "os_managed_present_preference": {
+      "status": "PASS \u2014 ACTUAL PRESENT OS ARRAY",
+      "actual_public_actions": [
+        "Apps",
+        "Parlor",
+        "Language",
+        "Arabic"
+      ],
+      "raw_actions": 44,
+      "each_semantic_action_count": 1,
+      "actual_app_array": [
+        "ar-EG",
+        "en-EG"
+      ],
+      "before_choice_sequence": 4,
+      "fresh_before_app_sequence": 6,
+      "baseline_sequence": 7,
+      "english_sequence": 10,
+      "system_sequence": 12,
+      "restart_before_app_sequence": 14,
+      "restart_settings_sequence": 17,
+      "baseline_raw_log_lines": [
+        7137,
+        7213,
+        7259,
+        7351
+      ],
+      "checked": "Known source panes, unique enabled visible targets, last3 stable numeric frames and exactly paired before/after actions independently checked. Four baseline records preserve exact presence/ordered array; English installs [en] while previous retains [ar-EG,en-EG]; System removes only app ownership and restores original array; fresh before-App restart and real Arabic Settings retain it. Actual AR action precedes all baseline records and completion markers follow them.",
+      "synthetic_cleanup": "Earlier synthetic [ar-EG,en] seed is separately token/first-boot bound with original absence and restored absence, before OS-created [ar-EG,en-EG] observation. This does not erase legitimate OS preferences.",
+      "limits": "Owned fresh simulator with prerequisite EN-primary/AR-secondary list. Not a connected personal phone; not proof of every OS preference representation."
+    },
+    "cleanup": {
+      "status": "PASS FOR IOS04 AND98-CONTROL CYCLE",
+      "commands": 35,
+      "all_command_exit_codes": 0,
+      "embedded_build_stop": "build_exit0/stop_exit0",
+      "outer_immediate_and_final_stop_exit_codes": [
+        0,
+        0
+      ],
+      "owned_simulator": "F022CCA0-6DC0-4CE1-8CAA-9933F4108F70",
+      "raw_state_sequence": [
+        "Booted",
+        "Shutdown",
+        "absent"
+      ],
+      "secondary_fifos": 2,
+      "secondary_ledger_sha256": "776965cc70089f15e261c3b4e79e45ae518348d4bef0a5b87fb221ea29aab618",
+      "current_exact_paths_all_absent": true,
+      "remaining_owned_workers": [],
+      "unknown_holders": [],
+      "remaining_outputs": [],
+      "cleanup_errors": [],
+      "check": "Raw stop logs, exact owned simulator observations,9 finalization stages, source input recheck and2 FIFO inode/UID/parent-lifetime ledgers read. Current exact temporary root, simulator directory, both FIFO paths and empty-parent paths are absent. No global cache/user profile deleted or unrelated worker stopped by reviewer."
+    }
+  },
+  "counter_evidence_considered": [
+    "The historical disabled/diagnostic failures remain immutable and are not converted to app defects or success.",
+    "Framework memory UUID equality alone does not mean embedded/external bytes match; raw differing hashes remain explicit.",
+    "Original Home storage numeric attribution is false; actual separate invocation is identified, not backfilled.",
+    "Actual OS-created PRESENT array differs from prior synthetic array; cleanup occurs before public OS choice and requires original absence.",
+    "Canonical equality during early-phase settings/lifecycle matrix is not complete-game or LAN evidence.",
+    "98 helper tests and Xcode compilation alone were not accepted as app-runtime proof; real5 XCTest descriptors and durable raw native rows were inspected."
+  ],
+  "new_blocking_findings": [],
+  "retained_limits": [
+    "Uninstrumented normal-source repeated-launch run pending separate reviewed controls/source binding.",
+    "Physical Android/iOS LAN, real Store signing/provisioning, Xcode26.3 Store qualification, owner/legal/Store requirements, accessibility/large text and full game/resume matrix remain separate gates.",
+    "This scoped review is not approval to publish, merge, commit unrelated work, or claim16 fixes fully verified."
+  ],
+  "evidence": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-04/receipt.json",
+      "sha256": "9aa2b1036ef9669be046622dfe5b613a3ba2253467e5e7579978a058a27d31a0"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-04/input-manifest.json",
+      "sha256": "755c4d6b4c0c7abd198603abb4bc2f810716b8b07ba2558bdf8f5c6a20cbf601"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-04/copied-source.diff",
+      "sha256": "7c24325551342efa6b76b40d3da50318855cb7e73099db71f4fd3be221ceb277"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-04/copied-source-manifest.json",
+      "sha256": "81a66839266031b0c859eef8395da86290c3c336f25db708f059f0615bbe4b7d"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-04/copied-source-inputs-after-build.json",
+      "sha256": "2be75e853e3a40c1f44e02ce0b046f6088e4f59d630b5222050aa5ab393a6f0e"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-04/xcodebuild.log",
+      "sha256": "760907d6553dc3f10874a2bfc129e82dab44a77c484e6ce344e9399b62030135"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-04/xcresult-summary.json",
+      "sha256": "618524c683fa573dce5195451124d88094519710698198aeb70bce11a8226f26"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-04/xcresult-tests.json",
+      "sha256": "788842d8aef50c37b3d3573214e6ab0764f73643c1f0caca93ba36e6172f6fb4"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-04/built-app-binary-inventory.json",
+      "sha256": "82214f41bf29ed1a14318c1858541bac4a9f29e461ca3cbcb535c70ecf3f2146"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-04/installed-app-binary-inventory.json",
+      "sha256": "82214f41bf29ed1a14318c1858541bac4a9f29e461ca3cbcb535c70ecf3f2146"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-04/executed-framework-inventory.json",
+      "sha256": "a4584ac8f7a49322a56a7d8722af603312d495813b38a3da17209c302b6ef504"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-04/probe-settings-result.json",
+      "sha256": "a5bc73683f877beb2b8f610d33379625db35c697a61f22481159fe51609907a2"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-04/probe-readiness-result.json",
+      "sha256": "a99025d932d15b6c16b369f4a94f1f6ad5ab3fb8c028720639ed7989e4b45374"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-04/probe-whodunit-result.json",
+      "sha256": "a66ffec53bf3a7b19d1198f3a98ce2ec41900aea4e050e01dd21669668cb1b23"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-04/probe-mafia-result.json",
+      "sha256": "33e28d600857a9d31db4e386d25b5eca4c174ed3746b74341a8d1910ce9bdf7d"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-04/probe-os-result.json",
+      "sha256": "a560730575c3c8d98e44c3f1501d2c963b69616b45e4a800181b416f9af9a0f2"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-04/parlor-native-synthetic-seed-cleanup.json",
+      "sha256": "201a7cc0d2c6a1c090077d7ebeaebe768f9950e2dffe388b361ef622b5c7780f"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-04/secondary-fifo-ownership-final.json",
+      "sha256": "776965cc70089f15e261c3b4e79e45ae518348d4bef0a5b87fb221ea29aab618"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-04/embedded-gradle-stop.txt",
+      "sha256": "fb55a963c8d30249ea6b8be68a62b5921facefdc7823c16ad139fea885be972f"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-04/stop-xcode-immediate.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-04/stop-final.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-04/parlor-native-readiness-boot-1.json",
+      "sha256": "596d793f2f73a8076053b5046c7d7f6eb2c97b69744892acdeda509356c162ad"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-04/parlor-native-readiness-boot-2.json",
+      "sha256": "4db5cd07c093f4126f4d9685a788e1771a5c14c8ed952a2827ba1be3ce6ed95b"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-04/parlor-native-readiness-boot-3.json",
+      "sha256": "dead6d48594717141999a63daff19c7bd8fc567c33bf791fa662ac131ef2326d"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-04/parlor-native-readiness-boot-4.json",
+      "sha256": "2e6dd0bd5b0e51f7827d7b838a316a63af04592a0f02d2b70be95cbf5544ad34"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-04/parlor-native-readiness-boot-5.json",
+      "sha256": "9780b267972d39fe8881dc3933ab80fabc05e4d1b45c64620ec56b4560b283c2"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-04/parlor-native-readiness-boot-6.json",
+      "sha256": "bf879ba35583e7e7f985559cb84b3ff406a08e55240afe1391e4a44bffbc66f0"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-04/parlor-native-readiness-boot-7.json",
+      "sha256": "2ba0a5b65b4bd9af80382f2fe3deba3b04c232a26a91299f990fa1978cb4901a"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-04/parlor-native-readiness-boot-8.json",
+      "sha256": "4ac05dd70f723114355a1956d8d1b70498e97e9f5d9033f1b46f36974c976f58"
+    }
+  ],
+  "reviewer_preservation": "Only new review JSON deliverables written. No production/test/resource/control changes; no executable-module imports, tests, builds, simulator/app/server launches, cleanup actions, private material reads or Git writes. No reviewer-owned workers/build outputs exist."
+}

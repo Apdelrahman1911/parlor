@@ -1,0 +1,128 @@
+{
+  "created_at": "2026-09-07T07:53:41.474256+00:00",
+  "author": "/root/release_fix_review",
+  "status": "DRAFT_UNEXECUTED_PENDING_INDEPENDENT_REVIEW",
+  "source_baseline": {
+    "branch": "fix/local-readiness-2026-09-07",
+    "commit": "1f809b87c15a4deb079809bc14718a58cf0fe451",
+    "tree": "6f6912d8612f71e07d2c338d860e906333ce8aad"
+  },
+  "runtime_evidence": "None. All native/build/test execution belongs to /root. A successful NULL task-name port is not proof that its process exited.",
+  "files": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/darwin_owned_processes.py",
+      "sha256": "148a71180b6768858f47d7cf5607104169898dafdee48ecbf41937cd46e71a1d",
+      "line_count": 357,
+      "static_test_method_count": 0,
+      "test_methods": [],
+      "scope": "unchanged frozen controls"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/test_darwin_owned_processes.py",
+      "sha256": "30e28929a5305fbef65c855d56e5e2c16d9fc2c5b30c1c7e3bc5f0ef5350f9c9",
+      "line_count": 333,
+      "static_test_method_count": 20,
+      "test_methods": [
+        "test_completed_launch_cannot_grant_recycled_group",
+        "test_completed_leader_surviving_attested_child_is_still_stopped",
+        "test_recycled_descendant_pid_is_not_signaled",
+        "test_recycled_parent_cannot_authorize_its_new_children",
+        "test_pid_reuse_between_last_check_and_signal_is_rejected_by_token",
+        "test_legitimate_exec_is_re_attested_with_current_token_and_command",
+        "test_unreaped_terminated_leader_allows_final_descendant_capture",
+        "test_poll_does_not_reap_or_release_the_group_pin",
+        "test_unexpected_external_reap_revokes_group_without_querying_reused_pid",
+        "test_denied_token_signal_has_no_numeric_fallback_and_remains_failed",
+        "test_foreground_command_rejects_and_stops_leftover_workers",
+        "test_failed_group_enumeration_cannot_report_finished_or_reap_worker",
+        "test_sdk_structure_sizes_match_arm64_header_layout",
+        "test_list_convenience_wrapper_returns_pid_count_not_bytes",
+        "test_zero_count_native_errors_are_rejected_by_both_list_wrappers",
+        "test_zero_count_without_errno_is_empty_and_clears_stale_errno",
+        "test_negative_process_count_remains_failed",
+        "test_process_list_ceiling_fails_instead_of_truncating",
+        "test_wait_status_uses_public_non_reaping_flags",
+        "test_native_signal_passes_complete_token_and_rejects_stale_generation"
+      ],
+      "scope": "unchanged frozen controls"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/owned_arm64_smoke.py",
+      "sha256": "38ea4c0000a2c426f8475b4616e77ee0d8bb25bb424dc7516348c2095cd08b48",
+      "line_count": 473,
+      "static_test_method_count": 0,
+      "test_methods": [],
+      "scope": "unchanged frozen controls"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/test_owned_arm64_smoke.py",
+      "sha256": "404e2fa8f88f140cb5a1d40395e8422bcc35b8714dbe6020e60cef8ca7f4b29a",
+      "line_count": 258,
+      "static_test_method_count": 21,
+      "test_methods": [
+        "test_actual_started_and_completed_descriptor_passes",
+        "test_zero_adb_exit_and_ok_summary_without_descriptors_cannot_pass",
+        "test_instrumentation_success_without_completed_test_cannot_pass",
+        "test_skips_ignored_errors_and_failures_cannot_pass",
+        "test_wrong_class_wrong_method_and_wrong_count_cannot_pass",
+        "test_duplicate_descriptors_cannot_pass",
+        "test_out_of_order_completion_cannot_pass",
+        "test_crash_after_descriptors_and_non_success_exit_cannot_pass",
+        "test_marker_open_failure_removes_only_new_empty_directory",
+        "test_partial_marker_write_failure_removes_attested_marker_and_empty_root",
+        "test_failed_initialization_preserves_unexpected_child_and_reports_root",
+        "test_attested_temporary_tree_is_removed",
+        "test_changed_marker_preserves_tree",
+        "test_symlinked_marker_cannot_authorize_cleanup",
+        "test_child_symlink_does_not_delete_external_target",
+        "test_property_duplicate_is_not_silently_normalized",
+        "test_missing_endpoint_cannot_create_a_socket_or_start_a_server",
+        "test_refused_owned_endpoint_returns_without_autostart",
+        "test_exact_host_kill_packet_and_fragmented_okay_response",
+        "test_bad_acknowledgement_is_a_cleanup_failure_not_a_pass",
+        "test_symlink_cannot_redirect_shutdown_to_another_endpoint"
+      ],
+      "scope": "unchanged frozen controls"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/darwin-null-port-retry-01/darwin_owned_processes.py",
+      "sha256": "2f2ad2a5d68cea999709a4c3c3e384cd9e6767258ad34aed4181ee2118962378",
+      "line_count": 368,
+      "static_test_method_count": 0,
+      "test_methods": [],
+      "scope": "draft only; not applied or executed"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/darwin-null-port-retry-01/test_task_name_null_retry.py",
+      "sha256": "0fb15e65e59812213a0952c90ed90fb07057da92bd39bb46bae911d9588623b6",
+      "line_count": 251,
+      "static_test_method_count": 20,
+      "test_methods": [
+        "test_successful_null_port_then_valid_token_is_retried_not_denied",
+        "test_null_port_then_independently_confirmed_exit_returns_absent",
+        "test_null_port_with_immediately_confirmed_exit_needs_no_retry",
+        "test_persistent_null_live_candidate_fails_after_exact_bound",
+        "test_genuine_native_denial_for_live_candidate_is_not_retried",
+        "test_native_denial_after_confirmed_exit_retains_absence_semantics",
+        "test_null_then_genuine_denial_fails_without_consuming_more_retries",
+        "test_bsd_inspection_failure_is_not_misclassified_as_absence",
+        "test_non_null_port_without_race_has_no_delay_and_is_released",
+        "test_task_info_failure_for_live_candidate_is_not_retried_and_releases_port",
+        "test_task_info_failure_after_confirmed_exit_releases_port",
+        "test_malformed_token_count_still_fails_and_releases_port",
+        "test_wrong_token_pid_still_fails_and_releases_port",
+        "test_failed_port_release_is_not_hidden_by_successful_token",
+        "test_keyboard_interrupt_during_null_retry_propagates_without_port_use",
+        "test_interrupted_wait_during_null_retry_propagates_without_port_use",
+        "test_keyboard_interrupt_during_token_read_still_releases_owned_port",
+        "test_read_restarts_if_null_retry_crosses_bsd_process_lifetimes",
+        "test_read_still_rejects_unstable_tokens_after_null_retry",
+        "test_read_never_uses_path_after_null_retry_independently_confirms_exit"
+      ],
+      "scope": "draft only; not applied or executed"
+    }
+  ],
+  "patch_sha256": "2eed4d7c0381f2f9a0b07b9aaa2cc01efcfe93c13818415901ee71b912929869",
+  "bound": "three task_name_for_pid attempts; only KERN_SUCCESS+NULL/live causes two interruptible 0.01s sleeps maximum; scheduler/syscall latency not guaranteed",
+  "frozen_original_unchanged": true
+}

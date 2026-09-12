@@ -656,29 +656,33 @@ def google_promote_execute(args: argparse.Namespace) -> dict[str, Any]:
     if args.operation == "production" and destination_track != policy()["applications"]["android"]["production_track"]:
         fail("Production promotion must target the production track")
     client = GoogleClient(Path(args.credentials))
-    tracks, bundles = client.read_inventory(package)
-    require_candidate_bundle_digest(bundles, version_code, artifact_sha)
-    source = find_track(tracks, source_track)
-    if source is None:
-        fail("Candidate version is not present on the required source track")
-    completed_release_for_version(source, version_code, "Google Play source track")
-    destination = find_track(tracks, destination_track)
-    if destination is None:
-        fail("Configured Google Play destination track does not exist")
-    require_replaceable_destination(destination, "Google Play destination track")
-    if track_has_version(destination, version_code):
-        completed_release_for_version(destination, version_code, "Google Play destination track")
-        return google_promotion_receipt(
-            manifest,
-            args.operation,
-            source_track,
-            destination_track,
-            "already_present",
-            "",
-        )
     edit_id = client.insert_edit(package)
     committed = False
     try:
+        # All preconditions must describe the exact edit that will be mutated.
+        # A separate read edit leaves a window for a Console rollout change
+        # before the mutation snapshot exists (and can be invalidated by Play).
+        tracks = client.list_tracks(package, edit_id)
+        bundles = client.list_bundles(package, edit_id)
+        require_candidate_bundle_digest(bundles, version_code, artifact_sha)
+        source = find_track(tracks, source_track)
+        if source is None:
+            fail("Candidate version is not present on the required source track")
+        completed_release_for_version(source, version_code, "Google Play source track")
+        destination = find_track(tracks, destination_track)
+        if destination is None:
+            fail("Configured Google Play destination track does not exist")
+        require_replaceable_destination(destination, "Google Play destination track")
+        if track_has_version(destination, version_code):
+            completed_release_for_version(destination, version_code, "Google Play destination track")
+            return google_promotion_receipt(
+                manifest,
+                args.operation,
+                source_track,
+                destination_track,
+                "already_present",
+                "",
+            )
         release_name = f"Parlor {manifest['version']['marketing_version']} ({version_code})"
         client.set_track(package, edit_id, destination_track, version_code, release_name)
         client.validate_edit(package, edit_id)

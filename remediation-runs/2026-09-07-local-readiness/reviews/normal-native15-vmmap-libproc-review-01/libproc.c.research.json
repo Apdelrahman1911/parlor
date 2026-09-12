@@ -1,0 +1,52 @@
+{
+  "url": "https://raw.githubusercontent.com/apple-oss-distributions/xnu/4d495c6e23c53686cf65f45067f79024cf5dcee8/libsyscall/wrappers/libproc/libproc.c",
+  "tag": "xnu-12377.61.12",
+  "commit": "4d495c6e23c53686cf65f45067f79024cf5dcee8",
+  "accessed_at": "2026-09-08T06:58:28.204284+00:00",
+  "status": 200,
+  "bytes": 28996,
+  "sha256": "5c8a771427e04c5e1d55c4cdf5a077f3b52c5be4a091683b970084bfdda76df2",
+  "line_count": 1216,
+  "excerpts": [
+    {
+      "from": 100,
+      "to": 110,
+      "lines": [
+        "int",
+        "proc_pidinfo(int pid, int flavor, uint64_t arg, void *buffer, int buffersize)",
+        "{",
+        "\tint retval;",
+        "",
+        "\tif ((retval = __proc_info(PROC_INFO_CALL_PIDINFO, pid, flavor, arg, buffer, buffersize)) == -1) {",
+        "\t\treturn 0;",
+        "\t}",
+        "",
+        "\treturn retval;",
+        "}"
+      ]
+    },
+    {
+      "from": 234,
+      "to": 250,
+      "lines": [
+        "int",
+        "proc_regionfilename(int pid, uint64_t address, void * buffer, uint32_t buffersize)",
+        "{",
+        "\tint retval;",
+        "\tstruct proc_regionpath path;",
+        "",
+        "\tif (buffersize < MAXPATHLEN) {",
+        "\t\terrno = ENOMEM;",
+        "\t\treturn 0;",
+        "\t}",
+        "",
+        "\tretval = proc_pidinfo(pid, PROC_PIDREGIONPATH, (uint64_t)address, &path, sizeof(struct proc_regionpath));",
+        "\tif (retval != 0) {",
+        "\t\treturn (int)(strlcpy(buffer, path.prpo_path, buffersize));",
+        "\t}",
+        "\treturn 0;",
+        "}"
+      ]
+    }
+  ]
+}

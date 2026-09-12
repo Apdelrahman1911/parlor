@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/factory_review",
+  "author": "/root/native_fix_review",
+  "reviewed_at": "2026-09-07T05:12:38.794985+00:00",
+  "conclusion": "FROZEN FINAL DRAFT SOURCE APPROVED; ROOT EDIT WINDOW, PUBLICATION,70TEST RERUN AND EXACT EXECUTION BINDING PENDING",
+  "supersedes": {
+    "file": "reviews/native-entitlement-draft-independent-review.json",
+    "reason": "Earlier evidence was written while draft author changes landed, so automatically captured261/190line headers and9test/68suite narrative did not describe one completely reviewed frozen version. Do not use its coverage/header as exact approval or execution evidence. Its broad source rationale is retained historically. This supplement follows full updated261/212 source re-read and explicit author hold at all four listed hashes.",
+    "historical_receipt_preserved": true
+  },
+  "frozen_files": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/control-drafts-02/simulator_entitlements.py",
+      "sha256": "57bee1eeb1fdd58bb6fef10545a37e1b0afae09be7107c2c6710f788905450f3",
+      "lines": 261,
+      "reviewer": "/root/factory_review",
+      "reviewed_ranges": [
+        [
+          1,
+          261
+        ]
+      ],
+      "reading_method": "Complete new current source re-read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/control-drafts-02/test_simulator_entitlements.py",
+      "sha256": "0beea984b56aab3bec2c8e14558edf875f01ce341142708121b9d6d2c5f1e4b2",
+      "lines": 212,
+      "reviewer": "/root/factory_review",
+      "reviewed_ranges": [
+        [
+          1,
+          212
+        ]
+      ],
+      "reading_method": "Complete new current source re-read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/control-drafts-02/run_ios_readiness.py",
+      "sha256": "464719dd100ca8d941126a2113611650e8febde8889abd2a97e9dbdb22dffb20",
+      "lines": 898,
+      "reviewer": "/root/factory_review",
+      "reviewed_ranges": [
+        [
+          1,
+          898
+        ]
+      ],
+      "reading_method": "Previously complete source reading + all final overlay changes and call-sites reopened"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/control-drafts-02/README.md",
+      "sha256": "073dfc3e309374e4e45dec27e3332eb06260573d3bf5309a007eda843b6efdbc",
+      "lines": 141,
+      "reviewer": "/root/factory_review",
+      "reviewed_ranges": [
+        [
+          1,
+          141
+        ]
+      ],
+      "reading_method": "Previously complete source reading + all final overlay changes and call-sites reopened"
+    }
+  ],
+  "test_case_count": 11,
+  "expected_full_control_suite_count": 70,
+  "new_changes_independently_reopened": [
+    "bounded_file uses actual stream.read(limit+1), not stat-then-unlimited allocation. Bundle Info.plist, generated xcent, SDK defaults use it. Generated xcent size must remain equal to earlier stat; growth/oversize fails rather than getting parsed/accepted.",
+    "FAT32/FAT64 slice alignment exponent is bounded31 and actual offset modulo2**exponent checked before slice read. Width/endian and expected exponent layout previously matched actualSDKfat.h.",
+    "New bounded-file test uses a4096-byte real BytesIO with a spy; asserts exact open(rb) and one read(65) for limit64. A read-all then len check no longer satisfies test.",
+    "Existing fat scenario tests all2widths*2endians with validalign0, then percase oversized exponent32 and actual misalignment exponent5 at correctoffset, restoring validbytes before separateCPU-mismatch case. None of these negative cases is satisfied merely by the previous CPU mismatch.",
+    "New runner AST test binds both built/temp and installed/owned_device inspectors, exact generated(derived,temp) call, one SDK observer, and shared signing_arguments use. It is wiring evidence, not actual native execution."
+  ],
+  "unchanged_assessment": [
+    "Strict ownership/canonical path/hash checks,64KiB payload/4MiB commandtable/countbounds, correct32/64 endian parsing, XML/binary public allowlist andDERnotinterpreted semantics remain intact.",
+    "No read of private signing material/keychain, no appID/entitlement/signing modification. Fourexplicit unsigned flags unchanged; nativeKeychain/IOS-R1 remains unresolved until observed.",
+    "Runtime gates/finalization/wholebuilt-installed image binding unchanged. Public SDK defaultobservations are not merged effective target settings.",
+    "Full freeze03 independent review and SDKheader/xcspec evidence remain applicable to unchanged controls; this source approval does not authorize parallel build or Storeoperations."
+  ],
+  "required_next": [
+    "Root opens edit window afterfocus05cleanup; author publishes byte-identical finaldraft plus provenance and new freeze.",
+    "Root runs full70tests, records source/control hashes, exitstatus andcleanup; independent reviewer reopens rawresults. None executed yet for these new11cases.",
+    "Independent exact sourcebinding+execution controlhash review before rootnative lane."
+  ],
+  "safety": "Reviewer started no builds/tests/nativeworkers/server or applicationprocesses. Only read-only text/hash/header/XML and this isolated evidence write. Allsource/control drafts authored bynativeagent; originalreceipt immutable; no cleanup againstother tasks."
+}

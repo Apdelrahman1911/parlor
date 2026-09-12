@@ -1,0 +1,195 @@
+{
+  "schema_version": 1,
+  "kind": "DRAFT_ONLY_B24_COMPLETED_REGION_QUERY_FAILURE_DIAGNOSTICS",
+  "author": "/root/lifecycle_controls",
+  "execution_coordinator": "/root",
+  "independent_reviewer": "/root/portability_review",
+  "status": "HELD_FOR_INDEPENDENT_REVIEW_NOT_EXECUTED_NOT_ADOPTED",
+  "scope": "Only this draft directory was authored. Canonical frozen 08d1adfbd7284f190fbab5f7baa846944bca5b68 source, Python acceptance helper, caller, old tests and driver were not edited. No test, compiler, project import/runtime, network/API, Actions/dispatch or commit was executed by this author.",
+  "authored_paths": [
+    "remediation-runs/2026-09-08-continuation/reviews/native-b24-region-diagnostics-01/kernel_image_region.c.in",
+    "remediation-runs/2026-09-08-continuation/reviews/native-b24-region-diagnostics-01/test_kernel_region_failure_diagnostics.py",
+    "remediation-runs/2026-09-08-continuation/reviews/native-b24-region-diagnostics-01/author-report.json"
+  ],
+  "draft_payload_manifest": [
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-b24-region-diagnostics-01/kernel_image_region.c.in",
+      "bytes": 4625,
+      "sha256": "e98501da6bec44050e2dc9aab75da13c6d34e3733019789df74efad7774d6eb8"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-b24-region-diagnostics-01/test_kernel_region_failure_diagnostics.py",
+      "bytes": 33264,
+      "sha256": "07154aa92327d828f4ad4755671825d0678c38b620664b740675f434cb64f14a"
+    }
+  ],
+  "frozen_inputs_reopened_and_rehashed": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/kernel_image_region.c.in",
+      "bytes": 3773,
+      "sha256": "d42aa932e5fe83defab173670aeea6f59507fa1b10029159efc04e1bbd67fdfc"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/kernel_image_regions.py",
+      "bytes": 3821,
+      "sha256": "4b87bf30ab492bf45554b2952ef52982343d5f16c66dce247412a45801b0287b"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_kernel_image_regions.py",
+      "bytes": 12776,
+      "sha256": "92c6218d227ec93e50d5e6df7a21274e8f1b469ddf14839e51c050c1d0f196e4"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
+      "bytes": 59858,
+      "sha256": "5524d839202211270ec1c97776f0d350b9802ecf0d1c5e6eb3d28cd960629302"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_control_tests.py",
+      "bytes": 2837,
+      "sha256": "0aa080c52ff3f30bb159bc59f728084ff92d6ad4f340b1ec051dfc55dd317f2e"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34303850578/native-evidence/ios-readiness-24/kernel-region-01.json",
+      "bytes": 96,
+      "sha256": "6b3b492f8044908b6453f0b36d292f4363294a534c2038f616407bd96a860f31"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34303850578/native-evidence/ios-readiness-24/receipt.json",
+      "bytes": 425102,
+      "sha256": "c8317c5612c11173746b8bb0e637f1b796b51056b3205f0713b7ac9475ff5e87"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34303850578/native-evidence/ios-readiness-24/input-manifest.json",
+      "bytes": 169019,
+      "sha256": "aa949d3f4154352cbb3fe276fe4effb94d4a151ddde22a5e47cb95b1b135d233"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-b24-region-investigation-01.json",
+      "bytes": 48156,
+      "sha256": "27640e489400fc4624ebf6e315b5933c1eedf142b2e00b804fd3a9d71fd9ab1c",
+      "inspection_scope": "Investigator findings/header and relevant six-predicate/rounding findings communicated directly; not an author re-performance of the entire Apple reference investigation."
+    }
+  ],
+  "actual_B24_gap": {
+    "raw_failure": {
+      "schema_version": 1,
+      "status": "FAIL",
+      "reason": "not-selected-executable-region",
+      "native_error": 0
+    },
+    "recorded_query_exit_code": 1,
+    "recorded_requested_pid": 86376,
+    "recorded_requested_start": 4397121536,
+    "recorded_requested_end_exclusive": 4439839520,
+    "recorded_requested_span": 42717984,
+    "compiled_helper_binary_sha256_not_source_sha256": "c147a166ef5f1a2634244605a98363759e87e475b0bf692009ab21f4e78e0461",
+    "established_from_frozen_source_and_receipt": "The combined six-predicate rejection was reached after the exact returned==sizeof(info) completeness check. The retained failure does not contain the actual raw region fields, actual sizeof/returned values, or captured query errno. The numeric request bounds survive separately in the command receipt.",
+    "errno_precision": "native_error0 at this particular rejection is a hardcoded sentinel, not evidence that proc_pidinfo left errno zero. The candidate retains that sentinel and uses a distinct query_errno field for the preexisting capture.",
+    "not_established": [
+      "Which of the six predicates failed, or whether more than one failed.",
+      "Actual region address, size, offset, protection, maximum protection or flags.",
+      "Page rounding as the cause, target-map page size, sampled Mach-O segment semantics or an application defect.",
+      "Path/vnode/final-lstat corroboration or the caller's post-query lifetime check for the rejected region. Those checks were not reached."
+    ],
+    "current_numeric_root_cause": "UNKNOWN; this draft does not reconstruct missing B24 measurements."
+  },
+  "candidate_delta": {
+    "location": "Only the body of the existing completed-query not-selected-executable-region guard; add braces and replace its generic failure call with a fixed diagnostic printf and return1.",
+    "original_six_failure_predicates_preserved": [
+      "region->pri_address != start",
+      "region->pri_size == 0",
+      "region->pri_size > end - start",
+      "region->pri_offset != 0",
+      "(region->pri_flags & PROC_REGION_SUBMAP) != 0",
+      "region->pri_protection != (VM_PROT_READ | VM_PROT_EXECUTE)"
+    ],
+    "failure_base_keys_unchanged": {
+      "schema_version": 1,
+      "status": "FAIL",
+      "reason": "not-selected-executable-region",
+      "native_error": 0
+    },
+    "failure_exit_code_unchanged": 1,
+    "added_top_level_key": "region_diagnostic",
+    "closed_nested_numeric_fields": {
+      "requested_start": "Validated start, uint64_t, no rounding.",
+      "requested_end_exclusive": "Validated end, uint64_t, no rounding.",
+      "pri_address": "Raw completed-reply region->pri_address, uint64_t.",
+      "pri_size": "Raw completed-reply region->pri_size, uint64_t; not clamped or rounded.",
+      "pri_offset": "Raw completed-reply region->pri_offset, uint64_t.",
+      "pri_protection": "Raw completed-reply region->pri_protection, existing unsigned format.",
+      "pri_max_protection": "Raw completed-reply region->pri_max_protection, existing unsigned format; not a new C acceptance predicate.",
+      "pri_flags": "Raw completed-reply region->pri_flags, existing unsigned format; not masked before output.",
+      "native_structure_bytes": "Actual sizeof(info), size_t, not an ABI-size literal.",
+      "native_return_bytes": "Actual returned value, int, not a guessed byte count.",
+      "query_errno": "Preexisting native_error local captured immediately after the one proc_pidinfo call, int; distinct from top-level literal native_error0."
+    },
+    "success_and_other_branches": "Byte-identical to the frozen source outside this one guard-body replacement, including the success printf, all request/artifact/path/vnode/final-lstat checks and region-query-incomplete failure.",
+    "incomplete_reply_rule": "Existing early return remains before region/file pointer declarations and any diagnostic field access. Incomplete replies keep the existing four-key failure record with captured native_error and no region_diagnostic object.",
+    "privacy_and_bounds": "Exactly one fixed object of numeric primitives; only closed literal reason/status strings. No path, vnode identifiers, raw map, mapped memory, variable OS error description or application data. The caller's existing4096-byte output limit is unchanged.",
+    "query_and_acceptance_scope": "One original proc_pidinfo call, no new OS query, fallback, retry, region-end addition, page-size call or rounding acceptance. Maximum protection remains reported but does not add a C guard. The unchanged Python binder still requires its exact PASS schema and all existing numeric/identity predicates.",
+    "optional_host_page_size": "Omitted to minimize scope. Host sysconf context is not needed to distinguish the existing six predicates and would not establish target-map page size.",
+    "failure_evidence_semantics": "Uncorroborated raw failure snapshot only. It is not successful path/vnode/target-lifetime evidence and cannot repair provenance or make a failed helper invocation PASS.",
+    "python_or_caller_change": "None proposed. The existing caller's require raises on exit1 before parsing success JSON; the exact-schema Python binder also rejects diagnostic FAIL records and diagnostic fields added to PASS rows."
+  },
+  "focused_controls_authored_not_executed": {
+    "declared_test_methods_from_stdlib_AST": 17,
+    "planned_compiled_mutants": 19,
+    "expected_compiler_invocations_if_entire_suite_reaches_every_mutant": 21,
+    "execution_result": "NOT EXECUTED; no passing test/build/runtime credit is claimed.",
+    "design": "Compile the actual adjacent candidate and a byte-pinned inverse-delta reconstruction of the original main using embedded fake libproc declarations and fake identity/file operations. Every fixture is an owned subprocess with synthetic numeric input. The fake ABI is not Darwin ABI validation. The production Python binder is executed only by root after verifying its exact SHA256.",
+    "input_closure": "C stub headers and harness are literals inside the hash-bound test file. The old C source is reconstructed and verified against d42aa932 rather than read from any unbound external baseline. The only external production Python source is pinned to4b87bf30. Candidate/test/binder must all be included in root's before/after control binding.",
+    "coverage": [
+      "Exact inverse delta reproduces the frozen original source SHA256; six conditions, early completeness return, single proc call and all other source bytes are unchanged.",
+      "Each of six independent failure witnesses still exits1 with exact closed failure-only raw numeric data; original observer rejects the same witnesses.",
+      "Original success bytes/schema are unchanged across allowed size boundaries, non-submap flags, maximum-protection values and nonzero captured errno. The stricter existing Python maximum-protection acceptance is separately preserved.",
+      "Advanced addresses, overlong/zero regions, both hypothetical4K/16K rounding sizes, protections and combined faults stay rejected. Synthetic spans are not missing B24 measurements.",
+      "Unsigned64/32-bit extremes and signed errno extremes remain raw and within a1024-byte fixture-output assertion, stricter than the unchanged4096-byte caller cap.",
+      "Short, zero, negative and oversized reply counts preserve the old four-key incomplete failure; the synthetic reply poisons bytes beyond its reported prefix.",
+      "Request/owned-artifact failures still occur before query; path/vnode/final-lstat failures retain their original output without diagnostic expansion.",
+      "The pinned Python binder rejects every extended FAIL row, a relabelled PASS diagnostic, diagnostic fields added to otherwise valid PASS rows and the original independent invalid success fields.",
+      "Nineteen compile-then-reject mutation controls: disable each of six predicates; allow4K/16K rounding; change failure status/reason/exit/legacy sentinel/captured errno/raw size/closed fields or leak a path; add a second query; remove the incomplete-reply return; contaminate success output with diagnostics. Mutant compilation failure is NOT counted as a killed behavioral mutant."
+    ],
+    "child_execution_budgets": {
+      "compiler_deadline_seconds_each": 30,
+      "compiler_stdout_bytes_max_each": 65536,
+      "compiler_stderr_bytes_max_each": 65536,
+      "fixture_deadline_seconds_each": 5,
+      "fixture_stdout_bytes_max_each": 4096,
+      "fixture_stderr_bytes_max_each": 4096,
+      "synthetic_executable_bytes_max_each": 1048576,
+      "failed_child_reap_deadline_seconds": 5,
+      "enforcement": "No shell, stdin DEVNULL, live selector-based stream caps, finite monotonic deadlines, dedicated process session/group, kill-and-reap on timeout/overflow/error, finally-close of pipes. Compiler must return0 with no output/diagnostics; fixtures must return0 or1 and satisfy each contract assertion."
+    },
+    "owned_paths_and_cleanup": "Root must provide an absolute, canonical, current-user-owned private TMPDIR (no group/other permissions). A unique0700 TemporaryDirectory owns all generated sources, outputs, child HOME and compiler TMPDIR. Output paths are exclusive/fresh; executable identity/type/owner/size are checked. Class cleanup removes the allocation even when setup or tests fail; child exception cleanup runs before removal.",
+    "suggested_root_only_standalone_argv": [
+      "python3",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "remediation-runs/2026-09-08-continuation/reviews/native-b24-region-diagnostics-01",
+      "-p",
+      "test_kernel_region_failure_diagnostics.py",
+      "-v"
+    ],
+    "root_binding_requirement": "The suggested argv is not an execution approval or self-binding receipt. Root must run it through a separately reviewed/hash-bound Ncontrol lane with ownedTMPDIR, before/after exact input manifests, explicit17 discovered IDs/count and captured results, OR promote the test into the canonical control closure and update/review its driver count.",
+    "promotion_compatibility": "The test locates an adjacent kernel_image_regions.py after canonical promotion, otherwise the exact pinned canonical helper from this draft directory. Existing control_manifest includes a promoted test_*.py automatically. If these17 methods are the sole additions to the historical187, the new canonical declared count would be204; root must recompute the actual count and bind driver/test bytes rather than credit historical187 results to new code.",
+    "classification": "Synthetic C/helper correctness controls only; not macOS SDK/ABI compilation, actual proc_pidinfo measurement, application/UI/runtime success, Store/device evidence, or authorization for a new native query."
+  },
+  "author_static_checks_only": {
+    "python_AST_parse": "Performed with stdlib ast.parse; test module was not imported or run.",
+    "declared_methods": 17,
+    "inverse_delta_exactly_equals_current_canonical_source": true,
+    "inverse_delta_sha256": "d42aa932e5fe83defab173670aeea6f59507fa1b10029159efc04e1bbd67fdfc",
+    "mutation_anchor_literal_occurrences": "Inspected as AST literals and text; anchors are unique. This is not compiled-mutant execution.",
+    "canonical_relevant_hashes": "Rehashed as listed above; unchanged by this author.",
+    "git_or_project_runtime_execution": "None."
+  },
+  "handoff": {
+    "hold": "All three authored files are held pending independent review. The report hash is delivered separately to avoid a self-referential manifest.",
+    "next_owner": "/root/portability_review for independent source/test review; /root for all later edits/adoption, root-lane control execution and runtime decisions.",
+    "not_authorized": "Canonical promotion, compiler/test execution by this author, a native dispatch/query, guard relaxation, inference of the B24 numeric cause, or success/provenance credit from this draft."
+  }
+}

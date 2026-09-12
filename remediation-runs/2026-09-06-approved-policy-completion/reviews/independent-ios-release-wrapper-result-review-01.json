@@ -1,0 +1,337 @@
+{
+  "schema_version": 1,
+  "reviewed_at": "2026-09-06T21:15:11.378987+00:00",
+  "reviewer": "/root/factory_review",
+  "author": "/root/native_fix_review",
+  "executor": "/root",
+  "classification": "PASS \u2014 SOURCE-BOUND UNSIGNED ARM64 SIMULATOR RELEASE WRAPPER BUILD AND ARTIFACT INSPECTION ONLY",
+  "status": "PASS",
+  "cycle": "ios-wrapper-release-01",
+  "receipt": {
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/ios-wrapper-release-01/receipt.json",
+    "sha256": "edab3832dfd32e65eab0e882ef51746f7157e77483a55ef22c3e6707b61f5e75"
+  },
+  "control_review": {
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-ios-release-wrapper-control-review-01.json",
+    "sha256": "5c869405451243ec2016e1761ec1269ab67f97283df9f9a4b011c26ab20de978"
+  },
+  "independent_execution_go": {
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-release-wrapper-focused-controls-and-execution-go-01.json",
+    "sha256": "e2b169b9bb3c5e5975cc8ff232acd2b82b5350662a3fbd61dcdc43e78619258b"
+  },
+  "exact_identity": {
+    "branch": "main",
+    "commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+    "git_tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+    "source_manifest_sha256": "9ac2be536979f2216b39c10a6d148125a12380987d4efd483bbcbaeb1733318e",
+    "tracked_diff_sha256": "148fb4583d8fa8341b3cbc48a7fc0bc7564bf4df5c27e9d80e32c6bfdc57b784",
+    "source_inputs": 669,
+    "copied_build_inputs": 613,
+    "control_files": 18,
+    "control_sha256": "e9ad9ac181e99684d019e7d306f355aa1916a488a5b5a12b725d943c3c03f133",
+    "dirty_source_not_clean_release_candidate": true
+  },
+  "execution": {
+    "started_at": "2026-09-06T20:57:27.031252+00:00",
+    "finished_at": "2026-09-06T21:02:09.132647+00:00",
+    "xcode_version": "Xcode 26.5\nBuild version 17F42",
+    "sdk_name": "iphonesimulator26.5",
+    "configuration": "Release",
+    "platform": "iOS Simulator",
+    "architectures": [
+      "arm64"
+    ],
+    "xcode_command": [
+      "xcodebuild",
+      "-project",
+      "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-ios-wrapper-release-01-9vvylje1/copy/iosApp/iosApp.xcodeproj",
+      "-scheme",
+      "iosApp",
+      "-configuration",
+      "Release",
+      "-sdk",
+      "iphonesimulator",
+      "-destination",
+      "generic/platform=iOS Simulator",
+      "-derivedDataPath",
+      "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-ios-wrapper-release-01-9vvylje1/DerivedData",
+      "-jobs",
+      "1",
+      "ARCHS=arm64",
+      "ONLY_ACTIVE_ARCH=YES",
+      "CODE_SIGNING_ALLOWED=NO",
+      "CODE_SIGNING_REQUIRED=NO",
+      "CODE_SIGN_IDENTITY=",
+      "DEVELOPMENT_TEAM=",
+      "COMPILER_INDEX_STORE_ENABLE=NO",
+      "build"
+    ],
+    "xcode_exit_code": 0,
+    "all11_recorded_commands_exit0": true,
+    "nested_gradle_exit_statuses": "build_exit=0\nstop_exit=0\n",
+    "gradle_actual_summary": "BUILD SUCCESSFUL in4m23s;137 actionable tasks:137 executed",
+    "xcode_actual_summary": "** BUILD SUCCEEDED **",
+    "runtime_tests_executed_by_this_cycle": 0,
+    "task_line_count": 249,
+    "gradle_task_skipped": 20,
+    "gradle_task_no_source": 91,
+    "task_skip_limit": "These are configuration/resource/debug-symbol/SwiftPM task dispositions, not executed runtime tests. Resources aggregated for iosArm64/iosX64 do not prove builds or runtime on those architectures."
+  },
+  "artifact_inventory": {
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/ios-wrapper-release-01/release-artifact-inventory.json",
+    "sha256": "10b73d091b9c5db832691072b0d9c0751fccc064c816af8d0edcdebf63ea3a63",
+    "files": 30,
+    "total_bytes": 58247504,
+    "native_files": 2,
+    "raw_source_resource_matches": 9,
+    "privacy_structural_match": true
+  },
+  "app_identity": {
+    "CFBundleIdentifier": "com.parlor.app",
+    "CFBundleExecutable": "Parlor",
+    "CFBundleShortVersionString": "1.0.0",
+    "CFBundleVersion": "1",
+    "MinimumOSVersion": "16.0",
+    "CFBundleSupportedPlatforms": [
+      "iPhoneSimulator"
+    ],
+    "DTPlatformName": "iphonesimulator",
+    "CFBundleLocalizations": [
+      "en",
+      "ar"
+    ]
+  },
+  "native_binaries": [
+    {
+      "path": "Frameworks/ComposeApp.framework/ComposeApp",
+      "bytes": 52266120,
+      "sha256": "b211e375ec48e30c649211d49d40c74c64d8b11b9059f6e326520a1bb08b0120",
+      "executable": true,
+      "kind": "mach-o",
+      "architectures": [
+        "arm64"
+      ],
+      "platforms": [
+        "IOSSIMULATOR"
+      ],
+      "minimum_os_versions": [
+        "15.0"
+      ],
+      "file_description": "Mach-O 64-bit dynamically linked shared library arm64",
+      "evidence_kind": "native-file-lipo-vtool-metadata-only"
+    },
+    {
+      "path": "Parlor",
+      "bytes": 130504,
+      "sha256": "a17b0ab1363e88957d05fb0312f79add70ee8962330763b7b9c248423bd4f8f5",
+      "executable": true,
+      "kind": "mach-o",
+      "architectures": [
+        "arm64"
+      ],
+      "platforms": [
+        "IOSSIMULATOR"
+      ],
+      "minimum_os_versions": [
+        "16.0"
+      ],
+      "file_description": "Mach-O 64-bit executable arm64",
+      "evidence_kind": "native-file-lipo-vtool-metadata-only"
+    }
+  ],
+  "native_raw_evidence": {
+    "Parlor": {
+      "file": {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/ios-wrapper-release-01/native-001-file.log",
+        "sha256": "643cc5d2dac8a288bdceeae0d8057fecf55ce5eb10dd5ea30d2d48cc957c662b"
+      },
+      "archs": {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/ios-wrapper-release-01/native-001-archs.log",
+        "sha256": "c1669e1d8edca98769c37d494b76442a1d6e5ffffd7b4da1fb63aef8ebaf6f01"
+      },
+      "build": {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/ios-wrapper-release-01/native-001-build.log",
+        "sha256": "ff768ecede8d06b27b161eebd77c3a1790327d1a25495c2dfc5eb51eb17c941e"
+      }
+    },
+    "ComposeApp framework": {
+      "file": {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/ios-wrapper-release-01/native-002-file.log",
+        "sha256": "f31727034b4f715eb79d8b4961bf28151cac23cf1cafe61000840420699049f2"
+      },
+      "archs": {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/ios-wrapper-release-01/native-002-archs.log",
+        "sha256": "c1669e1d8edca98769c37d494b76442a1d6e5ffffd7b4da1fb63aef8ebaf6f01"
+      },
+      "build": {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/ios-wrapper-release-01/native-002-build.log",
+        "sha256": "1ac48e868ab9ab47edc22b5ae9d0ae961adb9e318df82e043afe1965b4883689"
+      }
+    }
+  },
+  "native_metadata_review": [
+    "All2 native files, app/executable plus embedded dynamic framework, match exact arm64 lipo and IOSSIMULATOR vtool outputs. All30 inventory file entries read, summed and hash-linked to receipt.",
+    "App native minimum16.0/SDK26.5; framework native minimum15.0/SDK26.4. These are separate artifact metadata; no unsupported claim of identical version/deployment/SDK values.",
+    "Main executable130504bytes SHAa17b0ab1363e88957d05fb0312f79add70ee8962330763b7b9c248423bd4f8f5. Embedded framework52266120bytes SHAb211e375ec48e30c649211d49d40c74c64d8b11b9059f6e326520a1bb08b0120.",
+    "Seven authored JSON cases and two fonts each match current frozen public source hash and exact inventoried artifact path; all9 matches checked. Shipped root privacy is byte-identical to current source as well as structurally equal.",
+    "No provisioning profile, extra Mach-O/debug dylib or .appex appears in exhaustive30-file owned-app inventory. Compiled assets/localized strings are inventoried, not falsely equated to source bytes."
+  ],
+  "source_binding_review": {
+    "receipt_before_after_and_input_binding_equal_freeze02": true,
+    "all_current669_source_hashes_recomputed": true,
+    "all18_control_hashes_recomputed_and_matched_execution_manifest": true,
+    "copied_manifest_exact613_unique_paths": true,
+    "all613_original_hashes_match_frozen_copy_binding": true,
+    "only_changed_copy_input": "iosApp/iosApp.xcodeproj/project.pbxproj",
+    "phase_proof": "Reconstructed exact copied pbx phase using current source and frozen template with recorded owned paths; computed copied hash and full unified diff equal actual before-build evidence. No Kotlin/Swift/test/resource byte was changed.",
+    "all613_post_build_hashes_equal_expected_copy": true,
+    "unexpected_missing_or_symlinked_inputs": []
+  },
+  "cleanup_review": {
+    "all7_finalization_stages": "PASS",
+    "gradle_stops": [
+      {
+        "label": "stop-xcode-immediate",
+        "exit_code": 0,
+        "at": "2026-09-06T21:02:06.525937+00:00"
+      },
+      {
+        "label": "stop-final",
+        "exit_code": 0,
+        "at": "2026-09-06T21:02:07.579109+00:00"
+      }
+    ],
+    "nested_stop_proved_by_exact_receipt": true,
+    "observed_owned_process_identities": 49,
+    "remaining_owned_processes": [],
+    "unknown_holders": [],
+    "remaining_outputs": [],
+    "cleanup_errors": [],
+    "secondary_attestation_errors": [],
+    "primary_owned_temp_copy_and_derived_data_absent_on_independent_path_check": true,
+    "secondary_fifo_records": 2,
+    "secondary_attestation": "PID44741/start paired with parentibtoold44665/start and matching observed ownership; pair inode/UID/birth metadata within cycle, no pending claim; both exact paths and empty owned parent directories absent on independent check.",
+    "shared_global_cache_targets_still_present": true,
+    "source_unmodified": true,
+    "original_output_cleanup_not_attempted": true,
+    "limitation": "Live process absence is reported by the reviewed completed finalizer receipt; reviewer did not signal/query native processes. Exact owned file absence checked read-only afterward."
+  },
+  "warnings_preserved": [
+    {
+      "location": "xcodebuild.log:748",
+      "classification": "PINNED_BUILD_CONFIGURATION_WARNING",
+      "claim": "android.experimental.lint.version9.1.1 experimental; pin retained."
+    },
+    {
+      "location": "xcodebuild.log:749-755",
+      "classification": "FUTURE_TOOLCHAIN_MAINTENANCE",
+      "claim": "KGP warns Gradle8.13 support will end in Kotlin2.5.0; no upgrade or suppression performed."
+    },
+    {
+      "location": "xcodebuild.log:757-760",
+      "classification": "HOST_INCOMPATIBLE_RUNTIME_TARGET",
+      "claim": "iosX64Test disabled on macos-aarch64. Not claimed executed or repaired by resource aggregation."
+    },
+    {
+      "location": "xcodebuild.log:1230,1242",
+      "classification": "ABSENT_APPINTENTS_FEATURE_METADATA",
+      "claim": "Xcode reports noAppIntents.framework/noAppShortcuts and skips their metadata. Native entry sources contain no AppIntent feature; no application test was skipped by this build-only cycle."
+    }
+  ],
+  "evidence": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/ios-wrapper-release-01/copied-source-inputs-after-build.json",
+      "sha256": "0a6bf96a76de4bfd5332e3742c79edea86a66548b5370682bdcfc9e8ace5282f"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/ios-wrapper-release-01/copied-source-manifest.json",
+      "sha256": "bc680b5c20e51ac1b217b9124af712a5b00c612823920a26b6c1199f026bbf9b"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/ios-wrapper-release-01/copied-source.diff",
+      "sha256": "d14292ce7d4ad42671bfea3fe24e0c98b720858a1b440e510c6a12140635a1b9"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/ios-wrapper-release-01/embedded-gradle-stop.txt",
+      "sha256": "fb55a963c8d30249ea6b8be68a62b5921facefdc7823c16ad139fea885be972f"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/ios-wrapper-release-01/input-manifest.json",
+      "sha256": "b105ab7e1eaa42962de5deb376c60de2c3be5548d7f534a31f05703183d2e663"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/ios-wrapper-release-01/native-001-archs.log",
+      "sha256": "c1669e1d8edca98769c37d494b76442a1d6e5ffffd7b4da1fb63aef8ebaf6f01"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/ios-wrapper-release-01/native-001-build.log",
+      "sha256": "ff768ecede8d06b27b161eebd77c3a1790327d1a25495c2dfc5eb51eb17c941e"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/ios-wrapper-release-01/native-001-file.log",
+      "sha256": "643cc5d2dac8a288bdceeae0d8057fecf55ce5eb10dd5ea30d2d48cc957c662b"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/ios-wrapper-release-01/native-002-archs.log",
+      "sha256": "c1669e1d8edca98769c37d494b76442a1d6e5ffffd7b4da1fb63aef8ebaf6f01"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/ios-wrapper-release-01/native-002-build.log",
+      "sha256": "1ac48e868ab9ab47edc22b5ae9d0ae961adb9e318df82e043afe1965b4883689"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/ios-wrapper-release-01/native-002-file.log",
+      "sha256": "f31727034b4f715eb79d8b4961bf28151cac23cf1cafe61000840420699049f2"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/ios-wrapper-release-01/receipt.json",
+      "sha256": "edab3832dfd32e65eab0e882ef51746f7157e77483a55ef22c3e6707b61f5e75"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/ios-wrapper-release-01/release-artifact-inventory.json",
+      "sha256": "10b73d091b9c5db832691072b0d9c0751fccc064c816af8d0edcdebf63ea3a63"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/ios-wrapper-release-01/sdk-version.log",
+      "sha256": "25205f2e2f02dc71036ee827e19c49b893b231a3d1af240e35a3ac55aa8cdcb6"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/ios-wrapper-release-01/secondary-fifo-ownership-final.json",
+      "sha256": "8e806ccdfd9334afc486910d107593498838dff3518c35781b6702e14f9d4663"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/ios-wrapper-release-01/secondary-fifo-ownership.json",
+      "sha256": "8e806ccdfd9334afc486910d107593498838dff3518c35781b6702e14f9d4663"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/ios-wrapper-release-01/stop-final.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/ios-wrapper-release-01/stop-xcode-immediate.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/ios-wrapper-release-01/xcode-version.log",
+      "sha256": "5f6350250c6f298d06e1435819ddd1539d6c84785aaa8d824c2ac74f57914d03"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/ios-wrapper-release-01/xcodebuild.log",
+      "sha256": "7e118fab689badbbf592ba1f097928d54f6bba25a1297b10eee07b416833299a"
+    }
+  ],
+  "review_method": "Complete compact inventory/native/stop/phase/secondary logs and all receipt outcome/command/ownership fields; full structured reconciliation of all source/control/copy hash lists. Generated Xcode1257-line log inspected for invocation, task dispositions, compiler/link/resource paths, warnings/errors, stops and final outcome; not falsely described as a new line-by-line application audit. Artifacts were correctly cleaned after root inspection, so reviewer uses retained native-tool output/inventory, not a new post-cleanup binary execution.",
+  "limits": [
+    "No app installed/launched; no simulator device created/booted, XCTest executed, physical device/LAN tested, or Store artifact signed/uploaded. Xcode asset-catalog helper processes were owned and cleaned.",
+    "Installed Xcode26.5/17F42 differs from Store-qualified26.3/17C529. Canonical com.parlor.app identity collision/publication disablement remains unchanged.",
+    "Xcode builtin shallow -validate-for-store command is local bundle checking, not Store service evidence or submission authorization.",
+    "Successful wrapper compilation does not complete DS-C01 language/OS/session runtime gate, whole-project audit or Store readiness.15/16 scope repair verification remains unchanged until the separate language outcome is approved.",
+    "No whole-worktree preservation claim beyond669frozen source hashes; final root preservation audit remains required."
+  ],
+  "reviewer_preservation": {
+    "production_or_existing_evidence_edits": false,
+    "build_test_native_processes_started": false,
+    "generated_build_outputs": false,
+    "only_written_artifact": "This exclusive additive required review dossier."
+  }
+}

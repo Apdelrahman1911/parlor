@@ -1,0 +1,434 @@
+{
+  "schema_version": 1,
+  "kind": "INDEPENDENT_FINAL_D03_APPLE_ACTUAL_EXECUTION_AND_CUSTODY_REVIEW",
+  "reviewer": "/root/l08_fixture",
+  "reviewed_at_utc": "2026-09-10T11:41:14.697127+00:00",
+  "status": "APPLE_SCOPED_PASS_D03_COMBINED_FAILURE_NOT_READY",
+  "findings": [],
+  "source": {
+    "commit": "75c104734373703570a307de9c7a53d291bc2718",
+    "tree": "4d5b660c5f508a3eb8d01cd9203f2503570dbb18",
+    "branch": "fix/local-readiness-2026-09-07",
+    "run_id": 34464573240,
+    "run_attempt": 1,
+    "job_id": 102830019281,
+    "job_name": "iOS tests, release frameworks, and Swift wrapper",
+    "dispatch_scope": "full",
+    "job_conclusion": "success",
+    "whole_run_conclusion": "failure",
+    "whole_run_failure_boundary": "Saved jobs API records the Common, desktop, and Android release cleanup step as failure. That platform is reviewed separately; Apple success neither erases nor stitches a pass over D03.",
+    "binding": "Saved run, attempt, jobs and artifact APIs; exact-SHA checkout and clean-Git logs; source-bound ownership; frozen Git blobs; hosted package inspector. Full-mode checkout fetch-depth 1 is intentional; this review used the full local frozen Git tree.",
+    "frozen_tracked_paths": 24865,
+    "package_source_manifest_sha256": "8216731d302391117eca37699f7f54ddcbd8ca716f50b1f39f0aabc87b75c66f",
+    "source_rows_checked_against_frozen_git_blobs": 840,
+    "source_row_total_bytes": 40461563,
+    "source_path_selection_length_sha256_and_executable_modes_match": true,
+    "source_manifest_hash_recomputed": true,
+    "included_tracked_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "untracked_included": [],
+    "source_unchanged_during_hosted_inspection": true,
+    "scope_limit": "Evidence is at this exact frozen revision, not any later working-tree or committed Linux-only probe correction."
+  },
+  "custody": {
+    "packet": "remediation-runs/2026-09-08-continuation/actions/34464573240",
+    "download_receipt_bytes": 35338678,
+    "download_receipt_sha256": "6b14142ab06c9d327ad455985517fecbcc8397de3f70a8dcdd5cc99a8e54774f",
+    "ios_artifact_id": 10149497218,
+    "ios_zip_bytes": 12743163,
+    "ios_zip_sha256": "254deedc42ae6067d46090f8282a1de5341a365fa88a633144cf1680351b94f8",
+    "cleanup_artifact_id": 10149500205,
+    "cleanup_zip_bytes": 2747,
+    "cleanup_zip_sha256": "99f563ff48e98fae93313fe1f246d5ca69db324ff324726ee05b40401e1a7274",
+    "original_log_zip_bytes": 384549,
+    "original_log_zip_sha256": "9fdcdb1796877f252032e51bdf05d4ce878d2df3d4f2af263adadbda0afae4ae",
+    "checks": "Original Apple ZIP lengths/digests match saved artifact APIs and collector command receipts. All 10,103 Apple members plus final cleanup member were read, CRC/SHA256/length-checked against the receipt; paths were checked for duplicate/unsafe/symlink entries. Historical/current classification was independently reconciled against frozen Git path membership. Extracted file sets and bytes exactly match the 277 selected Apple members and one cleanup member. All 25 Apple log members were independently rehashed against the retained log manifest; relevant raw logs were read directly without extraction.",
+    "ios_zip_members": 10103,
+    "frozen_tracked_historical_members_excluded_from_execution_counts": 9782,
+    "current_members": 321,
+    "current_members_extracted": 277,
+    "current_members_retained_compressed_only": 44,
+    "compressed_only_breakdown": {
+      "fresh_xcresult_files": 41,
+      "release_wrapper_dsym_files": 3
+    },
+    "duplicate_unsafe_or_symlink_paths_found": false,
+    "frozen_path_manifest_sha256": "0992082cea4af235f0dc7150e258a21aa0555cd0750b633f0afb87e67e737440"
+  },
+  "qualified_environment": {
+    "host": "GitHub-hosted macos-15-arm64, macOS 15.7.9 (24G830)",
+    "runner_image": "20260907.0337.1",
+    "runner_agent": "2.337.0",
+    "xcode": "26.3 / 17C529",
+    "developer_dir": "/Applications/Xcode_26.3.app/Contents/Developer",
+    "iphoneos_sdk": "26.2",
+    "iphonesimulator_sdk": "26.2",
+    "jdk": "Temurin 21.0.12+101.0 arm64",
+    "release_policy_toolchain_checks_executed": true
+  },
+  "apple_aggregate": {
+    "command": "./gradlew productionIosSimulatorRuntimeTests productionAppleCheck --dependency-verification=strict --no-daemon --stacktrace --console=plain",
+    "step_interval_utc": [
+      "2026-09-10T10:10:18Z",
+      "2026-09-10T11:05:04Z"
+    ],
+    "result": "BUILD SUCCESSFUL in 54m 43s",
+    "gradle_actionable_tasks": {
+      "executed": 253,
+      "up_to_date": 0,
+      "from_cache": 0
+    },
+    "non_runtime_task_log_events": {
+      "skipped": 55,
+      "no_source": 332
+    },
+    "runtime_task_events": 13,
+    "runtime_xml_suites": 75,
+    "runtime_testcase_descriptors": 465,
+    "runtime_failures": 0,
+    "runtime_errors": 0,
+    "runtime_skips": 0,
+    "runtime_xml_timestamp_range_utc": [
+      "2026-09-10T10:23:21.638Z",
+      "2026-09-10T10:28:09.850Z"
+    ],
+    "module_counts_columns": [
+      "module",
+      "xml_suites",
+      "testcase_descriptors"
+    ],
+    "module_counts": [
+      [
+        "composeApp",
+        16,
+        91
+      ],
+      [
+        "game-modes/mafia",
+        2,
+        23
+      ],
+      [
+        "game-modes/whodunit",
+        5,
+        9
+      ],
+      [
+        "shared/content",
+        5,
+        24
+      ],
+      [
+        "shared/core",
+        2,
+        12
+      ],
+      [
+        "shared/design-system",
+        9,
+        26
+      ],
+      [
+        "shared/engine",
+        2,
+        9
+      ],
+      [
+        "shared/engine-testing",
+        3,
+        6
+      ],
+      [
+        "shared/networking",
+        8,
+        34
+      ],
+      [
+        "shared/networking-testing",
+        2,
+        5
+      ],
+      [
+        "shared/session",
+        11,
+        142
+      ],
+      [
+        "shared/storage",
+        4,
+        31
+      ],
+      [
+        "shared/transport-p2p",
+        6,
+        53
+      ]
+    ],
+    "runtime_evidence_scope": "Only exact live parlor/parlor/<module>/build/test-results/iosSimulatorArm64Test XMLs. Each suite total matches actual testcase/failure/error/skipped nodes; all 465 descriptor names end [iosSimulatorArm64], are unique within module/suite, have fresh timestamps inside the successful aggregate cycle, and match all 13 unsuffixed runtime-task events. Fresh output ownership plus no cached/up-to-date aggregate tasks excludes historical reports or compilation-only substitutions.",
+    "apple_type_aware_static_analysis": {
+      "executed_detektMetadataIosMain_modules": [
+        "composeApp",
+        "shared/design-system",
+        "shared/networking",
+        "shared/transport-p2p"
+      ],
+      "current_xml_reports": 4,
+      "violations": 0,
+      "other_detekt_target_source_set_events_no_source": 113
+    },
+    "release_link_tasks_executed_not_cached": [
+      ":composeApp:linkReleaseFrameworkIosArm64",
+      ":composeApp:linkReleaseFrameworkIosSimulatorArm64",
+      ":composeApp:linkReleaseFrameworkIosX64"
+    ],
+    "linkage_and_count_limits": "The three Release tasks are linkage only. ARM64-host iosX64Test is explicitly disabled by architecture mismatch and was not counted as passing runtime. Task SKIPPED/NO-SOURCE events are not testcase skips. Repeated Gradle log task headings around compiler warnings are not multiple executions."
+  },
+  "normal_debug_xctest": {
+    "configuration": "Normal production Debug XCTest build and test, not an L08/OS39 copy-only fixture or libproc B lane",
+    "result": "TEST SUCCEEDED",
+    "test_suite_interval_utc": [
+      "2026-09-10T11:10:20.092Z",
+      "2026-09-10T11:10:48.414Z"
+    ],
+    "passed_tests": 5,
+    "failures": 0,
+    "skips": 0,
+    "passed_test_methods": [
+      "ComposeContainerViewControllerTests/testChildUsesFullBoundsAcrossSizesAndOpposingSemanticDirections",
+      "ComposeContainerViewControllerTests/testDefaultAppearanceForwardingReachesTheSameChildExactlyOnce",
+      "ComposeContainerViewControllerTests/testOneStableChildKeepsItsExplicitSemanticsIndependentOfTheOuterView",
+      "ComposeContainerViewControllerTests/testSystemDecorationAndOrientationPoliciesStillBelongToTheChild",
+      "IOSAppLaunchUITests/testColdLaunchRendersComposeHomeWithoutUnexpectedAlert"
+    ],
+    "test_scope": "Four UIKit tests compile the actual container source into the test target and check child semantics, bounds, decoration/orientation policies and appearance forwarding. One app-host XCTest launches com.parlor.app.debug, waits for runningForeground and parlor-home-brand, checks absence of an unexpected alert during its two-second observation window, and confirms foreground state. Only that one test is an actual production app cold-launch observation; the four container tests are not independent app launches.",
+    "fresh_simulator": {
+      "udid": "38113B25-6FBE-4DD5-9B00-634D87C40BBC",
+      "device": "iPhone 16 Pro",
+      "os": "iOS 18.5",
+      "architecture_used": "arm64",
+      "parallel_testing_enabled": false,
+      "maximum_concurrent_destinations": 1,
+      "journaled_uuid_not_in_pre_create_baseline": true
+    },
+    "embedded_gradle_actionable_tasks": {
+      "executed": 46,
+      "up_to_date": 92,
+      "from_cache": 0
+    },
+    "effective_debug_bundle_id": "com.parlor.app.debug",
+    "effective_release_bundle_id": "com.parlor.app",
+    "plist_and_privacy_lint": "Both executed and OK",
+    "xcresult": {
+      "retention": "Original Apple ZIP only; opaque native bundle not decoded using xcresulttool on Linux",
+      "files": 41,
+      "bytes": 95233,
+      "info_plist_date_created_utc": "2026-09-10T11:05:33Z",
+      "fresh_result_path_guard_executed": true
+    },
+    "stdout_custody": "Every retained xcode-ui-test.log stdout line appears in the original timestamped Actions UI step log in order; raw five started/passed cases and suite totals reconcile."
+  },
+  "unsigned_release_wrapper": {
+    "result": "BUILD SUCCEEDED",
+    "target": "Release iphonesimulator arm64, ONLY_ACTIVE_ARCH=YES, CODE_SIGNING_ALLOWED=NO, CODE_SIGNING_REQUIRED=NO",
+    "embedded_gradle_actionable_tasks": {
+      "executed": 20,
+      "up_to_date": 118,
+      "from_cache": 0
+    },
+    "linkReleaseFrameworkIosSimulatorArm64_executed_in_wrapper_cycle": true,
+    "package_inspection_status": "PASS",
+    "inspected_files": 56,
+    "inspected_total_bytes": 58477207,
+    "bundle_id": "com.parlor.app",
+    "version_and_build": "1.0.0 (1)",
+    "minimum_os": "16.0",
+    "localizations": [
+      "en",
+      "ar"
+    ],
+    "executable": {
+      "bytes": 129592,
+      "sha256": "1dd0790db2dc8819c76524574e7811bba2e3079d8f7509706320ace41b64c8c0",
+      "uuid": "ca2fdde0-1042-3c5d-bab1-fda614d8b45b"
+    },
+    "embedded_compose_framework": {
+      "bytes": 52396808,
+      "sha256": "68acacc219c670f8bff9d1094a51a0ec95925477c7c86cd0f0235f98e8760154",
+      "uuid": "9ab42c19-aa95-3a15-aa69-089209ad2536",
+      "minimum_os_versions": [
+        "15.0"
+      ]
+    },
+    "native_metadata_scope": "Two arm64 IOSSIMULATOR Mach-O files in the hosted native file/lipo/vtool/dwarfdump report. Wrapper minimum OS16.0 and framework minimum OS15.0 are preserved, not normalized.",
+    "retained_dsym": {
+      "files": 3,
+      "bytes": 1309122,
+      "raw_dwarf_macho_uuid_matches_inspected_executable": true,
+      "dwarf_sha256": "6caf27efff2bec0cb8f1d57a4d3478656190a6e37d57d903a0773894af0548f1"
+    },
+    "raw_resource_matches": "All seven case JSONs and two fonts match frozen Git lengths/hashes and their package inventory records.",
+    "privacy": "Source and shipped privacy hashes agree; hosted structural comparison passed.",
+    "notices": {
+      "status": "PASS",
+      "exact_resources": 26,
+      "total_bytes": 99515,
+      "independent_check": "All 26 source, package-notice and artifact-inventory records match frozen Git bytes/length/SHA256 at exact platform Compose paths. Source manifest and version-catalog raw hashes also match frozen blobs. No notice-byte normalization or legal-completeness inference.",
+      "manifest_sha256": "4b501223b3841017477a226515d3758bc60848fe00d579fac3152a81928d6406",
+      "catalog_raw_sha256": "87a031665605a1fb3f932be31c75afd8d2d1bc0d94cfcca36101141c50788399"
+    },
+    "stdout_custody": "Every retained xcode-release-build.log stdout line appears in the original timestamped Actions wrapper step log in order.",
+    "retention_and_runtime_limit": "Workflow does not upload the complete unsigned .app; it retains actual hosted package inspection, build logs and dSYM. This reviewer did not rehash a locally retained complete .app, run the Release wrapper, or verify Store signing. Xcode shallow -validate-for-store build output is not an App Store operation or Store-readiness proof."
+  },
+  "cleanup": {
+    "status": "PASS_WITHIN_ATTESTED_APPLE_SCOPE",
+    "source_bound_claims_stop_receipts_and_logged_json_reconciled": true,
+    "immediate_gradle_stops": [
+      {
+        "cycle": "apple-aggregate",
+        "started_at": "2026-09-10T11:05:05.919530+00:00",
+        "exit_code": 0
+      },
+      {
+        "cycle": "apple-ui",
+        "started_at": "2026-09-10T11:10:56.416340+00:00",
+        "exit_code": 0
+      },
+      {
+        "cycle": "apple-wrapper",
+        "started_at": "2026-09-10T11:22:43.478957+00:00",
+        "exit_code": 0
+      }
+    ],
+    "all_stop_output": "No Gradle daemons are running.",
+    "fresh_ui_simulator_deleted": true,
+    "simulator_cleanup_scope": "Exact nonce/run/attempt-bound UI simulator only; create UUID absent from the132-entry pre-create baseline, creation0, adoption journal and final delete0 agree. The frozen helper verifies Shutdown before deletion and absence in a subsequent authoritative inventory. Aggregate/wrapper simulator receipts are NOT_APPLICABLE, not a claim that every host CoreSimulator profile was removed.",
+    "owned_exact_xcode_workers_retired": "Wrapper cycle newly owned ibtoold lifetimes PID27303/start[1789039348,339054] and PID27298/start[1789039348,231683] received delivered SIGTERM. Both start after cycle claim and are absent from its native lifetime baseline. All before/after exact-worker scans PASS; aggregate/UI reported no owned survivors. No broad PID/name cleanup claimed.",
+    "artifact_custody_before_deletion": {
+      "upload_artifact_id": 10149497218,
+      "upload_finalized_at_utc": "2026-09-10T11:23:11.881494Z",
+      "cleanup_started_at": "2026-09-10T11:23:12.517938+00:00",
+      "exact_uploaded_zip_digest_bound": true
+    },
+    "final_gradle_stop_exit_code": 0,
+    "attested_output_targets": 179,
+    "removed_output_roots": 15,
+    "never_created_targets": 164,
+    "target_partition_exact_and_recomputed_from_frozen_tree": true,
+    "retained_outputs": [],
+    "errors": [],
+    "finished_at": "2026-09-10T11:23:15.647343+00:00",
+    "scope": "Only attested live build/Python-cache roots. Root build deletion includes owned DerivedData. No tracked source, archived report build directories, or global caches were deletion targets. Hosted receipts are retained observations, not this Linux reviewer observing the retired runner. No local build or generated fixture was created by this review."
+  },
+  "evidence_anchors": {
+    "relative_to_packet": true,
+    "log_members": {
+      "1": {
+        "member": "iOS tests, release frameworks, and Swift wrapper/1_Set up job.txt",
+        "sha256": "af5bf6a4846421752f87454b8bee199c55eaea751c350c9bbfaf2bffedb2f2b2"
+      },
+      "3": {
+        "member": "iOS tests, release frameworks, and Swift wrapper/3_Check out source.txt",
+        "sha256": "1d80f71d041d5bd411b2b663d4d62d9ff1012229975fd5ee7eb831f4bcd93a74"
+      },
+      "4": {
+        "member": "iOS tests, release frameworks, and Swift wrapper/4_Validate verification scope.txt",
+        "sha256": "3e3e6c412850c26860b8287fea3f8cfb98eb0de7c03261cb094ecceceb1f52aa"
+      },
+      "5": {
+        "member": "iOS tests, release frameworks, and Swift wrapper/5_Set up JDK 21.txt",
+        "sha256": "7a770c906f72ccd17ce474af7eb02aa244c0f347ffc3e31726ecee9f75d241c6"
+      },
+      "16": {
+        "member": "iOS tests, release frameworks, and Swift wrapper/16_Record Xcode toolchain and exact source.txt",
+        "sha256": "11f02b21110c0dc3c666a8bafdd2aa641e5d37a4b78edb2faeb869c2263a9c8b"
+      },
+      "17": {
+        "member": "iOS tests, release frameworks, and Swift wrapper/17_Run iOS simulator tests, Apple static analysis, and release linkage gates.txt",
+        "sha256": "68e4a02650bafe7dd9b4657202b681151cb363b34c778aa7fa709d3db138642c"
+      },
+      "18": {
+        "member": "iOS tests, release frameworks, and Swift wrapper/18_Stop Gradle after apple-aggregate and retire owned Apple resources.txt",
+        "sha256": "c412e65f9aab66f7ae6e9eae333727424b4640d64ff239d87935fca872184f87"
+      },
+      "19": {
+        "member": "iOS tests, release frameworks, and Swift wrapper/19_Validate iOS plist and privacy manifest.txt",
+        "sha256": "0c5445f361514fb1c33da9b40d93555584ae7ac0e9da3fae5e9b4025f433b37f"
+      },
+      "21": {
+        "member": "iOS tests, release frameworks, and Swift wrapper/21_Verify effective Debug and Release application identities.txt",
+        "sha256": "2ff1b8ad37deaafc960a01c3058afc0156cc9d0bdd6ffdb659b43e37e5c55c8c"
+      },
+      "22": {
+        "member": "iOS tests, release frameworks, and Swift wrapper/22_Launch Swift host and Compose root on iOS Simulator.txt",
+        "sha256": "b379b16d47a63790b510dd744014b98339d4e64967e02c9d8e30923441a12ef9"
+      },
+      "23": {
+        "member": "iOS tests, release frameworks, and Swift wrapper/23_Stop Gradle after apple-ui and retire owned Apple resources.txt",
+        "sha256": "c4252133ff488c9d4f787c1916964d53643c1ccda6f6f44edb874d23a830063c"
+      },
+      "25": {
+        "member": "iOS tests, release frameworks, and Swift wrapper/25_Build unsigned Swift Release wrapper.txt",
+        "sha256": "2025ada287d56aa20f56413c17f9f7b1eedd638adf63c734cc3d2560a81ca5a1"
+      },
+      "26": {
+        "member": "iOS tests, release frameworks, and Swift wrapper/26_Stop Gradle after apple-wrapper and retire owned Apple resources.txt",
+        "sha256": "dcb84944dec0f5efc7b5e97b4241dbbdfca0369c91ad1c54e6318a92cd7b7314"
+      },
+      "27": {
+        "member": "iOS tests, release frameworks, and Swift wrapper/27_Inspect complete unsigned iOS Release package.txt",
+        "sha256": "a075731877e16d0f35632ba14c2917cf747b7657219548ca1c699d47f032f3ff"
+      },
+      "28": {
+        "member": "iOS tests, release frameworks, and Swift wrapper/28_Upload Apple verification evidence.txt",
+        "sha256": "71967cc34af169566aa4316eb9ced1aae99a2ef9b24044516d37142ed5b1ffe0"
+      },
+      "29": {
+        "member": "iOS tests, release frameworks, and Swift wrapper/29_Clean only attested verification outputs.txt",
+        "sha256": "32feb919fe58650249a49849d0dc7ed26fdd7114a442cc2b35b539ceb3734dac"
+      },
+      "30": {
+        "member": "iOS tests, release frameworks, and Swift wrapper/30_Upload verification cleanup receipt.txt",
+        "sha256": "6c3a48c8ed861ac211db2ad34122aff38dabd81f9c57fcd565b01e2cd07e8c3e"
+      }
+    },
+    "runtime_xml_prefix": "ios-verification/parlor/parlor/<module>/build/test-results/iosSimulatorArm64Test/",
+    "aggregate_step17_lines": "Runtime tasks650-744; Release links736,750-751; successful summary756-757.",
+    "ui_step22_lines": "Five started/passed cases1624-1669; suite totals1673-1675; TEST SUCCEEDED1683.",
+    "wrapper_step25_lines": "Release framework987; Gradle summary994-995; BUILD SUCCEEDED1242; app hash1246.",
+    "live_ci_evidence_prefix": "ios-verification/parlor/parlor/build/ci-evidence/",
+    "ios_release_artifact_inventory_sha256": "bb8d493784f8496a8c7c4973011045349bc766a1564d2511c2e8b314042beba3",
+    "ios_release_notices_sha256": "c93389a737fd210660da444522e0d126e06f51c18106b4a6ec2d2563f98d59f7",
+    "ownership_sha256": "a9397589ec323850392a16c97f45ee3023aa08e8adf7b5d13a33ed27f89a2740",
+    "cycle_stop_sha256": {
+      "apple-aggregate": "9075b4659d2b54fb915bf35948c1e33fca72269d4a1df6166fe43de4c5a88850",
+      "apple-ui": "1f14c9c4d38be542e451b3a0240201a5a9debaecd99a9f009bcbe596a5c235e4",
+      "apple-wrapper": "76fe4c2016bf3c8ca0362adb3927f8e9b09a85e8d2bbd2ffb6da029592ea8e20"
+    },
+    "cleanup_receipt": "verification-cleanup-ios/parlor-verification-34464573240-1-ios-cleanup.json",
+    "cleanup_receipt_sha256": "155d083f0eabbe9f215ead243bf4f331b8d6aec6496ae5ad73df044deac1eb96",
+    "frozen_controls_sha256": {
+      ".github/workflows/production-verification.yml": "9a8021ec1ba27f44d7d2ac18f0bcc7a4a254445ba1baae1a420287094c89414b",
+      "scripts/ci/apple_verification_hygiene.py": "d9c554781750d3cbbf2a4adce3b040edb83d0de5fec4c04eac700c526fca1c3c",
+      "scripts/ci/verification_hygiene.py": "f1aa6d4c5dae8360a9ff1bfd675376d78cb800e3d297fc213cdddca32c7376f6",
+      "scripts/ci/owned_ci_simulator.py": "717c8c02dc06e4eac175c5dde5c7f9bdd6ebbd5e7028cc94c6ba4f84b44388af",
+      "scripts/ci/darwin_worker_identity.py": "939ac6c98628046f9f45547135cbc439f217403e60c7e4033db5f541ab017ecc",
+      "scripts/verification/ios_release_artifacts.py": "e1b597f6513d18a1e35ea293e08a99d6ff7a3baefb383bb100f24988e5e83938",
+      "scripts/verification/third_party_notices.py": "d5a9e8e0cafd9c2d0de9ecd8dfcb040053fa52d25d798abd9998e84ab6676bdf",
+      "iosApp/iosAppUITests/IOSAppLaunchUITests.swift": "e903278fc8defcac9a4d03a52495c1364a361222e5f369059c5d6b6416fb6eb7",
+      "iosApp/iosAppUITests/ComposeContainerViewControllerTests.swift": "a4730b77ad93d01df60a4b6fde558bfea264f71b19ee5aa6c4a08d33480eacc8",
+      "build.gradle.kts": "bd6199e1f097eb236c50c46efb91d291550110f6b4d95a8e95ff0db4d8da192b"
+    }
+  },
+  "limits_and_readiness": [
+    "Fresh scoped Apple PASS at75c is not a successful combined D qualification. D03 whole-run failure and Linux cleanup failure remain preserved and require their own review.",
+    "This normal full workflow does not run OS39 or L08 functional-storage/retained-host/strict-protection gates. OS39 actual review belongs to /root/native_ci. A37 strict Complete metadata observations remain unresolved and are not passed, waived, made N/A, or reduced to a physical-only issue by this Apple result.",
+    "Nine focused native/clock/process-probe steps were skipped by full scope. This job supplies no fresh normal-Parlor libproc B runtime or process-image provenance evidence; successful hygiene controls and normal XCTest are not substitutes.",
+    "Warnings are preserved: experimental lint option, deprecated Gradle8.13 for future Kotlin2.5, disabled iosX64Test on ARM64, compiler4threads above3hostCPUs, duplicate simulator architecture destinations, and no AppIntents metadata dependency. None became runtime successes.",
+    "No physical device, real multiplayer radio session, signed Store candidate, publication/promotion, private Store credential operation, or owner/legal approval occurred. Public Store identity collision and separate owner/legal requirements remain.",
+    "Overall readiness remains NOT_READY. Later-source applicability requires explicit delta review; no later combined success is implied."
+  ],
+  "reviewer_work": {
+    "actions": "Read-only saved-evidence JSON/XML/plist/Mach-O-header parsing, SHA256/CRC checks and frozen Git blob/mode inspection. No project imports, harness/project tests, builds, network, Actions polling/dispatch or Git writes. Only this additive review file was written.",
+    "inspection_correction": "One initial read-only timing assertion compared a subsecond wrapper claim to the jobs API second-rounded run start and failed. Reopening the precise run log established claim11:11:06.555948 before run11:11:06.568054; comparison was corrected to that raw timestamp and all cycle custody checks passed. This was an inspection-script assumption, not a CI failure or weakened source guard.",
+    "local_cleanup": "Not required: review created no build outputs, imported project bytecode, simulator or worker. Original evidence was not changed or extracted anew."
+  }
+}

@@ -1,0 +1,136 @@
+@file:OptIn(ExperimentalForeignApi::class)
+
+package dev.p2pkit.core.internal
+
+import dev.p2pkit.core.NetworkPathObserver
+import dev.p2pkit.core.NetworkPathStatus
+import dev.p2pkit.core.P2pLogger
+import kotlin.concurrent.Volatile
+import kotlinx.cinterop.ExperimentalForeignApi
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
+import platform.Foundation.NSLock
+import platform.Network.nw_interface_type_cellular
+import platform.Network.nw_interface_type_wifi
+import platform.Network.nw_interface_type_wired
+import platform.Network.nw_path_get_status
+import platform.Network.nw_path_monitor_cancel
+import platform.Network.nw_path_monitor_create
+import platform.Network.nw_path_monitor_set_queue
+import platform.Network.nw_path_monitor_set_update_handler
+import platform.Network.nw_path_monitor_start
+import platform.Network.nw_path_monitor_t
+import platform.Network.nw_path_status_satisfied
+import platform.Network.nw_path_status_unsatisfied
+import platform.Network.nw_path_uses_interface_type
+import platform.darwin.dispatch_queue_create
+
+/**
+ * iOS / macOS network-path observer backed by Apple's `nw_path_monitor_t`.
+ *
+ * The monitor runs on a dedicated serial dispatch queue and fires its
+ * update handler whenever the system's default path changes (Wi-Fi off,
+ * carrier handover, VPN attach/detach, …). Each event is mapped to one
+ * of three [NetworkPathStatus] values and pushed into [status].
+ *
+ * **What about `satisfiable` / `invalid`?** Apple defines four states
+ * total: `satisfied`, `unsatisfied`, `satisfiable` (path is unavailable
+ * but might come back), and `invalid` (the monitor is shutting down). We
+ * only care about `satisfied` and `unsatisfied` for kit decisions; the
+ * other two map to [NetworkPathStatus.Unknown] so the SDK does nothing.
+ *
+ * **What about cellular-only paths?** The LAN data transport prohibits the
+ * cellular interface, so a path that is `satisfied` over cellular ONLY is
+ * useless for LAN and is reported as [NetworkPathStatus.Unsatisfied] — otherwise
+ * it would wake reconnect to re-dial peers unreachable over cellular. A path
+ * carrying Wi-Fi or wired (even alongside cellular) stays `Satisfied`.
+ *
+ * Closing a monitor clears retained status to `Unknown`; a generation token
+ * prevents late callbacks from that cancelled monitor from changing state
+ * after close or after a subsequent restart.
+ *
+ * **Lambda return-type hazard:** the update handler block must return
+ * void. Kotlin/Native infers the lambda's ObjC return type from its last
+ * expression; if that's the return value of `_status.value =`
+ * (incidentally `Unit` here, but not guaranteed by the language), we still
+ * finish with an explicit labeled return to match what we had to do in the
+ * LAN transport's handlers — without it Kotlin/Native has historically tried
+ * to box the result and crash libdispatch. Kotlin 2.4 diagnoses a trailing
+ * `Unit` expression as unused under `-Werror`, while the labeled return keeps
+ * the required void control flow explicit.
+ */
+internal class IosNetworkPathObserver(
+    private val logger: P2pLogger
+) : NetworkPathObserver {
+
+    private val _status = MutableStateFlow<NetworkPathStatus>(NetworkPathStatus.Unknown)
+    override val status: StateFlow<NetworkPathStatus> = _status.asStateFlow()
+
+    private val queue = dispatch_queue_create("dev.p2pkit.nwpath", null)
+    private val startMutex = Mutex()
+    private val callbackStateLock = NSLock()
+    private val callbackState = NetworkPathCallbackState<Unit>()
+
+    @Volatile
+    private var monitor: nw_path_monitor_t = null
+
+    override suspend fun start() = startMutex.withLock {
+        if (monitor != null) return@withLock
+        val m = nw_path_monitor_create() ?: run {
+            logger.warn("nw_path_monitor_create returned null; path observer will report Unknown")
+            return@withLock
+        }
+        nw_path_monitor_set_queue(m, queue)
+        val generation = checkNotNull(withCallbackStateLock { callbackState.begin() })
+        nw_path_monitor_set_update_handler(m) { path ->
+            val s = nw_path_get_status(path)
+            // AUDIT-2026-06: the LAN data transport prohibits cellular
+            // (nw_parameters_prohibit_interface_type(cellular)), so a path that
+            // is "satisfied" over CELLULAR ONLY is unusable for LAN. Reporting
+            // it as Satisfied would wake the reconnect machinery to re-dial a
+            // peer it can never reach over cellular — a reconnect storm during a
+            // Wi-Fi gap. Mirror the transport's prohibition: a cellular-only
+            // satisfied path maps to Unsatisfied; Wi-Fi/wired (even if cellular
+            // is also present) stays Satisfied.
+            val usesCellular = nw_path_uses_interface_type(path, nw_interface_type_cellular)
+            val usesWifi = nw_path_uses_interface_type(path, nw_interface_type_wifi)
+            val usesWired = nw_path_uses_interface_type(path, nw_interface_type_wired)
+            val cellularOnly = usesCellular && !usesWifi && !usesWired
+            val mapped: NetworkPathStatus = when {
+                s == nw_path_status_satisfied && cellularOnly -> NetworkPathStatus.Unsatisfied
+                s == nw_path_status_satisfied -> NetworkPathStatus.Satisfied
+                s == nw_path_status_unsatisfied -> NetworkPathStatus.Unsatisfied
+                else -> NetworkPathStatus.Unknown
+            }
+            withCallbackStateLock {
+                callbackState.publish(generation, mapped)?.let { _status.value = it }
+            }
+            return@nw_path_monitor_set_update_handler
+        }
+        nw_path_monitor_start(m)
+        monitor = m
+    }
+
+    override suspend fun close() = startMutex.withLock {
+        val m = monitor ?: return@withLock
+        val generation = checkNotNull(withCallbackStateLock { callbackState.currentGeneration() })
+        nw_path_monitor_cancel(m)
+        monitor = null
+        withCallbackStateLock {
+            callbackState.detach(generation)?.let { _status.value = it }
+        }
+        Unit
+    }
+
+    private inline fun <T> withCallbackStateLock(block: () -> T): T {
+        callbackStateLock.lock()
+        return try {
+            block()
+        } finally {
+            callbackStateLock.unlock()
+        }
+    }
+}

@@ -1,0 +1,83 @@
+{
+  "schema_version": 1,
+  "kind": "INDEPENDENT_NATIVE14_SOURCE_CONTROL_EXECUTION_APPROVAL",
+  "recorded_at": "2026-09-08T06:13:10.944579+00:00",
+  "reviewer": "/root/factory_review",
+  "executor": "/root",
+  "recording_note": "Durably preserves exact approval delivered to root before native14 launch; this later recording does not claim native14 has completed.",
+  "classification": "APPROVED_FOR_ONE_ROOT_OWNED_IOS_READINESS_14_ADHOC_SIMULATOR_RUN",
+  "approved_command": [
+    "/usr/bin/python3",
+    "-B",
+    "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/compose_runner.py",
+    "ios-readiness-14",
+    "remediation-runs/2026-09-07-local-readiness/ios-readiness-source-13.json",
+    "79eab46b33ac60239de7c35966c01d370c09e3ac09be4a67455df2f187f12e45",
+    "--simulator-signing=adhoc"
+  ],
+  "source": {
+    "repository": "/Users/abdelrahman/Projects/parlor",
+    "branch": "fix/local-readiness-2026-09-07",
+    "commit": "8b9e3b0cdfdab82e7cff3ad8135d0eae9a0b8ca3",
+    "tree": "c1e92b5e00ab64a293c4d7f9c9b5e2b85887be88",
+    "source_manifest_sha256": "c4d3387a95ff1a4462071147afe92411f5a08ee8b10f78852a59494c8d3e4420",
+    "binding": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/ios-readiness-source-13.json",
+    "binding_sha256": "873e97df8018337b4e5623fc9bb5ae16a92b8eaa71be3201531fa84caf394704",
+    "all_source_files_independently_rehashed": 800,
+    "source_bytes_hashed": 13460421,
+    "copy_selection_independently_reconciled": 740,
+    "source_binding_matches_control_cycle_before_and_after": true
+  },
+  "controls": {
+    "manifest": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/l08-source13-native14-control-manifest-01.json",
+    "manifest_file_sha256": "1558dd2d83298b4b87a39433d53568218197cb89138059cfcc7d67b3c991070c",
+    "control_sha256": "79eab46b33ac60239de7c35966c01d370c09e3ac09be4a67455df2f187f12e45",
+    "all_control_files_independently_rehashed": 92,
+    "generated_runner_sha256": "57fd0c2fefe71ecf0cf49f48ad12bbde59b4a623476cfce1f22cc1f03c725c76",
+    "source_review": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/l08-app-foundation-composition01-independent-source-review-01.json",
+    "source_review_sha256": "a19fc33ca3f6522db459ab02a54c9d3dca7f6e19f335636ee9c1271eba4a9c6e"
+  },
+  "executed_control_result": {
+    "evidence_directory": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-app-foundation-composition-controls-01",
+    "receipt_sha256": "d7a212cad47262d591b9fc1f0864b12520ac70948e24adfb76029421562a199c",
+    "gradle_log_sha256": "a3ddd8825f68bc8649986dbf7b99be6961609cfdb74b7f480d7da88ec4ffae90",
+    "tests_run": 48,
+    "frozen_draft_tests": 30,
+    "composition_tests": 18,
+    "actual_log_ids_equal_declared_ids": true,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "native_execution": false,
+    "test_input_hashes_match_frozen_review": true
+  },
+  "control_cycle_cleanup": {
+    "receipt_status": "PASS",
+    "command_exit_code": 0,
+    "gradle_stop_exit_code": 0,
+    "stop_log": "No Gradle daemons are running.",
+    "creation_attested_external_allocations": 4,
+    "matching_successful_cleanup_records": 4,
+    "all_four_paths_independently_checked_absent": true,
+    "source_changed": false,
+    "runner_changed": false,
+    "remaining_outputs": [],
+    "retained_outputs": [],
+    "remaining_owned_workers_in_root_receipt": [],
+    "cleanup_errors": [],
+    "live_process_query_by_reviewer": false
+  },
+  "conditions": [
+    "Single root-owned native14 execution; exact control/source approval remains enforced by original runner.",
+    "Fresh external owned copy and simulator, Debug-only explicit ad-hoc mode; no private credentials, Store operations or user device.",
+    "Original preflight/lock, source assertions, strict dependency verification, one-worker/in-process6GiB Gradle policy and ownership-attested finalization unchanged.",
+    "Root supervises current disk/RAM capacity and records all cleanup, regardless of native result.",
+    "No native/strictL08/physical-protection/physicalLAN/signed-release/Store-success claim is conferred."
+  ],
+  "reviewer_operations": {
+    "reviewed_modules_executed": false,
+    "tests_or_builds_started": 0,
+    "native_or_process_operations": 0,
+    "new_outputs": "This compact additive report only; no task-owned build outputs/background workers."
+  }
+}

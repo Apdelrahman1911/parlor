@@ -1,0 +1,326 @@
+{
+  "schema_version": 1,
+  "kind": "HELD_PUBLIC_SETTINGS_SHEET_DIAGNOSTIC_PROPOSAL",
+  "status": "SEALED_REVISION03_NOT_ADOPTED_NOT_TESTED_PENDING_DIFFERENT_AGENT_REVIEW",
+  "author": "/root/l08_fixture",
+  "contract_coauthor": "/root/ci_workflow",
+  "independent_reviewer_requested": "/root/portability_review",
+  "coordinator": "/root",
+  "created_at": "2026-09-10T02:14:07.572783+00:00",
+  "base": {
+    "branch": "fix/local-readiness-2026-09-07",
+    "head": "4ccfafcfc361231cfb730178b3798ebcb6304770",
+    "tree": "8a89fab3042b8614fc4285148a8cd645f7ac2786",
+    "layer": "Exact root-adopted independently approved Windowsrevision02 canonical layer, uncommitted at sealing. Overlay is not against pre-Windows HEAD.",
+    "windows_author": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/windows-long-path-followup-01/revision-02/AUTHOR_REPORT.json",
+      "sha256": "e50b49c37c32040f25671d101fefb1e52f4d11663fa0a42389a7179acdc4d33c",
+      "bytes": 8609
+    }
+  },
+  "trigger": {
+    "cycle": "ios-readiness-33",
+    "run_id": 34412114359,
+    "log": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34412114359/native-evidence/ios-readiness-33/xcodebuild.log",
+      "sha256": "337725f40723a7e51cfabdd53e51f060eeb5eb15ae51f6443fcca78332845ccb",
+      "bytes": 1203457
+    },
+    "observation": "Ordinals25/26/27 (lines13317/13339/13343) show foreground Settings, Alert0/Sheet1,3sheet buttons and0 Use English/Keep English exact matches. before-activation precedes failed guard; no English-choice tap occurred. Actual labels absent from retained A33 evidence. XCTest4pass/1fail, Xcode65; strict gates remain unresolved.",
+    "reason": "One diagnostic-only targetless Swift UITest feasibility/capture dispatch, not another full Kotlin build or guessed selector."
+  },
+  "files": [
+    {
+      "path": ".github/workflows/production-verification.yml",
+      "base_sha256": "d80bfd7062f43b93d7697490325fbd32cf679cca4dfea5a3dc9fc5e705e0a7ff",
+      "base_bytes": 43665,
+      "proposed_path": "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/revision-03/proposed/.github/workflows/production-verification.yml",
+      "proposed_sha256": "5437a0da79512e8c0ae90145972b65074791e6f3ce4b4edd6c6fd2d4e697eb86",
+      "proposed_bytes": 43906,
+      "added_physical_lines": 5,
+      "removed_physical_lines": 4,
+      "added_nonblank_noncomment_lines": 5
+    },
+    {
+      "path": "scripts/ci/NATIVE_CONTINUATION.md",
+      "base_sha256": "237d7ddd53c4f8b5531c759ce83573c8853bfea74143d940f64ca137e946b9e6",
+      "base_bytes": 20959,
+      "proposed_path": "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/revision-03/proposed/scripts/ci/NATIVE_CONTINUATION.md",
+      "proposed_sha256": "d350ee860a7b6d4d67fa6fc73ab139153c8fd4f9cd78a45c75175ed5c51bf169",
+      "proposed_bytes": 23094,
+      "added_physical_lines": 33,
+      "removed_physical_lines": 1,
+      "added_nonblank_noncomment_lines": 27
+    },
+    {
+      "path": "scripts/ci/native_continuation.py",
+      "base_sha256": "00c2956df77a896402dcb30eb17138a15b0c44f88eebf14649bcad57ec2afae0",
+      "base_bytes": 66688,
+      "proposed_path": "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/revision-03/proposed/scripts/ci/native_continuation.py",
+      "proposed_sha256": "971fdeca3fa27d6b8fb356bae50f11909365af30d7a6af8cd058a3487684f4d2",
+      "proposed_bytes": 68409,
+      "added_physical_lines": 41,
+      "removed_physical_lines": 22,
+      "added_nonblank_noncomment_lines": 40
+    },
+    {
+      "path": "scripts/release/tests/test_native_continuation.py",
+      "base_sha256": "824a95f46b21f6b679b85cd211913a37906c041668a18d9be94967d51e525605",
+      "base_bytes": 95171,
+      "proposed_path": "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/revision-03/proposed/scripts/release/tests/test_native_continuation.py",
+      "proposed_sha256": "600637179d309178a900bac0936d5d1db0feacc0a0aa372fb36e94089914a125",
+      "proposed_bytes": 98368,
+      "added_physical_lines": 44,
+      "removed_physical_lines": 3,
+      "added_nonblank_noncomment_lines": 41
+    },
+    {
+      "path": "scripts/release/tests/test_native_process_probe.py",
+      "base_sha256": "32280e091ea19838812d815962094b67417cba7b2498d456d8f075dd5357c41d",
+      "base_bytes": 43371,
+      "proposed_path": "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/revision-03/proposed/scripts/release/tests/test_native_process_probe.py",
+      "proposed_sha256": "8ccd48b4f8fd2bca04f9b81fd8ed93cdf5b92c240ac9e84571792103bab2a118",
+      "proposed_bytes": 43409,
+      "added_physical_lines": 1,
+      "removed_physical_lines": 1,
+      "added_nonblank_noncomment_lines": 1
+    },
+    {
+      "path": "scripts/release/tests/test_workflow_contract.py",
+      "base_sha256": "dda15ea413bbb912ac96972c7f6247b1569eb16cc75250c4c60b20832749d5d5",
+      "base_bytes": 45841,
+      "proposed_path": "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/revision-03/proposed/scripts/release/tests/test_workflow_contract.py",
+      "proposed_sha256": "84df23b6aae1e47eb1d0d953c9c713fe1055ff90462f69351ca3643e648bdba0",
+      "proposed_bytes": 47785,
+      "added_physical_lines": 27,
+      "removed_physical_lines": 3,
+      "added_nonblank_noncomment_lines": 26
+    },
+    {
+      "path": "scripts/release/workflow_contract.py",
+      "base_sha256": "4e65fa76afce936e007f46b4987f140b885ce58a2b19719feef75a336e08a2c5",
+      "base_bytes": 52246,
+      "proposed_path": "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/revision-03/proposed/scripts/release/workflow_contract.py",
+      "proposed_sha256": "d59a7531555b0cc869beb629c0b7167b4c6150be225d0956d86c4d887f70ce7e",
+      "proposed_bytes": 52826,
+      "added_physical_lines": 8,
+      "removed_physical_lines": 4,
+      "added_nonblank_noncomment_lines": 8
+    },
+    {
+      "path": "scripts/verification/ios-settings-sheet/SettingsSheet.xcscheme.in",
+      "base_sha256": null,
+      "base_bytes": 0,
+      "proposed_path": "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/revision-03/proposed/scripts/verification/ios-settings-sheet/SettingsSheet.xcscheme.in",
+      "proposed_sha256": "d8688e9e4e00757c9f348b52c44d14875bc3328dc99cb754dff31edae837bab3",
+      "proposed_bytes": 1295,
+      "added_physical_lines": 19,
+      "removed_physical_lines": 0,
+      "added_nonblank_noncomment_lines": 19
+    },
+    {
+      "path": "scripts/verification/ios-settings-sheet/SettingsSheetUITest.swift.in",
+      "base_sha256": null,
+      "base_bytes": 0,
+      "proposed_path": "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/revision-03/proposed/scripts/verification/ios-settings-sheet/SettingsSheetUITest.swift.in",
+      "proposed_sha256": "547155ee3cbcf1259ef02a803b9e442b90bb390c0c3ab16dca61c53ede67b8e7",
+      "proposed_bytes": 27559,
+      "added_physical_lines": 424,
+      "removed_physical_lines": 0,
+      "added_nonblank_noncomment_lines": 375
+    },
+    {
+      "path": "scripts/verification/ios-settings-sheet/settings_sheet_probe.py",
+      "base_sha256": null,
+      "base_bytes": 0,
+      "proposed_path": "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/revision-03/proposed/scripts/verification/ios-settings-sheet/settings_sheet_probe.py",
+      "proposed_sha256": "626a5096b4aab37ee449abe45ec8f6d4d8c0d4801fb2acb8c83b1e17e8a3f3ed",
+      "proposed_bytes": 12852,
+      "added_physical_lines": 215,
+      "removed_physical_lines": 0,
+      "added_nonblank_noncomment_lines": 184
+    },
+    {
+      "path": "scripts/verification/ios-settings-sheet/test_settings_sheet_probe.py",
+      "base_sha256": null,
+      "base_bytes": 0,
+      "proposed_path": "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/revision-03/proposed/scripts/verification/ios-settings-sheet/test_settings_sheet_probe.py",
+      "proposed_sha256": "1f3716f315f990a02b9e21e7b71f7db91833de852f4cd3f97530d6c1d4db9292",
+      "proposed_bytes": 8786,
+      "added_physical_lines": 140,
+      "removed_physical_lines": 0,
+      "added_nonblank_noncomment_lines": 129
+    }
+  ],
+  "patch": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/revision-03/proposed.patch",
+    "sha256": "952eee29f65d1483f9f6a70f8b61a16da9098d1be3f7226d5d39b70351a558ab",
+    "bytes": 85015
+  },
+  "control_snapshot": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/revision-03/control-snapshot.json",
+    "sha256": "af9b2e03d90bf44ad6eb69c339214e571f2799836142dde9651a53f64177b0da",
+    "bytes": 20040
+  },
+  "swift_reuse_map": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/revision-03/swift-reuse-map.json",
+    "sha256": "e40bc78054685e10b9849dd1ac8d07e85bf2fd1a6b93792bd3845e3486823ccf",
+    "bytes": 1594
+  },
+  "file_and_loc_snapshot": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/revision-03/file-and-loc-snapshot.json",
+    "sha256": "f5a8d3c1950152e36c94ab7e70e051f408c2694ceeec80a88978fb74a6e329db",
+    "bytes": 7288
+  },
+  "coauthor_overlay": {
+    "directory": "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/workflow-contract-overlay-01",
+    "pins": {
+      "proposed.patch": "f8264da5b883ca4b6f2115a8e388719247a1e6e0330bb2f6d581384572163f6c",
+      "AUTHOR_REPORT.json": "28ec5c38ea82c2975098bfabeeb34a370b01a3ba80d9a9a07daea99aa069daa2",
+      "proposed/scripts/release/workflow_contract.py": "d59a7531555b0cc869beb629c0b7167b4c6150be225d0956d86c4d887f70ce7e",
+      "proposed/scripts/release/tests/test_workflow_contract.py": "84df23b6aae1e47eb1d0d953c9c713fe1055ff90462f69351ca3643e648bdba0"
+    }
+  },
+  "loc_accounting": {
+    "method": "Added physical diff lines are counted separately. Operative LOC excludes blank/comment lines, tests/docs, exact copied Swift helper blocks and generated/reused project/scheme code. New Swift collector and conservative16-line prefix/binding/signature allowance ARE counted.",
+    "total_physical_added_lines": 957,
+    "total_physical_removed_lines": 38,
+    "new_python_runner_operative": 184,
+    "adapter_contract_workflow_added_operative": 53,
+    "swift_capture_tail_operative": 32,
+    "swift_new_prefix_binding_signature_operative_upper_bound": 16,
+    "operative_runtime_control_upper_bound": 285,
+    "generated_swift_physical_lines": 424,
+    "generated_scheme_physical_lines": 19
+  },
+  "design": [
+    "Original normal runner/support/Darwin98control bytes unchanged and pinned. New private module imports exact normal runner SHA, retains original manifest callable, and binds inherited prepare/finalize/lifecycle callbacks to one104control aggregate plus later real source binding. No normal B file/entry point edit.",
+    "Only copied XCTest/project/scheme differ. Exact anchors detach existing UI-test target from app dependencies and Compose sources; scheme has no app LaunchAction/implicit dependencies. Existing Debug test identity only. No Kotlin/Parlor target launch/build intended; actual absent app/build output assertion required.",
+    "Real xcodebuild UITest attempt marks original build/worker/destructive-cleanup barrier before invocation. Finally paths immediately stop copied Gradle wrapper, preserve bounded log/structured result attempts, and run complete inherited owned simulator/worker/finalizer guards. Missing result bundle is retained as missing, never execution/capture success.",
+    "Exact fresh owned simulator UUID/name bound into one Swift test. Existing public English-primary/no-Arabic prerequisite and24pure-case helper reused; dead already-satisfied early-return branch removed. After one public Add Arabic flow inspect only unique3-action sheet with finite enabled/hittable controls, bounded labels, no choice tap/discovery retry/screenshot/hierarchy/container/private state.",
+    "Capture requires successful unskipped single-method structured XCTest on exact ARM64 simulator, one strict bounded duplicate-key-rejecting marker and original source/control/ownership/cleanup guards. Normal runtime/provenance/notices remain NOT_RUN. Status is SETTINGS_SHEET_CAPTURED_NOT_APP_QUALIFICATION, never A/B/combined PASS.",
+    "Settings-only selection allowed solely for native-preflight/native-evidence; preflight has3exact files and uses existing approved_probe_control_sha256 input. Default original paired preflight and normal/l08 domains preserved. No new workflow input, publication flow, app identity, Store/device operation, protocol/storage/timer/business-rule change."
+  ],
+  "bounded_budget": {
+    "cycle": "ios-readiness-35",
+    "dispatch_status": "NOT_DISPATCHED",
+    "swift_test_methods": 1,
+    "test_iterations": 1,
+    "test_default_seconds": 180,
+    "test_maximum_seconds": 240,
+    "xcode_seconds": 600,
+    "xcode_log_bytes": 8388608,
+    "child_wait_seconds": 900,
+    "finalizer_grace_seconds": 600,
+    "custody_reserve_seconds": 600,
+    "workflow_minutes": 40,
+    "admission_maximum_elapsed_before_start_seconds": 300,
+    "unknown_label_count": 3,
+    "label_utf8_bytes": 128,
+    "capture_json_bytes": 2048
+  },
+  "tests_authored": {
+    "new_probe_methods": 5,
+    "new_native_adapter_methods": 2,
+    "new_workflow_contract_method": 1,
+    "existing_selection_preflight_and_process_probe_mutation_witnesses_updated": true
+  },
+  "execution": {
+    "source_only": "Read-only Git/source/evidence plus stdlib read/hash/diff/AST inspection. Seven proposed Python modules AST-parse. No project/native imports or tests. Original98 bytes reverified in revision02; no normal changes in revision03.",
+    "tests": "NOT_RUN",
+    "gradle": "NOT_RUN",
+    "swift_build": "NOT_RUN",
+    "native_runtime": "NOT_RUN",
+    "actions": "NOT_DISPATCHED",
+    "targetless_runner_feasibility": "UNVERIFIED; one capped future native diagnostic must establish it, no fallback stub or blind retry.",
+    "author_preparation_failure": "One source-inspection sealing script initially stopped with ValueError while locating the known Swift method anchor. Corrected exact method anchor; no tests/native resources were involved, and sealing then completed."
+  },
+  "root_local_commands_after_review": [
+    "python3 -B -m unittest discover -s scripts/verification/ios-settings-sheet -p test_settings_sheet_probe.py -v",
+    "python3 -B -m unittest -v scripts.release.tests.test_native_continuation scripts.release.tests.test_workflow_contract",
+    "python3 -B -m unittest -v scripts.release.tests.test_native_process_probe.ProbeSourceContractTest.test_full_non_app_scope_is_explicit_and_cycles_do_not_reuse_failed_labels",
+    "./gradlew :shared:transport-p2p:desktopTest --tests \"*ProductionVerificationWorkflowContractTest*\" --dependency-verification=strict --no-daemon --stacktrace --console=plain",
+    "Use existing pinned actionlint selectively on changed workflow in root-owned lane. Preserve evidence; immediate ./gradlew --stop, exact task-owned cleanup/clean when safe, then ./gradlew --stop and cleanup verification."
+  ],
+  "root_dispatch_commands_not_executed": [
+    "gh workflow run production-verification.yml --ref fix/local-readiness-2026-09-07 -f verification_scope=native-preflight -f native_selection=settings-sheet-only -f frozen_source_sha=<exact frozen source+inventory SHA>",
+    "gh workflow run production-verification.yml --ref fix/local-readiness-2026-09-07 -f verification_scope=native-evidence -f native_selection=settings-sheet-only -f frozen_source_sha=<same SHA> -f preflight_run_id=<reviewed run> -f preflight_run_attempt=<reviewed attempt> -f preflight_artifact_id=<reviewed id> -f preflight_artifact_sha256=<reviewed digest> -f approved_probe_control_sha256=<fresh independently approved settings_sheet aggregate>"
+  ],
+  "root_sequence": [
+    "Different-agent review whole pinned packet; root adopts once atop exact Windowsbaseline, batches local affected controls and records failures/cleanup. Commit reviewed source; regenerate/separately commit mechanical inventory; confirm remote/frozen source. No dirty-source native qualification.",
+    "Root serializes same-ref Actions: Windows-only as planned, then one settings-sheet-only native-preflight. Independently review source/toolchain/3file package/run/attempt/artifact/digest and new105row source-bound settings_sheet aggregate. The unbound104row snapshot here is NOT dispatch approval.",
+    "One settings-sheet-only native-evidence dispatch on that same frozen SHA with exact approved preflight bindings. No competing Apple lane, full matrix, publication/promotion or blind retry.",
+    "Retain actual diagnostic result/custody/cleanup even on targetless build/selector failure. Independently inspect public labels before considering separate evidence-backed fixture correction or L08 run. Diagnostic success proves no A/B/D, strict protection, per-app language acceptance, device or Store readiness."
+  ],
+  "cleanup": {
+    "author_resources": "No app/native/Gradle workers, simulator, DerivedData, temporary builds, global cache/config changes or project imports. Only assigned held files written; no canonical modifications.",
+    "root_lane_lock": "untouched",
+    "failed_and_historical_evidence": "preserved"
+  },
+  "adoption_guard": "Verify every listed base SHA (null means absent) and proposed SHA before adoption. Preserve sealed packet; review corrections belong in a separate revision, never silent overwrite.",
+  "readiness": "NOT_READY. Diagnostic proposal only; no remaining workstream/native evidence gate completed by this packet.",
+  "revision": 3,
+  "previous_seal": {
+    "directory": "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01",
+    "manifest": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/SEALED_MANIFEST.json",
+      "sha256": "9e1de2e140df050868163d1f71c3e9fc12d5a3bf0b036699b47366bee6cebd68",
+      "bytes": 4105
+    },
+    "author_report": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/AUTHOR_REPORT.json",
+      "sha256": "2810cb8ee8125750ab7e61dc0001b5e5542e1e55849690d35482062e2a4f3ccb",
+      "bytes": 16881
+    },
+    "patch": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/proposed.patch",
+      "sha256": "0125ecba0da6f12ed60ebaedc42e34714e556a30752119bef89f88926e046293",
+      "bytes": 82342
+    },
+    "status": "PRESERVED_NOT_ADMITTED_FOR_INCOMPLETE_DIAGNOSTIC_PRESERVATION_GUARD"
+  },
+  "review_findings": {
+    "reviewer": "/root/portability_review",
+    "root_requested": true,
+    "delta": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/revision-02/revision-delta.patch",
+      "sha256": "e8daa956a16bd2daeccc94fb4370babe28b2f5a438f7f4999a52faf6795e5d5f",
+      "bytes": 5170
+    },
+    "changes": [
+      "Move both exact no-app output checks into preserve() before postbuild_evidence_preserved acknowledgment, including failed-build/missing-result path. Reset prior acknowledgment/absence flags before preservation; reject existing output directories and dangling symlinks; record parlor_outputs_absent only after check. Remove duplicate success-only check. Unexpected app output stays preserved without diagnostic destructive-cleanup permission.",
+      "At start of finalization normalize only diagnostic_status RUNNING to FAIL. A genuinely CAPTURED observation remains CAPTURED even if inherited cleanup fails; overall status still FAIL. No normal runtime/provenance/notice status is relabeled.",
+      "Extend the same existing missing-result/failure tests to cover unexpected output directories/symlinks denying acknowledgment and final RUNNING/CAPTURED status handling. No extra test class/module/framework, native dispatch or normal control edits."
+    ],
+    "tests": "NOT_RUN; six proposed Python modules AST-parsed only."
+  },
+  "previous_revision": {
+    "directory": "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/revision-02",
+    "manifest": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/revision-02/SEALED_MANIFEST.json",
+      "sha256": "6d0ceaf65e691ebf27943b76c21356953a9dabb40c884e4b0035381faf676d99",
+      "bytes": 4548
+    },
+    "author_report": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/revision-02/AUTHOR_REPORT.json",
+      "sha256": "db0f760b6f042b22adf6a234bf754f44bbc824acc9bc9f02a59885b56ad790b6",
+      "bytes": 19456
+    },
+    "patch": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/revision-02/proposed.patch",
+      "sha256": "44278014d0c9d584ca1ffea67e46041a06c3d92f66e0fc9dab612046bed7e778",
+      "bytes": 84051
+    },
+    "status": "PRESERVED_SUPERSEDED_ONLY_FOR_EXISTING_CYCLES_TEST_EXPECTATION"
+  },
+  "compatibility_review_finding": {
+    "reviewer": "/root/portability_review",
+    "delta": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/revision-03/revision-delta.patch",
+      "sha256": "ab7406eb41410fde701d4cbb09c2b3610095c6e2d9b8ebb63a4d7692b12c24b4",
+      "bytes": 865
+    },
+    "correction": "One existing ProbeSourceContractTest.test_full_non_app_scope_is_explicit_and_cycles_do_not_reuse_failed_labels assertion now expects unchanged l08:33/normal:34 plus settings_sheet:35. All remaining assertions and process-probe runtime/source behavior unchanged. No new harness.",
+    "test": "NOT_RUN; execute only this affected existing method in planned root batch."
+  }
+}

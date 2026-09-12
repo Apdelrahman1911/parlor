@@ -1,0 +1,591 @@
+{
+  "app_container": false,
+  "approved_manifest_sha256": "9efdb9f7918b75c0c4315fa4ecf208ece85ba4b37a8c66bb6d35cab8612c2f3b",
+  "branch": "fix/local-readiness-2026-09-07",
+  "cancel_signals": [],
+  "cancellation_requested": false,
+  "cleanup_device_uuid": "DA41AAF7-F521-4608-BF61-8C625C2ED36A",
+  "cleanup_errors": [],
+  "cleanup_status": "PASS",
+  "commands": [
+    {
+      "argv": [
+        "/usr/bin/plutil",
+        "-convert",
+        "json",
+        "-o",
+        "-",
+        "/Applications/Xcode.app/Contents/version.plist"
+      ],
+      "error": null,
+      "exit_code": 0,
+      "finished_at": "2026-09-08T02:04:31.530065+00:00",
+      "label": "xcode-plist",
+      "started_at": "2026-09-08T02:04:31.521799+00:00",
+      "stderr_bytes": 0,
+      "stdout_bytes": 179
+    },
+    {
+      "argv": [
+        "/usr/bin/plutil",
+        "-convert",
+        "json",
+        "-o",
+        "-",
+        "/Library/Developer/PrivateFrameworks/CoreSimulator.framework/Versions/A/Resources/Info.plist"
+      ],
+      "error": null,
+      "exit_code": 0,
+      "finished_at": "2026-09-08T02:04:31.535729+00:00",
+      "label": "coresimulator-plist",
+      "started_at": "2026-09-08T02:04:31.530139+00:00",
+      "stderr_bytes": 0,
+      "stdout_bytes": 733
+    },
+    {
+      "argv": [
+        "/opt/homebrew/Cellar/openjdk@21/21.0.11/libexec/openjdk.jdk/Contents/Home/bin/java",
+        "-version"
+      ],
+      "error": null,
+      "exit_code": 0,
+      "finished_at": "2026-09-08T02:04:31.627967+00:00",
+      "label": "jdk-version",
+      "started_at": "2026-09-08T02:04:31.536611+00:00",
+      "stderr_bytes": 161,
+      "stdout_bytes": 0
+    },
+    {
+      "argv": [
+        "/usr/bin/pgrep",
+        "-f",
+        "[o]rg.gradle.launcher.daemon.bootstrap.GradleDaemon"
+      ],
+      "error": null,
+      "exit_code": 1,
+      "finished_at": "2026-09-08T02:04:31.642489+00:00",
+      "label": "gradle-baseline",
+      "started_at": "2026-09-08T02:04:31.628182+00:00",
+      "stderr_bytes": 0,
+      "stdout_bytes": 0
+    },
+    {
+      "argv": [
+        "/usr/bin/git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "error": null,
+      "exit_code": 0,
+      "finished_at": "2026-09-08T02:04:31.655533+00:00",
+      "label": "baseline-commit",
+      "started_at": "2026-09-08T02:04:31.642553+00:00",
+      "stderr_bytes": 0,
+      "stdout_bytes": 41
+    },
+    {
+      "argv": [
+        "/usr/bin/git",
+        "rev-parse",
+        "HEAD^{tree}"
+      ],
+      "error": null,
+      "exit_code": 0,
+      "finished_at": "2026-09-08T02:04:31.670785+00:00",
+      "label": "baseline-tree",
+      "started_at": "2026-09-08T02:04:31.655576+00:00",
+      "stderr_bytes": 0,
+      "stdout_bytes": 41
+    },
+    {
+      "argv": [
+        "/usr/bin/git",
+        "branch",
+        "--show-current"
+      ],
+      "error": null,
+      "exit_code": 0,
+      "finished_at": "2026-09-08T02:04:31.682740+00:00",
+      "label": "baseline-branch",
+      "started_at": "2026-09-08T02:04:31.670822+00:00",
+      "stderr_bytes": 0,
+      "stdout_bytes": 31
+    },
+    {
+      "argv": [
+        "/usr/bin/git",
+        "status",
+        "--porcelain=v1",
+        "--untracked-files=no"
+      ],
+      "error": null,
+      "exit_code": 0,
+      "finished_at": "2026-09-08T02:04:31.698839+00:00",
+      "label": "baseline-tracked-status",
+      "started_at": "2026-09-08T02:04:31.682782+00:00",
+      "stderr_bytes": 0,
+      "stdout_bytes": 0
+    },
+    {
+      "argv": [
+        "/Library/Developer/PrivateFrameworks/CoreSimulator.framework/Versions/A/Resources/bin/simctl",
+        "--set",
+        "/private/tmp/parlor-foundation-control-f8zfyj2k/devices",
+        "list",
+        "-j",
+        "runtimes"
+      ],
+      "error": null,
+      "exit_code": 0,
+      "finished_at": "2026-09-08T02:04:34.909094+00:00",
+      "label": "runtimes",
+      "started_at": "2026-09-08T02:04:32.106534+00:00",
+      "stderr_bytes": 0,
+      "stdout_bytes": 41059
+    },
+    {
+      "argv": [
+        "/Library/Developer/PrivateFrameworks/CoreSimulator.framework/Versions/A/Resources/bin/simctl",
+        "--set",
+        "/private/tmp/parlor-foundation-control-f8zfyj2k/devices",
+        "list",
+        "-j",
+        "devicetypes"
+      ],
+      "error": null,
+      "exit_code": 0,
+      "finished_at": "2026-09-08T02:04:34.982688+00:00",
+      "label": "device-types",
+      "started_at": "2026-09-08T02:04:34.909482+00:00",
+      "stderr_bytes": 0,
+      "stdout_bytes": 61947
+    },
+    {
+      "argv": [
+        "/Library/Developer/PrivateFrameworks/CoreSimulator.framework/Versions/A/Resources/bin/simctl",
+        "--set",
+        "/private/tmp/parlor-foundation-control-f8zfyj2k/devices",
+        "list",
+        "-j",
+        "devices"
+      ],
+      "error": null,
+      "exit_code": 0,
+      "finished_at": "2026-09-08T02:04:35.051013+00:00",
+      "label": "empty-device-set",
+      "started_at": "2026-09-08T02:04:34.983138+00:00",
+      "stderr_bytes": 0,
+      "stdout_bytes": 147
+    },
+    {
+      "argv": [
+        "/Library/Developer/PrivateFrameworks/CoreSimulator.framework/Versions/A/Resources/bin/simctl",
+        "--set",
+        "/private/tmp/parlor-foundation-control-f8zfyj2k/devices",
+        "create",
+        "ParlorFoundationControl-d5797b7d09aa4f78ab622e67a1d330a8",
+        "com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro",
+        "com.apple.CoreSimulator.SimRuntime.iOS-26-5"
+      ],
+      "error": null,
+      "exit_code": 0,
+      "finished_at": "2026-09-08T02:04:35.231859+00:00",
+      "label": "create",
+      "started_at": "2026-09-08T02:04:35.051179+00:00",
+      "stderr_bytes": 0,
+      "stdout_bytes": 37
+    },
+    {
+      "argv": [
+        "/Library/Developer/PrivateFrameworks/CoreSimulator.framework/Versions/A/Resources/bin/simctl",
+        "--set",
+        "/private/tmp/parlor-foundation-control-f8zfyj2k/devices",
+        "list",
+        "-j",
+        "devices"
+      ],
+      "error": null,
+      "exit_code": 0,
+      "finished_at": "2026-09-08T02:04:35.306734+00:00",
+      "label": "created-identity",
+      "started_at": "2026-09-08T02:04:35.232041+00:00",
+      "stderr_bytes": 0,
+      "stdout_bytes": 718
+    },
+    {
+      "argv": [
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang",
+        "-fobjc-arc",
+        "-fmodules",
+        "-fmodules-cache-path=/private/tmp/parlor-foundation-control-f8zfyj2k/cache",
+        "-target",
+        "arm64-apple-ios16.0-simulator",
+        "-isysroot",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.5.sdk",
+        "-framework",
+        "Foundation",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "/private/tmp/parlor-foundation-control-f8zfyj2k/FoundationProtectionControl.m",
+        "-o",
+        "/private/tmp/parlor-foundation-control-f8zfyj2k/FoundationProtectionControl"
+      ],
+      "error": null,
+      "exit_code": 0,
+      "finished_at": "2026-09-08T02:04:36.095941+00:00",
+      "label": "compile",
+      "started_at": "2026-09-08T02:04:35.307276+00:00",
+      "stderr_bytes": 0,
+      "stdout_bytes": 0
+    },
+    {
+      "argv": [
+        "/usr/bin/pgrep",
+        "-f",
+        "[o]rg.gradle.launcher.daemon.bootstrap.GradleDaemon"
+      ],
+      "error": null,
+      "exit_code": 1,
+      "finished_at": "2026-09-08T02:04:36.109632+00:00",
+      "label": "stop-after-compile-preflight",
+      "started_at": "2026-09-08T02:04:36.095982+00:00",
+      "stderr_bytes": 0,
+      "stdout_bytes": 0
+    },
+    {
+      "argv": [
+        "/Users/abdelrahman/Projects/parlor/gradlew",
+        "--stop"
+      ],
+      "error": null,
+      "exit_code": 0,
+      "finished_at": "2026-09-08T02:04:36.555768+00:00",
+      "label": "stop-after-compile",
+      "started_at": "2026-09-08T02:04:36.109694+00:00",
+      "stderr_bytes": 0,
+      "stdout_bytes": 31
+    },
+    {
+      "argv": [
+        "/usr/bin/pgrep",
+        "-f",
+        "[o]rg.gradle.launcher.daemon.bootstrap.GradleDaemon"
+      ],
+      "error": null,
+      "exit_code": 1,
+      "finished_at": "2026-09-08T02:04:36.569719+00:00",
+      "label": "stop-after-compile-verified",
+      "started_at": "2026-09-08T02:04:36.555812+00:00",
+      "stderr_bytes": 0,
+      "stdout_bytes": 0
+    },
+    {
+      "argv": [
+        "/usr/bin/codesign",
+        "--force",
+        "--sign",
+        "-",
+        "--timestamp=none",
+        "/private/tmp/parlor-foundation-control-f8zfyj2k/FoundationProtectionControl"
+      ],
+      "error": null,
+      "exit_code": 0,
+      "finished_at": "2026-09-08T02:04:36.585345+00:00",
+      "label": "adhoc-fixture-sign",
+      "started_at": "2026-09-08T02:04:36.569770+00:00",
+      "stderr_bytes": 106,
+      "stdout_bytes": 0
+    },
+    {
+      "argv": [
+        "/usr/bin/codesign",
+        "--verify",
+        "--strict",
+        "/private/tmp/parlor-foundation-control-f8zfyj2k/FoundationProtectionControl"
+      ],
+      "error": null,
+      "exit_code": 0,
+      "finished_at": "2026-09-08T02:04:36.591827+00:00",
+      "label": "fixture-signature-check",
+      "started_at": "2026-09-08T02:04:36.585389+00:00",
+      "stderr_bytes": 0,
+      "stdout_bytes": 0
+    },
+    {
+      "argv": [
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/dwarfdump",
+        "--uuid",
+        "/private/tmp/parlor-foundation-control-f8zfyj2k/FoundationProtectionControl"
+      ],
+      "error": null,
+      "exit_code": 0,
+      "finished_at": "2026-09-08T02:04:36.596860+00:00",
+      "label": "image-uuid",
+      "started_at": "2026-09-08T02:04:36.591863+00:00",
+      "stderr_bytes": 0,
+      "stdout_bytes": 127
+    },
+    {
+      "argv": [
+        "/Library/Developer/PrivateFrameworks/CoreSimulator.framework/Versions/A/Resources/bin/simctl",
+        "--set",
+        "/private/tmp/parlor-foundation-control-f8zfyj2k/devices",
+        "boot",
+        "DA41AAF7-F521-4608-BF61-8C625C2ED36A"
+      ],
+      "error": null,
+      "exit_code": 0,
+      "finished_at": "2026-09-08T02:04:41.389622+00:00",
+      "label": "boot",
+      "started_at": "2026-09-08T02:04:36.597242+00:00",
+      "stderr_bytes": 0,
+      "stdout_bytes": 0
+    },
+    {
+      "argv": [
+        "/Library/Developer/PrivateFrameworks/CoreSimulator.framework/Versions/A/Resources/bin/simctl",
+        "--set",
+        "/private/tmp/parlor-foundation-control-f8zfyj2k/devices",
+        "bootstatus",
+        "DA41AAF7-F521-4608-BF61-8C625C2ED36A",
+        "-b"
+      ],
+      "error": null,
+      "exit_code": 0,
+      "finished_at": "2026-09-08T02:05:08.658488+00:00",
+      "label": "boot-status",
+      "started_at": "2026-09-08T02:04:41.389822+00:00",
+      "stderr_bytes": 0,
+      "stdout_bytes": 5575
+    },
+    {
+      "argv": [
+        "/Library/Developer/PrivateFrameworks/CoreSimulator.framework/Versions/A/Resources/bin/simctl",
+        "--set",
+        "/private/tmp/parlor-foundation-control-f8zfyj2k/devices",
+        "list",
+        "-j",
+        "devices"
+      ],
+      "error": null,
+      "exit_code": 0,
+      "finished_at": "2026-09-08T02:05:09.045752+00:00",
+      "label": "booted-identity",
+      "started_at": "2026-09-08T02:05:08.659726+00:00",
+      "stderr_bytes": 0,
+      "stdout_bytes": 797
+    },
+    {
+      "argv": [
+        "/Library/Developer/PrivateFrameworks/CoreSimulator.framework/Versions/A/Resources/bin/simctl",
+        "--set",
+        "/private/tmp/parlor-foundation-control-f8zfyj2k/devices",
+        "spawn",
+        "DA41AAF7-F521-4608-BF61-8C625C2ED36A",
+        "/private/tmp/parlor-foundation-control-f8zfyj2k/FoundationProtectionControl"
+      ],
+      "error": null,
+      "exit_code": 0,
+      "finished_at": "2026-09-08T02:05:09.604448+00:00",
+      "label": "native-observations",
+      "started_at": "2026-09-08T02:05:09.046477+00:00",
+      "stderr_bytes": 0,
+      "stdout_bytes": 7047
+    },
+    {
+      "argv": [
+        "/usr/bin/pgrep",
+        "-f",
+        "[o]rg.gradle.launcher.daemon.bootstrap.GradleDaemon"
+      ],
+      "error": null,
+      "exit_code": 1,
+      "finished_at": "2026-09-08T02:05:09.629746+00:00",
+      "label": "stop-final-preflight",
+      "started_at": "2026-09-08T02:05:09.605947+00:00",
+      "stderr_bytes": 0,
+      "stdout_bytes": 0
+    },
+    {
+      "argv": [
+        "/Users/abdelrahman/Projects/parlor/gradlew",
+        "--stop"
+      ],
+      "error": null,
+      "exit_code": 0,
+      "finished_at": "2026-09-08T02:05:10.773211+00:00",
+      "label": "stop-final",
+      "started_at": "2026-09-08T02:05:09.629794+00:00",
+      "stderr_bytes": 0,
+      "stdout_bytes": 31
+    },
+    {
+      "argv": [
+        "/usr/bin/pgrep",
+        "-f",
+        "[o]rg.gradle.launcher.daemon.bootstrap.GradleDaemon"
+      ],
+      "error": null,
+      "exit_code": 1,
+      "finished_at": "2026-09-08T02:05:10.803368+00:00",
+      "label": "stop-final-verified",
+      "started_at": "2026-09-08T02:05:10.773273+00:00",
+      "stderr_bytes": 0,
+      "stdout_bytes": 0
+    },
+    {
+      "argv": [
+        "/Library/Developer/PrivateFrameworks/CoreSimulator.framework/Versions/A/Resources/bin/simctl",
+        "--set",
+        "/private/tmp/parlor-foundation-control-f8zfyj2k/devices",
+        "list",
+        "-j",
+        "devices"
+      ],
+      "error": null,
+      "exit_code": 0,
+      "finished_at": "2026-09-08T02:05:10.976205+00:00",
+      "label": "cleanup-device-identity",
+      "started_at": "2026-09-08T02:05:10.803597+00:00",
+      "stderr_bytes": 0,
+      "stdout_bytes": 797
+    },
+    {
+      "argv": [
+        "/Library/Developer/PrivateFrameworks/CoreSimulator.framework/Versions/A/Resources/bin/simctl",
+        "--set",
+        "/private/tmp/parlor-foundation-control-f8zfyj2k/devices",
+        "shutdown",
+        "DA41AAF7-F521-4608-BF61-8C625C2ED36A"
+      ],
+      "error": null,
+      "exit_code": 0,
+      "finished_at": "2026-09-08T02:05:14.212413+00:00",
+      "label": "shutdown",
+      "started_at": "2026-09-08T02:05:10.976376+00:00",
+      "stderr_bytes": 0,
+      "stdout_bytes": 0
+    },
+    {
+      "argv": [
+        "/Library/Developer/PrivateFrameworks/CoreSimulator.framework/Versions/A/Resources/bin/simctl",
+        "--set",
+        "/private/tmp/parlor-foundation-control-f8zfyj2k/devices",
+        "list",
+        "-j",
+        "devices"
+      ],
+      "error": null,
+      "exit_code": 0,
+      "finished_at": "2026-09-08T02:05:14.313423+00:00",
+      "label": "shutdown-identity",
+      "started_at": "2026-09-08T02:05:14.212558+00:00",
+      "stderr_bytes": 0,
+      "stdout_bytes": 799
+    },
+    {
+      "argv": [
+        "/Library/Developer/PrivateFrameworks/CoreSimulator.framework/Versions/A/Resources/bin/simctl",
+        "--set",
+        "/private/tmp/parlor-foundation-control-f8zfyj2k/devices",
+        "delete",
+        "DA41AAF7-F521-4608-BF61-8C625C2ED36A"
+      ],
+      "error": null,
+      "exit_code": 0,
+      "finished_at": "2026-09-08T02:05:14.399025+00:00",
+      "label": "delete",
+      "started_at": "2026-09-08T02:05:14.313608+00:00",
+      "stderr_bytes": 0,
+      "stdout_bytes": 0
+    },
+    {
+      "argv": [
+        "/Library/Developer/PrivateFrameworks/CoreSimulator.framework/Versions/A/Resources/bin/simctl",
+        "--set",
+        "/private/tmp/parlor-foundation-control-f8zfyj2k/devices",
+        "list",
+        "-j",
+        "devices"
+      ],
+      "error": null,
+      "exit_code": 0,
+      "finished_at": "2026-09-08T02:05:14.483706+00:00",
+      "label": "deleted-identity",
+      "started_at": "2026-09-08T02:05:14.399160+00:00",
+      "stderr_bytes": 0,
+      "stdout_bytes": 147
+    },
+    {
+      "argv": [
+        "/usr/sbin/lsof",
+        "-nP",
+        "-t",
+        "+w",
+        "+D",
+        "/private/tmp/parlor-foundation-control-f8zfyj2k"
+      ],
+      "error": null,
+      "exit_code": 1,
+      "finished_at": "2026-09-08T02:05:14.770977+00:00",
+      "label": "scratch-holders",
+      "started_at": "2026-09-08T02:05:14.483833+00:00",
+      "stderr_bytes": 0,
+      "stdout_bytes": 0
+    }
+  ],
+  "commit": "aecaa1bb07f560d7550951ec90c9bce038b77d23",
+  "context_source_hashes": {
+    "composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSnapshotFileSystem.kt": "c2852fafb293a693be830171f4674947289fafb07f8ecdbafa5c0aaae6d1bf8b",
+    "scripts/verification/ios-readiness/L08StorageProbe.kt.in": "a1202e47e1b41feb7e5c558e4df9515704e27762e437778b6ae79c777bfce651"
+  },
+  "context_source_hashes_after": {
+    "composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSnapshotFileSystem.kt": "c2852fafb293a693be830171f4674947289fafb07f8ecdbafa5c0aaae6d1bf8b",
+    "scripts/verification/ios-readiness/L08StorageProbe.kt.in": "a1202e47e1b41feb7e5c558e4df9515704e27762e437778b6ae79c777bfce651"
+  },
+  "creation_attempted": true,
+  "device_set_identity": [
+    16777232,
+    86088357,
+    501
+  ],
+  "device_set_quarantined": false,
+  "device_uuid": "DA41AAF7-F521-4608-BF61-8C625C2ED36A",
+  "finished_at": "2026-09-08T02:05:14.788513+00:00",
+  "first_cancel_signal": null,
+  "hardware_protection_verified": false,
+  "independent_review_sha256": "47240106caf99ca5f56c121a876e65fed9ad0e269e2c9f73a0b0c58a7a5ccf0f",
+  "initial_device_set_observed_empty": true,
+  "l08_status": "UNCHANGED_FAILED_UNRESOLVED",
+  "native_image": {
+    "config_sha256": "7026eded183083e417a476ce28371ffc2077e6a706a1ab2257f09212e4b67452",
+    "sha256": "c3ed966ce0ecd110f1a4d401b09be6443932e65e3f06b385ddb3529c62c7af2b",
+    "source_sha256": "a6b025d7b77c3b1b1de57b93869d0beff6b4cc9e365eb5672ffd2be9d52013f2",
+    "uuid": "f1cba8f6-0dc4-3297-a2be-4f0b6437c918"
+  },
+  "retained_until_native_inspection": "Disposable native image/config/cache inside attested scratch only",
+  "schema_version": 1,
+  "scratch": {
+    "identity": [
+      16777232,
+      86088356,
+      501
+    ],
+    "path": "/private/tmp/parlor-foundation-control-f8zfyj2k"
+  },
+  "scratch_removed": true,
+  "sdk_settings_sha256": "038a8a5fb9ac4ba60db102748ed117bf674cf64545cce8092eec0c6c44048adc",
+  "simulator_contacted": true,
+  "started_at": "2026-09-08T02:04:31.521618+00:00",
+  "status": "COLLECTION_VALIDATED_NOT_L08_PASS",
+  "token": "d5797b7d09aa4f78ab622e67a1d330a8",
+  "tool_hashes": {
+    "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang": "bd27e506760168f19f1c82d80a6c9cdafd5fa7226f08c77b347c9d3e7cdb1028",
+    "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/dwarfdump": "8eacfe557b435f923e800900d54c2ddfb3b43dcc587cbea555b489c9f5944edc",
+    "/Library/Developer/PrivateFrameworks/CoreSimulator.framework/Versions/A/Resources/Info.plist": "e787a2e9641a9320dc399e6633b0fd66516d118fc8d17aef3bf1a92e66a8a6a8",
+    "/Library/Developer/PrivateFrameworks/CoreSimulator.framework/Versions/A/Resources/bin/simctl": "b82abb2c3b8468bb3cd7f57ecf50478198fc76bc8f8678b08c4418115af4c5ed"
+  },
+  "tracked_status": "",
+  "tree": "adf87af6858a0b53adcbc406da9974c57f2e4408"
+}

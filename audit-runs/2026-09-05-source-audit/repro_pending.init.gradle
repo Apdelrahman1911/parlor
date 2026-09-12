@@ -1,0 +1,42 @@
+// Explicit invocation-only audit reproducers; no source/dependency/Ignore changes in the app.
+def auditSourceDirs = [
+    ':shared:transport-p2p': 'transport_registration',
+    ':game-modes:whodunit': 'whodunit',
+    ':shared:design-system': 'design'
+]
+gradle.beforeProject { p ->
+    def dir = auditSourceDirs[p.path]
+    if (dir != null) p.pluginManager.withPlugin('org.jetbrains.kotlin.multiplatform') {
+        p.extensions.getByName('kotlin').sourceSets.matching { it.name == 'desktopTest' }.configureEach { s ->
+            s.kotlin.srcDir(new File(p.rootProject.projectDir,
+                'audit-runs/2026-09-05-source-audit/reproducers/' + dir))
+        }
+    }
+}
+gradle.projectsEvaluated {
+    if (rootProject.findProject(':composeApp') == null) return
+    rootProject.tasks.register('auditRuntimeDependencyGraphs') {
+        doLast {
+            [':composeApp': ['releaseRuntimeClasspath', 'desktopRuntimeClasspath'],
+             ':shared:transport-p2p': ['iosArm64CompileKlibraries']].each { path, names ->
+                def p = rootProject.project(path)
+                names.each { name ->
+                    def c = p.configurations.findByName(name)
+                    if (c == null || !c.canBeResolved) {
+                        println("AUDIT_RESOLUTION_UNAVAILABLE ${path}:${name}; resolvable=" +
+                            p.configurations.findAll { it.canBeResolved }*.name)
+                    } else {
+                        println("AUDIT_RUNTIME_GRAPH_BEGIN ${path}:${name}")
+                        def resolution = c.incoming.resolutionResult
+                        resolution.allComponents.collect { it.id.displayName }.sort().each {
+                            println("AUDIT_RUNTIME_COMPONENT ${path}:${name} ${it}")
+                        }
+                        resolution.allDependencies.findAll {
+                            it instanceof org.gradle.api.artifacts.result.UnresolvedDependencyResult
+                        }.each { throw new GradleException("Unresolved audited dependency: " + it.requested.displayName, it.failure) }
+                    }
+                }
+            }
+        }
+    }
+}

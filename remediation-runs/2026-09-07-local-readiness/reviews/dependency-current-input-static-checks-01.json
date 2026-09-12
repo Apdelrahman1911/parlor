@@ -1,0 +1,625 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/release_fix_review",
+  "started_at": "2026-09-07T20:51:28.347278+00:00",
+  "finished_at": "2026-09-07T20:51:28.989787+00:00",
+  "status": "PASS_SCOPED_READ_ONLY_INPUT_RECONCILIATION",
+  "baseline": {
+    "head": "b6e1947c62661631d0593038db7f64dbf25f720e",
+    "tree": "f03ad1b302d951d0ca9811b1efab2751a8be6978",
+    "branch": "fix/local-readiness-2026-09-07",
+    "tracked_status": "",
+    "diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "source_stable_during_parse": true,
+  "script": {
+    "path": "remediation-runs/2026-09-07-local-readiness/reviews/reconcile_dependency_inputs_01.py",
+    "sha256": "3c3727489d495e833e3216ba3d9611d7de87a8b289bec533696c3629e7487b14",
+    "bytes": 19802
+  },
+  "historical_export_source": {
+    "commit": "11210dc6e34811bd1dd36d6a34339851601e5112",
+    "tree": "cb97cc572dff903b8555ec20144c6df2995f2512",
+    "diff_sha256": "f40d88169f213b5b5be3935ad7c06de6180acf65997ce6a887e4072ac9f2eed0"
+  },
+  "historical_source_manifest_sha256": "63ac217a2f76da6f9659677054f97d430a06c71044ce775287fec3ce1021c28a",
+  "historical_receipt": {
+    "path": "remediation-runs/2026-09-07-local-readiness/evidence/dependency-graph-export-02/receipt.json",
+    "sha256": "8877c86a6f7584f8b543ef7a43ce6eed0831944633b8653eaf32153ff6ec327e",
+    "bytes": 277535
+  },
+  "ci_source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+  "ci_source_tree": "c65463bdf1f3656f90dfe6e6dbe1d94b3c588dac",
+  "ci_manifest_sha256": "60e421f9ee3fcd2ea2a55c45684e7b1a5c473ad175f946c6c047b0b9e35e59ca",
+  "input_scope": "30 tracked config/build files including Detekt config, plus the exporter; source hashes are comparison evidence, not a new resolution run.",
+  "input_files": [
+    {
+      "path": "build-logic/convention/build.gradle.kts",
+      "bytes": 1663,
+      "sha256": "d97140c79c500416f3ef1b5a54b2d05f6d0aa895f92b6cd85c26a70c8852ac67",
+      "old_actual_manifest_matches": true,
+      "ci_actual_manifest_and_git_blob_match": true
+    },
+    {
+      "path": "build-logic/convention/src/main/kotlin/com/parlor/buildlogic/DetektConventionPlugin.kt",
+      "bytes": 2447,
+      "sha256": "8d5fd3fb3f13d9d5cb02f89c29a57aab8d71c89cdf6dd0ac41161942109bd825",
+      "old_actual_manifest_matches": true,
+      "ci_actual_manifest_and_git_blob_match": true
+    },
+    {
+      "path": "build-logic/convention/src/main/kotlin/com/parlor/buildlogic/KmpComposeLibraryConventionPlugin.kt",
+      "bytes": 614,
+      "sha256": "d8a7cd25a7062f20ae871a068b724c061c98f3831aae4d90701c5cbbf7b4e660",
+      "old_actual_manifest_matches": true,
+      "ci_actual_manifest_and_git_blob_match": true
+    },
+    {
+      "path": "build-logic/convention/src/main/kotlin/com/parlor/buildlogic/KmpLibraryConventionPlugin.kt",
+      "bytes": 2590,
+      "sha256": "9d3b07942123f5a4c2da229aa873d5d7b7d422b120d1ff42014cfe066eefbc63",
+      "old_actual_manifest_matches": true,
+      "ci_actual_manifest_and_git_blob_match": true
+    },
+    {
+      "path": "build-logic/settings.gradle.kts",
+      "bytes": 342,
+      "sha256": "d86cd60d448dfb6ebf0c9b6977456dc7b93865afe5c415dc368a56ab6ef1f729",
+      "old_actual_manifest_matches": true,
+      "ci_actual_manifest_and_git_blob_match": true
+    },
+    {
+      "path": "build.gradle.kts",
+      "bytes": 8766,
+      "sha256": "bd6199e1f097eb236c50c46efb91d291550110f6b4d95a8e95ff0db4d8da192b",
+      "old_actual_manifest_matches": true,
+      "ci_actual_manifest_and_git_blob_match": true
+    },
+    {
+      "path": "composeApp/build.gradle.kts",
+      "bytes": 27271,
+      "sha256": "c23525d6b06f9b536fb5e8ef6be68c653952fa9764e276f831772b864621fdd5",
+      "old_actual_manifest_matches": true,
+      "ci_actual_manifest_and_git_blob_match": true
+    },
+    {
+      "path": "config/detekt/detekt.yml",
+      "bytes": 4400,
+      "sha256": "0e50363aaffe4959659e8fca90cadb70a36d210cd9184f02e75c938abbd03894",
+      "old_actual_manifest_matches": true,
+      "ci_actual_manifest_and_git_blob_match": true
+    },
+    {
+      "path": "config/parlor-version.xcconfig",
+      "bytes": 202,
+      "sha256": "4975e763730608718095d3c7342f34f333a86e20cf562eb221b9e3478fa93f9e",
+      "old_actual_manifest_matches": true,
+      "ci_actual_manifest_and_git_blob_match": true
+    },
+    {
+      "path": "game-modes/mafia/build.gradle.kts",
+      "bytes": 1544,
+      "sha256": "7aceb370331f84b2fee70bb039b7779bdd818ea78aab15da3bfcfd137a76ad2d",
+      "old_actual_manifest_matches": true,
+      "ci_actual_manifest_and_git_blob_match": true
+    },
+    {
+      "path": "game-modes/whodunit/build.gradle.kts",
+      "bytes": 2204,
+      "sha256": "2eb4b00a53ff1eff42f2a64b3de1a1c4d28b08d419ad2828045a063320e4696c",
+      "old_actual_manifest_matches": true,
+      "ci_actual_manifest_and_git_blob_match": true
+    },
+    {
+      "path": "gradle.properties",
+      "bytes": 973,
+      "sha256": "2df8685921ad2c6eead097a6d9994bbcc93dbc5cbdeb0bce8911ffa4e83162ce",
+      "old_actual_manifest_matches": true,
+      "ci_actual_manifest_and_git_blob_match": true
+    },
+    {
+      "path": "gradle/libs.versions.toml",
+      "bytes": 5556,
+      "sha256": "87a031665605a1fb3f932be31c75afd8d2d1bc0d94cfcca36101141c50788399",
+      "old_actual_manifest_matches": true,
+      "ci_actual_manifest_and_git_blob_match": true
+    },
+    {
+      "path": "gradle/verification-metadata.xml",
+      "bytes": 795388,
+      "sha256": "58b5a279cc5ccc58e1088fbe3dd248fcfdf31a307707204c5438259de7960f95",
+      "old_actual_manifest_matches": true,
+      "ci_actual_manifest_and_git_blob_match": true
+    },
+    {
+      "path": "gradle/wrapper/gradle-wrapper.jar",
+      "bytes": 43705,
+      "sha256": "81a82aaea5abcc8ff68b3dfcb58b3c3c429378efd98e7433460610fecd7ae45f",
+      "old_actual_manifest_matches": true,
+      "ci_actual_manifest_and_git_blob_match": true
+    },
+    {
+      "path": "gradle/wrapper/gradle-wrapper.properties",
+      "bytes": 338,
+      "sha256": "c040b6ef2fb893ff5beea5a281614f2848f1c3996a7886f650b713f8240656a2",
+      "old_actual_manifest_matches": true,
+      "ci_actual_manifest_and_git_blob_match": true
+    },
+    {
+      "path": "gradlew",
+      "bytes": 8752,
+      "sha256": "734b3879d3501dce471cf0522d3bcbafe76873d9fc5129345b67fb43bd15e933",
+      "old_actual_manifest_matches": true,
+      "ci_actual_manifest_and_git_blob_match": true
+    },
+    {
+      "path": "gradlew.bat",
+      "bytes": 2872,
+      "sha256": "2209f919a22528af59a2af2ad97e8d056cca18e39f7d87aa3fd549a73b180150",
+      "old_actual_manifest_matches": true,
+      "ci_actual_manifest_and_git_blob_match": true
+    },
+    {
+      "path": "iosApp/Configuration/Config.xcconfig",
+      "bytes": 767,
+      "sha256": "102b93364c12cb6d9055fcb88acdb5ab15bc1a3724bdc350799539bc09d9c0df",
+      "old_actual_manifest_matches": true,
+      "ci_actual_manifest_and_git_blob_match": true
+    },
+    {
+      "path": "settings.gradle.kts",
+      "bytes": 1422,
+      "sha256": "27a40495b1adf18ca90b5a8fdd345448c2ecf2f9ac726c753468a5e627b27d18",
+      "old_actual_manifest_matches": true,
+      "ci_actual_manifest_and_git_blob_match": true
+    },
+    {
+      "path": "shared/content/build.gradle.kts",
+      "bytes": 793,
+      "sha256": "f956862a089a95ba41f4de714e95d1ac44a23d80994c323ba61a1c0c28d34939",
+      "old_actual_manifest_matches": true,
+      "ci_actual_manifest_and_git_blob_match": true
+    },
+    {
+      "path": "shared/core/build.gradle.kts",
+      "bytes": 763,
+      "sha256": "05bafd928b020cd386aab5593ba73c5e470d44005f9c23dff739a42b577f31dd",
+      "old_actual_manifest_matches": true,
+      "ci_actual_manifest_and_git_blob_match": true
+    },
+    {
+      "path": "shared/design-system/build.gradle.kts",
+      "bytes": 749,
+      "sha256": "118d898f900e3b8ccc76db6fca658d69a0d211c5220b6985738f14428a99f78d",
+      "old_actual_manifest_matches": true,
+      "ci_actual_manifest_and_git_blob_match": true
+    },
+    {
+      "path": "shared/engine-testing/build.gradle.kts",
+      "bytes": 551,
+      "sha256": "096e9f4f67d514fd0a41de6853ad599cf5e3f3168b3294d8c3d71db5eaeac87f",
+      "old_actual_manifest_matches": true,
+      "ci_actual_manifest_and_git_blob_match": true
+    },
+    {
+      "path": "shared/engine/build.gradle.kts",
+      "bytes": 625,
+      "sha256": "4cbe86781aa8f11d2ef91381855ab3bcb3b126ef53b6a8272b79c478f90fc38a",
+      "old_actual_manifest_matches": true,
+      "ci_actual_manifest_and_git_blob_match": true
+    },
+    {
+      "path": "shared/networking-testing/build.gradle.kts",
+      "bytes": 409,
+      "sha256": "81ed6260d7ac49fada4f0a922dde7db77fc557b86ab0a5884d5b20a64ec74f7e",
+      "old_actual_manifest_matches": true,
+      "ci_actual_manifest_and_git_blob_match": true
+    },
+    {
+      "path": "shared/networking/build.gradle.kts",
+      "bytes": 764,
+      "sha256": "765ac532634f0dc088a5ded8c32bfc6550aa6408155b44d2956be395d131d621",
+      "old_actual_manifest_matches": true,
+      "ci_actual_manifest_and_git_blob_match": true
+    },
+    {
+      "path": "shared/session/build.gradle.kts",
+      "bytes": 673,
+      "sha256": "3be79bcdba5c593eed5ac93d6000043911cd913ab1d7d2c70ab0be7ea37c80b8",
+      "old_actual_manifest_matches": true,
+      "ci_actual_manifest_and_git_blob_match": true
+    },
+    {
+      "path": "shared/storage/build.gradle.kts",
+      "bytes": 551,
+      "sha256": "096e9f4f67d514fd0a41de6853ad599cf5e3f3168b3294d8c3d71db5eaeac87f",
+      "old_actual_manifest_matches": true,
+      "ci_actual_manifest_and_git_blob_match": true
+    },
+    {
+      "path": "shared/transport-p2p/build.gradle.kts",
+      "bytes": 4251,
+      "sha256": "6ce2fd726bd41031a5b26d0d30f8ee8f693b4dc942da90bdc48b40fbf040c3b7",
+      "old_actual_manifest_matches": true,
+      "ci_actual_manifest_and_git_blob_match": true
+    },
+    {
+      "path": "scripts/verification/resolved_dependencies.init.gradle",
+      "bytes": 7170,
+      "sha256": "5120cb8d7c12825ad889f23d73075ef29ae48b66e4966d1e2335aa2d11995f59",
+      "old_actual_manifest_matches": true,
+      "ci_actual_manifest_and_git_blob_match": true
+    }
+  ],
+  "compiled_source_directory_files_matching_ci": 632,
+  "untracked_configured_inputs": [],
+  "renderer_controls": {
+    "scripts/verification/dependency_inventory.py": "fc0238d4d6ea0abd60d2985ed214af6516a239e439269978139fcc9519a20534",
+    "scripts/verification/resolved_dependencies.init.gradle": "5120cb8d7c12825ad889f23d73075ef29ae48b66e4966d1e2335aa2d11995f59",
+    "scripts/release/tests/test_dependency_inventory.py": "a3c454f08af038a59381360a1290a470d2b04e3ad4201fa1ca63bc96d01f1b91"
+  },
+  "graphs": [
+    {
+      "graph": "androidRelease",
+      "raw_graph": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/dependency-graph-export-02/raw-graphs/androidRelease.json",
+        "sha256": "97aafb48c1e50f78ef1d1b6ff830a308448a82cef8919da07fbd6972ce3598a0",
+        "bytes": 277318
+      },
+      "configuration": "releaseRuntimeClasspath",
+      "components": 239,
+      "maven_components": 228,
+      "artifacts": 129,
+      "strict_artifact_sha_matches": 129,
+      "edges_including_constraints": 1198,
+      "deduplicated_nonconstraint_edges": 914,
+      "project_components": [
+        "project::composeApp",
+        "project::game-modes:mafia",
+        "project::game-modes:whodunit",
+        "project::shared:content",
+        "project::shared:core",
+        "project::shared:design-system",
+        "project::shared:engine",
+        "project::shared:networking",
+        "project::shared:session",
+        "project::shared:storage",
+        "project::shared:transport-p2p"
+      ]
+    },
+    {
+      "graph": "iosArm64",
+      "raw_graph": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/dependency-graph-export-02/raw-graphs/iosArm64.json",
+        "sha256": "b761e0d7059cd37fe1212190eb9d5c71eec4bdc3cce7479964c1cc12d86adf63",
+        "bytes": 154639
+      },
+      "configuration": "iosArm64CompileKlibraries",
+      "components": 167,
+      "maven_components": 156,
+      "artifacts": 81,
+      "strict_artifact_sha_matches": 81,
+      "edges_including_constraints": 577,
+      "deduplicated_nonconstraint_edges": 516,
+      "project_components": [
+        "project::composeApp",
+        "project::game-modes:mafia",
+        "project::game-modes:whodunit",
+        "project::shared:content",
+        "project::shared:core",
+        "project::shared:design-system",
+        "project::shared:engine",
+        "project::shared:networking",
+        "project::shared:session",
+        "project::shared:storage",
+        "project::shared:transport-p2p"
+      ]
+    },
+    {
+      "graph": "iosSimulatorArm64",
+      "raw_graph": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/dependency-graph-export-02/raw-graphs/iosSimulatorArm64.json",
+        "sha256": "3c8a7d69e853e893a58cf0b951f03918e6a8baf63c7be5815ce119bd5c0fbcad",
+        "bytes": 157924
+      },
+      "configuration": "iosSimulatorArm64CompileKlibraries",
+      "components": 167,
+      "maven_components": 156,
+      "artifacts": 81,
+      "strict_artifact_sha_matches": 81,
+      "edges_including_constraints": 577,
+      "deduplicated_nonconstraint_edges": 516,
+      "project_components": [
+        "project::composeApp",
+        "project::game-modes:mafia",
+        "project::game-modes:whodunit",
+        "project::shared:content",
+        "project::shared:core",
+        "project::shared:design-system",
+        "project::shared:engine",
+        "project::shared:networking",
+        "project::shared:session",
+        "project::shared:storage",
+        "project::shared:transport-p2p"
+      ]
+    },
+    {
+      "graph": "iosX64",
+      "raw_graph": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/dependency-graph-export-02/raw-graphs/iosX64.json",
+        "sha256": "dc8f07642fe1d3ff4a37008b47fff36eb3f242ca3799cfb170aee14cbd741aa3",
+        "bytes": 153736
+      },
+      "configuration": "iosX64CompileKlibraries",
+      "components": 167,
+      "maven_components": 156,
+      "artifacts": 81,
+      "strict_artifact_sha_matches": 81,
+      "edges_including_constraints": 577,
+      "deduplicated_nonconstraint_edges": 516,
+      "project_components": [
+        "project::composeApp",
+        "project::game-modes:mafia",
+        "project::game-modes:whodunit",
+        "project::shared:content",
+        "project::shared:core",
+        "project::shared:design-system",
+        "project::shared:engine",
+        "project::shared:networking",
+        "project::shared:session",
+        "project::shared:storage",
+        "project::shared:transport-p2p"
+      ]
+    }
+  ],
+  "unique_maven_coordinates": 456,
+  "unique_artifact_content_identities": 372,
+  "strict_artifact_pin_misses": 0,
+  "graph_test_fixture_projects_absent": true,
+  "poms": {
+    "files": 459,
+    "bytes": 1507794,
+    "all_entire_xml_documents_reparsed": true,
+    "hashes_urls_coordinates_access_times_direct_and_inherited_licenses_match": true,
+    "inherited_license_records": 3,
+    "extra_parent_coordinates": [
+      "com.google.guava:guava-parent:26.0-android",
+      "org.slf4j:slf4j-bom:2.0.16",
+      "org.slf4j:slf4j-parent:2.0.16"
+    ],
+    "original_independent_ledger": {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/dependency-research03-pom-evidence-ledger-01.json",
+      "sha256": "476413a879dcc38c34a9fd7a1428e9dc257b4418e602605813f7a907ad2b1066",
+      "bytes": 244396
+    }
+  },
+  "sboms": [
+    {
+      "graph": "androidRelease",
+      "evidence": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/dependency-license-research-03/report/androidRelease.cdx.json",
+        "sha256": "aabbe9eddd21e97b3c172e602c2fe3a177a97775d71fbbdbaaa2671c5768b4c1",
+        "bytes": 294860
+      },
+      "all_components_artifacts_licenses_edges_match": true,
+      "historical_official_schema_receipt_still_binds_same_bytes": true
+    },
+    {
+      "graph": "iosArm64",
+      "evidence": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/dependency-license-research-03/report/iosArm64.cdx.json",
+        "sha256": "a70e39f44375502041bcb8f79ab3f1a1d13664d8cb570c784d4ca5fa0c5b0156",
+        "bytes": 198842
+      },
+      "all_components_artifacts_licenses_edges_match": true,
+      "historical_official_schema_receipt_still_binds_same_bytes": true
+    },
+    {
+      "graph": "iosSimulatorArm64",
+      "evidence": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/dependency-license-research-03/report/iosSimulatorArm64.cdx.json",
+        "sha256": "75701e0ea9d5218acf577830741341ccd61dd4ec8e1707937a29395a5644df14",
+        "bytes": 201956
+      },
+      "all_components_artifacts_licenses_edges_match": true,
+      "historical_official_schema_receipt_still_binds_same_bytes": true
+    },
+    {
+      "graph": "iosX64",
+      "evidence": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/dependency-license-research-03/report/iosX64.cdx.json",
+        "sha256": "cb46c0c9d865b75a23713b8955c6701c136025b5170b8e18bbeff50ea12f2595",
+        "bytes": 197981
+      },
+      "all_components_artifacts_licenses_edges_match": true,
+      "historical_official_schema_receipt_still_binds_same_bytes": true
+    }
+  ],
+  "historical_schema_receipt": {
+    "path": "remediation-runs/2026-09-07-local-readiness/evidence/dependency-sbom-schema-02/schema-validation.json",
+    "sha256": "513dcc7af3220e8d0582634530f4b93e8c5f9138e4741d2c345d928da6752374",
+    "bytes": 2006
+  },
+  "schema_validation_not_reexecuted": true,
+  "notice_manifest": {
+    "path": "config/third-party-notices.json",
+    "sha256": "4b501223b3841017477a226515d3758bc60848fe00d579fac3152a81928d6406",
+    "bytes": 26026
+  },
+  "notice_resources": [
+    {
+      "name": "APACHE-2.0.txt",
+      "bytes": 11358,
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+    },
+    {
+      "name": "BouncyCastle-1.85-LICENSE.md",
+      "bytes": 1171,
+      "sha256": "0e01f1549c9022f406392ac2947d32223b7c2e977d21ea2f8c182fdeb4dae5fd"
+    },
+    {
+      "name": "DNG-SDK-NOTICE.txt",
+      "bytes": 5422,
+      "sha256": "b60660d2a5a3ee1a49366400e7e9b01c1872356d6f08942f095d356a44deb5f6"
+    },
+    {
+      "name": "DNG-SDK-PATENTS.txt",
+      "bytes": 3496,
+      "sha256": "bd958835863f42d8479457503a7ed716424d35b6e76ef76db06b72b109696ec4"
+    },
+    {
+      "name": "Expat-COPYING.txt",
+      "bytes": 1144,
+      "sha256": "31b15de82aa19a845156169a17a5488bf597e561b2c318d159ed583139b25e87"
+    },
+    {
+      "name": "HarfBuzz-COPYING.txt",
+      "bytes": 1971,
+      "sha256": "ba8f810f2455c2f08e2d56bb49b72f37fcf68f1f4fade38977cfd7372050ad64"
+    },
+    {
+      "name": "HarfBuzz-hb-ucd-ISC-LICENSE.txt",
+      "bytes": 795,
+      "sha256": "cb95728cc2b4a3502bb8e69c019e0e5f01c0a218a855168e9c19d4df51582cd5"
+    },
+    {
+      "name": "ICU-LICENSE.txt",
+      "bytes": 25185,
+      "sha256": "17510cf7a58b4879b887ec05a45d72cf1b73544dd9ec7e72f20110ed104229ee"
+    },
+    {
+      "name": "INDEX.txt",
+      "bytes": 5031,
+      "sha256": "53b6a73e28b2aa88bc2084bae2923348d109a9e6d117b9f98c5b6b37495d4764"
+    },
+    {
+      "name": "Kotlin-Boost-LICENSE.txt",
+      "bytes": 1337,
+      "sha256": "8d8291caf1cee26d23acf3eb67c9f9a2d58f1c681b16a4fbe8cbfb9e3c0b5a9b"
+    },
+    {
+      "name": "Kotlin-Harmony-NOTICE.txt",
+      "bytes": 563,
+      "sha256": "8a6725437c8f16af6322496d8e22169fdb8988ad43c5b300350ef867fd7d48e4"
+    },
+    {
+      "name": "Kotlin-MPMC-QUEUE-LICENSE.txt",
+      "bytes": 1537,
+      "sha256": "bd41bc36bf821736a2ad3a2f081da9acc9c53ab96c9e375191003c7176d2ef96"
+    },
+    {
+      "name": "Kotlin-ThreeTenBP-LICENSE.txt",
+      "bytes": 1520,
+      "sha256": "d1bc53b493a3ab387b42717ed5c4b1976a5048996f81154278100bff86d39331"
+    },
+    {
+      "name": "Kotlin-Unicode-LICENSE.txt",
+      "bytes": 3397,
+      "sha256": "1c3ddd6cc94ad4357e76a589325dd46520850348770536ef66bf8f2b56c77463"
+    },
+    {
+      "name": "Kotlin-libbacktrace-LICENSE.txt",
+      "bytes": 1470,
+      "sha256": "660729a7713d03d375b81ec8126f9c801b11d1eacefbe9685185d4c6a24e79cf"
+    },
+    {
+      "name": "SLF4J-2.0.16-LICENSE.txt",
+      "bytes": 1178,
+      "sha256": "4e7f90c86ab51278228bce153122f1d8df30149d13ce9ef524c8444a84c32dcc"
+    },
+    {
+      "name": "Skia-LICENSE.txt",
+      "bytes": 1507,
+      "sha256": "5f787c1dee3c56547f09ccc2906ab5f5293c4d8dd6c8654e573216c38e908dbd"
+    },
+    {
+      "name": "Skiko-NOTICE.txt",
+      "bytes": 197,
+      "sha256": "35dd077c24768b53625101cfcc0ad853ae7e2abc08bd2a111a0267760d1406d8"
+    },
+    {
+      "name": "Unicode-V3-LICENSE.txt",
+      "bytes": 1995,
+      "sha256": "e7a93b009565cfce55919a381437ac4db883e9da2126fa28b91d12732bc53d96"
+    },
+    {
+      "name": "WebP-COPYING.txt",
+      "bytes": 1496,
+      "sha256": "5aec868f669e384a22372a4e8a1a6cd7d44c64cd451f960ca69cc170d1e13acf"
+    },
+    {
+      "name": "WebP-PATENTS.txt",
+      "bytes": 1436,
+      "sha256": "cc3273e0694ea5896145e0677699b53471b03ea43021ddc50e7923fbb9f5023c"
+    },
+    {
+      "name": "Wuffs-Skia-wrapper-LICENSE.txt",
+      "bytes": 1635,
+      "sha256": "e59bb5c5c6ba426a9ac4ba9fe667ad14c5166b12aa25be8af1d122b14fbe2e36"
+    },
+    {
+      "name": "libjpeg-turbo-LICENSE.md",
+      "bytes": 5620,
+      "sha256": "96f5b328adbb78eeaaec6980d73fd558cb1e4d62560ed615646bc3cf5e532430"
+    },
+    {
+      "name": "libjpeg-turbo-README.ijg.txt",
+      "bytes": 12799,
+      "sha256": "75815e3bf6484201a3c3d17a1bbf10f2e8e3237f84df10a2357ea896db2a81d6"
+    },
+    {
+      "name": "libpng-LICENSE.txt",
+      "bytes": 5345,
+      "sha256": "7317e078e2d3b5d7ba5a6159e650945153262b44b76f6700f8e9edb261c5143e"
+    },
+    {
+      "name": "zlib-LICENSE.txt",
+      "bytes": 910,
+      "sha256": "e1cfcc55c325b3f78cf55df9664abaa066e2271dffe8213347d9fccdfbac8f2c"
+    }
+  ],
+  "package_binding": [
+    {
+      "platform": "android",
+      "notice_receipt": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/desktop-android-verification/parlor/parlor/build/ci-evidence/android-release-notices.json",
+        "sha256": "aa9d81fc220f24be8bf0b3a45cd3e9ecb1f4f1e25a161d6cff6f0feca3adcf03",
+        "bytes": 10256
+      },
+      "inventory": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/desktop-android-verification/parlor/parlor/build/ci-evidence/android-release-artifact-inventory.json",
+        "sha256": "49fb18241cddf124b5a2f78aff1dc5d18cd9c1a4a0650c673be62389fc07dfd5",
+        "bytes": 78248
+      },
+      "exact_source_manifest_and_26_entries_match": true,
+      "artifact_sha256": "386f59a9c75b8582ba9dcec2326c24cfdf564fc0e6d77d50e90385d237843701",
+      "total_notice_bytes": 99515,
+      "limitation": "Android raw AAB independently rehashed/inspected in previous C01 report; iOS raw app not uploaded, source-bound producer inventory only."
+    },
+    {
+      "platform": "ios",
+      "notice_receipt": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/build/ci-evidence/ios-release-notices.json",
+        "sha256": "c93389a737fd210660da444522e0d126e06f51c18106b4a6ec2d2563f98d59f7",
+        "bytes": 10407
+      },
+      "inventory": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/build/ci-evidence/ios-release-artifact-inventory.json",
+        "sha256": "6ffb8e2581591664773f77af276c3fc98f6e35159382267c51886843349a82b9",
+        "bytes": 184462
+      },
+      "exact_source_manifest_and_26_entries_match": true,
+      "artifact_sha256": null,
+      "total_notice_bytes": 99515,
+      "limitation": "Android raw AAB independently rehashed/inspected in previous C01 report; iOS raw app not uploaded, source-bound producer inventory only."
+    }
+  ],
+  "current_delta_from_ci": "M\tdocs/review/INDEPENDENT_REVIEW_INVENTORY.csv\nM\tremediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/README.md\nM\tremediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/normal_launch_receipts.py\nM\tremediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_control_tests.py\nA\tremediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_xcode26_repetitions.py\nA\tremediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/xcresult-26.5-repetitions.json.in\nM\tscripts/verification/ios-readiness/L08StorageProbe.kt.in\nM\tscripts/verification/ios-readiness/l08_receipts.py\nA\tscripts/verification/ios-readiness/test_l08_diagnostics.py\n",
+  "hygiene": {
+    "no_gradle_xcode_app_test_native_network_or_background_workers_started": true,
+    "no_global_cache_or_user_work_touched": true,
+    "no_generated_build_outputs_created": true,
+    "output_is_required_compact_evidence": true,
+    "only_synchronous_git_and_python_readers_used": true
+  }
+}

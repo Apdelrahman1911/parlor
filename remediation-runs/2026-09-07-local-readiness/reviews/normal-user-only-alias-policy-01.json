@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "author": "/root",
+  "at": "2026-09-08T01:40:14.157426+00:00",
+  "status": "PROPOSED_NOT_IMPLEMENTED",
+  "basis": {
+    "native10_receipt_sha256": "0daf830ce66ad7c11c271431dcd53996ea530e55dd1b5b4c2ff89d15abf14589",
+    "sample_header_failure_sha256": "97d95532748c3a58ad7ef0f0d4b9d36f4353eca6bfbf35ebd14aae211c7844a3",
+    "observed": "Exactly one matched PID and a 15-component path with only account component2 replaced by literal USER; all remaining components exactly matched. No wildcard or unobserved Binary Images/vmmap claim."
+  },
+  "proposal": [
+    "Keep verify_header/parse_sample/bind_vmmap default behavior exact. Opt-in explicit per-path alias map comes from already independently attested OS current-user home and complete approved artifact inventory, never inferred from raw tool output.",
+    "Only paths under that exact current-user CoreSimulator device root receive a USER substitution at component2; exact device UUID, app-container UUID and remaining path are unchanged. Exact paths remain accepted. Copied-build/DerivedData paths remain exact unless separately observed/reviewed.",
+    "Require canonical absolute inputs, no traversal, bounded complete map and reject raw/alias collisions across different approved artifacts. Unknown/shortened/wildcard/another-user or another-device paths never granted ownership.",
+    "Before constructing and consuming aliases, preserve current full kernel launcher path/UID/audit-token/lifetime preconditions. Validate exactly one selected launcher/debug dylib/Compose image, original UUID/file hash/size checks and vmmap address agreement.",
+    "Record alias use as lossy tool presentation. Never label a non-launcher alias an independently kernel-attested image path or mapped-page hash.",
+    "Add a failing current-header regression derived from the exact retained component shape. Add negative controls for wrong account/home input, wrong UUID/suffix, wildcard/extra redaction, duplicate headers, PID mismatch, map collision, unknown images, UUID mismatch, duplicate images and mismatched vmmap address.",
+    "Future actual output must satisfy exact supported format; do not infer that synthetic Binary Images/vmmap fixtures establish actual native10 row support."
+  ],
+  "research": "Installed sample manual does not promise unredaction; authoritative crash-report documentation is counter-evidence/lead, not sample proof. Actual native10 diagnostic is direct evidence of this one header transformation. Previous bounded research preserved.",
+  "application_changes": false
+}

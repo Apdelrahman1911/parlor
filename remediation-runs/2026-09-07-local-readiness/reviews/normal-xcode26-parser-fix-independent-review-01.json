@@ -1,0 +1,252 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-09-07T19:38:53.175269+00:00",
+  "reviewer": "/root/factory_review",
+  "author": "/root",
+  "executor": "/root",
+  "classification": "CONFIRMED HARNESS DEFECT \u2014 SCOPED PARSER REPAIR ACCEPTED WITH EXECUTED PURE REGRESSIONS",
+  "decision": "ACCEPT exact reviewed parser/test/fixture/documentation controls; NOT native execution approval and NOT application-runtime PASS",
+  "scope": {
+    "repository": "/Users/abdelrahman/Projects/parlor",
+    "branch": "fix/local-readiness-2026-09-07",
+    "commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+    "tree": "c65463bdf1f3656f90dfe6e6dbe1d94b3c588dac",
+    "tracked_control_diff_sha256": "07fb745e60ee017d5e5e5a507393b99eb8832a254d390b39e883d2583d6d2a0c",
+    "tracked_modified_paths": [
+      "README.md",
+      "normal_launch_receipts.py",
+      "run_control_tests.py"
+    ],
+    "new_fix_paths": [
+      "test_xcode26_repetitions.py",
+      "xcresult-26.5-repetitions.json.in"
+    ],
+    "note": "Five fix paths inspected: three tracked changes plus two additions. Other untracked research and evidence are preserved and not implicitly included. A parent reference to six paths does not establish an additional reviewed path.",
+    "files": [
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/README.md",
+        "sha256": "148b667e136b457f6b4691a2655aa59f4ed0c2e00d0536e68458c0a4a1d58d99",
+        "lines": 147
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/normal_launch_receipts.py",
+        "sha256": "c1335e043f91c1a5e995fb03e9464a291cd5566e0eabfaf1f981f339c5660ae0",
+        "lines": 248
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_control_tests.py",
+        "sha256": "d9fdfddce9b1d96a353c51e21d41dd9671a4bb16123e367b93cbfef1d95ca06d",
+        "lines": 65
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_xcode26_repetitions.py",
+        "sha256": "3e51f197304d1b7f16da4ee3269fcd48bf0fa6f0632d2dbc36ab395e68d5e66a",
+        "lines": 120
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/xcresult-26.5-repetitions.json.in",
+        "sha256": "c6ff15f91b5b3a240b4940e714950b8f8ce99661ed3887a83c2e2aa0f845463f",
+        "lines": 266
+      }
+    ]
+  },
+  "review_coverage": {
+    "normal_launch_receipts.py": "Complete current lines1\u2013248 reread; full baseline diff; unchanged marker, strict JSON, duration, node-bound and nested-run paths examined.",
+    "test_xcode26_repetitions.py": "Complete current lines1\u2013120 reread; all13 methods and mutation assertions inspected.",
+    "run_control_tests.py": "Complete current lines1\u201365 reread; AST/discovery/import-binding and fail-closed count/skip/drift behavior inspected.",
+    "README.md": "Earlier complete read retained in this reviewer context plus complete current diff; current147-line file hash bound to executed green02 controls.",
+    "xcresult-26.5-repetitions.json.in": "Complete structured recursive comparison against all three actual raw queries; only six scalar device-name/UUID sanitizations."
+  },
+  "root_cause": {
+    "original_review": {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/normal-ios06-actual-schema-failure-independent-review-01.json",
+      "sha256": "cd55cbd8c9f9e722f134f55975216a36c9f030a983739a98e433c28e2569aeed"
+    },
+    "proof": "Actual native06 Xcodebuild0/eight passing executions reports one method in summary, eight passes per destination, and eight direct Repetition leaves in each query. Previous parser rejected1 versus8 and, if only that check relaxed, counted zero Test Case Run records.",
+    "classification_boundary": "This is a reachable evidence-parser defect, not evidence of an app launch failure."
+  },
+  "correction": {
+    "leaf_layout": "Exactly eight direct Passed Repetition leaves with ordered identifiers1\u20138 and names Repetition1\u20138, no children, finite duration10\u2013240seconds.",
+    "cross_query_binding": "One selected method; summary count exactly1; destination count exactly8; sole selected case children match details identities and duration; exactly8 tree repetition nodes and no Test Case Run in tree.",
+    "legacy_layout": "Nested Test Case Run path retains destination/summary equality and previous identity/count/duration validation.",
+    "unchanged_guards": [
+      "Strict JSON duplicate/nonfinite checks and input limits",
+      "One ARM64 owned-simulator identity across summary/tree/details",
+      "Single equal test-plan configuration across queries",
+      "No skips, failures, expected failures, or nonpassing nodes",
+      "No app, source-copy, native runner, signing or cleanup modifications",
+      "Marker sequence validation is separate, unchanged, and insufficient on its own"
+    ],
+    "counter_evidence": "Do not accept summary counts alone, marker counts alone, arbitrary ancestors, duplicate IDs, mixed/extra leaves, mismatched queries, or unobserved one-layout aggregation. Reviewer requested exact one-method summary for modern leaves; adopted and independently checked in green02."
+  },
+  "fixture_provenance": {
+    "fixture": {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/xcresult-26.5-repetitions.json.in",
+      "sha256": "c6ff15f91b5b3a240b4940e714950b8f8ce99661ed3887a83c2e2aa0f845463f"
+    },
+    "actual_raw_files": [
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-06/xcresult-summary.json",
+        "sha256": "9815d6daa36caec3f5640070151ea779b8a220d82f795607271e77f5d2fd565f"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-06/xcresult-tests.json",
+        "sha256": "c71d89875ae7cc8b413b59fcceca55faafd1cbe907c1399a21a6fae8e7e65635"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-06/xcresult-test-details.json",
+        "sha256": "463e2f8a683c354a895f68e35484adfaeb6d027bf41641480f7ebe8296c17063"
+      }
+    ],
+    "only_changes": "One deviceId and one deviceName scalar in each query; six substitutions total. No count, result, duration, hierarchy, method, configuration or architecture modification."
+  },
+  "verification": {
+    "red": {
+      "name": "normal-xcode26-receipts-red-01",
+      "receipt": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/normal-xcode26-receipts-red-01/receipt.json",
+        "sha256": "3b4401638b555297f8405ea3ab64fdb91a0b60ae484e0fc60af545812a789ee3"
+      },
+      "raw_log": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/normal-xcode26-receipts-red-01/gradle.log",
+        "sha256": "b917ad43aea596336ee809c61b2deb5f3fd4c9dd6dcbd3f34c3ca3ffc2efa731"
+      },
+      "stop_log": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/normal-xcode26-receipts-red-01/stop.log",
+        "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+      },
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_control_tests.py"
+      ],
+      "started_at": "2026-09-07T19:19:38.683426+00:00",
+      "finished_at": "2026-09-07T19:19:39.272564+00:00",
+      "status": "FAIL",
+      "exit_code": 1,
+      "tests": 90,
+      "errors": 1,
+      "failures": 0,
+      "skips": 0,
+      "declared_discovered_equal": true,
+      "full_control_before_after_equal": true,
+      "stop_exit_code": 0,
+      "remaining_outputs": [],
+      "remaining_owned_workers": [],
+      "remaining_artifact_workers": [],
+      "cleanup_errors": [],
+      "source_changed_during_cycle": false,
+      "runner_changed_during_cycle": false
+    },
+    "green_intermediate": {
+      "name": "normal-xcode26-receipts-green-01",
+      "receipt": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/normal-xcode26-receipts-green-01/receipt.json",
+        "sha256": "5b017fdabcedb13515c713f78276f8a717146c8908d85f7fc10fb2cf5bc54ef0"
+      },
+      "raw_log": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/normal-xcode26-receipts-green-01/gradle.log",
+        "sha256": "5e4f5cfc14db2f058d9b927beaa7f47f5e989fe9c15776e3a11b42884bde3e80"
+      },
+      "stop_log": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/normal-xcode26-receipts-green-01/stop.log",
+        "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+      },
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_control_tests.py"
+      ],
+      "started_at": "2026-09-07T19:21:45.742899+00:00",
+      "finished_at": "2026-09-07T19:21:46.253594+00:00",
+      "status": "PASS",
+      "exit_code": 0,
+      "tests": 90,
+      "errors": 0,
+      "failures": 0,
+      "skips": 0,
+      "declared_discovered_equal": true,
+      "full_control_before_after_equal": true,
+      "stop_exit_code": 0,
+      "remaining_outputs": [],
+      "remaining_owned_workers": [],
+      "remaining_artifact_workers": [],
+      "cleanup_errors": [],
+      "source_changed_during_cycle": false,
+      "runner_changed_during_cycle": false
+    },
+    "green_final": {
+      "name": "normal-xcode26-receipts-green-02",
+      "receipt": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/normal-xcode26-receipts-green-02/receipt.json",
+        "sha256": "af2c65fc0c7c3feccb5a6b39ea3d483bdc995559f2f0aac0d4f123c44b2f6388"
+      },
+      "raw_log": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/normal-xcode26-receipts-green-02/gradle.log",
+        "sha256": "67843049b39f91b99a05fad4fa1fcd57f6ed94c08321e8ded5f7fb7933065f02"
+      },
+      "stop_log": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/normal-xcode26-receipts-green-02/stop.log",
+        "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+      },
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_control_tests.py"
+      ],
+      "started_at": "2026-09-07T19:28:15.073628+00:00",
+      "finished_at": "2026-09-07T19:28:15.613648+00:00",
+      "status": "PASS",
+      "exit_code": 0,
+      "tests": 91,
+      "errors": 0,
+      "failures": 0,
+      "skips": 0,
+      "declared_discovered_equal": true,
+      "full_control_before_after_equal": true,
+      "stop_exit_code": 0,
+      "remaining_outputs": [],
+      "remaining_owned_workers": [],
+      "remaining_artifact_workers": [],
+      "cleanup_errors": [],
+      "source_changed_during_cycle": false,
+      "runner_changed_during_cycle": false
+    },
+    "red_witness": "90 tests executed; the genuine positive fixture raised original Per-destination XCTest counts disagree at old parser171; not an import or discovery failure.",
+    "green_final_independent_reconstruction": {
+      "current_ast": 91,
+      "declared": 91,
+      "discovered": 91,
+      "unique_actual_raw_ok_descriptors": 91,
+      "all_sets_equal": true,
+      "full_before_after_current_control_rows": 74,
+      "all_control_bytes_current_and_equal": true,
+      "actual_bound_imports": 25,
+      "new_test_methods": 13,
+      "unchanged_existing_test_methods": 78
+    },
+    "test_boundary": "Pure Python controls executed by root. Reviewer only parsed AST/JSON/raw logs and read source; no test execution by reviewer. Synthetic/receipt tests are not app runtime."
+  },
+  "research": {
+    "schema_commands_and_payloads": {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/xcresult-schema-references-01.json",
+      "sha256": "a316ce9c978e68ff295535f8ab0df27cd410bc12687c0b3d30223f908bfbfb79"
+    },
+    "claim": "Official installed xcresulttool0.1.0 schemas define separate integer summary/destination counts and TestNode lists; they do not require equal aggregation levels or a Test Case Run wrapper. Exact accepted modern shape is backed by actual26.5 queries.",
+    "online_reference": "https://developer.apple.com/documentation/xcode-release-notes/xcode-26_5-release-notes",
+    "access_date": "2026-09-07",
+    "limitation": "Release-note Testing section does not document this layout; it is not cited as proof of the exact parser contract."
+  },
+  "remaining_local_verification": [
+    "Re-freeze exact source, changed controls and copied-input manifest; obtain independent exact-control execution approval. Old source06 approval cannot authorize edited controls.",
+    "Run a new normal-source owned-simulator observation: eight actual repetitions plus complete XCResult/marker validation.",
+    "Complete separate ninth-launch external-image provenance and package/notice inspection stages, which native06 never reached.",
+    "Continue separate L08 real-save boundary diagnosis without treating new parser success as storage success."
+  ],
+  "historical_receipts": "native05 and native06 original FAIL receipts remain unmodified; no retroactive PASS or fabricated completed stage.",
+  "cleanup": {
+    "root_red_green_cycles": "All recorded stop commands exit0; no remaining generated outputs, owned workers or cleanup errors. Exact owned-directory cleanup did not run a new Gradle clean task.",
+    "reviewer": "No build/test/native/process-control command, executable repository import, background process, or generated build output. Only this new additive review report is written."
+  },
+  "independence": "Author/executor /root; independent reviewer /root/factory_review. Scope acceptance does not authorize Git writes, signing, publication, native execution, or changes outside the five byte-bound paths."
+}

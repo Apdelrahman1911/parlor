@@ -1,0 +1,94 @@
+{
+  "schema_version": 1,
+  "kind": "REVIEW_DOCUMENT_PATH_CORRECTION_NOT_TEST_OR_APPLICATION_FAILURE",
+  "author": "/root/ci_review",
+  "started_at": "2026-09-09T00:14:06.717861+00:00",
+  "status": "PASS_EXACT_REPORT_RELOCATED_OUTER_TASK_DIRECTORIES_REMOVED",
+  "source": "/root/projects/Parlor/remediation-runs/2026-09-08-continuation/reviews/native-a23-afterfreeze-preparation-independent-01.json",
+  "destination": "/root/projects/Parlor/parlor/remediation-runs/2026-09-08-continuation/reviews/native-a23-afterfreeze-preparation-independent-01.json",
+  "expected_sha256": "657ff4e08ed17817f9c348c7735029b0d0eed2e0bb71a43cbe62a564d38a5be9",
+  "expected_bytes": 37932,
+  "authorization": "Root explicitly authorized exact canonical owned source/hash check, absent/canonical destination exclusive write, exact byte verification before original unlink, only newly created now-empty outer directory rmdir, and this additive receipt. No source/report content edits.",
+  "actions": [
+    {
+      "operation": "verify_exact_canonical_owned_source",
+      "status": "PASS"
+    },
+    {
+      "operation": "exclusive_destination_write_and_exact_bytes_verification",
+      "status": "PASS"
+    },
+    {
+      "operation": "unlink_exact_unchanged_original_after_verified_copy",
+      "status": "PASS"
+    }
+  ],
+  "errors": [],
+  "not_project_test_build_or_native_execution": true,
+  "source_identity_before": {
+    "device": 24,
+    "inode": 16294389,
+    "uid": 0,
+    "links": 1,
+    "mode": "0o600",
+    "bytes": 37932,
+    "mtime_ns": 1788912675099629612
+  },
+  "destination_identity": {
+    "device": 24,
+    "inode": 16295361,
+    "uid": 0,
+    "links": 1,
+    "mode": "0o600",
+    "bytes": 37932,
+    "mtime_ns": 1788912846717619383
+  },
+  "actual_destination_sha256": "657ff4e08ed17817f9c348c7735029b0d0eed2e0bb71a43cbe62a564d38a5be9",
+  "actual_destination_bytes": 37932,
+  "outer_directory_cleanup": [
+    {
+      "path": "/root/projects/Parlor/remediation-runs/2026-09-08-continuation/reviews",
+      "identity": {
+        "device": 23,
+        "inode": 669453,
+        "uid": 0,
+        "links": 2,
+        "mode": "0o700",
+        "bytes": 4096,
+        "mtime_ns": 1788912846720619383
+      },
+      "status": "REMOVED_EMPTY_WITH_RMDIR"
+    },
+    {
+      "path": "/root/projects/Parlor/remediation-runs/2026-09-08-continuation",
+      "identity": {
+        "device": 23,
+        "inode": 669452,
+        "uid": 0,
+        "links": 2,
+        "mode": "0o700",
+        "bytes": 4096,
+        "mtime_ns": 1788912846720619383
+      },
+      "status": "REMOVED_EMPTY_WITH_RMDIR"
+    },
+    {
+      "path": "/root/projects/Parlor/remediation-runs",
+      "identity": {
+        "device": 23,
+        "inode": 669451,
+        "uid": 0,
+        "links": 2,
+        "mode": "0o700",
+        "bytes": 4096,
+        "mtime_ns": 1788912846720619383
+      },
+      "status": "REMOVED_EMPTY_WITH_RMDIR"
+    }
+  ],
+  "finished_at": "2026-09-09T00:14:06.722072+00:00",
+  "report_bytes_unchanged": true,
+  "original_absent": true,
+  "cleanup_limit": "Only exact task-owned report original and three now-empty newly created outer directories; no project output, cache, lock, evidence or unrelated path cleaned.",
+  "gradle_stop_clean": "Not applicable: no project build/test cycle was started by this correction/reviewer."
+}

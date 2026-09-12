@@ -1,0 +1,335 @@
+{"name": "primary-errors", "command": ["/usr/bin/python3", "-B", "-m", "unittest", "discover", "-v", "-s", "scripts/verification/ios-readiness", "-p", "test_native_command_failures.py"], "log": "primary-errors.log", "status": "PASS", "exit_code": 0}
+{"name": "lifecycle-integration", "command": ["/usr/bin/python3", "-B", "-m", "unittest", "discover", "-v", "-s", "scripts/verification/ios-readiness", "-p", "test_simulator_lifecycle_integration.py"], "log": "lifecycle-integration.log", "status": "PASS", "exit_code": 0}
+{"name": "foundation-profile", "command": ["/usr/bin/python3", "-B", "scripts/verification/ios-readiness/test_foundation_toolchain_binding.py"], "log": "foundation-profile.log", "status": "PASS", "exit_code": 0}
+{"name": "functional-copy", "command": ["/usr/bin/python3", "-B", "-m", "unittest", "discover", "-v", "-s", "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02", "-p", "test_l08_functional_copy.py"], "log": "functional-copy.log", "status": "PASS", "exit_code": 0}
+{"name": "composition", "command": ["/usr/bin/python3", "-B", "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/run_controls.py"], "log": "composition.log", "status": "PASS", "exit_code": 0}
+{"name": "native-adapter", "command": ["/usr/bin/python3", "-B", "-m", "unittest", "-v", "scripts/release/tests/test_native_continuation.py"], "log": "native-adapter.log", "status": "PASS", "exit_code": 0}
+{"name": "workflow-contract", "command": ["/usr/bin/python3", "-B", "-m", "unittest", "-v", "scripts/release/tests/test_workflow_contract.py"], "log": "workflow-contract.log", "status": "PASS", "exit_code": 0}
+{"name": "probe-cycle-guard", "command": ["/usr/bin/python3", "-B", "-m", "unittest", "-v", "scripts.release.tests.test_native_process_probe.ProbeSourceContractTest.test_full_non_app_scope_is_explicit_and_cycles_do_not_reuse_failed_labels"], "log": "probe-cycle-guard.log", "status": "PASS", "exit_code": 0}
+{
+  "schema_version": 1,
+  "cycle": "continuation-native-budget-controls-01",
+  "status": "PASS",
+  "scope": "Working-tree-bound synthetic controls only; NOT Apple/application/simulator/libproc ABI/strict protection/Store proof",
+  "pass_scope": "Only fixed child exits, exact unskipped test counts, reviewed input pins, before/after input stability and retained log identities; external process/allocation clearance is separately REQUIRED",
+  "commands": [
+    {
+      "name": "primary-errors",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-v",
+        "-s",
+        "scripts/verification/ios-readiness",
+        "-p",
+        "test_native_command_failures.py"
+      ],
+      "log": "primary-errors.log",
+      "status": "PASS",
+      "exit_code": 0
+    },
+    {
+      "name": "lifecycle-integration",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-v",
+        "-s",
+        "scripts/verification/ios-readiness",
+        "-p",
+        "test_simulator_lifecycle_integration.py"
+      ],
+      "log": "lifecycle-integration.log",
+      "status": "PASS",
+      "exit_code": 0
+    },
+    {
+      "name": "foundation-profile",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "scripts/verification/ios-readiness/test_foundation_toolchain_binding.py"
+      ],
+      "log": "foundation-profile.log",
+      "status": "PASS",
+      "exit_code": 0,
+      "external_cleanup_requires_independent_inspection": true
+    },
+    {
+      "name": "functional-copy",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-v",
+        "-s",
+        "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02",
+        "-p",
+        "test_l08_functional_copy.py"
+      ],
+      "log": "functional-copy.log",
+      "status": "PASS",
+      "exit_code": 0
+    },
+    {
+      "name": "composition",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/run_controls.py"
+      ],
+      "log": "composition.log",
+      "status": "PASS",
+      "exit_code": 0,
+      "external_cleanup_requires_independent_inspection": true
+    },
+    {
+      "name": "native-adapter",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "-v",
+        "scripts/release/tests/test_native_continuation.py"
+      ],
+      "log": "native-adapter.log",
+      "status": "PASS",
+      "exit_code": 0
+    },
+    {
+      "name": "workflow-contract",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "-v",
+        "scripts/release/tests/test_workflow_contract.py"
+      ],
+      "log": "workflow-contract.log",
+      "status": "PASS",
+      "exit_code": 0
+    },
+    {
+      "name": "probe-cycle-guard",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "-v",
+        "scripts.release.tests.test_native_process_probe.ProbeSourceContractTest.test_full_non_app_scope_is_explicit_and_cycles_do_not_reuse_failed_labels"
+      ],
+      "log": "probe-cycle-guard.log",
+      "status": "PASS",
+      "exit_code": 0
+    }
+  ],
+  "summaries": {
+    "primary-errors": {
+      "expected_tests": 29,
+      "reported_counts": [
+        "29"
+      ],
+      "unskipped_success_summary": true
+    },
+    "lifecycle-integration": {
+      "expected_tests": 54,
+      "reported_counts": [
+        "54"
+      ],
+      "unskipped_success_summary": true
+    },
+    "foundation-profile": {
+      "expected_tests": 20,
+      "reported_counts": [
+        "20"
+      ],
+      "unskipped_success_summary": true
+    },
+    "functional-copy": {
+      "expected_tests": 12,
+      "reported_counts": [
+        "12"
+      ],
+      "unskipped_success_summary": true
+    },
+    "composition": {
+      "expected_tests": 55,
+      "reported_counts": [
+        "55"
+      ],
+      "unskipped_success_summary": true
+    },
+    "native-adapter": {
+      "expected_tests": 63,
+      "reported_counts": [
+        "63"
+      ],
+      "unskipped_success_summary": true
+    },
+    "workflow-contract": {
+      "expected_tests": 52,
+      "reported_counts": [
+        "52"
+      ],
+      "unskipped_success_summary": true
+    },
+    "probe-cycle-guard": {
+      "expected_tests": 1,
+      "reported_counts": [
+        "1"
+      ],
+      "unskipped_success_summary": true
+    }
+  },
+  "log_identities": {
+    "primary-errors": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-budget-controls-01/primary-errors.log",
+      "sha256": "77247718838d541426507d9b598e217b7a02486c3cff17e510c6582e9e329422",
+      "bytes": 5958
+    },
+    "lifecycle-integration": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-budget-controls-01/lifecycle-integration.log",
+      "sha256": "ec3271c51887c051dd9935e094d78116e5ced5126c054341062e1b393e9bc173",
+      "bytes": 12887
+    },
+    "foundation-profile": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-budget-controls-01/foundation-profile.log",
+      "sha256": "30c291eb6306fdabe1f058dc68a11628b8a63236667315818b565814f58cb842",
+      "bytes": 4151
+    },
+    "functional-copy": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-budget-controls-01/functional-copy.log",
+      "sha256": "4f88b8eda0ebeea77341824808e2b01b6a7574165168f2a9e252548fc553f872",
+      "bytes": 2543
+    },
+    "composition": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-budget-controls-01/composition.log",
+      "sha256": "23683132310d0adc1f158e447de2d1b97f64add308e24d46597cff5249fabed2",
+      "bytes": 19640
+    },
+    "native-adapter": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-budget-controls-01/native-adapter.log",
+      "sha256": "4004e767ac6b6ad5544636048bdeabce2df89b287964f721b06581651875ce40",
+      "bytes": 14292
+    },
+    "workflow-contract": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-budget-controls-01/workflow-contract.log",
+      "sha256": "462b89fbebf1ef56101f0e9d7c362e2f9da3f48f96343d2fa7dc22ed7769fa5b",
+      "bytes": 10319
+    },
+    "probe-cycle-guard": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-budget-controls-01/probe-cycle-guard.log",
+      "sha256": "b6c42af9add74670e9e1abdb64cdd0e27199b7cc8768d73977200e4636fca6e0",
+      "bytes": 326
+    }
+  },
+  "input_manifest_identities": {
+    "before": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-budget-controls-01/native-budget-inputs-before.json",
+      "sha256": "9a20dab267f026e10922cb97017a34c7227ba9c368a0ca44f483ee2790f5edc6",
+      "bytes": 52439
+    },
+    "after": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-budget-controls-01/native-budget-inputs-after.json",
+      "sha256": "9a20dab267f026e10922cb97017a34c7227ba9c368a0ca44f483ee2790f5edc6",
+      "bytes": 52439
+    }
+  },
+  "inputs_unchanged": true,
+  "expected_input_pins_match": true,
+  "source_and_runner_binding": "Actual complete source/runner before-and-after bindings and ordinary cleanup are owned by the enclosing receipt.json; no historical SHA or clean-source assertion is substituted here",
+  "unattempted_commands": [],
+  "external_postrun_reconciliation": {
+    "status": "REQUIRED_EXTERNAL_POSTRUN_RECONCILIATION",
+    "clearance": "NOT_GRANTED_BY_THIS_PACKET_OR_ORDINARY_LANE_PASS",
+    "required_on_every_outcome": true,
+    "owner": "Coordinator /root plus a different independent reviewer",
+    "blocks": "Source/inventory freeze and native/final CI dispatch until additive independent reconciliation closes actual process/allocation evidence",
+    "automatic_marker_parsing": false,
+    "obligations": [
+      "On every outcome, root and a different reviewer reopen each attempted raw driver log and its retained SHA/size, all child exit/error/shutdown records, both input manifests, and the enclosing lane source/runner/cleanup receipt.",
+      "Enumerate every actual Foundation/composition allocation and cleanup marker even when embedded after a unittest progress prefix. Pair exact path/device/inode/uid; never assume line-start or exactly one pair, never prefix-delete or substitute ordinary lane scratch cleanup.",
+      "Confirm all exact allocated external parents are absent after the cycle using fresh no-adoption inspection; unresolved absence, missing rows, ambiguity, cleanup FAIL, timeout, interruption or escalation withholds clearance and requires owned follow-up evidence.",
+      "Reconcile composition RESULTS for55 distinct discovered IDs, zero failures/errors, empty skips, native_execution=False and its two exact current input-test hashes. Neither expected pair counts nor a test PASS substitute for actual custody and absence evidence.",
+      "The packet and ordinary lane PASS are deliberately NOT process/external-allocation clearance. Additive independent reconciliation must close this non-upgradeable REQUIRED state before source/inventory freeze and native/final CI dispatch. Preserve the original native-repair-control01 and native-lifecycle-controls01 FAIL receipts and all historical reconciliations byte-for-byte."
+    ],
+    "targets": [
+      {
+        "name": "foundation-profile",
+        "attempted": true,
+        "child_status": "PASS",
+        "log_identity": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-budget-controls-01/foundation-profile.log",
+          "sha256": "30c291eb6306fdabe1f058dc68a11628b8a63236667315818b565814f58cb842",
+          "bytes": 4151
+        },
+        "required_review": {
+          "allocation_marker": "PARLOR_APP_FOUNDATION_CONTROL_ALLOCATION",
+          "cleanup_marker": "PARLOR_APP_FOUNDATION_CONTROL_CLEANUP",
+          "expected_allocation_cleanup_pairs_from_current_source": 1,
+          "kind": "EXTERNAL_SYNTHETIC_FOUNDATION_FIXTURE_PARENT",
+          "required": [
+            "Bind every actual exact parent/custody allocation-cleanup pair and require PASS,parent_removed=True,matching device/inode/uid and workers_started=0.",
+            "Freshly verify each exact external parent is absent without adoption/deletion; the ordinary lane scratch receipt alone is insufficient."
+          ]
+        }
+      },
+      {
+        "name": "composition",
+        "attempted": true,
+        "child_status": "PASS",
+        "log_identity": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-budget-controls-01/composition.log",
+          "sha256": "23683132310d0adc1f158e447de2d1b97f64add308e24d46597cff5249fabed2",
+          "bytes": 19640
+        },
+        "required_review": {
+          "allocation_marker": "PARLOR_APP_FOUNDATION_CONTROL_ALLOCATION",
+          "cleanup_marker": "PARLOR_APP_FOUNDATION_CONTROL_CLEANUP",
+          "expected_allocation_cleanup_pairs_from_current_source": 4,
+          "expected_input_tests": [
+            {
+              "bytes": 34661,
+              "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/test_app_foundation.py",
+              "sha256": "c04c7d4b1bb99207415beab77ae3b40bb3d5f59709970f7d844d5d14beab0fe5"
+            },
+            {
+              "bytes": 34551,
+              "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/test_composition.py",
+              "sha256": "9cbc54882717a4c441b51e953c883579976cdd1c299d9a57099a713c36823464"
+            }
+          ],
+          "expected_results": {
+            "errors": 0,
+            "failures": 0,
+            "native_execution": false,
+            "skipped": [],
+            "tests_run": 55
+          },
+          "kind": "EXTERNAL_SYNTHETIC_FOUNDATION_COMPOSITION_FIXTURE_PARENTS",
+          "pair_explanation": "One outer parent plus three nested None/ValueError/KeyboardInterrupt callback parents; synthetic callbacks are not OS signal tests. Reconcile every actual row, not a startswith/exactly-one parser.",
+          "required": [
+            "Bind all actual allocation/cleanup pairs and exact custody, including mid-prefix nested output; require cleanup PASS,parent_removed=True,matching device/inode/uid and workers_started=0.",
+            "Verify every exact external parent is absent. Reopen RESULTS for55 distinct discovered IDs, zero failures/errors, empty skips, native_execution=False and exact two current test-source hashes."
+          ],
+          "results_marker": "PARLOR_APP_FOUNDATION_CONTROL_RESULTS"
+        }
+      }
+    ]
+  },
+  "native_or_ci_dispatch_authorized": false,
+  "errors": [],
+  "pending_signals": [],
+  "deferred_signals": []
+}

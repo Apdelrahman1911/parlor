@@ -1,0 +1,26 @@
+{
+  "at": "2026-09-05T20:15:30.741850+00:00",
+  "author": "/root/whodunit_cont",
+  "authorization": "/root requested minimal paused-clock fixture correction after independent source research",
+  "path": "shared/design-system/src/desktopTest/kotlin/com/parlor/designsystem/components/ParlorToastLifetimeTest.kt",
+  "sha256": "4bec7f140fa576210c1abc9c33decf1bac5b6ca24112d15d69dee2d0ad702cc9",
+  "lines": 88,
+  "changed_lines": [
+    46,
+    48
+  ],
+  "change": "Two explicit frames instead of one: switch Flow collector, then render its first emission. No sleep, timer override, manual dismiss, key change or assertion reduction.",
+  "expected_remaining_assertions": [
+    "Equal numeric IDs across owners",
+    "Replacement visible before old owner would expire",
+    "Replacement still visible after old owner lifetime",
+    "One item retained in replacement owner queue",
+    "Replacement expires on its own production timer"
+  ],
+  "status": "FROZEN - no compiler/tests run by child; root focused rerun pending",
+  "prior_source": "Source reviewer now authors only bounded fixture scheduling correction; original production DS-C02 fix remains root-authored and independently reviewed.",
+  "source_check": {
+    "command": "git diff --check -- shared/design-system",
+    "exit_code": 0
+  }
+}

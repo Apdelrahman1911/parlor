@@ -1,0 +1,46 @@
+{
+  "schema": 1,
+  "reviewer": "/root/protection_host",
+  "author": "/root/ci_ios_runtime",
+  "status": "APPROVED_SCOPED_SOURCE_AND_FOCUSED_CONTROLS_NOT_NATIVE_HOST_RUNTIME",
+  "source_base": "1c234ff026355c3f21fc1d7a589d3bd36085e74f",
+  "files_root": "remediation-runs/2026-09-08-continuation/protection-diagnostic-01",
+  "pins": {
+    "run_probe.py": "aa8e9ba6eeb51e5f8c80fdd6cfb395887713dd84d4926faba51f6b9f962e5f41",
+    "test_probe.py": "1bbd22982085f53cbf865fb3bdd838216138599f1a9b6543b720a9af42f51761",
+    "README.md": "b3f03d63b2adc3d178159cde2cbb6f62d3412ae5aa0d423728eddb9f1be202dc"
+  },
+  "actual_pd05": {
+    "evidence_root": "actions/34551626246",
+    "run_attempt": 1,
+    "control_sha256": "538e6d1e869c19a6829ec393fc39bbcdad1fcba3991bc2ee37e2578e168aeab9",
+    "pins": {
+      "main/native.stdout.jsonl": "04775fee3f8ee16dfc3868cd1157ef833fd934af7fe054519e52b2f446713c3f",
+      "main/native-report.json": "261d3046acc9112f26441021dfb881105ca485484a67c0d21b4da50c8d56257c",
+      "main/state.json": "5ffa4265a15653d65dddc36aa1cbd6728b86b8c558070c5ff4308012c314dc41",
+      "main/public-sdk-macros.txt": "d846113800f009f2b4d503586f884e83edca3e5aeecb94b5a8235557996b90e7"
+    },
+    "simulator": "Raw18 rows exactly equal report.events. Native observation exit0/reaped in6.699s;9 samples each collected with5 readers and closed descriptors. All9 FileManager dictionaries present but protection key missing/no NSError;7 regular-file fresh URLs report until-first-authentication/no NSError,2 directory URLs correctly N/A. Strict0PASS/5FAIL.",
+    "images": "Main ProtectionProbe UUIDc59b86c7-f8ed-4095-a6cb-abd8f425c01a matches built UUID and before/after. FileManager/Foundation getter UUIDc153116f-dd31-3fa9-89bb-04b47c1fa83d offset8363460; NSURL/CoreFoundation getter UUID4f6d050d-95ee-3a95-969c-3a98b29df6ff offset1443152. Getter identities stable before/after and across9 samples. All images[7]. Entry-point identity is not private-callee or runtime-causality proof.",
+    "kernel_and_capability": "All9 fcntl GET63 return3/errno0; attrlist return0/errno0,class3 with returned/requested0xc0000000,length28,attribute_set_bytes20,protection_returned=true. Not absent/default-zero fields. Public SDK macros expose GET63/SET64/masks/MNT128 but not PROTECTION_CLASS_A; kernel setter was unavailable, not a failed syscall. Raw URL/fstatfs capabilities unsupported; APFS flags76582912 omit128. Volume/atomic interpretation and inode-join approval have separate owners.",
+    "host_absence": "macOS15.7.9/24G830,Darwin24.6.0; Simulator26.2/23C54,Xcode26.3/17C529. Exact xcrun --sdk macosx --show-sdk-version timed out at30s (elapsed30.056),stdout/stderr0/0,exit-15,reaped. No host SDK version/path attestation, source generation, compilation, main/getter observations or comparison report. Neither host-image rejection nor missing SDK is established; host[1,6] correction remains natively unexercised. Overall collection state FAIL."
+  },
+  "source_review": [
+    "Only existing platform_binding and compile_and_read_host bodies change; bind_host_sdk/bound_host_sdk are added. Original host version/path argv, labels, default30s limits, strict26.2 check, canonical resolution and MacOSX.platform containment move after JDK qualification and before owned simulator creation. No retry or command fallback.",
+    "Successful qualification retains a separate canonical Path plus copied full source/run identity, approved control digest and fresh request nonce in host_platform, then saves state. Missing/duplicate qualification fails closed. Later host compilation requires exact current-run record agreement and unchanged canonical path/containment before source generation, without another SDK query; explicit host target/isysroot use is unchanged.",
+    "AST comparison confirms all other driver methods and top-level validators unchanged, including child environment, source checks, execute/capture, run480+90 finalization, host compile90/read30, cleanup300+65, timeout scratch-retention, mandatory stops and assert-result. Native process helper unchanged. H01 borrowed methods remain unchanged.",
+    "ProtectionSampler remains3f4f49af81d396a07beabeed45be649314495fd286327baa931aa5eb2dcca137; host template/transform and shared receipt validator byte-identical to base. Host main[1], simulator[7], qualified host fm/Foundation or url/CoreFoundation[1,6], every other image predicate and strict comparison remain intact.",
+    "Six added synthetic controls cover real-driver phase order with mocked commands, exact once-only30s queries, bad version/path and durable TIMEOUT rejection, source/run/attempt/control/nonce/record drift, redirected SDK path, missing/duplicate binding and host-stage consumption. All previously existing test methods are AST-identical."
+  ],
+  "focused_controls": {
+    "executor": "/root",
+    "receipt": "../2026-09-07-local-readiness/evidence/continuation-sdk-concurrency-controls-01/receipt.json",
+    "receipt_sha256": "c800e0c50197704a97a5b9cf1ffafa53c96e80ea73b0d54e448f90b123109007",
+    "paired_log_sha256": "40f5e126226b243431af686dc828b4808948bb83ef7c200c96ebc1d2c3528e02",
+    "result": "Independently read/hash-checked paired.log:41 individual ok, unittest41/OK,receipt exit0; zero failures/errors/skips. Includes all6 new controls. Before=after and all3 reviewed source pins match current bytes. Concurrent workflow controls have separate review scope.",
+    "cleanup": "Receipt stop0/errors[]/scratch_removed=true; independently hash-checked stop log9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d stating no Gradle daemons. All21 specified live roots and exact task scratch independently observed absent."
+  },
+  "findings": [],
+  "limits": "Scheduling mitigation only; PD05 timeout cause is unproven and successful later native execution remains required. No SDK-byte immutability or enforcement claim. Workflow concurrency changes are outside this three-file source review. PD05 failures, A37/APP04 strict results, app/full qualification, hardware and Store gates are not promoted. Fresh committed/inventoried bindings required before any new dispatch.",
+  "operations": "Only local text/Git/stdlib AST/JSON/hash inspection and this additive review receipt. Reviewer ran no project imports/tests/builds/native commands/network/CI and made no author-file/Git writes. No reviewer cleanup owed."
+}

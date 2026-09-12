@@ -1,0 +1,471 @@
+{
+  "reviewer": "/root/release_fix_review",
+  "at": "2026-09-06T10:15:52.916552+00:00",
+  "scope": "Independent current-source and fresh-execution revalidation of five previously independently approved fixes, not whole-repository re-audit. No fix authorship.",
+  "source": {
+    "branch": "main",
+    "commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+    "tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+    "diff_sha256": "38326880d1f9332618d193f73d49cebc6de063dd26c7e87a8711be9a04a5a430",
+    "source_manifest_sha256": "de7573ed1f4e1a19969f3063e135d234cd57ec8764c4af784cf4b3eaff5ef9b4"
+  },
+  "issues": [
+    {
+      "id": "IOS-B1",
+      "independent_author_review": "session_cont",
+      "files": [
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/iosApp/iosApp.xcodeproj/project.pbxproj",
+          "sha256": "dbf9c4d8f1c8e51cf78682afd5f32729566f75df6355735d3df37841e46fabfe",
+          "unchanged_since_prior_review": true
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_xcode_framework_phase.py",
+          "sha256": "3033307b0a029d87ab9c8c14d3b3b4d3a0d4db9d183012d6da58fb1e8b5c4a73",
+          "unchanged_since_prior_review": true
+        }
+      ],
+      "prior_evidence": [
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/session_cont/IOS-B1-independent-remediation-review-01.json",
+          "sha256": "3e04f4aeed79ba9f7528357fe18136386abcb90c5fe84abb86f3b76e64e236ab"
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/session_cont/IOS-B1-independent-remediation-review-01.md",
+          "sha256": "8d0f2eb8693356379329e17e134d63a991ef37d0111a6a7df472a4ee41e82b01"
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/session_cont/IOS-B1-independent-remediation-review-02-green.md",
+          "sha256": "6dd99298c8d85295227f1a3435ba1fd8f271e7fd4ec155b7110ea36fc98c52c9"
+        }
+      ],
+      "status": "FIXED AND VERIFIED",
+      "proof": "Actual pbxproj shell sets -e before cd, checked-in Gradle embed with strict verification, and normalization. Failed cd cannot use prior cwd; failed Gradle cannot normalize stale framework. Original IDE override/success preserved.",
+      "regressions": "5 actual-shell-phase plus3 normalizer tests freshly executed. Complete source fixtures and assertions reopened.",
+      "limits": "No historical app-crash diagnosis, signed or Store-qualified Xcode app-build proof from shell fixtures."
+    },
+    {
+      "id": "ROOT-T3",
+      "independent_author_review": "session_cont",
+      "files": [
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/JupiterDiscoveryContractTest.kt",
+          "sha256": "94682d196381d97a37f6c5e925b63646f102b864d76eb55252cfbd082abcb305",
+          "unchanged_since_prior_review": true
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitRoomTransportLifecycleTest.kt",
+          "sha256": "947a86aebdca10d7d9cfa97a5677c1a79733601dca887effc6c218280a098b1b",
+          "unchanged_since_prior_review": true
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitRoomTransportLoopbackTest.kt",
+          "sha256": "cda4755e373172719f6fc7a4d72a38416ec061b44f356d9ef4f3529e29588737",
+          "unchanged_since_prior_review": true
+        }
+      ],
+      "prior_evidence": [
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/session_cont/ROOT-T3-independent-remediation-review-01.json",
+          "sha256": "875e0723d0175ff193f7fee77a38333597a8114bf943aafc0eb837b0a604c199"
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/session_cont/ROOT-T3-independent-remediation-review-01.md",
+          "sha256": "20c958f269669878dc68a58c6ab8a5eeaf5a7702b6591f3b74327771fc3aa85e"
+        }
+      ],
+      "status": "FIXED AND VERIFIED",
+      "proof": "Explicit Unit on10runBlocking methods preserves assertions/Ignore. Actual compiled-signature guard rejects nonvoid/private/static Jupiter@Test. Eight formerly absent enabled tests and guard now execute; two restored ignored descriptors plus existing third physical fixture remain skipped.",
+      "limits": "Guard scope is this compiled module; not all future plugins or packed IDE JAR. Advertising fixture is not physical LAN delivery proof."
+    },
+    {
+      "id": "RL-C1",
+      "independent_author_review": "mafia_cont + release_fix_review",
+      "files": [
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/docs/RELEASE_AUTOMATION.md",
+          "sha256": "5598e91447aae3f111654b217118aa64cc9ea0c0c3c34d36f0440c51c0b7f206",
+          "unchanged_since_prior_review": true
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_android_artifact_size.py",
+          "sha256": "1bdf6fe45be629ed8ea6d435727e88d87644319257127732b61a529f1ce1a0b1",
+          "unchanged_since_prior_review": true
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/scripts/release/validate_android_artifact.sh",
+          "sha256": "e0100ed6274e41113e18d1cdaa5310242f749d2f337fdb0c5b85920a011cece6",
+          "unchanged_since_prior_review": true
+        }
+      ],
+      "prior_evidence": [
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/mafia/rl-c1-independent-fix-review-01.json",
+          "sha256": "623d83ad4b20674179887f49c2e733026f0149bd831e91f3ab3ae100e94f941f"
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/release_fix_review/release-docs-interactions-01.json",
+          "sha256": "bd900c84f3e0949c0ae3dd04cc1173c171e24150e2e8f78bb36ba64d74386201"
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/release_fix_review/release-docs-approval-02.json",
+          "sha256": "e4d58a9ea4131b7399347ff38b5858630a9c8068f6ddf9683ca2f68e20ed5e30"
+        }
+      ],
+      "status": "FIXED AND VERIFIED",
+      "proof": "Both limits use os.stat(no-follow) integer st_size. BSD/GNU output fallback gone. Inclusive512MiB/10MiB, regularfile/nosymlink/nonempty-report guards intact.",
+      "regressions": "7 real preflight fixtures freshly executed; GNU-shaped shim and sparse exact/overbounds. Positive tests assert reaching later deliberate digest guard.",
+      "limits": "macOS execution; no complete Linux signedAAB test claimed."
+    },
+    {
+      "id": "RL-C2",
+      "independent_author_review": "release_fix_review",
+      "files": [
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/docs/RELEASE_AUTOMATION.md",
+          "sha256": "5598e91447aae3f111654b217118aa64cc9ea0c0c3c34d36f0440c51c0b7f206",
+          "unchanged_since_prior_review": true
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/scripts/release/PrepareAndroidUploadTrust.java",
+          "sha256": "a74b92902839047353aa4b5816bc226e43526960da7c4d2df117e25c9375c211",
+          "unchanged_since_prior_review": true
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_android_upload_signature.py",
+          "sha256": "fd9723397cd3ae4336371cd6fdd93164d225919d1ed615d5fd48f75055b3eade",
+          "unchanged_since_prior_review": true
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/scripts/release/validate_android_artifact.sh",
+          "sha256": "e0100ed6274e41113e18d1cdaa5310242f749d2f337fdb0c5b85920a011cece6",
+          "unchanged_since_prior_review": true
+        }
+      ],
+      "prior_evidence": [
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/release_fix_review/RL-C2-independent-remediation-review-01.json",
+          "sha256": "0dfb26b45804abd11dcea5d3f5fce4c5b168822f01a9598cd774935cf968bbdb"
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/release_fix_review/RL-C2-independent-remediation-review-01.md",
+          "sha256": "f2d0d7ac7f7cb40ef66e50bf6ba8b0df619dff1f4d112d711dbcf3bc3be40554"
+        }
+      ],
+      "status": "FIXED AND VERIFIED",
+      "proof": "JarFile drains boundedpayloads and validates every signer fingerprint. Unsigned/tampered/additionalsigner fail. Only approved cryptographically selfsigned leaf gets ephemeralpublictrust after PKIXleaf-as-path/JDK21SignedJARpolicy. SeparateTSAtrust uses originalJDKroots. Strictjarsigner remains mandatory; stale output/unapprovedCApath failclosed.",
+      "regressions": "20 synthetic signature/policy tests plus1 ownedprocess cleanup test freshly executed; fullfixture/teardown/fragment boundaries reopened.",
+      "limits": "No Storecredentials/fullAAB certification; no positive RFC3161JARintegration or PSScertificatecoverage inferred. OriginalrevCheckpolicy unchanged."
+    },
+    {
+      "id": "RL-C3",
+      "independent_author_review": "mafia_cont + release_fix_review",
+      "files": [
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/docs/RELEASE_AUTOMATION.md",
+          "sha256": "5598e91447aae3f111654b217118aa64cc9ea0c0c3c34d36f0440c51c0b7f206",
+          "unchanged_since_prior_review": true
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/scripts/release/store_api.py",
+          "sha256": "95ba5a18b5e78d85eb15c8764f011db76293d0bdcf8ee088151321ad5d6b7012",
+          "unchanged_since_prior_review": true
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_google_promotion_edit.py",
+          "sha256": "b6ed5e950782ef5581f86cabd7a263937da52d3dfcf7c84cc45df5bcc2d147db",
+          "unchanged_since_prior_review": true
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_store_api.py",
+          "sha256": "18d49c5deb8cc5383b5a9888f7f14f21884bbbfeb577348412f1930f4972a1d1",
+          "unchanged_since_prior_review": true
+        }
+      ],
+      "prior_evidence": [
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/mafia/rl-c3-independent-fix-review-01.json",
+          "sha256": "2911a5629eb8b16f34936834301a59c883b1913597a42fa2cd7ecbd49e3c322b"
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/release_fix_review/release-docs-interactions-01.json",
+          "sha256": "bd900c84f3e0949c0ae3dd04cc1173c171e24150e2e8f78bb36ba64d74386201"
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/release_fix_review/release-docs-approval-02.json",
+          "sha256": "e4d58a9ea4131b7399347ff38b5858630a9c8068f6ddf9683ca2f68e20ed5e30"
+        }
+      ],
+      "status": "FIXED AND VERIFIED",
+      "proof": "Tracks/bundles/source/destination/digest and PUT/validate/commit use sameeditID. Idempotent/rejected paths delete uncommittededit; successpostcommitreadback retained. No mutationblindretry; identity/publication/rollout constraints intact.",
+      "regressions": "9 realGoogleClienthelpers+fakeHTTP tests freshly executed; updated existingStoretests also in172.",
+      "limits": "No liveGooglePlay operation; external invalidation modeled. Networkcleanup best effort remains not guaranteed."
+    }
+  ],
+  "release_fresh_execution": {
+    "log": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-03/gradle.log",
+    "sha256": "d9d072558249f81184251fa3d3e92f712be5c74f6314b3237ab67c9674d4692f",
+    "tests": 172,
+    "failures": 0,
+    "skips": 0,
+    "relevant_families": {
+      "test_android_artifact_size.": [
+        "test_both_small_files_with_spaces_pass_gnu_shaped_stat_preflight (test_android_artifact_size.AndroidArtifactSizeTest) ... ok",
+        "test_empty_dependency_report_is_rejected (test_android_artifact_size.AndroidArtifactSizeTest) ... ok",
+        "test_exact_artifact_bound_is_accepted_without_allocating_512_mib (test_android_artifact_size.AndroidArtifactSizeTest) ... ok",
+        "test_exact_dependency_report_bound_is_accepted (test_android_artifact_size.AndroidArtifactSizeTest) ... ok",
+        "test_missing_directory_and_symlink_inputs_are_rejected (test_android_artifact_size.AndroidArtifactSizeTest) ... ok",
+        "test_oversized_artifact_is_rejected (test_android_artifact_size.AndroidArtifactSizeTest) ... ok",
+        "test_oversized_dependency_report_is_rejected (test_android_artifact_size.AndroidArtifactSizeTest) ... ok"
+      ],
+      "test_android_upload_signature.": [
+        "test_additional_unapproved_signer_is_rejected (test_android_upload_signature.AndroidUploadSignatureTest) ... ok",
+        "test_certificate_usage_must_allow_code_signing (test_android_upload_signature.AndroidUploadSignatureTest) ... ok",
+        "test_corrupt_signature_block_is_rejected (test_android_upload_signature.AndroidUploadSignatureTest) ... ok",
+        "test_disabled_certificate_algorithm_is_rejected_with_modern_jar_signature (test_android_upload_signature.AndroidUploadSignatureTest) ... ok",
+        "test_disabled_jar_algorithm_is_rejected_with_modern_certificate (test_android_upload_signature.AndroidUploadSignatureTest) ... ok",
+        "test_disabled_rsa_key_size_is_rejected (test_android_upload_signature.AndroidUploadSignatureTest) ... ok",
+        "test_entirely_unsigned_bundle_is_rejected (test_android_upload_signature.AndroidUploadSignatureTest) ... ok",
+        "test_expired_self_signed_certificate_is_rejected (test_android_upload_signature.AndroidUploadSignatureTest) ... ok",
+        "test_extended_usage_must_allow_code_signing (test_android_upload_signature.AndroidUploadSignatureTest) ... ok",
+        "test_failed_java_preparation_cannot_be_masked_by_later_verification (test_android_upload_signature.AndroidUploadSignatureTest) ... ok",
+        "test_not_yet_valid_self_signed_certificate_is_rejected (test_android_upload_signature.AndroidUploadSignatureTest) ... ok",
+        "test_registered_self_signed_upload_certificate_passes_strict_verification (test_android_upload_signature.AndroidUploadSignatureTest) ... ok",
+        "test_signedjar_specific_certificate_policy_cannot_be_bypassed_by_trusting_leaf (test_android_upload_signature.AndroidUploadSignatureTest) ... ok",
+        "test_stale_trust_store_is_not_overwritten_or_used_after_preparation_failure (test_android_upload_signature.AndroidUploadSignatureTest) ... ok",
+        "test_tampered_signed_payload_is_rejected (test_android_upload_signature.AndroidUploadSignatureTest) ... ok",
+        "test_unknown_critical_certificate_extension_is_rejected (test_android_upload_signature.AndroidUploadSignatureTest) ... ok",
+        "test_unsigned_extra_payload_including_meta_inf_is_rejected (test_android_upload_signature.AndroidUploadSignatureTest) ... ok",
+        "test_untrusted_ca_path_does_not_become_a_new_trust_anchor (test_android_upload_signature.AndroidUploadSignatureTest) ... ok",
+        "test_upload_trust_cannot_be_reused_as_timestamp_authority_trust (test_android_upload_signature.AndroidUploadSignatureTest) ... ok",
+        "test_wrong_approved_fingerprint_is_rejected (test_android_upload_signature.AndroidUploadSignatureTest) ... ok",
+        "test_timeout_stops_term_resistant_redirected_descendant (test_android_upload_signature.OwnedSignatureProcessTest) ... ok"
+      ],
+      "test_google_promotion_edit.": [
+        "test_already_present_candidate_is_validated_and_edit_is_deleted (test_google_promotion_edit.GooglePromotionEditTest) ... ok",
+        "test_commit_failure_is_not_blindly_retried (test_google_promotion_edit.GooglePromotionEditTest) ... ok",
+        "test_external_change_after_reads_invalidates_mutation_without_retry (test_google_promotion_edit.GooglePromotionEditTest) ... ok",
+        "test_missing_configured_destination_is_rejected (test_google_promotion_edit.GooglePromotionEditTest) ... ok",
+        "test_read_validation_and_commit_use_the_same_edit_snapshot (test_google_promotion_edit.GooglePromotionEditTest) ... ok",
+        "test_staged_destination_in_mutation_snapshot_is_not_completed (test_google_promotion_edit.GooglePromotionEditTest) ... ok",
+        "test_unavailable_or_unfinished_source_in_mutation_snapshot_is_rejected (test_google_promotion_edit.GooglePromotionEditTest) ... ok",
+        "test_validation_failure_deletes_uncommitted_edit_without_retry (test_google_promotion_edit.GooglePromotionEditTest) ... ok",
+        "test_wrong_bundle_digest_in_mutation_snapshot_is_rejected (test_google_promotion_edit.GooglePromotionEditTest) ... ok"
+      ],
+      "test_xcode_framework_phase.": [
+        "test_failed_directory_change_cannot_build_from_previous_directory (test_xcode_framework_phase.XcodeFrameworkPhaseTest) ... ok",
+        "test_failed_gradle_with_stale_framework_fails_without_normalizing (test_xcode_framework_phase.XcodeFrameworkPhaseTest) ... ok",
+        "test_intentional_ide_override_still_skips_gradle_and_normalization (test_xcode_framework_phase.XcodeFrameworkPhaseTest) ... ok",
+        "test_successful_embed_normalizes_case_only_framework_name (test_xcode_framework_phase.XcodeFrameworkPhaseTest) ... ok",
+        "test_successful_gradle_still_rejects_missing_framework (test_xcode_framework_phase.XcodeFrameworkPhaseTest) ... ok"
+      ],
+      "test_normalize_embedded_apple_framework.": [
+        "test_canonical_framework_is_an_idempotent_success (test_normalize_embedded_apple_framework.EmbeddedAppleFrameworkNormalizationTest) ... ok",
+        "test_case_only_framework_rename_matches_macho_identity (test_normalize_embedded_apple_framework.EmbeddedAppleFrameworkNormalizationTest) ... ok",
+        "test_framework_without_canonical_executable_fails_closed (test_normalize_embedded_apple_framework.EmbeddedAppleFrameworkNormalizationTest) ... ok"
+      ]
+    },
+    "parser_note": "171singlelineok; one GitTreefixture emits its owned temporary-branch message then standaloneok. Summary172OK; fixture did not change Parlor branch."
+  },
+  "compiled_execution_evidence": [
+    {
+      "cycle": "combined-production-03",
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-03/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitRoomTransportLifecycleTest.xml",
+      "sha256": "79b2b80194512694f8b0839e4664f27b7c10e0d132fe43f9af72632ed74c4f6b",
+      "counts": {
+        "tests": 130,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "formerly_omitted_cases_passed": [
+        "admission_pending_opens_a_separate_host_approval_window()[desktop]",
+        "host_send_propagates_coroutine_cancellation()[desktop]",
+        "disconnect_during_acceptance_rolls_back_the_seat_without_a_ghost_member()[desktop]",
+        "cancellation_during_acceptance_propagates_after_rolling_back_the_seat()[desktop]",
+        "fatal_send_and_cleanup_failures_are_never_converted_to_normal_results()[desktop]",
+        "peer_send_propagates_coroutine_cancellation()[desktop]",
+        "wrong_room_does_not_end_search_before_a_late_correct_candidate_appears()[desktop]",
+        "kit_factory_cancellation_is_never_mapped_to_transport_failure()[desktop]"
+      ]
+    },
+    {
+      "cycle": "combined-production-03",
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-03/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest.xml",
+      "sha256": "b0a3e5ef470af6f073a02a19fbe59c9f0e4d27551c02ca20ec4631f4c68ad5b5",
+      "counts": {
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 3
+      },
+      "cases": [
+        {
+          "name": "peer_to_host_message_round_trips_and_host_to_peer_message_arrives_back()[desktop]",
+          "skipped": true,
+          "failed": false
+        },
+        {
+          "name": "peer_can_join_a_hosted_room_and_membership_appears_on_host()[desktop]",
+          "skipped": true,
+          "failed": false
+        },
+        {
+          "name": "host_broadcast_reaches_every_peer()[desktop]",
+          "skipped": true,
+          "failed": false
+        },
+        {
+          "name": "host_advertises_a_room_code_that_join_resolves_to()[desktop]",
+          "skipped": false,
+          "failed": false
+        }
+      ]
+    },
+    {
+      "cycle": "combined-production-03",
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-03/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.JupiterDiscoveryContractTest.xml",
+      "sha256": "6875e7d0bcd1d66c46f55a5f596e9accc41a931bfdd89f6705d903c274d99cb1",
+      "counts": {
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "cases": [
+        {
+          "name": "annotated_tests_including_disabled_tests_are_discoverable()[desktop]",
+          "skipped": false,
+          "failed": false
+        }
+      ]
+    },
+    {
+      "cycle": "combined-native-alltests-01",
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-native-alltests-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitRoomTransportLifecycleTest.xml",
+      "sha256": "47289eef5bfd0f6ecbd22f37a81e91d64ff9574011a3f25e0696e00b5879bdfe",
+      "counts": {
+        "tests": 130,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "formerly_omitted_cases_passed": [
+        "admission_pending_opens_a_separate_host_approval_window()[desktop]",
+        "host_send_propagates_coroutine_cancellation()[desktop]",
+        "disconnect_during_acceptance_rolls_back_the_seat_without_a_ghost_member()[desktop]",
+        "cancellation_during_acceptance_propagates_after_rolling_back_the_seat()[desktop]",
+        "fatal_send_and_cleanup_failures_are_never_converted_to_normal_results()[desktop]",
+        "peer_send_propagates_coroutine_cancellation()[desktop]",
+        "wrong_room_does_not_end_search_before_a_late_correct_candidate_appears()[desktop]",
+        "kit_factory_cancellation_is_never_mapped_to_transport_failure()[desktop]"
+      ]
+    },
+    {
+      "cycle": "combined-native-alltests-01",
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-native-alltests-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest.xml",
+      "sha256": "4f91e33be549fbfbfc884a5e3b733dbf6e8df8ead8f28a9438cf6eb4863518f4",
+      "counts": {
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 3
+      },
+      "cases": [
+        {
+          "name": "peer_to_host_message_round_trips_and_host_to_peer_message_arrives_back()[desktop]",
+          "skipped": true,
+          "failed": false
+        },
+        {
+          "name": "peer_can_join_a_hosted_room_and_membership_appears_on_host()[desktop]",
+          "skipped": true,
+          "failed": false
+        },
+        {
+          "name": "host_broadcast_reaches_every_peer()[desktop]",
+          "skipped": true,
+          "failed": false
+        },
+        {
+          "name": "host_advertises_a_room_code_that_join_resolves_to()[desktop]",
+          "skipped": false,
+          "failed": false
+        }
+      ]
+    },
+    {
+      "cycle": "combined-native-alltests-01",
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-native-alltests-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.JupiterDiscoveryContractTest.xml",
+      "sha256": "fc52b19719ee141fb16884d3d3046bc6fecb414d80fcc1f851f25e651c5761cb",
+      "counts": {
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "cases": [
+        {
+          "name": "annotated_tests_including_disabled_tests_are_discoverable()[desktop]",
+          "skipped": false,
+          "failed": false
+        }
+      ]
+    }
+  ],
+  "cycles": [
+    {
+      "cycle": "combined-production-03",
+      "receipt_sha256": "12d240d9db448e8ad008c59d77e1049d3847811897fe5726357847bc8504f073",
+      "log_sha256": "d9d072558249f81184251fa3d3e92f712be5c74f6314b3237ab67c9674d4692f",
+      "status": "FAIL",
+      "exit_code": 1,
+      "cleanup": {
+        "stop_exit_code": 0,
+        "remaining_outputs": [],
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        },
+        "cleanup_errors": [],
+        "source_changed_during_cycle": false
+      }
+    },
+    {
+      "cycle": "combined-native-alltests-01",
+      "receipt_sha256": "70652660de120710bdbb4cde2780332da9ede8b29f3b93d99b751d5cad12a9db",
+      "log_sha256": "a46bf2a0b451694143a22b65c49c4d87ff491f02191eb89a5e3647f563e2b5c6",
+      "status": "PASS",
+      "exit_code": 0,
+      "cleanup": {
+        "stop_exit_code": 0,
+        "remaining_outputs": [],
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        },
+        "cleanup_errors": [],
+        "source_changed_during_cycle": false
+      }
+    },
+    {
+      "cycle": "combined-apple-01",
+      "receipt_sha256": "63558a7a098971ce9ddfe577c65bcfee4375b1d76b267988a4f396b94b824e42",
+      "log_sha256": "9c79863dac5f487b10463cbeaa5e1039870b12ee1b86707d51797782bcee68b1",
+      "status": "PASS",
+      "exit_code": 0,
+      "cleanup": {
+        "stop_exit_code": 0,
+        "remaining_outputs": [],
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        },
+        "cleanup_errors": [],
+        "source_changed_during_cycle": false
+      }
+    }
+  ],
+  "aggregate_verdict": "productionCheck FAIL (sole observed failedtaskverifyReleaseLintWarnings) retained. Scopedfixes have localPASS evidence, not Store-readiness.",
+  "review_actions": "Source/diff/test-body and archived-receipt reading, exact rehash, rawXML/logparse only. No builds/tests/signing/Store/source/Git mutation."
+}

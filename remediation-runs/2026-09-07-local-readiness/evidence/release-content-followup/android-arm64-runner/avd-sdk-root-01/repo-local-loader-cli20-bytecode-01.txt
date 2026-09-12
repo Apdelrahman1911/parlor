@@ -1,0 +1,773 @@
+Compiled from "LocalRepoLoaderImpl.java"
+public final class com.android.repository.impl.manager.LocalRepoLoaderImpl implements com.android.repository.impl.manager.LocalRepoLoader {
+  public static final java.lang.String PACKAGE_XML_FN;
+
+  private static final int MAX_SCAN_DEPTH;
+
+  static final java.lang.String KNOWN_PACKAGES_HASH_FN;
+
+  private static final com.google.common.collect.ImmutableSet<java.lang.String> RESOURCE_CACHE_DIRS;
+
+  private final java.nio.file.Path mRoot;
+
+  private final com.google.common.collect.ImmutableSet<com.android.repository.api.SchemaModule<?>> mSchemaModules;
+
+  private final com.android.repository.api.FallbackLocalRepoLoader mFallback;
+
+  public com.android.repository.impl.manager.LocalRepoLoaderImpl(java.nio.file.Path, java.util.Set<com.android.repository.api.SchemaModule<?>>, com.android.repository.api.FallbackLocalRepoLoader);
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: aload_1
+       6: putfield      #7                  // Field mRoot:Ljava/nio/file/Path;
+       9: aload_0
+      10: aload_2
+      11: invokestatic  #13                 // Method com/google/common/collect/ImmutableSet.copyOf:(Ljava/util/Collection;)Lcom/google/common/collect/ImmutableSet;
+      14: putfield      #19                 // Field mSchemaModules:Lcom/google/common/collect/ImmutableSet;
+      17: aload_0
+      18: aload_3
+      19: putfield      #23                 // Field mFallback:Lcom/android/repository/api/FallbackLocalRepoLoader;
+      22: return
+
+  public java.util.Map<java.lang.String, com.android.repository.api.LocalPackage> getPackages(com.android.repository.api.ProgressIndicator);
+    Code:
+       0: aload_0
+       1: getfield      #23                 // Field mFallback:Lcom/android/repository/api/FallbackLocalRepoLoader;
+       4: ifnull        16
+       7: aload_0
+       8: getfield      #23                 // Field mFallback:Lcom/android/repository/api/FallbackLocalRepoLoader;
+      11: invokeinterface #27,  1           // InterfaceMethod com/android/repository/api/FallbackLocalRepoLoader.refresh:()V
+      16: aload_0
+      17: invokevirtual #32                 // Method collectPackages:()Ljava/util/Set;
+      20: astore_2
+      21: aload_0
+      22: aload_2
+      23: aload_1
+      24: invokevirtual #36                 // Method parsePackages:(Ljava/util/Collection;Lcom/android/repository/api/ProgressIndicator;)Ljava/util/Map;
+      27: astore_3
+      28: aload_3
+      29: invokeinterface #40,  1           // InterfaceMethod java/util/Map.isEmpty:()Z
+      34: ifne          86
+      37: aload_0
+      38: aload_0
+      39: aload_2
+      40: invokevirtual #46                 // Method getLocalPackagesHash:(Ljava/util/Set;)[B
+      43: invokevirtual #50                 // Method writeHashFile:([B)V
+      46: aload_1
+      47: aload_3
+      48: invokeinterface #54,  1           // InterfaceMethod java/util/Map.keySet:()Ljava/util/Set;
+      53: invokeinterface #57,  1           // InterfaceMethod java/util/Set.stream:()Ljava/util/stream/Stream;
+      58: invokeinterface #63,  1           // InterfaceMethod java/util/stream/Stream.sorted:()Ljava/util/stream/Stream;
+      63: ldc           #68                 // String
+      65: invokestatic  #70                 // Method java/util/stream/Collectors.joining:(Ljava/lang/CharSequence;)Ljava/util/stream/Collector;
+      68: invokeinterface #76,  2           // InterfaceMethod java/util/stream/Stream.collect:(Ljava/util/stream/Collector;)Ljava/lang/Object;
+      73: checkcast     #80                 // class java/lang/String
+      76: invokedynamic #82,  0             // InvokeDynamic #0:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+      81: invokeinterface #86,  2           // InterfaceMethod com/android/repository/api/ProgressIndicator.logVerbose:(Ljava/lang/String;)V
+      86: aload_3
+      87: invokestatic  #92                 // Method java/util/Collections.unmodifiableMap:(Ljava/util/Map;)Ljava/util/Map;
+      90: areturn
+
+  public boolean needsUpdate(long, boolean);
+    Code:
+       0: aload_0
+       1: lload_1
+       2: invokevirtual #98                 // Method checkKnownPackagesUpdateTime:(J)Z
+       5: istore        4
+       7: iload         4
+       9: ifne          22
+      12: iload_3
+      13: ifeq          22
+      16: aload_0
+      17: invokevirtual #102                // Method updateKnownPackageHashFileIfNecessary:()Z
+      20: istore        4
+      22: iload         4
+      24: ireturn
+
+  private java.util.Map<java.lang.String, com.android.repository.api.LocalPackage> parsePackages(java.util.Collection<java.nio.file.Path>, com.android.repository.api.ProgressIndicator);
+    Code:
+       0: invokestatic  #105                // Method com/google/common/collect/Maps.newHashMap:()Ljava/util/HashMap;
+       3: astore_3
+       4: aload_1
+       5: invokeinterface #111,  1          // InterfaceMethod java/util/Collection.iterator:()Ljava/util/Iterator;
+      10: astore        4
+      12: aload         4
+      14: invokeinterface #117,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+      19: ifeq          201
+      22: aload         4
+      24: invokeinterface #122,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      29: checkcast     #126                // class java/nio/file/Path
+      32: astore        5
+      34: aload         5
+      36: ldc           #128                // String package.xml
+      38: invokeinterface #130,  2          // InterfaceMethod java/nio/file/Path.resolve:(Ljava/lang/String;)Ljava/nio/file/Path;
+      43: astore        6
+      45: aconst_null
+      46: astore        7
+      48: aload         6
+      50: iconst_0
+      51: anewarray     #134                // class java/nio/file/LinkOption
+      54: invokestatic  #136                // Method com/android/io/CancellableFileIo.exists:(Ljava/nio/file/Path;[Ljava/nio/file/LinkOption;)Z
+      57: ifeq          95
+      60: aload_0
+      61: aload         6
+      63: aload_2
+      64: invokevirtual #142                // Method parsePackage:(Ljava/nio/file/Path;Lcom/android/repository/api/ProgressIndicator;)Lcom/android/repository/api/LocalPackage;
+      67: astore        7
+      69: goto          95
+      72: astore        8
+      74: aload         8
+      76: invokestatic  #148                // Method com/android/ProgressManagerAdapter.throwIfCancellation:(Ljava/lang/Throwable;)V
+      79: aload_2
+      80: aload         6
+      82: invokestatic  #154                // Method java/lang/String.valueOf:(Ljava/lang/Object;)Ljava/lang/String;
+      85: invokedynamic #158,  0            // InvokeDynamic #1:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+      90: invokeinterface #159,  2          // InterfaceMethod com/android/repository/api/ProgressIndicator.logWarning:(Ljava/lang/String;)V
+      95: aload         7
+      97: ifnull        115
+     100: aload         7
+     102: invokeinterface #162,  1          // InterfaceMethod com/android/repository/api/LocalPackage.getDisplayName:()Ljava/lang/String;
+     107: ldc           #168                // String Unknown
+     109: invokevirtual #170                // Method java/lang/String.startsWith:(Ljava/lang/String;)Z
+     112: ifeq          185
+     115: aload_0
+     116: getfield      #23                 // Field mFallback:Lcom/android/repository/api/FallbackLocalRepoLoader;
+     119: ifnull        185
+     122: aload_0
+     123: getfield      #23                 // Field mFallback:Lcom/android/repository/api/FallbackLocalRepoLoader;
+     126: aload         5
+     128: aload_2
+     129: invokeinterface #174,  3          // InterfaceMethod com/android/repository/api/FallbackLocalRepoLoader.parseLegacyLocalPackage:(Ljava/nio/file/Path;Lcom/android/repository/api/ProgressIndicator;)Lcom/android/repository/api/LocalPackage;
+     134: astore        7
+     136: aload         7
+     138: ifnull        153
+     141: aload_0
+     142: aload         7
+     144: aload         6
+     146: aload_2
+     147: invokevirtual #177                // Method writePackage:(Lcom/android/repository/api/LocalPackage;Ljava/nio/file/Path;Lcom/android/repository/api/ProgressIndicator;)V
+     150: goto          185
+     153: aload         6
+     155: iconst_0
+     156: anewarray     #134                // class java/nio/file/LinkOption
+     159: invokestatic  #136                // Method com/android/io/CancellableFileIo.exists:(Ljava/nio/file/Path;[Ljava/nio/file/LinkOption;)Z
+     162: ifeq          185
+     165: aload_2
+     166: ldc           #181                // String Invalid package.xml found at %1$s and failed to parse using fallback.
+     168: iconst_1
+     169: anewarray     #2                  // class java/lang/Object
+     172: dup
+     173: iconst_0
+     174: aload         6
+     176: aastore
+     177: invokestatic  #183                // Method java/lang/String.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+     180: invokeinterface #159,  2          // InterfaceMethod com/android/repository/api/ProgressIndicator.logWarning:(Ljava/lang/String;)V
+     185: aload         7
+     187: ifnull        198
+     190: aload_0
+     191: aload         7
+     193: aload_3
+     194: aload_2
+     195: invokevirtual #187                // Method addPackage:(Lcom/android/repository/api/LocalPackage;Ljava/util/Map;Lcom/android/repository/api/ProgressIndicator;)V
+     198: goto          12
+     201: aload_3
+     202: areturn
+    Exception table:
+       from    to  target type
+          60    69    72   Class java/lang/Exception
+
+  private java.util.Set<java.nio.file.Path> collectPackages();
+    Code:
+       0: invokestatic  #191                // Method com/google/common/collect/Sets.newTreeSet:()Ljava/util/TreeSet;
+       3: astore_1
+       4: aload_0
+       5: aload_1
+       6: aload_0
+       7: getfield      #7                  // Field mRoot:Ljava/nio/file/Path;
+      10: iconst_0
+      11: invokevirtual #197                // Method collectPackages:(Ljava/util/Collection;Ljava/nio/file/Path;I)V
+      14: aload_1
+      15: areturn
+
+  private void collectPackages(java.util.Collection<java.nio.file.Path>, java.nio.file.Path, int);
+    Code:
+       0: iload_3
+       1: bipush        10
+       3: if_icmple     7
+       6: return
+       7: aload_2
+       8: aload_0
+       9: getfield      #7                  // Field mRoot:Ljava/nio/file/Path;
+      12: if_acmpeq     46
+      15: aload_2
+      16: iconst_0
+      17: anewarray     #134                // class java/nio/file/LinkOption
+      20: invokestatic  #200                // Method com/android/io/CancellableFileIo.isDirectory:(Ljava/nio/file/Path;[Ljava/nio/file/LinkOption;)Z
+      23: ifeq          46
+      26: aload_2
+      27: invokeinterface #203,  1          // InterfaceMethod java/nio/file/Path.getFileName:()Ljava/nio/file/Path;
+      32: invokeinterface #207,  1          // InterfaceMethod java/nio/file/Path.toString:()Ljava/lang/String;
+      37: ldc           #212                // String .
+      39: invokevirtual #170                // Method java/lang/String.startsWith:(Ljava/lang/String;)Z
+      42: ifeq          46
+      45: return
+      46: aload_2
+      47: ldc           #128                // String package.xml
+      49: invokeinterface #130,  2          // InterfaceMethod java/nio/file/Path.resolve:(Ljava/lang/String;)Ljava/nio/file/Path;
+      54: astore        4
+      56: aload         4
+      58: iconst_0
+      59: anewarray     #134                // class java/nio/file/LinkOption
+      62: invokestatic  #136                // Method com/android/io/CancellableFileIo.exists:(Ljava/nio/file/Path;[Ljava/nio/file/LinkOption;)Z
+      65: ifne          88
+      68: aload_0
+      69: getfield      #23                 // Field mFallback:Lcom/android/repository/api/FallbackLocalRepoLoader;
+      72: ifnull        99
+      75: aload_0
+      76: getfield      #23                 // Field mFallback:Lcom/android/repository/api/FallbackLocalRepoLoader;
+      79: aload_2
+      80: invokeinterface #214,  2          // InterfaceMethod com/android/repository/api/FallbackLocalRepoLoader.shouldParse:(Ljava/nio/file/Path;)Z
+      85: ifeq          99
+      88: aload_1
+      89: aload_2
+      90: invokeinterface #218,  2          // InterfaceMethod java/util/Collection.add:(Ljava/lang/Object;)Z
+      95: pop
+      96: goto          196
+      99: aload_2
+     100: invokestatic  #222                // Method com/android/io/CancellableFileIo.list:(Ljava/nio/file/Path;)Ljava/util/stream/Stream;
+     103: astore        5
+     105: aload         5
+     107: invokedynamic #226,  0            // InvokeDynamic #2:test:()Ljava/util/function/Predicate;
+     112: invokeinterface #230,  2          // InterfaceMethod java/util/stream/Stream.filter:(Ljava/util/function/Predicate;)Ljava/util/stream/Stream;
+     117: aload_0
+     118: invokevirtual #234                // Method resourceCachePaths:()Lcom/google/common/collect/ImmutableSet;
+     121: invokestatic  #238                // Method com/google/common/base/Predicates.in:(Ljava/util/Collection;)Lcom/google/common/base/Predicate;
+     124: invokeinterface #244,  1          // InterfaceMethod com/google/common/base/Predicate.negate:()Ljava/util/function/Predicate;
+     129: invokeinterface #230,  2          // InterfaceMethod java/util/stream/Stream.filter:(Ljava/util/function/Predicate;)Ljava/util/stream/Stream;
+     134: aload_0
+     135: aload_1
+     136: iload_3
+     137: invokedynamic #249,  0            // InvokeDynamic #3:accept:(Lcom/android/repository/impl/manager/LocalRepoLoaderImpl;Ljava/util/Collection;I)Ljava/util/function/Consumer;
+     142: invokeinterface #253,  2          // InterfaceMethod java/util/stream/Stream.forEach:(Ljava/util/function/Consumer;)V
+     147: aload         5
+     149: ifnull        191
+     152: aload         5
+     154: invokeinterface #257,  1          // InterfaceMethod java/util/stream/Stream.close:()V
+     159: goto          191
+     162: astore        6
+     164: aload         5
+     166: ifnull        188
+     169: aload         5
+     171: invokeinterface #257,  1          // InterfaceMethod java/util/stream/Stream.close:()V
+     176: goto          188
+     179: astore        7
+     181: aload         6
+     183: aload         7
+     185: invokevirtual #262                // Method java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+     188: aload         6
+     190: athrow
+     191: goto          196
+     194: astore        5
+     196: return
+    Exception table:
+       from    to  target type
+         105   147   162   Class java/lang/Throwable
+         169   176   179   Class java/lang/Throwable
+          99   191   194   Class java/io/IOException
+
+  private void addPackage(com.android.repository.api.LocalPackage, java.util.Map<java.lang.String, com.android.repository.api.LocalPackage>, com.android.repository.api.ProgressIndicator);
+    Code:
+       0: aload_1
+       1: invokeinterface #267,  1          // InterfaceMethod com/android/repository/api/LocalPackage.getPath:()Ljava/lang/String;
+       6: bipush        59
+       8: getstatic     #272                // Field java/io/File.separatorChar:C
+      11: invokevirtual #278                // Method java/lang/String.replace:(CC)Ljava/lang/String;
+      14: astore        4
+      16: aload_0
+      17: getfield      #7                  // Field mRoot:Ljava/nio/file/Path;
+      20: aload         4
+      22: invokeinterface #130,  2          // InterfaceMethod java/nio/file/Path.resolve:(Ljava/lang/String;)Ljava/nio/file/Path;
+      27: astore        5
+      29: aload_1
+      30: invokeinterface #282,  1          // InterfaceMethod com/android/repository/api/LocalPackage.getLocation:()Ljava/nio/file/Path;
+      35: astore        6
+      37: aload         5
+      39: aload         6
+      41: invokeinterface #285,  2          // InterfaceMethod java/nio/file/Path.equals:(Ljava/lang/Object;)Z
+      46: ifne          147
+      49: aload_3
+      50: ldc_w         #288                // String Observed package id \'%1$s\' in inconsistent location \'%2$s\' (Expected \'%3$s\')
+      53: iconst_3
+      54: anewarray     #2                  // class java/lang/Object
+      57: dup
+      58: iconst_0
+      59: aload_1
+      60: invokeinterface #267,  1          // InterfaceMethod com/android/repository/api/LocalPackage.getPath:()Ljava/lang/String;
+      65: aastore
+      66: dup
+      67: iconst_1
+      68: aload         6
+      70: aastore
+      71: dup
+      72: iconst_2
+      73: aload         5
+      75: aastore
+      76: invokestatic  #183                // Method java/lang/String.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+      79: invokeinterface #159,  2          // InterfaceMethod com/android/repository/api/ProgressIndicator.logWarning:(Ljava/lang/String;)V
+      84: aload_2
+      85: aload_1
+      86: invokeinterface #267,  1          // InterfaceMethod com/android/repository/api/LocalPackage.getPath:()Ljava/lang/String;
+      91: invokeinterface #290,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+      96: checkcast     #163                // class com/android/repository/api/LocalPackage
+      99: astore        7
+     101: aload         7
+     103: ifnull        147
+     106: aload_3
+     107: ldc_w         #294                // String Already observed package id \'%1$s\' in \'%2$s\'. Skipping duplicate at \'%3$s\'
+     110: iconst_3
+     111: anewarray     #2                  // class java/lang/Object
+     114: dup
+     115: iconst_0
+     116: aload_1
+     117: invokeinterface #267,  1          // InterfaceMethod com/android/repository/api/LocalPackage.getPath:()Ljava/lang/String;
+     122: aastore
+     123: dup
+     124: iconst_1
+     125: aload         7
+     127: invokeinterface #282,  1          // InterfaceMethod com/android/repository/api/LocalPackage.getLocation:()Ljava/nio/file/Path;
+     132: aastore
+     133: dup
+     134: iconst_2
+     135: aload         6
+     137: aastore
+     138: invokestatic  #183                // Method java/lang/String.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+     141: invokeinterface #159,  2          // InterfaceMethod com/android/repository/api/ProgressIndicator.logWarning:(Ljava/lang/String;)V
+     146: return
+     147: aload_2
+     148: aload_1
+     149: invokeinterface #267,  1          // InterfaceMethod com/android/repository/api/LocalPackage.getPath:()Ljava/lang/String;
+     154: aload_1
+     155: invokeinterface #296,  3          // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     160: pop
+     161: return
+
+  private void writePackage(com.android.repository.api.LocalPackage, java.nio.file.Path, com.android.repository.api.ProgressIndicator);
+    Code:
+       0: aload_1
+       1: invokestatic  #300                // Method com/android/repository/impl/meta/LocalPackageImpl.create:(Lcom/android/repository/api/RepoPackage;)Lcom/android/repository/impl/meta/LocalPackageImpl;
+       4: astore        4
+       6: aload_2
+       7: iconst_3
+       8: anewarray     #306                // class java/nio/file/OpenOption
+      11: dup
+      12: iconst_0
+      13: getstatic     #308                // Field java/nio/file/StandardOpenOption.CREATE:Ljava/nio/file/StandardOpenOption;
+      16: aastore
+      17: dup
+      18: iconst_1
+      19: getstatic     #314                // Field java/nio/file/StandardOpenOption.WRITE:Ljava/nio/file/StandardOpenOption;
+      22: aastore
+      23: dup
+      24: iconst_2
+      25: getstatic     #317                // Field java/nio/file/StandardOpenOption.TRUNCATE_EXISTING:Ljava/nio/file/StandardOpenOption;
+      28: aastore
+      29: invokestatic  #320                // Method java/nio/file/Files.newOutputStream:(Ljava/nio/file/Path;[Ljava/nio/file/OpenOption;)Ljava/io/OutputStream;
+      32: astore        5
+      34: aload         4
+      36: invokevirtual #326                // Method com/android/repository/impl/meta/LocalPackageImpl.createFactory:()Lcom/android/repository/impl/meta/CommonFactory;
+      39: invokevirtual #330                // Method com/android/repository/impl/meta/CommonFactory.createRepositoryType:()Lcom/android/repository/api/Repository;
+      42: astore        6
+      44: aload         6
+      46: aload         4
+      48: invokevirtual #336                // Method com/android/repository/api/Repository.setLocalPackage:(Lcom/android/repository/impl/meta/LocalPackageImpl;)V
+      51: aload         4
+      53: invokevirtual #342                // Method com/android/repository/impl/meta/LocalPackageImpl.getLicense:()Lcom/android/repository/api/License;
+      56: astore        7
+      58: aload         7
+      60: ifnull        70
+      63: aload         6
+      65: aload         7
+      67: invokevirtual #346                // Method com/android/repository/api/Repository.addLicense:(Lcom/android/repository/api/License;)V
+      70: aload_1
+      71: invokeinterface #350,  1          // InterfaceMethod com/android/repository/api/LocalPackage.createFactory:()Lcom/android/repository/impl/meta/CommonFactory;
+      76: astore        8
+      78: aload         8
+      80: aload         6
+      82: invokevirtual #351                // Method com/android/repository/impl/meta/CommonFactory.generateRepository:(Lcom/android/repository/api/Repository;)Ljavax/xml/bind/JAXBElement;
+      85: aload_0
+      86: getfield      #19                 // Field mSchemaModules:Lcom/google/common/collect/ImmutableSet;
+      89: aload         5
+      91: aload_0
+      92: getfield      #19                 // Field mSchemaModules:Lcom/google/common/collect/ImmutableSet;
+      95: aload_3
+      96: invokestatic  #355                // Method com/android/repository/impl/meta/SchemaModuleUtil.createResourceResolver:(Ljava/util/Set;Lcom/android/repository/api/ProgressIndicator;)Lorg/w3c/dom/ls/LSResourceResolver;
+      99: aload_3
+     100: iconst_0
+     101: invokestatic  #361                // Method com/android/repository/impl/meta/SchemaModuleUtil.marshal:(Ljavax/xml/bind/JAXBElement;Ljava/util/Collection;Ljava/io/OutputStream;Lorg/w3c/dom/ls/LSResourceResolver;Lcom/android/repository/api/ProgressIndicator;Z)V
+     104: aload         5
+     106: ifnull        144
+     109: aload         5
+     111: invokevirtual #365                // Method java/io/OutputStream.close:()V
+     114: goto          144
+     117: astore        6
+     119: aload         5
+     121: ifnull        141
+     124: aload         5
+     126: invokevirtual #365                // Method java/io/OutputStream.close:()V
+     129: goto          141
+     132: astore        7
+     134: aload         6
+     136: aload         7
+     138: invokevirtual #262                // Method java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+     141: aload         6
+     143: athrow
+     144: goto          164
+     147: astore        5
+     149: aload_3
+     150: aload_2
+     151: invokestatic  #154                // Method java/lang/String.valueOf:(Ljava/lang/Object;)Ljava/lang/String;
+     154: invokedynamic #368,  0            // InvokeDynamic #4:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+     159: invokeinterface #369,  2          // InterfaceMethod com/android/repository/api/ProgressIndicator.logInfo:(Ljava/lang/String;)V
+     164: return
+    Exception table:
+       from    to  target type
+          34   104   117   Class java/lang/Throwable
+         124   129   132   Class java/lang/Throwable
+           6   144   147   Class java/io/IOException
+
+  private com.android.repository.api.LocalPackage parsePackage(java.nio.file.Path, com.android.repository.api.ProgressIndicator) throws javax.xml.bind.JAXBException;
+    Code:
+       0: aload_1
+       1: iconst_0
+       2: anewarray     #306                // class java/nio/file/OpenOption
+       5: invokestatic  #372                // Method com/android/io/CancellableFileIo.newInputStream:(Ljava/nio/file/Path;[Ljava/nio/file/OpenOption;)Ljava/io/InputStream;
+       8: astore        4
+      10: aload         4
+      12: aload_0
+      13: getfield      #19                 // Field mSchemaModules:Lcom/google/common/collect/ImmutableSet;
+      16: iconst_0
+      17: aload_2
+      18: aload_1
+      19: invokeinterface #203,  1          // InterfaceMethod java/nio/file/Path.getFileName:()Ljava/nio/file/Path;
+      24: invokeinterface #207,  1          // InterfaceMethod java/nio/file/Path.toString:()Ljava/lang/String;
+      29: invokestatic  #376                // Method com/android/repository/impl/meta/SchemaModuleUtil.unmarshal:(Ljava/io/InputStream;Ljava/util/Collection;ZLcom/android/repository/api/ProgressIndicator;Ljava/lang/String;)Ljava/lang/Object;
+      32: checkcast     #337                // class com/android/repository/api/Repository
+      35: astore_3
+      36: aload         4
+      38: ifnull        76
+      41: aload         4
+      43: invokevirtual #380                // Method java/io/InputStream.close:()V
+      46: goto          76
+      49: astore        5
+      51: aload         4
+      53: ifnull        73
+      56: aload         4
+      58: invokevirtual #380                // Method java/io/InputStream.close:()V
+      61: goto          73
+      64: astore        6
+      66: aload         5
+      68: aload         6
+      70: invokevirtual #262                // Method java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+      73: aload         5
+      75: athrow
+      76: goto          105
+      79: astore        4
+      81: aload_2
+      82: ldc_w         #383                // String XML file %s doesn\'t exist
+      85: iconst_1
+      86: anewarray     #2                  // class java/lang/Object
+      89: dup
+      90: iconst_0
+      91: aload_1
+      92: aastore
+      93: invokestatic  #183                // Method java/lang/String.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+      96: aload         4
+      98: invokeinterface #385,  3          // InterfaceMethod com/android/repository/api/ProgressIndicator.logError:(Ljava/lang/String;Ljava/lang/Throwable;)V
+     103: aconst_null
+     104: areturn
+     105: aload_3
+     106: ifnonnull     131
+     109: aload_2
+     110: ldc_w         #389                // String Failed to parse %s
+     113: iconst_1
+     114: anewarray     #2                  // class java/lang/Object
+     117: dup
+     118: iconst_0
+     119: aload_1
+     120: aastore
+     121: invokestatic  #183                // Method java/lang/String.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+     124: invokeinterface #159,  2          // InterfaceMethod com/android/repository/api/ProgressIndicator.logWarning:(Ljava/lang/String;)V
+     129: aconst_null
+     130: areturn
+     131: aload_3
+     132: invokevirtual #391                // Method com/android/repository/api/Repository.getLocalPackage:()Lcom/android/repository/api/LocalPackage;
+     135: astore        4
+     137: aload         4
+     139: ifnonnull     153
+     142: aload_2
+     143: ldc_w         #395                // String Didn\'t find any local package in repository
+     146: invokeinterface #159,  2          // InterfaceMethod com/android/repository/api/ProgressIndicator.logWarning:(Ljava/lang/String;)V
+     151: aconst_null
+     152: areturn
+     153: aload         4
+     155: aload_1
+     156: invokeinterface #397,  1          // InterfaceMethod java/nio/file/Path.getParent:()Ljava/nio/file/Path;
+     161: invokeinterface #400,  2          // InterfaceMethod com/android/repository/api/LocalPackage.setInstalledPath:(Ljava/nio/file/Path;)V
+     166: aload         4
+     168: areturn
+    Exception table:
+       from    to  target type
+          10    36    49   Class java/lang/Throwable
+          56    61    64   Class java/lang/Throwable
+           0    76    79   Class java/io/IOException
+
+  private java.nio.file.Path getKnownPackagesHashFile(boolean);
+    Code:
+       0: aload_0
+       1: getfield      #7                  // Field mRoot:Ljava/nio/file/Path;
+       4: ldc_w         #404                // String .knownPackages
+       7: invokeinterface #130,  2          // InterfaceMethod java/nio/file/Path.resolve:(Ljava/lang/String;)Ljava/nio/file/Path;
+      12: astore_2
+      13: aload_2
+      14: iconst_0
+      15: anewarray     #134                // class java/nio/file/LinkOption
+      18: invokestatic  #406                // Method com/android/io/CancellableFileIo.notExists:(Ljava/nio/file/Path;[Ljava/nio/file/LinkOption;)Z
+      21: ifeq          59
+      24: iload_1
+      25: ifeq          57
+      28: aload_2
+      29: invokeinterface #397,  1          // InterfaceMethod java/nio/file/Path.getParent:()Ljava/nio/file/Path;
+      34: iconst_0
+      35: anewarray     #409                // class java/nio/file/attribute/FileAttribute
+      38: invokestatic  #411                // Method java/nio/file/Files.createDirectories:(Ljava/nio/file/Path;[Ljava/nio/file/attribute/FileAttribute;)Ljava/nio/file/Path;
+      41: pop
+      42: aload_2
+      43: iconst_0
+      44: anewarray     #409                // class java/nio/file/attribute/FileAttribute
+      47: invokestatic  #415                // Method java/nio/file/Files.createFile:(Ljava/nio/file/Path;[Ljava/nio/file/attribute/FileAttribute;)Ljava/nio/file/Path;
+      50: pop
+      51: goto          59
+      54: astore_3
+      55: aconst_null
+      56: areturn
+      57: aconst_null
+      58: areturn
+      59: aload_2
+      60: areturn
+    Exception table:
+       from    to  target type
+          28    51    54   Class java/io/IOException
+
+  private boolean updateKnownPackageHashFileIfNecessary();
+    Code:
+       0: aload_0
+       1: invokevirtual #32                 // Method collectPackages:()Ljava/util/Set;
+       4: astore_1
+       5: aload_0
+       6: iconst_0
+       7: invokevirtual #418                // Method getKnownPackagesHashFile:(Z)Ljava/nio/file/Path;
+      10: astore_2
+      11: aload_2
+      12: ifnull        68
+      15: aconst_null
+      16: astore_3
+      17: aload_0
+      18: aload_1
+      19: invokevirtual #422                // Method getLatestPackageUpdateTime:(Ljava/util/Set;)J
+      22: aload_0
+      23: aload_2
+      24: invokevirtual #426                // Method getLastModifiedTime:(Ljava/nio/file/Path;)J
+      27: lcmp
+      28: ifgt          41
+      31: aload_2
+      32: invokestatic  #430                // Method com/android/io/CancellableFileIo.readAllBytes:(Ljava/nio/file/Path;)[B
+      35: astore_3
+      36: goto          41
+      39: astore        4
+      41: aload_0
+      42: aload_1
+      43: invokevirtual #46                 // Method getLocalPackagesHash:(Ljava/util/Set;)[B
+      46: astore        4
+      48: aload_3
+      49: aload         4
+      51: invokestatic  #434                // Method java/util/Arrays.equals:([B[B)Z
+      54: ifne          65
+      57: aload_0
+      58: aload         4
+      60: invokevirtual #50                 // Method writeHashFile:([B)V
+      63: iconst_1
+      64: ireturn
+      65: goto          79
+      68: aload_0
+      69: aload_0
+      70: aload_1
+      71: invokevirtual #46                 // Method getLocalPackagesHash:(Ljava/util/Set;)[B
+      74: invokevirtual #50                 // Method writeHashFile:([B)V
+      77: iconst_1
+      78: ireturn
+      79: iconst_0
+      80: ireturn
+    Exception table:
+       from    to  target type
+          31    36    39   Class java/io/IOException
+
+  private long getLastModifiedTime(java.nio.file.Path);
+    Code:
+       0: aload_1
+       1: iconst_0
+       2: anewarray     #134                // class java/nio/file/LinkOption
+       5: invokestatic  #439                // Method com/android/io/CancellableFileIo.getLastModifiedTime:(Ljava/nio/file/Path;[Ljava/nio/file/LinkOption;)Ljava/nio/file/attribute/FileTime;
+       8: invokevirtual #442                // Method java/nio/file/attribute/FileTime.toMillis:()J
+      11: lstore_2
+      12: goto          19
+      15: astore        4
+      17: lconst_0
+      18: lstore_2
+      19: lload_2
+      20: lreturn
+    Exception table:
+       from    to  target type
+           0    12    15   Class java/io/IOException
+
+  private void writeHashFile(byte[]);
+    Code:
+       0: aload_0
+       1: iconst_1
+       2: invokevirtual #418                // Method getKnownPackagesHashFile:(Z)Ljava/nio/file/Path;
+       5: astore_2
+       6: aload_2
+       7: ifnull        24
+      10: aload_2
+      11: aload_1
+      12: iconst_0
+      13: anewarray     #306                // class java/nio/file/OpenOption
+      16: invokestatic  #448                // Method java/nio/file/Files.write:(Ljava/nio/file/Path;[B[Ljava/nio/file/OpenOption;)Ljava/nio/file/Path;
+      19: pop
+      20: goto          24
+      23: astore_3
+      24: return
+    Exception table:
+       from    to  target type
+          10    20    23   Class java/io/IOException
+
+  private boolean checkKnownPackagesUpdateTime(long);
+    Code:
+       0: aload_0
+       1: iconst_0
+       2: invokevirtual #418                // Method getKnownPackagesHashFile:(Z)Ljava/nio/file/Path;
+       5: astore_3
+       6: aload_3
+       7: ifnull        20
+      10: aload_0
+      11: aload_3
+      12: invokevirtual #426                // Method getLastModifiedTime:(Ljava/nio/file/Path;)J
+      15: lload_1
+      16: lcmp
+      17: ifle          24
+      20: iconst_1
+      21: goto          25
+      24: iconst_0
+      25: ireturn
+
+  private byte[] getLocalPackagesHash(java.util.Set<java.nio.file.Path>);
+    Code:
+       0: invokestatic  #452                // Method com/google/common/hash/Hashing.md5:()Lcom/google/common/hash/HashFunction;
+       3: invokeinterface #458,  1          // InterfaceMethod com/google/common/hash/HashFunction.newHasher:()Lcom/google/common/hash/Hasher;
+       8: astore_2
+       9: aload_1
+      10: invokeinterface #464,  1          // InterfaceMethod java/util/Set.iterator:()Ljava/util/Iterator;
+      15: astore_3
+      16: aload_3
+      17: invokeinterface #117,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+      22: ifeq          64
+      25: aload_3
+      26: invokeinterface #122,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      31: checkcast     #126                // class java/nio/file/Path
+      34: astore        4
+      36: aload_2
+      37: aload         4
+      39: invokeinterface #465,  1          // InterfaceMethod java/nio/file/Path.toAbsolutePath:()Ljava/nio/file/Path;
+      44: invokeinterface #207,  1          // InterfaceMethod java/nio/file/Path.toString:()Ljava/lang/String;
+      49: getstatic     #468                // Field java/nio/charset/StandardCharsets.UTF_8:Ljava/nio/charset/Charset;
+      52: invokevirtual #474                // Method java/lang/String.getBytes:(Ljava/nio/charset/Charset;)[B
+      55: invokeinterface #478,  2          // InterfaceMethod com/google/common/hash/Hasher.putBytes:([B)Lcom/google/common/hash/Hasher;
+      60: pop
+      61: goto          16
+      64: aload_2
+      65: invokeinterface #484,  1          // InterfaceMethod com/google/common/hash/Hasher.hash:()Lcom/google/common/hash/HashCode;
+      70: invokevirtual #488                // Method com/google/common/hash/HashCode.asBytes:()[B
+      73: areturn
+
+  private long getLatestPackageUpdateTime(java.util.Set<java.nio.file.Path>);
+    Code:
+       0: lconst_0
+       1: lstore_2
+       2: aload_1
+       3: invokeinterface #464,  1          // InterfaceMethod java/util/Set.iterator:()Ljava/util/Iterator;
+       8: astore        4
+      10: aload         4
+      12: invokeinterface #117,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+      17: ifeq          57
+      20: aload         4
+      22: invokeinterface #122,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      27: checkcast     #126                // class java/nio/file/Path
+      30: astore        5
+      32: aload_0
+      33: aload         5
+      35: ldc           #128                // String package.xml
+      37: invokeinterface #130,  2          // InterfaceMethod java/nio/file/Path.resolve:(Ljava/lang/String;)Ljava/nio/file/Path;
+      42: invokevirtual #426                // Method getLastModifiedTime:(Ljava/nio/file/Path;)J
+      45: lstore        6
+      47: lload         6
+      49: lload_2
+      50: invokestatic  #494                // Method java/lang/Math.max:(JJ)J
+      53: lstore_2
+      54: goto          10
+      57: lload_2
+      58: lreturn
+
+  private com.google.common.collect.ImmutableSet<java.nio.file.Path> resourceCachePaths();
+    Code:
+       0: getstatic     #500                // Field RESOURCE_CACHE_DIRS:Lcom/google/common/collect/ImmutableSet;
+       3: invokevirtual #503                // Method com/google/common/collect/ImmutableSet.stream:()Ljava/util/stream/Stream;
+       6: aload_0
+       7: getfield      #7                  // Field mRoot:Ljava/nio/file/Path;
+      10: dup
+      11: invokestatic  #504                // Method java/util/Objects.requireNonNull:(Ljava/lang/Object;)Ljava/lang/Object;
+      14: pop
+      15: invokedynamic #509,  0            // InvokeDynamic #5:apply:(Ljava/nio/file/Path;)Ljava/util/function/Function;
+      20: invokeinterface #513,  2          // InterfaceMethod java/util/stream/Stream.map:(Ljava/util/function/Function;)Ljava/util/stream/Stream;
+      25: invokestatic  #517                // Method com/google/common/collect/ImmutableSet.toImmutableSet:()Ljava/util/stream/Collector;
+      28: invokeinterface #76,  2           // InterfaceMethod java/util/stream/Stream.collect:(Ljava/util/stream/Collector;)Ljava/lang/Object;
+      33: checkcast     #14                 // class com/google/common/collect/ImmutableSet
+      36: areturn
+
+  private void lambda$collectPackages$1(java.util.Collection, int, java.nio.file.Path);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: aload_3
+       3: iload_2
+       4: iconst_1
+       5: iadd
+       6: invokevirtual #197                // Method collectPackages:(Ljava/util/Collection;Ljava/nio/file/Path;I)V
+       9: return
+
+  private static boolean lambda$collectPackages$0(java.nio.file.Path);
+    Code:
+       0: aload_0
+       1: iconst_0
+       2: anewarray     #134                // class java/nio/file/LinkOption
+       5: invokestatic  #200                // Method com/android/io/CancellableFileIo.isDirectory:(Ljava/nio/file/Path;[Ljava/nio/file/LinkOption;)Z
+       8: ireturn
+
+  static {};
+    Code:
+       0: ldc_w         #521                // String fonts
+       3: ldc_w         #523                // String icons
+       6: ldc_w         #525                // String skins
+       9: invokestatic  #527                // Method com/google/common/collect/ImmutableSet.of:(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Lcom/google/common/collect/ImmutableSet;
+      12: putstatic     #500                // Field RESOURCE_CACHE_DIRS:Lcom/google/common/collect/ImmutableSet;
+      15: return
+}

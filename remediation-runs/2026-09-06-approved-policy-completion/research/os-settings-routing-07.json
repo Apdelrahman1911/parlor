@@ -1,0 +1,58 @@
+{
+  "reviewer": "/root",
+  "purpose": "Clarify supported Settings URL completion versus verified UI destination, and XCTest hit eligibility after apphost07. No source/private data sent. Does not establish runtime destination or OS cause.",
+  "records": [
+    {
+      "url": "https://developer.apple.com/tutorials/data/documentation/uikit/uiapplication/opensettingsurlstring.json",
+      "accessed_at": "2026-09-06T20:59:34.973625+00:00",
+      "http_status": 200,
+      "title": "openSettingsURLString",
+      "public_payload_sha256": "ab4dcfd71f9e6f7232a2b70f4ba428b9ca736407d54a5e15fec1202e067d2e77",
+      "abstract": [
+        "The URL string you use to deep link to your app’s custom settings in the Settings app."
+      ],
+      "primary_content": [
+        "Create a URL from this value and pass it to the ",
+        " method to launch the Settings app and display your app’s custom settings, if it has any.",
+        "For design guidance, see ",
+        "."
+      ]
+    },
+    {
+      "url": "https://developer.apple.com/tutorials/data/documentation/uikit/uiapplication/open(_:options:completionhandler:).json",
+      "accessed_at": "2026-09-06T20:59:37.987144+00:00",
+      "http_status": 200,
+      "title": "open(_:options:completionHandler:)",
+      "public_payload_sha256": "ed39f8f58d91c36c583e54f723d27320ffd01d05c151ee323019c5952c9c3d30",
+      "abstract": [
+        "Attempts to asynchronously open the resource at the specified URL."
+      ],
+      "primary_content": [
+        "A URL (Universal Resource Locator). The resource identified by this URL may be local to the current app or it may be one that must be provided by a different app. UIKit supports many common schemes, including the ",
+        ", ",
+        ", ",
+        ", ",
+        ", and ",
+        " schemes. You can also employ custom URL schemes associated with apps installed on the device.",
+        "A dictionary of options to use when opening the URL. For a list of possible keys to include in this dictionary, see ",
+        ".",
+        "The block to execute with the results. Provide a value for this parameter if you want to be informed of the success or failure of opening the URL. This block is executed asynchronously on your app’s main thread. The block has no return value and takes the following parameter:",
+        "A Boolean value that indicates whether the URL was opened successfully.",
+        "success",
+        "Use this method to open the specified resource. If the specified URL scheme is handled by another app, iOS launches that app and passes the URL to it. (Launching the app brings the other app to the foreground.)  If no app is capable of handling the specified scheme, the completion handler is called with the ",
+        "success",
+        " parameter set to ",
+        ".",
+        "To determine whether an app is installed that is capable of handling the URL, call the ",
+        " method before calling this one. Be sure to read the description of that method for an important note about registering the schemes you want to employ."
+      ]
+    },
+    {
+      "url": "https://developer.apple.com/tutorials/data/documentation/xctest/xcuielement/ishittable.json",
+      "accessed_at": "2026-09-06T20:59:40.514360+00:00",
+      "status": "RESEARCH_UNRESOLVED",
+      "error": "HTTPError: HTTP Error 404: Not Found"
+    }
+  ],
+  "process_hygiene": "Synchronous urllib fetches only; no daemon/build/task process or temporary artifacts created. This compact research record is a required deliverable."
+}

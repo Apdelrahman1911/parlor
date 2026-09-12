@@ -1,0 +1,178 @@
+package com.parlor.designsystem.auditcopy
+
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.SideEffect
+import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.unit.LayoutDirection
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
+
+/**
+ * Evidence-only: added exclusively to a manifest-owned temporary source copy.
+ * No app reducer, navigation, lifecycle, store, or session is replaced here.
+ * All calls originate on UIKit/Compose main. Private values remain in memory;
+ * only equality booleans, bounded counters, and allowlisted public phases leave.
+ */
+object DSC01CopyOnlyObservation {
+    private data class Binding(
+        val surface: String,
+        val controller: Any,
+        val canonical: StateFlow<Any>,
+        val publicPhase: () -> String,
+    )
+    private data class Checkpoint(
+        val binding: Binding,
+        val canonicalValue: Any,
+        val phase: String,
+        val disposals: Int,
+        val background: Int,
+        val foreground: Int,
+    )
+    private var binding: Binding? = null
+    private var checkpoint: Checkpoint? = null
+    private var settingsMounted = false
+    private var settingsDirection = "absent"
+    private var gameDirection = "absent"
+    private var disposals = 0
+    private var background = 0
+    private var foreground = 0
+    private var inactive = 0
+    private var commandOrdinal = 0
+    private var commandLanguage = "none"
+    private var commandStatus = "none"
+    private var completed = false
+
+    fun settingsMounted(direction: LayoutDirection) {
+        if (completed) return
+        settingsMounted = true
+        settingsDirection = direction.tag()
+    }
+
+    fun settingsDisposed() {
+        settingsMounted = false
+        settingsDirection = "absent"
+    }
+
+    fun attach(surface: String, controller: Any, canonical: StateFlow<Any>, phase: () -> String) {
+        check(!completed && surface in setOf("whodunit-local", "mafia-local"))
+        check(binding == null) { "Two actual local sessions attached to the synthetic observer" }
+        binding = Binding(surface, controller, canonical, phase)
+    }
+
+    fun direction(controller: Any, direction: LayoutDirection) {
+        if (completed) return
+        check(binding?.controller === controller)
+        gameDirection = direction.tag()
+    }
+
+    fun detach(controller: Any) {
+        if (binding?.controller === controller) {
+            binding = null
+            gameDirection = "absent"
+            disposals = increment(disposals)
+        }
+        // Deliberately retain the one checkpoint until explicit completion.
+        // Replacement/remount must fail comparison, never silently rebase it.
+    }
+
+    fun capture() {
+        check(!completed && checkpoint == null) { "Checkpoint must be captured exactly once" }
+        val current = checkNotNull(binding)
+        val expected = if (current.surface == "whodunit-local") "public-intro" else "role-assignment"
+        val phase = current.publicPhase()
+        check(phase == expected) { "Capture requires the actual stable, non-timed public phase" }
+        checkpoint = Checkpoint(current, current.canonical.value, phase, disposals, background, foreground)
+    }
+
+    fun lifecycle(event: String) {
+        when (event) {
+            "background" -> background = increment(background)
+            "foreground" -> foreground = increment(foreground)
+            "inactive" -> inactive = increment(inactive)
+            else -> error("Unsupported synthetic lifecycle observation")
+        }
+    }
+
+    fun beginCommand(language: String): Int {
+        check(!completed && commandStatus != "pending" && commandOrdinal < 24)
+        check(language in setOf("en", "ar", "system"))
+        commandOrdinal += 1
+        commandLanguage = language
+        commandStatus = "pending"
+        return commandOrdinal
+    }
+
+    fun endCommand(ordinal: Int, status: String) {
+        check(ordinal == commandOrdinal && commandStatus == "pending")
+        check(status in setOf("applied", "cancelled", "failed"))
+        commandStatus = status
+    }
+
+    fun release() {
+        check(commandStatus != "pending")
+        completed = true
+        checkpoint = null
+        binding = null
+        gameDirection = "absent"
+    }
+
+    fun snapshot(): String {
+        val actual = binding
+        val saved = checkpoint
+        val phase = actual?.publicPhase()?.takeIf {
+            it in setOf("setup", "public-intro", "role-assignment")
+        } ?: if (actual == null) "none" else "other"
+        // Exactly one immutable canonical value is captured in process memory.
+        // Do not add IDs, hashes, seeds, state.toString(), or serialized state.
+        val value = actual?.canonical?.value
+        return buildJsonObject {
+            put("settingsMounted", settingsMounted)
+            put("settingsDirection", settingsDirection)
+            put("surface", actual?.surface ?: "none")
+            put("gameDirection", gameDirection)
+            put("publicPhase", phase)
+            put("checkpointCaptured", saved != null)
+            put("sameController", saved != null && actual?.controller === saved.binding.controller)
+            put("sameCanonicalFlow", saved != null && actual?.canonical === saved.binding.canonical)
+            put("sameCanonicalReference", saved != null && value === saved.canonicalValue)
+            put("sameCanonicalValue", saved != null && value == saved.canonicalValue)
+            put("samePublicPhase", saved != null && phase == saved.phase)
+            put("disposalsSinceCapture", if (saved == null) 0 else disposals - saved.disposals)
+            put("backgroundSinceCapture", if (saved == null) 0 else background - saved.background)
+            put("foregroundSinceCapture", if (saved == null) 0 else foreground - saved.foreground)
+            put("backgroundCallbacks", background)
+            put("foregroundCallbacks", foreground)
+            put("inactiveCallbacks", inactive)
+            put("commandOrdinal", commandOrdinal)
+            put("commandLanguage", commandLanguage)
+            put("commandStatus", commandStatus)
+        }.toString()
+    }
+
+    private fun LayoutDirection.tag() = if (this == LayoutDirection.Rtl) "rtl" else "ltr"
+    private fun increment(value: Int): Int = (value + 1).also { check(it <= 512) }
+}
+
+@Composable
+fun DSC01ObserveActualSettingsComposition() {
+    val direction = LocalLayoutDirection.current
+    DisposableEffect(Unit) { onDispose { DSC01CopyOnlyObservation.settingsDisposed() } }
+    SideEffect { DSC01CopyOnlyObservation.settingsMounted(direction) }
+}
+
+@Composable
+fun DSC01ObserveActualLocalSession(
+    surface: String,
+    controller: Any,
+    canonical: StateFlow<Any>,
+    publicPhase: () -> String,
+) {
+    val direction = LocalLayoutDirection.current
+    DisposableEffect(controller, canonical) {
+        DSC01CopyOnlyObservation.attach(surface, controller, canonical, publicPhase)
+        onDispose { DSC01CopyOnlyObservation.detach(controller) }
+    }
+    SideEffect { DSC01CopyOnlyObservation.direction(controller, direction) }
+}

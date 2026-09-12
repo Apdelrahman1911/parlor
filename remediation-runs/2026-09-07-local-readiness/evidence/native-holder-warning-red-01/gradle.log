@@ -1,0 +1,73 @@
+test_acceptance_bounds_are_enforced (test_owned_lane_lsof.NativeHolderQueryTest) ... FAIL
+test_errors_and_malformed_output_fail_closed (test_owned_lane_lsof.NativeHolderQueryTest) ... ok
+test_no_matches_requires_no_successful_selection (test_owned_lane_lsof.NativeHolderQueryTest) ... FAIL
+test_partial_selection_retains_every_reported_holder (test_owned_lane_lsof.NativeHolderQueryTest) ... ok
+test_timeout_is_not_converted_to_an_empty_holder_set (test_owned_lane_lsof.NativeHolderQueryTest) ... ok
+test_warning_enable_follows_terse_option (test_owned_lane_lsof.NativeHolderQueryTest) ... FAIL
+test_warning_never_means_no_holders_and_does_not_expose_raw_paths (test_owned_lane_lsof.NativeHolderQueryTest) ... 
+======================================================================
+FAIL: test_acceptance_bounds_are_enforced (test_owned_lane_lsof.NativeHolderQueryTest)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/test_owned_lane_lsof.py", line 55, in test_acceptance_bounds_are_enforced
+    lsof_pids(['+D', '/synthetic/owned'])
+AssertionError: RuntimeError not raised
+
+======================================================================
+FAIL: test_no_matches_requires_no_successful_selection (test_owned_lane_lsof.NativeHolderQueryTest)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/test_owned_lane_lsof.py", line 30, in test_no_matches_requires_no_successful_selection
+    lsof_pids(['/synthetic/owned/fifo'])
+AssertionError: RuntimeError not raised
+
+======================================================================
+FAIL: test_warning_enable_follows_terse_option (test_owned_lane_lsof.NativeHolderQueryTest)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/test_owned_lane_lsof.py", line 14, in test_warning_enable_follows_terse_option
+    run.assert_called_once_with(
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/mock.py", line 919, in assert_called_once_with
+    return self.assert_called_with(*args, **kwargs)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/mock.py", line 907, in assert_called_with
+    raise AssertionError(_error_message()) from cause
+AssertionError: expected call not found.
+Expected: run(['/usr/sbin/lsof', '-nP', '-t', '+w', '+D', '/synthetic/owned'], text=True, capture_output=True, timeout=30)
+Actual: run(['/usr/sbin/lsof', '-nP', '-w', '-t', '+D', '/synthetic/owned'], text=True, capture_output=True, timeout=30)
+
+======================================================================
+FAIL: test_warning_never_means_no_holders_and_does_not_expose_raw_paths (test_owned_lane_lsof.NativeHolderQueryTest) (code=0, output='')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/test_owned_lane_lsof.py", line 40, in test_warning_never_means_no_holders_and_does_not_expose_raw_paths
+    self.assertNotIn('/synthetic/unrelated', str(raised.exception))
+AssertionError: '/synthetic/unrelated' unexpectedly found in 'Ownership lsof failed: lsof: WARNING: cannot stat /synthetic/unrelated/private-name\n'
+
+======================================================================
+FAIL: test_warning_never_means_no_holders_and_does_not_expose_raw_paths (test_owned_lane_lsof.NativeHolderQueryTest) (code=0, output='123\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/test_owned_lane_lsof.py", line 40, in test_warning_never_means_no_holders_and_does_not_expose_raw_paths
+    self.assertNotIn('/synthetic/unrelated', str(raised.exception))
+AssertionError: '/synthetic/unrelated' unexpectedly found in 'Ownership lsof failed: lsof: WARNING: cannot stat /synthetic/unrelated/private-name\n'
+
+======================================================================
+FAIL: test_warning_never_means_no_holders_and_does_not_expose_raw_paths (test_owned_lane_lsof.NativeHolderQueryTest) (code=1, output='')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/test_owned_lane_lsof.py", line 40, in test_warning_never_means_no_holders_and_does_not_expose_raw_paths
+    self.assertNotIn('/synthetic/unrelated', str(raised.exception))
+AssertionError: '/synthetic/unrelated' unexpectedly found in 'Ownership lsof failed: lsof: WARNING: cannot stat /synthetic/unrelated/private-name\n'
+
+======================================================================
+FAIL: test_warning_never_means_no_holders_and_does_not_expose_raw_paths (test_owned_lane_lsof.NativeHolderQueryTest) (code=1, output='123\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/test_owned_lane_lsof.py", line 40, in test_warning_never_means_no_holders_and_does_not_expose_raw_paths
+    self.assertNotIn('/synthetic/unrelated', str(raised.exception))
+AssertionError: '/synthetic/unrelated' unexpectedly found in 'Ownership lsof failed: lsof: WARNING: cannot stat /synthetic/unrelated/private-name\n'
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.006s
+
+FAILED (failures=7)

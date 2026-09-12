@@ -1,0 +1,400 @@
+{
+  "schema_version": 1,
+  "review_id": "native-ci-drafts-independent-source-review-01",
+  "reviewer": "/root/native_fix_review",
+  "original_author": "/root/release_fix_review",
+  "applied_by": "/root (during independent read-only review)",
+  "reviewed_at": "2026-09-07T11:49:06.994735+00:00",
+  "disposition": "SOURCE REVIEW PASS FOR CURRENT EXACT FIVE-FILE DIFF; FOCUSED TEST/DISCOVERY/LINT AND WINDOWS EXECUTION STILL REQUIRE RECEIPTS; NOT A RUNTIME OR INTEGRATION PASS",
+  "source": {
+    "repository": "/Users/abdelrahman/Projects/parlor",
+    "head": "f5ea8045bd903c255041b198f54aca67e893612f",
+    "tree": "b109c8ec6ec579b9197f449b36bda2c39105a652",
+    "branch": "fix/local-readiness-2026-09-07",
+    "tracked_status": " M composeApp/src/desktopTest/kotlin/com/parlor/app/ProductionUiAccessibilityContractTest.kt\n M config/android-lint-accepted-warnings.txt\n M docs/ANDROID_LINT_TRIAGE.md\n M shared/transport-p2p/build.gradle.kts\n M shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/AndroidReleaseLintContractTest.kt\n",
+    "diff_sha256": "b559c093872bbe766f699c65c5c21f3eaf0ba29ac2a41ed41f2f47a9c12f3f14",
+    "changed_files": [
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/desktopTest/kotlin/com/parlor/app/ProductionUiAccessibilityContractTest.kt",
+        "sha256": "830f077ec2f61747339310051f609d4f95fa79979a5da543620358b72742db31",
+        "lines": 394,
+        "review_scope": "complete baseline file plus all current diff hunks"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/config/android-lint-accepted-warnings.txt",
+        "sha256": "4fe091a88dc1cec1849c0076790fa5db25608cf16ff094a30441ac99a84277d7",
+        "lines": 42,
+        "review_scope": "complete baseline file plus all current diff hunks"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/docs/ANDROID_LINT_TRIAGE.md",
+        "sha256": "cc5ccc1396aa806f2b2f21dfd71095e82a847c352f02170daec9ae0b65fd1ac8",
+        "lines": 113,
+        "review_scope": "complete baseline file plus all current diff hunks"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/build.gradle.kts",
+        "sha256": "ff98166cb38c9f6d36cf69aa2246e54014d0a38bbcb833b80692f2d2358762b5",
+        "lines": 99,
+        "review_scope": "complete baseline file plus all current diff hunks"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/AndroidReleaseLintContractTest.kt",
+        "sha256": "65de8f54c89ff24fb21e563c216c94408d53fbd036892ff7e090ce1dcbe50fc1",
+        "lines": 334,
+        "review_scope": "complete baseline file plus all current diff hunks"
+      }
+    ],
+    "all_applied_hashes_match_reviewed_drafts": true
+  },
+  "patches": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34112913001-evidence/drafts/windows-source-crlf-draft.patch",
+      "sha256": "d84c28ffa3e934d3dce87ecb9f048ef73b88e7899b5cde5f363faa87d83e95ec",
+      "reviewed": "all hunks",
+      "author": "/root/release_fix_review"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34112913001-evidence/drafts/linux-exact-kotlin-advisory-triage-draft.patch",
+      "sha256": "1047dfc96c89305dc0af2ca1a2cc94b1d084a3a27ae5d7cb8572e60227058ebb",
+      "reviewed": "all hunks",
+      "author": "/root/release_fix_review"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34112913001-evidence/drafts/linux-no-kapt-applicability-guard-v2-draft.patch",
+      "sha256": "089fa6e65b7b37974dfc3a600df0c76e678e91ec385ce9a3a9166e2610f15a19",
+      "reviewed": "all hunks",
+      "author": "/root/release_fix_review"
+    }
+  ],
+  "checks": [
+    {
+      "id": "WINDOWS-SOURCE-CRLF",
+      "classification": "CONFIRMED TEST PORTABILITY DEFECT; SOURCE FIX COMPLETE, EXECUTION PENDING",
+      "original_locations": [
+        "ProductionUiAccessibilityContractTest.kt baseline221-222 and356",
+        "LocalAppLocale.ios.kt40-49"
+      ],
+      "current_locations": [
+        "ProductionUiAccessibilityContractTest.kt222-223 and356-369"
+      ],
+      "reachable_proof": "Jupiter-enabled composeApp desktopTest runs the platform-locale source contract; readText preserves CRLF, whereas two unchanged assertion literals require an LF immediately after an opening brace. A CRLF checkout of the same valid iOS effect therefore deterministically fails before any app is executed. Current read() passes through a CRLF-only normalizer, producing the exact LF substring without deleting whitespace, tokens or assertions.",
+      "original_ci_evidence": {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34112913001-evidence/windows-x64-sanitized.log",
+        "sha256": "aaa57cb71ffdde269d34bd785f38d5e5b56980479620a41cc67cdba7d01015f1",
+        "lines": [
+          689,
+          696
+        ],
+        "observed": "Actual Windows job reported source-contract assertion line221;95 composeApp tests/1failure. Checkout source bytes/core.autocrlf were not retained, so that job is supporting\u2014not direct byte-level\u2014proof of CRLF origin."
+      },
+      "regression_review": "New block-bodied@Test exercises unchanged LF, CRLF->LF and preservation of literal escaped backslash-r/backslash-n, tabs and lone carriage returns. It uses the same normalizer called by the source reader. Existing iOS effect/apply/release/domain ownership assertions remain intact. Other direct readText usages in this class are line-insensitive scans, not the failed multiline assertions.",
+      "counter_evidence": "This is not a production locale/storage/navigation or launch-crash defect. Exact upstream Git Windows defaults support why CRLF is legitimate, not proof of captured checkout bytes.",
+      "verification_required": [
+        "Execute original locale source-contract test and new CRLF fixture with strict desktopTest; inspect actual JUnit descriptors and no skipped methods.",
+        "Actual Windows checkout rerun remains required for Windows host evidence; host-independent normalization fixtures alone are not a Windows job PASS."
+      ]
+    },
+    {
+      "id": "LINUX-EXACT-KOTLIN-ADVISORY-TRIAGE",
+      "classification": "EXPECTED STRICT GATE DETECTED NEW ADVISORIES; EXACT TRIAGE AND DOCUMENTATION CHANGE SOURCE-REVIEWED",
+      "original_locations": [
+        "composeApp/build.gradle.kts349-435",
+        "config/android-lint-accepted-warnings.txt32 accepted rows"
+      ],
+      "current_locations": [
+        "config/android-lint-accepted-warnings.txt37-39 (three new rows)",
+        "AndroidReleaseLintContractTest.kt43-107",
+        "docs/ANDROID_LINT_TRIAGE.md32-86"
+      ],
+      "original_ci_evidence": {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34112913001-evidence/linux-common-desktop-android-sanitized.log",
+        "sha256": "f0d93440d69ad044dc91664d4a12238bfedb28fae62878236bdc67f0161fe043",
+        "lines": [
+          1978,
+          1990
+        ],
+        "observed": "Verifier rejects exactly multiplatform/plugin.compose/plugin.serialization2.4.10 update rows; missing=[]; no other unexpected row in retained failure."
+      },
+      "reachable_proof": "The unchanged verifier parses actual lint XML, strips only latest-version suffixes, canonicalizes the two established update IDs only at the version catalog, and compares sorted exact multisets. The patch adds exactly the three observed coordinate/current-version/path tuples and updates class counts32->35 and DependencyUpdate26->29. It does not change the validator, lint abort behavior, pins, repositories, verification metadata, workflows or publication gates.",
+      "regression_review": "Contract asserts all three full accepted rows, total35 and per-class multiset; substantive existing assertions retained. Documentation removes false permanence/latest claims and exposes the applicable security advisory rather than silently waiving it.",
+      "counter_evidence": "KGP2.4.10 is NOT patched against GHSA-r937-wjx7-w2jp. Exact2.4.20 release and cached metadata evidence corroborate first appearance; a lint PASS would not prove no vulnerabilities.",
+      "verification_required": [
+        "Execute transport-p2p source contract and actual lintRelease+verifyReleaseLintWarnings at strict pins. Preserve XML/command exit; unexecuted or stale cached output is not evidence.",
+        "Repeat Linux source-bound workflow after local source checks; broad CI remains incomplete until actual gate receipts."
+      ]
+    },
+    {
+      "id": "KAPT-APPLICABILITY-V2",
+      "classification": "NARROW SOURCE-BACKED NON-REACHABILITY GUARD; NOT A DEPENDENCY SECURITY REPAIR",
+      "current_locations": [
+        "AndroidReleaseLintContractTest.kt109-177",
+        "shared/transport-p2p/build.gradle.kts47-51"
+      ],
+      "reachable_proof": "All13 declared modules and three convention classes inspected. None applies KAPT/configures its runtime. At exact KGP2.4.10, SubpluginEnvironment selects installed KotlinCompilerPluginSupportPlugin instances (20-42); Kapt3GradleSubplugin apply creates its extension(43-45), applyToCompilation registers KAPT tasks(160-205), and getPluginArtifact chooses kotlin-annotation-processing-gradle(81,378-379). KaptContext58-60 constructs JavaClassCacheManager only with its incremental-cache option; the unsafe readObject sites are cache.kt139-167. The current configured build never reaches that reader.",
+      "metadata_inspection": "Namespace-aware parse of all1483 verification component records finds no kotlin-annotation-processing or KAPT-like component. This is a structured component-name query, not a claim that the whole verification XML received line-by-line review here.",
+      "regression_review": "v2 recursively gathers both.kt and.kts, including nested precompiled.gradle.kts. Its owned temp fixture proves inclusion and normal acceptance, then invokes the exact guard on the altered precompiled script and requires AssertionError plus offending filename. Both new tests are block-bodied Unit methods with@Test. finally deletes only its fresh owned directory. The same convention root/file extensions plus build-logic settings are now registered as Gradle test inputs. Existing build.gradle.kts/tree, catalog, properties and metadata inputs remain.",
+      "counter_evidence": [
+        "Advisory vulnerable range explicitly includes2.4.10; upstream patch independently inspected, current cached reader still unsafe. No claim of disabling all cache deserialization.",
+        "Structural no-KAPT source guard is conservative (even comments containing kapt trigger rereview); it is not a runtime sandbox or defense against obfuscated plugin injection/user init scripts. No future arbitrary build topology coverage claimed.",
+        "No Kotlin version change, duplicate flag, dependency verification regeneration, publication enablement or physical tests introduced."
+      ],
+      "verification_required": [
+        "Execute both new transport contract tests; inspect method discovery, real nested.kt/.kts rejection and finally cleanup; no root-run receipt reviewed yet.",
+        "Reopen security/version review before any KAPT/runtime addition or advisory scope change, rather than delete or weaken the assertion."
+      ]
+    }
+  ],
+  "supporting_source_reads": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/build.gradle.kts",
+      "sha256": "bd6199e1f097eb236c50c46efb91d291550110f6b4d95a8e95ff0db4d8da192b",
+      "lines": 204,
+      "review_scope": "complete file read; relevant graph/callers verified"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/settings.gradle.kts",
+      "sha256": "27a40495b1adf18ca90b5a8fdd345448c2ecf2f9ac726c753468a5e627b27d18",
+      "lines": 55,
+      "review_scope": "complete file read; relevant graph/callers verified"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/gradle.properties",
+      "sha256": "2df8685921ad2c6eead097a6d9994bbcc93dbc5cbdeb0bce8911ffa4e83162ce",
+      "lines": 29,
+      "review_scope": "complete file read; relevant graph/callers verified"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/gradle/libs.versions.toml",
+      "sha256": "87a031665605a1fb3f932be31c75afd8d2d1bc0d94cfcca36101141c50788399",
+      "lines": 106,
+      "review_scope": "complete file read; relevant graph/callers verified"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/build-logic/settings.gradle.kts",
+      "sha256": "d86cd60d448dfb6ebf0c9b6977456dc7b93865afe5c415dc368a56ab6ef1f729",
+      "lines": 18,
+      "review_scope": "complete file read; relevant graph/callers verified"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/build-logic/convention/build.gradle.kts",
+      "sha256": "d97140c79c500416f3ef1b5a54b2d05f6d0aa895f92b6cd85c26a70c8852ac67",
+      "lines": 62,
+      "review_scope": "complete file read; relevant graph/callers verified"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/.github/workflows/production-verification.yml",
+      "sha256": "965e47ddb4c47b19d8017c9494239d0a0309b26f465eb0f6b655bd90113a929c",
+      "lines": 347,
+      "review_scope": "complete file read; relevant graph/callers verified"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/iosMain/kotlin/com/parlor/designsystem/localization/LocalAppLocale.ios.kt",
+      "sha256": "0e0783ca3e38634bd3469760f5dbfa5ade8509b976d0ec676202f4513cd8e098",
+      "lines": 83,
+      "review_scope": "complete file read; relevant graph/callers verified"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/build.gradle.kts",
+      "sha256": "c23525d6b06f9b536fb5e8ef6be68c653952fa9764e276f831772b864621fdd5",
+      "lines": 627,
+      "review_scope": "complete file read; relevant graph/callers verified"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/core/build.gradle.kts",
+      "sha256": "05bafd928b020cd386aab5593ba73c5e470d44005f9c23dff739a42b577f31dd",
+      "lines": 23,
+      "review_scope": "complete file read; relevant graph/callers verified"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/build.gradle.kts",
+      "sha256": "118d898f900e3b8ccc76db6fca658d69a0d211c5220b6985738f14428a99f78d",
+      "lines": 25,
+      "review_scope": "complete file read; relevant graph/callers verified"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/engine/build.gradle.kts",
+      "sha256": "4cbe86781aa8f11d2ef91381855ab3bcb3b126ef53b6a8272b79c478f90fc38a",
+      "lines": 24,
+      "review_scope": "complete file read; relevant graph/callers verified"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/engine-testing/build.gradle.kts",
+      "sha256": "096e9f4f67d514fd0a41de6853ad599cf5e3f3168b3294d8c3d71db5eaeac87f",
+      "lines": 20,
+      "review_scope": "complete file read; relevant graph/callers verified"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/session/build.gradle.kts",
+      "sha256": "3be79bcdba5c593eed5ac93d6000043911cd913ab1d7d2c70ab0be7ea37c80b8",
+      "lines": 22,
+      "review_scope": "complete file read; relevant graph/callers verified"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/content/build.gradle.kts",
+      "sha256": "f956862a089a95ba41f4de714e95d1ac44a23d80994c323ba61a1c0c28d34939",
+      "lines": 24,
+      "review_scope": "complete file read; relevant graph/callers verified"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/networking/build.gradle.kts",
+      "sha256": "765ac532634f0dc088a5ded8c32bfc6550aa6408155b44d2956be395d131d621",
+      "lines": 23,
+      "review_scope": "complete file read; relevant graph/callers verified"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/networking-testing/build.gradle.kts",
+      "sha256": "81ed6260d7ac49fada4f0a922dde7db77fc557b86ab0a5884d5b20a64ec74f7e",
+      "lines": 17,
+      "review_scope": "complete file read; relevant graph/callers verified"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/storage/build.gradle.kts",
+      "sha256": "096e9f4f67d514fd0a41de6853ad599cf5e3f3168b3294d8c3d71db5eaeac87f",
+      "lines": 20,
+      "review_scope": "complete file read; relevant graph/callers verified"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/build.gradle.kts",
+      "sha256": "2eb4b00a53ff1eff42f2a64b3de1a1c4d28b08d419ad2828045a063320e4696c",
+      "lines": 53,
+      "review_scope": "complete file read; relevant graph/callers verified"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/build.gradle.kts",
+      "sha256": "7aceb370331f84b2fee70bb039b7779bdd818ea78aab15da3bfcfd137a76ad2d",
+      "lines": 43,
+      "review_scope": "complete file read; relevant graph/callers verified"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/build-logic/convention/src/main/kotlin/com/parlor/buildlogic/KmpLibraryConventionPlugin.kt",
+      "sha256": "9d3b07942123f5a4c2da229aa873d5d7b7d422b120d1ff42014cfe066eefbc63",
+      "lines": 72,
+      "review_scope": "complete file read; relevant graph/callers verified"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/build-logic/convention/src/main/kotlin/com/parlor/buildlogic/KmpComposeLibraryConventionPlugin.kt",
+      "sha256": "d8a7cd25a7062f20ae871a068b724c061c98f3831aae4d90701c5cbbf7b4e660",
+      "lines": 19,
+      "review_scope": "complete file read; relevant graph/callers verified"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/build-logic/convention/src/main/kotlin/com/parlor/buildlogic/DetektConventionPlugin.kt",
+      "sha256": "8d5fd3fb3f13d9d5cb02f89c29a57aab8d71c89cdf6dd0ac41161942109bd825",
+      "lines": 59,
+      "review_scope": "complete file read; relevant graph/callers verified"
+    }
+  ],
+  "upstream_source_reads": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34112913001-evidence/official-kotlin-2.4.10-kapt-cache.kt.txt",
+      "sha256": "5a6b4d0b5316ffa99f2c50bd1d892f124727d98f2bfa943c46d2475e1d5e3d05",
+      "reviewed_line_ranges": [
+        [
+          1,
+          228
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34112913001-evidence/official-kotlin-2.4.10-KaptContext.kt.txt",
+      "sha256": "244a15bda0989d7901585309ebae6f6b08abef795f6219aff50dc0d5e4719461",
+      "reviewed_line_ranges": [
+        [
+          1,
+          172
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34112913001-evidence/official-kotlin-2.4.10-Kapt3KotlinGradleSubplugin.kt.txt",
+      "sha256": "0a249a0ee49f87f205fd0760887685dfdd46755df2431cdf1f06436e67f3b2e0",
+      "reviewed_line_ranges": [
+        [
+          1,
+          585
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34112913001-evidence/official-kotlin-2.4.10-SubpluginEnvironment.kt.txt",
+      "sha256": "ef6823917f917dfff785c55155e647a7f5bd8cc946aea07b22ea384dcac20ef9",
+      "reviewed_line_ranges": [
+        [
+          1,
+          132
+        ]
+      ]
+    }
+  ],
+  "additional_references": {
+    "independent_https_crosscheck": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/native-ci-draft-public-source-crosscheck-01.json",
+    "sha256": "e3c4e26c921071d0120983037a290aeaabe210773963e97e90a5535c9855a328",
+    "lint_source_ranges": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34112913001-evidence/official-lint-32.1.1-GradleDetector.kt.txt",
+      "sha256": "f6ba40e072159212c3348d8fdb38029c4d77ef761d220e55ea2f0a467e571270",
+      "ranges": [
+        [
+          2400,
+          2490
+        ],
+        [
+          3700,
+          3830
+        ]
+      ]
+    },
+    "git_windows_installer_ranges": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34112913001-evidence/official-git-windows-installer.iss.txt",
+      "ranges": [
+        [
+          380,
+          384
+        ],
+        [
+          856,
+          880
+        ],
+        [
+          2350,
+          2383
+        ],
+        [
+          3259,
+          3271
+        ],
+        [
+          3730,
+          3739
+        ]
+      ]
+    },
+    "pinned_windows_image_git_setup": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34112913001-evidence/official-windows-20260824.214-Install-Git.ps1.txt",
+      "ranges": [
+        [
+          1,
+          66
+        ]
+      ]
+    }
+  },
+  "scope_limits": [
+    "Source/diff review only. Root is running focused lane86738; no result from that lane is credited here.",
+    "All five applied files match exact reviewed drafts at report creation. Parent intentionally applied changes after prior completed native cycles; source04 binding is now stale and cannot authorize a new normal-source cycle.",
+    "Normal-source manifest05 must be prepared only after parent confirms test/inventory/source freeze. Existing original source04 and prior receipts must not be rewritten.",
+    "Existing source-contract test reads the accepted-inventory file, whereas its transport desktopTest input list does not explicitly register that file; this is pre-existing. The authoritative verifyReleaseLintWarnings DOES register it. The current patch also changes declared docs/test/build inputs, so focused execution cannot rely on that omission. Consider explicit inventory input in any future standalone inventory-only edit."
+  ],
+  "reviewer_actions": {
+    "production_control_edits": false,
+    "git_writes": false,
+    "builds_tests_native_simulator_or_signing_execution": false,
+    "stopped_processes": false,
+    "online_research": "Three public bounded HTTPS GETs, completed; no source/secrets transmitted",
+    "retained_only": [
+      "native-ci-draft-public-source-crosscheck-01.json",
+      "native-ci-drafts-independent-source-review-01.json"
+    ],
+    "cleanup": "No reviewer-created build directories, bytecode caches, background worker, native app or simulator. No unrelated process/file touched."
+  }
+}

@@ -1,0 +1,211 @@
+import XCTest
+
+final class IOSAppLaunchUITests: XCTestCase {
+    override func setUpWithError() throws { continueAfterFailure = false }
+
+    @MainActor
+    func testDSC01ActualSettingsAcrossProcessRestartAndSystem() throws {
+        let app = XCUIApplication()
+        let token = UUID().uuidString
+        let simulator = try XCTUnwrap(ProcessInfo.processInfo.environment["SIMULATOR_UDID"])
+        app.launchArguments = [] // Never pin AppleLanguages/AppleLocale in argument domain.
+        app.launchEnvironment = ["PARLOR_DSC01_RUN_TOKEN": token, "PARLOR_DSC01_EXPECTED_UDID": simulator]
+        defer { app.terminate() }
+
+        try launch(app, fixture: "fresh")
+        let initial = try observe(app)
+        let fallback = try string(try dictionary(initial, "now"), "preferredLanguage")
+        XCTAssertEqual(try string(try dictionary(initial, "now"), "setting"), "system")
+        XCTAssertEqual(try dictionary(initial, "now")["hasAppOverride"] as? Bool, false)
+        let currentLanguage = fallback
+
+        // Both supported explicit choices use actual Compose Settings actions.
+        // Each restart must independently show the marker BEFORE original App.
+        for explicit in ["ar"] {
+            try openSettings(app, language: currentLanguage)
+            try tap(app, label: explicit == "ar" ? "العربية" : "English")
+            try assertSettingsStrings(app, language: explicit)
+            let installed = try observeEventually(app) { snapshot in
+                let value = try self.dictionary(snapshot, "now")
+                return value["setting"] as? String == explicit && value["ownerInstalled"] as? String == explicit
+            }
+            try assertOwned(installed, explicit: explicit, previous: [])
+            let priorBoot = try string(installed, "boot")
+            app.terminate()
+            XCTAssertTrue(app.wait(for: .notRunning, timeout: 15))
+            try launch(app, fixture: "continue")
+            let resumed = try observe(app)
+            XCTAssertNotEqual(try string(resumed, "boot"), priorBoot, "Must be a new process, not remount")
+            let beforeMain = try dictionary(resumed, "beforeMain")
+            XCTAssertEqual(beforeMain["setting"] as? String, explicit)
+            XCTAssertEqual(beforeMain["ownerInstalled"] as? String, explicit,
+                           "Harness validity: persistent owner must survive termination BEFORE App initializes")
+            XCTAssertEqual(beforeMain["ownerPresent"] as? Bool, true)
+            XCTAssertEqual(beforeMain["appLanguages"] as? [String], [explicit])
+            try assertOwned(resumed, explicit: explicit, previous: [])
+            try openSettings(app, language: explicit)
+            try tap(app, label: explicit == "ar" ? "لغة النظام" : "System language")
+            try assertSettingsStrings(app, language: fallback)
+            let system = try observeEventually(app) { snapshot in
+                let value = try self.dictionary(snapshot, "now")
+                return value["setting"] as? String == "system" && value["ownerPresent"] as? Bool == false
+            }
+            try assertSystem(system, expected: fallback, previous: [])
+        }
+
+        // This represents an OS-managed previous per-app value synthetically;
+        // it is NOT execution of the actual iOS Settings application.
+        app.terminate(); XCTAssertTrue(app.wait(for: .notRunning, timeout: 15))
+        try launch(app, fixture: "previous-ar")
+        let previous = try observe(app)
+        try assertSystem(previous, expected: "ar", previous: ["ar-EG", "en"])
+        try openSettings(app, language: "ar")
+        try tap(app, label: "English")
+        try assertSettingsStrings(app, language: "en")
+        let english = try observeEventually(app) { snapshot in
+            try self.dictionary(snapshot, "now")["ownerInstalled"] as? String == "en"
+        }
+        try assertOwned(english, explicit: "en", previous: ["ar-EG", "en"])
+        let beforeRestart = try string(english, "boot")
+        app.terminate(); XCTAssertTrue(app.wait(for: .notRunning, timeout: 15))
+        try launch(app, fixture: "continue")
+        let finalRestart = try observe(app)
+        XCTAssertNotEqual(try string(finalRestart, "boot"), beforeRestart)
+        let recovered = try dictionary(finalRestart, "beforeMain")
+        XCTAssertEqual(recovered["ownerPresent"] as? Bool, true)
+        XCTAssertEqual(recovered["ownerInstalled"] as? String, "en")
+        XCTAssertEqual(recovered["ownerPrevious"] as? [String], ["ar-EG", "en"])
+        try openSettings(app, language: "en")
+        try tap(app, label: "System language")
+        try assertSettingsStrings(app, language: "ar")
+        let restored = try observeEventually(app) { snapshot in
+            let value = try self.dictionary(snapshot, "now")
+            return value["setting"] as? String == "system" && value["ownerPresent"] as? Bool == false
+        }
+        try assertSystem(restored, expected: "ar", previous: ["ar-EG", "en"])
+        app.buttons["parlor-dsc01-complete"].tap()
+        let complete = try observe(app)
+        XCTAssertEqual(complete["completed"] as? Bool, true)
+    }
+
+    @MainActor private func launch(_ app: XCUIApplication, fixture: String) throws {
+        app.launchEnvironment["PARLOR_DSC01_FIXTURE"] = fixture
+        app.launch()
+        XCTAssertTrue(app.wait(for: .runningForeground, timeout: 30))
+        XCTAssertTrue(app.staticTexts["parlor-home-brand"].waitForExistence(timeout: 30))
+        XCTAssertTrue(app.buttons["parlor-dsc01-observe"].waitForExistence(timeout: 10))
+        XCTAssertFalse(app.alerts.firstMatch.exists, "Do not dismiss unexpected alerts or call a failed launch passing")
+    }
+
+    @MainActor private func openSettings(_ app: XCUIApplication, language: String) throws {
+        // CMP UI 1.10.3 UIKit combines this selectable parent description
+        // with its uppercase Text child, using a comma-space separator.
+        // Exact pinned-source proof is retained beside this versioned harness.
+        try tap(app, label: language == "ar" ? "افتح الإعدادات., الإعدادات" : "Open settings., SETTINGS")
+        try assertSettingsStrings(app, language: language)
+    }
+
+    @MainActor private func assertSettingsStrings(_ app: XCUIApplication, language: String) throws {
+        let text = language == "ar" ? "اللغة" : "LANGUAGE"
+        let query = app.descendants(matching: .any).matching(NSPredicate(format: "label == %@", text))
+        XCTAssertTrue(query.firstMatch.waitForExistence(timeout: 15), "Actual localized Compose language section missing")
+        XCTAssertTrue(app.descendants(matching: .any).matching(NSPredicate(format: "label == %@",
+                      language == "ar" ? "لغة النظام" : "System language")).firstMatch.exists)
+    }
+
+    @MainActor private func tap(_ app: XCUIApplication, label: String) throws {
+        let query = app.descendants(matching: .any).matching(NSPredicate(format: "label == %@", label))
+        let exists = query.firstMatch.waitForExistence(timeout: 15)
+        if !exists { recordSelectorDiagnostics(app, expected: label) }
+        XCTAssertTrue(exists, "Missing exact actual-app label; this is a selector/evidence failure, not crash proof")
+        let matches = query.allElementsBoundByIndex
+        if matches.count >= 32 { recordSelectorDiagnostics(app, expected: label) }
+        XCTAssertLessThan(matches.count, 32, "Selector unexpectedly broad")
+        let hittable = matches.first(where: { $0.isHittable })
+        if hittable == nil { recordSelectorDiagnostics(app, expected: label) }
+        let element = try XCTUnwrap(hittable, "No hittable exact-label control")
+        element.tap()
+    }
+
+    @MainActor private func recordSelectorDiagnostics(_ app: XCUIApplication, expected: String) {
+        // Diagnostic queries are exact and source-whitelisted. They never pick a
+        // fallback target, export a hierarchy, or read arbitrary labels/values.
+        let labels = ["Open settings., SETTINGS", "افتح الإعدادات., الإعدادات",
+                      "Open settings.", "افتح الإعدادات.", "SETTINGS", "الإعدادات",
+                      "LANGUAGE", "اللغة", "System language", "لغة النظام", "English", "العربية"]
+        let observations: [[String: Any]] = labels.map { known in
+            let query = app.descendants(matching: .any).matching(NSPredicate(format: "label == %@", known))
+            let count = query.count
+            let inspected = count < 32 ? Array(query.allElementsBoundByIndex.prefix(4)) : []
+            return ["knownLabel": known, "countCappedAt32": min(count, 32),
+                    "inspectedAtMost4": inspected.count,
+                    "hittableAmongInspected": inspected.filter { $0.isHittable }.count]
+        }
+        let report: [String: Any] = ["schemaVersion": 1,
+            "expectedKnownLabel": labels.contains(expected) ? expected : "not-allowlisted",
+            "observations": observations]
+        if let data = try? JSONSerialization.data(withJSONObject: report, options: [.sortedKeys]),
+           data.count <= 8192, let text = String(data: data, encoding: .utf8) {
+            print("DSC01_SELECTOR_DIAGNOSTICS " + text)
+        }
+    }
+
+    @MainActor private func observe(_ app: XCUIApplication) throws -> [String: Any] {
+        let state = app.staticTexts["parlor-dsc01-state"]
+        XCTAssertTrue(state.waitForExistence(timeout: 10))
+        let previous = state.value as? String
+        app.buttons["parlor-dsc01-observe"].tap()
+        let changed = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            state.value as? String != previous
+        }, object: nil)
+        XCTAssertEqual(XCTWaiter.wait(for: [changed], timeout: 10), .completed)
+        let encoded = try XCTUnwrap((state.value as? String)?.data(using: .utf8))
+        XCTAssertLessThanOrEqual(encoded.count, 4096)
+        let snapshot = try XCTUnwrap(JSONSerialization.jsonObject(with: encoded) as? [String: Any])
+        XCTAssertNil(snapshot["harnessError"])
+        XCTAssertEqual(snapshot["controllerCreations"] as? Int, 1, "Original root controller must remain the only one in this process")
+        return snapshot
+    }
+
+    @MainActor private func observeEventually(_ app: XCUIApplication,
+                                              predicate: ([String: Any]) throws -> Bool) throws -> [String: Any] {
+        // Bounded read-only observation refresh, never retries an app setting mutation.
+        for _ in 0..<6 {
+            let snapshot = try observe(app)
+            if try predicate(snapshot) { return snapshot }
+        }
+        XCTFail("Actual settings/owner never reached required state after bounded observations")
+        throw NSError(domain: "DSC01ObservationTimeout", code: 1)
+    }
+
+    private func assertOwned(_ snapshot: [String: Any], explicit: String, previous: [String]) throws {
+        let value = try dictionary(snapshot, "now")
+        XCTAssertEqual(value["setting"] as? String, explicit)
+        XCTAssertEqual(value["appLanguages"] as? [String], [explicit])
+        XCTAssertEqual(value["hasAppOverride"] as? Bool, true)
+        XCTAssertEqual(value["ownerPresent"] as? Bool, true)
+        XCTAssertEqual(value["ownerInstalled"] as? String, explicit)
+        XCTAssertEqual(value["ownerPrevious"] as? [String], previous)
+        XCTAssertEqual(value["ownerPreviousPresent"] as? Bool, !previous.isEmpty)
+        XCTAssertEqual(value["preferredLanguage"] as? String, explicit)
+        XCTAssertEqual(snapshot["nativeDirection"] as? String, explicit == "ar" ? "force_rtl" : "force_ltr")
+    }
+
+    private func assertSystem(_ snapshot: [String: Any], expected: String, previous: [String]) throws {
+        let value = try dictionary(snapshot, "now")
+        XCTAssertEqual(value["setting"] as? String, "system")
+        XCTAssertEqual(value["hasAppOverride"] as? Bool, !previous.isEmpty)
+        XCTAssertEqual(value["appLanguages"] as? [String], previous)
+        XCTAssertEqual(value["ownerPresent"] as? Bool, false)
+        XCTAssertEqual(value["ownerInstalled"] as? String, "none")
+        XCTAssertEqual(value["preferredLanguage"] as? String, expected)
+        XCTAssertEqual(snapshot["nativeDirection"] as? String, expected == "ar" ? "force_rtl" : "force_ltr")
+    }
+
+    private func dictionary(_ value: [String: Any], _ key: String) throws -> [String: Any] {
+        try XCTUnwrap(value[key] as? [String: Any])
+    }
+    private func string(_ value: [String: Any], _ key: String) throws -> String {
+        try XCTUnwrap(value[key] as? String)
+    }
+}

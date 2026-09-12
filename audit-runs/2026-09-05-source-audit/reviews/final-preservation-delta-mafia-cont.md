@@ -1,0 +1,9 @@
+# Final preservation checker — independent narrow delta review
+
+Reviewer: `/root/mafia_cont`. Source: `final_preservation_check.py`,148lines, SHA256 `433f254527e4409d9b7dcf9f2851427951a350986b4cd8cd5ec9290a54282d3c`. Prior fully reviewed version:147lines/`d9e852c61ad156b749b107e7476917f9b83cff07add328cb16e05408bd927d4b`.
+
+**APPROVED for root-owned execution after the build lane is idle.** Exact byte-delta comparison proves only two changes: adding `iosApp/build` to the known output list at line31, and treating the exact task-owned simulator UUID directory as remaining when it is a dangling symlink at lines111–112. No new traversal, deletion, process termination, or device command was introduced. Existing output/symlink handling and the fail-closed cleanup expression remain intact.
+
+Independent checks:25previous pure mocked-AST assertions rerun against the frozen new source, plus13new selected-assignment/path-double assertions: allPASS. The new checks cover absent/existing/dangling iOS output directories, preservation of the old output list, absent/existing/dangling owned simulator paths, no unowned simulator path reads, and their effect on the cleanup verdict. Neither suite executes the full helper; `ps`, `lsof`, filesystem existence checks, and simulator metadata are mocked where used. No Gradle/Xcode/device/build command or real process scan was issued.
+
+Evidence: `evidence/final-preservation-delta-mafia-cont/` contains the exact148-line source snapshot, both runnable synthetic checks, and both JSON result receipts. This is source/safety approval, **not an executed preservation or cleanup PASS**. The previous review’s limits still apply: the full helper regenerates audit reports; it cannot guarantee future process state; root must inspect the helper’s exit code if a receipt write itself fails. No generated build outputs or persistent processes were created by this review.

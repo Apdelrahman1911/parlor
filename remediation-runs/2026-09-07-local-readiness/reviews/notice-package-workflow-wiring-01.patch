@@ -1,0 +1,61 @@
+diff --git a/.github/workflows/production-verification.yml b/.github/workflows/production-verification.yml
+index e52a3c0..1ae086a 100644
+--- a/.github/workflows/production-verification.yml
++++ b/.github/workflows/production-verification.yml
+@@ -122,6 +122,7 @@ jobs:
+           test -s "$manifest"
+           sha256sum "$aab" | tee build/ci-evidence/android-aab.sha256
+           cp "$manifest" build/ci-evidence/merged-release-manifest.xml
++          python3 -B scripts/verification/third_party_notices.py --package "$aab" --json >build/ci-evidence/android-release-notices.json
+ 
+       - name: Upload verification reports, mappings, and unsigned AAB
+         id: verification_artifact
+@@ -593,6 +594,7 @@ jobs:
+           test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleVersion' "$app/Info.plist")" = "$(sed -n 's/^PARLOR_BUILD_NUMBER = //p' config/parlor-version.xcconfig)"
+           file "$app/Parlor" | tee build/ci-evidence/xcode-binary.txt
+           shasum -a 256 "$app/Parlor" | tee build/ci-evidence/xcode-binary.sha256
++          /usr/bin/python3 -B scripts/verification/third_party_notices.py --package "$app" --json >build/ci-evidence/ios-release-notices.json
+ 
+       - name: Stop Gradle after apple-wrapper and retire owned Apple resources
+         id: apple_wrapper_finish
+diff --git a/scripts/release/tests/test_workflow_contract.py b/scripts/release/tests/test_workflow_contract.py
+index 64690c1..d1be2ff 100644
+--- a/scripts/release/tests/test_workflow_contract.py
++++ b/scripts/release/tests/test_workflow_contract.py
+@@ -95,6 +95,17 @@ class WorkflowContractTest(unittest.TestCase):
+         with self.assertRaisesRegex(RuntimeError, "ownership before launch"):
+             workflow_contract.verify_validation(misplaced)
+ 
++    def test_android_and_ios_release_packages_must_verify_notice_bytes(self) -> None:
++        workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text(
++            encoding="utf-8"
++        )
++        for artifact in ("$aab", "$app"):
++            command = f'scripts/verification/third_party_notices.py --package "{artifact}" --json'
++            with self.subTest(artifact=artifact):
++                self.assertEqual(1, workflow.count(command))
++                with self.assertRaisesRegex(RuntimeError, "packaged-notice verification"):
++                    workflow_contract.verify_validation(workflow.replace(command, "removed-package-check", 1))
++
+     def test_mobile_release_kit_android_signing_fallbacks_remain_bounded(self) -> None:
+         gradle = (workflow_contract.ROOT / "composeApp/build.gradle.kts").read_text(
+             encoding="utf-8"
+diff --git a/scripts/release/workflow_contract.py b/scripts/release/workflow_contract.py
+index af230a9..a63cc9d 100755
+--- a/scripts/release/workflow_contract.py
++++ b/scripts/release/workflow_contract.py
+@@ -176,6 +176,14 @@ def verify_validation(text: str) -> None:
+         if token not in app_launch_step:
+             fail(f"validation workflow iOS app-launch test lacks {token!r}")
+     verify_owned_ios_app_launch(text)
++    for step, command in (
++        ("Inspect unsigned Android release artifact and merged manifest",
++         'python3 -B scripts/verification/third_party_notices.py --package "$aab" --json >build/ci-evidence/android-release-notices.json'),
++        ("Build unsigned Swift Release wrapper",
++         '/usr/bin/python3 -B scripts/verification/third_party_notices.py --package "$app" --json >build/ci-evidence/ios-release-notices.json'),
++    ):
++        if f"          {command}\n" not in validation_step(text, step):
++            fail(f"validation workflow lacks packaged-notice verification in {step!r}")
+     if '$1 ~ /PRODUCT_BUNDLE_IDENTIFIER$/' in text:
+         fail("validation workflow can confuse the Mac Catalyst derivation flag with the Bundle ID")
+     if text.count('key == "PRODUCT_BUNDLE_IDENTIFIER"') != 2:

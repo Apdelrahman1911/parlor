@@ -1,0 +1,97 @@
+{
+  "schema_version": 1,
+  "at": "2026-09-07T11:12:40.847487+00:00",
+  "reviewer": "/root",
+  "author": "/root/native_fix_review",
+  "disposition": "APPROVED FOR EXACT OWNED SIMULATOR ADHOC READINESS04; not runtime success",
+  "source_binding_sha256": "7491d984a16cfa1e7637b0e59623383d4b06e9ae3dd134e8406720578d0c60ce",
+  "source_manifest_sha256": "61e22ba3c507e0cb2e7d88017004cbac38c4431e6563b2a7af6bd6ec4c3e345d",
+  "control_sha256": "08bfed356d8c358f3a2e1baebc22ab82baa431e1d5084bbac414f94042ab99e2",
+  "delta_from_readiness03": [
+    {
+      "path": "scripts/verification/ios-readiness/NativeReadinessLaunch.swift.in",
+      "sha256": "df8f0cce3f45bedbfea47df3ca0b2e56c6a777383395fc170f0f07b83f8d143a",
+      "prior": "4bddc85fa3a28e1dcb4caaed7e32f8658c195e9c4ee93aeeecaab317fbcaf2bc"
+    },
+    {
+      "path": "scripts/verification/ios-readiness/NativeReadinessPathControls.swift.in",
+      "sha256": "efc84b3b49c099185d17ff56ceb53b0134ee2332ff35220a537dade5168a76c9",
+      "prior": null
+    },
+    {
+      "path": "scripts/verification/ios-readiness/test_native_paths.py",
+      "sha256": "11c0bcbba09de36d5e2eb5a276c8f8d3c52024c3b395558e6aebd2f12875007a",
+      "prior": null
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/ios-readiness-source-04.json",
+      "sha256": "7491d984a16cfa1e7637b0e59623383d4b06e9ae3dd134e8406720578d0c60ce",
+      "prior": null
+    }
+  ],
+  "complete_files_reviewed": [
+    {
+      "path": "scripts/verification/ios-readiness/NativeReadinessLaunch.swift.in",
+      "sha256": "df8f0cce3f45bedbfea47df3ca0b2e56c6a777383395fc170f0f07b83f8d143a",
+      "lines": [
+        1,
+        340
+      ]
+    },
+    {
+      "path": "scripts/verification/ios-readiness/NativeReadinessPathControls.swift.in",
+      "sha256": "efc84b3b49c099185d17ff56ceb53b0134ee2332ff35220a537dade5168a76c9",
+      "lines": [
+        1,
+        216
+      ]
+    },
+    {
+      "path": "scripts/verification/ios-readiness/test_native_paths.py",
+      "sha256": "11c0bcbba09de36d5e2eb5a276c8f8d3c52024c3b395558e6aebd2f12875007a",
+      "lines": [
+        1,
+        173
+      ]
+    }
+  ],
+  "cross_paths": [
+    "artifact_inventory.py strict owned Debug/ARM64 KGP path, file digest, memory UUID and SDK/installed binding unchanged",
+    "run_ios_readiness.py explicit source/control guard, copied_sources transforms, diagnostic failures and immediate daemon/worker/secondary-path finalizers unchanged",
+    "Apple Foundation/NSURL symlink semantics and exact KGP2.4.10 symlink destinations in native-origin13-investigation-01 reopened; actual host fixture witnesses alias now"
+  ],
+  "findings_resolved": [
+    "Initial test allocated under wrapper TMPDIR, not Darwin alias; draft corrected to new mode0700 /private/var/tmp owned fixture before execution"
+  ],
+  "proof": "Actual extracted Swift helper and loader observer executed with selected host Foundation: 18 named subcases in ONE of 98 tests; old Foundation-root asymmetry witnessed; exact POSIX owned path recognized. Unknown/sibling/escaped paths never invoke fingerprint; errors, immutable literal roots and bounds remain strict.",
+  "counter_evidence": [
+    "Previous code13 rejected path was deliberately not retained; do not assert exact historical cause",
+    "KGP DerivedData link points back into copied build; no arbitrary DerivedData trust added",
+    "Unavailable dyld cache noncandidates skipped, unavailable ComposeApp fatal; no app/runtime success inferred",
+    "No production game/protocol/storage changes and no real credentials used",
+    "File observation then open is not atomic; not a malicious same-UID filesystem sandbox"
+  ],
+  "execution": {
+    "cycle": "remediation-runs/2026-09-07-local-readiness/evidence/native-path-controls-01",
+    "receipt_sha256": "593bcb67a346ca842df0d8c5696cb6b3025053f6cd79c7bd8bad63b742179ebc",
+    "log_sha256": "e4ad17cfb678c4b0b09639dc5346a5d7c34de8021d654010b05a5f1fd92d2dfe",
+    "tests": 98,
+    "skips": 0,
+    "failures": 0,
+    "errors": 0,
+    "current_import_and_hash_bracket": true,
+    "gradle_stop": 0,
+    "remaining_outputs": [],
+    "workers": {
+      "terminated_owned_workers": [],
+      "remaining_owned_workers": []
+    },
+    "cleanup_errors": []
+  },
+  "conditions": [
+    "One owned lane, unchanged binding, fresh owned simulator only",
+    "Explicit adhoc dash identity no team/profile/Store operation; Xcode26.5 not qualified26.3",
+    "Late-created secondary FIFO must receive separate exact ownership attestation if ordinary cleanup fails; previous03 failure preserved",
+    "No native runtime/storage/OS-language/repeated-launch conclusion until actual current matrix completes"
+  ]
+}

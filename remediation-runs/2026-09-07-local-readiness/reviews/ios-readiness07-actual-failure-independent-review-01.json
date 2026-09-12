@@ -1,0 +1,589 @@
+{
+  "schema_version": 1,
+  "review_id": "ios-readiness07-actual-failure-independent-review-01",
+  "reviewer": "/root/factory_review",
+  "reviewed_at": "2026-09-07T21:34:06.527639+00:00",
+  "review_kind": "Independent static source plus retained actual-runtime receipt validation; no native execution by reviewer",
+  "conclusion": {
+    "cycle_status": "FAIL",
+    "classification": "TEST/EVIDENCE GAP \u2014 confirmed XCTest/verification failure at narrowed native directory-attribute boundary",
+    "production_defect_classification": "UNCONFIRMED \u2014 BLOCKED",
+    "reason": "Actual L08 boot1 save operation emitted FAIL at metadata-directory-protection; native attribute dictionary/key/value/error details were intentionally not collected. Source/receipt proof narrows the failed boundary but does not identify a production root cause or prove Simulator non-support.",
+    "approval": "Keep native07 failed; preserve native05 independently as its earlier broader failure. No production fix, entitlement change, weakened check or Store claim is approved."
+  },
+  "baseline": {
+    "commit": "b6e1947c62661631d0593038db7f64dbf25f720e",
+    "tree": "f03ad1b302d951d0ca9811b1efab2751a8be6978",
+    "branch": "fix/local-readiness-2026-09-07",
+    "tracked_status": "",
+    "diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "source_manifest_sha256": "4be6d9cbd07c891b60356921be1828c4c8f44501c979e435105494d261c65ffa"
+  },
+  "source_binding": {
+    "binding_file": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/ios-readiness-source-07.json",
+    "binding_sha256": "7a78b016f762dc22fe27beeda9f12b1a1cdac8f8417c2c560b5b67785f350a4c",
+    "source_file_count": 799,
+    "copy_input_count": 739,
+    "post_instrumentation_input_count": 751,
+    "control_count": 65,
+    "control_sha256": "37bed7da995b427bb2da6ec4121572f441b9ca25901346cc884b543bd860ff5d",
+    "checks": [
+      "Reconstructed current tracked+untracked applicable source rows using standard-library hashing and read-only Git listing; all799 equal binding/input/receipt before/after.",
+      "All65 control files hash to approved37bed7da; exact list matches runtime input manifest.",
+      "Reconstructed all28 changed/added copied text files in memory from original source plus retained unified diff; every copied hash matches manifest. No copied source tree was recreated on disk.",
+      "All751 after-build hashes equal post-instrumentation manifest, with no missing/unexpected source inputs or source symlinks.",
+      "IosSnapshotFileSystem, IosSnapshotKeychain, FileBackedSnapshotStore, GameSnapshot equality and both storage DI bindings were copied byte-for-byte.",
+      "Original checkout has no tracked edits; existing untracked AGENTS/audits/design/evidence preserved."
+    ],
+    "prior_full_control_approval": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/ios-readiness-source07-independent-approval-01.json"
+  },
+  "actual_execution": {
+    "started_at": "2026-09-07T20:58:50.904348+00:00",
+    "finished_at": "2026-09-07T21:11:19.164116+00:00",
+    "xcodebuild_exit_code": 65,
+    "actual_xcode": "26.5 /17F42",
+    "sdk": "iphonesimulator26.5",
+    "runtime": "iOS26.5 /23F77 ARM64 iPhone17Pro simulator",
+    "owned_simulator": "F96D4E03-A451-44EC-B3F6-C6475E684D0E",
+    "configuration": "Debug,com.parlor.app.debug,ad-hoc dash signing,empty team/profile/custom entitlement values",
+    "test_total": 5,
+    "passed": 4,
+    "failed": 1,
+    "skipped": 0,
+    "expected_failures": 0,
+    "methods": [
+      {
+        "identifier": "ComposeContainerViewControllerTests/testChildUsesFullBoundsAcrossSizesAndOpposingSemanticDirections()",
+        "result": "Passed",
+        "duration_seconds": 0.22440803050994873
+      },
+      {
+        "identifier": "ComposeContainerViewControllerTests/testDefaultAppearanceForwardingReachesTheSameChildExactlyOnce()",
+        "result": "Passed",
+        "duration_seconds": 0.03986799716949463
+      },
+      {
+        "identifier": "ComposeContainerViewControllerTests/testOneStableChildKeepsItsExplicitSemanticsIndependentOfTheOuterView()",
+        "result": "Passed",
+        "duration_seconds": 0.03591299057006836
+      },
+      {
+        "identifier": "ComposeContainerViewControllerTests/testSystemDecorationAndOrientationPoliciesStillBelongToTheChild()",
+        "result": "Passed",
+        "duration_seconds": 0.03575003147125244
+      },
+      {
+        "identifier": "IOSAppLaunchUITests/testDSC01ActualSettingsLocalSessionsAndOSInvestigation()",
+        "result": "Failed",
+        "duration_seconds": 507.32096898555756
+      }
+    ],
+    "primary_runtime_failure": "Copied IOSAppLaunchUITests.swift:2319 XCTest observation.status Optional(FAIL) != Optional(PASS).",
+    "runner_error": "verify_xctest rejects nonpassing actual summary at run_ios_readiness.py:179-183; this is a correct fail-closed consequence, not the underlying assertion root cause.",
+    "gradle_embedded_build_exit": 0,
+    "note": "Build success and four passing UIKit tests do not imply the full app-host matrix passed."
+  },
+  "source_level_failure_proof": {
+    "context": {
+      "scenario": "l08-storage",
+      "boot_ordinal": 1,
+      "action": "save",
+      "process_boot": "435F5896-2046-484D-8D8B-A2B641A32447",
+      "run_token": "6B09F096-6FF3-4569-B086-9A40939BF2A8"
+    },
+    "failure_observation": {
+      "action": "save",
+      "boot_ordinal": 1,
+      "reason": "fixture_or_boundary_failure",
+      "run_token": "6B09F096-6FF3-4569-B086-9A40939BF2A8",
+      "schema_version": 1,
+      "stage": "metadata-directory-protection",
+      "status": "FAIL"
+    },
+    "reachable_sequence": [
+      {
+        "location": "L08StorageUITests.swift.in:5-15,54-74",
+        "observation": "One exact public save activation in boot1, bound boot/action/token response; continueAfterFailure=false stops subsequent scenarios."
+      },
+      {
+        "location": "L08StorageProbe.kt.in:133-160",
+        "observation": "Koin actual FileBackedSnapshotStore/IosSnapshotFileSystem and P2pKit transport asserted, all synthetic IDs absent, first wc snapshot built from real reducer, save returns Success."
+      },
+      {
+        "location": "L08StorageProbe.kt.in:295-302; SnapshotCodec.kt:32-42",
+        "observation": "Real store.load returns Success, then full session/game/engine/date/phase/metadata and payload-content equality completes; loaded payload zeroized."
+      },
+      {
+        "location": "L08StorageProbe.kt.in:464-475",
+        "observation": "Guarded regular file/path exists; fresh resource-value observations for directory and file backup exclusion are true; both protection constants nonnull."
+      },
+      {
+        "location": "L08StorageProbe.kt.in:476-477",
+        "observation": "After assigning metadata-directory-protection, attributesOfItemAtPath(protected,null)?.get(key)==NSFileProtectionComplete fails or throws; failure catch preserves this stage."
+      },
+      {
+        "location": "L08StorageProbe.kt.in:478-488",
+        "observation": "File-protection comparison, observer ciphertext-header read, and success restoration of prior stage are not reached."
+      },
+      {
+        "location": "L08StorageProbe.kt.in:88-130,331-343; L08StorageLaunch.swift.in:15-38",
+        "observation": "One active command; closed failure stage and reason retained. Swift receives valid structured FAIL, adds owned process/image context, exclusively writes result. This is not a selector timeout, missing bridge receipt or reported process crash."
+      }
+    ],
+    "counter_evidence": [
+      "Same execution completed production save/read/equality before metadata assertion; it is not evidence that save returned IoError or load returned CorruptedData.",
+      "Snapshot source still creates directory with Complete attributes, atomic file write uses NSDataWritingFileProtectionComplete, and fresh directory/file backup exclusion checks succeeded. Code intent does not prove actual directory metadata or runtime Data Protection.",
+      "Live app returned a syntactically valid FAIL result after a real button activation. No app-crash diagnosis follows from xcodebuild65.",
+      "Extra controlled host transport binding is inactive outside l08-host; no fake SnapshotStore/FS substituted for this operation.",
+      "No authoritative evidence collected by this cycle proves the requested directory metadata unsupported by this Simulator."
+    ],
+    "unresolved_alternatives": [
+      "attributesOfItemAtPath returned nil",
+      "Attributes dictionary omitted NSFileProtectionKey",
+      "Attribute value differed from NSFileProtectionComplete",
+      "An exception occurred while evaluating the attribute lookup/comparison"
+    ],
+    "not_inferred": [
+      "Exact NSError/domain/code or actual protection value",
+      "Device lock/unlock protection effectiveness",
+      "Keychain failure or absent application-layer encryption",
+      "Failure of remaining Mafia/Whodunit resume flows",
+      "Same cause as historical native05 broad real-store-save failure"
+    ]
+  },
+  "coverage_not_completed": {
+    "storage_planned_operations": 20,
+    "storage_attempted_operations": 1,
+    "storage_completed_operations": 0,
+    "storage_unattempted_operations": 19,
+    "storage_complete_boots": 0,
+    "host_planned_operations": 42,
+    "host_executed_operations": 0,
+    "later_scenarios": "Local Whodunit/Mafia continuity and actual OS-language investigation after L08 did not run.",
+    "earlier_partial_observations": "Settings and eight native-readiness boot files were preserved; not promoted to full-cycle PASS or fully-bound runtime proof because later strict verification stopped. Receipt scope text is intended scope, not a coverage receipt.",
+    "external": [
+      "Physical iOS Data Protection, real LAN, Store-qualified Xcode26.3, Store signing/publication are not verified."
+    ]
+  },
+  "artifact_provenance_limit": {
+    "built_and_installed_inventory": "Equal four-image inventories with same SHA256fdc15469fa827b3fe7d3a1f95b08e50f9b08419e59fe37c7b43c857ed9a23251; read-only signature inspections exit0.",
+    "self_observed_loaded_framework": {
+      "file_bytes": 83991368,
+      "file_sha256": "117678fa544b2b7614e6b4ce52a5c7cefc2e97a5bcc7039e44c1095f6a950be8",
+      "image_uuid": "00793d9c-bccb-3259-bf1b-42805cd07452",
+      "origin": "owned-copy-build",
+      "path": "xcode-frameworks/Debug/iphonesimulator26.5/ComposeApp.framework/ComposeApp"
+    },
+    "binding_incomplete_reason": "Execution stops at verify_xctest before run_ios_readiness.py:803-853 external runtime-framework inventory and loaded-image binder. Observed build-framework bytes/hash differ from embedded framework while UUID matches; a matching UUID is not a substitute for byte/hash binding. No executed-framework-inventory.json retained.",
+    "scope": "Source/copy identity and actual XCTest failure are corroborated; do not claim complete executed binary provenance or signed-release evidence."
+  },
+  "cleanup": {
+    "classification": "PASS for exact07 owned resources, independently corroborated by retained receipts and current exact-path absence",
+    "gradle_stops": [
+      {
+        "label": "stop-xcode-immediate",
+        "exit_code": 0,
+        "at": "2026-09-07T21:11:09.522675+00:00"
+      },
+      {
+        "label": "stop-final",
+        "exit_code": 0,
+        "at": "2026-09-07T21:11:12.890539+00:00"
+      }
+    ],
+    "nested_phase_receipt": "build_exit=0\nstop_exit=0\n",
+    "immediate_stop_log": "No Gradle daemons are running.",
+    "final_stop_log": "No Gradle daemons are running.",
+    "command_count": 34,
+    "only_nonzero_command": "xcodebuild.log65; all33 other retained commands exit0",
+    "owned_simulator_shutdown_exit": 0,
+    "owned_simulator_delete_exit": 0,
+    "simulator_metadata_after_delete": {
+      "matches": []
+    },
+    "worker_receipt": {
+      "owned_processes_remaining": [],
+      "unknown_holders": [],
+      "cleanup_errors": [],
+      "secondary_attestation_errors": [],
+      "remaining_outputs": [],
+      "unexpected_original_outputs_preserved": []
+    },
+    "secondary_proof": "Both exact FIFOs tied to observed task-owned8485/start and parent8473/start plus inode/device/uid/birth metadata; empty exact parents removed; no broad temporary-directory cleanup.",
+    "current_exact_path_checks": [
+      {
+        "path": "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-ios-readiness-07-3vbx7ig_",
+        "absent": true
+      },
+      {
+        "path": "/Users/abdelrahman/Library/Developer/CoreSimulator/Devices/F96D4E03-A451-44EC-B3F6-C6475E684D0E",
+        "absent": true
+      },
+      {
+        "path": "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-8473/IB/10CA5E20-BFC6-422A-97A5-3F85E3DD52E0.RemoteToHost",
+        "absent": true
+      },
+      {
+        "path": "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-8473/IB/10CA5E20-BFC6-422A-97A5-3F85E3DD52E0.HostToRemote",
+        "absent": true
+      },
+      {
+        "path": "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-8473/IB",
+        "absent": true
+      },
+      {
+        "path": "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-8473",
+        "absent": true
+      }
+    ],
+    "cache_handling": "Only owned cache symlinks unlinked; global dependency caches not deleted.",
+    "reviewer_activity": "No builds, repository imports, native probes, process controls or background workers; only static reads/stdlib analysis and this new report. Did not enumerate or interfere with native08 resources."
+  },
+  "next_step": "If further diagnosis is authorized, preserve this FAIL and collect bounded closed native metadata classifications and exact allowlisted NSError evidence in a new source-bound run. Do not change production storage or weaken protection/absence checks based on this observation alone.",
+  "reviewed_source_ranges": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/L08StorageProbe.kt.in",
+      "sha256": "28f4158cc701f1355a9320da1edd9a6d7825cf76828b2b0472ea194611750b75",
+      "reviewed_ranges": [
+        [
+          1,
+          499
+        ]
+      ],
+      "file_lines": 499,
+      "reviewer": "/root/factory_review",
+      "purpose": "Complete producer; save/read/equality then guarded native metadata assertion."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/L08StorageLaunch.swift.in",
+      "sha256": "679532441cf6c8fcf6ada88d6e94d0452d1ea3e3979fe0f981aa1935ba83947f",
+      "reviewed_ranges": [
+        [
+          1,
+          71
+        ]
+      ],
+      "file_lines": 71,
+      "reviewer": "/root/factory_review",
+      "purpose": "Complete Kotlin-to-Swift callback/result bridge and public control."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/L08StorageUITests.swift.in",
+      "sha256": "2f0ce45e329efa15a8e28f681af0b201c4d503e59348a1ad507e2a2a8883e864",
+      "reviewed_ranges": [
+        [
+          1,
+          111
+        ]
+      ],
+      "file_lines": 111,
+      "reviewer": "/root/factory_review",
+      "purpose": "Complete operation matrix, exact selector, response binding and failed assertion."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/l08_copy.py",
+      "sha256": "c2bf28bf0efd9449d646c451d7b8e665000e8d11a3a6eea76de95e1fb4a55a5f",
+      "reviewed_ranges": [
+        [
+          1,
+          166
+        ]
+      ],
+      "file_lines": 166,
+      "reviewer": "/root/factory_review",
+      "purpose": "Complete closed copy transformations and order of additional scenarios."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/copied_sources.py",
+      "sha256": "d52f4f7904d1481fee00796a1c0775ee3512934639dac45fee44704fa9b74e62",
+      "reviewed_ranges": [
+        [
+          1,
+          231
+        ]
+      ],
+      "file_lines": 231,
+      "reviewer": "/root/factory_review",
+      "purpose": "Complete manifest/copy source guards and post-build input inventory."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/instrument_storage.py",
+      "sha256": "51348e3985e6872283182a728d8a91808714d69ad0197c978298678366cb4d88",
+      "reviewed_ranges": [
+        [
+          1,
+          42
+        ]
+      ],
+      "file_lines": 42,
+      "reviewer": "/root/factory_review",
+      "purpose": "Complete observer edits apply to separate credential backing only, not snapshot storage."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/L08HostProbe.kt.in",
+      "sha256": "62dfce06e71cf84f9e80c710f02a1fcb54308104af583d3d9d3033cf41b4bd79",
+      "reviewed_ranges": [
+        [
+          71,
+          142
+        ]
+      ],
+      "file_lines": 440,
+      "reviewer": "/root/factory_review",
+      "purpose": "Extra Koin modules return empty in l08-storage; host controls not reached."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/L08WhodunitSnapshots.kt.in",
+      "sha256": "2440e1d032e35171127b68ee69c42a35ef933bcdc8cea30cc991cb7a02ade0fb",
+      "reviewed_ranges": [
+        [
+          1,
+          105
+        ]
+      ],
+      "file_lines": 190,
+      "reviewer": "/root/factory_review",
+      "purpose": "First wc fixture uses actual reducer to reach round1/clue checkpoint; not generic JSON mock."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/IOSAppLaunchUITests.swift.in",
+      "sha256": "9bdfa70f43074569a8699dda01864496188562b117289c994ea4f4e8c844bf60",
+      "reviewed_ranges": [
+        [
+          1,
+          116
+        ]
+      ],
+      "file_lines": 665,
+      "reviewer": "/root/factory_review",
+      "purpose": "continueAfterFailure=false and settings/native/L08/local/OS scenario ordering."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/l08_receipts.py",
+      "sha256": "3cab6914886db081ba883629242d33a262158c0106e8658bc7b777387826f867",
+      "reviewed_ranges": [
+        [
+          1,
+          155
+        ]
+      ],
+      "file_lines": 422,
+      "reviewer": "/root/factory_review",
+      "purpose": "Closed failure stage vocabulary and strict all-operation PASS contract."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/run_ios_readiness.py",
+      "sha256": "85283be9681be14c18b76ef1657b596e837b4f97f978917f25ac693ae72d0ca8",
+      "reviewed_ranges": [
+        [
+          1,
+          215
+        ],
+        [
+          460,
+          850
+        ],
+        [
+          890,
+          1004
+        ]
+      ],
+      "file_lines": 1004,
+      "reviewer": "/root/factory_review",
+      "purpose": "Relevant actual test binding, copy, result preservation, short-circuit and cleanup paths reopened; full runner previously read in source07 approval."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/owned_lane.py",
+      "sha256": "4bf3bbb4abfa22cd1604e6b4381bf481c95662ab15bf3fbdc86355a083102742",
+      "reviewed_ranges": [
+        [
+          1,
+          103
+        ],
+        [
+          168,
+          221
+        ]
+      ],
+      "file_lines": 221,
+      "reviewer": "/root/factory_review",
+      "purpose": "Identity hash algorithm, protected exclusions, output inventory and cleanup receipt primitives."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSnapshotFileSystem.kt",
+      "sha256": "c2852fafb293a693be830171f4674947289fafb07f8ecdbafa5c0aaae6d1bf8b",
+      "reviewed_ranges": [
+        [
+          1,
+          225
+        ],
+        [
+          340,
+          500
+        ]
+      ],
+      "file_lines": 500,
+      "reviewer": "/root/factory_review",
+      "purpose": "Actual iOS file creation/protection/read/write paths; middle crypto already read in preceding review pass, not claimed newly reopened here."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/commonMain/kotlin/com/parlor/app/di/StorageModule.kt",
+      "sha256": "9734dde8f751d0e5792577692c322051aa0adc7f45ed0fa6ac5961cf9295e87c",
+      "reviewed_ranges": [
+        [
+          1,
+          23
+        ]
+      ],
+      "file_lines": 23,
+      "reviewer": "/root/factory_review",
+      "purpose": "Production real-store binding."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/iosMain/kotlin/com/parlor/app/storage/PlatformStorage.ios.kt",
+      "sha256": "cb69b6de029bf7d9f84dbc5bf19139150906a29d64cf29a60994259ca657a0c0",
+      "reviewed_ranges": [
+        [
+          1,
+          19
+        ]
+      ],
+      "file_lines": 19,
+      "reviewer": "/root/factory_review",
+      "purpose": "Production iOS SnapshotFileSystem binding."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/storage/src/commonMain/kotlin/com/parlor/storage/snapshot/FileBackedSnapshotStore.kt",
+      "sha256": "e2ca0be28fd2f0eafee1a55022653190cf30a8c6da620dc3dfe56f361e0da27f",
+      "reviewed_ranges": [
+        [
+          1,
+          246
+        ]
+      ],
+      "file_lines": 246,
+      "reviewer": "/root/factory_review",
+      "purpose": "Complete common save/load and exception mapping."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/engine/src/commonMain/kotlin/com/parlor/engine/snapshot/SnapshotCodec.kt",
+      "sha256": "010c2df47f3803d60a80a428e459e052c715d3eb29a55444f1eeeff7c28ebad1",
+      "reviewed_ranges": [
+        [
+          1,
+          64
+        ]
+      ],
+      "file_lines": 64,
+      "reviewer": "/root/factory_review",
+      "purpose": "Complete GameSnapshot field and byte-content equality."
+    }
+  ],
+  "evidence": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-07/receipt.json",
+      "sha256": "9080d2ffc5468ef3d1328ce76c06df97a3fc644674db90f958762792e86fc792",
+      "bytes": 379267
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-07/input-manifest.json",
+      "sha256": "60c6a70a87993cfeb8dd96f60d5f1b1dd682fa86889ced1de21924d4accc7321",
+      "bytes": 158280
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-07/copied-source.diff",
+      "sha256": "a86a916d2a9a1722deb80451c68a1f20f3ebdcf78e379afedaf0bfbacb611cbe",
+      "bytes": 363988
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-07/copied-source-manifest.json",
+      "sha256": "8cfb1ebd34a020f6a8d4bfb940b9ef22dff5f8d9094838d96fc3aacdc4685fc2",
+      "bytes": 215304
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-07/copied-source-inputs-after-build.json",
+      "sha256": "6cf20ba3ba4734e7211d53d92ace6cca0fdf2a204cfeb640b74c4687de1a2c84",
+      "bytes": 244145
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-07/xcresult-summary.json",
+      "sha256": "cdaa25b8fb5b59b4f0a0c43ef2fb98a2e9c827b93b17c8281ffba701326a85db",
+      "bytes": 1530
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-07/xcresult-tests.json",
+      "sha256": "2966a92686fb8b39784f322eaf0d1958ce3c7ac0e68d78660b951ad8fa4b15ef",
+      "bytes": 4966
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-07/xcodebuild.log",
+      "sha256": "6b54f819195bb22d69494bb9d81a3d5485d4b37a30fa39608b6089da833d2bfd",
+      "bytes": 370624
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-07/parlor-l08-storage-1-save.json",
+      "sha256": "e638ccd5539d67022a83968e5568adc4557b7b3c7434cec5d9416476a3d58efe",
+      "bytes": 1321
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-07/probe-l08-storage-result.json",
+      "sha256": "a35a0bc403cb84a4b3b5302881955a9a0ba16e7490dd9557755b98d8a473a168",
+      "bytes": 4115
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-07/effective-simulator-app-phase.json",
+      "sha256": "5924ffc61120b57943feaf8234052a004f38a302594cebf94a3bf8f9c3ab913e",
+      "bytes": 1638
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-07/built-app-binary-inventory.json",
+      "sha256": "fdc15469fa827b3fe7d3a1f95b08e50f9b08419e59fe37c7b43c857ed9a23251",
+      "bytes": 1565
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-07/installed-app-binary-inventory.json",
+      "sha256": "fdc15469fa827b3fe7d3a1f95b08e50f9b08419e59fe37c7b43c857ed9a23251",
+      "bytes": 1565
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-07/embedded-gradle-stop.txt",
+      "sha256": "fb55a963c8d30249ea6b8be68a62b5921facefdc7823c16ad139fea885be972f",
+      "bytes": 25
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-07/stop-xcode-immediate.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+      "bytes": 31
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-07/stop-final.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+      "bytes": 31
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-07/owned-device-before-shutdown.json",
+      "sha256": "5d6efedbfbe7d93c7ea60583d29dd0bc73269ddcaec9c1fd2f7c7063d3dee84a",
+      "bytes": 246
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-07/owned-device-after-shutdown.json",
+      "sha256": "99dc91abde7e301c35093fa3b02edce7c12e379ceaa60257ef2b66a1cb76bf6c",
+      "bytes": 248
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-07/owned-device-before-delete.json",
+      "sha256": "99dc91abde7e301c35093fa3b02edce7c12e379ceaa60257ef2b66a1cb76bf6c",
+      "bytes": 248
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-07/owned-device-after-delete.json",
+      "sha256": "755d442cf44919879856407fe199e916c770d206e3f6b050d6eb286b7af73782",
+      "bytes": 20
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-07/secondary-fifo-ownership-final.json",
+      "sha256": "1a803779ab2df0f1a678cdb9633b90f44883b3ffca33962ec89497f647fefed8",
+      "bytes": 2924
+    }
+  ]
+}

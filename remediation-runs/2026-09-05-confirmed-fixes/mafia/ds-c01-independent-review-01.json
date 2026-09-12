@@ -1,0 +1,171 @@
+{
+  "reviewer": "/root/mafia_cont",
+  "fix_author": "/root",
+  "at": "2026-09-05T19:07:43.382977+00:00",
+  "finding": "DS-C01",
+  "classification": "PARTIAL REMEDIATION \u2014 marked-override/fallback paths corrected; legacy provenance unresolved",
+  "source_evidence": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/iosMain/kotlin/com/parlor/designsystem/localization/IosLanguageOverrideOwner.kt",
+      "sha256": "c323a0e2eaf5aab2e5adc4df007cb20a930b1fdf18f67f54ca95b789b85e3482",
+      "reviewed_lines": [
+        [
+          1,
+          56
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/iosMain/kotlin/com/parlor/designsystem/localization/LocalAppLocale.ios.kt",
+      "sha256": "0e0783ca3e38634bd3469760f5dbfa5ade8509b976d0ec676202f4513cd8e098",
+      "reviewed_lines": [
+        [
+          1,
+          83
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/iosTest/kotlin/com/parlor/designsystem/localization/IosLanguageOverrideOwnerTest.kt",
+      "sha256": "e154cf26a94fc391347410ae98b7638b1ef6962b2485d9f8c14b7e762384e6e0",
+      "reviewed_lines": [
+        [
+          1,
+          104
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/localization/ProvideAppLanguage.kt",
+      "sha256": "b4f4286459fe923ebaa3e156f4a9995232ce40ad32ae9bc43f73a929da77dc18",
+      "reviewed_lines": [
+        [
+          1,
+          62
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/localization/LocalAppLocale.kt",
+      "sha256": "9fe9742ea7225d76795a1731bab0e38c60af8b1b8760fc7d7158024d7437794f",
+      "reviewed_lines": [
+        [
+          1,
+          21
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/localization/AppLanguage.kt",
+      "sha256": "fe6a1f254f55403d010bba741b80d05824b238f668f6d6951b31a308eb8353f0",
+      "reviewed_lines": [
+        [
+          1,
+          38
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/commonMain/kotlin/com/parlor/app/App.kt",
+      "sha256": "622b679a2ef023fab17bf6c8ed8eb38c1fbc2b76a391f5f9a8298d59da9dda59",
+      "reviewed_lines": [
+        [
+          51,
+          101
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/commonMain/kotlin/com/parlor/app/shell/settings/SettingsScreen.kt",
+      "sha256": "f97da085d85ed5fe01ac9f4725580ea2f86e399dcd330f532d9babc1925535c5",
+      "reviewed_lines": [
+        [
+          91,
+          130
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/commonMain/kotlin/com/parlor/app/shell/settings/SettingsMutationDispatcher.kt",
+      "sha256": "915149f63b117f3516c749070abea6c538942c2d61c2b9c7224f3551aad45ce5",
+      "reviewed_lines": [
+        [
+          1,
+          29
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSettingsKeyValueBacking.kt",
+      "sha256": "c8162e6713905b66d10aa8bc7e284d18f6815a2ae1754ba836c7241382014a10",
+      "reviewed_lines": [
+        [
+          1,
+          40
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/storage/src/commonMain/kotlin/com/parlor/storage/settings/PersistentSettingsStore.kt",
+      "sha256": "179e00506a2f3c7083d9f9231aa683e8bb73220a807ef6f1f5b04bb5496dac10",
+      "reviewed_lines": [
+        [
+          1,
+          110
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/iosApp/iosApp/iOSApp.swift",
+      "sha256": "01d47afe5d13eb9ec48d9e8987c7920e72f2fefa5b06ec525087025caa809386",
+      "reviewed_lines": [
+        [
+          1,
+          10
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/iosApp/iosApp/ContentView.swift",
+      "sha256": "2e9bf560447c78c84462daccafc67cee961428dbd592adb6e12ddf085ab67a55",
+      "reviewed_lines": [
+        [
+          1,
+          62
+        ]
+      ]
+    }
+  ],
+  "confirmed_improvements": [
+    "Reads only app persistent domain; does not capture resolved global/registration fallback as previous app value.",
+    "Persists a v1 marker before installing an explicit override; a new owner first reconciles the preceding marked override, including System/null startup.",
+    "Retains full previous array, not just first tag; restores/removes only if complete currently-installed array matches.",
+    "External differing arrays win; unmarked identical arrays are not newly claimed.",
+    "Effect/Composition boundary remains stable; native/Compose direction derives from applied language without replacing navigation/session."
+  ],
+  "counter_evidence": [
+    "Single production ProvideAppLanguage call in App; iOS Info.plist disables multiple scenes, so arbitrary multi-owner examples are not established production defects.",
+    "NSUserDefaults setters do not acknowledge durability/atomic multi-key persistence; implementation explicitly does not claim either.",
+    "Synthetic suite tests inspect Foundation preference operations only, not actual NSLocale/Compose/UIKit locale propagation."
+  ],
+  "open_limits": [
+    "Original old-process override lacks marker. New source intentionally preserves it; switching to System can retain it, so DS-C01 cannot be called fully resolved for upgraded pre-marker installs.",
+    "Exact-value match is not cryptographic/proven provenance: an external same-array write is indistinguishable and may be restored/removed. Policy/limitation must be explicit.",
+    "Malformed v1 owner previous field is currently untyped; matching installed array plus previous non-array restores arbitrary value into AppleLanguages. Recommend validate previous array-of-strings or preserve key on invalid metadata; no ordinary shipping producer proven.",
+    "No native suite, complete iOS app, physical language restart or native LTR/RTL gesture test executed by reviewer.",
+    "Interrupted in-memory call sequences are reasoned; asynchronous disk-flush/power-loss outcomes are not certified by those unit tests."
+  ],
+  "recommended_tests": [
+    "Marked owner with no previous app-domain value, interrupted preparation, release interrupted after restoration, startup explicit language differing from old marker.",
+    "Malformed current v1 marker previous types/missing installed key preserve platform value.",
+    "Actual iOS English\u2192process death/relaunch\u2192System with global Arabic and the reverse; external per-app preference behavior; stable ongoing game/navigation through runtime language changes."
+  ],
+  "references_reopened": [
+    "audit-runs/2026-09-05-source-audit/evidence/design-locale-api/research.json",
+    "audit-runs/2026-09-05-source-audit/candidates/DS-C01-ios-follow-system-locale.md",
+    "audit-runs/2026-09-05-source-audit/validations/DS-C01-root.md"
+  ],
+  "no_production_edits_by_reviewer": true,
+  "no_builds_or_native_runs_by_reviewer": true,
+  "cleanup": "Review created only this compact evidence file; no task build output/process to stop or clean."
+}

@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/release_fix_review",
+  "recorded_at": "2026-09-06T22:47:33.984236+00:00",
+  "xcode_version": {
+    "CFBundleShortVersionString": "26.5",
+    "ProductBuildVersion": "17F42"
+  },
+  "headers": [
+    {
+      "path": "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/Library/Frameworks/XCUIAutomation.framework/Headers/XCUIElementQuery.h",
+      "sha256": "e18a48164bd9df2d4e85c301d5af4c51af53a59410e6a8995b08364ef3c0c0b8",
+      "matched_declarations": [
+        {
+          "line": 61,
+          "text": "- (XCUIElementQuery *)matchingPredicate:(NSPredicate *)predicate;"
+        },
+        {
+          "line": 63,
+          "text": "- (XCUIElementQuery *)matchingIdentifier:(NSString *)identifier;"
+        },
+        {
+          "line": 66,
+          "text": "- (XCUIElementQuery *)containingPredicate:(NSPredicate *)predicate;"
+        }
+      ]
+    },
+    {
+      "path": "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/Library/Frameworks/XCUIAutomation.framework/Headers/XCUIElementAttributes.h",
+      "sha256": "1e82302dec92cad444bc057a526383bd927ec736b46d62122c5c1bfbbeb369c6",
+      "matched_declarations": [
+        {
+          "line": 35,
+          "text": "@property (readonly) NSString *identifier;"
+        },
+        {
+          "line": 41,
+          "text": "@property (readonly, nullable) id value;"
+        },
+        {
+          "line": 44,
+          "text": "@property (readonly, copy) NSString *title;"
+        },
+        {
+          "line": 47,
+          "text": "@property (readonly, copy) NSString *label;"
+        },
+        {
+          "line": 62,
+          "text": "@property (readonly, nullable) NSString *placeholderValue;"
+        }
+      ]
+    }
+  ],
+  "scope": "Exact installed Xcode26.5 public XCUIAutomation header declarations corroborate predicate/identifier queries and distinct properties; semantic multi-property matching claim is from authoritative Apple documentation research02, not inferred from declarations. Read-only, no builds/tests."
+}

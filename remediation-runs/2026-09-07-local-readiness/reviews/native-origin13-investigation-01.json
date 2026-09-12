@@ -1,0 +1,118 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/native_fix_review",
+  "created_at": "2026-09-07T10:36:50.546599+00:00",
+  "assignment": "Read-only independent investigation of readiness03 image-observation domain3/code13; no source/control changes, native execution, or secondary-FIFO investigation.",
+  "source": {
+    "branch": "fix/local-readiness-2026-09-07",
+    "head": "f5ea8045bd903c255041b198f54aca67e893612f",
+    "tree": "b109c8ec6ec579b9197f449b36bda2c39105a652",
+    "tracked_worktree": "clean at initial read",
+    "source_manifest_sha256": "09b1e6be496baccb185b1dbe227e12a46de20c7c408e2deccac882c6c2b26cb2"
+  },
+  "inputs": [
+    {
+      "path": "scripts/verification/ios-readiness/NativeReadinessLaunch.swift.in",
+      "sha256": "4bddc85fa3a28e1dcb4caaed7e32f8658c195e9c4ee93aeeecaab317fbcaf2bc"
+    },
+    {
+      "path": "scripts/verification/ios-readiness/artifact_inventory.py",
+      "sha256": "485196bd7dcebccaa5ad552896c7e2da781fbf6fa6fff6ef2ab350ecc9360124"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-03/receipt.json",
+      "sha256": "46316b3b8f80b86645e14746da1dbd08d511e0e77acc390233491c2f6af0fcd6"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-03/parlor-native-readiness-failure-1.json",
+      "sha256": "c3709eb74a2d7a002233c9ef0cbb4a31b6ad11d21f0284c153626deccbe749bb"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-03/xcodebuild.log",
+      "sha256": "eba350f262e69472115fc6a2440a132a0edb21af323a182e14737bd1c80659a3"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-03/copied-source.diff",
+      "sha256": "59a1d02e8351cc900a1ee7eb75dda244326941b09599a36e17319b17d9d0436d"
+    }
+  ],
+  "execution_performed_by_reviewer": {
+    "builds": 0,
+    "tests": 0,
+    "native_probes": 0,
+    "simulators": 0,
+    "process_actions": 0,
+    "source_or_control_edits": 0,
+    "deletions": 0,
+    "only_output": "this report"
+  },
+  "observed_failure": {
+    "classification": "INSTRUMENTATION PROVENANCE GATE FAILURE; NOT APPLICATION CRASH OR STORAGE CONCLUSION",
+    "stage": "image-observation",
+    "error_domain_id": 3,
+    "error_code": 13,
+    "proof": "NativeReadinessLaunch.swift.in188-218 enumerates an image named ComposeApp and rejects its resolved path after installed-app and product-root prefix comparisons both fail. No unknown path or framework fingerprint is retained on this branch.",
+    "limitations": "The exact rejected runtime path was intentionally omitted. Retained built/installed file inventories and successful UIKit tests do not establish which framework file was loaded in the failed expanded test."
+  },
+  "narrowing": [
+    {
+      "conclusion": "KGP symbolic-link task does not establish a separate DerivedData product origin.",
+      "evidence": "Exact2.4.10 AppleXcodeTasks104-112,266-277,557-560 derive frameworkPath from copy/composeApp/build/xcode-frameworks/Debug/iphonesimulator26.5. SymbolicLinkToFrameworkTask67-97 creates BUILT_PRODUCTS_DIR/<framework> -> that frameworkPath. Xcode log1061/1063 records both tasks. Do not broaden allowed origin roots because this task ran."
+    },
+    {
+      "conclusion": "Observer compares differently normalized trusted roots and runtime paths.",
+      "evidence": "artifact_inventory.py89-101 requires Python-canonical /private/var/... and injects it literally. NativeReadinessLaunch.swift.in198,213 resolves observed URL paths with Foundation, then compares product root verbatim. Sibling loader environment258 compares task root verbatim. Apple NSURL docs explicitly state /private stripping for an existing resulting file. Source diff591-592 proves /private literals; actual Xcode log293/472/787/1387 uses /var spelling.",
+      "classification": "SOURCE-LEVEL NORMALIZATION ASYMMETRY WITH AUTHORITATIVE SUPPORT; EXACT SWIFT/DARWIN RUNTIME WITNESS STILL REQUIRED",
+      "counterevidence": "Swift URL method documentation is less specific than NSURL bridge documentation. No root-controlled Foundation/POSIX fixture has been run by this reviewer, and the rejected runtime path is unavailable. A genuine external/stale image is still a possible explanation of code13."
+    }
+  ],
+  "recommended_narrow_correction": [
+    "First execute an owned synthetic Foundation/POSIX alias fixture in the root-owned lane to establish exact current toolchain behavior. Compare Python-canonical path, Foundation resolution, and POSIX realpath using no user data.",
+    "Use one filesystem canonicalization for observed paths and trusted roots. Prefer POSIX canonical observed paths against already Python-canonical literal roots, or normalize trusted Foundation roots only while explicitly rejecting any relocation other than identity/documented /private equivalence. Do not silently follow a substituted trusted-root symlink to another location.",
+    "Keep existing exact relative framework shapes, SDK binding, app-bundle inventory, bounded streaming fingerprint, memory UUID, and post-runtime owned-path verification. Do not accept generic DerivedData/task paths or log/read unowned image content.",
+    "Cover alias success, same-prefix sibling rejection, dot/traversal rejection, symlink escape/root relocation rejection, unknown-origin rejection before fingerprinting, and task-owned loader environment classification. If a subsequent failure remains, emit only bounded origin-category booleans/enums, never rejected raw paths."
+  ],
+  "research": [
+    {
+      "url": "https://developer.apple.com/tutorials/data/documentation/foundation/nsurl/resolvingsymlinksinpath.json",
+      "access_date": "2026-09-07",
+      "response_sha256": "1b67517b844d2bd973d53874289bdcdcfa1edc3bfce591f36cf8fec2f3191836",
+      "claim": "If receiving path begins with /private, strips that designator provided the result names an existing file. NSURL property available on iOS4.0/macOS10.6 and later. Bridge behavior evidence, not exact iOS26.5 execution."
+    },
+    {
+      "url": "https://developer.apple.com/tutorials/data/documentation/foundation/url/resolvingsymlinksinpath().json",
+      "access_date": "2026-09-07",
+      "response_sha256": "2c4ded9fc52f7f1a7e8e01fa5f5de91f6738c4f976037164012b8969cf6905d5",
+      "claim": "Swift URL method resolves symlinks for file URLs; it does not separately document /private treatment. Native witness recommended."
+    },
+    {
+      "url": "https://raw.githubusercontent.com/JetBrains/kotlin/v2.4.10/libraries/tools/kotlin-gradle-plugin/src/common/kotlin/org/jetbrains/kotlin/gradle/plugin/mpp/apple/AppleXcodeTasks.kt",
+      "access_date": "2026-09-07",
+      "response_sha256": "443c56f4ed9e9e6c36c5bab55e0a565aed303ca4faca8b3f8aa82f0513433207",
+      "claim": "Source bytes exactly match cached2.4.10-gradle813 source jar entry. Framework assembly destination is build/xcode-frameworks/configuration/sdk."
+    },
+    {
+      "url": "https://raw.githubusercontent.com/JetBrains/kotlin/v2.4.10/libraries/tools/kotlin-gradle-plugin/src/common/kotlin/org/jetbrains/kotlin/gradle/plugin/mpp/apple/SymbolicLinkToFrameworkTask.kt",
+      "access_date": "2026-09-07",
+      "response_sha256": "95240ec94078c87cf7d4c3f81e42912d8cb71782e47996a3f5c7649f8e145553",
+      "claim": "Source bytes match cached exact-version entry; creates BuiltProducts symlink pointing to frameworkPath, not inverse."
+    },
+    {
+      "url": "https://raw.githubusercontent.com/JetBrains/kotlin/v2.4.10/libraries/tools/kotlin-gradle-plugin/src/common/kotlin/org/jetbrains/kotlin/gradle/plugin/mpp/apple/XcodeEnvironment.kt",
+      "access_date": "2026-09-07",
+      "response_sha256": "d79510797c77fb84962cc3c2948219f6c1c9eef7fd9ac7ddde90422f992c3182",
+      "claim": "Source bytes match cached exact-version entry; frameworkSearchDir=File(CONFIGURATION,SDK_NAME)."
+    }
+  ],
+  "cached_dependency_sources": {
+    "artifact": "kotlin-gradle-plugin-2.4.10-gradle813-sources.jar",
+    "sha256": "70e277a44fbcf4d58444bb8b1459cb80686380537aa7414b80745a71607b36bb",
+    "mode": "read-only; global cache unchanged"
+  },
+  "remaining_uncertainty": [
+    "Exact rejected runtime image location in readiness03",
+    "Exact selected Swift/Foundation native canonicalization behavior",
+    "Whether future native attempt succeeds after a separately reviewed correction"
+  ],
+  "cleanup": "No reviewer-started build/test/native worker or generated artifact exists. Public-reference downloads were memory-only. Root alone owns readiness03 cleanup and secondary-FIFO decisions."
+}

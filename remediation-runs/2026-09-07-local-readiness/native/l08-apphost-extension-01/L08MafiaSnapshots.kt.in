@@ -1,0 +1,190 @@
+// COPY-ONLY native app-host fixture; uses real reducers and recovery, no state copies.
+package com.parlor.games.mafia.readiness
+
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import com.parlor.core.ids.CaseId
+import com.parlor.core.ids.PlayerId
+import com.parlor.core.ids.SessionId
+import com.parlor.core.random.RandomSource
+import com.parlor.core.result.Result
+import com.parlor.core.time.FakeClock
+import com.parlor.engine.reducer.DefaultReducerContext
+import com.parlor.engine.session.SessionConfig
+import com.parlor.engine.snapshot.GameSnapshot
+import com.parlor.engine.state.Player
+import com.parlor.games.mafia.MafiaDefinition
+import com.parlor.games.mafia.MafiaIds
+import com.parlor.games.mafia.domain.action.MafiaAction
+import com.parlor.games.mafia.domain.event.MafiaEvent
+import com.parlor.games.mafia.domain.phase.MafiaPhase
+import com.parlor.games.mafia.domain.settings.MafiaRoleCounts
+import com.parlor.games.mafia.domain.settings.MafiaSettings
+import com.parlor.games.mafia.domain.state.MafiaState
+import com.parlor.games.mafia.domain.state.Role
+import com.parlor.games.mafia.domain.state.Team
+import com.parlor.games.mafia.snapshot.MAFIA_SNAPSHOT_VERSION
+import com.parlor.games.mafia.snapshot.isValidRecoveryState
+import com.parlor.games.mafia.snapshot.loadMafiaResumedSession
+import com.parlor.session.SessionController
+import com.parlor.session.passandplay.PassAndPlaySessionController
+import com.parlor.storage.snapshot.SnapshotStore
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancelAndJoin
+import kotlin.time.Instant
+
+object L08MafiaSnapshots {
+    private const val SEED = 43L
+    private val createdAt = Instant.fromEpochSeconds(1_700_000_000)
+    private var expected: MafiaState? = null
+    private var expectedId: SessionId? = null
+    private var attached: SessionController<MafiaState, MafiaAction, MafiaEvent>? = null
+    private var attachedInitial: MafiaState? = null
+    private var attaches = 0
+    private var completed = false
+
+    suspend fun expectedEnvelope(definition: MafiaDefinition, id: SessionId, repeatEnabled: Boolean): GameSnapshot {
+        check(expectedId == null && id.raw.startsWith("l08-"))
+        val config = SessionConfig(id, CaseId("default"), MafiaIds.ClassicModeId,
+            (1..6).map { Player(PlayerId("l08-seat-$it"), "Audit Player $it", it - 1) }, SEED)
+        val job = SupervisorJob()
+        val raw = PassAndPlaySessionController(definition, config,
+            DefaultReducerContext(FakeClock(createdAt), RandomSource.seeded(SEED)),
+            CoroutineScope(job + Dispatchers.Main.immediate))
+        try {
+            val driver = Driver(raw)
+            driver.submit(MafiaAction.ConfigureAndStart(MafiaSettings(
+                MafiaRoleCounts(mafia = 1, detective = 1, doctor = 1),
+                doctorCanSelfHeal = false, doctorCanProtectSamePlayerConsecutively = repeatEnabled)))
+            check(raw.currentState().phase == MafiaPhase.RoleAssignment)
+            config.players.forEach { driver.submit(MafiaAction.AcknowledgeRoleViewed(it.id)) }
+            driver.submit(MafiaAction.AdvanceFromRoleAssignment)
+            val roles = raw.currentState().hostOnly.fullRoleMap
+            val doctor = roles.entries.single { it.value == Role.Doctor }.key
+            val targets = roles.filterValues { it == Role.Civilian }.keys.toList()
+            check(targets.size >= 2)
+            // ON: four repeated effective protections. OFF: legal alternation,
+            // explicit skipped night, then the pre-skip target again.
+            val plan = if (repeatEnabled) List(4) { targets[0] }
+                else listOf(targets[0], targets[1], null, targets[1])
+            for ((index, target) in plan.withIndex()) {
+                check(raw.currentState().phase == MafiaPhase.Night(index + 1))
+                if (!repeatEnabled && index == 1) {
+                    val before = raw.currentState()
+                    val rejected = raw.submit(MafiaAction.SubmitDoctorProtect(doctor, targets[0]))
+                    check(rejected is Result.Success && !rejected.data.stateChanged)
+                    check(raw.currentState() === before && !before.privatePerPlayer.getValue(doctor).nightChoiceSubmitted)
+                }
+                driver.night(target, target)
+                val resolved = raw.currentState()
+                check(resolved.phase == MafiaPhase.NightAnnouncement(index + 1))
+                check(resolved.hostOnly.nightLog.last().doctorProtect == target)
+                check(resolved.privatePerPlayer.getValue(doctor).previousDoctorProtect == target)
+                check(target == null || resolved.public.lastNight?.wasSaved == true)
+                driver.toVote()
+                check(raw.currentState().phase == MafiaPhase.Voting(index + 1))
+                checkNotNull(raw.currentState().public.activeVote).ballot.forEach {
+                    driver.submit(MafiaAction.AbstainVote(it))
+                }
+                driver.submit(MafiaAction.CloseVote)
+                check(raw.currentState().phase == MafiaPhase.VoteAnnouncement(index + 1))
+                driver.alive().forEach { driver.submit(MafiaAction.AcknowledgeVoteAnnouncement(it)) }
+                driver.submit(MafiaAction.AdvanceFromVoteAnnouncement)
+            }
+            val state = raw.currentState()
+            check(state.phase == MafiaPhase.Night(5) && state.public.settings.doctorCanProtectSamePlayerConsecutively == repeatEnabled)
+            check(state.hostOnly.nightLog.map { it.doctorProtect } == plan)
+            check(state.isValidRecoveryState())
+            expected = state
+            expectedId = id
+            return GameSnapshot(id, MafiaIds.GameId, MAFIA_SNAPSHOT_VERSION, createdAt,
+                state.phase.id, definition.snapshotCodec().encode(state), mapOf("playMode" to "PassAndPlay"))
+        } finally {
+            raw.close()
+            job.cancelAndJoin()
+            check(job.isCompleted)
+        }
+    }
+
+    suspend fun verifyRecovery(store: SnapshotStore, definition: MafiaDefinition) {
+        val resumed = loadMafiaResumedSession(store, definition, checkNotNull(expectedId))
+        check(resumed is Result.Success && resumed.data.sessionId == expectedId && resumed.data.state == expected)
+        check(resumed.data.state.isValidRecoveryState())
+    }
+
+    fun attach(id: SessionId?, session: SessionController<MafiaState, MafiaAction, MafiaEvent>) {
+        if (id == null || id != expectedId) return
+        check(!completed && attached == null && attaches == 0)
+        attached = session
+        attachedInitial = checkNotNull(session.canonicalState).value
+        attaches += 1
+        check(attachedInitial == expected)
+    }
+
+    fun detach(session: SessionController<MafiaState, MafiaAction, MafiaEvent>) {
+        if (attached === session) attached = null
+    }
+
+    fun isAttached(): Boolean = attaches == 1 && attached != null && attachedInitial == expected
+
+    suspend fun continueActualResumedController() {
+        check(isAttached() && !completed)
+        val session = checkNotNull(attached)
+        val canonical = checkNotNull(session.canonicalState)
+        check(canonical.value === attachedInitial && canonical.value == expected)
+        val driver = Driver(session)
+        driver.night(null, null)
+        check(canonical.value.phase == MafiaPhase.NightAnnouncement(5))
+        driver.toVote()
+        val mafia = canonical.value.hostOnly.fullRoleMap.entries.single { it.value == Role.Mafia }.key
+        checkNotNull(canonical.value.public.activeVote).ballot.forEach { voter ->
+            driver.submit(if (voter == mafia) MafiaAction.AbstainVote(voter) else MafiaAction.CastVote(voter, mafia))
+        }
+        driver.submit(MafiaAction.CloseVote)
+        check(canonical.value.phase == MafiaPhase.PostGame && canonical.value.public.winner == Team.Town)
+        check(canonical.value.privatePerPlayer.values.all { it.previousDoctorProtect == null })
+        completed = true
+    }
+
+    fun release() {
+        expected = null; expectedId = null; attached = null; attachedInitial = null
+    }
+
+    private class Driver(val session: SessionController<MafiaState, MafiaAction, MafiaEvent>) {
+        private val state: MafiaState get() = checkNotNull(session.canonicalState).value
+        suspend fun submit(action: MafiaAction) {
+            val receipt = session.submit(action)
+            check(receipt is Result.Success && !receipt.data.awaitingAuthority)
+            check(state.isValidRecoveryState())
+        }
+        fun alive(): List<PlayerId> = state.public.roster.filter { it.alive }.map { it.playerId }
+        suspend fun night(protect: PlayerId?, kill: PlayerId?) {
+            check(state.phase is MafiaPhase.Night)
+            alive().forEach { id ->
+                check(!state.privatePerPlayer.getValue(id).nightChoiceSubmitted)
+                submit(when (state.privatePerPlayer.getValue(id).role) {
+                    Role.Doctor -> MafiaAction.SubmitDoctorProtect(id, protect)
+                    Role.Mafia -> MafiaAction.SubmitMafiaKillVote(id, kill)
+                    Role.Detective -> MafiaAction.SubmitDetectiveInspect(id, null)
+                    Role.Civilian -> MafiaAction.SubmitCivilianSuspicion(id, null)
+                })
+            }
+            submit(MafiaAction.ResolveNight)
+        }
+        suspend fun toVote() {
+            alive().forEach { submit(MafiaAction.AcknowledgeNightAnnouncement(it)) }
+            submit(MafiaAction.OpenDiscussion)
+            submit(MafiaAction.OpenVote)
+        }
+    }
+}
+
+@Composable
+fun L08ObserveMafiaResume(id: SessionId?, session: SessionController<MafiaState, MafiaAction, MafiaEvent>) {
+    DisposableEffect(id, session) {
+        L08MafiaSnapshots.attach(id, session)
+        onDispose { L08MafiaSnapshots.detach(session) }
+    }
+}

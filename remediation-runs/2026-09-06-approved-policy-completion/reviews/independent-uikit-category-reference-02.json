@@ -1,0 +1,406 @@
+{
+  "reviewer": "/root/release_fix_review",
+  "accessed_utc": "2026-09-06T11:56:21.419284+00:00",
+  "supersedes_excerpt": "independent-uikit-category-reference-01.json selected a TOC position; this supplement records the actual API prose. Original HTTP/hash retained.",
+  "url": "https://kotlinlang.org/docs/native-objc-interop.html#extensions-and-category-members",
+  "http_status": 200,
+  "response_sha256": "1784b0a4d790c7ab37f828f06232a0970430c4a4ed2b235ad652cf2ef0194e8a",
+  "excerpt": "Members of Objective-C categories and Swift extensions are generally imported to Kotlin as extensions. That's why these declarations can't be overridden in Kotlin, and the extension initializers aren't available as Kotlin constructors. Currently, there are two exceptions. Starting with Kotlin 1.8.20, category members that are declared in the same headers as the NSView class (from the AppKit framework) or UIView classes (from the UIKit framework) are imported as members of these classes. This means that you can override methods that subclass from NSView or UIView. ",
+  "sdk_header": {
+    "path": "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk/System/Library/Frameworks/UIKit.framework/Headers/UIViewController.h",
+    "sha256": "61454958d79ae0627b6078bf70a4ac3bada7837297374f56da2a5591d4e3692d",
+    "ranges": [
+      [
+        361,
+        372
+      ],
+      [
+        426,
+        439
+      ],
+      [
+        468,
+        473
+      ],
+      [
+        480,
+        515
+      ],
+      [
+        652,
+        675
+      ]
+    ],
+    "relevant_lines": [
+      {
+        "line": 361,
+        "text": "@interface UIViewController (UIViewControllerRotation)"
+      },
+      {
+        "line": 362,
+        "text": ""
+      },
+      {
+        "line": 363,
+        "text": "+ (void)attemptRotationToDeviceOrientation API_DEPRECATED(\"Please use instance method `setNeedsUpdateOfSupportedInterfaceOrientations`.\", ios(5.0, 16.0), visionos(1.0, 1.0)) API_UNAVAILABLE(tvos) API_UNAVAILABLE(watchos);"
+      },
+      {
+        "line": 364,
+        "text": ""
+      },
+      {
+        "line": 365,
+        "text": "// Applications should use supportedInterfaceOrientations and/or shouldAutorotate."
+      },
+      {
+        "line": 366,
+        "text": "- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation API_DEPRECATED(\"\", ios(2.0, 6.0)) API_UNAVAILABLE(tvos) API_UNAVAILABLE(visionos, watchos);"
+      },
+      {
+        "line": 367,
+        "text": ""
+      },
+      {
+        "line": 368,
+        "text": "// New Autorotation support."
+      },
+      {
+        "line": 369,
+        "text": "@property(nonatomic, readonly) BOOL shouldAutorotate API_DEPRECATED(\"Update supported interface orientations and call setNeedsUpdateOfSupportedInterfaceOrientations to indicate a change.\", ios(6.0, 16.0), visionos(1.0, 1.0)) API_UNAVAILABLE(tvos) API_UNAVAILABLE(watchos);"
+      },
+      {
+        "line": 370,
+        "text": "@property(nonatomic, readonly) UIInterfaceOrientationMask supportedInterfaceOrientations API_AVAILABLE(ios(6.0)) API_UNAVAILABLE(tvos);"
+      },
+      {
+        "line": 371,
+        "text": "// Returns interface orientation masks."
+      },
+      {
+        "line": 372,
+        "text": "@property(nonatomic, readonly) UIInterfaceOrientation preferredInterfaceOrientationForPresentation API_AVAILABLE(ios(6.0)) API_UNAVAILABLE(tvos);"
+      },
+      {
+        "line": 426,
+        "text": "@interface UIViewController (UIContainerViewControllerProtectedMethods)"
+      },
+      {
+        "line": 427,
+        "text": ""
+      },
+      {
+        "line": 428,
+        "text": "// An array of children view controllers. This array does not include any presented view controllers."
+      },
+      {
+        "line": 429,
+        "text": "@property(nonatomic,readonly) NSArray<__kindof UIViewController *> *childViewControllers API_AVAILABLE(ios(5.0));"
+      },
+      {
+        "line": 430,
+        "text": ""
+      },
+      {
+        "line": 431,
+        "text": "/*"
+      },
+      {
+        "line": 432,
+        "text": "  If the child controller has a different parent controller, it will first be removed from its current parent"
+      },
+      {
+        "line": 433,
+        "text": "  by calling removeFromParentViewController. If this method is overridden then the super implementation must"
+      },
+      {
+        "line": 434,
+        "text": "  be called."
+      },
+      {
+        "line": 435,
+        "text": "*/"
+      },
+      {
+        "line": 436,
+        "text": "- (void)addChildViewController:(UIViewController *)childController API_AVAILABLE(ios(5.0));"
+      },
+      {
+        "line": 437,
+        "text": ""
+      },
+      {
+        "line": 438,
+        "text": "/*"
+      },
+      {
+        "line": 439,
+        "text": "  Removes the the receiver from its parent's children controllers array. If this method is overridden then"
+      },
+      {
+        "line": 468,
+        "text": "@property(nonatomic, readonly, nullable) UIViewController *childViewControllerForStatusBarStyle API_AVAILABLE(ios(7.0)) API_DEPRECATED(\"Has no effect on visionOS\", visionos(1.0, 1.0)) API_UNAVAILABLE(tvos);"
+      },
+      {
+        "line": 469,
+        "text": "@property(nonatomic, readonly, nullable) UIViewController *childViewControllerForStatusBarHidden API_AVAILABLE(ios(7.0)) API_DEPRECATED(\"Has no effect on visionOS\", visionos(1.0, 1.0)) API_UNAVAILABLE(tvos);"
+      },
+      {
+        "line": 470,
+        "text": ""
+      },
+      {
+        "line": 471,
+        "text": "// Call to modify the trait collection for child view controllers."
+      },
+      {
+        "line": 472,
+        "text": "- (void)setOverrideTraitCollection:(nullable UITraitCollection *)collection forChildViewController:(UIViewController *)childViewController API_DEPRECATED(\"Use the traitOverrides property on the child view controller instead\", ios(8.0, 17.0), visionos(1.0, 1.0)) API_UNAVAILABLE(watchos);"
+      },
+      {
+        "line": 473,
+        "text": "- (nullable UITraitCollection *)overrideTraitCollectionForChildViewController:(UIViewController *)childViewController API_DEPRECATED(\"Use the traitOverrides property on the child view controller instead\", ios(8.0, 17.0), visionos(1.0, 1.0)) API_UNAVAILABLE(watchos);"
+      },
+      {
+        "line": 480,
+        "text": "@interface UIViewController (UIContainerViewControllerCallbacks)"
+      },
+      {
+        "line": 481,
+        "text": ""
+      },
+      {
+        "line": 482,
+        "text": "/*"
+      },
+      {
+        "line": 483,
+        "text": "  This method is consulted to determine if a view controller manually forwards its containment callbacks to"
+      },
+      {
+        "line": 484,
+        "text": "  any children view controllers. Subclasses of UIViewController that implement containment logic may override"
+      },
+      {
+        "line": 485,
+        "text": "  this method. The default implementation returns YES. If it is overridden and returns NO, then the subclass is"
+      },
+      {
+        "line": 486,
+        "text": "  responsible for forwarding the following methods as appropriate - viewWillAppear: viewDidAppear: viewWillDisappear:"
+      },
+      {
+        "line": 487,
+        "text": "  viewDidDisappear: willRotateToInterfaceOrientation:duration:"
+      },
+      {
+        "line": 488,
+        "text": "  willAnimateRotationToInterfaceOrientation:duration: didRotateFromInterfaceOrientation:"
+      },
+      {
+        "line": 489,
+        "text": "*/"
+      },
+      {
+        "line": 490,
+        "text": ""
+      },
+      {
+        "line": 491,
+        "text": "- (BOOL)automaticallyForwardAppearanceAndRotationMethodsToChildViewControllers API_DEPRECATED(\"\", ios(5.0, 6.0)) API_UNAVAILABLE(tvos) API_UNAVAILABLE(visionos, watchos);"
+      },
+      {
+        "line": 492,
+        "text": "- (BOOL)shouldAutomaticallyForwardRotationMethods API_DEPRECATED(\"Manually forward viewWillTransitionToSize:withTransitionCoordinator: if necessary\", ios(6.0, 8.0)) API_UNAVAILABLE(tvos) API_UNAVAILABLE(visionos, watchos);"
+      },
+      {
+        "line": 493,
+        "text": ""
+      },
+      {
+        "line": 494,
+        "text": "@property(nonatomic, readonly) BOOL shouldAutomaticallyForwardAppearanceMethods API_AVAILABLE(ios(6.0));"
+      },
+      {
+        "line": 495,
+        "text": ""
+      },
+      {
+        "line": 496,
+        "text": ""
+      },
+      {
+        "line": 497,
+        "text": "/*"
+      },
+      {
+        "line": 498,
+        "text": "  These two methods are public for container subclasses to call when transitioning between child"
+      },
+      {
+        "line": 499,
+        "text": "  controllers. If they are overridden, the overrides should ensure to call the super. The parent argument in"
+      },
+      {
+        "line": 500,
+        "text": "  both of these methods is nil when a child is being removed from its parent; otherwise it is equal to the new"
+      },
+      {
+        "line": 501,
+        "text": "  parent view controller."
+      },
+      {
+        "line": 502,
+        "text": ""
+      },
+      {
+        "line": 503,
+        "text": "  addChildViewController: will call [child willMoveToParentViewController:self] before adding the"
+      },
+      {
+        "line": 504,
+        "text": "  child. However, it will not call didMoveToParentViewController:. It is expected that a container view"
+      },
+      {
+        "line": 505,
+        "text": "  controller subclass will make this call after a transition to the new child has completed or, in the"
+      },
+      {
+        "line": 506,
+        "text": "  case of no transition, immediately after the call to addChildViewController:. Similarly,"
+      },
+      {
+        "line": 507,
+        "text": "  removeFromParentViewController does not call [self willMoveToParentViewController:nil] before removing the"
+      },
+      {
+        "line": 508,
+        "text": "  child. This is also the responsibility of the container subclass. Container subclasses will typically define"
+      },
+      {
+        "line": 509,
+        "text": "  a method that transitions to a new child by first calling addChildViewController:, then executing a"
+      },
+      {
+        "line": 510,
+        "text": "  transition which will add the new child's view into the view hierarchy of its parent, and finally will call"
+      },
+      {
+        "line": 511,
+        "text": "  didMoveToParentViewController:. Similarly, subclasses will typically define a method that removes a child in"
+      },
+      {
+        "line": 512,
+        "text": "  the reverse manner by first calling [child willMoveToParentViewController:nil]."
+      },
+      {
+        "line": 513,
+        "text": "*/"
+      },
+      {
+        "line": 514,
+        "text": "- (void)willMoveToParentViewController:(nullable UIViewController *)parent API_AVAILABLE(ios(5.0));"
+      },
+      {
+        "line": 515,
+        "text": "- (void)didMoveToParentViewController:(nullable UIViewController *)parent API_AVAILABLE(ios(5.0));"
+      },
+      {
+        "line": 652,
+        "text": "@interface UIViewController (UIScreenEdgesDeferringSystemGestures)"
+      },
+      {
+        "line": 653,
+        "text": ""
+      },
+      {
+        "line": 654,
+        "text": "// Override to return a child view controller or nil. If non-nil, that view controller's screen edges deferring system gestures will be used. If nil, self is used. Whenever the return value changes, -setNeedsScreenEdgesDeferringSystemGesturesUpdate should be called."
+      },
+      {
+        "line": 655,
+        "text": "@property (nonatomic, readonly, nullable) UIViewController *childViewControllerForScreenEdgesDeferringSystemGestures API_AVAILABLE(ios(11.0)) API_UNAVAILABLE(tvos) API_UNAVAILABLE(watchos);"
+      },
+      {
+        "line": 656,
+        "text": ""
+      },
+      {
+        "line": 657,
+        "text": "// Controls the application's preferred screen edges deferring system gestures when this view controller is shown. Default is UIRectEdgeNone."
+      },
+      {
+        "line": 658,
+        "text": "@property (nonatomic, readonly) UIRectEdge preferredScreenEdgesDeferringSystemGestures API_AVAILABLE(ios(11.0)) API_UNAVAILABLE(tvos) API_UNAVAILABLE(watchos);"
+      },
+      {
+        "line": 659,
+        "text": ""
+      },
+      {
+        "line": 660,
+        "text": "// This should be called whenever the return values for the view controller's screen edges deferring system gestures have changed."
+      },
+      {
+        "line": 661,
+        "text": "- (void)setNeedsUpdateOfScreenEdgesDeferringSystemGestures API_AVAILABLE(ios(11.0)) API_UNAVAILABLE(tvos) API_UNAVAILABLE(watchos);"
+      },
+      {
+        "line": 662,
+        "text": ""
+      },
+      {
+        "line": 663,
+        "text": "@end"
+      },
+      {
+        "line": 664,
+        "text": ""
+      },
+      {
+        "line": 665,
+        "text": ""
+      },
+      {
+        "line": 666,
+        "text": "@interface UIViewController (UIHomeIndicatorAutoHidden)"
+      },
+      {
+        "line": 667,
+        "text": ""
+      },
+      {
+        "line": 668,
+        "text": "// Override to return a child view controller or nil. If non-nil, that view controller's home indicator auto-hiding will be used. If nil, self is used. Whenever the return value changes, -setNeedsHomeIndicatorAutoHiddenUpdate should be called."
+      },
+      {
+        "line": 669,
+        "text": "@property (nonatomic, readonly, nullable) UIViewController *childViewControllerForHomeIndicatorAutoHidden API_AVAILABLE(ios(11.0)) API_UNAVAILABLE(tvos) API_UNAVAILABLE(watchos);"
+      },
+      {
+        "line": 670,
+        "text": ""
+      },
+      {
+        "line": 671,
+        "text": "// Controls the application's preferred home indicator auto-hiding when this view controller is shown."
+      },
+      {
+        "line": 672,
+        "text": "@property (nonatomic, readonly) BOOL prefersHomeIndicatorAutoHidden API_AVAILABLE(ios(11.0)) API_UNAVAILABLE(tvos) API_UNAVAILABLE(watchos);"
+      },
+      {
+        "line": 673,
+        "text": ""
+      },
+      {
+        "line": 674,
+        "text": "// This should be called whenever the return values for the view controller's home indicator auto-hiding have changed."
+      },
+      {
+        "line": 675,
+        "text": "- (void)setNeedsUpdateOfHomeIndicatorAutoHidden API_AVAILABLE(ios(11.0)) API_UNAVAILABLE(tvos) API_UNAVAILABLE(watchos);"
+      }
+    ]
+  },
+  "conclusion": "Documented UIKit UIView exception does not cover UIViewController. SDK header places failed properties/methods in categories, and focused01 independently reports override-nothing. Narrow imports explain invocations but do not fix overrides. A plain Swift UIViewController container can preserve full child delegation without adding navigation or relying on fake Kotlin overrides. Must be source reviewed and native tested before acceptance."
+}

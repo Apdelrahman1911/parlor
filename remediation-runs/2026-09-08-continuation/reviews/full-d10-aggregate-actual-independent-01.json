@@ -1,0 +1,366 @@
+{
+  "schema_version": 1,
+  "kind": "INDEPENDENT_FULL_D10_AGGREGATE_ACTUAL_REVIEW",
+  "reviewer": "/root/qualification_review",
+  "reviewed_at": "2026-09-11T16:04:23.805491+00:00",
+  "status": "PASS_EXACT_FROZEN_D10_AUTOMATED_COMBINED_SCOPE",
+  "findings": [],
+  "decision": "All six mandatory D10 actual lane reviews, independent12-artifact custody and six-lane scoped cleanup are accepted together for run34610163120/attempt1 at exact25cd7f57/tree1e44e982. This is acceptance of the admitted automated full+paired combined scope, not strict protection, product or Store readiness.",
+  "source": {
+    "repository": "Apdelrahman1911/parlor",
+    "workflow": ".github/workflows/production-verification.yml",
+    "ref": "fix/local-readiness-2026-09-07",
+    "inputs": {
+      "verification_scope": "full",
+      "native_selection": "paired"
+    },
+    "executed_commit": "25cd7f57b031bebdcfb4931615782b906610703f",
+    "executed_tree": "1e44e982216bfc4fda32dc370a0d1b3d77fee836",
+    "source_parent": "3fa4ef1e3f398124846b29d0b5c1a52341ea9d96",
+    "observed_local_head": "25cd7f57b031bebdcfb4931615782b906610703f",
+    "observed_local_head_tree": "1e44e982216bfc4fda32dc370a0d1b3d77fee836",
+    "named_control_subset_sha256": "0f5d6529528284dc499657ba11f13925451084a1f4cd7a687808264a800eeff9",
+    "controls": "All13 named admitted controls and canonical digest reconcile to exact frozen Git blobs. This named subset is NOT exhaustive source/import closure; the whole frozen tree binds executed source. Full ignores frozen_source_sha, so acceptance relies on actual run/job/checkout/source joins, not an unused input.",
+    "delivery_note": "HEAD remains the executed candidate at this review. Post-run passive evidence staging may be present; this aggregate does not certify the whole evolving delivery diff or execution at a later delivery HEAD."
+  },
+  "run": {
+    "id": 34610163120,
+    "attempt": 1,
+    "event": "workflow_dispatch",
+    "terminal_run_api": "success",
+    "terminal_attempt_api": "success",
+    "required_job_ids": {
+      "desktop-android": 103298347022,
+      "desktop-linux-arm64": 103298347425,
+      "desktop-macos-x64": 103298347256,
+      "desktop-windows-x64": 103298347391,
+      "ios": 103298347277,
+      "ios-release": 103298347260
+    },
+    "required_jobs_accepted": 6,
+    "protection_diagnostic": {
+      "job_id": 103298348797,
+      "conclusion": "skipped",
+      "required_for_full_scope": false,
+      "used_as_evidence": false
+    },
+    "execution_window_utc": "2026-09-11 approximately14:26-15:39",
+    "collection_started_at": "2026-09-11T15:40:28.285928+00:00",
+    "collection_finished_at": "2026-09-11T15:44:37.175594+00:00",
+    "timing_note": "Collection15:40-15:44 is post-run custody, not execution time."
+  },
+  "dispatch_admission": "Pinned exact request/admission/source association and single exit0 HTTP204 POST reconcile with the unique initial run and completed attempt. Root-recorded immediate inventory36488-row freshness, remote equality, clean tracked source and empty active-status observations were checked by retained stdout hashes; no reviewer network or live concurrency claim.",
+  "evidence_pins_sha256": {
+    "remediation-runs/2026-09-08-continuation/reviews/final-d10-exact-request-admission-independent-01.json": "e9f1d1276001ef8044d34a259c9a713b9f8318903431770bf913b6a3f08f7e9a",
+    "remediation-runs/2026-09-08-continuation/actions/full-qualification-dispatch-10/request.json": "3dd1dddcbb29067f428624b5d232aa0f83651f740b77eae380be886c3f40a62f",
+    "remediation-runs/2026-09-08-continuation/actions/full-qualification-dispatch-10/source-association.json": "e635fe57383ed6d928200d52e3b4d2e0dc4ce083445e7fda4a296e1a2074a0af",
+    "remediation-runs/2026-09-08-continuation/actions/full-qualification-dispatch-10/controls.json": "dc9a1e791a8cff4da05c9be5caf93b725af59a49c2ba840d2f5a80b54a8d749a",
+    "remediation-runs/2026-09-08-continuation/actions/full-qualification-dispatch-10/dispatch-receipt.json": "b82e9e21462f9df8a1734c1d4785b6d3e9cd21f1abded64c6903b4160f4f2263",
+    "remediation-runs/2026-09-08-continuation/actions/full-qualification-dispatch-10/dispatched-run.json": "d5857590d076a3c22d830eabc80dd2e7522a74aabf743ff1f719f2b219e40d31",
+    "remediation-runs/2026-09-08-continuation/actions/34610163120/download-receipt.json": "d89caddb61aa452599560efeb77aefd5aefda49cddefb88f22eadbe16f083e91",
+    "remediation-runs/2026-09-08-continuation/actions/34610163120/run.json": "32d60c60f3d79b024142b5d8e3f72260d7c12cda6f7aeae92e5020a650c67839",
+    "remediation-runs/2026-09-08-continuation/actions/34610163120/attempt.json": "f3afda3e2ec8f2f3e58332efec1eeaa53c14321940aa94589777595f78a0c19c",
+    "remediation-runs/2026-09-08-continuation/actions/34610163120/jobs.json": "e751e09e572c98248a959b9c908a7455dc2e4ccf38e110f5b018246f7a31a3ba",
+    "remediation-runs/2026-09-08-continuation/actions/34610163120/artifacts.json": "2250a3079d851dc63524442dcb2ab96a5de207647d96c556c29f6c8dffa2b729",
+    "remediation-runs/2026-09-08-continuation/actions/34610163120/frozen-tree-paths.z": "9f59ae8dc14e2ef1bd66d51f60e2d2fc8be4b631493061b01cb34dfcfb88932b",
+    "remediation-runs/2026-09-08-continuation/actions/34610163120/run-attempt-1-logs.zip": "e86553af4102f5e6724610da815d7e99e6d0de9ceb8f2979624ec07248082f46"
+  },
+  "collector03_sha256": "53d6a05f4a2c591f25e3bda2104b0c15e39cd472d6519d24e6fd1aff5234f7a8",
+  "independent_reviews": [
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/full-d10-linux-android-actual-independent-01.json",
+      "sha256": "f62ca2c72f63564c1954d18f11f78c937755421e8a107c29c81e6b345ab44687",
+      "reviewer": "/root/ci_linux",
+      "scope": "desktop-android",
+      "result": "PASS",
+      "findings": []
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/full-d10-linux-arm64-actual-independent-01.json",
+      "sha256": "0ff41260675f52ea523bcaef7221069e3e992ea9c81fd7dd7f1d4ad00897272a",
+      "reviewer": "/root/ci_linux_arm",
+      "scope": "desktop-linux-arm64",
+      "result": "PASS_DESKTOP_LANE_WITH_3_SKIPPED_CASES",
+      "findings": []
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/full-d10-macos-x64-actual-independent-01.json",
+      "sha256": "73c23fe165b68e9ff4c164009c9e3ba84d1e7ba808c9f5ffcf9e0bffe2b0d15b",
+      "reviewer": "/root/ci_macos_x64",
+      "scope": "desktop-macos-x64",
+      "result": "APPROVED_CURRENT_DESKTOP_LANE_WITH_THREE_SOURCE_DECLARED_SKIPS",
+      "findings": []
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/full-d10-windows-x64-actual-independent-01.json",
+      "sha256": "8248d21123bd7a8c960640d1dd9489a647981d78873e3b0b8ab14fc236544af2",
+      "reviewer": "/root/ci_windows",
+      "scope": "desktop-windows-x64",
+      "result": "ACCEPTED_D10_WINDOWS_CURRENT_DESKTOP_RUNTIME_NATIVE_DISTRIBUTION_AND_RESOURCES",
+      "findings": []
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/full-d10-ios-runtime-actual-independent-01.json",
+      "sha256": "64d65a81a346ac33a35e5edfbe06dd8d8df2c768d68a9c8cff9ff812b2cbf93b",
+      "reviewer": "/root/ci_ios_runtime",
+      "scope": "ios",
+      "result": "PASS_IOS_RUNTIME_ONLY_CLEANUP_REVIEW_SEPARATE",
+      "findings": []
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/full-d10-ios-release-actual-independent-01.json",
+      "sha256": "77d879ea0ac479099bdf71b0e598e018269ae799000236ff168b338d55e06bed",
+      "reviewer": "/root/ci_ios_release",
+      "scope": "ios-release",
+      "result": "SCOPED_PASS_RELEASE_BUILD_ANALYSIS_PACKAGE_CLEANUP_SEPARATE",
+      "findings": []
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/full-d10-artifact-custody-independent-01.json",
+      "sha256": "097fa31a3d632ad6e3380d5d07adf5f983bac974ea255e856c5785b384b5ba07",
+      "reviewer": "/root/artifact_custody",
+      "scope": "custody",
+      "result": "D10_ARTIFACT_CUSTODY_VERIFIED_API_SUCCESS_NOT_FULL_QUALIFICATION",
+      "findings": []
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/full-d10-six-lane-cleanup-actual-independent-01.json",
+      "sha256": "00839f6ca1c7ed919dd5ab87ae18524380b4d049a46b807c7872d18a2b7a2a0b",
+      "reviewer": "/root/ci_cleanup_review",
+      "scope": "cleanup",
+      "result": "ACCEPT_D10_SIX_LANE_SCOPED_CLEANUP",
+      "findings": []
+    }
+  ],
+  "gate_coverage": {
+    "desktop-android": {
+      "job_id": 103298347022,
+      "accepted": true,
+      "coverage": "Actual strict productionCheck, productionStaticAnalysis, productionReleaseAutomationCheck and root/all13 module allTests; Desktop and Android Debug/Release unit tests, managed-emulator Release smoke, R8/lint/unsigned AAB and current package/notices inspection.",
+      "current_case_executions": {
+        "passed": 2221,
+        "skipped": 3,
+        "failures": 0,
+        "errors": 0
+      },
+      "release_python_controls": 573,
+      "managed_emulator_cases_passed": 3,
+      "current_aab_sha256": "4b8f515f62d4e03231ce1c34aa2d2376134da61e3ae124794215b66857784d79",
+      "limits": "35 lint warnings exactly match the frozen allowlist, not zero warnings.26 host-inapplicable iOS task skips are not Apple runtime. Build/compilation cache reuse is separate from actual test execution."
+    },
+    "desktop-linux-arm64": {
+      "job_id": 103298347425,
+      "accepted": true,
+      "coverage": "Actual strict host-selected Linux ARM64 productionDesktopCheck; all13 desktopTest tasks and application Desktop compilation executed.",
+      "current_cases": {
+        "passed": 1340,
+        "skipped": 3,
+        "failures": 0,
+        "errors": 0
+      },
+      "limits": "Desktop/JVM only; Kotlin/Native unsupported on this host. No independently measured downloaded-library bytes or physical-device runtime claim."
+    },
+    "desktop-macos-x64": {
+      "job_id": 103298347256,
+      "accepted": true,
+      "coverage": "Actual strict macOS x64 productionDesktopCheck, all13 desktopTest tasks, application Desktop compilation and requested Kotlin/Native distribution task.",
+      "current_cases": {
+        "passed": 1340,
+        "skipped": 3,
+        "failures": 0,
+        "errors": 0
+      },
+      "limits": "Existing global .konan content prevents clean-cache/all-bytes-network-download proof. Distribution preparation is not Native/iOS runtime or shipping Desktop package qualification."
+    },
+    "desktop-windows-x64": {
+      "job_id": 103298347391,
+      "accepted": true,
+      "coverage": "Actual strict Windows x64 productionDesktopCheck, all13 desktopTest tasks, application Desktop compilation, Kotlin/Native distribution and uncached processDebugResources. All12 workflow contract methods, including former D08 CRLF failures and the LF/CRLF regression, passed in D10 on Windows.",
+      "current_cases": {
+        "passed": 1340,
+        "skipped": 3,
+        "failures": 0,
+        "errors": 0
+      },
+      "limits": "Existing .konan content is not clean-cache proof. No Native app runtime or separately measured downloaded-binary claim."
+    },
+    "ios": {
+      "job_id": 103298347277,
+      "accepted": true,
+      "coverage": "Actual complete13-module KMP simulator runtime aggregate plus all five Debug XCTest methods; current Swift host/Compose launch and container behavior.",
+      "current_kmp_cases_passed": 465,
+      "current_debug_xctest_methods_passed": 5,
+      "toolchain": "Xcode26.3/17C529, SDK26.2",
+      "ui_simulator": {
+        "runtime": "com.apple.CoreSimulator.SimRuntime.iOS-18-5",
+        "device_type": "com.apple.CoreSimulator.SimDeviceType.iPhone-16-Pro",
+        "udid": "929DAFEF-2806-41F8-9042-CA39C0A10847"
+      },
+      "limits": "UI runtime is iOS18.5/iPhone16 Pro, not SDK26.2. UI device identity is not transferred to the KMP runner. No Release runtime, production-storage enforcement or physical-device claim."
+    },
+    "ios-release": {
+      "job_id": 103298347260,
+      "accepted": true,
+      "coverage": "Complete productionAppleCheck/type-aware analysis, all three serial uncached Release framework links, real strict resource/embed tasks, unsigned arm64 Simulator Swift Release wrapper and complete hosted package/notices/identity/version inspection.",
+      "package_files": 56,
+      "package_app_minimum_os": "16.0",
+      "limits": "Embedded KMP framework minOS15 is valid alongside app minOS16. Complete .app was not retained/rehashed locally; package proof uses current hosted inspection/logs and retained dSYM. Unsigned Simulator build/linkage is not Release launch, device or signing/Store proof."
+    }
+  },
+  "artifacts": [
+    {
+      "name": "verification-cleanup-ios-release",
+      "id": 10271342612,
+      "job_id": 103298347260,
+      "bytes": 2802,
+      "zip_sha256": "70a6938433a699158df88c131af58a40dd53798f4f6e625be2d4f64097d9de9b"
+    },
+    {
+      "name": "ios-release-verification",
+      "id": 10270323321,
+      "job_id": 103298347260,
+      "bytes": 3646723,
+      "zip_sha256": "1cfacfe2098b6b65cf8bc345c5b8dfa071546ea341f554754dc0927c965f9339"
+    },
+    {
+      "name": "verification-cleanup-ios",
+      "id": 10268928771,
+      "job_id": 103298347277,
+      "bytes": 2782,
+      "zip_sha256": "27cb72dd7f5db84a37b0def8c1a80ae8a67659a849dd7c04f44fa0f81efd8527"
+    },
+    {
+      "name": "ios-runtime-verification",
+      "id": 10268678983,
+      "job_id": 103298347277,
+      "bytes": 22006124,
+      "zip_sha256": "e7b22588bfe779ebbd561c398bcc036c397440b9dadc5edee066bf35bb8723e1"
+    },
+    {
+      "name": "verification-cleanup-desktop-android",
+      "id": 10268588393,
+      "job_id": 103298347022,
+      "bytes": 3134,
+      "zip_sha256": "f8743aeebdcb878ec4b357025db97a19ba5585f87462a804836b8356696319c3"
+    },
+    {
+      "name": "desktop-verification-desktop-windows-x64",
+      "id": 10268555858,
+      "job_id": 103298347391,
+      "bytes": 22164737,
+      "zip_sha256": "9d9e3389be6b6a9a961839ba55dcf49f1683c130c662b75d92700de7d8277efb"
+    },
+    {
+      "name": "verification-cleanup-desktop-windows-x64",
+      "id": 10268446113,
+      "job_id": 103298347391,
+      "bytes": 2747,
+      "zip_sha256": "6b220eb5c753a9a3ae8a1b75fc1e1eadcb3ba9475d88802a5906c63c9ff2db50"
+    },
+    {
+      "name": "desktop-android-verification",
+      "id": 10268423437,
+      "job_id": 103298347022,
+      "bytes": 40656319,
+      "zip_sha256": "3ba033fe2b01e9dc423ab92c0f548d490bf1d5570288877d533d7d0dd104d271"
+    },
+    {
+      "name": "desktop-verification-desktop-linux-arm64",
+      "id": 10268322313,
+      "job_id": 103298347425,
+      "bytes": 22160318,
+      "zip_sha256": "4e3ad00ed7b1e2bb222973210ebe764a68ea712b28ff2b50a4a2a1bcd862e988"
+    },
+    {
+      "name": "verification-cleanup-desktop-linux-arm64",
+      "id": 10268062508,
+      "job_id": 103298347425,
+      "bytes": 2709,
+      "zip_sha256": "62b72bc98b7419a5884d2e979b4c2ad35841145897204ee19fbe87495b357469"
+    },
+    {
+      "name": "desktop-verification-desktop-macos-x64",
+      "id": 10268048632,
+      "job_id": 103298347256,
+      "bytes": 22170262,
+      "zip_sha256": "624391c4eaecf469284a6cc1dd261015865dbb6409ef434af89e1f8bad9a879c"
+    },
+    {
+      "name": "verification-cleanup-desktop-macos-x64",
+      "id": 10268023828,
+      "job_id": 103298347256,
+      "bytes": 2708,
+      "zip_sha256": "5f892cb3db023e18d1439376125a870b511a98462f51a640ee239522c73548cc"
+    }
+  ],
+  "custody": {
+    "accepted": true,
+    "expected_artifacts": 12,
+    "missing": [],
+    "unexpected": [],
+    "binding": "Six main and six cleanup artifact names/IDs/job/run/source/bytes/digests agree across admission, APIs, collector and independent reviews. expired=false is the retained API collection observation, not a new network check.",
+    "collector_status_preserved": "COLLECTED_NOT_RUNTIME_REVIEW",
+    "independent_audit_summary": {
+      "artifact_members": 91875,
+      "selected_existing_files_verified": 3379,
+      "log_members": 68,
+      "frozen_historical_entries_excluded": 88433
+    },
+    "scope": "Pinned custody review independently checked all12 retained ZIPs and metadata/extractions.88,433 frozen historical entries remain archive-only. Current-path candidates and named-receipt custody labels are not execution proof without their actual lane/cleanup reviews. Aggregate did not repeat XML/ZIP/CRC audits."
+  },
+  "cleanup": {
+    "accepted": true,
+    "lanes": 6,
+    "current_errors": [],
+    "retained_owned_outputs": [],
+    "claimed_roots_per_lane": 188,
+    "claimed_build_roots": 17,
+    "claimed_python_cache_roots": 171,
+    "partition": "Each lane exactly partitions188 claimed roots into removed versus not-created; not-created is not renamed removed. Android removed15 build plus6 Python-cache roots; other lanes removed15 build roots. Unclaimed/global caches and unrelated work are outside scope.",
+    "binding": "Current source/task/ownership/main-artifact-upload joins and raw upload-before-delete chronology accepted for all six jobs. Artifact numeric-ID order is not used as timing proof.",
+    "gradle_stops_exit0": 15,
+    "apple_cycles": {
+      "ios": [
+        "apple-aggregate",
+        "apple-ui"
+      ],
+      "ios-release": [
+        "apple-aggregate",
+        "apple-wrapper"
+      ],
+      "all_four": "PASS"
+    },
+    "simulator": "Exact owned UI simulator929DAFEF-2806-41F8-9042-CA39C0A10847 delete returned exit0; no explicit shutdown action is recorded or claimed.",
+    "workers": "Two exact newly owned ibtoold lifetimes13259/13257 received TERM15 then bounded quiescence; no reaping/whole-machine absence claim.",
+    "android_sample": {
+      "mode": "sudo-proc-exe-v2",
+      "enumerated": 154,
+      "sampled": 154,
+      "matching_executables": 0,
+      "errors": [],
+      "limit": "Bounded visible selected-UID paths beneath the bound SDK/emulator only; not termination, task ownership, AVD retirement, other SDKs/UIDs or continuous/global absence."
+    },
+    "runner_orphan_action": "Later Android runner reports adb PID7305 termination action, not explicit exit/wait confirmation. Duplicate step/aggregate views are one action.",
+    "fixture_failures": "Injected failure-control OSError/FAILED/fake-source outputs in the Linux unittest stream remain preserved fixtures, not current task-bound cleanup failures or application proof. Actual focused diagnostic steps are skipped.",
+    "basis": "Separate current scoped cleanup evidence, not green API inference; no upload-failure retention branch exercised."
+  },
+  "counting_and_skips": "Every lane count above comes from its fresh pinned D10 actual review, not copied D09 results. No cross-platform total or globally unique authored-test sum is asserted: suites overlap across hosts/targets. All Desktop lanes preserve three explicit frozen @Ignore peer-LAN fixture skips; peer join/roundtrip/broadcast need separate physical same-LAN evidence. Cached/build/link/resource tasks are not runtime passes.",
+  "strict_and_historical_boundary": {
+    "strict_a37": {
+      "passed": 0,
+      "failed": 26,
+      "disposition": "UNCHANGED_OPEN_FAILURE_NOT_WAIVED_OR_RECLASSIFIED"
+    },
+    "diagnostics": "D10 optional protection job skipped. H03 FALSE/Cocoa256/POSIX22 and its unobserved internal rejecting condition remain separate; no platform-wide incapability or protection exemption follows. D09/H03/other focused results fill no D10 lane.",
+    "history": "D09 remains its own accepted d3 candidate; D08 and previous failures are not rewritten, erased or substituted.",
+    "readiness": "No strict NSFileProtectionComplete enforcement, production-storage integration, physical same-LAN gameplay, Release runtime, signing/publication, legal-completeness or product/Store certificate. Documented com.parlor.app Store-identity collision remains blocked."
+  },
+  "delivery_envelope": {
+    "executed_source": "25cd7f57b031bebdcfb4931615782b906610703f",
+    "later_delivery_diff_acceptance": "SEPARATELY_REQUIRED_NOT_PREAPPROVED",
+    "allowed": "Only passive archived evidence/reviews, descriptive documentation/ledger and mechanically regenerated inventory after an exact-diff check.",
+    "frozen": "All active/normative source, imported inputs, contracts/policies, workflows, helpers, tests and validators must remain frozen. A markdown/docs path alone is not evidence of a passive change. No new executable helper is permitted as evidence-only delivery.",
+    "qualification_identity": "Preserve executed25cd separately from delivery HEAD; never claim D10 ran at the delivery SHA. Mechanical inventory freshness verification is not another test execution or a new-source qualification."
+  },
+  "activity": "Bounded local read-only Git/stdlib JSON/text/hash and result/source/artifact-identity reconciliation. Reused all eight new independent D10 actual reviews without lane recounts, XML/ZIP/CRC re-audits or D09 count substitution. No project imports, tests/builds/validators, API/network, dispatch/cancellation, extraction, source/raw-evidence edits, Git writes or child agents. Sole write is this assigned additive aggregate; prior evidence unchanged."
+}

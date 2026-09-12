@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "status": "HELD_REVISION_02_SOURCE_AND_AST_ONLY_NOT_EXECUTED",
+  "author": "/root/lifecycle_controls",
+  "files": [
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-b26-region-followup-01/draft-02/image_text_layout_diagnostic.py",
+      "bytes": 9747,
+      "sha256": "026184d084bb62b50768e1c100ea366f3bbf90afaa8007b7e440ee97954a1cbd",
+      "declared_tests": 0
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-b26-region-followup-01/draft-02/run_normal_ios_launch.py",
+      "bytes": 67346,
+      "sha256": "9e71c7b654b70de5a97b6817af4eecc920e45f6d7986ffbdadc396482a49b6d3",
+      "declared_tests": 0
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-b26-region-followup-01/draft-02/test_image_text_layout_diagnostic.py",
+      "bytes": 27196,
+      "sha256": "dfc6630c89df234d0348ea8f789c9051e121f983524afd9c1ebaa8158a429458",
+      "declared_tests": 22
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-b26-region-followup-01/draft-02/run_control_tests.py",
+      "bytes": 2932,
+      "sha256": "3779d70a5c5b099f2612bfe451bf9688b54c4b33abc938da36177bb920af8842",
+      "declared_tests": 0
+    }
+  ],
+  "preserved_failed_draft_report": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/native-b26-region-followup-01/implementation-report.json",
+    "bytes": 3315,
+    "sha256": "c15d1779c8500cb873f035893c19317640add7e466185b8b83f36a25a7d5ce0f"
+  },
+  "rejected_draft_files_hash_matched": true,
+  "delta": [
+    "Existing Lane.command gains a default-false internal capture_output_identity keyword. Only the layout diagnostic opts in; fstat records original device/inode/UID/file type immediately after exclusive xb open and before Popen. Ordinary command receipt keys and outcomes are unchanged.",
+    "Diagnostic raw output identity must match its original command descriptor before decoding/publishing. Cleanup additionally requires exact command/log/completed record, no command_cleanup_error, an exact integer exit, and canonical current-user regular-file identity equality. Failed stop, unresolved/no-child exit or replacement is retained with raw_removed=false for the existing outer finalizer.",
+    "Four added post-launch/replacement test methods, including timeout then stop failure/interruption, timeout then unresolved exit, reaped timeout cleanup, and otherwise-valid same-UID regular replacement. A completed leader plus output-budget/stop-error case also retains raw. Prelaunch failure expectations now conservatively retain output.",
+    "Existing bounded native layout decoder unchanged; ordinary kernel acceptance, runtime modes, launch intervals, app source and entitlements unchanged. Original kernel failure is rethrown identically; no provenance PASS or readiness claim."
+  ],
+  "static_compatibility": "Inspected scripts/verification/ios-readiness/test_native_command_failures.py strict ordinary command keys and isolated-command globals. Optional false branch avoids new os/stat dependency or receipt fields there. Only stdlib AST/JSON/hash/source inspection performed, not test execution.",
+  "focused_command_after_root_adoption": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01 -p test_image_text_layout_diagnostic.py -v",
+  "expected_focused_tests": 22,
+  "canonical_existing_declared_tests": 204,
+  "expected_aggregate_discovery": 226,
+  "execution": "Root alone adopts/runs tests/native. No tests, project imports/validators, builds/compiler, network/CI, or Git writes executed by this author.",
+  "unchanged_acceptance": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/kernel_image_region.c.in",
+      "bytes": 4625,
+      "sha256": "e98501da6bec44050e2dc9aab75da13c6d34e3733019789df74efad7774d6eb8"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/kernel_image_regions.py",
+      "bytes": 3821,
+      "sha256": "4b87bf30ab492bf45554b2952ef52982343d5f16c66dce247412a45801b0287b"
+    }
+  ]
+}

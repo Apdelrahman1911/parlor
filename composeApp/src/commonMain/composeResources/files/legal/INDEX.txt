@@ -1,0 +1,86 @@
+PARLOR - THIRD-PARTY NOTICES
+===========================
+
+This software is based in part on the work of the Independent JPEG Group.
+This product includes DNG technology under license by Adobe Systems Incorporated.
+
+About this supplement
+---------------------
+This directory preserves notices for reviewed dependency inputs used by Parlor.
+All files accompany the app as common Compose resources; platform labels below
+identify the inspected inputs, not separate platform-exclusive delivery.
+Input inclusion is not proof that every object survives optimization and linking.
+This supplement is not an exhaustive per-file copyright inventory, an application
+license, publisher legal approval, or a statement of Store readiness. Other
+licenses may already accompany dependency resources elsewhere in the package.
+
+The 25 upstream text files are copied verbatim (including their line endings).
+INDEX.txt is a Parlor-authored guide, not a replacement for the full terms.
+The repository's config/third-party-notices.json records exact byte sizes,
+SHA-256 hashes, upstream sources, versions and applicability. It is not a
+runtime dependency or part of a signing/credential store.
+
+Shared license text
+-------------------
+APACHE-2.0.txt: Apache License 2.0 for Kotlin/Compose, Skiko, generated Wuffs
+0.3.3, Piex and Apache-derived inputs. This is not a claim that every dependency
+is Apache-licensed. Component notices below remain separate.
+
+Skiko / Skia native inputs (iOS)
+-------------------------------
+Skiko 0.9.37.4 incorporates Skia package m138-80d088a-1.
+- Skiko-NOTICE.txt: upstream Android Open Source Project adaptation notice.
+- Skia-LICENSE.txt: Skia BSD terms; matching inspected skcms terms.
+- ICU-LICENSE.txt: complete combined ICU terms. Its build-script sections do not
+  make the ICU runtime or Parlor application GPL-licensed.
+- HarfBuzz-COPYING.txt: HarfBuzz root copyright and permission text.
+- HarfBuzz-hb-ucd-ISC-LICENSE.txt: separate Grigori Goronzy hb-ucd source notice.
+- Expat-COPYING.txt: Expat copyright and MIT permission text.
+- WebP-COPYING.txt and WebP-PATENTS.txt: WebP terms and companion patent grant.
+- DNG-SDK-NOTICE.txt and DNG-SDK-PATENTS.txt: custom Adobe terms, Google patch
+  attribution and patent grant. The DNG SDK is not Apache-licensed.
+- libjpeg-turbo-LICENSE.md and libjpeg-turbo-README.ijg.txt: full upstream
+  license rollup and IJG README. Inspected inputs include libjpeg and SIMD;
+  TurboJPEG API object inclusion is not claimed.
+- Wuffs-Skia-wrapper-LICENSE.txt: BSD terms for the separate Skia wrapper;
+  generated Wuffs input uses the shared Apache License 2.0 text.
+- libpng-LICENSE.txt and zlib-LICENSE.txt: optional acknowledgements. These
+  licenses say binary acknowledgement is appreciated, not required.
+
+Kotlin/Native 2.4.10 inputs (iOS)
+-------------------------------
+- Kotlin-ThreeTenBP-LICENSE.txt: ThreeTenBP portions of kotlin.time.Instant.
+- Kotlin-Harmony-NOTICE.txt: Apache Harmony-derived regex and numeric conversion.
+- Kotlin-MPMC-QUEUE-LICENSE.txt: default runtime bounded queue attribution.
+- Kotlin-libbacktrace-LICENSE.txt: runtime modules collected for Apple targets
+  based on target support, even when source-information dispatch selects NOOP.
+  The default input is established; final dead-strip survival is not asserted.
+- Kotlin-Unicode-LICENSE.txt: Unicode portions of Kotlin/Native's
+  Apache-Harmony-derived regular-expression implementation. These are upstream
+  Kotlin/Native adaptations, not Parlor-authored Unicode data changes.
+- Kotlin-Boost-LICENSE.txt: Boost-derived runtime utilities and UTFCPP. The
+  machine-executable object-code exception makes this a voluntary binary notice.
+
+Unicode generated data (iOS)
+---------------------------
+Unicode-V3-LICENSE.txt: access-dated current Unicode License v3 (2026-09-07),
+covering Public data under the official current terms unless otherwise indicated.
+HarfBuzz's inspected generated table identifies Unicode 16.0.0; Kotlin/Native's
+character table generator identifies Unicode 13.0.0. The current 1991-2026 grant
+is not represented as an immutable historical grant. Legacy regex notices in
+Kotlin-Unicode-LICENSE.txt remain distinct from these modern data tables.
+
+Android input license copies
+----------------------------
+- BouncyCastle-1.85-LICENSE.md: exact bcprov-jdk18on 1.85 JAR license member.
+- SLF4J-2.0.16-LICENSE.txt: exact slf4j-api 2.0.16 JAR license member.
+Bouncy Castle and some AndroidX license texts were already observed elsewhere
+in an earlier Android package. These copies do not claim their previous absence.
+
+Review and remaining responsibility
+----------------------------------
+Package verification proves only that this complete reviewed resource set is
+present with exact bytes in the inspected artifact. It does not establish
+which native objects survive the linker, legal sufficiency, end-user UI access,
+commercial/custom-license acceptance, trademarks, content rights, signing,
+physical-device behavior or Store approval. Those remain separate review gates.

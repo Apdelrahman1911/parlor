@@ -1,0 +1,674 @@
+{
+  "schema_version": 1,
+  "kind": "BOUNDED_POST_08D_DELIVERY_SAFETY_PRECHECK_NOT_STAGE_APPROVAL",
+  "reviewer": "/root/native_ci",
+  "recorded_at": "2026-09-09T05:12:49.691322+00:00",
+  "status": "NO_ACTIONABLE_SAFETY_FINDINGS_AT_RECORDED_CUTOFF_NOT_STAGE_APPROVAL",
+  "actionable_findings": [],
+  "authorization": {
+    "only_write": "remediation-runs/2026-09-08-continuation/reviews/post-08d-delivery-safety-precheck-01.json",
+    "source_changes": 0,
+    "project_imports": 0,
+    "tests_or_builds": 0,
+    "APIs_or_dispatches": 0,
+    "staging_commits_pushes": 0,
+    "cleanup_or_deletions": 0,
+    "stage_approval": false,
+    "native_retry_or_final_qualification_approval": false
+  },
+  "scope": {
+    "roots": [
+      "remediation-runs/2026-09-08-continuation",
+      "remediation-runs/2026-09-07-local-readiness/evidence/continuation-release-validator-04",
+      "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-04",
+      "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-export-linux-04",
+      "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-render-linux-04"
+    ],
+    "selection": "Git-new untracked including ignored plus tracked-added relative to HEAD; no tracked historical file contents selected.",
+    "selection_commands": [
+      "git ls-files --others -z -- <exact roots>",
+      "git diff HEAD --name-only --diff-filter=A -z -- <exact roots>"
+    ],
+    "ignored_classification_command": "git ls-files --others --exclude-standard -z -- <exact roots>; any selected file absent from this plus added-file set is classified ignored",
+    "excluded_own_report": "remediation-runs/2026-09-08-continuation/reviews/post-08d-delivery-safety-precheck-01.json",
+    "excluded": "Tracked historical file contents, unrelated work, global caches and all directories outside the exact roots. No archived evidence was removed or treated as disposable.",
+    "base_commit": "08d1adfbd7284f190fbab5f7baa846944bca5b68",
+    "base_tree": "c19beea4647ce882c02d8751d1bf82c22484b52b",
+    "branch": "fix/local-readiness-2026-09-07",
+    "limit": "This is a scoped content/custody precheck, not a final staging whitelist, canonical-source review, frozen-source binding or application readiness proof."
+  },
+  "snapshot": {
+    "cutoff": "2026-09-09T05:12:49.691322+00:00",
+    "files": 856,
+    "bytes": 16587013,
+    "regular_files": 856,
+    "git_visible_files": 763,
+    "git_ignored_files": 93,
+    "git_ignored_bytes": 1267486,
+    "file_manifest_sha256": "7937469f53dce9bb5dc2d82aa0d20204816aedde590d07621b55d6832a14f3f6",
+    "path_list_sha256": "af95eb95ee16dc79cd3bd861f8e0ff3c3eb6f60c9d94f39c2bb0100ca9324d54",
+    "ignored_file_manifest_sha256": "8d16f9b2529d2521e1082ceba3ae9ed62c702e18b6293ca8e24e54e46adffbe9",
+    "manifest_format": "Sorted by path; each row compact JSON (sort_keys=True, ensure_ascii=True, separators=(comma,colon)), UTF-8 newline terminated. Fields: path,bytes,sha256,mode (permissions integer),ignored (bool),kind. SHA256 over concatenation.",
+    "path_list_format": "Paths sorted lexically and encoded with filesystem UTF-8, each followed by NUL, SHA256 over concatenation.",
+    "groups": [
+      {
+        "root": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-release-validator-04",
+        "files": 7,
+        "bytes": 397487,
+        "ignored_files": 4,
+        "manifest_sha256": "4a0be21785e03ac7b6bc6f23102d644c0fd8a181cfb0507ce9297b7f2c4b2126"
+      },
+      {
+        "root": "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-04",
+        "files": 10,
+        "bytes": 354549,
+        "ignored_files": 4,
+        "manifest_sha256": "14fc0cb726501a4c576746ff02364a1abedcae0dd905547645c3ecd109ea3443"
+      },
+      {
+        "root": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-export-linux-04",
+        "files": 12,
+        "bytes": 1055009,
+        "ignored_files": 4,
+        "manifest_sha256": "e11d80e0c1016eb44aead7c1da35a7b540570bc2576cc13fe4b32d7aa0c650ef"
+      },
+      {
+        "root": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-render-linux-04",
+        "files": 472,
+        "bytes": 3189096,
+        "ignored_files": 4,
+        "manifest_sha256": "3d212991207abd5ad1f33510dd3fc578a271b9be446daccdd65a1cb301ccd9b2"
+      },
+      {
+        "root": "remediation-runs/2026-09-08-continuation/actions/34300240397",
+        "files": 43,
+        "bytes": 621432,
+        "ignored_files": 1,
+        "manifest_sha256": "28a31f57ae1251ea5761f15abdb6011716c2932aca425880a336d0911e772a36"
+      },
+      {
+        "root": "remediation-runs/2026-09-08-continuation/actions/34303850578",
+        "files": 194,
+        "bytes": 5775483,
+        "ignored_files": 69,
+        "manifest_sha256": "b6833137ff407ba3ccc646c44ca8997b0954050ad9fa4ad6595c5abfaadeed7b"
+      },
+      {
+        "root": "remediation-runs/2026-09-08-continuation/actions/full-qualification-dispatch-01",
+        "files": 1,
+        "bytes": 36192,
+        "ignored_files": 0,
+        "manifest_sha256": "412b6a68436d5daa27dc9087f5152852e65af62bc4a83c56a0f282638ca50574"
+      },
+      {
+        "root": "remediation-runs/2026-09-08-continuation/actions/native-evidence-dispatch-04",
+        "files": 28,
+        "bytes": 1068427,
+        "ignored_files": 1,
+        "manifest_sha256": "3191cf93b131e8895a9ff8208f713beadbc8df1c1f2fb9eaae2c192b69f3a0b9"
+      },
+      {
+        "root": "remediation-runs/2026-09-08-continuation/actions/native-preflight-dispatch-04",
+        "files": 31,
+        "bytes": 985758,
+        "ignored_files": 1,
+        "manifest_sha256": "baec0a39328fd67a4cd405daa7cc35871dfb2dee10181bbf95b31957975efe7e"
+      },
+      {
+        "root": "remediation-runs/2026-09-08-continuation/candidate-input-binding-04.json",
+        "files": 1,
+        "bytes": 1517,
+        "ignored_files": 0,
+        "manifest_sha256": "f8e860cab60d52bcae0c80f11cd48a908027ece62ac3bb0838d4ae9cd62181a0"
+      },
+      {
+        "root": "remediation-runs/2026-09-08-continuation/reviews",
+        "files": 57,
+        "bytes": 3102063,
+        "ignored_files": 5,
+        "manifest_sha256": "250fe64d3e76ab8e29e6c52d8808fe1f93efad2fb1342f39f006a835a68b28ad"
+      }
+    ],
+    "stability": {
+      "changed_during_incremental_scan": [],
+      "added_during_incremental_scan": [],
+      "removed_during_incremental_scan": []
+    }
+  },
+  "scan_history": {
+    "initial_content_scan": {
+      "started_at": "2026-09-09T05:00:55.689641+00:00",
+      "finished_at": "2026-09-09T05:00:58.884450+00:00",
+      "files": 849,
+      "bytes": 16300018,
+      "file_manifest_sha256": "8871f657ef11f7ea10ece2038993ed6607c66a44566777292bbd6797564edefd",
+      "content_observations_including_archive_members": 1016,
+      "content_bytes_including_duplicate_archived_evidence": 20695715,
+      "stability": {
+        "selected_files_changed_during_scan": [],
+        "paths_added_during_scan": [],
+        "paths_removed_during_scan": [],
+        "head_end": "08d1adfbd7284f190fbab5f7baa846944bca5b68"
+      }
+    },
+    "refresh_reason": "Later author/reviewer deliveries changed the scoped inventory after initial inspection; no earlier snapshot was silently reused for later bytes.",
+    "final_refresh": {
+      "recorded_at": "2026-09-09T05:12:49.691322+00:00",
+      "unchanged_groups_fully_rehashed": [
+        "remediation-runs/2026-09-07-local-readiness/evidence/continuation-release-validator-04",
+        "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-04",
+        "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-export-linux-04",
+        "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-render-linux-04",
+        "remediation-runs/2026-09-08-continuation/actions/34300240397",
+        "remediation-runs/2026-09-08-continuation/actions/34303850578",
+        "remediation-runs/2026-09-08-continuation/actions/full-qualification-dispatch-01",
+        "remediation-runs/2026-09-08-continuation/actions/native-evidence-dispatch-04",
+        "remediation-runs/2026-09-08-continuation/actions/native-preflight-dispatch-04",
+        "remediation-runs/2026-09-08-continuation/candidate-input-binding-04.json"
+      ],
+      "changed_groups_fully_content_rescanned": [
+        "remediation-runs/2026-09-08-continuation/reviews"
+      ],
+      "content_files_rescanned": 57,
+      "content_bytes_rescanned": 3102063,
+      "new_sensitive_pattern_hits": [],
+      "unresolved_findings": []
+    },
+    "inspection_error_and_resolution": "Initial triage classifier rejected a source TOKEN=re.compile(...) lexer expression because its allowlist recognized only literal regex syntax; corrected using AST source inspection. No project code or tests executed."
+  },
+  "file_safety": {
+    "symlinks_and_symlink_ancestors": 0,
+    "nonregular_files": 0,
+    "unexpected_binary_or_NUL_content": 0,
+    "live_build_cache_or_compiled_output_paths_detected": 0,
+    "private_or_signing_sensitive_filenames_detected": 0,
+    "files_at_least_1_MiB": 0,
+    "largest_file": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34303850578/artifact-10087146864.zip",
+      "bytes": 953562,
+      "sha256": "e5dc50b5a4318d43070819f7795834ddbec0fc92307cb73f083e4991dfcc649e",
+      "mode": 384,
+      "ignored": false,
+      "kind": "file"
+    },
+    "category_scope": "Inspected private/signing extensions and common build/cache locations; no code, fixture, simulator, archive member or downloaded file was executed."
+  },
+  "archive_safety": {
+    "on_disk_archive_files": 7,
+    "zip_archives": 6,
+    "on_disk_gzip_files": 1,
+    "additional_nested_gzip_observations": 1,
+    "unsafe_entries_or_integrity_failures": 0,
+    "method": "ZIP/tar/gzip-aware bounded in-memory reading, no extraction. ZIP CRC/read and size checks plus absolute/parent/backslash/control-character paths, normalized/casefold duplicates, symlinks/special files, encryption, entry/expansion/depth limits. Only ZIP/gzip containers were encountered. All current archive-containing groups exactly rehashed to the initial complete scan.",
+    "bounds": {
+      "member_bytes": 33554432,
+      "total_zip_or_tar_uncompressed_bytes": 268435456,
+      "members": 10000,
+      "nested_depth": 3,
+      "ratio_limit_over_1_MiB": 1000
+    },
+    "refs": [
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34300240397/native-cleanup.zip",
+        "bytes": 764,
+        "sha256": "6bd86dc2c1b15fe853e508b7eabe7a36f48896098e1f1e3ecc6ba7f2baf996dd",
+        "kind": "zip",
+        "members": 1,
+        "uncompressed_bytes": 977,
+        "unsafe_entries": [],
+        "integrity": "COMPLETE",
+        "member_manifest_sha256": "4d4c1339338ae39feca5db25347fac5bce27cca3389d7991a2145cfb56dddc73"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34300240397/native-preflight.zip",
+        "bytes": 93960,
+        "sha256": "6ca09caa187e12338269859e94de659d2e61149326ac8e6d91e1ea4be8a11461",
+        "kind": "zip",
+        "members": 4,
+        "uncompressed_bytes": 341891,
+        "unsafe_entries": [],
+        "integrity": "COMPLETE",
+        "member_manifest_sha256": "6861a99a999b01896d26e6b383e34663eb7bfbcad57de6a7b5870120829acfdc"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34300240397/run-attempt-1-logs.zip",
+        "bytes": 20888,
+        "sha256": "970436b172753ad0cabbcbe041feeb900d6461a91869b0e139e3772fcd33b152",
+        "kind": "zip",
+        "members": 13,
+        "uncompressed_bytes": 67885,
+        "unsafe_entries": [],
+        "integrity": "COMPLETE",
+        "member_manifest_sha256": "2d10f0e3bc8b3e4c318888898f80523393f4882ff7b56bc5bfac0e62af52c5a9"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34303850578/artifact-10087146864.zip!/ios-readiness-24/xcodebuild.log.gz",
+        "bytes": 27846,
+        "sha256": "1621d6cec0fa5596c768051ce4ceff80750c26f3db16d6363ebe94c720b8693b",
+        "kind": "gzip",
+        "members": 1,
+        "uncompressed_bytes": 289808,
+        "unsafe_entries": [],
+        "integrity": "COMPLETE",
+        "member_manifest_sha256": "6e0bb9092333f74cc2311cd9f5f8043ce925d74dfef148590619b1c280f772b4"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34303850578/artifact-10087146864.zip",
+        "bytes": 953562,
+        "sha256": "e5dc50b5a4318d43070819f7795834ddbec0fc92307cb73f083e4991dfcc649e",
+        "kind": "zip",
+        "members": 140,
+        "uncompressed_bytes": 4471495,
+        "unsafe_entries": [],
+        "integrity": "COMPLETE",
+        "member_manifest_sha256": "45b083528a927ff3ebdbe32d2734b782487b8666e6fbbec4c0593fe9aaaa4dcf"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34303850578/artifact-10087147640.zip",
+        "bytes": 1389,
+        "sha256": "725264a463fa39a254e7ebdbd2381bce115f4f3b5d2e11046df48522e6a2b5ef",
+        "kind": "zip",
+        "members": 1,
+        "uncompressed_bytes": 3280,
+        "unsafe_entries": [],
+        "integrity": "COMPLETE",
+        "member_manifest_sha256": "f401af58b526ffdeb5bc31a6e23cb8834868e932640d5b7794b34f980fe14224"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34303850578/native-evidence/ios-readiness-24/xcodebuild.log.gz",
+        "bytes": 27846,
+        "sha256": "1621d6cec0fa5596c768051ce4ceff80750c26f3db16d6363ebe94c720b8693b",
+        "kind": "gzip",
+        "members": 1,
+        "uncompressed_bytes": 289808,
+        "unsafe_entries": [],
+        "integrity": "COMPLETE",
+        "member_manifest_sha256": "6e0bb9092333f74cc2311cd9f5f8043ce925d74dfef148590619b1c280f772b4"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34303850578/run-attempt-1-logs.zip",
+        "bytes": 25414,
+        "sha256": "20286303fd9f293a6f0b35a40498eda5dcfd418cdac4578f725a60c1d75e5f41",
+        "kind": "zip",
+        "members": 14,
+        "uncompressed_bytes": 82222,
+        "unsafe_entries": [],
+        "integrity": "COMPLETE",
+        "member_manifest_sha256": "057e0f1f94ae47319337a1e1eddba8787f9bc90bc3183f68cd2acfce739d5df4"
+      }
+    ],
+    "aggregate_member_inventory_sha256": "6272637f30b859282f8b511947b7f24027938f23eea3d12e8192d61f12290b0e"
+  },
+  "sensitive_content": {
+    "method": "Nine high-confidence credential/private-key/credentialed-URL signatures plus generic sensitive assignment screening on every selected text payload and archive member. Context review/stdlib AST inspection for matches; no raw matched values were emitted.",
+    "rule_names": [
+      "private_key_header",
+      "github_token",
+      "aws_access_key_id",
+      "slack_token",
+      "google_oauth_or_api_key",
+      "stripe_live_secret",
+      "credentialed_http_url",
+      "authorization_credential",
+      "signed_or_tokenized_url",
+      "generic_sensitive_assignment_requires_context"
+    ],
+    "high_confidence_signature_hits": 0,
+    "generic_match_location_records": 24,
+    "generic_match_occurrences_including_duplicate_archived_content": 64,
+    "unique_matched_content_hashes": 16,
+    "masked_null_or_symbolic_values_suppressed": 18,
+    "unresolved_generic_matches": 0,
+    "category_counts_including_duplicate_archived_content": {
+      "GitHub-checkout-header-masked": 9,
+      "JDK-action-environment-variable-name-not-password-value": 9,
+      "synthetic-fixture-source-type-index-expression-or-empty-value": 34,
+      "review-authorization-object-not-access-credential": 6,
+      "lexer-TOKEN-regex-or-equality-expression-not-credential": 4,
+      "adapter-symbolic-authorization-construction-or-env-lookup": 2
+    },
+    "context_review_refs": [
+      {
+        "sha256": "59a1c07a85d0e375344b8b8366049d45b13708b6e861324c4cde75afd5332992",
+        "bytes": 33622,
+        "locations": [
+          "remediation-runs/2026-09-08-continuation/actions/34300240397/run-attempt-1-logs.zip!/0_iOS tests, release frameworks, and Swift wrapper.txt",
+          "remediation-runs/2026-09-08-continuation/actions/34300240397/run-logs/0_iOS tests, release frameworks, and Swift wrapper.txt"
+        ],
+        "dispositions": [
+          {
+            "line": 98,
+            "category": "GitHub-checkout-header-masked"
+          },
+          {
+            "line": 241,
+            "category": "JDK-action-environment-variable-name-not-password-value"
+          }
+        ]
+      },
+      {
+        "sha256": "5b7f837c7d1b09c1e923538f97cbe18d0c83ee5eccecc347a03b85404d62e06c",
+        "bytes": 16876,
+        "locations": [
+          "remediation-runs/2026-09-08-continuation/actions/34300240397/run-attempt-1-logs.zip!/iOS tests, release frameworks, and Swift wrapper/3_Check out source.txt",
+          "remediation-runs/2026-09-08-continuation/actions/34300240397/run-logs/iOS tests, release frameworks, and Swift wrapper/3_Check out source.txt"
+        ],
+        "dispositions": [
+          {
+            "line": 65,
+            "category": "GitHub-checkout-header-masked"
+          }
+        ]
+      },
+      {
+        "sha256": "7e12378d84370cb02a7fe2d5e6fbaacfe7f8c3fb800c389db54033818044802f",
+        "bytes": 2182,
+        "locations": [
+          "remediation-runs/2026-09-08-continuation/actions/34300240397/run-attempt-1-logs.zip!/iOS tests, release frameworks, and Swift wrapper/5_Set up JDK 21.txt",
+          "remediation-runs/2026-09-08-continuation/actions/34300240397/run-logs/iOS tests, release frameworks, and Swift wrapper/5_Set up JDK 21.txt"
+        ],
+        "dispositions": [
+          {
+            "line": 11,
+            "category": "JDK-action-environment-variable-name-not-password-value"
+          }
+        ]
+      },
+      {
+        "sha256": "c8068eec71792486e68a36fafa4188aed5ffeee40defbe6479c05bd72fa50f38",
+        "bytes": 40789,
+        "locations": [
+          "remediation-runs/2026-09-08-continuation/actions/34303850578/job-102316312942.log",
+          "remediation-runs/2026-09-08-continuation/actions/34303850578/run-attempt-1-logs.zip!/4_iOS tests, release frameworks, and Swift wrapper.txt",
+          "remediation-runs/2026-09-08-continuation/actions/34303850578/run-logs/4_iOS tests, release frameworks, and Swift wrapper.txt"
+        ],
+        "dispositions": [
+          {
+            "line": 117,
+            "category": "GitHub-checkout-header-masked"
+          },
+          {
+            "line": 262,
+            "category": "JDK-action-environment-variable-name-not-password-value"
+          }
+        ]
+      },
+      {
+        "sha256": "9cff75f99ae5263fce9ade011a8e4cd5d16f1ac05d6668346a42e8ab5e405772",
+        "bytes": 425637,
+        "locations": [
+          "remediation-runs/2026-09-08-continuation/actions/34303850578/artifact-10087146864.zip!/ios-readiness-23/copied-source.diff",
+          "remediation-runs/2026-09-08-continuation/actions/34303850578/native-evidence/ios-readiness-23/copied-source.diff"
+        ],
+        "dispositions": [
+          {
+            "line": 221,
+            "category": "synthetic-fixture-source-type-index-expression-or-empty-value"
+          },
+          {
+            "line": 234,
+            "category": "synthetic-fixture-source-type-index-expression-or-empty-value"
+          },
+          {
+            "line": 607,
+            "category": "synthetic-fixture-source-type-index-expression-or-empty-value"
+          },
+          {
+            "line": 697,
+            "category": "synthetic-fixture-source-type-index-expression-or-empty-value"
+          },
+          {
+            "line": 714,
+            "category": "synthetic-fixture-source-type-index-expression-or-empty-value"
+          },
+          {
+            "line": 1083,
+            "category": "synthetic-fixture-source-type-index-expression-or-empty-value"
+          },
+          {
+            "line": 1166,
+            "category": "synthetic-fixture-source-type-index-expression-or-empty-value"
+          },
+          {
+            "line": 4763,
+            "category": "synthetic-fixture-source-type-index-expression-or-empty-value"
+          },
+          {
+            "line": 5729,
+            "category": "synthetic-fixture-source-type-index-expression-or-empty-value"
+          },
+          {
+            "line": 5772,
+            "category": "synthetic-fixture-source-type-index-expression-or-empty-value"
+          },
+          {
+            "line": 6603,
+            "category": "synthetic-fixture-source-type-index-expression-or-empty-value"
+          },
+          {
+            "line": 6608,
+            "category": "synthetic-fixture-source-type-index-expression-or-empty-value"
+          },
+          {
+            "line": 6645,
+            "category": "synthetic-fixture-source-type-index-expression-or-empty-value"
+          },
+          {
+            "line": 6864,
+            "category": "synthetic-fixture-source-type-index-expression-or-empty-value"
+          },
+          {
+            "line": 6874,
+            "category": "synthetic-fixture-source-type-index-expression-or-empty-value"
+          },
+          {
+            "line": 6885,
+            "category": "synthetic-fixture-source-type-index-expression-or-empty-value"
+          },
+          {
+            "line": 7552,
+            "category": "synthetic-fixture-source-type-index-expression-or-empty-value"
+          }
+        ]
+      },
+      {
+        "sha256": "e7e5eb3a533a4af98b35743dea4bc2a622f8fa038f5ef46d25a6ac9303d8333d",
+        "bytes": 17154,
+        "locations": [
+          "remediation-runs/2026-09-08-continuation/actions/34303850578/run-attempt-1-logs.zip!/iOS tests, release frameworks, and Swift wrapper/3_Check out source.txt",
+          "remediation-runs/2026-09-08-continuation/actions/34303850578/run-logs/iOS tests, release frameworks, and Swift wrapper/3_Check out source.txt"
+        ],
+        "dispositions": [
+          {
+            "line": 66,
+            "category": "GitHub-checkout-header-masked"
+          }
+        ]
+      },
+      {
+        "sha256": "c1dcac78c66f505a06ad11156945b67186065109a4ac4866e345d36409f5f239",
+        "bytes": 2397,
+        "locations": [
+          "remediation-runs/2026-09-08-continuation/actions/34303850578/run-attempt-1-logs.zip!/iOS tests, release frameworks, and Swift wrapper/5_Set up JDK 21.txt",
+          "remediation-runs/2026-09-08-continuation/actions/34303850578/run-logs/iOS tests, release frameworks, and Swift wrapper/5_Set up JDK 21.txt"
+        ],
+        "dispositions": [
+          {
+            "line": 11,
+            "category": "JDK-action-environment-variable-name-not-password-value"
+          }
+        ]
+      },
+      {
+        "sha256": "3589d574f00a5b5b83eefd0b24d08eecdce65647733e933fa5cd11b9d98706ef",
+        "bytes": 36192,
+        "locations": [
+          "remediation-runs/2026-09-08-continuation/actions/full-qualification-dispatch-01/request.json"
+        ],
+        "dispositions": [
+          {
+            "line": 35,
+            "category": "review-authorization-object-not-access-credential"
+          }
+        ]
+      },
+      {
+        "sha256": "f7155d536ca31cb506fb052c141e31b4a93c07ede2cf862aa1f4b514636d1213",
+        "bytes": 166113,
+        "locations": [
+          "remediation-runs/2026-09-08-continuation/reviews/native-34303850578-postrun-author-01.json"
+        ],
+        "dispositions": [
+          {
+            "line": 11,
+            "category": "review-authorization-object-not-access-credential"
+          }
+        ]
+      },
+      {
+        "sha256": "73db8287ce46c0579368b8322f3fca93faef909fbf1a75ffb98239b5eef19862",
+        "bytes": 48179,
+        "locations": [
+          "remediation-runs/2026-09-08-continuation/reviews/native-a23-scroll-correction-01/revision-02/test_single_tap_fixture_review.py"
+        ],
+        "dispositions": [
+          {
+            "line": 78,
+            "category": "lexer-TOKEN-regex-or-equality-expression-not-credential"
+          },
+          {
+            "line": 168,
+            "category": "lexer-TOKEN-regex-or-equality-expression-not-credential"
+          }
+        ]
+      },
+      {
+        "sha256": "1ee870c576b7d5212d3b14b93514a7ba973c07065493a33bfc4a2b8dca73e5e2",
+        "bytes": 45184,
+        "locations": [
+          "remediation-runs/2026-09-08-continuation/reviews/native-a23-scroll-correction-01/test_single_tap_fixture_review.py"
+        ],
+        "dispositions": [
+          {
+            "line": 78,
+            "category": "lexer-TOKEN-regex-or-equality-expression-not-credential"
+          },
+          {
+            "line": 167,
+            "category": "lexer-TOKEN-regex-or-equality-expression-not-credential"
+          }
+        ]
+      },
+      {
+        "sha256": "21d5f2ba437d5aaed855e2a5f1bfd2a0c8141c625772aa1409405087025ed222",
+        "bytes": 64697,
+        "locations": [
+          "remediation-runs/2026-09-08-continuation/reviews/native-a25-cycle-preparation-01/native_continuation.py.candidate"
+        ],
+        "dispositions": [
+          {
+            "line": 274,
+            "category": "adapter-symbolic-authorization-construction-or-env-lookup"
+          },
+          {
+            "line": 842,
+            "category": "adapter-symbolic-authorization-construction-or-env-lookup"
+          }
+        ]
+      },
+      {
+        "sha256": "057938cbc276278bb35f0bd72fca4a22d73fae25b935725c92eb426dbbe95656",
+        "bytes": 31847,
+        "locations": [
+          "remediation-runs/2026-09-08-continuation/reviews/native-a25-cycle-preparation-independent-01.json"
+        ],
+        "dispositions": [
+          {
+            "line": 10,
+            "category": "review-authorization-object-not-access-credential"
+          }
+        ]
+      },
+      {
+        "sha256": "8e8ffb3253eaf8adf04e18075ab53d0db8c3ea47c07fca6c5bd1ec4778323451",
+        "bytes": 12561,
+        "locations": [
+          "remediation-runs/2026-09-08-continuation/reviews/native-a25-label-integration-independent-01.json"
+        ],
+        "dispositions": [
+          {
+            "line": 10,
+            "category": "review-authorization-object-not-access-credential"
+          }
+        ]
+      },
+      {
+        "sha256": "34e2038f191e1bef8c73dd37fde6da343c277873055205b91db23ef9f2fe6e51",
+        "bytes": 59290,
+        "locations": [
+          "remediation-runs/2026-09-08-continuation/reviews/native-preflight-34300240397-independent-01.json"
+        ],
+        "dispositions": [
+          {
+            "line": 24,
+            "category": "review-authorization-object-not-access-credential"
+          }
+        ]
+      },
+      {
+        "sha256": "c1e783a94ab523e59f215459746f1ac99b4f68ce2e8e80bebcf1eed6ee577357",
+        "bytes": 24168,
+        "locations": [
+          "remediation-runs/2026-09-08-continuation/reviews/native-preflight-budget-freeze-independent-01.json"
+        ],
+        "dispositions": [
+          {
+            "line": 9,
+            "category": "review-authorization-object-not-access-credential"
+          }
+        ]
+      }
+    ],
+    "caution": "No credential/private-key/private-player-payload finding was identified by this bounded heuristic/context review. This is not a mathematical guarantee that all possible secrets or personal data are absent, and is not owner/legal/privacy approval."
+  },
+  "retained_generated_evidence": {
+    "POM_metadata": {
+      "files": 459,
+      "bytes": 1507794,
+      "manifest_sha256": "193468747a3bb6fa0e91e1676ddb5ce849b9ae355b32c73a2a7973ad82d7df04",
+      "sample_refs": [
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-render-linux-04/report/metadata/007cb6e06e7c2614c6ceaae62dc065c4a7af51ecc8c20d562983049f93a687b2.pom",
+          "bytes": 6042,
+          "sha256": "007cb6e06e7c2614c6ceaae62dc065c4a7af51ecc8c20d562983049f93a687b2",
+          "mode": 384,
+          "ignored": false,
+          "kind": "file"
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-render-linux-04/report/metadata/00987bb29fea8ce03946a09747d0fa7ae59f845122a26d0a2e58fcb62f550a0d.pom",
+          "bytes": 2556,
+          "sha256": "00987bb29fea8ce03946a09747d0fa7ae59f845122a26d0a2e58fcb62f550a0d",
+          "mode": 384,
+          "ignored": false,
+          "kind": "file"
+        }
+      ],
+      "disposition": "Retained task-owned renderer POM evidence, not global cache; no deletion or license approval.",
+      "all_content_addressed_filenames_rehashed_and_match": true
+    },
+    "ignored_logs": {
+      "files": 93,
+      "bytes": 1267486,
+      "manifest_sha256": "8d16f9b2529d2521e1082ceba3ae9ed62c702e18b6293ca8e24e54e46adffbe9",
+      "disposition": "Retained task-owned execution/controller/toolchain/cleanup evidence. Ignored is not disposable or automatically staged. Root must preserve required receipts and choose exact final whitelist after tests."
+    },
+    "other_evidence": "Source/control proposals, failed receipts, compact logs, dependency graphs/SBOM outputs, API artifact metadata and necessary archives are intentional evidence. This scan does not approve their substantive claims or authorize deleting them."
+  },
+  "final_disposition": {
+    "stage_approval": false,
+    "next_action": "Root performs final whitelist and scope/hash reconciliation after remaining tests/deliveries. Any later added or changed file is outside this cutoff and needs a fresh scoped precheck before staging.",
+    "readiness": "NOT_READY; no application runtime, libproc success, final combined qualification, physical-device, Store-operation or owner/legal clearance added."
+  },
+  "cleanup": "Read-only inspection plus this sole authorized report. No build/test cycle, spawned worker, simulator, DerivedData or extraction directory was created; no Gradle stop/clean needed or run. All evidence and unrelated work preserved."
+}

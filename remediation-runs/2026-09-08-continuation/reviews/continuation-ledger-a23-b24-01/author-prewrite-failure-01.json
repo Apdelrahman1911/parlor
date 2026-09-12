@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "kind": "LEDGER_AUTHOR_PREWRITE_ASSEMBLY_FAILURE",
+  "author": "/root/evidence_audit",
+  "status": "PRESERVED_ADMINISTRATIVE_FAILURE_BEFORE_ANY_WRITE",
+  "actual_exit_code": 1,
+  "actual_output": "Traceback (most recent call last):\n  File \"<stdin>\", line 9, in <module>\nAssertionError: Unexpected Latest span\n",
+  "cause": "Overescaped locally assembled Python regular expression failed the exact Latest-span assertion before evidence-pin checks, output-directory creation or any file write. It was not an application/control/build/test execution.",
+  "correction": "Use literal byte boundaries plus the same exact whole-base hash/size and expected48:696 span; preserve all original source and canonical ledger bytes.",
+  "retry_scope": "Only this held-document assembly, not a native or candidate consumer retry.",
+  "created_workers_or_outputs": false,
+  "recorded_at": "2026-09-09T05:05:45.821786+00:00"
+}

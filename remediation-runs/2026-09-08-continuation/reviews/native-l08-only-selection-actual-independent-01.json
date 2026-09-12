@@ -1,0 +1,287 @@
+{
+  "schema_version": 1,
+  "kind": "A31 adopted selector actual Linux verification independent review",
+  "reviewer": "/root/ci_review",
+  "coordinator": "/root",
+  "recorded_at": "2026-09-09T17:04:32.463127+00:00",
+  "status": "APPROVED_ACTUAL_LOCAL_SELECTOR_VERIFICATION_PENDING_FREEZE_AND_PLATFORM_EXECUTION",
+  "findings": [],
+  "scope": "Bounded adoption/log/XML/source/cleanup review only. Fixture 90 controls belong to the separate fixture reviewer. No project import, helper execution, test, build, worker, network or Actions invocation by this reviewer.",
+  "prior_source_review": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/native-l08-only-selection-independent-01.json",
+    "bytes": 15709,
+    "sha256": "59cdc22e7c3ed384300818d1c641edceb4cb9151f07ba62e96780c17270fa859"
+  },
+  "cycle": {
+    "directory": "remediation-runs/2026-09-07-local-readiness/evidence/native-a31-focused-controls-linux-01",
+    "receipt": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/native-a31-focused-controls-linux-01/receipt.json",
+      "bytes": 310708,
+      "sha256": "87ca4ba6d44a5fb2e41be6ac2163a95b9ea3323c218cfc51cd97faeae6066e44"
+    },
+    "command_exit": 0,
+    "stop_exit": 0,
+    "started_at": "2026-09-09T16:48:40.981838+00:00",
+    "finished_at": "2026-09-09T16:49:42.462692+00:00",
+    "stopped_at": "2026-09-09T16:49:43.255342+00:00",
+    "cleanup_completed_at": "2026-09-09T16:49:43.445948+00:00"
+  },
+  "source_binding": {
+    "commit": "360fc797a85e1e494334fd8cc11b4e739981cea8",
+    "tree": "8bfe56a21074ba51a4b668bad0728e42007a7593",
+    "branch": "fix/local-readiness-2026-09-07",
+    "dirty_pre_freeze": true,
+    "tracked_modifications_during_cycle": 10,
+    "diff_sha256": "ddf5e0d455c45c74de35f150068860c77218eacededa324d16b5ee24e42a6b54",
+    "source_manifest_rows": 829,
+    "source_manifest_sha256": "7484356cf1fae26a5da1e2461c4594f7e150c5001707296ecc0b1fc266caf302",
+    "complete_before_after_objects_equal": true,
+    "current_manifest_equals_executed_manifest": true,
+    "later_handoff_edit": "CONTINUE_LATEST.md changed after this cycle. Excluding precisely that path reproduces the recorded binary diff hash. This does not rebind execution to a later commit.",
+    "runner_manifest_sha256": "942e138764146313a59cbe1278c1357284a5701d0c125809c34ddbbe876ce912",
+    "runner_sha256": "1b9e882514bfe5386785d5a71ae32fdc2bc3aa4cc1dd24532709899fbf4f41bc"
+  },
+  "adopted_seven_files": [
+    {
+      "path": ".github/workflows/production-verification.yml",
+      "sha256": "5895ce4e80000b205302a987f8b603ac21380764f36e3711064029c3b1af62bc",
+      "git_mode": "100644"
+    },
+    {
+      "path": "scripts/ci/native_continuation.py",
+      "sha256": "cac70087f29356074f7a6870ede578ca4e8a4cd765b7c895e95381fb1a2c7a00",
+      "git_mode": "100644"
+    },
+    {
+      "path": "scripts/ci/NATIVE_CONTINUATION.md",
+      "sha256": "2f7556f9c0e901fbd07df722429fc96ea617b33afc83d11508b64dcabe3b4233",
+      "git_mode": "100644"
+    },
+    {
+      "path": "scripts/release/workflow_contract.py",
+      "sha256": "aeeb5fb01a228f9ef5419c2aae4e4e78326b39b0e62846591b184168756d7c6e",
+      "git_mode": "100755"
+    },
+    {
+      "path": "scripts/release/tests/test_native_continuation.py",
+      "sha256": "824a95f46b21f6b679b85cd211913a37906c041668a18d9be94967d51e525605",
+      "git_mode": "100644"
+    },
+    {
+      "path": "scripts/release/tests/test_workflow_contract.py",
+      "sha256": "b2a6a09ef5091788081bd1383e75cda188859b67001ecd376519408aa7d03d97",
+      "git_mode": "100644"
+    },
+    {
+      "path": "scripts/release/tests/test_native_process_probe.py",
+      "sha256": "ecef057e4d90b532d74eb002ee53ebfe1699ab75e084ffb1eafe22388b75f1ff",
+      "git_mode": "100644"
+    }
+  ],
+  "control_binding": {
+    "rows": 221,
+    "unique": 221,
+    "before_after_byte_identical": true,
+    "all_current_hashes_and_regular_canonical_paths_match": true,
+    "before": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/native-a31-focused-controls-linux-01/control-inputs-before.json",
+      "bytes": 42624,
+      "sha256": "1490036a6f8c5de04b94093a975a9da6763b1b43701519439881ee684f6da9a5"
+    },
+    "after": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/native-a31-focused-controls-linux-01/control-inputs-after.json",
+      "bytes": 42624,
+      "sha256": "1490036a6f8c5de04b94093a975a9da6763b1b43701519439881ee684f6da9a5"
+    }
+  },
+  "python_controls": {
+    "passed": 126,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0,
+    "duplicate_selected_ids": 0,
+    "new_methods_logged_once": 10,
+    "selection": [
+      {
+        "module": "scripts.release.tests.test_native_continuation",
+        "selected": 71,
+        "logged_once_ok": 71,
+        "selected_ids_sorted_compact_json_sha256": "fd7515e4336e1a97044b0ea74380c9253272fdd37da48be0d06290b7dab8083f",
+        "exact_AST_selection_equals_log": true,
+        "log": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/native-a31-focused-controls-linux-01/native_selection.log",
+          "bytes": 16026,
+          "sha256": "4fb039c15bcd84d2a6d38bef95bf76edb761667ddafdb6b63830dcb4f49a6489"
+        }
+      },
+      {
+        "module": "scripts.release.tests.test_workflow_contract",
+        "selected": 54,
+        "logged_once_ok": 54,
+        "selected_ids_sorted_compact_json_sha256": "8becc025ca863ee53ac55ae3595577f7118cce015d1e74fd6eccfdfb8c06389d",
+        "exact_AST_selection_equals_log": true,
+        "log": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/native-a31-focused-controls-linux-01/workflow_contract_tests.log",
+          "bytes": 10763,
+          "sha256": "6beec978bd8c858bcbcaaf03209a91124d2bc971da5444ec5b6e04fafd04b39d"
+        }
+      },
+      {
+        "module": "scripts.release.tests.test_native_process_probe",
+        "selected": 1,
+        "logged_once_ok": 1,
+        "selected_ids_sorted_compact_json_sha256": "a82c34a94691f9d87d4ee518f1d32687b0667d54d71279fc86427846e4dd66e4",
+        "exact_AST_selection_equals_log": true,
+        "log": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/native-a31-focused-controls-linux-01/native_labels.log",
+          "bytes": 326,
+          "sha256": "b6c42af9add74670e9e1abdb64cdd0e27199b7cc8768d73977200e4636fca6e0"
+        }
+      }
+    ],
+    "new_methods": [
+      "scripts.release.tests.test_native_continuation.DirectLifecycleAdapterTest.test_l08_only_uses_actual_a_adapter_guards_without_b_claim_or_directory",
+      "scripts.release.tests.test_native_continuation.NativeCleanupTest.test_l08_only_cleanup_binds_selection_and_removes_only_its_exact_a_directory",
+      "scripts.release.tests.test_native_continuation.NativeCleanupTest.test_l08_only_status_never_synthesizes_combined_pass_or_invokes_b",
+      "scripts.release.tests.test_native_continuation.NativeCleanupTest.test_unselected_b_claims_or_scope_selection_status_drift_refuse_all_cleanup_deletion",
+      "scripts.release.tests.test_native_continuation.NativeJobBudgetAdmissionTest.test_l08_only_never_admits_unselected_b_or_bypasses_a_budget",
+      "scripts.release.tests.test_native_continuation.NativeScopeTest.test_invalid_selection_is_rejected_by_cli_and_constructor_before_native_resources",
+      "scripts.release.tests.test_native_continuation.NativeScopeTest.test_l08_only_selection_and_b_not_run_are_bound_even_when_a_fails",
+      "scripts.release.tests.test_native_continuation.NativeScopeTest.test_native_selection_defaults_to_paired_and_is_closed",
+      "scripts.release.tests.test_workflow_contract.WorkflowContractTest.test_native_selection_is_closed_paired_default_and_cannot_be_duplicated",
+      "scripts.release.tests.test_workflow_contract.WorkflowContractTest.test_native_selection_validation_execution_and_cleanup_use_identical_input"
+    ],
+    "invocation_note": "Root split the approved 71+54+1 selection into three sequential unittest commands in one coordinated cycle; exact selected IDs each executed once, not a separate ten-new replay.",
+    "standalone_workflow_contract": {
+      "result": "PASS",
+      "log": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/native-a31-focused-controls-linux-01/workflow_contract.log",
+        "bytes": 32,
+        "sha256": "ed4d00104b82af25bedca2f5586359a98c6d2c5d0667ceb6a849ab748394c196"
+      }
+    }
+  },
+  "command_coupling": {
+    "read_complete_recorded_script": true,
+    "description": "Before/after fresh control hashes; all eight timeout-bounded run_one exits retained in command-exits.tsv; any nonzero child makes overall=1; Gradle runs only after prior controls pass; after-manifest equality assertion is exit-coupled. All eight exits are zero.",
+    "exits": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/native-a31-focused-controls-linux-01/command-exits.tsv",
+      "bytes": 160,
+      "sha256": "645d7a05d5164ed83ba15242be6fdf9476265874c3b994992b3d95396ffeabf6"
+    },
+    "outer_log": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/native-a31-focused-controls-linux-01/gradle.log",
+      "bytes": 521,
+      "sha256": "7fbcaffa42f6ae4a5ed948118dd3d21a2de412aa7fe42c76000c416e9e409a3a"
+    }
+  },
+  "transport_runtime": {
+    "task": ":shared:transport-p2p:desktopTest",
+    "result": "PASS_WITH_THREE_EXISTING_IGNORES",
+    "strict_dependency_verification": true,
+    "jdk_home": "/usr/lib/jvm/java-21-openjdk-amd64",
+    "javac": "21.0.12",
+    "raw_log": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/native-a31-focused-controls-linux-01/transport_contracts.log",
+      "bytes": 4691,
+      "sha256": "dac61c9cf3701786de0fc033ee2a269281c70f1df2bec905bafba39772cb2cdc"
+    },
+    "retained_receipts": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/native-a31-focused-controls-linux-01/test-receipts.json",
+      "bytes": 73799,
+      "sha256": "fe86c3c907d1421200a4698e45c55f739077549939f4efdcfbe98b40ff51e5f1"
+    },
+    "xml_suites": 22,
+    "xml_receipts_equal_raw_files": true,
+    "unique_case_descriptors": 277,
+    "passed": 274,
+    "skipped": 3,
+    "failures": 0,
+    "errors": 0,
+    "raw_xml_ordered_path_hash_pairs_compact_json_sha256": "b6f0607812e38a51f5d042bd1e036ffdf44a9624b9df9f60d2e29db7b3c6e671",
+    "gradle_summary": "21 actionable tasks: 14 executed, 7 from cache",
+    "test_task_executed_not_cached": true,
+    "cached_compile_tasks": [
+      "> Task :build-logic:convention:compileKotlin FROM-CACHE",
+      "> Task :shared:core:compileKotlinDesktop FROM-CACHE",
+      "> Task :shared:engine:compileKotlinDesktop FROM-CACHE",
+      "> Task :shared:networking:compileKotlinDesktop FROM-CACHE",
+      "> Task :shared:storage:compileKotlinDesktop FROM-CACHE",
+      "> Task :shared:transport-p2p:compileKotlinDesktop FROM-CACHE",
+      "> Task :shared:transport-p2p:compileTestKotlinDesktop FROM-CACHE"
+    ],
+    "skipped_cases": [
+      {
+        "name": "peer_to_host_message_round_trips_and_host_to_peer_message_arrives_back()[desktop]",
+        "classname": "com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest",
+        "skipped": true,
+        "failed": false
+      },
+      {
+        "name": "peer_can_join_a_hosted_room_and_membership_appears_on_host()[desktop]",
+        "classname": "com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest",
+        "skipped": true,
+        "failed": false
+      },
+      {
+        "name": "host_broadcast_reaches_every_peer()[desktop]",
+        "classname": "com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest",
+        "skipped": true,
+        "failed": false
+      }
+    ],
+    "skip_source": {
+      "path": "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitRoomTransportLoopbackTest.kt",
+      "bytes": 10824,
+      "sha256": "21451bf407d791ec85066227a2670ccf61d3506efaae47375c0bba557fe3be73"
+    },
+    "skip_source_unchanged_from_HEAD": true,
+    "skip_reason": "Existing @Ignore annotations require physical devices on the same LAN (two for join/message, three for broadcast); single-JVM mDNS loopback is unreliable. Not counted as passes.",
+    "platform_limits": "Linux logs explicitly disable iOS native tasks. This cycle is not Apple, simulator, libproc ABI, UI or Store runtime proof."
+  },
+  "cleanup": {
+    "stop_log": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/native-a31-focused-controls-linux-01/stop.log",
+      "bytes": 31,
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    "before_outputs": [],
+    "removed_outputs": [
+      "shared/networking/build",
+      "shared/transport-p2p/build",
+      "shared/core/build",
+      "shared/storage/build",
+      "shared/engine/build",
+      "build",
+      "build-logic/convention/build"
+    ],
+    "remaining_outputs": [],
+    "cleanup_errors": [],
+    "deferred_signals": [],
+    "owned_worker_survivors": [],
+    "artifact_worker_survivors": [],
+    "fresh_absence_paths": [
+      "shared/networking-testing/build",
+      "shared/session/build",
+      "shared/networking/build",
+      "shared/transport-p2p/build",
+      "shared/core/build",
+      "shared/engine-testing/build",
+      "shared/storage/build",
+      "shared/design-system/build",
+      "shared/engine/build",
+      "shared/content/build",
+      "game-modes/whodunit/build",
+      "game-modes/mafia/build",
+      "build",
+      "composeApp/build",
+      "build-logic/build",
+      "build-logic/convention/build",
+      "remediation-runs/2026-09-07-local-readiness/evidence/native-a31-focused-controls-linux-01/scratch",
+      "/tmp/parlor-app-foundation-controls-vsl1jjoi"
+    ],
+    "fresh_absence_all_true": true,
+    "scope": "16 current module/root build dirs, cycle scratch, and recorded external composition control parent. Archived reports/build directories preserved; no reviewer resources allocated or cleanup executed."
+  },
+  "conclusion": "Adopted selector bytes and focused Linux verification accepted for source/control freeze. Native A31 remains unexecuted at the future frozen source; B32 remains unselected, not passed. Full qualification, fresh source/control bindings and C06 at the final qualification SHA remain separate work. Overall readiness is not upgraded by these harness tests."
+}

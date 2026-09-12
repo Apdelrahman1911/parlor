@@ -1,0 +1,143 @@
+{
+  "schema_version": 1,
+  "kind": "INDEPENDENT_UNBOUND_FULL_QUALIFICATION_AFTERFREEZE_PACKET_AND_WIRING_REVIEW",
+  "recorded_at": "2026-09-08T17:24:00.191578+00:00",
+  "reviewer": "/root/ci_review",
+  "author": "/root/evidence_audit",
+  "status": "APPROVED_REVISED_PREPARATION_ONLY_PENDING_FUTURE_FREEZE_REHASH_BINDING_AND_SEPARATE_DISPATCH_APPROVAL",
+  "reviewed_packet": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/full-qualification-afterfreeze-01.json",
+    "sha256": "1c455d0dfc2405a9c3205782efbc31acf0fbd9ee356aeade25a74eeaa3c1aad5",
+    "bytes": 45031
+  },
+  "committed_reference_baseline": {
+    "commit": "700243c3426db2da3855a9d3a3df58ada607ffc5",
+    "tree": "bd93099fe19ccf46e27eb67f22d694cc1ae074aa",
+    "kind": "Evidence-only checkpoint; not an approved execution freeze"
+  },
+  "scope": "Bounded read-only packet, task/checkout/artifact wiring, retained-reference integrity and relevant cleanup source inspection. Not a repeat of the original16 remediation or full application source campaign; not approval of concurrent native lifecycle edits.",
+  "independently_verified": {
+    "committed_control_path_byte_sha256_bindings": 17,
+    "prior_reference_path_byte_sha256_bindings": 8,
+    "committed_controls_equal_current_worktree": 16,
+    "disclosed_mutable_control": "scripts/ci/native_continuation.py differs. Packet intentionally binds only committed700243 bytes. Current effective_scope/main ASTs matched those committed versions when inspected, but this is not approval of the rest of the draft or a future freeze.",
+    "full_jobs": 5,
+    "main_artifacts": 5,
+    "cleanup_artifacts": 5,
+    "full_mode_focused_steps_intentionally_skipped": 8,
+    "job_names_hosts_main_artifact_names_and_upload_paths": "Matched every declared job against actual workflow blocks, including normalization only of runner/run/attempt/job interpolation notation.",
+    "no_invented_future_binding": "Source/control/inventory freeze, approval, dispatch/run/attempt, actual job and artifact IDs remain null/unknown; no700243 or5f35 execution authorization.",
+    "method": "Read-only Git blobs/status, SHA256/size/JSON/reference comparisons, complete workflow and relevant root task/cleanup/native validate-scope sources, Swift/PBX/scheme declaration wiring and AST/XML parsing. No project module imports or source execution."
+  },
+  "jobs_and_required_artifact_names": [
+    {
+      "job": "desktop-android",
+      "name": "Common, desktop, and Android release",
+      "host": "ubuntu-24.04",
+      "full_timeout_minutes": 90,
+      "main": "desktop-android-verification",
+      "cleanup": "verification-cleanup-desktop-android",
+      "stop_labels": [
+        "common-android",
+        "managed-device"
+      ]
+    },
+    {
+      "job": "desktop-linux-arm64",
+      "name": "Desktop strict verification (Linux arm64)",
+      "host": "ubuntu-24.04-arm",
+      "full_timeout_minutes": 45,
+      "main": "desktop-verification-desktop-linux-arm64",
+      "cleanup": "verification-cleanup-desktop-linux-arm64",
+      "stop_labels": [
+        "linux-arm64"
+      ]
+    },
+    {
+      "job": "desktop-macos-x64",
+      "name": "Desktop and Kotlin Native strict verification (macOS x64)",
+      "host": "macos-15-intel",
+      "full_timeout_minutes": 45,
+      "main": "desktop-verification-desktop-macos-x64",
+      "cleanup": "verification-cleanup-desktop-macos-x64",
+      "stop_labels": [
+        "macos-x64"
+      ]
+    },
+    {
+      "job": "desktop-windows-x64",
+      "name": "Desktop, Kotlin Native, and Android resources strict verification (Windows x64)",
+      "host": "windows-2025",
+      "full_timeout_minutes": 60,
+      "main": "desktop-verification-desktop-windows-x64",
+      "cleanup": "verification-cleanup-desktop-windows-x64",
+      "stop_labels": [
+        "windows-x64"
+      ]
+    },
+    {
+      "job": "ios",
+      "name": "iOS tests, release frameworks, and Swift wrapper",
+      "host": "macos-15",
+      "full_timeout_minutes": 120,
+      "main": "ios-verification",
+      "cleanup": "verification-cleanup-ios",
+      "stop_labels": [
+        "apple-aggregate",
+        "apple-ui",
+        "apple-wrapper"
+      ]
+    }
+  ],
+  "source_binding_conclusions": [
+    "Full jobs do not set or enforce PARLOR_FROZEN_SOURCE_SHA. The iOS validate-scope path only validates/selects scope and returns before focused Continuation context checks. Supplying frozen_source_sha to full would not bind the checkout.",
+    "A later separately approved initial full run must reconcile actual run/attempt repository/workflow/ref/head, all five distinct job source identities, retained checkout logs and ownership head/tree/task against the actual future desired SHA/tree. Names, branch snapshots or focused preflight cannot replace actual checkout evidence.",
+    "Only common desktop-android has fetch-depth0. iOS full and three desktop jobs have depth1. The history-dependent inventory gate is correctly routed to the full-history common job; Windows Git identity is not a claim of Linux-identical newline-normalized checkout bytes.",
+    "Commit reviewed source/controls, regenerate and separately commit the mechanical inventory, then rehash the exact future workflow/control closure and review relevant deltas before dispatch. Recheck remote/local freeze identity and prevent overlapping same-ref full/focused runs because cancel-in-progress applies across scopes."
+  ],
+  "runtime_and_nonruntime_conclusions": [
+    "Root task wiring matches: productionDesktopCheck includes registered desktopTest tasks; productionIosSimulatorRuntimeTests includes registered iosSimulatorArm64Test tasks; productionAppleCheck is type-aware analysis plus three release framework linkage targets, not three native runtime targets.",
+    "Android productionAndroidRuntimeCheck delegates to pixel2Api35ReleaseAndroidTest through the task-owned synthetic-signing managed-device script. Static/resource/unsigned-AAB/package checks, Kotlin Native distribution download and linkage are not runtime evidence.",
+    "Revised iOS packet correctly accounts for one Home-launch method plus four UIKit containment methods in the active nonparallel iosAppUITests testable, with no only-testing selector. Four UIKit methods compile the production container source but do not themselves prove actual SwiftUI/Compose app-host integration.",
+    "Actual task/log outcomes and descriptor hashes must distinguish EXECUTED from FROM-CACHE, UP-TO-DATE, NO-SOURCE, SKIPPED, FAILED, NOT_RUN and UNKNOWN. Restored XML, aggregate success, declarations or a linked/retained XCResult directory are not newly executed tests. Reused evidence requires exact source/control/platform/scope applicability; unresolved freshness gaps stay visible.",
+    "Full Home/containment tests do not close A storage/protection/retained-host/single-tap coverage or B eight launches plus actual Parlor libproc provenance. A19 cleanup failures and B20 NOT_RUN remain historical facts; C02 retains its separate exact5f35 scope."
+  ],
+  "artifact_and_cleanup_conclusions": [
+    "Successful full qualification requires all five actual required jobs/checks, ten attributable nonempty original main/cleanup artifacts and independent raw-evidence reconciliation. Uploads use14-day retention and warn on no files; successful upload steps or artifact names alone cannot satisfy completeness or custody.",
+    "Collection must retain paginated API identities, original ZIP sizes/digests and safe member inventories/extracted hashes, command exits/times and run/attempt/job association without secrets. No overwrite of failed or unrelated evidence; absent artifacts/reports after failure remain gaps or NOT_RUN.",
+    "Main iOS upload includes reports, XCResult and optional dSYM, not Parlor.app or an IPA. Actual Release binary hash/notices/package-inventory receipts are not an invented retained or Store-signed application.",
+    "All jobs use prepared head/tree/task/output-root claims, immediate configured Gradle stops and final custody-gated cleanup. Final deletion requires stop0, unchanged source/output authority and positive artifact ID/64hex digest after upload. Inspect errors/retained/removed/not_created; never infer clean resources from an Actions conclusion.",
+    "Apple aggregate/UI/wrapper finishes must each reconcile actual prepare/run/finish outcomes, source/task/claim hashes, stop first, bounded native-worker quiescence before/after simulator cleanup and exact owned-UUID retirement. Legitimate NOT_RUN cleanup requires skipped prepare/run and no claim, and never upgrades an unexecuted required test.",
+    "Non-Apple cleanup only attests Gradle/in-process Kotlin scope. Emulator/other native retirement needs separate actual evidence; generic Gradle or orphan cleanup cannot establish it. Missing native/device cleanup evidence remains a qualification limitation even if ordinary output cleanup succeeds."
+  ],
+  "review_findings": [
+    {
+      "id": "FULL-IOS-DECLARATION-SCOPE-01",
+      "status": "RESOLVED_IN_REVISED_UNEXECUTED_PACKET",
+      "previous_draft_sha256": "c0ea13f7f8f6ac7d52644a181fe0cb82b413cb4412ad0e3a537a42c35c646c97",
+      "finding": "Original one-method suite wording omitted four UIKit methods wired into the same active testable.",
+      "resolution": "Author corrected job/cache/artifact/B-scope wording and added scheme/PBX/container/test pins plus all five declaration names. Independently reconciled actual committed/current source wiring; no source/test changes or runtime results implied."
+    }
+  ],
+  "outstanding_blocking_packet_findings": [],
+  "authorization": {
+    "unbound_revised_preparation_template_approved": true,
+    "any_current_or_future_source_sha_approved_for_execution": false,
+    "test_build_native_execution": false,
+    "workflow_dispatch_download_retry_or_cancellation": false,
+    "required_later": "Future reviewed source/control/inventory freeze, exact rehash/delta/binding review and separate root-controlled one-new-initial-run dispatch approval. Follow failure inspection and fresh narrow approval, not an automatic matrix rerun."
+  },
+  "readiness": "NOT_READY. D remains UNEXECUTED; A/B and applicable fresh C/D work, physical-device checks, Store operations and separate owner/legal/editorial/privacy requirements are not completed by this review. Disabled publication and known application-identity collision remain unchanged.",
+  "activity_and_cleanup": {
+    "tests": 0,
+    "builds": 0,
+    "project_imports": 0,
+    "native_actions": 0,
+    "network_calls": 0,
+    "workflow_dispatches": 0,
+    "source_edits": 0,
+    "cleanup_actions": 0,
+    "commits_or_pushes": 0,
+    "note": "Read-only inspection and only this new review file. No build lane or temporary runtime resources created. Existing lock, live outputs, historical evidence and other agents work preserved; no stop/cleanup receipt invented."
+  }
+}

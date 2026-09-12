@@ -1,0 +1,3986 @@
+{
+  "reviewer": "/root/release_fix_review",
+  "source": {
+    "commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+    "tree": "c65463bdf1f3656f90dfe6e6dbe1d94b3c588dac",
+    "run_id": 34152138368,
+    "attempt": 1,
+    "job_id": 101836438981
+  },
+  "suite_count": 74,
+  "descriptor_count": 464,
+  "passes": 464,
+  "failures": 0,
+  "errors": 0,
+  "skips": 0,
+  "suites": [
+    {
+      "module": "composeApp",
+      "task": ":composeApp:iosSimulatorArm64Test",
+      "task_outcome": "EXECUTED",
+      "log_line": 974,
+      "suite": "com.parlor.app.AppBackPolicyTest",
+      "suite_timestamp": "2026-09-07T18:48:03.347Z",
+      "tests": 5,
+      "descriptors": [
+        {
+          "name": "home_allows_the_platform_to_finish_the_application[iosSimulatorArm64]",
+          "classname": "com.parlor.app.AppBackPolicyTest",
+          "time": "0.001",
+          "result": "PASS"
+        },
+        {
+          "name": "settings_navigates_to_the_games_tab[iosSimulatorArm64]",
+          "classname": "com.parlor.app.AppBackPolicyTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "unreadable_save_recovery_is_owned_by_nav_display[iosSimulatorArm64]",
+          "classname": "com.parlor.app.AppBackPolicyTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "guarded_game_exposes_only_its_current_entry_to_predictive_back[iosSimulatorArm64]",
+          "classname": "com.parlor.app.AppBackPolicyTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "registered_game_content_receives_back_and_owns_transactional_cleanup[iosSimulatorArm64]",
+          "classname": "com.parlor.app.AppBackPolicyTest",
+          "time": "0.0",
+          "result": "PASS"
+        }
+      ],
+      "xml": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/composeApp/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.app.AppBackPolicyTest.xml",
+        "bytes": 1125,
+        "sha256": "55a19044cd92139981d671a3e1d2f3512fe315fd2113bb7f910d40f5e3c4d8c3"
+      }
+    },
+    {
+      "module": "composeApp",
+      "task": ":composeApp:iosSimulatorArm64Test",
+      "task_outcome": "EXECUTED",
+      "log_line": 974,
+      "suite": "com.parlor.app.AppNavigationTest",
+      "suite_timestamp": "2026-09-07T18:48:03.349Z",
+      "tests": 11,
+      "descriptors": [
+        {
+          "name": "every_route_has_one_explicit_top_level_owner[iosSimulatorArm64]",
+          "classname": "com.parlor.app.AppNavigationTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "top_level_stacks_are_non_empty_and_switch_independently[iosSimulatorArm64]",
+          "classname": "com.parlor.app.AppNavigationTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "a_game_launch_is_process_local_and_cannot_be_bypassed_by_tab_selection[iosSimulatorArm64]",
+          "classname": "com.parlor.app.AppNavigationTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "authorized_game_exit_clears_the_transient_launch_and_returns_home[iosSimulatorArm64]",
+          "classname": "com.parlor.app.AppNavigationTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "recovery_back_pops_only_the_games_stack[iosSimulatorArm64]",
+          "classname": "com.parlor.app.AppNavigationTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "stale_callbacks_cannot_leave_a_replacement_route[iosSimulatorArm64]",
+          "classname": "com.parlor.app.AppNavigationTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "duplicate_back_completion_cannot_pop_a_new_recovery_route[iosSimulatorArm64]",
+          "classname": "com.parlor.app.AppNavigationTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "game_route_requires_a_positive_entry_identity[iosSimulatorArm64]",
+          "classname": "com.parlor.app.AppNavigationTest",
+          "time": "0.003",
+          "result": "PASS"
+        },
+        {
+          "name": "route_serial_names_round_trip_as_a_stable_contract[iosSimulatorArm64]",
+          "classname": "com.parlor.app.AppNavigationTest",
+          "time": "0.001",
+          "result": "PASS"
+        },
+        {
+          "name": "regular_navigation_directions_follow_the_logical_layout_direction[iosSimulatorArm64]",
+          "classname": "com.parlor.app.AppNavigationTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "predictive_navigation_uses_the_physical_swipe_edge[iosSimulatorArm64]",
+          "classname": "com.parlor.app.AppNavigationTest",
+          "time": "0.0",
+          "result": "PASS"
+        }
+      ],
+      "xml": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/composeApp/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.app.AppNavigationTest.xml",
+        "bytes": 2035,
+        "sha256": "28a838d4a4aef5c1d10ddcbd81d07511594cc1ccd539cd5fbcfa8d6e82e66628"
+      }
+    },
+    {
+      "module": "composeApp",
+      "task": ":composeApp:iosSimulatorArm64Test",
+      "task_outcome": "EXECUTED",
+      "log_line": 974,
+      "suite": "com.parlor.app.LocalResumeRouterTest",
+      "suite_timestamp": "2026-09-07T18:48:03.361Z",
+      "tests": 10,
+      "descriptors": [
+        {
+          "name": "routes_each_shipping_game_from_the_authenticated_envelope[iosSimulatorArm64]",
+          "classname": "com.parlor.app.LocalResumeRouterTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "rejects_unknown_games_instead_of_decoding_them_as_whodunit[iosSimulatorArm64]",
+          "classname": "com.parlor.app.LocalResumeRouterTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "unreadable_outer_snapshot_routes_to_explicit_recovery_for_that_exact_save[iosSimulatorArm64]",
+          "classname": "com.parlor.app.LocalResumeRouterTest",
+          "time": "0.001",
+          "result": "PASS"
+        },
+        {
+          "name": "readable_outer_snapshot_still_routes_directly_to_its_registered_game[iosSimulatorArm64]",
+          "classname": "com.parlor.app.LocalResumeRouterTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "cancellation_during_snapshot_routing_is_not_converted_to_a_data_error[iosSimulatorArm64]",
+          "classname": "com.parlor.app.LocalResumeRouterTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "only_the_latest_resume_request_generation_may_navigate[iosSimulatorArm64]",
+          "classname": "com.parlor.app.LocalResumeRouterTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "coordinator_surfaces_an_unreadable_save_without_deleting_it[iosSimulatorArm64]",
+          "classname": "com.parlor.app.LocalResumeRouterTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "coordinator_discards_only_after_an_explicit_recovery_action[iosSimulatorArm64]",
+          "classname": "com.parlor.app.LocalResumeRouterTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "failed_discard_keeps_the_recovery_screen_and_reports_the_failure[iosSimulatorArm64]",
+          "classname": "com.parlor.app.LocalResumeRouterTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "invalidating_a_pending_resume_prevents_stale_navigation[iosSimulatorArm64]",
+          "classname": "com.parlor.app.LocalResumeRouterTest",
+          "time": "0.0",
+          "result": "PASS"
+        }
+      ],
+      "xml": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/composeApp/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.app.LocalResumeRouterTest.xml",
+        "bytes": 2008,
+        "sha256": "89f417c2ab37597edce483ee3920c70f009ed710ede8baf1acb266cfed52d699"
+      }
+    },
+    {
+      "module": "composeApp",
+      "task": ":composeApp:iosSimulatorArm64Test",
+      "task_outcome": "EXECUTED",
+      "log_line": 974,
+      "suite": "com.parlor.app.MultiplayerRouteRestorationTest",
+      "suite_timestamp": "2026-09-07T18:48:03.363Z",
+      "tests": 3,
+      "descriptors": [
+        {
+          "name": "resumableWhodunitRouteRestoresRegisteredBindingAndName[iosSimulatorArm64]",
+          "classname": "com.parlor.app.MultiplayerRouteRestorationTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "resumableMafiaRouteRestoresRegisteredBindingAndName[iosSimulatorArm64]",
+          "classname": "com.parlor.app.MultiplayerRouteRestorationTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "unknown_or_unsupported_game_route_does_not_fall_through[iosSimulatorArm64]",
+          "classname": "com.parlor.app.MultiplayerRouteRestorationTest",
+          "time": "0.0",
+          "result": "PASS"
+        }
+      ],
+      "xml": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/composeApp/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.app.MultiplayerRouteRestorationTest.xml",
+        "bytes": 880,
+        "sha256": "e8c12fc9d81d4c0bbc5e31023dcdce475de159297d4e8cf76b68fcea908db7f0"
+      }
+    },
+    {
+      "module": "composeApp",
+      "task": ":composeApp:iosSimulatorArm64Test",
+      "task_outcome": "EXECUTED",
+      "log_line": 974,
+      "suite": "com.parlor.app.di.GameShellCompositionTest",
+      "suite_timestamp": "2026-09-07T18:48:03.363Z",
+      "tests": 1,
+      "descriptors": [
+        {
+          "name": "composition_root_builds_shell_and_domain_registries_from_the_same_bindings[iosSimulatorArm64]",
+          "classname": "com.parlor.app.di.GameShellCompositionTest",
+          "time": "0.0",
+          "result": "PASS"
+        }
+      ],
+      "xml": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/composeApp/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.app.di.GameShellCompositionTest.xml",
+        "bytes": 564,
+        "sha256": "982430f0d2154e81a0ef70fe3614cc9d8d45d2513fefdb6cf3cccf1bd7a2c577"
+      }
+    },
+    {
+      "module": "composeApp",
+      "task": ":composeApp:iosSimulatorArm64Test",
+      "task_outcome": "EXECUTED",
+      "log_line": 974,
+      "suite": "com.parlor.app.di.ProductionSessionSeedSourceTest",
+      "suite_timestamp": "2026-09-07T18:48:03.364Z",
+      "tests": 1,
+      "descriptors": [
+        {
+          "name": "application_binds_fresh_game_seeds_to_the_platform_csprng_boundary[iosSimulatorArm64]",
+          "classname": "com.parlor.app.di.ProductionSessionSeedSourceTest",
+          "time": "0.0",
+          "result": "PASS"
+        }
+      ],
+      "xml": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/composeApp/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.app.di.ProductionSessionSeedSourceTest.xml",
+        "bytes": 570,
+        "sha256": "34210a1f3996255ca3027d318be824072af615850e6bfed4e96fd60d7bdb3c48"
+      }
+    },
+    {
+      "module": "composeApp",
+      "task": ":composeApp:iosSimulatorArm64Test",
+      "task_outcome": "EXECUTED",
+      "log_line": 974,
+      "suite": "com.parlor.app.lifecycle.AppLifecycleCoordinatorTest",
+      "suite_timestamp": "2026-09-07T18:48:03.370Z",
+      "tests": 9,
+      "descriptors": [
+        {
+          "name": "inactiveCoversPrivateContentWithoutChangingTransportState[iosSimulatorArm64]",
+          "classname": "com.parlor.app.lifecycle.AppLifecycleCoordinatorTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "backgroundAndForegroundEffectsAreIdempotent[iosSimulatorArm64]",
+          "classname": "com.parlor.app.lifecycle.AppLifecycleCoordinatorTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "shortInactiveInterruptionNeverSuspendsTransport[iosSimulatorArm64]",
+          "classname": "com.parlor.app.lifecycle.AppLifecycleCoordinatorTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "initialInactiveDoesNotInventForegroundOrBackgroundEvidence[iosSimulatorArm64]",
+          "classname": "com.parlor.app.lifecycle.AppLifecycleCoordinatorTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "backgroundBeforeFirstActiveStillProducesAConsistentSuspendResumePair[iosSimulatorArm64]",
+          "classname": "com.parlor.app.lifecycle.AppLifecycleCoordinatorTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "inactiveThenBackgroundSuspendsExactlyOnceAndActiveResumesExactlyOnce[iosSimulatorArm64]",
+          "classname": "com.parlor.app.lifecycle.AppLifecycleCoordinatorTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "processTrackerIgnoresDuplicateOwnerCallbacks[iosSimulatorArm64]",
+          "classname": "com.parlor.app.lifecycle.AppLifecycleCoordinatorTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "processTrackerDoesNotFlapDuringConfigurationReplacement[iosSimulatorArm64]",
+          "classname": "com.parlor.app.lifecycle.AppLifecycleCoordinatorTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "processTrackerKeepsProcessForegroundedWhileAnotherOwnerIsStarted[iosSimulatorArm64]",
+          "classname": "com.parlor.app.lifecycle.AppLifecycleCoordinatorTest",
+          "time": "0.006",
+          "result": "PASS"
+        }
+      ],
+      "xml": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/composeApp/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.app.lifecycle.AppLifecycleCoordinatorTest.xml",
+        "bytes": 1954,
+        "sha256": "bc107f4a1b7b8fdac67ce8d44ae419cf072c72f47a61dc03f4cc058a69ba8709"
+      }
+    },
+    {
+      "module": "composeApp",
+      "task": ":composeApp:iosSimulatorArm64Test",
+      "task_outcome": "EXECUTED",
+      "log_line": 974,
+      "suite": "com.parlor.app.shell.game.GameShellRegistryExtensibilityTest",
+      "suite_timestamp": "2026-09-07T18:48:03.378Z",
+      "tests": 11,
+      "descriptors": [
+        {
+          "name": "shell_back_requests_are_monotonic_nonnegative_events[iosSimulatorArm64]",
+          "classname": "com.parlor.app.shell.game.GameShellRegistryExtensibilityTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "third_game_registers_in_catalog_and_exposes_shell_contract[iosSimulatorArm64]",
+          "classname": "com.parlor.app.shell.game.GameShellRegistryExtensibilityTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "third_game_starts_locally_and_resolves_navigation_without_shell_branch[iosSimulatorArm64]",
+          "classname": "com.parlor.app.shell.game.GameShellRegistryExtensibilityTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "third_game_snapshot_round_trips_and_resolves_local_resume[iosSimulatorArm64]",
+          "classname": "com.parlor.app.shell.game.GameShellRegistryExtensibilityTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "third_game_participates_in_owned_host_and_peer_session_restoration[iosSimulatorArm64]",
+          "classname": "com.parlor.app.shell.game.GameShellRegistryExtensibilityTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "multiplayer_resume_requires_the_registered_game_protocol_version[iosSimulatorArm64]",
+          "classname": "com.parlor.app.shell.game.GameShellRegistryExtensibilityTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "duplicate_shell_registration_fails_before_catalog_or_routing[iosSimulatorArm64]",
+          "classname": "com.parlor.app.shell.game.GameShellRegistryExtensibilityTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "router_rejects_launch_kinds_the_registered_binding_does_not_support[iosSimulatorArm64]",
+          "classname": "com.parlor.app.shell.game.GameShellRegistryExtensibilityTest",
+          "time": "0.001",
+          "result": "PASS"
+        },
+        {
+          "name": "picker_preserves_independent_host_join_and_local_capabilities[iosSimulatorArm64]",
+          "classname": "com.parlor.app.shell.game.GameShellRegistryExtensibilityTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "picker_uses_each_registered_games_player_bounds_instead_of_shared_copy[iosSimulatorArm64]",
+          "classname": "com.parlor.app.shell.game.GameShellRegistryExtensibilityTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "registry_rejects_a_multiplayer_contract_that_does_not_match_definition[iosSimulatorArm64]",
+          "classname": "com.parlor.app.shell.game.GameShellRegistryExtensibilityTest",
+          "time": "0.0",
+          "result": "PASS"
+        }
+      ],
+      "xml": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/composeApp/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.app.shell.game.GameShellRegistryExtensibilityTest.xml",
+        "bytes": 2476,
+        "sha256": "04475cbbb9d8685e1b5325e8a4bc2fb22ce96a9dc9ef208a38871d1dd3ae2255"
+      }
+    },
+    {
+      "module": "composeApp",
+      "task": ":composeApp:iosSimulatorArm64Test",
+      "task_outcome": "EXECUTED",
+      "log_line": 974,
+      "suite": "com.parlor.app.shell.game.WhodunitShippedPlayerCountTest",
+      "suite_timestamp": "2026-09-07T18:48:03.379Z",
+      "tests": 2,
+      "descriptors": [
+        {
+          "name": "releaseMultiplayerRangeMatchesTheOnlyBundledPlayerCount[iosSimulatorArm64]",
+          "classname": "com.parlor.app.shell.game.WhodunitShippedPlayerCountTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "releaseMultiplayerRangeRemainsWithinEngineCapabilities[iosSimulatorArm64]",
+          "classname": "com.parlor.app.shell.game.WhodunitShippedPlayerCountTest",
+          "time": "0.0",
+          "result": "PASS"
+        }
+      ],
+      "xml": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/composeApp/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.app.shell.game.WhodunitShippedPlayerCountTest.xml",
+        "bytes": 748,
+        "sha256": "48f363f7856a9aff2d743c0d6bfcc86e47c82f0a5753600bb2f7709e8a722035"
+      }
+    },
+    {
+      "module": "composeApp",
+      "task": ":composeApp:iosSimulatorArm64Test",
+      "task_outcome": "EXECUTED",
+      "log_line": 974,
+      "suite": "com.parlor.app.shell.home.HomeRecoveryAvailabilityTest",
+      "suite_timestamp": "2026-09-07T18:48:03.379Z",
+      "tests": 8,
+      "descriptors": [
+        {
+          "name": "failedStoresAreReportedInsteadOfMasqueradingAsEmpty[iosSimulatorArm64]",
+          "classname": "com.parlor.app.shell.home.HomeRecoveryAvailabilityTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "successfulSourceRemainsAvailableWhenTheOtherSourceFails[iosSimulatorArm64]",
+          "classname": "com.parlor.app.shell.home.HomeRecoveryAvailabilityTest",
+          "time": "0.001",
+          "result": "PASS"
+        },
+        {
+          "name": "compatibleRecoveryRecordsAreExposedWithoutAnError[iosSimulatorArm64]",
+          "classname": "com.parlor.app.shell.home.HomeRecoveryAvailabilityTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "unsupportedSavedMultiplayerRecordIsReportedAndCannotBeOpened[iosSimulatorArm64]",
+          "classname": "com.parlor.app.shell.home.HomeRecoveryAvailabilityTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "localInventoryIdentifiesHealthyGamesAndRetainsUnreadableRecords[iosSimulatorArm64]",
+          "classname": "com.parlor.app.shell.home.HomeRecoveryAvailabilityTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "localInventoryBoundsMetadataReadsWithoutLoadingSnapshotPayloads[iosSimulatorArm64]",
+          "classname": "com.parlor.app.shell.home.HomeRecoveryAvailabilityTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "multiplayerRecoveryProbeStartsWhileLocalInventoryIsSlow[iosSimulatorArm64]",
+          "classname": "com.parlor.app.shell.home.HomeRecoveryAvailabilityTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "unsupportedLocalGameIsVisibleButMarksRecoverySourceUnavailable[iosSimulatorArm64]",
+          "classname": "com.parlor.app.shell.home.HomeRecoveryAvailabilityTest",
+          "time": "0.0",
+          "result": "PASS"
+        }
+      ],
+      "xml": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/composeApp/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.app.shell.home.HomeRecoveryAvailabilityTest.xml",
+        "bytes": 1809,
+        "sha256": "795737903702ebc3843e1f9423633436d8a08774ece71b17e92eb7162622346a"
+      }
+    },
+    {
+      "module": "composeApp",
+      "task": ":composeApp:iosSimulatorArm64Test",
+      "task_outcome": "EXECUTED",
+      "log_line": 974,
+      "suite": "com.parlor.app.shell.multiplayer.NameInputPolicyTest",
+      "suite_timestamp": "2026-09-07T18:48:03.380Z",
+      "tests": 2,
+      "descriptors": [
+        {
+          "name": "blankNamesCannotBeSubmittedAsASharedFallback[iosSimulatorArm64]",
+          "classname": "com.parlor.app.shell.multiplayer.NameInputPolicyTest",
+          "time": "0.004",
+          "result": "PASS"
+        },
+        {
+          "name": "explicitNameIsTrimmedAndRemainsSubmittable[iosSimulatorArm64]",
+          "classname": "com.parlor.app.shell.multiplayer.NameInputPolicyTest",
+          "time": "0.0",
+          "result": "PASS"
+        }
+      ],
+      "xml": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/composeApp/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.app.shell.multiplayer.NameInputPolicyTest.xml",
+        "bytes": 717,
+        "sha256": "bb8dc8d27ad3fca3d0c242df81b3b7a2cbce17b8cdaaab023c45dfc3a06fdb97"
+      }
+    },
+    {
+      "module": "composeApp",
+      "task": ":composeApp:iosSimulatorArm64Test",
+      "task_outcome": "EXECUTED",
+      "log_line": 974,
+      "suite": "com.parlor.app.shell.settings.SettingsMutationDispatcherTest",
+      "suite_timestamp": "2026-09-07T18:48:03.384Z",
+      "tests": 2,
+      "descriptors": [
+        {
+          "name": "mutationOutlivesItsCallingScreenAndReportsPersistenceFailure[iosSimulatorArm64]",
+          "classname": "com.parlor.app.shell.settings.SettingsMutationDispatcherTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "ownerCancellationIsNotConvertedIntoPersistenceFailure[iosSimulatorArm64]",
+          "classname": "com.parlor.app.shell.settings.SettingsMutationDispatcherTest",
+          "time": "0.0",
+          "result": "PASS"
+        }
+      ],
+      "xml": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/composeApp/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.app.shell.settings.SettingsMutationDispatcherTest.xml",
+        "bytes": 764,
+        "sha256": "f4d11e3e16052f646d968bd33b4654a32b63bca4e15c3bbb21c3adb66797a73d"
+      }
+    },
+    {
+      "module": "composeApp",
+      "task": ":composeApp:iosSimulatorArm64Test",
+      "task_outcome": "EXECUTED",
+      "log_line": 974,
+      "suite": "com.parlor.app.storage.IosLegacySnapshotBackupTest",
+      "suite_timestamp": "2026-09-07T18:48:03.385Z",
+      "tests": 14,
+      "descriptors": [
+        {
+          "name": "coldInventoryProtectsMalformedLegacyWithoutDestroyingItsLastCopy[iosSimulatorArm64]",
+          "classname": "com.parlor.app.storage.IosLegacySnapshotBackupTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "directReadProtectsMalformedLegacyWithoutPriorInventory[iosSimulatorArm64]",
+          "classname": "com.parlor.app.storage.IosLegacySnapshotBackupTest",
+          "time": "0.001",
+          "result": "PASS"
+        },
+        {
+          "name": "damagedCurrentHeaderKeepsPrecedenceAndExcludesRetainedLegacy[iosSimulatorArm64]",
+          "classname": "com.parlor.app.storage.IosLegacySnapshotBackupTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "oversizedLegacyIsExcludedBeforeBoundedReadRejectsIt[iosSimulatorArm64]",
+          "classname": "com.parlor.app.storage.IosLegacySnapshotBackupTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "exclusionFailureIsNotSwallowedByInventoryAndDoesNotPreventExplicitDiscard[iosSimulatorArm64]",
+          "classname": "com.parlor.app.storage.IosLegacySnapshotBackupTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "retryReappliesLegacyExclusionInsteadOfCachingIt[iosSimulatorArm64]",
+          "classname": "com.parlor.app.storage.IosLegacySnapshotBackupTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "nativeExclusionRejectsMissingPathsRatherThanClaimingProtection[iosSimulatorArm64]",
+          "classname": "com.parlor.app.storage.IosLegacySnapshotBackupTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "nativeExclusionIsReappliedAfterSyntheticDirectoryRecreation[iosSimulatorArm64]",
+          "classname": "com.parlor.app.storage.IosLegacySnapshotBackupTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "recognizedDamagedCurrentRetainsValidLegacyDuringColdInventoryAndRetry[iosSimulatorArm64]",
+          "classname": "com.parlor.app.storage.IosLegacySnapshotBackupTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "missingKeyKeepsValidLegacyButNeverFallsBackToIt[iosSimulatorArm64]",
+          "classname": "com.parlor.app.storage.IosLegacySnapshotBackupTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "keyReadFailureKeepsValidLegacyAndRemainsAnError[iosSimulatorArm64]",
+          "classname": "com.parlor.app.storage.IosLegacySnapshotBackupTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "failedAuthenticationRetainsValidLegacyAcrossInventoryAndExplicitDiscard[iosSimulatorArm64]",
+          "classname": "com.parlor.app.storage.IosLegacySnapshotBackupTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "cancelledKeyReadPreservesBothCopiesAndOriginalCancellation[iosSimulatorArm64]",
+          "classname": "com.parlor.app.storage.IosLegacySnapshotBackupTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "authenticatedCurrentLoadRemovesStaleLegacyOnlyAfterSuccessfulDecrypt[iosSimulatorArm64]",
+          "classname": "com.parlor.app.storage.IosLegacySnapshotBackupTest",
+          "time": "0.0",
+          "result": "PASS"
+        }
+      ],
+      "xml": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/composeApp/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.app.storage.IosLegacySnapshotBackupTest.xml",
+        "bytes": 2836,
+        "sha256": "c1382ce91cfe6c138b70850cbd5aecf93f338e0a2435c2b8f8d280037986c6c5"
+      }
+    },
+    {
+      "module": "composeApp",
+      "task": ":composeApp:iosSimulatorArm64Test",
+      "task_outcome": "EXECUTED",
+      "log_line": 974,
+      "suite": "com.parlor.app.storage.IosStorageSafetyTest",
+      "suite_timestamp": "2026-09-07T18:48:03.387Z",
+      "tests": 6,
+      "descriptors": [
+        {
+          "name": "boundedReaderRejectsAfterReadingOnlyLimitPlusOneBytes[iosSimulatorArm64]",
+          "classname": "com.parlor.app.storage.IosStorageSafetyTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "boundedReaderAcceptsAFileExactlyAtTheLimit[iosSimulatorArm64]",
+          "classname": "com.parlor.app.storage.IosStorageSafetyTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "keychainDataSupportsAnEmptyValueWithoutAddressingAMissingElement[iosSimulatorArm64]",
+          "classname": "com.parlor.app.storage.IosStorageSafetyTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "commonCryptoRoundTripsAnEmptySnapshotPayload[iosSimulatorArm64]",
+          "classname": "com.parlor.app.storage.IosStorageSafetyTest",
+          "time": "0.001",
+          "result": "PASS"
+        },
+        {
+          "name": "unreadableProtectedSnapshotPreservesMatchingLegacyPlaintext[iosSimulatorArm64]",
+          "classname": "com.parlor.app.storage.IosStorageSafetyTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "protectedSnapshotWithMissingKeyPreservesMatchingLegacyPlaintext[iosSimulatorArm64]",
+          "classname": "com.parlor.app.storage.IosStorageSafetyTest",
+          "time": "0.0",
+          "result": "PASS"
+        }
+      ],
+      "xml": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/composeApp/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.app.storage.IosStorageSafetyTest.xml",
+        "bytes": 1361,
+        "sha256": "0c8e5c57e2a63c6a9791a07cb9f5eb18d3ad424181633006fb3eeadecb9d9749"
+      }
+    },
+    {
+      "module": "composeApp",
+      "task": ":composeApp:iosSimulatorArm64Test",
+      "task_outcome": "EXECUTED",
+      "log_line": 974,
+      "suite": "com.parlor.app.storage.PlatformStorageMigrationTest",
+      "suite_timestamp": "2026-09-07T18:48:03.384Z",
+      "tests": 2,
+      "descriptors": [
+        {
+          "name": "one_corrupt_legacy_record_does_not_hide_or_skip_later_records[iosSimulatorArm64]",
+          "classname": "com.parlor.app.storage.PlatformStorageMigrationTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "cancellation_is_not_downgraded_to_an_individual_migration_failure[iosSimulatorArm64]",
+          "classname": "com.parlor.app.storage.PlatformStorageMigrationTest",
+          "time": "0.001",
+          "result": "PASS"
+        }
+      ],
+      "xml": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/composeApp/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.app.storage.PlatformStorageMigrationTest.xml",
+        "bytes": 754,
+        "sha256": "ef43e03bd666f986a501b6fbf59ae982b507abb1c766f2ba89df7a7ca5fcf231"
+      }
+    },
+    {
+      "module": "composeApp",
+      "task": ":composeApp:iosSimulatorArm64Test",
+      "task_outcome": "EXECUTED",
+      "log_line": 974,
+      "suite": "com.parlor.app.storage.SnapshotProtectionPolicyTest",
+      "suite_timestamp": "2026-09-07T18:48:03.385Z",
+      "tests": 4,
+      "descriptors": [
+        {
+          "name": "authenticationTagOnlyPayloadIsValidForEmptyPlaintext[iosSimulatorArm64]",
+          "classname": "com.parlor.app.storage.SnapshotProtectionPolicyTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "recordOneByteShorterThanAuthenticationTagIsRejected[iosSimulatorArm64]",
+          "classname": "com.parlor.app.storage.SnapshotProtectionPolicyTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "plaintextExactlyAtTheMaximumIsAcceptedWithoutCopying[iosSimulatorArm64]",
+          "classname": "com.parlor.app.storage.SnapshotProtectionPolicyTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "oversizedPlaintextIsClearedBeforeItIsRejected[iosSimulatorArm64]",
+          "classname": "com.parlor.app.storage.SnapshotProtectionPolicyTest",
+          "time": "0.0",
+          "result": "PASS"
+        }
+      ],
+      "xml": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/composeApp/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.app.storage.SnapshotProtectionPolicyTest.xml",
+        "bytes": 1056,
+        "sha256": "841192f35008b636e654af1bcfd2dd20d14a19688c4ce1bef5ae0ce3ea680890"
+      }
+    },
+    {
+      "module": "game-modes/mafia",
+      "task": ":game-modes:mafia:iosSimulatorArm64Test",
+      "task_outcome": "EXECUTED",
+      "log_line": 883,
+      "suite": "com.parlor.games.mafia.domain.MafiaDoctorRulesTest",
+      "suite_timestamp": "2026-09-07T18:45:47.710Z",
+      "tests": 8,
+      "descriptors": [
+        {
+          "name": "repeat_is_default_off_for_every_supported_player_count[iosSimulatorArm64]",
+          "classname": "com.parlor.games.mafia.domain.MafiaDoctorRulesTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "enabled_setting_saves_same_living_target_for_four_consecutive_nights[iosSimulatorArm64]",
+          "classname": "com.parlor.games.mafia.domain.MafiaDoctorRulesTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "disabled_setting_rejects_repeat_and_allows_alternating_targets[iosSimulatorArm64]",
+          "classname": "com.parlor.games.mafia.domain.MafiaDoctorRulesTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "skipped_night_clears_previous_effective_target_but_consumes_submission[iosSimulatorArm64]",
+          "classname": "com.parlor.games.mafia.domain.MafiaDoctorRulesTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "repeat_and_self_protection_settings_are_independent[iosSimulatorArm64]",
+          "classname": "com.parlor.games.mafia.domain.MafiaDoctorRulesTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "first_valid_target_cannot_be_replaced_or_skipped_later_that_night[iosSimulatorArm64]",
+          "classname": "com.parlor.games.mafia.domain.MafiaDoctorRulesTest",
+          "time": "0.001",
+          "result": "PASS"
+        },
+        {
+          "name": "enabling_repeats_does_not_allow_dead_targets_or_a_non_doctor_actor[iosSimulatorArm64]",
+          "classname": "com.parlor.games.mafia.domain.MafiaDoctorRulesTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "setup_draft_and_action_codec_commit_selection_once_without_changing_assignment[iosSimulatorArm64]",
+          "classname": "com.parlor.games.mafia.domain.MafiaDoctorRulesTest",
+          "time": "0.001",
+          "result": "PASS"
+        }
+      ],
+      "xml": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/game-modes/mafia/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.games.mafia.domain.MafiaDoctorRulesTest.xml",
+        "bytes": 1831,
+        "sha256": "6d398522d89b928facca50a61098af603235287732526ea5f38305a103d030e8"
+      }
+    },
+    {
+      "module": "game-modes/mafia",
+      "task": ":game-modes:mafia:iosSimulatorArm64Test",
+      "task_outcome": "EXECUTED",
+      "log_line": 883,
+      "suite": "com.parlor.games.mafia.snapshot.MafiaDoctorHistoryRecoveryTest",
+      "suite_timestamp": "2026-09-07T18:45:47.718Z",
+      "tests": 15,
+      "descriptors": [
+        {
+          "name": "private_previous_protection_must_match_retained_history_in_every_active_phase[iosSimulatorArm64]",
+          "classname": "com.parlor.games.mafia.snapshot.MafiaDoctorHistoryRecoveryTest",
+          "time": "1.007",
+          "result": "PASS"
+        },
+        {
+          "name": "history_binding_also_applies_during_a_day_revote[iosSimulatorArm64]",
+          "classname": "com.parlor.games.mafia.snapshot.MafiaDoctorHistoryRecoveryTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "mafia_coordination_revote_preserves_doctor_history_and_own_submission[iosSimulatorArm64]",
+          "classname": "com.parlor.games.mafia.snapshot.MafiaDoctorHistoryRecoveryTest",
+          "time": "0.001",
+          "result": "PASS"
+        },
+        {
+          "name": "null_effective_protection_cannot_be_replaced_by_an_old_legal_target[iosSimulatorArm64]",
+          "classname": "com.parlor.games.mafia.snapshot.MafiaDoctorHistoryRecoveryTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "initial_setup_role_assignment_and_first_night_have_no_previous_protection[iosSimulatorArm64]",
+          "classname": "com.parlor.games.mafia.snapshot.MafiaDoctorHistoryRecoveryTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "repeated_protection_history_is_valid_only_with_setting_enabled[iosSimulatorArm64]",
+          "classname": "com.parlor.games.mafia.snapshot.MafiaDoctorHistoryRecoveryTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "latest_binding_survives_history_capping_without_requiring_missing_predecessors[iosSimulatorArm64]",
+          "classname": "com.parlor.games.mafia.snapshot.MafiaDoctorHistoryRecoveryTest",
+          "time": "0.001",
+          "result": "PASS"
+        },
+        {
+          "name": "killed_doctor_keeps_last_effective_target_until_next_resolution_then_clears_it[iosSimulatorArm64]",
+          "classname": "com.parlor.games.mafia.snapshot.MafiaDoctorHistoryRecoveryTest",
+          "time": "0.299",
+          "result": "PASS"
+        },
+        {
+          "name": "doctor_eliminated_by_day_vote_retains_previous_night_binding[iosSimulatorArm64]",
+          "classname": "com.parlor.games.mafia.snapshot.MafiaDoctorHistoryRecoveryTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "death_of_previous_target_does_not_erase_last_effective_protection[iosSimulatorArm64]",
+          "classname": "com.parlor.games.mafia.snapshot.MafiaDoctorHistoryRecoveryTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "no_doctor_configuration_keeps_null_history_and_rejects_foreign_private_history[iosSimulatorArm64]",
+          "classname": "com.parlor.games.mafia.snapshot.MafiaDoctorHistoryRecoveryTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "terminal_cleanup_does_not_require_historical_protection_to_be_erased[iosSimulatorArm64]",
+          "classname": "com.parlor.games.mafia.snapshot.MafiaDoctorHistoryRecoveryTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "normal_terminal_win_also_clears_private_history_without_discarding_host_history[iosSimulatorArm64]",
+          "classname": "com.parlor.games.mafia.snapshot.MafiaDoctorHistoryRecoveryTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "peer_projections_keep_only_own_private_history_and_do_not_require_host_logs[iosSimulatorArm64]",
+          "classname": "com.parlor.games.mafia.snapshot.MafiaDoctorHistoryRecoveryTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "resumed_local_controller_enforces_the_persisted_repeat_setting[iosSimulatorArm64]",
+          "classname": "com.parlor.games.mafia.snapshot.MafiaDoctorHistoryRecoveryTest",
+          "time": "0.001",
+          "result": "PASS"
+        }
+      ],
+      "xml": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/game-modes/mafia/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.games.mafia.snapshot.MafiaDoctorHistoryRecoveryTest.xml",
+        "bytes": 3360,
+        "sha256": "f33e49f21b1f8b69e663798bbe8acf5eb22dd8bb994151ceb991b7eb8ebb564b"
+      }
+    },
+    {
+      "module": "game-modes/whodunit",
+      "task": ":game-modes:whodunit:iosSimulatorArm64Test",
+      "task_outcome": "EXECUTED",
+      "log_line": 881,
+      "suite": "com.parlor.games.whodunit.domain.rules.WhodunitPolicyGoldenTest",
+      "suite_timestamp": "2026-09-07T18:45:47.523Z",
+      "tests": 2,
+      "descriptors": [
+        {
+          "name": "clueSelectionHasStableCrossPlatformGoldenSequences[iosSimulatorArm64]",
+          "classname": "com.parlor.games.whodunit.domain.rules.WhodunitPolicyGoldenTest",
+          "time": "0.012",
+          "result": "PASS"
+        },
+        {
+          "name": "roundResolutionPreservesExactNearestTieAndDefaultRules[iosSimulatorArm64]",
+          "classname": "com.parlor.games.whodunit.domain.rules.WhodunitPolicyGoldenTest",
+          "time": "0.0",
+          "result": "PASS"
+        }
+      ],
+      "xml": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/game-modes/whodunit/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.games.whodunit.domain.rules.WhodunitPolicyGoldenTest.xml",
+        "bytes": 767,
+        "sha256": "54ac2a2e82d0b257b35efdd91766430f42088b92e74141f1f5aa74335fbbf941"
+      }
+    },
+    {
+      "module": "game-modes/whodunit",
+      "task": ":game-modes:whodunit:iosSimulatorArm64Test",
+      "task_outcome": "EXECUTED",
+      "log_line": 881,
+      "suite": "com.parlor.games.whodunit.ui.WhodunitNetErrorMessageKeyTest",
+      "suite_timestamp": "2026-09-07T18:45:47.544Z",
+      "tests": 1,
+      "descriptors": [
+        {
+          "name": "everyNetworkFailureKeepsItsActionableUiClassification[iosSimulatorArm64]",
+          "classname": "com.parlor.games.whodunit.ui.WhodunitNetErrorMessageKeyTest",
+          "time": "0.0",
+          "result": "PASS"
+        }
+      ],
+      "xml": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/game-modes/whodunit/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.games.whodunit.ui.WhodunitNetErrorMessageKeyTest.xml",
+        "bytes": 577,
+        "sha256": "4720cd28b7eabef0c95cff951452d5cd9a2433713dfa254d3b0dfeafe3de4d74"
+      }
+    },
+    {
+      "module": "game-modes/whodunit",
+      "task": ":game-modes:whodunit:iosSimulatorArm64Test",
+      "task_outcome": "EXECUTED",
+      "log_line": 881,
+      "suite": "com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitPeerSessionFlowPolicyTest",
+      "suite_timestamp": "2026-09-07T18:45:47.544Z",
+      "tests": 2,
+      "descriptors": [
+        {
+          "name": "failedLeaveDoesNotDisableConnectionRetry[iosSimulatorArm64]",
+          "classname": "com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitPeerSessionFlowPolicyTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "checkpointInstallationFailureStillDisablesConnectionRetry[iosSimulatorArm64]",
+          "classname": "com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitPeerSessionFlowPolicyTest",
+          "time": "0.0",
+          "result": "PASS"
+        }
+      ],
+      "xml": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/game-modes/whodunit/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitPeerSessionFlowPolicyTest.xml",
+        "bytes": 807,
+        "sha256": "a467786acda8077602dfea2fd8637eb42f633203444e110c7191a81e837da84b"
+      }
+    },
+    {
+      "module": "game-modes/whodunit",
+      "task": ":game-modes:whodunit:iosSimulatorArm64Test",
+      "task_outcome": "EXECUTED",
+      "log_line": 881,
+      "suite": "com.parlor.games.whodunit.ui.screens.setup.WhodunitCaseLanguageLabelTest",
+      "suite_timestamp": "2026-09-07T18:45:47.545Z",
+      "tests": 2,
+      "descriptors": [
+        {
+          "name": "englishAndArabicUseTheirPrimaryBcp47Subtag[iosSimulatorArm64]",
+          "classname": "com.parlor.games.whodunit.ui.screens.setup.WhodunitCaseLanguageLabelTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "anotherLanguageUsesTheFallbackClassification[iosSimulatorArm64]",
+          "classname": "com.parlor.games.whodunit.ui.screens.setup.WhodunitCaseLanguageLabelTest",
+          "time": "0.0",
+          "result": "PASS"
+        }
+      ],
+      "xml": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/game-modes/whodunit/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.games.whodunit.ui.screens.setup.WhodunitCaseLanguageLabelTest.xml",
+        "bytes": 773,
+        "sha256": "00eb20878340a97b4a3a6c9377d69fc3ce3eeeaef1c875b9db1f7a4c926097be"
+      }
+    },
+    {
+      "module": "game-modes/whodunit",
+      "task": ":game-modes:whodunit:iosSimulatorArm64Test",
+      "task_outcome": "EXECUTED",
+      "log_line": 881,
+      "suite": "com.parlor.games.whodunit.ui.screens.setup.WhodunitModeChoiceTest",
+      "suite_timestamp": "2026-09-07T18:45:47.546Z",
+      "tests": 2,
+      "descriptors": [
+        {
+          "name": "selected_case_controls_visible_modes_and_effective_player_bounds[iosSimulatorArm64]",
+          "classname": "com.parlor.games.whodunit.ui.screens.setup.WhodunitModeChoiceTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "unsupported_unknown_and_disjoint_modes_are_not_offered[iosSimulatorArm64]",
+          "classname": "com.parlor.games.whodunit.ui.screens.setup.WhodunitModeChoiceTest",
+          "time": "0.0",
+          "result": "PASS"
+        }
+      ],
+      "xml": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/game-modes/whodunit/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.games.whodunit.ui.screens.setup.WhodunitModeChoiceTest.xml",
+        "bytes": 784,
+        "sha256": "0e893548cc74c419ce61fdf4f8af5a15e53bd68d13b330b0a85b12f1291c185a"
+      }
+    },
+    {
+      "module": "shared/content",
+      "task": ":shared:content:iosSimulatorArm64Test",
+      "task_outcome": "EXECUTED",
+      "log_line": 895,
+      "suite": "com.parlor.content.datasource.OfflineRemoteCaseDataSourceTest",
+      "suite_timestamp": "2026-09-07T18:46:05.590Z",
+      "tests": 7,
+      "descriptors": [
+        {
+          "name": "bundled_only_policy_reports_remote_as_unreachable[iosSimulatorArm64]",
+          "classname": "com.parlor.content.datasource.OfflineRemoteCaseDataSourceTest",
+          "time": "0.001",
+          "result": "PASS"
+        },
+        {
+          "name": "ktor_source_maps_non_success_status_before_deserializing_error_body[iosSimulatorArm64]",
+          "classname": "com.parlor.content.datasource.OfflineRemoteCaseDataSourceTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "ktor_source_propagates_structured_cancellation[iosSimulatorArm64]",
+          "classname": "com.parlor.content.datasource.OfflineRemoteCaseDataSourceTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "ktor_source_rejects_oversized_chunked_bodies_before_json_decode[iosSimulatorArm64]",
+          "classname": "com.parlor.content.datasource.OfflineRemoteCaseDataSourceTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "ktor_source_rejects_malformed_utf8_before_json_interpretation[iosSimulatorArm64]",
+          "classname": "com.parlor.content.datasource.OfflineRemoteCaseDataSourceTest",
+          "time": "0.001",
+          "result": "PASS"
+        },
+        {
+          "name": "ktor_source_does_not_convert_fatal_errors_into_network_failures[iosSimulatorArm64]",
+          "classname": "com.parlor.content.datasource.OfflineRemoteCaseDataSourceTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "ktor_source_rejects_path_unsafe_ids_before_request[iosSimulatorArm64]",
+          "classname": "com.parlor.content.datasource.OfflineRemoteCaseDataSourceTest",
+          "time": "0.0",
+          "result": "PASS"
+        }
+      ],
+      "xml": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/shared/content/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.content.datasource.OfflineRemoteCaseDataSourceTest.xml",
+        "bytes": 1689,
+        "sha256": "e09d5f2634cbc1a5e48babed613ed020beddf8643b711f027df98ad8cbef0a81"
+      }
+    },
+    {
+      "module": "shared/content",
+      "task": ":shared:content:iosSimulatorArm64Test",
+      "task_outcome": "EXECUTED",
+      "log_line": 895,
+      "suite": "com.parlor.content.repository.DefaultCaseRepositoryTest",
+      "suite_timestamp": "2026-09-07T18:46:05.592Z",
+      "tests": 9,
+      "descriptors": [
+        {
+          "name": "invalid_remote_case_is_not_cached_before_typed_validation[iosSimulatorArm64]",
+          "classname": "com.parlor.content.repository.DefaultCaseRepositoryTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "refresh_does_not_cache_a_failed_envelope_shape[iosSimulatorArm64]",
+          "classname": "com.parlor.content.repository.DefaultCaseRepositoryTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "valid_remote_case_is_cached_only_after_validation[iosSimulatorArm64]",
+          "classname": "com.parlor.content.repository.DefaultCaseRepositoryTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "corrupt_cached_case_is_invalidated_before_remote_fallback[iosSimulatorArm64]",
+          "classname": "com.parlor.content.repository.DefaultCaseRepositoryTest",
+          "time": "0.001",
+          "result": "PASS"
+        },
+        {
+          "name": "remote_case_identity_must_match_the_requested_case_before_caching[iosSimulatorArm64]",
+          "classname": "com.parlor.content.repository.DefaultCaseRepositoryTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "corrupt_remote_case_falls_back_to_a_valid_bundled_copy[iosSimulatorArm64]",
+          "classname": "com.parlor.content.repository.DefaultCaseRepositoryTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "refresh_rejects_game_invalid_payload_before_cache_warming[iosSimulatorArm64]",
+          "classname": "com.parlor.content.repository.DefaultCaseRepositoryTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "refresh_rejects_a_fetched_case_that_does_not_match_its_manifest_identity[iosSimulatorArm64]",
+          "classname": "com.parlor.content.repository.DefaultCaseRepositoryTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "refresh_reports_an_advertised_case_that_cannot_be_fetched[iosSimulatorArm64]",
+          "classname": "com.parlor.content.repository.DefaultCaseRepositoryTest",
+          "time": "0.0",
+          "result": "PASS"
+        }
+      ],
+      "xml": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/shared/content/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.content.repository.DefaultCaseRepositoryTest.xml",
+        "bytes": 1994,
+        "sha256": "acf8f0e0caf55f47fdb4f119bede30ed978a7adb9e69ee996443e91a68d01b63"
+      }
+    },
+    {
+      "module": "shared/content",
+      "task": ":shared:content:iosSimulatorArm64Test",
+      "task_outcome": "EXECUTED",
+      "log_line": 895,
+      "suite": "com.parlor.content.schema.IntRangePairSerializerTest",
+      "suite_timestamp": "2026-09-07T18:46:05.593Z",
+      "tests": 2,
+      "descriptors": [
+        {
+          "name": "descriptorMatchesTheJsonArrayWireShape[iosSimulatorArm64]",
+          "classname": "com.parlor.content.schema.IntRangePairSerializerTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "correctedDescriptorPreservesTheExistingWireFormat[iosSimulatorArm64]",
+          "classname": "com.parlor.content.schema.IntRangePairSerializerTest",
+          "time": "0.0",
+          "result": "PASS"
+        }
+      ],
+      "xml": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/shared/content/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.content.schema.IntRangePairSerializerTest.xml",
+        "bytes": 714,
+        "sha256": "de20edf2b7ecc4be6f52d5057856ff1d6f988c8573dec8995007ef500fb321dd"
+      }
+    },
+    {
+      "module": "shared/content",
+      "task": ":shared:content:iosSimulatorArm64Test",
+      "task_outcome": "EXECUTED",
+      "log_line": 895,
+      "suite": "com.parlor.content.validation.CaseSummaryValidatorTest",
+      "suite_timestamp": "2026-09-07T18:46:05.594Z",
+      "tests": 3,
+      "descriptors": [
+        {
+          "name": "shape_validation_rejects_path_traversal_and_duplicate_ids[iosSimulatorArm64]",
+          "classname": "com.parlor.content.validation.CaseSummaryValidatorTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "shape_validation_rejects_wrong_game_and_oversized_display_data[iosSimulatorArm64]",
+          "classname": "com.parlor.content.validation.CaseSummaryValidatorTest",
+          "time": "0.001",
+          "result": "PASS"
+        },
+        {
+          "name": "shape_validation_rejects_control_and_format_characters_in_display_data[iosSimulatorArm64]",
+          "classname": "com.parlor.content.validation.CaseSummaryValidatorTest",
+          "time": "0.0",
+          "result": "PASS"
+        }
+      ],
+      "xml": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/shared/content/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.content.validation.CaseSummaryValidatorTest.xml",
+        "bytes": 945,
+        "sha256": "3ec448f15913cd389d469c62cb55f9d906409436051084a4ff747731b4bfff1d"
+      }
+    },
+    {
+      "module": "shared/content",
+      "task": ":shared:content:iosSimulatorArm64Test",
+      "task_outcome": "EXECUTED",
+      "log_line": 895,
+      "suite": "com.parlor.content.validation.DefaultCaseValidatorBoundaryTest",
+      "suite_timestamp": "2026-09-07T18:46:05.595Z",
+      "tests": 3,
+      "descriptors": [
+        {
+          "name": "blank_untrusted_game_id_is_a_typed_failure_not_an_exception[iosSimulatorArm64]",
+          "classname": "com.parlor.content.validation.DefaultCaseValidatorBoundaryTest",
+          "time": "0.001",
+          "result": "PASS"
+        },
+        {
+          "name": "direct_envelope_validation_enforces_the_same_safe_shape_as_case_summaries[iosSimulatorArm64]",
+          "classname": "com.parlor.content.validation.DefaultCaseValidatorBoundaryTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "unverified_delivery_signature_is_rejected_instead_of_being_treated_as_trusted[iosSimulatorArm64]",
+          "classname": "com.parlor.content.validation.DefaultCaseValidatorBoundaryTest",
+          "time": "0.0",
+          "result": "PASS"
+        }
+      ],
+      "xml": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/shared/content/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.content.validation.DefaultCaseValidatorBoundaryTest.xml",
+        "bytes": 997,
+        "sha256": "8f339a1a2782c19fc9e5aa9c3614f0d5ccdfec518ad8024af2bb45c976906735"
+      }
+    },
+    {
+      "module": "shared/core",
+      "task": ":shared:core:iosSimulatorArm64Test",
+      "task_outcome": "EXECUTED",
+      "log_line": 884,
+      "suite": "com.parlor.core.result.ResultTest",
+      "suite_timestamp": "2026-09-07T18:45:49.901Z",
+      "tests": 10,
+      "descriptors": [
+        {
+          "name": "map_transforms_success[iosSimulatorArm64]",
+          "classname": "com.parlor.core.result.ResultTest",
+          "time": "0.001",
+          "result": "PASS"
+        },
+        {
+          "name": "map_preserves_failure[iosSimulatorArm64]",
+          "classname": "com.parlor.core.result.ResultTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "flatMap_chains_success[iosSimulatorArm64]",
+          "classname": "com.parlor.core.result.ResultTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "flatMap_short_circuits_on_failure[iosSimulatorArm64]",
+          "classname": "com.parlor.core.result.ResultTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "mapError_transforms_failure[iosSimulatorArm64]",
+          "classname": "com.parlor.core.result.ResultTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "onSuccess_runs_block_only_on_success[iosSimulatorArm64]",
+          "classname": "com.parlor.core.result.ResultTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "onFailure_runs_block_only_on_failure[iosSimulatorArm64]",
+          "classname": "com.parlor.core.result.ResultTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "getOrNull_returns_data_on_success[iosSimulatorArm64]",
+          "classname": "com.parlor.core.result.ResultTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "getOrNull_returns_null_on_failure[iosSimulatorArm64]",
+          "classname": "com.parlor.core.result.ResultTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "getOrElse_falls_back_on_failure[iosSimulatorArm64]",
+          "classname": "com.parlor.core.result.ResultTest",
+          "time": "0.0",
+          "result": "PASS"
+        }
+      ],
+      "xml": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/shared/core/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.core.result.ResultTest.xml",
+        "bytes": 1653,
+        "sha256": "c4c9b21661115e8cdcbddc5ac64c8da5eb412db7dd21e46ed23b27c3c895b4c5"
+      }
+    },
+    {
+      "module": "shared/core",
+      "task": ":shared:core:iosSimulatorArm64Test",
+      "task_outcome": "EXECUTED",
+      "log_line": 884,
+      "suite": "com.parlor.core.versioning.SemVerTest",
+      "suite_timestamp": "2026-09-07T18:45:49.904Z",
+      "tests": 2,
+      "descriptors": [
+        {
+          "name": "parse_accepts_one_to_three_non_negative_integer_components[iosSimulatorArm64]",
+          "classname": "com.parlor.core.versioning.SemVerTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "parse_rejects_missing_extra_negative_and_non_numeric_components[iosSimulatorArm64]",
+          "classname": "com.parlor.core.versioning.SemVerTest",
+          "time": "0.001",
+          "result": "PASS"
+        }
+      ],
+      "xml": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/shared/core/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.core.versioning.SemVerTest.xml",
+        "bytes": 707,
+        "sha256": "bd97e11acf03ddf158516f817e7da1a59c35200398c17dff4928680b5f4d9d6e"
+      }
+    },
+    {
+      "module": "shared/design-system",
+      "task": ":shared:design-system:iosSimulatorArm64Test",
+      "task_outcome": "EXECUTED",
+      "log_line": 897,
+      "suite": "com.parlor.designsystem.components.ParlorSafeAreaTest",
+      "suite_timestamp": "2026-09-07T18:46:06.443Z",
+      "tests": 1,
+      "descriptors": [
+        {
+          "name": "visual spacing is added outside every safe-area edge[iosSimulatorArm64]",
+          "classname": "com.parlor.designsystem.components.ParlorSafeAreaTest",
+          "time": "0.0",
+          "result": "PASS"
+        }
+      ],
+      "xml": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/shared/design-system/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.designsystem.components.ParlorSafeAreaTest.xml",
+        "bytes": 564,
+        "sha256": "025c2a543544f3c1684ec5e8241697b688d9b1db01fd3bbdca194467a2357394"
+      }
+    },
+    {
+      "module": "shared/design-system",
+      "task": ":shared:design-system:iosSimulatorArm64Test",
+      "task_outcome": "EXECUTED",
+      "log_line": 897,
+      "suite": "com.parlor.designsystem.components.ParlorToastHostInsetsTest",
+      "suite_timestamp": "2026-09-07T18:46:06.444Z",
+      "tests": 1,
+      "descriptors": [
+        {
+          "name": "toast host keeps horizontal and bottom safe areas without adding a top inset[iosSimulatorArm64]",
+          "classname": "com.parlor.designsystem.components.ParlorToastHostInsetsTest",
+          "time": "0.0",
+          "result": "PASS"
+        }
+      ],
+      "xml": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/shared/design-system/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.designsystem.components.ParlorToastHostInsetsTest.xml",
+        "bytes": 602,
+        "sha256": "a9da9aa7443a883043b3f2175fb62a052c00079a4a111049d90a5900a14c348e"
+      }
+    },
+    {
+      "module": "shared/design-system",
+      "task": ":shared:design-system:iosSimulatorArm64Test",
+      "task_outcome": "EXECUTED",
+      "log_line": 897,
+      "suite": "com.parlor.designsystem.components.ParlorToastStateTest",
+      "suite_timestamp": "2026-09-07T18:46:06.444Z",
+      "tests": 4,
+      "descriptors": [
+        {
+          "name": "queue_is_bounded_and_keeps_the_latest_distinct_messages[iosSimulatorArm64]",
+          "classname": "com.parlor.designsystem.components.ParlorToastStateTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "adjacent_duplicate_message_is_coalesced[iosSimulatorArm64]",
+          "classname": "com.parlor.designsystem.components.ParlorToastStateTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "dismissed_identity_cannot_dismiss_a_new_lifetime_even_with_identical_text[iosSimulatorArm64]",
+          "classname": "com.parlor.designsystem.components.ParlorToastStateTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "coalescing_preserves_existing_lifetime_and_eviction_does_not_recycle_it[iosSimulatorArm64]",
+          "classname": "com.parlor.designsystem.components.ParlorToastStateTest",
+          "time": "0.001",
+          "result": "PASS"
+        }
+      ],
+      "xml": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/shared/design-system/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.designsystem.components.ParlorToastStateTest.xml",
+        "bytes": 1118,
+        "sha256": "5f149df96b09801272335b7237f70a98afaef0f9686ab667721e17bfbd0cc7de"
+      }
+    },
+    {
+      "module": "shared/design-system",
+      "task": ":shared:design-system:iosSimulatorArm64Test",
+      "task_outcome": "EXECUTED",
+      "log_line": 897,
+      "suite": "com.parlor.designsystem.components.SessionExitBackPolicyTest",
+      "suite_timestamp": "2026-09-07T18:46:06.445Z",
+      "tests": 2,
+      "descriptors": [
+        {
+          "name": "active_local_sessions_always_confirm_before_the_save_transaction[iosSimulatorArm64]",
+          "classname": "com.parlor.designsystem.components.SessionExitBackPolicyTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "multiplayer_setup_exits_immediately_but_started_games_confirm[iosSimulatorArm64]",
+          "classname": "com.parlor.designsystem.components.SessionExitBackPolicyTest",
+          "time": "0.0",
+          "result": "PASS"
+        }
+      ],
+      "xml": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/shared/design-system/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.designsystem.components.SessionExitBackPolicyTest.xml",
+        "bytes": 776,
+        "sha256": "86ace0a14e8ac826aea17d924d857fb87887aae2d61e486d827cb18db41654f6"
+      }
+    },
+    {
+      "module": "shared/design-system",
+      "task": ":shared:design-system:iosSimulatorArm64Test",
+      "task_outcome": "EXECUTED",
+      "log_line": 897,
+      "suite": "com.parlor.designsystem.components.SessionExitOverlayTest",
+      "suite_timestamp": "2026-09-07T18:46:06.445Z",
+      "tests": 1,
+      "descriptors": [
+        {
+          "name": "content starts after the measured affordance and both visual margins[iosSimulatorArm64]",
+          "classname": "com.parlor.designsystem.components.SessionExitOverlayTest",
+          "time": "0.0",
+          "result": "PASS"
+        }
+      ],
+      "xml": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/shared/design-system/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.designsystem.components.SessionExitOverlayTest.xml",
+        "bytes": 588,
+        "sha256": "a870ab674ebdd09e73ad273e10ebdd995a00fc2e8408b4c40c22b456f806394a"
+      }
+    },
+    {
+      "module": "shared/design-system",
+      "task": ":shared:design-system:iosSimulatorArm64Test",
+      "task_outcome": "EXECUTED",
+      "log_line": 897,
+      "suite": "com.parlor.designsystem.icons.ParlorIconsTest",
+      "suite_timestamp": "2026-09-07T18:46:06.445Z",
+      "tests": 1,
+      "descriptors": [
+        {
+          "name": "directional_icons_mirror_with_layout_direction[iosSimulatorArm64]",
+          "classname": "com.parlor.designsystem.icons.ParlorIconsTest",
+          "time": "0.0",
+          "result": "PASS"
+        }
+      ],
+      "xml": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/shared/design-system/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.designsystem.icons.ParlorIconsTest.xml",
+        "bytes": 542,
+        "sha256": "381ab90b2f0ca1d4d6e3d5628a9bae05a1af4fbe685f7f001a2214e60176ef57"
+      }
+    },
+    {
+      "module": "shared/design-system",
+      "task": ":shared:design-system:iosSimulatorArm64Test",
+      "task_outcome": "EXECUTED",
+      "log_line": 897,
+      "suite": "com.parlor.designsystem.localization.AppLanguageSelectionTest",
+      "suite_timestamp": "2026-09-07T18:46:06.445Z",
+      "tests": 3,
+      "descriptors": [
+        {
+          "name": "null_override_follows_a_supported_system_language[iosSimulatorArm64]",
+          "classname": "com.parlor.designsystem.localization.AppLanguageSelectionTest",
+          "time": "0.001",
+          "result": "PASS"
+        },
+        {
+          "name": "explicit_override_wins_over_the_system_language[iosSimulatorArm64]",
+          "classname": "com.parlor.designsystem.localization.AppLanguageSelectionTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "unsupported_system_language_falls_back_to_english[iosSimulatorArm64]",
+          "classname": "com.parlor.designsystem.localization.AppLanguageSelectionTest",
+          "time": "0.0",
+          "result": "PASS"
+        }
+      ],
+      "xml": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/shared/design-system/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.designsystem.localization.AppLanguageSelectionTest.xml",
+        "bytes": 929,
+        "sha256": "3b517db0003d8c6f8eca3c9df4130ffd4edc2b08928797b45b9aaacad550ce6a"
+      }
+    },
+    {
+      "module": "shared/design-system",
+      "task": ":shared:design-system:iosSimulatorArm64Test",
+      "task_outcome": "EXECUTED",
+      "log_line": 897,
+      "suite": "com.parlor.designsystem.localization.IosLanguageOverrideOwnerTest",
+      "suite_timestamp": "2026-09-07T18:46:06.446Z",
+      "tests": 11,
+      "descriptors": [
+        {
+          "name": "system_after_interrupted_lifetime_removes_only_owned_override[iosSimulatorArm64]",
+          "classname": "com.parlor.designsystem.localization.IosLanguageOverrideOwnerTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "explicit_choice_after_restart_keeps_original_os_value_for_later_system[iosSimulatorArm64]",
+          "classname": "com.parlor.designsystem.localization.IosLanguageOverrideOwnerTest",
+          "time": "0.001",
+          "result": "PASS"
+        },
+        {
+          "name": "fallback_language_is_never_promoted_to_the_application_domain[iosSimulatorArm64]",
+          "classname": "com.parlor.designsystem.localization.IosLanguageOverrideOwnerTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "external_preference_changes_win_over_owned_cleanup[iosSimulatorArm64]",
+          "classname": "com.parlor.designsystem.localization.IosLanguageOverrideOwnerTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "unmarked_identical_values_are_not_claimed_or_removed[iosSimulatorArm64]",
+          "classname": "com.parlor.designsystem.localization.IosLanguageOverrideOwnerTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "interrupted_preparation_does_not_delete_an_unmodified_preference[iosSimulatorArm64]",
+          "classname": "com.parlor.designsystem.localization.IosLanguageOverrideOwnerTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "malformed_owner_record_cannot_clear_os_preferences[iosSimulatorArm64]",
+          "classname": "com.parlor.designsystem.localization.IosLanguageOverrideOwnerTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "malformed_previous_value_is_never_installed_as_a_language_array[iosSimulatorArm64]",
+          "classname": "com.parlor.designsystem.localization.IosLanguageOverrideOwnerTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "interrupted_preparation_without_previous_value_keeps_fallback_unowned[iosSimulatorArm64]",
+          "classname": "com.parlor.designsystem.localization.IosLanguageOverrideOwnerTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "interrupted_release_cannot_restore_over_a_new_os_preference[iosSimulatorArm64]",
+          "classname": "com.parlor.designsystem.localization.IosLanguageOverrideOwnerTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "multiple_runtime_switches_restore_original_preference[iosSimulatorArm64]",
+          "classname": "com.parlor.designsystem.localization.IosLanguageOverrideOwnerTest",
+          "time": "0.0",
+          "result": "PASS"
+        }
+      ],
+      "xml": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/shared/design-system/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.designsystem.localization.IosLanguageOverrideOwnerTest.xml",
+        "bytes": 2493,
+        "sha256": "8e69f95e4b8d03c0dee932bcdfefe5c2822baacde4d874d33738a03eca2a2d82"
+      }
+    },
+    {
+      "module": "shared/design-system",
+      "task": ":shared:design-system:iosSimulatorArm64Test",
+      "task_outcome": "EXECUTED",
+      "log_line": 897,
+      "suite": "com.parlor.designsystem.motion.ParlorMotionTest",
+      "suite_timestamp": "2026-09-07T18:46:06.446Z",
+      "tests": 2,
+      "descriptors": [
+        {
+          "name": "either_app_or_system_preference_enables_reduced_motion[iosSimulatorArm64]",
+          "classname": "com.parlor.designsystem.motion.ParlorMotionTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "reduced_tokens_keep_only_a_short_fade_and_disable_continuous_cycles[iosSimulatorArm64]",
+          "classname": "com.parlor.designsystem.motion.ParlorMotionTest",
+          "time": "0.0",
+          "result": "PASS"
+        }
+      ],
+      "xml": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/shared/design-system/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.designsystem.motion.ParlorMotionTest.xml",
+        "bytes": 733,
+        "sha256": "c0795e3969beb3297ed8e4e83e331c3e1293e3698c31913fab3e4e0e6bf37bdb"
+      }
+    },
+    {
+      "module": "shared/engine",
+      "task": ":shared:engine:iosSimulatorArm64Test",
+      "task_outcome": "EXECUTED",
+      "log_line": 909,
+      "suite": "com.parlor.engine.registry.GameRegistryTest",
+      "suite_timestamp": "2026-09-07T18:46:12.125Z",
+      "tests": 5,
+      "descriptors": [
+        {
+          "name": "empty_registry_has_no_catalog_or_lookup_entries[iosSimulatorArm64]",
+          "classname": "com.parlor.engine.registry.GameRegistryTest",
+          "time": "0.001",
+          "result": "PASS"
+        },
+        {
+          "name": "catalog_preserves_registration_order_and_lookup_returns_original_definitions[iosSimulatorArm64]",
+          "classname": "com.parlor.engine.registry.GameRegistryTest",
+          "time": "0.001",
+          "result": "PASS"
+        },
+        {
+          "name": "duplicate_ids_on_distinct_definitions_fail_before_a_catalog_is_published[iosSimulatorArm64]",
+          "classname": "com.parlor.engine.registry.GameRegistryTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "registering_the_same_definition_twice_is_also_rejected[iosSimulatorArm64]",
+          "classname": "com.parlor.engine.registry.GameRegistryTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "mutating_the_input_list_cannot_change_the_captured_catalog_or_lookup[iosSimulatorArm64]",
+          "classname": "com.parlor.engine.registry.GameRegistryTest",
+          "time": "0.0",
+          "result": "PASS"
+        }
+      ],
+      "xml": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/shared/engine/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.engine.registry.GameRegistryTest.xml",
+        "bytes": 1247,
+        "sha256": "ff7aa12fa05100489535ab7352e23abaa460f64c9c3c6ddc8b3b29027567d5ad"
+      }
+    },
+    {
+      "module": "shared/engine",
+      "task": ":shared:engine:iosSimulatorArm64Test",
+      "task_outcome": "EXECUTED",
+      "log_line": 909,
+      "suite": "com.parlor.engine.snapshot.GameSnapshotTest",
+      "suite_timestamp": "2026-09-07T18:46:12.127Z",
+      "tests": 4,
+      "descriptors": [
+        {
+          "name": "equal_payload_bytes_use_content_equality_and_consistent_hash_codes[iosSimulatorArm64]",
+          "classname": "com.parlor.engine.snapshot.GameSnapshotTest",
+          "time": "0.001",
+          "result": "PASS"
+        },
+        {
+          "name": "each_envelope_field_and_payload_or_metadata_change_affects_equality[iosSimulatorArm64]",
+          "classname": "com.parlor.engine.snapshot.GameSnapshotTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "json_round_trip_preserves_the_exact_envelope_byte_values_and_metadata[iosSimulatorArm64]",
+          "classname": "com.parlor.engine.snapshot.GameSnapshotTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "legacy_envelope_without_metadata_restores_with_an_empty_map[iosSimulatorArm64]",
+          "classname": "com.parlor.engine.snapshot.GameSnapshotTest",
+          "time": "0.0",
+          "result": "PASS"
+        }
+      ],
+      "xml": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/shared/engine/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.engine.snapshot.GameSnapshotTest.xml",
+        "bytes": 1081,
+        "sha256": "a7d48134f12789928f8100af64c66af922c29e2dc74882aeb9882c44391dec65"
+      }
+    },
+    {
+      "module": "shared/engine-testing",
+      "task": ":shared:engine-testing:iosSimulatorArm64Test",
+      "task_outcome": "EXECUTED",
+      "log_line": 908,
+      "suite": "com.parlor.engine.testing.fakes.RrSnapshotCodecTest",
+      "suite_timestamp": "2026-09-07T18:46:12.125Z",
+      "tests": 2,
+      "descriptors": [
+        {
+          "name": "round_trip_preserves_the_complete_fixture_state[iosSimulatorArm64]",
+          "classname": "com.parlor.engine.testing.fakes.RrSnapshotCodecTest",
+          "time": "0.001",
+          "result": "PASS"
+        },
+        {
+          "name": "malformed_payload_is_rejected_instead_of_fabricating_state[iosSimulatorArm64]",
+          "classname": "com.parlor.engine.testing.fakes.RrSnapshotCodecTest",
+          "time": "0.001",
+          "result": "PASS"
+        }
+      ],
+      "xml": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/shared/engine-testing/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.engine.testing.fakes.RrSnapshotCodecTest.xml",
+        "bytes": 735,
+        "sha256": "465c79c8fb5d65fab1088bfbd3b8f46be03367d68f9deadc8516cd2c6afd8022"
+      }
+    },
+    {
+      "module": "shared/engine-testing",
+      "task": ":shared:engine-testing:iosSimulatorArm64Test",
+      "task_outcome": "EXECUTED",
+      "log_line": 908,
+      "suite": "com.parlor.engine.testing.reducer.ReducerSmokeTest",
+      "suite_timestamp": "2026-09-07T18:46:12.128Z",
+      "tests": 2,
+      "descriptors": [
+        {
+          "name": "reducer_runs_to_completion[iosSimulatorArm64]",
+          "classname": "com.parlor.engine.testing.reducer.ReducerSmokeTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "out_of_turn_announcement_is_rejected[iosSimulatorArm64]",
+          "classname": "com.parlor.engine.testing.reducer.ReducerSmokeTest",
+          "time": "0.0",
+          "result": "PASS"
+        }
+      ],
+      "xml": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/shared/engine-testing/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.engine.testing.reducer.ReducerSmokeTest.xml",
+        "bytes": 683,
+        "sha256": "1523e93b92cc4e7689f1268996e98a3a0ee8b0f341e6188acf8ff46e63fc6304"
+      }
+    },
+    {
+      "module": "shared/engine-testing",
+      "task": ":shared:engine-testing:iosSimulatorArm64Test",
+      "task_outcome": "EXECUTED",
+      "log_line": 908,
+      "suite": "com.parlor.engine.testing.registry.GameRegistryExtensibilityTest",
+      "suite_timestamp": "2026-09-07T18:46:12.128Z",
+      "tests": 2,
+      "descriptors": [
+        {
+          "name": "second_game_can_be_registered_resolved_and_exercised[iosSimulatorArm64]",
+          "classname": "com.parlor.engine.testing.registry.GameRegistryExtensibilityTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "duplicate_game_ids_fail_during_registration[iosSimulatorArm64]",
+          "classname": "com.parlor.engine.testing.registry.GameRegistryExtensibilityTest",
+          "time": "0.0",
+          "result": "PASS"
+        }
+      ],
+      "xml": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/shared/engine-testing/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.engine.testing.registry.GameRegistryExtensibilityTest.xml",
+        "bytes": 758,
+        "sha256": "a7265e61ac45ba3299383e2c86a44e8f583850a0666708c5e41ae74d53f710b9"
+      }
+    },
+    {
+      "module": "shared/networking",
+      "task": ":shared:networking:iosSimulatorArm64Test",
+      "task_outcome": "EXECUTED",
+      "log_line": 924,
+      "suite": "com.parlor.networking.protocol.ProtocolValidationTest",
+      "suite_timestamp": "2026-09-07T18:46:19.052Z",
+      "tests": 8,
+      "descriptors": [
+        {
+          "name": "rejects incompatible protocol game and session[iosSimulatorArm64]",
+          "classname": "com.parlor.networking.protocol.ProtocolValidationTest",
+          "time": "0.001",
+          "result": "PASS"
+        },
+        {
+          "name": "rejects unsafe wire identities even when an initial peer trusts the supplied session[iosSimulatorArm64]",
+          "classname": "com.parlor.networking.protocol.ProtocolValidationTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "enforces command identifiers sequence revision and payload cap[iosSimulatorArm64]",
+          "classname": "com.parlor.networking.protocol.ProtocolValidationTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "snapshot is atomic and independently caps public and private slices[iosSimulatorArm64]",
+          "classname": "com.parlor.networking.protocol.ProtocolValidationTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "snapshot request permits only the pre-snapshot minus-one sentinel[iosSimulatorArm64]",
+          "classname": "com.parlor.networking.protocol.ProtocolValidationTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "peer control messages require the unsequenced zero header domain[iosSimulatorArm64]",
+          "classname": "com.parlor.networking.protocol.ProtocolValidationTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "validates epoch and control message semantics[iosSimulatorArm64]",
+          "classname": "com.parlor.networking.protocol.ProtocolValidationTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "session start identity metadata and phase sequences are strict[iosSimulatorArm64]",
+          "classname": "com.parlor.networking.protocol.ProtocolValidationTest",
+          "time": "0.0",
+          "result": "PASS"
+        }
+      ],
+      "xml": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/shared/networking/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.networking.protocol.ProtocolValidationTest.xml",
+        "bytes": 1837,
+        "sha256": "c1b054b51f06e897e5fc351879fff4008fa50fc4350747885abaa6b8f2543a03"
+      }
+    },
+    {
+      "module": "shared/networking",
+      "task": ":shared:networking:iosSimulatorArm64Test",
+      "task_outcome": "EXECUTED",
+      "log_line": 924,
+      "suite": "com.parlor.networking.protocol.RoomMessageCodecTest",
+      "suite_timestamp": "2026-09-07T18:46:19.054Z",
+      "tests": 9,
+      "descriptors": [
+        {
+          "name": "round trips binary snapshot without JSON byte expansion[iosSimulatorArm64]",
+          "classname": "com.parlor.networking.protocol.RoomMessageCodecTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "rejects oversized encoded input before decode[iosSimulatorArm64]",
+          "classname": "com.parlor.networking.protocol.RoomMessageCodecTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "registered room message variants match the complete wire allowlist[iosSimulatorArm64]",
+          "classname": "com.parlor.networking.protocol.RoomMessageCodecTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "player snapshot matches its golden wire vector[iosSimulatorArm64]",
+          "classname": "com.parlor.networking.protocol.RoomMessageCodecTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "session starting matches its golden wire vector[iosSimulatorArm64]",
+          "classname": "com.parlor.networking.protocol.RoomMessageCodecTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "client command matches its golden wire vector[iosSimulatorArm64]",
+          "classname": "com.parlor.networking.protocol.RoomMessageCodecTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "admission offered matches its golden wire vector[iosSimulatorArm64]",
+          "classname": "com.parlor.networking.protocol.RoomMessageCodecTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "round trips every transactional admission and resume frame[iosSimulatorArm64]",
+          "classname": "com.parlor.networking.protocol.RoomMessageCodecTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "round trips every acknowledged session-start frame[iosSimulatorArm64]",
+          "classname": "com.parlor.networking.protocol.RoomMessageCodecTest",
+          "time": "0.0",
+          "result": "PASS"
+        }
+      ],
+      "xml": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/shared/networking/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.networking.protocol.RoomMessageCodecTest.xml",
+        "bytes": 1898,
+        "sha256": "d8b836d48961c4e172064ca1913a2150bf62e70977dddd03d6bee35fada11c09"
+      }
+    },
+    {
+      "module": "shared/networking",
+      "task": ":shared:networking:iosSimulatorArm64Test",
+      "task_outcome": "EXECUTED",
+      "log_line": 924,
+      "suite": "com.parlor.networking.room.LocalRoomRetryContractTest",
+      "suite_timestamp": "2026-09-07T18:46:19.055Z",
+      "tests": 3,
+      "descriptors": [
+        {
+          "name": "fallback retry close maps an ordinary adapter exception[iosSimulatorArm64]",
+          "classname": "com.parlor.networking.room.LocalRoomRetryContractTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "fallback retry close propagates cancellation[iosSimulatorArm64]",
+          "classname": "com.parlor.networking.room.LocalRoomRetryContractTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "fallback retry close propagates fatal errors[iosSimulatorArm64]",
+          "classname": "com.parlor.networking.room.LocalRoomRetryContractTest",
+          "time": "0.0",
+          "result": "PASS"
+        }
+      ],
+      "xml": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/shared/networking/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.networking.room.LocalRoomRetryContractTest.xml",
+        "bytes": 893,
+        "sha256": "1dd805860ba4bf06aa0302c45f3c8002f97fd169a87df3cc46d5115115cd09bb"
+      }
+    },
+    {
+      "module": "shared/networking",
+      "task": ":shared:networking:iosSimulatorArm64Test",
+      "task_outcome": "EXECUTED",
+      "log_line": 924,
+      "suite": "com.parlor.networking.room.PeerSessionRetryPolicyTest",
+      "suite_timestamp": "2026-09-07T18:46:19.056Z",
+      "tests": 3,
+      "descriptors": [
+        {
+          "name": "fresh_session_uses_join_until_a_post_admission_start_failure[iosSimulatorArm64]",
+          "classname": "com.parlor.networking.room.PeerSessionRetryPolicyTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "resumed_retry_returns_to_resume_after_each_failed_start_transaction[iosSimulatorArm64]",
+          "classname": "com.parlor.networking.room.PeerSessionRetryPolicyTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "explicitly_resumed_flow_never_falls_back_to_fresh_room_code_admission[iosSimulatorArm64]",
+          "classname": "com.parlor.networking.room.PeerSessionRetryPolicyTest",
+          "time": "0.0",
+          "result": "PASS"
+        }
+      ],
+      "xml": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/shared/networking/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.networking.room.PeerSessionRetryPolicyTest.xml",
+        "bytes": 944,
+        "sha256": "0506c1dd11ff84cee7aefe90884e583ba6f46c1cb8e4fc54307afb56945eb5c5"
+      }
+    },
+    {
+      "module": "shared/networking",
+      "task": ":shared:networking:iosSimulatorArm64Test",
+      "task_outcome": "EXECUTED",
+      "log_line": 924,
+      "suite": "com.parlor.networking.room.RoomInputPolicyTest",
+      "suite_timestamp": "2026-09-07T18:46:19.056Z",
+      "tests": 5,
+      "descriptors": [
+        {
+          "name": "room_codes_are_exact_unambiguous_ascii[iosSimulatorArm64]",
+          "classname": "com.parlor.networking.room.RoomInputPolicyTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "room_code_normalization_drops_formatting_and_ambiguous_characters[iosSimulatorArm64]",
+          "classname": "com.parlor.networking.room.RoomInputPolicyTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "display_names_support_international_text_but_reject_control_and_bidi_formatting[iosSimulatorArm64]",
+          "classname": "com.parlor.networking.room.RoomInputPolicyTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "display_name_sanitization_never_splits_a_unicode_surrogate_pair[iosSimulatorArm64]",
+          "classname": "com.parlor.networking.room.RoomInputPolicyTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "display_name_rosters_require_valid_canonical_exactly_distinct_names[iosSimulatorArm64]",
+          "classname": "com.parlor.networking.room.RoomInputPolicyTest",
+          "time": "0.0",
+          "result": "PASS"
+        }
+      ],
+      "xml": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/shared/networking/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.networking.room.RoomInputPolicyTest.xml",
+        "bytes": 1254,
+        "sha256": "44adb989ddabb5438a03e1de17232c84ce77ba29bb07798678070cf6c8c6793e"
+      }
+    },
+    {
+      "module": "shared/networking",
+      "task": ":shared:networking:iosSimulatorArm64Test",
+      "task_outcome": "EXECUTED",
+      "log_line": 924,
+      "suite": "com.parlor.networking.security.SecureHashesTest",
+      "suite_timestamp": "2026-09-07T18:46:19.056Z",
+      "tests": 3,
+      "descriptors": [
+        {
+          "name": "sha256_matches_the_standard_abc_vector[iosSimulatorArm64]",
+          "classname": "com.parlor.networking.security.SecureHashesTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "sha256_supports_the_standard_empty_input_vector[iosSimulatorArm64]",
+          "classname": "com.parlor.networking.security.SecureHashesTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "constant_time_comparison_handles_equal_unequal_and_different_lengths[iosSimulatorArm64]",
+          "classname": "com.parlor.networking.security.SecureHashesTest",
+          "time": "0.0",
+          "result": "PASS"
+        }
+      ],
+      "xml": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/shared/networking/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.networking.security.SecureHashesTest.xml",
+        "bytes": 879,
+        "sha256": "95da36bbc5fddb9a237c526ebb3be95d5e119b455402cc8b727d51d289001382"
+      }
+    },
+    {
+      "module": "shared/networking",
+      "task": ":shared:networking:iosSimulatorArm64Test",
+      "task_outcome": "EXECUTED",
+      "log_line": 924,
+      "suite": "com.parlor.networking.security.SecureIdsTest",
+      "suite_timestamp": "2026-09-07T18:46:19.057Z",
+      "tests": 2,
+      "descriptors": [
+        {
+          "name": "random_long_byte_conversion_preserves_all_64_random_bits[iosSimulatorArm64]",
+          "classname": "com.parlor.networking.security.SecureIdsTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "random_long_byte_conversion_rejects_partial_entropy[iosSimulatorArm64]",
+          "classname": "com.parlor.networking.security.SecureIdsTest",
+          "time": "0.0",
+          "result": "PASS"
+        }
+      ],
+      "xml": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/shared/networking/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.networking.security.SecureIdsTest.xml",
+        "bytes": 710,
+        "sha256": "c26510dd1f342231374bc830f82f7306f347d159885fdc139505637e73151735"
+      }
+    },
+    {
+      "module": "shared/networking",
+      "task": ":shared:networking:iosSimulatorArm64Test",
+      "task_outcome": "EXECUTED",
+      "log_line": 924,
+      "suite": "com.parlor.networking.transport.LocalNetworkAccessTest",
+      "suite_timestamp": "2026-09-07T18:46:19.057Z",
+      "tests": 1,
+      "descriptors": [
+        {
+          "name": "recovery_guidance_is_reserved_for_proven_or_unclassified_failures[iosSimulatorArm64]",
+          "classname": "com.parlor.networking.transport.LocalNetworkAccessTest",
+          "time": "0.0",
+          "result": "PASS"
+        }
+      ],
+      "xml": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/shared/networking/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.networking.transport.LocalNetworkAccessTest.xml",
+        "bytes": 579,
+        "sha256": "8bfd363a09c2619f1fdc589a56f7c167bdb343ddc6a5813eae8d9012c6929936"
+      }
+    },
+    {
+      "module": "shared/networking-testing",
+      "task": ":shared:networking-testing:iosSimulatorArm64Test",
+      "task_outcome": "EXECUTED",
+      "log_line": 918,
+      "suite": "com.parlor.networking.testing.InMemoryRoomBusTest",
+      "suite_timestamp": "2026-09-07T18:46:16.935Z",
+      "tests": 4,
+      "descriptors": [
+        {
+          "name": "direct send to an unknown peer fails instead of disappearing[iosSimulatorArm64]",
+          "classname": "com.parlor.networking.testing.InMemoryRoomBusTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "peer to host overflow is non blocking and observable[iosSimulatorArm64]",
+          "classname": "com.parlor.networking.testing.InMemoryRoomBusTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "broadcast skips a full peer without blocking other peers[iosSimulatorArm64]",
+          "classname": "com.parlor.networking.testing.InMemoryRoomBusTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "peer event overflow is non blocking and observable[iosSimulatorArm64]",
+          "classname": "com.parlor.networking.testing.InMemoryRoomBusTest",
+          "time": "0.0",
+          "result": "PASS"
+        }
+      ],
+      "xml": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/shared/networking-testing/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.networking.testing.InMemoryRoomBusTest.xml",
+        "bytes": 1064,
+        "sha256": "593cb5d3055e53760fd34cf76a8ab2568c1dd7a7f7fb337a9680efe951510e0a"
+      }
+    },
+    {
+      "module": "shared/session",
+      "task": ":shared:session:iosSimulatorArm64Test",
+      "task_outcome": "EXECUTED",
+      "log_line": 942,
+      "suite": "com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest",
+      "suite_timestamp": "2026-09-07T18:46:43.154Z",
+      "tests": 42,
+      "descriptors": [
+        {
+          "name": "host close waits for inbound collector cancellation cleanup[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "host applies once then rejects duplicate gap and stale revision deterministically[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "host routes each private snapshot only to its recipient[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "fresh peer runtime resumes the host command sequence from its authoritative snapshot[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "host mutation and peer command share one authoritative order[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "unchanged host mutation does not advance revision or publish snapshot[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "host end is delivered before end returns and remains delivered after close[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "closing host coordinator completes executing and queued mutation callers[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "parent scope cancellation completes executing and queued mutation callers[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "caller cancellation removes a queued host mutation before it can execute[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "failed publication does not kill mailbox or strand later host mutation[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest",
+          "time": "0.002",
+          "result": "PASS"
+        },
+        {
+          "name": "failed terminal transport is bounded and mailbox remains closable[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "host outcome query returns recorded result without applying command again[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "one peer cannot evict another peer command outcome[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "malformed command id is dropped without killing host command processing[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "heartbeat snapshots and terminal envelopes share one monotonic host sequence[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "retained peer acknowledges the stable start offer replay after reconnect[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "retained peer rejects a mutated start replay under the accepted start id[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "peer installs only valid monotonic atomic snapshots[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "peer validates terminal envelope before asking transport to commit[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest",
+          "time": "0.001",
+          "result": "PASS"
+        },
+        {
+          "name": "peer does not accept terminal end when durable transport commit fails[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "peer ignores validated terminal frame no longer owned by transport[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "failed snapshot installation does not consume its revision[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "in-memory peer room stamps command actor like production transport[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "peer never replays sequence gap command and requests a fresh snapshot[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "peer accepts a command result that arrives after a newer-sequence snapshot[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "peer allows only one mutating command in flight[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "peer retains every authoritative command outcome until UI acknowledgement[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "applied result remains in flight until its authoritative snapshot is installed[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "slow compatibility result observer cannot block authoritative inbound frames[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "close rejects stale submissions and wipes retained command payload[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "peer marks failed send ambiguous without replaying or releasing command[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "peer automatically reconciles a lost result without replaying the action[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "outcome lookup cannot overtake the original command write[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "caller cancellation during command write propagates and starts query-only recovery[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "outcome reconciliation has a deadline and reports recovery timeout[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "authenticated host traffic restarts timed out outcome lookup without replay[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "peer queries ambiguous send outcome on restore without replaying command[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "acknowledged unknown outcome releases command and reuses host sequence[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest",
+          "time": "0.001",
+          "result": "PASS"
+        },
+        {
+          "name": "host rejects commands while suspended without consuming id or sequence[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "host gameplay mutation is suspended while lifecycle mutation remains ordered[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest",
+          "time": "0.003",
+          "result": "PASS"
+        },
+        {
+          "name": "peer cannot enqueue a command while room is suspended[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest",
+          "time": "0.001",
+          "result": "PASS"
+        }
+      ],
+      "xml": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/shared/session/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest.xml",
+        "bytes": 8793,
+        "sha256": "5e2dcf86f1dfe00bdde86813dcb40abcc2e426ed98a02096d0043b284a52ad65"
+      }
+    },
+    {
+      "module": "shared/session",
+      "task": ":shared:session:iosSimulatorArm64Test",
+      "task_outcome": "EXECUTED",
+      "log_line": 942,
+      "suite": "com.parlor.session.multidevice.BoundedPeerOutboxTest",
+      "suite_timestamp": "2026-09-07T18:46:43.166Z",
+      "tests": 8,
+      "descriptors": [
+        {
+          "name": "documented per-peer byte ceiling includes the retained heartbeat[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.BoundedPeerOutboxTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "close waits for the in-flight sender cancellation cleanup[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.BoundedPeerOutboxTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "control queue is bounded and unsent snapshots are conflated[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.BoundedPeerOutboxTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "stalled peer cannot delay honest peer or authoritative mutation[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.BoundedPeerOutboxTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "terminal delivery attempts peers in parallel and has a fixed deadline[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.BoundedPeerOutboxTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "terminal transport exception is returned as a sanitized failure[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.BoundedPeerOutboxTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "concurrent terminal requests share one in flight delivery[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.BoundedPeerOutboxTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "close racing terminal publication cannot strand the terminal caller[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.BoundedPeerOutboxTest",
+          "time": "0.0",
+          "result": "PASS"
+        }
+      ],
+      "xml": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/shared/session/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.session.multidevice.BoundedPeerOutboxTest.xml",
+        "bytes": 1828,
+        "sha256": "8376ebc51467c909c3fa8edc9119119cbff5f73ace697cac503e6f3c1059608c"
+      }
+    },
+    {
+      "module": "shared/session",
+      "task": ":shared:session:iosSimulatorArm64Test",
+      "task_outcome": "EXECUTED",
+      "log_line": 942,
+      "suite": "com.parlor.session.multidevice.MultiDeviceShapeTest",
+      "suite_timestamp": "2026-09-07T18:46:43.166Z",
+      "tests": 1,
+      "descriptors": [
+        {
+          "name": "reducer_state_trajectory_matches_across_real_in_memory_topologies[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.MultiDeviceShapeTest",
+          "time": "0.0",
+          "result": "PASS"
+        }
+      ],
+      "xml": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/shared/session/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.session.multidevice.MultiDeviceShapeTest.xml",
+        "bytes": 573,
+        "sha256": "0e3304466a306e5ee702394d77477ff1b4fe2d48f9d523bec3d5ff525394b85b"
+      }
+    },
+    {
+      "module": "shared/session",
+      "task": ":shared:session:iosSimulatorArm64Test",
+      "task_outcome": "EXECUTED",
+      "log_line": 942,
+      "suite": "com.parlor.session.multidevice.PeerConnectionTrackerTest",
+      "suite_timestamp": "2026-09-07T18:46:43.167Z",
+      "tests": 8,
+      "descriptors": [
+        {
+          "name": "durable room status closes a lost event subscription gap[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.PeerConnectionTrackerTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "connection state remains observable without an event collector[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.PeerConnectionTrackerTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "duplicate host loss does not extend the original deadline[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.PeerConnectionTrackerTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "restore cancels expiry and marks the peer online[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.PeerConnectionTrackerTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "close cancels an outstanding host loss deadline[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.PeerConnectionTrackerTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "tracker owns and removes all timer jobs when closed[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.PeerConnectionTrackerTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "close waits for an expiry callback that already started[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.PeerConnectionTrackerTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "host restoration cannot reverse a host-loss expiry that already committed[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.PeerConnectionTrackerTest",
+          "time": "0.0",
+          "result": "PASS"
+        }
+      ],
+      "xml": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/shared/session/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.session.multidevice.PeerConnectionTrackerTest.xml",
+        "bytes": 1814,
+        "sha256": "c01e30852c1fe2ecd6c048fddd85ce52f888be1ba54870e163f592fd7e7dae9b"
+      }
+    },
+    {
+      "module": "shared/session",
+      "task": ":shared:session:iosSimulatorArm64Test",
+      "task_outcome": "EXECUTED",
+      "log_line": 942,
+      "suite": "com.parlor.session.multidevice.ProcessMultiplayerSessionOwnerTest",
+      "suite_timestamp": "2026-09-07T18:46:43.167Z",
+      "tests": 30,
+      "descriptors": [
+        {
+          "name": "multiplayerRoutesRejectNonCanonicalUserInputAtTheOwnershipBoundary[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.ProcessMultiplayerSessionOwnerTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "sameRouteReattachesWithoutOpeningAnotherRoom[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.ProcessMultiplayerSessionOwnerTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "aDifferentRouteCannotReplaceAnActiveSession[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.ProcessMultiplayerSessionOwnerTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "cancellingOneUiWaiterDoesNotCancelProcessOwnedOpen[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.ProcessMultiplayerSessionOwnerTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "explicitLeaveDuringOpenWaitsForCancellationAndClosesAnOrphanRoom[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.ProcessMultiplayerSessionOwnerTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "cancelledOpenRestoresIdleAndDoesNotPoisonTheNextAcquire[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.ProcessMultiplayerSessionOwnerTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "explicitLeaveReportsOrphanCleanupFailureWithoutStrandingOwnership[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.ProcessMultiplayerSessionOwnerTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "admissionFreezeIsExactlyOnceAcrossConcurrentUiRequests[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.ProcessMultiplayerSessionOwnerTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "thrownAdmissionCloseBecomesRetryableWithoutPoisoningTheGate[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.ProcessMultiplayerSessionOwnerTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "cancelledAdmissionCloseDoesNotPoisonTheGate[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.ProcessMultiplayerSessionOwnerTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "checkpointAndRuntimeSurviveUiReattachmentAndRejectWrongKinds[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.ProcessMultiplayerSessionOwnerTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "retainedFactoryFailureIsExplicitAndDoesNotPoisonAReplacement[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.ProcessMultiplayerSessionOwnerTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "runtimeFactoryKindMismatchClosesTheUninstalledCandidate[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.ProcessMultiplayerSessionOwnerTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "retainedValuesCannotBeCreatedAfterTheSessionIsReleased[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.ProcessMultiplayerSessionOwnerTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "peerRetryRetainsMembershipAndForcesResumeOnTheNextRoom[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.ProcessMultiplayerSessionOwnerTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "leaveRacingPeerRetryWaitsThenDiscardsTheRetainedCredential[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.ProcessMultiplayerSessionOwnerTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "failedPeerRetryKeepsTheLiveSessionAndCanBeRetried[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.ProcessMultiplayerSessionOwnerTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "peerRetryRuntimeCloseFailureCannotStrandTheOwnerInClosing[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.ProcessMultiplayerSessionOwnerTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "cancelledPeerRetryCloseRestoresActiveStateAndPropagatesCancellation[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.ProcessMultiplayerSessionOwnerTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "cancelledCredentialDiscardRemainsRetryableAndPropagatesCancellation[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.ProcessMultiplayerSessionOwnerTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "leavingAFailedOpenClearsTheRouteForANewSession[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.ProcessMultiplayerSessionOwnerTest",
+          "time": "0.001",
+          "result": "PASS"
+        },
+        {
+          "name": "leavingAColdFailedResumeDiscardsThePersistedMembership[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.ProcessMultiplayerSessionOwnerTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "failedColdResumeDiscardKeepsTheRouteForAnExplicitRetry[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.ProcessMultiplayerSessionOwnerTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "failedPeerFinalLeaveKeepsSessionAndConcurrentRetryClosesExactlyOnce[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.ProcessMultiplayerSessionOwnerTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "hostRetryTerminatesRuntimeBeforeLeavingAndKeepsRouteRecoverable[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.ProcessMultiplayerSessionOwnerTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "hostFinalLeaveRuntimeCloseFailureStillReleasesOwnership[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.ProcessMultiplayerSessionOwnerTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "aNewOwnerModelsProcessDeathAsNoInMemoryHostSession[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.ProcessMultiplayerSessionOwnerTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "peerLifecycleExpiryReleasesRuntimeAndLeavesAnExplicitTerminalOwnerState[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.ProcessMultiplayerSessionOwnerTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "finalLeaveWaitsForSessionChildrenToFinishCancellationCleanup[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.ProcessMultiplayerSessionOwnerTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "staleExpiredLifecycleCannotReplaceANewerActiveSession[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.ProcessMultiplayerSessionOwnerTest",
+          "time": "0.0",
+          "result": "PASS"
+        }
+      ],
+      "xml": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/shared/session/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.session.multidevice.ProcessMultiplayerSessionOwnerTest.xml",
+        "bytes": 6008,
+        "sha256": "76dbfd4c3ce3f7e74547da212a7218078498dc3e8cd969fa097aa3d05e265c31"
+      }
+    },
+    {
+      "module": "shared/session",
+      "task": ":shared:session:iosSimulatorArm64Test",
+      "task_outcome": "EXECUTED",
+      "log_line": 942,
+      "suite": "com.parlor.session.multidevice.RetainedSessionOperationTest",
+      "suite_timestamp": "2026-09-07T18:46:43.174Z",
+      "tests": 4,
+      "descriptors": [
+        {
+          "name": "concurrentInstallersLaunchTheOperationExactlyOnce[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.RetainedSessionOperationTest",
+          "time": "0.001",
+          "result": "PASS"
+        },
+        {
+          "name": "losingTheUiCallerDoesNotCancelProcessOwnedWork[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.RetainedSessionOperationTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "unexpectedFailureBecomesTheExplicitSafeState[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.RetainedSessionOperationTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "sessionCancellationIsNotMappedToAnOrdinaryFailure[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.RetainedSessionOperationTest",
+          "time": "0.0",
+          "result": "PASS"
+        }
+      ],
+      "xml": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/shared/session/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.session.multidevice.RetainedSessionOperationTest.xml",
+        "bytes": 1088,
+        "sha256": "645ce56235e5cd26b2918af9212727ebbda82c0822f72df7513b24481be931de"
+      }
+    },
+    {
+      "module": "shared/session",
+      "task": ":shared:session:iosSimulatorArm64Test",
+      "task_outcome": "EXECUTED",
+      "log_line": 942,
+      "suite": "com.parlor.session.multidevice.SessionStartCommitDeadlineTest",
+      "suite_timestamp": "2026-09-07T18:46:43.179Z",
+      "tests": 9,
+      "descriptors": [
+        {
+          "name": "lateAcceptedCommitSurvivesSlowAcknowledgement[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.SessionStartCommitDeadlineTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "acknowledgementTimeoutOnlyBoundsDeliveryAfterAcceptedCommit[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.SessionStartCommitDeadlineTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "acknowledgementFailureAfterReceiveDeadlineStillEntersCommittedStart[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.SessionStartCommitDeadlineTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "acknowledgementAdapterExceptionDoesNotUndoAcceptedStart[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.SessionStartCommitDeadlineTest",
+          "time": "0.001",
+          "result": "PASS"
+        },
+        {
+          "name": "callerCancellationDuringAcknowledgementStillPropagates[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.SessionStartCommitDeadlineTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "absentCommitStillTimesOutWithoutAnAcknowledgement[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.SessionStartCommitDeadlineTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "commitForAnotherStartCannotEscapeTheReceiveDeadline[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.SessionStartCommitDeadlineTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "matchingStartWithInvalidVersionIsRejectedWithoutAcknowledgement[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.SessionStartCommitDeadlineTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "coordinatorReacknowledgesDuplicateAndAcceptsFirstSnapshotAfterLateCommit[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.SessionStartCommitDeadlineTest",
+          "time": "0.0",
+          "result": "PASS"
+        }
+      ],
+      "xml": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/shared/session/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.session.multidevice.SessionStartCommitDeadlineTest.xml",
+        "bytes": 2055,
+        "sha256": "6140aa7f29ca93fbb9c64be3af21f9830b35e5f2cdc3d2db4f75bae8b356ed82"
+      }
+    },
+    {
+      "module": "shared/session",
+      "task": ":shared:session:iosSimulatorArm64Test",
+      "task_outcome": "EXECUTED",
+      "log_line": 942,
+      "suite": "com.parlor.session.multidevice.SessionStartHandshakeTest",
+      "suite_timestamp": "2026-09-07T18:46:43.180Z",
+      "tests": 31,
+      "descriptors": [
+        {
+          "name": "host commits after all ready and commit acknowledgement is delivery only[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.SessionStartHandshakeTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "lost commit acknowledgement in a multi-peer room never rolls commit back[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.SessionStartHandshakeTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "caller cancellation racing irreversible commit cannot abort the session[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.SessionStartHandshakeTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "slow preparation and first dropped commit use fresh delivery deadlines[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.SessionStartHandshakeTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "wrong actor and stale ready cannot advance host transaction[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.SessionStartHandshakeTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "duplicate ready flood during commit does not amplify responses[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.SessionStartHandshakeTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "host pre-commit deadline is terminal and bounded[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.SessionStartHandshakeTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "hanging start send cannot block absolute host deadline[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.SessionStartHandshakeTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "host coordinator requires the start barrier by default[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.SessionStartHandshakeTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "host start gate retains typed failure and exit transition is idempotent[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.SessionStartHandshakeTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "cancelling host start propagates cancellation and aborts transaction[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.SessionStartHandshakeTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "resend start retries each phase and only succeeds after commit acknowledgement[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.SessionStartHandshakeTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "resend ready deadline is bounded and delayed frames cannot revive it[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.SessionStartHandshakeTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "concurrent resend transactions are isolated per player[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.SessionStartHandshakeTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "seat resend progresses while another initial commit acknowledgement is outstanding[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.SessionStartHandshakeTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "cancelled resend cannot commit when its abort signal loses to a full mailbox[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.SessionStartHandshakeTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "peer lobby has no pre-offer timeout and late valid start succeeds[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.SessionStartHandshakeTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "peer ignores transient host loss and reacks ready on restoration[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.SessionStartHandshakeTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "peer transaction deadline begins at offer and terminal lifecycle fails[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.SessionStartHandshakeTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "peer lobby reports terminal credential commit failure without accepting end[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.SessionStartHandshakeTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "peer start transaction ignores terminal frame no longer owned by transport[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.SessionStartHandshakeTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "peer validates wire version against local protocol major and minor[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.SessionStartHandshakeTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "peer rejects non-canonical start seats before local preparation[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.SessionStartHandshakeTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "unexpected local preparation failure remains typed and cancellation propagates[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.SessionStartHandshakeTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "fatal preparation error is never converted into a start failure[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.SessionStartHandshakeTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "peer enters on irreversible commit even when acknowledgement send is lost[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.SessionStartHandshakeTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "dropped eager snapshot and initial request recover from revision-zero heartbeat[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.SessionStartHandshakeTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "initial snapshot recovery retries are bounded and expose timeout[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.SessionStartHandshakeTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "throwing snapshot transport is retried and cannot strand loading forever[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.SessionStartHandshakeTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "game coordinator reacks delayed duplicate commit[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.SessionStartHandshakeTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "throwing duplicate commit acknowledgement cannot kill peer inbox[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.SessionStartHandshakeTest",
+          "time": "0.0",
+          "result": "PASS"
+        }
+      ],
+      "xml": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/shared/session/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.session.multidevice.SessionStartHandshakeTest.xml",
+        "bytes": 6228,
+        "sha256": "7480c62417a63a1956e67aa9421c5e7fc9f85350bce52f72dfebc090932ad61d"
+      }
+    },
+    {
+      "module": "shared/session",
+      "task": ":shared:session:iosSimulatorArm64Test",
+      "task_outcome": "EXECUTED",
+      "log_line": 942,
+      "suite": "com.parlor.session.multidevice.ShadowSessionControllerTest",
+      "suite_timestamp": "2026-09-07T18:46:43.182Z",
+      "tests": 3,
+      "descriptors": [
+        {
+          "name": "installPlayerSnapshotUpdatesBothViewsFromOneValidatedCall[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.ShadowSessionControllerTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "wrongPlayerSnapshotIsRejectedBeforeEitherViewChanges[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.ShadowSessionControllerTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "peerCannotAssumeHostViewerContext[iosSimulatorArm64]",
+          "classname": "com.parlor.session.multidevice.ShadowSessionControllerTest",
+          "time": "0.001",
+          "result": "PASS"
+        }
+      ],
+      "xml": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/shared/session/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.session.multidevice.ShadowSessionControllerTest.xml",
+        "bytes": 914,
+        "sha256": "ea3a98f1dfa37c485c44d4982270b358be0b0bcf1dff9cad1c840768ff52bfa9"
+      }
+    },
+    {
+      "module": "shared/session",
+      "task": ":shared:session:iosSimulatorArm64Test",
+      "task_outcome": "EXECUTED",
+      "log_line": 942,
+      "suite": "com.parlor.session.party.PartyAwareCanonicalStateTest",
+      "suite_timestamp": "2026-09-07T18:46:43.183Z",
+      "tests": 1,
+      "descriptors": [
+        {
+          "name": "readiness_uses_directly_committed_state_when_public_projection_is_stale[iosSimulatorArm64]",
+          "classname": "com.parlor.session.party.PartyAwareCanonicalStateTest",
+          "time": "0.0",
+          "result": "PASS"
+        }
+      ],
+      "xml": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/shared/session/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.session.party.PartyAwareCanonicalStateTest.xml",
+        "bytes": 583,
+        "sha256": "5ddea0ca04597265b840452e462f343c8c2c5b710b7769df4db21d337e23806a"
+      }
+    },
+    {
+      "module": "shared/session",
+      "task": ":shared:session:iosSimulatorArm64Test",
+      "task_outcome": "EXECUTED",
+      "log_line": 942,
+      "suite": "com.parlor.session.passandplay.RestoredStateTest",
+      "suite_timestamp": "2026-09-07T18:46:43.183Z",
+      "tests": 5,
+      "descriptors": [
+        {
+          "name": "null_restoredState_starts_at_initial_state[iosSimulatorArm64]",
+          "classname": "com.parlor.session.passandplay.RestoredStateTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "restoredState_boots_controller_at_provided_state[iosSimulatorArm64]",
+          "classname": "com.parlor.session.passandplay.RestoredStateTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "current_state_observes_the_committed_reduction_before_projection_flows_dispatch[iosSimulatorArm64]",
+          "classname": "com.parlor.session.passandplay.RestoredStateTest",
+          "time": "0.003",
+          "result": "PASS"
+        },
+        {
+          "name": "submit_receipt_distinguishes_committed_mutation_from_reducer_no_op[iosSimulatorArm64]",
+          "classname": "com.parlor.session.passandplay.RestoredStateTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "unknown_player_cannot_create_an_unbounded_private_projection[iosSimulatorArm64]",
+          "classname": "com.parlor.session.passandplay.RestoredStateTest",
+          "time": "0.001",
+          "result": "PASS"
+        }
+      ],
+      "xml": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/shared/session/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.session.passandplay.RestoredStateTest.xml",
+        "bytes": 1255,
+        "sha256": "d1c6968052c6d7cba0d7b4c3ed3b9ee00d4377cc11f772b1fbade2b2813e80fe"
+      }
+    },
+    {
+      "module": "shared/storage",
+      "task": ":shared:storage:iosSimulatorArm64Test",
+      "task_outcome": "EXECUTED",
+      "log_line": 932,
+      "suite": "com.parlor.storage.secure.PlatformKeyedSecureStorageTest",
+      "suite_timestamp": "2026-09-07T18:46:28.307Z",
+      "tests": 4,
+      "descriptors": [
+        {
+          "name": "in_memory_test_backing_never_aliases_caller_arrays[iosSimulatorArm64]",
+          "classname": "com.parlor.storage.secure.PlatformKeyedSecureStorageTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "adapter_preserves_lifecycle_cancellation[iosSimulatorArm64]",
+          "classname": "com.parlor.storage.secure.PlatformKeyedSecureStorageTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "adapter_maps_ordinary_backing_failures_without_exposing_details[iosSimulatorArm64]",
+          "classname": "com.parlor.storage.secure.PlatformKeyedSecureStorageTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "adapter_never_converts_fatal_errors_into_recoverable_io_failures[iosSimulatorArm64]",
+          "classname": "com.parlor.storage.secure.PlatformKeyedSecureStorageTest",
+          "time": "0.0",
+          "result": "PASS"
+        }
+      ],
+      "xml": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/shared/storage/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.storage.secure.PlatformKeyedSecureStorageTest.xml",
+        "bytes": 1100,
+        "sha256": "b6fe72b61b5f80693d032f9d2548114faa1d5eeddb4547a7bf6dc6f156e6b451"
+      }
+    },
+    {
+      "module": "shared/storage",
+      "task": ":shared:storage:iosSimulatorArm64Test",
+      "task_outcome": "EXECUTED",
+      "log_line": 932,
+      "suite": "com.parlor.storage.settings.PersistentSettingsStoreTest",
+      "suite_timestamp": "2026-09-07T18:46:28.308Z",
+      "tests": 5,
+      "descriptors": [
+        {
+          "name": "absent_preferences_use_safe_defaults[iosSimulatorArm64]",
+          "classname": "com.parlor.storage.settings.PersistentSettingsStoreTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "every_preference_survives_store_recreation[iosSimulatorArm64]",
+          "classname": "com.parlor.storage.settings.PersistentSettingsStoreTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "corrupt_persisted_tags_fall_back_without_blocking_startup[iosSimulatorArm64]",
+          "classname": "com.parlor.storage.settings.PersistentSettingsStoreTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "invalid_setter_values_are_rejected_without_overwriting_last_value[iosSimulatorArm64]",
+          "classname": "com.parlor.storage.settings.PersistentSettingsStoreTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "cancelled_or_failed_persistence_never_changes_the_published_flow[iosSimulatorArm64]",
+          "classname": "com.parlor.storage.settings.PersistentSettingsStoreTest",
+          "time": "0.0",
+          "result": "PASS"
+        }
+      ],
+      "xml": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/shared/storage/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.storage.settings.PersistentSettingsStoreTest.xml",
+        "bytes": 1260,
+        "sha256": "37a5f38ff346b2dc66cebf2d0892e4018a5431a3c1656da38c0bff29c9c1fbde"
+      }
+    },
+    {
+      "module": "shared/storage",
+      "task": ":shared:storage:iosSimulatorArm64Test",
+      "task_outcome": "EXECUTED",
+      "log_line": 932,
+      "suite": "com.parlor.storage.snapshot.FileBackedSnapshotStoreTest",
+      "suite_timestamp": "2026-09-07T18:46:28.308Z",
+      "tests": 11,
+      "descriptors": [
+        {
+          "name": "protection_failure_is_reported_as_corrupted_without_crypto_detail[iosSimulatorArm64]",
+          "classname": "com.parlor.storage.snapshot.FileBackedSnapshotStoreTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "generic_io_failure_is_sanitized[iosSimulatorArm64]",
+          "classname": "com.parlor.storage.snapshot.FileBackedSnapshotStoreTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "cancellation_is_never_converted_into_a_data_error[iosSimulatorArm64]",
+          "classname": "com.parlor.storage.snapshot.FileBackedSnapshotStoreTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "fatal_errors_are_never_converted_into_a_data_error[iosSimulatorArm64]",
+          "classname": "com.parlor.storage.snapshot.FileBackedSnapshotStoreTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "envelope_codec_runs_on_injected_context_and_filesystem_stays_outside_it[iosSimulatorArm64]",
+          "classname": "com.parlor.storage.snapshot.FileBackedSnapshotStoreTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "cancellation_during_codec_work_propagates_and_releases_store_mutex[iosSimulatorArm64]",
+          "classname": "com.parlor.storage.snapshot.FileBackedSnapshotStoreTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "unfinished_sessions_are_filtered_deduplicated_and_stable[iosSimulatorArm64]",
+          "classname": "com.parlor.storage.snapshot.FileBackedSnapshotStoreTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "valid_snapshot_round_trips_through_filesystem_boundary[iosSimulatorArm64]",
+          "classname": "com.parlor.storage.snapshot.FileBackedSnapshotStoreTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "metadata_read_uses_the_header_decoder_instead_of_full_snapshot_decoder[iosSimulatorArm64]",
+          "classname": "com.parlor.storage.snapshot.FileBackedSnapshotStoreTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "malformed_utf8_snapshot_is_rejected_as_corrupted[iosSimulatorArm64]",
+          "classname": "com.parlor.storage.snapshot.FileBackedSnapshotStoreTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "traversal_and_temporary_names_are_rejected[iosSimulatorArm64]",
+          "classname": "com.parlor.storage.snapshot.FileBackedSnapshotStoreTest",
+          "time": "0.0",
+          "result": "PASS"
+        }
+      ],
+      "xml": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/shared/storage/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.storage.snapshot.FileBackedSnapshotStoreTest.xml",
+        "bytes": 2321,
+        "sha256": "8c01ca5de0234fa68c3beb819e3f67f02285cbac2745d1688180c08590c52ce3"
+      }
+    },
+    {
+      "module": "shared/storage",
+      "task": ":shared:storage:iosSimulatorArm64Test",
+      "task_outcome": "EXECUTED",
+      "log_line": 932,
+      "suite": "com.parlor.storage.snapshot.SerializedSnapshotWriterTest",
+      "suite_timestamp": "2026-09-07T18:46:28.310Z",
+      "tests": 11,
+      "descriptors": [
+        {
+          "name": "concurrent_flushes_are_serialized_and_latest_state_wins[iosSimulatorArm64]",
+          "classname": "com.parlor.storage.snapshot.SerializedSnapshotWriterTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "a_failed_state_is_retried_but_a_successful_duplicate_is_deduplicated[iosSimulatorArm64]",
+          "classname": "com.parlor.storage.snapshot.SerializedSnapshotWriterTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "explicit_discard_waits_for_an_in_flight_save_and_prevents_resurrection[iosSimulatorArm64]",
+          "classname": "com.parlor.storage.snapshot.SerializedSnapshotWriterTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "completed_state_deletes_and_an_explicit_rematch_can_persist_again[iosSimulatorArm64]",
+          "classname": "com.parlor.storage.snapshot.SerializedSnapshotWriterTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "cancellation_propagates_and_does_not_leave_a_false_writing_status[iosSimulatorArm64]",
+          "classname": "com.parlor.storage.snapshot.SerializedSnapshotWriterTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "snapshot_construction_exception_is_corruption_and_same_state_can_retry[iosSimulatorArm64]",
+          "classname": "com.parlor.storage.snapshot.SerializedSnapshotWriterTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "thrown_store_exception_is_sanitized_as_io_and_same_state_can_retry[iosSimulatorArm64]",
+          "classname": "com.parlor.storage.snapshot.SerializedSnapshotWriterTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "fatal_snapshot_error_propagates_restores_status_and_releases_mutex[iosSimulatorArm64]",
+          "classname": "com.parlor.storage.snapshot.SerializedSnapshotWriterTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "discard_cancellation_propagates_restores_status_and_can_retry[iosSimulatorArm64]",
+          "classname": "com.parlor.storage.snapshot.SerializedSnapshotWriterTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "fatal_discard_error_propagates_restores_status_and_can_retry[iosSimulatorArm64]",
+          "classname": "com.parlor.storage.snapshot.SerializedSnapshotWriterTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "thrown_discard_store_exception_is_sanitized_as_io_and_can_retry[iosSimulatorArm64]",
+          "classname": "com.parlor.storage.snapshot.SerializedSnapshotWriterTest",
+          "time": "0.0",
+          "result": "PASS"
+        }
+      ],
+      "xml": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/shared/storage/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.storage.snapshot.SerializedSnapshotWriterTest.xml",
+        "bytes": 2440,
+        "sha256": "1f1fc1b5bc652e536182d7a01109853050dd1bac0f3c916174eb1bf5da94e733"
+      }
+    },
+    {
+      "module": "shared/transport-p2p",
+      "task": ":shared:transport-p2p:iosSimulatorArm64Test",
+      "task_outcome": "EXECUTED",
+      "log_line": 944,
+      "suite": "com.parlor.transport.p2p.AppLifecycleRoomCoordinatorTest",
+      "suite_timestamp": "2026-09-07T18:46:43.252Z",
+      "tests": 2,
+      "descriptors": [
+        {
+          "name": "foreground_cannot_be_overtaken_by_background_captured_during_room_registration[iosSimulatorArm64]",
+          "classname": "com.parlor.transport.p2p.AppLifecycleRoomCoordinatorTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "close_from_an_old_generation_cannot_detach_the_replacement_room[iosSimulatorArm64]",
+          "classname": "com.parlor.transport.p2p.AppLifecycleRoomCoordinatorTest",
+          "time": "0.0",
+          "result": "PASS"
+        }
+      ],
+      "xml": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/shared/transport-p2p/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.transport.p2p.AppLifecycleRoomCoordinatorTest.xml",
+        "bytes": 782,
+        "sha256": "62fe895294740a9b9d5902e3da3abca665f71ce8d251aa70145679534616e07b"
+      }
+    },
+    {
+      "module": "shared/transport-p2p",
+      "task": ":shared:transport-p2p:iosSimulatorArm64Test",
+      "task_outcome": "EXECUTED",
+      "log_line": 944,
+      "suite": "com.parlor.transport.p2p.AppLifecycleRoomRegistrationTest",
+      "suite_timestamp": "2026-09-07T18:46:43.253Z",
+      "tests": 3,
+      "descriptors": [
+        {
+          "name": "cancelledRegistrationDetachesBeforeQueuedForeground[iosSimulatorArm64]",
+          "classname": "com.parlor.transport.p2p.AppLifecycleRoomRegistrationTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "failedRegistrationDetachesBeforeQueuedForeground[iosSimulatorArm64]",
+          "classname": "com.parlor.transport.p2p.AppLifecycleRoomRegistrationTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "cancellationBeforeRegistrationLockDoesNotDetachExistingRoom[iosSimulatorArm64]",
+          "classname": "com.parlor.transport.p2p.AppLifecycleRoomRegistrationTest",
+          "time": "0.0",
+          "result": "PASS"
+        }
+      ],
+      "xml": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/shared/transport-p2p/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.transport.p2p.AppLifecycleRoomRegistrationTest.xml",
+        "bytes": 922,
+        "sha256": "6f101d17603f4c3d985b367d11187d8de091aa724dee576d868d5e57bc27b3bb"
+      }
+    },
+    {
+      "module": "shared/transport-p2p",
+      "task": ":shared:transport-p2p:iosSimulatorArm64Test",
+      "task_outcome": "EXECUTED",
+      "log_line": 944,
+      "suite": "com.parlor.transport.p2p.DiscoveryCandidateSchedulerTest",
+      "suite_timestamp": "2026-09-07T18:46:43.253Z",
+      "tests": 13,
+      "descriptors": [
+        {
+          "name": "sustained_candidate_flood_cannot_create_an_unbounded_retry_ledger[iosSimulatorArm64]",
+          "classname": "com.parlor.transport.p2p.DiscoveryCandidateSchedulerTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "repeated_churn_never_exceeds_the_persistent_candidate_budget[iosSimulatorArm64]",
+          "classname": "com.parlor.transport.p2p.DiscoveryCandidateSchedulerTest",
+          "time": "6.949",
+          "result": "PASS"
+        },
+        {
+          "name": "a_late_candidate_displaces_an_exhausted_candidate_at_capacity[iosSimulatorArm64]",
+          "classname": "com.parlor.transport.p2p.DiscoveryCandidateSchedulerTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "wrong_room_is_candidate_local_and_a_late_correct_room_is_selected_first[iosSimulatorArm64]",
+          "classname": "com.parlor.transport.p2p.DiscoveryCandidateSchedulerTest",
+          "time": "0.012",
+          "result": "PASS"
+        },
+        {
+          "name": "transient_failures_back_off_then_reprobe_an_unchanged_candidate[iosSimulatorArm64]",
+          "classname": "com.parlor.transport.p2p.DiscoveryCandidateSchedulerTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "retry_budget_is_hard_bounded_for_one_unchanged_candidate[iosSimulatorArm64]",
+          "classname": "com.parlor.transport.p2p.DiscoveryCandidateSchedulerTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "disappearance_and_reappearance_reset_budget_even_when_metadata_is_unchanged[iosSimulatorArm64]",
+          "classname": "com.parlor.transport.p2p.DiscoveryCandidateSchedulerTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "changed_endpoint_version_is_a_new_incarnation_without_disappearance[iosSimulatorArm64]",
+          "classname": "com.parlor.transport.p2p.DiscoveryCandidateSchedulerTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "unchanged_wrong_room_is_periodically_reprobed_for_an_unobservable_room_restart[iosSimulatorArm64]",
+          "classname": "com.parlor.transport.p2p.DiscoveryCandidateSchedulerTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "late_result_from_an_old_observation_cannot_back_off_the_new_incarnation[iosSimulatorArm64]",
+          "classname": "com.parlor.transport.p2p.DiscoveryCandidateSchedulerTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "candidates_with_unused_budget_are_not_starved_by_an_older_retry[iosSimulatorArm64]",
+          "classname": "com.parlor.transport.p2p.DiscoveryCandidateSchedulerTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "each_attempt_deadline_is_clipped_by_the_total_deadline[iosSimulatorArm64]",
+          "classname": "com.parlor.transport.p2p.DiscoveryCandidateSchedulerTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "incompatible_version_has_deterministic_precedence_over_wrong_code_at_deadline[iosSimulatorArm64]",
+          "classname": "com.parlor.transport.p2p.DiscoveryCandidateSchedulerTest",
+          "time": "0.0",
+          "result": "PASS"
+        }
+      ],
+      "xml": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/shared/transport-p2p/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.transport.p2p.DiscoveryCandidateSchedulerTest.xml",
+        "bytes": 2838,
+        "sha256": "fbecf720984af2d5f3a1ed467d2d9ef128aaa94a719c0293cc6ea5af5e945671"
+      }
+    },
+    {
+      "module": "shared/transport-p2p",
+      "task": ":shared:transport-p2p:iosSimulatorArm64Test",
+      "task_outcome": "EXECUTED",
+      "log_line": 944,
+      "suite": "com.parlor.transport.p2p.P2pDiagnosticsTest",
+      "suite_timestamp": "2026-09-07T18:46:50.215Z",
+      "tests": 5,
+      "descriptors": [
+        {
+          "name": "sustained_flood_retains_only_the_fixed_ring_capacity[iosSimulatorArm64]",
+          "classname": "com.parlor.transport.p2p.P2pDiagnosticsTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "platform_output_has_a_one_record_backlog_and_is_rate_limited[iosSimulatorArm64]",
+          "classname": "com.parlor.transport.p2p.P2pDiagnosticsTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "exported_lines_have_only_the_allowlisted_fixed_shape[iosSimulatorArm64]",
+          "classname": "com.parlor.transport.p2p.P2pDiagnosticsTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "invalid_memory_or_output_configuration_fails_closed[iosSimulatorArm64]",
+          "classname": "com.parlor.transport.p2p.P2pDiagnosticsTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "count_buckets_disclose_only_coarse_cardinality[iosSimulatorArm64]",
+          "classname": "com.parlor.transport.p2p.P2pDiagnosticsTest",
+          "time": "0.0",
+          "result": "PASS"
+        }
+      ],
+      "xml": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/shared/transport-p2p/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.transport.p2p.P2pDiagnosticsTest.xml",
+        "bytes": 1185,
+        "sha256": "72f942614a65e470b8730c618320ac0a315dab47c22b74bc3a1c3c21c90abae1"
+      }
+    },
+    {
+      "module": "shared/transport-p2p",
+      "task": ":shared:transport-p2p:iosSimulatorArm64Test",
+      "task_outcome": "EXECUTED",
+      "log_line": 944,
+      "suite": "com.parlor.transport.p2p.P2pTrafficPolicyTest",
+      "suite_timestamp": "2026-09-07T18:46:50.215Z",
+      "tests": 7,
+      "descriptors": [
+        {
+          "name": "queue_memory_budgets_are_derived_from_capacity_and_directional_frame_limits[iosSimulatorArm64]",
+          "classname": "com.parlor.transport.p2p.P2pTrafficPolicyTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "sustained_flood_is_dropped_then_disconnects_only_the_offending_session[iosSimulatorArm64]",
+          "classname": "com.parlor.transport.p2p.P2pTrafficPolicyTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "traffic_budget_refills_and_violation_strikes_expire_after_cooldown[iosSimulatorArm64]",
+          "classname": "com.parlor.transport.p2p.P2pTrafficPolicyTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "long_idle_period_never_accumulates_more_than_one_burst[iosSimulatorArm64]",
+          "classname": "com.parlor.transport.p2p.P2pTrafficPolicyTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "admission_limiter_allows_legitimate_room_burst_and_throttles_one_identity[iosSimulatorArm64]",
+          "classname": "com.parlor.transport.p2p.P2pTrafficPolicyTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "rate_limited_identity_does_not_consume_global_admission_credit[iosSimulatorArm64]",
+          "classname": "com.parlor.transport.p2p.P2pTrafficPolicyTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "admission_identity_bookkeeping_is_bounded_and_pruned[iosSimulatorArm64]",
+          "classname": "com.parlor.transport.p2p.P2pTrafficPolicyTest",
+          "time": "0.0",
+          "result": "PASS"
+        }
+      ],
+      "xml": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/shared/transport-p2p/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.transport.p2p.P2pTrafficPolicyTest.xml",
+        "bytes": 1608,
+        "sha256": "b30b90c13689765c850ed68bc8745109caa0ef43cb75884b11dfbbf64d95b79a"
+      }
+    },
+    {
+      "module": "shared/transport-p2p",
+      "task": ":shared:transport-p2p:iosSimulatorArm64Test",
+      "task_outcome": "EXECUTED",
+      "log_line": 944,
+      "suite": "com.parlor.transport.p2p.ResumableCredentialStoreTest",
+      "suite_timestamp": "2026-09-07T18:46:50.216Z",
+      "tests": 23,
+      "descriptors": [
+        {
+          "name": "initial_offer_is_resumable_before_commit_and_becomes_active_on_commit[iosSimulatorArm64]",
+          "classname": "com.parlor.transport.p2p.ResumableCredentialStoreTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "pending_rotation_does_not_destroy_the_last_committed_generation[iosSimulatorArm64]",
+          "classname": "com.parlor.transport.p2p.ResumableCredentialStoreTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "unrelated_pending_admission_wins_crash_recovery_without_destroying_old_rollback[iosSimulatorArm64]",
+          "classname": "com.parlor.transport.p2p.ResumableCredentialStoreTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "discarding_a_failed_rotation_restores_the_committed_generation[iosSimulatorArm64]",
+          "classname": "com.parlor.transport.p2p.ResumableCredentialStoreTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "mismatched_commit_cannot_promote_an_unconfirmed_offer[iosSimulatorArm64]",
+          "classname": "com.parlor.transport.p2p.ResumableCredentialStoreTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "malformed_or_unknown_schema_record_is_rejected[iosSimulatorArm64]",
+          "classname": "com.parlor.transport.p2p.ResumableCredentialStoreTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "persisted_credentials_must_retain_canonical_room_and_display_name_boundaries[iosSimulatorArm64]",
+          "classname": "com.parlor.transport.p2p.ResumableCredentialStoreTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "canonical_international_display_name_remains_resumable[iosSimulatorArm64]",
+          "classname": "com.parlor.transport.p2p.ResumableCredentialStoreTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "malformed_utf8_record_is_rejected_without_replacement_decoding[iosSimulatorArm64]",
+          "classname": "com.parlor.transport.p2p.ResumableCredentialStoreTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "invalid_credential_is_reported_as_corrupted_before_storage_is_mutated[iosSimulatorArm64]",
+          "classname": "com.parlor.transport.p2p.ResumableCredentialStoreTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "credential_read_propagates_cancellation_and_fatal_errors[iosSimulatorArm64]",
+          "classname": "com.parlor.transport.p2p.ResumableCredentialStoreTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "credential_write_propagates_cancellation_and_fatal_errors[iosSimulatorArm64]",
+          "classname": "com.parlor.transport.p2p.ResumableCredentialStoreTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "schema_one_record_without_membership_id_upgrades_to_offer_identity[iosSimulatorArm64]",
+          "classname": "com.parlor.transport.p2p.ResumableCredentialStoreTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "explicit_clear_permanently_removes_all_generations[iosSimulatorArm64]",
+          "classname": "com.parlor.transport.p2p.ResumableCredentialStoreTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "matching_generation_is_invalidated_transactionally_and_duplicate_is_idempotent[iosSimulatorArm64]",
+          "classname": "com.parlor.transport.p2p.ResumableCredentialStoreTest",
+          "time": "0.001",
+          "result": "PASS"
+        },
+        {
+          "name": "stale_generation_cannot_erase_a_committed_rotation_for_the_same_logical_room[iosSimulatorArm64]",
+          "classname": "com.parlor.transport.p2p.ResumableCredentialStoreTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "final_membership_invalidation_revokes_a_rotation_committed_before_room_handoff[iosSimulatorArm64]",
+          "classname": "com.parlor.transport.p2p.ResumableCredentialStoreTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "final_membership_invalidation_preserves_a_newer_unrelated_membership[iosSimulatorArm64]",
+          "classname": "com.parlor.transport.p2p.ResumableCredentialStoreTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "final_membership_invalidation_propagates_storage_cancellation[iosSimulatorArm64]",
+          "classname": "com.parlor.transport.p2p.ResumableCredentialStoreTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "old_room_cleanup_cannot_erase_a_different_logical_room_credential[iosSimulatorArm64]",
+          "classname": "com.parlor.transport.p2p.ResumableCredentialStoreTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "invalidating_active_generation_preserves_its_pending_rotation[iosSimulatorArm64]",
+          "classname": "com.parlor.transport.p2p.ResumableCredentialStoreTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "invalidation_and_rotation_are_one_serialized_read_modify_write_transaction[iosSimulatorArm64]",
+          "classname": "com.parlor.transport.p2p.ResumableCredentialStoreTest",
+          "time": "0.0",
+          "result": "PASS"
+        },
+        {
+          "name": "read_modify_write_transactions_are_serialized_without_losing_rotation_or_game_metadata[iosSimulatorArm64]",
+          "classname": "com.parlor.transport.p2p.ResumableCredentialStoreTest",
+          "time": "0.0",
+          "result": "PASS"
+        }
+      ],
+      "xml": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/shared/transport-p2p/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.transport.p2p.ResumableCredentialStoreTest.xml",
+        "bytes": 4622,
+        "sha256": "7b8080ee579568bfe2d4fcba422f7bfd70f7685ab94cc760f53328f1509b04a9"
+      }
+    }
+  ]
+}

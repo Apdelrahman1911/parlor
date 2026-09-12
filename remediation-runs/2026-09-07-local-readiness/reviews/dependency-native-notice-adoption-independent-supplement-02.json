@@ -1,0 +1,520 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/factory_review",
+  "originator": "/root/native_fix_review",
+  "recorded_at": "2026-09-07T15:18:52.580345+00:00",
+  "observed_checkout": {
+    "branch": "fix/local-readiness-2026-09-07",
+    "commit": "5d9f5f4c81ff51ee70922c876eefb91c6e669d56",
+    "tree": "3fbc4908ae41fab311e5e936e3ec8913199da7ad",
+    "tracked_diff_sha256": "a95f847c4c9a630166a071f07fa0cf6e79d40b84be0d589744779f80348a70b0",
+    "note": "Checkout contains parent-owned edits and pre-existing audit assets. This review only creates this independent report."
+  },
+  "decision": "APPROVED_ADDITIVE_INPUT_APPLICABILITY_FOR_BOTH_PREVIOUSLY_UNPROVEN_NOTICE_CANDIDATES_NOT_FINAL_LINK_OR_DELIVERY",
+  "supersedes_only": {
+    "previous_report": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/dependency-native-notice-adoption-independent-review-01.json",
+      "sha256": "274bde5a1428da3537c233f26a57794f929d4187cbe8d5d74a105afd22d96bb4",
+      "bytes": 49640
+    },
+    "section": "material_interpretation.unproven_candidates",
+    "reason": "New exact-version compiler inclusion source and four installed-native-regex source headers establish specific runtime/stdlib INPUT applicability. Original report and all other limits are preserved, not rewritten."
+  },
+  "corrections": [
+    {
+      "component": "Kotlin-libbacktrace-LICENSE.txt",
+      "conclusion": "ELIGIBLE_KOTLIN_NATIVE_APP_RUNTIME_INPUT_ATTRIBUTION",
+      "proof": [
+        "CompilerOutput.kt65-69 assigns runtime ownership to the compilation or cache producing stdlib Runtime.kt;100-112 collects selected native inputs.",
+        "CompilerOutput.kt130-170 unconditionally includes SOURCE_INFO_LIBBACKTRACE and LIBBACKTRACE in runtimeBitcodeFiles when target.supportsLibBacktrace(); sourceInfoType is not this input gate.",
+        "KonanTargetExtenstions.kt31-34 returns true for all Apple target families, including Parlor iosArm64/iosSimulatorArm64/iosX64.",
+        "CompilerOutput.kt196-203 parses inputs when that compilation/cache owns runtime;206-225 optimizes/links;240-251 invokes the dependency linker for produced framework paths."
+      ],
+      "counter_evidence": [
+        "NativeSecondStageCompilationConfig.kt229-232 defaults sourceInfoType to NOOP or debug CoreSymbolication. Inferring absent libbacktrace inputs from that runtime-selected behavior alone was incorrect.",
+        "Runtime ownership may reside in a compiled cache rather than the current top-level compile. This is not evidence the compiler omits the input entirely.",
+        "LTO or linker stripping may remove individual routines; this report does not establish final-image symbol survival."
+      ],
+      "license_scope": "Exact upstream BSD-style copyright/conditions/disclaimer permits documentation and/or other distribution materials for binary notices; no required Settings UI identified."
+    },
+    {
+      "component": "Kotlin-Unicode-LICENSE.txt",
+      "conclusion": "ELIGIBLE_LEGACY_NATIVE_STDLIB_REGEX_INPUT_ATTRIBUTION",
+      "proof": [
+        "All four installed nativeWasmMain regex source files are byte-identical to corresponding files at exact Kotlin2.4.10 commit5687445832cd835b4509b9fbc264cdf1a8201093.",
+        "Each complete source header25-85 carries1991-2005 Unicode copyright and1995-1999 database terms, content-equal to collected legacy notice after stripping source-comment prefixes/whitespace for comparison only.",
+        "Regex.kt86-99 constructs Pattern;144-158 dispatches matches to compiled pattern. Pattern.kt783-799 selects three range-set implementations;801-809 references both surrogate-character implementations.",
+        "First-party CaseSummaryValidator.kt50-51 constructs Regex and86-88/113-115 executes it in production commonMain source. This is dependency/API applicability, not proof ASCII patterns trigger every surrogate branch."
+      ],
+      "counter_evidence": [
+        "Modern generated Unicode category data has a separate provenance/license question; the old notice is not a substitute for HarfBuzz Unicode16 or all current Unicode data.",
+        "No claim every listed regex class survives final optimization or executes for Parlor accepted inputs.",
+        "Headers in actual regex implementation are stronger evidence than a standalone compiler-distribution license file."
+      ],
+      "license_scope": "Retain original notice with complete permission/database terms as an accurately named legacy Kotlin native regex input attribution; do not translate/modernize dates or claim an invented2024 grant."
+    }
+  ],
+  "static_verification": {
+    "result": "PASS_INPUT_BYTES_AND_REACHABLE_COMPILER_STDLIB_SOURCE_PROOF",
+    "actual_commands_kind": "/usr/bin/python3 -B standard-library read-only ZIP/hash/text operations, nl/sed/cat; no imported repository runners or executable dependency code",
+    "installed_source_zip": {
+      "path": "/Users/abdelrahman/.konan/kotlin-native-prebuilt-macos-aarch64-2.4.10/sources/kotlin-stdlib-native-sources.zip",
+      "sha256": "695be82e734df478ff7d5b679f272ca3105b2ad52b159f282cd29d54fa6572ce",
+      "bytes": 909888
+    },
+    "members": [
+      {
+        "source_zip": "/Users/abdelrahman/.konan/kotlin-native-prebuilt-macos-aarch64-2.4.10/sources/kotlin-stdlib-native-sources.zip",
+        "member": "commonMain/kotlin/text/regex/RegexExtensions.kt",
+        "file": "followup__stdlib__commonMain__kotlin__text__regex__RegexExtensions.kt.txt",
+        "sha256": "189672e4986db474c72507abed5e6f1326f325dc8a080c7a3edb9d249fb5470a",
+        "bytes": 1483,
+        "independently_byte_verified": true
+      },
+      {
+        "source_zip": "/Users/abdelrahman/.konan/kotlin-native-prebuilt-macos-aarch64-2.4.10/sources/kotlin-stdlib-native-sources.zip",
+        "member": "nativeWasmMain/kotlin/text/regex/Lexer.kt",
+        "file": "followup__stdlib__nativeWasmMain__kotlin__text__regex__Lexer.kt.txt",
+        "sha256": "4481e2de369fa642452375320182a33a23afdfb377761585cd8643ac1f51b072",
+        "bytes": 39366,
+        "independently_byte_verified": true
+      },
+      {
+        "source_zip": "/Users/abdelrahman/.konan/kotlin-native-prebuilt-macos-aarch64-2.4.10/sources/kotlin-stdlib-native-sources.zip",
+        "member": "nativeWasmMain/kotlin/text/regex/Pattern.kt",
+        "file": "followup__stdlib__nativeWasmMain__kotlin__text__regex__Pattern.kt.txt",
+        "sha256": "561ab0010bb25d239dbab5278149a527c2b5b482c11098fa3df880989ba7a708",
+        "bytes": 35392,
+        "independently_byte_verified": true
+      },
+      {
+        "source_zip": "/Users/abdelrahman/.konan/kotlin-native-prebuilt-macos-aarch64-2.4.10/sources/kotlin-stdlib-native-sources.zip",
+        "member": "nativeWasmMain/kotlin/text/regex/sets/CompositeRangeSet.kt",
+        "file": "followup__stdlib__nativeWasmMain__kotlin__text__regex__sets__CompositeRangeSet.kt.txt",
+        "sha256": "f80330cb2e86ed348f8ee5381e4edceada1bfb9a80060b5c1cf6e763703088aa",
+        "bytes": 6536,
+        "independently_byte_verified": true,
+        "upstream_exact_commit_file": {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/dependency-native-notices-01/followup__libraries__stdlib__native-wasm__src__kotlin__text__regex__sets__CompositeRangeSet.kt.txt",
+          "sha256": "f80330cb2e86ed348f8ee5381e4edceada1bfb9a80060b5c1cf6e763703088aa",
+          "bytes": 6536
+        },
+        "source_header_25_85_notice_equal_ignoring_comment_prefix_and_whitespace": true
+      },
+      {
+        "source_zip": "/Users/abdelrahman/.konan/kotlin-native-prebuilt-macos-aarch64-2.4.10/sources/kotlin-stdlib-native-sources.zip",
+        "member": "nativeWasmMain/kotlin/text/regex/sets/SupplementaryRangeSet.kt",
+        "file": "followup__stdlib__nativeWasmMain__kotlin__text__regex__sets__SupplementaryRangeSet.kt.txt",
+        "sha256": "81ed7387e65e446b5a4e8721fea68721f4dca753e4c96f1e02abed6ef7ebda22",
+        "bytes": 7172,
+        "independently_byte_verified": true,
+        "upstream_exact_commit_file": {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/dependency-native-notices-01/followup__libraries__stdlib__native-wasm__src__kotlin__text__regex__sets__SupplementaryRangeSet.kt.txt",
+          "sha256": "81ed7387e65e446b5a4e8721fea68721f4dca753e4c96f1e02abed6ef7ebda22",
+          "bytes": 7172
+        },
+        "source_header_25_85_notice_equal_ignoring_comment_prefix_and_whitespace": true
+      },
+      {
+        "source_zip": "/Users/abdelrahman/.konan/kotlin-native-prebuilt-macos-aarch64-2.4.10/sources/kotlin-stdlib-native-sources.zip",
+        "member": "nativeWasmMain/kotlin/text/regex/sets/SurrogateCharSets.kt",
+        "file": "followup__stdlib__nativeWasmMain__kotlin__text__regex__sets__SurrogateCharSets.kt.txt",
+        "sha256": "6c4ecd9d6dc2410784a58f9e907b6e4b97ec9b58d4ce57fc97928edbec0ace65",
+        "bytes": 9091,
+        "independently_byte_verified": true,
+        "upstream_exact_commit_file": {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/dependency-native-notices-01/followup__libraries__stdlib__native-wasm__src__kotlin__text__regex__sets__SurrogateCharSets.kt.txt",
+          "sha256": "6c4ecd9d6dc2410784a58f9e907b6e4b97ec9b58d4ce57fc97928edbec0ace65",
+          "bytes": 9091
+        },
+        "source_header_25_85_notice_equal_ignoring_comment_prefix_and_whitespace": true
+      },
+      {
+        "source_zip": "/Users/abdelrahman/.konan/kotlin-native-prebuilt-macos-aarch64-2.4.10/sources/kotlin-stdlib-native-sources.zip",
+        "member": "nativeWasmMain/kotlin/text/regex/sets/SurrogateRangeSet.kt",
+        "file": "followup__stdlib__nativeWasmMain__kotlin__text__regex__sets__SurrogateRangeSet.kt.txt",
+        "sha256": "ff7039d528938684ca96579fbc249aa51ad56853b3d6e45e997dd729d57e9875",
+        "bytes": 5942,
+        "independently_byte_verified": true,
+        "upstream_exact_commit_file": {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/dependency-native-notices-01/followup__libraries__stdlib__native-wasm__src__kotlin__text__regex__sets__SurrogateRangeSet.kt.txt",
+          "sha256": "ff7039d528938684ca96579fbc249aa51ad56853b3d6e45e997dd729d57e9875",
+          "bytes": 5942
+        },
+        "source_header_25_85_notice_equal_ignoring_comment_prefix_and_whitespace": true
+      }
+    ],
+    "upstream_references": [
+      {
+        "url": "https://raw.githubusercontent.com/JetBrains/kotlin/5687445832cd835b4509b9fbc264cdf1a8201093/kotlin-native/backend.native/compiler/ir/backend.native/src/org/jetbrains/kotlin/backend/konan/CompilerOutput.kt",
+        "accessed_at": "2026-09-07T15:06:48.512374+00:00",
+        "status": 200,
+        "file": "followup__backend__CompilerOutput.kt.txt",
+        "sha256": "dfa0c8833fe0e8b90b2f2fb6b95577eb036cb2c9245a48ecb8deede25a20f6ea",
+        "bytes": 12994,
+        "receipt": {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/dependency-native-notices-01/fetch-receipts-26.json",
+          "sha256": "d9806406df5554ce7a7920e80187ce4ec1ce9833249c0fd58d612717ffb95a4c",
+          "bytes": 462
+        }
+      },
+      {
+        "url": "https://raw.githubusercontent.com/JetBrains/kotlin/5687445832cd835b4509b9fbc264cdf1a8201093/libraries/stdlib/native-wasm/src/kotlin/text/regex/sets/CompositeRangeSet.kt",
+        "accessed_at": "2026-09-07T15:07:58.486393+00:00",
+        "status": 200,
+        "file": "followup__libraries__stdlib__native-wasm__src__kotlin__text__regex__sets__CompositeRangeSet.kt.txt",
+        "sha256": "f80330cb2e86ed348f8ee5381e4edceada1bfb9a80060b5c1cf6e763703088aa",
+        "bytes": 6536,
+        "receipt": {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/dependency-native-notices-01/fetch-receipts-27.json",
+          "sha256": "3724ce22cdb5d5116bd2102c57c4893cdf1ebf7b152e30e0e58c3f4642f7a40d",
+          "bytes": 1755
+        }
+      },
+      {
+        "url": "https://raw.githubusercontent.com/JetBrains/kotlin/5687445832cd835b4509b9fbc264cdf1a8201093/libraries/stdlib/native-wasm/src/kotlin/text/regex/sets/SurrogateRangeSet.kt",
+        "accessed_at": "2026-09-07T15:07:59.987698+00:00",
+        "status": 200,
+        "file": "followup__libraries__stdlib__native-wasm__src__kotlin__text__regex__sets__SurrogateRangeSet.kt.txt",
+        "sha256": "ff7039d528938684ca96579fbc249aa51ad56853b3d6e45e997dd729d57e9875",
+        "bytes": 5942,
+        "receipt": {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/dependency-native-notices-01/fetch-receipts-27.json",
+          "sha256": "3724ce22cdb5d5116bd2102c57c4893cdf1ebf7b152e30e0e58c3f4642f7a40d",
+          "bytes": 1755
+        }
+      },
+      {
+        "url": "https://raw.githubusercontent.com/JetBrains/kotlin/5687445832cd835b4509b9fbc264cdf1a8201093/native/utils/src/org/jetbrains/kotlin/konan/target/KonanTargetExtenstions.kt",
+        "accessed_at": "2026-09-07T15:08:51.021279+00:00",
+        "status": 200,
+        "file": "followup__native__utils__src__org__jetbrains__kotlin__konan__target__KonanTargetExtenstions.kt.txt",
+        "sha256": "e0cfb822ff1ddbb80aaaaff6cbb6a33127dbb190cd435ab0ea518f778f416d6b",
+        "bytes": 4181,
+        "receipt": {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/dependency-native-notices-01/fetch-receipts-28.json",
+          "sha256": "3b5f98d912ad6d1e3e46c93f254c439ba339b77c3de5beaf892b02b7235cd5fc",
+          "bytes": 483
+        }
+      },
+      {
+        "url": "https://raw.githubusercontent.com/JetBrains/kotlin/5687445832cd835b4509b9fbc264cdf1a8201093/libraries/stdlib/native-wasm/src/kotlin/text/regex/sets/SupplementaryRangeSet.kt",
+        "accessed_at": "2026-09-07T15:11:37.044357+00:00",
+        "status": 200,
+        "file": "followup__libraries__stdlib__native-wasm__src__kotlin__text__regex__sets__SupplementaryRangeSet.kt.txt",
+        "bytes": 7172,
+        "sha256": "81ed7387e65e446b5a4e8721fea68721f4dca753e4c96f1e02abed6ef7ebda22",
+        "receipt": {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/dependency-native-notices-01/fetch-receipts-29.json",
+          "sha256": "be7ba1c63b90cecc13304c0640b1bae086776dbdfa0b1f67620b57e8d1a36a33",
+          "bytes": 2156
+        }
+      },
+      {
+        "url": "https://raw.githubusercontent.com/JetBrains/kotlin/5687445832cd835b4509b9fbc264cdf1a8201093/libraries/stdlib/native-wasm/src/kotlin/text/regex/sets/SurrogateCharSets.kt",
+        "accessed_at": "2026-09-07T15:11:37.503658+00:00",
+        "status": 200,
+        "file": "followup__libraries__stdlib__native-wasm__src__kotlin__text__regex__sets__SurrogateCharSets.kt.txt",
+        "bytes": 9091,
+        "sha256": "6c4ecd9d6dc2410784a58f9e907b6e4b97ec9b58d4ce57fc97928edbec0ace65",
+        "receipt": {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/dependency-native-notices-01/fetch-receipts-29.json",
+          "sha256": "be7ba1c63b90cecc13304c0640b1bae086776dbdfa0b1f67620b57e8d1a36a33",
+          "bytes": 2156
+        }
+      }
+    ],
+    "failed_research": "Initial wrong-path404s in earlier fetch receipts remain preserved and are not treated as successful evidence."
+  },
+  "coverage": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/dependency-native-notices-01/followup__backend__CompilerOutput.kt.txt",
+      "sha256": "dfa0c8833fe0e8b90b2f2fb6b95577eb036cb2c9245a48ecb8deede25a20f6ea",
+      "bytes": 12994,
+      "line_count": 285,
+      "reviewed_line_ranges": [
+        [
+          1,
+          285
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "method": "TEXT_READ"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/dependency-native-notices-01/followup__native__utils__src__org__jetbrains__kotlin__konan__target__KonanTargetExtenstions.kt.txt",
+      "sha256": "e0cfb822ff1ddbb80aaaaff6cbb6a33127dbb190cd435ab0ea518f778f416d6b",
+      "bytes": 4181,
+      "line_count": 103,
+      "reviewed_line_ranges": [
+        [
+          1,
+          103
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "method": "TEXT_READ"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/dependency-native-notices-01/kotlin-native-legacy-unicode-extracted-source-receipt-01.json",
+      "sha256": "debd7d84010f2bd30cbe822f637de701f778d1bda44171fe71fd1ec70cba37c8",
+      "bytes": 3241,
+      "line_count": 56,
+      "reviewed_line_ranges": [
+        [
+          1,
+          56
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "method": "TEXT_READ"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/dependency-native-notices-01/draft-notice-inputs-01/Kotlin-libbacktrace-LICENSE.txt",
+      "sha256": "660729a7713d03d375b81ec8126f9c801b11d1eacefbe9685185d4c6a24e79cf",
+      "bytes": 1470,
+      "line_count": 29,
+      "reviewed_line_ranges": [
+        [
+          1,
+          29
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "method": "TEXT_READ"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/dependency-native-notices-01/draft-notice-inputs-01/Kotlin-Unicode-LICENSE.txt",
+      "sha256": "1c3ddd6cc94ad4357e76a589325dd46520850348770536ef66bf8f2b56c77463",
+      "bytes": 3397,
+      "line_count": 61,
+      "reviewed_line_ranges": [
+        [
+          1,
+          61
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "method": "TEXT_READ"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/content/src/commonMain/kotlin/com/parlor/content/validation/CaseSummaryValidator.kt",
+      "sha256": "07a43b454cd16a46bb38bb735699cf70e574649d03595d69bc41e77f0d7a00d4",
+      "bytes": 7822,
+      "line_count": 182,
+      "reviewed_line_ranges": [
+        [
+          1,
+          182
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "method": "TEXT_READ"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/dependency-native-notices-01/followup__stdlib__nativeWasmMain__kotlin__text__regex__sets__CompositeRangeSet.kt.txt",
+      "sha256": "f80330cb2e86ed348f8ee5381e4edceada1bfb9a80060b5c1cf6e763703088aa",
+      "bytes": 6536,
+      "line_count": 136,
+      "reviewed_line_ranges": [
+        [
+          1,
+          136
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "method": "TEXT_READ"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/dependency-native-notices-01/followup__stdlib__nativeWasmMain__kotlin__text__regex__sets__SupplementaryRangeSet.kt.txt",
+      "sha256": "81ed7387e65e446b5a4e8721fea68721f4dca753e4c96f1e02abed6ef7ebda22",
+      "bytes": 7172,
+      "line_count": 163,
+      "reviewed_line_ranges": [
+        [
+          1,
+          163
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "method": "TEXT_READ"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/dependency-native-notices-01/followup__stdlib__nativeWasmMain__kotlin__text__regex__sets__SurrogateCharSets.kt.txt",
+      "sha256": "6c4ecd9d6dc2410784a58f9e907b6e4b97ec9b58d4ce57fc97928edbec0ace65",
+      "bytes": 9091,
+      "line_count": 217,
+      "reviewed_line_ranges": [
+        [
+          1,
+          217
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "method": "TEXT_READ"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/dependency-native-notices-01/followup__stdlib__nativeWasmMain__kotlin__text__regex__sets__SurrogateRangeSet.kt.txt",
+      "sha256": "ff7039d528938684ca96579fbc249aa51ad56853b3d6e45e997dd729d57e9875",
+      "bytes": 5942,
+      "line_count": 123,
+      "reviewed_line_ranges": [
+        [
+          1,
+          123
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "method": "TEXT_READ"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/dependency-native-notices-01/fetch-receipts-24.json",
+      "sha256": "7a3e8019605bfd70ae153c477197fc22e8db5c262826557fdabbecb319d6d8e0",
+      "bytes": 2317,
+      "line_count": 42,
+      "reviewed_line_ranges": [
+        [
+          1,
+          42
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "method": "TEXT_READ"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/dependency-native-notices-01/fetch-receipts-25.json",
+      "sha256": "2301ccd784d95e70144e8bb8435c74fbf45463f73106b0ed07081ef10a2b40f0",
+      "bytes": 1859,
+      "line_count": 34,
+      "reviewed_line_ranges": [
+        [
+          1,
+          34
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "method": "TEXT_READ"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/dependency-native-notices-01/fetch-receipts-26.json",
+      "sha256": "d9806406df5554ce7a7920e80187ce4ec1ce9833249c0fd58d612717ffb95a4c",
+      "bytes": 462,
+      "line_count": 10,
+      "reviewed_line_ranges": [
+        [
+          1,
+          10
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "method": "TEXT_READ"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/dependency-native-notices-01/fetch-receipts-27.json",
+      "sha256": "3724ce22cdb5d5116bd2102c57c4893cdf1ebf7b152e30e0e58c3f4642f7a40d",
+      "bytes": 1755,
+      "line_count": 31,
+      "reviewed_line_ranges": [
+        [
+          1,
+          31
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "method": "TEXT_READ"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/dependency-native-notices-01/fetch-receipts-28.json",
+      "sha256": "3b5f98d912ad6d1e3e46c93f254c439ba339b77c3de5beaf892b02b7235cd5fc",
+      "bytes": 483,
+      "line_count": 10,
+      "reviewed_line_ranges": [
+        [
+          1,
+          10
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "method": "TEXT_READ"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/dependency-native-notices-01/fetch-receipts-29.json",
+      "sha256": "be7ba1c63b90cecc13304c0640b1bae086776dbdfa0b1f67620b57e8d1a36a33",
+      "bytes": 2156,
+      "line_count": 42,
+      "reviewed_line_ranges": [
+        [
+          1,
+          42
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "method": "TEXT_READ"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/dependency-native-notices-01/kotlin-extra__NativeSecondStageCompilationConfig.kt.txt",
+      "sha256": "38462eaef79e505501bec7f3aa3c3a4d2a7b5086039cd2661c0d3863f31fc7ae",
+      "bytes": 30924,
+      "line_count": 706,
+      "reviewed_line_ranges": [
+        [
+          211,
+          243
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "method": "TEXT_READ"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/dependency-native-notices-01/followup__stdlib__nativeWasmMain__kotlin__text__regex__Pattern.kt.txt",
+      "sha256": "561ab0010bb25d239dbab5278149a527c2b5b482c11098fa3df880989ba7a708",
+      "bytes": 35392,
+      "line_count": 883,
+      "reviewed_line_ranges": [
+        [
+          1,
+          80
+        ],
+        [
+          190,
+          270
+        ],
+        [
+          550,
+          610
+        ],
+        [
+          777,
+          813
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "method": "TEXT_READ"
+    },
+    {
+      "path": "/Users/abdelrahman/.konan/kotlin-native-prebuilt-macos-aarch64-2.4.10/sources/kotlin-stdlib-native-sources.zip!/nativeWasmMain/kotlin/text/Regex.kt",
+      "sha256": "740bc470f92b7ce5edcce9232d7f628023ab36b96cad9918d607737b9f662a91",
+      "bytes": 21970,
+      "line_count": 484,
+      "reviewed_line_ranges": [
+        [
+          1,
+          200
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "method": "ZIP_MEMBER_TEXT_READ_NO_EXTRACTION"
+    }
+  ],
+  "unchanged_limits": [
+    "Does not preapprove actual resource/provenance/validator code; independently inspect that diff when created.",
+    "Both notices can join the25-text resource-only supplement; final source and real AAB/iOSapp exact-byte/package verification still required.",
+    "No exhaustive per-file third-party legal audit, lawyer review, publisher patent/commercial acceptance, Store signing/publication approval, or production-readiness finding.",
+    "No final-link survival, runtime or physical-device evidence is fabricated. No new Settings/navigation flow required by the reviewed alternative-distribution notice clauses."
+  ],
+  "cleanup": {
+    "reviewer_owned_builds_or_workers_started": false,
+    "reviewer_generated_build_outputs": [],
+    "actions": "Only this report created. No application/source edits, no deletion, no process stop; parent retains sole build lane."
+  }
+}

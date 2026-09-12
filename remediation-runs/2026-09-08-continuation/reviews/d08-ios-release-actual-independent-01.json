@@ -1,0 +1,123 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/ci_ios_release",
+  "status": "SCOPED_PASS_RELEASE_BUILD_ANALYSIS_PACKAGE_CLEANUP_SEPARATE",
+  "findings": [],
+  "binding": {
+    "run_id": 34553741387,
+    "run_attempt": 1,
+    "job_id": 103121858148,
+    "job_name": "iOS release frameworks and Swift wrapper",
+    "job_conclusion": "success",
+    "source_commit": "59a384441f44844a79ae62ea8ee68d0c9e1e5878",
+    "source_tree": "9f06627b0dd047394de6f52adbc494e334651c74",
+    "packet": "remediation-runs/2026-09-08-continuation/actions/34553741387/",
+    "collector_receipt_sha256": "0e4be955e1fc7445e74e2d23135feb19aca62f700db390fdc496efa438f4884c",
+    "source_binding": "Run/attempt/job API, checkout log, commit.txt, fresh ownership and package source identities agree."
+  },
+  "toolchain": {
+    "host": "macOS 15.7.9/24G830 arm64",
+    "java": "Temurin 21.0.12+101.0",
+    "xcode": "26.3",
+    "xcode_build": "17C529",
+    "developer_dir": "/Applications/Xcode_26.3.app/Contents/Developer",
+    "iphoneos_sdk": "26.2",
+    "iphonesimulator_sdk": "26.2"
+  },
+  "apple_gate": {
+    "command": "./gradlew productionAppleCheck --dependency-verification=strict --no-daemon --stacktrace --console=plain",
+    "result": "BUILD SUCCESSFUL",
+    "duration": "58m 13s",
+    "actionable_tasks": 148,
+    "executed": 148,
+    "release_links_executed_uncached_in_serial_order": [
+      ":composeApp:linkReleaseFrameworkIosArm64",
+      ":composeApp:linkReleaseFrameworkIosSimulatorArm64",
+      ":composeApp:linkReleaseFrameworkIosX64"
+    ],
+    "productionAppleStaticAnalysis_executed": true,
+    "active_detektMetadataIosMain_modules": [
+      "composeApp",
+      "shared/design-system",
+      "shared/networking",
+      "shared/transport-p2p"
+    ],
+    "current_xml_reports": 4,
+    "current_sarif_reports": 4,
+    "findings": 0,
+    "other_detekt_no_source_tasks": 113,
+    "historical_reports_excluded": true
+  },
+  "unsigned_wrapper": {
+    "result": "BUILD SUCCEEDED",
+    "configuration": "Release",
+    "destination": "generic/platform=iOS Simulator",
+    "ARCHS": "arm64",
+    "ONLY_ACTIVE_ARCH": "YES",
+    "CODE_SIGNING_ALLOWED": "NO",
+    "CODE_SIGNING_REQUIRED": "NO",
+    "real_resource_sync_and_embed_tasks_executed": true,
+    "ide_override_bypass_used": false,
+    "simulator_release_framework_relinked": true,
+    "embedded_gradle": {
+      "result": "BUILD SUCCESSFUL",
+      "actionable_tasks": 138,
+      "executed": 59,
+      "up_to_date": 79
+    },
+    "retained_stdout_lines_reconciled_in_order_with_actions_log": 1228
+  },
+  "package": {
+    "hosted_inspection_status": "PASS",
+    "file_count": 56,
+    "total_bytes": 58477207,
+    "bundle_id": "com.parlor.app",
+    "version": "1.0.0",
+    "build": "1",
+    "app_minimum_os": "16.0",
+    "localizations": [
+      "en",
+      "ar"
+    ],
+    "native_binaries": "Both Parlor and Frameworks/ComposeApp.framework/ComposeApp are arm64 IOSSIMULATOR Mach-O; framework minimum OS15.0 remains valid.",
+    "main_executable_sha256": "1dd0790db2dc8819c76524574e7811bba2e3079d8f7509706320ace41b64c8c0",
+    "main_uuid": "ca2fdde0-1042-3c5d-bab1-fda614d8b45b",
+    "retained_dsym_uuid_matches_main": true,
+    "source_binding": {
+      "clean_diff": true,
+      "untracked_included": [],
+      "source_unchanged_during_inspection": true,
+      "manifest_entries": 844,
+      "source_manifest_sha256": "ba75e001a3ffeb32f59971582bb90f57d82f411c36ce05d3ae1e8c7935164384",
+      "explicit_frozen_input_files_compared": 47
+    },
+    "raw_resource_matches": {
+      "case_jsons": 7,
+      "fonts": 2,
+      "exact_source_package_lengths_and_hashes_agree": true
+    },
+    "notices": {
+      "status": "PASS",
+      "resources": 26,
+      "total_bytes": 99515,
+      "source_package_inventory_lengths_and_hashes_agree": true
+    },
+    "privacy_version_policy_inspector_and_execution_inputs_match_frozen_source": true
+  },
+  "evidence_sha256": {
+    "ios-release-verification.zip": "3c776d1b2d9379fad0cca6bd59817f4ded777dfcf3dc7494fc62a469c1b57907",
+    "run-attempt-1-logs.zip": "5e50d2b0a4be5cc697b81fc4730f2f2b961114f07d38c3ac184174b8c4e2b0b8",
+    "ios-release-artifact-inventory.json": "9127b73a1f9860e7bbf835f28f56cc69925352f37f946979fe44f646474c80a2",
+    "ios-release-notices.json": "c93389a737fd210660da444522e0d126e06f51c18106b4a6ec2d2563f98d59f7",
+    "aggregate_step_log": "b5d3420e6173a838f497dd162d7361920b018667ed46c1c6174259997301e2dc",
+    "wrapper_step_log": "94876319c1aa293e6d7506312268cc912ff8a92bd68ded636d267ec873294c5b"
+  },
+  "limits": [
+    "Cleanup verdict is separately owned by ci_cleanup_review; this report does not replace it.",
+    "No runtime tests or Release launch claimed. Disabled iosX64Test is not a runtime pass; NO-SOURCE and non-gate skips are not testcase results.",
+    "Complete .app was not retained or locally rehashed. Package conclusions use current hosted inspection, build logs and retained dSYM.",
+    "Unsigned simulator evidence does not prove signing, Store, physical-device, publication or legal readiness. The com.parlor.app Store-identity collision remains blocked.",
+    "D08 overall conclusion is failure, not qualification PASS. No evidence from PD06 or historical runs substitutes for D08."
+  ],
+  "activity": "Completed bounded, read-only actual-evidence review; no builds, network, source edits or full log extraction. This sole JSON persistence records the completed review without further audit or rechecks."
+}

@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "kind": "ONE_NONBUILDING_OS_RECOVERY_PREFLIGHT",
+  "created_at": "2026-09-10T08:53:15.273824+00:00",
+  "coordinator": "/root",
+  "status": "AUTHORIZED_NONBUILDING_FRESH_BINDING_ONLY_AFTER_REVIEWED_SOURCE_AND_LOCAL_CONTROLS",
+  "repository": "Apdelrahman1911/parlor",
+  "branch": "fix/local-readiness-2026-09-07",
+  "frozen_source_sha": "75c104734373703570a307de9c7a53d291bc2718",
+  "tree": "4d5b660c5f508a3eb8d01cd9203f2503570dbb18",
+  "inputs": {
+    "verification_scope": "native-preflight",
+    "native_selection": "os-recovery-only",
+    "frozen_source_sha": "75c104734373703570a307de9c7a53d291bc2718"
+  },
+  "command": [
+    "gh",
+    "workflow",
+    "run",
+    "production-verification.yml",
+    "--repo",
+    "Apdelrahman1911/parlor",
+    "--ref",
+    "fix/local-readiness-2026-09-07",
+    "-f",
+    "verification_scope=native-preflight",
+    "-f",
+    "native_selection=os-recovery-only",
+    "-f",
+    "frozen_source_sha=75c104734373703570a307de9c7a53d291bc2718"
+  ],
+  "maximum_dispatches": 1,
+  "source_freeze": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/os39-source-freeze-01.json",
+    "bytes": 3253,
+    "sha256": "872050ef664cc81f21578ac07a628a227454faf08a1bd8f61d71410f677de1b9"
+  },
+  "source_and_actual_local_review": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/os-recovery-controls-linux-actual-independent-01.json",
+    "bytes": 11494,
+    "sha256": "15bbaa2374226a099aa213325c4f779aefd10e9fee716b7358ac49f7956b6cda"
+  },
+  "expected_preflight_files": [
+    "preflight.json",
+    "ios-readiness-source-ci.json",
+    "os_recovery-controls.json"
+  ],
+  "authorization_boundary": "Nonbuilding binding generation only. Root verifies exact local/remote/workflow/no-overlap before one dispatch. Actual fresh OS-only source/control/platform/package and exact OS39 request require separate independent review before any native build/test. Not runtime admission, old B reuse, strict protection or readiness proof."
+}

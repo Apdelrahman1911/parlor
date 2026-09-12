@@ -1,0 +1,145 @@
+{
+  "schema_version": 1,
+  "kind": "BOUNDED_EXECUTION_APPROVAL_NOT_RUNTIME_PASS",
+  "at": "2026-09-08T06:32:20.756978+00:00",
+  "reviewer": "/root/release_fix_review",
+  "executor": "/root",
+  "implementation_author": "/root/native_fix_review",
+  "classification": "APPROVED_ONE_ROOT_OWNED_NORMAL_NATIVE15_ADHOC_CYCLE",
+  "approved_command": [
+    "/usr/bin/python3",
+    "-B",
+    "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
+    "ios-readiness-15",
+    "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/ios-readiness-source-14.json",
+    "5e0cedc613aca90bf3b0baeabc6ec178d9364c3afda6588c4219ba3c3fc46e5c",
+    "--simulator-signing=adhoc"
+  ],
+  "source": {
+    "commit": "8b9e3b0cdfdab82e7cff3ad8135d0eae9a0b8ca3",
+    "tree": "c1e92b5e00ab64a293c4d7f9c9b5e2b85887be88",
+    "branch": "fix/local-readiness-2026-09-07",
+    "tracked_status": "M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/README.md\n M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/external_image_diagnostics.py\n M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/external_image_provenance.py\n M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_control_tests.py\n M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
+    "diff_sha256": "8e5e873e93e89aa6e077d78e0263018d567117b3e14e59148a9447062a336b9d",
+    "source_manifest_sha256": "c4d3387a95ff1a4462071147afe92411f5a08ee8b10f78852a59494c8d3e4420",
+    "binding": {
+      "path": "remediation-runs/2026-09-07-local-readiness/ios-readiness-source-14.json",
+      "sha256": "922a1a7e6e2eeec866e81d4080d0ff52582cfaafa297780dbbea68c9c0398db3"
+    },
+    "source_rows_independently_rehashed": 800,
+    "source_bytes": 13460421,
+    "copy_selection_independently_reconciled": 740,
+    "binding_equals_control_cycle_source_before_and_after": true
+  },
+  "controls": {
+    "manifest": {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/normal-source14-control-manifest-01.json",
+      "sha256": "d36c6d4fa151b7bddd54310445a85cb94b0cad1e1db4f59bed1320df9984133e"
+    },
+    "sha256": "5e0cedc613aca90bf3b0baeabc6ec178d9364c3afda6588c4219ba3c3fc46e5c",
+    "files_independently_rehashed": 84,
+    "actual_directory_selection_matches_manifest": true,
+    "matches_executed_83_controls_plus_source_binding": true,
+    "executed_imports": 32,
+    "all_executed_imports_bound": true,
+    "root_independent_diff_review": {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/normal-star-vmmap-root-independent-01.json",
+      "sha256": "1e161e4fb8223ee49118735cec410acfaf30677ebf0b9879f6ce8015c523ff23"
+    }
+  },
+  "executed_controls": {
+    "receipt": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/normal-star-vmmap-controls-01/receipt.json",
+      "sha256": "9cafa5c965043354f426ddff30dccb35fb7d7839fab7cbdfcfa379b4018452ad"
+    },
+    "log": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/normal-star-vmmap-controls-01/gradle.log",
+      "sha256": "ff17ecf51aff7fc3f1d3fea5e41457779d32fe16c2fdc07ae5ac83240a72c64e"
+    },
+    "tests": 177,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "raw_unique_successes_equal_current_AST_declared_and_discovered": true,
+    "class_counts": {
+      "test_header_diagnostics.HeaderDiagnosticTests": 8,
+      "test_image_diagnostic_orchestration.ImageDiagnosticOrchestrationTests": 18,
+      "test_image_diagnostics.ImageDiagnosticTests": 25,
+      "test_normal_launch_controls.CopiedSourceTests": 6,
+      "test_normal_launch_controls.ExternalProvenanceTests": 15,
+      "test_normal_launch_controls.MarkerTests": 14,
+      "test_normal_launch_controls.RunnerGuards": 29,
+      "test_normal_launch_controls.XCTestTests": 14,
+      "test_owned_tool_paths.DriverContextTests": 5,
+      "test_owned_tool_paths.OwnedToolPathTests": 16,
+      "test_sample_literal_star.SampleLiteralStarTests": 7,
+      "test_vmmap_command_failure.VmmapCommandFailureTests": 7,
+      "test_xcode26_repetitions.ObservedXcodeRepetitionTests": 13
+    },
+    "new_sample_star_methods": 7,
+    "new_vmmap_failure_methods": 7,
+    "original163_retained": true,
+    "source_and_control_before_after_equal": true
+  },
+  "bounded_source_reopen": {
+    "driver": "run_control_tests.py1-65",
+    "new_tests": [
+      "test_sample_literal_star.py1-118",
+      "test_vmmap_command_failure.py1-161"
+    ],
+    "changed_paths": [
+      "external_image_provenance.py1-185",
+      "external_image_diagnostics.py1-90,175-237",
+      "run_normal_ios_launch.py1-125,160-280,555-655,740-827"
+    ],
+    "copy_binding": [
+      "bind_source.py1-59",
+      "copied_sources.py1-76"
+    ],
+    "scope": "Fresh execution/discovery/current-byte binding reconciliation plus changed boundaries; root separately reviewed full seven-file patch. Not a new audit of all inherited source."
+  },
+  "reasoning": [
+    "Literal-star form is a finite full-string installed-artifact alias restricted to sample-table rows; header/vmmap forms retain separate exact/USER-only policy and unchanged inventory/lifetime/UUID/address checks. Tests reject foreign usernames, container changes, copied-build aliasing, collisions and malformed/repeated intervals.",
+    "Completed nonzero vmmap only adds bounded closed-vocabulary failure metadata from exact owned regular single-link output; return status stays nonzero. Timeout/interruption tests do not create completed-command evidence. Unknown native words are hashed, not stored.",
+    "Eight XCTest launches and a separate ninth owned observation are future runtime, not established by177 synthetic controls. A diagnostic record cannot grant provenance PASS."
+  ],
+  "cleanup": {
+    "control_cycle_stop": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/normal-star-vmmap-controls-01/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    "stop_exit_code": 0,
+    "cycle_cleanup_completed_at": "2026-09-08T06:24:48.667157+00:00",
+    "reported_remaining_workers": [],
+    "reported_remaining_outputs": [],
+    "reported_cleanup_errors": [],
+    "exact_paths_lstat_absent": [
+      "remediation-runs/2026-09-07-local-readiness/evidence/normal-star-vmmap-controls-01/scratch",
+      "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-15",
+      "build",
+      "composeApp/build",
+      "build-logic/build",
+      "build-logic/convention/build",
+      "shared/core/build",
+      "shared/networking/build",
+      "shared/content/build",
+      "shared/storage/build",
+      "shared/transport-p2p/build",
+      "shared/networking-testing/build",
+      "shared/engine/build",
+      "shared/design-system/build",
+      "shared/engine-testing/build",
+      "shared/session/build",
+      "game-modes/whodunit/build",
+      "game-modes/mafia/build"
+    ],
+    "reviewer_process_actions": "No builds/tests/module execution/OS tooling/network/Git/process-control operations. Only stdlib reads/hash/AST and this additive evidence file."
+  },
+  "conditions": [
+    "Root rechecks applicable host/toolchain/process availability and owns the sole lane; use exact fresh ios-readiness-15 destination and fresh owned simulator/copy.",
+    "Freeze all800source and84control inputs, including the five intentionally dirty tracked normal controls and two new hash-bound test files. No source/control edits or competing build/native lane until finalization.",
+    "Preserve actual runtime, provenance, notice, source-equality and cleanup failures separately; immediate Gradle stop and exact owned worker/simulator/temporary cleanup remain mandatory even on failure.",
+    "Ad-hoc Debug simulator only. This neither authorizes Store signing/publication nor proves qualified-Xcode, physical-device, mapped-page hashes, L08legacy recovery success or final repository readiness."
+  ],
+  "reviewer_reader_correction": "An initial read-only log parser assumed method names repeated inside unittest parentheses; the actual system-Python format is method (module.Class). Corrected reader composes both tokens and reconciles all177 exact IDs; no test rerun or application change occurred."
+}

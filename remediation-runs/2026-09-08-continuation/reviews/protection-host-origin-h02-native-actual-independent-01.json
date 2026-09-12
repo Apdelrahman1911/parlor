@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/storage_boundary",
+  "status": "ACCEPT_ACTUAL_HOST_ORIGIN_OBSERVATIONS_NOT_PROTECTION_PASS",
+  "run_id": 34564001336,
+  "run_attempt": 1,
+  "source_sha": "22ea6bebb95317e148d89b03c40cbb7efc9d36a4",
+  "control_sha256": "91e18dec83251b4e040fc9f706d652a660bdb8d46414ef08321589e8c575d5b0",
+  "evidence_root": "actions/34564001336/main",
+  "hashes": {
+    "host-setter.stdout.json": "d6854f702329bdbc10b62bce0ea5cb7d87717640e7c3886a0f7ea0dbaa5196ac",
+    "host-setter-report.json": "59ff42a2ba9d483790e7cba177a0d4f62120fa300bd3026870148f406b1a4bed",
+    "host-setter-bindings.json": "ddbe4daf6bd3320dcceb6f46e98e450beff4e00041ff850866536ab6266b9ee6",
+    "OwnedHostSetterContext.h": "88197e4a7f02529083d3973972989caad55e635d178327a06d5457e010eeaed7",
+    "state.json": "206a6c71a02faa2bc0e83a88e0678dc38d44066984c7249017839ee0dd592dcf",
+    "request.json": "2cc0cfb3a284fb9f2a5206d0973c9a1ea8eabd0a597a93702fb4a8570fafad70"
+  },
+  "actual": {
+    "scope": "HOST_ORIGIN_ONLY",
+    "platform": "Native arm64 macOS15.7.9/24G830; Xcode26.3/17C529 and macOS SDK26.2, corroborated by raw version outputs.",
+    "capture": {
+      "collection_status": "PASS",
+      "normalized_status": "CAPTURED_HOST_ORIGIN_SETTER_NOT_PROTECTION_PASS",
+      "process_id": 2738,
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "recorded_elapsed_seconds": 0.009,
+      "driver_timeout_seconds": 30,
+      "stdout_bytes": 9502,
+      "stderr_bytes": 0
+    },
+    "operation": {
+      "id": "host-origin-fm-set",
+      "receiver_class": "NSFileManager",
+      "selector": "setAttributes:ofItemAtPath:error:",
+      "requested_protection": "complete",
+      "returned": false,
+      "native_error": {"present": true, "domain": "cocoa", "code": 256},
+      "interpretation": "The one public setter failed; the successful collection/process exit does not report successful protection mutation. The returned field is an actual JSON Boolean, not numeric0."
+    },
+    "identity": {"device": 16777229, "inode": 3535393, "uid": 501, "mode": 33152, "links": 1, "size": 40, "type": "regular"},
+    "fixture_root": {"device": 16777229, "inode": 3535392},
+    "before_and_after": {
+      "whole_sample_objects_equal": true,
+      "filemanager": "Both dictionaries and protection keys present; until-first-authentication; no NSError.",
+      "fresh_url": "Both protection keys present; until-first-authentication; no NSError; volume support unsupported.",
+      "fcntl": "Both public getter command63 results are raw class3, errno0.",
+      "attrlist": "Both return0/errno0, length28, attribute_set_bytes20, returned/requested common mask3221225472 including data-protection bit1073741824; class3 is actually returned.",
+      "filesystem": "Both fstatfs observations succeed on APFS, fsid[16777229,26], flags76582912; MNT_CPROTECT bit128 absent.",
+      "custody": "Two samples, each collectionPASS/descriptor closed. All ten ordered fm/url/fcntl/attrlist/filesystem reads bracket the exact same seven-field descriptor/path identity. No replacement or metadata transition was observed."
+    }
+  },
+  "identity_and_source_joins": {
+    "context": "Raw binding equals request and host-setter-bindings five-field binding, including run_token b00c1219c8ac48509649fcf121af7ca6. Retained compiled header reconstructs that binding, fixture-root device/inode and full target identity; its root is the invoked helper's resources/host-fixtures child.",
+    "source": "Recorded HostSetterProbe.m input hash be3f272644ea1284552f6622ed7aa02e035548802bfa5e78908e296e234c2b9b matches the independently approved native source and request control. Four input hash/stat witnesses match before compile and after execution. Original sampler pin3f4f49af81d396a07beabeed45be649314495fd286327baa931aa5eb2dcca137 and recorded host-copy hash7656cc25a7e2d9ab3a6715713acf177f5c3f02855ac24fc2757df663ecc77d50 remain explicit.",
+    "binary": "One host-setter compile, ad-hoc sign, strict signature verification and UUID query each exited0/reaped. Built UUID575678e6-131a-4043-95e6-99d6f63e4a85 equals raw main before/after, platforms[1]. Recorded binary SHA2562b26416612a4b040fb902d15ac9a8f324a0d6a3fa62c01e34ef39f7d249496b9 and complete file identity are unchanged after execution; binary bytes are not retained for an independent rehash.",
+    "methods": "Setter Foundation UUID39be75ac-350f-3b8c-9c10-8b2b5321ce8e/offset456112 is identical before/after. FM getter has that same Foundation UUID/offset211688 throughout; NSURL getter CoreFoundation UUIDbdc82415-a029-3463-ac49-1a792208ce00/offset520524 throughout. Both system images have ordered platforms[1,6]. All four before/after getter witnesses per method agree; these identify entry points, not their internal calls.",
+    "raw_normalized_equality": "The normalized before/operation/after objects exactly equal raw stdout objects and its identity equals the raw sample identity. Request/state/bindings fixture identities agree."
+  },
+  "conclusions": [
+    "This hosted native macOS process failed to install observable Complete metadata on a fresh host-origin public fixture. Its default-before and after readings are the same non-Complete values; Simulator execution or a Simulator-created inode is not required for this particular failure.",
+    "The host FileManager getter returns a recognized non-Complete value here, not a missing key. Getter visibility and setter effectiveness are distinct questions; neither API success elsewhere nor class3/capability labels can substitute for strict Complete equality.",
+    "No production writer defect or evidence-supported shipping patch is established. This is not the earlier paired None inode, a production snapshot, a Simulator-origin same-inode setter result or physical-device enforcement evidence. A37/APP04 strict results are unchanged; no new original strict comparisons ran."
+  ],
+  "smallest_remaining_causal_gap": "The retained outer NSError is only Cocoa256. No underlying NSError domain/code or failing internal operation is captured, so this evidence cannot distinguish a Foundation/platform-policy rejection from a filesystem/kernel refusal. A bounded public underlying-error observation, if available, would narrow this exact failure; one must not infer a POSIX errno from Cocoa256 or assume such a nested error exists. No new execution or code change is authorized by this review.",
+  "limits": "Identity checks are bracketing observations, not atomic whole-filesystem snapshots. Stable method images do not prove runtime implementation causality. Unsupported capability flags and raw class3 do not prove hardware protection, universal Simulator incapability or an acceptable waiver. API/ZIP/control-closure and final cleanup/retirement acceptance belong to their separately assigned reviews.",
+  "activity": "Read stable local raw JSON/text with duplicate-key/nonfinite rejection and stdlib equality/hash checks. No API/network, project imports, tests, builds, dispatches or source edits. This assigned review JSON is the only reviewer-authored file."
+}

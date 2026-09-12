@@ -1,0 +1,66 @@
+Search only; not line-review credit.
+Explicit *Main source directories (including non-shipping fixtures; shipping applicability checked separately): composeApp/src/androidMain/kotlin, composeApp/src/commonMain/kotlin, composeApp/src/desktopMain/kotlin, composeApp/src/iosMain/kotlin, game-modes/mafia/src/commonMain/kotlin, game-modes/whodunit/src/commonMain/kotlin, shared/content/src/commonMain/kotlin, shared/core/src/commonMain/kotlin, shared/design-system/src/androidMain/kotlin, shared/design-system/src/commonMain/kotlin, shared/design-system/src/desktopMain/kotlin, shared/design-system/src/iosMain/kotlin, shared/engine-testing/src/commonMain/kotlin, shared/engine/src/commonMain/kotlin, shared/networking-testing/src/commonMain/kotlin, shared/networking/src/androidMain/kotlin, shared/networking/src/commonMain/kotlin, shared/networking/src/desktopMain/kotlin, shared/networking/src/iosMain/kotlin, shared/session/src/commonMain/kotlin, shared/storage/src/commonMain/kotlin, shared/transport-p2p/src/androidMain/kotlin, shared/transport-p2p/src/commonMain/kotlin, shared/transport-p2p/src/desktopMain/kotlin, shared/transport-p2p/src/iosMain/kotlin
+Pattern: \bGameEvent\b|\bevents\b|eventFlow|::events
+game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/event/MafiaEvent.kt:4:import com.parlor.engine.event.GameEvent
+game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/event/MafiaEvent.kt:12:sealed interface MafiaEvent : GameEvent {
+composeApp/src/desktopMain/kotlin/com/parlor/app/PlatformBackHandler.desktop.kt:15:    // events follow the same application policy as every other Back source.
+composeApp/src/commonMain/kotlin/com/parlor/app/lifecycle/AppLifecycleCoordinator.kt:114: * callbacks do not emit duplicate transport events.
+game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/event/WhodunitEvent.kt:5:import com.parlor.engine.event.GameEvent
+game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/event/WhodunitEvent.kt:13:sealed interface WhodunitEvent : GameEvent {
+game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/reducer/MafiaReducer.kt:499:        val events = buildList {
+game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/reducer/MafiaReducer.kt:509:        return Reduction(newState, events)
+shared/networking/src/commonMain/kotlin/com/parlor/networking/room/PeerEvent.kt:6: * Connection-lifecycle events that a [LocalRoom] may emit via
+shared/networking/src/commonMain/kotlin/com/parlor/networking/room/LocalRoom.kt:44:     * Connection-lifecycle events. Implementations that don't surface
+shared/networking/src/commonMain/kotlin/com/parlor/networking/room/LocalRoom.kt:189:/** Shared empty flow for transports that don't emit peer events. */
+game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/multiplayer/WhodunitPeerRoomBridge.kt:73:    val connectionEvents: SharedFlow<PeerEvent> = connectionTracker.events
+shared/engine-testing/src/commonMain/kotlin/com/parlor/engine/testing/fakes/RoundRobinAnnounceGame.kt:12:import com.parlor.engine.event.GameEvent
+shared/engine-testing/src/commonMain/kotlin/com/parlor/engine/testing/fakes/RoundRobinAnnounceGame.kt:90:sealed interface RrEvent : GameEvent {
+shared/engine-testing/src/commonMain/kotlin/com/parlor/engine/testing/fakes/RoundRobinAnnounceGame.kt:113:                    val events = mutableListOf<RrEvent>(RrEvent.PlayerAnnounced(action.by))
+shared/engine-testing/src/commonMain/kotlin/com/parlor/engine/testing/fakes/RoundRobinAnnounceGame.kt:115:                        events += RrEvent.SessionEnded
+shared/engine-testing/src/commonMain/kotlin/com/parlor/engine/testing/fakes/RoundRobinAnnounceGame.kt:118:                            events,
+shared/engine-testing/src/commonMain/kotlin/com/parlor/engine/testing/fakes/RoundRobinAnnounceGame.kt:126:                            events,
+game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitGameFlow.kt:208: * screens by observing `session.publicState`. UI events submit real
+game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/reducer/WhodunitReducer.kt:562:        val events = mutableListOf<WhodunitEvent>()
+game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/reducer/WhodunitReducer.kt:564:            events += WhodunitEvent.TimerWarning(clamped)
+game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/reducer/WhodunitReducer.kt:566:        return Reduction(state.copy(public = state.public.copy(timer = newT)), events)
+game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/reducer/WhodunitReducer.kt:584:        return progressed.copy(events = listOf(WhodunitEvent.TimerExhausted) + progressed.events)
+game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/reducer/WhodunitReducer.kt:703:        val events: List<WhodunitEvent> = if (refused) listOf(WhodunitEvent.VoteRefused(voter)) else emptyList()
+game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/reducer/WhodunitReducer.kt:704:        return Reduction(state.copy(public = state.public.copy(voteState = advanced)), events)
+game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaPeerRoomBridge.kt:63:    val connectionEvents: SharedFlow<PeerEvent> = connectionTracker.events
+shared/engine/src/commonMain/kotlin/com/parlor/engine/event/GameEvent.kt:4: * Marker for one-shot events emitted by the reducer (sound cue, UI motion,
+shared/engine/src/commonMain/kotlin/com/parlor/engine/event/GameEvent.kt:5: * persistence trigger). Distinct from state — state describes what *is*; events
+shared/engine/src/commonMain/kotlin/com/parlor/engine/event/GameEvent.kt:10:interface GameEvent
+shared/session/src/commonMain/kotlin/com/parlor/session/passandplay/PassAndPlaySessionController.kt:7:import com.parlor.engine.event.GameEvent
+shared/session/src/commonMain/kotlin/com/parlor/session/passandplay/PassAndPlaySessionController.kt:43:class PassAndPlaySessionController<S : GameState, A : GameAction, E : GameEvent>(
+shared/session/src/commonMain/kotlin/com/parlor/session/passandplay/PassAndPlaySessionController.kt:70:    override val events: SharedFlow<E> = _events.asSharedFlow()
+shared/session/src/commonMain/kotlin/com/parlor/session/passandplay/PassAndPlaySessionController.kt:107:        // Serialize ONLY the state mutation under the lock. Emitting events
+shared/session/src/commonMain/kotlin/com/parlor/session/passandplay/PassAndPlaySessionController.kt:118:            val turn = if (reduction.events.isEmpty()) {
+shared/session/src/commonMain/kotlin/com/parlor/session/passandplay/PassAndPlaySessionController.kt:125:                    events = reduction.events,
+shared/session/src/commonMain/kotlin/com/parlor/session/passandplay/PassAndPlaySessionController.kt:149:    private val events: List<E>,
+shared/session/src/commonMain/kotlin/com/parlor/session/passandplay/PassAndPlaySessionController.kt:154:            events.forEach { event -> emit(event) }
+shared/networking-testing/src/commonMain/kotlin/com/parlor/networking/testing/InMemoryRoomBus.kt:57:    /** Number of lifecycle events rejected because the shared event buffer was full or closed. */
+shared/session/src/commonMain/kotlin/com/parlor/session/multidevice/ShadowSessionController.kt:6:import com.parlor.engine.event.GameEvent
+shared/session/src/commonMain/kotlin/com/parlor/session/multidevice/ShadowSessionController.kt:34:class ShadowSessionController<S : GameState, A : GameAction, E : GameEvent>(
+shared/session/src/commonMain/kotlin/com/parlor/session/multidevice/ShadowSessionController.kt:49:    override val events: SharedFlow<E> = _events.asSharedFlow()
+shared/engine/src/commonMain/kotlin/com/parlor/engine/reducer/GameReducer.kt:4:import com.parlor.engine.event.GameEvent
+shared/engine/src/commonMain/kotlin/com/parlor/engine/reducer/GameReducer.kt:9: * new state and any one-shot events.
+shared/engine/src/commonMain/kotlin/com/parlor/engine/reducer/GameReducer.kt:17:interface GameReducer<S : GameState, A : GameAction, E : GameEvent> {
+shared/engine/src/commonMain/kotlin/com/parlor/engine/reducer/GameReducer.kt:22: * The result of a reduction — the new state and any events to emit.
+shared/engine/src/commonMain/kotlin/com/parlor/engine/reducer/GameReducer.kt:28:    val events: List<E> = emptyList(),
+shared/session/src/commonMain/kotlin/com/parlor/session/SessionController.kt:6:import com.parlor.engine.event.GameEvent
+shared/session/src/commonMain/kotlin/com/parlor/session/SessionController.kt:23:interface SessionController<S : GameState, A : GameAction, E : GameEvent> {
+shared/session/src/commonMain/kotlin/com/parlor/session/SessionController.kt:36:    val events: SharedFlow<E>
+shared/session/src/commonMain/kotlin/com/parlor/session/multidevice/SessionStartHandshake.kt:109:    val events = merged.produceIn(this)
+shared/session/src/commonMain/kotlin/com/parlor/session/multidevice/SessionStartHandshake.kt:113:            val event = events.receiveCatching().getOrNull()
+shared/session/src/commonMain/kotlin/com/parlor/session/multidevice/SessionStartHandshake.kt:140:                            events = events,
+shared/session/src/commonMain/kotlin/com/parlor/session/multidevice/SessionStartHandshake.kt:169:        events.cancel()
+shared/session/src/commonMain/kotlin/com/parlor/session/multidevice/SessionStartHandshake.kt:175:    events: ReceiveChannel<PeerStartEvent>,
+shared/session/src/commonMain/kotlin/com/parlor/session/multidevice/SessionStartHandshake.kt:212:            val event = events.receiveCatching().getOrNull()
+shared/engine/src/commonMain/kotlin/com/parlor/engine/definition/GameDefinition.kt:5:import com.parlor.engine.event.GameEvent
+shared/engine/src/commonMain/kotlin/com/parlor/engine/definition/GameDefinition.kt:23:interface GameDefinition<S : GameState, A : GameAction, E : GameEvent> {
+shared/session/src/commonMain/kotlin/com/parlor/session/party/PartyAwareSession.kt:5:import com.parlor.engine.event.GameEvent
+shared/session/src/commonMain/kotlin/com/parlor/session/party/PartyAwareSession.kt:38:class PartyAwareSession<S : GameState, A : GameAction, E : GameEvent>(
+shared/session/src/commonMain/kotlin/com/parlor/session/party/PartyAwareSession.kt:47:    override val events: SharedFlow<E> get() = delegate.events
+shared/session/src/commonMain/kotlin/com/parlor/session/multidevice/PeerConnectionTracker.kt:27: * Reduces transport reachability events into durable state and owns the one
+shared/session/src/commonMain/kotlin/com/parlor/session/multidevice/PeerConnectionTracker.kt:28: * host-loss grace deadline. Duplicate HostLost events are idempotent and must
+shared/session/src/commonMain/kotlin/com/parlor/session/multidevice/PeerConnectionTracker.kt:52:    val events: SharedFlow<PeerEvent> = _events.asSharedFlow()

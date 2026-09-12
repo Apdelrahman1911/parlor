@@ -1,0 +1,319 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/release_fix_review",
+  "author": "/root",
+  "reviewed_at": "2026-09-08T00:13:51.581617+00:00",
+  "decision": "INDEPENDENT REVIEW PASS \u2014 canonical holder-query warning repair and focused red/green7 controls verified. Ready for separately coordinated combined verification; not native/app/Store approval.",
+  "finding_scope": "Canonical verification tooling lsof warning visibility, strict output acceptance and safe diagnostics. Separate from partial-FIFO live-identity cache repair and original16 application findings.",
+  "source": {
+    "module": {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/owned_lane.py",
+      "sha256": "949091403ac669429f962120e9873a09897a87bdcae10702720ede0c68342f03",
+      "line_ranges": [
+        [
+          1,
+          228
+        ]
+      ],
+      "changed_lines": [
+        [
+          61,
+          79
+        ]
+      ]
+    },
+    "test": {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/test_owned_lane_lsof.py",
+      "sha256": "72a1f9bd5f23d7124e6d8679333e4071c07f67b812ff861e5ac727f7e875ede8",
+      "line_ranges": [
+        [
+          1,
+          64
+        ]
+      ]
+    },
+    "baseline_module_sha256": "4bf3bbb4abfa22cd1604e6b4381bf481c95662ab15bf3fbdc86355a083102742",
+    "scoped_tracked_diff_sha256": "4d3609dda9ff71eeb317a027ddc9284602e4d90e7d37416669080f3f768b03f6",
+    "all_other_owned_lane_function_and_class_AST_identical": true,
+    "tests_were_build_consumed_untracked_source": "New test is not in HEAD but is included in both actual source manifests at identical SHA; commit alone is not the reviewed tree."
+  },
+  "root_cause_and_reachability": {
+    "original": "owned_lane.lsof_pids constructed -nP -w -t and treated empty stderr as an error-free query. Apple -t itself suppresses warnings, so native selected-path read/stat warnings could be hidden.",
+    "callers": [
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/run_ios_readiness.py",
+        "lines": [
+          [
+            278,
+            315
+          ],
+          [
+            919,
+            935
+          ]
+        ],
+        "flow": "AppHostOwnership gives lsof_pids to SecondaryFifoLedger and uses it to detect unknown holders before task-output deletion."
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/secondary_fifo.py",
+        "lines": [
+          [
+            154,
+            205
+          ]
+        ],
+        "flow": "Cleanup invokes holder callback on exact attested dirs and leaves, rejects any PID set and propagates query failure."
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
+        "lines": [
+          [
+            26,
+            44
+          ],
+          [
+            600,
+            638
+          ]
+        ],
+        "flow": "Imports canonical AppHostOwnership/owned_lane; inherited cleanup and final worker check preserve failures before file removal."
+      }
+    ],
+    "authority": "No new process is adopted from an open-file result. Returned PID set informs rejection, not arbitrary signal authority. Existing ownership and stop implementations are AST unchanged."
+  },
+  "correction_review": [
+    "Actual argv is /usr/sbin/lsof -nP -t +w followed by caller-owned arguments. +w follows the suppression-implying -t; no current production caller appends a suppression option.",
+    "Exit1 retains every reported PID (including partial +D selection); duplicate PIDs coalesce safely. It is not universally reinterpreted as no matches.",
+    "Unsupported status, any non-whitespace diagnostic or malformed PID lines remain failure. Exit0 with no holder lines now fails closed instead of pretending successful empty enumeration.",
+    "Oversized stdout/stderr are rejected at65536/4096 encoded bytes. These are explicitly post-capture acceptance limits, not streaming/process-memory ceilings.",
+    "New native warnings may include unrelated paths. Error now uses closed non-path-bearing text; failure is retained, not swallowed or logged raw.",
+    "TimeoutExpired propagates. No retry, warning filtering, recursive deletion, app/game/protocol/privacy/Store behavior change."
+  ],
+  "independent_regression_reconciliation": {
+    "executed_test_ids": [
+      "test_owned_lane_lsof.NativeHolderQueryTest.test_acceptance_bounds_are_enforced",
+      "test_owned_lane_lsof.NativeHolderQueryTest.test_errors_and_malformed_output_fail_closed",
+      "test_owned_lane_lsof.NativeHolderQueryTest.test_no_matches_requires_no_successful_selection",
+      "test_owned_lane_lsof.NativeHolderQueryTest.test_partial_selection_retains_every_reported_holder",
+      "test_owned_lane_lsof.NativeHolderQueryTest.test_timeout_is_not_converted_to_an_empty_holder_set",
+      "test_owned_lane_lsof.NativeHolderQueryTest.test_warning_enable_follows_terse_option",
+      "test_owned_lane_lsof.NativeHolderQueryTest.test_warning_never_means_no_holders_and_does_not_expose_raw_paths"
+    ],
+    "red": {
+      "tests": 7,
+      "failed_methods": 4,
+      "passing_methods": 3,
+      "failure_assertions": 7,
+      "errors": 0,
+      "skips": 0,
+      "meaning": "Genuine pre-fix witness. Command oracle fails on actual -w -t vs required -t+w; empty-success and stdout-bound cases fail; raw-path guard has four failing warning subtests. Seven failures is not seven distinct failing methods."
+    },
+    "green": {
+      "tests": 7,
+      "passes": 7,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0
+    },
+    "all_raw_descriptors_match_AST_once": true,
+    "source_delta_between_cycles": [
+      "scripts/verification/ios-readiness/owned_lane.py"
+    ],
+    "tests_identical_between_red_green": true,
+    "execution_scope": "Python unittest, mocked subprocess outputs and synthetic path strings only. Test import has no native process operations. This is source/control proof, not proof that canonical native queries were executed or every OS warning scenario occurred.",
+    "test_assertion_limits": "Oversized stderr case rejects as RuntimeError but does not distinguish warning rejection from size-specific rejection. Source enforces explicit bound; do not call this a hard-RAM experiment."
+  },
+  "verification_receipts": [
+    {
+      "cycle": "native-holder-warning-red-01",
+      "receipt": {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/native-holder-warning-red-01/receipt.json",
+        "sha256": "f39b02e3b3e1474f6c635b37f2a4df5e15b38a7f4aa614a733ea7974776fef05"
+      },
+      "log": {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/native-holder-warning-red-01/gradle.log",
+        "sha256": "bbe5e82a1c142f68ce24192956d841b5b01dff11072198158f066a9a1c44958b"
+      },
+      "stop_log": {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/native-holder-warning-red-01/stop.log",
+        "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+      },
+      "status": "FAIL",
+      "exit_code": 1,
+      "started_at": "2026-09-08T00:00:24.125474+00:00",
+      "finished_at": "2026-09-08T00:00:24.802322+00:00",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "scripts/verification/ios-readiness",
+        "-p",
+        "test_owned_lane_lsof.py",
+        "-v"
+      ],
+      "source": {
+        "commit": "b6e1947c62661631d0593038db7f64dbf25f720e",
+        "tree": "f03ad1b302d951d0ca9811b1efab2751a8be6978",
+        "branch": "fix/local-readiness-2026-09-07",
+        "diff_sha256": "36dd70117778d1f5d038acfab1ab46ffb464cd8c78b2428552214bfe6fdffed1",
+        "source_manifest_sha256": "f7f3e3bdd92e5128f959915ab8af5a233f9fd0c26a9d657b4533715350a2cf75"
+      },
+      "module_sha256": "4bf3bbb4abfa22cd1604e6b4381bf481c95662ab15bf3fbdc86355a083102742",
+      "test_sha256": "72a1f9bd5f23d7124e6d8679333e4071c07f67b812ff861e5ac727f7e875ede8",
+      "source_inventory_count": 800,
+      "source_before_after_exact": true,
+      "runner_before_after_exact": true,
+      "observed_methods": [
+        "test_acceptance_bounds_are_enforced",
+        "test_errors_and_malformed_output_fail_closed",
+        "test_no_matches_requires_no_successful_selection",
+        "test_partial_selection_retains_every_reported_holder",
+        "test_timeout_is_not_converted_to_an_empty_holder_set",
+        "test_warning_enable_follows_terse_option",
+        "test_warning_never_means_no_holders_and_does_not_expose_raw_paths"
+      ],
+      "raw_failure_entries": 7,
+      "failed_unique_methods": [
+        "test_acceptance_bounds_are_enforced",
+        "test_no_matches_requires_no_successful_selection",
+        "test_warning_enable_follows_terse_option",
+        "test_warning_never_means_no_holders_and_does_not_expose_raw_paths"
+      ],
+      "stop_exit_code": 0,
+      "stopped_at": "2026-09-08T00:00:25.320742+00:00",
+      "cleanup_completed_at": "2026-09-08T00:00:25.460308+00:00",
+      "cleanup_errors": [],
+      "remaining_outputs": [],
+      "remaining_owned_workers": [],
+      "retained_outputs": [],
+      "cleanup_method": "Exact task-owned generated dirs; no Gradle clean daemon or global cache deletion. Unrelated processes excluded by PID/start identity and cycle ownership."
+    },
+    {
+      "cycle": "native-holder-warning-green-01",
+      "receipt": {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/native-holder-warning-green-01/receipt.json",
+        "sha256": "473c20f832384f026d9ac87c4e1950582a2ea099dfd698f251c527cb14ac354d"
+      },
+      "log": {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/native-holder-warning-green-01/gradle.log",
+        "sha256": "cf7be64591aecd0b729540f1461d0b31744048b291e3fb169e0ca0b131ddda85"
+      },
+      "stop_log": {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/native-holder-warning-green-01/stop.log",
+        "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+      },
+      "status": "PASS",
+      "exit_code": 0,
+      "started_at": "2026-09-08T00:02:53.295289+00:00",
+      "finished_at": "2026-09-08T00:02:53.827484+00:00",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "scripts/verification/ios-readiness",
+        "-p",
+        "test_owned_lane_lsof.py",
+        "-v"
+      ],
+      "source": {
+        "commit": "b6e1947c62661631d0593038db7f64dbf25f720e",
+        "tree": "f03ad1b302d951d0ca9811b1efab2751a8be6978",
+        "branch": "fix/local-readiness-2026-09-07",
+        "diff_sha256": "f376c8cdd1aaa6127fedc00199dcf51c6319f28da507a1a5f32b615e109afd17",
+        "source_manifest_sha256": "478a42fd5493f35f482f6def17b0defb5fe0b9d56ad1c1c1217077f173f453e2"
+      },
+      "module_sha256": "949091403ac669429f962120e9873a09897a87bdcae10702720ede0c68342f03",
+      "test_sha256": "72a1f9bd5f23d7124e6d8679333e4071c07f67b812ff861e5ac727f7e875ede8",
+      "source_inventory_count": 800,
+      "source_before_after_exact": true,
+      "runner_before_after_exact": true,
+      "observed_methods": [
+        "test_acceptance_bounds_are_enforced",
+        "test_errors_and_malformed_output_fail_closed",
+        "test_no_matches_requires_no_successful_selection",
+        "test_partial_selection_retains_every_reported_holder",
+        "test_timeout_is_not_converted_to_an_empty_holder_set",
+        "test_warning_enable_follows_terse_option",
+        "test_warning_never_means_no_holders_and_does_not_expose_raw_paths"
+      ],
+      "raw_failure_entries": 0,
+      "failed_unique_methods": [],
+      "stop_exit_code": 0,
+      "stopped_at": "2026-09-08T00:02:54.345436+00:00",
+      "cleanup_completed_at": "2026-09-08T00:02:54.499628+00:00",
+      "cleanup_errors": [],
+      "remaining_outputs": [],
+      "remaining_owned_workers": [],
+      "retained_outputs": [],
+      "cleanup_method": "Exact task-owned generated dirs; no Gradle clean daemon or global cache deletion. Unrelated processes excluded by PID/start identity and cycle ownership."
+    }
+  ],
+  "authoritative_research": [
+    {
+      "url": "https://raw.githubusercontent.com/apple-oss-distributions/lsof/7a8a1b2a3c0f35c30a5fcd0927f31d441c3e5255/lsof/main.c",
+      "accessed_at": "2026-09-07T23:45:08.109503+00:00",
+      "sha256": "74656c434777d77626d8962bd1fd06f17b59c286f02c72e40520ebf03a8b8cae",
+      "lines": [
+        [
+          880,
+          882
+        ],
+        [
+          938,
+          940
+        ],
+        [
+          1499,
+          1543
+        ],
+        [
+          1757,
+          1762
+        ]
+      ],
+      "basis": "-t suppresses warnings, later+w re-enables; exit1 may coexist with matches."
+    },
+    {
+      "url": "https://raw.githubusercontent.com/apple-oss-distributions/lsof/7a8a1b2a3c0f35c30a5fcd0927f31d441c3e5255/lsof/arg.c",
+      "accessed_at": "2026-09-07T23:45:08.772634+00:00",
+      "sha256": "1aaa7a9b134df024f6f2c35d475ce05460cfb998f3e1dc67fca7819bc2ed1585",
+      "lines": [
+        [
+          1004,
+          1015
+        ],
+        [
+          1058,
+          1069
+        ],
+        [
+          1142,
+          1151
+        ]
+      ],
+      "basis": "Selected-object operations may warn/skip when inspection fails; disabling warnings erases this signal."
+    }
+  ],
+  "counter_evidence_and_remaining_gates": [
+    "The exact controlled cleanup03 using the same warning ordering has separately reviewed native evidence from factory_review, but is not relabeled as canonical lsof execution by this report.",
+    "Actual native warnings after this correction can cause conservative cleanup failure. They must remain explicit blockers, not be filtered to make a cycle green.",
+    "Partial-pair cache repair is separate and not included in lsof focused green. Run combined canonical controls and normal-runner controls after both reviewed changes are adopted.",
+    "Source/control hash changes invalidate source08 native execution approval; refresh binding before native10.",
+    "No physical devices, real LAN, Store credentials, launch-crash cause, storage Complete readback or application readiness established by this tooling verification."
+  ],
+  "cleanup_and_preservation": {
+    "each_cycle_stop0": true,
+    "each_cycle_source_and_runner_unchanged": true,
+    "each_cycle_no_remaining_owned_workers_outputs_or_cleanup_errors": true,
+    "red_FAIL_not_rewritten": true,
+    "original_native09_runtime_and_cleanup_FAIL_preserved": true,
+    "reviewer_started_builds_tests_native_processes": false,
+    "reviewer_edits": "This additive review only; no source/test/commands run or cleanup operations performed by reviewer."
+  }
+}

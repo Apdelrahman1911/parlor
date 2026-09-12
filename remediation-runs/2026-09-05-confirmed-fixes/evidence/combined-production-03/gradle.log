@@ -1,0 +1,1497 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.13/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+Type-safe project accessors is an incubating feature.
+> Task :build-logic:convention:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :build-logic:convention:compileKotlin
+> Task :build-logic:convention:compileJava NO-SOURCE
+> Task :build-logic:convention:pluginDescriptors
+> Task :build-logic:convention:processResources
+> Task :build-logic:convention:classes
+> Task :build-logic:convention:jar
+
+> Configure project :composeApp
+WARNING: The option setting 'android.experimental.lint.version=9.1.1' is experimental.
+w: [33m[1m⚠️ Deprecated Gradle Version[0m[0m
+The used Gradle version (Gradle 8.13) is deprecated and will not be supported in future Kotlin Gradle Plugin releases.
+The minimum supported Gradle version will become Gradle 8.14.4 in Kotlin 2.5.0.
+
+This warning can be suppressed in 'gradle.properties':
+    kotlin.suppressGradlePluginWarnings=DeprecatedGradleVersionWarning
+[32m[1mSolution:[0m[0m
+[32m[3mPlease update the Gradle version to at least Gradle 8.14.4.[0m[0m
+
+w: [33m[1m⚠️ Native task 'iosX64Test' is disabled[0m[0m
+Task 'iosX64Test' for target 'ios_x64' cannot run on the current host (macos-aarch64).
+Reason: architecture mismatch - target requires X64, current host is ARM64
+[32m[1mSolution:[0m[0m
+[32m[3mTo suppress this warning, add 'kotlin.native.ignoreDisabledTargets=true' to gradle.properties.[0m[0m
+
+
+> Task :composeApp:preBuild UP-TO-DATE
+> Task :composeApp:preReleaseBuild UP-TO-DATE
+> Task :composeApp:extractReleaseVersionControlInfo
+> Task :composeApp:mergeReleaseShaders
+> Task :composeApp:compileReleaseShaders NO-SOURCE
+> Task :composeApp:convertXmlValueResourcesForAndroidMain NO-SOURCE
+> Task :composeApp:copyNonXmlValueResourcesForAndroidMain NO-SOURCE
+> Task :composeApp:prepareComposeResourcesTaskForAndroidMain NO-SOURCE
+> Task :composeApp:convertXmlValueResourcesForAndroidRelease NO-SOURCE
+> Task :composeApp:copyNonXmlValueResourcesForAndroidRelease NO-SOURCE
+> Task :composeApp:prepareComposeResourcesTaskForAndroidRelease NO-SOURCE
+> Task :composeApp:convertXmlValueResourcesForCommonMain
+> Task :composeApp:copyNonXmlValueResourcesForCommonMain NO-SOURCE
+> Task :composeApp:prepareComposeResourcesTaskForCommonMain UP-TO-DATE
+> Task :composeApp:copyReleaseComposeResourcesToAndroidAssets
+> Task :composeApp:generateReleaseAssets UP-TO-DATE
+> Task :composeApp:releaseAssetsCopyForAGP NO-SOURCE
+> Task :game-modes:mafia:preBuild UP-TO-DATE
+> Task :game-modes:mafia:preReleaseBuild UP-TO-DATE
+> Task :game-modes:mafia:mergeReleaseShaders
+> Task :game-modes:mafia:compileReleaseShaders NO-SOURCE
+> Task :game-modes:mafia:convertXmlValueResourcesForAndroidMain NO-SOURCE
+> Task :game-modes:mafia:copyNonXmlValueResourcesForAndroidMain NO-SOURCE
+> Task :game-modes:mafia:prepareComposeResourcesTaskForAndroidMain NO-SOURCE
+> Task :game-modes:mafia:convertXmlValueResourcesForAndroidRelease NO-SOURCE
+> Task :game-modes:mafia:copyNonXmlValueResourcesForAndroidRelease NO-SOURCE
+> Task :game-modes:mafia:prepareComposeResourcesTaskForAndroidRelease NO-SOURCE
+> Task :game-modes:mafia:convertXmlValueResourcesForCommonMain
+> Task :game-modes:mafia:copyNonXmlValueResourcesForCommonMain NO-SOURCE
+> Task :game-modes:mafia:prepareComposeResourcesTaskForCommonMain UP-TO-DATE
+> Task :game-modes:mafia:copyReleaseComposeResourcesToAndroidAssets
+> Task :game-modes:mafia:generateReleaseAssets UP-TO-DATE
+> Task :game-modes:mafia:releaseAssetsCopyForAGP NO-SOURCE
+> Task :build-logic:convention:detekt
+> Task :game-modes:mafia:mergeReleaseAssets
+> Task :game-modes:whodunit:preBuild UP-TO-DATE
+> Task :game-modes:whodunit:preReleaseBuild UP-TO-DATE
+> Task :game-modes:whodunit:mergeReleaseShaders
+> Task :game-modes:whodunit:compileReleaseShaders NO-SOURCE
+> Task :game-modes:whodunit:convertXmlValueResourcesForAndroidMain NO-SOURCE
+> Task :game-modes:whodunit:copyNonXmlValueResourcesForAndroidMain NO-SOURCE
+> Task :game-modes:whodunit:prepareComposeResourcesTaskForAndroidMain NO-SOURCE
+> Task :game-modes:whodunit:convertXmlValueResourcesForAndroidRelease NO-SOURCE
+> Task :game-modes:whodunit:copyNonXmlValueResourcesForAndroidRelease NO-SOURCE
+> Task :game-modes:whodunit:prepareComposeResourcesTaskForAndroidRelease NO-SOURCE
+> Task :game-modes:whodunit:convertXmlValueResourcesForCommonMain
+> Task :game-modes:whodunit:copyNonXmlValueResourcesForCommonMain
+> Task :game-modes:whodunit:prepareComposeResourcesTaskForCommonMain UP-TO-DATE
+> Task :game-modes:whodunit:copyReleaseComposeResourcesToAndroidAssets
+> Task :game-modes:whodunit:generateReleaseAssets UP-TO-DATE
+> Task :game-modes:whodunit:releaseAssetsCopyForAGP NO-SOURCE
+> Task :game-modes:whodunit:mergeReleaseAssets
+> Task :shared:content:preBuild UP-TO-DATE
+> Task :shared:content:preReleaseBuild UP-TO-DATE
+> Task :shared:content:mergeReleaseShaders
+> Task :shared:content:compileReleaseShaders NO-SOURCE
+> Task :shared:content:generateReleaseAssets UP-TO-DATE
+> Task :shared:content:releaseAssetsCopyForAGP NO-SOURCE
+> Task :shared:content:mergeReleaseAssets
+> Task :shared:core:preBuild UP-TO-DATE
+> Task :shared:core:preReleaseBuild UP-TO-DATE
+> Task :shared:core:mergeReleaseShaders
+> Task :shared:core:compileReleaseShaders NO-SOURCE
+> Task :shared:core:generateReleaseAssets UP-TO-DATE
+> Task :shared:core:releaseAssetsCopyForAGP NO-SOURCE
+> Task :shared:core:mergeReleaseAssets
+> Task :shared:design-system:preBuild UP-TO-DATE
+> Task :shared:design-system:preReleaseBuild UP-TO-DATE
+> Task :shared:design-system:mergeReleaseShaders
+> Task :shared:design-system:compileReleaseShaders NO-SOURCE
+> Task :shared:design-system:convertXmlValueResourcesForAndroidMain NO-SOURCE
+> Task :shared:design-system:copyNonXmlValueResourcesForAndroidMain NO-SOURCE
+> Task :shared:design-system:prepareComposeResourcesTaskForAndroidMain NO-SOURCE
+> Task :shared:design-system:convertXmlValueResourcesForAndroidRelease NO-SOURCE
+> Task :shared:design-system:copyNonXmlValueResourcesForAndroidRelease NO-SOURCE
+> Task :shared:design-system:prepareComposeResourcesTaskForAndroidRelease NO-SOURCE
+> Task :shared:design-system:convertXmlValueResourcesForCommonMain
+> Task :shared:design-system:copyNonXmlValueResourcesForCommonMain
+> Task :shared:design-system:prepareComposeResourcesTaskForCommonMain UP-TO-DATE
+> Task :shared:design-system:copyReleaseComposeResourcesToAndroidAssets
+> Task :shared:design-system:generateReleaseAssets UP-TO-DATE
+> Task :shared:design-system:releaseAssetsCopyForAGP NO-SOURCE
+> Task :shared:design-system:mergeReleaseAssets
+> Task :shared:engine:preBuild UP-TO-DATE
+> Task :shared:engine:preReleaseBuild UP-TO-DATE
+> Task :shared:engine:mergeReleaseShaders
+> Task :shared:engine:compileReleaseShaders NO-SOURCE
+> Task :shared:engine:generateReleaseAssets UP-TO-DATE
+> Task :shared:engine:releaseAssetsCopyForAGP NO-SOURCE
+> Task :shared:engine:mergeReleaseAssets
+> Task :shared:networking:preBuild UP-TO-DATE
+> Task :shared:networking:preReleaseBuild UP-TO-DATE
+> Task :shared:networking:mergeReleaseShaders
+> Task :shared:networking:compileReleaseShaders NO-SOURCE
+> Task :shared:networking:generateReleaseAssets UP-TO-DATE
+> Task :shared:networking:releaseAssetsCopyForAGP NO-SOURCE
+> Task :shared:networking:mergeReleaseAssets
+> Task :shared:session:preBuild UP-TO-DATE
+> Task :shared:session:preReleaseBuild UP-TO-DATE
+> Task :shared:session:mergeReleaseShaders
+> Task :shared:session:compileReleaseShaders NO-SOURCE
+> Task :shared:session:generateReleaseAssets UP-TO-DATE
+> Task :shared:session:releaseAssetsCopyForAGP NO-SOURCE
+> Task :shared:session:mergeReleaseAssets
+> Task :shared:storage:preBuild UP-TO-DATE
+> Task :shared:storage:preReleaseBuild UP-TO-DATE
+> Task :shared:storage:mergeReleaseShaders
+> Task :shared:storage:compileReleaseShaders NO-SOURCE
+> Task :shared:storage:generateReleaseAssets UP-TO-DATE
+> Task :shared:storage:releaseAssetsCopyForAGP NO-SOURCE
+> Task :shared:storage:mergeReleaseAssets
+> Task :shared:transport-p2p:preBuild UP-TO-DATE
+> Task :shared:transport-p2p:preReleaseBuild UP-TO-DATE
+> Task :shared:transport-p2p:mergeReleaseShaders
+> Task :shared:transport-p2p:compileReleaseShaders NO-SOURCE
+> Task :shared:transport-p2p:generateReleaseAssets UP-TO-DATE
+> Task :shared:transport-p2p:releaseAssetsCopyForAGP NO-SOURCE
+> Task :shared:transport-p2p:mergeReleaseAssets
+> Task :composeApp:mergeReleaseAssets
+> Task :game-modes:whodunit:kmpPartiallyResolvedDependenciesChecker
+> Task :game-modes:whodunit:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :game-modes:whodunit:generateResourceAccessorsForAndroidMain NO-SOURCE
+> Task :game-modes:whodunit:generateResourceAccessorsForCommonMain
+> Task :game-modes:whodunit:generateActualResourceCollectorsForAndroidMain
+> Task :game-modes:whodunit:generateComposeResClass
+> Task :game-modes:whodunit:generateExpectResourceCollectorsForCommonMain
+> Task :game-modes:whodunit:generateReleaseResValues
+> Task :game-modes:whodunit:generateReleaseResources
+> Task :game-modes:whodunit:packageReleaseResources
+> Task :game-modes:whodunit:processReleaseNavigationResources
+> Task :game-modes:whodunit:parseReleaseLocalResources
+> Task :game-modes:whodunit:generateReleaseRFile
+> Task :game-modes:whodunit:generateResourceAccessorsForAndroidRelease NO-SOURCE
+> Task :shared:content:kmpPartiallyResolvedDependenciesChecker
+> Task :shared:content:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :shared:content:generateReleaseResValues
+> Task :shared:content:generateReleaseResources
+> Task :shared:content:packageReleaseResources
+> Task :shared:content:processReleaseNavigationResources
+> Task :shared:content:parseReleaseLocalResources
+> Task :shared:content:generateReleaseRFile
+> Task :shared:core:kmpPartiallyResolvedDependenciesChecker
+> Task :shared:core:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :shared:core:generateReleaseResValues
+> Task :shared:core:generateReleaseResources
+> Task :shared:core:packageReleaseResources
+> Task :shared:core:processReleaseNavigationResources
+> Task :shared:core:parseReleaseLocalResources
+> Task :shared:core:generateReleaseRFile
+> Task :shared:core:compileReleaseKotlinAndroid
+> Task :shared:core:javaPreCompileRelease
+> Task :shared:core:compileReleaseJavaWithJavac NO-SOURCE
+> Task :shared:core:bundleLibCompileToJarRelease
+> Task :shared:engine:kmpPartiallyResolvedDependenciesChecker
+> Task :shared:engine:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :shared:engine:generateReleaseResValues
+> Task :shared:engine:generateReleaseResources
+> Task :shared:engine:packageReleaseResources
+> Task :shared:engine:processReleaseNavigationResources
+> Task :shared:engine:parseReleaseLocalResources
+> Task :shared:engine:generateReleaseRFile
+> Task :shared:engine:compileReleaseKotlinAndroid
+> Task :shared:engine:javaPreCompileRelease
+> Task :shared:engine:compileReleaseJavaWithJavac NO-SOURCE
+> Task :shared:engine:bundleLibCompileToJarRelease
+> Task :shared:content:compileReleaseKotlinAndroid
+> Task :shared:content:javaPreCompileRelease
+> Task :shared:content:compileReleaseJavaWithJavac NO-SOURCE
+> Task :shared:content:bundleLibCompileToJarRelease
+> Task :shared:design-system:kmpPartiallyResolvedDependenciesChecker
+> Task :shared:design-system:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :shared:design-system:generateResourceAccessorsForAndroidMain NO-SOURCE
+> Task :shared:design-system:generateResourceAccessorsForCommonMain
+> Task :shared:design-system:generateActualResourceCollectorsForAndroidMain
+> Task :shared:design-system:generateComposeResClass
+> Task :shared:design-system:generateExpectResourceCollectorsForCommonMain
+> Task :shared:design-system:generateReleaseResValues
+> Task :shared:design-system:generateReleaseResources
+> Task :shared:design-system:packageReleaseResources
+> Task :shared:design-system:processReleaseNavigationResources
+> Task :shared:design-system:parseReleaseLocalResources
+> Task :shared:design-system:generateReleaseRFile
+> Task :shared:design-system:generateResourceAccessorsForAndroidRelease NO-SOURCE
+> Task :shared:design-system:compileReleaseKotlinAndroid
+> Task :shared:design-system:javaPreCompileRelease
+> Task :shared:design-system:compileReleaseJavaWithJavac NO-SOURCE
+> Task :shared:design-system:bundleLibCompileToJarRelease
+> Task :shared:networking:kmpPartiallyResolvedDependenciesChecker
+> Task :shared:networking:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :shared:networking:generateReleaseResValues
+> Task :shared:networking:generateReleaseResources
+> Task :shared:networking:packageReleaseResources
+> Task :shared:networking:processReleaseNavigationResources
+> Task :shared:networking:parseReleaseLocalResources
+> Task :shared:networking:generateReleaseRFile
+> Task :shared:networking:compileReleaseKotlinAndroid
+> Task :shared:networking:javaPreCompileRelease
+> Task :shared:networking:compileReleaseJavaWithJavac NO-SOURCE
+> Task :shared:networking:bundleLibCompileToJarRelease
+> Task :shared:session:kmpPartiallyResolvedDependenciesChecker
+> Task :shared:session:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :shared:session:generateReleaseResValues
+> Task :shared:session:generateReleaseResources
+> Task :shared:session:packageReleaseResources
+> Task :shared:session:processReleaseNavigationResources
+> Task :shared:session:parseReleaseLocalResources
+> Task :shared:session:generateReleaseRFile
+> Task :shared:session:compileReleaseKotlinAndroid
+> Task :shared:session:javaPreCompileRelease
+> Task :shared:session:compileReleaseJavaWithJavac NO-SOURCE
+> Task :shared:session:bundleLibCompileToJarRelease
+> Task :shared:storage:kmpPartiallyResolvedDependenciesChecker
+> Task :shared:storage:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :shared:storage:generateReleaseResValues
+> Task :shared:storage:generateReleaseResources
+> Task :shared:storage:packageReleaseResources
+> Task :shared:storage:processReleaseNavigationResources
+> Task :shared:storage:parseReleaseLocalResources
+> Task :shared:storage:generateReleaseRFile
+> Task :shared:storage:compileReleaseKotlinAndroid
+> Task :shared:storage:javaPreCompileRelease
+> Task :shared:storage:compileReleaseJavaWithJavac NO-SOURCE
+> Task :shared:storage:bundleLibCompileToJarRelease
+> Task :game-modes:whodunit:compileReleaseKotlinAndroid
+> Task :game-modes:whodunit:javaPreCompileRelease
+> Task :game-modes:whodunit:compileReleaseJavaWithJavac NO-SOURCE
+> Task :game-modes:whodunit:mergeReleaseGeneratedProguardFiles UP-TO-DATE
+> Task :game-modes:whodunit:exportReleaseConsumerProguardFiles UP-TO-DATE
+> Task :game-modes:mafia:kmpPartiallyResolvedDependenciesChecker
+> Task :game-modes:mafia:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :game-modes:mafia:generateResourceAccessorsForAndroidMain NO-SOURCE
+> Task :game-modes:mafia:generateResourceAccessorsForCommonMain
+> Task :game-modes:mafia:generateActualResourceCollectorsForAndroidMain
+> Task :game-modes:mafia:generateComposeResClass
+> Task :game-modes:mafia:generateExpectResourceCollectorsForCommonMain
+> Task :game-modes:mafia:generateReleaseResValues
+> Task :game-modes:mafia:generateReleaseResources
+> Task :game-modes:mafia:packageReleaseResources
+> Task :game-modes:mafia:processReleaseNavigationResources
+> Task :game-modes:mafia:parseReleaseLocalResources
+> Task :game-modes:mafia:generateReleaseRFile
+> Task :game-modes:mafia:generateResourceAccessorsForAndroidRelease NO-SOURCE
+> Task :game-modes:mafia:compileReleaseKotlinAndroid
+> Task :game-modes:mafia:javaPreCompileRelease
+> Task :game-modes:mafia:compileReleaseJavaWithJavac NO-SOURCE
+> Task :game-modes:mafia:mergeReleaseGeneratedProguardFiles UP-TO-DATE
+> Task :game-modes:mafia:exportReleaseConsumerProguardFiles UP-TO-DATE
+> Task :shared:session:mergeReleaseGeneratedProguardFiles UP-TO-DATE
+> Task :shared:session:exportReleaseConsumerProguardFiles UP-TO-DATE
+> Task :shared:content:mergeReleaseGeneratedProguardFiles UP-TO-DATE
+> Task :shared:content:exportReleaseConsumerProguardFiles UP-TO-DATE
+> Task :shared:transport-p2p:kmpPartiallyResolvedDependenciesChecker
+> Task :shared:transport-p2p:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :shared:transport-p2p:generateReleaseResValues
+> Task :shared:transport-p2p:generateReleaseResources
+> Task :shared:transport-p2p:packageReleaseResources
+> Task :shared:transport-p2p:processReleaseNavigationResources
+> Task :shared:transport-p2p:parseReleaseLocalResources
+> Task :shared:transport-p2p:generateReleaseRFile
+> Task :shared:transport-p2p:compileReleaseKotlinAndroid
+> Task :shared:transport-p2p:javaPreCompileRelease
+> Task :shared:transport-p2p:compileReleaseJavaWithJavac NO-SOURCE
+> Task :shared:transport-p2p:mergeReleaseGeneratedProguardFiles UP-TO-DATE
+> Task :shared:transport-p2p:exportReleaseConsumerProguardFiles UP-TO-DATE
+> Task :shared:networking:mergeReleaseGeneratedProguardFiles UP-TO-DATE
+> Task :shared:networking:exportReleaseConsumerProguardFiles UP-TO-DATE
+> Task :shared:storage:mergeReleaseGeneratedProguardFiles UP-TO-DATE
+> Task :shared:storage:exportReleaseConsumerProguardFiles UP-TO-DATE
+> Task :shared:engine:mergeReleaseGeneratedProguardFiles UP-TO-DATE
+> Task :shared:engine:exportReleaseConsumerProguardFiles UP-TO-DATE
+> Task :shared:design-system:mergeReleaseGeneratedProguardFiles UP-TO-DATE
+> Task :shared:design-system:exportReleaseConsumerProguardFiles UP-TO-DATE
+> Task :shared:core:mergeReleaseGeneratedProguardFiles UP-TO-DATE
+> Task :shared:core:exportReleaseConsumerProguardFiles UP-TO-DATE
+> Task :composeApp:buildKotlinToolingMetadata
+> Task :composeApp:checkReleaseDuplicateClasses
+> Task :composeApp:kmpPartiallyResolvedDependenciesChecker
+> Task :composeApp:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :composeApp:generateResourceAccessorsForAndroidMain NO-SOURCE
+> Task :composeApp:generateResourceAccessorsForCommonMain
+> Task :composeApp:generateActualResourceCollectorsForAndroidMain
+> Task :composeApp:generateComposeResClass
+> Task :composeApp:generateExpectResourceCollectorsForCommonMain
+> Task :composeApp:generateParlorVersion
+> Task :composeApp:generateResourceAccessorsForAndroidRelease NO-SOURCE
+> Task :game-modes:mafia:writeReleaseAarMetadata
+> Task :game-modes:whodunit:writeReleaseAarMetadata
+> Task :shared:content:writeReleaseAarMetadata
+> Task :shared:core:writeReleaseAarMetadata
+> Task :shared:design-system:writeReleaseAarMetadata
+> Task :shared:engine:writeReleaseAarMetadata
+> Task :shared:networking:writeReleaseAarMetadata
+> Task :shared:session:writeReleaseAarMetadata
+> Task :shared:storage:writeReleaseAarMetadata
+> Task :shared:transport-p2p:writeReleaseAarMetadata
+> Task :composeApp:checkReleaseAarMetadata
+> Task :composeApp:processReleaseNavigationResources
+> Task :composeApp:compileReleaseNavigationResources
+> Task :composeApp:generateReleaseResValues
+> Task :composeApp:mapReleaseSourceSetPaths
+> Task :composeApp:generateReleaseResources
+> Task :composeApp:mergeReleaseResources
+> Task :composeApp:packageReleaseResources
+> Task :composeApp:parseReleaseLocalResources
+> Task :composeApp:createReleaseCompatibleScreenManifests
+> Task :composeApp:extractDeepLinksRelease
+> Task :game-modes:mafia:extractDeepLinksRelease
+> Task :game-modes:mafia:processReleaseManifest
+> Task :game-modes:whodunit:extractDeepLinksRelease
+> Task :game-modes:whodunit:processReleaseManifest
+> Task :shared:content:extractDeepLinksRelease
+> Task :shared:content:processReleaseManifest
+> Task :shared:core:extractDeepLinksRelease
+> Task :shared:core:processReleaseManifest
+> Task :shared:design-system:extractDeepLinksRelease
+> Task :shared:design-system:processReleaseManifest
+> Task :shared:engine:extractDeepLinksRelease
+> Task :shared:engine:processReleaseManifest
+> Task :shared:networking:extractDeepLinksRelease
+> Task :shared:networking:processReleaseManifest
+> Task :shared:session:extractDeepLinksRelease
+> Task :shared:session:processReleaseManifest
+> Task :shared:storage:extractDeepLinksRelease
+> Task :shared:storage:processReleaseManifest
+> Task :shared:transport-p2p:extractDeepLinksRelease
+> Task :shared:transport-p2p:processReleaseManifest
+> Task :composeApp:processReleaseMainManifest
+> Task :composeApp:processReleaseManifest
+> Task :composeApp:processReleaseManifestForPackage
+> Task :composeApp:processReleaseResources
+> Task :game-modes:mafia:bundleLibCompileToJarRelease
+> Task :game-modes:whodunit:bundleLibCompileToJarRelease
+> Task :shared:transport-p2p:bundleLibCompileToJarRelease
+> Task :composeApp:compileReleaseKotlinAndroid
+> Task :composeApp:javaPreCompileRelease
+> Task :composeApp:compileReleaseJavaWithJavac NO-SOURCE
+> Task :game-modes:mafia:prepareReleaseArtProfile UP-TO-DATE
+> Task :game-modes:whodunit:prepareReleaseArtProfile UP-TO-DATE
+> Task :shared:content:prepareReleaseArtProfile UP-TO-DATE
+> Task :shared:core:prepareReleaseArtProfile UP-TO-DATE
+> Task :shared:design-system:prepareReleaseArtProfile UP-TO-DATE
+> Task :shared:engine:prepareReleaseArtProfile UP-TO-DATE
+> Task :shared:networking:prepareReleaseArtProfile UP-TO-DATE
+> Task :shared:session:prepareReleaseArtProfile UP-TO-DATE
+> Task :shared:storage:prepareReleaseArtProfile UP-TO-DATE
+> Task :shared:transport-p2p:prepareReleaseArtProfile UP-TO-DATE
+> Task :composeApp:mergeReleaseArtProfile
+> Task :game-modes:mafia:bundleLibRuntimeToJarRelease
+> Task :game-modes:whodunit:bundleLibRuntimeToJarRelease
+> Task :shared:content:bundleLibRuntimeToJarRelease
+> Task :shared:core:bundleLibRuntimeToJarRelease
+> Task :shared:design-system:bundleLibRuntimeToJarRelease
+> Task :shared:engine:bundleLibRuntimeToJarRelease
+> Task :shared:networking:bundleLibRuntimeToJarRelease
+> Task :shared:session:bundleLibRuntimeToJarRelease
+> Task :shared:storage:bundleLibRuntimeToJarRelease
+> Task :shared:transport-p2p:bundleLibRuntimeToJarRelease
+> Task :composeApp:expandReleaseArtProfileWildcards
+> Task :composeApp:extractProguardFiles
+> Task :composeApp:mergeReleaseGeneratedProguardFiles UP-TO-DATE
+> Task :composeApp:processReleaseJavaRes
+> Task :game-modes:mafia:processReleaseJavaRes
+> Task :game-modes:whodunit:processReleaseJavaRes
+> Task :shared:content:processReleaseJavaRes
+> Task :shared:core:processReleaseJavaRes
+> Task :shared:design-system:processReleaseJavaRes
+> Task :shared:engine:processReleaseJavaRes
+> Task :shared:networking:processReleaseJavaRes
+> Task :shared:session:processReleaseJavaRes
+> Task :shared:storage:processReleaseJavaRes
+> Task :shared:transport-p2p:processReleaseJavaRes
+> Task :composeApp:mergeReleaseJavaResource
+> Task :composeApp:mergeReleaseStartupProfile UP-TO-DATE
+
+> Task :composeApp:minifyReleaseWithR8
+WARNING: R8: Class file resource provider does not support async parsing: com.android.builder.dexing.r8.ClassFileProviderFactory$OrderedClassFileResourceProvider
+WARNING: R8: Class file resource provider does not support async parsing: com.android.builder.dexing.r8.ClassFileProviderFactory$OrderedClassFileResourceProvider
+
+> Task :composeApp:mergeReleaseJniLibFolders
+> Task :game-modes:mafia:mergeReleaseJniLibFolders
+> Task :game-modes:mafia:mergeReleaseNativeLibs NO-SOURCE
+> Task :game-modes:mafia:copyReleaseJniLibsProjectOnly
+> Task :game-modes:whodunit:mergeReleaseJniLibFolders
+> Task :game-modes:whodunit:mergeReleaseNativeLibs NO-SOURCE
+> Task :game-modes:whodunit:copyReleaseJniLibsProjectOnly
+> Task :shared:content:mergeReleaseJniLibFolders
+> Task :shared:content:mergeReleaseNativeLibs NO-SOURCE
+> Task :shared:content:copyReleaseJniLibsProjectOnly
+> Task :shared:core:mergeReleaseJniLibFolders
+> Task :shared:core:mergeReleaseNativeLibs NO-SOURCE
+> Task :shared:core:copyReleaseJniLibsProjectOnly
+> Task :shared:design-system:mergeReleaseJniLibFolders
+> Task :shared:design-system:mergeReleaseNativeLibs NO-SOURCE
+> Task :shared:design-system:copyReleaseJniLibsProjectOnly
+> Task :shared:engine:mergeReleaseJniLibFolders
+> Task :shared:engine:mergeReleaseNativeLibs NO-SOURCE
+> Task :shared:engine:copyReleaseJniLibsProjectOnly
+> Task :shared:networking:mergeReleaseJniLibFolders
+> Task :shared:networking:mergeReleaseNativeLibs NO-SOURCE
+> Task :shared:networking:copyReleaseJniLibsProjectOnly
+> Task :shared:session:mergeReleaseJniLibFolders
+> Task :shared:session:mergeReleaseNativeLibs NO-SOURCE
+> Task :shared:session:copyReleaseJniLibsProjectOnly
+> Task :shared:storage:mergeReleaseJniLibFolders
+> Task :shared:storage:mergeReleaseNativeLibs NO-SOURCE
+> Task :shared:storage:copyReleaseJniLibsProjectOnly
+> Task :shared:transport-p2p:mergeReleaseJniLibFolders
+> Task :shared:transport-p2p:mergeReleaseNativeLibs NO-SOURCE
+> Task :shared:transport-p2p:copyReleaseJniLibsProjectOnly
+> Task :composeApp:mergeReleaseNativeLibs
+
+> Task :composeApp:stripReleaseDebugSymbols
+Unable to strip the following libraries, packaging them as they are: libandroidx.graphics.path.so. Run with --info option to learn more.
+
+> Task :composeApp:writeReleaseAppMetadata
+> Task :composeApp:buildReleasePreBundle
+> Task :composeApp:produceReleaseComposeMapping
+> Task :composeApp:reportReleaseComposeMappingErrors
+> Task :composeApp:mergeReleaseComposeMapping
+> Task :composeApp:compileReleaseArtProfile
+> Task :composeApp:collectReleaseDependencies
+> Task :composeApp:configureReleaseDependencies
+> Task :composeApp:extractReleaseNativeDebugMetadata
+> Task :composeApp:convertXmlValueResourcesForAndroidDebug NO-SOURCE
+> Task :composeApp:copyNonXmlValueResourcesForAndroidDebug NO-SOURCE
+> Task :composeApp:prepareComposeResourcesTaskForAndroidDebug NO-SOURCE
+> Task :composeApp:copyDebugComposeResourcesToAndroidAssets
+> Task :composeApp:generateResourceAccessorsForAndroidDebug NO-SOURCE
+> Task :composeApp:convertXmlValueResourcesForAndroidUnitTest NO-SOURCE
+> Task :composeApp:copyNonXmlValueResourcesForAndroidUnitTest NO-SOURCE
+> Task :composeApp:prepareComposeResourcesTaskForAndroidUnitTest NO-SOURCE
+> Task :composeApp:generateResourceAccessorsForAndroidUnitTest NO-SOURCE
+> Task :composeApp:convertXmlValueResourcesForAndroidUnitTestDebug NO-SOURCE
+> Task :composeApp:copyNonXmlValueResourcesForAndroidUnitTestDebug NO-SOURCE
+> Task :composeApp:prepareComposeResourcesTaskForAndroidUnitTestDebug NO-SOURCE
+> Task :composeApp:generateResourceAccessorsForAndroidUnitTestDebug NO-SOURCE
+> Task :composeApp:convertXmlValueResourcesForAndroidUnitTestRelease NO-SOURCE
+> Task :composeApp:copyNonXmlValueResourcesForAndroidUnitTestRelease NO-SOURCE
+> Task :composeApp:prepareComposeResourcesTaskForAndroidUnitTestRelease NO-SOURCE
+> Task :composeApp:generateResourceAccessorsForAndroidUnitTestRelease NO-SOURCE
+> Task :composeApp:convertXmlValueResourcesForCommonTest NO-SOURCE
+> Task :composeApp:copyNonXmlValueResourcesForCommonTest NO-SOURCE
+> Task :composeApp:prepareComposeResourcesTaskForCommonTest NO-SOURCE
+> Task :composeApp:generateResourceAccessorsForCommonTest NO-SOURCE
+> Task :composeApp:convertXmlValueResourcesForDesktopMain NO-SOURCE
+> Task :composeApp:copyNonXmlValueResourcesForDesktopMain NO-SOURCE
+> Task :composeApp:prepareComposeResourcesTaskForDesktopMain NO-SOURCE
+> Task :composeApp:generateResourceAccessorsForDesktopMain NO-SOURCE
+> Task :composeApp:convertXmlValueResourcesForDesktopTest NO-SOURCE
+> Task :composeApp:copyNonXmlValueResourcesForDesktopTest NO-SOURCE
+> Task :composeApp:prepareComposeResourcesTaskForDesktopTest NO-SOURCE
+> Task :composeApp:generateResourceAccessorsForDesktopTest NO-SOURCE
+> Task :game-modes:mafia:createFullJarRelease
+> Task :game-modes:mafia:convertXmlValueResourcesForAndroidDebug NO-SOURCE
+> Task :game-modes:mafia:copyNonXmlValueResourcesForAndroidDebug NO-SOURCE
+> Task :game-modes:mafia:prepareComposeResourcesTaskForAndroidDebug NO-SOURCE
+> Task :game-modes:mafia:copyDebugComposeResourcesToAndroidAssets
+> Task :game-modes:mafia:generateResourceAccessorsForAndroidDebug NO-SOURCE
+> Task :game-modes:mafia:convertXmlValueResourcesForAndroidUnitTest NO-SOURCE
+> Task :game-modes:mafia:copyNonXmlValueResourcesForAndroidUnitTest NO-SOURCE
+> Task :game-modes:mafia:prepareComposeResourcesTaskForAndroidUnitTest NO-SOURCE
+> Task :game-modes:mafia:generateResourceAccessorsForAndroidUnitTest NO-SOURCE
+> Task :game-modes:mafia:convertXmlValueResourcesForAndroidUnitTestRelease NO-SOURCE
+> Task :game-modes:mafia:copyNonXmlValueResourcesForAndroidUnitTestRelease NO-SOURCE
+> Task :game-modes:mafia:prepareComposeResourcesTaskForAndroidUnitTestRelease NO-SOURCE
+> Task :game-modes:mafia:generateResourceAccessorsForAndroidUnitTestRelease NO-SOURCE
+> Task :game-modes:mafia:convertXmlValueResourcesForCommonTest NO-SOURCE
+> Task :game-modes:mafia:copyNonXmlValueResourcesForCommonTest NO-SOURCE
+> Task :game-modes:mafia:prepareComposeResourcesTaskForCommonTest NO-SOURCE
+> Task :game-modes:mafia:generateResourceAccessorsForCommonTest NO-SOURCE
+> Task :game-modes:mafia:convertXmlValueResourcesForDesktopMain NO-SOURCE
+> Task :game-modes:mafia:copyNonXmlValueResourcesForDesktopMain NO-SOURCE
+> Task :game-modes:mafia:prepareComposeResourcesTaskForDesktopMain NO-SOURCE
+> Task :game-modes:mafia:generateResourceAccessorsForDesktopMain NO-SOURCE
+> Task :game-modes:mafia:convertXmlValueResourcesForDesktopTest NO-SOURCE
+> Task :game-modes:mafia:copyNonXmlValueResourcesForDesktopTest NO-SOURCE
+> Task :game-modes:mafia:prepareComposeResourcesTaskForDesktopTest NO-SOURCE
+> Task :game-modes:mafia:generateResourceAccessorsForDesktopTest NO-SOURCE
+> Task :game-modes:mafia:extractProguardFiles
+> Task :shared:content:createFullJarRelease
+> Task :shared:content:extractProguardFiles
+> Task :shared:core:createFullJarRelease
+> Task :shared:core:extractProguardFiles
+> Task :shared:core:generateReleaseLintModel
+> Task :shared:core:prepareLintJarForPublish UP-TO-DATE
+> Task :shared:engine:createFullJarRelease
+> Task :shared:engine:extractProguardFiles
+> Task :shared:engine:generateReleaseLintModel
+> Task :shared:engine:prepareLintJarForPublish UP-TO-DATE
+> Task :shared:content:generateReleaseLintModel
+> Task :shared:content:prepareLintJarForPublish UP-TO-DATE
+> Task :shared:design-system:createFullJarRelease
+> Task :shared:design-system:convertXmlValueResourcesForAndroidDebug NO-SOURCE
+> Task :shared:design-system:copyNonXmlValueResourcesForAndroidDebug NO-SOURCE
+> Task :shared:design-system:prepareComposeResourcesTaskForAndroidDebug NO-SOURCE
+> Task :shared:design-system:copyDebugComposeResourcesToAndroidAssets
+> Task :shared:design-system:generateResourceAccessorsForAndroidDebug NO-SOURCE
+> Task :shared:design-system:convertXmlValueResourcesForAndroidUnitTest NO-SOURCE
+> Task :shared:design-system:copyNonXmlValueResourcesForAndroidUnitTest NO-SOURCE
+> Task :shared:design-system:prepareComposeResourcesTaskForAndroidUnitTest NO-SOURCE
+> Task :shared:design-system:generateResourceAccessorsForAndroidUnitTest NO-SOURCE
+> Task :shared:design-system:convertXmlValueResourcesForAndroidUnitTestRelease NO-SOURCE
+> Task :shared:design-system:copyNonXmlValueResourcesForAndroidUnitTestRelease NO-SOURCE
+> Task :shared:design-system:prepareComposeResourcesTaskForAndroidUnitTestRelease NO-SOURCE
+> Task :shared:design-system:generateResourceAccessorsForAndroidUnitTestRelease NO-SOURCE
+> Task :shared:design-system:convertXmlValueResourcesForCommonTest NO-SOURCE
+> Task :shared:design-system:copyNonXmlValueResourcesForCommonTest NO-SOURCE
+> Task :shared:design-system:prepareComposeResourcesTaskForCommonTest NO-SOURCE
+> Task :shared:design-system:generateResourceAccessorsForCommonTest NO-SOURCE
+> Task :shared:design-system:convertXmlValueResourcesForDesktopMain NO-SOURCE
+> Task :shared:design-system:copyNonXmlValueResourcesForDesktopMain NO-SOURCE
+> Task :shared:design-system:prepareComposeResourcesTaskForDesktopMain NO-SOURCE
+> Task :shared:design-system:generateResourceAccessorsForDesktopMain NO-SOURCE
+> Task :shared:design-system:convertXmlValueResourcesForDesktopTest NO-SOURCE
+> Task :shared:design-system:copyNonXmlValueResourcesForDesktopTest NO-SOURCE
+> Task :shared:design-system:prepareComposeResourcesTaskForDesktopTest NO-SOURCE
+> Task :shared:design-system:generateResourceAccessorsForDesktopTest NO-SOURCE
+> Task :shared:design-system:extractProguardFiles
+> Task :shared:design-system:generateReleaseLintModel
+> Task :shared:design-system:prepareLintJarForPublish UP-TO-DATE
+> Task :shared:networking:createFullJarRelease
+> Task :shared:networking:extractProguardFiles
+> Task :shared:networking:generateReleaseLintModel
+> Task :shared:networking:prepareLintJarForPublish UP-TO-DATE
+> Task :shared:session:createFullJarRelease
+> Task :shared:session:extractProguardFiles
+> Task :shared:session:generateReleaseLintModel
+> Task :shared:session:prepareLintJarForPublish UP-TO-DATE
+> Task :shared:storage:createFullJarRelease
+> Task :shared:storage:extractProguardFiles
+> Task :shared:storage:generateReleaseLintModel
+> Task :shared:storage:prepareLintJarForPublish UP-TO-DATE
+> Task :game-modes:mafia:generateReleaseLintModel
+> Task :game-modes:mafia:prepareLintJarForPublish UP-TO-DATE
+> Task :game-modes:whodunit:createFullJarRelease
+> Task :game-modes:whodunit:convertXmlValueResourcesForAndroidDebug NO-SOURCE
+> Task :game-modes:whodunit:copyNonXmlValueResourcesForAndroidDebug NO-SOURCE
+> Task :game-modes:whodunit:prepareComposeResourcesTaskForAndroidDebug NO-SOURCE
+> Task :game-modes:whodunit:copyDebugComposeResourcesToAndroidAssets
+> Task :game-modes:whodunit:generateResourceAccessorsForAndroidDebug NO-SOURCE
+> Task :game-modes:whodunit:convertXmlValueResourcesForAndroidUnitTest NO-SOURCE
+> Task :game-modes:whodunit:copyNonXmlValueResourcesForAndroidUnitTest NO-SOURCE
+> Task :game-modes:whodunit:prepareComposeResourcesTaskForAndroidUnitTest NO-SOURCE
+> Task :game-modes:whodunit:generateResourceAccessorsForAndroidUnitTest NO-SOURCE
+> Task :game-modes:whodunit:convertXmlValueResourcesForAndroidUnitTestRelease NO-SOURCE
+> Task :game-modes:whodunit:copyNonXmlValueResourcesForAndroidUnitTestRelease NO-SOURCE
+> Task :game-modes:whodunit:prepareComposeResourcesTaskForAndroidUnitTestRelease NO-SOURCE
+> Task :game-modes:whodunit:generateResourceAccessorsForAndroidUnitTestRelease NO-SOURCE
+> Task :game-modes:whodunit:convertXmlValueResourcesForCommonTest NO-SOURCE
+> Task :game-modes:whodunit:copyNonXmlValueResourcesForCommonTest NO-SOURCE
+> Task :game-modes:whodunit:prepareComposeResourcesTaskForCommonTest NO-SOURCE
+> Task :game-modes:whodunit:generateResourceAccessorsForCommonTest NO-SOURCE
+> Task :game-modes:whodunit:convertXmlValueResourcesForDesktopMain NO-SOURCE
+> Task :game-modes:whodunit:copyNonXmlValueResourcesForDesktopMain NO-SOURCE
+> Task :game-modes:whodunit:prepareComposeResourcesTaskForDesktopMain NO-SOURCE
+> Task :game-modes:whodunit:generateResourceAccessorsForDesktopMain NO-SOURCE
+> Task :game-modes:whodunit:convertXmlValueResourcesForDesktopTest NO-SOURCE
+> Task :game-modes:whodunit:copyNonXmlValueResourcesForDesktopTest NO-SOURCE
+> Task :game-modes:whodunit:prepareComposeResourcesTaskForDesktopTest NO-SOURCE
+> Task :game-modes:whodunit:generateResourceAccessorsForDesktopTest NO-SOURCE
+> Task :game-modes:whodunit:extractProguardFiles
+> Task :game-modes:whodunit:generateReleaseLintModel
+> Task :game-modes:whodunit:prepareLintJarForPublish UP-TO-DATE
+> Task :shared:transport-p2p:createFullJarRelease
+> Task :shared:transport-p2p:extractProguardFiles
+> Task :shared:transport-p2p:generateReleaseLintModel
+> Task :shared:transport-p2p:prepareLintJarForPublish UP-TO-DATE
+> Task :composeApp:generateReleaseLintVitalReportModel
+> Task :game-modes:whodunit:checkReleaseAarMetadata
+> Task :game-modes:whodunit:stripReleaseDebugSymbols NO-SOURCE
+> Task :game-modes:whodunit:copyReleaseJniLibsProjectAndLocalJars
+> Task :game-modes:whodunit:extractDeepLinksForAarRelease UP-TO-DATE
+> Task :game-modes:whodunit:extractReleaseAnnotations
+> Task :game-modes:whodunit:mergeReleaseConsumerProguardFiles UP-TO-DATE
+> Task :game-modes:whodunit:mergeReleaseJavaResource
+> Task :game-modes:whodunit:syncReleaseLibJars
+> Task :game-modes:whodunit:bundleReleaseLocalLintAar
+> Task :game-modes:mafia:checkReleaseAarMetadata
+> Task :game-modes:mafia:stripReleaseDebugSymbols NO-SOURCE
+> Task :game-modes:mafia:copyReleaseJniLibsProjectAndLocalJars
+> Task :game-modes:mafia:extractDeepLinksForAarRelease UP-TO-DATE
+> Task :game-modes:mafia:extractReleaseAnnotations
+> Task :game-modes:mafia:mergeReleaseConsumerProguardFiles UP-TO-DATE
+> Task :game-modes:mafia:mergeReleaseJavaResource
+> Task :game-modes:mafia:syncReleaseLibJars
+> Task :game-modes:mafia:bundleReleaseLocalLintAar
+> Task :shared:session:checkReleaseAarMetadata
+> Task :shared:session:stripReleaseDebugSymbols NO-SOURCE
+> Task :shared:session:copyReleaseJniLibsProjectAndLocalJars
+> Task :shared:session:extractDeepLinksForAarRelease UP-TO-DATE
+> Task :shared:session:extractReleaseAnnotations
+> Task :shared:session:mergeReleaseConsumerProguardFiles UP-TO-DATE
+> Task :shared:session:mergeReleaseJavaResource
+> Task :shared:session:syncReleaseLibJars
+> Task :shared:session:bundleReleaseLocalLintAar
+> Task :shared:content:checkReleaseAarMetadata
+> Task :shared:content:stripReleaseDebugSymbols NO-SOURCE
+> Task :shared:content:copyReleaseJniLibsProjectAndLocalJars
+> Task :shared:content:extractDeepLinksForAarRelease UP-TO-DATE
+> Task :shared:content:extractReleaseAnnotations
+> Task :shared:content:mergeReleaseConsumerProguardFiles UP-TO-DATE
+> Task :shared:content:mergeReleaseJavaResource
+> Task :shared:content:syncReleaseLibJars
+> Task :shared:content:bundleReleaseLocalLintAar
+> Task :shared:transport-p2p:checkReleaseAarMetadata
+> Task :shared:transport-p2p:stripReleaseDebugSymbols NO-SOURCE
+> Task :shared:transport-p2p:copyReleaseJniLibsProjectAndLocalJars
+> Task :shared:transport-p2p:extractDeepLinksForAarRelease UP-TO-DATE
+> Task :shared:transport-p2p:extractReleaseAnnotations
+> Task :shared:transport-p2p:mergeReleaseConsumerProguardFiles UP-TO-DATE
+> Task :shared:transport-p2p:mergeReleaseJavaResource
+> Task :shared:transport-p2p:syncReleaseLibJars
+> Task :shared:transport-p2p:bundleReleaseLocalLintAar
+> Task :shared:networking:checkReleaseAarMetadata
+> Task :shared:networking:stripReleaseDebugSymbols NO-SOURCE
+> Task :shared:networking:copyReleaseJniLibsProjectAndLocalJars
+> Task :shared:networking:extractDeepLinksForAarRelease UP-TO-DATE
+> Task :shared:networking:extractReleaseAnnotations
+> Task :shared:networking:mergeReleaseConsumerProguardFiles UP-TO-DATE
+> Task :shared:networking:mergeReleaseJavaResource
+> Task :shared:networking:syncReleaseLibJars
+> Task :shared:networking:bundleReleaseLocalLintAar
+> Task :shared:storage:checkReleaseAarMetadata
+> Task :shared:storage:stripReleaseDebugSymbols NO-SOURCE
+> Task :shared:storage:copyReleaseJniLibsProjectAndLocalJars
+> Task :shared:storage:extractDeepLinksForAarRelease UP-TO-DATE
+> Task :shared:storage:extractReleaseAnnotations
+> Task :shared:storage:mergeReleaseConsumerProguardFiles UP-TO-DATE
+> Task :shared:storage:mergeReleaseJavaResource
+> Task :shared:storage:syncReleaseLibJars
+> Task :shared:storage:bundleReleaseLocalLintAar
+> Task :shared:engine:checkReleaseAarMetadata
+> Task :shared:engine:stripReleaseDebugSymbols NO-SOURCE
+> Task :shared:engine:copyReleaseJniLibsProjectAndLocalJars
+> Task :shared:engine:extractDeepLinksForAarRelease UP-TO-DATE
+> Task :shared:engine:extractReleaseAnnotations
+> Task :shared:engine:mergeReleaseConsumerProguardFiles UP-TO-DATE
+> Task :shared:engine:mergeReleaseJavaResource
+> Task :shared:engine:syncReleaseLibJars
+> Task :shared:engine:bundleReleaseLocalLintAar
+> Task :shared:design-system:checkReleaseAarMetadata
+> Task :shared:design-system:stripReleaseDebugSymbols NO-SOURCE
+> Task :shared:design-system:copyReleaseJniLibsProjectAndLocalJars
+> Task :shared:design-system:extractDeepLinksForAarRelease UP-TO-DATE
+> Task :shared:design-system:extractReleaseAnnotations
+> Task :shared:design-system:mergeReleaseConsumerProguardFiles UP-TO-DATE
+> Task :shared:design-system:mergeReleaseJavaResource
+> Task :shared:design-system:syncReleaseLibJars
+> Task :shared:design-system:bundleReleaseLocalLintAar
+> Task :shared:core:checkReleaseAarMetadata
+> Task :shared:core:stripReleaseDebugSymbols NO-SOURCE
+> Task :shared:core:copyReleaseJniLibsProjectAndLocalJars
+> Task :shared:core:extractDeepLinksForAarRelease UP-TO-DATE
+> Task :shared:core:extractReleaseAnnotations
+> Task :shared:core:mergeReleaseConsumerProguardFiles UP-TO-DATE
+> Task :shared:core:mergeReleaseJavaResource
+> Task :shared:core:syncReleaseLibJars
+> Task :shared:core:bundleReleaseLocalLintAar
+> Task :shared:content:writeReleaseLintModelMetadata
+> Task :shared:core:writeReleaseLintModelMetadata
+> Task :shared:design-system:writeReleaseLintModelMetadata
+> Task :shared:engine:writeReleaseLintModelMetadata
+> Task :shared:networking:writeReleaseLintModelMetadata
+> Task :shared:session:writeReleaseLintModelMetadata
+> Task :shared:storage:writeReleaseLintModelMetadata
+> Task :game-modes:mafia:lintVitalAnalyzeRelease
+> Task :game-modes:mafia:writeReleaseLintModelMetadata
+> Task :game-modes:whodunit:lintVitalAnalyzeRelease
+> Task :game-modes:whodunit:writeReleaseLintModelMetadata
+> Task :shared:content:lintVitalAnalyzeRelease
+> Task :shared:core:lintVitalAnalyzeRelease
+> Task :shared:design-system:lintVitalAnalyzeRelease
+> Task :shared:engine:lintVitalAnalyzeRelease
+> Task :shared:networking:lintVitalAnalyzeRelease
+> Task :shared:session:lintVitalAnalyzeRelease
+> Task :shared:storage:lintVitalAnalyzeRelease
+> Task :shared:transport-p2p:lintVitalAnalyzeRelease
+> Task :shared:transport-p2p:writeReleaseLintModelMetadata
+> Task :composeApp:lintVitalAnalyzeRelease
+> Task :game-modes:mafia:generateReleaseLintVitalModel
+> Task :game-modes:whodunit:generateReleaseLintVitalModel
+> Task :shared:content:generateReleaseLintVitalModel
+> Task :shared:core:generateReleaseLintVitalModel
+> Task :shared:design-system:generateReleaseLintVitalModel
+> Task :shared:engine:generateReleaseLintVitalModel
+> Task :shared:networking:generateReleaseLintVitalModel
+> Task :shared:session:generateReleaseLintVitalModel
+> Task :shared:storage:generateReleaseLintVitalModel
+> Task :shared:transport-p2p:generateReleaseLintVitalModel
+> Task :composeApp:lintVitalReportRelease SKIPPED
+> Task :composeApp:lintVitalRelease SKIPPED
+> Task :composeApp:parseReleaseIntegrityConfig UP-TO-DATE
+> Task :composeApp:packageReleaseBundle
+> Task :composeApp:signReleaseBundle
+> Task :composeApp:produceReleaseBundleIdeListingFile
+> Task :composeApp:createReleaseBundleListingFileRedirect
+> Task :composeApp:bundleRelease
+> Task :composeApp:bundleReleaseClassesToCompileJar
+> Task :composeApp:preReleaseAndroidTestBuild SKIPPED
+> Task :composeApp:generateReleaseAndroidTestResValues
+> Task :composeApp:generateReleaseAndroidTestLintModel
+> Task :composeApp:generateReleaseLintReportModel
+> Task :shared:engine-testing:preBuild UP-TO-DATE
+> Task :shared:engine-testing:preReleaseBuild UP-TO-DATE
+> Task :shared:engine-testing:checkReleaseAarMetadata
+> Task :shared:engine-testing:mergeReleaseJniLibFolders
+> Task :shared:engine-testing:mergeReleaseNativeLibs NO-SOURCE
+> Task :shared:engine-testing:stripReleaseDebugSymbols NO-SOURCE
+> Task :shared:engine-testing:copyReleaseJniLibsProjectAndLocalJars
+> Task :shared:engine-testing:generateReleaseResValues
+> Task :shared:engine-testing:extractDeepLinksForAarRelease UP-TO-DATE
+> Task :shared:engine-testing:kmpPartiallyResolvedDependenciesChecker
+> Task :shared:engine-testing:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :shared:engine-testing:generateReleaseResources
+> Task :shared:engine-testing:packageReleaseResources
+> Task :shared:engine-testing:processReleaseNavigationResources
+> Task :shared:engine-testing:parseReleaseLocalResources
+> Task :shared:engine-testing:generateReleaseRFile
+> Task :shared:engine-testing:compileReleaseKotlinAndroid
+> Task :shared:engine-testing:extractReleaseAnnotations
+> Task :shared:engine-testing:mergeReleaseShaders
+> Task :shared:engine-testing:compileReleaseShaders NO-SOURCE
+> Task :shared:engine-testing:generateReleaseAssets UP-TO-DATE
+> Task :shared:engine-testing:releaseAssetsCopyForAGP NO-SOURCE
+> Task :shared:engine-testing:mergeReleaseAssets
+> Task :shared:engine-testing:javaPreCompileRelease
+> Task :shared:engine-testing:compileReleaseJavaWithJavac NO-SOURCE
+> Task :shared:engine-testing:mergeReleaseGeneratedProguardFiles UP-TO-DATE
+> Task :shared:engine-testing:mergeReleaseConsumerProguardFiles UP-TO-DATE
+> Task :shared:engine-testing:prepareLintJarForPublish UP-TO-DATE
+> Task :shared:engine-testing:prepareReleaseArtProfile UP-TO-DATE
+> Task :shared:engine-testing:processReleaseManifest
+> Task :shared:engine-testing:processReleaseJavaRes
+> Task :shared:engine-testing:mergeReleaseJavaResource
+> Task :shared:engine-testing:syncReleaseLibJars
+> Task :shared:engine-testing:writeReleaseAarMetadata
+> Task :shared:engine-testing:bundleReleaseLocalLintAar
+> Task :composeApp:preReleaseUnitTestBuild UP-TO-DATE
+> Task :shared:engine-testing:bundleLibRuntimeToJarRelease
+> Task :shared:engine-testing:createFullJarRelease
+> Task :shared:engine-testing:writeReleaseLintModelMetadata
+> Task :composeApp:generateReleaseUnitTestLintModel
+> Task :shared:core:lintAnalyzeRelease
+> Task :shared:engine:lintAnalyzeRelease
+> Task :shared:content:lintAnalyzeRelease
+> Task :shared:design-system:lintAnalyzeRelease
+> Task :shared:networking:lintAnalyzeRelease
+> Task :shared:session:lintAnalyzeRelease
+> Task :shared:storage:lintAnalyzeRelease
+> Task :game-modes:mafia:lintAnalyzeRelease
+> Task :game-modes:whodunit:lintAnalyzeRelease
+> Task :shared:transport-p2p:lintAnalyzeRelease
+> Task :composeApp:lintAnalyzeRelease
+> Task :composeApp:lintAnalyzeReleaseAndroidTest
+> Task :composeApp:lintAnalyzeReleaseUnitTest
+> Task :shared:networking-testing:preBuild UP-TO-DATE
+> Task :shared:networking-testing:preReleaseBuild UP-TO-DATE
+> Task :shared:networking-testing:checkReleaseAarMetadata
+> Task :shared:networking-testing:mergeReleaseJniLibFolders
+> Task :shared:networking-testing:mergeReleaseNativeLibs NO-SOURCE
+> Task :shared:networking-testing:stripReleaseDebugSymbols NO-SOURCE
+> Task :shared:networking-testing:copyReleaseJniLibsProjectAndLocalJars
+> Task :shared:networking-testing:generateReleaseResValues
+> Task :shared:networking-testing:extractDeepLinksForAarRelease UP-TO-DATE
+> Task :shared:networking-testing:kmpPartiallyResolvedDependenciesChecker
+> Task :shared:networking-testing:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :shared:networking-testing:generateReleaseResources
+> Task :shared:networking-testing:packageReleaseResources
+> Task :shared:networking-testing:processReleaseNavigationResources
+> Task :shared:networking-testing:parseReleaseLocalResources
+> Task :shared:networking-testing:generateReleaseRFile
+> Task :shared:networking-testing:compileReleaseKotlinAndroid
+> Task :shared:networking-testing:extractReleaseAnnotations
+> Task :shared:networking-testing:mergeReleaseShaders
+> Task :shared:networking-testing:compileReleaseShaders NO-SOURCE
+> Task :shared:networking-testing:generateReleaseAssets UP-TO-DATE
+> Task :shared:networking-testing:releaseAssetsCopyForAGP NO-SOURCE
+> Task :shared:networking-testing:mergeReleaseAssets
+> Task :shared:networking-testing:javaPreCompileRelease
+> Task :shared:networking-testing:compileReleaseJavaWithJavac NO-SOURCE
+> Task :shared:networking-testing:mergeReleaseGeneratedProguardFiles UP-TO-DATE
+> Task :shared:networking-testing:mergeReleaseConsumerProguardFiles UP-TO-DATE
+> Task :shared:networking-testing:prepareLintJarForPublish UP-TO-DATE
+> Task :shared:networking-testing:prepareReleaseArtProfile UP-TO-DATE
+> Task :shared:networking-testing:processReleaseManifest
+> Task :shared:networking-testing:processReleaseJavaRes
+> Task :shared:networking-testing:mergeReleaseJavaResource
+> Task :shared:networking-testing:syncReleaseLibJars
+> Task :shared:networking-testing:writeReleaseAarMetadata
+> Task :shared:networking-testing:bundleReleaseLocalLintAar
+> Task :game-modes:mafia:preReleaseUnitTestBuild UP-TO-DATE
+> Task :shared:networking-testing:bundleLibRuntimeToJarRelease
+> Task :shared:networking-testing:createFullJarRelease
+> Task :shared:networking-testing:writeReleaseLintModelMetadata
+> Task :game-modes:mafia:generateReleaseUnitTestLintModel
+> Task :game-modes:mafia:lintAnalyzeReleaseUnitTest
+> Task :game-modes:whodunit:preReleaseUnitTestBuild UP-TO-DATE
+> Task :game-modes:whodunit:generateReleaseUnitTestLintModel
+> Task :game-modes:whodunit:lintAnalyzeReleaseUnitTest
+> Task :shared:content:preReleaseUnitTestBuild UP-TO-DATE
+> Task :shared:content:generateReleaseUnitTestLintModel
+> Task :shared:content:lintAnalyzeReleaseUnitTest
+> Task :shared:core:preReleaseUnitTestBuild UP-TO-DATE
+> Task :shared:core:generateReleaseUnitTestLintModel
+> Task :shared:core:lintAnalyzeReleaseUnitTest
+> Task :shared:design-system:preReleaseUnitTestBuild UP-TO-DATE
+> Task :shared:design-system:generateReleaseUnitTestLintModel
+> Task :shared:design-system:lintAnalyzeReleaseUnitTest
+> Task :shared:engine:preReleaseUnitTestBuild UP-TO-DATE
+> Task :shared:engine:generateReleaseUnitTestLintModel
+> Task :shared:engine:lintAnalyzeReleaseUnitTest
+> Task :shared:networking:preReleaseUnitTestBuild UP-TO-DATE
+> Task :shared:networking:generateReleaseUnitTestLintModel
+> Task :shared:networking:lintAnalyzeReleaseUnitTest
+> Task :shared:session:preReleaseUnitTestBuild UP-TO-DATE
+> Task :shared:session:generateReleaseUnitTestLintModel
+> Task :shared:session:lintAnalyzeReleaseUnitTest
+> Task :shared:storage:preReleaseUnitTestBuild UP-TO-DATE
+> Task :shared:storage:generateReleaseUnitTestLintModel
+> Task :shared:storage:lintAnalyzeReleaseUnitTest
+> Task :shared:transport-p2p:preReleaseUnitTestBuild UP-TO-DATE
+> Task :shared:transport-p2p:generateReleaseUnitTestLintModel
+> Task :shared:transport-p2p:lintAnalyzeReleaseUnitTest
+
+> Task :composeApp:lintReportRelease
+Wrote HTML report to file:///Users/abdelrahman/Projects/parlor/composeApp/build/reports/lint-results-release.html
+
+> Task :composeApp:lintRelease
+> Task :composeApp:preDebugBuild UP-TO-DATE
+> Task :game-modes:mafia:preDebugBuild UP-TO-DATE
+> Task :game-modes:mafia:writeDebugAarMetadata
+> Task :game-modes:whodunit:preDebugBuild UP-TO-DATE
+> Task :game-modes:whodunit:writeDebugAarMetadata
+> Task :shared:content:preDebugBuild UP-TO-DATE
+> Task :shared:content:writeDebugAarMetadata
+> Task :shared:core:preDebugBuild UP-TO-DATE
+> Task :shared:core:writeDebugAarMetadata
+> Task :shared:design-system:preDebugBuild UP-TO-DATE
+> Task :shared:design-system:writeDebugAarMetadata
+> Task :shared:engine:preDebugBuild UP-TO-DATE
+> Task :shared:engine:writeDebugAarMetadata
+> Task :shared:networking:preDebugBuild UP-TO-DATE
+> Task :shared:networking:writeDebugAarMetadata
+> Task :shared:session:preDebugBuild UP-TO-DATE
+> Task :shared:session:writeDebugAarMetadata
+> Task :shared:storage:preDebugBuild UP-TO-DATE
+> Task :shared:storage:writeDebugAarMetadata
+> Task :shared:transport-p2p:preDebugBuild UP-TO-DATE
+> Task :shared:transport-p2p:writeDebugAarMetadata
+> Task :composeApp:checkDebugAarMetadata
+> Task :game-modes:mafia:processDebugNavigationResources
+> Task :game-modes:whodunit:processDebugNavigationResources
+> Task :shared:content:processDebugNavigationResources
+> Task :shared:core:processDebugNavigationResources
+> Task :shared:design-system:processDebugNavigationResources
+> Task :shared:engine:processDebugNavigationResources
+> Task :shared:networking:processDebugNavigationResources
+> Task :shared:session:processDebugNavigationResources
+> Task :shared:storage:processDebugNavigationResources
+> Task :shared:transport-p2p:processDebugNavigationResources
+> Task :composeApp:processDebugNavigationResources
+> Task :composeApp:compileDebugNavigationResources
+> Task :composeApp:generateDebugResValues
+> Task :game-modes:mafia:generateDebugResValues
+> Task :game-modes:mafia:generateDebugResources
+> Task :game-modes:mafia:packageDebugResources
+> Task :game-modes:whodunit:generateDebugResValues
+> Task :game-modes:whodunit:generateDebugResources
+> Task :game-modes:whodunit:packageDebugResources
+> Task :shared:content:generateDebugResValues
+> Task :shared:content:generateDebugResources
+> Task :shared:content:packageDebugResources
+> Task :shared:core:generateDebugResValues
+> Task :shared:core:generateDebugResources
+> Task :shared:core:packageDebugResources
+> Task :shared:design-system:generateDebugResValues
+> Task :shared:design-system:generateDebugResources
+> Task :shared:design-system:packageDebugResources
+> Task :shared:engine:generateDebugResValues
+> Task :shared:engine:generateDebugResources
+> Task :shared:engine:packageDebugResources
+> Task :shared:networking:generateDebugResValues
+> Task :shared:networking:generateDebugResources
+> Task :shared:networking:packageDebugResources
+> Task :shared:session:generateDebugResValues
+> Task :shared:session:generateDebugResources
+> Task :shared:session:packageDebugResources
+> Task :shared:storage:generateDebugResValues
+> Task :shared:storage:generateDebugResources
+> Task :shared:storage:packageDebugResources
+> Task :shared:transport-p2p:generateDebugResValues
+> Task :shared:transport-p2p:generateDebugResources
+> Task :shared:transport-p2p:packageDebugResources
+> Task :composeApp:mapDebugSourceSetPaths
+> Task :composeApp:generateDebugResources
+> Task :composeApp:mergeDebugResources
+> Task :composeApp:packageDebugResources
+> Task :composeApp:parseDebugLocalResources
+> Task :composeApp:createDebugCompatibleScreenManifests
+> Task :composeApp:extractDeepLinksDebug
+> Task :game-modes:mafia:extractDeepLinksDebug
+> Task :game-modes:mafia:processDebugManifest
+> Task :game-modes:whodunit:extractDeepLinksDebug
+> Task :game-modes:whodunit:processDebugManifest
+> Task :shared:content:extractDeepLinksDebug
+> Task :shared:content:processDebugManifest
+> Task :shared:core:extractDeepLinksDebug
+> Task :shared:core:processDebugManifest
+> Task :shared:design-system:extractDeepLinksDebug
+> Task :shared:design-system:processDebugManifest
+> Task :shared:engine:extractDeepLinksDebug
+> Task :shared:engine:processDebugManifest
+> Task :shared:networking:extractDeepLinksDebug
+> Task :shared:networking:processDebugManifest
+> Task :shared:session:extractDeepLinksDebug
+> Task :shared:session:processDebugManifest
+> Task :shared:storage:extractDeepLinksDebug
+> Task :shared:storage:processDebugManifest
+> Task :shared:transport-p2p:extractDeepLinksDebug
+> Task :shared:transport-p2p:processDebugManifest
+> Task :composeApp:processDebugMainManifest
+> Task :composeApp:processDebugManifest
+> Task :composeApp:processDebugManifestForPackage
+> Task :game-modes:mafia:compileDebugLibraryResources
+> Task :game-modes:mafia:parseDebugLocalResources
+> Task :game-modes:mafia:generateDebugRFile
+> Task :game-modes:whodunit:compileDebugLibraryResources
+> Task :game-modes:whodunit:parseDebugLocalResources
+> Task :game-modes:whodunit:generateDebugRFile
+> Task :shared:content:compileDebugLibraryResources
+> Task :shared:content:parseDebugLocalResources
+> Task :shared:content:generateDebugRFile
+> Task :shared:core:compileDebugLibraryResources
+> Task :shared:core:parseDebugLocalResources
+> Task :shared:core:generateDebugRFile
+> Task :shared:design-system:compileDebugLibraryResources
+> Task :shared:design-system:parseDebugLocalResources
+> Task :shared:design-system:generateDebugRFile
+> Task :shared:engine:compileDebugLibraryResources
+> Task :shared:engine:parseDebugLocalResources
+> Task :shared:engine:generateDebugRFile
+> Task :shared:networking:compileDebugLibraryResources
+> Task :shared:networking:parseDebugLocalResources
+> Task :shared:networking:generateDebugRFile
+> Task :shared:session:compileDebugLibraryResources
+> Task :shared:session:parseDebugLocalResources
+> Task :shared:session:generateDebugRFile
+> Task :shared:storage:compileDebugLibraryResources
+> Task :shared:storage:parseDebugLocalResources
+> Task :shared:storage:generateDebugRFile
+> Task :shared:transport-p2p:compileDebugLibraryResources
+> Task :shared:transport-p2p:parseDebugLocalResources
+> Task :shared:transport-p2p:generateDebugRFile
+> Task :composeApp:processDebugResources
+> Task :shared:core:compileDebugKotlinAndroid
+> Task :shared:core:javaPreCompileDebug
+> Task :shared:core:compileDebugJavaWithJavac NO-SOURCE
+> Task :shared:core:bundleLibCompileToJarDebug
+> Task :shared:engine:compileDebugKotlinAndroid
+> Task :shared:engine:javaPreCompileDebug
+> Task :shared:engine:compileDebugJavaWithJavac NO-SOURCE
+> Task :shared:engine:bundleLibCompileToJarDebug
+> Task :shared:content:compileDebugKotlinAndroid
+> Task :shared:content:javaPreCompileDebug
+> Task :shared:content:compileDebugJavaWithJavac NO-SOURCE
+> Task :shared:content:bundleLibCompileToJarDebug
+> Task :shared:design-system:compileDebugKotlinAndroid
+> Task :shared:design-system:javaPreCompileDebug
+> Task :shared:design-system:compileDebugJavaWithJavac NO-SOURCE
+> Task :shared:design-system:bundleLibCompileToJarDebug
+> Task :shared:networking:compileDebugKotlinAndroid
+> Task :shared:networking:javaPreCompileDebug
+> Task :shared:networking:compileDebugJavaWithJavac NO-SOURCE
+> Task :shared:networking:bundleLibCompileToJarDebug
+> Task :shared:session:compileDebugKotlinAndroid
+> Task :shared:session:javaPreCompileDebug
+> Task :shared:session:compileDebugJavaWithJavac NO-SOURCE
+> Task :shared:session:bundleLibCompileToJarDebug
+> Task :shared:storage:compileDebugKotlinAndroid
+> Task :shared:storage:javaPreCompileDebug
+> Task :shared:storage:compileDebugJavaWithJavac NO-SOURCE
+> Task :shared:storage:bundleLibCompileToJarDebug
+> Task :game-modes:mafia:compileDebugKotlinAndroid
+> Task :game-modes:mafia:javaPreCompileDebug
+> Task :game-modes:mafia:compileDebugJavaWithJavac NO-SOURCE
+> Task :game-modes:mafia:bundleLibCompileToJarDebug
+> Task :game-modes:whodunit:compileDebugKotlinAndroid
+> Task :game-modes:whodunit:javaPreCompileDebug
+> Task :game-modes:whodunit:compileDebugJavaWithJavac NO-SOURCE
+> Task :game-modes:whodunit:bundleLibCompileToJarDebug
+> Task :shared:transport-p2p:compileDebugKotlinAndroid
+> Task :shared:transport-p2p:javaPreCompileDebug
+> Task :shared:transport-p2p:compileDebugJavaWithJavac NO-SOURCE
+> Task :shared:transport-p2p:bundleLibCompileToJarDebug
+> Task :composeApp:compileDebugKotlinAndroid
+> Task :composeApp:javaPreCompileDebug
+> Task :composeApp:compileDebugJavaWithJavac NO-SOURCE
+> Task :composeApp:bundleDebugClassesToRuntimeJar
+> Task :composeApp:bundleDebugClassesToCompileJar
+> Task :shared:engine-testing:preDebugBuild UP-TO-DATE
+> Task :shared:engine-testing:generateDebugResValues
+> Task :shared:engine-testing:generateDebugResources
+> Task :shared:engine-testing:packageDebugResources
+> Task :shared:engine-testing:processDebugNavigationResources
+> Task :shared:engine-testing:parseDebugLocalResources
+> Task :shared:engine-testing:generateDebugRFile
+> Task :shared:engine-testing:compileDebugKotlinAndroid
+> Task :shared:engine-testing:javaPreCompileDebug
+> Task :shared:engine-testing:compileDebugJavaWithJavac NO-SOURCE
+> Task :shared:engine-testing:bundleLibCompileToJarDebug
+> Task :composeApp:compileDebugUnitTestKotlinAndroid
+> Task :composeApp:preDebugUnitTestBuild UP-TO-DATE
+> Task :composeApp:javaPreCompileDebugUnitTest
+> Task :composeApp:compileDebugUnitTestJavaWithJavac NO-SOURCE
+> Task :composeApp:processDebugJavaRes
+> Task :composeApp:processDebugUnitTestJavaRes
+> Task :game-modes:mafia:bundleLibRuntimeToJarDebug
+> Task :game-modes:mafia:processDebugJavaRes
+> Task :game-modes:whodunit:bundleLibRuntimeToJarDebug
+> Task :game-modes:whodunit:processDebugJavaRes
+> Task :shared:content:bundleLibRuntimeToJarDebug
+> Task :shared:content:processDebugJavaRes
+> Task :shared:core:bundleLibRuntimeToJarDebug
+> Task :shared:core:processDebugJavaRes
+> Task :shared:design-system:bundleLibRuntimeToJarDebug
+> Task :shared:design-system:processDebugJavaRes
+> Task :shared:engine:bundleLibRuntimeToJarDebug
+> Task :shared:engine:processDebugJavaRes
+> Task :shared:engine-testing:bundleLibRuntimeToJarDebug
+> Task :shared:engine-testing:processDebugJavaRes
+> Task :shared:networking:bundleLibRuntimeToJarDebug
+> Task :shared:networking:processDebugJavaRes
+> Task :shared:session:bundleLibRuntimeToJarDebug
+> Task :shared:session:processDebugJavaRes
+> Task :shared:storage:bundleLibRuntimeToJarDebug
+> Task :shared:storage:processDebugJavaRes
+> Task :shared:transport-p2p:bundleLibRuntimeToJarDebug
+> Task :shared:transport-p2p:processDebugJavaRes
+> Task :composeApp:testDebugUnitTest
+> Task :composeApp:bundleReleaseClassesToRuntimeJar
+> Task :shared:engine-testing:bundleLibCompileToJarRelease
+> Task :composeApp:compileReleaseUnitTestKotlinAndroid
+> Task :composeApp:javaPreCompileReleaseUnitTest
+> Task :composeApp:compileReleaseUnitTestJavaWithJavac NO-SOURCE
+> Task :composeApp:processReleaseUnitTestJavaRes
+> Task :composeApp:testReleaseUnitTest
+> Task :composeApp:verifyApplicationIdentities
+> Task :composeApp:verifyMergedReleaseManifest
+> Task :composeApp:verifyReleaseLintWarnings
+> Task :productionAndroidCheck
+> Task :composeApp:generateActualResourceCollectorsForDesktopMain
+> Task :game-modes:mafia:generateActualResourceCollectorsForDesktopMain
+> Task :shared:core:compileKotlinDesktop
+> Task :shared:core:compileDesktopMainJava NO-SOURCE
+> Task :shared:core:desktopProcessResources NO-SOURCE
+> Task :shared:core:processDesktopMainResources SKIPPED
+> Task :shared:core:desktopMainClasses
+> Task :shared:core:desktopJar
+> Task :shared:engine:compileKotlinDesktop
+> Task :shared:engine:compileDesktopMainJava NO-SOURCE
+> Task :shared:engine:desktopProcessResources NO-SOURCE
+> Task :shared:engine:processDesktopMainResources SKIPPED
+> Task :shared:engine:desktopMainClasses
+> Task :shared:engine:desktopJar
+> Task :shared:content:compileKotlinDesktop
+> Task :shared:content:compileDesktopMainJava NO-SOURCE
+> Task :shared:content:desktopProcessResources NO-SOURCE
+> Task :shared:content:processDesktopMainResources SKIPPED
+> Task :shared:content:desktopMainClasses
+> Task :shared:content:desktopJar
+> Task :shared:design-system:generateActualResourceCollectorsForDesktopMain
+> Task :shared:design-system:compileKotlinDesktop
+> Task :shared:design-system:compileDesktopMainJava NO-SOURCE
+> Task :shared:design-system:assembleDesktopMainResources
+> Task :shared:design-system:desktopProcessResources
+> Task :shared:design-system:processDesktopMainResources SKIPPED
+> Task :shared:design-system:desktopMainClasses
+> Task :shared:design-system:desktopJar
+> Task :shared:networking:compileKotlinDesktop
+> Task :shared:networking:compileDesktopMainJava NO-SOURCE
+> Task :shared:networking:desktopProcessResources NO-SOURCE
+> Task :shared:networking:processDesktopMainResources SKIPPED
+> Task :shared:networking:desktopMainClasses
+> Task :shared:networking:desktopJar
+> Task :shared:session:compileKotlinDesktop
+> Task :shared:session:compileDesktopMainJava NO-SOURCE
+> Task :shared:session:desktopProcessResources NO-SOURCE
+> Task :shared:session:processDesktopMainResources SKIPPED
+> Task :shared:session:desktopMainClasses
+> Task :shared:session:desktopJar
+> Task :shared:storage:compileKotlinDesktop
+> Task :shared:storage:compileDesktopMainJava NO-SOURCE
+> Task :shared:storage:desktopProcessResources NO-SOURCE
+> Task :shared:storage:processDesktopMainResources SKIPPED
+> Task :shared:storage:desktopMainClasses
+> Task :shared:storage:desktopJar
+> Task :game-modes:mafia:compileKotlinDesktop
+> Task :game-modes:mafia:compileDesktopMainJava NO-SOURCE
+> Task :game-modes:mafia:assembleDesktopMainResources
+> Task :game-modes:mafia:desktopProcessResources
+> Task :game-modes:mafia:processDesktopMainResources SKIPPED
+> Task :game-modes:mafia:desktopMainClasses
+> Task :game-modes:mafia:desktopJar
+> Task :game-modes:whodunit:generateActualResourceCollectorsForDesktopMain
+> Task :game-modes:whodunit:compileKotlinDesktop
+> Task :game-modes:whodunit:compileDesktopMainJava NO-SOURCE
+> Task :game-modes:whodunit:assembleDesktopMainResources
+> Task :game-modes:whodunit:desktopProcessResources
+> Task :game-modes:whodunit:processDesktopMainResources SKIPPED
+> Task :game-modes:whodunit:desktopMainClasses
+> Task :game-modes:whodunit:desktopJar
+> Task :shared:transport-p2p:compileKotlinDesktop
+> Task :shared:transport-p2p:compileDesktopMainJava NO-SOURCE
+> Task :shared:transport-p2p:desktopProcessResources NO-SOURCE
+> Task :shared:transport-p2p:processDesktopMainResources SKIPPED
+> Task :shared:transport-p2p:desktopMainClasses
+> Task :shared:transport-p2p:desktopJar
+> Task :composeApp:compileKotlinDesktop
+> Task :composeApp:compileDesktopMainJava NO-SOURCE
+> Task :composeApp:assembleDesktopMainResources
+> Task :composeApp:desktopProcessResources
+> Task :composeApp:processDesktopMainResources SKIPPED
+> Task :composeApp:desktopMainClasses
+> Task :composeApp:desktopJar
+> Task :shared:engine-testing:compileKotlinDesktop
+> Task :shared:engine-testing:compileDesktopMainJava NO-SOURCE
+> Task :shared:engine-testing:desktopProcessResources NO-SOURCE
+> Task :shared:engine-testing:processDesktopMainResources SKIPPED
+> Task :shared:engine-testing:desktopMainClasses
+> Task :shared:engine-testing:desktopJar
+> Task :composeApp:compileTestKotlinDesktop
+> Task :composeApp:compileDesktopTestJava NO-SOURCE
+> Task :composeApp:assembleDesktopTestResources
+> Task :composeApp:desktopTestProcessResources
+> Task :composeApp:processDesktopTestResources SKIPPED
+> Task :composeApp:desktopTestClasses
+> Task :composeApp:desktopTest
+> Task :shared:networking-testing:compileKotlinDesktop
+> Task :shared:networking-testing:compileDesktopMainJava NO-SOURCE
+> Task :shared:networking-testing:desktopProcessResources NO-SOURCE
+> Task :shared:networking-testing:processDesktopMainResources SKIPPED
+> Task :shared:networking-testing:desktopMainClasses
+> Task :shared:networking-testing:desktopJar
+> Task :game-modes:mafia:compileTestKotlinDesktop
+> Task :game-modes:mafia:compileDesktopTestJava NO-SOURCE
+> Task :game-modes:mafia:assembleDesktopTestResources
+> Task :game-modes:mafia:desktopTestProcessResources
+> Task :game-modes:mafia:processDesktopTestResources SKIPPED
+> Task :game-modes:mafia:desktopTestClasses
+> Task :game-modes:mafia:desktopTest
+> Task :game-modes:whodunit:compileTestKotlinDesktop
+> Task :game-modes:whodunit:compileDesktopTestJava NO-SOURCE
+> Task :game-modes:whodunit:assembleDesktopTestResources
+> Task :game-modes:whodunit:desktopTestProcessResources
+> Task :game-modes:whodunit:processDesktopTestResources SKIPPED
+> Task :game-modes:whodunit:desktopTestClasses
+> Task :game-modes:whodunit:desktopTest
+> Task :shared:content:compileTestKotlinDesktop
+> Task :shared:content:compileDesktopTestJava NO-SOURCE
+> Task :shared:content:desktopTestProcessResources NO-SOURCE
+> Task :shared:content:processDesktopTestResources SKIPPED
+> Task :shared:content:desktopTestClasses
+> Task :shared:content:desktopTest
+> Task :shared:core:compileTestKotlinDesktop
+> Task :shared:core:compileDesktopTestJava NO-SOURCE
+> Task :shared:core:desktopTestProcessResources NO-SOURCE
+> Task :shared:core:processDesktopTestResources SKIPPED
+> Task :shared:core:desktopTestClasses
+> Task :shared:core:desktopTest
+> Task :shared:design-system:compileTestKotlinDesktop
+> Task :shared:design-system:compileDesktopTestJava NO-SOURCE
+> Task :shared:design-system:assembleDesktopTestResources
+> Task :shared:design-system:desktopTestProcessResources
+> Task :shared:design-system:processDesktopTestResources SKIPPED
+> Task :shared:design-system:desktopTestClasses
+> Task :shared:design-system:desktopTest
+> Task :shared:engine:compileTestKotlinDesktop
+> Task :shared:engine:compileDesktopTestJava NO-SOURCE
+> Task :shared:engine:desktopTestProcessResources NO-SOURCE
+> Task :shared:engine:processDesktopTestResources SKIPPED
+> Task :shared:engine:desktopTestClasses
+> Task :shared:engine:desktopTest
+> Task :shared:engine-testing:compileTestKotlinDesktop
+> Task :shared:engine-testing:compileDesktopTestJava NO-SOURCE
+> Task :shared:engine-testing:desktopTestProcessResources NO-SOURCE
+> Task :shared:engine-testing:processDesktopTestResources SKIPPED
+> Task :shared:engine-testing:desktopTestClasses
+> Task :shared:engine-testing:desktopTest
+> Task :shared:networking:compileTestKotlinDesktop
+> Task :shared:networking:compileDesktopTestJava NO-SOURCE
+> Task :shared:networking:desktopTestProcessResources NO-SOURCE
+> Task :shared:networking:processDesktopTestResources SKIPPED
+> Task :shared:networking:desktopTestClasses
+> Task :shared:networking:desktopTest
+> Task :shared:networking-testing:compileTestKotlinDesktop
+> Task :shared:networking-testing:compileDesktopTestJava NO-SOURCE
+> Task :shared:networking-testing:desktopTestProcessResources NO-SOURCE
+> Task :shared:networking-testing:processDesktopTestResources SKIPPED
+> Task :shared:networking-testing:desktopTestClasses
+> Task :shared:networking-testing:desktopTest
+> Task :shared:session:compileTestKotlinDesktop
+> Task :shared:session:compileDesktopTestJava NO-SOURCE
+> Task :shared:session:desktopTestProcessResources NO-SOURCE
+> Task :shared:session:processDesktopTestResources SKIPPED
+> Task :shared:session:desktopTestClasses
+> Task :shared:session:desktopTest
+> Task :shared:storage:compileTestKotlinDesktop
+> Task :shared:storage:compileDesktopTestJava NO-SOURCE
+> Task :shared:storage:desktopTestProcessResources NO-SOURCE
+> Task :shared:storage:processDesktopTestResources SKIPPED
+> Task :shared:storage:desktopTestClasses
+> Task :shared:storage:desktopTest
+> Task :shared:transport-p2p:compileTestKotlinDesktop
+> Task :shared:transport-p2p:compileDesktopTestJava NO-SOURCE
+> Task :shared:transport-p2p:desktopTestProcessResources NO-SOURCE
+> Task :shared:transport-p2p:processDesktopTestResources SKIPPED
+> Task :shared:transport-p2p:desktopTestClasses
+> Task :shared:transport-p2p:desktopTest
+> Task :productionDesktopCheck
+
+> Task :productionReleaseAutomationCheck
+test_both_small_files_with_spaces_pass_gnu_shaped_stat_preflight (test_android_artifact_size.AndroidArtifactSizeTest) ... ok
+test_empty_dependency_report_is_rejected (test_android_artifact_size.AndroidArtifactSizeTest) ... ok
+test_exact_artifact_bound_is_accepted_without_allocating_512_mib (test_android_artifact_size.AndroidArtifactSizeTest) ... ok
+test_exact_dependency_report_bound_is_accepted (test_android_artifact_size.AndroidArtifactSizeTest) ... ok
+test_missing_directory_and_symlink_inputs_are_rejected (test_android_artifact_size.AndroidArtifactSizeTest) ... ok
+test_oversized_artifact_is_rejected (test_android_artifact_size.AndroidArtifactSizeTest) ... ok
+test_oversized_dependency_report_is_rejected (test_android_artifact_size.AndroidArtifactSizeTest) ... ok
+test_additional_unapproved_signer_is_rejected (test_android_upload_signature.AndroidUploadSignatureTest) ... ok
+test_certificate_usage_must_allow_code_signing (test_android_upload_signature.AndroidUploadSignatureTest) ... ok
+test_corrupt_signature_block_is_rejected (test_android_upload_signature.AndroidUploadSignatureTest) ... ok
+test_disabled_certificate_algorithm_is_rejected_with_modern_jar_signature (test_android_upload_signature.AndroidUploadSignatureTest) ... ok
+test_disabled_jar_algorithm_is_rejected_with_modern_certificate (test_android_upload_signature.AndroidUploadSignatureTest) ... ok
+test_disabled_rsa_key_size_is_rejected (test_android_upload_signature.AndroidUploadSignatureTest) ... ok
+test_entirely_unsigned_bundle_is_rejected (test_android_upload_signature.AndroidUploadSignatureTest) ... ok
+test_expired_self_signed_certificate_is_rejected (test_android_upload_signature.AndroidUploadSignatureTest) ... ok
+test_extended_usage_must_allow_code_signing (test_android_upload_signature.AndroidUploadSignatureTest) ... ok
+test_failed_java_preparation_cannot_be_masked_by_later_verification (test_android_upload_signature.AndroidUploadSignatureTest) ... ok
+test_not_yet_valid_self_signed_certificate_is_rejected (test_android_upload_signature.AndroidUploadSignatureTest) ... ok
+test_registered_self_signed_upload_certificate_passes_strict_verification (test_android_upload_signature.AndroidUploadSignatureTest) ... ok
+test_signedjar_specific_certificate_policy_cannot_be_bypassed_by_trusting_leaf (test_android_upload_signature.AndroidUploadSignatureTest) ... ok
+test_stale_trust_store_is_not_overwritten_or_used_after_preparation_failure (test_android_upload_signature.AndroidUploadSignatureTest) ... ok
+test_tampered_signed_payload_is_rejected (test_android_upload_signature.AndroidUploadSignatureTest) ... ok
+test_unknown_critical_certificate_extension_is_rejected (test_android_upload_signature.AndroidUploadSignatureTest) ... ok
+test_unsigned_extra_payload_including_meta_inf_is_rejected (test_android_upload_signature.AndroidUploadSignatureTest) ... ok
+test_untrusted_ca_path_does_not_become_a_new_trust_anchor (test_android_upload_signature.AndroidUploadSignatureTest) ... ok
+test_upload_trust_cannot_be_reused_as_timestamp_authority_trust (test_android_upload_signature.AndroidUploadSignatureTest) ... ok
+test_wrong_approved_fingerprint_is_rejected (test_android_upload_signature.AndroidUploadSignatureTest) ... ok
+test_timeout_stops_term_resistant_redirected_descendant (test_android_upload_signature.OwnedSignatureProcessTest) ... ok
+test_already_present_candidate_is_validated_and_edit_is_deleted (test_google_promotion_edit.GooglePromotionEditTest) ... ok
+test_commit_failure_is_not_blindly_retried (test_google_promotion_edit.GooglePromotionEditTest) ... ok
+test_external_change_after_reads_invalidates_mutation_without_retry (test_google_promotion_edit.GooglePromotionEditTest) ... ok
+test_missing_configured_destination_is_rejected (test_google_promotion_edit.GooglePromotionEditTest) ... ok
+test_read_validation_and_commit_use_the_same_edit_snapshot (test_google_promotion_edit.GooglePromotionEditTest) ... ok
+test_staged_destination_in_mutation_snapshot_is_not_completed (test_google_promotion_edit.GooglePromotionEditTest) ... ok
+test_unavailable_or_unfinished_source_in_mutation_snapshot_is_rejected (test_google_promotion_edit.GooglePromotionEditTest) ... ok
+test_validation_failure_deletes_uncommitted_edit_without_retry (test_google_promotion_edit.GooglePromotionEditTest) ... ok
+test_wrong_bundle_digest_in_mutation_snapshot_is_rejected (test_google_promotion_edit.GooglePromotionEditTest) ... ok
+test_canonical_framework_is_an_idempotent_success (test_normalize_embedded_apple_framework.EmbeddedAppleFrameworkNormalizationTest) ... ok
+test_case_only_framework_rename_matches_macho_identity (test_normalize_embedded_apple_framework.EmbeddedAppleFrameworkNormalizationTest) ... ok
+test_framework_without_canonical_executable_fails_closed (test_normalize_embedded_apple_framework.EmbeddedAppleFrameworkNormalizationTest) ... ok
+test_artifact_digest_tampering_is_rejected (test_release_tool.CandidateManifestTest) ... ok
+test_artifact_size_bound_is_enforced (test_release_tool.CandidateManifestTest) ... ok
+test_binary_checkpoint_recovers_exact_bytes (test_release_tool.CandidateManifestTest) ... ok
+test_candidate_claim_binds_build_source_and_workflow (test_release_tool.CandidateManifestTest) ... ok
+test_control_artifact_path_traversal_is_rejected (test_release_tool.CandidateManifestTest) ... ok
+test_debug_identity_is_rejected (test_release_tool.CandidateManifestTest) ... ok
+test_expired_orphan_binary_still_refuses_rebuild (test_release_tool.CandidateManifestTest) ... ok
+test_failed_atomic_evidence_write_removes_temporary_file (test_release_tool.CandidateManifestTest) ... ok
+test_foreign_protected_candidate_claim_reserves_build_number (test_release_tool.CandidateManifestTest) ... ok
+test_github_artifact_inventory_is_bounded_and_paginated (test_release_tool.CandidateManifestTest) ... ok
+test_github_prefixed_sha256_digest_is_normalized (test_release_tool.CandidateManifestTest) ... ok
+test_orphan_binary_checkpoint_refuses_rebuild (test_release_tool.CandidateManifestTest) ... ok
+test_platform_state_rejects_another_candidate (test_release_tool.CandidateManifestTest) ... ok
+test_same_run_claim_allows_a_safe_rerun (test_release_tool.CandidateManifestTest) ... ok
+test_store_mutation_intent_is_bound_to_exact_candidate_bytes (test_release_tool.CandidateManifestTest) ... ok
+test_store_mutation_intent_rejects_another_candidate (test_release_tool.CandidateManifestTest) ... ok
+test_store_receipt_cannot_smuggle_private_fields_into_manifest (test_release_tool.CandidateManifestTest) ... ok
+test_untrusted_artifact_cannot_reserve_candidate_build_number (test_release_tool.CandidateManifestTest) ... ok
+test_valid_manifest_round_trip (test_release_tool.CandidateManifestTest) ... ok
+test_version_mismatch_is_rejected (test_release_tool.CandidateManifestTest) ... ok
+test_wrong_signature_fingerprint_is_rejected (test_release_tool.CandidateManifestTest) ... ok
+test_https_cross_host_redirect_strips_github_authorization (test_release_tool.GitHubRedirectPolicyTest) ... ok
+test_insecure_or_credentialed_redirect_is_rejected (test_release_tool.GitHubRedirectPolicyTest) ... ok
+test_divergent_tree_is_rejected (test_release_tool.GitTreeVerificationTest) ... ok
+test_exact_candidate_commit_is_accepted (test_release_tool.GitTreeVerificationTest) ... ok
+test_shared_history_equal_tree_rebase_or_merge_is_accepted (test_release_tool.GitTreeVerificationTest) ... ok
+test_unrelated_same_tree_is_rejected (test_release_tool.GitTreeVerificationTest) ... Switched to a new branch 'unrelated'
+ok
+test_api_verified_identity_approval_is_accepted (test_release_tool.StoreIdentityApprovalTest) ... ok
+test_known_collision_cannot_be_approved_by_changing_only_the_flag (test_release_tool.StoreIdentityApprovalTest) ... ok
+test_public_store_collision_blocks_every_candidate_platform (test_release_tool.StoreIdentityApprovalTest) ... ok
+test_verified_identity_still_requires_platform_valid_format (test_release_tool.StoreIdentityApprovalTest) ... ok
+test_verified_status_without_evidence_fails_closed (test_release_tool.StoreIdentityApprovalTest) ... ok
+test_candidate_claim_accepts_only_the_protected_candidate_workflow (test_release_tool.WorkflowRunRecordTest) ... ok
+test_successful_protected_external_run_is_bound_to_its_own_source_sha (test_release_tool.WorkflowRunRecordTest) ... ok
+test_untrusted_repository_or_branch_is_rejected (test_release_tool.WorkflowRunRecordTest) ... ok
+test_wrong_workflow_attempt_is_rejected (test_release_tool.WorkflowRunRecordTest) ... ok
+test_finding_overrides_require_full_commit_shas (test_review_inventory.ReviewInventoryTest) ... ok
+test_rendering_ignores_a_synthetic_pull_request_merge (test_review_inventory.ReviewInventoryTest) ... ok
+test_rendering_is_repeatable_and_independent_of_untracked_files (test_review_inventory.ReviewInventoryTest) ... ok
+test_apple_pagination_is_bounded_to_official_host (test_store_api.AppleStoreReadbackTest) ... ok
+test_apple_pagination_rejects_foreign_redirect_target (test_store_api.AppleStoreReadbackTest) ... ok
+test_beta_group_app_binding_uses_the_relationship_endpoint (test_store_api.AppleStoreReadbackTest) ... ok
+test_beta_group_for_another_app_is_rejected_before_association (test_store_api.AppleStoreReadbackTest) ... ok
+test_beta_review_state_is_not_accepted_as_a_production_review_state (test_store_api.AppleStoreReadbackTest) ... ok
+test_build_group_readback_uses_supported_beta_group_filter (test_store_api.AppleStoreReadbackTest) ... ok
+test_candidate_rejects_a_different_app_store_connect_app_id (test_store_api.AppleStoreReadbackTest) ... ok
+test_existing_submitted_production_review_is_resumed_without_mutation (test_store_api.AppleStoreReadbackTest) ... ok
+test_external_receipt_uses_beta_review_readback (test_store_api.AppleStoreReadbackTest) ... ok
+test_production_rejects_lost_external_group_membership (test_store_api.AppleStoreReadbackTest) ... ok
+test_review_submission_requires_api_readback (test_store_api.AppleStoreReadbackTest) ... ok
+test_review_submission_rerun_reuses_one_empty_draft (test_store_api.AppleStoreReadbackTest) ... ok
+test_store_candidate_requires_current_app_store_eligible_build_metadata (test_store_api.AppleStoreReadbackTest) ... ok
+test_unrelated_active_review_submission_fails_closed (test_store_api.AppleStoreReadbackTest) ... ok
+test_transport_receipt_for_other_ipa_is_rejected (test_store_api.AppleUploadTransportTest) ... ok
+test_transport_receipt_is_bound_to_exact_ipa (test_store_api.AppleUploadTransportTest) ... ok
+test_der_signature_converts_to_fixed_width_jwt_signature (test_store_api.EcdsaSignatureTest) ... ok
+test_malformed_der_signature_is_rejected (test_store_api.EcdsaSignatureTest) ... ok
+test_external_evidence_rejects_manifest_or_attempt_tampering (test_store_api.ExternalEvidenceTest) ... ok
+test_receipt_with_unexpected_sensitive_field_is_rejected (test_store_api.ExternalEvidenceTest) ... ok
+test_successful_run_can_aggregate_valid_receipts_from_prior_attempts (test_store_api.ExternalEvidenceTest) ... ok
+test_existing_exact_bundle_on_wrong_track_is_rejected (test_store_api.GoogleInternalRecoveryTest) ... ok
+test_existing_version_with_different_store_bytes_is_rejected (test_store_api.GoogleInternalRecoveryTest) ... ok
+test_new_candidate_cannot_adopt_an_existing_byte_identical_store_bundle (test_store_api.GoogleInternalRecoveryTest) ... ok
+test_new_upload_rejects_google_digest_mismatch_before_commit (test_store_api.GoogleInternalRecoveryTest) ... ok
+test_recovered_upload_intent_can_resume_by_exact_store_digest (test_store_api.GoogleInternalRecoveryTest) ... ok
+test_recovered_upload_intent_never_sends_a_second_bundle (test_store_api.GoogleInternalRecoveryTest) ... ok
+test_active_or_ambiguous_destination_cannot_be_replaced (test_store_api.GoogleTrackTest) ... ok
+test_ambiguous_duplicate_track_release_is_rejected (test_store_api.GoogleTrackTest) ... ok
+test_duplicate_named_tracks_are_rejected (test_store_api.GoogleTrackTest) ... ok
+test_duplicate_version_in_bundle_inventory_is_rejected (test_store_api.GoogleTrackTest) ... ok
+test_duplicate_version_is_detected_across_tracks (test_store_api.GoogleTrackTest) ... ok
+test_empty_or_single_completed_destination_can_be_replaced (test_store_api.GoogleTrackTest) ... ok
+test_existing_google_promotion_with_exact_store_bytes_is_idempotent (test_store_api.GoogleTrackTest) ... ok
+test_google_promotion_checks_store_bytes_before_mutation (test_store_api.GoogleTrackTest) ... ok
+test_only_completed_play_release_is_promotable (test_store_api.GoogleTrackTest) ... ok
+test_other_version_is_allowed (test_store_api.GoogleTrackTest) ... ok
+test_prebuild_uniqueness_allows_unused_store_version (test_store_api.GoogleTrackTest) ... ok
+test_prebuild_uniqueness_rejects_existing_store_version (test_store_api.GoogleTrackTest) ... ok
+test_promotion_requires_exact_candidate_bundle_digest (test_store_api.GoogleTrackTest) ... ok
+test_mutation_is_never_blindly_retried (test_store_api.HttpRetryContractTest) ... ok
+test_safe_read_uses_bounded_retry (test_store_api.HttpRetryContractTest) ... ok
+test_apple_unapproved_external_build_is_rejected (test_store_api.PromotionReceiptTest) ... ok
+test_google_external_track_commit_is_accepted (test_store_api.PromotionReceiptTest) ... ok
+test_receipt_for_other_artifact_is_rejected (test_store_api.PromotionReceiptTest) ... ok
+test_apple_internal_validation_mode_avoids_store_client (test_store_api.ValidationOnlyTest) ... ok
+test_apple_unique_validation_mode_avoids_store_client (test_store_api.ValidationOnlyTest) ... ok
+test_every_promotion_validation_mode_avoids_store_clients (test_store_api.ValidationOnlyTest) ... ok
+test_execute_mode_cannot_bypass_blocked_store_identity_ownership (test_store_api.ValidationOnlyTest) ... ok
+test_google_internal_validation_only_never_constructs_store_client (test_store_api.ValidationOnlyTest) ... ok
+test_google_unique_validation_mode_avoids_store_client (test_store_api.ValidationOnlyTest) ... ok
+test_all_release_temporary_directories_use_signal_safe_cleanup (test_workflow_contract.WorkflowContractTest) ... ok
+test_apple_signing_and_upload_scripts_require_identity_approval (test_workflow_contract.WorkflowContractTest) ... ok
+test_candidate_build_number_claim_cannot_be_removed (test_workflow_contract.WorkflowContractTest) ... ok
+test_candidate_bundletool_download_must_be_bounded (test_workflow_contract.WorkflowContractTest) ... ok
+test_candidate_claim_requires_a_secretless_protected_environment (test_workflow_contract.WorkflowContractTest) ... ok
+test_candidate_claim_transaction_cannot_be_scoped_per_sha (test_workflow_contract.WorkflowContractTest) ... ok
+test_candidate_dependency_and_validation_evidence_must_be_retained (test_workflow_contract.WorkflowContractTest) ... ok
+test_candidate_dependency_report_must_use_release_runtime (test_workflow_contract.WorkflowContractTest) ... ok
+test_candidate_preflight_requires_reviewed_managed_device_image (test_workflow_contract.WorkflowContractTest) ... ok
+test_every_store_workflow_job_is_repository_disabled (test_workflow_contract.WorkflowContractTest) ... ok
+test_external_partial_rerun_evidence_cannot_be_removed (test_workflow_contract.WorkflowContractTest) ... ok
+test_ios_app_launch_ui_test_cannot_be_replaced_with_a_build (test_workflow_contract.WorkflowContractTest) ... ok
+test_ios_artifact_validator_enforces_pinned_store_toolchain (test_workflow_contract.WorkflowContractTest) ... ok
+test_ios_build_phases_do_not_inherit_source_signing_secrets (test_workflow_contract.WorkflowContractTest) ... ok
+test_ios_profile_refusal_cannot_delete_a_preexisting_profile (test_workflow_contract.WorkflowContractTest) ... ok
+test_ios_signing_cleanup_is_fail_closed (test_workflow_contract.WorkflowContractTest) ... ok
+test_ios_upload_uses_scoped_key_directory_and_removes_raw_response (test_workflow_contract.WorkflowContractTest) ... ok
+test_managed_device_runner_cannot_use_production_signing_material (test_workflow_contract.WorkflowContractTest) ... ok
+test_missing_shared_store_lock_is_rejected (test_workflow_contract.WorkflowContractTest) ... ok
+test_mobile_release_kit_android_signing_fallbacks_remain_bounded (test_workflow_contract.WorkflowContractTest) ... ok
+test_mobile_release_kit_ios_signing_mapping_is_release_target_only (test_workflow_contract.WorkflowContractTest) ... ok
+test_mutable_action_reference_is_rejected (test_workflow_contract.WorkflowContractTest) ... ok
+test_new_store_workflow_job_cannot_omit_the_release_stop (test_workflow_contract.WorkflowContractTest) ... ok
+test_production_build_command_is_rejected (test_workflow_contract.WorkflowContractTest) ... ok
+test_production_push_trigger_is_rejected (test_workflow_contract.WorkflowContractTest) ... ok
+test_production_without_external_receipt_attestation_is_rejected (test_workflow_contract.WorkflowContractTest) ... ok
+test_production_without_its_own_receipt_attestations_is_rejected (test_workflow_contract.WorkflowContractTest) ... ok
+test_promotion_without_candidate_attestation_is_rejected (test_workflow_contract.WorkflowContractTest) ... ok
+test_release_policy_includes_the_candidate_control_environment (test_workflow_contract.WorkflowContractTest) ... ok
+test_release_system_enforces_review_inventory_freshness (test_workflow_contract.WorkflowContractTest) ... ok
+test_release_tool_download_failure_cannot_false_pass (test_workflow_contract.WorkflowContractTest) ... ok
+test_repository_workflows_satisfy_release_contract (test_workflow_contract.WorkflowContractTest) ... ok
+test_review_inventory_gate_has_full_git_history (test_workflow_contract.WorkflowContractTest) ... ok
+test_store_workflow_without_identity_ownership_gate_is_rejected (test_workflow_contract.WorkflowContractTest) ... ok
+test_unreviewed_workflow_file_is_rejected (test_workflow_contract.WorkflowContractTest) ... ok
+test_validation_requires_release_managed_device_runtime_gate (test_workflow_contract.WorkflowContractTest) ... ok
+test_xcode_identity_guard_matches_the_exact_build_setting (test_workflow_contract.WorkflowContractTest) ... ok
+test_failed_directory_change_cannot_build_from_previous_directory (test_xcode_framework_phase.XcodeFrameworkPhaseTest) ... ok
+test_failed_gradle_with_stale_framework_fails_without_normalizing (test_xcode_framework_phase.XcodeFrameworkPhaseTest) ... ok
+test_intentional_ide_override_still_skips_gradle_and_normalization (test_xcode_framework_phase.XcodeFrameworkPhaseTest) ... ok
+test_successful_embed_normalizes_case_only_framework_name (test_xcode_framework_phase.XcodeFrameworkPhaseTest) ... ok
+test_successful_gradle_still_rejects_missing_framework (test_xcode_framework_phase.XcodeFrameworkPhaseTest) ... ok
+
+----------------------------------------------------------------------
+Ran 172 tests in 28.003s
+
+OK
+validation-only: no App Store Connect request was made
+validation-only: no Google Play request was made
+release workflow contract: PASS
+release workflow contract: PASS
+Verified 628 reviewed rows in docs/review/INDEPENDENT_REVIEW_INVENTORY.csv
+/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-03/scratch/tmp/parlor-release-tools.i0nJco/shellcheck.tar.gz: OK
+/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-03/scratch/tmp/parlor-release-tools.i0nJco/actionlint.tar.gz: OK
+
+> Task :composeApp:detekt
+> Task :game-modes:detekt NO-SOURCE
+> Task :shared:detekt NO-SOURCE
+> Task :game-modes:mafia:detekt
+> Task :game-modes:whodunit:detekt
+> Task :shared:content:detekt
+> Task :shared:core:detekt
+> Task :shared:design-system:detekt
+> Task :shared:engine:detekt
+> Task :shared:engine-testing:detekt
+> Task :shared:networking:detekt
+> Task :shared:networking-testing:detekt
+> Task :shared:session:detekt
+> Task :shared:storage:detekt
+> Task :shared:transport-p2p:detekt
+> Task :staticAnalysis
+> Task :composeApp:detektAndroidRelease
+> Task :composeApp:detektAndroidReleaseUnitTest
+> Task :composeApp:detektDesktopMain
+> Task :composeApp:detektDesktopTest
+> Task :composeApp:detektMetadataCommonMain
+> Task :game-modes:mafia:detektAndroidRelease NO-SOURCE
+> Task :game-modes:mafia:generateReleaseUnitTestStubRFile
+> Task :shared:networking-testing:bundleLibCompileToJarRelease
+> Task :game-modes:mafia:compileReleaseUnitTestKotlinAndroid NO-SOURCE
+> Task :game-modes:mafia:javaPreCompileReleaseUnitTest
+> Task :game-modes:mafia:compileReleaseUnitTestJavaWithJavac NO-SOURCE
+> Task :game-modes:mafia:detektAndroidReleaseUnitTest NO-SOURCE
+> Task :game-modes:mafia:detektDesktopMain NO-SOURCE
+> Task :game-modes:mafia:detektDesktopTest
+> Task :game-modes:mafia:detektMetadataCommonMain
+> Task :game-modes:whodunit:detektAndroidRelease NO-SOURCE
+> Task :game-modes:whodunit:generateReleaseUnitTestStubRFile
+> Task :game-modes:whodunit:compileReleaseUnitTestKotlinAndroid
+> Task :game-modes:whodunit:javaPreCompileReleaseUnitTest
+> Task :game-modes:whodunit:compileReleaseUnitTestJavaWithJavac NO-SOURCE
+> Task :game-modes:whodunit:detektAndroidReleaseUnitTest NO-SOURCE
+> Task :game-modes:whodunit:detektDesktopMain NO-SOURCE
+
+> Task :game-modes:whodunit:detektDesktopTest
+/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/snapshot/WhodunitFinalTwoRecoveryTest.kt:298:13: Function has redundant `suspend` modifier. [RedundantSuspendModifier]
+
+
+> Task :game-modes:whodunit:detektDesktopTest FAILED
+
+[Incubating] Problems report is available at: file:///Users/abdelrahman/Projects/parlor/build/reports/problems/problems-report.html
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':game-modes:whodunit:detektDesktopTest'.
+> Analysis failed with 1 weighted issues.
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+
+BUILD FAILED in 5m 15s
+852 actionable tasks: 775 executed, 77 up-to-date

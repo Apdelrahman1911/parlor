@@ -1,0 +1,30 @@
+{
+  "schema": 1,
+  "reviewer": "/root/platform_support",
+  "decision": "YES_BOUNDED_UNDERLYING_NSError_CAPTURE_IS_USEFUL_NOT_SYSCALL_CAUSAL_PROOF",
+  "h02_context": "Root reports run34564001336/source22ea6beb returned FALSE with NSCocoaErrorDomain/256. Actual H02 interpretation belongs to other reviewers; not independently audited here.",
+  "app04_sdk_evidence": {
+    "root": "actions/34542099663/native-evidence/ios-readiness-40",
+    "sdk": "Xcode_26.3.app/MacOSX26.2.sdk; native arm64 preprocessing, TARGET_OS_OSX=1 and TARGET_OS_SIMULATOR=0. SDK26.2 is not the running host OS version.",
+    "bindings_file": "host-reader-sdk-bindings.json",
+    "bindings_sha256": "fb6cdb5e583fa41354a87d9c6446bb8017e0ed27a247e70a9064372f248ad5be",
+    "archive_file": "host-reader-sdk-macros.raw.gz",
+    "archive_sha256": "6ae5f696567816dd08e251ba5de12ab57d2878ba81242fe584e168cffab95565",
+    "decompressed_sha256": "7aff1ea87840e40f2bd5c6edd5a8bb745d1e00f17f8a72c5d6860a665bcef8d5",
+    "observed": "Archive and decompressed hashes independently match retained identity. Exact macro lines show F_GETPROTECTIONCLASS=63, F_SETPROTECTIONCLASS=64 and MNT_CPROTECT=0x00000080; PROTECTION_CLASS_A is absent, agreeing with available:false/definition:null.",
+    "scope": "Unavailable as a macro in APP04's actual public host sampler include surface (Foundation, fcntl, sys/attr, sys/mount, etc.). Not a whole-SDK header search or proof against an enum/another header. Retained SDK header identities are hashes, not retained full header text. Do not add a private header or numeric class-A fallback; NSError capture needs neither."
+  },
+  "error_contract": [
+    "Standard Foundation meaning: NSCocoaErrorDomain/256 is NSFileReadUnknownError, a generic classification, not POSIX errno256, proof of an actual read syscall, or an unsupported-protection verdict. Error codes require their domains.",
+    "NSUnderlyingErrorKey optionally identifies an underlying NSError. Its domain/code can establish what cause Foundation reports for this failed call. Presence, POSIX domain and a complete causal chain are not guaranteed. No retained MacOSX26.2 NSError.h/NSCocoaError.h was located; these are public API conventions, not a newly verified installed implementation mapping.",
+    "If the underlying domain is NSPOSIXErrorDomain, APP04's actual macro bytes identify EPERM=1, EACCES=13, EINVAL=22 and ENOTSUP=45. These distinguish reported permission/invalid-argument/unsupported categories; they do not identify open versus F_SETPROTECTIONCLASS, capture immediate syscall errno, or prove why that operation failed.",
+    "Retained public Utilities source lines268,274,282 passes reading:true when constructing protection-setter errors, so a read-category NSError is not inherently contradictory. Its precise installed call path is unproved; do not derive the failed branch from this source or generic code256."
+  ],
+  "minimal_capture": "Keep the single owned public setter and existing BOOL/top-level domain/code. On failure inspect only error.userInfo[NSUnderlyingErrorKey] once; emit a closed state absent/nserror/non_nserror and, only for NSError, the existing closed domain category plus signed code. No recursive traversal, descriptions, arbitrary userInfo, paths or object dumps. A wrapped non-POSIX/absent cause remains unknown; never substitute zero as errno or read later thread-local errno as the syscall cause. Existing alarm, direct-child ownership, output bounds, inode custody, cleanup and strict class requirements remain unchanged.",
+  "reference": {
+    "path": "../2026-09-07-local-readiness/evidence/l08-native09-protection-research-01/swift-tag-FileManager+Utilities.swift",
+    "sha256": "10ed21dd5fc60873916e9e5be5f7f09d43dac21da18b31de0b13de251bdd45f5"
+  },
+  "limits": "Recommend this narrow observability addition before any instrumentation; no promise that the key will resolve the cause. No setter retry, direct native setter, debugger, interposition, privilege change, capability/enforcement equivalence, or promotion of historical failures.",
+  "activity": "Retained source/evidence and hash/text reads only; this concise receipt is the only write. No code edits, Git writes, builds/tests, CI, network, native execution, child agents or notifications."
+}

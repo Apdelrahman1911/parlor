@@ -246,6 +246,10 @@ fun WhodunitHostSessionFlow(
             }
         }
     }
+    // As in local play, host Leave-confirmation time must not count toward
+    // Discussion. Replacing the game presentation cancels its sole ticker;
+    // the process owner retains canonical state and networking, not a clock.
+    // Stay must not send Resume: a manual/lifecycle pause has its own owner.
     if (leaveConfirmationOpen) {
         SessionExitConfirmation(
             kind = SessionExitKind.Host,

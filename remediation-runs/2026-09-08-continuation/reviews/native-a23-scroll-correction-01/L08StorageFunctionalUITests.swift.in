@@ -1,0 +1,402 @@
+// Separate functional companion; never an upgrade of original strict L08 or physical storage evidence.
+extension IOSAppLaunchUITests {
+    @MainActor private func verifyL08FunctionalStoreResume(_ app: XCUIApplication) throws {
+        var boots = Set<String>()
+        for ordinal in 1...13 {
+            app.launchEnvironment["PARLOR_L08_STORAGE_FUNCTIONAL_BOOT"] = String(ordinal)
+            try startScenario(app, name: "l08-storage-functional")
+            let initial = try observe(app)
+            let boot = try string(initial, "boot")
+            XCTAssertTrue(boots.insert(boot).inserted, "Every checkpoint recovery must be a different process")
+            try assertNative(initial)
+            var actions: [String] = []
+            if [1, 3, 5, 7].contains(ordinal) {
+                _ = try l08StorageFunctionalAction(app, action: "save", ordinal: ordinal, boot: boot)
+                actions = ["save"]
+            } else if [2, 4, 6, 8, 10].contains(ordinal) {
+                let aliases = [2: "wc", 4: "we", 6: "mon", 8: "moff", 10: "legacy"]
+                let load = ordinal == 10 ? "legacy-load" : "load"
+                _ = try l08StorageFunctionalAction(app, action: load, ordinal: ordinal, boot: boot)
+                try l08TapExactPublicControl(app, identifier: "l08-home-" + aliases[ordinal]!)
+                _ = try l08StorageFunctionalAction(app, action: "continue", ordinal: ordinal, boot: boot)
+                actions = [load, "continue"]
+            } else if ordinal == 9 {
+                _ = try l08StorageFunctionalAction(app, action: "legacy-seed", ordinal: ordinal, boot: boot)
+                actions = ["legacy-seed"]
+            } else if [11, 12].contains(ordinal) {
+                let check = ordinal == 11 ? "legacy-neighbor" : "dual-preserved"
+                let alias = ordinal == 11 ? "damaged" : "dual"
+                _ = try l08StorageFunctionalAction(app, action: check, ordinal: ordinal, boot: boot)
+                try l08TapExactPublicControl(app, identifier: "l08-home-" + alias)
+                try l08WaitRecovery(app, shows: 1)
+                try l08TapExactPublicControl(app, identifier: "l08-recovery-retry")
+                try l08WaitRecovery(app, shows: 2)
+                try l08TapExactPublicControl(app, identifier: "l08-recovery-discard")
+                _ = try l08StorageFunctionalAction(app, action: "discard-observed", ordinal: ordinal, boot: boot)
+                actions = [check, "discard-observed"]
+            } else {
+                _ = try l08StorageFunctionalAction(app, action: "final-absence", ordinal: ordinal, boot: boot)
+                actions = ["final-absence"]
+            }
+            let row: [String: Any] = ["schema_version": 1, "boot_ordinal": ordinal, "process_boot": boot,
+                "actions": actions, "foreground": app.state == .runningForeground,
+                "alert_present": app.alerts.firstMatch.exists,
+                "run_token": app.launchEnvironment["PARLOR_DSC01_RUN_TOKEN"] ?? ""]
+            let encoded = try JSONSerialization.data(withJSONObject: row, options: [.sortedKeys])
+            XCTAssertLessThanOrEqual(encoded.count, 2048)
+            print("PARLOR_L08_STORAGE_FUNCTIONAL_BOOT " + String(decoding: encoded, as: UTF8.self))
+        }
+        app.buttons["parlor-dsc01-complete"].tap()
+        XCTAssertEqual(try observe(app)["completed"] as? Bool, true)
+        app.launchEnvironment.removeValue(forKey: "PARLOR_L08_STORAGE_FUNCTIONAL_BOOT")
+    }
+
+    @MainActor private func l08StorageFunctionalAction(_ app: XCUIApplication, action: String,
+                                            ordinal: Int, boot: String) throws -> [String: Any] {
+        try l08TapExactPublicControl(app, identifier: "l08-functional-action-" + action)
+        let state = app.staticTexts["l08-storage-functional-result"]
+        XCTAssertTrue(state.waitForExistence(timeout: 10))
+        let done = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            guard let text = state.value as? String, !["pending", "running"].contains(text) else { return false }
+            guard let bytes = text.data(using: .utf8), bytes.count <= 16384,
+                  let value = (try? JSONSerialization.jsonObject(with: bytes)) as? [String: Any] else { return true }
+            return value["action"] as? String == action
+        }, object: nil)
+        XCTAssertEqual(XCTWaiter.wait(for: [done], timeout: 75), .completed)
+        let bytes = try XCTUnwrap((state.value as? String)?.data(using: .utf8))
+        XCTAssertLessThanOrEqual(bytes.count, 16384)
+        let value = try XCTUnwrap(JSONSerialization.jsonObject(with: bytes) as? [String: Any])
+        XCTAssertEqual(value["process_boot"] as? String, boot)
+        XCTAssertEqual(value["boot_ordinal"] as? Int, ordinal)
+        XCTAssertEqual(value["action"] as? String, action)
+        XCTAssertEqual(value["run_token"] as? String, app.launchEnvironment["PARLOR_DSC01_RUN_TOKEN"])
+        let result = try dictionary(value, "observation")
+        XCTAssertEqual(result["kind"] as? String, "l08-storage-functional")
+        XCTAssertEqual(result["functional_status"] as? String, "PASS")
+        let comparisons = try XCTUnwrap(result["complete_comparisons"] as? [[String: Any]])
+        XCTAssertLessThanOrEqual(comparisons.count, 4)
+        for comparison in comparisons {
+            XCTAssertTrue(["PASS", "FAIL"].contains(try string(comparison, "comparison")))
+        } // A FAIL here remains a required metadata FAIL in the strict host verifier.
+        XCTAssertEqual(result["physical_or_store_evidence"] as? Bool, false)
+        XCTAssertEqual(app.state, .runningForeground)
+        XCTAssertFalse(app.alerts.firstMatch.exists)
+        return value
+    }
+
+    @MainActor private func l08TapExactPublicControl(_ app: XCUIApplication, identifier: String) throws {
+        XCTAssertTrue(identifier.hasPrefix("l08-"))
+        let homeAliases = ["wc", "we", "mon", "moff", "legacy", "damaged", "dual"]
+        let isHome = homeAliases.contains { identifier == "l08-home-" + $0 }
+        let query = app.descendants(matching: .any).matching(identifier: identifier)
+        if isHome {
+            let lists = app.descendants(matching: .any).matching(identifier: "l08-home-list")
+            XCTAssertTrue(lists.firstMatch.waitForExistence(timeout: 15))
+            XCTAssertEqual(lists.count, 1)
+            let list = lists.firstMatch
+            // Settle each public position BEFORE deciding whether and which way
+            // to scroll. A transient nil readiness result is not a direction.
+            var targetSeen = false
+            for attempt in 0...8 {
+                let direction = try l08SettleHomeScrollDecision(app, identifier: identifier,
+                                                                attempt: attempt, targetSeen: &targetSeen)
+                try l08PublicControlObservation(app, identifier: identifier, attempt: attempt)
+                if direction == .ready { break }
+                guard attempt < 8 else {
+                    XCTFail("L08 Home target exceeded its eight public list gestures")
+                    throw NSError(domain: "L08HomeScroll", code: 1)
+                }
+                XCTAssertTrue(list.exists && list.isEnabled && list.isHittable)
+                if direction == .up { list.swipeUp(velocity: .slow) }
+                else { list.swipeDown(velocity: .slow) }
+            }
+        }
+        XCTAssertTrue(query.firstMatch.waitForExistence(timeout: 15))
+        XCTAssertEqual(query.count, 1)
+        let target = query.firstMatch
+        let ready = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            if isHome { return self.l08HomeGeometry(app, identifier: identifier) != nil }
+            return target.exists && target.isEnabled && target.isHittable
+        }, object: nil)
+        let result = XCTWaiter.wait(for: [ready], timeout: 15)
+        // Retain the individual predicates and public geometry before an
+        // assertion can stop the XCTest; never retain labels or private state.
+        try l08PublicControlObservation(app, identifier: identifier, attempt: 8)
+        XCTAssertEqual(result, .completed)
+        if isHome {
+            // Sample zero AFTER every list gesture, then settle geometry after
+            // the real Observe tap. No other gesture precedes the card activation.
+            try l08RequireHomeZeroBeforeTap(app, identifier: identifier)
+            let settled = try l08WaitStableHomeGeometry(app, identifier: identifier)
+            let current = l08HomeGeometry(app, identifier: identifier)
+            try l08HomeActivationDiagnostic(identifier: identifier, phase: "before-tap", attempt: 0,
+                                            frames: current)
+            guard let current, l08HomeGeometryNear(settled, current),
+                  dsc01CatalogNear(target.frame, current[0]), target.isEnabled, target.isHittable else {
+                XCTFail("L08 Home target moved before its single activation")
+                throw NSError(domain: "L08HomeActivation", code: 1)
+            }
+        }
+        target.tap() // No alternate selector, coordinate fallback, or repeat activation.
+        if isHome { try l08WaitHomeOneAfterTap(app, identifier: identifier) }
+    }
+
+    @MainActor private func l08PublicControlObservation(_ app: XCUIApplication,
+                                                       identifier: String, attempt: Int) throws {
+        let allowed = ["l08-home-wc", "l08-home-we", "l08-home-mon", "l08-home-moff",
+                       "l08-home-legacy", "l08-home-damaged", "l08-home-dual"]
+        guard allowed.contains(identifier) else { return }
+        XCTAssertTrue((0...8).contains(attempt))
+        func observation(_ key: String) -> [String: Any] {
+            let nodes = app.descendants(matching: .any).matching(identifier: key)
+            let count = nodes.count
+            var row: [String: Any] = ["count": count]
+            if count == 1 {
+                let node = nodes.firstMatch
+                row["exists"] = node.exists
+                row["enabled"] = node.isEnabled
+                let frame = node.frame
+                // Never ask XCTest to find a hit point for an offscreen frame.
+                // Unqueried is not false and never counts as readiness evidence.
+                let hittabilityQueried = dsc01CatalogFinite(frame) && app.frame.contains(frame)
+                row["hittability_queried"] = hittabilityQueried
+                if hittabilityQueried { row["hittable"] = node.isHittable }
+                if [frame.minX, frame.minY, frame.width, frame.height].allSatisfy({ $0.isFinite }) {
+                    row["frame"] = ["x": frame.minX, "y": frame.minY,
+                                    "width": frame.width, "height": frame.height]
+                }
+            }
+            return row
+        }
+        let row: [String: Any] = ["schema_version": 1, "identifier": identifier, "attempt": attempt,
+            "target": observation(identifier), "list": observation("l08-home-list"),
+            "overlay": observation("parlor-dsc01-overlay"), "proves_recovery": false]
+        let data = try JSONSerialization.data(withJSONObject: row, options: [.sortedKeys])
+        XCTAssertLessThanOrEqual(data.count, 2048)
+        print("PARLOR_L08_PUBLIC_CONTROL " + String(decoding: data, as: UTF8.self))
+    }
+
+    @MainActor private func l08WaitRecovery(_ app: XCUIApplication, shows: Int) throws {
+        // Observe completion of the actual asynchronous resume coordinator, not
+        // merely that an old Retry/Discard button survived recomposition.
+        for _ in 0..<24 {
+            try l08TapExactPublicControl(app, identifier: "l08-ui-observe")
+            let node = app.staticTexts["l08-ui-result"]
+            let data = try XCTUnwrap((node.value as? String)?.data(using: .utf8))
+            XCTAssertLessThanOrEqual(data.count, 1024)
+            let value = try XCTUnwrap(JSONSerialization.jsonObject(with: data) as? [String: Any])
+            if value["recovery_shows"] as? Int == shows { return }
+            let interval = XCTestExpectation(description: "L08 bounded recovery observation")
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { interval.fulfill() }
+            XCTAssertEqual(XCTWaiter.wait(for: [interval], timeout: 2), .completed)
+        }
+        XCTFail("Original resume coordinator did not retain the expected failed-recovery route")
+        throw NSError(domain: "L08RecoveryObservation", code: 1)
+    }
+
+    private enum L08HomeScrollDirection: String { case up, down, ready }
+
+    private func l08HomeScrollDirection(_ frames: [CGRect]) -> L08HomeScrollDirection? {
+        guard frames.count == 4, frames.allSatisfy(dsc01CatalogFinite),
+              frames[2].contains(frames[1]), frames[2].contains(frames[3]),
+              frames[0].minX >= frames[1].minX, frames[0].maxX <= frames[1].maxX,
+              frames[0].height <= frames[1].height else { return nil }
+        let target = frames[0], list = frames[1], blocked = frames[3].insetBy(dx: -8, dy: -8)
+        if list.contains(target) && !target.intersects(blocked) { return .ready }
+        if target.minY < list.minY { return .down }
+        if target.maxY > list.maxY { return .up }
+        // A contained card overlaps the overlay. Prefer the larger free band
+        // only if that band fits the WHOLE card; do not guess a tap point.
+        let below = list.maxY - max(list.minY, blocked.maxY)
+        let above = min(list.maxY, blocked.minY) - list.minY
+        if below >= target.height && below >= above { return .down }
+        if above >= target.height { return .up }
+        return nil
+    }
+
+    @MainActor private func l08SettleHomeScrollDecision(_ app: XCUIApplication, identifier: String,
+                                                       attempt: Int, targetSeen: inout Bool) throws -> L08HomeScrollDirection {
+        let targets = app.descendants(matching: .any).matching(identifier: identifier)
+        let lists = app.descendants(matching: .any).matching(identifier: "l08-home-list")
+        let overlays = app.descendants(matching: .any).matching(identifier: "parlor-dsc01-overlay")
+        var anchor: [CGRect]? = nil
+        var anchoredDirection: L08HomeScrollDirection? = nil
+        var consecutive = 0
+        for sample in 0..<24 {
+            let targetCount = targets.count, listCount = lists.count, overlayCount = overlays.count
+            guard (0...1).contains(targetCount), (0...1).contains(listCount), (0...1).contains(overlayCount) else {
+                XCTFail("L08 Home scroll identity is ambiguous")
+                throw NSError(domain: "L08HomeScroll", code: 2)
+            }
+            if targetCount == 1 { targetSeen = true }
+            var frames: [CGRect] = []
+            var direction: L08HomeScrollDirection? = nil
+            if listCount == 1, overlayCount == 1, app.state == .runningForeground,
+               !app.alerts.firstMatch.exists, !app.keyboards.firstMatch.exists,
+               lists.firstMatch.exists, lists.firstMatch.isEnabled, overlays.firstMatch.exists {
+                let list = lists.firstMatch, overlay = overlays.firstMatch
+                if targetCount == 1, targets.firstMatch.exists, targets.firstMatch.isEnabled {
+                    frames = [targets.firstMatch.frame, list.frame, app.frame, overlay.frame]
+                    direction = l08HomeScrollDirection(frames)
+                    if direction == .ready {
+                        // Reuse every strict readiness predicate, AFTER geometry;
+                        // recaptured frames must agree before this sample counts.
+                        if let visible = l08HomeGeometry(app, identifier: identifier),
+                           l08HomeGeometryNear(frames, visible) { frames = visible }
+                        else { direction = nil }
+                    }
+                } else if targetCount == 0 && !targetSeen {
+                    // LazyColumn may not compose the initial offscreen identity.
+                    // Search up only before it has ever been seen on this boot;
+                    // disappearance after a known position cannot choose motion.
+                    frames = [list.frame, app.frame, overlay.frame]
+                    if frames.allSatisfy(dsc01CatalogFinite), frames[1].contains(frames[0]),
+                       frames[1].contains(frames[2]) { direction = .up }
+                }
+            }
+            if let direction {
+                if let anchor, anchoredDirection == direction, anchor.count == frames.count,
+                   zip(anchor, frames).allSatisfy({ dsc01CatalogNear($0.0, $0.1) }) { consecutive += 1 }
+                else { anchor = frames; anchoredDirection = direction; consecutive = 1 }
+            } else { anchor = nil; anchoredDirection = nil; consecutive = 0 }
+            let row: [String: Any] = ["schema_version": 1, "identifier": identifier, "attempt": attempt,
+                "sample": sample, "target_count": targetCount, "target_seen": targetSeen,
+                "list_count": listCount, "overlay_count": overlayCount,
+                "direction": direction?.rawValue ?? "wait", "stable_samples": consecutive,
+                "frames": frames.allSatisfy(dsc01CatalogFinite) ? frames.map { [$0.minX, $0.minY, $0.width, $0.height] } : [],
+                "proves_recovery": false]
+            let data = try JSONSerialization.data(withJSONObject: row, options: [.sortedKeys])
+            guard data.count <= 2048 else { throw NSError(domain: "L08HomeScroll", code: 3) }
+            print("PARLOR_L08_HOME_SCROLL " + String(decoding: data, as: UTF8.self))
+            if consecutive == 6, let direction { return direction }
+            if sample < 23 { try catalogSamplingInterval() }
+        }
+        XCTFail("L08 Home scroll decision did not settle within its bounded observations")
+        throw NSError(domain: "L08HomeScroll", code: 4)
+    }
+
+    @MainActor private func l08HomeGeometry(_ app: XCUIApplication, identifier: String) -> [CGRect]? {
+        let targets = app.descendants(matching: .any).matching(identifier: identifier)
+        let lists = app.descendants(matching: .any).matching(identifier: "l08-home-list")
+        let overlays = app.descendants(matching: .any).matching(identifier: "parlor-dsc01-overlay")
+        guard targets.count == 1, lists.count == 1, overlays.count == 1,
+              app.state == .runningForeground, !app.alerts.firstMatch.exists,
+              !app.keyboards.firstMatch.exists else { return nil }
+        let target = targets.firstMatch, list = lists.firstMatch, overlay = overlays.firstMatch
+        guard target.exists, target.isEnabled,
+              list.exists, list.isEnabled, overlay.exists else { return nil }
+        // frame is in screen coordinates. tap() chooses its own hittable point;
+        // require the WHOLE card clear, never assume tap() means center-point.
+        let frames = [target.frame, list.frame, app.frame, overlay.frame]
+        guard frames.allSatisfy(dsc01CatalogFinite), frames[2].contains(frames[1]),
+              frames[2].contains(frames[3]), frames[1].contains(frames[0]),
+              !frames[0].intersects(frames[3].insetBy(dx: -8, dy: -8)) else { return nil }
+        guard target.isHittable, list.isHittable else { return nil }
+        return frames
+    }
+
+    private func l08HomeGeometryNear(_ first: [CGRect], _ second: [CGRect]) -> Bool {
+        first.count == 4 && second.count == 4 &&
+            zip(first, second).allSatisfy { dsc01CatalogNear($0.0, $0.1) }
+    }
+
+    @MainActor private func l08WaitStableHomeGeometry(_ app: XCUIApplication,
+                                                     identifier: String) throws -> [CGRect] {
+        var anchor: [CGRect]? = nil
+        var consecutive = 0
+        // Six consecutive samples relative to the FIRST sample (not adjacent
+        // drift), bounded to 24 observations. No gesture or activation here.
+        for attempt in 0..<24 {
+            let frames = l08HomeGeometry(app, identifier: identifier)
+            if let frames {
+                if let anchor, l08HomeGeometryNear(anchor, frames) { consecutive += 1 }
+                else { anchor = frames; consecutive = 1 }
+            } else { anchor = nil; consecutive = 0 }
+            try l08HomeActivationDiagnostic(identifier: identifier, phase: "geometry", attempt: attempt,
+                                            frames: frames, stableSamples: consecutive)
+            if consecutive == 6, let frames { return frames }
+            if attempt < 23 { try catalogSamplingInterval() }
+        }
+        try l08PublicControlObservation(app, identifier: identifier, attempt: 8)
+        XCTFail("L08 Home target did not reach bounded stable visible geometry")
+        throw NSError(domain: "L08HomeActivation", code: 2)
+    }
+
+    @MainActor private func l08RequireHomeZeroBeforeTap(_ app: XCUIApplication,
+                                                      identifier: String) throws {
+        let query = app.staticTexts.matching(identifier: "l08-ui-result")
+        let untouched = query.count == 1 && query.firstMatch.value as? String == "{}"
+        try l08HomeActivationDiagnostic(identifier: identifier, phase: "before-observer", attempt: 0)
+        guard untouched else {
+            XCTFail("L08 Home observer must be untouched on this process boot")
+            throw NSError(domain: "L08HomeActivation", code: 3)
+        }
+        try l08TapExactPublicControl(app, identifier: "l08-ui-observe")
+        let published = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            guard query.count == 1, let text = query.firstMatch.value as? String else { return false }
+            return text != "{}"
+        }, object: nil)
+        let result = XCTWaiter.wait(for: [published], timeout: 5)
+        let counters = try l08ReadHomeCounters(app, identifier: identifier, phase: "before-zero", attempt: 0)
+        guard result == .completed, counters.values.allSatisfy({ $0 == 0 }) else {
+            XCTFail("L08 Home callback counters were not freshly observed as zero")
+            throw NSError(domain: "L08HomeActivation", code: 4)
+        }
+    }
+
+    @MainActor private func l08WaitHomeOneAfterTap(_ app: XCUIApplication,
+                                                  identifier: String) throws {
+        // Repeated READ-ONLY observation, never another Home activation. An old
+        // zero sample may delay acknowledgement but can never produce PASS.
+        for attempt in 0..<24 {
+            try l08TapExactPublicControl(app, identifier: "l08-ui-observe")
+            let counters = try l08ReadHomeCounters(app, identifier: identifier, phase: "after-tap", attempt: attempt)
+            guard (0...1).contains(counters["resume_taps"]!), counters["retry_taps"] == 0,
+                  counters["discard_taps"] == 0, (0...1).contains(counters["recovery_shows"]!),
+                  app.state == .runningForeground, !app.alerts.firstMatch.exists else {
+                XCTFail("L08 Home callback acknowledgement violated its exact counter contract")
+                throw NSError(domain: "L08HomeActivation", code: 5)
+            }
+            if counters["resume_taps"] == 1 { return }
+            if attempt < 23 { try catalogSamplingInterval() }
+        }
+        try l08PublicControlObservation(app, identifier: identifier, attempt: 8)
+        XCTFail("One L08 Home activation did not acknowledge its expected callback")
+        throw NSError(domain: "L08HomeActivation", code: 6)
+    }
+
+    @MainActor private func l08ReadHomeCounters(_ app: XCUIApplication, identifier: String,
+                                               phase: String, attempt: Int) throws -> [String: Int] {
+        let query = app.staticTexts.matching(identifier: "l08-ui-result")
+        var counters: [String: Int]? = nil
+        if query.count == 1, let text = query.firstMatch.value as? String,
+           let data = text.data(using: .utf8), data.count <= 1024,
+           let decoded = try? JSONDecoder().decode([String: Int].self, from: data),
+           Set(decoded.keys) == Set(["resume_taps", "retry_taps", "discard_taps", "recovery_shows"]),
+           decoded.values.allSatisfy({ (0...2).contains($0) }) { counters = decoded }
+        try l08HomeActivationDiagnostic(identifier: identifier, phase: phase, attempt: attempt, counters: counters)
+        guard let counters else {
+            XCTFail("L08 Home observer did not publish the closed counter schema")
+            throw NSError(domain: "L08HomeActivation", code: 7)
+        }
+        return counters
+    }
+
+    private func l08HomeActivationDiagnostic(identifier: String, phase: String, attempt: Int,
+                                             frames: [CGRect]? = nil, stableSamples: Int = 0,
+                                             counters: [String: Int]? = nil) throws {
+        let allowed = ["l08-home-wc", "l08-home-we", "l08-home-mon", "l08-home-moff",
+                       "l08-home-legacy", "l08-home-damaged", "l08-home-dual"]
+        guard allowed.contains(identifier), (0..<24).contains(attempt), (0...6).contains(stableSamples),
+              ["before-observer", "before-zero", "geometry", "before-tap", "after-tap"].contains(phase) else {
+            throw NSError(domain: "L08HomeDiagnostic", code: 1)
+        }
+        let row: [String: Any] = ["schema_version": 1, "identifier": identifier, "phase": phase, "attempt": attempt,
+            "geometry_valid": frames != nil, "frames": (frames ?? []).map { [$0.minX, $0.minY, $0.width, $0.height] },
+            "stable_samples": stableSamples, "counters_valid": counters != nil, "counters": counters ?? [:],
+            "proves_recovery": false]
+        let data = try JSONSerialization.data(withJSONObject: row, options: [.sortedKeys])
+        guard data.count <= 2048 else { throw NSError(domain: "L08HomeDiagnostic", code: 2) }
+        print("PARLOR_L08_HOME_ACTIVATION " + String(decoding: data, as: UTF8.self))
+    }
+}

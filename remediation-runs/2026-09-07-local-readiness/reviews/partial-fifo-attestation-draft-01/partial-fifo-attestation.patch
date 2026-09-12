@@ -1,0 +1,299 @@
+--- a/scripts/verification/ios-readiness/secondary_fifo.py
++++ b/scripts/verification/ios-readiness/secondary_fifo.py
+@@ -4,6 +4,7 @@
+ or open files alone NEVER authorize process ownership/termination. This module
+ only unlinks individually attested FIFOs then rmdirs empty attested directories.
+ """
++from copy import deepcopy
+ import os
+ from pathlib import Path
+ import re
+@@ -48,11 +49,28 @@
+         self.records = {}
+         self.pending = {}
+         self.removed = []
++        # Runtime-only completed identity proofs; NEVER rebuilt from pending names.
++        self._partial_pair_proofs = {}
++
++    def _snapshot(self, records, pending):
++        return dict(schema_version=1, cycle_started=self.started,
++                    records=list(records.values()), pending=list(pending.values()),
++                    removed=list(self.removed))
+ 
+     def dump(self):
+-        return dict(schema_version=1, cycle_started=self.started,
+-                    records=list(self.records.values()), pending=list(self.pending.values()),
+-                    removed=list(self.removed))
++        return self._snapshot(self.records, self.pending)
++
++    @staticmethod
++    def _pair_state(keys, records, pending):
++        return deepcopy([(records.get(key), pending.get(key)) for key in keys])
++
++    @staticmethod
++    def _same_live_identity(current, identity):
++        pid, started, parent_id, parent_started, command, parent_command = identity
++        child, parent = current.get(pid, {}), current.get(parent_id, {})
++        return (child.get('start') == started and child.get('command') == command and
++                child.get('ppid') == parent_id and parent.get('start') == parent_started and
++                parent.get('command') == parent_command)
+ 
+     def canonical_argument(self, raw):
+         # macOS's system-owned /var alias is the only normalization allowed.
+@@ -110,30 +128,45 @@
+             self.records[str(path)]['parent'] == expected_parent
+             for path in paths
+         )
+-        if not fully_attested_pair:
+-            # A new, incomplete, or changed pair still needs full live UID and
+-            # post-query process/argv attestation. Cache reuse never adopts paths.
++        identity = (pid, process['start'], parent_id, parent['start'],
++                    live['command'], current[parent_id]['command'])
++        pair_key = tuple(str(path) for path in paths) if not primary_pair else ()
++        proof = self._partial_pair_proofs.get(pair_key)
++        partial_identity_attested = (proof is not None and proof['identity'] == identity and
++            proof['state'] == self._pair_state(pair_key, self.records, self.pending))
++        if not fully_attested_pair and not partial_identity_attested:
++            # A partial pair may reuse ONLY its own completed live UID/argv proof,
++            # with identical current identities and unmodified recorded state.
+             if self.uid_of(pid) != os.getuid() or self.uid_of(parent_id) != os.getuid():
+                 raise UnsafeSecondaryPath('Apple worker UID differs from owned user')
+             after = self.current_processes()
+-            if (after.get(pid, {}).get('start') != process['start'] or
+-                    after.get(pid, {}).get('command') != live['command'] or
+-                    after.get(pid, {}).get('ppid') != parent_id or
+-                    after.get(parent_id, {}).get('start') != parent['start'] or
+-                    after.get(parent_id, {}).get('command') != current[parent_id]['command']):
++            if not self._same_live_identity(after, identity):
+                 raise UnsafeSecondaryPath('Apple process changed during UID verification')
+         if primary_pair:
+             return  # Exact primary-task-root cleanup owns these, not this ledger.
+-        # A fully attested exact pair need not re-query a possibly exiting
+-        # worker's UID. Its inode/type/UID/creation metadata is STILL checked
+-        # below, and cleanup retains every prior live-PID/holder/path guard.
++        # Remember validated path claims even if later metadata/persistence fails.
++        # Pending claims are NOT inode ownership; cleanup still refuses late paths.
++        claims = dict(self.pending)
+         for path in paths:
+             key = str(path)
+-            if len(self.pending) + len(self.records) >= 256 and key not in self.pending and key not in self.records:
++            if key not in self.records:
++                if len(claims) + len(self.records) >= 256 and key not in claims:
++                    raise UnsafeSecondaryPath('Secondary path ledger bound exceeded')
++                claims[key] = dict(path=key, process=dict(expected_process), parent=dict(expected_parent))
++        if claims != self.pending:
++            self.pending = claims
++            self.persist(self.dump())
++        # Stage inode promotions: interruption, bad sibling metadata or failed
++        # durable publication must not promote an unverified pending leaf.
++        records, pending = dict(self.records), dict(self.pending)
++        new_inode = False
++        for path in paths:
++            key = str(path)
++            if len(pending) + len(records) >= 256 and key not in pending and key not in records:
+                 raise UnsafeSecondaryPath('Secondary path ledger bound exceeded')
+             claim = dict(path=key, process=dict(pid=pid, start=process['start']),
+                          parent=dict(pid=parent_id, start=parent['start']))
+-            self.pending[key] = claim
++            pending[key] = claim
+             if not path.exists():
+                 continue  # Capture early claim; finalization fails if an unattested path later appears.
+             relatives = [path.parent.parent, path.parent, path]
+@@ -144,12 +177,26 @@
+                         value['birth_at'] < self.started or value['birth_at'] > time.time() + 1):
+                     raise UnsafeSecondaryPath('Secondary inode/type/UID/birthtime is not task-owned')
+             record = {**claim, 'metadata': [dict(path=str(item), **value) for item, value in zip(relatives, values)]}
+-            existing = self.records.get(key)
++            existing = records.get(key)
+             if existing is not None and existing != record:
+                 raise UnsafeSecondaryPath('Secondary inode or owner was replaced')
+-            self.records[key] = record
+-            self.pending.pop(key, None)
+-        self.persist(self.dump())  # Durable path/inode proof BEFORE workers may exit.
++            new_inode = new_inode or existing is None
++            records[key] = record
++            pending.pop(key, None)
++        if new_inode and not self._same_live_identity(self.current_processes(), identity):
++            raise UnsafeSecondaryPath('Apple process changed during new FIFO inode attestation')
++        recorded = {key for key in pair_key if key in records}
++        awaiting = {key for key in pair_key if key in pending}
++        partial = len(recorded) == len(awaiting) == 1 and recorded.isdisjoint(awaiting)
++        if partial and pair_key not in self._partial_pair_proofs and len(self._partial_pair_proofs) >= 128:
++            raise UnsafeSecondaryPath('Partial pair identity ledger bound exceeded')
++        self.persist(self._snapshot(records, pending))  # Durable proof before publishing new ownership.
++        self.records, self.pending = records, pending
++        if partial:
++            self._partial_pair_proofs[pair_key] = dict(identity=identity,
++                state=self._pair_state(pair_key, records, pending))
++        else:
++            self._partial_pair_proofs.pop(pair_key, None)
+ 
+     def cleanup(self):
+         current = self.current_processes()
+--- a/scripts/verification/ios-readiness/test_secondary_fifo.py
++++ b/scripts/verification/ios-readiness/test_secondary_fifo.py
+@@ -3,6 +3,7 @@
+ No simctl, Gradle, Xcode, preference access or process termination is invoked.
+ Every FIFO/file is under unittest TemporaryDirectory; symlink target is synthetic.
+ """
++from copy import deepcopy
+ import os
+ from pathlib import Path
+ import tempfile
+@@ -245,5 +246,156 @@
+         self.assertFalse(self.ledger.records)
+ 
+ 
++    def partial_pair(self):
++        self.paths[0].unlink()
++        self.attest()
++        self.assertEqual({str(self.paths[1])}, set(self.ledger.records))
++        self.assertEqual({str(self.paths[0])}, set(self.ledger.pending))
++
++    def test_partial_pair_reuses_its_completed_live_identity_without_requerying_uid(self):
++        queried = []
++        def uid(pid):
++            queried.append(pid)
++            return os.getuid()
++        self.ledger.uid_of = uid
++        self.partial_pair()
++        self.assertEqual([1235, 1234], queried)
++        os.mkfifo(self.paths[0])
++        self.ledger.uid_of = self.fail_uid_query
++        self.attest()
++        self.assertEqual(2, len(self.ledger.records))
++        self.assertFalse(self.ledger.pending)
++        self.assertFalse(self.ledger._partial_pair_proofs)
++        self.stop_fixture_processes()
++        self.assertEqual('PASS', self.ledger.cleanup()['status'])
++        self.assertFalse(self.directory.parent.exists())
++
++    def test_partial_pair_new_inode_requires_identity_still_live_after_metadata(self):
++        self.partial_pair(); os.mkfifo(self.paths[0])
++        before = deepcopy(self.ledger.dump())
++        self.ledger.uid_of = self.fail_uid_query
++        self.ledger.current_processes = lambda: {}
++        with self.assertRaisesRegex(UnsafeSecondaryPath, 'new FIFO inode attestation'):
++            self.attest()
++        self.assertEqual(before, self.ledger.dump())
++        self.stop_fixture_processes()
++        with self.assertRaises(UnsafeSecondaryPath): self.ledger.cleanup()
++        self.assertTrue(all(path.exists() for path in self.paths))
++
++    def test_partial_pair_cannot_attest_a_leaf_first_seen_after_worker_exit(self):
++        self.partial_pair(); self.stop_fixture_processes(); os.mkfifo(self.paths[0])
++        before = deepcopy(self.ledger.dump())
++        with self.assertRaises(UnsafeSecondaryPath): self.attest()
++        self.assertEqual(before, self.ledger.dump())
++        with self.assertRaises(UnsafeSecondaryPath): self.ledger.cleanup()
++
++    def test_partial_pair_changed_child_or_parent_command_needs_fresh_identity(self):
++        self.partial_pair(); os.mkfifo(self.paths[0])
++        before = deepcopy(self.ledger.dump())
++        self.ledger.uid_of = self.fail_uid_query
++        for pid in (1234, 1235):
++            with self.subTest(pid=pid):
++                original = self.current[pid]
++                self.current[pid] = {**original, 'command': original['command'] + ' --changed'}
++                with self.assertRaisesRegex(RuntimeError, 'synthetic worker exited'):
++                    self.attest()
++                self.assertEqual(before, self.ledger.dump())
++                self.current[pid] = original
++
++    def test_partial_pair_record_or_claim_mutation_cannot_reuse_its_proof(self):
++        self.partial_pair(); os.mkfifo(self.paths[0])
++        before = deepcopy(self.ledger.dump())
++        self.ledger.uid_of = self.fail_uid_query
++        for kind in ('missing-record', 'nested-metadata', 'malformed-pending'):
++            with self.subTest(kind=kind):
++                if kind == 'missing-record': self.ledger.records.clear()
++                elif kind == 'nested-metadata': self.ledger.records[str(self.paths[1])]['metadata'][-1]['inode'] += 1
++                else: self.ledger.pending[str(self.paths[0])] = {'path': str(self.paths[0])}
++                with self.assertRaisesRegex(RuntimeError, 'synthetic worker exited'):
++                    self.attest()
++                self.ledger.records = {item['path']: deepcopy(item) for item in before['records']}
++                self.ledger.pending = {item['path']: deepcopy(item) for item in before['pending']}
++
++    def test_partial_pair_initial_uid_or_post_uid_failure_never_creates_cached_proof(self):
++        self.paths[0].unlink()
++        self.ledger.uid_of = self.fail_uid_query
++        with self.assertRaises(RuntimeError): self.attest()
++        self.assertFalse(self.ledger._partial_pair_proofs)
++        self.assertFalse(self.ledger.records); self.assertFalse(self.ledger.pending)
++        self.ledger.uid_of = lambda pid: os.getuid()
++        self.ledger.current_processes = lambda: {}
++        with self.assertRaises(UnsafeSecondaryPath): self.attest()
++        self.assertFalse(self.ledger._partial_pair_proofs)
++        self.assertFalse(self.ledger.records); self.assertFalse(self.ledger.pending)
++
++    def test_partial_pair_bad_sibling_does_not_publish_new_leaf(self):
++        self.partial_pair(); os.mkfifo(self.paths[0])
++        before = deepcopy(self.ledger.dump())
++        original = secondary_fifo.metadata
++        def bad_sibling(path):
++            value = original(path)
++            return {**value, 'uid': os.getuid() + 1} if path == self.paths[1] else value
++        with patch('secondary_fifo.metadata', side_effect=bad_sibling):
++            with self.assertRaises(UnsafeSecondaryPath): self.attest()
++        self.assertEqual(before, self.ledger.dump())
++
++    def test_partial_pair_replaced_parent_is_not_accepted_from_cached_identity(self):
++        self.partial_pair(); os.mkfifo(self.paths[0])
++        before = deepcopy(self.ledger.dump())
++        original = secondary_fifo.metadata
++        def changed_parent(path):
++            value = original(path)
++            return {**value, 'inode': value['inode'] + 1} if path == self.directory else value
++        with patch('secondary_fifo.metadata', side_effect=changed_parent):
++            with self.assertRaises(UnsafeSecondaryPath): self.attest()
++        self.assertEqual(before, self.ledger.dump())
++
++    def test_partial_pair_interrupted_metadata_keeps_pending_unpromoted(self):
++        self.partial_pair(); os.mkfifo(self.paths[0])
++        before = deepcopy(self.ledger.dump())
++        original = secondary_fifo.metadata
++        def interrupted(path):
++            if path == self.paths[1]: raise KeyboardInterrupt('synthetic interruption')
++            return original(path)
++        with patch('secondary_fifo.metadata', side_effect=interrupted):
++            with self.assertRaises(KeyboardInterrupt): self.attest()
++        self.assertEqual(before, self.ledger.dump())
++        self.assertTrue(all(path.exists() for path in self.paths))
++
++    def test_partial_pair_failed_publication_keeps_pending_unpromoted(self):
++        self.partial_pair(); os.mkfifo(self.paths[0])
++        before = deepcopy(self.ledger.dump())
++        def unavailable(value):
++            raise RuntimeError('synthetic durable publication failure')
++        self.ledger.persist = unavailable
++        with self.assertRaisesRegex(RuntimeError, 'durable publication failure'):
++            self.attest()
++        self.assertEqual(before, self.ledger.dump())
++        self.stop_fixture_processes()
++        with self.assertRaises(UnsafeSecondaryPath): self.ledger.cleanup()
++
++    def test_fresh_metadata_failure_retains_claims_without_publishing_inode_ownership(self):
++        original = secondary_fifo.metadata
++        def interrupted(path):
++            if path == self.paths[1]: raise KeyboardInterrupt('synthetic interruption')
++            return original(path)
++        with patch('secondary_fifo.metadata', side_effect=interrupted):
++            with self.assertRaises(KeyboardInterrupt): self.attest()
++        self.assertFalse(self.ledger.records)
++        self.assertEqual(set(map(str, self.paths)), set(self.ledger.pending))
++        self.assertFalse(self.ledger._partial_pair_proofs)
++        self.stop_fixture_processes()
++        with self.assertRaises(UnsafeSecondaryPath): self.ledger.cleanup()
++
++    def test_partial_identity_proof_ledger_is_bounded_without_promoting_paths(self):
++        self.paths[0].unlink()
++        self.ledger._partial_pair_proofs = {('unrelated-' + str(index),): {} for index in range(128)}
++        with self.assertRaisesRegex(UnsafeSecondaryPath, 'identity ledger bound'):
++            self.attest()
++        self.assertFalse(self.ledger.records)
++        self.assertEqual(set(map(str, self.paths)), set(self.ledger.pending))
++        self.assertEqual(128, len(self.ledger._partial_pair_proofs))
++
++
+ if __name__ == '__main__':
+     unittest.main()

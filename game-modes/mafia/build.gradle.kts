@@ -30,6 +30,10 @@ kotlin {
             implementation(libs.koin.test)
             implementation(project(":shared:networking-testing"))
         }
+        desktopTest.dependencies {
+            implementation(compose.desktop.currentOs)
+            implementation(libs.compose.ui.test)
+        }
     }
 }
 

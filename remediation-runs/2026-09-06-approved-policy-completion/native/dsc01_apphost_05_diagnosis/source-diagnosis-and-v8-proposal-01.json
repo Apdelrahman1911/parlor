@@ -1,0 +1,210 @@
+{
+  "schema_version": 1,
+  "written_at": "2026-09-06T17:42:48.922573+00:00",
+  "reviewer": "/root/native_fix_review",
+  "classification": "TEST/EVIDENCE GAP",
+  "application_defect_established": false,
+  "source": {
+    "branch": "main",
+    "head": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+    "head_tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+    "freeze": "source-freeze-02.json",
+    "source_manifest_sha256": "9ac2be536979f2216b39c10a6d148125a12380987d4efd483bbcbaeb1733318e",
+    "tracked_diff_sha256": "148fb4583d8fa8341b3cbc48a7fc0bc7564bf4df5c27e9d80e32c6bfdc57b784"
+  },
+  "executed_control_identity": "19343b941ecb031788133df2427d65d6dd7332d80124fe975900e310aa7a2bc4",
+  "runtime_receipt": {
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-05/receipt.json",
+    "sha256": "7003fc8092850e167a99277a3553b709870bb820d2976c01540b63020e50318e"
+  },
+  "runtime_summary": {
+    "status": "FAIL",
+    "runtime_evidence_status": "FAIL",
+    "cleanup_status": "PASS",
+    "xcodebuild_exit_code": 65,
+    "source_unchanged": true,
+    "controls_unchanged": true,
+    "copied_sources_unchanged": true,
+    "owned_uuid": "B5ADF7CB-94CB-4C69-848D-E02AB689362E",
+    "owned_device_absent": true,
+    "temporary_directory_removed": true,
+    "remaining_outputs": [],
+    "owned_processes_remaining": []
+  },
+  "raw_proof": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-05/xcodebuild.log",
+      "sha256": "6d52054081edf43d9448a8d0adda53ec54a18fabf18eb0b618ecc8c5f8788e64",
+      "one_based_lines": [
+        [
+          3697,
+          3716
+        ],
+        [
+          3722,
+          3835
+        ],
+        [
+          3841,
+          3879
+        ],
+        [
+          3880,
+          3976
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-05/probe-mafia-result.json",
+      "sha256": "2d2a3a402705cc004b73d172419c61667608461804b5dfe6cadf2e7475f7c47a"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-05/xcresult-summary.json",
+      "sha256": "7233ab43e18d9788db20406e929cb0234f9d9477f4ba44c0701862364a6d254a"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-05/xcresult-tests.json",
+      "sha256": "6b6ba50545da41d34fbfaa85c2c51ecd4302e1d0878e85c50aab3c47521826dc"
+    }
+  ],
+  "facts": [
+    "Exact four production UIKit fixtures passed; one matrix failed; zero skips.",
+    "Both catalog cards proved one activation followed by actual topology picker; Mafia then selected Pass-and-Play, five players, and entered all five synthetic names through existing IME Next/Done.",
+    "Continue to settings was followed by three real upward swipes. The last swipe idle return at 375.00s precedes the logged Start tap at 375.07s.",
+    "A logged synthesized Start event does not establish callback delivery or canonical commit. Start frame/enabled/hittable/coordinate metadata was not retained.",
+    "Mafia public probe remains mafia-local/setup/ltr for observations8\u201313; checkpointCaptured stays false and zero synthetic language commands were applied.",
+    "All13 Mafia observations share one process; native full-window/one-child observations remain valid.",
+    "Whodunit matrix completed; Mafia RoleAssignment continuity and actual OS scenario did not execute.",
+    "The generic failure at copied XCTest line612 was the public local initial phase predicate, not evidence of a failed settings-owner transaction."
+  ],
+  "source_path": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/passandplay/MafiaGameFlow.kt",
+      "sha256": "8f250d62f8afb48e407c30e5382eb4758bc4ad53dee5168af8e3452ad3e840f6",
+      "one_based_lines": [
+        [
+          179,
+          207
+        ],
+        [
+          231,
+          267
+        ],
+        [
+          326,
+          350
+        ]
+      ],
+      "claim": "Count/names create a real seeded local PartyAwareSession; Setup already has canonical local session ownership."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaSetupScreen.kt",
+      "sha256": "c1dc2d1e5f4bf72ac1c2946341143f22936dd7903aab2d02b58c0d63709e87e4",
+      "one_based_lines": [
+        [
+          110,
+          125
+        ],
+        [
+          218,
+          224
+        ]
+      ],
+      "claim": "Draft validation gates actual button; real onClick passes chosen settings."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/passandplay/MafiaPassAndPlayPhaseRouter.kt",
+      "sha256": "1371eb747579362548f3962a520c2c3f3c2f6225ef551bad93e3e690e08a1fe6",
+      "one_based_lines": [
+        [
+          79,
+          90
+        ],
+        [
+          139,
+          156
+        ],
+        [
+          169,
+          188
+        ]
+      ],
+      "claim": "Actual Setup callback launches exactly one ConfigureAndStart submission; role-assignment stays until actual acknowledgements."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/settings/MafiaSettingsPresets.kt",
+      "sha256": "0fec32a5ccabfbd01dbce10b0afca62a8dffb9736d03eeb76c755c1bf40b4bf0",
+      "one_based_lines": [
+        [
+          10,
+          38
+        ]
+      ],
+      "claim": "Unmodified five-player preset is1Mafia+1Detective+0Doctor+3Civilian; no timers or altered setup are needed."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/reducer/MafiaReducer.kt",
+      "sha256": "2ff9754d497b8258613badb057ab915a6d457786c56b0d5e725f2ba0053e56e2",
+      "one_based_lines": [
+        [
+          56,
+          61
+        ],
+        [
+          106,
+          169
+        ]
+      ],
+      "claim": "Setup/no-drops/valid-settings configure-and-start deterministically installs RoleAssignment."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/session/src/commonMain/kotlin/com/parlor/session/passandplay/PassAndPlaySessionController.kt",
+      "sha256": "d2a6b6fbc0a78685fe192e16894907cc98a51f1a30dd48ce0095a0d2745d8008",
+      "one_based_lines": [
+        [
+          106,
+          131
+        ]
+      ],
+      "claim": "Canonical state commits under mutex before asynchronous event delivery/submit return."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v7/IOSAppLaunchUITests.swift.in",
+      "sha256": "79c477c3e2123e7f28d024a7fa5f2cc4fbccb14cfbfb800e616414e55f11bfd8",
+      "one_based_lines": [
+        [
+          125,
+          169
+        ],
+        [
+          373,
+          394
+        ],
+        [
+          605,
+          613
+        ]
+      ],
+      "claim": "Failed predicate requires mafia-local + role-assignment + ltr; generic Start helper previously tapped first hittable match immediately after scroll."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v7/copied_sources.py",
+      "sha256": "a33fee7e8ac9cae3d80de0c9d906b252cbc0cc939ff2b670fcdd62eb349a2221",
+      "claim": "Copy observer reads actual canonicalState.value.phase.id live; no fake phase or callback advancement."
+    }
+  ],
+  "counter_evidence": [
+    "No proof of invalid settings, reducer rejection, cancellation, application exception, OS termination, wrong native containment, or app crash exists.",
+    "No recorded Start hit coordinates or visual obstruction permits proving a fling/occlusion explanation; close timing is a lead only.",
+    "A valid deterministic source path explains required successor, but does not prove that the event reached that path."
+  ],
+  "v8_authorization_scope": [
+    "Preserve V7 and all original runtime receipts.",
+    "Only actual Mafia Start receives the existing bounded safe-hit observation principle, one activation, and canonical+public successor proof.",
+    "Keep probes, retention equality/native/rotation/passive-window oracles, game settings, source binding and cleanup unchanged.",
+    "Name every bounded observation failure context; report only allowlisted public scenario/surface/phase metadata.",
+    "Actual iOS Settings multilingual prerequisite on runner-owned fresh simulator only; English remains primary, no global defaults writes/private URLs/unknown-alert dismissal.",
+    "Unknown public selector/outcome is BLOCKED, not a product defect or passing OS evidence."
+  ],
+  "cleanup_authority": "Root executed and recorded cleanup. This reviewer started no builds/tests/apps/simulators/background workers and performed no process or file deletion."
+}

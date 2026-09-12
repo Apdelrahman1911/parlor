@@ -1,0 +1,213 @@
+{
+  "schema_version": 1,
+  "id": "L08-APP-CONTAINER-DISCRIMINATOR-RESEARCH-01",
+  "reviewer": "/root/factory_review",
+  "requested_by": "/root",
+  "created_at_utc": "2026-09-08T03:48:34.518694+00:00",
+  "status": "STRICT_L08_REMAINS_FAILED_UNRESOLVED_NO_NEW_APPLICATION_DEFECT_ESTABLISHED",
+  "scope": "Independent read-only source and retained authoritative-reference research. No new native execution, repository-module import, builds, process queries/signals, simulator operation, application edits, or protection waiver. This additive report was explicitly authorized by root.",
+  "baseline": {
+    "branch": "fix/local-readiness-2026-09-07",
+    "commit": "484f82c3bcc273c0014a946376c1ee9fc7de8d83",
+    "tree": "548625b4a49bef5df8db723c1e59a4edd5676ddc",
+    "tracked_status": "clean",
+    "existing_untracked_material": "preserved"
+  },
+  "independently_reopened_evidence": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-09/parlor-l08-storage-1-save.json",
+      "sha256": "c2e85bf1895334d9c1ad18c5216a5094846c80b235ad500c12f2893acc955132"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/native-observations.stdout",
+      "sha256": "7a250d962336621fed327a1173f22f3c08bf9aa16db22861cb69a257881bf417"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/observations.json",
+      "sha256": "e93b1e246467764f7aa3eecd53ef5ad5fc9451f2a7925e61cec6b2768e4386e3"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/receipt.json",
+      "sha256": "55b51c77c8f962d0d4e45fc2f18dac296ebf99d1e5d2224066993d0907000998"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/l08-native-foundation-control-03/FoundationProtectionControl.m",
+      "sha256": "a6b025d7b77c3b1b1de57b93869d0beff6b4cc9e365eb5672ffd2be9d52013f2",
+      "reviewed_line_ranges": [
+        [
+          1,
+          295
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSnapshotFileSystem.kt",
+      "sha256": "c2852fafb293a693be830171f4674947289fafb07f8ecdbafa5c0aaae6d1bf8b",
+      "reviewed_line_ranges": [
+        [
+          1,
+          155
+        ],
+        [
+          330,
+          395
+        ]
+      ]
+    }
+  ],
+  "observations": [
+    "Actual app09 boot1/save failed the required NSFileManager directory protection equality. Dictionary present, key absent, no NSError. Diagnostic-only file getter also lacked the key; both volume queries returned supported. Later original required checks did not execute. This was a test assertion failure, not an established application crash.",
+    "Actual Foundation02 uses attested control03 producer a6b025d7b77c3b1b1de57b93869d0beff6b4cc9e365eb5672ffd2be9d52013f2 (not the earlier similarly named control02 source). Direct Objective-C NSFileManager/NSData methods run in an arm64 iOS26.5 Simulator CLI, app_container=false. Native Foundation UUID 2cc9fce0-08f9-3a0d-8a2f-6db229462de5 is observed, not matched to a public source build.",
+    "Eight native operations return true without NSError/exception. Eight checkpoints all omit NSFileProtectionKey. Regular-file URL class reads return until-first-authentication, even after Atomic|Complete, direct Complete, and explicit FileManager Complete setter. Backup exclusion changes from included to excluded; containing-volume support remains true.",
+    "Production directory creation requests NSFileProtectionComplete; production writes encrypt first and use NSDataWritingAtomic OR NSDataWritingFileProtectionComplete, then exclude the result from backup. Requesting named flags and native success do not prove retained class or device enforcement."
+  ],
+  "authoritative_references": [
+    {
+      "url": "https://developer.apple.com/documentation/foundation/fileattributekey/protectionkey",
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-native09-protection-research-01/official-protection-key.json",
+      "sha256": "d8a47f9181b308110b4e094c946fd66bef4e5dba2aae6d039b836a9e8534566c",
+      "inspection": "Complete primary abstract/discussion/declaration reopened 2026-09-08; retained official response originally accessed 2026-09-07, not freshly fetched in this continuation.",
+      "claim": "Key represents item protection class with NSString value; no explicit Simulator readback guarantee."
+    },
+    {
+      "url": "https://developer.apple.com/documentation/foundation/nsdata/writingoptions/completefileprotection",
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-native09-protection-research-01/official-nsdata-protection.json",
+      "sha256": "69d8ce6ef9580c6951e470edb3e4f1bdaec15a7e5483f6487d85629e8d45c6b4",
+      "inspection": "Complete primary API content reopened 2026-09-08; retained official response.",
+      "claim": "Complete requests encrypted storage accessible only while device is unlocked. This is an API contract, not runtime proof."
+    },
+    {
+      "url": "https://developer.apple.com/documentation/foundation/urlresourcekey/volumesupportsfileprotectionkey",
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-native09-protection-research-01/official-volume-key.json",
+      "sha256": "cc72e2961079c921b19630bc41a2314f1e13fb5f998dbd37d23a4cb214e1746f",
+      "inspection": "Complete primary API content reopened 2026-09-08; retained official response.",
+      "claim": "Containing-volume capability is distinct from an individual file class; true cannot replace item readback."
+    },
+    {
+      "url": "https://developer.apple.com/documentation/foundation/filemanager/createdirectory(atpath:withintermediatedirectories:attributes:)",
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-native09-protection-research-01/official-filemanager-directory.json",
+      "sha256": "ec47b77c3ff9fc96bba8129b239ff6b379c002b2f5c0ab4cfe7c52873a8d3c4c",
+      "inspection": "Complete primary API content reopened 2026-09-08; retained official response.",
+      "claim": "Attributes apply to new directories; no guaranteed repair of an existing directory."
+    },
+    {
+      "url": "https://developer.apple.com/documentation/foundation/filemanager/setattributes(_:ofitematpath:)",
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-native09-protection-research-01/official-filemanager-setattributes.json",
+      "sha256": "73d4bb1d583a33700e9a61efa02970bf40ccf23d69d032c5b881a24d947b1350",
+      "inspection": "Complete primary API content reopened 2026-09-08; retained official response.",
+      "claim": "Prose explicitly allows ignored modification rejections. Success alone is not proof of protection persistence; the incomplete attribute list cannot establish protection unsupported."
+    },
+    {
+      "url": "https://github.com/swiftlang/swift-foundation/blob/60bd7a1d8a730ebdeab2cb037b0519ef3b010ed3/Sources/FoundationEssentials/FileManager/FileManager%2BFiles.swift",
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-native09-protection-research-01/swift-tag-FileManager+Files.swift",
+      "sha256": "6bc250eb5d1d78851abcadf338ac009111b500a50eb9d4ae9a07adb952cb985a",
+      "reviewed_line_ranges": [
+        [
+          140,
+          205
+        ],
+        [
+          609,
+          675
+        ],
+        [
+          965,
+          1004
+        ]
+      ],
+      "inspection": "Immutable official Swift source reopened 2026-09-08.",
+      "claim": "Getter656–665 and setter990–1000 explicitly exclude targetEnvironment(simulator). Stat population164–201 does not add protectionKey. Source-family relevance is established; exact installed OS binary mapping is NOT."
+    },
+    {
+      "url": "https://github.com/swiftlang/swift-foundation/blob/60bd7a1d8a730ebdeab2cb037b0519ef3b010ed3/Sources/FoundationEssentials/FileManager/FileManager%2BBridge.swift",
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-native09-protection-research-01/swift-tag-FileManager+Bridge.swift",
+      "sha256": "73c8acedc56bae364a080e470747b419812c02f4ba105305ea52421ee6d1b423",
+      "reviewed_line_ranges": [
+        [
+          1,
+          105
+        ]
+      ],
+      "inspection": "Immutable official Swift source reopened 2026-09-08.",
+      "claim": "FileManager bridge forwards setter54–55 and attributes70–71 to the implementation; this is not a Linux-only corelibs inference."
+    },
+    {
+      "url": "https://github.com/swiftlang/swift-foundation/blob/60bd7a1d8a730ebdeab2cb037b0519ef3b010ed3/Sources/FoundationEssentials/FileManager/FileManager%2BDirectories.swift",
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-native09-protection-research-01/swift-tag-FileManager+Directories.swift",
+      "sha256": "a005539ad686d07af9d9f0c2d0036d0bc23ab90b681f6f380139bbd3fc82ab9e",
+      "reviewed_line_ranges": [
+        [
+          237,
+          416
+        ]
+      ],
+      "inspection": "Immutable official Swift source reopened 2026-09-08.",
+      "claim": "Darwin/Foundation recursive creation returns for EEXIST335 and attempts newly created directory attributes via try?367/374. No runtime path for app09 is inferred from that source alone."
+    },
+    {
+      "url": "https://github.com/swiftlang/swift-foundation/blob/60bd7a1d8a730ebdeab2cb037b0519ef3b010ed3/Sources/FoundationEssentials/Data/Data%2BWriting.swift",
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-native09-protection-research-01/swift-tag-Data+Writing.swift",
+      "sha256": "a56d2ece2c089134e007447fd2a6744a3fc19b3d2812624c0792fe7ccdfdd127",
+      "reviewed_line_ranges": [
+        [
+          1,
+          110
+        ],
+        [
+          220,
+          295
+        ],
+        [
+          329,
+          535
+        ]
+      ],
+      "inspection": "Immutable official Swift source reopened 2026-09-08.",
+      "claim": "Protected open49–55 delegates to private _NSOpenFileDescriptor_Protected. Atomic temporary-file path249–285 depends on sandbox state and private _NSDataWritingOptionsForRelocatedAtomicWrite268. A CLI-versus-app-container distinction may matter; these private implementations were not inspected."
+    },
+    {
+      "url": "https://developer.apple.com/documentation/xcode/running-your-app-on-simulated-or-physical-devices",
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-native09-protection-research-01/official-running-devices.json",
+      "sha256": "bba44d442e3aa168811e468592bd36dfa4ca7becd7a1efd713bda7bca57c172e",
+      "inspection": "Complete primary content reopened 2026-09-08; retained current official response.",
+      "claim": "General Simulator limitations and physical-testing advice only. NOT File-Protection-specific proof, nor proof every Simulator omits metadata."
+    }
+  ],
+  "classification_and_counter_evidence": [
+    {
+      "claim": "An application storage/Kotlin bridge bug explains the missing protection key.",
+      "classification": "UNCONFIRMED_COUNTER_EVIDENCE_PRESENT",
+      "reason": "Independent direct Objective-C control reproduces absence before and after backup/settings; production requests the expected flags. Actual app-container native control has not run."
+    },
+    {
+      "claim": "Missing NSFileProtectionKey proves unsupported volume, plaintext snapshots, or missing entitlement.",
+      "classification": "REJECTED_INFERENCE",
+      "reason": "Volume capability is observed true; application encryption and OS Data Protection are distinct. No entitlement cause has been established. Do not add entitlements or weaken storage."
+    },
+    {
+      "claim": "Exact installed Simulator intentionally omits FileManager protection metadata.",
+      "classification": "UNCONFIRMED_EXPLANATORY_BINARY_BINDING",
+      "reason": "Official immutable source explicitly does so and actual native CLI observations agree, but the public commit has not been bound to installed Foundation UUID. This does not negate the measured absence."
+    },
+    {
+      "claim": "Strict Complete metadata expectation is inherently physical-only.",
+      "classification": "OVERBROAD",
+      "reason": "Metadata reads are locally observable; this Simulator returns absent/non-Complete. No inspected authoritative API contract guarantees this Simulator will return Complete. Keep the original required gate FAIL/unresolved rather than auto-waiving it."
+    },
+    {
+      "claim": "Lock-state/keybag protection enforcement can be proved by functional Simulator saves.",
+      "classification": "REJECTED",
+      "reason": "Actual iOS hardware/device lock behavior and backup protection require physical-device evidence, separate from metadata readback and encrypted-envelope functionality."
+    }
+  ],
+  "smallest_remaining_local_discriminator": {
+    "status": "PROPOSAL_ONLY_NO_IMPLEMENTATION_OR_EXECUTION",
+    "goal": "If root decides more local discrimination is warranted, distinguish CLI/container/native-bridge differences without altering production storage or strict assertions.",
+    "context": "Same root-owned Debug app-container/runtime/source-bound image, one fresh synthetic Application Support sibling outside Parlor snapshots/rejoin/legacy names; no Keychain or real player data.",
+    "operations": "Direct Objective-C NSFileManager directory creation/attributes, NSData Atomic|Complete plus direct Complete, backup exclusion and explicit setter before/after observations; fresh NSURL only for regular-file class; record loaded Foundation UUID. Preserve primitive bounded errors/counts/classes, not native descriptions/paths/payloads.",
+    "ownership": "Single root build lane, exact token/UDID/container/path/type ownership, bounded files and timeout, finalizer cleanup; no connected phone or user profile.",
+    "limits": "Could establish the exact native app-container observation and reduce Kotlin/CLI hypotheses, not installed-source provenance, physical Data Protection enforcement or strict L08 success. A root-controlled binary/source attestation or authoritative Apple OS-specific confirmation is separate and currently absent."
+  },
+  "preservation": "All original receipts and strict L08 controls preserved. Only this explicitly authorized new JSON report is written; no reviewer task-owned native workers/build outputs exist.",
+  "native12_boundary": "Native12 subsequently failed a separate actual Home target readiness wait; its failure/runtime/provenance reconciliation is separate. This research does not treat the partial functional run as PASS."
+}

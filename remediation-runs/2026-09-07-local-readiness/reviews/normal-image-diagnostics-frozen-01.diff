@@ -1,0 +1,1142 @@
+--- remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/README.md
++++ remediation-runs/2026-09-07-local-readiness/native/normal-image-diagnostics-draft-01/README.md
+@@ -1,11 +1,17 @@
+-# Normal-source iOS launch observation — campaign controls
++# Normal-source iOS launch — isolated image-diagnostics draft 01
++
++This sibling draft is **not adopted, executed, or approved for native execution**.
++It leaves the canonical normal controls and shared support bytes untouched.
++Independent source review and root-owned pure-control execution are required
++before adoption, followed by a fresh source/control binding for any native cycle.
+ 
+ The original controls had independent source review and **78 passing synthetic
+ tests** in `evidence/package-controls-01/` (2026-09-07). The subsequent **99** controls
+-passed in `evidence/normal-after-native10-controls-01/`. The current suite declares
+-**120 tests**, adding explicit USER-only presentation binding and adversarial
+-cases. The additional tests need their own execution receipt; test-control success
+-is not app-runtime evidence.
++passed in `evidence/normal-after-native10-controls-01/`. The canonical suite declares
++**120 tests**. This isolated draft declares **163 tests** (43 added failure-only
++diagnostic, negative, orchestration and mutation controls). None of these new
++controls has been executed by its author; test-control success is not app-runtime
++evidence. Existing assertions and test signatures are preserved.
+ 
+ `ios-readiness-06` executed eight successful XCTest repetitions but then failed
+ report parsing, before the separate ninth-launch provenance observation. Its
+@@ -40,6 +46,48 @@
+ of each loaded non-launcher image's full path or mapped-memory bytes. Actual
+ Binary Images and `vmmap` support remain unverified until a new approved native
+ cycle exercises them; synthetic fixtures do not prove those tool formats.
++
++## Failure-only image diagnostics
++
++`ios-readiness-11` passed eight XCTest repetitions, both notice-package checks
++and cleanup. Its separate image observation failed with **“Runtime contains an
++unbound application/framework image.”** The offending Binary Images row was not
++retained, so neither its path format nor an explanation is established. That
++original FAIL is unchanged. This draft grants **no additional path aliases**.
++
++`external_image_diagnostics.py` examines bounded already-acquired text only after
++a parser rejection. Its closed `FAILURE_ONLY_EXTERNAL_IMAGE_FORMAT` result always
++has `proves_provenance=false`. It retains only Parlor/Compose names, known
++artifact/origin/kind/component indexes, exact UUID-equality/index relationships,
++interval metadata, closed public redaction markers, and unknown component
++SHA-256/lengths. Indexes refer to sorted canonical keys of the existing artifact
++inventory, additionally bound by its canonical JSON value hash. They are
++comparisons, never newly authorized paths. No unknown paths, raw UUIDs, stacks,
++symbols, unrelated mappings or arbitrary exception messages are retained.
++Alternate `__TEXT_EXEC` and malformed literal `__TEXT`-prefixed rows can receive
++closed diagnostic-kind labels; the unchanged acceptance parser still rejects
++missing required `__TEXT` bindings. This is not support for another native format.
++
++Limits remain 16 MiB input, 65,536 scanned lines, 8,192 bytes per line, 32 relevant
++rows, 4,096 path bytes, 128 path components, 64 known-component relationships per
++component / 2,048 per path, and 256 KiB serialized output. Each appended row is
++budget-checked. Missing or ambiguous Binary Images tables are explicitly unscanned,
++not normalized. Bound failures remain diagnostic insufficiency, not provenance.
++
++Root separately approved **drafting**, not executing, a single guarded sibling
++`vmmap -w` attempt after a successful `sample` command, unchanged post-sample
++lifetime, and a `RuntimeError` parser rejection. A fresh same-target preflight
++must succeed, command time/output limits are unchanged, and postflight is attempted
++even if the command fails. Diagnostic interruption prevents further optional
++native work. A sample failure provides **no selected-image reference**; this path
++never calls `bind_vmmap`, retries, changes a parser, or reaches provenance PASS.
++The original sample exception remains primary; sibling command, lifetime and
++diagnostic failures are recorded separately by type. Normal successful-sample
++`vmmap` diagnostics may compare only to that actual successful sample result.
++
++Failure-only records never substitute for the provenance document. Original raw
++file deletion, process ownership, simulator cleanup, copied-input validation,
++source/control binding and final PASS predicates remain unchanged.
+ 
+ ## What this runner does
+ 
+@@ -137,11 +185,11 @@
+ ## Root review and execution
+ 
+ Do not execute while another lane is active. Independent review must examine all
+-new source and the referenced approved helper hashes, then run the **120** synthetic
++new source and the referenced approved helper hashes, then run the **163** synthetic
+ control tests (not Swift compilation or app runtime):
+ 
+ ```sh
+-/usr/bin/python3 -B remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_control_tests.py
++/usr/bin/python3 -B remediation-runs/2026-09-07-local-readiness/native/normal-image-diagnostics-draft-01/run_control_tests.py
+ ```
+ 
+ Use the root's outer receipt/finalization wrapper even for this pure cycle. The
+@@ -169,7 +217,8 @@
+ preflight; this is not Store signing or publication authorization. No app-source
+ freeze or native success is implied by this draft's control freeze.
+ 
+-Research receipts/gzipped public sources are adjacent. Apple current launch docs,
++Research receipts/gzipped public sources remain in the unchanged canonical
++`normal-ios-launch-proposal-01/` sibling. Apple current launch docs,
+ the installed Xcode repetition manpage and xcresult0.1.0 schemas, installed
+ `sample(1)`/`vmmap(1)`, Apple vmmap documentation, installed LLDB help, and current
+ LLVM command mapping were considered. LLDB was researched but is **not** used as
+--- /dev/null
++++ remediation-runs/2026-09-07-local-readiness/native/normal-image-diagnostics-draft-01/external_image_diagnostics.py
+@@ -0,0 +1,202 @@
++"""Bounded failure-only image-format metadata, never provenance acceptance.
++
++This module performs no filesystem, account, process or native-tool operations.
++It cannot create a path policy, select trusted images or relax a parser. Unknown
++paths/symbols/UUIDs are never retained. Artifact indexes refer to the sorted exact
++inventory keys, not to a guessed match or a newly authorized image origin.
++"""
++import hashlib
++import io
++import json
++from pathlib import Path
++import re
++
++from external_image_provenance import OwnedToolPaths, SAMPLE_ROW, UUID, validate_artifacts
++
++MAX_INPUT_BYTES = 16 * 1024 * 1024
++MAX_OUTPUT_BYTES = 256 * 1024
++MAX_LINES = 65536
++MAX_LINE_BYTES = 8192
++MAX_CANDIDATES = 32
++MAX_PATH_BYTES = 4096
++MAX_COMPONENTS = 128
++MAX_RELATIONS_PER_COMPONENT = 64
++MAX_RELATIONS_PER_PATH = 2048
++IMAGE_NAMES = frozenset({'Parlor', 'Parlor.debug.dylib', 'ComposeApp'})
++PUBLIC_MARKERS = frozenset({'USER', '*', '...', '…', '~', '<redacted>'})
++ABSOLUTE_TAIL = re.compile(r'(?:^|[ \t])(/[^\r\n]*?)\s*$')
++SAMPLE_ADDRESS = re.compile(r'^\s*(0x[0-9a-fA-F]+)\s*-\s*(0x[0-9a-fA-F]+)\s+')
++VMMAP_ADDRESS = re.compile(r'^\s*__TEXT\s+([0-9a-fA-F]+)-([0-9a-fA-F]+)\s+')
++
++
++def _context(artifacts, tool_paths, selected):
++    validate_artifacts(artifacts)
++    if tool_paths is not None:
++        if not isinstance(tool_paths, OwnedToolPaths):
++            raise RuntimeError('Unknown diagnostic path policy')
++        tool_paths.require_inventory(artifacts)
++    paths = sorted(artifacts)
++    components = [path.split('/') for path in paths]
++    if any(len(parts) > MAX_COMPONENTS for parts in components):
++        raise RuntimeError('Diagnostic inventory component budget exceeded')
++    if any(not isinstance(row['relative_path'], str) or len(row['relative_path'].encode()) > MAX_PATH_BYTES
++           for row in artifacts.values()):
++        raise RuntimeError('Invalid diagnostic inventory relative path')
++    if selected is not None:
++        if not isinstance(selected, dict) or not 1 <= len(selected) <= len(artifacts):
++            raise RuntimeError('Invalid diagnostic sampled-image reference')
++        for path, row in selected.items():
++            if (path not in artifacts or not isinstance(row, dict) or
++                    any(row.get(key) != value for key, value in artifacts[path].items()) or
++                    type(row.get('sample_start')) is not int or type(row.get('sample_end_inclusive')) is not int or
++                    not 0 < row['sample_start'] <= row['sample_end_inclusive'] < 2**64):
++                raise RuntimeError('Diagnostic sample reference differs from its inventory')
++    return paths, components
++
++
++def _path_shape(value, paths, components, tool_paths):
++    if not isinstance(value, str) or not 0 < len(value.encode()) <= MAX_PATH_BYTES:
++        raise RuntimeError('Diagnostic candidate path budget exceeded')
++    parts = value.split('/')
++    if len(parts) > MAX_COMPONENTS:
++        raise RuntimeError('Diagnostic candidate component budget exceeded')
++    exact = [index for index, path in enumerate(paths) if value == path]
++    canonical = value if tool_paths is None else tool_paths.resolve(value)
++    aliases = [index for index, path in enumerate(paths) if canonical == path and value != path]
++    shape, relationships = [], 0
++    for part in parts:
++        matches = [dict(artifact_index=index, component_indexes=[offset for offset, known in enumerate(known_parts)
++                                                                if known == part])
++                   for index, known_parts in enumerate(components) if part in known_parts]
++        count = sum(len(match['component_indexes']) for match in matches)
++        relationships += count
++        if count > MAX_RELATIONS_PER_COMPONENT or relationships > MAX_RELATIONS_PER_PATH:
++            raise RuntimeError('Diagnostic component relationship budget exceeded')
++        if matches:
++            shape.append(dict(known_components=matches))
++        elif part in PUBLIC_MARKERS:
++            shape.append(dict(public_marker=part))
++        else:
++            shape.append(dict(unknown_sha256=hashlib.sha256(part.encode()).hexdigest(), bytes=len(part.encode())))
++    return dict(bytes=len(value.encode()), component_shape=shape,
++                exact_artifact_indexes=exact, owned_presentation_artifact_indexes=aliases,
++                classification='EXACT_BOUND' if exact else 'OWNED_USER_PRESENTATION' if aliases else 'UNBOUND')
++
++
++def _interval(line, tool):
++    match = (SAMPLE_ADDRESS if tool == 'sample' else VMMAP_ADDRESS).match(line)
++    value = dict(syntax_matches=match is not None, start=None, end=None,
++                 start_hex_digits=None, end_hex_digits=None, within_u64=False,
++                 ordered_nonzero=False, end_inclusive=tool == 'sample')
++    if match is not None:
++        start, end = int(match[1], 16), int(match[2], 16)
++        # An exclusive vmmap end may be the sentinel just beyond the last u64
++        # address. Do not misdescribe a range the unchanged binder permits.
++        end_fits = 0 <= end < 2**64 if tool == 'sample' else 0 <= end <= 2**64
++        value.update(start_hex_digits=len(match[1].removeprefix('0x')),
++                     end_hex_digits=len(match[2].removeprefix('0x')),
++                     within_u64=0 <= start < 2**64 and end_fits)
++        if value['within_u64']:
++            value.update(start=start, end=end,
++                         ordered_nonzero=0 < start <= end if tool == 'sample' else 0 < start < end)
++    return value
++
++
++def _uuid_relations(line, artifacts, paths, path_indexes, matched_uuid=None):
++    tokens = [matched_uuid] if matched_uuid is not None else re.findall(r'<([^<>\r\n]*)>', line)
++    valid = len(tokens) == 1 and re.fullmatch(UUID, tokens[0]) is not None
++    matches = [index for index, path in enumerate(paths)
++               if valid and tokens[0].lower() == artifacts[path]['uuid'].lower()]
++    return dict(token_count=len(tokens), syntax_matches=valid, matching_artifact_indexes=matches,
++                matches_bound_path_uuid=bool(path_indexes) and all(index in matches for index in path_indexes))
++
++
++def _sample_interval_relations(interval, path_indexes, paths, selected):
++    if selected is None:
++        return []
++    result = []
++    for index in path_indexes:
++        row = selected.get(paths[index])
++        if row is not None:
++            bounded = interval['within_u64'] and interval['ordered_nonzero']
++            result.append(dict(artifact_index=index,
++                same_start=bounded and interval['start'] == row['sample_start'],
++                end_within_sample=bounded and interval['end'] <= row['sample_end_inclusive'] + 1))
++    return result
++
++
++def image_diagnostic(raw, tool, artifacts, *, tool_paths=None, selected=None,
++                     budget=MAX_INPUT_BYTES, output_budget=MAX_OUTPUT_BYTES):
++    """Describe candidate formats after a rejection without accepting any image.
++
++    ``selected`` is only the successful parse_sample result at the caller. A
++    failed sample has no such reference, even when some rows looked plausible.
++    Invalid/oversized diagnostics raise; the caller must preserve its original
++    failure. Missing/ambiguous tables are reported as unscanned, never repaired.
++    """
++    if tool not in {'sample', 'vmmap'} or tool == 'sample' and selected is not None:
++        raise RuntimeError('Invalid failure-only image diagnostic context')
++    if (type(budget) is not int or not 0 < budget <= MAX_INPUT_BYTES or
++            type(output_budget) is not int or not 0 < output_budget <= MAX_OUTPUT_BYTES or
++            not isinstance(raw, str) or not 0 < len(raw.encode()) <= budget):
++        raise RuntimeError('Empty or unbounded failure-only image diagnostic')
++    paths, components = _context(artifacts, tool_paths, selected)
++    forms = {path: path for path in paths} if tool_paths is None else tool_paths.aliases
++    value = dict(schema_version=1, kind='FAILURE_ONLY_EXTERNAL_IMAGE_FORMAT', proves_provenance=False,
++        tool=tool, decoded_input_bytes=len(raw.encode()),
++        inventory_value_sha256=hashlib.sha256(json.dumps(artifacts, sort_keys=True, separators=(',', ':')).encode()).hexdigest(),
++        artifact_index_order='SORTED_EXACT_INVENTORY_PATHS',
++        inventory=[dict(index=index, origin=artifacts[path]['origin'], kind=artifacts[path]['kind'])
++                   for index, path in enumerate(paths)],
++        sample_selection_available=selected is not None, binary_image_table_markers=None,
++        scan_status='COMPLETE_DIAGNOSTIC_SCAN_NOT_PROVENANCE', lines_scanned=0, candidates=[])
++    table = raw
++    if tool == 'sample':
++        value['binary_image_table_markers'] = raw.count('\nBinary Images:\n')
++        if value['binary_image_table_markers'] != 1:
++            value['scan_status'] = 'NOT_SCANNED_MISSING_OR_AMBIGUOUS_TABLE'
++            table = ''
++        else:
++            table = raw.split('\nBinary Images:\n', 1)[1]
++    for ordinal, line in enumerate(io.StringIO(table), start=1):
++        if ordinal > MAX_LINES or len(line.encode()) > MAX_LINE_BYTES:
++            raise RuntimeError('Failure-only image diagnostic line budget exceeded')
++        value['lines_scanned'] = ordinal
++        if tool == 'vmmap' and not line.lstrip().startswith('__TEXT'):
++            continue
++        strict = SAMPLE_ROW.fullmatch(line.rstrip('\r\n')) if tool == 'sample' else None
++        tail = ABSOLUTE_TAIL.search(line)
++        reported = strict[4] if strict is not None else tail[1] if tail is not None else None
++        contains = sorted({paths.index(path) for form, path in forms.items() if form in line})
++        resolved = (reported if tool_paths is None else tool_paths.resolve(reported)) if reported is not None else None
++        name = Path(reported).name if reported is not None else None
++        if name not in IMAGE_NAMES and resolved not in artifacts and not contains:
++            continue  # No unrelated system row or arbitrary symbol is retained.
++        if len(value['candidates']) >= MAX_CANDIDATES:
++            raise RuntimeError('Failure-only image candidate budget exceeded')
++        shape = _path_shape(reported, paths, components, tool_paths) if reported is not None else None
++        indexes = [] if shape is None else shape['exact_artifact_indexes'] + shape['owned_presentation_artifact_indexes']
++        interval = _interval(line, tool)
++        row = dict(table_line=ordinal, bytes=len(line.encode()),
++                   image_name=name if name in IMAGE_NAMES else None,
++                   path_locator='STRICT_SAMPLE_ROW' if strict is not None else 'ABSOLUTE_TAIL' if tail is not None else 'NONE',
++                   contains_bound_form_artifact_indexes=contains, path=shape, interval=interval)
++        if tool == 'sample':
++            prefix = line[:tail.start(1)] if tail is not None else line
++            row.update(strict_row_syntax_matches=strict is not None,
++                       uuid=_uuid_relations(prefix, artifacts, paths, indexes,
++                                            matched_uuid=strict[3] if strict is not None else None))
++        else:
++            row['mapping_kind'] = ('EXPECTED_TEXT' if re.match(r'^\s*__TEXT\s+', line) is not None else
++                                   'ALTERNATE_TEXT_EXEC' if re.match(r'^\s*__TEXT_EXEC\s+', line) is not None else
++                                   'UNKNOWN_TEXT_PREFIX')
++            row['successful_sample_interval_relations'] = _sample_interval_relations(interval, indexes, paths, selected)
++        value['candidates'].append(row)
++        # Check each bounded append, not only an arbitrarily amplified complete
++        # result. Even adversarial repeated components cannot accumulate a huge
++        # retained diagnostic before its serialization budget is evaluated.
++        if len((json.dumps(value, indent=2) + '\n').encode()) > output_budget:
++            raise RuntimeError('Failure-only image diagnostic serialization budget exceeded')
++    if len((json.dumps(value, indent=2) + '\n').encode()) > output_budget:
++        raise RuntimeError('Failure-only image diagnostic serialization budget exceeded')
++    return value
+--- remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_control_tests.py
++++ remediation-runs/2026-09-07-local-readiness/native/normal-image-diagnostics-draft-01/run_control_tests.py
+@@ -10,7 +10,7 @@
+ sys.path.insert(0, str(HERE))
+ import run_normal_ios_launch as control
+ 
+-EXPECTED_COUNT = 120
++EXPECTED_COUNT = 163
+ 
+ 
+ def declared_tests():
+--- remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py
++++ remediation-runs/2026-09-07-local-readiness/native/normal-image-diagnostics-draft-01/run_normal_ios_launch.py
+@@ -43,6 +43,7 @@
+ from normal_launch_receipts import read_json, verify_markers, verify_xctest, METHOD, SELECTOR, UUID
+ from external_image_provenance import (APP_ID, parse_launch_pid, attest_target, unchanged_target,
+                                        parse_sample, bind_vmmap, header_diagnostic, OwnedToolPaths, LIMITATION)
++from external_image_diagnostics import image_diagnostic
+ 
+ 
+ def now():
+@@ -502,16 +503,30 @@
+             self.require(['/usr/bin/sample', str(pid), '1', '10', '-file', raw_sample],
+                          'sample-command.log', timeout=45, limit=65536)
+             middle = unchanged_target(before, backend.read(pid))
++            self.receipt['sample_command_lifetime_verified'] = True
+             if (not raw_sample.is_file() or raw_sample.is_symlink() or
+                     not 0 < raw_sample.stat().st_size <= 16 * 1024 * 1024):
+                 raise RuntimeError('Missing or unbounded public sample image evidence')
+-            selected = self.parse_external_observation('sample', raw_sample, pid, executable,
+-                lambda raw: parse_sample(raw, pid, executable, artifacts, tool_paths=tool_paths))
++            try:
++                selected = self.parse_external_observation('sample', raw_sample, pid, executable,
++                    lambda raw: parse_sample(raw, pid, executable, artifacts, tool_paths=tool_paths),
++                    artifacts=artifacts, tool_paths=tool_paths)
++            except RuntimeError:
++                # A rejected sample never supplies selected images. The one
++                # sibling tool attempt is diagnostic-only and cannot rescue it.
++                self.receipt['provenance_status'] = 'FAIL'
++                try:
++                    self.observe_failure_only_vmmap(before, backend, pid, executable,
++                                                    artifacts, tool_paths, raw_vmmap)
++                except BaseException as diagnostic_error:
++                    self.receipt['failure_only_vmmap_error_type'] = type(diagnostic_error).__name__
++                raise  # Preserve the original sample exception, including its identity.
+             self.require(['/usr/bin/vmmap', '-w', str(pid)], 'vmmap', timeout=45,
+                          output=raw_vmmap, limit=16 * 1024 * 1024)
+             after = unchanged_target(before, backend.read(pid))
+             bound = self.parse_external_observation('vmmap', raw_vmmap, pid, executable,
+-                lambda raw: bind_vmmap(raw, pid, executable, selected, tool_paths=tool_paths))
++                lambda raw: bind_vmmap(raw, pid, executable, selected, tool_paths=tool_paths),
++                artifacts=artifacts, tool_paths=tool_paths, selected=selected)
+             self.check_watched_outputs()
+             # File bytes remain tied to the prior installed/current-build image
+             # inventory. This does not claim the mapped pages were rehashed.
+@@ -532,7 +547,8 @@
+             self.receipt['raw_external_stack_mapping_files_removed'] = all(not path.exists() for path in (raw_sample, raw_vmmap))
+             self.receipt['external_provenance_limitation'] = LIMITATION
+ 
+-    def parse_external_observation(self, tool, path, pid, executable, parse):
++    def parse_external_observation(self, tool, path, pid, executable, parse, *,
++                                   artifacts=None, tool_paths=None, selected=None):
+         if tool not in {'sample', 'vmmap'}:
+             raise RuntimeError('Unknown external diagnostic producer')
+         raw = path.read_text()
+@@ -543,12 +559,79 @@
+             # metadata before the existing finalizer destroys raw stacks/maps.
+             # Do not retain an unknown native path, process name, stack or symbol.
+             try:
+-                name = tool + '-header-failure.json'
+-                write_json(self.destination / name, header_diagnostic(raw, pid, executable))
+-                self.receipt[tool + '_header_failure_sha256'] = digest(self.destination / name)
++                self.collect_external_failure_diagnostics(tool, raw, pid, executable,
++                                                         artifacts, tool_paths, selected)
++            except BaseException as diagnostic_interrupt:
++                # The primary parser is already failed. Record a cancellation
++                # without replacing it or starting further optional native work.
++                self.receipt[tool + '_failure_diagnostics_interrupted'] = True
++                self.receipt[tool + '_failure_diagnostics_interrupt_type'] = type(diagnostic_interrupt).__name__
++            raise
++
++    def collect_external_failure_diagnostics(self, tool, raw, pid, executable,
++                                             artifacts, tool_paths, selected):
++        try:
++            name = tool + '-header-failure.json'
++            write_json(self.destination / name, header_diagnostic(raw, pid, executable))
++            self.receipt[tool + '_header_failure_sha256'] = digest(self.destination / name)
++        except Exception as diagnostic_error:
++            self.receipt[tool + '_header_diagnostic_error'] = type(diagnostic_error).__name__
++        if artifacts is not None:
++            try:
++                name = tool + '-images-failure.json'
++                value = image_diagnostic(raw, tool, artifacts, tool_paths=tool_paths, selected=selected)
++                write_json(self.destination / name, value)
++                self.receipt[tool + '_images_failure_sha256'] = digest(self.destination / name)
+             except Exception as diagnostic_error:
+-                self.receipt[tool + '_header_diagnostic_error'] = type(diagnostic_error).__name__
+-            raise
++                self.receipt[tool + '_images_diagnostic_error'] = type(diagnostic_error).__name__
++
++    def observe_failure_only_vmmap(self, before, backend, pid, executable,
++                                  artifacts, tool_paths, raw_vmmap):
++        observation = dict(kind='FAILURE_ONLY_VMMAP_AFTER_SAMPLE_REJECTION', proves_provenance=False,
++            status='NOT_STARTED', sample_selection_available=False,
++            original_sample_failure_preserved=True, command_attempted=False, command_succeeded=False,
++            lifetime_before_verified=False, lifetime_after_verified=False)
++        self.receipt['failure_only_vmmap_after_sample'] = observation
++        if self.receipt.get('sample_failure_diagnostics_interrupted'):
++            observation['status'] = 'NOT_RUN_PRIOR_DIAGNOSTIC_INTERRUPTION'
++            return
++        try:
++            self.check_watched_outputs()
++            unchanged_target(before, backend.read(pid))
++            observation['lifetime_before_verified'] = True
++        except BaseException as error:
++            observation.update(status='NOT_RUN_PREFLIGHT_FAILED', preflight_error_type=type(error).__name__)
++            return
++        try:
++            observation.update(status='COMMAND_RUNNING', command_attempted=True)
++            self.require(['/usr/bin/vmmap', '-w', str(pid)], 'vmmap-failure-only', timeout=45,
++                         output=raw_vmmap, limit=16 * 1024 * 1024)
++            observation['command_succeeded'] = True
++        except BaseException as error:
++            observation['command_error_type'] = type(error).__name__
++        finally:
++            try:
++                unchanged_target(before, backend.read(pid))
++                observation['lifetime_after_verified'] = True
++            except BaseException as error:
++                observation['postflight_error_type'] = type(error).__name__
++        if not observation['command_succeeded'] or not observation['lifetime_after_verified']:
++            observation['status'] = 'FAILED_COMMAND_OR_LIFETIME'
++            return
++        try:
++            self.check_watched_outputs()
++            if (not raw_vmmap.is_file() or raw_vmmap.is_symlink() or
++                    not 0 < raw_vmmap.stat().st_size <= 16 * 1024 * 1024):
++                raise RuntimeError('Missing or unbounded failure-only mapping observation')
++            # No bind_vmmap call and no selected-image result: only closed
++            # diagnostics, even if vmmap alone appears plausible.
++            self.collect_external_failure_diagnostics('vmmap', raw_vmmap.read_text(), pid, executable,
++                                                     artifacts, tool_paths, None)
++            observation['status'] = ('COLLECTED_FAILURE_ONLY_NOT_PROVENANCE'
++                if 'vmmap_images_failure_sha256' in self.receipt and 'vmmap_header_failure_sha256' in self.receipt
++                else 'FAILED_DIAGNOSTIC_COLLECTION')
++        except BaseException as error:
++            observation.update(status='FAILED_DIAGNOSTIC_COLLECTION', diagnostic_error_type=type(error).__name__)
+ 
+     def shutdown_device(self):
+         info = self.simulator_metadata('owned-device-before-shutdown')
+--- /dev/null
++++ remediation-runs/2026-09-07-local-readiness/native/normal-image-diagnostics-draft-01/test_image_diagnostic_orchestration.py
+@@ -0,0 +1,355 @@
++"""Mocked command/lifetime orchestration only; never native runtime evidence."""
++from contextlib import contextmanager, ExitStack
++import hashlib
++import inspect
++import json
++from pathlib import Path
++import subprocess
++import tempfile
++import textwrap
++import types
++import unittest
++from unittest.mock import Mock, patch
++
++import external_image_provenance as provenance
++import run_normal_ios_launch as runner
++import test_normal_launch_controls as runner_fixtures
++from test_normal_launch_controls import PID, Record
++
++
++class ImageDiagnosticOrchestrationTests(unittest.TestCase):
++    def setUp(self):
++        allocation = tempfile.TemporaryDirectory(prefix='parlor-image-diagnostics-fixture-')
++        self.addCleanup(allocation.cleanup)
++        self.base = Path(allocation.name).resolve()
++        self.ordinal = 0
++
++    def fixture(self):
++        self.ordinal += 1
++        self.root = self.base / str(self.ordinal)
++        self.root.mkdir()
++        lane = runner_fixtures.RunnerGuards.lane(self)
++        lane.name, lane.baseline, lane.save = 'synthetic-image-observation', {}, Mock()
++        app = lane.temporary / 'Parlor.app'
++        artifacts = {}
++        for index, (relative, kind) in enumerate((('Parlor', 'launcher'), ('Parlor.debug.dylib', 'debug-dylib'),
++                                                 ('Frameworks/ComposeApp.framework/ComposeApp', 'compose-framework'))):
++            path = app / relative
++            path.parent.mkdir(parents=True, exist_ok=True)
++            data = ('synthetic-owned-bytes-' + kind).encode()
++            path.write_bytes(data)
++            artifacts[str(path)] = dict(origin='installed-app', relative_path=relative,
++                sha256=hashlib.sha256(data).hexdigest(), bytes=len(data),
++                uuid=f'{index + 1:08x}-2222-3333-4444-555555555555', kind=kind)
++        executable = app / 'Parlor'
++        lane.artifact_inventory = Mock(return_value=(executable, artifacts))
++        record = Record(command=str(executable))
++        backend = Mock()
++        backend.read.return_value = record
++        head = f'Process: Parlor [{PID}]\nPath: {executable}\n'
++        raw_sample = head + '\nPRIVATE_STACK_SENTINEL\n\nBinary Images:\n' + ''.join(
++            f'0x{(i+1)*0x100000:x} - 0x{(i+1)*0x100000+0x3fff:x} +image (1) <{row["uuid"]}> {path}\n'
++            for i, (path, row) in enumerate(artifacts.items()))
++        raw_vmmap = head + ''.join(
++            f'__TEXT {(i+1)*0x100000:x}-{(i+1)*0x100000+0x2000:x} [8K] r-x/r-x SM=COW {path}\n'
++            for i, path in enumerate(artifacts))
++        context = dict(lane=lane, executable=executable, artifacts=artifacts, record=record, backend=backend,
++                       raw_sample=raw_sample, raw_vmmap=raw_vmmap, commands=[], sample_error=None, vmmap_error=None)
++
++        def require(arguments, filename, **options):
++            context['commands'].append((list(map(str, arguments)), filename, dict(options)))
++            if list(arguments[:3]) == ['xcrun', 'simctl', 'launch']:
++                (lane.destination / filename).write_text(f'{provenance.APP_ID}: {PID}\n')
++            elif arguments[0] == '/usr/bin/sample':
++                self.assertEqual(45, options['timeout'])
++                self.assertEqual(65536, options['limit'])
++                Path(arguments[-1]).write_text(context['raw_sample'])
++                if context['sample_error'] is not None:
++                    raise context['sample_error']
++            elif arguments[0] == '/usr/bin/vmmap':
++                self.assertEqual(['/usr/bin/vmmap', '-w', str(PID)], arguments)
++                self.assertEqual(45, options['timeout'])
++                self.assertEqual(16 * 1024 * 1024, options['limit'])
++                options['output'].write_text(context['raw_vmmap'])
++                if context['vmmap_error'] is not None:
++                    raise context['vmmap_error']
++            else:
++                self.fail('Unexpected native command in a pure synthetic fixture')
++        lane.require = Mock(side_effect=require)
++        return context
++
++    @contextmanager
++    def mocked_native(self, context):
++        with ExitStack() as stack:
++            stack.enter_context(patch.object(runner, 'darwin_backend', return_value=context['backend']))
++            stack.enter_context(patch.object(runner, 'owned_tool_paths', return_value=None))
++            stack.enter_context(patch.object(runner.time, 'time', side_effect=[1000.0, 1001.0]))
++            stack.enter_context(patch.object(runner.time, 'sleep'))
++            stack.enter_context(patch.object(runner.subprocess, 'Popen', side_effect=AssertionError('No native process allowed')))
++            stack.enter_context(patch.object(runner.subprocess, 'run', side_effect=AssertionError('No native process allowed')))
++            yield
++
++    def assert_original(self, action, original):
++        try:
++            action()
++        except BaseException as observed:
++            self.assertIs(original, observed)
++        else:
++            self.fail('A failed sample became successful')
++
++    def assert_raw_removed(self, lane):
++        for name in ('owned-app.sample.txt', 'owned-app.vmmap.txt'):
++            self.assertFalse((lane.temporary / name).exists())
++        self.assertTrue(lane.receipt['raw_external_stack_mapping_files_removed'])
++
++    def vmmap_commands(self, context):
++        return [row for row in context['commands'] if row[0][0] == '/usr/bin/vmmap']
++
++    def test_original_real_unbound_sample_rejection_gathers_sibling_diagnostics_not_provenance(self):
++        context = self.fixture(); lane = context['lane']
++        owned = str(context['executable'].parent / 'Frameworks/ComposeApp.framework/ComposeApp')
++        context['raw_sample'] = context['raw_sample'].replace(owned, '/UNBOUND_PRIVATE_ORIGIN/ComposeApp')
++        with self.mocked_native(context), patch.object(runner, 'bind_vmmap') as bind:
++            with self.assertRaisesRegex(RuntimeError, '^Runtime contains an unbound application/framework image$'):
++                lane.observe_external_images()
++        bind.assert_not_called()
++        self.assertEqual('FAIL', lane.receipt['provenance_status'])
++        self.assertTrue(lane.receipt['sample_command_lifetime_verified'])
++        event = lane.receipt['failure_only_vmmap_after_sample']
++        self.assertEqual('COLLECTED_FAILURE_ONLY_NOT_PROVENANCE', event['status'])
++        self.assertTrue(event['lifetime_before_verified'])
++        self.assertTrue(event['lifetime_after_verified'])
++        self.assertFalse(event['sample_selection_available'])
++        self.assertFalse(event['proves_provenance'])
++        self.assertEqual(1, len(self.vmmap_commands(context)))
++        self.assertFalse((lane.destination / 'separate-external-image-provenance.json').exists())
++        for tool in ('sample', 'vmmap'):
++            record = lane.destination / (tool + '-images-failure.json')
++            self.assertEqual(runner.digest(record), lane.receipt[tool + '_images_failure_sha256'])
++            result = json.loads(record.read_text())
++            self.assertFalse(result['proves_provenance'])
++            self.assertFalse(result['sample_selection_available'])
++            self.assertNotIn('PRIVATE_STACK_SENTINEL', record.read_text())
++            self.assertNotIn('UNBOUND_PRIVATE_ORIGIN', record.read_text())
++        self.assert_raw_removed(lane)
++
++    def test_successful_sample_and_vmmap_have_unchanged_provenance_and_no_diagnostics(self):
++        context = self.fixture(); lane = context['lane']
++        expected_selected = provenance.parse_sample(context['raw_sample'], PID, context['executable'], context['artifacts'])
++        expected = provenance.bind_vmmap(context['raw_vmmap'], PID, context['executable'], expected_selected)
++        with self.mocked_native(context), patch.object(runner, 'image_diagnostic') as collect:
++            lane.observe_external_images()
++        collect.assert_not_called()
++        result = json.loads((lane.destination / 'separate-external-image-provenance.json').read_text())
++        for key, value in expected.items(): self.assertEqual(value, result[key])
++        self.assertEqual('PASS', lane.receipt['provenance_status'])
++        self.assertNotIn('failure_only_vmmap_after_sample', lane.receipt)
++        self.assertEqual(1, len(self.vmmap_commands(context)))
++        self.assertEqual([], list(lane.destination.glob('*-failure.json')))
++        self.assert_raw_removed(lane)
++
++    def test_successful_sample_vmmap_rejection_has_successful_sample_interval_reference(self):
++        context = self.fixture(); lane = context['lane']
++        context['raw_vmmap'] = context['raw_vmmap'].replace('300000-302000', '301000-303000')
++        with self.mocked_native(context), self.assertRaisesRegex(RuntimeError, 'not the same sampled image mapping'):
++            lane.observe_external_images()
++        result = json.loads((lane.destination / 'vmmap-images-failure.json').read_text())
++        self.assertTrue(result['sample_selection_available'])
++        self.assertFalse(result['proves_provenance'])
++        self.assertFalse(result['candidates'][-1]['successful_sample_interval_relations'][0]['same_start'])
++        self.assertNotIn('failure_only_vmmap_after_sample', lane.receipt)
++        self.assertNotEqual('PASS', lane.receipt['provenance_status'])
++        self.assert_raw_removed(lane)
++
++    def test_successful_sample_command_is_required_before_any_sibling_invocation(self):
++        for error in (RuntimeError('sample command failed'), subprocess.TimeoutExpired('synthetic', 45), KeyboardInterrupt()):
++            context = self.fixture(); lane = context['lane']; context['sample_error'] = error
++            with self.mocked_native(context): self.assert_original(lane.observe_external_images, error)
++            self.assertEqual([], self.vmmap_commands(context))
++            self.assertNotIn('failure_only_vmmap_after_sample', lane.receipt)
++            self.assert_raw_removed(lane)
++
++    def test_sample_parser_cancellation_never_becomes_optional_diagnostic_work(self):
++        context = self.fixture(); lane = context['lane']; original = KeyboardInterrupt()
++        with self.mocked_native(context), patch.object(runner, 'parse_sample', side_effect=original):
++            self.assert_original(lane.observe_external_images, original)
++        self.assertEqual([], self.vmmap_commands(context))
++        self.assertNotIn('failure_only_vmmap_after_sample', lane.receipt)
++        self.assert_raw_removed(lane)
++
++    def test_post_sample_changed_lifetime_never_reaches_parser_or_vmmap(self):
++        context = self.fixture(); lane = context['lane']
++        context['backend'].read.side_effect = [context['record']] * 3 + [None]
++        with self.mocked_native(context), patch.object(runner, 'parse_sample') as parse:
++            with self.assertRaisesRegex(RuntimeError, 'changed generation'): lane.observe_external_images()
++        parse.assert_not_called()
++        self.assertEqual([], self.vmmap_commands(context))
++        self.assertNotIn('sample_command_lifetime_verified', lane.receipt)
++        self.assert_raw_removed(lane)
++
++    def test_failure_only_preflight_detects_exit_reuse_and_exec_before_invocation(self):
++        for changed in (None, Record(started=(1001, 0)), Record(command='/UNRELATED_PROCESS'),
++                        Record(token=(0, 0, 0, 0, 0, PID, 0, 2))):
++            context = self.fixture(); lane = context['lane']; original = RuntimeError('original sample rejection')
++            context['backend'].read.side_effect = [context['record']] * 4 + [changed]
++            with self.mocked_native(context), patch.object(runner, 'parse_sample', side_effect=original):
++                self.assert_original(lane.observe_external_images, original)
++            event = lane.receipt['failure_only_vmmap_after_sample']
++            self.assertEqual('NOT_RUN_PREFLIGHT_FAILED', event['status'])
++            self.assertFalse(event['command_attempted'])
++            self.assertFalse(event['lifetime_before_verified'])
++            self.assertEqual([], self.vmmap_commands(context))
++            self.assertNotIn('UNRELATED_PROCESS', json.dumps(lane.receipt))
++            self.assert_raw_removed(lane)
++
++    def test_failure_only_postflight_failure_preserves_primary_and_does_not_collect_unattested_maps(self):
++        context = self.fixture(); lane = context['lane']; original = RuntimeError('original sample rejection')
++        context['backend'].read.side_effect = [context['record']] * 5 + [None]
++        with self.mocked_native(context), patch.object(runner, 'parse_sample', side_effect=original):
++            self.assert_original(lane.observe_external_images, original)
++        event = lane.receipt['failure_only_vmmap_after_sample']
++        self.assertTrue(event['command_attempted'])
++        self.assertTrue(event['command_succeeded'])
++        self.assertTrue(event['lifetime_before_verified'])
++        self.assertFalse(event['lifetime_after_verified'])
++        self.assertEqual('FAILED_COMMAND_OR_LIFETIME', event['status'])
++        self.assertNotIn('vmmap_images_failure_sha256', lane.receipt)
++        self.assert_raw_removed(lane)
++
++    def test_failure_only_command_error_timeout_and_interruption_keep_primary_and_postflight(self):
++        for failure in (RuntimeError('PRIVATE_COMMAND_ERROR'), subprocess.TimeoutExpired('synthetic', 45), KeyboardInterrupt()):
++            context = self.fixture(); lane = context['lane']; original = RuntimeError('original sample rejection')
++            context['vmmap_error'] = failure
++            with self.mocked_native(context), patch.object(runner, 'parse_sample', side_effect=original):
++                self.assert_original(lane.observe_external_images, original)
++            event = lane.receipt['failure_only_vmmap_after_sample']
++            self.assertEqual('FAILED_COMMAND_OR_LIFETIME', event['status'])
++            self.assertTrue(event['lifetime_before_verified'])
++            self.assertTrue(event['lifetime_after_verified'])
++            self.assertFalse(event['command_succeeded'])
++            self.assertEqual(type(failure).__name__, event['command_error_type'])
++            self.assertNotIn('PRIVATE_COMMAND_ERROR', json.dumps(lane.receipt))
++            self.assert_raw_removed(lane)
++
++    def test_failure_only_command_and_postflight_errors_are_both_recorded(self):
++        context = self.fixture(); lane = context['lane']; original = RuntimeError('original sample rejection')
++        context['vmmap_error'] = RuntimeError('PRIVATE_COMMAND_ERROR')
++        context['backend'].read.side_effect = [context['record']] * 5 + [None]
++        with self.mocked_native(context), patch.object(runner, 'parse_sample', side_effect=original):
++            self.assert_original(lane.observe_external_images, original)
++        event = lane.receipt['failure_only_vmmap_after_sample']
++        self.assertEqual('RuntimeError', event['command_error_type'])
++        self.assertEqual('RuntimeError', event['postflight_error_type'])
++        self.assert_raw_removed(lane)
++
++    def test_diagnostic_collection_failure_preserves_primary_without_serializing_exception_text(self):
++        context = self.fixture(); lane = context['lane']; original = RuntimeError('original sample rejection')
++        with self.mocked_native(context), patch.object(runner, 'parse_sample', side_effect=original), \
++             patch.object(runner, 'image_diagnostic', side_effect=ValueError('PRIVATE_DIAGNOSTIC_ERROR')):
++            self.assert_original(lane.observe_external_images, original)
++        self.assertEqual('ValueError', lane.receipt['sample_images_diagnostic_error'])
++        self.assertEqual('ValueError', lane.receipt['vmmap_images_diagnostic_error'])
++        self.assertEqual('FAILED_DIAGNOSTIC_COLLECTION', lane.receipt['failure_only_vmmap_after_sample']['status'])
++        self.assertNotIn('PRIVATE_DIAGNOSTIC_ERROR', json.dumps(lane.receipt))
++        self.assert_raw_removed(lane)
++
++    def test_diagnostic_write_failure_keeps_original_exception_object_and_no_provenance(self):
++        context = self.fixture(); lane = context['lane']; original = RuntimeError('original sample rejection')
++        with self.mocked_native(context), patch.object(runner, 'parse_sample', side_effect=original), \
++             patch.object(runner, 'write_json', side_effect=OSError('PRIVATE_SERIALIZATION_ERROR')):
++            self.assert_original(lane.observe_external_images, original)
++        for tool in ('sample', 'vmmap'):
++            self.assertEqual('OSError', lane.receipt[tool + '_header_diagnostic_error'])
++            self.assertEqual('OSError', lane.receipt[tool + '_images_diagnostic_error'])
++        self.assertNotIn('PRIVATE_SERIALIZATION_ERROR', json.dumps(lane.receipt))
++        self.assertNotIn('provenance_sha256', lane.receipt)
++        self.assert_raw_removed(lane)
++
++    def test_interrupting_sample_diagnostics_preserves_primary_and_prevents_vmmap(self):
++        for producer in ('image_diagnostic', 'write_json'):
++            context = self.fixture(); lane = context['lane']; original = RuntimeError('original sample rejection')
++            with self.mocked_native(context), patch.object(runner, 'parse_sample', side_effect=original), \
++                 patch.object(runner, producer, side_effect=KeyboardInterrupt()):
++                self.assert_original(lane.observe_external_images, original)
++            self.assertTrue(lane.receipt['sample_failure_diagnostics_interrupted'])
++            self.assertEqual('KeyboardInterrupt', lane.receipt['sample_failure_diagnostics_interrupt_type'])
++            self.assertEqual('NOT_RUN_PRIOR_DIAGNOSTIC_INTERRUPTION', lane.receipt['failure_only_vmmap_after_sample']['status'])
++            self.assertEqual([], self.vmmap_commands(context))
++            self.assert_raw_removed(lane)
++
++    def test_interrupting_vmmap_diagnostics_preserves_primary_and_cleanup(self):
++        context = self.fixture(); lane = context['lane']; original = RuntimeError('original sample rejection')
++        collect = runner.image_diagnostic
++        def interrupted(raw, tool, *arguments, **options):
++            if tool == 'vmmap': raise KeyboardInterrupt()
++            return collect(raw, tool, *arguments, **options)
++        with self.mocked_native(context), patch.object(runner, 'parse_sample', side_effect=original), \
++             patch.object(runner, 'image_diagnostic', side_effect=interrupted):
++            self.assert_original(lane.observe_external_images, original)
++        event = lane.receipt['failure_only_vmmap_after_sample']
++        self.assertEqual('FAILED_DIAGNOSTIC_COLLECTION', event['status'])
++        self.assertEqual('KeyboardInterrupt', event['diagnostic_error_type'])
++        self.assertEqual(1, len(self.vmmap_commands(context)))
++        self.assert_raw_removed(lane)
++
++    def test_failure_only_empty_output_is_not_collected_or_credited(self):
++        context = self.fixture(); lane = context['lane']; original = RuntimeError('original sample rejection')
++        context['raw_vmmap'] = ''
++        with self.mocked_native(context), patch.object(runner, 'parse_sample', side_effect=original):
++            self.assert_original(lane.observe_external_images, original)
++        self.assertEqual('FAILED_DIAGNOSTIC_COLLECTION', lane.receipt['failure_only_vmmap_after_sample']['status'])
++        self.assertNotIn('vmmap_images_failure_sha256', lane.receipt)
++        self.assert_raw_removed(lane)
++
++    def test_overbudget_watch_does_not_start_sibling_after_sample_failure(self):
++        context = self.fixture(); lane = context['lane']; original = RuntimeError('original sample rejection')
++        collect = lane.collect_external_failure_diagnostics
++        def fill_after_diagnostics(*arguments, **options):
++            collect(*arguments, **options)
++            path = lane.temporary / 'owned-app.stdout'
++            path.write_bytes(b'12345')
++            lane.watched_outputs = [(path, 4)]
++        lane.collect_external_failure_diagnostics = Mock(side_effect=fill_after_diagnostics)
++        with self.mocked_native(context), patch.object(runner, 'parse_sample', side_effect=original):
++            self.assert_original(lane.observe_external_images, original)
++        self.assertEqual('NOT_RUN_PREFLIGHT_FAILED', lane.receipt['failure_only_vmmap_after_sample']['status'])
++        self.assertEqual([], self.vmmap_commands(context))
++        self.assert_raw_removed(lane)
++
++    def test_run_keeps_original_failure_and_all_finalization_even_when_diagnostics_succeed(self):
++        context = self.fixture(); lane = context['lane']; original = RuntimeError('original sample rejection')
++        lane.prepare, lane.run_xctest = Mock(), Mock()
++        with self.mocked_native(context), patch.object(runner, 'parse_sample', side_effect=original), \
++             patch.object(runner, 'normalized_identity', return_value={'frozen': True}), \
++             patch.object(runner, 'control_hash', return_value=lane.approved), patch('builtins.print'):
++            self.assertEqual(1, lane.run())
++        self.assertEqual('FAIL', lane.receipt['status'])
++        self.assertEqual('FAIL', lane.receipt['provenance_status'])
++        self.assertEqual('PASS', lane.receipt['runtime_evidence_status'])
++        self.assertEqual('PASS', lane.receipt['notice_package_status'])
++        self.assertEqual('PASS', lane.receipt['cleanup_status'])
++        self.assertEqual({'type': 'RuntimeError', 'message': 'original sample rejection'}, lane.receipt['error'])
++        lane.stop_gradle.assert_called_once_with('stop-final')
++        lane.shutdown_device.assert_called_once()
++        lane.delete_device.assert_called_once()
++        lane.owner.stop.assert_called_once()
++        lane.owner.secondary.cleanup.assert_called_once()
++        self.assertFalse(lane.temporary.exists())
++        self.assertEqual([], lane.watched_outputs)
++        lane.save.assert_called_once()
++
++    def test_original_exception_contract_kills_removing_post_diagnostic_reraise(self):
++        context = self.fixture(); lane = context['lane']; original = RuntimeError('original sample rejection')
++        source = textwrap.dedent(inspect.getsource(runner.Lane.observe_external_images))
++        statement = 'raise  # Preserve the original sample exception, including its identity.'
++        self.assertEqual(1, source.count(statement))
++        with self.mocked_native(context), patch.object(runner, 'parse_sample', side_effect=original):
++            namespace = dict(vars(runner))  # Only already-mocked native entry points.
++            exec(compile(source.replace(statement, 'pass  # Synthetic removed failure propagation'), '<synthetic-failure-mutation>', 'exec'), namespace)
++            mutated = types.MethodType(namespace['observe_external_images'], lane)
++            with self.assertRaises(AssertionError): self.assert_original(mutated, original)
++        self.assert_raw_removed(lane)
++
++
++if __name__ == '__main__':
++    unittest.main()
+--- /dev/null
++++ remediation-runs/2026-09-07-local-readiness/native/normal-image-diagnostics-draft-01/test_image_diagnostics.py
+@@ -0,0 +1,328 @@
++"""Pure synthetic format/negative/mutation controls; not native observations."""
++import copy
++import hashlib
++import inspect
++import json
++from pathlib import Path
++import unittest
++from unittest.mock import patch
++
++import external_image_diagnostics as diagnostic
++import external_image_provenance as provenance
++from test_owned_tool_paths import (APP, CONTAINER, DEVICE, EXE, HOME, PID, RELATIVES,
++                                 alias, header, image_row, inventory, sample, vmmap)
++
++
++def artifact_index(artifacts, path):
++    return sorted(artifacts).index(str(path))
++
++
++class ImageDiagnosticTests(unittest.TestCase):
++    def setUp(self):
++        self.artifacts = inventory()
++        self.policy = provenance.OwnedToolPaths(self.artifacts, HOME, DEVICE, APP)
++
++    def describe(self, raw, tool='sample', **options):
++        return diagnostic.image_diagnostic(raw, tool, self.artifacts, tool_paths=self.policy, **options)
++
++    def assert_failure_only_private(self, result, *secrets):
++        self.assertEqual('FAILURE_ONLY_EXTERNAL_IMAGE_FORMAT', result['kind'])
++        self.assertIs(result['proves_provenance'], False)
++        self.assertNotIn('status', result)
++        text = json.dumps(result)
++        self.assertLessEqual(len((json.dumps(result, indent=2) + '\n').encode()), diagnostic.MAX_OUTPUT_BYTES)
++        for secret in (*self.artifacts.keys(), HOME, *secrets):
++            self.assertNotIn(secret, text)
++        for row in result['candidates']:
++            self.assertIn(row['image_name'], diagnostic.IMAGE_NAMES | {None})
++
++    def test_exact_rows_report_only_inventory_indexes_and_equality_not_authority(self):
++        result = self.describe(sample())
++        self.assert_failure_only_private(result)
++        self.assertEqual(3, len(result['candidates']))
++        self.assertEqual('SORTED_EXACT_INVENTORY_PATHS', result['artifact_index_order'])
++        value_hash = hashlib.sha256(json.dumps(self.artifacts, sort_keys=True, separators=(',', ':')).encode()).hexdigest()
++        self.assertEqual(value_hash, result['inventory_value_sha256'])
++        for row, path in zip(result['candidates'], self.artifacts):
++            index = artifact_index(self.artifacts, path)
++            self.assertEqual([index], row['path']['exact_artifact_indexes'])
++            self.assertEqual([], row['path']['owned_presentation_artifact_indexes'])
++            self.assertEqual('EXACT_BOUND', row['path']['classification'])
++            self.assertEqual([index], row['uuid']['matching_artifact_indexes'])
++            self.assertTrue(row['uuid']['matches_bound_path_uuid'])
++            self.assertTrue(row['interval']['ordered_nonzero'])
++
++    def test_user_only_existing_policy_remains_explicit_and_default_stays_exact(self):
++        result = self.describe(sample(redacted=True))
++        self.assert_failure_only_private(result)
++        for row, path in zip(result['candidates'], self.artifacts):
++            self.assertEqual([], row['path']['exact_artifact_indexes'])
++            self.assertEqual([artifact_index(self.artifacts, path)], row['path']['owned_presentation_artifact_indexes'])
++            self.assertEqual('OWNED_USER_PRESENTATION', row['path']['classification'])
++        default = diagnostic.image_diagnostic(sample(redacted=True), 'sample', self.artifacts)
++        self.assertTrue(all(row['path']['classification'] == 'UNBOUND' for row in default['candidates']))
++        with self.assertRaises(RuntimeError): provenance.parse_sample(sample(redacted=True), PID, EXE, self.artifacts)
++
++    def test_foreign_user_container_and_copied_origin_never_become_bound(self):
++        framework = str(APP / RELATIVES[2])
++        for foreign in (framework.replace(HOME, '/Users/PRIVATE_OTHER_USER'),
++                        framework.replace(CONTAINER, '99999999-aaaa-bbbb-cccc-dddddddddddd'),
++                        '/unowned/PRIVATE_BUILD/ComposeApp.framework/ComposeApp',
++                        '/unowned/PRIVATE FOLDER/ComposeApp.framework/ComposeApp'):
++            raw = sample().replace(framework, foreign)
++            result = self.describe(raw)
++            self.assert_failure_only_private(result, 'PRIVATE_OTHER_USER', 'PRIVATE_BUILD', 'PRIVATE FOLDER', foreign)
++            row = result['candidates'][-1]
++            self.assertEqual('UNBOUND', row['path']['classification'])
++            self.assertEqual([], row['path']['exact_artifact_indexes'])
++            self.assertEqual([], row['path']['owned_presentation_artifact_indexes'])
++            self.assertEqual([artifact_index(self.artifacts, framework)], row['uuid']['matching_artifact_indexes'])
++            self.assertFalse(row['uuid']['matches_bound_path_uuid'])
++            with self.assertRaises(RuntimeError): provenance.parse_sample(raw, PID, EXE, self.artifacts, tool_paths=self.policy)
++
++    def test_unknown_components_are_hashed_and_known_component_indexes_are_exact(self):
++        raw = sample().replace(str(APP / RELATIVES[2]), '/Users/PRIVATE_SENTINEL/*/ComposeApp')
++        result = self.describe(raw)
++        self.assert_failure_only_private(result, 'PRIVATE_SENTINEL')
++        shape = result['candidates'][-1]['path']['component_shape']
++        self.assertIn({'public_marker': '*'}, shape)
++        self.assertIn(dict(unknown_sha256=hashlib.sha256(b'PRIVATE_SENTINEL').hexdigest(), bytes=16), shape)
++        expected = str(APP / RELATIVES[2]).split('/')
++        matched = shape[-1]['known_components']
++        self.assertEqual([dict(artifact_index=artifact_index(self.artifacts, APP / RELATIVES[2]),
++                               component_indexes=[expected.index('ComposeApp')])], matched)
++
++    def test_unknown_uuid_never_escapes_and_does_not_match_known_inventory(self):
++        unknown = '99999999-aaaa-bbbb-cccc-dddddddddddd'
++        raw = sample().replace(self.artifacts[str(EXE)]['uuid'], unknown)
++        result = self.describe(raw)
++        self.assert_failure_only_private(result, unknown)
++        self.assertTrue(result['candidates'][0]['uuid']['syntax_matches'])
++        self.assertEqual([], result['candidates'][0]['uuid']['matching_artifact_indexes'])
++        self.assertFalse(result['candidates'][0]['uuid']['matches_bound_path_uuid'])
++        with self.assertRaises(RuntimeError): provenance.parse_sample(raw, PID, EXE, self.artifacts, tool_paths=self.policy)
++
++    def test_malformed_uuid_address_and_owned_trailing_text_are_diagnostic_not_repaired(self):
++        valid = image_row(alias(EXE), 0, self.artifacts[str(EXE)])
++        for malformed in (valid.replace('<00000001-', '<INVALID-'), valid.replace('0x100000', 'INVALID'),
++                          'malformed ' + alias(EXE) + ' PRIVATE_TRAILING_SYMBOL\n'):
++            raw = sample(redacted=True) + malformed
++            result = self.describe(raw)
++            self.assert_failure_only_private(result, 'PRIVATE_TRAILING_SYMBOL')
++            self.assertFalse(result['candidates'][-1]['strict_row_syntax_matches'])
++            self.assertTrue(result['candidates'][-1]['contains_bound_form_artifact_indexes'])
++            with self.assertRaises(RuntimeError): provenance.parse_sample(raw, PID, EXE, self.artifacts, tool_paths=self.policy)
++
++    def test_path_redaction_angle_markers_cannot_corrupt_recognized_uuid_metadata(self):
++        framework = str(APP / RELATIVES[2])
++        raw = sample().replace(framework, '/Users/<redacted>/*/ComposeApp')
++        result = self.describe(raw)
++        row = result['candidates'][-1]
++        self.assertTrue(row['strict_row_syntax_matches'])
++        self.assertTrue(row['uuid']['syntax_matches'])
++        self.assertEqual([artifact_index(self.artifacts, framework)], row['uuid']['matching_artifact_indexes'])
++        self.assertEqual('UNBOUND', row['path']['classification'])
++
++    def test_duplicate_raw_alias_rows_retain_both_candidates_without_deduplication(self):
++        raw = sample(redacted=True) + image_row(str(EXE), 0, self.artifacts[str(EXE)])
++        result = self.describe(raw)
++        self.assertEqual(4, len(result['candidates']))
++        first, last = result['candidates'][0], result['candidates'][-1]
++        self.assertEqual(first['path']['owned_presentation_artifact_indexes'], last['path']['exact_artifact_indexes'])
++        with self.assertRaises(RuntimeError): provenance.parse_sample(raw, PID, EXE, self.artifacts, tool_paths=self.policy)
++
++    def test_missing_or_duplicate_table_never_scans_other_sections(self):
++        for raw in (sample().replace('Binary Images:', 'OTHER_SECTION:'), sample() + '\nBinary Images:\n' + sample()):
++            result = self.describe(raw)
++            self.assertEqual('NOT_SCANNED_MISSING_OR_AMBIGUOUS_TABLE', result['scan_status'])
++            self.assertEqual([], result['candidates'])
++            self.assertEqual(0, result['lines_scanned'])
++            with self.assertRaises(RuntimeError): provenance.parse_sample(raw, PID, EXE, self.artifacts, tool_paths=self.policy)
++
++    def test_pre_table_owned_stack_ignored_post_table_malformed_owned_row_recorded(self):
++        stack = 'PRIVATE_STACK PRIVATE_SYMBOL ' + str(EXE) + '\n'
++        raw = sample().replace('\nBinary Images:\n', '\n' + stack + '\nBinary Images:\n') + 'malformed ' + str(EXE) + '\n'
++        result = self.describe(raw)
++        self.assert_failure_only_private(result, 'PRIVATE_STACK', 'PRIVATE_SYMBOL')
++        self.assertEqual(4, len(result['candidates']))
++        self.assertFalse(result['candidates'][-1]['strict_row_syntax_matches'])
++
++    def test_unrelated_rows_and_named_symbols_outside_relevant_image_paths_are_not_retained(self):
++        extra = '0xabc - 0xfff +Parlor (PRIVATE_SYMBOL) <99999999-2222-3333-4444-555555555555> /PRIVATE_SYSTEM/libOther\n'
++        raw = sample() + extra
++        result = self.describe(raw)
++        self.assert_failure_only_private(result, 'PRIVATE_SYSTEM', 'PRIVATE_SYMBOL', '/PRIVATE_SYSTEM/libOther')
++        self.assertEqual(3, len(result['candidates']))
++
++    def test_zero_reversed_and_overwide_intervals_are_visible_but_still_rejected(self):
++        for start, end in (('0x0', '0x103fff'), ('0x104000', '0x103fff'), ('0x10000000000000000', '0x10000000000001000')):
++            raw = sample().replace('0x100000 - 0x103fff', start + ' - ' + end)
++            result = self.describe(raw)
++            self.assertFalse(result['candidates'][0]['interval']['ordered_nonzero'])
++            with self.assertRaises(RuntimeError): provenance.parse_sample(raw, PID, EXE, self.artifacts, tool_paths=self.policy)
++        self.assertIsNone(result['candidates'][0]['interval']['start'])
++        self.assertIsNone(result['candidates'][0]['interval']['end'])
++
++    def test_copied_framework_uuid_relation_keeps_origins_and_different_bytes_distinct(self):
++        artifacts = copy.deepcopy(self.artifacts)
++        embedded = str(APP / RELATIVES[2])
++        copied = HOME + '/Projects/PRIVATE_COPY/ComposeApp.framework/ComposeApp'
++        artifacts[copied] = dict(artifacts[embedded], origin='owned-copy-build', sha256='f' * 64)
++        policy = provenance.OwnedToolPaths(artifacts, HOME, DEVICE, APP)
++        observed = {path: row for path, row in artifacts.items() if path != embedded}
++        raw = sample(observed)
++        result = diagnostic.image_diagnostic(raw, 'sample', artifacts, tool_paths=policy)
++        self.assert_failure_only_private(result, copied, 'PRIVATE_COPY')
++        row = result['candidates'][-1]
++        self.assertEqual([artifact_index(artifacts, copied)], row['path']['exact_artifact_indexes'])
++        self.assertEqual(sorted([artifact_index(artifacts, copied), artifact_index(artifacts, embedded)]), row['uuid']['matching_artifact_indexes'])
++        selected = provenance.parse_sample(raw, PID, EXE, artifacts, tool_paths=policy)
++        self.assertFalse(selected[copied]['same_file_bytes_as_embedded'])
++        self.assertEqual('owned-copy-build', selected[copied]['origin'])
++
++    def test_vmmap_without_successful_sample_has_no_selected_or_uuid_claim(self):
++        result = self.describe(vmmap(redacted=True), 'vmmap')
++        self.assert_failure_only_private(result)
++        self.assertFalse(result['sample_selection_available'])
++        self.assertEqual(3, len(result['candidates']))
++        for row in result['candidates']:
++            self.assertEqual([], row['successful_sample_interval_relations'])
++            self.assertNotIn('uuid', row)
++        with self.assertRaises(RuntimeError): self.describe(vmmap(), 'vmmap', selected={})
++
++    def test_vmmap_compares_only_to_supplied_successful_sample_ranges(self):
++        selected = provenance.parse_sample(sample(), PID, EXE, self.artifacts, tool_paths=self.policy)
++        result = self.describe(vmmap(), 'vmmap', selected=selected)
++        self.assertTrue(result['sample_selection_available'])
++        for row in result['candidates']:
++            self.assertTrue(row['successful_sample_interval_relations'][0]['same_start'])
++            self.assertTrue(row['successful_sample_interval_relations'][0]['end_within_sample'])
++        for span, key in (('301000-303000', 'same_start'), ('300000-309000', 'end_within_sample')):
++            raw = vmmap().replace('300000-302000', span)
++            result = self.describe(raw, 'vmmap', selected=selected)
++            self.assertFalse(result['candidates'][-1]['successful_sample_interval_relations'][0][key])
++            with self.assertRaises(RuntimeError): provenance.bind_vmmap(raw, PID, EXE, selected, tool_paths=self.policy)
++        boundary_sample = sample().replace('0x300000 - 0x303fff', '0xffffffffffffe000 - 0xffffffffffffffff')
++        selected = provenance.parse_sample(boundary_sample, PID, EXE, self.artifacts, tool_paths=self.policy)
++        boundary_vmmap = vmmap().replace('300000-302000', 'ffffffffffffe000-10000000000000000')
++        self.assertEqual('PASS', provenance.bind_vmmap(boundary_vmmap, PID, EXE, selected, tool_paths=self.policy)['status'])
++        result = self.describe(boundary_vmmap, 'vmmap', selected=selected)
++        self.assertEqual(2**64, result['candidates'][-1]['interval']['end'])
++        self.assertTrue(result['candidates'][-1]['successful_sample_interval_relations'][0]['end_within_sample'])
++
++    def test_vmmap_unknown_missing_duplicate_and_malformed_text_rows_remain_rejected(self):
++        selected = provenance.parse_sample(sample(redacted=True), PID, EXE, self.artifacts, tool_paths=self.policy)
++        raw = vmmap(redacted=True)
++        variants = [raw.replace('300000-302000', 'INVALID-RANGE'),
++                    raw.replace(alias(APP / RELATIVES[2]), '/unowned/PRIVATE_FRAMEWORK/ComposeApp'),
++                    raw + vmmap().splitlines()[2] + '\n', '\n'.join(raw.splitlines()[:-1]) + '\n']
++        for text in variants:
++            result = self.describe(text, 'vmmap', selected=selected)
++            self.assert_failure_only_private(result, 'PRIVATE_FRAMEWORK')
++            with self.assertRaises(RuntimeError): provenance.bind_vmmap(text, PID, EXE, selected, tool_paths=self.policy)
++        self.assertEqual(2, len(result['candidates']))
++        for prefix, kind in (('__TEXT_EXEC ', 'ALTERNATE_TEXT_EXEC'), ('__TEXT:', 'UNKNOWN_TEXT_PREFIX'),
++                             ('__TEXT_PRIVATE_PREFIX ', 'UNKNOWN_TEXT_PREFIX')):
++            text = raw.replace('__TEXT ', prefix)
++            result = self.describe(text, 'vmmap', selected=selected)
++            self.assert_failure_only_private(result, 'PRIVATE_PREFIX')
++            self.assertEqual(3, len(result['candidates']))
++            self.assertTrue(all(row['mapping_kind'] == kind for row in result['candidates']))
++            self.assertTrue(all(not row['interval']['syntax_matches'] for row in result['candidates']))
++            with self.assertRaises(RuntimeError): provenance.bind_vmmap(text, PID, EXE, selected, tool_paths=self.policy)
++
++    def test_vmmap_non_text_maps_and_unrelated_private_paths_are_excluded(self):
++        raw = vmmap() + '__DATA 100000-101000 [4K] rw-/rw- /PRIVATE_DATA/Parlor\n' + \
++            '__TEXT 200000-201000 [4K] r-x/r-x /PRIVATE_SYSTEM/libOther\n'
++        result = self.describe(raw, 'vmmap')
++        self.assert_failure_only_private(result, 'PRIVATE_DATA', 'PRIVATE_SYSTEM')
++        self.assertEqual(3, len(result['candidates']))
++
++    def test_input_tool_context_and_output_budgets_cannot_be_weakened(self):
++        for raw, options in ((None, {}), ('', {}), (sample(), {'budget': 4}),
++                             (sample(), {'budget': diagnostic.MAX_INPUT_BYTES + 1}),
++                             (sample(), {'output_budget': 4}),
++                             (sample(), {'output_budget': diagnostic.MAX_OUTPUT_BYTES + 1}),
++                             (sample(), {'budget': True})):
++            with self.subTest(options=options), self.assertRaises(RuntimeError): self.describe(raw, **options)
++        with self.assertRaises(RuntimeError): self.describe(sample(), 'other')
++        with self.assertRaises(RuntimeError): self.describe(sample(), selected={})
++
++    def test_relevant_row_line_path_and_component_limits_are_explicit(self):
++        row = image_row(str(EXE), 0, self.artifacts[str(EXE)])
++        cases = [header() + '\nBinary Images:\n' + row * (diagnostic.MAX_CANDIDATES + 1),
++                 header() + '\nBinary Images:\n' + '\n' * (diagnostic.MAX_LINES + 1),
++                 sample() + 'x' * (diagnostic.MAX_LINE_BYTES + 1),
++                 sample().replace(str(APP / RELATIVES[2]), '/' + 'x' * 4096 + '/ComposeApp'),
++                 sample().replace(str(APP / RELATIVES[2]), '/' + 'x/' * 128 + 'ComposeApp')]
++        for text in cases:
++            with self.subTest(size=len(text)), self.assertRaises(RuntimeError): self.describe(text)
++
++    def test_repeated_known_components_cannot_amplify_diagnostic_memory_without_bound(self):
++        artifacts = {('/' + 'same/' * 70 + Path(path).name): row for path, row in self.artifacts.items()}
++        target = next(iter(artifacts))
++        raw = header() + '\nBinary Images:\n' + image_row(target, 0, artifacts[target])
++        with self.assertRaisesRegex(RuntimeError, 'component relationship budget'):
++            diagnostic.image_diagnostic(raw, 'sample', artifacts)
++
++    def test_literal_asterisk_temp_path_is_not_an_authorized_copy_or_derived_alias(self):
++        framework = str(APP / RELATIVES[2])
++        for origin in ('owned-copy-build', 'owned-derived-app'):
++            artifacts = copy.deepcopy(self.artifacts)
++            owned = '/private/var/folders/aa/KNOWN_TEMP_ROOT/T/owned-copy/ComposeApp.framework/ComposeApp'
++            artifacts[owned] = dict(artifacts[framework], origin=origin)
++            policy = provenance.OwnedToolPaths(artifacts, HOME, DEVICE, APP)
++            presented = '/private/var/folders/*/owned-copy/ComposeApp.framework/ComposeApp'
++            observed = sample().replace(framework, presented)
++            result = diagnostic.image_diagnostic(observed, 'sample', artifacts, tool_paths=policy)
++            row = result['candidates'][-1]
++            self.assertEqual('UNBOUND', row['path']['classification'])
++            self.assertIn({'public_marker': '*'}, row['path']['component_shape'])
++            self.assertIsNone(policy.resolve(presented))
++            self.assertNotIn('KNOWN_TEMP_ROOT', json.dumps(result))
++            with self.assertRaises(RuntimeError): provenance.parse_sample(observed, PID, EXE, artifacts, tool_paths=policy)
++
++    def test_changed_inventory_and_invalid_sample_references_are_not_trusted(self):
++        altered = copy.deepcopy(self.artifacts)
++        altered[str(EXE)]['sha256'] = 'f' * 64
++        with self.assertRaises(RuntimeError): diagnostic.image_diagnostic(sample(), 'sample', altered, tool_paths=self.policy)
++        with self.assertRaises(RuntimeError): diagnostic.image_diagnostic(sample(), 'sample', self.artifacts, tool_paths=object())
++        selected = provenance.parse_sample(sample(), PID, EXE, self.artifacts)
++        for field, value in (('sha256', 'f' * 64), ('sample_start', True), ('sample_end_inclusive', -1)):
++            bad = copy.deepcopy(selected); bad[str(EXE)][field] = value
++            with self.subTest(field=field), self.assertRaises(RuntimeError): self.describe(vmmap(), 'vmmap', selected=bad)
++
++    def test_collector_neither_mutates_inputs_nor_queries_files_processes_or_accounts(self):
++        before = copy.deepcopy((self.artifacts, self.policy.aliases))
++        with patch.object(Path, 'resolve', side_effect=AssertionError('no filesystem query')), \
++             patch.object(Path, 'stat', side_effect=AssertionError('no filesystem query')), \
++             patch.object(Path, 'read_text', side_effect=AssertionError('no filesystem query')), \
++             patch('subprocess.run', side_effect=AssertionError('no native invocation')), \
++             patch('subprocess.Popen', side_effect=AssertionError('no native invocation')), \
++             patch('pwd.getpwuid', side_effect=AssertionError('no account query')), \
++             patch.object(provenance.OwnedToolPaths, '__init__', side_effect=AssertionError('no new authority')):
++            result = self.describe(sample())
++        self.assertEqual(before, (self.artifacts, self.policy.aliases))
++        self.assert_failure_only_private(result)
++
++    def test_failure_only_contract_kills_provenance_true_mutation(self):
++        source = inspect.getsource(diagnostic.image_diagnostic)
++        self.assertEqual(1, source.count('proves_provenance=False'))
++        namespace = dict(vars(diagnostic))
++        exec(compile(source.replace('proves_provenance=False', 'proves_provenance=True'), '<synthetic-marker-mutation>', 'exec'), namespace)
++        mutated = namespace['image_diagnostic'](sample(), 'sample', self.artifacts, tool_paths=self.policy)
++        with self.assertRaises(AssertionError): self.assert_failure_only_private(mutated)
++
++    def test_privacy_contract_kills_unknown_component_plaintext_mutation(self):
++        source = inspect.getsource(diagnostic._path_shape)
++        original = 'unknown_sha256=hashlib.sha256(part.encode()).hexdigest()'
++        self.assertEqual(1, source.count(original))
++        namespace = dict(vars(diagnostic))
++        exec(compile(source.replace(original, 'unknown_plaintext=part'), '<synthetic-privacy-mutation>', 'exec'), namespace)
++        with patch.object(diagnostic, '_path_shape', namespace['_path_shape']):
++            mutated = self.describe(sample().replace(str(APP / RELATIVES[2]), '/PRIVATE_COMPONENT/ComposeApp'))
++        with self.assertRaises(AssertionError): self.assert_failure_only_private(mutated, 'PRIVATE_COMPONENT')
++
++
++if __name__ == '__main__':
++    unittest.main()

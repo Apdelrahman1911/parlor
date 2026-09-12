@@ -1,0 +1,515 @@
+{
+  "schema_version": 1,
+  "kind": "READ_ONLY_PENDING_LIFECYCLE_SOURCE_SCOPE_AND_HISTORICAL_EVIDENCE_APPLICABILITY",
+  "reviewer": "/root/evidence_audit",
+  "recorded_at": "2026-09-08T18:19:16.017785+00:00",
+  "classification": "SCOPED_SOURCE_COMPARISON_ONLY_PENDING_RESULTS_LEDGER_DELIVERY_AND_FUTURE_FREEZE",
+  "branch": "fix/local-readiness-2026-09-07",
+  "historical_execution_source": "5f35a20d3c9c846cd98b38a16881997ecf577497",
+  "observed_evidence_delivery_HEAD": "700243c3426db2da3855a9d3a3df58ada607ffc5",
+  "observed_HEAD_tree": "bd93099fe19ccf46e27eb67f22d694cc1ae074aa",
+  "future_source_commit": null,
+  "future_inventory_commit": null,
+  "future_frozen_tree": null,
+  "scope": "Source/evidence applicability for imminent reviewed source/control then inventory-only commits. Directly compare unchanged tracked shipping/build/architecture/workflow bytes and exact pending control inputs; reconcile retained author/review/preparation identities. Not an exact final safety allowlist, new runtime/cleanup result, inventory generation or source/native dispatch approval.",
+  "unchanged_application_build_contract_scope": {
+    "files": 648,
+    "shipping_and_build_subtree_files": 632,
+    "other_contract_root_adr_workflow_files": 16,
+    "all_historical_Git_modes_types_and_blob_ids_equal": true,
+    "all648_current_raw_file_bytes_equal_both_committed_blobs": true,
+    "mismatched_paths": [],
+    "subtrees": [
+      {
+        "path": "composeApp",
+        "files": 121,
+        "nul_git_ls_tree_sha256": "530cbcbee413bd11a6c70992a627264c5c753efa24fa166ce47fb3b0e06f4e68",
+        "git_subtree_oid_at_both_commits": "27e88880f97d3148184c80c1fa40bae958530a22",
+        "all_current_tracked_bytes_equal": true
+      },
+      {
+        "path": "shared",
+        "files": 239,
+        "nul_git_ls_tree_sha256": "e6091ab34b38870e54a042171d7626c5832b75406f3f6eb3bb7c6e103d5cd5a8",
+        "git_subtree_oid_at_both_commits": "d585faaa02fa681ddb5b60b2a43d1d51d4a10ce3",
+        "all_current_tracked_bytes_equal": true
+      },
+      {
+        "path": "game-modes",
+        "files": 238,
+        "nul_git_ls_tree_sha256": "b2ac350063b503585a5ca2f33a1a6acfd3e6872375bb5a600c6580a7c4b20bd1",
+        "git_subtree_oid_at_both_commits": "d56b07334d549c3a6d4d3819f2bff645c149aa50",
+        "all_current_tracked_bytes_equal": true
+      },
+      {
+        "path": "iosApp",
+        "files": 19,
+        "nul_git_ls_tree_sha256": "272a4cccfefc0a2dd534fc064296769c4e3e03ae594ebdee73282fa62535e7f2",
+        "git_subtree_oid_at_both_commits": "da6d918bb46c4c29640b8ce5c4484ca57fc5101e",
+        "all_current_tracked_bytes_equal": true
+      },
+      {
+        "path": "build-logic",
+        "files": 5,
+        "nul_git_ls_tree_sha256": "ed84ec392767420e47a7ce9b3905f36d279f3def3404f7d0dee20a4ef5bf4c9a",
+        "git_subtree_oid_at_both_commits": "3fa3848246aa0204b6daf067617b0aed69c7510c",
+        "all_current_tracked_bytes_equal": true
+      },
+      {
+        "path": "config",
+        "files": 6,
+        "nul_git_ls_tree_sha256": "44c98de7f682048130f2122463a85a2c90ef9efca039965be6cce5ea76a17cc9",
+        "git_subtree_oid_at_both_commits": "3081d67d7c14ca8ffc7b30824dc5b1a81c0f0fd4",
+        "all_current_tracked_bytes_equal": true
+      },
+      {
+        "path": "gradle",
+        "files": 4,
+        "nul_git_ls_tree_sha256": "3ef8e5d248362d02c9c4c3127fa3a1e9996d20540f9b6ec5442a636639447348",
+        "git_subtree_oid_at_both_commits": "56fe4ae6668625c7cd9f357c52bb7ba9c684a8c9",
+        "all_current_tracked_bytes_equal": true
+      },
+      {
+        "path": "docs/adr",
+        "files": 2,
+        "nul_git_ls_tree_sha256": "d6227388455d19ede8eb07352c6638d4116f2629aa8791ac27af513a8b52b78e",
+        "git_subtree_oid_at_both_commits": "9bb751a77d90dad34b838d9a046a2471d1232a7b",
+        "all_current_tracked_bytes_equal": true
+      },
+      {
+        "path": ".github/workflows",
+        "files": 4,
+        "nul_git_ls_tree_sha256": "45d0d7fc912d5d8b3ba50a68ca515d6778c3fbef49885205b959c0a14848ed3b",
+        "git_subtree_oid_at_both_commits": "38d2a1e7e535a1fb31c2330f214065aa91d8f837",
+        "all_current_tracked_bytes_equal": true
+      }
+    ],
+    "standalone_paths": [
+      "AGENTS.md",
+      "build.gradle.kts",
+      "settings.gradle.kts",
+      "gradle.properties",
+      "gradlew",
+      "gradlew.bat",
+      "docs/PRODUCTION_ARCHITECTURE.md",
+      "docs/RELEASE_GATES.md",
+      "docs/HOW_TO_ADD_A_GAME.md",
+      "docs/P2PKIT_MAVEN_PROVENANCE.md"
+    ],
+    "manifest_sha256": "a046fbad1dee5cf448ffa7f1d11168aef0aecc19650db96c6274c410a8dbfb2b",
+    "manifest_encoding": "compact UTF-8 ensure_ascii JSON without newline; whole-path string lexically sorted rows[path,git_mode,git_blob_oid,sha256,bytes]",
+    "raw_combined_git_ls_tree_sha256": "acce8cc048ada37da0808fdc83b33c249e1c266002f551285552da1bf801f21b",
+    "method": "Explicit git ls-tree at5f35/700243, exact-key/mode/type/blob comparison, git cat-file --batch and current raw byte equality for every selected file. Not inference solely from git status or agent summaries. No project imports/builds/tests.",
+    "boundary": "648 exact tracked files within stated scope; not an inventory/full-all-files review, a clean checkout claim or verification of arbitrary ignored/untracked external files."
+  },
+  "application_invariant_applicability": [
+    "No selected shipping source, bundled resources, app identity/Xcode project/plist/privacy files, build graph/toolchain/dependency pins or workflow bytes differ across the two historical commits and current source.",
+    "Host-only reducer authority, exact protocol4.2, deterministic session seed, privacy projections, snapshot/content validation and Doctor ON/OFF shipping implementations are unchanged by this continuation control delta.",
+    "Committed Whodunit Leave Confirmation timer exclusion remains in unchanged game source. No original16 remediation implementation was restarted or replaced here.",
+    "Unchanged bytes permit scoped reuse/reconciliation of applicable earlier source reviews/results; they do not establish missing Apple/libproc/storage/strict-protection runtime or make a prior differently bound whole-checkout run newly executed."
+  ],
+  "pending_control_inputs": {
+    "tracked_modified_paths": 13,
+    "new_python_files": 3,
+    "new_additive_control_freeze_json": 1,
+    "total_changed_control_doc_test_inputs": 17,
+    "source_path_rows": [
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/run_ios_readiness.py",
+        "bytes": 76990,
+        "sha256": "b0f3794fe89537d5108a2c24c22c33ed94d9330ee220e7fa257bfb2c4a7b1e29",
+        "classification": "RUNNER_OR_LIFECYCLE_CONTROL_SOURCE",
+        "tracked_edit": true,
+        "baseline_bytes": 72609,
+        "baseline_sha256": "a56f47787c5abbda301cdfcafa5c8ac4ad7eb505d21d560e86063f93453a36f7",
+        "baseline5f35_and700243_equal": true
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/README.md",
+        "bytes": 12318,
+        "sha256": "ab3e78c11a796e2122f666ca8522d0eeea44da5b0c180292140ba28c645a300b",
+        "classification": "PERMITTED_CONTROL_DOCUMENTATION",
+        "tracked_edit": true,
+        "baseline_bytes": 10614,
+        "baseline_sha256": "e934ab0834cbe9776fbd410bac6f51147919c718bb8e274fb56103d087dc369e",
+        "baseline5f35_and700243_equal": true
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/compose_runner.py",
+        "bytes": 21878,
+        "sha256": "cf41c413d321d87689b97b86e4fe7981052dab6b629c8ffcd57b15a00be6555c",
+        "classification": "RUNNER_OR_LIFECYCLE_CONTROL_SOURCE",
+        "tracked_edit": true,
+        "baseline_bytes": 21106,
+        "baseline_sha256": "288c412456e130ec640f40042133ef4686554b4f63abecc097602999f2d20b18",
+        "baseline5f35_and700243_equal": true
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/app_foundation_copy.py",
+        "bytes": 13449,
+        "sha256": "241bc0e199be2699fe49b1552d993e7389de79ff8fb88f2d1fe53bed99847840",
+        "classification": "RUNNER_OR_LIFECYCLE_CONTROL_SOURCE",
+        "tracked_edit": true,
+        "baseline_bytes": 13449,
+        "baseline_sha256": "0df57639ed7bdef3fd4df62e73489dc85f4006dd587ce82cf9077e4262e1b068",
+        "baseline5f35_and700243_equal": true
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/README.md",
+        "bytes": 23054,
+        "sha256": "16ae9dbdaf680add4eeb965dee0b96910d8ecf3ef6bb89c3b8afead1a8975451",
+        "classification": "PERMITTED_CONTROL_DOCUMENTATION",
+        "tracked_edit": true,
+        "baseline_bytes": 21350,
+        "baseline_sha256": "f1d77ff98814e515461f9d91f0e3c640638552b26990227c6d5069181f588e88",
+        "baseline5f35_and700243_equal": true
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
+        "bytes": 59858,
+        "sha256": "5524d839202211270ec1c97776f0d350b9802ecf0d1c5e6eb3d28cd960629302",
+        "classification": "RUNNER_OR_LIFECYCLE_CONTROL_SOURCE",
+        "tracked_edit": true,
+        "baseline_bytes": 56767,
+        "baseline_sha256": "98334625a01adbe3c8b2fb1573895a5056c95e430cb9d857142809d8ef4db454",
+        "baseline5f35_and700243_equal": true
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/direct-lifecycle-draft-freeze-01.json",
+        "bytes": 2956,
+        "sha256": "4a18e36224c895581515d538f995e6f8a1bd7016a3cf6eba3328712e5535bd08",
+        "classification": "ADDITIVE_RUNTIME_CONTROL_FREEZE_JSON",
+        "tracked_edit": false,
+        "baseline_bytes": null,
+        "baseline_sha256": null
+      },
+      {
+        "path": "scripts/ci/NATIVE_CONTINUATION.md",
+        "bytes": 14826,
+        "sha256": "b5ae13ab4f6158d3d5d067445286098f1aab72b177591bdb0e5252a1e2d06709",
+        "classification": "PERMITTED_CONTROL_DOCUMENTATION",
+        "tracked_edit": true,
+        "baseline_bytes": 10879,
+        "baseline_sha256": "e2e5f62f4a8d876585120e32ff73e91f7c3d992963c80346e94e54f906eec846",
+        "baseline5f35_and700243_equal": true
+      },
+      {
+        "path": "scripts/ci/native_continuation.py",
+        "bytes": 57512,
+        "sha256": "3c974b93e202359c12aa2647984b624024986676eb058ace9ecdf4e7663200bb",
+        "classification": "RUNNER_OR_LIFECYCLE_CONTROL_SOURCE",
+        "tracked_edit": true,
+        "baseline_bytes": 42095,
+        "baseline_sha256": "d5c6faf5a33187a9bed855f8d82b17ea2c90d72c3b22df0a041975f7a6bc7b21",
+        "baseline5f35_and700243_equal": true
+      },
+      {
+        "path": "scripts/release/tests/test_native_continuation.py",
+        "bytes": 55155,
+        "sha256": "dac139c779e33b795aa6f36fc0f853ee071099b927c901a9b993323c6f6edb35",
+        "classification": "REGRESSION_SOURCE",
+        "tracked_edit": true,
+        "baseline_bytes": 37634,
+        "baseline_sha256": "7113f5cf5283fb9cb44dcf18c885c6c8dcf4a14ed2a948cac3ff4a173fcb1337",
+        "baseline5f35_and700243_equal": true
+      },
+      {
+        "path": "scripts/release/tests/test_native_process_probe.py",
+        "bytes": 43371,
+        "sha256": "2730119da9d074d490a259669d3e9f9b4fec655da2045bfd9401ee44dc91e4ea",
+        "classification": "REGRESSION_SOURCE",
+        "tracked_edit": true,
+        "baseline_bytes": 43371,
+        "baseline_sha256": "707f394e34d8234f4617963af32a865b3620aaec7a16ee6e0c166c0e1090ef39",
+        "baseline5f35_and700243_equal": true
+      },
+      {
+        "path": "scripts/verification/ios-readiness/simulator_lifecycle.py",
+        "bytes": 37085,
+        "sha256": "8d799475f1e92fc7943ca05b2d1e59655cbb8b0973031029440662059e65f248",
+        "classification": "RUNNER_OR_LIFECYCLE_CONTROL_SOURCE",
+        "tracked_edit": false,
+        "baseline_bytes": null,
+        "baseline_sha256": null
+      },
+      {
+        "path": "scripts/verification/ios-readiness/test_foundation_toolchain_binding.py",
+        "bytes": 24627,
+        "sha256": "613f255556f052d553a2e85dc7d84e4f137957f47732356449e22d6991f7fc53",
+        "classification": "REGRESSION_SOURCE",
+        "tracked_edit": true,
+        "baseline_bytes": 24389,
+        "baseline_sha256": "df030e500c035fc65ede190a8c11b795f7b4a40e2933a86a4b8529b4bdac4c13",
+        "baseline5f35_and700243_equal": true
+      },
+      {
+        "path": "scripts/verification/ios-readiness/test_native_command_failures.py",
+        "bytes": 27564,
+        "sha256": "2dae0e77803d5c6b98bd3d4bc1ee4f84a366b799da7e21c16e2068312e0d9b8c",
+        "classification": "REGRESSION_SOURCE",
+        "tracked_edit": true,
+        "baseline_bytes": 12002,
+        "baseline_sha256": "7ea11e97a11cc07ba85d09c1366fe4198b95b8ee59414979fa7801122be981be",
+        "baseline5f35_and700243_equal": true
+      },
+      {
+        "path": "scripts/verification/ios-readiness/test_simulator_lifecycle.py",
+        "bytes": 75257,
+        "sha256": "2f7c957e47aa63804866a71e3b5a8566342c6f7deca2f80e57f0cd42af1a5a46",
+        "classification": "REGRESSION_SOURCE",
+        "tracked_edit": false,
+        "baseline_bytes": null,
+        "baseline_sha256": null
+      },
+      {
+        "path": "scripts/verification/ios-readiness/test_simulator_lifecycle_integration.py",
+        "bytes": 56392,
+        "sha256": "93d88840fcef436dbf45cc20de071e784daa4c6bc0e7683b623da8df7197100c",
+        "classification": "REGRESSION_SOURCE",
+        "tracked_edit": false,
+        "baseline_bytes": null,
+        "baseline_sha256": null
+      },
+      {
+        "path": "scripts/verification/ios-readiness/test_toolchain_profiles.py",
+        "bytes": 12166,
+        "sha256": "aee9e30948813929393acedfaad5767fee2a47eb896a7eddd81db96208f14672",
+        "classification": "REGRESSION_SOURCE",
+        "tracked_edit": true,
+        "baseline_bytes": 12098,
+        "baseline_sha256": "77ee3b78862c23bee045ff9ca049f312a20b45bff1257768b13e2c5f2ca6bf4a",
+        "baseline5f35_and700243_equal": true
+      }
+    ],
+    "scope_note": "The additive draft-freeze JSON is a real runtime control input despite its N/reviews location; include it in reviewed control delivery/binding. Ordinary later review/evidence reports are a separate eventual allowlist. The unchanged companion README is not a tracked edit."
+  },
+  "changed_control_semantics_and_review_boundary": [
+    "Narrow companion own_simulator_metadata exception preservation was reviewed separately before lifecycle integration. Its earlier030e15/6073cc exact snapshots are historical, not current umbrella approval.",
+    "Current independently reviewed integration adds explicitly selected qualified direct-owned-v1 simulator lifecycle, durable direct-child/resource journal and cleanup admission, while default legacy AppHost and generic build/app/provenance ownership remain separate. It does not fix build-era ps/lsof or prove actual simulator retirement.",
+    "Composition/helper/tests and exact driver pin closure changes require affected focused controls; fresh focused native source/control/preflight bindings must replace oldA19/B20 bindings. New reserved labelsA21/B22 are not run results.",
+    "Only mutable app_foundation_copy.py driver pin changes among the nine additive frozen-draft inputs. Original prior freeze and other eight template/validation inputs remain preserved.",
+    "Implementation, regression/oracle and late-summary-persistence policy reviews are distinct and source-only. Earlier required raw ack/journal authority cannot be bypassed; later summary persistence failure may still allow independently journal-backed safe retirement but never PASS/admission.",
+    "No workflow YAML change; new adapter cleanup/journal helpers affect focused modes. Full main/context/effective_scope top-level ASTs remain identical, but current control bytes still need final freeze review/binding."
+  ],
+  "native_adapter_toplevel_ast_comparison": {
+    "changed_existing_functions": [
+      "cleanup_is_safe"
+    ],
+    "added_functions": [
+      "canonical_sha",
+      "direct_lifecycle_is_safe",
+      "lifecycle_journal_matches"
+    ],
+    "removed_functions": [],
+    "unchanged_full_entry_functions": {
+      "effective_scope": true,
+      "context": true,
+      "main": true
+    },
+    "method": "ast.parse/dump including code but excluding location metadata, not project import, compiler or runtime."
+  },
+  "affected_test_declarations_not_execution": {
+    "modified_and_new_test_files": [
+      {
+        "path": "scripts/release/tests/test_native_continuation.py",
+        "historical_declared_methods": 35,
+        "current_declared_methods": 40,
+        "removed_method_names": [],
+        "added_method_names": 5,
+        "execution_by_this_reviewer": 0
+      },
+      {
+        "path": "scripts/release/tests/test_native_process_probe.py",
+        "historical_declared_methods": 45,
+        "current_declared_methods": 45,
+        "removed_method_names": [],
+        "added_method_names": 0,
+        "execution_by_this_reviewer": 0
+      },
+      {
+        "path": "scripts/verification/ios-readiness/test_foundation_toolchain_binding.py",
+        "historical_declared_methods": 20,
+        "current_declared_methods": 20,
+        "removed_method_names": [],
+        "added_method_names": 0,
+        "execution_by_this_reviewer": 0
+      },
+      {
+        "path": "scripts/verification/ios-readiness/test_native_command_failures.py",
+        "historical_declared_methods": 12,
+        "current_declared_methods": 26,
+        "removed_method_names": [],
+        "added_method_names": 14,
+        "execution_by_this_reviewer": 0
+      },
+      {
+        "path": "scripts/verification/ios-readiness/test_simulator_lifecycle.py",
+        "historical_declared_methods": 0,
+        "current_declared_methods": 51,
+        "removed_method_names": [],
+        "added_method_names": 51,
+        "execution_by_this_reviewer": 0
+      },
+      {
+        "path": "scripts/verification/ios-readiness/test_simulator_lifecycle_integration.py",
+        "historical_declared_methods": 0,
+        "current_declared_methods": 32,
+        "removed_method_names": [],
+        "added_method_names": 32,
+        "execution_by_this_reviewer": 0
+      },
+      {
+        "path": "scripts/verification/ios-readiness/test_toolchain_profiles.py",
+        "historical_declared_methods": 12,
+        "current_declared_methods": 12,
+        "removed_method_names": [],
+        "added_method_names": 0,
+        "execution_by_this_reviewer": 0
+      }
+    ],
+    "probe_selected_scope": "45 declarations at all snapshots; only ProbeSourceContractTest.test_full_non_app_scope_is_explicit_and_cycles_do_not_reuse_failed_labels changes one expected A19/B20-to-A21/B22 line.44 method ASTs unchanged; additive count clarification independently closed. Do not infer45 new executions.",
+    "related_existing_controls": "Composition22 + frozen-draft33, functional-clone12, toolchain/metadata/wrapper/normal-manifest and immutable ownership regressions have control-input dependencies. Exact coordinator invocation packet/review decides the combined focused selector set, not this declaration table.",
+    "low_level_standins": "51 low-level declarations include46 synthetic and5 bounded Python Popen stand-ins, not51 native Apple operations.32 integration declarations use actual wrapper/composition glue with inert external seams.",
+    "nonclaim": "Declared counts, inherited selectors and source parsing are not executed/pass counts. No predicted combined total or successful runtime is supplied here. Coordinator cycles require raw outcomes/descriptors/cleanup and separate independent postrun review."
+  },
+  "historical_and_preparation_evidence": {
+    "700243_delivery": "Exact614 reviewed payloads plus2 safety reports/616 Git blobs were independently reconciled. Evidence-only delivery did not freeze the current lifecycle sources; its root push/remote receipt remains distinct from this reviewer nonnetwork inspection.",
+    "source01_vs02": "Keep held source01 as superseded creation-time snapshot, including companion README divergence it disclosed; source02 restored README to exact committed69afd613 bytes without weakening clone guard. Source02 pending-at-time statuses are closed additively, never rewritten.",
+    "source02_count": "Preserve source02 probe_other_38 field historically and pair it with approved addendum6c34261e and independent30a6cc2b correction to44 unchanged of45.",
+    "post0607_draft": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/post0607-ledger-notes-01.md",
+      "bytes": 8430,
+      "sha256": "c2cf2446a1240250ca437978147df1328df067a7431e7ff87d4b6927b6752bf7",
+      "author": "/root/l08_fixture",
+      "classification": "SUPERSEDED_HISTORICAL_WORKING_DRAFT_NOT_CURRENT_LEDGER_OR_APPROVAL",
+      "boundary": "It records an earlier ledger hash, pending A19/B20 and pending C02 postreview at its cutoff. Retain unchanged as provenance if coordinator selects it; do not copy its superseded statuses into current ledger or delete it."
+    },
+    "C03": {
+      "preparation_only": true,
+      "all14_current_control_and_schema_pins_match": true,
+      "fresh_source_binding_export_render_candidate_results": "Not supplied or created by this scope review. C02 remains historical5f35 scoped PASS, not a future C03 result."
+    },
+    "full_D": {
+      "preparation_only": true,
+      "committed_reference_pins": 17,
+      "current_differing_paths": [
+        "scripts/ci/native_continuation.py"
+      ],
+      "critical": "Full ignores frozen_source_sha; after future source/control/inventory commits compare actual five run/job/checkout HEAD/tree against approved desired freeze. Future run/artifact IDs stay unknown.",
+      "suite_correction": "Reviewed full packet correctly distinguishes one Home-launch plus four UIKit containment declarations; none are A functional/retained-host/protection or actual normal Parlor libproc provenance."
+    }
+  },
+  "future_freeze_and_delivery_requirements": [
+    "Root supplies completed focused/transport raw cycles and cleanup, independent result reviews and final held ledger; author exact additive safety allowlist only then. Active outputs/controller logs are not blindly scanned or treated as completed evidence.",
+    "Preserve reviewed source01/02, count/closure corrections, failed receipts, old C/A/diagnostic outputs, superseded draft and exact ignored logs. No blanket add or broad force-add; ownership lock and unrelated work are not completed payload.",
+    "Commit reviewed source/control and chosen closed evidence/ledger normally; then regenerate and commit only mechanical inventory. No inventory generation/check or future source SHA was invented here.",
+    "Require fresh final source/control manifests, inventory freshness evidence, normal push/direct remote equality and independently approved platform bindings at the actual frozen SHA. Historical manifest825, C02 counts and preflight hashes are not substitutes.",
+    "Completed future native, C03 and full qualification each need actual scope-specific results and cleanup. Preserve failures/skips/cache distinctions and prevent unsafe A cleanup from admitting B."
+  ],
+  "reference_identities": [
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/direct-lifecycle-author-source-01.json",
+      "bytes": 10413,
+      "sha256": "bc35e4b89fc48129dc60c176806753fe8a8b0ba2047638bfeb8770d6a5bc8ab2"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/direct-lifecycle-author-source-02.json",
+      "bytes": 11177,
+      "sha256": "0e3ef86e9e66708be391630e864f01bfeb9f03bbfa183a0a027bec4a12f951ec"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/direct-lifecycle-author-count-addendum-01.json",
+      "bytes": 3425,
+      "sha256": "6c34261e6903cf7f4d27fbd2ccaa1e44de9ce4c3981a625ee0cc66d89ebe003b"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/direct-lifecycle-author-count-independent-01.json",
+      "bytes": 4011,
+      "sha256": "30a6cc2bceb26fb1d70b68a5cc6d30351802212df76c2d90b8e7720df8c8044f"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/direct-lifecycle-author-review-closure-01.json",
+      "bytes": 6330,
+      "sha256": "d23443bc888ee08ac004565b29d2bf13b2bf57667fc4b513e1169a1617bf77cd"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/direct-lifecycle-author-review-closure-independent-01.json",
+      "bytes": 7916,
+      "sha256": "fc3ee3477673f0b3734913cda1159f085198236a3babac44636cb9fd604ebbdd"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/direct-owned-simulator-lifecycle-implementation-independent-01.json",
+      "bytes": 28603,
+      "sha256": "44239859c10b762b6447234eddbc993ac1e9e65982a0e149250e943941194bdf"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/direct-owned-simulator-lifecycle-persistence-policy-independent-01.json",
+      "bytes": 5567,
+      "sha256": "756a549e40145cb659c7ac2829974413f179bdd588c5a9f5a41d599531a02f0e"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/direct-simulator-lifecycle-controls-independent-01.json",
+      "bytes": 41645,
+      "sha256": "719427b07d3cad552bf638e3c424f09c3e1f334c8aaea855b98e1559913791f7"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-metadata-primary-repair-author-01.json",
+      "bytes": 28590,
+      "sha256": "292a61f891dc7820628a45e7a8ad8e92a87da3a48f41ba4f57ca4aa9a24904d6"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-metadata-error-preservation-independent-01.json",
+      "bytes": 7983,
+      "sha256": "e8dd16bbd4a2f062bde7a8bdd81b6ea3742f4affe0f84b566e761c29fbec34b7"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/post5f35-evidence-delivery-controller-01.json",
+      "bytes": 2648,
+      "sha256": "fd55d188fd3e0f423e14dfde14b896602a2ea5f42a8e1289f38706bdcf275bce"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/post5f35-evidence-delivery-independent-01.json",
+      "bytes": 12173,
+      "sha256": "e7d4edbeb557ddaccf9ddf11462fe9ea8014b012148f910f6f91c6f770107011"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/dependency-chain-afterfreeze-execution-03.json",
+      "bytes": 11784,
+      "sha256": "cd931693d9a4a6ce957a5474d4c2f26827c0425b645953a0c98f497c52a935b1"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/dependency-chain-afterfreeze-execution-independent-03.json",
+      "bytes": 9488,
+      "sha256": "0fd0cadbd7d224dc5a3d05a368fa5b58cba9ab4fe3ccaca6afddb21d4e6c4930"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/full-qualification-afterfreeze-01.json",
+      "bytes": 45031,
+      "sha256": "1c455d0dfc2405a9c3205782efbc31acf0fbd9ee356aeade25a74eeaa3c1aad5"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/full-qualification-afterfreeze-independent-01.json",
+      "bytes": 10869,
+      "sha256": "2d49153881be3dc9ddc2ef9a9f08768ea288a921435d450cbc09fbea15aeb36c"
+    }
+  ],
+  "findings": {
+    "blocking_shipping_source_delta_findings": [],
+    "resolved_factual_count_issue": "Author count addendum/independent review close45=1+44 without source/test rerun.",
+    "remaining_work": "Actual coordinator cycles, raw-result review, final ledger, exact additive safety and reviewed source/inventory commits/fresh bindings remain separate; no readiness conclusion upgrade."
+  },
+  "activity_and_cleanup": {
+    "project_imports": 0,
+    "tests_or_python_standins": 0,
+    "builds": 0,
+    "native_execution": 0,
+    "network_or_Actions": 0,
+    "inventory_generation": 0,
+    "source_control_doc_edits": 0,
+    "existing_evidence_edits": 0,
+    "staging_commits_pushes": 0,
+    "new_file_only": "remediation-runs/2026-09-08-continuation/reviews/source-scope-before-lifecycle-freeze-01.json",
+    "cleanup": "Read-only Git/standard-library -B source/hash/JSON/AST inspection and this N-only report. No lane, temporary worker, simulator, DerivedData or live build output created/deleted; no Gradle stop/clean needed or run. Coordinator active/completed cycles have separate actual receipts and are not inferred from this activity."
+  },
+  "readiness": "NOT READY unchanged. No application-runtime result is established here. Original strict file-protection observations, A functional-storage/retained-host/interaction and B real normal Debug Parlor libproc plus full D remain actual verification work; physical-device/Store/private-signing/publication and separate owner/identity/legal/editorial/privacy requirements remain excluded."
+}

@@ -1,0 +1,31 @@
+{
+  "reviewer": "/root/factory_review",
+  "created_at": "2026-09-06T10:07:20.972478+00:00",
+  "correction": {
+    "supersedes": "independent-dsc01-v4-factory-apphost-02-partial-review.json candidate counter-evidence assertion that ContentView addsStateObject; parentmessage repeatsamewrongclaim",
+    "correct_source": "v4runner468\u2013479 andcopied-source.diff1\u201338 onlyappend.overlay(alignment:.top){DSC01Overlay().padding(.top,72)};Probe.swift243\u2013269 has@ObservedObjectinsideDSC01Overlay, NOTparentContentViewStateObject.",
+    "impact": "Remove assumedparentStateObject invalidationasprovenmechanism. NoSwiftUIcauseconfirmedbythisrecord; v5boundedruntime remainsneeded. Otherrawobservations/nativeLTR\u2192RTLcounterexample unchanged."
+  },
+  "container_feasibility": {
+    "status": "POTENTIALLY_APPROPRIATE_PUBLIC_BOUNDARY_IF_EXTERNAL_DIRECTION_OWNERSHIP_RESET_CONFIRMED__NOT_PATCH_APPROVAL",
+    "research": "dsc01-native-direction-research-factory-01/apple-container-references.json",
+    "basis": [
+      "AppleUIViewControllerRepresentable docsstateSwiftUIcontrols representedviewlayout; customcontainmentdocsclearlyseparateparentgeometryandchildownhierarchy. Doesnotitselfdocumentsemanticresetcause.",
+      "AplainstableUIViewControllerparentwithoneComposechildisnotUINavigationController,noextrastack/reducer/session/navigationstate.",
+      "UseproperUIKitcontainment addChild\u2192addSubview\u2192fullboundsconstraints(orpreservedflexibleautoresizing)\u2192child.didMove; never manuallymutateSwiftUIrepresentedparentframe.",
+      "ContainmentparentmustreturnchildForStatusBarStyle/Hidden,childForHomeIndicatorAutoHidden,childForScreenEdgesDeferringSystemGesturesifpreservingchildownership. Appledefaultsotherwisechooseparent.",
+      "Applychildboundsnotparent.safeAreaLayoutGuide top/bottom toavoidduplicatingComposeinsets. VerifychildsafeAreaInsets equivalenttopriorfull-screencontroller. Noextrabar/padding.",
+      "KeepchildcreationoutofupdateUIViewController; oneinit/make lifecycle. Appearance/windowhierarchyautomaticforwardingmustremainenabled; no arbitrarymanualviewDid callbacks.",
+      "Existing privacyZStackblackcover/accessibilityHidden wrapswholeComposeView andcanremainunchanged. CheckInactive/backgroundNoPrivateUI exposure.",
+      "LocalUIViewControllerstillreferencesComposeHostingViewControllerviaexactCMP1.10.3 containercompositionlocal; gameNAV remainslibraryowned. ParentControllerlookup/screenedgeorstatusbarassumptionsmustbereviewed\u2014notclaimedidenticalmerelyfromcompile.",
+      "Test stablecontroller/session/StateFlow identities acrossAR/EN/System, foreground,SwiftUIredraw; actualbounds/insets, gestureedge,orientation,keyboard+focus,controllerdetach/disposal required. Noautonomousnativebuildbyreviewer."
+    ],
+    "source_read": "ContentView.swift complete; MainViewController.ktcomplete; LocalAppLocale.ios.ktcomplete; exactCMP1.10.3 ComposeHostingViewController relevantrootview/lifecycle/navigation/context code; nofirstparty otherrootsemanticsetterfound."
+  },
+  "task_safety": {
+    "production_edits": 0,
+    "builds_tests_started": 0,
+    "research_python_process": "Finished successfully; no longrunningprocessleft",
+    "record": "Append-only correction; originalauditreceiptsunchanged"
+  }
+}

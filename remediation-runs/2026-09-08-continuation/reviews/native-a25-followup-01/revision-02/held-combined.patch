@@ -1,0 +1,461 @@
+--- a/remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/L08HostProbe.kt.in
++++ b/remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/L08HostProbe.kt.in
+@@ -152,42 +152,62 @@
+         stage = action
+         when (action) {
+             "prepare" -> {
++                stage = "prepare-initial-state"
+                 check(owned == null && !captured && mounts == 0)
+                 // Explicit test-only presentation mount happens before owner
+                 // acquisition; the ordinary shell cannot launch a second room.
++                stage = "prepare-presentation-slot"
+                 check(L08UiSeam.hostContent == null)
+                 L08UiSeam.hostContent = {
+                     val current = presentation
+                     if (current == null) Box(Modifier.fillMaxSize()) else actualHostContent(current)
+                 }
++                stage = "prepare-koin"
+                 val koin = KoinPlatform.getKoin()
++                stage = "prepare-owner-binding"
+                 owner = koin.get()
++                stage = "prepare-transport-binding"
+                 transport = koin.get<L08ControlledTransport>()
++                stage = "prepare-scope-binding"
+                 processScope = koin.get(qualifier = named("multiplayerSession"))
++                stage = "prepare-transport-identity"
+                 check(koin.get<RoomTransport>() === transport)
++                stage = "prepare-system-language"
+                 check(koin.get<SettingsStore>().languageOverride.first() == null)
++                stage = "prepare-owner-idle"
+                 check(checkNotNull(owner).state.value == ProcessMultiplayerState.Idle)
++                stage = "prepare-fixture-roster"
+                 val players = (1..6).map { Player(PlayerId("l08-host-seat-$it"), "Audit Player $it", it - 1) }
+                 checkNotNull(transport).players = players
+                 val loadedCase = if (boot == 1) {
++                    stage = "prepare-content-load"
+                     val result = koin.get<CaseRepository>().loadCase(CaseId("last-dinner"), WhodunitPayloadValidator(koin.get()))
++                    stage = "prepare-content-result"
+                     check(result is Result.Success)
+                     result.data
+                 } else null
++                stage = "prepare-route"
+                 val route = if (loadedCase != null) MultiplayerSessionRoute.host(WhodunitIds.GameId,
+                     players.first().displayName, loadedCase.envelope.caseId, WhodunitIds.ClassicVoteModeId.raw)
+                     else MultiplayerSessionRoute.host(MafiaIds.GameId, players.first().displayName)
++                stage = "prepare-acquire"
+                 val result = checkNotNull(owner).acquire(route, hostSeed = 91L) { mode ->
+                     check(mode == MultiplayerOpenMode.Host)
+                     checkNotNull(transport).host(HostConfig(players.first().displayName, maxRemotePlayers = 5))
+                 }
++                stage = "prepare-acquire-result"
+                 check(result is Result.Success)
+                 val session = result.data
+                 owned = session
++                stage = "prepare-runtime-empty"
+                 check(session.runtime.value == null)
++                stage = "prepare-admissions-freeze"
+                 val frozen = session.freezeAdmissions()
++                stage = "prepare-room-identity"
+                 val room = checkNotNull(transport).room()
++                stage = "prepare-frozen-roster"
+                 check(frozen is Result.Success && frozen.data == room.members.value)
++                stage = "prepare-witness"
+                 val exits: () -> Unit = { workerFailed = true }
+                 val value = if (loadedCase != null) {
+                     val game = L08WhodunitHost(session, loadedCase)
+@@ -203,15 +223,23 @@
+                         MafiaMultiDeviceHostFlow(players, session, checkNotNull(owner), exits, exits, Modifier.fillMaxSize())
+                     }
+                 }
++                stage = "prepare-presentation"
+                 witness = value
+                 presentation = value
++                stage = "prepare-await-offers"
+                 await { value.waiting() && room.offeredPeerCount == 5 }
++                stage = "prepare-ready-empty"
+                 check(room.readyPeerCount == 0 && room.committedPeerCount == 0)
++                stage = "prepare-release-ready"
+                 room.releaseReady(value.protocol(), value.accepts)
++                stage = "prepare-await-started"
+                 await { value.started() && room.snapshottedPeerCount == 5 && direction != null }
++                stage = "prepare-committed-roster"
+                 check(room.committedPeerCount == 5 && room.admissionClosures == 1)
+                 systemDirection = direction
++                stage = "prepare-no-drops"
+                 room.requireNoDrops()
++                stage = "prepare-return"
+                 return checks("real_owner_acquisition", "admissions_frozen_once", "strict_start_barrier",
+                     "real_host_flow_started", "direct_peer_snapshots", "test_transport_explicit")
+             }
+--- a/remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/l08_receipts.py
++++ b/remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/l08_receipts.py
+@@ -187,6 +187,36 @@
+ 
+ HOST_PLAN = ('prepare', 'capture', 'language-en', 'cycle-1', 'resume-1', 'language-ar',
+              'cycle-2', 'resume-2', 'remount', 'language-system', 'cycle-3', 'resume-3', 'active-ack', 'leave')
++HOST_PREPARE_FAILURE_STAGES = frozenset({
++    'prepare-initial-state',
++    'prepare-presentation-slot',
++    'prepare-koin',
++    'prepare-owner-binding',
++    'prepare-transport-binding',
++    'prepare-scope-binding',
++    'prepare-transport-identity',
++    'prepare-system-language',
++    'prepare-owner-idle',
++    'prepare-fixture-roster',
++    'prepare-content-load',
++    'prepare-content-result',
++    'prepare-route',
++    'prepare-acquire',
++    'prepare-acquire-result',
++    'prepare-runtime-empty',
++    'prepare-admissions-freeze',
++    'prepare-room-identity',
++    'prepare-frozen-roster',
++    'prepare-witness',
++    'prepare-presentation',
++    'prepare-await-offers',
++    'prepare-ready-empty',
++    'prepare-release-ready',
++    'prepare-await-started',
++    'prepare-committed-roster',
++    'prepare-no-drops',
++    'prepare-return',
++})
+ HOST_CHECKS = {
+     'prepare': {'real_owner_acquisition', 'admissions_frozen_once', 'strict_start_barrier',
+                 'real_host_flow_started', 'direct_peer_snapshots', 'test_transport_explicit'},
+@@ -460,8 +490,10 @@
+         require((set(value) == fields or set(value) == fields | {'protection_metadata'}) and
+                 isinstance(value['reason'], str) and value['reason'] in {'cancelled', 'fixture_or_boundary_failure'} and
+                 isinstance(value['stage'], str) and
+-                value['stage'] in (STORAGE_FAILURE_STAGES if scenario == 'l08-storage' else {'context', *HOST_PLAN}),
++                value['stage'] in (STORAGE_FAILURE_STAGES if scenario == 'l08-storage' else {'context', *HOST_PLAN, *HOST_PREPARE_FAILURE_STAGES}),
+                 'Unknown failure metadata must not enter retained evidence')
++        require(scenario != 'l08-host' or value['stage'] not in HOST_PREPARE_FAILURE_STAGES or action == 'prepare',
++                'Host prepare diagnostics belong only to the prepare action')
+         if 'protection_metadata' in value:
+             require(scenario == 'l08-storage' and value['reason'] == 'fixture_or_boundary_failure' and
+                     value['stage'] in {'metadata-directory-protection', 'metadata-file-protection'},
+--- a/remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/test_l08_functional_copy.py
++++ b/remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/test_l08_functional_copy.py
+@@ -1,16 +1,22 @@
+ """Source/copy contract tests only; root executes in the shared lane, never native proof."""
+ import ast
++import copy
+ import hashlib
+ import json
+ from pathlib import Path
+ import re
+ import tempfile
+ import unittest
++from unittest import mock
+ 
+ import copied_sources as copies
+ import l08_copy as strict
+ import l08_functional_copy as companion
+ import l08_functional_receipts as functional_receipts
++import l08_receipts as host_receipts
++from test_l08_host_receipts import host_matrix
++from test_l08_diagnostics import failure_record as storage_failure_record
++from test_native_readiness import TOKEN, framework_inventory
+ 
+ HERE = Path(__file__).resolve().parent
+ ROOT = HERE.parents[2]
+@@ -24,6 +30,76 @@
+     'continue-mafia-terminal-phase-winner', 'continue-mafia-terminal-doctor-cleanup',
+     'continue-mafia-action-await', 'continue-mafia-action-receipt', 'continue-mafia-action-validity',
+     'continue-mafia-night-phase', 'continue-mafia-night-unsubmitted', 'continue-mafia-night-choice')
++
++# Literal, failure-only labels. Each is bound to its exact original prepare line.
++# Removing these insertions must restore the complete original host source.
++HOST_PREPARE_BOUNDARIES = (
++    ('prepare-initial-state', '                check(owned == null && !captured && mounts == 0)'),
++    ('prepare-presentation-slot', '                check(L08UiSeam.hostContent == null)'),
++    ('prepare-koin', '                val koin = KoinPlatform.getKoin()'),
++    ('prepare-owner-binding', '                owner = koin.get()'),
++    ('prepare-transport-binding', '                transport = koin.get<L08ControlledTransport>()'),
++    ('prepare-scope-binding', '                processScope = koin.get(qualifier = named("multiplayerSession"))'),
++    ('prepare-transport-identity', '                check(koin.get<RoomTransport>() === transport)'),
++    ('prepare-system-language', '                check(koin.get<SettingsStore>().languageOverride.first() == null)'),
++    ('prepare-owner-idle', '                check(checkNotNull(owner).state.value == ProcessMultiplayerState.Idle)'),
++    ('prepare-fixture-roster', '                val players = (1..6).map { Player(PlayerId("l08-host-seat-$it"), "Audit Player $it", it - 1) }'),
++    ('prepare-content-load', '                    val result = koin.get<CaseRepository>().loadCase(CaseId("last-dinner"), WhodunitPayloadValidator(koin.get()))'),
++    ('prepare-content-result', '                    check(result is Result.Success)'),
++    ('prepare-route', '                val route = if (loadedCase != null) MultiplayerSessionRoute.host(WhodunitIds.GameId,'),
++    ('prepare-acquire', '                val result = checkNotNull(owner).acquire(route, hostSeed = 91L) { mode ->'),
++    ('prepare-acquire-result', '                check(result is Result.Success)'),
++    ('prepare-runtime-empty', '                check(session.runtime.value == null)'),
++    ('prepare-admissions-freeze', '                val frozen = session.freezeAdmissions()'),
++    ('prepare-room-identity', '                val room = checkNotNull(transport).room()'),
++    ('prepare-frozen-roster', '                check(frozen is Result.Success && frozen.data == room.members.value)'),
++    ('prepare-witness', '                val exits: () -> Unit = { workerFailed = true }'),
++    ('prepare-presentation', '                witness = value'),
++    ('prepare-await-offers', '                await { value.waiting() && room.offeredPeerCount == 5 }'),
++    ('prepare-ready-empty', '                check(room.readyPeerCount == 0 && room.committedPeerCount == 0)'),
++    ('prepare-release-ready', '                room.releaseReady(value.protocol(), value.accepts)'),
++    ('prepare-await-started', '                await { value.started() && room.snapshottedPeerCount == 5 && direction != null }'),
++    ('prepare-committed-roster', '                check(room.committedPeerCount == 5 && room.admissionClosures == 1)'),
++    ('prepare-no-drops', '                room.requireNoDrops()'),
++    ('prepare-return', '                return checks("real_owner_acquisition", "admissions_frozen_once", "strict_start_barrier",'),
++)
++HOST_PREPARE_DECLARATION = ('HOST_PREPARE_FAILURE_STAGES = frozenset({\n' +
++    ''.join('    ' + repr(stage) + ',\n' for stage, _ in HOST_PREPARE_BOUNDARIES) + '})\n')
++HOST_PREPARE_OLD_STAGE_TEST = "value['stage'] in (STORAGE_FAILURE_STAGES if scenario == 'l08-storage' else {'context', *HOST_PLAN}),"
++HOST_PREPARE_NEW_STAGE_TEST = "value['stage'] in (STORAGE_FAILURE_STAGES if scenario == 'l08-storage' else {'context', *HOST_PLAN, *HOST_PREPARE_FAILURE_STAGES}),"
++HOST_PREPARE_ACTION_RESTRICTION = "        require(scenario != 'l08-host' or value['stage'] not in HOST_PREPARE_FAILURE_STAGES or action == 'prepare',\n                'Host prepare diagnostics belong only to the prepare action')\n"
++
++
++def strip_host_prepare_stages(candidate):
++    first, last = '            "prepare" -> {\n', '            "capture" -> {\n'
++    prepare = section(candidate, first, last)
++    for stage, anchor in HOST_PREPARE_BOUNDARIES:
++        indent = anchor[:len(anchor) - len(anchor.lstrip())]
++        inserted = indent + 'stage = "' + stage + '"\n'
++        require(candidate.count(inserted) == 1, 'Missing/duplicated closed host prepare stage')
++        prepare = strict.once(prepare, inserted + anchor + '\n', anchor + '\n')
++    return strict.once(candidate, section(candidate, first, last), prepare)
++
++
++def assert_host_prepare_contract(candidate, original):
++    require(strip_host_prepare_stages(candidate) == original,
++            'Host prepare diagnostics must preserve complete original execution and failure payload')
++
++
++def strip_host_prepare_parser_extension(candidate):
++    for before, after in (
++        (HOST_PREPARE_DECLARATION, ''),
++        (HOST_PREPARE_NEW_STAGE_TEST, HOST_PREPARE_OLD_STAGE_TEST),
++        (HOST_PREPARE_ACTION_RESTRICTION, ''),
++    ):
++        candidate = strict.once(candidate, before, after)
++    return candidate
++
++
++def assert_host_prepare_parser_contract(candidate, original):
++    require(strip_host_prepare_parser_extension(candidate) == original,
++            'Host diagnostics must preserve every original sanitizer and complete-matrix verifier')
++
+ 
+ 
+ def sha(path):
+@@ -332,6 +408,12 @@
+                 if row['path'] == 'L08MafiaSnapshots.kt.in':
+                     self.assertEqual(strip_mafia_continuation_stages((HERE / row['path']).read_text()),
+                                      (CANONICAL / row['path']).read_text())
++                elif row['path'] == 'L08HostProbe.kt.in':
++                    assert_host_prepare_contract((HERE / row['path']).read_text(),
++                                                 (CANONICAL / row['path']).read_text())
++                elif row['path'] == 'l08_receipts.py':
++                    assert_host_prepare_parser_contract((HERE / row['path']).read_text(),
++                                                        (CANONICAL / row['path']).read_text())
+                 elif row['path'] not in changed:
+                     self.assertEqual(sha(HERE / row['path']), row['original_sha256'])
+         original = (CANONICAL / 'copied_sources.py').read_text()
+@@ -451,9 +533,32 @@
+         changed = companion.instrument_ui_test(ui)
+         self.assertEqual(changed.count('func ' + companion.NEW_TEST + '()'), 1)
+         self.assertNotIn('func ' + companion.OLD_TEST + '()', changed)
+-        ordered = ['verifyActualNativeReadiness', 'verifyL08FunctionalStoreResume', 'verifyL08StartedHosts']
++        ordered = ['verifyActualNativeReadiness', 'verifyL08StartedHosts', 'verifyL08FunctionalStoreResume']
+         locations = [changed.index('try ' + name + '(app)') for name in ordered]
+         self.assertEqual(locations, sorted(locations))
++        for name in ordered:
++            self.assertEqual(changed.count('try ' + name + '(app)'), 1)
++        # Reverse only the exact fail-fast swap and the original namespace edits.
++        # Full source equality preserves settings and the later local/OS paths,
++        # rather than treating a shortened host-only matrix as equivalent.
++        original = strict.instrument_ui_test(ui)
++        namespaced = strict.once(original, 'try verifyL08RealStoreResume(app)',
++                                'try verifyL08FunctionalStoreResume(app)')
++        namespaced = strict.once(namespaced, 'func ' + companion.OLD_TEST + '()',
++                                'func ' + companion.NEW_TEST + '()')
++        previous_order = ('        try verifyActualNativeReadiness(app)\n'
++                          '        try verifyL08FunctionalStoreResume(app)\n'
++                          '        try verifyL08StartedHosts(app)')
++        fail_fast_order = ('        try verifyActualNativeReadiness(app)\n'
++                           '        try verifyL08StartedHosts(app)\n'
++                           '        try verifyL08FunctionalStoreResume(app)')
++        self.assertEqual(strict.once(changed, fail_fast_order, previous_order), namespaced)
++        required_suffix = ('        try verifyL08FunctionalStoreResume(app)\n'
++                           '        try verifyActualLocalGame(app, game: "whodunit")\n'
++                           '        try verifyActualLocalGame(app, game: "mafia")\n'
++                           '        try prepareActualOSMultilingualPrerequisite(app, expectedSimulator: simulator)\n'
++                           '        try investigateActualOSPerAppLanguage(app)')
++        self.assertEqual(changed.count(required_suffix), 1)
+         self.assertIn('continueAfterFailure = false', changed)
+         for invalid in ('', ui + ui, changed):
+             with self.assertRaises(RuntimeError): companion.instrument_ui_test(invalid)
+@@ -475,4 +580,155 @@
+             ast.parse((HERE / name).read_text(), filename=name)
+ 
+ 
++class L08HostPrepareDiagnosticTests(unittest.TestCase):
++    """Synthetic source/sanitizer controls only, not Kotlin or Simulator runtime."""
++
++    def source_pair(self, name):
++        return (HERE / name).read_text(), (CANONICAL / name).read_text()
++
++    def failure(self, stage, reason='fixture_or_boundary_failure'):
++        # Deliberately synthetic. No actual A25 failure is rewritten by these tests.
++        record = host_matrix()[0][0]
++        record['observation'] = dict(schema_version=1, status='FAIL', run_token=TOKEN,
++            boot_ordinal=record['boot_ordinal'], action=record['action'], stage=stage, reason=reason)
++        return record
++
++    def test_exact_closed_stages_preserve_complete_original_host_source(self):
++        candidate, original = self.source_pair('L08HostProbe.kt.in')
++        assert_host_prepare_contract(candidate, original)
++        stages = {stage for stage, _ in HOST_PREPARE_BOUNDARIES}
++        self.assertEqual(len(stages), 28)
++        self.assertIsInstance(host_receipts.HOST_PREPARE_FAILURE_STAGES, frozenset)
++        self.assertEqual(host_receipts.HOST_PREPARE_FAILURE_STAGES, stages)
++        self.assertEqual(set(re.findall(r'stage = "(prepare-[a-z-]+)"', candidate)), stages)
++        # Exact restoration includes every other action, timeout, catch, cleanup,
++        # original room/owner/seed/authority binding, and closed FAIL payload.
++        self.assertEqual(strip_host_prepare_stages(candidate), original)
++
++    def test_parser_extension_does_not_touch_storage_or_strict_host_verification(self):
++        candidate, original = self.source_pair('l08_receipts.py')
++        assert_host_prepare_parser_contract(candidate, original)
++        self.assertEqual(section(candidate, 'def verify_host(', 'def preserve_l08_evidence('),
++                         section(original, 'def verify_host(', 'def preserve_l08_evidence('))
++
++    def test_every_stage_is_failure_only_preservable_without_record_mutation(self):
++        for stage in sorted(host_receipts.HOST_PREPARE_FAILURE_STAGES):
++            for reason in ('cancelled', 'fixture_or_boundary_failure'):
++                with self.subTest(stage=stage, reason=reason):
++                    record = self.failure(stage, reason)
++                    before = copy.deepcopy(record)
++                    host_receipts.validate_preservable_operation(record, 'l08-host')
++                    self.assertEqual(record, before)
++                    self.assertEqual(record['observation']['status'], 'FAIL')
++
++    def test_prepare_diagnostics_cannot_appear_on_another_action_or_storage(self):
++        for stage in sorted(host_receipts.HOST_PREPARE_FAILURE_STAGES):
++            for action in host_receipts.HOST_PLAN[1:]:
++                record = self.failure(stage)
++                record['action'] = record['observation']['action'] = action
++                with self.subTest(stage=stage, action=action), self.assertRaisesRegex(
++                        RuntimeError, '^Host prepare diagnostics belong only to the prepare action$'):
++                    host_receipts.validate_preservable_operation(record, 'l08-host')
++            record = storage_failure_record(stage=stage)
++            with self.subTest(stage=stage, scenario='l08-storage'), self.assertRaises(RuntimeError):
++                host_receipts.validate_preservable_operation(record, 'l08-storage')
++
++    @mock.patch.object(host_receipts, 'bind_loaded_images')
++    def test_no_preservable_diagnostic_failure_can_satisfy_the_complete_host_matrix(self, _binding):
++        # Verify the positive synthetic baseline first, avoiding an always-failing oracle.
++        records, scenario, log = host_matrix()
++        self.assertEqual(host_receipts.verify_host(records, scenario, TOKEN, log, 'disabled', {}, {},
++            [framework_inventory()])['status'], 'PASS')
++        for stage in sorted(host_receipts.HOST_PREPARE_FAILURE_STAGES):
++            for changed_status in ('FAIL', 'PASS'):
++                rows, scenario, log = host_matrix()
++                rows[0] = self.failure(stage)
++                rows[0]['observation']['status'] = changed_status
++                with self.subTest(stage=stage, changed_status=changed_status), self.assertRaises(RuntimeError):
++                    host_receipts.verify_host(rows, scenario, TOKEN, log, 'disabled', {}, {}, [framework_inventory()])
++            passed = host_matrix()[0][0]
++            passed['observation']['stage'] = stage
++            with self.subTest(stage=stage, operation='PASS'), self.assertRaises(RuntimeError):
++                host_receipts.validate_preservable_operation(passed, 'l08-host')
++
++    def test_failure_payload_rejects_dynamic_unknown_or_sensitive_metadata(self):
++        valid = self.failure('prepare-await-offers')
++        host_receipts.validate_preservable_operation(valid, 'l08-host')
++        changes = [('stage', value) for value in ('', 'prepare-unknown', '/private/synthetic',
++                   'prepare-' + 'x' * 8192, True, 1, None, [], {})]
++        changes += [('reason', value) for value in ('raw exception text', True, 1, None, [], {})]
++        changes += [(key, 'synthetic-rejection-only') for key in
++                    ('exception', 'message', 'path', 'payload', 'private_state', 'role_map', 'seed',
++                     'action_ordinal', 'checks', 'protection_metadata')]
++        for field, value in changes:
++            changed = copy.deepcopy(valid)
++            changed['observation'][field] = value
++            with self.subTest(field=field, value=value), self.assertRaises(RuntimeError):
++                host_receipts.validate_preservable_operation(changed, 'l08-host')
++
++    def test_every_stage_must_remain_unique_literal_and_at_the_exact_original_boundary(self):
++        source, original = self.source_pair('L08HostProbe.kt.in')
++        assert_host_prepare_contract(source, original)
++        for stage, anchor in HOST_PREPARE_BOUNDARIES:
++            indent = anchor[:len(anchor) - len(anchor.lstrip())]
++            inserted = indent + 'stage = "' + stage + '"\n'
++            self.assertEqual(source.count(inserted), 1)
++            for replacement in ('', inserted + inserted, indent + 'stage = token\n'):
++                altered = source.replace(inserted, replacement, 1)
++                self.assertNotEqual(altered, source)
++                with self.subTest(stage=stage, replacement=replacement), self.assertRaises(RuntimeError):
++                    assert_host_prepare_contract(altered, original)
++            altered = strict.once(source, inserted + anchor + '\n', anchor + '\n' + inserted)
++            with self.subTest(stage=stage, moved_after_guard=True), self.assertRaises(RuntimeError):
++                assert_host_prepare_contract(altered, original)
++
++    def test_diagnostics_cannot_hide_execution_guard_reset_timeout_cleanup_or_privacy_changes(self):
++        source, original = self.source_pair('L08HostProbe.kt.in')
++        assert_host_prepare_contract(source, original)
++        changes = (
++            ('check(owned == null && !captured && mounts == 0)', 'check(true)'),
++            ('check(koin.get<RoomTransport>() === transport)', 'check(true)'),
++            ('check(koin.get<SettingsStore>().languageOverride.first() == null)',
++             'koin.get<SettingsStore>().setLanguageOverride(null)'),
++            ('hostSeed = 91L', 'hostSeed = 92L'),
++            ('val frozen = session.freezeAdmissions()', 'val frozen = Result.Success(emptyList())'),
++            ('check(frozen is Result.Success && frozen.data == room.members.value)', 'check(true)'),
++            ('await { value.waiting() && room.offeredPeerCount == 5 }', 'await { true }'),
++            ('check(room.readyPeerCount == 0 && room.committedPeerCount == 0)', 'check(true)'),
++            ('room.releaseReady(value.protocol(), value.accepts)', 'Unit'),
++            ('await { value.started() && room.snapshottedPeerCount == 5 && direction != null }', 'await { true }'),
++            ('check(room.committedPeerCount == 5 && room.admissionClosures == 1)', 'check(true)'),
++            ('withTimeout(20_000)', 'withTimeout(200_000)'),
++            ('withTimeout(60_000)', 'withTimeout(600_000)'),
++            ('throw cancelled', 'return@launch'),
++            ('if (finished) observerScope.cancel()', 'if (finished) Unit'),
++            ('put("stage", stage)', 'put("stage", token)'),
++            ('put("stage", stage)', 'put("stage", stage); put("exception", "synthetic-private")'),
++            ('checkNotNull(witness).activeAck()', 'Unit'),
++        )
++        for before, after in changes:
++            self.assertEqual(source.count(before), 1)
++            altered = source.replace(before, after, 1)
++            self.assertNotEqual(altered, source)
++            with self.subTest(mutation=before, replacement=after), self.assertRaises(RuntimeError):
++                assert_host_prepare_contract(altered, original)
++
++    def test_parser_contract_rejects_relaxed_failure_scope_unknown_stage_and_success_laundering(self):
++        source, original = self.source_pair('l08_receipts.py')
++        assert_host_prepare_parser_contract(source, original)
++        changes = (
++            (HOST_PREPARE_ACTION_RESTRICTION, ''),
++            ("    'prepare-initial-state',", "    'prepare-unknown',"),
++            ("value.get('status') == 'FAIL'", "value.get('status') in {'FAIL', 'PASS'}"),
++            ("value['schema_version'] == 1 and value['status'] == 'PASS' and",
++             "value['schema_version'] == 1 and value['status'] in {'PASS', 'FAIL'} and"),
++        )
++        for before, after in changes:
++            self.assertEqual(source.count(before), 1)
++            altered = source.replace(before, after, 1)
++            self.assertNotEqual(altered, source)
++            with self.subTest(mutation=before), self.assertRaises(RuntimeError):
++                assert_host_prepare_parser_contract(altered, original)
++
++
+ if __name__ == '__main__': unittest.main()
+--- a/remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/l08_functional_copy.py
++++ b/remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/l08_functional_copy.py
+@@ -44,4 +44,13 @@
+ def instrument_ui_test(text):
+     text = strict.instrument_ui_test(text)
+     text = strict.once(text, 'try verifyL08RealStoreResume(app)', 'try verifyL08FunctionalStoreResume(app)')
++    # Fail fast at retained-host boundaries, but keep native readiness first:
++    # its boot-1 owned cleanup restores the real System preference baseline.
++    # The complete matrix and every original check still execute on success.
++    text = strict.once(text, '        try verifyActualNativeReadiness(app)\n'
++                       '        try verifyL08FunctionalStoreResume(app)\n'
++                       '        try verifyL08StartedHosts(app)',
++                       '        try verifyActualNativeReadiness(app)\n'
++                       '        try verifyL08StartedHosts(app)\n'
++                       '        try verifyL08FunctionalStoreResume(app)')
+     return strict.once(text, 'func ' + OLD_TEST + '()', 'func ' + NEW_TEST + '()')

@@ -1,0 +1,58 @@
+{
+  "created_at": "2026-09-07T08:32:41.719099+00:00",
+  "reviewer": "/root/release_fix_review",
+  "method": "Read installed public OpenSSH manual text; no SSH connection or binary invocation",
+  "applicability": "/usr/bin/ssh and /usr/bin/scp selected by owned wrappers on this macOS host; actual -G effective policy remains a required root-executed runtime check",
+  "claim": "First obtained scalar option wins. ControlPath=none disables sharing; ControlPersist=no prevents background persistence; ControlPersist=0 or yes means indefinite persistence and must be rejected. ssh -G prints effective configuration and exits.",
+  "references": [
+    {
+      "path": "/usr/share/man/man5/ssh_config.5",
+      "sha256": "5bf6ad0d24da68c05151d28fe7401a36f1e53c029526e86eb92cc1e3f5c1f942",
+      "reviewed_line_ranges": [
+        [
+          48,
+          85
+        ],
+        [
+          661,
+          746
+        ]
+      ],
+      "excerpts": [
+        {
+          "range": [
+            48,
+            85
+          ],
+          "text": ".Bl -enum -offset indent -compact\n.It\ncommand-line options\n.It\nuser's configuration file\n.Pq Pa ~/.ssh/config\n.It\nsystem-wide configuration file\n.Pq Pa /etc/ssh/ssh_config\n.El\n.Pp\nUnless noted otherwise, for each parameter, the first obtained value\nwill be used.\nThe configuration files contain sections separated by\n.Cm Host\nspecifications, and that section is only applied for hosts that\nmatch one of the patterns given in the specification.\nThe matched host name is usually the one given on the command line\n(see the\n.Cm CanonicalizeHostname\noption for exceptions).\n.Pp\nSince the first obtained value for each parameter is used, more\nhost-specific declarations should be given near the beginning of the\nfile, and general defaults at the end.\n.Pp\nThe file contains keyword-argument pairs, one per line.\nLines starting with\n.Ql #\nand empty lines are interpreted as comments.\nArguments may optionally be enclosed in double quotes\n.Pq \\&\"\nin order to represent arguments containing spaces.\nConfiguration options may be separated by whitespace or\noptional whitespace and exactly one\n.Ql = ;\nthe latter format is useful to avoid the need to quote whitespace\nwhen specifying configuration options using the"
+        },
+        {
+          "range": [
+            661,
+            746
+          ],
+          "text": ".It Cm ControlMaster\nEnables the sharing of multiple sessions over a single network connection.\nWhen set to\n.Cm yes ,\n.Xr ssh 1\nwill listen for connections on a control socket specified using the\n.Cm ControlPath\nargument.\nAdditional sessions can connect to this socket using the same\n.Cm ControlPath\nwith\n.Cm ControlMaster\nset to\n.Cm no\n(the default).\nThese sessions will try to reuse the master instance's network connection\nrather than initiating new ones, but will fall back to connecting normally\nif the control socket does not exist, or is not listening.\n.Pp\nSetting this to\n.Cm ask\nwill cause\n.Xr ssh 1\nto listen for control connections, but require confirmation using\n.Xr ssh-askpass 1 .\nIf the\n.Cm ControlPath\ncannot be opened,\n.Xr ssh 1\nwill continue without connecting to a master instance.\n.Pp\nX11 and\n.Xr ssh-agent 1\nforwarding is supported over these multiplexed connections, however the\ndisplay and agent forwarded will be the one belonging to the master\nconnection i.e. it is not possible to forward multiple displays or agents.\n.Pp\nTwo additional options allow for opportunistic multiplexing: try to use a\nmaster connection but fall back to creating a new one if one does not already\nexist.\nThese options are:\n.Cm auto\nand\n.Cm autoask .\nThe latter requires confirmation like the\n.Cm ask\noption.\n.It Cm ControlPath\nSpecify the path to the control socket used for connection sharing as described\nin the\n.Cm ControlMaster\nsection above or the string\n.Cm none\nto disable connection sharing.\nArguments to\n.Cm ControlPath\nmay use the tilde syntax to refer to a user's home directory,\nthe tokens described in the\n.Sx TOKENS\nsection and environment variables as described in the\n.Sx ENVIRONMENT VARIABLES\nsection.\nIt is recommended that any\n.Cm ControlPath\nused for opportunistic connection sharing include\nat least %h, %p, and %r (or alternatively %C) and be placed in a directory\nthat is not writable by other users.\nThis ensures that shared connections are uniquely identified.\n.It Cm ControlPersist\nWhen used in conjunction with\n.Cm ControlMaster ,\nspecifies that the master connection should remain open\nin the background (waiting for future client connections)\nafter the initial client connection has been closed.\nIf set to\n.Cm no\n(the default),\nthen the master connection will not be placed into the background,\nand will close as soon as the initial client connection is closed.\nIf set to\n.Cm yes\nor 0,\nthen the master connection will remain in the background indefinitely\n(until killed or closed via a mechanism such as the\n.Qq ssh -O exit ) .\nIf set to a time in seconds, or a time in any of the formats documented in"
+        }
+      ]
+    },
+    {
+      "path": "/usr/share/man/man1/ssh.1",
+      "sha256": "f683f44315df6f73b52765720630b4eeb59d1d42d444e32cd96c86db6f3cd455",
+      "reviewed_line_ranges": [
+        [
+          270,
+          289
+        ]
+      ],
+      "excerpts": [
+        {
+          "range": [
+            270,
+            289
+          ],
+          "text": "Refer to the description of\n.Cm ForkAfterAuthentication\nin\n.Xr ssh_config 5\nfor details.\n.Pp\n.It Fl G\nCauses\n.Nm\nto print its configuration after evaluating\n.Cm Host\nand\n.Cm Match\nblocks and exit.\n.Pp\n.It Fl g\nAllows remote hosts to connect to local forwarded ports.\nIf used on a multiplexed connection, then this option must be specified\non the master process.\n.Pp"
+        }
+      ]
+    }
+  ]
+}

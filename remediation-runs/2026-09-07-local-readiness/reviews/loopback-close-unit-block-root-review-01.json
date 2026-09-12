@@ -1,0 +1,17 @@
+{
+  "reviewer": "/root",
+  "author": "/root/factory_review",
+  "reviewed_at": "2026-09-07T05:40:00.575795+00:00",
+  "source": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/LoopbackFixtureContractTest.kt",
+  "sha256": "3865be6b115e3a5c23401fda3f614e87d62803803f9f4194274bc3a748624334",
+  "status": "APPROVED FOR REGRESSION RERUN",
+  "reasoning": [
+    "OriginalwithContext is suspend and protects real asynchronous host.leave; removing suspend would be invalid. Newblockbody explicitwithContext<Unit> preservesoriginalUnit expectedtype, cancellation shielding, reverseall-roomcleanup then all unstopped kits andsameaggregateerror.",
+    "All249lines and callerfinally paths reread byroot; only two structural lines and indent changed since priorfullindependentreview. No assertion, Ignore, signature-discovery or production changes.",
+    "Exact analyzer mechanism remains unresolved; Detekt+all5fixture runtimecases mustrerun. Older110passcycle remains FAIL for one type-aware finding; do notlabelcurrenttrialfixedbeforeexecution."
+  ],
+  "source_references": [
+    "factory_review/loopback-close-unit-block-author-report.json",
+    "evidence/focused-readiness-regressions-06/reports/shared/transport-p2p/build/reports/detekt/detektDesktopTest.xml"
+  ]
+}

@@ -1,0 +1,163 @@
+// One public Complete request on a fresh, driver-owned host-origin fixture.
+// No Simulator process, historical inode, application data or inferred PASS.
+#import "ProtectionSampler.h"
+#import <TargetConditionals.h>
+#include <limits.h>
+#include <mach-o/loader.h>
+#include <signal.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include "OwnedHostSetterContext.h"
+
+#if !TARGET_OS_OSX || TARGET_OS_SIMULATOR || TARGET_OS_MACCATALYST || !defined(__arm64__)
+#error This entry point requires native arm64 macOS, never a simulator.
+#endif
+
+extern char **environ;
+
+static void demand(BOOL value, NSString *reason) {
+    if (!value) @throw [NSException exceptionWithName:@"ProtectionBoundary" reason:reason userInfo:nil];
+}
+
+static BOOL hostEnvironment(void) {
+    for (char **entry = environ; entry && *entry; entry++) {
+        if (strncmp(*entry, "SIMULATOR_", sizeof("SIMULATOR_") - 1) == 0) return NO;
+    }
+    return YES;
+}
+
+static NSDictionary *compiledDictionary(NSString *json) {
+    NSData *data = [json dataUsingEncoding:NSUTF8StringEncoding];
+    demand(data && data.length > 0 && data.length <= 4096, @"compiled-context-size");
+    id value = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
+    demand([value isKindOfClass:NSDictionary.class], @"compiled-context-dictionary");
+    return value;
+}
+
+static NSDictionary *errorRecord(NSError *error) {
+    return @{@"present": error != nil ? @YES : @NO, @"code": error ? @(error.code) : @0,
+        @"domain": !error ? @"none" : [error.domain isEqual:NSCocoaErrorDomain] ? @"cocoa" :
+            [error.domain isEqual:NSPOSIXErrorDomain] ? @"posix" : @"other"};
+}
+
+static NSDictionary *errorChain(NSError *error) {
+    NSMutableArray *nodes = [NSMutableArray array];
+    NSMutableArray<NSError *> *seen = [NSMutableArray array];
+    NSString *termination = @"no-error";
+    NSError *current = error;
+    while (current && nodes.count < 4) {
+        [seen addObject:current];
+        [nodes addObject:errorRecord(current)];
+        // Read only this standard relation. Never serialize userInfo, paths,
+        // descriptions or arbitrary error-domain strings.
+        id next = current.userInfo[NSUnderlyingErrorKey];
+        if (!next) { termination = @"no-underlying"; break; }
+        if (![next isKindOfClass:NSError.class]) { termination = @"non-error"; break; }
+        BOOL cycle = NO;
+        for (NSError *prior in seen) if (prior == next) { cycle = YES; break; }
+        if (cycle) { termination = @"cycle"; break; }
+        if (nodes.count == 4) { termination = @"depth-limit"; break; }
+        current = next;
+    }
+    return @{@"nodes": nodes, @"termination": termination};
+}
+
+static NSDictionary *namedIdentity(NSString *path) {
+    char canonical[PATH_MAX];
+    struct stat value;
+    demand(path.isAbsolutePath && [path isEqual:path.stringByStandardizingPath] &&
+        realpath(path.fileSystemRepresentation, canonical) &&
+        [path isEqual:[NSString stringWithUTF8String:canonical]] &&
+        lstat(path.fileSystemRepresentation, &value) == 0 && value.st_uid == getuid() &&
+        (uint64_t)value.st_dev == HOST_SET_ROOT_DEVICE &&
+        (S_ISDIR(value.st_mode) || (S_ISREG(value.st_mode) && value.st_nlink == 1)) &&
+        value.st_size >= 0 && value.st_size <= 16 * 1024 * 1024, @"owned-canonical-entry");
+    return @{@"device": @((uint64_t)value.st_dev), @"inode": @((uint64_t)value.st_ino),
+        @"uid": @(value.st_uid), @"mode": @(value.st_mode), @"links": @(value.st_nlink),
+        @"size": @(value.st_size), @"type": S_ISDIR(value.st_mode) ? @"directory" : @"regular"};
+}
+
+static void attestRoot(void) {
+    NSDictionary *root = namedIdentity(HOST_SET_ROOT);
+    demand(getuid() > 0 && getuid() == geteuid() && [root[@"type"] isEqual:@"directory"] &&
+        ([root[@"mode"] unsignedIntValue] & 0777) == 0700 &&
+        [root[@"inode"] unsignedLongLongValue] == HOST_SET_ROOT_INODE, @"owned-root-custody");
+}
+
+static NSString *attestTarget(NSDictionary *expected) {
+    attestRoot();
+    NSString *path = [HOST_SET_ROOT stringByAppendingPathComponent:@"probe.bin"];
+    NSDictionary *identity = namedIdentity(path);
+    demand([identity[@"type"] isEqual:@"regular"] && ([identity[@"mode"] unsignedIntValue] & 0777) == 0600 &&
+        [identity[@"size"] unsignedLongLongValue] <= 256 && [identity isEqual:expected],
+        @"expected-host-fixture-full-identity");
+    return path;
+}
+
+static void sampleTarget(NSDictionary *expected, NSMutableDictionary *receipt, NSString *key) {
+    NSDictionary *sample = ParlorProtectionSample(attestTarget(expected));
+    receipt[key] = sample; // Retain a partial observation before a subsequent guard can fail.
+    attestTarget(expected);
+    demand([sample[@"collection_status"] isEqual:@"PASS"] && [sample[@"descriptor_closed"] isEqual:@YES] &&
+        [sample[@"identity"] isEqual:expected], @"host-setter-same-inode-collection");
+}
+
+int main(int argc, const char *argv[]) {
+    (void)argv;
+    signal(SIGALRM, SIG_DFL);
+    alarm(25); // Bounds this process only, including Foundation startup.
+    @autoreleasepool {
+        NSMutableDictionary *receipt = [@{@"schema": @2, @"kind": @"host-origin-protection-setter",
+            @"collection_status": @"FAIL", @"scope": @"HOST_ORIGIN_ONLY", @"target_leaf": @"probe.bin",
+            @"process_id": @(getpid()), @"uid": @(getuid()), @"read_only": @NO,
+            @"simulator_fixture_observed": @NO, @"production_snapshots_observed": @NO,
+            @"historical_a37_strict_result_changed": @NO, @"protection_qualified": @NO,
+            @"fixture_root_device": @(HOST_SET_ROOT_DEVICE),
+            @"fixture_root_inode": @(HOST_SET_ROOT_INODE)} mutableCopy];
+        @try {
+            demand(argc == 1 && hostEnvironment(), @"host-only-invocation");
+            attestRoot();
+            NSDictionary *binding = compiledDictionary(HOST_SET_BINDING_JSON);
+            NSDictionary *expected = compiledDictionary(HOST_SET_EXPECTED_JSON);
+            demand(binding.count == 5 && expected.count == 7, @"compiled-context-shape");
+            receipt[@"binding"] = binding;
+            NSOperatingSystemVersion version = NSProcessInfo.processInfo.operatingSystemVersion;
+            demand(version.majorVersion == 15, @"host-runtime-major");
+            receipt[@"runtime_version"] = @[@(version.majorVersion), @(version.minorVersion), @(version.patchVersion)];
+            receipt[@"main_image_before"] = ParlorProtectionImageIdentity((const void *)&main);
+            demand([receipt[@"main_image_before"][@"platforms"] isEqual:@[@(PLATFORM_MACOS)]], @"host-main-platform");
+            sampleTarget(expected, receipt, @"before");
+
+            NSFileManager *manager = NSFileManager.defaultManager;
+            SEL setter = @selector(setAttributes:ofItemAtPath:error:);
+            NSDictionary *implementationBefore = ParlorProtectionImplementation(manager, setter);
+            NSMutableDictionary *operation = [@{@"id": @"host-origin-fm-set", @"requested_protection": @"complete",
+                @"implementation_before": implementationBefore} mutableCopy];
+            receipt[@"operation"] = operation;
+            NSError *error = nil;
+            NSString *path = attestTarget(expected);
+            BOOL result = [manager setAttributes:@{NSFileProtectionKey: NSFileProtectionComplete} ofItemAtPath:path error:&error];
+            [operation addEntriesFromDictionary:@{@"returned": @(result), @"native_error": errorRecord(error)}];
+            operation[@"error_chain"] = errorChain(error);
+            attestTarget(expected);
+            NSDictionary *implementationAfter = ParlorProtectionImplementation(manager, setter);
+            operation[@"implementation_after"] = implementationAfter;
+            demand([implementationBefore isEqual:implementationAfter], @"host-set-implementation-changed");
+            sampleTarget(expected, receipt, @"after");
+
+            receipt[@"main_image_after"] = ParlorProtectionImageIdentity((const void *)&main);
+            demand([receipt[@"main_image_before"] isEqual:receipt[@"main_image_after"]], @"host-main-image-changed");
+            // Captured BOOL/error/classes are observations, never a qualification condition.
+            receipt[@"collection_status"] = @"PASS";
+        } @catch (NSException *exception) {
+            receipt[@"failure"] = [exception.name isEqual:@"ProtectionBoundary"] ? exception.reason : @"native-exception";
+        }
+        NSData *data = [NSJSONSerialization dataWithJSONObject:receipt options:NSJSONWritingSortedKeys error:NULL];
+        if (!data || data.length > 256 * 1024 || fwrite(data.bytes, 1, data.length, stdout) != data.length ||
+            fputc('\n', stdout) == EOF || fflush(stdout) != 0) return 2;
+        return [receipt[@"collection_status"] isEqual:@"PASS"] ? 0 : 1;
+    }
+}

@@ -1,0 +1,404 @@
+{
+  "schema_version": 1,
+  "kind": "INDEPENDENT_HELD_HOSTED_L08_EXCEPTION_RETENTION_AND_BUDGET_SOURCE_REVIEW",
+  "reviewer": "/root/portability_review",
+  "implementation_author": "/root/ci_workflow",
+  "recorded_at": "2026-09-08T22:45:10.338225+00:00",
+  "status": "APPROVED_EXACT_HELD_COMPANION_SOURCE_AND_HOOK_INTERFACE_NOT_TESTED_NOT_EXECUTION_OR_DISPATCH_APPROVAL",
+  "scope": "Actual held companion-driver implementation only: explicit A budget, stable allowlisted raw preservation after Xcode return/exception, primary-exception ordering and unchanged ownership/validation boundaries. ci_review owns adapter/workflow/admission; fixture_review owns regression validity; l08_fixture owns mechanical composer/pin/freeze closure. No approval of unseen generated composition or a new native run.",
+  "source": {
+    "baseline_commit": "e5111ea49113c3f12cb577058c3f926dfebdc325",
+    "baseline_tree": "a88872673bd4cfc366236362f287c1db0a04a5cd",
+    "baseline_driver": {
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/run_ios_readiness.py",
+      "bytes": 76990,
+      "sha256": "b0f3794fe89537d5108a2c24c22c33ed94d9330ee220e7fa257bfb2c4a7b1e29"
+    },
+    "held_driver": {
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/run_ios_readiness.py",
+      "bytes": 87139,
+      "sha256": "9580071ecec4abc8ba375ca01e722eee4245f36132e6a5b8790f5d8bb8456687"
+    },
+    "git_diff_sha256": "be897224e5fd9e0cdff0587397931217795b383e04c4ab2a9b3147a27d941a25",
+    "HEAD_at_review": "e5111ea49113c3f12cb577058c3f926dfebdc325",
+    "held_is_uncommitted_source": true,
+    "new_function_ranges": [
+      {
+        "name": "xcode_time_budget",
+        "start": 124,
+        "end": 133
+      },
+      {
+        "name": "read_stable_owned_file",
+        "start": 136,
+        "end": 163
+      },
+      {
+        "name": "raw_json_object",
+        "start": 166,
+        "end": 179
+      },
+      {
+        "name": "write_raw_owned_file",
+        "start": 182,
+        "end": 197
+      },
+      {
+        "name": "preserve_postbuild_raw",
+        "start": 200,
+        "end": 365
+      },
+      {
+        "name": "finish_xcode_attempt",
+        "start": 368,
+        "end": 382
+      }
+    ]
+  },
+  "findings": [],
+  "resolved_review_note": {
+    "subject": "Budget wording must not imply a separately timed build phase",
+    "provisional_driver_sha256": "ceae3fb00d1439bdfde78a077dd34777dc4140073586fcfabaf6400d8b895f39",
+    "author_only_change": "One docstring now explicitly says cumulative build-plus-test command and per-test allowances. Replacing only that line reconstructs exact provisional ceae3fb bytes. No implementation change in this review closure.",
+    "final_driver_sha256": "9580071ecec4abc8ba375ca01e722eee4245f36132e6a5b8790f5d8bb8456687"
+  },
+  "reopened_actual_evidence": {
+    "reference_reviews": [
+      {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/native-34275491965-postrun-independent-01.json",
+        "bytes": 34488,
+        "sha256": "85ca368c5ee2850cc8fdad3449eca87c1a057e5d3adbad89585e525d608adc31"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/a21-qualified-budget-proposal-01.json",
+        "bytes": 14395,
+        "sha256": "434a4dcbccfa56852ac99f7393804ef049987040a5ffc894f80c32291776c660"
+      }
+    ],
+    "raw_files": [
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34275491965/native-evidence/ios-readiness-21/receipt.json",
+        "bytes": 425426,
+        "sha256": "2d8168608c71fbc4bbed03cc23f595eafc95473e7e4fa3ec1277f61961ed18a3"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34275491965/native-evidence/ios-readiness-21/xcodebuild.log",
+        "bytes": 408545,
+        "sha256": "dd68f0f5ee696408953e9b3dcdc11bf6a9c9a70d2593ea4c57c13333b48ac468"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34275491965/native-evidence/ios-readiness-21/stop-xcode-immediate.log",
+        "bytes": 31,
+        "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34275491965/native-evidence/ios-readiness-21/stop-final.log",
+        "bytes": 31,
+        "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34275491965/native-evidence/ios-readiness-21/parlor-l08-app-foundation.json",
+        "bytes": 7839,
+        "sha256": "c21e69e3ea4e5cce3bc005d25d35dd3b499c9885758bf24095ad13a410c4ec2b"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34275491965/native-evidence/ios-readiness-21/simulator-lifecycle.jsonl",
+        "bytes": 17105,
+        "sha256": "e0eb8557f09729282db2df60ae8ede6e8ad82ecd33abf7d5d82a6636724a3739"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34275491965/native-cleanup/parlor-native-34275491965-1-cleanup.json",
+        "bytes": 814,
+        "sha256": "841a2ef0c1cb4d3ccb9fa930625e230c6bb85df1234f36339aad0f9b18c26bed"
+      }
+    ],
+    "actual_run": 34275491965,
+    "attempt": 1,
+    "actual_source": "e5111ea49113c3f12cb577058c3f926dfebdc325",
+    "primary_error": "TimeoutExpired",
+    "whole_command_exit": -15,
+    "xcode_started_at": "2026-09-08T20:37:55.663079+00:00",
+    "xcode_finished_at": "2026-09-08T21:23:19.811275+00:00",
+    "first_suite_at": "2026-09-08T21:12:17.384000+00:00",
+    "pre_first_suite_seconds": 2061.720921,
+    "remaining_old2700_after_first_suite_seconds": 638.2790789999999,
+    "raw_log_anchors": {
+      "1152": "BUILD SUCCESSFUL in30m47s",
+      "1153": "138 actionable tasks:138 executed",
+      "1775": "First XCTest suite starts21:12:17.384",
+      "1778_1799": "Four production-container UIKit tests passed in raw log",
+      "1801": "Combined L08 method starts",
+      "3785": "Second stable Home geometry sample, no target tap yet",
+      "3790_3791": "Combined test t639.75s followed by BUILD INTERRUPTED"
+    },
+    "actual_failure_path": "The old command deadline included cold compilation/preparation. Timeout bypassed normal xcresult/container preservation; composer later preserved Foundation but correctly ANDed the oldFalse raw ack. Both immediate/final Gradle stops returned0. This is not evidence of a per-method allowance expiry or an application storage/callback assertion.",
+    "preserved_limits": "A21 remainsFAIL/incomplete, B22 notrun and cleanupFAIL. An installed Parlor process was an unknown holder; retention alone does not authorize adopting/killing it or prove cleanup. Strict Foundation observations remain unsatisfied and unwaived. This source review does not replace native_ci actual postrun conclusions."
+  },
+  "budget_review": {
+    "selection_interface": "xcode_time_budget(profile_name), called after existing closed toolchain parser/profile validation and before allocation; no free-form timeout override or environment fallback",
+    "qualified": {
+      "profile": "qualified-xcode-26.3",
+      "whole_command_seconds": 5400,
+      "default_test_execution_seconds": 3000,
+      "maximum_test_execution_seconds": 3300
+    },
+    "local_unchanged": {
+      "profile": "local-xcode-26.5",
+      "whole_command_seconds": 2700,
+      "default_test_execution_seconds": 1200,
+      "maximum_test_execution_seconds": 1500
+    },
+    "normal_unchanged": {
+      "whole_command_seconds": 2700,
+      "default_test_execution_seconds": 120,
+      "maximum_test_execution_seconds": 240
+    },
+    "recorded_at": [
+      "receipt.xcode_time_budget",
+      "xcode command timeout_seconds and actual allowance argv"
+    ],
+    "unknown_profile": "Raises before allocation; selected_toolchain and strict toolchain observation schema unchanged",
+    "execution_shape": "Still one xcodebuild test with jobs1, parallel-testingNO, one destination, original exact five-test set and original signing/source/simulator identity. No retries, split build-for-testing/test-without-building, test filtering or app-input change.",
+    "planning_not_guarantee": {
+      "new_remaining_after_observed_first_suite_seconds": 3338.279079,
+      "remaining_after3000_default_method_seconds": 338.2790789999999,
+      "meaning": "Measured A21 cost justifies more finite headroom; it is not a measured duration of the unfinished complete matrix and not a prediction of another hosted run.5400 covers build+test together."
+    }
+  },
+  "raw_retention_review": {
+    "entry_and_order": "main catches exact Xcode/mark-build exception object; finally invokes finish_xcode_attempt, which always tries immediate Gradle stop first, then one raw-preservation pass, and rethrows the earliest original error. Thus command timeout/KeyboardInterrupt cannot skip every ordinary raw result as inA21.",
+    "independent_attempts": "Summary and tests extraction each have a separate attempt. The exact app-data container is queried independently even if an extraction failed. Every available allowlisted probe/operation/native file has its own attempt; a bad sibling cannot skip all later safe evidence. Exhausted budget refuses further work rather than retries/shorter commands.",
+    "closed_allowlist": [
+      {
+        "family": "XCTest structured summary/tests",
+        "limit_bytes_each": 4194304,
+        "validation": "Exact ownedResults.xcresult directory; original xcresulttool get test-results commands; exit exactint0; stable owned JSON object. No attachments/screenshots/whole bundle export."
+      },
+      {
+        "family": "Owned container query",
+        "limit_bytes": 4096,
+        "validation": "Exact APP_ID, reviewed UUID, Data/Application/<UUID> shape, canonical nonsymlink same-UID container/tmp. No unrelated simulator or arbitrary path traversal."
+      },
+      {
+        "family": "Seven original probe scenarios",
+        "names": [
+          "settings",
+          "whodunit",
+          "mafia",
+          "os",
+          "readiness",
+          "l08-storage-functional",
+          "l08-host"
+        ],
+        "limit_bytes_each": 262144,
+        "validation": "Same explicit filenames; bounded stable raw JSON object. Original scenario-specific runtime validation still occurs later."
+      },
+      {
+        "family": "Original strict-storage/host operations",
+        "limit_bytes_each": [
+          16384,
+          24576
+        ],
+        "validation": "Same storage_result_names/host_result_names; unchanged validate_preservable_operation(value,scenario) and exact planned filename/boot/action equality BEFORE exclusive canonical write."
+      },
+      {
+        "family": "Functional-storage operations",
+        "limit_bytes_each": 16384,
+        "validation": "Same functional_result_names and unchanged validate_preservable_functional_operation; exact filename/boot/action equality. Complete comparisons remain literal retained comparisons, never normalized or waived."
+      },
+      {
+        "family": "Synthetic seed cleanup",
+        "limit_bytes": 1024,
+        "validation": "Same one exact filename; stable bounded JSON object; original read_synthetic_seed_cleanup still validates runtime later."
+      },
+      {
+        "family": "Eight native boot records",
+        "limit_bytes_each": 49152,
+        "validation": "Same exact ordinal1..8 filenames; stable bounded JSON object, original native/image validation later."
+      },
+      {
+        "family": "Eight native diagnostic-failure records",
+        "limit_bytes_each": 1024,
+        "validation": "Same exact ordinal1..8 filenames; stable bounded read replaces read_failure wrapper and calls its unchanged validate_failure with same ordinal/readiness context/signing mode before canonical write."
+      }
+    ],
+    "stable_read": "Exact parent/path, canonical nonsymlink directory/file, same UID, regular single-link file, positive bounded size, O_NOFOLLOW, identity equality before/open/after/read, byte count and parent device/inode/mode/UID stability. In-progress/replaced/symlinked/hardlinked/nonregular records fail closed.",
+    "exclusive_write": "Same-UID canonical evidence directory; O_EXCL|O_NOFOLLOW with0600; flush/fsync plus byte-identical stable readback and parent identity recheck. Existing destinations and partial writes are never overwritten/adopted on retry.",
+    "JSON": "Reject duplicate keys, explicit NaN/Infinity constants and non-object roots before retaining probe/operation/native input; keep unchanged domain privacy validators for operation/failure records. This parser does not substitute for final scenario/XCTest/runtime validation.",
+    "missing": "Missing/unexecuted allowlisted files are recorded in missing and not fabricated. A retention-stagePASS can mean an absent file was safely observed as absent; it is not a runtime-testPASS. This preserves the old available-record retention contract.",
+    "one_shot": "State transitions NOT_RUN->RUNNING->COMPLETE/FAIL. A failed/running pass is never retried; completed reentry performs no writes. Each exact leaf is attempted once and failures do not cause a second extraction/write pass. New field raw_postbuild_preservation exposes stages/errors/files/missing.",
+    "error_metadata": "New retention/secondary failure rows use closed stage names, exception type and fixed generic messages only; no raw exception output, player state, XCTest attachment or broad container dump is added.",
+    "acknowledgment": "Raw ack beginsFalse and becomesTrue only with exact owned container, both structured extraction exit codes exactly0, no retention errors and successful final save. Any extraction/read/validation/write/secondary callback/save/admission failure keeps or restoresFalse and raises the first error. Missing unavailable actions may coexist with successful raw retention, but cannot satisfy unchanged runtime matrix requirements.",
+    "compound_ack": "Raw COMPLETE is only this retention scope. Composer must still AND it with successful Foundation retention in its finalizer; source review approves the extra_container hook interface but does not replace that conjunction or approve an unrendered composer. Foundation unavailable/failure/collection distinctions remain separate.",
+    "durability_limit": "Per-file bounds and stable readback govern accepted raw acknowledgments. Existing command logging remains the original AppHost capture path; this patch is not a global streaming-log-size cap, whole-job durability guarantee, or privacy/runtime certification."
+  },
+  "primary_error_review": {
+    "finish_xcode_attempt": "Original error object is sticky across stop and preserve errors. If none existed, first stop/preservation error becomes primary; later ones append fixed postbuild_secondary_errors. Failed raw acknowledgment is itself an error; all success-shaped data cannot override the prior timeout.",
+    "generic_command": "Only xcode timeout_seconds metadata and failure-only final receipt-save handling added. Existing owner registration/refresh/stop, process-group behavior and per-command allowances are retained. With an active primary, final save failure adds command_persistence_error rather than masks the original; without a primary it raises normally.",
+    "outer_classification": "Rethrown exception reaches the existing outer handler: attempted runtime becomesFAIL with error; downstream normal validation cannot run to success on that path. An ordinary nonzero Xcode return remains recorded and must still satisfy the unchanged full validation/final runtime_complete rules; no nonzero-toPASS fallback."
+  },
+  "preserved_controls": {
+    "unchanged_top_level_AST": [
+      "AppHostOwnership",
+      "verify_xctest",
+      "verify_catalog_receipts",
+      "defer_parent_signals",
+      "checked_binding_path",
+      "control_files",
+      "control_manifest",
+      "control_hash",
+      "normalized_identity",
+      "verify_legacy_settings_probe",
+      "process_uid"
+    ],
+    "unchanged_nested_main_AST": [
+      "save",
+      "stage",
+      "simulator_command",
+      "stop_gradle",
+      "own_simulator_metadata",
+      "shutdown_owned_device",
+      "delete_owned_device",
+      "verify_workers",
+      "remove_temp",
+      "verify_copied_inputs"
+    ],
+    "only_existing_top_level_definition_changed": "main",
+    "only_existing_nested_main_definition_changed": "command",
+    "added_helpers": [
+      "finish_xcode_attempt",
+      "preserve_postbuild_raw",
+      "raw_json_object",
+      "read_stable_owned_file",
+      "write_raw_owned_file",
+      "xcode_time_budget"
+    ],
+    "removed_definitions": [],
+    "exact_EXPECTED_TEST_and_EXPECTED_TESTS_AST_unchanged": true,
+    "unchanged_current_files_equal_e511": [
+      {
+        "path": "scripts/verification/ios-readiness/toolchain_profiles.py",
+        "bytes": 3358,
+        "sha256": "8adacaf4c59ed823aa088ecb70ad5c6c1e3f76e7ca3520d8abf0563341591313"
+      },
+      {
+        "path": "scripts/verification/ios-readiness/simulator_lifecycle.py",
+        "bytes": 37085,
+        "sha256": "8d799475f1e92fc7943ca05b2d1e59655cbb8b0973031029440662059e65f248"
+      },
+      {
+        "path": "scripts/verification/ios-readiness/run_ios_readiness.py",
+        "bytes": 70167,
+        "sha256": "85283be9681be14c18b76ef1657b596e837b4f97f978917f25ac693ae72d0ca8"
+      },
+      {
+        "path": "scripts/verification/ios-readiness/owned_lane.py",
+        "bytes": 10446,
+        "sha256": "949091403ac669429f962120e9873a09897a87bdcae10702720ede0c68342f03"
+      },
+      {
+        "path": "scripts/verification/ios-readiness/secondary_fifo.py",
+        "bytes": 14015,
+        "sha256": "170586ec941b02866acfa4b8e54aa3dd0842dbc7bc9c4b50410bca4b1149440a"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/owned_lane.py",
+        "bytes": 10446,
+        "sha256": "949091403ac669429f962120e9873a09897a87bdcae10702720ede0c68342f03"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/secondary_fifo.py",
+        "bytes": 14015,
+        "sha256": "170586ec941b02866acfa4b8e54aa3dd0842dbc7bc9c4b50410bca4b1149440a"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/l08_receipts.py",
+        "bytes": 33871,
+        "sha256": "43200492a5fae3cb31f89ecafe9985eee84b9c30b4549cd2933788dac056bfbd"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/l08_functional_receipts.py",
+        "bytes": 13404,
+        "sha256": "4069cdca2a9946d56107c423820a43cae513131db3c0eaf5d3db53a41919dafd"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/native_failure_receipts.py",
+        "bytes": 3914,
+        "sha256": "9376f5f7244dc297edf9bca964357a1148c1972a41b44fdfd60fd8c988a007d6"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/l08_functional_runner.py",
+        "bytes": 8305,
+        "sha256": "6fcf689c32a07bb9eefd5e9f3726df6eef27163cbe732a794282d72ddcc33f52"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/NativeReadinessUITests.swift.in",
+        "bytes": 4754,
+        "sha256": "fa2dc7dbc97c576262ad14cd85b22f65aa908b1629ab1a205b22aa4873f5c0dc"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/l08_functional_copy.py",
+        "bytes": 2509,
+        "sha256": "417865a86daca8c09e1d650abc2d46b20920a128d95d2021ad365e38e7a207a4"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
+        "bytes": 59858,
+        "sha256": "5524d839202211270ec1c97776f0d350b9802ecf0d1c5e6eb3d28cd960629302"
+      }
+    ],
+    "shipping_build_paths_with_no_tracked_delta": [
+      "composeApp",
+      "shared",
+      "game-modes",
+      "iosApp",
+      "build-logic",
+      "config",
+      "gradle",
+      "build.gradle.kts",
+      "settings.gradle.kts",
+      "gradle.properties"
+    ],
+    "ownership_and_validation_conclusions": [
+      "Host-only reducer authority, exact4.2, deterministic seed, public/own-private/host-only privacy, Doctor policy and Leave timing are untouched; no shipping source change in this patch.",
+      "Canonical/inherited ownership and FIFO code, direct lifecycle journal, strict refresh/no-unknown-holder/no-secondary-error barrier, direct-build-handle wait0 requirement, cleanup480 ceiling and original strict runner are byte-unchanged.",
+      "Raw retention is not authority to kill an app-looking holder, adopt another process, bypass original-source/control bindings, delete preserved failures, manufacture ack or release another environment lane.",
+      "Original L08/functional/native validators and exact five unskipped XCTest requirements remain intact; no strict file-protection downgrade, metadata normalization or physical-only waiver."
+    ]
+  },
+  "bounded_accounting_not_guarantees": {
+    "raw_preservation_accounting_seconds": 420,
+    "native_extraction_command_seconds": 120,
+    "admission_required_seconds": 130,
+    "lifecycle_cleanup_seconds_unchanged": 480,
+    "outer_parent_finalizer_grace_seconds_required_unchanged": 600,
+    "native_child_execution_seconds_required_unchanged": 6000,
+    "limits": [
+      "Raw budget is checked before/after stages and before full-length command admission. It is not an asynchronous hard wall-clock cutoff for filesystem IO, fsync, owner refresh/stop or exception cleanup.",
+      "The raw-preservation interval occurs after Xcode/initial stop and is separate from lifecycle cleanup; do not promise all setup+5400command+420retention+global finalizers fit6000+600.",
+      "Lifecycle480, outer600 and any Actions focused-job ceiling bound different layers; their maxima are not measured completion times. Another timeout still fails honestly and missing/unsafe preservation still prevents destructive cleanup.",
+      "ci_review must separately approve adapter cumulative job admission, workflow timeout and exact source bindings. This review neither changes nor qualifies those four files."
+    ]
+  },
+  "approval_boundary_and_next_requirements": [
+    "Approved exact held driver9580071e source logic and explicit Foundation callback interface; l08_fixture may prepare the mechanical composer/driver dependency pins and additive draft freeze against these exact bytes.",
+    "Before execution, independently review actual rendered composer hookup and preserved Foundation conjunction, all pin/control closure, regression validity and actual focused results. Old composer still binds previous driver until that separately owned work is complete.",
+    "Every later driver source change invalidates this exact-source approval. Reviewed source/control commit, regenerated inventory commit, remote match and fresh source/control/preflight/dispatch approval remain root-owned requirements.",
+    "No build, test discovery, Python project import, native command, Actions call or new runtime proof was performed here. ActualA21 failures/cleanup andB22 unexecuted status remain preserved; no new A/B/C/D completion inference.",
+    "Physical-device LAN/lifecycle/accessibility/keybag/backup/power-loss, Store/signing/publication and identity collision, and separate owner/editorial/privacy/legal requirements are not waived."
+  ],
+  "activity_and_cleanup": {
+    "builds": 0,
+    "tests_or_discovery": 0,
+    "project_imports": 0,
+    "native_commands": 0,
+    "network_or_Actions_calls": 0,
+    "source_or_existing_evidence_edits": 0,
+    "staging_commits_pushes": 0,
+    "cleanup_or_signaling_actions": 0,
+    "only_written_path": "remediation-runs/2026-09-08-continuation/reviews/hosted-l08-exception-budget-source-independent-01.json",
+    "inspection": "Read-only current/Git source, full held diff, original preservers/validators, raw actualA21 evidence, stdlib hashing/JSON/AST; no code extracted from the project was executed.",
+    "cleanup": "No build/process/fixture cycle started and no reviewer cleanup owed. Existing task lock, live outputs, archived failures and other agents' files left untouched."
+  },
+  "verdict": "APPROVED_EXACT_HELD_COMPANION_SOURCE_ONLY; no open blocking findings within assigned scope. Not regression execution, complete composition binding, native/cleanup success, workflow authorization or readiness approval."
+}

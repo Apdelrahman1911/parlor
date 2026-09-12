@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "author": "/root/native_fix_review",
+  "created_at": "2026-09-07T11:01:51.370821+00:00",
+  "status": "SOURCE_DRAFT_UNEXECUTED_REVIEW_REQUIRED",
+  "reviewer": "/root",
+  "review_concern": "Root test lane redirects TMPDIR into campaign scratch; implicit TemporaryDirectory would never exercise /private/var alias and would fail before native compilation.",
+  "correction": "Only this synthetic alias fixture explicitly allocates a fresh mode-0700 TemporaryDirectory below canonical Path(/var/tmp).resolve(strict=True). Context-finalized removal remains limited to that fresh owned allocation. No scans/reuse/deletion of other /var/tmp entries, and child compiler TMPDIR points inside the owned fixture. Unexpected canonical parent/child aliases fail.",
+  "preserved_previous_test": "review-revision-01-original/test_native_paths.py",
+  "previous_test_sha256": "0b8a82d377bd551c9918450f4d18b7fa12ab94faba33e8a6662190879d51b809",
+  "files": [
+    {
+      "path": "scripts/verification/ios-readiness/NativeReadinessLaunch.swift.in",
+      "sha256": "df8f0cce3f45bedbfea47df3ca0b2e56c6a777383395fc170f0f07b83f8d143a"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/native-path-canonicalization-draft-01/test_native_paths.py",
+      "sha256": "11c0bcbba09de36d5e2eb5a276c8f8d3c52024c3b395558e6aebd2f12875007a"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/native-path-canonicalization-draft-01/NativeReadinessPathControls.swift.in",
+      "sha256": "efc84b3b49c099185d17ff56ceb53b0134ee2332ff35220a537dade5168a76c9"
+    }
+  ],
+  "tests_declared": 3,
+  "host_foundation_subcases": 18,
+  "execution": "NONE; root-only test/native/build lane",
+  "scripts_freeze": "Template df8f0cce unchanged; revised test remains campaign-only."
+}

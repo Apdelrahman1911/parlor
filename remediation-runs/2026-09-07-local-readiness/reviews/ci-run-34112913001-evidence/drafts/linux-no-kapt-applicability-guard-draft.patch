@@ -1,0 +1,54 @@
+--- a/shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/AndroidReleaseLintContractTest.kt
++++ b/shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/AndroidReleaseLintContractTest.kt
+@@ -105,6 +105,38 @@
+     }
+ 
+     @Test
++    fun kotlin_advisory_triage_requires_the_build_to_remain_without_kapt() {
++        val moduleBuilds = Regex("""include\("(:[^"]+)"\)""")
++            .findAll(read("settings.gradle.kts"))
++            .map { match -> match.groupValues[1].removePrefix(":").replace(':', '/') + "/build.gradle.kts" }
++            .toList()
++        assertTrue(moduleBuilds.isNotEmpty(), "No included modules found for the KAPT applicability review")
++        val conventionSources = repositoryRoot.resolve("build-logic/convention/src/main/kotlin")
++            .walkTopDown()
++            .filter { file -> file.isFile && file.extension == "kt" }
++            .map { file -> file.relativeTo(repositoryRoot).invariantSeparatorsPath }
++            .toList()
++        val buildSources = listOf(
++            "build.gradle.kts",
++            "settings.gradle.kts",
++            "gradle.properties",
++            "gradle/libs.versions.toml",
++            "build-logic/settings.gradle.kts",
++            "build-logic/convention/build.gradle.kts",
++        ) + moduleBuilds + conventionSources
++        buildSources.forEach { path ->
++            assertFalse(
++                read(path).contains("kapt", ignoreCase = true),
++                "$path changes the no-KAPT prerequisite; re-review GHSA-r937-wjx7-w2jp before accepting this pin",
++            )
++        }
++        assertFalse(
++            read("gradle/verification-metadata.xml").contains("kotlin-annotation-processing"),
++            "A processing-runtime dependency invalidates the no-KAPT applicability decision",
++        )
++    }
++
++    @Test
+     fun launcher_is_adaptive_on_every_supported_android_version() {
+         val manifest = read("composeApp/src/androidMain/AndroidManifest.xml")
+         assertFalse(manifest.contains("hasFragileUserData"))
+--- a/shared/transport-p2p/build.gradle.kts
++++ b/shared/transport-p2p/build.gradle.kts
+@@ -44,6 +44,10 @@
+         rootProject.file("iosApp/iosAppUITests/IOSAppLaunchUITests.swift"),
+         rootProject.file("whodunit-game-design.md"),
+         rootProject.file("settings.gradle.kts"),
++        rootProject.file("build-logic/settings.gradle.kts"),
++        rootProject.fileTree("build-logic/convention/src/main/kotlin") {
++            include("**/*.kt")
++        },
+         rootProject.file("gradle.properties"),
+         rootProject.fileTree(".") {
+             include("**/build.gradle.kts")

@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/storage_boundary",
+  "status": "VERIFIED_SCOPED_H03_ERROR_CHAIN_NOT_PROTECTION_PASS",
+  "run_id": 34606946362,
+  "run_attempt": 1,
+  "source_sha": "25cd7f57b031bebdcfb4931615782b906610703f",
+  "tree": "1e44e982216bfc4fda32dc370a0d1b3d77fee836",
+  "control_sha256": "6537d41f499b4635df3f1cfc80be3d84d07b619fa92790bb83ae0973ee9419e8",
+  "evidence_root": "actions/34606946362/main",
+  "hashes": {
+    "host-setter.stdout.json": "9f61998265bb2d259ba5544819d1235ced9afab9237377644eaf114eabbe94f8",
+    "host-setter-report.json": "76a799c56b9a68709483455f2627543ba215cbb1e9553043e139c631e366b894",
+    "host-setter-bindings.json": "84c54c17eeedc9015d708c59592b7780db2d73dee48fb31cc2f64471547647cc",
+    "OwnedHostSetterContext.h": "93b40a17175feb19626242d7beb1963856f0520426a2f270109443ea8ebc2c43",
+    "state.json": "c3f57e05ed136ecaf0ab82c44542f5621d7ba0a0d05a1d1c282d29aac20cac26",
+    "request.json": "fce8a3d82e627c4a147609e0dfbe69c5bd33af61d252006c6a54c264fa92c56e"
+  },
+  "actual": {
+    "native_schema": 2,
+    "scope": "HOST_ORIGIN_ONLY",
+    "runtime": "arm64 native macOS15.7.9/24G830, Xcode26.3/17C529, macOS SDK26.2",
+    "collection_status": "PASS",
+    "normalized_status": "CAPTURED_HOST_ORIGIN_SETTER_NOT_PROTECTION_PASS",
+    "operation": {
+      "id": "host-origin-fm-set",
+      "receiver_class": "NSFileManager",
+      "selector": "setAttributes:ofItemAtPath:error:",
+      "requested_protection": "complete",
+      "returned": false,
+      "native_error": {"present": true, "domain": "cocoa", "code": 256},
+      "error_chain": {
+        "nodes": [
+          {"present": true, "domain": "cocoa", "code": 256},
+          {"present": true, "domain": "posix", "code": 22}
+        ],
+        "termination": "no-underlying"
+      }
+    },
+    "error_interpretation": "An actual Boolean false and outer Cocoa256 are preserved, followed through the standard NSUnderlyingErrorKey relation to NSPOSIXErrorDomain22 (Darwin EINVAL). The two-node chain ends normally; it is neither depth-truncated, cyclic nor a non-error terminal. This records a reported underlying error, not a sampled failing syscall or its arguments.",
+    "fixture_root": {"device": 16777230, "inode": 3544187},
+    "identity": {"device": 16777230, "inode": 3544188, "uid": 501, "mode": 33152, "links": 1, "size": 40, "type": "regular"},
+    "before_after": {
+      "whole_sample_objects_equal": true,
+      "filemanager": "Both dictionaries and protection keys present; until-first-authentication; no NSError.",
+      "fresh_url": "Both protection keys present; until-first-authentication; no NSError; volume support unsupported.",
+      "fcntl": "Both public command63 getter results are raw class3, errno0.",
+      "attrlist": "Both return0/errno0, length28, attribute-set bytes20 and returned common mask3221225472 including protection bit1073741824; raw class3 was returned.",
+      "filesystem": "Both fstatfs calls succeed on APFS, fsid[16777230,26], flags76582912; content-protection bit128 absent.",
+      "custody": "Both samples are collectionPASS with descriptor closed. All ten ordered fm/url/fcntl/attrlist/filesystem reads bracket the same full seven-field path/descriptor identity. No replacement or metadata transition was observed."
+    },
+    "process": {"pid": 2798, "exit_code": 0, "direct_child_reaped": true, "recorded_elapsed_seconds": 0.013, "driver_timeout_seconds": 30, "stdout_bytes": 9647, "stderr_bytes": 0}
+  },
+  "independent_joins": {
+    "source": "Reopened the native Git blob at frozen25cd7f57. Its8844 bytes hash to99d7f72db7fbc57d976563e97b1bd9514c9a637e801ae84847cc34c890fc7bc9, matching the approved native source, request control and recorded copied input. Lines40-66 only classify errors and follow the bounded standard relation; lines142-144 perform the one public Complete request, retain BOOL/outer error first, then collect the chain. No incorrect public key/value, selector, retry or source-preservation defect was found in this boundary.",
+    "context": "Raw five-field binding equals request and host-setter-bindings, including run_token120b86de8ae24564a2811b1a4fb831ac and exact source/run/attempt/control. Retained header reconstructs that binding, root device/inode and full target identity. Its root is exactly the invoked helper's resources/host-fixtures child; header hash matches the copied-input witness.",
+    "reports": "Normalized before/operation/after exactly equal raw stdout. Manifest, state, compiled expected identity and both native samples agree; the entire before/after sample objects are equal.",
+    "inputs_and_binary": "All four recorded input hash/stat witnesses agree before compile and after execution. One compile, ad-hoc sign, strict signature verification and UUID query each exited0/reaped. Main UUID9cc1438a-30cd-4147-bda4-f83ce62faf36 agrees with the raw UUID log, built image and both runtime main images, platforms[1]. Recorded binary SHA256fd5910ff88d5f638824078a818cbe17a271bf9000a53e42ccf40718f5522402d and full file identity are unchanged after execution; binary bytes were not retained for independent rehash.",
+    "method_images": "Setter Foundation UUID39be75ac-350f-3b8c-9c10-8b2b5321ce8e/offset456112 is stable before/after. FM getter uses that Foundation UUID/offset211688 throughout. NSURL getter CoreFoundation UUIDbdc82415-a029-3463-ac49-1a792208ce00/offset520524 is stable throughout. Both system images report ordered[1,6]; method attribution does not expose internal call paths."
+  },
+  "conclusions": [
+    "This fresh native-host fixture did not obtain observable Complete protection through the one public setter. Successful execution/collection is not successful mutation, strict equality, device enforcement or application qualification.",
+    "H03 narrows its own failure from a generic outer Cocoa error to a reported underlying EINVAL. No-underlying means no further standard NSError relation was exposed; it does not mean the rejecting internal condition has been identified.",
+    "The inspected call uses the public NSFileProtectionKey/NSFileProtectionComplete constants and an attested owned path. EINVAL alone does not establish malformed caller arguments, distinguish a Foundation policy rejection from a filesystem/kernel restriction, or prove a universal Simulator/macOS limitation.",
+    "No production storage defect or evidence-supported shipping correction is established. This is a host-origin fixture, not a paired Simulator inode or production snapshot. A37/APP04 strict results remain unchanged; no original strict comparison ran."
+  ],
+  "smallest_remaining_causal_gap": "The precise internal operation, argument or supported-platform condition that produced the reported EINVAL remains unobserved. Stable Foundation entry-point identity and capability flags cannot identify it. No code change is justified by EINVAL alone; preserve the exact failure rather than retrying write variants, substituting this host result for iOS strict comparisons or declaring universal incapability. Any further causal investigation must target that rejecting condition under separately reviewed authorization.",
+  "historical_limit": "H03's fresh schema2 chain does not retroactively supply H02's unrecorded underlying error, despite matching outer code and method-image identities. Keep each run's source, inode and observations separate.",
+  "scope_limits": "Bracketing identities are not atomic filesystem snapshots. Raw class3 and unsupported capability labels do not establish physical enforcement or waive Complete requirements. Full API/ZIP/control custody and cleanup/retirement acceptance belong to separately assigned reviews.",
+  "activity": "Read stable local raw JSON/text and frozen Git source with duplicate-key/nonfinite rejection and stdlib hash/equality checks. No network/API, builds, project tests/imports, dispatches or source changes. This assigned review JSON is the only reviewer-authored file."
+}

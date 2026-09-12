@@ -1,0 +1,54 @@
+{
+  "kind": "REVIEWED_LINUX_DIAGNOSTIC_AND_PROBE_ADOPTION_NOT_EXECUTION",
+  "at": "2026-09-10T11:33:10.987824+00:00",
+  "baseline": "75c104734373703570a307de9c7a53d291bc2718",
+  "reviews": {
+    "linux-process-probe-independent-01.json": "a9184100bb521387e85cb1d540ef8e329f368c112eb1d8f6aac28321be056458",
+    "android-proc-permission-diagnostic-independent-01.json": "6efe702c65fd9370f1c6d9c0643fe889af5d14993a00547e78af46c167df5d87"
+  },
+  "files": [
+    {
+      "path": ".github/workflows/production-verification.yml",
+      "before_sha256": "9a8021ec1ba27f44d7d2ac18f0bcc7a4a254445ba1baae1a420287094c89414b",
+      "after_sha256": "57b112d806277eeb861efc7d58cffc76878210a4c441a7229d064351ecb126f2",
+      "bytes": 48085
+    },
+    {
+      "path": "scripts/ci/linux_process_probe.py",
+      "before_sha256": null,
+      "after_sha256": "2696b0d81f1113eeaea20b431191788925053703d2ed6e12d72489041c6f76b6",
+      "bytes": 15616
+    },
+    {
+      "path": "scripts/release/workflow_contract.py",
+      "before_sha256": "40bc1dc521676043be6c70a8d6e7e775e4b902350e0177acd19500ee69576e0d",
+      "after_sha256": "d1b625c48af28eb0a53153f08b928fc818153d0c6eb4a9275bf7ed78700d7104",
+      "bytes": 58298
+    },
+    {
+      "path": "scripts/release/tests/test_workflow_contract.py",
+      "before_sha256": "5c3b0af5ee60f024e417750b10cee69ba8fb75170d80127e3e835b3929c354b3",
+      "after_sha256": "c0539b7b2daeef29936aa3c4763e3ee1876ff53b60fb9d68e787388eaa363372",
+      "bytes": 51196
+    },
+    {
+      "path": "scripts/release/tests/test_linux_process_probe.py",
+      "before_sha256": null,
+      "after_sha256": "51e3086b6bc43712e689f3c06584cfc9659adbdf45564d16f60c8493f8891325",
+      "bytes": 13240
+    },
+    {
+      "path": "scripts/ci/verification_hygiene.py",
+      "before_sha256": "f1aa6d4c5dae8360a9ff1bfd675376d78cb800e3d297fc213cdddca32c7376f6",
+      "after_sha256": "1fc2fb6f0b3bb7a505edc63277e0fe974a67ccf972753eec0da60386438c16f4",
+      "bytes": 22204
+    },
+    {
+      "path": "scripts/release/tests/test_ci_verification_hygiene.py",
+      "before_sha256": "2ba311084cd57923f85c3176b3d5ac83385022c7e0fe174ac5a38fd1c5101f63",
+      "after_sha256": "1f228c62dd1de0b79b8c0add9500dd3da7572bd761d079a058f45ef502e1f8e0",
+      "bytes": 30703
+    }
+  ],
+  "readiness": "NOT_READY; D03 cleanup FAIL and strict protection unresolved; no runtime result promoted"
+}

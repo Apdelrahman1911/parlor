@@ -1,0 +1,232 @@
+{
+  "schema_version": 1,
+  "kind": "Independent source and actual offline reconciliation review for historical A31",
+  "reviewer": "/root/ci_review",
+  "author_and_executor": "/root",
+  "recorded_at": "2026-09-09T19:45:11.107266+00:00",
+  "status": "APPROVED_HISTORICAL_SCOPED_RECONCILIATION_NOT_NEW_RUNTIME",
+  "findings": [],
+  "scope": "Review of the one-off invocation source, existing validator argument/schema binding, retained execution outputs and cleanup. The fixture reviewer owns detailed per-operation native findings; this report does not duplicate that review. Reviewer performed only read-only Git and stdlib source/JSON/hash/filesystem inspection, no imports of project modules, helper execution, tests, builds, network or workers.",
+  "source_approval": {
+    "script": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/a31-offline-reconciliation-01.py",
+      "bytes": 5750,
+      "sha256": "eb736d3eb3425d6325b9be9b87170ac4ae564c2f8524f6064a28e3bae4a28feb"
+    },
+    "approved_before_root_execution": true,
+    "historical_validator_files_checked": 38,
+    "all_38_match_actual_native_input_manifest": true,
+    "argument_binding": "Existing companion verifier signatures and runner calls matched. Native eight + functional twenty + host forty-two raw rows use the same complete framework-union/subset procedure, native runToken and actual adhoc mode. Settings uses the existing legacy validator; local games are correctly captured by lambda default arguments. Seed cleanup uses the existing bounded reader.",
+    "input_shape_admission": "132 actual evidence files were regular, <=2MiB. All94 historical JSON files parsed without duplicate keys or nonfinite constants. Functional/host records and scenarios also met the existing per-family16384/24576/262144-byte bounds. This admits only these exact historical inputs, not a weaker general replacement reader.",
+    "execution_guards": "Exact HEAD plus clean tracked diff before imports; before/after input hash equality; fresh output open(x) within the existing owned evidence cycle. Existing validators only: no main/build/simulator entry point invoked. RETURNED preserves the full nested result, never implies unconditional PASS. Expected aggregate exceptions remain FAIL; unexpected return/exception polarity is exit-coupled."
+  },
+  "actual_invocation": {
+    "command": [
+      "/usr/bin/python3",
+      "-B",
+      "remediation-runs/2026-09-08-continuation/reviews/a31-offline-reconciliation-01.py",
+      "/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/evidence/a31-offline-existing-verifiers-linux-01"
+    ],
+    "cycle_receipt": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/a31-offline-existing-verifiers-linux-01/receipt.json",
+      "bytes": 305997,
+      "sha256": "c3b2192e3533fcd4614fb8849c05b24117cc7be1f16d0deb7679d27f08a0e810"
+    },
+    "result": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/a31-offline-existing-verifiers-linux-01/reconciliation.json",
+      "bytes": 89242,
+      "sha256": "79567c59c64fdd5f8286bad28ebb3eac6d8b70ca3104fb954733f41cdc8fe52c"
+    },
+    "raw_log": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/a31-offline-existing-verifiers-linux-01/gradle.log",
+      "bytes": 837,
+      "sha256": "76101eb4d7f3c7cbd814d67871964f90906e13992b9702e8638dc19bf243473b"
+    },
+    "started_at": "2026-09-09T19:31:47.013829+00:00",
+    "finished_at": "2026-09-09T19:31:48.222902+00:00",
+    "exit_code": 0,
+    "status": "RECONCILIATION_FINISHED",
+    "returned_checks": 9,
+    "expected_failed_original_checks": 2,
+    "unexpected_results": [],
+    "raw_log_equals_result_summary": true,
+    "calls": [
+      {
+        "name": "catalogue_single_tap_routes",
+        "verification_status": "RETURNED",
+        "expected_failure": false,
+        "scoped_status_fields": {}
+      },
+      {
+        "name": "functional_storage",
+        "verification_status": "RETURNED",
+        "expected_failure": false,
+        "scoped_status_fields": {
+          "status": "FUNCTIONAL_MATRIX_VERIFIED",
+          "functional_gate": "PASS",
+          "complete_comparison_gate": "FAIL",
+          "original_strict_l08": "NOT_SATISFIED_BY_COMPANION"
+        }
+      },
+      {
+        "name": "retained_host",
+        "verification_status": "RETURNED",
+        "expected_failure": false,
+        "scoped_status_fields": {
+          "status": "PASS"
+        }
+      },
+      {
+        "name": "settings",
+        "verification_status": "RETURNED",
+        "expected_failure": false,
+        "scoped_status_fields": {
+          "status": "PASS"
+        }
+      },
+      {
+        "name": "local_whodunit",
+        "verification_status": "RETURNED",
+        "expected_failure": false,
+        "scoped_status_fields": {
+          "status": "PASS"
+        }
+      },
+      {
+        "name": "local_mafia",
+        "verification_status": "RETURNED",
+        "expected_failure": false,
+        "scoped_status_fields": {
+          "status": "PASS"
+        }
+      },
+      {
+        "name": "mafia_public_start",
+        "verification_status": "RETURNED",
+        "expected_failure": false,
+        "scoped_status_fields": {}
+      },
+      {
+        "name": "native_readiness",
+        "verification_status": "RETURNED",
+        "expected_failure": false,
+        "scoped_status_fields": {
+          "diagnostic_delivery": "PASS",
+          "current_build_cold_launch": "PASS",
+          "storage_health": "PASS",
+          "original_first_four_launch_failures_cause": "UNRESOLVED"
+        }
+      },
+      {
+        "name": "native_loaded_images",
+        "verification_status": "RETURNED",
+        "expected_failure": false,
+        "scoped_status_fields": {
+          "status": "PASS"
+        }
+      },
+      {
+        "name": "original_xctest_aggregate",
+        "verification_status": "FAIL",
+        "expected_failure": true,
+        "error_type": "RuntimeError",
+        "error": "Actual XCTest summary is not exactly five successful, unskipped tests"
+      },
+      {
+        "name": "actual_os_multilingual_prerequisite",
+        "verification_status": "FAIL",
+        "expected_failure": true,
+        "error_type": "RuntimeError",
+        "error": "OS prerequisite blocked/malformed/reordered; no inferred OS success"
+      }
+    ],
+    "empty_test_and_artifact_receipts": true
+  },
+  "bindings": {
+    "source_commit": "965eb79cea7dd40ced8efa0b1fcd98596f7a952b",
+    "source_tree": "334bf3a1fe15fc8acd55715bbc40eb78e2a0646f",
+    "branch": "fix/local-readiness-2026-09-07",
+    "clean_at_execution": true,
+    "source_manifest_rows": 829,
+    "source_manifest_sha256": "ed52f946cd5241f41fe8b8b25c4e42253741656bf68c688926a55f6e2979ed6e",
+    "offline_before_after_and_actual_native_source_objects_all_identical": true,
+    "input_rows": 210,
+    "input_rows_sorted_compact_json_sha256": "19693ddcb47a0753c0f5e14d7271499bd87151c319dec688852958741b82573f",
+    "all210_current_file_hashes_still_match": true,
+    "inputs_after_identical": true,
+    "runner_manifest_sha256": "942e138764146313a59cbe1278c1357284a5701d0c125809c34ddbbe876ce912",
+    "runner_before_after_current_match": true,
+    "historical_native_receipt": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34384037292/native-evidence/ios-readiness-31/receipt.json",
+      "bytes": 541719,
+      "sha256": "0251827d0d25f1c4f1afbe1591fc20a2b96e4aed61058070891b3564d18862a5"
+    },
+    "historical_input_manifest": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34384037292/native-evidence/ios-readiness-31/input-manifest.json",
+      "bytes": 173163,
+      "sha256": "bb6c1a1d19f31864bd9a7dde6f36954da23738662675c5da05a11d5670333907"
+    },
+    "later_edit_note": "scripts/ci/native_continuation.py changed after the clean offline cycle. It is not imported by this script or among its210 bound inputs; no claim is made that this execution occurred after that edit."
+  },
+  "preserved_failures_and_limits": {
+    "actual_native_run_id": 34384037292,
+    "run_attempt": 1,
+    "original_A31_status": "FAIL",
+    "readiness": "NOT_READY",
+    "original_xctest": "4 passed /1 failed /0 skipped; aggregate remains failed at the real retainEnglishPrimary OS prerequisite.",
+    "os_prerequisite": "Raw log retains status BLOCKED at retainEnglishPrimary; no probe-os-result.json exists.",
+    "strict_protection": "Functional parsing returned FUNCTIONAL_MATRIX_VERIFIED with functional_gate PASS, but complete_comparison_gate FAIL,0/26 successful Complete comparisons and original_strict_l08 NOT_SATISFIED_BY_COMPANION.",
+    "historical_native_limits": "Returned cold-launch storage-health and image-binding results concern the instrumented adhoc Debug simulator observations only. Prior launch root cause remains UNRESOLVED. Not normal-binary libproc proof, physical LAN/device-lock/backup or Store proof.",
+    "reconciliation_is_not_runtime": "Offline parsing now executed successfully; actual app/Swift/native observations remain those of34384037292 at965eb. Main XCTest, OS and strict protection are not cleared by parser returns.",
+    "actual_xctest_summary": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34384037292/native-evidence/ios-readiness-31/xcresult-summary.json",
+      "bytes": 1579,
+      "sha256": "06a846d90a4d634e8ca5e4d05c17a5f780a9ecf95f717960c9e322ea95d8cf9f"
+    },
+    "actual_native_log": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34384037292/native-evidence/ios-readiness-31/xcodebuild.log",
+      "bytes": 1209410,
+      "sha256": "61290374ed5929fe111d20edf021197fcd77dcf4aecb7025f4691627c7c1af94"
+    }
+  },
+  "cleanup": {
+    "stop_exit_code": 0,
+    "stopped_at": "2026-09-09T19:31:49.025184+00:00",
+    "stop_log": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/a31-offline-existing-verifiers-linux-01/stop.log",
+      "bytes": 31,
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    "cleanup_completed_at": "2026-09-09T19:31:49.119638+00:00",
+    "outputs_before": [],
+    "removed_outputs": [],
+    "remaining_outputs": [],
+    "errors": [],
+    "deferred_signals": [],
+    "owned_worker_survivors": [],
+    "artifact_worker_survivors": [],
+    "fresh_absent_paths": [
+      "shared/networking-testing/build",
+      "shared/session/build",
+      "shared/networking/build",
+      "shared/transport-p2p/build",
+      "shared/core/build",
+      "shared/engine-testing/build",
+      "shared/storage/build",
+      "shared/design-system/build",
+      "shared/engine/build",
+      "shared/content/build",
+      "game-modes/whodunit/build",
+      "game-modes/mafia/build",
+      "build",
+      "composeApp/build",
+      "build-logic/build",
+      "build-logic/convention/build",
+      "remediation-runs/2026-09-07-local-readiness/evidence/a31-offline-existing-verifiers-linux-01/scratch"
+    ],
+    "all17_absent": true,
+    "reviewer_resources_allocated": false,
+    "note": "No build/test outputs created. Outer lane still ran mandatory Gradle stop and retired cycle scratch; no global caches or historical artifacts removed."
+  },
+  "conclusion": "Accept the recorded nine historical scoped verifier returns and two retained original failures exactly as written. This closes offline reconciliation only; NOT_READY and separate native/OS/strict-protection/final-qualification requirements remain."
+}

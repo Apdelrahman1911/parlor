@@ -1,0 +1,35 @@
+{
+  "url": "https://developer.apple.com/videos/play/wwdc2019/403/",
+  "title": "Creating Great Localized Experiences with Xcode 11 - WWDC19 - Videos - Apple Developer",
+  "segments": [
+    {
+      "query": "multilingual",
+      "text": "with your app. At Apple, we care deeply about creating a great experience for all of our users around the world. This year, we have a host of new features and improvements for our Multilingual and International Users. To name a few, in iOS 13 we have keyboards for 38 new languages. I'm sure if your language is up there you're really excited. We also have a new setup flow that guides multilingual users to the right language settings. Now one of these features I'm particularly excited about, and I want to dive a bit deeper with you. In iOS 13 there's a new setting that appears from Multilingual Users in your app settings page. I'm happy to say that users can now set the language of your app independent of the system language. If a user has a connected watch, the setting will also sync to the accompanying watch application. And simil"
+    },
+    {
+      "query": "multilingual",
+      "text": "onal Users. To name a few, in iOS 13 we have keyboards for 38 new languages. I'm sure if your language is up there you're really excited. We also have a new setup flow that guides multilingual users to the right language settings. Now one of these features I'm particularly excited about, and I want to dive a bit deeper with you. In iOS 13 there's a new setting that appears from Multilingual Users in your app settings page. I'm happy to say that users can now set the language of your app independent of the system language. If a user has a connected watch, the setting will also sync to the accompanying watch application. And similarly, on macOS, users can set the language of an app via Language and Region preferences. This is important because in multilingual regions, users may prefer to use different languages in different context."
+    },
+    {
+      "query": "multilingual",
+      "text": " the right language settings. Now one of these features I'm particularly excited about, and I want to dive a bit deeper with you. In iOS 13 there's a new setting that appears from Multilingual Users in your app settings page. I'm happy to say that users can now set the language of your app independent of the system language. If a user has a connected watch, the setting will also sync to the accompanying watch application. And similarly, on macOS, users can set the language of an app via Language and Region preferences. This is important because in multilingual regions, users may prefer to use different languages in different context. In a region like Hong Kong, someone might read their news in Chinese even though they do their banking in English. In India, a student will go to school and learn in English even though they come home"
+    },
+    {
+      "query": "multilingual",
+      "text": "ll also sync to the accompanying watch application. And similarly, on macOS, users can set the language of an app via Language and Region preferences. This is important because in multilingual regions, users may prefer to use different languages in different context. In a region like Hong Kong, someone might read their news in Chinese even though they do their banking in English. In India, a student will go to school and learn in English even though they come home and speak Hindi with their family. Apps are windows into these interactions we have everyday. And this new setting allows users to choose a language that reflects their preference for your app. Now this works for your app out of the box and for free if you're using all of our standard foundation APIs for localization. But there are couple things to keep in mind to make t"
+    },
+    {
+      "query": "multilingual",
+      "text": "Locale that preferred languages returns a list of languages in order of user preference. Now, this list might be useful to you if maybe you're building an app that needs to handle multilingual content, and you need to fetch resources such as font for all of the user's languages. And one thing to know is that locale, that preferred languages will return the language list, that user's preferred languages, regardless of the languages your application bundle supports. So it's not useful for getting the current running application language. To get the current running application language, we can use Bundle APIs. And Bundle APIs are useful for language matching. Bundle.main.preferred Localizations considers both the user preferred languages and the languages that your application bundle supports and returns a list of languages your appl"
+    },
+    {
+      "query": "relaunched",
+      "text": "guages, we recommend you Launch into Settings where users can go in and switch the language of your app. Next, when the user does change the language of your app, your app will be relaunched in the target language. Now, to make this language change a seamless experience for the user, we recommend you adapt state restoration APIs. In iOS 13, there are some new state restoration APIs with NSUserActivity. To learn more about how you can use them, you can check out this talk on Friday. And, finally, it's important that all of your content is shown consistently in one language throughout your app. If you're doing some custom or server-side resource loading, there are handful of APIs that might be useful for you to determine which language to request that content here. Let's go over a few of them. Locale APIs are useful for fetching t"
+    },
+    {
+      "query": "launch into Settings",
+      "text": " code. Our APIs do a lot of work to ensure users get the right language and font fall backs. If you do need to add the option within your app to switch languages, we recommend you Launch into Settings where users can go in and switch the language of your app. Next, when the user does change the language of your app, your app will be relaunched in the target language. Now, to make this language change a seamless experience for the user, we recommend you adapt state restoration APIs. In iOS 13, there are some new state restoration APIs with NSUserActivity. To learn more about how you can use them, you can check out this talk on Friday. And, finally, it's important that all of your content is shown consistently in one language throughout your app. If you're doing some custom or server-side resource loading, there are handful of APIs that mig"
+    }
+  ],
+  "known_language_image_tags": []
+}

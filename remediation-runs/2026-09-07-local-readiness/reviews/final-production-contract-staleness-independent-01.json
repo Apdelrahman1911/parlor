@@ -1,0 +1,122 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-09-07T16:53:07.846121+00:00",
+  "finder": "/root",
+  "independent_validator": "/root/release_fix_review",
+  "classification": "CONFIRMED STALE TEST ASSERTION / TEST-CONTRACT REGRESSION; NOT A WORKFLOW APPLICATION-LAUNCH DEFECT",
+  "baseline_commit": "0b3090a40ff8135b04e0d6e9933c0af5d160daba",
+  "branch_at_review": "fix/local-readiness-2026-09-07",
+  "summary": "ProductionVerificationWorkflowContractTest still demands raw existing-device enumeration in the app-launch YAML step after the workflow and Python contract deliberately moved to journaled fresh-simulator creation. Reintroducing raw profile selection would weaken the corrected workflow.",
+  "coverage": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/ProductionVerificationWorkflowContractTest.kt",
+      "version": "0b3090a40ff8135b04e0d6e9933c0af5d160daba",
+      "sha256": "c1b4f71893be8f3796f7c3c1e556991d15fe8ba686d0211742e1fcd85232f7d5",
+      "lines": 656,
+      "reviewed_line_ranges": [
+        [
+          296,
+          523
+        ],
+        [
+          615,
+          656
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/.github/workflows/production-verification.yml",
+      "sha256": "f823182501d7a28dd20d117781b59dd46bc5103baef5b016316a5a672a18258f",
+      "lines": 669,
+      "reviewed_line_ranges": [
+        [
+          507,
+          578
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/release/workflow_contract.py",
+      "sha256": "8907e1abd5e06812ebe2674bb175056bfb6b27423bbc9819d02404450e1141ca",
+      "lines": 745,
+      "reviewed_line_ranges": [
+        [
+          93,
+          220
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_workflow_contract.py",
+      "sha256": "b2e5f6af1a37f86e5e47c3c69e7a31afb1b4090034c202a39c7bfc3a93f3e219",
+      "lines": 515,
+      "reviewed_line_ranges": [
+        [
+          1,
+          126
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/ci/apple_verification_hygiene.py",
+      "sha256": "d9c554781750d3cbbf2a4adce3b040edb83d0de5fec4c04eac700c526fca1c3c",
+      "lines": 278,
+      "reviewed_line_ranges": [
+        [
+          1,
+          112
+        ],
+        [
+          205,
+          278
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/ci/owned_ci_simulator.py",
+      "sha256": "717c8c02dc06e4eac175c5dde5c7f9bdd6ebbd5e7028cc94c6ba4f84b44388af",
+      "lines": 213,
+      "reviewed_line_ranges": [
+        [
+          1,
+          213
+        ]
+      ]
+    }
+  ],
+  "failure_evidence": {
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/final-production-check-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.ProductionVerificationWorkflowContractTest.xml",
+    "sha256": "8359f250705d1c50291277d8dd670f6413cc2f5bd6d20a29be7fcd16f52af581",
+    "lines": 67,
+    "suite_counts": {
+      "tests": "9",
+      "skipped": "0",
+      "failures": "1",
+      "errors": "0"
+    },
+    "failed_test": "apple_job_runs_kotlin_and_app_launch_tests_all_link_targets_and_unsigned_swift_release()[desktop]",
+    "asserted_obsolete_token": "xcrun simctl list devices available --json",
+    "failing_assertion_line": 401,
+    "obsolete_expected_token_line": 395,
+    "reviewer_executed_tests": false,
+    "note": "XML copied by root while cycle finalization was still running. This record does not claim final cycle cleanup or subsequent fix PASS."
+  },
+  "reachable_proof": [
+    "JUnit actually discovers/runs9methods; the failed method reads the actual repository workflow via canonical-root search. It extracts app-launch-to-Release region and assertContains demands the old literal at395. XML shows current helper invocation inside the same region and failure exactly at401.",
+    "Current workflow invokes /usr/bin/python3 -B -m scripts.ci.apple_verification_hygiene create-simulator apple-ui, passes its returned UUID to Debug XCTest, disallows parallel destinations, demands a fresh xcresult and immediately runs always finalization with matching prepare/run outcomes.",
+    "Helper main262-267 requires apple-ui and validates the prelaunch source/task/Xcode/tracking claim before create. owned_ci_simulator84-120 still enumerates inventory, selects only available iPhone runtime/type, writes exclusive precreate journal, issues simctl create, validates the returned UUID against authoritative inventory and excludes baseline devices. It never returns the old template profile as the test target.",
+    "Finalizer stops Gradle, quiesces owned Xcode workers, validates task journals, shuts down/deletes only the attested newly created device, then rechecks workers. No cleanup weakening is needed to correct the stale test."
+  ],
+  "related_commit": {
+    "commit": "9668eeb6d245d93c9e519d9fd9b32b640242d9a3",
+    "subject": "test(ci): enforce owned simulator preparation and finalization",
+    "observed_diff": "Python contract removes the exact same old raw simctl token and adds verify_owned_ios_app_launch plus3adversarial test methods; Kotlin contract was not changed. Source diff inspected without checkout."
+  },
+  "precise_recommendation": [
+    "Replace the stale Kotlin token with the exact source-owned helper create-simulator apple-ui invocation, not a generic simulator string or deleted check.",
+    "Constrain assertion to the unique named app-launch step. Keep Debug SDK/project/scheme/destination/xcresult/XCTest command assertions. Require fresh-result refusal, -parallel-testing-enabled NO, -maximum-concurrent-test-simulator-destinations1, and task-owned DerivedData.",
+    "Require matching apple-ui prepare step before launch and immediate always finish step afterwards, with correct prepare/run outcome bindings. Keep Python mutation guards for wrong cycle, reused profile, parallel cloning, stale results, missing/late ownership and skipped cleanup.",
+    "Run the focused transport workflow contract and module suite after correction, then full production gate under root lane. Preserve failed receipt. Update mechanical inventory only after reviewing the actual source diff."
+  ],
+  "compatibility_and_limits": "Test-only correction; no shipping Kotlin game/session/protocol/storage/native behavior needs changing. Current workflow source is stronger, but static proof does not establish qualifiedCI native execution. No source edits, builds, tests, process signals or cleanup by validator."
+}

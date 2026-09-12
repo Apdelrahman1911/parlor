@@ -1,0 +1,112 @@
+{
+  "schema_version": 1,
+  "kind": "NATIVE_PROCESS_PROBE_PLATFORM_BUDGET_AUTHOR_REVIEW",
+  "author": "/root/ci_workflow",
+  "recorded_date_utc": "2026-09-08",
+  "status": "IMPLEMENTED_FROZEN_FOR_INDEPENDENT_SOURCE_REVIEW_AND_COORDINATOR_CONTROLS",
+  "source_checkpoint": {
+    "branch": "fix/local-readiness-2026-09-07",
+    "commit": "1efed50cbc7856c11867e4cb088ba3b68716c8fc",
+    "tree": "bcabd2fd29eaea276bee31ec4ff6b74b63a79366"
+  },
+  "evidence_reopened": [
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34232325670/native-process-probe/probe.json",
+      "sha256": "31a911983e53ae2095738e84ccd37f5e36c4d85975707b78f6e5511f95abd10c"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34232325670/native-process-probe-cleanup/parlor-process-probe-34232325670-1-cleanup.json",
+      "sha256": "567e5b06e6f99edd4a857872e0497ff54287a354252164198de188e9b37fdd84"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34232325670/download-receipt.json",
+      "sha256": "7ec4795e201e40c396988b5c635946d35994ad1831d6b4d23e389ed85f52180c"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-process-probe-platform-diagnosis-01.json",
+      "sha256": "7437cee01eb25eb854890fad9a19052a25b73d632900109a693fe0aa007c6998"
+    }
+  ],
+  "diagnosis": {
+    "actual_failed_command": ["/usr/bin/xcrun", "simctl", "list", "runtimes", "--json"],
+    "declared_timeout_seconds": 20,
+    "timeout_observation_seconds": 20.003,
+    "command_total_seconds": 20.017,
+    "exit_code": -15,
+    "direct_child_reaped": true,
+    "stdout_bytes": 0,
+    "stderr_bytes": 0,
+    "named_stages": [],
+    "toolchain_qualification_completed": false,
+    "introduced_seam": "native_continuation.command defaults120s, but the injected diagnostic Commands.execute selected/capped20s for qualification inventory calls.",
+    "unresolved": "Why the first runtime listing exceeded20s is unknown; no cold-init, memory-pressure, OS or ownership-observer cause is established.",
+    "cleanup": "All five internal finalizer stages COMPLETE; outer upload-bound custody cleanup COMPLETE; the diagnostic failure remains unchanged."
+  },
+  "changed_files": [
+    {
+      "path": "scripts/ci/native_process_probe.py",
+      "before_sha256": "b5bfc4a18eb75ecceb1cc4807e2715bc15edd52ffd101a81f6c4d6fb4affb3e4",
+      "after_sha256": "c87f6d1289ee50a7387988bd85953d451dac9e1b7b88a4d60f7b4848f86516da",
+      "change": "Closed operation-specific platform enumeration timeouts, explicit bounded timeout validation, no observation deadline shortening, and named fail-closed qualified-platform stage."
+    },
+    {
+      "path": "scripts/release/tests/test_native_process_probe.py",
+      "before_sha256": "f7c7a9c23f6426cdcb3feaeabfa6d6fab28922387e8fb247b4040231058dacb1",
+      "after_sha256": "707f394e34d8234f4617963af32a865b3620aaec7a16ee6e0c166c0e1090ef39",
+      "change": "Six new synthetic test methods and narrow updates to existing finalizer/positive lifecycle controls."
+    },
+    {
+      "path": "scripts/ci/NATIVE_CONTINUATION.md",
+      "before_sha256": "1d3b4fa1f8fed36598fc423948acf9c633c24e058076418315e4b59a30b1721e",
+      "after_sha256": "e2e5f62f4a8d876585120e32ff73e91f7c3d992963c80346e94e54f906eec846",
+      "change": "Describe exact enumeration allowance, historical failure limits, whole-budget refusal and unchanged original-ps deadline."
+    }
+  ],
+  "operation_policy": {
+    "exact_120_second_commands": [
+      ["/usr/bin/xcrun", "simctl", "list", "runtimes", "--json"],
+      ["/usr/bin/xcrun", "simctl", "list", "devicetypes", "--json"]
+    ],
+    "other_execute_default_and_ceiling_seconds": 20,
+    "explicit_timeout": "Positive int/float not exceeding the operation-specific ceiling; invalid, bool, NaN, infinite or excessive values fail rather than being silently capped.",
+    "insufficient_observation_budget": "Existing capture refuses launch as SKIPPED_BUDGET when the complete selected allowance plus4s direct-child retirement reserve cannot fit; required execution fails, with no partial-result promotion or retry.",
+    "cleanup_exception": "Only finalizing Git source reconciliation retains its existing min(requested<=20, remaining_stage-4.1) adaptive allowance; the20s reconciliation stage is unchanged.",
+    "qualified_platform_stage": "Records COMPLETE only after the strict shared qualifier returns; failure records FAILED and prevents toolchain publication or any later observation while independent finalizers still run."
+  },
+  "preserved_contracts": [
+    "Original full ps command and15s timeout, capture/ownership/sample implementation and canonical owned_lane.py are unchanged.",
+    "Observation300s, cleanup225s,10-minute job backup, simulator boot/bootstatus and isolated Gradle stop allowances are unchanged.",
+    "Strict toolchain/profile/source/control validation, environment privacy, output limits, direct-handle ownership, simulator journals, cleanup and upload-before-evidence-deletion remain unchanged.",
+    "No automatic retry, fallback, platform selection, global process/service kill, application code, protocol, privacy boundary, Store operation or application-run authorization is introduced.",
+    "All historical failed receipts, reviews, approvals and unrelated local work are preserved."
+  ],
+  "focused_controls": {
+    "recommended_coordinator_command": ["python3", "-B", "-m", "unittest", "scripts/release/tests/test_native_process_probe.py", "-v"],
+    "declared_module_test_methods": 45,
+    "new_test_methods": [
+      "test_only_exact_qualified_simulator_enumerations_restore_one_hundred_twenty_seconds",
+      "test_explicit_command_timeout_is_honored_or_rejected_not_silently_capped",
+      "test_qualified_enumeration_without_full_budget_is_skipped_not_shortened_or_retried",
+      "test_qualified_enumeration_timeout_with_partial_bytes_stays_failed_without_retry",
+      "test_real_qualifier_routes_both_enumeration_budgets_and_rejects_timeout_at_either_seam",
+      "test_failed_qualification_is_named_and_blocks_all_observations_without_skipping_cleanup"
+    ],
+    "scope": "Inert synthetic controls only: the real shared qualifier and diagnostic executor dispatch to mocked captures with strict qualified profile inputs. Native calls/default executor/Popen are forbidden in the bridge, and no real wait or Apple tool runs. Existing positive/failure/resource lifetime controls remain.",
+    "execution_status": "NOT_RUN_BY_AUTHOR; declaration count is not a pass count. Coordinator alone executes the independently reviewed focused cycle."
+  },
+  "independent_review": {
+    "primary_source_reviewer": "/root/portability_review",
+    "native_diagnosis_author": "/root/native_ci",
+    "final_approval_status": "PENDING_EXACT_FROZEN_BYTES_REVIEW"
+  },
+  "author_activity": {
+    "performed": "Read current/frozen source and retained JSON receipts; inspect source diff and SHA256s; edit only the three authorized paths and this new report.",
+    "tests": 0,
+    "builds": 0,
+    "native_commands": 0,
+    "workflow_dispatches": 0,
+    "commits_or_pushes": 0,
+    "cleanup": "No author build/test/native cycle or runtime resource was created; no Gradle/global cache cleanup was run or needed."
+  },
+  "readiness": "NOT_READY. Run34232325670 did not execute ps identity/process/metadata/boot/overlap observations, and provides no A/B application/runtime/protection evidence. New code is not native proof; fresh reviewed source/control/inventory freeze and coordinator approval are required before any further diagnostic dispatch."
+}

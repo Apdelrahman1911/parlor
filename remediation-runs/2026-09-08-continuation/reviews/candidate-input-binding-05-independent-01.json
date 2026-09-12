@@ -1,0 +1,456 @@
+{
+  "schema_version": 1,
+  "kind": "C05_ACTUAL_PRODUCER_AND_BINDING_INDEPENDENT_ADMISSION_REVIEW",
+  "reviewer": "/root/ci_review",
+  "author_reviewed": "/root/dependency_chain",
+  "coordinator": "/root",
+  "recorded_at": "2026-09-09T14:38:43.833278+00:00",
+  "status": "APPROVED_FOR_ROOT_IMMEDIATE_CANDIDATE_ADMISSION_NOT_EXECUTION",
+  "findings": [],
+  "binding": {
+    "path": "remediation-runs/2026-09-08-continuation/candidate-input-binding-05.json",
+    "bytes": 1517,
+    "sha256": "6d70fbc6f9a0640b16c3b65537a62a04e99426344c763323519328371c7b11ed"
+  },
+  "author_packet": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/candidate-input-binding-author-inspection-05.json",
+    "bytes": 145815,
+    "sha256": "580567095456b9aa0f66341c645fe288aa9b3bcc5577932f791faa14b49ad003"
+  },
+  "review_scope": "Actual05 outputs and independently sealed binding at360fc. Prior recipe/control review is reused only where current bytes match. No C04 rows/counts, old runtime bindings, official-schema execution or candidate acceptance substituted.",
+  "source": {
+    "commit": "360fc797a85e1e494334fd8cc11b4e739981cea8",
+    "tree": "8bfe56a21074ba51a4b668bad0728e42007a7593",
+    "diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "source_manifest_sha256": "f7fba4adbed9cd963c53486ee57300a940f3f3fe4e61cc6d661159a706c125f8",
+    "branch": "fix/local-readiness-2026-09-07",
+    "tracked_status": "",
+    "source_manifest_count": 829
+  },
+  "complete_source_and_runner": {
+    "current_method": "Read-only Git commands plus stdlib independent current path enumeration/rehashing with the pinned lane source exclusions; no project API/import. Complete normalized objects compared, not selected digest fields only. All829 source rows verified.",
+    "source_equalities": [
+      "current == export.source_before == export.source_after == render.source_before == render.source_after"
+    ],
+    "runner_equalities": [
+      "current lane row == export.runner_before == export.runner_after == render.runner_before == render.runner_after"
+    ],
+    "source_manifest_sha256": "f7fba4adbed9cd963c53486ee57300a940f3f3fe4e61cc6d661159a706c125f8",
+    "runner": {
+      "manifest": [
+        [
+          "remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py",
+          "1b9e882514bfe5386785d5a71ae32fdc2bc3aa4cc1dd24532709899fbf4f41bc"
+        ]
+      ],
+      "manifest_sha256": "942e138764146313a59cbe1278c1357284a5701d0c125809c34ddbbe876ce912"
+    },
+    "complete_source_object_sha256": "5fc7ce818f1faad1c12866ce9d7ad3bca3343e3a818b39a254a28802873f1aa6",
+    "complete_runner_object_sha256": "63cf55a0a6d19869d8bb189e55374816707b48496b07e394df84813d5c498cdd",
+    "complete_capture_sha256": "14fd82087f997483ae8b41601b07fc2278f4a679256ab5454a6c408944a30a1c",
+    "complete_object_serialization": "UTF8 compact JSON, existing receipt insertion order; capture source then runner. Source_manifest rows use path-sorted lists.",
+    "freeze": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/a29-b30-source-freeze-01.json",
+      "sha256": "8aa27322bc63e1abe667a355bb9bcb75ecca3a308df51b40190e8fb7c5213c95",
+      "bytes": 46469
+    },
+    "inventory": {
+      "path": "docs/review/INDEPENDENT_REVIEW_INVENTORY.csv",
+      "sha256": "e4de3805ce7aba2babf39e083893bf3505b8dc10a8a86ee7d080eca3ad460bcb",
+      "bytes": 11570147
+    },
+    "source_applicability": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/frozen-source-applicability-360fc-01.md",
+      "sha256": "4b7a1511edbd7a6384b76778b8a346fbe7b7339a566a32bd964bcb19aa3f8cac",
+      "bytes": 4996
+    },
+    "remote_observation": "No reviewer network; root owns immediate remote/source/lock admission."
+  },
+  "controls": {
+    "C14_count": 14,
+    "all_rehashed_identical_to_reviewed_recipe": true,
+    "reviewed_recipe": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/candidate-c05-execution-prep-01.json",
+      "bytes": 26630,
+      "sha256": "1c2bb53a303ffd58418b9940f05a866de7277ba2ae5d442c0c883f32a5d61824"
+    },
+    "full_C14_rows_reference": "remediation-runs/2026-09-08-continuation/reviews/candidate-input-binding-author-inspection-05.json#/current_control_pins and #/official_schema_pins",
+    "C14_manifest_sha256": "1b19db645ea150ab1c9f31461cb7da1d831e604774fc7d79e8298265b635992f",
+    "scope": "No repeated source/synthetic/schema tests for unchanged controls."
+  },
+  "prospective_input_closure": {
+    "count": 511,
+    "bytes": 5568722,
+    "manifest_sha256": "70b3989214e4eb5250f4c919f79bf80ed3cc6d808cd3a456ad67f7f3532dce0d",
+    "row_reference": "remediation-runs/2026-09-08-continuation/reviews/candidate-input-binding-author-inspection-05.json#/prospective_input_closure/files",
+    "recipe": "Independently enumerate12 explicit bound/source files plus every regular file in the four actual current graph/report/schema/notice directories; sort unique repository-relative [path,SHA256,bytes]; compact UTF8 JSON. Compare all actual rows with sealed author rows and rehash after inspection.",
+    "directory_sets": {
+      "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-export-linux-05/raw-graphs": {
+        "file_count": 5,
+        "paths_sha256": "986a7ef878fce261a4004507da794a71401947a450d3b89fef81bf73ebd5d71c"
+      },
+      "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-render-linux-05/report": {
+        "file_count": 465,
+        "paths_sha256": "524bbd693a4aa6d6c95316447b379a1e447cadbc08d63cd5b55018696ea4fa2c"
+      },
+      "remediation-runs/2026-09-07-local-readiness/reviews/dependency-candidate-consumer-03/schemas": {
+        "file_count": 3,
+        "paths_sha256": "9b828a03a24bcdd0b4c8e4a14ff8b71240838c92574693eb53c80b35ed46fcfe"
+      },
+      "composeApp/src/commonMain/composeResources/files/legal": {
+        "file_count": 26,
+        "paths_sha256": "2ec271837518a2a11d806c1db5a2265285eb12856c18e59d9029584cdab3911b"
+      }
+    },
+    "all_regular_no_symlink_or_special_files": true,
+    "boundaries": "511 is newly observed05 prospective closure, not an executed consumer count. Complete source829 and bootstrap/C14 controls are separate bindings."
+  },
+  "producer_evidence": [
+    {
+      "receipt": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-export-linux-05/receipt.json",
+        "sha256": "81cec4ad5c3ce5d89543620f1f982af7867bcee032bdf074282c4e68826516a4",
+        "bytes": 306586
+      },
+      "cycle": "final-dependency-export-linux-05",
+      "command": [
+        "./gradlew",
+        "writeResolvedDependencyInventory",
+        "-I",
+        "scripts/verification/resolved_dependencies.init.gradle",
+        "-Pparlor.dependencyInventoryDir=/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-export-linux-05/raw-graphs",
+        "--no-daemon",
+        "--no-parallel",
+        "--max-workers=1",
+        "--no-configuration-cache",
+        "--dependency-verification=strict",
+        "-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=final-dependency-export-linux-05",
+        "-Pkotlin.compiler.execution.strategy=in-process",
+        "-Pparlor.android.signing.storeFile=",
+        "-Pparlor.android.signing.storePassword=",
+        "-Pparlor.android.signing.keyAlias=",
+        "-Pparlor.android.signing.keyPassword="
+      ],
+      "status": "PASS",
+      "exit_code": 0,
+      "stop_exit_code": 0,
+      "started_at": "2026-09-09T14:20:51.425596+00:00",
+      "finished_at": "2026-09-09T14:21:10.375868+00:00",
+      "cleanup_completed_at": "2026-09-09T14:21:10.978469+00:00",
+      "jdk21": {
+        "home": "/usr/lib/jvm/java-21-openjdk-amd64",
+        "specification_version": "21",
+        "javac_version": "21.0.12",
+        "java_log_sha256": "a7a86ea7b20362e2c856e5e71a8b6fc51764d5aeaa9f5a8c82b386ff156f8a7c",
+        "javac_log_sha256": "157f601a5854ca28a7dc364c13a5ca2879084186be49e3462d37acd028f35755"
+      },
+      "logs": [
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-export-linux-05/gradle.log",
+          "sha256": "9c29c25021d0771d9ac2ea45d73c1a5c18599c6d2404440b541882f54c81a7c1",
+          "bytes": 2483
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-export-linux-05/stop.log",
+          "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+          "bytes": 31
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-export-linux-05/java-toolchain.log",
+          "sha256": "a7a86ea7b20362e2c856e5e71a8b6fc51764d5aeaa9f5a8c82b386ff156f8a7c",
+          "bytes": 2026
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-export-linux-05/javac-toolchain.log",
+          "sha256": "157f601a5854ca28a7dc364c13a5ca2879084186be49e3462d37acd028f35755",
+          "bytes": 14
+        }
+      ],
+      "test_receipts": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-export-linux-05/test-receipts.json",
+        "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+        "bytes": 3
+      },
+      "artifact_receipts": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-export-linux-05/artifact-receipts.json",
+        "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+        "bytes": 3
+      }
+    },
+    {
+      "receipt": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-render-linux-05/receipt.json",
+        "sha256": "e13e49d37923f6d023f88741fc83828a62ee3b7d4e9008d462f7ccb69d2ef761",
+        "bytes": 306057
+      },
+      "cycle": "final-dependency-render-linux-05",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "scripts/verification/dependency_inventory.py",
+        "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-export-linux-05/raw-graphs",
+        "/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-render-linux-05/report"
+      ],
+      "status": "PASS",
+      "exit_code": 0,
+      "stop_exit_code": 0,
+      "started_at": "2026-09-09T14:22:58.679593+00:00",
+      "finished_at": "2026-09-09T14:25:24.659295+00:00",
+      "cleanup_completed_at": "2026-09-09T14:25:25.559085+00:00",
+      "jdk21": {
+        "home": "/usr/lib/jvm/java-21-openjdk-amd64",
+        "specification_version": "21",
+        "javac_version": "21.0.12",
+        "java_log_sha256": "a7a86ea7b20362e2c856e5e71a8b6fc51764d5aeaa9f5a8c82b386ff156f8a7c",
+        "javac_log_sha256": "157f601a5854ca28a7dc364c13a5ca2879084186be49e3462d37acd028f35755"
+      },
+      "logs": [
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-render-linux-05/gradle.log",
+          "sha256": "ef1042602e31e11bb04d1d6614e648956b37c0108d001a6f016c863bb9b0ca97",
+          "bytes": 51
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-render-linux-05/stop.log",
+          "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+          "bytes": 31
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-render-linux-05/java-toolchain.log",
+          "sha256": "a7a86ea7b20362e2c856e5e71a8b6fc51764d5aeaa9f5a8c82b386ff156f8a7c",
+          "bytes": 2026
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-render-linux-05/javac-toolchain.log",
+          "sha256": "157f601a5854ca28a7dc364c13a5ca2879084186be49e3462d37acd028f35755",
+          "bytes": 14
+        }
+      ],
+      "test_receipts": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-render-linux-05/test-receipts.json",
+        "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+        "bytes": 3
+      },
+      "artifact_receipts": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-render-linux-05/artifact-receipts.json",
+        "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+        "bytes": 3
+      }
+    }
+  ],
+  "actual_execution_scope": {
+    "export": "Exactly one actual :writeResolvedDependencyInventory executed under strict verification/no-daemon/no-parallel/max-workers1/no-configuration-cache, explicit fresh output. Log:5 actionable,4 executed,1 from cache.",
+    "cached": "Only build-logic:convention:compileKotlin FROM-CACHE; not newly executed application compile/runtime.",
+    "skips": "checkKotlinGradlePluginConfigurationErrors SKIPPED; compileJava NO-SOURCE; Linux disabled-ios-task warnings are NOT native test execution.",
+    "render": "Actual source-bound Python renderer log4 graphs/456 selected Maven/unresolved[]. Retained459 POMs, not reviewer network observations.",
+    "application_runtime": "NOT_RUN_BY_THESE_TWO_CYCLES",
+    "candidate_and_official_schema": "NOT_RUN_AT_REVIEW; pending actual candidate four-receipt reconciliation."
+  },
+  "graph_review": {
+    "files": [
+      {
+        "graph": "androidRelease",
+        "graph_file": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-export-linux-05/raw-graphs/androidRelease.json",
+          "sha256": "4efbba497899e295a975e9e67a3addda2f8e5d5b26dc1416e9224c42e8e107da",
+          "bytes": 277318
+        },
+        "configuration": "releaseRuntimeClasspath",
+        "components": 239,
+        "artifacts": 129,
+        "dependency_edges": 1198,
+        "strict_artifact_hashes_reconciled": true
+      },
+      {
+        "graph": "iosArm64",
+        "graph_file": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-export-linux-05/raw-graphs/iosArm64.json",
+          "sha256": "61b089222a131582ac0d8ee30a2aa5aa8cd53dd874206ebcc2a08b863fcba4a0",
+          "bytes": 154639
+        },
+        "configuration": "iosArm64CompileKlibraries",
+        "components": 167,
+        "artifacts": 81,
+        "dependency_edges": 577,
+        "strict_artifact_hashes_reconciled": true
+      },
+      {
+        "graph": "iosSimulatorArm64",
+        "graph_file": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-export-linux-05/raw-graphs/iosSimulatorArm64.json",
+          "sha256": "8a14359b39c016e7e52e14f3002e7ca9070361489b2e63506bd3ef84ced5d388",
+          "bytes": 157924
+        },
+        "configuration": "iosSimulatorArm64CompileKlibraries",
+        "components": 167,
+        "artifacts": 81,
+        "dependency_edges": 577,
+        "strict_artifact_hashes_reconciled": true
+      },
+      {
+        "graph": "iosX64",
+        "graph_file": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-export-linux-05/raw-graphs/iosX64.json",
+          "sha256": "fc338bf30d9535474a80b691f8dccd957b04f5a6d83af0c2fe9d87bf1d0623b2",
+          "bytes": 153736
+        },
+        "configuration": "iosX64CompileKlibraries",
+        "components": 167,
+        "artifacts": 81,
+        "dependency_edges": 577,
+        "strict_artifact_hashes_reconciled": true
+      }
+    ],
+    "sboms": [
+      {
+        "graph": "androidRelease",
+        "file": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-render-linux-05/report/androidRelease.cdx.json",
+          "sha256": "56be6403780e061e8476ddb4ec6b3d449511ede047be413f593148ef4f47e99d",
+          "bytes": 294860
+        },
+        "components": 239,
+        "graph_source_and_nested_artifact_relations_match": true,
+        "official_schema_execution": "NOT_RUN_BY_AUTHOR_PENDING_CANDIDATE"
+      },
+      {
+        "graph": "iosArm64",
+        "file": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-render-linux-05/report/iosArm64.cdx.json",
+          "sha256": "1e9f3f9e7ad84fe71a46a9022a5ef31d14f441de83de546309d7ce221e7ae09c",
+          "bytes": 198842
+        },
+        "components": 167,
+        "graph_source_and_nested_artifact_relations_match": true,
+        "official_schema_execution": "NOT_RUN_BY_AUTHOR_PENDING_CANDIDATE"
+      },
+      {
+        "graph": "iosSimulatorArm64",
+        "file": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-render-linux-05/report/iosSimulatorArm64.cdx.json",
+          "sha256": "aed0e6acfe9e0e093c775c3bb1d2650c94bfa3fd85e1240377f9e8b4580be05e",
+          "bytes": 201956
+        },
+        "components": 167,
+        "graph_source_and_nested_artifact_relations_match": true,
+        "official_schema_execution": "NOT_RUN_BY_AUTHOR_PENDING_CANDIDATE"
+      },
+      {
+        "graph": "iosX64",
+        "file": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-render-linux-05/report/iosX64.cdx.json",
+          "sha256": "e31735388cab76513ef921c39a0b280961d82bf09719ba9b475e28a60a6a870d",
+          "bytes": 197981
+        },
+        "components": 167,
+        "graph_source_and_nested_artifact_relations_match": true,
+        "official_schema_execution": "NOT_RUN_BY_AUTHOR_PENDING_CANDIDATE"
+      }
+    ],
+    "completion": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-export-linux-05/raw-graphs/resolution-complete.json",
+      "sha256": "8705ffc3c778089baf5d754f630431714cb6d49f9991dd66d4d7b75ceeb7a7ef",
+      "bytes": 682
+    },
+    "strict_artifact_rows_reconciled": 372,
+    "method": "Read actual four graph identities/configurations/root/source/completion SHA256s, unique component/artifact owners, closed dependency edges and variant sets. All372 artifact row hashes match unchanged strict verification XML. Expected project::composeApp roots and no engine-testing/networking-testing production components. BOM metadata source/graph and exact nested artifact hash+byte identities checked independently; official schema remains pending."
+  },
+  "publisher_review": {
+    "license_evidence": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-render-linux-05/report/license-evidence.json",
+      "sha256": "b8212cc25486f238af85819c9bc1393a43925eade22a99a7c71933db5c880314",
+      "bytes": 332551
+    },
+    "draft": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-render-linux-05/report/THIRD_PARTY_DECLARATIONS_DRAFT.md",
+      "sha256": "d4556ac0fd25d0a2980dfb4440f29ec7e9dcec53bf3101f8b756fc7ac99245bf",
+      "bytes": 147363
+    },
+    "selected_maven_components": 456,
+    "publisher_poms": 459,
+    "metadata_bytes": 1507794,
+    "unresolved": [],
+    "accessed_at_min": "2026-09-09T14:23:00.120198+00:00",
+    "accessed_at_max": "2026-09-09T14:25:24.522454+00:00",
+    "extra_required_parent_POMs": [
+      "com.google.guava:guava-parent:26.0-android",
+      "org.slf4j:slf4j-bom:2.0.16",
+      "org.slf4j:slf4j-parent:2.0.16"
+    ],
+    "method": "All459 retained POM hash/filename/member-set, allowed Maven/Google URL coordinates, render-window timestamp, XML coordinate identity, exact direct/inherited declared-license relationships and bounded acyclic456+3 closure checked with stdlib. No redirects/network recontacts or project parser/consumer imports.",
+    "p2pkit": "All10 selected p2p-core/p2p-transport-lan platform/base coordinates remain Maven0.7.0-rc3.",
+    "source_notices": "26 current notice files /99515B and source config/catalog/build included in independently rehashed829 source and511 closure; unchanged reviewed notice implementation. Actual source_receipt/schema/consumer/package verification still separate.",
+    "limit": "Publisher declarations and resolved-input superset, not final redistribution notices, shrinker/native binary completeness or legal approval."
+  },
+  "cleanup": {
+    "export_finished_at": "2026-09-09T14:21:10.375868+00:00",
+    "export_stopped_at": "2026-09-09T14:21:10.900020+00:00",
+    "export_cleanup_completed_at": "2026-09-09T14:21:10.978469+00:00",
+    "export_removed_outputs": [
+      "build",
+      "build-logic/convention/build"
+    ],
+    "render_started_at": "2026-09-09T14:22:58.679593+00:00",
+    "render_finished_at": "2026-09-09T14:25:24.659295+00:00",
+    "render_stopped_at": "2026-09-09T14:25:25.460616+00:00",
+    "render_cleanup_completed_at": "2026-09-09T14:25:25.559085+00:00",
+    "render_removed_outputs": [],
+    "both_stop_exit_codes": [
+      0,
+      0
+    ],
+    "source_runner_drift": false,
+    "raw_cleanup_errors": [],
+    "retained_outputs_or_reported_owned_survivors": [],
+    "current_exact_absence_paths": [
+      "build",
+      "build-logic/build",
+      "build-logic/convention/build",
+      "composeApp/build",
+      "game-modes/mafia/build",
+      "game-modes/whodunit/build",
+      "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-export-linux-05/scratch",
+      "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-render-linux-05/scratch",
+      "shared/content/build",
+      "shared/core/build",
+      "shared/design-system/build",
+      "shared/engine-testing/build",
+      "shared/engine/build",
+      "shared/networking-testing/build",
+      "shared/networking/build",
+      "shared/session/build",
+      "shared/storage/build",
+      "shared/transport-p2p/build"
+    ],
+    "candidate_destination_absent": "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-05",
+    "scope": "Both producer finalizers complete;16 current owned build paths +2 cycle scratch paths independently absent. Existing lane lock/evidence preserved; reviewer neither acquired lock nor probed processes. No extra Gradle stop/clean justified for this read-only review."
+  },
+  "root_immediate_admission": [
+    "Recheck actual360fc/tree8bfe clean complete source829 and full current runner against both producer snapshots; no selected-field-only shortcut.",
+    "Rehash exact binding, this independent report, sealed author, C14 and every current511 prospective file/directory set. Treat any drift as a new admission, not waived validation.",
+    "Root exclusively checks existing regular owned lane lock and absent candidate05 destination immediately before one execution; preserve historical evidence and release admission lock before owned lane runs. Do not execute old04 one-shot admission.",
+    "Execute only the reviewed candidate command below in coordinated lane, not --controls. Preserve actual four coupled receipts and raw log before exact owned cleanup.",
+    "Postrun requires consumer PASS_SCOPED_CANDIDATE_INPUTS, adapter PASS_SCOPED_CANDIDATE_INPUT_EXECUTION/consumer0/parser cleanup, bootstrap PASS_OWNED_SCHEMA_PREREQUISITES/candidate/inner0/base cleanup, outerPASS/exit0/stop0/no source or runner drift/cleanup failure. Check actual consumed closure and schema-format availability; do not precredit this review as runtime/schema success."
+  ],
+  "one_candidate_command_after_root_admission": [
+    "/usr/bin/python3",
+    "-B",
+    "remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py",
+    "final-candidate-input-linux-05",
+    "--command",
+    "/usr/bin/python3",
+    "-B",
+    "remediation-runs/2026-09-08-continuation/controls/run_candidate_with_schema.py",
+    "remediation-runs/2026-09-08-continuation/candidate-input-binding-05.json",
+    "6d70fbc6f9a0640b16c3b65537a62a04e99426344c763323519328371c7b11ed"
+  ],
+  "activities": {
+    "project_imports_or_functions": 0,
+    "tests_builds_or_native_tools": 0,
+    "network_API_dispatch": 0,
+    "canonical_source_or_control_writes": 0,
+    "only_write": "remediation-runs/2026-09-08-continuation/reviews/candidate-input-binding-05-independent-01.json",
+    "reviewer_allocated_build_workers_or_outputs": false
+  },
+  "readiness": "NOT_READY. Producers/binding approved within resolved-input scope; candidate not yet executed. No A/B/D/runtime/final-package/physical-device/Store/owner/legal approval."
+}

@@ -1,0 +1,55 @@
+{
+  "reviewer": "/root/release_fix_review",
+  "at": "2026-09-06T10:05:52.948078+00:00",
+  "classification": "TEST/EVIDENCE GAP; productionCheck FAIL retained",
+  "cycle": "combined-production-03",
+  "source_manifest_sha256": "de7573ed1f4e1a19969f3063e135d234cd57ec8764c4af784cf4b3eaff5ef9b4",
+  "current_source_drift": [],
+  "raw_lint_tool": {
+    "format": "6",
+    "by": "lint 9.1.1"
+  },
+  "expected_count": 32,
+  "actual_count": 30,
+  "missing": [
+    "AndroidGradlePluginVersion|gradle/libs.versions.toml|A newer version of com.android.application than 8.13.2",
+    "DependencyUpdate|gradle/libs.versions.toml|A newer version of org.jetbrains.compose.components:components-ui-tooling-preview than 1.10.3"
+  ],
+  "unexpected": [],
+  "failed_task": ":composeApp:verifyReleaseLintWarnings",
+  "exit_code": 1,
+  "all_other_tasks": "--continue log completed productionDesktopCheck, productionReleaseAutomationCheck and productionStaticAnalysis; no other failed task observed. This is not an aggregate PASS.",
+  "evidence": [
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-03/receipt.json",
+      "sha256": "12d240d9db448e8ad008c59d77e1049d3847811897fe5726357847bc8504f073"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-03/gradle.log",
+      "sha256": "d9d072558249f81184251fa3d3e92f712be5c74f6314b3237ab67c9674d4692f"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-03/reports/composeApp/build/reports/lint-results-release.xml",
+      "sha256": "337c3dd83b1c4dd75f629fc8fa7e84cee4cbf9d19960704d481c41d9fe6040ba"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-lint-inventory-variance-01.json",
+      "sha256": "8c071437212f494aedbcbe7d9be440465b910af65829ce363549925ad9501919"
+    }
+  ],
+  "cleanup": {
+    "stop_exit_code": 0,
+    "stopped_at": "2026-09-06T07:44:52.502122+00:00",
+    "remaining_outputs": [],
+    "workers": {
+      "terminated_owned_workers": [],
+      "remaining_owned_workers": []
+    },
+    "cleanup_errors": [],
+    "cleanup_completed_at": "2026-09-06T07:44:54.777245+00:00",
+    "source_changed_during_cycle": false
+  },
+  "research": "Prior exact lint9.1.1 source research establishes remote/cache advisory omission mechanisms, not which branch occurred in these runs. Source664inputs unchanged yet cycle03 omits a different pair from cycles01/02.",
+  "conclusion": "No unexpected warning and no independent proof of a repaired-application regression. Aggregate is genuinely FAIL, not waived. Preserve pins/strict gate/verification metadata. Separately diagnose advisory collection if gate policy is to change; no scope authorization inferred.",
+  "no_builds_tests_or_production_mutations_by_reviewer": true
+}

@@ -1,0 +1,209 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/release_fix_review",
+  "reviewed_at": "2026-09-08T02:54:12.084401+00:00",
+  "classification": "EXACT SOURCE10 / 79-CONTROL NORMAL IOS-READINESS-11 EXECUTION TECHNICALLY APPROVED, WITH EXPLICIT BOUNDS",
+  "execution_owner": "/root only; no independent reviewer execution",
+  "source_identity": {
+    "commit": "484f82c3bcc273c0014a946376c1ee9fc7de8d83",
+    "tree": "548625b4a49bef5df8db723c1e59a4edd5676ddc",
+    "branch": "fix/local-readiness-2026-09-07",
+    "tracked_status": "",
+    "diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "source_manifest_sha256": "c4d3387a95ff1a4462071147afe92411f5a08ee8b10f78852a59494c8d3e4420"
+  },
+  "binding": {
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/ios-readiness-source-10.json",
+    "sha256": "a59e4bab9d8f9fca64337c2af86c381e77f7dd339a5f832ea6fdcf17ca2bf266"
+  },
+  "control_manifest": {
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/normal-source10-control-manifest-01.json",
+    "sha256": "d88cade526bc318d0d8ad1416c9d4e0032480a787efcdfac0455eb0f22e6c069"
+  },
+  "combined_control_sha256": "491c2f45360e13be3ab895a2bdee678b57b65fca4cf3cd72925f74f8d3d65eb2",
+  "exact_command": [
+    "/usr/bin/python3",
+    "-B",
+    "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
+    "ios-readiness-11",
+    "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/ios-readiness-source-10.json",
+    "491c2f45360e13be3ab895a2bdee678b57b65fca4cf3cd72925f74f8d3d65eb2",
+    "--simulator-signing=adhoc"
+  ],
+  "working_directory": "/Users/abdelrahman/Projects/parlor",
+  "source_verification": {
+    "fresh_git_tracked_and_untracked_inventory": true,
+    "source_rows": 800,
+    "all_hashes_current": true,
+    "sha256": "c4d3387a95ff1a4462071147afe92411f5a08ee8b10f78852a59494c8d3e4420",
+    "copy_rows": 740,
+    "all_copy_rows_exact_filtered_current_source": true,
+    "copy_rows_sha256": "10ff0d5bce923414ff33c1243333fa3138dd5c1aa146e798ea8703f99685767e",
+    "all740_copy_inputs_canonical_nonsymlink": true,
+    "copy740_identical_to_source09": true,
+    "only_source_manifest_delta_since_source09": [
+      "docs/review/INDEPENDENT_REVIEW_INVENTORY.csv"
+    ],
+    "normal_controls78_identical_to_actual_canonical120_before_after": true,
+    "fresh_binding_only_extra_control": true,
+    "postrelease_source800_equal": true,
+    "tracked_clean": true,
+    "protected_contents_unread": true,
+    "protected_exclusion_count": 0,
+    "nonbuild_symlink_exclusion_count": 0,
+    "remote_state": "Root reported push/exact remoteHEAD; reviewer did not query remote and grants no Git authorization."
+  },
+  "copy_scope": {
+    "changed": [
+      "iosApp/iosAppUITests/IOSAppLaunchUITests.swift",
+      "iosApp/iosApp.xcodeproj/project.pbxproj"
+    ],
+    "production_app_source_changes": 0,
+    "guarantee": "Closed exact two-file transform and all740 before/after input inventory, not a claim that XCTest itself is instrumentation-free. Shared instrument_kotlin/instrument_l08 functions are imported but not invoked by normal Lane."
+  },
+  "reopened_reading": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/bind_source.py",
+      "sha256": "0954f5c24eb61c4f09c365efe6b3ab1fdb9f8342f86bad3e7654795464b53347",
+      "reviewed_lines": [
+        [
+          1,
+          59
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/copied_sources.py",
+      "sha256": "d52f4f7904d1481fee00796a1c0775ee3512934639dac45fee44704fa9b74e62",
+      "reviewed_lines": [
+        [
+          1,
+          231
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/normal_source_copy.py",
+      "sha256": "5920d07a43c64eb7193a1c1d03aea93948bfa21597591ee13d79073666ed54d2",
+      "reviewed_lines": [
+        [
+          1,
+          51
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/NormalSourceLaunchUITests.swift.in",
+      "sha256": "c3d5cd42d60371cffee6ec4e8cdc462165f953dbef352bcdbf0f3f2d2a5a4ed2",
+      "reviewed_lines": [
+        [
+          1,
+          76
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/copied-kotlin-phase.sh.in",
+      "sha256": "4992e516f99df2b5f1425688c51ae532086f8859618b1968937fbede818f49b0",
+      "reviewed_lines": [
+        [
+          1,
+          45
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/simulator_signing.py",
+      "sha256": "89524b777694f8504008a83b60299725cae01e8b642c10754283d79ce1974d1e",
+      "reviewed_lines": [
+        [
+          1,
+          190
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/run_ios_readiness.py",
+      "sha256": "85283be9681be14c18b76ef1657b596e837b4f97f978917f25ac693ae72d0ca8",
+      "reviewed_lines": [
+        [
+          153,
+          176
+        ],
+        [
+          318,
+          326
+        ]
+      ]
+    }
+  ],
+  "earlier_current_diff_review": {
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/normal-user-only-alias-canonical-independent-01.json",
+    "sha256": "8611ae43661dc9a8909238df4f2ee5639449f3ccfd5681ed3f101291bea38561"
+  },
+  "combined_release_review": {
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/inventory-foundation-alias-release-independent-01.json",
+    "sha256": "1b6519dffcc377c4210a35b362b831bd70a73c1bf5912175a2328428507e622b"
+  },
+  "guards_reconciled": [
+    "Normal driver and full alias helper/new tests have exact five independently reviewed hashes; canonical120+shared172+release347 actual execution reconciled in prior reports. All remaining helpers identical to preceding approved/current canonical control rows.",
+    "main requires exact source/control hash, unused canonical evidence directory and shared flock. prepare requires current full source identity, no existing original outputs, no competing observed Gradle/Xcode before owned allocation. Root must still verify those preconditions at execution.",
+    "New source copy includes exact required build inputs and only reviewed UI-test/isolated shell changes. Full post-worker copy inventory rejects application probes, drift, missing inputs and unregistered additions.",
+    "One Xcode26.5/17F42 Debug ARM64 iPhone17Pro/iOS26.5 cycle. XCTest selected method fixed8, no retry-on-failure, test-process relaunch, serial execution, six actual post-Home observations over>=10seconds each. Actual individual XCResult records still required.",
+    "Ad-hoc mode is sole explicit --simulator-signing=adhoc option. Empty team/profile/custom entitlements, dash identity, same Debug id and actual app-phase attestation prevent real signing/profile use. Strict dependency verification preserved.",
+    "External provenance is one separate ninth launch. Kernel UID/path/lifetime/token attestation precedes OS-account-derived installed-app USER-only lookup. Same policy passed to sample/vmmap; default exact behavior, raw copied framework origins, UUID/hash/address/inventory/duplicate guards retained.",
+    "Both notices packages must match bound source26 resources; source-only notice success insufficient. Actual app signatures/byte inventories and observed mapped framework origin remain distinct.",
+    "Owned memory/disk/process budgets, immediate Gradle stop, failure-preserving finalizer, attested secondary FIFO cleanup, exact inode/path removal, source/control recheck and original-source/cache preservation unchanged."
+  ],
+  "conditions": [
+    "Execute only exact listed command once with this source/binding/control identity, no overlapping Gradle/Xcode or unrelated task resources. No auto-retry, fallback parser, changed flags or unreviewed instrumentation.",
+    "Root reports8.7GiB free; monitor owned cycle resource availability and preserve compact needed receipts before cleanup. This source review makes no independent live disk/RAM capacity measurement and does not authorize deleting unrelated files/caches.",
+    "Unknown/denied sample or vmmap formats remain a failed/blocked provenance gate; new aliases or parser relaxation require separate evidence-backed review and fresh binding.",
+    "Original native09/native10 failures and supporting evidence remain immutable. App launch/simulator success cannot repair IOS-R1 or establish historical crash cause, language ownership, full game/LAN or Store readiness.",
+    "After success/failure/timeout/interruption: stop owned Gradle, preserve compact evidence, shutdown/delete only fresh owned simulator, finish identity-attested secondary cleanup, verify no unknown/live holders, then remove exact owned copy/build/DerivedData/temp. Do not claim completion while cleanup fails.",
+    "Independent postexecution reconciliation must inspect actual repeated-test records, notice/hash inventories, separate sample/vmmap labels and process-lifetime/artifact proof plus cleanup. This approval is not pre-approval of a PASS result."
+  ],
+  "evidence_limits": [
+    "USER alias is explicitly lossy non-launcher path presentation; not independent kernel full-path proof for each image. Numeric-PID bracketing not atomic reservation; no mapped-page hashes.",
+    "HeaderUSER-only transformation was previously observed; actual Binary Images/vmmap remain unverified before this execution.",
+    "Xcode26.5 local Debug/ad-hoc simulator differs from pinned Store-qualified26.3. No physical-device, Store/legal, iOS16, pass-and-play/multiplayer, Follow System or storage-health coverage is implied.",
+    "Only known output paths were lstat-checked by reviewer. Root receipt/process preflight establishes current daemon/build-lane status; reviewer made no native/process/account API calls."
+  ],
+  "preexecution_known_paths_absent": [
+    "/Users/abdelrahman/Projects/parlor/build",
+    "/Users/abdelrahman/Projects/parlor/build-logic/build",
+    "/Users/abdelrahman/Projects/parlor/build-logic/convention/build",
+    "/Users/abdelrahman/Projects/parlor/composeApp/build",
+    "/Users/abdelrahman/Projects/parlor/game-modes/mafia/build",
+    "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/build",
+    "/Users/abdelrahman/Projects/parlor/iosApp/build",
+    "/Users/abdelrahman/Projects/parlor/shared/content/build",
+    "/Users/abdelrahman/Projects/parlor/shared/core/build",
+    "/Users/abdelrahman/Projects/parlor/shared/design-system/build",
+    "/Users/abdelrahman/Projects/parlor/shared/engine/build",
+    "/Users/abdelrahman/Projects/parlor/shared/engine-testing/build",
+    "/Users/abdelrahman/Projects/parlor/shared/networking/build",
+    "/Users/abdelrahman/Projects/parlor/shared/networking-testing/build",
+    "/Users/abdelrahman/Projects/parlor/shared/session/build",
+    "/Users/abdelrahman/Projects/parlor/shared/storage/build",
+    "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/build",
+    "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-11"
+  ],
+  "original_failed_receipts_unchanged": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-09/receipt.json",
+      "sha256": "7035d9505efe8cf1d5d9012024c6c5883c0e9371b97a5a5c5a0cfa15ccf36567"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-10/receipt.json",
+      "sha256": "0daf830ce66ad7c11c271431dcd53996ea530e55dd1b5b4c2ff89d15abf14589"
+    }
+  ],
+  "hygiene": {
+    "new_file_only": true,
+    "repository_python_imports_or_tests_executed": false,
+    "native_process_account_queries_signals_deletions": false,
+    "Git_mutations": false,
+    "reviewer_workers_build_outputs": 0
+  }
+}

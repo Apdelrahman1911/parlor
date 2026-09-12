@@ -1,0 +1,56 @@
+{
+  "author": "/root/native_fix_review",
+  "branch": "fix/local-readiness-2026-09-07",
+  "cleanup": {
+    "background_workers_started": false,
+    "build_outputs_created": false,
+    "other_task_resources_touched": false,
+    "required_draft_files_preserved": true
+  },
+  "commit": "b6e1947c62661631d0593038db7f64dbf25f720e",
+  "context_source_hashes": {
+    "composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSnapshotFileSystem.kt": "c2852fafb293a693be830171f4674947289fafb07f8ecdbafa5c0aaae6d1bf8b",
+    "scripts/verification/ios-readiness/L08StorageProbe.kt.in": "a1202e47e1b41feb7e5c558e4df9515704e27762e437778b6ae79c777bfce651"
+  },
+  "continuation": [
+    "Review frozen manifest and complete implementation independently.",
+    "Repair draft review issues and freeze a new separately identified manifest.",
+    "Root owns exclusive lane and any test/native cycle; preserve required logs, stop Gradle, verify task-owned cleanup.",
+    "Keep native09 failed/unresolved until evidence is interpreted without waiving its original requirements."
+  ],
+  "created_at_utc": "2026-09-08T00:16:40.444206+00:00",
+  "design": [
+    "Foundation-only arm64 Simulator CLI; no Kotlin/XCTest/application rebuild or app installation.",
+    "16 ordered operation/metadata rows, before/after backup and explicit setters; regular-file-only URL protection; distinct missing/value/error/exception observations.",
+    "Explicit independent-manifest approval, shared lane lock, new private device set, exact installed SDK/runtime/type and loaded image identity.",
+    "Cancellation-safe child/scratch ownership registration, bounded command output/deadlines, owned exact UUID shutdown/deletion, fd-relative no-follow root cleanup only after zero holders; unrelated Gradle blocks stop rather than terminating it.",
+    "No changes to original L08 equality, production storage, native09 failure receipts or physical/Store interpretation."
+  ],
+  "executed": {
+    "attachments": false,
+    "builds": false,
+    "deletions": false,
+    "native_launches": false,
+    "simulator_commands": false,
+    "source_and_public_tool_reading": true,
+    "tests": false
+  },
+  "id": "L08-NATIVE-FOUNDATION-CONTROL-DRAFT-01",
+  "independent_review": "Assigned by root to /root/factory_review; pending at freeze.",
+  "known_limitations": [
+    "Uncompiled Objective-C and unexecuted Python controls. Root/factory must independently review and run synthetic tests before considering native execution.",
+    "CLI sandbox/container differs from application; missing NSFileManager metadata is not missing encryption, unsupported volume or proof of a production defect.",
+    "Private NSData relocation helpers and exact upstream-to-installed-binary correspondence remain unproven.",
+    "Private Simulator set/temp forwarding/loaded Foundation platform metadata and lsof cleanup must be measured; current source fails closed rather than fabricating success.",
+    "No hardware lock/unlock, backup, Store-qualified Xcode/signing, original remaining L08 boots, or original artifact-provenance completion established."
+  ],
+  "manifest": "remediation-runs/2026-09-07-local-readiness/reviews/l08-native-foundation-control-01/manifest.json",
+  "manifest_sha256": "789884aa6ec4dad4afc4eca89a00ee5cf576cc9dcce7c2b042c976a3df216ff5",
+  "repository": "/Users/abdelrahman/Projects/parlor",
+  "requested_by": "/root",
+  "schema_version": 1,
+  "scope": "Only additive control draft, synthetic tests, source/tool applicability evidence and this author report; no production/test-infrastructure adoption.",
+  "status": "DRAFT_COMPLETE_NOT_EXECUTED_AWAITING_INDEPENDENT_REVIEW",
+  "tracked_status_at_completion": "M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/README.md\n M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/external_image_provenance.py\n M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_control_tests.py\n M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py\n M scripts/verification/ios-readiness/L08StorageProbe.kt.in\n M scripts/verification/ios-readiness/l08_receipts.py\n M scripts/verification/ios-readiness/owned_lane.py\n M scripts/verification/ios-readiness/secondary_fifo.py\n M scripts/verification/ios-readiness/test_l08_diagnostics.py\n M scripts/verification/ios-readiness/test_secondary_fifo.py",
+  "tree": "f03ad1b302d951d0ca9811b1efab2751a8be6978"
+}

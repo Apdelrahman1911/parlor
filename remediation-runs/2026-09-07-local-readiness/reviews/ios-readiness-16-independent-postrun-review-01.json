@@ -1,0 +1,1072 @@
+{
+  "schema_version": 1,
+  "kind": "INDEPENDENT_NATIVE16_POSTRUN_AND_REACHABLE_HOME_COUNTER_DIAGNOSIS",
+  "at_utc": "2026-09-08T07:50:11.186951+00:00",
+  "reviewer": "/root/factory_review",
+  "classification": "FAIL_RETAINED; FOUNDATION_DIAGNOSTIC_BINDING_VERIFIED; HOME_ACTIVATION_EVIDENCE_GAP_NOT_APPLICATION_DEFECT_PROVEN",
+  "receipt": {
+    "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-16/receipt.json",
+    "sha256": "56094f40132dd9beaeda52fdc737c61c242e897e0356b2722c4b50ad75bbf576",
+    "root_lane_session": 63942,
+    "status": "FAIL",
+    "xcode_exit": 65,
+    "started": "2026-09-08T07:19:22.014826+00:00",
+    "finished": "2026-09-08T07:38:55.753117+00:00",
+    "xcode_summary_sha256": "6e8c73ea2a90265cbccf2a98968f78747878efe755608c9d9d92751795e9c493",
+    "xcode_log_sha256": "c4d7c7ab7d34dbe171364eb9847beb08f714570319c22464e500d0edd21ee425",
+    "actual_xctests": {
+      "total": 5,
+      "pass": 4,
+      "fail": 1,
+      "skip": 0
+    },
+    "failure": "Main Settings/L08 XCTest failed at generatedSwift2321 / functionalUITests75 because observationfunctional_statusFAIL. Four UIKit tests passed. This is not app-exception or OS-termination evidence."
+  },
+  "exact_identity": {
+    "source_identity": {
+      "commit": "8b9e3b0cdfdab82e7cff3ad8135d0eae9a0b8ca3",
+      "tree": "c1e92b5e00ab64a293c4d7f9c9b5e2b85887be88",
+      "branch": "fix/local-readiness-2026-09-07",
+      "tracked_status": "M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/README.md\n M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/external_image_diagnostics.py\n M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/external_image_provenance.py\n M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_control_tests.py\n M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
+      "diff_sha256": "8e5e873e93e89aa6e077d78e0263018d567117b3e14e59148a9447062a336b9d",
+      "source_manifest_sha256": "c4d3387a95ff1a4462071147afe92411f5a08ee8b10f78852a59494c8d3e4420"
+    },
+    "input_manifest_sha256": "a76215854f2ba107b97db12b864dc5c5cd0ab0215d3934c7712bbf2a5aaac01b",
+    "approved_control_sha256": "521a56093f856e2425d7ad2ff75a1ca1aae7efea9528846d866850f8367ccf90",
+    "controls_after_sha256": "521a56093f856e2425d7ad2ff75a1ca1aae7efea9528846d866850f8367ccf90",
+    "source_unchanged": true,
+    "controls_unchanged": true,
+    "800_source_and_92_control_hashes_independently_rechecked": true,
+    "copied_sources_unchanged": true,
+    "754_copy_before_after_hash_maps_equal": true,
+    "copy_manifest_sha256": "2e5969666866a0a7bc54aec5cdd81b07731efcb301d545b9947d5946e3dac8df",
+    "after_copy_manifest_sha256": "854f55aacf22e1ac75e50fc8664e7deec726baba49764ee87f3a5a55f2994aa3",
+    "unexpected_copy_inputs_symlinks_missing": [],
+    "platform": {
+      "Xcode": "26.5/17F42",
+      "simulator": "iPhone17Pro iOS26.5/23F77 arm64",
+      "signing": "Debug simulator ad-hoc; no Store identity or signing proof"
+    }
+  },
+  "actual_functional_matrix": {
+    "planned": {
+      "boots": 13,
+      "operations": 20,
+      "complete_comparisons": 26
+    },
+    "observed": {
+      "process_boots": 10,
+      "completed_XCTest_boot_markers": 9,
+      "operations": 15,
+      "functional_PASS": 14,
+      "functional_FAIL": 1,
+      "complete_comparisons": 24,
+      "complete_PASS": 0,
+      "complete_FAIL": 24
+    },
+    "operation_receipts": [
+      {
+        "path": "parlor-l08-storage-functional-1-save.json",
+        "sha256": "efee0b3694db22d6a34bb72df85a37edd9c681156e698662d72a438af53e1342",
+        "boot": 1,
+        "action": "save",
+        "status": "PASS",
+        "stage": null,
+        "reason": null,
+        "comparison_count": 2,
+        "failed_comparisons": 2,
+        "process_boot": "15DA4124-8924-4E9C-9EB5-2ABA8FD75D06"
+      },
+      {
+        "path": "parlor-l08-storage-functional-2-load.json",
+        "sha256": "c0615961e229560df2e1601fbe6940fe597a33a6b4d8f70a661a5b6afddb40b3",
+        "boot": 2,
+        "action": "load",
+        "status": "PASS",
+        "stage": null,
+        "reason": null,
+        "comparison_count": 2,
+        "failed_comparisons": 2,
+        "process_boot": "33608767-35B3-412B-939B-26F51D7823FC"
+      },
+      {
+        "path": "parlor-l08-storage-functional-2-continue.json",
+        "sha256": "6dde45c841d652bdd7e149664de3516e34e09a47b773655c80cfe7bf55d00d79",
+        "boot": 2,
+        "action": "continue",
+        "status": "PASS",
+        "stage": null,
+        "reason": null,
+        "comparison_count": 0,
+        "failed_comparisons": 0,
+        "process_boot": "33608767-35B3-412B-939B-26F51D7823FC"
+      },
+      {
+        "path": "parlor-l08-storage-functional-3-save.json",
+        "sha256": "475faf120b424bca74b6d709c31312f49a6a2ddbb1a05f684b13779a48a5ff77",
+        "boot": 3,
+        "action": "save",
+        "status": "PASS",
+        "stage": null,
+        "reason": null,
+        "comparison_count": 2,
+        "failed_comparisons": 2,
+        "process_boot": "54F4A0AA-5A22-48FE-9D2F-C990546D7D5D"
+      },
+      {
+        "path": "parlor-l08-storage-functional-4-load.json",
+        "sha256": "982a1491f56d4aa873cfd1f7f9d65d6ca3d9fbb35af02977a07cea88f599ca08",
+        "boot": 4,
+        "action": "load",
+        "status": "PASS",
+        "stage": null,
+        "reason": null,
+        "comparison_count": 2,
+        "failed_comparisons": 2,
+        "process_boot": "312677D7-D21B-47CA-8D33-D7EFA8FBBD77"
+      },
+      {
+        "path": "parlor-l08-storage-functional-4-continue.json",
+        "sha256": "b84eec96dee1726458c33337b84cac97701a88147ef4142d82f557c2b35ad203",
+        "boot": 4,
+        "action": "continue",
+        "status": "PASS",
+        "stage": null,
+        "reason": null,
+        "comparison_count": 0,
+        "failed_comparisons": 0,
+        "process_boot": "312677D7-D21B-47CA-8D33-D7EFA8FBBD77"
+      },
+      {
+        "path": "parlor-l08-storage-functional-5-save.json",
+        "sha256": "4f57dd1631fd4c20f9078db99410ef39edab5beb3482c45b678548afc7d4cbcf",
+        "boot": 5,
+        "action": "save",
+        "status": "PASS",
+        "stage": null,
+        "reason": null,
+        "comparison_count": 2,
+        "failed_comparisons": 2,
+        "process_boot": "DD682740-D3EF-4358-92AB-2A8F7F243303"
+      },
+      {
+        "path": "parlor-l08-storage-functional-6-load.json",
+        "sha256": "8a2c56437c1c292bce044ab8ffb8a342d7c35b0b5dbda3f0b590256ce24b3922",
+        "boot": 6,
+        "action": "load",
+        "status": "PASS",
+        "stage": null,
+        "reason": null,
+        "comparison_count": 2,
+        "failed_comparisons": 2,
+        "process_boot": "217B45C9-3E7E-49F8-9152-1D6F14513CD5"
+      },
+      {
+        "path": "parlor-l08-storage-functional-6-continue.json",
+        "sha256": "46c5cfcd3fedfa908d266a2b45f98df0b553174d17c68f6d2fe37014bee10ec7",
+        "boot": 6,
+        "action": "continue",
+        "status": "PASS",
+        "stage": null,
+        "reason": null,
+        "comparison_count": 0,
+        "failed_comparisons": 0,
+        "process_boot": "217B45C9-3E7E-49F8-9152-1D6F14513CD5"
+      },
+      {
+        "path": "parlor-l08-storage-functional-7-save.json",
+        "sha256": "170409e0783e6d1964c3f86280a36d25eabf2cef281267133f7a7b1c6f9ee1cd",
+        "boot": 7,
+        "action": "save",
+        "status": "PASS",
+        "stage": null,
+        "reason": null,
+        "comparison_count": 2,
+        "failed_comparisons": 2,
+        "process_boot": "C17A4065-4E2C-4E65-8F09-DA41CC55AAE4"
+      },
+      {
+        "path": "parlor-l08-storage-functional-8-load.json",
+        "sha256": "85db52e5cd6bfaa4451ad20903015a882c9c9d3cf11b9e7f6dc51bbe1a643f07",
+        "boot": 8,
+        "action": "load",
+        "status": "PASS",
+        "stage": null,
+        "reason": null,
+        "comparison_count": 2,
+        "failed_comparisons": 2,
+        "process_boot": "B7DD73C1-C1AD-44B0-8BBB-2474AFB34C1A"
+      },
+      {
+        "path": "parlor-l08-storage-functional-8-continue.json",
+        "sha256": "60d7423d071e8aba3b7dbdf953fca32e144952d7626076db8c6a7c2ca7172b37",
+        "boot": 8,
+        "action": "continue",
+        "status": "PASS",
+        "stage": null,
+        "reason": null,
+        "comparison_count": 0,
+        "failed_comparisons": 0,
+        "process_boot": "B7DD73C1-C1AD-44B0-8BBB-2474AFB34C1A"
+      },
+      {
+        "path": "parlor-l08-storage-functional-9-legacy-seed.json",
+        "sha256": "0285380d7f1c4eb5c6848c6e3a7ad05dd7f3dacc635fd988447c10c95753e5e8",
+        "boot": 9,
+        "action": "legacy-seed",
+        "status": "PASS",
+        "stage": null,
+        "reason": null,
+        "comparison_count": 4,
+        "failed_comparisons": 4,
+        "process_boot": "FC19F84B-338D-4D05-BF96-35CC71CE4E77"
+      },
+      {
+        "path": "parlor-l08-storage-functional-10-legacy-load.json",
+        "sha256": "3380950b2bae18c351bb2aeeebc033d47f027ec7c31e3cd618381c3b5488071c",
+        "boot": 10,
+        "action": "legacy-load",
+        "status": "PASS",
+        "stage": null,
+        "reason": null,
+        "comparison_count": 4,
+        "failed_comparisons": 4,
+        "process_boot": "5E630B3A-568C-4D0B-8230-F40739D849FE"
+      },
+      {
+        "path": "parlor-l08-storage-functional-10-continue.json",
+        "sha256": "5026dce2c3ff30f510f9018eb9ae5fae23517e25cc563a1faea6b3f3268e0221",
+        "boot": 10,
+        "action": "continue",
+        "status": "FAIL",
+        "stage": "continue-home-counters",
+        "reason": "fixture_or_boundary_failure",
+        "comparison_count": 0,
+        "failed_comparisons": 0,
+        "process_boot": "5E630B3A-568C-4D0B-8230-F40739D849FE"
+      }
+    ],
+    "passed_subtraces": [
+      "WhodunitClassic actual save/load/Home/resumed-controller/terminal-writer-delete",
+      "WhodunitElimination actual save/load/Home/resumed-controller/terminal-writer-delete",
+      "MafiaDoctorON four effective same-target protections plus save/load/Home/controller/terminal delete",
+      "MafiaDoctorOFF alternation/explicit skip/pre-skip target and repeated-target rejection plus save/load/Home/controller/terminal delete",
+      "Legacy seed and boot10 legacy-load, exact envelope/recovery/Home destination, malformed neighbor isolation/exclusion and protected-damaged dual fail-closed legacy retention"
+    ],
+    "not_run": [
+      "Boot10 Mafia attachment and resumed-controller continuation afterHomeguard",
+      "Boot11 retained-corrupt neighbor actualRetry/Discard",
+      "Boot12 protected-damaged dual preservation actualRetry/Discard",
+      "Boot13 final restartedabsence",
+      "All3 retained-host boots42operations",
+      "Later activeWhodunit/Mafia language/lifecycle and actualOSSettings scenarios in this invocation"
+    ]
+  },
+  "home_diagnosis": {
+    "exact_failed_guard": {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/L08StorageFunctionalProbe.kt.in",
+      "sha256": "55d9ccb998831b07a43429249fc335189227bcd344f252dbcd4dbdbda963463c",
+      "lines": [
+        249,
+        250
+      ],
+      "predicate": "L08UiSeam.resumeTaps == 1 && L08UiSeam.discardTaps == 0",
+      "failure_stage": "continue-home-counters",
+      "reason": "fixture_or_boundary_failure"
+    },
+    "reachable_proof": [
+      "Boot10 maps to aliaslegacy; successful legacy-load calls expect(id,legacy) exactly once, retaining expectedId before this continue command.",
+      "L08UiSeam counters begin0; expectedId cannot be replaced; legacy cannot mutate discardTaps because discard/retry methods only act for damaged or dual.",
+      "Only matching expected-ID homeTapped incrementsresumeTaps, requiring previous0; counter is never decremented/reset. TaggedHome onTap invokes homeTapped immediately before originalonResume.",
+      "Therefore the failed predicate implies matching Home resume counter remained0/discard0 at continuation. Controller attachment and Mafia continuation are after this guard and were not reached.",
+      "Actual unique/enabled/hittable tag and one XCTesttap are not evidence that expected applicationcallback executed."
+    ],
+    "public_geometry_evidence": [
+      {
+        "log_line": 4539,
+        "attempt": 0,
+        "identifier": "l08-home-legacy",
+        "list": {
+          "count": 1,
+          "enabled": true,
+          "exists": true,
+          "frame": {
+            "height": 769.6666870117188,
+            "width": 402,
+            "x": 0,
+            "y": 0
+          },
+          "hittable": true
+        },
+        "overlay": {
+          "count": 1,
+          "enabled": true,
+          "exists": true,
+          "frame": {
+            "height": 139,
+            "width": 265,
+            "x": 68.66666666666666,
+            "y": 134
+          },
+          "hittable": true
+        },
+        "proves_recovery": false,
+        "schema_version": 1,
+        "target": {
+          "count": 1,
+          "enabled": true,
+          "exists": true,
+          "frame": {
+            "height": 96,
+            "width": 354,
+            "x": 24,
+            "y": 911.6666870117188
+          },
+          "hittable": false
+        }
+      },
+      {
+        "log_line": 4568,
+        "attempt": 1,
+        "identifier": "l08-home-legacy",
+        "list": {
+          "count": 1,
+          "enabled": true,
+          "exists": true,
+          "frame": {
+            "height": 769.6666870117188,
+            "width": 402,
+            "x": 0,
+            "y": 0
+          },
+          "hittable": true
+        },
+        "overlay": {
+          "count": 1,
+          "enabled": true,
+          "exists": true,
+          "frame": {
+            "height": 139,
+            "width": 265,
+            "x": 68.66666666666666,
+            "y": 134
+          },
+          "hittable": true
+        },
+        "proves_recovery": false,
+        "schema_version": 1,
+        "target": {
+          "count": 1,
+          "enabled": true,
+          "exists": true,
+          "frame": {
+            "height": 96.00003051757812,
+            "width": 354,
+            "x": 24,
+            "y": 494.3333435058594
+          },
+          "hittable": true
+        }
+      },
+      {
+        "log_line": 4594,
+        "attempt": 8,
+        "identifier": "l08-home-legacy",
+        "list": {
+          "count": 1,
+          "enabled": true,
+          "exists": true,
+          "frame": {
+            "height": 769.6666870117188,
+            "width": 402,
+            "x": 0,
+            "y": 0
+          },
+          "hittable": true
+        },
+        "overlay": {
+          "count": 1,
+          "enabled": true,
+          "exists": true,
+          "frame": {
+            "height": 139,
+            "width": 265,
+            "x": 68.66666666666666,
+            "y": 134
+          },
+          "hittable": true
+        },
+        "proves_recovery": false,
+        "schema_version": 1,
+        "target": {
+          "count": 1,
+          "enabled": true,
+          "exists": true,
+          "frame": {
+            "height": 96,
+            "width": 354,
+            "x": 24,
+            "y": 285
+          },
+          "hittable": true
+        }
+      }
+    ],
+    "event_timing_seconds": {
+      "single_list_swipe": 699.44,
+      "post_scroll_target_y494_sample": 700.47,
+      "final_target_y285_sample": 703.47,
+      "single_target_tap": 703.48,
+      "continue_tap": 706.01,
+      "failure_assertion": 708.48
+    },
+    "counter_evidence": [
+      "Last observed target24,285,354,96 is below overlayy134..273; exactcause cannot simply be declared overlayobstruction.",
+      "Target moved fromy494.33 to285 between acceptedhittable observations, so current fixture has no demonstrated settled target beforetap.",
+      "Existing4 successful actualHome resumptions prove this callback wiring canexecute; missing legacy activation doesnotprove Mafia or migratedsave corruption.",
+      "No posttap UIcounter/geometryreceipt identifies whether a wrongtile, movinghitpoint, suppressedgesture, or laterdelivery caused zero."
+    ],
+    "classification": "TEST/EVIDENCE GAP \u2014 missing expected activation confirmed; underlying gesture-loss cause UNCONFIRMED. No additional application defect is justified.",
+    "next_minimal_action": "New reviews-only fixture draft: bounded stable exacttarget/full-visible-uncovered geometry windows afterscrolI; beforezero/afterone counts through existingl08-ui-observe; preserve exactlyone realtarget.tap, existingcontinuationguard+attachmentwait, failureevidence, no retry/directcallback/coordinatefallback/privatevalue. Review and syntheticcontrols before any nativeattempt. User now requested checkpoint/push: NO additional nativecycle in this task."
+  },
+  "foundation_diagnostic": {
+    "receipt_sha256": "e656f929fd9c96a58ecf7430bd3f74b5d33be2cf3c8dcb4f15d446aeb6b42d35",
+    "status": "COLLECTION_VALIDATED_NOT_L08_PASS",
+    "main_UUID": "71706706-bc02-3337-ac3f-963551855c37",
+    "main_bytes_sha256": "95e0aaa0a0e2a53becd8bcbc34f7b4be498fd15205c0fe1602ec0c1dbfb78531",
+    "fixture_UUID": "b0a3bd6f-dc20-3dbd-8a3e-512dc4be9766",
+    "fixture_bytes_sha256": "fc335a4a993f57a43fbf7bf8fd16954101e083a3c2cdaf7d6ca6e171a270a574",
+    "foundation_UUID": "2cc9fce0-08f9-3a0d-8a2f-6db229462de5",
+    "built_installed_full_inventory_equal": true,
+    "main_and_fixture_memory_UUID_to_arm64_inventory_and_hash_reconciled": true,
+    "marker_firsthealth_context_process_control_template_binding_reconciled": true,
+    "marker": {
+      "activations": 1,
+      "alert_present": false,
+      "boot_ordinal": 1,
+      "context_sha256": "893237ce3e43190c8774d625f49d5cc14924c0528a176daa7d8e1ba69526a225",
+      "controls_sha256": "521a56093f856e2425d7ad2ff75a1ca1aae7efea9528846d866850f8367ccf90",
+      "fixture_template_sha256": "f7b0e515b580f4bd9c49857ad4a49a3ab925218e8e52c260eb14cc75e410cba7",
+      "foreground": true,
+      "kind": "l08-app-foundation-xctest",
+      "process_boot": "7CCBBCDA-3378-44D1-9193-D65862EC43EE",
+      "process_id": 51755,
+      "run_token": "64005FDD-2835-4433-B8DF-F28134F6F82E",
+      "schema_version": 1
+    },
+    "actual_operations": 8,
+    "operation_errors": 0,
+    "observation_rows": 8,
+    "FM_missing_protection_key": 8,
+    "URL_until_first_authentication": 5,
+    "all16rows_exactly_equal_native14_and_standaloneFoundation02": true,
+    "fixture_cleanup": {
+      "created": true,
+      "directory_pinned": true,
+      "reason": "none",
+      "root_pinned": true,
+      "root_removed": true,
+      "status": "REMOVED"
+    },
+    "conclusion": "Mainimage selector correction now genuinely collectedandbound in actualcopiedapp. Originalcollectionbug solved for thissimulator run. MetadataComplete remains unsuccessful, identical outsideKotlin and inapp; neitherKotlin-only norapp-container-only cause established. No platform enforcement or strictL08 waiver."
+  },
+  "other_available_subtraces": {
+    "health_cold_boots": 8,
+    "health_step_rows": [
+      {
+        "boot": 1,
+        "steps": [
+          {
+            "step": "home-rerun",
+            "outcome": {
+              "has_unavailable_source": false,
+              "kind": "home_observed",
+              "local": "absent",
+              "multiplayer": "absent",
+              "original_home_invocation": false
+            },
+            "native_events": [
+              {
+                "operation": "credential-read",
+                "ordinal": 1,
+                "status": -25300
+              }
+            ]
+          },
+          {
+            "step": "credential-read",
+            "outcome": {
+              "kind": "absent"
+            },
+            "native_events": [
+              {
+                "operation": "credential-read",
+                "ordinal": 1,
+                "status": -25300
+              }
+            ]
+          },
+          {
+            "step": "snapshot-read",
+            "outcome": {
+              "kind": "absent"
+            },
+            "native_events": []
+          },
+          {
+            "step": "credential-write",
+            "outcome": {
+              "kind": "ok"
+            },
+            "native_events": [
+              {
+                "operation": "credential-update",
+                "ordinal": 1,
+                "status": -25300
+              },
+              {
+                "operation": "credential-add",
+                "ordinal": 2,
+                "status": 0
+              }
+            ]
+          },
+          {
+            "step": "snapshot-write",
+            "outcome": {
+              "kind": "ok"
+            },
+            "native_events": []
+          }
+        ]
+      },
+      {
+        "boot": 2,
+        "steps": [
+          {
+            "step": "home-rerun",
+            "outcome": {
+              "has_unavailable_source": false,
+              "kind": "home_observed",
+              "local": "absent",
+              "multiplayer": "absent",
+              "original_home_invocation": false
+            },
+            "native_events": [
+              {
+                "operation": "credential-read",
+                "ordinal": 1,
+                "status": -25300
+              }
+            ]
+          },
+          {
+            "step": "credential-read",
+            "outcome": {
+              "kind": "matches"
+            },
+            "native_events": [
+              {
+                "operation": "credential-read",
+                "ordinal": 1,
+                "status": 0
+              }
+            ]
+          },
+          {
+            "step": "snapshot-read",
+            "outcome": {
+              "kind": "matches"
+            },
+            "native_events": []
+          },
+          {
+            "step": "credential-write",
+            "outcome": {
+              "kind": "ok"
+            },
+            "native_events": [
+              {
+                "operation": "credential-update",
+                "ordinal": 1,
+                "status": 0
+              }
+            ]
+          },
+          {
+            "step": "snapshot-write",
+            "outcome": {
+              "kind": "ok"
+            },
+            "native_events": []
+          }
+        ]
+      },
+      {
+        "boot": 3,
+        "steps": [
+          {
+            "step": "home-rerun",
+            "outcome": {
+              "has_unavailable_source": false,
+              "kind": "home_observed",
+              "local": "absent",
+              "multiplayer": "absent",
+              "original_home_invocation": false
+            },
+            "native_events": [
+              {
+                "operation": "credential-read",
+                "ordinal": 1,
+                "status": -25300
+              }
+            ]
+          },
+          {
+            "step": "credential-read",
+            "outcome": {
+              "kind": "matches"
+            },
+            "native_events": [
+              {
+                "operation": "credential-read",
+                "ordinal": 1,
+                "status": 0
+              }
+            ]
+          },
+          {
+            "step": "snapshot-read",
+            "outcome": {
+              "kind": "matches"
+            },
+            "native_events": []
+          },
+          {
+            "step": "credential-remove",
+            "outcome": {
+              "kind": "ok"
+            },
+            "native_events": [
+              {
+                "operation": "credential-delete",
+                "ordinal": 1,
+                "status": 0
+              }
+            ]
+          },
+          {
+            "step": "snapshot-remove",
+            "outcome": {
+              "kind": "ok"
+            },
+            "native_events": []
+          }
+        ]
+      },
+      {
+        "boot": 4,
+        "steps": [
+          {
+            "step": "home-rerun",
+            "outcome": {
+              "has_unavailable_source": false,
+              "kind": "home_observed",
+              "local": "absent",
+              "multiplayer": "absent",
+              "original_home_invocation": false
+            },
+            "native_events": [
+              {
+                "operation": "credential-read",
+                "ordinal": 1,
+                "status": -25300
+              }
+            ]
+          },
+          {
+            "step": "credential-read",
+            "outcome": {
+              "kind": "absent"
+            },
+            "native_events": [
+              {
+                "operation": "credential-read",
+                "ordinal": 1,
+                "status": -25300
+              }
+            ]
+          },
+          {
+            "step": "snapshot-read",
+            "outcome": {
+              "kind": "absent"
+            },
+            "native_events": []
+          }
+        ]
+      },
+      {
+        "boot": 5,
+        "steps": [
+          {
+            "step": "home-rerun",
+            "outcome": {
+              "has_unavailable_source": false,
+              "kind": "home_observed",
+              "local": "absent",
+              "multiplayer": "absent",
+              "original_home_invocation": false
+            },
+            "native_events": [
+              {
+                "operation": "credential-read",
+                "ordinal": 1,
+                "status": -25300
+              }
+            ]
+          },
+          {
+            "step": "credential-read",
+            "outcome": {
+              "kind": "absent"
+            },
+            "native_events": [
+              {
+                "operation": "credential-read",
+                "ordinal": 1,
+                "status": -25300
+              }
+            ]
+          },
+          {
+            "step": "snapshot-read",
+            "outcome": {
+              "kind": "absent"
+            },
+            "native_events": []
+          }
+        ]
+      },
+      {
+        "boot": 6,
+        "steps": [
+          {
+            "step": "home-rerun",
+            "outcome": {
+              "has_unavailable_source": false,
+              "kind": "home_observed",
+              "local": "absent",
+              "multiplayer": "absent",
+              "original_home_invocation": false
+            },
+            "native_events": [
+              {
+                "operation": "credential-read",
+                "ordinal": 1,
+                "status": -25300
+              }
+            ]
+          },
+          {
+            "step": "credential-read",
+            "outcome": {
+              "kind": "absent"
+            },
+            "native_events": [
+              {
+                "operation": "credential-read",
+                "ordinal": 1,
+                "status": -25300
+              }
+            ]
+          },
+          {
+            "step": "snapshot-read",
+            "outcome": {
+              "kind": "absent"
+            },
+            "native_events": []
+          }
+        ]
+      },
+      {
+        "boot": 7,
+        "steps": [
+          {
+            "step": "home-rerun",
+            "outcome": {
+              "has_unavailable_source": false,
+              "kind": "home_observed",
+              "local": "absent",
+              "multiplayer": "absent",
+              "original_home_invocation": false
+            },
+            "native_events": [
+              {
+                "operation": "credential-read",
+                "ordinal": 1,
+                "status": -25300
+              }
+            ]
+          },
+          {
+            "step": "credential-read",
+            "outcome": {
+              "kind": "absent"
+            },
+            "native_events": [
+              {
+                "operation": "credential-read",
+                "ordinal": 1,
+                "status": -25300
+              }
+            ]
+          },
+          {
+            "step": "snapshot-read",
+            "outcome": {
+              "kind": "absent"
+            },
+            "native_events": []
+          }
+        ]
+      },
+      {
+        "boot": 8,
+        "steps": [
+          {
+            "step": "home-rerun",
+            "outcome": {
+              "has_unavailable_source": false,
+              "kind": "home_observed",
+              "local": "absent",
+              "multiplayer": "absent",
+              "original_home_invocation": false
+            },
+            "native_events": [
+              {
+                "operation": "credential-read",
+                "ordinal": 1,
+                "status": -25300
+              }
+            ]
+          },
+          {
+            "step": "credential-read",
+            "outcome": {
+              "kind": "absent"
+            },
+            "native_events": [
+              {
+                "operation": "credential-read",
+                "ordinal": 1,
+                "status": -25300
+              }
+            ]
+          },
+          {
+            "step": "snapshot-read",
+            "outcome": {
+              "kind": "absent"
+            },
+            "native_events": []
+          }
+        ]
+      }
+    ],
+    "health_limit": "Bounded records/source/sequence inspected. Full aggregate validator was not reached after failingXCTest; these are not an overallgreen gate or explanation for originalnormal-launch problem.",
+    "settings": {
+      "receipt_sha256": "642a5a73ff804b2d19bb2f724912bfc68542f8ab8181a5c133c3352cd4f52030",
+      "observations": 22,
+      "processes": 4,
+      "completed": true,
+      "trace": "Systemabsence -> ARowned -> restart -> Systemrestoresabsence; syntheticprevious[ar-EG,en] -> ENowned -> restart -> Systemrestoresexactprevious. Not actualOSSettings preferenceproof."
+    }
+  },
+  "research": [
+    {
+      "access_date": "2026-09-08",
+      "url": "https://developer.apple.com/documentation/xcuiautomation/xcuielement/tap()",
+      "fetched": "https://developer.apple.com/tutorials/data/documentation/xcuiautomation/xcuielement/tap().json",
+      "http": 200,
+      "sha256": "bc49772beb3e08c609840c26ab831bde35cfbce7d3aa8bae316cdfa24e74a88a",
+      "claim": "tap sends event to a system-computed hittable point; mayscrolloffscreen element. It doesnotpromise a centerpoint or receipt of an applicationcallback."
+    },
+    {
+      "access_date": "2026-09-08",
+      "url": "https://developer.apple.com/documentation/xcuiautomation/xcuielement/ishittable",
+      "fetched": "https://developer.apple.com/tutorials/data/documentation/xcuiautomation/xcuielement/ishittable.json",
+      "http": 200,
+      "sha256": "a425383b2660acbb1529b1653dc46b691fb266e1c33d2379b4396ffeb27fe6f1",
+      "claim": "isHittable determines whether a hitpoint can be computed at currentlocation; it is not futuregeometry stability. Current XCTest/XCUITest methods on iOS26.5 match the documented APIs; no version-specificimplementationcause inferred."
+    }
+  ],
+  "source_review_ledger": [
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/L08StorageFunctionalProbe.kt.in",
+      "sha256": "55d9ccb998831b07a43429249fc335189227bcd344f252dbcd4dbdbda963463c",
+      "ranges": [
+        [
+          104,
+          149
+        ],
+        [
+          160,
+          170
+        ],
+        [
+          210,
+          266
+        ]
+      ],
+      "reviewer": "/root/factory_review"
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/L08UiSeam.kt.in",
+      "sha256": "22d9e352ba6c4b8e161b2e69f1aae208a0c9a654ed85284ef4a34c2ea63399e4",
+      "ranges": [
+        [
+          1,
+          71
+        ]
+      ],
+      "reviewer": "/root/factory_review"
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/l08_copy.py",
+      "sha256": "c2bf28bf0efd9449d646c451d7b8e665000e8d11a3a6eea76de95e1fb4a55a5f",
+      "ranges": [
+        [
+          1,
+          166
+        ]
+      ],
+      "reviewer": "/root/factory_review"
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/L08StorageFunctionalUITests.swift.in",
+      "sha256": "30ea69c2e8537b4e8dd451972342b3a2ac16c4759b8b77fb329637f4a3407d02",
+      "ranges": [
+        [
+          1,
+          170
+        ]
+      ],
+      "reviewer": "/root/factory_review"
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/L08StorageFunctionalLaunch.swift.in",
+      "sha256": "cc61c02ceae5b5144cdc66dd12927dd31475ac3fac76be7732151582a1d777a6",
+      "ranges": [
+        [
+          1,
+          71
+        ]
+      ],
+      "reviewer": "/root/factory_review"
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/DSC01CatalogSelection.swift.in",
+      "sha256": "2649fb97fe27e74539dfd9867f6677c6a390e722129f8e2434231f44b1d91465",
+      "ranges": [
+        [
+          1,
+          280
+        ]
+      ],
+      "reviewer": "/root/factory_review"
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/composeApp/src/commonMain/kotlin/com/parlor/app/shell/home/HomeScreen.kt",
+      "sha256": "ae11eb3dd97c28520205237b95c28766ccd6ce8dd0e005f82a0d63866323e152",
+      "ranges": [
+        [
+          82,
+          173
+        ],
+        [
+          281,
+          366
+        ]
+      ],
+      "reviewer": "/root/factory_review"
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/ParlorCard.kt",
+      "sha256": "e764e6c7e09dc72464ad3eb14b41328a609a7d47475941054fb7af292f7a9d51",
+      "ranges": [
+        [
+          1,
+          55
+        ]
+      ],
+      "reviewer": "/root/factory_review"
+    }
+  ],
+  "cleanup": {
+    "status": "PASS",
+    "Gradle_stops": [
+      {
+        "label": "stop-xcode-immediate",
+        "exit_code": 0,
+        "at": "2026-09-08T07:38:45.493853+00:00"
+      },
+      {
+        "label": "stop-final",
+        "exit_code": 0,
+        "at": "2026-09-08T07:38:49.077095+00:00"
+      }
+    ],
+    "stop_logs": [
+      {
+        "file": "stop-xcode-immediate.log",
+        "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+        "text": "No Gradle daemons are running."
+      },
+      {
+        "file": "stop-final.log",
+        "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+        "text": "No Gradle daemons are running."
+      }
+    ],
+    "completed_at": "2026-09-08T07:38:55.538674+00:00",
+    "owned_device": "B2E06965-ED29-437B-AF38-B8C0D6B54F42",
+    "owned_device_absent": true,
+    "secondary_cleanup": {
+      "status": "PASS",
+      "removed": [
+        "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-50868/IB/6071E5CA-CFFC-46AC-998C-A1D76A4F7147.RemoteToHost",
+        "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-50868/IB/6071E5CA-CFFC-46AC-998C-A1D76A4F7147.HostToRemote",
+        "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-50868/IB",
+        "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-50868"
+      ],
+      "remaining": []
+    },
+    "exact_cleanup_paths_independently_absent": [
+      "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-ios-readiness-16-558d2x5y",
+      "/Users/abdelrahman/Library/Developer/CoreSimulator/Devices/B2E06965-ED29-437B-AF38-B8C0D6B54F42",
+      "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-50868/IB/6071E5CA-CFFC-46AC-998C-A1D76A4F7147.RemoteToHost",
+      "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-50868/IB/6071E5CA-CFFC-46AC-998C-A1D76A4F7147.HostToRemote",
+      "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-50868/IB",
+      "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-50868"
+    ],
+    "owned_processes_remaining": [],
+    "unknown_holders": [],
+    "remaining_outputs": [],
+    "errors": [],
+    "reviewer_processes_started": "Only boundedstandardPython/readtools; no build/test/native/backgroundworkers. No processcontrol, Gitactions or applicationchanges byreviewer."
+  },
+  "continuation_checkpoint": {
+    "next_author": "/root/native_fix_review reviews-only L08gesture draft",
+    "independent_draft_review": "Still required when frozen; do not interpret this diagnosis as implementationapproval.",
+    "next_runtime": "Not authorized in this checkpoint task; future root-owned freshbinding/lane only after approval.",
+    "frozen_evidence": "Originalnative14/native16FAILs and all receipts untouched.",
+    "remaining_limits": [
+      "Original strictL08 notsatisfied",
+      "No completed3host42operation submatrix in native16",
+      "LaterOSSettings/activegame scenarios unexecuted in native16",
+      "PhysicalAndroid/iOSLAN, actualstorageprotectionlock/backup, Storeidentity/signing/legal remainexternal; no externalreadiness claim"
+    ]
+  }
+}

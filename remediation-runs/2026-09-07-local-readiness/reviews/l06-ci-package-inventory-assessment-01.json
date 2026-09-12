@@ -1,0 +1,125 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/release_fix_review",
+  "requestor": "/root",
+  "recorded_at": "2026-09-07T15:39:36.088747+00:00",
+  "classification": "TEST_EVIDENCE_GAP_NOT_AN_APPLICATION_DEFECT",
+  "conclusion": "CurrentCIwrapper+newlegalnoticecheckdoesnotfullysatisfyL06completepackage/nativeinventory. ReusethesameexistingCIbuildandaddnarrowread-onlypackageinspectionratherthanduplicatingaheavylocalbuild.",
+  "commit": "5d9f5f4c81ff51ee70922c876eefb91c6e669d56",
+  "scope": "Source-backedgateapplicabilityassessmentonly; noadoptioneditsorchecksperformed.",
+  "coverage": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/.github/workflows/production-verification.yml",
+      "sha256": "eb6ac6fb35621d49bede96b7fc008d6d4ac364ff44e7bafc46700ea38ef94a81",
+      "reviewed_line_ranges": [
+        [
+          473,
+          519
+        ],
+        [
+          572,
+          652
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/build.gradle.kts",
+      "sha256": "bd6199e1f097eb236c50c46efb91d291550110f6b4d95a8e95ff0db4d8da192b",
+      "reviewed_line_ranges": [
+        [
+          105,
+          143
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/native/ios_release_wrapper_v1/release_artifacts.py",
+      "sha256": "12ebbf1959095915c825dc8cba80da527e092963c0201e7197add1f7ca003152",
+      "reviewed_line_ranges": [
+        [
+          1,
+          163
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/native/ios_release_wrapper_v1/test_release_wrapper_contract.py",
+      "sha256": "093c0ae70126be9e1a16ca512bb8c774c02884dca10deabcda08e37223d13a07",
+      "reviewed_line_ranges": [
+        [
+          1,
+          140
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/ci/apple_verification_hygiene.py",
+      "sha256": "d9c554781750d3cbbf2a4adce3b040edb83d0de5fec4c04eac700c526fca1c3c",
+      "reviewed_line_ranges": [
+        [
+          205,
+          278
+        ]
+      ]
+    }
+  ],
+  "already_present": [
+    {
+      "path": ".github/workflows/production-verification.yml",
+      "lines": [
+        577,
+        597
+      ],
+      "evidence": "Successfulset-euo-pipefailunsignedReleasearm64simulatorbuild; outerParlor executableexistence,filedescription,SHA256; mainInfo.plistidentifier/version/build; plannedlegalnoticebytechecker."
+    },
+    {
+      "path": "build.gradle.kts",
+      "lines": [
+        128,
+        135
+      ],
+      "evidence": "productionAppleCheckonlyAppleDetekt+threetargetframeworklinktasks; nofullwrapperpackageinventory."
+    },
+    {
+      "path": ".github/workflows/production-verification.yml",
+      "lines": [
+        508,
+        513
+      ],
+      "evidence": "plutillintappliestosourceInfo.plistandPrivacyInfo,notcomparisonwithshippedcopies."
+    }
+  ],
+  "not_established_by_current_steps": [
+    "EmbeddedComposeApp.frameworkandanyotherMachO/dylib/extensioncompletefilelist,SHA256,architecture,platformanddeploymentmetadata.",
+    "Per-nativeUUIDstoidentifysymbolicatedcrashesandbindimageevidence;L06explicitlyrequeststhem.",
+    "Allshippedregularresource/metadatafilehashesandexactrequiredrawstory/fontbytes.",
+    "ShippedprivacyplistequalityandReleasebundleplatform/deployment/localizationconstraints.",
+    "Noprovisioningprofile/unreviewedextension/unsafeartifactpathinunsignedsimulatorwrapper."
+  ],
+  "historical_inspector_assessment": {
+    "positive": [
+      "Streamingeachfilehash; bounded8192files/2GiB,64nativeobjects;allrecognizedMachOheadersinspectedinsteadonlytwoknownpaths.",
+      "Rejectsgeneratedsymlinks/nonregularfiles/unrecognizedexecutable/native-namedfiles; requirestwoexpectednativeobjects.",
+      "Probechecksarm64andIOSSIMULATORdeployment<=16withoutincorrectlyrequiringframeworkminimumtoequalappminimum.",
+      "Verifiessourcexcconfig-derivedversionandexpectedReleaseidentity/platform/localizations; shippedprivacyandLANdeclarationsmatchsource.",
+      "Bindsallprovidedrawcase/fontinputsbyexacthashwhilerespectingthatcompiledAssets.car/cvrisnotrawPNG/XML.",
+      "Explicitlynotruntime,signatureintegrity,physicaldeviceorStorequalification."
+    ],
+    "limitations_to_keep_visible": [
+      "NoUUIDcollectioncurrentlyexists; verify_native_probe64-77 acceptsfile/archs/buildonly. IfL06retainsUUIDrequirement,addindependentlyreviewedUUIDprobe/testinsteadclaimingalreadycomplete.",
+      "require_completed_build31-36 isoldlocalrunner-specificreceiptcontract. Donotfabricatebuild_exit/stop_exittextforCI;useactualCIstepoutcomesandfreshownershipclaims toguardinspection.",
+      "rawresourceverificationtrustssuppliedsource_paths;newCLImustderivefromcurrentboundcheckout/manifest,notacceptanarbitrarysubsettoobtainPASS.",
+      "Historicaltestscontainnativetoolstubbytes; preserveadversarialfixturesbutrunnewCLIoveractualqualifiedCIappbeforemarkingartifactgatePASS."
+    ]
+  },
+  "proposed_narrow_adoption": [
+    "Copy/reuseonlythepureartifactinspectorunderfirst-partyverificationtooling; preservearchivedrunner/reportsandavoidshippinga dependencyonauditmaterial.",
+    "Usefixednativeinspectioncommandswithcheckedexit,boundedoutputanddeadline;enforceregularcanonicalpathsandnosigning/network/Storeoperations.",
+    "WireinspectionaftersuccessfulBuildunsignedSwiftReleasewrapperANDsuccessfulalwaysGradle/nativefinalizer,usingthatfreshCIownedapp;avoidlongerinspectionbeforeimmediatestop.",
+    "Emitcompactsource/tool/artifactboundJSONreportwithallfiles/nativeproperties;includeinexistingci-evidenceuploadbeforeattestedcleanup.",
+    "Keepnoticecheckerastheauthoritativelegalbytescheck;reuseitsresult ratherthandeclarenative/fileinventoryalegalapproval.",
+    "Rerunfocusedfixture+workflowcontrolsandfreshqualifiedCIexecution; donotborrowhistoricPASSforchangedscript/tree."
+  ],
+  "remaining_status": "BLOCKED_PENDING_ADOPTION_AND_ACTUAL_CURRENT_SOURCE_CI_INSPECTION; no additionallocalReleasebuildisrequiredifqualifiedCIproducesneededboundevidence.",
+  "cleanup": "No build,nativetools,testprocesses,sourceedits,Gitmutationsorcleanupactionsstartedbyreviewer;onlythisadditivereportandcompletedread/hashprocesses."
+}

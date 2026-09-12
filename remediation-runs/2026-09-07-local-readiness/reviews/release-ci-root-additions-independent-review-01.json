@@ -1,0 +1,283 @@
+{
+  "reviewer": "/root/release_fix_review",
+  "author_of_reviewed_additions": "/root",
+  "reviewed_at": "2026-09-07T13:33:10.553686+00:00",
+  "classification": "APPROVED \u2014 root-authored three additional tests and workflow-local compiler strategy; focused local22-test evidence verified",
+  "independence_boundary": "This reviewer authored the earlier CIv3 draft and does NOT independently approve that own draft. Root has separately reviewed it. This approval covers ONLY root additions after that draft and their surrounding execution paths, before this reviewer authors subsequent native cleanup changes.",
+  "reviewed_source_files": {
+    ".github/workflows/production-verification.yml": "6b825062507949e80796b64776f6656d14c10543b7789b05451e4c8a09b48a6d",
+    "scripts/ci/verification_hygiene.py": "0a767d158b49c3be5b9408bb10a4ee93977196476f7f952a5db523d5a75dcc7a",
+    "scripts/release/tests/test_ci_verification_hygiene.py": "bc8c69ad664587e569c48d552cd9576ddd14479ae7ea06a0018adfee54ea5de0"
+  },
+  "diff_scope": {
+    "workflow": "Only six-line workflow env block plus removal of a trailing empty EOF line beyond authoredv3. Removing the new env block and restoring that blank line exactly reconstructs v3SHA6c4b8b67e3c82757920d4431ed513adc2a13bc2aef2b927982127e4b13a66576.",
+    "tests": "One subprocess import, VerificationHygieneGitIntegrationTest228\u2013295 with two fixtures/tests, and VerificationWorkflowHygieneTest299\u2013306 compiler-strategy contract. Full337-line test file reopened; exact diff against retainedv3 read.",
+    "helper": "Current215-line helper fully reopened and byte-identical to retainedv3; no root production helper change hidden in this approval."
+  },
+  "integration_test_review": {
+    "clean_checkout": "Real isolated Git init/config/add/synthetic local commit, hooks/signing disabled for fixture commit; real source_identity/status and actual disposable wrapper subprocess. Exact claimed outputs removed only after successful stop/upload prerequisites; source/claim/clean Git status preserved.",
+    "dirty_checkout": "Real tracked build file modified with unchanged HEAD/tree; actual status check rejects cleanup, all generated evidence remains, modified source remains, wrapper stop still executes.",
+    "safety": "Fixture roots use TemporaryDirectory+addCleanup; no repository history changed. Fake gradlew performs only --stop assertion+echo, not a Gradle build. No native process or Store side effects.",
+    "limitations": "Mac-host focused run covers these fixture behaviors; Windows .bat semantics not yet executed in Windows CI. Source-string strategy assertion protects configured value, not actual daemon behavior."
+  },
+  "compiler_strategy_source_proof": [
+    "Currentworkflow23\u201327 declares GRADLE_OPTS only for this verification workflow; all five jobs inherit it, iOS job env adds DEVELOPER_DIR without overriding it. No repository gradle.properties or candidate/promotion settings changed.",
+    "Checked-in POSIXwrapper244\u2013251 and Windowswrapper77 inject GRADLE_OPTS into launcher JVM arguments. CurrentXcode shell phaseproject.pbxproj253 inherits env, calls wrapper --no-daemon, and does not strip GRADLE_OPTS.",
+    "Gradle8.13 DaemonParameters145\u2013150 includes launcher System.getProperties in effective properties; BuildActionsFactory222\u2013229 passes these through DefaultBuildActionParameters. EstablishBuildEnvironment52\u201363 installs nonstandard build-system properties in the daemon before execution. Thus client JVM options are not mistaken for daemon heap arguments.",
+    "Gradle8.13 DefaultProjectPropertiesLoader44\u201357 loads system-prefixed project properties and strips prefix66\u201378; controller108\u2013109 installs them. Official8.13 docs explicitly define org.gradle.project.* mapping. A higher-precedence explicit-P override could change this; no conflicting override exists in the reviewed workflow/project task setup.",
+    "ExactpublishedKGP2.4.10 Gradle8.13 variant archive hash matches officialMaven.module fetched200. PropertiesProvider424\u2013427 reads kotlin.compiler.execution.strategy; AbstractKotlinCompileConfig61 configures task convention; IN_PROCESS enum value exactly in-process.",
+    "Actual default JVM path is BTA, not merely old legacy runner: PropertiesProvider441\u2013444 defaulttrue, GradleBuildToolsApiCompilerRunner45 noIsolation, BuildToolsApiCompilationWork171\u2013184 createsInProcessExecutionPolicy,305\u2013317 selects it directly. Legacy runner likewise uses noIsolation42 and directcompileInProcess175\u2013180 without daemon attempt when IN_PROCESS."
+  ],
+  "counter_evidence": [
+    "Gradle8.13 docs say GRADLE_OPTS controls launcher, not daemon JVM configuration. Independently traced the system-project-property forwarding above rather than assuming the option changes daemon heap or all worker processes.",
+    "--no-daemon alone does not prevent defaultKotlinDAEMON path. Exactlegacy runner attempts daemon141\u2013171 before later org.gradle.daemon check; BTA also has separate daemon strategy.",
+    "Kotlin/Native uses a different path: disableCompilerDaemon defaultfalse and native task !forceDisableRunningInProcess already select in-process native tool entry. NewJVM strategy is not proof that Xcode/native helpers never survive.",
+    "KGP simulator tests default standalone=true and generate simctl spawn --standalone. Do not manufacture a blanket simulator leak; oldCI inventory after aggregate showedShutdown. SwiftUI step separately selects an existing simulator and lacks owned shutdown/delete.",
+    "OldCI actualrunner2.337.0/macOS15.7.9 ARM64 later reaped twoibtoold helpers only in postjob cleanup. RUNNER_TRACKING_ID ownership approach is corroborated by officialJobExtension586\u2013601/880\u2013928; do not override the tracking ID or transplant global numeric-PID kills."
+  ],
+  "verification": {
+    "receipt": "remediation-runs/2026-09-07-local-readiness/evidence/ci-hygiene-focused-02/receipt.json",
+    "receipt_sha256": "92f4290b0893993f5e27506e84bf2ce9b4592b49e608d853b0fa50f43bc1ae84",
+    "source_identity": {
+      "commit": "711dd4163f4afa97954f47eddc98fd1a4df0b4ae",
+      "tree": "e0b610b0ad32bb7f0be4a2aac822042a8bcf1f02",
+      "branch": "fix/local-readiness-2026-09-07",
+      "tracked_status": "M .github/workflows/production-verification.yml\n M game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/night/MafiaKillVoteScreen.kt\n M game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/vote/VoteCastScreen.kt",
+      "diff_sha256": "dc4e28e563ccb042969087104e0f81d1cf8d68b788449bdc0a090720df9c8b15",
+      "source_manifest_sha256": "b1ad5657870bccee0cd90148f56105b97a45429d8abe093d1229f12d18282892"
+    },
+    "current_three_file_hashes_match_before_after": true,
+    "command": [
+      "/bin/sh",
+      "-c",
+      "/usr/bin/python3 -B -m unittest discover -s scripts/release/tests -p test_ci_verification_hygiene.py -v && actionlint .github/workflows/production-verification.yml && git diff --check"
+    ],
+    "raw_test_log_sha256": "8995cdddafdeac90a7f7175f553647966d7beafa15537f8770fb19ed85d0be10",
+    "tests": 22,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "test_descriptors": "All22 individual ...ok descriptors read; includes both realGit tests and compiler-strategy contract.",
+    "actionlint": "PASS by shell&& chain exit0; no diagnostic output.",
+    "git_diff_check": "PASS by same chain exit0.",
+    "cleanup": {
+      "exit_code": 0,
+      "stop_exit_code": 0,
+      "remaining_outputs": [],
+      "remaining_owned_workers": [],
+      "cleanup_errors": [],
+      "source_changed": false
+    }
+  },
+  "unexecuted_checks": [
+    "Fresh GitHub CI run of this exact workflow",
+    "Runtime observation that no separateKotlin daemon survives on each CIhost",
+    "Immediate per-cycle native/Xcode helper and freshSwift simulator ownership cleanup (next implementation)",
+    "AnyphysicalLAN/Store/realdevicesigningverification"
+  ],
+  "exact_kgp_source_references": [
+    {
+      "archive": "/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-gradle-plugin-api/2.4.10/dbf95fe3926390ba21b660357867b14e0e4a7f1b/kotlin-gradle-plugin-api-2.4.10-gradle813-sources.jar",
+      "archive_sha256": "bc6390940d048c2095c2ba689e5fcdcfce12c3370474682a70f320391ea14686",
+      "entry": "org/jetbrains/kotlin/gradle/tasks/CompileUsingKotlinDaemon.kt",
+      "entry_sha256": "a954bb4ff55740381c9da9df3520c9bf505f39109073fa586937c44fb129152a",
+      "reviewed_relevant_ranges": [
+        [
+          18,
+          57
+        ],
+        [
+          71,
+          86
+        ]
+      ]
+    },
+    {
+      "archive": "/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-gradle-plugin/2.4.10/687bc5c96eeca0e5cfc2c4176e57f8ea7a7cac9f/kotlin-gradle-plugin-2.4.10-gradle813-sources.jar",
+      "archive_sha256": "70e277a44fbcf4d58444bb8b1459cb80686380537aa7414b80745a71607b36bb",
+      "entry": "org/jetbrains/kotlin/gradle/plugin/PropertiesProvider.kt",
+      "entry_sha256": "b266a4284350cce58c8bc56f67d334280c8da3a09f2904ebe7dd3acb67766d6f",
+      "reviewed_relevant_ranges": [
+        [
+          424,
+          430
+        ],
+        [
+          441,
+          444
+        ]
+      ]
+    },
+    {
+      "archive": "/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-gradle-plugin/2.4.10/687bc5c96eeca0e5cfc2c4176e57f8ea7a7cac9f/kotlin-gradle-plugin-2.4.10-gradle813-sources.jar",
+      "archive_sha256": "70e277a44fbcf4d58444bb8b1459cb80686380537aa7414b80745a71607b36bb",
+      "entry": "org/jetbrains/kotlin/gradle/tasks/configuration/AbstractKotlinCompileConfig.kt",
+      "entry_sha256": "d991c568d10c6b2e43489d5ecf0c3467436227e2b4aa881ecfdeb1ec3b7470a5",
+      "reviewed_relevant_ranges": [
+        [
+          38,
+          87
+        ]
+      ]
+    },
+    {
+      "archive": "/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-gradle-plugin/2.4.10/687bc5c96eeca0e5cfc2c4176e57f8ea7a7cac9f/kotlin-gradle-plugin-2.4.10-gradle813-sources.jar",
+      "archive_sha256": "70e277a44fbcf4d58444bb8b1459cb80686380537aa7414b80745a71607b36bb",
+      "entry": "org/jetbrains/kotlin/compilerRunner/btapi/GradleBuildToolsApiCompilerRunner.kt",
+      "entry_sha256": "04d7d4bf53c193404e647201881e97faa5250e60f32a71784ce7f9f33f6d8df6",
+      "reviewed_relevant_ranges": [
+        [
+          40,
+          61
+        ]
+      ]
+    },
+    {
+      "archive": "/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-gradle-plugin/2.4.10/687bc5c96eeca0e5cfc2c4176e57f8ea7a7cac9f/kotlin-gradle-plugin-2.4.10-gradle813-sources.jar",
+      "archive_sha256": "70e277a44fbcf4d58444bb8b1459cb80686380537aa7414b80745a71607b36bb",
+      "entry": "org/jetbrains/kotlin/compilerRunner/btapi/BuildToolsApiCompilationWork.kt",
+      "entry_sha256": "d1d775da8b208ed077225db143f92b26c510c2b3a3535bb107f61b77855246f3",
+      "reviewed_relevant_ranges": [
+        [
+          171,
+          188
+        ],
+        [
+          305,
+          320
+        ]
+      ]
+    },
+    {
+      "archive": "/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-gradle-plugin/2.4.10/687bc5c96eeca0e5cfc2c4176e57f8ea7a7cac9f/kotlin-gradle-plugin-2.4.10-gradle813-sources.jar",
+      "archive_sha256": "70e277a44fbcf4d58444bb8b1459cb80686380537aa7414b80745a71607b36bb",
+      "entry": "org/jetbrains/kotlin/compilerRunner/GradleCompilerRunnerWithWorkers.kt",
+      "entry_sha256": "fbaf8f7a21dbf341aa869d8d91611353807c9f0b426a76c6428578f13008f67e",
+      "reviewed_relevant_ranges": [
+        [
+          36,
+          51
+        ]
+      ]
+    },
+    {
+      "archive": "/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-gradle-plugin/2.4.10/687bc5c96eeca0e5cfc2c4176e57f8ea7a7cac9f/kotlin-gradle-plugin-2.4.10-gradle813-sources.jar",
+      "archive_sha256": "70e277a44fbcf4d58444bb8b1459cb80686380537aa7414b80745a71607b36bb",
+      "entry": "org/jetbrains/kotlin/compilerRunner/GradleKotlinCompilerWork.kt",
+      "entry_sha256": "7585a944f72a595e39897ccbd94a2c67aca58697c59b67303fefde9d2944cba0",
+      "reviewed_relevant_ranges": [
+        [
+          126,
+          182
+        ]
+      ]
+    },
+    {
+      "archive": "/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-gradle-plugin/2.4.10/687bc5c96eeca0e5cfc2c4176e57f8ea7a7cac9f/kotlin-gradle-plugin-2.4.10-gradle813-sources.jar",
+      "archive_sha256": "70e277a44fbcf4d58444bb8b1459cb80686380537aa7414b80745a71607b36bb",
+      "entry": "org/jetbrains/kotlin/gradle/internal/properties/NativeProperties.kt",
+      "entry_sha256": "9b2598243602e66efa8d5f06ee30d78fe88ba50b98f7a3a6069d147926b79b50",
+      "reviewed_relevant_ranges": [
+        [
+          80,
+          82
+        ],
+        [
+          145,
+          150
+        ]
+      ]
+    },
+    {
+      "archive": "/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-gradle-plugin/2.4.10/687bc5c96eeca0e5cfc2c4176e57f8ea7a7cac9f/kotlin-gradle-plugin-2.4.10-gradle813-sources.jar",
+      "archive_sha256": "70e277a44fbcf4d58444bb8b1459cb80686380537aa7414b80745a71607b36bb",
+      "entry": "org/jetbrains/kotlin/gradle/targets/native/tasks/KotlinNativeTasks.kt",
+      "entry_sha256": "818202c406d56742d07734002f774b27f216e6e8c142ad5f3469de6c47ba7bf2",
+      "reviewed_relevant_ranges": [
+        [
+          590,
+          596
+        ]
+      ]
+    },
+    {
+      "archive": "/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-gradle-plugin/2.4.10/687bc5c96eeca0e5cfc2c4176e57f8ea7a7cac9f/kotlin-gradle-plugin-2.4.10-gradle813-sources.jar",
+      "archive_sha256": "70e277a44fbcf4d58444bb8b1459cb80686380537aa7414b80745a71607b36bb",
+      "entry": "org/jetbrains/kotlin/gradle/targets/native/tasks/KotlinNativeLink.kt",
+      "entry_sha256": "956a16bead9c55f07abaecb1ab5500a3fe77d088c147098ab27091a4e69dfa24",
+      "reviewed_relevant_ranges": [
+        [
+          541,
+          547
+        ]
+      ]
+    },
+    {
+      "archive": "/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-gradle-plugin/2.4.10/687bc5c96eeca0e5cfc2c4176e57f8ea7a7cac9f/kotlin-gradle-plugin-2.4.10-gradle813-sources.jar",
+      "archive_sha256": "70e277a44fbcf4d58444bb8b1459cb80686380537aa7414b80745a71607b36bb",
+      "entry": "org/jetbrains/kotlin/internal/compilerRunner/native/KotlinNativeToolRunner.kt",
+      "entry_sha256": "982a6e9f5c87d15c58982d7d3552c7c68b1ef7aabe3c39844c8e32828f108590",
+      "reviewed_relevant_ranges": [
+        [
+          60,
+          70
+        ],
+        [
+          136,
+          185
+        ]
+      ]
+    },
+    {
+      "archive": "/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-gradle-plugin/2.4.10/687bc5c96eeca0e5cfc2c4176e57f8ea7a7cac9f/kotlin-gradle-plugin-2.4.10-gradle813-sources.jar",
+      "archive_sha256": "70e277a44fbcf4d58444bb8b1459cb80686380537aa7414b80745a71607b36bb",
+      "entry": "org/jetbrains/kotlin/gradle/targets/native/KotlinNativeTestRunFactories.kt",
+      "entry_sha256": "b4443aa960e98012841671c9a741455c61629952bb48c1977ecac2ffed01f324",
+      "reviewed_relevant_ranges": [
+        [
+          50,
+          72
+        ]
+      ]
+    },
+    {
+      "archive": "/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-gradle-plugin/2.4.10/687bc5c96eeca0e5cfc2c4176e57f8ea7a7cac9f/kotlin-gradle-plugin-2.4.10-gradle813-sources.jar",
+      "archive_sha256": "70e277a44fbcf4d58444bb8b1459cb80686380537aa7414b80745a71607b36bb",
+      "entry": "org/jetbrains/kotlin/gradle/targets/native/tasks/KotlinNativeTest.kt",
+      "entry_sha256": "f3538844f82046975c2036c821a5c942debc01109e7294e16aa4ba1b1999df72",
+      "reviewed_relevant_ranges": [
+        [
+          265,
+          296
+        ]
+      ]
+    }
+  ],
+  "authoritative_research_receipts": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34112913001-evidence/authoritative-ci-worker-lifecycle-01.json",
+      "sha256": "ae45bd2de8303230891a3b270d04b9e656f726b14166c5a39323e64be8c9c9cc"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34112913001-evidence/authoritative-ci-worker-lifecycle-02.json",
+      "sha256": "5f927c44b277175ed486e9e1c8feb06eb7300ce1d6c0fe56214e7399822de485"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34112913001-evidence/authoritative-ci-worker-lifecycle-03.json",
+      "sha256": "8ed875919e941acf8e4aaa8bcdfc5042ae4f3dc8fdfdcea819b111698766e02d"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34112913001-evidence/authoritative-ci-worker-lifecycle-04.json",
+      "sha256": "8e419b310fc4007a7cfd72b45e73cee6cff0ba5bd1aeee7bee36d1f272073de4"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34112913001-evidence/authoritative-ci-worker-lifecycle-05.json",
+      "sha256": "f21fcf9da7c2446f0f76bb883369c99856a3da07b35a1c968d8799e61e737cc1"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34112913001-evidence/authoritative-gradle8-project-property-paths-01.json",
+      "sha256": "22ec84720deeeeb3e5d919681536ed34a288a41488e0b7cad97e75bcf6a18371"
+    }
+  ],
+  "review_hygiene": "No Gradle/build/runtime/simulator/process-control invoked. Only read-only source/evidence/network fetches and additive review/research material. All child network-reader commands completed; no task workers remain. Initial source URL404/429s and one draftparser KeyError retained as research/analysis failures, not claimed runtime success."
+}

@@ -1,0 +1,573 @@
+﻿2026-09-10T14:14:27.1169494Z Current runner version: '2.337.0'
+2026-09-10T14:14:27.1195625Z ##[group]Runner Image Provisioner
+2026-09-10T14:14:27.1196456Z Hosted Compute Agent
+2026-09-10T14:14:27.1197211Z Version: 20260828.587
+2026-09-10T14:14:27.1197961Z Commit: abac92662cab4cc7352de4f9f9d2e2419aad9c29
+2026-09-10T14:14:27.1198732Z Build Date: 2026-08-28T16:44:25Z
+2026-09-10T14:14:27.1199435Z Worker ID: {1e66ff76-62c1-455e-9a49-aa384d64ac02}
+2026-09-10T14:14:27.1200164Z Azure Region: chilecentral
+2026-09-10T14:14:27.1201082Z ##[endgroup]
+2026-09-10T14:14:27.1202911Z ##[group]Operating System
+2026-09-10T14:14:27.1203660Z Ubuntu
+2026-09-10T14:14:27.1204194Z 24.04.5
+2026-09-10T14:14:27.1204695Z LTS
+2026-09-10T14:14:27.1205247Z ##[endgroup]
+2026-09-10T14:14:27.1205833Z ##[group]Runner Image
+2026-09-10T14:14:27.1206416Z Image: ubuntu-24.04
+2026-09-10T14:14:27.1207042Z Version: 20260907.300.1
+2026-09-10T14:14:27.1208275Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260907.300/images/ubuntu/Ubuntu2404-Readme.md
+2026-09-10T14:14:27.1209925Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260907.300
+2026-09-10T14:14:27.1211251Z ##[endgroup]
+2026-09-10T14:14:27.1212467Z ##[group]GITHUB_TOKEN Permissions
+2026-09-10T14:14:27.1214380Z Contents: read
+2026-09-10T14:14:27.1215226Z Metadata: read
+2026-09-10T14:14:27.1215783Z ##[endgroup]
+2026-09-10T14:14:27.1217974Z Secret source: Actions
+2026-09-10T14:14:27.1218894Z Cache mode: write
+2026-09-10T14:14:27.1219628Z Prepare workflow directory
+2026-09-10T14:14:27.1616935Z Prepare all required actions
+2026-09-10T14:14:27.1665253Z Getting action download info
+2026-09-10T14:14:27.6859221Z Download action repository 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+2026-09-10T14:14:27.7860174Z Download action repository 'actions/setup-java@03ad4de0992f5dab5e18fcb136590ce7c4a0ac95' (SHA:03ad4de0992f5dab5e18fcb136590ce7c4a0ac95)
+2026-09-10T14:14:28.9122855Z Download action repository 'actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a' (SHA:043fb46d1a93c77aae656e7c1c64a875d1fc6a0a)
+2026-09-10T14:14:29.1119857Z Complete job name: Common, desktop, and Android release
+2026-09-10T14:14:29.1994377Z ##[group]Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+2026-09-10T14:14:29.1995549Z with:
+2026-09-10T14:14:29.1996036Z   fetch-depth: 0
+2026-09-10T14:14:29.1996546Z   persist-credentials: false
+2026-09-10T14:14:29.1997142Z   repository: Apdelrahman1911/parlor
+2026-09-10T14:14:29.2001651Z   token: ***
+2026-09-10T14:14:29.2002143Z   ssh-strict: true
+2026-09-10T14:14:29.2002632Z   ssh-user: git
+2026-09-10T14:14:29.2003094Z   clean: true
+2026-09-10T14:14:29.2003581Z   sparse-checkout-cone-mode: true
+2026-09-10T14:14:29.2004168Z   fetch-tags: false
+2026-09-10T14:14:29.2004662Z   show-progress: true
+2026-09-10T14:14:29.2005159Z   lfs: false
+2026-09-10T14:14:29.2005625Z   submodules: false
+2026-09-10T14:14:29.2006119Z   set-safe-directory: true
+2026-09-10T14:14:29.2006668Z   allow-unsafe-pr-checkout: false
+2026-09-10T14:14:29.2007538Z env:
+2026-09-10T14:14:29.2008326Z   GRADLE_OPTS: -Dorg.gradle.project.kotlin.compiler.execution.strategy=in-process
+2026-09-10T14:14:29.2009257Z ##[endgroup]
+2026-09-10T14:14:29.3085842Z Syncing repository: Apdelrahman1911/parlor
+2026-09-10T14:14:29.3088713Z ##[group]Getting Git version info
+2026-09-10T14:14:29.3090141Z Working directory is '/home/runner/work/parlor/parlor'
+2026-09-10T14:14:29.3092372Z [command]/usr/bin/git version
+2026-09-10T14:14:29.3132063Z git version 2.55.0
+2026-09-10T14:14:29.3155896Z ##[endgroup]
+2026-09-10T14:14:29.3167447Z Temporarily overriding HOME='/home/runner/work/_temp/ad5214c3-ed46-40cf-9c1d-b2a3375f0ced' before making global git config changes
+2026-09-10T14:14:29.3169762Z Adding repository directory to the temporary git global config as a safe directory
+2026-09-10T14:14:29.3173745Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/parlor/parlor
+2026-09-10T14:14:29.3235145Z Deleting the contents of '/home/runner/work/parlor/parlor'
+2026-09-10T14:14:29.3262240Z ##[group]Determining repository object format
+2026-09-10T14:14:29.3264555Z ##[endgroup]
+2026-09-10T14:14:29.3266172Z ##[group]Initializing the repository
+2026-09-10T14:14:29.3267651Z [command]/usr/bin/git init /home/runner/work/parlor/parlor
+2026-09-10T14:14:29.3356108Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-09-10T14:14:29.3357998Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-09-10T14:14:29.3359272Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-09-10T14:14:29.3360259Z hint: call:
+2026-09-10T14:14:29.3361266Z hint:
+2026-09-10T14:14:29.3361953Z hint: 	git config --global init.defaultBranch <name>
+2026-09-10T14:14:29.3362754Z hint:
+2026-09-10T14:14:29.3363419Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-09-10T14:14:29.3364472Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-09-10T14:14:29.3365354Z hint:
+2026-09-10T14:14:29.3365822Z hint: 	git branch -m <name>
+2026-09-10T14:14:29.3366354Z hint:
+2026-09-10T14:14:29.3367078Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-09-10T14:14:29.3373569Z Initialized empty Git repository in /home/runner/work/parlor/parlor/.git/
+2026-09-10T14:14:29.3384735Z [command]/usr/bin/git remote add origin https://github.com/Apdelrahman1911/parlor
+2026-09-10T14:14:29.3437523Z ##[endgroup]
+2026-09-10T14:14:29.3438400Z ##[group]Disabling automatic garbage collection
+2026-09-10T14:14:29.3442370Z [command]/usr/bin/git config --local gc.auto 0
+2026-09-10T14:14:29.3475593Z ##[endgroup]
+2026-09-10T14:14:29.3476805Z ##[group]Setting up auth
+2026-09-10T14:14:29.3477775Z Removing SSH command configuration
+2026-09-10T14:14:29.3482482Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-09-10T14:14:29.3516673Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-09-10T14:14:29.3907786Z Removing HTTP extra header
+2026-09-10T14:14:29.3918083Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-09-10T14:14:29.3964444Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-09-10T14:14:29.4195681Z Removing includeIf entries pointing to credentials config files
+2026-09-10T14:14:29.4201601Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-09-10T14:14:29.4239041Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-09-10T14:14:29.4481457Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-d26520bc-e95e-4a86-9645-ad674cdf08d0.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-09-10T14:14:29.4525700Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/parlor/parlor/.git.path /home/runner/work/_temp/git-credentials-d26520bc-e95e-4a86-9645-ad674cdf08d0.config
+2026-09-10T14:14:29.4561549Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/parlor/parlor/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-d26520bc-e95e-4a86-9645-ad674cdf08d0.config
+2026-09-10T14:14:29.4600343Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-d26520bc-e95e-4a86-9645-ad674cdf08d0.config
+2026-09-10T14:14:29.4635906Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-d26520bc-e95e-4a86-9645-ad674cdf08d0.config
+2026-09-10T14:14:29.4666470Z ##[endgroup]
+2026-09-10T14:14:29.4667315Z ##[group]Fetching the repository
+2026-09-10T14:14:29.4672947Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules origin +refs/heads/*:refs/remotes/origin/* +refs/tags/*:refs/tags/*
+2026-09-10T14:14:36.9109531Z From https://github.com/Apdelrahman1911/parlor
+2026-09-10T14:14:36.9110876Z  * [new branch]        codex/parlor-fr-remediation -> origin/codex/parlor-fr-remediation
+2026-09-10T14:14:36.9112309Z  * [new branch]        codex/parlor-independent-review-9cd4040 -> origin/codex/parlor-independent-review-9cd4040
+2026-09-10T14:14:36.9113916Z  * [new branch]        dependabot/github_actions/ci-actions-6bc1927ba3 -> origin/dependabot/github_actions/ci-actions-6bc1927ba3
+2026-09-10T14:14:36.9115126Z  * [new branch]        fix/issue-103 -> origin/fix/issue-103
+2026-09-10T14:14:36.9115926Z  * [new branch]        fix/issue-72  -> origin/fix/issue-72
+2026-09-10T14:14:36.9116712Z  * [new branch]        fix/issue-73  -> origin/fix/issue-73
+2026-09-10T14:14:36.9117662Z  * [new branch]        fix/local-readiness-2026-09-07 -> origin/fix/local-readiness-2026-09-07
+2026-09-10T14:14:36.9118964Z  * [new branch]        mafia/module-and-platform-updates -> origin/mafia/module-and-platform-updates
+2026-09-10T14:14:36.9119991Z  * [new branch]        main          -> origin/main
+2026-09-10T14:14:36.9121063Z  * [new branch]        release       -> origin/release
+2026-09-10T14:14:36.9121864Z  * [new branch]        testing       -> origin/testing
+2026-09-10T14:14:36.9122846Z  * [new branch]        whodunit/round-config-and-clue-pool -> origin/whodunit/round-config-and-clue-pool
+2026-09-10T14:14:36.9125422Z [command]/usr/bin/git branch --list --remote origin/fix/local-readiness-2026-09-07
+2026-09-10T14:14:36.9159902Z   origin/fix/local-readiness-2026-09-07
+2026-09-10T14:14:36.9170342Z [command]/usr/bin/git rev-parse refs/remotes/origin/fix/local-readiness-2026-09-07
+2026-09-10T14:14:36.9198956Z e4d49e17f5f1099a742ab3985c6257d090d61ba6
+2026-09-10T14:14:36.9204239Z ##[endgroup]
+2026-09-10T14:14:36.9205029Z ##[group]Determining the checkout info
+2026-09-10T14:14:36.9205933Z ##[endgroup]
+2026-09-10T14:14:36.9210756Z [command]/usr/bin/git sparse-checkout disable
+2026-09-10T14:14:36.9265936Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-09-10T14:14:36.9298887Z ##[group]Checking out the ref
+2026-09-10T14:14:36.9304356Z [command]/usr/bin/git checkout --progress --force -B fix/local-readiness-2026-09-07 refs/remotes/origin/fix/local-readiness-2026-09-07
+2026-09-10T14:14:37.9712313Z Updating files:  50% (14720/29052)
+2026-09-10T14:14:37.9965490Z Updating files:  51% (14817/29052)
+2026-09-10T14:14:38.0156455Z Updating files:  52% (15108/29052)
+2026-09-10T14:14:38.0385918Z Updating files:  53% (15398/29052)
+2026-09-10T14:14:38.0703157Z Updating files:  54% (15689/29052)
+2026-09-10T14:14:38.0985510Z Updating files:  55% (15979/29052)
+2026-09-10T14:14:38.1230036Z Updating files:  56% (16270/29052)
+2026-09-10T14:14:38.1529329Z Updating files:  57% (16560/29052)
+2026-09-10T14:14:38.1670143Z Updating files:  58% (16851/29052)
+2026-09-10T14:14:38.2069700Z Updating files:  59% (17141/29052)
+2026-09-10T14:14:38.2190068Z Updating files:  60% (17432/29052)
+2026-09-10T14:14:38.2368181Z Updating files:  61% (17722/29052)
+2026-09-10T14:14:38.2645178Z Updating files:  62% (18013/29052)
+2026-09-10T14:14:38.2912719Z Updating files:  63% (18303/29052)
+2026-09-10T14:14:38.3135454Z Updating files:  64% (18594/29052)
+2026-09-10T14:14:38.3435779Z Updating files:  65% (18884/29052)
+2026-09-10T14:14:38.3686685Z Updating files:  66% (19175/29052)
+2026-09-10T14:14:38.3883043Z Updating files:  67% (19465/29052)
+2026-09-10T14:14:38.4088081Z Updating files:  68% (19756/29052)
+2026-09-10T14:14:38.4421010Z Updating files:  69% (20046/29052)
+2026-09-10T14:14:38.5169151Z Updating files:  70% (20337/29052)
+2026-09-10T14:14:38.5310678Z Updating files:  71% (20627/29052)
+2026-09-10T14:14:38.5466754Z Updating files:  72% (20918/29052)
+2026-09-10T14:14:38.5639700Z Updating files:  73% (21208/29052)
+2026-09-10T14:14:38.5803723Z Updating files:  74% (21499/29052)
+2026-09-10T14:14:38.6131805Z Updating files:  75% (21789/29052)
+2026-09-10T14:14:38.6273677Z Updating files:  76% (22080/29052)
+2026-09-10T14:14:38.6621449Z Updating files:  77% (22371/29052)
+2026-09-10T14:14:38.6763358Z Updating files:  78% (22661/29052)
+2026-09-10T14:14:38.7952299Z Updating files:  79% (22952/29052)
+2026-09-10T14:14:38.8403752Z Updating files:  80% (23242/29052)
+2026-09-10T14:14:38.8755800Z Updating files:  81% (23533/29052)
+2026-09-10T14:14:38.9095235Z Updating files:  82% (23823/29052)
+2026-09-10T14:14:38.9836357Z Updating files:  83% (24114/29052)
+2026-09-10T14:14:38.9971005Z Updating files:  83% (24187/29052)
+2026-09-10T14:14:39.0109254Z Updating files:  84% (24404/29052)
+2026-09-10T14:14:39.0251930Z Updating files:  85% (24695/29052)
+2026-09-10T14:14:39.0412079Z Updating files:  86% (24985/29052)
+2026-09-10T14:14:39.0574100Z Updating files:  87% (25276/29052)
+2026-09-10T14:14:39.1017339Z Updating files:  88% (25566/29052)
+2026-09-10T14:14:39.1158021Z Updating files:  89% (25857/29052)
+2026-09-10T14:14:39.1704831Z Updating files:  90% (26147/29052)
+2026-09-10T14:14:39.1847190Z Updating files:  91% (26438/29052)
+2026-09-10T14:14:39.2031388Z Updating files:  92% (26728/29052)
+2026-09-10T14:14:39.3526856Z Updating files:  93% (27019/29052)
+2026-09-10T14:14:39.3714426Z Updating files:  94% (27309/29052)
+2026-09-10T14:14:39.3937685Z Updating files:  95% (27600/29052)
+2026-09-10T14:14:39.4269000Z Updating files:  96% (27890/29052)
+2026-09-10T14:14:39.4659755Z Updating files:  97% (28181/29052)
+2026-09-10T14:14:39.4999458Z Updating files:  98% (28471/29052)
+2026-09-10T14:14:39.5351295Z Updating files:  99% (28762/29052)
+2026-09-10T14:14:39.5352139Z Updating files: 100% (29052/29052)
+2026-09-10T14:14:39.5352838Z Updating files: 100% (29052/29052), done.
+2026-09-10T14:14:39.5800707Z Switched to a new branch 'fix/local-readiness-2026-09-07'
+2026-09-10T14:14:39.5805973Z branch 'fix/local-readiness-2026-09-07' set up to track 'origin/fix/local-readiness-2026-09-07'.
+2026-09-10T14:14:39.5895079Z ##[endgroup]
+2026-09-10T14:14:39.5951426Z [command]/usr/bin/git log -1 --format=%H
+2026-09-10T14:14:39.5976367Z e4d49e17f5f1099a742ab3985c6257d090d61ba6
+2026-09-10T14:14:39.5986285Z ##[group]Removing auth
+2026-09-10T14:14:39.5986742Z Removing SSH command configuration
+2026-09-10T14:14:39.5991137Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-09-10T14:14:39.6029447Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-09-10T14:14:39.6295817Z Removing HTTP extra header
+2026-09-10T14:14:39.6299987Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-09-10T14:14:39.6337659Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-09-10T14:14:39.6608524Z Removing includeIf entries pointing to credentials config files
+2026-09-10T14:14:39.6612238Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-09-10T14:14:39.6663678Z includeif.gitdir:/home/runner/work/parlor/parlor/.git.path
+2026-09-10T14:14:39.6665115Z includeif.gitdir:/home/runner/work/parlor/parlor/.git/worktrees/*.path
+2026-09-10T14:14:39.6666319Z includeif.gitdir:/github/workspace/.git.path
+2026-09-10T14:14:39.6667357Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-09-10T14:14:39.6672758Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/parlor/parlor/.git.path
+2026-09-10T14:14:39.6700442Z /home/runner/work/_temp/git-credentials-d26520bc-e95e-4a86-9645-ad674cdf08d0.config
+2026-09-10T14:14:39.6720996Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/parlor/parlor/.git.path \/home\/runner\/work\/_temp\/git\-credentials\-d26520bc\-e95e\-4a86\-9645\-ad674cdf08d0\.config
+2026-09-10T14:14:39.6758146Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/parlor/parlor/.git/worktrees/*.path
+2026-09-10T14:14:39.6786113Z /home/runner/work/_temp/git-credentials-d26520bc-e95e-4a86-9645-ad674cdf08d0.config
+2026-09-10T14:14:39.6795247Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/parlor/parlor/.git/worktrees/*.path \/home\/runner\/work\/_temp\/git\-credentials\-d26520bc\-e95e\-4a86\-9645\-ad674cdf08d0\.config
+2026-09-10T14:14:39.6842254Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+2026-09-10T14:14:39.6860508Z /github/runner_temp/git-credentials-d26520bc-e95e-4a86-9645-ad674cdf08d0.config
+2026-09-10T14:14:39.6868091Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-d26520bc\-e95e\-4a86\-9645\-ad674cdf08d0\.config
+2026-09-10T14:14:39.6904744Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-09-10T14:14:39.6932049Z /github/runner_temp/git-credentials-d26520bc-e95e-4a86-9645-ad674cdf08d0.config
+2026-09-10T14:14:39.6939216Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-d26520bc\-e95e\-4a86\-9645\-ad674cdf08d0\.config
+2026-09-10T14:14:39.6974728Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-09-10T14:14:39.7232162Z Removing credentials config '/home/runner/work/_temp/git-credentials-d26520bc-e95e-4a86-9645-ad674cdf08d0.config'
+2026-09-10T14:14:39.7241406Z ##[endgroup]
+2026-09-10T14:14:39.7521713Z ##[group]Run actions/setup-java@03ad4de0992f5dab5e18fcb136590ce7c4a0ac95
+2026-09-10T14:14:39.7522117Z with:
+2026-09-10T14:14:39.7522317Z   distribution: temurin
+2026-09-10T14:14:39.7522538Z   java-version: 21
+2026-09-10T14:14:39.7522743Z   check-latest: false
+2026-09-10T14:14:39.7522977Z   java-package: jdk
+2026-09-10T14:14:39.7523196Z   set-default: true
+2026-09-10T14:14:39.7523400Z   verify-signature: false
+2026-09-10T14:14:39.7523623Z   server-id: github
+2026-09-10T14:14:39.7523829Z   server-username: GITHUB_ACTOR
+2026-09-10T14:14:39.7524080Z   server-password: GITHUB_TOKEN
+2026-09-10T14:14:39.7524334Z   overwrite-settings: true
+2026-09-10T14:14:39.7524563Z   job-status: success
+2026-09-10T14:14:39.7527294Z   token: ***
+2026-09-10T14:14:39.7527521Z   show-download-progress: false
+2026-09-10T14:14:39.7527765Z env:
+2026-09-10T14:14:39.7528117Z   GRADLE_OPTS: -Dorg.gradle.project.kotlin.compiler.execution.strategy=in-process
+2026-09-10T14:14:39.7528545Z ##[endgroup]
+2026-09-10T14:14:39.9018120Z ##[group]Installed distributions
+2026-09-10T14:14:39.9083216Z Resolved Java 21.0.12+1 from tool-cache
+2026-09-10T14:14:39.9083721Z Setting Java 21.0.12+1 as the default
+2026-09-10T14:14:39.9094481Z Creating toolchains.xml for JDK version 21 from temurin
+2026-09-10T14:14:39.9171585Z Writing to /home/runner/.m2/toolchains.xml
+2026-09-10T14:14:39.9172085Z 
+2026-09-10T14:14:39.9172295Z Java configuration:
+2026-09-10T14:14:39.9172699Z   Distribution: temurin
+2026-09-10T14:14:39.9173170Z   Version: 21.0.12+1
+2026-09-10T14:14:39.9173766Z   Path: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-1/x64
+2026-09-10T14:14:39.9174184Z 
+2026-09-10T14:14:39.9174546Z ##[endgroup]
+2026-09-10T14:14:39.9209127Z Creating settings.xml with server-id: github
+2026-09-10T14:14:39.9209776Z Writing to /home/runner/.m2/settings.xml
+2026-09-10T14:14:39.9211487Z Configured MAVEN_ARGS to include -ntp to suppress Maven transfer progress logs. Set 'show-download-progress: true' to keep the download progress output.
+2026-09-10T14:14:39.9356868Z ##[group]Run /usr/bin/python3 -B scripts/ci/linux_process_probe.py validate
+2026-09-10T14:14:39.9357470Z [36;1m/usr/bin/python3 -B scripts/ci/linux_process_probe.py validate[0m
+2026-09-10T14:14:39.9402549Z shell: /usr/bin/bash -e {0}
+2026-09-10T14:14:39.9403058Z env:
+2026-09-10T14:14:39.9403457Z   GRADLE_OPTS: -Dorg.gradle.project.kotlin.compiler.execution.strategy=in-process
+2026-09-10T14:14:39.9404052Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-1/x64
+2026-09-10T14:14:39.9404574Z   JAVA_HOME_21_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-1/x64
+2026-09-10T14:14:39.9405005Z   MAVEN_ARGS: -ntp
+2026-09-10T14:14:39.9406116Z   PARLOR_LINUX_PROBE_INPUTS: {
+  "verification_scope": "linux-process-probe",
+  "native_selection": "paired",
+  "frozen_source_sha": "e4d49e17f5f1099a742ab3985c6257d090d61ba6",
+  "approved_probe_control_sha256": "f01113e6516e1e16ccefb9d96b8e3ffa2bc0ece7ebcb8206d603c52c80108d51"
+}
+2026-09-10T14:14:39.9407286Z ##[endgroup]
+2026-09-10T14:14:41.4132780Z {"task": {"GITHUB_RUN_ID": "34487728583", "GITHUB_RUN_ATTEMPT": "1", "GITHUB_JOB": "desktop-android"}, "source": {"root": "/home/runner/work/parlor/parlor", "head": "e4d49e17f5f1099a742ab3985c6257d090d61ba6", "tree": "1e3697d7eab93cc856166f85a791fe3cdd62941a"}, "controls": {"files": [{"path": ".github/workflows/production-verification.yml", "sha256": "f455e2b7327009935fe4503d340237bc78dcaa2a65763a662a3dcf54318ac7b5"}, {"path": "gradle/wrapper/gradle-wrapper.jar", "sha256": "81a82aaea5abcc8ff68b3dfcb58b3c3c429378efd98e7433460610fecd7ae45f"}, {"path": "gradle/wrapper/gradle-wrapper.properties", "sha256": "c040b6ef2fb893ff5beea5a281614f2848f1c3996a7886f650b713f8240656a2"}, {"path": "gradlew", "sha256": "734b3879d3501dce471cf0522d3bcbafe76873d9fc5129345b67fb43bd15e933"}, {"path": "scripts/ci/linux_exe_reader.py", "sha256": "f3b71da3870e8d45630b5415045eb77ede9f6eeb1ae706cc3f6332b4bd0b8ae0"}, {"path": "scripts/ci/linux_process_probe.py", "sha256": "e449163d97161f570ed61227df2b345a9a3a7d652784f224109610c04a561e50"}, {"path": "scripts/ci/verification_hygiene.py", "sha256": "f6a882754d8df582148e4c7e97f22eca2613041170ebfcc36cb946a63bff3ea0"}, {"path": "scripts/release/tests/test_ci_verification_hygiene.py", "sha256": "927981c5aa745b8f430d1e4b96feab9b5f2669548364b96d089210944800cdaf"}, {"path": "scripts/release/tests/test_linux_exe_reader.py", "sha256": "a844c29651b1d3c475c7331d614a15bde5365b0f6ed9152f81916aa2678b145a"}, {"path": "scripts/release/tests/test_linux_process_probe.py", "sha256": "225effb84ef4bd58c91354cd98619200e780e3d771aa6b40383ca554059683bd"}, {"path": "scripts/release/tests/test_workflow_contract.py", "sha256": "1b322f47e96c68f3b8e690e8a0ef01159e33bd751d3c48204d141b61a9051872"}, {"path": "scripts/release/workflow_contract.py", "sha256": "98b722d0ac5c0ec3711522ca2b5e8367ebcaa1873342425f01d1c9a464a7f0a6"}], "control_sha256": "f01113e6516e1e16ccefb9d96b8e3ffa2bc0ece7ebcb8206d603c52c80108d51"}, "android_sdk": {"sdk_path_sha256": "e507a12011d2294b5329bb26fe44164d883087cb9d582c7ec9335a39e4c551e1", "sdk_device": 2049, "sdk_inode": 795534, "uid": 1001}, "platform": {"os": "ubuntu-24.04", "machine": "x86_64", "kernel": "6.17.0-1022-azure", "python": "3.12.3"}}
+2026-09-10T14:14:41.4240101Z ##[group]Run set -euo pipefail
+2026-09-10T14:14:41.4240704Z [36;1mset -euo pipefail[0m
+2026-09-10T14:14:41.4241089Z [36;1m/usr/bin/timeout --signal=TERM --kill-after=10s 180s \[0m
+2026-09-10T14:14:41.4241691Z [36;1m  "${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager" --sdk_root="${ANDROID_HOME}" "emulator"[0m
+2026-09-10T14:14:41.4280130Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-09-10T14:14:41.4280693Z env:
+2026-09-10T14:14:41.4281074Z   GRADLE_OPTS: -Dorg.gradle.project.kotlin.compiler.execution.strategy=in-process
+2026-09-10T14:14:41.4281640Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-1/x64
+2026-09-10T14:14:41.4282158Z   JAVA_HOME_21_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-1/x64
+2026-09-10T14:14:41.4282566Z   MAVEN_ARGS: -ntp
+2026-09-10T14:14:41.4282778Z ##[endgroup]
+2026-09-10T14:14:46.1334266Z Loading package information...                                                  
+2026-09-10T14:14:46.2262638Z Loading local repository...                                                     
+2026-09-10T14:14:46.2265394Z [                                       ] 3% Loading local repository...        
+2026-09-10T14:14:48.3824269Z [                                       ] 3% Fetch remote repository...         
+2026-09-10T14:14:48.8519373Z [=                                      ] 3% Fetch remote repository...         
+2026-09-10T14:14:48.9502417Z [=                                      ] 4% Fetch remote repository...         
+2026-09-10T14:14:48.9961824Z [=                                      ] 5% Fetch remote repository...         
+2026-09-10T14:14:49.0517124Z [==                                     ] 5% Fetch remote repository...         
+2026-09-10T14:14:49.2295660Z [==                                     ] 6% Fetch remote repository...         
+2026-09-10T14:14:49.3873891Z [==                                     ] 7% Fetch remote repository...         
+2026-09-10T14:14:49.3901456Z [==                                     ] 7% Computing updates...               
+2026-09-10T14:14:49.3969328Z [===                                    ] 8% Computing updates...               
+2026-09-10T14:14:49.4341521Z [===                                    ] 10% Computing updates...              
+2026-09-10T14:14:49.4607768Z [===                                    ] 10% Installing Android Emulator       
+2026-09-10T14:14:49.5847195Z [===                                    ] 10% Downloading emulator-linux_x64-159
+2026-09-10T14:14:49.6891829Z [====                                   ] 10% Downloading emulator-linux_x64-159
+2026-09-10T14:14:49.7697327Z [====                                   ] 11% Downloading emulator-linux_x64-159
+2026-09-10T14:14:49.8455042Z [====                                   ] 12% Downloading emulator-linux_x64-159
+2026-09-10T14:14:49.9017431Z [=====                                  ] 13% Downloading emulator-linux_x64-159
+2026-09-10T14:14:49.9572018Z [=====                                  ] 14% Downloading emulator-linux_x64-159
+2026-09-10T14:14:49.9989589Z [=====                                  ] 15% Downloading emulator-linux_x64-159
+2026-09-10T14:14:50.0251044Z [======                                 ] 15% Downloading emulator-linux_x64-159
+2026-09-10T14:14:50.0766888Z [======                                 ] 16% Downloading emulator-linux_x64-159
+2026-09-10T14:14:50.1365878Z [======                                 ] 17% Downloading emulator-linux_x64-159
+2026-09-10T14:14:50.1721567Z [=======                                ] 18% Downloading emulator-linux_x64-159
+2026-09-10T14:14:50.2147525Z [=======                                ] 19% Downloading emulator-linux_x64-159
+2026-09-10T14:14:50.2318781Z [=======                                ] 20% Downloading emulator-linux_x64-159
+2026-09-10T14:14:50.2489589Z [========                               ] 20% Downloading emulator-linux_x64-159
+2026-09-10T14:14:50.2915078Z [========                               ] 21% Downloading emulator-linux_x64-159
+2026-09-10T14:14:50.3255985Z [========                               ] 22% Downloading emulator-linux_x64-159
+2026-09-10T14:14:50.3604597Z [=========                              ] 23% Downloading emulator-linux_x64-159
+2026-09-10T14:14:50.4006561Z [=========                              ] 24% Downloading emulator-linux_x64-159
+2026-09-10T14:14:50.4142699Z [=========                              ] 25% Downloading emulator-linux_x64-159
+2026-09-10T14:14:50.4316061Z [==========                             ] 25% Downloading emulator-linux_x64-159
+2026-09-10T14:14:50.4707030Z [==========                             ] 26% Downloading emulator-linux_x64-159
+2026-09-10T14:14:50.5008772Z [==========                             ] 27% Downloading emulator-linux_x64-159
+2026-09-10T14:14:50.5436508Z [===========                            ] 28% Downloading emulator-linux_x64-159
+2026-09-10T14:14:50.5760910Z [===========                            ] 29% Downloading emulator-linux_x64-159
+2026-09-10T14:14:50.5919237Z [===========                            ] 30% Downloading emulator-linux_x64-159
+2026-09-10T14:14:50.6157947Z [============                           ] 30% Downloading emulator-linux_x64-159
+2026-09-10T14:14:50.6482880Z [============                           ] 31% Downloading emulator-linux_x64-159
+2026-09-10T14:14:50.6812246Z [============                           ] 32% Downloading emulator-linux_x64-159
+2026-09-10T14:14:50.6817001Z [============                           ] 33% Downloading emulator-linux_x64-159
+2026-09-10T14:14:50.8225860Z [============                           ] 33% Unzipping...                      
+2026-09-10T14:14:50.8227485Z [============                           ] 33% Unzipping... emulator/            
+2026-09-10T14:14:50.8228591Z [============                           ] 33% Unzipping... emulator/resources/  
+2026-09-10T14:14:50.8249555Z [============                           ] 33% Unzipping... emulator/qsn         
+2026-09-10T14:14:50.8629681Z [=============                          ] 33% Unzipping... emulator/qsn         
+2026-09-10T14:14:50.9310689Z [=============                          ] 33% Unzipping... emulator/emulator    
+2026-09-10T14:14:51.0477367Z [=============                          ] 33% Unzipping... emulator/netsimd     
+2026-09-10T14:14:51.0478423Z [=============                          ] 33% Unzipping... emulator/bin64/      
+2026-09-10T14:14:51.0479421Z [=============                          ] 33% Unzipping... emulator/qemu/       
+2026-09-10T14:14:51.0495675Z [=============                          ] 33% Unzipping... emulator/NOTICE.txt  
+2026-09-10T14:14:51.0701091Z [=============                          ] 33% Unzipping... emulator/crashpad_han
+2026-09-10T14:14:51.0704153Z [=============                          ] 33% Unzipping... emulator/source.prope
+2026-09-10T14:14:51.0747727Z [=============                          ] 33% Unzipping... emulator/nimble_bridg
+2026-09-10T14:14:51.1394566Z [=============                          ] 34% Unzipping... emulator/nimble_bridg
+2026-09-10T14:14:51.1397884Z [=============                          ] 34% Unzipping... emulator/LICENSE     
+2026-09-10T14:14:51.1398728Z [=============                          ] 34% Unzipping... emulator/lib/        
+2026-09-10T14:14:51.1522630Z [=============                          ] 34% Unzipping... emulator/qemu-img    
+2026-09-10T14:14:51.1523381Z [=============                          ] 34% Unzipping... emulator/include/    
+2026-09-10T14:14:51.1531293Z [=============                          ] 34% Unzipping... emulator/NOTICE.csv  
+2026-09-10T14:14:51.1532400Z [=============                          ] 34% Unzipping... emulator/lib64/      
+2026-09-10T14:14:51.1741893Z [=============                          ] 34% Unzipping... emulator/emulator-che
+2026-09-10T14:14:51.1951836Z [=============                          ] 34% Unzipping... emulator/crashreport 
+2026-09-10T14:14:51.1966968Z [=============                          ] 34% Unzipping... emulator/mksdcard    
+2026-09-10T14:14:51.2151579Z [=============                          ] 34% Unzipping... emulator/resources/To
+2026-09-10T14:14:51.2161869Z [=============                          ] 35% Unzipping... emulator/resources/To
+2026-09-10T14:14:51.2170399Z [=============                          ] 35% Unzipping... emulator/resources/de
+2026-09-10T14:14:51.2307405Z [=============                          ] 35% Unzipping... emulator/resources/To
+2026-09-10T14:14:51.2308146Z [=============                          ] 35% Unzipping... emulator/resources/ma
+2026-09-10T14:14:51.2331444Z [=============                          ] 35% Unzipping... emulator/resources/de
+2026-09-10T14:14:51.2342446Z [=============                          ] 35% Unzipping... emulator/resources/sk
+2026-09-10T14:14:51.2369798Z [=============                          ] 35% Unzipping... emulator/resources/de
+2026-09-10T14:14:51.2371098Z [=============                          ] 35% Unzipping... emulator/resources/ma
+2026-09-10T14:14:51.2384164Z [=============                          ] 35% Unzipping... emulator/resources/po
+2026-09-10T14:14:51.2454760Z [=============                          ] 35% Unzipping... emulator/resources/ma
+2026-09-10T14:14:51.2520665Z [=============                          ] 35% Unzipping... emulator/resources/sk
+2026-09-10T14:14:51.2536680Z [=============                          ] 35% Unzipping... emulator/resources/ma
+2026-09-10T14:14:51.2573338Z [=============                          ] 35% Unzipping... emulator/bin64/e2fsck
+2026-09-10T14:14:51.2624178Z [=============                          ] 35% Unzipping... emulator/bin64/fsck.e
+2026-09-10T14:14:51.2637818Z [=============                          ] 35% Unzipping... emulator/bin64/tune2f
+2026-09-10T14:14:51.2656148Z [=============                          ] 35% Unzipping... emulator/bin64/resize
+2026-09-10T14:14:51.2681466Z [=============                          ] 35% Unzipping... emulator/bin64/mkfs.e
+2026-09-10T14:14:51.2786807Z [=============                          ] 35% Unzipping... emulator/qemu/linux-x
+2026-09-10T14:14:51.3870270Z [==============                         ] 35% Unzipping... emulator/qemu/linux-x
+2026-09-10T14:14:51.5515351Z [==============                         ] 36% Unzipping... emulator/qemu/linux-x
+2026-09-10T14:14:51.7593646Z [==============                         ] 37% Unzipping... emulator/qemu/linux-x
+2026-09-10T14:14:51.9198077Z [===============                        ] 38% Unzipping... emulator/qemu/linux-x
+2026-09-10T14:14:52.0743250Z [===============                        ] 39% Unzipping... emulator/qemu/linux-x
+2026-09-10T14:14:52.1540819Z [===============                        ] 40% Unzipping... emulator/qemu/linux-x
+2026-09-10T14:14:52.2344335Z [================                       ] 40% Unzipping... emulator/qemu/linux-x
+2026-09-10T14:14:52.3243850Z [================                       ] 41% Unzipping... emulator/qemu/linux-x
+2026-09-10T14:14:52.3246155Z [================                       ] 41% Unzipping... emulator/lib/emulator
+2026-09-10T14:14:52.3248803Z [================                       ] 41% Unzipping... emulator/lib/rtc_serv
+2026-09-10T14:14:52.3253352Z [================                       ] 41% Unzipping... emulator/lib/advanced
+2026-09-10T14:14:52.3254472Z [================                       ] 41% Unzipping... emulator/lib/cmake/  
+2026-09-10T14:14:52.3257264Z [================                       ] 41% Unzipping... emulator/lib/emulator
+2026-09-10T14:14:52.3260398Z [================                       ] 41% Unzipping... emulator/lib/control_
+2026-09-10T14:14:52.3263195Z [================                       ] 41% Unzipping... emulator/lib/emulated
+2026-09-10T14:14:52.3266179Z [================                       ] 41% Unzipping... emulator/lib/rtc_serv
+2026-09-10T14:14:52.3269942Z [================                       ] 41% Unzipping... emulator/lib/emu-orig
+2026-09-10T14:14:52.3274458Z [================                       ] 41% Unzipping... emulator/lib/hardware
+2026-09-10T14:14:52.3280699Z [================                       ] 41% Unzipping... emulator/lib/pkgconfi
+2026-09-10T14:14:52.3281513Z [================                       ] 41% Unzipping... emulator/lib/pc-bios/
+2026-09-10T14:14:52.3282271Z [================                       ] 41% Unzipping... emulator/lib/snapshot
+2026-09-10T14:14:52.3283173Z [================                       ] 41% Unzipping... emulator/lib/adb_serv
+2026-09-10T14:14:52.3290042Z [================                       ] 41% Unzipping... emulator/lib/hostapd.
+2026-09-10T14:14:52.3293216Z [================                       ] 41% Unzipping... emulator/lib/grpc_end
+2026-09-10T14:14:52.3315910Z [================                       ] 41% Unzipping... emulator/lib/ca-bundl
+2026-09-10T14:14:52.3319928Z [================                       ] 41% Unzipping... emulator/lib/ui_contr
+2026-09-10T14:14:52.3323916Z [================                       ] 41% Unzipping... emulator/lib/snapshot
+2026-09-10T14:14:52.3327404Z [================                       ] 41% Unzipping... emulator/lib/ice_conf
+2026-09-10T14:14:52.3656888Z [================                       ] 41% Unzipping... emulator/lib/libflatb
+2026-09-10T14:14:52.3665655Z [================                       ] 41% Unzipping... emulator/lib/emulator
+2026-09-10T14:14:52.3667946Z [================                       ] 41% Unzipping... emulator/lib/waterfal
+2026-09-10T14:14:52.3672269Z [================                       ] 41% Unzipping... emulator/lib/emulated
+2026-09-10T14:14:52.3686910Z [================                       ] 41% Unzipping... emulator/lib/cmake/fl
+2026-09-10T14:14:52.3689279Z [================                       ] 41% Unzipping... emulator/lib/pkgconfi
+2026-09-10T14:14:52.3902579Z [================                       ] 41% Unzipping... emulator/lib/pc-bios/
+2026-09-10T14:14:52.4000313Z [================                       ] 41% Unzipping... emulator/include/flat
+2026-09-10T14:14:52.4088958Z [================                       ] 41% Unzipping... emulator/lib64/libgli
+2026-09-10T14:14:52.4209818Z [================                       ] 41% Unzipping... emulator/lib64/libpro
+2026-09-10T14:14:52.4211201Z [================                       ] 41% Unzipping... emulator/lib64/qt/   
+2026-09-10T14:14:52.4644758Z [================                       ] 41% Unzipping... emulator/lib64/liband
+2026-09-10T14:14:52.4668805Z [================                       ] 41% Unzipping... emulator/lib64/libgfx
+2026-09-10T14:14:52.5337722Z [================                       ] 42% Unzipping... emulator/lib64/libgfx
+2026-09-10T14:14:52.5338485Z [================                       ] 42% Unzipping... emulator/lib64/gles_l
+2026-09-10T14:14:52.5346884Z [================                       ] 42% Unzipping... emulator/lib64/liband
+2026-09-10T14:14:52.5347703Z [================                       ] 42% Unzipping... emulator/lib64/vulkan
+2026-09-10T14:14:52.5348406Z [================                       ] 42% Unzipping... emulator/lib64/gles_s
+2026-09-10T14:14:52.5353329Z [================                       ] 42% Unzipping... emulator/lib64/libemu
+2026-09-10T14:14:52.5473915Z [================                       ] 42% Unzipping... emulator/lib64/libpro
+2026-09-10T14:14:52.6516312Z [================                       ] 42% Unzipping... emulator/lib64/liband
+2026-09-10T14:14:52.7015072Z [=================                      ] 43% Unzipping... emulator/lib64/liband
+2026-09-10T14:14:52.7033526Z [=================                      ] 43% Unzipping... emulator/lib64/libtcm
+2026-09-10T14:14:52.7041641Z [=================                      ] 43% Unzipping... emulator/lib64/libima
+2026-09-10T14:14:52.7100701Z [=================                      ] 43% Unzipping... emulator/lib64/libc++
+2026-09-10T14:14:52.7367567Z [=================                      ] 43% Unzipping... emulator/lib64/liband
+2026-09-10T14:14:52.7412981Z [=================                      ] 43% Unzipping... emulator/lib64/libabs
+2026-09-10T14:14:52.7414019Z [=================                      ] 43% Unzipping... emulator/lib64/gles_a
+2026-09-10T14:14:52.7484283Z [=================                      ] 43% Unzipping... emulator/lib64/libsha
+2026-09-10T14:14:52.7550271Z [=================                      ] 43% Unzipping... emulator/lib64/libc++
+2026-09-10T14:14:52.7556470Z [=================                      ] 43% Unzipping... emulator/lib64/qt/res
+2026-09-10T14:14:52.7561764Z [=================                      ] 43% Unzipping... emulator/lib64/qt/lib
+2026-09-10T14:14:52.7562601Z [=================                      ] 43% Unzipping... emulator/lib64/qt/tra
+2026-09-10T14:14:52.7563376Z [=================                      ] 43% Unzipping... emulator/lib64/qt/plu
+2026-09-10T14:14:52.7673478Z [=================                      ] 43% Unzipping... emulator/lib64/qt/res
+2026-09-10T14:14:52.8282166Z [=================                      ] 44% Unzipping... emulator/lib64/qt/res
+2026-09-10T14:14:52.8395636Z [=================                      ] 44% Unzipping... emulator/lib64/qt/lib
+2026-09-10T14:14:52.8997669Z [=================                      ] 45% Unzipping... emulator/lib64/qt/lib
+2026-09-10T14:14:53.0228952Z [==================                     ] 45% Unzipping... emulator/lib64/qt/lib
+2026-09-10T14:14:53.1817973Z [==================                     ] 46% Unzipping... emulator/lib64/qt/lib
+2026-09-10T14:14:53.3779797Z [==================                     ] 47% Unzipping... emulator/lib64/qt/lib
+2026-09-10T14:14:53.5772257Z [===================                    ] 48% Unzipping... emulator/lib64/qt/lib
+2026-09-10T14:14:53.7619426Z [===================                    ] 49% Unzipping... emulator/lib64/qt/lib
+2026-09-10T14:14:53.8502109Z [===================                    ] 50% Unzipping... emulator/lib64/qt/lib
+2026-09-10T14:14:53.9504413Z [====================                   ] 50% Unzipping... emulator/lib64/qt/lib
+2026-09-10T14:14:54.0125271Z [====================                   ] 51% Unzipping... emulator/lib64/qt/lib
+2026-09-10T14:14:54.1234551Z [====================                   ] 51% Unzipping... emulator/lib64/qt/tra
+2026-09-10T14:14:54.1351821Z [====================                   ] 51% Unzipping... emulator/lib64/qt/plu
+2026-09-10T14:14:54.1748007Z [====================                   ] 51% Unzipping... emulator/lib64/gles_l
+2026-09-10T14:14:54.2193193Z [====================                   ] 52% Unzipping... emulator/lib64/gles_l
+2026-09-10T14:14:54.3804463Z [====================                   ] 52% Unzipping... emulator/lib64/vulkan
+2026-09-10T14:14:54.5669240Z [=====================                  ] 53% Unzipping... emulator/lib64/vulkan
+2026-09-10T14:14:54.7742303Z [=====================                  ] 54% Unzipping... emulator/lib64/vulkan
+2026-09-10T14:14:54.8058214Z [=====================                  ] 54% Unzipping... emulator/lib64/gles_s
+2026-09-10T14:14:54.8433721Z [=====================                  ] 55% Unzipping... emulator/lib64/gles_s
+2026-09-10T14:14:54.9627181Z [=====================                  ] 55% Unzipping... emulator/lib64/gles_a
+2026-09-10T14:14:54.9628100Z [=======================================] 100% Unzipping... emulator/lib64/gles_
+2026-09-10T14:14:55.3444144Z 
+2026-09-10T14:14:55.3913643Z ##[group]Run import runpy, sys
+2026-09-10T14:14:55.3913985Z [36;1mimport runpy, sys[0m
+2026-09-10T14:14:55.3914292Z [36;1msys.argv = ["verification_hygiene.py", "prepare"][0m
+2026-09-10T14:14:55.3914759Z [36;1mrunpy.run_path("scripts/ci/verification_hygiene.py", run_name="__main__")[0m
+2026-09-10T14:14:55.4318538Z shell: /usr/bin/python {0}
+2026-09-10T14:14:55.4318924Z env:
+2026-09-10T14:14:55.4319482Z   GRADLE_OPTS: -Dorg.gradle.project.kotlin.compiler.execution.strategy=in-process
+2026-09-10T14:14:55.4320325Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-1/x64
+2026-09-10T14:14:55.4321350Z   JAVA_HOME_21_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-1/x64
+2026-09-10T14:14:55.4322045Z   MAVEN_ARGS: -ntp
+2026-09-10T14:14:55.4322334Z ##[endgroup]
+2026-09-10T14:14:56.4914503Z ##[group]Run /usr/bin/python3 -B scripts/ci/linux_process_probe.py run
+2026-09-10T14:14:56.4915049Z [36;1m/usr/bin/python3 -B scripts/ci/linux_process_probe.py run[0m
+2026-09-10T14:14:56.4951750Z shell: /usr/bin/bash -e {0}
+2026-09-10T14:14:56.4952021Z env:
+2026-09-10T14:14:56.4952406Z   GRADLE_OPTS: -Dorg.gradle.project.kotlin.compiler.execution.strategy=in-process
+2026-09-10T14:14:56.4952983Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-1/x64
+2026-09-10T14:14:56.4953509Z   JAVA_HOME_21_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-1/x64
+2026-09-10T14:14:56.4953909Z   MAVEN_ARGS: -ntp
+2026-09-10T14:14:56.4954958Z   PARLOR_LINUX_PROBE_INPUTS: {
+  "verification_scope": "linux-process-probe",
+  "native_selection": "paired",
+  "frozen_source_sha": "e4d49e17f5f1099a742ab3985c6257d090d61ba6",
+  "approved_probe_control_sha256": "f01113e6516e1e16ccefb9d96b8e3ffa2bc0ece7ebcb8206d603c52c80108d51"
+}
+2026-09-10T14:14:56.4956131Z   PARLOR_VERIFICATION_PREPARE_OUTCOME: success
+2026-09-10T14:14:56.4956435Z ##[endgroup]
+2026-09-10T14:15:02.6805366Z {"kind": "BARE_HOST_LINUX_PROC_DISCRIMINATOR_NOT_APP_QUALIFICATION", "result": "FAIL", "task": {"GITHUB_RUN_ID": "34487728583", "GITHUB_RUN_ATTEMPT": "1", "GITHUB_JOB": "desktop-android"}, "started_at": "2026-09-10T14:14:56.545163+00:00", "binding": {"task": {"GITHUB_RUN_ID": "34487728583", "GITHUB_RUN_ATTEMPT": "1", "GITHUB_JOB": "desktop-android"}, "source": {"root": "/home/runner/work/parlor/parlor", "head": "e4d49e17f5f1099a742ab3985c6257d090d61ba6", "tree": "1e3697d7eab93cc856166f85a791fe3cdd62941a"}, "controls": {"files": [{"path": ".github/workflows/production-verification.yml", "sha256": "f455e2b7327009935fe4503d340237bc78dcaa2a65763a662a3dcf54318ac7b5"}, {"path": "gradle/wrapper/gradle-wrapper.jar", "sha256": "81a82aaea5abcc8ff68b3dfcb58b3c3c429378efd98e7433460610fecd7ae45f"}, {"path": "gradle/wrapper/gradle-wrapper.properties", "sha256": "c040b6ef2fb893ff5beea5a281614f2848f1c3996a7886f650b713f8240656a2"}, {"path": "gradlew", "sha256": "734b3879d3501dce471cf0522d3bcbafe76873d9fc5129345b67fb43bd15e933"}, {"path": "scripts/ci/linux_exe_reader.py", "sha256": "f3b71da3870e8d45630b5415045eb77ede9f6eeb1ae706cc3f6332b4bd0b8ae0"}, {"path": "scripts/ci/linux_process_probe.py", "sha256": "e449163d97161f570ed61227df2b345a9a3a7d652784f224109610c04a561e50"}, {"path": "scripts/ci/verification_hygiene.py", "sha256": "f6a882754d8df582148e4c7e97f22eca2613041170ebfcc36cb946a63bff3ea0"}, {"path": "scripts/release/tests/test_ci_verification_hygiene.py", "sha256": "927981c5aa745b8f430d1e4b96feab9b5f2669548364b96d089210944800cdaf"}, {"path": "scripts/release/tests/test_linux_exe_reader.py", "sha256": "a844c29651b1d3c475c7331d614a15bde5365b0f6ed9152f81916aa2678b145a"}, {"path": "scripts/release/tests/test_linux_process_probe.py", "sha256": "225effb84ef4bd58c91354cd98619200e780e3d771aa6b40383ca554059683bd"}, {"path": "scripts/release/tests/test_workflow_contract.py", "sha256": "1b322f47e96c68f3b8e690e8a0ef01159e33bd751d3c48204d141b61a9051872"}, {"path": "scripts/release/workflow_contract.py", "sha256": "98b722d0ac5c0ec3711522ca2b5e8367ebcaa1873342425f01d1c9a464a7f0a6"}], "control_sha256": "f01113e6516e1e16ccefb9d96b8e3ffa2bc0ece7ebcb8206d603c52c80108d51"}, "android_sdk": {"sdk_path_sha256": "e507a12011d2294b5329bb26fe44164d883087cb9d582c7ec9335a39e4c551e1", "sdk_device": 2049, "sdk_inode": 795534, "uid": 1001}, "platform": {"os": "ubuntu-24.04", "machine": "x86_64", "kernel": "6.17.0-1022-azure", "python": "3.12.3"}}, "reader": "sudo-proc-exe-v1", "host_audit": {"result": "FAIL", "started_at": "2026-09-10T14:14:57.476784+00:00", "enumerated": 167, "sampled": 147, "selected_uid": 3, "matching_executables": 0, "errors": [{"code": "PROC_UID_AMBIGUOUS"}], "exe_reader": {"mode": "sudo-proc-exe-v1", "eacces_denials": 2, "privileged_reads": 2}, "scope": "Enumerated visible selected-UID executable paths beneath bound SDK/emulator only; not termination, task-process ownership, AVD retirement, other SDKs/UIDs, or continuous absence", "binding": {"sdk_path_sha256": "e507a12011d2294b5329bb26fe44164d883087cb9d582c7ec9335a39e4c551e1", "sdk_device": 2049, "sdk_inode": 795534, "uid": 1001}, "finished_at": "2026-09-10T14:14:57.557868+00:00"}, "controls": [{"kind": "LIVE_LINUX_CONTROL_SYNTHETIC_ENUMERATION", "dumpable": 1, "reader": "unprivileged", "result": "CONTROL_PASS", "started_at": "2026-09-10T14:14:57.558122+00:00", "child_reaped": true, "fixture_removed": true, "errors": [], "scope": "Only self/direct-child enumeration with real procfs reads; not a host inventory or emulator runtime.", "fixture_basename": "parlor-linux-proc-control-zd0oj0te", "owned_pid": 2569, "readiness": {"pid": 2569, "uid": 1001, "dumpable": 1}, "audit": {"result": "PASS", "started_at": "2026-09-10T14:14:57.581609+00:00", "enumerated": 2, "sampled": 2, "selected_uid": 2, "matching_executables": 0, "errors": [], "exe_reader": {"mode": "unprivileged", "eacces_denials": 0, "privileged_reads": 0}, "scope": "Enumerated visible selected-UID executable paths beneath bound SDK/emulator only; not termination, task-process ownership, AVD retirement, other SDKs/UIDs, or continuous absence", "binding": {"sdk_path_sha256": "e507a12011d2294b5329bb26fe44164d883087cb9d582c7ec9335a39e4c551e1", "sdk_device": 2049, "sdk_inode": 795534, "uid": 1001}, "finished_at": "2026-09-10T14:14:57.582728+00:00"}, "child_exit_code": 0, "interrupted": false, "finished_at": "2026-09-10T14:14:57.584007+00:00"}, {"kind": "LIVE_LINUX_CONTROL_SYNTHETIC_ENUMERATION", "dumpable": 0, "reader": "unprivileged", "result": "CONTROL_PASS", "started_at": "2026-09-10T14:14:57.584230+00:00", "child_reaped": true, "fixture_removed": true, "errors": [], "scope": "Only self/direct-child enumeration with real procfs reads; not a host inventory or emulator runtime.", "fixture_basename": "parlor-linux-proc-control-46cilp86", "owned_pid": 2570, "readiness": {"pid": 2570, "uid": 1001, "dumpable": 0}, "audit": {"result": "FAIL", "started_at": "2026-09-10T14:14:57.605470+00:00", "enumerated": 2, "sampled": 1, "selected_uid": 1, "matching_executables": 0, "errors": [{"code": "PermissionError"}], "exe_reader": {"mode": "unprivileged", "eacces_denials": 1, "privileged_reads": 0}, "scope": "Enumerated visible selected-UID executable paths beneath bound SDK/emulator only; not termination, task-process ownership, AVD retirement, other SDKs/UIDs, or continuous absence", "binding": {"sdk_path_sha256": "e507a12011d2294b5329bb26fe44164d883087cb9d582c7ec9335a39e4c551e1", "sdk_device": 2049, "sdk_inode": 795534, "uid": 1001}, "failure_context": {"operation": "before_exe_readlink", "selection": true, "errno": 13}, "finished_at": "2026-09-10T14:14:57.606227+00:00"}, "child_exit_code": 0, "interrupted": false, "finished_at": "2026-09-10T14:14:57.607488+00:00"}, {"kind": "LIVE_LINUX_CONTROL_SYNTHETIC_ENUMERATION", "dumpable": 0, "reader": "sudo-proc-exe-v1", "result": "CONTROL_PASS", "started_at": "2026-09-10T14:14:57.607664+00:00", "child_reaped": true, "fixture_removed": true, "errors": [], "scope": "Only self/direct-child enumeration with real procfs reads; not a host inventory or emulator runtime.", "fixture_basename": "parlor-linux-proc-control-2b2wlbld", "owned_pid": 2571, "readiness": {"pid": 2571, "uid": 1001, "dumpable": 0}, "audit": {"result": "PASS", "started_at": "2026-09-10T14:14:57.629639+00:00", "enumerated": 2, "sampled": 2, "selected_uid": 2, "matching_executables": 0, "errors": [], "exe_reader": {"mode": "sudo-proc-exe-v1", "eacces_denials": 1, "privileged_reads": 1}, "scope": "Enumerated visible selected-UID executable paths beneath bound SDK/emulator only; not termination, task-process ownership, AVD retirement, other SDKs/UIDs, or continuous absence", "binding": {"sdk_path_sha256": "e507a12011d2294b5329bb26fe44164d883087cb9d582c7ec9335a39e4c551e1", "sdk_device": 2049, "sdk_inode": 795534, "uid": 1001}, "finished_at": "2026-09-10T14:14:57.658563+00:00"}, "child_exit_code": 0, "interrupted": false, "finished_at": "2026-09-10T14:14:57.659847+00:00"}], "errors": [], "scope": "No build/emulator/managed-device execution; cannot repair previous cleanup or combined qualification.", "finished_at": "2026-09-10T14:14:58.582881+00:00"}
+2026-09-10T14:15:02.6838938Z {"task": {"GITHUB_RUN_ID": "34487728583", "GITHUB_RUN_ATTEMPT": "1", "GITHUB_JOB": "desktop-android"}, "binding": {"task": {"GITHUB_RUN_ID": "34487728583", "GITHUB_RUN_ATTEMPT": "1", "GITHUB_JOB": "desktop-android"}, "source": {"root": "/home/runner/work/parlor/parlor", "head": "e4d49e17f5f1099a742ab3985c6257d090d61ba6", "tree": "1e3697d7eab93cc856166f85a791fe3cdd62941a"}, "controls": {"files": [{"path": ".github/workflows/production-verification.yml", "sha256": "f455e2b7327009935fe4503d340237bc78dcaa2a65763a662a3dcf54318ac7b5"}, {"path": "gradle/wrapper/gradle-wrapper.jar", "sha256": "81a82aaea5abcc8ff68b3dfcb58b3c3c429378efd98e7433460610fecd7ae45f"}, {"path": "gradle/wrapper/gradle-wrapper.properties", "sha256": "c040b6ef2fb893ff5beea5a281614f2848f1c3996a7886f650b713f8240656a2"}, {"path": "gradlew", "sha256": "734b3879d3501dce471cf0522d3bcbafe76873d9fc5129345b67fb43bd15e933"}, {"path": "scripts/ci/linux_exe_reader.py", "sha256": "f3b71da3870e8d45630b5415045eb77ede9f6eeb1ae706cc3f6332b4bd0b8ae0"}, {"path": "scripts/ci/linux_process_probe.py", "sha256": "e449163d97161f570ed61227df2b345a9a3a7d652784f224109610c04a561e50"}, {"path": "scripts/ci/verification_hygiene.py", "sha256": "f6a882754d8df582148e4c7e97f22eca2613041170ebfcc36cb946a63bff3ea0"}, {"path": "scripts/release/tests/test_ci_verification_hygiene.py", "sha256": "927981c5aa745b8f430d1e4b96feab9b5f2669548364b96d089210944800cdaf"}, {"path": "scripts/release/tests/test_linux_exe_reader.py", "sha256": "a844c29651b1d3c475c7331d614a15bde5365b0f6ed9152f81916aa2678b145a"}, {"path": "scripts/release/tests/test_linux_process_probe.py", "sha256": "225effb84ef4bd58c91354cd98619200e780e3d771aa6b40383ca554059683bd"}, {"path": "scripts/release/tests/test_workflow_contract.py", "sha256": "1b322f47e96c68f3b8e690e8a0ef01159e33bd751d3c48204d141b61a9051872"}, {"path": "scripts/release/workflow_contract.py", "sha256": "98b722d0ac5c0ec3711522ca2b5e8367ebcaa1873342425f01d1c9a464a7f0a6"}], "control_sha256": "f01113e6516e1e16ccefb9d96b8e3ffa2bc0ece7ebcb8206d603c52c80108d51"}, "android_sdk": {"sdk_path_sha256": "e507a12011d2294b5329bb26fe44164d883087cb9d582c7ec9335a39e4c551e1", "sdk_device": 2049, "sdk_inode": 795534, "uid": 1001}, "platform": {"os": "ubuntu-24.04", "machine": "x86_64", "kernel": "6.17.0-1022-azure", "python": "3.12.3"}}, "command": ["./gradlew", "--stop"], "started_at": "2026-09-10T14:14:58.583945+00:00", "exit_code": 0, "output": "Downloading https://services.gradle.org/distributions/gradle-8.13-bin.zip\n.............10%.............20%.............30%.............40%.............50%.............60%.............70%.............80%.............90%.............100%\n\nWelcome to Gradle 8.13!\n\nHere are the highlights of this release:\n - Daemon JVM auto-provisioning\n - Enhancements for Scala plugin and JUnit testing\n - Improvements for build authors and plugin developers\n\nFor more details see https://docs.gradle.org/8.13/release-notes.html\n\nNo Gradle daemons are running.\n", "finished_at": "2026-09-10T14:15:02.676683+00:00"}
+2026-09-10T14:15:02.6880667Z ##[error]Process completed with exit code 1.
+2026-09-10T14:15:02.6982873Z ##[group]Run actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+2026-09-10T14:15:02.6983302Z with:
+2026-09-10T14:15:02.6983531Z   name: linux-process-probe-34487728583-1
+2026-09-10T14:15:02.6983835Z   if-no-files-found: error
+2026-09-10T14:15:02.6984080Z   retention-days: 14
+2026-09-10T14:15:02.6985261Z   path: /home/runner/work/_temp/parlor-verification-34487728583-1-desktop-android-linux-probe.json
+/home/runner/work/_temp/parlor-verification-34487728583-1-desktop-android-ownership.json
+/home/runner/work/_temp/parlor-verification-34487728583-1-desktop-android-stop-linux-probe.json
+
+2026-09-10T14:15:02.6986510Z   compression-level: 6
+2026-09-10T14:15:02.6986730Z   overwrite: false
+2026-09-10T14:15:02.6986945Z   include-hidden-files: false
+2026-09-10T14:15:02.6987179Z   archive: true
+2026-09-10T14:15:02.6987367Z env:
+2026-09-10T14:15:02.6987722Z   GRADLE_OPTS: -Dorg.gradle.project.kotlin.compiler.execution.strategy=in-process
+2026-09-10T14:15:02.6988349Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-1/x64
+2026-09-10T14:15:02.6988848Z   JAVA_HOME_21_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-1/x64
+2026-09-10T14:15:02.6989229Z   MAVEN_ARGS: -ntp
+2026-09-10T14:15:02.6989435Z ##[endgroup]
+2026-09-10T14:15:02.8428631Z Multiple search paths detected. Calculating the least common ancestor of all paths
+2026-09-10T14:15:02.8431432Z The least common ancestor is /home/runner/work/_temp. This will be the root directory of the artifact
+2026-09-10T14:15:02.8432736Z With the provided path, there will be 3 files uploaded
+2026-09-10T14:15:02.8436934Z Artifact name is valid!
+2026-09-10T14:15:02.8437484Z Root directory input is valid!
+2026-09-10T14:15:03.4149274Z Uploading artifact: linux-process-probe-34487728583-1.zip
+2026-09-10T14:15:03.4195731Z Beginning upload of artifact content to blob storage
+2026-09-10T14:15:03.9900114Z Uploaded bytes 6841
+2026-09-10T14:15:04.1124637Z Finished uploading artifact content to blob storage!
+2026-09-10T14:15:04.1126368Z SHA256 digest of uploaded artifact is 95c9f71d28ad771385eda240844651455a7e3a211c8e7b1a2c72ce5f779d38f0
+2026-09-10T14:15:04.1128288Z Finalizing artifact upload
+2026-09-10T14:15:04.7123790Z Artifact linux-process-probe-34487728583-1 successfully finalized. Artifact ID 10156381508
+2026-09-10T14:15:04.7125555Z Artifact linux-process-probe-34487728583-1 has been successfully uploaded! Final size is 6841 bytes. Artifact ID is 10156381508
+2026-09-10T14:15:04.7128964Z Artifact download URL: https://github.com/Apdelrahman1911/parlor/actions/runs/34487728583/artifacts/10156381508
+2026-09-10T14:15:04.7258360Z ##[group]Run /usr/bin/python3 -B scripts/ci/linux_process_probe.py cleanup
+2026-09-10T14:15:04.7258935Z [36;1m/usr/bin/python3 -B scripts/ci/linux_process_probe.py cleanup[0m
+2026-09-10T14:15:04.7295602Z shell: /usr/bin/bash -e {0}
+2026-09-10T14:15:04.7295884Z env:
+2026-09-10T14:15:04.7296286Z   GRADLE_OPTS: -Dorg.gradle.project.kotlin.compiler.execution.strategy=in-process
+2026-09-10T14:15:04.7296881Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-1/x64
+2026-09-10T14:15:04.7297418Z   JAVA_HOME_21_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-1/x64
+2026-09-10T14:15:04.7297839Z   MAVEN_ARGS: -ntp
+2026-09-10T14:15:04.7298911Z   PARLOR_LINUX_PROBE_INPUTS: {
+  "verification_scope": "linux-process-probe",
+  "native_selection": "paired",
+  "frozen_source_sha": "e4d49e17f5f1099a742ab3985c6257d090d61ba6",
+  "approved_probe_control_sha256": "f01113e6516e1e16ccefb9d96b8e3ffa2bc0ece7ebcb8206d603c52c80108d51"
+}
+2026-09-10T14:15:04.7300112Z   PARLOR_VERIFICATION_PREPARE_OUTCOME: success
+2026-09-10T14:15:04.7300730Z   PARLOR_VERIFICATION_UPLOAD_OUTCOME: success
+2026-09-10T14:15:04.7301083Z   PARLOR_VERIFICATION_ARTIFACT_ID: 10156381508
+2026-09-10T14:15:04.7301623Z   PARLOR_VERIFICATION_ARTIFACT_DIGEST: 95c9f71d28ad771385eda240844651455a7e3a211c8e7b1a2c72ce5f779d38f0
+2026-09-10T14:15:04.7302132Z ##[endgroup]
+2026-09-10T14:15:07.3387759Z {"task": {"GITHUB_RUN_ID": "34487728583", "GITHUB_RUN_ATTEMPT": "1", "GITHUB_JOB": "desktop-android"}, "started_at": "2026-09-10T14:15:05.709194+00:00", "removed": [], "not_created": ["audit-runs/2026-09-05-source-audit/__pycache__", "audit-runs/2026-09-05-source-audit/evidence/android-managed-reconciliation-mafia-cont-02/__pycache__", "audit-runs/2026-09-05-source-audit/evidence/android-runner-independent-whodunit-cont/__pycache__", "audit-runs/2026-09-05-source-audit/evidence/android-runner-safety-mafia-cont/__pycache__", "audit-runs/2026-09-05-source-audit/evidence/coverage-binary-delta-mafia-cont/__pycache__", "audit-runs/2026-09-05-source-audit/evidence/final-apphost-closeout-history/__pycache__", "audit-runs/2026-09-05-source-audit/evidence/final-checker-root-revision-history/__pycache__", "audit-runs/2026-09-05-source-audit/evidence/final-frozen-reconciliation-mafia-cont/__pycache__", "audit-runs/2026-09-05-source-audit/evidence/final-frozen-reconciliation-mafia-cont/inputs-after-correction/__pycache__", "audit-runs/2026-09-05-source-audit/evidence/final-frozen-reconciliation-mafia-cont/inputs/__pycache__", "audit-runs/2026-09-05-source-audit/evidence/final-frozen-reconciliation-mafia-cont/order-correction-review/__pycache__", "audit-runs/2026-09-05-source-audit/evidence/final-frozen-reconciliation-mafia-cont/order-correction-review/inputs/__pycache__", "audit-runs/2026-09-05-source-audit/evidence/final-generation-order-history-01/__pycache__", "audit-runs/2026-09-05-source-audit/evidence/final-preservation-delta-mafia-cont/__pycache__", "audit-runs/2026-09-05-source-audit/evidence/final-preservation-review-mafia-cont/__pycache__", "audit-runs/2026-09-05-source-audit/evidence/final-preservation-secondary-mafia-cont/__pycache__", "audit-runs/2026-09-05-source-audit/evidence/final-verification-review-initial-mafia-cont/__pycache__", "audit-runs/2026-09-05-source-audit/evidence/final-verification-skeleton-mafia-cont/__pycache__", "audit-runs/2026-09-05-source-audit/evidence/iosr1-apphost-01/__pycache__", "audit-runs/2026-09-05-source-audit/evidence/iosr1-apphost-02/__pycache__", "audit-runs/2026-09-05-source-audit/evidence/iosr1-runner-independent-whodunit-cont/__pycache__", "audit-runs/2026-09-05-source-audit/evidence/iosr1-runner-independent-whodunit-cont/cycle01-reviewed-inputs/__pycache__", "audit-runs/2026-09-05-source-audit/evidence/runner-versions/__pycache__", "audit-runs/2026-09-05-source-audit/reproducers/__pycache__", "audit-runs/2026-09-05-source-audit/research/android-managed-listener-whodunit-cont/__pycache__", "build", "build-logic/build", "build-logic/convention/build", "composeApp/build", "game-modes/mafia/build", "game-modes/whodunit/build", "iosApp/build", "remediation-runs/2026-09-05-confirmed-fixes/__pycache__", "remediation-runs/2026-09-05-confirmed-fixes/mafia/__pycache__", "remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/dsc01_apphost/__pycache__", "remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/dsc01_apphost_v2/__pycache__", "remediation-runs/2026-09-05-confirmed-fixes/observation-controls-contracts-01/__pycache__", "remediation-runs/2026-09-05-confirmed-fixes/release_fix_review/__pycache__", "remediation-runs/2026-09-05-confirmed-fixes/session_cont/apple_runner/__pycache__", "remediation-runs/2026-09-06-approved-policy-completion/__pycache__", "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v10/__pycache__", "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v11/__pycache__", "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v12/__pycache__", "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v3/__pycache__", "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v4/__pycache__", "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v5/__pycache__", "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v6/__pycache__", "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v7/__pycache__", "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v7/revision01-unexecuted-controls/__pycache__", "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v8/__pycache__", "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v9/__pycache__", "remediation-runs/2026-09-06-approved-policy-completion/native/ios_release_wrapper_v1/__pycache__", "remediation-runs/2026-09-06-approved-policy-completion/native/ios_wrapper_smoke_v1/__pycache__", "remediation-runs/2026-09-06-approved-policy-completion/reviews/__pycache__", "remediation-runs/2026-09-06-approved-policy-completion/root/__pycache__", "remediation-runs/2026-09-07-local-readiness/__pycache__", "remediation-runs/2026-09-07-local-readiness/drafts/l08-protection-metadata-01/files/scripts/verification/ios-readiness/__pycache__", "remediation-runs/2026-09-07-local-readiness/drafts/l08-save-diagnostics-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-apk-build-helper/__pycache__", "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/__pycache__", "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/avd-sdk-root-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/avd-sdk-root-01/emulator-package-followup-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/darwin-null-port-retry-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/canonical-final-identity-helper/__pycache__", "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/canonical-identity-helper/__pycache__", "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/linux-vz-runner-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/release-readiness-map/local-gap-remediation-01/before/scripts/__pycache__", "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/release-readiness-map/local-gap-remediation-01/before/scripts/release/tests/__pycache__", "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/tsa-positive-runner/__pycache__", "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/__pycache__", "remediation-runs/2026-09-07-local-readiness/native/control-drafts-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/native/control-drafts-02/__pycache__", "remediation-runs/2026-09-07-local-readiness/native/controls-gap-drafts-01/before/__pycache__", "remediation-runs/2026-09-07-local-readiness/native/controls-gap-drafts-01/staged/__pycache__", "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/native/l08-apphost-extension-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/native/normal-image-diagnostics-draft-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/native/normal-vmmap-capability-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/native/rosetta-desktop-controls-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/reviews/__pycache__", "remediation-runs/2026-09-07-local-readiness/reviews/before-null-port-adoption-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/reviews/ci-native-argument-capacity-before-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/reviews/darwin-ci-uid-inventory-01/draft/scripts/ci/__pycache__", "remediation-runs/2026-09-07-local-readiness/reviews/darwin-ci-uid-inventory-01/draft/scripts/release/tests/__pycache__", "remediation-runs/2026-09-07-local-readiness/reviews/dependency-candidate-consumer-03/__pycache__", "remediation-runs/2026-09-07-local-readiness/reviews/dependency-native-notices-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/reviews/ios-controls-before-gap02/__pycache__", "remediation-runs/2026-09-07-local-readiness/reviews/l08-native-foundation-control-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/reviews/l08-native-foundation-control-02/__pycache__", "remediation-runs/2026-09-07-local-readiness/reviews/l08-native-foundation-control-03/__pycache__", "remediation-runs/2026-09-07-local-readiness/reviews/libproc-image-observer-01/before-last-query-test-correction/__pycache__", "remediation-runs/2026-09-07-local-readiness/reviews/libproc-image-observer-01/before-review-correction/__pycache__", "remediation-runs/2026-09-07-local-readiness/reviews/libproc-image-observer-01/before/__pycache__", "remediation-runs/2026-09-07-local-readiness/reviews/libproc-image-observer-01/draft/__pycache__", "remediation-runs/2026-09-07-local-readiness/reviews/native-failure-diagnostic-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/reviews/native-path-canonicalization-draft-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/reviews/native-path-canonicalization-draft-01/review-revision-01-original/__pycache__", "remediation-runs/2026-09-07-local-readiness/reviews/native-path-canonicalization-prepatch-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/reviews/normal-launch-allocation-prepatch-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/reviews/normal-user-only-alias-draft-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/reviews/partial-fifo-attestation-draft-01/__pycache__", "remediation-runs/2026-09-08-continuation/controls/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/a33-owned-import-test-followup-01/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/android-emulator-absence-audit-01/proposed/scripts/ci/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/android-emulator-absence-audit-01/proposed/scripts/release/tests/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/android-proc-permission-diagnostic-01/proposed/scripts/ci/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/android-proc-permission-diagnostic-01/proposed/scripts/release/tests/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/l08-observed-english-us-selector-01/proposed/remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/l08-observed-english-us-selector-01/proposed/scripts/ci/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/l08-observed-english-us-selector-01/proposed/scripts/release/tests/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/l08-observed-english-us-selector-01/revision-02/proposed/remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/l08-observed-english-us-selector-01/revision-02/proposed/scripts/ci/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/l08-observed-english-us-selector-01/revision-02/proposed/scripts/release/tests/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/l08-single-tap-scanner-correction-01/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/linux-process-probe-01/proposed/scripts/ci/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/linux-process-probe-01/proposed/scripts/release/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/linux-process-probe-01/proposed/scripts/release/tests/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-a23-scroll-correction-01/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-a23-scroll-correction-01/revision-02/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-a25-followup-01/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-a25-followup-01/integration-01/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-a25-followup-01/revision-02/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-a25-functional-copy-guard-correction-01/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-a27-stale-runner-guard-01/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-a29-b30-label-01/draft/scripts/ci/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-a29-b30-label-01/draft/scripts/release/tests/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-a29-host-followup-01/implementation-01/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-a31-catalog-followup-01/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-a31-host-observation-followup-01/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-a31-os-prerequisite-followup-01/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-b24-region-diagnostics-01/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-b26-region-followup-01/draft-02/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-b26-region-followup-01/draft/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-b30-text-extent-01/draft/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-l08-only-selection-01/draft/scripts/ci/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-l08-only-selection-01/draft/scripts/release/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-l08-only-selection-01/draft/scripts/release/tests/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-normal-only-selection-01/draft/scripts/ci/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-normal-only-selection-01/draft/scripts/release/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-normal-only-selection-01/draft/scripts/release/tests/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/proposed/scripts/ci/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/proposed/scripts/release/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/proposed/scripts/release/tests/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/proposed/scripts/verification/ios-settings-sheet/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/revision-02/proposed/scripts/ci/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/revision-02/proposed/scripts/release/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/revision-02/proposed/scripts/release/tests/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/revision-02/proposed/scripts/verification/ios-settings-sheet/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/revision-03/proposed/scripts/ci/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/revision-03/proposed/scripts/release/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/revision-03/proposed/scripts/release/tests/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/revision-03/proposed/scripts/verification/ios-settings-sheet/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/workflow-contract-overlay-01/proposed/scripts/release/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/workflow-contract-overlay-01/proposed/scripts/release/tests/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/settings-single-execution-cli-fix-01/proposed/scripts/ci/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/settings-single-execution-cli-fix-01/proposed/scripts/release/tests/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/settings-single-execution-cli-fix-01/proposed/scripts/verification/ios-settings-sheet/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/windows-long-path-followup-01/proposed/scripts/release/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/windows-long-path-followup-01/proposed/scripts/release/tests/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/windows-long-path-followup-01/revision-02/proposed/scripts/release/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/windows-long-path-followup-01/revision-02/proposed/scripts/release/tests/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/windows-targeted-collector-01/__pycache__", "scripts/__pycache__", "scripts/ci/__pycache__", "scripts/release/__pycache__", "scripts/release/tests/__pycache__", "scripts/verification/__pycache__", "scripts/verification/ios-os-recovery/__pycache__", "scripts/verification/ios-readiness/__pycache__", "scripts/verification/ios-settings-sheet/__pycache__", "shared/content/build", "shared/core/build", "shared/design-system/build", "shared/engine-testing/build", "shared/engine/build", "shared/networking-testing/build", "shared/networking/build", "shared/session/build", "shared/storage/build", "shared/transport-p2p/build"], "retained": [], "upload": {"outcome": "success", "artifact_id": "10156381508", "artifact_digest": "95c9f71d28ad771385eda240844651455a7e3a211c8e7b1a2c72ce5f779d38f0"}, "preparation_outcome": "success", "errors": [{"error": "Android sampled emulator absence did not pass; retain outputs"}], "gradle_stop": {"command": ["./gradlew", "--stop"], "started_at": "2026-09-10T14:15:05.709210+00:00", "exit_code": 0, "output": "No Gradle daemons are running.\n", "finished_at": "2026-09-10T14:15:06.315789+00:00"}, "android_emulator_absence": {"result": "FAIL", "started_at": "2026-09-10T14:15:07.252309+00:00", "enumerated": 167, "sampled": 147, "selected_uid": 3, "matching_executables": 0, "errors": [{"code": "PROC_UID_AMBIGUOUS"}], "exe_reader": {"mode": "sudo-proc-exe-v1", "eacces_denials": 2, "privileged_reads": 2}, "scope": "Enumerated visible selected-UID executable paths beneath bound SDK/emulator only; not termination, task-process ownership, AVD retirement, other SDKs/UIDs, or continuous absence", "binding": {"sdk_path_sha256": "e507a12011d2294b5329bb26fe44164d883087cb9d582c7ec9335a39e4c551e1", "sdk_device": 2049, "sdk_inode": 795534, "uid": 1001}, "finished_at": "2026-09-10T14:15:07.330021+00:00", "source": {"head": "e4d49e17f5f1099a742ab3985c6257d090d61ba6", "tree": "1e3697d7eab93cc856166f85a791fe3cdd62941a"}}, "result": "FAIL", "finished_at": "2026-09-10T14:15:07.330069+00:00", "scope": "Only attested checkout build/Python-cache directories; no global caches or source", "worker_scope": "Gradle stop; Android receipt, when present, covers only sampled selected-UID SDK/emulator executable-path absence, not termination or AVD retirement"}
+2026-09-10T14:15:07.3471513Z ##[error]Process completed with exit code 1.
+2026-09-10T14:15:07.3556170Z ##[group]Run actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+2026-09-10T14:15:07.3556962Z with:
+2026-09-10T14:15:07.3557483Z   name: linux-process-probe-cleanup-34487728583-1
+2026-09-10T14:15:07.3558109Z   if-no-files-found: error
+2026-09-10T14:15:07.3558552Z   retention-days: 14
+2026-09-10T14:15:07.3559324Z   path: /home/runner/work/_temp/parlor-verification-34487728583-1-desktop-android-cleanup.json
+2026-09-10T14:15:07.3560249Z   compression-level: 6
+2026-09-10T14:15:07.3560911Z   overwrite: false
+2026-09-10T14:15:07.3561324Z   include-hidden-files: false
+2026-09-10T14:15:07.3561763Z   archive: true
+2026-09-10T14:15:07.3562115Z env:
+2026-09-10T14:15:07.3562773Z   GRADLE_OPTS: -Dorg.gradle.project.kotlin.compiler.execution.strategy=in-process
+2026-09-10T14:15:07.3563841Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-1/x64
+2026-09-10T14:15:07.3564766Z   JAVA_HOME_21_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-1/x64
+2026-09-10T14:15:07.3565564Z   MAVEN_ARGS: -ntp
+2026-09-10T14:15:07.3565949Z ##[endgroup]
+2026-09-10T14:15:07.4953559Z With the provided path, there will be 1 file uploaded
+2026-09-10T14:15:07.4958835Z Artifact name is valid!
+2026-09-10T14:15:07.4960917Z Root directory input is valid!
+2026-09-10T14:15:08.0324053Z Uploading artifact: linux-process-probe-cleanup-34487728583-1.zip
+2026-09-10T14:15:08.0397588Z Beginning upload of artifact content to blob storage
+2026-09-10T14:15:08.5457865Z Uploaded bytes 3132
+2026-09-10T14:15:08.6703126Z Finished uploading artifact content to blob storage!
+2026-09-10T14:15:08.6704512Z SHA256 digest of uploaded artifact is 138c1953ef1c4472674d9f385ce2e879d36e0c9728ec7630275dd7b75c7d8b7f
+2026-09-10T14:15:08.6705750Z Finalizing artifact upload
+2026-09-10T14:15:09.2451432Z Artifact linux-process-probe-cleanup-34487728583-1 successfully finalized. Artifact ID 10156385493
+2026-09-10T14:15:09.2453601Z Artifact linux-process-probe-cleanup-34487728583-1 has been successfully uploaded! Final size is 3132 bytes. Artifact ID is 10156385493
+2026-09-10T14:15:09.2455739Z Artifact download URL: https://github.com/Apdelrahman1911/parlor/actions/runs/34487728583/artifacts/10156385493
+2026-09-10T14:15:09.2645653Z Post job cleanup.
+2026-09-10T14:15:09.4125134Z Post job cleanup.
+2026-09-10T14:15:09.5161367Z [command]/usr/bin/git version
+2026-09-10T14:15:09.5211365Z git version 2.55.0
+2026-09-10T14:15:09.5245623Z Temporarily overriding HOME='/home/runner/work/_temp/e8190afb-955b-4b5a-b4d2-c8616eab86db' before making global git config changes
+2026-09-10T14:15:09.5247434Z Adding repository directory to the temporary git global config as a safe directory
+2026-09-10T14:15:09.5251713Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/parlor/parlor
+2026-09-10T14:15:09.5285213Z Removing SSH command configuration
+2026-09-10T14:15:09.5292481Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-09-10T14:15:09.5328188Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-09-10T14:15:09.5613888Z Removing HTTP extra header
+2026-09-10T14:15:09.5620796Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-09-10T14:15:09.5658726Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-09-10T14:15:09.5955806Z Removing includeIf entries pointing to credentials config files
+2026-09-10T14:15:09.5962858Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-09-10T14:15:09.6004402Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-09-10T14:15:09.6427992Z Cleaning up orphan processes

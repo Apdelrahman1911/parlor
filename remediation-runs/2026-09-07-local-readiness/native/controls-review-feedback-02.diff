@@ -1,0 +1,61 @@
+--- freeze02/scripts/verification/ios-readiness/README.md
++++ freeze03/scripts/verification/ios-readiness/README.md
+@@ -44,7 +44,9 @@
+ 5. **Full native provenance.** Every bundle file is checked for Mach-O magic;
+    built and installed image inventories must be identical. This includes the
+    launch stub, `Parlor.debug.dylib`, and `ComposeApp.framework/ComposeApp`.
+-   Actual app-emitted dyld paths bind each executed image to those hashes.
++   Actual app-emitted dyld paths bind the observed app images to those hashes.
++   Enumeration is a bounded, non-atomic sample, not evidence of every image
++   ever loaded or of absent concurrent image loads/unloads.
+    `dwarfdump` UUID/architecture results and read-only owned-app `codesign`
+    metadata supplement the inventory. `CODE_SIGNING_ALLOWED=NO` describes the
+    build configuration; it does not by itself establish the bytes' signature
+--- freeze02/scripts/verification/ios-readiness/artifact_inventory.py
++++ freeze03/scripts/verification/ios-readiness/artifact_inventory.py
+@@ -94,7 +94,7 @@
+         bound.append(dict(boot_ordinal=run['boot_ordinal'], process_boot=run['process_boot'],
+                           loaded_images=[{key: by_path[path][key] for key in ('path', 'bytes', 'sha256')} for path in images]))
+     return dict(status='PASS', method='Actual app dyld paths bound to identical installed and built Mach-O inventories',
+-                runs=bound, limitation='Signing-disabled instrumented Debug simulator only; not Store-signature or system-library attestation')
++                runs=bound, limitation='Observed app-image paths at one bounded, non-atomic dyld enumeration per boot; not every past/concurrent image. Signing-disabled instrumented Debug simulator only; not Store-signature or system-library attestation')
+ 
+ 
+ def parse_dwarfdump_uuids(output, path):
+--- freeze02/scripts/verification/ios-readiness/run_ios_readiness.py
++++ freeze03/scripts/verification/ios-readiness/run_ios_readiness.py
+@@ -338,7 +338,7 @@
+         receipt = dict(cycle=NAME, started_at=now(), status='RUNNING',
+                        execution_kind='manifest-owned-copy-signing-disabled-ios-local-readiness-matrix', commands=[],
+                        runtime_evidence_status='NOT_RUN', cleanup_status='BLOCKED',
+-                       scope='Four actual production-container UIKit tests; actual Settings/restart; direct Compose and actual LocalUIViewController direction; stable outer/child/window identities and full-bounds safe-area geometry in EN/AR portrait/landscape; local Whodunit/Mafia controller/flow/value continuity under synthetic real-store language setters and actual background/foreground; actual OS Arabic per-app preference; eight current-build cold launches; exact rerun credential OSStatus and synthetic storage durability; complete embedded/loaded binary inventory. No physical LAN, full-game, signed-release, Store or leak-free claim.', approved_control_sha256=approved)
++                       scope='Four actual production-container UIKit tests; actual Settings/restart; direct Compose and actual LocalUIViewController direction; stable outer/child/window identities and full-bounds safe-area geometry in EN/AR portrait/landscape; local Whodunit/Mafia controller/flow/value continuity under synthetic real-store language setters and actual background/foreground; actual OS Arabic per-app preference; eight current-build cold launches; exact rerun credential OSStatus and synthetic storage durability; complete embedded Mach-O inventory and observed loaded-image binding. No physical LAN, full-game, signed-release, Store or leak-free claim.', approved_control_sha256=approved)
+         temp, owner, env, uuid = None, None, None, None
+         # This iteration compiles only inside temp/copy. Original-repository
+         # outputs are never task-owned and must never be deleted by this run.
+--- freeze02/scripts/verification/ios-readiness/inherited-controls.json
++++ freeze03/scripts/verification/ios-readiness/inherited-controls.json
+@@ -162,7 +162,7 @@
+       "path": "run_ios_readiness.py",
+       "inherited_from": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v12/run_dsc01_apphost_cycle.py",
+       "original_sha256": "68d1d1ac98402c9c79a991f536983c0cd058bafdc152df9a31dfefb2a0b6790d",
+-      "current_sha256": "8b30eadd1b3737ea6f5653511526028ba1ad01c5c71d08e3ef397bf65fd216d9",
++      "current_sha256": "fa1f1c8a0ba4b6c3db723234f6cd0eaa74733ba4e90ea147aacbb13f0828bbf1",
+       "disposition": "MODIFIED_REQUIRES_FULL_REVIEW"
+     },
+     {
+@@ -182,12 +182,12 @@
+     },
+     {
+       "path": "README.md",
+-      "current_sha256": "4528fb0879419a9030b1a22739a7ae50b69d7aeb2fcd5f682d61cf5d072dfac1",
++      "current_sha256": "63029aa44d0437178a618e233414c085b667de5263ae8c1edb88f2b9389649a7",
+       "disposition": "NEW_SELF_CONTAINED_CONTROL_REQUIRES_FULL_REVIEW"
+     },
+     {
+       "path": "artifact_inventory.py",
+-      "current_sha256": "892f1b20c1a92f3e0746b703f2e3b38007ce967788f105aaf817a9bf49ec3934",
++      "current_sha256": "8573fde3df191027d867a91fcdf9e4d544be319f6dc6e474ddeb83a6e84d9066",
+       "disposition": "NEW_SELF_CONTAINED_CONTROL_REQUIRES_FULL_REVIEW"
+     },
+     {

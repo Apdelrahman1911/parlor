@@ -1,0 +1,2217 @@
+{
+  "recorded_at": "2026-09-06T02:17:24.537745+00:00",
+  "reviewer": "/root",
+  "observation_status": "PASS",
+  "preservation_verdict": "PASS",
+  "cleanup_verdict": "PASS",
+  "current_worker_classification": "NONE_OBSERVED",
+  "historical_cleanup_evidence_complete": false,
+  "historical_cleanup_limits": [
+    "Original ios-b1-red has no PID/start ownership ledger and no recorded scan command. Its empty scan/exit1 are retained, not treated as proof of historical worker absence."
+  ],
+  "source_manifest_sha256": "e59da533dbec2f02f6f2b460ce72e2a7337af1e44abfb0bc6d533304d4127ec7",
+  "tracked_diff_sha256": "60b555c0dd323a086e959ffbc5aa3fd7c6629ae1d0ad016021572e7ae272e4dd",
+  "base_head": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+  "base_tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+  "branch": "main",
+  "worktree_is_intentionally_dirty": true,
+  "checks": {
+    "head_unchanged": true,
+    "branch_unchanged": true,
+    "refs_unchanged": true,
+    "stash_unchanged": true,
+    "index_empty": true,
+    "all_original_files_present": true,
+    "all_preexisting_untracked_unchanged": true
+  },
+  "baseline": {
+    "path": "remediation-runs/2026-09-05-confirmed-fixes/baseline.json",
+    "sha256": "ea1cd2652288f36b25c6e6fbec271a7713e564e010ad854a49dbecc0004be8ae"
+  },
+  "baseline_files": 1618,
+  "unchanged_original_files": 1584,
+  "modified_original_files": [
+    {
+      "path": "composeApp/build.gradle.kts",
+      "kind": "tracked",
+      "sha256": "c23525d6b06f9b536fb5e8ef6be68c653952fa9764e276f831772b864621fdd5"
+    },
+    {
+      "path": "composeApp/src/desktopTest/kotlin/com/parlor/app/ProductionUiAccessibilityContractTest.kt",
+      "kind": "tracked",
+      "sha256": "00e0d9c8af2d59562ae1a68cc514382f6e017b0c63613ac43810ad407a9d4ba6"
+    },
+    {
+      "path": "composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSnapshotFileSystem.kt",
+      "kind": "tracked",
+      "sha256": "8a99e60647c3d9f137ca8783e636b37798d06f4883df3609bf6cd2a0568bdf48"
+    },
+    {
+      "path": "docs/MAFIA_RULES.md",
+      "kind": "tracked",
+      "sha256": "4051a05d1c3bd769329178be3a2191be20617f792f18fd0328ab105c2ec29d95"
+    },
+    {
+      "path": "docs/PRODUCTION_ARCHITECTURE.md",
+      "kind": "tracked",
+      "sha256": "1d795dfd86c3620f6359f9398f162470bfa441ef35127d30148b34879b3e1808"
+    },
+    {
+      "path": "docs/RELEASE_AUTOMATION.md",
+      "kind": "tracked",
+      "sha256": "5598e91447aae3f111654b217118aa64cc9ea0c0c3c34d36f0440c51c0b7f206"
+    },
+    {
+      "path": "game-modes/mafia/build.gradle.kts",
+      "kind": "tracked",
+      "sha256": "7aceb370331f84b2fee70bb039b7779bdd818ea78aab15da3bfcfd137a76ad2d"
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/composeResources/values-ar/strings.xml",
+      "kind": "tracked",
+      "sha256": "a9416283c7bf130d9ca98b4ff0e08ae420bad4b935f476ed7166178c42c3bdcc"
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/snapshot/MafiaSnapshotRecovery.kt",
+      "kind": "tracked",
+      "sha256": "64525b0d14b07d87e99729c3707dd0af4a083f8f4a98a5a948575755482ea3fd"
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaMultiDevicePhaseRouter.kt",
+      "kind": "tracked",
+      "sha256": "09de10c3735f1afeb7b36550dca57c4e9fd190d985faf6ff0eae8c0b8d21a784"
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/passandplay/MafiaPassAndPlayPhaseRouter.kt",
+      "kind": "tracked",
+      "sha256": "1371eb747579362548f3962a520c2c3f3c2f6225ef551bad93e3e690e08a1fe6"
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/postgame/PostGameScreen.kt",
+      "kind": "tracked",
+      "sha256": "2ebe210da47584cd0ed1105a921b4b2884cde23227b6cfb0086f25f3aec70aa9"
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaSetupScreen.kt",
+      "kind": "tracked",
+      "sha256": "c1dc2d1e5f4bf72ac1c2946341143f22936dd7903aab2d02b58c0d63709e87e4"
+    },
+    {
+      "path": "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/state/WhodunitStateValidator.kt",
+      "kind": "tracked",
+      "sha256": "c391101ba10792d4ba81eb0aa3a21771162c458e075b90bfbf06d4cb33d139c1"
+    },
+    {
+      "path": "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitPhaseRouter.kt",
+      "kind": "tracked",
+      "sha256": "11b188ca7ecfa7a02086ab2513fe9e40230f3aab9db9a9fa25c79204b4e9b0b7"
+    },
+    {
+      "path": "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/domain/WhodunitRulesInvariantTest.kt",
+      "kind": "tracked",
+      "sha256": "593a7e3937abc330e11ab76f4a4802e21bcde7231fb9b5220657a5bcc7d5d513"
+    },
+    {
+      "path": "iosApp/iosApp.xcodeproj/project.pbxproj",
+      "kind": "tracked",
+      "sha256": "dbf9c4d8f1c8e51cf78682afd5f32729566f75df6355735d3df37841e46fabfe"
+    },
+    {
+      "path": "scripts/release/store_api.py",
+      "kind": "tracked",
+      "sha256": "95ba5a18b5e78d85eb15c8764f011db76293d0bdcf8ee088151321ad5d6b7012"
+    },
+    {
+      "path": "scripts/release/tests/test_store_api.py",
+      "kind": "tracked",
+      "sha256": "18d49c5deb8cc5383b5a9888f7f14f21884bbbfeb577348412f1930f4972a1d1"
+    },
+    {
+      "path": "scripts/release/validate_android_artifact.sh",
+      "kind": "tracked",
+      "sha256": "e0100ed6274e41113e18d1cdaa5310242f749d2f337fdb0c5b85920a011cece6"
+    },
+    {
+      "path": "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/HostDisconnectedOverlay.kt",
+      "kind": "tracked",
+      "sha256": "a4cf551ee4846b8529b7ba1352a92a286d28831ecff086ef3a5a1ea3a30c450d"
+    },
+    {
+      "path": "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/ParlorButton.kt",
+      "kind": "tracked",
+      "sha256": "06ac462915e5371344abb953d29eab22bb9b622c800c70c5ebc96cca96efac0b"
+    },
+    {
+      "path": "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/ParlorToastHost.kt",
+      "kind": "tracked",
+      "sha256": "ea4e554c099511942e13e07281df48419c333948be7a64d65a72b7dd49ea25b0"
+    },
+    {
+      "path": "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/ReconnectingOverlay.kt",
+      "kind": "tracked",
+      "sha256": "587a0b4c7f8af7b7d0b762035855beee02cf4d1e9b4f4b532862b5f9821a10b5"
+    },
+    {
+      "path": "shared/design-system/src/commonTest/kotlin/com/parlor/designsystem/components/ParlorToastStateTest.kt",
+      "kind": "tracked",
+      "sha256": "6fb9a4c16974a10c978a325c57deffcbeb80d36bb9afd394cea55837cbf79cd1"
+    },
+    {
+      "path": "shared/design-system/src/iosMain/kotlin/com/parlor/designsystem/localization/LocalAppLocale.ios.kt",
+      "kind": "tracked",
+      "sha256": "0e0783ca3e38634bd3469760f5dbfa5ade8509b976d0ec676202f4513cd8e098"
+    },
+    {
+      "path": "shared/session/src/commonMain/kotlin/com/parlor/session/multidevice/SessionStartHandshake.kt",
+      "kind": "tracked",
+      "sha256": "eab3e1743484280bbdf1731f033b9984ad0b9e1d2aea31a94e40a6c29fe17512"
+    },
+    {
+      "path": "shared/transport-p2p/src/androidMain/kotlin/com/parlor/transport/p2p/P2pTransportModule.android.kt",
+      "kind": "tracked",
+      "sha256": "280b7f13d26939972416c805a184efe8fb8041f48db219f2e41797adbe456a11"
+    },
+    {
+      "path": "shared/transport-p2p/src/commonMain/kotlin/com/parlor/transport/p2p/AppLifecycleRoomCoordinator.kt",
+      "kind": "tracked",
+      "sha256": "7761d49b0de180d34daa32f790768a541f2af8d0de98b94eeb89ab20bf2d1e68"
+    },
+    {
+      "path": "shared/transport-p2p/src/commonMain/kotlin/com/parlor/transport/p2p/P2pKitRoomTransport.kt",
+      "kind": "tracked",
+      "sha256": "a5e2536e41c81c54b58ec27da135ea9046969db9cb80084e2a0da3b15ddde7c7"
+    },
+    {
+      "path": "shared/transport-p2p/src/desktopMain/kotlin/com/parlor/transport/p2p/P2pTransportModule.desktop.kt",
+      "kind": "tracked",
+      "sha256": "7bb0e36a15dfde7e193c74f1ab2a3d10f35c01e04c0fb3ba4e08a8a8cf88d3cb"
+    },
+    {
+      "path": "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitRoomTransportLifecycleTest.kt",
+      "kind": "tracked",
+      "sha256": "947a86aebdca10d7d9cfa97a5677c1a79733601dca887effc6c218280a098b1b"
+    },
+    {
+      "path": "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitRoomTransportLoopbackTest.kt",
+      "kind": "tracked",
+      "sha256": "cda4755e373172719f6fc7a4d72a38416ec061b44f356d9ef4f3529e29588737"
+    },
+    {
+      "path": "shared/transport-p2p/src/iosMain/kotlin/com/parlor/transport/p2p/P2pTransportModule.ios.kt",
+      "kind": "tracked",
+      "sha256": "bea599aa4d6dd9820477f2cbee57c213a9988da33e51eada0eb061d25fd77753"
+    }
+  ],
+  "missing_original_files": [],
+  "preexisting_untracked_changed": [],
+  "new_source_files": [
+    "composeApp/src/iosTest/kotlin/com/parlor/app/storage/IosLegacySnapshotBackupTest.kt",
+    "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/night/DoctorTargetEligibility.kt",
+    "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/domain/MafiaDoctorRulesTest.kt",
+    "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/multidevice/MafiaDoctorLanTest.kt",
+    "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/snapshot/MafiaDoctorHistoryRecoveryTest.kt",
+    "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/testing/MafiaDoctorFixture.kt",
+    "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/night/DoctorTargetEligibilityTest.kt",
+    "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/postgame/PostGameScreenLayoutTest.kt",
+    "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaDoctorSettingUiTest.kt",
+    "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/snapshot/WhodunitFinalTwoRecoveryTest.kt",
+    "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/PeerReadinessRemountTest.kt",
+    "scripts/release/PrepareAndroidUploadTrust.java",
+    "scripts/release/tests/test_android_artifact_size.py",
+    "scripts/release/tests/test_android_upload_signature.py",
+    "scripts/release/tests/test_google_promotion_edit.py",
+    "scripts/release/tests/test_xcode_framework_phase.py",
+    "shared/design-system/src/desktopTest/kotlin/com/parlor/designsystem/components/ParlorToastConcurrencyTest.kt",
+    "shared/design-system/src/desktopTest/kotlin/com/parlor/designsystem/components/ParlorToastLifetimeTest.kt",
+    "shared/design-system/src/desktopTest/kotlin/com/parlor/designsystem/components/RecoveryActionContrastTest.kt",
+    "shared/design-system/src/iosMain/kotlin/com/parlor/designsystem/localization/IosLanguageOverrideOwner.kt",
+    "shared/design-system/src/iosTest/kotlin/com/parlor/designsystem/localization/IosLanguageOverrideOwnerTest.kt",
+    "shared/session/src/commonTest/kotlin/com/parlor/session/multidevice/SessionStartCommitDeadlineTest.kt",
+    "shared/transport-p2p/src/commonMain/kotlin/com/parlor/transport/p2p/P2pKitCreation.kt",
+    "shared/transport-p2p/src/commonTest/kotlin/com/parlor/transport/p2p/AppLifecycleRoomRegistrationTest.kt",
+    "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/HostOpeningCancellationTest.kt",
+    "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/JupiterDiscoveryContractTest.kt",
+    "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitCreationTest.kt",
+    "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/PeerOpeningCancellationTest.kt"
+  ],
+  "generated_outputs_remaining": [],
+  "cycle_scratch_remaining": [],
+  "observed_gradle_kotlin_workers": [],
+  "worker_note": "Point-in-time observation only; unrelated workers never terminated. Modern cycle ownership ledgers separately evaluated. Legacy PID attestation is not invented.",
+  "disk_free_bytes": 20880560128,
+  "retained_remediation_evidence_bytes": 26234959,
+  "cycles_including_post_materialization": [
+    {
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-apple-01/receipt.json",
+        "sha256": "41dd813e36c349daefb5f45237b70e85571d4238e1be0e9ef1e363b7afd6f82c"
+      },
+      "cycle": "combined-apple-01",
+      "cleanup_evaluation": {
+        "schema": "gradle-cycle",
+        "status": "PASS",
+        "problems": [],
+        "historical_pid_evidence_complete": true,
+        "limitations": []
+      },
+      "recorded_fields": {
+        "status": "PASS",
+        "exit_code": 0,
+        "finished_at": "2026-09-05T22:53:15.708031+00:00",
+        "stop_exit_code": 0,
+        "cleanup_completed_at": "2026-09-05T22:53:16.378042+00:00",
+        "cleanup_errors": [],
+        "remaining_outputs": [],
+        "retained_outputs": [],
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        }
+      },
+      "associated": []
+    },
+    {
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-01/receipt.json",
+        "sha256": "c31513337d13649489920c1c2dfc604b76ca8f8121df1a3d9581516ae82d4509"
+      },
+      "cycle": "combined-production-01",
+      "cleanup_evaluation": {
+        "schema": "gradle-cycle",
+        "status": "PASS",
+        "problems": [],
+        "historical_pid_evidence_complete": true,
+        "limitations": []
+      },
+      "recorded_fields": {
+        "status": "FAIL",
+        "exit_code": 1,
+        "finished_at": "2026-09-05T21:44:03.091505+00:00",
+        "stop_exit_code": 0,
+        "cleanup_completed_at": "2026-09-05T21:44:04.607927+00:00",
+        "cleanup_errors": [],
+        "remaining_outputs": [],
+        "retained_outputs": [],
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        }
+      },
+      "associated": []
+    },
+    {
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-02/receipt.json",
+        "sha256": "449e46f258aae6a13a3543a9a4fe30b9bcf3848870675a042b2a567c436e8bbb"
+      },
+      "cycle": "combined-production-02",
+      "cleanup_evaluation": {
+        "schema": "gradle-cycle",
+        "status": "PASS",
+        "problems": [],
+        "historical_pid_evidence_complete": true,
+        "limitations": []
+      },
+      "recorded_fields": {
+        "status": "FAIL",
+        "exit_code": 1,
+        "finished_at": "2026-09-05T22:03:20.553075+00:00",
+        "stop_exit_code": 0,
+        "cleanup_completed_at": "2026-09-05T22:03:22.543364+00:00",
+        "cleanup_errors": [],
+        "remaining_outputs": [],
+        "retained_outputs": [],
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        }
+      },
+      "associated": []
+    },
+    {
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-03/receipt.json",
+        "sha256": "e8d122edb2506dbe5a9b4100656c319ab561dcb434752f8c7a08d51c784b552c"
+      },
+      "cycle": "combined-production-03",
+      "cleanup_evaluation": {
+        "schema": "gradle-cycle",
+        "status": "PASS",
+        "problems": [],
+        "historical_pid_evidence_complete": true,
+        "limitations": []
+      },
+      "recorded_fields": {
+        "status": "FAIL",
+        "exit_code": 1,
+        "finished_at": "2026-09-05T22:16:36.652495+00:00",
+        "stop_exit_code": 0,
+        "cleanup_completed_at": "2026-09-05T22:16:38.376026+00:00",
+        "cleanup_errors": [],
+        "remaining_outputs": [],
+        "retained_outputs": [],
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        }
+      },
+      "associated": []
+    },
+    {
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/receipt.json",
+        "sha256": "4f8374afedbc3fec40353f0a95556766eaf8fa393daf1f8d307104e05694b9f4"
+      },
+      "cycle": "combined-production-04",
+      "cleanup_evaluation": {
+        "schema": "gradle-cycle",
+        "status": "PASS",
+        "problems": [],
+        "historical_pid_evidence_complete": true,
+        "limitations": []
+      },
+      "recorded_fields": {
+        "status": "PASS",
+        "exit_code": 0,
+        "finished_at": "2026-09-05T22:30:19.979017+00:00",
+        "stop_exit_code": 0,
+        "cleanup_completed_at": "2026-09-05T22:30:22.205283+00:00",
+        "cleanup_errors": [],
+        "remaining_outputs": [],
+        "retained_outputs": [],
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        }
+      },
+      "associated": []
+    },
+    {
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-toast-cover-01/receipt.json",
+        "sha256": "30544f878300dfde4218b282cc9cf0d92ab87249bb6489f8bd942e850aa85a5e"
+      },
+      "cycle": "design-toast-cover-01",
+      "cleanup_evaluation": {
+        "schema": "gradle-cycle",
+        "status": "PASS",
+        "problems": [],
+        "historical_pid_evidence_complete": true,
+        "limitations": []
+      },
+      "recorded_fields": {
+        "status": "PASS",
+        "exit_code": 0,
+        "finished_at": "2026-09-05T18:47:38.240657+00:00",
+        "stop_exit_code": 0,
+        "cleanup_completed_at": "2026-09-05T18:47:38.670293+00:00",
+        "cleanup_errors": [],
+        "remaining_outputs": [],
+        "retained_outputs": [],
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        }
+      },
+      "associated": []
+    },
+    {
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-toast-cover-02/receipt.json",
+        "sha256": "1623724c52d9c7dcc3eb6e5279b4d350c584a32a3dc514ddffb5397665ee847a"
+      },
+      "cycle": "design-toast-cover-02",
+      "cleanup_evaluation": {
+        "schema": "gradle-cycle",
+        "status": "PASS",
+        "problems": [],
+        "historical_pid_evidence_complete": true,
+        "limitations": []
+      },
+      "recorded_fields": {
+        "status": "PASS",
+        "exit_code": 0,
+        "finished_at": "2026-09-05T20:28:16.746812+00:00",
+        "stop_exit_code": 0,
+        "cleanup_completed_at": "2026-09-05T20:28:17.196419+00:00",
+        "cleanup_errors": [],
+        "remaining_outputs": [],
+        "retained_outputs": [],
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        }
+      },
+      "associated": []
+    },
+    {
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-whodunit-desktop-01/receipt.json",
+        "sha256": "6ec583de55d5b45847ece8177a5c09124958c078d795db5abe2a4d2b13055aae"
+      },
+      "cycle": "design-whodunit-desktop-01",
+      "cleanup_evaluation": {
+        "schema": "gradle-cycle",
+        "status": "PASS",
+        "problems": [],
+        "historical_pid_evidence_complete": true,
+        "limitations": []
+      },
+      "recorded_fields": {
+        "status": "FAIL",
+        "exit_code": 1,
+        "finished_at": "2026-09-05T19:56:40.260644+00:00",
+        "stop_exit_code": 0,
+        "cleanup_completed_at": "2026-09-05T19:56:40.847118+00:00",
+        "cleanup_errors": [],
+        "remaining_outputs": [],
+        "retained_outputs": [],
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        }
+      },
+      "associated": []
+    },
+    {
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/dsc01-apphost-01/receipt.json",
+        "sha256": "33b7d8a4ee78dd34903aa4b3131fabc0df578b4148deafe30b818dff7885e89c"
+      },
+      "cycle": "dsc01-apphost-01",
+      "cleanup_evaluation": {
+        "schema": "dsc01-apphost",
+        "status": "PASS",
+        "problems": [],
+        "historical_pid_evidence_complete": true,
+        "limitations": []
+      },
+      "recorded_fields": {
+        "status": "FAIL",
+        "xcodebuild_exit_code": 65,
+        "runtime_evidence_status": "NOT_RUN",
+        "error": {
+          "type": "RuntimeError",
+          "message": "Actual XCTest summary is not exactly one successful, unskipped test"
+        },
+        "finished_at": "2026-09-06T01:01:09.423608+00:00",
+        "cleanup_completed_at": "2026-09-06T01:01:09.212331+00:00",
+        "cleanup_status": "PASS",
+        "cleanup_errors": [],
+        "remaining_outputs": [],
+        "gradle_stops": [
+          {
+            "label": "stop-xcode-immediate",
+            "exit_code": 0,
+            "at": "2026-09-06T01:01:00.860581+00:00"
+          },
+          {
+            "label": "stop-final",
+            "exit_code": 0,
+            "at": "2026-09-06T01:01:02.501872+00:00"
+          }
+        ],
+        "temporary_directory_removed": true,
+        "owned_device_absent": true,
+        "owned_processes_remaining": [],
+        "unknown_holders": [],
+        "secondary_cleanup": {
+          "status": "PASS",
+          "removed": [
+            "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-88445/IB/B80B37CD-55C7-4F43-980B-951FCD6F91E8.RemoteToHost",
+            "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-88445/IB/B80B37CD-55C7-4F43-980B-951FCD6F91E8.HostToRemote",
+            "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-88445/IB",
+            "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-88445"
+          ],
+          "remaining": []
+        },
+        "secondary_attestation_errors": []
+      },
+      "associated": [
+        {
+          "kind": "secondary-fifo-final-ledger",
+          "reference": {
+            "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/dsc01-apphost-01/secondary-fifo-ownership-final.json",
+            "sha256": "d7bbfbdd5a8fdbd07e2fad2644b22392f5caf7c3ea50b438b8c4113dd330e01e"
+          }
+        }
+      ]
+    },
+    {
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/dsc01-apphost-02/receipt.json",
+        "sha256": "7ce472e0296c985d152d02c0dbdf6b6979830c12906c7653291c5237bf5ac660"
+      },
+      "cycle": "dsc01-apphost-02",
+      "cleanup_evaluation": {
+        "schema": "dsc01-apphost",
+        "status": "PASS",
+        "problems": [],
+        "historical_pid_evidence_complete": true,
+        "limitations": []
+      },
+      "recorded_fields": {
+        "status": "PASS",
+        "xcodebuild_exit_code": 0,
+        "runtime_evidence_status": "PASS",
+        "finished_at": "2026-09-06T01:37:36.009359+00:00",
+        "cleanup_completed_at": "2026-09-06T01:37:35.569226+00:00",
+        "cleanup_status": "PASS",
+        "cleanup_errors": [],
+        "remaining_outputs": [],
+        "gradle_stops": [
+          {
+            "label": "stop-xcode-immediate",
+            "exit_code": 0,
+            "at": "2026-09-06T01:37:28.226975+00:00"
+          },
+          {
+            "label": "stop-final",
+            "exit_code": 0,
+            "at": "2026-09-06T01:37:29.269205+00:00"
+          }
+        ],
+        "temporary_directory_removed": true,
+        "owned_device_absent": true,
+        "owned_processes_remaining": [],
+        "unknown_holders": [],
+        "secondary_cleanup": {
+          "status": "PASS",
+          "removed": [
+            "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-1042/IB/7F106FDE-4660-49E8-8E03-7ABE964E26B0.RemoteToHost",
+            "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-1042/IB/7F106FDE-4660-49E8-8E03-7ABE964E26B0.HostToRemote",
+            "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-1042/IB",
+            "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-1042"
+          ],
+          "remaining": []
+        },
+        "secondary_attestation_errors": []
+      },
+      "associated": [
+        {
+          "kind": "secondary-fifo-final-ledger",
+          "reference": {
+            "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/dsc01-apphost-02/secondary-fifo-ownership-final.json",
+            "sha256": "ae78fe2125c0b699b9e7310b6bdccf3b82b839e323c79cf31fc2bf907798c139"
+          }
+        }
+      ]
+    },
+    {
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/dsc01-harness-contracts-01/receipt.json",
+        "sha256": "e754b3a6b475f154d27216a100d753b7271f50a6a32926459d561adbe7301c92"
+      },
+      "cycle": "dsc01-harness-contracts-01",
+      "cleanup_evaluation": {
+        "schema": "gradle-cycle",
+        "status": "PASS",
+        "problems": [],
+        "historical_pid_evidence_complete": true,
+        "limitations": []
+      },
+      "recorded_fields": {
+        "status": "PASS",
+        "exit_code": 0,
+        "finished_at": "2026-09-06T00:49:14.970499+00:00",
+        "stop_exit_code": 0,
+        "cleanup_completed_at": "2026-09-06T00:49:15.510371+00:00",
+        "cleanup_errors": [],
+        "remaining_outputs": [],
+        "retained_outputs": [],
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        }
+      },
+      "associated": []
+    },
+    {
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/dsc01-harness-contracts-02/receipt.json",
+        "sha256": "b80456d15f4fa6f428050c25b6fca57f1ee3751ebd7f51c9d97fc0cbdd608bc9"
+      },
+      "cycle": "dsc01-harness-contracts-02",
+      "cleanup_evaluation": {
+        "schema": "gradle-cycle",
+        "status": "PASS",
+        "problems": [],
+        "historical_pid_evidence_complete": true,
+        "limitations": []
+      },
+      "recorded_fields": {
+        "status": "PASS",
+        "exit_code": 0,
+        "finished_at": "2026-09-06T01:29:40.903048+00:00",
+        "stop_exit_code": 0,
+        "cleanup_completed_at": "2026-09-06T01:29:41.412463+00:00",
+        "cleanup_errors": [],
+        "remaining_outputs": [],
+        "retained_outputs": [],
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        }
+      },
+      "associated": []
+    },
+    {
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/final-continuation-assembly-01/receipt.json",
+        "sha256": "0930eddafde6d39f41158cb082a96e9ffd029ba8113bfd3d8ecd244c7b642bfa"
+      },
+      "cycle": "final-continuation-assembly-01",
+      "cleanup_evaluation": {
+        "schema": "gradle-cycle",
+        "status": "PASS",
+        "problems": [],
+        "historical_pid_evidence_complete": true,
+        "limitations": []
+      },
+      "recorded_fields": {
+        "status": "PASS",
+        "exit_code": 0,
+        "finished_at": "2026-09-06T01:54:04.316540+00:00",
+        "stop_exit_code": 0,
+        "cleanup_completed_at": "2026-09-06T01:54:04.835480+00:00",
+        "cleanup_errors": [],
+        "remaining_outputs": [],
+        "retained_outputs": [],
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        }
+      },
+      "associated": []
+    },
+    {
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/final-continuation-validation-01/receipt.json",
+        "sha256": "7d145f9e7400c1f2a3b8fa5e2a934ab8f45af3c86336453c41916abc06eff40f"
+      },
+      "cycle": "final-continuation-validation-01",
+      "cleanup_evaluation": {
+        "schema": "gradle-cycle",
+        "status": "PASS",
+        "problems": [],
+        "historical_pid_evidence_complete": true,
+        "limitations": []
+      },
+      "recorded_fields": {
+        "status": "FAIL",
+        "exit_code": 1,
+        "finished_at": "2026-09-06T02:04:15.910225+00:00",
+        "stop_exit_code": 0,
+        "cleanup_completed_at": "2026-09-06T02:04:16.283932+00:00",
+        "cleanup_errors": [],
+        "remaining_outputs": [],
+        "retained_outputs": [],
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        }
+      },
+      "associated": []
+    },
+    {
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/final-continuation-validation-02/receipt.json",
+        "sha256": "c8284f9df6375484509fbcd1a4296ee6037ace1fece39327dd26601ae88ef1a5"
+      },
+      "cycle": "final-continuation-validation-02",
+      "cleanup_evaluation": {
+        "schema": "gradle-cycle",
+        "status": "PASS",
+        "problems": [],
+        "historical_pid_evidence_complete": true,
+        "limitations": []
+      },
+      "recorded_fields": {
+        "status": "PASS",
+        "exit_code": 0,
+        "finished_at": "2026-09-06T02:06:15.555314+00:00",
+        "stop_exit_code": 0,
+        "cleanup_completed_at": "2026-09-06T02:06:15.881711+00:00",
+        "cleanup_errors": [],
+        "remaining_outputs": [],
+        "retained_outputs": [],
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        }
+      },
+      "associated": []
+    },
+    {
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/final-evidence-assembly-01/receipt.json",
+        "sha256": "f25af494e43e733f4eaffb258cc31d3f3742575552f7988205ec128c084be2d7"
+      },
+      "cycle": "final-evidence-assembly-01",
+      "cleanup_evaluation": {
+        "schema": "gradle-cycle",
+        "status": "PASS",
+        "problems": [],
+        "historical_pid_evidence_complete": true,
+        "limitations": []
+      },
+      "recorded_fields": {
+        "status": "PASS",
+        "exit_code": 0,
+        "finished_at": "2026-09-05T23:12:26.052879+00:00",
+        "stop_exit_code": 0,
+        "cleanup_completed_at": "2026-09-05T23:12:26.387612+00:00",
+        "cleanup_errors": [],
+        "remaining_outputs": [],
+        "retained_outputs": [],
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        }
+      },
+      "associated": []
+    },
+    {
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/final-indexes-01/receipt.json",
+        "sha256": "79ba6f7c43c4ff62970a62b8722a282c26fe2a56eacaab053958ccc5d00e032c"
+      },
+      "cycle": "final-indexes-01",
+      "cleanup_evaluation": {
+        "schema": "gradle-cycle",
+        "status": "PASS",
+        "problems": [],
+        "historical_pid_evidence_complete": true,
+        "limitations": []
+      },
+      "recorded_fields": {
+        "status": "PASS",
+        "exit_code": 0,
+        "finished_at": "2026-09-06T00:11:37.549169+00:00",
+        "stop_exit_code": 0,
+        "cleanup_completed_at": "2026-09-06T00:11:38.047139+00:00",
+        "cleanup_errors": [],
+        "remaining_outputs": [],
+        "retained_outputs": [],
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        }
+      },
+      "associated": []
+    },
+    {
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/final-ledger-validation-01/receipt.json",
+        "sha256": "144805e1bd47ba7aa812e4c831a665d6aff9abf8aa91f3928665bb47a213c482"
+      },
+      "cycle": "final-ledger-validation-01",
+      "cleanup_evaluation": {
+        "schema": "gradle-cycle",
+        "status": "PASS",
+        "problems": [],
+        "historical_pid_evidence_complete": true,
+        "limitations": []
+      },
+      "recorded_fields": {
+        "status": "PASS",
+        "exit_code": 0,
+        "finished_at": "2026-09-06T00:15:06.432757+00:00",
+        "stop_exit_code": 0,
+        "cleanup_completed_at": "2026-09-06T00:15:06.939853+00:00",
+        "cleanup_errors": [],
+        "remaining_outputs": [],
+        "retained_outputs": [],
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        }
+      },
+      "associated": []
+    },
+    {
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/final-observation-contracts-01/receipt.json",
+        "sha256": "d0e8ad7b8be4aab7c42c014c4cbf68778cd3807e2e2fbdf7d9fb102c6160a3f7"
+      },
+      "cycle": "final-observation-contracts-01",
+      "cleanup_evaluation": {
+        "schema": "gradle-cycle",
+        "status": "PASS",
+        "problems": [],
+        "historical_pid_evidence_complete": true,
+        "limitations": []
+      },
+      "recorded_fields": {
+        "status": "PASS",
+        "exit_code": 0,
+        "finished_at": "2026-09-06T01:08:02.669474+00:00",
+        "stop_exit_code": 0,
+        "cleanup_completed_at": "2026-09-06T01:08:03.049185+00:00",
+        "cleanup_errors": [],
+        "remaining_outputs": [],
+        "retained_outputs": [],
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        }
+      },
+      "associated": []
+    },
+    {
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/final-observation-contracts-02/receipt.json",
+        "sha256": "3b5059cf1aead0a41a86033cb64a5a047692d5db67b9933fa9a072c06e144d71"
+      },
+      "cycle": "final-observation-contracts-02",
+      "cleanup_evaluation": {
+        "schema": "gradle-cycle",
+        "status": "PASS",
+        "problems": [],
+        "historical_pid_evidence_complete": true,
+        "limitations": []
+      },
+      "recorded_fields": {
+        "status": "PASS",
+        "exit_code": 0,
+        "finished_at": "2026-09-06T01:16:31.217200+00:00",
+        "stop_exit_code": 0,
+        "cleanup_completed_at": "2026-09-06T01:16:31.756977+00:00",
+        "cleanup_errors": [],
+        "remaining_outputs": [],
+        "retained_outputs": [],
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        }
+      },
+      "associated": []
+    },
+    {
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/final-observation-contracts-03/receipt.json",
+        "sha256": "9949837ab9e54e3ecc044ef47727b6db4c2337003f450470bd644e8ec6c39fb0"
+      },
+      "cycle": "final-observation-contracts-03",
+      "cleanup_evaluation": {
+        "schema": "gradle-cycle",
+        "status": "PASS",
+        "problems": [],
+        "historical_pid_evidence_complete": true,
+        "limitations": []
+      },
+      "recorded_fields": {
+        "status": "PASS",
+        "exit_code": 0,
+        "finished_at": "2026-09-06T01:20:52.322608+00:00",
+        "stop_exit_code": 0,
+        "cleanup_completed_at": "2026-09-06T01:20:52.642955+00:00",
+        "cleanup_errors": [],
+        "remaining_outputs": [],
+        "retained_outputs": [],
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        }
+      },
+      "associated": []
+    },
+    {
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/final-resource-checks-01/receipt.json",
+        "sha256": "42d363bcc04f84e49deac1d608f81cb92a70b97fbf51c3b9dc41c353d183f731"
+      },
+      "cycle": "final-resource-checks-01",
+      "cleanup_evaluation": {
+        "schema": "gradle-cycle",
+        "status": "PASS",
+        "problems": [],
+        "historical_pid_evidence_complete": true,
+        "limitations": []
+      },
+      "recorded_fields": {
+        "status": "PASS",
+        "exit_code": 0,
+        "finished_at": "2026-09-05T22:59:27.326904+00:00",
+        "stop_exit_code": 0,
+        "cleanup_completed_at": "2026-09-05T22:59:27.660219+00:00",
+        "cleanup_errors": [],
+        "remaining_outputs": [],
+        "retained_outputs": [],
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        }
+      },
+      "associated": []
+    },
+    {
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/foundation-transport-green/receipt.json",
+        "sha256": "f2b412ec493dbaf36b00e95480e4b152a32326fb4811ac41a26b94cdd1ba6992"
+      },
+      "cycle": "foundation-transport-green",
+      "cleanup_evaluation": {
+        "schema": "gradle-cycle",
+        "status": "PASS",
+        "problems": [],
+        "historical_pid_evidence_complete": true,
+        "limitations": []
+      },
+      "recorded_fields": {
+        "status": "PASS",
+        "exit_code": 0,
+        "finished_at": "2026-09-05T18:40:01.575266+00:00",
+        "stop_exit_code": 0,
+        "cleanup_completed_at": "2026-09-05T18:40:02.210615+00:00",
+        "cleanup_errors": [],
+        "remaining_outputs": [],
+        "retained_outputs": [],
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        }
+      },
+      "associated": []
+    },
+    {
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-01/receipt.json",
+        "sha256": "0e8e6a3d7471e10b80a77a34697f7f27b347c86c066d1b52f9e9896ff128b4e0"
+      },
+      "cycle": "games-session-desktop-01",
+      "cleanup_evaluation": {
+        "schema": "gradle-cycle",
+        "status": "PASS",
+        "problems": [],
+        "historical_pid_evidence_complete": true,
+        "limitations": []
+      },
+      "recorded_fields": {
+        "status": "FAIL",
+        "exit_code": 1,
+        "finished_at": "2026-09-05T19:02:52.255514+00:00",
+        "stop_exit_code": 0,
+        "cleanup_completed_at": "2026-09-05T19:02:52.719070+00:00",
+        "cleanup_errors": [],
+        "remaining_outputs": [],
+        "retained_outputs": [],
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        }
+      },
+      "associated": []
+    },
+    {
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-02/receipt.json",
+        "sha256": "5e845371c19e0c25b730d580f62b09a31f673b087665a93020f1881a76c9adf5"
+      },
+      "cycle": "games-session-desktop-02",
+      "cleanup_evaluation": {
+        "schema": "gradle-cycle",
+        "status": "PASS",
+        "problems": [],
+        "historical_pid_evidence_complete": true,
+        "limitations": []
+      },
+      "recorded_fields": {
+        "status": "FAIL",
+        "exit_code": 1,
+        "finished_at": "2026-09-05T19:21:50.225436+00:00",
+        "stop_exit_code": 0,
+        "cleanup_completed_at": "2026-09-05T19:21:50.851140+00:00",
+        "cleanup_errors": [],
+        "remaining_outputs": [],
+        "retained_outputs": [],
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        }
+      },
+      "associated": []
+    },
+    {
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/receipt.json",
+        "sha256": "b7dd7cbcd744cc9ba75cb01a53ac747b875f9467c96ebcbc9c6659595fa11ae5"
+      },
+      "cycle": "games-session-desktop-03",
+      "cleanup_evaluation": {
+        "schema": "gradle-cycle",
+        "status": "PASS",
+        "problems": [],
+        "historical_pid_evidence_complete": true,
+        "limitations": []
+      },
+      "recorded_fields": {
+        "status": "FAIL",
+        "exit_code": 1,
+        "finished_at": "2026-09-05T19:42:03.940194+00:00",
+        "stop_exit_code": 0,
+        "cleanup_completed_at": "2026-09-05T19:42:04.581043+00:00",
+        "cleanup_errors": [],
+        "remaining_outputs": [],
+        "retained_outputs": [],
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        }
+      },
+      "associated": []
+    },
+    {
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/ios-b1-green/receipt.json",
+        "sha256": "66088528454ff016f3c7ac6bb6ec5241ed07889e63b377ffdde43fabaf23745d"
+      },
+      "cycle": "ios-b1-green",
+      "cleanup_evaluation": {
+        "schema": "gradle-cycle",
+        "status": "PASS",
+        "problems": [],
+        "historical_pid_evidence_complete": true,
+        "limitations": []
+      },
+      "recorded_fields": {
+        "status": "PASS",
+        "exit_code": 0,
+        "finished_at": "2026-09-05T18:41:46.191112+00:00",
+        "stop_exit_code": 0,
+        "cleanup_completed_at": "2026-09-05T18:41:46.510555+00:00",
+        "cleanup_errors": [],
+        "remaining_outputs": [],
+        "retained_outputs": [],
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        }
+      },
+      "associated": []
+    },
+    {
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/ios-b1-phase-green/receipt.json",
+        "sha256": "06726b151d585a80f8df7c1ff67b7238dd1d3df39fb5437aab2e6bf43258c045"
+      },
+      "cycle": "ios-b1-phase-green",
+      "cleanup_evaluation": {
+        "schema": "gradle-cycle",
+        "status": "PASS",
+        "problems": [],
+        "historical_pid_evidence_complete": true,
+        "limitations": []
+      },
+      "recorded_fields": {
+        "status": "PASS",
+        "exit_code": 0,
+        "finished_at": "2026-09-05T18:43:57.739590+00:00",
+        "stop_exit_code": 0,
+        "cleanup_completed_at": "2026-09-05T18:43:58.066256+00:00",
+        "cleanup_errors": [],
+        "remaining_outputs": [],
+        "retained_outputs": [],
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        }
+      },
+      "associated": []
+    },
+    {
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/ios-b1-red/receipt.json",
+        "sha256": "1a1c0d0f2d68cf0f4be5b93033918fdae373c7ca1cd07c8686e680b3d77a5772"
+      },
+      "cycle": "ios-b1-red",
+      "cleanup_evaluation": {
+        "schema": "legacy-shell-cycle",
+        "status": "PASS",
+        "problems": [],
+        "historical_pid_evidence_complete": false,
+        "limitations": [
+          "Original ios-b1-red has no PID/start ownership ledger and no recorded scan command. Its empty scan/exit1 are retained, not treated as proof of historical worker absence."
+        ]
+      },
+      "recorded_fields": {
+        "status": "FAIL",
+        "exit_code": 1,
+        "finished_at": "2026-09-05T18:18:53.292052+00:00",
+        "stop_exit_code": 0,
+        "cleanup_completed_at": "2026-09-05T18:18:53.731875+00:00",
+        "cleanup_errors": [],
+        "remaining_outputs": []
+      },
+      "associated": [
+        {
+          "kind": "legacy-limited-process-scan",
+          "reference": {
+            "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/ios-b1-red/processes-after.txt",
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        }
+      ]
+    },
+    {
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/locale-source-contract-green-01/receipt.json",
+        "sha256": "ad2e08caea2cc9009a33532d9158842edb5ff436ad827f7008b7d8465c54fc95"
+      },
+      "cycle": "locale-source-contract-green-01",
+      "cleanup_evaluation": {
+        "schema": "gradle-cycle",
+        "status": "PASS",
+        "problems": [],
+        "historical_pid_evidence_complete": true,
+        "limitations": []
+      },
+      "recorded_fields": {
+        "status": "PASS",
+        "exit_code": 0,
+        "finished_at": "2026-09-05T21:55:32.681175+00:00",
+        "stop_exit_code": 0,
+        "cleanup_completed_at": "2026-09-05T21:55:33.237554+00:00",
+        "cleanup_errors": [],
+        "remaining_outputs": [],
+        "retained_outputs": [],
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        }
+      },
+      "associated": []
+    },
+    {
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/mafia-type-aware-green-01/receipt.json",
+        "sha256": "284534c7f6e5b73c16c329c80bdb3ac9803cef0cf0bf4c8c96b9cb22abfa81bd"
+      },
+      "cycle": "mafia-type-aware-green-01",
+      "cleanup_evaluation": {
+        "schema": "gradle-cycle",
+        "status": "PASS",
+        "problems": [],
+        "historical_pid_evidence_complete": true,
+        "limitations": []
+      },
+      "recorded_fields": {
+        "status": "PASS",
+        "exit_code": 0,
+        "finished_at": "2026-09-05T22:09:25.350688+00:00",
+        "stop_exit_code": 0,
+        "cleanup_completed_at": "2026-09-05T22:09:25.879863+00:00",
+        "cleanup_errors": [],
+        "remaining_outputs": [],
+        "retained_outputs": [],
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        }
+      },
+      "associated": []
+    },
+    {
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/native-alltests-01/receipt.json",
+        "sha256": "fae1ca61e3eb2854c2d21fae7a79c747cf5093d451a99fe957ec091fcc7043eb"
+      },
+      "cycle": "native-alltests-01",
+      "cleanup_evaluation": {
+        "schema": "gradle-cycle",
+        "status": "PASS",
+        "problems": [],
+        "historical_pid_evidence_complete": true,
+        "limitations": []
+      },
+      "recorded_fields": {
+        "status": "PASS",
+        "exit_code": 0,
+        "finished_at": "2026-09-05T22:39:02.052990+00:00",
+        "stop_exit_code": 0,
+        "cleanup_completed_at": "2026-09-05T22:39:09.247928+00:00",
+        "cleanup_errors": [],
+        "remaining_outputs": [],
+        "retained_outputs": [],
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        }
+      },
+      "associated": [
+        {
+          "kind": "owned-simulator",
+          "reference": {
+            "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/native-alltests-01/simulator/receipt.json",
+            "sha256": "c3725a106b41ebed08792c296ec85c82e5439cd01910ad2ace58bf6d95310975"
+          },
+          "record": {
+            "name": "Parlor-Remediation-native-alltests-01-2fe3b9f188bd453496f772189d62ce48",
+            "runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-5",
+            "device_type": "com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro",
+            "commands": [
+              {
+                "command": [
+                  "xcrun",
+                  "simctl",
+                  "list",
+                  "devices",
+                  "-j"
+                ],
+                "log": "inventory-before.log",
+                "started_at": "2026-09-05T22:30:55.119995+00:00",
+                "exit_code": 0,
+                "finished_at": "2026-09-05T22:31:01.427764+00:00"
+              },
+              {
+                "command": [
+                  "xcrun",
+                  "simctl",
+                  "create",
+                  "Parlor-Remediation-native-alltests-01-2fe3b9f188bd453496f772189d62ce48",
+                  "com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro",
+                  "com.apple.CoreSimulator.SimRuntime.iOS-26-5"
+                ],
+                "log": "create.log",
+                "started_at": "2026-09-05T22:31:01.428192+00:00",
+                "exit_code": 0,
+                "finished_at": "2026-09-05T22:31:01.696922+00:00"
+              },
+              {
+                "command": [
+                  "xcrun",
+                  "simctl",
+                  "list",
+                  "devices",
+                  "-j"
+                ],
+                "log": "inventory-created.log",
+                "started_at": "2026-09-05T22:31:01.697115+00:00",
+                "exit_code": 0,
+                "finished_at": "2026-09-05T22:31:01.808586+00:00"
+              },
+              {
+                "command": [
+                  "xcrun",
+                  "simctl",
+                  "boot",
+                  "7F62342A-458F-43BC-9E8A-A843D0314033"
+                ],
+                "log": "boot.log",
+                "started_at": "2026-09-05T22:31:01.809161+00:00",
+                "exit_code": 0,
+                "finished_at": "2026-09-05T22:31:05.539237+00:00"
+              },
+              {
+                "command": [
+                  "xcrun",
+                  "simctl",
+                  "bootstatus",
+                  "7F62342A-458F-43BC-9E8A-A843D0314033",
+                  "-b"
+                ],
+                "log": "bootstatus.log",
+                "started_at": "2026-09-05T22:31:05.539457+00:00",
+                "exit_code": 0,
+                "finished_at": "2026-09-05T22:31:30.681969+00:00"
+              },
+              {
+                "command": [
+                  "xcrun",
+                  "simctl",
+                  "list",
+                  "devices",
+                  "-j"
+                ],
+                "log": "inventory-cleanup.log",
+                "started_at": "2026-09-05T22:39:02.389868+00:00",
+                "exit_code": 0,
+                "finished_at": "2026-09-05T22:39:02.563601+00:00"
+              },
+              {
+                "command": [
+                  "xcrun",
+                  "simctl",
+                  "shutdown",
+                  "7F62342A-458F-43BC-9E8A-A843D0314033"
+                ],
+                "log": "shutdown.log",
+                "started_at": "2026-09-05T22:39:02.564475+00:00",
+                "exit_code": 0,
+                "finished_at": "2026-09-05T22:39:05.779446+00:00"
+              },
+              {
+                "command": [
+                  "xcrun",
+                  "simctl",
+                  "delete",
+                  "7F62342A-458F-43BC-9E8A-A843D0314033"
+                ],
+                "log": "delete.log",
+                "started_at": "2026-09-05T22:39:05.780848+00:00",
+                "exit_code": 0,
+                "finished_at": "2026-09-05T22:39:05.919549+00:00"
+              },
+              {
+                "command": [
+                  "xcrun",
+                  "simctl",
+                  "list",
+                  "devices",
+                  "-j"
+                ],
+                "log": "inventory-final.log",
+                "started_at": "2026-09-05T22:39:05.919823+00:00",
+                "exit_code": 0,
+                "finished_at": "2026-09-05T22:39:06.024196+00:00"
+              }
+            ],
+            "cleanup_errors": [],
+            "owned_device_absent": true,
+            "preexisting_device_count": 22,
+            "owned_uuid": "7F62342A-458F-43BC-9E8A-A843D0314033",
+            "preexisting_devices_preserved": true,
+            "remaining_owned_uuid_processes": []
+          }
+        }
+      ]
+    },
+    {
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/native-storage-language-01/receipt.json",
+        "sha256": "7b3afd96138795f98a5f3fa2ac341ab0e517147d0cfa093116e2b922347b562d"
+      },
+      "cycle": "native-storage-language-01",
+      "cleanup_evaluation": {
+        "schema": "gradle-cycle",
+        "status": "PASS",
+        "problems": [],
+        "historical_pid_evidence_complete": true,
+        "limitations": []
+      },
+      "recorded_fields": {
+        "status": "FAIL",
+        "exit_code": 1,
+        "finished_at": "2026-09-05T20:33:04.537033+00:00",
+        "stop_exit_code": 0,
+        "cleanup_completed_at": "2026-09-05T20:33:08.946429+00:00",
+        "cleanup_errors": [],
+        "remaining_outputs": [],
+        "retained_outputs": [],
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        }
+      },
+      "associated": [
+        {
+          "kind": "owned-simulator",
+          "reference": {
+            "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/native-storage-language-01/simulator/receipt.json",
+            "sha256": "5febcc8ee0efa402ec479e3bfa412629db9430d0680f7304d1e360ae21e7705f"
+          },
+          "record": {
+            "name": "Parlor-Remediation-native-storage-language-01-d27f5ca5842b484cab9f21327a0e1de7",
+            "runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-5",
+            "device_type": "com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro",
+            "commands": [
+              {
+                "command": [
+                  "xcrun",
+                  "simctl",
+                  "list",
+                  "devices",
+                  "-j"
+                ],
+                "log": "inventory-before.log",
+                "started_at": "2026-09-05T20:31:51.287573+00:00",
+                "exit_code": 0,
+                "finished_at": "2026-09-05T20:31:53.419275+00:00"
+              },
+              {
+                "command": [
+                  "xcrun",
+                  "simctl",
+                  "create",
+                  "Parlor-Remediation-native-storage-language-01-d27f5ca5842b484cab9f21327a0e1de7",
+                  "com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro",
+                  "com.apple.CoreSimulator.SimRuntime.iOS-26-5"
+                ],
+                "log": "create.log",
+                "started_at": "2026-09-05T20:31:53.419625+00:00",
+                "exit_code": 0,
+                "finished_at": "2026-09-05T20:31:53.683795+00:00"
+              },
+              {
+                "command": [
+                  "xcrun",
+                  "simctl",
+                  "list",
+                  "devices",
+                  "-j"
+                ],
+                "log": "inventory-created.log",
+                "started_at": "2026-09-05T20:31:53.684340+00:00",
+                "exit_code": 0,
+                "finished_at": "2026-09-05T20:31:53.801180+00:00"
+              },
+              {
+                "command": [
+                  "xcrun",
+                  "simctl",
+                  "boot",
+                  "124CC16C-87B4-4C2A-9401-3DBDB4088FDB"
+                ],
+                "log": "boot.log",
+                "started_at": "2026-09-05T20:31:53.801701+00:00",
+                "exit_code": 0,
+                "finished_at": "2026-09-05T20:31:57.192873+00:00"
+              },
+              {
+                "command": [
+                  "xcrun",
+                  "simctl",
+                  "bootstatus",
+                  "124CC16C-87B4-4C2A-9401-3DBDB4088FDB",
+                  "-b"
+                ],
+                "log": "bootstatus.log",
+                "started_at": "2026-09-05T20:31:57.193305+00:00",
+                "exit_code": 0,
+                "finished_at": "2026-09-05T20:32:22.374930+00:00"
+              },
+              {
+                "command": [
+                  "xcrun",
+                  "simctl",
+                  "list",
+                  "devices",
+                  "-j"
+                ],
+                "log": "inventory-cleanup.log",
+                "started_at": "2026-09-05T20:33:04.974134+00:00",
+                "exit_code": 0,
+                "finished_at": "2026-09-05T20:33:05.092202+00:00"
+              },
+              {
+                "command": [
+                  "xcrun",
+                  "simctl",
+                  "shutdown",
+                  "124CC16C-87B4-4C2A-9401-3DBDB4088FDB"
+                ],
+                "log": "shutdown.log",
+                "started_at": "2026-09-05T20:33:05.092681+00:00",
+                "exit_code": 0,
+                "finished_at": "2026-09-05T20:33:08.312919+00:00"
+              },
+              {
+                "command": [
+                  "xcrun",
+                  "simctl",
+                  "delete",
+                  "124CC16C-87B4-4C2A-9401-3DBDB4088FDB"
+                ],
+                "log": "delete.log",
+                "started_at": "2026-09-05T20:33:08.315515+00:00",
+                "exit_code": 0,
+                "finished_at": "2026-09-05T20:33:08.568388+00:00"
+              },
+              {
+                "command": [
+                  "xcrun",
+                  "simctl",
+                  "list",
+                  "devices",
+                  "-j"
+                ],
+                "log": "inventory-final.log",
+                "started_at": "2026-09-05T20:33:08.568712+00:00",
+                "exit_code": 0,
+                "finished_at": "2026-09-05T20:33:08.719504+00:00"
+              }
+            ],
+            "cleanup_errors": [],
+            "owned_device_absent": true,
+            "preexisting_device_count": 22,
+            "owned_uuid": "124CC16C-87B4-4C2A-9401-3DBDB4088FDB",
+            "preexisting_devices_preserved": true,
+            "remaining_owned_uuid_processes": []
+          }
+        }
+      ]
+    },
+    {
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/native-storage-language-02/receipt.json",
+        "sha256": "3708df669d6ec74a668b701eca5dcfca97cafbe6e6262d65712cc3d0630ab331"
+      },
+      "cycle": "native-storage-language-02",
+      "cleanup_evaluation": {
+        "schema": "gradle-cycle",
+        "status": "PASS",
+        "problems": [],
+        "historical_pid_evidence_complete": true,
+        "limitations": []
+      },
+      "recorded_fields": {
+        "status": "PASS",
+        "exit_code": 0,
+        "finished_at": "2026-09-05T20:44:16.450197+00:00",
+        "stop_exit_code": 0,
+        "cleanup_completed_at": "2026-09-05T20:44:21.103803+00:00",
+        "cleanup_errors": [],
+        "remaining_outputs": [],
+        "retained_outputs": [],
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        }
+      },
+      "associated": [
+        {
+          "kind": "owned-simulator",
+          "reference": {
+            "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/native-storage-language-02/simulator/receipt.json",
+            "sha256": "fdb74ac1395a51b0d9b34cb9ea4aacccdf62b709dd36b518aa8fe22a0129ea91"
+          },
+          "record": {
+            "name": "Parlor-Remediation-native-storage-language-02-ac910768832442ac97776aeac64becab",
+            "runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-5",
+            "device_type": "com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro",
+            "commands": [
+              {
+                "command": [
+                  "xcrun",
+                  "simctl",
+                  "list",
+                  "devices",
+                  "-j"
+                ],
+                "log": "inventory-before.log",
+                "started_at": "2026-09-05T20:42:27.562367+00:00",
+                "exit_code": 0,
+                "finished_at": "2026-09-05T20:42:29.173951+00:00"
+              },
+              {
+                "command": [
+                  "xcrun",
+                  "simctl",
+                  "create",
+                  "Parlor-Remediation-native-storage-language-02-ac910768832442ac97776aeac64becab",
+                  "com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro",
+                  "com.apple.CoreSimulator.SimRuntime.iOS-26-5"
+                ],
+                "log": "create.log",
+                "started_at": "2026-09-05T20:42:29.174529+00:00",
+                "exit_code": 0,
+                "finished_at": "2026-09-05T20:42:29.430479+00:00"
+              },
+              {
+                "command": [
+                  "xcrun",
+                  "simctl",
+                  "list",
+                  "devices",
+                  "-j"
+                ],
+                "log": "inventory-created.log",
+                "started_at": "2026-09-05T20:42:29.430750+00:00",
+                "exit_code": 0,
+                "finished_at": "2026-09-05T20:42:29.540528+00:00"
+              },
+              {
+                "command": [
+                  "xcrun",
+                  "simctl",
+                  "boot",
+                  "97F2B485-389F-426C-9CC2-E3F7D3569B7D"
+                ],
+                "log": "boot.log",
+                "started_at": "2026-09-05T20:42:29.541325+00:00",
+                "exit_code": 0,
+                "finished_at": "2026-09-05T20:42:32.982541+00:00"
+              },
+              {
+                "command": [
+                  "xcrun",
+                  "simctl",
+                  "bootstatus",
+                  "97F2B485-389F-426C-9CC2-E3F7D3569B7D",
+                  "-b"
+                ],
+                "log": "bootstatus.log",
+                "started_at": "2026-09-05T20:42:32.983356+00:00",
+                "exit_code": 0,
+                "finished_at": "2026-09-05T20:42:59.317977+00:00"
+              },
+              {
+                "command": [
+                  "xcrun",
+                  "simctl",
+                  "list",
+                  "devices",
+                  "-j"
+                ],
+                "log": "inventory-cleanup.log",
+                "started_at": "2026-09-05T20:44:16.946251+00:00",
+                "exit_code": 0,
+                "finished_at": "2026-09-05T20:44:17.110229+00:00"
+              },
+              {
+                "command": [
+                  "xcrun",
+                  "simctl",
+                  "shutdown",
+                  "97F2B485-389F-426C-9CC2-E3F7D3569B7D"
+                ],
+                "log": "shutdown.log",
+                "started_at": "2026-09-05T20:44:17.111363+00:00",
+                "exit_code": 0,
+                "finished_at": "2026-09-05T20:44:20.288227+00:00"
+              },
+              {
+                "command": [
+                  "xcrun",
+                  "simctl",
+                  "delete",
+                  "97F2B485-389F-426C-9CC2-E3F7D3569B7D"
+                ],
+                "log": "delete.log",
+                "started_at": "2026-09-05T20:44:20.288847+00:00",
+                "exit_code": 0,
+                "finished_at": "2026-09-05T20:44:20.466896+00:00"
+              },
+              {
+                "command": [
+                  "xcrun",
+                  "simctl",
+                  "list",
+                  "devices",
+                  "-j"
+                ],
+                "log": "inventory-final.log",
+                "started_at": "2026-09-05T20:44:20.467222+00:00",
+                "exit_code": 0,
+                "finished_at": "2026-09-05T20:44:20.567433+00:00"
+              }
+            ],
+            "cleanup_errors": [],
+            "owned_device_absent": true,
+            "preexisting_device_count": 22,
+            "owned_uuid": "97F2B485-389F-426C-9CC2-E3F7D3569B7D",
+            "preexisting_devices_preserved": true,
+            "remaining_owned_uuid_processes": []
+          }
+        }
+      ]
+    },
+    {
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/native-wrapper-safety-01/receipt.json",
+        "sha256": "7b73230fd303d4b02e6bd9eafff8ff9897d4ec1b0792efd327ef42fe5597d7cb"
+      },
+      "cycle": "native-wrapper-safety-01",
+      "cleanup_evaluation": {
+        "schema": "gradle-cycle",
+        "status": "PASS",
+        "problems": [],
+        "historical_pid_evidence_complete": true,
+        "limitations": []
+      },
+      "recorded_fields": {
+        "status": "PASS",
+        "exit_code": 0,
+        "finished_at": "2026-09-05T20:23:49.898555+00:00",
+        "stop_exit_code": 0,
+        "cleanup_completed_at": "2026-09-05T20:23:50.493229+00:00",
+        "cleanup_errors": [],
+        "remaining_outputs": [],
+        "retained_outputs": [],
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        }
+      },
+      "associated": []
+    },
+    {
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/release-system-green-01/receipt.json",
+        "sha256": "5b330259a8ae0c0bed366bc7131f356bd3c4363030b93917a712a70559c84139"
+      },
+      "cycle": "release-system-green-01",
+      "cleanup_evaluation": {
+        "schema": "gradle-cycle",
+        "status": "PASS",
+        "problems": [],
+        "historical_pid_evidence_complete": true,
+        "limitations": []
+      },
+      "recorded_fields": {
+        "status": "PASS",
+        "exit_code": 0,
+        "finished_at": "2026-09-05T21:38:25.671710+00:00",
+        "stop_exit_code": 0,
+        "cleanup_completed_at": "2026-09-05T21:38:25.989717+00:00",
+        "cleanup_errors": [],
+        "remaining_outputs": [],
+        "retained_outputs": [],
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        }
+      },
+      "associated": []
+    },
+    {
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/rl-c1-green/receipt.json",
+        "sha256": "d6890d31fb004bb56ad11542c082b3201130b5e6cb586c2df6639ae41bd70adb"
+      },
+      "cycle": "rl-c1-green",
+      "cleanup_evaluation": {
+        "schema": "gradle-cycle",
+        "status": "PASS",
+        "problems": [],
+        "historical_pid_evidence_complete": true,
+        "limitations": []
+      },
+      "recorded_fields": {
+        "status": "PASS",
+        "exit_code": 0,
+        "finished_at": "2026-09-05T19:29:55.450298+00:00",
+        "stop_exit_code": 0,
+        "cleanup_completed_at": "2026-09-05T19:29:55.763332+00:00",
+        "cleanup_errors": [],
+        "remaining_outputs": [],
+        "retained_outputs": [],
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        }
+      },
+      "associated": []
+    },
+    {
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/rl-c1-red/receipt.json",
+        "sha256": "9c28f83ea3934710bae4e9e7dbb861be93625c60d7645a0a6672dca13f91f41c"
+      },
+      "cycle": "rl-c1-red",
+      "cleanup_evaluation": {
+        "schema": "gradle-cycle",
+        "status": "PASS",
+        "problems": [],
+        "historical_pid_evidence_complete": true,
+        "limitations": []
+      },
+      "recorded_fields": {
+        "status": "FAIL",
+        "exit_code": 1,
+        "finished_at": "2026-09-05T19:29:18.668938+00:00",
+        "stop_exit_code": 0,
+        "cleanup_completed_at": "2026-09-05T19:29:19.149256+00:00",
+        "cleanup_errors": [],
+        "remaining_outputs": [],
+        "retained_outputs": [],
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        }
+      },
+      "associated": []
+    },
+    {
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/rl-c2-green-01/receipt.json",
+        "sha256": "321e471ed49bcb176c03505ca05089bf198abba897532cfade9881c3970bc69b"
+      },
+      "cycle": "rl-c2-green-01",
+      "cleanup_evaluation": {
+        "schema": "gradle-cycle",
+        "status": "PASS",
+        "problems": [],
+        "historical_pid_evidence_complete": true,
+        "limitations": []
+      },
+      "recorded_fields": {
+        "status": "PASS",
+        "exit_code": 0,
+        "finished_at": "2026-09-05T20:25:56.841112+00:00",
+        "stop_exit_code": 0,
+        "cleanup_completed_at": "2026-09-05T20:25:57.326082+00:00",
+        "cleanup_errors": [],
+        "remaining_outputs": [],
+        "retained_outputs": [],
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        }
+      },
+      "associated": []
+    },
+    {
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/rl-c2-green-02/receipt.json",
+        "sha256": "cbd27e89676f8ea5bdd575ab45462b7861e5bf3e11ca1929dba42871f7515979"
+      },
+      "cycle": "rl-c2-green-02",
+      "cleanup_evaluation": {
+        "schema": "gradle-cycle",
+        "status": "PASS",
+        "problems": [],
+        "historical_pid_evidence_complete": true,
+        "limitations": []
+      },
+      "recorded_fields": {
+        "status": "PASS",
+        "exit_code": 0,
+        "finished_at": "2026-09-05T21:13:18.767587+00:00",
+        "stop_exit_code": 0,
+        "cleanup_completed_at": "2026-09-05T21:13:19.238428+00:00",
+        "cleanup_errors": [],
+        "remaining_outputs": [],
+        "retained_outputs": [],
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        }
+      },
+      "associated": []
+    },
+    {
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/rl-c2-red/receipt.json",
+        "sha256": "00a2741dfff4aeedf827a7983834ad2d50ea5e8d3ff61f943ecb9f40c575dc1f"
+      },
+      "cycle": "rl-c2-red",
+      "cleanup_evaluation": {
+        "schema": "gradle-cycle",
+        "status": "PASS",
+        "problems": [],
+        "historical_pid_evidence_complete": true,
+        "limitations": []
+      },
+      "recorded_fields": {
+        "status": "FAIL",
+        "exit_code": 1,
+        "finished_at": "2026-09-05T20:07:53.758094+00:00",
+        "stop_exit_code": 0,
+        "cleanup_completed_at": "2026-09-05T20:07:54.193949+00:00",
+        "cleanup_errors": [],
+        "remaining_outputs": [],
+        "retained_outputs": [],
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        }
+      },
+      "associated": []
+    },
+    {
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/rl-c3-green/receipt.json",
+        "sha256": "14ddb8cfe944b0e1b61a4129cfdfee66596c33c3e96887f498d37a29fe89ca17"
+      },
+      "cycle": "rl-c3-green",
+      "cleanup_evaluation": {
+        "schema": "gradle-cycle",
+        "status": "PASS",
+        "problems": [],
+        "historical_pid_evidence_complete": true,
+        "limitations": []
+      },
+      "recorded_fields": {
+        "status": "PASS",
+        "exit_code": 0,
+        "finished_at": "2026-09-05T19:38:24.415075+00:00",
+        "stop_exit_code": 0,
+        "cleanup_completed_at": "2026-09-05T19:38:24.903343+00:00",
+        "cleanup_errors": [],
+        "remaining_outputs": [],
+        "retained_outputs": [],
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        }
+      },
+      "associated": []
+    },
+    {
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/rl-c3-red/receipt.json",
+        "sha256": "640f37c234fc95f80bbee4302367d5a29a4d3a1194977149368c73b7e9b7f071"
+      },
+      "cycle": "rl-c3-red",
+      "cleanup_evaluation": {
+        "schema": "gradle-cycle",
+        "status": "PASS",
+        "problems": [],
+        "historical_pid_evidence_complete": true,
+        "limitations": []
+      },
+      "recorded_fields": {
+        "status": "FAIL",
+        "exit_code": 1,
+        "finished_at": "2026-09-05T19:34:24.037018+00:00",
+        "stop_exit_code": 0,
+        "cleanup_completed_at": "2026-09-05T19:34:24.596235+00:00",
+        "cleanup_errors": [],
+        "remaining_outputs": [],
+        "retained_outputs": [],
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        }
+      },
+      "associated": []
+    },
+    {
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/rl-c3-red-02/receipt.json",
+        "sha256": "f0ad03ec518d3d83ec1459258348ad390665d610ad4cf7b636af66d42362fc0a"
+      },
+      "cycle": "rl-c3-red-02",
+      "cleanup_evaluation": {
+        "schema": "gradle-cycle",
+        "status": "PASS",
+        "problems": [],
+        "historical_pid_evidence_complete": true,
+        "limitations": []
+      },
+      "recorded_fields": {
+        "status": "FAIL",
+        "exit_code": 1,
+        "finished_at": "2026-09-05T19:37:14.680229+00:00",
+        "stop_exit_code": 0,
+        "cleanup_completed_at": "2026-09-05T19:37:15.219635+00:00",
+        "cleanup_errors": [],
+        "remaining_outputs": [],
+        "retained_outputs": [],
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        }
+      },
+      "associated": []
+    },
+    {
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/root-t3-red/receipt.json",
+        "sha256": "e92746b003e83a0099cd09a511295cc94a620276e96a4504591eafe2f3e48e37"
+      },
+      "cycle": "root-t3-red",
+      "cleanup_evaluation": {
+        "schema": "gradle-cycle",
+        "status": "PASS",
+        "problems": [],
+        "historical_pid_evidence_complete": true,
+        "limitations": []
+      },
+      "recorded_fields": {
+        "status": "FAIL",
+        "exit_code": 1,
+        "finished_at": "2026-09-05T18:35:36.911456+00:00",
+        "stop_exit_code": 0,
+        "cleanup_completed_at": "2026-09-05T18:35:37.387558+00:00",
+        "cleanup_errors": [],
+        "remaining_outputs": [],
+        "retained_outputs": [],
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        }
+      },
+      "associated": []
+    },
+    {
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/sn-c2-factory-green-01/receipt.json",
+        "sha256": "e05ed0279180af13c09c2a4b3cdf4108f9360460c2918ca70af949332046f161"
+      },
+      "cycle": "sn-c2-factory-green-01",
+      "cleanup_evaluation": {
+        "schema": "gradle-cycle",
+        "status": "PASS",
+        "problems": [],
+        "historical_pid_evidence_complete": true,
+        "limitations": []
+      },
+      "recorded_fields": {
+        "status": "FAIL",
+        "exit_code": 1,
+        "finished_at": "2026-09-05T21:18:48.054559+00:00",
+        "stop_exit_code": 0,
+        "cleanup_completed_at": "2026-09-05T21:18:48.485666+00:00",
+        "cleanup_errors": [],
+        "remaining_outputs": [],
+        "retained_outputs": [],
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        }
+      },
+      "associated": []
+    },
+    {
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/test-type-aware-green-02/receipt.json",
+        "sha256": "3653b225944d313205d98993092048111c972fb1fc3736e59f34f324f93e0dbf"
+      },
+      "cycle": "test-type-aware-green-02",
+      "cleanup_evaluation": {
+        "schema": "gradle-cycle",
+        "status": "PASS",
+        "problems": [],
+        "historical_pid_evidence_complete": true,
+        "limitations": []
+      },
+      "recorded_fields": {
+        "status": "PASS",
+        "exit_code": 0,
+        "finished_at": "2026-09-05T22:23:20.265556+00:00",
+        "stop_exit_code": 0,
+        "cleanup_completed_at": "2026-09-05T22:23:21.739557+00:00",
+        "cleanup_errors": [],
+        "remaining_outputs": [],
+        "retained_outputs": [],
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        }
+      },
+      "associated": []
+    },
+    {
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/transport-static-green-02/receipt.json",
+        "sha256": "df1dde732388bad7cbb37ffe6294eea973fca7dfc7b4a30d49a9a4d338cf1ff4"
+      },
+      "cycle": "transport-static-green-02",
+      "cleanup_evaluation": {
+        "schema": "gradle-cycle",
+        "status": "PASS",
+        "problems": [],
+        "historical_pid_evidence_complete": true,
+        "limitations": []
+      },
+      "recorded_fields": {
+        "status": "PASS",
+        "exit_code": 0,
+        "finished_at": "2026-09-05T21:31:18.369194+00:00",
+        "stop_exit_code": 0,
+        "cleanup_completed_at": "2026-09-05T21:31:18.814411+00:00",
+        "cleanup_errors": [],
+        "remaining_outputs": [],
+        "retained_outputs": [],
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        }
+      },
+      "associated": []
+    },
+    {
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/whodunit-type-aware-01/receipt.json",
+        "sha256": "0f05529c9d4be46c104f6f8d8a64af2d467c869535e0ff020b32aaf912928e89"
+      },
+      "cycle": "whodunit-type-aware-01",
+      "cleanup_evaluation": {
+        "schema": "gradle-cycle",
+        "status": "PASS",
+        "problems": [],
+        "historical_pid_evidence_complete": true,
+        "limitations": []
+      },
+      "recorded_fields": {
+        "status": "FAIL",
+        "exit_code": 1,
+        "finished_at": "2026-09-05T22:20:11.126651+00:00",
+        "stop_exit_code": 0,
+        "cleanup_completed_at": "2026-09-05T22:20:12.574694+00:00",
+        "cleanup_errors": [],
+        "remaining_outputs": [],
+        "retained_outputs": [],
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        }
+      },
+      "associated": []
+    }
+  ],
+  "final_deliverables": [
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/final/FINALIZATION.md",
+      "sha256": "991056ced3962cc893b5b10f48622944a1db55699d1e641861814ba3d8e495bf"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/final/REPORT-CONTINUATION.md",
+      "sha256": "a3359c488364141d326964a13427e558f5d7fc6e00f190d54effa9e805a34b8f"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/final/REPORT.md",
+      "sha256": "00f5b6bf3af925de480ad86ab84bf8a25bcc55273af8eaff710600214fc25584"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/final/continuation-evidence.json",
+      "sha256": "c8b8f844b7666e7a159c9c99dc93984310f336f9168dd91b231bc556bc343d2b"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/final/cycle-history.json",
+      "sha256": "6332e391f95ec36db0bc81e5f845f50c6d7615022089a5db1bb63706e0aaf15a"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/final/diff-identity.json",
+      "sha256": "612514fb26e2ae85671925ca54f18a86a6b4837878fc99311d2b635be74c15b7"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/final/gates-continued.json",
+      "sha256": "92f64cb19df9e802e996eb22ef4e1a3f6e3f02591f751f92c431fa0b90ea10a9"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/final/gates.json",
+      "sha256": "331bf4c43368d2533d7ed493517430615781a655b961e8db31233a8059c6cbe8"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/final/issue-source-map.json",
+      "sha256": "f73cfb1b1bbb9c1683e006b880f554a3551de98033f27c2891fccba94f432038"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/final/issues-continued.json",
+      "sha256": "fcdf977fcdf9d1be7693142aab2152ae713ba9cfecc1ee02b1d1cfc832324c10"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/final/issues.json",
+      "sha256": "026f41acf992a5d7d9feebd0e54c7966fc2f5b170d4a8204698ae1b557e0c317"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/final/preservation.json",
+      "sha256": "7fc27c70f677510788c6a47bd33561ebc2b7b62c1957ffeea395f497d9871ba4"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/final/remediation.patch",
+      "sha256": "305b8f3db676a79ddc98faf72e08d4269596528cdc30cafbbf4c6811312f03f9"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/final/review-and-research-index.json",
+      "sha256": "74e412840577d5864e1b68e48271681be3e0fb55c585cc625b5ead40faea6e99"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/final/source-identity.json",
+      "sha256": "e710c5705cf066033d8e16747c04fe5e9a9383fb4dfc7f73e2fdc38af0206830"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/final/verification-summary.json",
+      "sha256": "4d549bf6bc4f2807a7a1d8783824e969861e92c686a86795733c0ea1211acba6"
+    }
+  ],
+  "recorder": {
+    "path": "remediation-runs/2026-09-05-confirmed-fixes/record_final_observation_v2.py",
+    "sha256": "f5dabf6f162f4b4e359e928a5b371a6f42e1e1420c1c357b738707fc1753533d"
+  },
+  "protected_exclusions": [],
+  "limitations": "Evaluated cleanup is not test success or whole-system RAM proof. Known historical limits remain explicit. Source identity excludes evidence-only controls. No private/player data inspected and no release/signing/Store readiness claim."
+}

@@ -1,0 +1,310 @@
+{
+  "kind": "INDEPENDENT_D08_LINUX_ARM64_ACTUAL_DESKTOP_REVIEW_NOT_FULL_QUALIFICATION",
+  "reviewer": "/root/ci_linux_arm",
+  "reviewed_at": "2026-09-11T03:35:48.029872+00:00",
+  "result": "PASS_DESKTOP_JOB_WITH_3_SKIPPED_LOOPBACK_CASES",
+  "run_id": 34553741387,
+  "run_attempt": 1,
+  "job_id": 103121858057,
+  "job": "desktop-linux-arm64",
+  "source_sha": "59a384441f44844a79ae62ea8ee68d0c9e1e5878",
+  "source_tree": "9f06627b0dd047394de6f52adbc494e334651c74",
+  "custody": {
+    "collector_receipt": "remediation-runs/2026-09-08-continuation/actions/34553741387/download-receipt.json",
+    "collector_receipt_sha256": "0e4be955e1fc7445e74e2d23135feb19aca62f700db390fdc496efa438f4884c",
+    "artifact_id": 10181866645,
+    "artifact_name": "desktop-verification-desktop-linux-arm64",
+    "archive_sha256": "96331312604209a530ae63bd3abc75f3587ecfc0b5482c6c9a0d7baef7b1dc62",
+    "archive_bytes": 15363304,
+    "collector_whole_archive_crc_and_bounds": true,
+    "ownership_member": "_temp/parlor-verification-34553741387-1-desktop-linux-arm64-ownership.json",
+    "ownership_sha256": "397ede70a326d080c8a51bf8817f16b6b5d395bc9df2d9c47c1f107b3265cd54",
+    "job_source_attempt_and_ownership_bound": true,
+    "log_archive": "run-attempt-1-logs.zip",
+    "log_archive_sha256": "5e50d2b0a4be5cc697b81fc4730f2f2b961114f07d38c3ac184174b8c4e2b0b8",
+    "log_member": "3_Desktop strict verification (Linux arm64).txt",
+    "log_member_bytes": 98110,
+    "log_member_sha256": "7d9f0bdabe9061cd0360294a64e2638b0777f326f8d3ed6037d191cc7a5c8aa6",
+    "log_read_limit_bytes": 262144,
+    "log_read_mode": "One exact member in memory; no extraction."
+  },
+  "execution": {
+    "api_job_conclusion": "success",
+    "all_api_steps_success": true,
+    "runner_label": "ubuntu-24.04-arm",
+    "host_checks": "Linux/aarch64 checks executed successfully; Gradle also reports linux-aarch64.",
+    "jdk": "Temurin 21.0.12+101.0.LTS arm64 as logged",
+    "command": "./gradlew productionDesktopCheck --dependency-verification=strict --no-daemon --stacktrace --console=plain",
+    "gradle_result": "BUILD SUCCESSFUL in 4m 58s",
+    "actionable_tasks": 113,
+    "executed_actionable_tasks": 113,
+    "module_desktop_tests": [
+      {
+        "task": ":composeApp:desktopTest",
+        "status": "EXECUTED",
+        "log_line": 844
+      },
+      {
+        "task": ":game-modes:mafia:desktopTest",
+        "status": "EXECUTED",
+        "log_line": 849
+      },
+      {
+        "task": ":game-modes:whodunit:desktopTest",
+        "status": "EXECUTED",
+        "log_line": 850
+      },
+      {
+        "task": ":shared:content:desktopTest",
+        "status": "EXECUTED",
+        "log_line": 790
+      },
+      {
+        "task": ":shared:core:desktopTest",
+        "status": "EXECUTED",
+        "log_line": 758
+      },
+      {
+        "task": ":shared:design-system:desktopTest",
+        "status": "EXECUTED",
+        "log_line": 806
+      },
+      {
+        "task": ":shared:engine:desktopTest",
+        "status": "EXECUTED",
+        "log_line": 783
+      },
+      {
+        "task": ":shared:engine-testing:desktopTest",
+        "status": "EXECUTED",
+        "log_line": 797
+      },
+      {
+        "task": ":shared:networking:desktopTest",
+        "status": "EXECUTED",
+        "log_line": 805
+      },
+      {
+        "task": ":shared:networking-testing:desktopTest",
+        "status": "EXECUTED",
+        "log_line": 814
+      },
+      {
+        "task": ":shared:session:desktopTest",
+        "status": "EXECUTED",
+        "log_line": 822
+      },
+      {
+        "task": ":shared:storage:desktopTest",
+        "status": "EXECUTED",
+        "log_line": 818
+      },
+      {
+        "task": ":shared:transport-p2p:desktopTest",
+        "status": "EXECUTED",
+        "log_line": 848
+      }
+    ],
+    "composeApp_compileKotlinDesktop": "EXECUTED",
+    "productionDesktopCheck": "EXECUTED"
+  },
+  "current_xml": {
+    "selection": "Only collector-extracted current candidates at parlor/parlor/<frozen live module build root>/test-results/desktopTest/TEST-*.xml.",
+    "xml_files": 203,
+    "tests": 1342,
+    "passed": 1339,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 3,
+    "all_xml_bytes_match_collector_member_sha256": true,
+    "suite_counts_match_actual_testcase_nodes": true,
+    "case_id_uniqueness": "module + classname + testcase name",
+    "all_suite_timestamps_and_durations_within_current_command": true,
+    "timestamp_first": "2026-09-11T02:16:47.192Z",
+    "timestamp_last": "2026-09-11T02:18:21.328Z",
+    "hostname": "runnervmec22z",
+    "sorted_path_bytes_sha256_manifest_digest": "331d4f18ffb6f13799d56a4a8d4e5bdc2a993e41de18e7907a7be82661d52301",
+    "per_module": {
+      "composeApp": {
+        "xml_files": 21,
+        "tests": 96,
+        "passed": 96,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "game-modes/mafia": {
+        "xml_files": 37,
+        "tests": 297,
+        "passed": 297,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "game-modes/whodunit": {
+        "xml_files": 63,
+        "tests": 360,
+        "passed": 360,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "shared/content": {
+        "xml_files": 5,
+        "tests": 24,
+        "passed": 24,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "shared/core": {
+        "xml_files": 2,
+        "tests": 12,
+        "passed": 12,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "shared/design-system": {
+        "xml_files": 18,
+        "tests": 40,
+        "passed": 40,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "shared/engine": {
+        "xml_files": 5,
+        "tests": 13,
+        "passed": 13,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "shared/engine-testing": {
+        "xml_files": 3,
+        "tests": 6,
+        "passed": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "shared/networking": {
+        "xml_files": 8,
+        "tests": 34,
+        "passed": 34,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "shared/networking-testing": {
+        "xml_files": 2,
+        "tests": 5,
+        "passed": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "shared/session": {
+        "xml_files": 13,
+        "tests": 145,
+        "passed": 145,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "shared/storage": {
+        "xml_files": 4,
+        "tests": 31,
+        "passed": 31,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "shared/transport-p2p": {
+        "xml_files": 22,
+        "tests": 279,
+        "passed": 276,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 3
+      }
+    },
+    "skipped_cases": [
+      {
+        "suite": "com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest",
+        "case": "peer_to_host_message_round_trips_and_host_to_peer_message_arrives_back()[desktop]",
+        "xml": "parlor/parlor/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest.xml",
+        "reason": "No reason text in XML; not counted as execution/PASS."
+      },
+      {
+        "suite": "com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest",
+        "case": "peer_can_join_a_hosted_room_and_membership_appears_on_host()[desktop]",
+        "xml": "parlor/parlor/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest.xml",
+        "reason": "No reason text in XML; not counted as execution/PASS."
+      },
+      {
+        "suite": "com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest",
+        "case": "host_broadcast_reaches_every_peer()[desktop]",
+        "xml": "parlor/parlor/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest.xml",
+        "reason": "No reason text in XML; not counted as execution/PASS."
+      }
+    ]
+  },
+  "runtime_and_dependency_sentinels": [
+    {
+      "suite": "com.parlor.app.DesktopPlatformBackHandlerTest",
+      "xml": "parlor/parlor/composeApp/build/test-results/desktopTest/TEST-com.parlor.app.DesktopPlatformBackHandlerTest.xml",
+      "sha256": "01e16e55283d8def816f756e3dcd256e5d3380ab8bf1c67eed4b66d3e386d94b",
+      "tests": 4,
+      "passed": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "com.parlor.designsystem.localization.ProvideAppLanguageDesktopTest",
+      "xml": "parlor/parlor/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.localization.ProvideAppLanguageDesktopTest.xml",
+      "sha256": "2bd462cefe1d8e871455713201404ce1ae8005dfb39812d99e9c9234d9c43bde",
+      "tests": 1,
+      "passed": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "com.parlor.transport.p2p.DesktopDependencyVerificationContractTest",
+      "xml": "parlor/parlor/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.DesktopDependencyVerificationContractTest.xml",
+      "sha256": "2db7bd78d9d048fa45e43a706050b3b55cfede4c43b2ecc425a82113a1a75928",
+      "tests": 3,
+      "passed": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "com.parlor.transport.p2p.ProductionVerificationWorkflowContractTest",
+      "xml": "parlor/parlor/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.ProductionVerificationWorkflowContractTest.xml",
+      "sha256": "a97d67b5e5f5a42c94e88bcc42e137c140bd294a4890f6a2db39683600dbdc5d",
+      "tests": 11,
+      "passed": 11,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  ],
+  "dependency_scope": "Real strict desktop graph executed on verified Linux ARM64 plus current Compose/Skiko UI runtime tests and host-checksum contract tests. No standalone resolved-component dump or fresh downloaded-library hash measurement is claimed. The Kotlin Native-named metadata test is a static guard, not Native toolchain execution.",
+  "excluded": {
+    "historical_frozen_members_not_counted": 12277,
+    "other_jobs_and_PD06": "Not used",
+    "cleanup": "Assigned to ci_cleanup_review; this receipt does not independently qualify cleanup."
+  },
+  "findings": [],
+  "limits": [
+    "1339 passed, not 1342: three loopback cases are explicitly skipped.",
+    "Desktop-only: raw log explicitly says Kotlin/Native compiler does not support linux-aarch64.",
+    "D08 overall run failed elsewhere; this successful lane cannot be stitched into a later source/run qualification.",
+    "No corrected Windows runtime, Android, iOS, physical-device, Store or product-readiness claim.",
+    "No tests, builds, network calls, source audit or cleanup commands executed by this review."
+  ]
+}

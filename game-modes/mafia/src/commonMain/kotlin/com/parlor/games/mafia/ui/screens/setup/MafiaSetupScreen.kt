@@ -2,6 +2,7 @@ package com.parlor.games.mafia.ui.screens.setup
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -96,10 +97,9 @@ import org.jetbrains.compose.resources.stringResource
  * while [MafiaSettings.validate] remains the authoritative gate and disables
  * Start for invalid combinations. The three timer fields are retained only
  * for compatibility and are intentionally not exposed until timed phase
- * transitions exist. Submitting fires [onStart] — the flow then dispatches
- * `ApplySettings` followed by `StartGame`, after which this screen no longer
- * renders (the phase moves off Setup), so the settings are structurally
- * locked.
+ * transitions exist. Submitting fires [onStart] — both flows then dispatch
+ * one atomic `ConfigureAndStart`, after which this screen no longer renders
+ * (the phase moves off Setup), so the settings are structurally locked.
  */
 @Composable
 fun MafiaSetupScreen(
@@ -353,10 +353,11 @@ private fun RoleCountStepperRow(
     val decDesc = stringResource(Res.string.settings_role_count_decrement_description_format, name)
     val incDesc = stringResource(Res.string.settings_role_count_increment_description_format, name)
 
-    Row(
+    FlowRow(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically,
+        verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.s),
+        itemVerticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
             text = name,
@@ -505,11 +506,12 @@ private fun ToggleRow(
                 role = Role.Switch,
                 onValueChange = onCheckedChange,
             ),
-        horizontalArrangement = Arrangement.SpaceBetween,
+        horizontalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.m),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
             text = label,
+            modifier = Modifier.weight(1f),
             style = ParlorTheme.typography.bodyLarge,
             color = ParlorTheme.colors.textPrimary,
         )

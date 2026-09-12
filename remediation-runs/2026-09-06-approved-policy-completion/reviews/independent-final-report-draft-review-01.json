@@ -1,0 +1,323 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-09-06T17:43:49.993411+00:00",
+  "reviewer": "/root/factory_review",
+  "author": "/root",
+  "classification": "APPROVED_AS_DRAFT_WITH_REQUIRED_FINAL_EVIDENCE_RECONCILIATION",
+  "scope": "Read-only report consistency review. Not final DS-C01 approval, not a fresh exhaustive repository audit, no execution of collector or application edit.",
+  "draft": {
+    "path": "remediation-runs/2026-09-06-approved-policy-completion/root/REPORT-DRAFT.md",
+    "sha256": "e9c97df2fad3b18ec68065b15137b624806ef4c70a310b6747a25a8d8fabf53b",
+    "reviewed_line_ranges": [
+      [
+        1,
+        138
+      ]
+    ],
+    "placeholder_lines": [
+      11,
+      95,
+      132
+    ]
+  },
+  "source": {
+    "branch": "main",
+    "commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+    "tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+    "diff_sha256": "148fb4583d8fa8341b3cbc48a7fc0bc7564bf4df5c27e9d80e32c6bfdc57b784",
+    "source_manifest_sha256": "9ac2be536979f2216b39c10a6d148125a12380987d4efd483bbcbaeb1733318e"
+  },
+  "source_inputs_rehashed": 669,
+  "source_drift": [],
+  "confirmed_report_facts": [
+    {
+      "lines": [
+        15,
+        28
+      ],
+      "claim": "Base identity and complete84-file patch are exact",
+      "evidence": {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-final-source-materialized-01.json",
+        "sha256": "fd65f41ae0a8daaf39a5360bee385c46445bd8ca7d8bcd09b28a3fff5fdbeb2b"
+      },
+      "details": "84files=45tracked modifications+39additions; all161hunks independently reconstructed to currentbytes; patchSHA71b17c8e05ab9e5850c523ff0c25a29a576a6bc088636c4a265e0944efcfc000."
+    },
+    {
+      "lines": [
+        32,
+        51
+      ],
+      "claim": "15FIXED AND VERIFIED rows; DS-C01 pending; prior independent chains maintained",
+      "evidence": {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/reviews/final-matrix-support-01.json",
+        "sha256": "c968be5fbcb7bff58288039b6d8ae4dc6e0c1f91a6a4344a42746ed04b9ab391"
+      },
+      "qualification": "93.75% applies only to16repair rows, not overallproject or release readiness."
+    },
+    {
+      "lines": [
+        53,
+        64
+      ],
+      "claim": "Existing default-OFF Doctor setting, four-nightON/counts5..16, OFF alternating, 130-night cap traces",
+      "evidence": {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/reviews/final-matrix-support-01.json",
+        "sha256": "c968be5fbcb7bff58288039b6d8ae4dc6e0c1f91a6a4344a42746ed04b9ab391"
+      },
+      "details": "MafiaDoctorRulesTest15–62 and MafiaDoctorHistoryRecoveryTest145–262 reopened; MAX_SERIALIZED_LOG_ENTRIES128 confirmed; no new switch/physicalLAN/nativeDesktop-rules execution claim."
+    },
+    {
+      "lines": [
+        66,
+        83
+      ],
+      "claim": "15scalar edits/4version bumps; dictionary/listshapes unchanged; versions derive fromenvelopes;48complete-game combinations",
+      "trace_source": {
+        "path": "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/TestingStoryGameTraceTest.kt",
+        "sha256": "ca31ec98fc19aaeba3675e6d56135abec745d9307a471fc81543e57bd6f6c058",
+        "reviewed_line_ranges": [
+          [
+            1,
+            157
+          ]
+        ]
+      },
+      "detail": "4cases x2modes x6killers; duplicate complete games prove determinism; eachdriveraction structurallyroundtrips and passes loaded-case validation; replay asserted. Fullstory-reading claims link their preserved dossiers, not this narrower pass."
+    },
+    {
+      "lines": [
+        103,
+        115
+      ],
+      "claim": "Gate counts and SKIPPED/NO-SOURCE distinctions match rawreceipts",
+      "evidence": {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-final-verification-collector-review-01.json",
+        "sha256": "493ea9ba2343b09470d04dda560de456692042ed2ac1e2b854663e831c84cf72"
+      },
+      "details": "Desktop1243/1240PASS/3skip;production1395/1392PASS/3skip;nativealltests2481/2478PASS/3skip;actualsim426;Python172;32lintwarnings."
+    },
+    {
+      "line": 113,
+      "claim": "Mafia269 and Whodunit327Desktopdescriptors allPASS",
+      "evidence": "module_xml_counts section"
+    },
+    {
+      "line": 115,
+      "claim": "Allproduction01/02/03failed onlyverifyReleaseLintWarnings",
+      "evidence": "early_production_failures section; noWhodunit compilerfailure in those3cycles."
+    },
+    {
+      "line": 117,
+      "claim": "AAB8803044bytes/SHAf30780bf995741a372646dd9c6a27705cb4eb0368c1d5a4de7197386d3a61473/354entries",
+      "evidence": {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/artifact-receipts.json",
+        "sha256": "e0741b994c1dd56ed3b9b5ef6a11ff2af024c4b745b9ee6533c108627374fdc4"
+      },
+      "archive_entry_count": 354
+    },
+    {
+      "line": 136,
+      "claim": "HistoricalcleanupFAIL retained; laterexactrecordedpath/workerabsence supplemental only",
+      "evidence": {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-dsc01-apphost02-cleanup-supplement-01.json",
+        "sha256": "c39da55bf2c29957e75635bf2bbfa700dd994d0d554c2a8c8a36233b841ba8b0"
+      },
+      "qualification": "FailedpsUIDreason unknown; completenessbeyondrecordedpathsnot established."
+    }
+  ],
+  "early_production_failures": [
+    {
+      "cycle": "combined-production-01",
+      "status": "FAIL",
+      "exit_code": 1,
+      "receipt": {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-01/receipt.json",
+        "sha256": "bdcf9e7128e84df8d2d63f17804a11e8f78780c5669a2c3d0dba72afd33d617f"
+      },
+      "log": {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-01/gradle.log",
+        "sha256": "54b81104189f155b8a4f9adefa6df7d2a84d1dbebfc8647ac6eabad373c1e127"
+      },
+      "failure_lines": [
+        {
+          "line": 1078,
+          "text": "> Task :composeApp:verifyReleaseLintWarnings FAILED"
+        },
+        {
+          "line": 1085,
+          "text": "Execution failed for task ':composeApp:verifyReleaseLintWarnings'."
+        },
+        {
+          "line": 1086,
+          "text": "> Release lint inventory changed. Unexpected: []; missing: [DependencyUpdate|gradle/libs.versions.toml|A newer version of io.ktor:ktor-client-mock than 3.0.3]"
+        },
+        {
+          "line": 1094,
+          "text": "BUILD FAILED in 5m 4s"
+        }
+      ]
+    },
+    {
+      "cycle": "combined-production-02",
+      "status": "FAIL",
+      "exit_code": 1,
+      "receipt": {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-02/receipt.json",
+        "sha256": "fc5f914ddfa6937d069192a87d1ac8baf19c260a0f75774e51c80a574816d0a2"
+      },
+      "log": {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-02/gradle.log",
+        "sha256": "7784d1fef6058a2bc3261454d8d5dfcfe201584f6fa7696f09ffc245aa197ede"
+      },
+      "failure_lines": [
+        {
+          "line": 1078,
+          "text": "> Task :composeApp:verifyReleaseLintWarnings FAILED"
+        },
+        {
+          "line": 1085,
+          "text": "Execution failed for task ':composeApp:verifyReleaseLintWarnings'."
+        },
+        {
+          "line": 1086,
+          "text": "> Release lint inventory changed. Unexpected: []; missing: [AndroidGradlePluginVersion|gradle/wrapper/gradle-wrapper.properties|A newer version of Gradle than 8.13, DependencyUpdate|gradle/libs.versions.toml|A newer version of io.gitlab.arturbosch.detekt than 1.23.7]"
+        },
+        {
+          "line": 1094,
+          "text": "BUILD FAILED in 4m 10s"
+        }
+      ]
+    },
+    {
+      "cycle": "combined-production-03",
+      "status": "FAIL",
+      "exit_code": 1,
+      "receipt": {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-03/receipt.json",
+        "sha256": "12d240d9db448e8ad008c59d77e1049d3847811897fe5726357847bc8504f073"
+      },
+      "log": {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-03/gradle.log",
+        "sha256": "d9d072558249f81184251fa3d3e92f712be5c74f6314b3237ab67c9674d4692f"
+      },
+      "failure_lines": [
+        {
+          "line": 1078,
+          "text": "> Task :composeApp:verifyReleaseLintWarnings FAILED"
+        },
+        {
+          "line": 1577,
+          "text": "Execution failed for task ':composeApp:verifyReleaseLintWarnings'."
+        },
+        {
+          "line": 1578,
+          "text": "> Release lint inventory changed. Unexpected: []; missing: [AndroidGradlePluginVersion|gradle/libs.versions.toml|A newer version of com.android.application than 8.13.2, DependencyUpdate|gradle/libs.versions.toml|A newer version of org.jetbrains.compose.components:components-ui-tooling-preview than 1.10.3]"
+        },
+        {
+          "line": 1586,
+          "text": "BUILD FAILED in 7m 11s"
+        }
+      ]
+    }
+  ],
+  "module_xml_counts": [
+    {
+      "module": "mafia",
+      "evidence_directory": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-desktop-static-04/reports/game-modes/mafia/build/test-results/desktopTest",
+      "suites": 32,
+      "descriptors": 269,
+      "passed": 269,
+      "skipped": 0,
+      "xml_path_hash_manifest_sha256": "1a47353e35fcd758b4b6123cfe474c858ff2628205ff49b7d019c4e22c977b9d"
+    },
+    {
+      "module": "whodunit",
+      "evidence_directory": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-desktop-static-04/reports/game-modes/whodunit/build/test-results/desktopTest",
+      "suites": 58,
+      "descriptors": 327,
+      "passed": 327,
+      "skipped": 0,
+      "xml_path_hash_manifest_sha256": "c732a16f5103e2a3627c676c31ec37ae091802e17a57e408f55f7ef51bc38cdd"
+    }
+  ],
+  "resolved_draft_qualifiers": [
+    {
+      "line": 13,
+      "result": "Mainrepo Git preservation clearly distinct from disposableGit/syntheticsigning fixtures."
+    },
+    {
+      "line": 68,
+      "result": "Fullstoryinputandindependentsource ledgers nowexplicitlylinked."
+    },
+    {
+      "line": 91,
+      "result": "Geometry/privacy/appearance/orientation statement nowsource-/specifictest-scoped; notphysicalapproval."
+    },
+    {
+      "line": 134,
+      "result": "Mandatoryfinalization defined asworkflowwithactualoutcomes, notperfect historicalcleanup."
+    },
+    {
+      "line": 136,
+      "result": "Supplemental exactpath/workerabsence review explicitlylinked; failedattestationretained."
+    }
+  ],
+  "required_final_reconciliation": [
+    {
+      "lines": [
+        1,
+        3,
+        11,
+        43,
+        95,
+        132
+      ],
+      "request": "Resolve counts/native/preservation placeholders against genuine finalreceipts. If DS incomplete, finalstatus PARTIALLY VERIFIED and status-oriented title; no completionclaimfrompassing subtests infailedmatrix."
+    },
+    {
+      "line": 138,
+      "request": "Materialize and review final issues/gates/verification/history/research/preservation/finalobservation. Several links intentionallyabsent now. Finalpreservationmustcover latestnativecycle and collector; retain priorFAIL outcomes."
+    }
+  ],
+  "limitations": [
+    "Latestknowndsc01-apphost05aggregateFAIL65:4UIKitPASS+1matrixfailure. LaterV8pending; nofinalruntimeapprovalhere.",
+    "No physicaldevice/Storecredential/realbackup/powerloss/nativegesture/accessibilitymatrix validatedbythisreview.",
+    "Preserved fullmatrixdossiers provide16-rowreviewlineage; thispassreopened selectedsource/receipts and reportclaims, not everyproductionfile anew.",
+    "Originalaudit, priorfailures, externalblockers and cleanupFAIL preserved."
+  ],
+  "supporting_reviews": [
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/reviews/final-matrix-support-01.json",
+      "sha256": "c968be5fbcb7bff58288039b6d8ae4dc6e0c1f91a6a4344a42746ed04b9ab391"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-final-source-materialized-01.json",
+      "sha256": "fd65f41ae0a8daaf39a5360bee385c46445bd8ca7d8bcd09b28a3fff5fdbeb2b"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-final-verification-collector-review-01.json",
+      "sha256": "493ea9ba2343b09470d04dda560de456692042ed2ac1e2b854663e831c84cf72"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-wdc2-remediation-focused-01.json",
+      "sha256": "563998b215bc002f3902bd035fda8e0db913f22497628ff5e74c42dceb73b631"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-wdc2-original-source-review-01.json",
+      "sha256": "8db514b048fc11789ecd49a3bd78fbc88b261d856c9eff27b7a4a2d0192f5176"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-dsc01-apphost02-cleanup-supplement-01.json",
+      "sha256": "c39da55bf2c29957e75635bf2bbfa700dd994d0d554c2a8c8a36233b841ba8b0"
+    }
+  ],
+  "reviewer_hygiene": {
+    "gradle_xcode_app_test_cycles_started": 0,
+    "background_workers_started": 0,
+    "build_outputs_created": [],
+    "processes_signalled": [],
+    "paths_deleted": [],
+    "source_edits": [],
+    "additive_evidence_only": true
+  }
+}

@@ -1,0 +1,77 @@
+{
+  "reviewer": "/root/release_fix_review",
+  "recorded_at": "2026-09-06T09:58:10.364109+00:00",
+  "classification": "SUPPLEMENTAL_EXACT_RECORDED_OUTPUTS_ABSENT; ORIGINAL_CLEANUP_FAIL_RETAINED",
+  "reviewed_evidence": [
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_02_diagnosis/cleanup-supplemental-01.json",
+      "sha256": "2718930b8b047b7977a8e8681823dd483c03509f4f9834170e39c101ded1e223"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-02/receipt.json",
+      "sha256": "c03616f76e91061c810debf7884b98d7b0bf02abcfd83cbcfa21c4ba8049e13e"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-02/secondary-fifo-errors.json",
+      "sha256": "13b6ede698a2292e6ed1eecf21423123069940c6be6fa63fbceac28b18661e2e"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-02/secondary-fifo-ownership-final.json",
+      "sha256": "0b35e93835d1989d51f3ecc67851209fee8ff6243af3db793a24ece1f9573b35"
+    }
+  ],
+  "reason": "Independent reading of the failed UID attestation, final durable inode/UID ownership ledger, matching argv/parent+worker PID/start records, and supplemental record establishes the error names the same already-attested FIFO pair. Current read-only lstat/ps checks below establish those four exact recorded paths and two worker PIDs are now absent. No unobserved path ownership or global cleanup claim. The failed ps UID event did not retain stdout/stderr/exit; its precise cause is unresolved.",
+  "paths": [
+    {
+      "path": "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-43565",
+      "status": "ABSENT"
+    },
+    {
+      "path": "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-43565/IB",
+      "status": "ABSENT"
+    },
+    {
+      "path": "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-43565/IB/340F344B-1DD5-409F-A73F-93E681463A47.HostToRemote",
+      "status": "ABSENT"
+    },
+    {
+      "path": "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-43565/IB/340F344B-1DD5-409F-A73F-93E681463A47.RemoteToHost",
+      "status": "ABSENT"
+    }
+  ],
+  "processes": [
+    {
+      "command": [
+        "ps",
+        "-p",
+        "44714",
+        "-o",
+        "pid=,lstart="
+      ],
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "ps",
+        "-p",
+        "43565",
+        "-o",
+        "pid=,lstart="
+      ],
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "original_receipt_unchanged_sha256": "c03616f76e91061c810debf7884b98d7b0bf02abcfd83cbcfa21c4ba8049e13e",
+  "builds_tests_started": 0,
+  "deleted_paths": [],
+  "signalled_processes": [],
+  "remaining_uncertainty": [
+    "Why ps UID lookup failed; disappearance race remains hypothesis.",
+    "Completeness beyond paths recorded in argv/durable ledger is not established by later absence."
+  ],
+  "approval": "Accept supplemental current absence only, not a retroactive PASS of dsc01-apphost-02 cleanup or runtime."
+}

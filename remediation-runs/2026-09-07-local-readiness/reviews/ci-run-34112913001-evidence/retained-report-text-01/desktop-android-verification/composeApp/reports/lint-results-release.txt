@@ -1,0 +1,150 @@
+<CI_WORKSPACE>/composeApp/build.gradle.kts:229: Warning: Not targeting the latest versions of Android; compatibility modes apply. Consider testing and updating this version. Consult the android.os.Build.VERSION_CODES javadoc for details. [OldTargetApi]
+        targetSdk = libs.versions.android.target.sdk.get().toInt()
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "OldTargetApi":
+   When your application or sdk runs on a version of Android that is more
+   recent than your targetSdk specifies that it has been tested with, various
+   compatibility modes kick in. This ensures that your application continues
+   to work, but it may look out of place. For example, if the targetSdk is
+   less than 14, your app may get an option button in the UI.
+
+   To fix this issue, set the targetSdk to the highest available value. Then
+   test your app to make sure everything works correctly. You may want to
+   consult the compatibility notes to see what changes apply to each version
+   you are adding support for:
+   https://developer.android.com/reference/android/os/Build.VERSION_CODES.html
+   as well as follow this guide:
+   https://developer.android.com/distribute/best-practices/develop/target-sdk.
+   html
+
+   https://developer.android.com/distribute/best-practices/develop/target-sdk.html
+
+<CI_WORKSPACE>/gradle/wrapper/gradle-wrapper.properties:4: Warning: A newer version of Gradle than 8.13 is available: 8.14.5 [AndroidGradlePluginVersion]
+distributionUrl=https\://services.gradle.org/distributions/gradle-8.13-bin.zip
+                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<CI_WORKSPACE>/gradle/libs.versions.toml:22: Warning: A newer version of com.android.application than 8.13.2 is available: 9.4.0 [AndroidGradlePluginVersion]
+agp = "8.13.2"
+      ~~~~~~~~
+<CI_WORKSPACE>/gradle/libs.versions.toml:22: Warning: A newer version of com.android.library than 8.13.2 is available: 9.4.0 [AndroidGradlePluginVersion]
+agp = "8.13.2"
+      ~~~~~~~~
+<CI_WORKSPACE>/gradle/libs.versions.toml:22: Warning: A newer version of com.android.tools.build:gradle than 8.13.2 is available: 9.4.0 [AndroidGradlePluginVersion]
+agp = "8.13.2"
+      ~~~~~~~~
+
+   Explanation for issues of type "AndroidGradlePluginVersion":
+   This detector looks for usage of the Android Gradle Plugin where the
+   version you are using is not the current stable release. Using older
+   versions is fine, and there are cases where you deliberately want to stick
+   with an older version. However, you may simply not be aware that a more
+   recent version is available, and that is what this lint check helps find.
+
+<CI_WORKSPACE>/gradle.properties:21: Warning: Newer version of lint available: 9.5.0-alpha04 [GradleDependency]
+android.experimental.lint.version=9.1.1
+                                  ~~~~~
+<CI_WORKSPACE>/gradle/libs.versions.toml:18: Warning: A newer version of androidx.navigation3:navigation3-runtime than 1.0.0 is available: 1.1.7 [GradleDependency]
+navigation3-runtime = "1.0.0"
+                      ~~~~~~~
+<CI_WORKSPACE>/gradle/libs.versions.toml:45: Warning: A newer version of androidx.activity:activity-compose than 1.9.3 is available: 1.13.0 [GradleDependency]
+androidx-activity-compose = { module = "androidx.activity:activity-compose", version = "1.9.3" }
+                                                                                       ~~~~~~~
+
+   Explanation for issues of type "GradleDependency":
+   This detector looks for usages of libraries where the version you are using
+   is not the current stable release. Using older versions is fine, and there
+   are cases where you deliberately want to stick with an older version.
+   However, you may simply not be aware that a more recent version is
+   available, and that is what this lint check helps find.
+
+<CI_WORKSPACE>/gradle/libs.versions.toml:8: Warning: A newer version of org.jetbrains.kotlin.multiplatform than 2.4.10 is available: 2.4.20 [NewerVersionAvailable]
+kotlin = "2.4.10"
+         ~~~~~~~~
+<CI_WORKSPACE>/gradle/libs.versions.toml:8: Warning: A newer version of org.jetbrains.kotlin.plugin.compose than 2.4.10 is available: 2.4.20 [NewerVersionAvailable]
+kotlin = "2.4.10"
+         ~~~~~~~~
+<CI_WORKSPACE>/gradle/libs.versions.toml:8: Warning: A newer version of org.jetbrains.kotlin.plugin.serialization than 2.4.10 is available: 2.4.20 [NewerVersionAvailable]
+kotlin = "2.4.10"
+         ~~~~~~~~
+<CI_WORKSPACE>/gradle/libs.versions.toml:11: Warning: A newer version of org.jetbrains.kotlinx:kotlinx-datetime than 0.7.1 is available: 0.8.0 [NewerVersionAvailable]
+kotlinx-datetime = "0.7.1"
+                   ~~~~~~~
+<CI_WORKSPACE>/gradle/libs.versions.toml:14: Warning: A newer version of org.jetbrains.compose than 1.10.3 is available: 1.12.0 [NewerVersionAvailable]
+compose-multiplatform = "1.10.3"
+                        ~~~~~~~~
+<CI_WORKSPACE>/gradle/libs.versions.toml:14: Warning: A newer version of org.jetbrains.compose.components:components-resources than 1.10.3 is available: 1.12.0 [NewerVersionAvailable]
+compose-multiplatform = "1.10.3"
+                        ~~~~~~~~
+<CI_WORKSPACE>/gradle/libs.versions.toml:14: Warning: A newer version of org.jetbrains.compose.components:components-ui-tooling-preview than 1.10.3 is available: 1.12.0 [NewerVersionAvailable]
+compose-multiplatform = "1.10.3"
+                        ~~~~~~~~
+<CI_WORKSPACE>/gradle/libs.versions.toml:14: Warning: A newer version of org.jetbrains.compose.foundation:foundation than 1.10.3 is available: 1.12.0 [NewerVersionAvailable]
+compose-multiplatform = "1.10.3"
+                        ~~~~~~~~
+<CI_WORKSPACE>/gradle/libs.versions.toml:14: Warning: A newer version of org.jetbrains.compose.runtime:runtime than 1.10.3 is available: 1.12.0 [NewerVersionAvailable]
+compose-multiplatform = "1.10.3"
+                        ~~~~~~~~
+<CI_WORKSPACE>/gradle/libs.versions.toml:14: Warning: A newer version of org.jetbrains.compose.ui:ui than 1.10.3 is available: 1.12.0 [NewerVersionAvailable]
+compose-multiplatform = "1.10.3"
+                        ~~~~~~~~
+<CI_WORKSPACE>/gradle/libs.versions.toml:14: Warning: A newer version of org.jetbrains.compose.ui:ui-test than 1.10.3 is available: 1.12.0 [NewerVersionAvailable]
+compose-multiplatform = "1.10.3"
+                        ~~~~~~~~
+<CI_WORKSPACE>/gradle/libs.versions.toml:14: Warning: A newer version of org.jetbrains.compose:compose-gradle-plugin than 1.10.3 is available: 1.12.0 [NewerVersionAvailable]
+compose-multiplatform = "1.10.3"
+                        ~~~~~~~~
+<CI_WORKSPACE>/gradle/libs.versions.toml:15: Warning: A newer version of org.jetbrains.compose.material3:material3 than 1.9.0-beta03 is available: 1.9.0 [NewerVersionAvailable]
+compose-material3 = "1.9.0-beta03"
+                    ~~~~~~~~~~~~~~
+<CI_WORKSPACE>/gradle/libs.versions.toml:19: Warning: A newer version of org.jetbrains.androidx.navigation3:navigation3-ui than 1.0.0-alpha06 is available: 1.1.1 [NewerVersionAvailable]
+navigation3-ui = "1.0.0-alpha06"
+                 ~~~~~~~~~~~~~~~
+<CI_WORKSPACE>/gradle/libs.versions.toml:28: Warning: A newer version of io.insert-koin:koin-android than 4.0.0 is available: 4.2.2 [NewerVersionAvailable]
+koin = "4.0.0"
+       ~~~~~~~
+<CI_WORKSPACE>/gradle/libs.versions.toml:28: Warning: A newer version of io.insert-koin:koin-compose than 4.0.0 is available: 4.2.2 [NewerVersionAvailable]
+koin = "4.0.0"
+       ~~~~~~~
+<CI_WORKSPACE>/gradle/libs.versions.toml:28: Warning: A newer version of io.insert-koin:koin-compose-viewmodel than 4.0.0 is available: 4.2.2 [NewerVersionAvailable]
+koin = "4.0.0"
+       ~~~~~~~
+<CI_WORKSPACE>/gradle/libs.versions.toml:28: Warning: A newer version of io.insert-koin:koin-core than 4.0.0 is available: 4.2.2 [NewerVersionAvailable]
+koin = "4.0.0"
+       ~~~~~~~
+<CI_WORKSPACE>/gradle/libs.versions.toml:28: Warning: A newer version of io.insert-koin:koin-test than 4.0.0 is available: 4.2.2 [NewerVersionAvailable]
+koin = "4.0.0"
+       ~~~~~~~
+<CI_WORKSPACE>/gradle/libs.versions.toml:31: Warning: A newer version of io.ktor:ktor-client-content-negotiation than 3.0.3 is available: 3.5.2 [NewerVersionAvailable]
+ktor = "3.0.3"
+       ~~~~~~~
+<CI_WORKSPACE>/gradle/libs.versions.toml:31: Warning: A newer version of io.ktor:ktor-client-core than 3.0.3 is available: 3.5.2 [NewerVersionAvailable]
+ktor = "3.0.3"
+       ~~~~~~~
+<CI_WORKSPACE>/gradle/libs.versions.toml:31: Warning: A newer version of io.ktor:ktor-client-mock than 3.0.3 is available: 3.5.2 [NewerVersionAvailable]
+ktor = "3.0.3"
+       ~~~~~~~
+<CI_WORKSPACE>/gradle/libs.versions.toml:31: Warning: A newer version of io.ktor:ktor-serialization-kotlinx-json than 3.0.3 is available: 3.5.2 [NewerVersionAvailable]
+ktor = "3.0.3"
+       ~~~~~~~
+<CI_WORKSPACE>/gradle/libs.versions.toml:35: Warning: A newer version of com.lemonappdev:konsist than 0.16.1 is available: 0.17.3 [NewerVersionAvailable]
+konsist = "0.16.1"
+          ~~~~~~~~
+<CI_WORKSPACE>/gradle/libs.versions.toml:36: Warning: A newer version of io.gitlab.arturbosch.detekt than 1.23.7 is available: 1.23.8 [NewerVersionAvailable]
+detekt = "1.23.7"
+         ~~~~~~~~
+<CI_WORKSPACE>/gradle/libs.versions.toml:36: Warning: A newer version of io.gitlab.arturbosch.detekt:detekt-gradle-plugin than 1.23.7 is available: 1.23.8 [NewerVersionAvailable]
+detekt = "1.23.7"
+         ~~~~~~~~
+<CI_WORKSPACE>/gradle/libs.versions.toml:39: Warning: A newer version of app.cash.turbine:turbine than 1.2.0 is available: 1.2.1 [NewerVersionAvailable]
+turbine = "1.2.0"
+          ~~~~~~~
+
+   Explanation for issues of type "NewerVersionAvailable":
+   This detector checks with a central repository to see if there are newer
+   versions available for the dependencies used by this project. This is
+   similar to the GradleDependency check, which checks for newer versions
+   available in the Android SDK tools and libraries, but this works with any
+   MavenCentral dependency, and connects to the library every time, which
+   makes it more flexible but also much slower.
+
+0 errors, 35 warnings

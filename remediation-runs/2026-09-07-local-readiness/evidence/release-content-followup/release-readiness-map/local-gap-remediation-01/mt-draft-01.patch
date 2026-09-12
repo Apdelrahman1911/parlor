@@ -1,0 +1,350 @@
+--- /dev/null
++++ b/shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/VerificationMetadataAssertions.kt
+@@ -0,0 +1,75 @@
++package com.parlor.transport.p2p
++
++import java.io.StringReader
++import javax.xml.XMLConstants
++import javax.xml.parsers.DocumentBuilderFactory
++import org.w3c.dom.Element
++import org.xml.sax.InputSource
++import kotlin.test.assertEquals
++import kotlin.test.assertTrue
++
++/** Structural assertions for repository-owned verification metadata; desktop tests only. */
++internal class VerificationMetadataAssertions(metadata: String) {
++    private val components: List<Element> = parseRoot(metadata)
++        .children("components")
++        .singleEntry("components container")
++        .children("component")
++
++    fun assertArtifact(
++        group: String,
++        name: String,
++        version: String,
++        artifact: String,
++        sha256: String,
++    ) {
++        assertTrue(SHA256_PATTERN.matches(sha256), "Expected checksum must be a lowercase SHA-256")
++        val coordinates = "$group:$name:$version"
++        val component = components.filter {
++            it.getAttribute("group") == group &&
++                it.getAttribute("name") == name &&
++                it.getAttribute("version") == version
++        }.singleEntry("component $coordinates")
++        val artifactElement = component.children("artifact")
++            .filter { it.getAttribute("name") == artifact }
++            .singleEntry("artifact $coordinates:$artifact")
++        val checksum = artifactElement.children("sha256")
++            .singleEntry("sha256 for $coordinates:$artifact")
++        assertEquals(sha256, checksum.getAttribute("value"), "Unexpected checksum for $coordinates:$artifact")
++    }
++
++    private companion object {
++        const val VERIFICATION_NAMESPACE = "https://schema.gradle.org/dependency-verification"
++        val SHA256_PATTERN = Regex("[0-9a-f]{64}")
++
++        fun parseRoot(metadata: String): Element {
++            val factory = DocumentBuilderFactory.newDefaultInstance().apply {
++                isNamespaceAware = true
++                isValidating = false
++                isXIncludeAware = false
++                isExpandEntityReferences = false
++                setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true)
++                setFeature("http://apache.org/xml/features/disallow-doctype-decl", true)
++                setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "")
++                setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "")
++            }
++            val root = factory.newDocumentBuilder().parse(InputSource(StringReader(metadata))).documentElement
++            assertEquals(VERIFICATION_NAMESPACE, root.namespaceURI, "Unexpected verification namespace")
++            assertEquals("verification-metadata", root.localName, "Unexpected verification root")
++            return root
++        }
++
++        fun Element.children(name: String): List<Element> = buildList {
++            for (index in 0 until childNodes.length) {
++                val child = childNodes.item(index)
++                if (child is Element && child.namespaceURI == VERIFICATION_NAMESPACE && child.localName == name) {
++                    add(child)
++                }
++            }
++        }
++
++        fun List<Element>.singleEntry(label: String): Element {
++            assertEquals(1, size, "Expected exactly one $label; missing or duplicate metadata is ambiguous")
++            return single()
++        }
++    }
++}
+--- /dev/null
++++ b/shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/VerificationMetadataAssertionsTest.kt
+@@ -0,0 +1,151 @@
++package com.parlor.transport.p2p
++
++import org.xml.sax.SAXParseException
++import kotlin.test.Test
++import kotlin.test.assertFailsWith
++
++class VerificationMetadataAssertionsTest {
++    @Test
++    fun exact_component_artifact_and_checksum_binding_succeeds_with_siblings() {
++        assertPin(metadata(component(artifact() + artifact(name = "other.jar", hash = OTHER_HASH))))
++    }
++
++    @Test
++    fun swapped_sibling_checksums_are_rejected() {
++        val swapped = metadata(component(artifact(hash = OTHER_HASH) + artifact(name = "other.jar")))
++        assertFailsWith<AssertionError> { assertPin(swapped) }
++    }
++
++    @Test
++    fun a_checksum_in_a_comment_does_not_satisfy_the_artifact_pin() {
++        val xml = metadata(component(artifact(hash = OTHER_HASH) + "<!-- <sha256 value=\"$EXPECTED_HASH\"/> -->"))
++        assertFailsWith<AssertionError> { assertPin(xml) }
++    }
++
++    @Test
++    fun each_component_coordinate_is_bound() {
++        val otherComponents = listOf(
++            component(artifact(), group = "other-group"),
++            component(artifact(), name = "other-component"),
++            component(artifact(), version = "other-version"),
++        )
++        otherComponents.forEach { other ->
++            val xml = metadata(component(artifact(hash = OTHER_HASH)) + other)
++            assertFailsWith<AssertionError> { assertPin(xml) }
++        }
++    }
++
++    @Test
++    fun missing_component_is_rejected() {
++        assertFailsWith<AssertionError> { assertPin(metadata("")) }
++    }
++
++    @Test
++    fun missing_artifact_is_rejected_even_when_another_artifact_has_the_checksum() {
++        assertFailsWith<AssertionError> { assertPin(metadata(component(artifact(name = "other.jar")))) }
++    }
++
++    @Test
++    fun missing_checksum_is_rejected() {
++        assertFailsWith<AssertionError> { assertPin(metadata(component("<artifact name=\"wanted.jar\"/>"))) }
++    }
++
++    @Test
++    fun duplicate_components_are_rejected_even_when_the_first_matches() {
++        val xml = metadata(component(artifact()) + component(artifact(hash = OTHER_HASH)))
++        assertFailsWith<AssertionError> { assertPin(xml) }
++    }
++
++    @Test
++    fun duplicate_artifacts_are_rejected_even_when_both_match() {
++        assertFailsWith<AssertionError> { assertPin(metadata(component(artifact() + artifact()))) }
++    }
++
++    @Test
++    fun duplicate_checksum_elements_are_rejected_even_when_both_match() {
++        val duplicate = "<artifact name=\"wanted.jar\"><sha256 value=\"$EXPECTED_HASH\"/>" +
++            "<sha256 value=\"$EXPECTED_HASH\"/></artifact>"
++        assertFailsWith<AssertionError> { assertPin(metadata(component(duplicate))) }
++    }
++
++    @Test
++    fun duplicate_component_containers_are_rejected() {
++        val xml = metadata(component(artifact())).replace(
++            "</verification-metadata>",
++            "<components>${component(artifact())}</components></verification-metadata>",
++        )
++        assertFailsWith<AssertionError> { assertPin(xml) }
++    }
++
++    @Test
++    fun nested_artifact_is_not_a_direct_component_artifact() {
++        val nested = "<wrapper>${artifact()}</wrapper>"
++        assertFailsWith<AssertionError> { assertPin(metadata(component(nested))) }
++    }
++
++    @Test
++    fun nested_checksum_is_not_a_direct_artifact_checksum() {
++        val nested = "<artifact name=\"wanted.jar\"><wrapper><sha256 value=\"$EXPECTED_HASH\"/></wrapper></artifact>"
++        assertFailsWith<AssertionError> { assertPin(metadata(component(nested))) }
++    }
++
++    @Test
++    fun another_trusted_checksum_does_not_replace_the_explicit_primary_pin() {
++        val alternative = "<artifact name=\"wanted.jar\"><sha256 value=\"$OTHER_HASH\">" +
++            "<also-trust value=\"$EXPECTED_HASH\"/></sha256></artifact>"
++        assertFailsWith<AssertionError> { assertPin(metadata(component(alternative))) }
++    }
++
++    @Test
++    fun namespace_prefixes_attribute_order_and_escaped_artifact_names_are_supported() {
++        val xml = """
++            <v:verification-metadata xmlns:v="$NAMESPACE">
++              <v:components>
++                <v:component version="v" name="n" group="g">
++                  <v:artifact name="wanted&amp;.jar"><v:sha256 value="$EXPECTED_HASH"/></v:artifact>
++                </v:component>
++              </v:components>
++            </v:verification-metadata>
++        """.trimIndent()
++        VerificationMetadataAssertions(xml).assertArtifact("g", "n", "v", "wanted&.jar", EXPECTED_HASH)
++    }
++
++    @Test
++    fun a_different_xml_namespace_is_rejected() {
++        assertFailsWith<AssertionError> { assertPin(metadata(component(artifact())).replace(NAMESPACE, "urn:other")) }
++    }
++
++    @Test
++    fun dtds_are_rejected_instead_of_expanding_entities() {
++        val xml = "<!DOCTYPE verification-metadata [<!ENTITY marker \"unused\">]>" + metadata(component(artifact()))
++        assertFailsWith<SAXParseException> { assertPin(xml) }
++    }
++
++    @Test
++    fun malformed_xml_is_rejected() {
++        assertFailsWith<SAXParseException> { VerificationMetadataAssertions("<verification-metadata>") }
++    }
++
++    private fun assertPin(xml: String) {
++        VerificationMetadataAssertions(xml).assertArtifact("g", "n", "v", "wanted.jar", EXPECTED_HASH)
++    }
++
++    private fun metadata(components: String): String =
++        "<verification-metadata xmlns=\"$NAMESPACE\"><components>$components</components></verification-metadata>"
++
++    private fun component(
++        artifacts: String,
++        group: String = "g",
++        name: String = "n",
++        version: String = "v",
++    ): String = "<component group=\"$group\" name=\"$name\" version=\"$version\">$artifacts</component>"
++
++    private fun artifact(name: String = "wanted.jar", hash: String = EXPECTED_HASH): String =
++        "<artifact name=\"$name\"><sha256 value=\"$hash\"/></artifact>"
++
++    private companion object {
++        const val NAMESPACE = "https://schema.gradle.org/dependency-verification"
++        val EXPECTED_HASH = "a".repeat(64)
++        val OTHER_HASH = "b".repeat(64)
++    }
++}
+--- a/shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitMavenProvenanceContractTest.kt
++++ b/shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitMavenProvenanceContractTest.kt
+@@ -42,23 +42,14 @@
+         assertTrue("<verify-metadata>true</verify-metadata>" in metadata)
+         assertFalse("p2p-network-provisioning" in metadata)
+ 
++        val verification = VerificationMetadataAssertions(metadata)
+         expectedArtifacts.forEach { expected ->
+-            val header =
+-                "<component group=\"io.github.apdelrahman1911\" " +
+-                    "name=\"${expected.component}\" version=\"$P2PKIT_VERSION\">"
+-            val start = metadata.indexOf(header)
+-            assertTrue(start >= 0, "Missing verified component ${expected.component}")
+-            val end = metadata.indexOf("</component>", startIndex = start)
+-            assertTrue(end > start, "Malformed component block for ${expected.component}")
+-            val block = metadata.substring(start, end)
+-
+-            assertTrue(
+-                "<artifact name=\"${expected.artifact}\">" in block,
+-                "Missing verified artifact ${expected.component}:${expected.artifact}",
+-            )
+-            assertTrue(
+-                "<sha256 value=\"${expected.sha256}\"" in block,
+-                "Unexpected checksum for ${expected.component}:${expected.artifact}",
++            verification.assertArtifact(
++                group = "io.github.apdelrahman1911",
++                name = expected.component,
++                version = P2PKIT_VERSION,
++                artifact = expected.artifact,
++                sha256 = expected.sha256,
+             )
+         }
+     }
+--- a/shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/DesktopDependencyVerificationContractTest.kt
++++ b/shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/DesktopDependencyVerificationContractTest.kt
+@@ -18,8 +18,8 @@
+         locateRepositoryRoot().resolve("gradle/libs.versions.toml").readText()
+     }
+ 
+-    private val metadata: String by lazy {
+-        locateRepositoryRoot().resolve("gradle/verification-metadata.xml").readText()
++    private val metadata: VerificationMetadataAssertions by lazy {
++        VerificationMetadataAssertions(locateRepositoryRoot().resolve("gradle/verification-metadata.xml").readText())
+     }
+ 
+     @Test
+@@ -62,21 +62,21 @@
+         )
+ 
+         variants.forEach { variant ->
+-            assertArtifact(
++            metadata.assertArtifact(
+                 group = "org.jetbrains.compose.desktop",
+                 name = "desktop-jvm-${variant.name}",
+                 version = COMPOSE_VERSION,
+                 artifact = "desktop-jvm-${variant.name}-$COMPOSE_VERSION.pom",
+                 sha256 = variant.composePomSha256,
+             )
+-            assertArtifact(
++            metadata.assertArtifact(
+                 group = "org.jetbrains.skiko",
+                 name = "skiko-awt-runtime-${variant.name}",
+                 version = SKIKO_VERSION,
+                 artifact = "skiko-awt-runtime-${variant.name}-$SKIKO_VERSION.jar",
+                 sha256 = variant.skikoJarSha256,
+             )
+-            assertArtifact(
++            metadata.assertArtifact(
+                 group = "org.jetbrains.skiko",
+                 name = "skiko-awt-runtime-${variant.name}",
+                 version = SKIKO_VERSION,
+@@ -102,7 +102,7 @@
+             "windows-x86_64.zip" to
+                 "ce99eba1f4faec1d77f4bbd747bb722404ef11f2c349ec70c59d4c002859380f",
+         ).forEach { (hostArchive, sha256) ->
+-            assertArtifact(
++            metadata.assertArtifact(
+                 group = "org.jetbrains.kotlin",
+                 name = "kotlin-native-prebuilt",
+                 version = KOTLIN_VERSION,
+@@ -123,7 +123,7 @@
+             "osx" to "0d47f17c3924e5472b6125aa608d949dd7f46510889729671f31f2f4d801e8e7",
+             "windows" to "5dc730c3dc454b76d779a46036c06fd9c874039a31e22214434ecdbe64c3300a",
+         ).forEach { (platform, sha256) ->
+-            assertArtifact(
++            metadata.assertArtifact(
+                 group = "com.android.tools.build",
+                 name = "aapt2",
+                 version = AAPT2_VERSION,
+@@ -131,28 +131,6 @@
+                 sha256 = sha256,
+             )
+         }
+-    }
+-
+-    private fun assertArtifact(
+-        group: String,
+-        name: String,
+-        version: String,
+-        artifact: String,
+-        sha256: String,
+-    ) {
+-        val componentMarker =
+-            "<component group=\"$group\" name=\"$name\" version=\"$version\">"
+-        val component = metadata.substringAfter(componentMarker, missingDelimiterValue = "")
+-            .substringBefore("</component>")
+-        assertTrue(component.isNotEmpty(), "Missing verified component $group:$name:$version")
+-        assertTrue(
+-            "<artifact name=\"$artifact\">" in component,
+-            "Missing verified artifact $group:$name:$version:$artifact",
+-        )
+-        assertTrue(
+-            "<sha256 value=\"$sha256\"" in component,
+-            "Unexpected checksum for $group:$name:$version:$artifact",
+-        )
+     }
+ 
+     private fun locateRepositoryRoot(): File {

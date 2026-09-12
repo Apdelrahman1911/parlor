@@ -1,0 +1,177 @@
+{
+  "schema_version": 1,
+  "kind": "INDEPENDENT_NATIVE_CONTINUATION_SOURCE_REVIEW_NOT_RUNTIME",
+  "reviewer": "/root/ci_review",
+  "author": "/root/ci_workflow",
+  "recorded_at": "2026-09-08T09:37:55.881258+00:00",
+  "status": "APPROVED_SOURCE_PENDING_COORDINATOR_CONTROLS_AND_FRESH_NATIVE_BINDINGS",
+  "repository": "/root/projects/Parlor/parlor",
+  "branch": "fix/local-readiness-2026-09-07",
+  "head": "ec0de52a2c7ff9077482a291dc4fd2591fdea01f",
+  "head_tree": "48b099f3cd002a3253f21d2b06a4ece5787e62cb",
+  "scope": [
+    "Optional native-preflight/native-evidence manual modes in the existing production-verification workflow; same five jobs and unchanged full/default/push/PR qualification scope.",
+    "Focused orchestrator source/control/producer/artifact binding, native serial scheduling, failure preservation, cancellation forwarding and owned outer cleanup.",
+    "Release workflow contract predicates, Linux-executable mocked control tests, and focused-mode operator documentation.",
+    "Toolchain-profile/archived-runner portability and copy-only single-tap fixture are independently owned/reviewed by other agents, not newly approved by this report."
+  ],
+  "files": [
+    {
+      "path": ".github/workflows/production-verification.yml",
+      "bytes": 37612,
+      "sha256": "af0a96cf33c950818546024627641fa842d4c1336b64c67467b01f7384c6f2e6",
+      "independently_verified": true
+    },
+    {
+      "path": "scripts/ci/native_continuation.py",
+      "bytes": 41819,
+      "sha256": "1a79be62a223747d9a704819bf5bacac0bed512292a556afd9f2f8ddee66bed2",
+      "independently_verified": true,
+      "ast_parse": "PASS",
+      "declared_test_methods": 0,
+      "unique_declared_test_methods": 0
+    },
+    {
+      "path": "scripts/ci/NATIVE_CONTINUATION.md",
+      "bytes": 4719,
+      "sha256": "c3f4f0e9b9f4d606a567f78c8a9c3678485ce947fde157396b9d33ade91fbf9f",
+      "independently_verified": true
+    },
+    {
+      "path": "scripts/release/workflow_contract.py",
+      "bytes": 42263,
+      "sha256": "55ad26a933eb1c2b3e8fbedaf1e35dc42875c6d1d13897d43263c71c7080ce9a",
+      "independently_verified": true,
+      "ast_parse": "PASS",
+      "declared_test_methods": 0,
+      "unique_declared_test_methods": 0
+    },
+    {
+      "path": "scripts/release/tests/test_native_continuation.py",
+      "bytes": 36207,
+      "sha256": "ad0aa309b90eaf39b26f1c6638acde335100a0a4a76c5b73afda0b54d5fc0479",
+      "independently_verified": true,
+      "ast_parse": "PASS",
+      "declared_test_methods": 34,
+      "unique_declared_test_methods": 34
+    },
+    {
+      "path": "scripts/release/tests/test_workflow_contract.py",
+      "bytes": 28410,
+      "sha256": "36c89b71edbf9d56ba743f86f3ed11c64a6eaacc58116130e3e6941094e4408e",
+      "independently_verified": true,
+      "ast_parse": "PASS",
+      "declared_test_methods": 45,
+      "unique_declared_test_methods": 45
+    }
+  ],
+  "findings": [
+    {
+      "id": "NC01",
+      "status": "CORRECTED_AND_INDEPENDENTLY_RECHECKED",
+      "finding": "Initial native result handling parsed a receipt before preserving raw failed or malformed evidence.",
+      "correction": "run_native finally invokes bounded raw preservation before parsing. Incomplete preservation stays unsafe, prevents B and prevents canonical evidence deletion. Missing/malformed/symlink partial evidence regressions are present."
+    },
+    {
+      "id": "NC02",
+      "status": "CORRECTED_AND_INDEPENDENTLY_RECHECKED",
+      "finding": "Pathname-only file checks could miss a replacement at open or final mode/owner/link drift.",
+      "correction": "O_NOFOLLOW and the same dev/inode/size/mtime/mode/uid/nlink identity at pre-open, opened fd, post-read fd and final path. Regressions swap opened descriptor, refuse symlink, and mutate post-fd hardlink/mode while bytes/inode remain stable."
+    },
+    {
+      "id": "NC03",
+      "status": "CORRECTED_AND_INDEPENDENTLY_RECHECKED",
+      "finding": "Outer cleanup could retain a PASS status if staging rmtree failed after qualification.",
+      "correction": "Exception handler explicitly resets FAIL and retains an error; regression covers postqualification deletion failure. Other tests cover successful upload, failed/missing upload, unsafe native cleanup, hash/inode/symlink drift and unrelated sentinel preservation."
+    },
+    {
+      "id": "NC04",
+      "status": "CORRECTED_AND_INDEPENDENTLY_RECHECKED",
+      "finding": "Cleanup predicate needed actual worker/holder/source/control/stop reconciliation without treating xcodebuild -version as a build attempt.",
+      "correction": "Requires safe canonical source/control equality, worker/holder/secondary-error/finalization/device fields. Actual test/build attempts require both distinct zero-exit immediate/final Gradle stops and unchanged copy sources; read-only prebuild observation does not invent Gradle attempts. Raw historical A16/B15 failure receipt schemas reopened."
+    },
+    {
+      "id": "NC05",
+      "status": "CORRECTED_AND_INDEPENDENTLY_RECHECKED",
+      "finding": "Signal handler installation after Popen had a launch/assignment cancellation window.",
+      "correction": "Install handlers before spawn, retain pending signal until exact child assignment, forward SIGTERM and wait for bounded native finalizer without direct kill; restore prior handlers. Deterministic mocked signal-during-Popen test, timeout/grace and unfinished-finalizer tests are present."
+    },
+    {
+      "id": "NC06",
+      "status": "CORRECTED_AND_INDEPENDENTLY_RECHECKED",
+      "finding": "Evidence traversal/error handling needed bounded failure handling, including os.walk default silent scandir omissions.",
+      "correction": "Directory/file/byte/error ceilings are enforced. Both walks use explicit raising onerror; preservation catches traversal error once and stays INCOMPLETE while retaining already copied receipt/log bytes. Mocked directory-read failure regression cannot pass through silent omission."
+    },
+    {
+      "id": "NC07",
+      "status": "CORRECTED_AND_INDEPENDENTLY_RECHECKED",
+      "finding": "Consumer evidence originally needed retained checked producer API facts, not only requested IDs/digests.",
+      "correction": "Allowlisted run/workflow/repository/artifact observations are retained and can be fed back through producer validation offline. No API/signed URL, actor or token is retained. Roundtrip and authorization-nonforwarding regressions are present."
+    }
+  ],
+  "source_conclusions": [
+    "Full/default/push/PR keep the existing five-job qualification; only explicit native scopes skip other jobs and full Apple steps. Unknown dispatch scope fails before focused execution. Full finalizers retain exact always() plus full-scope predicate. Immutable Action pins and disabled Store workflows remain untouched.",
+    "Preflight invokes the official source binder and both control-manifest commands only, producing exactly four artifact files. Requires exact continuation repository/branch/workflow, GITHUB_SHA/GITHUB_WORKFLOW_SHA/frozen SHA, clean checkout and full history. Qualified Xcode26.3/build17C529, SDK/runtime26.2 and arm64 observations are strict, with no fallback.",
+    "Native execution requires separately reviewed preflight producer run/attempt/artifact ID/digest and both control hashes at the same frozen source. Download checks successful producer source/workflow/repository ownership, exact bounded ZIP contents and current binding/control/toolchain bytes before any build.",
+    "Authenticated API requests are fixed read-only same-repository Actions endpoints with redirect disabled. Separate signed Azure blob request receives no Authorization header. Archive bytes are read bounded and never extractall-executed.",
+    "Canonical A17 composed L08 and B18 normal Debug execute serially with explicit adhoc signing/qualified profile, B explicitly uses libproc. A strict/partial failure remains NOT_READY/nonzero; B proceeds only after actual safe cleanup/source/control observations, not merely harness status.",
+    "Canonical runners remain the only build/simulator/copy/worker owners and retain immediate/final isolated Gradle stops. Outer cleanup verifies uploaded custody, exact file/directory ownership and unchanged manifests, deletes only known task paths, and never removes global caches. Missing dependency-cache directories may only be created and recorded.",
+    "No application reducer, protocol4.2, deterministic seed, privacy boundary, strict snapshot/content validation, Doctor behavior, Whodunit Leave Confirmation timing, application identity or Store-operation change occurs in these six files."
+  ],
+  "historical_receipt_basis": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-15/receipt.json",
+      "sha256": "7b4235bc8d869db573ffbdf65a246be7d25ac1ebefb81b7affe01ffd97818c50",
+      "status": "FAIL",
+      "cleanup_status": "PASS",
+      "use": "Reopened raw receipt to check cleanup schema compatibility only; historical failure is not new runtime evidence."
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-16/receipt.json",
+      "sha256": "56094f40132dd9beaeda52fdc737c61c242e897e0356b2722c4b50ad75bbf576",
+      "status": "FAIL",
+      "cleanup_status": "PASS",
+      "use": "Reopened raw receipt to check cleanup schema compatibility only; historical failure is not new runtime evidence."
+    }
+  ],
+  "reviewed_test_scope": [
+    "Dispatch scope/frozen source/full history and exact workflow predicate mutation controls.",
+    "Preflight exact four-file/no-build behavior and rejection of root/source/run/attempt/control drift.",
+    "Artifact producer ownership/digest, duplicate keys/members, path traversal, symlink/fifo/encryption/size and untrusted redirect controls.",
+    "Malformed/partial raw evidence retention, strict cleanup contradictions, real temporary-directory custody deletion controls and mocked finalizer/signal behavior.",
+    "Preflight digest rejection before install; live-control drift rejection before native execution; offline checked API identity roundtrip."
+  ],
+  "execution_conditions": [
+    "Coordinator must execute focused Linux controls for these exact hashes, retain actual counts/failures/skips/source maps, stop Gradle and perform ownership cleanup in the single coordinated lane. Declared methods are not executed tests.",
+    "Complete the existing release validator including workflow security, actionlint/ShellCheck and mechanical inventory freshness before dispatch; source review is not those executable results.",
+    "Commit reviewed source/control changes, then regenerate/commit mechanical inventory. Create fresh run-specific hosted source/control bindings for that frozen revision; this dirty-worktree source review is not a future control-manifest approval.",
+    "Independently inspect actual four-file preflight artifact, API/digest/run identities and qualified toolchain observations before authorizing native execution. Native execution approval remains false here.",
+    "Read actual native receipts, xcresult descriptors, Foundation protection rows, libproc target/image/ABI observations and cleanup receipts. A passing control suite or compilation must not be described as application/runtime/protection proof."
+  ],
+  "review_execution": {
+    "tests_run": 0,
+    "builds": 0,
+    "gradle_commands": 0,
+    "native_commands": 0,
+    "workflow_dispatches": 0,
+    "commits": 0,
+    "performed": [
+      "Read held source and diffs",
+      "Reopen raw historical receipt schemas",
+      "Independent SHA256/byte/AST-declaration checks",
+      "Write this unique source-only review"
+    ]
+  },
+  "native_execution_approved": false,
+  "limitations": [
+    "Actual current-source Parlor libproc runtime has not been approved or executed by this reviewer; historical187 tests are harness controls only.",
+    "L08 functional/retained-host and strict protection work, fresh dependency export/rendering/candidate consumer and frozen combined qualification still require their own actual evidence.",
+    "This report makes no Store-ready, physical-device, complete multiplayer/UI, hardware file-protection enforcement, owner/legal, or general everything-works claim."
+  ],
+  "cleanup": {
+    "generated_build_or_native_outputs": false,
+    "temporary_workers_started": false,
+    "cleanup_needed": false,
+    "detail": "Reviewer performed read/hash/AST operations and wrote only this retained report. No tests, build workers, simulators, caches, stashes, historical evidence or source files were removed."
+  }
+}

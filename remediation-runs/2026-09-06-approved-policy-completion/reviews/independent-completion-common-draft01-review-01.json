@@ -1,0 +1,859 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-09-06T21:47:37.233691+00:00",
+  "reviewer": "/root/factory_review",
+  "author_of_subject": "/root",
+  "subject": {
+    "path": "remediation-runs/2026-09-06-approved-policy-completion/root/completion-selection-common-draft-01.json",
+    "sha256": "5b74a8f0ec1b210a3fe408bd96dce4f6fc03adcaa5593002a8e90cf595d0a0cd",
+    "reviewed_line_ranges": [
+      [
+        1,
+        418
+      ]
+    ]
+  },
+  "classification": "COMMON DATA VERIFIED; REPORT PRECISION EDITS REQUIRED BEFORE FINAL ADOPTION; NATIVE/PRESERVATION UNSELECTED",
+  "scope": "Read-only independent review of immutable common draft01. This record neither approves an unexecuted V10 result nor authorizes final completion/materialization. Root accepted precision edits and will create separate draft02; draft01 remains untouched.",
+  "source": {
+    "branch": "main",
+    "commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+    "tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+    "source_manifest_sha256": "9ac2be536979f2216b39c10a6d148125a12380987d4efd483bbcbaeb1733318e",
+    "diff_sha256": "148fb4583d8fa8341b3cbc48a7fc0bc7564bf4df5c27e9d80e32c6bfdc57b784"
+  },
+  "current_source_input_rehash": {
+    "count": 669,
+    "mismatches": [],
+    "method": "Read only the existing freeze02 approved public source inputs; SHA matches each file. No new Git operation or fresh whole-repository inventory; final working-tree preservation remains unselected."
+  },
+  "references": {
+    "occurrences": 37,
+    "unique_paths": 25,
+    "all_safe_relative_existing_regular_nonsymlink_matching_sha256": true
+  },
+  "unselected_fields": {
+    "fields": [
+      "native_language",
+      "preservation_observation",
+      "native_report_markdown",
+      "preservation_report_markdown"
+    ],
+    "all_null": true,
+    "claim": "No16/16 or scoped100% claim is approved; draft status/purpose explicitly disallow materializer use."
+  },
+  "combined_reconciliation": {
+    "combined-desktop-static-04": {
+      "receipt": {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-desktop-static-04/receipt.json",
+        "sha256": "74f68916fa8ad3ecee3eb4f4e03a68cfc93a839f40bf8bc2104fbbd1ab365a7f"
+      },
+      "raw_log": {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-desktop-static-04/gradle.log",
+        "sha256": "fec078b40d59aedbdc84a9fe697edd116a225983352d879361c0e043483ea36b"
+      },
+      "test_receipts": {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-desktop-static-04/test-receipts.json",
+        "sha256": "8c5256e072a17e33d31121508aef7058cea68e7a6ae2d7b4b5888dd69bb4620b"
+      },
+      "command": [
+        "./gradlew",
+        "productionDesktopCheck",
+        "staticAnalysis",
+        "--no-build-cache",
+        "--continue",
+        "--no-daemon",
+        "--no-parallel",
+        "--max-workers=1",
+        "--no-configuration-cache",
+        "--dependency-verification=strict",
+        "-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=combined-desktop-static-04",
+        "-Pkotlin.compiler.execution.strategy=in-process",
+        "-Pparlor.android.signing.storeFile=",
+        "-Pparlor.android.signing.storePassword=",
+        "-Pparlor.android.signing.keyAlias=",
+        "-Pparlor.android.signing.keyPassword="
+      ],
+      "counting_method": "Parsed every retained TEST-*.xml; reconciled header totals, testcase descriptors and individual skip/failure states with test-receipts.json. No test rerun by reviewer.",
+      "counts": {
+        "suites": 188,
+        "tests": 1243,
+        "skipped": 3,
+        "failures": 0,
+        "errors": 0
+      },
+      "counts_by_task": {
+        "desktopTest": {
+          "suites": 188,
+          "tests": 1243,
+          "skipped": 3,
+          "failures": 0,
+          "errors": 0
+        }
+      },
+      "xml_manifest_sha256": "43a21f337cd6b94847f0fd4479b3546156992fd3b527da940876ffa304bcab2c",
+      "skipped_descriptors": [
+        {
+          "file": "shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest.xml",
+          "name": "peer_to_host_message_round_trips_and_host_to_peer_message_arrives_back()[desktop]"
+        },
+        {
+          "file": "shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest.xml",
+          "name": "peer_can_join_a_hosted_room_and_membership_appears_on_host()[desktop]"
+        },
+        {
+          "file": "shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest.xml",
+          "name": "host_broadcast_reaches_every_peer()[desktop]"
+        }
+      ],
+      "receipt_source_before_and_after_match_freeze02": true,
+      "status": "PASS",
+      "exit_code": 0,
+      "stop_exit_code": 0,
+      "source_changed_during_cycle": false,
+      "runner_changed_during_cycle": false,
+      "cleanup_completed_at": "2026-09-06T12:07:26.079554+00:00",
+      "remaining_outputs": [],
+      "retained_outputs": [],
+      "remaining_owned_workers": [],
+      "cleanup_errors": [],
+      "detekt_report_count": 14,
+      "detekt_error_count": 0,
+      "build_summary_lines": [
+        "BUILD SUCCESSFUL in 1m 59s",
+        "126 actionable tasks: 122 executed, 4 up-to-date"
+      ]
+    },
+    "combined-production-04": {
+      "receipt": {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/receipt.json",
+        "sha256": "ee8e31280b0f2d45b869b6b5fffa23dee89944ea52e36bd6027f33e48415a47a"
+      },
+      "raw_log": {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/gradle.log",
+        "sha256": "195ca59c870a0ed1d01332aa8bcdcf28dde2f7e04c689c326debe73dac0e193d"
+      },
+      "test_receipts": {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/test-receipts.json",
+        "sha256": "208a18bb700604177317d0e07ae5863cb3b4419a1a5e5e508a50a77c3ea9b1ce"
+      },
+      "command": [
+        "./gradlew",
+        "productionCheck",
+        "--no-build-cache",
+        "--continue",
+        "--no-daemon",
+        "--no-parallel",
+        "--max-workers=1",
+        "--no-configuration-cache",
+        "--dependency-verification=strict",
+        "-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=combined-production-04",
+        "-Pkotlin.compiler.execution.strategy=in-process",
+        "-Pparlor.android.signing.storeFile=",
+        "-Pparlor.android.signing.storePassword=",
+        "-Pparlor.android.signing.keyAlias=",
+        "-Pparlor.android.signing.keyPassword="
+      ],
+      "counting_method": "Parsed every retained TEST-*.xml; reconciled header totals, testcase descriptors and individual skip/failure states with test-receipts.json. No test rerun by reviewer.",
+      "counts": {
+        "suites": 222,
+        "tests": 1395,
+        "skipped": 3,
+        "failures": 0,
+        "errors": 0
+      },
+      "counts_by_task": {
+        "desktopTest": {
+          "suites": 188,
+          "tests": 1243,
+          "skipped": 3,
+          "failures": 0,
+          "errors": 0
+        },
+        "testDebugUnitTest": {
+          "suites": 17,
+          "tests": 76,
+          "skipped": 0,
+          "failures": 0,
+          "errors": 0
+        },
+        "testReleaseUnitTest": {
+          "suites": 17,
+          "tests": 76,
+          "skipped": 0,
+          "failures": 0,
+          "errors": 0
+        }
+      },
+      "xml_manifest_sha256": "4a38f693aa57d33ac816606bcdd9a24ed053f03342668d9d4fbb47d432e244d6",
+      "skipped_descriptors": [
+        {
+          "file": "shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest.xml",
+          "name": "peer_to_host_message_round_trips_and_host_to_peer_message_arrives_back()[desktop]"
+        },
+        {
+          "file": "shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest.xml",
+          "name": "peer_can_join_a_hosted_room_and_membership_appears_on_host()[desktop]"
+        },
+        {
+          "file": "shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest.xml",
+          "name": "host_broadcast_reaches_every_peer()[desktop]"
+        }
+      ],
+      "receipt_source_before_and_after_match_freeze02": true,
+      "status": "PASS",
+      "exit_code": 0,
+      "stop_exit_code": 0,
+      "source_changed_during_cycle": false,
+      "runner_changed_during_cycle": false,
+      "cleanup_completed_at": "2026-09-06T12:21:24.761643+00:00",
+      "remaining_outputs": [],
+      "retained_outputs": [],
+      "remaining_owned_workers": [],
+      "cleanup_errors": [],
+      "detekt_report_count": 43,
+      "detekt_error_count": 0,
+      "build_summary_lines": [
+        "Ran 172 tests in 23.659s",
+        "BUILD SUCCESSFUL in 5m 30s",
+        "903 actionable tasks: 826 executed, 77 up-to-date"
+      ],
+      "release_python_tests": {
+        "count": 172,
+        "method_line_range": [
+          1251,
+          1423
+        ],
+        "summary_line": 1426,
+        "ok_line": 1428,
+        "failures": 0,
+        "skips": 0,
+        "method_output_caveat": "171 methods end inline ok; unrelated-tree fixture emits its synthetic Git branch message then ok on next line1318. All172 method starts reconciled; no repo Git operation was performed by reviewer."
+      },
+      "lint": {
+        "report": {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/composeApp/build/reports/lint-results-release.xml",
+          "sha256": "c13b213c1bd45cd821a5e156b0aac6005dd76fec4dd4d5fc155142c4e1fe2b96"
+        },
+        "severities": {
+          "Warning": 32
+        },
+        "ids": {
+          "OldTargetApi": 1,
+          "AndroidGradlePluginVersion": 4,
+          "GradleDependency": 3,
+          "NewerVersionAvailable": 24
+        },
+        "qualification": "32 accepted existing maintenance/version warnings; not warning-free, not a vulnerability or Store-readiness certificate."
+      }
+    },
+    "combined-native-alltests-02": {
+      "receipt": {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-native-alltests-02/receipt.json",
+        "sha256": "2253a31979d575c1915e0445a9a1e1234abf963db9d49c98a628c386706c4fc0"
+      },
+      "raw_log": {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-native-alltests-02/gradle.log",
+        "sha256": "2a646d4ef1aa57c8057b8263a02bc8bdb801ea04cec820ba735146d212d4c018"
+      },
+      "test_receipts": {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-native-alltests-02/test-receipts.json",
+        "sha256": "852568bb6ef6080881cc915d86141da98ff8d83f65eb68bb73d2d51e82af5653"
+      },
+      "command": [
+        "./gradlew",
+        "allTests",
+        "productionIosSimulatorRuntimeTests",
+        "--no-build-cache",
+        "--continue",
+        "--no-daemon",
+        "--no-parallel",
+        "--max-workers=1",
+        "--no-configuration-cache",
+        "--dependency-verification=strict",
+        "-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=combined-native-alltests-02",
+        "-Pkotlin.compiler.execution.strategy=in-process",
+        "-Pparlor.android.signing.storeFile=",
+        "-Pparlor.android.signing.storePassword=",
+        "-Pparlor.android.signing.keyAlias=",
+        "-Pparlor.android.signing.keyPassword=",
+        "-I",
+        "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/owned_ios_simulator.init.gradle"
+      ],
+      "counting_method": "Parsed every retained TEST-*.xml; reconciled header totals, testcase descriptors and individual skip/failure states with test-receipts.json. No test rerun by reviewer.",
+      "counts": {
+        "suites": 398,
+        "tests": 2481,
+        "skipped": 3,
+        "failures": 0,
+        "errors": 0
+      },
+      "counts_by_task": {
+        "desktopTest": {
+          "suites": 188,
+          "tests": 1243,
+          "skipped": 3,
+          "failures": 0,
+          "errors": 0
+        },
+        "iosSimulatorArm64Test": {
+          "suites": 70,
+          "tests": 426,
+          "skipped": 0,
+          "failures": 0,
+          "errors": 0
+        },
+        "testDebugUnitTest": {
+          "suites": 70,
+          "tests": 406,
+          "skipped": 0,
+          "failures": 0,
+          "errors": 0
+        },
+        "testReleaseUnitTest": {
+          "suites": 70,
+          "tests": 406,
+          "skipped": 0,
+          "failures": 0,
+          "errors": 0
+        }
+      },
+      "xml_manifest_sha256": "018e8abe23f98256524810aab218451e54abd1463083c5e60c056cedbe2fd82d",
+      "skipped_descriptors": [
+        {
+          "file": "shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest.xml",
+          "name": "peer_to_host_message_round_trips_and_host_to_peer_message_arrives_back()[desktop]"
+        },
+        {
+          "file": "shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest.xml",
+          "name": "peer_can_join_a_hosted_room_and_membership_appears_on_host()[desktop]"
+        },
+        {
+          "file": "shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest.xml",
+          "name": "host_broadcast_reaches_every_peer()[desktop]"
+        }
+      ],
+      "receipt_source_before_and_after_match_freeze02": true,
+      "status": "PASS",
+      "exit_code": 0,
+      "stop_exit_code": 0,
+      "source_changed_during_cycle": false,
+      "runner_changed_during_cycle": false,
+      "cleanup_completed_at": "2026-09-06T12:31:49.479924+00:00",
+      "remaining_outputs": [],
+      "retained_outputs": [],
+      "remaining_owned_workers": [],
+      "cleanup_errors": [],
+      "detekt_report_count": 0,
+      "detekt_error_count": 0,
+      "build_summary_lines": [
+        "BUILD SUCCESSFUL in 6m 13s",
+        "861 actionable tasks: 857 executed, 4 up-to-date"
+      ],
+      "native_limits": {
+        "ios_x64_test_tasks_skipped": 13,
+        "reason": "Raw KGP log23-27: macos-aarch64 host architecture mismatch. Task disabled is not a test pass.",
+        "no_native_test_sources": [
+          ":game-modes:mafia",
+          ":shared:engine"
+        ],
+        "no_source_evidence": "compileTestKotlinIosSimulatorArm64/linkDebugTestIosSimulatorArm64 NO-SOURCE plus test task SKIPPED. Common implementations were compiled, but native tests for those two modules did not execute."
+      }
+    },
+    "combined-apple-02": {
+      "receipt": {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-apple-02/receipt.json",
+        "sha256": "dd75d054341870316ff21a8106e245e5859c83a347399aa59afc57d0eea68d16"
+      },
+      "raw_log": {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-apple-02/gradle.log",
+        "sha256": "29b2daf1f1c7005d56e82f2be779c586fe063eb79d7f8e4ee6814ac880be406f"
+      },
+      "test_receipts": {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-apple-02/test-receipts.json",
+        "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+      },
+      "command": [
+        "./gradlew",
+        "productionAppleCheck",
+        "--no-build-cache",
+        "--continue",
+        "--no-daemon",
+        "--no-parallel",
+        "--max-workers=1",
+        "--no-configuration-cache",
+        "--dependency-verification=strict",
+        "-Dorg.gradle.jvmargs=-Xmx6g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=combined-apple-02",
+        "-Pkotlin.compiler.execution.strategy=in-process",
+        "-Pparlor.android.signing.storeFile=",
+        "-Pparlor.android.signing.storePassword=",
+        "-Pparlor.android.signing.keyAlias=",
+        "-Pparlor.android.signing.keyPassword="
+      ],
+      "counting_method": "Parsed every retained TEST-*.xml; reconciled header totals, testcase descriptors and individual skip/failure states with test-receipts.json. No test rerun by reviewer.",
+      "counts": {
+        "suites": 0,
+        "tests": 0,
+        "skipped": 0,
+        "failures": 0,
+        "errors": 0
+      },
+      "counts_by_task": {},
+      "xml_manifest_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "skipped_descriptors": [],
+      "receipt_source_before_and_after_match_freeze02": true,
+      "status": "PASS",
+      "exit_code": 0,
+      "stop_exit_code": 0,
+      "source_changed_during_cycle": false,
+      "runner_changed_during_cycle": false,
+      "cleanup_completed_at": "2026-09-06T12:48:26.659160+00:00",
+      "remaining_outputs": [],
+      "retained_outputs": [],
+      "remaining_owned_workers": [],
+      "cleanup_errors": [],
+      "detekt_report_count": 4,
+      "detekt_error_count": 0,
+      "build_summary_lines": [
+        "BUILD SUCCESSFUL in 10m 35s",
+        "147 actionable tasks: 143 executed, 4 up-to-date"
+      ],
+      "artifact_receipt": {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-apple-02/artifact-receipts.json",
+        "sha256": "879deeaab05de7e596dd4f25cdede06788ee4abdca4171359bf4fe41ed4daa45"
+      },
+      "framework_artifacts": [
+        {
+          "path": "composeApp/build/bin/iosX64/releaseFramework/ComposeApp.framework/ComposeApp",
+          "bytes": 53558320,
+          "sha256": "91a0d6ea8b8b5babb64f12518b13216be0366b21ea84ea3f830b51d453f11de9"
+        },
+        {
+          "path": "composeApp/build/bin/iosSimulatorArm64/releaseFramework/ComposeApp.framework/ComposeApp",
+          "bytes": 52265976,
+          "sha256": "bf86618842cb65349ad55141c87e5da7db8e79651da4c2e1b93f3c4323993919"
+        },
+        {
+          "path": "composeApp/build/bin/iosArm64/releaseFramework/ComposeApp.framework/ComposeApp",
+          "bytes": 52067904,
+          "sha256": "7be53cb3cfabd585f86ae480f74f240a3238031435f0f5c6df06e5420d4a224c"
+        }
+      ]
+    },
+    "resources-and-diff-02": {
+      "receipt": {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/resources-and-diff-02/receipt.json",
+        "sha256": "0973f253d65b3a77b445ddf6f4ac29faeb4e6965011fcbacc0264b61ff0b082d"
+      },
+      "raw_log": {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/resources-and-diff-02/gradle.log",
+        "sha256": "cd143696758da7f6356ea3824caaacfd073e5715c2d3ebd485f4104f754980de"
+      },
+      "test_receipts": {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/resources-and-diff-02/test-receipts.json",
+        "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+      },
+      "command": [
+        "/bin/zsh",
+        "-c",
+        "set -e; shasum -a 256 /Users/abdelrahman/.agents/skills/localization-rtl-accessibility/scripts/validate_resource_parity.py; for module in composeApp shared/design-system game-modes/whodunit game-modes/mafia; do echo \"MODULE=$module\"; /usr/bin/python3 -B /Users/abdelrahman/.agents/skills/localization-rtl-accessibility/scripts/validate_resource_parity.py --base \"$module/src/commonMain/composeResources/values\" --locale \"$module/src/commonMain/composeResources/values-ar\" --required-plural-quantities zero,one,two,few,many,other; done; git diff --check; echo DIFF_CHECK_PASS"
+      ],
+      "counting_method": "Parsed every retained TEST-*.xml; reconciled header totals, testcase descriptors and individual skip/failure states with test-receipts.json. No test rerun by reviewer.",
+      "counts": {
+        "suites": 0,
+        "tests": 0,
+        "skipped": 0,
+        "failures": 0,
+        "errors": 0
+      },
+      "counts_by_task": {},
+      "xml_manifest_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "skipped_descriptors": [],
+      "receipt_source_before_and_after_match_freeze02": true,
+      "status": "PASS",
+      "exit_code": 0,
+      "stop_exit_code": 0,
+      "source_changed_during_cycle": false,
+      "runner_changed_during_cycle": false,
+      "cleanup_completed_at": "2026-09-06T13:12:26.435698+00:00",
+      "remaining_outputs": [],
+      "retained_outputs": [],
+      "remaining_owned_workers": [],
+      "cleanup_errors": [],
+      "detekt_report_count": 0,
+      "detekt_error_count": 0,
+      "build_summary_lines": [],
+      "resource_recount": [
+        {
+          "module": "composeApp",
+          "locales": {
+            "values": {
+              "resources": 139,
+              "source": {
+                "path": "composeApp/src/commonMain/composeResources/values/strings.xml",
+                "sha256": "076cedf11593aa46aba9bb3ee0ec5538de78512d1a8d2caaa65646f5373a5883"
+              }
+            },
+            "values-ar": {
+              "resources": 139,
+              "source": {
+                "path": "composeApp/src/commonMain/composeResources/values-ar/strings.xml",
+                "sha256": "f853e9921a57a2865bba39d7ec479b217628a99a6d7a9bb1c94b36de5fda52dd"
+              }
+            }
+          },
+          "unique_key_and_type_parity": true
+        },
+        {
+          "module": "shared/design-system",
+          "locales": {
+            "values": {
+              "resources": 16,
+              "source": {
+                "path": "shared/design-system/src/commonMain/composeResources/values/strings.xml",
+                "sha256": "46588f65cf7123f5e3110a4aa02fa77ec5c85b0a5c0f3af54fc4122d8c1fdb55"
+              }
+            },
+            "values-ar": {
+              "resources": 16,
+              "source": {
+                "path": "shared/design-system/src/commonMain/composeResources/values-ar/strings.xml",
+                "sha256": "4f3d8703207ad2984b51bbbb5b6ddbca6a61f7e0a741b3f675b2266a81769e4c"
+              }
+            }
+          },
+          "unique_key_and_type_parity": true
+        },
+        {
+          "module": "game-modes/whodunit",
+          "locales": {
+            "values": {
+              "resources": 324,
+              "source": {
+                "path": "game-modes/whodunit/src/commonMain/composeResources/values/strings.xml",
+                "sha256": "aea6aa1abb5cf4d68734de65fb21e1f71cdc520039dbe12e2c88cdad3c2865f9"
+              }
+            },
+            "values-ar": {
+              "resources": 324,
+              "source": {
+                "path": "game-modes/whodunit/src/commonMain/composeResources/values-ar/strings.xml",
+                "sha256": "4009a4813e51af96e49e5e6c71c66ed931a6436e92fee97e877ff6abe0122a10"
+              }
+            }
+          },
+          "unique_key_and_type_parity": true
+        },
+        {
+          "module": "game-modes/mafia",
+          "locales": {
+            "values": {
+              "resources": 269,
+              "source": {
+                "path": "game-modes/mafia/src/commonMain/composeResources/values/strings.xml",
+                "sha256": "8f46afd35f71ad31e3d5b72cac1587e21dfc9e9a903b362e69eb79c6b33b551f"
+              }
+            },
+            "values-ar": {
+              "resources": 269,
+              "source": {
+                "path": "game-modes/mafia/src/commonMain/composeResources/values-ar/strings.xml",
+                "sha256": "a9416283c7bf130d9ca98b4ff0e08ae420bad4b935f476ed7166178c42c3bdcc"
+              }
+            }
+          },
+          "unique_key_and_type_parity": true
+        }
+      ],
+      "scope": "Independent full XML structural count/key/type parity. Root raw log records placeholder/empty validation and DIFF_CHECK_PASS. Not full translation semantics, screen-reader/device or new Git diff execution by this reviewer."
+    }
+  },
+  "aab": {
+    "receipt": {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/artifact-receipts.json",
+      "sha256": "e0741b994c1dd56ed3b9b5ef6a11ff2af024c4b745b9ee6533c108627374fdc4"
+    },
+    "path": "composeApp/build/outputs/bundle/release/composeApp-release.aab",
+    "sha256": "f30780bf995741a372646dd9c6a27705cb4eb0368c1d5a4de7197386d3a61473",
+    "bytes": 8803044,
+    "entries": 354,
+    "unique_safe_paths": 354,
+    "method": "Structurally parsed full retained inventory. Large AAB was cleaned by executor; did not reopen deleted binary or manually pretend every generated ZIP entry was source-reviewed."
+  },
+  "release_wrapper": {
+    "independent_review": {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-ios-release-wrapper-result-review-01.json",
+      "sha256": "ba0afe497cbb6d7348102d1a746debba6d1ebf64bf3cb226be4679b5c8442885"
+    },
+    "approved_scope": "Previously fully reviewed same-source, code-signing-disabled arm64 Simulator Release Swift wrapper compilation and30-file artifact inspection; no runtime or Store qualification. Actual frozen application669/source copy613/control18 bindings and artifact values match selected receipts. Signature state was not independently checked."
+  },
+  "smoke": {
+    "independent_review": {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-ios-wrapper-smoke01-outcome-01.json",
+      "sha256": "622ef6da86af7595c9c0753d053d712dd2ff5ee306ce523b7706c337a657d48c"
+    },
+    "raw_summary": {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/ios-wrapper-smoke-01/xcresult-summary.json",
+      "sha256": "f0f124d6bf86b21a084d20a8834387dc1dd109e29306c7f625c9e32f26b5c137"
+    },
+    "actual_counts": {
+      "tests": 5,
+      "passed": 5,
+      "failed": 0,
+      "skipped": 0
+    },
+    "source_test_methods_reopened": true,
+    "scope": "One original explicit-English actual cold-launch/Home/no-alert test and four original UIKit container fixtures, not5 app launches, DS-C01 matrix, actual Compose-child fixtures or Release runtime. Missing Parlor.debug.dylib hash remains explicit."
+  },
+  "latest_selected_historical_native": {
+    "independent_review": {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-dsc01-apphost07-outcome-01.json",
+      "sha256": "c05ca3adc41bc1a1c665ce8712f1ed2c59aa9d2d1d12a1ffd3dab8bfde5a3f6b"
+    },
+    "raw_summary": {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-07/xcresult-summary.json",
+      "sha256": "c1c3fb2f046097356ba3385cb826ab38fef41752b3cf78f8a51c68df4d134ad1"
+    },
+    "actual_counts": {
+      "tests": 5,
+      "passed": 4,
+      "failed": 1,
+      "skipped": 0
+    },
+    "status": "FAIL",
+    "qualification": "Reopened full independent dossier1-778 and raw summary. Actual OS pane/English selection/restore/restart remains unproven. Harness marker failure is not established app crash/root cause; later work is not presumed successful."
+  },
+  "remaining_gates": {
+    "blocked": 12,
+    "not_applicable": 1,
+    "manual_actions_equal_blocked_ids": true,
+    "source_backed_applicability": "Android managed Pixel2/API35 google x86_64 profile and Linux/KVM gate; other CI host graphs; preserved disabled publication/identity collision; actual installed versus qualified Xcode; authorization-limited Store signing; owner legal/editorial approval; dirty uncommitted candidate; WD-C4 product policy. Physical LAN and native UI/privacy/backup are not inferred from JVM/simulator fixtures.",
+    "not_applicable_justification": "Accepted pre-release owner policy excludes ambiguous unmarked old unpublished iOS language overrides from supported migration; current ownership/clean install/real OS behavior remain required. No backward content migration for old internal saves; exact identity validation and explicit discard remain required.",
+    "non_defect_register_preserved": [
+      "WD-C4 unresolved product decision",
+      "IOS-R1 test/evidence gap",
+      "retry-case-producer-candidate test/evidence gap;not17th defect",
+      "historical first-four-launch crashes unconfirmed cause"
+    ],
+    "production_content_limit": "Four1.0.1 stories are shipping-reachable source with testing-content approval only; full production editorial/localization/legal review remains required, not a newly invented blocker on approved testing corrections."
+  },
+  "precision_edits": [
+    {
+      "id": "COMMON-PRECISION-01",
+      "line_ranges": [
+        [
+          22,
+          22
+        ],
+        [
+          252,
+          275
+        ],
+        [
+          384,
+          384
+        ]
+      ],
+      "issue": "Code-signing-disabled compilation/no Store credentials is established; complete absence of any embedded/ad-hoc signature was not inspected. Broad no artifact signed text goes beyond this evidence.",
+      "requested": "Use code-signing-disabled simulator Release build, no Store-credential signing/upload, signature state unassessed. Do not invent automatic signing either.",
+      "root_response": "Accepted;root will create draft02."
+    },
+    {
+      "id": "COMMON-PRECISION-02",
+      "line_ranges": [
+        [
+          100,
+          103
+        ],
+        [
+          308,
+          311
+        ]
+      ],
+      "issue": "Combined physical-ios-backup-and-keychain label risks presenting IOS-R1 app-host Keychain investigation as necessarily external/device-only.",
+      "requested": "Separate genuinely physical backup/restore/device-protection gate from still-unexecuted locally executable app-host IOS-R1 investigation. Keep IOS-R1 outside16 and not a confirmed defect.",
+      "root_response": "Accepted;root will create draft02."
+    },
+    {
+      "id": "COMMON-PRECISION-03",
+      "line_ranges": [
+        [
+          72,
+          75
+        ],
+        [
+          296,
+          299
+        ]
+      ],
+      "issue": "Ignored physical P2P tests still have historical admission assumptions; attaching devices alone would not establish valid current-architecture tests.",
+      "requested": "Explicitly require admission-fixture alignment/review before reliance on genuine physical execution; never un-ignore/claim pass merely to clear counts.",
+      "root_response": "Accepted;root will create draft02."
+    }
+  ],
+  "reviewed_source_ranges": [
+    {
+      "path": "docs/RELEASE_GATES.md",
+      "sha256": "19ee19acf35f833e3bd61b03d3113c6a3ea05b67afcbe1b956e9d4aa070a3f32",
+      "reviewed_ranges": [
+        [
+          1,
+          109
+        ]
+      ]
+    },
+    {
+      "path": "docs/PRE_RELEASE_COMPATIBILITY.md",
+      "sha256": "32ae112de9fd761636191c3308faf28fa5a3a8f3fd694064bbeaf3f2ffe69060",
+      "reviewed_ranges": [
+        [
+          1,
+          59
+        ]
+      ]
+    },
+    {
+      "path": "docs/WHODUNIT_TEST_CONTENT.md",
+      "sha256": "19a2ca3a4cba3d60117f76897c7fc0d1cc55f97beb5002aead43fdc020b12756",
+      "reviewed_ranges": [
+        [
+          1,
+          86
+        ]
+      ]
+    },
+    {
+      "path": "config/release-policy.json",
+      "sha256": "316b28f75a13e0b925beb6bcd893b82e077a1a9efa850022026e830f9b1d4ad4",
+      "reviewed_ranges": [
+        [
+          1,
+          119
+        ]
+      ]
+    },
+    {
+      "path": "scripts/android/run_release_managed_device_smoke.sh",
+      "sha256": "5b6dc8fcdd7b11c9cefd39da3adb8783321b647cd9a8459ff761ef7fa031262d",
+      "reviewed_ranges": [
+        [
+          1,
+          58
+        ]
+      ]
+    },
+    {
+      "path": "iosApp/iosAppUITests/ComposeContainerViewControllerTests.swift",
+      "sha256": "a4730b77ad93d01df60a4b6fde558bfea264f71b19ee5aa6c4a08d33480eacc8",
+      "reviewed_ranges": [
+        [
+          1,
+          104
+        ]
+      ]
+    },
+    {
+      "path": "iosApp/iosAppUITests/IOSAppLaunchUITests.swift",
+      "sha256": "e903278fc8defcac9a4d03a52495c1364a361222e5f369059c5d6b6416fb6eb7",
+      "reviewed_ranges": [
+        [
+          1,
+          32
+        ]
+      ]
+    },
+    {
+      "path": "build.gradle.kts",
+      "sha256": "bd6199e1f097eb236c50c46efb91d291550110f6b4d95a8e95ff0db4d8da192b",
+      "reviewed_ranges": [
+        [
+          1,
+          210
+        ]
+      ]
+    },
+    {
+      "path": "composeApp/build.gradle.kts",
+      "sha256": "c23525d6b06f9b536fb5e8ef6be68c653952fa9764e276f831772b864621fdd5",
+      "reviewed_ranges": [
+        [
+          290,
+          340
+        ]
+      ]
+    },
+    {
+      "path": ".github/workflows/production-verification.yml",
+      "sha256": "965e47ddb4c47b19d8017c9494239d0a0309b26f465eb0f6b655bd90113a929c",
+      "reviewed_ranges": [
+        [
+          1,
+          240
+        ]
+      ]
+    },
+    {
+      "path": ".github/workflows/testing-candidate.yml",
+      "sha256": "0488fc5e0c4e520a767408cfb5e7fa387bc5fdfa0edfeb9dcd29a4cb0d2c7976",
+      "reviewed_ranges": [
+        [
+          1,
+          70
+        ]
+      ]
+    },
+    {
+      "path": ".github/workflows/production-promotion.yml",
+      "sha256": "94ca7f617c24cb4c9ffafa5860c7ebc104f08cfa46b2a2e13fbae3ed816c461b",
+      "reviewed_ranges": [
+        [
+          1,
+          65
+        ]
+      ]
+    },
+    {
+      "path": "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitRoomTransportLoopbackTest.kt",
+      "sha256": "cda4755e373172719f6fc7a4d72a38416ec061b44f356d9ef4f3529e29588737",
+      "reviewed_ranges": [
+        [
+          1,
+          270
+        ]
+      ]
+    }
+  ],
+  "research": {
+    "refetches": 0,
+    "records_reopened": [
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/research/os-settings-routing-07.json",
+        "sha256": "9e137edc66f102e3abb8905958c8b133ba55335fbe711cf7b6202646091c4f37"
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/research/xcuiautomation-hittable-07.json",
+        "sha256": "3286a096f7fea9f96bd43662fc7e3395ee6c320c59c2c64d5c44ed39bab50356"
+      }
+    ],
+    "applicability": "Retained official Apple UIAPI/current Xcode26.5 references distinguish URL acceptance from verified destination and exists from hittable; preserve prior404 and later official successful endpoint. No new platform semantics or device outcome inferred."
+  },
+  "limits": [
+    "No new exhaustive source audit is claimed by this report-selection pass.",
+    "Prior controls/source reviews remain independent historical evidence, not silently rewritten or rebased.",
+    "Current finalnative and finalpreservation values require separate executed source-bound receipt and independent review.",
+    "Generated log/XML parsing is structural evidence reconciliation, not fresh runtime execution.",
+    "Report precision items are not extra confirmed application defects."
+  ],
+  "cleanup_and_preservation": {
+    "builds_or_tests_run": 0,
+    "native_or_app_or_server_processes_started": 0,
+    "background_workers_started": 0,
+    "source_test_config_control_edits": 0,
+    "git_store_signing_operations": 0,
+    "network_fetches": 0,
+    "process_signals": 0,
+    "generated_outputs_created": 0,
+    "cleanup_required": false,
+    "write_policy": "Exclusive creation of this additive review JSON only. Source/control/existing reports unchanged. Final global/task process state belongs to root final preservation receipt; not claimed here."
+  }
+}

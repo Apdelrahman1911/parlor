@@ -1,0 +1,121 @@
+{
+  "at": "2026-09-07T12:12:44.749035+00:00",
+  "executor": "/root",
+  "classification": "APPROVED_EXACT_OWNED_ATTEMPT_NOT_RUNTIME_PASS",
+  "current_source": {
+    "commit": "2250007173bbf9ca7c441f1c46802d84c1b478ba",
+    "tree": "b506da5b778a3220f81e07674dcd85d381c49cb6",
+    "branch": "fix/local-readiness-2026-09-07",
+    "tracked_status": "",
+    "diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "source_manifest_sha256": "d3a952947d7451fde5d1679f9be21aef044ee58da507a8d9ef076ef338640054"
+  },
+  "original_artifact_source": {
+    "commit": "f5ea8045bd903c255041b198f54aca67e893612f",
+    "tree": "b109c8ec6ec579b9197f449b36bda2c39105a652",
+    "branch": "fix/local-readiness-2026-09-07",
+    "tracked_status": "",
+    "diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "source_manifest_sha256": "87f96b69dd8b62a3e3bbf2b22355220850325fe420097e356497ce0b5aa580e8"
+  },
+  "source_delta": [
+    {
+      "path": "composeApp/src/desktopTest/kotlin/com/parlor/app/ProductionUiAccessibilityContractTest.kt",
+      "before": "00e0d9c8af2d59562ae1a68cc514382f6e017b0c63613ac43810ad407a9d4ba6",
+      "after": "830f077ec2f61747339310051f609d4f95fa79979a5da543620358b72742db31"
+    },
+    {
+      "path": "config/android-lint-accepted-warnings.txt",
+      "before": "e196948d55ae455b7d59a4532b9a8f680e109daef5a704b555d1b903afb9ecbd",
+      "after": "4fe091a88dc1cec1849c0076790fa5db25608cf16ff094a30441ac99a84277d7"
+    },
+    {
+      "path": "docs/ANDROID_LINT_TRIAGE.md",
+      "before": "425d39b620add895c1f8f43c502b2012dd0f5f5a57688a9d9f937f4d923ee209",
+      "after": "cc5ccc1396aa806f2b2f21dfd71095e82a847c352f02170daec9ae0b65fd1ac8"
+    },
+    {
+      "path": "scripts/verification/ios-readiness/NativeReadinessPathControls.swift.in",
+      "before": null,
+      "after": "efc84b3b49c099185d17ff56ceb53b0134ee2332ff35220a537dade5168a76c9"
+    },
+    {
+      "path": "scripts/verification/ios-readiness/test_native_paths.py",
+      "before": null,
+      "after": "11c0bcbba09de36d5e2eb5a276c8f8d3c52024c3b395558e6aebd2f12875007a"
+    },
+    {
+      "path": "shared/transport-p2p/build.gradle.kts",
+      "before": "ac439a069b3c99d1bef803bbc053580c4b99cbd7f4775a98d98a2b40482d96d7",
+      "after": "6ce2fd726bd41031a5b26d0d30f8ee8f693b4dc942da90bdc48b40fbf040c3b7"
+    },
+    {
+      "path": "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/AndroidReleaseLintContractTest.kt",
+      "before": "649d3d91daffa9f8a2df92a373d6ba0729d591cfc158abeb0a62df78270b0fc2",
+      "after": "ebcb71cc9433aca72a87046224227c29a992bc193096a86289a831167e2032b9"
+    }
+  ],
+  "delta_relevance": "Two nonshipping iOS controls; Desktop-only CRLF/assertion tests; exact advisory config/docs; transport desktopTest-only input wiring. No app, resource, dependency, runtime/reducer/test-APK source change. APK03 retains original exact source binding rather than being relabeled a new build.",
+  "independent_review": {
+    "path": "remediation-runs/2026-09-07-local-readiness/reviews/android-cli20-preferences-independent-review-01.json",
+    "sha256": "aa6732b87066b938fe6c857be87fe5dc35c5e5675e66211e2a47c81e73402cb7"
+  },
+  "artifacts": [
+    {
+      "variant": "releaseAndroidTest",
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-apk-stage-03/release-androidTest.apk",
+      "sha256": "754daf608683abb2c32988287a19d0438c86699fcbfc259a62e117138ec9893d",
+      "bytes": 14008,
+      "signer_sha256": "a3e32e98880dd405b9859b064276284e266db6e7049a0f420c8b4dd526f0aa58",
+      "application_id": "com.parlor.app.test",
+      "metadata_sha256": "4226f0778f7e7c2912870981c0327b859e5bb73a3d23813fd5b312018e02f882"
+    },
+    {
+      "variant": "release",
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-apk-stage-03/release.apk",
+      "sha256": "561b269c883de7be33efda9eb7b2dcabb412ce2706ffd38ad79f3f04c2c5a8cb",
+      "bytes": 4835301,
+      "signer_sha256": "a3e32e98880dd405b9859b064276284e266db6e7049a0f420c8b4dd526f0aa58",
+      "application_id": "com.parlor.app",
+      "metadata_sha256": "e060375f09cc26d89f08e9651ffa193f72aa57b10800ac9c9cc7b9f708b2484e"
+    }
+  ],
+  "runtime_controls": {
+    "files": [
+      {
+        "path": "owned_arm64_smoke_sdk.py",
+        "sha256": "3a425d8dafac853ac3f8c189a68e4951eb1874e79c57f458825d1145d0289991"
+      },
+      {
+        "path": "darwin_owned_processes.py",
+        "sha256": "2f2ad2a5d68cea999709a4c3c3e384cd9e6767258ad34aed4181ee2118962378"
+      },
+      {
+        "path": "avd-sdk-root-01/owned_sdk_image.py",
+        "sha256": "82490e1769445cbb1f4e95ab41007dcc47473a243f78224c1042e2743f8b47a0"
+      }
+    ],
+    "sha256": "19870b9e06bf54fd0721910646aaf9c904e5a2c6404e3debbf4a321c36d08e5d"
+  },
+  "public_tool_hashes_rechecked": 125,
+  "command": [
+    "/usr/bin/python3",
+    "-B",
+    "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/owned_arm64_smoke_sdk.py",
+    "--sdk-root",
+    "/Users/abdelrahman/Library/Android/sdk",
+    "--avdmanager",
+    "/opt/homebrew/bin/avdmanager",
+    "--app-apk",
+    "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-apk-stage-03/release.apk",
+    "--test-apk",
+    "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-apk-stage-03/release-androidTest.apk",
+    "--source-commit",
+    "f5ea8045bd903c255041b198f54aca67e893612f",
+    "--approved-control-sha256",
+    "19870b9e06bf54fd0721910646aaf9c904e5a2c6404e3debbf4a321c36d08e5d",
+    "--evidence-dir",
+    "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-runtime-05"
+  ],
+  "remaining": "3 actual methods still must execute; fresh attested owned API35 ARM64 emulator only; not physical or Linux/KVM validation."
+}

@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "kind": "REVIEWED_SETTINGS_DIAGNOSTIC_ADOPTION",
+  "coordinator": "/root",
+  "at": "2026-09-10T02:20:41.010719+00:00",
+  "source_base": {
+    "branch": "fix/local-readiness-2026-09-07",
+    "head": "4ccfafcfc361231cfb730178b3798ebcb6304770",
+    "tree": "8a89fab3042b8614fc4285148a8cd645f7ac2786",
+    "layer": "Exact root-adopted independently approved Windowsrevision02 canonical layer, uncommitted at sealing. Overlay is not against pre-Windows HEAD.",
+    "windows_author": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/windows-long-path-followup-01/revision-02/AUTHOR_REPORT.json",
+      "sha256": "e50b49c37c32040f25671d101fefb1e52f4d11663fa0a42389a7179acdc4d33c",
+      "bytes": 8609
+    }
+  },
+  "patch_sha256": "952eee29f65d1483f9f6a70f8b61a16da9098d1be3f7226d5d39b70351a558ab",
+  "adopted_files": [
+    {
+      "path": ".github/workflows/production-verification.yml",
+      "sha256": "5437a0da79512e8c0ae90145972b65074791e6f3ce4b4edd6c6fd2d4e697eb86"
+    },
+    {
+      "path": "scripts/ci/NATIVE_CONTINUATION.md",
+      "sha256": "d350ee860a7b6d4d67fa6fc73ab139153c8fd4f9cd78a45c75175ed5c51bf169"
+    },
+    {
+      "path": "scripts/ci/native_continuation.py",
+      "sha256": "971fdeca3fa27d6b8fb356bae50f11909365af30d7a6af8cd058a3487684f4d2"
+    },
+    {
+      "path": "scripts/release/tests/test_native_continuation.py",
+      "sha256": "600637179d309178a900bac0936d5d1db0feacc0a0aa372fb36e94089914a125"
+    },
+    {
+      "path": "scripts/release/tests/test_native_process_probe.py",
+      "sha256": "8ccd48b4f8fd2bca04f9b81fd8ed93cdf5b92c240ac9e84571792103bab2a118"
+    },
+    {
+      "path": "scripts/release/tests/test_workflow_contract.py",
+      "sha256": "84df23b6aae1e47eb1d0d953c9c713fe1055ff90462f69351ca3643e648bdba0"
+    },
+    {
+      "path": "scripts/release/workflow_contract.py",
+      "sha256": "d59a7531555b0cc869beb629c0b7167b4c6150be225d0956d86c4d887f70ce7e"
+    },
+    {
+      "path": "scripts/verification/ios-settings-sheet/SettingsSheet.xcscheme.in",
+      "sha256": "d8688e9e4e00757c9f348b52c44d14875bc3328dc99cb754dff31edae837bab3"
+    },
+    {
+      "path": "scripts/verification/ios-settings-sheet/SettingsSheetUITest.swift.in",
+      "sha256": "547155ee3cbcf1259ef02a803b9e442b90bb390c0c3ab16dca61c53ede67b8e7"
+    },
+    {
+      "path": "scripts/verification/ios-settings-sheet/settings_sheet_probe.py",
+      "sha256": "626a5096b4aab37ee449abe45ec8f6d4d8c0d4801fb2acb8c83b1e17e8a3f3ed"
+    },
+    {
+      "path": "scripts/verification/ios-settings-sheet/test_settings_sheet_probe.py",
+      "sha256": "1f3716f315f990a02b9e21e7b71f7db91833de852f4cd3f97530d6c1d4db9292"
+    }
+  ],
+  "status": "ADOPTED_SOURCE_ONLY_TESTS_AND_NATIVE_NOT_RUN",
+  "review": "Root independently reopened complete runner/adapter/Swift/scheme and exact revision03 cleanup/status delta; different-agent portability review identified and closed these bounded corrections. Its sealed report follows before CI admission.",
+  "preserved": "Original seals/revisions, Windows reviewed layer and normal98 controls unchanged. No app, dependency, protocol, identity, Store, or physical-device change."
+}

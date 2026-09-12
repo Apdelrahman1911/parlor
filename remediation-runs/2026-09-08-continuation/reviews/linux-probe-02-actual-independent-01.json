@@ -1,0 +1,464 @@
+{
+  "schema_version": 1,
+  "kind": "INDEPENDENT_LINUX_PROCESS_PROBE_02_ACTUAL_EVIDENCE_REVIEW",
+  "reviewer": "/root/ci_review",
+  "executing_coordinator": "/root",
+  "status": "ACCEPT_CUSTODY_AND_SCOPED_LIVE_CONTROLS_HOST_PROBE_AND_CLEANUP_FAIL",
+  "source": {
+    "repository": "Apdelrahman1911/parlor",
+    "branch": "fix/local-readiness-2026-09-07",
+    "root": "/home/runner/work/parlor/parlor",
+    "head": "055f9fd3ac4ff714ada9ac0a582075739653199e",
+    "tree": "896ccc027ed48b0c08b80d10bbbd6145bc66f0f2",
+    "source_commit": "960de51e36b97fa08b1503ccf28bd4ac2ce53811",
+    "inventory_child_changes_only": "docs/review/INDEPENDENT_REVIEW_INVENTORY.csv",
+    "inventory_rows": 29013,
+    "inventory_sha256": "affa75278162d502b6f52368b238d1b53fa4dfd8f95111cd74175b52ecf6e544",
+    "control_files_rehashed_from_frozen_git": 10,
+    "control_sha256": "72e531e4a6166b387d1617b1489a080223e4a2dd00c5636da13fff39eaa5aecc",
+    "critical_control_hashes": {
+      ".github/workflows/production-verification.yml": "79d9fa5cdf487ad87849e19fb1baeb71d7694db7f2b62123e9cec729519a3be0",
+      "scripts/ci/linux_process_probe.py": "2696b0d81f1113eeaea20b431191788925053703d2ed6e12d72489041c6f76b6",
+      "scripts/ci/verification_hygiene.py": "1fc2fb6f0b3bb7a505edc63277e0fe974a67ccf972753eec0da60386438c16f4"
+    },
+    "binding_conclusion": "Ten frozen Git blobs and sorted compact path/sha256 aggregate match request and runtime proof. Initial admission stdout equals observation/stop binding; ownership task/source/SDK and final cleanup task/source/SDK agree. Frozen admit/source/ownership guards remain required before and after observation and before cleanup; this is not a review of a later mutable HEAD."
+  },
+  "run": {
+    "id": 34479469398,
+    "attempt": 1,
+    "job_id": 102878326972,
+    "conclusion": "failure",
+    "job_conclusion": "failure",
+    "url": "https://github.com/Apdelrahman1911/parlor/actions/runs/34479469398",
+    "created_at": "2026-09-10T12:55:09Z",
+    "updated_at": "2026-09-10T12:55:50Z",
+    "job_started_at": "2026-09-10T12:55:13Z",
+    "job_completed_at": "2026-09-10T12:55:49Z",
+    "platform": {
+      "os": "ubuntu-24.04",
+      "machine": "x86_64",
+      "kernel": "6.17.0-1022-azure",
+      "python": "3.12.3",
+      "ubuntu": "24.04.5",
+      "image": "20260907.300.1",
+      "runner_version": "2.337.0",
+      "java": "Temurin 21.0.12+1 from setup-java tool-cache"
+    },
+    "step_outcomes": "Steps1-6 succeeded: setup, full-history checkout, JDK, source/control admission, emulator-package-only install, fresh ownership. Full SDK/source-record/build/managed-device/artifact/full-cleanup steps7-16 skipped. Probe17 failed; main upload18 succeeded; final cleanup19 failed; cleanup upload20 succeeded. Post steps succeeded.",
+    "skipped_jobs": [
+      {
+        "id": 102878328175,
+        "name": "Desktop, Kotlin Native, and Android resources strict verification (Windows x64)",
+        "conclusion": "skipped"
+      },
+      {
+        "id": 102878328409,
+        "name": "iOS tests, release frameworks, and Swift wrapper",
+        "conclusion": "skipped"
+      },
+      {
+        "id": 102878328512,
+        "name": "Desktop strict verification (Linux arm64)",
+        "conclusion": "skipped"
+      },
+      {
+        "id": 102878328599,
+        "name": "Desktop and Kotlin Native strict verification (macOS x64)",
+        "conclusion": "skipped"
+      }
+    ],
+    "sdk_install": {
+      "step": 5,
+      "started_at": "2026-09-10T12:55:24Z",
+      "completed_at": "2026-09-10T12:55:36Z",
+      "conclusion": "success",
+      "command": "/usr/bin/timeout --signal=TERM --kill-after=10s 180s \"${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager\" --sdk_root=\"${ANDROID_HOME}\" \"emulator\"",
+      "scope": "Actual package download/unpack reached100%; source/control admission preceded mutation and ownership followed it. No system-image/platform package, emulator invocation, application build or Store operation is in this selected lane."
+    },
+    "execution_credit": "Real bare-host procfs observation plus two real direct-child mechanism controls with synthetic enumeration. No project test suite, Gradle build, managed-device, Apple, application or Store runtime was executed in LP02. Gradle8.13 wrapper bootstrap during --stop is not a build."
+  },
+  "custody": {
+    "root": "remediation-runs/2026-09-08-continuation/actions/34479469398",
+    "metadata": [
+      {
+        "path": "run.json",
+        "bytes": 12681,
+        "sha256": "a9d8d2bb2aabe2f442aa4c1a4a0f494d18df0a1ef38afbc4480a52992ed93197"
+      },
+      {
+        "path": "attempt.json",
+        "bytes": 12703,
+        "sha256": "0b0b884bdf6ec48a18891d77aaae3c84aac740c40f155907d976f874c884f14e"
+      },
+      {
+        "path": "jobs.json",
+        "bytes": 8887,
+        "sha256": "a0912f099498984a36a19922346610c282997f98d7a8a24ac7e2f810b183f835"
+      },
+      {
+        "path": "artifacts.json",
+        "bytes": 1499,
+        "sha256": "4e3868f5564ff7290f3ed56948a40ff99167820dcd09bd73c3a230c4dcde85ff"
+      },
+      {
+        "path": "desktop-android.log",
+        "bytes": 80981,
+        "sha256": "2f3ceb850d1a7a0e65b56e828b2c5ecd7aa443f56a96430cafd5743b4b1ea804"
+      },
+      {
+        "path": "download-receipt.json",
+        "bytes": 5284,
+        "sha256": "70996c81257545c0f06cb761122c17344fbc0ef5e8ce042277a2aeeab475cfd7"
+      }
+    ],
+    "artifacts": [
+      {
+        "path": "linux-process-probe-cleanup-34479469398-1.zip",
+        "bytes": 3114,
+        "sha256": "9c5739878bf37dfedf1d14dff57363d0cc4bb47b511b3ac8d9b635bde141feb3",
+        "id": 10152952343,
+        "name": "linux-process-probe-cleanup-34479469398-1",
+        "members": [
+          {
+            "path": "linux-process-probe-cleanup-34479469398-1/parlor-verification-34479469398-1-desktop-android-cleanup.json",
+            "bytes": 20776,
+            "sha256": "69ad7d0efa7456955ef6556611b96e8a2f7ad3dcc2418a069399809cc2c97ca2"
+          }
+        ]
+      },
+      {
+        "path": "linux-process-probe-34479469398-1.zip",
+        "bytes": 6470,
+        "sha256": "a9df658e26ac670790e71a00851bff775a6a44fbf23693506a29cdc3bd0ff47d",
+        "id": 10152950225,
+        "name": "linux-process-probe-34479469398-1",
+        "members": [
+          {
+            "path": "linux-process-probe-34479469398-1/parlor-verification-34479469398-1-desktop-android-linux-probe.json",
+            "bytes": 6752,
+            "sha256": "34f3fe7826ecb5d0d77f1ea363071ab43f3dc0cd4e47d4505a7c19032ffd3892"
+          },
+          {
+            "path": "linux-process-probe-34479469398-1/parlor-verification-34479469398-1-desktop-android-ownership.json",
+            "bytes": 19465,
+            "sha256": "b0d58b422711e8ca5944aa0b2777a4aa4ccff70813e662b751a1699ba75d0430"
+          },
+          {
+            "path": "linux-process-probe-34479469398-1/parlor-verification-34479469398-1-desktop-android-stop-linux-probe.json",
+            "bytes": 3357,
+            "sha256": "5b6a47dc0f5f3d3f04df55d721ee133806b4dd2a79ff1826d3067ef444ef1a88"
+          }
+        ]
+      }
+    ],
+    "checks": "Independently reconciled exact run/attempt/source/branch/repository/workflow, five job records and step outcomes. Both original ZIP lengths/SHA256s equal API metadata, retained download receipt and raw upload lines. Four exact flat regular unencrypted member names, bounded counts/sizes, CRC32s and SHA256s match the retained extracted byte sequences. Read ZIP members only in memory; no extraction.",
+    "compact_raw_json": {
+      "count": 4,
+      "lines": [
+        262,
+        472,
+        473,
+        527
+      ],
+      "values": [
+        "admission binding",
+        "observation",
+        "stop",
+        "cleanup"
+      ],
+      "all_equal_retained_values": true,
+      "note": "Ownership is uploaded as a separate record, not an additional compact JSON stdout line."
+    },
+    "raw_input_blocks": {
+      "count": 3,
+      "all_match_request_plus_default_native_selection_paired": true
+    },
+    "collector": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/linux-probe-collector-01.py",
+      "sha256": "fa5b841123ee2c92f62c99b48a9ea6e1735319f17f1387f28ff28e70d9db11ba",
+      "unchanged_helper_sha256": "3af9603aff8e20aa1380f844897ed356426ba29c4dd5172cc5c60edb2dea10de",
+      "review_sha256": "e5410a66cd364a617df4cc851ba7e943e4d4c2bd6d32c2a9627dfc32958a81e0",
+      "reuse": "Root-authorized unchanged bounded collector/helper reuse; no collector retest or new framework."
+    },
+    "collection": {
+      "result": "COLLECTED_NOT_RUNTIME_VERDICT",
+      "commands": 7,
+      "all_command_exit_codes": 0,
+      "started_at": "2026-09-10T12:58:48.385940+00:00",
+      "finished_at": "2026-09-10T12:58:54.893086+00:00",
+      "finally_stop_exit_code": 0
+    },
+    "custody_discrepancies": []
+  },
+  "dispatch_and_monitor": {
+    "directory": "remediation-runs/2026-09-08-continuation/actions/linux-process-probe-02",
+    "records": [
+      {
+        "path": "request.json",
+        "bytes": 4091,
+        "sha256": "63e6b95888a947834c04cb91ce81e6028ef8d2095e6e886d5b84cde81468e4c6"
+      },
+      {
+        "path": "freeze-push-receipt.json",
+        "bytes": 13665,
+        "sha256": "1d61ce82f848680e485abf07d6c450f6d7d7d6df123f62cc4439f37ff083a296"
+      },
+      {
+        "path": "immediate-admission.json",
+        "bytes": 738,
+        "sha256": "aacdce29d1a0e7562c622886f8cdc0b3d435765e51cebd6110b373002db64b85"
+      },
+      {
+        "path": "dispatch-result.json",
+        "bytes": 591,
+        "sha256": "e4ea53fed164ff918efea4c423b93753108f729b32649944ab9f7f87ccf4bd99"
+      },
+      {
+        "path": "run-association.json",
+        "bytes": 879,
+        "sha256": "6fa34c6248a797b1e81dbd23c4aa0b7c1000810a080b86d641761e1311e4c324"
+      },
+      {
+        "path": "runs-before.json",
+        "bytes": 11163,
+        "sha256": "608e3b3b1a574b2599bed41a4df2a0e4042e6a6b24e30aa946ac6d8efe687f90"
+      },
+      {
+        "path": "watcher-collection-receipt.json",
+        "bytes": 471,
+        "sha256": "1353930929e35f532dd14a98bebe7d75774b096d628980ea9245ad19b8a0628c"
+      },
+      {
+        "path": "collection.log",
+        "bytes": 139,
+        "sha256": "ddad5a485b9f9bdf1d27344c8489a24686446d56fd09e0c9b7ce2e537127dfaf"
+      },
+      {
+        "path": "watch.log",
+        "bytes": 79,
+        "sha256": "bb724bb2a7f493ec198134debb839e84b3523f90b1ba02a4b66e4ea30b4d3138"
+      }
+    ],
+    "dispatches": 1,
+    "dispatch_exit_code": 0,
+    "new_run_candidates": 1,
+    "association_polls": 1,
+    "pre_dispatch": "Retained normal push/ls-remote and immediate admission agree on055f9/tree, tracked-clean state, intended active workflow, no active same-ref run and exact approved request/review hash. Reviewed frozen inventory child has29013 rows and matching digest. No reviewer network query.",
+    "watch_exit_code": 1,
+    "collection_exit_code": 0,
+    "monitor_finally_stop_exit_code": 0,
+    "watch_interpretation": "Exit1 accompanies the already-completed failure conclusion; collection itself succeeded with all seven commands0. This is not an additional dispatch or collection failure."
+  },
+  "observations": {
+    "overall": "FAIL",
+    "outer_errors": [],
+    "started_at": "2026-09-10T12:55:37.893776+00:00",
+    "finished_at": "2026-09-10T12:55:39.807760+00:00",
+    "sdk_binding": {
+      "sdk_path_sha256": "e507a12011d2294b5329bb26fe44164d883087cb9d582c7ec9335a39e4c551e1",
+      "sdk_device": 2049,
+      "sdk_inode": 795534,
+      "uid": 1001
+    },
+    "sdk_identity_equal_all_receipts": true,
+    "host": {
+      "result": "FAIL",
+      "enumerated": 162,
+      "sampled": 145,
+      "selected_uid": 0,
+      "matching_executables": 0,
+      "errors": [
+        {
+          "code": "PermissionError"
+        }
+      ],
+      "failure_context": {
+        "operation": "before_exe_readlink",
+        "selection": true,
+        "errno": 13
+      },
+      "started_at": "2026-09-10T12:55:38.818653+00:00",
+      "finished_at": "2026-09-10T12:55:38.837822+00:00"
+    },
+    "owned_controls": [
+      {
+        "kind": "LIVE_LINUX_CONTROL_SYNTHETIC_ENUMERATION",
+        "dumpable": 1,
+        "result": "CONTROL_PASS",
+        "owned_pid": 2534,
+        "readiness": {
+          "pid": 2534,
+          "uid": 1001,
+          "dumpable": 1
+        },
+        "audit": {
+          "result": "PASS",
+          "enumerated": 2,
+          "sampled": 2,
+          "selected_uid": 2,
+          "matching_executables": 0,
+          "errors": [],
+          "started_at": "2026-09-10T12:55:38.862318+00:00",
+          "finished_at": "2026-09-10T12:55:38.863291+00:00"
+        },
+        "child_exit_code": 0,
+        "child_reaped": true,
+        "fixture_removed": true,
+        "interrupted": false,
+        "errors": []
+      },
+      {
+        "kind": "LIVE_LINUX_CONTROL_SYNTHETIC_ENUMERATION",
+        "dumpable": 0,
+        "result": "CONTROL_PASS",
+        "owned_pid": 2535,
+        "readiness": {
+          "pid": 2535,
+          "uid": 1001,
+          "dumpable": 0
+        },
+        "audit": {
+          "result": "FAIL",
+          "enumerated": 2,
+          "sampled": 1,
+          "selected_uid": 1,
+          "matching_executables": 0,
+          "errors": [
+            {
+              "code": "PermissionError"
+            }
+          ],
+          "failure_context": {
+            "operation": "before_exe_readlink",
+            "selection": true,
+            "errno": 13
+          },
+          "started_at": "2026-09-10T12:55:38.889121+00:00",
+          "finished_at": "2026-09-10T12:55:38.889783+00:00"
+        },
+        "child_exit_code": 0,
+        "child_reaped": true,
+        "fixture_removed": true,
+        "interrupted": false,
+        "errors": []
+      }
+    ],
+    "control_scope": "Only observer plus held direct child are enumerated through owned symlinks into real /proc. Dumpable1 actually passes2/2 samples; dumpable0 actually fails at the requested selected executable readlink with EACCES after1/2 completed samples. Both mechanism expectations pass. CONTROL_PASS does not relabel the negative audit PASS, broaden enumeration to the host, or grant application-runtime credit.",
+    "host_interpretation": "A real selected-UID executable readlink denial is now recorded. selected_uid=0 counts completed selected samples, not UID0: failure occurs before that selected process increments sampled/selected_uid. Zero matching executables in a partial failed scan is not absence. Observation.errors=[] does not override host/result FAIL.",
+    "causal_limit": "No failed host PID, name, path or dumpability value is retained. The owned negative control demonstrates one mechanism producing the same denial, not that the host process used that mechanism. Equal counters in host and cleanup samples do not identify one shared denied PID. Original D03 had no operation/selection context and used image20260831.293.1, not LP02 image20260907.300.1; its PID/cause and cleanup cannot be reconstructed from LP02."
+  },
+  "cleanup": {
+    "overall": "FAIL",
+    "started_at": "2026-09-10T12:55:46.072264+00:00",
+    "finished_at": "2026-09-10T12:55:47.582052+00:00",
+    "errors": [
+      {
+        "error": "Android sampled emulator absence did not pass; retain outputs"
+      }
+    ],
+    "final_host_audit": {
+      "result": "FAIL",
+      "enumerated": 162,
+      "sampled": 145,
+      "selected_uid": 0,
+      "matching_executables": 0,
+      "errors": [
+        {
+          "code": "PermissionError"
+        }
+      ],
+      "failure_context": {
+        "operation": "before_exe_readlink",
+        "selection": true,
+        "errno": 13
+      },
+      "started_at": "2026-09-10T12:55:47.562843+00:00",
+      "finished_at": "2026-09-10T12:55:47.582030+00:00"
+    },
+    "ownership_prepared_at": "2026-09-10T12:55:37.799202+00:00",
+    "claimed_roots": 184,
+    "not_created": 184,
+    "removed_roots": 0,
+    "retained_roots": 0,
+    "roots_reconciliation": "Independently regenerated the184 sorted root names from frozen tracked paths using the reviewed static rules. They exactly equal ownership.outputs and cleanup.not_created; none contains a frozen tracked file. No claimed checkout build/Python-cache root was created. This does not satisfy or waive the failed mandatory host-absence gate.",
+    "owned_children_reaped": 2,
+    "owned_fixtures_removed": 2,
+    "owned_child_exit_codes": [
+      0,
+      0
+    ],
+    "probe_stop": {
+      "command": [
+        "./gradlew",
+        "--stop"
+      ],
+      "started_at": "2026-09-10T12:55:39.809785+00:00",
+      "finished_at": "2026-09-10T12:55:44.321648+00:00",
+      "exit_code": 0
+    },
+    "probe_stop_output": "Wrapper downloaded Gradle8.13, then reported No Gradle daemons are running.",
+    "final_stop": {
+      "command": [
+        "./gradlew",
+        "--stop"
+      ],
+      "started_at": "2026-09-10T12:55:46.072283+00:00",
+      "exit_code": 0,
+      "output": "No Gradle daemons are running.\n",
+      "finished_at": "2026-09-10T12:55:46.640897+00:00"
+    },
+    "upload": {
+      "outcome": "success",
+      "artifact_id": "10152950225",
+      "artifact_digest": "a9df658e26ac670790e71a00851bff775a6a44fbf23693506a29cdc3bd0ff47d"
+    },
+    "scope": "Both exact uploads succeeded and all four receipts are retained. Task-owned direct children and synthetic link fixtures retired; final selected-UID SDK/emulator path absence remainsFAIL. Not proof of arbitrary-worker termination, AVD retirement, other SDK/UID or continuous absence. Shared SDK package and wrapper caches are outside claimed output roots and are not deleted."
+  },
+  "findings": [
+    {
+      "id": "LP02-HOST-ACCESS-FAIL",
+      "classification": "FAILED_MANDATORY_REAL_HOST_AUDIT",
+      "conclusion": "Both real host samples retain PermissionError/before_exe_readlink/selection=true/EACCES. Evidence collection and mechanism controls are valid, but neither probe nor cleanup is PASS. Preserve both failed receipts."
+    },
+    {
+      "id": "LP02-PREREQUISITE-PROGRESS",
+      "classification": "NEW_SCOPED_OBSERVATION_NOT_RETROACTIVE_REPAIR",
+      "conclusion": "The reviewed package-only prerequisite actually installs and audits progress beyond LP01 pre-enumeration FileNotFoundError. Two scoped controls now observe their required outcomes; LP01 remainsFAIL and original D03 cleanup remainsFAIL."
+    }
+  ],
+  "review_pins": [
+    {
+      "path": "reviews/linux-probe-sdk-prerequisite-independent-01.json",
+      "bytes": 11805,
+      "sha256": "2a71f1bd26b2c2ffedc7b6a4136f66d88fcd3f0028a7b03f32608a7e2ab8cb9f"
+    },
+    {
+      "path": "reviews/linux-process-probe-request-independent-02.json",
+      "bytes": 3740,
+      "sha256": "e79a0e0123352d5bd1284b821c296bea29014b5ea19200f9fe13ecf2e17d7d1a"
+    },
+    {
+      "path": "reviews/linux-probe-01-actual-independent-01.json",
+      "bytes": 12939,
+      "sha256": "ebbac96572c333f1f8550175f36b4df32e0a24bf9e31be10b9b771109a86f67e"
+    },
+    {
+      "path": "reviews/final-d-linux-actual-independent-01.json",
+      "bytes": 38285,
+      "sha256": "d3845729e59e08fd4e0471621dcc97968584f18c0db81b24f68f71108d970f52"
+    }
+  ],
+  "verdict": "NOT_READY. Accept custody and the two narrowly scoped live mechanism observations, not successful host absence/cleanup or final combined qualification. No original D03 PID/nondumpability diagnosis, iOS strict-protection repair, new normal-Debug provenance, physical-device, signed-candidate, Store-operation or owner/legal approval follows from LP02. Historical failures remain preserved.",
+  "reviewer_activity": {
+    "method": "Read-only frozen Git/source/raw-log and stdlib JSON/CSV/hash/AST/path inspection, bounded ZIP-member in-memory comparison and independent assertions only.",
+    "project_imports": 0,
+    "tests_or_builds": 0,
+    "process_probes_or_signals": 0,
+    "network_or_Actions": 0,
+    "archive_extractions": 0,
+    "canonical_source_edits": 0,
+    "git_mutations": 0,
+    "output": "Only this assigned additive review JSON. No task-owned build/cache/worker resources created or cleanup commands run by reviewer."
+  },
+  "completed_at": "2026-09-10T13:28:24.841533+00:00"
+}

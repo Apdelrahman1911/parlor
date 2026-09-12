@@ -1,0 +1,486 @@
+{
+  "api_evidence": {
+    "abi_version": "2.4.0",
+    "compiler_version": "2.4.10",
+    "klib_manifest": {
+      "bytes": 10091,
+      "path": "/Users/abdelrahman/.konan/kotlin-native-prebuilt-macos-aarch64-2.4.10/klib/platform/ios_simulator_arm64/org.jetbrains.kotlin.native.platform.Foundation/default/manifest",
+      "sha256": "7e109ea4907f9c2b9eeb33003ae32e77f2372d0a41750aad8ee4683ab269932d"
+    },
+    "limitations": [
+      "Exact installed SDK declarations are not the closed-source Foundation implementation.",
+      "Platform-metadata symbol presence is not Kotlin compilation, linkage or successful runtime calls.",
+      "No reference inspected proves this exact Simulator26.5 must expose Complete or cannot expose it; do not infer platform bypass."
+    ],
+    "related_authoritative_online_research": {
+      "bytes": 21646,
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/l08-file-protection-platform-research-01.json",
+      "sha256": "087a72daf3d5ad468b7022737714b8d2a4d817efb013b1909e7c8c60d56de61c"
+    },
+    "sdk_headers": [
+      {
+        "bytes": 58197,
+        "frozen_author_excerpts_match_actual_headers": true,
+        "path": "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.5.sdk/System/Library/Frameworks/Foundation.framework/Headers/NSFileManager.h",
+        "reviewed_ranges": [
+          [
+            149,
+            159
+          ],
+          [
+            173,
+            177
+          ],
+          [
+            601,
+            606
+          ]
+        ],
+        "sha256": "446f238e10fec2b392bc82b54da061eebc7fcc919f827807911774ef987423eb"
+      },
+      {
+        "bytes": 97493,
+        "frozen_author_excerpts_match_actual_headers": true,
+        "path": "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.5.sdk/System/Library/Frameworks/Foundation.framework/Headers/NSURL.h",
+        "reviewed_ranges": [
+          [
+            177,
+            183
+          ],
+          [
+            288,
+            295
+          ],
+          [
+            310,
+            313
+          ],
+          [
+            353,
+            353
+          ]
+        ],
+        "sha256": "97981c4e8ad70b8fc8c33c22e73b448a9ce9ad0ddfb7304d85a67d0843365f6d"
+      },
+      {
+        "bytes": 17721,
+        "frozen_author_excerpts_match_actual_headers": true,
+        "path": "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.5.sdk/System/Library/Frameworks/Foundation.framework/Headers/NSProcessInfo.h",
+        "reviewed_ranges": [
+          [
+            21,
+            25
+          ],
+          [
+            55,
+            61
+          ]
+        ],
+        "sha256": "c121ba7aa9ca7e96f88447ff70e1d4a5a1ef15d3619426fa5476287239e51d22"
+      }
+    ],
+    "symbol_observations": [
+      {
+        "bytes": 88398,
+        "limitation": "Static string-presence observation only; no compiler or declaration decompilation",
+        "path": "/Users/abdelrahman/.konan/kotlin-native-prebuilt-macos-aarch64-2.4.10/klib/platform/ios_simulator_arm64/org.jetbrains.kotlin.native.platform.Foundation/default/linkdata/package_platform.Foundation/00_Foundation.knm",
+        "sha256": "c7e8282de52b18369d129a6f63a15789dc4af25411806dea0fee5c8fb64c9964",
+        "symbol_bytes_present": {
+          "resourceValuesForKeys": true
+        }
+      },
+      {
+        "bytes": 17589,
+        "limitation": "Static string-presence observation only; no compiler or declaration decompilation",
+        "path": "/Users/abdelrahman/.konan/kotlin-native-prebuilt-macos-aarch64-2.4.10/klib/platform/ios_simulator_arm64/org.jetbrains.kotlin.native.platform.Foundation/default/linkdata/package_platform.Foundation/19_Foundation.knm",
+        "sha256": "3982d76ab22f5c6a8d6da61e36a1764c444caffc88ea1f093c08e14c0633e9e7",
+        "symbol_bytes_present": {
+          "NSFileProtectionCompleteWhenUserInactive": true
+        }
+      },
+      {
+        "bytes": 96491,
+        "limitation": "Static string-presence observation only; no compiler or declaration decompilation",
+        "path": "/Users/abdelrahman/.konan/kotlin-native-prebuilt-macos-aarch64-2.4.10/klib/platform/ios_simulator_arm64/org.jetbrains.kotlin.native.platform.Foundation/default/linkdata/package_platform.Foundation/04_Foundation.knm",
+        "sha256": "ceaa9fd50e74bd890bd9426fd02c406a143cd599829048cd0bb68421ca940f56",
+        "symbol_bytes_present": {
+          "NSOperatingSystemVersion": true,
+          "isOperatingSystemAtLeastVersion": true
+        }
+      },
+      {
+        "bytes": 115671,
+        "limitation": "Static string-presence observation only; no compiler or declaration decompilation",
+        "path": "/Users/abdelrahman/.konan/kotlin-native-prebuilt-macos-aarch64-2.4.10/klib/platform/ios_simulator_arm64/org.jetbrains.kotlin.native.platform.Foundation/default/linkdata/package_platform.Foundation/02_Foundation.knm",
+        "sha256": "ae8900b2441d182d969433fc658ab2ac94e9e732d9f57f56561a2350b8dd77ac",
+        "symbol_bytes_present": {
+          "attributesOfItemAtPath": true
+        }
+      },
+      {
+        "bytes": 65003,
+        "limitation": "Static string-presence observation only; no compiler or declaration decompilation",
+        "path": "/Users/abdelrahman/.konan/kotlin-native-prebuilt-macos-aarch64-2.4.10/klib/platform/ios_simulator_arm64/org.jetbrains.kotlin.native.platform.Foundation/default/linkdata/package_platform.Foundation/05_Foundation.knm",
+        "sha256": "110f53c032c18cd963d86546809eb4fe63c5f203b4fc05024dadcdc3f17fefb0",
+        "symbol_bytes_present": {
+          "NSOperatingSystemVersion": true
+        }
+      },
+      {
+        "bytes": 18679,
+        "limitation": "Static string-presence observation only; no compiler or declaration decompilation",
+        "path": "/Users/abdelrahman/.konan/kotlin-native-prebuilt-macos-aarch64-2.4.10/klib/platform/ios_simulator_arm64/org.jetbrains.kotlin.native.platform.Foundation/default/linkdata/package_platform.Foundation/24_Foundation.knm",
+        "sha256": "32a1b50909d33e80ba2ed2023c7343c73b7837b978ffe42ca414aa9117d2ad73",
+        "symbol_bytes_present": {
+          "NSURLVolumeSupportsFileProtectionKey": true
+        }
+      }
+    ]
+  },
+  "baseline": {
+    "branch": "fix/local-readiness-2026-09-07",
+    "commit": "b6e1947c62661631d0593038db7f64dbf25f720e",
+    "concurrent_changes": "Normal-ios-launch proposal edits appeared during review. Not authored, modified or reviewed as part of this L08 assignment. Reviewed L08 and production bytes still match originals.",
+    "preexisting_untracked_material": "All preserved",
+    "repository": "/Users/abdelrahman/Projects/parlor",
+    "tracked_status_at_report": "M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/README.md\n M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/external_image_provenance.py\n M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_control_tests.py\n M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
+    "tracked_status_at_review_start": "",
+    "tree": "f03ad1b302d951d0ca9811b1efab2751a8be6978"
+  },
+  "comments": [
+    {
+      "blocking": false,
+      "classification": "EVIDENCE WORDING",
+      "detail": "Failed the original Complete-equality assertion should not be understood to rule out an original getter/bridge exception from stage-only evidence. Use failed at required directory getter/equality boundary until real metadata resolves the cause. Frozen draft not modified; author informed.",
+      "location": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/drafts/l08-protection-metadata-01/README.md:8-15"
+    }
+  ],
+  "completed_at_utc": "2026-09-07T22:03:28.391664+00:00",
+  "coverage": [
+    {
+      "destination": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/L08StorageProbe.kt.in",
+      "draft": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/drafts/l08-protection-metadata-01/files/scripts/verification/ios-readiness/L08StorageProbe.kt.in",
+      "draft_reviewed_ranges": [
+        [
+          1,
+          630
+        ]
+      ],
+      "draft_sha256": "a1202e47e1b41feb7e5c558e4df9515704e27762e437778b6ae79c777bfce651",
+      "method": "Complete original reading before context continuation; complete frozen proposed reread; full delta/hash and applicable AST comparison",
+      "original_reviewed_ranges": [
+        [
+          1,
+          499
+        ]
+      ],
+      "original_sha256": "28f4158cc701f1355a9320da1edd9a6d7825cf76828b2b0472ea194611750b75",
+      "relevance": "copy-only verification input/test; not normal shipping source",
+      "reviewer": "/root/release_fix_review"
+    },
+    {
+      "destination": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/l08_receipts.py",
+      "draft": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/drafts/l08-protection-metadata-01/files/scripts/verification/ios-readiness/l08_receipts.py",
+      "draft_reviewed_ranges": [
+        [
+          1,
+          486
+        ]
+      ],
+      "draft_sha256": "43200492a5fae3cb31f89ecafe9985eee84b9c30b4549cd2933788dac056bfbd",
+      "method": "Complete original reading before context continuation; complete frozen proposed reread; full delta/hash and applicable AST comparison",
+      "original_reviewed_ranges": [
+        [
+          1,
+          422
+        ]
+      ],
+      "original_sha256": "3cab6914886db081ba883629242d33a262158c0106e8658bc7b777387826f867",
+      "relevance": "copy-only verification input/test; not normal shipping source",
+      "reviewer": "/root/release_fix_review"
+    },
+    {
+      "destination": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/test_l08_diagnostics.py",
+      "draft": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/drafts/l08-protection-metadata-01/files/scripts/verification/ios-readiness/test_l08_diagnostics.py",
+      "draft_reviewed_ranges": [
+        [
+          1,
+          348
+        ]
+      ],
+      "draft_sha256": "925be779c7b03f148995061f1e769290ec4fa014c2e7f4dbab202fd1b84d8d9c",
+      "method": "Complete original reading before context continuation; complete frozen proposed reread; full delta/hash and applicable AST comparison",
+      "original_reviewed_ranges": [
+        [
+          1,
+          151
+        ]
+      ],
+      "original_sha256": "97d6bb76316151b850e2e85ed84aac5524743184a78c499fb9b2c7db1bf9980a",
+      "relevance": "copy-only verification input/test; not normal shipping source",
+      "reviewer": "/root/release_fix_review"
+    },
+    {
+      "bytes": 20807,
+      "method": "Complete reopened implementation, including metadata creation, encryption, migration, backup exclusion, bounded reads and cancellation",
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSnapshotFileSystem.kt",
+      "relevance": "shipping iOS storage",
+      "reviewed_ranges": [
+        [
+          1,
+          500
+        ]
+      ],
+      "reviewer": "/root/release_fix_review",
+      "sha256": "c2852fafb293a693be830171f4674947289fafb07f8ecdbafa5c0aaae6d1bf8b"
+    }
+  ],
+  "draft_author": "/root/native_fix_review",
+  "independent_reviewer": "/root/release_fix_review",
+  "kind": "INDEPENDENT_DIAGNOSTIC_ONLY_DRAFT_SOURCE_REVIEW",
+  "not_a_verdict_of": [
+    "test success",
+    "Kotlin/Native compilation/linkage",
+    "native protection observation",
+    "L08 PASS",
+    "storage repair",
+    "physical-device or Store readiness"
+  ],
+  "original_failure": {
+    "binding": {
+      "bytes": 293377,
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/ios-readiness-source-07.json",
+      "sha256": "7a78b016f762dc22fe27beeda9f12b1a1cdac8f8417c2c560b5b67785f350a4c"
+    },
+    "bytes": 1321,
+    "interpretation": "Real record enters metadata-directory-protection after the sequential save, same-process load/envelope equality, exact path/existence and backup-exclusion checks. It does not uniquely prove whether the original getter/bridge threw or equality failed on nil/missing/unequal value. Original file protection, ciphertext-header and later L08 stages did not run. Full native07 artifact-gate verification did not complete; no upgrade to PASS is made.",
+    "observation": {
+      "action": "save",
+      "boot_ordinal": 1,
+      "reason": "fixture_or_boundary_failure",
+      "run_token": "6B09F096-6FF3-4569-B086-9A40939BF2A8",
+      "schema_version": 1,
+      "stage": "metadata-directory-protection",
+      "status": "FAIL"
+    },
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-07/parlor-l08-storage-1-save.json",
+    "sha256": "e638ccd5539d67022a83968e5568adc4557b7b3c7434cec5d9416476a3d58efe"
+  },
+  "reasoning": [
+    {
+      "conclusion": "Exact initialized NSError getter executes once per required check. value==protection is still the check predicate, directory then file, with all original constants/backup/header/bounded-read assertions required. No retry, write, repair, platform skip or exception-to-PASS conversion.",
+      "probe_lines": [
+        [
+          491,
+          535
+        ]
+      ],
+      "topic": "Preserved required metadata predicate/order"
+    },
+    {
+      "conclusion": "Failure-only extra file query is labeled diagnostic-only when the original file assertion was not reached; file-stage failure reuses real directory and file observations. Fresh URLs query containing-volume capabilities on those same exact attested paths. No directory enumeration or expanded path authority.",
+      "probe_lines": [
+        [
+          551,
+          600
+        ]
+      ],
+      "topic": "Additional sibling/volume semantics"
+    },
+    {
+      "conclusion": "Nil dictionary, absent key, null/public/redacted protection values stay distinct. Volume support derives only from actual NSNumber.boolValue; missing/nil/error is not unsupported. Only NSError presence, closed domain and signed64 code are emitted; no message/userInfo/raw domain/path/payload/native value. Fixed-shape metadata remains bounded.",
+      "probe_lines": [
+        [
+          524,
+          549
+        ],
+        [
+          580,
+          619
+        ]
+      ],
+      "topic": "Closed enums/errors/unknowns"
+    },
+    {
+      "conclusion": "Per-command reset, once-only exact-stage recording and terminal release prevent stale diagnostic reuse. Both extra getter paths rethrow CancellationException. Cancellation FAIL excludes metadata, original timeout and observer scope cleanup remain. Genuine cancellation can supersede pending diagnostic failure; it is never treated as absence or success.",
+      "probe_lines": [
+        [
+          103,
+          147
+        ],
+        [
+          350,
+          369
+        ],
+        [
+          572,
+          600
+        ]
+      ],
+      "topic": "Cancellation and diagnostic ownership"
+    },
+    {
+      "conclusion": "Optional metadata maintains old failure compatibility and is allowed only at exact matching storage FAIL stage/reason. Exact nested schema/types/64-bit errors/roles/query-value consistency reject speculative or sensitive data. Original PASS validators, host paths and native provenance functions/constants are AST-identical.",
+      "parser_lines": [
+        [
+          374,
+          486
+        ]
+      ],
+      "topic": "Strict retention is not successful verification"
+    },
+    {
+      "conclusion": "Production requests Complete protection on directory creation and atomic NSData writes; backup exclusion is a separate verified boundary. Draft changes no production encryption, migration, save format, recovery, game/session/network contract, entitlement, identity or signing.",
+      "production_lines": [
+        [
+          76,
+          108
+        ],
+        [
+          128,
+          228
+        ],
+        [
+          362,
+          374
+        ],
+        [
+          401,
+          435
+        ]
+      ],
+      "topic": "Production cross-check"
+    },
+    {
+      "conclusion": "Exact selected SDK declares volume support as read-only NSNumber iOS14+ and allows it on any filesystem URL. WhenUserInactive is iOS17+ and short-circuit guarded by NSProcessInfo/version struct before symbol access; iOS16 minimum unchanged. Pinned Kotlin2.4.10 Foundation metadata contains all symbols, and NSError pointer patterns match production. Native compile/link/runtime are still unexecuted.",
+      "probe_lines": [
+        [
+          537,
+          549
+        ],
+        [
+          580,
+          600
+        ]
+      ],
+      "topic": "Applicable SDK/Kotlin API basis"
+    }
+  ],
+  "required_root_verification": [
+    {
+      "gate": "Execute21 diagnostic tests in isolated full-control copy with these exact drafts; verify discovery/count, failures and exit status.",
+      "status": "NOT RUN"
+    },
+    {
+      "gate": "Run sibling l08 receipt/host/native controls; verify old FAIL/PASS compatibility and provenance. Ensure imports resolve to intended isolated source, not canonical old controls.",
+      "status": "NOT RUN"
+    },
+    {
+      "gate": "Rehash adopted files and freeze source before pinned Kotlin/Native compilation; specifically inspect interop/global-symbol/version-struct compilation. Headers do not replace this.",
+      "status": "NOT RUN"
+    },
+    {
+      "gate": "Use existing fresh ownership-attested native matrix; preserve actual bounded FAIL metadata and independently classify. Do not call diagnostic success a storage repair or L08 PASS unless every original requirement passes.",
+      "status": "NOT RUN"
+    },
+    {
+      "gate": "iOS16 runtime symbol behavior, physical lock/backup durability, physical LAN and signed Store requirements are not established here.",
+      "status": "DISTINCT RUNTIME/EXTERNAL GAPS"
+    }
+  ],
+  "reviewed_freeze": {
+    "all_baseline_and_proposed_hashes_verified": true,
+    "bytes": 4213,
+    "notes": {
+      "bytes": 3579,
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/drafts/l08-protection-metadata-01/README.md",
+      "sha256": "67e3fc1420a60172530213dd2da3da3cab71db10f4d19e674addfc46a7fac694"
+    },
+    "patch": {
+      "bytes": 32769,
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/drafts/l08-protection-metadata-01/patch.diff",
+      "sha256": "7b859443ec17fd4072af3d1a5a24eaaae6ebfec180da871b974ac42b9bfe73af"
+    },
+    "patch_equals_fresh_exact_delta": true,
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/drafts/l08-protection-metadata-01/manifest.json",
+    "sdk_evidence": {
+      "bytes": 12868,
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/drafts/l08-protection-metadata-01/sdk-evidence.json",
+      "sha256": "c89da4ba456646a2e42b19886a6e97c5381d1383ec351193898ac09c45bc205e"
+    },
+    "sha256": "d33ef4edc34eed1aef40ae93827e984cfdad29189c4d95efffa8a5d34a99bc79"
+  },
+  "safety_cleanup": {
+    "background_workers_started": false,
+    "build_outputs_created": false,
+    "git_mutations": false,
+    "gradle_stop": "NOT APPLICABLE: reviewer started no Gradle; root exclusively owns the lane. No other-task process was stopped.",
+    "private_user_data_global_caches_other_evidence": "Untouched; only this additive report written.",
+    "source_edits": false,
+    "static_commands": "All short-lived read/hash/AST commands completed. A report-generator guard rejected a concurrently dirty global tree before writing anything; scoped source hashes remained valid and the final report records that global delta honestly.",
+    "subagents_spawned": false,
+    "tests_builds_native_probes": false
+  },
+  "schema_version": 1,
+  "static_checks": {
+    "all_original_names_retained": true,
+    "kind": "Read-only AST/JSON/hash/diff parsing, not running tests",
+    "new_parser_functions": [
+      "_validate_protection_read",
+      "validate_protection_metadata"
+    ],
+    "only_changed_existing_parser_function": "validate_preservable_operation",
+    "original_test_method_count": 9,
+    "proposed_test_method_count": 21,
+    "proposed_test_methods": [
+      "test_every_emitted_stage_is_a_closed_literal_with_no_silent_schema_drift",
+      "test_all_legacy_and_diagnostic_stages_are_preservable_only_as_closed_failures",
+      "test_no_diagnostic_failure_can_become_a_successful_native_storage_result",
+      "test_unknown_dynamic_non_string_or_sensitive_failure_metadata_is_rejected",
+      "test_storage_diagnostics_do_not_expand_host_failure_stages",
+      "test_save_load_and_equality_remain_separate_required_boundaries",
+      "test_metadata_checks_remain_bounded_strict_and_observation_only",
+      "test_nested_metadata_stage_restores_only_after_all_checks_and_zeroization",
+      "test_new_command_resets_context_and_cancellation_still_propagates",
+      "test_closed_metadata_distinguishes_nil_error_missing_and_public_protection_classes",
+      "test_additional_file_getter_is_explicitly_diagnostic_only_and_can_remain_unknown",
+      "test_volume_unavailable_supported_unsupported_and_error_remain_observations",
+      "test_supported_volume_and_complete_diagnostic_sibling_never_satisfy_the_storage_gate",
+      "test_metadata_is_rejected_on_host_cancellation_and_other_storage_stages",
+      "test_metadata_identity_roles_and_required_comparison_cannot_disagree",
+      "test_nested_unknown_fields_and_raw_native_values_never_enter_evidence",
+      "test_native_error_values_are_closed_bounded_and_do_not_coerce_booleans",
+      "test_missing_or_unknown_read_cannot_claim_an_observed_value",
+      "test_producer_keeps_required_getter_order_equality_and_failure_only_scope",
+      "test_extra_queries_are_read_only_bounded_and_failure_unknown_does_not_become_success",
+      "test_newer_public_enum_is_runtime_guarded_and_arbitrary_strings_stay_redacted"
+    ],
+    "test_review": "Nine old methods retained. New helper equality/getter/order test backs updated lexical assertions. Twelve additions cover closed values, role/stage identity, unknown/error types, privacy, failure-only scope, cancellation and API guard. Synthetic parser/source assertions do not execute Kotlin.",
+    "unchanged_constants": [
+      "UUID",
+      "STORAGE_PLAN",
+      "STORAGE_CHECKS",
+      "STORAGE_FAILURE_STAGES",
+      "HOST_PLAN",
+      "HOST_CHECKS",
+      "HOST_VARIANTS",
+      "HOST_COUNTERS"
+    ],
+    "unchanged_existing_parser_functions": [
+      "unique",
+      "read_owned_result",
+      "storage_result_names",
+      "_context",
+      "_framework_inventory_keys",
+      "verify_storage",
+      "host_checks",
+      "host_result_names",
+      "framework_subset",
+      "_host_language",
+      "_host_cycles",
+      "verify_host",
+      "preserve_l08_evidence"
+    ]
+  },
+  "verdict": "APPROVE EXACT DRAFT FOR ROOT-OWNED FOCUSED VERIFICATION; NO BLOCKING SOURCE DEFECT IDENTIFIED"
+}

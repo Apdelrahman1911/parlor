@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "kind": "INDEPENDENT_MECHANICAL_NEXT_CYCLE_LABEL_REVIEW",
+  "reviewer": "/root/ci_workflow",
+  "author": "/root",
+  "recorded_at": "2026-09-09T08:21:07.620473+00:00",
+  "status": "APPROVED_EXACT_THREE_FILE_LABEL_DELTA_ONLY",
+  "findings": [],
+  "base_commit": "0303a76771794c52ea96a7d7f47eb689f5b236ba",
+  "files": [
+    {
+      "path": "scripts/ci/native_continuation.py",
+      "before_sha256": "21d5f2ba437d5aaed855e2a5f1bfd2a0c8141c625772aa1409405087025ed222",
+      "after_sha256": "23569ba9a718bcbbd3b6d7aa08bb73ef9f0882019779d1b7f7c53e24b979e35e"
+    },
+    {
+      "path": "scripts/release/tests/test_native_process_probe.py",
+      "before_sha256": "8108f26cb176ecf5d9c2c63dcee762256111fa6ef32dc5bf5068a2fc40d81bbe",
+      "after_sha256": "669d6448c9d19506e4779bf1566bb0f8e4936ce0d1665d274fdec8b94f31923b"
+    },
+    {
+      "path": "scripts/ci/NATIVE_CONTINUATION.md",
+      "before_sha256": "65888db5a545840fc72cacba1fe32f01eae3293e46e53ead72e8b0ef4b6f951a",
+      "after_sha256": "153c23a2e8fd314923b2fb57a973e2edb7ae4eff3e386241b0fdab4ed212b6cf"
+    }
+  ],
+  "diff_sha256": "3e8cd66542aa960aa0b2920ea88da5617f28e85926c635af10c404ef21fd07d4",
+  "conclusions": [
+    "Each of the three files is byte-identical to frozen0303 except its sole25\u219227 and26\u219228 label substitutions: adapter CYCLES, matching test assertion, and next-cycle guidance.",
+    "Failed A25/B26 receipts remain immutable historical evidence. New labels do not change lane ordering, app/runtime semantics, toolchain, source/control, budget, ownership, cleanup, scope validation or non-app probe isolation.",
+    "The two planned local evidence paths are absent. No workflow change or B-only selection is introduced; this remains the paired adapter.",
+    "Root may batch the changed exact assertion with diagnostic-control tests. This source review executes no test and does not authorize any dispatch. Reviewed-source/inventory freeze and fresh bindings remain required before another native run."
+  ],
+  "historical_custody": "native34321128224-custody-independent-01.json remains bound to frozen0303 and retained on-host source observations, not this now-changed adapter.",
+  "reviewer_actions": "Read-only exact Git-diff/byte substitution/hash inspection. No source/Git mutation, project import, build, test, network or simulator. Only this assigned report written."
+}

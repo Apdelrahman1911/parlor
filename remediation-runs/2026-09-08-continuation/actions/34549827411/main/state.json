@@ -1,0 +1,387 @@
+{
+  "status": "FAIL",
+  "logs": [
+    {
+      "path": "07-macos-version.stdout",
+      "bytes": 7,
+      "sha256": "3e7f3aac6ec05838460f29272ec4647dbdf438a5b83be784975079531ab79eb1"
+    },
+    {
+      "path": "07-macos-version.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "08-macos-build.stdout",
+      "bytes": 7,
+      "sha256": "5df341fbbd18e74e68cb4734c679d512871121f96119a5f6636734c85fcfba08"
+    },
+    {
+      "path": "08-macos-build.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "09-host-kernel.stdout",
+      "bytes": 7,
+      "sha256": "cc6da794ab87ad4e07f7b72ec6f6d17420ba214571e637d0c749c9f28406397c"
+    },
+    {
+      "path": "09-host-kernel.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "10-xcode-version.stdout",
+      "bytes": 32,
+      "sha256": "bb7fc9a8f5e063e81975b33054b3a526c91bcccff263ad11d5bd8bcdbe8f0973"
+    },
+    {
+      "path": "10-xcode-version.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "11-developer-selection.stdout",
+      "bytes": 48,
+      "sha256": "f61dc333807430553f78902403e4cc45b547d508c03963122c5c75c6d27beedb"
+    },
+    {
+      "path": "11-developer-selection.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "12-sdk-version.stdout",
+      "bytes": 5,
+      "sha256": "14a06c556ac677f94334dd2c86395d46009b9def8685e00741e60d31305a0262"
+    },
+    {
+      "path": "12-sdk-version.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "13-sdk-path.stdout",
+      "bytes": 122,
+      "sha256": "7a600faec8bfe87bad2f5e0f3c3a4886ab3143a661d90b7e7cd8acadf806627a"
+    },
+    {
+      "path": "13-sdk-path.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "15-gradle-stop.stdout",
+      "bytes": 544,
+      "sha256": "01cc71b2d614314df3ccd1c1422e5ae0c996070e78e0a858042b0596b36091f6"
+    },
+    {
+      "path": "15-gradle-stop.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "errors": [
+    {
+      "stage": "collection",
+      "type": "RuntimeError",
+      "code": "required-command-failed"
+    }
+  ],
+  "started_at": "2026-09-11T01:14:34.089762+00:00",
+  "commands": [
+    {
+      "label": "git-binding",
+      "command": [
+        "/usr/bin/git",
+        "rev-parse",
+        "--show-toplevel"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 20,
+      "started_at": "2026-09-11T01:14:33.060070+00:00",
+      "owned_pid": 11539,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.82,
+      "finished_at": "2026-09-11T01:14:33.882430+00:00",
+      "stdout_bytes": 33,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "git-binding",
+      "command": [
+        "/usr/bin/git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 20,
+      "started_at": "2026-09-11T01:14:33.882518+00:00",
+      "owned_pid": 11545,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.027,
+      "finished_at": "2026-09-11T01:14:33.912884+00:00",
+      "stdout_bytes": 41,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "git-binding",
+      "command": [
+        "/usr/bin/git",
+        "branch",
+        "--show-current"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 20,
+      "started_at": "2026-09-11T01:14:33.912960+00:00",
+      "owned_pid": 11546,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.022,
+      "finished_at": "2026-09-11T01:14:33.937309+00:00",
+      "stdout_bytes": 31,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "git-binding",
+      "command": [
+        "/usr/bin/git",
+        "rev-parse",
+        "--is-shallow-repository"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 20,
+      "started_at": "2026-09-11T01:14:33.937370+00:00",
+      "owned_pid": 11547,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.021,
+      "finished_at": "2026-09-11T01:14:33.961271+00:00",
+      "stdout_bytes": 6,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "git-binding",
+      "command": [
+        "/usr/bin/git",
+        "status",
+        "--porcelain=v1",
+        "--untracked-files=no"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 60,
+      "started_at": "2026-09-11T01:14:33.961396+00:00",
+      "owned_pid": 11548,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.105,
+      "finished_at": "2026-09-11T01:14:34.069226+00:00",
+      "stdout_bytes": 0,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "git-binding",
+      "command": [
+        "/usr/bin/git",
+        "rev-parse",
+        "HEAD^{tree}"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 20,
+      "started_at": "2026-09-11T01:14:34.069300+00:00",
+      "owned_pid": 11549,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.017,
+      "finished_at": "2026-09-11T01:14:34.087816+00:00",
+      "stdout_bytes": 41,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "macos-version",
+      "command": [
+        "/usr/bin/sw_vers",
+        "-productVersion"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 30,
+      "started_at": "2026-09-11T01:14:34.090850+00:00",
+      "owned_pid": 11550,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.014,
+      "finished_at": "2026-09-11T01:14:34.108232+00:00",
+      "stdout_bytes": 7,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "macos-build",
+      "command": [
+        "/usr/bin/sw_vers",
+        "-buildVersion"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 30,
+      "started_at": "2026-09-11T01:14:34.112223+00:00",
+      "owned_pid": 11551,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.012,
+      "finished_at": "2026-09-11T01:14:34.127869+00:00",
+      "stdout_bytes": 7,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "host-kernel",
+      "command": [
+        "/usr/bin/uname",
+        "-r"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 30,
+      "started_at": "2026-09-11T01:14:34.129801+00:00",
+      "owned_pid": 11552,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.003,
+      "finished_at": "2026-09-11T01:14:34.137286+00:00",
+      "stdout_bytes": 7,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "xcode-version",
+      "command": [
+        "/usr/bin/xcodebuild",
+        "-version"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 30,
+      "started_at": "2026-09-11T01:14:34.140698+00:00",
+      "owned_pid": 11553,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.108,
+      "finished_at": "2026-09-11T01:14:34.253952+00:00",
+      "stdout_bytes": 32,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "developer-selection",
+      "command": [
+        "/usr/bin/xcode-select",
+        "-p"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 30,
+      "started_at": "2026-09-11T01:14:34.258433+00:00",
+      "owned_pid": 11555,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.006,
+      "finished_at": "2026-09-11T01:14:34.269632+00:00",
+      "stdout_bytes": 48,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "sdk-version",
+      "command": [
+        "/usr/bin/xcrun",
+        "--sdk",
+        "iphonesimulator",
+        "--show-sdk-version"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 30,
+      "started_at": "2026-09-11T01:14:34.273081+00:00",
+      "owned_pid": 11556,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 2.027,
+      "finished_at": "2026-09-11T01:14:36.303415+00:00",
+      "stdout_bytes": 5,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "sdk-path",
+      "command": [
+        "/usr/bin/xcrun",
+        "--sdk",
+        "iphonesimulator",
+        "--show-sdk-path"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 30,
+      "started_at": "2026-09-11T01:14:36.306239+00:00",
+      "owned_pid": 11564,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.008,
+      "finished_at": "2026-09-11T01:14:36.316849+00:00",
+      "stdout_bytes": 122,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "runtimes",
+      "command": [
+        "/usr/bin/xcrun",
+        "simctl",
+        "list",
+        "runtimes",
+        "--json"
+      ],
+      "status": "TIMEOUT",
+      "timeout_seconds": 90,
+      "started_at": "2026-09-11T01:14:36.318655+00:00",
+      "owned_pid": 11565,
+      "ownership": "direct-unreaped-Popen",
+      "timeout_observed_at": "2026-09-11T01:16:06.323168+00:00",
+      "observation_elapsed_seconds": 90.003,
+      "exit_code": -15,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 90.012,
+      "finished_at": "2026-09-11T01:16:06.332674+00:00",
+      "stdout_bytes": 0,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "gradle-stop",
+      "command": [
+        "/Users/runner/work/parlor/parlor/gradlew",
+        "--stop"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 60,
+      "started_at": "2026-09-11T01:16:06.335756+00:00",
+      "owned_pid": 14690,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 5.068,
+      "finished_at": "2026-09-11T01:16:11.410068+00:00",
+      "stdout_bytes": 544,
+      "stderr_bytes": 0
+    }
+  ],
+  "preservation": {
+    "failures": 0,
+    "errors": []
+  },
+  "signals": [],
+  "finished_at": "2026-09-11T01:16:11.415937+00:00"
+}

@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-09-07T20:05:12.907105+00:00",
+  "reviewer": "/root/factory_review",
+  "clarifies": "l08-diagnostics-isolated-driver-independent-review-01.json",
+  "clarified_report_sha256": "4e4ba5eb958d8478363ba1e641c10c3bacb68b4a40802028b78236e1969e0e8c",
+  "field": "safety.imports",
+  "correction": "test_native_readiness imports owns_java_tmp_argument from owned_lane, but the four selected test modules use fixture functions only and do not invoke that helper or owned_lane process-control functions. The original phrase selected tests call only owns_java_tmp_argument must read import that helper without invoking it.",
+  "decision_change": false,
+  "execution_by_reviewer": false
+}

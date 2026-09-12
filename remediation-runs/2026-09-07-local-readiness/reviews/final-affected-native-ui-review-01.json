@@ -1,0 +1,386 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-09-07T13:49:58.337783+00:00",
+  "reviewer": "/root/native_fix_review",
+  "decision": "APPROVED for all six original scoped production corrections and source/assertion validity. No new blocking regression identified in this affected-source review. NOT a whole-project READY, complete fresh audit, publication approval or frozen-tree combined PASS.",
+  "source": {
+    "repository": "/Users/abdelrahman/Projects/parlor",
+    "branch": "fix/local-readiness-2026-09-07",
+    "commit": "2085367999a1b6e998567e83e978785f02607b3d",
+    "tree": "887a4e26d8f43198d1bd8c4e4e6727fc126c4f8c",
+    "tracked_diff_sha256": "dc3d56de309162dd68564942c916a18fb90ede396700e2d6b35f4f1e6da4c6c1",
+    "observed_status": "M .github/workflows/production-verification.yml\n?? AGENTS.md\n?? audit-runs/\n?? design/\n?? docs/PARLOR_PROJECT_HANDOFF.md\n?? project-code-audit/\n?? remediation-runs/\n?? scripts/ci/\n?? scripts/release/tests/test_ci_verification_hygiene.py\n?? scripts/verification/resolved_dependencies.init.gradle",
+    "reviewed_subset_sha256": "6ff9982664bb8fd694fc446b4768b7e35f4652ce4675ed091b9e71b18c2ec805"
+  },
+  "source_identity_limits": "Source/test bytes are bound individually by the88-file direct-read ledger and affected execution manifests. Current HEAD alone does not identify pending CI files. Final combined freeze/verification remains root-owned.",
+  "coverage_and_raw_evidence": {
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/final-affected-native-ui-coverage-evidence-01.json",
+    "sha256": "fc0f708de6fcaada1a85e75cba7461346c5ba1c09e477f73b349e8209e03b29f"
+  },
+  "issues": [
+    {
+      "finding_id": "ST-C1",
+      "original_author": "/root/session_cont",
+      "independent_reviewer": "/root/native_fix_review",
+      "decision": "APPROVED scoped correction, assertions and preserved native regression evidence",
+      "root_cause_correction": "Exclude and verify the retained legacy directory before list migration isolation and before any direct current/legacy read. Initial exclusion failure propagates as a safe I/O error instead of empty inventory; malformed/oversized last-copy data remains available for Retry/Discard.",
+      "exact_current_locations": [
+        "composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSnapshotFileSystem.kt:74-107,152-220,401-430",
+        "shared/storage/src/commonMain/kotlin/com/parlor/storage/snapshot/FileBackedSnapshotStore.kt:73-150"
+      ],
+      "fresh_path_review": [
+        "iOS PlatformStorage binding -> singleton FileBackedSnapshotStore -> list/read -> exclusion before migration; direct reads cannot bypass it.",
+        "Fresh NSURL resource readback checks boolValue after setting the flag. Retry re-applies exclusion instead of trusting lazy/cached success; explicit discard does not retry a failing excluder.",
+        "Bounded reads, current-protected precedence, authenticated write-before-delete, safe error mapping and CancellationException propagation are unchanged. No snapshots or secrets are sent to peers."
+      ],
+      "regression_evidence": "8 IosLegacySnapshotBackupTest +6 IosStorageSafetyTest actual native methods in combined-native-alltests-02. Current implementation/test and related store bytes match both execution manifests. Tests inspect actual Foundation flags and preserved synthetic bytes, including direct-read, malformed-current, oversize, exclusion failure, retry/recreation and explicit discard.",
+      "counter_evidence": [
+        "Existing recognized-PARSNAP invalid-version/key-loss finally branch still deletes stale legacy bytes; original finding explicitly distinguished that already-handled path. Do not claim legacy copies are never deleted.",
+        "Backup-exclusion request/readback is OS guidance, not actual physical backup/restore or historical-backup removal. IOS-R1 is a separate evidence gap."
+      ],
+      "compatibility": "No crypto, key, snapshot-envelope or serialized-format change.",
+      "remaining": "Physical backup/lock/keychain and any separate signed/native persistence gates cannot be inferred from these filesystem tests.",
+      "original_dossiers": [
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/audit-runs/2026-09-05-source-audit/candidates/ST-C1-ios-legacy-backup-eligibility.md",
+          "sha256": "d65fb58571bb30c35de0c82b0fde00b07f6db96963b32754c36001be03be207a"
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/audit-runs/2026-09-05-source-audit/validations/ST-C1-root.md",
+          "sha256": "c2694a45ce4daf01a5824e2494a66fccdeaac948a5c084e60fb72d7c7372ac8e"
+        }
+      ],
+      "production_author_conflict": false
+    },
+    {
+      "finding_id": "DS-C01",
+      "original_author": "/root",
+      "independent_reviewer": "/root/native_fix_review",
+      "decision": "APPROVED scoped production ownership/container correction; native runtime acceptance attributed to a different reviewer",
+      "root_cause_correction": "Persist app override ownership separately from resolved OS preferences; restore only the exact app-owned installed value. Use a stable outer UIKit container so SwiftUI does not overwrite Compose-owned semantic direction.",
+      "exact_current_locations": [
+        "shared/design-system/src/iosMain/kotlin/com/parlor/designsystem/localization/IosLanguageOverrideOwner.kt:1-61",
+        "shared/design-system/src/iosMain/kotlin/com/parlor/designsystem/localization/LocalAppLocale.ios.kt:27-83",
+        "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/localization/ProvideAppLanguage.kt:44-62",
+        "iosApp/iosApp/ComposeContainerViewController.swift:1-48",
+        "iosApp/iosApp/ContentView.swift:54-62"
+      ],
+      "fresh_path_review": [
+        "Actual SettingsScreen -> SettingsMutationDispatcher -> PersistentSettingsStore -> App -> ProvideAppLanguage path was reopened. Nullable System remains null; no language-keyed navigation/session recreation.",
+        "Owner records exact previous persistent application-domain array versus absence, prepares its own marker before installing and releases only valid metadata with exact current-installed-array equality. Resolved global fallback is not promoted into the app domain.",
+        "Different external OS preference wins; identical unowned preference is not claimed or removed. Malformed prior ownership record cannot install an invalid previous array. Marked interrupted lifetimes reconcile on restart/System.",
+        "One remembered provider owner and one stable Swift outer/Compose child remain. Full physical child bounds, normal containment and appearance/decoration/orientation forwarding were inspected. Native semantic refresh is conditional on actual direction change/window attachment for pinned Compose1.10.3."
+      ],
+      "regression_evidence": "11 native ownership methods;14 current structural contracts;2 Mafia +2 Whodunit actual Desktop host-continuity methods rebound to current affected source. Native04 executes4 production UIKit container tests +1 actual Settings/local-session/OS matrix, accepted independently by /root/factory_review. Actual OS-created PRESENT array [ar-EG,en-EG], English override, System restoration and restart are evidenced—not inferred from synthetic PRESENT alone.",
+      "counter_evidence": [
+        "Pre-release compatibility policy deliberately preserves ambiguous unmarked old AppleLanguages; do not claim universal old-unmarked migration.",
+        "NSUserDefaults writes are asynchronous, not an atomic cross-process transaction or guaranteed power-loss durability. An identical external write cannot be distinguished from owned value.",
+        "This reviewer authored some historical DS-C01V12/native controls and therefore does not independently approve those controls or their runtime outcome. The separate reviewer chain supplies that acceptance."
+      ],
+      "compatibility": "Existing language_override unchanged; added own-domain ownership bookkeeping only. No game/session/save/protocol migration.",
+      "remaining": "Native04 is instrumented ad-hoc simulator26.5/Xcode26.5, not Store-qualified26.3, physical LAN, native multiplayer-host, all gestures or signed-release proof. Normal uninstrumented launch is separately root-owned; historical first-four-launch-crashes cause remains unproved.",
+      "original_dossiers": [
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/audit-runs/2026-09-05-source-audit/candidates/DS-C01-ios-follow-system-locale.md",
+          "sha256": "91c012cf770f6edc4e75b7c42cb12e1f218fa2b555afb901cbf6a9b3ddcd54f2"
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/audit-runs/2026-09-05-source-audit/validations/DS-C01-root.md",
+          "sha256": "f694719ff8faf5dc7d1b0b4ab8beaf31a14353d403fec5f61f45b19c6ff2622c"
+        }
+      ],
+      "production_author_conflict": false
+    },
+    {
+      "finding_id": "DS-C02",
+      "original_author": "/root",
+      "independent_reviewer": "/root/native_fix_review",
+      "decision": "APPROVED scoped lifecycle identity correction and actual concurrency/composable regressions",
+      "root_cause_correction": "Reserve lifecycle IDs atomically outside queue insertion and key effects by state owner plus ID. Never derive new lifetime identity from only currently queued items.",
+      "exact_current_locations": [
+        "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/ParlorToastHost.kt:75-110,171-198"
+      ],
+      "fresh_path_review": [
+        "Atomic Long updateAndGet transform is pure; queue CAS may retry without reserving another identity. Overflow fails closed instead of wrapping. IDs do not represent queue insertion order.",
+        "Distinct lifetime IDs and key(state,toast.id) reset remembered visibility/expiry after a conflated empty frame or replacement owner. Old expiry cannot dismiss a fresh never-reused ID.",
+        "Four-entry queue bound and adjacent-text coalescing stay intact. Public asynchronous error/outcome callers remain; no persistent state or extra retained scope was added."
+      ],
+      "regression_evidence": "4 common state methods x4 actual tasks (Desktop,iOS,Android debug-unit,release-unit)=16 executions;2 concurrency +3 actual Compose timer methods. Replacement tests wait for production auto-dismiss, enqueue only via public show, assert new visibility and later independent expiry. Current source/test hashes match before/after manifests.",
+      "counter_evidence": [
+        "Ordinary notifications separated by a composed empty frame worked before; tests intentionally force the legal conflation schedule.",
+        "Android unit executions are JVM, not Android UI. Finite concurrency tests are not exhaustive; Long.MAX_VALUE exhaustion is source-reviewed, not run to exhaustion."
+      ],
+      "compatibility": "Presentation-only lifetime identifiers; no serializer/protocol/session change.",
+      "remaining": "Mobile runtime timing and device accessibility are not proved by Desktop composable tests.",
+      "original_dossiers": [
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/audit-runs/2026-09-05-source-audit/candidates/DS-C02-toast-identity-reuse.md",
+          "sha256": "6cf95b1ac317cfb56a7c846c0adad91ff7532e3d69b3519a3ef9b7253040e5ef"
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/audit-runs/2026-09-05-source-audit/validations/DS-C02-root.md",
+          "sha256": "0f3991333a99bdca544ffd352d59c1d1e9f8816695be55c648c33b3163526830"
+        }
+      ],
+      "production_author_conflict": false
+    },
+    {
+      "finding_id": "DS-C03",
+      "original_author": "/root",
+      "independent_reviewer": "/root/native_fix_review",
+      "decision": "APPROVED scoped cover-aware action colors and ordinary-theme negative control",
+      "root_cause_correction": "Black recovery overlays use CoverGhost with cover-specific light foreground; ordinary Ghost remains theme-specific for regular light surfaces.",
+      "exact_current_locations": [
+        "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/ParlorButton.kt:38-105,159-193",
+        "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/ReconnectingOverlay.kt:57-116",
+        "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/HostDisconnectedOverlay.kt:44-91"
+      ],
+      "fresh_path_review": [
+        "Both recovery surfaces are opaque black and now opt in locally; enabled foreground is #B7B5B0 (10.249923:1 on black) rather than light-theme #55524D (2.700341:1).",
+        "Disabled cover foreground/border and unchanged pressed8percent tint were inspected. Callback semantics, minimum touch height, focus blocking, scrolling and privacy opacity are unchanged.",
+        "ContinueWithoutDialog Ghost sits on elevated card; filled SessionExit controls are different. They correctly did not receive a global text recoloring. Whodunit paused-cover and Mafia handoff-cover siblings have separate corrections/reviews."
+      ],
+      "regression_evidence": "3 actual production-composable color/display methods (each Light/Dark) plus1 keyboard focus method. Tests inspect actual Text style color and explicit palette contrast; current implementation/test hashes rebind.",
+      "counter_evidence": [
+        "Dark mode already had sufficient contrast; issue was not that the button disappeared or stopped accepting input.",
+        "Pressed/disabled observations are source-level; tests are not a complete native screenshot/VoiceOver/TalkBack matrix."
+      ],
+      "compatibility": "Internal UI variant extension only; ordinary light-theme Ghost stays unchanged.",
+      "remaining": "Physical accessibility and display measurements remain outside this approval.",
+      "original_dossiers": [
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/audit-runs/2026-09-05-source-audit/candidates/DS-C03-light-cover-ghost-contrast.md",
+          "sha256": "83356495a74bc999dc292e32118cdc50e66cbc4b71b85197aeacd5c735e94337"
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/audit-runs/2026-09-05-source-audit/validations/DS-C03-whodunit_cont.md",
+          "sha256": "81a740b63f3524d2f56abb6aa414501a749021c1d9214a918cc69d604d3b880b"
+        }
+      ],
+      "production_author_conflict": false
+    },
+    {
+      "finding_id": "WD-C3",
+      "original_author": "/root/whodunit_cont",
+      "independent_reviewer": "/root/native_fix_review",
+      "decision": "APPROVED shared canonical/peer phase invariant and production-boundary regression tests",
+      "root_cause_correction": "Reject active Elimination Round/TiedRevote when roster minus eliminated seats is <=2, without rejecting valid terminal states.",
+      "exact_current_locations": [
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/state/WhodunitStateValidator.kt:613-634,739-751",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/reducer/WhodunitReducer.kt:788-821",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitGameFlow.kt:413-487",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/multiplayer/WhodunitPeerRoomBridge.kt:126-184"
+      ],
+      "fresh_path_review": [
+        "Complete current1092line validator,190line codec,349line regression,216line peer bridge were reread; loader and reducer/caller ranges were reopened. validatePhaseShape is common to canonical and own-private peer boundaries.",
+        "Active dropped seats are already forbidden739-751; roster minus unique eliminated count is therefore sound. Normal reducer788-821 ends immediately at final two. Classic and terminal Reveal/PostGame are not blanket-rejected.",
+        "Current encoder/decoder, bare legacy validation, actual loader/content check and peer install guard converge on this invariant. No current corrupt-data normalization and no host secrets added to peers.",
+        "Tests derive a legal six-seat bundled case through real reducer setup/four rounds, then forge five active substates. Specific error-message assertions ensure new guard—not unrelated parse error—rejects them. Positive cases cover killer final-two victory, legal final-round killer elimination, early end, PostGame and replay."
+      ],
+      "regression_evidence": "9 actual Desktop methods in peer-paused-cover-green-01; current validator,codec,loader,test and Last Dinner resource all match before/after execution manifests. Actual peer validation boundary is tested for every own-private seat; its installation caller is independently source-traced.",
+      "counter_evidence": [
+        "Original defect requires erroneous trusted producer/current authenticated malformed state or invalid host projection; no normal producer or crypto bypass was established.",
+        "Existing defensive reducer fallback for impossible input is not permission to accept that input as valid recovery. Terminal recovery and replay remain intact."
+      ],
+      "compatibility": "No schema/protocol/game-rule migration. Previously accepted impossible active saves now fail closed; legitimate terminal saves remain valid.",
+      "remaining": "Desktop semantic/loader checks are not physical rejoin or real-player-save evidence.",
+      "original_dossiers": [
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/audit-runs/2026-09-05-source-audit/candidates/WD-C3-whodunit_cont.md",
+          "sha256": "3e8e7ac801e7d6af280dca961301bd59be61fa0637564524a2e02fac697eab45"
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/audit-runs/2026-09-05-source-audit/validations/WD-C3-root.md",
+          "sha256": "ac1e4e6da1f61b35c9973c5e9dfc29f6d1c8378c3075d2c92d35c7434ceae6cc"
+        }
+      ],
+      "production_author_conflict": false
+    },
+    {
+      "finding_id": "M-C03",
+      "original_author": "/root/mafia_cont",
+      "independent_reviewer": "/root/native_fix_review",
+      "decision": "APPROVED full-width final-role presentation and current measured layout regressions",
+      "root_cause_correction": "Stack full-width name and role in each row group so legal long names cannot consume the trailing role width.",
+      "exact_current_locations": [
+        "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/postgame/PostGameScreen.kt:40-95",
+        "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/passandplay/MafiaPassAndPlayPhaseRouter.kt:127-132,747-751",
+        "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaMultiDevicePhaseRouter.kt:188-193,614-628",
+        "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/projection/MafiaProjectionPolicy.kt:49-94"
+      ],
+      "fresh_path_review": [
+        "Full available width, normal wrapping/font scaling and existing vertical scrolling are preserved; valid32character display names are not reduced.",
+        "Local PostGame reads canonical private roles; LAN PostGame uses intentionally revealed public roster when host map is absent. Projection still strips host-only seed/history/maps and all other private buckets before sending. No earlier role disclosure was introduced.",
+        "Both routers reach same component. Setup toggle/stepper and tally siblings were independently checked separately—not inferred from final-role proof."
+      ],
+      "regression_evidence": "6 actual current PostGameScreenLayoutTest methods in tally-green02: EN/AR320dp fontScale1/2 and640x3202x. Roles must be displayed,positive-width,horizontally contained and scroll-reachable; full-width name wrapping tested. Current component/test and resource bytes match both manifests.",
+      "counter_evidence": [
+        "Pinned Compose1.10.3 plain String Text semantics overflow is not a general paint oracle. Final-role full-width Text avoids the narrow-cache/rebuilt-semantics mismatch; actual nonzero bounds and source allocation establish this repair.",
+        "A Setup readonly-count clipping inference from that semantics diagnostic was rejected with exact official framework counter-evidence; no readonly Setup production change was manufactured."
+      ],
+      "compatibility": "Presentation reflow only. Role secrecy rules, serializers, names and font accessibility support unchanged.",
+      "remaining": "Mobile-native rendering and physical assistive-technology matrix remain outside Desktop evidence.",
+      "original_dossiers": [
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/audit-runs/2026-09-05-source-audit/candidates/M-C03-mafia-row-layout.md",
+          "sha256": "c18e3ef2aef2a61d723e050a1d6fcceab19a1b119e14d13431b073915faeb494"
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/audit-runs/2026-09-05-source-audit/validations/M-C03-root.md",
+          "sha256": "b2273fdaae369f53d02dd6b13ce3343c8e81a8825a9cbdc6616468e946fe92ed"
+        }
+      ],
+      "production_author_conflict": false
+    }
+  ],
+  "verification_summary": {
+    "reviewer_builds_or_tests_executed": 0,
+    "selected_testcase_executions": 87,
+    "selected_suites": 17,
+    "selected_failures": 0,
+    "selected_errors": 0,
+    "selected_skips": 0,
+    "counts": {
+      "combined-native-alltests-02": 50,
+      "peer-paused-cover-green-01": 15,
+      "mafia-stepper-layout-green-01": 2,
+      "mafia-tally-layout-green-02": 6,
+      "ci-portability-input-green-02": 14
+    },
+    "erratum": "combined-native-alltests-02 selection is50 actual executions, not49.4common ToastState methods repeat across4target tasks. Counts are selected executions, not unique test definitions.",
+    "combined_frozen_tree_status": "PENDING_ROOT_FINAL_RUNS; old source-bound evidence is not silently promoted to a whole-current-tree result."
+  },
+  "native04_attribution": {
+    "raw_receipt": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-04/receipt.json",
+      "sha256": "9aa2b1036ef9669be046622dfe5b613a3ba2253467e5e7579978a058a27d31a0"
+    },
+    "raw_xcresult_summary": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-04/xcresult-summary.json",
+      "sha256": "618524c683fa573dce5195451124d88094519710698198aeb70bce11a8226f26"
+    },
+    "raw_xcresult_tests": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-04/xcresult-tests.json",
+      "sha256": "788842d8aef50c37b3d3573214e6ab0764f73643c1f0caca93ba36e6172f6fb4"
+    },
+    "actual_test_methods": [
+      "ComposeContainerViewControllerTests/testChildUsesFullBoundsAcrossSizesAndOpposingSemanticDirections()",
+      "ComposeContainerViewControllerTests/testDefaultAppearanceForwardingReachesTheSameChildExactlyOnce()",
+      "ComposeContainerViewControllerTests/testOneStableChildKeepsItsExplicitSemanticsIndependentOfTheOuterView()",
+      "ComposeContainerViewControllerTests/testSystemDecorationAndOrientationPoliciesStillBelongToTheChild()",
+      "IOSAppLaunchUITests/testDSC01ActualSettingsLocalSessionsAndOSInvestigation()"
+    ],
+    "actual_tests": 5,
+    "failures": 0,
+    "skips": 0,
+    "os_present_gate": {
+      "status": "PASS",
+      "actual_settings_application_opened": true,
+      "actual_arabic_selection": true,
+      "actual_english_override_and_system_restoration": true,
+      "restart_preserves_os_preference": true,
+      "observed_os_preference_representation": "PRESENT",
+      "exact_presence_and_array_restored": true,
+      "post_choice_before_app_baseline": true,
+      "actual_present_os_preference_coverage": true,
+      "original_present_oracle_executed": true,
+      "unchanged_v10_v11_action_guards_required": true,
+      "applicability": "Owned fresh iOS simulator; actual OS representation is reported, never inferred.",
+      "physical_device_claim": false
+    },
+    "separate_independent_reviewer": "/root/factory_review",
+    "separate_acceptance": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/ios-readiness04-exact-evidence-independent-review-01.json",
+      "sha256": "63ef44cb0ed88129c0b1e20bb0128f1c3469dbe8b1faeee3ef744f7f80d5d01b"
+    },
+    "authorship_limit": "This reviewer authored some older native controls. No self-approval of complete harness/runtime claimed; separate validator explicitly approves exact44-control/current04 chain.",
+    "runtime_limit": "Instrumented ad-hoc iOS26.5 Simulator/Xcode26.5, not Store-qualified26.3, physical LAN, native multiplayer-host or normal uninstrumented standalone launch.",
+    "cleanup": {
+      "gradle_stops": [
+        {
+          "label": "stop-xcode-immediate",
+          "exit_code": 0,
+          "at": "2026-09-07T11:32:36.775480+00:00"
+        },
+        {
+          "label": "stop-final",
+          "exit_code": 0,
+          "at": "2026-09-07T11:32:40.695026+00:00"
+        }
+      ],
+      "cleanup_status": "PASS",
+      "cleanup_errors": [],
+      "remaining_outputs": [],
+      "owned_device_absent": true,
+      "temporary_directory_removed": true,
+      "secondary_attestation_errors": [],
+      "unknown_holders": [],
+      "owned_processes_remaining": []
+    }
+  },
+  "sibling_reviews": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/mafia-toggle-fix-independent-review-01.json",
+      "sha256": "b202e861afcd51d53b0f8a1a7657efdae8d665c2930b12f9f503a6d7b785f473"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/mafia-toggle-fix-green02-supplement.json",
+      "sha256": "8379c3bcc69317c69773726d6ba74be8aad835000fe3dbf3e807eb6de036b5dd"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/mafia-stepper-production-fix-independent-review-01.json",
+      "sha256": "e53f0a7636de71172f29f358155599b015ff0b11d50725550c2b44a62555405e"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/mafia-stepper-flowrow-independent-review-01.json",
+      "sha256": "ee4b7f998961951fbf8bdf4ec4f3b815e2980f9a0a21ba123833ff881e0671cb"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/peer-paused-cover-fix-independent-review-01.json",
+      "sha256": "7ab870b0eafa5847ff76c3b3216a82efe0c994718c85254eb60ace706cab1266"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/mafia-handoff-cover-fix-independent-review-01.json",
+      "sha256": "69816429873009321e53c287ba2d41b00bc56eb87488c10cd7d70abee9ff9f94"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/mafia-tally-fix-independent-review-01.json",
+      "sha256": "9404fca34246070fe549d6eff897e1536bfa670b411bf87f98435e3673d85478"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/mafia-tally-tests-root-independent-review-01.json",
+      "sha256": "b4cb71a6d4583ea2594b9b4b8928d16eec314d48daefad36c1c72c9990328433"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/compose-1.10.3-text-semantics-counterevidence-01.json",
+      "sha256": "85c92a8a95ed48ff8c2720db8f7651f2f902bb81ed574e2686f915c6a37b7f11"
+    }
+  ],
+  "sibling_authorship": "Reviewer drafted original tally/Setup tests; root independently reviewed/reproduced those drafts and authored production/measurement-assertion corrections. Root draft review and this reviewer production/helper review remain separate.",
+  "rejected_candidate": {
+    "classification": "FALSE POSITIVE",
+    "description": "Mafia readonly Civilian count inferred clipped solely from semantics hasVisualOverflow.",
+    "proof": "Exact Compose1.10.3 TextStringSimpleNode semantics reconstructs MultiParagraph with max constraints, but paint uses cached original Paragraph. Actual numeric frames are positive and sufficient, with foreground pixels. Setup readonly no production change; actual tally zero-width red remains a distinct confirmed/repaired condition.",
+    "reference": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/compose-1.10.3-text-semantics-counterevidence-01.json",
+      "sha256": "85c92a8a95ed48ff8c2720db8f7651f2f902bb81ed574e2686f915c6a37b7f11"
+    }
+  },
+  "scope_limits": [
+    "IOS-R1 remains separately classified evidence gap unless root obtains distinct proof. No error-to-empty hiding or blind entitlements added.",
+    "WD-C4 decisions belong to its own authorized policy/review chain; this report does not invent or implement policy.",
+    "Physical LAN/rejoin, screen-reader/app-switcher behaviour, signed Store candidates, identity collision/publication-disablement safeguards and owner/legal requirements are separate gates.",
+    "Historical failed controls, selector mismatches and original defect witnesses remain immutable; a passing defect witness is not repair proof.",
+    "Review did not approve unrelated pending .github/workflows/production-verification.yml,scripts/ci or CI-hygiene-test edits."
+  ],
+  "hygiene": {
+    "production_test_config_edits": 0,
+    "git_mutations": 0,
+    "builds_started": 0,
+    "app_worker_simulator_processes_started": 0,
+    "processes_stopped": 0,
+    "task_build_outputs": 0,
+    "new_deliverables": "Only this additive JSON and referenced coverage/evidence JSON. All old reports/source/user work preserved.",
+    "cleanup": "No build/task resource cleanup required for this source-only pass. Root cycle receipts show Gradle stop0, no remaining owned outputs/workers/cleanup errors. No other-task resources touched."
+  }
+}

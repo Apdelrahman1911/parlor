@@ -1,0 +1,117 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/release_fix_review",
+  "author": "/root",
+  "reviewed_at": "2026-09-08T07:40:28.973989+00:00",
+  "status": "SOURCE_APPROVED_FOR_SINGLE_LANE_ADOPTION_AND_CONTROLS",
+  "approval_scope": "Only the exact six-file source proposal. Adopt and execute controls after root confirms current native16 cleanup. This is not native execution approval, actual test discovery, compilation, ABI/runtime proof or a provenance PASS.",
+  "source_freeze": {
+    "path": "remediation-runs/2026-09-07-local-readiness/reviews/libproc-image-observer-01/freeze-03.json",
+    "sha256": "da6246f2076f40cc1ae5f3a128064730383b1b6dc322007ea1057a6beb83cc33"
+  },
+  "patch": {
+    "path": "remediation-runs/2026-09-07-local-readiness/reviews/libproc-image-observer-01/changes-03.patch",
+    "sha256": "9a98cc8ceb37ba4dbe1f339f838eb989d51bb4bc7c538cc01535cac0f170c299",
+    "exact_regeneration_from_original_plus_draft": true
+  },
+  "reviewed_files": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/libproc-image-observer-01/draft/README.md",
+      "sha256": "2b66fe50c60c5c01e6ea4c14069111d014ea023e73fe92c91df5cb5b444485fd",
+      "lines": 300,
+      "reviewed_ranges": [
+        [
+          1,
+          300
+        ]
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/libproc-image-observer-01/draft/kernel_image_region.c.in",
+      "sha256": "d42aa932e5fe83defab173670aeea6f59507fa1b10029159efc04e1bbd67fdfc",
+      "lines": 76,
+      "reviewed_ranges": [
+        [
+          1,
+          76
+        ]
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/libproc-image-observer-01/draft/kernel_image_regions.py",
+      "sha256": "4b87bf30ab492bf45554b2952ef52982343d5f16c66dce247412a45801b0287b",
+      "lines": 52,
+      "reviewed_ranges": [
+        [
+          1,
+          52
+        ]
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/libproc-image-observer-01/draft/run_control_tests.py",
+      "sha256": "0aa080c52ff3f30bb159bc59f728084ff92d6ad4f340b1ec051dfc55dd317f2e",
+      "lines": 65,
+      "reviewed_ranges": [
+        [
+          1,
+          65
+        ]
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/libproc-image-observer-01/draft/run_normal_ios_launch.py",
+      "sha256": "7cae22790e018dc3c57d05b77ccee597d435b441c88c41b47d620e9059ed852d",
+      "lines": 874,
+      "reviewed_ranges": [
+        [
+          1,
+          874
+        ]
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/libproc-image-observer-01/draft/test_kernel_image_regions.py",
+      "sha256": "92c6218d227ec93e50d5e6df7a21274e8f1b469ddf14839e51c050c1d0f196e4",
+      "lines": 196,
+      "reviewed_ranges": [
+        [
+          1,
+          196
+        ]
+      ]
+    }
+  ],
+  "prior_full_review": "independent-review-01.json",
+  "correction_revalidation": {
+    "id": "LIBPROC-REVIEW-01",
+    "status": "SOURCE_CORRECTED_WITH_PRECISE_REGRESSION",
+    "implementation": "run_normal_ios_launch.py527\u2013542 now checks canonical regular helper bytes/hash before and after every invocation, including the final one; postflight precedes JSON acceptance. All process and artifact checks remain intact.",
+    "test": "test_kernel_image_regions.py161\u2013184 changes helper bytes only after the final sorted selected-image query emitted a valid fixture result, then asserts every selected query occurred. The pre-fix source would return normally and fail assertRaises; corrected source raises at postflight. This is a deterministic source trace; root still must execute it.",
+    "intermediate_test_rejected": "freeze-02 mutation happened after first query, so original source would reject before second and incorrectly satisfy assertRaises. changes-03 corrects this; original intermediate source/patch remain preserved by root."
+  },
+  "retained_conclusions": [
+    "Installed public header layout is compiled, not guessed. Kernel query remains exactly one full flavor8 call per selected image, rejects next-region holes, mismatching bounds/path/vnode/size/protection/offset and incomplete output.",
+    "All selected images remain required, including optional owned image rows. Parent target generation/executable/UID/start-time and app artifact UUID/hash checks remain intact.",
+    "Default vmmap flow and original177 test methods remain unchanged. New mode is explicit and has no fallback, privileged call or injected app code.",
+    "Helper/native-command output and timeout are bounded; existing task process ownership and exact allocation finalizer cover generated helper and compiler output.",
+    "Distinct method/limitations disclose per-selected-region scope, no in-memory UUID/page hash, no whole-map enumeration and no historical native15 PASS."
+  ],
+  "test_evidence": {
+    "statically_declared_existing": 177,
+    "statically_declared_new": 10,
+    "statically_declared_total": 187,
+    "actual_discovery": "NOT_RUN",
+    "actual_execution": "NOT_RUN",
+    "clang_or_libproc": "NOT_RUN",
+    "C_source_substring_controls": "Not an executable native guard/ABI test; maintain that limitation."
+  },
+  "required_next_evidence": [
+    "Root confirms native16 complete cleanup before adoption or any further validation.",
+    "Compare adopted canonical files to these exact draft hashes, then execute frozen187 controls under owned outer finalization; require declared/discovered/executed IDs/count equality and zero failure/error/skip.",
+    "Record actual C compiler/toolchain and native struct/return sizes; fixture1328 is not an ABI claim.",
+    "Fresh source/control binding and independent exact-hash execution approval before a native libproc cycle; preserve strict API failure and precise scope.",
+    "Collect native outcome and cleanup; only actual app observation can establish chosen API works in this environment."
+  ],
+  "hygiene": "No production/control edits, imports, tests, compiler, native APIs, process probes/stops, Git or CI executed. Only short-lived stdlib source/hash/AST/diff reads and additive review evidence; no new build artifacts/workers."
+}

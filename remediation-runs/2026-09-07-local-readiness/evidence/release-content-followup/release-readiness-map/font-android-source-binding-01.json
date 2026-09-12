@@ -1,0 +1,48 @@
+{
+  "created_at": "2026-09-07T07:57:33.745044+00:00",
+  "reviewer": "/root/release_fix_review",
+  "status": "PASS \u2014 narrow recorded source/artifact/evidence binding only",
+  "checks": {
+    "source_before_recorded_manifest_digest_valid": true,
+    "source_after_recorded_manifest_digest_valid": true,
+    "outer_before_after_recorded_source_equal": true,
+    "stage_source_matches_outer": true,
+    "outer_gate_reports_pass_and_exit_zero": true,
+    "outer_cleanup_receipt_reports_complete": true,
+    "stage_scope_reports_pass_and_complete_cleanup": true,
+    "inspection_release_hash_matches_stage": true,
+    "inspected_source_binding_matches_stage": true,
+    "inspection_outer_receipt_hash_unchanged": true
+  },
+  "evidence": {
+    "stage": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-apk-stage-01/receipt.json",
+      "sha256": "9c0226c2abf47135d039ce9e6e4cea692e4d27102d1af93fe0cae5f6ce202b67"
+    },
+    "outer": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/android-arm64-apks-01/receipt.json",
+      "sha256": "030fb449f5b9fe7f91816a08463ace500f663be48a22901bf01be73776bd8937"
+    },
+    "inspection": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/release-readiness-map/font-android-apk-inspection-01.json",
+      "sha256": "4bcc1febbdd9d73db205f6b610b0bd9a2544ecf11641793ab4906d8ce737ec50"
+    }
+  },
+  "source_binding": {
+    "commit": "1f809b87c15a4deb079809bc14718a58cf0fe451",
+    "tree": "6f6912d8612f71e07d2c338d860e906333ce8aad",
+    "diff_sha256": "ec0c1d52ea89502648e10252ee9c221f8195cefc2241ee8d23c126b61aba4ddb",
+    "source_manifest_sha256": "bfcace5afc080386688d806a1d81459cddd214cc1eeb5dbb4c41e03360c9e540"
+  },
+  "recorded_source_entries": 718,
+  "limits": [
+    "This is mechanical equality/digest verification of receipts, not a new build or manual review of all718 source entries.",
+    "Root owns Gradle execution, complete build-graph/source scope and process/output cleanup receipts.",
+    "No APK signature/runtime/Store verification was newly executed. The original failed Android runtime attempt remains FAIL."
+  ],
+  "cleanup": {
+    "workers_started": 0,
+    "artifacts_modified_or_deleted": 0,
+    "retained_outputs": "Only this required JSON evidence; root retains APKs for its runtime lane"
+  }
+}

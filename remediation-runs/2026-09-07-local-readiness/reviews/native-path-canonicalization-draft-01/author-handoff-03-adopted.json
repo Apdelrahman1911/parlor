@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "author": "/root/native_fix_review",
+  "created_at": "2026-09-07T11:05:17.221053+00:00",
+  "status": "ADOPTED_UNEXECUTED_REVIEW_REQUIRED",
+  "authorization": "Root released Android03 freeze only for adopting corrected draft tests; no unrelated source/control edits.",
+  "files": [
+    {
+      "path": "scripts/verification/ios-readiness/NativeReadinessLaunch.swift.in",
+      "sha256": "df8f0cce3f45bedbfea47df3ca0b2e56c6a777383395fc170f0f07b83f8d143a",
+      "lines": 340
+    },
+    {
+      "path": "scripts/verification/ios-readiness/test_native_paths.py",
+      "sha256": "11c0bcbba09de36d5e2eb5a276c8f8d3c52024c3b395558e6aebd2f12875007a",
+      "lines": 173
+    },
+    {
+      "path": "scripts/verification/ios-readiness/NativeReadinessPathControls.swift.in",
+      "sha256": "efc84b3b49c099185d17ff56ceb53b0134ee2332ff35220a537dade5168a76c9",
+      "lines": 216
+    }
+  ],
+  "diff_sha256": "9fd5beb8bc321f177303822dfe32d01013cb3f7f17611da4ba466089b434a0f8",
+  "draft_test_review_correction": "Explicit canonical /var/tmp fixture parent avoids root lane TMPDIR redirection; original draft/test hashes retained.",
+  "tests_declared": 3,
+  "host_native_subcases_in_one_test": 18,
+  "executed_by_author": 0,
+  "compatibility": "Copy-only observer/control changes, no app Kotlin/Swift/state/game/protocol/schema changes",
+  "cleanup": "No reviewer-started builds/native tests or background workers; only required controls and compact evidence created."
+}

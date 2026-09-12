@@ -1,0 +1,85 @@
+{
+  "kind": "FOCUSED_LINUX_ERROR_CHAIN_CONTROLS_NOT_NATIVE_RUNTIME",
+  "started_at": "2026-09-11T13:25:15.587504+00:00",
+  "source_before": "22ea6bebb95317e148d89b03c40cbb7efc9d36a4",
+  "pins_before": {
+    "remediation-runs/2026-09-08-continuation/protection-host-image-01/HostSetterProbe.m.in": "2e55538c5eac96917d581197d21ecd49f6ae2f19c69b38c93594d5ec63896fd4",
+    "remediation-runs/2026-09-08-continuation/protection-host-image-01/run_host_probe.py": "24a650b5ff9cbc98aba4f583eb1637065aa45749968e72dc31408e0661cee3b8",
+    "remediation-runs/2026-09-08-continuation/protection-host-image-01/test_host_probe.py": "aa5892a4d2a54db68c1dddece89984643a44dfd60c4c8152b82eb6cb9a7814ae",
+    "remediation-runs/2026-09-08-continuation/protection-host-image-01/README.md": "87adcf5ed181f3cf1c5690c2bf9a1f522173d287944be9bcd1942ffa858548ac"
+  },
+  "errors": [],
+  "commands": [
+    {
+      "command": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "remediation-runs/2026-09-08-continuation/protection-host-image-01",
+        "-p",
+        "test_host_probe.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.567,
+      "log": "tests.log",
+      "sha256": "2171b1a09eb0151b17ff273a98681586f8318a7c3001f6329f69d10cdcc7a1e0"
+    },
+    {
+      "command": [
+        "./gradlew",
+        "--stop"
+      ],
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.768,
+      "log": "gradle-stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    }
+  ],
+  "test_exit_code": 0,
+  "scratch_before_removal": {
+    "path": "/tmp/parlor-h03-controls-tci16iho",
+    "bytes": 0,
+    "uid": 0,
+    "mode": "0o700"
+  },
+  "scratch_absent": true,
+  "live_outputs_after": {
+    ".compose": false,
+    ".gradle": false,
+    ".kotlin": false,
+    "build": false,
+    "build-logic/build": false,
+    "build-logic/convention/build": false,
+    "composeApp/build": false,
+    "game-modes/mafia/build": false,
+    "game-modes/whodunit/build": false,
+    "iosApp/build": false,
+    "shared/content/build": false,
+    "shared/core/build": false,
+    "shared/design-system/build": false,
+    "shared/engine-testing/build": false,
+    "shared/engine/build": false,
+    "shared/networking-testing/build": false,
+    "shared/networking/build": false,
+    "shared/session/build": false,
+    "shared/storage/build": false,
+    "shared/transport-p2p/build": false
+  },
+  "pins_after": {
+    "remediation-runs/2026-09-08-continuation/protection-host-image-01/HostSetterProbe.m.in": "2e55538c5eac96917d581197d21ecd49f6ae2f19c69b38c93594d5ec63896fd4",
+    "remediation-runs/2026-09-08-continuation/protection-host-image-01/run_host_probe.py": "24a650b5ff9cbc98aba4f583eb1637065aa45749968e72dc31408e0661cee3b8",
+    "remediation-runs/2026-09-08-continuation/protection-host-image-01/test_host_probe.py": "aa5892a4d2a54db68c1dddece89984643a44dfd60c4c8152b82eb6cb9a7814ae",
+    "remediation-runs/2026-09-08-continuation/protection-host-image-01/README.md": "87adcf5ed181f3cf1c5690c2bf9a1f522173d287944be9bcd1942ffa858548ac"
+  },
+  "pins_unchanged": true,
+  "tests_run": 14,
+  "scope": "Python synthetic parser/control tests only; no Apple compilation, native execution or strict Complete success.",
+  "finished_at": "2026-09-11T13:25:17.121885+00:00",
+  "status": "PASS"
+}

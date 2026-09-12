@@ -1,0 +1,386 @@
+{
+  "schema_version": 1,
+  "kind": "INDEPENDENT_B28_ACTUAL_FOCUSED_LINUX_CONTROLS_RECONCILIATION",
+  "reviewer": "/root/portability_review",
+  "implementation_author": "/root/lifecycle_controls",
+  "execution_coordinator": "/root",
+  "recorded_at": "2026-09-09T09:33:31.796Z",
+  "status": "B_RELEVANT_61_PASS_COMBINED_CYCLE_FAIL_NOT_PLATFORM_PROOF",
+  "scope": "Read-only reconciliation of already-executed controls in continuation-a27-b28-controls-01, including exact reviewed B28 adoption, actual test IDs, source/control bindings and recorded cleanup. No test rerun, project import/function execution or native action by reviewer.",
+  "evidence": {
+    "lane": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-a27-b28-controls-01/receipt.json",
+      "bytes": 310416,
+      "sha256": "0a8e3b772985068a4eb9d9e600293a91467657f91bd0927569c214db843803da"
+    },
+    "raw_exits": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-a27-b28-controls-01/command-exits.tsv",
+      "bytes": 254,
+      "sha256": "cb0c3fff82e4285fbc6388fa395694533e8e3e1a204eaa2b2d7b1407207c1b3c"
+    },
+    "outer_log": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-a27-b28-controls-01/gradle.log",
+      "bytes": 678,
+      "sha256": "3ee770567c11a3be25efdaf04c37c393babe7bd1fbc27a990dcf77e2c32c18fb"
+    },
+    "source_review": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-b28-layout-diagnostic-independent-01.json",
+      "bytes": 10973,
+      "sha256": "8ea71b9070bf891340277e2f06086d8181c574239a0ff2c83f80708fc3d273ff"
+    },
+    "adoption": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/b28-adoption-01.json",
+      "bytes": 2635,
+      "sha256": "704508dca104922625d70dcc4f138dde95d5da2642bc1f755d4688dc4e7c98c4"
+    },
+    "coordinator_projection": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/a27-b28-controls-01-result.json",
+      "bytes": 5972,
+      "sha256": "560693c6fa94e6c9166c8d13afbf5ea8e3a29e39d9250c345b94351492136a3b"
+    },
+    "authority": "Raw logs and receipt independently inspected and mechanically reconciled; coordinator projection is consistent, not substituted for raw evidence."
+  },
+  "executed_identity": {
+    "branch": "fix/local-readiness-2026-09-07",
+    "base_commit": "0303a76771794c52ea96a7d7f47eb689f5b236ba",
+    "base_tree": "4d2364b41a5a29b3c66a3ccc5307a9d84c4f5900",
+    "tracked_worktree_diff_sha256": "706166566ceccad26825e8b59e0ad8bad14b2b7afb46bccff9dcca0b65f64fc5",
+    "attribution": "Executed a dirty reviewed worktree, not pristine base commit. B28 new/modified controls are explicitly present in the before/after control manifests.",
+    "ordinary_source_manifest": {
+      "entries": 828,
+      "sha256": "8e8cfcd1605a8ac89b628de95a39d4875c973c73462799f8eb8e337f6f30bd7a",
+      "full_before_after_equal": true,
+      "row_digest_independently_recomputed": true
+    },
+    "outer_runner": {
+      "path": "remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py",
+      "sha256": "1b9e882514bfe5386785d5a71ae32fdc2bc3aa4cc1dd24532709899fbf4f41bc",
+      "manifest_sha256": "942e138764146313a59cbe1278c1357284a5701d0c125809c34ddbbe876ce912",
+      "full_before_after_equal": true,
+      "row_digest_independently_recomputed": true
+    },
+    "focused_controls": {
+      "entries": 216,
+      "before": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-a27-b28-controls-01/control-inputs-before.json",
+        "bytes": 41803,
+        "sha256": "137af9f6d5dbe97cdac840c073b6605bc8d6aa2780eb8dd524f05fa7576f78e9"
+      },
+      "after": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-a27-b28-controls-01/control-inputs-after.json",
+        "bytes": 41803,
+        "sha256": "137af9f6d5dbe97cdac840c073b6605bc8d6aa2780eb8dd524f05fa7576f78e9"
+      },
+      "byte_identical": true,
+      "unique_paths": true,
+      "current_rehash": "All 30 manifest entries under native/normal-ios-launch-proposal-01 plus shared A runner, shared29-test source, outer lane and manifest producer (34 files) still match their cycle hashes. All four adopted B28 files also byte-match the independently approved draft-02.",
+      "binding_limit": "The 216-input manifest is a fixed packet snapshot, not a runtime import-closure attestation from the full normal control driver. Receipt source/runner digests were independently recomputed from retained rows; no claim that all 828 ordinary-source files were rehashed in this review."
+    },
+    "exact_reviewed_b28_files": [
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/image_text_layout_diagnostic.py",
+        "bytes": 9747,
+        "sha256": "026184d084bb62b50768e1c100ea366f3bbf90afaa8007b7e440ee97954a1cbd"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
+        "bytes": 67346,
+        "sha256": "9e71c7b654b70de5a97b6817af4eecc920e45f6d7986ffbdadc396482a49b6d3"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_image_text_layout_diagnostic.py",
+        "bytes": 27196,
+        "sha256": "dfc6630c89df234d0348ea8f789c9051e121f983524afd9c1ebaa8158a429458"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_control_tests.py",
+        "bytes": 2932,
+        "sha256": "3779d70a5c5b099f2612bfe451bf9688b54c4b33abc938da36177bb920af8842"
+      }
+    ],
+    "unchanged_acceptance": [
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/kernel_image_region.c.in",
+        "bytes": 4625,
+        "sha256": "e98501da6bec44050e2dc9aab75da13c6d34e3733019789df74efad7774d6eb8"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/kernel_image_regions.py",
+        "bytes": 3821,
+        "sha256": "4b87bf30ab492bf45554b2952ef52982343d5f16c66dce247412a45801b0287b"
+      }
+    ],
+    "adoption_chronology": "Root adoption at 09:14:17 UTC cites delivered pre-adoption reviewer approval; the formal source-review file was recorded at 09:16:06 UTC. Preserve this honest chronology."
+  },
+  "actual_execution": {
+    "environment": "Linux; /usr/bin/python3 -B via the existing coordinated lane; native tools/processes mocked by focused tests.",
+    "batch": "Eleven commands, each wrapped in timeout --signal=TERM --kill-after=30s 300s, run sequentially without skipping later commands after a failure. Exact shell script is retained in lane receipt.command.",
+    "batch_script_sha256": "096a3c42179e5b6d394d7bb5ae7c229778d0a1e002e8d6662532ac3cee42831a",
+    "b_scope": {
+      "tests": 61,
+      "passed": 61,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "description": "22 new layout-diagnostic tests +10 existing kernel/orchestration tests +29 shared A/B command/metadata-handler controls. Counts are unittest test methods, not subtest inflation."
+    },
+    "b_commands": [
+      {
+        "name": "image_text_layout",
+        "tests": 22,
+        "passed": 22,
+        "failures": 0,
+        "errors": 0,
+        "skips": 0,
+        "exit_code": 0,
+        "seconds": "0.163",
+        "log": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-a27-b28-controls-01/image_text_layout.log",
+          "bytes": 4701,
+          "sha256": "be070eecf8c600aa1c562f32c0123b5e8d23eee72ab105e327cfdeadb2c4f24e"
+        },
+        "test_source": {
+          "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_image_text_layout_diagnostic.py",
+          "bytes": 27196,
+          "sha256": "dfc6630c89df234d0348ea8f789c9051e121f983524afd9c1ebaa8158a429458"
+        },
+        "actual_ids_match_bound_source_ast": true,
+        "sorted_normalized_ids_sha256": "db7b6ea884f0da5356a5b59fd0f2d2e9462a6fb7da4f9c93fec0197651503c5c"
+      },
+      {
+        "name": "kernel_orchestration",
+        "tests": 10,
+        "passed": 10,
+        "failures": 0,
+        "errors": 0,
+        "skips": 0,
+        "exit_code": 0,
+        "seconds": "0.089",
+        "log": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-a27-b28-controls-01/kernel_orchestration.log",
+          "bytes": 2159,
+          "sha256": "2fc7c6205177841546a2ab581b2ca8018592c9016bb4cfcf5a805a16ea695fa2"
+        },
+        "test_source": {
+          "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_kernel_image_regions.py",
+          "bytes": 12776,
+          "sha256": "92c6218d227ec93e50d5e6df7a21274e8f1b469ddf14839e51c050c1d0f196e4"
+        },
+        "actual_ids_match_bound_source_ast": true,
+        "sorted_normalized_ids_sha256": "a7d0d0e2603b20e7a8cca5737e1b12aa1724ebfd41fbf1cbb1bb72241afa3e30"
+      },
+      {
+        "name": "native_command_failures",
+        "tests": 29,
+        "passed": 29,
+        "failures": 0,
+        "errors": 0,
+        "skips": 0,
+        "exit_code": 0,
+        "seconds": "2.121",
+        "log": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-a27-b28-controls-01/native_command_failures.log",
+          "bytes": 5378,
+          "sha256": "4692adceb3744adda2fb277f59532e70f96b563fc1897cc820546be57bccd8ef"
+        },
+        "test_source": {
+          "path": "scripts/verification/ios-readiness/test_native_command_failures.py",
+          "bytes": 35980,
+          "sha256": "ea2f6d7b9acbeede8d36596539813b86a1fe68e2d7b293cb5d995c5bcecf1223"
+        },
+        "actual_ids_match_bound_source_ast": true,
+        "sorted_normalized_ids_sha256": "4989e08b1c5760dd50e9a59ff629a8025a755336e10c51697fecdf34fc16b229"
+      }
+    ],
+    "id_comparison": "Every individual B test result is ok; unique full module/class/method IDs exactly equal the AST-declared methods in the bound test file. Only direct-script __main__ is normalized to test_native_command_failures. ID digest is SHA256 of sorted normalized IDs joined with newline plus final newline. Source parsing only; no unittest discovery/execution by reviewer.",
+    "newly_executed_custody_regressions": [
+      "test_postlaunch_timeout_stop_failure_retains_raw_for_outer_finalizer",
+      "test_postlaunch_timeout_unresolved_exit_retains_raw_for_outer_finalizer",
+      "test_postlaunch_timeout_reaped_child_removes_exact_owned_raw",
+      "test_same_uid_regular_replacement_is_neither_decoded_nor_unlinked"
+    ],
+    "ordinary_command_compatibility": "Shared handler controls passed, including ordinary success/nonzero exact fields/no-stop behavior, same-primary-exception preservation, cancellation/secondary failures and metadata guards. New output-file identity remains opt-in for the diagnostic.",
+    "combined_cycle": {
+      "status": "FAIL",
+      "commands": 11,
+      "tests": 211,
+      "passed": 210,
+      "failures": 1,
+      "errors": 0,
+      "skips": 0,
+      "outer_exit_code": 1,
+      "independently_reconciled_commands": [
+        {
+          "name": "test_l08_functional_copy",
+          "tests": 21,
+          "passed": 21,
+          "failures": 0,
+          "errors": 0,
+          "skips": 0,
+          "exit_code": 0
+        },
+        {
+          "name": "test_l08_host_receipts",
+          "tests": 12,
+          "passed": 12,
+          "failures": 0,
+          "errors": 0,
+          "skips": 0,
+          "exit_code": 0
+        },
+        {
+          "name": "test_l08_diagnostics",
+          "tests": 21,
+          "passed": 21,
+          "failures": 0,
+          "errors": 0,
+          "skips": 0,
+          "exit_code": 0
+        },
+        {
+          "name": "test_l08_receipts",
+          "tests": 13,
+          "passed": 13,
+          "failures": 0,
+          "errors": 0,
+          "skips": 0,
+          "exit_code": 0
+        },
+        {
+          "name": "test_l08_functional_runner",
+          "tests": 11,
+          "passed": 10,
+          "failures": 1,
+          "errors": 0,
+          "skips": 0,
+          "exit_code": 1
+        },
+        {
+          "name": "test_l08_functional_receipts",
+          "tests": 16,
+          "passed": 16,
+          "failures": 0,
+          "errors": 0,
+          "skips": 0,
+          "exit_code": 0
+        },
+        {
+          "name": "composition",
+          "tests": 55,
+          "passed": 55,
+          "failures": 0,
+          "errors": 0,
+          "skips": 0,
+          "exit_code": 0
+        },
+        {
+          "name": "image_text_layout",
+          "tests": 22,
+          "passed": 22,
+          "failures": 0,
+          "errors": 0,
+          "skips": 0,
+          "exit_code": 0
+        },
+        {
+          "name": "kernel_orchestration",
+          "tests": 10,
+          "passed": 10,
+          "failures": 0,
+          "errors": 0,
+          "skips": 0,
+          "exit_code": 0
+        },
+        {
+          "name": "native_command_failures",
+          "tests": 29,
+          "passed": 29,
+          "failures": 0,
+          "errors": 0,
+          "skips": 0,
+          "exit_code": 0
+        },
+        {
+          "name": "native_labels",
+          "tests": 1,
+          "passed": 1,
+          "failures": 0,
+          "errors": 0,
+          "skips": 0,
+          "exit_code": 0
+        }
+      ],
+      "sole_failure": {
+        "id": "test_l08_functional_runner.L08FunctionalRunnerTests.test_original_ownership_build_stop_and_cleanup_implementations_are_unchanged",
+        "log": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-a27-b28-controls-01/test_l08_functional_runner.log",
+          "bytes": 3406,
+          "sha256": "8ab169f5466a30e0fa7f8c6aa8553ffafc30f685ccabeea96c9ae02ed0309c30"
+        },
+        "disposition": "A source-equality assertion failed; comparison baseline is canonical scripts/verification runner, not companion-01. Separate A author/reviewer own diagnosis and correction. This B reconciliation neither approves that correction nor upgrades this failed cycle."
+      },
+      "additional_label_control": {
+        "outside_b61": true,
+        "name": "native_labels",
+        "tests": 1,
+        "passed": 1,
+        "failures": 0,
+        "errors": 0,
+        "skips": 0,
+        "seconds": "0.000",
+        "exit_code": 0,
+        "log": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-a27-b28-controls-01/native_labels.log",
+          "bytes": 326,
+          "sha256": "b6c42af9add74670e9e1abdb64cdd0e27199b7cc8768d73977200e4636fca6e0"
+        }
+      },
+      "accounting": "94 A methods (93 pass/1 fail) +55 composition pass +61 B-relevant pass +1 label pass =211 methods (210 pass/1 fail). All11 retained exit rows exactly match outer-log exit rows and unittest outcomes."
+    }
+  },
+  "cleanup": {
+    "status": "RECORDED_CLEANUP_PASS_AND_OWNED_PATH_ABSENCE_CONFIRMED",
+    "finished_at": "2026-09-09T09:15:16.699268+00:00",
+    "stopped_at": "2026-09-09T09:15:17.448502+00:00",
+    "cleanup_completed_at": "2026-09-09T09:15:17.535090+00:00",
+    "stop_exit_code": 0,
+    "workers": {
+      "terminated_owned_workers": [],
+      "remaining_owned_workers": []
+    },
+    "artifact_workers": {
+      "terminated_owned_workers": [],
+      "remaining_owned_workers": []
+    },
+    "removed_outputs": [],
+    "retained_outputs": [],
+    "remaining_outputs": [],
+    "cleanup_errors": [],
+    "deferred_signals": [],
+    "stop_log": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-a27-b28-controls-01/stop.log",
+      "bytes": 31,
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    "stop_order": "Reopened bound outer-lane finalizer: ./gradlew --stop is its immediate first finalization operation. It returned0 with 'No Gradle daemons are running.'",
+    "precise_owned_build_paths_checked": 16,
+    "owned_build_paths_and_cycle_scratch_absent": true,
+    "composition": "All four retained external-parent cleanup rows report PASS, workers_started0 and parent_removed=true; their exact recorded paths are absent now.",
+    "reports": "Empty test-receipts.json/artifact-receipts.json are expected for this Python control batch and are not application/test-runtime proof. All raw failed/successful logs remain retained.",
+    "method": "No Gradle clean needed: no owned build outputs existed or remained. Bound lane removed exact owned scratch; no global-cache or archived evidence/build deletion. Reviewer only inspected receipts/path absence; no process querying/signaling or cleanup operation."
+  },
+  "limits": [
+    "The full226 normal control suite was not executed in this cycle. Historical204/187 results are not relabeled as fresh B28 tests.",
+    "Synthetic otool text and mocked libproc/command paths do not establish actual Apple ABI, Mach-O geometry, runtime provenance or application behavior.",
+    "B28 adds failure-only metadata; C helper and Python acceptance remain unchanged. It cannot round/normalize the rejected interval or produce provenance PASS.",
+    "Actual B26 native evidence remains overallFAIL/provenanceFAIL despite8 Home XCTest repetitions passing. Its first helper returned a1272-byte native response and42729472-byte region versus42717984-byte sample span; downstream vnode/post-query bindings were not reached.",
+    "Fresh reviewed source freeze/control bindings and actual platform execution remain required. No Store publication, physical-device proof or readiness promotion follows from these controls."
+  ],
+  "historical_b26": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/native-b26-actual-independent-01.json",
+    "bytes": 19907,
+    "sha256": "b73673872a085ada2b780641150699224bc033c59873c46b9739a8d2281cb7c4"
+  },
+  "conclusion": "Approve these exact61 B-relevant Linux controls as actually executed PASS with consistent bindings and cleanup. Keep combined cycle FAIL and B runtime/provenance incomplete. No B retest is warranted solely for a separately reviewed A-only test correction if B/shared-handler/control inputs used here remain unchanged; future binding/execution scope still must be checked.",
+  "reviewer_cleanup": "No reviewer fixture, worker, build or native allocation; no reviewer cleanup cycle owed. Sole owned write is this report."
+}

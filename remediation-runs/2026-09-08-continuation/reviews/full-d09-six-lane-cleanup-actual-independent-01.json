@@ -1,0 +1,502 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/ci_cleanup_review",
+  "decision": "ACCEPT_D09_SIX_LANE_SCOPED_CLEANUP",
+  "run": {
+    "attempt": 1,
+    "focused_protection_job": {
+      "api_job_id": 103145383779,
+      "conclusion": "skipped",
+      "evidence_used": false
+    },
+    "id": 34561630512,
+    "overall_conclusion": "success",
+    "scope": "full",
+    "source": "d3c0df9ccba51463708728c3c618d3652e76aafa",
+    "tree": "3169657a10279eb2bfad6c59a60a5054c6092b61"
+  },
+  "evidence_root": "remediation-runs/2026-09-08-continuation/actions/34561630512",
+  "custody": {
+    "artifact_archives": [
+      {
+        "bytes": 35458539,
+        "current_named_receipts": 3,
+        "id": 10184937822,
+        "name": "desktop-android-verification",
+        "zip_sha256": "1a02bf5e0f0daff42e6d9f2ed573f98176e338046d08c1ae637e9b94ef53f3e9"
+      },
+      {
+        "bytes": 3119,
+        "current_named_receipts": 1,
+        "id": 10184939144,
+        "name": "verification-cleanup-desktop-android",
+        "zip_sha256": "57fac05579c55819712d8653283bc87a305674642a68e200cba7c13b953182d8"
+      },
+      {
+        "bytes": 17850140,
+        "current_named_receipts": 2,
+        "id": 10184603884,
+        "name": "desktop-verification-desktop-linux-arm64",
+        "zip_sha256": "741a0adb1a5fb31d260f853d5ceef33b9f3abc34660bc5badc8bd52beae8ad45"
+      },
+      {
+        "bytes": 2688,
+        "current_named_receipts": 1,
+        "id": 10184604879,
+        "name": "verification-cleanup-desktop-linux-arm64",
+        "zip_sha256": "79043fc19449c4c3b5b6769fe2abb6440326f53e1692a3e22fb0abf987e0d4b1"
+      },
+      {
+        "bytes": 17860194,
+        "current_named_receipts": 2,
+        "id": 10184740042,
+        "name": "desktop-verification-desktop-macos-x64",
+        "zip_sha256": "54b1233f3bf00d41226c347ce0344dba3f12468b1ff3a416db7388f9f1e137a3"
+      },
+      {
+        "bytes": 2696,
+        "current_named_receipts": 1,
+        "id": 10184742573,
+        "name": "verification-cleanup-desktop-macos-x64",
+        "zip_sha256": "0e505ec1b2dd6f7399af0dca5c158e4e1321c6d708b31a31ea6045b24b712283"
+      },
+      {
+        "bytes": 17854825,
+        "current_named_receipts": 2,
+        "id": 10184742700,
+        "name": "desktop-verification-desktop-windows-x64",
+        "zip_sha256": "3644e309b90d40f53d2cb78e2bd01c2551d7a45055652ba3ba558f504965a78a"
+      },
+      {
+        "bytes": 2729,
+        "current_named_receipts": 1,
+        "id": 10184744464,
+        "name": "verification-cleanup-desktop-windows-x64",
+        "zip_sha256": "b7e9ed9aa4ba83caacd4e020f7c7c995a4dc1897477727a1e72deaa07a66d237"
+      },
+      {
+        "bytes": 17692922,
+        "current_named_receipts": 8,
+        "id": 10184984034,
+        "name": "ios-runtime-verification",
+        "zip_sha256": "736b11bd00458298b99176b2a0f693ee31b71f2ceedc61ff5e59da72f27ff2b7"
+      },
+      {
+        "bytes": 2764,
+        "current_named_receipts": 1,
+        "id": 10184986147,
+        "name": "verification-cleanup-ios",
+        "zip_sha256": "57a2ad1bfb69e56bdd25c04da560b271c75816fccfe9ec486ab71b50a06f96ff"
+      },
+      {
+        "bytes": 2795942,
+        "current_named_receipts": 5,
+        "id": 10185860790,
+        "name": "ios-release-verification",
+        "zip_sha256": "b5838f771925834adc6d2fd4ec4331cce4829662d56d597a217c60c4a53c9051"
+      },
+      {
+        "bytes": 2785,
+        "current_named_receipts": 1,
+        "id": 10185861945,
+        "name": "verification-cleanup-ios-release",
+        "zip_sha256": "cc9e9756e201b20518317dc9239af88543c66fc35f09f1bb2669cd00a3d8e288"
+      }
+    ],
+    "collector_finished_at": "2026-09-11T13:12:21.019917+00:00",
+    "collector_receipt_sha256": "64d973465fa1a2d8b43aafa4a4c0e40d52638caaa7e7e4b9dc4bb6b13d265a2e",
+    "current_named_receipts_checked": 28,
+    "derived_build_roots": 17,
+    "derived_python_cache_roots": 170,
+    "frozen_manifest_sha256": "830a9ab5c34598bca4b7fe58f8d1cda1d14d1d959e59405d71531144170da2e6",
+    "logs_read_to_eof_crc_hash_size_checked": 12,
+    "logs_zip_sha256": "25f90391edc685b735dbdccc49ca0c501641e36979087a80a138724bc2000708",
+    "tracked_paths": 32670,
+    "checks": "Run/attempt/seven API jobs and twelve exact artifact identities bind this source. Independently hashed all twelve artifact ZIPs against the API list, individual API metadata and collector receipt; central-directory metadata also matches every collector member row. All 28 current ownership/cycle/simulator/stop/final-cleanup JSON members were read to EOF and match ZIP/member-hash/extracted bytes. All twelve raw log members were read to EOF and CRC/hash/size checked. Nine separate cycle-stop records and six final-cleanup records, including six embedded final stops, equal their unique current raw job-log JSON. Every main artifact's ID/digest and successful raw-log upload precedes final cleanup; all six cleanup uploads follow finalization.",
+    "ownership": "Frozen 32,670-path manifest byte-equals immutable Git tree enumeration. Independently derived 187 roots (17 build roots from tracked Gradle build/settings paths plus root/iOS build locations, and 170 Python-cache roots from tracked Python-file parents) equal every generic claim. Each removed/not-created pair uniquely and disjointly partitions those 187 roots. No claimed output root contains tracked files, and no removed root touches historical evidence. All six fresh ownership preparations succeeded; ownership checkout roots match their actual checkout logs.",
+    "timing": "Job execution was 2026-09-11 approximately 04:17-05:20 UTC. The later 13:08-13:12 UTC collection is post-run custody, not a source or execution-time discrepancy. API timestamps have whole-second precision; raw upload/cleanup ordering was checked using finer-grained log and receipt timestamps.",
+    "limits": "Original ZIPs are retained. Historical and opaque members are not promoted into current cleanup or execution evidence; only the exact 28 current named receipts are content-reviewed here. No reviewer archive extraction."
+  },
+  "lanes": [
+    {
+      "api_job_id": 103145382708,
+      "artifact_ids": {
+        "cleanup": 10184939144,
+        "main": 10184937822
+      },
+      "cleanup": "PASS",
+      "cleanup_finished_at": "2026-09-11T04:37:16.203497+00:00",
+      "cleanup_receipt_sha256": "3e98f6f699ac8a0dc8ba02b46cb4c88fbff424c251e0a42983d89684d3e0dfc3",
+      "cleanup_started_at": "2026-09-11T04:37:13.446091+00:00",
+      "job": "desktop-android",
+      "job_conclusion": "success",
+      "log": {
+        "cleanup_json_line": 4419,
+        "cleanup_upload_finalized_line": 4445,
+        "main_upload_finalized_line": 4401,
+        "member": "6_Common, desktop, and Android release.txt",
+        "orphan_heading_line": 4464,
+        "sha256": "272e060acee32f5d70b3f0c9f2647a09d6729276b8268c87f53e89f74135aafa",
+        "stop_json_lines": {
+          "common-android": 3235,
+          "managed-device": 3947
+        },
+        "termination_lines": [
+          4465
+        ]
+      },
+      "not_created": 166,
+      "ownership_receipt_sha256": "60bca7d006c587e2b55690d34f8391529ef9da027354cec3561666c51eac6d9d",
+      "removed_build_roots": 15,
+      "removed_python_caches": 6,
+      "zero_exit_stops_including_final": 3
+    },
+    {
+      "api_job_id": 103145382861,
+      "artifact_ids": {
+        "cleanup": 10184604879,
+        "main": 10184603884
+      },
+      "cleanup": "PASS",
+      "cleanup_finished_at": "2026-09-11T04:21:48.714324+00:00",
+      "cleanup_receipt_sha256": "cf1a7273772521faa7f1e7d5754ca5017d3003887f1b77172837cf2813f14ea0",
+      "cleanup_started_at": "2026-09-11T04:21:47.073778+00:00",
+      "job": "desktop-linux-arm64",
+      "job_conclusion": "success",
+      "log": {
+        "cleanup_json_line": 925,
+        "cleanup_upload_finalized_line": 951,
+        "main_upload_finalized_line": 907,
+        "member": "1_Desktop strict verification (Linux arm64).txt",
+        "orphan_heading_line": 970,
+        "sha256": "c1e99017e3bd85730504d2643e477604a55dded848728aa1a4e6162fd5991cbc",
+        "stop_json_lines": {
+          "linux-arm64": 873
+        },
+        "termination_lines": []
+      },
+      "not_created": 172,
+      "ownership_receipt_sha256": "1712f67e8e454ca74ae4e91e89e7fa2e3bbf54c83d71d3e679a01bcc825e500b",
+      "removed_build_roots": 15,
+      "removed_python_caches": 0,
+      "zero_exit_stops_including_final": 2
+    },
+    {
+      "api_job_id": 103145382811,
+      "artifact_ids": {
+        "cleanup": 10184742573,
+        "main": 10184740042
+      },
+      "cleanup": "PASS",
+      "cleanup_finished_at": "2026-09-11T04:28:02.301988+00:00",
+      "cleanup_receipt_sha256": "7d84de00058d3b2701621473cd660fe3146aa298bc525e58e43276496664857c",
+      "cleanup_started_at": "2026-09-11T04:27:56.922860+00:00",
+      "job": "desktop-macos-x64",
+      "job_conclusion": "success",
+      "log": {
+        "cleanup_json_line": 739,
+        "cleanup_upload_finalized_line": 765,
+        "main_upload_finalized_line": 721,
+        "member": "3_Desktop and Kotlin Native strict verification (macOS x64).txt",
+        "orphan_heading_line": 785,
+        "sha256": "6b221f85b6f3fea65c77fd639b61b3a7800226018025eb8691baca848e110628",
+        "stop_json_lines": {
+          "macos-x64": 687
+        },
+        "termination_lines": []
+      },
+      "not_created": 172,
+      "ownership_receipt_sha256": "5fb639de1255b4af21532e9b1bddec45fa7b256a4ac824a2c2c19fa3d0f64dac",
+      "removed_build_roots": 15,
+      "removed_python_caches": 0,
+      "zero_exit_stops_including_final": 2
+    },
+    {
+      "api_job_id": 103145382822,
+      "artifact_ids": {
+        "cleanup": 10184744464,
+        "main": 10184742700
+      },
+      "cleanup": "PASS",
+      "cleanup_finished_at": "2026-09-11T04:28:08.121811+00:00",
+      "cleanup_receipt_sha256": "eee4f0a0547a90bd3cf916731767f3dbc5362e0fd7894bc38c58e1dbbbdbbf6c",
+      "cleanup_started_at": "2026-09-11T04:28:04.657731+00:00",
+      "job": "desktop-windows-x64",
+      "job_conclusion": "success",
+      "log": {
+        "cleanup_json_line": 941,
+        "cleanup_upload_finalized_line": 970,
+        "main_upload_finalized_line": 920,
+        "member": "4_Desktop, Kotlin Native, and Android resources strict verification (Windows x64).txt",
+        "orphan_heading_line": 989,
+        "sha256": "8d6559a2efb55b491dee417c54c41c3838e24afbb55a4f5136cdbf5810274c43",
+        "stop_json_lines": {
+          "windows-x64": 883
+        },
+        "termination_lines": []
+      },
+      "not_created": 172,
+      "ownership_receipt_sha256": "d197f65af8ad60ff248082c6bf2d6d67d82abac7c73efc7aab443ff0bf67e9cc",
+      "removed_build_roots": 15,
+      "removed_python_caches": 0,
+      "zero_exit_stops_including_final": 2
+    },
+    {
+      "api_job_id": 103145382813,
+      "artifact_ids": {
+        "cleanup": 10184986147,
+        "main": 10184984034
+      },
+      "cleanup": "PASS",
+      "cleanup_finished_at": "2026-09-11T04:39:30.519672+00:00",
+      "cleanup_receipt_sha256": "339f48952cc59ff28a95a456cea4ad1091496c0557e0deea674686b05f222320",
+      "cleanup_started_at": "2026-09-11T04:39:27.633882+00:00",
+      "job": "ios",
+      "job_conclusion": "success",
+      "log": {
+        "cleanup_json_line": 2659,
+        "cleanup_upload_finalized_line": 2686,
+        "main_upload_finalized_line": 2638,
+        "member": "0_iOS simulator runtime and Swift host.txt",
+        "orphan_heading_line": 2706,
+        "sha256": "4ada4d1af0c9742d8bfe3881e70d5a2778a70475a898d3135b60cd98bc9f5121",
+        "stop_json_lines": {
+          "apple-aggregate": 861,
+          "apple-ui": 2600
+        },
+        "termination_lines": []
+      },
+      "not_created": 172,
+      "ownership_receipt_sha256": "6c32a4e3058f8a301dc15651b154d688b8545dab927bf06636e4dcd27a45c9de",
+      "removed_build_roots": 15,
+      "removed_python_caches": 0,
+      "zero_exit_stops_including_final": 3
+    },
+    {
+      "api_job_id": 103145382816,
+      "artifact_ids": {
+        "cleanup": 10185861945,
+        "main": 10185860790
+      },
+      "cleanup": "PASS",
+      "cleanup_finished_at": "2026-09-11T05:20:03.207818+00:00",
+      "cleanup_receipt_sha256": "1214aa597b3a0b7537f95e748f9985b92f3d1b418b852520b6023f5903c91261",
+      "cleanup_started_at": "2026-09-11T05:20:01.046816+00:00",
+      "job": "ios-release",
+      "job_conclusion": "success",
+      "log": {
+        "cleanup_json_line": 2195,
+        "cleanup_upload_finalized_line": 2222,
+        "main_upload_finalized_line": 2174,
+        "member": "5_iOS release frameworks and Swift wrapper.txt",
+        "orphan_heading_line": 2242,
+        "sha256": "bea45587a61c7713929103bdbf8a682028133089961b54bdd6359e4995f98bc8",
+        "stop_json_lines": {
+          "apple-aggregate": 828,
+          "apple-wrapper": 2126
+        },
+        "termination_lines": []
+      },
+      "not_created": 172,
+      "ownership_receipt_sha256": "38eabeef11fae666bd924e1eb13d967cb30f798a93daed1b7ff438ce6acdf120",
+      "removed_build_roots": 15,
+      "removed_python_caches": 0,
+      "zero_exit_stops_including_final": 3
+    }
+  ],
+  "apple_cycles": [
+    {
+      "baseline_lifetimes": 243,
+      "claim_sha256": "3f4b40cbd1862960ceaf3285362a31627edceec724466c967b6c7a53779cb39c",
+      "cycle": "apple-aggregate",
+      "excluded_lifetimes": 0,
+      "job": "ios",
+      "nonce": "7484c6b973a24f68a1730415d85c376a",
+      "not_before_us": 1789100417532828,
+      "result": "PASS",
+      "signals": [],
+      "simulator": {
+        "result": "NOT_APPLICABLE"
+      },
+      "stop_sha256": "75606425f3daec2d1f9564c5d9d4d15ee9a8e859985f83380ba9c4242ce7a57e",
+      "tracking_sha256": "8646afdb67667368e5255a449decb30eac0649698c52ec472bd99448d780590c",
+      "worker_errors": 0,
+      "worker_passes": 2
+    },
+    {
+      "baseline_lifetimes": 171,
+      "claim_sha256": "23570ca6663f0c9ce0e7dfb650b94c6008bf98d31d21af4871b33fb27d4b5f64",
+      "cycle": "apple-ui",
+      "excluded_lifetimes": 0,
+      "job": "ios",
+      "nonce": "b06a9b95339d4004b3c35b2711b8ff4b",
+      "not_before_us": 1789101191428071,
+      "result": "PASS",
+      "signals": [],
+      "simulator": {
+        "actions": [
+          {
+            "command": "delete",
+            "exit_code": 0
+          }
+        ],
+        "recovered_from_intent": false,
+        "result": "PASS",
+        "udid": "FB8622DF-0973-484D-AEE2-79D57C16B1CD"
+      },
+      "stop_sha256": "2e5cd6b673db9b2993e09873d066e10df00bcd8111029c0d93a114eb52386d10",
+      "tracking_sha256": "8646afdb67667368e5255a449decb30eac0649698c52ec472bd99448d780590c",
+      "worker_errors": 0,
+      "worker_passes": 2
+    },
+    {
+      "baseline_lifetimes": 212,
+      "claim_sha256": "8fca7398125265b57b7ba5d38b6ec517e319f525d0c53774e2b380062983b176",
+      "cycle": "apple-aggregate",
+      "excluded_lifetimes": 0,
+      "job": "ios-release",
+      "nonce": "518b9cc8aa5e44099a7cf99034eae44c",
+      "not_before_us": 1789100265502251,
+      "result": "PASS",
+      "signals": [],
+      "simulator": {
+        "result": "NOT_APPLICABLE"
+      },
+      "stop_sha256": "4fbaf9cd17e9269116e90a3ad63a156ee50ac54e74267418c198fbeecc12019f",
+      "tracking_sha256": "4133077a36e56d9b968d277ffc05b885a2b59e7d2f1516a98870f026d4acd4b0",
+      "worker_errors": 0,
+      "worker_passes": 2
+    },
+    {
+      "baseline_lifetimes": 114,
+      "claim_sha256": "d66ba7cc0fd53192cc2d4d2a2664602bb17d739522295c5b0843a94c0680930b",
+      "cycle": "apple-wrapper",
+      "excluded_lifetimes": 0,
+      "job": "ios-release",
+      "nonce": "d03f93887f37475fb7940c730c071e96",
+      "not_before_us": 1789103226847398,
+      "result": "PASS",
+      "signals": [
+        {
+          "delivered": true,
+          "executable": "Contents/Developer/usr/bin/ibtoold",
+          "pid": 99473,
+          "signal": 15,
+          "started": [
+            1789103963,
+            479117
+          ]
+        },
+        {
+          "delivered": true,
+          "executable": "Contents/Developer/usr/bin/ibtoold",
+          "pid": 99464,
+          "signal": 15,
+          "started": [
+            1789103963,
+            403223
+          ]
+        }
+      ],
+      "simulator": {
+        "result": "NOT_APPLICABLE"
+      },
+      "stop_sha256": "73ff34221c6ff6317766a094e19636775f06ed145bc2ae622b0ce4c54bde2953",
+      "tracking_sha256": "4133077a36e56d9b968d277ffc05b885a2b59e7d2f1516a98870f026d4acd4b0",
+      "worker_errors": 0,
+      "worker_passes": 2
+    }
+  ],
+  "apple_ui_journals": {
+    "job": "ios",
+    "cycle": "apple-ui",
+    "nonce": "b06a9b95339d4004b3c35b2711b8ff4b",
+    "device": "FB8622DF-0973-484D-AEE2-79D57C16B1CD",
+    "plan_sha256": "57e957e302212e76b46b4a359ebf9134a9749e6cb3745c0222765ef9c48f84f4",
+    "create_sha256": "c7b2aa240a18e967b873cc9a57e50a80bc65fdcb36695816e7c76684a0753a5e",
+    "adopted_sha256": "33ac57cbfd80b3e883b6f9485e5312931697400f78674dc53882db6ae064652c",
+    "precreate_baseline_devices": 132,
+    "current_device_absent_from_baseline": true,
+    "runtime": "com.apple.CoreSimulator.SimRuntime.iOS-18-5",
+    "device_type": "com.apple.CoreSimulator.SimDeviceType.iPhone-16-Pro",
+    "create_exit_code": 0,
+    "cleanup_actions": [
+      {
+        "command": "delete",
+        "exit_code": 0
+      }
+    ],
+    "recovered_from_intent": false
+  },
+  "apple_reconciliation": "Exactly ios=apple-aggregate+apple-ui and ios-release=apple-aggregate+apple-wrapper. Every assigned cycle's prepare/run/finish succeeded; current source/task, claim hashes, final-to-stop hashes and within-job tracking-marker hashes reconcile. UI plan/create/adopt share the claim nonce and fresh device, with valid chronology and delete exit 0; there is no explicit shutdown action to claim. Other three cycles are simulator NOT_APPLICABLE, not device-retirement evidence. Two release-wrapper ibtoold TERM15 events target new non-baseline native lifetimes after the claim boundary on the exact-Xcode allowlist, followed by an event-free bounded worker pass. This is native-identity signaling and bounded quiescent sampling, not child reaping or whole-machine absence.",
+  "linux_v2_absence": {
+    "binding": {
+      "sdk_device": 2049,
+      "sdk_inode": 795534,
+      "sdk_path_sha256": "e507a12011d2294b5329bb26fe44164d883087cb9d582c7ec9335a39e4c551e1",
+      "uid": 1001
+    },
+    "enumerated": 151,
+    "errors": [],
+    "exe_reader": {
+      "eacces_denials": 3,
+      "mode": "sudo-proc-exe-v2",
+      "privileged_reads": 3
+    },
+    "finished_at": "2026-09-11T04:37:15.180559+00:00",
+    "matching_executables": 0,
+    "mixed_uid_privileged_samples": 1,
+    "mixed_uid_samples": 1,
+    "result": "PASS",
+    "sampled": 151,
+    "scope": "Enumerated visible selected-UID executable paths beneath bound SDK/emulator only; not termination, task-process ownership, AVD retirement, other SDKs/UIDs, or continuous absence",
+    "selected_uid": 8,
+    "source": {
+      "head": "d3c0df9ccba51463708728c3c618d3652e76aafa",
+      "tree": "3169657a10279eb2bfad6c59a60a5054c6092b61"
+    },
+    "started_at": "2026-09-11T04:37:15.072081+00:00"
+  },
+  "managed_device_context": {
+    "api_step": {
+      "completed_at": "2026-09-11T04:36:48Z",
+      "conclusion": "success",
+      "name": "Run release Android managed-device smoke tests",
+      "number": 12,
+      "started_at": "2026-09-11T04:32:42Z",
+      "status": "completed"
+    },
+    "log_member": "6_Common, desktop, and Android release.txt",
+    "managed_task_line": 3920,
+    "managed_test_start_line": 3921,
+    "managed_build_success_line": 3933,
+    "managed_stop_receipt_line": 3947
+  },
+  "linux_scope_limit": "The managed-device smoke API step succeeded, rather than being skipped, and its current raw log records the managed test task/start and BUILD SUCCESSFUL. Its stop and the final Gradle stop precede the v2 sample. Both counter families reconcile: 151 enumerated/sampled, 8 selected-UID samples for bound UID 1001, 0 matching executables, mixed-UID counters 1/1, privileged reads/EACCES denials 3/3. This is only sampled visible selected-UID executable-path absence beneath the bound SDK/emulator path. It is not termination, task-process ownership, AVD retirement, other-SDK/UID coverage, continuous absence or all-process absence.",
+  "preservation_and_orphans": {
+    "current_errors": "All six current final receipts have errors[] and retained[]; all four Apple cycles and all eight worker passes have errors[]. All fifteen repository-wrapper Gradle stops exit 0 with No Gradle daemons are running.",
+    "unit_test_output": "Android raw-log lines 2342/2347 retain native-probe preservation 10/8 OSError summaries within the release-automation unittest stream. Passing injected-failure controls are at 2141/2151; line 2352 is an intentionally FAILED custody fixture bound to fake source aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, not D09. The stream ends at 2426/2428 with its unittest summary/OK. Actual focused native/process-probe steps were skipped. These fixture errors were inspected and preserved, not erased or misattributed to current task-bound cleanup.",
+    "orphan_output": "All six combined Complete-job tails and system logs were inspected. Each combined log has one Cleaning up orphan processes heading. Android additionally reports an adb orphan action after final cleanup; the other five have no Terminate orphan process lines. The Android line is a runner-reported termination action, not explicit exit/wait confirmation. Neither headings nor missing termination lines establish global process absence.",
+    "runner_orphan_observations": [
+      {
+        "line": 4465,
+        "member": "6_Common, desktop, and Android release.txt",
+        "text": "2026-09-11T04:37:17.4878151Z Terminate orphan process: pid (7228) (adb)"
+      }
+    ],
+    "cache_scope": "Android reports removing 15 build roots plus six Python-cache roots; each other lane reports removing 15 build roots. Not-created roots remain distinct from removed roots. Unclaimed .gradle/.kotlin and global caches are not certified removed. No removed root touches tracked source or historical evidence; unrelated work and global caches are outside this result.",
+    "android_removed_python_caches": [
+      "scripts/__pycache__",
+      "scripts/ci/__pycache__",
+      "scripts/release/__pycache__",
+      "scripts/release/tests/__pycache__",
+      "scripts/verification/__pycache__",
+      "scripts/verification/ios-readiness/__pycache__"
+    ],
+    "worker_scope": "Desktop Linux-arm64/macOS-x64/Windows-x64 receipts attest Gradle stop and exact checkout-output cleanup, not a generic native-worker inventory. Android adds the bounded SDK/emulator absence sample. Native Xcode-worker/device cleanup receipts apply only to the four assigned ios/ios-release cycles."
+  },
+  "findings": [],
+  "qualification_limit": "Cleanup PASS is derived from current scoped ownership/resource/custody evidence, not from green jobs alone. No build/test rerun, cross-run/SHA evidence stitching, runtime-count re-review, strict-protection/readiness or Store qualification. H02 and protection diagnostics are out of scope; the seventh API job is explicitly skipped, not missing and not reviewed.",
+  "activity": "Read-only immutable Git path/tree binding and stdlib metadata/ZIP/JSON/log reconciliation; no source-code re-audit, project imports, tests, builds, network, process signals or Git writes. Sole write is this new independent review receipt. Historical failures remain unchanged.",
+  "completed_at": "2026-09-11T13:31:06.546217+00:00"
+}

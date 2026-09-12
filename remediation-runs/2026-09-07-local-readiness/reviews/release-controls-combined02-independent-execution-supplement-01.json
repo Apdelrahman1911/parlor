@@ -1,0 +1,137 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/release_fix_review",
+  "executor": "/root",
+  "reviewed_at": "2026-09-07T15:11:54.987188+00:00",
+  "decision": "PASS_FULL_RELEASE_VALIDATOR_EXECUTION_AT_RECORDED_SOURCE_NOT_A_NEW_CANDIDATE_RUN",
+  "supplements": "reviews/workflow-owned-simulator-contract-independent-review-01.json",
+  "source": {
+    "commit": "849234edb91eef98d9ef1a85d966a6b0c09aaab8",
+    "tree": "cd28d9c6193979186392478fe10c48568ddbb600",
+    "tracked_status": "M docs/review/INDEPENDENT_REVIEW_INVENTORY.csv\n M scripts/release/tests/test_workflow_contract.py\n M scripts/release/workflow_contract.py",
+    "diff_sha256": "2abe95d0bf861668ca82f99004efa4f8abc9f09f310f2d78c84690ed3cd5800b",
+    "source_manifest_sha256": "06a5fa982580949857b8df07e0f08a830a709c6f9e30a778488d5a0695d25379"
+  },
+  "receipt": {
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-controls-combined-02/receipt.json",
+    "sha256": "21f7f70287d09d3c29986fb0edc7fe2effb1f6f3b7ccb936a8f0eca27eb90ff8",
+    "log": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-controls-combined-02/gradle.log",
+    "log_sha256": "a3c266598e0b3a97e41dd7e51542ce29bab523b9c0e21ff98ee64c95847142ce"
+  },
+  "command": [
+    "scripts/release/validate_release_system.sh"
+  ],
+  "started_at": "2026-09-07T15:04:44.229777+00:00",
+  "finished_at": "2026-09-07T15:05:39.469184+00:00",
+  "exit_code": 0,
+  "status": "PASS",
+  "tests": {
+    "declared": 251,
+    "distinct_executed": 251,
+    "all_declared_ids_match": true,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "test_file_source_binding": [
+      {
+        "path": "scripts/release/tests/test_android_artifact_size.py",
+        "sha256": "1bdf6fe45be629ed8ea6d435727e88d87644319257127732b61a529f1ce1a0b1",
+        "receipt_match": true
+      },
+      {
+        "path": "scripts/release/tests/test_android_upload_signature.py",
+        "sha256": "fd9723397cd3ae4336371cd6fdd93164d225919d1ed615d5fd48f75055b3eade",
+        "receipt_match": true
+      },
+      {
+        "path": "scripts/release/tests/test_apple_ci_hygiene.py",
+        "sha256": "28ad6d083da0088087b2196ff1c102e19944e190d9d4484facd511b1d4063be1",
+        "receipt_match": true
+      },
+      {
+        "path": "scripts/release/tests/test_ci_verification_hygiene.py",
+        "sha256": "3fc6f1d4a15152bcca6d86d77bcbc782b3936c6c47336a3ff7b3067d3790e4c8",
+        "receipt_match": true
+      },
+      {
+        "path": "scripts/release/tests/test_dependency_inventory.py",
+        "sha256": "a3c454f08af038a59381360a1290a470d2b04e3ad4201fa1ca63bc96d01f1b91",
+        "receipt_match": true
+      },
+      {
+        "path": "scripts/release/tests/test_google_promotion_edit.py",
+        "sha256": "b6ed5e950782ef5581f86cabd7a263937da52d3dfcf7c84cc45df5bcc2d147db",
+        "receipt_match": true
+      },
+      {
+        "path": "scripts/release/tests/test_normalize_embedded_apple_framework.py",
+        "sha256": "f05aebef486c23bc9bf28fe4eafdf17bbb3789d8c807cb69c7ec10de6aedecc9",
+        "receipt_match": true
+      },
+      {
+        "path": "scripts/release/tests/test_release_documentation.py",
+        "sha256": "414579949e9668da6971d41dd4ef7434271fd17b8af4547b0009162ea5c83046",
+        "receipt_match": true
+      },
+      {
+        "path": "scripts/release/tests/test_release_tool.py",
+        "sha256": "89a2f83994e461184706e9c2ec50d13bffabc622f615793802a6f7e040f9c140",
+        "receipt_match": true
+      },
+      {
+        "path": "scripts/release/tests/test_review_inventory.py",
+        "sha256": "841961fda25e9d4455c3178a3beab93f713e41667592538fcaef0621af74b78c",
+        "receipt_match": true
+      },
+      {
+        "path": "scripts/release/tests/test_store_api.py",
+        "sha256": "18d49c5deb8cc5383b5a9888f7f14f21884bbbfeb577348412f1930f4972a1d1",
+        "receipt_match": true
+      },
+      {
+        "path": "scripts/release/tests/test_workflow_contract.py",
+        "sha256": "f6881e7e0bc5449655a23a88855e2ef8ef854ad11c2342b54e5286a5b68b3e6c",
+        "receipt_match": true
+      },
+      {
+        "path": "scripts/release/tests/test_xcode_framework_phase.py",
+        "sha256": "3033307b0a029d87ab9c8c14d3b3b4d3a0d4db9d183012d6da58fb1e8b5c4a73",
+        "receipt_match": true
+      }
+    ],
+    "interleaved_output_investigated": "250 descriptors have inline ok. test_release_tool.GitTreeVerificationTest.test_unrelated_same_tree_is_rejected has its owned-fixture Git checkout message followed by a separate ok; its reachable test at lines581-589 was reread. Together251 actual passing descriptors, not a missing/skipped test."
+  },
+  "later_gates": {
+    "python_compilation": "PASS reached unittest command under set -euo pipefail",
+    "workflow_contract": "PASS actual two success lines (unittest plus explicit CLI)",
+    "mechanical_inventory": "PASS 752 rows at bound inventory SHA d5f8291a2ff0158cb538f1f50f40724578ae9db021625906da12f247e8002889; explicitly not independent source-review coverage",
+    "downloaded_pinned_shellcheck": "PASS darwin-arm64 policy0.11.0 tar checksum OK and command exit0 through successful script",
+    "downloaded_pinned_actionlint": "PASS policy1.7.12 tar checksum OK and final actionlint -shellcheck command exit0"
+  },
+  "cleanup": {
+    "stop_exit_code": 0,
+    "stopped_at": "2026-09-07T15:05:39.811977+00:00",
+    "workers": {
+      "terminated_owned_workers": [],
+      "remaining_owned_workers": []
+    },
+    "remaining_outputs": [],
+    "cleanup_errors": [],
+    "source_changed_during_cycle": false,
+    "runner_changed_during_cycle": false
+  },
+  "current_binding_caveat": {
+    "current_commit": "5d9f5f4c81ff51ee70922c876eefb91c6e669d56",
+    "current_contract_sha256": "90e4b07ac5a932b1153a82c50066c19d0c70d7027be81b75397ccf1fa9dcf87c",
+    "current_contract_tests_sha256": "f6881e7e0bc5449655a23a88855e2ef8ef854ad11c2342b54e5286a5b68b3e6c",
+    "code_test_bytes_still_match_cycle": true,
+    "current_inventory_sha256": "69871f2cd81ed210af76d346237dad725c8afbba9f2c7ffa2860754692bc7a61",
+    "interpretation": "Root subsequently committed the reviewed correction and mechanically refreshed inventory. The prior full-validator result belongs to its recorded dirty source and inventory; it does not establish final current-commit productionCheck or CI success."
+  },
+  "remaining": [
+    "Final frozen-source productionCheck and complete platform matrix.",
+    "Qualified actual CI resource cleanup and new simulator execution.",
+    "No Store/device/legal gate is closed by these synthetic release-security checks."
+  ],
+  "reviewer_actions": "Read/AST-parse/hash existing source and receipts; only this compact supplement written. No tests/builds/native/process termination/artifact deletion/Git changes performed."
+}

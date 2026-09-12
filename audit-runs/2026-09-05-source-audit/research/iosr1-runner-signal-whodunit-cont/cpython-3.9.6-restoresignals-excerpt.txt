@@ -1,0 +1,25 @@
+2444:  * listed at `man 7 signal` or
+2445:  * http://www.opengroup.org/onlinepubs/009695399/functions/xsh_chap02_04.html.
+2446:  *
+2447:  * If this function is updated, update also _posix_spawn() of subprocess.py.
+2448:  */
+2449: void
+2450: _Py_RestoreSignals(void)
+2451: {
+2452: #ifdef SIGPIPE
+2453:     PyOS_setsig(SIGPIPE, SIG_DFL);
+2454: #endif
+2455: #ifdef SIGXFZ
+2456:     PyOS_setsig(SIGXFZ, SIG_DFL);
+2457: #endif
+2458: #ifdef SIGXFSZ
+2459:     PyOS_setsig(SIGXFSZ, SIG_DFL);
+2460: #endif
+2461: }
+2462: 
+2463: 
+2464: /*
+2465:  * The file descriptor fd is considered ``interactive'' if either
+2466:  *   a) isatty(fd) is TRUE, or
+2467:  *   b) the -i flag was given, and the filename associated with
+2468:  *      the descriptor is NULL or "<stdin>" or "???".

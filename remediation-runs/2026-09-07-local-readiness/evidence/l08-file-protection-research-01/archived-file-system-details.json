@@ -1,0 +1,179 @@
+{
+  "accessed_at_utc": "2026-09-07T20:26:20.569512+00:00",
+  "bytes": 70990,
+  "final_url": "https://developer.apple.com/library/archive/documentation/FileManagement/Conceptual/FileSystemProgrammingGuide/FileSystemDetails/FileSystemDetails.html",
+  "name": "archived-file-system-details",
+  "request_url": "https://developer.apple.com/library/archive/documentation/FileManagement/Conceptual/FileSystemProgrammingGuide/FileSystemDetails/FileSystemDetails.html",
+  "response_sha256": "71b69bea0e96a1710ef0dbf1ced9a02e51d9dcc0b7413a73d62510bb9394d47d",
+  "selected_visible_paragraphs": [
+    {
+      "paragraph": 73,
+      "text": "File type and creator codes are an older way of identifying the type of a file and the app that created it. A file type code (a 32-bit value usually specified as a sequence of four characters) identifies the type of content contained in a file. A creator code (similarly identified using a sequence of four characters) identifies the app that created the file and acts as the primary editor for that specific file. Although these codes are generally deprecated, you may see them in legacy files and apps and in some places in the system."
+    },
+    {
+      "paragraph": 74,
+      "text": "macOS File System Security"
+    },
+    {
+      "paragraph": 75,
+      "text": "macOS provides file system security policies that limit access to files and directories (including special files and directories such as mount points for volumes, block and character special device files that represent hardware devices, symbolic links, named pipes, UNIX domain sockets, and so on). This appendix explains these policies and how they affect apps."
+    },
+    {
+      "paragraph": 76,
+      "text": "Security Schemes"
+    },
+    {
+      "paragraph": 77,
+      "text": "macOS provides three file system security schemes: UNIX (BSD) permissions, POSIX access control lists (ACLs), and sandbox entitlements. In addition, the BSD layer provides several per-file flags that override UNIX permissions. These schemes are described in the sections that follow."
+    },
+    {
+      "paragraph": 78,
+      "text": "In addition, macOS allows admin users to disable ownership and permissions checking for removable volumes on a per-volume basis by choosing Get Info on the volume in Finder, then checking the \u201cIgnore ownership on this volume\u201d checkbox."
+    },
+    {
+      "paragraph": 79,
+      "text": "These permissions models fit together as follows:"
+    },
+    {
+      "paragraph": 156,
+      "text": "If the end of the ACL is reached without finding all of the required permissions, and if the object also has BSD permissions, then the system checks the unsatisfied permissions against the BSD permissions. If these are sufficient to grant all required permissions, the request is allowed. If the permission requested has no BSD equivalent (such as \u201ctake ownership\u201d), then it is considered still outstanding and the request is denied."
+    },
+    {
+      "paragraph": 157,
+      "text": "If the file system object has no ACL, then permissions are evaluated according to the BSD security policies, as described in UNIX Permissions and BSD File Flags."
+    },
+    {
+      "paragraph": 158,
+      "text": "The credential of the requesting entity is equivalent to the effective UID (that is, the EUID) of the program attempting to open or execute a file. The EUID is normally the same as the UID of the user or process that executes the process., but it can differ in special circumstances (involving the setuid bit) as described in Owner or Root Security Policy."
+    },
+    {
+      "paragraph": 159,
+      "text": "Inheritance of Permissions"
+    },
+    {
+      "paragraph": 160,
+      "text": "BSD permissions are assigned only on a per-file basis, so that the permissions assigned to a directory do not affect the permissions of a new file or subdirectory created in that directory. Although you can apply the permissions of a directory to enclosed items, doing so is a one-time operation. Any newly created files or subdirectories are not affected\u2014they are created with default permissions."
+    },
+    {
+      "paragraph": 174,
+      "text": "Therefore, any explicitly specified ACEs take precedence over all inherited ACEs. For more information on how ACEs are evaluated, see Evaluating Access Control Lists."
+    },
+    {
+      "paragraph": 175,
+      "text": "Because ACEs can be inherited, administrators can control the fine-grained permissions of files created in a directory by assigning inheritable ACEs to the directory. Doing so saves the work of assigning ACEs to each file individually. In addition, because ACEs can apply to groups of users, administrators can assign permissions to groups rather than having to specify permissions for each individual. Applying access security to directories and groups rather than to files and individuals saves administrator time and gives better file system performance in many circumstances."
+    },
+    {
+      "paragraph": 176,
+      "text": "For app programmers, the automatic inheritance of ACEs greatly simplifies working with file permissions. You do not need to create an ACL every time you create a new file. You also don\u2019t need to maintain inherited ACEs when saving files. Instead, the kernel automatically creates the ACL for every new file using inherited ACEs."
+    },
+    {
+      "paragraph": 177,
+      "text": "Note that assignment and inheritance of BSD permissions are not affected by ACLs. If ACLs are not supported, the BSD permissions are used. For more information on the way permissions are evaluated when both ACLs and BSD permissions are set, see Security Schemes."
+    },
+    {
+      "paragraph": 178,
+      "text": "In macOS Server 10.4, the server administrator can perform the following operations:"
+    },
+    {
+      "paragraph": 179,
+      "text": "Copy permissions from a parent directory to all files and directories below it in the hierarchy. This makes permissions uniform in the directory tree and should be used only for BSD permissions."
+    },
+    {
+      "paragraph": 293,
+      "text": "The owner of the sticky directory (EUID = directory UID)"
+    },
+    {
+      "paragraph": 294,
+      "text": "For example, if the owner of a binary executable file is the root user and the setuid bit is set, the program always runs with an EUID of 0. Because such a program runs with root privileges when executed by someone other than root, it can create a security vulnerability. Therefore, it is important to restrict the creation and use of setuid and setgid programs."
+    },
+    {
+      "paragraph": 295,
+      "text": "A user can change the permissions only on files owned by that user. Therefore, only the root user can set the setuid bit on a program owned by root."
+    },
+    {
+      "paragraph": 296,
+      "text": "UNIX permissions are visible to users in Terminal and in the Finder. In Terminal, they look like this:"
+    },
+    {
+      "paragraph": 299,
+      "text": "-rw-r--r-- 1 username groupname 0 Jun 16 13:40 filename"
+    },
+    {
+      "paragraph": 300,
+      "text": "The format of the permissions (at left) is described further in Shell Script Security in Shell Scripting Primer."
+    },
+    {
+      "paragraph": 301,
+      "text": "In the Finder, UNIX permissions take the form of the Ownership and Permissions information in a file or folder\u2019s Info dialog (Figure B-3)."
+    },
+    {
+      "paragraph": 302,
+      "text": "Figure B-3 Ownership and Permissions information"
+    },
+    {
+      "paragraph": 310,
+      "text": "A major difference between standard BSD permission semantics and the macOS implementation is that in macOS the root user is disabled after system installation. In most cases, it is not necessary for an administrator to run as root (see The Admin Group). You may also assume root power by using the sudo utility. Although the sudo utility does not require you to enable the root user, you can use it only from the Terminal app; that is, you must have physical access to the machine to use it. See the sudo man page for more information on its use."
+    },
+    {
+      "paragraph": 311,
+      "text": "The root user should not be enabled on user systems. If your app needs to perform operations as the root user, you must use Authorization Services. For more information, see Authorization Services C Reference and Authorization Services Programming Guide in Security Documentation."
+    },
+    {
+      "paragraph": 312,
+      "text": "Note: In almost all cases you can run as a member of the admin group or use sudo rather than enabling the root user. If you absolutely must enable the root user, run the NetInfo Manager utility and authenticate yourself as the local administrator. Then choose Enable Root User from the Security menu. This menu item is enabled only if you are a member of the local admin group\u2014a group with special administrative privileges\u2014and you have been previously authenticated in the local domain. Once you\u2019ve enabled the root user, the password is blank, so you should give the root user a password by selecting Change Root Password from the Security menu. After you\u2019ve completed the task requiring root access, you should relinquish root user privileges by choosing Disable Root User from the Security menu."
+    },
+    {
+      "paragraph": 313,
+      "text": "Whereas most user permissions apply across networks, setuid and setgid are often ignored on network volumes, as is the concept of a root user."
+    },
+    {
+      "paragraph": 314,
+      "text": "For example, when accessing remote volumes over NFS, by default, the root user is mapped to nobody\u2014a special user with very little access. This prevents the root user on one computer from becoming the root user on another computer."
+    },
+    {
+      "paragraph": 335,
+      "text": "NFS"
+    },
+    {
+      "paragraph": 336,
+      "text": "In general, NFS is not a secure protocol, because most NFS servers trust their clients. That is, if a client says that this file operation is done on behalf of user Bob, the server does the operation on behalf of user Bob. However, if you have root access on the client, you can pretend to be user Bob and access any of Bob\u2019s files on the NFS server. To maintain some security, most NFS servers map the root user to a special user, nobody, which owns no files or directories. For this reason, if your EUID is 0 you can, in general, access only those files on an NFS server that allow access to \u201cother\u201d."
+    },
+    {
+      "paragraph": 337,
+      "text": "SMB/CIFS"
+    },
+    {
+      "paragraph": 338,
+      "text": "SMB is a networking protocol for file sharing commonly used on Windows networks. CIFS is often used as a synonym for SMB. Samba is software that implements an SMB/CIFS server on UNIX. Therefore, this file sharing protocol is variously referred to as SMB, CIFS, SMB/CIFS, Samba, and Windows file sharing."
+    },
+    {
+      "paragraph": 349,
+      "text": "HTTP Extensions for Distributed Authoring\u2014WEBDAVhttp://www.ietf.org/rfc/rfc2518.txt"
+    },
+    {
+      "paragraph": 350,
+      "text": "iOS File System Security"
+    },
+    {
+      "paragraph": 351,
+      "text": "Although the underlying permissions model in iOS is the same as in macOS, in practice, iOS apps are limited by their sandbox such that an app can generally only access files created by that app. (Apps can access certain other files such as address book data and photos, but only through APIs specifically designed for that purpose.)"
+    },
+    {
+      "paragraph": 352,
+      "text": "In addition, if file protection is enabled on an iOS device, apps can choose to prevent access to specific files to when the device is locked. You might do this for files that contain private user data or sensitive information."
+    },
+    {
+      "paragraph": 353,
+      "text": "As with the keychain, encrypted files in iOS are also encrypted in any backups of the mobile device. In addition to enabling encryption, you can also cause a file to be excluded from appearing in backups entirely."
+    },
+    {
+      "paragraph": 354,
+      "text": "Important: Any app that supports file protection must be prepared to handle situations in which the app is running but the protected file is unavailable."
+    },
+    {
+      "paragraph": 355,
+      "text": "For more information about file protection APIs, see the information in Advanced App Tricks in App Programming Guide for iOS."
+    }
+  ],
+  "status": 200
+}

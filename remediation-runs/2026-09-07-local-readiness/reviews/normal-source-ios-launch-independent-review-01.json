@@ -1,0 +1,467 @@
+{
+  "schema_version": 1,
+  "review_id": "normal-source-ios-launch-independent-review-01",
+  "reviewed_at": "2026-09-07T10:07:30.363973+00:00",
+  "reviewer": "/root/factory_review",
+  "author": "/root/native_fix_review",
+  "disposition": "SOURCE REVIEW APPROVED FOR ROOT-OWNED PURE-CONTROL EXECUTION; NATIVE EXECUTION STILL REQUIRES ACTUAL 74-TEST RECEIPT AND FRESH APPLICATION+CONTROL BINDING",
+  "baseline": {
+    "repository": "/Users/abdelrahman/Projects/parlor",
+    "branch": "fix/local-readiness-2026-09-07",
+    "commit": "0264b6bb6ae312b943d7ce8b8a026c5cd6a7e0c1",
+    "tree": "3aa3f48efd1b56fad64d2df6667c6b9bee4804c6",
+    "status": " M game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitGameFlow.kt\n?? AGENTS.md\n?? audit-runs/\n?? design/\n?? docs/PARLOR_PROJECT_HANDOFF.md\n?? game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/PeerPausedCoverContrastTest.kt\n?? project-code-audit/\n?? remediation-runs/\n?? scripts/verification/",
+    "tracked_diff_sha256": "2abaf553a8601e5b9cb280abf5a913a997a003238c03c7c3e15b800d1d18a372",
+    "note": "Root-owned Whodunit paused-cover production/test changes remain untouched; a commit alone does not identify this dirty/untracked checkout."
+  },
+  "freeze": {
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/draft-freeze-02.json",
+    "sha256": "46ad557848f42f603539cf2ef6491fdb45a1b4a328d518b922ca8dddeaabf68a",
+    "base_control_count": 51,
+    "base_control_sha256": "75144fdb037df10d72c25f6666f61e291f1776b03ce30e673f8229ca2ace1cd6",
+    "actual_files_match": true,
+    "original_freeze_preserved": true,
+    "original_freeze01_is_stale": true,
+    "source_binding_included": false,
+    "requirement": "Before native use explicitly create and review schema3 source binding for current actual app inputs, then recompute control manifest including that file. Do not silently refresh or reuse an old approval."
+  },
+  "coverage": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
+      "sha256": "27606b6d2c630aef5cc674805219f3448b6c588e1240dd23d7adb9adaa34cf9f",
+      "line_count": 656,
+      "reviewed_line_ranges": [
+        [
+          1,
+          656
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "review_scope": "complete",
+      "relevance": "campaign verification control; does not ship"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/normal_source_copy.py",
+      "sha256": "5920d07a43c64eb7193a1c1d03aea93948bfa21597591ee13d79073666ed54d2",
+      "line_count": 51,
+      "reviewed_line_ranges": [
+        [
+          1,
+          51
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "review_scope": "complete",
+      "relevance": "campaign verification control; does not ship"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/normal_launch_receipts.py",
+      "sha256": "7753fccfbda4678289d889f58c5c3b4454e954eec0dbee7d8b654780f55d42f5",
+      "line_count": 203,
+      "reviewed_line_ranges": [
+        [
+          1,
+          203
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "review_scope": "complete",
+      "relevance": "campaign verification control; does not ship"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/external_image_provenance.py",
+      "sha256": "820a566780f15edc07331d41e0ac7818414d90e347e4833ed62d6ca4fb76b559",
+      "line_count": 149,
+      "reviewed_line_ranges": [
+        [
+          1,
+          149
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "review_scope": "complete",
+      "relevance": "campaign verification control; does not ship"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_control_tests.py",
+      "sha256": "5d7e15e530750b9b3626a482afd138c2560b3fef506a29a3c987653a3a1a15b9",
+      "line_count": 65,
+      "reviewed_line_ranges": [
+        [
+          1,
+          65
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "review_scope": "complete",
+      "relevance": "campaign verification control; does not ship"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_normal_launch_controls.py",
+      "sha256": "6060ec8b41fb3551cc9eb5d828aec2efc799cb77bcd627baaef25427b6503ace",
+      "line_count": 790,
+      "reviewed_line_ranges": [
+        [
+          1,
+          790
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "review_scope": "complete",
+      "relevance": "campaign verification control; does not ship"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/NormalSourceLaunchUITests.swift.in",
+      "sha256": "c3d5cd42d60371cffee6ec4e8cdc462165f953dbef352bcdbf0f3f2d2a5a4ed2",
+      "line_count": 76,
+      "reviewed_line_ranges": [
+        [
+          1,
+          76
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "review_scope": "complete",
+      "relevance": "campaign verification control; does not ship"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/README.md",
+      "sha256": "1e8e9cb396ef4d89e6de79d7c1ff1f4e551cb06c1467b6789d423f53945c9e63",
+      "line_count": 135,
+      "reviewed_line_ranges": [
+        [
+          1,
+          135
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "review_scope": "complete",
+      "relevance": "campaign verification control; does not ship"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/owned_lane.py",
+      "sha256": "4bf3bbb4abfa22cd1604e6b4381bf481c95662ab15bf3fbdc86355a083102742",
+      "line_count": 221,
+      "reviewed_line_ranges": [
+        [
+          1,
+          221
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "review_scope": "complete",
+      "relevance": "campaign verification control; does not ship"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/secondary_fifo.py",
+      "sha256": "080622194e19ef5d3ffb561e134ab8cf91e3e3ccef1e29197f59781154a7ffcc",
+      "line_count": 205,
+      "reviewed_line_ranges": [
+        [
+          1,
+          205
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "review_scope": "complete",
+      "relevance": "campaign verification control; does not ship"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/simulator_signing.py",
+      "sha256": "89524b777694f8504008a83b60299725cae01e8b642c10754283d79ce1974d1e",
+      "line_count": 190,
+      "reviewed_line_ranges": [
+        [
+          1,
+          190
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "review_scope": "complete",
+      "relevance": "campaign verification control; does not ship"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/copied-kotlin-phase.sh.in",
+      "sha256": "4992e516f99df2b5f1425688c51ae532086f8859618b1968937fbede818f49b0",
+      "line_count": 45,
+      "reviewed_line_ranges": [
+        [
+          1,
+          45
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "review_scope": "complete",
+      "relevance": "campaign verification control; does not ship"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/native_failure_receipts.py",
+      "sha256": "9376f5f7244dc297edf9bca964357a1148c1972a41b44fdfd60fd8c988a007d6",
+      "line_count": 72,
+      "reviewed_line_ranges": [
+        [
+          1,
+          72
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "review_scope": "complete",
+      "relevance": "campaign verification control; does not ship"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/run_ios_readiness.py",
+      "sha256": "9bd997ec5836fe8da4e3afcdb3604eb10f180d3b55a63718c1ea9ba1f9893f2c",
+      "line_count": 977,
+      "reviewed_line_ranges": [
+        [
+          1,
+          96
+        ],
+        [
+          147,
+          173
+        ],
+        [
+          270,
+          328
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "review_scope": "listed ranges only",
+      "relevance": "campaign verification control; does not ship"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/copied_sources.py",
+      "sha256": "5597d1e4b6a123a1c23bd82c66e30fdd86cb00cf85c831d6c6f281e023cbd752",
+      "line_count": 229,
+      "reviewed_line_ranges": [
+        [
+          1,
+          100
+        ],
+        [
+          159,
+          229
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "review_scope": "listed ranges only",
+      "relevance": "campaign verification control; does not ship"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/artifact_inventory.py",
+      "sha256": "485196bd7dcebccaa5ad552896c7e2da781fbf6fa6fff6ef2ab350ecc9360124",
+      "line_count": 234,
+      "reviewed_line_ranges": [
+        [
+          1,
+          89
+        ],
+        [
+          215,
+          234
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "review_scope": "listed ranges only",
+      "relevance": "campaign verification control; does not ship"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/darwin_owned_processes.py",
+      "sha256": "2f2ad2a5d68cea999709a4c3c3e384cd9e6767258ad34aed4181ee2118962378",
+      "line_count": 368,
+      "reviewed_line_ranges": [
+        [
+          1,
+          210
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "review_scope": "listed ranges only",
+      "relevance": "campaign verification control; does not ship"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/iosApp/iosAppUITests/IOSAppLaunchUITests.swift",
+      "sha256": "e903278fc8defcac9a4d03a52495c1364a361222e5f369059c5d6b6416fb6eb7",
+      "line_count": 32,
+      "reviewed_line_ranges": [
+        [
+          1,
+          32
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "review_scope": "complete",
+      "relevance": "checked-in iOS UI test replaced only inside owned copy"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/iosApp/iosApp.xcodeproj/xcshareddata/xcschemes/iosApp.xcscheme",
+      "sha256": "b883fb73d15c7cf4faf868d2cdc8c2fb921c7ffe3606893733b1f89a33747312",
+      "line_count": 103,
+      "reviewed_line_ranges": [
+        [
+          1,
+          103
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "review_scope": "complete",
+      "relevance": "actual application/test scheme"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/iosApp/iosApp.xcodeproj/project.pbxproj",
+      "sha256": "625103b4676a017beb4619c61b705efc84c2be47b71603bddd840c1d3856ea9d",
+      "line_count": 539,
+      "reviewed_line_ranges": [
+        [
+          410,
+          510
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "review_scope": "listed ranges only",
+      "relevance": "actual Xcode application/test build wiring; additional search references not counted as full review"
+    }
+  ],
+  "coverage_method": "Full original eight-file reading followed by complete archived-to-current allocation delta and repeated current caller/finalization inspection; SHA identity checked for unchanged controls. Partial inherited-helper ranges are explicit. Hashing all51 controls does not mean all51 were newly read in full.",
+  "allocation_defect": {
+    "classification": "CONFIRMED CAMPAIGN-RUNNER CLEANUP DEFECT, SOURCE FIX APPROVED; REGRESSION EXECUTION PENDING",
+    "finder": "/root/factory_review",
+    "author": "/root/native_fix_review",
+    "independent_reviewer": "/root/factory_review",
+    "original_path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/normal-launch-allocation-prepatch-01/run_normal_ios_launch.py",
+    "original_sha256": "0c710bd70c818c52b8dc0107f97ba75d4ba09bd4154a5e2b4d537ebd69fb67da",
+    "original_lines": [
+      245,
+      255
+    ],
+    "proof": "A SIGINT/SIGTERM received during mkdtemp or receipt save was deferred only through save. Exiting that guard replayed interruption before canonical path/dev+inode/owner assignment, so finalizer correctly refused unowned removal and stranded the exact allocation. A receipt-write exception also exited before identity capture. No app process needed to exist for this reachable failure.",
+    "correction_lines": [
+      233,
+      253
+    ],
+    "correction": "Resolve canonical parent first; defer signals through mkdtemp, exact regular-directory/current-UID/dev+inode capture, owned-name and in-memory owner setup, then persistence. The owner constructor starts no subprocess. Owner/name/persistence errors leave identity available to the finalizer. Removal rechecks canonical path, directory type, UID and exact identity. No unrelated allocation or global cache is adopted.",
+    "tests_lines": [
+      485,
+      609
+    ],
+    "new_cases": 7,
+    "tests_executed_by_reviewer": 0,
+    "counter_evidence": "Failure to attest the newly allocated directory itself intentionally remains cleanup FAIL with the path retained. Guessing ownership to delete is unsafe; this is not converted to PASS. Synthetic deferrer test invokes only the installed handler callback, never signals a real process.",
+    "diff_path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/normal-launch-allocation-correction-01.diff",
+    "diff_sha256": "cbec3787b127d6d13246ce33ba02bc1e022537148c9c6765db7337816e28b1be"
+  },
+  "conclusions": [
+    {
+      "area": "Actual app-source purity",
+      "evidence": [
+        "normal_source_copy.py:11-51",
+        "run_normal_ios_launch.py:255-318",
+        "copied_sources.py:159-229"
+      ],
+      "conclusion": "Schema3 source identity, content hashes and exact copy inventory bind actual current inputs. Exactly the one XCTest source and isolated embedding shell phase may change. Production Kotlin/Swift/resources remain identical; no instrumentation entrypoint is called. Before/after copy inventory detects changed, missing and additional source inputs."
+    },
+    {
+      "area": "Exactly eight cold-launch observations",
+      "evidence": [
+        "run_normal_ios_launch.py:84-96,336-377",
+        "NormalSourceLaunchUITests.swift.in:11-69",
+        "normal_launch_receipts.py:49-203"
+      ],
+      "conclusion": "Fixed eight iterations, explicit repetition relaunch, no retry/until-failure and no parallel destination execution. Each uses XCUIApplication.launch with checked-in English arguments, foreground+Home checks and six passive observations spanning >=10 actual post-Home seconds. Marker parser requires exactly eight serial unique observation IDs/48 samples. Independent XCResult parsing requires eight actual unique Test Case Run hierarchies, exact selected test/device/configuration and no skipped/failed/expected-failure runs; aggregate1 or8 alone cannot green the run."
+    },
+    {
+      "area": "Separate ninth provenance observation",
+      "evidence": [
+        "run_normal_ios_launch.py:379-496",
+        "external_image_provenance.py:27-149"
+      ],
+      "conclusion": "The later simctl launch is explicitly separate, not credited as a ninth passing UI repetition. Its returned PID must attest current UID, exact installed executable and a new lifetime inside the launch interval, with unchanged audit token before/after. Public sample+vmmap observations bind image paths/UUIDs/load addresses to this cycle built/installed hashes. Exactly one mapped Compose framework is required. Copied framework and embedded signing bytes remain distinct. No mapped-page SHA claim, LLDB fallback or injected probe; ninth-launch mapping does not prove mappings of the earlier eight lifetimes."
+    },
+    {
+      "area": "Toolchain/signing scope",
+      "evidence": [
+        "run_normal_ios_launch.py:99-116,284-307",
+        "simulator_signing.py:1-190",
+        "copied-kotlin-phase.sh.in:1-45"
+      ],
+      "conclusion": "Environment allowlist excludes app probes, DYLD/signing credentials and arbitrary inherited Gradle options. Uses Debug .debug identity and explicit disabled/adhoc simulator settings only. Requires Xcode26.5/17F42 and SDK/runtime26.5, not Store-qualified26.3/17C529. No private Store signing/publication operation."
+    },
+    {
+      "area": "Resource ownership and cleanup",
+      "evidence": [
+        "run_normal_ios_launch.py:160-253,498-632",
+        "owned_lane.py:1-221",
+        "secondary_fifo.py:1-205",
+        "run_ios_readiness.py:147-173,273-310"
+      ],
+      "conclusion": "Root lock, preexisting output/worker refusal, exact fresh simulator UUID/name, isolated Gradle registry and task allocation. Dependency cache links are unlinked without deleting global caches. Embed phase stops Gradle; Python stops immediately after xcode attempt and during finalization. Stage isolation attempts device, owned-worker, secondary-FIFO and file cleanup even after an earlier stage error. Unknown holders preserve files and fail cleanup. Full source/control identity and cleanup are required for overall PASS."
+    },
+    {
+      "area": "Synthetic test quality",
+      "evidence": [
+        "test_normal_launch_controls.py:1-790",
+        "run_control_tests.py:13-61"
+      ],
+      "conclusion": "74 distinct statically declared methods independently counted; driver requires discovered IDs equal source AST IDs/count, reviewed import paths, unchanged controls, no skips and actual74 executions. Tests cover malformed receipts, incorrect repetitions, wrong device/PID/UUID, app-source additions, launch flags/environment and success/failure/interruption cleanup. Assertions have not been executed by this reviewer; pure parser/filesystem mocks do not prove native app behavior."
+    }
+  ],
+  "source_review_blockers": [],
+  "pending_gates": [
+    {
+      "gate": "74 normal-runner pure control tests",
+      "status": "BLOCKED",
+      "reason": "Not executed at review time; root exclusive lane must run exact driver and retain actual discovery/results/source+cleanup receipts."
+    },
+    {
+      "gate": "Fresh schema3 source/control execution freeze",
+      "status": "BLOCKED",
+      "reason": "Freeze02 is base controls only; actual application dirty/untracked inputs and new source-binding bytes must be explicitly approved together."
+    },
+    {
+      "gate": "Eight XCTest runtime repetitions and separate ninth image observation",
+      "status": "BLOCKED",
+      "reason": "Not executed. Actual XCResult repetition layout, public sample/vmmap output and permissions may differ; any unsupported layout must stay failed evidence until independently reviewed."
+    },
+    {
+      "gate": "Physical device, historical repeated-crash diagnosis, Follow System, multiplayer and Store evidence",
+      "status": "NOT_APPLICABLE",
+      "reason": "Outside this narrow normal English Debug simulator launch runner. These remain separate campaign gates; this scoped N/A is not a waiver or global readiness claim."
+    }
+  ],
+  "limitations": [
+    "Inherited worker signaling uses PID+lstart/observed ancestry and exact task tmp arguments, not atomic Darwin generation-safe signaling. The audit-token helper is used for ninth-launch observation only. Do not claim a stronger worker-retirement guarantee.",
+    "Failure to read canonical ownership, unknown filesystem holders or changed cache links intentionally retains files and reports cleanup FAIL for targeted investigation; no broad deletion.",
+    "Public tool observation, fixed Home accessibility and absence of a native alert do not prove absence of all app exceptions, UI problems or historical crash causes.",
+    "Current research host macOS26.2/Darwin25.2 is distinct from historical Darwin26 helper prose; actual execution must retain its own toolchain versions.",
+    "Parent finalization receipts may fail to persist if disk/storage itself fails; this cannot become a native PASS. In-memory stages still attempt owned cleanup."
+  ],
+  "authoritative_references": [
+    {
+      "url": "https://developer.apple.com/tutorials/data/documentation/xcuiautomation/xcuiapplication/launch().json",
+      "receipt": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/research-current-xcuiautomation.json",
+      "retained_body": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/launch-current.json.gz",
+      "decoded_sha256": "32443f9f20f30a02eaddba4f8d6ab0e2c96f7239cbb92947f68de899ba2188f6",
+      "claim": "launch is synchronous, launch failure is a test failure, and an existing instance is terminated before fresh launch.",
+      "applicability": "Public XCTest API used by the copied UI test, not a library-internal launch assumption."
+    },
+    {
+      "receipt": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/xcresult-schema-references-01.json",
+      "claim": "Pinned xcresulttool0.1.0 schemas describe TestNode/testRuns/duration types. Schema inspection supports conservative parser design but does not establish actual repetition-result shape."
+    },
+    {
+      "receipt": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/external-provenance-online-references-01.json",
+      "claim": "Apple public vmmap and image/UUID documentation supports image metadata observation, not mapped-byte hashing. Old XCTest404 research leads are not positive evidence; current XCUAutomation references supersede them."
+    }
+  ],
+  "reviewer_actions": {
+    "builds_tests_apps_native_probes_started": false,
+    "workers_started": false,
+    "daemons_or_other_processes_stopped": false,
+    "task_build_outputs": [],
+    "source_or_runner_edits": [],
+    "git_writes": [],
+    "evidence_written": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/normal-source-ios-launch-independent-review-01.json",
+    "cleanup": "No reviewer-owned build artifacts or workers were created. Root lane and all pre-existing material preserved."
+  }
+}

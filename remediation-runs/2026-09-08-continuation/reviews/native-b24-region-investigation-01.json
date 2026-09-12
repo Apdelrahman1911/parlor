@@ -1,0 +1,889 @@
+{
+  "schema_version": 1,
+  "kind": "READ_ONLY_INVESTIGATION_OF_ACTUAL_B24_LIBPROC_REGION_FAILURE",
+  "author": "/root/dependency_chain",
+  "execution_coordinator": "/root",
+  "started_at": "2026-09-09T04:19:25.723261+00:00",
+  "recorded_at": "2026-09-09T04:19:25.737717+00:00",
+  "status": "INVESTIGATION_COMPLETE_EXACT_FAILED_SUBPREDICATE_AND_CAUSE_UNDETERMINED",
+  "scope": "Only retained B24 raw receipts, current exact hash-bound observer source and the specifically requested archived Apple/reference reviews were inspected. This report is not canonical implementation, test/native execution, causal diagnosis, independent runtime acceptance or dispatch authorization.",
+  "only_authored_file": "remediation-runs/2026-09-08-continuation/reviews/native-b24-region-investigation-01.json",
+  "findings": [
+    {
+      "id": "B24_REGION_FAILURE_DIAGNOSTIC_GAP",
+      "classification": "VERIFICATION_DIAGNOSTIC_GAP_NOT_CONFIRMED_APPLICATION_DEFECT",
+      "observation": "Actual helper returned FAIL/not-selected-executable-region at the combined six-predicate gate. No raw failed region fields were retained; native_error0 is a literal sentinel at this branch.",
+      "impact": "Cannot distinguish address,zero/oversize,offset,submap,protection failure or attribute the cause to page rounding. No contract relaxation is justified.",
+      "action": "Small failure-only numeric diagnostics at the existing rejection, leaving all guards, return1, successful schema and caller rejection unchanged; separate author and reviewer plus focused controls before any new native run."
+    }
+  ],
+  "actual_B24": {
+    "receipt": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34303850578/native-evidence/ios-readiness-24/receipt.json",
+      "sha256": "c8317c5612c11173746b8bb0e637f1b796b51056b3205f0713b7ac9475ff5e87",
+      "bytes": 425102
+    },
+    "input_manifest": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34303850578/native-evidence/ios-readiness-24/input-manifest.json",
+      "sha256": "aa949d3f4154352cbb3fe276fe4effb94d4a151ddde22a5e47cb95b1b135d233",
+      "bytes": 169019
+    },
+    "kernel_failure": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34303850578/native-evidence/ios-readiness-24/kernel-region-01.json",
+      "sha256": "6b3b492f8044908b6453f0b36d292f4363294a534c2038f616407bd96a860f31",
+      "bytes": 96
+    },
+    "failure_content": {
+      "schema_version": 1,
+      "status": "FAIL",
+      "reason": "not-selected-executable-region",
+      "native_error": 0
+    },
+    "source": {
+      "commit": "08d1adfbd7284f190fbab5f7baa846944bca5b68",
+      "tree": "c19beea4647ce882c02d8751d1bf82c22484b52b",
+      "branch": "fix/local-readiness-2026-09-07",
+      "tracked_status": "",
+      "diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_manifest_sha256": "d7d6bd8802fb36ab75e566adc183500db24555dce36f0fafd0a1ac91034bf08e"
+    },
+    "source_before_after_complete_equal": true,
+    "recorded_control_manifest_rows": 94,
+    "recorded_control_manifest_digest_recomputed": "7cdd2dee7adb3a53be0d2c2487e0e776dbc83208693909b6ecbfb0b872e3a82f",
+    "before_after_approved_control_digest_equal": true,
+    "current_relevant_source_pins": [
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/kernel_image_region.c.in",
+        "sha256": "d42aa932e5fe83defab173670aeea6f59507fa1b10029159efc04e1bbd67fdfc",
+        "bytes": 3773
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/kernel_image_regions.py",
+        "sha256": "4b87bf30ab492bf45554b2952ef52982343d5f16c66dce247412a45801b0287b",
+        "bytes": 3821
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
+        "sha256": "5524d839202211270ec1c97776f0d350b9802ecf0d1c5e6eb3d28cd960629302",
+        "bytes": 59858
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/external_image_provenance.py",
+        "sha256": "6b5f72a5915f056912b4377d315d5331f0cbc25fd34b7800a839031e5d9efb9f",
+        "bytes": 17902
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_kernel_image_regions.py",
+        "sha256": "92c6218d227ec93e50d5e6df7a21274e8f1b469ddf14839e51c050c1d0f196e4",
+        "bytes": 12776
+      }
+    ],
+    "control_scope_limit": "The complete retained94row list digest was recomputed; the five relevant current helper/parser/caller/sample/test files were rehashed against that list. This report does not replace the coordinator full current-source/native audit.",
+    "command": {
+      "command": [
+        "/private/var/folders/bl/vzjcvbz95c3dk19cb0fw46180000gn/T/parlor-audit-ios-readiness-24-zk2lkvm5/kernel-image-region",
+        "86376",
+        "4397121536",
+        "4439839520",
+        "/Users/runner/Library/Developer/CoreSimulator/Devices/BA9D053A-9CCB-4D97-BF8A-B76EC84F58AE/data/Containers/Bundle/Application/5F51660F-B20C-4FC3-955D-35A7F3500129/Parlor.app/Frameworks/ComposeApp.framework/ComposeApp"
+      ],
+      "started_at": "2026-09-09T03:30:16.159280+00:00",
+      "log": "kernel-region-01.json",
+      "exit_code": 1,
+      "finished_at": "2026-09-09T03:30:16.222496+00:00"
+    },
+    "compile_command": {
+      "command": [
+        "xcrun",
+        "--sdk",
+        "macosx",
+        "clang",
+        "-x",
+        "c",
+        "-std=c11",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-arch",
+        "arm64",
+        "/Users/runner/work/parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/kernel_image_region.c.in",
+        "-lproc",
+        "-o",
+        "/private/var/folders/bl/vzjcvbz95c3dk19cb0fw46180000gn/T/parlor-audit-ios-readiness-24-zk2lkvm5/kernel-image-region"
+      ],
+      "started_at": "2026-09-09T03:29:37.366048+00:00",
+      "log": "region-helper-compile.log",
+      "exit_code": 0,
+      "finished_at": "2026-09-09T03:29:47.780099+00:00"
+    },
+    "sample_command": {
+      "command": [
+        "/usr/bin/sample",
+        "86376",
+        "1",
+        "10",
+        "-file",
+        "/private/var/folders/bl/vzjcvbz95c3dk19cb0fw46180000gn/T/parlor-audit-ios-readiness-24-zk2lkvm5/owned-app.sample.txt"
+      ],
+      "started_at": "2026-09-09T03:30:07.980683+00:00",
+      "log": "sample-command.log",
+      "exit_code": 0,
+      "finished_at": "2026-09-09T03:30:16.136983+00:00"
+    },
+    "launch_command": {
+      "command": [
+        "xcrun",
+        "simctl",
+        "launch",
+        "--terminate-running-process",
+        "--stdout=/private/var/folders/bl/vzjcvbz95c3dk19cb0fw46180000gn/T/parlor-audit-ios-readiness-24-zk2lkvm5/owned-app.stdout",
+        "--stderr=/private/var/folders/bl/vzjcvbz95c3dk19cb0fw46180000gn/T/parlor-audit-ios-readiness-24-zk2lkvm5/owned-app.stderr",
+        "BA9D053A-9CCB-4D97-BF8A-B76EC84F58AE",
+        "com.parlor.app.debug",
+        "-AppleLanguages",
+        "(en)",
+        "-AppleLocale",
+        "en_US"
+      ],
+      "started_at": "2026-09-09T03:29:47.792182+00:00",
+      "log": "public-launch.log",
+      "exit_code": 0,
+      "finished_at": "2026-09-09T03:29:50.582968+00:00"
+    },
+    "compiled_helper_sha256_recorded": "c147a166ef5f1a2634244605a98363759e87e475b0bf692009ab21f4e78e0461",
+    "compiled_helper_custody_limit": "Actual successful xcrun macOS-SDK C11 -Wall/-Wextra/-Werror arm64 compile and pinned helper invocation are retained. The finalizer removed the owned helper; author did not disassemble or run it.",
+    "outcomes_from_actual_receipt": {
+      "status": "FAIL",
+      "runtime_evidence_status": "PASS",
+      "provenance_status": "FAIL",
+      "notice_package_status": "PASS",
+      "cleanup_status": "PASS"
+    },
+    "outcome_scope": "Real Parlor libproc was invoked, so historical NOT_RUN no longer describes B24. The one query failed strict region validation; this is not provenance PASS. Runtime PASS is the separate eight-XCTest component reported by the receipt, not established here through a new full XCTest reconciliation.",
+    "only_region_query_completed_in_this_run": 1,
+    "strict_sample_parser_control_flow": "Bound caller parses the sample successfully before entering observe_kernel_regions. The retained first query arguments establish this chosen installed ComposeApp path/start/end. Missing remaining selected rows or raw sample data are not reconstructed.",
+    "process_lifetime_limit": "Sample-command identity bracket was recorded. observe_kernel_regions checks target/helper before the query, but require raises on exit1 before the post-query target/helper checks, binding, final selected-artifact rehash and structured provenance output. The failed query snapshot is not a completed provenance/lifetime bracket.",
+    "no_final_provenance_artifact": "No separate-external-image-provenance.json or kernel-region-02.json in the retained downloaded B24 evidence.",
+    "raw_sample_map_preservation": "Receipt explicitly records raw stack/mapping files removed. Do not recover/invent deleted text or launch another query against the old PID."
+  },
+  "actual_platform_and_artifact": {
+    "platform_logs": [
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34303850578/native-evidence/ios-readiness-24/macos-version.log",
+        "sha256": "31fd674ddb951680692d7b68cafdeab5baa6b3e82aae843269dad73b53f25fc5",
+        "bytes": 66
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34303850578/native-evidence/ios-readiness-24/darwin-version.log",
+        "sha256": "39f2bb4ba4caae31e47a5b186080638b2c4b483e91d49de4e838e778e92030bd",
+        "bytes": 14
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34303850578/native-evidence/ios-readiness-24/host-architecture.log",
+        "sha256": "c1669e1d8edca98769c37d494b76442a1d6e5ffffd7b4da1fb63aef8ebaf6f01",
+        "bytes": 6
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34303850578/native-evidence/ios-readiness-24/xcode-version.log",
+        "sha256": "bb7fc9a8f5e063e81975b33054b3a526c91bcccff263ad11d5bd8bcdbe8f0973",
+        "bytes": 32
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34303850578/native-evidence/ios-readiness-24/sdk-version.log",
+        "sha256": "14a06c556ac677f94334dd2c86395d46009b9def8685e00741e60d31305a0262",
+        "bytes": 5
+      }
+    ],
+    "actual_host": "macOS15.7.9 build24G830; Darwin24.6.0; arm64",
+    "actual_xcode": "26.3 build17C529; iOS simulatorSDK26.2",
+    "host_page_size": "NOT_RETAINED; Linux author page size is not relevant and was not queried.",
+    "target_map_page_size": "NOT_RETAINED; must not substitute the hypothetical16KiB value or a host self-page observation as target-map proof.",
+    "expected_artifact_path": "/Users/runner/Library/Developer/CoreSimulator/Devices/BA9D053A-9CCB-4D97-BF8A-B76EC84F58AE/data/Containers/Bundle/Application/5F51660F-B20C-4FC3-955D-35A7F3500129/Parlor.app/Frameworks/ComposeApp.framework/ComposeApp",
+    "artifact": {
+      "origin": "installed-app",
+      "relative_path": "Frameworks/ComposeApp.framework/ComposeApp",
+      "sha256": "a4f6caeb17e11974ce7662c6091f98a3ebfafbf404e98246af88d697af64f7aa",
+      "bytes": 82428752,
+      "uuid": "dddcac0f-7e1f-355c-8327-fdcfe6859c79",
+      "kind": "compose-framework"
+    },
+    "artifact_bindings": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34303850578/native-evidence/ios-readiness-24/external-image-artifact-bindings.json",
+      "sha256": "c05c3b9db963e1e5da79a021ab13fbf87325d6c210664164244857b1835d2f50",
+      "bytes": 4719
+    },
+    "thin_binary_inventory": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34303850578/native-evidence/ios-readiness-24/built-installed-binary-inventory.json",
+      "sha256": "d38fb6540c8e214e57f22f73b2ecb046c00e43ef11d21dbbea6398ac81b33bac",
+      "bytes": 1565
+    },
+    "dwarfdump": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34303850578/native-evidence/ios-readiness-24/uuid-001.log",
+      "sha256": "95f945adb6563709263d4b0cd13587824747ef2c3070a90086a6d383de0990a4",
+      "bytes": 268
+    },
+    "image_fact_scope": "Retained owned thin Mach-O64 magic cffaedfe, ARM64 UUID and installed/derived file SHA/byte identity. No LC_SEGMENT_64 __TEXT vmaddr/vmsize/fileoff/filesize or target VM segment geometry is retained.",
+    "whole_file_size_limit": "82,428,752 file bytes are not an executable-region or sampled-image bound. Do not replace end-start by artifact_bytes."
+  },
+  "control_flow_facts": {
+    "source": {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/kernel_image_region.c.in",
+      "sha256": "d42aa932e5fe83defab173670aeea6f59507fa1b10029159efc04e1bbd67fdfc",
+      "bytes": 3773
+    },
+    "source_line_ranges": {
+      "argument_guards": [
+        32,
+        38
+      ],
+      "owned_artifact_precheck": [
+        40,
+        44
+      ],
+      "single_query_and_return_size": [
+        46,
+        51
+      ],
+      "failed_six_predicates": [
+        52,
+        58
+      ],
+      "not_reached_vnode_path_poststat": [
+        59,
+        64
+      ],
+      "successful_numeric_output": [
+        66,
+        75
+      ]
+    },
+    "established": "Given the exact bound helper/compile/invocation, execution reached the six-predicate gate after exact returned==sizeof(actual SDK struct). The failure is not the helper region-query-incomplete branch. Numeric returned/sizeof and actual saved errno were not output, so1328 remains a historical fixture value, not a B24 ABI observation.",
+    "native_error_zero": "failed(\"not-selected-executable-region\",0) passes literal0, whereas the preceding incomplete-query branch uses the saved errno. Therefore the96byte failure receipt does not prove observed errno==0.",
+    "six_predicates": [
+      {
+        "id": "ADDRESS",
+        "expression": "region->pri_address != start",
+        "needed_numeric_fields": [
+          "requested_start",
+          "region_start"
+        ],
+        "interpretation": "A different start rejects both a containing region beginning before the sample and a later region after a hole. The retained XNU lookup can advance to the next entry; neither direction is automatically acceptable."
+      },
+      {
+        "id": "EMPTY_SIZE",
+        "expression": "region->pri_size == 0",
+        "needed_numeric_fields": [
+          "region_size"
+        ],
+        "interpretation": "Zero size is unusable; no retained B24 size exists to confirm or exclude this branch."
+      },
+      {
+        "id": "OVERSIZE",
+        "expression": "region->pri_size > end - start",
+        "needed_numeric_fields": [
+          "requested_start",
+          "requested_end_exclusive",
+          "region_size"
+        ],
+        "interpretation": "Compare the unchanged strict limit42,717,984. Page-rounding is one possible explanation for an excess, not established by sample nonalignment or whole file size."
+      },
+      {
+        "id": "OFFSET",
+        "expression": "region->pri_offset != 0",
+        "needed_numeric_fields": [
+          "region_offset"
+        ],
+        "interpretation": "Archived XNU records VME_OFFSET(entry). It is a VM backing-object offset, not a universal guarantee that every valid Mach-O/header mapping has zero offset. A nonzero observation remains rejected."
+      },
+      {
+        "id": "SUBMAP",
+        "expression": "(region->pri_flags & PROC_REGION_SUBMAP) != 0",
+        "needed_numeric_fields": [
+          "region_flags"
+        ],
+        "interpretation": "Retained public header defines PROC_REGION_SUBMAP as1. A submap is rejected; no recursion/flavor change or path-only fallback is authorized."
+      },
+      {
+        "id": "PROTECTION",
+        "expression": "region->pri_protection != (VM_PROT_READ | VM_PROT_EXECUTE)",
+        "needed_numeric_fields": [
+          "protection"
+        ],
+        "interpretation": "Retained public constants READ1/EXECUTE4 make the expected current protection5. R-only, RWX, or any other current mask remains rejected; max protection is separately restricted by Python to5or7."
+      }
+    ],
+    "failed_predicates_observed": null,
+    "short_circuit_limit": "At least one six-condition predicate was true; original OR evaluation may short-circuit. No identity of the first/other true predicates is recoverable without their values.",
+    "not_established": [
+      "Exact kernel region address,size,offset,flags or protections",
+      "Kernel vnode path/device/inode/size match",
+      "Post-query target generation and helper integrity",
+      "All other selected image corroborations",
+      "Final selected-artifact rehash or in-memory Mach-O/page integrity"
+    ]
+  },
+  "nonalignment_discriminator": {
+    "requested_start": 4397121536,
+    "requested_start_hex": "0x10616c000",
+    "requested_end_exclusive": 4439839520,
+    "requested_end_hex": "0x108a29320",
+    "sample_end_inclusive_from_command": 4439839519,
+    "sample_end_inclusive_hex": "0x108a2931f",
+    "strict_span_bytes": 42717984,
+    "strict_span_hex": "0x28bd320",
+    "owned_artifact_bytes": 82428752,
+    "hypothetical_page_rounding": [
+      {
+        "hypothetical_page_bytes": 4096,
+        "sample_start_remainder": 0,
+        "sample_end_remainder": 800,
+        "sample_span_remainder": 800,
+        "rounded_span_bytes": 42721280,
+        "rounded_span_hex": "0x28be000",
+        "rounded_end_exclusive": 4439842816,
+        "rounded_end_hex": "0x108a2a000",
+        "excess_bytes": 3296,
+        "classification": "ARITHMETIC_HYPOTHESIS_NOT_OBSERVED_TARGET_PAGE_SIZE_OR_REGION"
+      },
+      {
+        "hypothetical_page_bytes": 16384,
+        "sample_start_remainder": 0,
+        "sample_end_remainder": 4896,
+        "sample_span_remainder": 4896,
+        "rounded_span_bytes": 42729472,
+        "rounded_span_hex": "0x28c0000",
+        "rounded_end_exclusive": 4439851008,
+        "rounded_end_hex": "0x108a2c000",
+        "excess_bytes": 11488,
+        "classification": "ARITHMETIC_HYPOTHESIS_NOT_OBSERVED_TARGET_PAGE_SIZE_OR_REGION"
+      }
+    ],
+    "positive_fact": "The recorded sample exclusive end is not aligned to either4KiB or16KiB; start is aligned to both. That is an arithmetic fact about the retained command.",
+    "hypothesis_only": "If a future raw region has the exact start, nonzero size equal to one illustrated rounded span, offset0,no submap and RX, the oversize predicate would be isolated and a page-boundary mismatch would be consistent. B24 has no such raw values, and even that future pattern would not by itself prove __TEXT/sample/target-map semantics.",
+    "important_terminology": "The retained addresses come from the sample Binary Images table. Calling this a proven unrounded __TEXT.vmsize interval is premature: the parser retains numeric endpoints but reads no Mach-O load commands, and archived sample manpage does not specify binary-image endpoint construction.",
+    "no_current_adjustment": "Do not round the existing sample end, clamp/truncate returned size, enlarge the permitted range by a guessed page, replace bounds with whole file size, or reinterpret current FAIL as success."
+  },
+  "archived_authoritative_reference_analysis": {
+    "prior_requested_review": {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/normal-native15-vmmap-libproc-review-01/review.md",
+      "sha256": "513ebf7b844698c6c8350885977990cd0947e8004db447abf55185c5c3535189",
+      "bytes": 9345
+    },
+    "archived_manifest_rehashed_all_entries": {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/normal-native15-vmmap-libproc-review-01/evidence-manifest.json",
+      "sha256": "fee2144654a342887ce82ee8bd99776a34158eb9130e697874aa6391c7894177",
+      "bytes": 3409
+    },
+    "reference_revision": "Apple OSS XNU xnu-12377.61.12 commit4d495c6e23c53686cf65f45067f79024cf5dcee8",
+    "runtime_version_limit": "Reference dossier came from macOS26.2/Darwin25.2 and MacOSX26.5 SDK. B24 is macOS15.7.9/Darwin24.6 with Xcode26.3. It is a semantic reference, not a claim that the actual B24 kernel/libproc/SDK bytes equal those references.",
+    "libproc_wrapper": {
+      "file": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/normal-native15-vmmap-libproc-review-01/libproc.c.research.json",
+        "sha256": "a17ece7d85321f0bef2cd99c8ac898e862a1b242268fa02e61717806f6df961b",
+        "bytes": 1558
+      },
+      "upstream_url": "https://raw.githubusercontent.com/apple-oss-distributions/xnu/4d495c6e23c53686cf65f45067f79024cf5dcee8/libsyscall/wrappers/libproc/libproc.c",
+      "ranges": [
+        [
+          100,
+          110
+        ]
+      ],
+      "fact": "proc_pidinfo converts syscall-1 to0 and otherwise returns its byte count. Complete return alone is not backing-vnode proof."
+    },
+    "full_region_syscall": {
+      "file": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/normal-native15-vmmap-libproc-review-01/proc_info.c.research.json",
+        "sha256": "851012acc6e55a2156456a0e8d960f499193718789ec995f4d5a3e042885d437",
+        "bytes": 10931
+      },
+      "upstream_url": "https://raw.githubusercontent.com/apple-oss-distributions/xnu/4d495c6e23c53686cf65f45067f79024cf5dcee8/bsd/kern/proc_info.c",
+      "ranges": [
+        [
+          1155,
+          1188
+        ]
+      ],
+      "fact": "Zeroes preginfo, calls fill_procregioninfo, then may fail to populate vnode/stat/path independently of final structure copyout/size success. Full byte count does not waive remaining exact identity checks."
+    },
+    "vm_region_fields": {
+      "file": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/normal-native15-vmmap-libproc-review-01/bsd_vm.c.research.json",
+        "sha256": "70e935e820339d4c7b1bac827ee0b812579793c31ac32ab9432662f29cc31166",
+        "bytes": 14422
+      },
+      "upstream_url": "https://raw.githubusercontent.com/apple-oss-distributions/xnu/4d495c6e23c53686cf65f45067f79024cf5dcee8/osfmk/vm/bsd_vm.c",
+      "ranges": [
+        [
+          1004,
+          1005
+        ],
+        [
+          1014,
+          1017
+        ],
+        [
+          1079,
+          1100
+        ],
+        [
+          1131,
+          1149
+        ]
+      ],
+      "fact": "Looks up containing/next entry; copies VME_OFFSET,protection,max_protection,submap/shared flags; assigns pri_address=vme_start and pri_size=vme_end-start. vm_self_region_page_shift(map) is map-specific context, used here in accounting; source does not equate it with this sample image interval."
+    },
+    "public_headers": {
+      "file": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/normal-native15-vmmap-libproc-review-01/installed-public-headers-and-manpages.json",
+        "sha256": "b7802a75a8d8e720c42035486334c8b23e3a19cbaa96bf6fbe1cd39ee418381a",
+        "bytes": 26515
+      },
+      "ranges": {
+        "sys/proc_info.h": [
+          [
+            166,
+            191
+          ],
+          [
+            282,
+            340
+          ],
+          [
+            735,
+            739
+          ]
+        ],
+        "mach/vm_prot.h": [
+          [
+            85,
+            90
+          ]
+        ]
+      },
+      "fact": "Compiled public fields use uint64 addresses/size/offset and uint32 protection/flags; SUBMAP1,READ1,EXECUTE4. Older retained header layout is not a numeric sizeof observation for B24."
+    },
+    "vm_map_evidence_gap": {
+      "file": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/normal-native15-vmmap-libproc-review-01/vm_map.c.research.json",
+        "sha256": "f48c8170325b228a18950d6c721f0603a3acbcae49319ac40c8cd255edd2a789",
+        "bytes": 430
+      },
+      "fact": "Only fetch metadata/hash/size/line_count and excerpts[] are retained. There is no retained vm_map.c body to quote for page rounding. No new public fetch performed."
+    },
+    "sample_manpage_limit": "Retained manpage describes process sampling and fullPaths for source-code paths, not formal Binary Images endpoint/vmsize rounding. No guessed tool switch recommended.",
+    "prior_observer_review": {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/libproc-image-observer-01/independent-review-03.json",
+      "sha256": "a13eb3f7ca9d77af2bc5ff28a5283b1d3abaa71eca0a225065da29438fd84ece",
+      "bytes": 6203
+    },
+    "prior_rejected_review_preserved": {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/libproc-image-observer-01/independent-review-01.json",
+      "sha256": "f87fe85019ba1387d7a24b0dfef335d3e00ece6fde4ab080281f2975534f5a1e",
+      "bytes": 6849
+    },
+    "prior_exact_adoption": {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/libproc-image-observer-01/adoption-01.json",
+      "sha256": "881b045697142dc47f7b49672b4ab7475efe64216e5d3205db00f4c26526fc2d",
+      "bytes": 1457
+    },
+    "prior_controls": {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/normal-libproc-control-reconciliation-02.json",
+      "sha256": "64472e0b52d8d7819ca0f5d640b606cf7cee3817f263c53657438fcc0c76997e",
+      "bytes": 10321
+    },
+    "historical_control_scope": "Raw normal-libproc-controls-01/validation-01 receipts/logs were rehashed against that prior review.187 controls and prior compile/invalid-argument smoke remain historical control evidence; those invalid requests returned before proc_pidinfo. No fresh187 execution is claimed. The current B24 query is new failed application-process API execution, not supplied by those controls."
+  },
+  "minimal_failure_only_numeric_proposal": {
+    "status": "PROPOSAL_ONLY; separate lifecycle_controls agent owns draft implementation, root owns review/adoption/execution.",
+    "placement": "Only the existing not-selected-executable-region rejection after returned==sizeof(info); preserve original guard expressions and immediate FAIL/exit1.",
+    "minimum_predicate_values": [
+      {
+        "name": "requested_start",
+        "C_value": "start",
+        "type": "uint64"
+      },
+      {
+        "name": "requested_end_exclusive",
+        "C_value": "end",
+        "type": "uint64"
+      },
+      {
+        "name": "region_start",
+        "C_value": "region->pri_address",
+        "type": "uint64"
+      },
+      {
+        "name": "region_size",
+        "C_value": "region->pri_size",
+        "type": "uint64"
+      },
+      {
+        "name": "region_offset",
+        "C_value": "region->pri_offset",
+        "type": "uint64"
+      },
+      {
+        "name": "protection",
+        "C_value": "region->pri_protection",
+        "type": "uint32"
+      },
+      {
+        "name": "region_flags",
+        "C_value": "region->pri_flags",
+        "type": "uint32"
+      }
+    ],
+    "small_adjacent_context": [
+      {
+        "name": "max_protection",
+        "C_value": "region->pri_max_protection",
+        "reason": "Expose the later Python5/7 predicate without treating it as already passed."
+      },
+      {
+        "name": "native_structure_bytes",
+        "C_value": "sizeof(info)",
+        "reason": "Actual compiled SDK ABI size, not fixture1328."
+      },
+      {
+        "name": "native_return_bytes",
+        "C_value": "returned",
+        "reason": "Make the successful-size branch observation numeric."
+      },
+      {
+        "name": "query_errno",
+        "C_value": "native_error saved immediately after proc_pidinfo",
+        "reason": "Do not confuse the historical native_error0 branch sentinel with actual errno; errno on a complete result is not an acceptance waiver."
+      }
+    ],
+    "representation": "Add one explicitly failure-only nested numeric object, optionally its own diagnostic schema version. Keep original top-level schema_version1/statusFAIL/reason/native_error0. Do not change successful FIELDS, emit PASS-only path_exact/vnode_identity_matches, or teach bind_regions to consume failure objects.",
+    "optional_page_size_context": {
+      "required_for_six_predicate_discrimination": false,
+      "minimal_option": "On this failure branch only, sysconf(_SC_PAGESIZE) with signed result and separately saved errno; unistd.h is already included. It queries host self context, not another target region.",
+      "label": "host_page_size, not target_page_size. Preserve-1/errno distinctly; do not replace failure/indeterminate with a guessed4096/16384.",
+      "errno_order": "Use the existing saved query errno; any page-size call must not overwrite its diagnostic value.",
+      "evidence_limit": "Host pagesize never proves target map page granularity or the sample __TEXT/file layout. Omission does not prevent identifying the actual six-condition failure.",
+      "draft_coordination": "lifecycle_controls plans to omit this optional new call for minimality unless root explicitly directs otherwise."
+    },
+    "safety_constraints": [
+      "One existing proc_pidinfo call only; no extra region query, recursive submap traversal, privilege escalation, fallback, target memory read or app injection.",
+      "No raw vnode/path/OS error text, stack, symbols, user data, struct padding or entire map. Only closed literals and fixed-count exact numeric values.",
+      "Serialize raw start and size separately with exact-width integer formats; avoid region_start+region_size arithmetic/overflow in C.",
+      "Keep existing4096byte/10second helper command bounds. Proposed fixed numeric payload remains small; regressions should explicitly bound worst-case output.",
+      "Successful output byte shape, all six conditions, artifact checks, default observer choice, source/UUID/hash/PID/ownership/finalization protections remain unchanged.",
+      "No failure snapshot is used as provenance, and current caller postflight is not falsely claimed reached after require exit1."
+    ],
+    "proposed_focused_regressions_not_executed": [
+      "Every original acceptance guard and single-query/default-mode behavior unchanged; exact PASS schema/source behavior retains its controls.",
+      "A failure object with added nested diagnostics is still rejected by bind_regions and by nonzero helper require; cannot be promoted or counted as selected-image proof.",
+      "Six distinct fabricated bad-field inputs and combinations preserve rejection and expose exact raw values; metadata-only observations are not assumed executable native guard coverage.",
+      "Golden failure envelope retains old schema/status/reason/native_error semantics and distinguishes query_errno; no arbitrary string interpolation/raw path output.",
+      "Zero/max uint64 and uint32 values serialize numerically within4096bytes without C addition overflow. If pagesize is included, positive/-1/errno fixtures are explicit.",
+      "Independently reviewed focused Linux controls first; actual SDK clang and runtime failure diagnostics must still be exercised on the next justified root-owned Apple run. Linux synthetic/source controls do not prove actual libproc ABI."
+    ]
+  },
+  "what_can_later_establish_strict_provenance": {
+    "next_observation": "Use only a reviewed additive diagnostic correction with refreshed source/control bindings in a coordinator-approved native execution. Do not issue an independent native retry solely from this report or query the stale B24 PID after cleanup.",
+    "first_discriminator": "Read the actual failed numeric fields and evaluate all six original predicates offline. Distinguish measured violating fields from mechanism speculation; retain the original failed receipt and final cleanup.",
+    "if_boundary_hypothesis_survives": "A later, separately reviewed bounded read of the exact owned thin ARM64 artifact could retain only Mach-O header/LC_UUID and LC_SEGMENT_64 numeric geometry (__TEXT vmaddr/vmsize/fileoff/filesize/protections), tied to its full file SHA/size before/after. Check load-command bounds, overflow, architecture, unique segment/layout and equality to selected image identity. Combine with applicable current public API/loader semantics and actual map/page observations; neither wholesale file size nor sample text alone establishes the relationship.",
+    "no_preapproved_contract_change": "This report approves neither a new Mach-O parser nor rounded upper bound nor offset/protection/submap exception. Any later layout-aware observation contract would need an explicit evidence-based design and independent negative review; the unchanged strict guard currently remains authoritative.",
+    "completion_under_current_contract": [
+      "Every sample-selected image, including any optional selected row, supplies exact full successful kernel receipt: matching start,nonzero size within unchanged sample interval,offset0,no submap,RX and allowed maximum protection.",
+      "Exact bounded kernel vnode path/device/inode/size/ordinary-file identity and before/after artifact hashes/UUIDs remain checked; a successful raw size query is insufficient.",
+      "Target audit-token/generation/start-time/executable and compiled-helper identity checks bracket each successful query and final selected-artifact rehash; numeric-PID brackets remain non-atomic.",
+      "Normal eight-run UI evidence remains separately scoped; ninth-launch image provenance gets its own completed structured receipt and no per-repetition mapping claim.",
+      "Fresh frozen-source/control equality, all strict observer predicates and postrun independent evidence/cleanup acceptance pass. No mapped-page hash, whole-map enumeration or physical-device/Store proof is implied."
+    ],
+    "if_current_contract_still_fails": "Preserve FAIL. Evidence explaining a legitimate layout is not itself a PASS and cannot silently waive an acceptance predicate."
+  },
+  "cleanup_and_activity": {
+    "actual_B24_cleanup_basis": {
+      "status": "PASS",
+      "gradle_stops": [
+        {
+          "label": "stop-xcode-immediate",
+          "exit_code": 0,
+          "at": "2026-09-09T03:29:29.030115+00:00"
+        },
+        {
+          "label": "stop-final",
+          "exit_code": 0,
+          "at": "2026-09-09T03:30:17.989280+00:00"
+        }
+      ],
+      "stop_logs": [
+        {
+          "path": "remediation-runs/2026-09-08-continuation/actions/34303850578/native-evidence/ios-readiness-24/stop-xcode-immediate.log",
+          "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+          "bytes": 31
+        },
+        {
+          "path": "remediation-runs/2026-09-08-continuation/actions/34303850578/native-evidence/ios-readiness-24/stop-final.log",
+          "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+          "bytes": 31
+        }
+      ],
+      "owned_device_absent": true,
+      "temporary_directory_removed": true,
+      "remaining_owned_processes": [],
+      "unknown_holders": [],
+      "cleanup_errors": []
+    },
+    "cleanup_scope_limit": "These are retained Apple receipt/log facts. Author is on Linux and did not claim that a local lstat of an Apple path verifies remote deletion; complete hosted cleanup custody is the coordinator/native review task.",
+    "author_activity": "Short-lived stdlib JSON/hash/stat/integer/source inspection only; no project import or extracted-function execution, tests/build/toolchain probes, API/network/Actions, Git/index write, worker/simulator operation or cleanup.",
+    "inspection_assembly_note": "Initial stdlib report assembly stopped with KeyError(log) while reading heterogeneous command rows, before opening the output or writing any file. After inspecting those actual rows, filtering was corrected to select the relevant log-tagged commands; no native/test command was attempted.",
+    "allocated_resources": "Only this additive report; no task scratch/packages/native worker/build output created. No Gradle stop is started for a read-only evidence inspection.",
+    "preserved": "All old native15/16/21/22/B24 failures, raw current receipts/logs, archived research, current canonical observer and other-agent draft work remain unchanged."
+  },
+  "decision": {
+    "can_proceed": "Root may use this evidence to commission/review a minimal failure-only diagnostic proposal; it is not dispatch/adoption approval.",
+    "cause": "UNKNOWN; page rounding is a bounded, numerically discriminable hypothesis, not an established B24 cause.",
+    "B24_provenance": "ACTUALLY_EXECUTED_AND_FAILED_STRICT_REGION_VALIDATION",
+    "overall_readiness": "NOT_READY",
+    "external_limits": "Physical-device/LAN/keybag/accessibility/backup-restore, Store identity/signing/publication and separate owner/legal/privacy/editorial requirements remain separate; no application behavior or protocol rule changed.",
+    "independent_review": "Required by a different agent for this report/proposed correction; author does not self-approve implementation."
+  },
+  "read_integrity": {
+    "rechecked_at": "2026-09-09T04:19:25.745430+00:00",
+    "unique_files": 47,
+    "file_manifest_rows": [
+      [
+        "remediation-runs/2026-09-07-local-readiness/evidence/normal-libproc-controls-01/gradle.log",
+        "48bd252289ba3355598d6772e4933d3e49592925183c5a6528c3c217cb55a7a6",
+        96541
+      ],
+      [
+        "remediation-runs/2026-09-07-local-readiness/evidence/normal-libproc-controls-01/receipt.json",
+        "ec7599bd2c1e73fb48db664edf85189d0fc1b4b628bc2431b7d2d28d32d3fa25",
+        297167
+      ],
+      [
+        "remediation-runs/2026-09-07-local-readiness/evidence/normal-libproc-controls-01/stop.log",
+        "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+        31
+      ],
+      [
+        "remediation-runs/2026-09-07-local-readiness/evidence/normal-libproc-validation-01/gradle.log",
+        "7ce3412759db9f8ed2c58876d0c6a9942fab9d8a1a75e4d179bbca3cc559cf9a",
+        3241
+      ],
+      [
+        "remediation-runs/2026-09-07-local-readiness/evidence/normal-libproc-validation-01/receipt.json",
+        "819e5daa3c1308d72daca722ff4f0b9cf3b342a21454ad5794a650f7d16e66dd",
+        300538
+      ],
+      [
+        "remediation-runs/2026-09-07-local-readiness/evidence/normal-libproc-validation-01/stop.log",
+        "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+        31
+      ],
+      [
+        "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/external_image_provenance.py",
+        "6b5f72a5915f056912b4377d315d5331f0cbc25fd34b7800a839031e5d9efb9f",
+        17902
+      ],
+      [
+        "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/kernel_image_region.c.in",
+        "d42aa932e5fe83defab173670aeea6f59507fa1b10029159efc04e1bbd67fdfc",
+        3773
+      ],
+      [
+        "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/kernel_image_regions.py",
+        "4b87bf30ab492bf45554b2952ef52982343d5f16c66dce247412a45801b0287b",
+        3821
+      ],
+      [
+        "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
+        "5524d839202211270ec1c97776f0d350b9802ecf0d1c5e6eb3d28cd960629302",
+        59858
+      ],
+      [
+        "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_kernel_image_regions.py",
+        "92c6218d227ec93e50d5e6df7a21274e8f1b469ddf14839e51c050c1d0f196e4",
+        12776
+      ],
+      [
+        "remediation-runs/2026-09-07-local-readiness/reviews/libproc-image-observer-01/adoption-01.json",
+        "881b045697142dc47f7b49672b4ab7475efe64216e5d3205db00f4c26526fc2d",
+        1457
+      ],
+      [
+        "remediation-runs/2026-09-07-local-readiness/reviews/libproc-image-observer-01/draft/kernel_image_region.c.in",
+        "d42aa932e5fe83defab173670aeea6f59507fa1b10029159efc04e1bbd67fdfc",
+        3773
+      ],
+      [
+        "remediation-runs/2026-09-07-local-readiness/reviews/libproc-image-observer-01/draft/kernel_image_regions.py",
+        "4b87bf30ab492bf45554b2952ef52982343d5f16c66dce247412a45801b0287b",
+        3821
+      ],
+      [
+        "remediation-runs/2026-09-07-local-readiness/reviews/libproc-image-observer-01/independent-review-01.json",
+        "f87fe85019ba1387d7a24b0dfef335d3e00ece6fde4ab080281f2975534f5a1e",
+        6849
+      ],
+      [
+        "remediation-runs/2026-09-07-local-readiness/reviews/libproc-image-observer-01/independent-review-03.json",
+        "a13eb3f7ca9d77af2bc5ff28a5283b1d3abaa71eca0a225065da29438fd84ece",
+        6203
+      ],
+      [
+        "remediation-runs/2026-09-07-local-readiness/reviews/normal-libproc-control-reconciliation-02.json",
+        "64472e0b52d8d7819ca0f5d640b606cf7cee3817f263c53657438fcc0c76997e",
+        10321
+      ],
+      [
+        "remediation-runs/2026-09-07-local-readiness/reviews/normal-native15-vmmap-libproc-review-01/apple-xnu-tags.json",
+        "c84b77b9bd741bfe56a0fc12002e815ed8436c7c10dfc71d5deecc294ba6531a",
+        2364
+      ],
+      [
+        "remediation-runs/2026-09-07-local-readiness/reviews/normal-native15-vmmap-libproc-review-01/bsd_kern.c.research.json",
+        "d9dbb7e0b724b30663972de38f5d33189042733a7903908b4b4dfbbd7130351b",
+        432
+      ],
+      [
+        "remediation-runs/2026-09-07-local-readiness/reviews/normal-native15-vmmap-libproc-review-01/bsd_vm.c.research.json",
+        "70e935e820339d4c7b1bac827ee0b812579793c31ac32ab9432662f29cc31166",
+        14422
+      ],
+      [
+        "remediation-runs/2026-09-07-local-readiness/reviews/normal-native15-vmmap-libproc-review-01/evidence-manifest.json",
+        "fee2144654a342887ce82ee8bd99776a34158eb9130e697874aa6391c7894177",
+        3409
+      ],
+      [
+        "remediation-runs/2026-09-07-local-readiness/reviews/normal-native15-vmmap-libproc-review-01/installed-public-headers-and-manpages.json",
+        "b7802a75a8d8e720c42035486334c8b23e3a19cbaa96bf6fbe1cd39ee418381a",
+        26515
+      ],
+      [
+        "remediation-runs/2026-09-07-local-readiness/reviews/normal-native15-vmmap-libproc-review-01/libproc.c.research.json",
+        "a17ece7d85321f0bef2cd99c8ac898e862a1b242268fa02e61717806f6df961b",
+        1558
+      ],
+      [
+        "remediation-runs/2026-09-07-local-readiness/reviews/normal-native15-vmmap-libproc-review-01/native15-independent-reconciliation.json",
+        "e50caa16520486b6fcc2e20695387992d607b55697f6b7819e478c9ea906ee9a",
+        7790
+      ],
+      [
+        "remediation-runs/2026-09-07-local-readiness/reviews/normal-native15-vmmap-libproc-review-01/proc_info.c.research.json",
+        "851012acc6e55a2156456a0e8d960f499193718789ec995f4d5a3e042885d437",
+        10931
+      ],
+      [
+        "remediation-runs/2026-09-07-local-readiness/reviews/normal-native15-vmmap-libproc-review-01/review.md",
+        "513ebf7b844698c6c8350885977990cd0947e8004db447abf55185c5c3535189",
+        9345
+      ],
+      [
+        "remediation-runs/2026-09-07-local-readiness/reviews/normal-native15-vmmap-libproc-review-01/task.c.research.json",
+        "6147d1f44a98ba7bf8e2926e91c8048f47aee923a5a0402e96b03713f1357f45",
+        430
+      ],
+      [
+        "remediation-runs/2026-09-07-local-readiness/reviews/normal-native15-vmmap-libproc-review-01/unavailable-research-reference.json",
+        "ea46258ffc6359f45f5ce790aecabac602401f04c8418ebf3d003abf768c836c",
+        348
+      ],
+      [
+        "remediation-runs/2026-09-07-local-readiness/reviews/normal-native15-vmmap-libproc-review-01/vm_map.c.research.json",
+        "f48c8170325b228a18950d6c721f0603a3acbcae49319ac40c8cd255edd2a789",
+        430
+      ],
+      [
+        "remediation-runs/2026-09-07-local-readiness/reviews/normal-native15-vmmap-libproc-review-01/vm_user.c.research.json",
+        "3d7657835a7f7ee847ad07203e9544a238c99db6dfc70d9c4c9f231111fba328",
+        429
+      ],
+      [
+        "remediation-runs/2026-09-07-local-readiness/reviews/normal-native15-vmmap-libproc-review-01/vmmap-static-diagnostic-reconciliation.json",
+        "07a4fc6fc7cc40d8201022dd55a7758d39749ec24f44dfd8e42c3d0cb1eb004b",
+        5629
+      ],
+      [
+        "remediation-runs/2026-09-08-continuation/actions/34303850578/native-evidence/ios-readiness-24/built-installed-binary-inventory.json",
+        "d38fb6540c8e214e57f22f73b2ecb046c00e43ef11d21dbbea6398ac81b33bac",
+        1565
+      ],
+      [
+        "remediation-runs/2026-09-08-continuation/actions/34303850578/native-evidence/ios-readiness-24/darwin-version.log",
+        "39f2bb4ba4caae31e47a5b186080638b2c4b483e91d49de4e838e778e92030bd",
+        14
+      ],
+      [
+        "remediation-runs/2026-09-08-continuation/actions/34303850578/native-evidence/ios-readiness-24/external-image-artifact-bindings.json",
+        "c05c3b9db963e1e5da79a021ab13fbf87325d6c210664164244857b1835d2f50",
+        4719
+      ],
+      [
+        "remediation-runs/2026-09-08-continuation/actions/34303850578/native-evidence/ios-readiness-24/host-architecture.log",
+        "c1669e1d8edca98769c37d494b76442a1d6e5ffffd7b4da1fb63aef8ebaf6f01",
+        6
+      ],
+      [
+        "remediation-runs/2026-09-08-continuation/actions/34303850578/native-evidence/ios-readiness-24/input-manifest.json",
+        "aa949d3f4154352cbb3fe276fe4effb94d4a151ddde22a5e47cb95b1b135d233",
+        169019
+      ],
+      [
+        "remediation-runs/2026-09-08-continuation/actions/34303850578/native-evidence/ios-readiness-24/kernel-region-01.json",
+        "6b3b492f8044908b6453f0b36d292f4363294a534c2038f616407bd96a860f31",
+        96
+      ],
+      [
+        "remediation-runs/2026-09-08-continuation/actions/34303850578/native-evidence/ios-readiness-24/macos-version.log",
+        "31fd674ddb951680692d7b68cafdeab5baa6b3e82aae843269dad73b53f25fc5",
+        66
+      ],
+      [
+        "remediation-runs/2026-09-08-continuation/actions/34303850578/native-evidence/ios-readiness-24/public-launch.log",
+        "1529d9fe6676c22be973aca0a06aea8bfee9852fafe2f0fa392ef0a775d8f277",
+        28
+      ],
+      [
+        "remediation-runs/2026-09-08-continuation/actions/34303850578/native-evidence/ios-readiness-24/receipt.json",
+        "c8317c5612c11173746b8bb0e637f1b796b51056b3205f0713b7ac9475ff5e87",
+        425102
+      ],
+      [
+        "remediation-runs/2026-09-08-continuation/actions/34303850578/native-evidence/ios-readiness-24/region-helper-compile.log",
+        "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        0
+      ],
+      [
+        "remediation-runs/2026-09-08-continuation/actions/34303850578/native-evidence/ios-readiness-24/sample-command.log",
+        "b59ebeef158a1bc273790157bd609f368d84afd0739b3706780b1ceb52ff632c",
+        293
+      ],
+      [
+        "remediation-runs/2026-09-08-continuation/actions/34303850578/native-evidence/ios-readiness-24/sdk-version.log",
+        "14a06c556ac677f94334dd2c86395d46009b9def8685e00741e60d31305a0262",
+        5
+      ],
+      [
+        "remediation-runs/2026-09-08-continuation/actions/34303850578/native-evidence/ios-readiness-24/stop-final.log",
+        "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+        31
+      ],
+      [
+        "remediation-runs/2026-09-08-continuation/actions/34303850578/native-evidence/ios-readiness-24/stop-xcode-immediate.log",
+        "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+        31
+      ],
+      [
+        "remediation-runs/2026-09-08-continuation/actions/34303850578/native-evidence/ios-readiness-24/uuid-001.log",
+        "95f945adb6563709263d4b0cd13587824747ef2c3070a90086a6d383de0990a4",
+        268
+      ],
+      [
+        "remediation-runs/2026-09-08-continuation/actions/34303850578/native-evidence/ios-readiness-24/xcode-version.log",
+        "bb7fc9a8f5e063e81975b33054b3a526c91bcccff263ad11d5bd8bcdbe8f0973",
+        32
+      ]
+    ],
+    "file_manifest_sha256": "7da4d6e6502379b912f2e82f1bef734def9ec7bb7aa6483e0094178e5a116d94",
+    "manifest_recipe": "Path-sorted [repository-relative path,SHA256,bytes] rows, compact JSON comma/colon separators, UTF8, no newline. Inspection count, not test execution count."
+  }
+}

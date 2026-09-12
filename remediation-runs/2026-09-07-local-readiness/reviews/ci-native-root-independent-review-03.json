@@ -1,0 +1,106 @@
+{
+  "reviewer": "/root",
+  "authors": {
+    "CI_native_and_output_controls": "/root/release_fix_review",
+    "compiler_execution_and_two_Git_tests": "/root (separately approved in release-ci-root-additions-independent-review-01.json)"
+  },
+  "reviewed_at": "2026-09-07T14:47:10.021824+00:00",
+  "head": "11210dc6e34811bd1dd36d6a34339851601e5112",
+  "status": "APPROVED_SOURCE_AND_FOCUSED_CONTROLS; QUALIFIED_CI_EXECUTION_PENDING",
+  "files": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/.github/workflows/production-verification.yml",
+      "sha256": "916207fd2d0a42d17c088dbf7899afe06d3ae070e1f8b1d6749661785a88d8fd",
+      "reviewed_lines": [
+        1,
+        650
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/ci/verification_hygiene.py",
+      "sha256": "9eab427aeb3d810c033a3827aa44f7201cbb261345a2e6667a8d085df2fbd603",
+      "reviewed_lines": [
+        1,
+        276
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/ci/apple_verification_hygiene.py",
+      "sha256": "d9c554781750d3cbbf2a4adce3b040edb83d0de5fec4c04eac700c526fca1c3c",
+      "reviewed_lines": [
+        1,
+        278
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/ci/darwin_worker_identity.py",
+      "sha256": "ee61ed6ff7f3b3333ad540431a5f6764d0acd24e0a4d9a5617a59f0dba9b2b86",
+      "reviewed_lines": [
+        1,
+        253
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/ci/owned_ci_simulator.py",
+      "sha256": "717c8c02dc06e4eac175c5dde5c7f9bdd6ebbd5e7028cc94c6ba4f84b44388af",
+      "reviewed_lines": [
+        1,
+        213
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_ci_verification_hygiene.py",
+      "sha256": "3fc6f1d4a15152bcca6d86d77bcbc782b3936c6c47336a3ff7b3067d3790e4c8",
+      "reviewed_lines": [
+        1,
+        339
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_apple_ci_hygiene.py",
+      "sha256": "28ad6d083da0088087b2196ff1c102e19944e190d9d4484facd511b1d4063be1",
+      "reviewed_lines": [
+        1,
+        576
+      ]
+    }
+  ],
+  "reasoning": [
+    "All five jobs prepare only fresh Git/task/output ownership before work; XML/raw results and source claims retained before deleting last local copies; upload success requires actual artifact ID/digest.",
+    "Gradle always-stop follows each heavy cycle; in-process Kotlin owns compiler work. Apple claims exact Xcode/UID/start/token/tracking before tasks, quiesces workers before device retirement and verifies afterward. No arbitrary PID/PGID or unowned-device deletion.",
+    "Fresh UI simulator uses durable exclusive pre-create intent; exact UUID/type/runtime/baseline and adopted claim precede shutdown/delete. Ambiguous or missing outcomes fail closed, preserving evidence.",
+    "Final output cleanup is bound to current preparation/outcomes/claim/source, not just historic successful receipt. All tracked/redirected/preexisting source or output conflicts preserve files.",
+    "Actual root probe identified off-by-four ARG_MAX cap before any child started; reviewed correction separately bounds 1MiB payload plus native argc word. Parser/sysctl/allocation agree, previous unknown-marker/generation/ownership checks unchanged.",
+    "Actual corrected probe reads only the task-owned bounded Python child marker and attests token before delivering TERM; reaped child exits -15. This proves local Darwin API use, not Xcode XPC marker inheritance.",
+    "No publication workflow, repository identity, signing trust, game/session rules, dependency verification, physical test enablement or secret scopes changed."
+  ],
+  "executed_controls": {
+    "path": "remediation-runs/2026-09-07-local-readiness/evidence/ci-native-and-dependency-controls-02/gradle.log",
+    "sha256": "5f8f71d815824bbee089838c61c2a578e68b41a1d1048a085e372e3ff9a5e40b",
+    "counts": [
+      "59",
+      "15"
+    ],
+    "CI_methods": 59,
+    "dependency_methods": 15,
+    "failures": 0,
+    "skips": 0,
+    "native_owned_child": "PASS; TERM delivered via audit token; exit-15; reaped",
+    "actionlint": "Homebrew1.7.12 PASS; pinned-download release-validator still pending",
+    "cleanup": "stop0,no remaining task workers/outputs/errors; see cycle02receipt"
+  },
+  "counterevidence": [
+    "Original synthetic55CIpass did not prove native construction: probe01 rejected host ARG_MAX1048576+4. Original failed receipt retained; bound correction verified in later actual native probe.",
+    "Simctl PIPE capture has a90-second child timeout and1MiB accepted-output ceiling, not a streaming-memory cap. Fixed trusted local simctl output and MAX_DEVICES256; no claim that this is a general untrusted subprocess runner.",
+    "Missing/denied XPC marker or unrecognized worker path is a fail-closed evidence failure; must run exact qualified26.3 CI before claiming hosted worker cleanup verified."
+  ],
+  "independent_support": [
+    "reviews/release-ci-root-additions-independent-review-01.json",
+    "reviews/ci-native-argument-capacity-author-review-02.json",
+    "reviews/ci-apple-native-cleanup-evidence-supplement-01.json"
+  ],
+  "remaining": [
+    "Current qualifiedXcode26.3/macOSCI must exercise real sourcekit/build services and simulator lifecycle.",
+    "Pinned actionlint/ShellCheck/release validator and refreshed mechanicalinventory must pass before final current-tree readiness."
+  ]
+}

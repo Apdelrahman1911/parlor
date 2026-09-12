@@ -1,0 +1,1547 @@
+--- v5/run_dsc01_apphost_cycle.py
++++ v6/run_dsc01_apphost_cycle.py
+@@ -35,12 +35,18 @@
+ from run_android_managed_cycle import Ownership, snapshot_processes, lsof_pids, digest, write_json
+ from secondary_fifo import SecondaryFifoLedger
+ from copied_sources import (create_source_copy, instrument_kotlin, inspect_copied_manifest,
+-                            inspect_copied_inputs_after_build, MODIFIED_KOTLIN, ADDITION)
++                            inspect_copied_inputs_after_build, MODIFIED_KOTLIN, ADDITIONS)
+ from probe_validation import verify_probe
+ 
+ FIXTURE = HERE
+ APP_ID = 'com.parlor.app.debug'
+ EXPECTED_TEST = 'IOSAppLaunchUITests/testDSC01ActualSettingsLocalSessionsAndOSInvestigation()'
++EXPECTED_TESTS = {EXPECTED_TEST} | {'ComposeContainerViewControllerTests/' + name + '()' for name in (
++    'testOneStableChildKeepsItsExplicitSemanticsIndependentOfTheOuterView',
++    'testChildUsesFullBoundsAcrossSizesAndOpposingSemanticDirections',
++    'testSystemDecorationAndOrientationPoliciesStillBelongToTheChild',
++    'testDefaultAppearanceForwardingReachesTheSameChildExactlyOnce',
++)}
+ 
+ 
+ def normalized_identity():
+@@ -53,7 +59,8 @@
+         HERE / name for name in ('secondary_fifo.py', 'test_secondary_fifo.py', 'test_harness_contract.py',
+         'DSC01Probe.swift.in', 'IOSAppLaunchUITests.swift.in',
+         'copied-kotlin-phase.sh.in', 'source-bindings.json', 'copied_sources.py', 'bind_source.py',
+-        'DSC01ComposeObservation.kt.in', 'DSC01InvocationBridge.kt.in', 'probe_validation.py',
++        'DSC01ComposeObservation.kt.in', 'DSC01InvocationBridge.kt.in', 'DSC01UIKitObservation.kt.in',
++        'DSC01NativeObservation.swift.in', 'probe_validation.py',
+         'test_copy_observation_contract.py')]
+ 
+ 
+@@ -111,10 +118,10 @@
+ 
+ 
+ def verify_xctest(summary, tests, uuid):
+-    expected = dict(result='Passed', totalTestCount=1, passedTests=1,
++    expected = dict(result='Passed', totalTestCount=5, passedTests=5,
+                     failedTests=0, skippedTests=0, expectedFailures=0)
+     if any(summary.get(key) != value for key, value in expected.items()) or summary.get('testFailures'):
+-        raise RuntimeError('Actual XCTest summary is not exactly one successful, unskipped test')
++        raise RuntimeError('Actual XCTest summary is not exactly five successful, unskipped tests')
+     configurations = summary.get('devicesAndConfigurations', [])
+     devices = tests.get('devices', [])
+     if (len(configurations) != 1 or len(devices) != 1 or
+@@ -131,9 +138,11 @@
+             visit(node.get('children', []))
+ 
+     visit(tests.get('testNodes', []))
+-    if len(cases) != 1 or cases[0].get('nodeIdentifier') != EXPECTED_TEST or cases[0].get('result') != 'Passed':
+-        raise RuntimeError('The exact audited XCTest method did not pass')
+-    return dict(method=EXPECTED_TEST, result='Passed', total=1, skipped=0, failures=0, device_uuid=uuid)
++    if (len(cases) != 5 or {case.get('nodeIdentifier') for case in cases} != EXPECTED_TESTS or
++            any(case.get('result') != 'Passed' for case in cases)):
++        raise RuntimeError('Every exact production-container XCTest and actual app-host matrix must pass')
++    return dict(method=EXPECTED_TEST, methods=sorted(EXPECTED_TESTS), result='Passed', total=5,
++                skipped=0, failures=0, device_uuid=uuid)
+ 
+ 
+ def verify_legacy_settings_probe(report):
+@@ -261,7 +270,7 @@
+         receipt = dict(cycle=NAME, started_at=now(), status='RUNNING',
+                        execution_kind='manifest-owned-copy-unsigned-ios-dsc01-observation-invocation-matrix', commands=[],
+                        runtime_evidence_status='NOT_RUN', cleanup_status='BLOCKED',
+-                       scope='Actual Settings/restart; direct Compose direction; actual local Whodunit/Mafia controller/flow/value continuity under synthetic real-store language setters and actual background/foreground; OS per-app language investigation. No physical LAN, full-game, signed-release, Store or leak-free claim.', approved_control_sha256=approved)
++                       scope='Four actual production-container UIKit tests; actual Settings/restart; direct Compose and actual LocalUIViewController direction; stable outer/child/window identities and full-bounds safe-area geometry in EN/AR portrait/landscape; local Whodunit/Mafia controller/flow/value continuity under synthetic real-store language setters and actual background/foreground; actual OS per-app language investigation. No physical LAN, full-game, signed-release, Store or leak-free claim.', approved_control_sha256=approved)
+         temp, owner, env, uuid = None, None, None, None
+         # This iteration compiles only inside temp/copy. Original-repository
+         # outputs are never task-owned and must never be deleted by this run.
+@@ -471,12 +480,14 @@
+             if original.count(needle) != 1:
+                 raise RuntimeError('Unexpected original Swift safe-area structure')
+             original = original.replace(needle, needle + '\n        .overlay(alignment: .top) { DSC01Overlay().padding(.top, 72) }')
+-            needle = '        MainViewControllerKt.MainViewController()'
++            needle = '        ComposeContainerViewController(contentController: MainViewControllerKt.MainViewController())'
+             if original.count(needle) != 1:
+-                raise RuntimeError('Unexpected original Kotlin entry invocation count')
+-            original = original.replace(needle, '        let controller = MainViewControllerKt.MainViewController()\n'
++                raise RuntimeError('Unexpected explicitly source-bound production container factory')
++            original = original.replace(needle,
++                '        let controller = ComposeContainerViewController(contentController: MainViewControllerKt.MainViewController())\n'
+                 '        DSC01Probe.shared.attach(controller)\n        return controller')
+-            content.write_text(original + '\n' + (FIXTURE / 'DSC01Probe.swift.in').read_text())
++            content.write_text(original + '\n' + (FIXTURE / 'DSC01NativeObservation.swift.in').read_text() +
++                               '\n' + (FIXTURE / 'DSC01Probe.swift.in').read_text())
+             entry = temp / 'copy/iosApp/iosApp/iOSApp.swift'
+             original = entry.read_text()
+             needle = 'struct iOSApp: App {'
+@@ -510,8 +521,9 @@
+             diff = ''.join(''.join(difflib.unified_diff((ROOT / path).read_text().splitlines(True),
+                 (temp / 'copy' / path).read_text().splitlines(True),
+                 fromfile='original/' + path, tofile='audit-copy/' + path)) for path in changes)
+-            diff += ''.join(difflib.unified_diff([], (temp / 'copy' / ADDITION).read_text().splitlines(True),
+-                          fromfile='/dev/null', tofile='audit-copy/' + ADDITION))
++            for addition in ADDITIONS:
++                diff += ''.join(difflib.unified_diff([], (temp / 'copy' / addition).read_text().splitlines(True),
++                              fromfile='/dev/null', tofile='audit-copy/' + addition))
+             (dest / 'copied-source.diff').write_text(diff)
+             copied_source_manifest = inspect_copied_manifest(temp / 'copy', manifest, changed)
+             write_json(dest / 'copied-source-manifest.json', copied_source_manifest)
+--- v5/test_harness_contract.py
++++ v6/test_harness_contract.py
+@@ -3,6 +3,7 @@
+ import copy
+ import json
+ import os
++import re
+ from pathlib import Path
+ import subprocess
+ import tempfile
+@@ -73,6 +74,45 @@
+         with self.assertRaises(RuntimeError):
+             runner.verify_xctest(dict(result='Passed',totalTestCount=1,passedTests=0,
+                                       failedTests=0,skippedTests=1,expectedFailures=0),{},'synthetic')
++
++    def five_test_fixture(self):
++        identifier = str(uuid.uuid4())
++        device = dict(deviceId=identifier, architecture='arm64', platform='iOS Simulator')
++        summary = dict(result='Passed', totalTestCount=5, passedTests=5, failedTests=0,
++                       skippedTests=0, expectedFailures=0, devicesAndConfigurations=[dict(device=device)])
++        tests = dict(devices=[device], testNodes=[dict(nodeType='Test Case', nodeIdentifier=name,
++                     result='Passed', children=[]) for name in sorted(runner.EXPECTED_TESTS)])
++        return summary, tests, identifier
++
++    def test_exact_five_test_receipt_is_required_not_just_the_app_matrix(self):
++        summary, tests, identifier = self.five_test_fixture()
++        self.assertEqual(5, runner.verify_xctest(summary, tests, identifier)['total'])
++        self.assertEqual(5, len(runner.EXPECTED_TESTS))
++        for mutation in ('missing', 'duplicate', 'skip', 'unknown', 'fail'):
++            summary, tests, identifier = self.five_test_fixture()
++            if mutation == 'missing': tests['testNodes'].pop()
++            elif mutation == 'duplicate': tests['testNodes'][-1] = tests['testNodes'][0]
++            elif mutation == 'unknown': tests['testNodes'][0]['nodeIdentifier'] = 'Fake/testPass()'
++            elif mutation == 'skip':
++                summary.update(passedTests=4, skippedTests=1)
++                tests['testNodes'][0]['result'] = 'Skipped'
++            else: tests['testNodes'][0]['result'] = 'Failed'
++            with self.subTest(mutation=mutation), self.assertRaises(RuntimeError):
++                runner.verify_xctest(summary, tests, identifier)
++
++    def test_production_container_test_names_signatures_and_actual_project_wiring_are_bound(self):
++        path = runner.ROOT / 'iosApp/iosAppUITests/ComposeContainerViewControllerTests.swift'
++        source = path.read_text()
++        methods = re.findall(r'^    func (test\w+)\(\) \{', source, re.M)
++        expected = {name for name in runner.EXPECTED_TESTS if name.startswith('ComposeContainerViewControllerTests/')}
++        self.assertEqual(4, len(methods))
++        self.assertEqual(expected, {'ComposeContainerViewControllerTests/' + name + '()' for name in methods})
++        self.assertEqual(4, source.count('@MainActor'))
++        self.assertNotIn('XCTSkip', source)
++        project = (runner.ROOT / 'iosApp/iosApp.xcodeproj/project.pbxproj').read_text()
++        self.assertIn('ComposeContainerViewControllerTests.swift in Sources', project)
++        self.assertIn('ComposeContainerViewController.swift in Sources', project)
++        self.assertIn('testOneStableChildKeepsItsExplicitSemanticsIndependentOfTheOuterView', source)
+ 
+ 
+ class RuntimeStatusContractTest(unittest.TestCase):
+--- v5/DSC01Probe.swift.in
++++ v6/DSC01Probe.swift.in
+@@ -19,12 +19,14 @@
+     let boot: String
+     let preferences: DSC01Preferences
+     let nativeDirection: String
++    let native: DSC01NativeObservation
+     let controllerCreations: Int
+     let composition: String
+     let osDisposition: String
+     let samplingWindow: Int
+     let samplingIndex: Int
+     let samplingElapsedMilliseconds: Int
++    let samplingContext: String
+ }
+ 
+ private struct DSC01Report: Codable {
+@@ -50,10 +52,19 @@
+     private var prepared = false
+     private var controllerCreations = 0
+     private weak var controller: UIViewController?
++    private weak var firstOuter: UIViewController?
++    private weak var firstCompose: UIViewController?
++    private weak var firstOuterView: UIView?
++    private weak var firstComposeView: UIView?
++    private weak var firstWindow: UIWindow?
++    private var capturedCompose = false
++    private var capturedViews = false
++    private var capturedWindow = false
+     private var samplingOrdinal = 0
+     private var samplingStatus = "none"
+     private var samplingStarted: TimeInterval = 0
+     private var samplingRows: [DSC01Observation] = []
++    private var samplingContext = "none"
+     private let appID = "com.parlor.app.debug"
+     private let ownerKey = "com.parlor.languageOverrideOwner.v1"
+     private var resultURL: URL {
+@@ -84,17 +95,17 @@
+                 guard original.setting == "system", !original.hasAppOverride, !original.ownerPresent else {
+                     throw fixtureError()
+                 }
+-                report = DSC01Report(schemaVersion: 5, runToken: token, scenario: scenario, completed: false, observations: [])
++                report = DSC01Report(schemaVersion: 6, runToken: token, scenario: scenario, completed: false, observations: [])
+             } else if selected == "existing" && !FileManager.default.fileExists(atPath: resultURL.path) {
+                 guard scenario != "settings" else { throw fixtureError() }
+                 // Preserve all existing preferences and local synthetic saved games.
+                 // Starting this observation scenario does not reset application data.
+-                report = DSC01Report(schemaVersion: 5, runToken: token, scenario: scenario, completed: false, observations: [])
++                report = DSC01Report(schemaVersion: 6, runToken: token, scenario: scenario, completed: false, observations: [])
+             } else {
+                 let size = try FileManager.default.attributesOfItem(atPath: resultURL.path)[.size] as? NSNumber
+                 guard let size, size.intValue <= 262144 else { throw fixtureError() }
+                 let recovered = try JSONDecoder().decode(DSC01Report.self, from: Data(contentsOf: resultURL))
+-                guard recovered.schemaVersion == 5, recovered.scenario == scenario, recovered.runToken == token,
++                guard recovered.schemaVersion == 6, recovered.scenario == scenario, recovered.runToken == token,
+                       !recovered.completed, recovered.observations.count < 256 else { throw fixtureError() }
+                 report = recovered
+                 osDisposition = recovered.observations.last?.osDisposition ?? "not-investigated"
+@@ -118,6 +129,7 @@
+ 
+     func attach(_ actualController: UIViewController) {
+         precondition(Thread.isMainThread && prepared, "DSC01 observer was not prepared")
++        if controllerCreations == 0 { firstOuter = actualController }
+         controllerCreations += 1
+         controller = actualController
+     }
+@@ -131,14 +143,16 @@
+         catch { display = "{\"harnessError\":\"bounded_observation_failed\"}" }
+     }
+ 
+-    func beginStabilityWindow() {
++    func beginStabilityWindow(context: String = "foreground") {
+         precondition(Thread.isMainThread && prepared && ["whodunit", "mafia"].contains(scenario))
+-        guard samplingStatus != "running", samplingOrdinal < 8 else {
++        guard samplingStatus != "running", samplingOrdinal < 12,
++              ["foreground", "landscape", "portrait"].contains(context) else {
+             display = "{\"harnessError\":\"sampling_window_precondition_failed\"}"; return
+         }
+         samplingOrdinal += 1
+         samplingStatus = "running"
+         samplingRows = []
++        samplingContext = context
+         samplingStarted = ProcessInfo.processInfo.systemUptime
+         scheduleStabilitySample()
+     }
+@@ -158,7 +172,7 @@
+             guard elapsed >= 0 && elapsed <= 10000, samplingRows.count < 6 else { throw fixtureError() }
+             let observation = try appendObservation(phase: "window_sample", publish: false,
+                 samplingWindow: samplingOrdinal, samplingIndex: samplingRows.count + 1,
+-                samplingElapsedMilliseconds: elapsed)
++                samplingElapsedMilliseconds: elapsed, samplingContext: samplingContext)
+             samplingRows.append(observation)
+             if samplingRows.count == 6 {
+                 samplingStatus = "complete"
+@@ -221,18 +235,16 @@
+     @discardableResult
+     private func appendObservation(phase: String, publish: Bool = true,
+                                    samplingWindow: Int = 0, samplingIndex: Int = 0,
+-                                   samplingElapsedMilliseconds: Int = 0) throws -> DSC01Observation {
++                                   samplingElapsedMilliseconds: Int = 0,
++                                   samplingContext: String = "none") throws -> DSC01Observation {
+         guard var value = report, value.observations.count < 256, beforeMain != nil else { throw fixtureError() }
+         let now = try preferences()
+-        let direction: String
+-        if let root = controller?.view {
+-            switch root.semanticContentAttribute {
+-            case .forceLeftToRight: direction = "force_ltr"
+-            case .forceRightToLeft: direction = "force_rtl"
+-            case .unspecified: direction = "unspecified"
+-            default: direction = "other"
+-            }
+-        } else { direction = "unavailable" }
++        // The native oracle is EXACTLY the controller observed at the actual
++        // LocalUIViewController read, never Main's return value or a type guess.
++        // Before App starts, no Kotlin bridge call or premature view load occurs.
++        let child = phase == "before_main" ? nil : MainViewControllerKt.DSC01ActualUIKitController()
++        let direction = dsc01Direction(child?.viewIfLoaded)
++        let native = phase == "before_main" ? DSC01NativeObservation.unavailable : nativeObservation(child)
+         // This direct read is deliberately unavailable before original Main/App
+         // initialization; invoking the Kotlin bridge there would invalidate the
+         // persisted-ownership startup witness.
+@@ -240,9 +252,11 @@
+         guard composition.utf8.count <= 4096 else { throw fixtureError() }
+         let observation = DSC01Observation(
+             ordinal: value.observations.count + 1, phase: phase, fixture: fixture,
+-            boot: boot, preferences: now, nativeDirection: direction, controllerCreations: controllerCreations,
++            boot: boot, preferences: now, nativeDirection: direction, native: native,
++            controllerCreations: controllerCreations,
+             composition: composition, osDisposition: osDisposition, samplingWindow: samplingWindow,
+-            samplingIndex: samplingIndex, samplingElapsedMilliseconds: samplingElapsedMilliseconds
++            samplingIndex: samplingIndex, samplingElapsedMilliseconds: samplingElapsedMilliseconds,
++            samplingContext: samplingContext
+         )
+         value.observations.append(observation)
+         let encoded = try JSONEncoder().encode(value)
+@@ -253,11 +267,58 @@
+         return observation
+     }
+ 
++    private func nativeObservation(_ child: UIViewController?) -> DSC01NativeObservation {
++        // Every captured identity is weak and write-once. This instrumentation
++        // cannot keep a removed controller alive or rebase after replacement.
++        if let child, !capturedCompose { firstCompose = child; capturedCompose = true }
++        let outerView = controller?.viewIfLoaded
++        let composeView = child?.viewIfLoaded
++        if let outerView, let composeView, !capturedViews {
++            firstOuterView = outerView; firstComposeView = composeView; capturedViews = true
++        }
++        let window = outerView?.window
++        if let window, composeView?.window === window, !capturedWindow {
++            firstWindow = window; capturedWindow = true
++        }
++        var geometry: DSC01Geometry?
++        if let outerView, let composeView, let window, composeView.window === window {
++            let orientation: String
++            switch window.windowScene?.interfaceOrientation {
++            case .portrait: orientation = "portrait"
++            case .landscapeLeft, .landscapeRight: orientation = "landscape"
++            default: orientation = "other"
++            }
++            // Read-only public UIKit geometry. No layoutIfNeeded, forced view
++            // loading, lifecycle callback, semantic setter or direction repair.
++            geometry = DSC01Geometry(windowBounds: dsc01Rectangle(window.bounds),
++                outerBounds: dsc01Rectangle(outerView.bounds), composeBounds: dsc01Rectangle(composeView.bounds),
++                outerInWindow: dsc01Rectangle(outerView.convert(outerView.bounds, to: window)),
++                composeInWindow: dsc01Rectangle(composeView.convert(composeView.bounds, to: window)),
++                composeFrameInOuter: dsc01Rectangle(composeView.frame),
++                windowSafeArea: dsc01Insets(window.safeAreaInsets),
++                outerSafeArea: dsc01Insets(outerView.safeAreaInsets),
++                composeSafeArea: dsc01Insets(composeView.safeAreaInsets), orientation: orientation)
++        }
++        return DSC01NativeObservation(
++            sameOuterController: controller != nil && controller === firstOuter,
++            sameComposeController: child != nil && child === firstCompose,
++            sameOuterView: outerView != nil && outerView === firstOuterView,
++            sameComposeView: composeView != nil && composeView === firstComposeView,
++            childParentIsOuter: child != nil && controller != nil && child?.parent === controller,
++            singleComposeChild: controller?.children.count == 1 && controller?.children.first === child,
++            directSubview: outerView != nil && composeView != nil && composeView?.superview === outerView,
++            sameWindow: window != nil && composeView?.window === window && window === firstWindow,
++            attachments: Int(MainViewControllerKt.DSC01UIKitAttachmentCount()),
++            disposals: Int(MainViewControllerKt.DSC01UIKitDisposalCount()),
++            outerDirection: dsc01Direction(outerView), geometry: geometry)
++    }
++
+     private func publishObservation(_ observation: DSC01Observation) throws {
+         guard let value = report, let beforeMain else { throw fixtureError() }
+         let window: [[String: Any]] = try samplingRows.map { sample -> [String: Any] in
+             ["sequence": sample.ordinal, "boot": sample.boot,
+              "controllerCreations": sample.controllerCreations, "nativeDirection": sample.nativeDirection,
++             "native": sample.native.compact,
+              "now": try JSONSerialization.jsonObject(with: JSONEncoder().encode(sample.preferences)),
+              "composition": try JSONSerialization.jsonObject(with: Data(sample.composition.utf8)),
+              "index": sample.samplingIndex, "elapsedMilliseconds": sample.samplingElapsedMilliseconds]
+@@ -269,9 +330,11 @@
+             "beforeMain": try JSONSerialization.jsonObject(with: JSONEncoder().encode(beforeMain)),
+             "now": try JSONSerialization.jsonObject(with: JSONEncoder().encode(observation.preferences)),
+             "nativeDirection": observation.nativeDirection, "controllerCreations": controllerCreations,
++            "native": observation.native.compact,
+             "composition": try JSONSerialization.jsonObject(with: Data(observation.composition.utf8)),
+             "scenario": scenario, "osDisposition": osDisposition,
+-            "sampling": ["ordinal": samplingOrdinal, "status": samplingStatus, "samples": window],
++            "sampling": ["ordinal": samplingOrdinal, "status": samplingStatus,
++                         "context": samplingContext, "samples": window],
+         ]
+         let displayData = try JSONSerialization.data(withJSONObject: payload, options: [.sortedKeys])
+         guard displayData.count <= 8192 else { throw fixtureError() }
+@@ -331,6 +394,12 @@
+                 Button("Synthetic SYS") { probe.syntheticLanguage("system") }.accessibilityIdentifier("parlor-dsc01-synthetic-system")
+                 Button("OS Settings") { probe.openOSSettings() }.accessibilityIdentifier("parlor-dsc01-open-os")
+             }
++            HStack(spacing: 8) {
++                Button("Landscape window") { probe.beginStabilityWindow(context: "landscape") }
++                    .accessibilityIdentifier("parlor-dsc01-window-landscape")
++                Button("Portrait window") { probe.beginStabilityWindow(context: "portrait") }
++                    .accessibilityIdentifier("parlor-dsc01-window-portrait")
++            }
+             if probe.isOSScenario {
+                 HStack(spacing: 8) {
+                     Button("OS row unavailable") { probe.markOS("language-control-unavailable") }.accessibilityIdentifier("parlor-dsc01-os-no-row")
+--- v5/IOSAppLaunchUITests.swift.in
++++ v6/IOSAppLaunchUITests.swift.in
+@@ -1,4 +1,5 @@
+ import XCTest
++import UIKit
+ 
+ final class IOSAppLaunchUITests: XCTestCase {
+     override func setUpWithError() throws { continueAfterFailure = false }
+@@ -8,10 +9,12 @@
+         let app = XCUIApplication()
+         let token = UUID().uuidString
+         let simulator = try XCTUnwrap(ProcessInfo.processInfo.environment["SIMULATOR_UDID"])
++        // This complete test runs only on the runner-owned disposable simulator.
++        XCUIDevice.shared.orientation = .portrait
+         app.launchArguments = [] // Never pin AppleLanguages/AppleLocale in argument domain.
+         app.launchEnvironment = ["PARLOR_DSC01_RUN_TOKEN": token, "PARLOR_DSC01_EXPECTED_UDID": simulator,
+                                  "PARLOR_DSC01_SCENARIO": "settings"]
+-        defer { app.terminate() }
++        defer { app.terminate(); XCUIDevice.shared.orientation = .portrait }
+ 
+         try launch(app, fixture: "fresh")
+         let initial = try observe(app)
+@@ -169,6 +172,8 @@
+         // A real-Settings EN lifecycle baseline precedes all synthetic changes.
+         try verifyActualForeground(app, ready: checkpoint, game: game, phase: phase,
+                                    requestedLanguage: "en", expectedLanguage: "en", previous: systemPreferences, boot: boot)
++        try verifyActualGeometry(app, game: game, phase: phase, language: "en",
++                                 previous: systemPreferences, boot: boot)
+         for language in ["ar", "en", "system"] {
+             _ = try syntheticLanguage(app, language: language)
+             let expectedLanguage = language == "system" ? systemLanguage : language
+@@ -190,6 +195,10 @@
+             try verifyActualForeground(app, ready: ready, game: game, phase: phase,
+                                        requestedLanguage: language, expectedLanguage: expectedLanguage,
+                                        previous: systemPreferences, boot: boot)
++            if language == "ar" {
++                try verifyActualGeometry(app, game: game, phase: phase, language: "ar",
++                                         previous: systemPreferences, boot: boot)
++            }
+         }
+         app.buttons["parlor-dsc01-complete"].tap()
+         XCTAssertEqual(try observe(app)["completed"] as? Bool, true)
+@@ -225,6 +234,7 @@
+             XCTAssertGreaterThan(try XCTUnwrap(value["backgroundSinceCapture"] as? Int), backgrounds)
+             XCTAssertGreaterThan(try XCTUnwrap(value["foregroundSinceCapture"] as? Int), foregrounds)
+             try assertContinuity(snapshot, game: game, phase: phase, language: expectedLanguage)
++            try assertNative(snapshot, orientation: "portrait")
+             if requestedLanguage == "system" {
+                 try assertSystem(snapshot, expected: expectedLanguage, previous: previous)
+             } else {
+@@ -233,23 +243,54 @@
+         }
+     }
+ 
+-    @MainActor private func collectPassiveWindow(_ app: XCUIApplication) throws -> [[String: Any]] {
++    @MainActor private func verifyActualGeometry(_ app: XCUIApplication, game: String,
++        phase: String, language: String, previous: [String], boot: String) throws {
++        XCTAssertTrue(["en", "ar"].contains(language))
++        let baseline = try dictionary(try readDisplayedObservation(app), "composition")
++        // Real XCTest orientation changes, not a frame setter or fake lifecycle.
++        // No geometry/direction polling chooses a lucky final measurement. The
++        // entire six-sample passive train survives even an early mismatch.
++        for (orientation, context) in [(UIDeviceOrientation.landscapeLeft, "landscape"), (.portrait, "portrait")] {
++            XCUIDevice.shared.orientation = orientation
++            XCTAssertTrue(app.wait(for: .runningForeground, timeout: 15))
++            let snapshots = try collectPassiveWindow(app, context: context)
++            XCTAssertEqual(snapshots.count, 6)
++            for snapshot in snapshots {
++                XCTAssertEqual(try string(snapshot, "boot"), boot)
++                let value = try dictionary(snapshot, "composition")
++                for counter in ["backgroundSinceCapture", "foregroundSinceCapture", "commandOrdinal"] {
++                    XCTAssertEqual(value[counter] as? Int, baseline[counter] as? Int,
++                                   "Rotation must not create a language command or background cycle")
++                }
++                try assertContinuity(snapshot, game: game, phase: phase, language: language)
++                try assertOwned(snapshot, explicit: language, previous: previous)
++                try assertNative(snapshot, orientation: context)
++            }
++        }
++    }
++
++    @MainActor private func collectPassiveWindow(_ app: XCUIApplication,
++                                                context: String = "foreground") throws -> [[String: Any]] {
++        XCTAssertTrue(["foreground", "landscape", "portrait"].contains(context))
+         let previous = try dictionary(try readDisplayedObservation(app), "sampling")
+         let ordinal = try XCTUnwrap(previous["ordinal"] as? Int)
+-        app.buttons["parlor-dsc01-window"].tap()
++        let button = context == "foreground" ? "parlor-dsc01-window" : "parlor-dsc01-window-" + context
++        app.buttons[button].tap()
+         let state = app.staticTexts["parlor-dsc01-state"]
+         let finished = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+             guard let data = (state.value as? String)?.data(using: .utf8), data.count <= 8192,
+                   let value = (try? JSONSerialization.jsonObject(with: data)) as? [String: Any] else { return false }
+             if value["harnessError"] != nil { return true } // Fail explicitly below, never wait into a false PASS.
+             guard let window = value["sampling"] as? [String: Any] else { return false }
+-            return window["ordinal"] as? Int == ordinal + 1 && window["status"] as? String == "complete"
++            return window["ordinal"] as? Int == ordinal + 1 && window["status"] as? String == "complete" &&
++                   window["context"] as? String == context
+         }, object: nil)
+         XCTAssertEqual(XCTWaiter.wait(for: [finished], timeout: 15), .completed)
+         let final = try readDisplayedObservation(app) // Read only: no Observe tap inside the passive window.
+         let window = try dictionary(final, "sampling")
+         XCTAssertEqual(window["ordinal"] as? Int, ordinal + 1)
+         XCTAssertEqual(window["status"] as? String, "complete")
++        XCTAssertEqual(window["context"] as? String, context)
+         let snapshots = try XCTUnwrap(window["samples"] as? [[String: Any]])
+         XCTAssertEqual(snapshots.count, 6)
+         var previousElapsed = 0
+@@ -264,6 +305,7 @@
+     }
+ 
+     private func assertContinuity(_ snapshot: [String: Any], game: String, phase: String, language: String) throws {
++        try assertNative(snapshot)
+         let value = try dictionary(snapshot, "composition")
+         XCTAssertEqual(value["surface"] as? String, game + "-local")
+         XCTAssertEqual(value["publicPhase"] as? String, phase)
+@@ -274,6 +316,22 @@
+             XCTAssertEqual(value[property] as? Bool, true, "Actual retained-session invariant: " + property)
+         }
+         XCTAssertEqual(snapshot["nativeDirection"] as? String, language == "ar" ? "force_rtl" : "force_ltr")
++    }
++
++    private func assertNative(_ snapshot: [String: Any], orientation: String? = nil) throws {
++        XCTAssertEqual(snapshot["controllerCreations"] as? Int, 1)
++        let native = try dictionary(snapshot, "native")
++        XCTAssertEqual(Set(native.keys), Set(["o", "c", "v", "p", "w", "a", "d", "g", "i"]))
++        for key in ["o", "c", "v", "p", "w", "g"] {
++            XCTAssertEqual(native[key] as? Bool, true, "Actual UIKit identity/containment/geometry invariant: " + key)
++        }
++        XCTAssertEqual(native["a"] as? Int, 1, "Actual LocalUIViewController observer attaches once")
++        XCTAssertEqual(native["d"] as? Int, 0, "Actual Compose controller observer never disposes")
++        let actual = try string(native, "i")
++        XCTAssertTrue(["portrait", "landscape"].contains(actual))
++        if let orientation { XCTAssertEqual(actual, orientation) }
++        // Raw numeric safe areas, converted frames, and each individual identity
++        // comparison are retained per sample and revalidated outside Swift.
+     }
+ 
+     @MainActor private func enterActualPlayerNames(_ app: XCUIApplication, count: Int) throws {
+@@ -526,7 +584,8 @@
+         XCTAssertLessThanOrEqual(encoded.count, 8192)
+         let snapshot = try XCTUnwrap(JSONSerialization.jsonObject(with: encoded) as? [String: Any])
+         XCTAssertNil(snapshot["harnessError"])
+-        XCTAssertEqual(snapshot["controllerCreations"] as? Int, 1, "Original root controller must remain the only one in this process")
++        // Invariants are asserted only AFTER each full passive train is durable;
++        // do not truncate collection because the first root/native value differs.
+         return snapshot
+     }
+ 
+@@ -542,6 +601,7 @@
+     }
+ 
+     private func assertOwned(_ snapshot: [String: Any], explicit: String, previous: [String]) throws {
++        try assertNative(snapshot)
+         let value = try dictionary(snapshot, "now")
+         XCTAssertEqual(value["setting"] as? String, explicit)
+         XCTAssertEqual(value["appLanguages"] as? [String], [explicit])
+@@ -555,6 +615,7 @@
+     }
+ 
+     private func assertSystem(_ snapshot: [String: Any], expected: String, previous: [String]) throws {
++        try assertNative(snapshot)
+         let value = try dictionary(snapshot, "now")
+         XCTAssertEqual(value["setting"] as? String, "system")
+         XCTAssertEqual(value["hasAppOverride"] as? Bool, !previous.isEmpty)
+--- v5/source-bindings.json
++++ v6/source-bindings.json
+@@ -2,13 +2,13 @@
+   "schema_version": 3,
+   "binding_status": "REVIEW_REQUIRED_BOUND",
+   "repository": "/Users/abdelrahman/Projects/parlor",
+-  "created_at": "2026-09-06T07:39:21.666466+00:00",
++  "created_at": "2026-09-06T13:01:43.798318+00:00",
+   "source_identity": {
+     "commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+     "tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+     "branch": "main",
+-    "tracked_status": "M composeApp/build.gradle.kts\n M composeApp/src/desktopTest/kotlin/com/parlor/app/ProductionUiAccessibilityContractTest.kt\n M composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSnapshotFileSystem.kt\n M docs/MAFIA_RULES.md\n M docs/PRODUCTION_ARCHITECTURE.md\n M docs/RELEASE_AUTOMATION.md\n M game-modes/mafia/build.gradle.kts\n M game-modes/mafia/src/commonMain/composeResources/values-ar/strings.xml\n M game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/snapshot/MafiaSnapshotRecovery.kt\n M game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaMultiDevicePhaseRouter.kt\n M game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/passandplay/MafiaPassAndPlayPhaseRouter.kt\n M game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/postgame/PostGameScreen.kt\n M game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaSetupScreen.kt\n M game-modes/whodunit/src/commonMain/composeResources/files/cases/jasmine-ring.json\n M game-modes/whodunit/src/commonMain/composeResources/files/cases/khan-el-khalili.json\n M game-modes/whodunit/src/commonMain/composeResources/files/cases/last-dinner.json\n M game-modes/whodunit/src/commonMain/composeResources/files/cases/layla-halabi.json\n M game-modes/whodunit/src/commonMain/composeResources/values-ar/strings.xml\n M game-modes/whodunit/src/commonMain/composeResources/values/strings.xml\n M game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/state/WhodunitStateValidator.kt\n M game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitGameFlow.kt\n M game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitPhaseRouter.kt\n M game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/WhodunitContentIdentityTest.kt\n M game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/domain/WhodunitRulesInvariantTest.kt\n M game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/snapshot/WhodunitCaseBindingTest.kt\n M game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/snapshot/WhodunitResumeReconstructionTest.kt\n M iosApp/iosApp.xcodeproj/project.pbxproj\n M scripts/release/store_api.py\n M scripts/release/tests/test_store_api.py\n M scripts/release/validate_android_artifact.sh\n M shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/HostDisconnectedOverlay.kt\n M shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/ParlorButton.kt\n M shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/ParlorToastHost.kt\n M shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/ReconnectingOverlay.kt\n M shared/design-system/src/commonTest/kotlin/com/parlor/designsystem/components/ParlorToastStateTest.kt\n M shared/design-system/src/iosMain/kotlin/com/parlor/designsystem/localization/LocalAppLocale.ios.kt\n M shared/session/src/commonMain/kotlin/com/parlor/session/multidevice/SessionStartHandshake.kt\n M shared/transport-p2p/src/androidMain/kotlin/com/parlor/transport/p2p/P2pTransportModule.android.kt\n M shared/transport-p2p/src/commonMain/kotlin/com/parlor/transport/p2p/AppLifecycleRoomCoordinator.kt\n M shared/transport-p2p/src/commonMain/kotlin/com/parlor/transport/p2p/P2pKitRoomTransport.kt\n M shared/transport-p2p/src/desktopMain/kotlin/com/parlor/transport/p2p/P2pTransportModule.desktop.kt\n M shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitRoomTransportLifecycleTest.kt\n M shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitRoomTransportLoopbackTest.kt\n M shared/transport-p2p/src/iosMain/kotlin/com/parlor/transport/p2p/P2pTransportModule.ios.kt",
+-    "diff_sha256": "38326880d1f9332618d193f73d49cebc6de063dd26c7e87a8711be9a04a5a430",
++    "tracked_status": "M composeApp/build.gradle.kts\n M composeApp/src/desktopTest/kotlin/com/parlor/app/ProductionUiAccessibilityContractTest.kt\n M composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSnapshotFileSystem.kt\n M docs/MAFIA_RULES.md\n M docs/PRODUCTION_ARCHITECTURE.md\n M docs/RELEASE_AUTOMATION.md\n M game-modes/mafia/build.gradle.kts\n M game-modes/mafia/src/commonMain/composeResources/values-ar/strings.xml\n M game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/snapshot/MafiaSnapshotRecovery.kt\n M game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaMultiDevicePhaseRouter.kt\n M game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/passandplay/MafiaPassAndPlayPhaseRouter.kt\n M game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/postgame/PostGameScreen.kt\n M game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaSetupScreen.kt\n M game-modes/whodunit/src/commonMain/composeResources/files/cases/jasmine-ring.json\n M game-modes/whodunit/src/commonMain/composeResources/files/cases/khan-el-khalili.json\n M game-modes/whodunit/src/commonMain/composeResources/files/cases/last-dinner.json\n M game-modes/whodunit/src/commonMain/composeResources/files/cases/layla-halabi.json\n M game-modes/whodunit/src/commonMain/composeResources/values-ar/strings.xml\n M game-modes/whodunit/src/commonMain/composeResources/values/strings.xml\n M game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/state/WhodunitStateValidator.kt\n M game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitGameFlow.kt\n M game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitPhaseRouter.kt\n M game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/WhodunitContentIdentityTest.kt\n M game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/domain/WhodunitRulesInvariantTest.kt\n M game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/snapshot/WhodunitCaseBindingTest.kt\n M game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/snapshot/WhodunitResumeReconstructionTest.kt\n M iosApp/iosApp.xcodeproj/project.pbxproj\n M iosApp/iosApp/ContentView.swift\n M scripts/release/store_api.py\n M scripts/release/tests/test_store_api.py\n M scripts/release/validate_android_artifact.sh\n M shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/HostDisconnectedOverlay.kt\n M shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/ParlorButton.kt\n M shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/ParlorToastHost.kt\n M shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/ReconnectingOverlay.kt\n M shared/design-system/src/commonTest/kotlin/com/parlor/designsystem/components/ParlorToastStateTest.kt\n M shared/design-system/src/iosMain/kotlin/com/parlor/designsystem/localization/LocalAppLocale.ios.kt\n M shared/session/src/commonMain/kotlin/com/parlor/session/multidevice/SessionStartHandshake.kt\n M shared/transport-p2p/src/androidMain/kotlin/com/parlor/transport/p2p/P2pTransportModule.android.kt\n M shared/transport-p2p/src/commonMain/kotlin/com/parlor/transport/p2p/AppLifecycleRoomCoordinator.kt\n M shared/transport-p2p/src/commonMain/kotlin/com/parlor/transport/p2p/P2pKitRoomTransport.kt\n M shared/transport-p2p/src/desktopMain/kotlin/com/parlor/transport/p2p/P2pTransportModule.desktop.kt\n M shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitRoomTransportLifecycleTest.kt\n M shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitRoomTransportLoopbackTest.kt\n M shared/transport-p2p/src/iosMain/kotlin/com/parlor/transport/p2p/P2pTransportModule.ios.kt",
++    "diff_sha256": "148fb4583d8fa8341b3cbc48a7fc0bc7564bf4df5c27e9d80e32c6bfdc57b784",
+     "source_manifest": [
+       [
+         ".github/dependabot.yml",
+@@ -588,7 +588,7 @@
+       ],
+       [
+         "docs/PRE_RELEASE_COMPATIBILITY.md",
+-        "2f5d46b17ca70d89042b94357a413d244cbd6abc467aa570d02082bd9f883559"
++        "32ae112de9fd761636191c3308faf28fa5a3a8f3fd694064bbeaf3f2ffe69060"
+       ],
+       [
+         "docs/PRIVACY_AND_COMPLIANCE.md",
+@@ -596,7 +596,7 @@
+       ],
+       [
+         "docs/PRODUCTION_ARCHITECTURE.md",
+-        "fc6e46a4d3a2820f2645c30f2c92094050b8543481e2c11be7ed2b53eef46f3b"
++        "e5fd25fbdcf8e157c90cf2095ab64d8d62777dbefe6b7b8ef58a74927345252d"
+       ],
+       [
+         "docs/PROGRESS.md",
+@@ -620,7 +620,7 @@
+       ],
+       [
+         "docs/WHODUNIT_TEST_CONTENT.md",
+-        "442715d8e015c5c433569039adf731b4e0b55e17919880ca2ea6051e7c969a53"
++        "19a2ca3a4cba3d60117f76897c7fc0d1cc55f97beb5002aead43fdc020b12756"
+       ],
+       [
+         "docs/adr/0001-game-module-registration.md",
+@@ -979,6 +979,10 @@
+         "fa5a85db72638033569368062722fc1e1f97fcf1c3948e912c7954324e1e2ba7"
+       ],
+       [
++        "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaHostLanguageContinuityTest.kt",
++        "027f36dda4a27b68fad6d5abf1740f9778cce897a2ba7dea7fc152acf7bce743"
++      ],
++      [
+         "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaNetworkErrorMessageKeyTest.kt",
+         "c91eab4b2ff15bf94a29604c5445a4e58a5b6a4ec79d34ce172533164a336666"
+       ],
+@@ -1188,7 +1192,7 @@
+       ],
+       [
+         "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitGameFlow.kt",
+-        "b5b57dfe7675a0f85e299719f5161d9e50d75e6c0f1c25cfb72379e7b032ec36"
++        "726d948937f757496807bab91381abcb9d050240695fb63dbdbdc21181cb9334"
+       ],
+       [
+         "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitLocalSessionConfig.kt",
+@@ -1488,7 +1492,7 @@
+       ],
+       [
+         "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/snapshot/WhodunitResumeReconstructionTest.kt",
+-        "8ba9e35b1f3f1c9cf819c5f46a3b0daf5a0f8d650916e5d90bca0346cd824cd9"
++        "e2ef51a27dd6ba794ff5241326d7f3e1c49e88a730c872bde7cd6bdde1623b09"
+       ],
+       [
+         "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/snapshot/WhodunitSnapshotRoundTripTest.kt",
+@@ -1532,7 +1536,11 @@
+       ],
+       [
+         "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitRecoveryInteractionTest.kt",
+-        "6a6adb88b4de74294e9874d8a94c2b5fe977968a12c895f677114befecf605d2"
++        "ce78251562131202f41648b26ef897034fd712c59f9cbb5d0af5207a3c47aa57"
++      ],
++      [
++        "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/multiplayer/WhodunitHostLanguageContinuityTest.kt",
++        "97e55bc43b465a0efc241810520db0e6e642f4991860b3f7fc843effa5667323"
+       ],
+       [
+         "game-modes/whodunit/src/desktopTest/resources/snapshot-goldens/whodunit-bare-assigned-8186f7d.json",
+@@ -1580,7 +1588,7 @@
+       ],
+       [
+         "iosApp/iosApp.xcodeproj/project.pbxproj",
+-        "dbf9c4d8f1c8e51cf78682afd5f32729566f75df6355735d3df37841e46fabfe"
++        "625103b4676a017beb4619c61b705efc84c2be47b71603bddd840c1d3856ea9d"
+       ],
+       [
+         "iosApp/iosApp.xcodeproj/project.xcworkspace/contents.xcworkspacedata",
+@@ -1611,8 +1619,12 @@
+         "0fd49ba3c3585c709678e0046a821c3c60685ec7063720d30d3a3448be3a208b"
+       ],
+       [
++        "iosApp/iosApp/ComposeContainerViewController.swift",
++        "9bdeeaf67a569f4016bc5359ae865b6df9eeaa2a9f6ee36e01041bf79000a903"
++      ],
++      [
+         "iosApp/iosApp/ContentView.swift",
+-        "2e9bf560447c78c84462daccafc67cee961428dbd592adb6e12ddf085ab67a55"
++        "5881b354ccc45340100356fbf37480e94efdcc2e8fe823f0bb6b5b60f8ccaa87"
+       ],
+       [
+         "iosApp/iosApp/Info.plist",
+@@ -1639,6 +1651,10 @@
+         "01d47afe5d13eb9ec48d9e8987c7920e72f2fefa5b06ec525087025caa809386"
+       ],
+       [
++        "iosApp/iosAppUITests/ComposeContainerViewControllerTests.swift",
++        "a4730b77ad93d01df60a4b6fde558bfea264f71b19ee5aa6c4a08d33480eacc8"
++      ],
++      [
+         "iosApp/iosAppUITests/IOSAppLaunchUITests.swift",
+         "e903278fc8defcac9a4d03a52495c1364a361222e5f369059c5d6b6416fb6eb7"
+       ],
+@@ -2233,6 +2249,10 @@
+       [
+         "shared/networking-testing/build.gradle.kts",
+         "81ed6260d7ac49fada4f0a922dde7db77fc557b86ab0a5884d5b20a64ec74f7e"
++      ],
++      [
++        "shared/networking-testing/src/commonMain/kotlin/com/parlor/networking/testing/ControlledStartRoom.kt",
++        "cda4c061d3a34a216011d1be1846b7d9b579a8ec77eb9f517e8dc7c6f680de6e"
+       ],
+       [
+         "shared/networking-testing/src/commonMain/kotlin/com/parlor/networking/testing/InMemoryRoomBus.kt",
+@@ -2667,7 +2687,7 @@
+         "1dfcf1145d4344b757f4fe95661b8aadd87635c89ece389c13988097afab67a6"
+       ]
+     ],
+-    "source_manifest_sha256": "de7573ed1f4e1a19969f3063e135d234cd57ec8764c4af784cf4b3eaff5ef9b4"
++    "source_manifest_sha256": "9ac2be536979f2216b39c10a6d148125a12380987d4efd483bbcbaeb1733318e"
+   },
+   "copy_only": [
+     {
+@@ -3423,6 +3443,10 @@
+       "sha256": "fa5a85db72638033569368062722fc1e1f97fcf1c3948e912c7954324e1e2ba7"
+     },
+     {
++      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaHostLanguageContinuityTest.kt",
++      "sha256": "027f36dda4a27b68fad6d5abf1740f9778cce897a2ba7dea7fc152acf7bce743"
++    },
++    {
+       "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaNetworkErrorMessageKeyTest.kt",
+       "sha256": "c91eab4b2ff15bf94a29604c5445a4e58a5b6a4ec79d34ce172533164a336666"
+     },
+@@ -3632,7 +3656,7 @@
+     },
+     {
+       "path": "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitGameFlow.kt",
+-      "sha256": "b5b57dfe7675a0f85e299719f5161d9e50d75e6c0f1c25cfb72379e7b032ec36"
++      "sha256": "726d948937f757496807bab91381abcb9d050240695fb63dbdbdc21181cb9334"
+     },
+     {
+       "path": "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitLocalSessionConfig.kt",
+@@ -3932,7 +3956,7 @@
+     },
+     {
+       "path": "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/snapshot/WhodunitResumeReconstructionTest.kt",
+-      "sha256": "8ba9e35b1f3f1c9cf819c5f46a3b0daf5a0f8d650916e5d90bca0346cd824cd9"
++      "sha256": "e2ef51a27dd6ba794ff5241326d7f3e1c49e88a730c872bde7cd6bdde1623b09"
+     },
+     {
+       "path": "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/snapshot/WhodunitSnapshotRoundTripTest.kt",
+@@ -3976,7 +4000,11 @@
+     },
+     {
+       "path": "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitRecoveryInteractionTest.kt",
+-      "sha256": "6a6adb88b4de74294e9874d8a94c2b5fe977968a12c895f677114befecf605d2"
++      "sha256": "ce78251562131202f41648b26ef897034fd712c59f9cbb5d0af5207a3c47aa57"
++    },
++    {
++      "path": "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/multiplayer/WhodunitHostLanguageContinuityTest.kt",
++      "sha256": "97e55bc43b465a0efc241810520db0e6e642f4991860b3f7fc843effa5667323"
+     },
+     {
+       "path": "game-modes/whodunit/src/desktopTest/resources/snapshot-goldens/whodunit-bare-assigned-8186f7d.json",
+@@ -4024,7 +4052,7 @@
+     },
+     {
+       "path": "iosApp/iosApp.xcodeproj/project.pbxproj",
+-      "sha256": "dbf9c4d8f1c8e51cf78682afd5f32729566f75df6355735d3df37841e46fabfe"
++      "sha256": "625103b4676a017beb4619c61b705efc84c2be47b71603bddd840c1d3856ea9d"
+     },
+     {
+       "path": "iosApp/iosApp.xcodeproj/project.xcworkspace/contents.xcworkspacedata",
+@@ -4055,8 +4083,12 @@
+       "sha256": "0fd49ba3c3585c709678e0046a821c3c60685ec7063720d30d3a3448be3a208b"
+     },
+     {
++      "path": "iosApp/iosApp/ComposeContainerViewController.swift",
++      "sha256": "9bdeeaf67a569f4016bc5359ae865b6df9eeaa2a9f6ee36e01041bf79000a903"
++    },
++    {
+       "path": "iosApp/iosApp/ContentView.swift",
+-      "sha256": "2e9bf560447c78c84462daccafc67cee961428dbd592adb6e12ddf085ab67a55"
++      "sha256": "5881b354ccc45340100356fbf37480e94efdcc2e8fe823f0bb6b5b60f8ccaa87"
+     },
+     {
+       "path": "iosApp/iosApp/Info.plist",
+@@ -4083,6 +4115,10 @@
+       "sha256": "01d47afe5d13eb9ec48d9e8987c7920e72f2fefa5b06ec525087025caa809386"
+     },
+     {
++      "path": "iosApp/iosAppUITests/ComposeContainerViewControllerTests.swift",
++      "sha256": "a4730b77ad93d01df60a4b6fde558bfea264f71b19ee5aa6c4a08d33480eacc8"
++    },
++    {
+       "path": "iosApp/iosAppUITests/IOSAppLaunchUITests.swift",
+       "sha256": "e903278fc8defcac9a4d03a52495c1364a361222e5f369059c5d6b6416fb6eb7"
+     },
+@@ -4673,6 +4709,10 @@
+     {
+       "path": "shared/networking-testing/build.gradle.kts",
+       "sha256": "81ed6260d7ac49fada4f0a922dde7db77fc557b86ab0a5884d5b20a64ec74f7e"
++    },
++    {
++      "path": "shared/networking-testing/src/commonMain/kotlin/com/parlor/networking/testing/ControlledStartRoom.kt",
++      "sha256": "cda4c061d3a34a216011d1be1846b7d9b579a8ec77eb9f517e8dc7c6f680de6e"
+     },
+     {
+       "path": "shared/networking-testing/src/commonMain/kotlin/com/parlor/networking/testing/InMemoryRoomBus.kt",
+--- v5/copied_sources.py
++++ v6/copied_sources.py
+@@ -10,12 +10,15 @@
+ WD = 'game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitGameFlow.kt'
+ MF = 'game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/passandplay/MafiaGameFlow.kt'
+ MAIN = 'composeApp/src/iosMain/kotlin/com/parlor/app/MainViewController.kt'
++LOCALE = 'shared/design-system/src/iosMain/kotlin/com/parlor/designsystem/localization/LocalAppLocale.ios.kt'
+ ADDITION = 'shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/auditcopy/DSC01ComposeObservation.kt'
++UIKIT_ADDITION = 'shared/design-system/src/iosMain/kotlin/com/parlor/designsystem/auditcopy/DSC01UIKitObservation.kt'
++ADDITIONS = {ADDITION: 'DSC01ComposeObservation.kt.in', UIKIT_ADDITION: 'DSC01UIKitObservation.kt.in'}
+ NAME_FIELDS = (
+     'game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/screens/setup/PlayerEntryScreen.kt',
+     'game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaPlayerEntryScreen.kt',
+ )
+-MODIFIED_KOTLIN = (SETTINGS, WD, MF, MAIN, *NAME_FIELDS)
++MODIFIED_KOTLIN = (SETTINGS, WD, MF, MAIN, LOCALE, *NAME_FIELDS)
+ BUILD_PREFIXES = ('composeApp/', 'shared/', 'game-modes/', 'build-logic/', 'gradle/', 'config/', 'iosApp/', 'scripts/')
+ BUILD_ROOTS = ('build.gradle.kts', 'settings.gradle.kts', 'gradle.properties', 'gradlew', 'gradlew.bat')
+ PROTECTED = ('.keystore', '.jks', '.p12', '.p8', '.pfx', '.mobileprovision', 'credentials.json',
+@@ -54,7 +57,9 @@
+     if {entry['path']: entry['sha256'] for entry in entries} != selected or len(entries) != len(selected):
+         raise RuntimeError('Copy input inventory must match every applicable bound tracked/untracked input')
+     for required in (*BUILD_ROOTS, *MODIFIED_KOTLIN, 'gradle/wrapper/gradle-wrapper.jar',
+-                     'gradle/verification-metadata.xml', 'iosApp/iosApp/Info.plist'):
++                     'gradle/verification-metadata.xml', 'iosApp/iosApp/Info.plist',
++                     'iosApp/iosApp/ComposeContainerViewController.swift',
++                     'iosApp/iosAppUITests/ComposeContainerViewControllerTests.swift'):
+         if required not in selected:
+             raise RuntimeError('A required actual build input is absent from the frozen source manifest')
+     for entry in entries:
+@@ -66,8 +71,9 @@
+         shutil.copyfile(source, target)
+         # Preserve only executable permission, not untrusted extended metadata.
+         target.chmod(0o700 if source.stat().st_mode & 0o111 else 0o600)
+-    if (destination / ADDITION).exists():
+-        raise RuntimeError('Refuse to overwrite an existing source at the synthetic observer path')
++    for path in ADDITIONS:
++        if (destination / path).exists():
++            raise RuntimeError('Refuse to overwrite an existing source at a synthetic observer path')
+ 
+ 
+ def instrument_kotlin(copy_root):
+@@ -104,6 +110,10 @@
+         return text + '\n' + (HERE / 'DSC01InvocationBridge.kt.in').read_text()
+ 
+     change(MAIN, main_bridge)
++    change(LOCALE, lambda text: replace_once(text,
++        '    val viewController = LocalUIViewController.current',
++        '    val viewController = LocalUIViewController.current\n'
++        '    com.parlor.designsystem.auditcopy.DSC01ObserveActualUIKitController(viewController)'))
+     for path in NAME_FIELDS:
+         def fields(text):
+             text = replace_once(text, 'import androidx.compose.ui.Modifier\n',
+@@ -112,9 +122,12 @@
+                 'modifier = Modifier.fillMaxWidth().bringIntoViewOnFocus(),',
+                 'modifier = Modifier.fillMaxWidth().bringIntoViewOnFocus().testTag("dsc01-player-${index + 1}"),')
+         change(path, fields)
+-    observer = copy_root / ADDITION
+-    observer.parent.mkdir(parents=True)
+-    observer.write_text((HERE / 'DSC01ComposeObservation.kt.in').read_text())
++    for path, template in ADDITIONS.items():
++        observer = copy_root / path
++        observer.parent.mkdir(parents=True, exist_ok=True)
++        if observer.exists() or observer.is_symlink():
++            raise RuntimeError('Refuse an existing observer addition')
++        observer.write_text((HERE / template).read_text())
+ 
+ 
+ def inspect_copied_manifest(copy_root, bindings, additional_modified):
+@@ -132,7 +145,8 @@
+         result.append(dict(path=entry['path'], original_sha256=entry['sha256'], copied_sha256=current))
+     if changed != permitted:
+         raise RuntimeError('Every declared copy-only transformation must actually occur, and only those')
+-    result.append(dict(path=ADDITION, original_sha256=None, copied_sha256=sha256(copy_root / ADDITION)))
++    for path in ADDITIONS:
++        result.append(dict(path=path, original_sha256=None, copied_sha256=sha256(copy_root / path)))
+     actual_files = {str(path.relative_to(copy_root)) for path in copy_root.rglob('*') if path.is_file()}
+     if actual_files != {entry['path'] for entry in result}:
+         raise RuntimeError('Unregistered source additions in the task-owned copy')
+--- v5/DSC01InvocationBridge.kt.in
++++ v6/DSC01InvocationBridge.kt.in
+@@ -49,3 +49,15 @@
+ fun DSC01SyntheticLanguage(language: String) = DSC01SyntheticSettingsInvocation.submit(language)
+ 
+ fun DSC01ReleaseSyntheticObservation() = DSC01SyntheticSettingsInvocation.close()
++
++// Borrowed actual controller read from LocalUIViewController at the production
++// locale provider, not the Main factory's return shape or a child/type guess.
++// All calls happen after original Main/App initialization on the main thread.
++fun DSC01ActualUIKitController(): platform.UIKit.UIViewController? =
++    com.parlor.designsystem.auditcopy.DSC01CopyOnlyUIKitObservation.actualController()
++
++fun DSC01UIKitAttachmentCount(): Int =
++    com.parlor.designsystem.auditcopy.DSC01CopyOnlyUIKitObservation.attachmentCount
++
++fun DSC01UIKitDisposalCount(): Int =
++    com.parlor.designsystem.auditcopy.DSC01CopyOnlyUIKitObservation.disposalCount
+--- /dev/null
++++ v6/DSC01UIKitObservation.kt.in
+@@ -0,0 +1,51 @@
++@file:OptIn(kotlinx.cinterop.ExperimentalForeignApi::class, kotlin.experimental.ExperimentalNativeApi::class)
++
++package com.parlor.designsystem.auditcopy
++
++import androidx.compose.runtime.Composable
++import androidx.compose.runtime.DisposableEffect
++import kotlin.native.ref.WeakReference
++import platform.Foundation.NSThread
++import platform.UIKit.UIViewController
++
++/** Copy-only observation of the actual LocalUIViewController reference.
++ * No controller lookup by runtime class, child order, private API or guessed type.
++ * Weak references do not keep a removed controller/composition alive. The Swift
++ * observer captures the first actual identity and never rebases on replacement.
++ */
++object DSC01CopyOnlyUIKitObservation {
++    private var current: WeakReference<UIViewController>? = null
++    var attachmentCount: Int = 0
++        private set
++    var disposalCount: Int = 0
++        private set
++
++    fun attach(controller: UIViewController) {
++        check(NSThread.isMainThread)
++        check(current?.get() == null)
++        attachmentCount += 1
++        check(attachmentCount <= 16)
++        current = WeakReference(controller)
++    }
++
++    fun detach(controller: UIViewController) {
++        check(NSThread.isMainThread)
++        check(current?.get() === controller)
++        current = null
++        disposalCount += 1
++        check(disposalCount <= 16)
++    }
++
++    fun actualController(): UIViewController? {
++        check(NSThread.isMainThread)
++        return current?.get()
++    }
++}
++
++@Composable
++fun DSC01ObserveActualUIKitController(controller: UIViewController) {
++    DisposableEffect(controller) {
++        DSC01CopyOnlyUIKitObservation.attach(controller)
++        onDispose { DSC01CopyOnlyUIKitObservation.detach(controller) }
++    }
++}
+--- /dev/null
++++ v6/DSC01NativeObservation.swift.in
+@@ -0,0 +1,97 @@
++// Evidence-only geometry/identity schema, appended to the owned Debug copy.
++// Numeric coordinates are public layout metadata, never player/session data.
++#if DEBUG && targetEnvironment(simulator)
++private struct DSC01Geometry: Codable {
++    let windowBounds: [Double]
++    let outerBounds: [Double]
++    let composeBounds: [Double]
++    let outerInWindow: [Double]
++    let composeInWindow: [Double]
++    let composeFrameInOuter: [Double]
++    let windowSafeArea: [Double]
++    let outerSafeArea: [Double]
++    let composeSafeArea: [Double]
++    let orientation: String
++
++    // A separate Python validator rechecks EVERY raw numeric sample, not this
++    // derived UI boolean. Half a point admits floating pixel-rounding only.
++    var valid: Bool {
++        let rectangles = [windowBounds, outerBounds, composeBounds, outerInWindow,
++                          composeInWindow, composeFrameInOuter]
++        let insets = [windowSafeArea, outerSafeArea, composeSafeArea]
++        guard rectangles.allSatisfy({ row in
++            row.count == 4 && row.allSatisfy({ $0.isFinite && abs($0) <= 100000 }) &&
++            row[2] > 0 && row[3] > 0
++        }), insets.allSatisfy({ row in
++            row.count == 4 && row.allSatisfy({ $0.isFinite && $0 >= 0 && $0 <= 100000 })
++        }) else { return false }
++        func equal(_ left: [Double], _ right: [Double]) -> Bool {
++            zip(left, right).allSatisfy { abs($0.0 - $0.1) <= 0.5 }
++        }
++        let local = [0.0, 0.0, windowBounds[2], windowBounds[3]]
++        guard equal(outerBounds, local), equal(composeBounds, local),
++              equal(outerInWindow, windowBounds), equal(composeInWindow, windowBounds),
++              equal(composeFrameInOuter, outerBounds),
++              equal(outerSafeArea, windowSafeArea), equal(composeSafeArea, windowSafeArea),
++              windowSafeArea.contains(where: { $0 > 0.5 }),
++              windowSafeArea[0] + windowSafeArea[2] < windowBounds[3],
++              windowSafeArea[1] + windowSafeArea[3] < windowBounds[2] else { return false }
++        switch orientation {
++        case "portrait": return windowBounds[3] > windowBounds[2]
++        case "landscape": return windowBounds[2] > windowBounds[3]
++        default: return false
++        }
++    }
++}
++
++private struct DSC01NativeObservation: Codable {
++    let sameOuterController: Bool
++    let sameComposeController: Bool
++    let sameOuterView: Bool
++    let sameComposeView: Bool
++    let childParentIsOuter: Bool
++    let singleComposeChild: Bool
++    let directSubview: Bool
++    let sameWindow: Bool
++    let attachments: Int
++    let disposals: Int
++    let outerDirection: String
++    let geometry: DSC01Geometry?
++
++    static let unavailable = DSC01NativeObservation(
++        sameOuterController: false, sameComposeController: false,
++        sameOuterView: false, sameComposeView: false, childParentIsOuter: false,
++        singleComposeChild: false, directSubview: false, sameWindow: false,
++        attachments: 0, disposals: 0, outerDirection: "unavailable", geometry: nil)
++
++    // Compact keys keep ALL six samples below the original 8192-byte a11y cap.
++    // Full component booleans and numeric geometry live in each durable event.
++    var compact: [String: Any] {
++        ["o": sameOuterController, "c": sameComposeController,
++         "v": sameOuterView && sameComposeView,
++         "p": childParentIsOuter && singleComposeChild && directSubview,
++         "w": sameWindow, "a": attachments, "d": disposals,
++         "g": geometry?.valid ?? false, "i": geometry?.orientation ?? "unavailable"]
++    }
++}
++
++private func dsc01Rectangle(_ value: CGRect) -> [Double] {
++    [Double(value.origin.x), Double(value.origin.y), Double(value.size.width), Double(value.size.height)]
++}
++
++private func dsc01Insets(_ value: UIEdgeInsets) -> [Double] {
++    [Double(value.top), Double(value.left), Double(value.bottom), Double(value.right)]
++}
++
++private func dsc01Direction(_ view: UIView?) -> String {
++    guard let view else { return "unavailable" }
++    switch view.semanticContentAttribute {
++    case .forceLeftToRight: return "force_ltr"
++    case .forceRightToLeft: return "force_rtl"
++    case .unspecified: return "unspecified"
++    default: return "other"
++    }
++}
++#else
++#error("DSC01 geometry observer may compile ONLY as Debug iOS simulator")
++#endif
+--- v5/probe_validation.py
++++ v6/probe_validation.py
+@@ -1,5 +1,6 @@
+ """Fail-closed bounded evidence validators; synthetic fixtures are not runtime proof."""
+ import json
++import math
+ import re
+ 
+ UUID = re.compile(r'[A-Fa-f0-9]{8}(?:-[A-Fa-f0-9]{4}){3}-[A-Fa-f0-9]{12}')
+@@ -15,7 +16,16 @@
+ COMPOSITION_KEYS = COMPOSITION_BOOLEANS | COMPOSITION_COUNTERS | COMPOSITION_STRINGS
+ OS_STATUSES = {'not-investigated', 'opening', 'opened', 'open-rejected', 'language-control-unavailable',
+                'selection-unavailable', 'verified-english'}
+-SAMPLING_KEYS = {'samplingWindow', 'samplingIndex', 'samplingElapsedMilliseconds'}
++SAMPLING_COORDINATES = {'samplingWindow', 'samplingIndex', 'samplingElapsedMilliseconds'}
++SAMPLING_KEYS = SAMPLING_COORDINATES | {'samplingContext'}
++NATIVE_BOOLEANS = {'sameOuterController', 'sameComposeController', 'sameOuterView', 'sameComposeView',
++                  'childParentIsOuter', 'singleComposeChild', 'directSubview', 'sameWindow'}
++NATIVE_KEYS = NATIVE_BOOLEANS | {'attachments', 'disposals', 'outerDirection'}
++RECTANGLES = {'windowBounds', 'outerBounds', 'composeBounds', 'outerInWindow', 'composeInWindow', 'composeFrameInOuter'}
++SAFE_AREAS = {'windowSafeArea', 'outerSafeArea', 'composeSafeArea'}
++WINDOW_PLAN = ((0, 'foreground'), (0, 'foreground'), (0, 'landscape'), (0, 'portrait'),
++               (1, 'foreground'), (1, 'foreground'), (1, 'landscape'), (1, 'portrait'),
++               (2, 'foreground'), (2, 'foreground'), (3, 'foreground'), (3, 'foreground'))
+ 
+ 
+ def require(condition, reason):
+@@ -65,10 +75,67 @@
+     return value
+ 
+ 
++def geometry(value):
++    require(isinstance(value, dict) and set(value) == RECTANGLES | SAFE_AREAS | {'orientation'},
++            'Unexpected raw UIKit geometry schema')
++    for key in RECTANGLES | SAFE_AREAS:
++        row = value[key]
++        require(isinstance(row, list) and len(row) == 4 and all(
++            type(number) in (int, float) and math.isfinite(number) and abs(number) <= 100000 for number in row),
++            'Non-finite, unbounded, or non-numeric raw UIKit geometry')
++        if key in RECTANGLES:
++            require(row[2] > 0 and row[3] > 0, 'Raw view/window rectangle is empty')
++        else:
++            require(all(number >= 0 for number in row), 'Negative UIKit safe-area inset')
++    require(value['orientation'] in {'portrait', 'landscape', 'other'}, 'Unknown actual UIWindowScene orientation')
++
++
++def geometry_fills_window(value, orientation=None):
++    """Independent raw-number oracle, not acceptance of Swift's compact `g`."""
++    geometry(value)
++    equal = lambda left, right: all(abs(a - b) <= 0.5 for a, b in zip(left, right))
++    bounds = value['windowBounds']
++    local = [0, 0, bounds[2], bounds[3]]
++    insets = value['windowSafeArea']
++    actual = value['orientation']
++    return (equal(value['outerBounds'], local) and equal(value['composeBounds'], local) and
++            equal(value['outerInWindow'], bounds) and equal(value['composeInWindow'], bounds) and
++            equal(value['composeFrameInOuter'], value['outerBounds']) and
++            equal(value['outerSafeArea'], insets) and equal(value['composeSafeArea'], insets) and
++            any(inset > 0.5 for inset in insets) and insets[0] + insets[2] < bounds[3] and
++            insets[1] + insets[3] < bounds[2] and
++            ((actual == 'portrait' and bounds[3] > bounds[2]) or
++             (actual == 'landscape' and bounds[2] > bounds[3])) and
++            (orientation is None or actual == orientation))
++
++
++def native(event):
++    value = event['native']
++    before = event['phase'] == 'before_main'
++    require(isinstance(value, dict) and set(value) == NATIVE_KEYS | (set() if before else {'geometry'}),
++            'Unexpected actual LocalUIViewController/outer identity schema')
++    for key in NATIVE_BOOLEANS:
++        require(type(value[key]) is bool, 'Native controller/view/window identity is not a boolean')
++    require(all(type(value[key]) is int and 0 <= value[key] <= 16 for key in ('attachments', 'disposals')),
++            'Unbounded actual Compose controller attach/dispose counter')
++    require(value['outerDirection'] in {'unavailable', 'force_ltr', 'force_rtl', 'unspecified', 'other'},
++            'Unknown outer UIKit semantic direction')
++    if before:
++        require(not any(value[key] for key in NATIVE_BOOLEANS) and value['attachments'] == 0 and
++                value['disposals'] == 0 and value['outerDirection'] == 'unavailable',
++                'Native observer must not run or load a view before original App startup')
++    else:
++        geometry(value['geometry'])
++        require(all(value[key] for key in NATIVE_BOOLEANS) and value['attachments'] == 1 and
++                value['disposals'] == 0 and value['outerDirection'] != 'unavailable',
++                'Actual outer/Compose controller, views, containment or UIWindow changed/disposed')
++    return value
++
++
+ def common(report, scenario):
+     require(isinstance(report, dict) and set(report) == {'schemaVersion', 'runToken', 'scenario', 'completed', 'observations'},
+             'Unexpected complete report schema')
+-    require(report['schemaVersion'] == 5 and report['scenario'] == scenario and report['completed'] is True and
++    require(report['schemaVersion'] == 6 and report['scenario'] == scenario and report['completed'] is True and
+             isinstance(report['runToken'], str) and UUID.fullmatch(report['runToken']), 'Wrong/incomplete scenario binding')
+     events = report['observations']
+     require(isinstance(events, list) and 3 <= len(events) <= 256, 'Unexpected scenario event count')
+@@ -76,22 +143,26 @@
+     rows = []
+     for index, event in enumerate(events):
+         require(isinstance(event, dict) and set(event) == {'ordinal', 'phase', 'fixture', 'boot', 'preferences',
+-                'nativeDirection', 'controllerCreations', 'composition', 'osDisposition'} | SAMPLING_KEYS,
++                'nativeDirection', 'native', 'controllerCreations', 'composition', 'osDisposition'} | SAMPLING_KEYS,
+                 'Unexpected event schema')
+         require(event['ordinal'] == index + 1 and event['phase'] in {'before_main', 'sample', 'window_sample', 'complete'} and
+                 event['fixture'] in {'fresh', 'continue', 'previous-ar', 'existing'} and
+                 isinstance(event['boot'], str) and UUID.fullmatch(event['boot']), 'Invalid observation binding')
+-        require(all(type(event[key]) is int for key in SAMPLING_KEYS), 'Sampling coordinates must be actual integers')
++        require(all(type(event[key]) is int for key in SAMPLING_COORDINATES), 'Sampling coordinates must be actual integers')
+         if event['phase'] == 'window_sample':
+-            require(scenario in {'whodunit', 'mafia'} and 1 <= event['samplingWindow'] <= 8 and
++            require(scenario in {'whodunit', 'mafia'} and 1 <= event['samplingWindow'] <= 12 and
+                     1 <= event['samplingIndex'] <= 6 and 200 <= event['samplingElapsedMilliseconds'] <= 10000,
+                     'Unbounded or wrongly scoped passive observation')
++            require(event['samplingContext'] in {'foreground', 'landscape', 'portrait'},
++                    'Unknown passive observation context')
+         else:
+-            require(all(event[key] == 0 for key in SAMPLING_KEYS), 'Non-window event impersonates a passive sample')
++            require(all(event[key] == 0 for key in SAMPLING_COORDINATES) and event['samplingContext'] == 'none',
++                    'Non-window event impersonates a passive sample')
+         require(event['osDisposition'] in OS_STATUSES and
+                 (scenario == 'os' or event['osDisposition'] == 'not-investigated'), 'Unexpected OS receipt scope')
+         preference(event['preferences'])
+         observed = composition(event)
++        native(event)
+         if event['phase'] == 'before_main':
+             require(event['controllerCreations'] == 0 and event['nativeDirection'] == 'unavailable', 'Not a before-App witness')
+             starts.append(event)
+@@ -110,7 +181,7 @@
+     rows, starts = common(report, 'settings')
+     original = dict(schemaVersion=1, runToken=report['runToken'], completed=True,
+                     observations=[{key: value for key, value in event.items()
+-                                   if key not in {'composition', 'osDisposition'} | SAMPLING_KEYS} for event, _ in rows])
++                                   if key not in {'composition', 'osDisposition', 'native'} | SAMPLING_KEYS} for event, _ in rows])
+     proof = legacy_validator(original)
+     # Verify each actual Settings phase under both directions, not root UIKit
+     # direction or a guessed language-to-direction conversion as observation.
+@@ -122,6 +193,10 @@
+         require(any(value['settingsDirection'] == (direction or ('rtl' if event['preferences']['preferredLanguage'] == 'ar' else 'ltr'))
+                     for event, value in matches), 'Required direct actual-Settings Compose direction missing')
+     proof['direct_compose_direction_measurement'] = True
++    require(all(geometry_fills_window(event['native']['geometry'], 'portrait') for event, _ in rows
++                if event['phase'] != 'before_main'), 'Actual Settings container/child/window bounds or safe areas diverged')
++    proof['native_direction_from_actual_local_uiviewcontroller'] = True
++    proof['stable_outer_child_and_window'] = True
+     return proof
+ 
+ 
+@@ -148,6 +223,8 @@
+                 event['preferences']['ownerPrevious'] == previous and event['nativeDirection'] == 'force_ltr'
+                 for event, value in before_capture), 'Missing actual Settings EN selection before game entry')
+     for event, value in in_scope:
++        require(geometry_fills_window(event['native']['geometry']),
++                'Actual local full-bounds/window safe-area geometry diverged')
+         require(all(value[key] is True for key in CONTINUITY_BOOLEANS) and value['disposalsSinceCapture'] == 0 and
+                 value['surface'] == game + '-local' and value['publicPhase'] == phase,
+                 'Actual controller/StateFlow/value/phase changed or was disposed; checkpoint cannot be rebased')
+@@ -162,11 +239,11 @@
+             in_scope[0][1]['backgroundSinceCapture'] == 0 and in_scope[0][1]['foregroundSinceCapture'] == 0,
+             'Canonical checkpoint must precede every synthetic command and lifecycle cycle')
+     windows = [(event, value) for event, value in samples if event['phase'] == 'window_sample']
+-    require(len(windows) == 48 and {event['samplingWindow'] for event, _ in windows} == set(range(1, 9)) and
++    require(len(windows) == 72 and {event['samplingWindow'] for event, _ in windows} == set(range(1, 13)) and
+             all(baseline_index < event['ordinal'] < complete_index for event, _ in windows),
+-            'Exactly two six-sample passive windows are required after each of four lifecycle cycles')
++            'Eight lifecycle plus four orientation windows require exactly 72 passive samples')
+     require([(event['samplingWindow'], event['samplingIndex']) for event, _ in windows] ==
+-            [(window, index) for window in range(1, 9) for index in range(1, 7)],
++            [(window, index) for window in range(1, 13) for index in range(1, 7)],
+             'Passive windows must remain in their actual observation/publication order')
+     for ordinal, language in ((0, 'en'), (1, 'ar'), (2, 'en'), (3, 'system')):
+         command_language, status = ('none', 'none') if ordinal == 0 else (language, 'applied')
+@@ -192,22 +269,39 @@
+                     value['gameDirection'] == ('rtl' if expected_language == 'ar' else 'ltr') and
+                     event['nativeDirection'] == ('force_rtl' if expected_language == 'ar' else 'force_ltr')
+                     for event, value in settled), 'Post-foreground preference/native/Compose direction diverged')
+-        for window_id in (ordinal * 2 + 1, ordinal * 2 + 2):
++        for window_id, (command_id, context) in enumerate(WINDOW_PLAN, 1):
++            if command_id != ordinal:
++                continue
+             train = [(event, value) for event, value in windows if event['samplingWindow'] == window_id]
+             require(len(train) == 6 and [event['samplingIndex'] for event, _ in train] == list(range(1, 7)),
+                     'A passive window was missing, duplicated, reordered, or truncated')
+             require(all((event, value) in settled for event, value in train),
+                     'Passive window lacks its own completed lifecycle/requested-language witness')
++            require(all(event['samplingContext'] == context and
++                        geometry_fills_window(event['native']['geometry'], 'landscape' if context == 'landscape' else 'portrait')
++                        for event, _ in train), 'Raw UIKit geometry does not match its planned portrait/landscape window')
+             elapsed = [0] + [event['samplingElapsedMilliseconds'] for event, _ in train]
+             require(all(right - left >= 200 for left, right in zip(elapsed, elapsed[1:])),
+                     'Passive samples were not separated by the bounded nonblocking interval')
++        geometry_rows = [(event, value) for event, value in windows if
++                         value['commandOrdinal'] == ordinal and event['samplingContext'] in {'landscape', 'portrait'}]
++        if geometry_rows:
++            baseline = [(event, value) for event, value in windows if value['commandOrdinal'] == ordinal and
++                        event['samplingContext'] == 'foreground'][-1][1]
++            require(all(value['backgroundSinceCapture'] == baseline['backgroundSinceCapture'] and
++                        value['foregroundSinceCapture'] == baseline['foregroundSinceCapture'] for _, value in geometry_rows),
++                    'Orientation unexpectedly manufactured a background/foreground lifecycle cycle')
+     require(in_scope[-1][1]['commandOrdinal'] == 3, 'Unexpected extra local language commands')
+     return dict(status='PASS', actual_process_boots=1, stable_public_phase=phase,
+                 actual_controller_reference=True, actual_canonical_flow_reference=True,
+                 actual_canonical_reference_and_value=True, direct_compose_direction=True,
+                 initial_english_selection='Actual App Settings UI, zero synthetic commands before checkpoint',
+                 language_changes='AR/EN/System synthetic calls to actual production Koin SettingsStore, not an in-game Settings route',
+-                actual_background_foreground_cycles=4, passive_windows=8, passive_samples=48,
++                actual_background_foreground_cycles=4, passive_windows=12, passive_samples=72,
++                foreground_passive_windows=8, portrait_landscape_passive_windows=4,
++                native_direction_from_actual_local_uiviewcontroller=True,
++                stable_outer_child_views_and_window=True, raw_full_bounds_and_window_safe_areas=True,
++                geometry_directions=['en-ltr', 'ar-rtl'], geometry_orientations=['portrait', 'landscape'],
+                 all_post_foreground_samples_must_agree=True, session_disposals=0,
+                 observer_limitation='Overlay and initial/final publications may perturb SwiftUI; no display publication within each six-sample window',
+                 complete_game_or_persistence_resume_claim=False, physical_lan_claim=False)
+@@ -225,7 +319,8 @@
+     explicit = [(event, value) for event, value in rows if event['phase'] != 'before_main' and
+                 event['preferences']['setting'] == 'ar' and event['preferences']['ownerInstalled'] == 'ar' and
+                 event['preferences']['ownerPrevious'] and event['preferences']['ownerPrevious'][0].startswith('en') and
+-                value['settingsMounted'] and value['settingsDirection'] == 'rtl']
++                value['settingsMounted'] and value['settingsDirection'] == 'rtl' and
++                geometry_fills_window(event['native']['geometry'], 'portrait')]
+     require(explicit, 'Actual OS preference was not retained under actual Arabic Settings selection')
+     previous = explicit[-1][0]['preferences']['ownerPrevious']
+     require(len(starts) >= 2 and starts[-1]['preferences']['setting'] == 'system' and
+@@ -234,7 +329,7 @@
+     restored = [(event, value) for event, value in rows if event['ordinal'] > explicit[-1][0]['ordinal'] and
+                 event['phase'] != 'before_main' and event['preferences']['setting'] == 'system' and
+                 event['preferences']['appLanguages'] == previous and event['preferences']['ownerPresent'] is False and
+-                event['nativeDirection'] == 'force_ltr']
++                event['nativeDirection'] == 'force_ltr' and geometry_fills_window(event['native']['geometry'], 'portrait')]
+     require(any(value['settingsMounted'] and value['settingsDirection'] == 'ltr' for _, value in restored),
+             'System did not return actual Settings composition to OS English')
+     return dict(status='PASS', actual_settings_application_opened=True, actual_english_selection=True,
+--- v5/test_copy_observation_contract.py
++++ v6/test_copy_observation_contract.py
+@@ -20,29 +20,54 @@
+     return result
+ 
+ 
++def native_observation(before=False, orientation='portrait'):
++    value = {key: not before for key in validation.NATIVE_BOOLEANS}
++    value.update(attachments=0 if before else 1, disposals=0,
++                 outerDirection='unavailable' if before else 'force_rtl')
++    if not before:
++        bounds = [0, 0, 874, 402] if orientation == 'landscape' else [0, 0, 402, 874]
++        insets = [0, 62, 21, 62] if orientation == 'landscape' else [62, 0, 34, 0]
++        geometry = {key: bounds.copy() for key in validation.RECTANGLES}
++        geometry.update({key: insets.copy() for key in validation.SAFE_AREAS})
++        geometry['orientation'] = orientation
++        value['geometry'] = geometry
++    return value
++
++
++def compact_native(value):
++    return dict(o=value['sameOuterController'], c=value['sameComposeController'],
++                v=value['sameOuterView'] and value['sameComposeView'],
++                p=value['childParentIsOuter'] and value['singleComposeChild'] and value['directSubview'],
++                w=value['sameWindow'], a=value['attachments'], d=value['disposals'],
++                g=validation.geometry_fills_window(value['geometry']), i=value['geometry']['orientation'])
++
++
+ def settings_report():
+     report = valid_report()
+-    report.update(schemaVersion=5, scenario='settings')
++    report.update(schemaVersion=6, scenario='settings')
+     for event in report['observations']:
+         value = {} if event['phase'] == 'before_main' else base_composition()
+         if value:
+             value.update(settingsMounted=True,
+                          settingsDirection='rtl' if event['preferences']['preferredLanguage'] == 'ar' else 'ltr')
+         event.update(composition=json.dumps(value), osDisposition='not-investigated',
+-                     samplingWindow=0, samplingIndex=0, samplingElapsedMilliseconds=0)
++                     native=native_observation(event['phase'] == 'before_main'),
++                     samplingWindow=0, samplingIndex=0, samplingElapsedMilliseconds=0, samplingContext='none')
+     return report
+ 
+ 
+ def local_report(game):
+-    report = dict(schemaVersion=5, scenario=game, runToken=str(uuid.uuid4()), completed=True, observations=[])
++    report = dict(schemaVersion=6, scenario=game, runToken=str(uuid.uuid4()), completed=True, observations=[])
+     boot = str(uuid.uuid4())
+-    def add(phase, value, pref, window=0, index=0):
++    def add(phase, value, pref, window=0, index=0, context='none'):
+         report['observations'].append(dict(ordinal=len(report['observations']) + 1, phase=phase,
+             fixture='existing', boot=boot, preferences=copy.deepcopy(pref),
+             nativeDirection='unavailable' if phase == 'before_main' else 'force_rtl' if pref['preferredLanguage'] == 'ar' else 'force_ltr',
+             controllerCreations=0 if phase == 'before_main' else 1,
++            native=native_observation(phase == 'before_main', 'landscape' if context == 'landscape' else 'portrait'),
+             composition=json.dumps(value), osDisposition='not-investigated',
+-            samplingWindow=window, samplingIndex=index, samplingElapsedMilliseconds=index * 250))
++            samplingWindow=window, samplingIndex=index, samplingElapsedMilliseconds=index * 250,
++            samplingContext=context))
+     add('before_main', {}, preferences(app=['ar-EG', 'en'], language='ar'))
+     en = preferences('en', ['en'], 'en', ['ar-EG', 'en'])
+     settings = base_composition(); settings.update(settingsMounted=True, settingsDirection='ltr')
+@@ -64,23 +89,26 @@
+         value.update(backgroundSinceCapture=ordinal + 1, foregroundSinceCapture=ordinal + 1,
+                      backgroundCallbacks=ordinal + 1, foregroundCallbacks=ordinal + 2, inactiveCallbacks=ordinal + 2)
+         add('sample', copy.deepcopy(value), pref)
+-        for window in (ordinal * 2 + 1, ordinal * 2 + 2):
++        for window, (command, context) in enumerate(validation.WINDOW_PLAN, 1):
++            if command != ordinal:
++                continue
+             for index in range(1, 7):
+-                add('window_sample', copy.deepcopy(value), pref, window=window, index=index)
++                add('window_sample', copy.deepcopy(value), pref, window=window, index=index, context=context)
+     add('complete', copy.deepcopy(value), pref)
+     return report
+ 
+ 
+ def os_report(blocked=True):
+-    report = dict(schemaVersion=5, scenario='os', runToken=str(uuid.uuid4()), completed=True, observations=[])
++    report = dict(schemaVersion=6, scenario='os', runToken=str(uuid.uuid4()), completed=True, observations=[])
+     boot = str(uuid.uuid4())
+     def add(phase, pref, value, status, fixture='existing'):
+         report['observations'].append(dict(ordinal=len(report['observations']) + 1, phase=phase,
+             fixture=fixture, boot=boot, preferences=pref,
+             nativeDirection='unavailable' if phase == 'before_main' else 'force_rtl' if pref['preferredLanguage'] == 'ar' else 'force_ltr',
+             controllerCreations=0 if phase == 'before_main' else 1,
++            native=native_observation(phase == 'before_main'),
+             composition=json.dumps(value), osDisposition=status,
+-            samplingWindow=0, samplingIndex=0, samplingElapsedMilliseconds=0))
++            samplingWindow=0, samplingIndex=0, samplingElapsedMilliseconds=0, samplingContext='none'))
+     initial = preferences(app=['ar-EG', 'en'], language='ar')
+     add('before_main', initial, {}, 'not-investigated')
+     add('sample', initial, base_composition(), 'opened')
+@@ -119,7 +147,7 @@
+         for game in ('whodunit', 'mafia'):
+             result = validation.verify_local(local_report(game), game)
+             self.assertEqual(4, result['actual_background_foreground_cycles'])
+-            self.assertEqual(48, result['passive_samples'])
++            self.assertEqual(72, result['passive_samples'])
+             self.assertFalse(result['physical_lan_claim'])
+ 
+     def test_equal_value_cannot_hide_a_replaced_controller_or_flow_or_state_reference(self):
+@@ -221,7 +249,7 @@
+             validation.verify_local(report, 'whodunit')
+ 
+     def test_any_early_middle_or_second_window_divergence_fails_despite_good_final_sample(self):
+-        for window, index in ((1, 1), (1, 3), (2, 3), (5, 1), (6, 5)):
++        for window, index in ((1, 1), (1, 3), (2, 3), (9, 1), (10, 5)):
+             with self.subTest(window=window, index=index):
+                 report = local_report('whodunit')
+                 event = next(event for event in report['observations'] if
+@@ -263,9 +291,10 @@
+ 
+     def test_six_full_public_snapshot_rows_fit_the_existing_accessibility_budget(self):
+         report = local_report('mafia')
+-        events = [event for event in report['observations'] if event['samplingWindow'] == 8]
++        events = [event for event in report['observations'] if event['samplingWindow'] == 12]
+         snapshots = [dict(sequence=event['ordinal'], boot=event['boot'],
+                           controllerCreations=event['controllerCreations'], nativeDirection=event['nativeDirection'],
++                          native=compact_native(event['native']),
+                           now=event['preferences'], composition=json.loads(event['composition']),
+                           index=event['samplingIndex'], elapsedMilliseconds=event['samplingElapsedMilliseconds'])
+                      for event in events]
+@@ -273,10 +302,90 @@
+         payload = dict(sequence=last['ordinal'], boot=last['boot'], completed=False,
+                        beforeMain=report['observations'][0]['preferences'], now=last['preferences'],
+                        nativeDirection=last['nativeDirection'], controllerCreations=1,
++                       native=compact_native(last['native']),
+                        composition=json.loads(last['composition']), scenario='mafia', osDisposition='not-investigated',
+-                       sampling=dict(ordinal=8, status='complete', samples=snapshots))
++                       sampling=dict(ordinal=12, status='complete', context='foreground', samples=snapshots))
+         self.assertLessEqual(len(json.dumps(payload, separators=(',', ':')).encode()), 8192)
+         self.assertEqual(6, len(snapshots))
++
++    def test_complete_raw_geometric_receipts_fit_the_retained_file_budget(self):
++        for game in ('mafia', 'whodunit'):
++            report = local_report(game)
++            self.assertLess(len(report['observations']), 256)
++            self.assertLessEqual(len(json.dumps(report, separators=(',', ':')).encode()), 262144)
++
++    def test_distinct_outer_direction_is_not_mistaken_for_compose_native_direction(self):
++        report = local_report('whodunit')
++        for event in report['observations'][1:]:
++            event['native']['outerDirection'] = 'force_rtl' if event['nativeDirection'] == 'force_ltr' else 'force_ltr'
++        self.assertEqual('PASS', validation.verify_local(report, 'whodunit')['status'])
++
++    def test_actual_native_child_outer_view_window_or_parent_replacement_is_rejected(self):
++        for key in validation.NATIVE_BOOLEANS:
++            report = local_report('mafia')
++            event = next(row for row in report['observations'] if row['samplingWindow'] == 7)
++            event['native'][key] = False
++            with self.subTest(key=key), self.assertRaises(RuntimeError):
++                validation.verify_local(report, 'mafia')
++
++    def test_matching_but_inset_child_and_parent_do_not_prove_full_window_geometry(self):
++        report = local_report('whodunit')
++        event = next(row for row in report['observations'] if row['samplingWindow'] == 3)
++        raw = event['native']['geometry']
++        for key in ('outerBounds', 'composeBounds', 'outerInWindow', 'composeInWindow', 'composeFrameInOuter'):
++            raw[key][2] -= 30
++        with self.assertRaisesRegex(RuntimeError, 'geometry diverged'):
++            validation.verify_local(report, 'whodunit')
++
++    def test_every_raw_geometry_field_is_independently_checked(self):
++        for key in validation.RECTANGLES | validation.SAFE_AREAS:
++            report = local_report('mafia')
++            event = next(row for row in report['observations'] if row['samplingWindow'] == 8)
++            event['native']['geometry'][key][0] += 12
++            with self.subTest(key=key), self.assertRaises(RuntimeError):
++                validation.verify_local(report, 'mafia')
++
++    def test_zero_safe_areas_cannot_false_green_even_when_all_three_match(self):
++        report = local_report('whodunit')
++        event = next(row for row in report['observations'] if row['samplingWindow'] == 1)
++        for key in validation.SAFE_AREAS:
++            event['native']['geometry'][key] = [0, 0, 0, 0]
++        with self.assertRaises(RuntimeError): validation.verify_local(report, 'whodunit')
++
++    def test_oversized_negative_nan_and_bool_geometry_is_rejected(self):
++        for invalid in (float('nan'), float('inf'), 100001, True, '402'):
++            raw = native_observation()['geometry']; raw['windowBounds'][2] = invalid
++            with self.subTest(invalid=invalid), self.assertRaises(RuntimeError): validation.geometry(raw)
++        raw = native_observation()['geometry']; raw['windowSafeArea'][0] = -1
++        with self.assertRaises(RuntimeError): validation.geometry(raw)
++
++    def test_rotations_must_cover_both_actual_directions_and_not_fake_orientation(self):
++        for window in (3, 4, 7, 8):
++            report = local_report('mafia')
++            event = next(row for row in report['observations'] if row['samplingWindow'] == window)
++            event['samplingContext'] = 'foreground'
++            with self.subTest(window=window), self.assertRaises(RuntimeError): validation.verify_local(report, 'mafia')
++        report = local_report('mafia')
++        event = next(row for row in report['observations'] if row['samplingWindow'] == 7)
++        event['native']['geometry']['orientation'] = 'portrait'
++        with self.assertRaises(RuntimeError): validation.verify_local(report, 'mafia')
++
++    def test_geometry_window_must_not_add_a_background_cycle(self):
++        report = local_report('whodunit')
++        event = next(row for row in report['observations'] if row['samplingWindow'] == 3)
++        value = json.loads(event['composition']); value['backgroundSinceCapture'] += 1
++        event['composition'] = json.dumps(value)
++        with self.assertRaisesRegex(RuntimeError, 'Orientation unexpectedly'):
++            validation.verify_local(report, 'whodunit')
++
++    def test_native_observer_cannot_rebase_after_disposal_or_call_before_main(self):
++        for mutation in ('attach', 'dispose', 'before_main'):
++            report = local_report('mafia')
++            event = report['observations'][0 if mutation == 'before_main' else 4]
++            if mutation == 'attach': event['native']['attachments'] = 2
++            elif mutation == 'dispose': event['native']['disposals'] = 1
++            else: event['native'] = native_observation()
++            with self.subTest(mutation=mutation), self.assertRaises(RuntimeError): validation.verify_local(report, 'mafia')
+ 
+     def test_missing_os_language_ui_is_blocked_never_pass_or_not_applicable(self):
+         result = validation.verify_os(os_report())
+@@ -296,6 +405,67 @@
+ 
+ 
+ class CopyBoundaryContractTest(unittest.TestCase):
++    def test_exact_compose_controller_is_captured_from_local_not_a_child_type_guess(self):
++        source = (runner.ROOT / copies.LOCALE).read_text()
++        self.assertEqual(1, source.count('val viewController = LocalUIViewController.current'))
++        controls = Path(copies.__file__).read_text()
++        self.assertIn('DSC01ObserveActualUIKitController(viewController)', controls)
++        observer = (copies.HERE / 'DSC01UIKitObservation.kt.in').read_text()
++        self.assertIn('DisposableEffect(controller)', observer)
++        self.assertIn('onDispose { DSC01CopyOnlyUIKitObservation.detach(controller) }', observer)
++        self.assertNotIn('languageTag', observer)
++        self.assertIn('WeakReference<UIViewController>', observer)
++        self.assertIn('current?.get()', observer)
++        bridge = (copies.HERE / 'DSC01InvocationBridge.kt.in').read_text()
++        self.assertIn('DSC01CopyOnlyUIKitObservation.actualController()', bridge)
++        swift = (copies.HERE / 'DSC01Probe.swift.in').read_text()
++        self.assertIn('phase == "before_main" ? nil : MainViewControllerKt.DSC01ActualUIKitController()', swift)
++        self.assertIn('let direction = dsc01Direction(child?.viewIfLoaded)', swift)
++        self.assertIn('private weak var firstCompose:', swift)
++        self.assertIn('if let child, !capturedCompose', swift)
++        self.assertNotIn('capturedCompose = false\n', swift[swift.index('func attach('):])
++        for forbidden in ('isKind(of:', 'NSClassFromString', 'String(describing:', 'children.first as?'):
++            self.assertNotIn(forbidden, swift)
++
++    def test_observation_never_loads_or_reconfigures_a_native_view(self):
++        swift = (copies.HERE / 'DSC01Probe.swift.in').read_text()
++        native = (copies.HERE / 'DSC01NativeObservation.swift.in').read_text()
++        for forbidden in ('loadViewIfNeeded(', 'layoutIfNeeded(', 'setNeedsLayout(', 'semanticContentAttribute =',
++                          'didMoveToWindow()', 'beginAppearanceTransition(', '.frame =', '.bounds ='):
++            self.assertNotIn(forbidden, swift + native)
++        self.assertIn('outerView.convert(outerView.bounds, to: window)', swift)
++        self.assertIn('composeView.convert(composeView.bounds, to: window)', swift)
++        self.assertIn('window.safeAreaInsets', swift)
++        self.assertIn('composeView?.window === window && window === firstWindow', swift)
++        self.assertIn('controller?.children.count == 1 && controller?.children.first === child', swift)
++
++    def test_both_en_ar_geometries_use_actual_orientation_then_a_complete_passive_window(self):
++        source = (copies.HERE / 'IOSAppLaunchUITests.swift.in').read_text()
++        start = source.index('@MainActor private func verifyActualGeometry(')
++        end = source.index('@MainActor private func collectPassiveWindow(', start)
++        body = source[start:end]
++        self.assertIn('UIDeviceOrientation.landscapeLeft, "landscape"', body)
++        self.assertIn('(.portrait, "portrait")', body)
++        self.assertIn('XCUIDevice.shared.orientation = orientation', body)
++        self.assertLess(body.index('try collectPassiveWindow('), body.index('try assertNative('))
++        self.assertNotIn('observeEventually', body)
++        self.assertNotIn('syntheticLanguage(', body)
++        setup = source[source.index('@MainActor private func verifyActualLocalGame('):
++                       source.index('@MainActor private func verifyActualForeground(')]
++        self.assertIn('try verifyActualGeometry(app, game: game, phase: phase, language: "en"', setup)
++        self.assertIn('if language == "ar"', setup)
++        self.assertIn('try verifyActualGeometry(app, game: game, phase: phase, language: "ar"', setup)
++
++    def test_native_source_additions_and_explicit_swift_outer_are_closed_manifest_inputs(self):
++        self.assertEqual(2, len(copies.ADDITIONS))
++        self.assertIn('/src/iosMain/', copies.UIKIT_ADDITION)
++        source = Path(runner.__file__).read_text()
++        self.assertIn('ComposeContainerViewController(contentController: MainViewControllerKt.MainViewController())', source)
++        self.assertIn('DSC01Probe.shared.attach(controller)', source)
++        self.assertIn('for addition in ADDITIONS:', source)
++        self.assertIn("'DSC01UIKitObservation.kt.in'", source)
++        self.assertIn("'DSC01NativeObservation.swift.in'", source)
++
+     def test_local_checkpoint_uses_real_settings_then_home_before_synthetic_language_calls(self):
+         source = (copies.HERE / 'IOSAppLaunchUITests.swift.in').read_text()
+         start = source.index('@MainActor private func verifyActualLocalGame(')
+@@ -363,6 +533,10 @@
+             for path in copies.MODIFIED_KOTLIN:
+                 self.assertNotEqual(before[path], copies.sha256(root / path))
+             self.assertEqual((copies.HERE / 'DSC01ComposeObservation.kt.in').read_text(), (root / copies.ADDITION).read_text())
++            self.assertEqual((copies.HERE / 'DSC01UIKitObservation.kt.in').read_text(), (root / copies.UIKIT_ADDITION).read_text())
++            locale = (root / copies.LOCALE).read_text()
++            self.assertIn('val viewController = LocalUIViewController.current\n'
++                          '    com.parlor.designsystem.auditcopy.DSC01ObserveActualUIKitController(viewController)', locale)
+             for actual in ('notifyBackgrounded()', 'notifyActive()', 'notifyInactive()'):
+                 self.assertEqual(1, (root / copies.MAIN).read_text().count('lifecycleCoordinator().' + actual))
+             for path in (copies.WD, copies.MF):

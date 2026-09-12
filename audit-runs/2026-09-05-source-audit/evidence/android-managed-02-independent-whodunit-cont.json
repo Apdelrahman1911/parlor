@@ -1,0 +1,361 @@
+{
+  "recorded_at": "2026-09-05T13:31:07.183999+00:00",
+  "reviewer": "/root/whodunit_cont",
+  "execution_owner": "/root",
+  "cycle": "android-managed-02",
+  "verdict": "PASS",
+  "scope": "One synthetic-signed, release-variant, API35 ARM64 managed emulator, three actual instrumentation methods, strict dependency verification and owned-process/output cleanup. Not physical LAN/Store/real signing/cross-platform verification.",
+  "checks": [
+    {
+      "name": "input-manifest-hash-bound",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "all-eight-recorded-input-hashes-match-current",
+      "status": "PASS",
+      "detail": 8
+    },
+    {
+      "name": "tracked-source-identity-stable",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "current-tracked-source-matches-run",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "xml-has-exact-three-actual-methods",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "xml-no-failure-error-skip",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "managed-device-project-binding",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "two-expected-artifact-receipts",
+      "status": "PASS",
+      "detail": "APK bytes already cleaned; retained hash receipts not independent certificate verification"
+    },
+    {
+      "name": "cycle-stop-and-cleanup-exits",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "stop-log-no-daemons",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "immediate-stop-recorded",
+      "status": "PASS",
+      "detail": 0.33695
+    },
+    {
+      "name": "thirteen-recorded-output-directories-absent",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "owned-temporary-root-absent",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "shared-caches-still-exist",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "all-recorded-owned-pid-start-identities-gone",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "dedicated-adb-port-has-no-listener",
+      "status": "PASS",
+      "detail": null
+    }
+  ],
+  "source_inputs": [
+    {
+      "path": "audit-runs/2026-09-05-source-audit/run_android_managed_cycle.py",
+      "sha256": "b34ad4662ac906bff0a2f4e8ebe25c0757229098361e8e34c29b7c06681730c0",
+      "actual_sha256": "b34ad4662ac906bff0a2f4e8ebe25c0757229098361e8e34c29b7c06681730c0",
+      "matches": true
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/run_gradle_cycle.py",
+      "sha256": "a0500421159c6fee5ebca996b86f84dd4c877cfd30519f0e2f873fa76b9914bb",
+      "actual_sha256": "a0500421159c6fee5ebca996b86f84dd4c877cfd30519f0e2f873fa76b9914bb",
+      "matches": true
+    },
+    {
+      "path": "scripts/android/run_release_managed_device_smoke.sh",
+      "sha256": "5b6dc8fcdd7b11c9cefd39da3adb8783321b647cd9a8459ff761ef7fa031262d",
+      "actual_sha256": "5b6dc8fcdd7b11c9cefd39da3adb8783321b647cd9a8459ff761ef7fa031262d",
+      "matches": true
+    },
+    {
+      "path": "gradlew",
+      "sha256": "734b3879d3501dce471cf0522d3bcbafe76873d9fc5129345b67fb43bd15e933",
+      "actual_sha256": "734b3879d3501dce471cf0522d3bcbafe76873d9fc5129345b67fb43bd15e933",
+      "matches": true
+    },
+    {
+      "path": "composeApp/build.gradle.kts",
+      "sha256": "ae5e49b02e3480e2ca7f678778f4620178a790847f613675ce6d84e159b6ad87",
+      "actual_sha256": "ae5e49b02e3480e2ca7f678778f4620178a790847f613675ce6d84e159b6ad87",
+      "matches": true
+    },
+    {
+      "path": "build.gradle.kts",
+      "sha256": "bd6199e1f097eb236c50c46efb91d291550110f6b4d95a8e95ff0db4d8da192b",
+      "actual_sha256": "bd6199e1f097eb236c50c46efb91d291550110f6b4d95a8e95ff0db4d8da192b",
+      "matches": true
+    },
+    {
+      "path": "composeApp/src/androidInstrumentedTest/java/com/parlor/app/ReleaseRuntimeSmokeTest.java",
+      "sha256": "bfa1c7a05d6310d467ebaa993225f72a80a8ed9ea0791cc67640d5810a248a13",
+      "actual_sha256": "bfa1c7a05d6310d467ebaa993225f72a80a8ed9ea0791cc67640d5810a248a13",
+      "matches": true
+    },
+    {
+      "path": "composeApp/src/androidInstrumentedTest/kotlin/com/parlor/app/MainActivityColdStartTest.kt",
+      "sha256": "14055d93940b37c4f1a03b91d0df87b8042b146cdd58a9e061da752d375094f9",
+      "actual_sha256": "14055d93940b37c4f1a03b91d0df87b8042b146cdd58a9e061da752d375094f9",
+      "matches": true
+    }
+  ],
+  "xml_cases": [
+    {
+      "name": "testColdStartDisplaysContentWhileSettingsIoIsBlocked",
+      "classname": "com.parlor.app.MainActivityColdStartTest",
+      "time": "0.763"
+    },
+    {
+      "name": "testReleaseBuildCanAcquireDeclaredMulticastLock",
+      "classname": "com.parlor.app.ReleaseRuntimeSmokeTest",
+      "time": "0.123"
+    },
+    {
+      "name": "testReleaseBuildLaunchesCanonicalActivityWithoutDebuggableFlag",
+      "classname": "com.parlor.app.ReleaseRuntimeSmokeTest",
+      "time": "1.411"
+    }
+  ],
+  "xml_source": "audit-runs/2026-09-05-source-audit/evidence/android-managed-02/reports/composeApp/build/outputs/androidTest-results/managedDevice/release/pixel2Api35/TEST-pixel2Api35-_composeApp-.xml",
+  "artifact_receipts": [
+    {
+      "path": "composeApp/build/outputs/apk/androidTest/release/composeApp-release-androidTest.apk",
+      "bytes": 12048,
+      "sha256": "c456586bbd3ab6b2b5818acd929ce7ada6cb93a56f71a44ac044d9f6eb33ac12"
+    },
+    {
+      "path": "composeApp/build/outputs/apk/release/composeApp-release.apk",
+      "bytes": 4784964,
+      "sha256": "33c2bcad1afefc4ef7fed98e764e2a53fae489613a6f9f5e06e4c5b410d764e5"
+    }
+  ],
+  "removed_outputs_rechecked": [
+    {
+      "path": "shared/core/build",
+      "exists_now": false,
+      "symlink_now": false
+    },
+    {
+      "path": "shared/networking/build",
+      "exists_now": false,
+      "symlink_now": false
+    },
+    {
+      "path": "shared/content/build",
+      "exists_now": false,
+      "symlink_now": false
+    },
+    {
+      "path": "shared/storage/build",
+      "exists_now": false,
+      "symlink_now": false
+    },
+    {
+      "path": "shared/transport-p2p/build",
+      "exists_now": false,
+      "symlink_now": false
+    },
+    {
+      "path": "shared/engine/build",
+      "exists_now": false,
+      "symlink_now": false
+    },
+    {
+      "path": "shared/design-system/build",
+      "exists_now": false,
+      "symlink_now": false
+    },
+    {
+      "path": "shared/session/build",
+      "exists_now": false,
+      "symlink_now": false
+    },
+    {
+      "path": "game-modes/whodunit/build",
+      "exists_now": false,
+      "symlink_now": false
+    },
+    {
+      "path": "game-modes/mafia/build",
+      "exists_now": false,
+      "symlink_now": false
+    },
+    {
+      "path": "build",
+      "exists_now": false,
+      "symlink_now": false
+    },
+    {
+      "path": "composeApp/build",
+      "exists_now": false,
+      "symlink_now": false
+    },
+    {
+      "path": "build-logic/convention/build",
+      "exists_now": false,
+      "symlink_now": false
+    }
+  ],
+  "post_cleanup_process_query": {
+    "command": [
+      "ps",
+      "-p",
+      "38428,38432,38439,38449,38483,38599,38600,38647,38666,38691,38712,39351,39399,39413,39439,39501,39546,39559,39582,39611,39721,39767,40297,40305,40310,40496,40595,40620,40661",
+      "-o",
+      "pid=,lstart="
+    ],
+    "exit_code": 1,
+    "owned_identities_remaining": [],
+    "returned_pid_starts": {}
+  },
+  "post_cleanup_adb_port_query": {
+    "command": [
+      "/usr/sbin/lsof",
+      "-nP",
+      "-w",
+      "-t",
+      "-iTCP:53207",
+      "-sTCP:LISTEN"
+    ],
+    "exit_code": 1,
+    "listener_pids": []
+  },
+  "evidence_hashes": [
+    {
+      "path": "audit-runs/2026-09-05-source-audit/evidence/android-managed-02/adb-server.log",
+      "sha256": "5931ed651d3f5bf01f126490efdbbc5e35f7c712169a045d48fae2a2b61de545",
+      "reviewed_ranges": [
+        [
+          1,
+          3
+        ]
+      ]
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/evidence/android-managed-02/artifact-receipts.json",
+      "sha256": "074003a0024e93ff8cf7cf9ad621ebcc64165fdc702dcbf9e2fc42e56bc161f8",
+      "reviewed_ranges": [
+        [
+          1,
+          12
+        ]
+      ]
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/evidence/android-managed-02/gradle.log",
+      "sha256": "1bacb891e022bba8bf4d066ba28f7d33c1a5957275e6899254c6eae9639ce043",
+      "reviewed_ranges": [
+        [
+          1,
+          693
+        ]
+      ]
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/evidence/android-managed-02/input-manifest.json",
+      "sha256": "485451b17cd815855e0e91f6c6c8654a60f93bb810ead6a9061c2527213c3b77",
+      "reviewed_ranges": [
+        [
+          1,
+          43
+        ]
+      ]
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/evidence/android-managed-02/instrumented-test-receipts.json",
+      "sha256": "8b158e5d95d1cca7f021c6b2328bcd98e40ddf82b4f3f47ef4b93624072fd44e",
+      "reviewed_ranges": [
+        [
+          1,
+          30
+        ]
+      ]
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/evidence/android-managed-02/receipt.json",
+      "sha256": "2766aaa568de67ea3c041b3eb11c55e196516faf17b4668c7944d312abd06da1",
+      "reviewed_ranges": [
+        [
+          1,
+          481
+        ]
+      ]
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/evidence/android-managed-02/reports/composeApp/build/outputs/androidTest-results/managedDevice/release/pixel2Api35/TEST-pixel2Api35-_composeApp-.xml",
+      "sha256": "e0638db112db9edd44bb9575af8850569bebeb137a705258f461853092d3fe0c",
+      "reviewed_ranges": [
+        [
+          1,
+          11
+        ]
+      ]
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/evidence/android-managed-02/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+      "reviewed_ranges": [
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/evidence/android-managed-02/test-receipts.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "reviewed_ranges": [
+        [
+          1,
+          1
+        ]
+      ]
+    }
+  ],
+  "gradle_or_sdk_runtime_commands_by_reviewer": 0,
+  "read_only_process_queries": 2,
+  "generated_build_outputs_by_reviewer": 0,
+  "limitations": [
+    "Only these three instrumentation assertions ran; desktop/common rule suites and physical P2pKit tests not part of this cycle.",
+    "APK signatures not independently inspected after artifact deletion; expected fixture signing source and successful installation/runtime are not real signing proof.",
+    "Full dirty/untracked source identification relies on root baseline inventory; this cycle binds eight explicit inputs and tracked identity."
+  ]
+}

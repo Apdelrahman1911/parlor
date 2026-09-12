@@ -1,0 +1,1648 @@
+{
+  "schema_version": 1,
+  "kind": "NATIVE_PROCESS_PROBE_NOT_APP_EVIDENCE",
+  "context": {
+    "repository": "Apdelrahman1911/parlor",
+    "branch": "fix/local-readiness-2026-09-07",
+    "head_sha": "5f35a20d3c9c846cd98b38a16881997ecf577497",
+    "tree": "e0e7abfff89975682a96a884cb745bcbc12e7238",
+    "workflow": ".github/workflows/production-verification.yml",
+    "root": "/Users/runner/work/parlor/parlor",
+    "run_id": 34239707887,
+    "run_attempt": 1
+  },
+  "control_manifest": {
+    "files": [
+      {
+        "path": ".github/workflows/production-verification.yml",
+        "sha256": "d347a4cd3e22181b37e5aec91203d3aa37779cb7bb7976fb74ed01cc29ba328d"
+      },
+      {
+        "path": "gradle/wrapper/gradle-wrapper.jar",
+        "sha256": "81a82aaea5abcc8ff68b3dfcb58b3c3c429378efd98e7433460610fecd7ae45f"
+      },
+      {
+        "path": "gradle/wrapper/gradle-wrapper.properties",
+        "sha256": "c040b6ef2fb893ff5beea5a281614f2848f1c3996a7886f650b713f8240656a2"
+      },
+      {
+        "path": "gradlew",
+        "sha256": "734b3879d3501dce471cf0522d3bcbafe76873d9fc5129345b67fb43bd15e933"
+      },
+      {
+        "path": "scripts/ci/NATIVE_CONTINUATION.md",
+        "sha256": "e2e5f62f4a8d876585120e32ff73e91f7c3d992963c80346e94e54f906eec846"
+      },
+      {
+        "path": "scripts/ci/darwin_worker_identity.py",
+        "sha256": "939ac6c98628046f9f45547135cbc439f217403e60c7e4033db5f541ab017ecc"
+      },
+      {
+        "path": "scripts/ci/native_continuation.py",
+        "sha256": "d5c6faf5a33187a9bed855f8d82b17ea2c90d72c3b22df0a041975f7a6bc7b21"
+      },
+      {
+        "path": "scripts/ci/native_process_metadata.py",
+        "sha256": "6497e55c6c4a7f0922486d58ce47bc9ad05b987e8cca9bc5c60adf2b13cd9256"
+      },
+      {
+        "path": "scripts/ci/native_process_probe.py",
+        "sha256": "c87f6d1289ee50a7387988bd85953d451dac9e1b7b88a4d60f7b4848f86516da"
+      },
+      {
+        "path": "scripts/ci/owned_ci_simulator.py",
+        "sha256": "717c8c02dc06e4eac175c5dde5c7f9bdd6ebbd5e7028cc94c6ba4f84b44388af"
+      },
+      {
+        "path": "scripts/ci/verification_hygiene.py",
+        "sha256": "9eab427aeb3d810c033a3827aa44f7201cbb261345a2e6667a8d085df2fbd603"
+      },
+      {
+        "path": "scripts/verification/ios-readiness/owned_lane.py",
+        "sha256": "949091403ac669429f962120e9873a09897a87bdcae10702720ede0c68342f03"
+      },
+      {
+        "path": "scripts/verification/ios-readiness/toolchain_profiles.py",
+        "sha256": "8adacaf4c59ed823aa088ecb70ad5c6c1e3f76e7ca3520d8abf0563341591313"
+      }
+    ],
+    "control_sha256": "eaf596f24601bfe908cae23039dc99e383ac3f2b29fd775e303bbe395485153b"
+  },
+  "approved_control_sha256": "eaf596f24601bfe908cae23039dc99e383ac3f2b29fd775e303bbe395485153b",
+  "base_custody": {
+    "device": 16777229,
+    "inode": 3514470,
+    "uid": 501
+  },
+  "resources_custody": {
+    "device": 16777229,
+    "inode": 3514472,
+    "uid": 501
+  },
+  "claim": {
+    "task": {
+      "repository": "Apdelrahman1911/parlor",
+      "branch": "fix/local-readiness-2026-09-07",
+      "head_sha": "5f35a20d3c9c846cd98b38a16881997ecf577497",
+      "tree": "e0e7abfff89975682a96a884cb745bcbc12e7238",
+      "workflow": ".github/workflows/production-verification.yml",
+      "root": "/Users/runner/work/parlor/parlor",
+      "run_id": 34239707887,
+      "run_attempt": 1
+    },
+    "cycle": "native-process-probe",
+    "nonce": "120b4a26f8d747b4b3432f4634a243c8"
+  },
+  "status": "OBSERVATIONS_WITH_FAILURES_NOT_RUNTIME_EVIDENCE",
+  "started_at": "2026-09-08T14:40:13.659164+00:00",
+  "stages": [
+    {
+      "label": "qualified-platform",
+      "status": "COMPLETE",
+      "started_at": "2026-09-08T14:40:13.662881+00:00",
+      "result": {
+        "name": "qualified-xcode-26.3",
+        "xcode": "26.3",
+        "build": "17C529",
+        "sdk": "26.2",
+        "runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-2",
+        "runtime_version": [
+          26,
+          2,
+          0
+        ],
+        "developer_dir": "/Applications/Xcode_26.3.app/Contents/Developer",
+        "scope": "Xcode26.3/17C529 qualified compiler; Debug iOS26.2 simulator observation only, not Store-signing or physical-device evidence",
+        "selected_developer_dir": "/Applications/Xcode_26.3.app/Contents/Developer",
+        "architecture": "arm64",
+        "sdk_name": "iphonesimulator26.2",
+        "runtime_build": "23C54",
+        "device_type": "com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro",
+        "simulator_sdk_path": "/Applications/Xcode_26.3.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.2.sdk",
+        "android_sdk": "/Users/runner/Library/Android/sdk",
+        "java_home": "/Users/runner/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-101.0/arm64/Contents/Home",
+        "runtime_scope": "Toolchain observation only; no application/ABI/protection/runtime claim"
+      },
+      "finished_at": "2026-09-08T14:40:23.228946+00:00"
+    },
+    {
+      "label": "installed-ps-identity",
+      "status": "COMPLETE",
+      "started_at": "2026-09-08T14:40:23.261146+00:00",
+      "result": {
+        "resolved_path": "/bin/ps",
+        "sha256": "b4dc60d3bfb3b5e4653b08741f5da6494efe9603f2dc359b7218850d46b9f2e0",
+        "device": 16777229,
+        "inode": 1152921500312522857,
+        "uid": 0,
+        "mode": 35309,
+        "links": 1,
+        "bytes": 170816,
+        "modified_ns": 1785601887000000000,
+        "located_path": "/bin/ps",
+        "path_search_sha256": "12a10d9386a904a4cdcb8d682a4084fa7d3faee1eb92b0ec59eed30afed2d4f2",
+        "signature": {
+          "command_label": "signature",
+          "status": "EXITED",
+          "exit_code": 0,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "678ccf2d2281e97fa93c4a9348e8122402c0f833e7a16d279947d89344c81596",
+          "fields": [
+            "Executable=/bin/ps",
+            "Identifier=com.apple.ps",
+            "Format=Mach-O universal (x86_64 arm64e)",
+            "CodeDirectory v=20400 size=869 flags=0x0(none) hashes=17+7 location=embedded",
+            "Platform identifier=16",
+            "Hash type=sha256 size=32",
+            "CDHash=baf9cef360db633496b19d903d24b05c646426da",
+            "Signature size=4442",
+            "Authority=Software Signing",
+            "Authority=Apple Code Signing Certification Authority",
+            "Authority=Apple Root CA",
+            "TeamIdentifier=not set"
+          ]
+        },
+        "entitlements": {
+          "command_label": "entitlements",
+          "status": "EXITED",
+          "exit_code": 0,
+          "stdout_sha256": "38a06a9c93356657efd6c72f757ed5e53573f9e23c4482b983b375f87b2a8e3d",
+          "stderr_sha256": "51c1c81e448c67a26e6d399220e20eefa584af85ee9a3ee2a45b50ef8ad8dbe5",
+          "entitlements": {
+            "com.apple.private.persona-mgmt": true,
+            "com.apple.system-task-ports.read": true
+          },
+          "meaning": "Observed codesign output; null is not an asserted empty entitlement set."
+        },
+        "signature_verify": {
+          "command_label": "signature_verify",
+          "status": "EXITED",
+          "exit_code": 0,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "finished_at": "2026-09-08T14:40:23.340060+00:00"
+    },
+    {
+      "label": "before-boot-metrics",
+      "status": "COMPLETE",
+      "started_at": "2026-09-08T14:40:23.341228+00:00",
+      "result": {
+        "cpu": {
+          "ncpu": 3,
+          "memory_bytes": 7516192768,
+          "physical_cpu": 3,
+          "logical_cpu": 3
+        },
+        "vm_page_bytes": 16384,
+        "vm": {
+          "Pages free": 3772,
+          "Pages active": 156639,
+          "Pages inactive": 141732,
+          "Pages speculative": 14589,
+          "Pages throttled": 0,
+          "Pages wired down": 101451,
+          "Pages purgeable": 99,
+          "Pages stored in compressor": 110783,
+          "Pages occupied by compressor": 39678,
+          "Pageins": 395816,
+          "Pageouts": 1223,
+          "Swapins": 0,
+          "Swapouts": 0
+        }
+      },
+      "finished_at": "2026-09-08T14:40:23.358709+00:00"
+    },
+    {
+      "label": "before-boot-process-observations",
+      "status": "COMPLETE",
+      "started_at": "2026-09-08T14:40:23.360023+00:00",
+      "result": [
+        "before-boot-original-ps",
+        "before-boot-metadata-ps",
+        "before-boot-libproc-metadata"
+      ],
+      "finished_at": "2026-09-08T14:40:23.603712+00:00"
+    },
+    {
+      "label": "one-owned-simulator-boot",
+      "status": "COMPLETE",
+      "started_at": "2026-09-08T14:40:23.605054+00:00",
+      "result": {
+        "uuid": "61CFBA14-3FA7-4210-BCB4-F4D3E8B1C776",
+        "name": "Parlor-ci-120b4a26f8d747b4b3432f4634a243c8",
+        "runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-2",
+        "boot_completed": true
+      },
+      "finished_at": "2026-09-08T14:41:45.119751+00:00"
+    },
+    {
+      "label": "after-boot-metrics",
+      "status": "COMPLETE",
+      "started_at": "2026-09-08T14:41:45.199978+00:00",
+      "result": {
+        "cpu": {
+          "ncpu": 3,
+          "memory_bytes": 7516192768,
+          "physical_cpu": 3,
+          "logical_cpu": 3
+        },
+        "vm_page_bytes": 16384,
+        "vm": {
+          "Pages free": 3673,
+          "Pages active": 112696,
+          "Pages inactive": 103619,
+          "Pages speculative": 8896,
+          "Pages throttled": 0,
+          "Pages wired down": 128165,
+          "Pages purgeable": 2149,
+          "Pages stored in compressor": 267219,
+          "Pages occupied by compressor": 100394,
+          "Pageins": 575879,
+          "Pageouts": 4962,
+          "Swapins": 0,
+          "Swapouts": 0
+        }
+      },
+      "finished_at": "2026-09-08T14:41:46.421179+00:00"
+    },
+    {
+      "label": "after-boot-process-observations",
+      "status": "COMPLETE",
+      "started_at": "2026-09-08T14:41:46.423205+00:00",
+      "result": [
+        "after-boot-original-ps",
+        "after-boot-metadata-ps",
+        "after-boot-libproc-metadata"
+      ],
+      "finished_at": "2026-09-08T14:42:02.049669+00:00"
+    },
+    {
+      "label": "single-nonbuilding-xcode-overlap",
+      "status": "COMPLETE",
+      "started_at": "2026-09-08T14:42:02.051282+00:00",
+      "result": {
+        "observations": [
+          "nonbuilding-xcode-original-ps",
+          "nonbuilding-xcode-metadata-ps",
+          "nonbuilding-xcode-libproc-metadata"
+        ],
+        "scope": "ShowBuildSettings only; no build/test or actool/Kotlin workload reproduced by assertion."
+      },
+      "finished_at": "2026-09-08T14:43:03.072371+00:00"
+    }
+  ],
+  "cleanup_stages": [
+    {
+      "label": "stop-immediate",
+      "status": "COMPLETE",
+      "started_at": "2026-09-08T14:43:03.136309+00:00",
+      "result": {
+        "exit_code": 0,
+        "isolated_registry": true,
+        "no_build_or_test_task": true
+      },
+      "finished_at": "2026-09-08T14:43:21.841247+00:00"
+    },
+    {
+      "label": "owned-simulator-retirement",
+      "status": "COMPLETE",
+      "started_at": "2026-09-08T14:43:21.843373+00:00",
+      "result": {
+        "result": "PASS",
+        "udid": "61CFBA14-3FA7-4210-BCB4-F4D3E8B1C776",
+        "actions": [
+          {
+            "command": "shutdown",
+            "exit_code": 0
+          },
+          {
+            "command": "delete",
+            "exit_code": 0
+          }
+        ],
+        "recovered_from_intent": false
+      },
+      "finished_at": "2026-09-08T14:43:28.524078+00:00"
+    },
+    {
+      "label": "stop-final",
+      "status": "COMPLETE",
+      "started_at": "2026-09-08T14:43:28.525855+00:00",
+      "result": {
+        "exit_code": 0,
+        "isolated_registry": true,
+        "no_build_or_test_task": true
+      },
+      "finished_at": "2026-09-08T14:43:29.355040+00:00"
+    },
+    {
+      "label": "exact-owned-resource-cleanup",
+      "status": "COMPLETE",
+      "started_at": "2026-09-08T14:43:29.357608+00:00",
+      "result": {
+        "resources_removed": true,
+        "global_cache_deleted": false
+      },
+      "finished_at": "2026-09-08T14:43:29.717446+00:00"
+    },
+    {
+      "label": "source-control-reconciliation",
+      "status": "COMPLETE",
+      "started_at": "2026-09-08T14:43:29.719501+00:00",
+      "result": {
+        "source_unchanged": true,
+        "controls_unchanged": true
+      },
+      "finished_at": "2026-09-08T14:43:30.257846+00:00"
+    }
+  ],
+  "commands": [
+    {
+      "label": "binding-or-platform",
+      "command": [
+        "git",
+        "rev-parse",
+        "--show-toplevel"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 20,
+      "started_at": "2026-09-08T14:40:13.368284+00:00",
+      "owned_pid": 2647,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.006,
+      "finished_at": "2026-09-08T14:40:13.382813+00:00",
+      "stdout_bytes": 33,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "binding-or-platform",
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 20,
+      "started_at": "2026-09-08T14:40:13.382867+00:00",
+      "owned_pid": 2648,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.006,
+      "finished_at": "2026-09-08T14:40:13.398422+00:00",
+      "stdout_bytes": 41,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "binding-or-platform",
+      "command": [
+        "git",
+        "branch",
+        "--show-current"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 20,
+      "started_at": "2026-09-08T14:40:13.398508+00:00",
+      "owned_pid": 2649,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.006,
+      "finished_at": "2026-09-08T14:40:13.413210+00:00",
+      "stdout_bytes": 31,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "binding-or-platform",
+      "command": [
+        "git",
+        "rev-parse",
+        "--is-shallow-repository"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 20,
+      "started_at": "2026-09-08T14:40:13.413273+00:00",
+      "owned_pid": 2650,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.008,
+      "finished_at": "2026-09-08T14:40:13.428952+00:00",
+      "stdout_bytes": 6,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "binding-or-platform",
+      "command": [
+        "git",
+        "status",
+        "--porcelain=v1",
+        "--untracked-files=no"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 20,
+      "started_at": "2026-09-08T14:40:13.429010+00:00",
+      "owned_pid": 2651,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.105,
+      "finished_at": "2026-09-08T14:40:13.542811+00:00",
+      "stdout_bytes": 0,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "binding-or-platform",
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD^{tree}"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 20,
+      "started_at": "2026-09-08T14:40:13.542886+00:00",
+      "owned_pid": 2656,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.008,
+      "finished_at": "2026-09-08T14:40:13.552116+00:00",
+      "stdout_bytes": 41,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "binding-or-platform",
+      "command": [
+        "git",
+        "status",
+        "--porcelain=v1",
+        "--untracked-files=all"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 20,
+      "started_at": "2026-09-08T14:40:13.558169+00:00",
+      "owned_pid": 2661,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.097,
+      "finished_at": "2026-09-08T14:40:13.658654+00:00",
+      "stdout_bytes": 0,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "binding-or-platform",
+      "command": [
+        "/usr/bin/xcodebuild",
+        "-version"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 20,
+      "started_at": "2026-09-08T14:40:13.664063+00:00",
+      "owned_pid": 2686,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.113,
+      "finished_at": "2026-09-08T14:40:13.779821+00:00",
+      "stdout_bytes": 32,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "binding-or-platform",
+      "command": [
+        "/usr/bin/xcrun",
+        "--sdk",
+        "iphonesimulator",
+        "--show-sdk-version"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 20,
+      "started_at": "2026-09-08T14:40:13.780831+00:00",
+      "owned_pid": 2721,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 1.56,
+      "finished_at": "2026-09-08T14:40:15.344681+00:00",
+      "stdout_bytes": 5,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "binding-or-platform",
+      "command": [
+        "/usr/bin/xcode-select",
+        "-p"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 20,
+      "started_at": "2026-09-08T14:40:15.345631+00:00",
+      "owned_pid": 2762,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.005,
+      "finished_at": "2026-09-08T14:40:15.355491+00:00",
+      "stdout_bytes": 48,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "binding-or-platform",
+      "command": [
+        "/usr/bin/xcrun",
+        "--sdk",
+        "iphoneos",
+        "--show-sdk-version"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 20,
+      "started_at": "2026-09-08T14:40:15.356443+00:00",
+      "owned_pid": 2763,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 1.516,
+      "finished_at": "2026-09-08T14:40:16.874868+00:00",
+      "stdout_bytes": 5,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "binding-or-platform",
+      "command": [
+        "/usr/bin/xcrun",
+        "--sdk",
+        "iphonesimulator",
+        "--show-sdk-path"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 20,
+      "started_at": "2026-09-08T14:40:16.875750+00:00",
+      "owned_pid": 2771,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.006,
+      "finished_at": "2026-09-08T14:40:16.886280+00:00",
+      "stdout_bytes": 122,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "binding-or-platform",
+      "command": [
+        "/usr/bin/xcrun",
+        "simctl",
+        "list",
+        "runtimes",
+        "--json"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 120,
+      "started_at": "2026-09-08T14:40:16.887221+00:00",
+      "owned_pid": 2772,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 6.115,
+      "finished_at": "2026-09-08T14:40:23.007067+00:00",
+      "stdout_bytes": 133117,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "binding-or-platform",
+      "command": [
+        "/usr/bin/xcrun",
+        "simctl",
+        "list",
+        "devicetypes",
+        "--json"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 120,
+      "started_at": "2026-09-08T14:40:23.014309+00:00",
+      "owned_pid": 2905,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.175,
+      "finished_at": "2026-09-08T14:40:23.193726+00:00",
+      "stdout_bytes": 60485,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "binding-or-platform",
+      "command": [
+        "/usr/libexec/java_home",
+        "-v",
+        "21"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 20,
+      "started_at": "2026-09-08T14:40:23.198597+00:00",
+      "owned_pid": 2908,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.023,
+      "finished_at": "2026-09-08T14:40:23.227554+00:00",
+      "stdout_bytes": 89,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "binding-or-platform",
+      "command": [
+        "/usr/bin/sw_vers",
+        "-productVersion"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 20,
+      "started_at": "2026-09-08T14:40:23.230219+00:00",
+      "owned_pid": 2909,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.011,
+      "finished_at": "2026-09-08T14:40:23.243962+00:00",
+      "stdout_bytes": 7,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "binding-or-platform",
+      "command": [
+        "/usr/bin/sw_vers",
+        "-buildVersion"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 20,
+      "started_at": "2026-09-08T14:40:23.246131+00:00",
+      "owned_pid": 2910,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.01,
+      "finished_at": "2026-09-08T14:40:23.259882+00:00",
+      "stdout_bytes": 7,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "signature",
+      "command": [
+        "/usr/bin/codesign",
+        "-d",
+        "--verbose=4",
+        "/bin/ps"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 10,
+      "started_at": "2026-09-08T14:40:23.264205+00:00",
+      "owned_pid": 2911,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.021,
+      "finished_at": "2026-09-08T14:40:23.290336+00:00",
+      "stdout_bytes": 0,
+      "stderr_bytes": 947
+    },
+    {
+      "label": "entitlements",
+      "command": [
+        "/usr/bin/codesign",
+        "-d",
+        "--entitlements",
+        ":-",
+        "/bin/ps"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 10,
+      "started_at": "2026-09-08T14:40:23.291460+00:00",
+      "owned_pid": 2912,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.02,
+      "finished_at": "2026-09-08T14:40:23.319059+00:00",
+      "stdout_bytes": 282,
+      "stderr_bytes": 107
+    },
+    {
+      "label": "signature_verify",
+      "command": [
+        "/usr/bin/codesign",
+        "--verify",
+        "--strict",
+        "/bin/ps"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 10,
+      "started_at": "2026-09-08T14:40:23.322109+00:00",
+      "owned_pid": 2913,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.013,
+      "finished_at": "2026-09-08T14:40:23.338521+00:00",
+      "stdout_bytes": 0,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "binding-or-platform",
+      "command": [
+        "/usr/sbin/sysctl",
+        "-n",
+        "hw.ncpu",
+        "hw.memsize",
+        "hw.physicalcpu",
+        "hw.logicalcpu"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 20,
+      "started_at": "2026-09-08T14:40:23.342160+00:00",
+      "owned_pid": 2914,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.004,
+      "finished_at": "2026-09-08T14:40:23.348871+00:00",
+      "stdout_bytes": 17,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "binding-or-platform",
+      "command": [
+        "/usr/bin/vm_stat"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 20,
+      "started_at": "2026-09-08T14:40:23.350132+00:00",
+      "owned_pid": 2915,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.003,
+      "finished_at": "2026-09-08T14:40:23.357478+00:00",
+      "stdout_bytes": 1137,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "before-boot-original-ps",
+      "command": [
+        "ps",
+        "-axo",
+        "pid=,ppid=,pgid=,lstart=,command="
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 15,
+      "started_at": "2026-09-08T14:40:23.361653+00:00",
+      "owned_pid": 2916,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.04,
+      "finished_at": "2026-09-08T14:40:23.405076+00:00",
+      "stdout_bytes": 60534,
+      "stderr_bytes": 0,
+      "observation": {
+        "rows": 484,
+        "malformed_rows": 0,
+        "coordinator_seen": true,
+        "observer_seen": true,
+        "complete": true,
+        "scope": "Counts only; no global PID/argv rows retained, no ownership or atomic-snapshot claim."
+      }
+    },
+    {
+      "label": "before-boot-metadata-ps",
+      "command": [
+        "ps",
+        "-axo",
+        "pid=,ppid=,pgid=,lstart=,ucomm="
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 15,
+      "started_at": "2026-09-08T14:40:23.407412+00:00",
+      "owned_pid": 2917,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.012,
+      "finished_at": "2026-09-08T14:40:23.421504+00:00",
+      "stdout_bytes": 30976,
+      "stderr_bytes": 0,
+      "observation": {
+        "rows": 484,
+        "malformed_rows": 0,
+        "coordinator_seen": true,
+        "observer_seen": true,
+        "complete": true,
+        "scope": "Counts only; no global PID/argv rows retained, no ownership or atomic-snapshot claim."
+      }
+    },
+    {
+      "label": "before-boot-libproc-metadata",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/Users/runner/work/parlor/parlor/scripts/ci/native_process_metadata.py",
+        "observe"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 15,
+      "started_at": "2026-09-08T14:40:23.424154+00:00",
+      "owned_pid": 2918,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.174,
+      "finished_at": "2026-09-08T14:40:23.600649+00:00",
+      "stdout_bytes": 648,
+      "stderr_bytes": 0,
+      "observation": {
+        "complete": false,
+        "enumerated": 485,
+        "error_counts": {
+          "denied:1": 248
+        },
+        "field_offsets": {
+          "pgid": 100,
+          "pid": 12,
+          "ppid": 16,
+          "start_sec": 120,
+          "start_usec": 128,
+          "uid": 20
+        },
+        "kind": "LIBPROC_METADATA_OBSERVATION_ONLY",
+        "metadata_sha256": "68ece8212d89bed099ebe3013060ad84ecb8f6a460b6942ff9532b9ae65dfa4c",
+        "observed": 236,
+        "own_process": {
+          "pgid": 2918,
+          "pid": 2918,
+          "ppid": 2645,
+          "start_sec": 1788878423,
+          "start_usec": 425206,
+          "status": 2,
+          "uid": 501
+        },
+        "schema_version": 1,
+        "scope": "Metadata only; denied/disappeared rows are not missing-worker proof. No argv, task ports, adoption or signal.",
+        "selector": "PROC_ALL_PIDS",
+        "struct_size": 136
+      }
+    },
+    {
+      "label": "simctl-list",
+      "command": [
+        "/usr/bin/xcrun",
+        "simctl",
+        "list",
+        "devices",
+        "--json"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 20,
+      "started_at": "2026-09-08T14:40:23.606012+00:00",
+      "owned_pid": 2920,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.172,
+      "finished_at": "2026-09-08T14:40:23.781234+00:00",
+      "stdout_bytes": 71890,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "simctl-create",
+      "command": [
+        "/usr/bin/xcrun",
+        "simctl",
+        "create",
+        "Parlor-ci-120b4a26f8d747b4b3432f4634a243c8",
+        "com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro",
+        "com.apple.CoreSimulator.SimRuntime.iOS-26-2"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 20,
+      "started_at": "2026-09-08T14:40:23.783911+00:00",
+      "owned_pid": 2923,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.259,
+      "finished_at": "2026-09-08T14:40:24.045348+00:00",
+      "stdout_bytes": 37,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "simctl-list",
+      "command": [
+        "/usr/bin/xcrun",
+        "simctl",
+        "list",
+        "devices",
+        "--json"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 20,
+      "started_at": "2026-09-08T14:40:24.047838+00:00",
+      "owned_pid": 2954,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.16,
+      "finished_at": "2026-09-08T14:40:24.211251+00:00",
+      "stdout_bytes": 72444,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "simctl-boot",
+      "command": [
+        "/usr/bin/xcrun",
+        "simctl",
+        "boot",
+        "61CFBA14-3FA7-4210-BCB4-F4D3E8B1C776"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 20,
+      "started_at": "2026-09-08T14:40:24.214389+00:00",
+      "owned_pid": 2999,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 2.215,
+      "finished_at": "2026-09-08T14:40:26.431578+00:00",
+      "stdout_bytes": 0,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "simctl-bootstatus",
+      "command": [
+        "/usr/bin/xcrun",
+        "simctl",
+        "bootstatus",
+        "61CFBA14-3FA7-4210-BCB4-F4D3E8B1C776",
+        "-b"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 120,
+      "started_at": "2026-09-08T14:40:26.436040+00:00",
+      "owned_pid": 3089,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 77.355,
+      "finished_at": "2026-09-08T14:41:43.958282+00:00",
+      "stdout_bytes": 7894,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "binding-or-platform",
+      "command": [
+        "/usr/sbin/sysctl",
+        "-n",
+        "hw.ncpu",
+        "hw.memsize",
+        "hw.physicalcpu",
+        "hw.logicalcpu"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 20,
+      "started_at": "2026-09-08T14:41:45.279569+00:00",
+      "owned_pid": 4169,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.08,
+      "finished_at": "2026-09-08T14:41:45.769682+00:00",
+      "stdout_bytes": 17,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "binding-or-platform",
+      "command": [
+        "/usr/bin/vm_stat"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 20,
+      "started_at": "2026-09-08T14:41:45.771370+00:00",
+      "owned_pid": 4172,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.245,
+      "finished_at": "2026-09-08T14:41:46.259385+00:00",
+      "stdout_bytes": 1137,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "after-boot-original-ps",
+      "command": [
+        "ps",
+        "-axo",
+        "pid=,ppid=,pgid=,lstart=,command="
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 15,
+      "started_at": "2026-09-08T14:41:46.584073+00:00",
+      "owned_pid": 4178,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 4.128,
+      "finished_at": "2026-09-08T14:41:50.872838+00:00",
+      "stdout_bytes": 104573,
+      "stderr_bytes": 0,
+      "observation": {
+        "rows": 670,
+        "malformed_rows": 0,
+        "coordinator_seen": true,
+        "observer_seen": true,
+        "complete": true,
+        "scope": "Counts only; no global PID/argv rows retained, no ownership or atomic-snapshot claim."
+      }
+    },
+    {
+      "label": "after-boot-metadata-ps",
+      "command": [
+        "ps",
+        "-axo",
+        "pid=,ppid=,pgid=,lstart=,ucomm="
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 15,
+      "started_at": "2026-09-08T14:41:51.299086+00:00",
+      "owned_pid": 4238,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 1.027,
+      "finished_at": "2026-09-08T14:41:53.019537+00:00",
+      "stdout_bytes": 43456,
+      "stderr_bytes": 0,
+      "observation": {
+        "rows": 679,
+        "malformed_rows": 0,
+        "coordinator_seen": true,
+        "observer_seen": true,
+        "complete": true,
+        "scope": "Counts only; no global PID/argv rows retained, no ownership or atomic-snapshot claim."
+      }
+    },
+    {
+      "label": "after-boot-libproc-metadata",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/Users/runner/work/parlor/parlor/scripts/ci/native_process_metadata.py",
+        "observe"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 15,
+      "started_at": "2026-09-08T14:41:53.035232+00:00",
+      "owned_pid": 4256,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 8.749,
+      "finished_at": "2026-09-08T14:42:02.003652+00:00",
+      "stdout_bytes": 667,
+      "stderr_bytes": 0,
+      "observation": {
+        "complete": false,
+        "enumerated": 698,
+        "error_counts": {
+          "denied:1": 255,
+          "disappeared:3": 6
+        },
+        "field_offsets": {
+          "pgid": 100,
+          "pid": 12,
+          "ppid": 16,
+          "start_sec": 120,
+          "start_usec": 128,
+          "uid": 20
+        },
+        "kind": "LIBPROC_METADATA_OBSERVATION_ONLY",
+        "metadata_sha256": "5dac7423865bd71c0cc6cd6ff0f4ea575f5ab65fdd4741cb8b1749756ee0818b",
+        "observed": 436,
+        "own_process": {
+          "pgid": 4256,
+          "pid": 4256,
+          "ppid": 2645,
+          "start_sec": 1788878513,
+          "start_usec": 38814,
+          "status": 2,
+          "uid": 501
+        },
+        "schema_version": 1,
+        "scope": "Metadata only; denied/disappeared rows are not missing-worker proof. No argv, task ports, adoption or signal.",
+        "selector": "PROC_ALL_PIDS",
+        "struct_size": 136
+      }
+    },
+    {
+      "label": "nonbuilding-xcode-settings",
+      "command": [
+        "/usr/bin/xcodebuild",
+        "-project",
+        "/Users/runner/work/parlor/parlor/iosApp/iosApp.xcodeproj",
+        "-scheme",
+        "iosApp",
+        "-configuration",
+        "Debug",
+        "-sdk",
+        "iphonesimulator",
+        "-destination",
+        "generic/platform=iOS Simulator",
+        "-derivedDataPath",
+        "/Users/runner/work/_temp/parlor-process-probe-34239707887-1/resources/DerivedData",
+        "-disableAutomaticPackageResolution",
+        "-skipPackageUpdates",
+        "-showBuildSettings"
+      ],
+      "status": "TIMEOUT",
+      "timeout_seconds": 60,
+      "started_at": "2026-09-08T14:42:02.053726+00:00",
+      "output_policy": "DEVNULL; no build settings retained",
+      "owned_pid": 4442,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": -15,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 60.639
+    },
+    {
+      "label": "nonbuilding-xcode-original-ps",
+      "command": [
+        "ps",
+        "-axo",
+        "pid=,ppid=,pgid=,lstart=,command="
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 15,
+      "started_at": "2026-09-08T14:42:02.071330+00:00",
+      "owned_pid": 4445,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 10.207,
+      "finished_at": "2026-09-08T14:42:12.298971+00:00",
+      "stdout_bytes": 117336,
+      "stderr_bytes": 0,
+      "nonbuilding_xcode_overlap": {
+        "live_before": true,
+        "live_after": true
+      },
+      "observation": {
+        "rows": 701,
+        "malformed_rows": 0,
+        "coordinator_seen": true,
+        "observer_seen": true,
+        "complete": true,
+        "scope": "Counts only; no global PID/argv rows retained, no ownership or atomic-snapshot claim."
+      }
+    },
+    {
+      "label": "nonbuilding-xcode-metadata-ps",
+      "command": [
+        "ps",
+        "-axo",
+        "pid=,ppid=,pgid=,lstart=,ucomm="
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 15,
+      "started_at": "2026-09-08T14:42:13.082098+00:00",
+      "owned_pid": 4520,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.543,
+      "finished_at": "2026-09-08T14:42:13.645971+00:00",
+      "stdout_bytes": 45760,
+      "stderr_bytes": 0,
+      "nonbuilding_xcode_overlap": {
+        "live_before": true,
+        "live_after": true
+      },
+      "observation": {
+        "rows": 715,
+        "malformed_rows": 0,
+        "coordinator_seen": true,
+        "observer_seen": true,
+        "complete": true,
+        "scope": "Counts only; no global PID/argv rows retained, no ownership or atomic-snapshot claim."
+      }
+    },
+    {
+      "label": "nonbuilding-xcode-libproc-metadata",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/Users/runner/work/parlor/parlor/scripts/ci/native_process_metadata.py",
+        "observe"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 15,
+      "started_at": "2026-09-08T14:42:13.652602+00:00",
+      "owned_pid": 4534,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 4.028,
+      "finished_at": "2026-09-08T14:42:17.695334+00:00",
+      "stdout_bytes": 648,
+      "stderr_bytes": 0,
+      "nonbuilding_xcode_overlap": {
+        "live_before": true,
+        "live_after": true
+      },
+      "observation": {
+        "complete": false,
+        "enumerated": 716,
+        "error_counts": {
+          "denied:1": 255
+        },
+        "field_offsets": {
+          "pgid": 100,
+          "pid": 12,
+          "ppid": 16,
+          "start_sec": 120,
+          "start_usec": 128,
+          "uid": 20
+        },
+        "kind": "LIBPROC_METADATA_OBSERVATION_ONLY",
+        "metadata_sha256": "dc023d0928638d377f40a4547462efde9a6bf9c760f7488e024804018c741b03",
+        "observed": 460,
+        "own_process": {
+          "pgid": 4534,
+          "pid": 4534,
+          "ppid": 2645,
+          "start_sec": 1788878533,
+          "start_usec": 657262,
+          "status": 2,
+          "uid": 501
+        },
+        "schema_version": 1,
+        "scope": "Metadata only; denied/disappeared rows are not missing-worker proof. No argv, task ports, adoption or signal.",
+        "selector": "PROC_ALL_PIDS",
+        "struct_size": 136
+      }
+    },
+    {
+      "label": "stop-immediate",
+      "command": [
+        "/Users/runner/work/parlor/parlor/gradlew",
+        "--stop"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 65,
+      "started_at": "2026-09-08T14:43:03.137955+00:00",
+      "owned_pid": 4829,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 18.499,
+      "finished_at": "2026-09-08T14:43:21.823626+00:00",
+      "stdout_bytes": 544,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "simctl-list",
+      "command": [
+        "/usr/bin/xcrun",
+        "simctl",
+        "list",
+        "devices",
+        "--json"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 20,
+      "started_at": "2026-09-08T14:43:21.851663+00:00",
+      "owned_pid": 5448,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 2.142,
+      "finished_at": "2026-09-08T14:43:24.002764+00:00",
+      "stdout_bytes": 72523,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "simctl-shutdown",
+      "command": [
+        "/usr/bin/xcrun",
+        "simctl",
+        "shutdown",
+        "61CFBA14-3FA7-4210-BCB4-F4D3E8B1C776"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 20,
+      "started_at": "2026-09-08T14:43:24.011977+00:00",
+      "owned_pid": 5533,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 3.535,
+      "finished_at": "2026-09-08T14:43:27.559206+00:00",
+      "stdout_bytes": 0,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "simctl-list",
+      "command": [
+        "/usr/bin/xcrun",
+        "simctl",
+        "list",
+        "devices",
+        "--json"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 20,
+      "started_at": "2026-09-08T14:43:27.563367+00:00",
+      "owned_pid": 5570,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.381,
+      "finished_at": "2026-09-08T14:43:27.956707+00:00",
+      "stdout_bytes": 72525,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "simctl-delete",
+      "command": [
+        "/usr/bin/xcrun",
+        "simctl",
+        "delete",
+        "61CFBA14-3FA7-4210-BCB4-F4D3E8B1C776"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 20,
+      "started_at": "2026-09-08T14:43:27.962308+00:00",
+      "owned_pid": 5638,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.297,
+      "finished_at": "2026-09-08T14:43:28.269990+00:00",
+      "stdout_bytes": 0,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "simctl-list",
+      "command": [
+        "/usr/bin/xcrun",
+        "simctl",
+        "list",
+        "devices",
+        "--json"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 20,
+      "started_at": "2026-09-08T14:43:28.275320+00:00",
+      "owned_pid": 5682,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.24,
+      "finished_at": "2026-09-08T14:43:28.520852+00:00",
+      "stdout_bytes": 71890,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "stop-final",
+      "command": [
+        "/Users/runner/work/parlor/parlor/gradlew",
+        "--stop"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 30,
+      "started_at": "2026-09-08T14:43:28.527764+00:00",
+      "owned_pid": 5733,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.818,
+      "finished_at": "2026-09-08T14:43:29.353327+00:00",
+      "stdout_bytes": 31,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "resource-holders",
+      "command": [
+        "/usr/sbin/lsof",
+        "-nP",
+        "-t",
+        "+w",
+        "+D",
+        "/Users/runner/work/_temp/parlor-process-probe-34239707887-1/resources"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 10,
+      "started_at": "2026-09-08T14:43:29.359608+00:00",
+      "owned_pid": 5853,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 1,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.339,
+      "finished_at": "2026-09-08T14:43:29.708986+00:00",
+      "stdout_bytes": 0,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "binding-or-platform",
+      "command": [
+        "git",
+        "rev-parse",
+        "--show-toplevel"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 15.897927250000004,
+      "started_at": "2026-09-08T14:43:29.721560+00:00",
+      "owned_pid": 5877,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.034,
+      "finished_at": "2026-09-08T14:43:29.772377+00:00",
+      "stdout_bytes": 33,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "binding-or-platform",
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 15.845606874999982,
+      "started_at": "2026-09-08T14:43:29.773880+00:00",
+      "owned_pid": 5878,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.01,
+      "finished_at": "2026-09-08T14:43:29.794933+00:00",
+      "stdout_bytes": 41,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "binding-or-platform",
+      "command": [
+        "git",
+        "branch",
+        "--show-current"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 15.821437499999996,
+      "started_at": "2026-09-08T14:43:29.798053+00:00",
+      "owned_pid": 5879,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.009,
+      "finished_at": "2026-09-08T14:43:29.817797+00:00",
+      "stdout_bytes": 31,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "binding-or-platform",
+      "command": [
+        "git",
+        "rev-parse",
+        "--is-shallow-repository"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 15.799414417000003,
+      "started_at": "2026-09-08T14:43:29.820078+00:00",
+      "owned_pid": 5880,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.008,
+      "finished_at": "2026-09-08T14:43:29.839800+00:00",
+      "stdout_bytes": 6,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "binding-or-platform",
+      "command": [
+        "git",
+        "status",
+        "--porcelain=v1",
+        "--untracked-files=no"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 15.778199874999979,
+      "started_at": "2026-09-08T14:43:29.841286+00:00",
+      "owned_pid": 5882,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.195,
+      "finished_at": "2026-09-08T14:43:30.045764+00:00",
+      "stdout_bytes": 0,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "binding-or-platform",
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD^{tree}"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 15.571492416999996,
+      "started_at": "2026-09-08T14:43:30.047996+00:00",
+      "owned_pid": 5889,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.009,
+      "finished_at": "2026-09-08T14:43:30.068829+00:00",
+      "stdout_bytes": 41,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "binding-or-platform",
+      "command": [
+        "git",
+        "status",
+        "--porcelain=v1",
+        "--untracked-files=all"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 15.538424791999995,
+      "started_at": "2026-09-08T14:43:30.081063+00:00",
+      "owned_pid": 5895,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.165,
+      "finished_at": "2026-09-08T14:43:30.254996+00:00",
+      "stdout_bytes": 0,
+      "stderr_bytes": 0
+    }
+  ],
+  "preservation": {
+    "failures": 0,
+    "errors": []
+  },
+  "original_process_source_seam": {
+    "path": "scripts/verification/ios-readiness/owned_lane.py",
+    "sha256": "949091403ac669429f962120e9873a09897a87bdcae10702720ede0c68342f03",
+    "command": [
+      "ps",
+      "-axo",
+      "pid=,ppid=,pgid=,lstart=,command="
+    ],
+    "timeout_seconds": 15,
+    "source_imported_or_modified": false
+  },
+  "observation_budget_seconds": 300,
+  "cleanup_budget_seconds": 225,
+  "scope": "No application build, XCTest, A/B libproc provenance, protection, Store or device qualification.",
+  "public_wrapper_cache": {
+    "path": "/Users/runner/.gradle/wrapper",
+    "created": [
+      "/Users/runner/.gradle/wrapper"
+    ],
+    "policy": "Retain global distribution cache; isolated daemon registry."
+  },
+  "toolchain": {
+    "name": "qualified-xcode-26.3",
+    "xcode": "26.3",
+    "build": "17C529",
+    "sdk": "26.2",
+    "runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-2",
+    "runtime_version": [
+      26,
+      2,
+      0
+    ],
+    "developer_dir": "/Applications/Xcode_26.3.app/Contents/Developer",
+    "scope": "Xcode26.3/17C529 qualified compiler; Debug iOS26.2 simulator observation only, not Store-signing or physical-device evidence",
+    "selected_developer_dir": "/Applications/Xcode_26.3.app/Contents/Developer",
+    "architecture": "arm64",
+    "sdk_name": "iphonesimulator26.2",
+    "runtime_build": "23C54",
+    "device_type": "com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro",
+    "simulator_sdk_path": "/Applications/Xcode_26.3.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.2.sdk",
+    "android_sdk": "/Users/runner/Library/Android/sdk",
+    "java_home": "/Users/runner/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-101.0/arm64/Contents/Home",
+    "runtime_scope": "Toolchain observation only; no application/ABI/protection/runtime claim"
+  },
+  "os_version": "15.7.9",
+  "os_build": "24G830",
+  "owned_simulator_uuid": "61CFBA14-3FA7-4210-BCB4-F4D3E8B1C776",
+  "derived_data_custody": {
+    "device": 16777229,
+    "inode": 3526480,
+    "uid": 501
+  },
+  "finished_at": "2026-09-08T14:43:30.259424+00:00",
+  "signals": [],
+  "cleanup_safe": true
+}

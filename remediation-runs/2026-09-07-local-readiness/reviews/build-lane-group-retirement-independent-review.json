@@ -1,0 +1,58 @@
+{
+  "reviewer": "/root/factory_review",
+  "author": "/root",
+  "reviewed_at": "2026-09-07T04:38:32.983104+00:00",
+  "conclusion": "APPROVED FOR BUILD-LANE REUSE",
+  "classification": "Verification-control lifecycle hardening, not an application defect",
+  "files": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py",
+      "sha256": "172c4f3162dc6a6b20e912e6551eaca9f33a32ba3d0d6f150ad8becfd30865ea",
+      "lines": 291
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/build-lane-group-retirement.diff",
+      "sha256": "5b834547bcbd4a8435a71b68a9d16c0251fa49a336f4746fca299269d8f67130",
+      "lines": 15
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/test_build_lane_group_retirement.py",
+      "sha256": "6933afa3dca7e1fa89886500806491ca09d27d499d9b94dd8c92158102509878",
+      "lines": 56
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/build-lane-group-retirement-tests.log",
+      "sha256": "7f0696dbf1e55478e8b8214d3165302c9ad488ec6c0c89e81f2de909baccd476",
+      "lines": 10
+    }
+  ],
+  "reviewed_ranges": {
+    "run_gradle_cycle.py": [
+      [
+        1,
+        291
+      ]
+    ],
+    "test_build_lane_group_retirement.py": [
+      [
+        1,
+        56
+      ]
+    ],
+    "diff": "complete"
+  },
+  "reasoning": [
+    "invoke registers the new-session process group before tracking. Its new finally retires the group grant on success, nonzero child exit, exceptions, and cancellation after the wait/termination path. A reaped leader no longer leaves a numeric PGID authorized for later unrelated process adoption.",
+    "The grant retirement does not remove already attested PID/start descendants. track_processes and stop_owned_workers retain those identities and recheck start/command before termination. Subsequent live invocations acquire independent grants.",
+    "Five executed root tests use only fake Popen/process-table rows: immediate success/failure/cancellation retirement, reused-group rejection, and preservation of previously attested descendants. I reopened their assertions and raw output.",
+    "The tests do not execute Gradle or OS signals. Existing live-child timeout signaling and full OS race behavior are not newly runtime-proven by these five synthetic tests; the scoped group-retirement defect is deterministically covered."
+  ],
+  "runtime_evidence": {
+    "executor": "/root",
+    "tests": 5,
+    "failures": 0,
+    "skips": 0,
+    "reviewer_reran_tests": false
+  },
+  "cleanup": "Reviewer started no build/native/test/server workers; only short read-only commands and this evidence write. Synthetic test TemporaryDirectory cleanup belongs to the root execution; no task build outputs created."
+}

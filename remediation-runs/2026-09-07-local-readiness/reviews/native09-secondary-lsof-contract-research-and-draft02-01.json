@@ -1,0 +1,280 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-09-07T23:31:19.162716+00:00",
+  "analyst_and_helper_author": "/root/factory_review",
+  "original_failure_finder_and_executor": "/root",
+  "fix_independent_reviewer": "/root (required before02 execution; author is NOT approving own fix)",
+  "classification": "CONFIRMED ONE-SHOT HELPER01 QUERY-CONTRACT DEFECT. SYNTHETIC19 PASS DID NOT EXERCISE REAL LSOF PARTIAL SELECTION. NOT AN APPLICATION DEFECT OR NATIVE09 RUNTIME REPAIR.",
+  "reachable_proof": [
+    "ExactRecovery opens its approved directory descriptors, then check_pids/check_holders are called before the first successful preflight event or any deletion.",
+    "Root first observed ps oldPIDs1/empty, ps known-owned-self0/self and lsof without opened descriptors1/empty. Those satisfy01; that probe alone did not explain failure.",
+    "Root held-descriptor probe wraps ONLY subprocess.run to preserve bounded exact argv/status/stdout/stderr and invokes unchanged01 ExactRecovery(execute=False). ps remains1/empty; exact lsof+D returns1 with PID52505 and empty stderr. The original require70 rejects this legitimate mixed-selection form, before applying the holder policy.",
+    "Apple lsof main.c1499-1543 explicitly returns1 if ANY requested file selection was unused. arg.c enter_dir records the directory and descends children as file selections; matching open directory descriptors can print a PID while unopened FIFO file selections force1. A nonempty result is not promised to imply exit0.",
+    "The precise original preflight had not retained query-specific output; its independent held-descriptor reproducer establishes this deterministic helper boundary failure, without retroactively inventing missing original query logs."
+  ],
+  "actual_held_descriptor_query_records": [
+    {
+      "command": [
+        "/bin/ps",
+        "-p",
+        "41785,41768",
+        "-o",
+        "pid="
+      ],
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/sbin/lsof",
+        "-nP",
+        "-w",
+        "-t",
+        "+D",
+        "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-41768"
+      ],
+      "exit_code": 1,
+      "stdout": "52505\n",
+      "stderr": ""
+    }
+  ],
+  "pid_evidence_precision": "Root identifies52505 as its probe process. This probe log itself does not print os.getpid; the contract defect requires only the actual syntactically valid positive PID list, not proving that holder was ours. New02 actual receipt explicitly records helper_pid; unknown holders still block. No previously unowned PID is adopted by this analysis.",
+  "source_locations": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/native09_secondary_fifo_recovery_01.py",
+      "sha256": "aaad39c1ff54639bd14212cd03439b5f0d285e2bac2347a18f97d344e3dc82f0",
+      "lines": [
+        [
+          59,
+          81
+        ],
+        [
+          95,
+          156
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/test_native09_secondary_fifo_recovery_01.py",
+      "sha256": "4d26eb413dbd6a2016a4981ed1719b7178741ca6ee54185b84295d3f2261faf3",
+      "lines": [
+        [
+          144,
+          174
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/probe_native09_secondary_queries_01.py",
+      "sha256": "d0bd900e2757d7ca57f730b2fe3edc247a38007e00f2a16f3e175ea6e8d250ae",
+      "lines": [
+        [
+          1,
+          29
+        ]
+      ]
+    }
+  ],
+  "cycle_receipts": [
+    {
+      "cycle": "native09-secondary-recovery-controls-01",
+      "receipt": {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/native09-secondary-recovery-controls-01/receipt.json",
+        "sha256": "f95897d585061d43f19f6c34e0f3c0fddb208fa0ada046823d543ac1aa4e3a7b"
+      },
+      "log": {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/native09-secondary-recovery-controls-01/gradle.log",
+        "sha256": "a799e3061d30b5839f594be5bd4c7501938e99ef844fc95265bfdce830331dd8"
+      },
+      "status": "PASS",
+      "exit_code": 0,
+      "started_at": "2026-09-07T23:15:32.038174+00:00",
+      "finished_at": "2026-09-07T23:15:32.579411+00:00",
+      "stop_exit_code": 0,
+      "cleanup_errors": [],
+      "remaining_outputs": [],
+      "remaining_owned_workers": []
+    },
+    {
+      "cycle": "native09-secondary-recovery-preflight-01",
+      "receipt": {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/native09-secondary-recovery-preflight-01/receipt.json",
+        "sha256": "1a65ede2f663899fea39ede50f1418d181c3f4b9c23910f2c071280ce264ffe3"
+      },
+      "log": {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/native09-secondary-recovery-preflight-01/gradle.log",
+        "sha256": "bd9bc4a11b3640bf1a3f2c8285561e7a38912488f9701684654c6036c67466c5"
+      },
+      "status": "FAIL",
+      "exit_code": 1,
+      "started_at": "2026-09-07T23:17:37.422765+00:00",
+      "finished_at": "2026-09-07T23:17:38.233610+00:00",
+      "stop_exit_code": 0,
+      "cleanup_errors": [],
+      "remaining_outputs": [],
+      "remaining_owned_workers": []
+    },
+    {
+      "cycle": "native09-secondary-query-probe-01",
+      "receipt": {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/native09-secondary-query-probe-01/receipt.json",
+        "sha256": "6081cac96e9d127df237868aeba464b4889cf3b53572c1b0ca0fd2fe549fa40f"
+      },
+      "log": {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/native09-secondary-query-probe-01/gradle.log",
+        "sha256": "3905e13180e6cf0feb5e37973995fb349640735d7cc191aab7546d69961f6065"
+      },
+      "status": "PASS",
+      "exit_code": 0,
+      "started_at": "2026-09-07T23:19:59.545789+00:00",
+      "finished_at": "2026-09-07T23:20:00.314997+00:00",
+      "stop_exit_code": 0,
+      "cleanup_errors": [],
+      "remaining_outputs": [],
+      "remaining_owned_workers": []
+    },
+    {
+      "cycle": "native09-secondary-query-openfds-01",
+      "receipt": {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/native09-secondary-query-openfds-01/receipt.json",
+        "sha256": "e440cb612719406c6d20c9eaff12c9c361159e4cc00d663e78f7b036fb6450a8"
+      },
+      "log": {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/native09-secondary-query-openfds-01/gradle.log",
+        "sha256": "a1480a0709bfeb25582b83df5a0b1c916e1ac2b195685a320902e3f061690107"
+      },
+      "status": "FAIL",
+      "exit_code": 1,
+      "started_at": "2026-09-07T23:21:35.093576+00:00",
+      "finished_at": "2026-09-07T23:21:35.916057+00:00",
+      "stop_exit_code": 0,
+      "cleanup_errors": [],
+      "remaining_outputs": [],
+      "remaining_owned_workers": []
+    }
+  ],
+  "old_control_quality": {
+    "actual_tests": 19,
+    "exact_AST_and_verbose_results_reconciled": true,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "limitation": "The existing query table declared1/nonempty invalid for every command. It confirmed that assumption rather than exercising native lsof. Tests underreviews are not automatically bound by canonical source manifest; explicit author/independent frozen file hashes and checked invocation bind these draft inputs."
+  },
+  "authoritative_research": [
+    {
+      "url": "https://raw.githubusercontent.com/apple-oss-distributions/lsof/7a8a1b2a3c0f35c30a5fcd0927f31d441c3e5255/lsof/main.c",
+      "accessed_at": "2026-09-07T23:31:18.505002+00:00",
+      "repository": "apple-oss-distributions/lsof",
+      "release_tag": "lsof-76",
+      "commit": "7a8a1b2a3c0f35c30a5fcd0927f31d441c3e5255",
+      "sha256": "74656c434777d77626d8962bd1fd06f17b59c286f02c72e40520ebf03a8b8cae",
+      "line_count": 1913,
+      "excerpts": [
+        {
+          "lines": [
+            1499,
+            1543
+          ],
+          "text": "/*\n * See if all requested information was displayed.  Return zero if it\n * was; one, if not.  If -V was specified, report what was not displayed.\n */\n\t(void) childx();\n\trv = 0;\n\tfor (str = Cmdl; str; str = str->next) {\n\n\t/*\n\t * Check command specifications.\n\t */\n\t    if (str->f)\n\t\tcontinue;\n\t    rv = 1;\n\t    if (Fverbose) {\n\t\t(void) printf(\"%s: command not located: \", Pn);\n\t\tsafestrprt(str->str, stdout, 1);\n\t    }\n\t}\n\tfor (i = 0; i < NCmdRxU; i++) {\n\t\n\t/*\n\t * Check command regular expressions.\n\t */\n\t    if (CmdRx[i].mc)\n\t\tcontinue;\n\t    rv = 1;\n\t    if (Fverbose) {\n\t\t(void) printf(\"%s: no command found for regex: \", Pn);\n\t\tsafestrprt(CmdRx[i].exp, stdout, 1);\n\t    }\n\t}\n\tfor (sfp = Sfile; sfp; sfp = sfp->next) {\n\n\t/*\n\t * Check file specifications.\n\t */\n\t    if (sfp->f)\n\t\tcontinue;\n\t    rv = 1;\n\t    if (Fverbose) {\n\t\t(void) printf(\"%s: no file%s use located: \", Pn,\n\t\t    sfp->type ? \"\" : \" system\");\n\t\tsafestrprt(sfp->aname, stdout, 1);\n\t    }"
+        },
+        {
+          "lines": [
+            1757,
+            1762
+          ],
+          "text": "\tif (!rv && rc)\n\t    rv = ev;\n\tif (!rv && ErrStat)\n\t    rv = 1;\n\tExit(rv);\n\treturn(rv);\t\t/* to make code analyzers happy */"
+        }
+      ]
+    },
+    {
+      "url": "https://raw.githubusercontent.com/apple-oss-distributions/lsof/7a8a1b2a3c0f35c30a5fcd0927f31d441c3e5255/lsof/arg.c",
+      "accessed_at": "2026-09-07T23:31:19.136542+00:00",
+      "repository": "apple-oss-distributions/lsof",
+      "release_tag": "lsof-76",
+      "commit": "7a8a1b2a3c0f35c30a5fcd0927f31d441c3e5255",
+      "sha256": "1aaa7a9b134df024f6f2c35d475ce05460cfb998f3e1dc67fca7819bc2ed1585",
+      "line_count": 2497,
+      "excerpts": [
+        {
+          "lines": [
+            969,
+            983
+          ],
+          "text": " */\n\n#define\tEDDEFFNL\t128\t\t/* default file name length */\n\nint\nenter_dir(d, descend)\n\tchar *d;\t\t\t/* directory path name pointer */\n\tint descend;\t\t\t/* subdirectory descend flag:\n\t\t\t\t\t *\t0 = don't descend\n\t\t\t\t\t *\t1 = descend */\n{\n\tchar *av[2];\n\tdev_t ddev;\n\tDIR *dfp;\n\tchar *dn = (char *)NULL;"
+        },
+        {
+          "lines": [
+            1032,
+            1061
+          ],
+          "text": "\n\tddev = sb.st_dev;\n/*\n * Stack the directory and record it in Sfile for searching.\n */\n\tDstkn = Dstkx = 0;\n\tDstk = (char **)NULL;\n\t(void) stkdir(dn);\n\tav[0] = (dn == d) ? mkstrcpy(dn, (MALLOC_S *)NULL) : dn;\n\tav[1] = (char *)NULL;\n\tdn = (char *)NULL;\n\tif (!ck_file_arg(0, 1, av, 1, 1, &sb)) {\n\t    av[0] = (char *)NULL;\n\t    fct++;\n\t}\n/*\n * Unstack the next directory and examine it.\n */\n\twhile (--Dstkx >= 0) {\n\t    if (!(dn = Dstk[Dstkx]))\n\t\tcontinue;\n\t    Dstk[Dstkx] = (char *)NULL;\n\t/*\n\t * Open the directory path and prepare its name for use with the\n\t * files in the directory.\n\t */\n\t    if (!(dfp = OpenDir(dn))) {\n\t\tif (!Fwarn) {\n\t\t    if ((en = errno) != ENOENT) {\n\t\t\t(void) fprintf(stderr,"
+        }
+      ]
+    }
+  ],
+  "local_manual_references": [
+    {
+      "path": "/usr/share/man/man8/lsof.8",
+      "sha256": "b3e81bbde414e488160ead258804afbb09438c49b3aaba2e59f185314cc8ac1e",
+      "version": "4.91",
+      "lines": [
+        [
+          436,
+          478
+        ],
+        [
+          1725,
+          1745
+        ]
+      ],
+      "claim": "+D searches root and contents; -t implies warning suppression. Not proof of exact installed-source build provenance."
+    },
+    {
+      "path": "/usr/share/man/man1/ps.1",
+      "sha256": "fbddf023ce4960c7e6eadebcfb7f0badf0ab6c3f59b2b97c2807d3f67a85142d",
+      "lines": [
+        [
+          194,
+          196
+        ],
+        [
+          645,
+          650
+        ]
+      ],
+      "claim": "-p selects explicit processIDs; no explicit exit contract documented here. Actual controlled ps forms retained unchanged rather than inferred from lsof."
+    }
+  ],
+  "installed_lsof_binary": {
+    "path": "/usr/sbin/lsof",
+    "sha256": "53b9a14df1036dd6d0b7f04d6f212823bddde2e090aaed1e772b73d7d43b2558"
+  },
+  "research_applicability": "Official Apple distribution immutable taglsof-76 source exhibits exactly the observed local behavior and agrees with installed4.91manual. No claim that binarySHA is reproducibly bound to that release tag; actual installed executable behavior is separately witnessed. Exit1 can also represent errors;02 preserves all existing stderr/code/bounded-output and exact filesystem/holder guards, not a universal success reinterpretation of exit1.",
+  "proposed02_delta": {
+    "manifest": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/native09-secondary-fifo-recovery-draft-02.json",
+      "sha256": "04b985ad2f0817747dc207af8b740b9e3cfc03e5502402f40c24eac0170a9c6b"
+    },
+    "patch": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/native09-secondary-fifo-recovery-01-to-02.patch",
+      "sha256": "a844e4a007c1c061576f89f296dc6937b121a54816f7f6fbf00c28a89a01f69f"
+    },
+    "only_explicit_exception": "arguments equal exact /usr/sbin/lsof -nP -w -t +D <frozen native09root>, exit1 and nonempty valid bounded PID list, no stderr. Return entire PIDset. Old worker PID/other holder cannot be ignored. ps/synthetic/wrongtarget remain strict.",
+    "scope_and_inode_operations_AST_identical": true,
+    "existing19_test_bodies_AST_identical": true,
+    "new_tests": 5,
+    "total_tests_expected": 24,
+    "tests_executed_by_author": false,
+    "output_evidence": "verify-02 / execute-02 only;01 never overwritten; helper_pid added."
+  },
+  "original_result_preservation": {
+    "native09_runtime": "FAIL unchanged",
+    "native09_original_cleanup": "FAIL unchanged",
+    "preflight01": "FAIL/BLOCKED_PRESERVE_REMAINDER; zero-byte events prove no successful guard or mutation callback",
+    "held_descriptor_witness": "FAIL expected defect witness, not PASS repair",
+    "native10": "SUSPENDED; no prevention or source-binding approval"
+  },
+  "analyst_hygiene": "Read source/evidence/installed public manuals/binary hash and authoritative public source URLs only; AST/hash comparisons. No repository executable import/test/query/native process/simulator, deletion or Git/Store change. Only additive02draft/test/patch/reports underreviews;01 and canonical files untouched."
+}

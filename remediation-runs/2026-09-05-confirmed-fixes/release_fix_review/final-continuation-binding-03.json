@@ -1,0 +1,262 @@
+{
+  "reviewer": "/root/release_fix_review",
+  "observed_at": "2026-09-06T02:13:22.803667+00:00",
+  "scope": "Read-only evidence/checkout/path observations; no new build or runtime test, no cleanup or process signaling",
+  "observer_sha256": "6cc9c8f81dd838920b66143db1065af47a24bb2a58dd63cb4f3cafb4c01cce1e",
+  "source_manifest_sha256": "e59da533dbec2f02f6f2b460ce72e2a7337af1e44abfb0bc6d533304d4127ec7",
+  "source_count": 658,
+  "tracked_diff_sha256": "60b555c0dd323a086e959ffbc5aa3fd7c6629ae1d0ad016021572e7ae272e4dd",
+  "complete_patch_sha256": "305b8f3db676a79ddc98faf72e08d4269596528cdc30cafbbf4c6811312f03f9",
+  "baseline_files": 1618,
+  "unchanged_original_files": 1584,
+  "modified_original_files": [
+    "composeApp/build.gradle.kts",
+    "composeApp/src/desktopTest/kotlin/com/parlor/app/ProductionUiAccessibilityContractTest.kt",
+    "composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSnapshotFileSystem.kt",
+    "docs/MAFIA_RULES.md",
+    "docs/PRODUCTION_ARCHITECTURE.md",
+    "docs/RELEASE_AUTOMATION.md",
+    "game-modes/mafia/build.gradle.kts",
+    "game-modes/mafia/src/commonMain/composeResources/values-ar/strings.xml",
+    "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/snapshot/MafiaSnapshotRecovery.kt",
+    "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaMultiDevicePhaseRouter.kt",
+    "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/passandplay/MafiaPassAndPlayPhaseRouter.kt",
+    "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/postgame/PostGameScreen.kt",
+    "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaSetupScreen.kt",
+    "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/state/WhodunitStateValidator.kt",
+    "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitPhaseRouter.kt",
+    "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/domain/WhodunitRulesInvariantTest.kt",
+    "iosApp/iosApp.xcodeproj/project.pbxproj",
+    "scripts/release/store_api.py",
+    "scripts/release/tests/test_store_api.py",
+    "scripts/release/validate_android_artifact.sh",
+    "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/HostDisconnectedOverlay.kt",
+    "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/ParlorButton.kt",
+    "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/ParlorToastHost.kt",
+    "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/ReconnectingOverlay.kt",
+    "shared/design-system/src/commonTest/kotlin/com/parlor/designsystem/components/ParlorToastStateTest.kt",
+    "shared/design-system/src/iosMain/kotlin/com/parlor/designsystem/localization/LocalAppLocale.ios.kt",
+    "shared/session/src/commonMain/kotlin/com/parlor/session/multidevice/SessionStartHandshake.kt",
+    "shared/transport-p2p/src/androidMain/kotlin/com/parlor/transport/p2p/P2pTransportModule.android.kt",
+    "shared/transport-p2p/src/commonMain/kotlin/com/parlor/transport/p2p/AppLifecycleRoomCoordinator.kt",
+    "shared/transport-p2p/src/commonMain/kotlin/com/parlor/transport/p2p/P2pKitRoomTransport.kt",
+    "shared/transport-p2p/src/desktopMain/kotlin/com/parlor/transport/p2p/P2pTransportModule.desktop.kt",
+    "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitRoomTransportLifecycleTest.kt",
+    "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitRoomTransportLoopbackTest.kt",
+    "shared/transport-p2p/src/iosMain/kotlin/com/parlor/transport/p2p/P2pTransportModule.ios.kt"
+  ],
+  "preserved_preexisting_untracked_count": 990,
+  "preexisting_untracked_changed": [],
+  "new_source_count": 28,
+  "refs_stash_index_preserved": true,
+  "reference_occurrences": 353,
+  "distinct_reference_count": 188,
+  "old_milestone_count": 11,
+  "issue_counts": {
+    "FIXED AND VERIFIED": 14,
+    "PARTIALLY VERIFIED": 1,
+    "BLOCKED": 1
+  },
+  "gate_counts": {
+    "PASS": 23,
+    "BLOCKED": 15
+  },
+  "continuation_cycles": [
+    {
+      "cycle": "dsc01-apphost-01",
+      "status_now": "FAIL",
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/dsc01-apphost-01/receipt.json",
+        "sha256": "33b7d8a4ee78dd34903aa4b3131fabc0df578b4148deafe30b818dff7885e89c"
+      },
+      "materialization_was_running": false
+    },
+    {
+      "cycle": "dsc01-apphost-02",
+      "status_now": "PASS",
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/dsc01-apphost-02/receipt.json",
+        "sha256": "7ce472e0296c985d152d02c0dbdf6b6979830c12906c7653291c5237bf5ac660"
+      },
+      "materialization_was_running": false
+    },
+    {
+      "cycle": "dsc01-harness-contracts-01",
+      "status_now": "PASS",
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/dsc01-harness-contracts-01/receipt.json",
+        "sha256": "e754b3a6b475f154d27216a100d753b7271f50a6a32926459d561adbe7301c92"
+      },
+      "materialization_was_running": false
+    },
+    {
+      "cycle": "dsc01-harness-contracts-02",
+      "status_now": "PASS",
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/dsc01-harness-contracts-02/receipt.json",
+        "sha256": "b80456d15f4fa6f428050c25b6fca57f1ee3751ebd7f51c9d97fc0cbdd608bc9"
+      },
+      "materialization_was_running": false
+    },
+    {
+      "cycle": "final-continuation-assembly-01",
+      "status_now": "PASS",
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/final-continuation-assembly-01/receipt.json",
+        "sha256": "0930eddafde6d39f41158cb082a96e9ffd029ba8113bfd3d8ecd244c7b642bfa"
+      },
+      "materialization_was_running": true
+    },
+    {
+      "cycle": "final-evidence-assembly-01",
+      "status_now": "PASS",
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/final-evidence-assembly-01/receipt.json",
+        "sha256": "f25af494e43e733f4eaffb258cc31d3f3742575552f7988205ec128c084be2d7"
+      },
+      "materialization_was_running": false
+    },
+    {
+      "cycle": "final-indexes-01",
+      "status_now": "PASS",
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/final-indexes-01/receipt.json",
+        "sha256": "79ba6f7c43c4ff62970a62b8722a282c26fe2a56eacaab053958ccc5d00e032c"
+      },
+      "materialization_was_running": false
+    },
+    {
+      "cycle": "final-ledger-validation-01",
+      "status_now": "PASS",
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/final-ledger-validation-01/receipt.json",
+        "sha256": "144805e1bd47ba7aa812e4c831a665d6aff9abf8aa91f3928665bb47a213c482"
+      },
+      "materialization_was_running": false
+    },
+    {
+      "cycle": "final-observation-contracts-01",
+      "status_now": "PASS",
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/final-observation-contracts-01/receipt.json",
+        "sha256": "d0e8ad7b8be4aab7c42c014c4cbf68778cd3807e2e2fbdf7d9fb102c6160a3f7"
+      },
+      "materialization_was_running": false
+    },
+    {
+      "cycle": "final-observation-contracts-02",
+      "status_now": "PASS",
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/final-observation-contracts-02/receipt.json",
+        "sha256": "3b5059cf1aead0a41a86033cb64a5a047692d5db67b9933fa9a072c06e144d71"
+      },
+      "materialization_was_running": false
+    },
+    {
+      "cycle": "final-observation-contracts-03",
+      "status_now": "PASS",
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/final-observation-contracts-03/receipt.json",
+        "sha256": "9949837ab9e54e3ecc044ef47727b6db4c2337003f450470bd644e8ec6c39fb0"
+      },
+      "materialization_was_running": false
+    }
+  ],
+  "apphost": [
+    {
+      "cycle": "dsc01-apphost-01",
+      "copy_binding": {
+        "manifest": {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/dsc01-apphost-01/copied-wrapper-manifest.json",
+          "sha256": "9d82683d207cc6006f040f4caf4a514cbcd0117f006f9045d76e737e315ce26d"
+        },
+        "diff": {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/dsc01-apphost-01/copied-wrapper.diff",
+          "sha256": "6f6fdb0075d7571765e82d741259c375d87cd4725e1f2e7bdf71632e19eb3680"
+        },
+        "original_count": 18,
+        "unchanged_copies": 14,
+        "reconstructed_copies": {
+          "iosApp/iosApp/iOSApp.swift": "ebb934f340c8a7c05b75fdc9f9ebc41cea4238571db860321219424fe8651fd5",
+          "iosApp/iosApp/ContentView.swift": "5341113b7894fab1ca0aa199deaa040fc0c328242ea97dfd9b21915d01c473d9",
+          "iosApp/iosAppUITests/IOSAppLaunchUITests.swift": "4a198288c8deda3c66821370e171859876591f3ee6bf0ff47dd70abb0d02b4e4",
+          "iosApp/iosApp.xcodeproj/project.pbxproj": "fe64a8f9172917e39413eaa0953d85c4257f5045226f6182e6837e23043157dd"
+        }
+      },
+      "control_sha256": "82c4efd11d4c9885423066e6318967321c5dc1a7c3afe550cae42c3ff1cdb375",
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/dsc01-apphost-01/receipt.json",
+        "sha256": "33b7d8a4ee78dd34903aa4b3131fabc0df578b4148deafe30b818dff7885e89c"
+      },
+      "owned_pid_count": 71,
+      "targeted_ps_exit": 1,
+      "same_pid_new_start_not_owned": [],
+      "matching_task_processes": [],
+      "owned_paths_checked": [
+        "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-dsc01-apphost-01-fjwb30zo",
+        "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-88445/IB/B80B37CD-55C7-4F43-980B-951FCD6F91E8.RemoteToHost",
+        "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-88445/IB/B80B37CD-55C7-4F43-980B-951FCD6F91E8.HostToRemote",
+        "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-88445/IB",
+        "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-88445"
+      ],
+      "remaining_owned_paths": []
+    },
+    {
+      "cycle": "dsc01-apphost-02",
+      "copy_binding": {
+        "manifest": {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/dsc01-apphost-02/copied-wrapper-manifest.json",
+          "sha256": "35792f7e6cdc474f74e7d850645b1324833f5c6a6d6b520449128cc30680ecb1"
+        },
+        "diff": {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/dsc01-apphost-02/copied-wrapper.diff",
+          "sha256": "f981a345443bf3ca13273fe94a5d15880c4b978b5a0e71abc87a115dff4da547"
+        },
+        "original_count": 18,
+        "unchanged_copies": 14,
+        "reconstructed_copies": {
+          "iosApp/iosApp/iOSApp.swift": "ebb934f340c8a7c05b75fdc9f9ebc41cea4238571db860321219424fe8651fd5",
+          "iosApp/iosApp/ContentView.swift": "5341113b7894fab1ca0aa199deaa040fc0c328242ea97dfd9b21915d01c473d9",
+          "iosApp/iosAppUITests/IOSAppLaunchUITests.swift": "2751f2eff71c6f5ece7d9b98c54b1a72832aa10f7225328c58a04818b2a52c3a",
+          "iosApp/iosApp.xcodeproj/project.pbxproj": "5c4e01ca237a4fdec5f4294a26e4c5914d7546af3f2132b683af1a79065e71d4"
+        }
+      },
+      "control_sha256": "5eed8a6fb73960bcf352c8792a4961fa58bee6b52a41861bce5af449aa8dca0f",
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/dsc01-apphost-02/receipt.json",
+        "sha256": "7ce472e0296c985d152d02c0dbdf6b6979830c12906c7653291c5237bf5ac660"
+      },
+      "owned_pid_count": 54,
+      "targeted_ps_exit": 1,
+      "same_pid_new_start_not_owned": [],
+      "matching_task_processes": [],
+      "owned_paths_checked": [
+        "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-dsc01-apphost-02-meqticu6",
+        "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-1042/IB/7F106FDE-4660-49E8-8E03-7ABE964E26B0.RemoteToHost",
+        "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-1042/IB/7F106FDE-4660-49E8-8E03-7ABE964E26B0.HostToRemote",
+        "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-1042/IB",
+        "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-1042"
+      ],
+      "remaining_owned_paths": []
+    }
+  ],
+  "new_final_deliverables": [
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/final/REPORT-CONTINUATION.md",
+      "sha256": "a3359c488364141d326964a13427e558f5d7fc6e00f190d54effa9e805a34b8f"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/final/issues-continued.json",
+      "sha256": "fcdf977fcdf9d1be7693142aab2152ae713ba9cfecc1ee02b1d1cfc832324c10"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/final/gates-continued.json",
+      "sha256": "92f64cb19df9e802e996eb22ef4e1a3f6e3f02591f751f92c431fa0b90ea10a9"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/final/continuation-evidence.json",
+      "sha256": "c8b8f844b7666e7a159c9c99dc93984310f336f9168dd91b231bc556bc343d2b"
+    }
+  ],
+  "pending_final_observation_exists": false
+}

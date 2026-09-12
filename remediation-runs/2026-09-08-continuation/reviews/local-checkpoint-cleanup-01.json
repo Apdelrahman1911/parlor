@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-09-08T10:03:45.418380+00:00",
+  "scope": "Task-owned ordinary lane lock retirement after closed Linux test cycles; no global cache/source/evidence deletion. Later cycles may create a new lock.",
+  "ownership": "Initial verified clone was clean and lacked this untracked lock. Only coordinator-owned run_gradle_cycle invocations allocated/used it. Exclusive nonblocking lock acquired after final recheck receipt closed.",
+  "path": "remediation-runs/2026-09-07-local-readiness/build-lane.lock",
+  "custody": {
+    "device": 24,
+    "inode": 16275368,
+    "uid": 0,
+    "bytes": 0
+  },
+  "last_cycle_receipt": {
+    "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-l08-control-recheck-01/receipt.json",
+    "sha256": "bc2a7d2f96094ae1d214e16b031f07913a5579fc88e8e2f04ab75d2a1b67bd18"
+  },
+  "stop_policy": "Last cycle already preserved evidence and immediately stopped Gradle successfully; this lock-only operation starts no worker.",
+  "status": "PASS",
+  "lock_absent": true
+}

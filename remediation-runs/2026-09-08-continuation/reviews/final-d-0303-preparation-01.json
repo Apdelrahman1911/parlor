@@ -1,0 +1,157 @@
+{
+  "schema_version": 1,
+  "kind": "FINAL_D_PREPARATION_AFTER_CURRENT_0303_SOURCE_REOPEN",
+  "author": "/root/ci_review",
+  "coordinator": "/root",
+  "status": "PREPARATION_ONLY_D_NOT_RUN_NOT_AUTHORIZED",
+  "source_observed": {
+    "commit": "0303a76771794c52ea96a7d7f47eb689f5b236ba",
+    "tree": "4d2364b41a5a29b3c66a3ccc5307a9d84c4f5900",
+    "tracked_clean": true,
+    "final_qualification_source_chosen": false
+  },
+  "readiness": "NOT_READY",
+  "reuse": {
+    "basis": "Reopened held packet02/independent02, stale08d full request/preparation, current workflow/root tasks/XCTest wiring and C applicability. Rehashed17 full-packet controls against0303 Git blobs:16 unchanged; only native_continuation CYCLES23/24->25/26 differs. Full validate-scope entry does not instantiate focused lane. Existing collection/cleanup review remains applicable; no new parser, workflow, broad re-review or local duplicate build needed.",
+    "current17_manifest_sha256": "4dc8ea2bf1c0c6fc8869ad40cf1ec2dfb398a152aa3b42616028de8cccb67519",
+    "serialization": "Path-sorted {path,bytes,sha256} rows; JSON sort_keys=True,separators=(comma,colon),UTF-8,no newline; rows derive from packet02 observed_control_bindings_NOT_FUTURE_FREEZE with the single current21d5f2ba native adapter hash.",
+    "stale_request": "full-qualification-dispatch-01/request.json remains3589d574\u2026 at08d, with outdated A23/B24/C04 prerequisite states. Preserve, do not dispatch/relabel it. Its full command, job/artifact and collection methods are reusable, not its source/control/runtime assertions."
+  },
+  "admission_checklist": [
+    "Wait for focused34321128224/1 to finish and reconcile actual source/control/runtime/cleanup evidence; its queued status is coordinator-provided, not an API observation here. Investigate failures before deciding corrections or final freeze. D cannot supersede an A/B failure.",
+    "Choose actual stable final source after any justified reviewed corrections; source/control commit then mechanical inventory-only commit/check. If0303 remains final, reuse its actual freeze/check receipt; do not regenerate merely for this preparation. Any later source/control change requires scoped rebinding; no futureSHA invented.",
+    "Retain valid A/B evidence only for its exact source/control/platform/scope. Complete fresh C05 export/render/binding/actual consumer/four-receipt acceptance at the chosen final source; C04 remains scoped08d history. Avoid C replay at every interim diagnostic freeze.",
+    "One compact final-source admission should reconcile A/B,C and unchanged full controls with existing reviews, then root explicitly authorizes one new full run. No extra synthetic/full-validator rehearsal or independent loop is needed for unchanged code.",
+    "Immediately capture clean tracked source/tree/full-history/inventory and exact remote branch; query active workflow and complete all-scope same-ref runs. Shared cancel-in-progress concurrency forbids dispatch over the needed focused run. Keep source fixed throughout; no canonical ledger/commit midqualification.",
+    "Associate exactly one new workflow_dispatch attempt1 with expected repository/branch/workflowID/actual finalhead. Full mode does NOT enforce frozen_source_sha, so remote/actual checkout association is essential; preparation approval or passing a focused input cannot replace it."
+  ],
+  "exact_full_invocation": {
+    "command": [
+      "gh",
+      "workflow",
+      "run",
+      "production-verification.yml",
+      "--repo",
+      "Apdelrahman1911/parlor",
+      "--ref",
+      "fix/local-readiness-2026-09-07",
+      "-f",
+      "verification_scope=full"
+    ],
+    "inputs": {
+      "verification_scope": "full"
+    },
+    "omitted": "No frozen_source_sha,preflight IDs/artifact/control hashes,or probe inputs; these are focused-only, not full-source guards.",
+    "current_dispatch_authority": 0
+  },
+  "missing_final_source_execution": [
+    {
+      "job": "desktop-android",
+      "host": "ubuntu-24.04 x64",
+      "minutes": 90,
+      "work": "./gradlew productionCheck productionStaticAnalysis productionReleaseAutomationCheck allTests --dependency-verification=strict --no-daemon --stacktrace --console=plain; then scripts/android/run_release_managed_device_smoke.sh; unsignedAAB/manifest/DEX/resource/native/notice inventory.",
+      "main_artifact": "desktop-android-verification",
+      "stop_labels": [
+        "common-android",
+        "managed-device"
+      ]
+    },
+    {
+      "job": "desktop-linux-arm64",
+      "host": "ubuntu-24.04-arm",
+      "minutes": 45,
+      "work": "./gradlew productionDesktopCheck with strict/no-daemon/stacktrace/plain flags; actual arm64 desktop graph/tests, NOT Kotlin/Native host support.",
+      "main_artifact": "desktop-verification-desktop-linux-arm64",
+      "stop_labels": [
+        "linux-arm64"
+      ]
+    },
+    {
+      "job": "desktop-macos-x64",
+      "host": "macos-15-intel",
+      "minutes": 45,
+      "work": "./gradlew productionDesktopCheck :composeApp:downloadKotlinNativeDistribution with same strict flags; actual Intel desktop graph/tests and distribution resolution.",
+      "main_artifact": "desktop-verification-desktop-macos-x64",
+      "stop_labels": [
+        "macos-x64"
+      ]
+    },
+    {
+      "job": "desktop-windows-x64",
+      "host": "windows-2025",
+      "minutes": 60,
+      "work": ".\\gradlew.bat productionDesktopCheck :composeApp:downloadKotlinNativeDistribution :composeApp:processDebugResources with same strict flags; actual Windows desktop/runtime and Windows aapt2, not Linux resolution inference.",
+      "main_artifact": "desktop-verification-desktop-windows-x64",
+      "stop_labels": [
+        "windows-x64"
+      ]
+    },
+    {
+      "job": "ios",
+      "host": "macos-15 arm64/Xcode26.3 build17C529",
+      "minutes": 120,
+      "work": "./gradlew productionIosSimulatorRuntimeTests productionAppleCheck with strict flags; plist/privacy and effective Debug/Release IDs; owned-simulator xcodebuild test; unsigned arm64 simulator Release wrapper and package/notice inventory.",
+      "main_artifact": "ios-verification",
+      "stop_labels": [
+        "apple-aggregate",
+        "apple-ui",
+        "apple-wrapper"
+      ]
+    }
+  ],
+  "overlap_and_limits": [
+    "These are missing final-source combinedD results, not a claim the platforms never ran historically. Existing Linux1 label/workflow PASS and25/55/204/corrected12 controls do not supply these five jobs. Use the single existing matrix; no duplicate local productionCheck/R8/static/Windows/Apple builds first.",
+    "Gradle deduplicates overlapping productionCheck/static/release/allTests dependencies within the requested graph; count distinct executed task/test descriptors, not aggregate aliases. Full Linux naturally executes release validation (historical464 count is not a prescribed new count),workflow/inventory/actionlint/ShellCheck; no separate validator05 rehearsal.",
+    "Full iOS has five source-declared Home/UIKit methods: one normal cold launch plus four ComposeContainerViewController tests. They are expected declarations, not executed counts. Full UI partly overlaps basic launch coverage but does NOT run A's13 functional-storage boots/retained-host/strict-protection fixtures, B's8 repetitions or ninth real libproc query.",
+    "Nine focused-only clock/native/probe steps are expected skipped in full; validate-scope and all five full jobs are required. Full iOS120minutes is not focused240minutes. Dedicated simulator tests are runtime; device/x64 release framework links and distribution downloads are not. Full intentionally avoids duplicate common/desktop/Android aggregates on expensive Apple arm64.",
+    "Full resolves dependencies and checks packaged notices/artifacts, but does NOT produce the separate four-graph C05 export/render/schema-consumer chain. C05 input integrity is not package/runtime/legal proof. Reconcile its final-source/notice bindings with D's actual package receipts; do not hardcode historical456/459/511 counts.",
+    "No D success can close unresolved strict protection or actual libproc failures, physical-device/LAN/accessibility/keybag/backup/power-loss,Store identity/signing/archive/operations,or owner/legal/editorial/privacy requirements. No Store workflow/credentials or physical test is authorized."
+  ],
+  "evidence_and_cleanup_checklist": [
+    "Retain attempt-specific raw run/jobs/log archive and complete paginated artifacts metadata plus originalZIPs/compact safe member inventories. Reuse reviewed Linux normalizer48ca12d9\u2026 for complete JSON pages if needed; no unsupported --slurp or gh run view runAttempt. Run-scoped artifact API is not attempt attribution: match actual upload step IDs/digests.",
+    "Expect five main artifacts above plus verification-cleanup-<job> for each job:10 artifacts are expected, not observed.14day retention/warn-on-missing uploads do not prove completeness. Bind IDs,API/upload SHA256,downloaded size/digest,source/run/attempt and safe regular members before relying on reports.",
+    "Reconcile raw Gradle outcomes and unique platform/job/task/suite/testcase XML; full XCTest actual XCResult methods/repetitions. Preserve failures,skips,NO-SOURCE,UP-TO-DATE,FROM-CACHE,aborted/NOT_RUN separately. Cached XML/linkage/declarations are not new runtime; if required execution is cached, rerun only affected clean-output/no-build-cache scope after investigation.",
+    "Android main evidence includes managed R8 runtime results,lint/Detekt/mappings/unsignedAAB and full artifact/manifest/notices. Apple includes simulator XML/XCResult/logs/toolchains,three link outcomes,Debug/Release IDs,unsigned wrapper hashes/package/notices/dSYM. Apple .app/raw device/x64 frameworks are not uploaded by this workflow: producer inventories are not independent remote-binary reinspections.",
+    "After each job cycle verify immediate Gradle-stop receipt and source/ownership stability; Apple additionally needs aggregate/UI/wrapper prepare/run/finish,worker identity and exact owned simulator retirement. General Gradle stop alone is not emulator/global-process cleanup proof; retain actual managed-device lifecycle evidence and scope limits.",
+    "Same-job follow-on builds retain needed owned outputs until successful nonempty main upload. Then verify exact owned-output cleanup and separate RUNNER_TEMP cleanup artifact (stop again if cleanup startedGradle); no global caches/source/signing/unrelated work or archived evidence deletion. Retain failed receipts. Collector uses fresh bounded destinations and leaves no owned workers/extractions."
+  ],
+  "reference_pins": [
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/full-qualification-afterfreeze-02.json",
+      "bytes": 73611,
+      "sha256": "feba34720798a3a70608dcf81b6239a2357c21fb53e94214601390b5febc8403"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/full-qualification-afterfreeze-independent-02.json",
+      "bytes": 38384,
+      "sha256": "10c0acc986adf9175ca4c3a10acb798206a46ea9f6a6920f80c7e6c24267b716"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/full-qualification-frozen-request-preparation-01.json",
+      "bytes": 21413,
+      "sha256": "e144174afa1ad5987f0472592db4c5522895e4f1f2f5ad38ccb96dbe1f25514a"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/candidate-c04-upcoming-freeze-applicability-independent-01.json",
+      "bytes": 17775,
+      "sha256": "d30af7df68c61c822b5cb21b8e5be5677d69f8be553ace01710a057b379fabac"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/full-qualification-dispatch-01/request.json",
+      "bytes": 36192,
+      "sha256": "3589d574f00a5b5b83eefd0b24d08eecdce65647733e933fa5cd11b9d98706ef"
+    }
+  ],
+  "workflow_pin": {
+    "path": ".github/workflows/production-verification.yml",
+    "bytes": 41331,
+    "sha256": "84888fae00e1add37dd8f39c5a86a9600c2a95b5e3bca794133c3fc28147b46c"
+  },
+  "activities": {
+    "tests_builds_API_network_dispatch_project_imports_Git_or_canonical_writes": 0,
+    "only_write": "remediation-runs/2026-09-08-continuation/reviews/final-d-0303-preparation-01.json",
+    "cleanup": "No build/test/worker/extraction created; no reviewer Gradle stop/clean owed."
+  },
+  "conclusion": "Use existing reviewed full packet with one truthful actual-final-source admission and one matrix, after focused completion and stable freeze/C05. This checklist adds no execution or authorization.",
+  "recorded_at": "2026-09-09T07:04:24.468690+00:00"
+}

@@ -1,0 +1,133 @@
+{
+  "schema_version": 1,
+  "author": "/root/native_fix_review",
+  "at_utc": "2026-09-08T01:44:54.674047+00:00",
+  "references": [
+    {
+      "url": "https://raw.githubusercontent.com/llvm/llvm-project/llvmorg-17.0.6/clang/docs/ObjectiveCLiterals.rst",
+      "accessed_at_utc": "2026-09-08T01:44:45.852861+00:00",
+      "sha256": "6e383d2d968b5ae5909132af7ffc1924ad8318552b52937ea4f546f905875413",
+      "claim": "Clang explicitly lowers @YES/@NO to numberWithBool, not numberWithInt; boxed expressions follow their scalar type.",
+      "excerpts": [
+        {
+          "lines": [
+            45,
+            66
+          ],
+          "text": "    void main(int argc, const char *argv[]) {\n      // character literals.\n      NSNumber *theLetterZ = @'Z';          // equivalent to [NSNumber numberWithChar:'Z']\n\n      // integral literals.\n      NSNumber *fortyTwo = @42;             // equivalent to [NSNumber numberWithInt:42]\n      NSNumber *fortyTwoUnsigned = @42U;    // equivalent to [NSNumber numberWithUnsignedInt:42U]\n      NSNumber *fortyTwoLong = @42L;        // equivalent to [NSNumber numberWithLong:42L]\n      NSNumber *fortyTwoLongLong = @42LL;   // equivalent to [NSNumber numberWithLongLong:42LL]\n\n      // floating point literals.\n      NSNumber *piFloat = @3.141592654F;    // equivalent to [NSNumber numberWithFloat:3.141592654F]\n      NSNumber *piDouble = @3.1415926535;   // equivalent to [NSNumber numberWithDouble:3.1415926535]\n\n      // BOOL literals.\n      NSNumber *yesNumber = @YES;           // equivalent to [NSNumber numberWithBool:YES]\n      NSNumber *noNumber = @NO;             // equivalent to [NSNumber numberWithBool:NO]\n\n    #ifdef __cplusplus\n      NSNumber *trueNumber = @true;         // equivalent to [NSNumber numberWithBool:(BOOL)true]\n      NSNumber *falseNumber = @false;       // equivalent to [NSNumber numberWithBool:(BOOL)false]\n    #endif"
+        },
+        {
+          "lines": [
+            90,
+            108
+          ],
+          "text": "Previously, the ``BOOL`` type was simply a typedef for ``signed char``,\nand ``YES`` and ``NO`` were macros that expand to ``(BOOL)1`` and\n``(BOOL)0`` respectively. To support ``@YES`` and ``@NO`` expressions,\nthese macros are now defined using new language keywords in\n``<objc/objc.h>``:\n\n.. code-block:: objc\n\n    #if __has_feature(objc_bool)\n    #define YES             __objc_yes\n    #define NO              __objc_no\n    #else\n    #define YES             ((BOOL)1)\n    #define NO              ((BOOL)0)\n    #endif\n\nThe compiler implicitly converts ``__objc_yes`` and ``__objc_no`` to\n``(BOOL)1`` and ``(BOOL)0``. The keywords are used to disambiguate\n``BOOL`` and integer literals."
+        },
+        {
+          "lines": [
+            116,
+            133
+          ],
+          "text": "Objective-C provides a new syntax for boxing C expressions:\n\n.. code-block:: objc\n\n    @( <expression> )\n\nExpressions of scalar (numeric, enumerated, BOOL), C string pointer\nand some C structures (via NSValue) are supported:\n\n.. code-block:: objc\n\n    // numbers.\n    NSNumber *smallestInt = @(-INT_MAX - 1);  // [NSNumber numberWithInt:(-INT_MAX - 1)]\n    NSNumber *piOverTwo = @(M_PI / 2);        // [NSNumber numberWithDouble:(M_PI / 2)]\n\n    // enumerated types.\n    typedef enum { Red, Green, Blue } Color;\n    NSNumber *favoriteColor = @(Green);       // [NSNumber numberWithInt:((int)Green)]"
+        }
+      ]
+    },
+    {
+      "url": "https://raw.githubusercontent.com/llvm/llvm-project/llvmorg-17.0.6/clang/lib/Sema/SemaExpr.cpp",
+      "accessed_at_utc": "2026-09-08T01:44:47.630336+00:00",
+      "sha256": "b51bd7b993651e67149be380845e34560b2795d9053bdad49fe2be5f132806f1",
+      "claim": "Comparison operands use the language logical-operation type.",
+      "excerpts": [
+        {
+          "lines": [
+            12993,
+            12997
+          ],
+          "text": "  auto computeResultTy = [&]() {\n    if (Opc != BO_Cmp)\n      return Context.getLogicalOperationType();\n    assert(getLangOpts().CPlusPlus);\n    assert(Context.hasSameType(LHS.get()->getType(), RHS.get()->getType()));"
+        }
+      ]
+    },
+    {
+      "url": "https://raw.githubusercontent.com/llvm/llvm-project/llvmorg-17.0.6/clang/include/clang/AST/ASTContext.h",
+      "accessed_at_utc": "2026-09-08T01:44:49.966954+00:00",
+      "sha256": "384ddea3e000b6f72a7d6bea0ffe0deface892c683b4f1dd99c53b71304b292e",
+      "claim": "C/Objective-C comparison result uses int; C++ uses bool.",
+      "excerpts": [
+        {
+          "lines": [
+            1961,
+            1970
+          ],
+          "text": "    return QualType();\n  }\n\n  /// The result type of logical operations, '<', '>', '!=', etc.\n  QualType getLogicalOperationType() const {\n    return getLangOpts().CPlusPlus ? BoolTy : IntTy;\n  }\n\n  /// Emit the Objective-CC type encoding for the given type \\p T into\n  /// \\p S."
+        }
+      ]
+    },
+    {
+      "url": "https://raw.githubusercontent.com/llvm/llvm-project/llvmorg-17.0.6/clang/lib/AST/NSAPI.cpp",
+      "accessed_at_utc": "2026-09-08T01:44:51.912920+00:00",
+      "sha256": "a31c332f85d364d2d721aa61c6e1bb90700d85eaa8c888d39d5987319d90903a",
+      "claim": "NSNumber factory selection distinguishes native BOOL and BuiltinType::Bool from BuiltinType::Int.",
+      "excerpts": [
+        {
+          "lines": [
+            378,
+            423
+          ],
+          "text": "std::optional<NSAPI::NSNumberLiteralMethodKind>\nNSAPI::getNSNumberFactoryMethodKind(QualType T) const {\n  const BuiltinType *BT = T->getAs<BuiltinType>();\n  if (!BT)\n    return std::nullopt;\n\n  const TypedefType *TDT = T->getAs<TypedefType>();\n  if (TDT) {\n    QualType TDTTy = QualType(TDT, 0);\n    if (isObjCBOOLType(TDTTy))\n      return NSAPI::NSNumberWithBool;\n    if (isObjCNSIntegerType(TDTTy))\n      return NSAPI::NSNumberWithInteger;\n    if (isObjCNSUIntegerType(TDTTy))\n      return NSAPI::NSNumberWithUnsignedInteger;\n  }\n\n  switch (BT->getKind()) {\n  case BuiltinType::Char_S:\n  case BuiltinType::SChar:\n    return NSAPI::NSNumberWithChar;\n  case BuiltinType::Char_U:\n  case BuiltinType::UChar:\n    return NSAPI::NSNumberWithUnsignedChar;\n  case BuiltinType::Short:\n    return NSAPI::NSNumberWithShort;\n  case BuiltinType::UShort:\n    return NSAPI::NSNumberWithUnsignedShort;\n  case BuiltinType::Int:\n    return NSAPI::NSNumberWithInt;\n  case BuiltinType::UInt:\n    return NSAPI::NSNumberWithUnsignedInt;\n  case BuiltinType::Long:\n    return NSAPI::NSNumberWithLong;\n  case BuiltinType::ULong:\n    return NSAPI::NSNumberWithUnsignedLong;\n  case BuiltinType::LongLong:\n    return NSAPI::NSNumberWithLongLong;\n  case BuiltinType::ULongLong:\n    return NSAPI::NSNumberWithUnsignedLongLong;\n  case BuiltinType::Float:\n    return NSAPI::NSNumberWithFloat;\n  case BuiltinType::Double:\n    return NSAPI::NSNumberWithDouble;\n  case BuiltinType::Bool:\n    return NSAPI::NSNumberWithBool;"
+        }
+      ]
+    },
+    {
+      "url": "https://raw.githubusercontent.com/llvm/llvm-project/llvmorg-17.0.6/clang/lib/Sema/SemaExprObjC.cpp",
+      "accessed_at_utc": "2026-09-08T01:44:54.670251+00:00",
+      "sha256": "52032b38fe00c24e33f0cf853c64c11c2c738d17ac99f55ae8407a30be6f3d99",
+      "claim": "Boxed arithmetic expression factory is selected using its ValueType.",
+      "excerpts": [
+        {
+          "lines": [
+            241,
+            248
+          ],
+          "text": "/// Retrieve the NSNumber factory method that should be used to create\n/// an Objective-C literal for the given type.\nstatic ObjCMethodDecl *getNSNumberFactoryMethod(Sema &S, SourceLocation Loc,\n                                                QualType NumberType,\n                                                bool isLiteral = false,\n                                                SourceRange R = SourceRange()) {\n  std::optional<NSAPI::NSNumberLiteralMethodKind> Kind =\n      S.NSAPIObj->getNSNumberFactoryMethodKind(NumberType);"
+        },
+        {
+          "lines": [
+            615,
+            636
+          ],
+          "text": "      case CharacterLiteral::UTF8:\n        ValueType = Context.CharTy;\n        break;\n\n      case CharacterLiteral::Wide:\n        ValueType = Context.getWideCharType();\n        break;\n\n      case CharacterLiteral::UTF16:\n        ValueType = Context.Char16Ty;\n        break;\n\n      case CharacterLiteral::UTF32:\n        ValueType = Context.Char32Ty;\n        break;\n      }\n    }\n    // FIXME:  Do I need to do anything special with BoolTy expressions?\n\n    // Look for the appropriate method within NSNumber.\n    BoxingMethod = getNSNumberFactoryMethod(*this, Loc, ValueType);\n    BoxedType = NSNumberPointer;"
+        }
+      ]
+    }
+  ],
+  "installed_public_headers": [
+    {
+      "path": "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.5.sdk/usr/include/objc/objc.h",
+      "sha256": "24d244af818046702546269afbedbe2992ea9b6d8f6ad43e7b0750e53d3bfe2b",
+      "lines": [
+        66,
+        101
+      ],
+      "text": "/// Type to represent a boolean value.\n\n#if defined(__OBJC_BOOL_IS_BOOL)\n    // Honor __OBJC_BOOL_IS_BOOL when available.\n#   if __OBJC_BOOL_IS_BOOL\n#       define OBJC_BOOL_IS_BOOL 1\n#   else\n#       define OBJC_BOOL_IS_BOOL 0\n#   endif\n#else\n    // __OBJC_BOOL_IS_BOOL not set.\n#   if TARGET_OS_OSX || TARGET_OS_MACCATALYST || ((TARGET_OS_IOS || 0) && !__LP64__ && !__ARM_ARCH_7K)\n#      define OBJC_BOOL_IS_BOOL 0\n#   else\n#      define OBJC_BOOL_IS_BOOL 1\n#   endif\n#endif\n\n#if OBJC_BOOL_IS_BOOL\n    typedef bool BOOL;\n#else\n#   define OBJC_BOOL_IS_CHAR 1\n    typedef signed char BOOL; \n    // BOOL is explicitly signed so @encode(BOOL) == \"c\" rather than \"C\" \n    // even if -funsigned-char is used.\n#endif\n\n#define OBJC_BOOL_DEFINED\n\n#if __has_feature(objc_bool)\n#define YES __objc_yes\n#define NO  __objc_no\n#else\n#define YES ((BOOL)1)\n#define NO  ((BOOL)0)\n#endif"
+    },
+    {
+      "path": "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.5.sdk/System/Library/Frameworks/Foundation.framework/Headers/NSValue.h",
+      "sha256": "7f06ebd4c71ea0e9b962d55cb8e88a0f8f185cc4e3150c4ee86fa370d9800183",
+      "lines": [
+        88,
+        103
+      ],
+      "text": "\n+ (NSNumber *)numberWithChar:(char)value;\n+ (NSNumber *)numberWithUnsignedChar:(unsigned char)value;\n+ (NSNumber *)numberWithShort:(short)value;\n+ (NSNumber *)numberWithUnsignedShort:(unsigned short)value;\n+ (NSNumber *)numberWithInt:(int)value;\n+ (NSNumber *)numberWithUnsignedInt:(unsigned int)value;\n+ (NSNumber *)numberWithLong:(long)value;\n+ (NSNumber *)numberWithUnsignedLong:(unsigned long)value;\n+ (NSNumber *)numberWithLongLong:(long long)value;\n+ (NSNumber *)numberWithUnsignedLongLong:(unsigned long long)value;\n+ (NSNumber *)numberWithFloat:(float)value;\n+ (NSNumber *)numberWithDouble:(double)value;\n+ (NSNumber *)numberWithBool:(BOOL)value;\n+ (NSNumber *)numberWithInteger:(NSInteger)value API_AVAILABLE(macos(10.5), ios(2.0), watchos(2.0), tvos(9.0));\n+ (NSNumber *)numberWithUnsignedInteger:(NSUInteger)value API_AVAILABLE(macos(10.5), ios(2.0), watchos(2.0), tvos(9.0));"
+    }
+  ],
+  "applicability": "Frozen02 compiles a .m Objective-C translation unit with pinned Xcode26.5/17F42 Clang and iPhoneSimulator26.5 SDK to arm64-apple-ios16.0-simulator. LLVM17.0.6 is official implementation/documentation evidence for long-standing literal/language semantics, NOT an attestation that Apple Clang uses this exact source commit. Exact installed native01 output independently demonstrates the expression distinction on the approved compiler/runtime.",
+  "root_cause": "Three @(pointer != nil) expressions have C int result and therefore use integer NSNumber boxing. They serialize as JSON0/1. BOOL result and @YES/@NO serialize as JSON Booleans in the same actual receipt. A ternary selecting @YES or @NO at those three sites fixes only wire representation; strict parser must stay type(value) is bool.",
+  "actual_witness": {
+    "receipt": "../evidence/l08-foundation-control-01/receipt.json",
+    "receipt_sha256": "3774d5829a19f3de62f831c652b3e8c3f78b518dea36910858ab56f6e4e0c2ab",
+    "raw": "../evidence/l08-foundation-control-01/native-observations.stdout",
+    "raw_sha256": "ff5dd1d002b4d2d63a86eb54f6504766a806bb70b3ac3368251f8ef8db3e1811",
+    "classification": "CONTROL_FAILED, native-error-types; never normalized or promoted to validated collection"
+  },
+  "scope": "Read public documentation, SDK declarations, original synthetic receipts and complete source. No compile/test/native launch/process/cleanup operations executed by reviewer."
+}

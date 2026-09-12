@@ -1,0 +1,1037 @@
+{
+  "schema_version": 1,
+  "scope": "Public API semantics for copy-only passive evidence controls",
+  "references": [
+    {
+      "name": "dispatch-asyncafter",
+      "url": "https://developer.apple.com/tutorials/data/documentation/dispatch/dispatchqueue/asyncafter(deadline:qos:flags:execute:).json",
+      "accessed_at": "2026-09-06T10:48:22.935317+00:00",
+      "http_status": 200,
+      "document_sha256": "a5241acc4a71f9a8dee3f948a6cb3272ae15c7e81b1521bf3761c0366b0a0387",
+      "title": "asyncAfter(deadline:qos:flags:execute:)",
+      "abstract": [
+        {
+          "text": "Schedules a block for execution using the specified attributes, and returns immediately.",
+          "type": "text"
+        }
+      ],
+      "platforms": [
+        {
+          "beta": false,
+          "deprecated": false,
+          "name": "iOS",
+          "unavailable": false
+        },
+        {
+          "beta": false,
+          "deprecated": false,
+          "name": "iPadOS",
+          "unavailable": false
+        },
+        {
+          "beta": false,
+          "deprecated": false,
+          "name": "Mac Catalyst",
+          "unavailable": false
+        },
+        {
+          "beta": false,
+          "deprecated": false,
+          "name": "macOS",
+          "unavailable": false
+        },
+        {
+          "beta": false,
+          "deprecated": false,
+          "name": "tvOS",
+          "unavailable": false
+        },
+        {
+          "beta": false,
+          "deprecated": false,
+          "name": "visionOS",
+          "unavailable": false
+        },
+        {
+          "beta": false,
+          "deprecated": false,
+          "name": "watchOS",
+          "unavailable": false
+        }
+      ],
+      "primary_content": [
+        {
+          "declarations": [
+            {
+              "languages": [
+                "swift"
+              ],
+              "platforms": [
+                "iOS",
+                "iPadOS",
+                "Mac Catalyst",
+                "macOS",
+                "tvOS",
+                "visionOS",
+                "watchOS"
+              ],
+              "tokens": [
+                {
+                  "kind": "attribute",
+                  "text": "@preconcurrency"
+                },
+                {
+                  "kind": "text",
+                  "text": " "
+                },
+                {
+                  "kind": "keyword",
+                  "text": "func"
+                },
+                {
+                  "kind": "text",
+                  "text": " "
+                },
+                {
+                  "kind": "identifier",
+                  "text": "asyncAfter"
+                },
+                {
+                  "kind": "text",
+                  "text": "("
+                },
+                {
+                  "kind": "externalParam",
+                  "text": "deadline"
+                },
+                {
+                  "kind": "text",
+                  "text": ": "
+                },
+                {
+                  "identifier": "doc://com.apple.dispatch/documentation/Dispatch/DispatchTime",
+                  "kind": "typeIdentifier",
+                  "preciseIdentifier": "s:8Dispatch0A4TimeV",
+                  "text": "DispatchTime"
+                },
+                {
+                  "kind": "text",
+                  "text": ", "
+                },
+                {
+                  "kind": "externalParam",
+                  "text": "qos"
+                },
+                {
+                  "kind": "text",
+                  "text": ": "
+                },
+                {
+                  "identifier": "doc://com.apple.dispatch/documentation/Dispatch/DispatchQoS",
+                  "kind": "typeIdentifier",
+                  "preciseIdentifier": "s:8Dispatch0A3QoSV",
+                  "text": "DispatchQoS"
+                },
+                {
+                  "kind": "text",
+                  "text": " = .unspecified, "
+                },
+                {
+                  "kind": "externalParam",
+                  "text": "flags"
+                },
+                {
+                  "kind": "text",
+                  "text": ": "
+                },
+                {
+                  "identifier": "doc://com.apple.dispatch/documentation/Dispatch/DispatchWorkItemFlags",
+                  "kind": "typeIdentifier",
+                  "preciseIdentifier": "s:8Dispatch0A13WorkItemFlagsV",
+                  "text": "DispatchWorkItemFlags"
+                },
+                {
+                  "kind": "text",
+                  "text": " = [], "
+                },
+                {
+                  "kind": "externalParam",
+                  "text": "execute"
+                },
+                {
+                  "kind": "text",
+                  "text": " "
+                },
+                {
+                  "kind": "internalParam",
+                  "text": "work"
+                },
+                {
+                  "kind": "text",
+                  "text": ": "
+                },
+                {
+                  "kind": "attribute",
+                  "text": "@escaping "
+                },
+                {
+                  "kind": "attribute",
+                  "text": "@Sendable"
+                },
+                {
+                  "kind": "text",
+                  "text": " () -> "
+                },
+                {
+                  "identifier": "doc://com.apple.documentation/documentation/Swift/Void",
+                  "kind": "typeIdentifier",
+                  "preciseIdentifier": "s:s4Voida",
+                  "text": "Void"
+                },
+                {
+                  "kind": "text",
+                  "text": ")"
+                }
+              ]
+            }
+          ],
+          "kind": "declarations"
+        },
+        {
+          "kind": "parameters",
+          "parameters": [
+            {
+              "content": [
+                {
+                  "inlineContent": [
+                    {
+                      "text": "The time at which to schedule the block for execution. Specifying the current time is less efficient than calling the ",
+                      "type": "text"
+                    },
+                    {
+                      "identifier": "doc://com.apple.dispatch/documentation/Dispatch/DispatchQueue/async(execute:)",
+                      "isActive": true,
+                      "type": "reference"
+                    },
+                    {
+                      "text": " method directly. Do not specify the value in ",
+                      "type": "text"
+                    },
+                    {
+                      "identifier": "doc://com.apple.dispatch/documentation/Dispatch/DispatchTime/distantFuture",
+                      "isActive": true,
+                      "type": "reference"
+                    },
+                    {
+                      "text": "; doing so is undefined.",
+                      "type": "text"
+                    }
+                  ],
+                  "type": "paragraph"
+                }
+              ],
+              "name": "deadline"
+            },
+            {
+              "content": [
+                {
+                  "inlineContent": [
+                    {
+                      "text": "The quality-of-service class to use when executing the block. This parameter determines the priority with which the block is scheduled and executed. For a list of possible values, see ",
+                      "type": "text"
+                    },
+                    {
+                      "identifier": "doc://com.apple.dispatch/documentation/Dispatch/DispatchQoS",
+                      "isActive": true,
+                      "type": "reference"
+                    },
+                    {
+                      "text": ".",
+                      "type": "text"
+                    }
+                  ],
+                  "type": "paragraph"
+                }
+              ],
+              "name": "qos"
+            },
+            {
+              "content": [
+                {
+                  "inlineContent": [
+                    {
+                      "text": "Additional attributes to apply when executing the block. For a list of possible values, see ",
+                      "type": "text"
+                    },
+                    {
+                      "identifier": "doc://com.apple.dispatch/documentation/Dispatch/DispatchWorkItemFlags",
+                      "isActive": true,
+                      "type": "reference"
+                    },
+                    {
+                      "text": ".",
+                      "type": "text"
+                    }
+                  ],
+                  "type": "paragraph"
+                }
+              ],
+              "name": "flags"
+            },
+            {
+              "content": [
+                {
+                  "inlineContent": [
+                    {
+                      "text": "The block containing the work to perform. This block has no return value and no parameters.",
+                      "type": "text"
+                    }
+                  ],
+                  "type": "paragraph"
+                }
+              ],
+              "name": "work"
+            }
+          ]
+        }
+      ],
+      "classification": "FETCHED_OFFICIAL_DOCUMENT_NOT_RUNTIME_PROOF"
+    },
+    {
+      "name": "process-uptime",
+      "url": "https://developer.apple.com/tutorials/data/documentation/foundation/processinfo/systemuptime.json",
+      "accessed_at": "2026-09-06T10:48:25.758062+00:00",
+      "http_status": 200,
+      "document_sha256": "e2c1eb85a5226e254e76a4b7b3481753ca66bbf2d53b74b944121aa46af76642",
+      "title": "systemUptime",
+      "abstract": [
+        {
+          "text": "The amount of time the system has been awake since the last time it was restarted.",
+          "type": "text"
+        }
+      ],
+      "platforms": [
+        {
+          "beta": false,
+          "deprecated": false,
+          "introducedAt": "4.0",
+          "name": "iOS",
+          "unavailable": false
+        },
+        {
+          "beta": false,
+          "deprecated": false,
+          "introducedAt": "4.0",
+          "name": "iPadOS",
+          "unavailable": false
+        },
+        {
+          "beta": false,
+          "deprecated": false,
+          "introducedAt": "13.1",
+          "name": "Mac Catalyst",
+          "unavailable": false
+        },
+        {
+          "beta": false,
+          "deprecated": false,
+          "introducedAt": "10.6",
+          "name": "macOS",
+          "unavailable": false
+        },
+        {
+          "beta": false,
+          "deprecated": false,
+          "introducedAt": "9.0",
+          "name": "tvOS",
+          "unavailable": false
+        },
+        {
+          "beta": false,
+          "deprecated": false,
+          "introducedAt": "1.0",
+          "name": "visionOS",
+          "unavailable": false
+        },
+        {
+          "beta": false,
+          "deprecated": false,
+          "introducedAt": "2.0",
+          "name": "watchOS",
+          "unavailable": false
+        }
+      ],
+      "primary_content": [
+        {
+          "declarations": [
+            {
+              "languages": [
+                "swift"
+              ],
+              "platforms": [
+                "iOS",
+                "iPadOS",
+                "Mac Catalyst",
+                "macOS",
+                "tvOS",
+                "visionOS",
+                "watchOS"
+              ],
+              "tokens": [
+                {
+                  "kind": "keyword",
+                  "text": "var"
+                },
+                {
+                  "kind": "text",
+                  "text": " "
+                },
+                {
+                  "kind": "identifier",
+                  "text": "systemUptime"
+                },
+                {
+                  "kind": "text",
+                  "text": ": "
+                },
+                {
+                  "identifier": "doc://com.apple.foundation/documentation/Foundation/TimeInterval",
+                  "kind": "typeIdentifier",
+                  "preciseIdentifier": "c:@T@NSTimeInterval",
+                  "text": "TimeInterval"
+                },
+                {
+                  "kind": "text",
+                  "text": " { "
+                },
+                {
+                  "kind": "keyword",
+                  "text": "get"
+                },
+                {
+                  "kind": "text",
+                  "text": " }"
+                }
+              ]
+            }
+          ],
+          "kind": "declarations"
+        },
+        {
+          "content": [
+            {
+              "anchor": "Discussion",
+              "level": 2,
+              "text": "Discussion",
+              "type": "heading"
+            },
+            {
+              "content": [
+                {
+                  "inlineContent": [
+                    {
+                      "text": "",
+                      "type": "text"
+                    },
+                    {
+                      "text": " ",
+                      "type": "text"
+                    },
+                    {
+                      "text": "This API has the potential of being misused to access device signals to try to identify the device or user, also known as fingerprinting. Regardless of whether a user gives your app permission to track, fingerprinting is not allowed. When you use this API in your app or third-party SDK (an SDK not provided by Apple), declare your usage and the reason for using the API in your app or third-party SDK’s ",
+                      "type": "text"
+                    },
+                    {
+                      "code": "PrivacyInfo.xcprivacy",
+                      "type": "codeVoice"
+                    },
+                    {
+                      "text": " file. For more information, including the list of valid reasons for using the API, see ",
+                      "type": "text"
+                    },
+                    {
+                      "identifier": "doc://com.apple.documentation/documentation/BundleResources/describing-use-of-required-reason-api",
+                      "isActive": true,
+                      "type": "reference"
+                    },
+                    {
+                      "text": ".",
+                      "type": "text"
+                    }
+                  ],
+                  "type": "paragraph"
+                }
+              ],
+              "name": "Important",
+              "style": "important",
+              "type": "aside"
+            }
+          ],
+          "kind": "content"
+        }
+      ],
+      "classification": "FETCHED_OFFICIAL_DOCUMENT_NOT_RUNTIME_PROOF"
+    },
+    {
+      "name": "swiftui-observedobject",
+      "url": "https://developer.apple.com/tutorials/data/documentation/swiftui/observedobject.json",
+      "accessed_at": "2026-09-06T10:48:27.113084+00:00",
+      "http_status": 200,
+      "document_sha256": "6969239e3c8d08a97db5abead27a1fb533d55588a4bce282cc3069aacd62ffd3",
+      "title": "ObservedObject",
+      "abstract": [
+        {
+          "text": "A property wrapper type that subscribes to an observable object and",
+          "type": "text"
+        },
+        {
+          "text": " ",
+          "type": "text"
+        },
+        {
+          "text": "invalidates a view whenever the observable object changes.",
+          "type": "text"
+        }
+      ],
+      "platforms": [
+        {
+          "beta": false,
+          "deprecated": false,
+          "introducedAt": "13.0",
+          "name": "iOS",
+          "unavailable": false
+        },
+        {
+          "beta": false,
+          "deprecated": false,
+          "introducedAt": "13.0",
+          "name": "iPadOS",
+          "unavailable": false
+        },
+        {
+          "beta": false,
+          "deprecated": false,
+          "introducedAt": "13.0",
+          "name": "Mac Catalyst",
+          "unavailable": false
+        },
+        {
+          "beta": false,
+          "deprecated": false,
+          "introducedAt": "10.15",
+          "name": "macOS",
+          "unavailable": false
+        },
+        {
+          "beta": false,
+          "deprecated": false,
+          "introducedAt": "13.0",
+          "name": "tvOS",
+          "unavailable": false
+        },
+        {
+          "beta": false,
+          "deprecated": false,
+          "introducedAt": "1.0",
+          "name": "visionOS",
+          "unavailable": false
+        },
+        {
+          "beta": false,
+          "deprecated": false,
+          "introducedAt": "6.0",
+          "name": "watchOS",
+          "unavailable": false
+        }
+      ],
+      "primary_content": [
+        {
+          "declarations": [
+            {
+              "languages": [
+                "swift"
+              ],
+              "platforms": [
+                "iOS",
+                "iPadOS",
+                "Mac Catalyst",
+                "macOS",
+                "tvOS",
+                "visionOS",
+                "watchOS"
+              ],
+              "tokens": [
+                {
+                  "kind": "attribute",
+                  "text": "@"
+                },
+                {
+                  "identifier": "doc://com.apple.documentation/documentation/Swift/MainActor",
+                  "kind": "attribute",
+                  "preciseIdentifier": "s:ScM",
+                  "text": "MainActor"
+                },
+                {
+                  "kind": "text",
+                  "text": " "
+                },
+                {
+                  "kind": "attribute",
+                  "text": "@propertyWrapper"
+                },
+                {
+                  "kind": "text",
+                  "text": " "
+                },
+                {
+                  "kind": "attribute",
+                  "text": "@preconcurrency"
+                },
+                {
+                  "kind": "text",
+                  "text": " "
+                },
+                {
+                  "kind": "attribute",
+                  "text": "@frozen"
+                },
+                {
+                  "kind": "text",
+                  "text": " "
+                },
+                {
+                  "kind": "keyword",
+                  "text": "struct"
+                },
+                {
+                  "kind": "text",
+                  "text": " "
+                },
+                {
+                  "kind": "identifier",
+                  "text": "ObservedObject"
+                },
+                {
+                  "kind": "text",
+                  "text": "<"
+                },
+                {
+                  "kind": "genericParameter",
+                  "text": "ObjectType"
+                },
+                {
+                  "kind": "text",
+                  "text": "> "
+                },
+                {
+                  "kind": "keyword",
+                  "text": "where"
+                },
+                {
+                  "kind": "text",
+                  "text": " "
+                },
+                {
+                  "kind": "typeIdentifier",
+                  "text": "ObjectType"
+                },
+                {
+                  "kind": "text",
+                  "text": " : "
+                },
+                {
+                  "identifier": "doc://com.apple.documentation/documentation/Combine/ObservableObject",
+                  "kind": "typeIdentifier",
+                  "preciseIdentifier": "s:7Combine16ObservableObjectP",
+                  "text": "ObservableObject"
+                }
+              ]
+            }
+          ],
+          "kind": "declarations"
+        },
+        {
+          "content": [
+            {
+              "anchor": "overview",
+              "level": 2,
+              "text": "Overview",
+              "type": "heading"
+            },
+            {
+              "inlineContent": [
+                {
+                  "text": "Add the ",
+                  "type": "text"
+                },
+                {
+                  "code": "@ObservedObject",
+                  "type": "codeVoice"
+                },
+                {
+                  "text": " attribute to a parameter of a SwiftUI ",
+                  "type": "text"
+                },
+                {
+                  "identifier": "doc://com.apple.SwiftUI/documentation/SwiftUI/View",
+                  "isActive": true,
+                  "type": "reference"
+                },
+                {
+                  "text": " ",
+                  "type": "text"
+                },
+                {
+                  "text": "when the input is an",
+                  "type": "text"
+                },
+                {
+                  "text": " ",
+                  "type": "text"
+                },
+                {
+                  "identifier": "doc://com.apple.documentation/documentation/Combine/ObservableObject",
+                  "isActive": true,
+                  "type": "reference"
+                },
+                {
+                  "text": " ",
+                  "type": "text"
+                },
+                {
+                  "text": "and you want the view to update when the object’s published properties",
+                  "type": "text"
+                },
+                {
+                  "text": " ",
+                  "type": "text"
+                },
+                {
+                  "text": "change. You typically do this to pass a ",
+                  "type": "text"
+                },
+                {
+                  "identifier": "doc://com.apple.SwiftUI/documentation/SwiftUI/StateObject",
+                  "isActive": true,
+                  "type": "reference"
+                },
+                {
+                  "text": " into a subview.",
+                  "type": "text"
+                }
+              ],
+              "type": "paragraph"
+            },
+            {
+              "inlineContent": [
+                {
+                  "text": "The following example defines a data model as an observable object,",
+                  "type": "text"
+                },
+                {
+                  "text": " ",
+                  "type": "text"
+                },
+                {
+                  "text": "instantiates the model in a view as a state object, and then passes",
+                  "type": "text"
+                },
+                {
+                  "text": " ",
+                  "type": "text"
+                },
+                {
+                  "text": "the instance to a subview as an observed object:",
+                  "type": "text"
+                }
+              ],
+              "type": "paragraph"
+            },
+            {
+              "code": [
+                "class DataModel: ObservableObject {",
+                "    @Published var name = \"Some Name\"",
+                "    @Published var isEnabled = false",
+                "}",
+                "",
+                "struct MyView: View {",
+                "    @StateObject private var model = DataModel()",
+                "",
+                "    var body: some View {",
+                "        Text(model.name)",
+                "        MySubView(model: model)",
+                "    }",
+                "}",
+                "",
+                "struct MySubView: View {",
+                "    @ObservedObject var model: DataModel",
+                "",
+                "    var body: some View {",
+                "        Toggle(\"Enabled\", isOn: $model.isEnabled)",
+                "    }",
+                "}"
+              ],
+              "syntax": "swift",
+              "type": "codeListing"
+            },
+            {
+              "inlineContent": [
+                {
+                  "text": "When any published property of the observable object changes, SwiftUI",
+                  "type": "text"
+                },
+                {
+                  "text": " ",
+                  "type": "text"
+                },
+                {
+                  "text": "updates any view that depends on the object. Subviews can",
+                  "type": "text"
+                },
+                {
+                  "text": " ",
+                  "type": "text"
+                },
+                {
+                  "text": "also make updates to the model properties, like the ",
+                  "type": "text"
+                },
+                {
+                  "identifier": "doc://com.apple.SwiftUI/documentation/SwiftUI/Toggle",
+                  "isActive": true,
+                  "type": "reference"
+                },
+                {
+                  "text": " in the",
+                  "type": "text"
+                },
+                {
+                  "text": " ",
+                  "type": "text"
+                },
+                {
+                  "text": "above example, that propagate to other observers throughout the view",
+                  "type": "text"
+                },
+                {
+                  "text": " ",
+                  "type": "text"
+                },
+                {
+                  "text": "hierarchy.",
+                  "type": "text"
+                }
+              ],
+              "type": "paragraph"
+            },
+            {
+              "inlineContent": [
+                {
+                  "text": "Don’t specify a default or initial value for the observed object. Use the",
+                  "type": "text"
+                },
+                {
+                  "text": " ",
+                  "type": "text"
+                },
+                {
+                  "text": "attribute only for a property that acts as an input for a view, as in the",
+                  "type": "text"
+                },
+                {
+                  "text": " ",
+                  "type": "text"
+                },
+                {
+                  "text": "above example.",
+                  "type": "text"
+                }
+              ],
+              "type": "paragraph"
+            },
+            {
+              "content": [
+                {
+                  "inlineContent": [
+                    {
+                      "text": "Don’t wrap objects conforming to the",
+                      "type": "text"
+                    },
+                    {
+                      "text": " ",
+                      "type": "text"
+                    },
+                    {
+                      "identifier": "doc://com.apple.documentation/documentation/Observation/Observable",
+                      "isActive": true,
+                      "type": "reference"
+                    },
+                    {
+                      "text": " ",
+                      "type": "text"
+                    },
+                    {
+                      "text": "protocol with ",
+                      "type": "text"
+                    },
+                    {
+                      "code": "@ObservedObject",
+                      "type": "codeVoice"
+                    },
+                    {
+                      "text": ". SwiftUI automatically tracks dependencies",
+                      "type": "text"
+                    },
+                    {
+                      "text": " ",
+                      "type": "text"
+                    },
+                    {
+                      "text": "to ",
+                      "type": "text"
+                    },
+                    {
+                      "code": "Observable",
+                      "type": "codeVoice"
+                    },
+                    {
+                      "text": " objects used within body and updates dependent views when",
+                      "type": "text"
+                    },
+                    {
+                      "text": " ",
+                      "type": "text"
+                    },
+                    {
+                      "text": "their data changes. Attempting to wrap an ",
+                      "type": "text"
+                    },
+                    {
+                      "code": "Observable",
+                      "type": "codeVoice"
+                    },
+                    {
+                      "text": " object with",
+                      "type": "text"
+                    },
+                    {
+                      "text": " ",
+                      "type": "text"
+                    },
+                    {
+                      "code": "@ObservedObject",
+                      "type": "codeVoice"
+                    },
+                    {
+                      "text": " may cause a compiler error, because it requires that its",
+                      "type": "text"
+                    },
+                    {
+                      "text": " ",
+                      "type": "text"
+                    },
+                    {
+                      "text": "wrapped object to conform to the",
+                      "type": "text"
+                    },
+                    {
+                      "text": " ",
+                      "type": "text"
+                    },
+                    {
+                      "identifier": "doc://com.apple.documentation/documentation/Combine/ObservableObject",
+                      "isActive": true,
+                      "type": "reference"
+                    },
+                    {
+                      "text": " ",
+                      "type": "text"
+                    },
+                    {
+                      "text": "protocol.",
+                      "type": "text"
+                    }
+                  ],
+                  "type": "paragraph"
+                },
+                {
+                  "inlineContent": [
+                    {
+                      "text": "If the view needs a binding to a property of an ",
+                      "type": "text"
+                    },
+                    {
+                      "code": "Observable",
+                      "type": "codeVoice"
+                    },
+                    {
+                      "text": " object in",
+                      "type": "text"
+                    },
+                    {
+                      "text": " ",
+                      "type": "text"
+                    },
+                    {
+                      "text": "its body, wrap the object with the ",
+                      "type": "text"
+                    },
+                    {
+                      "identifier": "doc://com.apple.SwiftUI/documentation/SwiftUI/Bindable",
+                      "isActive": true,
+                      "type": "reference"
+                    },
+                    {
+                      "text": " property wrapper instead;",
+                      "type": "text"
+                    },
+                    {
+                      "text": " ",
+                      "type": "text"
+                    },
+                    {
+                      "text": "for example, ",
+                      "type": "text"
+                    },
+                    {
+                      "code": "@Bindable var model: DataModel",
+                      "type": "codeVoice"
+                    },
+                    {
+                      "text": ". For more information, see",
+                      "type": "text"
+                    },
+                    {
+                      "text": " ",
+                      "type": "text"
+                    },
+                    {
+                      "identifier": "doc://com.apple.SwiftUI/documentation/SwiftUI/Managing-model-data-in-your-app",
+                      "isActive": true,
+                      "type": "reference"
+                    },
+                    {
+                      "text": ".",
+                      "type": "text"
+                    }
+                  ],
+                  "type": "paragraph"
+                }
+              ],
+              "name": "Note",
+              "style": "note",
+              "type": "aside"
+            }
+          ],
+          "kind": "content"
+        }
+      ],
+      "classification": "FETCHED_OFFICIAL_DOCUMENT_NOT_RUNTIME_PROOF"
+    }
+  ],
+  "limitations": [
+    "Dispatch deadlines schedule work rather than guaranteeing callback precision; actual elapsed sample spacing remains recorded and bounded.",
+    "ObservedObject view invalidation is documented; it does not prove the specific writer or cause of the V4 native semantic-direction mismatch.",
+    "No production state, private source, credentials, or player data was sent."
+  ]
+}

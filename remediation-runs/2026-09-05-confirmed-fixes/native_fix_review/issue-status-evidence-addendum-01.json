@@ -1,0 +1,325 @@
+{
+  "title": "All-16 evidence reconciliation \u2014 combined02 and explicit-type follow-up addendum",
+  "reviewer": "/root/native_fix_review",
+  "checked_at": "2026-09-05T22:15:44.492144+00:00",
+  "scope": "Administrative independent evidence/hash reconciliation only. Original all-16 report is immutable. Factory reviewer owns the separate source/API/Detekt review; this addendum does not claim newly reopening every production file or executing builds.",
+  "base_report": {
+    "path": "remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/issue-status-evidence-check.json",
+    "sha256": "5277baa3f98abe3442c79336437abffcbaeb6aba6719020011feaff0cd6b1dee",
+    "bytes": 138709
+  },
+  "unchanged_counting": {
+    "canonical_scoped_defects": 16,
+    "independently_approved_bounded_fixes_with_focused_pass": 14,
+    "percentage": "87.5%",
+    "partially_verified": [
+      "DS-C01"
+    ],
+    "blocked": [
+      "WD-C2"
+    ],
+    "implementation_including_partial": "15/16 = 93.75%, not completion",
+    "qualification": "The percentage describes focused scoped corrections, not combined repository verification, audit coverage, GitHub closures, physical platform evidence or Store readiness. No seventeenth defect is introduced by the type-aware test-fixture follow-up."
+  },
+  "combined_production_02": {
+    "cycle": "combined-production-02",
+    "started_at": "2026-09-05T22:00:16.800677+00:00",
+    "finished_at": "2026-09-05T22:03:20.553075+00:00",
+    "status": "FAIL",
+    "exit_code": 1,
+    "command": [
+      "./gradlew",
+      "productionCheck",
+      "--no-daemon",
+      "--no-parallel",
+      "--max-workers=1",
+      "--no-configuration-cache",
+      "--dependency-verification=strict",
+      "-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=combined-production-02",
+      "-Pkotlin.compiler.execution.strategy=in-process",
+      "-Pparlor.android.signing.storeFile=",
+      "-Pparlor.android.signing.storePassword=",
+      "-Pparlor.android.signing.keyAlias=",
+      "-Pparlor.android.signing.keyPassword="
+    ],
+    "env_policy": "JDK21, system Python, strict verification, signing env removed/empty Gradle signing props, cycle-owned TMPDIR/pycache",
+    "stop_exit_code": 0,
+    "stopped_at": "2026-09-05T22:03:20.866765+00:00",
+    "workers": {
+      "terminated_owned_workers": [],
+      "remaining_owned_workers": []
+    },
+    "outputs_before": [],
+    "removed_outputs": [
+      "shared/core/build",
+      "shared/networking/build",
+      "shared/content/build",
+      "shared/storage/build",
+      "shared/transport-p2p/build",
+      "shared/networking-testing/build",
+      "shared/engine/build",
+      "shared/design-system/build",
+      "shared/engine-testing/build",
+      "shared/session/build",
+      "game-modes/whodunit/build",
+      "game-modes/mafia/build",
+      "build",
+      "composeApp/build",
+      "build-logic/convention/build"
+    ],
+    "retained_outputs": [],
+    "remaining_outputs": [],
+    "cleanup_completed_at": "2026-09-05T22:03:22.543364+00:00",
+    "cleanup_errors": [],
+    "source_changed_during_cycle": false,
+    "runner_changed_during_cycle": false,
+    "cleanup_method": "Exact task-owned generated dirs; no Gradle clean daemon or global cache deletion. Unrelated processes excluded by PID/start identity and cycle ownership.",
+    "receipt": {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-02/receipt.json",
+      "sha256": "449e46f258aae6a13a3543a9a4fe30b9bcf3848870675a042b2a567c436e8bbb",
+      "bytes": 254005
+    },
+    "source_before": {
+      "commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+      "tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+      "branch": "main",
+      "diff_sha256": "60b555c0dd323a086e959ffbc5aa3fd7c6629ae1d0ad016021572e7ae272e4dd",
+      "source_manifest_sha256": "9d9841ef0c9fb115ff6792f6bd276265ebec16c6c851dd684bc647cf2a966310"
+    },
+    "source_after": {
+      "commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+      "tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+      "branch": "main",
+      "diff_sha256": "60b555c0dd323a086e959ffbc5aa3fd7c6629ae1d0ad016021572e7ae272e4dd",
+      "source_manifest_sha256": "9d9841ef0c9fb115ff6792f6bd276265ebec16c6c851dd684bc647cf2a966310"
+    },
+    "gradle.log": {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-02/gradle.log",
+      "sha256": "c27f13eb4c553da1c580632b1b28c1b1e413ffe8fb912c424b75d715bbd6b6e2",
+      "bytes": 95542
+    },
+    "stop.log": {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-02/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+      "bytes": 31
+    }
+  },
+  "combined_02_actual_failure": {
+    "log_lines": [
+      1463,
+      1485
+    ],
+    "task": ":game-modes:mafia:detektDesktopTest",
+    "classification": "FAILED validation cycle, never reclassified as PASS. The two RedundantSuspendModifier diagnostics were independently determined to be source-shape-dependent false positives for actually suspend callers, not a Doctor rule defect.",
+    "detekt": {
+      "evidence": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-02/reports/game-modes/mafia/build/reports/detekt/detektDesktopTest.xml",
+        "sha256": "af8771ded990a78fb7a50b4b3b088ce2757f5628f7522f7c5e54de5ee84ac1a9",
+        "bytes": 492
+      },
+      "findings": [
+        {
+          "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/multidevice/MafiaDoctorLanTest.kt",
+          "line": "133",
+          "column": "13",
+          "severity": "warning",
+          "message": "Function has redundant `suspend` modifier.",
+          "source": "detekt.RedundantSuspendModifier"
+        },
+        {
+          "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/multidevice/MafiaDoctorLanTest.kt",
+          "line": "148",
+          "column": "13",
+          "severity": "warning",
+          "message": "Function has redundant `suspend` modifier.",
+          "source": "detekt.RedundantSuspendModifier"
+        }
+      ]
+    }
+  },
+  "post_failure_delta": {
+    "manifest_changes": [
+      {
+        "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/multidevice/MafiaDoctorLanTest.kt",
+        "before_sha256": "513a87423f1de6834d3b1664d1103f83a36d67f351a888e095b53bf1bedd5be9",
+        "after_sha256": "570e8f18c12f15c480a48c38e6a09025d5aef2ab1aa38cbac246b2f2f0b5a5a5"
+      }
+    ],
+    "scope": "Only explicit property types in already-reviewed Doctor LAN test fixture, at lines 212 and 240. Suspend modifiers, function bodies, assertions, scheduling and production code unchanged.",
+    "inverse_annotation_reconstruction_matches_entire_previous_file": true,
+    "independent_reviewer": "/root/factory_review",
+    "independent_approval": {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/factory_review/mafia-detekt-review-01/independent-followup-approval-01.json",
+      "sha256": "c61312b439ba1198e229d9b47ec133b77c629aa5496164e6e82c3065d9f1c32d",
+      "bytes": 13924
+    },
+    "independent_markdown": {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/factory_review/mafia-detekt-review-01/independent-followup-approval-01.md",
+      "sha256": "92864a816c467f43d6df24924c60f5fa41cbd7de91c593ee36c76a598d0dfaa2",
+      "bytes": 2308
+    },
+    "classification": "APPROVED SCOPED CORRECTION \u2014 two explicit test-fixture property types, no behavior or policy weakening",
+    "counter_evidence": "Factory reviewer reopened the suspend APIs and the exact Detekt1.23.7 rule. No suspend modifier should be removed. The exact binding-context/metadata failure was not instrumented; do not claim a proven compiler/metadata root cause beyond source-shape-dependent type resolution sensitivity."
+  },
+  "focused_green_cycle": {
+    "cycle": "mafia-type-aware-green-01",
+    "started_at": "2026-09-05T22:09:01.766530+00:00",
+    "finished_at": "2026-09-05T22:09:25.350688+00:00",
+    "status": "PASS",
+    "exit_code": 0,
+    "command": [
+      "./gradlew",
+      ":game-modes:mafia:desktopTest",
+      "--tests",
+      "*MafiaDoctorLanTest",
+      ":game-modes:mafia:detektDesktopTest",
+      "--no-daemon",
+      "--no-parallel",
+      "--max-workers=1",
+      "--no-configuration-cache",
+      "--dependency-verification=strict",
+      "-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=mafia-type-aware-green-01",
+      "-Pkotlin.compiler.execution.strategy=in-process",
+      "-Pparlor.android.signing.storeFile=",
+      "-Pparlor.android.signing.storePassword=",
+      "-Pparlor.android.signing.keyAlias=",
+      "-Pparlor.android.signing.keyPassword="
+    ],
+    "env_policy": "JDK21, system Python, strict verification, signing env removed/empty Gradle signing props, cycle-owned TMPDIR/pycache",
+    "stop_exit_code": 0,
+    "stopped_at": "2026-09-05T22:09:25.661699+00:00",
+    "workers": {
+      "terminated_owned_workers": [],
+      "remaining_owned_workers": []
+    },
+    "outputs_before": [],
+    "removed_outputs": [
+      "shared/core/build",
+      "shared/networking/build",
+      "shared/content/build",
+      "shared/storage/build",
+      "shared/networking-testing/build",
+      "shared/engine/build",
+      "shared/design-system/build",
+      "shared/session/build",
+      "game-modes/mafia/build",
+      "build",
+      "build-logic/convention/build"
+    ],
+    "retained_outputs": [],
+    "remaining_outputs": [],
+    "cleanup_completed_at": "2026-09-05T22:09:25.879863+00:00",
+    "cleanup_errors": [],
+    "source_changed_during_cycle": false,
+    "runner_changed_during_cycle": false,
+    "cleanup_method": "Exact task-owned generated dirs; no Gradle clean daemon or global cache deletion. Unrelated processes excluded by PID/start identity and cycle ownership.",
+    "receipt": {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/mafia-type-aware-green-01/receipt.json",
+      "sha256": "284534c7f6e5b73c16c329c80bdb3ac9803cef0cf0bf4c8c96b9cb22abfa81bd",
+      "bytes": 253984
+    },
+    "source_before": {
+      "commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+      "tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+      "branch": "main",
+      "diff_sha256": "60b555c0dd323a086e959ffbc5aa3fd7c6629ae1d0ad016021572e7ae272e4dd",
+      "source_manifest_sha256": "283020fbc279db238c3c3cf449a7c0f76d1c493d2c2b07ef6f29b06f795337cb"
+    },
+    "source_after": {
+      "commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+      "tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+      "branch": "main",
+      "diff_sha256": "60b555c0dd323a086e959ffbc5aa3fd7c6629ae1d0ad016021572e7ae272e4dd",
+      "source_manifest_sha256": "283020fbc279db238c3c3cf449a7c0f76d1c493d2c2b07ef6f29b06f795337cb"
+    },
+    "gradle.log": {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/mafia-type-aware-green-01/gradle.log",
+      "sha256": "a109ae1966504c90d837abaee2078f74703ff3d0b4f33931257ef2b3109fd3af",
+      "bytes": 8728
+    },
+    "stop.log": {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/mafia-type-aware-green-01/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+      "bytes": 31
+    }
+  },
+  "focused_runtime_evidence": {
+    "xml": {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/mafia-type-aware-green-01/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.multidevice.MafiaDoctorLanTest.xml",
+      "sha256": "bc69f574159cfd4c45276f9573512726ab5de2ffc5cd76be5086b16c0072f845",
+      "bytes": 723
+    },
+    "suite_attributes_without_hostname": {
+      "name": "com.parlor.games.mafia.multidevice.MafiaDoctorLanTest",
+      "tests": "2",
+      "skipped": "0",
+      "failures": "0",
+      "errors": "0",
+      "timestamp": "2026-09-05T22:09:19.220Z",
+      "time": "0.318"
+    },
+    "testcases": [
+      {
+        "name": "only_host_can_commit_setup_selection_and_no_one_can_change_it_after_start()[desktop]",
+        "status": "PASS"
+      },
+      {
+        "name": "rejoin_preserves_doctor_restriction_setting_and_first_submission_without_host_secrets()[desktop]",
+        "status": "PASS"
+      }
+    ],
+    "actual_task_execution": "Both desktopTest and detektDesktopTest are listed without FROM-CACHE/UP-TO-DATE in the focused raw log. Test compilation executed; dependency compilations could be cached.",
+    "detekt": {
+      "evidence": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/mafia-type-aware-green-01/reports/game-modes/mafia/build/reports/detekt/detektDesktopTest.xml",
+        "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+        "bytes": 79
+      },
+      "findings": []
+    },
+    "limitation": "These are deterministic Desktop in-memory host/peer bridge tests, not physical-radio, iOS runtime or Store tests. Earlier29-Doctor coverage remains in the base report; only these2 are newly rerun here."
+  },
+  "combined_production_03_at_checkpoint": {
+    "cycle": "combined-production-03",
+    "started_at": "2026-09-05T22:11:20.443340+00:00",
+    "status": "RUNNING",
+    "command": [
+      "./gradlew",
+      "productionCheck",
+      "--no-build-cache",
+      "--no-daemon",
+      "--no-parallel",
+      "--max-workers=1",
+      "--no-configuration-cache",
+      "--dependency-verification=strict",
+      "-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=combined-production-03",
+      "-Pkotlin.compiler.execution.strategy=in-process",
+      "-Pparlor.android.signing.storeFile=",
+      "-Pparlor.android.signing.storePassword=",
+      "-Pparlor.android.signing.keyAlias=",
+      "-Pparlor.android.signing.keyPassword="
+    ],
+    "env_policy": "JDK21, system Python, strict verification, signing env removed/empty Gradle signing props, cycle-owned TMPDIR/pycache",
+    "outputs_before": [],
+    "receipt": {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-03/receipt.json",
+      "sha256": "066dd410e00437202265f1edd8698458f2a7557f54de480000322ffad1e752dc",
+      "bytes": 126878
+    },
+    "source_before": {
+      "commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+      "tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+      "branch": "main",
+      "diff_sha256": "60b555c0dd323a086e959ffbc5aa3fd7c6629ae1d0ad016021572e7ae272e4dd",
+      "source_manifest_sha256": "283020fbc279db238c3c3cf449a7c0f76d1c493d2c2b07ef6f29b06f795337cb"
+    }
+  },
+  "combined_gate_disposition": "Latest combined attempt is RUNNING at this checkpoint unless its captured receipt explicitly says otherwise. No final PASS/cleanup result inferred. Root owns completion, any repairs, verification and cleanup.",
+  "unchanged_partial_and_blocked": {
+    "DS-C01": "Provenance ownership correction approved with native owner tests and structural source-contract verification. Unmarked old override and same-value external-write ambiguity remain. Fresh owner is not killed/relaunched process; live UIKit/Compose/system preference/restart matrix still unavailable.",
+    "WD-C2": "Four story manifestations remain untouched pending specific authorial timeline decision(s). Counted once and still BLOCKED.",
+    "WD-C4": "Modal discussion-timer policy remains an unresolved product decision outside these16 repairs.",
+    "IOS-R1": "Remains evidence gap, not invented defect or entitlement repair."
+  },
+  "reviewer_hygiene": "This reviewer started no Gradle/Xcode/app/test/background processes, edited no source/config/docs and touched no devices/UserDefaults. This compact addendum is the only new owned file; parent build outputs/processes left untouched. Captured terminal receipts report successful stop and zero owned residual outputs/workers/errors."
+}

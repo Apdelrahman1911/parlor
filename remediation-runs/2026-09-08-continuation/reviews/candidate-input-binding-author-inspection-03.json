@@ -1,0 +1,488 @@
+{
+  "schema_version": 1,
+  "kind": "C03_ACTUAL_PRODUCER_RECONCILIATION_AND_FRESH_BINDING_FOR_INDEPENDENT_REVIEW",
+  "author": "/root/dependency_chain",
+  "started_at": "2026-09-08T20:19:34.432971+00:00",
+  "recorded_at": "2026-09-08T20:19:35.818754+00:00",
+  "status": "READY_FOR_INDEPENDENT_BINDING_REVIEW_NOT_CANDIDATE_PASS",
+  "binding": {
+    "path": "remediation-runs/2026-09-08-continuation/candidate-input-binding-03.json",
+    "sha256": "f2cb3be23bd20b5a2ff2bc1411561bc291c74cb04a0970a1a274e5db7f81bd01",
+    "bytes": 1517
+  },
+  "source": {
+    "commit": "e5111ea49113c3f12cb577058c3f926dfebdc325",
+    "tree": "a88872673bd4cfc366236362f287c1db0a04a5cd",
+    "diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "source_manifest_sha256": "6e313ce760d840aa08b617229c03263ce90eda715cb6c442cbe9738045a63e8e"
+  },
+  "frozen_source_receipt": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/direct-lifecycle-freeze-01.json",
+    "sha256": "18a502b32cf1349e06bc5efbc33fdc90bc1dc3bd7389c3a87f4e1ba77a82b3ad",
+    "bytes": 2318
+  },
+  "preparation": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/dependency-chain-afterfreeze-execution-03.json",
+    "sha256": "cd931693d9a4a6ce957a5474d4c2f26827c0425b645953a0c98f497c52a935b1",
+    "bytes": 11784
+  },
+  "preparation_review": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/dependency-chain-afterfreeze-execution-independent-03.json",
+    "sha256": "0fd0cadbd7d224dc5a3d05a368fa5b58cba9ab4fe3ccaca6afddb21d4e6c4930",
+    "bytes": 9488
+  },
+  "source_manifest_entries": 828,
+  "source_validation": {
+    "actual_current_lane_identity_called": true,
+    "actual_current_runner_identity_called": true,
+    "all_current_source_file_hashes_match": true,
+    "source_files_checked": 828,
+    "manifest_digest_recomputed": true,
+    "clean_tracked_worktree": true,
+    "both_producer_before_after_snapshots_equal_current": true,
+    "independent_source_recheck_at_binding_write": true
+  },
+  "producers": [
+    {
+      "name": "export",
+      "receipt": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-export-linux-03/receipt.json",
+        "sha256": "2a5462f3092a9313cc32e4fe86a80cdbcdf2cfdb502467fca72fc47d7c426571"
+      },
+      "command": [
+        "./gradlew",
+        "writeResolvedDependencyInventory",
+        "-I",
+        "scripts/verification/resolved_dependencies.init.gradle",
+        "-Pparlor.dependencyInventoryDir=/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-export-linux-03/raw-graphs",
+        "--no-daemon",
+        "--no-parallel",
+        "--max-workers=1",
+        "--no-configuration-cache",
+        "--dependency-verification=strict",
+        "-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=final-dependency-export-linux-03",
+        "-Pkotlin.compiler.execution.strategy=in-process",
+        "-Pparlor.android.signing.storeFile=",
+        "-Pparlor.android.signing.storePassword=",
+        "-Pparlor.android.signing.keyAlias=",
+        "-Pparlor.android.signing.keyPassword="
+      ],
+      "status": "PASS",
+      "exit_code": 0,
+      "stop_exit_code": 0,
+      "started_at": "2026-09-08T20:03:57.363959+00:00",
+      "finished_at": "2026-09-08T20:04:19.807756+00:00",
+      "cleanup_completed_at": "2026-09-08T20:04:20.370714+00:00",
+      "cleanup_errors": [],
+      "remaining_outputs": [],
+      "retained_outputs": [],
+      "workers": {
+        "terminated_owned_workers": [],
+        "remaining_owned_workers": []
+      },
+      "artifact_workers": {
+        "terminated_owned_workers": [],
+        "remaining_owned_workers": []
+      },
+      "source_control_unchanged": true
+    },
+    {
+      "name": "render",
+      "receipt": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-render-linux-03/receipt.json",
+        "sha256": "2385794da9181199763be4d47c7b1ef2b6c589bd8c0807d83d52d649ea33a428"
+      },
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "scripts/verification/dependency_inventory.py",
+        "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-export-linux-03/raw-graphs",
+        "/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-render-linux-03/report"
+      ],
+      "status": "PASS",
+      "exit_code": 0,
+      "stop_exit_code": 0,
+      "started_at": "2026-09-08T20:05:47.540176+00:00",
+      "finished_at": "2026-09-08T20:08:38.391513+00:00",
+      "cleanup_completed_at": "2026-09-08T20:08:39.237197+00:00",
+      "cleanup_errors": [],
+      "remaining_outputs": [],
+      "retained_outputs": [],
+      "workers": {
+        "terminated_owned_workers": [],
+        "remaining_owned_workers": []
+      },
+      "artifact_workers": {
+        "terminated_owned_workers": [],
+        "remaining_owned_workers": []
+      },
+      "source_control_unchanged": true
+    }
+  ],
+  "export_task_outcome": {
+    "actual_inventory_task_executed": true,
+    "actionable_tasks": 5,
+    "executed_tasks": 4,
+    "cached_convention_tasks": 1,
+    "unit_tests_executed": 0,
+    "native_test_tasks": "iosX64Test and iosSimulatorArm64Test disabled on Linux; not requested by graph export",
+    "scope": "Fresh dependency resolution, not application compile/link/runtime"
+  },
+  "graph_completion": {
+    "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-export-linux-03/raw-graphs/resolution-complete.json",
+    "sha256": "6bc3b8d8ad516a985d725021f8cc7d9c33cb12077f203b228828a0d94a030eb2",
+    "bytes": 682
+  },
+  "graphs": [
+    {
+      "graph": "androidRelease",
+      "raw": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-export-linux-03/raw-graphs/androidRelease.json",
+        "sha256": "4b1ce6b841519c163b40ae3854af10caa8ef35c932ba0fa6443adfd88b070db4",
+        "bytes": 277318
+      },
+      "components": 239,
+      "artifacts": 129,
+      "edges": 1198,
+      "all_reachable": true,
+      "all_artifact_rows_strictly_pinned": true,
+      "non_source_fields_changed_vs_C02": []
+    },
+    {
+      "graph": "iosArm64",
+      "raw": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-export-linux-03/raw-graphs/iosArm64.json",
+        "sha256": "d029615f46439f218b432a682606e8ba205cd2bc34e04b8966b3416eb997649e",
+        "bytes": 154639
+      },
+      "components": 167,
+      "artifacts": 81,
+      "edges": 577,
+      "all_reachable": true,
+      "all_artifact_rows_strictly_pinned": true,
+      "non_source_fields_changed_vs_C02": []
+    },
+    {
+      "graph": "iosSimulatorArm64",
+      "raw": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-export-linux-03/raw-graphs/iosSimulatorArm64.json",
+        "sha256": "3560d22e3af1e0f2a4e702289da253dc56eb551a5001237ce8023202a5b4c2bc",
+        "bytes": 157924
+      },
+      "components": 167,
+      "artifacts": 81,
+      "edges": 577,
+      "all_reachable": true,
+      "all_artifact_rows_strictly_pinned": true,
+      "non_source_fields_changed_vs_C02": []
+    },
+    {
+      "graph": "iosX64",
+      "raw": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-export-linux-03/raw-graphs/iosX64.json",
+        "sha256": "396db269a60beabe29faf49eecc9f72a4ceeeffbf051e4d93eb782e04ce33558",
+        "bytes": 153736
+      },
+      "components": 167,
+      "artifacts": 81,
+      "edges": 577,
+      "all_reachable": true,
+      "all_artifact_rows_strictly_pinned": true,
+      "non_source_fields_changed_vs_C02": []
+    }
+  ],
+  "maven_components": 456,
+  "publisher_declarations": 459,
+  "retained_pom_files": 459,
+  "metadata_bytes": 1507794,
+  "unresolved": [],
+  "pom_coordinate_hash_origin_time_and_inheritance_checks": true,
+  "inherited_license_chains": [
+    [
+      "com.google.guava:listenablefuture:1.0",
+      "com.google.guava:guava-parent:26.0-android"
+    ],
+    [
+      "org.slf4j:slf4j-api:2.0.16",
+      "org.slf4j:slf4j-parent:2.0.16",
+      "org.slf4j:slf4j-bom:2.0.16"
+    ]
+  ],
+  "publisher_declaration_changes_vs_C02_excluding_access_time": [],
+  "sboms": [
+    {
+      "graph": "androidRelease",
+      "file": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-render-linux-03/report/androidRelease.cdx.json",
+        "sha256": "4dbc3b0826725cca1dc68fcb955bba6e56407551c0da5895204abe9195404f35",
+        "bytes": 294860
+      },
+      "fresh_graph_declaration_relationships_match": true,
+      "components_and_edges_equal_C02": true,
+      "official_schema_execution": "PENDING_COORDINATOR_CANDIDATE"
+    },
+    {
+      "graph": "iosArm64",
+      "file": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-render-linux-03/report/iosArm64.cdx.json",
+        "sha256": "af5d7679895880e29a03a41adf1d67d82ffe65f2ea9c41ac6228ef3c10ff3f4c",
+        "bytes": 198842
+      },
+      "fresh_graph_declaration_relationships_match": true,
+      "components_and_edges_equal_C02": true,
+      "official_schema_execution": "PENDING_COORDINATOR_CANDIDATE"
+    },
+    {
+      "graph": "iosSimulatorArm64",
+      "file": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-render-linux-03/report/iosSimulatorArm64.cdx.json",
+        "sha256": "ef0334af827f7310a015fdcd0d960fa14e3780a02d5544ad115e3f549f946b44",
+        "bytes": 201956
+      },
+      "fresh_graph_declaration_relationships_match": true,
+      "components_and_edges_equal_C02": true,
+      "official_schema_execution": "PENDING_COORDINATOR_CANDIDATE"
+    },
+    {
+      "graph": "iosX64",
+      "file": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-render-linux-03/report/iosX64.cdx.json",
+        "sha256": "9198d252a56324234fb7429962ad66b48c1fc8d7a874b98a23769f680233da4d",
+        "bytes": 197981
+      },
+      "fresh_graph_declaration_relationships_match": true,
+      "components_and_edges_equal_C02": true,
+      "official_schema_execution": "PENDING_COORDINATOR_CANDIDATE"
+    }
+  ],
+  "draft": {
+    "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-render-linux-03/report/THIRD_PARTY_DECLARATIONS_DRAFT.md",
+    "sha256": "d4556ac0fd25d0a2980dfb4440f29ec7e9dcec53bf3101f8b756fc7ac99245bf",
+    "bytes": 147363
+  },
+  "draft_matches_fresh_declarations": true,
+  "source_notice_input_hashes": {
+    "manifest": {
+      "path": "config/third-party-notices.json",
+      "sha256": "4b501223b3841017477a226515d3758bc60848fe00d579fac3152a81928d6406",
+      "bytes": 26026
+    },
+    "catalog": {
+      "path": "gradle/libs.versions.toml",
+      "sha256": "87a031665605a1fb3f932be31c75afd8d2d1bc0d94cfcca36101141c50788399",
+      "bytes": 5556
+    },
+    "resources": 26,
+    "bytes": 99515,
+    "all_declared_bytes_and_exact_set_match": true,
+    "full_source_notice_consumer_gate": "PENDING_COORDINATOR_CANDIDATE"
+  },
+  "current_control_pins": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py",
+      "sha256": "1b9e882514bfe5386785d5a71ae32fdc2bc3aa4cc1dd24532709899fbf4f41bc",
+      "bytes": 25106
+    },
+    {
+      "path": "scripts/verification/resolved_dependencies.init.gradle",
+      "sha256": "5120cb8d7c12825ad889f23d73075ef29ae48b66e4966d1e2335aa2d11995f59",
+      "bytes": 7170
+    },
+    {
+      "path": "scripts/verification/dependency_inventory.py",
+      "sha256": "fc0238d4d6ea0abd60d2985ed214af6516a239e439269978139fcc9519a20534",
+      "bytes": 14449
+    },
+    {
+      "path": "scripts/verification/third_party_notices.py",
+      "sha256": "d5a9e8e0cafd9c2d0de9ecd8dfcb040053fa52d25d798abd9998e84ab6676bdf",
+      "bytes": 30079
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/dependency-candidate-consumer-03/candidate_consumer.py",
+      "sha256": "eb6e2baaac22739b4652bc63c6b57a24374ee57fb81d4711b981b872e8ac1c7f",
+      "bytes": 23404
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/run_candidate_input_01.py",
+      "sha256": "2a306819fb41b1883139fb42355d493f02e1d93a687f54d06f43ffbb758afa60",
+      "bytes": 4319
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/run_schema_consumer_controls_01.py",
+      "sha256": "78222a79d0d19cdce28077506ce1fd74481cc419fdf9dce9e9e5b6fd8840336f",
+      "bytes": 8956
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/controls/run_candidate_with_schema.py",
+      "sha256": "c9d3a26fb3901b3518f7c066d91ebda906d0bb8bef67273acb4720d5c37419c9",
+      "bytes": 14663
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/controls/test_schema_base_bootstrap.py",
+      "sha256": "3923b1a3451ac7bcdb54293f93ae6dd8f55d334f69e4a4e297405ea99c6a028c",
+      "bytes": 19518
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/schema-base-prerequisites-research-01.json",
+      "sha256": "54c9f96db0ead50008cab5c8c960c0540351922f949757e03dc91b8c5328b13e",
+      "bytes": 55180
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/dependency-candidate-consumer-03/test_candidate_consumer.py",
+      "sha256": "92eef687dbf037b310b00c9b678a5718d95cf5e8313094861c398554755a3535",
+      "bytes": 22210
+    }
+  ],
+  "schemas": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/dependency-candidate-consumer-03/schemas/bom-1.6.schema.json",
+      "sha256": "3e92dddbc30cf7f6a02b80f0942b1a4cfd4fb1c26f1dfc4310afa9d613cafb93",
+      "bytes": 252625
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/dependency-candidate-consumer-03/schemas/spdx.schema.json",
+      "sha256": "baa9d3bd1ed57b6751b0887edead6b5063ff53ff7429cf85d476c6c94af0166e",
+      "bytes": 14269
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/dependency-candidate-consumer-03/schemas/jsf-0.82.schema.json",
+      "sha256": "8bae002c25e723db7ee1f26afde680ae1a2b1a8f6b4b4b0fd65dc3becb090aae",
+      "bytes": 8058
+    }
+  ],
+  "producer_evidence": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-export-linux-03/artifact-receipts.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "bytes": 3
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-export-linux-03/gradle.log",
+      "sha256": "722687d5b6f9ad5d74fb64848f3283e639136242d164f932121a58434eb6b275",
+      "bytes": 2483
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-export-linux-03/java-toolchain.log",
+      "sha256": "a7a86ea7b20362e2c856e5e71a8b6fc51764d5aeaa9f5a8c82b386ff156f8a7c",
+      "bytes": 2026
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-export-linux-03/javac-toolchain.log",
+      "sha256": "157f601a5854ca28a7dc364c13a5ca2879084186be49e3462d37acd028f35755",
+      "bytes": 14
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-export-linux-03/receipt.json",
+      "sha256": "2a5462f3092a9313cc32e4fe86a80cdbcdf2cfdb502467fca72fc47d7c426571",
+      "bytes": 306150
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-export-linux-03/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+      "bytes": 31
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-export-linux-03/test-receipts.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "bytes": 3
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-render-linux-03/artifact-receipts.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "bytes": 3
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-render-linux-03/gradle.log",
+      "sha256": "ef1042602e31e11bb04d1d6614e648956b37c0108d001a6f016c863bb9b0ca97",
+      "bytes": 51
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-render-linux-03/java-toolchain.log",
+      "sha256": "a7a86ea7b20362e2c856e5e71a8b6fc51764d5aeaa9f5a8c82b386ff156f8a7c",
+      "bytes": 2026
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-render-linux-03/javac-toolchain.log",
+      "sha256": "157f601a5854ca28a7dc364c13a5ca2879084186be49e3462d37acd028f35755",
+      "bytes": 14
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-render-linux-03/receipt.json",
+      "sha256": "2385794da9181199763be4d47c7b1ef2b6c589bd8c0807d83d52d649ea33a428",
+      "bytes": 305621
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-render-linux-03/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+      "bytes": 31
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-render-linux-03/test-receipts.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "bytes": 3
+    }
+  ],
+  "cleanup": {
+    "original_both_receipts_stop0_and_no_remaining_outputs_or_workers": true,
+    "current_exact_absence": [
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-export-linux-03/scratch",
+        "method": "exact lstat",
+        "result": "ENOENT"
+      },
+      {
+        "path": "build",
+        "method": "exact lstat",
+        "result": "ENOENT"
+      },
+      {
+        "path": "build-logic/convention/build",
+        "method": "exact lstat",
+        "result": "ENOENT"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-render-linux-03/scratch",
+        "method": "exact lstat",
+        "result": "ENOENT"
+      }
+    ],
+    "no_new_cleanup_invoked": true
+  },
+  "preservation": {
+    "all_read_original_inputs_reopened_byte_identical": true,
+    "all_observed_directory_inventories_unchanged": true,
+    "historical_C02_files_unchanged": true,
+    "historical_scope": "C02 accepted only at5f35; no relabeling of earlier passes or failures"
+  },
+  "approval": {
+    "independent_reviewer": "/root/fixture_review",
+    "required": "Approve exact binding bytes/SHA and current producer/control/source evidence before coordinator candidate03",
+    "candidate_cycle": "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-03",
+    "candidate_not_executed": true,
+    "acceptance": "Consumer PASS_SCOPED_CANDIDATE_INPUTS AND adapter PASS_SCOPED_CANDIDATE_INPUT_EXECUTION AND bootstrap PASS_OWNED_SCHEMA_PREREQUISITES AND outer PASS/exit0/stop0; equal frozen source/control bindings, actual format support and complete cleanup, then independent postrun review"
+  },
+  "activity": {
+    "builds": 0,
+    "tests": 0,
+    "candidate_runs": 0,
+    "schema_engine_runs": 0,
+    "network_fetches": 0,
+    "workflow_dispatches": 0,
+    "source_control_edits": 0,
+    "cleanup_actions": 0,
+    "commits": 0,
+    "project_imports": "Only hash-verified ordinary lane module for identity()/runner_identity(False); no main, invocation, test, package bootstrap, renderer/network or consumer call",
+    "new_files": [
+      "remediation-runs/2026-09-08-continuation/candidate-input-binding-03.json",
+      "remediation-runs/2026-09-08-continuation/reviews/candidate-input-binding-author-inspection-03.json"
+    ]
+  },
+  "limits": [
+    "Author cannot independently approve their own binding. Await fixture_review before coordinator execution.",
+    "Fresh graph/artifact/variant/POM/BOM/source-notice input relationships checked from retained raw bytes; official schema and candidate-consumer execution remain pending.",
+    "Artifact hashes reconciled with strict verification XML; cleaned third-party binary input files were not independently rehashed by this author.",
+    "Historical C02 comparison is not a source binding or a substitute for C03 execution.",
+    "Resolved inputs/source notices do not prove final-binary completeness, application runtime, physical devices, Store operations, or owner/legal approval."
+  ]
+}

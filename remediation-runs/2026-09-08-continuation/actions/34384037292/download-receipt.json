@@ -1,0 +1,944 @@
+{
+  "schema_version": 1,
+  "kind": "BOUNDED_ACTIONS_ARCHIVE_COLLECTION_NOT_RUNTIME_REVIEW",
+  "coordinator": "/root",
+  "started_at": "2026-09-09T18:57:31.082740+00:00",
+  "run_id": 34384037292,
+  "run_attempt": 1,
+  "source_commit": "965eb79cea7dd40ced8efa0b1fcd98596f7a952b",
+  "commands": [
+    {
+      "command": [
+        "gh",
+        "api",
+        "repos/Apdelrahman1911/parlor/actions/runs/34384037292"
+      ],
+      "started_at": "2026-09-09T18:57:31.082767+00:00",
+      "finished_at": "2026-09-09T18:57:31.598860+00:00",
+      "exit_code": 0,
+      "stdout_file": "run.json",
+      "stderr": "",
+      "bytes": 12682,
+      "sha256": "13e6940310b072b3f4279e691d569ea90cccc6dd7828bc11d3d8b0b854885a36"
+    },
+    {
+      "command": [
+        "gh",
+        "api",
+        "repos/Apdelrahman1911/parlor/actions/runs/34384037292/attempts/1"
+      ],
+      "started_at": "2026-09-09T18:57:31.599758+00:00",
+      "finished_at": "2026-09-09T18:57:32.131201+00:00",
+      "exit_code": 0,
+      "stdout_file": "attempt.json",
+      "stderr": "",
+      "bytes": 12704,
+      "sha256": "a49258056cf29937d869a5a494efc5db71d949f8edb270dac61a0661fb963e53"
+    },
+    {
+      "command": [
+        "gh",
+        "api",
+        "repos/Apdelrahman1911/parlor/actions/runs/34384037292/attempts/1/jobs?per_page=100"
+      ],
+      "started_at": "2026-09-09T18:57:32.131589+00:00",
+      "finished_at": "2026-09-09T18:57:32.646712+00:00",
+      "exit_code": 0,
+      "stdout_file": "jobs.json",
+      "stderr": "",
+      "bytes": 10733,
+      "sha256": "52eab87ded0106784ab77bf4101ec45d9e98ef35cc4daca99c310d1415175b68"
+    },
+    {
+      "command": [
+        "gh",
+        "api",
+        "repos/Apdelrahman1911/parlor/actions/runs/34384037292/artifacts?per_page=100"
+      ],
+      "started_at": "2026-09-09T18:57:32.647423+00:00",
+      "finished_at": "2026-09-09T18:57:33.154963+00:00",
+      "exit_code": 0,
+      "stdout_file": "artifacts.json",
+      "stderr": "",
+      "bytes": 1484,
+      "sha256": "f2d0647f760b74501a43117e803139c78a8577441e07061db4080f28a4580556"
+    },
+    {
+      "command": [
+        "gh",
+        "api",
+        "repos/Apdelrahman1911/parlor/actions/artifacts/10119957308/zip"
+      ],
+      "started_at": "2026-09-09T18:57:33.155604+00:00",
+      "finished_at": "2026-09-09T18:57:34.296846+00:00",
+      "exit_code": 0,
+      "stdout_file": "native-cleanup.zip",
+      "stderr": "",
+      "bytes": 1260,
+      "sha256": "0e2a9be20ce072e7a28bd612fddb6f77ddf4df3becf13cf32881482436ce9951"
+    },
+    {
+      "command": [
+        "gh",
+        "api",
+        "repos/Apdelrahman1911/parlor/actions/artifacts/10119954214/zip"
+      ],
+      "started_at": "2026-09-09T18:57:34.300033+00:00",
+      "finished_at": "2026-09-09T18:57:35.919056+00:00",
+      "exit_code": 0,
+      "stdout_file": "native-evidence.zip",
+      "stderr": "",
+      "bytes": 780719,
+      "sha256": "37f9b5242397809d615697b9fbc32aa8df348ca2aacc80ec07fb65e97d5bbf0c"
+    },
+    {
+      "command": [
+        "gh",
+        "api",
+        "repos/Apdelrahman1911/parlor/actions/runs/34384037292/attempts/1/logs"
+      ],
+      "started_at": "2026-09-09T18:57:35.997178+00:00",
+      "finished_at": "2026-09-09T18:57:37.206976+00:00",
+      "exit_code": 0,
+      "stdout_file": "run-attempt-1-logs.zip",
+      "stderr": "",
+      "bytes": 25945,
+      "sha256": "219a829e6274ba6ec0b96eb77850dd042d264d1a3f7188acf9cbb09dcfbb5820"
+    }
+  ],
+  "archives": [
+    {
+      "artifact_id": 10119957308,
+      "artifact_name": "native-cleanup-34384037292-1",
+      "archive": "native-cleanup.zip",
+      "bytes": 1260,
+      "sha256": "0e2a9be20ce072e7a28bd612fddb6f77ddf4df3becf13cf32881482436ce9951",
+      "api_digest_matches": true,
+      "members": [
+        {
+          "path": "parlor-native-34384037292-1-cleanup.json",
+          "bytes": 2350,
+          "sha256": "3bf4e125b11e34aa349ea8350891e12d49d87126d1ad9ba2b3e619bff3b58d95"
+        }
+      ],
+      "crc_and_bounds_checked": true
+    },
+    {
+      "artifact_id": 10119954214,
+      "artifact_name": "native-evidence-34384037292-1",
+      "archive": "native-evidence.zip",
+      "bytes": 780719,
+      "sha256": "37f9b5242397809d615697b9fbc32aa8df348ca2aacc80ec07fb65e97d5bbf0c",
+      "api_digest_matches": true,
+      "members": [
+        {
+          "path": "continuation.json",
+          "bytes": 33817,
+          "sha256": "5f555517eee4004c733aa553ef434119ab950b00edef0d3b5f8648ea1bc99f41"
+        },
+        {
+          "path": "ios-readiness-31/bootstatus.log",
+          "bytes": 94,
+          "sha256": "a20f23c883ef85e52be6483772a89d714d0af287411c576d1a4b2702e585abc4"
+        },
+        {
+          "path": "ios-readiness-31/boot.log",
+          "bytes": 88,
+          "sha256": "9d6940e9399512fafc89c5094f8d0907b399dc3b59f13c586e8a844457630bc4"
+        },
+        {
+          "path": "ios-readiness-31/app-foundation-copy-binding.json",
+          "bytes": 2365,
+          "sha256": "76ae68da96fb19e0761e7c5a80432fbcaf146039ecad14b7f62c146edd2890ec"
+        },
+        {
+          "path": "ios-readiness-31/built-app-binary-inventory.json",
+          "bytes": 1566,
+          "sha256": "9ff3f562270a8ba1f0e122117555186ff6ee8889248f16b8c56bcaeb289f94d2"
+        },
+        {
+          "path": "ios-readiness-31/built-app-linker-entitlements.json",
+          "bytes": 3228,
+          "sha256": "19783ffea2c7d0b92f0536311db79fcf09c4342fe9426b2f6b207ebdc689b13d"
+        },
+        {
+          "path": "ios-readiness-31/copied-source-inputs-after-build.json",
+          "bytes": 249177,
+          "sha256": "b5da86925b9ef9d2902ab8f7e90013d12ba1cf2ae4c0df47d2291a4de4dea6e6"
+        },
+        {
+          "path": "ios-readiness-31/composed-runner.diff",
+          "bytes": 8850,
+          "sha256": "252859418eb7464186e44cec5d8bab489a8dbeb0952ff2a9802f8c841489ae61"
+        },
+        {
+          "path": "ios-readiness-31/copied-source-manifest.json",
+          "bytes": 219583,
+          "sha256": "ddff872b7f9f0edb7e6b7c213be2b999f671a40f713caa18b11f00d46ad8bd12"
+        },
+        {
+          "path": "ios-readiness-31/copied-source.diff",
+          "bytes": 440002,
+          "sha256": "969f9fe161db8089297248b3dd4eae93b04d93926e84b535ecd8a2d0e95c061c"
+        },
+        {
+          "path": "ios-readiness-31/create.log",
+          "bytes": 37,
+          "sha256": "5900ef88f7525b600a8b03ec65393f4d73601f01475c05c98204ae58b679c155"
+        },
+        {
+          "path": "ios-readiness-31/darwin-version.log",
+          "bytes": 14,
+          "sha256": "39f2bb4ba4caae31e47a5b186080638b2c4b483e91d49de4e838e778e92030bd"
+        },
+        {
+          "path": "ios-readiness-31/delete.log",
+          "bytes": 42,
+          "sha256": "1627cd751b3823e5dabb403ddb93209ae080cadcaaff3ee038021dc08b4067cc"
+        },
+        {
+          "path": "ios-readiness-31/effective-simulator-app-phase.json",
+          "bytes": 1638,
+          "sha256": "3487ee47d8a1297596eba01b529b9c6b4fa5009ccbb0e713461896ab63830fa5"
+        },
+        {
+          "path": "ios-readiness-31/embedded-gradle-stop.txt",
+          "bytes": 25,
+          "sha256": "fb55a963c8d30249ea6b8be68a62b5921facefdc7823c16ad139fea885be972f"
+        },
+        {
+          "path": "ios-readiness-31/executed-framework-inventory.json",
+          "bytes": 806,
+          "sha256": "90c93f4f9f6bed5d26e975d79a910076b4e55fb3578191b7dcfdff31d49d5cb2"
+        },
+        {
+          "path": "ios-readiness-31/generated-app-entitlements.json",
+          "bytes": 812,
+          "sha256": "553341ec15409e698f0773da43747efab644eadbbd9fae74a40a1bad99f5778f"
+        },
+        {
+          "path": "ios-readiness-31/input-manifest.json",
+          "bytes": 173163,
+          "sha256": "bb6c1a1d19f31864bd9a7dde6f36954da23738662675c5da05a11d5670333907"
+        },
+        {
+          "path": "ios-readiness-31/host-architecture.log",
+          "bytes": 6,
+          "sha256": "c1669e1d8edca98769c37d494b76442a1d6e5ffffd7b4da1fb63aef8ebaf6f01"
+        },
+        {
+          "path": "ios-readiness-31/installed-app-binary-inventory.json",
+          "bytes": 1566,
+          "sha256": "9ff3f562270a8ba1f0e122117555186ff6ee8889248f16b8c56bcaeb289f94d2"
+        },
+        {
+          "path": "ios-readiness-31/installed-app-linker-entitlements.json",
+          "bytes": 3228,
+          "sha256": "19783ffea2c7d0b92f0536311db79fcf09c4342fe9426b2f6b207ebdc689b13d"
+        },
+        {
+          "path": "ios-readiness-31/java-version.log",
+          "bytes": 205,
+          "sha256": "5b4412738541184e84f6b2d7520d4f4a7c2a455f60650491464c61adcbbbdeb0"
+        },
+        {
+          "path": "ios-readiness-31/macos-version.log",
+          "bytes": 66,
+          "sha256": "31fd674ddb951680692d7b68cafdeab5baa6b3e82aae843269dad73b53f25fc5"
+        },
+        {
+          "path": "ios-readiness-31/native-runtime-framework-001.log",
+          "bytes": 244,
+          "sha256": "a6660c918850f1a5f6a9a872f0225a41a6e7b136da958cf668e54f7fd654b967"
+        },
+        {
+          "path": "ios-readiness-31/native-signature-000.log",
+          "bytes": 1008,
+          "sha256": "b621faaf1028bf8e105cf91379573ae99ffc1f719398792df2c7b1c5f7912582"
+        },
+        {
+          "path": "ios-readiness-31/native-signature-001.log",
+          "bytes": 968,
+          "sha256": "d83584a139ddd4acdcda4cee61ba72a8291cc9a0338352a9b721e5f993643658"
+        },
+        {
+          "path": "ios-readiness-31/native-signature-002.log",
+          "bytes": 935,
+          "sha256": "0c5093bc17119c3f3ac0f62b7454c98e5943a43facc5f94162423360b8020048"
+        },
+        {
+          "path": "ios-readiness-31/native-signature-003.log",
+          "bytes": 966,
+          "sha256": "815dec0bac34bd32e33d46d5ac2df5d73a5e4eaa5b1e4dc70c7fbb06af56adb7"
+        },
+        {
+          "path": "ios-readiness-31/native-signature-verify-000.log",
+          "bytes": 451,
+          "sha256": "13298bb76f15ca3fbb3919730ae71c312fa129727b7334e4a9dfe7bd380e52d6"
+        },
+        {
+          "path": "ios-readiness-31/native-signature-verify-001.log",
+          "bytes": 379,
+          "sha256": "9d37a44db198109011ba78e276f9497b18889abea9dac6bf00aae064cd5958cf"
+        },
+        {
+          "path": "ios-readiness-31/native-signature-verify-002.log",
+          "bytes": 403,
+          "sha256": "a09557f4e0354726b16f66e9976c137bcbdb81a55286d1e0804e20f24955c328"
+        },
+        {
+          "path": "ios-readiness-31/native-signature-verify-003.log",
+          "bytes": 397,
+          "sha256": "d78b2561ee82748b05f0fccabe5171fb4be0bcb39ed57298c8ea48a2a6b60e2d"
+        },
+        {
+          "path": "ios-readiness-31/native-uuid-000.log",
+          "bytes": 250,
+          "sha256": "5e723e2834ccc47f59dfa9cc06781cbb428144fd29eb9972e4331629acfa9842"
+        },
+        {
+          "path": "ios-readiness-31/native-uuid-001.log",
+          "bytes": 214,
+          "sha256": "16ba269155c24c0bf9dcd6dc406f0ca8e26f638ea29279ae0c94692c5156050c"
+        },
+        {
+          "path": "ios-readiness-31/native-uuid-002.log",
+          "bytes": 226,
+          "sha256": "cf7c3751e2cb6a33e9172c5afb551a11ab082c920e60d75c886f0467b557cf2a"
+        },
+        {
+          "path": "ios-readiness-31/native-uuid-003.log",
+          "bytes": 223,
+          "sha256": "1ff8d00cf1e1580c5d80ed7a706f84aa302988aba7d77211ee7fa75a304b2bd5"
+        },
+        {
+          "path": "ios-readiness-31/owned-app-entitlements.log",
+          "bytes": 262,
+          "sha256": "ce6a06e242bd6e03605e54f6f661b7f7f85f8a3e08b024ebe9cf0f88b5912ae1"
+        },
+        {
+          "path": "ios-readiness-31/owned-app-signature-display.log",
+          "bytes": 968,
+          "sha256": "d83584a139ddd4acdcda4cee61ba72a8291cc9a0338352a9b721e5f993643658"
+        },
+        {
+          "path": "ios-readiness-31/owned-app-signature-verify.log",
+          "bytes": 365,
+          "sha256": "a064ff9c3e1e874efbd0fd410385b03b75cf6cffc858db2f37c754f917f94818"
+        },
+        {
+          "path": "ios-readiness-31/owned-container.log",
+          "bytes": 161,
+          "sha256": "fceaa5a8eabcaa9862d3111b7826aa5c7bf781fd90ce44d9bdf5e67b9d5abb69"
+        },
+        {
+          "path": "ios-readiness-31/parlor-l08-host-1-active-ack.json",
+          "bytes": 1676,
+          "sha256": "13e912bd134b613baa5e9c60de26245491ca24f49e70220b3785235237409702"
+        },
+        {
+          "path": "ios-readiness-31/parlor-l08-host-1-capture.json",
+          "bytes": 1671,
+          "sha256": "b1e9bc7c656989a20364d3f17bd8ff2bcb7464c94b3d13cce9b31acaf3b2ef59"
+        },
+        {
+          "path": "ios-readiness-31/owned-installed-app.log",
+          "bytes": 174,
+          "sha256": "0e943342826dc8e0d66a3f6f88deb1954641d056daa56abafc38c2d3555ad234"
+        },
+        {
+          "path": "ios-readiness-31/parlor-l08-app-foundation.json",
+          "bytes": 7841,
+          "sha256": "94d501884ddbf5cbc64f67db6f2fbad1c380479368aa0259e4384c8caa9289c6"
+        },
+        {
+          "path": "ios-readiness-31/parlor-l08-host-1-cycle-2.json",
+          "bytes": 1804,
+          "sha256": "26b197a09799793972ab8ea76c36c2abec627a08b2b9802da4108639d4b6a43b"
+        },
+        {
+          "path": "ios-readiness-31/parlor-l08-host-1-cycle-1.json",
+          "bytes": 1804,
+          "sha256": "8abff3b38179dc2ac5cac7b231d1aab9cd7912342ad82a5ca12758d874ed9c69"
+        },
+        {
+          "path": "ios-readiness-31/parlor-l08-host-1-language-ar.json",
+          "bytes": 1690,
+          "sha256": "30e2c072c9636f2a45a442b991f1b44c9035230229892df6f8f5ab7441c35d4f"
+        },
+        {
+          "path": "ios-readiness-31/parlor-l08-host-1-cycle-3.json",
+          "bytes": 1805,
+          "sha256": "17b06f0e813603abdfcd8a63c5026381ae37594f3370a77e9b9ca570b75a9f20"
+        },
+        {
+          "path": "ios-readiness-31/parlor-l08-host-1-language-en.json",
+          "bytes": 1689,
+          "sha256": "ecb27c42446a9b9eb850b01e5851d9d61f1693e6c223406e4329800464efeeda"
+        },
+        {
+          "path": "ios-readiness-31/parlor-l08-host-1-language-system.json",
+          "bytes": 1699,
+          "sha256": "672d758cb4e1f0fdd1b1ea346690a570a56f9b3ba63d854278872bb0c1f1b6d1"
+        },
+        {
+          "path": "ios-readiness-31/parlor-l08-host-1-leave.json",
+          "bytes": 1695,
+          "sha256": "ec3770f7f3cab5ce836f3a6f8e1dae091c63109cb35f49ba09ab7cba16f0cb2f"
+        },
+        {
+          "path": "ios-readiness-31/parlor-l08-host-1-prepare.json",
+          "bytes": 1761,
+          "sha256": "a78f1bb25eca587ed54b639c9d52515111c79516e0c54e00b1fa550849427952"
+        },
+        {
+          "path": "ios-readiness-31/parlor-l08-host-1-resume-1.json",
+          "bytes": 1645,
+          "sha256": "36b3ca47fb91a1b4ee4cd03554657bc831e517dc231c5e53e685073f7e0604c9"
+        },
+        {
+          "path": "ios-readiness-31/parlor-l08-host-1-resume-2.json",
+          "bytes": 1645,
+          "sha256": "9e1ba66c10769e1a01e0534a2c4d26afc316eac3669560eea28a275bd0dd9fe0"
+        },
+        {
+          "path": "ios-readiness-31/parlor-l08-host-1-resume-3.json",
+          "bytes": 1646,
+          "sha256": "b17df6ea7a9f77c7cb8c9babab45ce7aa2062b17d65b9581eeebe0afbd51092c"
+        },
+        {
+          "path": "ios-readiness-31/parlor-l08-host-1-remount.json",
+          "bytes": 1676,
+          "sha256": "d188b77dbde51a5180f825e17a44e407012b7c5eaa380fa91287ac8c221994ae"
+        },
+        {
+          "path": "ios-readiness-31/parlor-l08-host-2-active-ack.json",
+          "bytes": 1675,
+          "sha256": "d939dc28e2833b40f01367ae8a486a342a364e8a917ff70ff5789f0ffd66e6d5"
+        },
+        {
+          "path": "ios-readiness-31/parlor-l08-host-2-capture.json",
+          "bytes": 1671,
+          "sha256": "fa9c2940b0fa8c1960d22cdd4f019536026d006286d568a44c7899266cc76713"
+        },
+        {
+          "path": "ios-readiness-31/parlor-l08-host-2-cycle-2.json",
+          "bytes": 1803,
+          "sha256": "0c105b5687252c292e1b924e6e5125a8286b011bf332f0af2402cbd5f18b33cf"
+        },
+        {
+          "path": "ios-readiness-31/parlor-l08-host-2-cycle-1.json",
+          "bytes": 1803,
+          "sha256": "a6c80122cbb3986b5b3431233be5b2e52b47f64b7870dc2258c9f26589e4b851"
+        },
+        {
+          "path": "ios-readiness-31/parlor-l08-host-2-cycle-3.json",
+          "bytes": 1804,
+          "sha256": "16aa7b71f1022fffa6ab4173f1f714b033227c0ec4de9091ee98595e6d71d8c8"
+        },
+        {
+          "path": "ios-readiness-31/parlor-l08-host-2-language-en.json",
+          "bytes": 1689,
+          "sha256": "c9b5513613bef7a77a993890abc08080ef6d5f27bfc6a071bb848c150d857b03"
+        },
+        {
+          "path": "ios-readiness-31/parlor-l08-host-2-language-ar.json",
+          "bytes": 1689,
+          "sha256": "0c748e4fe83d35f7461fa3a42d0d835a1b380877ac9e9681f608b1b8db060490"
+        },
+        {
+          "path": "ios-readiness-31/parlor-l08-host-2-language-system.json",
+          "bytes": 1698,
+          "sha256": "d85670958aab5b3fd53ab7b19970eb66ff398c70687020fc0f11ea8856211f38"
+        },
+        {
+          "path": "ios-readiness-31/parlor-l08-host-2-leave.json",
+          "bytes": 1694,
+          "sha256": "aa0b5c2ef4eb82fef8fcb891ee662f88ba043d9104abe2aa9a246f2078e8507a"
+        },
+        {
+          "path": "ios-readiness-31/parlor-l08-host-2-prepare.json",
+          "bytes": 1761,
+          "sha256": "924021f144bd172d83a67bab4d11258be3ed8391b680893d3f5cf7a7de2f7e56"
+        },
+        {
+          "path": "ios-readiness-31/parlor-l08-host-2-remount.json",
+          "bytes": 1675,
+          "sha256": "fc750623014dd5aa25fde0a81e2d8ab07f83fd7e5a0923d269b9c9d1d5574c27"
+        },
+        {
+          "path": "ios-readiness-31/parlor-l08-host-2-resume-1.json",
+          "bytes": 1644,
+          "sha256": "54d11a11c672b46bfc7d53c8d443d7b8950beee912ffe4ef46c0b6383a624de2"
+        },
+        {
+          "path": "ios-readiness-31/parlor-l08-host-2-resume-2.json",
+          "bytes": 1644,
+          "sha256": "8c1cd8081048329d72da985dbbd8582ceb4da3c595823ab37884c23c4ad98321"
+        },
+        {
+          "path": "ios-readiness-31/parlor-l08-host-2-resume-3.json",
+          "bytes": 1645,
+          "sha256": "6fb32f153b843da39414c1a9ddb2f32c1a4660b4280eba0ff53fb4caedc7a12f"
+        },
+        {
+          "path": "ios-readiness-31/parlor-l08-host-3-active-ack.json",
+          "bytes": 1676,
+          "sha256": "de3ea4ee1e8fda54941c7c72abae76d214608dd3094012e03fed64bbdcb5455e"
+        },
+        {
+          "path": "ios-readiness-31/parlor-l08-host-3-capture.json",
+          "bytes": 1672,
+          "sha256": "9b6846ad3b6a3eb64d7f5d40d0340e79833e3e6da933eecb35029ee936d986a2"
+        },
+        {
+          "path": "ios-readiness-31/parlor-l08-host-3-cycle-1.json",
+          "bytes": 1804,
+          "sha256": "f26f3af43deb6818501b5fb97ae75630daa4182d81bf2392023bef7b2b4e1da8"
+        },
+        {
+          "path": "ios-readiness-31/parlor-l08-host-3-cycle-2.json",
+          "bytes": 1804,
+          "sha256": "66ff82560985add97845eace7a85065885780b2ab010b6e6f510ecc7010c4917"
+        },
+        {
+          "path": "ios-readiness-31/parlor-l08-host-3-cycle-3.json",
+          "bytes": 1805,
+          "sha256": "f48da04d28e197c38cc93dedb9c1d489d5b910877241ec96309375cf09d64283"
+        },
+        {
+          "path": "ios-readiness-31/parlor-l08-host-3-language-ar.json",
+          "bytes": 1690,
+          "sha256": "8114f5203cb1bbcceb7a769330e2f165fb7a1cc9a516dc832a166742e604dc22"
+        },
+        {
+          "path": "ios-readiness-31/parlor-l08-host-3-language-en.json",
+          "bytes": 1690,
+          "sha256": "942fee99ae9b4f903addca4b73eca4ac1859b851fef0da50495cc4745fde966e"
+        },
+        {
+          "path": "ios-readiness-31/parlor-l08-host-3-language-system.json",
+          "bytes": 1699,
+          "sha256": "ca3cd14d7c4d9f2489daaf5bfa4576877e1197cbf94382bd5714d183086dc238"
+        },
+        {
+          "path": "ios-readiness-31/parlor-l08-host-3-leave.json",
+          "bytes": 1695,
+          "sha256": "410c6a3ca20fedcfa6cea4d86917e0801b8b20964d714799e480e647497f493f"
+        },
+        {
+          "path": "ios-readiness-31/parlor-l08-host-3-prepare.json",
+          "bytes": 1762,
+          "sha256": "748ec5d17ed39f8d3c98e16fdbb351397b6f163f4f361f2d5e3bb54f85507ef2"
+        },
+        {
+          "path": "ios-readiness-31/parlor-l08-host-3-remount.json",
+          "bytes": 1676,
+          "sha256": "33772f33c6fdc0037da651c94313239f11f417ff3b2b2abc1709cdc65927b9a9"
+        },
+        {
+          "path": "ios-readiness-31/parlor-l08-host-3-resume-1.json",
+          "bytes": 1645,
+          "sha256": "d197853b3a0eb0ceeaa64e249b9d2c10b15cb7894ba9455a2e9eafe04407193f"
+        },
+        {
+          "path": "ios-readiness-31/parlor-l08-host-3-resume-2.json",
+          "bytes": 1645,
+          "sha256": "bae0ef8a33c4915d43227840a6e8e20502d34aa02f9be4066dbfb6d1080eeb16"
+        },
+        {
+          "path": "ios-readiness-31/parlor-l08-host-3-resume-3.json",
+          "bytes": 1646,
+          "sha256": "ce8984609d0dc2fdfd7f99306f5aff8cd29e244036669a935b3abf00d0805c59"
+        },
+        {
+          "path": "ios-readiness-31/parlor-l08-storage-functional-1-save.json",
+          "bytes": 2075,
+          "sha256": "48b29cc7c82a8be32d7f892f3bf97ba13574dda98d6f15819605aa5942f48d51"
+        },
+        {
+          "path": "ios-readiness-31/parlor-l08-storage-functional-10-continue.json",
+          "bytes": 1596,
+          "sha256": "99243b94d4c89bda63cdd384439256b7e22bd83a60dcbf11ed4a1e995069708c"
+        },
+        {
+          "path": "ios-readiness-31/parlor-l08-storage-functional-10-legacy-load.json",
+          "bytes": 2798,
+          "sha256": "bb8444c877b7ae0e6ebeb4d146d0f53f19fccf2ed64d4e68df28eddab26caa16"
+        },
+        {
+          "path": "ios-readiness-31/parlor-l08-storage-functional-11-discard-observed.json",
+          "bytes": 1574,
+          "sha256": "15195444e3b521c76281283d06dd96aa720615f8689820cd1d6c506270cecf71"
+        },
+        {
+          "path": "ios-readiness-31/parlor-l08-storage-functional-11-legacy-neighbor.json",
+          "bytes": 1546,
+          "sha256": "c639d7d605985cbb566b89cfbcb9765fd86d5b31973c9bb75e598a3067ec0799"
+        },
+        {
+          "path": "ios-readiness-31/parlor-l08-storage-functional-12-discard-observed.json",
+          "bytes": 1574,
+          "sha256": "fe305c33164562ccb24c205a80f2841ee3869e37ebe0da3595791485356a9489"
+        },
+        {
+          "path": "ios-readiness-31/parlor-l08-storage-functional-12-dual-preserved.json",
+          "bytes": 2202,
+          "sha256": "513f5a1d1deafb4f3f91d301fc00e2bf598d40f486200de492c8749903269eb9"
+        },
+        {
+          "path": "ios-readiness-31/parlor-l08-storage-functional-13-final-absence.json",
+          "bytes": 1516,
+          "sha256": "7a945b2abb9cc65e8a95b7d3cc16dabd605300f3033d5d5ee8011039a5049351"
+        },
+        {
+          "path": "ios-readiness-31/parlor-l08-storage-functional-2-continue.json",
+          "bytes": 1594,
+          "sha256": "b150accfce4434b2dd75e201e78f23463196c4b9298de9f21e467e976038da8d"
+        },
+        {
+          "path": "ios-readiness-31/parlor-l08-storage-functional-2-load.json",
+          "bytes": 2078,
+          "sha256": "f6d09aad077790182a3be25eb25da718c4a46f365f4e64902a3c1304c798f21a"
+        },
+        {
+          "path": "ios-readiness-31/parlor-l08-storage-functional-3-save.json",
+          "bytes": 2075,
+          "sha256": "96452eca8ee8923d998465f7b30d9c77cc8d4062c27ecc23f03214e41067295f"
+        },
+        {
+          "path": "ios-readiness-31/parlor-l08-storage-functional-4-continue.json",
+          "bytes": 1594,
+          "sha256": "7d22d00d18b75b6d065619afb342cb1c6afa61e47c52206f3e07864d34ed2c99"
+        },
+        {
+          "path": "ios-readiness-31/parlor-l08-storage-functional-4-load.json",
+          "bytes": 2078,
+          "sha256": "deb9a5afad46753a7366f1bb1842326f2ac81df5aaa9ba0708d5dd1c5ef93ea3"
+        },
+        {
+          "path": "ios-readiness-31/parlor-l08-storage-functional-5-save.json",
+          "bytes": 2077,
+          "sha256": "9c620a0614177b77bec17053a8f9011a36f85009aecd230d40a5a75c2ea7b822"
+        },
+        {
+          "path": "ios-readiness-31/parlor-l08-storage-functional-6-continue.json",
+          "bytes": 1594,
+          "sha256": "422810f505fdb804e03dff80bb130368cf2dd43b5b1def6da440f0f250e5bb69"
+        },
+        {
+          "path": "ios-readiness-31/parlor-l08-storage-functional-6-load.json",
+          "bytes": 2080,
+          "sha256": "133d7c22860c2925ebfaffdd7daf1e81f4ea1c70f96bee33bf8e5c97b3284dbb"
+        },
+        {
+          "path": "ios-readiness-31/parlor-l08-storage-functional-7-save.json",
+          "bytes": 2079,
+          "sha256": "6d9da7379723a80621c66655bc0ef40f7c3e2504cf8adcbab2ded14738297936"
+        },
+        {
+          "path": "ios-readiness-31/parlor-l08-storage-functional-8-continue.json",
+          "bytes": 1594,
+          "sha256": "02c04910e5902907836724dd3a55792b536690cc6c3aaf6e2eeed2f7920ccb10"
+        },
+        {
+          "path": "ios-readiness-31/parlor-l08-storage-functional-8-load.json",
+          "bytes": 2082,
+          "sha256": "4661ec885d250ddc564871b2e2ac4de43ced52338d708bd0f40885a2038f02e3"
+        },
+        {
+          "path": "ios-readiness-31/parlor-native-readiness-boot-1.json",
+          "bytes": 2157,
+          "sha256": "0ed6fa42d5f6ee7cb90c43baaef1fc416a03a2cda5378d85149a112dafbfa9cd"
+        },
+        {
+          "path": "ios-readiness-31/parlor-l08-storage-functional-9-legacy-seed.json",
+          "bytes": 2747,
+          "sha256": "4045694e27af4c815d960779e7be0cee843f0a9cd81f6c9c9d25a86761e9c928"
+        },
+        {
+          "path": "ios-readiness-31/parlor-native-readiness-boot-2.json",
+          "bytes": 2095,
+          "sha256": "66d7bf831417d707f5a21edd2106d1f3b35147e9d922ce7b407f286f4cc0728a"
+        },
+        {
+          "path": "ios-readiness-31/parlor-native-readiness-boot-3.json",
+          "bytes": 2097,
+          "sha256": "978b6f778c5afce2a2dacfa0961bf8afe3f4b219a4c63bc17ba74ae8a193ba54"
+        },
+        {
+          "path": "ios-readiness-31/parlor-native-readiness-boot-4.json",
+          "bytes": 1868,
+          "sha256": "2883acdafcfc59ceccf3e094d30f3df2538c48f7a212cac677aa7faa2c9df0f3"
+        },
+        {
+          "path": "ios-readiness-31/parlor-native-readiness-boot-5.json",
+          "bytes": 1866,
+          "sha256": "1c856f186a670ab4b891b344acef669ee593def3f6c8ab62af7486514d4cde2c"
+        },
+        {
+          "path": "ios-readiness-31/parlor-native-readiness-boot-6.json",
+          "bytes": 1867,
+          "sha256": "e72d34c29ab3308a51bba7e4b8107b0ab323c51ff959f95abb7b3bd6820fe3f6"
+        },
+        {
+          "path": "ios-readiness-31/parlor-native-readiness-boot-7.json",
+          "bytes": 1867,
+          "sha256": "6a2ca9eb9ea755ed8442231907e8aaf7c884de615a680bcaa08d19d5876f49a3"
+        },
+        {
+          "path": "ios-readiness-31/parlor-native-readiness-boot-8.json",
+          "bytes": 1868,
+          "sha256": "30367d4148eac543c31dbb87883494d5b7f8de6a5a0ecda3e106a8ef1bc85f43"
+        },
+        {
+          "path": "ios-readiness-31/parlor-native-synthetic-seed-cleanup.json",
+          "bytes": 272,
+          "sha256": "7206392290d6faa74547cdab6e7335695c9b0f8b010199418f2315590b050607"
+        },
+        {
+          "path": "ios-readiness-31/probe-l08-host-result.json",
+          "bytes": 150205,
+          "sha256": "4953c0f071052128dfb7e7a20baba874d1a015030d107d7877ce7e5de7fd9e03"
+        },
+        {
+          "path": "ios-readiness-31/probe-l08-storage-functional-result.json",
+          "bytes": 55205,
+          "sha256": "871cfda4098db28f25d0a19a29c52632ba825dcce4dcca60f1c90707dd824ea8"
+        },
+        {
+          "path": "ios-readiness-31/probe-mafia-result.json",
+          "bytes": 160250,
+          "sha256": "cbdc853cfe38affe63c9b72b895337d40290b923603c2bc77062353158a39e78"
+        },
+        {
+          "path": "ios-readiness-31/probe-readiness-result.json",
+          "bytes": 112431,
+          "sha256": "29cf724da876b56ca52b4467a35e9909d694d096e609134004a6145f67137b8d"
+        },
+        {
+          "path": "ios-readiness-31/probe-settings-result.json",
+          "bytes": 32190,
+          "sha256": "1c34c0488c2146f934707da9368fea9bdbe9be1292e5c5f7ccac4e21c5fb4b6d"
+        },
+        {
+          "path": "ios-readiness-31/probe-whodunit-result.json",
+          "bytes": 157025,
+          "sha256": "5c8637007550592d8ebec9f41677180a81d09e891a8ed727199128fb37f93626"
+        },
+        {
+          "path": "ios-readiness-31/receipt.json",
+          "bytes": 541719,
+          "sha256": "0251827d0d25f1c4f1afbe1591fc20a2b96e4aed61058070891b3564d18862a5"
+        },
+        {
+          "path": "ios-readiness-31/sdk-version.log",
+          "bytes": 5,
+          "sha256": "14a06c556ac677f94334dd2c86395d46009b9def8685e00741e60d31305a0262"
+        },
+        {
+          "path": "ios-readiness-31/secondary-fifo-ownership-final.json",
+          "bytes": 2934,
+          "sha256": "9679728daeec7c7aea9cd96f9fb298840245d17e2b2bb1ce2804da2513b48d5d"
+        },
+        {
+          "path": "ios-readiness-31/secondary-fifo-ownership.json",
+          "bytes": 2934,
+          "sha256": "9679728daeec7c7aea9cd96f9fb298840245d17e2b2bb1ce2804da2513b48d5d"
+        },
+        {
+          "path": "ios-readiness-31/selected-developer.log",
+          "bytes": 48,
+          "sha256": "f61dc333807430553f78902403e4cc45b547d508c03963122c5c75c6d27beedb"
+        },
+        {
+          "path": "ios-readiness-31/selected-sdk-path.log",
+          "bytes": 122,
+          "sha256": "7a600faec8bfe87bad2f5e0f3c3a4886ab3143a661d90b7e7cd8acadf806627a"
+        },
+        {
+          "path": "ios-readiness-31/shutdown.log",
+          "bytes": 44,
+          "sha256": "7ebfdbe2e6ec2d747c23c86ae8729f01fa29d25b28f49cfb6b88b261093b9b1c"
+        },
+        {
+          "path": "ios-readiness-31/simulator-lifecycle.jsonl",
+          "bytes": 24909,
+          "sha256": "c1562643185c1fbba56d300357b5408a5a1a653d12063a6e628cbdf2bc416f3e"
+        },
+        {
+          "path": "ios-readiness-31/stop-final.log",
+          "bytes": 31,
+          "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+        },
+        {
+          "path": "ios-readiness-31/stop-xcode-immediate.log",
+          "bytes": 31,
+          "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+        },
+        {
+          "path": "ios-readiness-31/xcode-version.log",
+          "bytes": 32,
+          "sha256": "bb7fc9a8f5e063e81975b33054b3a526c91bcccff263ad11d5bd8bcdbe8f0973"
+        },
+        {
+          "path": "ios-readiness-31/xcodebuild.log",
+          "bytes": 1209410,
+          "sha256": "61290374ed5929fe111d20edf021197fcd77dcf4aecb7025f4691627c7c1af94"
+        },
+        {
+          "path": "ios-readiness-31/xcresult-summary.json",
+          "bytes": 1579,
+          "sha256": "06a846d90a4d634e8ca5e4d05c17a5f780a9ecf95f717960c9e322ea95d8cf9f"
+        },
+        {
+          "path": "ios-readiness-31/xcresult-tests.json",
+          "bytes": 5002,
+          "sha256": "d8eeba7baceda0cb616d97030d97d876a5e036f57c7cf48c47c2b7414f5f0b84"
+        },
+        {
+          "path": "l08-runner.log",
+          "bytes": 541719,
+          "sha256": "0251827d0d25f1c4f1afbe1591fc20a2b96e4aed61058070891b3564d18862a5"
+        },
+        {
+          "path": "preflight-api-binding.json",
+          "bytes": 1764,
+          "sha256": "c4bdd28c11249c4a2c4bd135e9b098db111e3d02d7659bbcac0dceb289b968ef"
+        },
+        {
+          "path": "reviewed-preflight/ios-readiness-source-ci.json",
+          "bytes": 300809,
+          "sha256": "8453265fea9d0f1bef28b7d89815f9075c113236d818bca8bb851ada5d3ced19"
+        },
+        {
+          "path": "reviewed-preflight/l08-controls.json",
+          "bytes": 21430,
+          "sha256": "bd64b74103e5be11de02d158fc410cbfe7e09a1176cd0f4e63bf0bb0e2d840fc"
+        },
+        {
+          "path": "reviewed-preflight/normal-controls.json",
+          "bytes": 18523,
+          "sha256": "8c9d8cf791be3068ae92a494f863a53733d8f8b4bdba39eed4a43495af5e0365"
+        },
+        {
+          "path": "reviewed-preflight/preflight.json",
+          "bytes": 2703,
+          "sha256": "637bbcc5534d4779e17f4167c82e60d5ee94e91f1abe8ccf65dfb821d1ebd378"
+        }
+      ],
+      "crc_and_bounds_checked": true
+    }
+  ],
+  "status": "COLLECTED_NOT_RUNTIME_REVIEW",
+  "log_archive": {
+    "path": "run-attempt-1-logs.zip",
+    "sha256": "219a829e6274ba6ec0b96eb77850dd042d264d1a3f7188acf9cbb09dcfbb5820",
+    "bytes": 25945,
+    "members": [
+      {
+        "path": "0_iOS tests, release frameworks, and Swift wrapper.txt",
+        "bytes": 41180,
+        "sha256": "28c43c4fde50a52b950e1ca7b736bda526e82b2c52592f28c653e3c7009274bd"
+      },
+      {
+        "path": "iOS tests, release frameworks, and Swift wrapper/system.txt",
+        "bytes": 611,
+        "sha256": "2564a2ce42fd8512e839ed530368414636edc0e21de16cdbd365c436ef14a7f0"
+      },
+      {
+        "path": "iOS tests, release frameworks, and Swift wrapper/1_Set up job.txt",
+        "bytes": 2335,
+        "sha256": "d1add5002bcd1621f2c11c7bf271192476c37eff57c408099b69999163974bf6"
+      },
+      {
+        "path": "iOS tests, release frameworks, and Swift wrapper/2_Start focused native job clock.txt",
+        "bytes": 1492,
+        "sha256": "1d26b76c1ac59b4c3d164c5133e9a1e75ad88c179388db91fa21462de45dd366"
+      },
+      {
+        "path": "iOS tests, release frameworks, and Swift wrapper/3_Check out source.txt",
+        "bytes": 18547,
+        "sha256": "a3b78600cc63ae5fe1077e8f2839d88b779f7db7d2ae8bbbf9fc868cece5aa7d"
+      },
+      {
+        "path": "iOS tests, release frameworks, and Swift wrapper/4_Validate verification scope.txt",
+        "bytes": 982,
+        "sha256": "2d4a81f534707e90dd6f29c938deb2ff741ba05a994c9cccebc6683baa613e2f"
+      },
+      {
+        "path": "iOS tests, release frameworks, and Swift wrapper/5_Set up JDK 21.txt",
+        "bytes": 2396,
+        "sha256": "72c63f993ee74ab120d060b7e92ff352ed8af7450376ba23813b2aa7bec3513a"
+      },
+      {
+        "path": "iOS tests, release frameworks, and Swift wrapper/6_Run focused native continuation.txt",
+        "bytes": 2556,
+        "sha256": "da282c074292b4c42d6e2e92445cf1c941a1a49c233ebcdc76dac9af67f98c7b"
+      },
+      {
+        "path": "iOS tests, release frameworks, and Swift wrapper/7_Upload focused native evidence.txt",
+        "bytes": 2531,
+        "sha256": "f205fb59973a01fb4005ab40a84bb74e041187411aac1a423572fcb08457ea8f"
+      },
+      {
+        "path": "iOS tests, release frameworks, and Swift wrapper/8_Verify focused native cleanup and uploaded custody.txt",
+        "bytes": 5783,
+        "sha256": "75d65f84c84eff1044e5514f2f682f9f7139d1799737752bfe4f495adc77e3a4"
+      },
+      {
+        "path": "iOS tests, release frameworks, and Swift wrapper/9_Upload native continuation cleanup receipt.txt",
+        "bytes": 2525,
+        "sha256": "b4e5e3da1db7a611105d286383679680ca7023c3bbbeb1f92093a68320ffc6a3"
+      },
+      {
+        "path": "iOS tests, release frameworks, and Swift wrapper/59_Post Set up JDK 21.txt",
+        "bytes": 50,
+        "sha256": "5e5312362ffec52915c5bb3b8256272d44d0a3329359c48c996e279a4f296ce7"
+      },
+      {
+        "path": "iOS tests, release frameworks, and Swift wrapper/60_Post Check out source.txt",
+        "bytes": 1955,
+        "sha256": "e82d8bdb0267003338ab74c7c5bd6640c9fcb85f8e7fedc5cbadf01c39ca89f9"
+      },
+      {
+        "path": "iOS tests, release frameworks, and Swift wrapper/61_Complete job.txt",
+        "bytes": 61,
+        "sha256": "035278951d2a1a9ce50e7e3e133241298ff0d23d6d606e7475e65666c38cf631"
+      }
+    ],
+    "crc_and_bounds_checked": true,
+    "extracted": false,
+    "scope": "Compact original ZIP retained; underlying per-step logs remain readable directly from this archive."
+  },
+  "run_conclusion": "failure",
+  "run_url": "https://github.com/Apdelrahman1911/parlor/actions/runs/34384037292",
+  "jobs": [
+    {
+      "id": 102575696419,
+      "name": "iOS tests, release frameworks, and Swift wrapper",
+      "conclusion": "failure"
+    },
+    {
+      "id": 102575697737,
+      "name": "Desktop and Kotlin Native strict verification (macOS x64)",
+      "conclusion": "skipped"
+    },
+    {
+      "id": 102575697759,
+      "name": "Desktop, Kotlin Native, and Android resources strict verification (Windows x64)",
+      "conclusion": "skipped"
+    },
+    {
+      "id": 102575698106,
+      "name": "Desktop strict verification (Linux arm64)",
+      "conclusion": "skipped"
+    },
+    {
+      "id": 102575698162,
+      "name": "Common, desktop, and Android release",
+      "conclusion": "skipped"
+    }
+  ],
+  "finished_at": "2026-09-09T18:57:37.210482+00:00"
+}

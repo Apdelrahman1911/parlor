@@ -1,0 +1,257 @@
+{
+  "schema_version": 1,
+  "kind": "INDEPENDENT_SPLIT_FULL_D_COLLECTOR_AND_FOUR_FIXTURES_SOURCE_REVIEW",
+  "reviewer": "/root/dependency_chain",
+  "author": "/root",
+  "reviewed_at": "2026-09-10T19:06:33.000443+00:00",
+  "status": "APPROVED_PINNED03_SOURCE_FOR_ROOT_FOUR_FOCUSED_TESTS_NOT_EXECUTION_OR_QUALIFICATION",
+  "findings": [],
+  "bindings": {
+    "collector": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/full-d-compact-collector-03.py",
+      "sha256": "53d6a05f4a2c591f25e3bda2104b0c15e39cd472d6519d24e6fd1aff5234f7a8",
+      "bytes": 18172
+    },
+    "fixtures": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/test_full_d_compact_collector_03.py",
+      "sha256": "780eac69c46ec16fe6f08c5b3a786c102c70402afa28e39dd875166883863618",
+      "bytes": 4344
+    },
+    "preserved02": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/full-d-compact-collector-02.py",
+      "sha256": "3af9603aff8e20aa1380f844897ed356426ba29c4dd5172cc5c60edb2dea10de",
+      "bytes": 17464
+    },
+    "preserved02fixtures": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/test_full_d_compact_collector_02.py",
+      "sha256": "1b56aa715b06947d6e3e06968c9b60bd25825254ce080446051cfaa2ae364afa",
+      "bytes": 9677
+    },
+    "prior_source_review": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/full-d-compact-collector-independent-02.json",
+      "sha256": "3e3f5be8590e2cfc808629c8787f414873c32169179d1a8b8dce737dcb372140",
+      "bytes": 10163
+    },
+    "prior_actual14_review": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/full-d-compact-collector-actual-independent-02.json",
+      "sha256": "585c499356175a982143d5ca168f24cac989c89fc8da3dcb5fc5e05584bdbb37",
+      "bytes": 6231
+    },
+    "review_context_HEAD": "0b192d63729b884b7f45ddab14c7a67da922f457",
+    "review_context_tree": "d78587d9e2446441c03d4ca5aee5c382c7e97e39",
+    "context_limit": "Context Git identity only, not a final source/dispatch binding. Additive03 controls reviewed by exact bytes; split workflow integration and frozen execution source remain separate."
+  },
+  "narrow_delta": {
+    "unified_diff_bytes": 6078,
+    "unified_diff_sha256": "7e9b9e3c805d7692806b759167c5ab09af0d6e00d2fc5a7cb2dd9dc7dd4e4d52",
+    "new_function": {
+      "name": "full_job_contexts",
+      "lines": [
+        92,
+        105
+      ]
+    },
+    "unchanged_helpers": [
+      {
+        "name": "require",
+        "new_lines": [
+          43,
+          45
+        ],
+        "source_body_sha256": "570ace48effbcffbb325b4bdc4424b575500114187d28c59c86b8870081e9f76"
+      },
+      {
+        "name": "now",
+        "new_lines": [
+          48,
+          49
+        ],
+        "source_body_sha256": "657729523cb5c0ead0b1e95551773c0d89eca7b7f361a6f59a6766df30c1b014"
+      },
+      {
+        "name": "sha_file",
+        "new_lines": [
+          52,
+          57
+        ],
+        "source_body_sha256": "e32cbffc32c4611748b1a7524ca5f829291a9e2e258481d01cfc74b20de15dd7"
+      },
+      {
+        "name": "new_json",
+        "new_lines": [
+          60,
+          63
+        ],
+        "source_body_sha256": "0d4cdd482c95a58e9d289f4c19543fef71cd3e27b147a7745414a56b5a1a30e0"
+      },
+      {
+        "name": "live_build_roots",
+        "new_lines": [
+          66,
+          74
+        ],
+        "source_body_sha256": "031746d01d0e4e8f404a3329a2947d75bd2e67a9f9704d8d12fae9f4ba79ab15"
+      },
+      {
+        "name": "job_context",
+        "new_lines": [
+          77,
+          88
+        ],
+        "source_body_sha256": "16964074dc89bf906ee17fbe4be785c61b8e854e0dc85d0f9ea6624aea494fa2"
+      },
+      {
+        "name": "classify_member",
+        "new_lines": [
+          108,
+          138
+        ],
+        "source_body_sha256": "75772214ae4d50bb9206714b0f1d681e7434a20dc48f43b4c60c119bb0fd3ba8"
+      },
+      {
+        "name": "archive_members",
+        "new_lines": [
+          141,
+          181
+        ],
+        "source_body_sha256": "2e24e58fd0304ed845acf844d5226614e9c985ad39941d0657fe5a4dd5c7ec49"
+      },
+      {
+        "name": "extract_selected",
+        "new_lines": [
+          184,
+          204
+        ],
+        "source_body_sha256": "3b331793597e6fb6ac22a5a50c95ca13e7807865cf924450f10306a9fe62a96e"
+      }
+    ],
+    "all_nine_helper_bodies_byte_identical02": true,
+    "main_change": "Exact02 main text after only usage02->03, receipt schema2->3, and replacing old inline five-job checks/context assembly with full_job_contexts; download/metadata/artifact/source/ZIP/extraction/failure/finalization code unchanged.",
+    "other_changes": "Docstring, two Apple full job names, one focused-job map, split Apple artifact identities; no cap expansion or guard weakening."
+  },
+  "split_identity_contract": {
+    "mandatory_full_jobs": {
+      "desktop-android": "Common, desktop, and Android release",
+      "desktop-linux-arm64": "Desktop strict verification (Linux arm64)",
+      "desktop-macos-x64": "Desktop and Kotlin Native strict verification (macOS x64)",
+      "desktop-windows-x64": "Desktop, Kotlin Native, and Android resources strict verification (Windows x64)",
+      "ios": "iOS simulator runtime and Swift host",
+      "ios-release": "iOS release frameworks and Swift wrapper"
+    },
+    "mandatory_focused_skips": {
+      "ios-protection-probe": "iOS strict protection diagnostic"
+    },
+    "expected_artifacts": {
+      "desktop-android-verification": "desktop-android",
+      "ios-runtime-verification": "ios",
+      "ios-release-verification": "ios-release",
+      "desktop-verification-desktop-linux-arm64": "desktop-linux-arm64",
+      "desktop-verification-desktop-macos-x64": "desktop-macos-x64",
+      "desktop-verification-desktop-windows-x64": "desktop-windows-x64",
+      "verification-cleanup-desktop-android": "desktop-android",
+      "verification-cleanup-desktop-linux-arm64": "desktop-linux-arm64",
+      "verification-cleanup-desktop-macos-x64": "desktop-macos-x64",
+      "verification-cleanup-desktop-windows-x64": "desktop-windows-x64",
+      "verification-cleanup-ios": "ios",
+      "verification-cleanup-ios-release": "ios-release"
+    },
+    "job_count": 7,
+    "mandatory_full_count": 6,
+    "expected_artifact_count": 12,
+    "checks": "Complete API page length/count and exact seven unique display names. Every job including skipped probe must match run ID, attempt and SHA and be completed. Probe conclusion must be skipped; every full job must be non-skipped. Only full jobs pass through exact unique checkout/ownership-step admission. Missing/duplicate/substituted scope cannot masquerade as combined full qualification.",
+    "failure_scope": "Failure/cancellation/timed_out outcomes are not upgraded to success. A non-skipped failed full lane remains collectible; checkout+ownership success separately determines live-path admission. Collection never proves that all suites actually executed.",
+    "workflow_coordination": "ci_workflow explicitly confirmed exact displayed job/artifact names and run-attempt-job receipt prefixes. Runtime ios owns apple-aggregate+apple-ui, ios-release owns apple-aggregate+apple-wrapper. The optional probe has separately prefixed artifacts and is skipped without artifacts in full.",
+    "integration_limit": "At initial inspection canonical workflow still used the unsplit ios name. This report does not claim adoption/integration correctness or authorize collecting that incompatible workflow with03. ci_review/native_qualifier own the actual split workflow integration; root must freeze and match all exact identities before use."
+  },
+  "custody_and_unchanged_guards": {
+    "artifact_assignment": "Each of six full jobs maps to its own main artifact and cleanup artifact. Current-named receipts include exact run-attempt-job prefix; ios and ios-release prefixes do not alias. The probe is not mapped into the12 full artifacts. Missing/extra artifacts produce PARTIAL_COLLECTION_NOT_RUNTIME_REVIEW and remain explicit, not full success.",
+    "source_run_attempt": "Inherited fixed repo/branch/workflow_dispatch/workflow path and completed run+attempt SHA checks remain. Artifact workflow_run ID/SHA and exact API size+digest remain. Only attempt1 is supported; no fallback to another attempt/source.",
+    "failed_lane": "job_context returns live_path_extraction_admitted=false after failed/skipped checkout/claim, while exact current-named cleanup/ownership receipts remain CONTENT_UNREVIEWED. Historical/tracked/unknown/live-looking unadmitted reports remain archive-only. No selected-path count is test execution.",
+    "zip": "Whole-table path normalization/traversal/NUL/backslash/colon, duplicates/ancestor collisions, encryption, regular/directory type, nonempty-directory and finite byte guards unchanged. Every member including unselected history streams to EOF for CRC/size/SHA before extraction. Selected output uses fresh nonredirected roots, exclusive files and second-pass size+hash verification. Original archives retained.",
+    "bounds": {
+      "artifact_compressed_MiB": 64,
+      "artifacts_compressed_total_MiB": 512,
+      "members_per_artifact": 50000,
+      "expanded_per_archive_MiB": 256,
+      "file_expanded_MiB": 128,
+      "logs_compressed_MiB": 128,
+      "log_members": 1500,
+      "log_file_MiB": 64
+    },
+    "report_honesty": "COLLECTED_NOT_RUNTIME_REVIEW and NOT_COMPUTED_REQUIRES_SEPARATE_RUNTIME_REVIEW unchanged; run conclusion/steps retained. Finally preserves collection-failure receipt and partial downloaded bytes. No Store operation, workflow dispatch or build call added."
+  },
+  "four_new_fixture_source_review": {
+    "declared_methods": [
+      {
+        "name": "test_exact_full_jobs_have_separate_apple_artifact_custody",
+        "lines": [
+          30,
+          44
+        ]
+      },
+      {
+        "name": "test_wrong_scope_and_missing_or_duplicate_lane_are_rejected",
+        "lines": [
+          46,
+          59
+        ]
+      },
+      {
+        "name": "test_every_job_source_attempt_and_completion_is_bound",
+        "lines": [
+          61,
+          68
+        ]
+      },
+      {
+        "name": "test_failed_full_lane_evidence_is_retained_without_live_path_admission",
+        "lines": [
+          70,
+          83
+        ]
+      }
+    ],
+    "test_count": 4,
+    "actual03_execution": "NOT_RUN_BY_REVIEWER; root batch pending",
+    "coverage": [
+      "Positive exact seven-job fixture returns six full contexts and12 artifacts; asserts separate runtime/release mapping and absence of probe mapping. Both Apple ownership receipt prefixes select only their own job and reject the other.",
+      "Four isolated mutations reject a running focused probe, skipped mandatory release, incomplete job set, and duplicate/substituted job name. Count/set guard is not bypassed by reconstructing fixture totals.",
+      "For all seven job records, independently mutate head_sha, run_id, run_attempt and completion status:28 negative subcases target real full_job_contexts guards.",
+      "A failed release checkout plus skipped ownership is retained as a full context with false live admission; runtime context remains independent and failed release exact-named cleanup stays extractable as unreviewed evidence."
+    ],
+    "validity": "Fresh per-case dictionaries/deepcopy prevent state leakage. Production helper import is guarded from main; only constant construction and functions load. Assertions exercise actual new full_job_contexts and unchanged classifier without stubbing their results. New tests do not replace/delete02 tests.",
+    "limits": "Tests use synthetic API records, not real GitHub APIs or newly executed suites. Display-name fixture derives collector constants; exact workflow-name agreement therefore needs independent integration checks. No network/download/main end-to-end coverage or malformed ZIP rerun is claimed."
+  },
+  "prior14_reuse": {
+    "raw_receipt": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-full-d-collector-controls-01/receipt.json",
+      "sha256": "75a8814a1954d0b44adedd01e49f4bb7d1bd2a06698ee6b29c1b536b41395101",
+      "bytes": 306292
+    },
+    "raw_log": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-full-d-collector-controls-01/gradle.log",
+      "sha256": "af72e7a2c001a0e1bae9652e109153de8c3763b2472182b93d8dd8c52dc2b408",
+      "bytes": 2015
+    },
+    "raw_stop": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-full-d-collector-controls-01/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+      "bytes": 31
+    },
+    "verified": "Reopened exact pinned old raw log and receipt:14 unittest methods actually passed at4cc, zero errors/failures/skips, source/runner stable, stop0 and clean finalizer. All nine reused helper bodies and old14 test bytes remain exact02. Those historical tests were NOT rerun and are not relabeled as03 execution."
+  },
+  "root_execution_conditions": [
+    "Root alone runs the exact pinned03 four-method test module, preferably in its planned focused batch. Preserve real verbose results and hashes before/after; inspect any failure, do not bypass it.",
+    "After local source/control approvals and real selected test PASS, root freezes reviewed split workflow/source and inventory, records exact source/control/run/attempt request bindings and independent integration admission.",
+    "Before one GET-only collector call, recheck03 hash, completed full-scope run/attempt/source and the six mandatory plus one skipped names; require absent nonredirected destination and valid frozen-tree output roots. Preserve every prior failed destination/archive.",
+    "Only after actual collection independently reconcile cleanup JSON contents, job/task execution versus cached/disabled/skip results, exact test XML, schema/artifacts and native outcomes. Collector PASS alone is never readiness evidence.",
+    "All tests/collection and required immediate stop/precise cleanup stay root-owned; no global cache/unrelated work deletion."
+  ],
+  "inherited_limits": [
+    "Download byte caps are post-process checks with180second timeout; stderr remains buffered. Per-archive expansion has no aggregate disk quota beyond inherited finite per-archive/count/compressed bounds.",
+    "Fixed observed parlor/parlor workspace layout is fail-closed for others; unknown paths stay compressed. A frozen tree overlapping derived output roots fails closed and needs source-specific admission.",
+    "Setup errors before outer try may lack a final receipt; root must preserve command output. Partial extraction is retained on later failure and cannot imply complete evidence."
+  ],
+  "activity": "Read-only source/hash/AST/diff and old raw receipts/logs. No collector/project imports, tests, network, builds, CI/Store operations, locks, cleanup or canonical edits. One additive review file only; no resources requiring Gradle cleanup allocated.",
+  "verdict": "No blocking collector03 source or four-new-fixture finding. Approve root-run focused tests of these pinned bytes; source approval is not test execution, collection admission, final workflow integration or application/native qualification."
+}

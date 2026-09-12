@@ -1,0 +1,107 @@
+{
+  "schema_version": 1,
+  "recorded_at_utc": "2026-09-08T00:12:49.349398+00:00",
+  "author": "/root/native_fix_review",
+  "method": "Read public installed tool files/SDK headers; strings + bounded grep excerpt for simctl help; plutil JSON for public metadata. No simctl, compiler, native execution or tests.",
+  "files": [
+    {
+      "path": "/Library/Developer/PrivateFrameworks/CoreSimulator.framework/Versions/A/Resources/bin/simctl",
+      "bytes": 1460336,
+      "sha256": "b82abb2c3b8468bb3cd7f57ecf50478198fc76bc8f8678b08c4418115af4c5ed"
+    },
+    {
+      "path": "/Applications/Xcode.app/Contents/Developer/usr/bin/simctl",
+      "bytes": 729,
+      "sha256": "52b0b0e1d558df72146de39aa365df14d355fe07f6aac4e2ac7223d2d769ba8e"
+    },
+    {
+      "path": "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.5.sdk/System/Library/Frameworks/Foundation.framework/Headers/NSFileManager.h",
+      "bytes": 58197,
+      "sha256": "446f238e10fec2b392bc82b54da061eebc7fcc919f827807911774ef987423eb"
+    },
+    {
+      "path": "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.5.sdk/System/Library/Frameworks/Foundation.framework/Headers/NSData.h",
+      "bytes": 14930,
+      "sha256": "32f700128c672692ee168a8cf5d230cd9668328f01a75fac5f3d35682d0f49a2"
+    },
+    {
+      "path": "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.5.sdk/System/Library/Frameworks/Foundation.framework/Headers/NSURL.h",
+      "bytes": 97493,
+      "sha256": "97981c4e8ad70b8fc8c33c22e73b448a9ce9ad0ddfb7304d85a67d0843365f6d"
+    }
+  ],
+  "plists": [
+    {
+      "path": "/Applications/Xcode.app/Contents/version.plist",
+      "sha256": "14fe47aa50107e5eebb39f6e93acb96c2c81dc39ed9bd51ad1edbcc71488b91f",
+      "data": {
+        "CFBundleVersion": "24943",
+        "CFBundleShortVersionString": "26.5",
+        "ProjectName": "IDEApplication",
+        "ProductBuildVersion": "17F42",
+        "SourceVersion": "24943000000000000",
+        "BuildVersion": "2"
+      }
+    },
+    {
+      "path": "/Library/Developer/PrivateFrameworks/CoreSimulator.framework/Versions/A/Resources/Info.plist",
+      "sha256": "e787a2e9641a9320dc399e6633b0fd66516d118fc8d17aef3bf1a92e66a8a6a8",
+      "data": {
+        "CFBundleName": "CoreSimulator",
+        "DTXcode": "2650",
+        "DTSDKName": "macosx26.4.internal",
+        "NSHumanReadableCopyright": "Copyright \u00a9 2013-2026 Apple Inc. All rights reserved.",
+        "DTSDKBuild": "25E210a",
+        "CFBundleDevelopmentRegion": "English",
+        "CFBundleVersion": "1051.54",
+        "BuildMachineOSBuild": "23A344014",
+        "DTPlatformName": "macosx",
+        "CFBundlePackageType": "FMWK",
+        "CFBundleShortVersionString": "1051.54",
+        "CFBundleSupportedPlatforms": [
+          "MacOSX"
+        ],
+        "CFBundleInfoDictionaryVersion": "6.0",
+        "CFBundleExecutable": "CoreSimulator",
+        "DTCompiler": "com.apple.compilers.llvm.clang.1_0",
+        "CFBundleIdentifier": "com.apple.CoreSimulator",
+        "DTPlatformVersion": "26.4",
+        "DTXcodeBuild": "17F41",
+        "LSMinimumSystemVersion": "14.0",
+        "CFBundleSignature": "????",
+        "DTPlatformBuild": "25E210a"
+      }
+    }
+  ],
+  "wrapper_complete_text": "#!/bin/bash\nDEVELOPER_USR_BIN_DIR=${0%/*}\nDEVELOPER_USR_BIN_DIR=${DEVELOPER_USR_BIN_DIR%/local/bin}\nDEVELOPER_USR_BIN_DIR=${DEVELOPER_USR_BIN_DIR%/bin}\nDEVELOPER_USR_BIN_DIR=${DEVELOPER_USR_BIN_DIR}/bin\nDEVELOPER_USR_DIR=${DEVELOPER_USR_BIN_DIR%/*}\nexport DEVELOPER_DIR=${DEVELOPER_USR_DIR%/*}\n\nEXPECTED_VERSION=\"1051.54\"\nCURRENT_VERSION=\"$(/usr/libexec/PlistBuddy -c \"Print :CFBundleVersion\" \"/Library/Developer/PrivateFrameworks/CoreSimulator.framework/Versions/A/Resources/Info.plist\" 2>&1)\"\n\nif [[ \"${EXPECTED_VERSION}\" != \"${CURRENT_VERSION}\" ]]; then\n    \"${DEVELOPER_DIR}/usr/bin/xcodebuild\" -runFirstLaunch >&2\nfi\nexec \"/Library/Developer/PrivateFrameworks/CoreSimulator.framework/Versions/A/Resources/bin/simctl\" \"${@}\"\n",
+  "observed_help_excerpts": [
+    "usage: %s [--set <path>] [--profiles <path>] <subcommand> ...",
+    "Spawn a process by executing a given executable on a device.",
+    "[-w | --wait-for-debugger] [-s | --standalone] [-a <arch> | --arch=<arch>] [--checked-allocations] <device> <path to executable> [<argv 1> <argv 2> ... <argv n>]",
+    "-s    Use a NULL mach bootstrap port, meaning the process cannot connect to other services and does not require a booted device. (deprecated)",
+    "   <path> starts with /: Assume a literal path to the binary. This must start from the host's root.",
+    "If you want to set environment variables in the resulting environment, set them in the calling environment with a SIMCTL_CHILD_ prefix.",
+    "[-j | --json] [--json-fd=<fd>] [--json-output=<file path>] [-e | --no-escape-slashes] [-v] [devices|devicetypes|runtimes|pairs] [<search term>|available]",
+    "Shutdown a device.",
+    "<device> | all",
+    "Specifying all will shut down all running devices"
+  ],
+  "applicability": [
+    "Wrapper may invoke xcodebuild -runFirstLaunch on CoreSimulator version mismatch; runner pins installed1051.54 before invoking underlying exact simctl.",
+    "Literal host-root executable and explicit private device-set options are documented by the installed CLI help strings; actual runtime support remains unexecuted.",
+    "No --standalone, booted, all, global device listing, existing profile or first-launch setup is proposed.",
+    "NSFileManager Complete constants/iOS4+, NSData Atomic|Complete and NSURL regular-file/volume declarations reopened. Metadata readback remains separate from physical Data Protection.",
+    "Official online source/URLs/access dates and exact upstream tag provenance are in ../l08-native09-file-protection-research-01.json; not copied as installed-binary attestation."
+  ],
+  "execution_status": {
+    "builds": "NOT_RUN",
+    "tests": "NOT_RUN",
+    "native": "NOT_RUN",
+    "simulator_commands": "NOT_RUN"
+  },
+  "cleanup": {
+    "task_owned_build_outputs_created": false,
+    "native_or_background_workers_started": false,
+    "deletions_performed": false
+  }
+}

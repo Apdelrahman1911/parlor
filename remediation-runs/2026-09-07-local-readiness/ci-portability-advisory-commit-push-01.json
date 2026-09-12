@@ -1,0 +1,166 @@
+{
+  "recorded_at": "2026-09-07T12:05:06.556335+00:00",
+  "branch": "fix/local-readiness-2026-09-07",
+  "commits": [
+    "30bea221a6433a55b1daf6b5708c89aa8f1f10f2",
+    "2250007173bbf9ca7c441f1c46802d84c1b478ba"
+  ],
+  "reviewed_diff_sha256": "09d3bae1eaedd8e9755eae5e7688e31200635da871ef60a14748a4e130131415",
+  "source_review": "reviews/native-ci-portability-input-green02-independent-review-01.json",
+  "verification": [
+    "evidence/ci-portability-advisory-green-01",
+    "evidence/ci-portability-input-green-02"
+  ],
+  "remote_confirmed": true,
+  "remaining_status": "?? AGENTS.md\n?? audit-runs/\n?? design/\n?? docs/PARLOR_PROJECT_HANDOFF.md\n?? project-code-audit/\n?? remediation-runs/\n?? scripts/verification/",
+  "all_five_verified_tracked_changes_committed_and_pushed": true,
+  "commands": [
+    {
+      "command": [
+        "git",
+        "branch",
+        "--show-current"
+      ],
+      "exit_code": 0,
+      "output": "fix/local-readiness-2026-09-07\n"
+    },
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "exit_code": 0,
+      "output": "f5ea8045bd903c255041b198f54aca67e893612f\n"
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--cached",
+        "--name-only"
+      ],
+      "exit_code": 0,
+      "output": ""
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exit_code": 0,
+      "output": ""
+    },
+    {
+      "command": [
+        "git",
+        "add",
+        "--",
+        "composeApp/src/desktopTest/kotlin/com/parlor/app/ProductionUiAccessibilityContractTest.kt"
+      ],
+      "exit_code": 0,
+      "output": ""
+    },
+    {
+      "command": [
+        "git",
+        "commit",
+        "-m",
+        "test(ui): normalize source contract line endings on Windows"
+      ],
+      "exit_code": 0,
+      "output": "[fix/local-readiness-2026-09-07 30bea22] test(ui): normalize source contract line endings on Windows\n 1 file changed, 14 insertions(+), 1 deletion(-)\n"
+    },
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "exit_code": 0,
+      "output": "30bea221a6433a55b1daf6b5708c89aa8f1f10f2\n"
+    },
+    {
+      "command": [
+        "git",
+        "add",
+        "--",
+        "config/android-lint-accepted-warnings.txt",
+        "docs/ANDROID_LINT_TRIAGE.md",
+        "shared/transport-p2p/build.gradle.kts",
+        "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/AndroidReleaseLintContractTest.kt"
+      ],
+      "exit_code": 0,
+      "output": ""
+    },
+    {
+      "command": [
+        "git",
+        "commit",
+        "-m",
+        "build(lint): review Kotlin advisories and guard KAPT applicability"
+      ],
+      "exit_code": 0,
+      "output": "[fix/local-readiness-2026-09-07 2250007] build(lint): review Kotlin advisories and guard KAPT applicability\n 4 files changed, 133 insertions(+), 8 deletions(-)\n"
+    },
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "exit_code": 0,
+      "output": "2250007173bbf9ca7c441f1c46802d84c1b478ba\n"
+    },
+    {
+      "command": [
+        "git",
+        "push",
+        "--porcelain",
+        "origin",
+        "HEAD:refs/heads/fix/local-readiness-2026-09-07"
+      ],
+      "exit_code": 0,
+      "output": "To https://github.com/Apdelrahman1911/parlor.git\n \tHEAD:refs/heads/fix/local-readiness-2026-09-07\tf5ea804..2250007\nDone\n"
+    },
+    {
+      "command": [
+        "git",
+        "ls-remote",
+        "origin",
+        "refs/heads/fix/local-readiness-2026-09-07"
+      ],
+      "exit_code": 0,
+      "output": "2250007173bbf9ca7c441f1c46802d84c1b478ba\trefs/heads/fix/local-readiness-2026-09-07\n"
+    },
+    {
+      "command": [
+        "git",
+        "status",
+        "--porcelain=v1"
+      ],
+      "exit_code": 0,
+      "output": "?? AGENTS.md\n?? audit-runs/\n?? design/\n?? docs/PARLOR_PROJECT_HANDOFF.md\n?? project-code-audit/\n?? remediation-runs/\n?? scripts/verification/\n"
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--name-only"
+      ],
+      "exit_code": 0,
+      "output": ""
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--cached",
+        "--name-only"
+      ],
+      "exit_code": 0,
+      "output": ""
+    }
+  ]
+}

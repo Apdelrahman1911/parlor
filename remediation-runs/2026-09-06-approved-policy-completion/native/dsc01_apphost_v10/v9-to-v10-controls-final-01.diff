@@ -1,0 +1,1139 @@
+--- v9/run_dsc01_apphost_cycle.py
++++ v10/run_dsc01_apphost_cycle.py
+@@ -38,6 +38,8 @@
+                             inspect_copied_inputs_after_build, MODIFIED_KOTLIN, ADDITIONS)
+ from probe_validation import verify_probe
+ from v9_receipts import verify_v9_receipts
++from v10_receipts import verify_v10_receipts
++from v10_sources import render_v10_ui, render_v10_probe
+ 
+ FIXTURE = HERE
+ APP_ID = 'com.parlor.app.debug'
+@@ -61,6 +63,7 @@
+         'DSC01Probe.swift.in', 'IOSAppLaunchUITests.swift.in', 'DSC01CatalogSelection.swift.in', 'test_catalog_contract.py',
+         'DSC01PublicDiagnostics.swift.in', 'DSC01MafiaStartSelection.swift.in', 'DSC01OSPrerequisite.swift.in',
+         'v8_receipts.py', 'test_v8_contract.py', 'v9_receipts.py', 'test_v9_contract.py',
++        'v10_sources.py', 'DSC01OSAppSettings.swift.in', 'v10_receipts.py', 'test_v10_contract.py',
+         'copied-kotlin-phase.sh.in', 'source-bindings.json', 'copied_sources.py', 'bind_source.py',
+         'DSC01ComposeObservation.kt.in', 'DSC01InvocationBridge.kt.in', 'DSC01UIKitObservation.kt.in',
+         'DSC01NativeObservation.swift.in', 'probe_validation.py',
+@@ -88,7 +91,16 @@
+         'DSC01PublicDiagnostics.swift.in', 'DSC01MafiaStartSelection.swift.in', 'DSC01OSPrerequisite.swift.in',
+         'v8_receipts.py', 'test_v8_contract.py', 'copied-kotlin-phase.sh.in', 'source-bindings.json', 'copied_sources.py',
+         'bind_source.py', 'DSC01ComposeObservation.kt.in', 'DSC01InvocationBridge.kt.in', 'DSC01UIKitObservation.kt.in',
+-        'DSC01NativeObservation.swift.in', 'probe_validation.py', 'test_copy_observation_contract.py')]
++        'DSC01NativeObservation.swift.in', 'probe_validation.py', 'test_copy_observation_contract.py')] + [
++        # V10 compares original templates, tests, probes and the entire finalizer
++        # with these immutable executed V9 bytes, bound by their full paths.
++        HERE.parent / 'dsc01_apphost_v9' / name for name in (
++        'run_dsc01_apphost_cycle.py', 'secondary_fifo.py', 'test_secondary_fifo.py', 'test_harness_contract.py',
++        'DSC01Probe.swift.in', 'IOSAppLaunchUITests.swift.in', 'DSC01CatalogSelection.swift.in', 'test_catalog_contract.py',
++        'DSC01PublicDiagnostics.swift.in', 'DSC01MafiaStartSelection.swift.in', 'DSC01OSPrerequisite.swift.in',
++        'v8_receipts.py', 'test_v8_contract.py', 'v9_receipts.py', 'test_v9_contract.py', 'copied-kotlin-phase.sh.in',
++        'copied_sources.py', 'bind_source.py', 'DSC01ComposeObservation.kt.in', 'DSC01InvocationBridge.kt.in',
++        'DSC01UIKitObservation.kt.in', 'DSC01NativeObservation.swift.in', 'probe_validation.py', 'test_copy_observation_contract.py')]
+ 
+ 
+ def control_manifest():
+@@ -563,7 +575,7 @@
+                 '        let controller = ComposeContainerViewController(contentController: MainViewControllerKt.MainViewController())\n'
+                 '        DSC01Probe.shared.attach(controller)\n        return controller')
+             content.write_text(original + '\n' + (FIXTURE / 'DSC01NativeObservation.swift.in').read_text() +
+-                               '\n' + (FIXTURE / 'DSC01Probe.swift.in').read_text())
++                               '\n' + render_v10_probe((FIXTURE / 'DSC01Probe.swift.in').read_text()))
+             entry = temp / 'copy/iosApp/iosApp/iOSApp.swift'
+             original = entry.read_text()
+             needle = 'struct iOSApp: App {'
+@@ -571,11 +583,12 @@
+                 raise RuntimeError('Unexpected original Swift App entry')
+             entry.write_text(original.replace(needle, needle + '\n    init() { DSC01Probe.shared.prepare() }'))
+             ui_test = temp / 'copy/iosApp/iosAppUITests/IOSAppLaunchUITests.swift'
+-            ui_test.write_text((FIXTURE / 'IOSAppLaunchUITests.swift.in').read_text() + '\n' +
++            ui_test.write_text(render_v10_ui((FIXTURE / 'IOSAppLaunchUITests.swift.in').read_text()) + '\n' +
+                                (FIXTURE / 'DSC01PublicDiagnostics.swift.in').read_text() + '\n' +
+                                (FIXTURE / 'DSC01CatalogSelection.swift.in').read_text() + '\n' +
+                                (FIXTURE / 'DSC01MafiaStartSelection.swift.in').read_text() + '\n' +
+-                               (FIXTURE / 'DSC01OSPrerequisite.swift.in').read_text())
++                               (FIXTURE / 'DSC01OSPrerequisite.swift.in').read_text() + '\n' +
++                               (FIXTURE / 'DSC01OSAppSettings.swift.in').read_text())
+             project = temp / 'copy/iosApp/iosApp.xcodeproj/project.pbxproj'
+             pbx = project.read_text()
+             old_search = '$(SRCROOT)/../composeApp/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)'
+@@ -686,6 +699,8 @@
+                     raise RuntimeError('Required executed scenario has no durable probe evidence: ' + scenario)
+                 reports[scenario] = json.loads(path.read_text())
+             receipt['dsc01_matrix'] = verify_probe(reports, verify_legacy_settings_probe)
++            receipt['v10_os_interaction_proof'] = verify_v10_receipts(
++                (dest / 'xcodebuild.log').read_text(), reports['os'], receipt['dsc01_matrix']['os_settings_gate'])
+             receipt['probe_harness_status'] = 'observation_complete'
+             receipt['os_settings_gate'] = receipt['dsc01_matrix']['os_settings_gate']
+             if owner.secondary_errors:
+--- /dev/null
++++ v10/v10_sources.py
+@@ -0,0 +1,113 @@
++"""Exact source-bound OS-only copy transformations; no application mutation.
++
++V9 originals remain immutable and all old control assertions still execute.
++The final copied-source diff must additionally expose these substitutions.
++"""
++import hashlib
++
++
++ORIGINAL_UI_SHA = '82471590bf434cb0b174f6ba44f0d8c0b377e4fee3c4eb0dfe39bbfaa21946e5'
++ORIGINAL_PROBE_SHA = 'b20b07d53feb3fd7d5aebeb8a71a5742957d9ddab8eaf6bf981736318c3cfa94'
++OS_FUNCTION = '    @MainActor private func investigateActualOSPerAppLanguage('
++POST_SELECTION = '        XCTAssertFalse(settings.alerts.firstMatch.exists, "Do not dismiss unknown OS alerts")'
++ORIGINAL_PREFIX_SHA = '08efd9ddd785ba3c54fc6be0317c48db7b495c4cbf294cbb1e584680535f92b6'
++OLD_VERIFIED = '''        app.buttons["parlor-dsc01-os-verified"].tap()
++        app.buttons["parlor-dsc01-complete"].tap()'''
++NEW_VERIFIED = '''        try finishOSInvestigation(app, status: "verified-english", diagnostics: osDiagnostics)'''
++NEW_PREFIX = '''    @MainActor private func investigateActualOSPerAppLanguage(_ app: XCUIApplication) throws {
++        try verifyOSInteractionDecisionContract()
++        try startScenario(app, name: "os")
++        _ = try syntheticLanguage(app, language: "system")
++        app.buttons["parlor-dsc01-open-os"].tap()
++        let settings = XCUIApplication(bundleIdentifier: "com.apple.Preferences")
++        let osDiagnostics = DSC01OSAppDiagnostics()
++        defer { settings.terminate() }
++        XCTAssertTrue(settings.wait(for: .runningForeground, timeout: 20),
++                      "Supported UIApplication.openSettingsURLString must open actual Settings")
++        // URL acceptance is not proof of the app-specific pane. Only observed
++        // public Settings > Apps > Parlor routing may establish that context.
++        guard try establishOSAppPane(settings, diagnostics: osDiagnostics),
++              try activateOSRow(settings, control: .language, pane: .parlor,
++                                diagnostics: osDiagnostics, allowScroll: false) else {
++            recordOSSelectorDiagnostics(settings)
++            app.activate(); XCTAssertTrue(app.wait(for: .runningForeground, timeout: 20))
++            try finishOSInvestigation(app, status: "language-control-unavailable", diagnostics: osDiagnostics)
++            XCTAssertEqual(try observe(app)["osDisposition"] as? String, "language-control-unavailable")
++            return // Explicit BLOCKED; an unobserved pane is not an absent OS feature.
++        }
++        guard try awaitOSPane(settings, allowed: [.language], diagnostics: osDiagnostics, stage: "english"),
++              try activateOSRow(settings, control: .english, pane: .language,
++                                diagnostics: osDiagnostics, allowScroll: false) else {
++            recordOSSelectorDiagnostics(settings)
++            app.activate(); XCTAssertTrue(app.wait(for: .runningForeground, timeout: 20))
++            try finishOSInvestigation(app, status: "selection-unavailable", diagnostics: osDiagnostics)
++            XCTAssertEqual(try observe(app)["osDisposition"] as? String, "selection-unavailable")
++            return
++        }
++'''
++
++
++def replace_once(source, old, new):
++    if source.count(old) != 1:
++        raise RuntimeError('OS-only copy transformation requires exactly one original source boundary')
++    return source.replace(old, new, 1)
++
++
++def render_v10_ui(source):
++    if hashlib.sha256(source.encode()).hexdigest() != ORIGINAL_UI_SHA:
++        raise RuntimeError('V9 original complete UI matrix changed; never transform an unreviewed input')
++    start = source.index(OS_FUNCTION)
++    end = source.index(POST_SELECTION, start)
++    prefix = source[start:end]
++    if hashlib.sha256(prefix.encode()).hexdigest() != ORIGINAL_PREFIX_SHA:
++        raise RuntimeError('Original OS preselection boundary changed')
++    result = replace_once(source, prefix, NEW_PREFIX)
++    return replace_once(result, OLD_VERIFIED, NEW_VERIFIED)
++
++
++OLD_MARKER_LAYOUT = '''            if probe.isOSScenario {
++                HStack(spacing: 8) {
++                    Button("OS row unavailable") { probe.markOS("language-control-unavailable") }.accessibilityIdentifier("parlor-dsc01-os-no-row")
++                    Button("OS selection unavailable") { probe.markOS("selection-unavailable") }.accessibilityIdentifier("parlor-dsc01-os-no-selection")
++                    Button("OS verified") { probe.markOS("verified-english") }.accessibilityIdentifier("parlor-dsc01-os-verified")
++                }
++            }'''
++
++NEW_MARKER_LAYOUT = '''            if probe.isOSScenario {
++                // Keep the audit overlay compact during all actual Settings
++                // actions. Expand only after entering terminal reporting.
++                if probe.osMarkerControlsVisible {
++                    VStack(spacing: 4) {
++                        Button { probe.markOS("language-control-unavailable") } label: {
++                            Text("OS row unavailable").frame(maxWidth: .infinity, minHeight: 44).contentShape(Rectangle())
++                        }.buttonStyle(.plain).accessibilityIdentifier("parlor-dsc01-os-no-row")
++                        Button { probe.markOS("selection-unavailable") } label: {
++                            Text("OS selection unavailable").frame(maxWidth: .infinity, minHeight: 44).contentShape(Rectangle())
++                        }.buttonStyle(.plain).accessibilityIdentifier("parlor-dsc01-os-no-selection")
++                        Button { probe.markOS("verified-english") } label: {
++                            Text("OS verified").frame(maxWidth: .infinity, minHeight: 44).contentShape(Rectangle())
++                        }.buttonStyle(.plain).accessibilityIdentifier("parlor-dsc01-os-verified")
++                    }
++                } else {
++                    Button("OS receipt controls") { probe.showOSMarkerControls() }
++                        .accessibilityIdentifier("parlor-dsc01-os-show-markers")
++                }
++            }'''
++
++MARKER_PROPERTY = '    @Published private(set) var osMarkerControlsVisible = false\n'
++MARKER_REVEAL = '''    func showOSMarkerControls() {
++        precondition(Thread.isMainThread && scenario == "os" && report?.completed == false)
++        precondition(!osMarkerControlsVisible, "OS reporting controls must expand once")
++        osMarkerControlsVisible = true
++    }
++
++'''
++
++
++def render_v10_probe(source):
++    if hashlib.sha256(source.encode()).hexdigest() != ORIGINAL_PROBE_SHA:
++        raise RuntimeError('V9 original probe changed; never transform an unreviewed input')
++    result = replace_once(source, '    private var osDisposition = "not-investigated"',
++        MARKER_PROPERTY + '    private var osDisposition = "not-investigated"')
++    result = replace_once(result, '    func markOS(_ status: String) {', MARKER_REVEAL + '    func markOS(_ status: String) {')
++    return replace_once(result, OLD_MARKER_LAYOUT, NEW_MARKER_LAYOUT)
+--- /dev/null
++++ v10/DSC01OSAppSettings.swift.in
+@@ -0,0 +1,335 @@
++// Copy-only XCTest. Public Settings UI is observed, never manufactured.
++// Apple Support121430 documents Settings > Apps > a chosen app. UI labels are
++// runtime prerequisites, not API guarantees. Parlor/بارلور are bound resources.
++private enum DSC01OSPane: String, CaseIterable {
++    case settings, apps, parlor, language, audit
++    var titles: [String] {
++        switch self {
++        case .settings: return ["Settings"]
++        case .apps: return ["Apps"]
++        case .parlor: return ["Parlor", "بارلور"]
++        case .language: return ["Language", "Preferred Language"]
++        case .audit: return []
++        }
++    }
++}
++
++private enum DSC01OSControl: String {
++    case apps, parlor, language, english, showMarkers, noRow, noSelection, verified, complete
++    var labels: [String] {
++        switch self {
++        case .apps: return ["Apps"]
++        case .parlor: return ["Parlor", "بارلور"]
++        case .language: return ["Language"]
++        case .english: return ["English"]
++        default: return []
++        }
++    }
++    var auditIdentifier: String? {
++        switch self {
++        case .showMarkers: return "parlor-dsc01-os-show-markers"
++        case .noRow: return "parlor-dsc01-os-no-row"
++        case .noSelection: return "parlor-dsc01-os-no-selection"
++        case .verified: return "parlor-dsc01-os-verified"
++        case .complete: return "parlor-dsc01-complete"
++        default: return nil
++        }
++    }
++}
++
++@MainActor private final class DSC01OSAppDiagnostics {
++    private var ordinal = 0
++    private var bytes = 0
++    func append(_ stage: String, _ status: String, _ fields: [String: Any]) throws {
++        guard ["initialPane", "apps", "appsSuccessor", "parlor", "appPane", "language", "english",
++               "markerControls", "marker", "complete"].contains(stage),
++              ["observe", "before-activation", "after-activation", "PASS", "BLOCKED"].contains(status),
++              ordinal < 128 else { throw NSError(domain: "DSC01OSAppDiagnosticBudget", code: 1) }
++        ordinal += 1
++        let data = try JSONSerialization.data(withJSONObject: ["schemaVersion": 1,
++            "ordinal": ordinal, "stage": stage, "status": status, "fields": fields], options: [.sortedKeys])
++        bytes += data.count
++        guard data.count <= 8192, bytes <= 262144, let text = String(data: data, encoding: .utf8) else {
++            throw NSError(domain: "DSC01OSAppDiagnosticBudget", code: 2)
++        }
++        print("DSC01_OS_APP_INTERACTION " + text)
++    }
++}
++
++private func dsc01OSFrame(_ fields: [String: Any], _ key: String) -> CGRect? {
++    guard let value = fields[key] as? [String: Any], value["present"] as? Bool == true,
++          value["validFiniteRectangle"] as? Bool == true,
++          let numbers = value["rectangle"] as? [CGFloat], numbers.count == 4 else { return nil }
++    let frame = CGRect(x: numbers[0], y: numbers[1], width: numbers[2], height: numbers[3])
++    return dsc01CatalogFinite(frame) ? frame : nil
++}
++
++private func dsc01OSPaneEligible(_ fields: [String: Any]) -> Bool {
++    guard fields["foreground"] as? Bool == true, fields["alertCountCapped16"] as? Int == 0,
++          fields["keyboardPresent"] as? Bool == false, fields["paneCountCapped16"] as? Int == 1,
++          fields["paneHittable"] as? Bool == true,
++          let viewport = dsc01OSFrame(fields, "viewport"), let pane = dsc01OSFrame(fields, "paneFrame") else { return false }
++    return viewport.contains(pane)
++}
++
++private func dsc01OSRowEligible(_ fields: [String: Any]) -> Bool {
++    guard dsc01OSPaneEligible(fields), fields["targetCountCapped16"] as? Int == 1,
++          fields["targetHittable"] as? Bool == true, fields["targetEnabled"] as? Bool == true,
++          let viewport = dsc01OSFrame(fields, "viewport"), let target = dsc01OSFrame(fields, "targetFrame") else { return false }
++    return viewport.contains(target)
++}
++
++private func dsc01OSStable(_ first: CGRect, _ second: CGRect) -> Bool {
++    zip([first.minX, first.minY, first.width, first.height],
++        [second.minX, second.minY, second.width, second.height]).allSatisfy { pair in abs(pair.0 - pair.1) <= 0.5 }
++}
++
++private func dsc01OSStableTrain(_ frames: [CGRect], final: CGRect) -> Bool {
++    frames.count == 3 && frames.allSatisfy { dsc01OSStable($0, final) }
++}
++
++extension IOSAppLaunchUITests {
++    @MainActor private func osPaneMetadata(_ app: XCUIApplication, pane: DSC01OSPane) -> [String: Any] {
++        let query = pane == .audit ? app.staticTexts.matching(identifier: "parlor-dsc01-state") :
++            app.navigationBars.matching(NSPredicate(format: "label IN %@", pane.titles))
++        let count = query.count
++        let item = count == 1 ? query.firstMatch : nil
++        let knownTitles = ["Settings", "Apps", "Parlor", "بارلور", "Language", "Preferred Language", "General", "Language & Region"]
++        return ["pane": pane.rawValue, "foreground": app.state == .runningForeground,
++            "viewport": dsc01CatalogRectFields(app.frame), "alertCountCapped16": min(app.alerts.count, 16),
++            "keyboardPresent": app.keyboards.firstMatch.exists,
++            "paneCountCapped16": min(count, 16), "paneHittable": item?.isHittable ?? false,
++            "paneFrame": dsc01CatalogRectFields(item?.frame),
++            "knownNavigationTitles": knownTitles.map { title -> [String: Any] in
++                ["knownTitle": title, "countCapped16": min(app.navigationBars.matching(identifier: title).count, 16)]
++            }]
++    }
++
++    @MainActor private func osRowObservation(_ app: XCUIApplication, control: DSC01OSControl,
++        pane: DSC01OSPane) -> (XCUIElement?, [String: Any]) {
++        var fields = osPaneMetadata(app, pane: pane)
++        fields["control"] = control.rawValue
++        let queries: [(String, XCUIElementQuery)]
++        if let identifier = control.auditIdentifier {
++            queries = [("audit-button", app.buttons.matching(identifier: identifier))]
++        } else {
++            let predicate = NSPredicate(format: "label IN %@", control.labels)
++            queries = [("known-cell", app.cells.containing(predicate)),
++                       ("known-button", app.buttons.matching(predicate)),
++                       ("known-text", app.staticTexts.matching(predicate))]
++        }
++        var selected: XCUIElement?
++        fields["targetCountCapped16"] = 0
++        fields["targetHittable"] = false; fields["targetEnabled"] = false
++        fields["targetFrame"] = dsc01CatalogRectFields(nil); fields["selectorKind"] = "absent"
++        // An ambiguous nonempty class never falls through to a convenient one.
++        for (kind, query) in queries {
++            let count = query.count
++            if count == 0 { continue }
++            fields["selectorKind"] = kind; fields["targetCountCapped16"] = min(count, 16)
++            if count == 1 {
++                selected = query.firstMatch
++                fields["targetHittable"] = selected!.isHittable
++                fields["targetEnabled"] = selected!.isEnabled
++                fields["targetFrame"] = dsc01CatalogRectFields(selected!.frame)
++            }
++            break
++        }
++        return (selected, fields)
++    }
++
++    @MainActor private func awaitOSPane(_ settings: XCUIApplication, allowed: [DSC01OSPane],
++        diagnostics: DSC01OSAppDiagnostics, stage: String) throws -> Bool {
++        for attempt in 1...6 {
++            let observations = allowed.map { osPaneMetadata(settings, pane: $0) }
++            let eligible = observations.filter(dsc01OSPaneEligible)
++            if eligible.count == 1 {
++                try diagnostics.append(stage, "PASS", eligible[0]); return true
++            }
++            try diagnostics.append(stage, "observe", ["attempt": attempt, "eligiblePaneCount": eligible.count,
++                "knownPanes": observations])
++            if eligible.count > 1 { break }
++            if attempt < 6 { try catalogSamplingInterval() }
++        }
++        try diagnostics.append(stage, "BLOCKED", ["reason": "actual-known-pane-unavailable-or-ambiguous"])
++        return false
++    }
++
++    @MainActor private func establishOSAppPane(_ settings: XCUIApplication,
++        diagnostics: DSC01OSAppDiagnostics) throws -> Bool {
++        guard try awaitOSPane(settings, allowed: [.settings, .apps, .parlor],
++                              diagnostics: diagnostics, stage: "initialPane") else { return false }
++        if dsc01OSPaneEligible(osPaneMetadata(settings, pane: .settings)) {
++            guard try activateOSRow(settings, control: .apps, pane: .settings, diagnostics: diagnostics, allowScroll: true),
++                  try awaitOSPane(settings, allowed: [.apps], diagnostics: diagnostics, stage: "appsSuccessor") else { return false }
++        }
++        if dsc01OSPaneEligible(osPaneMetadata(settings, pane: .apps)) {
++            guard try activateOSRow(settings, control: .parlor, pane: .apps,
++                                    diagnostics: diagnostics, allowScroll: true) else { return false }
++        }
++        return try awaitOSPane(settings, allowed: [.parlor], diagnostics: diagnostics, stage: "appPane")
++    }
++
++    @MainActor private func activateOSRow(_ app: XCUIApplication, control: DSC01OSControl,
++        pane: DSC01OSPane, diagnostics: DSC01OSAppDiagnostics, allowScroll: Bool,
++        stage: String? = nil) throws -> Bool {
++        let eventStage = stage ?? control.rawValue
++        var stable: [CGRect] = []
++        for attempt in 1...8 {
++            let (candidate, observed) = osRowObservation(app, control: control, pane: pane)
++            var fields = observed; fields["attempt"] = attempt
++            try diagnostics.append(eventStage, "observe", fields)
++            guard dsc01OSPaneEligible(fields), (fields["targetCountCapped16"] as? Int ?? 16) <= 1 else { break }
++            if dsc01OSRowEligible(fields), let candidate, let frame = dsc01OSFrame(fields, "targetFrame") {
++                if stable.contains(where: { !dsc01OSStable($0, frame) }) { stable.removeAll() }
++                stable.append(frame)
++                if stable.count == 3 {
++                    // Re-query the unique semantic target immediately before
++                    // the only activation; no guessed coordinate or tap retry.
++                    let (current, finalFields) = osRowObservation(app, control: control, pane: pane)
++                    guard let current, dsc01OSRowEligible(finalFields),
++                          let currentFrame = dsc01OSFrame(finalFields, "targetFrame"),
++                          dsc01OSStableTrain(stable, final: currentFrame), candidate.exists else { break }
++                    var before = finalFields
++                    before["stableFrames"] = stable.map { dsc01CatalogRectFields($0) }
++                    try diagnostics.append(eventStage, "before-activation", before)
++                    current.tap()
++                    try diagnostics.append(eventStage, "after-activation", ["control": control.rawValue,
++                        "activationCount": 1, "expectedSourcePane": pane.rawValue])
++                    return true
++                }
++            } else {
++                stable.removeAll()
++                // Navigation-only search within a currently proven public pane.
++                // No scroll is allowed for language selection or audit markers.
++                if allowScroll && attempt < 6 { app.swipeUp(velocity: .slow) }
++            }
++            if attempt < 8 { try catalogSamplingInterval() }
++        }
++        try diagnostics.append(eventStage, "BLOCKED", osRowObservation(app, control: control, pane: pane).1)
++        return false
++    }
++
++    @MainActor private func osMarkerSnapshot(_ app: XCUIApplication) throws -> [String: Any] {
++        let observed = try readDisplayedObservation(app)
++        let statuses = ["not-investigated", "opening", "opened", "open-rejected",
++                        "language-control-unavailable", "selection-unavailable", "verified-english"]
++        guard observed["scenario"] as? String == "os", let sequence = observed["sequence"] as? Int,
++              (1...256).contains(sequence), let status = observed["osDisposition"] as? String,
++              statuses.contains(status), let completed = observed["completed"] as? Bool else {
++            throw NSError(domain: "DSC01OSMarkerUnexpectedObservation", code: 1)
++        }
++        return ["sequence": sequence, "osDisposition": status, "completed": completed]
++    }
++
++    @MainActor private func awaitOSMarkerPanel(_ app: XCUIApplication,
++        diagnostics: DSC01OSAppDiagnostics) throws -> Bool {
++        for attempt in 1...6 {
++            let rows = [DSC01OSControl.noRow, .noSelection, .verified].map {
++                osRowObservation(app, control: $0, pane: .audit).1
++            }
++            let frames = rows.compactMap { dsc01OSFrame($0, "targetFrame") }
++            if rows.allSatisfy(dsc01OSRowEligible), frames.count == 3,
++               frames.allSatisfy({ $0.height >= 44 }),
++               frames[0].maxY <= frames[1].minY + 0.5, frames[1].maxY <= frames[2].minY + 0.5 {
++                try diagnostics.append("markerControls", "PASS", ["visibleMarkerRows": rows]); return true
++            }
++            try diagnostics.append("markerControls", "observe", ["attempt": attempt, "visibleMarkerRows": rows])
++            if attempt < 6 { try catalogSamplingInterval() }
++        }
++        try diagnostics.append("markerControls", "BLOCKED", ["reason": "expanded-reporting-panel-not-visible"])
++        return false
++    }
++
++    @MainActor private func finishOSInvestigation(_ app: XCUIApplication, status: String,
++        diagnostics: DSC01OSAppDiagnostics) throws {
++        let control: DSC01OSControl
++        switch status {
++        case "language-control-unavailable": control = .noRow
++        case "selection-unavailable": control = .noSelection
++        case "verified-english": control = .verified
++        default: throw NSError(domain: "DSC01OSMarkerUnknownStatus", code: 1)
++        }
++        // The supported URL callback must already have durably reported opened.
++        // This is ordering evidence, not the original witness's assumed cause.
++        var before: [String: Any]?
++        for attempt in 1...6 {
++            let observed = try osMarkerSnapshot(app)
++            if observed["osDisposition"] as? String == "opened", observed["completed"] as? Bool == false {
++                before = observed; break
++            }
++            if attempt < 6 { try catalogSamplingInterval() }
++        }
++        guard let before, let previousSequence = before["sequence"] as? Int,
++              try activateOSRow(app, control: .showMarkers, pane: .audit, diagnostics: diagnostics,
++                                allowScroll: false, stage: "markerControls"),
++              try awaitOSMarkerPanel(app, diagnostics: diagnostics),
++              try activateOSRow(app, control: control, pane: .audit, diagnostics: diagnostics,
++                                allowScroll: false, stage: "marker") else {
++            XCTFail("Task-owned OS marker is not uniquely visible/hittable or URL callback is unobserved")
++            throw NSError(domain: "DSC01OSMarkerBlocked", code: 1)
++        }
++        var marked: [String: Any]?
++        for attempt in 1...6 {
++            let observed = try osMarkerSnapshot(app)
++            if observed["osDisposition"] as? String == status, observed["completed"] as? Bool == false,
++               (observed["sequence"] as? Int ?? 0) > previousSequence { marked = observed; break }
++            if attempt < 6 { try catalogSamplingInterval() }
++        }
++        guard let marked, let markedSequence = marked["sequence"] as? Int else {
++            XCTFail("Task marker activation produced no durable matching observation; never complete it")
++            throw NSError(domain: "DSC01OSMarkerNoReceipt", code: 1)
++        }
++        try diagnostics.append("marker", "PASS", marked)
++        guard try activateOSRow(app, control: .complete, pane: .audit, diagnostics: diagnostics,
++                                allowScroll: false, stage: "complete") else {
++            throw NSError(domain: "DSC01OSCompletionBlocked", code: 1)
++        }
++        for attempt in 1...6 {
++            let completed = try osMarkerSnapshot(app)
++            if completed["osDisposition"] as? String == status, completed["completed"] as? Bool == true,
++               (completed["sequence"] as? Int ?? 0) > markedSequence {
++                try diagnostics.append("complete", "PASS", completed); return
++            }
++            if attempt < 6 { try catalogSamplingInterval() }
++        }
++        XCTFail("Task completion produced no durable matching terminal observation")
++        throw NSError(domain: "DSC01OSCompletionNoReceipt", code: 1)
++    }
++
++    @MainActor private func verifyOSInteractionDecisionContract() throws {
++        let good: [String: Any] = ["foreground": true, "alertCountCapped16": 0, "keyboardPresent": false,
++            "paneCountCapped16": 1, "paneHittable": true, "paneFrame": dsc01CatalogRectFields(CGRect(x: 0, y: 44, width: 402, height: 54)),
++            "viewport": dsc01CatalogRectFields(CGRect(x: 0, y: 0, width: 402, height: 874)),
++            "targetCountCapped16": 1, "targetHittable": true, "targetEnabled": true,
++            "targetFrame": dsc01CatalogRectFields(CGRect(x: 20, y: 200, width: 362, height: 44))]
++        var cases: [([String: Any], Bool)] = [(good, true)]
++        for (key, value) in [("foreground", false), ("keyboardPresent", true), ("paneHittable", false),
++                             ("targetHittable", false), ("targetEnabled", false)] {
++            var changed = good; changed[key] = value; cases.append((changed, false))
++        }
++        for (key, value) in [("alertCountCapped16", 1), ("paneCountCapped16", 0), ("paneCountCapped16", 2),
++                             ("targetCountCapped16", 0), ("targetCountCapped16", 2)] {
++            var changed = good; changed[key] = value; cases.append((changed, false))
++        }
++        for key in ["targetFrame", "paneFrame", "viewport"] {
++            var missing = good; missing.removeValue(forKey: key); cases.append((missing, false))
++            var offscreen = good
++            offscreen[key] = dsc01CatalogRectFields(CGRect(x: -500, y: -500, width: 30, height: 30))
++            cases.append((offscreen, false))
++        }
++        var invalid = good
++        invalid["targetFrame"] = ["present": true, "validFiniteRectangle": false]
++        cases.append((invalid, false))
++        XCTAssertEqual(cases.count, 18)
++        for (index, item) in cases.enumerated() { XCTAssertEqual(dsc01OSRowEligible(item.0), item.1, "OS guard case \(index)") }
++        XCTAssertTrue(dsc01OSStable(CGRect(x: 1, y: 2, width: 3, height: 4), CGRect(x: 1, y: 2, width: 3, height: 4)))
++        XCTAssertFalse(dsc01OSStable(CGRect(x: 1, y: 2, width: 3, height: 4), CGRect(x: 1, y: 3, width: 3, height: 4)))
++        let frame: (CGFloat) -> CGRect = { CGRect(x: $0, y: 2, width: 30, height: 44) }
++        XCTAssertFalse(dsc01OSStableTrain([frame(0), frame(0.4), frame(0.8)], final: frame(1.2)), "Cumulative drift is not stability")
++        XCTAssertTrue(dsc01OSStableTrain([frame(0), frame(0.2), frame(0.4)], final: frame(0.4)))
++        XCTAssertFalse(dsc01OSStableTrain([frame(0), frame(0.2), frame(0.4)], final: frame(2)), "Final re-query cannot drift")
++        XCTAssertFalse(dsc01OSStableTrain([frame(0), frame(0)], final: frame(0)), "All three samples are mandatory")
++        print("DSC01_OS_INTERACTION_DECISION_CONTRACT {\"schemaVersion\":1,\"cases\":24,\"passed\":true}")
++    }
++}
+--- /dev/null
++++ v10/v10_receipts.py
+@@ -0,0 +1,179 @@
++"""Strict public OS interaction receipts, ADDITIONAL to every original oracle.
++
++A successful supported URL, a marker, or these synthetic contracts is never
++actual OS-selection evidence. Root first validates the unchanged full probes.
++"""
++import v8_receipts
++from v9_receipts import contained
++
++
++STAGES = ('initialPane', 'apps', 'appsSuccessor', 'parlor', 'appPane', 'language', 'english',
++          'markerControls', 'marker', 'complete')
++TERMINALS = {'language-control-unavailable': 'noRow', 'selection-unavailable': 'noSelection',
++             'verified-english': 'verified'}
++ACTION_PANES = {'apps': 'settings', 'parlor': 'apps', 'language': 'parlor', 'english': 'language',
++                'showMarkers': 'audit', 'noRow': 'audit', 'noSelection': 'audit',
++                'verified': 'audit', 'complete': 'audit'}
++ACTION_STAGES = dict(apps='apps', parlor='parlor', language='language', english='english',
++                     showMarkers='markerControls', noRow='marker', noSelection='marker', verified='marker', complete='complete')
++
++
++def require(condition, message):
++    if not condition:
++        raise RuntimeError(message)
++
++
++def pane_eligible(fields):
++    require(isinstance(fields, dict), 'Pane metadata is not an observation object')
++    require(all(fields.get(key) is True for key in ('foreground', 'paneHittable')) and
++            fields.get('keyboardPresent') is False and
++            type(fields.get('alertCountCapped16')) is int and fields['alertCountCapped16'] == 0 and
++            type(fields.get('paneCountCapped16')) is int and fields['paneCountCapped16'] == 1,
++            'Actual pane must be unique, visible, uncovered and foreground')
++    viewport = v8_receipts.rectangle(fields.get('viewport'))
++    require(contained(v8_receipts.rectangle(fields.get('paneFrame')), viewport), 'Pane is outside measured viewport')
++    # knownNavigationTitles use identifier queries for DIAGNOSTICS ONLY. Actual
++    # pane eligibility is separately measured with the exact known label union.
++    return viewport
++
++
++def row_eligible(fields, control):
++    require(isinstance(fields, dict), 'Target metadata is not an observation object')
++    require(fields.get('control') == control and fields.get('pane') == ACTION_PANES[control],
++            'Wrong semantic control or source pane')
++    viewport = pane_eligible(fields)
++    require(type(fields.get('targetCountCapped16')) is int and fields['targetCountCapped16'] == 1 and
++            fields.get('targetHittable') is True and fields.get('targetEnabled') is True,
++            'Actual target must be unique, hittable and enabled')
++    expected_kinds = {'audit-button'} if ACTION_PANES[control] == 'audit' else {'known-cell', 'known-button', 'known-text'}
++    require(fields.get('selectorKind') in expected_kinds, 'Unreviewed target-selector class')
++    target = v8_receipts.rectangle(fields.get('targetFrame'))
++    require(contained(target, viewport), 'Target is outside measured viewport')
++    return target
++
++
++def exactly(rows, stage, status):
++    selected = [row for row in rows if (row['stage'], row['status']) == (stage, status)]
++    require(len(selected) == 1, 'Required unique interaction stage missing/repeated: ' + stage + '/' + status)
++    return selected[0]
++
++
++def verify_v10_receipts(log, os_report, original_os_gate):
++    contracts = v8_receipts.records(log, 'DSC01_OS_INTERACTION_DECISION_CONTRACT ',
++        maximum=1, row_bytes=256, total_bytes=256)
++    require(contracts == [dict(schemaVersion=1, cases=24, passed=True)] and
++            type(contracts[0]['schemaVersion']) is int and type(contracts[0]['cases']) is int and
++            contracts[0]['passed'] is True, 'Executed Swift OS interaction guard contract absent')
++    rows = v8_receipts.records(log, 'DSC01_OS_APP_INTERACTION ', maximum=128, row_bytes=8192, total_bytes=262144)
++    require(rows, 'Actual OS interaction receipts absent')
++    for ordinal, row in enumerate(rows, 1):
++        require(set(row) == {'schemaVersion', 'ordinal', 'stage', 'status', 'fields'} and
++                type(row['schemaVersion']) is int and row['schemaVersion'] == 1 and
++                type(row['ordinal']) is int and row['ordinal'] == ordinal and row['stage'] in STAGES and
++                row['status'] in {'observe', 'before-activation', 'after-activation', 'PASS', 'BLOCKED'} and
++                isinstance(row['fields'], dict), 'Malformed, reordered or unknown OS interaction receipt')
++    initial = [row for row in rows if (row['stage'], row['status']) == ('initialPane', 'PASS')]
++    require(len(initial) <= 1, 'Initial pane repeated')
++    if initial:
++        start = initial[0]['fields']; pane_eligible(start)
++        require(start.get('pane') in {'settings', 'apps', 'parlor'}, 'Unknown initial public pane')
++        expected_public = {'settings': ['apps', 'parlor'], 'apps': ['parlor'], 'parlor': []}[start['pane']] + ['language', 'english']
++    else:
++        expected_public = []
++    before = [row for row in rows if row['status'] == 'before-activation']
++    after = [row for row in rows if row['status'] == 'after-activation']
++    require(before and len(before) == len(after), 'Required activations are absent or an activation lacks its after receipt')
++    actions = []
++    previous_after = 0
++    for pre, post in zip(before, after):
++        control = pre['fields'].get('control')
++        require(control in ACTION_PANES and pre['stage'] == post['stage'] == ACTION_STAGES[control] and
++                previous_after < pre['ordinal'] < post['ordinal'] and
++                type(post['fields'].get('activationCount')) is int and
++                post['fields'] == dict(control=control, activationCount=1, expectedSourcePane=ACTION_PANES[control]),
++                'Wrong, repeated or unpaired OS interaction action')
++        target = row_eligible(pre['fields'], control)
++        stable = pre['fields'].get('stableFrames')
++        require(isinstance(stable, list) and len(stable) == 3 and
++                all(v8_receipts.near(v8_receipts.rectangle(frame), target) for frame in stable),
++                'No three stable measured target frames before activation')
++        samples = [row for row in rows if row['ordinal'] < pre['ordinal'] and row['stage'] == pre['stage'] and
++                   row['status'] == 'observe' and row['fields'].get('control') == control][-3:]
++        require(len(samples) == 3, 'Measured stable target observation train incomplete')
++        for sample in samples:
++            require(previous_after < sample['ordinal'], 'Action reused samples from before a previous activation')
++            require(v8_receipts.near(row_eligible(sample['fields'], control), target), 'Stable observation train moved or was ineligible')
++        actions.append(control)
++        previous_after = post['ordinal']
++    require(len(actions) == len(set(actions)), 'A semantic action was retried')
++    public = [control for control in actions if ACTION_PANES[control] != 'audit']
++    require(public == expected_public[:len(public)], 'Public Settings route absent, reordered or guessed')
++    require(not initial or initial[0]['ordinal'] < before[0]['ordinal'], 'An action preceded proven initial pane')
++    require(actions[-3:] in (['showMarkers', 'noRow', 'complete'], ['showMarkers', 'noSelection', 'complete'],
++                            ['showMarkers', 'verified', 'complete']) and actions == public + actions[-3:],
++            'Reporting expansion, marker and completion must be unique and follow every public action')
++    panel = exactly(rows, 'markerControls', 'PASS')
++    panels = panel['fields'].get('visibleMarkerRows')
++    require(isinstance(panels, list) and len(panels) == 3, 'Actual expanded reporting-panel successor missing')
++    frames = [row_eligible(fields, control) for fields, control in zip(panels, ('noRow', 'noSelection', 'verified'))]
++    require(all(frame[3] >= 44 for frame in frames) and frames[0][1] + frames[0][3] <= frames[1][1] + 0.5 and
++            frames[1][1] + frames[1][3] <= frames[2][1] + 0.5, 'Expanded markers are clipped, undersized or overlapping')
++    marker = exactly(rows, 'marker', 'PASS'); completed = exactly(rows, 'complete', 'PASS')
++    require(exactly(rows, 'markerControls', 'after-activation')['ordinal'] < panel['ordinal'] <
++            exactly(rows, 'marker', 'before-activation')['ordinal'] < exactly(rows, 'marker', 'after-activation')['ordinal'] <
++            marker['ordinal'] < exactly(rows, 'complete', 'before-activation')['ordinal'] <
++            exactly(rows, 'complete', 'after-activation')['ordinal'] < completed['ordinal'],
++            'Completion occurred before visible expansion and durable marker')
++    require(os_report.get('scenario') == 'os' and os_report.get('completed') is True and
++            isinstance(os_report.get('observations'), list), 'No complete original durable OS report')
++    events = os_report['observations']
++    require(events and all(isinstance(event, dict) for event in events), 'Missing original OS observations')
++    terminal = events[-1].get('osDisposition')
++    require(terminal in TERMINALS and actions[-2] == TERMINALS[terminal], 'Marker and actual durable outcome disagree')
++    for record, is_completed in ((marker, False), (completed, True)):
++        value = record['fields']
++        require(set(value) == {'sequence', 'osDisposition', 'completed'} and type(value['sequence']) is int and
++                value['osDisposition'] == terminal and value['completed'] is is_completed,
++                'Marker/completion receipt missing exact durable sequence/status')
++        matching = [event for event in events if event.get('ordinal') == value['sequence']]
++        require(len(matching) == 1 and matching[0].get('osDisposition') == terminal and
++                matching[0].get('phase') == ('complete' if is_completed else 'sample'),
++                'Printed marker is not backed by the original durable probe')
++    require(marker['fields']['sequence'] < completed['fields']['sequence'], 'Durable completion precedes marker')
++    require(any(event.get('osDisposition') == 'opened' and event.get('ordinal', 257) < marker['fields']['sequence']
++                for event in events), 'Supported URL callback must be durably observed before terminal reporting')
++    blocked = [row for row in rows if row['status'] == 'BLOCKED']
++    if terminal != 'verified-english':
++        require(original_os_gate.get('status') == 'BLOCKED' and original_os_gate.get('reason') == terminal and len(blocked) == 1,
++                'Unavailable public route is not an actual OS selection PASS')
++        require((terminal == 'language-control-unavailable' and blocked[0]['stage'] in
++                    {'initialPane', 'apps', 'appsSuccessor', 'parlor', 'appPane', 'language'} and 'language' not in public) or
++                (terminal == 'selection-unavailable' and blocked[0]['stage'] == 'english' and public[-1:] == ['language']),
++                'Blocked classification does not match the last actual public interaction')
++        require(all(pre['ordinal'] < blocked[0]['ordinal'] for pre in before if pre['fields']['control'] in public),
++                'A public action ran after a blocked route without authorization')
++        return dict(status='BLOCKED', terminal=terminal, actual_public_actions=public, durable_reporting=True,
++                    reason='Actual public per-app pane/language flow was not completed; markers and URL acceptance are not OS proof.')
++    require(original_os_gate.get('status') == 'PASS' and not blocked and public == expected_public and
++            public[-2:] == ['language', 'english'], 'Actual OS English selection and unchanged original oracles did not all pass')
++    app_pane = exactly(rows, 'appPane', 'PASS'); pane_eligible(app_pane['fields'])
++    require(app_pane['fields'].get('pane') == 'parlor' and app_pane['ordinal'] < exactly(rows, 'language', 'before-activation')['ordinal'],
++            'App-specific pane was not proven before selecting language')
++    if 'parlor' in public:
++        require(exactly(rows, 'parlor', 'after-activation')['ordinal'] < app_pane['ordinal'], 'Parlor successor preceded its route action')
++    language_pane = exactly(rows, 'english', 'PASS'); pane_eligible(language_pane['fields'])
++    require(language_pane['fields'].get('pane') == 'language' and
++            exactly(rows, 'language', 'after-activation')['ordinal'] < language_pane['ordinal'] <
++            exactly(rows, 'english', 'before-activation')['ordinal'], 'Actual language picker successor missing')
++    if 'apps' in public:
++        successor = exactly(rows, 'appsSuccessor', 'PASS'); pane_eligible(successor['fields'])
++        require(successor['fields'].get('pane') == 'apps' and exactly(rows, 'apps', 'after-activation')['ordinal'] <
++                successor['ordinal'] < exactly(rows, 'parlor', 'before-activation')['ordinal'], 'Actual Apps successor missing')
++    expected_passes = {'initialPane', 'appPane', 'english', 'markerControls', 'marker', 'complete'}
++    if 'apps' in public:
++        expected_passes.add('appsSuccessor')
++    require([row['stage'] for row in rows if row['status'] == 'PASS'] ==
++            [stage for stage in STAGES if stage in expected_passes], 'Unexpected or reordered successful observation stage')
++    return dict(status='PASS', actual_public_actions=public, actual_app_pane=True, actual_os_english_selection=True,
++                original_os_ar_system_restart_oracles_required=True, guarded_durable_reporting=True,
++                swift_decision_contract_cases=24, rows=len(rows), physical_device_or_store_claim=False)
+--- /dev/null
++++ v10/test_v10_contract.py
+@@ -0,0 +1,314 @@
++"""Pure synthetic source/receipt controls; root executes, never native proof."""
++import copy
++import hashlib
++import json
++from pathlib import Path
++import re
++import unittest
++
++import probe_validation
++import run_dsc01_apphost_cycle as runner
++import v10_receipts as receipts
++import v10_sources as source
++from test_copy_observation_contract import os_report
++from test_v8_contract import rect
++
++HERE = Path(__file__).resolve().parent
++V9 = HERE.parent / 'dsc01_apphost_v9'
++V9_REFERENCES = (
++    'run_dsc01_apphost_cycle.py', 'secondary_fifo.py', 'test_secondary_fifo.py', 'test_harness_contract.py',
++    'DSC01Probe.swift.in', 'IOSAppLaunchUITests.swift.in', 'DSC01CatalogSelection.swift.in', 'test_catalog_contract.py',
++    'DSC01PublicDiagnostics.swift.in', 'DSC01MafiaStartSelection.swift.in', 'DSC01OSPrerequisite.swift.in',
++    'v8_receipts.py', 'test_v8_contract.py', 'v9_receipts.py', 'test_v9_contract.py', 'copied-kotlin-phase.sh.in',
++    'copied_sources.py', 'bind_source.py', 'DSC01ComposeObservation.kt.in', 'DSC01InvocationBridge.kt.in',
++    'DSC01UIKitObservation.kt.in', 'DSC01NativeObservation.swift.in', 'probe_validation.py', 'test_copy_observation_contract.py')
++
++
++def pane(name):
++    return dict(pane=name, foreground=True, viewport=rect(0, 0, 402, 874), alertCountCapped16=0,
++                keyboardPresent=False, paneCountCapped16=1, paneHittable=True, paneFrame=rect(0, 44, 402, 54),
++                knownNavigationTitles=[])  # Identifier diagnostics are not label-query proof.
++
++
++def control(name, y=200):
++    value = pane(receipts.ACTION_PANES[name])
++    value.update(control=name, selectorKind='audit-button' if value['pane'] == 'audit' else 'known-cell',
++                 targetCountCapped16=1, targetHittable=True, targetEnabled=True, targetFrame=rect(20, y, 362, 44))
++    return value
++
++
++def fixture(start='settings', blocked=None):
++    rows = []
++    def add(stage, status, fields):
++        rows.append(dict(schemaVersion=1, ordinal=len(rows) + 1, stage=stage, status=status, fields=copy.deepcopy(fields)))
++    def action(name):
++        fields = control(name); stage = receipts.ACTION_STAGES[name]
++        for attempt in range(1, 4): add(stage, 'observe', dict(fields, attempt=attempt))
++        add(stage, 'before-activation', dict(fields, stableFrames=[copy.deepcopy(fields['targetFrame']) for _ in range(3)]))
++        add(stage, 'after-activation', dict(control=name, activationCount=1, expectedSourcePane=fields['pane']))
++    if start is None:
++        add('initialPane', 'BLOCKED', dict(reason='actual-known-pane-unavailable-or-ambiguous'))
++    else:
++        add('initialPane', 'PASS', pane(start))
++        if start == 'settings':
++            action('apps'); add('appsSuccessor', 'PASS', pane('apps'))
++        if start != 'parlor': action('parlor')
++        add('appPane', 'PASS', pane('parlor'))
++        if blocked == 'language-control-unavailable':
++            add('language', 'BLOCKED', dict(reason='exact-language-unavailable'))
++        else:
++            action('language'); add('english', 'PASS', pane('language'))
++            if blocked:
++                add('english', 'BLOCKED', dict(reason='exact-selection-unavailable'))
++            else: action('english')
++    report = os_report(blocked=blocked is not None)
++    terminal = blocked or 'verified-english'
++    completed = report['observations'].pop()
++    marked = copy.deepcopy(completed); marked.update(phase='sample', osDisposition=terminal)
++    completed.update(ordinal=marked['ordinal'] + 1, osDisposition=terminal)
++    report['observations'] += [marked, completed]
++    action('showMarkers')
++    add('markerControls', 'PASS', dict(visibleMarkerRows=[control(name, y) for name, y in
++        zip(('noRow', 'noSelection', 'verified'), (200, 248, 296))]))
++    action(receipts.TERMINALS[terminal])
++    add('marker', 'PASS', dict(sequence=marked['ordinal'], osDisposition=terminal, completed=False))
++    action('complete')
++    add('complete', 'PASS', dict(sequence=completed['ordinal'], osDisposition=terminal, completed=True))
++    return rows, report
++
++
++def encoded(rows, contract=True):
++    result = ['DSC01_OS_APP_INTERACTION ' + json.dumps(row) for row in rows]
++    if contract: result.insert(0, 'DSC01_OS_INTERACTION_DECISION_CONTRACT ' + json.dumps(dict(schemaVersion=1, cases=24, passed=True)))
++    return '\n'.join(result)
++
++
++def reordinal(rows):
++    for ordinal, row in enumerate(rows, 1): row['ordinal'] = ordinal
++
++
++def pick(rows, stage, status):
++    return next(row for row in rows if (row['stage'], row['status']) == (stage, status))
++
++
++class V10OSReceiptTest(unittest.TestCase):
++    def verify(self, rows, report):
++        return receipts.verify_v10_receipts(encoded(rows), report, probe_validation.verify_os(report))
++
++    def test_all_observed_public_entry_panes_keep_full_original_os_oracles(self):
++        for start in ('settings', 'apps', 'parlor'):
++            rows, report = fixture(start)
++            result = self.verify(rows, report)
++            self.assertEqual('PASS', result['status'])
++            self.assertTrue(result['original_os_ar_system_restart_oracles_required'])
++            self.assertEqual(['language', 'english'], result['actual_public_actions'][-2:])
++
++    def test_unproven_pane_or_unavailable_language_remains_explicitly_blocked(self):
++        for start, blocked in ((None, 'language-control-unavailable'), ('settings', 'language-control-unavailable'),
++                               ('parlor', 'selection-unavailable')):
++            rows, report = fixture(start, blocked)
++            result = self.verify(rows, report)
++            self.assertEqual('BLOCKED', result['status'])
++            self.assertNotIn('actual_os_english_selection', result)
++
++    def test_opened_or_verified_marker_alone_cannot_manufacture_os_selection(self):
++        for stage in ('language', 'english'):
++            rows, report = fixture()
++            removed = [row for row in rows if not (row['stage'] == stage and row['status'].endswith('activation'))]
++            reordinal(removed)
++            with self.assertRaises(RuntimeError): self.verify(removed, report)
++        rows, report = fixture()
++        with self.assertRaises(RuntimeError): receipts.verify_v10_receipts(encoded(rows), report, dict(status='BLOCKED'))
++
++    def test_contract_must_be_executed_once_with_all_twenty_four_cases(self):
++        rows, report = fixture()
++        for log in (encoded(rows, False), encoded(rows).replace('"cases": 24', '"cases": 23'),
++                    encoded(rows).replace('"schemaVersion": 1, "cases": 24', '"schemaVersion": true, "cases": 24'),
++                    encoded(rows) + '\n' + encoded(rows).splitlines()[0]):
++            with self.assertRaises(RuntimeError): receipts.verify_v10_receipts(log, report, dict(status='PASS'))
++
++    def test_missing_repeated_or_reordered_actions_fail_closed(self):
++        for stage in ('apps', 'parlor', 'language', 'english', 'markerControls', 'marker', 'complete'):
++            for mode in ('missing', 'duplicate', 'reorder'):
++                rows, report = fixture(); target = pick(rows, stage, 'after-activation'); index = rows.index(target)
++                if mode == 'missing': rows.remove(target)
++                elif mode == 'duplicate': rows.insert(index, copy.deepcopy(target))
++                else: rows.remove(target); rows.insert(0, target)
++                reordinal(rows)
++                with self.subTest(stage=stage, mode=mode), self.assertRaises(RuntimeError): self.verify(rows, report)
++
++    def test_page_and_target_guards_reject_hidden_ambiguous_offscreen_and_wrong_pane(self):
++        changes = (('foreground', False), ('keyboardPresent', True), ('alertCountCapped16', 1),
++                   ('paneCountCapped16', 2), ('paneHittable', False), ('targetCountCapped16', 2),
++                   ('targetHittable', False), ('targetEnabled', False), ('pane', 'settings'),
++                   ('selectorKind', 'prefix-fallback'), ('targetCountCapped16', True))
++        for key, value in changes:
++            rows, report = fixture(); pick(rows, 'language', 'before-activation')['fields'][key] = value
++            with self.subTest(key=key), self.assertRaises(RuntimeError): self.verify(rows, report)
++        for key in ('targetFrame', 'viewport', 'paneFrame'):
++            rows, report = fixture(); pick(rows, 'language', 'before-activation')['fields'][key] = rect(-500, -500, 10, 10)
++            with self.assertRaises(RuntimeError): self.verify(rows, report)
++
++    def test_three_real_stable_samples_and_finite_frames_are_mandatory(self):
++        for mode in ('missing', 'moved', 'nan', 'unhittable'):
++            rows, report = fixture(); before = pick(rows, 'marker', 'before-activation')['fields']
++            original_target = copy.deepcopy(before['targetFrame'])
++            if mode == 'missing': before['stableFrames'].pop()
++            elif mode == 'moved': before['stableFrames'][0]['rectangle'][0] += 2
++            elif mode == 'nan': before['stableFrames'][0]['rectangle'][0] = float('nan')
++            else: pick(rows, 'marker', 'observe')['fields']['targetHittable'] = False
++            self.assertEqual(original_target, before['targetFrame'], 'A stable-sample mutation must not alias the final target')
++            if mode in ('moved', 'nan'):
++                self.assertEqual([original_target, original_target], before['stableFrames'][1:])
++            expected = ('numeric bounds invalid' if mode == 'nan' else 'Actual target must' if mode == 'unhittable'
++                        else 'No three stable measured target frames')
++            with self.subTest(mode=mode), self.assertRaisesRegex(RuntimeError, expected): self.verify(rows, report)
++        rows, report = fixture()
++        sample = pick(rows, 'marker', 'observe'); rows.remove(sample)
++        rows.insert(1, sample); reordinal(rows)
++        with self.assertRaises(RuntimeError): self.verify(rows, report)
++        for cumulative in (True, False):
++            rows, report = fixture(); before = pick(rows, 'marker', 'before-activation')['fields']
++            frames = [rect(20 + delta, 200, 362, 44) for delta in ((0, 0.4, 0.8) if cumulative else (0, 0.2, 0.4))]
++            before['stableFrames'] = frames
++            before['targetFrame'] = rect(21.2 if cumulative else 22, 200, 362, 44)
++            samples = [row for row in rows if (row['stage'], row['status']) == ('marker', 'observe')]
++            for sample, frame in zip(samples, frames): sample['fields']['targetFrame'] = frame
++            with self.subTest(cumulative=cumulative), self.assertRaises(RuntimeError): self.verify(rows, report)
++
++    def test_expander_successor_requires_all_three_visible_ordered_full_height_markers(self):
++        for mode in ('missing', 'covered', 'clipped', 'overlap'):
++            rows, report = fixture(); panel = pick(rows, 'markerControls', 'PASS')['fields']['visibleMarkerRows']
++            if mode == 'missing': panel.pop()
++            elif mode == 'covered': panel[1]['targetHittable'] = False
++            elif mode == 'clipped': panel[0]['targetFrame']['rectangle'][3] = 10
++            else: panel[1]['targetFrame']['rectangle'][1] = 201
++            with self.subTest(mode=mode), self.assertRaises(RuntimeError): self.verify(rows, report)
++
++    def test_marker_requires_matching_durable_sample_before_completed_report(self):
++        for mode in ('wrong-sequence', 'wrong-status', 'no-sample', 'already-complete'):
++            rows, report = fixture(); marker = pick(rows, 'marker', 'PASS')['fields']
++            if mode == 'wrong-sequence': marker['sequence'] += 10
++            elif mode == 'wrong-status': marker['osDisposition'] = 'opened'
++            elif mode == 'no-sample': report['observations'][-2]['phase'] = 'complete'
++            else: marker['completed'] = True
++            with self.subTest(mode=mode), self.assertRaises(RuntimeError): self.verify(rows, report)
++
++    def test_report_expansion_and_complete_cannot_precede_their_receipts(self):
++        for stage, before in (('markerControls', 'after-activation'), ('marker', 'after-activation'), ('complete', 'after-activation')):
++            rows, report = fixture(); passed = pick(rows, stage, 'PASS'); anchor = pick(rows, stage, before)
++            rows.remove(passed); rows.insert(rows.index(anchor), passed); reordinal(rows)
++            with self.assertRaises(RuntimeError): self.verify(rows, report)
++
++    def test_original_os_preference_restoration_and_restart_assertions_are_not_bypassed(self):
++        rows, report = fixture()
++        explicit = next(event for event in report['observations'] if event['preferences']['setting'] == 'ar')
++        explicit['preferences']['ownerPrevious'] = []
++        with self.assertRaises(RuntimeError): self.verify(rows, report)
++        rows, report = fixture()
++        report['observations'] = [row for row in report['observations'] if row['fixture'] != 'continue']
++        with self.assertRaises(RuntimeError): self.verify(rows, report)
++
++    def test_unknown_stages_bool_counts_payload_bounds_and_missing_receipts_fail(self):
++        rows, report = fixture(); pick(rows, 'language', 'after-activation')['fields']['activationCount'] = True
++        with self.assertRaises(RuntimeError): self.verify(rows, report)
++        rows, report = fixture(); rows[0]['stage'] = 'unknown'
++        with self.assertRaises(RuntimeError): self.verify(rows, report)
++        rows, report = fixture()
++        for log in ('', encoded(rows) + '\nDSC01_OS_APP_INTERACTION ' + ' ' * 8193):
++            with self.assertRaises(RuntimeError): receipts.verify_v10_receipts(log, report, dict(status='PASS'))
++        missing = [row for row in rows if not row['status'].endswith('activation')]
++        reordinal(missing)
++        with self.assertRaises(RuntimeError): self.verify(missing, report)
++        rows, report = fixture('settings', 'language-control-unavailable')
++        pick(rows, 'language', 'BLOCKED')['stage'] = 'english'
++        with self.assertRaises(RuntimeError): self.verify(rows, report)
++
++
++class V10CopySourceContractTest(unittest.TestCase):
++    def test_all_original_templates_tests_kotlin_probes_and_cleanup_remain_immutable(self):
++        for name in V9_REFERENCES:
++            if name != 'run_dsc01_apphost_cycle.py': self.assertEqual((V9 / name).read_bytes(), (HERE / name).read_bytes(), name)
++        marker = '        finally:\n            deferred = []'
++        old = (V9 / 'run_dsc01_apphost_cycle.py').read_text(); current = Path(runner.__file__).read_text()
++        self.assertEqual(old[old.index(marker):], current[current.index(marker):])
++
++    def test_renderer_preserves_every_original_postselection_assertion_and_non_os_byte(self):
++        original = (HERE / 'IOSAppLaunchUITests.swift.in').read_text(); transformed = source.render_v10_ui(original)
++        begin = original.index(source.OS_FUNCTION); end = original.index(source.POST_SELECTION, begin)
++        restored = transformed.replace(source.NEW_PREFIX, original[begin:end], 1).replace(source.NEW_VERIFIED, source.OLD_VERIFIED, 1)
++        self.assertEqual(original, restored)
++        old_tail = original[end:].replace(source.OLD_VERIFIED, source.NEW_VERIFIED, 1)
++        self.assertEqual(old_tail, transformed[transformed.index(source.POST_SELECTION):])
++        self.assertEqual(original[:begin], transformed[:transformed.index(source.OS_FUNCTION)])
++
++    def test_renderer_fails_closed_on_changed_inputs_missing_or_duplicate_boundaries(self):
++        for renderer, filename in ((source.render_v10_ui, 'IOSAppLaunchUITests.swift.in'), (source.render_v10_probe, 'DSC01Probe.swift.in')):
++            original = (HERE / filename).read_text()
++            with self.assertRaises(RuntimeError): renderer(original + '\n')
++            with self.assertRaises(RuntimeError): renderer(original.replace('osDisposition', 'changed'))
++        for changed in ('none', 'needle needle'):
++            with self.assertRaises(RuntimeError): source.replace_once(changed, 'needle', 'new')
++
++    def test_probe_only_adds_terminal_report_visibility_not_preference_or_native_behavior(self):
++        original = (HERE / 'DSC01Probe.swift.in').read_text(); transformed = source.render_v10_probe(original)
++        restored = transformed.replace(source.MARKER_PROPERTY, '', 1).replace(source.MARKER_REVEAL, '', 1)
++        restored = restored.replace(source.NEW_MARKER_LAYOUT, source.OLD_MARKER_LAYOUT, 1)
++        self.assertEqual(original, restored)
++        self.assertIn('osMarkerControlsVisible = false', source.MARKER_PROPERTY)
++        self.assertIn('scenario == "os" && report?.completed == false', source.MARKER_REVEAL)
++        self.assertIn('if probe.osMarkerControlsVisible', source.NEW_MARKER_LAYOUT)
++        self.assertEqual(3, source.NEW_MARKER_LAYOUT.count('minHeight: 44'))
++        for forbidden in ('UserDefaults', 'language_override', 'AppleLanguages', 'semanticContentAttribute', 'layoutIfNeeded'):
++            self.assertNotIn(forbidden, source.MARKER_PROPERTY + source.MARKER_REVEAL + source.NEW_MARKER_LAYOUT)
++
++    def test_expansion_only_occurs_inside_terminal_finish_after_original_restart_oracles(self):
++        helper = (HERE / 'DSC01OSAppSettings.swift.in').read_text()
++        finish = helper[helper.index('private func finishOSInvestigation('):helper.index('private func verifyOSInteractionDecisionContract(')]
++        self.assertEqual(1, helper.count('control: .showMarkers'))
++        self.assertIn('control: .showMarkers', finish)
++        self.assertLess(finish.index('awaitOSMarkerPanel('), finish.index('control: control'))
++        self.assertLess(finish.index('diagnostics.append("marker", "PASS"'), finish.index('control: .complete'))
++        transformed = source.render_v10_ui((HERE / 'IOSAppLaunchUITests.swift.in').read_text())
++        tail = transformed[transformed.index(source.POST_SELECTION):transformed.index('private func recordOSSelectorDiagnostics')]
++        self.assertLess(tail.index('try assertSystem(restarted'), tail.index('try finishOSInvestigation'))
++
++    def test_source_whitelisted_english_and_arabic_app_names_match_shipped_resources(self):
++        helper = (HERE / 'DSC01OSAppSettings.swift.in').read_text()
++        for locale in ('en', 'ar'):
++            text = (runner.ROOT / ('iosApp/iosApp/' + locale + '.lproj/InfoPlist.strings')).read_text()
++            label = re.search(r'"CFBundleDisplayName" = "([^"]+)";', text).group(1)
++            self.assertIn('"' + label + '"', helper)
++        for forbidden in ('BEGINSWITH', 'CONTAINS', 'debugDescription', 'typeText(', 'URL(', 'UserDefaults', '.coordinate('):
++            self.assertNotIn(forbidden, helper)
++        self.assertEqual(1, helper.count('current.tap()'))
++        self.assertIn('if allowScroll && attempt < 6', helper)
++
++    def test_new_real_swift_contract_and_complete_original_probe_gate_are_both_wired(self):
++        code = Path(runner.__file__).read_text()
++        self.assertIn('render_v10_ui(', code); self.assertIn('render_v10_probe(', code)
++        self.assertIn("FIXTURE / 'DSC01OSAppSettings.swift.in'", code)
++        self.assertLess(code.index("receipt['dsc01_matrix'] = verify_probe"), code.index("receipt['v10_os_interaction_proof'] = verify_v10_receipts"))
++        self.assertIn("receipt['dsc01_matrix']['os_settings_gate']", code)
++        helper = (HERE / 'DSC01OSAppSettings.swift.in').read_text()
++        self.assertIn('XCTAssertEqual(cases.count, 18)', helper)
++        self.assertIn('XCTAssertEqual(dsc01OSRowEligible(item.0), item.1', helper)
++        self.assertIn('dsc01OSStableTrain(stable, final: currentFrame)', helper)
++        self.assertIn('Cumulative drift is not stability', helper)
++        self.assertIn('Final re-query cannot drift', helper)
++        self.assertIn('try verifyOSInteractionDecisionContract()', source.NEW_PREFIX)
++        self.assertEqual(5, len(runner.EXPECTED_TESTS))
++
++    def test_every_consumed_old_and_new_control_is_bound_by_full_path(self):
++        controls = runner.control_files()
++        self.assertEqual(len(controls), len(set(controls)))
++        self.assertEqual({V9 / name for name in V9_REFERENCES}, {path for path in controls if path.parent == V9})
++        for name in ('v10_sources.py', 'DSC01OSAppSettings.swift.in', 'v10_receipts.py', 'test_v10_contract.py'):
++            self.assertIn(HERE / name, controls)
++        manifest = {row['path']: row['sha256'] for row in runner.control_manifest()}
++        for path in controls:
++            self.assertEqual(hashlib.sha256(path.read_bytes()).hexdigest(), manifest[str(path.relative_to(runner.ROOT))])
++
++
++if __name__ == '__main__':
++    unittest.main()
+--- v9/source-bindings.json
++++ v10/source-bindings.json
+@@ -2,7 +2,7 @@
+   "schema_version": 3,
+   "binding_status": "REVIEW_REQUIRED_BOUND",
+   "repository": "/Users/abdelrahman/Projects/parlor",
+-  "created_at": "2026-09-06T19:38:38.265975+00:00",
++  "created_at": "2026-09-06T22:17:28.878886+00:00",
+   "source_identity": {
+     "commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+     "tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+--- /dev/null
++++ v10/README.md
+@@ -0,0 +1,57 @@
++# DS-C01 App-Host Verification — V10
++
++## Scope and prior evidence
++
++This is a **copy-only verification harness**, not an application change. V9's
++`dsc01-apphost-07` execution completed the Settings and both local-game matrices,
++but did not establish Parlor's OS Settings pane. Its fallback audit-marker tap
++reported `{-1,-1}`; no unavailable-marker observation was durably recorded.
++Neither an app crash nor a callback-overwrite-only cause was established.
++
++The actual OS English selection → in-app Arabic → System → restart requirement
++remains unverified until new runtime evidence satisfies every original oracle.
++
++## Bounded correction
++
++`v10_sources.py` hash-checks the complete immutable V9 inputs and transforms only
++temporary copied Swift sources. All prior templates, Kotlin probes, 148 focused
++control methods, original ownership assertions, and the runner's entire cleanup
++finalizer remain unchanged.
++
++The additional XCTest helper proves an actual public Settings → Apps → Parlor
++pane when the supported Settings URL has not done so. It accepts only known
++exact labels, including the shipped English/Arabic app names. Each action needs
++one finite, fully visible, enabled, hittable target and three stable observations
++matching the final re-query. It taps once; bounded scrolling is navigation-only.
++Unknown panes, alerts, ambiguity, or unavailable language controls remain blocked.
++
++The original compact overlay stays compact throughout actual Settings actions.
++Only terminal reporting expands its marker panel, after original restart oracles
++or an explicit blocked outcome. Expansion requires three separately visible,
++ordered 44-point markers. A marker must produce a new durable matching sample
++before Complete is permitted. The unchanged probe determines preferences and
++native observations; no synthetic OS preference or successful status is invented.
++
++`v10_receipts.py` is **additional** to the original exact-five-XCTest, V9 public
++interaction, and complete probe gates. Its 24-case Swift guard contract is part
++of the existing matrix test, not 24 separately discovered XCTest methods.
++
++## Root-only execution sequence
++
++1. Review the complete V9→V10 delta and prebinding metadata.
++2. Root alone creates a fresh `source-bindings.json` for the explicit source/diff.
++3. Freeze all 107 full-path controls; obtain independent exact-hash review.
++4. Root runs all focused contracts: **168 expected methods** (148 original +20
++   new), not an execution claim. Review genuine results before native approval.
++5. Root runs the next owned fresh-simulator cycle using the approved hash and
++   the sole shared build lane. Reuse neither a connected phone nor a user profile.
++6. Independently review the runtime results, copied-source identity, and cleanup.
++
++The existing finalizer immediately stops isolated Gradle, shuts down/deletes only
++the owned simulator, stops attested workers, removes only attested secondary FIFOs
++and task-owned copy/DerivedData outputs, and preserves compact evidence. Failures
++also finalize. Global caches and unrelated files/processes are never removed.
++
++This directory by itself proves no runtime, complete-game, retained multiplayer,
++physical LAN, signing, accessibility, or Store result. A classified blocked OS
++outcome is not a DS-C01 completion.
+--- /dev/null
++++ v10/research-public-os-controls-01.json
+@@ -0,0 +1,42 @@
++{
++  "schema_version": 1,
++  "researcher": "/root/native_fix_review",
++  "scope": "Public Settings routing and computed-hittable XCUIElement tap semantics only",
++  "sources": [
++    {
++      "url": "https://support.apple.com/en-us/121430",
++      "accessed_at": "2026-09-06T21:16:24.171281+00:00",
++      "http_status": 200,
++      "response_sha256": "844e45665dd96629b53421d97f9747a58705b0a1e6fb8a6f7df77f87b0b426d2",
++      "retained_claims": [
++        "Go to Settings, then tap Apps.",
++        "If you want to change that choice later, open Settings, tap Apps, and then tap Safari."
++      ],
++      "applicability": "Supports public Settings > Apps > chosen app routing, not guaranteed Parlor accessibility selectors or per-app Language availability.",
++      "independent_corroboration": "../../reviews/independent-v10-public-apps-routing-research-01.json"
++    },
++    {
++      "url": "https://developer.apple.com/tutorials/data/documentation/xcuiautomation/xcuielement/tap().json",
++      "accessed_at": "2026-09-06T21:16:31.305748+00:00",
++      "http_status": 200,
++      "response_sha256": "bc49772beb3e08c609840c26ab831bde35cfbce7d3aa8bae316cdfa24e74a88a",
++      "retained_claims": [
++        "Sends a tap event to a hittable point the system computes for the element."
++      ],
++      "applicability": "A declared button or an attempted tap alone does not establish a usable hit target. The copy-only helper requires actual uniqueness, finite in-viewport geometry, enabled/hittable observations, then the original durable successor."
++    }
++  ],
++  "related_root_research": [
++    "../../research/os-settings-routing-07.json",
++    "../../research/xcuiautomation-hittable-07.json"
++  ],
++  "source_names": [
++    "iosApp/iosApp/en.lproj/InfoPlist.strings:1 = Parlor",
++    "iosApp/iosApp/ar.lproj/InfoPlist.strings:1 = بارلور"
++  ],
++  "limitations": [
++    "Only bounded public-document claims and response digests were retained; full downloaded payloads were not retained.",
++    "These document reads establish no actual OS pane, selector availability, tap delivery, or per-app language change.",
++    "No application source, private values, credentials, or player data were sent to public services."
++  ]
++}

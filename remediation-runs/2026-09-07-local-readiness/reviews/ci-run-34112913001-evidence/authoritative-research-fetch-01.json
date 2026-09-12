@@ -1,0 +1,106 @@
+{
+  "at": "2026-09-07T11:05:27.585789+00:00",
+  "purpose": "Authoritative exact-version research for CI Windows CRLF and Kotlin update-only lint advisories",
+  "requests": [
+    {
+      "key": "git-config-2.55.0",
+      "url": "https://git-scm.com/docs/git-config/2.55.0",
+      "requested_at": "2026-09-07T11:05:27.585899+00:00",
+      "status": 200,
+      "final_url": "https://git-scm.com/docs/git-config/2.55.0",
+      "sha256": "08bc1c1cc664bd9f7629bf86bddbee120197788b1fc01297b8c69ce010dbce0d",
+      "bytes": 804458,
+      "core_autocrlf_html_excerpt": "eported by the <span class='synopsis'><code>core.safecrlf</code></span>\nmechanism.</p>\n</div>\n</dd>\n<dt class=\"hdlist1\" id=\"Documentation/git-config.txt-coreautocrlf\"><a class=\"anchor\" href=\"#Documentation/git-config.txt-coreautocrlf\"></a>core.autocrlf </dt>\n<dd>\n<p>Setting this variable to \"true\" is the same as setting\nthe <span class='synopsis'><code>text</code></span> attribute to \"auto\" on all files and core.eol to \"crlf\".\nSet to true if you want to have <span class='synopsis'><code>CRLF</code></span> line endings in your\nworking directory and the repository has LF line endings.\nThis variable can be set to <em>input</em>,\nin which case no output conversion is performed.</p>\n</dd>\n<dt class=\"hdlist1\" id=\"Documentation/git-config.txt-corecheckRoundtripEncoding\"><a class=\"anchor\" href=\"#Documentation/git-config.txt-corecheckRoundtripEncoding\"></a>core.checkRoundtripEncoding </dt>\n<dd>\n<p>A comma and/or whitespace separated list of encodings that Git\nperforms UTF-8 round trip checks on if they are used in an\n<span class='synopsis'><code>working-tree-encoding</code></span> attribute (see <a href='/docs/gitattributes'>gitattributes[5]</a>).\nThe default value is <span class='synopsis'><code>SHIFT-JIS</code></span>.</p>\n</dd>\n<dt class=\"hdlist1\" id=\"Documentation/git-config.txt-coresymlinks\"><a class=\"anchor\" href=\"#Documentation/git-config.txt-coresymlinks\"></a>core.symlinks </dt>\n<dd>\n<p>If false, symbolic links are checked out as small plain files that\ncontain the link text. <a href='/docs/git-update-index'>git-update-index[1]</a> and\n<a href='/docs/git-add'>git-add[1]</a> will not change the recorded type to regular\nfile. Useful on filesystems like FAT that do not support\nsymbolic links.</p>\n<div class=\"paragraph\">\n<p>The default is true, except <a href='/docs/git-clone'>git-clone[1]</a> or <a href='/docs/git-init'>git-init[1]</a>\nwill probe and set core.symlinks false if appropriate whe"
+    },
+    {
+      "key": "kotlin-gradle-metadata",
+      "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-gradle-plugin/maven-metadata.xml",
+      "requested_at": "2026-09-07T11:05:31.372411+00:00",
+      "status": 200,
+      "final_url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-gradle-plugin/maven-metadata.xml",
+      "sha256": "b695609c742bb4e4ca504952e98c232023647e7472245c275d5d4900761c1bbd",
+      "bytes": 10545,
+      "metadata": {
+        "latest": "2.4.20",
+        "release": "2.4.20",
+        "lastUpdated": "20260907091159"
+      },
+      "versions_recent": [
+        "2.3.20",
+        "2.3.21-RC",
+        "2.3.21-RC2",
+        "2.3.21",
+        "2.4.0-Beta1",
+        "2.4.0-Beta2",
+        "2.4.0-RC",
+        "2.4.0-RC2",
+        "2.4.0",
+        "2.4.10-RC",
+        "2.4.10-RC2",
+        "2.4.10",
+        "2.4.20-Beta1",
+        "2.4.20-Beta2",
+        "2.4.20-RC",
+        "2.4.20-RC2",
+        "2.4.20-RC3",
+        "2.4.20"
+      ],
+      "retained_path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34112913001-evidence/kotlin-gradle-metadata.xml"
+    },
+    {
+      "key": "kotlin-multiplatform-marker",
+      "url": "https://plugins.gradle.org/m2/org/jetbrains/kotlin/multiplatform/org.jetbrains.kotlin.multiplatform.gradle.plugin/maven-metadata.xml",
+      "requested_at": "2026-09-07T11:05:34.187610+00:00",
+      "status": 200,
+      "final_url": "https://plugins.gradle.org/m2/org/jetbrains/kotlin/multiplatform/org.jetbrains.kotlin.multiplatform.gradle.plugin/maven-metadata.xml",
+      "sha256": "f944c3514a0371006c8311145a640d5e2b7d993fef557dc80c14ab444c322444",
+      "bytes": 5280,
+      "metadata": {
+        "latest": "2.4.20",
+        "release": "2.4.20",
+        "lastUpdated": "20260907101246"
+      },
+      "versions_recent": [
+        "2.3.20-RC3",
+        "2.3.21",
+        "2.3.21-RC",
+        "2.3.21-RC2",
+        "2.4.0",
+        "2.4.0-Beta1",
+        "2.4.0-Beta2",
+        "2.4.0-RC",
+        "2.4.0-RC2",
+        "2.4.10",
+        "2.4.10-RC",
+        "2.4.10-RC2",
+        "2.4.20",
+        "2.4.20-Beta1",
+        "2.4.20-Beta2",
+        "2.4.20-RC",
+        "2.4.20-RC2",
+        "2.4.20-RC3"
+      ],
+      "retained_path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34112913001-evidence/kotlin-multiplatform-marker.xml"
+    },
+    {
+      "key": "lint-checks-9.1.1-sources",
+      "url": "https://dl.google.com/dl/android/maven2/com/android/tools/lint/lint-checks/9.1.1/lint-checks-9.1.1-sources.jar",
+      "requested_at": "2026-09-07T11:05:36.548040+00:00",
+      "status": "BLOCKED",
+      "error_type": "HTTPError",
+      "message": "HTTP Error 404: Not Found"
+    },
+    {
+      "argv": [
+        "gh",
+        "api",
+        "repos/actions/runner-images/contents/images/windows/scripts/build/Install-Git.ps1?ref=win25-vs2026%2F20260824.214"
+      ],
+      "status": 0,
+      "url": "https://github.com/actions/runner-images/blob/win25-vs2026/20260824.214/images/windows/scripts/build/Install-Git.ps1",
+      "sha256": "8b7320968c3f3f984e89ae9eab5fd097c0b8fb31aad401bdf1ccf91e7ad06603",
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34112913001-evidence/official-windows-20260824.214-Install-Git.ps1.txt",
+      "lines": 66
+    }
+  ]
+}

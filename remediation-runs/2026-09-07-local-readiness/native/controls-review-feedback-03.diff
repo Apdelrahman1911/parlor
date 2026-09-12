@@ -1,0 +1,599 @@
+--- freeze03/README.md
++++ freeze04/README.md
+@@ -51,6 +51,13 @@
+    metadata supplement the inventory. `CODE_SIGNING_ALLOWED=NO` describes the
+    build configuration; it does not by itself establish the bytes' signature
+    form or explain a Keychain result.
++   Bounded direct Mach-O parsing separately records `__TEXT,__entitlements`
++   and `__ents_der` presence/size. XML/binary plists expose only public app/team
++   identifiers, access groups and `get-task-allow`; DER is not decoded. Only the
++   two exact app-target generated `.xcent` filenames are inspected. Malformed,
++   absent and oversized records remain explicit, not inferred storage success.
++   Installed Xcode/platform/SDK defaults and actual shared invocation overrides
++   are recorded separately; they are not a query of merged target settings.
+ 
+ ## Prerequisites and explicit binding
+ 
+--- freeze03/inherited-controls.json
++++ freeze04/inherited-controls.json
+@@ -162,7 +162,7 @@
+       "path": "run_ios_readiness.py",
+       "inherited_from": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v12/run_dsc01_apphost_cycle.py",
+       "original_sha256": "68d1d1ac98402c9c79a991f536983c0cd058bafdc152df9a31dfefb2a0b6790d",
+-      "current_sha256": "fa1f1c8a0ba4b6c3db723234f6cd0eaa74733ba4e90ea147aacbb13f0828bbf1",
++      "current_sha256": "464719dd100ca8d941126a2113611650e8febde8889abd2a97e9dbdb22dffb20",
+       "disposition": "MODIFIED_REQUIRES_FULL_REVIEW"
+     },
+     {
+@@ -182,7 +182,7 @@
+     },
+     {
+       "path": "README.md",
+-      "current_sha256": "63029aa44d0437178a618e233414c085b667de5263ae8c1edb88f2b9389649a7",
++      "current_sha256": "073dfc3e309374e4e45dec27e3332eb06260573d3bf5309a007eda843b6efdbc",
+       "disposition": "NEW_SELF_CONTAINED_CONTROL_REQUIRES_FULL_REVIEW"
+     },
+     {
+@@ -223,6 +223,16 @@
+     {
+       "path": "test_os_preference_receipts.py",
+       "current_sha256": "74d74d25358a1dfe557ca1a57cc7145780d95ad422cc0e29cb6d09157912a4ec",
++      "disposition": "NEW_SELF_CONTAINED_CONTROL_REQUIRES_FULL_REVIEW"
++    },
++    {
++      "path": "simulator_entitlements.py",
++      "current_sha256": "57bee1eeb1fdd58bb6fef10545a37e1b0afae09be7107c2c6710f788905450f3",
++      "disposition": "NEW_SELF_CONTAINED_CONTROL_REQUIRES_FULL_REVIEW"
++    },
++    {
++      "path": "test_simulator_entitlements.py",
++      "current_sha256": "0beea984b56aab3bec2c8e14558edf875f01ce341142708121b9d6d2c5f1e4b2",
+       "disposition": "NEW_SELF_CONTAINED_CONTROL_REQUIRES_FULL_REVIEW"
+     }
+   ]
+--- freeze03/run_ios_readiness.py
++++ freeze04/run_ios_readiness.py
+@@ -36,6 +36,8 @@
+ from os_pane_receipts import verify_os_pane_receipts
+ from artifact_inventory import inventory_bundle, bind_loaded_images, parse_dwarfdump_uuids
+ from native_readiness_receipts import verify_native_readiness
++from simulator_entitlements import (inspect_bundle_entitlements, inspect_generated_app_entitlements,
++                                    inspect_sdk_signing_defaults)
+ 
+ OUT = None
+ BINDING = None
+@@ -525,6 +527,15 @@
+                 raise RuntimeError('Unexpected SDK version')
+             env['SDK_NAME'] = 'iphonesimulator' + sdk_version
+             receipt['sdk_name'] = env['SDK_NAME']
++            if command(['xcode-select', '-p'], 'selected-developer.log') or command(
++                    ['xcrun', '--sdk', 'iphonesimulator', '--show-sdk-path'], 'selected-sdk-path.log'):
++                raise RuntimeError('Cannot bind public installed SDK signing defaults')
++            configured_signing = {key: env[key] for key in (
++                'CODE_SIGNING_ALLOWED', 'CODE_SIGNING_REQUIRED', 'CODE_SIGN_IDENTITY', 'DEVELOPMENT_TEAM')}
++            receipt['signing_configuration_observations'] = inspect_sdk_signing_defaults(
++                Path((dest / 'selected-developer.log').read_text().strip()),
++                Path((dest / 'selected-sdk-path.log').read_text().strip()), configured_signing)
++            signing_arguments = [key + '=' + value for key, value in configured_signing.items()]
+             bindings = json.loads(BINDING.read_text())
+             if receipt['source_before'] != bindings['source_identity']:
+                 raise RuntimeError('Dirty/untracked source differs from independently reviewed fixture binding')
+@@ -632,7 +643,7 @@
+                     '-parallel-testing-enabled', 'NO', '-maximum-concurrent-test-simulator-destinations', '1',
+                     '-disable-concurrent-destination-testing', '-jobs', '1', '-test-timeouts-enabled', 'YES',
+                     '-default-test-execution-time-allowance', '1200', '-maximum-test-execution-time-allowance', '1500',
+-                    'CODE_SIGNING_ALLOWED=NO', 'CODE_SIGNING_REQUIRED=NO', 'CODE_SIGN_IDENTITY=', 'DEVELOPMENT_TEAM=',
++                    *signing_arguments,
+                     'ONLY_ACTIVE_ARCH=YES', 'COMPILER_INDEX_STORE_ENABLE=NO', 'test'], 'xcodebuild.log', 2700)
+                 receipt['xcodebuild_exit_code'] = xcode
+             finally:
+@@ -668,6 +679,11 @@
+                         if result.stat().st_size > 49152:
+                             raise RuntimeError('Oversized task-owned native result')
+                         shutil.copyfile(result, dest / result.name)
++            derived = temp / 'DerivedData'
++            if derived.is_dir():
++                generated_entitlements = inspect_generated_app_entitlements(derived, temp)
++                write_json(dest / 'generated-app-entitlements.json', generated_entitlements)
++                receipt['generated_app_entitlements_sha256'] = digest(dest / 'generated-app-entitlements.json')
+             app = temp / 'DerivedData/Build/Products/Debug-iphonesimulator/Parlor.app'
+             built_inventory = installed_inventory = None
+             if app.is_dir():
+@@ -675,6 +691,8 @@
+                 write_json(dest / 'built-app-binary-inventory.json', built_inventory)
+                 receipt['app_identity'] = built_inventory['bundle_identity']
+                 receipt['artifacts'] = built_inventory['images']
++                write_json(dest / 'built-app-linker-entitlements.json', inspect_bundle_entitlements(app, built_inventory, temp))
++                receipt['built_app_linker_entitlements_sha256'] = digest(dest / 'built-app-linker-entitlements.json')
+                 uuids = []
+                 actual_images = {row['resolved_path']: row for row in built_inventory['images']}
+                 for index, (relative, image) in enumerate(sorted(actual_images.items())):
+@@ -705,6 +723,9 @@
+                 installed.relative_to(owned_device)
+                 installed_inventory = inventory_bundle(installed)
+                 write_json(dest / 'installed-app-binary-inventory.json', installed_inventory)
++                write_json(dest / 'installed-app-linker-entitlements.json',
++                           inspect_bundle_entitlements(installed, installed_inventory, owned_device))
++                receipt['installed_app_linker_entitlements_sha256'] = digest(dest / 'installed-app-linker-entitlements.json')
+             if not results.exists() or receipt.get('xcresult_extraction_exit_codes') != {'summary': 0, 'tests': 0}:
+                 raise RuntimeError('No complete actual XCTest result extraction')
+             receipt['xctest'] = verify_xctest(
+--- freeze03/simulator_entitlements.py
++++ freeze04/simulator_entitlements.py
+@@ -0,0 +1,261 @@
++"""Read-only, bounded simulator provenance. Never sign or open a user keychain.
++
++Simulator linker entitlements are independent of codesign display output.
++Only explicitly owned app images/generated app xcent and installed SDK metadata
++are read. Receipts expose a small public entitlement allowlist, never raw blobs.
++"""
++import hashlib
++import json
++from pathlib import Path
++import plistlib
++import re
++import struct
++
++from artifact_inventory import digest, safe_relative
++
++MAX_PLIST_BYTES = 65536
++MAX_COMMAND_BYTES = 4 * 1024 * 1024
++APP_ID = 'com.parlor.app.debug'
++PUBLIC_ENTITLEMENTS = {'application-identifier', 'com.apple.application-identifier',
++                       'com.apple.developer.team-identifier', 'get-task-allow', 'keychain-access-groups'}
++SIGNING_FLAGS = ('AD_HOC_CODE_SIGNING_ALLOWED', 'CODE_SIGN_IDENTITY', 'CODE_SIGNING_ALLOWED',
++                 'CODE_SIGNING_REQUIRED', 'ENTITLEMENTS_DESTINATION', 'ENTITLEMENTS_REQUIRED',
++                 'CODE_SIGN_ENTITLEMENTS')
++THIN = {bytes.fromhex('feedface'): ('>', False), bytes.fromhex('cefaedfe'): ('<', False),
++        bytes.fromhex('feedfacf'): ('>', True), bytes.fromhex('cffaedfe'): ('<', True)}
++FAT = {bytes.fromhex('cafebabe'): ('>', False), bytes.fromhex('bebafeca'): ('<', False),
++       bytes.fromhex('cafebabf'): ('>', True), bytes.fromhex('bfbafeca'): ('<', True)}
++
++
++def owned_path(path, owner, directory=False):
++    path, owner = Path(path).absolute(), Path(owner).absolute()
++    if owner.is_symlink() or owner.resolve(strict=True) != owner or not owner.is_dir():
++        raise RuntimeError('Unattested owner root for simulator entitlement inspection')
++    try:
++        path.relative_to(owner)
++    except ValueError as error:
++        raise RuntimeError('Entitlement path is outside its explicit owned root') from error
++    if path.is_symlink() or path.resolve(strict=True) != path or (not path.is_dir() if directory else not path.is_file()):
++        raise RuntimeError('Missing/symlinked/wrong-type owned entitlement path')
++    return path
++
++
++def bounded_file(path, limit):
++    with path.open('rb') as stream:
++        raw = stream.read(limit + 1)
++    if len(raw) > limit:
++        raise RuntimeError('Owned public metadata exceeded its bounded read')
++    return raw
++
++
++class UniqueDictionary(dict):
++    def __setitem__(self, key, value):
++        if key in self:
++            raise ValueError('Duplicate plist key')
++        super().__setitem__(key, value)
++
++
++def public_entitlements(raw):
++    """Parse bounded XML/binary plist; never include unknown keys/values/errors."""
++    if len(raw) > MAX_PLIST_BYTES:
++        return dict(status='OVERSIZED_NOT_PARSED', bytes=len(raw))
++    try:
++        value = plistlib.loads(raw, dict_type=UniqueDictionary)
++        if not isinstance(value, dict):
++            raise ValueError('Non-dictionary entitlements')
++        public = {}
++        for key in sorted(PUBLIC_ENTITLEMENTS & set(value)):
++            item = value[key]
++            if key == 'get-task-allow':
++                if type(item) is not bool: raise ValueError('Wrong public boolean')
++            else:
++                values = item if key == 'keychain-access-groups' else [item]
++                if (not isinstance(values, list) or len(values) > 32 or
++                        not all(isinstance(v, str) and re.fullmatch(r'[A-Za-z0-9_.:*+\-]{1,256}', v) for v in values)):
++                    raise ValueError('Unsafe public identifier')
++            public[key] = item
++        return dict(status='PARSED_PUBLIC_FIELDS_ONLY', public=public,
++                    unknown_key_count=len(set(value) - PUBLIC_ENTITLEMENTS))
++    except Exception:
++        return dict(status='MALFORMED_REDACTED')
++
++
++def read_exact(stream, offset, size, total):
++    if offset < 0 or size < 0 or offset + size > total:
++        raise RuntimeError('Mach-O metadata extends outside its owned image')
++    stream.seek(offset)
++    result = stream.read(size)
++    if len(result) != size:
++        raise RuntimeError('Owned native image changed during bounded read')
++    return result
++
++
++def thin_sections(stream, start, size, total):
++    magic = read_exact(stream, start, 4, total)
++    if magic not in THIN:
++        raise RuntimeError('Unexpected Mach-O slice type')
++    endian, wide = THIN[magic]
++    header_size = 32 if wide else 28
++    if size < header_size: raise RuntimeError('Truncated Mach-O header')
++    header = read_exact(stream, start, header_size, total)
++    cpu, subtype, _, count, command_size, _ = struct.unpack_from(endian + '6I', header, 4)
++    if count > 4096 or command_size > MAX_COMMAND_BYTES or command_size > size - header_size or count > command_size // 8:
++        raise RuntimeError('Unbounded/inconsistent Mach-O command table')
++    commands = read_exact(stream, start + header_size, command_size, total)
++    cursor, sections = 0, {}
++    for _ in range(count):
++        if cursor + 8 > len(commands): raise RuntimeError('Truncated Mach-O load command')
++        kind, length = struct.unpack_from(endian + 'II', commands, cursor)
++        if length < 8 or length % (8 if wide else 4) or cursor + length > len(commands):
++            raise RuntimeError('Invalid Mach-O load command size')
++        if kind in (1, 0x19):
++            segment_wide = kind == 0x19
++            if segment_wide != wide: raise RuntimeError('Wrong Mach-O segment width')
++            base, section_size = (72, 80) if wide else (56, 68)
++            if length < base: raise RuntimeError('Truncated Mach-O segment')
++            section_count = struct.unpack_from(endian + 'I', commands, cursor + (64 if wide else 48))[0]
++            if section_count > 1024 or base + section_count * section_size != length:
++                raise RuntimeError('Unbounded/inconsistent Mach-O sections')
++            segment_name = commands[cursor + 8:cursor + 24].split(b'\0', 1)[0]
++            segment_file, segment_bytes = struct.unpack_from(endian + ('QQ' if wide else 'II'), commands,
++                                                           cursor + (40 if wide else 32))
++            if segment_file + segment_bytes > size:
++                raise RuntimeError('Segment extends outside Mach-O slice')
++            for index in range(section_count):
++                position = cursor + base + index * section_size
++                name = commands[position:position + 16].split(b'\0', 1)[0]
++                section_segment = commands[position + 16:position + 32].split(b'\0', 1)[0]
++                if segment_name != b'__TEXT' or name not in (b'__entitlements', b'__ents_der'):
++                    continue
++                if section_segment != b'__TEXT' or name in sections:
++                    raise RuntimeError('Ambiguous simulator entitlement section')
++                section_bytes = struct.unpack_from(endian + ('Q' if wide else 'I'), commands,
++                                                   position + (40 if wide else 36))[0]
++                offset = struct.unpack_from(endian + 'I', commands, position + (48 if wide else 40))[0]
++                if (offset < header_size + command_size or offset < segment_file or
++                        offset + section_bytes > segment_file + segment_bytes):
++                    raise RuntimeError('Entitlement section extends outside actual file-backed segment')
++                row = dict(present=True, bytes=section_bytes)
++                if section_bytes > MAX_PLIST_BYTES:
++                    row['payload'] = dict(status='OVERSIZED_NOT_READ')
++                else:
++                    payload = read_exact(stream, start + offset, section_bytes, total)
++                    row['sha256'] = hashlib.sha256(payload).hexdigest()
++                    row['payload'] = public_entitlements(payload) if name == b'__entitlements' else dict(status='DER_NOT_INTERPRETED')
++                sections[name] = row
++        cursor += length
++    if cursor != len(commands): raise RuntimeError('Unconsumed Mach-O load-command bytes')
++    return dict(cpu_type=cpu, cpu_subtype=subtype,
++                sections={name.decode(): sections.get(name, dict(present=False, bytes=0))
++                          for name in (b'__entitlements', b'__ents_der')})
++
++
++def macho_entitlement_sections(path):
++    """Call only after explicit ownership+image hash checks; bounded streaming."""
++    total = path.stat().st_size
++    with path.open('rb') as stream:
++        magic = read_exact(stream, 0, 4, total)
++        if magic in THIN:
++            return [thin_sections(stream, 0, total, total)]
++        if magic not in FAT: raise RuntimeError('Not a native image')
++        endian, wide = FAT[magic]
++        count = struct.unpack(endian + 'I', read_exact(stream, 4, 4, total))[0]
++        if not 1 <= count <= 16: raise RuntimeError('Unbounded Mach-O architecture table')
++        entry_size = 32 if wide else 20
++        table = read_exact(stream, 8, entry_size * count, total)
++        spans, rows = [], []
++        for index in range(count):
++            fields = struct.unpack_from(endian + ('IIQQII' if wide else 'IIIII'), table, entry_size * index)
++            cpu, subtype, start, size, alignment = fields[:5]
++            if (start < 8 + entry_size * count or size < 28 or start + size > total or
++                    alignment > 31 or start % (1 << alignment)):
++                raise RuntimeError('Invalid Mach-O slice bounds')
++            if any(start < other + length and other < start + size for other, length in spans):
++                raise RuntimeError('Overlapping Mach-O slices')
++            row = thin_sections(stream, start, size, total)
++            if row['cpu_type'] != cpu or row['cpu_subtype'] != subtype:
++                raise RuntimeError('Mach-O outer/inner architecture mismatch')
++            spans.append((start, size)); rows.append(row)
++        return rows
++
++
++def inspect_bundle_entitlements(bundle, inventory, owner):
++    bundle = owned_path(bundle, owner, directory=True)
++    info_path = owned_path(bundle / 'Info.plist', bundle)
++    if info_path.stat().st_size > MAX_PLIST_BYTES: raise RuntimeError('Oversized owned bundle metadata')
++    if (plistlib.loads(bounded_file(info_path, MAX_PLIST_BYTES)).get('CFBundleIdentifier') != APP_ID or
++            inventory.get('bundle_identity', {}).get('CFBundleIdentifier') != APP_ID):
++        raise RuntimeError('Entitlement inspection requires the actual owned Debug application')
++    images = inventory.get('images')
++    if not isinstance(images, list) or not 1 <= len(images) <= 256:
++        raise RuntimeError('Missing/unbounded native image inventory')
++    result, observed = [], {}
++    for image in images:
++        relative = image['resolved_path']
++        if not safe_relative(relative): raise RuntimeError('Unsafe native entitlement image path')
++        if relative in observed:
++            if observed[relative] != image['sha256']: raise RuntimeError('Conflicting native image alias hashes')
++            continue  # Internal aliases bind the same exact bytes.
++        observed[relative] = image['sha256']
++        path = owned_path(bundle / relative, bundle)
++        if digest(path) != image['sha256']: raise RuntimeError('Image changed before entitlement inspection')
++        slices = macho_entitlement_sections(path)
++        if digest(path) != image['sha256']: raise RuntimeError('Image changed during entitlement inspection')
++        result.append(dict(path=relative, sha256=image['sha256'], architectures=slices))
++    return dict(schema_version=1, images=result, scope='Owned current app Mach-O sections only; presence is not signature validation or healthy Keychain proof. DER presence/hash only, not decoded.')
++
++
++def inspect_generated_app_entitlements(derived, owner):
++    derived = owned_path(derived, owner, directory=True)
++    directory = derived / 'Build/Intermediates.noindex/iosApp.build/Debug-iphonesimulator/iosApp.build'
++    if directory.is_symlink() or directory.resolve() != directory.absolute():
++        raise RuntimeError('Generated entitlement directory traverses a symlink')
++    if directory.exists() and not directory.is_dir(): raise RuntimeError('Wrong generated entitlement directory type')
++    rows = []
++    # No recursive scan or arbitrary keychain/provisioning/signing-file read.
++    for name in ('Parlor.app.xcent', 'Parlor.app-Simulated.xcent'):
++        path = directory / name
++        relative = str(path.relative_to(derived))
++        if not path.exists() and not path.is_symlink():
++            rows.append(dict(path=relative, present=False)); continue
++        path = owned_path(path, derived)
++        size = path.stat().st_size
++        row = dict(path=relative, present=True, bytes=size)
++        if size > MAX_PLIST_BYTES:
++            row['payload'] = dict(status='OVERSIZED_NOT_READ')
++        else:
++            raw = bounded_file(path, MAX_PLIST_BYTES)
++            if len(raw) != size: raise RuntimeError('Generated entitlement changed during bounded read')
++            row.update(sha256=hashlib.sha256(raw).hexdigest(), payload=public_entitlements(raw))
++        rows.append(row)
++    return dict(schema_version=1, files=rows, scope='Exact app-target generated xcent filenames only; unrelated targets and private signing material excluded. Unknown entitlement fields redacted.')
++
++
++def inspect_sdk_signing_defaults(developer, sdk, configured):
++    """Public installed-toolchain metadata, not merged/effective target settings."""
++    developer = Path(developer).resolve(strict=True)
++    if developer.name != 'Developer' or developer.parent.name != 'Contents':
++        raise RuntimeError('Unrecognized selected Xcode Developer root')
++    platform = developer / 'Platforms/iPhoneSimulator.platform'
++    sdk = owned_path(Path(sdk).resolve(strict=True), platform / 'Developer/SDKs', directory=True)
++    if sdk.suffix != '.sdk': raise RuntimeError('Unexpected selected simulator SDK')
++    sources = ((developer.parent / 'version.plist', 'xcode_version'),
++               (platform / 'Info.plist', 'platform_defaults'), (sdk / 'SDKSettings.json', 'sdk_defaults'))
++    rows = {}
++    for path, kind in sources:
++        path = owned_path(path, developer.parent)
++        if path.stat().st_size > 1024 * 1024: raise RuntimeError('Oversized public SDK metadata')
++        raw = bounded_file(path, 1024 * 1024)
++        data = json.loads(raw) if path.suffix == '.json' else plistlib.loads(raw)
++        if kind == 'xcode_version':
++            values = {key: data.get(key) for key in ('CFBundleShortVersionString', 'ProductBuildVersion')}
++        else:
++            values = {key: data.get('DefaultProperties', {}).get(key) for key in SIGNING_FLAGS}
++        if not all(value is None or isinstance(value, str) and len(value) <= 256 and '\n' not in value for value in values.values()):
++            raise RuntimeError('Unexpected public SDK metadata shape')
++        rows[kind] = dict(path=str(path), sha256=hashlib.sha256(raw).hexdigest(), values=values)
++    if configured != dict(CODE_SIGNING_ALLOWED='NO', CODE_SIGNING_REQUIRED='NO', CODE_SIGN_IDENTITY='', DEVELOPMENT_TEAM=''):
++        raise RuntimeError('Unexpected explicit signing invocation fields')
++    rows['explicit_environment_and_command_overrides'] = configured
++    return dict(schema_version=1, observations=rows,
++                scope='Installed Xcode/platform/SDK raw defaults and explicit matching runner overrides. Not queried merged effective target settings; do not infer signed entitlement state or healthy storage from flags.')
+--- freeze03/test_simulator_entitlements.py
++++ freeze04/test_simulator_entitlements.py
+@@ -0,0 +1,212 @@
++"""Disposable data-only fixtures: no native command, signing, simulator or build."""
++import ast
++import io
++import json
++from pathlib import Path
++import plistlib
++import struct
++import tempfile
++import unittest
++from unittest import mock
++
++from artifact_inventory import digest
++import simulator_entitlements as subject
++
++
++def thin(xml=None, der=None, wide=True, endian='<'):
++    payloads = [(name, payload) for name, payload in ((b'__entitlements', xml), (b'__ents_der', der)) if payload is not None]
++    header_size, segment_size, section_size = (32, 72, 80) if wide else (28, 56, 68)
++    command_size = segment_size + len(payloads) * section_size
++    cursor = header_size + command_size
++    total = cursor + sum(len(payload) for _, payload in payloads)
++    magic = 0xfeedfacf if wide else 0xfeedface
++    cpu = 0x100000c if wide else 7
++    header = struct.pack(endian + ('8I' if wide else '7I'), magic, cpu, 0, 2, 1, command_size, 0, *([0] if wide else []))
++    segment = struct.pack(endian + ('II16s4Q4I' if wide else 'II16s8I'),
++                          0x19 if wide else 1, command_size, b'__TEXT', 0, total, 0, total, 5, 5, len(payloads), 0)
++    sections = []
++    for name, payload in payloads:
++        sections.append(struct.pack(endian + ('16s16sQQ8I' if wide else '16s16s9I'),
++            name, b'__TEXT', cursor, len(payload), cursor, 0, 0, 0, 0, 0, 0, *([0] if wide else [])))
++        cursor += len(payload)
++    return header + segment + b''.join(sections) + b''.join(payload for _, payload in payloads)
++
++
++def inventory(bundle):
++    return dict(bundle_identity={'CFBundleIdentifier': subject.APP_ID},
++                images=[dict(resolved_path='Parlor', sha256=digest(bundle / 'Parlor'))])
++
++
++class SimulatorEntitlementTests(unittest.TestCase):
++    def test_bounded_file_refuses_growth_or_oversize_without_unbounded_read(self):
++        with tempfile.TemporaryDirectory(prefix='parlor-entitlements-test-') as raw:
++            path = Path(raw) / 'metadata'; path.write_bytes(b'x' * 65)
++            with self.assertRaises(RuntimeError): subject.bounded_file(path, 64)
++            self.assertEqual(subject.bounded_file(path, 65), b'x' * 65)
++        # A pre-read size observation may be stale. Enforce the actual I/O
++        # bound, not merely an after-the-fact length check on an unlimited read.
++        stream = io.BytesIO(b'x' * 4096)
++        read = mock.Mock(wraps=stream.read)
++        stream.read = read
++        path = mock.Mock()
++        path.open.return_value = stream
++        with self.assertRaises(RuntimeError): subject.bounded_file(path, 64)
++        path.open.assert_called_once_with('rb')
++        read.assert_called_once_with(65)
++
++    def test_public_plist_allowlist_preserves_only_expected_public_fields(self):
++        values = {'application-identifier': 'SYNTHETIC.com.parlor.app.debug',
++                  'com.apple.application-identifier': 'SYNTHETIC.com.parlor.app.debug',
++                  'com.apple.developer.team-identifier': 'SYNTHETIC', 'get-task-allow': True,
++                  'keychain-access-groups': ['SYNTHETIC.com.parlor.app.debug', 'com.apple.token'],
++                  'unknown-private-fixture': 'must-not-enter-receipt'}
++        for fmt in (plistlib.FMT_XML, plistlib.FMT_BINARY):
++            observed = subject.public_entitlements(plistlib.dumps(values, fmt=fmt))
++            self.assertEqual(observed['status'], 'PARSED_PUBLIC_FIELDS_ONLY')
++            self.assertEqual(observed['unknown_key_count'], 1)
++            self.assertEqual(observed['public'], {k: v for k, v in values.items() if k in subject.PUBLIC_ENTITLEMENTS})
++            self.assertNotIn('must-not-enter-receipt', json.dumps(observed))
++
++    def test_malformed_oversized_duplicate_and_unsafe_plists_are_redacted(self):
++        samples = [b'not a plist', plistlib.dumps(['wrong root']),
++                   plistlib.dumps({'get-task-allow': 1}), plistlib.dumps({'application-identifier': 'unsafe\nvalue'}),
++                   plistlib.dumps({'keychain-access-groups': 'not an array'}),
++                   b'<plist version="1.0"><dict><key>get-task-allow</key><true/><key>get-task-allow</key><false/></dict></plist>']
++        for raw in samples:
++            with self.subTest(length=len(raw)):
++                self.assertEqual(subject.public_entitlements(raw), {'status': 'MALFORMED_REDACTED'})
++        self.assertEqual(subject.public_entitlements(b'x' * (subject.MAX_PLIST_BYTES + 1))['status'], 'OVERSIZED_NOT_PARSED')
++
++    def test_thin_macho_endianness_width_sections_and_absence(self):
++        xml = plistlib.dumps({'get-task-allow': True})
++        with tempfile.TemporaryDirectory(prefix='parlor-entitlements-test-') as raw:
++            path = Path(raw) / 'image'
++            for wide in (False, True):
++                for endian in ('<', '>'):
++                    path.write_bytes(thin(xml, b'\x30\x00', wide=wide, endian=endian))
++                    values = subject.macho_entitlement_sections(path)[0]['sections']
++                    self.assertEqual(values['__entitlements']['payload']['public'], {'get-task-allow': True})
++                    self.assertEqual(values['__ents_der']['bytes'], 2)
++                    self.assertEqual(values['__ents_der']['payload'], {'status': 'DER_NOT_INTERPRETED'})
++            path.write_bytes(thin())
++            self.assertEqual(subject.macho_entitlement_sections(path)[0]['sections'],
++                             {'__entitlements': {'present': False, 'bytes': 0}, '__ents_der': {'present': False, 'bytes': 0}})
++
++    def test_oversized_section_is_not_read_or_claimed_as_parsed(self):
++        with tempfile.TemporaryDirectory(prefix='parlor-entitlements-test-') as raw:
++            path = Path(raw) / 'image'; path.write_bytes(thin(b'x' * (subject.MAX_PLIST_BYTES + 1)))
++            section = subject.macho_entitlement_sections(path)[0]['sections']['__entitlements']
++            self.assertEqual(section, {'present': True, 'bytes': subject.MAX_PLIST_BYTES + 1,
++                                      'payload': {'status': 'OVERSIZED_NOT_READ'}})
++
++    def test_fat_macho_slices_and_architecture_binding(self):
++        first, second = thin(wide=False), thin(wide=True)
++        with tempfile.TemporaryDirectory(prefix='parlor-entitlements-test-') as raw:
++            path = Path(raw) / 'image'
++            for wide in (False, True):
++                for endian in ('<', '>'):
++                    table_size = 8 + 2 * (32 if wide else 20)
++                    first_start, second_start = table_size, table_size + len(first)
++                    entry = 'IIQQII' if wide else 'IIIII'
++                    table = struct.pack(endian + 'II', 0xcafebabf if wide else 0xcafebabe, 2)
++                    for cpu, start, payload in ((7, first_start, first), (0x100000c, second_start, second)):
++                        table += struct.pack(endian + entry, cpu, 0, start, len(payload), 0, *([0] if wide else []))
++                    path.write_bytes(table + first + second)
++                    self.assertEqual([row['cpu_type'] for row in subject.macho_entitlement_sections(path)], [7, 0x100000c])
++                    alignment_offset = 8 + (24 if wide else 16)
++                    for invalid_alignment in (32, 5):
++                        # 32 exceeds the accepted exponent; the first slice's
++                        # offset (48/72) is not aligned to 2**5 in either table.
++                        changed = bytearray(table + first + second)
++                        struct.pack_into(endian + 'I', changed, alignment_offset, invalid_alignment)
++                        path.write_bytes(changed)
++                        with self.subTest(wide=wide, endian=endian, alignment=invalid_alignment), self.assertRaises(RuntimeError):
++                            subject.macho_entitlement_sections(path)
++                    path.write_bytes(table + first + second)
++            malformed = bytearray(path.read_bytes()); struct.pack_into('>I', malformed, 8, 99); path.write_bytes(malformed)
++            with self.assertRaises(RuntimeError): subject.macho_entitlement_sections(path)
++
++    def test_macho_malformed_command_bounds_and_section_bounds_refuse(self):
++        valid = thin(plistlib.dumps({'get-task-allow': True}))
++        changes = [(16, 4097), (20, subject.MAX_COMMAND_BYTES + 1), (32 + 4, 0), (32 + 72 + 48, 0)]
++        with tempfile.TemporaryDirectory(prefix='parlor-entitlements-test-') as raw:
++            path = Path(raw) / 'image'
++            for offset, value in changes:
++                changed = bytearray(valid); struct.pack_into('<I', changed, offset, value); path.write_bytes(changed)
++                with self.subTest(offset=offset), self.assertRaises(RuntimeError): subject.macho_entitlement_sections(path)
++            for invalid in (b'', b'not a macho', valid[:10]):
++                path.write_bytes(invalid)
++                with self.assertRaises(RuntimeError): subject.macho_entitlement_sections(path)
++
++    def test_bundle_requires_exact_owner_app_identity_paths_and_current_hash(self):
++        with tempfile.TemporaryDirectory(prefix='parlor-entitlements-test-') as raw:
++            owner = Path(raw).resolve(); bundle = owner / 'Parlor.app'; bundle.mkdir()
++            (bundle / 'Info.plist').write_bytes(plistlib.dumps({'CFBundleIdentifier': subject.APP_ID}))
++            (bundle / 'Parlor').write_bytes(thin(plistlib.dumps({'get-task-allow': True})))
++            bound = inventory(bundle)
++            self.assertEqual(len(subject.inspect_bundle_entitlements(bundle, bound, owner)['images']), 1)
++            elsewhere = owner / 'elsewhere'; elsewhere.mkdir()
++            with self.assertRaises(RuntimeError): subject.inspect_bundle_entitlements(bundle, bound, elsewhere)
++            forged = {**bound, 'images': [{**bound['images'][0], 'resolved_path': '../user-file'}]}
++            with self.assertRaises(RuntimeError): subject.inspect_bundle_entitlements(bundle, forged, owner)
++            original = bundle / 'original'; (bundle / 'Parlor').rename(original); (bundle / 'Parlor').symlink_to(original)
++            with self.assertRaises(RuntimeError): subject.inspect_bundle_entitlements(bundle, bound, owner)
++            (bundle / 'Parlor').unlink(); original.rename(bundle / 'Parlor')
++            (bundle / 'Parlor').write_bytes(thin())
++            with self.assertRaises(RuntimeError): subject.inspect_bundle_entitlements(bundle, bound, owner)
++            (bundle / 'Info.plist').write_bytes(plistlib.dumps({'CFBundleIdentifier': 'unrelated.synthetic.app'}))
++            with self.assertRaises(RuntimeError): subject.inspect_bundle_entitlements(bundle, inventory(bundle), owner)
++
++    def test_generated_xcent_reads_only_exact_owned_app_paths(self):
++        with tempfile.TemporaryDirectory(prefix='parlor-entitlements-test-') as raw:
++            owner = Path(raw).resolve(); derived = owner / 'DerivedData'; derived.mkdir()
++            empty = subject.inspect_generated_app_entitlements(derived, owner)
++            self.assertEqual([row['present'] for row in empty['files']], [False, False])
++            exact = derived / empty['files'][1]['path']; exact.parent.mkdir(parents=True)
++            exact.write_bytes(plistlib.dumps({'application-identifier': 'SYNTHETIC.com.parlor.app.debug'}))
++            (exact.parent / 'not-allowlisted.xcent').write_bytes(b'private synthetic fixture must never be opened')
++            rows = subject.inspect_generated_app_entitlements(derived, owner)['files']
++            self.assertEqual(len(rows), 2)
++            self.assertEqual(rows[1]['payload']['status'], 'PARSED_PUBLIC_FIELDS_ONLY')
++            exact.write_bytes(b'bad plist')
++            self.assertEqual(subject.inspect_generated_app_entitlements(derived, owner)['files'][1]['payload']['status'], 'MALFORMED_REDACTED')
++            exact.write_bytes(b'x' * (subject.MAX_PLIST_BYTES + 1))
++            self.assertEqual(subject.inspect_generated_app_entitlements(derived, owner)['files'][1]['payload']['status'], 'OVERSIZED_NOT_READ')
++            exact.unlink(); exact.symlink_to(exact.parent / 'not-allowlisted.xcent')
++            with self.assertRaises(RuntimeError): subject.inspect_generated_app_entitlements(derived, owner)
++
++    def test_sdk_defaults_and_explicit_flags_never_claim_merged_settings(self):
++        with tempfile.TemporaryDirectory(prefix='parlor-entitlements-test-') as raw:
++            contents = Path(raw).resolve() / 'Xcode.app/Contents'; developer = contents / 'Developer'
++            platform = developer / 'Platforms/iPhoneSimulator.platform'; sdk = platform / 'Developer/SDKs/iPhoneSimulator.sdk'
++            sdk.mkdir(parents=True)
++            (contents / 'version.plist').write_bytes(plistlib.dumps({'CFBundleShortVersionString': '26.5', 'ProductBuildVersion': '17F42'}))
++            (platform / 'Info.plist').write_bytes(plistlib.dumps({'DefaultProperties': {'AD_HOC_CODE_SIGNING_ALLOWED': 'NO'}}))
++            (sdk / 'SDKSettings.json').write_text(json.dumps({'DefaultProperties': {'AD_HOC_CODE_SIGNING_ALLOWED': 'YES', 'CODE_SIGN_IDENTITY': '-'}}))
++            configured = dict(CODE_SIGNING_ALLOWED='NO', CODE_SIGNING_REQUIRED='NO', CODE_SIGN_IDENTITY='', DEVELOPMENT_TEAM='')
++            observed = subject.inspect_sdk_signing_defaults(developer, sdk, configured)
++            self.assertEqual(observed['observations']['platform_defaults']['values']['AD_HOC_CODE_SIGNING_ALLOWED'], 'NO')
++            self.assertEqual(observed['observations']['sdk_defaults']['values']['AD_HOC_CODE_SIGNING_ALLOWED'], 'YES')
++            self.assertIn('Not queried merged effective', observed['scope'])
++            with self.assertRaises(RuntimeError): subject.inspect_sdk_signing_defaults(developer, contents, configured)
++            with self.assertRaises(RuntimeError): subject.inspect_sdk_signing_defaults(developer, sdk, {**configured, 'DEVELOPMENT_TEAM': 'not-authorized'})
++
++    def test_runner_binds_each_inspection_to_the_explicit_owned_artifact(self):
++        runner = (Path(__file__).resolve().parent / 'run_ios_readiness.py').read_text()
++        tree = ast.parse(runner)
++        calls = [node for node in ast.walk(tree) if isinstance(node, ast.Call) and isinstance(node.func, ast.Name)]
++        bundle_calls = [node for node in calls if node.func.id == 'inspect_bundle_entitlements']
++        expected = ['inspect_bundle_entitlements(app, built_inventory, temp)',
++                    'inspect_bundle_entitlements(installed, installed_inventory, owned_device)']
++        self.assertEqual(sorted(ast.dump(node) for node in bundle_calls),
++                         sorted(ast.dump(ast.parse(source, mode='eval').body) for source in expected))
++        generated = [node for node in calls if node.func.id == 'inspect_generated_app_entitlements']
++        self.assertEqual([ast.dump(node) for node in generated],
++                         [ast.dump(ast.parse('inspect_generated_app_entitlements(derived, temp)', mode='eval').body)])
++        self.assertEqual(sum(node.func.id == 'inspect_sdk_signing_defaults' for node in calls), 1)
++        self.assertIn("signing_arguments = [key + '=' + value for key, value in configured_signing.items()]", runner)
++        self.assertIn('*signing_arguments,', runner)
++
++
++if __name__ == '__main__':
++    unittest.main()

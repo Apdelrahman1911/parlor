@@ -1,0 +1,690 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.13/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+Type-safe project accessors is an incubating feature.
+> Task :build-logic:convention:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :build-logic:convention:compileKotlin
+> Task :build-logic:convention:compileJava NO-SOURCE
+> Task :build-logic:convention:pluginDescriptors
+> Task :build-logic:convention:processResources
+> Task :build-logic:convention:classes
+> Task :build-logic:convention:jar
+
+> Configure project :composeApp
+WARNING: The option setting 'android.experimental.lint.version=9.1.1' is experimental.
+w: [33m[1m⚠️ Deprecated Gradle Version[0m[0m
+The used Gradle version (Gradle 8.13) is deprecated and will not be supported in future Kotlin Gradle Plugin releases.
+The minimum supported Gradle version will become Gradle 8.14.4 in Kotlin 2.5.0.
+
+This warning can be suppressed in 'gradle.properties':
+    kotlin.suppressGradlePluginWarnings=DeprecatedGradleVersionWarning
+[32m[1mSolution:[0m[0m
+[32m[3mPlease update the Gradle version to at least Gradle 8.14.4.[0m[0m
+
+w: [33m[1m⚠️ Native task 'iosX64Test' is disabled[0m[0m
+Task 'iosX64Test' for target 'ios_x64' cannot run on the current host (macos-aarch64).
+Reason: architecture mismatch - target requires X64, current host is ARM64
+[32m[1mSolution:[0m[0m
+[32m[3mTo suppress this warning, add 'kotlin.native.ignoreDisabledTargets=true' to gradle.properties.[0m[0m
+
+
+> Task :auditRuntimeDependencyGraphs
+AUDIT_RUNTIME_GRAPH_BEGIN :composeApp:releaseRuntimeClasspath
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.activity:activity-compose:1.12.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.activity:activity-ktx:1.12.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.activity:activity:1.12.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.annotation:annotation-experimental:1.4.1
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.annotation:annotation-jvm:1.9.1
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.annotation:annotation:1.9.1
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.appcompat:appcompat-resources:1.7.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.appcompat:appcompat:1.7.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.arch.core:core-common:2.2.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.arch.core:core-runtime:2.2.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.autofill:autofill:1.0.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.collection:collection-jvm:1.5.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.collection:collection-ktx:1.5.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.collection:collection:1.5.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.compose.animation:animation-android:1.10.5
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.compose.animation:animation-core-android:1.10.5
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.compose.animation:animation-core:1.10.5
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.compose.animation:animation:1.10.5
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.compose.foundation:foundation-android:1.10.5
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.compose.foundation:foundation-layout-android:1.10.5
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.compose.foundation:foundation-layout:1.10.5
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.compose.foundation:foundation:1.10.5
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.compose.material3:material3-android:1.4.0-beta01
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.compose.material3:material3:1.4.0-beta01
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.compose.material:material-ripple-android:1.9.0-rc01
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.compose.material:material-ripple:1.9.0-rc01
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.compose.runtime:runtime-android:1.10.5
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.compose.runtime:runtime-annotation-android:1.10.5
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.compose.runtime:runtime-annotation:1.10.5
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.compose.runtime:runtime-retain-android:1.10.5
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.compose.runtime:runtime-retain:1.10.5
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.compose.runtime:runtime-saveable-android:1.10.5
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.compose.runtime:runtime-saveable:1.10.5
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.compose.runtime:runtime:1.10.5
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.compose.ui:ui-android:1.10.5
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.compose.ui:ui-geometry-android:1.10.5
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.compose.ui:ui-geometry:1.10.5
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.compose.ui:ui-graphics-android:1.10.5
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.compose.ui:ui-graphics:1.10.5
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.compose.ui:ui-text-android:1.10.5
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.compose.ui:ui-text:1.10.5
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.compose.ui:ui-tooling-preview-android:1.10.5
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.compose.ui:ui-tooling-preview:1.10.5
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.compose.ui:ui-unit-android:1.10.5
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.compose.ui:ui-unit:1.10.5
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.compose.ui:ui-util-android:1.10.5
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.compose.ui:ui-util:1.10.5
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.compose.ui:ui:1.10.5
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.concurrent:concurrent-futures:1.1.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.core:core-ktx:1.16.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.core:core-viewtree:1.0.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.core:core:1.16.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.cursoradapter:cursoradapter:1.0.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.customview:customview-poolingcontainer:1.0.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.customview:customview:1.0.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.documentfile:documentfile:1.0.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.drawerlayout:drawerlayout:1.0.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.dynamicanimation:dynamicanimation:1.0.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.emoji2:emoji2-views-helper:1.4.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.emoji2:emoji2:1.4.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.fragment:fragment-ktx:1.8.3
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.fragment:fragment:1.8.3
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.graphics:graphics-path:1.0.1
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.graphics:graphics-shapes-android:1.0.1
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.graphics:graphics-shapes:1.0.1
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.interpolator:interpolator:1.0.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.legacy:legacy-support-core-utils:1.0.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.lifecycle:lifecycle-common-java8:2.10.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.lifecycle:lifecycle-common-jvm:2.10.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.lifecycle:lifecycle-common:2.10.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.lifecycle:lifecycle-livedata-core-ktx:2.10.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.lifecycle:lifecycle-livedata-core:2.10.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.lifecycle:lifecycle-livedata:2.10.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.lifecycle:lifecycle-process:2.10.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.lifecycle:lifecycle-runtime-android:2.10.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.lifecycle:lifecycle-runtime-compose-android:2.10.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.lifecycle:lifecycle-runtime-compose:2.10.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.lifecycle:lifecycle-runtime-ktx-android:2.10.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.lifecycle:lifecycle-runtime-ktx:2.10.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.lifecycle:lifecycle-runtime:2.10.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.lifecycle:lifecycle-viewmodel-android:2.10.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.lifecycle:lifecycle-viewmodel-compose-android:2.10.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.lifecycle:lifecycle-viewmodel-compose:2.10.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.lifecycle:lifecycle-viewmodel-ktx:2.10.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.lifecycle:lifecycle-viewmodel-savedstate-android:2.10.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.lifecycle:lifecycle-viewmodel-savedstate:2.10.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.lifecycle:lifecycle-viewmodel:2.10.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.loader:loader:1.0.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.localbroadcastmanager:localbroadcastmanager:1.0.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.navigation3:navigation3-runtime-android:1.0.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.navigation3:navigation3-runtime:1.0.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.navigation3:navigation3-ui-android:1.0.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.navigation3:navigation3-ui:1.0.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.navigationevent:navigationevent-android:1.0.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.navigationevent:navigationevent-compose-android:1.0.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.navigationevent:navigationevent-compose:1.0.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.navigationevent:navigationevent:1.0.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.print:print:1.0.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.profileinstaller:profileinstaller:1.4.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.resourceinspection:resourceinspection-annotation:1.0.1
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.savedstate:savedstate-android:1.4.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.savedstate:savedstate-compose-android:1.4.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.savedstate:savedstate-compose:1.4.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.savedstate:savedstate-ktx:1.4.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.savedstate:savedstate:1.4.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.startup:startup-runtime:1.1.1
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.tracing:tracing:1.2.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.transition:transition:1.6.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.vectordrawable:vectordrawable-animated:1.1.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.vectordrawable:vectordrawable:1.1.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.versionedparcelable:versionedparcelable:1.1.1
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.viewpager:viewpager:1.0.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.window:window-core-android:1.5.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.window:window-core:1.5.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath androidx.window:window:1.5.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath co.touchlab:stately-concurrency-jvm:2.1.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath co.touchlab:stately-concurrency:2.1.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath co.touchlab:stately-concurrent-collections-jvm:2.1.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath co.touchlab:stately-concurrent-collections:2.1.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath co.touchlab:stately-strict-jvm:2.1.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath co.touchlab:stately-strict:2.1.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath com.google.guava:listenablefuture:1.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath dev.whyoleg.cryptography:cryptography-bigint-jvm:0.6.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath dev.whyoleg.cryptography:cryptography-bigint:0.6.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath dev.whyoleg.cryptography:cryptography-bom:0.6.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath dev.whyoleg.cryptography:cryptography-core-jvm:0.6.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath dev.whyoleg.cryptography:cryptography-core:0.6.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath dev.whyoleg.cryptography:cryptography-provider-base-jvm:0.6.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath dev.whyoleg.cryptography:cryptography-provider-base:0.6.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath dev.whyoleg.cryptography:cryptography-provider-jdk-jvm:0.6.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath dev.whyoleg.cryptography:cryptography-provider-jdk:0.6.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath dev.whyoleg.cryptography:cryptography-random-jvm:0.6.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath dev.whyoleg.cryptography:cryptography-random:0.6.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath dev.whyoleg.cryptography:cryptography-serialization-asn1-jvm:0.6.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath dev.whyoleg.cryptography:cryptography-serialization-asn1-modules-jvm:0.6.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath dev.whyoleg.cryptography:cryptography-serialization-asn1-modules:0.6.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath dev.whyoleg.cryptography:cryptography-serialization-asn1:0.6.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath dev.whyoleg.cryptography:cryptography-serialization-pem-jvm:0.6.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath dev.whyoleg.cryptography:cryptography-serialization-pem:0.6.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath io.github.apdelrahman1911:p2p-core-android:0.7.0-rc3
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath io.github.apdelrahman1911:p2p-core:0.7.0-rc3
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath io.github.apdelrahman1911:p2p-transport-lan-android:0.7.0-rc3
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath io.github.apdelrahman1911:p2p-transport-lan:0.7.0-rc3
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath io.insert-koin:koin-android:4.0.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath io.insert-koin:koin-compose-jvm:4.0.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath io.insert-koin:koin-compose-viewmodel-jvm:4.0.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath io.insert-koin:koin-compose-viewmodel:4.0.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath io.insert-koin:koin-compose:4.0.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath io.insert-koin:koin-core-jvm:4.0.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath io.insert-koin:koin-core-viewmodel-jvm:4.0.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath io.insert-koin:koin-core-viewmodel:4.0.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath io.insert-koin:koin-core:4.0.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath io.ktor:ktor-client-core-jvm:3.0.3
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath io.ktor:ktor-client-core:3.0.3
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath io.ktor:ktor-events-jvm:3.0.3
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath io.ktor:ktor-events:3.0.3
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath io.ktor:ktor-http-jvm:3.0.3
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath io.ktor:ktor-http:3.0.3
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath io.ktor:ktor-io-jvm:3.0.3
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath io.ktor:ktor-io:3.0.3
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath io.ktor:ktor-serialization-jvm:3.0.3
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath io.ktor:ktor-serialization:3.0.3
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath io.ktor:ktor-sse-jvm:3.0.3
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath io.ktor:ktor-sse:3.0.3
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath io.ktor:ktor-utils-jvm:3.0.3
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath io.ktor:ktor-utils:3.0.3
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath io.ktor:ktor-websocket-serialization-jvm:3.0.3
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath io.ktor:ktor-websocket-serialization:3.0.3
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath io.ktor:ktor-websockets-jvm:3.0.3
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath io.ktor:ktor-websockets:3.0.3
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath org.bouncycastle:bcprov-jdk18on:1.85
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath org.jetbrains.androidx.core:core-bundle-android:1.0.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath org.jetbrains.androidx.core:core-bundle:1.0.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath org.jetbrains.androidx.lifecycle:lifecycle-common:2.10.0-alpha06
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose:2.10.0-alpha06
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath org.jetbrains.androidx.lifecycle:lifecycle-runtime:2.10.0-alpha06
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose:2.8.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-savedstate:2.9.6
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath org.jetbrains.androidx.lifecycle:lifecycle-viewmodel:2.9.6
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath org.jetbrains.androidx.navigation3:navigation3-ui:1.0.0-alpha06
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath org.jetbrains.androidx.navigationevent:navigationevent-compose:1.0.0-rc01
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath org.jetbrains.androidx.savedstate:savedstate-compose:1.3.6
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath org.jetbrains.androidx.savedstate:savedstate:1.3.6
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath org.jetbrains.compose.animation:animation-core:1.10.3
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath org.jetbrains.compose.animation:animation:1.10.3
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath org.jetbrains.compose.annotation-internal:annotation:1.10.3
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath org.jetbrains.compose.collection-internal:collection:1.10.3
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath org.jetbrains.compose.components:components-resources-android:1.10.3
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath org.jetbrains.compose.components:components-resources:1.10.3
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath org.jetbrains.compose.components:components-ui-tooling-preview-android:1.10.3
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath org.jetbrains.compose.components:components-ui-tooling-preview:1.10.3
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath org.jetbrains.compose.foundation:foundation-layout:1.10.3
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath org.jetbrains.compose.foundation:foundation:1.10.3
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath org.jetbrains.compose.material3:material3:1.9.0-beta03
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath org.jetbrains.compose.material:material-ripple:1.9.0-beta03
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath org.jetbrains.compose.runtime:runtime-saveable:1.10.3
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath org.jetbrains.compose.runtime:runtime:1.10.3
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath org.jetbrains.compose.ui:ui-backhandler-android:1.9.0-beta03
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath org.jetbrains.compose.ui:ui-backhandler:1.9.0-beta03
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath org.jetbrains.compose.ui:ui-geometry:1.10.3
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath org.jetbrains.compose.ui:ui-graphics:1.10.3
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath org.jetbrains.compose.ui:ui-text:1.10.3
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath org.jetbrains.compose.ui:ui-unit:1.10.3
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath org.jetbrains.compose.ui:ui-util:1.10.3
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath org.jetbrains.compose.ui:ui:1.10.3
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath org.jetbrains.kotlin:kotlin-stdlib:2.4.10
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath org.jetbrains.kotlinx:kotlinx-coroutines-android:1.11.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath org.jetbrains.kotlinx:kotlinx-coroutines-bom:1.11.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.11.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath org.jetbrains.kotlinx:kotlinx-coroutines-core:1.11.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath org.jetbrains.kotlinx:kotlinx-coroutines-slf4j:1.11.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath org.jetbrains.kotlinx:kotlinx-datetime-jvm:0.7.1
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath org.jetbrains.kotlinx:kotlinx-datetime:0.7.1
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath org.jetbrains.kotlinx:kotlinx-io-bytestring-jvm:0.9.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath org.jetbrains.kotlinx:kotlinx-io-bytestring:0.9.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath org.jetbrains.kotlinx:kotlinx-io-core-jvm:0.9.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath org.jetbrains.kotlinx:kotlinx-io-core:0.9.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath org.jetbrains.kotlinx:kotlinx-serialization-bom:1.11.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath org.jetbrains.kotlinx:kotlinx-serialization-cbor-jvm:1.11.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath org.jetbrains.kotlinx:kotlinx-serialization-cbor:1.11.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath org.jetbrains.kotlinx:kotlinx-serialization-core-jvm:1.11.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath org.jetbrains.kotlinx:kotlinx-serialization-core:1.11.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath org.jetbrains.kotlinx:kotlinx-serialization-json-jvm:1.11.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath org.jetbrains.kotlinx:kotlinx-serialization-json:1.11.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath org.jetbrains:annotations:23.0.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath org.jmdns:jmdns:3.6.3
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath org.jspecify:jspecify:1.0.0
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath org.slf4j:slf4j-api:2.0.16
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath project :composeApp
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath project :game-modes:mafia
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath project :game-modes:whodunit
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath project :shared:content
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath project :shared:core
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath project :shared:design-system
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath project :shared:engine
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath project :shared:networking
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath project :shared:session
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath project :shared:storage
+AUDIT_RUNTIME_COMPONENT :composeApp:releaseRuntimeClasspath project :shared:transport-p2p
+AUDIT_RUNTIME_GRAPH_BEGIN :composeApp:desktopRuntimeClasspath
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath androidx.annotation:annotation-jvm:1.9.1
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath androidx.annotation:annotation:1.9.1
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath androidx.arch.core:core-common:2.2.0
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath androidx.collection:collection-jvm:1.5.0
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath androidx.collection:collection:1.5.0
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath androidx.compose.runtime:runtime-annotation-jvm:1.10.5
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath androidx.compose.runtime:runtime-annotation:1.10.5
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath androidx.compose.runtime:runtime-desktop:1.10.5
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath androidx.compose.runtime:runtime-retain-desktop:1.10.5
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath androidx.compose.runtime:runtime-retain:1.10.5
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath androidx.compose.runtime:runtime-saveable-desktop:1.10.5
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath androidx.compose.runtime:runtime-saveable:1.10.5
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath androidx.compose.runtime:runtime:1.10.5
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath androidx.lifecycle:lifecycle-common-jvm:2.10.0
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath androidx.lifecycle:lifecycle-common:2.10.0
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath androidx.lifecycle:lifecycle-runtime-compose-desktop:2.10.0
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath androidx.lifecycle:lifecycle-runtime-compose:2.10.0
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath androidx.lifecycle:lifecycle-runtime-desktop:2.10.0
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath androidx.lifecycle:lifecycle-runtime:2.10.0
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath androidx.lifecycle:lifecycle-viewmodel-desktop:2.10.0
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath androidx.lifecycle:lifecycle-viewmodel-savedstate-desktop:2.10.0
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath androidx.lifecycle:lifecycle-viewmodel-savedstate:2.10.0
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath androidx.lifecycle:lifecycle-viewmodel:2.10.0
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath androidx.navigation3:navigation3-runtime-desktop:1.0.0
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath androidx.navigation3:navigation3-runtime:1.0.0
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath androidx.navigationevent:navigationevent-desktop:1.0.2
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath androidx.navigationevent:navigationevent:1.0.2
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath androidx.savedstate:savedstate-compose-desktop:1.4.0
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath androidx.savedstate:savedstate-compose:1.4.0
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath androidx.savedstate:savedstate-desktop:1.4.0
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath androidx.savedstate:savedstate:1.4.0
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath co.touchlab:stately-concurrency-jvm:2.1.0
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath co.touchlab:stately-concurrency:2.1.0
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath co.touchlab:stately-concurrent-collections-jvm:2.1.0
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath co.touchlab:stately-concurrent-collections:2.1.0
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath co.touchlab:stately-strict-jvm:2.1.0
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath co.touchlab:stately-strict:2.1.0
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath dev.whyoleg.cryptography:cryptography-bigint-jvm:0.6.0
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath dev.whyoleg.cryptography:cryptography-bigint:0.6.0
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath dev.whyoleg.cryptography:cryptography-bom:0.6.0
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath dev.whyoleg.cryptography:cryptography-core-jvm:0.6.0
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath dev.whyoleg.cryptography:cryptography-core:0.6.0
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath dev.whyoleg.cryptography:cryptography-provider-base-jvm:0.6.0
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath dev.whyoleg.cryptography:cryptography-provider-base:0.6.0
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath dev.whyoleg.cryptography:cryptography-provider-jdk-jvm:0.6.0
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath dev.whyoleg.cryptography:cryptography-provider-jdk:0.6.0
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath dev.whyoleg.cryptography:cryptography-random-jvm:0.6.0
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath dev.whyoleg.cryptography:cryptography-random:0.6.0
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath dev.whyoleg.cryptography:cryptography-serialization-asn1-jvm:0.6.0
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath dev.whyoleg.cryptography:cryptography-serialization-asn1-modules-jvm:0.6.0
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath dev.whyoleg.cryptography:cryptography-serialization-asn1-modules:0.6.0
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath dev.whyoleg.cryptography:cryptography-serialization-asn1:0.6.0
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath dev.whyoleg.cryptography:cryptography-serialization-pem-jvm:0.6.0
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath dev.whyoleg.cryptography:cryptography-serialization-pem:0.6.0
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath io.github.apdelrahman1911:p2p-core-jvm:0.7.0-rc3
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath io.github.apdelrahman1911:p2p-core:0.7.0-rc3
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath io.github.apdelrahman1911:p2p-transport-lan-jvm:0.7.0-rc3
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath io.github.apdelrahman1911:p2p-transport-lan:0.7.0-rc3
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath io.insert-koin:koin-compose-jvm:4.0.0
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath io.insert-koin:koin-compose-viewmodel-jvm:4.0.0
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath io.insert-koin:koin-compose-viewmodel:4.0.0
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath io.insert-koin:koin-compose:4.0.0
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath io.insert-koin:koin-core-jvm:4.0.0
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath io.insert-koin:koin-core-viewmodel-jvm:4.0.0
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath io.insert-koin:koin-core-viewmodel:4.0.0
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath io.insert-koin:koin-core:4.0.0
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath io.ktor:ktor-client-core-jvm:3.0.3
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath io.ktor:ktor-client-core:3.0.3
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath io.ktor:ktor-events-jvm:3.0.3
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath io.ktor:ktor-events:3.0.3
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath io.ktor:ktor-http-jvm:3.0.3
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath io.ktor:ktor-http:3.0.3
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath io.ktor:ktor-io-jvm:3.0.3
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath io.ktor:ktor-io:3.0.3
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath io.ktor:ktor-serialization-jvm:3.0.3
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath io.ktor:ktor-serialization:3.0.3
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath io.ktor:ktor-sse-jvm:3.0.3
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath io.ktor:ktor-sse:3.0.3
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath io.ktor:ktor-utils-jvm:3.0.3
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath io.ktor:ktor-utils:3.0.3
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath io.ktor:ktor-websocket-serialization-jvm:3.0.3
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath io.ktor:ktor-websocket-serialization:3.0.3
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath io.ktor:ktor-websockets-jvm:3.0.3
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath io.ktor:ktor-websockets:3.0.3
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.bouncycastle:bcprov-jdk18on:1.85
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jetbrains.androidx.core:core-bundle-desktop:1.0.0
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jetbrains.androidx.core:core-bundle:1.0.0
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jetbrains.androidx.lifecycle:lifecycle-common:2.10.0-alpha06
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose-desktop:2.10.0-alpha06
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose:2.10.0-alpha06
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jetbrains.androidx.lifecycle:lifecycle-runtime:2.10.0-alpha06
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose-desktop:2.8.0
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose:2.8.0
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-savedstate:2.9.6
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jetbrains.androidx.lifecycle:lifecycle-viewmodel:2.9.6
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jetbrains.androidx.navigation3:navigation3-ui-desktop:1.0.0-alpha06
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jetbrains.androidx.navigation3:navigation3-ui:1.0.0-alpha06
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jetbrains.androidx.navigationevent:navigationevent-compose-desktop:1.0.0-rc01
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jetbrains.androidx.navigationevent:navigationevent-compose:1.0.0-rc01
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jetbrains.androidx.savedstate:savedstate-compose-desktop:1.3.6
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jetbrains.androidx.savedstate:savedstate-compose:1.3.6
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jetbrains.androidx.savedstate:savedstate:1.3.6
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jetbrains.compose.animation:animation-core-desktop:1.10.3
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jetbrains.compose.animation:animation-core:1.10.3
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jetbrains.compose.animation:animation-desktop:1.10.3
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jetbrains.compose.animation:animation:1.10.3
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jetbrains.compose.annotation-internal:annotation:1.10.3
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jetbrains.compose.collection-internal:collection:1.10.3
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jetbrains.compose.components:components-resources-desktop:1.10.3
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jetbrains.compose.components:components-resources:1.10.3
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jetbrains.compose.components:components-ui-tooling-preview-desktop:1.10.3
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jetbrains.compose.components:components-ui-tooling-preview:1.10.3
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jetbrains.compose.desktop:desktop-jvm-macos-arm64:1.10.3
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jetbrains.compose.desktop:desktop-jvm:1.10.3
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jetbrains.compose.desktop:desktop:1.10.3
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jetbrains.compose.foundation:foundation-desktop:1.10.3
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jetbrains.compose.foundation:foundation-layout-desktop:1.10.3
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jetbrains.compose.foundation:foundation-layout:1.10.3
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jetbrains.compose.foundation:foundation:1.10.3
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jetbrains.compose.material3:material3-desktop:1.9.0-beta03
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jetbrains.compose.material3:material3:1.9.0-beta03
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jetbrains.compose.material:material-desktop:1.10.3
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jetbrains.compose.material:material-ripple-desktop:1.10.3
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jetbrains.compose.material:material-ripple:1.10.3
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jetbrains.compose.material:material:1.10.3
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jetbrains.compose.runtime:runtime-desktop:1.10.3
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jetbrains.compose.runtime:runtime-saveable-desktop:1.10.3
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jetbrains.compose.runtime:runtime-saveable:1.10.3
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jetbrains.compose.runtime:runtime:1.10.3
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jetbrains.compose.ui:ui-backhandler-desktop:1.10.3
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jetbrains.compose.ui:ui-backhandler:1.10.3
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jetbrains.compose.ui:ui-desktop:1.10.3
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jetbrains.compose.ui:ui-geometry-desktop:1.10.3
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jetbrains.compose.ui:ui-geometry:1.10.3
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jetbrains.compose.ui:ui-graphics-desktop:1.10.3
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jetbrains.compose.ui:ui-graphics:1.10.3
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jetbrains.compose.ui:ui-text-desktop:1.10.3
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jetbrains.compose.ui:ui-text:1.10.3
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jetbrains.compose.ui:ui-tooling-preview-desktop:1.10.3
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jetbrains.compose.ui:ui-tooling-preview:1.10.3
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jetbrains.compose.ui:ui-unit-desktop:1.10.3
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jetbrains.compose.ui:ui-unit:1.10.3
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jetbrains.compose.ui:ui-util-desktop:1.10.3
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jetbrains.compose.ui:ui-util:1.10.3
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jetbrains.compose.ui:ui:1.10.3
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jetbrains.kotlin:kotlin-stdlib-jdk7:2.2.20
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jetbrains.kotlin:kotlin-stdlib-jdk8:2.2.20
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jetbrains.kotlin:kotlin-stdlib:2.4.10
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jetbrains.kotlinx:atomicfu-jvm:0.23.2
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jetbrains.kotlinx:atomicfu:0.23.2
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jetbrains.kotlinx:kotlinx-coroutines-bom:1.11.0
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.11.0
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jetbrains.kotlinx:kotlinx-coroutines-core:1.11.0
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jetbrains.kotlinx:kotlinx-coroutines-slf4j:1.11.0
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jetbrains.kotlinx:kotlinx-datetime-jvm:0.7.1
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jetbrains.kotlinx:kotlinx-datetime:0.7.1
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jetbrains.kotlinx:kotlinx-io-bytestring-jvm:0.9.0
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jetbrains.kotlinx:kotlinx-io-bytestring:0.9.0
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jetbrains.kotlinx:kotlinx-io-core-jvm:0.9.0
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jetbrains.kotlinx:kotlinx-io-core:0.9.0
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jetbrains.kotlinx:kotlinx-serialization-bom:1.11.0
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jetbrains.kotlinx:kotlinx-serialization-cbor-jvm:1.11.0
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jetbrains.kotlinx:kotlinx-serialization-cbor:1.11.0
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jetbrains.kotlinx:kotlinx-serialization-core-jvm:1.11.0
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jetbrains.kotlinx:kotlinx-serialization-core:1.11.0
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jetbrains.kotlinx:kotlinx-serialization-json-jvm:1.11.0
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jetbrains.kotlinx:kotlinx-serialization-json:1.11.0
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jetbrains.runtime:jbr-api:1.5.0
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jetbrains.skiko:skiko-awt-runtime-macos-arm64:0.9.37.4
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jetbrains.skiko:skiko-awt:0.9.37.4
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jetbrains.skiko:skiko:0.9.37.4
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jetbrains:annotations:23.0.0
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jmdns:jmdns:3.6.3
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.jspecify:jspecify:1.0.0
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath org.slf4j:slf4j-api:2.0.16
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath project :composeApp
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath project :game-modes:mafia
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath project :game-modes:whodunit
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath project :shared:content
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath project :shared:core
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath project :shared:design-system
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath project :shared:engine
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath project :shared:networking
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath project :shared:session
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath project :shared:storage
+AUDIT_RUNTIME_COMPONENT :composeApp:desktopRuntimeClasspath project :shared:transport-p2p
+AUDIT_RUNTIME_GRAPH_BEGIN :shared:transport-p2p:iosArm64CompileKlibraries
+AUDIT_RUNTIME_COMPONENT :shared:transport-p2p:iosArm64CompileKlibraries co.touchlab:stately-concurrency-iosarm64:2.1.0
+AUDIT_RUNTIME_COMPONENT :shared:transport-p2p:iosArm64CompileKlibraries co.touchlab:stately-concurrency:2.1.0
+AUDIT_RUNTIME_COMPONENT :shared:transport-p2p:iosArm64CompileKlibraries co.touchlab:stately-concurrent-collections-iosarm64:2.1.0
+AUDIT_RUNTIME_COMPONENT :shared:transport-p2p:iosArm64CompileKlibraries co.touchlab:stately-concurrent-collections:2.1.0
+AUDIT_RUNTIME_COMPONENT :shared:transport-p2p:iosArm64CompileKlibraries co.touchlab:stately-strict-iosarm64:2.1.0
+AUDIT_RUNTIME_COMPONENT :shared:transport-p2p:iosArm64CompileKlibraries co.touchlab:stately-strict:2.1.0
+AUDIT_RUNTIME_COMPONENT :shared:transport-p2p:iosArm64CompileKlibraries dev.whyoleg.cryptography:cryptography-bigint-iosarm64:0.6.0
+AUDIT_RUNTIME_COMPONENT :shared:transport-p2p:iosArm64CompileKlibraries dev.whyoleg.cryptography:cryptography-bigint:0.6.0
+AUDIT_RUNTIME_COMPONENT :shared:transport-p2p:iosArm64CompileKlibraries dev.whyoleg.cryptography:cryptography-core-iosarm64:0.6.0
+AUDIT_RUNTIME_COMPONENT :shared:transport-p2p:iosArm64CompileKlibraries dev.whyoleg.cryptography:cryptography-core:0.6.0
+AUDIT_RUNTIME_COMPONENT :shared:transport-p2p:iosArm64CompileKlibraries dev.whyoleg.cryptography:cryptography-provider-base-iosarm64:0.6.0
+AUDIT_RUNTIME_COMPONENT :shared:transport-p2p:iosArm64CompileKlibraries dev.whyoleg.cryptography:cryptography-provider-base:0.6.0
+AUDIT_RUNTIME_COMPONENT :shared:transport-p2p:iosArm64CompileKlibraries dev.whyoleg.cryptography:cryptography-provider-cryptokit-iosarm64:0.6.0
+AUDIT_RUNTIME_COMPONENT :shared:transport-p2p:iosArm64CompileKlibraries dev.whyoleg.cryptography:cryptography-provider-cryptokit:0.6.0
+AUDIT_RUNTIME_COMPONENT :shared:transport-p2p:iosArm64CompileKlibraries dev.whyoleg.cryptography:cryptography-random-iosarm64:0.6.0
+AUDIT_RUNTIME_COMPONENT :shared:transport-p2p:iosArm64CompileKlibraries dev.whyoleg.cryptography:cryptography-random:0.6.0
+AUDIT_RUNTIME_COMPONENT :shared:transport-p2p:iosArm64CompileKlibraries dev.whyoleg.cryptography:cryptography-serialization-asn1-iosarm64:0.6.0
+AUDIT_RUNTIME_COMPONENT :shared:transport-p2p:iosArm64CompileKlibraries dev.whyoleg.cryptography:cryptography-serialization-asn1-modules-iosarm64:0.6.0
+AUDIT_RUNTIME_COMPONENT :shared:transport-p2p:iosArm64CompileKlibraries dev.whyoleg.cryptography:cryptography-serialization-asn1-modules:0.6.0
+AUDIT_RUNTIME_COMPONENT :shared:transport-p2p:iosArm64CompileKlibraries dev.whyoleg.cryptography:cryptography-serialization-asn1:0.6.0
+AUDIT_RUNTIME_COMPONENT :shared:transport-p2p:iosArm64CompileKlibraries dev.whyoleg.cryptography:cryptography-serialization-pem-iosarm64:0.6.0
+AUDIT_RUNTIME_COMPONENT :shared:transport-p2p:iosArm64CompileKlibraries dev.whyoleg.cryptography:cryptography-serialization-pem:0.6.0
+AUDIT_RUNTIME_COMPONENT :shared:transport-p2p:iosArm64CompileKlibraries io.github.apdelrahman1911:p2p-core-iosarm64:0.7.0-rc3
+AUDIT_RUNTIME_COMPONENT :shared:transport-p2p:iosArm64CompileKlibraries io.github.apdelrahman1911:p2p-core:0.7.0-rc3
+AUDIT_RUNTIME_COMPONENT :shared:transport-p2p:iosArm64CompileKlibraries io.github.apdelrahman1911:p2p-transport-lan-iosarm64:0.7.0-rc3
+AUDIT_RUNTIME_COMPONENT :shared:transport-p2p:iosArm64CompileKlibraries io.github.apdelrahman1911:p2p-transport-lan:0.7.0-rc3
+AUDIT_RUNTIME_COMPONENT :shared:transport-p2p:iosArm64CompileKlibraries io.insert-koin:koin-core-iosarm64:4.0.0
+AUDIT_RUNTIME_COMPONENT :shared:transport-p2p:iosArm64CompileKlibraries io.insert-koin:koin-core:4.0.0
+AUDIT_RUNTIME_COMPONENT :shared:transport-p2p:iosArm64CompileKlibraries org.jetbrains.kotlin:kotlin-stdlib:2.4.10
+AUDIT_RUNTIME_COMPONENT :shared:transport-p2p:iosArm64CompileKlibraries org.jetbrains.kotlinx:atomicfu-iosarm64:0.32.1
+AUDIT_RUNTIME_COMPONENT :shared:transport-p2p:iosArm64CompileKlibraries org.jetbrains.kotlinx:atomicfu:0.32.1
+AUDIT_RUNTIME_COMPONENT :shared:transport-p2p:iosArm64CompileKlibraries org.jetbrains.kotlinx:kotlinx-coroutines-core-iosarm64:1.11.0
+AUDIT_RUNTIME_COMPONENT :shared:transport-p2p:iosArm64CompileKlibraries org.jetbrains.kotlinx:kotlinx-coroutines-core:1.11.0
+AUDIT_RUNTIME_COMPONENT :shared:transport-p2p:iosArm64CompileKlibraries org.jetbrains.kotlinx:kotlinx-datetime-iosarm64:0.7.1
+AUDIT_RUNTIME_COMPONENT :shared:transport-p2p:iosArm64CompileKlibraries org.jetbrains.kotlinx:kotlinx-datetime:0.7.1
+AUDIT_RUNTIME_COMPONENT :shared:transport-p2p:iosArm64CompileKlibraries org.jetbrains.kotlinx:kotlinx-io-bytestring-iosarm64:0.9.0
+AUDIT_RUNTIME_COMPONENT :shared:transport-p2p:iosArm64CompileKlibraries org.jetbrains.kotlinx:kotlinx-io-bytestring:0.9.0
+AUDIT_RUNTIME_COMPONENT :shared:transport-p2p:iosArm64CompileKlibraries org.jetbrains.kotlinx:kotlinx-io-core-iosarm64:0.9.0
+AUDIT_RUNTIME_COMPONENT :shared:transport-p2p:iosArm64CompileKlibraries org.jetbrains.kotlinx:kotlinx-io-core:0.9.0
+AUDIT_RUNTIME_COMPONENT :shared:transport-p2p:iosArm64CompileKlibraries org.jetbrains.kotlinx:kotlinx-serialization-cbor-iosarm64:1.11.0
+AUDIT_RUNTIME_COMPONENT :shared:transport-p2p:iosArm64CompileKlibraries org.jetbrains.kotlinx:kotlinx-serialization-cbor:1.11.0
+AUDIT_RUNTIME_COMPONENT :shared:transport-p2p:iosArm64CompileKlibraries org.jetbrains.kotlinx:kotlinx-serialization-core-iosarm64:1.11.0
+AUDIT_RUNTIME_COMPONENT :shared:transport-p2p:iosArm64CompileKlibraries org.jetbrains.kotlinx:kotlinx-serialization-core:1.11.0
+AUDIT_RUNTIME_COMPONENT :shared:transport-p2p:iosArm64CompileKlibraries org.jetbrains.kotlinx:kotlinx-serialization-json-iosarm64:1.11.0
+AUDIT_RUNTIME_COMPONENT :shared:transport-p2p:iosArm64CompileKlibraries org.jetbrains.kotlinx:kotlinx-serialization-json:1.11.0
+AUDIT_RUNTIME_COMPONENT :shared:transport-p2p:iosArm64CompileKlibraries project :shared:core
+AUDIT_RUNTIME_COMPONENT :shared:transport-p2p:iosArm64CompileKlibraries project :shared:engine
+AUDIT_RUNTIME_COMPONENT :shared:transport-p2p:iosArm64CompileKlibraries project :shared:networking
+AUDIT_RUNTIME_COMPONENT :shared:transport-p2p:iosArm64CompileKlibraries project :shared:storage
+AUDIT_RUNTIME_COMPONENT :shared:transport-p2p:iosArm64CompileKlibraries project :shared:transport-p2p
+
+> Task :shared:core:kmpPartiallyResolvedDependenciesChecker
+> Task :shared:core:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :shared:core:compileKotlinDesktop
+> Task :shared:core:compileDesktopMainJava NO-SOURCE
+> Task :shared:core:desktopProcessResources NO-SOURCE
+> Task :shared:core:processDesktopMainResources SKIPPED
+> Task :shared:core:desktopMainClasses
+> Task :shared:core:desktopJar
+> Task :shared:engine:kmpPartiallyResolvedDependenciesChecker
+> Task :shared:engine:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :shared:engine:compileKotlinDesktop
+> Task :shared:engine:compileDesktopMainJava NO-SOURCE
+> Task :shared:engine:desktopProcessResources NO-SOURCE
+> Task :shared:engine:processDesktopMainResources SKIPPED
+> Task :shared:engine:desktopMainClasses
+> Task :shared:engine:desktopJar
+> Task :shared:networking:kmpPartiallyResolvedDependenciesChecker
+> Task :shared:networking:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :shared:networking:compileKotlinDesktop
+> Task :shared:networking:compileDesktopMainJava NO-SOURCE
+> Task :shared:networking:desktopProcessResources NO-SOURCE
+> Task :shared:networking:processDesktopMainResources SKIPPED
+> Task :shared:networking:desktopMainClasses
+> Task :shared:networking:desktopJar
+> Task :shared:storage:kmpPartiallyResolvedDependenciesChecker
+> Task :shared:storage:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :shared:storage:compileKotlinDesktop
+> Task :shared:storage:compileDesktopMainJava NO-SOURCE
+> Task :shared:storage:desktopProcessResources NO-SOURCE
+> Task :shared:storage:processDesktopMainResources SKIPPED
+> Task :shared:storage:desktopMainClasses
+> Task :shared:storage:desktopJar
+> Task :shared:transport-p2p:kmpPartiallyResolvedDependenciesChecker
+> Task :shared:transport-p2p:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :shared:transport-p2p:compileKotlinDesktop
+> Task :shared:transport-p2p:compileDesktopMainJava NO-SOURCE
+> Task :shared:transport-p2p:desktopProcessResources NO-SOURCE
+> Task :shared:transport-p2p:processDesktopMainResources SKIPPED
+> Task :shared:transport-p2p:desktopMainClasses
+> Task :shared:transport-p2p:desktopJar
+> Task :shared:transport-p2p:compileTestKotlinDesktop
+> Task :shared:transport-p2p:compileDesktopTestJava NO-SOURCE
+> Task :shared:transport-p2p:desktopTestProcessResources NO-SOURCE
+> Task :shared:transport-p2p:processDesktopTestResources SKIPPED
+> Task :shared:transport-p2p:desktopTestClasses
+> Task :shared:transport-p2p:desktopTest
+> Task :game-modes:whodunit:kmpPartiallyResolvedDependenciesChecker
+> Task :game-modes:whodunit:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :game-modes:whodunit:convertXmlValueResourcesForCommonMain
+> Task :game-modes:whodunit:copyNonXmlValueResourcesForCommonMain
+> Task :game-modes:whodunit:prepareComposeResourcesTaskForCommonMain UP-TO-DATE
+> Task :game-modes:whodunit:generateResourceAccessorsForCommonMain
+> Task :game-modes:whodunit:convertXmlValueResourcesForDesktopMain NO-SOURCE
+> Task :game-modes:whodunit:copyNonXmlValueResourcesForDesktopMain NO-SOURCE
+> Task :game-modes:whodunit:prepareComposeResourcesTaskForDesktopMain NO-SOURCE
+> Task :game-modes:whodunit:generateResourceAccessorsForDesktopMain NO-SOURCE
+> Task :game-modes:whodunit:generateActualResourceCollectorsForDesktopMain
+> Task :game-modes:whodunit:generateComposeResClass
+> Task :game-modes:whodunit:generateExpectResourceCollectorsForCommonMain
+> Task :shared:content:kmpPartiallyResolvedDependenciesChecker
+> Task :shared:content:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :shared:content:compileKotlinDesktop
+> Task :shared:content:compileDesktopMainJava NO-SOURCE
+> Task :shared:content:desktopProcessResources NO-SOURCE
+> Task :shared:content:processDesktopMainResources SKIPPED
+> Task :shared:content:desktopMainClasses
+> Task :shared:content:desktopJar
+> Task :shared:design-system:kmpPartiallyResolvedDependenciesChecker
+> Task :shared:design-system:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :shared:design-system:convertXmlValueResourcesForCommonMain
+> Task :shared:design-system:copyNonXmlValueResourcesForCommonMain
+> Task :shared:design-system:prepareComposeResourcesTaskForCommonMain UP-TO-DATE
+> Task :shared:design-system:generateResourceAccessorsForCommonMain
+> Task :shared:design-system:convertXmlValueResourcesForDesktopMain NO-SOURCE
+> Task :shared:design-system:copyNonXmlValueResourcesForDesktopMain NO-SOURCE
+> Task :shared:design-system:prepareComposeResourcesTaskForDesktopMain NO-SOURCE
+> Task :shared:design-system:generateResourceAccessorsForDesktopMain NO-SOURCE
+> Task :shared:design-system:generateActualResourceCollectorsForDesktopMain
+> Task :shared:design-system:generateComposeResClass
+> Task :shared:design-system:generateExpectResourceCollectorsForCommonMain
+> Task :shared:design-system:compileKotlinDesktop
+> Task :shared:design-system:compileDesktopMainJava NO-SOURCE
+> Task :shared:design-system:assembleDesktopMainResources
+> Task :shared:design-system:desktopProcessResources
+> Task :shared:design-system:processDesktopMainResources SKIPPED
+> Task :shared:design-system:desktopMainClasses
+> Task :shared:design-system:desktopJar
+> Task :shared:session:kmpPartiallyResolvedDependenciesChecker
+> Task :shared:session:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :shared:session:compileKotlinDesktop
+> Task :shared:session:compileDesktopMainJava NO-SOURCE
+> Task :shared:session:desktopProcessResources NO-SOURCE
+> Task :shared:session:processDesktopMainResources SKIPPED
+> Task :shared:session:desktopMainClasses
+> Task :shared:session:desktopJar
+> Task :game-modes:whodunit:compileKotlinDesktop
+> Task :game-modes:whodunit:compileDesktopMainJava NO-SOURCE
+> Task :game-modes:whodunit:assembleDesktopMainResources
+> Task :game-modes:whodunit:desktopProcessResources
+> Task :game-modes:whodunit:processDesktopMainResources SKIPPED
+> Task :game-modes:whodunit:desktopMainClasses
+> Task :game-modes:whodunit:desktopJar
+> Task :game-modes:whodunit:convertXmlValueResourcesForCommonTest NO-SOURCE
+> Task :game-modes:whodunit:copyNonXmlValueResourcesForCommonTest NO-SOURCE
+> Task :game-modes:whodunit:prepareComposeResourcesTaskForCommonTest NO-SOURCE
+> Task :game-modes:whodunit:generateResourceAccessorsForCommonTest NO-SOURCE
+> Task :game-modes:whodunit:convertXmlValueResourcesForDesktopTest NO-SOURCE
+> Task :game-modes:whodunit:copyNonXmlValueResourcesForDesktopTest NO-SOURCE
+> Task :game-modes:whodunit:prepareComposeResourcesTaskForDesktopTest NO-SOURCE
+> Task :game-modes:whodunit:generateResourceAccessorsForDesktopTest NO-SOURCE
+> Task :shared:networking-testing:kmpPartiallyResolvedDependenciesChecker
+> Task :shared:networking-testing:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :shared:networking-testing:compileKotlinDesktop
+> Task :shared:networking-testing:compileDesktopMainJava NO-SOURCE
+> Task :shared:networking-testing:desktopProcessResources NO-SOURCE
+> Task :shared:networking-testing:processDesktopMainResources SKIPPED
+> Task :shared:networking-testing:desktopMainClasses
+> Task :shared:networking-testing:desktopJar
+> Task :game-modes:whodunit:compileTestKotlinDesktop
+> Task :game-modes:whodunit:compileDesktopTestJava NO-SOURCE
+> Task :game-modes:whodunit:assembleDesktopTestResources
+> Task :game-modes:whodunit:desktopTestProcessResources
+> Task :game-modes:whodunit:processDesktopTestResources SKIPPED
+> Task :game-modes:whodunit:desktopTestClasses
+
+> Task :game-modes:whodunit:desktopTest FAILED
+
+WD_C3FinalTwoRecoveryAuditTest[desktop] > current_snapshot_codec_should_reject_an_active_final_two_ballot()[desktop] FAILED
+    org.opentest4j.AssertionFailedError at WD_C3FinalTwoRecoveryAuditTest.kt:116
+
+2 tests completed, 1 failed
+
+> Task :shared:design-system:convertXmlValueResourcesForCommonTest NO-SOURCE
+> Task :shared:design-system:copyNonXmlValueResourcesForCommonTest NO-SOURCE
+> Task :shared:design-system:prepareComposeResourcesTaskForCommonTest NO-SOURCE
+> Task :shared:design-system:generateResourceAccessorsForCommonTest NO-SOURCE
+> Task :shared:design-system:convertXmlValueResourcesForDesktopTest NO-SOURCE
+> Task :shared:design-system:copyNonXmlValueResourcesForDesktopTest NO-SOURCE
+> Task :shared:design-system:prepareComposeResourcesTaskForDesktopTest NO-SOURCE
+> Task :shared:design-system:generateResourceAccessorsForDesktopTest NO-SOURCE
+> Task :shared:design-system:compileTestKotlinDesktop
+> Task :shared:design-system:compileDesktopTestJava NO-SOURCE
+> Task :shared:design-system:assembleDesktopTestResources
+> Task :shared:design-system:desktopTestProcessResources
+> Task :shared:design-system:processDesktopTestResources SKIPPED
+> Task :shared:design-system:desktopTestClasses
+
+> Task :shared:design-system:desktopTest FAILED
+
+DSC02ToastIdentityReuseTest[desktop] > newlyEnqueuedToastAfterAutomaticDismissMustGetFreshVisibilityAndTimer()[desktop] FAILED
+    java.lang.AssertionError at SemanticsNodeInteraction.kt:178
+        Caused by: java.lang.AssertionError at DSC02ToastIdentityReuseTest.kt:23
+
+1 test completed, 1 failed
+
+[Incubating] Problems report is available at: file:///Users/abdelrahman/Projects/parlor/build/reports/problems/problems-report.html
+
+FAILURE: Build completed with 2 failures.
+
+1: Task failed with an exception.
+-----------
+* What went wrong:
+Execution failed for task ':game-modes:whodunit:desktopTest'.
+> There were failing tests. See the report at: file:///Users/abdelrahman/Projects/parlor/game-modes/whodunit/build/reports/tests/desktopTest/index.html
+
+* Try:
+> Run with --scan to get full insights.
+==============================================================================
+
+2: Task failed with an exception.
+-----------
+* What went wrong:
+Execution failed for task ':shared:design-system:desktopTest'.
+> There were failing tests. See the report at: file:///Users/abdelrahman/Projects/parlor/shared/design-system/build/reports/tests/desktopTest/index.html
+
+* Try:
+> Run with --scan to get full insights.
+==============================================================================
+
+BUILD FAILED in 38s
+63 actionable tasks: 61 executed, 2 up-to-date

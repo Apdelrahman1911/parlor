@@ -1,0 +1,172 @@
+{
+  "schema_version": 1,
+  "kind": "INDEPENDENT_CORRECTED_FUNCTIONAL_COPY_CONTROLS02_POSTRUN_REVIEW",
+  "reviewed_at": "2026-09-09T05:46:40.099249+00:00",
+  "reviewer": "/root/fixture_review",
+  "implementation_author": "/root/l08_fixture",
+  "executor": "/root",
+  "status": "PASS_SCOPED_12_LINUX_CONTROLS_AND_CLEANUP",
+  "readiness": "NOT_READY",
+  "findings": [],
+  "scope": "Exact adoption, actual12 unittest methods, before/after bindings, cleanup and unchanged25/55/B204 reuse applicability. No tests, project imports, extracted-function execution, build, native, API/Actions or canonical/index edits by reviewer.",
+  "source_review_reference": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/native-a25-functional-copy-guard-independent-01.json",
+    "sha256": "027cc3b9faaaaf564b48fb1568b90a5c900f5967b7e47047ad6571c869a2d874",
+    "applicability": "Prior complete source/delta/mutation/dependency review remains applicable; not duplicated here."
+  },
+  "exact_adoption": {
+    "canonical_path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/test_l08_functional_copy.py",
+    "sha256": "a630c0002261e09a114390e5661ae0a95b75dc9a2548b249b425fac456077a1e",
+    "bytes": 33100,
+    "held_draft_byte_identical": true,
+    "changed_control_inputs_since_prior": [
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/test_l08_functional_copy.py",
+        "before_sha256": "b58d9761b7c199f0ab7fd01c2c6614d2f49e0a71102fd54ff3f6783acfede7f0",
+        "after_sha256": "a630c0002261e09a114390e5661ae0a95b75dc9a2548b249b425fac456077a1e"
+      }
+    ]
+  },
+  "execution": {
+    "cycle": "continuation-a25-functional-copy-controls-02",
+    "platform": "Linux host source/copy/mutation controls",
+    "command": [
+      "/usr/bin/python3",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02",
+      "-p",
+      "test_l08_functional_copy.py",
+      "-v"
+    ],
+    "started_at": "2026-09-09T05:42:33.175929+00:00",
+    "finished_at": "2026-09-09T05:42:34.372454+00:00",
+    "exit_code": 0,
+    "tests": 12,
+    "passed": 12,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "raw_reconciliation": "Read complete2543-byte log:12 unique named methods eachend ok; lines15-17 report Ran12 tests in0.110s / OK. IDs exactly equal the12 current AST declarations and root afterbinding IDs; no descriptor is inferred from a harness summary alone.",
+    "negative_controls": "The adopted reason-specific24-mutation method and positive-baseline method both executed PASS. These are subcases within the12 unittest methods, not24 extra tests and not XCTest/application proof.",
+    "evidence_type": "New execution, not cached compilation. Empty test-receipts.json/artifact-receipts.json are consistent with this Python-only cycle; raw unittest log is the actual test evidence."
+  },
+  "bindings": {
+    "head": "08d1adfbd7284f190fbab5f7baa846944bca5b68",
+    "tree": "c19beea4647ce882c02d8751d1bf82c22484b52b",
+    "branch": "fix/local-readiness-2026-09-07",
+    "tracked_dirty_worktree": true,
+    "recorded_tracked_diff_sha256": "9b17e823529b42939f6ff27533629aa58a55ac725ca607b69f39b8baccd5304b",
+    "control_rows": 211,
+    "unique_paths": 211,
+    "manifest_sha256": "2f767601114d1564bd96637c12234631e436cd8acfd915cf135fc445ed584714",
+    "controls_before_after_exact": true,
+    "all211_current_files_independently_rehashed_match": true,
+    "only_changed_control_input_since_prior_is_approved_test": true,
+    "ordinary_source_rows": 828,
+    "ordinary_source_manifest_sha256": "f7d8b3dbdec3d07c16921e7f8457c0da96d404708758605eb7797c2f6b106237",
+    "entire_source_before_after_identity_equal": true,
+    "all828_current_files_independently_rehashed_match": true,
+    "ordinary_source_hash_independently_recomputed": true,
+    "runner_before_after_exact": true,
+    "runner_manifest_sha256": "942e138764146313a59cbe1278c1357284a5701d0c125809c34ddbbe876ce912",
+    "runner_file_and_manifest_hash_independently_recomputed": true,
+    "limit": "211 inputs are bound, not211 tests or a fresh execution of every bound control. This is reviewed dirty08d worktree evidence, not final frozen-source qualification."
+  },
+  "cleanup": {
+    "status": "PASS",
+    "immediate_stop_exit_code": 0,
+    "stopped_at": "2026-09-09T05:42:35.123883+00:00",
+    "completed_at": "2026-09-09T05:42:35.228225+00:00",
+    "stop_log": "No Gradle daemons are running.",
+    "remaining_owned_workers": [],
+    "remaining_artifact_workers": [],
+    "remaining_outputs": [],
+    "retained_outputs": [],
+    "errors": [],
+    "deferred_signals": [],
+    "scratch_path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-a25-functional-copy-controls-02/scratch",
+    "scratch_independently_checked_absent": true,
+    "method": "Reopened bound lane source: ./gradlew--stop immediately follows command finalization; exact owned scratch/output removal follows worker/report safety guards. Receipt has no cleanup failures, retained outputs or surviving owned workers; leaf scratch absence independently confirmed. No global caches or archived evidence cleanup.",
+    "toolchain_evidence": "Actual retained java/javac probe logs bind JDK21.0.12 and match the receipt hashes. Reviewer did not rerun toolchain probes."
+  },
+  "unchanged_evidence_reuse": {
+    "status": "APPLICABLE_FOR_ORIGINAL_UNCHANGED_SCOPE_ONLY",
+    "cycles": {
+      "fixture25": "continuation-a25-fixture-controls-01:25PASS/0skip",
+      "composition55": "continuation-a25-composition-controls-01:55PASS/0skip",
+      "normal204": "continuation-b26-normal-controls-01:204PASS/0skip"
+    },
+    "basis": "Exact a630 adoption and independently recomputed211-input delta satisfy the approved source-review applicability conditions. Only this test changed. The existing detailed dependency review shows no executable dependency from25/55/B204 to that test, while composition's aggregate manifest includes its bytes.",
+    "not_reexecuted_in02": [
+      25,
+      55,
+      204
+    ],
+    "limits": "Retain their original dates/bindings/scopes, not newly executed results for manifest2f767601 or a future final commit. Fresh frozen-source/native bindings remain mandatory. Full earlierA and independentB actual-result reviews remain authoritative references."
+  },
+  "preservation_and_limits": {
+    "previous_functional01": "Retained10PASS/1FAIL/1ERROR/0skip; independently rehashed original receipt a37b3797 and log6e348154 unchanged. Successful02 does not relabel or overwrite01.",
+    "earlier_reports_and_parser_failure": "Preserved; no existing report rewritten.",
+    "application_runtime": "NOT_RUN in this cycle. Unfinished functional/retained-host native scenarios, strict-protection failures and real normal-Debug provenance remain unresolved by these controls.",
+    "native_dispatch_authorized": false,
+    "physical_store_owner_legal": "Outside scope and remain separate requirements.",
+    "reviewer_cleanup": "No build/test lane, worker or generated build output created; only this authorized report written."
+  },
+  "conclusion": "Exact reviewed guard correction is now independently verified by actual12PASS/0fail/0error/0skip plus cleanupPASS. Reuse25/55/B204 remains scoped, not fresh execution. OverallNOT_READY unchanged.",
+  "evidence": [
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-a25-functional-copy-guard-root-adoption-01.json",
+      "sha256": "d12b88189b8bf246cdec5bf99f454ddbb2a9bf82434c78ec7c0b1ea6ff68cbbc",
+      "bytes": 1286
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/continuation-a25-functional-copy-controls02-inputs-before-01.json",
+      "sha256": "91366f9f059048ff45c5c1b61c51183b76bb9e161259f07bbee0225dd5cb2560",
+      "bytes": 44713
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/continuation-a25-functional-copy-controls02-inputs-after-01.json",
+      "sha256": "b5a66b1a423ac2f4bbb234b07bb43c073978ffcac0c6687037422baf76020e7e",
+      "bytes": 46297
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-a25-functional-copy-controls-02/receipt.json",
+      "sha256": "5e95510ccf2ff868d8a1c2d67382876b9c99a178bbc7c56424ffc75abbb8b1fe",
+      "bytes": 307000
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-a25-functional-copy-controls-02/gradle.log",
+      "sha256": "34cd245497cd13ed95abf5c615e44dffa86b8aeac84f69ac83c535a1c5b91fa2",
+      "bytes": 2543
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-a25-functional-copy-controls-02/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+      "bytes": 31
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-a25-functional-copy-controls-02/java-toolchain.log",
+      "sha256": "a7a86ea7b20362e2c856e5e71a8b6fc51764d5aeaa9f5a8c82b386ff156f8a7c",
+      "bytes": 2026
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-a25-functional-copy-controls-02/javac-toolchain.log",
+      "sha256": "157f601a5854ca28a7dc364c13a5ca2879084186be49e3462d37acd028f35755",
+      "bytes": 14
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-a25-fixture-controls-independent-01.json",
+      "sha256": "3eaecc86617e4044ac6f35bb40bd894d4d29b0ff7b1134ac12becb8bb79a0d43",
+      "bytes": 51746
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-b26-normal-controls-independent-01.json",
+      "sha256": "e49183ac4074715fff3d3a63d7695d5f141b4cb817f7340a5b2b8eb4ee1f76eb",
+      "bytes": 16657
+    }
+  ]
+}

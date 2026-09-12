@@ -1,0 +1,73 @@
+{
+  "schema_version": 2,
+  "kind": "EXACT_DRAFT_FREEZE_WITH_PRIMARY_ERROR_AND_PAIRED_RUNTIME_REPAIR",
+  "author": "/root/native_ci",
+  "recorded_at": "2026-09-08T11:53:25.886732+00:00",
+  "execution": "NOT_EXECUTED",
+  "directory": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01",
+  "previous_freeze": {
+    "path": "remediation-runs/2026-09-07-local-readiness/reviews/hosted-native-portability-01/draft-freeze-relative.json",
+    "sha256": "64c02554e7ddec05b85f533c05733e0f8bbedcc843843245d82cfd1ffd98564a"
+  },
+  "source_files": [
+    {
+      "path": "L08AppFoundation.m.in",
+      "sha256": "f7b0e515b580f4bd9c49857ad4a49a3ab925218e8e52c260eb14cc75e410cba7",
+      "lines": 539
+    },
+    {
+      "path": "L08AppFoundationBridge.h.in",
+      "sha256": "b65a86e26170b313ba00d875910da7499685736240a5cb644b6f916ec71e7d08",
+      "lines": 7
+    },
+    {
+      "path": "L08AppFoundationLaunch.swift.in",
+      "sha256": "76e37762006d912e40b18508414dc55384aaa89be9212f7fd172b55a30edabb0",
+      "lines": 74
+    },
+    {
+      "path": "L08AppFoundationUITests.swift.in",
+      "sha256": "5f3f136ec7c5925ed82f277c2ca60e6f22ba81e42e97cc22ef7bdc3954ef2e07",
+      "lines": 49
+    },
+    {
+      "path": "README.md",
+      "sha256": "0854ffec41d4eafcbfc8269b2c199d4d681e79576e4d53b77716ff0080249cc1",
+      "lines": 95
+    },
+    {
+      "path": "ROOT_INTEGRATION.md",
+      "sha256": "e3009bfe096930dbde969f239dd162da15a25d407e4b39a99f8bf4fab22d8dcb",
+      "lines": 112
+    },
+    {
+      "path": "app_foundation_copy.py",
+      "sha256": "0df57639ed7bdef3fd4df62e73489dc85f4006dd587ce82cf9077e4262e1b068",
+      "lines": 219
+    },
+    {
+      "path": "app_foundation_receipts.py",
+      "sha256": "db69c16b7d8abfb5998f92db886a8b8c77bcbb3e72fdd1d806f0ea3dd05f1fb6",
+      "lines": 285
+    },
+    {
+      "path": "test_app_foundation.py",
+      "sha256": "c04c7d4b1bb99207415beab77ae3b40bb3d5f59709970f7d844d5d14beab0fe5",
+      "lines": 553
+    }
+  ],
+  "expected_draft_tests": 33,
+  "expected_composition_tests": 22,
+  "expected_support_tests": {
+    "profile": 12,
+    "primary_error": 12,
+    "paired_runtime": 20
+  },
+  "limitations": [
+    "Both prior relative and original absolute freezes are preserved byte-for-byte. This freeze does not authorize execution.",
+    "Native Objective-C/Swift/bridge templates, all16 operation/query rows and strict metadata requirements are unchanged. Only the one exact native runtime guard is transformed in the owned generated copy.",
+    "Copy/schema/integration instructions bind the explicitly selected closed profile; default local26.5.0 is retained and qualified26.2.0 must be selected and matched exactly.",
+    "Mutable companion driver receives primary-error retention only; its immutable original and owned_lane controls are unchanged.",
+    "Static inspection/test declarations are not executed controls, native runtime evidence or an L08/provenance/readiness pass."
+  ]
+}

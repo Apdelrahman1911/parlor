@@ -1,0 +1,312 @@
+{
+  "schema_version": 1,
+  "at": "2026-09-06T01:48:09.877015+00:00",
+  "reviewer": "/root/factory_review",
+  "harness_author": "/root/native_fix_review",
+  "operator": "/root",
+  "conclusion": "PASS \u2014 narrowly scoped actual-app owned iOS-simulator language selection, process restart, and Follow System restoration matrix; CLEANUP PASS",
+  "issue_classification_limit": "This adds a PASS gate, not blanket FIXED AND VERIFIED for DS-C01. Keep PARTIALLY VERIFIED while legacy-unmarked ownership/product policy and active-session continuity/other platform evidence gaps remain explicit.",
+  "cycle": "dsc01-apphost-02",
+  "source_identity": {
+    "commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+    "tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+    "branch": "main",
+    "diff_sha256": "60b555c0dd323a086e959ffbc5aa3fd7c6629ae1d0ad016021572e7ae272e4dd",
+    "source_manifest_sha256": "e59da533dbec2f02f6f2b460ce72e2a7337af1e44abfb0bc6d533304d4127ec7"
+  },
+  "approved_current_before_after_control_hash": "5eed8a6fb73960bcf352c8792a4961fa58bee6b52a41861bce5af449aa8dca0f",
+  "source_before_after_current_match": true,
+  "source_rows_independently_recomputed": 658,
+  "dirty_checkout_preserved": true,
+  "actual_execution": {
+    "start": "2026-09-06T01:33:36.490206+00:00",
+    "finish": "2026-09-06T01:37:36.009359+00:00",
+    "xcodebuild_exit": 0,
+    "raw_xctest_summary_result": "Passed",
+    "test": "IOSAppLaunchUITests/testDSC01ActualSettingsAcrossProcessRestartAndSystem()",
+    "count": 1,
+    "passed": 1,
+    "failed": 0,
+    "skipped": 0,
+    "expected_failures": 0,
+    "duration_seconds": 65.51015996932983,
+    "device": {
+      "architecture": "arm64",
+      "deviceId": "3BBEF9FC-BF55-48B9-9985-58725B8087B9",
+      "deviceName": "Parlor-Audit-parlor-audit-dsc01-apphost-02-meqticu6",
+      "modelName": "iPhone 17 Pro",
+      "osBuildNumber": "23F77",
+      "osVersion": "26.5",
+      "platform": "iOS Simulator"
+    },
+    "app_identity": {
+      "CFBundleIdentifier": "com.parlor.app.debug",
+      "CFBundleVersion": "1",
+      "CFBundleShortVersionString": "1.0.0",
+      "MinimumOSVersion": "16.0"
+    },
+    "log_actual_app_pids": [
+      "2139",
+      "2320",
+      "2375",
+      "2452"
+    ],
+    "observations": 14,
+    "distinct_boots": [
+      "DFBE2E16-8365-48E5-8EE0-9E3654E8ADEB",
+      "5FFB4D4A-F7B0-4422-BED2-873EEC94EE12",
+      "8B5B1E6E-8465-42A0-AFC3-F4913158132C",
+      "11B57519-27D8-476F-BDC4-2CD75795878F"
+    ],
+    "observed_actual_tap_labels": [
+      "Open settings., SETTINGS",
+      "\u0627\u0641\u062a\u062d \u0627\u0644\u0625\u0639\u062f\u0627\u062f\u0627\u062a., \u0627\u0644\u0625\u0639\u062f\u0627\u062f\u0627\u062a",
+      "\u0627\u0644\u0639\u0631\u0628\u064a\u0629",
+      "\u0644\u063a\u0629 \u0627\u0644\u0646\u0638\u0627\u0645",
+      "English",
+      "System language"
+    ],
+    "fallback_diagnostics_emitted": false,
+    "ordinary_kotlin_path": true,
+    "raw_build_and_tests_retained": "Evidence refs below; no author-only or mocked runtime claim."
+  },
+  "matrix_proof": [
+    {
+      "step": "Fresh absence to Arabic",
+      "events": [
+        1,
+        2,
+        3
+      ],
+      "observed": "Before App: System/English, no own marker or app AppleLanguages. Actual Arabic button sets language_override=ar, installs owner=ar, AppleLanguages=[ar], root force_rtl; actual Arabic Settings section/System label assertions passed."
+    },
+    {
+      "step": "Arabic ownership across real process restart then System",
+      "events": [
+        4,
+        5,
+        6
+      ],
+      "observed": "New app PID/boot; marker ar and AppleLanguages=[ar] already present before original App/Koin/controller exists (controllerCreations0). Actual System button removes own marker and own override, returns English/native force_ltr with one root controller throughout this process."
+    },
+    {
+      "step": "Synthetic legitimate prior per-app preference to English",
+      "events": [
+        7,
+        8,
+        9
+      ],
+      "observed": "New process seeds only AppleLanguages=[ar-EG,en] inside fresh owned app sandbox under System/noowner precondition. Real app renders Arabic/native force_rtl. Actual English button installs [en] with owner previous=[ar-EG,en], native force_ltr and rendered English strings."
+    },
+    {
+      "step": "English ownership across real process restart then exact prior restoration",
+      "events": [
+        10,
+        11,
+        12,
+        13,
+        14
+      ],
+      "observed": "New PID/boot; before App marker=en and exact previous array already persisted. Actual System button restores [ar-EG,en] byte-for-value at list level, removes owner, returns Arabic/native force_rtl; completion event and final sample agree. One root controller in process."
+    }
+  ],
+  "production_reachability_and_counterevidence": [
+    "Copied wrapper still calls actual MainViewController; no Kotlin init overlay, settings replacement, app-root substitute, owner injection, or AppleLanguages/AppleLocale launch args. Probe prepare(continue) loads its bounded synthetic observation report, not preference ownership writes. before_main markers therefore are not manufactured by the test.",
+    "Original SettingsScreen mutations -> app-owned SettingsMutationDispatcher -> PersistentSettingsStore validated mutex -> IosSettingsKeyValueBacking -> production language flow/provider -> IosLanguageOverrideOwner. Reopened implementation and surrounding UI/source in current exact tree.",
+    "Observed actual native semantic direction is from same root provided to LocalUIViewController at exact CMP1.10.3, proven in source. It is not direct measurement of LocalLayoutDirection, gesture edges, visual layout, or screen-reader traversal.",
+    "XCTest log now directly identifies exact combined English/Arabic Settings buttons and all four actual option taps, confirming the previously source-predicted selector. v1 failed run remains immutable one-fail evidence; it is not retroactively passing or an application-crash claim.",
+    "Four distinct real app PIDs corroborate boot UUIDs. Native root creation count1 establishes no extra root controller per process, not active game/session retention, race-free rapid switching, or app lifecycle correctness generally.",
+    "Production code intentionally preserves unmarked OS/legacy preferences and refuses to claim an identical existing override. The unresolved provenance policy for old unmarked overrides is not answered by this marked-owner matrix.",
+    "NSUserDefaults write APIs remain asynchronous acceptance; successful controlled restart does not promise power-loss durability or atomic cross-process settings transactions.",
+    "Binary hashes are selected stub/framework artifacts only, not a complete signed bundle/Store provenance attestation. Fresh owned DerivedData, exact copied-source hashes, current original Kotlin source, and raw compile/runtime logs bind this local test path."
+  ],
+  "independent_evidence_checks": {
+    "details": "remediation-runs/2026-09-05-confirmed-fixes/factory_review/dsc01-runtime-binding-cleanup-02.json",
+    "sha256": "c7d909a8a6b557d9b413a8d358c14a6156e5ce1968136325633302404b4d1894",
+    "method": "All14 retained actual event records compared against independently constructed expected transition table without calling harness verify_probe. Four-file diff reconstructed in memory against current originals, all18 copied-input hashes verified. All658 source rows and tracked diff/current controls independently recomputed.",
+    "new_source_reopens": [
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/iosMain/kotlin/com/parlor/designsystem/localization/IosLanguageOverrideOwner.kt",
+        "sha256": "959ab1a8cb955e484c806c8ce5af65ca841a20cfcd9b1f205443a1cfe768da20",
+        "reviewed_line_ranges": [
+          [
+            1,
+            61
+          ]
+        ],
+        "reviewer": "/root/factory_review"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/iosMain/kotlin/com/parlor/designsystem/localization/LocalAppLocale.ios.kt",
+        "sha256": "0e0783ca3e38634bd3469760f5dbfa5ade8509b976d0ec676202f4513cd8e098",
+        "reviewed_line_ranges": [
+          [
+            20,
+            83
+          ]
+        ],
+        "reviewer": "/root/factory_review"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSettingsKeyValueBacking.kt",
+        "sha256": "c8162e6713905b66d10aa8bc7e284d18f6815a2ae1754ba836c7241382014a10",
+        "reviewed_line_ranges": [
+          [
+            1,
+            40
+          ]
+        ],
+        "reviewer": "/root/factory_review"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/shared/storage/src/commonMain/kotlin/com/parlor/storage/settings/PersistentSettingsStore.kt",
+        "sha256": "179e00506a2f3c7083d9f9231aa683e8bb73220a807ef6f1f5b04bb5496dac10",
+        "reviewed_line_ranges": [
+          [
+            1,
+            110
+          ]
+        ],
+        "reviewer": "/root/factory_review"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/commonMain/kotlin/com/parlor/app/shell/settings/SettingsMutationDispatcher.kt",
+        "sha256": "915149f63b117f3516c749070abea6c538942c2d61c2b9c7224f3551aad45ce5",
+        "reviewed_line_ranges": [
+          [
+            1,
+            29
+          ]
+        ],
+        "reviewer": "/root/factory_review"
+      }
+    ]
+  },
+  "cleanup": {
+    "status": "PASS within owned-cycle scope",
+    "embedded_build_exit": 0,
+    "embedded_stop_exit": 0,
+    "outer_gradle_stops": [
+      {
+        "label": "stop-xcode-immediate",
+        "exit_code": 0,
+        "at": "2026-09-06T01:37:28.226975+00:00"
+      },
+      {
+        "label": "stop-final",
+        "exit_code": 0,
+        "at": "2026-09-06T01:37:29.269205+00:00"
+      }
+    ],
+    "cleanup_completed_at": "2026-09-06T01:37:35.569226+00:00",
+    "simulator_shutdown_exit": 0,
+    "simulator_delete_exit": 0,
+    "post_delete_exact_owned_name_matches": [],
+    "attested_secondary_fifo_pair_and_empty_parents_removed": [
+      "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-1042/IB/7F106FDE-4660-49E8-8E03-7ABE964E26B0.RemoteToHost",
+      "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-1042/IB/7F106FDE-4660-49E8-8E03-7ABE964E26B0.HostToRemote",
+      "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-1042/IB",
+      "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-1042"
+    ],
+    "secondary_attestation_errors": [],
+    "remaining_owned_paths_independent": [],
+    "queried_recorded_owned_pid_count": 54,
+    "targeted_ps_exit": 1,
+    "targeted_ps_current_rows": [],
+    "targeted_ps_errors": "",
+    "remaining_outputs": [],
+    "unknown_holders": [],
+    "cleanup_errors": [],
+    "global_cache_directories_still_exist": {
+      "/Users/abdelrahman/.gradle/caches": true,
+      "/Users/abdelrahman/.gradle/wrapper": true
+    },
+    "reviewer_invoked_simctl_or_stopped_processes": false
+  },
+  "remaining_gaps": [
+    "Legacy unmarked AppleLanguages ownership/product decision; do not delete legitimate OS preferences to simulate migration.",
+    "Active Whodunit/Mafia or live LAN session/navigation continuity during language changes; this app-host matrix remained Home/Settings only.",
+    "Actual iOS Settings application changes; prior per-app array represented synthetically, not OS Settings automation.",
+    "Direct Compose LocalLayoutDirection, visual RTL/LTR layout, VoiceOver/accessibility behavior, gestures, app-switcher, large text, other iOS versions/iPads, real physical devices/LAN, signed Keychain/Store verification, and power-loss durability.",
+    "IOS-R1 remains independently classified evidence gap; no Keychain/store/entitlement claim from this language test."
+  ],
+  "unchanged_history_and_prior_evidence": {
+    "v1_failed_attempt_preserved": true,
+    "production_source_changes_during_test": false,
+    "new_git_commits_merges_pushes_issue_or_store_operations": false,
+    "prior_combined_exact_source_checks_not_invalidated_by_evidence_only_changes": true
+  },
+  "evidence_files": [
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/dsc01-apphost-02/receipt.json",
+      "sha256": "7ce472e0296c985d152d02c0dbdf6b6979830c12906c7653291c5237bf5ac660",
+      "bytes": 312940
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/dsc01-apphost-02/input-manifest.json",
+      "sha256": "0751b08e5bb6f575896f99c341738cf85090ca20d5b23bf495bb8c69e9fc6605",
+      "bytes": 127899
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/dsc01-apphost-02/copied-wrapper-manifest.json",
+      "sha256": "35792f7e6cdc474f74e7d850645b1324833f5c6a6d6b520449128cc30680ecb1",
+      "bytes": 4535
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/dsc01-apphost-02/copied-wrapper.diff",
+      "sha256": "f981a345443bf3ca13273fe94a5d15880c4b978b5a0e71abc87a115dff4da547",
+      "bytes": 28349
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/dsc01-apphost-02/xcodebuild.log",
+      "sha256": "86d67da79ecaa06039cb3be7d3e522b67f5cc14ea3a45bd503c62580e29a1d9d",
+      "bytes": 234685
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/dsc01-apphost-02/xcresult-summary.json",
+      "sha256": "ed725b1c6ed56794928781fdc92faf89d408d2b39f2e1e0f3779227a8fed9595",
+      "bytes": 1000
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/dsc01-apphost-02/xcresult-tests.json",
+      "sha256": "6f149983032509328417602f3b2098d34991d409e09e714da72409cb8d170ffb",
+      "bytes": 1731
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/dsc01-apphost-02/probe-result.json",
+      "sha256": "fe0de6c3bf01077fdac09067ef0548f65f7811d7fa69d5ffe20a4b3d2c3f5142",
+      "bytes": 5046
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/dsc01-apphost-02/embedded-gradle-stop.txt",
+      "sha256": "fb55a963c8d30249ea6b8be68a62b5921facefdc7823c16ad139fea885be972f",
+      "bytes": 25
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/dsc01-apphost-02/stop-xcode-immediate.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+      "bytes": 31
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/dsc01-apphost-02/stop-final.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+      "bytes": 31
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/dsc01-apphost-02/secondary-fifo-ownership-final.json",
+      "sha256": "ae78fe2125c0b699b9e7310b6bdccf3b82b839e323c79cf31fc2bf907798c139",
+      "bytes": 2924
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/dsc01-apphost-02/owned-device-after-delete.json",
+      "sha256": "755d442cf44919879856407fe199e916c770d206e3f6b050d6eb286b7af73782",
+      "bytes": 20
+    }
+  ],
+  "reviewer_safety": {
+    "builds_tests_native_tools_started": 0,
+    "background_workers_started": 0,
+    "source_test_config_or_harness_edits": 0,
+    "new_files": "Only compact independent review and hash/path evidence under factory_review. No cleanup of other tasks, private data or global caches."
+  }
+}

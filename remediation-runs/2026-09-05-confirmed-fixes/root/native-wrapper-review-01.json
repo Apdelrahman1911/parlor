@@ -1,0 +1,59 @@
+{
+  "at": "2026-09-05T20:31:50.939465+00:00",
+  "reviewer": "/root",
+  "correction_author": "/root/mafia_cont",
+  "decision": "APPROVED for bounded direct-KGP simulator execution, with explicit native limitations",
+  "files": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-05-confirmed-fixes/run_gradle_cycle.py",
+      "sha256": "d2d18c2311d59554db88be3f92e609ec5ca46fc8af4c79702836f9e4c130240f",
+      "reviewed_ranges": [
+        [
+          1,
+          283
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-05-confirmed-fixes/owned_ios_simulator.py",
+      "sha256": "184684f4cdba8733217a124b53552e4f73f234618e82ade9d8ead566fb748712",
+      "reviewed_ranges": [
+        [
+          1,
+          137
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-05-confirmed-fixes/owned_ios_simulator.init.gradle",
+      "sha256": "e857bd0d8fbc18199ee1fbaef7e01ae325785397b5e23f82186462f9a33c3b34",
+      "reviewed_ranges": [
+        [
+          1,
+          68
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-05-confirmed-fixes/mafia/test_owned_ios_simulator_safety.py",
+      "sha256": "9672cd25e8ef0775bc0c621563c8141eba9a48f4e715cdc1568f2a48bc2dfdba",
+      "reviewed_ranges": [
+        [
+          1,
+          413
+        ]
+      ]
+    }
+  ],
+  "proof": [
+    "Root reread complete helper/init, runner process/identity/finalizer and all 32 fake-boundary tests. Exact-name/runtime/new UUID attestation fails closed; partial inventory logs now removed on failure. Before/after controls and application drift prevent PASS. No user devices selected; no broad paths or unrelated PIDs deleted.",
+    "native-wrapper-safety-01 actually executed 32/32 synthetic tests; exit0, stop0, no source/control drift, no remaining owned outputs/workers. Tests do not simulate successful CoreSimulator or native runtime."
+  ],
+  "evidence": "evidence/native-wrapper-safety-01/receipt.json",
+  "limits": [
+    "Only a fresh iOS26.5 simulator is authorized here; no phone, Store signing, Xcode app-host or qualified26.3 proof.",
+    "Unknown/ambiguous/deletion/late-allocation paths are explicit failure, not a guarantee of cleanup after OS crash or SIGKILL.",
+    "Shared CoreSimulator services are not task kill targets. Any identified owned leftovers require exact followup.",
+    "Archived app-host runner not reused; secondary ibtool path issue not exercised."
+  ]
+}

@@ -1,0 +1,102 @@
+{
+  "schema": 1,
+  "reviewer": "/root/portability_review",
+  "author": "/root/lifecycle_controls",
+  "status": "APPROVED_PINNED_V2_SOURCE_FOR_FOCUSED_TESTS_THEN_FROZEN_HOSTED_PROBE",
+  "scope": "Independent read-only review of the four core/helper source and test files only; probe/workflow integration is separately reviewed by native_ci.",
+  "baseline": {
+    "commit": "e4d49e17f5f1099a742ab3985c6257d090d61ba6",
+    "tree": "1e3697d7eab93cc856166f85a791fe3cdd62941a"
+  },
+  "reviewed_files": [
+    {
+      "path": "scripts/ci/verification_hygiene.py",
+      "bytes": 29356,
+      "sha256": "d412a2cfe0d59c3cce6cdf4d67a978abf9c8981e745168ddae9d02b3a3ad372c"
+    },
+    {
+      "path": "scripts/ci/linux_exe_reader.py",
+      "bytes": 5552,
+      "sha256": "0600e84e29647158bf39b64fad73d5548d63f2e661dd42bbcb2a55d63a4eda6c"
+    },
+    {
+      "path": "scripts/release/tests/test_ci_verification_hygiene.py",
+      "bytes": 42961,
+      "sha256": "5ef040f31cd893304f6c94e15e7d0c2bca709c8b193f69bf9956ba4cb9c1aa5c"
+    },
+    {
+      "path": "scripts/release/tests/test_linux_exe_reader.py",
+      "bytes": 15179,
+      "sha256": "4dd542609e8e71da8f5cd4778985ddc818fcd2b238f59d819758220e63ff52a2"
+    }
+  ],
+  "method": "Read full changed diff and relevant source/control context, independently hash all four files, compare stdlib ASTs against the immutable baseline. No project imports, tests, extracted-function execution, native/process probes, network or source edits.",
+  "findings": [],
+  "design_conclusion": "Legitimate explicit-mode observation refinement: stable ordered real/effective/saved/filesystem credentials replace the conservative homogeneous-UID assumption. This expands observable credential states but does not establish ownership, authorize target control or confer deletion authority.",
+  "important_boundaries": [
+    "Only sudo-proc-exe-v2 is admitted; v1 is invalid. Default unprivileged mode still rejects selected mixed UID tuples.",
+    "Original caller remains nonroot and equal to the parent real/effective UID; helper requires root real/effective UID and authenticated SUDO_UID equal to that original caller. Exactly four bounded integer tuple fields, excluding bool, must contain the original caller. Root may appear only as an observed tuple component, never as the selected caller identity.",
+    "Fixed helper CLI receives UID PID START RUID EUID SUID FSUID as canonical numeric arguments. Caller/PID/starttime/tuple are validated before sudo or proc access. The helper pins the same read-only /proc PID directory and requires the exact ordered full identity before and after its two executable observations.",
+    "Private JSON schema2 requires exact fields including an ordered four-integer uids echo equal to the requested tuple. Old schema, absent/malformed/changed tuple, wrong caller/PID/lifetime and inconsistent executable metadata fail closed.",
+    "Only the first selected executable readlink EACCES13 can use the fixed isolated helper. EPERM, subsequent read/stat failures, disappearance, UID/lifetime churn and SDK executable matches still fail. No PID is skipped to evade ambiguity, and readable mixed processes do not force elevation.",
+    "Top-level mixed_uid_samples and mixed_uid_privileged_samples increment only after the outer exact identity recheck succeeds. Nested exe_reader shape is unchanged. Counters can exist in a failed scan, including a positively detected SDK executable; only an independently qualified overall PASS establishes the narrowly scoped sampled absence.",
+    "Source/ownership/upload/stop/deletion gates, nonroot cleanup, bound SDK predicate, observation byte/entry/time limits and helper read-only surface are unchanged. No target argv/environment/content, process signals, scans by the privileged helper, or per-target identity logging was added."
+  ],
+  "static_comparison": {
+    "hygiene_changed_definitions": [
+      "android_privileged_executable",
+      "audit_android_emulator_absence"
+    ],
+    "hygiene_unchanged_definitions": 18,
+    "explicitly_unchanged": [
+      "cleanup",
+      "context",
+      "main",
+      "android_sdk_binding",
+      "android_proc_identity",
+      "verify_apple_cleanup",
+      "source_identity",
+      "prepare",
+      "stop_gradle"
+    ],
+    "helper_changed_definitions": [
+      "read_executable",
+      "main"
+    ],
+    "helper_unchanged_definitions": 4,
+    "written_test_methods": {
+      "hygiene": 39,
+      "helper_and_client": 10
+    },
+    "test_delta": "One hygiene test method added; the existing helper churn test was renamed and expanded. Original default mixed-UID rejection and later-failure/escalation guards remain covered, not replaced by acceptance-only tests."
+  },
+  "changed_controls_reviewed": [
+    "Stable mixed identities are sampled in explicit mode, through readable and privileged paths; default and legacy-mode failures remain. Mixed SDK/emulator detection still fails rather than skipping the process.",
+    "Helper success includes caller membership in each tuple position. Before/after mutations of each credential and ordered permutations, including changes preserving caller membership, must fail.",
+    "Malformed lengths/types/ranges, bool, root/absent caller, mismatched SUDO_UID and redirected helper cannot reach privileged access. Old schema, missing/wrong/permuted echoed tuple and inconsistent metadata are rejected.",
+    "Parent tuple churn and helper failure leave completed mixed counters at zero; counters distinguish readable and privileged completed samples without retaining PID or UID tuple."
+  ],
+  "actual_execution": {
+    "v2_tests": "NOT_RUN at review time; 49 is a static method count, not executed tests.",
+    "v2_hosted_runtime": "NOT_RUN at review time; fresh frozen-source/control bindings required.",
+    "motivating_lp03": {
+      "run_id": "34487728583",
+      "attempt": 1,
+      "probe": {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34487728583/linux-process-probe-34487728583-1/parlor-verification-34487728583-1-desktop-android-linux-probe.json",
+        "bytes": 9004,
+        "sha256": "ca9490b5d7e906bcbd963158474b7717e22100647a43dfe0349de52f9d1b0c63"
+      },
+      "cleanup": {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34487728583/linux-process-probe-cleanup-34487728583-1/parlor-verification-34487728583-1-desktop-android-cleanup.json",
+        "bytes": 20778,
+        "sha256": "6cce00a91417bbe814bb3611d14482007039d8a7cf7fcc4cbd1f3a809ef5efa0"
+      },
+      "finding": "Both old-source host audits failed PROC_UID_AMBIGUOUS at 147/167 sampled with three completed selected samples and two privileged reads. All three owned live controls passed and retired. No offending mixed PID/tuple was retained; these observations do not identify or repair LP02/D03 failures."
+    }
+  },
+  "required_next_evidence": "Root-owned focused v2 controls, reviewed committed source plus mechanical inventory and fresh bindings, then a narrowly dispatched hosted LP04. Require actual complete host/cleanup PASS with positive completed mixed privileged samples before claiming the new mixed branch was exercised. Zero mixed coverage is not evidence of mixed-path execution and does not justify blind retries. No ADC application qualification is established by this source review or bare-host probe.",
+  "limitations": "Trusted isolated frozen checkout, not a sandbox against malicious concurrent helper mutation. Existing non-atomic sampled-absence scope remains; no termination, process ownership, AVD retirement, continuous absence, application runtime, hardware or Store qualification.",
+  "cleanup": "Reviewer allocated no build/native/process resources and performed no tests. Only this review report was written; no reviewer cleanup was owed.",
+  "reviewed_at": "2026-09-10T14:45:16.758656+00:00"
+}

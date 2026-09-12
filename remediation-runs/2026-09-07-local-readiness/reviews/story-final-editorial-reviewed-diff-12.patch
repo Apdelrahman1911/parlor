@@ -1,0 +1,224 @@
+diff --git a/docs/WHODUNIT_TEST_CONTENT.md b/docs/WHODUNIT_TEST_CONTENT.md
+index bd4cf2d..acf4841 100644
+--- a/docs/WHODUNIT_TEST_CONTENT.md
++++ b/docs/WHODUNIT_TEST_CONTENT.md
+@@ -27,10 +27,10 @@ These are testing-content coherence choices, not production editorial approval:
+ |---|---|---|
+ | `last-dinner` | **1.0.2** | Daniel's 9:00 claim versus 9:10 lamp is ten minutes, not fifteen. Vivienne's half-burned document is in the library fireplace, matching her own timeline, companion clue and final account. Her study document-fetching and Daniel's false alibi remain. |
+ | `layla-halabi` | **1.0.2** | Keep the public 8:45 speech. Amal's speech entry matches it; Rana's method and door witnesses agree with her existing 8:40 dosing/8:50 return and concealed ten-minute detour. Ghassan, Souad and Tarek's method prose now explicitly says 8:58, as their own timelines already did. Amal brings her father's note; Tarek keeps his genuine uncle relationship. |
+-| `jasmine-ring` | **1.0.2** | Walid returns at 11:22 and stages his search at 11:30: eight minutes. His lie and earlier stair-witness claims remain. Fadi's note now says the following morning, matching his brief and the Thursday-evening setting metadata. The metadata is bundled but not currently displayed, so that latter correction is not claimed as a reproduced visible weekday bug. |
++| `jasmine-ring` | **1.0.3** | Walid returns at 11:22 and stages his search at 11:30: eight minutes. His lie and earlier stair-witness claims remain. Fadi's note now says the following morning, matching his brief and the Thursday-evening setting metadata. The metadata is bundled but not currently displayed, so that latter correction is not claimed as a reproduced visible weekday bug. The final testing choices below align the will's last-week history and Nadim's current shop closure. |
+ | `khan-el-khalili` | **1.0.2** | Refaat's dismissal note is dated last week, when his private history says he discovered it. His 7:00 a.m. entry explicitly rereads it; preparation two days earlier and Karim's corrected alibi chain remain. |
+ | `saidi-inheritance` | **1.0.1** | Preserve Zahra's age 68, elder-sister role, divorce at 18 and fifty-year history. The testing age choice makes Mahrous 62 and aligns the physician's age reference to his sixties, rather than rewriting that family history. |
+-| `iskenderia-corniche` | **1.0.1** | Preserve Atif's age 70 and Magda's elder-sister/caregiver history; the testing age choice makes Magda 75. Her having cared for him at 15 is then coherent. Fatma takes the pack at 7:00 a.m., prepares it in the pantry at 8:25 p.m. and carries the bottle in her apron for the 8:35 table detour. Her method now matches her factual timeline; the bottle evidence and deliberately incomplete 8:40 alibi remain. |
++| `iskenderia-corniche` | **1.0.2** | Preserve Atif's age 70 and Magda's elder-sister/caregiver history; the testing age choice makes Magda 75. Her having cared for him at 15 is then coherent. Fatma takes the pack at 7:00 a.m., prepares it in the pantry at 8:25 p.m. and carries the bottle in her apron for the 8:35 table detour. Her method now matches her factual timeline; the bottle evidence and deliberately incomplete 8:40 alibi remain. In the selected guilty Captain variant, discovery is at 9:15 and the shout at 9:17, after the camera's two-minute hesitation. |
+ | `zamalek-ramadan` | **1.0.1** | Mokhtar's final account now agrees with the two-year secret/audit history. The fictional delay is explicitly approximate, not a two-hour minimum contradicted by 6:48 dosing and 8:30–8:45 death. This is no validation of real-world pharmacology. |
+ 
+ The replacement ages are explicit pre-release editorial choices, not ages
+@@ -39,6 +39,27 @@ motives, killer variants, case/character/clue IDs, clue-pool ordering, supported
+ modes/counts and round settings are unchanged. All seven bundles still support
+ exactly six players in Classic Vote and Elimination; engine ranges remain broader.
+ 
++### Final testing-chronology choices
++
++The owner authorized choosing coherent facts instead of leaving these testing
++stories blocked on an unrecorded author decision:
++
++- **Jasmine will:** Rasha persuades Abu Walid and he writes the new will last
++  week; Walid discovers it that same week. Both dossiers already supplied
++  last-week anchors. Copies/drafts and the next-morning signature remain;
++  no earlier second will or revision history is invented.
++- **Jasmine shop:** Nadim's shop officially closed last week, as its objective
++  register clue states. His private current-status paragraph agrees. His
++  desperation before closure, retrospective final account, Istanbul plan and
++  false cigarette alibi remain.
++- **Guilty Captain:** arrival/discovery at 9:15 agrees with the public intro;
++  he waits two minutes and shouts at 9:17, matching the camera and final account.
++  The other five guilty-only 9:15 shout rows belong to mutually exclusive
++  variants, so they are not rewritten.
++
++These choices advance Jasmine **1.0.2 → 1.0.3** and Iskenderia **1.0.1 → 1.0.2**.
++They are approved testing corrections, not final production editorial approval.
++
+ ## Content identity and recovery
+ 
+ `BundledWhodunitCases` derives catalog versions from each envelope;
+@@ -51,9 +72,10 @@ match both to the installed case before launching it. A pre-correction 1.0.0
+ save is **not migrated** to a corrected version, even if character IDs or clue
+ history still look valid. Likewise, a prior 1.0.1 save cannot launch a current
+ 1.0.2 story. Neither changing a version alone nor substituting a digest makes
+-incompatible content acceptable. The compatibility fixtures retain the four
+-original 1.0.0 digests and all seven pre-follow-up identities; they are not
+-updated to match the new prose.
++incompatible content acceptable. The same rule rejects Jasmine's prior 1.0.2
++save under 1.0.3. The compatibility fixtures retain the four original 1.0.0
++digests, all seven pre-follow-up identities and the two pre-final-editorial
++identities; none is updated to match new prose.
+ 
+ Older saves without either identity field may still be decoded/inspected by
+ the legacy loader and codec, but cannot launch a game: a pre-clue snapshot
+@@ -72,10 +94,11 @@ seeds and own-private projection boundaries are unchanged.
+ 
+ ## Verification and remaining editorial work
+ 
+-- `TestingStoryChronologyTest` and `TestingStoryFollowupChronologyTest` pin the
++- `TestingStoryChronologyTest`, `TestingStoryFollowupChronologyTest` and
++  `TestingStoryRemainingChronologyTest` pin the
+   selected factual chains, reference corrections and preserved lies against
+   actual bundled resources and strict production validators.
+-- `TestingStoryCompatibilityTest` checks all eleven retired canonical identities,
++- `TestingStoryCompatibilityTest` checks all thirteen retired canonical identities,
+   current save/load, rejected old/crossed/missing identities, byte retention,
+   explicit deletion and exact LAN-offer content matching. Its filesystem is
+   synthetic; it is not physical-device or platform-durability evidence.
+@@ -97,21 +120,11 @@ VoiceOver/TalkBack review, signed-release proof or editorial certification.
+ Every line and killer variant of all seven files was read for this follow-up.
+ That does not establish that every narrative claim is coherent or that a
+ deterministic full-game test is a human playtest. Remaining editorial questions
+-are recorded rather than repaired by inventing events:
++are distinguished from the factual choices above:
+ 
+ - Overlapping innocent library accounts in Last Dinner, Souad/Rana alibis in
+   Layla and cross-variant witness alibis: the shipping briefing permits lying;
+   “innocent” alone does not certify every account as an objective timeline.
+-- Jasmine's two-month will knowledge versus last-week persuasion/document
+-  discovery needs a decision about an earlier draft versus the same completed
+-  will. Existing references to copies/drafts are counter-evidence, not proof
+-  of an unmentioned revision history.
+-- Jasmine's imminent shop closure versus a last-week official closure needs
+-  a decision about motive-time versus current status. No administrative or
+-  reopening history is invented.
+-- Iskenderia's arrival/discovery/scream row may span several events; its
+-  relationship to the public discovery and two-minute hesitation still needs
+-  editorial confirmation.
+ 
+ The apparent Daniel reconciliation-versus-8:30-toast conflict compares
+ mutually exclusive killer timelines. Jasmine's public 11:10 request does not
+diff --git a/game-modes/whodunit/src/commonMain/composeResources/files/cases/iskenderia-corniche.json b/game-modes/whodunit/src/commonMain/composeResources/files/cases/iskenderia-corniche.json
+index 2cab44a..b98b697 100644
+--- a/game-modes/whodunit/src/commonMain/composeResources/files/cases/iskenderia-corniche.json
++++ b/game-modes/whodunit/src/commonMain/composeResources/files/cases/iskenderia-corniche.json
+@@ -3,7 +3,7 @@
+   "caseId": "iskenderia-corniche",
+   "title": "صيف الإسكندرية",
+   "subtitle": "جريمة قتل في فيلا على كورنيش الإسكندرية.",
+-  "version": "1.0.1",
++  "version": "1.0.2",
+   "minimumAppVersion": "1.0.0",
+   "gameId": "whodunit",
+   "supportedPlayerCounts": [6, 6],
+@@ -112,8 +112,8 @@
+             { "time": "7:30 مساءً", "action": "أخذتَ علبة الدواء من حقيبة سفره. سحقتَها في الحمّام." },
+             { "time": "8:30 مساءً", "action": "أفرغتَ المسحوق في إبريق عاطف حين خرج للاستقبال." },
+             { "time": "8:40 مساءً", "action": "ذهبتَ إلى المطبخ مع الحاجة فاطمة لتثبت وجودك." },
+-            { "time": "9:10 مساءً", "action": "خرجتَ إلى الشرفة. وجدتَه. صرختَ." },
+-            { "time": "9:15 مساءً", "action": "ركض الجميع إلى الشرفة." }
++            { "time": "9:15 مساءً", "action": "خرجتَ إلى الشرفة. وجدتَه. انتظرتَ دقيقتين كاملتين." },
++            { "time": "9:17 مساءً", "action": "صرختَ. ركض الجميع إلى الشرفة." }
+           ],
+           "fakeAlibi": "كنتُ مع الحاجة فاطمة في المطبخ. ثم خرجتُ فوجدتُه. (صحيح، لكن أخفِ ما قبل الثامنة وأربعين.)",
+           "deflectionTargets": ["tarek-aliskandarany", "ustaz-wagdy"],
+diff --git a/game-modes/whodunit/src/commonMain/composeResources/files/cases/jasmine-ring.json b/game-modes/whodunit/src/commonMain/composeResources/files/cases/jasmine-ring.json
+index ca5d9cb..ef0f95d 100644
+--- a/game-modes/whodunit/src/commonMain/composeResources/files/cases/jasmine-ring.json
++++ b/game-modes/whodunit/src/commonMain/composeResources/files/cases/jasmine-ring.json
+@@ -3,7 +3,7 @@
+   "caseId": "jasmine-ring",
+   "title": "خاتم الياسمين",
+   "subtitle": "موت تاجر الأنتيكا في حارة الياسمين.",
+-  "version": "1.0.2",
++  "version": "1.0.3",
+   "minimumAppVersion": "1.0.0",
+   "gameId": "whodunit",
+   "supportedPlayerCounts": [6, 6],
+@@ -29,7 +29,7 @@
+         "relationshipToVictim": "ابنه الوحيد، 36 عاماً.",
+         "publicIdentity": "ابن أبي وليد الوحيد. يعمل في المحل منذ خمسة عشر عاماً. كان من المفترض أن يرث المحل والمجموعة الخاصة. هو من نزل إلى القبو ووجد الجثة.",
+         "publicMotive": "ميراث المحل والمجموعة الخاصة — ظاهرياً علاقتهما جيدة، لكن كل من في الحارة يعرف خلافاتهما.",
+-        "privateSecret": "اكتشف قبل شهرين أن والده كان قد كتب وصية جديدة سرّاً يترك فيها نصف المجموعة الخاصة لمتحف الفن الإسلامي بدلاً من توريثها له بالكامل. الوصية الجديدة كانت في درج القبو، وكان أبو وليد سيوقّعها رسمياً غداً صباحاً.",
++        "privateSecret": "اكتشف الأسبوع الماضي أن والده كان قد كتب وصية جديدة سرّاً يترك فيها نصف المجموعة الخاصة لمتحف الفن الإسلامي بدلاً من توريثها له بالكامل. الوصية الجديدة كانت في درج القبو، وكان أبو وليد سيوقّعها رسمياً غداً صباحاً.",
+         "innocentBrief": {
+           "verdictLine": "أنت بريء.",
+           "alibi": "كنت في القاعة الخارجية مع البقية منذ 11:10 حتى نزلتُ في 11:30 لأبحث عن والدي. لم أغادر القاعة في تلك الفترة.",
+@@ -64,7 +64,7 @@
+         "relationshipToVictim": "صديق طفولته وشريك في صفقات سابقة، 65 عاماً.",
+         "publicIdentity": "تاجر أنتيكا منافس في حلب القديمة. صديق أبي وليد منذ خمسين عاماً. حضر السهرة لتقديم عرض شراء للخاتم.",
+         "publicMotive": "منافسة قديمة في السوق — لكنها صداقة أكثر منها عداوة.",
+-        "privateSecret": "أمواله شارفت على النفاد. محله في حلب على وشك الإغلاق. كان يعرف من مصدر داخلي أن أبا وليد سيرفض عرضه الليلة. لو حصل على الخاتم بطريقة أخرى، يستطيع بيعه في إسطنبول مقابل ثلاثة أضعاف وحلّ كل مشاكله.",
++        "privateSecret": "أمواله شارفت على النفاد. محله في حلب أُغلق رسمياً قبل أسبوع. كان يعرف من مصدر داخلي أن أبا وليد سيرفض عرضه الليلة. لو حصل على الخاتم بطريقة أخرى، يستطيع بيعه في إسطنبول مقابل ثلاثة أضعاف وحلّ كل مشاكله.",
+         "innocentBrief": {
+           "verdictLine": "أنت بريء.",
+           "alibi": "كنت في القاعة الخارجية أتحدث مع رشا وفادي طوال الفترة من 11:10 إلى 11:30. لم أتحرك.",
+diff --git a/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/TestingStoryChronologyTest.kt b/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/TestingStoryChronologyTest.kt
+index fcd306a..520f03d 100644
+--- a/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/TestingStoryChronologyTest.kt
++++ b/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/TestingStoryChronologyTest.kt
+@@ -124,11 +124,19 @@ class TestingStoryChronologyTest {
+ 
+     @Test
+     fun eachCorrectedTestingStoryUsesItsNextContentVersionWithoutSchemaChanges() = runTest {
+-        val previouslyCorrectedIds = setOf("last-dinner", "layla-halabi", "jasmine-ring", "khan-el-khalili")
++        val patchVersions = mapOf(
++            "last-dinner" to 2,
++            "layla-halabi" to 2,
++            "jasmine-ring" to 3,
++            "khan-el-khalili" to 2,
++            "iskenderia-corniche" to 2,
++            "saidi-inheritance" to 1,
++            "zamalek-ramadan" to 1,
++        )
+         bundledWhodunitCaseIds.forEach { id ->
+             val case = loadCase(id)
+             assertEquals(
+-                if (id in previouslyCorrectedIds) SemVer(1, 0, 2) else SemVer(1, 0, 1),
++                SemVer(1, 0, patchVersions.getValue(id)),
+                 case.envelope.version,
+                 id,
+             )
+diff --git a/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/TestingStoryCompatibilityTest.kt b/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/TestingStoryCompatibilityTest.kt
+index c1442ef..6ff519d 100644
+--- a/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/TestingStoryCompatibilityTest.kt
++++ b/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/TestingStoryCompatibilityTest.kt
+@@ -50,7 +50,7 @@ class TestingStoryCompatibilityTest {
+     @Test
+     fun correctedStoriesDoNotReuseAnyRecordedEarlierCanonicalContentDigest() = runTest {
+         assertEquals(bundledWhodunitCaseIds.toSet(), fixture.retiredIdentities.keys)
+-        assertEquals(11, fixture.retiredIdentities.values.sumOf { it.size })
++        assertEquals(13, fixture.retiredIdentities.values.sumOf { it.size })
+         val reused = mutableListOf<String>()
+         fixture.retiredIdentities.forEach { (caseId, retired) ->
+             val current = fixture.loadCase(caseId).envelope.contentIdentity()
+@@ -58,8 +58,8 @@ class TestingStoryCompatibilityTest {
+                 reused += caseId
+             }
+         }
+-        // Keep the first four 1.0.0 identities AND all seven pre-follow-up
+-        // identities: a version bump cannot silently replace older-save coverage.
++        // Keep the first four 1.0.0 identities, all seven pre-follow-up
++        // identities and both pre-final-editorial identities. Do not replace old-save coverage.
+         assertEquals(emptyList(), reused)
+     }
+ 
+@@ -238,10 +238,22 @@ internal class TestingStoryFixtures {
+         ),
+     )
+ 
++    // Canonical identities from committed 1f809b87c15a4deb079809bc14718a58cf0fe451,
++    // before the explicit final testing-chronology choices. Preserve these saved-game boundaries.
++    private val preFinalEditorialIdentities = mapOf(
++        "jasmine-ring" to WhodunitContentIdentity(
++            "1.0.2", "f03f94cc92f2f0c2388eab34e45857cb7dcfca2dd86f2aced5ff23d9292017cf",
++        ),
++        "iskenderia-corniche" to WhodunitContentIdentity(
++            "1.0.1", "e27cddb6fb9b6bf035ce6cd9fcb8000dbcb589ae0333cda5c7d7ac83598fb2f7",
++        ),
++    )
++
+     val retiredIdentities = previousIdentities.mapValues { (caseId, previous) ->
+         buildList {
+             add(previous)
+             originalDigests[caseId]?.let { add(WhodunitContentIdentity("1.0.0", it)) }
++            preFinalEditorialIdentities[caseId]?.let(::add)
+         }
+     }
+ 

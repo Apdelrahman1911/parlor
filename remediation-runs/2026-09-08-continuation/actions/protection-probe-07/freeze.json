@@ -1,0 +1,28 @@
+{
+  "kind": "FRESH_PAIRED_PROTECTION_SOURCE_CONTROL_BINDING_NOT_RUNTIME",
+  "recorded_at": "2026-09-11T02:48:29.736364+00:00",
+  "source": "ad62b0122ce08302c22a78b00c78e2d8ed7dc23c",
+  "tree": "1a6a866d6b66cfb723ff471d8a4b49705a36c3b5",
+  "source_commit": "00bb4e4ea58f0b4d727ebeef6fceb441a4c4d19e",
+  "remote": "ad62b0122ce08302c22a78b00c78e2d8ed7dc23c",
+  "controls_sha256": "df4fafb386f840e399676c8ec26518576f5cfc81480b9a16fa61fa1e245b968b",
+  "control_files": 19,
+  "request_sha256": "3d00366249832d05d3a5c471976c193d73f76e7a080aa262f4cb628f94809010",
+  "inventory_sha256": "bae1528734987b6d55c4f22a4e6709765dcb7843d54f8faf50ff90f51d6ec230",
+  "dispatch_status": "PREPARED_NOT_DISPATCHED",
+  "source_reviews": [
+    "remediation-runs/2026-09-08-continuation/reviews/protection-probe-spawn-preflight-source-independent-01.json",
+    "remediation-runs/2026-09-08-continuation/reviews/protection-probe-entry-markers-source-independent-01.json"
+  ],
+  "actual_controls_review": "remediation-runs/2026-09-08-continuation/reviews/protection-probe-spawn-preflight-controls-independent-01.json",
+  "previous_failed_run": 34553751369,
+  "rationale": "PD06 preboot host SDK qualified; native40s timeout emitted no bytes and immediate stop60s emitted only wrapper download banner. Reviewed change qualifies pinned wrapper before simulator allocation at unchanged60s bound; exact one-use owned spawn timeout sampling and fixed C entry markers add observations only. No timeout increase, retry, strict or cleanup waiver. Obtain paired host comparison if launcher reaches native execution.",
+  "overlap_intent": {
+    "run_id": 34553741387,
+    "source": "59a384441f44844a79ae62ea8ee68d0c9e1e5878",
+    "scope": "full",
+    "reason": "Old D08 already failed; allow useful independent remaining Release job to finish. Disjoint protection and qualification concurrency groups; separate sources/evidence; D09 not dispatched until old run terminal and relevant fixes stable."
+  },
+  "strict_a37": "0_PASS_26_FAIL_UNCHANGED",
+  "qualification": "NOT_ESTABLISHED"
+}

@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/native_fix_review",
+  "purpose": "Independent HTTPS cross-check of exact upstream2.4.10 build-cache reader/registration and active advisory; source-only research, not execution evidence",
+  "requests": [
+    {
+      "label": "kapt-cache",
+      "url": "https://raw.githubusercontent.com/JetBrains/kotlin/v2.4.10/plugins/kapt/kapt-base/src/org/jetbrains/kotlin/kapt/base/incremental/cache.kt",
+      "accessed_at": "2026-09-07T11:44:25.924411+00:00",
+      "status": 200,
+      "final_url": "https://raw.githubusercontent.com/JetBrains/kotlin/v2.4.10/plugins/kapt/kapt-base/src/org/jetbrains/kotlin/kapt/base/incremental/cache.kt",
+      "sha256": "5a6b4d0b5316ffa99f2c50bd1d892f124727d98f2bfa943c46d2475e1d5e3d05",
+      "bytes": 9811,
+      "retained_path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34112913001-evidence/official-kotlin-2.4.10-kapt-cache.kt.txt",
+      "exact_bytes_match": true
+    },
+    {
+      "label": "plugin-registration",
+      "url": "https://raw.githubusercontent.com/JetBrains/kotlin/v2.4.10/libraries/tools/kotlin-gradle-plugin/src/common/kotlin/org/jetbrains/kotlin/gradle/plugin/SubpluginEnvironment.kt",
+      "accessed_at": "2026-09-07T11:44:29.393778+00:00",
+      "status": 200,
+      "final_url": "https://raw.githubusercontent.com/JetBrains/kotlin/v2.4.10/libraries/tools/kotlin-gradle-plugin/src/common/kotlin/org/jetbrains/kotlin/gradle/plugin/SubpluginEnvironment.kt",
+      "sha256": "ef6823917f917dfff785c55155e647a7f5bd8cc946aea07b22ea384dcac20ef9",
+      "bytes": 5751,
+      "retained_path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34112913001-evidence/official-kotlin-2.4.10-SubpluginEnvironment.kt.txt",
+      "exact_bytes_match": true
+    },
+    {
+      "label": "advisory",
+      "url": "https://api.github.com/advisories/GHSA-r937-wjx7-w2jp",
+      "accessed_at": "2026-09-07T11:44:30.011173+00:00",
+      "status": 200,
+      "final_url": "https://api.github.com/advisories/GHSA-r937-wjx7-w2jp",
+      "sha256": "807be75073de9278648cd638ae3fdacf14972520df8b164893ff4f8ec77ae150",
+      "bytes": 3667,
+      "applicability": {
+        "ghsa_id": "GHSA-r937-wjx7-w2jp",
+        "cve_id": "CVE-2026-53914",
+        "description": "In JetBrains Kotlin before 2.4.20 code execution was possible via unsafe deserialization in the build cache metadata",
+        "severity": "medium",
+        "updated_at": "2026-08-12T19:25:24Z",
+        "withdrawn_at": null,
+        "vulnerabilities": [
+          {
+            "package": {
+              "ecosystem": "maven",
+              "name": "org.jetbrains.kotlin:kotlin-gradle-plugin"
+            },
+            "vulnerable_version_range": "< 2.4.20-Beta1",
+            "first_patched_version": "2.4.20-Beta1",
+            "vulnerable_functions": []
+          }
+        ],
+        "references": [
+          "https://nvd.nist.gov/vuln/detail/CVE-2026-53914",
+          "https://www.jetbrains.com/privacy-security/issues-fixed",
+          "https://github.com/JetBrains/kotlin/commit/bf51df665b458fda7c3eaf436c4d88dc119d7ec6",
+          "https://github.com/JetBrains/kotlin/releases/tag/v2.4.20-Beta1",
+          "https://github.com/advisories/GHSA-r937-wjx7-w2jp"
+        ]
+      },
+      "retained_relevant_claims_match": true
+    }
+  ],
+  "production_changes": false,
+  "builds_tests_native_processes_started": false,
+  "cleanup": "Only compact new report retained; synchronous research process finished, no build output or background worker created"
+}

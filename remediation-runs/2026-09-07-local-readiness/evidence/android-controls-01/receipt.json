@@ -1,0 +1,24 @@
+{
+  "started_at": "2026-09-07T05:13:42.208939+00:00",
+  "finished_at": "2026-09-07T05:13:42.359673+00:00",
+  "command": [
+    "/usr/bin/python3",
+    "-B",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner",
+    "-p",
+    "test_*.py",
+    "-v"
+  ],
+  "exit_code": 0,
+  "control_freeze_sha256": "0e44f1a86a93379af20b79404903def101b3a1c9e28fe0fdb4672293471b509f",
+  "controls_unchanged": true,
+  "reviewer": "/root",
+  "review_scope": "All354process+473runner+269process-tests+258runner-tests lines read, public ABI/source receipts inspected; no source changes. Root independent from release_fix_review author.",
+  "status": "PASS",
+  "runtime_scope": "Synthetic syscall tables, temporary directory/inode/socket-node fixtures only; no real native signals, adb server, emulator or Gradle. Real owned-child probe pending.",
+  "cleanup": "Test-owned TemporaryDirectory/addCleanup fixtures disposed. PYTHONDONTWRITEBYTECODE via -B; no build outputs/daemons started."
+}

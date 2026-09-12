@@ -1,0 +1,474 @@
+{
+  "schema": 1,
+  "recorded_at": "2026-09-07T04:05:40.353760+00:00",
+  "author": "/root",
+  "independent_reviewer": "/root/factory_review",
+  "status": "APPROVED \u2014 existing behavior retained, approved modal policy documented and locally verified",
+  "classification": "INTENDED BEHAVIOR with prior TEST/EVIDENCE GAP now covered locally; do not count WD-C4 as a newly repaired confirmed production defect.",
+  "scope": "Independent second/final review of root-authored WD-C4 comments, policy document, actual local/host timer acceptance tests and shared synthetic room correction. Root must independently review reviewer-authored recovery, transport and engine/Mafia common-test work.",
+  "original_candidate": "audit-runs/2026-09-05-source-audit/candidates/WD-C4-whodunit_cont.md",
+  "original_independent_disposition": "audit-runs/2026-09-05-source-audit/validations/WD-C4-root.md",
+  "policy_basis": "Parent task and local baseline.json policy: Leave-confirmation time must not count toward discussion. Original candidate correctly remained unconfirmed until that decision.",
+  "source_identity": {
+    "commit": "85ded00435b4f8327ce32d3b7f5062c4438ae174",
+    "tree": "0b0facb91b11b87f71c01454f470e21cfc2222ca",
+    "branch": "fix/local-readiness-2026-09-07",
+    "diff_sha256": "8009185ba858af90af0e5f25613a64b3c14ba06be87a6b9b92987914e6192476",
+    "source_manifest_sha256": "b1c1ad695e7c2694ba1bffd25934e5553ea1a58430f6729c3dd19b799a05dab4"
+  },
+  "source_review": [
+    "The supplied policy that confirmation time is excluded is already realized by removing presentation-owned ticker while retaining canonical session. No game/protocol/save migration is necessary.",
+    "Previous unsupported effectContext and Paused selector errors corrected to pinned supported APIs and actual PAUSED text.",
+    "Failure injection now precedes changed tick state; attempted/durable state are distinct and bounded persistence waits avoid treating real Default dispatcher as virtual time.",
+    "Host clock is explicitly advanced alongside retained host scheduler per frame; bulk advancement is used only behind confirmation or after termination.",
+    "Host fixture now freezes remote-only members. Production HostP2pRoom starts with empty remote map, records admitted peers, and closeAdmissions returns that map. Outer host flow prepends the host. Original fixture duplicated the host when exercised through that outer route.",
+    "Both existing language-continuity consumers supply their original full player list to inner runtime and only compare frozen list to room.members, so no caller depends on the old duplicate-host roster. Focused rerun remains required.",
+    "All reviewed modified production lines are comments; architecture, pure reducers, host-only clock ownership, private projections, deterministic seeds, snapshot formats and exact protocol4.2 unchanged."
+  ],
+  "coverage": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/networking-testing/src/commonMain/kotlin/com/parlor/networking/testing/ControlledStartRoom.kt",
+      "sha256": "147692e570bcc0e8c191a6373c61fd4f636c62891b604fdc1c5fee52990861f0",
+      "reviewed_ranges": [
+        [
+          1,
+          188
+        ]
+      ],
+      "reviewer": "/root/factory_review"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitDiscussionFixture.kt",
+      "sha256": "9656ee3f05824b0572019ac672334c06ef7b3ddc996ab7bee8158e41c367a1ac",
+      "reviewed_ranges": [
+        [
+          1,
+          139
+        ]
+      ],
+      "reviewer": "/root/factory_review"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitLocalLeaveTimerTest.kt",
+      "sha256": "d04913884e838590cfc3d34aa0c0640a3500b4bd4cd7bef04954d6df2d94e343",
+      "reviewed_ranges": [
+        [
+          1,
+          237
+        ]
+      ],
+      "reviewer": "/root/factory_review"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/multiplayer/WhodunitHostLeaveTimerTest.kt",
+      "sha256": "4adb53690ae19d5bd63fb556122b0b84d594cb283ffaa3e3352e112c78008a6c",
+      "reviewed_ranges": [
+        [
+          1,
+          274
+        ]
+      ],
+      "reviewer": "/root/factory_review"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/multiplayer/WhodunitHostLanguageContinuityTest.kt",
+      "sha256": "97e55bc43b465a0efc241810520db0e6e642f4991860b3f7fc843effa5667323",
+      "reviewed_ranges": [
+        [
+          1,
+          320
+        ]
+      ],
+      "reviewer": "/root/factory_review"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaHostLanguageContinuityTest.kt",
+      "sha256": "027f36dda4a27b68fad6d5abf1740f9778cce897a2ba7dea7fc152acf7bce743",
+      "reviewed_ranges": [
+        [
+          1,
+          338
+        ]
+      ],
+      "reviewer": "/root/factory_review"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/timer/DiscussionTickerLoop.kt",
+      "sha256": "dfbcc16abc38e99131e014a0656e4a31c576cca487e732e2ef36084ffc54f07a",
+      "reviewed_ranges": [
+        [
+          1,
+          67
+        ]
+      ],
+      "reviewer": "/root/factory_review"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/docs/WHODUNIT_DISCUSSION_TIMING.md",
+      "sha256": "877084e47d0e823278057da1f0881fbab0a52e5a8e57aa48eec5fbabc49cece1",
+      "reviewed_ranges": [
+        [
+          1,
+          39
+        ]
+      ],
+      "reviewer": "/root/factory_review"
+    }
+  ],
+  "cross_file_paths": [
+    "WhodunitGameFlow.kt:SessionDrivenFlow canonical controller, snapshot writer, exit request, pause/confirmation/router branches",
+    "WhodunitHostSessionFlow.kt:owned route acquisition, frozen roster, confirmation replacement, host+remote roster construction",
+    "WhodunitPhaseRouter.kt:RoundSegment sole authoritative LaunchedEffect ticker",
+    "WhodunitRetainedMultiplayerRuntime.kt:strict start barrier, state ownership and close",
+    "ProcessMultiplayerSessionOwner.kt:freezeAdmissions returns room result unchanged",
+    "P2pKitRoomTransport.kt:HostP2pRoom members map, admission registration and closeAdmissions"
+  ],
+  "prior_harness_failures": [
+    {
+      "id": "WD-C4-TEST-01",
+      "root_cause": "CMP1.10.3 Skiko runComposeUiTest rejects nonempty effectContext before content mounts.",
+      "correction": "Default supported effect context and explicit per-frame host/UI scheduler coupling.",
+      "basis": "factory_review/WD-C4-clock-research-01.json and original first-cycle host failure."
+    },
+    {
+      "id": "WD-C4-TEST-02",
+      "root_cause": "PauseOverlay title is PAUSED, not Paused.",
+      "correction": "Correct production text selector; no wording change."
+    },
+    {
+      "id": "WD-C4-TEST-03",
+      "root_cause": "Failure injection after identical snapshot already persisted cannot bypass legitimate deduplication.",
+      "correction": "Arm storage failure before a real tick and separate attempted state from last durable record."
+    },
+    {
+      "id": "WD-C4-TEST-04",
+      "root_cause": "Real Dispatchers.Default writer completion is independent of Compose virtual clock.",
+      "correction": "Bounded current-time drain waits for the exact durable/attempted value."
+    },
+    {
+      "id": "WD-C4-TEST-05",
+      "root_cause": "ControlledStartRoom incorrectly included host in remote members; outer host route prepended host again.",
+      "correction": "Remote-only members using original players.drop(1); full frozen start offer remains unchanged. Assert actual runtime roster equals original six players; both pre-existing game-language suites rerun."
+    }
+  ],
+  "prior_failed_cycles": [
+    {
+      "receipt": "remediation-runs/2026-09-07-local-readiness/evidence/focused-timer-retry-fixtures-01/receipt.json",
+      "exit_code": 1,
+      "suites": [
+        {
+          "file": "game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.flow.TickerAndRerollTest.xml",
+          "parse_error": "No module named expat; use SimpleXMLTreeBuilder instead"
+        },
+        {
+          "file": "game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.WhodunitLocalLeaveTimerTest.xml",
+          "parse_error": "No module named expat; use SimpleXMLTreeBuilder instead"
+        },
+        {
+          "file": "game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.WhodunitRecoveryInteractionTest.xml",
+          "parse_error": "No module named expat; use SimpleXMLTreeBuilder instead"
+        },
+        {
+          "file": "game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostLeaveTimerTest.xml",
+          "parse_error": "No module named expat; use SimpleXMLTreeBuilder instead"
+        }
+      ],
+      "cleanup_stop_exit_code": 0,
+      "remaining_outputs": [],
+      "cleanup_errors": []
+    },
+    {
+      "receipt": "remediation-runs/2026-09-07-local-readiness/evidence/focused-timer-retry-fixtures-02/receipt.json",
+      "exit_code": 1,
+      "suites": [
+        {
+          "file": "game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.flow.TickerAndRerollTest.xml",
+          "suite": "com.parlor.games.whodunit.flow.TickerAndRerollTest",
+          "tests": "9",
+          "failures": "0",
+          "errors": "0",
+          "skipped": "0"
+        },
+        {
+          "file": "game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.WhodunitLocalLeaveTimerTest.xml",
+          "suite": "com.parlor.games.whodunit.ui.flow.WhodunitLocalLeaveTimerTest",
+          "tests": "6",
+          "failures": "0",
+          "errors": "0",
+          "skipped": "0"
+        },
+        {
+          "file": "game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.WhodunitRecoveryInteractionTest.xml",
+          "suite": "com.parlor.games.whodunit.ui.flow.WhodunitRecoveryInteractionTest",
+          "tests": "9",
+          "failures": "0",
+          "errors": "0",
+          "skipped": "0"
+        },
+        {
+          "file": "game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostLeaveTimerTest.xml",
+          "suite": "com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostLeaveTimerTest",
+          "tests": "4",
+          "failures": "4",
+          "errors": "0",
+          "skipped": "0"
+        }
+      ],
+      "cleanup_stop_exit_code": 0,
+      "remaining_outputs": [],
+      "cleanup_errors": []
+    }
+  ],
+  "verification": {
+    "receipt": "remediation-runs/2026-09-07-local-readiness/evidence/focused-timer-retry-fixtures-03/receipt.json",
+    "receipt_sha256": "245bd48ccfb4300f73360d29d3081b9d98340b6ff68e598ad5b748bbb02ab772",
+    "command": [
+      "./gradlew",
+      ":game-modes:whodunit:desktopTest",
+      "--tests",
+      "*LeaveTimerTest",
+      "--tests",
+      "*WhodunitRecoveryInteractionTest",
+      "--tests",
+      "*TickerAndRerollTest",
+      "--tests",
+      "*HostLanguageContinuityTest",
+      ":game-modes:mafia:desktopTest",
+      "--tests",
+      "*HostLanguageContinuityTest",
+      "--tests",
+      "*MafiaDoctorRulesTest",
+      "--tests",
+      "*MafiaDoctorHistoryRecoveryTest",
+      ":shared:engine:desktopTest",
+      "--tests",
+      "*GameRegistryTest",
+      "--tests",
+      "*GameSnapshotTest",
+      ":shared:transport-p2p:desktopTest",
+      "--tests",
+      "*LoopbackFixtureContractTest",
+      "--tests",
+      "*JupiterDiscoveryContractTest",
+      "--rerun-tasks",
+      "--no-build-cache",
+      "--no-daemon",
+      "--no-parallel",
+      "--max-workers=1",
+      "--no-configuration-cache",
+      "--dependency-verification=strict",
+      "-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=focused-timer-retry-fixtures-03",
+      "-Pkotlin.compiler.execution.strategy=in-process",
+      "-Pparlor.android.signing.storeFile=",
+      "-Pparlor.android.signing.storePassword=",
+      "-Pparlor.android.signing.keyAlias=",
+      "-Pparlor.android.signing.keyPassword="
+    ],
+    "started_at": "2026-09-07T04:00:13.552472+00:00",
+    "finished_at": "2026-09-07T04:02:05.692625+00:00",
+    "exit_code": 0,
+    "independent_method": "Parsed all12 raw XML files with /usr/bin/python3 xml.etree, checked actual case nodes and no skip/failure/error children; compared reviewed hashes to before-run manifest and current files.",
+    "total_selected_tests": 70,
+    "failed": 0,
+    "skipped": 0,
+    "root_authored_policy_and_sibling_control_suites": [
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/focused-timer-retry-fixtures-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.flow.multidevice.MafiaHostLanguageContinuityTest.xml",
+        "sha256": "2d93c97483c09da504684aac6cd6f05dbf03b6458d97c83e702dff84f9fca998",
+        "suite": "com.parlor.games.mafia.ui.flow.multidevice.MafiaHostLanguageContinuityTest",
+        "tests": 2,
+        "failed": 0,
+        "skipped": 0,
+        "timestamp": "2026-09-07T04:01:57.823Z"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/focused-timer-retry-fixtures-03/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.flow.TickerAndRerollTest.xml",
+        "sha256": "cb7e2eee9bb398c3b03a29d1965b65a4f2c0fc4a02482f774982a08f736e5899",
+        "suite": "com.parlor.games.whodunit.flow.TickerAndRerollTest",
+        "tests": 9,
+        "failed": 0,
+        "skipped": 0,
+        "timestamp": "2026-09-07T04:00:48.956Z"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/focused-timer-retry-fixtures-03/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.WhodunitLocalLeaveTimerTest.xml",
+        "sha256": "9f94db09d491f65575f126f5ec8ced01619870439f3eb2f94cd23cf0136f3278",
+        "suite": "com.parlor.games.whodunit.ui.flow.WhodunitLocalLeaveTimerTest",
+        "tests": 6,
+        "failed": 0,
+        "skipped": 0,
+        "timestamp": "2026-09-07T04:00:49.457Z"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/focused-timer-retry-fixtures-03/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostLanguageContinuityTest.xml",
+        "sha256": "bd1baaf513ecbbddfd8b589f7486ba604096f1d38f2347115d9337a86a94a1a8",
+        "suite": "com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostLanguageContinuityTest",
+        "tests": 2,
+        "failed": 0,
+        "skipped": 0,
+        "timestamp": "2026-09-07T04:01:16.579Z"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/focused-timer-retry-fixtures-03/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostLeaveTimerTest.xml",
+        "sha256": "4a47d68eed5389fa7787dc844533c887d9cf01ab8450d6c1bc17c7d69dc28fc8",
+        "suite": "com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostLeaveTimerTest",
+        "tests": 4,
+        "failed": 0,
+        "skipped": 0,
+        "timestamp": "2026-09-07T04:01:16.835Z"
+      }
+    ],
+    "all_executed_suites": [
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/focused-timer-retry-fixtures-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.MafiaDoctorRulesTest.xml",
+        "sha256": "e76bcb7c47ce3629232848f51a87d58942db4ded43ffe0dfbe76688cd81e0778",
+        "suite": "com.parlor.games.mafia.domain.MafiaDoctorRulesTest",
+        "tests": 8,
+        "failed": 0,
+        "skipped": 0,
+        "timestamp": "2026-09-07T04:01:57.364Z"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/focused-timer-retry-fixtures-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.snapshot.MafiaDoctorHistoryRecoveryTest.xml",
+        "sha256": "e3c08f3fb1af86c597c859724a9afa46081cdc6c72d17878ba28902594d34dae",
+        "suite": "com.parlor.games.mafia.snapshot.MafiaDoctorHistoryRecoveryTest",
+        "tests": 15,
+        "failed": 0,
+        "skipped": 0,
+        "timestamp": "2026-09-07T04:01:57.535Z"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/focused-timer-retry-fixtures-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.flow.multidevice.MafiaHostLanguageContinuityTest.xml",
+        "sha256": "2d93c97483c09da504684aac6cd6f05dbf03b6458d97c83e702dff84f9fca998",
+        "suite": "com.parlor.games.mafia.ui.flow.multidevice.MafiaHostLanguageContinuityTest",
+        "tests": 2,
+        "failed": 0,
+        "skipped": 0,
+        "timestamp": "2026-09-07T04:01:57.823Z"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/focused-timer-retry-fixtures-03/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.flow.TickerAndRerollTest.xml",
+        "sha256": "cb7e2eee9bb398c3b03a29d1965b65a4f2c0fc4a02482f774982a08f736e5899",
+        "suite": "com.parlor.games.whodunit.flow.TickerAndRerollTest",
+        "tests": 9,
+        "failed": 0,
+        "skipped": 0,
+        "timestamp": "2026-09-07T04:00:48.956Z"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/focused-timer-retry-fixtures-03/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.WhodunitLocalLeaveTimerTest.xml",
+        "sha256": "9f94db09d491f65575f126f5ec8ced01619870439f3eb2f94cd23cf0136f3278",
+        "suite": "com.parlor.games.whodunit.ui.flow.WhodunitLocalLeaveTimerTest",
+        "tests": 6,
+        "failed": 0,
+        "skipped": 0,
+        "timestamp": "2026-09-07T04:00:49.457Z"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/focused-timer-retry-fixtures-03/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.WhodunitRecoveryInteractionTest.xml",
+        "sha256": "f2b1278afeb88e73240bb763ef9240732354e9fc4eff6022834d7886d2fcd864",
+        "suite": "com.parlor.games.whodunit.ui.flow.WhodunitRecoveryInteractionTest",
+        "tests": 9,
+        "failed": 0,
+        "skipped": 0,
+        "timestamp": "2026-09-07T04:01:16.099Z"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/focused-timer-retry-fixtures-03/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostLanguageContinuityTest.xml",
+        "sha256": "bd1baaf513ecbbddfd8b589f7486ba604096f1d38f2347115d9337a86a94a1a8",
+        "suite": "com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostLanguageContinuityTest",
+        "tests": 2,
+        "failed": 0,
+        "skipped": 0,
+        "timestamp": "2026-09-07T04:01:16.579Z"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/focused-timer-retry-fixtures-03/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostLeaveTimerTest.xml",
+        "sha256": "4a47d68eed5389fa7787dc844533c887d9cf01ab8450d6c1bc17c7d69dc28fc8",
+        "suite": "com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostLeaveTimerTest",
+        "tests": 4,
+        "failed": 0,
+        "skipped": 0,
+        "timestamp": "2026-09-07T04:01:16.835Z"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/focused-timer-retry-fixtures-03/reports/shared/engine/build/test-results/desktopTest/TEST-com.parlor.engine.registry.GameRegistryTest.xml",
+        "sha256": "3dd92256dbec235b551948ff57ad7fec766c0abd55889385deadcb1097290e86",
+        "suite": "com.parlor.engine.registry.GameRegistryTest",
+        "tests": 5,
+        "failed": 0,
+        "skipped": 0,
+        "timestamp": "2026-09-07T04:01:59.662Z"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/focused-timer-retry-fixtures-03/reports/shared/engine/build/test-results/desktopTest/TEST-com.parlor.engine.snapshot.GameSnapshotTest.xml",
+        "sha256": "7353567e3b90edd3768bfba4865776e56d6c94bbb22412dc2d53b46190bf1caf",
+        "suite": "com.parlor.engine.snapshot.GameSnapshotTest",
+        "tests": 4,
+        "failed": 0,
+        "skipped": 0,
+        "timestamp": "2026-09-07T04:01:59.688Z"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/focused-timer-retry-fixtures-03/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.JupiterDiscoveryContractTest.xml",
+        "sha256": "9726d1d93ec3405833f3930e64abe7e29a584ef8b7cde8f792ec9f4ed388662e",
+        "suite": "com.parlor.transport.p2p.JupiterDiscoveryContractTest",
+        "tests": 1,
+        "failed": 0,
+        "skipped": 0,
+        "timestamp": "2026-09-07T04:02:04.999Z"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/focused-timer-retry-fixtures-03/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.LoopbackFixtureContractTest.xml",
+        "sha256": "fe36e6da3e7276006dfa809fc8ba6cbb90ed742d2b394daecaf050f617d67933",
+        "suite": "com.parlor.transport.p2p.LoopbackFixtureContractTest",
+        "tests": 5,
+        "failed": 0,
+        "skipped": 0,
+        "timestamp": "2026-09-07T04:02:05.080Z"
+      }
+    ]
+  },
+  "behavior_verified": [
+    "Local Classic and Elimination: 360-second confirmation exceeds full authored timer yet state/writes stay fixed; three repeated returns each decrement exactly3 seconds without duplicate ticker.",
+    "Retained host Classic and Elimination: two confirmation/Stay cycles freeze current state, preserve runtime/controller/seed/private assignment and decrement exactly3 seconds afterwards.",
+    "Lifecycle Suspended/Resuming/Active behind host confirmation does not resume hidden ticking and does not release a pre-existing manual pause.",
+    "Local existing session pause and per-timer pause remain owned; last-second timer cannot expire behind confirmation and does expire after Stay.",
+    "Failed local flush leaves confirmation/time frozen; successful save/load retains exact timer, host/private state and no wall-clock catchup.",
+    "Confirmed host Leave closes room once, clears retained owner/runtime and stops ticker/workers."
+  ],
+  "compatibility": "Four production files gained comments only. No game rules, action fields, reducer behavior, seed sampling, projection, snapshot/save version, content digest or protocol4.2 change. Shared room correction is test-only. Mafia still has no timed rounds.",
+  "limitations": [
+    "Desktop Compose behavior over synthetic pre-admitted transport, not physical LAN or platform lifecycle callbacks.",
+    "Tests drive actual toolbar content descriptions and Back request callback seam, not Android system/predictive Back or iOS edge gestures.",
+    "No Store/signing/release approval, no proof of absence of unrelated defects.",
+    "No Git history mutation performed by this reviewer; approval binds listed source hashes."
+  ],
+  "cleanup": {
+    "stop_exit_code": 0,
+    "stopped_at": "2026-09-07T04:02:05.997793+00:00",
+    "removed_outputs": [
+      "shared/core/build",
+      "shared/networking/build",
+      "shared/content/build",
+      "shared/storage/build",
+      "shared/transport-p2p/build",
+      "shared/networking-testing/build",
+      "shared/engine/build",
+      "shared/design-system/build",
+      "shared/session/build",
+      "game-modes/whodunit/build",
+      "game-modes/mafia/build",
+      "build",
+      "build-logic/convention/build"
+    ],
+    "remaining_outputs": [],
+    "cleanup_errors": [],
+    "workers": {
+      "terminated_owned_workers": [],
+      "remaining_owned_workers": []
+    },
+    "cleanup_completed_at": "2026-09-07T04:02:06.376740+00:00"
+  },
+  "author_owned_processes": "No reviewer build/test/native/server process started. Root owns the build lane and performed captured cleanup."
+}

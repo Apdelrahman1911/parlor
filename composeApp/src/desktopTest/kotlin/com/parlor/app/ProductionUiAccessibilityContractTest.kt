@@ -3,6 +3,7 @@ package com.parlor.app
 import java.io.File
 import kotlin.test.Test
 import kotlin.test.assertContains
+import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
@@ -200,6 +201,10 @@ class ProductionUiAccessibilityContractTest {
             "shared/design-system/src/iosMain/kotlin/com/parlor/designsystem/localization/" +
                 "LocalAppLocale.ios.kt",
         )
+        val iosOwner = read(
+            "shared/design-system/src/iosMain/kotlin/com/parlor/designsystem/localization/" +
+                "IosLanguageOverrideOwner.kt",
+        )
         val desktop = read(
             "shared/design-system/src/desktopMain/kotlin/com/parlor/designsystem/localization/" +
                 "LocalAppLocale.desktop.kt",
@@ -212,7 +217,14 @@ class ProductionUiAccessibilityContractTest {
         assertFalse(android.contains("updateConfiguration"))
         assertFalse(android.contains("@Suppress(\"DEPRECATION\")"))
         assertTrue(android.indexOf("Locale.setDefault") > android.indexOf("DisposableEffect("))
-        assertTrue(ios.indexOf("userDefaults.setObject") > ios.indexOf("DisposableEffect("))
+        assertContains(ios, "val overrideOwner = remember {")
+        assertContains(ios, "IosLanguageOverrideOwner(")
+        assertContains(ios, "DisposableEffect(languageTag) {\n        overrideOwner.apply(languageTag)")
+        assertContains(ios, "onDispose {\n            overrideOwner.release()")
+        assertFalse(ios.contains(".setObject("), "Preference writes belong to the effect-owned override owner")
+        assertContains(iosOwner, "defaults.persistentDomainForName(applicationDomain)")
+        assertContains(iosOwner, "domain[APPLE_LANGUAGES_KEY] == listOf(installed)")
+        assertFalse(iosOwner.contains("arrayForKey("), "Do not promote a resolved OS fallback to owned state")
         assertTrue(desktop.indexOf("Locale.setDefault") > desktop.indexOf("DisposableEffect("))
     }
 
@@ -342,7 +354,19 @@ class ProductionUiAccessibilityContractTest {
         }
     }
 
-    private fun read(path: String): String = File(root, path).readText()
+    @Test
+    fun source_contract_text_normalizes_only_crlf_line_endings() {
+        val lf = "DisposableEffect(languageTag) {\n        overrideOwner.apply(languageTag)\n" +
+            "        onDispose {\n            overrideOwner.release()\n        }\n    }"
+        assertEquals(lf, normalizeSourceLineEndings(lf))
+        assertEquals(lf, normalizeSourceLineEndings(lf.replace("\n", "\r\n")))
+        val otherContent = "unchanged\t literal \\r\\n and lone\rcarriage return"
+        assertEquals(otherContent, normalizeSourceLineEndings(otherContent))
+    }
+
+    private fun read(path: String): String = normalizeSourceLineEndings(File(root, path).readText())
+
+    private fun normalizeSourceLineEndings(source: String): String = source.replace("\r\n", "\n")
 
     private fun productionKotlinFiles(): Sequence<File> = sequenceOf(
         File(root, "composeApp/src/commonMain"),

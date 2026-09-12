@@ -1,0 +1,1144 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-09-07T17:35:37.476515+00:00",
+  "scope": "Independent second review of root-authored four-file ST-C1 recognized-current last-copy residual correction; no permission to author/apply fixes or execute builds granted to reviewer.",
+  "original_finder": "/root",
+  "original_residual_validator": "/root/release_fix_review",
+  "fix_author": "/root",
+  "independent_fix_reviewer": "/root/factory_review",
+  "classification": "ACCEPTED — ORIGINAL RESIDUAL ROOT CAUSE ADDRESSED; FOCUSED NATIVE REGRESSIONS EXECUTED AND VERIFIED",
+  "issue_scope": "ST-C1 residual last-recoverable-copy requirement, not a seventeenth defect, not a regression of the earlier directory-exclusion patch, not IOS-R1.",
+  "baseline": {
+    "repository": "/Users/abdelrahman/Projects/parlor",
+    "branch": "fix/local-readiness-2026-09-07",
+    "commit": "b26a3947b763e262b488d52761f050df5d57cfc1",
+    "tree": "cfb2134489da4d0d038bd34e547cc1cf0be9b66a",
+    "scoped_diff_sha256": "d7aa2fed33c5db7b78eaca5af44b9eab33e1ca299873b976f7b47fef60c9c86f",
+    "scoped_diff_bytes": 17339,
+    "scoped_paths": [
+      "composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSnapshotFileSystem.kt",
+      "composeApp/src/iosTest/kotlin/com/parlor/app/storage/IosLegacySnapshotBackupTest.kt",
+      "composeApp/src/iosTest/kotlin/com/parlor/app/storage/IosStorageSafetyTest.kt",
+      "docs/PRODUCTION_ARCHITECTURE.md"
+    ],
+    "matches_green_cycle_diff": true,
+    "current_four_source_hashes_match_green_cycle": true,
+    "unrelated_live_changes": "Two Darwin UID-inventory author fixes coexist outside this review; those do not affect the four-file digest or storage acceptance. UID fix was authored by this reviewer and requires release_fix_review approval, not self-approval."
+  },
+  "original_records": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/stc1-recognized-current-last-copy-independent-01.json",
+      "sha256": "c79472a1ceaaa9fb8b606dc38468ea5d67ee78342700be0c397f4c4ab355841d"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/stc1-recognized-current-last-copy-erratum-01.json",
+      "sha256": "027d6e9eb4514b69dd0fd9b3d20174a44287bcda6c7342071cdd3de28495b47a"
+    }
+  ],
+  "coverage": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSnapshotFileSystem.kt",
+      "sha256": "c2852fafb293a693be830171f4674947289fafb07f8ecdbafa5c0aaae6d1bf8b",
+      "line_count": 500,
+      "reviewed_line_ranges": [
+        [
+          1,
+          500
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "scope": "Production iOS filesystem; full file and full diff",
+      "entire_file_read": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/iosTest/kotlin/com/parlor/app/storage/IosLegacySnapshotBackupTest.kt",
+      "sha256": "a730f7fe3063e6fb2802cef76d68c7a19b6f35afe82ffc642852bad386adf3f2",
+      "line_count": 397,
+      "reviewed_line_ranges": [
+        [
+          1,
+          397
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "scope": "iOS test source; full file and full diff",
+      "entire_file_read": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/iosTest/kotlin/com/parlor/app/storage/IosStorageSafetyTest.kt",
+      "sha256": "84b6701e1adc272d2b822ca509e5c66bc8162143d78802c1d8c9732445e62cca",
+      "line_count": 196,
+      "reviewed_line_ranges": [
+        [
+          1,
+          196
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "scope": "iOS test source; full file and full diff",
+      "entire_file_read": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/docs/PRODUCTION_ARCHITECTURE.md",
+      "sha256": "279e3287ab49d8889f9f9450a6a6769cc1dd9f72cbfa8c5ff559d2fa1884ca99",
+      "line_count": 312,
+      "reviewed_line_ranges": [
+        [
+          225,
+          286
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "scope": "Production architecture documentation; full changed hunk and persistence surroundings only",
+      "entire_file_read": false
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSnapshotKeychain.kt",
+      "sha256": "511aff877a27eb3f42ce4891203a830ba8879781de405e2248c3873f5f381a5e",
+      "line_count": 205,
+      "reviewed_line_ranges": [
+        [
+          1,
+          205
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "scope": "Unchanged production Keychain caller/ownership/error paths; source only, no Keychain access",
+      "entire_file_read": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/commonMain/kotlin/com/parlor/app/storage/PlatformStorage.kt",
+      "sha256": "1f56d8b7adca7d5148445ec9e8f69d2f9a74f253d4c425cc2abd00a84594b690",
+      "line_count": 41,
+      "reviewed_line_ranges": [
+        [
+          1,
+          41
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "scope": "Unchanged migration failure/cancellation isolation",
+      "entire_file_read": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/iosMain/kotlin/com/parlor/app/storage/PlatformStorage.ios.kt",
+      "sha256": "cb69b6de029bf7d9f84dbc5bf19139150906a29d64cf29a60994259ca657a0c0",
+      "line_count": 19,
+      "reviewed_line_ranges": [
+        [
+          1,
+          19
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "scope": "Production actual DI binding",
+      "entire_file_read": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/commonMain/kotlin/com/parlor/app/di/StorageModule.kt",
+      "sha256": "9734dde8f751d0e5792577692c322051aa0adc7f45ed0fa6ac5961cf9295e87c",
+      "line_count": 23,
+      "reviewed_line_ranges": [
+        [
+          1,
+          23
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "scope": "Singleton store composition",
+      "entire_file_read": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/storage/src/commonMain/kotlin/com/parlor/storage/snapshot/FileBackedSnapshotStore.kt",
+      "sha256": "e2ca0be28fd2f0eafee1a55022653190cf30a8c6da620dc3dfe56f361e0da27f",
+      "line_count": 246,
+      "reviewed_line_ranges": [
+        [
+          1,
+          246
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "scope": "Full shared envelope, serialization, mutex, read/delete/error mapping and filename contract",
+      "entire_file_read": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/commonMain/kotlin/com/parlor/app/shell/home/HomeRecoveryAvailability.kt",
+      "sha256": "4c8a962fba7ec8334cc8f4dfe0a75f221b201178481ae115d85ae391647fbb2a",
+      "line_count": 146,
+      "reviewed_line_ranges": [
+        [
+          1,
+          146
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "scope": "Full cold Home recovery metadata inventory/error path",
+      "entire_file_read": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/commonMain/kotlin/com/parlor/app/LocalResumeRouter.kt",
+      "sha256": "bb45b775fa4f8444bf6d00aa240b66ab78dd0066ba88dcf037f758cdd86ea0b1",
+      "line_count": 163,
+      "reviewed_line_ranges": [
+        [
+          1,
+          163
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "scope": "Full retry/discard/navigation reachability",
+      "entire_file_read": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/commonMain/kotlin/com/parlor/app/App.kt",
+      "sha256": "622b679a2ef023fab17bf6c8ed8eb38c1fbc2b76a391f5f9a8298d59da9dda59",
+      "line_count": 338,
+      "reviewed_line_ranges": [
+        [
+          111,
+          151
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "scope": "Actual Home produceState caller; not a full App review",
+      "entire_file_read": false
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/engine/src/commonMain/kotlin/com/parlor/engine/snapshot/SnapshotCodec.kt",
+      "sha256": "010c2df47f3803d60a80a428e459e052c715d3eb29a55444f1eeeff7c28ebad1",
+      "line_count": 64,
+      "reviewed_line_ranges": [
+        [
+          1,
+          64
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "scope": "Real GameSnapshot serializer/content-equality contract",
+      "entire_file_read": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/MafiaDefinition.kt",
+      "sha256": "196c9186b5ae44179652caa2d212b07968a801243d8ad17d21962123ada3c884",
+      "line_count": 71,
+      "reviewed_line_ranges": [
+        [
+          1,
+          71
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "scope": "Real fixture definition, roster creation, reducer and codec dispatch",
+      "entire_file_read": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/reducer/MafiaReducer.kt",
+      "sha256": "2ff9754d497b8258613badb057ab915a6d457786c56b0d5e725f2ba0053e56e2",
+      "line_count": 1054,
+      "reviewed_line_ranges": [
+        [
+          1,
+          220
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "scope": "Actual StartGame path and surrounding guards; remainder outside scoped review",
+      "entire_file_read": false
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/settings/MafiaSettingsPresets.kt",
+      "sha256": "0fec32a5ccabfbd01dbce10b0afca62a8dffb9736d03eeb76c755c1bf40b4bf0",
+      "line_count": 39,
+      "reviewed_line_ranges": [
+        [
+          1,
+          39
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "scope": "Five-player valid fixture defaults",
+      "entire_file_read": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/rules/MafiaSessionRules.kt",
+      "sha256": "26ce059a7d686687b1aefc5b3105067c7fe318aa1b65de512ab461e2ecd7d7fb",
+      "line_count": 39,
+      "reviewed_line_ranges": [
+        [
+          1,
+          39
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "scope": "Authoritative fixture roster/config validation",
+      "entire_file_read": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/snapshot/MafiaSnapshotCodec.kt",
+      "sha256": "9d37b28b40c2a295afb5cfd4889e39a3803f8ad86623c8c37320d7c00cf4f20c",
+      "line_count": 55,
+      "reviewed_line_ranges": [
+        [
+          1,
+          55
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "scope": "Real strict state/recovery codec and canonical encode/decode validation",
+      "entire_file_read": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/snapshot/MafiaSnapshotRecovery.kt",
+      "sha256": "64525b0d14b07d87e99729c3707dd0af4a083f8f4a98a5a948575755482ea3fd",
+      "line_count": 535,
+      "reviewed_line_ranges": [
+        [
+          1,
+          135
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "scope": "Envelope/version/play-mode compatibility and opening state invariants; remainder outside scope",
+      "entire_file_read": false
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/build.gradle.kts",
+      "sha256": "c23525d6b06f9b536fb5e8ef6be68c653952fa9764e276f831772b864621fdd5",
+      "line_count": 627,
+      "reviewed_line_ranges": [
+        [
+          1,
+          245
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "scope": "Applicable iOS targets and production/test source-set dependencies; no signing material read",
+      "entire_file_read": false
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/build-logic/convention/src/main/kotlin/com/parlor/buildlogic/DetektConventionPlugin.kt",
+      "sha256": "8d5fd3fb3f13d9d5cb02f89c29a57aab8d71c89cdf6dd0ac41161942109bd825",
+      "line_count": 59,
+      "reviewed_line_ranges": [
+        [
+          1,
+          59
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "scope": "All authored src/**/*.kt coverage in plain Detekt task",
+      "entire_file_read": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/build.gradle.kts",
+      "sha256": "bd6199e1f097eb236c50c46efb91d291550110f6b4d95a8e95ff0db4d8da192b",
+      "line_count": 204,
+      "reviewed_line_ranges": [
+        [
+          67,
+          169
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "scope": "Analysis task wiring and native hierarchical-test NO-SOURCE explanation",
+      "entire_file_read": false
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitRoomTransportLoopbackTest.kt",
+      "sha256": "21451bf407d791ec85066227a2670ccf61d3506efaae47375c0bba557fe3be73",
+      "line_count": 242,
+      "reviewed_line_ranges": [
+        [
+          1,
+          242
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "scope": "Actual three ignored LAN fixtures and real-advertisement-only scope",
+      "entire_file_read": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/owned_ios_simulator.init.gradle",
+      "sha256": "e857bd0d8fbc18199ee1fbaef7e01ae325785397b5e23f82186462f9a33c3b34",
+      "line_count": 68,
+      "reviewed_line_ranges": [
+        [
+          1,
+          68
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "scope": "Exact KGP task/owned-simulator UUID binding; not executed by reviewer",
+      "entire_file_read": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/audit-runs/2026-09-05-source-audit/validations/ST-C1-root.md",
+      "sha256": "c2694a45ce4daf01a5824e2494a66fccdeaac948a5c084e60fb72d7c7372ac8e",
+      "line_count": 127,
+      "reviewed_line_ranges": [
+        [
+          1,
+          127
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "scope": "Original scope/intent/evidence claims checked, original audit retained",
+      "entire_file_read": true
+    }
+  ],
+  "complete_reachable_proof": [
+    "Production platformStorageModule binds IosSnapshotFileSystem into singleton FileBackedSnapshotStore. App.kt120-143 runs loadHomeRecoveryAvailability on Home; readLocalRecoveryInventory50 then listUnfinished120 invoke filesystem.list152-171, which eagerly calls readProtectedOrMigrate169. Direct load75/loadMetadata93 and Retry reach the same implementation. No save opening or explicit Discard is needed to trigger the old purge.",
+    "A retained old/current pair is legitimate across interruption after atomically writing current369 and before deleting old214, or a post-write backupExcluder373 failure. If current has the seven-byte PARSNAP prefix plus its two header bytes but invalid version/truncation, decrypt280-290 throws before any Keychain call. Old try/finally still deleted legacy. The independent dossier establishes this earlier intentional policy separately from original ST-C1 backup eligibility.",
+    "New readProtectedOrMigrate175 first excludes/rechecks the legacy directory. Existing current bytes always take precedence: no current -> migrateLegacy, recognized current -> decrypt, plaintext-in-current -> one-way encrypted migration, other damaged bytes -> error. No authentication failure, absent key, key-read exception, or CancellationException selects legacy as input.",
+    "New186-188 computes successful decrypted plaintext before deleteLegacy. Any failure from decrypt exits before deletion; the bytes in both records remain. decrypt324-329 preserves the exact CancellationException or wraps ordinary crypto/key errors as before. The changed code adds no catch/fallback/empty-result path and changes no cryptography.",
+    "If decryption succeeds, deleteLegacy still runs; if that unlink fails, deletePathIfPresent250-251 still throws and current bytes are not overwritten. Explicit discard stays delete current then legacy143-149 and the shared store maps errors without exposing sensitive paths. Successful legacy migration retains writeProtected(encrypt(...)) before deletion208-215.",
+    "Common store mutex still serializes list/load/save/delete. Ordinary per-record migration errors remain discoverable; structural cancellation is rethrown. Retaining an excluded legacy sibling never authorizes stale recovery. A cancellation observed only after synchronous successful decryption/unlink still leaves the authenticated current copy intact; no new asynchronous checkpoint or authority handoff is introduced.",
+    "Runtime fixture now builds a valid five-seat Mafia RoleAssignment via MafiaDefinition + authoritative StartGame with seed42, then strict snapshot codec encode/decode. Its GameSnapshot envelope version1.0.0, session/game/phase IDs and PassAndPlay metadata agree with production recovery contracts. Assertions verify retained exact byte encodings and decode them; these are not the previous illustrative hiddenRole-only JSON fixtures.",
+    "All storage production changes are iOS-local. No multiplayer transport payload, rejoin credential, host reducer, Whodunit/Mafia rule, shared storage contract, schema, magic/version or key ownership changes. Game imports were added only to composeApp iosTest, whose composition module already depends on both games."
+  ],
+  "regression_review": {
+    "red": "14 native testcases executed, five failed in assertValidRetainedCopy -> readBoundedSnapshotBytes with Couldn’t open protected snapshot. These are recognized damaged current, missing key, thrown key-read error, failed HMAC and thrown CancellationException. Current read/error assertions had already completed; lost legacy is the witnessed failure. The successful-current cleanup control and eight earlier backup tests passed.",
+    "green": "The same14 native tests plus6 IosStorageSafetyTest tests executed with zero failures/errors/skips. All source @Test names exactly equal unique native XML descriptors. Full transport desktop test task has277 XML children:274executed passing,3skipped. Summary test-receipts agree exactly with all24 raw XML suites.",
+    "red_green_test_delta": {
+      "file": "composeApp/src/iosTest/kotlin/com/parlor/app/storage/IosLegacySnapshotBackupTest.kt",
+      "red_sha256": "2288be0fcd4234f4109b50e4b2ed56bc2267300643e97ef8db62b13ca0fe5f84",
+      "green_sha256": "a730f7fe3063e6fb2802cef76d68c7a19b6f35afe82ffc642852bad386adf3f2",
+      "independent_reconstruction": "Removing exactly the single new fileExistsAtPath legacy assertion in assertValidRetainedCopy reconstructs the red bytes/hash. No old regression assertion was removed or weakened between red and green; this is a diagnostic strengthening.",
+      "reconstructed_red_hash_matches": true
+    },
+    "six_new_cases": [
+      {
+        "name": "recognizedDamagedCurrentRetainsValidLegacyDuringColdInventoryAndRetry",
+        "lines": [
+          185,
+          197
+        ],
+        "asserts": "Cold list remains addressable, store.load/loadMetadata are CorruptedData, repeated direct read fails, both exact copies retained and legacy directory exclusion true."
+      },
+      {
+        "name": "missingKeyKeepsValidLegacyButNeverFallsBackToIt",
+        "lines": [
+          199,
+          206
+        ],
+        "asserts": "Injected null reader rejects current, preserves both exact copies, no fallback."
+      },
+      {
+        "name": "keyReadFailureKeepsValidLegacyAndRemainsAnError",
+        "lines": [
+          208,
+          217
+        ],
+        "asserts": "Injected ordinary key failure retained as cause of SnapshotProtectionException; both copies preserved."
+      },
+      {
+        "name": "failedAuthenticationRetainsValidLegacyAcrossInventoryAndExplicitDiscard",
+        "lines": [
+          219,
+          232
+        ],
+        "asserts": "Real CommonCrypto-generated synthetic current with one flipped MAC bit rejects, list still contains name, both copies remain, explicit store.delete removes both."
+      },
+      {
+        "name": "cancelledKeyReadPreservesBothCopiesAndOriginalCancellation",
+        "lines": [
+          234,
+          242
+        ],
+        "asserts": "Same CancellationException object propagates from injected reader; both exact copies remain."
+      },
+      {
+        "name": "authenticatedCurrentLoadRemovesStaleLegacyOnlyAfterSuccessfulDecrypt",
+        "lines": [
+          244,
+          256
+        ],
+        "asserts": "Valid current returns exact saved envelope even when legacy is distinct valid stale metadata; only then legacy removed; current bytes unchanged."
+      }
+    ],
+    "old_policy_tests": "Two IosStorageSafetyTest tests deliberately asserted obsolete destructive cleanup. They now require exact legacy byte retention and current existence while still requiring failed protected reads. This is an authorized policy correction, not deletion of a valid security assertion; the excluded-directory requirement remains tested independently.",
+    "synthetic_crypto_honesty": "Fixtures use known local64-byte synthetic key, deterministic16-byte IV, real iosAesCbc(CommonCrypto) and real CCHmac; production decrypt/header/name binding/MAC verification execute. The reader seam avoids all real Keychain access. This is not proof of Keychain durability, real user encryption-key recovery, physical backup behavior, production random-IV quality, or signed app-host operation.",
+    "static_analysis": "composeApp:detekt executed and XML is empty of findings; convention src/**/*.kt includes iosMain/iosTest. detektIosSimulatorArm64Test was NO-SOURCE (hierarchical iosTest, not leaf source), so it is not reported as an executed type-aware analysis. Kotlin/Native compilation and native runtime cover test type/runtime validity.",
+    "skips": "Three P2pKitRoomTransportLoopbackTest peer/join/broadcast tests remain @Ignore for physical same-LAN device requirements; source annotations and XML match. The runnable host-advertisement smoke is not a full LAN/session test."
+  },
+  "counter_evidence_considered": [
+    "The pre-existing purge was intentional in historical d54ab0c and original ST-C1 explicitly treated it as different behavior. Retention is required by current scoped authorization; old audit claims remain unchanged.",
+    "Retaining plaintext without backup exclusion would revive original privacy issue. Exclusion still executes before list and every read/migration, with fresh Foundation readback, fail-closed failures and native regression coverage.",
+    "Falling back to legacy on missing/wrong key would bypass current precedence and risk stale/private-state recovery. No fallback is introduced; distinct-current-versus-stale-legacy success control and failure controls enforce this.",
+    "Successful decryption must still be allowed to remove obsolete legacy, and explicit Discard must remove both. Both remain executable assertions rather than inferred from names.",
+    "Cancelling read must not become CorruptedData or trigger old deletion in finally. Production catch ordering is unchanged and same-object cancellation native assertion passes.",
+    "Post-decrypt delete failure must not be swallowed. The delete helper and store failure mapping are unchanged; no exception-catching was added. No native injected-unlink-failure test was run in these cycles.",
+    "Passing toy JSON does not demonstrate last valid saved-state preservation. New data originates from real validated game state/envelope, with exact byte/decode assertions; native red failures establish the original loss.",
+    "Green names alone might hide undiscovered tests. Source-declared14+6 tests match all20 unique XML native records, and target log is actual iosSimulatorArm64Test without FROM-CACHE/UP-TO-DATE/NO-SOURCE on that test task."
+  ],
+  "verification_cycles": [
+    {
+      "cycle": "ios-legacy-current-retention-red-01",
+      "command": [
+        "./gradlew",
+        ":composeApp:iosSimulatorArm64Test",
+        "--tests",
+        "*IosLegacySnapshotBackupTest*",
+        "--no-daemon",
+        "--no-parallel",
+        "--max-workers=1",
+        "--no-configuration-cache",
+        "--dependency-verification=strict",
+        "-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=ios-legacy-current-retention-red-01",
+        "-Pkotlin.compiler.execution.strategy=in-process",
+        "-Pparlor.android.signing.storeFile=",
+        "-Pparlor.android.signing.storePassword=",
+        "-Pparlor.android.signing.keyAlias=",
+        "-Pparlor.android.signing.keyPassword=",
+        "-I",
+        "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/owned_ios_simulator.init.gradle"
+      ],
+      "status": "FAIL",
+      "exit_code": 1,
+      "started_at": "2026-09-07T17:11:52.027070+00:00",
+      "finished_at": "2026-09-07T17:13:37.876738+00:00",
+      "env_policy": "JDK21, system Python, strict verification, signing env removed/empty Gradle signing props, cycle-owned TMPDIR/pycache",
+      "source": {
+        "commit": "b26a3947b763e262b488d52761f050df5d57cfc1",
+        "tree": "cfb2134489da4d0d038bd34e547cc1cf0be9b66a",
+        "branch": "fix/local-readiness-2026-09-07",
+        "tracked_status": "M composeApp/src/iosTest/kotlin/com/parlor/app/storage/IosLegacySnapshotBackupTest.kt",
+        "diff_sha256": "e0559715ca3eddeca6d63ce9355f31cb27780dff22a92d1268c502144f50443f",
+        "source_manifest_sha256": "61fc22196248238e7f55cab3d7a536c78663715609ab296cc086f2bd4df9646f"
+      },
+      "source_and_runner_stable": true,
+      "totals_from_raw_xml": {
+        "iosSimulatorArm64": {
+          "tests": 14,
+          "failures": 5,
+          "errors": 0,
+          "skipped": 0,
+          "executed": 14
+        }
+      },
+      "reports": [
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-legacy-current-retention-red-01/reports/composeApp/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.app.storage.IosLegacySnapshotBackupTest.xml",
+          "sha256": "b98118ef62adf3d8d2b0fb1ba2bd89dd3f1e2b2a8aff8b3b8da7ca95433fbdbc",
+          "suite": "com.parlor.app.storage.IosLegacySnapshotBackupTest",
+          "counts": {
+            "tests": 14,
+            "failures": 5,
+            "errors": 0,
+            "skipped": 0
+          },
+          "testcase_child_count": 14,
+          "failed_descriptors": [
+            "recognizedDamagedCurrentRetainsValidLegacyDuringColdInventoryAndRetry[iosSimulatorArm64]",
+            "missingKeyKeepsValidLegacyButNeverFallsBackToIt[iosSimulatorArm64]",
+            "keyReadFailureKeepsValidLegacyAndRemainsAnError[iosSimulatorArm64]",
+            "failedAuthenticationRetainsValidLegacyAcrossInventoryAndExplicitDiscard[iosSimulatorArm64]",
+            "cancelledKeyReadPreservesBothCopiesAndOriginalCancellation[iosSimulatorArm64]"
+          ],
+          "skipped_descriptors": []
+        }
+      ],
+      "test_receipt_mismatches": [],
+      "evidence_hashes": [
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-legacy-current-retention-red-01/receipt.json",
+          "sha256": "91c0173822d9a538c2da519ed0c01bf64f3ef76ea69ae040b00c647c7dec89a5"
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-legacy-current-retention-red-01/gradle.log",
+          "sha256": "f1026d998bcf378488a7dc0bd0c8e6aa51ae3e6dbcb3a40655fa850ec1b6d2f5"
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-legacy-current-retention-red-01/stop.log",
+          "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-legacy-current-retention-red-01/test-receipts.json",
+          "sha256": "a7445d9f2384a3cc40c722fa8fef037484896ba5d4155b619c6afd5a4a16d904"
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-legacy-current-retention-red-01/simulator/receipt.json",
+          "sha256": "64a0e6c477dccd246b39d1c7d74dfc049794c7e21bc6f10981de18265a61137d"
+        }
+      ],
+      "cleanup": {
+        "stop_exit_code": 0,
+        "stopped_at": "2026-09-07T17:13:38.229926+00:00",
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        },
+        "artifact_workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        },
+        "removed_outputs": [
+          "shared/core/build",
+          "shared/networking/build",
+          "shared/content/build",
+          "shared/storage/build",
+          "shared/transport-p2p/build",
+          "shared/networking-testing/build",
+          "shared/engine/build",
+          "shared/design-system/build",
+          "shared/engine-testing/build",
+          "shared/session/build",
+          "game-modes/whodunit/build",
+          "game-modes/mafia/build",
+          "build",
+          "composeApp/build",
+          "build-logic/convention/build"
+        ],
+        "retained_outputs": [],
+        "remaining_outputs": [],
+        "cleanup_completed_at": "2026-09-07T17:13:42.119705+00:00",
+        "cleanup_errors": [],
+        "cleanup_method": "Exact task-owned generated dirs; no Gradle clean daemon or global cache deletion. Unrelated processes excluded by PID/start identity and cycle ownership."
+      },
+      "simulator": {
+        "runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-5",
+        "device_type": "com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro",
+        "owned_uuid": "20F6F7CE-1E59-44EE-B9BA-4F3BA5AB8E8B",
+        "owned_device_absent": true,
+        "preexisting_device_count": 22,
+        "preexisting_devices_preserved": true,
+        "remaining_owned_uuid_processes": [],
+        "cleanup_errors": []
+      },
+      "simulator_shutdown_delete_exit_codes": [
+        {
+          "operation": "shutdown",
+          "exit_code": 0
+        },
+        {
+          "operation": "delete",
+          "exit_code": 0
+        }
+      ]
+    },
+    {
+      "cycle": "ios-legacy-current-retention-green-01",
+      "command": [
+        "./gradlew",
+        ":composeApp:iosSimulatorArm64Test",
+        "--tests",
+        "*IosLegacySnapshotBackupTest*",
+        "--tests",
+        "*IosStorageSafetyTest*",
+        ":composeApp:detekt",
+        ":composeApp:detektIosSimulatorArm64Test",
+        ":shared:transport-p2p:desktopTest",
+        "--no-daemon",
+        "--no-parallel",
+        "--max-workers=1",
+        "--no-configuration-cache",
+        "--dependency-verification=strict",
+        "-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=ios-legacy-current-retention-green-01",
+        "-Pkotlin.compiler.execution.strategy=in-process",
+        "-Pparlor.android.signing.storeFile=",
+        "-Pparlor.android.signing.storePassword=",
+        "-Pparlor.android.signing.keyAlias=",
+        "-Pparlor.android.signing.keyPassword=",
+        "-I",
+        "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/owned_ios_simulator.init.gradle"
+      ],
+      "status": "PASS",
+      "exit_code": 0,
+      "started_at": "2026-09-07T17:16:03.768618+00:00",
+      "finished_at": "2026-09-07T17:17:42.041122+00:00",
+      "env_policy": "JDK21, system Python, strict verification, signing env removed/empty Gradle signing props, cycle-owned TMPDIR/pycache",
+      "source": {
+        "commit": "b26a3947b763e262b488d52761f050df5d57cfc1",
+        "tree": "cfb2134489da4d0d038bd34e547cc1cf0be9b66a",
+        "branch": "fix/local-readiness-2026-09-07",
+        "tracked_status": "M composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSnapshotFileSystem.kt\n M composeApp/src/iosTest/kotlin/com/parlor/app/storage/IosLegacySnapshotBackupTest.kt\n M composeApp/src/iosTest/kotlin/com/parlor/app/storage/IosStorageSafetyTest.kt\n M docs/PRODUCTION_ARCHITECTURE.md",
+        "diff_sha256": "d7aa2fed33c5db7b78eaca5af44b9eab33e1ca299873b976f7b47fef60c9c86f",
+        "source_manifest_sha256": "946470dfd956d1156571f357e0fbdadc275f74c32b2a053afbc81bc7671d5661"
+      },
+      "source_and_runner_stable": true,
+      "totals_from_raw_xml": {
+        "iosSimulatorArm64": {
+          "tests": 20,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "executed": 20
+        },
+        "desktop": {
+          "tests": 277,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 3,
+          "executed": 274
+        }
+      },
+      "reports": [
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-legacy-current-retention-green-01/reports/composeApp/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.app.storage.IosLegacySnapshotBackupTest.xml",
+          "sha256": "48ec19de38db309eadd19ed972ae2ffb8f0e1d3a05bf630b37333cdbcffd4082",
+          "suite": "com.parlor.app.storage.IosLegacySnapshotBackupTest",
+          "counts": {
+            "tests": 14,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0
+          },
+          "testcase_child_count": 14,
+          "failed_descriptors": [],
+          "skipped_descriptors": []
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-legacy-current-retention-green-01/reports/composeApp/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.app.storage.IosStorageSafetyTest.xml",
+          "sha256": "eed280849946f3bf90037f767370c36c80cb61db762d5c253a47ac21f3791941",
+          "suite": "com.parlor.app.storage.IosStorageSafetyTest",
+          "counts": {
+            "tests": 6,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0
+          },
+          "testcase_child_count": 6,
+          "failed_descriptors": [],
+          "skipped_descriptors": []
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-legacy-current-retention-green-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.AndroidManifestLanPermissionTest.xml",
+          "sha256": "1fffcbfd36aa116ef81ac5c1eb82ec6ef013626bf90a225bcf891bfee642db75",
+          "suite": "com.parlor.transport.p2p.AndroidManifestLanPermissionTest",
+          "counts": {
+            "tests": 2,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0
+          },
+          "testcase_child_count": 2,
+          "failed_descriptors": [],
+          "skipped_descriptors": []
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-legacy-current-retention-green-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.AndroidReleaseLintContractTest.xml",
+          "sha256": "6e49c2f75f967e57aaefdb5c63bdb298cf5c49ba05206cab5cb0d1819b6e8a3f",
+          "suite": "com.parlor.transport.p2p.AndroidReleaseLintContractTest",
+          "counts": {
+            "tests": 8,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0
+          },
+          "testcase_child_count": 8,
+          "failed_descriptors": [],
+          "skipped_descriptors": []
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-legacy-current-retention-green-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.AppLifecycleRoomCoordinatorTest.xml",
+          "sha256": "667817ed38dfab9c2f793c3796983214174ba7b1ae5577c9df75fdb34519809d",
+          "suite": "com.parlor.transport.p2p.AppLifecycleRoomCoordinatorTest",
+          "counts": {
+            "tests": 2,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0
+          },
+          "testcase_child_count": 2,
+          "failed_descriptors": [],
+          "skipped_descriptors": []
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-legacy-current-retention-green-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.AppLifecycleRoomRegistrationTest.xml",
+          "sha256": "15e8eb857b49a2afc721192c3b1209ae504995dcd9635b4c1da365b43270cbc2",
+          "suite": "com.parlor.transport.p2p.AppLifecycleRoomRegistrationTest",
+          "counts": {
+            "tests": 3,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0
+          },
+          "testcase_child_count": 3,
+          "failed_descriptors": [],
+          "skipped_descriptors": []
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-legacy-current-retention-green-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.DesktopDependencyVerificationContractTest.xml",
+          "sha256": "6fbe17ed864f6228d7649dda7d9fbfccb65d651c0e7635dbb6451d74d101a462",
+          "suite": "com.parlor.transport.p2p.DesktopDependencyVerificationContractTest",
+          "counts": {
+            "tests": 3,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0
+          },
+          "testcase_child_count": 3,
+          "failed_descriptors": [],
+          "skipped_descriptors": []
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-legacy-current-retention-green-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.DiscoveryCandidateSchedulerTest.xml",
+          "sha256": "637c789b2de5150eb5b6a14b45faaf9ef6f7a48d042ef54afc39f094dee70409",
+          "suite": "com.parlor.transport.p2p.DiscoveryCandidateSchedulerTest",
+          "counts": {
+            "tests": 13,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0
+          },
+          "testcase_child_count": 13,
+          "failed_descriptors": [],
+          "skipped_descriptors": []
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-legacy-current-retention-green-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.HostOpeningCancellationTest.xml",
+          "sha256": "970b52148d376a50bd7adb723a2010c9646d86b863a44a6650386053d284f4f1",
+          "suite": "com.parlor.transport.p2p.HostOpeningCancellationTest",
+          "counts": {
+            "tests": 5,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0
+          },
+          "testcase_child_count": 5,
+          "failed_descriptors": [],
+          "skipped_descriptors": []
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-legacy-current-retention-green-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.IosInfoPlistBonjourTest.xml",
+          "sha256": "0079181d7df8cd30a14ad132e29351802aac3c79513bdf092223232c457cd67b",
+          "suite": "com.parlor.transport.p2p.IosInfoPlistBonjourTest",
+          "counts": {
+            "tests": 1,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0
+          },
+          "testcase_child_count": 1,
+          "failed_descriptors": [],
+          "skipped_descriptors": []
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-legacy-current-retention-green-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.JupiterDiscoveryContractTest.xml",
+          "sha256": "6dfcf5e6300fc1840d2a8be0c293fca6c1aaa24abe5b3dad3d18cb606f38b0ce",
+          "suite": "com.parlor.transport.p2p.JupiterDiscoveryContractTest",
+          "counts": {
+            "tests": 1,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0
+          },
+          "testcase_child_count": 1,
+          "failed_descriptors": [],
+          "skipped_descriptors": []
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-legacy-current-retention-green-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.LoopbackFixtureContractTest.xml",
+          "sha256": "a56c34a92c37c97f40aab1474052eb44048f2f8ac4204236813251e08f78010d",
+          "suite": "com.parlor.transport.p2p.LoopbackFixtureContractTest",
+          "counts": {
+            "tests": 5,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0
+          },
+          "testcase_child_count": 5,
+          "failed_descriptors": [],
+          "skipped_descriptors": []
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-legacy-current-retention-green-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.MultiplayerDocumentationContractTest.xml",
+          "sha256": "b48b1f4f0230be5af64ea2deaf6855c5ac00a1d8427d64f753ef38948e3b0ba2",
+          "suite": "com.parlor.transport.p2p.MultiplayerDocumentationContractTest",
+          "counts": {
+            "tests": 11,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0
+          },
+          "testcase_child_count": 11,
+          "failed_descriptors": [],
+          "skipped_descriptors": []
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-legacy-current-retention-green-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pDiagnosticsTest.xml",
+          "sha256": "d71bbdd2cf66a49899c9c30626b060c9ae270f4b8f6d9e9a7df2866fcb3e55ec",
+          "suite": "com.parlor.transport.p2p.P2pDiagnosticsTest",
+          "counts": {
+            "tests": 5,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0
+          },
+          "testcase_child_count": 5,
+          "failed_descriptors": [],
+          "skipped_descriptors": []
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-legacy-current-retention-green-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitCreationTest.xml",
+          "sha256": "1898eec1f60269ba2c1bf7879ee98896f16a21720f7f081bf18867cf10eb0ff5",
+          "suite": "com.parlor.transport.p2p.P2pKitCreationTest",
+          "counts": {
+            "tests": 9,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0
+          },
+          "testcase_child_count": 9,
+          "failed_descriptors": [],
+          "skipped_descriptors": []
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-legacy-current-retention-green-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitMavenProvenanceContractTest.xml",
+          "sha256": "62d3103bf0d888fd70388636c6520d7297f6b561049f953eae2928297680cde2",
+          "suite": "com.parlor.transport.p2p.P2pKitMavenProvenanceContractTest",
+          "counts": {
+            "tests": 2,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0
+          },
+          "testcase_child_count": 2,
+          "failed_descriptors": [],
+          "skipped_descriptors": []
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-legacy-current-retention-green-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitRoomTransportLifecycleTest.xml",
+          "sha256": "61974b9d51537885cac63a7b6878538f4a5172f2688da75f75389f1c167fe043",
+          "suite": "com.parlor.transport.p2p.P2pKitRoomTransportLifecycleTest",
+          "counts": {
+            "tests": 130,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0
+          },
+          "testcase_child_count": 130,
+          "failed_descriptors": [],
+          "skipped_descriptors": []
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-legacy-current-retention-green-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest.xml",
+          "sha256": "d497a3c9717d5b4b0677ba7cb8145368ad2701d6872638122f78bd67d0525fdf",
+          "suite": "com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest",
+          "counts": {
+            "tests": 4,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 3
+          },
+          "testcase_child_count": 4,
+          "failed_descriptors": [],
+          "skipped_descriptors": [
+            "peer_to_host_message_round_trips_and_host_to_peer_message_arrives_back()[desktop]",
+            "peer_can_join_a_hosted_room_and_membership_appears_on_host()[desktop]",
+            "host_broadcast_reaches_every_peer()[desktop]"
+          ]
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-legacy-current-retention-green-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pTrafficPolicyTest.xml",
+          "sha256": "e6acc2f2cc801506cc0da54b9ee4a4d84172bc184a1712350d41ebd118ec5419",
+          "suite": "com.parlor.transport.p2p.P2pTrafficPolicyTest",
+          "counts": {
+            "tests": 7,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0
+          },
+          "testcase_child_count": 7,
+          "failed_descriptors": [],
+          "skipped_descriptors": []
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-legacy-current-retention-green-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.PeerOpeningCancellationTest.xml",
+          "sha256": "006bef77770f94761945b5a18ba29b07196e19b4c9df0523cba1bef0d4741a5f",
+          "suite": "com.parlor.transport.p2p.PeerOpeningCancellationTest",
+          "counts": {
+            "tests": 12,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0
+          },
+          "testcase_child_count": 12,
+          "failed_descriptors": [],
+          "skipped_descriptors": []
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-legacy-current-retention-green-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.ProductionVerificationWorkflowContractTest.xml",
+          "sha256": "01bdcf39edb4031138af135fd3d068d012c3f3a223947ce7bcf2f5fe2e09a1f3",
+          "suite": "com.parlor.transport.p2p.ProductionVerificationWorkflowContractTest",
+          "counts": {
+            "tests": 9,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0
+          },
+          "testcase_child_count": 9,
+          "failed_descriptors": [],
+          "skipped_descriptors": []
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-legacy-current-retention-green-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.ResumableCredentialStoreTest.xml",
+          "sha256": "0834c8fed7ddb9c6c8b2ac5a7dc376996120c96b4dec39f09904c96e61962cf0",
+          "suite": "com.parlor.transport.p2p.ResumableCredentialStoreTest",
+          "counts": {
+            "tests": 23,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0
+          },
+          "testcase_child_count": 23,
+          "failed_descriptors": [],
+          "skipped_descriptors": []
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-legacy-current-retention-green-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.TestTransportIsolationContractTest.xml",
+          "sha256": "91de0a62225cc1f24e568c5458e3b69a4e7b8acd642aa5a92e7d8fef11f4eaf6",
+          "suite": "com.parlor.transport.p2p.TestTransportIsolationContractTest",
+          "counts": {
+            "tests": 4,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0
+          },
+          "testcase_child_count": 4,
+          "failed_descriptors": [],
+          "skipped_descriptors": []
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-legacy-current-retention-green-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.VerificationMetadataAssertionsTest.xml",
+          "sha256": "12ba3626bae6227e6a092bae8787b6a77752254adffce6b3c033adc5122bcfc3",
+          "suite": "com.parlor.transport.p2p.VerificationMetadataAssertionsTest",
+          "counts": {
+            "tests": 18,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0
+          },
+          "testcase_child_count": 18,
+          "failed_descriptors": [],
+          "skipped_descriptors": []
+        }
+      ],
+      "test_receipt_mismatches": [],
+      "evidence_hashes": [
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-legacy-current-retention-green-01/receipt.json",
+          "sha256": "dd4650327c60f6364ada9ddb4efa9c7066a5a331599f3dda6b467f478f015c7d"
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-legacy-current-retention-green-01/gradle.log",
+          "sha256": "b407fc9b56088c74533cff6fbbe3e0c370f7acf7147fa14ee4f96b66186fa201"
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-legacy-current-retention-green-01/stop.log",
+          "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-legacy-current-retention-green-01/test-receipts.json",
+          "sha256": "f8c41e289925ac128f6e9c87916f2fecf03cfb6bb5d9a84e6293b7545f30faf1"
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-legacy-current-retention-green-01/simulator/receipt.json",
+          "sha256": "c21ee773de89a62a7045c7a846a2449cb69cad17c440d56ef427b11fbed14f25"
+        }
+      ],
+      "cleanup": {
+        "stop_exit_code": 0,
+        "stopped_at": "2026-09-07T17:17:42.390589+00:00",
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        },
+        "artifact_workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        },
+        "removed_outputs": [
+          "shared/core/build",
+          "shared/networking/build",
+          "shared/content/build",
+          "shared/storage/build",
+          "shared/transport-p2p/build",
+          "shared/networking-testing/build",
+          "shared/engine/build",
+          "shared/design-system/build",
+          "shared/engine-testing/build",
+          "shared/session/build",
+          "game-modes/whodunit/build",
+          "game-modes/mafia/build",
+          "build",
+          "composeApp/build",
+          "build-logic/convention/build"
+        ],
+        "retained_outputs": [],
+        "remaining_outputs": [],
+        "cleanup_completed_at": "2026-09-07T17:17:46.514749+00:00",
+        "cleanup_errors": [],
+        "cleanup_method": "Exact task-owned generated dirs; no Gradle clean daemon or global cache deletion. Unrelated processes excluded by PID/start identity and cycle ownership."
+      },
+      "simulator": {
+        "runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-5",
+        "device_type": "com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro",
+        "owned_uuid": "2CDC6E39-EFD3-4561-BF89-8FEB616424D2",
+        "owned_device_absent": true,
+        "preexisting_device_count": 22,
+        "preexisting_devices_preserved": true,
+        "remaining_owned_uuid_processes": [],
+        "cleanup_errors": []
+      },
+      "simulator_shutdown_delete_exit_codes": [
+        {
+          "operation": "shutdown",
+          "exit_code": 0
+        },
+        {
+          "operation": "delete",
+          "exit_code": 0
+        }
+      ]
+    }
+  ],
+  "compatibility": {
+    "serialized_format_change": false,
+    "migration_required": false,
+    "protocol_change": false,
+    "game_rules_change": false,
+    "host_or_peer_projection_change": false,
+    "user_visible_effect": "Failed current authentication/key access/cancellation retains an already excluded prior local save instead of unlinking it during inventory/read. Recovery remains fail-closed; explicit Discard remains available.",
+    "documentation": "Production architecture259-267 now accurately distinguishes retained excluded legacy, current precedence, success-only cleanup and the limits of OS backup-policy evidence."
+  },
+  "limitations": [
+    "This is a bounded independent repair review, not a new exhaustive whole-repository audit or READY determination.",
+    "Native runtime evidence is Kotlin/Native storage tests on fresh owned iPhone17Pro/iOS26.5 simulators, not physical devices or the Swift/Compose app-host launch journey. The runner receipt labels JDK21 and strict dependency verification; these receipts do not independently attest Store-qualified Xcode26.3/17C529.",
+    "No real Keychain, app encryption key, signing material, user data, Store operation, OS backup/restore, power-loss corruption or user incident was accessed/reproduced. IOS-R1 remains outside scope.",
+    "Injected key-read CancellationException tests exact propagation and legacy preservation, not every possible real asynchronous cancellation timing. Synchronous read/decrypt/save ordering was reviewed.",
+    "Successful actual Keychain-backed legacy encryption/write/delete, injected Foundation unlink failure and physical backup exclusion behavior were not newly exercised here; unchanged paths were source-reviewed. Known-key current authentication/decryption is covered.",
+    "Whodunit full-game behavior, LAN resume and all-platform release artifacts were not run in this focused cycle; no engine/protocol/version production files change. Combined repository/platform gates remain root responsibility.",
+    "Private/host-only runtime data remains out of networking/logging/UI paths. Test payloads and deliberately printable failure data are synthetic only."
+  ],
+  "cleanup_and_preservation": {
+    "reviewer_executed_builds_or_tests": false,
+    "reviewer_started_background_workers": false,
+    "reviewer_changed_live_source": false,
+    "reviewer_git_writes": false,
+    "reviewer_wrote_only_this_new_report": true,
+    "reviewer_operations": "Read source/diffs/sanitized evidence; static Python standard-library JSON/XML/hash comparison with -B; no import/execution of repository code. No process signals or Gradle stop were sent by this review agent because root owns the active lane.",
+    "root_cycle_cleanup": "Both raw stop logs say no Gradle daemons running; each stop exit0 immediately after task completion. Both receipts show15 owned output directories removed, no retention/errors/workers and owned simulator shutdown/delete exit0, absent, with22preexisting devices preserved.",
+    "removed_output_paths_independently_absent_now": [
+      "shared/core/build",
+      "shared/networking/build",
+      "shared/content/build",
+      "shared/storage/build",
+      "shared/transport-p2p/build",
+      "shared/networking-testing/build",
+      "shared/engine/build",
+      "shared/design-system/build",
+      "shared/engine-testing/build",
+      "shared/session/build",
+      "game-modes/whodunit/build",
+      "game-modes/mafia/build",
+      "build",
+      "composeApp/build",
+      "build-logic/convention/build"
+    ],
+    "original_dossier_and_erratum_preserved": true,
+    "other_user_material": "No AGENTS.md, source, config, signing, design, historical audit, branch/stash, global cache or unrelated process modified/deleted."
+  },
+  "acceptance": "Accept the exact four-file digest for ST-C1 residual source correction and focused local native verification. No must-fix concern found in the scoped diff. This independent acceptance does not authorize any Git/Store operation and is not self-approval of the separate Darwin UID fix."
+}

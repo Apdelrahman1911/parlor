@@ -1,0 +1,190 @@
+// COPY-ONLY native app-host fixture; never add to a shipping source set.
+package com.parlor.games.whodunit.readiness
+
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import com.parlor.content.repository.CaseRepository
+import com.parlor.content.validation.ValidatedCase
+import com.parlor.core.ids.CaseId
+import com.parlor.core.ids.PlayerId
+import com.parlor.core.ids.SessionId
+import com.parlor.core.random.RandomSource
+import com.parlor.core.result.Result
+import com.parlor.core.time.FakeClock
+import com.parlor.engine.session.SessionConfig
+import com.parlor.engine.snapshot.GameSnapshot
+import com.parlor.engine.state.Player
+import com.parlor.games.whodunit.WhodunitDefinition
+import com.parlor.games.whodunit.WhodunitIds
+import com.parlor.games.whodunit.content.WhodunitCase
+import com.parlor.games.whodunit.content.WhodunitPayloadValidator
+import com.parlor.games.whodunit.content.contentIdentity
+import com.parlor.games.whodunit.domain.action.WhodunitAction
+import com.parlor.games.whodunit.domain.event.WhodunitEvent
+import com.parlor.games.whodunit.domain.phase.WhodunitPhase
+import com.parlor.games.whodunit.domain.reducer.WhodunitReducerContext
+import com.parlor.games.whodunit.domain.rules.WhodunitRoundPolicy
+import com.parlor.games.whodunit.domain.state.VoteState
+import com.parlor.games.whodunit.domain.state.WhodunitState
+import com.parlor.games.whodunit.domain.state.WhodunitStateValidator
+import com.parlor.games.whodunit.snapshot.WHODUNIT_SNAPSHOT_ENGINE_VERSION
+import com.parlor.games.whodunit.ui.flow.loadResumedSession
+import com.parlor.games.whodunit.ui.flow.validateResumedSessionForCase
+import com.parlor.session.SessionController
+import com.parlor.session.passandplay.PassAndPlaySessionController
+import com.parlor.storage.snapshot.SnapshotStore
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancelAndJoin
+import kotlinx.serialization.json.Json
+import kotlin.time.Instant
+
+/** Only synthetic canonical values stay in memory; no state/hash/seed is reported. */
+object L08WhodunitSnapshots {
+    private const val SEED = 91L
+    private val createdAt = Instant.fromEpochSeconds(1_700_000_000)
+    private var expected: WhodunitState? = null
+    private var expectedId: SessionId? = null
+    private var attached: SessionController<WhodunitState, WhodunitAction, WhodunitEvent>? = null
+    private var attachedInitial: WhodunitState? = null
+    private var attaches = 0
+    private var completed = false
+    private var loadedCase: ValidatedCase<WhodunitCase>? = null
+
+    suspend fun expectedEnvelope(
+        repository: CaseRepository,
+        definition: WhodunitDefinition,
+        json: Json,
+        id: SessionId,
+        elimination: Boolean,
+    ): GameSnapshot {
+        check(expectedId == null && id.raw.startsWith("l08-"))
+        val loaded = repository.loadCase(CaseId("last-dinner"), WhodunitPayloadValidator(json))
+        check(loaded is Result.Success)
+        val case = loaded.data
+        val players = (1..6).map { Player(PlayerId("l08-seat-$it"), "Audit Player $it", it - 1) }
+        val config = SessionConfig(id, CaseId(case.envelope.caseId),
+            if (elimination) WhodunitIds.EliminationModeId else WhodunitIds.ClassicVoteModeId,
+            players, SEED)
+        val job = SupervisorJob()
+        val session = PassAndPlaySessionController(definition, config,
+            WhodunitReducerContext(FakeClock(createdAt), RandomSource.seeded(SEED), case),
+            CoroutineScope(job + Dispatchers.Main.immediate))
+        try {
+            suspend fun submit(action: WhodunitAction) {
+                check(session.submit(action) is Result.Success)
+                WhodunitStateValidator.requireValidForCase(session.currentState(), case)
+            }
+            submit(WhodunitAction.AssignRoles(SEED))
+            check(session.currentState().phase == WhodunitPhase.PublicIntro)
+            players.forEach { submit(WhodunitAction.AcknowledgeIntro(it.id)) }
+            submit(WhodunitAction.AdvanceFromIntro)
+            players.forEach { submit(WhodunitAction.AcknowledgeBriefing(it.id)) }
+            (1..4).forEach { submit(WhodunitAction.AdvanceBriefingCard(it)) }
+            val generation = session.currentState().public.roleAssignmentGeneration
+            players.forEach {
+                submit(WhodunitAction.StartCharacterReveal(it.id, generation))
+                submit(WhodunitAction.CompleteCharacterReveal(it.id, generation))
+            }
+            submit(WhodunitAction.AdvanceFromCharacterReveal)
+            // Stable, untimed checkpoint with non-empty canonical clue history.
+            submit(WhodunitAction.RevealNextClue)
+            val state = session.currentState()
+            check(state.phase == WhodunitPhase.Round(1) && state.public.timer == null)
+            check(state.public.revealedClues.size == 1 && state.hostOnly.drawnClueIds.size == 1)
+            expected = state
+            expectedId = id
+            loadedCase = case
+            val identity = case.envelope.contentIdentity()
+            return GameSnapshot(id, WhodunitIds.GameId, WHODUNIT_SNAPSHOT_ENGINE_VERSION,
+                createdAt, state.phase.id, definition.snapshotCodec().encode(state),
+                mapOf("playMode" to "PassAndPlay", "caseVersion" to identity.version,
+                    "caseDigest" to identity.digest))
+        } finally {
+            session.close()
+            job.cancelAndJoin()
+            check(job.isCompleted)
+        }
+    }
+
+    suspend fun verifyRecovery(store: SnapshotStore, definition: WhodunitDefinition) {
+        val id = checkNotNull(expectedId)
+        val resumed = loadResumedSession(store, definition, id)
+        check(resumed is Result.Success)
+        check(validateResumedSessionForCase(resumed.data, checkNotNull(loadedCase)) is Result.Success)
+        check(resumed.data.sessionId == id && resumed.data.state == expected)
+    }
+
+    fun attach(id: SessionId?, session: SessionController<WhodunitState, WhodunitAction, WhodunitEvent>) {
+        if (id == null || id != expectedId) return
+        check(!completed && attached == null && attaches == 0)
+        attached = session
+        attachedInitial = checkNotNull(session.canonicalState).value
+        attaches += 1
+        check(attachedInitial == expected)
+    }
+
+    fun detach(session: SessionController<WhodunitState, WhodunitAction, WhodunitEvent>) {
+        if (attached === session) attached = null
+        // Never rebase a checkpoint after remount/replacement.
+    }
+
+    fun isAttached(): Boolean = attaches == 1 && attached != null && attachedInitial == expected
+
+    suspend fun continueActualResumedController() {
+        check(isAttached() && !completed)
+        val session = checkNotNull(attached)
+        val canonical = checkNotNull(session.canonicalState)
+        val case = checkNotNull(loadedCase)
+        check(canonical.value === attachedInitial && canonical.value == expected)
+        suspend fun submit(action: WhodunitAction) {
+            val receipt = session.submit(action)
+            check(receipt is Result.Success && !receipt.data.awaitingAuthority)
+            WhodunitStateValidator.requireValidForCase(canonical.value, case)
+        }
+        var rounds = 0
+        while (canonical.value.phase is WhodunitPhase.Round) {
+            check(++rounds <= 8)
+            val state = canonical.value
+            val index = (state.phase as WhodunitPhase.Round).index
+            if (state.public.revealedClues.none { it.roundIndex == index }) submit(WhodunitAction.RevealNextClue)
+            submit(WhodunitAction.StartDiscussionTimer(
+                WhodunitRoundPolicy.discussionSeconds(case.payload, index, state.players.size)))
+            check(canonical.value.public.timer != null)
+            // Explicit legal host progression; not a claim that a real timer elapsed.
+            submit(WhodunitAction.AdvanceFromDiscussion)
+            if (canonical.value.public.voteState is VoteState.Collecting) break
+        }
+        val vote = canonical.value.public.voteState as? VoteState.Collecting
+        check(vote != null)
+        val target = canonical.value.hostOnly.killerId
+        vote.ballotPlayerIds.forEach { voter ->
+            submit(if (voter == target) WhodunitAction.AbstainVote(voter)
+                else WhodunitAction.CastVote(voter, target))
+        }
+        submit(WhodunitAction.CloseVote)
+        check(canonical.value.phase == WhodunitPhase.Reveal)
+        check((canonical.value.public.voteState as? VoteState.Resolved)?.wasKiller == true)
+        submit(WhodunitAction.AcknowledgeReveal)
+        check(canonical.value.phase == WhodunitPhase.PostGame)
+        completed = true
+    }
+
+    fun release() {
+        expected = null
+        expectedId = null
+        attached = null
+        attachedInitial = null
+        loadedCase = null
+        // Every process owns exactly one game checkpoint. Counters are not reset.
+    }
+}
+
+@Composable
+fun L08ObserveWhodunitResume(id: SessionId?, session: SessionController<WhodunitState, WhodunitAction, WhodunitEvent>) {
+    DisposableEffect(id, session) {
+        L08WhodunitSnapshots.attach(id, session)
+        onDispose { L08WhodunitSnapshots.detach(session) }
+    }
+}

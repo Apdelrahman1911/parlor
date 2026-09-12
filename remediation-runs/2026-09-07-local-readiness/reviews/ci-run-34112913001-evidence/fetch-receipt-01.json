@@ -1,0 +1,55 @@
+{
+  "scope": "Read-only existing failed-job logs; no workflow invocation/artifact retrieval",
+  "at": "2026-09-07T11:00:37.103688+00:00",
+  "run_id": 34112913001,
+  "head_sha": "f5ea8045bd903c255041b198f54aca67e893612f",
+  "reviewer": "/root/release_fix_review",
+  "jobs": [
+    {
+      "job_id": 101713007167,
+      "label": "windows-x64",
+      "argv": [
+        "gh",
+        "api",
+        "repos/Apdelrahman1911/parlor/actions/jobs/101713007167/logs",
+        "--method",
+        "GET"
+      ],
+      "started_at": "2026-09-07T11:00:37.103803+00:00",
+      "finished_at": "2026-09-07T11:00:48.974249+00:00",
+      "exit_code": 0,
+      "stderr": "",
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34112913001-evidence/windows-x64-sanitized.log",
+      "sha256": "aaa57cb71ffdde269d34bd785f38d5e5b56980479620a41cc67cdba7d01015f1",
+      "bytes": 95924,
+      "lines": 955
+    },
+    {
+      "job_id": 101713007567,
+      "label": "linux-common-desktop-android",
+      "argv": [
+        "gh",
+        "api",
+        "repos/Apdelrahman1911/parlor/actions/jobs/101713007567/logs",
+        "--method",
+        "GET"
+      ],
+      "started_at": "2026-09-07T11:00:48.980823+00:00",
+      "finished_at": "2026-09-07T11:00:54.596465+00:00",
+      "exit_code": 0,
+      "stderr": "",
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34112913001-evidence/linux-common-desktop-android-sanitized.log",
+      "sha256": "f0d93440d69ad044dc91664d4a12238bfedb28fae62878236bdc67f0161fe043",
+      "bytes": 221575,
+      "lines": 2205
+    }
+  ],
+  "sanitization": [
+    "ANSI escape removal",
+    "GitHub credential/bearer/Authorization masking",
+    "credential URL userinfo masking",
+    "password/token/secret/private-key assignment masking",
+    "standard CI workspace/home path normalization"
+  ],
+  "raw_logs_retained": false
+}

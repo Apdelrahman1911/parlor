@@ -109,7 +109,7 @@ fun ReconnectingOverlay(
                 contentDescription = leaveContentDescription,
                 onClick = onLeave,
                 modifier = Modifier.fillMaxWidth(),
-                variant = ParlorButtonVariant.Ghost,
+                variant = ParlorButtonVariant.CoverGhost,
             )
         }
     }

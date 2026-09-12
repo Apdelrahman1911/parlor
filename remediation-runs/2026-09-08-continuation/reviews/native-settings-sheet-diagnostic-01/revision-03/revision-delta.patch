@@ -1,0 +1,11 @@
+--- revision02/scripts/release/tests/test_native_process_probe.py
++++ revision03/scripts/release/tests/test_native_process_probe.py
+@@ -123,7 +123,7 @@
+     def test_full_non_app_scope_is_explicit_and_cycles_do_not_reuse_failed_labels(self):
+         self.assertEqual(native.effective_scope("workflow_dispatch", probe.SCOPE), probe.SCOPE)
+         self.assertEqual(native.effective_scope("pull_request", probe.SCOPE), "full")
+-        self.assertEqual(native.CYCLES, {"l08": "ios-readiness-33", "normal": "ios-readiness-34"})
++        self.assertEqual(native.CYCLES, {"l08": "ios-readiness-33", "normal": "ios-readiness-34", "settings_sheet": "ios-readiness-35"})
+         with self.assertRaisesRegex(RuntimeError, "not-an-app-native-continuation"):
+             native.Continuation(dict(GITHUB_EVENT_NAME="workflow_dispatch", PARLOR_DISPATCH_SCOPE=probe.SCOPE))
+ 

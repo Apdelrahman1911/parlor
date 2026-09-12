@@ -1,0 +1,122 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/native_ci",
+  "request_coordinator": "/root",
+  "review_date_utc": "2026-09-10",
+  "decision": "APPROVE_EXACT_SINGLE_COORDINATED_LINUX_PROCESS_PROBE_DISPATCH",
+  "status": "ADMISSION_PASS_NOT_RUNTIME_PASS",
+  "request_sha256": "755033a93117f180439b1bedde1d95d942ea4a4f835d83d0568eb70e74c65bda",
+  "source": {
+    "head": "7d9ea1eac42ebe7630a01e3dbe9aafcf4f36306b",
+    "tree": "6d2337b11a07f64cf677bbc9ae3d21138a245c5f",
+    "branch": "fix/local-readiness-2026-09-07",
+    "full_history": true,
+    "tracked_clean": true,
+    "source_commit": "289b01016e58a0843e5c51499f3832e4d1b7b7fd",
+    "inventory_only_child_commit": "7d9ea1eac42ebe7630a01e3dbe9aafcf4f36306b",
+    "inventory_rows": 28978,
+    "verification": "Current HEAD/tree and ten control-file bytes equal frozen Git blobs. All seven adopted canonical files match reviewed/local-tested pins; changes since75c outside retained evidence are exactly those seven. Frozen child changes only the mechanical inventory; inventory SHA/CSV count match the recorded generator/check exit0 receipt. Reviewer did not execute that generator.",
+    "local_untracked": "Only the preserved build-lane lock and new request/freeze evidence were untracked at audit time; this is not represented as a clean local hosted-admission context. CI must independently admit its fresh clean checkout."
+  },
+  "controls": {
+    "file_count": 10,
+    "sha256": "bbf7680815c5a6418574ab4accd061b6d0fa57f23178d28f45a986505675d79f",
+    "verification": "Reconstructed exact CONTROL_PATHS from AST without importing the module; recomputed sorted compact JSON digest from current bytes and checked each against the frozen Git blob, request and reviewed adoption pins."
+  },
+  "inputs": {
+    "verification_scope": "linux-process-probe",
+    "frozen_source_sha": "7d9ea1eac42ebe7630a01e3dbe9aafcf4f36306b",
+    "approved_probe_control_sha256": "bbf7680815c5a6418574ab4accd061b6d0fa57f23178d28f45a986505675d79f"
+  },
+  "command": "The request's exact gh workflow run production-verification.yml --repo Apdelrahman1911/parlor --ref fix/local-readiness-2026-09-07 command has only the three approved -f inputs. Optional native selection defaults to paired and other unused inputs remain empty, as admitted by the pinned guard.",
+  "isolation": {
+    "eligible_jobs": [
+      "desktop-android"
+    ],
+    "runner": "ubuntu-24.04",
+    "maximum_minutes": 10,
+    "eligible_steps": [
+      "Check out source",
+      "Set up JDK 21",
+      "Validate Linux process-probe source and controls",
+      "Claim fresh verification output ownership",
+      "Observe Linux process access without a build",
+      "Upload bounded Linux process-probe evidence",
+      "Finalize Linux process-probe resources and uploaded custody",
+      "Upload Linux process-probe cleanup receipt"
+    ],
+    "excluded": "No full qualification, Linux-arm64/macOS/Windows/iOS job, SDK installation, emulator/managed-device execution, Gradle build, packaging, Store signing/publication or promotion. Gradle --stop remains required."
+  },
+  "guards": {
+    "admission": "Exact workflow_dispatch/repository/branch/workflow-ref/job/run/attempt; frozen SHA=GITHUB_SHA=GITHUB_WORKFLOW_SHA=HEAD, branch/full history/clean checkout, Ubuntu24.04 x86_64, exact ten-file digest and real nonroot UID/SDK path/device/inode binding. Rechecked after observations and before cleanup.",
+    "observation": "Initial real /proc host audit remains separate from two real procfs controls with synthetic self/direct-child enumeration. Expected nondumpable EACCES remains audit FAIL/CONTROL_PASS, never a host PASS. Exact owned child/fixture retirement precedes the next control.",
+    "custody": "Observation and immediate finally Gradle stop receipts precede required nonempty upload. Finalizer binds source/controls/task/SDK and both child/fixture retirement receipts; unchanged generic cleanup requires stop0, fresh ownership, successful artifact ID/SHA, source equality and a separate final real host-absence sample before exact output deletion. Guard/upload/cleanup failures retain evidence and remain failures.",
+    "expected_artifacts": [
+      "linux-process-probe-<run>-<attempt>",
+      "linux-process-probe-cleanup-<run>-<attempt>"
+    ],
+    "concurrency": "Existing same-ref cancel-in-progress:true is unchanged. Root reports its dispatch script freshly refuses any noncompleted same-ref run and rechecks active workflow, exact remote/HEAD/tree and tracked equality, then dispatches once. Those live checks remain coordinator prerequisites; reviewer did not query Actions or independently execute that script."
+  },
+  "remote_confirmation": "Root's pinned normal push and ls-remote receipt both exit0 and name exact7d9e continuation ref. Independently reconciled the retained receipt with request; no reviewer network call.",
+  "independent_check": {
+    "status": "EXACT_HOSTED_LINUX_PROBE_REQUEST_SOURCE_CONTROLS_SCOPE_CUSTODY_ADMITTED",
+    "tool_chunk_id": "bd6ea3",
+    "exit_code": 0,
+    "method": "Read-only Git/source/receipt inspection and standard-library SHA/JSON/CSV/AST assertions. Independently evaluated the closed job/step predicates for these inputs. No project import, validator/test/build/probe execution, process scan, network, dispatch or Git write."
+  },
+  "evidence_files": [
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/linux-process-probe-01/request.json",
+      "bytes": 3686,
+      "sha256": "755033a93117f180439b1bedde1d95d942ea4a4f835d83d0568eb70e74c65bda"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/linux-process-probe-01/push-receipt.json",
+      "bytes": 615,
+      "sha256": "23df17ea5623eb21dee7e79f12fc6b6a1ae51d6cd3a272f2e5036fd6482c683a"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/linux-process-probe-freeze-01.json",
+      "bytes": 1709,
+      "sha256": "e404b42b1a53d8c230310ad8b49fd3890061c33b60fa7c67565ccc9ffc22d370"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/linux-process-probe-independent-01.json",
+      "bytes": 13025,
+      "sha256": "a9184100bb521387e85cb1d540ef8e329f368c112eb1d8f6aac28321be056458"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/linux-proc-controls-actual-independent-01.json",
+      "bytes": 23903,
+      "sha256": "cd8ec6628d05c4df7164f13eb0640576fceb332a702ae5edb2e547712243162e"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/android-proc-permission-diagnostic-independent-01.json",
+      "bytes": 7501,
+      "sha256": "6efe702c65fd9370f1c6d9c0643fe889af5d14993a00547e78af46c167df5d87"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/linux-process-probe-adoption-01.json",
+      "bytes": 2369,
+      "sha256": "4797512395f713a3459ab424da7c45de2af681f4188f93eec39f7658cd536823"
+    },
+    {
+      "path": "docs/review/INDEPENDENT_REVIEW_INVENTORY.csv",
+      "bytes": 18372462,
+      "sha256": "d382657560663d4e12ce0c196cf897664b1b33e7abdf2f177a743daf7a1c72c7"
+    }
+  ],
+  "findings": [],
+  "preserved_boundaries": {
+    "hosted_probe_execution": "NOT_YET_RUN",
+    "full_D03": "FAIL_RETAINED",
+    "local_outer_launcher": "EXIT143_RETAINED",
+    "strict_ios_file_protection": {
+      "passed": 0,
+      "failed": 26,
+      "status": "UNRESOLVED"
+    },
+    "readiness": "NOT_READY",
+    "limit": "Admission only; no application/runtime/combined qualification, historical D03 cause attribution or cleanup repair, physical-device, Store, owner/legal readiness credit."
+  }
+}

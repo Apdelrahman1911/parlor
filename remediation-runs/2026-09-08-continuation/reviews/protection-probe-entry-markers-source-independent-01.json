@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/storage_boundary",
+  "author": "/root/protection_atomic",
+  "status": "APPROVED_SOURCE_ONLY",
+  "source": "remediation-runs/2026-09-08-continuation/protection-diagnostic-01/ProbeMain.m",
+  "sha256": "b34d909120fcb5eb9d039b67694fe18537ad2de0f6d4bc758a72da525c467bfd",
+  "reviewed_against_commit": "59a384441f44844a79ae62ea8ee68d0c9e1e5878",
+  "findings": [],
+  "verified_source_properties": [
+    "Exactly 15 added lines and zero removed lines; stripping the exact unique additions reproduces the frozen file bytes.",
+    "Three fixed public C literals use one best-effort POSIX stderr write each: 37, 47 and 40 bytes, at most 124 bytes total. No retries, allocation, Foundation or stdio calls in the helper; errno is saved and restored.",
+    "Markers occur at C main entry before autoreleasepool (line 191), after initial Foundation dictionary construction (line 199), and before the first directory-create expression (line 137).",
+    "Existing stdout schema, writes/options, paths, strict predicates, guards, alarm25 placement, ownership checks and exits remain byte-unchanged. No production storage change."
+  ],
+  "limitations": [
+    "Best-effort marker absence or partial output does not prove main or a later boundary was not reached. Bounded bytes are not a new wall-time guarantee.",
+    "The first-operation marker precedes owned-path and other argument evaluation; it does not prove the Foundation API was entered.",
+    "Markers locate reached boundaries only; they establish neither timeout cause nor protection, cleanup or qualification PASS.",
+    "Driver/bootstrap and owned-spawn sampling are outside this approval. No native compilation, execution, tests or builds were performed."
+  ],
+  "persistence": "Records the already-completed independent review; no repeat audit was performed to persist this receipt."
+}

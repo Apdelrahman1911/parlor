@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "status": "HELD_SOURCE_AND_AST_ONLY_NOT_EXECUTED",
+  "author": "/root/lifecycle_controls",
+  "files": [
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-b26-region-followup-01/draft/image_text_layout_diagnostic.py",
+      "bytes": 9747,
+      "sha256": "026184d084bb62b50768e1c100ea366f3bbf90afaa8007b7e440ee97954a1cbd",
+      "declared_tests": 0
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-b26-region-followup-01/draft/run_normal_ios_launch.py",
+      "bytes": 66064,
+      "sha256": "e7735bb7f846a49d5e39a7e9e59ff49656a6241ac2ac8969b94131586b239f10",
+      "declared_tests": 0
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-b26-region-followup-01/draft/test_image_text_layout_diagnostic.py",
+      "bytes": 19776,
+      "sha256": "0164036d70e62a312e73ec818caa120c120accaf423f9aa5e91cd38586c3ac58",
+      "declared_tests": 18
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-b26-region-followup-01/draft/run_control_tests.py",
+      "bytes": 2932,
+      "sha256": "2c454074392e1b5efce8b16ce128dbdba23dd4f20047acde6b83fe537cad2a0d",
+      "declared_tests": 0
+    }
+  ],
+  "delta": "Four held files: one new bounded native-layout decoder, one existing-runner failure-only hook,18 focused tests, and aggregate discovery count204\u2192222. Existing kernel C/Python acceptance is unchanged; no runtime mode added.",
+  "trigger": "Only exact normally completed helper exit1, with closed full-size errno0 diagnostic showing only an oversized selected region. Interrupted/timed-out/budget/unsafe target cases do not start otool.",
+  "observation": "One owned xcrun otool -arch arm64 -l query,10seconds/256KiB, on the selected pinned artifact; closed __TEXT vmaddr/vmsize/fileoff/filesize/maxprot/initprot/nsects/flags and matching LC_UUID. Host os.sysconf(SC_PAGE_SIZE) explicitly does not establish target VM granularity.",
+  "guards": "Descriptor-bound owned regular-file SHA/bytes and identities before/after; original failure and helper unchanged; target before/after checks; temporary raw removed with owned command custody. Any diagnostic exception retains only its closed type and rethrows the identical original failure. No PASS, rounding, fallback, application/entitlement or cleanup-policy change.",
+  "focused_command_after_root_adoption": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01 -p test_image_text_layout_diagnostic.py -v",
+  "expected_focused_tests": 18,
+  "expected_aggregate_discovery": 222,
+  "execution": "Only stdlib AST parsing and SHA256 inspection performed. Root alone adopts/runs tests/native; no tests/project imports/compiler/network/CI/Git writes executed.",
+  "unchanged_acceptance": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/kernel_image_region.c.in",
+      "sha256": "e98501da6bec44050e2dc9aab75da13c6d34e3733019789df74efad7774d6eb8"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/kernel_image_regions.py",
+      "sha256": "4b87bf30ab492bf45554b2952ef52982343d5f16c66dce247412a45801b0287b"
+    }
+  ]
+}

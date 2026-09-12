@@ -1,0 +1,285 @@
+{
+  "schema_version": 1,
+  "kind": "HELD_CURRENT_CONTROL_CHECKPOINT_LEDGER_AUTHOR_REPORT",
+  "recorded_at": "2026-09-09T05:59:19.683191+00:00",
+  "author": "/root/evidence_audit",
+  "independent_reviewer": "/root/ci_review",
+  "integration_coordinator": "/root",
+  "status": "HELD_FOR_INDEPENDENT_REVIEW_LATER_EVIDENCE_DELIVERY_NOT_CANONICALLY_ADOPTED",
+  "ownership": "Only this new held proposal directory written; no canonical/source/index/network/build/test/worker/cleanup operation.",
+  "integration_hold": "Parent will freeze current canonical77b1369d separately. This candidate stays HELD for later evidence delivery after the next native attempt; it must not be adopted during the frozen run.",
+  "base": {
+    "path": "remediation-runs/2026-09-08-continuation/CONTINUE_LATEST.md",
+    "bytes": 104922,
+    "sha256": "77b1369d29384dcfb0ada0439350ecc3e8405c1487812c9d649a3910f9f09800"
+  },
+  "candidate": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/continuation-ledger-a25-b26-01/CONTINUE_LATEST.md",
+    "bytes": 112420,
+    "sha256": "d85d66122fdbb0876ce1d9e06a0146eca7453af3826950409059ab4f0c841fde"
+  },
+  "cutoff": "2026-09-09T05:46:40.099249+00:00",
+  "scope": "Replace only Latest, append compact reviewed control checkpoint. Preserve every other prior historical byte. No later source commit/check/native outcome incorporated.",
+  "actual_outcomes": {
+    "first_four": [
+      "fixture25PASS",
+      "functional12=10PASS/1FAIL/1ERROR",
+      "composition55PASS",
+      "normal204PASS"
+    ],
+    "corrected_functional02": "12PASS/0failure/error/skip;24 mutation subcases are within12 methods",
+    "reuse": "25/55/204 retained in original unchanged scope, not rerun in02",
+    "cleanup": "All five scoped cycles stop0 and exact owned cleanup PASS; no global process/leak/staging guarantee",
+    "native": "No new A25/B26 native execution; old A23 partial/strict failures and B24 actual provenance failure retained",
+    "C": "C04 historical scoped PASS; C05 required at eventual stable final source, not every interim freeze",
+    "D": "NOT_RUN; no stale held full request dispatch",
+    "readiness": "NOT_READY"
+  },
+  "binding_checks": {
+    "head_for_actual_controls": "08d1adfbd7284f190fbab5f7baa846944bca5b68",
+    "tree": "c19beea4647ce882c02d8751d1bf82c22484b52b",
+    "dirty_worktree_executions": true,
+    "first_four_diff_sha256": "a34a207234a8f098f3949dab0bdc6d0709f3d3f8742eb470ca0f6c24322f2094",
+    "corrected02_diff_sha256": "9b17e823529b42939f6ff27533629aa58a55ac725ca607b69f39b8baccd5304b",
+    "first_four_control_manifest_sha256": "cfff74eba46aeed5883d26f1536edfafa2543dc36eb8ac61410507cb29b1e09e",
+    "corrected02_control_manifest_sha256": "2f767601114d1564bd96637c12234631e436cd8acfd915cf135fc445ed584714",
+    "bound_rows_each": 211,
+    "before_after_rows_exact": true,
+    "single_control_row_delta": {
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/test_l08_functional_copy.py",
+      "before_sha256": "b58d9761b7c199f0ab7fd01c2c6614d2f49e0a71102fd54ff3f6783acfede7f0",
+      "after_sha256": "a630c0002261e09a114390e5661ae0a95b75dc9a2548b249b425fac456077a1e"
+    },
+    "ordinary_source_rows": 828,
+    "ordinary_source_manifest_sha256": "f7d8b3dbdec3d07c16921e7f8457c0da96d404708758605eb7797c2f6b106237",
+    "corrected02_source_runner_before_after_exact": true,
+    "corrected02_raw_unique_pass_rows": 12,
+    "not_all211_tests_executed": true
+  },
+  "preservation": {
+    "only_original_replacement_half_open": [
+      48,
+      908
+    ],
+    "old_latest_sha256": "8b46a3685a9d80ed977513435c32b7f2d977dc2d749af0e3df8fa51f26990927",
+    "new_latest_bytes": 684,
+    "new_latest_sha256": "9bfcc604f5f308271face228d9bc6131246333f02714bdae7b581910d4da98c7",
+    "historical_source_range": [
+      908,
+      104922
+    ],
+    "historical_candidate_range": [
+      732,
+      104746
+    ],
+    "historical_bytes": 104014,
+    "historical_sha256": "010d73a5d43d8180b32cf2abc1291cdafa5934d3ab867745066efe898e9ba163",
+    "historical_byte_identical": true,
+    "unchanged_heading_sha256": "d0438a35674865e7bf26f7e8bc067152d55a6ea575414dbf584f313e053d02f2",
+    "appendix_range": [
+      104746,
+      112420
+    ],
+    "appendix_bytes": 7674,
+    "appendix_sha256": "8072ee3bb692c921919e83b073184f2f08cef389f10e6110152bafcd56ef8ec7",
+    "canonical_unchanged": true,
+    "prior_proposals_receipts_reports_rewritten": false,
+    "relative_links": "Intended for canonical N/CONTINUE_LATEST.md location after separately approved integration."
+  },
+  "author_checks": {
+    "input_pins_rehashed": 35,
+    "raw_logs_read_without_project_execution": true,
+    "document_readback_and_JSON_parse": true,
+    "no_new_runtime_or_independent_approval": true
+  },
+  "author_inspection_failure": {
+    "kind": "READ_ONLY_LOG_INSPECTION_REGEX_ASSEMBLY_FAILURE_NOT_TEST",
+    "exit_code": 1,
+    "output": "Traceback (most recent call last):\n  File \"<stdin>\", line 35, in <module>\n  File \"/usr/lib/python3.12/re/__init__.py\", line 167, in match\n    return _compile(pattern, flags).match(string)\n           ^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/re/__init__.py\", line 307, in _compile\n    p = _compiler.compile(pattern, flags)\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/re/_compiler.py\", line 745, in compile\n    p = _parser.parse(p, flags)\n        ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/re/_parser.py\", line 979, in parse\n    p = _parse_sub(source, state, flags & SRE_FLAG_VERBOSE, 0)\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/re/_parser.py\", line 460, in _parse_sub\n    itemsappend(_parse(source, state, verbose, nested + 1,\n                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/re/_parser.py\", line 864, in _parse\n    raise source.error(\"missing ), unterminated subpattern\",\nre.error: missing ), unterminated subpattern at position 1\n",
+    "correction": "Replaced overescaped locally assembled inspection regexes with literal-character classes; no file writes, app/control imports/tests, builds or worker/lane operations occurred. Raw test logs and receipts were not changed."
+  },
+  "input_pins": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-a25-composition-controls-01/gradle.log",
+      "bytes": 19640,
+      "sha256": "fb1a838a165980d048215786fef5a4494f7e357abe50ee3d2dfb31328c223a76"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-a25-composition-controls-01/receipt.json",
+      "bytes": 306558,
+      "sha256": "b875badd345cba022f6e3dcfd69a6b2fecae631fa88169843f6115138a122064"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-a25-composition-controls-01/stop.log",
+      "bytes": 31,
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-a25-fixture-controls-01/gradle.log",
+      "bytes": 4450,
+      "sha256": "5873973d21c4d9cc881e1fe9d11a99fcc37bf9012c931a39ea8ea7b72a90026e"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-a25-fixture-controls-01/receipt.json",
+      "bytes": 306537,
+      "sha256": "c1bebb7c2a9bc9ed16a85d00cff627671e8703961aa698bfc926fe8d06c8bc08"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-a25-fixture-controls-01/stop.log",
+      "bytes": 31,
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-a25-functional-copy-controls-01/gradle.log",
+      "bytes": 30967,
+      "sha256": "6e348154b3710fc2d3bc354d36f937107fa73eef59fe940721f9658ecb77a225"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-a25-functional-copy-controls-01/receipt.json",
+      "bytes": 306648,
+      "sha256": "a37b3797b637bea5e47497cdbd981d33be11f24f6154efcb3ddf976f0114c572"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-a25-functional-copy-controls-01/stop.log",
+      "bytes": 31,
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-a25-functional-copy-controls-02/gradle.log",
+      "sha256": "34cd245497cd13ed95abf5c615e44dffa86b8aeac84f69ac83c535a1c5b91fa2",
+      "bytes": 2543
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-a25-functional-copy-controls-02/java-toolchain.log",
+      "sha256": "a7a86ea7b20362e2c856e5e71a8b6fc51764d5aeaa9f5a8c82b386ff156f8a7c",
+      "bytes": 2026
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-a25-functional-copy-controls-02/javac-toolchain.log",
+      "sha256": "157f601a5854ca28a7dc364c13a5ca2879084186be49e3462d37acd028f35755",
+      "bytes": 14
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-a25-functional-copy-controls-02/receipt.json",
+      "sha256": "5e95510ccf2ff868d8a1c2d67382876b9c99a178bbc7c56424ffc75abbb8b1fe",
+      "bytes": 307000
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-a25-functional-copy-controls-02/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+      "bytes": 31
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-b26-normal-controls-01/gradle.log",
+      "bytes": 119154,
+      "sha256": "6762060e5fb5fc0023287c0ce5bd29441d35380f3b40bf6dc59512c918105dbd"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-b26-normal-controls-01/receipt.json",
+      "bytes": 306554,
+      "sha256": "8dedf3945f357dc162b9b8d14636460c45d3d5e6031048fc9745512d547cda3e"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-b26-normal-controls-01/stop.log",
+      "bytes": 31,
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/candidate-c04-upcoming-freeze-applicability-independent-01.json",
+      "bytes": 17775,
+      "sha256": "d30af7df68c61c822b5cb21b8e5be5677d69f8be553ace01710a057b379fabac"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/continuation-a25-b26-controls-inputs-after-01.json",
+      "bytes": 46380,
+      "sha256": "40a1d9f00579ec22b238aac9d600644b6a62218744cbd44cab7ecc2eedb7d91b"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/continuation-a25-b26-controls-inputs-before-01.json",
+      "bytes": 43689,
+      "sha256": "63eb8b87edebe3021f7895c16be923942793274e20cc5b140e510f97ce0d473b"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/continuation-a25-b26-postflight-parser-failure-01.json",
+      "bytes": 883,
+      "sha256": "6c80f4bd438bbdf7eb75a6897c7d31cd25600debdcc1f609ae99e6141271f1c0"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/continuation-a25-functional-copy-controls02-inputs-after-01.json",
+      "sha256": "b5a66b1a423ac2f4bbb234b07bb43c073978ffcac0c6687037422baf76020e7e",
+      "bytes": 46297
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/continuation-a25-functional-copy-controls02-inputs-before-01.json",
+      "sha256": "91366f9f059048ff45c5c1b61c51183b76bb9e161259f07bbee0225dd5cb2560",
+      "bytes": 44713
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/continuation-ledger-a23-b24-independent-01.json",
+      "bytes": 62135,
+      "sha256": "90a1a95e07b17e4b50c1167f031c2c863e4432914138056abe6f51d4345022de"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/continuation-ledger-a23-b24-root-adoption-01.json",
+      "bytes": 1258,
+      "sha256": "a131e76369b4f3872194254c633575e501cabd7ebcbe138caf9a68626af5f463"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/l08-unreached-scenario-source-audit-01.json",
+      "bytes": 19221,
+      "sha256": "9d24eb8f9bce20305a64b539762561b886cbba1d3db5aee69e741b4e471d7dab"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-34303850578-postrun-independent-01.json",
+      "bytes": 107396,
+      "sha256": "6927bc39925fd3b906dcc0a31ddc611bc3871d26ba1b0b962dc75ee498a94784"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-a25-b26-control-adoption-01.json",
+      "bytes": 2460,
+      "sha256": "108900a08faa7099d6aaca3480a274fa6bc0de31ed3e69abc599f4d0382795d1"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-a25-fixture-controls-independent-01.json",
+      "bytes": 51746,
+      "sha256": "3eaecc86617e4044ac6f35bb40bd894d4d29b0ff7b1134ac12becb8bb79a0d43"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-a25-functional-copy-controls02-independent-01.json",
+      "bytes": 9847,
+      "sha256": "e5fe832eb87dc2f26855c95872da449f8eef586c615cc511c93aba668b11fb76"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-a25-functional-copy-guard-independent-01.json",
+      "bytes": 43525,
+      "sha256": "027cc3b9faaaaf564b48fb1568b90a5c900f5967b7e47047ad6571c869a2d874"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-a25-functional-copy-guard-root-adoption-01.json",
+      "bytes": 1286,
+      "sha256": "d12b88189b8bf246cdec5bf99f454ddbb2a9bf82434c78ec7c0b1ea6ff68cbbc"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-a25-label-integration-independent-01.json",
+      "bytes": 12561,
+      "sha256": "8e8ffb3253eaf8adf04e18075ab53d0db8c3ea47c07fca6c5bd1ec4778323451"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-b26-normal-controls-independent-01.json",
+      "bytes": 16657,
+      "sha256": "e49183ac4074715fff3d3a63d7695d5f141b4cb817f7340a5b2b8eb4ee1f76eb"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/post-08d-delivery-safety-precheck-01.json",
+      "bytes": 29885,
+      "sha256": "76f9cd976cf7d71a168536fec041ea74fd12c03fd7eb2bf9e6306f6320a82bb0"
+    }
+  ],
+  "cleanup": {
+    "build_test_cycle_started": false,
+    "owned_workers_generated_builds_or_extractions_created": false,
+    "cleanup_cycle_owed": false,
+    "other_lane_and_global_caches_touched": false
+  },
+  "next": "Different-agent exact candidate/report review; root may include approved held bytes only in later evidence delivery, not by editing frozen canonical files mid-native-run."
+}

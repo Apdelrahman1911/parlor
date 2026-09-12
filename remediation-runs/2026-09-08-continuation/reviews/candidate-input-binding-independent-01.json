@@ -1,0 +1,395 @@
+{
+  "schema_version": 1,
+  "kind": "INDEPENDENT_FRESH_PRODUCER_AND_BINDING_REVIEW_NOT_CONSUMER_OR_RUNTIME_PASS",
+  "reviewer": "/root/portability_review",
+  "binding_author": "/root/dependency_chain",
+  "executor": "/root",
+  "recorded_at": "2026-09-08T11:02:57.653947+00:00",
+  "status": "APPROVED_EXACT_BINDING_AND_CONTROLS_FOR_COORDINATOR_CANDIDATE_EXECUTION",
+  "blocking_findings": [],
+  "binding": {
+    "path": "remediation-runs/2026-09-08-continuation/candidate-input-binding-01.json",
+    "sha256": "d3d1a6d0c3345650e6eeb7f7a473e322a6c122a8e7036684cf701f5977de7fad"
+  },
+  "binding_file": {
+    "bytes": 1517,
+    "regular_canonical_nonsymlink": true,
+    "mode": "0600",
+    "link_count": 1,
+    "exact_fields": true,
+    "all_references_current": true
+  },
+  "source": {
+    "commit": "25b1c5551aee7630ac22d4b34668dd4b06c71b17",
+    "tree": "629a5d2b699cddb62d61849de3bd185fd4c01378",
+    "diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "source_manifest_sha256": "6e83dcdccc950fde35ccbf8fe2d4c73671a05a5f4a6a3a5068799af86bbd2334"
+  },
+  "source_manifest_entries": 820,
+  "all_current_source_manifest_file_hashes_match": true,
+  "tracked_worktree_clean_at_final_review": true,
+  "source_manifest_digest_independently_recomputed": true,
+  "producer_cycles": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-export-linux-01/receipt.json",
+      "sha256": "49df4bd696294e0a189e2094cbf27a48390f7d62b98c066cd7f39f069f956603",
+      "command": [
+        "./gradlew",
+        "writeResolvedDependencyInventory",
+        "-I",
+        "scripts/verification/resolved_dependencies.init.gradle",
+        "-Pparlor.dependencyInventoryDir=/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-export-linux-01/raw-graphs",
+        "--no-daemon",
+        "--no-parallel",
+        "--max-workers=1",
+        "--no-configuration-cache",
+        "--dependency-verification=strict",
+        "-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=final-dependency-export-linux-01",
+        "-Pkotlin.compiler.execution.strategy=in-process",
+        "-Pparlor.android.signing.storeFile=",
+        "-Pparlor.android.signing.storePassword=",
+        "-Pparlor.android.signing.keyAlias=",
+        "-Pparlor.android.signing.keyPassword="
+      ],
+      "status": "PASS",
+      "exit_code": 0,
+      "stop_exit_code": 0,
+      "started_at": "2026-09-08T10:38:12.570311+00:00",
+      "finished_at": "2026-09-08T10:41:52.052026+00:00",
+      "stopped_at": "2026-09-08T10:41:53.455358+00:00",
+      "cleanup_completed_at": "2026-09-08T10:41:53.563118+00:00",
+      "execution_log": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-export-linux-01/gradle.log",
+        "sha256": "4ba8d519cff7575d3cd2ed7bd76dd278fc9d30297a06b77ae85ff424d438b343"
+      },
+      "stop_log": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-export-linux-01/stop.log",
+        "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+      },
+      "removed_outputs": [
+        "build",
+        "build-logic/convention/build"
+      ],
+      "scratch_absent": true
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-render-linux-01/receipt.json",
+      "sha256": "3d72b4ba3360b53e2ee3f6134608c0df3d68a9d545068956be80cf962cc28768",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "scripts/verification/dependency_inventory.py",
+        "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-export-linux-01/raw-graphs",
+        "/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-render-linux-01/report"
+      ],
+      "status": "PASS",
+      "exit_code": 0,
+      "stop_exit_code": 0,
+      "started_at": "2026-09-08T10:44:00.286914+00:00",
+      "finished_at": "2026-09-08T10:46:31.894082+00:00",
+      "stopped_at": "2026-09-08T10:46:32.788296+00:00",
+      "cleanup_completed_at": "2026-09-08T10:46:32.888202+00:00",
+      "execution_log": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-render-linux-01/gradle.log",
+        "sha256": "ef1042602e31e11bb04d1d6614e648956b37c0108d001a6f016c863bb9b0ca97"
+      },
+      "stop_log": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-render-linux-01/stop.log",
+        "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+      },
+      "removed_outputs": [],
+      "scratch_absent": true
+    }
+  ],
+  "producer_reconciliation": {
+    "four_source_before_after_objects_identical": true,
+    "four_runner_before_after_objects_identical": true,
+    "source_clean_full_manifest_matches_frozen_checkout": true,
+    "serial_export_cleanup_before_render_start": true,
+    "strict_single_export_task_exact_command": true,
+    "exact_renderer_input_output_command": true,
+    "jdk": "OpenJDK/java+javac21.0.12 Linux amd64",
+    "export_actionable_tasks": 5,
+    "export_tasks_executed": 4,
+    "export_tasks_from_cache": 1,
+    "cached_task": ":build-logic:convention:compileKotlin",
+    "export_inventory_task_actually_executed": true,
+    "renderer_log": {
+      "graphs": 4,
+      "components": 456,
+      "unresolved": []
+    },
+    "scope": "Fresh dependency resolution/artifact hashes and publisher metadata rendering only; not app compilation or platform runtime. Linux-disabled Apple test configuration warnings are not native test passes."
+  },
+  "completion_marker": {
+    "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-export-linux-01/raw-graphs/resolution-complete.json",
+    "sha256": "91fad49608ce914dccbc4f2f9ba81e9124a9ba35885e561d027d331931e67313"
+  },
+  "graphs": [
+    {
+      "graph": "androidRelease",
+      "configuration": "releaseRuntimeClasspath",
+      "raw": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-export-linux-01/raw-graphs/androidRelease.json",
+        "sha256": "6d93fd0fa7448fa3adf3b68681f1e620fbd9ca85173d08fe90024b7c45696f2c"
+      },
+      "components": 239,
+      "maven_components": 228,
+      "first_party_components": 11,
+      "dependency_edges": 1198,
+      "constraint_edges": 282,
+      "artifacts": 129,
+      "all_components_reachable_from_production_root_with_and_without_constraint_edges": true,
+      "strict_coordinate_filename_sha256_pin_matches": true,
+      "duplicate_or_unclosed_component_edges": false,
+      "non_source_graph_fields_identical_to_original_export02": true,
+      "sbom": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-render-linux-01/report/androidRelease.cdx.json",
+        "sha256": "26a2378d62e13fdc2a2fe10f4591c6b006010d60ee4fc1135cfa2ce8032e336b"
+      },
+      "official_schema_execution": "PENDING_ACTUAL_COORDINATOR_CANDIDATE_CONSUMER"
+    },
+    {
+      "graph": "iosArm64",
+      "configuration": "iosArm64CompileKlibraries",
+      "raw": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-export-linux-01/raw-graphs/iosArm64.json",
+        "sha256": "39755a52285e8d361a900e6fb05d823feeb57b01729861a34017a9c78edee28a"
+      },
+      "components": 167,
+      "maven_components": 156,
+      "first_party_components": 11,
+      "dependency_edges": 577,
+      "constraint_edges": 60,
+      "artifacts": 81,
+      "all_components_reachable_from_production_root_with_and_without_constraint_edges": true,
+      "strict_coordinate_filename_sha256_pin_matches": true,
+      "duplicate_or_unclosed_component_edges": false,
+      "non_source_graph_fields_identical_to_original_export02": true,
+      "sbom": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-render-linux-01/report/iosArm64.cdx.json",
+        "sha256": "6156536dfe5008f383d2abfb40b0e93c9f212fae9768eb38c62da7032a62d953"
+      },
+      "official_schema_execution": "PENDING_ACTUAL_COORDINATOR_CANDIDATE_CONSUMER"
+    },
+    {
+      "graph": "iosSimulatorArm64",
+      "configuration": "iosSimulatorArm64CompileKlibraries",
+      "raw": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-export-linux-01/raw-graphs/iosSimulatorArm64.json",
+        "sha256": "12c7fa9419fb35f9b504029c3aef418e01eb9704975b9a2d570844f6931cc55a"
+      },
+      "components": 167,
+      "maven_components": 156,
+      "first_party_components": 11,
+      "dependency_edges": 577,
+      "constraint_edges": 60,
+      "artifacts": 81,
+      "all_components_reachable_from_production_root_with_and_without_constraint_edges": true,
+      "strict_coordinate_filename_sha256_pin_matches": true,
+      "duplicate_or_unclosed_component_edges": false,
+      "non_source_graph_fields_identical_to_original_export02": true,
+      "sbom": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-render-linux-01/report/iosSimulatorArm64.cdx.json",
+        "sha256": "1ee190332f99082996da1f090dac80fed4d0f38ca44df061b6875135e7f116b3"
+      },
+      "official_schema_execution": "PENDING_ACTUAL_COORDINATOR_CANDIDATE_CONSUMER"
+    },
+    {
+      "graph": "iosX64",
+      "configuration": "iosX64CompileKlibraries",
+      "raw": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-export-linux-01/raw-graphs/iosX64.json",
+        "sha256": "a65fde3f5b45353c7414888c584f756a30de6741389e3234f8fb672af1735c7b"
+      },
+      "components": 167,
+      "maven_components": 156,
+      "first_party_components": 11,
+      "dependency_edges": 577,
+      "constraint_edges": 60,
+      "artifacts": 81,
+      "all_components_reachable_from_production_root_with_and_without_constraint_edges": true,
+      "strict_coordinate_filename_sha256_pin_matches": true,
+      "duplicate_or_unclosed_component_edges": false,
+      "non_source_graph_fields_identical_to_original_export02": true,
+      "sbom": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-render-linux-01/report/iosX64.cdx.json",
+        "sha256": "2991e258761fc51bf31d3b9cdeab315fb1a7833cfdbd57ae45baa823f1de7684"
+      },
+      "official_schema_execution": "PENDING_ACTUAL_COORDINATOR_CANDIDATE_CONSUMER"
+    }
+  ],
+  "strict_verification": {
+    "metadata": {
+      "path": "gradle/verification-metadata.xml",
+      "sha256": "58b5a279cc5ccc58e1088fbe3dd248fcfdf31a307707204c5438259de7960f95"
+    },
+    "unique_coordinate_filename_pin_keys": 3028,
+    "unique_exported_artifact_rows": 372,
+    "all372_artifact_hashes_pinned": true,
+    "p2p_core_and_lan_version": "0.7.0-rc3",
+    "mavenCentral_not_mavenLocal_or_sibling_override": true,
+    "original_export02_preserved_with_its_original_source_identity": true
+  },
+  "rendered_declarations": {
+    "evidence": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-render-linux-01/report/license-evidence.json",
+      "sha256": "a3bce3ff705af5a12a61906f02d4e6bbfa29ca27d6fbedd12729db36f8a4119b"
+    },
+    "draft": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-render-linux-01/report/THIRD_PARTY_DECLARATIONS_DRAFT.md",
+      "sha256": "d4556ac0fd25d0a2980dfb4440f29ec7e9dcec53bf3101f8b756fc7ac99245bf"
+    },
+    "selected_maven_components": 456,
+    "publisher_declarations": 459,
+    "retained_poms_independently_parsed": 459,
+    "parent_only_rows": 3,
+    "metadata_bytes": 1507794,
+    "metadata_ledger_sha256": "22e9819dcf7e7d7baa2f4b51d18e4813e15aafb934aa510c64eff2ac113acea3",
+    "metadata_ledger_algorithm": "Sorted JSON compact [repository-relative path,sha256,bytes] rows",
+    "unresolved": [],
+    "all_retained_pom_hashes_filenames_coordinates_licenses_urls_and_access_times_checked": true,
+    "no_unrelated_retained_metadata_or_xml_dtd_entities": true,
+    "origins": "Exact permitted public Maven/Google publisher origins",
+    "inherited_license_chains": [
+      [
+        "com.google.guava:listenablefuture:1.0",
+        "com.google.guava:guava-parent:26.0-android"
+      ],
+      [
+        "org.slf4j:slf4j-api:2.0.16",
+        "org.slf4j:slf4j-parent:2.0.16",
+        "org.slf4j:slf4j-bom:2.0.16"
+      ]
+    ],
+    "bom_relationship_to_graphs_declarations_source_and_dependency_edges_independently_reconstructed": true,
+    "draft_independently_reconstructed_exact_bytes": true,
+    "first_party_owner_decision_required_components_per_graph": 11,
+    "not_final_legal_or_redistribution_approval": true
+  },
+  "schemas": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/dependency-candidate-consumer-03/schemas/bom-1.6.schema.json",
+      "sha256": "3e92dddbc30cf7f6a02b80f0942b1a4cfd4fb1c26f1dfc4310afa9d613cafb93"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/dependency-candidate-consumer-03/schemas/jsf-0.82.schema.json",
+      "sha256": "8bae002c25e723db7ee1f26afde680ae1a2b1a8f6b4b4b0fd65dc3becb090aae"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/dependency-candidate-consumer-03/schemas/spdx.schema.json",
+      "sha256": "baa9d3bd1ed57b6751b0887edead6b5063ff53ff7429cf85d476c6c94af0166e"
+    }
+  ],
+  "schema_scope": "Exact pinned three-file official schema set checked by hashes; reviewer did not execute schema engine. Actual schema/format-checker success pending candidate cycle.",
+  "source_notice_inputs": {
+    "verifier": {
+      "path": "scripts/verification/third_party_notices.py",
+      "sha256": "d5a9e8e0cafd9c2d0de9ecd8dfcb040053fa52d25d798abd9998e84ab6676bdf"
+    },
+    "manifest": {
+      "path": "config/third-party-notices.json",
+      "sha256": "4b501223b3841017477a226515d3758bc60848fe00d579fac3152a81928d6406"
+    },
+    "catalog": {
+      "path": "gradle/libs.versions.toml",
+      "sha256": "87a031665605a1fb3f932be31c75afd8d2d1bc0d94cfcca36101141c50788399"
+    },
+    "build": {
+      "path": "composeApp/build.gradle.kts",
+      "sha256": "c23525d6b06f9b536fb5e8ef6be68c653952fa9764e276f831772b864621fdd5"
+    },
+    "resource_files": 26,
+    "resource_bytes": 99515,
+    "exact_resource_set_hashes_sizes_and_source_binding_checked": true,
+    "not_packaged_binary_or_owner_legal_approval": true
+  },
+  "execution_controls": [
+    {
+      "path": "remediation-runs/2026-09-08-continuation/controls/run_candidate_with_schema.py",
+      "sha256": "c9d3a26fb3901b3518f7c066d91ebda906d0bb8bef67273acb4720d5c37419c9"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/run_candidate_input_01.py",
+      "sha256": "2a306819fb41b1883139fb42355d493f02e1d93a687f54d06f43ffbb758afa60"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/run_schema_consumer_controls_01.py",
+      "sha256": "78222a79d0d19cdce28077506ce1fd74481cc419fdf9dce9e9e5b6fd8840336f"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/dependency-candidate-consumer-03/candidate_consumer.py",
+      "sha256": "eb6e2baaac22739b4652bc63c6b57a24374ee57fb81d4711b981b872e8ac1c7f"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py",
+      "sha256": "1b9e882514bfe5386785d5a71ae32fdc2bc3aa4cc1dd24532709899fbf4f41bc"
+    }
+  ],
+  "controls_prior_reviews": [
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/gradle-lane-portability-independent-01.json",
+      "sha256": "c6a1940f6fcbdd28fa60b69f48724e948964ef9ef74437f3e26ae20af4695b0a"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/schema-base-bootstrap-independent-01.json",
+      "sha256": "65dfcfdb2c9531f7ae2588f1d128d52d425584b4ca19ef3269cdc7abc7222e99"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/schema-base-prerequisites-research-01.json",
+      "sha256": "54c9f96db0ead50008cab5c8c960c0540351922f949757e03dc91b8c5328b13e"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/focused-controls-evidence-independent-01.json",
+      "sha256": "5bc68543ef589bb76e076eaecb8ce221593fd9537a9a118b26698f373c55ab1f"
+    }
+  ],
+  "author_report": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/candidate-input-binding-author-inspection-01.json",
+    "sha256": "679cdfcb640b75860f64f39c1d5e5d9ca326b6e73bce238696514586bd095a77"
+  },
+  "author_ledger_clarification": {
+    "author_count": 492,
+    "meaning": "Author read-only comparison inspection ledger includes previous graphs/reports and omits direct candidate notice-resource reads; not an expected or actual candidate consumer ledger. Confirmed by author message; immutable author01 retained.",
+    "independent_candidate_input_ledger_prediction_only": {
+      "count": 511,
+      "sha256": "d86f4db4329683fd512123a7236645862ae1c5a15cc80f3a5846705f984046d9",
+      "algorithm": "Sorted compact JSON [repository-relative path,sha256,bytes] from this exact binding, consumer+lane+producer APIs, receipts,5 graph files,465 report files,3 schemas,strict metadata and source notice module/manifest/catalog/build/26 resources",
+      "not_actual_execution": true
+    },
+    "consumer_eventual_count_and_digest_must_be_observed_from_fresh_result": true
+  },
+  "approved_inner_command": [
+    "/usr/bin/python3",
+    "-B",
+    "remediation-runs/2026-09-08-continuation/controls/run_candidate_with_schema.py",
+    "remediation-runs/2026-09-08-continuation/candidate-input-binding-01.json",
+    "d3d1a6d0c3345650e6eeb7f7a473e322a6c122a8e7036684cf701f5977de7fad"
+  ],
+  "invocation_requirement": "Coordinator must use reviewed outer lane with a new evidence cycle, fresh frozen source attestation, Linux x86_64 CPython3.12 -B bootstrap, no --controls. No project source/control changes before execution.",
+  "acceptance_requires_all_four": [
+    "candidate-input-verification.json status PASS_SCOPED_CANDIDATE_INPUTS; actual four graph schema checks, missing formats [], bound source/binding/consumer/consumed ledger",
+    "candidate-prerequisites.json status PASS_SCOPED_CANDIDATE_INPUT_EXECUTION; consumer_exit_code0 and owned optional parser cleanup",
+    "schema-base-prerequisites.json status PASS_OWNED_SCHEMA_PREREQUISITES; mode candidate, inner_exit0, equal current before/after controls, verified base+optional imports and owned package cleanup",
+    "outer receipt PASS exit0 stop0; clean identical frozen source and runner, no cleanup errors/deferred signals/owned workers/output/scratch leaks"
+  ],
+  "cleanup": {
+    "producer_owned_generated_outputs_currently_absent": true,
+    "producer_cycle_scratch_absent": true,
+    "both_receipts_remaining_owned_workers_outputs_cleanup_errors_and_deferred_signals_empty": true,
+    "stop_exit_codes": [
+      0,
+      0
+    ],
+    "archived_evidence_and_global_caches_preserved": true,
+    "reviewer_created_only_this_new_review_no_build_test_or_cleanup_cycle": true
+  },
+  "limitations": [
+    "Workstream C is NOT complete until actual candidate and all coupled receipts are independently reconciled.",
+    "No app-runtime, libproc, physical-device, Store signing/publication, final-package, legal or owner readiness inference.",
+    "372 artifact hash receipts matched strict metadata; reviewer did not re-open cleaned third-party binary inputs.",
+    "Prior synthetic schema/control successes are not substituted for candidate execution.",
+    "Reviewer performed read-only stdlib JSON/XML/hash/static-source inspection; no project imports/downloads, Gradle/build/tests, Actions dispatches, tracked edits, commit or push.",
+    "Independent review of old/new renderer metadata comparison was not needed or claimed; fresh metadata/BOM/draft relationships were directly checked."
+  ]
+}

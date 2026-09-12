@@ -1,0 +1,101 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/release_fix_review",
+  "reviewed_at": "2026-09-08T03:20:24.697361+00:00",
+  "classification": "DEFERRED NEXT-LANE RECOMMENDATION ONLY; NOT EXECUTED OR APPROVED AS PASS",
+  "dependency": "Root explicitly defers until native diagnostics and companion controls settle and final candidate is frozen. Record final SHA/tree/diff/source manifest and exact runner/exporter/renderer hashes then; do not use current normal-source10 binding as future candidate proof.",
+  "reopened_source": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/resolved_dependencies.init.gradle",
+      "sha256": "5120cb8d7c12825ad889f23d73075ef29ae48b66e4966d1e2335aa2d11995f59",
+      "read_lines": [
+        [
+          1,
+          107
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/dependency_inventory.py",
+      "sha256": "fc0238d4d6ea0abd60d2985ed214af6516a239e439269978139fcc9519a20534",
+      "read_lines": [
+        [
+          1,
+          271
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/docs/DEPENDENCY_INVENTORY.md",
+      "sha256": "ba13764bc6e544c9cf5803c5b9fbbe8262469fd9fe4474eaa6477be7e6876fb8",
+      "read_lines": [
+        [
+          1,
+          68
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/docs/DEPENDENCY_REVIEW.md",
+      "sha256": "92f82c2b4b3c9d6f2da08100e223cd84bb84333d62533c71366a04a1fcf73572",
+      "read_lines": [
+        [
+          1,
+          93
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py",
+      "sha256": "5c0e546c819c28762cbc6b355ec2717737fc53f96712af591a27add878579d7a",
+      "read_lines": [
+        [
+          1,
+          344
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/validate_dependency_sbom_02.py",
+      "sha256": "12e7e391b6bccb772db23aee9bd56bf0a14b56739ba9bf0e800fd988a327abf5",
+      "read_lines": [
+        [
+          1,
+          48
+        ]
+      ]
+    }
+  ],
+  "proposed_root_command": [
+    "/usr/bin/python3",
+    "-B",
+    "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py",
+    "dependency-graph-export-03",
+    "writeResolvedDependencyInventory",
+    "-I",
+    "scripts/verification/resolved_dependencies.init.gradle",
+    "-Pparlor.dependencyInventoryDir=/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/dependency-graph-export-03/raw-graphs"
+  ],
+  "preconditions": [
+    "One coordinated build lane, no competing native/Gradle work or unowned Gradle daemon; root checks current process/resource state.",
+    "Use JDK21 and checked-in Gradle8.13. Current wrapper appends strictverification, no-daemon, serial/maxworkers1, 3GiB heap and empty Androidsigningproperties; no signing/Store operation.",
+    "Cycle03 and raw-graphs must remain new. Wrapper creates evidence parent; exporter requires parent present and raw-graphs absent. lstat now absent=True.",
+    "No source/control changes during cycle; no unreviewed build-consumed untracked inputs; no verificationmetadata generation or repository overrides."
+  ],
+  "actual_task_scope": "Opt-in init script registers writeResolvedDependencyInventory after projectsEvaluated; not a built-in root task. Resolves AndroidreleaseRuntimeClasspath and iosArm64/iosSimulatorArm64/iosX64 main compilation graphs. Maven-artifact-only view avoids firstpartyappcompilation but configuration may compile conventionbuild. Four graphs contain selectedcomponents/edges/variants/filehashes; completionmanifest only after source recheck.",
+  "required_postexport": [
+    "Exit0 alone insufficient: exact4graphs, COMPLETEmanifest, equal sourceidentity=currentfrozencandidate, matching4graphdigests, strict=true, no unresolved graph edges; preserve compact graph receipts.",
+    "Immediately Gradlestop via wrapper finalizer; preserve graph evidence then exact owned build/scratch cleanup. Reconcile stop exit, workers/artifactworkers, source/runner before-after, retained/remainingoutputs/cleanuperrors. No globalcache cleanup.",
+    "Compare selectedcomponent/artifact/edge/variant changes against archived02 without pretending its older commit is currentcandidate. Investigate real byte/graph changes before next stage."
+  ],
+  "following_lane": [
+    "Run source-bound scripts/verification/dependency_inventory.py with graph03/raw-graphs and a new root-owned declaration destination through coordinated evidence/cleanup wrapper. Never run/import it from reviewer.",
+    "Renderer verifies completionhashes/source, fetches bounded public POMs from two hardcoded Mavenorigins, rejects redirects/unsafeXML, rereads graphbytes afterward. Any unresolved declaration/nonzeroexit remains explicit; no Gradleresolution changes.",
+    "Create a newly reviewed schema-consumer for the fresh report; archived validate_dependency_sbom_02.py has hardcoded03research and02output and must not be rerun/overwritten as fresh proof. Reuse only verified immutable official1.6schema bytes; validate exactly4expectednames with localreference resolution and bind report/filehashes."
+  ],
+  "limits": [
+    "Resolved-inputSBOM and publisherlicenses are not final-binarySBOM, proof of nativeobject survival, exhaustive embeddedcopyright audit or legalapproval.",
+    "Native framework/notices delivery, Androidunsignedreleasepackages, originalIOS-R1storagegap, deviceLAN/a11y, realStoreidentity/signing/legal and publicationgates remain independent.",
+    "No new processes beyond short-lived stdlib/read-onlyGit review; no builds, tests, network research, processcontrol, deletions or Gitmutations performed."
+  ]
+}

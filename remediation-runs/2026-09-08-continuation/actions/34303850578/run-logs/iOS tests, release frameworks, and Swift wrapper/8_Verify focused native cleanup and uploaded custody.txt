@@ -1,0 +1,97 @@
+﻿2026-09-09T03:31:30.2064560Z ##[group]Run /usr/bin/python3 -B scripts/ci/native_continuation.py cleanup
+2026-09-09T03:31:30.2066960Z [36;1m/usr/bin/python3 -B scripts/ci/native_continuation.py cleanup[0m
+2026-09-09T03:31:30.4186270Z shell: /bin/bash --noprofile --norc -e -o pipefail {0}
+2026-09-09T03:31:30.4186590Z env:
+2026-09-09T03:31:30.4186910Z   GRADLE_OPTS: -Dorg.gradle.project.kotlin.compiler.execution.strategy=in-process
+2026-09-09T03:31:30.4187410Z   DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
+2026-09-09T03:31:30.4188080Z   PARLOR_NATIVE_JOB_CLOCK: {"clock":"CLOCK_MONOTONIC_RAW","start_ns":224424423458,"run_id":34303850578,"run_attempt":1,"job":"ios","head_sha":"08d1adfbd7284f190fbab5f7baa846944bca5b68"}
+2026-09-09T03:31:30.4188910Z   JAVA_HOME: /Users/runner/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-101.0/arm64/Contents/Home
+2026-09-09T03:31:30.4189490Z   JAVA_HOME_21_ARM64: /Users/runner/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-101.0/arm64/Contents/Home
+2026-09-09T03:31:30.4189910Z   MAVEN_ARGS: -ntp
+2026-09-09T03:31:30.4190220Z   PARLOR_DISPATCH_SCOPE: native-evidence
+2026-09-09T03:31:30.4190540Z   PARLOR_FROZEN_SOURCE_SHA: 08d1adfbd7284f190fbab5f7baa846944bca5b68
+2026-09-09T03:31:30.4190860Z   PARLOR_NATIVE_UPLOAD_OUTCOME: success
+2026-09-09T03:31:30.4191120Z   PARLOR_NATIVE_ARTIFACT_ID: 10087146864
+2026-09-09T03:31:30.4191510Z   PARLOR_NATIVE_ARTIFACT_DIGEST: e5dc50b5a4318d43070819f7795834ddbec0fc92307cb73f083e4991dfcc649e
+2026-09-09T03:31:30.4191890Z ##[endgroup]
+2026-09-09T03:31:31.4320150Z {
+2026-09-09T03:31:31.4320980Z   "schema_version": 1,
+2026-09-09T03:31:31.4321620Z   "context": {
+2026-09-09T03:31:31.4322250Z     "repository": "Apdelrahman1911/parlor",
+2026-09-09T03:31:31.4323170Z     "branch": "fix/local-readiness-2026-09-07",
+2026-09-09T03:31:31.4324020Z     "head_sha": "08d1adfbd7284f190fbab5f7baa846944bca5b68",
+2026-09-09T03:31:31.4324880Z     "tree": "c19beea4647ce882c02d8751d1bf82c22484b52b",
+2026-09-09T03:31:31.4325870Z     "workflow": ".github/workflows/production-verification.yml",
+2026-09-09T03:31:31.4326780Z     "root": "/Users/runner/work/parlor/parlor",
+2026-09-09T03:31:31.4327470Z     "run_id": 34303850578,
+2026-09-09T03:31:31.4328020Z     "run_attempt": 1
+2026-09-09T03:31:31.4328500Z   },
+2026-09-09T03:31:31.4328980Z   "started_at": "2026-09-09T03:31:31.134880+00:00",
+2026-09-09T03:31:31.4329660Z   "status": "PASS",
+2026-09-09T03:31:31.4330140Z   "removed": [
+2026-09-09T03:31:31.4330870Z     "remediation-runs/2026-09-08-continuation/evidence/ios-readiness-23",
+2026-09-09T03:31:31.4331980Z     "remediation-runs/2026-09-08-continuation/evidence/ios-readiness-24",
+2026-09-09T03:31:31.4333110Z     "remediation-runs/2026-09-08-continuation/ios-readiness-source-ci.json",
+2026-09-09T03:31:31.4334170Z     "remediation-runs/2026-09-08-continuation/build-lane.lock"
+2026-09-09T03:31:31.4334970Z   ],
+2026-09-09T03:31:31.4335380Z   "errors": [],
+2026-09-09T03:31:31.4335850Z   "upload": {
+2026-09-09T03:31:31.4336310Z     "artifact_id": "10087146864",
+2026-09-09T03:31:31.4337240Z     "sha256": "e5dc50b5a4318d43070819f7795834ddbec0fc92307cb73f083e4991dfcc649e"
+2026-09-09T03:31:31.4338110Z   },
+2026-09-09T03:31:31.4338590Z   "native_runs": {
+2026-09-09T03:31:31.4339070Z     "l08": {
+2026-09-09T03:31:31.4339660Z       "cycle": "ios-readiness-23",
+2026-09-09T03:31:31.4340250Z       "command": [
+2026-09-09T03:31:31.4340740Z         "/usr/bin/python3",
+2026-09-09T03:31:31.4341270Z         "-B",
+2026-09-09T03:31:31.4342570Z         "/Users/runner/work/parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/compose_runner.py",
+2026-09-09T03:31:31.4344000Z         "ios-readiness-23",
+2026-09-09T03:31:31.4345880Z         "/Users/runner/work/parlor/parlor/remediation-runs/2026-09-08-continuation/ios-readiness-source-ci.json",
+2026-09-09T03:31:31.4347280Z         "54402bb821327f8256b04e730591ac31d349f831d64ca554678a02e819e58763",
+2026-09-09T03:31:31.4348130Z         "--simulator-signing=adhoc",
+2026-09-09T03:31:31.4348850Z         "--toolchain=qualified-xcode-26.3",
+2026-09-09T03:31:31.4350550Z         "--simulator-lifecycle=direct-owned-v1"
+2026-09-09T03:31:31.4351210Z       ],
+2026-09-09T03:31:31.4351740Z       "started_at": "2026-09-09T02:36:37.263171+00:00",
+2026-09-09T03:31:31.4352420Z       "status": "FINISHED",
+2026-09-09T03:31:31.4352950Z       "exit_code": 1,
+2026-09-09T03:31:31.4353550Z       "finished_at": "2026-09-09T03:10:09.272532+00:00",
+2026-09-09T03:31:31.4354270Z       "receipt_status": "FAIL",
+2026-09-09T03:31:31.4354870Z       "cleanup_safe": true,
+2026-09-09T03:31:31.4355770Z       "receipt_sha256": "f113c4189807486d96a6b9b81c2a2f09dbb8c54600c2eb9065348c15531a4a2a"
+2026-09-09T03:31:31.4356720Z     },
+2026-09-09T03:31:31.4357150Z     "normal": {
+2026-09-09T03:31:31.4357620Z       "cycle": "ios-readiness-24",
+2026-09-09T03:31:31.4358200Z       "command": [
+2026-09-09T03:31:31.4358670Z         "/usr/bin/python3",
+2026-09-09T03:31:31.4359360Z         "-B",
+2026-09-09T03:31:31.4360660Z         "/Users/runner/work/parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
+2026-09-09T03:31:31.4362130Z         "ios-readiness-24",
+2026-09-09T03:31:31.4363220Z         "/Users/runner/work/parlor/parlor/remediation-runs/2026-09-08-continuation/ios-readiness-source-ci.json",
+2026-09-09T03:31:31.4364650Z         "7cdd2dee7adb3a53be0d2c2487e0e776dbc83208693909b6ecbfb0b872e3a82f",
+2026-09-09T03:31:31.4365540Z         "--simulator-signing=adhoc",
+2026-09-09T03:31:31.4366260Z         "--toolchain=qualified-xcode-26.3",
+2026-09-09T03:31:31.4367270Z         "--simulator-lifecycle=direct-owned-v1",
+2026-09-09T03:31:31.4368300Z         "--image-observer=libproc"
+2026-09-09T03:31:31.4369070Z       ],
+2026-09-09T03:31:31.4369660Z       "started_at": "2026-09-09T03:10:09.504773+00:00",
+2026-09-09T03:31:31.4370850Z       "status": "FINISHED",
+2026-09-09T03:31:31.4371490Z       "exit_code": 1,
+2026-09-09T03:31:31.4372270Z       "finished_at": "2026-09-09T03:31:28.246887+00:00",
+2026-09-09T03:31:31.4372840Z       "receipt_status": "FAIL",
+2026-09-09T03:31:31.4373220Z       "cleanup_safe": true,
+2026-09-09T03:31:31.4374360Z       "receipt_sha256": "c8317c5612c11173746b8bb0e637f1b796b51056b3205f0713b7ac9475ff5e87"
+2026-09-09T03:31:31.4374960Z     }
+2026-09-09T03:31:31.4375300Z   },
+2026-09-09T03:31:31.4375640Z   "cache_policy": {
+2026-09-09T03:31:31.4376030Z     "created": [
+2026-09-09T03:31:31.4376410Z       "/Users/runner/.gradle/caches",
+2026-09-09T03:31:31.4376970Z       "/Users/runner/.gradle/wrapper"
+2026-09-09T03:31:31.4377510Z     ],
+2026-09-09T03:31:31.4377980Z     "policy": "Dependency/distribution cache only; never delete global caches."
+2026-09-09T03:31:31.4378510Z   },
+2026-09-09T03:31:31.4379150Z   "stop_policy": "Canonical native receipts attest immediate/final isolated Gradle stops; preflight builds nothing.",
+2026-09-09T03:31:31.4380010Z   "source_unchanged": true,
+2026-09-09T03:31:31.4380480Z   "finished_at": "2026-09-09T03:31:31.430898+00:00"
+2026-09-09T03:31:31.4380900Z }

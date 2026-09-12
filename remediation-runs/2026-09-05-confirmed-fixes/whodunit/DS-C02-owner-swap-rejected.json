@@ -1,0 +1,106 @@
+{
+  "at": "2026-09-05T20:17:40.407806+00:00",
+  "candidate": "DS-C02-R1 - speculative stale queue on root owner replacement",
+  "classification": "REJECTED AS CONFIRMED APPLICATION DEFECT - no production-reachable owner swap established",
+  "reviewer": "/root/whodunit_cont",
+  "scope": "Root requested investigation following synthetic owner test failure",
+  "coverage": [
+    {
+      "path": "composeApp/src/commonMain/kotlin/com/parlor/app/App.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/composeApp/src/commonMain/kotlin/com/parlor/app/App.kt",
+      "sha256": "622b679a2ef023fab17bf6c8ed8eb38c1fbc2b76a391f5f9a8298d59da9dda59",
+      "reviewed_ranges": [
+        [
+          1,
+          338
+        ]
+      ],
+      "line_count": 338,
+      "reviewer": "/root/whodunit_cont",
+      "cross_file_path": "Platform App mount -> single remembered root toast state outside language/theme/nav -> sole common host; no in-place owner replacement"
+    },
+    {
+      "path": "composeApp/src/androidMain/kotlin/com/parlor/app/MainActivity.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/composeApp/src/androidMain/kotlin/com/parlor/app/MainActivity.kt",
+      "sha256": "23d3107249b2dbfdce0cd88361e644a71ef8c9c94316617c8782fb2a00ec2a45",
+      "reviewed_ranges": [
+        [
+          1,
+          69
+        ]
+      ],
+      "line_count": 69,
+      "reviewer": "/root/whodunit_cont",
+      "cross_file_path": "Platform App mount -> single remembered root toast state outside language/theme/nav -> sole common host; no in-place owner replacement"
+    },
+    {
+      "path": "composeApp/src/iosMain/kotlin/com/parlor/app/MainViewController.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/composeApp/src/iosMain/kotlin/com/parlor/app/MainViewController.kt",
+      "sha256": "c77abd03ddcae230b4752d888b16c3d74231d89c967624c31129d176a5ed20ce",
+      "reviewed_ranges": [
+        [
+          1,
+          56
+        ]
+      ],
+      "line_count": 56,
+      "reviewer": "/root/whodunit_cont",
+      "cross_file_path": "Platform App mount -> single remembered root toast state outside language/theme/nav -> sole common host; no in-place owner replacement"
+    },
+    {
+      "path": "composeApp/src/desktopMain/kotlin/com/parlor/app/Main.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/composeApp/src/desktopMain/kotlin/com/parlor/app/Main.kt",
+      "sha256": "1c7d1f24c31b2e4fc6973c66018046e7c09245779b95f7fb01faa6ee7032b866",
+      "reviewed_ranges": [
+        [
+          1,
+          71
+        ]
+      ],
+      "line_count": 71,
+      "reviewer": "/root/whodunit_cont",
+      "cross_file_path": "Platform App mount -> single remembered root toast state outside language/theme/nav -> sole common host; no in-place owner replacement"
+    },
+    {
+      "path": "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/localization/ProvideAppLanguage.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/localization/ProvideAppLanguage.kt",
+      "sha256": "b4f4286459fe923ebaa3e156f4a9995232ce40ad32ae9bc43f73a929da77dc18",
+      "reviewed_ranges": [
+        [
+          1,
+          62
+        ]
+      ],
+      "line_count": 62,
+      "reviewer": "/root/whodunit_cont",
+      "cross_file_path": "Platform App mount -> single remembered root toast state outside language/theme/nav -> sole common host; no in-place owner replacement"
+    },
+    {
+      "path": "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/ParlorToastHost.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/ParlorToastHost.kt",
+      "sha256": "ea4e554c099511942e13e07281df48419c333948be7a64d65a72b7dd49ea25b0",
+      "reviewed_ranges": [
+        [
+          1,
+          230
+        ]
+      ],
+      "line_count": 230,
+      "reviewer": "/root/whodunit_cont",
+      "cross_file_path": "Platform App mount -> single remembered root toast state outside language/theme/nav -> sole common host; no in-place owner replacement"
+    }
+  ],
+  "proof": [
+    "Only production ParlorToastState construction is App.kt81 remembered val",
+    "Only production host at App.kt320 receives that fixed value; no feature-provided host or mutable state owner",
+    "Language/theme/nav are descendants of owner creation; parameter recomposition does not replace unkeyed remember",
+    "Platform App recreation disposes old host with old state, rather than pairing existing collector with a new state",
+    "Library source permits stale remembered collected value when Flow actually changes, but that synthetic API scenario has no complete current shipping call path here"
+  ],
+  "limits": [
+    "No pixel measurement or native owner-switch capture was performed",
+    "No claim about unrelated notification privacy or localization scenarios",
+    "Original confirmed same-owner ID-reuse defect is distinct and remains valid"
+  ],
+  "source_changes": "Only separately authorized two-frame test fixture correction; no production remediation for rejected candidate"
+}

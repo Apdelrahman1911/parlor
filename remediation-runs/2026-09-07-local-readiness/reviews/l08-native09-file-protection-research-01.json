@@ -1,0 +1,298 @@
+{
+  "schema_version": 1,
+  "research_id": "L08-NATIVE09-FILE-PROTECTION-RESEARCH-01",
+  "created_at_utc": "2026-09-07T23:25:42.649617+00:00",
+  "reviewer": "/root/native_fix_review",
+  "requested_by": "/root",
+  "scope": "Research only: reopen native09 observations, production IosSnapshotFileSystem and L08 observer; inspect installed SDK declarations, authoritative Apple documentation and applicable upstream implementation. No production/control edits, builds, tests, native probes, simulator actions, process attachments, or other-task cleanup.",
+  "status": "RESEARCH_COMPLETE_UPSTREAM_SIMULATOR_GUARD_ESTABLISHED_INSTALLED_RUNTIME_BINDING_UNRESOLVED",
+  "summary": [
+    "Actual09 proves that the required directory NSFileManager attribute getter returned a dictionary without NSFileProtectionKey, without NSError. The file getter was diagnostic-only and showed the same absence. Both independent volume capability queries returned supported.",
+    "Public swift-foundation source at immutable commit 60bd7a1d8a730ebdeab2cb037b0519ef3b010ed3 explicitly excludes Simulator from the FileManager protection getter/setter path. Surrounding attribute-population helpers do not add this key. This supplies authoritative implementation counter-evidence to an application bug or unsupported-volume inference.",
+    "The inspected tag is not attested as the exact Foundation binary loaded by the iOS26.5/23F77 Simulator. The protected NSData open/relocation implementation also delegates to non-public Foundation helpers. Therefore exact installed-runtime behavior and physical Data Protection remain unverified.",
+    "Do not weaken the original L08 equality assertions, reinterpret the failed run as PASS, change entitlements, or change production storage on this evidence alone. A tiny separately-owned native Foundation control can distinguish current Simulator/API behavior from Kotlin/application handling."
+  ],
+  "baseline": {
+    "repository": "/Users/abdelrahman/Projects/parlor",
+    "branch": "fix/local-readiness-2026-09-07",
+    "commit": "b6e1947c62661631d0593038db7f64dbf25f720e",
+    "tree": "f03ad1b302d951d0ca9811b1efab2751a8be6978",
+    "tracked_status_at_report": "M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/README.md\n M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/external_image_provenance.py\n M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_control_tests.py\n M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py\n M scripts/verification/ios-readiness/L08StorageProbe.kt.in\n M scripts/verification/ios-readiness/l08_receipts.py\n M scripts/verification/ios-readiness/test_l08_diagnostics.py",
+    "native09_diff_sha256": "36dd70117778d1f5d038acfab1ab46ffb464cd8c78b2428552214bfe6fdffed1",
+    "native09_source_manifest_sha256": "b8baa32067fdf29135e3e935429768b710c65897c334f2bb8ac8108f6aa85359",
+    "source_identity_evidence": "remediation-runs/2026-09-07-local-readiness/evidence/l08-native09-protection-research-01/source-sdk-observations-01.json",
+    "source_identity_evidence_sha256": "368ec5a3b6853d1de932c256749764adfeb3de0bc594edacc5afe1b955bf1699",
+    "preservation": "All existing modifications/untracked audit and design files preserved. Only additive report/research material created; only an identity-checked, task-generated, unusable public search response removed."
+  },
+  "actual_native09": {
+    "receipt": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-09/receipt.json",
+      "sha256": "7035d9505efe8cf1d5d9012024c6c5883c0e9371b97a5a5c5a0cfa15ccf36567"
+    },
+    "operation": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-09/parlor-l08-storage-1-save.json",
+      "sha256": "c2e85bf1895334d9c1ad18c5216a5094846c80b235ad500c12f2893acc955132"
+    },
+    "xctest": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-09/xcresult-summary.json",
+      "sha256": "da98531f052f485f1b31ed02eec50d8218da3c6d971048df178bb3f82c18b5d8",
+      "passed": 4,
+      "failed": 1,
+      "skipped": 0,
+      "xcode_exit_code": 65
+    },
+    "environment": {
+      "xcode": "26.5/17F42",
+      "sdk": "iphonesimulator26.5",
+      "runtime": "iOS26.5/23F77",
+      "device_type": "iPhone17 Pro Simulator",
+      "architecture": "arm64",
+      "host": "macOS26.2",
+      "signing": "adhoc"
+    },
+    "observed_boundary": {
+      "operation": "boot1/save",
+      "status": "FAIL",
+      "stage": "metadata-directory-protection",
+      "directory_attributes": {
+        "dictionary_present": true,
+        "protection_key_present": false,
+        "native_error_present": false
+      },
+      "file_attributes": {
+        "role": "diagnostic-only",
+        "dictionary_present": true,
+        "protection_key_present": false,
+        "native_error_present": false
+      },
+      "directory_volume_support": "supported",
+      "file_volume_support": "supported"
+    },
+    "reached_source_path": [
+      "L08StorageProbe.kt.in150–176 confirms real store/filesystem/transport bindings, strict absence, reducer-built envelope, successful real save and same-process load; assertEnvelope312–319 checks complete GameSnapshot equality.",
+      "protectedMetadata491–506 validates owned regular path, existence, directory/file backup exclusion, non-null protection constants, then performs the required directory getter and unchanged Complete equality.",
+      "On directory failure, protectionFailure551–569 gathers only diagnostic file attributes and volume observations. It does not execute or waive the required file assertion.",
+      "Production basePath76–108 requests Complete for directory creation; write133–140 encrypts first; writeProtected362–374 combines NSDataWritingAtomic OR NSDataWritingFileProtectionComplete then excludes the resulting file from backup."
+    ],
+    "not_reached_or_not_proven": [
+      "Original required regular-file protection equality at509–510; encrypted-header gate512–516; remaining cross-process storage boots and complete L08 scenario.",
+      "Full native artifact/provenance verifier success: actual09 failed before overall verifier completion. The observed framework leaf digest/UUID is evidence, not a substitute for completed provenance acceptance.",
+      "No app crash was established by this result; XCTest reports FAIL versus PASS assertion.",
+      "Directory creation timing is not measured: initial store.load absence checks and earlier actual app work may initialize the lazy path before save. Do not assume a brand-new directory was created at the save call."
+    ],
+    "observed_compose_leaf": {
+      "file_bytes": 84025752,
+      "file_sha256": "008acbac7e02fd1ee6d9ae1dbc08e7d13de16a8ac62830eeed12b06d6d1e7422",
+      "image_uuid": "be20d762-6597-34dd-959b-7c685794db28",
+      "origin": "owned-copy-build",
+      "path": "xcode-frameworks/Debug/iphonesimulator26.5/ComposeApp.framework/ComposeApp"
+    },
+    "cleanup_context": "Actual09 records two separate secondary FIFO attestation cleanup errors; root/factory own investigation. This research neither modifies the receipt nor resolves/waives those errors."
+  },
+  "authoritative_references": [
+    {
+      "id": "R1",
+      "url": "https://developer.apple.com/documentation/foundation/fileattributekey/protectionkey",
+      "evidence": "remediation-runs/2026-09-07-local-readiness/evidence/l08-native09-protection-research-01/official-protection-key.json",
+      "claim": "NSFileProtectionKey identifies file protection level; value is NSString. No Simulator-specific guarantee is documented here.",
+      "applicability": "The exact key imported by production and probe; installed SDK declares iOS4+ availability."
+    },
+    {
+      "id": "R2",
+      "url": "https://developer.apple.com/documentation/foundation/nsdata/writingoptions/completefileprotection",
+      "evidence": "remediation-runs/2026-09-07-local-readiness/evidence/l08-native09-protection-research-01/official-nsdata-protection.json",
+      "claim": "Complete requests encrypted storage accessible only while unlocked. SDK defines Atomic=1 and Complete=0x20000000, so production bitwise OR is not an evident option-combination error.",
+      "applicability": "API/constant contract, not physical or Simulator execution proof."
+    },
+    {
+      "id": "R3",
+      "url": "https://developer.apple.com/documentation/foundation/urlresourcekey/volumesupportsfileprotectionkey",
+      "evidence": "remediation-runs/2026-09-07-local-readiness/evidence/l08-native09-protection-research-01/official-volume-key.json",
+      "claim": "Boolean capability of the containing volume, not the protection class of an individual item. NSURL.h310–313 permits a volume-key query via either file or directory URL.",
+      "applicability": "Explains why supported is not inconsistent with a Foundation getter that omits per-file metadata; does not establish actual protection."
+    },
+    {
+      "id": "R4",
+      "url": "https://developer.apple.com/documentation/foundation/filemanager/createdirectory(atpath:withintermediatedirectories:attributes:)",
+      "evidence": "remediation-runs/2026-09-07-local-readiness/evidence/l08-native09-protection-research-01/official-filemanager-directory.json",
+      "claim": "Directory creation accepts attributes for newly created directories; not a guaranteed repair of an already-existing directory.",
+      "applicability": "Production lazy base path uses createIntermediates=true; actual09 does not independently measure first creation."
+    },
+    {
+      "id": "R5",
+      "url": "https://developer.apple.com/documentation/foundation/filemanager/setattributes(_:ofitematpath:)",
+      "evidence": "remediation-runs/2026-09-07-local-readiness/evidence/l08-native09-protection-research-01/official-filemanager-setattributes.json",
+      "claim": "Official prose includes ignored attribute rejections and a limited parameter list; cannot infer protection behavior from missing list entries. SDK return-value comments alone also cannot prove every attribute persisted.",
+      "applicability": "Counter-evidence to relying only on create/set success; reinforces measured readback, not a recommendation to weaken it."
+    },
+    {
+      "id": "R6",
+      "url": "https://developer.apple.com/documentation/xcode-release-notes/xcode-26_5-release-notes",
+      "evidence": "remediation-runs/2026-09-07-local-readiness/evidence/l08-native09-protection-research-01/official-xcode26-5.json",
+      "claim": "Xcode26.5 includes Swift6.3 and iOS26.5 SDK and supports macOS26.2+. Entire primary release-note content examined; no File Protection issue found.",
+      "applicability": "Exact locally installed Xcode/SDK family; lack of a release-note entry is not proof of support."
+    },
+    {
+      "id": "R7",
+      "url": "https://github.com/swiftlang/swift-foundation/blob/60bd7a1d8a730ebdeab2cb037b0519ef3b010ed3/Sources/FoundationEssentials/FileManager/FileManager%2BFiles.swift#L638-L666",
+      "evidence": "remediation-runs/2026-09-07-local-readiness/evidence/l08-native09-protection-research-01/upstream-source-identity-01.json",
+      "claim": "The getter populates protectionKey only inside !targetEnvironment(simulator) && FOUNDATION_FRAMEWORK. FileManager setter990–1000 has the same exclusion. stat attribute population164–201 and Utilities86–124 catInfo do not add protectionKey; extended attributes remain nested. Bridge46–71 forwards to this implementation.",
+      "applicability": "Immutable official Swift project implementation source, not a forum or swift-corelibs Linux substitute; exact installed Foundation image/source correspondence remains unestablished."
+    },
+    {
+      "id": "R8",
+      "url": "https://github.com/swiftlang/swift-foundation/blob/60bd7a1d8a730ebdeab2cb037b0519ef3b010ed3/Sources/FoundationEssentials/FileManager/FileManager%2BDirectories.swift#L313-L375",
+      "evidence": "remediation-runs/2026-09-07-local-readiness/evidence/l08-native09-protection-research-01/swift-tag-FileManager+Directories.swift",
+      "claim": "Darwin/Foundation recursive directory creation returns immediately for EEXIST and applies attributes to new directories through try? setAttributes; comment explicitly preserves binary compatibility.",
+      "applicability": "Shows why source-level attribute request/create success does not itself establish persisted class in this implementation. Does not prove this was the native09 creation path."
+    },
+    {
+      "id": "R9",
+      "url": "https://github.com/swiftlang/swift-foundation/blob/60bd7a1d8a730ebdeab2cb037b0519ef3b010ed3/Sources/FoundationEssentials/Data/Data%2BWriting.swift#L49-L55",
+      "evidence": "remediation-runs/2026-09-07-local-readiness/evidence/l08-native09-protection-research-01/swift-tag-Data+Writing.swift",
+      "claim": "Foundation Data writing delegates to private _NSOpenFileDescriptor_Protected; relocated atomic writes also delegate option computation to private _NSDataWritingOptionsForRelocatedAtomicWrite. Public source alone does not reveal whether those helpers suppress/apply Complete for this Simulator.",
+      "applicability": "Preserves a critical limit: FileManager getter omission is not proof that NSData wrote plaintext or no per-file protection."
+    },
+    {
+      "id": "R10",
+      "url": "https://github.com/swiftlang/swift-foundation/blob/60bd7a1d8a730ebdeab2cb037b0519ef3b010ed3/README.md",
+      "evidence": "remediation-runs/2026-09-07-local-readiness/evidence/l08-native09-protection-research-01/swift-foundation-readme-tag.md",
+      "claim": "OS Foundation includes swift-foundation source; swift-corelibs-foundation is non-Darwin only and best-effort compatibility.",
+      "applicability": "Makes source family relevant but is not a binary provenance guarantee for a particular OS image."
+    },
+    {
+      "id": "R11",
+      "url": "https://support.apple.com/guide/security/data-protection-overview-secf6276da8a/web",
+      "evidence": "remediation-runs/2026-09-07-local-readiness/evidence/l08-file-protection-research-01/apple-platform-data-protection.json",
+      "accessed_at_utc": "2026-09-07T20:28:15.750320+00:00",
+      "claim": "Apple-silicon Macs support Data Protection and developers can opt into higher per-file/per-extent classes. macOS26.4 default FileVault statement does not apply to this26.2 host.",
+      "applicability": "Counter-evidence to a blanket claim that a Mac host cannot support File Protection. Previously retained primary visible paragraphs reopened; fresh body attempt exceeded300KB bound and is not used as new proof."
+    },
+    {
+      "id": "R12",
+      "url": "https://developer.apple.com/documentation/xcode/running-your-app-on-simulated-or-physical-devices",
+      "evidence": "remediation-runs/2026-09-07-local-readiness/evidence/l08-native09-protection-research-01/official-running-devices.json",
+      "claim": "Current Apple guidance says simulated devices do not replicate every physical-device feature and physical testing remains needed.",
+      "applicability": "General boundary only; current page includes newer Device Hub terminology and does not specify File Protection behavior for26.5."
+    },
+    {
+      "id": "R13",
+      "url": "https://developer.apple.com/library/archive/documentation/IDEs/Conceptual/iOS_Simulator_Guide/TestingontheiOSSimulator/TestingontheiOSSimulator.html",
+      "evidence": "remediation-runs/2026-09-07-local-readiness/evidence/l08-native09-protection-research-01/official-simulator-archive.html",
+      "claim": "Archive is retired/deprecated for Xcode9+ (2018); examined visible text does not specify current File Protection behavior.",
+      "applicability": "Historical lead only, not proof of either current support or unsupported status."
+    }
+  ],
+  "counter_hypotheses": [
+    {
+      "hypothesis": "The underlying volume is unsupported",
+      "classification": "NOT_ESTABLISHED_COUNTER_EVIDENCE_PRESENT",
+      "reason": "Both observed capability getters returned supported with no error; missing item key alone cannot negate that observation."
+    },
+    {
+      "hypothesis": "Production fails to request Complete or combines flags incorrectly",
+      "classification": "NOT_ESTABLISHED_SOURCE_COUNTER_EVIDENCE",
+      "reason": "Production requests the non-null named Complete class and ORs the documented Atomic/Complete flags; no alternate path in observed save changes them at application level."
+    },
+    {
+      "hypothesis": "Simulator Foundation intentionally omits this FileManager attribute",
+      "classification": "ESTABLISHED_IN_IDENTIFIED_UPSTREAM_SOURCE_INSTALLED_RUNTIME_UNCONFIRMED",
+      "reason": "Explicit Simulator exclusion in getter/setter and bridge path. Exact installed Foundation correspondence still needs a native control or attested binary proof."
+    },
+    {
+      "hypothesis": "Missing entitlement or signing identity caused this result",
+      "classification": "UNCONFIRMED_NO_SUPPORTING_PROOF",
+      "reason": "No inspected authoritative source/receipt establishes that cause. Adhoc Simulator signature and successful application encryption/save are not physical Data Protection evidence. Do not add entitlements or use private signing material."
+    },
+    {
+      "hypothesis": "Backup exclusion or existing-directory sequence changed the class",
+      "classification": "UNCONFIRMED",
+      "reason": "No direct before/after creation/backup-setting protection observations. A native control can measure this without mutating real snapshots."
+    },
+    {
+      "hypothesis": "The entire storage scenario succeeded except an irrelevant warning",
+      "classification": "REJECTED",
+      "reason": "XCTest failed a required assertion, remaining boots and required checks did not run, and full provenance/cleanup had failures. Retain FAIL/unresolved status."
+    }
+  ],
+  "smallest_next_fixture_proposal": {
+    "status": "PROPOSAL_ONLY_NOT_IMPLEMENTED_NOT_EXECUTED",
+    "purpose": "On the exact owned Debug app-host and iOS26.5/23F77 runtime, independently measure native Foundation creation/write/readback without Koin/session/Keychain/Kotlin mapping. Do not start a new runner architecture.",
+    "ownership": [
+      "Use root-owned single native lane after secondary FIFO ownership cleanup is resolved. Fresh task-owned simulator only; no connected phone or existing user profile.",
+      "Use a fresh token-bound Application Support child outside Parlor/snapshots and all production/legacy/rejoin names. Attest app bundle/UDID/container/parent and exact file types; reject symlinks/existing destination. No real player data or keychain access.",
+      "Keep only1 directory and1 small public fixed-ASCII fixture file for primary control; optional different files only if the primary result warrants them. Bound names, bytes, retries, receipts, and cleanup."
+    ],
+    "native_boundary": "Prefer direct Objective-C NSFileManager/NSData selectors (or a reviewed Swift bridge that demonstrably calls those same Objective-C APIs), so Kotlin map/string bridging is removed without silently replacing NSData with an unrelated writer.",
+    "primary_steps": [
+      "Create the fresh directory using attributes NSFileProtectionKey:NSFileProtectionComplete and createIntermediates=true. Record Boolean/typed NSError category+code; immediately read directory NSFileManager attributes.",
+      "Apply native URL backup exclusion only to this fixture directory and read attributes again to distinguish creation versus subsequent attribute handling; never apply a protection repair to a production directory.",
+      "Write the small fixture via NSData options Atomic|FileProtectionComplete. Record return/error; read native NSFileManager protection and, for this regular file only, fresh NSURLFileProtectionKey using the corresponding NSURL protection constants.",
+      "Apply fixture file backup exclusion and repeat these bounded metadata observations. Query volume support separately using fresh URLs; do not substitute the capability Boolean for per-item Complete.",
+      "Record only closed metadata enums/booleans/error category+code plus approved source/runtime/image identity. Do not record raw paths, complete dictionaries, payload, NSError descriptions, credentials, or private state.",
+      "Always collect compact receipt and execute owner-attested exact cleanup of fixture entries, app/test workers, DerivedData and generated build outputs; stop Gradle immediately and again after cleanup as required."
+    ],
+    "optional_followups": [
+      "If needed, compare a second non-atomic Complete file and a third explicit native setAttributes file, preserving each pre/post observation; do not mutate the primary control into a success.",
+      "If native Foundation differs from Kotlin, read the same owned synthetic file from both with documented key types and bind observations to one process/run.",
+      "If native NSFileManager omits the key but NSURL returns Complete, investigate getter-surface differences; this still does not prove hardware lock/backup semantics. No private APIs/entitlement changes."
+    ],
+    "interpretation": [
+      "Native getter also omits protection after the same direct calls: current runtime reproduction independent of Parlor/Kotlin; consistent with identified upstream Simulator guard. It does not prove universal Simulator incapability or absence of underlying encryption.",
+      "Native getter reports Complete but Parlor does not: current upstream equivalence assumption is insufficient; compare creation timing, backup attribute application, Objective-C bridge and exact types/paths without changing production first.",
+      "Any native creation/write/query error is a distinct controlled observation, not proof that original application code is wrong.",
+      "Original L08 gate remains failed/unresolved until its applicability is deliberately classified on this evidence. A control witness is not repair evidence and does not execute the original missing storage boots. Physical lock/unlock, backup and Store-qualified signing remain separate."
+    ]
+  },
+  "limitations": [
+    "No new simulator/physical runtime or executable regression was performed in this research task.",
+    "No installed Foundation binary-to-upstream source attestation; no private Foundation/helper implementation was read.",
+    "No private signing material, real player data, global preferences, connected devices or unrelated user files were inspected.",
+    "ROOT owns native09 FIFO cleanup and any later fixture authorization. This additive report is not a new independently approved application defect and does not change the confirmed-defect count."
+  ],
+  "evidence_indexes": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-native09-protection-research-01/fetches-01.json",
+      "sha256": "36f2cb8d04474de2eeb0de253aa145422e60840b2b8b0081328b29d3f1d45487"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-native09-protection-research-01/fetches-02.json",
+      "sha256": "9ea9cfdb70b1249a1e34407e82f17f9c02d58180ad1092e4e0ea38934dd3a139"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-native09-protection-research-01/fetches-03.json",
+      "sha256": "940614bdc17f2b84f24099c31910d2e04cd7c2975dfb45a927524a3de0e9730f"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-native09-protection-research-01/fetches-04.json",
+      "sha256": "695de478d943b2e2da244fdf745cbc71b926e7085cd13125f9d4550194b574ba"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-native09-protection-research-01/fetches-05.json",
+      "sha256": "7e550d7599f8739fee61c300bd2d9c7b618b54aa5430ae0a80237b34017c1ede"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-native09-protection-research-01/fetches-06.json",
+      "sha256": "ce7ec50326da0e600819903a58661dca7aab6efe4261adc07ae428c8f869ad69"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-native09-protection-research-01/fetches-07.json",
+      "sha256": "ef543de0e9d60e3ebb7dbac6e2766cfe8cf56039475b13dd06a0f53fc91d28e5"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-native09-protection-research-01/upstream-source-identity-01.json",
+      "sha256": "13a415aca3dc7ea7bf053b68652bcf232415cd3fde8e6395422464bcc7617a70"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-native09-protection-research-01/cleanup-01.json",
+      "sha256": "ed046c859575643be875d9f6f3b0514dca68ef654d33866520ab7abc9436b30a"
+    }
+  ],
+  "cleanup": {
+    "record": "remediation-runs/2026-09-07-local-readiness/evidence/l08-native09-protection-research-01/cleanup-01.json",
+    "task_started_builds": false,
+    "task_started_simulator_or_app_processes": false,
+    "live_task_network_workers": 0,
+    "root_lane_untouched": true
+  }
+}

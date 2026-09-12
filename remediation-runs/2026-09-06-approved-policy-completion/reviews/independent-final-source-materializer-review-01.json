@@ -1,0 +1,103 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-09-06T15:30:40.862840+00:00",
+  "reviewer": "/root/factory_review",
+  "author": "/root",
+  "classification": "APPROVED_SOURCE_COVERAGE_AND_ATTRIBUTION_FOR_ROOT_EXECUTION",
+  "scope": "Sanity review of additive final source/patch materializer, not execution approval of any app repair or proof outputs were generated.",
+  "script": {
+    "path": "remediation-runs/2026-09-06-approved-policy-completion/root/prepare_final_source.py",
+    "sha256": "d1086c8aff9df2b852ad19cae4c500b9c84ee68072f524bbd83ada719f8bec57"
+  },
+  "script_lines_read": [
+    [
+      1,
+      150
+    ]
+  ],
+  "called_helper_review": {
+    "path": "remediation-runs/2026-09-06-approved-policy-completion/run_gradle_cycle.py",
+    "sha256": "d2d18c2311d59554db88be3f92e609ec5ca46fc8af4c79702836f9e4c130240f",
+    "reviewed_ranges": [
+      [
+        1,
+        190
+      ],
+      [
+        266,
+        279
+      ]
+    ],
+    "relevant_definitions": "Module top-level declarations only; identity95..111 performs readonlyGit/filehash. owned_outputs89..93 only returns generated build paths. main guarded under __main__, so import does not build/stop/cleanup."
+  },
+  "source": {
+    "branch": "main",
+    "commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+    "tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+    "diff_sha256": "148fb4583d8fa8341b3cbc48a7fc0bc7564bf4df5c27e9d80e32c6bfdc57b784",
+    "source_manifest_sha256": "9ac2be536979f2216b39c10a6d148125a12380987d4efd483bbcbaeb1733318e"
+  },
+  "source_freeze": {
+    "path": "remediation-runs/2026-09-06-approved-policy-completion/source-freeze-02.json",
+    "sha256": "7b471f8561a728f4e429d957460f368ecb432aa83833c0f97d26c9ba819e70a4"
+  },
+  "source_inputs_rehashed": 669,
+  "source_drift": [],
+  "coverage": {
+    "old_full_campaign_paths": 62,
+    "new_inputs_this_phase": 11,
+    "current_modified_tracked_paths": 45,
+    "union": 84,
+    "modified_tracked": 45,
+    "new_untracked_source": 39,
+    "mapping_union_equals_expected": true,
+    "unattributed": [],
+    "mapping_outside_patch": [],
+    "empty_tracked_diffs": [],
+    "old_file_map_disposition": "All62oldmap entries preserved.4WD-C2 stories were formerly blocked/unchanged but now changed, so no empty trackedpatch entries.",
+    "new_phase_source_paths": [
+      "docs/PRE_RELEASE_COMPATIBILITY.md",
+      "docs/WHODUNIT_TEST_CONTENT.md",
+      "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaHostLanguageContinuityTest.kt",
+      "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/TestingStoryChronologyTest.kt",
+      "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/TestingStoryCompatibilityTest.kt",
+      "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/TestingStoryGameTraceTest.kt",
+      "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitRecoveryInteractionTest.kt",
+      "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/multiplayer/WhodunitHostLanguageContinuityTest.kt",
+      "iosApp/iosApp/ComposeContainerViewController.swift",
+      "iosApp/iosAppUITests/ComposeContainerViewControllerTests.swift",
+      "shared/networking-testing/src/commonMain/kotlin/com/parlor/networking/testing/ControlledStartRoom.kt"
+    ],
+    "cross_issue_attribution": "DS-C01 includes Swiftwrapper/target/test fixture/hostcontinuity/test-policy files; WD-C2 includes4contentcases, strictidentity/recoveryflow/resources/tests/docs; sharedfiles multiplyattributed, not duplicate defects.",
+    "exclusions": "UnrelatedAGENTS, audit/remediation evidence, designassets and handoffs excluded from full84filepatch. No private signing material or publication configuration change is included."
+  },
+  "safety_review": [
+    "Refuses different source identity than fullfreeze02 before materialization; exact SHA perinput rechecked before filecapture. Current669inputs matched independently.",
+    "Refuses existing generatedroot/module/buildlogic outputs rather than deleting task-needed files. Root must first resolve active/native lane.",
+    "Uses gitdiff only (trackedbinarydelta and untracked --no-index /dev/null); no stage/commit/reset/checkout/clean/merge/push.",
+    "Untracked symlink/nonregular inputs rejected; scope entries must exist in protectedsource inventory.",
+    "New reports/patch open with exclusive x/xb and preserve priorfiles. Partially writtennew reports mayremain on error; do not silentlyoverwrite them on retry.",
+    "Semantic source map status/author fields intentionally not copied from staleoldmap; currentstatus separately comesfrom issues.json/finalmatrix.",
+    "Relevance classification correctly catches desktop/common/iosTest and iosAppUITests; sharednetworking-testing fixture is explicitly nonshipping.",
+    "Changedline ranges including deletionlength0 describe diff only; comment correctly disclaims newfulllineauditcoverage."
+  ],
+  "current_version_notes": [
+    "Frozen source pathset/attribution is exact; no coverageblocker found.",
+    "Materializer has one identitygate atstart plus perfilehashbeforecapture, not fullpostwritefreeze revalidation. Executeonlywhile sourcefrozen and root lanequiet, then root must rehash source/patch and compare baseline as planned.",
+    "Output84file scope isfull16-repaircampaign, not just this11newfile continuation andnot a claimall16verified.",
+    "DS-C01status muststaypartial until nativeMafia+actualOSverification; current5/5smoke not fullmatrixproof."
+  ],
+  "execution": "NOT_EXECUTED by reviewer. No imports/evaluation of either Python module, no patch creation, no writes to NEW/final. AST parsed for source syntax/bookkeeping only.",
+  "supporting_matrix": {
+    "path": "remediation-runs/2026-09-06-approved-policy-completion/reviews/final-matrix-support-01.json",
+    "sha256": "c968be5fbcb7bff58288039b6d8ae4dc6e0c1f91a6a4344a42746ed04b9ab391"
+  },
+  "hygiene": {
+    "builds_tests_native_workers_started": 0,
+    "production_or_existing_evidence_modified": false,
+    "new_files_written": [
+      "reviews/independent-final-source-materializer-review-01.json"
+    ],
+    "cleanup": "No taskownedprocess/buildartifact created; did not stop or delete root activebuilds/globalcaches."
+  }
+}

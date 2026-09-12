@@ -1,0 +1,151 @@
+{
+  "reviewer": "/root/release_fix_review",
+  "recorded_at": "2026-09-06T01:24:42.508681+00:00",
+  "conclusion": "APPROVED FOR BOUNDED POST-CYCLE OBSERVATION EXECUTION; NOT FINAL OUTPUT OR APP RUNTIME APPROVAL",
+  "scope": "Current task-owned recorder and17synthetic evidence contracts. No production source authored or modified by reviewer.",
+  "files": [
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/record_final_observation_v2.py",
+      "sha256": "f5dabf6f162f4b4e359e928a5b371a6f42e1e1420c1c357b738707fc1753533d",
+      "reviewed_line_ranges": [
+        [
+          1,
+          283
+        ]
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/test_final_observation_v2.py",
+      "sha256": "745a6a52cac8084a3ed16d6d5bcba0d1f14e741e745a609875322c06bb9a98c3",
+      "reviewed_line_ranges": [
+        [
+          1,
+          144
+        ]
+      ]
+    }
+  ],
+  "previous_requests": {
+    "path": "remediation-runs/2026-09-05-confirmed-fixes/release_fix_review/final-observation-control-review-02.json",
+    "sha256": "afbf0563f174706c64a0a176f726e0317740b8273b760a470bbadcfab6826e8e"
+  },
+  "resolved": [
+    {
+      "request": "OBS-R2 pre-hash ancestry ordering",
+      "source_lines": [
+        [
+          58,
+          75
+        ],
+        [
+          198,
+          208
+        ]
+      ],
+      "evidence": "Same eligibility/exclusion list as pinned lane is enumerated and every candidate ancestry validated before lane.identity is called. Synthetic parent-alias test proves identity mock never invoked on rejection; valid path invokes it once. Build-lane lock itself also uses safe_path before opening."
+    },
+    {
+      "request": "OBS-R1 current worker verdict",
+      "source_lines": [
+        [
+          78,
+          83
+        ],
+        [
+          232,
+          251
+        ]
+      ],
+      "evidence": "Any observed unclassified worker yields BLOCKED and nonzero overall observation outcome rather than PASS. Current-worker classification explicit; no signaling or invented unrelated classification. Synthetic pass/block/fail assertions execute."
+    },
+    {
+      "request": "Control-source/test execution binding",
+      "evidence": "Cycle03receipt command embeds both expected SHA256s; raw log captures exact same before/after controls with test_exit_code0 and controls_unchanged=true. Both hashes still match reviewed files."
+    }
+  ],
+  "preserved_prior_fixes": "Modern/apphost-specific cleanup and native associated receipts; baseline pin/path checks/deduplication; explicit exact-digest legacy PID limitation; original134linev1 and prior253/119linev2 copies remain intact.",
+  "archived_old_controls": [
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/observation-controls-contracts-01/record_final_observation_v2.py",
+      "sha256": "823bce7b5ab9d1a529cba0e139c85e65915669de777981d2bc27614041b32c11"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/observation-controls-contracts-01/test_final_observation_v2.py",
+      "sha256": "7da7644a3d4fb696c38dff5fb7d9c827690523fe7e65e6eaa5df9b53daeeb93d"
+    }
+  ],
+  "cycles": [
+    {
+      "cycle": "final-observation-contracts-02",
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/final-observation-contracts-02/receipt.json",
+        "sha256": "3b5059cf1aead0a41a86033cb64a5a047692d5db67b9933fa9a072c06e144d71"
+      },
+      "raw_log": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/final-observation-contracts-02/gradle.log",
+        "sha256": "8226d65b2ed59aa817954fdf8d1d2bd3cbbdd06463c7fed266e76fa1687e2cb3"
+      },
+      "stop": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/final-observation-contracts-02/stop.log",
+        "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+      },
+      "executed_distinct_tests": 17,
+      "exit_code": 0,
+      "stop_exit_code": 0,
+      "cleanup_completed_at": "2026-09-06T01:16:31.756977+00:00",
+      "remaining_outputs": [],
+      "remaining_owned_workers": [],
+      "source_before": "e59da533dbec2f02f6f2b460ce72e2a7337af1e44abfb0bc6d533304d4127ec7",
+      "source_after": "e59da533dbec2f02f6f2b460ce72e2a7337af1e44abfb0bc6d533304d4127ec7"
+    },
+    {
+      "cycle": "final-observation-contracts-03",
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/final-observation-contracts-03/receipt.json",
+        "sha256": "9949837ab9e54e3ecc044ef47727b6db4c2337003f450470bd644e8ec6c39fb0"
+      },
+      "raw_log": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/final-observation-contracts-03/gradle.log",
+        "sha256": "ffe32a959e59d05d4dce1f08a2f697f6e5dc530bacdde057728d35296e3398a2"
+      },
+      "stop": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/final-observation-contracts-03/stop.log",
+        "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+      },
+      "executed_distinct_tests": 17,
+      "exit_code": 0,
+      "stop_exit_code": 0,
+      "cleanup_completed_at": "2026-09-06T01:20:52.642955+00:00",
+      "remaining_outputs": [],
+      "remaining_owned_workers": [],
+      "source_before": "e59da533dbec2f02f6f2b460ce72e2a7337af1e44abfb0bc6d533304d4127ec7",
+      "source_after": "e59da533dbec2f02f6f2b460ce72e2a7337af1e44abfb0bc6d533304d4127ec7"
+    }
+  ],
+  "hash_bound_cycle_captures": [
+    {
+      "controls_before": {
+        "record_final_observation_v2.py": "f5dabf6f162f4b4e359e928a5b371a6f42e1e1420c1c357b738707fc1753533d",
+        "test_final_observation_v2.py": "745a6a52cac8084a3ed16d6d5bcba0d1f14e741e745a609875322c06bb9a98c3"
+      }
+    },
+    {
+      "controls_after": {
+        "record_final_observation_v2.py": "f5dabf6f162f4b4e359e928a5b371a6f42e1e1420c1c357b738707fc1753533d",
+        "test_final_observation_v2.py": "745a6a52cac8084a3ed16d6d5bcba0d1f14e741e745a609875322c06bb9a98c3"
+      },
+      "controls_unchanged": true,
+      "test_exit_code": 0
+    }
+  ],
+  "counter_evidence_and_limits": [
+    "Source inventory protection/exclusion predicates were compared to the pinned lane; no attempt to read private files or mutate Git/source.",
+    "These are17distinct synthetic contracts executed twice, not34additional application tests. Main filesystem/process observation itself has not run or been approved.",
+    "Point-in-time observation does not prove whole-system RAM behavior, historical PID ownership, absence of future races or Store readiness.",
+    "Legacy ios-b1-red PID evidence remains incomplete; exact-hash exception exposes it rather than backfilling.",
+    "Final report/runtime/addendum bytes may change before materialization; this approval covers only the two stated control hashes and receipts.",
+    "Apphost01was an attempted failed/incomplete XCTest matrix; current control can recognize successful cleanup without calling the runtime successful."
+  ],
+  "process_cleanup": "No build/test/Gradle/Xcode/app/simulator/background workers started by this reviewer. Parent cycles02/03 show stop0, no retained/remaining outputs or owned worker survivors; no claim about subsequent cycles.",
+  "next_step": "After all remaining cycles finish, root may execute this frozen recorder. Independently reconcile the resulting observation, final references/source identity and DS-C01 runtime addendum before final report approval."
+}

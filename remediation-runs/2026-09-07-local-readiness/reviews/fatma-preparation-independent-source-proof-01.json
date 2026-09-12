@@ -1,0 +1,47 @@
+{
+  "id": "CONTENT-IC-01",
+  "classification": "CONFIRMED CONTENT COHERENCE DEFECT",
+  "severity": "Low",
+  "finder": "/root/factory_review",
+  "independent_validator": "/root",
+  "validated_at": "2026-09-07T06:14:17.289760+00:00",
+  "source": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/composeResources/files/cases/iskenderia-corniche.json",
+  "sha256": "f8339b64a1b268e571d388186162517dc611b5e1c3f54b9dfcf448ced508719f",
+  "affected_lines": [
+    [
+      202,
+      207
+    ]
+  ],
+  "supporting_ranges": [
+    [
+      187,
+      214
+    ],
+    [
+      219,
+      222
+    ],
+    [
+      265,
+      270
+    ],
+    [
+      326,
+      331
+    ]
+  ],
+  "reachable_path": [
+    "BundledWhodunitCatalog includes iskenderia-corniche; strict payload validates lengths/IDs rather than natural-language chronology.",
+    "A legal six-player session may assign hagga-fatma as killer in either supported mode. CharacterRevealScreens uses DossierCard with assigned character and own role.",
+    "DossierCard KillerOnlySections lines237–270 renders both guilty.method and each guilty.timeline row without rewriting. Both descriptions are factual, separate from fakeAlibi."
+  ],
+  "expected": "The same fictional preparation is described consistently in the method and timeline; user authorizes minimal testing-content corrections, not rule changes.",
+  "actual": "Method describes crushing the pack in the apron pocket this morning; own timeline takes pack07:00 but locates crushing in pantry20:25. The scene/location differ without a second preparation being described.",
+  "counter_evidence": [
+    "A hypothetical second grinding could reconcile chronology, but no text describes two preparations; do not invent it. This is an inconsistent/ambiguous authored preparation, not proof of a mathematically impossible reducer state.",
+    "The fake alibi remains a deliberate lie and must not be rewritten. Public clue about bathroom powder is not claimed to uniquely identify this killer or establish another validated defect."
+  ],
+  "suggestion": "Morning taking,20:25 pantry preparation and bottle in apron,20:35 table detour,20:40 alibi. Retain all IDs/order/motives/fake alibi. Keep pending1.0.1 bump from committed1.0.0, no version already published; digest still distinguishes prior uncommitted test bytes.",
+  "runtime": "Reproducer test to execute before resource edit; no device evidence yet."
+}

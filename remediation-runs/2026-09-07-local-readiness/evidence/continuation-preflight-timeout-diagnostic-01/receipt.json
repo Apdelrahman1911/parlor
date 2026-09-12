@@ -1,0 +1,44 @@
+{
+  "kind": "FOCUSED_PREFLIGHT_TIMEOUT_DIAGNOSTIC_CONTROLS_NOT_NATIVE_EXECUTION",
+  "started_at": "2026-09-10T21:46:52.083859+00:00",
+  "source_head": "72736446e5ee41c0a857ecc2908deb6c1565e865",
+  "working_tree_controls_before": {
+    "scripts/ci/native_continuation.py": "0b2c0fec310afd88810b84fcc4836ec72c0a07f0ff55f495f876dd92e2f231b3",
+    "scripts/release/tests/test_native_continuation.py": "7ec511272c6acdbf537548e7d0671f0ab55c70e14960a65b6c600433e7bce4d7"
+  },
+  "commands": [
+    {
+      "command": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "scripts.release.tests.test_native_continuation.NativePreflightTest",
+        "scripts.release.tests.test_native_continuation.NativeScopeTest",
+        "-v"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.316
+    }
+  ],
+  "test_summary": [
+    "",
+    "----------------------------------------------------------------------",
+    "Ran 11 tests in 0.078s",
+    "",
+    "OK"
+  ],
+  "status": "PASS",
+  "working_tree_controls_after": {
+    "scripts/ci/native_continuation.py": "0b2c0fec310afd88810b84fcc4836ec72c0a07f0ff55f495f876dd92e2f231b3",
+    "scripts/release/tests/test_native_continuation.py": "7ec511272c6acdbf537548e7d0671f0ab55c70e14960a65b6c600433e7bce4d7"
+  },
+  "cleanup": {
+    "gradle_stop_exit": 0,
+    "scratch_removed": true,
+    "errors": [],
+    "checked_live_outputs_remaining": []
+  },
+  "finished_at": "2026-09-10T21:46:53.225568+00:00",
+  "resources": "Filesystem      Size  Used Avail Use% Mounted on\noverlay          94G   70G   19G  79% /\n               total        used        free      shared  buff/cache   available\nMem:            62Gi        38Gi       3.1Gi        19Gi        40Gi        24Gi\nSwap:             0B          0B          0B\n"
+}

@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "kind": "INDEPENDENT_UPDATED_LINUX_HANDOFF_REVIEW",
+  "author": "/root/evidence_audit",
+  "reviewer": "/root",
+  "recorded_at": "2026-09-08T10:10:10.713263+00:00",
+  "status": "APPROVED_PRE_FREEZE_CHECKPOINT_NOT_RUNTIME_PROOF",
+  "files": [
+    {
+      "path": "CONTINUE_HERE.md",
+      "sha256": "2ee8d3ebc3c0566e8a707cc5d4959298a8717db5a3e80eb1bcf99dc25ac187fd"
+    },
+    {
+      "path": "docs/AGENT_CONTINUATION_2026-09-08_LINUX.md",
+      "sha256": "560dcec08755a3ef94a5daaaaad8a6bdd010ec9893cf148481d6bf16a4456718"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/CONTINUE_LATEST.md",
+      "sha256": "7ba40db8859dbbdc4c7ccdfcda31361a7477ee095a19d2d680bfb395a5160b5a"
+    }
+  ],
+  "conclusions": [
+    "Read all three updated documents and reopened actual source and raw receipts cited by them. Counts79PASS,274PASS/3existing skips,focused358FAIL356PASS/1failure/1error,and corrected26PASS match underlying evidence. Per-cycle totals are not additive unique coverage.",
+    "Root review corrected misleading physical-test wording: all three existing skips are single-JVM multicast/loopback peer fixtures, not physical-device tests or evidence. Source explicitly preserves physical controlled-device requirements.",
+    "Scanner and README failures remain retained; baseline mutation error is not reused as positive proof. New scanner14 and original functional-copy12 execution have independent postrun review and204-input hashes.",
+    "Native canonical runner outputs are under N on hosted runner; ordinary local cycles under C. Actual A/B, export-render-candidate C and combined D are still pending.",
+    "Source/control commit then mechanical inventory commit order is explicit. Linked remediation-only ledger can carry later evidence statuses without changing frozen application docs; it cannot relabel source/commit/platform evidence.",
+    "Architecture, source authority, publication/device exclusions and separate owner/legal/identity requirements remain intact. Original transfer handoff unchanged."
+  ],
+  "evidence": [
+    "remediation-runs/2026-09-08-continuation/reviews/transport-contracts-evidence-independent-01.json",
+    "remediation-runs/2026-09-08-continuation/reviews/focused-controls-evidence-independent-01.json",
+    "remediation-runs/2026-09-08-continuation/reviews/native-continuation-controls-independent-01.json",
+    "remediation-runs/2026-09-08-continuation/reviews/l08-control-recheck-01-independent-postrun-review.json"
+  ],
+  "operations": "Read-only review and this report only; no build/test/native/CI cycle."
+}

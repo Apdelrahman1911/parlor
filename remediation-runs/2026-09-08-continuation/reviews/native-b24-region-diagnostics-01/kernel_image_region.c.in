@@ -1,0 +1,87 @@
+/* Host-only observer for one attested, sample-selected image. Never injected. */
+#include <errno.h>
+#include <inttypes.h>
+#include <libproc.h>
+#include <limits.h>
+#include <mach/vm_prot.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/proc_info.h>
+#include <sys/stat.h>
+#include <unistd.h>
+
+static int number(const char *text, uint64_t *result) {
+    if (!text || !*text || strnlen(text, 21) > 20) return 0;
+    for (const char *p = text; *p; p++) if (*p < '0' || *p > '9') return 0;
+    char *end = NULL;
+    errno = 0;
+    unsigned long long value = strtoull(text, &end, 10);
+    if (errno || *end) return 0;
+    *result = (uint64_t)value;
+    return 1;
+}
+
+static int failed(const char *reason, int code) {
+    /* reason is always a closed literal, never an OS description or path. */
+    printf("{\"schema_version\":1,\"status\":\"FAIL\",\"reason\":\"%s\",\"native_error\":%d}\n", reason, code);
+    return 1;
+}
+
+int main(int argc, char **argv) {
+    uint64_t pid, start, end;
+    if (argc != 5 || getuid() != geteuid() ||
+        !number(argv[1], &pid) || pid <= 1 || pid > INT_MAX || pid == (uint64_t)getpid() ||
+        !number(argv[2], &start) || !number(argv[3], &end) || start == 0 || end <= start ||
+        argv[4][0] != '/' || strnlen(argv[4], MAXPATHLEN) >= MAXPATHLEN)
+        return failed("invalid-request", 0);
+
+    struct stat before, after;
+    char canonical[MAXPATHLEN];
+    if (lstat(argv[4], &before) || !S_ISREG(before.st_mode) || before.st_uid != getuid() ||
+        !realpath(argv[4], canonical) || strcmp(canonical, argv[4]) || before.st_size <= 0)
+        return failed("invalid-owned-artifact", 0);
+
+    struct proc_regionwithpathinfo info;
+    memset(&info, 0, sizeof(info));
+    errno = 0;
+    int returned = proc_pidinfo((int)pid, PROC_PIDREGIONPATHINFO, start, &info, (int)sizeof(info));
+    int native_error = errno;
+    if (returned != (int)sizeof(info)) return failed("region-query-incomplete", native_error);
+    const struct proc_regioninfo *region = &info.prp_prinfo;
+    const struct vinfo_stat *file = &info.prp_vip.vip_vi.vi_stat;
+    /* The kernel may advance over holes; never accept a subsequent region. */
+    if (region->pri_address != start || region->pri_size == 0 || region->pri_size > end - start ||
+        region->pri_offset != 0 || (region->pri_flags & PROC_REGION_SUBMAP) != 0 ||
+        region->pri_protection != (VM_PROT_READ | VM_PROT_EXECUTE)) {
+        /* Uncorroborated failure snapshot, not path/vnode/lifetime evidence. */
+        /* native_error retains its literal sentinel; query_errno is captured errno. */
+        printf("{\"schema_version\":1,\"status\":\"FAIL\",\"reason\":\"not-selected-executable-region\",\"native_error\":0"
+            ",\"region_diagnostic\":{\"requested_start\":%" PRIu64 ",\"requested_end_exclusive\":%" PRIu64
+            ",\"pri_address\":%" PRIu64 ",\"pri_size\":%" PRIu64 ",\"pri_offset\":%" PRIu64
+            ",\"pri_protection\":%u,\"pri_max_protection\":%u,\"pri_flags\":%u"
+            ",\"native_structure_bytes\":%zu,\"native_return_bytes\":%d,\"query_errno\":%d}}\n",
+            start, end, region->pri_address, region->pri_size, region->pri_offset,
+            region->pri_protection, region->pri_max_protection, region->pri_flags,
+            sizeof(info), returned, native_error);
+        return 1;
+    }
+    if (strnlen(info.prp_vip.vip_path, sizeof(info.prp_vip.vip_path)) == sizeof(info.prp_vip.vip_path) ||
+        strcmp(info.prp_vip.vip_path, argv[4]) || file->vst_dev != (uint32_t)before.st_dev ||
+        file->vst_ino != (uint64_t)before.st_ino || file->vst_size != before.st_size ||
+        !S_ISREG(file->vst_mode) || lstat(argv[4], &after) || !S_ISREG(after.st_mode) ||
+        before.st_dev != after.st_dev || before.st_ino != after.st_ino || before.st_size != after.st_size)
+        return failed("mapping-artifact-mismatch", 0);
+
+    printf("{\"schema_version\":1,\"status\":\"PASS\",\"pid\":%" PRIu64
+        ",\"requested_start\":%" PRIu64 ",\"requested_end_exclusive\":%" PRIu64
+        ",\"region_start\":%" PRIu64 ",\"region_size\":%" PRIu64
+        ",\"region_offset\":%" PRIu64 ",\"protection\":%u,\"max_protection\":%u"
+        ",\"region_flags\":%u,\"native_structure_bytes\":%zu,\"native_return_bytes\":%d"
+        ",\"path_exact\":true,\"vnode_identity_matches\":true,\"artifact_bytes\":%" PRId64 "}\n",
+        pid, start, end, region->pri_address, region->pri_size, region->pri_offset,
+        region->pri_protection, region->pri_max_protection, region->pri_flags,
+        sizeof(info), returned, (int64_t)before.st_size);
+    return 0;
+}

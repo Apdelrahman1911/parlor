@@ -1,0 +1,16 @@
+{
+  "url": "https://android.googlesource.com/platform/packages/modules/adb/+/1cf2f017d312f73b3dc53bda85ef2610e35a80e9/socket_spec.cpp?format=TEXT",
+  "accessed_at": "2026-09-05T13:10:37.449963+00:00",
+  "sha256": "d5513943279d0159a232417176cd8192c7b57d4dbf36d28a0f6183e5da2fa91a",
+  "line_count": 476,
+  "revision_caveat": "Public source corroboration, not asserted exact installed SDK37 revision",
+  "excerpts": [
+    {
+      "range": [
+        78,
+        118
+      ],
+      "numbered_source": "  78 bool parse_tcp_socket_spec(std::string_view spec, std::string* hostname, int* port,\n  79                            std::string* serial, std::string* error) {\n  80     if (!spec.starts_with(\"tcp:\")) {\n  81         *error = \"specification is not tcp: \";\n  82         *error += spec;\n  83         return false;\n  84     }\n  85 \n  86     std::string hostname_value;\n  87     int port_value;\n  88 \n  89     // If the spec is tcp:<port>, parse it ourselves.\n  90     // Otherwise, delegate to android::base::ParseNetAddress.\n  91     if (android::base::ParseInt(&spec[4], &port_value)) {\n  92         // Do the range checking ourselves, because ParseInt rejects 'tcp:65536' and 'tcp:foo:1234'\n  93         // identically.\n  94         if (port_value < 0 || port_value > 65535) {\n  95             *error = StringPrintf(\"bad port number '%d'\", port_value);\n  96             return false;\n  97         }\n  98     } else {\n  99         std::string addr(spec.substr(4));\n 100         port_value = DEFAULT_ADB_LOCAL_TRANSPORT_PORT;\n 101 \n 102         // FIXME: ParseNetAddress rejects port 0. This currently doesn't hurt, because listening\n 103         //        on an address that isn't 'localhost' is unsupported.\n 104         if (!android::base::ParseNetAddress(addr, &hostname_value, &port_value, serial, error)) {\n 105             return false;\n 106         }\n 107     }\n 108 \n 109     if (hostname) {\n 110         *hostname = std::move(hostname_value);\n 111     }\n 112 \n 113     if (port) {\n 114         *port = port_value;\n 115     }\n 116 \n 117     return true;\n 118 }"
+    }
+  ]
+}

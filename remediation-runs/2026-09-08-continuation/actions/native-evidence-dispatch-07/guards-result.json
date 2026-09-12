@@ -1,0 +1,81 @@
+{
+  "status": "GUARDS_FAILED_NO_DISPATCH",
+  "recorded_at": "2026-09-09T14:18:05.612988+00:00",
+  "error": "TypeError('list indices must be integers or slices, not str')",
+  "commands": [
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "started_at": "2026-09-09T14:18:04.936220+00:00",
+      "finished_at": "2026-09-09T14:18:04.939825+00:00",
+      "exit_code": 0,
+      "stdout": "360fc797a85e1e494334fd8cc11b4e739981cea8\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD^{tree}"
+      ],
+      "started_at": "2026-09-09T14:18:04.939840+00:00",
+      "finished_at": "2026-09-09T14:18:04.942804+00:00",
+      "exit_code": 0,
+      "stdout": "8bfe56a21074ba51a4b668bad0728e42007a7593\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "branch",
+        "--show-current"
+      ],
+      "started_at": "2026-09-09T14:18:04.942815+00:00",
+      "finished_at": "2026-09-09T14:18:04.944762+00:00",
+      "exit_code": 0,
+      "stdout": "fix/local-readiness-2026-09-07\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "status",
+        "--porcelain",
+        "--untracked-files=no"
+      ],
+      "started_at": "2026-09-09T14:18:04.944774+00:00",
+      "finished_at": "2026-09-09T14:18:04.979049+00:00",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "--is-shallow-repository"
+      ],
+      "started_at": "2026-09-09T14:18:04.979072+00:00",
+      "finished_at": "2026-09-09T14:18:04.981117+00:00",
+      "exit_code": 0,
+      "stdout": "false\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "ls-remote",
+        "origin",
+        "refs/heads/fix/local-readiness-2026-09-07"
+      ],
+      "started_at": "2026-09-09T14:18:04.981131+00:00",
+      "finished_at": "2026-09-09T14:18:05.608718+00:00",
+      "exit_code": 0,
+      "stdout": "360fc797a85e1e494334fd8cc11b4e739981cea8\trefs/heads/fix/local-readiness-2026-09-07\n",
+      "stderr": ""
+    }
+  ]
+}

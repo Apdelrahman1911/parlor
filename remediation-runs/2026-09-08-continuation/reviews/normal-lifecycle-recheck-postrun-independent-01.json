@@ -1,0 +1,1527 @@
+{
+  "schema_version": 1,
+  "kind": "INDEPENDENT_NORMAL_LIFECYCLE_RECHECK_POSTRUN_EVIDENCE_REVIEW",
+  "reviewer": "/root/fixture_review",
+  "recorded_at": "2026-09-08T19:22:22.247332+00:00",
+  "status": "NORMAL187_CORRECTED_PURE_CONTROLS_PASS_AND_ORDINARY_CLEANUP_INDEPENDENTLY_CLEARED",
+  "findings": [],
+  "cycle": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-normal-lifecycle-recheck-01",
+  "scope": "Only corrected normal187 actual Linux control recheck. Read-only raw logs, retained identities, AST declarations and filesystem absence inspection; no reviewer tests, imports, build, native command or cleanup. This is not native runtime, source freeze or combined qualification.",
+  "source_binding": {
+    "capture": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/normal-lifecycle-recheck-current-bindings-independent-01.json",
+      "sha256": "21bc29aa218ca7986aedcf60ea7fd61aad106089ea304d776fc6e5624931dd95",
+      "bytes": 171821
+    },
+    "captured_at": "2026-09-08T19:15:47.474920+00:00",
+    "whole_source_before_after_equals_held_capture": true,
+    "source_count": 828,
+    "source_identity": {
+      "commit": "700243c3426db2da3855a9d3a3df58ada607ffc5",
+      "tree": "bd93099fe19ccf46e27eb67f22d694cc1ae074aa",
+      "branch": "fix/local-readiness-2026-09-07",
+      "tracked_status": "M remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/run_ios_readiness.py\n M remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/README.md\n M remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/compose_runner.py\n M remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/app_foundation_copy.py\n M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/README.md\n M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py\n M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_normal_launch_controls.py\n M scripts/ci/NATIVE_CONTINUATION.md\n M scripts/ci/native_continuation.py\n M scripts/release/tests/test_native_continuation.py\n M scripts/release/tests/test_native_process_probe.py\n M scripts/verification/ios-readiness/test_foundation_toolchain_binding.py\n M scripts/verification/ios-readiness/test_native_command_failures.py\n M scripts/verification/ios-readiness/test_toolchain_profiles.py",
+      "diff_sha256": "64d20511dd19955a8e503845a020760cf94739c8bc4a9bc53073faf45831c1c0",
+      "source_manifest_sha256": "6fc7298b3b927aee32359326ef68f75a0a3d9928e73e47b7d5a3f82c4828fe15"
+    },
+    "runner_before_after_equals_held_capture": true,
+    "runner": {
+      "manifest": [
+        [
+          "remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py",
+          "1b9e882514bfe5386785d5a71ae32fdc2bc3aa4cc1dd24532709899fbf4f41bc"
+        ]
+      ],
+      "manifest_sha256": "942e138764146313a59cbe1278c1357284a5701d0c125809c34ddbbe876ce912"
+    },
+    "current_metadata_after_release_not_reasserted": "Coordinator released ledger-only source work after independent held capture; later source changes do not retroactively replace executed metadata.",
+    "normal_controls": {
+      "count": 93,
+      "before_after_held_capture_current_equal": true,
+      "paths_reenumerated_from_actual_control_manifest_source": true,
+      "canonical_sha256": "953a6854d95a5a440daff5dea10710cb814b46d59d99d8761b6151fffa6002af",
+      "prior_normal_scope_inputs_unchanged_except_fixture": 92,
+      "changes_from_old_control_packet": [
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_normal_launch_controls.py",
+          "before_sha256": "af5c912dbc9655468d5d428b18f5a7c16d7b0f2fa421e14cf559ee674eaceb76",
+          "after_sha256": "3da543bd92beecda95bdfbd53632a3a49ca95a6054f47a17dd03dff6460d6a5c"
+        }
+      ],
+      "actual_imports_all_bound": true,
+      "actual_imports": [
+        {
+          "name": "__main__",
+          "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_control_tests.py",
+          "sha256": "0aa080c52ff3f30bb159bc59f728084ff92d6ad4f340b1ec051dfc55dd317f2e"
+        },
+        {
+          "name": "artifact_inventory",
+          "path": "scripts/verification/ios-readiness/artifact_inventory.py",
+          "sha256": "485196bd7dcebccaa5ad552896c7e2da781fbf6fa6fff6ef2ab350ecc9360124"
+        },
+        {
+          "name": "copied_sources",
+          "path": "scripts/verification/ios-readiness/copied_sources.py",
+          "sha256": "d52f4f7904d1481fee00796a1c0775ee3512934639dac45fee44704fa9b74e62"
+        },
+        {
+          "name": "external_image_diagnostics",
+          "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/external_image_diagnostics.py",
+          "sha256": "bb7ab22243ffab9aef8404ae939ea67bd980aaf7d175bb3bc6b020f1c5312c67"
+        },
+        {
+          "name": "external_image_provenance",
+          "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/external_image_provenance.py",
+          "sha256": "6b5f72a5915f056912b4377d315d5331f0cbc25fd34b7800a839031e5d9efb9f"
+        },
+        {
+          "name": "instrument_storage",
+          "path": "scripts/verification/ios-readiness/instrument_storage.py",
+          "sha256": "51348e3985e6872283182a728d8a91808714d69ad0197c978298678366cb4d88"
+        },
+        {
+          "name": "kernel_image_regions",
+          "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/kernel_image_regions.py",
+          "sha256": "4b87bf30ab492bf45554b2952ef52982343d5f16c66dce247412a45801b0287b"
+        },
+        {
+          "name": "l08_copy",
+          "path": "scripts/verification/ios-readiness/l08_copy.py",
+          "sha256": "c2bf28bf0efd9449d646c451d7b8e665000e8d11a3a6eea76de95e1fb4a55a5f"
+        },
+        {
+          "name": "l08_receipts",
+          "path": "scripts/verification/ios-readiness/l08_receipts.py",
+          "sha256": "43200492a5fae3cb31f89ecafe9985eee84b9c30b4549cd2933788dac056bfbd"
+        },
+        {
+          "name": "native_failure_receipts",
+          "path": "scripts/verification/ios-readiness/native_failure_receipts.py",
+          "sha256": "9376f5f7244dc297edf9bca964357a1148c1972a41b44fdfd60fd8c988a007d6"
+        },
+        {
+          "name": "native_readiness_receipts",
+          "path": "scripts/verification/ios-readiness/native_readiness_receipts.py",
+          "sha256": "d350c850e7f2152cbbeaf369465580ecfaa80e6691269130efbcdd8c936f816f"
+        },
+        {
+          "name": "normal_launch_receipts",
+          "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/normal_launch_receipts.py",
+          "sha256": "c1335e043f91c1a5e995fb03e9464a291cd5566e0eabfaf1f981f339c5660ae0"
+        },
+        {
+          "name": "normal_source_copy",
+          "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/normal_source_copy.py",
+          "sha256": "5920d07a43c64eb7193a1c1d03aea93948bfa21597591ee13d79073666ed54d2"
+        },
+        {
+          "name": "os_action_receipts",
+          "path": "scripts/verification/ios-readiness/os_action_receipts.py",
+          "sha256": "54a5f6c0ceb669bae65d2be9480f691cc19bc77bcc5d77c75904cc3d4cc2e7bb"
+        },
+        {
+          "name": "os_pane_receipts",
+          "path": "scripts/verification/ios-readiness/os_pane_receipts.py",
+          "sha256": "4ffcba3ade80bfa334b14f5bcddec0527148983a99b2dbf1263bde091efc9229"
+        },
+        {
+          "name": "os_preference_receipts",
+          "path": "scripts/verification/ios-readiness/os_preference_receipts.py",
+          "sha256": "9de723db33e6a074261ae6199c55da7196bdbdc257a5ecaa558bcbc19f005c52"
+        },
+        {
+          "name": "owned_lane",
+          "path": "scripts/verification/ios-readiness/owned_lane.py",
+          "sha256": "949091403ac669429f962120e9873a09897a87bdcae10702720ede0c68342f03"
+        },
+        {
+          "name": "prerequisite_receipts",
+          "path": "scripts/verification/ios-readiness/prerequisite_receipts.py",
+          "sha256": "708116f488083da11357c053c6e56f5186bbde4707f1ba487a35ca363a09fd5b"
+        },
+        {
+          "name": "probe_validation",
+          "path": "scripts/verification/ios-readiness/probe_validation.py",
+          "sha256": "134bb3affe45711ec3f74d7091ec59b7f859ca4f5fa04df1d895ce3250fd3aa2"
+        },
+        {
+          "name": "public_interaction_receipts",
+          "path": "scripts/verification/ios-readiness/public_interaction_receipts.py",
+          "sha256": "4583b8e9545dbe16ef3ee6f59d7d34a2bfd1421402b0f532a0b84aa2b2f63040"
+        },
+        {
+          "name": "run_ios_readiness",
+          "path": "scripts/verification/ios-readiness/run_ios_readiness.py",
+          "sha256": "85283be9681be14c18b76ef1657b596e837b4f97f978917f25ac693ae72d0ca8"
+        },
+        {
+          "name": "run_normal_ios_launch",
+          "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
+          "sha256": "5524d839202211270ec1c97776f0d350b9802ecf0d1c5e6eb3d28cd960629302"
+        },
+        {
+          "name": "secondary_fifo",
+          "path": "scripts/verification/ios-readiness/secondary_fifo.py",
+          "sha256": "170586ec941b02866acfa4b8e54aa3dd0842dbc7bc9c4b50410bca4b1149440a"
+        },
+        {
+          "name": "simulator_entitlements",
+          "path": "scripts/verification/ios-readiness/simulator_entitlements.py",
+          "sha256": "8cd4f66b83d44c69bf60cb21362d0425774f67eece8f13adc1b0f4795f260e4a"
+        },
+        {
+          "name": "simulator_lifecycle",
+          "path": "scripts/verification/ios-readiness/simulator_lifecycle.py",
+          "sha256": "8d799475f1e92fc7943ca05b2d1e59655cbb8b0973031029440662059e65f248"
+        },
+        {
+          "name": "simulator_signing",
+          "path": "scripts/verification/ios-readiness/simulator_signing.py",
+          "sha256": "89524b777694f8504008a83b60299725cae01e8b642c10754283d79ce1974d1e"
+        },
+        {
+          "name": "test_header_diagnostics",
+          "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_header_diagnostics.py",
+          "sha256": "e2d835d4c7919c1448eebc51079d5f0673e71b3a1a8998ed97b616325e5bd06a"
+        },
+        {
+          "name": "test_image_diagnostic_orchestration",
+          "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_image_diagnostic_orchestration.py",
+          "sha256": "133fbc769d331581d7ad6e1154d5d1c6bf35bf9a853e28fc56bafa25049e5a8d"
+        },
+        {
+          "name": "test_image_diagnostics",
+          "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_image_diagnostics.py",
+          "sha256": "80f4ca531634bcb377d29803e58f5a99522e74e10402ce8221448b9d3ef3ab2c"
+        },
+        {
+          "name": "test_kernel_image_regions",
+          "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_kernel_image_regions.py",
+          "sha256": "92c6218d227ec93e50d5e6df7a21274e8f1b469ddf14839e51c050c1d0f196e4"
+        },
+        {
+          "name": "test_normal_launch_controls",
+          "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_normal_launch_controls.py",
+          "sha256": "3da543bd92beecda95bdfbd53632a3a49ca95a6054f47a17dd03dff6460d6a5c"
+        },
+        {
+          "name": "test_owned_tool_paths",
+          "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_owned_tool_paths.py",
+          "sha256": "f310d2af99449e4d8570dcc2eba8db4f1cb99c44574eeb1bfc32e447bcff6b58"
+        },
+        {
+          "name": "test_sample_literal_star",
+          "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_sample_literal_star.py",
+          "sha256": "e1cec3bb236fff0e518b153308e09cf850a865ee22e028201bcbe1d86346b814"
+        },
+        {
+          "name": "test_vmmap_command_failure",
+          "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_vmmap_command_failure.py",
+          "sha256": "97114b22407d470f0f71ab05d1f5b7e53158db0e8787150b0170a3d678aaaa50"
+        },
+        {
+          "name": "test_xcode26_repetitions",
+          "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_xcode26_repetitions.py",
+          "sha256": "3e51f197304d1b7f16da4ee3269fcd48bf0fa6f0632d2dbc36ab395e68d5e66a"
+        },
+        {
+          "name": "toolchain_profiles",
+          "path": "scripts/verification/ios-readiness/toolchain_profiles.py",
+          "sha256": "8adacaf4c59ed823aa088ecb70ad5c6c1e3f76e7ca3520d8abf0563341591313"
+        }
+      ]
+    }
+  },
+  "correction": {
+    "author_review": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/normal-legacy-lifecycle-fixture-author-01.json",
+      "sha256": "7f5a37426b674436843cdc6e57b201199c856aafe60ddb1d80bed8aeb528619a",
+      "bytes": 4460
+    },
+    "independent_source_review": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/normal-legacy-lifecycle-fixture-independent-01.json",
+      "sha256": "edc77bc8051485c2256c6f2b7f43fbc80f8995e0d25c579ea5869a598a0d45e3",
+      "bytes": 17609
+    },
+    "independent_source_review_status": "APPROVED_EXACT_FIXTURE_DELTA_AND_CONDITIONAL_ROOT_ONLY_NORMAL187_RECHECK_NOT_EXECUTED",
+    "before": {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_normal_launch_controls.py",
+      "sha256": "af5c912dbc9655468d5d428b18f5a7c16d7b0f2fa421e14cf559ee674eaceb76",
+      "bytes": 42841,
+      "retrieved_from_git": "700243c3426db2da3855a9d3a3df58ada607ffc5"
+    },
+    "after": {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_normal_launch_controls.py",
+      "sha256": "3da543bd92beecda95bdfbd53632a3a49ca95a6054f47a17dd03dff6460d6a5c",
+      "bytes": 42919
+    },
+    "exact_only_added_line": "        value.lifecycle_mode, value.lifecycle = runner.LEGACY_LIFECYCLE, None",
+    "added_bytes": 78,
+    "new_equals_old_with_one_line_added": true,
+    "test_method_ast_count": 78,
+    "all_test_method_asts_unchanged": true,
+    "no_assertion_skip_runtime_or_default_change": true,
+    "limits": "Synthetic object.__new__ fixture now initializes actual default legacy lifecycle state. Direct lifecycle authority/ack/ownership policies and real constructor are unchanged. Separate test evidence supersedes only the failed normal-control scope, not the old packet status."
+  },
+  "execution": {
+    "original_command": [
+      "/usr/bin/python3",
+      "-B",
+      "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_control_tests.py"
+    ],
+    "approved_command_exact_match": true,
+    "driver": {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_control_tests.py",
+      "sha256": "0aa080c52ff3f30bb159bc59f728084ff92d6ad4f340b1ec051dfc55dd317f2e",
+      "bytes": 2837
+    },
+    "outer_lane": {
+      "path": "remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py",
+      "sha256": "1b9e882514bfe5386785d5a71ae32fdc2bc3aa4cc1dd24532709899fbf4f41bc",
+      "bytes": 25106
+    },
+    "before_record_line": 1,
+    "after_record_line": 194,
+    "raw_driver_kind": "PURE_CONTROL_TESTS_NOT_APP_RUNTIME",
+    "ast_declaration_sources": [
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_header_diagnostics.py",
+        "sha256": "e2d835d4c7919c1448eebc51079d5f0673e71b3a1a8998ed97b616325e5bd06a",
+        "bytes": 5672,
+        "declared_tests": 8
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_image_diagnostic_orchestration.py",
+        "sha256": "133fbc769d331581d7ad6e1154d5d1c6bf35bf9a853e28fc56bafa25049e5a8d",
+        "bytes": 22696,
+        "declared_tests": 18
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_image_diagnostics.py",
+        "sha256": "80f4ca531634bcb377d29803e58f5a99522e74e10402ce8221448b9d3ef3ab2c",
+        "bytes": 22341,
+        "declared_tests": 25
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_kernel_image_regions.py",
+        "sha256": "92c6218d227ec93e50d5e6df7a21274e8f1b469ddf14839e51c050c1d0f196e4",
+        "bytes": 12776,
+        "declared_tests": 10
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_normal_launch_controls.py",
+        "sha256": "3da543bd92beecda95bdfbd53632a3a49ca95a6054f47a17dd03dff6460d6a5c",
+        "bytes": 42919,
+        "declared_tests": 78
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_owned_tool_paths.py",
+        "sha256": "f310d2af99449e4d8570dcc2eba8db4f1cb99c44574eeb1bfc32e447bcff6b58",
+        "bytes": 14851,
+        "declared_tests": 21
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_sample_literal_star.py",
+        "sha256": "e1cec3bb236fff0e518b153308e09cf850a865ee22e028201bcbe1d86346b814",
+        "bytes": 7046,
+        "declared_tests": 7
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_vmmap_command_failure.py",
+        "sha256": "97114b22407d470f0f71ab05d1f5b7e53158db0e8787150b0170a3d678aaaa50",
+        "bytes": 10171,
+        "declared_tests": 7
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_xcode26_repetitions.py",
+        "sha256": "3e51f197304d1b7f16da4ee3269fcd48bf0fa6f0632d2dbc36ab395e68d5e66a",
+        "bytes": 5869,
+        "declared_tests": 13
+      }
+    ],
+    "expected": 187,
+    "declared": 187,
+    "discovered": 187,
+    "executed_verbose": 187,
+    "distinct_ids": 187,
+    "declared_discovered_executed_sets_equal": true,
+    "test_ids_sha256": "0d3c8eea247b0f7d2c789ea1574655b22ebcd1117b64752690d83fe60f1f6851",
+    "ids_and_raw_results": [
+      {
+        "id": "test_header_diagnostics.HeaderDiagnosticTests.test_diagnostic_input_headers_and_component_counts_remain_bounded",
+        "status": "ok",
+        "raw_line": 2
+      },
+      {
+        "id": "test_header_diagnostics.HeaderDiagnosticTests.test_diagnostic_write_failure_cannot_replace_or_hide_original_failure",
+        "status": "ok",
+        "raw_line": 3
+      },
+      {
+        "id": "test_header_diagnostics.HeaderDiagnosticTests.test_duplicate_missing_and_wrong_pid_headers_do_not_become_success",
+        "status": "ok",
+        "raw_line": 4
+      },
+      {
+        "id": "test_header_diagnostics.HeaderDiagnosticTests.test_exact_headers_are_only_diagnostics_and_do_not_retain_paths_or_stacks",
+        "status": "ok",
+        "raw_line": 5
+      },
+      {
+        "id": "test_header_diagnostics.HeaderDiagnosticTests.test_public_redaction_shapes_remain_rejected_by_original_header_validator",
+        "status": "ok",
+        "raw_line": 6
+      },
+      {
+        "id": "test_header_diagnostics.HeaderDiagnosticTests.test_runner_keeps_parser_failure_and_only_preserves_sanitized_receipt",
+        "status": "ok",
+        "raw_line": 7
+      },
+      {
+        "id": "test_header_diagnostics.HeaderDiagnosticTests.test_successful_parser_does_not_emit_or_consume_diagnostics",
+        "status": "ok",
+        "raw_line": 8
+      },
+      {
+        "id": "test_header_diagnostics.HeaderDiagnosticTests.test_unknown_text_components_are_hashed_instead_of_disclosed",
+        "status": "ok",
+        "raw_line": 9
+      },
+      {
+        "id": "test_image_diagnostic_orchestration.ImageDiagnosticOrchestrationTests.test_diagnostic_collection_failure_preserves_primary_without_serializing_exception_text",
+        "status": "ok",
+        "raw_line": 10
+      },
+      {
+        "id": "test_image_diagnostic_orchestration.ImageDiagnosticOrchestrationTests.test_diagnostic_write_failure_keeps_original_exception_object_and_no_provenance",
+        "status": "ok",
+        "raw_line": 11
+      },
+      {
+        "id": "test_image_diagnostic_orchestration.ImageDiagnosticOrchestrationTests.test_failure_only_command_and_postflight_errors_are_both_recorded",
+        "status": "ok",
+        "raw_line": 12
+      },
+      {
+        "id": "test_image_diagnostic_orchestration.ImageDiagnosticOrchestrationTests.test_failure_only_command_error_timeout_and_interruption_keep_primary_and_postflight",
+        "status": "ok",
+        "raw_line": 13
+      },
+      {
+        "id": "test_image_diagnostic_orchestration.ImageDiagnosticOrchestrationTests.test_failure_only_empty_output_is_not_collected_or_credited",
+        "status": "ok",
+        "raw_line": 14
+      },
+      {
+        "id": "test_image_diagnostic_orchestration.ImageDiagnosticOrchestrationTests.test_failure_only_postflight_failure_preserves_primary_and_does_not_collect_unattested_maps",
+        "status": "ok",
+        "raw_line": 15
+      },
+      {
+        "id": "test_image_diagnostic_orchestration.ImageDiagnosticOrchestrationTests.test_failure_only_preflight_detects_exit_reuse_and_exec_before_invocation",
+        "status": "ok",
+        "raw_line": 16
+      },
+      {
+        "id": "test_image_diagnostic_orchestration.ImageDiagnosticOrchestrationTests.test_interrupting_sample_diagnostics_preserves_primary_and_prevents_vmmap",
+        "status": "ok",
+        "raw_line": 17
+      },
+      {
+        "id": "test_image_diagnostic_orchestration.ImageDiagnosticOrchestrationTests.test_interrupting_vmmap_diagnostics_preserves_primary_and_cleanup",
+        "status": "ok",
+        "raw_line": 18
+      },
+      {
+        "id": "test_image_diagnostic_orchestration.ImageDiagnosticOrchestrationTests.test_original_exception_contract_kills_removing_post_diagnostic_reraise",
+        "status": "ok",
+        "raw_line": 19
+      },
+      {
+        "id": "test_image_diagnostic_orchestration.ImageDiagnosticOrchestrationTests.test_original_real_unbound_sample_rejection_gathers_sibling_diagnostics_not_provenance",
+        "status": "ok",
+        "raw_line": 20
+      },
+      {
+        "id": "test_image_diagnostic_orchestration.ImageDiagnosticOrchestrationTests.test_overbudget_watch_does_not_start_sibling_after_sample_failure",
+        "status": "ok",
+        "raw_line": 21
+      },
+      {
+        "id": "test_image_diagnostic_orchestration.ImageDiagnosticOrchestrationTests.test_post_sample_changed_lifetime_never_reaches_parser_or_vmmap",
+        "status": "ok",
+        "raw_line": 22
+      },
+      {
+        "id": "test_image_diagnostic_orchestration.ImageDiagnosticOrchestrationTests.test_run_keeps_original_failure_and_all_finalization_even_when_diagnostics_succeed",
+        "status": "ok",
+        "raw_line": 23
+      },
+      {
+        "id": "test_image_diagnostic_orchestration.ImageDiagnosticOrchestrationTests.test_sample_parser_cancellation_never_becomes_optional_diagnostic_work",
+        "status": "ok",
+        "raw_line": 24
+      },
+      {
+        "id": "test_image_diagnostic_orchestration.ImageDiagnosticOrchestrationTests.test_successful_sample_and_vmmap_have_unchanged_provenance_and_no_diagnostics",
+        "status": "ok",
+        "raw_line": 25
+      },
+      {
+        "id": "test_image_diagnostic_orchestration.ImageDiagnosticOrchestrationTests.test_successful_sample_command_is_required_before_any_sibling_invocation",
+        "status": "ok",
+        "raw_line": 26
+      },
+      {
+        "id": "test_image_diagnostic_orchestration.ImageDiagnosticOrchestrationTests.test_successful_sample_vmmap_rejection_has_successful_sample_interval_reference",
+        "status": "ok",
+        "raw_line": 27
+      },
+      {
+        "id": "test_image_diagnostics.ImageDiagnosticTests.test_changed_inventory_and_invalid_sample_references_are_not_trusted",
+        "status": "ok",
+        "raw_line": 28
+      },
+      {
+        "id": "test_image_diagnostics.ImageDiagnosticTests.test_collector_neither_mutates_inputs_nor_queries_files_processes_or_accounts",
+        "status": "ok",
+        "raw_line": 29
+      },
+      {
+        "id": "test_image_diagnostics.ImageDiagnosticTests.test_copied_framework_uuid_relation_keeps_origins_and_different_bytes_distinct",
+        "status": "ok",
+        "raw_line": 30
+      },
+      {
+        "id": "test_image_diagnostics.ImageDiagnosticTests.test_duplicate_raw_alias_rows_retain_both_candidates_without_deduplication",
+        "status": "ok",
+        "raw_line": 31
+      },
+      {
+        "id": "test_image_diagnostics.ImageDiagnosticTests.test_exact_rows_report_only_inventory_indexes_and_equality_not_authority",
+        "status": "ok",
+        "raw_line": 32
+      },
+      {
+        "id": "test_image_diagnostics.ImageDiagnosticTests.test_failure_only_contract_kills_provenance_true_mutation",
+        "status": "ok",
+        "raw_line": 33
+      },
+      {
+        "id": "test_image_diagnostics.ImageDiagnosticTests.test_foreign_user_container_and_copied_origin_never_become_bound",
+        "status": "ok",
+        "raw_line": 34
+      },
+      {
+        "id": "test_image_diagnostics.ImageDiagnosticTests.test_input_tool_context_and_output_budgets_cannot_be_weakened",
+        "status": "ok",
+        "raw_line": 35
+      },
+      {
+        "id": "test_image_diagnostics.ImageDiagnosticTests.test_literal_asterisk_temp_path_is_not_an_authorized_copy_or_derived_alias",
+        "status": "ok",
+        "raw_line": 36
+      },
+      {
+        "id": "test_image_diagnostics.ImageDiagnosticTests.test_malformed_uuid_address_and_owned_trailing_text_are_diagnostic_not_repaired",
+        "status": "ok",
+        "raw_line": 37
+      },
+      {
+        "id": "test_image_diagnostics.ImageDiagnosticTests.test_missing_or_duplicate_table_never_scans_other_sections",
+        "status": "ok",
+        "raw_line": 38
+      },
+      {
+        "id": "test_image_diagnostics.ImageDiagnosticTests.test_path_redaction_angle_markers_cannot_corrupt_recognized_uuid_metadata",
+        "status": "ok",
+        "raw_line": 39
+      },
+      {
+        "id": "test_image_diagnostics.ImageDiagnosticTests.test_pre_table_owned_stack_ignored_post_table_malformed_owned_row_recorded",
+        "status": "ok",
+        "raw_line": 40
+      },
+      {
+        "id": "test_image_diagnostics.ImageDiagnosticTests.test_privacy_contract_kills_unknown_component_plaintext_mutation",
+        "status": "ok",
+        "raw_line": 41
+      },
+      {
+        "id": "test_image_diagnostics.ImageDiagnosticTests.test_relevant_row_line_path_and_component_limits_are_explicit",
+        "status": "ok",
+        "raw_line": 42
+      },
+      {
+        "id": "test_image_diagnostics.ImageDiagnosticTests.test_repeated_known_components_cannot_amplify_diagnostic_memory_without_bound",
+        "status": "ok",
+        "raw_line": 43
+      },
+      {
+        "id": "test_image_diagnostics.ImageDiagnosticTests.test_unknown_components_are_hashed_and_known_component_indexes_are_exact",
+        "status": "ok",
+        "raw_line": 44
+      },
+      {
+        "id": "test_image_diagnostics.ImageDiagnosticTests.test_unknown_uuid_never_escapes_and_does_not_match_known_inventory",
+        "status": "ok",
+        "raw_line": 45
+      },
+      {
+        "id": "test_image_diagnostics.ImageDiagnosticTests.test_unrelated_rows_and_named_symbols_outside_relevant_image_paths_are_not_retained",
+        "status": "ok",
+        "raw_line": 46
+      },
+      {
+        "id": "test_image_diagnostics.ImageDiagnosticTests.test_user_only_existing_policy_remains_explicit_and_default_stays_exact",
+        "status": "ok",
+        "raw_line": 47
+      },
+      {
+        "id": "test_image_diagnostics.ImageDiagnosticTests.test_vmmap_compares_only_to_supplied_successful_sample_ranges",
+        "status": "ok",
+        "raw_line": 48
+      },
+      {
+        "id": "test_image_diagnostics.ImageDiagnosticTests.test_vmmap_non_text_maps_and_unrelated_private_paths_are_excluded",
+        "status": "ok",
+        "raw_line": 49
+      },
+      {
+        "id": "test_image_diagnostics.ImageDiagnosticTests.test_vmmap_unknown_missing_duplicate_and_malformed_text_rows_remain_rejected",
+        "status": "ok",
+        "raw_line": 50
+      },
+      {
+        "id": "test_image_diagnostics.ImageDiagnosticTests.test_vmmap_without_successful_sample_has_no_selected_or_uuid_claim",
+        "status": "ok",
+        "raw_line": 51
+      },
+      {
+        "id": "test_image_diagnostics.ImageDiagnosticTests.test_zero_reversed_and_overwide_intervals_are_visible_but_still_rejected",
+        "status": "ok",
+        "raw_line": 52
+      },
+      {
+        "id": "test_kernel_image_regions.KernelImageRegionTests.test_actual_orchestration_queries_every_selected_row_without_vmmap_or_fallback",
+        "status": "ok",
+        "raw_line": 53
+      },
+      {
+        "id": "test_kernel_image_regions.KernelImageRegionTests.test_all_optional_selected_images_are_required_and_extra_rows_are_rejected",
+        "status": "ok",
+        "raw_line": 54
+      },
+      {
+        "id": "test_kernel_image_regions.KernelImageRegionTests.test_closed_schema_and_each_independent_native_guard_fail_closed",
+        "status": "ok",
+        "raw_line": 55
+      },
+      {
+        "id": "test_kernel_image_regions.KernelImageRegionTests.test_every_selected_image_preserves_precise_method_identity_and_file_hashes",
+        "status": "ok",
+        "raw_line": 56
+      },
+      {
+        "id": "test_kernel_image_regions.KernelImageRegionTests.test_generation_change_helper_change_and_bad_json_fail_before_provenance",
+        "status": "ok",
+        "raw_line": 57
+      },
+      {
+        "id": "test_kernel_image_regions.KernelImageRegionTests.test_helper_compile_rejects_stale_outputs_and_is_bound_into_controls",
+        "status": "ok",
+        "raw_line": 58
+      },
+      {
+        "id": "test_kernel_image_regions.KernelImageRegionTests.test_integer_types_holes_overflow_and_noncontaining_regions_are_rejected",
+        "status": "ok",
+        "raw_line": 59
+      },
+      {
+        "id": "test_kernel_image_regions.KernelImageRegionTests.test_native_source_uses_real_abi_exact_bounds_and_closed_path_free_output",
+        "status": "ok",
+        "raw_line": 60
+      },
+      {
+        "id": "test_kernel_image_regions.KernelImageRegionTests.test_observer_selection_is_explicit_unique_and_does_not_consume_signing_flags",
+        "status": "ok",
+        "raw_line": 61
+      },
+      {
+        "id": "test_kernel_image_regions.KernelImageRegionTests.test_query_failure_cancellation_or_bad_sample_never_waives_the_original_error",
+        "status": "ok",
+        "raw_line": 62
+      },
+      {
+        "id": "test_normal_launch_controls.CopiedSourceTests.test_ambiguous_or_wrong_shell_phase_is_rejected",
+        "status": "ok",
+        "raw_line": 63
+      },
+      {
+        "id": "test_normal_launch_controls.CopiedSourceTests.test_app_instrumentation_is_rejected",
+        "status": "ok",
+        "raw_line": 64
+      },
+      {
+        "id": "test_normal_launch_controls.CopiedSourceTests.test_kotlin_instrumentation_is_rejected",
+        "status": "ok",
+        "raw_line": 65
+      },
+      {
+        "id": "test_normal_launch_controls.CopiedSourceTests.test_missing_input_and_redirected_input_are_rejected",
+        "status": "ok",
+        "raw_line": 66
+      },
+      {
+        "id": "test_normal_launch_controls.CopiedSourceTests.test_only_ui_test_and_owned_phase_may_change",
+        "status": "ok",
+        "raw_line": 67
+      },
+      {
+        "id": "test_normal_launch_controls.CopiedSourceTests.test_unregistered_addition_is_rejected",
+        "status": "ok",
+        "raw_line": 68
+      },
+      {
+        "id": "test_normal_launch_controls.ExternalProvenanceTests.test_copied_framework_uuid_must_match_embedded_but_signing_bytes_remain_distinct",
+        "status": "ok",
+        "raw_line": 69
+      },
+      {
+        "id": "test_normal_launch_controls.ExternalProvenanceTests.test_disappearance_reuse_and_token_change_fail",
+        "status": "ok",
+        "raw_line": 70
+      },
+      {
+        "id": "test_normal_launch_controls.ExternalProvenanceTests.test_duplicate_framework_or_image_fails",
+        "status": "ok",
+        "raw_line": 71
+      },
+      {
+        "id": "test_normal_launch_controls.ExternalProvenanceTests.test_exact_new_target_attestation",
+        "status": "ok",
+        "raw_line": 72
+      },
+      {
+        "id": "test_normal_launch_controls.ExternalProvenanceTests.test_exact_public_launch_pid_is_required",
+        "status": "ok",
+        "raw_line": 73
+      },
+      {
+        "id": "test_normal_launch_controls.ExternalProvenanceTests.test_known_build_framework_remains_distinct_from_installed",
+        "status": "ok",
+        "raw_line": 74
+      },
+      {
+        "id": "test_normal_launch_controls.ExternalProvenanceTests.test_missing_binary_images_is_not_disk_provenance",
+        "status": "ok",
+        "raw_line": 75
+      },
+      {
+        "id": "test_normal_launch_controls.ExternalProvenanceTests.test_tool_images_and_addresses_bind_only_allowed_artifacts",
+        "status": "ok",
+        "raw_line": 76
+      },
+      {
+        "id": "test_normal_launch_controls.ExternalProvenanceTests.test_unbound_compose_framework_cannot_be_silently_ignored",
+        "status": "ok",
+        "raw_line": 77
+      },
+      {
+        "id": "test_normal_launch_controls.ExternalProvenanceTests.test_vmmap_mapping_cannot_exceed_sample_image_range",
+        "status": "ok",
+        "raw_line": 78
+      },
+      {
+        "id": "test_normal_launch_controls.ExternalProvenanceTests.test_vmmap_must_map_same_load_address",
+        "status": "ok",
+        "raw_line": 79
+      },
+      {
+        "id": "test_normal_launch_controls.ExternalProvenanceTests.test_vmmap_without_all_text_mappings_fails",
+        "status": "ok",
+        "raw_line": 80
+      },
+      {
+        "id": "test_normal_launch_controls.ExternalProvenanceTests.test_wrong_executable_uid_old_lifetime_or_preexisting_pid_fails",
+        "status": "ok",
+        "raw_line": 81
+      },
+      {
+        "id": "test_normal_launch_controls.ExternalProvenanceTests.test_wrong_runtime_uuid_fails",
+        "status": "ok",
+        "raw_line": 82
+      },
+      {
+        "id": "test_normal_launch_controls.ExternalProvenanceTests.test_wrong_tool_pid_or_executable_fails",
+        "status": "ok",
+        "raw_line": 83
+      },
+      {
+        "id": "test_normal_launch_controls.MarkerTests.test_boolean_duration_is_not_a_number",
+        "status": "ok",
+        "raw_line": 84
+      },
+      {
+        "id": "test_normal_launch_controls.MarkerTests.test_clock_regression_fails",
+        "status": "ok",
+        "raw_line": 85
+      },
+      {
+        "id": "test_normal_launch_controls.MarkerTests.test_complete_cannot_move_back_before_last_sample",
+        "status": "ok",
+        "raw_line": 86
+      },
+      {
+        "id": "test_normal_launch_controls.MarkerTests.test_duplicate_json_keys_fail",
+        "status": "ok",
+        "raw_line": 87
+      },
+      {
+        "id": "test_normal_launch_controls.MarkerTests.test_duplicate_lifetime_fails",
+        "status": "ok",
+        "raw_line": 88
+      },
+      {
+        "id": "test_normal_launch_controls.MarkerTests.test_eight_complete_trains_are_48_samples_not_48_tests",
+        "status": "ok",
+        "raw_line": 89
+      },
+      {
+        "id": "test_normal_launch_controls.MarkerTests.test_failing_foreground_home_alert_observations_fail",
+        "status": "ok",
+        "raw_line": 90
+      },
+      {
+        "id": "test_normal_launch_controls.MarkerTests.test_final_sample_must_itself_reach_ten_seconds",
+        "status": "ok",
+        "raw_line": 91
+      },
+      {
+        "id": "test_normal_launch_controls.MarkerTests.test_interleaved_trains_fail",
+        "status": "ok",
+        "raw_line": 92
+      },
+      {
+        "id": "test_normal_launch_controls.MarkerTests.test_ninth_attempt_fails_even_if_it_is_incomplete",
+        "status": "ok",
+        "raw_line": 93
+      },
+      {
+        "id": "test_normal_launch_controls.MarkerTests.test_nonfinite_json_fails",
+        "status": "ok",
+        "raw_line": 94
+      },
+      {
+        "id": "test_normal_launch_controls.MarkerTests.test_out_of_order_or_repeated_sample_fails",
+        "status": "ok",
+        "raw_line": 95
+      },
+      {
+        "id": "test_normal_launch_controls.MarkerTests.test_seven_launches_fail",
+        "status": "ok",
+        "raw_line": 96
+      },
+      {
+        "id": "test_normal_launch_controls.MarkerTests.test_unrecognized_marker_field_fails",
+        "status": "ok",
+        "raw_line": 97
+      },
+      {
+        "id": "test_normal_launch_controls.RunnerGuards.test_adhoc_is_explicit_and_does_not_inherit_a_real_identity",
+        "status": "ok",
+        "raw_line": 98
+      },
+      {
+        "id": "test_normal_launch_controls.RunnerGuards.test_allocation_canonicalizes_parent_before_mkdtemp_and_retains_exact_identity",
+        "status": "ok",
+        "raw_line": 99
+      },
+      {
+        "id": "test_normal_launch_controls.RunnerGuards.test_allocation_receipt_failure_does_not_strand_owned_directory",
+        "status": "ok",
+        "raw_line": 100
+      },
+      {
+        "id": "test_normal_launch_controls.RunnerGuards.test_cache_link_cleanup_does_not_remove_dependency_cache",
+        "status": "ok",
+        "raw_line": 101
+      },
+      {
+        "id": "test_normal_launch_controls.RunnerGuards.test_changed_cache_link_preserves_allocation",
+        "status": "ok",
+        "raw_line": 102
+      },
+      {
+        "id": "test_normal_launch_controls.RunnerGuards.test_control_drift_invalidates_overall_result",
+        "status": "ok",
+        "raw_line": 103
+      },
+      {
+        "id": "test_normal_launch_controls.RunnerGuards.test_deferred_interrupt_after_mkdtemp_keeps_finalizer_ownership",
+        "status": "ok",
+        "raw_line": 104
+      },
+      {
+        "id": "test_normal_launch_controls.RunnerGuards.test_environment_drops_probes_loader_credentials_and_foreign_gradle_options",
+        "status": "ok",
+        "raw_line": 105
+      },
+      {
+        "id": "test_normal_launch_controls.RunnerGuards.test_existing_allocation_cannot_be_replaced",
+        "status": "ok",
+        "raw_line": 106
+      },
+      {
+        "id": "test_normal_launch_controls.RunnerGuards.test_failed_gradle_stop_does_not_skip_device_workers_and_file_cleanup",
+        "status": "ok",
+        "raw_line": 107
+      },
+      {
+        "id": "test_normal_launch_controls.RunnerGuards.test_failed_notice_verifier_cannot_pass_package_gate",
+        "status": "ok",
+        "raw_line": 108
+      },
+      {
+        "id": "test_normal_launch_controls.RunnerGuards.test_failed_observation_releases_watch_before_final_shutdown",
+        "status": "ok",
+        "raw_line": 109
+      },
+      {
+        "id": "test_normal_launch_controls.RunnerGuards.test_failed_xcode_attempt_immediately_stops_gradle",
+        "status": "ok",
+        "raw_line": 110
+      },
+      {
+        "id": "test_normal_launch_controls.RunnerGuards.test_finalization_removes_only_exact_task_allocation",
+        "status": "ok",
+        "raw_line": 111
+      },
+      {
+        "id": "test_normal_launch_controls.RunnerGuards.test_fixed_test_arguments_have_no_retry_or_parallel_escape",
+        "status": "ok",
+        "raw_line": 112
+      },
+      {
+        "id": "test_normal_launch_controls.RunnerGuards.test_interrupted_xcode_attempt_immediately_stops_gradle",
+        "status": "ok",
+        "raw_line": 113
+      },
+      {
+        "id": "test_normal_launch_controls.RunnerGuards.test_mkdtemp_failure_has_no_allocation_or_cleanup_target",
+        "status": "ok",
+        "raw_line": 114
+      },
+      {
+        "id": "test_normal_launch_controls.RunnerGuards.test_notices_check_built_and_installed_apps_using_frozen_copy",
+        "status": "ok",
+        "raw_line": 115
+      },
+      {
+        "id": "test_normal_launch_controls.RunnerGuards.test_oversized_watch_file_is_rejected",
+        "status": "ok",
+        "raw_line": 116
+      },
+      {
+        "id": "test_normal_launch_controls.RunnerGuards.test_owned_name_failure_retains_preowner_cleanup_identity",
+        "status": "ok",
+        "raw_line": 117
+      },
+      {
+        "id": "test_normal_launch_controls.RunnerGuards.test_owner_constructor_failure_retains_preworker_cleanup_identity",
+        "status": "ok",
+        "raw_line": 118
+      },
+      {
+        "id": "test_normal_launch_controls.RunnerGuards.test_preexisting_original_output_is_preserved_not_deleted",
+        "status": "ok",
+        "raw_line": 119
+      },
+      {
+        "id": "test_normal_launch_controls.RunnerGuards.test_replaced_allocation_inode_refuses_removal",
+        "status": "ok",
+        "raw_line": 120
+      },
+      {
+        "id": "test_normal_launch_controls.RunnerGuards.test_secondary_path_attestation_failure_is_not_cleanup_success",
+        "status": "ok",
+        "raw_line": 121
+      },
+      {
+        "id": "test_normal_launch_controls.RunnerGuards.test_source_drift_invalidates_overall_result",
+        "status": "ok",
+        "raw_line": 122
+      },
+      {
+        "id": "test_normal_launch_controls.RunnerGuards.test_source_only_or_failed_notice_receipt_is_not_package_evidence",
+        "status": "ok",
+        "raw_line": 123
+      },
+      {
+        "id": "test_normal_launch_controls.RunnerGuards.test_timed_out_xcode_attempt_immediately_stops_gradle",
+        "status": "ok",
+        "raw_line": 124
+      },
+      {
+        "id": "test_normal_launch_controls.RunnerGuards.test_unexecuted_notice_verification_cannot_be_overall_pass",
+        "status": "ok",
+        "raw_line": 125
+      },
+      {
+        "id": "test_normal_launch_controls.RunnerGuards.test_unknown_holders_preserve_allocation_and_fail_cleanup",
+        "status": "ok",
+        "raw_line": 126
+      },
+      {
+        "id": "test_normal_launch_controls.XCTestTests.test_actual_runs_not_aggregate_method_count_establish_eight",
+        "status": "ok",
+        "raw_line": 127
+      },
+      {
+        "id": "test_normal_launch_controls.XCTestTests.test_additional_test_case_cannot_hide_in_summary",
+        "status": "ok",
+        "raw_line": 128
+      },
+      {
+        "id": "test_normal_launch_controls.XCTestTests.test_aggregate_skip_even_with_passed_case_nodes_fails",
+        "status": "ok",
+        "raw_line": 129
+      },
+      {
+        "id": "test_normal_launch_controls.XCTestTests.test_aggregate_without_actual_runs_fails",
+        "status": "ok",
+        "raw_line": 130
+      },
+      {
+        "id": "test_normal_launch_controls.XCTestTests.test_any_skip_failure_expected_failure_or_unknown_fails",
+        "status": "ok",
+        "raw_line": 131
+      },
+      {
+        "id": "test_normal_launch_controls.XCTestTests.test_boolean_count_fails",
+        "status": "ok",
+        "raw_line": 132
+      },
+      {
+        "id": "test_normal_launch_controls.XCTestTests.test_duplicate_run_hierarchy_fails",
+        "status": "ok",
+        "raw_line": 133
+      },
+      {
+        "id": "test_normal_launch_controls.XCTestTests.test_nested_actual_runs_cannot_inflate_count",
+        "status": "ok",
+        "raw_line": 134
+      },
+      {
+        "id": "test_normal_launch_controls.XCTestTests.test_repeated_leaf_names_beneath_distinct_repetitions_are_valid",
+        "status": "ok",
+        "raw_line": 135
+      },
+      {
+        "id": "test_normal_launch_controls.XCTestTests.test_seventh_or_ninth_actual_run_fails",
+        "status": "ok",
+        "raw_line": 136
+      },
+      {
+        "id": "test_normal_launch_controls.XCTestTests.test_too_short_actual_run_fails_even_with_good_markers",
+        "status": "ok",
+        "raw_line": 137
+      },
+      {
+        "id": "test_normal_launch_controls.XCTestTests.test_unknown_result_structure_fails_closed",
+        "status": "ok",
+        "raw_line": 138
+      },
+      {
+        "id": "test_normal_launch_controls.XCTestTests.test_wrong_device_architecture_platform_and_configuration_fail",
+        "status": "ok",
+        "raw_line": 139
+      },
+      {
+        "id": "test_normal_launch_controls.XCTestTests.test_wrong_selected_method_fails",
+        "status": "ok",
+        "raw_line": 140
+      },
+      {
+        "id": "test_owned_tool_paths.DriverContextTests.test_elevated_uid_is_rejected_before_account_lookup",
+        "status": "ok",
+        "raw_line": 141
+      },
+      {
+        "id": "test_owned_tool_paths.DriverContextTests.test_foreign_account_or_kernel_record_is_rejected",
+        "status": "ok",
+        "raw_line": 142
+      },
+      {
+        "id": "test_owned_tool_paths.DriverContextTests.test_missing_account_database_entry_is_not_replaced_with_environment",
+        "status": "ok",
+        "raw_line": 143
+      },
+      {
+        "id": "test_owned_tool_paths.DriverContextTests.test_os_account_database_not_environment_supplies_home",
+        "status": "ok",
+        "raw_line": 144
+      },
+      {
+        "id": "test_owned_tool_paths.DriverContextTests.test_production_driver_opts_in_only_after_kernel_attestation_and_passes_one_policy",
+        "status": "ok",
+        "raw_line": 145
+      },
+      {
+        "id": "test_owned_tool_paths.OwnedToolPathTests.test_account_home_outside_users_and_literal_user_account_are_raw_only",
+        "status": "ok",
+        "raw_line": 146
+      },
+      {
+        "id": "test_owned_tool_paths.OwnedToolPathTests.test_alias_collisions_cannot_redirect_an_existing_exact_artifact",
+        "status": "ok",
+        "raw_line": 147
+      },
+      {
+        "id": "test_owned_tool_paths.OwnedToolPathTests.test_build_and_derived_artifacts_do_not_gain_any_user_alias",
+        "status": "ok",
+        "raw_line": 148
+      },
+      {
+        "id": "test_owned_tool_paths.OwnedToolPathTests.test_copied_framework_keeps_distinct_bytes_and_must_have_an_exact_path",
+        "status": "ok",
+        "raw_line": 149
+      },
+      {
+        "id": "test_owned_tool_paths.OwnedToolPathTests.test_default_remains_exact_and_rejects_user_only_presentation",
+        "status": "ok",
+        "raw_line": 150
+      },
+      {
+        "id": "test_owned_tool_paths.OwnedToolPathTests.test_every_other_path_component_and_username_spelling_stays_exact",
+        "status": "ok",
+        "raw_line": 151
+      },
+      {
+        "id": "test_owned_tool_paths.OwnedToolPathTests.test_foreign_account_device_or_installed_container_context_fails",
+        "status": "ok",
+        "raw_line": 152
+      },
+      {
+        "id": "test_owned_tool_paths.OwnedToolPathTests.test_malformed_raw_and_alias_owned_rows_never_disappear",
+        "status": "ok",
+        "raw_line": 153
+      },
+      {
+        "id": "test_owned_tool_paths.OwnedToolPathTests.test_mutated_inventory_and_selected_artifact_are_not_accepted",
+        "status": "ok",
+        "raw_line": 154
+      },
+      {
+        "id": "test_owned_tool_paths.OwnedToolPathTests.test_noncanonical_and_control_character_paths_cannot_gain_aliases",
+        "status": "ok",
+        "raw_line": 155
+      },
+      {
+        "id": "test_owned_tool_paths.OwnedToolPathTests.test_raw_and_user_only_headers_rows_and_mappings_have_explicit_proof_limits",
+        "status": "ok",
+        "raw_line": 156
+      },
+      {
+        "id": "test_owned_tool_paths.OwnedToolPathTests.test_raw_plus_alias_sample_duplicates_are_one_canonical_image_and_fail",
+        "status": "ok",
+        "raw_line": 157
+      },
+      {
+        "id": "test_owned_tool_paths.OwnedToolPathTests.test_second_installed_container_or_false_relative_path_is_rejected",
+        "status": "ok",
+        "raw_line": 158
+      },
+      {
+        "id": "test_owned_tool_paths.OwnedToolPathTests.test_user_only_presentation_does_not_bypass_uuid_or_unbound_image_checks",
+        "status": "ok",
+        "raw_line": 159
+      },
+      {
+        "id": "test_owned_tool_paths.OwnedToolPathTests.test_vmmap_raw_alias_duplicates_unknown_paths_and_ranges_fail",
+        "status": "ok",
+        "raw_line": 160
+      },
+      {
+        "id": "test_owned_tool_paths.OwnedToolPathTests.test_wrong_missing_and_duplicate_headers_are_rejected_with_opt_in",
+        "status": "ok",
+        "raw_line": 161
+      },
+      {
+        "id": "test_sample_literal_star.SampleLiteralStarTests.test_copied_build_and_derived_origins_never_gain_star_aliases",
+        "status": "ok",
+        "raw_line": 162
+      },
+      {
+        "id": "test_sample_literal_star.SampleLiteralStarTests.test_every_other_component_partial_star_and_foreign_username_remain_exact",
+        "status": "ok",
+        "raw_line": 163
+      },
+      {
+        "id": "test_sample_literal_star.SampleLiteralStarTests.test_exact_star_collision_and_inventory_mutation_fail_closed",
+        "status": "ok",
+        "raw_line": 164
+      },
+      {
+        "id": "test_sample_literal_star.SampleLiteralStarTests.test_failure_diagnostics_distinguish_star_without_granting_vmmap_authority",
+        "status": "ok",
+        "raw_line": 165
+      },
+      {
+        "id": "test_sample_literal_star.SampleLiteralStarTests.test_literal_star_cannot_bypass_uuid_ranges_duplicates_or_container_binding",
+        "status": "ok",
+        "raw_line": 166
+      },
+      {
+        "id": "test_sample_literal_star.SampleLiteralStarTests.test_literal_star_is_not_authorized_in_headers_or_vmmap",
+        "status": "ok",
+        "raw_line": 167
+      },
+      {
+        "id": "test_sample_literal_star.SampleLiteralStarTests.test_observed_user_header_and_literal_star_rows_bind_with_distinct_lossy_labels",
+        "status": "ok",
+        "raw_line": 168
+      },
+      {
+        "id": "test_vmmap_command_failure.VmmapCommandFailureTests.test_actual_command_nonzero_preserves_diagnostic_on_both_existing_paths",
+        "status": "ok",
+        "raw_line": 169
+      },
+      {
+        "id": "test_vmmap_command_failure.VmmapCommandFailureTests.test_closed_vocabulary_unknown_bytes_and_requested_pid_never_expose_raw_output",
+        "status": "ok",
+        "raw_line": 170
+      },
+      {
+        "id": "test_vmmap_command_failure.VmmapCommandFailureTests.test_command_diagnostic_only_reads_exact_owned_single_link_file_and_closes_fd",
+        "status": "ok",
+        "raw_line": 171
+      },
+      {
+        "id": "test_vmmap_command_failure.VmmapCommandFailureTests.test_completed_success_and_other_commands_do_not_create_failure_diagnostics",
+        "status": "ok",
+        "raw_line": 172
+      },
+      {
+        "id": "test_vmmap_command_failure.VmmapCommandFailureTests.test_diagnostic_failure_or_interruption_cannot_mask_original_nonzero_command",
+        "status": "ok",
+        "raw_line": 173
+      },
+      {
+        "id": "test_vmmap_command_failure.VmmapCommandFailureTests.test_empty_output_strict_context_and_line_token_byte_budgets",
+        "status": "ok",
+        "raw_line": 174
+      },
+      {
+        "id": "test_vmmap_command_failure.VmmapCommandFailureTests.test_interrupted_or_timed_out_command_does_not_gain_completed_failure_evidence",
+        "status": "ok",
+        "raw_line": 175
+      },
+      {
+        "id": "test_xcode26_repetitions.ObservedXcodeRepetitionTests.test_destination_execution_count_is_not_method_count",
+        "status": "ok",
+        "raw_line": 176
+      },
+      {
+        "id": "test_xcode26_repetitions.ObservedXcodeRepetitionTests.test_direct_repetition_counts_must_match_both_queries",
+        "status": "ok",
+        "raw_line": 177
+      },
+      {
+        "id": "test_xcode26_repetitions.ObservedXcodeRepetitionTests.test_duplicate_repetition_ids_fail_despite_distinct_names",
+        "status": "ok",
+        "raw_line": 178
+      },
+      {
+        "id": "test_xcode26_repetitions.ObservedXcodeRepetitionTests.test_extra_repetition_outside_selected_case_is_rejected",
+        "status": "ok",
+        "raw_line": 179
+      },
+      {
+        "id": "test_xcode26_repetitions.ObservedXcodeRepetitionTests.test_independent_query_duration_must_agree",
+        "status": "ok",
+        "raw_line": 180
+      },
+      {
+        "id": "test_xcode26_repetitions.ObservedXcodeRepetitionTests.test_leaf_layout_requires_the_observed_single_method_summary",
+        "status": "ok",
+        "raw_line": 181
+      },
+      {
+        "id": "test_xcode26_repetitions.ObservedXcodeRepetitionTests.test_leaf_repetition_identity_is_required",
+        "status": "ok",
+        "raw_line": 182
+      },
+      {
+        "id": "test_xcode26_repetitions.ObservedXcodeRepetitionTests.test_missing_tree_repetitions_cannot_be_replaced_with_details",
+        "status": "ok",
+        "raw_line": 183
+      },
+      {
+        "id": "test_xcode26_repetitions.ObservedXcodeRepetitionTests.test_mixed_leaf_and_nested_run_layout_is_rejected",
+        "status": "ok",
+        "raw_line": 184
+      },
+      {
+        "id": "test_xcode26_repetitions.ObservedXcodeRepetitionTests.test_nonpassing_repetition_or_summary_is_never_accepted",
+        "status": "ok",
+        "raw_line": 185
+      },
+      {
+        "id": "test_xcode26_repetitions.ObservedXcodeRepetitionTests.test_observed_one_method_eight_destination_leaf_repetitions_pass",
+        "status": "ok",
+        "raw_line": 186
+      },
+      {
+        "id": "test_xcode26_repetitions.ObservedXcodeRepetitionTests.test_reordered_repetitions_fail",
+        "status": "ok",
+        "raw_line": 187
+      },
+      {
+        "id": "test_xcode26_repetitions.ObservedXcodeRepetitionTests.test_repetition_durations_are_bounded_and_not_boolean",
+        "status": "ok",
+        "raw_line": 188
+      }
+    ],
+    "status_counts": {
+      "ok": 187
+    },
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "missing_ids": [],
+    "unexpected_ids": [],
+    "summary": "Ran 187 tests in 0.910s",
+    "raw_result": "OK",
+    "child_exit_code": 0,
+    "outer_status": "PASS",
+    "test_receipts_empty_expected_for_python_unittest": true,
+    "artifact_receipts_empty_no_app_artifact_produced": true,
+    "jdk21_actual_runtime_and_compiler_receipts_reconciled": {
+      "home": "/usr/lib/jvm/java-21-openjdk-amd64",
+      "specification_version": "21",
+      "javac_version": "21.0.12",
+      "java_log_sha256": "a7a86ea7b20362e2c856e5e71a8b6fc51764d5aeaa9f5a8c82b386ff156f8a7c",
+      "javac_log_sha256": "157f601a5854ca28a7dc364c13a5ca2879084186be49e3462d37acd028f35755"
+    }
+  },
+  "cleanup": {
+    "ordinary_lane_only": true,
+    "source_finally_inspected": "run_gradle_cycle.py:340-400; after child completion, immediate ./gradlew --stop is first cleanup operation, before owned workers/reports/artifacts/output/scratch cleanup.",
+    "finished_at": "2026-09-08T19:03:55.461103+00:00",
+    "stop_argv": [
+      "./gradlew",
+      "--stop"
+    ],
+    "stop_exit_code": 0,
+    "stopped_at": "2026-09-08T19:03:56.150544+00:00",
+    "seconds_finish_to_completed_stop": 0.689441,
+    "raw_stop_log": "No Gradle daemons are running.",
+    "cleanup_completed_at": "2026-09-08T19:03:56.219181+00:00",
+    "workers": {
+      "terminated_owned_workers": [],
+      "remaining_owned_workers": []
+    },
+    "artifact_workers": {
+      "terminated_owned_workers": [],
+      "remaining_owned_workers": []
+    },
+    "retained_outputs": [],
+    "remaining_outputs": [],
+    "cleanup_errors": [],
+    "deferred_signals": [],
+    "fresh_absence_checked_at": "2026-09-08T19:22:22.248558+00:00",
+    "fresh_exact_absences": [
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-normal-lifecycle-recheck-01/scratch",
+        "exists": false,
+        "is_symlink": false
+      },
+      {
+        "path": "shared/networking-testing/build",
+        "exists": false,
+        "is_symlink": false
+      },
+      {
+        "path": "shared/session/build",
+        "exists": false,
+        "is_symlink": false
+      },
+      {
+        "path": "shared/networking/build",
+        "exists": false,
+        "is_symlink": false
+      },
+      {
+        "path": "shared/transport-p2p/build",
+        "exists": false,
+        "is_symlink": false
+      },
+      {
+        "path": "shared/core/build",
+        "exists": false,
+        "is_symlink": false
+      },
+      {
+        "path": "shared/engine-testing/build",
+        "exists": false,
+        "is_symlink": false
+      },
+      {
+        "path": "shared/storage/build",
+        "exists": false,
+        "is_symlink": false
+      },
+      {
+        "path": "shared/design-system/build",
+        "exists": false,
+        "is_symlink": false
+      },
+      {
+        "path": "shared/engine/build",
+        "exists": false,
+        "is_symlink": false
+      },
+      {
+        "path": "shared/content/build",
+        "exists": false,
+        "is_symlink": false
+      },
+      {
+        "path": "game-modes/whodunit/build",
+        "exists": false,
+        "is_symlink": false
+      },
+      {
+        "path": "game-modes/mafia/build",
+        "exists": false,
+        "is_symlink": false
+      },
+      {
+        "path": "build",
+        "exists": false,
+        "is_symlink": false
+      },
+      {
+        "path": "composeApp/build",
+        "exists": false,
+        "is_symlink": false
+      },
+      {
+        "path": "build-logic/build",
+        "exists": false,
+        "is_symlink": false
+      },
+      {
+        "path": "build-logic/convention/build",
+        "exists": false,
+        "is_symlink": false
+      }
+    ],
+    "owned_live_output_paths_count": 16,
+    "reviewer_did_not_run_cleanup_or_reissue_stop": true,
+    "no_second_stop_required_by_cleanup": "This ordinary lane removes only exact owned outputs/scratch and does not start Gradle for cleanup; package/test artifact receipts are empty.",
+    "workers_scope": "Both original owned-process censuses are empty. No new reviewer process census or adoption/deletion performed.",
+    "native_fixture_limit": "Pure controls; no actual simulator, native AppHost, app process, DerivedData build or libproc observation evidenced."
+  },
+  "artifacts": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-normal-lifecycle-recheck-01/artifact-receipts.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "bytes": 3,
+      "canonical_regular_single_link": true,
+      "uid": 0,
+      "device": 24,
+      "inode": 16279371
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-normal-lifecycle-recheck-01/gradle.log",
+      "sha256": "e68f19d0716199d355b9c7bd4a549994dd3b08bd4e1120f93293421f10a197de",
+      "bytes": 110082,
+      "canonical_regular_single_link": true,
+      "uid": 0,
+      "device": 24,
+      "inode": 16279368
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-normal-lifecycle-recheck-01/java-toolchain.log",
+      "sha256": "a7a86ea7b20362e2c856e5e71a8b6fc51764d5aeaa9f5a8c82b386ff156f8a7c",
+      "bytes": 2026,
+      "canonical_regular_single_link": true,
+      "uid": 0,
+      "device": 24,
+      "inode": 16279366
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-normal-lifecycle-recheck-01/javac-toolchain.log",
+      "sha256": "157f601a5854ca28a7dc364c13a5ca2879084186be49e3462d37acd028f35755",
+      "bytes": 14,
+      "canonical_regular_single_link": true,
+      "uid": 0,
+      "device": 24,
+      "inode": 16279367
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-normal-lifecycle-recheck-01/receipt.json",
+      "sha256": "3e0e95d184bf832225286fe9424ae2e98e61f9a0de95ec3fda35a620758f1b6e",
+      "bytes": 307719,
+      "canonical_regular_single_link": true,
+      "uid": 0,
+      "device": 24,
+      "inode": 16279365
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-normal-lifecycle-recheck-01/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+      "bytes": 31,
+      "canonical_regular_single_link": true,
+      "uid": 0,
+      "device": 24,
+      "inode": 16279369
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-normal-lifecycle-recheck-01/test-receipts.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "bytes": 3,
+      "canonical_regular_single_link": true,
+      "uid": 0,
+      "device": 24,
+      "inode": 16279370
+    }
+  ],
+  "prior_failed_cycle": {
+    "cycle": "continuation-native-lifecycle-controls-01",
+    "independent_failed_postrun_review": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-lifecycle-controls-postrun-independent-01.json",
+      "sha256": "ce9e68960dc161c4199deb3186dd5d940d8e1c587c7f5e5918ed1d5522b5abfa",
+      "bytes": 83166
+    },
+    "status": "FAIL_PRESERVED",
+    "actual_tests": 436,
+    "actual_passes": 415,
+    "actual_failures": 1,
+    "actual_errors": 20,
+    "skips": 0,
+    "old_normal_scope": {
+      "tests": 187,
+      "passes": 166,
+      "failures": 1,
+      "errors": 20,
+      "skips": 0
+    },
+    "unchanged_nine_scopes": "249 originally passed controls are not rerun, recounted as new execution or relabeled by this narrow recheck.",
+    "original_cleanup": "Independently cleared separately in cited failed postrun review."
+  },
+  "activity": {
+    "project_imports": 0,
+    "project_function_calls": 0,
+    "test_executions": 0,
+    "builds": 0,
+    "native_tools": 0,
+    "actions_dispatches": 0,
+    "cleanup_actions": 0,
+    "writes": "Only uniquely named independent JSON review and held-current snapshot. No source/configuration/evidence modification, staging, commit or push."
+  },
+  "readiness": "NOT_READY_UNCHANGED: normal187 pure controls pass is not actual normal Debug Parlor libproc runtime, L08 functional-storage/retained-host/strict-protection proof, fresh dependency-consumer chain, frozen combined qualification, physical-device or Store evidence."
+}

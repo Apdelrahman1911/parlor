@@ -1,0 +1,492 @@
+{
+  "schema": 1,
+  "reviewer": "/root/factory_review",
+  "author": "/root/native_fix_review (preserved draft attribution); /root maintained shared-owner pin",
+  "reviewed_at": "2026-09-07T10:54:58.892201+00:00",
+  "scope": "Complete current Rosetta Desktop control review plus shared native ownership, outer lane, public JDK metadata and exact-version Gradle/Kotlin applicability. No test/download/native/JVM/Gradle action performed by reviewer.",
+  "decision": "SOURCE CONDITIONALLY APPROVED FOR ROOT GUARDED RUNTIME AFTER FRESH SOURCE-BOUND20 SYNTHETIC CONTROLS PASS; NOT RUNTIME PASS",
+  "baseline": {
+    "repository": "/Users/abdelrahman/Projects/parlor",
+    "branch": "fix/local-readiness-2026-09-07",
+    "commit": "f5ea8045bd903c255041b198f54aca67e893612f",
+    "tree": "b109c8ec6ec579b9197f449b36bda2c39105a652",
+    "status": "?? AGENTS.md\n?? audit-runs/\n?? design/\n?? docs/PARLOR_PROJECT_HANDOFF.md\n?? project-code-audit/\n?? remediation-runs/\n?? scripts/verification/",
+    "tracked_status": ""
+  },
+  "control_binding": {
+    "files": [
+      [
+        "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/darwin_owned_processes.py",
+        "2f2ad2a5d68cea999709a4c3c3e384cd9e6767258ad34aed4181ee2118962378"
+      ],
+      [
+        "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/official-jdk-metadata-alternative.json",
+        "db97e794cf07d0c2ffcf4da861b550fecc2a66bbe7cd89c2d6ffc12278586cef"
+      ],
+      [
+        "remediation-runs/2026-09-07-local-readiness/native/rosetta-desktop-controls-01/ArchitectureProbe.java",
+        "c5b6aa817997308ac8629953f6372dbf55963baf9b44492422f8e51e1c41c278"
+      ],
+      [
+        "remediation-runs/2026-09-07-local-readiness/native/rosetta-desktop-controls-01/README.md",
+        "507b490154815e832a4f0eeec26b816e4bba575a03dd6b14b4ff7e6d46467e14"
+      ],
+      [
+        "remediation-runs/2026-09-07-local-readiness/native/rosetta-desktop-controls-01/rosetta.init.gradle",
+        "3ba5f5b78f2352bbef053469f5a7b4c882ef6985d1d4805723ff58b97b00602a"
+      ],
+      [
+        "remediation-runs/2026-09-07-local-readiness/native/rosetta-desktop-controls-01/run_rosetta_desktop.py",
+        "9fac73b1c74128b7370b4294954782c98a90c051a7be50e327c833504bca214d"
+      ],
+      [
+        "remediation-runs/2026-09-07-local-readiness/native/rosetta-desktop-controls-01/safe_jdk.py",
+        "1f90d828338f8f152b0133dfe0b4d48622a6fb443ad1a19461407dfb68ebe256"
+      ],
+      [
+        "remediation-runs/2026-09-07-local-readiness/native/rosetta-desktop-controls-01/test_controls.py",
+        "5a9fb1073f0c3304e0ebd1d20f37a5c3e16e2061f97e1f11a6dc4639b6ea1ed1"
+      ],
+      [
+        "remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py",
+        "172c4f3162dc6a6b20e912e6551eaca9f33a32ba3d0d6f150ad8becfd30865ea"
+      ]
+    ],
+    "sha256": "789c86aa619a5c9672fba3ac9f15023a5d99119cf67eb8105757bfa7465bb5ee",
+    "method": "Recomputed statically without importing runners: sorted full paths; pairs serialized by json.dumps(rows,separators=(comma,colon)); exact run_rosetta_desktop.control_binding equivalent.",
+    "process_pin_matches_current_helper": true
+  },
+  "coverage": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/rosetta-desktop-controls-01/run_rosetta_desktop.py",
+      "sha256": "9fac73b1c74128b7370b4294954782c98a90c051a7be50e327c833504bca214d",
+      "line_count": 285,
+      "reviewed_line_ranges": [
+        [
+          1,
+          285
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "scope": "complete current source/data read",
+      "relevance": "campaign-only control/reference; no shipping source changes"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/rosetta-desktop-controls-01/safe_jdk.py",
+      "sha256": "1f90d828338f8f152b0133dfe0b4d48622a6fb443ad1a19461407dfb68ebe256",
+      "line_count": 154,
+      "reviewed_line_ranges": [
+        [
+          1,
+          154
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "scope": "complete current source/data read",
+      "relevance": "campaign-only control/reference; no shipping source changes"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/rosetta-desktop-controls-01/ArchitectureProbe.java",
+      "sha256": "c5b6aa817997308ac8629953f6372dbf55963baf9b44492422f8e51e1c41c278",
+      "line_count": 12,
+      "reviewed_line_ranges": [
+        [
+          1,
+          12
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "scope": "complete current source/data read",
+      "relevance": "campaign-only control/reference; no shipping source changes"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/rosetta-desktop-controls-01/rosetta.init.gradle",
+      "sha256": "3ba5f5b78f2352bbef053469f5a7b4c882ef6985d1d4805723ff58b97b00602a",
+      "line_count": 66,
+      "reviewed_line_ranges": [
+        [
+          1,
+          66
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "scope": "complete current source/data read",
+      "relevance": "campaign-only control/reference; no shipping source changes"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/rosetta-desktop-controls-01/test_controls.py",
+      "sha256": "5a9fb1073f0c3304e0ebd1d20f37a5c3e16e2061f97e1f11a6dc4639b6ea1ed1",
+      "line_count": 183,
+      "reviewed_line_ranges": [
+        [
+          1,
+          183
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "scope": "complete current source/data read",
+      "relevance": "campaign-only control/reference; no shipping source changes"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/rosetta-desktop-controls-01/README.md",
+      "sha256": "507b490154815e832a4f0eeec26b816e4bba575a03dd6b14b4ff7e6d46467e14",
+      "line_count": 79,
+      "reviewed_line_ranges": [
+        [
+          1,
+          79
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "scope": "complete current source/data read",
+      "relevance": "campaign-only control/reference; no shipping source changes"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/darwin_owned_processes.py",
+      "sha256": "2f2ad2a5d68cea999709a4c3c3e384cd9e6767258ad34aed4181ee2118962378",
+      "line_count": 368,
+      "reviewed_line_ranges": [
+        [
+          1,
+          368
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "scope": "complete current source/data read",
+      "relevance": "campaign-only control/reference; no shipping source changes"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/official-jdk-metadata-alternative.json",
+      "sha256": "db97e794cf07d0c2ffcf4da861b550fecc2a66bbe7cd89c2d6ffc12278586cef",
+      "line_count": 28,
+      "reviewed_line_ranges": [
+        [
+          1,
+          28
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "scope": "complete current source/data read",
+      "relevance": "campaign-only control/reference; no shipping source changes"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py",
+      "sha256": "172c4f3162dc6a6b20e912e6551eaca9f33a32ba3d0d6f150ad8becfd30865ea",
+      "line_count": 291,
+      "reviewed_line_ranges": [
+        [
+          1,
+          291
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "scope": "complete current source/data read",
+      "relevance": "campaign-only control/reference; no shipping source changes"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/build.gradle.kts",
+      "sha256": "bd6199e1f097eb236c50c46efb91d291550110f6b4d95a8e95ff0db4d8da192b",
+      "line_count": 204,
+      "reviewed_line_ranges": [
+        [
+          1,
+          52
+        ],
+        [
+          155,
+          204
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "scope": "listed ranges only",
+      "relevance": "real graph/wrapper call path"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/gradlew",
+      "sha256": "734b3879d3501dce471cf0522d3bcbafe76873d9fc5129345b67fb43bd15e933",
+      "line_count": 251,
+      "reviewed_line_ranges": [
+        [
+          158,
+          249
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "scope": "listed ranges only",
+      "relevance": "real graph/wrapper call path"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/build-logic/convention/src/main/kotlin/com/parlor/buildlogic/KmpLibraryConventionPlugin.kt",
+      "sha256": "9d3b07942123f5a4c2da229aa873d5d7b7d422b120d1ff42014cfe066eefbc63",
+      "line_count": 72,
+      "reviewed_line_ranges": [
+        [
+          1,
+          72
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "scope": "complete current source read",
+      "relevance": "real graph/toolchain/JVM defaults"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/build-logic/convention/build.gradle.kts",
+      "sha256": "d97140c79c500416f3ef1b5a54b2d05f6d0aa895f92b6cd85c26a70c8852ac67",
+      "line_count": 62,
+      "reviewed_line_ranges": [
+        [
+          1,
+          62
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "scope": "complete current source read",
+      "relevance": "real graph/toolchain/JVM defaults"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/gradle.properties",
+      "sha256": "2df8685921ad2c6eead097a6d9994bbcc93dbc5cbdeb0bce8911ffa4e83162ce",
+      "line_count": 29,
+      "reviewed_line_ranges": [
+        [
+          1,
+          29
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "scope": "complete current source read",
+      "relevance": "real graph/toolchain/JVM defaults"
+    }
+  ],
+  "historical_actual20": {
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/rosetta-controls-01/receipt.json",
+    "receipt_sha256": "5d17a5413d68b440481109e7c3e7b3e84e7b109c0d42b0c8aa6f443c39ed9532",
+    "raw_log_sha256": "d44599c5f7a133d0bf813335ff2e612ddeef52b452ae6473c9bc3ba6b02e1153",
+    "started_at": "2026-09-07T07:26:17.004378+00:00",
+    "finished_at": "2026-09-07T07:26:17.084921+00:00",
+    "exit_code": 0,
+    "tests": 20,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "raw_ok_ids_equal_current_ast": true,
+    "actual_ids": [
+      "test_controls.PublicJdkControlTests.test_command_pins_runtime_compiler_test_toolchain_and_strict_graph",
+      "test_controls.PublicJdkControlTests.test_duplicate_normalized_paths_rejected",
+      "test_controls.PublicJdkControlTests.test_entry_bound_rejected",
+      "test_controls.PublicJdkControlTests.test_escaping_and_absolute_links_rejected",
+      "test_controls.PublicJdkControlTests.test_exact_public_digest_and_size_required",
+      "test_controls.PublicJdkControlTests.test_excess_download_rejected",
+      "test_controls.PublicJdkControlTests.test_existing_destination_never_overwritten",
+      "test_controls.PublicJdkControlTests.test_expansion_bound_rejected_before_payload_write",
+      "test_controls.PublicJdkControlTests.test_fifo_special_entry_rejected",
+      "test_controls.PublicJdkControlTests.test_file_under_symlink_rejected_before_write",
+      "test_controls.PublicJdkControlTests.test_hardlink_to_symbolic_link_rejected",
+      "test_controls.PublicJdkControlTests.test_noninventoried_target_rejected",
+      "test_controls.PublicJdkControlTests.test_only_public_https_release_redirects_allowed",
+      "test_controls.PublicJdkControlTests.test_regular_executable_and_contained_links_extract",
+      "test_controls.PublicJdkControlTests.test_scratch_symlink_is_not_ownership",
+      "test_controls.PublicJdkControlTests.test_symbolic_link_cycle_rejected",
+      "test_controls.PublicJdkControlTests.test_truncated_download_rejected",
+      "test_controls.PublicJdkControlTests.test_unsafe_names_rejected",
+      "test_controls.PublicJdkControlTests.test_wrong_declared_length_rejected",
+      "test_controls.PublicJdkControlTests.test_wrong_digest_rejected"
+    ],
+    "old_control_binding": "0b4349089728b1548f8ab9c55c8925966abf3bf0f64e0823b5ee91bdc44cd88b",
+    "changes_since_that_receipt": [
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/darwin_owned_processes.py",
+        "old_sha256": "148a71180b6768858f47d7cf5607104169898dafdee48ecbf41937cd46e71a1d",
+        "current_sha256": "2f2ad2a5d68cea999709a4c3c3e384cd9e6767258ad34aed4181ee2118962378"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/rosetta-desktop-controls-01/run_rosetta_desktop.py",
+        "old_sha256": "db7ac81e0913a7ec75a4f7c74ccbdf8f3aaf8154505656b4fb847bad510d4852",
+        "current_sha256": "9fac73b1c74128b7370b4294954782c98a90c051a7be50e327c833504bca214d"
+      }
+    ],
+    "runner_change_is_only_PROCESS_SHA_literal": true,
+    "current_control_execution_status": "PENDING NEW BRACKETED ROOT RUN; old actual20 is not credited as testing the current9 controls",
+    "cleanup_basis": "unittest TemporaryDirectory fixtures auto-removed; Python -B creates no bytecode; no build/background processes started"
+  },
+  "source_conclusions": [
+    {
+      "area": "Public archive trust and bounds",
+      "references": [
+        "safe_jdk.py:12-60,90-147",
+        "official-jdk-metadata-alternative.json"
+      ],
+      "conclusion": "One hardcoded public Temurin21.0.12.1+1 x64mac HTTPS archive, exact194316575 size and SHA44db0f\u2026 bound to preserved official metadata/checksum. HTTPS redirect restricted to GitHub/CDN with max3 redirects, proxy handler disabled, no retry/resume/fallback. One MiB chunks and600s overall checks/30s reads. Extraction limits40000 entries and1GiB declared expansion; prohibits special/escaping/duplicate paths, writes regular files before links, rejects non-directory ancestors and checks every resolved final path. No tar.extractall."
+    },
+    {
+      "area": "Actual runtime selection",
+      "references": [
+        "run_rosetta_desktop.py:48-61,175-202",
+        "ArchitectureProbe.java:1-12",
+        "rosetta.init.gradle:9-66"
+      ],
+      "conclusion": "Fresh extracted bin/java must be x86_64-only Mach-O; actual source-launch probe checks feature21 and x64 arch. JAVA_HOME/PATH +org.gradle.java.home bind wrapper/Gradle. Toolchain autodetect/download/fromEnv disabled and paths fixed. Init checks actual8.13 host home/arch/version, Test and JavaCompile installation homes and Kotlin strategy at execution. This proves selection only when those records execute and are independently reviewed."
+    },
+    {
+      "area": "Graph fidelity",
+      "references": [
+        "build.gradle.kts:27-30,160-202",
+        "run_rosetta_desktop.py:48-61",
+        "rosetta.init.gradle:21-66"
+      ],
+      "conclusion": "Runs exact productionDesktopCheck, every KMP desktopTest via root aggregate, with strict verification, rerun/no caches/no parallel/maxworkers1. Test max forks1; no source changes, exclusion/discovery filter, assertion weakening, repository rewrite, signing or publication. Desktop tests require production compilation but are not nativeiOS/Android/physicalLAN proof."
+    },
+    {
+      "area": "Cancellation and process lifetime",
+      "references": [
+        "run_rosetta_desktop.py:111-171,199-240",
+        "darwin_owned_processes.py:55-203,223-368"
+      ],
+      "conclusion": "Signals deferred across Popen registration and scratch ownership transaction; registered native controller captures still-waitable direct children and lifetime/token-bound descendants. Failure finalizer stops known workers then runs x64 wrapper --stop; second shutdown before scratch deletion. No PID/PGID fallback in inner native helper. Outer lane has separate existing PID/start-based emergency fallback; this review does not relabel that fallback generation-atomic."
+    },
+    {
+      "area": "Temporary ownership and evidence",
+      "references": [
+        "run_rosetta_desktop.py:86-108,155-192,241-279",
+        "safe_jdk.py:150-154",
+        "run_gradle_cycle.py:190-278"
+      ],
+      "conclusion": "Requires active matching root outer lane and empty preexisting build-output inventory. Fresh0700 scratch carries device/inode/UID +nonce marker. Cleanup verifies identity and nofollow marker and removes scratch only after worker cleanup. Outer lane preserves raw XML and then cleans exact generated module/build-logic outputs; JDK/archive not retained for cache reuse. Uncertain ownership/errors fail and preserve for explicit targeted cleanup."
+    }
+  ],
+  "review_leads_and_counter_evidence": [
+    {
+      "id": "ROSETTA-ENV-01",
+      "classification": "GUARDED EXECUTION PREREQUISITE; NOT APPLICATION DEFECT",
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/rosetta-desktop-controls-01/run_rosetta_desktop.py",
+      "lines": [
+        183,
+        191
+      ],
+      "source_proof": "JAVA_OPTS is not removed from inherited environment; checked-in gradlew:245 parses it into wrapper JVM options. Existing Gradle/Java flag stripping does not cover that sibling channel.",
+      "counter_evidence": "Explicit command-line home/heap flags and runtime checks prevent ordinary accidental architecture drift, but injected agents/unbounded wrapper JVM options are not fully constrained by those checks. No active JAVA_OPTS value was inspected or claimed.",
+      "resolution": "Parent explicitly agreed to invoke outer lane through env -u JAVA_OPTS -u GRADLE_OPTS -u JAVA_TOOL_OPTIONS -u _JAVA_OPTIONS -u JDK_JAVA_OPTIONS and record names only. Current source stays unchanged; source approval is conditional on this execution guard."
+    },
+    {
+      "id": "ROSETTA-OLD20-01",
+      "classification": "STALE CURRENT-CONTROL EVIDENCE, NOT TEST FAILURE",
+      "conclusion": "20 raw executed methods match current source IDs, but current shared owner and runner pin differ from old receipt. Root will execute20 again with all9 files bracketed, imported module paths and actual discovery equality. No skipped method can count toward success."
+    },
+    {
+      "id": "ROSETTA-INIT-01",
+      "classification": "UNEXECUTED GROOVY/ALTERNATE-GRAPH INTEGRATION",
+      "conclusion": "Exact Gradle8.13 docs plus pinnedKGP2.4.10 API confirm used selectors/property semantics. Groovy initialization, actual included-build hooks, test launch records and strict x64 artifact graph remain unexecuted. A resulting failure must be classified accurately, not bypassed by weakening checks."
+    }
+  ],
+  "required_execution_conditions": [
+    "Use root single shared lane only after Android/iOS/current cycle finishes and cleanup is recorded; no reviewer or parallel agent native runs.",
+    "Prefix OUTER lane command with env -u JAVA_OPTS -u GRADLE_OPTS -u JAVA_TOOL_OPTIONS -u _JAVA_OPTIONS -u JDK_JAVA_OPTIONS; record option names, never environment values.",
+    "Fresh root synthetic20 run must capture before/after current9 hashes, actual imported paths, AST/discovered/raw executed IDs and zero skips/failures/errors. Retain old receipts unchanged. Approve this exact runtime binding only after those results match.",
+    "Reject changed controls/source, unsafe scratch, existing outputs/daemon conflicts, unexpected JDK hash/size/architecture/home or missing toolchain artifacts. No verification metadata regeneration or alternate JDK fallback.",
+    "After native build, inspect actual PARLOR_ROSETTA_HOST/TEST/JAVAC/KOTLIN records and all raw test XML/counts/discovery/skips; build exit0 alone is not runtime coverage. Account for all actual compile/test task paths including build-logic where applicable.",
+    "Record both inner x64 and outer Gradle stops, registered-worker final state, scratch deletion and exact build-output cleanup. If ownership/error prevents cleanup, preserve compact evidence plus exact owned path and arrange targeted cleanup; do not call it clean.",
+    "Test scope is translated macOSx64 JVM graph only: not Intel hardware, Kotlin/Native iOS, Android instrumentation, physical LAN, Store identity/signing or release readiness."
+  ],
+  "research": {
+    "public_jdk_metadata": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/official-jdk-metadata-alternative.json",
+      "sha256": "db97e794cf07d0c2ffcf4da861b550fecc2a66bbe7cd89c2d6ffc12278586cef",
+      "api_url": "https://api.github.com/repos/adoptium/temurin21-binaries/releases/latest",
+      "original_accessed_at": "2026-09-07T03:55:24.625065+00:00",
+      "validation": "Independently parsed unique x64mac package; source URL/size/digest/checksum all equal. Original metadata receipt preserved; no reviewer network refetch or archive download."
+    },
+    "official_documents": [
+      {
+        "url": "https://docs.gradle.org/8.13/userguide/toolchains.html",
+        "original_accessed_at": "2026-09-07T06:57:34.742523+00:00",
+        "retained_path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/rosetta-desktop-controls-01/references/gradle813-toolchains.html.gz",
+        "compressed_sha256": "cd2d98dd411b582c33e827d938f2c530285c249f8eaf16c9f61a2e43dd896215",
+        "uncompressed_sha256": "26870e8978a9575e08594c8fc68ff367c1f6ec0cb2daf586701520d0af545458",
+        "inspection": "Relevant toolchain/init/Test/JavaCompile passages inspected only; full external HTML not counted as source coverage."
+      },
+      {
+        "url": "https://docs.gradle.org/8.13/userguide/build_environment.html",
+        "original_accessed_at": "2026-09-07T06:57:34.742523+00:00",
+        "retained_path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/rosetta-desktop-controls-01/references/gradle813-build-environment.html.gz",
+        "compressed_sha256": "8ea8309727467e7aeb6199e46eaeb317c3cc35b9d354e4380e7b63027ae3bc57",
+        "uncompressed_sha256": "d7b0428e485732d5f89ad751f0b4e958c4e8c5a8b19595f953bffe5463979a64",
+        "inspection": "Relevant toolchain/init/Test/JavaCompile passages inspected only; full external HTML not counted as source coverage."
+      },
+      {
+        "url": "https://docs.gradle.org/8.13/userguide/init_scripts.html",
+        "original_accessed_at": "2026-09-07T06:57:34.742523+00:00",
+        "retained_path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/rosetta-desktop-controls-01/references/gradle813-init-scripts.html.gz",
+        "compressed_sha256": "ca9b63c0018d149fc70fca8cead88e3cf8b754d3f90565f3a2a0e2cddb5fe7e0",
+        "uncompressed_sha256": "bd9848b70b9419dabb85507de60c55ad4f6a26a8ef7d8685f29c3e5b3fe1ee36",
+        "inspection": "Relevant toolchain/init/Test/JavaCompile passages inspected only; full external HTML not counted as source coverage."
+      },
+      {
+        "url": "https://docs.gradle.org/8.13/dsl/org.gradle.api.tasks.testing.Test.html",
+        "original_accessed_at": "2026-09-07T06:57:34.742523+00:00",
+        "retained_path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/rosetta-desktop-controls-01/references/gradle813-test-api.html.gz",
+        "compressed_sha256": "78ed97358d0174ccd89de7a971870de9bfbbf10e7355eec8fbc74e28b5f30f57",
+        "uncompressed_sha256": "9ffcac81be08dbadcf2cf8d67fab2d6d1791bb2326575065a123095062396189",
+        "inspection": "Relevant toolchain/init/Test/JavaCompile passages inspected only; full external HTML not counted as source coverage."
+      },
+      {
+        "url": "https://docs.gradle.org/8.13/dsl/org.gradle.api.tasks.compile.JavaCompile.html",
+        "original_accessed_at": "2026-09-07T06:57:34.742523+00:00",
+        "retained_path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/rosetta-desktop-controls-01/references/gradle813-java-compile-api.html.gz",
+        "compressed_sha256": "8be4f82042aea8190a36ba921caaa48c8d5687ecaaa6c0f9b33791c7913b928e",
+        "uncompressed_sha256": "6481393b533ed62d7a9b2ac0a35ce08033831fac2091848aab1052c3616a1964",
+        "inspection": "Relevant toolchain/init/Test/JavaCompile passages inspected only; full external HTML not counted as source coverage."
+      },
+      {
+        "url": "https://kotlinlang.org/docs/gradle-compilation-and-caches.html",
+        "original_accessed_at": "2026-09-07T06:57:34.742523+00:00",
+        "retained_path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/rosetta-desktop-controls-01/references/kotlin-gradle-compilation.html.gz",
+        "compressed_sha256": "1f830222b7bed517c64b3c617ea4da172a3090e2f8645d93b43f625d94dc7554",
+        "uncompressed_sha256": "75fa4c09cced2e3a7625c5d73c9a0cab199060ad9e90995ee25626f1c5be2034",
+        "inspection": "Relevant toolchain/init/Test/JavaCompile passages inspected only; full external HTML not counted as source coverage."
+      },
+      {
+        "url": "https://kotlinlang.org/docs/compiler-execution-strategy.html",
+        "original_accessed_at": "2026-09-07T06:59:18.225575+00:00",
+        "retained_path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/rosetta-desktop-controls-01/references/kotlin-compiler-execution-strategy.html.gz",
+        "compressed_sha256": "ae489faff0d8036916a95154496754ec3efffd905075df734ac21fd887968e6d",
+        "uncompressed_sha256": "d4e8974c0adcd9d8eea207e990df62b3db8e2292942f225abafb2424a6ca4abc",
+        "inspection": "Execution strategies/task property precedence/in-process semantics read from retained official HTML, checked against pinned2.4.10 API source and binary identity."
+      }
+    ],
+    "pinned_kotlin_api": {
+      "source_jar": "/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-gradle-plugin-api/2.4.10/dbf95fe3926390ba21b660357867b14e0e4a7f1b/kotlin-gradle-plugin-api-2.4.10-gradle813-sources.jar",
+      "source_jar_sha256": "bc6390940d048c2095c2ba689e5fcdcfce12c3370474682a70f320391ea14686",
+      "entry": "org/jetbrains/kotlin/gradle/tasks/CompileUsingKotlinDaemon.kt",
+      "entry_sha256": "a954bb4ff55740381c9da9df3520c9bf505f39109073fa586937c44fb129152a",
+      "reviewed_lines": [
+        [
+          1,
+          87
+        ]
+      ],
+      "binary_jar": "/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-gradle-plugin-api/2.4.10/57abfa0230a1ffc31556110bff4b946b55967ba3/kotlin-gradle-plugin-api-2.4.10-gradle813.jar",
+      "binary_jar_sha256": "74c4e4f7d037e850bab666db12c90a49e065d9495fd2dfdaa7bc39dd963083d6",
+      "binary_sha_matches_checked_in_strict_verification": true,
+      "applicability": "2.4.10 Gradle813 variant, matching current version catalog; public enum IN_PROCESS(in-process) and compilerExecutionStrategy Property declared in interface. Source archive is research material, not a build dependency or substitute for runtime."
+    }
+  },
+  "remaining_limits": [
+    "Rosetta availability, successful public archive download/extraction and native/JVM runtime have not executed in this review.",
+    "Synthetic20 tests do not test full main() cancellation/native API/Gradle integration; native controls require root actual execution and cleanup receipts.",
+    "8GiB is free-space headroom, not reservation. New graph downloads and2hour bounded build can still fail due storage/RAM/toolchain limits.",
+    "Scratch protection assumes task-exclusive same-UID workspace, not malicious simultaneous same-UID mutation. Whole filesystem state is not atomically locked.",
+    "General outer lane PID/start emergency fallback is not equivalent to inner kernel audit-token signaling. Require no remaining inner workers and review any outer fallback use independently."
+  ],
+  "reviewer_actions": {
+    "tests_builds_downloads_probes": false,
+    "runner_imports": false,
+    "source_control_edits": false,
+    "git_writes": false,
+    "background_workers_started": false,
+    "other_task_processes_or_outputs_touched": false,
+    "outputs_created": [
+      "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/rosetta-desktop-independent-source-review-01.json"
+    ],
+    "cleanup": "Only read/hash/parse/ZIP/gzip inspection and short commands; Python -B. No generated build/runtime output or persistent process. Required report retained."
+  }
+}

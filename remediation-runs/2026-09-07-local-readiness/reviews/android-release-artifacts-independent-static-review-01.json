@@ -1,0 +1,176 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-09-07T16:09:43.353248+00:00",
+  "reviewer": "/root/factory_review",
+  "author": "/root",
+  "decision": "APPROVED_STATIC_ANDROID_ARTIFACT_INSPECTOR_PENDING_EXECUTION_AND_ACTUAL_AAB",
+  "source_baseline": {
+    "branch": "fix/local-readiness-2026-09-07",
+    "head": "5d9f5f4c81ff51ee70922c876eefb91c6e669d56",
+    "tree": "3fbc4908ae41fab311e5e936e3ec8913199da7ad",
+    "dirty": true,
+    "identity_scope": "Exact reviewed hashes below; HEAD alone does not identify implementation."
+  },
+  "coverage": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/android_release_artifacts.py",
+      "sha256": "55d6b3ddbe4877956c383225ea8bc8b203a2b023206be60eeac519b2555e98cb",
+      "bytes": 16937,
+      "lines": 310,
+      "reviewed_line_ranges": [
+        [
+          1,
+          310
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_android_release_artifacts.py",
+      "sha256": "f8b9a707ef2a023fce7fa1a2cd658a0820042af4e28aae647d91567d80004963",
+      "bytes": 14473,
+      "lines": 241,
+      "reviewed_line_ranges": [
+        [
+          1,
+          241
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/androidMain/AndroidManifest.xml",
+      "sha256": "daddfd606b67536858d5e7d3272aacabeb4210db5c2a2fab0bc9e172c9d903ca",
+      "bytes": 1550,
+      "lines": 33,
+      "reviewed_line_ranges": [
+        [
+          1,
+          33
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/proguard-rules.pro",
+      "sha256": "823b55b65cb7519dcd8042f80af90f53df08b65da8987f6da0530c664297681b",
+      "bytes": 545,
+      "lines": 9,
+      "reviewed_line_ranges": [
+        [
+          1,
+          9
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/build.gradle.kts",
+      "sha256": "c23525d6b06f9b536fb5e8ef6be68c653952fa9764e276f831772b864621fdd5",
+      "bytes": 27271,
+      "lines": 627,
+      "reviewed_line_ranges": [
+        [
+          213,
+          292
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/config/release-policy.json",
+      "sha256": "316b28f75a13e0b925beb6bcd893b82e077a1a9efa850022026e830f9b1d4ad4",
+      "bytes": 4481,
+      "lines": 119,
+      "reviewed_line_ranges": [
+        [
+          1,
+          119
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/config/parlor-version.xcconfig",
+      "sha256": "4975e763730608718095d3c7342f34f333a86e20cf562eb221b9e3478fa93f9e",
+      "bytes": 202,
+      "lines": 4,
+      "reviewed_line_ranges": [
+        [
+          1,
+          4
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/gradle/libs.versions.toml",
+      "sha256": "87a031665605a1fb3f932be31c75afd8d2d1bc0d94cfcca36101141c50788399",
+      "bytes": 5556,
+      "lines": 106,
+      "reviewed_line_ranges": [
+        [
+          23,
+          25
+        ]
+      ]
+    }
+  ],
+  "method": "Full numbered line-by-line source/test reading including cancellation correction; traced actual source Android policy, release shrinker config, first-party fixture package declarations, raw resource roots and previously independently reviewed bounded notice verifier. Static AST/hash analysis only; repository executable modules were not imported.",
+  "resolved_review_requests": [
+    {
+      "id": "ANDROID_ARTIFACT_REVIEW_POST_SPAWN_CLEANUP",
+      "before_sha256": "547d050a8724a39011f1abffea757036c96fe7d6a181df7fbeb4ce1eec9bf04b",
+      "before_lines": [
+        65,
+        67
+      ],
+      "source_proof": "Child creation followed by time.monotonic before try/finally allowed an immediate post-spawn error/cancellation to escape without cleanup.",
+      "correction": "Process initialized to None; spawn and all subsequent initialization inside guarded try; finally reaps only the exact returned child, escalating terminate->bounded wait->kill->wait. CLI SIGTERM raises through same cleanup path.",
+      "current_lines": [
+        63,
+        83
+      ],
+      "regression_design": "Two new methods explicitly inject immediate post-spawn RuntimeError/KeyboardInterrupt and stubborn child wait timeout, asserting terminate/kill/wait calls. No test execution claimed here.",
+      "classification": "REVIEW_REQUEST_ADDRESSED_STATICALLY_PENDING_EXECUTION"
+    }
+  ],
+  "verified_source_contracts": [
+    "Bundletool binary SHA must equal current policy pin1.18.3 before Java execution. SDK dexdump path, executable type and source.properties revision must be36.0.0. Calls omit ignore-checksum and disable-verification flags.",
+    "Owned TemporaryDirectory, canonical non-symlink regular inputs, file size ceilings,128MiB entry/1GiB total expanded resource bounds, bounded line parsing,64KiB line ceiling, bounded accepted tool output/deadlines, cleanup-finally child reaping.",
+    "Prior bounded notice verifier checks ZIP central/local structure and all26 legal bytes. Current inspector streams every entry with zip CRC checks and SHA256, checks required metadata and rejects signed JAR-block entries; manifest is decoded by independently pinned bundletool rather than checking only a build intermediate.",
+    "Actual release ID/version/min26/target36, backup/cleartext false, no debug/testOnly, five permitted permissions, exact exported MainActivity + DUMP-guarded ProfileInstallReceiver, one launcher.",
+    "All DEX paths are expected base/dex names; SDK dump class count must equal DEX header class_defs_size. Duplicate or forbidden descriptors rejected. Original R8 mappings also inspected so obfuscation cannot hide the reviewed fixture namespaces. Runtime graph/security review remains separate.",
+    "Four current graphics.path ELF identities required with exact ABI class/machine/type/endianness. Raw seven Whodunit JSON and two DS font resources required byte-for-byte in correct Compose namespaces; unexpected case/font package files rejected. Runtime resources/protocol/rules unchanged.",
+    "Artifact SHA before/after stable and returned with per-entry/tool hashes. Caller still responsible for exact source/build receipt binding. Scope explicitly unsigned verification, never signed Store qualification/publication."
+  ],
+  "tests": {
+    "declared_unique_ast_methods": 17,
+    "methods": [
+      "AndroidReleaseArtifactsTest.test_manifest_validates_actual_required_policy",
+      "AndroidReleaseArtifactsTest.test_manifest_rejects_identity_version_sdk_and_privacy_drift",
+      "AndroidReleaseArtifactsTest.test_manifest_rejects_new_components_permissions_and_launcher",
+      "AndroidReleaseArtifactsTest.test_manifest_rejects_dtd_and_overlarge_output",
+      "AndroidReleaseArtifactsTest.test_each_native_abi_has_the_right_elf_identity",
+      "AndroidReleaseArtifactsTest.test_native_rejects_wrong_cpu_type_location_and_extra_library",
+      "AndroidReleaseArtifactsTest.test_dex_counts_every_defined_descriptor",
+      "AndroidReleaseArtifactsTest.test_dex_rejects_missing_duplicate_and_forbidden_classes",
+      "AndroidReleaseArtifactsTest.test_mapping_checks_original_names_even_when_obfuscated",
+      "AndroidReleaseArtifactsTest.test_mapping_rejects_empty_unrecognized_and_unbounded_lines",
+      "AndroidReleaseArtifactsTest.test_regular_input_rejects_symlink_and_empty_file",
+      "AndroidReleaseArtifactsTest.test_owned_tool_failure_and_timeout_are_reaped",
+      "AndroidReleaseArtifactsTest.test_immediate_post_spawn_failure_and_cancellation_reap_exact_owned_child",
+      "AndroidReleaseArtifactsTest.test_stubborn_owned_child_is_killed_then_reaped_after_cancel",
+      "AndroidReleaseArtifactsTest.test_tool_output_bound_is_enforced",
+      "AndroidReleaseArtifactsTest.test_integrated_fixture_uses_real_notice_resource_checks_and_independent_tools",
+      "AndroidReleaseArtifactsTest.test_integrated_fixture_rejects_changed_story_and_unsigned_policy"
+    ],
+    "executed_by_reviewer": false,
+    "reviewed_assertions": "Read all241lines. Manifest/privacy/SDK/identity mutations; all4ELF ABI identities and bad CPU/path/type; DEX discovery and duplicate/forbidden names; R8 original names; unsafe file type; actual tiny subprocess timeout/failure/outputbound design; modeled postspawn cancellation/stubborn child exact cleanup; synthetic integrated ZIP plus actual legal/resource byte checks.",
+    "limits": "Integrated fixture injects bundletool/dexdump output; its method name does not establish real independent SDK execution or a loadable AAB. Root must run both focused tests and the actual compiled AAB inspector."
+  },
+  "remaining_conditions": [
+    "Root focused17method results and cleanup receipt required before executed-test acceptance.",
+    "Actual fresh unsigned AAB required to validate assumptions about SDK output, merged metadata and current4ELF/9raw resource shape. In particular unexpected legitimate ELF debug-symbol metadata would fail closed and require source-backed review, not silent bypass.",
+    "CI/coordinator wiring has a separate review; coordinator notice-boundary fixture needs adaptation to its newly mandatory full-artifact gate. This report does not approve stale tests.",
+    "No device/LAN/signing/Store/legal readiness established; input graph review and compiled source provenance separate."
+  ],
+  "preservation_cleanup": {
+    "source_edits_by_reviewer": false,
+    "tests_builds_apps_workers_started_by_reviewer": false,
+    "writes": "This additive report only. Static read/hash/AST commands completed, no generated build outputs or private material touched."
+  }
+}

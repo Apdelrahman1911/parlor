@@ -1,0 +1,188 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/release_fix_review",
+  "reviewed_at": "2026-09-08T07:10:00.283756+00:00",
+  "task": "Native15 evidence reconciliation and bounded public libproc semantics research; no runtime execution",
+  "native15_status_unchanged": "FAIL",
+  "scopes": {
+    "runtime_evidence_status": "PASS",
+    "provenance_status": "FAIL",
+    "notice_package_status": "PASS",
+    "cleanup_status": "PASS"
+  },
+  "source_identity_from_receipt": {
+    "commit": "8b9e3b0cdfdab82e7cff3ad8135d0eae9a0b8ca3",
+    "tree": "c1e92b5e00ab64a293c4d7f9c9b5e2b85887be88",
+    "branch": "fix/local-readiness-2026-09-07",
+    "tracked_status": "M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/README.md\n M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/external_image_diagnostics.py\n M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/external_image_provenance.py\n M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_control_tests.py\n M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
+    "diff_sha256": "8e5e873e93e89aa6e077d78e0263018d567117b3e14e59148a9447062a336b9d",
+    "source_manifest_sha256": "c4d3387a95ff1a4462071147afe92411f5a08ee8b10f78852a59494c8d3e4420"
+  },
+  "source_manifest_file_count": 800,
+  "receipt_source_identity_before_equals_after": true,
+  "native15_control_sha256": "5e0cedc613aca90bf3b0baeabc6ec178d9364c3afda6588c4219ba3c3fc46e5c",
+  "receipt_control_hashes_equal": true,
+  "raw_XCResult": {
+    "summary_distinct_methods": 1,
+    "method": "IOSAppLaunchUITests/testColdLaunchRendersComposeHomeWithoutUnexpectedAlert()",
+    "repetitions": 8,
+    "all_repetitions_passed": true,
+    "failures": 0,
+    "skips": 0,
+    "durations": [
+      16.317230105400085,
+      13.76953399181366,
+      13.750282049179077,
+      13.819172978401184,
+      13.830229997634888,
+      13.784892916679382,
+      13.784106016159058,
+      13.819857954978943
+    ]
+  },
+  "periodic_observations": {
+    "runs": 8,
+    "samples": 48,
+    "all_sampled_home_foreground_no_alert": true,
+    "elapsed_seconds": [
+      10.425817166673369,
+      10.400618166662753,
+      10.384193416655762,
+      10.433623124990845,
+      10.42807108334091,
+      10.423032583334134,
+      10.429063958334154,
+      10.42862729166518
+    ],
+    "limitation": "XCTest-side periodic observations, not continuous liveness, PID identity, mapped-image capture or proof against an intervening OS restart."
+  },
+  "tools": [
+    {
+      "command": [
+        "/usr/bin/sample",
+        "38058",
+        "1",
+        "10",
+        "-file",
+        "/private/tmp/parlor-audit-ios-readiness-15-8le2t_vg/owned-app.sample.txt"
+      ],
+      "started_at": "2026-09-08T06:39:12.857937+00:00",
+      "log": "sample-command.log",
+      "exit_code": 0,
+      "finished_at": "2026-09-08T06:39:15.806079+00:00"
+    },
+    {
+      "command": [
+        "/usr/bin/vmmap",
+        "-w",
+        "38058"
+      ],
+      "started_at": "2026-09-08T06:39:15.811092+00:00",
+      "log": "temporary-only/owned-app.vmmap.txt",
+      "exit_code": 255,
+      "finished_at": "2026-09-08T06:39:18.087313+00:00"
+    }
+  ],
+  "sample_parser_source_level_reconciliation": {
+    "runner_path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
+    "runner_sha256_at_review": "32a2eac1d972d7345ba89bcbc0af51b48f7ca1ce25a8d6df047ef163194936a3",
+    "ranges": [
+      [
+        510,
+        580
+      ]
+    ],
+    "reason": "primary vmmap command rather than failure-only sibling command means strict parse_sample returned. That local selected-image object was not retained before vmmap failure, so no retrospective selected-path/UUID/address receipt may be reconstructed."
+  },
+  "retained_evidence": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-15/receipt.json",
+      "sha256": "7b4235bc8d869db573ffbdf65a246be7d25ac1ebefb81b7affe01ffd97818c50"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-15/vmmap-command-failure.json",
+      "sha256": "ba900734286ad76f2bc728d99cb05e84c2d3c79579ea9ce83f91e56bf88fb731"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-15/normal-launch-observations.json",
+      "sha256": "b4d40fd24105a7f97690f0dbed62894e9a071d455d33b0512045ce815c35705b"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-15/xcresult-summary.json",
+      "sha256": "e887a34141a63a8dd5314098bb00f557139662d4f9df6af6cf8761f0ca504225"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-15/xcresult-test-details.json",
+      "sha256": "7d94393ba89fe42a924205f7d2ad5ea00cc103458a46c3bb10e04e96d9ef6e7b"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-15/built-installed-binary-inventory.json",
+      "sha256": "aa66382f66cdf8fba0742b72778e312843b0e269dd9f1d83a68bc4e300c524c6"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-15/external-image-artifact-bindings.json",
+      "sha256": "9bbed5bcbf3cca2d9e74440499c46ca12a8d6207109c6aea83759c7a4fd2caaf"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-15/built-notice-package.json",
+      "sha256": "5b22822de051375fe5f2a6ab54daa4db11c0addfd86b183e39a200c09ace2db5"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-15/installed-notice-package.json",
+      "sha256": "5b22822de051375fe5f2a6ab54daa4db11c0addfd86b183e39a200c09ace2db5"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-15/macos-version.log",
+      "sha256": "50d598276e1b5fb38874dedb2e0829126024993316eb2afda985821d3946863c"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-15/darwin-version.log",
+      "sha256": "c1c9e8370471b6030ea288eb4dc17f6062a3e3d73834fad22f611d64503ffc07"
+    }
+  ],
+  "recorded_cleanup": {
+    "stops": [
+      {
+        "label": "stop-xcode-immediate",
+        "exit_code": 0,
+        "at": "2026-09-08T06:38:56.584621+00:00"
+      },
+      {
+        "label": "stop-final",
+        "exit_code": 0,
+        "at": "2026-09-08T06:39:18.782918+00:00"
+      }
+    ],
+    "owned_workers_remaining": [],
+    "unknown_holders": [],
+    "errors": [],
+    "raw_sample_maps_removed": true
+  },
+  "reviewer_fresh_exact_owned_path_absence": [
+    {
+      "path": "/private/tmp/parlor-audit-ios-readiness-15-8le2t_vg",
+      "absent": true
+    },
+    {
+      "path": "/Users/abdelrahman/Library/Developer/CoreSimulator/Devices/4BC6C7C8-914E-4BB3-98BB-CF346C5A0DFA",
+      "absent": true
+    },
+    {
+      "path": "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-36985/IB/DA2A7D4C-63B5-4DF2-A689-1C14844AB5CE.RemoteToHost",
+      "absent": true
+    },
+    {
+      "path": "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-36985/IB/DA2A7D4C-63B5-4DF2-A689-1C14844AB5CE.HostToRemote",
+      "absent": true
+    },
+    {
+      "path": "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-36985/IB",
+      "absent": true
+    },
+    {
+      "path": "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-36985",
+      "absent": true
+    }
+  ],
+  "new_execution_or_code_changes": "None. Only stdlib reads/analysis, fixed public authoritative HTTP GETs, and additive review evidence. No repository module imports, build/test/native calls, process stops, Git/CI/Store operations, or app edits."
+}

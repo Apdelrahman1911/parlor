@@ -1,0 +1,948 @@
+--- dsc01_apphost_v4/secondary_fifo.py
++++ dsc01_apphost_v5/secondary_fifo.py
+@@ -76,34 +76,57 @@
+         return path
+ 
+     def observe(self, process, members, current):
+-        args = shlex.split(process['command'])
++        # Membership attests identity, not a permanently immutable argv. Read the
++        # current snapshot so an exec/new FIFO pair cannot reuse an old cache.
++        pid = process['pid']
++        live = current.get(pid)
++        if live is None or live['start'] != process['start']:
++            raise UnsafeSecondaryPath('Missing current Apple process identity')
++        args = shlex.split(live['command'])
+         flags = ['--hostToRemoteFIFO', '--remoteToHostFIFO']
+         if not any(flag in args for flag in flags):
+             return
+         if any(args.count(flag) != 1 or args.index(flag) + 1 >= len(args) for flag in flags):
+             raise UnsafeSecondaryPath('Incomplete/duplicate Apple FIFO arguments')
+-        pid, parent_id = process['pid'], process['ppid']
++        parent_id = live['ppid']
+         member, parent = members.get(pid), members.get(parent_id)
+         if (member is None or member['start'] != process['start'] or parent is None or
+-                current.get(pid, {}).get('start') != process['start'] or
+                 current.get(parent_id, {}).get('start') != parent['start'] or
+-                Path(shlex.split(parent['command'])[0]).name != 'ibtoold'):
++                Path(shlex.split(current[parent_id]['command'])[0]).name != 'ibtoold'):
+             raise UnsafeSecondaryPath('Missing live attested Apple process ancestry')
+-        if self.uid_of(pid) != os.getuid() or self.uid_of(parent_id) != os.getuid():
+-            raise UnsafeSecondaryPath('Apple worker UID differs from owned user')
+-        after = self.current_processes()
+-        if (after.get(pid, {}).get('start') != process['start'] or
+-                after.get(parent_id, {}).get('start') != parent['start']):
+-            raise UnsafeSecondaryPath('Apple process changed during UID verification')
+         paths = [self.canonical_argument(args[args.index(flag) + 1]) for flag in flags]
+-        if paths == [None, None]:
+-            return
+-        if any(path is None for path in paths) or paths[0].parent != paths[1].parent:
++        primary_pair = paths == [None, None]
++        if not primary_pair and (any(path is None for path in paths) or paths[0].parent != paths[1].parent):
+             raise UnsafeSecondaryPath('Apple FIFO pair is not in one attested parent')
+-        if (paths[0].parent.parent.name != 'ibtoold-' + str(parent_id) or
++        if not primary_pair and (paths[0].parent.parent.name != 'ibtoold-' + str(parent_id) or
+                 paths[0].stem != paths[1].stem or paths[0].suffix != '.HostToRemote' or
+                 paths[1].suffix != '.RemoteToHost'):
+             raise UnsafeSecondaryPath('Apple FIFO pair differs from owned parent PID')
++        expected_process = dict(pid=pid, start=process['start'])
++        expected_parent = dict(pid=parent_id, start=parent['start'])
++        fully_attested_pair = not primary_pair and all(
++            str(path) in self.records and str(path) not in self.pending and
++            self.records[str(path)]['process'] == expected_process and
++            self.records[str(path)]['parent'] == expected_parent
++            for path in paths
++        )
++        if not fully_attested_pair:
++            # A new, incomplete, or changed pair still needs full live UID and
++            # post-query process/argv attestation. Cache reuse never adopts paths.
++            if self.uid_of(pid) != os.getuid() or self.uid_of(parent_id) != os.getuid():
++                raise UnsafeSecondaryPath('Apple worker UID differs from owned user')
++            after = self.current_processes()
++            if (after.get(pid, {}).get('start') != process['start'] or
++                    after.get(pid, {}).get('command') != live['command'] or
++                    after.get(pid, {}).get('ppid') != parent_id or
++                    after.get(parent_id, {}).get('start') != parent['start'] or
++                    after.get(parent_id, {}).get('command') != current[parent_id]['command']):
++                raise UnsafeSecondaryPath('Apple process changed during UID verification')
++        if primary_pair:
++            return  # Exact primary-task-root cleanup owns these, not this ledger.
++        # A fully attested exact pair need not re-query a possibly exiting
++        # worker's UID. Its inode/type/UID/creation metadata is STILL checked
++        # below, and cleanup retains every prior live-PID/holder/path guard.
+         for path in paths:
+             key = str(path)
+             if len(self.pending) + len(self.records) >= 256 and key not in self.pending and key not in self.records:
+--- dsc01_apphost_v4/test_secondary_fifo.py
++++ dsc01_apphost_v5/test_secondary_fifo.py
+@@ -164,6 +164,86 @@
+         self.child['command'] += ' --hostToRemoteFIFO '+str(self.paths[0])
+         with self.assertRaises(UnsafeSecondaryPath): self.attest()
+ 
++    def fail_uid_query(self, _pid):
++        raise RuntimeError('synthetic worker exited before UID query')
++
++    def test_fully_attested_same_identity_and_pair_avoids_redundant_uid_query(self):
++        self.attest()
++        original = self.ledger.dump()
++        self.ledger.uid_of = self.fail_uid_query
++        self.attest()
++        self.assertEqual(original, self.ledger.dump())
++        self.stop_fixture_processes()
++        self.assertEqual('PASS', self.ledger.cleanup()['status'])
++
++    def test_initial_uid_query_failure_never_attests_or_deletes_paths(self):
++        self.ledger.uid_of = self.fail_uid_query
++        with self.assertRaises(RuntimeError): self.attest()
++        self.assertFalse(self.ledger.records)
++        self.assertTrue(all(path.exists() for path in self.paths))
++
++    def test_partial_record_or_pending_claim_cannot_use_cached_uid(self):
++        for mode in ('missing-record', 'pending'):
++            with self.subTest(mode=mode):
++                self.ledger.records.clear(); self.ledger.pending.clear()
++                self.ledger.uid_of = lambda pid: os.getuid()
++                self.attest()
++                if mode == 'missing-record':
++                    self.ledger.records.pop(str(self.paths[0]))
++                else:
++                    self.ledger.pending[str(self.paths[0])] = {'path': str(self.paths[0])}
++                self.ledger.uid_of = self.fail_uid_query
++                with self.assertRaises(RuntimeError): self.attest()
++
++    def test_current_new_pair_cannot_hide_behind_members_old_argv(self):
++        self.attest()
++        old = dict(self.child)
++        self.members[1235] = old
++        new_command = self.child['command'].replace('613ED9B4-D4E6-4CDA-ACB8-AA81DFFB0280',
++                                                    'CEB01D2A-3F45-4321-A0BC-123456789ABC')
++        self.current[1235] = {**old, 'command': new_command}
++        self.ledger.uid_of = self.fail_uid_query
++        with self.assertRaises(RuntimeError):
++            self.ledger.observe(old, self.members, self.current)
++        self.assertEqual({str(path) for path in self.paths}, set(self.ledger.records))
++
++    def test_changed_child_or_parent_start_cannot_use_attested_pair(self):
++        self.attest()
++        self.ledger.uid_of = self.fail_uid_query
++        for pid in (1234, 1235):
++            with self.subTest(pid=pid):
++                original = self.current[pid]
++                self.current[pid] = {**original, 'start': 'new-start'}
++                with self.assertRaises(UnsafeSecondaryPath): self.attest()
++                self.current[pid] = original
++
++    def test_cached_pair_still_rechecks_changed_inode(self):
++        self.attest()
++        self.ledger.uid_of = self.fail_uid_query
++        held = self.paths[0].with_suffix('.held')
++        self.paths[0].rename(held); os.mkfifo(self.paths[0])
++        with self.assertRaises(UnsafeSecondaryPath): self.attest()
++        self.assertTrue(held.exists()); self.assertTrue(self.paths[0].exists())
++
++    def test_cached_pair_still_rechecks_inode_uid_and_symlink(self):
++        self.attest()
++        self.ledger.uid_of = self.fail_uid_query
++        original = secondary_fifo.metadata
++        def wrong_uid(path):
++            value = original(path)
++            return {**value, 'uid': os.getuid() + 1} if path == self.paths[0] else value
++        with patch('secondary_fifo.metadata', side_effect=wrong_uid):
++            with self.assertRaises(UnsafeSecondaryPath): self.attest()
++        self.paths[0].unlink(); self.paths[0].symlink_to(self.paths[1])
++        with self.assertRaises(UnsafeSecondaryPath): self.attest()
++        self.assertTrue(self.paths[0].is_symlink())
++
++    def test_new_pair_argv_change_during_uid_attestation_is_rejected(self):
++        after = {**self.current, 1235: {**self.child, 'command': self.child['command'] + ' --changed'}}
++        self.ledger.current_processes = lambda: after
++        with self.assertRaises(UnsafeSecondaryPath): self.attest()
++        self.assertFalse(self.ledger.records)
++
+ 
+ if __name__ == '__main__':
+     unittest.main()
+--- dsc01_apphost_v4/test_harness_contract.py
++++ dsc01_apphost_v5/test_harness_contract.py
+@@ -159,7 +159,8 @@
+             tabs.append(merged)
+             labels.update([merged, description, visible, strings['settings_language_label'].upper(),
+                            strings['settings_language_system'], strings['settings_language_english'],
+-                           strings['settings_language_arabic']])
++                           strings['settings_language_arabic'], strings['navigation_games_description'] + ', ' +
++                           strings['navigation_games_label'].upper()])
+         return tabs, labels
+ 
+     def test_exact_tab_selector_matches_reviewed_pinned_merge_and_actual_resources(self):
+@@ -173,6 +174,20 @@
+         # Public setup has a separately bounded, exact-whitelisted prefix helper.
+         # Settings navigation itself must retain the original exact-only policy.
+         self.assertNotIn('label BEGINSWITH', source[start:end])
++
++    def test_games_return_uses_original_resources_and_the_same_actual_tab_bar(self):
++        source = (Path(__file__).parent / 'IOSAppLaunchUITests.swift.in').read_text()
++        start = source.index('@MainActor private func openGames(')
++        end = source.index('@MainActor private func assertSettingsStrings(', start)
++        for locale in ('values', 'values-ar'):
++            path = runner.ROOT / 'composeApp/src/commonMain/composeResources' / locale / 'strings.xml'
++            strings = {node.attrib['name']: node.text for node in ET.parse(path).getroot() if node.tag == 'string'}
++            expected = strings['navigation_games_description'] + ', ' + strings['navigation_games_label'].upper()
++            self.assertIn('"' + expected + '"', source[start:end])
++        navigation = (runner.ROOT / 'composeApp/src/commonMain/kotlin/com/parlor/app/AppNavigationHost.kt').read_text()
++        self.assertIn('label = stringResource(Res.string.navigation_games_label)', navigation)
++        self.assertIn('contentDescription = stringResource(Res.string.navigation_games_description)', navigation)
++        self.assertIn('ParlorBottomTabBar(', navigation)
+ 
+     def test_diagnostics_are_exact_whitelisted_bounded_and_never_a_fallback_tap(self):
+         source = (Path(__file__).parent / 'IOSAppLaunchUITests.swift.in').read_text()
+--- dsc01_apphost_v4/DSC01Probe.swift.in
++++ dsc01_apphost_v5/DSC01Probe.swift.in
+@@ -22,6 +22,9 @@
+     let controllerCreations: Int
+     let composition: String
+     let osDisposition: String
++    let samplingWindow: Int
++    let samplingIndex: Int
++    let samplingElapsedMilliseconds: Int
+ }
+ 
+ private struct DSC01Report: Codable {
+@@ -47,6 +50,10 @@
+     private var prepared = false
+     private var controllerCreations = 0
+     private weak var controller: UIViewController?
++    private var samplingOrdinal = 0
++    private var samplingStatus = "none"
++    private var samplingStarted: TimeInterval = 0
++    private var samplingRows: [DSC01Observation] = []
+     private let appID = "com.parlor.app.debug"
+     private let ownerKey = "com.parlor.languageOverrideOwner.v1"
+     private var resultURL: URL {
+@@ -77,17 +84,17 @@
+                 guard original.setting == "system", !original.hasAppOverride, !original.ownerPresent else {
+                     throw fixtureError()
+                 }
+-                report = DSC01Report(schemaVersion: 3, runToken: token, scenario: scenario, completed: false, observations: [])
++                report = DSC01Report(schemaVersion: 5, runToken: token, scenario: scenario, completed: false, observations: [])
+             } else if selected == "existing" && !FileManager.default.fileExists(atPath: resultURL.path) {
+                 guard scenario != "settings" else { throw fixtureError() }
+                 // Preserve all existing preferences and local synthetic saved games.
+                 // Starting this observation scenario does not reset application data.
+-                report = DSC01Report(schemaVersion: 3, runToken: token, scenario: scenario, completed: false, observations: [])
++                report = DSC01Report(schemaVersion: 5, runToken: token, scenario: scenario, completed: false, observations: [])
+             } else {
+                 let size = try FileManager.default.attributesOfItem(atPath: resultURL.path)[.size] as? NSNumber
+                 guard let size, size.intValue <= 262144 else { throw fixtureError() }
+                 let recovered = try JSONDecoder().decode(DSC01Report.self, from: Data(contentsOf: resultURL))
+-                guard recovered.schemaVersion == 3, recovered.scenario == scenario, recovered.runToken == token,
++                guard recovered.schemaVersion == 5, recovered.scenario == scenario, recovered.runToken == token,
+                       !recovered.completed, recovered.observations.count < 256 else { throw fixtureError() }
+                 report = recovered
+                 osDisposition = recovered.observations.last?.osDisposition ?? "not-investigated"
+@@ -117,13 +124,61 @@
+ 
+     func sample() {
+         precondition(Thread.isMainThread && prepared)
+-        do { try appendObservation(phase: "sample") }
++        do {
++            guard samplingStatus != "running" else { throw fixtureError() }
++            try appendObservation(phase: "sample")
++        }
+         catch { display = "{\"harnessError\":\"bounded_observation_failed\"}" }
++    }
++
++    func beginStabilityWindow() {
++        precondition(Thread.isMainThread && prepared && ["whodunit", "mafia"].contains(scenario))
++        guard samplingStatus != "running", samplingOrdinal < 8 else {
++            display = "{\"harnessError\":\"sampling_window_precondition_failed\"}"; return
++        }
++        samplingOrdinal += 1
++        samplingStatus = "running"
++        samplingRows = []
++        samplingStarted = ProcessInfo.processInfo.systemUptime
++        scheduleStabilitySample()
++    }
++
++    private func scheduleStabilitySample() {
++        // Timed main-queue observations, not Thread.sleep or a busy/main-blocking
++        // loop. No display/@Published assignment occurs between these samples.
++        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { [weak self] in
++            self?.stabilitySample()
++        }
++    }
++
++    private func stabilitySample() {
++        precondition(Thread.isMainThread && samplingStatus == "running")
++        do {
++            let elapsed = Int((ProcessInfo.processInfo.systemUptime - samplingStarted) * 1000)
++            guard elapsed >= 0 && elapsed <= 10000, samplingRows.count < 6 else { throw fixtureError() }
++            let observation = try appendObservation(phase: "window_sample", publish: false,
++                samplingWindow: samplingOrdinal, samplingIndex: samplingRows.count + 1,
++                samplingElapsedMilliseconds: elapsed)
++            samplingRows.append(observation)
++            if samplingRows.count == 6 {
++                samplingStatus = "complete"
++                // Publish once after all six durable samples. A second complete
++                // window is then collected by XCTest to expose recurring resets
++                // after this SwiftUI invalidation; neither window may be dropped.
++                try publishObservation(observation)
++            } else {
++                scheduleStabilitySample()
++            }
++        } catch {
++            samplingStatus = "failed"
++            display = "{\"harnessError\":\"bounded_sampling_window_failed\"}"
++        }
+     }
+ 
+     func complete() {
+         precondition(Thread.isMainThread && prepared)
+         do {
++            guard samplingStatus != "running" else { throw fixtureError() }
+             guard var value = report else { throw fixtureError() }
+             value.completed = true; report = value
+             try appendObservation(phase: "complete")
+@@ -163,8 +218,11 @@
+         sample()
+     }
+ 
+-    private func appendObservation(phase: String) throws {
+-        guard var value = report, value.observations.count < 256, let beforeMain else { throw fixtureError() }
++    @discardableResult
++    private func appendObservation(phase: String, publish: Bool = true,
++                                   samplingWindow: Int = 0, samplingIndex: Int = 0,
++                                   samplingElapsedMilliseconds: Int = 0) throws -> DSC01Observation {
++        guard var value = report, value.observations.count < 256, beforeMain != nil else { throw fixtureError() }
+         let now = try preferences()
+         let direction: String
+         if let root = controller?.view {
+@@ -180,24 +238,40 @@
+         // persisted-ownership startup witness.
+         let composition = phase == "before_main" ? "{}" : MainViewControllerKt.DSC01ActualCompositionObservation()
+         guard composition.utf8.count <= 4096 else { throw fixtureError() }
+-        value.observations.append(DSC01Observation(
++        let observation = DSC01Observation(
+             ordinal: value.observations.count + 1, phase: phase, fixture: fixture,
+             boot: boot, preferences: now, nativeDirection: direction, controllerCreations: controllerCreations,
+-            composition: composition, osDisposition: osDisposition
+-        ))
++            composition: composition, osDisposition: osDisposition, samplingWindow: samplingWindow,
++            samplingIndex: samplingIndex, samplingElapsedMilliseconds: samplingElapsedMilliseconds
++        )
++        value.observations.append(observation)
+         let encoded = try JSONEncoder().encode(value)
+         guard encoded.count <= 262144 else { throw fixtureError() }
+         try encoded.write(to: resultURL, options: .atomic)
+         report = value
++        if publish { try publishObservation(observation) }
++        return observation
++    }
++
++    private func publishObservation(_ observation: DSC01Observation) throws {
++        guard let value = report, let beforeMain else { throw fixtureError() }
++        let window: [[String: Any]] = try samplingRows.map { sample -> [String: Any] in
++            ["sequence": sample.ordinal, "boot": sample.boot,
++             "controllerCreations": sample.controllerCreations, "nativeDirection": sample.nativeDirection,
++             "now": try JSONSerialization.jsonObject(with: JSONEncoder().encode(sample.preferences)),
++             "composition": try JSONSerialization.jsonObject(with: Data(sample.composition.utf8)),
++             "index": sample.samplingIndex, "elapsedMilliseconds": sample.samplingElapsedMilliseconds]
++        }
+         // Fixed-schema public synthetic settings ONLY: no stores, game state,
+         // seeds, role maps, credentials, diagnostics, or accessibility secrets.
+         let payload: [String: Any] = [
+             "sequence": value.observations.count, "boot": boot, "completed": value.completed,
+             "beforeMain": try JSONSerialization.jsonObject(with: JSONEncoder().encode(beforeMain)),
+-            "now": try JSONSerialization.jsonObject(with: JSONEncoder().encode(now)),
+-            "nativeDirection": direction, "controllerCreations": controllerCreations,
+-            "composition": try JSONSerialization.jsonObject(with: Data(composition.utf8)),
++            "now": try JSONSerialization.jsonObject(with: JSONEncoder().encode(observation.preferences)),
++            "nativeDirection": observation.nativeDirection, "controllerCreations": controllerCreations,
++            "composition": try JSONSerialization.jsonObject(with: Data(observation.composition.utf8)),
+             "scenario": scenario, "osDisposition": osDisposition,
++            "sampling": ["ordinal": samplingOrdinal, "status": samplingStatus, "samples": window],
+         ]
+         let displayData = try JSONSerialization.data(withJSONObject: payload, options: [.sortedKeys])
+         guard displayData.count <= 8192 else { throw fixtureError() }
+@@ -246,6 +320,7 @@
+         VStack(spacing: 4) {
+             HStack(spacing: 8) {
+                 Button("Observe") { probe.sample() }.accessibilityIdentifier("parlor-dsc01-observe")
++                Button("Window") { probe.beginStabilityWindow() }.accessibilityIdentifier("parlor-dsc01-window")
+                 Text("DS-C01 observer").accessibilityIdentifier("parlor-dsc01-state").accessibilityValue(probe.display)
+                 Button("Capture") { probe.capture() }.accessibilityIdentifier("parlor-dsc01-capture")
+                 Button("Complete") { probe.complete() }.accessibilityIdentifier("parlor-dsc01-complete")
+--- dsc01_apphost_v4/IOSAppLaunchUITests.swift.in
++++ dsc01_apphost_v5/IOSAppLaunchUITests.swift.in
+@@ -126,7 +126,15 @@
+         XCTAssertEqual(originalSystem["ownerPresent"] as? Bool, false)
+         let systemLanguage = try string(originalSystem, "preferredLanguage")
+         let systemPreferences = try XCTUnwrap(originalSystem["appLanguages"] as? [String])
+-        _ = try syntheticLanguage(app, language: "en")
++        // Initial EN uses the real Settings screen BEFORE any session exists.
++        // No synthetic store invocation may precede the canonical checkpoint.
++        try openSettings(app, language: systemLanguage)
++        try tap(app, label: "English")
++        try assertSettingsStrings(app, language: "en")
++        let selectedEnglish = try observe(app)
++        try assertOwned(selectedEnglish, explicit: "en", previous: systemPreferences)
++        XCTAssertEqual(try dictionary(selectedEnglish, "composition")["commandOrdinal"] as? Int, 0)
++        try openGames(app, language: "en")
+         try tapPublicSetupPrefix(app, prefix: game == "whodunit"
+             ? "Open Whodunit and pick how you want to play." : "Open the Mafia game.")
+         try tapPublicSetupPrefix(app, prefix: "Start a pass-and-play session on this device.")
+@@ -155,7 +163,12 @@
+         app.buttons["parlor-dsc01-capture"].tap()
+         let checkpoint = try observe(app)
+         try assertContinuity(checkpoint, game: game, phase: phase, language: "en")
++        XCTAssertEqual(try dictionary(checkpoint, "composition")["commandOrdinal"] as? Int, 0)
++        XCTAssertEqual(try dictionary(checkpoint, "composition")["commandLanguage"] as? String, "none")
+         let boot = try string(checkpoint, "boot")
++        // A real-Settings EN lifecycle baseline precedes all synthetic changes.
++        try verifyActualForeground(app, ready: checkpoint, game: game, phase: phase,
++                                   requestedLanguage: "en", expectedLanguage: "en", previous: systemPreferences, boot: boot)
+         for language in ["ar", "en", "system"] {
+             _ = try syntheticLanguage(app, language: language)
+             let expectedLanguage = language == "system" ? systemLanguage : language
+@@ -174,30 +187,80 @@
+             try assertContinuity(ready, game: game, phase: phase, language: expectedLanguage)
+             XCTAssertEqual(try string(ready, "boot"), boot)
+ 
+-            let before = try dictionary(ready, "composition")
+-            let backgrounds = try XCTUnwrap(before["backgroundSinceCapture"] as? Int)
+-            let foregrounds = try XCTUnwrap(before["foregroundSinceCapture"] as? Int)
+-            // Actual system Home/activate calls: original Swift scenePhase
+-            // forwarding invokes original AppLifecycleCoordinator unchanged.
+-            XCUIDevice.shared.press(.home)
+-            XCTAssertTrue(app.wait(for: .runningBackground, timeout: 15))
+-            app.activate()
+-            XCTAssertTrue(app.wait(for: .runningForeground, timeout: 15))
+-            let resumed = try observeEventually(app) { snapshot in
+-                let value = try self.dictionary(snapshot, "composition")
+-                return (value["backgroundSinceCapture"] as? Int ?? -1) > backgrounds &&
+-                       (value["foregroundSinceCapture"] as? Int ?? -1) > foregrounds
+-            }
+-            XCTAssertEqual(try string(resumed, "boot"), boot, "Process recreation is not retained-session proof")
+-            try assertContinuity(resumed, game: game, phase: phase, language: expectedLanguage)
+-            if language == "system" {
+-                try assertSystem(resumed, expected: systemLanguage, previous: systemPreferences)
+-            } else {
+-                try assertOwned(resumed, explicit: language, previous: systemPreferences)
+-            }
++            try verifyActualForeground(app, ready: ready, game: game, phase: phase,
++                                       requestedLanguage: language, expectedLanguage: expectedLanguage,
++                                       previous: systemPreferences, boot: boot)
+         }
+         app.buttons["parlor-dsc01-complete"].tap()
+         XCTAssertEqual(try observe(app)["completed"] as? Bool, true)
++    }
++
++    @MainActor private func verifyActualForeground(_ app: XCUIApplication, ready: [String: Any],
++        game: String, phase: String, requestedLanguage: String, expectedLanguage: String,
++        previous: [String], boot: String) throws {
++        let before = try dictionary(ready, "composition")
++        let backgrounds = try XCTUnwrap(before["backgroundSinceCapture"] as? Int)
++        let foregrounds = try XCTUnwrap(before["foregroundSinceCapture"] as? Int)
++        // Original production lifecycle forwarding remains unchanged.
++        XCUIDevice.shared.press(.home)
++        XCTAssertTrue(app.wait(for: .runningBackground, timeout: 15))
++        app.activate()
++        XCTAssertTrue(app.wait(for: .runningForeground, timeout: 15))
++        let resumed = try observeEventually(app) { snapshot in
++            let value = try self.dictionary(snapshot, "composition")
++            return (value["backgroundSinceCapture"] as? Int ?? -1) > backgrounds &&
++                   (value["foregroundSinceCapture"] as? Int ?? -1) > foregrounds
++        }
++        // Keep the first post-lifecycle observation, even if wrong. Collect the
++        // entire bounded train BEFORE asserting directions, so a failure still
++        // preserves enough samples to distinguish persistent/recurring reset
++        // from a single transient. No lucky final sample can erase divergence.
++        var snapshots = [resumed]
++        for _ in 0..<2 { snapshots += try collectPassiveWindow(app) }
++        XCTAssertEqual(snapshots.count, 13)
++        for snapshot in snapshots {
++            XCTAssertEqual(try string(snapshot, "boot"), boot, "A new process is not retained-session proof")
++            XCTAssertEqual(snapshot["controllerCreations"] as? Int, 1)
++            let value = try dictionary(snapshot, "composition")
++            XCTAssertGreaterThan(try XCTUnwrap(value["backgroundSinceCapture"] as? Int), backgrounds)
++            XCTAssertGreaterThan(try XCTUnwrap(value["foregroundSinceCapture"] as? Int), foregrounds)
++            try assertContinuity(snapshot, game: game, phase: phase, language: expectedLanguage)
++            if requestedLanguage == "system" {
++                try assertSystem(snapshot, expected: expectedLanguage, previous: previous)
++            } else {
++                try assertOwned(snapshot, explicit: requestedLanguage, previous: previous)
++            }
++        }
++    }
++
++    @MainActor private func collectPassiveWindow(_ app: XCUIApplication) throws -> [[String: Any]] {
++        let previous = try dictionary(try readDisplayedObservation(app), "sampling")
++        let ordinal = try XCTUnwrap(previous["ordinal"] as? Int)
++        app.buttons["parlor-dsc01-window"].tap()
++        let state = app.staticTexts["parlor-dsc01-state"]
++        let finished = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
++            guard let data = (state.value as? String)?.data(using: .utf8), data.count <= 8192,
++                  let value = (try? JSONSerialization.jsonObject(with: data)) as? [String: Any] else { return false }
++            if value["harnessError"] != nil { return true } // Fail explicitly below, never wait into a false PASS.
++            guard let window = value["sampling"] as? [String: Any] else { return false }
++            return window["ordinal"] as? Int == ordinal + 1 && window["status"] as? String == "complete"
++        }, object: nil)
++        XCTAssertEqual(XCTWaiter.wait(for: [finished], timeout: 15), .completed)
++        let final = try readDisplayedObservation(app) // Read only: no Observe tap inside the passive window.
++        let window = try dictionary(final, "sampling")
++        XCTAssertEqual(window["ordinal"] as? Int, ordinal + 1)
++        XCTAssertEqual(window["status"] as? String, "complete")
++        let snapshots = try XCTUnwrap(window["samples"] as? [[String: Any]])
++        XCTAssertEqual(snapshots.count, 6)
++        var previousElapsed = 0
++        for (index, snapshot) in snapshots.enumerated() {
++            XCTAssertEqual(snapshot["index"] as? Int, index + 1)
++            let elapsed = try XCTUnwrap(snapshot["elapsedMilliseconds"] as? Int)
++            XCTAssertGreaterThanOrEqual(elapsed - previousElapsed, 200)
++            XCTAssertLessThanOrEqual(elapsed, 10000)
++            previousElapsed = elapsed
++        }
++        return snapshots
+     }
+ 
+     private func assertContinuity(_ snapshot: [String: Any], game: String, phase: String, language: String) throws {
+@@ -382,6 +445,15 @@
+         try assertSettingsStrings(app, language: language)
+     }
+ 
++    @MainActor private func openGames(_ app: XCUIApplication, language: String) throws {
++        // The same original ParlorBottomTabBar merges Games description/text.
++        try tap(app, label: language == "ar" ? "افتح مكتبة الألعاب., الألعاب" : "Open the game library., GAMES")
++        XCTAssertTrue(app.staticTexts["parlor-home-brand"].waitForExistence(timeout: 15))
++        _ = try observeEventually(app) { snapshot in
++            try self.dictionary(snapshot, "composition")["settingsMounted"] as? Bool == false
++        }
++    }
++
+     @MainActor private func assertSettingsStrings(_ app: XCUIApplication, language: String) throws {
+         let text = language == "ar" ? "اللغة" : "LANGUAGE"
+         let query = app.descendants(matching: .any).matching(NSPredicate(format: "label == %@", text))
+@@ -416,7 +488,8 @@
+         // fallback target, export a hierarchy, or read arbitrary labels/values.
+         let labels = ["Open settings., SETTINGS", "افتح الإعدادات., الإعدادات",
+                       "Open settings.", "افتح الإعدادات.", "SETTINGS", "الإعدادات",
+-                      "LANGUAGE", "اللغة", "System language", "لغة النظام", "English", "العربية"]
++                      "LANGUAGE", "اللغة", "System language", "لغة النظام", "English", "العربية",
++                      "Open the game library., GAMES", "افتح مكتبة الألعاب., الألعاب"]
+         let observations: [[String: Any]] = labels.map { known in
+             let query = app.descendants(matching: .any).matching(NSPredicate(format: "label == %@", known))
+             let count = query.count
+@@ -443,6 +516,12 @@
+             state.value as? String != previous
+         }, object: nil)
+         XCTAssertEqual(XCTWaiter.wait(for: [changed], timeout: 10), .completed)
++        return try readDisplayedObservation(app)
++    }
++
++    @MainActor private func readDisplayedObservation(_ app: XCUIApplication) throws -> [String: Any] {
++        let state = app.staticTexts["parlor-dsc01-state"]
++        XCTAssertTrue(state.waitForExistence(timeout: 10))
+         let encoded = try XCTUnwrap((state.value as? String)?.data(using: .utf8))
+         XCTAssertLessThanOrEqual(encoded.count, 8192)
+         let snapshot = try XCTUnwrap(JSONSerialization.jsonObject(with: encoded) as? [String: Any])
+--- dsc01_apphost_v4/probe_validation.py
++++ dsc01_apphost_v5/probe_validation.py
+@@ -15,6 +15,7 @@
+ COMPOSITION_KEYS = COMPOSITION_BOOLEANS | COMPOSITION_COUNTERS | COMPOSITION_STRINGS
+ OS_STATUSES = {'not-investigated', 'opening', 'opened', 'open-rejected', 'language-control-unavailable',
+                'selection-unavailable', 'verified-english'}
++SAMPLING_KEYS = {'samplingWindow', 'samplingIndex', 'samplingElapsedMilliseconds'}
+ 
+ 
+ def require(condition, reason):
+@@ -67,7 +68,7 @@
+ def common(report, scenario):
+     require(isinstance(report, dict) and set(report) == {'schemaVersion', 'runToken', 'scenario', 'completed', 'observations'},
+             'Unexpected complete report schema')
+-    require(report['schemaVersion'] == 3 and report['scenario'] == scenario and report['completed'] is True and
++    require(report['schemaVersion'] == 5 and report['scenario'] == scenario and report['completed'] is True and
+             isinstance(report['runToken'], str) and UUID.fullmatch(report['runToken']), 'Wrong/incomplete scenario binding')
+     events = report['observations']
+     require(isinstance(events, list) and 3 <= len(events) <= 256, 'Unexpected scenario event count')
+@@ -75,10 +76,18 @@
+     rows = []
+     for index, event in enumerate(events):
+         require(isinstance(event, dict) and set(event) == {'ordinal', 'phase', 'fixture', 'boot', 'preferences',
+-                'nativeDirection', 'controllerCreations', 'composition', 'osDisposition'}, 'Unexpected event schema')
+-        require(event['ordinal'] == index + 1 and event['phase'] in {'before_main', 'sample', 'complete'} and
++                'nativeDirection', 'controllerCreations', 'composition', 'osDisposition'} | SAMPLING_KEYS,
++                'Unexpected event schema')
++        require(event['ordinal'] == index + 1 and event['phase'] in {'before_main', 'sample', 'window_sample', 'complete'} and
+                 event['fixture'] in {'fresh', 'continue', 'previous-ar', 'existing'} and
+                 isinstance(event['boot'], str) and UUID.fullmatch(event['boot']), 'Invalid observation binding')
++        require(all(type(event[key]) is int for key in SAMPLING_KEYS), 'Sampling coordinates must be actual integers')
++        if event['phase'] == 'window_sample':
++            require(scenario in {'whodunit', 'mafia'} and 1 <= event['samplingWindow'] <= 8 and
++                    1 <= event['samplingIndex'] <= 6 and 200 <= event['samplingElapsedMilliseconds'] <= 10000,
++                    'Unbounded or wrongly scoped passive observation')
++        else:
++            require(all(event[key] == 0 for key in SAMPLING_KEYS), 'Non-window event impersonates a passive sample')
+         require(event['osDisposition'] in OS_STATUSES and
+                 (scenario == 'os' or event['osDisposition'] == 'not-investigated'), 'Unexpected OS receipt scope')
+         preference(event['preferences'])
+@@ -101,7 +110,7 @@
+     rows, starts = common(report, 'settings')
+     original = dict(schemaVersion=1, runToken=report['runToken'], completed=True,
+                     observations=[{key: value for key, value in event.items()
+-                                   if key not in {'composition', 'osDisposition'}} for event, _ in rows])
++                                   if key not in {'composition', 'osDisposition'} | SAMPLING_KEYS} for event, _ in rows])
+     proof = legacy_validator(original)
+     # Verify each actual Settings phase under both directions, not root UIKit
+     # direction or a guessed language-to-direction conversion as observation.
+@@ -121,7 +130,7 @@
+     require(len(starts) == 1 and starts[0]['fixture'] == 'existing', 'Local continuity requires one actual process, no restore inference')
+     initial = starts[0]['preferences']
+     require(initial['setting'] == 'system' and initial['ownerPresent'] is False,
+-            'Local cycle must capture actual System preferences before synthetic changes')
++            'Local cycle must capture actual System preferences before real-UI or synthetic changes')
+     previous = initial['appLanguages']
+     samples = [(event, value) for event, value in rows if event['phase'] != 'before_main']
+     captured = [(event, value) for event, value in samples if value['checkpointCaptured']]
+@@ -130,19 +139,41 @@
+     complete_index = next(event['ordinal'] for event, _ in samples if event['phase'] == 'complete')
+     phase = 'public-intro' if game == 'whodunit' else 'role-assignment'
+     in_scope = [(event, value) for event, value in samples if baseline_index <= event['ordinal'] <= complete_index]
++    before_capture = [(event, value) for event, value in samples if event['ordinal'] < baseline_index]
++    require(all(value['commandOrdinal'] == 0 and value['commandLanguage'] == 'none' and
++                value['commandStatus'] == 'none' for _, value in before_capture),
++            'A synthetic language invocation preceded the real-Settings local checkpoint')
++    require(any(value['settingsMounted'] and value['settingsDirection'] == 'ltr' and
++                event['preferences']['setting'] == 'en' and event['preferences']['ownerInstalled'] == 'en' and
++                event['preferences']['ownerPrevious'] == previous and event['nativeDirection'] == 'force_ltr'
++                for event, value in before_capture), 'Missing actual Settings EN selection before game entry')
+     for event, value in in_scope:
+         require(all(value[key] is True for key in CONTINUITY_BOOLEANS) and value['disposalsSinceCapture'] == 0 and
+                 value['surface'] == game + '-local' and value['publicPhase'] == phase,
+                 'Actual controller/StateFlow/value/phase changed or was disposed; checkpoint cannot be rebased')
+         require(value['commandStatus'] not in {'cancelled', 'failed'}, 'Synthetic real-store mutation did not apply')
+-    require(in_scope[0][1]['commandOrdinal'] == 1 and in_scope[0][1]['commandLanguage'] == 'en' and
++        require(value['commandOrdinal'] in range(4) and
++                value['commandLanguage'] == ('none', 'ar', 'en', 'system')[value['commandOrdinal']],
++                'Unexpected local command order or setup mutation')
++    command_ordinals = [value['commandOrdinal'] for _, value in in_scope]
++    require(command_ordinals == sorted(command_ordinals), 'Synthetic command counter moved backwards')
++    require(in_scope[0][1]['commandOrdinal'] == 0 and in_scope[0][1]['commandLanguage'] == 'none' and
++            in_scope[0][1]['commandStatus'] == 'none' and
+             in_scope[0][1]['backgroundSinceCapture'] == 0 and in_scope[0][1]['foregroundSinceCapture'] == 0,
+-            'Canonical checkpoint was not captured after one EN setup command and before lifecycle cycles')
+-    for ordinal, language in ((2, 'ar'), (3, 'en'), (4, 'system')):
++            'Canonical checkpoint must precede every synthetic command and lifecycle cycle')
++    windows = [(event, value) for event, value in samples if event['phase'] == 'window_sample']
++    require(len(windows) == 48 and {event['samplingWindow'] for event, _ in windows} == set(range(1, 9)) and
++            all(baseline_index < event['ordinal'] < complete_index for event, _ in windows),
++            'Exactly two six-sample passive windows are required after each of four lifecycle cycles')
++    require([(event['samplingWindow'], event['samplingIndex']) for event, _ in windows] ==
++            [(window, index) for window in range(1, 9) for index in range(1, 7)],
++            'Passive windows must remain in their actual observation/publication order')
++    for ordinal, language in ((0, 'en'), (1, 'ar'), (2, 'en'), (3, 'system')):
++        command_language, status = ('none', 'none') if ordinal == 0 else (language, 'applied')
+         relevant = [(event, value) for event, value in in_scope if value['commandOrdinal'] == ordinal and
+-                    value['commandLanguage'] == language and value['commandStatus'] == 'applied']
+-        require(relevant, 'One of the bounded real-store language invocations is missing')
+-        required_callbacks = ordinal - 1
++                    value['commandLanguage'] == command_language and value['commandStatus'] == status]
++        require(relevant, 'The real-Settings baseline or a bounded real-store invocation is missing')
++        required_callbacks = ordinal + 1
+         expected_language = initial['preferredLanguage'] if language == 'system' else language
+         def correct_preference(value):
+             if value['setting'] != language or value['preferredLanguage'] != expected_language:
+@@ -152,18 +183,33 @@
+             return (value['ownerPresent'] is True and value['ownerInstalled'] == language and
+                     value['appLanguages'] == [language] and value['ownerPrevious'] == previous)
+         settled = [(event, value) for event, value in relevant if value['backgroundSinceCapture'] >= required_callbacks and
+-                   value['foregroundSinceCapture'] >= required_callbacks and
+-                   correct_preference(event['preferences']) and
+-                   value['gameDirection'] == ('rtl' if expected_language == 'ar' else 'ltr') and
+-                   event['nativeDirection'] == ('force_rtl' if expected_language == 'ar' else 'force_ltr')]
+-        require(settled, 'Missing actual background/foreground + direct Compose/session continuity after this language action')
+-        require(any(event['preferences']['setting'] == language for event, _ in settled), 'Live setting differs from acknowledged invocation')
+-    require(in_scope[-1][1]['commandOrdinal'] == 4, 'Unexpected extra local language commands')
++                   value['foregroundSinceCapture'] >= required_callbacks]
++        require(settled, 'Missing actual background/foreground observation for this language action')
++        # Include the FIRST observed callback completion and every later sample,
++        # not just samples whose directions happen to match. Divergence cannot
++        # be hidden by waiting for one lucky correct final value.
++        require(all(correct_preference(event['preferences']) and
++                    value['gameDirection'] == ('rtl' if expected_language == 'ar' else 'ltr') and
++                    event['nativeDirection'] == ('force_rtl' if expected_language == 'ar' else 'force_ltr')
++                    for event, value in settled), 'Post-foreground preference/native/Compose direction diverged')
++        for window_id in (ordinal * 2 + 1, ordinal * 2 + 2):
++            train = [(event, value) for event, value in windows if event['samplingWindow'] == window_id]
++            require(len(train) == 6 and [event['samplingIndex'] for event, _ in train] == list(range(1, 7)),
++                    'A passive window was missing, duplicated, reordered, or truncated')
++            require(all((event, value) in settled for event, value in train),
++                    'Passive window lacks its own completed lifecycle/requested-language witness')
++            elapsed = [0] + [event['samplingElapsedMilliseconds'] for event, _ in train]
++            require(all(right - left >= 200 for left, right in zip(elapsed, elapsed[1:])),
++                    'Passive samples were not separated by the bounded nonblocking interval')
++    require(in_scope[-1][1]['commandOrdinal'] == 3, 'Unexpected extra local language commands')
+     return dict(status='PASS', actual_process_boots=1, stable_public_phase=phase,
+                 actual_controller_reference=True, actual_canonical_flow_reference=True,
+                 actual_canonical_reference_and_value=True, direct_compose_direction=True,
+-                language_changes='Synthetic calls to actual production Koin SettingsStore, not an in-game Settings route',
+-                actual_background_foreground_cycles=3, session_disposals=0,
++                initial_english_selection='Actual App Settings UI, zero synthetic commands before checkpoint',
++                language_changes='AR/EN/System synthetic calls to actual production Koin SettingsStore, not an in-game Settings route',
++                actual_background_foreground_cycles=4, passive_windows=8, passive_samples=48,
++                all_post_foreground_samples_must_agree=True, session_disposals=0,
++                observer_limitation='Overlay and initial/final publications may perturb SwiftUI; no display publication within each six-sample window',
+                 complete_game_or_persistence_resume_claim=False, physical_lan_claim=False)
+ 
+ 
+--- dsc01_apphost_v4/test_copy_observation_contract.py
++++ dsc01_apphost_v5/test_copy_observation_contract.py
+@@ -22,55 +22,65 @@
+ 
+ def settings_report():
+     report = valid_report()
+-    report.update(schemaVersion=3, scenario='settings')
++    report.update(schemaVersion=5, scenario='settings')
+     for event in report['observations']:
+         value = {} if event['phase'] == 'before_main' else base_composition()
+         if value:
+             value.update(settingsMounted=True,
+                          settingsDirection='rtl' if event['preferences']['preferredLanguage'] == 'ar' else 'ltr')
+-        event.update(composition=json.dumps(value), osDisposition='not-investigated')
++        event.update(composition=json.dumps(value), osDisposition='not-investigated',
++                     samplingWindow=0, samplingIndex=0, samplingElapsedMilliseconds=0)
+     return report
+ 
+ 
+ def local_report(game):
+-    report = dict(schemaVersion=3, scenario=game, runToken=str(uuid.uuid4()), completed=True, observations=[])
++    report = dict(schemaVersion=5, scenario=game, runToken=str(uuid.uuid4()), completed=True, observations=[])
+     boot = str(uuid.uuid4())
+-    def add(phase, value, pref):
++    def add(phase, value, pref, window=0, index=0):
+         report['observations'].append(dict(ordinal=len(report['observations']) + 1, phase=phase,
+-            fixture='existing', boot=boot, preferences=pref,
++            fixture='existing', boot=boot, preferences=copy.deepcopy(pref),
+             nativeDirection='unavailable' if phase == 'before_main' else 'force_rtl' if pref['preferredLanguage'] == 'ar' else 'force_ltr',
+             controllerCreations=0 if phase == 'before_main' else 1,
+-            composition=json.dumps(value), osDisposition='not-investigated'))
++            composition=json.dumps(value), osDisposition='not-investigated',
++            samplingWindow=window, samplingIndex=index, samplingElapsedMilliseconds=index * 250))
+     add('before_main', {}, preferences(app=['ar-EG', 'en'], language='ar'))
++    en = preferences('en', ['en'], 'en', ['ar-EG', 'en'])
++    settings = base_composition(); settings.update(settingsMounted=True, settingsDirection='ltr')
++    add('sample', settings, en)
+     value = base_composition()
+     value.update(surface=game + '-local', publicPhase='public-intro' if game == 'whodunit' else 'role-assignment',
+-                 gameDirection='ltr', commandOrdinal=1, commandLanguage='en', commandStatus='applied')
+-    en = preferences('en', ['en'], 'en', ['ar-EG', 'en'])
++                 gameDirection='ltr')
+     add('sample', copy.deepcopy(value), en)
+     value.update({key: True for key in validation.CONTINUITY_BOOLEANS})
+     add('sample', copy.deepcopy(value), en)
+-    for ordinal, language in ((2, 'ar'), (3, 'en'), (4, 'system')):
++    for ordinal, language in ((0, 'en'), (1, 'ar'), (2, 'en'), (3, 'system')):
+         pref = (preferences(app=['ar-EG', 'en'], language='ar') if language == 'system' else
+                 preferences(language, [language], language, ['ar-EG', 'en'], language))
+-        value.update(commandOrdinal=ordinal, commandLanguage=language,
++        value.update(commandOrdinal=ordinal, commandLanguage='none' if ordinal == 0 else language,
++                     commandStatus='none' if ordinal == 0 else 'applied',
+                      gameDirection='rtl' if pref['preferredLanguage'] == 'ar' else 'ltr')
++        if ordinal > 0:
++            add('sample', copy.deepcopy(value), pref)
++        value.update(backgroundSinceCapture=ordinal + 1, foregroundSinceCapture=ordinal + 1,
++                     backgroundCallbacks=ordinal + 1, foregroundCallbacks=ordinal + 2, inactiveCallbacks=ordinal + 2)
+         add('sample', copy.deepcopy(value), pref)
+-        value.update(backgroundSinceCapture=ordinal - 1, foregroundSinceCapture=ordinal - 1,
+-                     backgroundCallbacks=ordinal - 1, foregroundCallbacks=ordinal, inactiveCallbacks=ordinal)
+-        add('sample', copy.deepcopy(value), pref)
++        for window in (ordinal * 2 + 1, ordinal * 2 + 2):
++            for index in range(1, 7):
++                add('window_sample', copy.deepcopy(value), pref, window=window, index=index)
+     add('complete', copy.deepcopy(value), pref)
+     return report
+ 
+ 
+ def os_report(blocked=True):
+-    report = dict(schemaVersion=3, scenario='os', runToken=str(uuid.uuid4()), completed=True, observations=[])
++    report = dict(schemaVersion=5, scenario='os', runToken=str(uuid.uuid4()), completed=True, observations=[])
+     boot = str(uuid.uuid4())
+     def add(phase, pref, value, status, fixture='existing'):
+         report['observations'].append(dict(ordinal=len(report['observations']) + 1, phase=phase,
+             fixture=fixture, boot=boot, preferences=pref,
+             nativeDirection='unavailable' if phase == 'before_main' else 'force_rtl' if pref['preferredLanguage'] == 'ar' else 'force_ltr',
+             controllerCreations=0 if phase == 'before_main' else 1,
+-            composition=json.dumps(value), osDisposition=status))
++            composition=json.dumps(value), osDisposition=status,
++            samplingWindow=0, samplingIndex=0, samplingElapsedMilliseconds=0))
+     initial = preferences(app=['ar-EG', 'en'], language='ar')
+     add('before_main', initial, {}, 'not-investigated')
+     add('sample', initial, base_composition(), 'opened')
+@@ -108,7 +118,8 @@
+     def test_both_actual_game_phase_schemas_are_exercised_without_runtime_claim(self):
+         for game in ('whodunit', 'mafia'):
+             result = validation.verify_local(local_report(game), game)
+-            self.assertEqual(3, result['actual_background_foreground_cycles'])
++            self.assertEqual(4, result['actual_background_foreground_cycles'])
++            self.assertEqual(48, result['passive_samples'])
+             self.assertFalse(result['physical_lan_claim'])
+ 
+     def test_equal_value_cannot_hide_a_replaced_controller_or_flow_or_state_reference(self):
+@@ -142,13 +153,13 @@
+         report = local_report('whodunit')
+         for event in report['observations'][1:]:
+             value = json.loads(event['composition'])
+-            if value['commandOrdinal'] == 3:
++            if value['commandOrdinal'] == 2:
+                 value['backgroundSinceCapture'] = 1
+             event['composition'] = json.dumps(value)
+         with self.assertRaises(RuntimeError): validation.verify_local(report, 'whodunit')
+ 
+     def test_explicit_language_cannot_pass_when_locale_and_direction_both_stay_stale(self):
+-        for ordinal, stale in ((2, 'en'), (3, 'ar')):
++        for ordinal, stale in ((1, 'en'), (2, 'ar')):
+             report = local_report('mafia')
+             for event in report['observations'][1:]:
+                 value = json.loads(event['composition'])
+@@ -163,7 +174,7 @@
+         report = local_report('mafia')
+         for event in report['observations'][1:]:
+             value = json.loads(event['composition'])
+-            if value['commandOrdinal'] == 4:
++            if value['commandOrdinal'] == 3:
+                 event['preferences'] = preferences(app=['en'], language='en')
+                 event['nativeDirection'] = 'force_ltr'
+                 value['gameDirection'] = 'ltr'
+@@ -191,6 +202,82 @@
+             event['composition'] = json.dumps(value)
+             with self.assertRaises(RuntimeError): validation.verify_local(report, 'mafia')
+ 
++    def test_initial_language_must_use_actual_settings_with_zero_synthetic_commands(self):
++        for mutation in ('synthetic', 'settings-absent'):
++            report = local_report('mafia')
++            event = report['observations'][1]
++            value = json.loads(event['composition'])
++            if mutation == 'synthetic':
++                value.update(commandOrdinal=1, commandLanguage='en', commandStatus='applied')
++            else:
++                value.update(settingsMounted=False, settingsDirection='absent')
++            event['composition'] = json.dumps(value)
++            with self.assertRaises(RuntimeError): validation.verify_local(report, 'mafia')
++
++    def test_first_post_foreground_mismatch_cannot_be_erased_by_good_passive_windows(self):
++        report = local_report('whodunit')
++        report['observations'][4]['nativeDirection'] = 'force_rtl'
++        with self.assertRaisesRegex(RuntimeError, 'diverged'):
++            validation.verify_local(report, 'whodunit')
++
++    def test_any_early_middle_or_second_window_divergence_fails_despite_good_final_sample(self):
++        for window, index in ((1, 1), (1, 3), (2, 3), (5, 1), (6, 5)):
++            with self.subTest(window=window, index=index):
++                report = local_report('whodunit')
++                event = next(event for event in report['observations'] if
++                             event['samplingWindow'] == window and event['samplingIndex'] == index)
++                event['nativeDirection'] = 'force_rtl'
++                with self.assertRaisesRegex(RuntimeError, 'diverged'):
++                    validation.verify_local(report, 'whodunit')
++
++    def test_passive_windows_require_all_six_samples_and_original_order(self):
++        for mutation in ('missing', 'index', 'window-order', 'instantaneous', 'new-boot'):
++            with self.subTest(mutation=mutation):
++                report = local_report('mafia')
++                event = next(event for event in report['observations'] if event['samplingWindow'] == 1)
++                if mutation == 'missing':
++                    report['observations'].remove(event)
++                    for index, row in enumerate(report['observations']): row['ordinal'] = index + 1
++                elif mutation == 'index': event['samplingIndex'] = 6
++                elif mutation == 'window-order': event['samplingWindow'] = 2
++                elif mutation == 'instantaneous': event['samplingElapsedMilliseconds'] = 1
++                else: event['boot'] = str(uuid.uuid4())
++                with self.assertRaises(RuntimeError): validation.verify_local(report, 'mafia')
++
++    def test_every_passive_sample_requires_own_lifecycle_and_canonical_reference(self):
++        for key, invalid in (('sameController', False), ('sameCanonicalFlow', False),
++                             ('sameCanonicalReference', False), ('foregroundSinceCapture', 0)):
++            report = local_report('mafia')
++            event = next(event for event in report['observations'] if event['samplingWindow'] == 4)
++            value = json.loads(event['composition']); value[key] = invalid
++            event['composition'] = json.dumps(value)
++            with self.assertRaises(RuntimeError): validation.verify_local(report, 'mafia')
++
++    def test_window_only_schema_is_not_accepted_in_settings_or_nonwindow_events(self):
++        for scenario in ('settings', 'nonwindow'):
++            report = settings_report() if scenario == 'settings' else local_report('mafia')
++            event = report['observations'][1]
++            event.update(samplingWindow=1, samplingIndex=1, samplingElapsedMilliseconds=250)
++            if scenario == 'settings': event['phase'] = 'window_sample'
++            with self.assertRaises(RuntimeError): validation.common(report, report['scenario'])
++
++    def test_six_full_public_snapshot_rows_fit_the_existing_accessibility_budget(self):
++        report = local_report('mafia')
++        events = [event for event in report['observations'] if event['samplingWindow'] == 8]
++        snapshots = [dict(sequence=event['ordinal'], boot=event['boot'],
++                          controllerCreations=event['controllerCreations'], nativeDirection=event['nativeDirection'],
++                          now=event['preferences'], composition=json.loads(event['composition']),
++                          index=event['samplingIndex'], elapsedMilliseconds=event['samplingElapsedMilliseconds'])
++                     for event in events]
++        last = events[-1]
++        payload = dict(sequence=last['ordinal'], boot=last['boot'], completed=False,
++                       beforeMain=report['observations'][0]['preferences'], now=last['preferences'],
++                       nativeDirection=last['nativeDirection'], controllerCreations=1,
++                       composition=json.loads(last['composition']), scenario='mafia', osDisposition='not-investigated',
++                       sampling=dict(ordinal=8, status='complete', samples=snapshots))
++        self.assertLessEqual(len(json.dumps(payload, separators=(',', ':')).encode()), 8192)
++        self.assertEqual(6, len(snapshots))
++
+     def test_missing_os_language_ui_is_blocked_never_pass_or_not_applicable(self):
+         result = validation.verify_os(os_report())
+         self.assertEqual('BLOCKED', result['status'])
+@@ -209,6 +296,52 @@
+ 
+ 
+ class CopyBoundaryContractTest(unittest.TestCase):
++    def test_local_checkpoint_uses_real_settings_then_home_before_synthetic_language_calls(self):
++        source = (copies.HERE / 'IOSAppLaunchUITests.swift.in').read_text()
++        start = source.index('@MainActor private func verifyActualLocalGame(')
++        capture = source.index('app.buttons["parlor-dsc01-capture"].tap()', start)
++        before = source[start:capture]
++        self.assertIn('try openSettings(app, language: systemLanguage)', before)
++        self.assertIn('try tap(app, label: "English")', before)
++        self.assertIn('try openGames(app, language: "en")', before)
++        self.assertNotIn('syntheticLanguage(', before)
++        loop = source.index('for language in ["ar", "en", "system"]', capture)
++        self.assertIn('try verifyActualForeground(', source[capture:loop])
++
++    def test_foreground_collects_both_windows_before_any_direction_assertion(self):
++        source = (copies.HERE / 'IOSAppLaunchUITests.swift.in').read_text()
++        start = source.index('@MainActor private func verifyActualForeground(')
++        end = source.index('@MainActor private func collectPassiveWindow(', start)
++        body = source[start:end]
++        self.assertLess(body.index('XCUIDevice.shared.press(.home)'), body.index('let resumed ='))
++        self.assertLess(body.index('let resumed ='), body.index('for _ in 0..<2'))
++        self.assertIn('var snapshots = [resumed]', body)
++        self.assertIn('XCTAssertEqual(snapshots.count, 13)', body)
++        self.assertLess(body.index('for _ in 0..<2'), body.index('try assertContinuity('))
++        self.assertIn('XCTAssertGreaterThan(try XCTUnwrap(value["foregroundSinceCapture"]', body)
++
++    def test_passive_samples_are_durable_nonblocking_and_do_not_publish_between_samples(self):
++        swift = (copies.HERE / 'DSC01Probe.swift.in').read_text()
++        start = swift.index('private func scheduleStabilitySample()')
++        end = swift.index('func complete()', start)
++        body = swift[start:end]
++        self.assertIn('DispatchQueue.main.asyncAfter(deadline: .now() + 0.25)', body)
++        self.assertIn('samplingRows.count < 6', body)
++        self.assertIn('elapsed <= 10000', body)
++        self.assertIn('appendObservation(phase: "window_sample", publish: false', body)
++        self.assertEqual(1, body.count('try publishObservation(observation)'))
++        self.assertLess(body.index('if samplingRows.count == 6'), body.index('try publishObservation(observation)'))
++        for forbidden in ('Thread.sleep(', 'usleep(', 'UserDefaults', 'semanticContentAttribute ='):
++            self.assertNotIn(forbidden, body)
++        source = (copies.HERE / 'IOSAppLaunchUITests.swift.in').read_text()
++        start = source.index('@MainActor private func collectPassiveWindow(')
++        end = source.index('private func assertContinuity(', start)
++        body = source[start:end]
++        self.assertIn('XCTWaiter.wait(for: [finished], timeout: 15)', body)
++        self.assertNotIn('try observe(', body)
++        self.assertNotIn('"parlor-dsc01-observe"', body)
++        self.assertIn('try readDisplayedObservation(app)', body)
++
+     def test_protected_traversal_hidden_generated_and_nonbuild_inputs_are_excluded(self):
+         for path in ('../secret', '/tmp/private', 'shared/x/../../../outside', '.git/config',
+                      'composeApp/local.properties', 'config/upload.jks', 'config/key.p12',

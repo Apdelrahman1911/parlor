@@ -1,0 +1,1067 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-09-07T01:18:10.188713+00:00",
+  "candidate": {
+    "commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+    "tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+    "branch": "main",
+    "source_manifest_sha256": "9ac2be536979f2216b39c10a6d148125a12380987d4efd483bbcbaeb1733318e",
+    "clean": false,
+    "not_a_release_candidate": true,
+    "tracked_diff_sha256": "148fb4583d8fa8341b3cbc48a7fc0bc7564bf4df5c27e9d80e32c6bfdc57b784",
+    "complete_patch_sha256": "71b17c8e05ab9e5850c523ff0c25a29a576a6bc088636c4a265e0944efcfc000"
+  },
+  "verdict": "NOT_READY",
+  "scope": "Authorized sixteen-defect remediation and explicitly distinguished verification/release gates.",
+  "gates": [
+    {
+      "id": "remediation-st-c1",
+      "status": "PASS",
+      "reason": "Exclude/verify legacy snapshot directory before listing/migration/direct read, preserve failed legacy bytes. Limits: Foundation filesystem flag/retention tests8 plus existing safety6; actual backup/restore and Keychain-backed healthy migration not claimed.",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-06-approved-policy-completion/final/issues.json",
+          "sha256": "9cc579e04a8ab2839e927a7462f1c6e6a719d42a38f69e34551ebc1b4f2d6bad"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/independent-review.json",
+          "sha256": "f2daf4d18fc856bbe2ae45f269c6e612f7d63e4ab9253fb36c75a2809e0cd334"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/INDEPENDENT_REVIEW.md",
+          "sha256": "3b23002f8a347aa22a8c70bd797d791cc08fcbc921ba4a6015297340608fce46"
+        }
+      ]
+    },
+    {
+      "id": "remediation-sn-c1",
+      "status": "PASS",
+      "reason": "Move accepted irreversible start commit outside receive timeout before separately bounded best-effort ACK; preserve caller cancellation. Limits: Production handshake and peer coordinator under synthetic room/virtual time, not physical LAN.",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-06-approved-policy-completion/final/issues.json",
+          "sha256": "9cc579e04a8ab2839e927a7462f1c6e6a719d42a38f69e34551ebc1b4f2d6bad"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/root/SN-C1-independent-fix-review-01.json",
+          "sha256": "a42e2f920214d4ff464b4dddf3f7baa8f6789c415c668b169754fbfe6100a4c3"
+        }
+      ]
+    },
+    {
+      "id": "remediation-sn-c2",
+      "status": "PASS",
+      "reason": "Cancellation-safe ownership from synchronous kit creation through host/peer registration and transfer; cleanup unreturned rooms and exact registration in NonCancellable. Limits: Factory9/host5/peer12/coordinator3 deterministic cases; native factory wiring source-reviewed, physical radio not measured.",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-06-approved-policy-completion/final/issues.json",
+          "sha256": "9cc579e04a8ab2839e927a7462f1c6e6a719d42a38f69e34551ebc1b4f2d6bad"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/factory_review/SN-C2-independent-remediation-review-02.json",
+          "sha256": "4d5f1113d9265a0b86abc1483c609cc6029cedb1ad73895d0dbf063dc5ad001d"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/factory_review/SN-C2-independent-remediation-review-02.md",
+          "sha256": "49718eece1cc2f8b1aafd1a6d6964148a7ef63183013733838a533ff76f7f5ee"
+        }
+      ]
+    },
+    {
+      "id": "remediation-wd-c1",
+      "status": "PASS",
+      "reason": "Read current authoritative own-player readiness in remount-safe effect with session/phase/seat/generation keys. Limits: Twelve real Compose-router tests with synthetic host/peer session controllers, not physical multiplayer.",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-06-approved-policy-completion/final/issues.json",
+          "sha256": "9cc579e04a8ab2839e927a7462f1c6e6a719d42a38f69e34551ebc1b4f2d6bad"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/root/WD-C1-independent-fix-review-01.json",
+          "sha256": "df7ba7e34da2d34e88ee6937c6838a0f8d061ca0bc4f1375e8b185788ddebf3f"
+        }
+      ]
+    },
+    {
+      "id": "remediation-ios-b1",
+      "status": "PASS",
+      "reason": "Fail actual Xcode embed shell immediately on failed cd/Gradle; normalize only after success. Limits: Five actual shell-phase tests and three normalizer tests; not a corrected qualified-Xcode app build or diagnosis of historical launch crashes.",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-06-approved-policy-completion/final/issues.json",
+          "sha256": "9cc579e04a8ab2839e927a7462f1c6e6a719d42a38f69e34551ebc1b4f2d6bad"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/session_cont/IOS-B1-independent-remediation-review-01.json",
+          "sha256": "3e04f4aeed79ba9f7528357fe18136386abcb90c5fe84abb86f3b76e64e236ab"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/session_cont/IOS-B1-independent-remediation-review-01.md",
+          "sha256": "8d0f2eb8693356379329e17e134d63a991ef37d0111a6a7df472a4ee41e82b01"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/session_cont/IOS-B1-independent-remediation-review-02-green.md",
+          "sha256": "6dd99298c8d85295227f1a3435ba1fd8f271e7fd4ec155b7110ea36fc98c52c9"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-release-foundations-rebind-01.json",
+          "sha256": "62e49d3380fab87cdee8888d05cbfe3b330eba37dfcb716c11b73f895052a5da"
+        }
+      ]
+    },
+    {
+      "id": "remediation-root-t3",
+      "status": "PASS",
+      "reason": "Add explicit Unit result to10 annotated methods and actual compiled-signature discovery guard. Limits: Eight formerly omitted enabled methods now execute; two restored disabled descriptors remain skipped along with third existing physical skip.",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-06-approved-policy-completion/final/issues.json",
+          "sha256": "9cc579e04a8ab2839e927a7462f1c6e6a719d42a38f69e34551ebc1b4f2d6bad"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/session_cont/ROOT-T3-independent-remediation-review-01.json",
+          "sha256": "875e0723d0175ff193f7fee77a38333597a8114bf943aafc0eb837b0a604c199"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/session_cont/ROOT-T3-independent-remediation-review-01.md",
+          "sha256": "20c958f269669878dc68a58c6ab8a5eeaf5a7702b6591f3b74327771fc3aa85e"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-release-foundations-rebind-01.json",
+          "sha256": "62e49d3380fab87cdee8888d05cbfe3b330eba37dfcb716c11b73f895052a5da"
+        }
+      ]
+    },
+    {
+      "id": "remediation-mf-c1",
+      "status": "PASS",
+      "reason": "Bind nonterminal Doctor private previous protection to newest canonical night record regardless of repeat setting/death/history cap. Reuse existing setting and shared Mafia-only UI predicate. Limits: Existing ON feature independently exercised across four nights; OFF restriction, skips, self flag, recovery, phase, death, caps, local resume and in-memory peer paths checked.",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-06-approved-policy-completion/final/issues.json",
+          "sha256": "9cc579e04a8ab2839e927a7462f1c6e6a719d42a38f69e34551ebc1b4f2d6bad"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/whodunit/MF-C1-M-C03-independent-evidence.json",
+          "sha256": "08b7012c575315873f0822d3dbaa6bb46c205e1b71e71f3d7f59a3f3b172ae91"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/whodunit/MF-C1-M-C03-independent-review.md",
+          "sha256": "ae821d8d7b8f8480b5691e9f60c3dd657c80f756512c5e43ffb46f57cd6bdff9"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/factory_review/mafia-detekt-review-01/independent-followup-approval-01.json",
+          "sha256": "c61312b439ba1198e229d9b47ec133b77c629aa5496164e6e82c3065d9f1c32d"
+        }
+      ]
+    },
+    {
+      "id": "remediation-wd-c3",
+      "status": "PASS",
+      "reason": "Reject active Elimination Round/TiedRevote states with at most two living survivors; retain legitimate terminal states. Limits: Nine strict encode/decode/local-load/own-private tests with real6-seat bundled case; no normal producer or cryptographic bypass allegation.",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-06-approved-policy-completion/final/issues.json",
+          "sha256": "9cc579e04a8ab2839e927a7462f1c6e6a719d42a38f69e34551ebc1b4f2d6bad"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/root/WD-C3-independent-fix-review-01.json",
+          "sha256": "32b0b19e68baa5f72f2c9e169cf66206490ce97b8dc72ac5b2378549314577fe"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/factory_review/whodunit-detekt-review-01/independent-followup-approval-01.json",
+          "sha256": "881d34fc9faf770f8a944ecbf0da774a99767075acc18dc577fe2625358e8ee4"
+        }
+      ]
+    },
+    {
+      "id": "remediation-m-c03",
+      "status": "PASS",
+      "reason": "Use full-width name-over-role Column in shared Mafia final-results composable. Limits: Six Desktop real-composable cases EN/AR,320dp,landscape,font scales1/2; native screens/readers remain separate.",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-06-approved-policy-completion/final/issues.json",
+          "sha256": "9cc579e04a8ab2839e927a7462f1c6e6a719d42a38f69e34551ebc1b4f2d6bad"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/whodunit/MF-C1-M-C03-independent-evidence.json",
+          "sha256": "08b7012c575315873f0822d3dbaa6bb46c205e1b71e71f3d7f59a3f3b172ae91"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/whodunit/MF-C1-M-C03-independent-review.md",
+          "sha256": "ae821d8d7b8f8480b5691e9f60c3dd657c80f756512c5e43ffb46f57cd6bdff9"
+        }
+      ]
+    },
+    {
+      "id": "remediation-ds-c01",
+      "status": "PASS",
+      "reason": "Ownership-aware iOS language overrides restore only the exact Parlor-owned preference to its previous application-domain value or absence across System selection and restart; preserve unowned OS choices. Owner-approved pre-release policy excludes ambiguous unmarked old internal build migration. Stable UIKit containment prevents outer SwiftUI semantics from overwriting the retained Compose child direction; no navigation engine or language-keyed session recreation. Limits: Source-bound instrumented unsigned Debug arm64 iOS Simulator on Xcode26.5/17F42. Not physical LAN, full-game/persistence resume, native multiplayer-host runtime, all gestures, native screen-reader/physical privacy, power-loss durability, signed Release or Store proof. Debug artifact inventory omits Parlor.debug.dylib, so this is not a complete executed-binary hash chain. Synthetic previous-present coverage does not replace the named actual OS-created PRESENT evidence gap (locally investigable, not automatically physical-only). Historical native09 FAIL and the unproven first-four-launch-crashes cause remain unchanged.",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-06-approved-policy-completion/final/issues.json",
+          "sha256": "9cc579e04a8ab2839e927a7462f1c6e6a719d42a38f69e34551ebc1b4f2d6bad"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/independent-review.json",
+          "sha256": "f2daf4d18fc856bbe2ae45f269c6e612f7d63e4ab9253fb36c75a2809e0cd334"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/INDEPENDENT_REVIEW.md",
+          "sha256": "3b23002f8a347aa22a8c70bd797d791cc08fcbc921ba4a6015297340608fce46"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/DS-C01-source-contract-review-03.json",
+          "sha256": "28b7723ede03eeb10302dbf4a6aa64649774529b6b8c719844aa31dc75d4e076"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/DS-C01-source-contract-green-review-04.json",
+          "sha256": "fbe3a4d016e12baeeeaba20a3adf516868aa6f3b77f9fb399ef6be26e89e20ba"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-baseline-dsc01-applicability-01.json",
+          "sha256": "9ea35d4ac5c48419b2770237378282ae43f68bdc343a443c7c2cce420d023f14"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-dsc01-swift-container-source-01.json",
+          "sha256": "e1842a06d3c82e1dd75d56e40b816e0f92a81dca667dc2cd2670d2d9a2bc56a6"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-host-continuity-focused02-01.json",
+          "sha256": "6ff9d3da74883406549ec393f91dcb7a1003d700d9f8ca81a0c2f4f8e9a6b938"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-dsc01-apphost04-outcome-01.json",
+          "sha256": "48569c8643c1b877de2104cddc3ba1a8082ced978522048fc2e6bef22bf3502f"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-ios-wrapper-smoke01-outcome-01.json",
+          "sha256": "622ef6da86af7595c9c0753d053d712dd2ff5ee306ce523b7706c337a657d48c"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-dsc01-apphost10-outcome-01.json",
+          "sha256": "4bca1750842bd8057bafe758a4c518b51566861e8e6c0ea16cda5e3af2783fa3"
+        }
+      ]
+    },
+    {
+      "id": "remediation-ds-c02",
+      "status": "PASS",
+      "reason": "Reserve distinct toast lifetimes independently of live queue and key presentation by owner+identity. Limits: State4/lifetime3/concurrency2 tests; Desktop timing only. Paused-frame fixture failure investigated, not hidden.",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-06-approved-policy-completion/final/issues.json",
+          "sha256": "9cc579e04a8ab2839e927a7462f1c6e6a719d42a38f69e34551ebc1b4f2d6bad"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/whodunit/DS-C02-C03-independent-evidence.json",
+          "sha256": "1f0b7e23936e89091983b7728bba968e0c958d5dacc7c3ecff28c80df35da21d"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/whodunit/DS-C02-C03-independent-review.md",
+          "sha256": "18f751fa243ff134a25725cb284363f7af0990a4f374cc183a1ea3415bad55c0"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/whodunit/DS-C02-additional-tests-execution-approval.json",
+          "sha256": "059db45339be3d0b7f7096fd296b5e2326ac069e618b71652983d5abc5404513"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/DS-C02-dispatch-review-01/independent-followup-approval-01.json",
+          "sha256": "9022ae4cc48bbcddc45b4658044fc1a854c5c9cb25630c188197d471ece6dd2c"
+        }
+      ]
+    },
+    {
+      "id": "remediation-ds-c03",
+      "status": "PASS",
+      "reason": "Add CoverGhost using cover foreground for black recovery surfaces, leave ordinary Ghost unchanged. Limits: Three actual-composable contrast cases plus focus regression; analytic pressed/disabled contrasts not physical a11y proof.",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-06-approved-policy-completion/final/issues.json",
+          "sha256": "9cc579e04a8ab2839e927a7462f1c6e6a719d42a38f69e34551ebc1b4f2d6bad"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/whodunit/DS-C02-C03-independent-evidence.json",
+          "sha256": "1f0b7e23936e89091983b7728bba968e0c958d5dacc7c3ecff28c80df35da21d"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/whodunit/DS-C02-C03-independent-review.md",
+          "sha256": "18f751fa243ff134a25725cb284363f7af0990a4f374cc183a1ea3415bad55c0"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/whodunit/DS-C02-additional-tests-execution-approval.json",
+          "sha256": "059db45339be3d0b7f7096fd296b5e2326ac069e618b71652983d5abc5404513"
+        }
+      ]
+    },
+    {
+      "id": "remediation-wd-c2",
+      "status": "PASS",
+      "reason": "Four authorized testing chronologies corrected and versioned1.0.1; exact loaded content identity required. All incompatible/identity-less/retired-Solo local records rejected without automatic mutation or deletion, explicit selected-only discard retained. Limits: Current5 chronology+4 compatibility+1 complete-game descriptor (48 combinations repeated)+6 real EN/AR recovery UI+11 reconstruction all pass at frozen bytes. No physical LAN/durability, editorial or content-rights approval.",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-06-approved-policy-completion/final/issues.json",
+          "sha256": "9cc579e04a8ab2839e927a7462f1c6e6a719d42a38f69e34551ebc1b4f2d6bad"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-wdc2-remediation-focused-01.json",
+          "sha256": "563998b215bc002f3902bd035fda8e0db913f22497628ff5e74c42dceb73b631"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-retired-solo-preservation-01.json",
+          "sha256": "4c1809d5a103c0a35c9ee88b0426887d37b53341fb0714d09f3d6c9ee85db7e0"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-wdc2-retired-save-green-01.json",
+          "sha256": "fd8a08793765eea0f5f7cdb408b5358ce4f161b2337a519cbc0b26f4a8e59914"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-wdc2-retired-save-range-correction-01.json",
+          "sha256": "de31c86830c965db935e5d464e81b9d2f6334c713122aaf59aa18c742425f789"
+        }
+      ]
+    },
+    {
+      "id": "remediation-rl-c1",
+      "status": "PASS",
+      "reason": "Replace both BSD/GNU stat fallbacks with one strict portable Python regular-file size guard. Limits: Seven real shell-preflight fixtures include exact/over bounds and GNU-shaped shim; not an actual Linux signed-AAB run.",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-06-approved-policy-completion/final/issues.json",
+          "sha256": "9cc579e04a8ab2839e927a7462f1c6e6a719d42a38f69e34551ebc1b4f2d6bad"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/mafia/rl-c1-independent-fix-review-01.json",
+          "sha256": "623d83ad4b20674179887f49c2e733026f0149bd831e91f3ab3ae100e94f941f"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/release_fix_review/release-docs-interactions-01.json",
+          "sha256": "bd900c84f3e0949c0ae3dd04cc1173c171e24150e2e8f78bb36ba64d74386201"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/release_fix_review/release-docs-approval-02.json",
+          "sha256": "e4d58a9ea4131b7399347ff38b5858630a9c8068f6ddf9683ca2f68e20ed5e30"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-release-foundations-rebind-01.json",
+          "sha256": "62e49d3380fab87cdee8888d05cbfe3b330eba37dfcb716c11b73f895052a5da"
+        }
+      ]
+    },
+    {
+      "id": "remediation-rl-c2",
+      "status": "PASS",
+      "reason": "Verify each signed payload and approved leaf; validate self-signed certificate policy before ephemeral public trust, then require strict jarsigner. Separate TSA trust. Limits: 21 local synthetic tests including actual owned descendant cleanup; not Store credentials/signed candidate/positive RFC3161 integration.",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-06-approved-policy-completion/final/issues.json",
+          "sha256": "9cc579e04a8ab2839e927a7462f1c6e6a719d42a38f69e34551ebc1b4f2d6bad"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/release_fix_review/RL-C2-independent-remediation-review-01.json",
+          "sha256": "0dfb26b45804abd11dcea5d3f5fce4c5b168822f01a9598cd774935cf968bbdb"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/release_fix_review/RL-C2-independent-remediation-review-01.md",
+          "sha256": "f2d0d7ac7f7cb40ef66e50bf6ba8b0df619dff1f4d112d711dbcf3bc3be40554"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-release-foundations-rebind-01.json",
+          "sha256": "62e49d3380fab87cdee8888d05cbfe3b330eba37dfcb716c11b73f895052a5da"
+        }
+      ]
+    },
+    {
+      "id": "remediation-rl-c3",
+      "status": "PASS",
+      "reason": "Read/validate source,destination and bundle digest within the same edit used for mutation/commit; cleanup attempted, no blind mutation retry. Limits: Nine new production-helper mocked-HTTP tests plus complete172-test release suite; no Google Play operations.",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-06-approved-policy-completion/final/issues.json",
+          "sha256": "9cc579e04a8ab2839e927a7462f1c6e6a719d42a38f69e34551ebc1b4f2d6bad"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/mafia/rl-c3-independent-fix-review-01.json",
+          "sha256": "2911a5629eb8b16f34936834301a59c883b1913597a42fa2cd7ecbd49e3c322b"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/release_fix_review/release-docs-interactions-01.json",
+          "sha256": "bd900c84f3e0949c0ae3dd04cc1173c171e24150e2e8f78bb36ba64d74386201"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/release_fix_review/release-docs-approval-02.json",
+          "sha256": "e4d58a9ea4131b7399347ff38b5858630a9c8068f6ddf9683ca2f68e20ed5e30"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-release-foundations-rebind-01.json",
+          "sha256": "62e49d3380fab87cdee8888d05cbfe3b330eba37dfcb716c11b73f895052a5da"
+        }
+      ]
+    },
+    {
+      "id": "desktop-and-static-analysis",
+      "status": "PASS",
+      "reason": "Configured Desktop tests/compile and static analysis executed on freeze02:188 suites,1243 descriptors=1240 passes+3 physical-P2P skips. No physical or native UI inference.",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-desktop-static-04/receipt.json",
+          "sha256": "74f68916fa8ad3ecee3eb4f4e03a68cfc93a839f40bf8bc2104fbbd1ab365a7f"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-desktop-static-04/gradle.log",
+          "sha256": "fec078b40d59aedbdc84a9fe697edd116a225983352d879361c0e043483ea36b"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-06-approved-policy-completion/final/verification-summary.json",
+          "sha256": "9dfd0f748d904894394fe39e0685f220a7f46d143c3e0abbb0d0f3c141b208bd"
+        }
+      ]
+    },
+    {
+      "id": "production-check",
+      "status": "PASS",
+      "reason": "Configured host-independent productionCheck passed on freeze02:222 suites,1395 descriptors=1392 passes+3 physical skips;172 release Python tests,Detekt,lint/R8,unsigned AAB,shell dispatch/release validators.32 accepted lint warnings retained.",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/receipt.json",
+          "sha256": "ee8e31280b0f2d45b869b6b5fffa23dee89944ea52e36bd6027f33e48415a47a"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/gradle.log",
+          "sha256": "195ca59c870a0ed1d01332aa8bcdcf28dde2f7e04c689c326debe73dac0e193d"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-06-approved-policy-completion/final/verification-summary.json",
+          "sha256": "9dfd0f748d904894394fe39e0685f220a7f46d143c3e0abbb0d0f3c141b208bd"
+        }
+      ]
+    },
+    {
+      "id": "configured-alltests-and-native-runtime",
+      "status": "PASS",
+      "reason": "Configured allTests plus actual owned ARM64 iOS simulator runtime:398 suites,2481 descriptors=2478 passes+3 physical skips. Desktop1243,Android debug-unit406/release-unit406,iOS426.13 x64 test tasks host-disabled; Mafia/engine native test sources absent,not executed.",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-native-alltests-02/receipt.json",
+          "sha256": "2253a31979d575c1915e0445a9a1e1234abf963db9d49c98a628c386706c4fc0"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-native-alltests-02/gradle.log",
+          "sha256": "2a646d4ef1aa57c8057b8263a02bc8bdb801ea04cec820ba735146d212d4c018"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-06-approved-policy-completion/final/verification-summary.json",
+          "sha256": "9dfd0f748d904894394fe39e0685f220a7f46d143c3e0abbb0d0f3c141b208bd"
+        }
+      ]
+    },
+    {
+      "id": "apple-release-frameworks-and-analysis",
+      "status": "PASS",
+      "reason": "All three Release frameworks link;four actual iOS-main Detekt reports clean;147 tasks/143 executed. Linkage is not runtime,Swift wrapper,signing or Store-qualified Xcode evidence.",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-apple-02/receipt.json",
+          "sha256": "dd75d054341870316ff21a8106e245e5859c83a347399aa59afc57d0eea68d16"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-apple-02/gradle.log",
+          "sha256": "29b2daf1f1c7005d56e82f2be779c586fe063eb79d7f8e4ee6814ac880be406f"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-06-approved-policy-completion/final/verification-summary.json",
+          "sha256": "9dfd0f748d904894394fe39e0685f220a7f46d143c3e0abbb0d0f3c141b208bd"
+        }
+      ]
+    },
+    {
+      "id": "resource-parity-and-tracked-whitespace",
+      "status": "PASS",
+      "reason": "EN/AR structural parity:139 shell,16 design-system,324 Whodunit,269 Mafia per locale. Keys/types/placeholders/emptiness and tracked git diff --check pass. Not translation-quality or accessibility certification.",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-06-approved-policy-completion/evidence/resources-and-diff-02/receipt.json",
+          "sha256": "0973f253d65b3a77b445ddf6f4ac29faeb4e6965011fcbacc0264b61ff0b082d"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-06-approved-policy-completion/evidence/resources-and-diff-02/gradle.log",
+          "sha256": "cd143696758da7f6356ea3824caaacfd073e5715c2d3ebd485f4104f754980de"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-06-approved-policy-completion/final/verification-summary.json",
+          "sha256": "9dfd0f748d904894394fe39e0685f220a7f46d143c3e0abbb0d0f3c141b208bd"
+        }
+      ]
+    },
+    {
+      "id": "ios-actual-language-direction-and-continuity",
+      "status": "PASS",
+      "reason": "Independently approved source-bound native10 complete actual Settings/restart/OS and both local-game direction/lifecycle-continuity matrix PASS, 5/5 XCTest/zero skips, exact source/control/copied-input identity and owned cleanup PASS. Actual OS preference representation is ABSENT and preserved exactly; original PRESENT-only oracle was not executed and the actual OS-created PRESENT counterpart remains separately BLOCKED as an evidence gap. Copy-only real-store game-language invocations, not in-game Settings taps. Debug dylib not inventoried; not physical or signed-release/Store proof.",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-10/receipt.json",
+          "sha256": "030995c5e3ed5e9e387c51eb94beeddf46328e13e51097b4aec22bbf623f30ab"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-dsc01-apphost10-outcome-01.json",
+          "sha256": "4bca1750842bd8057bafe758a4c518b51566861e8e6c0ea16cda5e3af2783fa3"
+        }
+      ]
+    },
+    {
+      "id": "unsigned-swift-release-wrapper",
+      "status": "PASS",
+      "reason": "Source-bound unsigned arm64 iOS Simulator Release Swift wrapper build and exhaustive30-file artifact inventory PASS. Xcode26.5,build only;no simulator/app launch,signing,archive,physical or Store evidence. Only copied pbx phase wrapped for immediate owned Gradle stopping. Native signature state was not independently assessed; code-signing-disabled build configuration is not Store-signature proof.",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-06-approved-policy-completion/evidence/ios-wrapper-release-01/receipt.json",
+          "sha256": "edab3832dfd32e65eab0e882ef51746f7157e77483a55ef22c3e6707b61f5e75"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-ios-release-wrapper-result-review-01.json",
+          "sha256": "ba0afe497cbb6d7348102d1a746debba6d1ebf64bf3cb226be4679b5c8442885"
+        }
+      ]
+    },
+    {
+      "id": "uninstrumented-ios-app-launch",
+      "status": "PASS",
+      "reason": "Uninstrumented-source Debug simulator wrapper5/5 XCTest:one actual cold launch/Home/no-alert check plus four UIKit containment fixtures. Not5 launches,language/session matrix or Release runtime. Parlor.debug.dylib was not inventoried.",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-06-approved-policy-completion/evidence/ios-wrapper-smoke-01/receipt.json",
+          "sha256": "72c13301a3e9882d4742ed10f8801108a028201d4a40c5dd8f2050e69576bbe3"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-ios-wrapper-smoke01-outcome-01.json",
+          "sha256": "622ef6da86af7595c9c0753d053d712dd2ff5ee306ce523b7706c337a657d48c"
+        }
+      ]
+    },
+    {
+      "id": "frozen-source-and-preservation",
+      "status": "PASS",
+      "reason": "Intentionally dirty 669-input source is frozen; all 2,180 baseline files retained with exactly 13 approved changes. Refs/stash/logical staged diff and original audits/design/AGENTS preserved. Not a clean release candidate.",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-06-approved-policy-completion/final/source-identity.json",
+          "sha256": "0f0545086a19d2e15cf592cd07dd2c9fd109d10794fa5f736837928ca71760ff"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-06-approved-policy-completion/final/diff-identity.json",
+          "sha256": "88f62f3dffc7d8204b11db5fa40fd9ed72fc2d980c1c277d43a82c3637b091ce"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-final-preservation-observation-02.json",
+          "sha256": "d86413bb423b01d058457a12be063413d1c224f8db2b92409c96a80034121d3a"
+        }
+      ]
+    },
+    {
+      "id": "current-owned-resource-cleanup",
+      "status": "PASS",
+      "reason": "Selected cycles' immediate Gradle stops and precise owned cleanup passed. The bounded observation found recorded owned paths/workers absent; historical apphost02 attestation remains FAIL, never retroactively PASS. Later final observation is separate.",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-final-preservation-observation-02.json",
+          "sha256": "d86413bb423b01d058457a12be063413d1c224f8db2b92409c96a80034121d3a"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-06-approved-policy-completion/final/cycle-history.json",
+          "sha256": "673ada78aea68d6394a7ad9172f8e6477a4a0c383b02993333c2111257172f74"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-10/receipt.json",
+          "sha256": "030995c5e3ed5e9e387c51eb94beeddf46328e13e51097b4aec22bbf623f30ab"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-06-approved-policy-completion/evidence/ios-wrapper-release-01/receipt.json",
+          "sha256": "edab3832dfd32e65eab0e882ef51746f7157e77483a55ef22c3e6707b61f5e75"
+        }
+      ]
+    },
+    {
+      "id": "android-managed-runtime",
+      "status": "BLOCKED",
+      "reason": "Pinned Linux/KVM/x86_64 managed-device runtime not available on current Apple Silicon host. Desktop and Android unit tests are not the R8-shrunk Android runtime gate.",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "docs/RELEASE_GATES.md",
+          "sha256": "19ee19acf35f833e3bd61b03d3113c6a3ea05b67afcbe1b956e9d4aa070a3f32"
+        },
+        {
+          "kind": "path",
+          "ref": "build.gradle.kts",
+          "sha256": "bd6199e1f097eb236c50c46efb91d291550110f6b4d95a8e95ff0db4d8da192b"
+        }
+      ],
+      "owner": "CI/repository owner"
+    },
+    {
+      "id": "other-desktop-host-graphs",
+      "status": "BLOCKED",
+      "reason": "Linux x64/arm64, macOS x64 and Windows x64 dependency/runtime graphs not executed by this macOS arm64 run.",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "docs/RELEASE_GATES.md",
+          "sha256": "19ee19acf35f833e3bd61b03d3113c6a3ea05b67afcbe1b956e9d4aa070a3f32"
+        }
+      ],
+      "owner": "CI/repository owner"
+    },
+    {
+      "id": "physical-p2pkit-lan",
+      "status": "BLOCKED",
+      "reason": "Three physical tests remain skipped. Independently align their historical admission/approval fixtures with the current protocol before relying on real-device results; do not merely un-ignore them. Then execute controlled two/three-device host/peer, permission-denial/rejoin, radio and lifecycle checks. In-memory transport tests supply no physicalLAN proof.",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "docs/RELEASE_GATES.md",
+          "sha256": "19ee19acf35f833e3bd61b03d3113c6a3ea05b67afcbe1b956e9d4aa070a3f32"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/native-final-verification-01.json",
+          "sha256": "c0235ccee1d68e85ecaa98ed3aee277eb50c22fc82fba3998ea9fdd1a6d4d245"
+        }
+      ],
+      "owner": "device validation owner"
+    },
+    {
+      "id": "native-accessibility-layout-and-privacy",
+      "status": "BLOCKED",
+      "reason": "Physical VoiceOver/TalkBack, compact/large-text RTL, gestures, app-switcher and lifecycle/performance matrix remain unexecuted. Desktop layout and current instrumented iOS geometry/language checks cover only their declared cases.",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "docs/RELEASE_GATES.md",
+          "sha256": "19ee19acf35f833e3bd61b03d3113c6a3ea05b67afcbe1b956e9d4aa070a3f32"
+        }
+      ],
+      "owner": "device/accessibility owner"
+    },
+    {
+      "id": "ios-apphost-keychain-investigation",
+      "status": "BLOCKED",
+      "reason": "IOS-R1 remains a locally investigable app-host storage/Keychain evidence gap outside the16repairs. Existing Foundation flag/retention tests do not establish healthy Keychain-backed migration or durable recovery. Complete an explicitly owned app-host investigation before attributing a new code defect; do not hide storage errors or add entitlements blindly. This is not classified as physical-only.",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "docs/RELEASE_GATES.md",
+          "sha256": "19ee19acf35f833e3bd61b03d3113c6a3ea05b67afcbe1b956e9d4aa070a3f32"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/independent-review.json",
+          "sha256": "f2daf4d18fc856bbe2ae45f269c6e612f7d63e4ab9253fb36c75a2809e0cd334"
+        }
+      ],
+      "owner": "implementation/platform-validation agent"
+    },
+    {
+      "id": "physical-ios-backup-and-restore",
+      "status": "BLOCKED",
+      "reason": "Actual physical backup/restore and retained-record handling have not been exercised. Foundation backup-resource flag/retention tests prove only their bounded cases, not real backup transport or restoration. The separately listed app-host IOS-R1 investigation may be locally executable.",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "docs/RELEASE_GATES.md",
+          "sha256": "19ee19acf35f833e3bd61b03d3113c6a3ea05b67afcbe1b956e9d4aa070a3f32"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/independent-review.json",
+          "sha256": "f2daf4d18fc856bbe2ae45f269c6e612f7d63e4ab9253fb36c75a2809e0cd334"
+        }
+      ],
+      "owner": "device validation owner"
+    },
+    {
+      "id": "qualified-apple-toolchain",
+      "status": "BLOCKED",
+      "reason": "Installed Xcode26.5/17F42 differs from pinned Store-qualified26.3/17C529.",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "config/release-policy.json",
+          "sha256": "316b28f75a13e0b925beb6bcd893b82e077a1a9efa850022026e830f9b1d4ad4"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-ios-release-wrapper-result-review-01.json",
+          "sha256": "ba0afe497cbb6d7348102d1a746debba6d1ebf64bf3cb226be4679b5c8442885"
+        }
+      ],
+      "owner": "release owner"
+    },
+    {
+      "id": "real-store-signing-and-submission",
+      "status": "BLOCKED",
+      "reason": "No authority to read/use private Store keys, sign Store candidates, upload, promote or publish. Local synthetic certificate tests do not satisfy this gate.",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "docs/RELEASE_GATES.md",
+          "sha256": "19ee19acf35f833e3bd61b03d3113c6a3ea05b67afcbe1b956e9d4aa070a3f32"
+        }
+      ],
+      "owner": "release owner"
+    },
+    {
+      "id": "store-identity-ownership",
+      "status": "BLOCKED",
+      "reason": "Known com.parlor.app identity collision unresolved; disabled publication and identity checks are deliberately preserved.",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "config/release-policy.json",
+          "sha256": "316b28f75a13e0b925beb6bcd893b82e077a1a9efa850022026e830f9b1d4ad4"
+        },
+        {
+          "kind": "path",
+          "ref": ".github/workflows/testing-candidate.yml",
+          "sha256": "0488fc5e0c4e520a767408cfb5e7fa387bc5fdfa0edfeb9dcd29a4cb0d2c7976"
+        },
+        {
+          "kind": "path",
+          "ref": ".github/workflows/production-promotion.yml",
+          "sha256": "94ca7f617c24cb4c9ffafa5860c7ebc104f08cfa46b2a2e13fbae3ed816c461b"
+        }
+      ],
+      "owner": "repository/release owner"
+    },
+    {
+      "id": "legal-and-store-declarations",
+      "status": "BLOCKED",
+      "reason": "Owner approval of content rights, licenses, privacy declarations, metadata and Store setup not independently established by tests.",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "docs/RELEASE_GATES.md",
+          "sha256": "19ee19acf35f833e3bd61b03d3113c6a3ea05b67afcbe1b956e9d4aa070a3f32"
+        }
+      ],
+      "owner": "product/legal/release owner"
+    },
+    {
+      "id": "immutable-integrated-release-candidate",
+      "status": "BLOCKED",
+      "reason": "Authorized changes are intentionally uncommitted. No commit/merge authorization; base SHA/tree alone cannot identify a clean reviewed release candidate.",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-06-approved-policy-completion/final/source-identity.json",
+          "sha256": "0f0545086a19d2e15cf592cd07dd2c9fd109d10794fa5f736837928ca71760ff"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-06-approved-policy-completion/final/diff-identity.json",
+          "sha256": "88f62f3dffc7d8204b11db5fa40fd9ed72fc2d980c1c277d43a82c3637b091ce"
+        }
+      ],
+      "owner": "repository owner"
+    },
+    {
+      "id": "wd-c4-modal-timer-policy",
+      "status": "BLOCKED",
+      "reason": "Outside16 repairs: whether Leave-confirmation modal time counts as discussion time is unresolved; no policy or code change invented.",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/canonical-register.json",
+          "sha256": "2767d98befc138dc9222ab0007209b52032f31033d1cbf8a71e6b4e665fe897e"
+        }
+      ],
+      "owner": "product owner"
+    },
+    {
+      "id": "production-story-editorial-approval",
+      "status": "BLOCKED",
+      "reason": "Four corrected 1.0.1 stories are approved as testing content only. All bundled stories still require final production editorial, translation and content-rights review. Reducers and sampling were not changed to accommodate prose.",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "docs/WHODUNIT_TEST_CONTENT.md",
+          "sha256": "19a2ca3a4cba3d60117f76897c7fc0d1cc55f97beb5002aead43fdc020b12756"
+        },
+        {
+          "kind": "path",
+          "ref": "docs/PRE_RELEASE_COMPATIBILITY.md",
+          "sha256": "32ae112de9fd761636191c3308faf28fa5a3a8f3fd694064bbeaf3f2ffe69060"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-wdc2-remediation-focused-01.json",
+          "sha256": "563998b215bc002f3902bd035fda8e0db913f22497628ff5e74c42dceb73b631"
+        }
+      ],
+      "owner": "content/editorial and legal owner"
+    },
+    {
+      "id": "ambiguous-development-language-migration",
+      "status": "NOT_APPLICABLE",
+      "reason": "Owner explicitly excludes ambiguous unmarked language overrides from older unpublished development builds from supported migration. Clean/current-build behavior remains required; genuine unmarked OS preferences remain preserved.",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "docs/PRE_RELEASE_COMPATIBILITY.md",
+          "sha256": "32ae112de9fd761636191c3308faf28fa5a3a8f3fd694064bbeaf3f2ffe69060"
+        }
+      ]
+    },
+    {
+      "id": "ios-actual-os-language-baseline-counterpart",
+      "status": "BLOCKED",
+      "reason": "The complete actual OS English -> in-app Arabic -> System -> fresh-restart flow preserved the observed ABSENT application-domain AppleLanguages baseline. An actual OS-created PRESENT baseline and its complete restoration were not observed. Existing synthetic previous-present Foundation/Settings/restart coverage is not OS-created-present proof. This is a TEST/EVIDENCE GAP, not a confirmed source defect or automatically a physical-only blocker.",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-dsc01-apphost10-outcome-01.json",
+          "sha256": "4bca1750842bd8057bafe758a4c518b51566861e8e6c0ea16cda5e3af2783fa3"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-10/receipt.json",
+          "sha256": "030995c5e3ed5e9e387c51eb94beeddf46328e13e51097b4aec22bbf623f30ab"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-06-approved-policy-completion/reviews/v12-os-representation-finalization-compatibility-01.json",
+          "sha256": "c74b0c5734c5494f98579112a056154fc91c711e1e0173977519cbe5fd634930"
+        }
+      ],
+      "owner": "Platform verification owner; investigate a fresh explicitly owned local Simulator first, controlled devices if needed."
+    }
+  ],
+  "artifacts": [
+    {
+      "name": "unsigned-release-aab",
+      "sha256": "f30780bf995741a372646dd9c6a27705cb4eb0368c1d5a4de7197386d3a61473",
+      "bytes": 8803044,
+      "source_commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+      "source_tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+      "source_manifest_sha256": "9ac2be536979f2216b39c10a6d148125a12380987d4efd483bbcbaeb1733318e",
+      "tracked_diff_sha256": "148fb4583d8fa8341b3cbc48a7fc0bc7564bf4df5c27e9d80e32c6bfdc57b784",
+      "retained": "Compact manifest/logs only;owned large artifact cleaned after inspection.",
+      "qualification": "Unsigned Android bundle,354 archive entries. Not signed/Store-approved.",
+      "inspection_receipt": {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/artifact-receipts.json",
+        "sha256": "e0741b994c1dd56ed3b9b5ef6a11ff2af024c4b745b9ee6533c108627374fdc4"
+      }
+    },
+    {
+      "name": "unsigned-arm64-ios-simulator-release-app-executable",
+      "sha256": "a17b0ab1363e88957d05fb0312f79add70ee8962330763b7b9c248423bd4f8f5",
+      "bytes": 130504,
+      "source_commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+      "source_tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+      "source_manifest_sha256": "9ac2be536979f2216b39c10a6d148125a12380987d4efd483bbcbaeb1733318e",
+      "tracked_diff_sha256": "148fb4583d8fa8341b3cbc48a7fc0bc7564bf4df5c27e9d80e32c6bfdc57b784",
+      "retained": "Compact manifest/logs only;owned large artifact cleaned after inspection.",
+      "qualification": "Unsigned simulator Release executable;no installation/runtime/signing evidence. Code-signing-disabled build configuration is not independent signature-state verification.",
+      "inspection_receipt": {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/ios-wrapper-release-01/release-artifact-inventory.json",
+        "sha256": "10b73d091b9c5db832691072b0d9c0751fccc064c816af8d0edcdebf63ea3a63"
+      }
+    },
+    {
+      "name": "unsigned-arm64-ios-simulator-release-compose-framework",
+      "sha256": "b211e375ec48e30c649211d49d40c74c64d8b11b9059f6e326520a1bb08b0120",
+      "bytes": 52266120,
+      "source_commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+      "source_tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+      "source_manifest_sha256": "9ac2be536979f2216b39c10a6d148125a12380987d4efd483bbcbaeb1733318e",
+      "tracked_diff_sha256": "148fb4583d8fa8341b3cbc48a7fc0bc7564bf4df5c27e9d80e32c6bfdc57b784",
+      "retained": "Compact manifest/logs only;owned large artifact cleaned after inspection.",
+      "qualification": "Unsigned simulator Release dynamic framework. Not physical-device binary or signed Store artifact. Code-signing-disabled build configuration is not independent signature-state verification.",
+      "inspection_receipt": {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/ios-wrapper-release-01/release-artifact-inventory.json",
+        "sha256": "10b73d091b9c5db832691072b0d9c0751fccc064c816af8d0edcdebf63ea3a63"
+      }
+    }
+  ],
+  "manual_actions": [
+    {
+      "id": "android-managed-runtime",
+      "owner": "CI/repository owner",
+      "action": "Pinned Linux/KVM/x86_64 managed-device runtime not available on current Apple Silicon host. Desktop and Android unit tests are not the R8-shrunk Android runtime gate.",
+      "blocking": true
+    },
+    {
+      "id": "other-desktop-host-graphs",
+      "owner": "CI/repository owner",
+      "action": "Linux x64/arm64, macOS x64 and Windows x64 dependency/runtime graphs not executed by this macOS arm64 run.",
+      "blocking": true
+    },
+    {
+      "id": "physical-p2pkit-lan",
+      "owner": "device validation owner",
+      "action": "Three physical tests remain skipped. Independently align their historical admission/approval fixtures with the current protocol before relying on real-device results; do not merely un-ignore them. Then execute controlled two/three-device host/peer, permission-denial/rejoin, radio and lifecycle checks. In-memory transport tests supply no physicalLAN proof.",
+      "blocking": true
+    },
+    {
+      "id": "native-accessibility-layout-and-privacy",
+      "owner": "device/accessibility owner",
+      "action": "Physical VoiceOver/TalkBack, compact/large-text RTL, gestures, app-switcher and lifecycle/performance matrix remain unexecuted. Desktop layout and current instrumented iOS geometry/language checks cover only their declared cases.",
+      "blocking": true
+    },
+    {
+      "id": "ios-apphost-keychain-investigation",
+      "owner": "implementation/platform-validation agent",
+      "action": "IOS-R1 remains a locally investigable app-host storage/Keychain evidence gap outside the16repairs. Existing Foundation flag/retention tests do not establish healthy Keychain-backed migration or durable recovery. Complete an explicitly owned app-host investigation before attributing a new code defect; do not hide storage errors or add entitlements blindly. This is not classified as physical-only.",
+      "blocking": true
+    },
+    {
+      "id": "physical-ios-backup-and-restore",
+      "owner": "device validation owner",
+      "action": "Actual physical backup/restore and retained-record handling have not been exercised. Foundation backup-resource flag/retention tests prove only their bounded cases, not real backup transport or restoration. The separately listed app-host IOS-R1 investigation may be locally executable.",
+      "blocking": true
+    },
+    {
+      "id": "qualified-apple-toolchain",
+      "owner": "release owner",
+      "action": "Installed Xcode26.5/17F42 differs from pinned Store-qualified26.3/17C529.",
+      "blocking": true
+    },
+    {
+      "id": "real-store-signing-and-submission",
+      "owner": "release owner",
+      "action": "No authority to read/use private Store keys, sign Store candidates, upload, promote or publish. Local synthetic certificate tests do not satisfy this gate.",
+      "blocking": true
+    },
+    {
+      "id": "store-identity-ownership",
+      "owner": "repository/release owner",
+      "action": "Known com.parlor.app identity collision unresolved; disabled publication and identity checks are deliberately preserved.",
+      "blocking": true
+    },
+    {
+      "id": "legal-and-store-declarations",
+      "owner": "product/legal/release owner",
+      "action": "Owner approval of content rights, licenses, privacy declarations, metadata and Store setup not independently established by tests.",
+      "blocking": true
+    },
+    {
+      "id": "immutable-integrated-release-candidate",
+      "owner": "repository owner",
+      "action": "Authorized changes are intentionally uncommitted. No commit/merge authorization; base SHA/tree alone cannot identify a clean reviewed release candidate.",
+      "blocking": true
+    },
+    {
+      "id": "wd-c4-modal-timer-policy",
+      "owner": "product owner",
+      "action": "Outside16 repairs: whether Leave-confirmation modal time counts as discussion time is unresolved; no policy or code change invented.",
+      "blocking": true
+    },
+    {
+      "id": "production-story-editorial-approval",
+      "owner": "content/editorial and legal owner",
+      "action": "Four corrected 1.0.1 stories are approved as testing content only. All bundled stories still require final production editorial, translation and content-rights review. Reducers and sampling were not changed to accommodate prose.",
+      "blocking": true
+    },
+    {
+      "id": "ios-actual-os-language-baseline-counterpart",
+      "owner": "Platform verification owner; investigate a fresh explicitly owned local Simulator first, controlled devices if needed.",
+      "action": "The complete actual OS English -> in-app Arabic -> System -> fresh-restart flow preserved the observed ABSENT application-domain AppleLanguages baseline. An actual OS-created PRESENT baseline and its complete restoration were not observed. Existing synthetic previous-present Foundation/Settings/restart coverage is not OS-created-present proof. This is a TEST/EVIDENCE GAP, not a confirmed source defect or automatically a physical-only blocker.",
+      "blocking": true
+    }
+  ]
+}

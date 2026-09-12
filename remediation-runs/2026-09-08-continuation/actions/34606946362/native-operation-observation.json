@@ -1,0 +1,73 @@
+{
+  "run_id": 34606946362,
+  "source": "25cd7f57b031bebdcfb4931615782b906610703f",
+  "path": "/root/projects/Parlor/parlor/remediation-runs/2026-09-08-continuation/actions/34606946362/main/host-setter.stdout.json",
+  "sha256": "9f61998265bb2d259ba5544819d1235ced9afab9237377644eaf114eabbe94f8",
+  "collection_status": "PASS",
+  "operation": {
+    "error_chain": {
+      "nodes": [
+        {
+          "code": 256,
+          "domain": "cocoa",
+          "present": true
+        },
+        {
+          "code": 22,
+          "domain": "posix",
+          "present": true
+        }
+      ],
+      "termination": "no-underlying"
+    },
+    "id": "host-origin-fm-set",
+    "implementation_after": {
+      "implementation": {
+        "cpusubtype": -2147483646,
+        "cputype": 16777228,
+        "dylib": {
+          "compatibility_version": 19660800,
+          "current_version": 236126719
+        },
+        "image_basename": "Foundation",
+        "image_offset": 456112,
+        "platforms": [
+          1,
+          6
+        ],
+        "uuid": "39be75ac-350f-3b8c-9c10-8b2b5321ce8e"
+      },
+      "receiver_class": "NSFileManager",
+      "selector": "setAttributes:ofItemAtPath:error:"
+    },
+    "implementation_before": {
+      "implementation": {
+        "cpusubtype": -2147483646,
+        "cputype": 16777228,
+        "dylib": {
+          "compatibility_version": 19660800,
+          "current_version": 236126719
+        },
+        "image_basename": "Foundation",
+        "image_offset": 456112,
+        "platforms": [
+          1,
+          6
+        ],
+        "uuid": "39be75ac-350f-3b8c-9c10-8b2b5321ce8e"
+      },
+      "receiver_class": "NSFileManager",
+      "selector": "setAttributes:ofItemAtPath:error:"
+    },
+    "native_error": {
+      "code": 256,
+      "domain": "cocoa",
+      "present": true
+    },
+    "requested_protection": "complete",
+    "returned": false
+  },
+  "raw_main_status": "CAPTURED",
+  "raw_cleanup_status": "PASS",
+  "qualification": "NOT_ESTABLISHED"
+}

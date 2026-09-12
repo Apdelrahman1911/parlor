@@ -1,0 +1,96 @@
+{
+  "L08_inputs": [
+    {
+      "path": "scripts/verification/ios-readiness/L08StorageProbe.kt.in",
+      "sha256": "a1202e47e1b41feb7e5c558e4df9515704e27762e437778b6ae79c777bfce651"
+    },
+    {
+      "path": "scripts/verification/ios-readiness/l08_receipts.py",
+      "sha256": "43200492a5fae3cb31f89ecafe9985eee84b9c30b4549cd2933788dac056bfbd"
+    },
+    {
+      "path": "scripts/verification/ios-readiness/test_l08_diagnostics.py",
+      "sha256": "925be779c7b03f148995061f1e769290ec4fa014c2e7f4dbab202fd1b84d8d9c"
+    }
+  ],
+  "baseline": {
+    "branch": "fix/local-readiness-2026-09-07",
+    "commit": "b6e1947c62661631d0593038db7f64dbf25f720e",
+    "diff_sha256": "36dd70117778d1f5d038acfab1ab46ffb464cd8c78b2428552214bfe6fdffed1",
+    "source_manifest_sha256": "b8baa32067fdf29135e3e935429768b710c65897c334f2bb8ac8108f6aa85359",
+    "tracked_status": "M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/README.md\n M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/external_image_provenance.py\n M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_control_tests.py\n M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py\n M scripts/verification/ios-readiness/L08StorageProbe.kt.in\n M scripts/verification/ios-readiness/l08_receipts.py\n M scripts/verification/ios-readiness/test_l08_diagnostics.py",
+    "tree": "f03ad1b302d951d0ca9811b1efab2751a8be6978"
+  },
+  "binding": {
+    "bytes": 293978,
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/ios-readiness-source-08.json",
+    "sha256": "149ec7a539036855d78ad1542a5487b6dd51b84469f6ab267d3e22169f5d49a2"
+  },
+  "classification_preparation": {
+    "known": "metadata-directory-protection failed after real store save/load/envelope equality and path/existence/directory+file backup assertions; later original file protection/header assertions were not reached.",
+    "native09_rules": [
+      "Bind actual command/source/copied inputs/control/artifact/test observations and cleanup first.",
+      "Retain actual FAIL unchanged; diagnostic-only file read does not mean original file assertion passed.",
+      "Do not substitute volume support for required Complete equality or privacy/backup/lock proof.",
+      "Reopen actual emitted enum/error/stage path and corresponding production implementation before interpreting data.",
+      "Separate caller cancellation, compiler/linker/runtime/test-selector and gate failures."
+    ],
+    "not_known": "Nil/error/missing/unequal/getter-exception cause was not distinguishable before this diagnostic. Not automatically a save, Keychain, app defect or Simulator limitation.",
+    "original_native07": {
+      "bytes": 1321,
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-07/parlor-l08-storage-1-save.json",
+      "sha256": "e638ccd5539d67022a83968e5568adc4557b7b3c7434cec5d9416476a3d58efe"
+    }
+  },
+  "control_digest_claim": "d7aad2e238b1d50335c4ea74741bb91d86354cfa37805ce73b78f4fe81fd9beb",
+  "control_manifest": {
+    "bytes": 11319,
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/l08-source08-control-manifest-01.json",
+    "sha256": "04eb6dd28eaf5caa1a3f198880dd80550a73ee1c69090e46f1e1e4860f50778b"
+  },
+  "created_at_utc": "2026-09-07T22:41:13.709488+00:00",
+  "executed153_controls_reconciliation": {
+    "bytes": 66833,
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/l08-protection-metadata-adopted-controls-independent-01.json",
+    "sha256": "68f8f688e4339507229023888fc8788197fe5126f999722d3642d574b3e41b1d"
+  },
+  "kind": "INDEPENDENT_SOURCE08_L08_BINDING_SUPPORT_NOT_EXECUTION_APPROVAL",
+  "original_source_review": {
+    "bytes": 23267,
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/l08-protection-metadata-draft-independent-01.json",
+    "sha256": "c83e79029341239c6706a1a2e86f65f0fddbacd4b5a0f568e825b41703076459"
+  },
+  "reviewer": "/root/release_fix_review",
+  "reviewer_activity": {
+    "background_workers_outputs": false,
+    "builds_tests_native_probes": false,
+    "cleanup": "No reviewer-owned build processes/artifacts started; no stop/cleanup against root lane. Only additive report written.",
+    "source_edits_git_mutations": false
+  },
+  "schema_version": 1,
+  "scope_limits": [
+    "Hash/inventory comparison of739 inputs is not a new line-by-line source review of739 files.",
+    "The reviewed three-file metadata delta is unchanged and covered by independent full source review plus153 actually executed controls; new Kotlin observer compilation/runtime remains pending.",
+    "65-file control_digest_claim is from root manifest; all component bytes verified here, full runner-specific manifest encoding/execution approval belongs to factory_review.",
+    "No execution approval is conferred by source binding or this support report. Wait for factory exact-hash command review and root-owned execution.",
+    "Normal-ios-launch proposal changes are in the global dirty diff but outside this L08 support review.",
+    "Native09 evidence is not read before root completion and cleanup notification."
+  ],
+  "verification": {
+    "all_control_inputs_exist_regular_match_current_hash": true,
+    "all_copy_inputs_exist_regular_match_current_hash": true,
+    "binding_copy_inputs_count": 739,
+    "control_inputs_count": 65,
+    "current_HEAD_matches_binding": true,
+    "current_exact_dirty_diff_matches_binding": true,
+    "hash_mismatches": [],
+    "ios_readiness_controls_equal153_test_cycle_inputs": 64,
+    "missing_symlink_or_nonregular_paths": [],
+    "non_ios_readiness_control_inputs": [
+      "remediation-runs/2026-09-07-local-readiness/ios-readiness-source-08.json"
+    ],
+    "protected_exclusions_encountered": [],
+    "source_manifest_digest_independently_recomputed": true,
+    "source_manifest_equals153_cycle_after": true
+  }
+}

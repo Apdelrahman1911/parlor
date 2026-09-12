@@ -1,0 +1,565 @@
+{
+  "schema_version": 1,
+  "kind": "INDEPENDENT_C03_ACTUAL_POSTRUN_COUPLED_CANDIDATE_EVIDENCE_REVIEW",
+  "reviewer": "/root/fixture_review",
+  "author": "/root/dependency_chain",
+  "recorded_at": "2026-09-08T20:36:37.642504+00:00",
+  "status": "PASS_SCOPED_C03_CHAIN_AT_E511_INDEPENDENTLY_ACCEPTED",
+  "findings": [],
+  "scope": "Fresh source-bound resolved-input export/render/official-schema consumer and source-notice integrity only. Actual coordinator execution is distinguished from independent read-only evidence inspection.",
+  "source": {
+    "commit": "e5111ea49113c3f12cb577058c3f926dfebdc325",
+    "tree": "a88872673bd4cfc366236362f287c1db0a04a5cd",
+    "diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "source_manifest_sha256": "6e313ce760d840aa08b617229c03263ce90eda715cb6c442cbe9738045a63e8e"
+  },
+  "binding": {
+    "path": "remediation-runs/2026-09-08-continuation/candidate-input-binding-03.json",
+    "sha256": "f2cb3be23bd20b5a2ff2bc1411561bc291c74cb04a0970a1a274e5db7f81bd01",
+    "bytes": 1517
+  },
+  "pre_execution_approval": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/candidate-input-binding-independent-03.json",
+    "sha256": "19e67054888e1ed633125e93f88d8630d920d208333ba57e2e4e778958bd346d",
+    "bytes": 26424
+  },
+  "author_postrun": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/candidate-input-postrun-author-03.json",
+    "sha256": "3f326b55875ca10f42b65a35e39ee624d0a21c233bee1b8e81410fa324355e52",
+    "bytes": 19760
+  },
+  "held_current_capture": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/candidate-input-current-bindings-independent-03.json",
+    "sha256": "5c0fd556e06f2f9b7ae909b06ae5d7c540ac913cd7029838c7608bfccff1ad99",
+    "bytes": 145504
+  },
+  "current_capture_at": "2026-09-08T20:28:46.629338+00:00",
+  "source_attestation": {
+    "full828_source_before_after_equal_held_current_capture": true,
+    "all_three_cycle_full_source_and_runner_snapshots_equal": true,
+    "reviewed11_control3schema_and_bootstrap6pins_current_equal": true,
+    "complete_source_manifest_digest": "6e313ce760d840aa08b617229c03263ce90eda715cb6c442cbe9738045a63e8e",
+    "complete_source_manifest_not_duplicated": "Retained in bound outer receipt; independently enumerated/hashed in held-current capture before later ledger release.",
+    "no_retroactive_source_relabel": "Later ledger-only source changes, if any, do not replace e511 executed source; this report makes no fresh full-current Git claim after the release."
+  },
+  "coupled_receipts": [
+    {
+      "role": "outer",
+      "status": "PASS",
+      "receipt": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-03/receipt.json",
+        "sha256": "753d4aa0c45152344b65cb77eba9ec1eebc11ad744eecbe71173aea2461e7063",
+        "bytes": 305572
+      }
+    },
+    {
+      "role": "consumer",
+      "status": "PASS_SCOPED_CANDIDATE_INPUTS",
+      "receipt": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-03/candidate-input-verification.json",
+        "sha256": "298168f6a8dcacce81d0a8fee13ce832d08c68a6ac5cdd858c97c2cf059a1b85",
+        "bytes": 8078
+      }
+    },
+    {
+      "role": "adapter",
+      "status": "PASS_SCOPED_CANDIDATE_INPUT_EXECUTION",
+      "receipt": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-03/candidate-prerequisites.json",
+        "sha256": "69d4ae97bc28526327090f9a105e9f3dc2e6bfabe3bf143d5b1bf2ac94db5cf5",
+        "bytes": 9943
+      }
+    },
+    {
+      "role": "base",
+      "status": "PASS_OWNED_SCHEMA_PREREQUISITES",
+      "receipt": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-03/schema-base-prerequisites.json",
+        "sha256": "c96b86014a895d81b0af413fb968dc476df321a4d236971b960aa588554bdc9b",
+        "bytes": 28590
+      }
+    }
+  ],
+  "actual_command": [
+    "/usr/bin/python3",
+    "-B",
+    "remediation-runs/2026-09-08-continuation/controls/run_candidate_with_schema.py",
+    "remediation-runs/2026-09-08-continuation/candidate-input-binding-03.json",
+    "f2cb3be23bd20b5a2ff2bc1411561bc291c74cb04a0970a1a274e5db7f81bd01"
+  ],
+  "command_matches_preapproved_binding_invocation": true,
+  "raw_log": {
+    "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-03/gradle.log",
+    "sha256": "1366576e7c5a743d9620e0d1849edc379e1dcc369335c2c0176c80d87d0a20b8",
+    "bytes": 289
+  },
+  "three_raw_nested_json_records": [
+    {
+      "status": "PASS_SCOPED_CANDIDATE_INPUTS",
+      "exit_code": 0
+    },
+    {
+      "status": "PASS_SCOPED_CANDIDATE_INPUT_EXECUTION",
+      "consumer_exit_code": 0,
+      "ephemeral_parser_cleanup": true
+    },
+    {
+      "status": "PASS_OWNED_SCHEMA_PREREQUISITES",
+      "mode": "candidate",
+      "inner_exit_code": 0,
+      "base_package_cleanup": true
+    }
+  ],
+  "outer_exit_code": 0,
+  "no_error_types_or_failure_waivers": true,
+  "consumer_result": {
+    "source": {
+      "commit": "e5111ea49113c3f12cb577058c3f926dfebdc325",
+      "tree": "a88872673bd4cfc366236362f287c1db0a04a5cd",
+      "diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_manifest_sha256": "6e313ce760d840aa08b617229c03263ce90eda715cb6c442cbe9738045a63e8e"
+    },
+    "binding_sha256": "f2cb3be23bd20b5a2ff2bc1411561bc291c74cb04a0970a1a274e5db7f81bd01",
+    "consumer": {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/dependency-candidate-consumer-03/candidate_consumer.py",
+      "sha256": "eb6e2baaac22739b4652bc63c6b57a24374ee57fb81d4711b981b872e8ac1c7f"
+    },
+    "graphs": [
+      {
+        "graph": "androidRelease",
+        "graph_sha256": "4b1ce6b841519c163b40ae3854af10caa8ef35c932ba0fa6443adfd88b070db4",
+        "sbom_sha256": "4dbc3b0826725cca1dc68fcb955bba6e56407551c0da5895204abe9195404f35",
+        "components": 239,
+        "artifacts": 129,
+        "status": "PASS"
+      },
+      {
+        "graph": "iosArm64",
+        "graph_sha256": "d029615f46439f218b432a682606e8ba205cd2bc34e04b8966b3416eb997649e",
+        "sbom_sha256": "af5d7679895880e29a03a41adf1d67d82ffe65f2ea9c41ac6228ef3c10ff3f4c",
+        "components": 167,
+        "artifacts": 81,
+        "status": "PASS"
+      },
+      {
+        "graph": "iosSimulatorArm64",
+        "graph_sha256": "3560d22e3af1e0f2a4e702289da253dc56eb551a5001237ce8023202a5b4c2bc",
+        "sbom_sha256": "ef0334af827f7310a015fdcd0d960fa14e3780a02d5544ad115e3f549f946b44",
+        "components": 167,
+        "artifacts": 81,
+        "status": "PASS"
+      },
+      {
+        "graph": "iosX64",
+        "graph_sha256": "396db269a60beabe29faf49eecc9f72a4ceeeffbf051e4d93eb782e04ce33558",
+        "sbom_sha256": "9198d252a56324234fb7429962ad66b48c1fc8d7a874b98a23769f680233da4d",
+        "components": 167,
+        "artifacts": 81,
+        "status": "PASS"
+      }
+    ],
+    "maven_components": 456,
+    "publisher_poms": 459,
+    "metadata_bytes": 1507794,
+    "unresolved": [],
+    "jsonschema_version": "4.25.1",
+    "referencing_version": "0.36.2",
+    "schema_formats": {
+      "registered": [
+        "date",
+        "email",
+        "idn-email",
+        "ipv4",
+        "ipv6",
+        "iri",
+        "iri-reference",
+        "regex",
+        "time",
+        "uuid"
+      ],
+      "encountered": [
+        "iri-reference"
+      ],
+      "missing": []
+    },
+    "consumed_file_count": 511,
+    "consumed_manifest_sha256": "19512563acee499b327948c1f564797cfa90ec180354cb4cedeb75979e9e3eb6",
+    "limits": [
+      "Root frozen source/receipt attestation is required; this consumer does not recapture Git or rebuild.",
+      "Renderer/parser and source-notice implementation checks reuse their reviewed, source-bound APIs.",
+      "Resolved input and source-notice integrity only; no final-package, legal, physical-device, signing or Store approval."
+    ],
+    "checked_at": "2026-09-08T20:24:27.153137+00:00"
+  },
+  "official_schema_scope": {
+    "four_actual_bound_BOMs_executed_in_root_consumer": true,
+    "official_schemas": {
+      "bom-1.6.schema.json": "3e92dddbc30cf7f6a02b80f0942b1a4cfd4fb1c26f1dfc4310afa9d613cafb93",
+      "spdx.schema.json": "baa9d3bd1ed57b6751b0887edead6b5063ff53ff7429cf85d476c6c94af0166e",
+      "jsf-0.82.schema.json": "8bae002c25e723db7ee1f26afde680ae1a2b1a8f6b4b4b0fd65dc3becb090aae"
+    },
+    "source_validator": "Pinned consumer loads official retained CycloneDX1.6/SPDX/JSF schemas in offline registry for both http/https schema IDs and executes the pinned jsonschema/referencing implementations.",
+    "registered_formats": [
+      "date",
+      "email",
+      "idn-email",
+      "ipv4",
+      "ipv6",
+      "iri",
+      "iri-reference",
+      "regex",
+      "time",
+      "uuid"
+    ],
+    "encountered_formats": [
+      "iri-reference"
+    ],
+    "missing_encountered_formats": [],
+    "all_unencountered_schema_formats_not_claimed": "Registered10, encountered onlyiri-reference. Missing/unregistered but unencountered formats are not represented as exercised coverage.",
+    "reviewer_schema_engine_executions": 0
+  },
+  "consumed_closure": {
+    "count": 511,
+    "total_bytes": 5567850,
+    "sha256": "19512563acee499b327948c1f564797cfa90ec180354cb4cedeb75979e9e3eb6",
+    "independent_exact511closure_reconstruction_matches_actual_consumer": true,
+    "full_rows_in_capture_not_duplicated": "19512563acee499b327948c1f564797cfa90ec180354cb4cedeb75979e9e3eb6",
+    "all511_current_bytes_reopened_unchanged_during_postrun": true,
+    "bootstrap_and_optional_tool_byte_ledgers_are_separate_not_consumer_files": true
+  },
+  "notice_source": {
+    "status": "PASS",
+    "resource_count": 26,
+    "total_bytes": 99515,
+    "manifest_sha256": "4b501223b3841017477a226515d3758bc60848fe00d579fac3152a81928d6406",
+    "catalog_sha256": "87a031665605a1fb3f932be31c75afd8d2d1bc0d94cfcca36101141c50788399",
+    "catalog_raw_sha256": "87a031665605a1fb3f932be31c75afd8d2d1bc0d94cfcca36101141c50788399",
+    "catalog_hash_policy": "CRLF_TO_LF",
+    "resource_namespace": "com.parlor.app.resources",
+    "every_reported_notice_hash_size_matches_manifest_and_current_bound_file": true,
+    "source_only_not_package_completeness": true
+  },
+  "base_packages": {
+    "status": "PASS_OWNED_SCHEMA_PREREQUISITES",
+    "mode": "candidate",
+    "inner_exit_code": 0,
+    "versions": {
+      "jsonschema": "4.25.1",
+      "referencing": "0.36.2",
+      "attrs": "25.3.0",
+      "jsonschema-specifications": "2025.4.1",
+      "rpds-py": "0.27.1",
+      "typing-extensions": "4.15.0"
+    },
+    "six_actual_package_rows_match_AST_WHEELS_and_official_research": true,
+    "research": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/schema-base-prerequisites-research-01.json",
+      "sha256": "54c9f96db0ead50008cab5c8c960c0540351922f949757e03dc91b8c5328b13e",
+      "bytes": 55180
+    },
+    "packages": [
+      {
+        "distribution": "jsonschema",
+        "version": "4.25.1",
+        "bytes": 90040,
+        "sha256": "3fba0169e345c7175110351d456342c364814cfcf3b964ba4587f22915230a63",
+        "members": 42,
+        "expanded_bytes": 475270,
+        "member_ledger_sha256": "dd1266e10b6535be4d63a9e86c084977fead488355726a47295240205477be7b"
+      },
+      {
+        "distribution": "referencing",
+        "version": "0.36.2",
+        "bytes": 26775,
+        "sha256": "e8699adbbf8b5c7de96d8ffa0eb5c158b3beafce084968e2ea8bb08c6794dcd0",
+        "members": 19,
+        "expanded_bytes": 115431,
+        "member_ledger_sha256": "e7b36da69b3b643fa83388e9017e816adda8f4a32c4b934595724a3250b0e4df"
+      },
+      {
+        "distribution": "attrs",
+        "version": "25.3.0",
+        "bytes": 63815,
+        "sha256": "427318ce031701fea540783410126f03899a97ffc6f61596ad581ac2e40e3bc3",
+        "members": 35,
+        "expanded_bytes": 219126,
+        "member_ledger_sha256": "8be2c5e364e65aeb1f21931bee4f192b1f6960c690e5051979f0c0ea1d306aad"
+      },
+      {
+        "distribution": "jsonschema-specifications",
+        "version": "2025.4.1",
+        "bytes": 18437,
+        "sha256": "4653bffbd6584f7de83a67e0d620ef16900b390ddc7939d56684d6c81e33f1af",
+        "members": 28,
+        "expanded_bytes": 47261,
+        "member_ledger_sha256": "bf9b8193bfdcd0e3e8a3e65e74116e87c75df3f573f81c98b04e767e4daad36f"
+      },
+      {
+        "distribution": "rpds-py",
+        "version": "0.27.1",
+        "bytes": 386883,
+        "sha256": "466bfe65bd932da36ff279ddd92de56b042f2266d752719beb97b08526268ec5",
+        "members": 8,
+        "expanded_bytes": 1046710,
+        "member_ledger_sha256": "697c5ff8394a644831ac96871591b4459dbc439d57d0c36a8eb37007e08cd55a"
+      },
+      {
+        "distribution": "typing-extensions",
+        "version": "4.15.0",
+        "bytes": 44614,
+        "sha256": "f0fa19c6845758ab08074a0cfa8b7aecb71c999ca73d62883bc25cc018c4e548",
+        "members": 5,
+        "expanded_bytes": 178133,
+        "member_ledger_sha256": "904902592e917247263bca8d345c3f320d266568f655d8707a0210f68c925b76"
+      }
+    ],
+    "downloaded_bytes": 630564,
+    "expanded_bytes": 2081931,
+    "member_rows": 137,
+    "all_actual137member_rows_match_retained_official_research": true,
+    "actual_imported_modules": {
+      "jsonschema": {
+        "path": "jsonschema/__init__.py",
+        "sha256": "a7e470e134bfd0e3c76482722260d6b1d5a099de823d61cc5cbabb06e4314c67"
+      },
+      "referencing": {
+        "path": "referencing/__init__.py",
+        "sha256": "e4864a5da007fc55b20894646939f55dca6d2df83d72f78b6fdbb99d853124ab"
+      },
+      "attr": {
+        "path": "attr/__init__.py",
+        "sha256": "7ce608bedd5e192a90adee2e092dec256299d26c00b82f140faa9b6b9392f7f5"
+      },
+      "attrs": {
+        "path": "attrs/__init__.py",
+        "sha256": "a9e4096783b4f327334a7f38d2ff5b60e699c9113cd56b158be402ad8de4ac25"
+      },
+      "jsonschema_specifications": {
+        "path": "jsonschema_specifications/__init__.py",
+        "sha256": "aa84c1d83298eeabcdac684c3c7ea0b6600944b8a599543e7c56704faaf2ab0d"
+      },
+      "rpds": {
+        "path": "rpds/__init__.py",
+        "sha256": "c373205d6ee5a530880b0d0a5dbc36d105f9ef7fe46ec12758878cb0202e82f3"
+      },
+      "typing_extensions": {
+        "path": "typing_extensions.py",
+        "sha256": "433d11d170d3a24d2eb065ebc1bfe848cea7e3d7ce68567ab52bea2d4c2f7ed8"
+      },
+      "rpds.rpds": {
+        "path": "rpds/rpds.cpython-312-x86_64-linux-gnu.so",
+        "sha256": "1a5acf297faad922c1335dc00cc2ae6e24dd907f77576bef0e200bd07e0f0e5c"
+      }
+    },
+    "eight_import_hashes_match_exact_extracted_members": true,
+    "native_rpds_hash_and_bytes_match_reviewed_CP312_LinuxX64_member": true,
+    "origin_scope": "Actual verify_imports enforces each of eight modules inside exact newly owned base tree and persists relativepath/hash; reviewer compared those raw records with recorded package member lengths/hashes and retained official research, without importing packages or claiming a new rehash of deleted temporary package bytes.",
+    "base_package_cleanup": true
+  },
+  "optional_packages": {
+    "status": "PASS_SCOPED_CANDIDATE_INPUT_EXECUTION",
+    "consumer_exit_code": 0,
+    "versions": {
+      "jsonschema": "4.25.1",
+      "referencing": "0.36.2",
+      "rfc3987-syntax": "1.1.0",
+      "lark": "1.2.2"
+    },
+    "packages": [
+      {
+        "distribution": "rfc3987-syntax",
+        "version": "1.1.0",
+        "bytes": 8046,
+        "sha256": "6c3d97604e4c5ce9f714898e05401a0445a641cfa276432b0a648c80856f6a3f",
+        "members": 9,
+        "expanded_bytes": 18424,
+        "member_ledger_sha256": "d755408c62289047d31750fb7e2d0e765709937f3e13b0acb1094d3d2729cacf"
+      },
+      {
+        "distribution": "lark",
+        "version": "1.2.2",
+        "bytes": 111036,
+        "sha256": "c2276486b02f0f1b90be155f2c8ba4a8e194d42775786db622faccd652d8e80c",
+        "members": 46,
+        "expanded_bytes": 350066,
+        "member_ledger_sha256": "22aac0857831066f6242f0f41ea47e766352d1d8d68cdda8971a493a36e1201a"
+      }
+    ],
+    "downloaded_bytes": 119082,
+    "expanded_bytes": 368490,
+    "member_rows": 55,
+    "current_wheel_url_size_sha_match_bound_helper_AST_and_official_metadata": true,
+    "research": [
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/schema-optional-checker-research-01.json",
+        "sha256": "c86d42085a732ec94ba0397852abbe245fb5de0d1a154c6f960e4135a6e233db",
+        "bytes": 3471
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/schema-optional-lark-research-01.json",
+        "sha256": "7522e4d9aeffd11eeb9ff862334bd40a99936442bd620e82c7371db71ea2af4f",
+        "bytes": 1626
+      }
+    ],
+    "fixed_tool_ledger_reference": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-02/candidate-prerequisites.json",
+      "sha256": "19b71c5964dea1719c720fd21f9b8ed3757b549d35ae322fb24e88ffdd4272f5",
+      "bytes": 9943
+    },
+    "all55actual_member_rows_match_unchanged_prior_fixed_tool_ledger": true,
+    "fixed_tool_comparison_not_prior_candidate_reuse": true,
+    "separate_optional_import_hash_map_available": false,
+    "origin_scope": "Bound helper imports rfc3987_syntax and lark and requires origins beneath its owned parser tree before yielding; raw adapter retains package ledger/versions/cleanup, not a separate optional import path/hash map. No map is fabricated.",
+    "ephemeral_parser_cleanup": true
+  },
+  "chronology": {
+    "ordered_actual_times": [
+      "2026-09-08T20:24:05.856075+00:00",
+      "2026-09-08T20:24:06.794602+00:00",
+      "2026-09-08T20:24:08.310360+00:00",
+      "2026-09-08T20:24:27.153137+00:00",
+      "2026-09-08T20:24:27.155231+00:00",
+      "2026-09-08T20:24:27.178423+00:00",
+      "2026-09-08T20:24:27.315628+00:00",
+      "2026-09-08T20:24:27.964541+00:00",
+      "2026-09-08T20:24:28.044916+00:00"
+    ],
+    "independent_binding_approval_preceded_candidate": true,
+    "export_cleanup_before_render_and_render_cleanup_before_candidate": true
+  },
+  "cleanup": {
+    "stop": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-03/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+      "bytes": 31
+    },
+    "stop_argv": [
+      "./gradlew",
+      "--stop"
+    ],
+    "stop_exit_code": 0,
+    "raw_stop_text": "No Gradle daemons are running.",
+    "finished_at": "2026-09-08T20:24:27.315628+00:00",
+    "stopped_at": "2026-09-08T20:24:27.964541+00:00",
+    "seconds_finish_to_completed_stop": 0.648913,
+    "cleanup_completed_at": "2026-09-08T20:24:28.044916+00:00",
+    "original_workers": {
+      "terminated_owned_workers": [],
+      "remaining_owned_workers": []
+    },
+    "original_artifact_workers": {
+      "terminated_owned_workers": [],
+      "remaining_owned_workers": []
+    },
+    "cleanup_errors": [],
+    "retained_outputs": [],
+    "remaining_outputs": [],
+    "deferred_signals": [],
+    "base_package_cleanup": true,
+    "ephemeral_parser_cleanup": true,
+    "fresh_absence_checked_at": "2026-09-08T20:36:37.644211+00:00",
+    "fresh_absent_paths": [
+      "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-export-linux-03/scratch",
+      "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-render-linux-03/scratch",
+      "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-03/scratch",
+      "shared/networking-testing/build",
+      "shared/session/build",
+      "shared/networking/build",
+      "shared/transport-p2p/build",
+      "shared/core/build",
+      "shared/engine-testing/build",
+      "shared/storage/build",
+      "shared/design-system/build",
+      "shared/engine/build",
+      "shared/content/build",
+      "game-modes/whodunit/build",
+      "game-modes/mafia/build",
+      "build",
+      "composeApp/build",
+      "build-logic/build",
+      "build-logic/convention/build"
+    ],
+    "source_custody": "Base and optional context finalizers compare actual allocated directory device/inode/uid before removing only their own trees under exact cycle scratch/tmp; required cleanup booleans returned before nestedPASS. Outer immediate Gradle stop then retires owned workers and removes exact scratch.",
+    "temporary_name_limit": "Random individual schema-base/schema-parsers child paths are not emitted in these receipts; reviewer does not invent them. Both actual finalizer receipts are true and their only permitted exact parent scratch is independently absent.",
+    "no_second_stop_required": "Ordinary cleanup does not launch Gradle clean; empty package/test artifact receipts and source confirm no Gradle restart during cleanup.",
+    "reviewer_cleanup_actions": 0
+  },
+  "actual_candidate_artifacts": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-03/artifact-receipts.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "bytes": 3
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-03/candidate-input-verification.json",
+      "sha256": "298168f6a8dcacce81d0a8fee13ce832d08c68a6ac5cdd858c97c2cf059a1b85",
+      "bytes": 8078
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-03/candidate-prerequisites.json",
+      "sha256": "69d4ae97bc28526327090f9a105e9f3dc2e6bfabe3bf143d5b1bf2ac94db5cf5",
+      "bytes": 9943
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-03/gradle.log",
+      "sha256": "1366576e7c5a743d9620e0d1849edc379e1dcc369335c2c0176c80d87d0a20b8",
+      "bytes": 289
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-03/java-toolchain.log",
+      "sha256": "a7a86ea7b20362e2c856e5e71a8b6fc51764d5aeaa9f5a8c82b386ff156f8a7c",
+      "bytes": 2026
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-03/javac-toolchain.log",
+      "sha256": "157f601a5854ca28a7dc364c13a5ca2879084186be49e3462d37acd028f35755",
+      "bytes": 14
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-03/receipt.json",
+      "sha256": "753d4aa0c45152344b65cb77eba9ec1eebc11ad744eecbe71173aea2461e7063",
+      "bytes": 305572
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-03/schema-base-prerequisites.json",
+      "sha256": "c96b86014a895d81b0af413fb968dc476df321a4d236971b960aa588554bdc9b",
+      "bytes": 28590
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-03/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+      "bytes": 31
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-03/test-receipts.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "bytes": 3
+    }
+  ],
+  "author_reconciliation": "Independently reopened all author-cited actual receipt/control/member/graph/count/schema/notice/closure and cleanup fields, matching raw evidence. Historical fixed-tool bytes used only as tool identity comparison, never as C03 execution evidence.",
+  "tests_and_platforms": {
+    "unit_tests_requested_by_candidate": 0,
+    "schema_documents_actually_validated": 4,
+    "candidate_skips_reported": null,
+    "skip_scope": "Candidate is not a unittest suite. Prior export Gradle checkKGP SKIPPED/compileJavaNO-SOURCE and compileKotlinFROM-CACHE are documented in independent producer review; exporttask itself executed; disabled iOS tests were not requested.",
+    "application_build_link_or_runtime_proven": false,
+    "native_Darwin_libproc_or_L08_proven": false
+  },
+  "preservation": "All original C01/C02 and historical failed receipts remain unchanged/source-specific; C03 is additive and scoped only to actual e511 execution. No producer rerun or evidence overwrite by reviewer.",
+  "activity": {
+    "tests": 0,
+    "builds": 0,
+    "project_imports": 0,
+    "project_function_calls": 0,
+    "schema_engine_runs": 0,
+    "candidate_runs": 0,
+    "native_tools": 0,
+    "network_calls": 0,
+    "workflow_dispatches": 0,
+    "source_edits": 0,
+    "cleanup_actions": 0,
+    "commits": 0,
+    "writes": "Only uniquely named independent held-current capture and this postrun JSON."
+  },
+  "readiness": "C03_COMPLETE_SCOPED_AT_E511; overall NOT_READY unchanged. No final-binary completeness, A/B native runtime, combined qualification, physical-device, Store signing/publication/promotion, or separate owner/legal/privacy/editorial approval inferred."
+}

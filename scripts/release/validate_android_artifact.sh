@@ -17,15 +17,35 @@ expected_certificate=$(printf '%s' "${6//:/}" | tr '[:upper:]' '[:lower:]')
 dependency_report=$7
 output=$8
 
+require_size_limit() {
+  # GNU stat's -f can emit filesystem text before failing; combining that
+  # output with a BSD/GNU fallback is not a numeric byte count.
+  python3 - "$1" "$2" "$3" <<'PY'
+import os
+import stat
+import sys
+
+try:
+    metadata = os.stat(sys.argv[1], follow_symlinks=False)
+except OSError:
+    sys.exit("Cannot inspect artifact-validation input")
+if not stat.S_ISREG(metadata.st_mode):
+    sys.exit("Artifact-validation input is not a regular file")
+if metadata.st_size > int(sys.argv[2]):
+    print(sys.argv[3], file=sys.stderr)
+    sys.exit(2)
+PY
+}
+
 [[ -f "$aab" && ! -L "$aab" ]] || { echo "AAB is not a regular file" >&2; exit 2; }
-[[ $(stat -f %z "$aab" 2>/dev/null || stat -c %s "$aab") -le 536870912 ]] || { echo "AAB exceeds the reviewed 512 MiB bound" >&2; exit 2; }
+require_size_limit "$aab" 536870912 "AAB exceeds the reviewed 512 MiB bound"
 [[ -f "$bundletool" && ! -L "$bundletool" ]] || { echo "bundletool is not a regular file" >&2; exit 2; }
 [[ "$expected_application_id" == "com.parlor.app" ]] || { echo "non-Store Android identity rejected" >&2; exit 2; }
 [[ "$expected_application_id" != *.debug ]] || { echo "Debug Android identity rejected" >&2; exit 2; }
 [[ "$expected_version_code" =~ ^[1-9][0-9]*$ ]] || { echo "invalid Android version code" >&2; exit 2; }
 [[ "$expected_certificate" =~ ^[0-9a-f]{64}$ ]] || { echo "invalid certificate fingerprint" >&2; exit 2; }
 [[ -s "$dependency_report" && -f "$dependency_report" && ! -L "$dependency_report" ]] || { echo "Android release dependency report is missing" >&2; exit 2; }
-[[ $(stat -f %z "$dependency_report" 2>/dev/null || stat -c %s "$dependency_report") -le 10485760 ]] || { echo "Android dependency report exceeds the reviewed 10 MiB bound" >&2; exit 2; }
+require_size_limit "$dependency_report" 10485760 "Android dependency report exceeds the reviewed 10 MiB bound"
 
 repo_root=$(cd "$(dirname "$0")/../.." && pwd -P)
 expected_bundletool=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["tools"]["bundletool"]["sha256"])' "$repo_root/config/release-policy.json")
@@ -51,10 +71,23 @@ trap 'exit 130' INT
 trap 'exit 143' TERM
 
 unzip -tqq "$aab"
-jarsigner -verify -strict -certs "$aab" >"$temporary_dir/jarsigner.txt" 2>&1
-keytool -printcert -jarfile "$aab" >"$temporary_dir/certificate.txt"
-actual_certificate=$(awk -F': ' '/SHA256:/{gsub(":", "", $2); print tolower($2); exit}' "$temporary_dir/certificate.txt")
-[[ "$actual_certificate" == "$expected_certificate" ]] || { echo "Android upload certificate mismatch" >&2; exit 2; }
+# Bind every verified payload signer to the approved certificate before trusting
+# a self-signed Android upload key. No private signing keystore is retained.
+java -Xmx256m --add-exports=java.base/sun.security.provider.certpath=ALL-UNNAMED \
+  --add-exports=java.base/sun.security.validator=ALL-UNNAMED \
+  "$repo_root/scripts/release/PrepareAndroidUploadTrust.java" \
+  "$aab" "$expected_certificate" "$temporary_dir/upload-trust.p12" \
+  >"$temporary_dir/upload-trust.txt" 2>&1
+# Isolate implicit user-home keystore lookup. Only the approved public upload
+# certificate and the JDK's public CA roots may influence this verification.
+if [[ -f "$temporary_dir/upload-trust.p12" ]]; then
+  jarsigner -verify -strict -certs "-J-Duser.home=$temporary_dir" \
+    -keystore "$temporary_dir/upload-trust.p12" -storetype PKCS12 -storepass parlor-public-only "$aab"
+else
+  # Avoid empty-array expansion under nounset on the supported macOS Bash 3.2.
+  jarsigner -verify -strict -certs "-J-Duser.home=$temporary_dir" "$aab"
+fi >"$temporary_dir/jarsigner.txt" 2>&1
+actual_certificate=$expected_certificate
 
 java -jar "$bundletool" dump manifest --bundle="$aab" --module=base >"$temporary_dir/AndroidManifest.xml"
 

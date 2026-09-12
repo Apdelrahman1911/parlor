@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "kind": "FROZEN_SOURCE_INDEPENDENT_ONE_CORRECTED_NON_APP_DIAGNOSTIC_APPROVAL",
+  "reviewer": "/root/ci_review",
+  "recorded_at": "2026-09-08T14:31:58.807382+00:00",
+  "status": "APPROVED_ONE_FRESH_NATIVE_PROCESS_PROBE_DISPATCH_INITIAL_ATTEMPT_ONLY",
+  "repository": "https://github.com/Apdelrahman1911/parlor.git",
+  "branch": "fix/local-readiness-2026-09-07",
+  "source_control_evidence_commit": "0607ced90fbd817ecff6994bf68ad51a9f30ebca",
+  "frozen_inventory_commit": "5f35a20d3c9c846cd98b38a16881997ecf577497",
+  "frozen_tree": "e0e7abfff89975682a96a884cb745bcbc12e7238",
+  "source_freeze": "Full history; clean tracked diff; source/control commit followed by inventory-CSV-only commit. All9 reviewed CI inputs, with the independently reviewed three-file correction, and all13 controls match frozen Git blobs/current bytes.",
+  "remote_observation": {
+    "reviewer_executed_command": "git ls-remote origin refs/heads/fix/local-readiness-2026-09-07",
+    "actual_stdout": "5f35a20d3c9c846cd98b38a16881997ecf577497\trefs/heads/fix/local-readiness-2026-09-07",
+    "matches_frozen_sha": true,
+    "coordinator_normal_push_log_sha256": "5847926c5cd2fb121d4d33fb943b1e248fda96f759a09883bd907d6a52c2f659"
+  },
+  "workflow": ".github/workflows/production-verification.yml",
+  "runner": "Existing ios job on macos-15,10-minute job budget; exact qualified platform guards remain authoritative.",
+  "allowed_inputs": {
+    "verification_scope": "native-process-probe",
+    "frozen_source_sha": "5f35a20d3c9c846cd98b38a16881997ecf577497",
+    "approved_probe_control_sha256": "eaf596f24601bfe908cae23039dc99e383ac3f2b29fd775e303bbe395485153b"
+  },
+  "other_inputs": "Omit every native-preflight/native-evidence/A/B input; no alternate scope or extra operation approved.",
+  "control_file_count": 13,
+  "fresh_control_artifact": "remediation-runs/2026-09-08-continuation/reviews/native-process-probe-frozen-controls-02.json",
+  "fresh_control_artifact_sha256": "0e08bbbe67b428059320be1c85053d52a8d594de9eea1cfcc8d8bc8cee91497f",
+  "control_derivation": "Read-only AST literal CONTROL_PATHS plus sorted-path LIST of ordered {path,sha256} records; SHA256 of json.dumps(rows,separators=(comma,colon)).encode(),1613 bytes. Exact actual controls02 artifact/frozen blobs/current bytes agree. No project/native code imported or executed by reviewer.",
+  "reviewer_preliminary_digest_correction": {
+    "retracted_invalid_dictionary_digest": "f8b4ba0e0b9fea8a9a3a8f3190f16511900afdd0b286a93010112be8b04b4f3c",
+    "reason": "Reviewer preliminary derivation incorrectly serialized a path-keyed dictionary, not the frozen controls() LIST. Coordinator failed closed before push/dispatch; both independently reproduced the mistake and correct eaf596 list hash. No source/control change or test rerun was needed.",
+    "preserved_failure_receipt": "remediation-runs/2026-09-08-continuation/reviews/hosted-probe-freeze-02-binding-preparation-failure.json",
+    "preserved_failure_receipt_sha256": "94ceca439aa570aa712acaf4d7bf2af666d4fe2978f8771a2cbccae9c5e12307"
+  },
+  "reviewed_correction_file_sha256": {
+    "scripts/ci/native_process_probe.py": "c87f6d1289ee50a7387988bd85953d451dac9e1b7b88a4d60f7b4848f86516da",
+    "scripts/release/tests/test_native_process_probe.py": "707f394e34d8234f4617963af32a865b3620aaec7a16ee6e0c166c0e1090ef39",
+    "scripts/ci/NATIVE_CONTINUATION.md": "e2e5f62f4a8d876585120e32ff73e91f7c3d992963c80346e94e54f906eec846"
+  },
+  "review_references": {
+    "remediation-runs/2026-09-08-continuation/reviews/native-process-probe-source-independent-01.json": "7d214ea0e6b93b46670713518bd822079ee843fb1fe22ff233abbfa1571adadb",
+    "remediation-runs/2026-09-08-continuation/reviews/native-process-probe-controls-independent-01.json": "4c370a22734ec870ab1443982f999455d18322cdfdb469f1475e8bf8af268630",
+    "remediation-runs/2026-09-08-continuation/reviews/native-repair-external-postflight-independent-addendum-01.json": "941835f9a8f87b490cd87dddaa5af09401a132a4af21f5c195641ebce8385d3e",
+    "remediation-runs/2026-09-08-continuation/reviews/native-process-probe-budget-independent-01.json": "53934d03592b917f311724e7e586744bfee36acad97a0fd88a7ea12c98cf7cda",
+    "remediation-runs/2026-09-08-continuation/reviews/process-probe-budget-controls-independent-01.json": "bc2de7978febf58d17813762b16b8f36c78d5be7b60bbf39924ee74a6c73a08b",
+    "remediation-runs/2026-09-08-continuation/reviews/native-process-probe-34232325670-independent-01.json": "adec30935b187f7a6acd5aab5b889e674f4f045cc9796a9c12f4f8a414d438d9",
+    "remediation-runs/2026-09-08-continuation/reviews/native-process-probe-platform-diagnosis-01.json": "7437cee01eb25eb854890fad9a19052a25b73d632900109a693fe0aa007c6998",
+    "remediation-runs/2026-09-08-continuation/reviews/hosted-probe-freeze-02.json": "ca885a8475e9e598e02bc07f01f1aac43bee0783f603dc38229b89d88a8bcf01"
+  },
+  "frozen_linux_validator": {
+    "command": "/bin/bash scripts/release/validate_release_system.sh",
+    "receipt": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-release-validator-03/receipt.json",
+    "receipt_sha256": "e39cba487668d9dcd3a0f294078422cee63dcbe18d08a8ddcdb8f8bfe4c89eef",
+    "raw_log_sha256": "e49d299aa5b3196f305ded575091c512ef3032ab3dd17ba90f6e8d4264ace2a7",
+    "status": "PASS",
+    "actual_tests": 432,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "raw_anchors": "Ran432 tests in44.372s; OK; workflow contract PASS; inventory freshness15628; pinned shellcheck/actionlint archive checksum OK; overall script exit0.",
+    "descriptor_reconciliation": "432 unique raw descriptors exactly match432 current AST declarations; all ok, including two Git-fixture stdout interleavings. Synthetic probe failure JSONs are intentional controls, not hosted observations.",
+    "source_binding": "Before/after source and runner identical, correct clean frozen commit/tree. Independently rehashed all825 source rows and runner; exact equality.",
+    "source_manifest_sha256": "eb18e3a2d498ef43432d5ad97c7a885db9b648ae7981cfdadafb10e039c23413",
+    "inventory_sha256": "0f99bb5bb32977587c51ce61e46b240778b98d85ae0e0cc466b1efa921c45dac",
+    "inventory_scope": "15628-row mechanical freshness, not source-review attestation.",
+    "cleanup": "Immediate Gradle stop exit0; raw No Gradle daemons are running.; no owned workers/generated survivors, errors or deferred signals; exact scratch lstat absent. Reviewer observed no live owned output paths.",
+    "cleanup_completed_at": "2026-09-08T14:22:42.477099+00:00"
+  },
+  "justification": "Prior run34232325670 failed in exact runtime enumeration at20.003s under diagnostic-introduced20s cap, before all process observations. Underlying OS delay remains unknown. Reviewed correction restores shared qualifier120s only for exact runtime/devicetype queries, ordinary adapter20s and whole-budget admission;45 focused controls actually passed. This is a source-corrected fresh diagnostic, not a blind retry or proof of cold startup.",
+  "one_run_scope": "One new workflow_dispatch at exact frozen branch/SHA, initial attempt only. Non-app original ps15s comparison, bounded metadata observations before/after one owned qualified simulator boot and one nonbuilding showBuildSettings. Observation300s/cleanup225s, strict platform/ownership/privacy/preservation and all finalizers remain unchanged.",
+  "constraints": "Coordinator alone dispatches; reconcile actual run/attempt/source/control/platform, ZIP identities, raw outcomes, owned simulator/worker/DerivedData retirement and post-upload custody receipt. No automatic retry or application attempt follows.",
+  "exclusions": "No A19/B20/preflight, app build/launch, actool/Kotlin workload equivalence, ownership fallback, strict-protection success, final five-job qualification, Store/signing/promotion/publication, physical device, global cache deletion or user-work mutation.",
+  "preserved_history": "Previous diagnostic FAIL, A17/B18 pre-runtime FAIL and controls01 outer marker-parser FAIL remain failures. Corrected hash preparation failure is retained, not relabeled a test or runtime failure.",
+  "findings": [],
+  "readiness": "NOT READY. Diagnostic approval only. Actual Parlor libproc provenance and remaining A/C/D qualification are incomplete; synthetic tests/hashes are not application-runtime proof. Physical-device, Store and owner/legal requirements remain separate.",
+  "reviewer_activity": "Read/hash/AST/Git/retained-evidence inspection plus one read-only remote query only. No tests/builds/native calls/workflow dispatch/cleanup mutation/commits. Only this new review file written; outside frozen source."
+}

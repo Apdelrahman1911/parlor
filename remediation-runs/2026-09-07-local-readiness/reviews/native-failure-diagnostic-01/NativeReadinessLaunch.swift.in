@@ -1,0 +1,220 @@
+// Copy-only app-host entry. No direct SecItem query and no second DI graph.
+import MachO
+import CryptoKit
+
+private let nativeReadinessSigningMode = __PARLOR_NATIVE_SIGNING_MODE__
+private let nativeReadinessTaskRoot = __PARLOR_NATIVE_TASK_ROOT__
+private let nativeReadinessProductRoot = __PARLOR_NATIVE_PRODUCT_ROOT__
+
+extension DSC01Probe {
+    // V12's synthetic prior-language fixture intentionally writes this one
+    // app-domain value. Undo ONLY that attested test write before investigating
+    // a real OS-created preference. This is not production migration logic.
+    func restoreOwnedSyntheticSettingsSeed(token: String) throws {
+        precondition(Thread.isMainThread && scenario == "readiness" && !prepared)
+        let url = FileManager.default.temporaryDirectory.appendingPathComponent("parlor-dsc01-settings-result.json")
+        let bytes = try FileManager.default.attributesOfItem(atPath: url.path)[.size] as? NSNumber
+        guard let bytes, (1...262144).contains(bytes.intValue),
+              !FileManager.default.fileExists(atPath: resultURL.path) else { throw fixtureError() }
+        let cleanupURL = FileManager.default.temporaryDirectory.appendingPathComponent(
+            "parlor-native-synthetic-seed-cleanup.json")
+        guard !FileManager.default.fileExists(atPath: cleanupURL.path) else { throw fixtureError() }
+        let settings = try JSONDecoder().decode(DSC01Report.self, from: Data(contentsOf: url))
+        let completions = settings.observations.filter { $0.phase == "complete" }
+        guard settings.schemaVersion == 6, settings.runToken == token, settings.scenario == "settings", settings.completed,
+              (3...256).contains(settings.observations.count), completions.count == 1,
+              let completed = completions.first,
+              let first = settings.observations.first, let last = settings.observations.last,
+              first.phase == "before_main", first.fixture == "fresh",
+              first.preferences.setting == "system", !first.preferences.hasAppOverride,
+              !first.preferences.ownerPresent, first.preferences.appLanguages == [],
+              completed.preferences == last.preferences, completed.boot == last.boot,
+              last.preferences.setting == "system", !last.preferences.ownerPresent,
+              last.preferences.appLanguages == ["ar-EG", "en"],
+              settings.observations.enumerated().allSatisfy({ $0.element.ordinal == $0.offset + 1 }),
+              settings.observations.filter({ $0.ordinal > completed.ordinal }).allSatisfy({
+                  $0.phase == "sample" && $0.boot == completed.boot && $0.preferences == completed.preferences
+              }),
+              settings.observations.contains(where: {
+                  $0.phase == "before_main" && $0.fixture == "previous-ar" &&
+                      $0.ordinal < completed.ordinal &&
+                      $0.preferences.appLanguages == ["ar-EG", "en"] && !$0.preferences.ownerPresent
+              }), settings.observations.allSatisfy({ $0.osDisposition == "not-investigated" }),
+              try preferences() == last.preferences else { throw fixtureError() }
+        UserDefaults.standard.removeObject(forKey: "AppleLanguages")
+        let restored = try preferences()
+        guard restored.setting == "system", !restored.hasAppOverride, !restored.ownerPresent else { throw fixtureError() }
+        let record: [String: Any] = ["schema_version": 2, "run_token": token, "process_boot": boot,
+            "original_present": false, "synthetic_previous": ["ar-EG", "en"], "restored_present": false,
+            "source": "completed-token-bound-owned-settings-fixture-only"]
+        let encoded = try JSONSerialization.data(withJSONObject: record, options: [.sortedKeys])
+        guard encoded.count <= 1024 else { throw fixtureError() }
+        // App stdout is not an XCTest stdout transport. Preserve an exclusive,
+        // token/boot-bound result in this owned sandbox for host extraction.
+        // Foundation forbids combining .withoutOverwriting with .atomic.
+        // Partial/interrupted records fail closed; no prior record is replaced.
+        try encoded.write(to: cleanupURL, options: [.withoutOverwriting])
+    }
+
+    func startNativeReadiness() {
+        precondition(Thread.isMainThread && scenario == "readiness" && nativeReadinessDisplay == "pending")
+        guard let value = ProcessInfo.processInfo.environment["PARLOR_READINESS_BOOT"],
+              let ordinal = Int(value), (1...8).contains(ordinal) else {
+            nativeReadinessDisplay = "invalid-context"; return
+        }
+        nativeReadinessDisplay = "running"
+        MainViewControllerKt.NativeReadinessStart(boot: Int32(ordinal)) { [weak self] json in
+            DispatchQueue.main.async {
+                guard let self else { return }
+                do {
+                    let data = Data(json.utf8)
+                    guard data.count <= 32768,
+                          let observed = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
+                        throw self.fixtureError()
+                    }
+                    let images = try nativeReadinessLoadedImages()
+                    let report: [String: Any] = ["schema_version": 2, "boot_ordinal": ordinal,
+                        "signing_mode": nativeReadinessSigningMode,
+                        "process_boot": self.boot, "process_id": ProcessInfo.processInfo.processIdentifier,
+                        "run_token": ProcessInfo.processInfo.environment["PARLOR_DSC01_RUN_TOKEN"] ?? "",
+                        "loaded_app_images": images.app, "loaded_compose_framework": images.framework,
+                        "loader_environment": try nativeReadinessLoaderEnvironment(), "observation": observed]
+                    let encoded = try JSONSerialization.data(withJSONObject: report, options: [.sortedKeys])
+                    guard encoded.count <= 49152 else { throw self.fixtureError() }
+                    let url = FileManager.default.temporaryDirectory.appendingPathComponent(
+                        "parlor-native-readiness-boot-\(ordinal).json")
+                    guard !FileManager.default.fileExists(atPath: url.path) else { throw self.fixtureError() }
+                    try encoded.write(to: url, options: [.atomic])
+                    self.nativeReadinessDisplay = String(decoding: encoded, as: UTF8.self)
+                } catch {
+                    self.nativeReadinessDisplay = "receipt-failed"
+                }
+            }
+        }
+    }
+}
+
+private func nativeReadinessImageError(_ code: Int) -> NSError {
+    NSError(domain: "NativeReadinessOwnedImage", code: code)
+}
+
+private func nativeReadinessRelative(_ path: String, root: String) throws -> String? {
+    guard path.hasPrefix(root + "/") else { return nil }
+    let relative = String(path.dropFirst(root.count + 1))
+    guard !relative.isEmpty, relative.utf8.count <= 512,
+          !relative.split(separator: "/", omittingEmptySubsequences: false).contains(where: {
+              $0.isEmpty || $0 == "." || $0 == ".."
+          }), !relative.unicodeScalars.contains(where: { $0.value < 32 || $0.value == 127 || $0.value == 92 }) else {
+        throw nativeReadinessImageError(1)
+    }
+    return relative
+}
+
+private func nativeReadinessFrameworkUUID(_ index: UInt32) throws -> String {
+    guard let header = _dyld_get_image_header(index), header.pointee.magic == MH_MAGIC_64 else {
+        throw nativeReadinessImageError(2)
+    }
+    let raw = UnsafeRawPointer(header)
+    let loaded = raw.load(as: mach_header_64.self)
+    let headerBytes = MemoryLayout<mach_header_64>.size
+    guard loaded.filetype == MH_DYLIB, loaded.cputype == CPU_TYPE_ARM64,
+          loaded.ncmds > 0, loaded.ncmds <= 4096, loaded.sizeofcmds <= 4 * 1024 * 1024,
+          loaded.ncmds <= loaded.sizeofcmds / 8 else { throw nativeReadinessImageError(3) }
+    var cursor = headerBytes
+    let end = headerBytes + Int(loaded.sizeofcmds)
+    var observed: String?
+    for _ in 0..<loaded.ncmds {
+        guard cursor + MemoryLayout<load_command>.size <= end else { throw nativeReadinessImageError(4) }
+        let command = raw.advanced(by: cursor).load(as: load_command.self)
+        let length = Int(command.cmdsize)
+        guard length >= 8, length % 8 == 0, cursor + length <= end else { throw nativeReadinessImageError(5) }
+        if command.cmd == LC_UUID {
+            guard observed == nil, length == MemoryLayout<uuid_command>.size else { throw nativeReadinessImageError(6) }
+            observed = UUID(uuid: raw.advanced(by: cursor).load(as: uuid_command.self).uuid).uuidString.lowercased()
+        }
+        cursor += length
+    }
+    guard cursor == end, let observed else { throw nativeReadinessImageError(7) }
+    return observed
+}
+
+private func nativeReadinessLoadedImages() throws -> (app: [String], framework: [String: Any]) {
+    let appRoot = Bundle.main.bundleURL.resolvingSymlinksInPath().path
+    let count = _dyld_image_count()
+    guard count > 0, count <= 4096 else { throw nativeReadinessImageError(8) }
+    var result = [String]()
+    var framework: [String: Any]?
+    for index in 0..<count {
+        guard let pointer = _dyld_get_image_name(index) else { continue }
+        let raw = String(cString: pointer)
+        guard raw.utf8.count <= 4096 else { throw nativeReadinessImageError(9) }
+        let url = URL(fileURLWithPath: raw).resolvingSymlinksInPath()
+        let appRelative = try nativeReadinessRelative(url.path, root: appRoot)
+        if let appRelative {
+            guard result.count < 128 else { throw nativeReadinessImageError(10) }
+            result.append(appRelative)
+        }
+        guard url.lastPathComponent == "ComposeApp" else { continue }
+        guard framework == nil, url.deletingLastPathComponent().lastPathComponent.lowercased() == "composeapp.framework" else {
+            throw nativeReadinessImageError(11)
+        }
+        let origin: String
+        let path: String
+        if let appRelative {
+            guard appRelative == "Frameworks/ComposeApp.framework/ComposeApp" else { throw nativeReadinessImageError(12) }
+            origin = "installed-app-bundle"; path = appRelative
+        } else if let owned = try nativeReadinessRelative(url.path, root: nativeReadinessProductRoot) {
+            origin = "owned-copy-build"; path = owned
+        } else {
+            // Do not retain unknown/unowned paths and do not substitute the
+            // embedded image for a different library that actually executed.
+            throw nativeReadinessImageError(13)
+        }
+        let fingerprint = try nativeReadinessFrameworkFingerprint(url)
+        framework = ["origin": origin, "path": path, "image_uuid": try nativeReadinessFrameworkUUID(index),
+                     "file_bytes": fingerprint.bytes, "file_sha256": fingerprint.sha256]
+    }
+    guard let executable = Bundle.main.executableURL?.lastPathComponent, result.contains(executable),
+          Set(result).count == result.count, let framework else { throw nativeReadinessImageError(14) }
+    return (result.sorted(), framework)
+}
+
+private func nativeReadinessFrameworkFingerprint(_ url: URL) throws -> (bytes: Int, sha256: String) {
+    // Only called after exact app/task-owned framework origin validation. Read
+    // in bounded chunks; never inspect credentials, data files or other images.
+    let handle = try FileHandle(forReadingFrom: url)
+    defer { try? handle.close() }
+    var digest = CryptoKit.SHA256()
+    var bytes = 0
+    while let data = try handle.read(upToCount: 1024 * 1024), !data.isEmpty {
+        bytes += data.count
+        guard bytes <= 512 * 1024 * 1024 else { throw nativeReadinessImageError(18) }
+        digest.update(data: data)
+    }
+    guard bytes > 0 else { throw nativeReadinessImageError(19) }
+    return (bytes, digest.finalize().map { String(format: "%02x", $0) }.joined())
+}
+
+private func nativeReadinessLoaderEnvironment() throws -> [String: Any] {
+    var result = [String: Any]()
+    for key in ["DYLD_FRAMEWORK_PATH", "DYLD_LIBRARY_PATH", "DYLD_FALLBACK_FRAMEWORK_PATH", "DYLD_FALLBACK_LIBRARY_PATH"] {
+        let raw = ProcessInfo.processInfo.environment[key]
+        guard (raw?.utf8.count ?? 0) <= 16384 else { throw nativeReadinessImageError(15) }
+        let entries = raw?.split(separator: ":", omittingEmptySubsequences: false).map(String.init) ?? []
+        guard entries.count <= 32 else { throw nativeReadinessImageError(16) }
+        var owned = [String]()
+        var redacted = 0
+        for entry in entries {
+            guard entry.utf8.count <= 4096 else { throw nativeReadinessImageError(17) }
+            if entry.hasPrefix("/") {
+                let path = URL(fileURLWithPath: entry).resolvingSymlinksInPath().path
+                if let relative = try nativeReadinessRelative(path, root: nativeReadinessTaskRoot) {
+                    owned.append(relative); continue
+                }
+            }
+            redacted += 1 // No unrelated user/system path or raw environment is retained.
+        }
+        result[key] = ["present": raw != nil, "task_owned_paths": owned, "redacted_entry_count": redacted]
+    }
+    return result
+}

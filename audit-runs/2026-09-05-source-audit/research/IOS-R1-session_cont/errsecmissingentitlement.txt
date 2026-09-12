@@ -1,0 +1,28 @@
+A required entitlement is missing.
+The 
+ method returns this error when you specify an access group to which your app doesn’t belong:
+To avoid the error, either use your app’s default access group by omitting the 
+ key in the add attributes, or make sure that the value associated with the key matches one of your app’s access groups. These access groups come from your app’s 
+, its app identifier, and its 
+, in that order, as described in 
+.
+You can check the access group string by setting a breakpoint on the 
+ call and using the debugger to print the query dictionary. Look for the 
+agrp
+ item:
+If after setting the access group key correctly you still receive the 
+errSecMissingEntitlement
+ error, check to make sure the entitlements in your built app match your expectations. Build your app for a hardware target—not the Simulator app—and use Xcode to locate the app bundle on disk:
+Then get a list of the app’s entitlements. Run the codesign command-line utility shown in the following example, substituting the Xcode-provided path to your app, like the one highlighted in the preceding illustration.
+Inspect the codesign output to determine the groups to which your app actually belongs. The following collectively define your app’s access groups:
+Any of the strings in the array associated with the 
+keychain-access-groups
+ key.
+The string corresponding to the 
+application-identifier
+ key (or the 
+com.apple.application-identifier
+ key in macOS).
+Any of the strings in the array associated with the 
+com.apple.security.application-groups
+ key.

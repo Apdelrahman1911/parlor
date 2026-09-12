@@ -1,0 +1,87 @@
+{
+  "recorded_at": "2026-09-07T16:33:03.254766+00:00",
+  "before": "5d9f5f4c81ff51ee70922c876eefb91c6e669d56",
+  "verification_cycles": [
+    "package-controls-01",
+    "release-system-package-controls-01",
+    "package-controls-bound-02"
+  ],
+  "commits": [
+    {
+      "sha": "dadf3cc857bb8d2c99bf2af9c174d83fbdacf00d",
+      "tree": "d98fde1bb41e7894fbdcd650a52d2b4a98b6b2aa",
+      "message": "build(legal): bundle and verify reviewed dependency notices",
+      "paths": [
+        ".gitattributes",
+        "docs/DEPENDENCY_REVIEW.md",
+        "docs/THIRD_PARTY_NOTICES.md",
+        "config/third-party-notices.json",
+        "scripts/verification/third_party_notices.py",
+        "scripts/release/tests/test_third_party_notices.py",
+        "scripts/release/tests/test_notice_git_bytes.py",
+        "composeApp/src/commonMain/composeResources/files/legal/APACHE-2.0.txt",
+        "composeApp/src/commonMain/composeResources/files/legal/BouncyCastle-1.85-LICENSE.md",
+        "composeApp/src/commonMain/composeResources/files/legal/DNG-SDK-NOTICE.txt",
+        "composeApp/src/commonMain/composeResources/files/legal/DNG-SDK-PATENTS.txt",
+        "composeApp/src/commonMain/composeResources/files/legal/Expat-COPYING.txt",
+        "composeApp/src/commonMain/composeResources/files/legal/HarfBuzz-COPYING.txt",
+        "composeApp/src/commonMain/composeResources/files/legal/HarfBuzz-hb-ucd-ISC-LICENSE.txt",
+        "composeApp/src/commonMain/composeResources/files/legal/ICU-LICENSE.txt",
+        "composeApp/src/commonMain/composeResources/files/legal/INDEX.txt",
+        "composeApp/src/commonMain/composeResources/files/legal/Kotlin-Boost-LICENSE.txt",
+        "composeApp/src/commonMain/composeResources/files/legal/Kotlin-Harmony-NOTICE.txt",
+        "composeApp/src/commonMain/composeResources/files/legal/Kotlin-MPMC-QUEUE-LICENSE.txt",
+        "composeApp/src/commonMain/composeResources/files/legal/Kotlin-ThreeTenBP-LICENSE.txt",
+        "composeApp/src/commonMain/composeResources/files/legal/Kotlin-Unicode-LICENSE.txt",
+        "composeApp/src/commonMain/composeResources/files/legal/Kotlin-libbacktrace-LICENSE.txt",
+        "composeApp/src/commonMain/composeResources/files/legal/SLF4J-2.0.16-LICENSE.txt",
+        "composeApp/src/commonMain/composeResources/files/legal/Skia-LICENSE.txt",
+        "composeApp/src/commonMain/composeResources/files/legal/Skiko-NOTICE.txt",
+        "composeApp/src/commonMain/composeResources/files/legal/Unicode-V3-LICENSE.txt",
+        "composeApp/src/commonMain/composeResources/files/legal/WebP-COPYING.txt",
+        "composeApp/src/commonMain/composeResources/files/legal/WebP-PATENTS.txt",
+        "composeApp/src/commonMain/composeResources/files/legal/Wuffs-Skia-wrapper-LICENSE.txt",
+        "composeApp/src/commonMain/composeResources/files/legal/libjpeg-turbo-LICENSE.md",
+        "composeApp/src/commonMain/composeResources/files/legal/libjpeg-turbo-README.ijg.txt",
+        "composeApp/src/commonMain/composeResources/files/legal/libpng-LICENSE.txt",
+        "composeApp/src/commonMain/composeResources/files/legal/zlib-LICENSE.txt"
+      ]
+    },
+    {
+      "sha": "7464b3e868f602813b6e0ef8528ea82cc03a2f03",
+      "tree": "cc4d5b9682f1f50558c21464cd8621f0178d4e46",
+      "message": "build(verification): inspect unsigned mobile release packages",
+      "paths": [
+        ".github/workflows/production-verification.yml",
+        "scripts/release/workflow_contract.py",
+        "scripts/release/tests/test_workflow_contract.py",
+        "scripts/verification/android_release_artifacts.py",
+        "scripts/verification/ios_release_artifacts.py",
+        "scripts/release/tests/test_android_release_artifacts.py",
+        "scripts/release/tests/test_ios_release_artifacts.py"
+      ]
+    },
+    {
+      "sha": "fd69f23ead08e42c0df8c111ed1c9e1f75b15d04",
+      "tree": "15542a8b3e7464071ab608be60005a9a57f9c8a4",
+      "message": "test(ios): verify notices in built and installed debug apps",
+      "paths": [
+        "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/README.md",
+        "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
+        "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_control_tests.py",
+        "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_normal_launch_controls.py"
+      ]
+    },
+    {
+      "sha": "93aa977b5482d2506634ad0d61478b0a4dc352ef",
+      "tree": "3135afd9297055b76519892b9959607206601c1f",
+      "message": "test(verification): retain package inspection and cleanup controls",
+      "paths": [
+        "remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py",
+        "remediation-runs/2026-09-07-local-readiness/reviews/test_aab_package_inspection_02.py",
+        "remediation-runs/2026-09-07-local-readiness/reviews/test_build_lane_group_retirement.py",
+        "remediation-runs/2026-09-07-local-readiness/reviews/run_package_controls_01.py"
+      ]
+    }
+  ]
+}

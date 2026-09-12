@@ -1,0 +1,15 @@
+{
+  "kind": "PREPARED_NOT_DISPATCHED",
+  "recorded_at": "2026-09-11T02:06:56.802800+00:00",
+  "source_sha": "59a384441f44844a79ae62ea8ee68d0c9e1e5878",
+  "tree": "9f06627b0dd047394de6f52adbc494e334651c74",
+  "request_sha256": "3dd1dddcbb29067f428624b5d232aa0f83651f740b77eae380be886c3f40a62f",
+  "controls_document_sha256": "ce38655dc5deafcdd11143a4bcbaa2ff72ee69879aa7385e7e4ffe8c1b0f31b7",
+  "source_reviews": [
+    "remediation-runs/2026-09-08-continuation/reviews/protection-host-sdk-sequencing-source-independent-01.json",
+    "remediation-runs/2026-09-08-continuation/reviews/protection-concurrency-partition-independent-01.json"
+  ],
+  "focused_controls_receipt": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-sdk-concurrency-controls-01/receipt.json",
+  "requires": "Independent admission; exact local/remote freeze, clean tracked source and no unexpected active same-ref run immediately before dispatch, accounting for legacy groups. Intentional PD06 probe overlap is isolated and permitted; no other qualification scope may be dispatched while full runs. Full ignores frozen_source_sha input: actual API/job/checkout/source controls must bind this freeze. Six mandatory jobs+cleanup must pass together in attempt1; focused probe skips and PD06 cannot fill any lane.",
+  "supersedes_prepared_packet": "full-qualification-dispatch-07; never dispatched and stale for these corrections"
+}

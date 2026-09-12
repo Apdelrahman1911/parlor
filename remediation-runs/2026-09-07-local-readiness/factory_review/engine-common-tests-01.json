@@ -1,0 +1,49 @@
+{
+  "timestamp_utc": "2026-09-07T03:59:19.836033+00:00",
+  "author": "/root/factory_review",
+  "scope": "Two pure commonTest classes; no production/dependency/build-graph change.",
+  "classes": [
+    {
+      "class": "com.parlor.engine.registry.GameRegistryTest",
+      "test_count": 5,
+      "contracts": [
+        "empty registry",
+        "registration order and stable lookup identity",
+        "distinct duplicate IDs fail closed with deterministic diagnosis",
+        "repeated instance also rejected",
+        "defensive input-list capture"
+      ]
+    },
+    {
+      "class": "com.parlor.engine.snapshot.GameSnapshotTest",
+      "test_count": 4,
+      "contracts": [
+        "ByteArray content equality and hash consistency",
+        "envelope/payload/metadata inequality",
+        "exact serializable envelope and signed-byte boundary roundtrip",
+        "legacy omitted metadata default"
+      ]
+    }
+  ],
+  "files": [
+    {
+      "path": "shared/engine/src/commonTest/kotlin/com/parlor/engine/snapshot/GameSnapshotTest.kt",
+      "sha256": "f6f32ce9109a6fcc73082931ba9857f356b001b3da41566080acc7a3ce9be91f",
+      "reviewed_lines": [
+        1,
+        105
+      ]
+    },
+    {
+      "path": "shared/engine/src/commonTest/kotlin/com/parlor/engine/registry/GameRegistryTest.kt",
+      "sha256": "e16468873595153fc0c560146fd905df8b04cbb25842b9414c2f9fb3a2e5262b",
+      "reviewed_lines": [
+        1,
+        98
+      ]
+    }
+  ],
+  "review": "Self-reviewed; independent root review pending",
+  "execution": "NOT RUN; source freeze for parent coordinated build lane",
+  "process_cleanup": "No build/native/test/server processes started by author."
+}

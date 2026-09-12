@@ -1,0 +1,25 @@
+[
+  {
+    "url": "https://raw.githubusercontent.com/gradle/gradle/v8.13.0/platforms/core-runtime/client-services/src/main/java/org/gradle/launcher/daemon/configuration/DaemonParameters.java",
+    "accessed_at": "2026-09-05T13:02:06.517228+00:00",
+    "status": "retrieved",
+    "bytes": 9247,
+    "sha256": "7a746eccb78f60d7713b4bf3c3507fc67aa1a33bdc7cd473440a11bc17765fe1",
+    "line_count": 262,
+    "excerpts": [
+      {
+        "range": [
+          47,
+          86
+        ],
+        "numbered_source": "  47 \n  48     private final File gradleUserHomeDir;\n  49 \n  50     private File baseDir;\n  51     private int idleTimeout = DEFAULT_IDLE_TIMEOUT;\n  52 \n  53     private int periodicCheckInterval = DEFAULT_PERIODIC_CHECK_INTERVAL_MILLIS;\n  54     private final JvmOptions jvmOptions;\n  55     private boolean applyInstrumentationAgent = true;\n  56     private NativeServicesMode nativeServicesMode = NativeServicesMode.ENABLED;\n  57     private Map<String, String> envVariables;\n  58     private boolean enabled = true;\n  59     private boolean foreground;\n  60     private boolean stop;\n  61     private boolean status;\n  62     private DaemonPriority priority = DaemonPriority.NORMAL;\n  63     private DaemonJvmCriteria requestedJvmCriteria = new DaemonJvmCriteria.LauncherJvm();\n  64     private ToolchainDownloadUrlProvider toolchainDownloadUrlProvider;\n  65 \n  66     public DaemonParameters(File gradleUserHomeDir, FileCollectionFactory fileCollectionFactory) {\n  67         this(gradleUserHomeDir, fileCollectionFactory, Collections.<String, String>emptyMap());\n  68     }\n  69 \n  70     public DaemonParameters(File gradleUserHomeDir, FileCollectionFactory fileCollectionFactory, Map<String, String> extraSystemProperties) {\n  71         this.jvmOptions = new JvmOptions(fileCollectionFactory);\n  72         if (!extraSystemProperties.isEmpty()) {\n  73             jvmOptions.systemProperties(extraSystemProperties);\n  74         }\n  75         jvmOptions.jvmArgs(DEFAULT_JVM_ARGS);\n  76         this.gradleUserHomeDir = gradleUserHomeDir;\n  77         this.baseDir = new File(gradleUserHomeDir, \"daemon\");\n  78         this.envVariables = new HashMap<>(System.getenv());\n  79     }\n  80 \n  81     public DaemonRequestContext toRequestContext() {\n  82         return new DaemonRequestContext(getRequestedJvmCriteria(), getEffectiveJvmArgs(), shouldApplyInstrumentationAgent(), getNativeServicesMode(), getPriority());\n  83     }\n  84 \n  85     public boolean isEnabled() {\n  86         return enabled;"
+      }
+    ]
+  },
+  {
+    "url": "https://raw.githubusercontent.com/gradle/gradle/v8.13.0/platforms/core-runtime/daemon-client/src/main/java/org/gradle/launcher/daemon/client/DaemonStopClient.java",
+    "accessed_at": "2026-09-05T13:02:08.153599+00:00",
+    "status": "BLOCKED",
+    "error": "HTTP Error 404: Not Found"
+  }
+]

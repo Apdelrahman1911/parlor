@@ -1,0 +1,1248 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-09-07T07:15:49.922506+00:00",
+  "reviewer": "/root/release_fix_review",
+  "source": {
+    "root": "/Users/abdelrahman/Projects/parlor",
+    "branch": "fix/local-readiness-2026-09-07",
+    "commit": "1f809b87c15a4deb079809bc14718a58cf0fe451",
+    "tree": "6f6912d8612f71e07d2c338d860e906333ce8aad",
+    "status_short": "?? AGENTS.md\n?? audit-runs/\n?? design/\n?? docs/PARLOR_PROJECT_HANDOFF.md\n?? game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/TestingStoryRemainingChronologyTest.kt\n?? project-code-audit/\n?? remediation-runs/\n?? scripts/verification/"
+  },
+  "scope": "Source-backed release/configuration/font follow-up, not complete repository review. Same reviewer direct reads include pre-compaction work; remaining ranges explicit.",
+  "files": [
+    {
+      "path": "AGENTS.md",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/AGENTS.md",
+      "sha256": "1e8cbc4f414819f47908e1a3be9f717792a0401fb4fb35b7272c053c00e2f609",
+      "line_count": 112,
+      "reviewed_line_ranges": [
+        [
+          1,
+          112
+        ]
+      ],
+      "remaining_unread_line_ranges": [],
+      "complete_text_read": true,
+      "reviewer": "/root/release_fix_review",
+      "relevance": "repository safety instructions; untracked preserved",
+      "review_method": "direct source reading, not inferred from generated inventory",
+      "scope_limitation": "Bounded release/content/readiness paths only; not complete behavioral approval of every subsystem mentioned by this file."
+    },
+    {
+      "path": "build.gradle.kts",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/build.gradle.kts",
+      "sha256": "bd6199e1f097eb236c50c46efb91d291550110f6b4d95a8e95ff0db4d8da192b",
+      "line_count": 204,
+      "reviewed_line_ranges": [
+        [
+          1,
+          204
+        ]
+      ],
+      "remaining_unread_line_ranges": [],
+      "complete_text_read": true,
+      "reviewer": "/root/release_fix_review",
+      "relevance": "root verification graph",
+      "review_method": "direct source reading, not inferred from generated inventory",
+      "scope_limitation": "Bounded release/content/readiness paths only; not complete behavioral approval of every subsystem mentioned by this file."
+    },
+    {
+      "path": "settings.gradle.kts",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/settings.gradle.kts",
+      "sha256": "27a40495b1adf18ca90b5a8fdd345448c2ecf2f9ac726c753468a5e627b27d18",
+      "line_count": 55,
+      "reviewed_line_ranges": [
+        [
+          1,
+          55
+        ]
+      ],
+      "remaining_unread_line_ranges": [],
+      "complete_text_read": true,
+      "reviewer": "/root/release_fix_review",
+      "relevance": "module inclusion and repository policy",
+      "review_method": "direct source reading, not inferred from generated inventory",
+      "scope_limitation": "Bounded release/content/readiness paths only; not complete behavioral approval of every subsystem mentioned by this file."
+    },
+    {
+      "path": "composeApp/build.gradle.kts",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/composeApp/build.gradle.kts",
+      "sha256": "c23525d6b06f9b536fb5e8ef6be68c653952fa9764e276f831772b864621fdd5",
+      "line_count": 627,
+      "reviewed_line_ranges": [
+        [
+          1,
+          627
+        ]
+      ],
+      "remaining_unread_line_ranges": [],
+      "complete_text_read": true,
+      "reviewer": "/root/release_fix_review",
+      "relevance": "shipping application variants, test/task wiring",
+      "review_method": "direct source reading, not inferred from generated inventory",
+      "scope_limitation": "Bounded release/content/readiness paths only; not complete behavioral approval of every subsystem mentioned by this file."
+    },
+    {
+      "path": "gradle/libs.versions.toml",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/gradle/libs.versions.toml",
+      "sha256": "87a031665605a1fb3f932be31c75afd8d2d1bc0d94cfcca36101141c50788399",
+      "line_count": 106,
+      "reviewed_line_ranges": [
+        [
+          1,
+          106
+        ]
+      ],
+      "remaining_unread_line_ranges": [],
+      "complete_text_read": true,
+      "reviewer": "/root/release_fix_review",
+      "relevance": "dependency pins",
+      "review_method": "direct source reading, not inferred from generated inventory",
+      "scope_limitation": "Bounded release/content/readiness paths only; not complete behavioral approval of every subsystem mentioned by this file."
+    },
+    {
+      "path": "gradle/wrapper/gradle-wrapper.properties",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/gradle/wrapper/gradle-wrapper.properties",
+      "sha256": "c040b6ef2fb893ff5beea5a281614f2848f1c3996a7886f650b713f8240656a2",
+      "line_count": 8,
+      "reviewed_line_ranges": [
+        [
+          1,
+          8
+        ]
+      ],
+      "remaining_unread_line_ranges": [],
+      "complete_text_read": true,
+      "reviewer": "/root/release_fix_review",
+      "relevance": "wrapper pin",
+      "review_method": "direct source reading, not inferred from generated inventory",
+      "scope_limitation": "Bounded release/content/readiness paths only; not complete behavioral approval of every subsystem mentioned by this file."
+    },
+    {
+      "path": "gradle.properties",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/gradle.properties",
+      "sha256": "2df8685921ad2c6eead097a6d9994bbcc93dbc5cbdeb0bce8911ffa4e83162ce",
+      "line_count": 29,
+      "reviewed_line_ranges": [
+        [
+          1,
+          29
+        ]
+      ],
+      "remaining_unread_line_ranges": [],
+      "complete_text_read": true,
+      "reviewer": "/root/release_fix_review",
+      "relevance": "build configuration",
+      "review_method": "direct source reading, not inferred from generated inventory",
+      "scope_limitation": "Bounded release/content/readiness paths only; not complete behavioral approval of every subsystem mentioned by this file."
+    },
+    {
+      "path": "config/parlor-version.xcconfig",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/config/parlor-version.xcconfig",
+      "sha256": "4975e763730608718095d3c7342f34f333a86e20cf562eb221b9e3478fa93f9e",
+      "line_count": 4,
+      "reviewed_line_ranges": [
+        [
+          1,
+          4
+        ]
+      ],
+      "remaining_unread_line_ranges": [],
+      "complete_text_read": true,
+      "reviewer": "/root/release_fix_review",
+      "relevance": "shared version source",
+      "review_method": "direct source reading, not inferred from generated inventory",
+      "scope_limitation": "Bounded release/content/readiness paths only; not complete behavioral approval of every subsystem mentioned by this file."
+    },
+    {
+      "path": "config/release-policy.json",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/config/release-policy.json",
+      "sha256": "316b28f75a13e0b925beb6bcd893b82e077a1a9efa850022026e830f9b1d4ad4",
+      "line_count": 119,
+      "reviewed_line_ranges": [
+        [
+          1,
+          119
+        ]
+      ],
+      "remaining_unread_line_ranges": [],
+      "complete_text_read": true,
+      "reviewer": "/root/release_fix_review",
+      "relevance": "release guards, host pins, identity policy",
+      "review_method": "direct source reading, not inferred from generated inventory",
+      "scope_limitation": "Bounded release/content/readiness paths only; not complete behavioral approval of every subsystem mentioned by this file."
+    },
+    {
+      "path": "release/mobile-release.json",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/release/mobile-release.json",
+      "sha256": "9c2a0811a2757b1f45ba88ddc9ebb495669a80c305a2bbedf8a26df8ccc0a236",
+      "line_count": 64,
+      "reviewed_line_ranges": [
+        [
+          1,
+          64
+        ]
+      ],
+      "remaining_unread_line_ranges": [],
+      "complete_text_read": true,
+      "reviewer": "/root/release_fix_review",
+      "relevance": "shadow migration config; not publishing authority",
+      "review_method": "direct source reading, not inferred from generated inventory",
+      "scope_limitation": "Bounded release/content/readiness paths only; not complete behavioral approval of every subsystem mentioned by this file."
+    },
+    {
+      "path": "docs/release/MOBILE_RELEASE_KIT_MIGRATION.md",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/docs/release/MOBILE_RELEASE_KIT_MIGRATION.md",
+      "sha256": "40ea5ce8dcc06ea9897c951befb0ea305e0001b571293d859194bf8452d6fa32",
+      "line_count": 70,
+      "reviewed_line_ranges": [
+        [
+          1,
+          70
+        ]
+      ],
+      "remaining_unread_line_ranges": [],
+      "complete_text_read": true,
+      "reviewer": "/root/release_fix_review",
+      "relevance": "migration-scope documentation",
+      "review_method": "direct source reading, not inferred from generated inventory",
+      "scope_limitation": "Bounded release/content/readiness paths only; not complete behavioral approval of every subsystem mentioned by this file."
+    },
+    {
+      "path": "docs/RELEASE_GATES.md",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/docs/RELEASE_GATES.md",
+      "sha256": "19ee19acf35f833e3bd61b03d3113c6a3ea05b67afcbe1b956e9d4aa070a3f32",
+      "line_count": 109,
+      "reviewed_line_ranges": [
+        [
+          1,
+          109
+        ]
+      ],
+      "remaining_unread_line_ranges": [],
+      "complete_text_read": true,
+      "reviewer": "/root/release_fix_review",
+      "relevance": "release-gate claims compared with task graph",
+      "review_method": "direct source reading, not inferred from generated inventory",
+      "scope_limitation": "Bounded release/content/readiness paths only; not complete behavioral approval of every subsystem mentioned by this file."
+    },
+    {
+      "path": "docs/STORE_METADATA.md",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/docs/STORE_METADATA.md",
+      "sha256": "ba35d595430c78f74b80363f265320b0b110ae19c8541068d70e142b9133a45b",
+      "line_count": 85,
+      "reviewed_line_ranges": [
+        [
+          1,
+          85
+        ]
+      ],
+      "remaining_unread_line_ranges": [],
+      "complete_text_read": true,
+      "reviewer": "/root/release_fix_review",
+      "relevance": "Store owner-declaration claims",
+      "review_method": "direct source reading, not inferred from generated inventory",
+      "scope_limitation": "Bounded release/content/readiness paths only; not complete behavioral approval of every subsystem mentioned by this file."
+    },
+    {
+      "path": "docs/PRIVACY_AND_COMPLIANCE.md",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/docs/PRIVACY_AND_COMPLIANCE.md",
+      "sha256": "299d248dea1938a445624842ab6b741b54221c06516689ec712eafcfe7b2bea9",
+      "line_count": 80,
+      "reviewed_line_ranges": [
+        [
+          1,
+          80
+        ]
+      ],
+      "remaining_unread_line_ranges": [],
+      "complete_text_read": true,
+      "reviewer": "/root/release_fix_review",
+      "relevance": "privacy and offline-source claims",
+      "review_method": "direct source reading, not inferred from generated inventory",
+      "scope_limitation": "Bounded release/content/readiness paths only; not complete behavioral approval of every subsystem mentioned by this file."
+    },
+    {
+      "path": "docs/review/README.md",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/docs/review/README.md",
+      "sha256": "bd11a380fd7ee9ae3ef719d657956efb356ecd514e585b6aa3a2a0a839342ea4",
+      "line_count": 42,
+      "reviewed_line_ranges": [
+        [
+          1,
+          42
+        ]
+      ],
+      "remaining_unread_line_ranges": [],
+      "complete_text_read": true,
+      "reviewer": "/root/release_fix_review",
+      "relevance": "inventory-review evidence claims",
+      "review_method": "direct source reading, not inferred from generated inventory",
+      "scope_limitation": "Bounded release/content/readiness paths only; not complete behavioral approval of every subsystem mentioned by this file."
+    },
+    {
+      "path": "build-logic/convention/src/main/kotlin/com/parlor/buildlogic/KmpComposeLibraryConventionPlugin.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/build-logic/convention/src/main/kotlin/com/parlor/buildlogic/KmpComposeLibraryConventionPlugin.kt",
+      "sha256": "d8a7cd25a7062f20ae871a068b724c061c98f3831aae4d90701c5cbbf7b4e660",
+      "line_count": 19,
+      "reviewed_line_ranges": [
+        [
+          1,
+          19
+        ]
+      ],
+      "remaining_unread_line_ranges": [],
+      "complete_text_read": true,
+      "reviewer": "/root/release_fix_review",
+      "relevance": "Compose shared resource build plugin",
+      "review_method": "direct source reading, not inferred from generated inventory",
+      "scope_limitation": "Bounded release/content/readiness paths only; not complete behavioral approval of every subsystem mentioned by this file."
+    },
+    {
+      "path": "build-logic/convention/src/main/kotlin/com/parlor/buildlogic/KmpLibraryConventionPlugin.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/build-logic/convention/src/main/kotlin/com/parlor/buildlogic/KmpLibraryConventionPlugin.kt",
+      "sha256": "9d3b07942123f5a4c2da229aa873d5d7b7d422b120d1ff42014cfe066eefbc63",
+      "line_count": 72,
+      "reviewed_line_ranges": [
+        [
+          1,
+          72
+        ]
+      ],
+      "remaining_unread_line_ranges": [],
+      "complete_text_read": true,
+      "reviewer": "/root/release_fix_review",
+      "relevance": "KMP targets and test-source wiring",
+      "review_method": "direct source reading, not inferred from generated inventory",
+      "scope_limitation": "Bounded release/content/readiness paths only; not complete behavioral approval of every subsystem mentioned by this file."
+    },
+    {
+      "path": "shared/design-system/build.gradle.kts",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/design-system/build.gradle.kts",
+      "sha256": "118d898f900e3b8ccc76db6fca658d69a0d211c5220b6985738f14428a99f78d",
+      "line_count": 25,
+      "reviewed_line_ranges": [
+        [
+          1,
+          25
+        ]
+      ],
+      "remaining_unread_line_ranges": [],
+      "complete_text_read": true,
+      "reviewer": "/root/release_fix_review",
+      "relevance": "production typography resource module",
+      "review_method": "direct source reading, not inferred from generated inventory",
+      "scope_limitation": "Bounded release/content/readiness paths only; not complete behavioral approval of every subsystem mentioned by this file."
+    },
+    {
+      "path": "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/tokens/ParlorTypography.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/tokens/ParlorTypography.kt",
+      "sha256": "eb442c5c7a41e34a4cf8e1c31466ef1a3e07e6582c3259d9a14c7942ee990f15",
+      "line_count": 190,
+      "reviewed_line_ranges": [
+        [
+          1,
+          190
+        ]
+      ],
+      "remaining_unread_line_ranges": [],
+      "complete_text_read": true,
+      "reviewer": "/root/release_fix_review",
+      "relevance": "production font resource use",
+      "review_method": "direct source reading, not inferred from generated inventory",
+      "scope_limitation": "Bounded release/content/readiness paths only; not complete behavioral approval of every subsystem mentioned by this file."
+    },
+    {
+      "path": "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/theme/ParlorTheme.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/theme/ParlorTheme.kt",
+      "sha256": "b751abc30f088d8e8a8b30bcaa43b7927a97ba06b7040f472c20f5e5c9d8ff00",
+      "line_count": 158,
+      "reviewed_line_ranges": [
+        [
+          1,
+          158
+        ]
+      ],
+      "remaining_unread_line_ranges": [],
+      "complete_text_read": true,
+      "reviewer": "/root/release_fix_review",
+      "relevance": "theme-to-font call path",
+      "review_method": "direct source reading, not inferred from generated inventory",
+      "scope_limitation": "Bounded release/content/readiness paths only; not complete behavioral approval of every subsystem mentioned by this file."
+    },
+    {
+      "path": "composeApp/src/commonMain/kotlin/com/parlor/app/di/ContentModule.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/composeApp/src/commonMain/kotlin/com/parlor/app/di/ContentModule.kt",
+      "sha256": "86321739a143ff494b8ff42c19d728119b81163eb572afaeed6a89da52a62635",
+      "line_count": 87,
+      "reviewed_line_ranges": [
+        [
+          1,
+          87
+        ]
+      ],
+      "remaining_unread_line_ranges": [],
+      "complete_text_read": true,
+      "reviewer": "/root/release_fix_review",
+      "relevance": "shipping bundled/offline content DI",
+      "review_method": "direct source reading, not inferred from generated inventory",
+      "scope_limitation": "Bounded release/content/readiness paths only; not complete behavioral approval of every subsystem mentioned by this file."
+    },
+    {
+      "path": "composeApp/src/commonMain/kotlin/com/parlor/app/di/AppModule.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/composeApp/src/commonMain/kotlin/com/parlor/app/di/AppModule.kt",
+      "sha256": "b449781eb52418300504344c1af978ef7cb41e4e1f35f8d50faa4b8662bbdb76",
+      "line_count": 74,
+      "reviewed_line_ranges": [
+        [
+          1,
+          74
+        ]
+      ],
+      "remaining_unread_line_ranges": [],
+      "complete_text_read": true,
+      "reviewer": "/root/release_fix_review",
+      "relevance": "app and platform DI",
+      "review_method": "direct source reading, not inferred from generated inventory",
+      "scope_limitation": "Bounded release/content/readiness paths only; not complete behavioral approval of every subsystem mentioned by this file."
+    },
+    {
+      "path": "composeApp/src/commonMain/kotlin/com/parlor/app/p2p/P2pBootstrap.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/composeApp/src/commonMain/kotlin/com/parlor/app/p2p/P2pBootstrap.kt",
+      "sha256": "b2a8fb0db69c617ca45b5491a9fbf4485dff9b2ffa651715670f6e3e74299da0",
+      "line_count": 13,
+      "reviewed_line_ranges": [
+        [
+          1,
+          13
+        ]
+      ],
+      "remaining_unread_line_ranges": [],
+      "complete_text_read": true,
+      "reviewer": "/root/release_fix_review",
+      "relevance": "transport bootstrap interface",
+      "review_method": "direct source reading, not inferred from generated inventory",
+      "scope_limitation": "Bounded release/content/readiness paths only; not complete behavioral approval of every subsystem mentioned by this file."
+    },
+    {
+      "path": "shared/content/src/commonMain/kotlin/com/parlor/content/datasource/OfflineRemoteCaseDataSource.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/content/src/commonMain/kotlin/com/parlor/content/datasource/OfflineRemoteCaseDataSource.kt",
+      "sha256": "ae29b8c1d33c5d7b50db6ef000e3b8b65c18fb877baa2638d489c6bbe6ac0b42",
+      "line_count": 28,
+      "reviewed_line_ranges": [
+        [
+          1,
+          28
+        ]
+      ],
+      "remaining_unread_line_ranges": [],
+      "complete_text_read": true,
+      "reviewer": "/root/release_fix_review",
+      "relevance": "shipping offline source; no network operation",
+      "review_method": "direct source reading, not inferred from generated inventory",
+      "scope_limitation": "Bounded release/content/readiness paths only; not complete behavioral approval of every subsystem mentioned by this file."
+    },
+    {
+      "path": "shared/content/build.gradle.kts",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/content/build.gradle.kts",
+      "sha256": "f956862a089a95ba41f4de714e95d1ac44a23d80994c323ba61a1c0c28d34939",
+      "line_count": 24,
+      "reviewed_line_ranges": [
+        [
+          1,
+          24
+        ]
+      ],
+      "remaining_unread_line_ranges": [],
+      "complete_text_read": true,
+      "reviewer": "/root/release_fix_review",
+      "relevance": "content production/test dependencies",
+      "review_method": "direct source reading, not inferred from generated inventory",
+      "scope_limitation": "Bounded release/content/readiness paths only; not complete behavioral approval of every subsystem mentioned by this file."
+    },
+    {
+      "path": "shared/transport-p2p/build.gradle.kts",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/build.gradle.kts",
+      "sha256": "ac439a069b3c99d1bef803bbc053580c4b99cbd7f4775a98d98a2b40482d96d7",
+      "line_count": 95,
+      "reviewed_line_ranges": [
+        [
+          1,
+          95
+        ]
+      ],
+      "remaining_unread_line_ranges": [],
+      "complete_text_read": true,
+      "reviewer": "/root/release_fix_review",
+      "relevance": "transport source/test dependency and input wiring",
+      "review_method": "direct source reading, not inferred from generated inventory",
+      "scope_limitation": "Bounded release/content/readiness paths only; not complete behavioral approval of every subsystem mentioned by this file."
+    },
+    {
+      "path": "shared/transport-p2p/src/commonMain/kotlin/com/parlor/transport/p2p/P2pKitFactory.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/commonMain/kotlin/com/parlor/transport/p2p/P2pKitFactory.kt",
+      "sha256": "5c45ff87104b0ed58b03ce57141020ec898aeeab27a949e9167593f05942dd6f",
+      "line_count": 28,
+      "reviewed_line_ranges": [
+        [
+          1,
+          28
+        ]
+      ],
+      "remaining_unread_line_ranges": [],
+      "complete_text_read": true,
+      "reviewer": "/root/release_fix_review",
+      "relevance": "LAN-only transport configuration",
+      "review_method": "direct source reading, not inferred from generated inventory",
+      "scope_limitation": "Bounded release/content/readiness paths only; not complete behavioral approval of every subsystem mentioned by this file."
+    },
+    {
+      "path": "shared/transport-p2p/src/commonMain/kotlin/com/parlor/transport/p2p/P2pTransportModule.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/commonMain/kotlin/com/parlor/transport/p2p/P2pTransportModule.kt",
+      "sha256": "32194117661b87d68e76a1d2f7bed3c16c0fa5b1f1c6d0962ae0901ec25c877a",
+      "line_count": 25,
+      "reviewed_line_ranges": [
+        [
+          1,
+          25
+        ]
+      ],
+      "remaining_unread_line_ranges": [],
+      "complete_text_read": true,
+      "reviewer": "/root/release_fix_review",
+      "relevance": "platform transport composition contract",
+      "review_method": "direct source reading, not inferred from generated inventory",
+      "scope_limitation": "Bounded release/content/readiness paths only; not complete behavioral approval of every subsystem mentioned by this file."
+    },
+    {
+      "path": "shared/transport-p2p/src/androidMain/kotlin/com/parlor/transport/p2p/P2pTransportModule.android.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/androidMain/kotlin/com/parlor/transport/p2p/P2pTransportModule.android.kt",
+      "sha256": "280b7f13d26939972416c805a184efe8fb8041f48db219f2e41797adbe456a11",
+      "line_count": 97,
+      "reviewed_line_ranges": [
+        [
+          1,
+          97
+        ]
+      ],
+      "remaining_unread_line_ranges": [],
+      "complete_text_read": true,
+      "reviewer": "/root/release_fix_review",
+      "relevance": "Android transport/lifecycle composition",
+      "review_method": "direct source reading, not inferred from generated inventory",
+      "scope_limitation": "Bounded release/content/readiness paths only; not complete behavioral approval of every subsystem mentioned by this file."
+    },
+    {
+      "path": "shared/transport-p2p/src/iosMain/kotlin/com/parlor/transport/p2p/P2pTransportModule.ios.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/iosMain/kotlin/com/parlor/transport/p2p/P2pTransportModule.ios.kt",
+      "sha256": "bea599aa4d6dd9820477f2cbee57c213a9988da33e51eada0eb061d25fd77753",
+      "line_count": 71,
+      "reviewed_line_ranges": [
+        [
+          1,
+          71
+        ]
+      ],
+      "remaining_unread_line_ranges": [],
+      "complete_text_read": true,
+      "reviewer": "/root/release_fix_review",
+      "relevance": "iOS transport/lifecycle composition",
+      "review_method": "direct source reading, not inferred from generated inventory",
+      "scope_limitation": "Bounded release/content/readiness paths only; not complete behavioral approval of every subsystem mentioned by this file."
+    },
+    {
+      "path": "composeApp/src/androidMain/kotlin/com/parlor/app/ParlorApplication.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/composeApp/src/androidMain/kotlin/com/parlor/app/ParlorApplication.kt",
+      "sha256": "82070ae7caa7971b9e0bcf869950407edf5e839bfc7786ba57dd934629a2daaa",
+      "line_count": 25,
+      "reviewed_line_ranges": [
+        [
+          1,
+          25
+        ]
+      ],
+      "remaining_unread_line_ranges": [],
+      "complete_text_read": true,
+      "reviewer": "/root/release_fix_review",
+      "relevance": "Android app DI/transport entry",
+      "review_method": "direct source reading, not inferred from generated inventory",
+      "scope_limitation": "Bounded release/content/readiness paths only; not complete behavioral approval of every subsystem mentioned by this file."
+    },
+    {
+      "path": "composeApp/src/iosMain/kotlin/com/parlor/app/MainViewController.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/composeApp/src/iosMain/kotlin/com/parlor/app/MainViewController.kt",
+      "sha256": "c77abd03ddcae230b4752d888b16c3d74231d89c967624c31129d176a5ed20ce",
+      "line_count": 56,
+      "reviewed_line_ranges": [
+        [
+          1,
+          56
+        ]
+      ],
+      "remaining_unread_line_ranges": [],
+      "complete_text_read": true,
+      "reviewer": "/root/release_fix_review",
+      "relevance": "iOS Compose root/DI entry",
+      "review_method": "direct source reading, not inferred from generated inventory",
+      "scope_limitation": "Bounded release/content/readiness paths only; not complete behavioral approval of every subsystem mentioned by this file."
+    },
+    {
+      "path": "composeApp/src/androidMain/AndroidManifest.xml",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/composeApp/src/androidMain/AndroidManifest.xml",
+      "sha256": "daddfd606b67536858d5e7d3272aacabeb4210db5c2a2fab0bc9e172c9d903ca",
+      "line_count": 33,
+      "reviewed_line_ranges": [
+        [
+          1,
+          33
+        ]
+      ],
+      "remaining_unread_line_ranges": [],
+      "complete_text_read": true,
+      "reviewer": "/root/release_fix_review",
+      "relevance": "shipping manifest",
+      "review_method": "direct source reading, not inferred from generated inventory",
+      "scope_limitation": "Bounded release/content/readiness paths only; not complete behavioral approval of every subsystem mentioned by this file."
+    },
+    {
+      "path": "composeApp/src/androidMain/res/xml/backup_rules.xml",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/composeApp/src/androidMain/res/xml/backup_rules.xml",
+      "sha256": "17d3558c5ad2bd3fcc21b366d8acac73fc8a0e31c8c515eab3d16211f62e3dc8",
+      "line_count": 17,
+      "reviewed_line_ranges": [
+        [
+          1,
+          17
+        ]
+      ],
+      "remaining_unread_line_ranges": [],
+      "complete_text_read": true,
+      "reviewer": "/root/release_fix_review",
+      "relevance": "Android backup exclusions",
+      "review_method": "direct source reading, not inferred from generated inventory",
+      "scope_limitation": "Bounded release/content/readiness paths only; not complete behavioral approval of every subsystem mentioned by this file."
+    },
+    {
+      "path": "composeApp/src/androidMain/res/xml/data_extraction_rules.xml",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/composeApp/src/androidMain/res/xml/data_extraction_rules.xml",
+      "sha256": "6e0b78698ea071f47ad49d21dd7f6d7518b1100f6d768b0b3f4f1e46fdc3b45d",
+      "line_count": 29,
+      "reviewed_line_ranges": [
+        [
+          1,
+          29
+        ]
+      ],
+      "remaining_unread_line_ranges": [],
+      "complete_text_read": true,
+      "reviewer": "/root/release_fix_review",
+      "relevance": "Android transfer/backup exclusions",
+      "review_method": "direct source reading, not inferred from generated inventory",
+      "scope_limitation": "Bounded release/content/readiness paths only; not complete behavioral approval of every subsystem mentioned by this file."
+    },
+    {
+      "path": "iosApp/iosApp/Info.plist",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/iosApp/iosApp/Info.plist",
+      "sha256": "db09f2c4a3cc378f4bb24b6de29653283c90227795a27f64370c9da87ef0d0a5",
+      "line_count": 61,
+      "reviewed_line_ranges": [
+        [
+          1,
+          61
+        ]
+      ],
+      "remaining_unread_line_ranges": [],
+      "complete_text_read": true,
+      "reviewer": "/root/release_fix_review",
+      "relevance": "iOS shipping declarations",
+      "review_method": "direct source reading, not inferred from generated inventory",
+      "scope_limitation": "Bounded release/content/readiness paths only; not complete behavioral approval of every subsystem mentioned by this file."
+    },
+    {
+      "path": "iosApp/iosApp/PrivacyInfo.xcprivacy",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/iosApp/iosApp/PrivacyInfo.xcprivacy",
+      "sha256": "179da3a1bcd19580aacbfa5e847f08ae35074f024b28d189e394d451feb7455b",
+      "line_count": 39,
+      "reviewed_line_ranges": [
+        [
+          1,
+          39
+        ]
+      ],
+      "remaining_unread_line_ranges": [],
+      "complete_text_read": true,
+      "reviewer": "/root/release_fix_review",
+      "relevance": "iOS privacy declaration; not runtime proof",
+      "review_method": "direct source reading, not inferred from generated inventory",
+      "scope_limitation": "Bounded release/content/readiness paths only; not complete behavioral approval of every subsystem mentioned by this file."
+    },
+    {
+      "path": "iosApp/iosApp/en.lproj/InfoPlist.strings",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/iosApp/iosApp/en.lproj/InfoPlist.strings",
+      "sha256": "83d332b5afc89a249428011b82906bef7b3a02037bf6f3fdc3f2f48ef20664a1",
+      "line_count": 2,
+      "reviewed_line_ranges": [
+        [
+          1,
+          2
+        ]
+      ],
+      "remaining_unread_line_ranges": [],
+      "complete_text_read": true,
+      "reviewer": "/root/release_fix_review",
+      "relevance": "English LAN permission explanation",
+      "review_method": "direct source reading, not inferred from generated inventory",
+      "scope_limitation": "Bounded release/content/readiness paths only; not complete behavioral approval of every subsystem mentioned by this file."
+    },
+    {
+      "path": "iosApp/iosApp/ar.lproj/InfoPlist.strings",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/iosApp/iosApp/ar.lproj/InfoPlist.strings",
+      "sha256": "9504ddfccd5307c43581871c6ef29b3055a0a003a72545bef2549d418beaef69",
+      "line_count": 2,
+      "reviewed_line_ranges": [
+        [
+          1,
+          2
+        ]
+      ],
+      "remaining_unread_line_ranges": [],
+      "complete_text_read": true,
+      "reviewer": "/root/release_fix_review",
+      "relevance": "Arabic LAN permission explanation",
+      "review_method": "direct source reading, not inferred from generated inventory",
+      "scope_limitation": "Bounded release/content/readiness paths only; not complete behavioral approval of every subsystem mentioned by this file."
+    },
+    {
+      "path": "scripts/release/validate_release_system.sh",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/scripts/release/validate_release_system.sh",
+      "sha256": "ce52c9c08edecba968337d6de42c90895badec127c7029a5afc16737d3b8864a",
+      "line_count": 104,
+      "reviewed_line_ranges": [
+        [
+          1,
+          104
+        ]
+      ],
+      "remaining_unread_line_ranges": [],
+      "complete_text_read": true,
+      "reviewer": "/root/release_fix_review",
+      "relevance": "release-validator dispatch",
+      "review_method": "direct source reading, not inferred from generated inventory",
+      "scope_limitation": "Bounded release/content/readiness paths only; not complete behavioral approval of every subsystem mentioned by this file."
+    },
+    {
+      "path": "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitMavenProvenanceContractTest.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitMavenProvenanceContractTest.kt",
+      "sha256": "b11524844042a2fc6eec9f82c835e5455331a7c362b3f7b9c563dbfd59da05ce",
+      "line_count": 166,
+      "reviewed_line_ranges": [
+        [
+          1,
+          166
+        ]
+      ],
+      "remaining_unread_line_ranges": [],
+      "complete_text_read": true,
+      "reviewer": "/root/release_fix_review",
+      "relevance": "MT-T1 provenance test binding",
+      "review_method": "direct source reading, not inferred from generated inventory",
+      "scope_limitation": "Bounded release/content/readiness paths only; not complete behavioral approval of every subsystem mentioned by this file."
+    },
+    {
+      "path": "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/DesktopDependencyVerificationContractTest.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/DesktopDependencyVerificationContractTest.kt",
+      "sha256": "0189e7ad54db484d2a676e6cc2ee2f822e5cbc6ae296e6c86aefc63537f0c00f",
+      "line_count": 182,
+      "reviewed_line_ranges": [
+        [
+          1,
+          182
+        ]
+      ],
+      "remaining_unread_line_ranges": [],
+      "complete_text_read": true,
+      "reviewer": "/root/release_fix_review",
+      "relevance": "MT-T1 sibling provenance test binding",
+      "review_method": "direct source reading, not inferred from generated inventory",
+      "scope_limitation": "Bounded release/content/readiness paths only; not complete behavioral approval of every subsystem mentioned by this file."
+    },
+    {
+      "path": "scripts/generate_review_inventory.py",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/scripts/generate_review_inventory.py",
+      "sha256": "83d837420bade1377ee319bafa1a9431a7a8542c4d84596d4cecf42b0e3aac27",
+      "line_count": 408,
+      "reviewed_line_ranges": [
+        [
+          1,
+          408
+        ]
+      ],
+      "remaining_unread_line_ranges": [],
+      "complete_text_read": true,
+      "reviewer": "/root/release_fix_review",
+      "relevance": "INV-C01 inventory/evidence labeling",
+      "review_method": "direct source reading, not inferred from generated inventory",
+      "scope_limitation": "Bounded release/content/readiness paths only; not complete behavioral approval of every subsystem mentioned by this file."
+    },
+    {
+      "path": "scripts/release/tests/test_review_inventory.py",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_review_inventory.py",
+      "sha256": "54b50984157fcd64f17030d0f137ddc42945e694e25190ba7489db3b637f490b",
+      "line_count": 125,
+      "reviewed_line_ranges": [
+        [
+          1,
+          125
+        ]
+      ],
+      "remaining_unread_line_ranges": [],
+      "complete_text_read": true,
+      "reviewer": "/root/release_fix_review",
+      "relevance": "generator regression tests; read only, not executed by child",
+      "review_method": "direct source reading, not inferred from generated inventory",
+      "scope_limitation": "Bounded release/content/readiness paths only; not complete behavioral approval of every subsystem mentioned by this file."
+    },
+    {
+      "path": ".github/workflows/production-verification.yml",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/.github/workflows/production-verification.yml",
+      "sha256": "965e47ddb4c47b19d8017c9494239d0a0309b26f465eb0f6b655bd90113a929c",
+      "line_count": 347,
+      "reviewed_line_ranges": [
+        [
+          1,
+          347
+        ]
+      ],
+      "remaining_unread_line_ranges": [],
+      "complete_text_read": true,
+      "reviewer": "/root/release_fix_review",
+      "relevance": "all five verification jobs; DOC-C4 comparison",
+      "review_method": "direct source reading, not inferred from generated inventory",
+      "scope_limitation": "Bounded release/content/readiness paths only; not complete behavioral approval of every subsystem mentioned by this file."
+    },
+    {
+      "path": "composeApp/src/commonMain/kotlin/com/parlor/app/App.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/composeApp/src/commonMain/kotlin/com/parlor/app/App.kt",
+      "sha256": "622b679a2ef023fab17bf6c8ed8eb38c1fbc2b76a391f5f9a8298d59da9dda59",
+      "line_count": 338,
+      "reviewed_line_ranges": [
+        [
+          66,
+          109
+        ]
+      ],
+      "remaining_unread_line_ranges": [
+        [
+          1,
+          65
+        ],
+        [
+          110,
+          338
+        ]
+      ],
+      "complete_text_read": false,
+      "reviewer": "/root/release_fix_review",
+      "relevance": "app theme entry for font reachability",
+      "review_method": "direct source reading, not inferred from generated inventory",
+      "scope_limitation": "Bounded release/content/readiness paths only; not complete behavioral approval of every subsystem mentioned by this file."
+    },
+    {
+      "path": "scripts/release/release_tool.py",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/scripts/release/release_tool.py",
+      "sha256": "3deab649aba1fdfff07df2036c9706bcddac2d8c20e9b6d50bdc2e9240ddd185",
+      "line_count": 1430,
+      "reviewed_line_ranges": [
+        [
+          140,
+          218
+        ]
+      ],
+      "remaining_unread_line_ranges": [
+        [
+          1,
+          139
+        ],
+        [
+          219,
+          1430
+        ]
+      ],
+      "complete_text_read": false,
+      "reviewer": "/root/release_fix_review",
+      "relevance": "identity publication guard",
+      "review_method": "direct source reading, not inferred from generated inventory",
+      "scope_limitation": "Bounded release/content/readiness paths only; not complete behavioral approval of every subsystem mentioned by this file."
+    },
+    {
+      "path": "scripts/release/store_api.py",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/scripts/release/store_api.py",
+      "sha256": "95ba5a18b5e78d85eb15c8764f011db76293d0bdcf8ee088151321ad5d6b7012",
+      "line_count": 1834,
+      "reviewed_line_ranges": [
+        [
+          1745,
+          1818
+        ]
+      ],
+      "remaining_unread_line_ranges": [
+        [
+          1,
+          1744
+        ],
+        [
+          1819,
+          1834
+        ]
+      ],
+      "complete_text_read": false,
+      "reviewer": "/root/release_fix_review",
+      "relevance": "execute guard before clients/credentials",
+      "review_method": "direct source reading, not inferred from generated inventory",
+      "scope_limitation": "Bounded release/content/readiness paths only; not complete behavioral approval of every subsystem mentioned by this file."
+    },
+    {
+      "path": "scripts/release/build_ios_candidate.sh",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/scripts/release/build_ios_candidate.sh",
+      "sha256": "cef210939371bbab1dd8a6946565683fc2621d4c2d004c428380881de925d966",
+      "line_count": 203,
+      "reviewed_line_ranges": [
+        [
+          1,
+          42
+        ]
+      ],
+      "remaining_unread_line_ranges": [
+        [
+          43,
+          203
+        ]
+      ],
+      "complete_text_read": false,
+      "reviewer": "/root/release_fix_review",
+      "relevance": "guard ordering before credential use",
+      "review_method": "direct source reading, not inferred from generated inventory",
+      "scope_limitation": "Bounded release/content/readiness paths only; not complete behavioral approval of every subsystem mentioned by this file."
+    },
+    {
+      "path": "scripts/release/upload_ios_candidate.sh",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/scripts/release/upload_ios_candidate.sh",
+      "sha256": "fbe327e22a54d2efa0c5149b0b46ad607fc34a7329a91580a617d3d5875c7521",
+      "line_count": 111,
+      "reviewed_line_ranges": [
+        [
+          1,
+          43
+        ]
+      ],
+      "remaining_unread_line_ranges": [
+        [
+          44,
+          111
+        ]
+      ],
+      "complete_text_read": false,
+      "reviewer": "/root/release_fix_review",
+      "relevance": "guard ordering before credential use",
+      "review_method": "direct source reading, not inferred from generated inventory",
+      "scope_limitation": "Bounded release/content/readiness paths only; not complete behavioral approval of every subsystem mentioned by this file."
+    },
+    {
+      "path": "scripts/release/workflow_contract.py",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/scripts/release/workflow_contract.py",
+      "sha256": "bee1eeab0bd18bd8222d6c29bbba46de6228e925e46b57ee001c1f0778cc3691",
+      "line_count": 671,
+      "reviewed_line_ranges": [
+        [
+          1,
+          65
+        ],
+        [
+          100,
+          215
+        ],
+        [
+          382,
+          451
+        ],
+        [
+          592,
+          671
+        ]
+      ],
+      "remaining_unread_line_ranges": [
+        [
+          66,
+          99
+        ],
+        [
+          216,
+          381
+        ],
+        [
+          452,
+          591
+        ]
+      ],
+      "complete_text_read": false,
+      "reviewer": "/root/release_fix_review",
+      "relevance": "publication-disablement checker and entry dispatch",
+      "review_method": "direct source reading, not inferred from generated inventory",
+      "scope_limitation": "Bounded release/content/readiness paths only; not complete behavioral approval of every subsystem mentioned by this file."
+    },
+    {
+      "path": "scripts/release/tests/test_release_tool.py",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_release_tool.py",
+      "sha256": "89a2f83994e461184706e9c2ec50d13bffabc622f615793802a6f7e040f9c140",
+      "line_count": 593,
+      "reviewed_line_ranges": [
+        [
+          99,
+          182
+        ]
+      ],
+      "remaining_unread_line_ranges": [
+        [
+          1,
+          98
+        ],
+        [
+          183,
+          593
+        ]
+      ],
+      "complete_text_read": false,
+      "reviewer": "/root/release_fix_review",
+      "relevance": "identity-rejection tests; not executed by child",
+      "review_method": "direct source reading, not inferred from generated inventory",
+      "scope_limitation": "Bounded release/content/readiness paths only; not complete behavioral approval of every subsystem mentioned by this file."
+    },
+    {
+      "path": "iosApp/iosApp.xcodeproj/project.pbxproj",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/iosApp/iosApp.xcodeproj/project.pbxproj",
+      "sha256": "625103b4676a017beb4619c61b705efc84c2be47b71603bddd840c1d3856ea9d",
+      "line_count": 539,
+      "reviewed_line_ranges": [
+        [
+          1,
+          46
+        ],
+        [
+          90,
+          139
+        ],
+        [
+          210,
+          228
+        ],
+        [
+          406,
+          470
+        ]
+      ],
+      "remaining_unread_line_ranges": [
+        [
+          47,
+          89
+        ],
+        [
+          140,
+          209
+        ],
+        [
+          229,
+          405
+        ],
+        [
+          471,
+          539
+        ]
+      ],
+      "complete_text_read": false,
+      "reviewer": "/root/release_fix_review",
+      "relevance": "privacy resource inclusion, app IDs and build configuration",
+      "review_method": "direct source reading, not inferred from generated inventory",
+      "scope_limitation": "Bounded release/content/readiness paths only; not complete behavioral approval of every subsystem mentioned by this file."
+    },
+    {
+      "path": "docs/RELEASE_AUTOMATION.md",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/docs/RELEASE_AUTOMATION.md",
+      "sha256": "5598e91447aae3f111654b217118aa64cc9ea0c0c3c34d36f0440c51c0b7f206",
+      "line_count": 638,
+      "reviewed_line_ranges": [
+        [
+          314,
+          352
+        ]
+      ],
+      "remaining_unread_line_ranges": [
+        [
+          1,
+          313
+        ],
+        [
+          353,
+          638
+        ]
+      ],
+      "complete_text_read": false,
+      "reviewer": "/root/release_fix_review",
+      "relevance": "DOC-C4 protected-branches wording",
+      "review_method": "direct source reading, not inferred from generated inventory",
+      "scope_limitation": "Bounded release/content/readiness paths only; not complete behavioral approval of every subsystem mentioned by this file."
+    },
+    {
+      "path": ".github/workflows/testing-candidate.yml",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/.github/workflows/testing-candidate.yml",
+      "sha256": "0488fc5e0c4e520a767408cfb5e7fa387bc5fdfa0edfeb9dcd29a4cb0d2c7976",
+      "line_count": 1244,
+      "reviewed_line_ranges": [
+        [
+          1,
+          102
+        ],
+        [
+          177,
+          180
+        ],
+        [
+          622,
+          625
+        ],
+        [
+          1158,
+          1163
+        ]
+      ],
+      "remaining_unread_line_ranges": [
+        [
+          103,
+          176
+        ],
+        [
+          181,
+          621
+        ],
+        [
+          626,
+          1157
+        ],
+        [
+          1164,
+          1244
+        ]
+      ],
+      "complete_text_read": false,
+      "reviewer": "/root/release_fix_review",
+      "relevance": "guards, workflow scope and job disablement; bodies not fully reread",
+      "review_method": "direct source reading, not inferred from generated inventory",
+      "scope_limitation": "Bounded release/content/readiness paths only; not complete behavioral approval of every subsystem mentioned by this file."
+    },
+    {
+      "path": ".github/workflows/testing-external-promotion.yml",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/.github/workflows/testing-external-promotion.yml",
+      "sha256": "5874b8b435e3b6fbfc02bb1cb54f8ab1d26ab01cf25b4220b2d81985fecc8a86",
+      "line_count": 429,
+      "reviewed_line_ranges": [
+        [
+          1,
+          86
+        ],
+        [
+          148,
+          156
+        ],
+        [
+          237,
+          245
+        ],
+        [
+          345,
+          350
+        ]
+      ],
+      "remaining_unread_line_ranges": [
+        [
+          87,
+          147
+        ],
+        [
+          157,
+          236
+        ],
+        [
+          246,
+          344
+        ],
+        [
+          351,
+          429
+        ]
+      ],
+      "complete_text_read": false,
+      "reviewer": "/root/release_fix_review",
+      "relevance": "guards, workflow scope and job disablement; bodies not fully reread",
+      "review_method": "direct source reading, not inferred from generated inventory",
+      "scope_limitation": "Bounded release/content/readiness paths only; not complete behavioral approval of every subsystem mentioned by this file."
+    },
+    {
+      "path": ".github/workflows/production-promotion.yml",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/.github/workflows/production-promotion.yml",
+      "sha256": "94ca7f617c24cb4c9ffafa5860c7ebc104f08cfa46b2a2e13fbae3ed816c461b",
+      "line_count": 466,
+      "reviewed_line_ranges": [
+        [
+          1,
+          112
+        ],
+        [
+          243,
+          251
+        ],
+        [
+          349,
+          357
+        ]
+      ],
+      "remaining_unread_line_ranges": [
+        [
+          113,
+          242
+        ],
+        [
+          252,
+          348
+        ],
+        [
+          358,
+          466
+        ]
+      ],
+      "complete_text_read": false,
+      "reviewer": "/root/release_fix_review",
+      "relevance": "guards, workflow scope and job disablement; bodies not fully reread",
+      "review_method": "direct source reading, not inferred from generated inventory",
+      "scope_limitation": "Bounded release/content/readiness paths only; not complete behavioral approval of every subsystem mentioned by this file."
+    }
+  ],
+  "binary_inspection_evidence": [
+    "font-full-metadata-inspection-02.json",
+    "font-ios-bundle-inspection-01.json"
+  ],
+  "historical_mapping_only": [
+    "audit-runs/2026-09-05-source-audit/canonical-register.json",
+    "audit-runs/2026-09-05-source-audit/verification-ledger.json"
+  ],
+  "protected_exclusions": [
+    "No release/private/ content",
+    "No signing keys, credentials, real player/tester data or local.properties",
+    "No unrelated user material"
+  ],
+  "cleanup": {
+    "gradle_xcode_emulator_builds_started_by_reviewer": 0,
+    "background_workers_started_by_reviewer": 0,
+    "root_build_cleanup_ownership_preserved": true,
+    "retained": "Compact task evidence and public reference text only; no downloaded comparison-font binary retained."
+  }
+}

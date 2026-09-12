@@ -1,0 +1,365 @@
+{
+  "author": "/root/native_fix_review",
+  "authoritative_references": [
+    {
+      "accessed_at": "2026-09-08T00:03:54.404941+00:00",
+      "claim": "-t suppresses warnings; +w after it reverses that; exit1 can reflect an unused selection rather than no holders.",
+      "ranges": [
+        [
+          880,
+          882
+        ],
+        [
+          938,
+          940
+        ],
+        [
+          1499,
+          1543
+        ],
+        [
+          1757,
+          1762
+        ]
+      ],
+      "sha256": "74656c434777d77626d8962bd1fd06f17b59c286f02c72e40520ebf03a8b8cae",
+      "url": "https://raw.githubusercontent.com/apple-oss-distributions/lsof/7a8a1b2a3c0f35c30a5fcd0927f31d441c3e5255/lsof/main.c"
+    },
+    {
+      "accessed_at": "2026-09-08T00:30:50.340549+00:00",
+      "claim": "Raising Python signal handlers can interrupt after any bytecode; high-reliability code should avoid exception-raising handlers. Applicability does not depend on Foundation/native implementation.",
+      "page_sha256": "72abf8398796149e8d6b93b579544447ad61ba2412868a6256c1f8da91b9c4ce",
+      "url": "https://docs.python.org/3.9/library/signal.html#note-on-signal-handlers-and-exceptions"
+    },
+    {
+      "claim": "Atomic and Complete use distinct bits; direct writeToFile options selector declared.",
+      "path": "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.5.sdk/System/Library/Frameworks/Foundation.framework/Headers/NSData.h",
+      "ranges": [
+        [
+          25,
+          35
+        ],
+        [
+          90,
+          93
+        ]
+      ],
+      "sha256": "32f700128c672692ee168a8cf5d230cd9668328f01a75fac5f3d35682d0f49a2"
+    },
+    {
+      "claim": "Direct directory/set/get selectors and protection constants; declarations are not runtime evidence.",
+      "path": "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.5.sdk/System/Library/Frameworks/Foundation.framework/Headers/NSFileManager.h",
+      "ranges": [
+        [
+          149,
+          177
+        ],
+        [
+          601,
+          607
+        ]
+      ],
+      "sha256": "446f238e10fec2b392bc82b54da061eebc7fcc919f827807911774ef987423eb"
+    },
+    {
+      "claim": "Missing property may be unavailable without error; regular-file versus volume key applicability, setter may ignore unsupported property. Fresh URL metadata read is not hardware proof.",
+      "path": "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.5.sdk/System/Library/Frameworks/Foundation.framework/Headers/NSURL.h",
+      "ranges": [
+        [
+          177,
+          187
+        ],
+        [
+          288,
+          304
+        ],
+        [
+          310,
+          313
+        ],
+        [
+          353,
+          353
+        ]
+      ],
+      "sha256": "97981c4e8ad70b8fc8c33c22e73b448a9ce9ad0ddfb7304d85a67d0843365f6d"
+    }
+  ],
+  "baseline": {
+    "branch": "fix/local-readiness-2026-09-07",
+    "commit": "e1dd40c0f1ff14561ecac6c25967fced8cda74d2",
+    "context_source_hashes": {
+      "/Users/abdelrahman/Projects/parlor/composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSnapshotFileSystem.kt": "c2852fafb293a693be830171f4674947289fafb07f8ecdbafa5c0aaae6d1bf8b",
+      "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/L08StorageProbe.kt.in": "a1202e47e1b41feb7e5c558e4df9515704e27762e437778b6ae79c777bfce651"
+    },
+    "repository": "/Users/abdelrahman/Projects/parlor",
+    "tree": "1d4822ebea89148635e0d71c74060fce1ab61824",
+    "working_tree": "Not clean: parent-owned normal-launch provenance and L08 diagnostic changes present; no baseline reset. This receipt binds the exact isolated manifest plus context source hashes, not commit alone."
+  },
+  "blockers_for_synthetic_execution": [],
+  "classification": "Frozen02 control corrections accepted at source-review level; no native execution approval or application repair claim yet.",
+  "coverage": [
+    {
+      "lines": 295,
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/l08-native-foundation-control-02/FoundationProtectionControl.m",
+      "ranges": [
+        [
+          1,
+          295
+        ]
+      ],
+      "reviewed": "complete source reading",
+      "sha256": "403432717c00b518d81a109415ad4c20c85a7307f733dfb6d53900c8cd327ff0"
+    },
+    {
+      "lines": 178,
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/l08-native-foundation-control-02/README.md",
+      "ranges": [
+        [
+          1,
+          178
+        ]
+      ],
+      "reviewed": "complete source reading",
+      "sha256": "332edbb66de9eca52256519e6e1f015d4bbea0dfdc1ad8d139455b970be19b9f"
+    },
+    {
+      "lines": 107,
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/l08-native-foundation-control-02/public-tool-evidence.json",
+      "ranges": [
+        [
+          1,
+          107
+        ]
+      ],
+      "reviewed": "complete source reading",
+      "sha256": "8a5cad552acfb337a3172282c15bfade6dd36fd99f39f1afc02a94cc4c5f1bb2"
+    },
+    {
+      "lines": 652,
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/l08-native-foundation-control-02/run_control.py",
+      "ranges": [
+        [
+          1,
+          652
+        ]
+      ],
+      "reviewed": "complete source reading",
+      "sha256": "58e8daf875eaf8061ed017e10cc8c8065eb49292866b6741227814282a1b8e9f"
+    },
+    {
+      "lines": 517,
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/l08-native-foundation-control-02/test_control.py",
+      "ranges": [
+        [
+          1,
+          517
+        ]
+      ],
+      "reviewed": "complete source reading",
+      "sha256": "f044ca95d872d4347d1db5657ddecd47fe60e1083a797e5310eb15b50087464d"
+    }
+  ],
+  "decision": "APPROVED_FOR_FOCUSED_SYNTHETIC_CONTROLS",
+  "manifest_path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/l08-native-foundation-control-02/manifest.json",
+  "manifest_sha256": "aa6867dbf163ba224c7feb5896da267f1648177890f1be669b98d73361dc2d9a",
+  "native_design_check": [
+    "Unchanged observer is Foundation-only and arm64 iOS-Simulator compile guarded; one directory and three <=256byte synthetic files,16 ordered rows.",
+    "Production-like Complete directory create -> backup -> Atomic|Complete file -> backup precedes explicit directory setter; later setter cannot mask baseline observations.",
+    "Fresh NSURL queries and regular-file-only NSURLFileProtectionKey; missing/unavailable/error/exception remain distinct closed values.",
+    "Main-image UUID binds compiled image; NSFileManager defining-image UUID/platform and runtime26.5/23F77 remain attribution, not installed-binary-to-upstream-source proof.",
+    "No content readback; no app install/identity/defaults/Keychain/player data/Store credential access. Metadata collection cannot satisfy L08 equality, encryption, backup-restoration, durability or hardware protection gates.",
+    "All native commands use explicit private-set path and exact device UUID; bounded output/timeouts and ownership-checked cleanup remain. No application or canonical control source was modified by reviewer.",
+    "Actual native behavior is intentionally allowed to fail with evidence; this approval does not authorize weakening original L08 metadata assertions."
+  ],
+  "native_execution_not_yet_approved": true,
+  "original_evidence_preserved": [
+    {
+      "original_cleanup_status": "FAIL",
+      "original_status": "FAIL",
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-09/receipt.json",
+      "sha256": "7035d9505efe8cf1d5d9012024c6c5883c0e9371b97a5a5c5a0cfa15ccf36567"
+    },
+    {
+      "original_cleanup_status": null,
+      "original_status": null,
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-09/parlor-l08-storage-1-save.json",
+      "sha256": "c2e85bf1895334d9c1ad18c5216a5094846c80b235ad500c12f2893acc955132"
+    }
+  ],
+  "preservation_and_cleanup": {
+    "application_or_canonical_changes_by_reviewer": false,
+    "build_test_native_simulator_operations_by_reviewer": false,
+    "cleanup_required_by_reviewer": false,
+    "new_workers_or_build_outputs": false,
+    "only_write": "This new additive review JSON under excluded reviews/; frozen01/02 and previous receipts untouched.",
+    "process_signals_or_deletions_by_reviewer": false
+  },
+  "prior_review": {
+    "decision_preserved": "BLOCKED_DRAFT_REQUIRES_REVISION",
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/l08-native-foundation-control01-independent-review-01.json",
+    "sha256": "6b3ff6136bca98bc3a3da841d38286ea079918f04c7029222d09ff96ee0b4ba8"
+  },
+  "recorded_at": "2026-09-08T01:14:27.453076+00:00",
+  "required_next_steps": [
+    "Root may execute only frozen02 test_control.py synthetic suite in coordinated lane. Preserve actual descriptors/count/failures/skips, exit status, Gradle-stop and owned-fixture cleanup results.",
+    "Independently reconcile resulting execution receipt, stdout/stderr and cleanup. A successful witness or AST count is not test PASS.",
+    "If controls execute and cleanup completes without unresolved issue, write separate exact-manifest APPROVED_FOR_ISOLATED_CONTROL receipt before native launch. This current decision intentionally does not satisfy verify_approval.",
+    "No canonical source change or normal-native cycle may be attributed to this isolated Foundation control. Preserve all previous failed native09 and blocked01 evidence."
+  ],
+  "resolved_review_roots": [
+    {
+      "conclusion": "SOURCE CORRECTION ACCEPTED; EXECUTABLE SYNTHETIC CHECK PENDING",
+      "counter_evidence": "Fresh mode0700 root narrows exposure but is not itself a no-holders proof; explicit +w and diagnostic rejection remain required.",
+      "id": "FND-CONTROL-R1",
+      "locations": {
+        "run_control.py": [
+          [
+            562,
+            573
+          ]
+        ],
+        "test_control.py": [
+          [
+            315,
+            335
+          ]
+        ]
+      },
+      "reasoning": "Holder query is exactly lsof -nP -t +w +D for the attested scratch root; +w follows the warning-suppressing -t. Only exit1 with empty stdout and stderr grants removal. A warning, holder, other code, timeout or command exception preserves root and cleanupFAIL. Descriptor-relative traversal and no-symlink-following guards remain unchanged.",
+      "tests": "Negative cases cover warning/holder/other exit and assert exact argv, no removal and retained directory. Positive empty result removes only the owned synthetic root. These tests use mocked lsof and do not attest actual native lsof completeness."
+    },
+    {
+      "conclusion": "SOURCE CORRECTION ACCEPTED; EXECUTABLE SYNTHETIC CHECK PENDING",
+      "counter_evidence": "These are non-native cancellation injections, not an OS-signal integration test. The control must still report actual timeouts, unreaped-child failure and cleanup diagnostics rather than infer successful worker disposal from synthetic checks. SIGKILL and host/power failure cannot be cleaned by Python finalization.",
+      "id": "FND-CONTROL-R2",
+      "locations": {
+        "run_control.py": [
+          [
+            253,
+            258
+          ],
+          [
+            285,
+            374
+          ],
+          [
+            392,
+            402
+          ],
+          [
+            521,
+            584
+          ],
+          [
+            630,
+            646
+          ]
+        ],
+        "test_control.py": [
+          [
+            437,
+            513
+          ]
+        ]
+      },
+      "reasoning": "SIGINT/SIGTERM handlers only record bounded cancellation. Explicit checkpoints stop new work and remain responsive while selector pipes or child.wait are pending. Child handoff is signal-masked; exceptional finalization masks through TERM/KILL before reap, closes both pipes and emits bounded command logs. No external PID is adopted. Finalizing shields immediate Gradle-stop and independent cleanup stages from recorded cancellation; main makes cancellation a non-success outcome.",
+      "tests": "Fake Popen supplies owned in-process pipe descriptors; killpg is patched everywhere. Tests inject cancellation at child return and again between TERM/KILL, assert original interruption, both signal types, TERM/KILL before wait, closed descriptors and logs. Separate EOF/wait case, refusal of new work, shielded Gradle-stop and normal-no-signal cases retain meaningful assertions."
+    },
+    {
+      "conclusion": "SOURCE CORRECTION ACCEPTED; EXECUTABLE SYNTHETIC CHECK PENDING",
+      "counter_evidence": "Mutating the private child still cannot be made safe by the outer root identity alone;02 now checks both. Mocks do not establish CoreSimulator private-set behavior, successful boot/shutdown/delete, or real open-handle release; native collection must record these separately.",
+      "id": "FND-CONTROL-R3",
+      "locations": {
+        "run_control.py": [
+          [
+            376,
+            385
+          ],
+          [
+            431,
+            459
+          ],
+          [
+            521,
+            573
+          ]
+        ],
+        "test_control.py": [
+          [
+            337,
+            435
+          ]
+        ]
+      },
+      "reasoning": "The created devices child receives its own inode/device/UID/canonical-mode pin and is reattested before every simctl call and final cleanup. Custody failure permanently quarantines. Any Simulator contact requires a positive empty observation, or exact token/type/runtime/UUID cleanup followed by empty observation. Unknown/nonempty pre-create sets are not authorized by creation_attempted=False. Partial create can recover only one exact token/type/runtime private-set device; no default set, all, booted, erase or external device selection is introduced.",
+      "tests": "Replacement/symlink cases assert no command forwarding/deletion and preserve outside sentinel. No-create nonempty and sticky-ambiguity cases retain scratch. Partial-create case confirms cancellation-shielded exact owned UUID deletion; wrong token grants no deletion. Existing duplicate-device/runtime/type/availability/UUID/source-shape tests remain unchanged."
+    }
+  ],
+  "reviewer": "/root/factory_review",
+  "schema_version": 1,
+  "scope": "Read all frozen02 native source, runner, tests, README, public-tool evidence and author report; inspect complete01-to02 diff and unchanged production/native09 context. Root alone owns execution, cleanup and native approval use. Reviewer did not execute the tests, import the runner, invoke native tools, signal processes or delete anything.",
+  "test_review": {
+    "added_test_ids": [
+      "OwnedFixtures.test_cancellation_while_waiting_after_pipe_eof_still_finalizes_child",
+      "OwnedFixtures.test_cancelled_lane_refuses_new_work_but_shields_gradle_stop",
+      "OwnedFixtures.test_device_set_replaced_before_any_contact_is_also_retained",
+      "OwnedFixtures.test_interrupted_partial_create_recovers_only_unique_token_device",
+      "OwnedFixtures.test_lsof_clean_empty_result_allows_only_owned_root_removal",
+      "OwnedFixtures.test_lsof_warnings_enabled_after_terse_option_and_stderr_is_fatal",
+      "OwnedFixtures.test_main_uses_nonthrowing_handlers_not_exception_raising_callbacks",
+      "OwnedFixtures.test_no_creation_attempt_is_not_evidence_of_empty_private_set",
+      "OwnedFixtures.test_partial_create_wrong_token_never_grants_delete_authority",
+      "OwnedFixtures.test_precreate_ambiguity_cannot_be_cleared_by_later_empty_listing",
+      "OwnedFixtures.test_repeated_cancellation_cannot_unwind_kill_reap_close_or_logs",
+      "OwnedFixtures.test_replaced_device_set_inode_is_not_forwarded_to_simctl",
+      "OwnedFixtures.test_symlink_device_set_is_not_forwarded_or_removed_by_lane"
+    ],
+    "all_test_ids": [
+      "DevicePlanTests.test_commands_never_use_wrapper_default_set_all_booted_or_standalone",
+      "DevicePlanTests.test_empty_runtime_keys_are_empty_but_unknown_devices_are_not_owned",
+      "DevicePlanTests.test_exact_private_device_only",
+      "DevicePlanTests.test_probe_baseline_is_not_masked_by_later_directory_set",
+      "MetadataTests.test_bad_source_token_image_runtime_and_platform_rejected",
+      "MetadataTests.test_collection_keeps_false_write_and_exception_distinct",
+      "MetadataTests.test_duplicate_unknown_oversized_and_nonfinite_json_rejected",
+      "MetadataTests.test_key_and_error_type_boundaries",
+      "MetadataTests.test_missing_keys_supported_volume_is_collection_not_l08_pass",
+      "MetadataTests.test_native_error_not_coerced_to_empty_or_success",
+      "MetadataTests.test_no_expanded_claims_or_raw_native_details",
+      "MetadataTests.test_query_exception_requires_unobserved_not_missing",
+      "MetadataTests.test_rows_cannot_be_lost_duplicated_reordered_or_repurposed",
+      "OwnedFixtures.test_cancellation_while_waiting_after_pipe_eof_still_finalizes_child",
+      "OwnedFixtures.test_cancelled_lane_refuses_new_work_but_shields_gradle_stop",
+      "OwnedFixtures.test_device_set_replaced_before_any_contact_is_also_retained",
+      "OwnedFixtures.test_foreign_gradle_is_not_stopped",
+      "OwnedFixtures.test_interrupted_partial_create_recovers_only_unique_token_device",
+      "OwnedFixtures.test_lsof_clean_empty_result_allows_only_owned_root_removal",
+      "OwnedFixtures.test_lsof_warnings_enabled_after_terse_option_and_stderr_is_fatal",
+      "OwnedFixtures.test_main_uses_nonthrowing_handlers_not_exception_raising_callbacks",
+      "OwnedFixtures.test_nested_files_fifo_and_owned_cache_removed",
+      "OwnedFixtures.test_no_creation_attempt_is_not_evidence_of_empty_private_set",
+      "OwnedFixtures.test_no_reap_precedes_termination_on_bounded_output_failure",
+      "OwnedFixtures.test_normal_fake_child_never_signals_any_process",
+      "OwnedFixtures.test_partial_create_wrong_token_never_grants_delete_authority",
+      "OwnedFixtures.test_precreate_ambiguity_cannot_be_cleared_by_later_empty_listing",
+      "OwnedFixtures.test_repeated_cancellation_cannot_unwind_kill_reap_close_or_logs",
+      "OwnedFixtures.test_replaced_device_set_inode_is_not_forwarded_to_simctl",
+      "OwnedFixtures.test_replaced_root_cannot_be_deleted_with_old_identity",
+      "OwnedFixtures.test_symlink_device_set_is_not_forwarded_or_removed_by_lane",
+      "OwnedFixtures.test_symlink_unlinks_only_owned_link_not_target",
+      "OwnedFixtures.test_wrong_mode_or_symlink_root_refused"
+    ],
+    "changed_original_test_asts": [],
+    "limitations": [
+      "Actual discovery and execution must be demonstrated by root log, not declaration count.",
+      "Some failure paths (actual shutdown/delete/native timeout) are source-reviewed only; preserve any runtime failures.",
+      "No Objective-C compilation, simulator/native operation, hardware lock behavior, or app-container storage runtime is verified by this receipt."
+    ],
+    "method": "Complete assertion/helper reading plus standard-library AST comparison; no import or test execution.",
+    "original_tests": 20,
+    "removed_tests": [],
+    "static_declarations": 33,
+    "tests_executed_by_reviewer": 0
+  }
+}

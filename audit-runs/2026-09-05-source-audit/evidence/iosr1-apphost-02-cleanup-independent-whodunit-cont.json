@@ -1,0 +1,79 @@
+{
+  "at": "2026-09-05T14:26:02.265270+00:00",
+  "cycle": "iosr1-apphost-02",
+  "independent_reviewer": "/root/whodunit_cont",
+  "receipt_sha256": "2dd7b901ddc2f33dda5fcb91c108f97156fb94f2d209e565754858d6032ec332",
+  "ps_command": [
+    "/bin/ps",
+    "-p",
+    "66806,66813,66815,66856,67231,67233,67236,67253,67366,67369,67389,67393,67395,67396,67397,67409,67414,67421,67435,67817,67880,67889,67890,67919,67921,67934,67938,67962,67965,67967,67968,67969,67982,67992,68073,68092,68142,68144,68188,68196,68203,68206,68210,68216,68222,68227,68233,68240,68246,68249,68253,68263,68269,68270,68277,68281,68286,68287,68318,68322,68419,68468,68493,68501,68506,68513,68523,68546,68550,68565,68569,68573,68578",
+    "-o",
+    "pid=,lstart="
+  ],
+  "ps_exit_code": 1,
+  "ps_stdout": "",
+  "ps_stderr": "",
+  "recorded_processes_checked": 70,
+  "additional_log_attested_processes": {
+    "66806": "executed runner parent PID from receipt",
+    "68318": "iosAppUITests-Runner from xcodebuild.log1510",
+    "68419": "app PID from xcodebuild.log1540,1559"
+  },
+  "total_pids_checked": 73,
+  "generated_outputs_checked": [
+    "shared/core/build",
+    "shared/networking/build",
+    "shared/content/build",
+    "shared/storage/build",
+    "shared/transport-p2p/build",
+    "shared/networking-testing/build",
+    "shared/engine/build",
+    "shared/design-system/build",
+    "shared/engine-testing/build",
+    "shared/session/build",
+    "game-modes/whodunit/build",
+    "game-modes/mafia/build",
+    "build",
+    "composeApp/build",
+    "build-logic/build",
+    "build-logic/convention/build",
+    "iosApp/build"
+  ],
+  "remaining_outputs": [],
+  "owned_path_absence": {
+    "/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-iosr1-apphost-02-11osw_58": true,
+    "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-iosr1-apphost-02-11osw_58": true,
+    "/Users/abdelrahman/Library/Developer/CoreSimulator/Devices/441CC892-68AB-4C6A-8B0C-739C6B21B06B": true,
+    "/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-67921": false
+  },
+  "global_cache_targets_preserved": {
+    "/Users/abdelrahman/.gradle/caches": true,
+    "/Users/abdelrahman/.gradle/wrapper": true
+  },
+  "source_current": {
+    "commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+    "tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+    "branch": "main",
+    "tracked_status": ""
+  },
+  "source_matches_before_after": true,
+  "gradle_stops": {
+    "framework.log": {
+      "task_finished_at": "2026-09-05T14:14:13.927537+00:00",
+      "stop_started_at": "2026-09-05T14:14:13.928560+00:00",
+      "stop_finished_at": "2026-09-05T14:14:14.512272+00:00",
+      "exit_code": 0,
+      "start_delay_seconds": 0.001023
+    },
+    "xcodebuild.log": {
+      "task_finished_at": "2026-09-05T14:15:39.092554+00:00",
+      "stop_started_at": "2026-09-05T14:15:39.095313+00:00",
+      "stop_finished_at": "2026-09-05T14:15:39.729329+00:00",
+      "exit_code": 0,
+      "start_delay_seconds": 0.002759
+    }
+  },
+  "nested_gradle_receipt": "build_exit=0\nstop_exit=0\n",
+  "cleanup_verified": false,
+  "inspection_limits": "No simctl/xcode/gradle or mutation; targeted ps metadata plus exact known path stat only. No unrelated process enumeration/kill or directory traversal."
+}

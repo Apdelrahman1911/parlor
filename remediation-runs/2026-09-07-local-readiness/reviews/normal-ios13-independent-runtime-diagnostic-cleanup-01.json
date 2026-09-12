@@ -1,0 +1,389 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/release_fix_review",
+  "reviewed_at": "2026-09-08T05:00:30.670656+00:00",
+  "classification": "OVERALL FAIL PRESERVED; 8 XCTEST REPETITIONS/NOTICES/CLEANUP PASS; SAMPLE LITERAL-STAR FORMAT GAP CONFIRMED; VMMAP255 CAUSE UNCONFIRMED",
+  "receipt": {
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-13/receipt.json",
+    "sha256": "721c991fec4dc3073cfa11e1a6f2ee1196deea35f54b1aaa3fc03bd48f7c0a2f"
+  },
+  "preexecution_approval": {
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/normal-source12-native13-independent-approval-01.json",
+    "sha256": "1835c9f5f89cb56261e7e1cd778c9b6e27c9f647176abfa856da87db7e22718b"
+  },
+  "source": {
+    "commit": "8b9e3b0cdfdab82e7cff3ad8135d0eae9a0b8ca3",
+    "tree": "c1e92b5e00ab64a293c4d7f9c9b5e2b85887be88",
+    "branch": "fix/local-readiness-2026-09-07",
+    "tracked_status": "",
+    "diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "source_manifest_sha256": "c4d3387a95ff1a4462071147afe92411f5a08ee8b10f78852a59494c8d3e4420"
+  },
+  "binding": {
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/ios-readiness-source-12.json",
+    "sha256": "bb155cd42fd6fd0ce29c2479a196b04e58aea641b2593c4a78a9543d0f31a199"
+  },
+  "control_manifest": {
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/normal-source12-control-manifest-01.json",
+    "sha256": "e01df80126f2545a5e5a627c4bb5249844c67d4425a9bdaa31d4eaf9654804bf"
+  },
+  "source_and_copy": {
+    "current800_source_hashes_and82controls_equal_before_after": true,
+    "copy_inputs": 740,
+    "post_worker_inputs_unchanged": true,
+    "actual_two_file_diff": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-13/copied-source.diff",
+      "sha256": "8b513d13f59db339ee8eb523b8cc022a6f0be9ba8d33e6e332aeb2f4acd316f0"
+    },
+    "diff_all95lines_read_and_bothfiles_reconstructed_in_memory": true,
+    "reconstructed_hashes": {
+      "iosApp/iosApp.xcodeproj/project.pbxproj": "5f7bacd5dc89558b1ec71efc004a8a933f4f0d22a281cdc7da0288b0e9640674",
+      "iosApp/iosAppUITests/IOSAppLaunchUITests.swift": "c3d5cd42d60371cffee6ec4e8cdc462165f953dbef352bcdbf0f3f2d2a5a4ed2"
+    },
+    "UI_test_equals_approved_template": true,
+    "production_Kotlin_or_Swift_instrumentation": false
+  },
+  "runtime": {
+    "status": "PASS",
+    "actual_XCTest_repetitions": 8,
+    "distinct_methods": 1,
+    "failures": 0,
+    "skips": 0,
+    "expected_failures": 0,
+    "tree_detail_identified_leaves_exact_equal": true,
+    "method": "IOSAppLaunchUITests/testColdLaunchRendersComposeHomeWithoutUnexpectedAlert()",
+    "device_uuid": "465433C2-00B7-4F9C-A00D-534656778AA2",
+    "summary_method_total": 1,
+    "destination_passed_count": 8,
+    "durations_seconds": [
+      16.466528058052063,
+      13.854179978370667,
+      13.814152956008911,
+      13.829406976699829,
+      13.826758980751038,
+      13.778771042823792,
+      13.868581056594849,
+      13.765784978866577
+    ],
+    "raw_log": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-13/xcodebuild.log.gz",
+      "sha256": "f16506ff9e5d96cc1697cb9c8471ef207a9a7a5abad5ed42449682cacacf4720"
+    },
+    "uncompressed_bytes": 296030,
+    "uncompressed_lines": 2423,
+    "uncompressed_sha256": "6c9554d65f645955583e9514666cfb07bd36b2d9e3bfce8d2a7eb13c1566bcc4",
+    "anchored_JSON_marker_count": 64,
+    "actual_sample_count": 48,
+    "serial_observation_ids": [
+      "0B5A1670-7EA9-46FA-B206-F1001F2F44D6",
+      "EB439E85-481B-4325-9C27-DBB36DFE4FDA",
+      "33DE9FC6-19D2-4246-8EAE-5D1247B15B0B",
+      "24CF3001-3ABF-4AE4-93AB-282FD971BD6E",
+      "AEFE5128-994F-48AD-A995-8AFCD5524839",
+      "630E2C74-B46D-436B-A14A-2E28B6EA6E6C",
+      "5C99F449-B801-495A-A1F3-12AF79DED6DA",
+      "AF3A59DD-BA69-4642-9FD5-9F0DB1979194"
+    ],
+    "completed_post_Home_seconds": [
+      10.404351541670621,
+      10.409133333334466,
+      10.42806200000632,
+      10.401569541660137,
+      10.428640791666112,
+      10.42997800000012,
+      10.41419470832625,
+      10.426455666660331
+    ],
+    "all_raw_marker_fields_equal_report": true,
+    "limitation": "English XCTest-controlled observations on one fresh owned install, not continuous liveness, per-boot mapped-image proof, physical device or historical crash reproduction."
+  },
+  "notices": {
+    "status": "PASS",
+    "both_packages_equal": true,
+    "resource_count": 26,
+    "total_bytes": 99515,
+    "all_exact_source_hashes_lengths_paths_match": true,
+    "built": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-13/built-notice-package.json",
+      "sha256": "5b22822de051375fe5f2a6ab54daa4db11c0addfd86b183e39a200c09ace2db5"
+    },
+    "installed": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-13/installed-notice-package.json",
+      "sha256": "5b22822de051375fe5f2a6ab54daa4db11c0addfd86b183e39a200c09ace2db5"
+    },
+    "limitation": "Delivery only; not legal completeness."
+  },
+  "native_file_and_signature_evidence": {
+    "bundle_identity": {
+      "CFBundleIdentifier": "com.parlor.app.debug",
+      "CFBundleExecutable": "Parlor",
+      "CFBundleVersion": "1",
+      "CFBundleShortVersionString": "1.0.0",
+      "MinimumOSVersion": "16.0"
+    },
+    "native_images": 4,
+    "artifact_bindings": 10,
+    "all10_actual_arm64_dwarfdump_rows_match": true,
+    "built_installed_image_hashes_sizes_equal": true,
+    "both_codesign_strict_verifications_exit0": true,
+    "embedded_framework": {
+      "origin": "installed-app",
+      "relative_path": "Frameworks/ComposeApp.framework/ComposeApp",
+      "sha256": "8a7a7f299098cf8831e2260f55aa8536863bda0f502aac1e1ac259d185425efe",
+      "bytes": 81949648,
+      "uuid": "47d85f5b-5b04-30c8-9891-5fb081e3e811",
+      "kind": "compose-framework"
+    },
+    "copied_framework": {
+      "origin": "owned-copy-build",
+      "relative_path": "bin/iosSimulatorArm64/debugFramework/ComposeApp.framework/ComposeApp",
+      "sha256": "e0c593b048bbe42fe390bf66d2249fe9c61b896851a8095b9b6e3725840f29cf",
+      "bytes": 82410632,
+      "uuid": "47d85f5b-5b04-30c8-9891-5fb081e3e811",
+      "kind": "compose-framework"
+    },
+    "same_framework_UUID_is_not_byte_identity_or_mapped_origin_proof": true
+  },
+  "provenance": {
+    "status": "FAIL",
+    "actual_primary_error": {
+      "type": "RuntimeError",
+      "message": "Runtime contains an unbound application/framework image"
+    },
+    "strict_rejection_location": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/external_image_provenance.py:214-218",
+    "sample_command_exit_code": 0,
+    "sample_output_diagnostics": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-13/sample-images-failure.json",
+      "sha256": "e2b2ff422ae91d88be59d044d779132e8064f8f47ecff2ab6c02c5c7ba314cc2"
+    },
+    "decoded_sample_bytes": 94756,
+    "scanned_Binary_Images_lines": 491,
+    "table_count": 1,
+    "known_candidate_count": 3,
+    "diagnostic_inventory_value_hash_matched": true,
+    "observed_candidate_paths": [
+      {
+        "table_line": 1,
+        "image_name": "Parlor",
+        "installed_artifact_index": 1,
+        "component_differences": [
+          {
+            "index": 2,
+            "literal": "*"
+          }
+        ],
+        "reconstructed_observed_presentation": "/Users/*/Library/Developer/CoreSimulator/Devices/465433C2-00B7-4F9C-A00D-534656778AA2/data/Containers/Bundle/Application/1D4857FE-8AD3-42EA-B24C-79E6FF17CB7B/Parlor.app/Parlor",
+        "matching_uuid_artifact_indexes": [
+          1,
+          5
+        ],
+        "interval": {
+          "syntax_matches": true,
+          "start": 4373020672,
+          "end": 4373034711,
+          "start_hex_digits": 9,
+          "end_hex_digits": 9,
+          "within_u64": true,
+          "ordered_nonzero": true,
+          "end_inclusive": true
+        },
+        "interpretation": "Closed metadata establishes an installed-path presentation except literal username star; not an accepted alias, full-path kernel proof or mapped-byte identity."
+      },
+      {
+        "table_line": 3,
+        "image_name": "Parlor.debug.dylib",
+        "installed_artifact_index": 2,
+        "component_differences": [
+          {
+            "index": 2,
+            "literal": "*"
+          }
+        ],
+        "reconstructed_observed_presentation": "/Users/*/Library/Developer/CoreSimulator/Devices/465433C2-00B7-4F9C-A00D-534656778AA2/data/Containers/Bundle/Application/1D4857FE-8AD3-42EA-B24C-79E6FF17CB7B/Parlor.app/Parlor.debug.dylib",
+        "matching_uuid_artifact_indexes": [
+          2,
+          6
+        ],
+        "interval": {
+          "syntax_matches": true,
+          "start": 4373299200,
+          "end": 4373344859,
+          "start_hex_digits": 9,
+          "end_hex_digits": 9,
+          "within_u64": true,
+          "ordered_nonzero": true,
+          "end_inclusive": true
+        },
+        "interpretation": "Closed metadata establishes an installed-path presentation except literal username star; not an accepted alias, full-path kernel proof or mapped-byte identity."
+      },
+      {
+        "table_line": 12,
+        "image_name": "ComposeApp",
+        "installed_artifact_index": 0,
+        "component_differences": [
+          {
+            "index": 2,
+            "literal": "*"
+          }
+        ],
+        "reconstructed_observed_presentation": "/Users/*/Library/Developer/CoreSimulator/Devices/465433C2-00B7-4F9C-A00D-534656778AA2/data/Containers/Bundle/Application/1D4857FE-8AD3-42EA-B24C-79E6FF17CB7B/Parlor.app/Frameworks/ComposeApp.framework/ComposeApp",
+        "matching_uuid_artifact_indexes": [
+          0,
+          4,
+          8,
+          9
+        ],
+        "interval": {
+          "syntax_matches": true,
+          "start": 4457938944,
+          "end": 4500656855,
+          "start_hex_digits": 9,
+          "end_hex_digits": 9,
+          "within_u64": true,
+          "ordered_nonzero": true,
+          "end_inclusive": true
+        },
+        "interpretation": "Closed metadata establishes an installed-path presentation except literal username star; not an accepted alias, full-path kernel proof or mapped-byte identity."
+      }
+    ],
+    "root_cause_scope": "The current exact/USER-only control cannot bind literal-star username presentation in three actual strict Binary Images rows. The first launcher row deterministically triggers the original fail-closed error. This is a verification-tool format gap, not a demonstrated application defect or crash.",
+    "header_scope": "Header uses literal USER in username position; unchanged header guard accepted it before first image rejection. Legacy exact-only diagnostic predicate false is not the actual failing guard.",
+    "framework_origin_limit": "All retained nonusername components match the installed embedded framework, unlike copied-framework origins. This supports an installed-path presentation only. UUID also matches byte-different copied frameworks; no mapped-byte or accepted origin proof exists.",
+    "separate_ninth_launch": {
+      "pid": 62322,
+      "uid": 501,
+      "started": [
+        1788842594,
+        118571
+      ],
+      "executable": "/Users/abdelrahman/Library/Developer/CoreSimulator/Devices/465433C2-00B7-4F9C-A00D-534656778AA2/data/Containers/Bundle/Application/1D4857FE-8AD3-42EA-B24C-79E6FF17CB7B/Parlor.app/Parlor",
+      "generation": 1854661,
+      "audit_token_sha256": "fcb55aaaf2b8e5d03091d27d467636baa96b6c606d9d3b199ce4332be13f44ce",
+      "bracketed_lifetime_unchanged": true
+    },
+    "sample_post_command_lifetime_boolean_verified": true,
+    "vmmap": {
+      "exit_code": 255,
+      "command": [
+        "/usr/bin/vmmap",
+        "-w",
+        "62322"
+      ],
+      "recorded_result": {
+        "kind": "FAILURE_ONLY_VMMAP_AFTER_SAMPLE_REJECTION",
+        "proves_provenance": false,
+        "status": "FAILED_COMMAND_OR_LIFETIME",
+        "sample_selection_available": false,
+        "original_sample_failure_preserved": true,
+        "command_attempted": true,
+        "command_succeeded": false,
+        "lifetime_before_verified": true,
+        "lifetime_after_verified": true,
+        "command_error_type": "RuntimeError"
+      },
+      "raw_output_retained": false,
+      "mapping_metadata_retained": false,
+      "cause": "UNCONFIRMED \u2014 no raw failure message or closed cause classifier retained; exit255 alone does not establish permission denial, unsupported environment or app fault.",
+      "bounds": "One failure-only attempt; pre/post lifetime true, no selected sample, no bind_vmmap call, no override of original sample error."
+    }
+  },
+  "root_preflight_incident": {
+    "classification": "FAIL \u2014 ROOT-REPORTED EPHEMERAL PREFLIGHT; CAUSE UNCONFIRMED",
+    "failure_record": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/normal-source12-native13-root-preflight-failure-01.json",
+      "sha256": "a6a5780ace88123203c51a69d2ffb5061d2a933bfbf5cd30de4515879a3a2b53"
+    },
+    "transcription": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/normal-source12-native13-root-preflight-transcript-01.json",
+      "sha256": "cd49491ead8ebbc2b169853b2e057d74ef047a34ad4c7ad83da2ab3c05f6590f"
+    },
+    "evidence_provenance": "Supplement is root transcription of tool history, not independent OS-level raw capture. Reviewer verified its bytes and source reachability, not the absent matching PID set.",
+    "recorded_failing_line": "conflicts=[dict(pid=k,kind='build') for k,v in run.snapshot_processes().items() if 'org.gradle.launcher.daemon.bootstrap.GradleDaemon' in v['command'] or v['command'].split()[0].endswith('/xcodebuild')];assert not conflicts",
+    "recorded_traceback": "Traceback (most recent call last):\n  File \"<stdin>\", line 9, in <module>\nAssertionError\n",
+    "shell_behavior": "Missing set-e/&& allowed the already-approved native command after preflight AssertionError. Do not call the failed preflight PASS.",
+    "counter_evidence": "Current hashed main checks exact controls and exclusive flock; Lane.prepare compares source binding, original output absence and its own current process-conflict guard before allocation. Actual input/copy/native commands prove this guarded path reached build; they cannot recover the earlier conflicting set.",
+    "recommended_correction": "Separate fail-fast preflight and native invocations; preserve bounded exact conflict classifications without full unrelated command lines. Root states future calls corrected; not independently executed here."
+  },
+  "cleanup": {
+    "status": "PASS",
+    "command_count": 41,
+    "command_nonzero_only": [
+      {
+        "index": 33,
+        "exit_code": 255,
+        "kind": "failure-only vmmap"
+      }
+    ],
+    "immediate_Gradle_stop_exit": 0,
+    "immediate_stop_delay_after_Xcode_seconds": 0.003421,
+    "embedded_build_and_stop_exits": 0,
+    "final_Gradle_stop_exit": 0,
+    "finalization_stages": 12,
+    "ownership_records_observed": 85,
+    "secondary_attested_records": 2,
+    "secondary_removed_paths": [
+      "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-60480/IB/E17C16C9-381D-4FF1-9381-449984F9CBC1.RemoteToHost",
+      "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-60480/IB/E17C16C9-381D-4FF1-9381-449984F9CBC1.HostToRemote",
+      "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-60480/IB",
+      "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-60480"
+    ],
+    "owned_survivors_unknown_holders_errors": [],
+    "all23_exact_paths_independently_lstat_absent": [
+      "/Users/abdelrahman/Library/Developer/CoreSimulator/Devices/465433C2-00B7-4F9C-A00D-534656778AA2",
+      "/Users/abdelrahman/Projects/parlor/build",
+      "/Users/abdelrahman/Projects/parlor/build-logic/build",
+      "/Users/abdelrahman/Projects/parlor/build-logic/convention/build",
+      "/Users/abdelrahman/Projects/parlor/composeApp/build",
+      "/Users/abdelrahman/Projects/parlor/game-modes/mafia/build",
+      "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/build",
+      "/Users/abdelrahman/Projects/parlor/iosApp/build",
+      "/Users/abdelrahman/Projects/parlor/shared/content/build",
+      "/Users/abdelrahman/Projects/parlor/shared/core/build",
+      "/Users/abdelrahman/Projects/parlor/shared/design-system/build",
+      "/Users/abdelrahman/Projects/parlor/shared/engine/build",
+      "/Users/abdelrahman/Projects/parlor/shared/engine-testing/build",
+      "/Users/abdelrahman/Projects/parlor/shared/networking/build",
+      "/Users/abdelrahman/Projects/parlor/shared/networking-testing/build",
+      "/Users/abdelrahman/Projects/parlor/shared/session/build",
+      "/Users/abdelrahman/Projects/parlor/shared/storage/build",
+      "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/build",
+      "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-60480",
+      "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-60480/IB",
+      "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-60480/IB/E17C16C9-381D-4FF1-9381-449984F9CBC1.HostToRemote",
+      "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-60480/IB/E17C16C9-381D-4FF1-9381-449984F9CBC1.RemoteToHost",
+      "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-ios-readiness-13-74ap6ub9"
+    ],
+    "original_source_outputs_and_shared_global_caches_not_deleted_by_reviewer": true,
+    "raw_sample_vmmap_stdout_stderr_removed_with_owned_allocation": true,
+    "process_boundary": "Reviewer reconciled owner-scoped receipts; no process/account API or signals invoked."
+  },
+  "remaining_smallest_verification": [
+    "Keep native13 and older failures immutable; do not claim the new diagnostics repaired provenance.",
+    "Defer alias repair until vmmap capability is understood. Any later star support must be finite exact full-path lookup only at the attested current-account username slot, never wildcard/regex/any-user matching; preserve source-origin separation, duplicates, UUID/range/hash/lifetime checks and label lossy presentation.",
+    "Before another app build, source-review a minimal root-owned harmless sleep-child vmmap capability probe with a bounded closed nonzero-command diagnostic and mandatory owned-child cleanup. No existing PID, app, sudo, private entitlement, account, or broad process access; host-child success is not Simulator-app permission proof.",
+    "Do not claim sample -fullPaths changes Binary Images anonymization; no applicable authoritative support established.",
+    "Full app/physical LAN/iOS16/Store-qualified Xcode/signing/legal readiness, IOS-R1, Follow System/L08 and historical repeated-launch crash cause remain separate."
+  ],
+  "original_failed_receipts_unchanged": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-09/receipt.json",
+      "sha256": "7035d9505efe8cf1d5d9012024c6c5883c0e9371b97a5a5c5a0cfa15ccf36567"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-10/receipt.json",
+      "sha256": "0daf830ce66ad7c11c271431dcd53996ea530e55dd1b5b4c2ff89d15abf14589"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-11/receipt.json",
+      "sha256": "d06746d020ca6601e8c5398076c64a4684bd5081687eb519e0de986914df91f5"
+    }
+  ],
+  "new_receipt_remains_failure": true,
+  "reviewer_hygiene": {
+    "stdlib_JSON_hash_AST_or_inmemory_diff_checks_only": true,
+    "project_tests_or_native_process_calls": 0,
+    "production_canonical_Git_changes": 0,
+    "deletions_signals_workers": 0,
+    "new_additive_review_JSON_only": true
+  }
+}

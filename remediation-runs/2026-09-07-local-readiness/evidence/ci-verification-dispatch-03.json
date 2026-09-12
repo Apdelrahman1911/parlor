@@ -1,0 +1,44 @@
+{
+  "at": "2026-09-07T18:33:52.962830+00:00",
+  "repository": "Apdelrahman1911/parlor",
+  "workflow": ".github/workflows/production-verification.yml",
+  "ref": "fix/local-readiness-2026-09-07",
+  "sha": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+  "scope": "Existing verification-only per-host CI lanes; no Store signing or publication, no private credentials, no issue changes. Separate host RAM/disks.",
+  "command": [
+    "gh",
+    "workflow",
+    "run",
+    "production-verification.yml",
+    "--repo",
+    "Apdelrahman1911/parlor",
+    "--ref",
+    "fix/local-readiness-2026-09-07"
+  ],
+  "prior_runs": [
+    {
+      "conclusion": "failure",
+      "databaseId": 34143924756,
+      "headSha": "0b3090a40ff8135b04e0d6e9933c0af5d160daba",
+      "status": "completed"
+    },
+    {
+      "conclusion": "failure",
+      "databaseId": 34112913001,
+      "headSha": "f5ea8045bd903c255041b198f54aca67e893612f",
+      "status": "completed"
+    }
+  ],
+  "independent_workflow_review": "/root/release_fix_review source/message + reviews/verification-dispatch-authoritative-research-01.json",
+  "exit_code": 0,
+  "stdout": "https://github.com/Apdelrahman1911/parlor/actions/runs/34152138368\n",
+  "stderr": "",
+  "run_readback": {
+    "databaseId": 34152138368,
+    "event": "workflow_dispatch",
+    "headBranch": "fix/local-readiness-2026-09-07",
+    "headSha": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+    "status": "queued",
+    "url": "https://github.com/Apdelrahman1911/parlor/actions/runs/34152138368"
+  }
+}

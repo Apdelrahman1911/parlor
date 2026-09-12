@@ -1,0 +1,1067 @@
+{
+  "schema_version": 1,
+  "author": "/root/release_fix_review",
+  "recorded_at": "2026-09-07T15:21:57.567289+00:00",
+  "purpose": "FRESH SOURCE/TASK-BACKED FINAL GATE TEMPLATE, NOT EXECUTION OR TOTAL AUDIT COVERAGE CLAIM",
+  "baseline": {
+    "repository": "/Users/abdelrahman/Projects/parlor",
+    "branch": "fix/local-readiness-2026-09-07",
+    "commit": "5d9f5f4c81ff51ee70922c876eefb91c6e669d56",
+    "tree": "3fbc4908ae41fab311e5e936e3ec8913199da7ad",
+    "tracked_status": "M .github/workflows/production-verification.yml\n M docs/DEPENDENCY_REVIEW.md\n M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_control_tests.py\n M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py\n M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_normal_launch_controls.py\n M scripts/release/tests/test_workflow_contract.py\n M scripts/release/workflow_contract.py",
+    "working_diff_sha256": "a95f847c4c9a630166a071f07fa0cf6e79d40b84be0d589744779f80348a70b0",
+    "provisional": true,
+    "reason": "Root concurrently finalizing reviewed documentation/resources; no frozen release candidate implied."
+  },
+  "method": "Reopened root aggregates, settings/conventions, all13 KMP module configs, policy/workflow, release/ownership helpers, relevant test placement, actual retained receipts/XML/log descriptors and old41 gate statements. Static/source reconciliation only; no reviewer builds/tests/native operations. Every old row is mapped, none inherits PASS. This is not a replacement for a file-level line-by-line application audit.",
+  "source_inputs": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/.github/workflows/production-verification.yml",
+      "sha256": "eb6ac6fb35621d49bede96b7fc008d6d4ac364ff44e7bafc46700ea38ef94a81",
+      "lines": 652
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/build-logic/convention/build.gradle.kts",
+      "sha256": "d97140c79c500416f3ef1b5a54b2d05f6d0aa895f92b6cd85c26a70c8852ac67",
+      "lines": 62
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/build-logic/settings.gradle.kts",
+      "sha256": "d86cd60d448dfb6ebf0c9b6977456dc7b93865afe5c415dc368a56ab6ef1f729",
+      "lines": 18
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/build.gradle.kts",
+      "sha256": "bd6199e1f097eb236c50c46efb91d291550110f6b4d95a8e95ff0db4d8da192b",
+      "lines": 204
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/build.gradle.kts",
+      "sha256": "c23525d6b06f9b536fb5e8ef6be68c653952fa9764e276f831772b864621fdd5",
+      "lines": 627
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/config/parlor-version.xcconfig",
+      "sha256": "4975e763730608718095d3c7342f34f333a86e20cf562eb221b9e3478fa93f9e",
+      "lines": 4
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/config/release-policy.json",
+      "sha256": "316b28f75a13e0b925beb6bcd893b82e077a1a9efa850022026e830f9b1d4ad4",
+      "lines": 119
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/docs/DEPENDENCY_INVENTORY.md",
+      "sha256": "ba13764bc6e544c9cf5803c5b9fbbe8262469fd9fe4474eaa6477be7e6876fb8",
+      "lines": 68
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/docs/PRE_RELEASE_COMPATIBILITY.md",
+      "sha256": "32ae112de9fd761636191c3308faf28fa5a3a8f3fd694064bbeaf3f2ffe69060",
+      "lines": 59
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/docs/RELEASE_GATES.md",
+      "sha256": "19ee19acf35f833e3bd61b03d3113c6a3ea05b67afcbe1b956e9d4aa070a3f32",
+      "lines": 109
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/docs/WHODUNIT_DISCUSSION_TIMING.md",
+      "sha256": "877084e47d0e823278057da1f0881fbab0a52e5a8e57aa48eec5fbabc49cece1",
+      "lines": 39
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/docs/WHODUNIT_TEST_CONTENT.md",
+      "sha256": "e10fc5f4d8d5024c5a9f1fcf51d1bf30a9a1fda410843ed51e42d66186cd5a33",
+      "lines": 135
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/build.gradle.kts",
+      "sha256": "7aceb370331f84b2fee70bb039b7779bdd818ea78aab15da3bfcfd137a76ad2d",
+      "lines": 43
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/build.gradle.kts",
+      "sha256": "2eb4b00a53ff1eff42f2a64b3de1a1c4d28b08d419ad2828045a063320e4696c",
+      "lines": 53
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/gradle.properties",
+      "sha256": "2df8685921ad2c6eead097a6d9994bbcc93dbc5cbdeb0bce8911ffa4e83162ce",
+      "lines": 29
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/gradle/libs.versions.toml",
+      "sha256": "87a031665605a1fb3f932be31c75afd8d2d1bc0d94cfcca36101141c50788399",
+      "lines": 106
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/gradle/wrapper/gradle-wrapper.properties",
+      "sha256": "c040b6ef2fb893ff5beea5a281614f2848f1c3996a7886f650b713f8240656a2",
+      "lines": 8
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
+      "sha256": "5b69fc6d6c1efbdd61e049057c57f3eddb1d11e1f804bb8ec8debc7e9aba42c8",
+      "lines": 677
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/owned_ios_simulator.init.gradle",
+      "sha256": "e857bd0d8fbc18199ee1fbaef7e01ae325785397b5e23f82186462f9a33c3b34",
+      "lines": 68
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py",
+      "sha256": "15976d75c765d411450baad6d1b42bcf78e68e1a743758f7503a658cdd8afc2a",
+      "lines": 304
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/android/run_release_managed_device_smoke.sh",
+      "sha256": "5b6dc8fcdd7b11c9cefd39da3adb8783321b647cd9a8459ff761ef7fa031262d",
+      "lines": 58
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/release/validate_release_system.sh",
+      "sha256": "ce52c9c08edecba968337d6de42c90895badec127c7029a5afc16737d3b8864a",
+      "lines": 104
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/release/workflow_contract.py",
+      "sha256": "77072dd274b0468d25a9cfb1e81111b036130b61c29b6117eb3bc1759981301d",
+      "lines": 724
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/settings.gradle.kts",
+      "sha256": "27a40495b1adf18ca90b5a8fdd345448c2ecf2f9ac726c753468a5e627b27d18",
+      "lines": 55
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/content/build.gradle.kts",
+      "sha256": "f956862a089a95ba41f4de714e95d1ac44a23d80994c323ba61a1c0c28d34939",
+      "lines": 24
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/core/build.gradle.kts",
+      "sha256": "05bafd928b020cd386aab5593ba73c5e470d44005f9c23dff739a42b577f31dd",
+      "lines": 23
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/build.gradle.kts",
+      "sha256": "118d898f900e3b8ccc76db6fca658d69a0d211c5220b6985738f14428a99f78d",
+      "lines": 25
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/engine-testing/build.gradle.kts",
+      "sha256": "096e9f4f67d514fd0a41de6853ad599cf5e3f3168b3294d8c3d71db5eaeac87f",
+      "lines": 20
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/engine/build.gradle.kts",
+      "sha256": "4cbe86781aa8f11d2ef91381855ab3bcb3b126ef53b6a8272b79c478f90fc38a",
+      "lines": 24
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/networking-testing/build.gradle.kts",
+      "sha256": "81ed6260d7ac49fada4f0a922dde7db77fc557b86ab0a5884d5b20a64ec74f7e",
+      "lines": 17
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/networking/build.gradle.kts",
+      "sha256": "765ac532634f0dc088a5ded8c32bfc6550aa6408155b44d2956be395d131d621",
+      "lines": 23
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/session/build.gradle.kts",
+      "sha256": "3be79bcdba5c593eed5ac93d6000043911cd913ab1d7d2c70ab0be7ea37c80b8",
+      "lines": 22
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/storage/build.gradle.kts",
+      "sha256": "096e9f4f67d514fd0a41de6853ad599cf5e3f3168b3294d8c3d71db5eaeac87f",
+      "lines": 20
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/build.gradle.kts",
+      "sha256": "6ce2fd726bd41031a5b26d0d30f8ee8f693b4dc942da90bdc48b40fbf040c3b7",
+      "lines": 100
+    }
+  ],
+  "status_semantics": "BLOCKED means final gate is not yet executed/bound or requires specified environment/owner. Historical scoped PASS receipts are separate. NOT_APPLICABLE has explicit source/policy basis. This template is not a count of unfixed defects.",
+  "percentage": {
+    "value": null,
+    "reason": "No valid final completed-gate numerator until root freezes and records results. Old41 percentages and16-fix scope do not equal project/Store readiness. Do not mix grouped parent gates with duplicate aggregate children in one denominator."
+  },
+  "local_final_gates": [
+    {
+      "id": "L01",
+      "gate": "Final source/control freeze and input identity",
+      "status": "BLOCKED",
+      "reason": "Implementation/documentation and final verification are still active. A clean tracked tree alone does not bind preserved untracked build inputs.",
+      "next": "Record full commit/tree, staged and working diff hashes, build-consumed tracked/untracked source hashes, dependency metadata, JDK21/Gradle8.13/Xcode versions, reviewed runner/control hashes, and retained baseline-user-work comparison. Never stash/reset/delete user files."
+    },
+    {
+      "id": "L02",
+      "gate": "Final host-independent productionCheck",
+      "status": "BLOCKED",
+      "reason": "No exact-final-candidate aggregate receipt yet; focused prior results cannot substitute.",
+      "command_template": "/usr/bin/python3 -B remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py final-production-check-NN productionCheck",
+      "covers": [
+        "All13 KMP desktopTest tasks with main compilation",
+        "App Android Debug/Release unit suites, release compilation, R8, unsigned AAB",
+        "lintRelease and accepted-warning enforcement; merged manifest and Debug/Store identity guards",
+        "Plain repository/build-logic Detekt and type-aware common/desktop/Android gates",
+        "Game-shell dispatch",
+        "Complete release Python/security/signature/tool/workflow/inventory validation"
+      ],
+      "must_inspect": [
+        "Actual task outcomes and raw JUnit descriptors, not just BUILD SUCCESSFUL",
+        "Compiled Jupiter signature guard executes; all3 physical P2pKit fixtures remain explicit skips",
+        "R8 optional asynchronous-parser fallback and prospective Kotlin2.5/Gradle warning retained, not hidden",
+        "Every16 original regression plus later timer/content/layout/transport/CI/dependency tests discoverable; no repeated focused run counted as new coverage"
+      ]
+    },
+    {
+      "id": "L03",
+      "gate": "Root allTests plus actual iOS simulator runtime",
+      "status": "BLOCKED",
+      "reason": "Current complete runtime aggregate has not run at final source. Native engine/Doctor test absence in old ledger is obsolete.",
+      "command_template": "/usr/bin/python3 -B remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py final-alltests-ios-NN --ios-simulator allTests productionIosSimulatorRuntimeTests",
+      "covers": [
+        "Every module allTests actually registered (including module Android unit suites absent from the explicit app-only Android aggregate)",
+        "Every executable iosSimulatorArm64Test on a newly created owned UUID; main/native compilation as dependencies"
+      ],
+      "must_inspect": [
+        "AUDIT_SIMULATOR_BOUND lines and actual XML runtime suites; NO-SOURCE/SKIPPED/disabled targets are not runtime PASS",
+        "GameRegistryTest5 and GameSnapshotTest4 are now commonTest",
+        "MafiaDoctorRulesTest8 and MafiaDoctorHistoryRecoveryTest15 are now commonTest; confirm native execution, not only Desktop",
+        "Do not enable or relabel3 physical P2pKit tests",
+        "Owned init rejects unexpected enabled simulator tasks; treat such failure as investigation, not disablement permission"
+      ]
+    },
+    {
+      "id": "L04",
+      "gate": "Final Apple release frameworks and compiler-backed static analysis",
+      "status": "BLOCKED",
+      "reason": "Final source links/Apple type-aware gates pending; local Xcode is not qualified26.3/17C529.",
+      "command_template": "PARLOR_REMEDIATION_GRADLE_HEAP=6g /usr/bin/python3 -B remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py final-apple-links-NN productionAppleCheck",
+      "covers": [
+        "Apple type-aware Detekt tasks actually registered",
+        "Release framework links for iosArm64, iosSimulatorArm64, iosX64"
+      ],
+      "must_inspect": [
+        "Serial links and actual architecture identities/hashes",
+        "No device/iosX64 runtime claim from linkage",
+        "Capture preserved plist/privacy artifacts before immediate cleanup"
+      ]
+    },
+    {
+      "id": "L05",
+      "gate": "Final unsigned Android artifact and shipped-resource inspection",
+      "status": "BLOCKED",
+      "reason": "Dependent on final L02 bytes. The generic lane records AAB hashes/ZIP entries and merged manifest, but that alone is not complete DEX/resource/license/signature verification.",
+      "command_template": "Within the single L02 lane, before cleanup: inspect the one unsigned composeApp/build/outputs/bundle/release/*.aab, ZIP integrity, base/manifest/AndroidManifest.xml, base/dex/classes.dex, merged release manifest, expected resource/notice bytes, native ABI/content and dependency/DEX policy; preserve compact hashes/results.",
+      "not_proven": [
+        "Store signature, upload fingerprint or Play acceptance",
+        "All input dependencies surviving R8/native linking",
+        "Unimplemented notice delivery from merely prepared upstream input evidence"
+      ]
+    },
+    {
+      "id": "L06",
+      "gate": "Final unsigned Swift Release wrapper and artifact inventory",
+      "status": "BLOCKED",
+      "reason": "A final current-source unsigned wrapper must be built/inspected separately from KMP linkage and Debug runtime.",
+      "command_payload": "xcodebuild -project iosApp/iosApp.xcodeproj -scheme iosApp -configuration Release -sdk iphonesimulator -destination generic/platform=iOS\\ Simulator -derivedDataPath <FRESH_OWNED_DERIVED_DATA> ARCHS=arm64 ONLY_ACTIVE_ARCH=YES CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO build",
+      "execution_condition": "Use root-reviewed Xcode ownership/finalization lane; the CI-only helper refuses local use. Do not run an unwrapped payload or reuse historical DerivedData.",
+      "must_inspect": [
+        "Executable plus every owned embedded framework/dylib UUID/hash, architecture, Info.plist version/build/Store identity and privacy manifest",
+        "Required shipped resource/notice bytes; signed-Store scope remains excluded",
+        "Immediately stop Gradle after Xcode, preserve compact evidence, retire attested workers and remove only owned copy/build/DerivedData"
+      ]
+    },
+    {
+      "id": "L07",
+      "gate": "Uninstrumented application-source Debug cold-launch matrix and separate mapped-image observation",
+      "status": "BLOCKED",
+      "reason": "Normal-source controls74 passed, but approved source03/source04 bindings are historical and actual8+1 runtime remains unexecuted in inspected evidence.",
+      "command_template": "/usr/bin/python3 -B remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py ios-readiness-NN <FRESH_SOURCE_BINDING> <INDEPENDENTLY_APPROVED_CURRENT_CONTROL_SHA256> --simulator-signing=adhoc",
+      "must_inspect": [
+        "Current normal runner pins localXcode26.5/17F42 and iOS26.5; verify actual host applicability before approval",
+        "Eight XCTest cold launches with >=10second Home stability, then a separate ninth Debug simctl launch for sample/vmmap image provenance",
+        "Ninth observation is NOT a Release run and not an additional credited XCTest pass",
+        "Fresh source/control freeze, nonauthor approval, post-build copy equality, executed dylib/framework identity and complete ownership/FIFO cleanup",
+        "No invented explanation of historical first-four launch failures"
+      ]
+    },
+    {
+      "id": "L08",
+      "gate": "iOS Settings/OS-language and synthetic app-host storage continuity",
+      "status": "BLOCKED",
+      "reason": "Scoped readiness04 PASS is real historical evidence, not a final-current-source aggregate. Rebind unchanged covered app/control bytes or rerun after relevant changes; keep uncovered scenarios explicit.",
+      "historical_evidence": "evidence/ios-readiness-04/receipt.json",
+      "covered_scope": [
+        "Actual iOS Settings Arabic preference PRESENT baseline; in-app English override -> System restores exact presence/array through restart",
+        "Real UIKit containment/direction and stable local Whodunit PublicIntro/Mafia RoleAssignment controllers through EN/AR/rotation/lifecycle changes",
+        "Synthetic production-interface credential/snapshot write/read-match/delete/absence across8 cold boots under recorded ad-hoc simulator context"
+      ],
+      "remaining": [
+        "Retained multiplayer-host native matrix NOT_RUN",
+        "Full legacy migration/corrupt-save recovery/full-game save-resume under app host not established by health probes",
+        "Actual device Keychain/backup restore/power-loss behavior and Store signing context separate",
+        "Game language changes in active sessions are copy-only calls to real SettingsStore, not an exposed in-game Settings route"
+      ]
+    },
+    {
+      "id": "L09",
+      "gate": "Android R8 release runtime local alternative",
+      "status": "BLOCKED",
+      "reason": "Owned API35 ARM64 runtime06 has3 real instrumentation tests at historical app bytes, not final artifact bytes or pinned Linux managed-device proof. Rebind/rerun if shipping inputs change.",
+      "historical_evidence": "evidence/android-arm64-runtime-06/receipt.json",
+      "remaining": [
+        "Canonical Linux/KVM/x86_64 image revision9 managed-device gate is C01",
+        "No physical LAN/TalkBack/Store proof",
+        "Preserve earlier runtime05 failure and explicitly unowned emulator crash-database limitation; never inspect/delete unrelated crash data"
+      ]
+    },
+    {
+      "id": "L10",
+      "gate": "Release tooling and CI controls combined",
+      "status": "BLOCKED",
+      "reason": "Current source code bytes have independently checked combined02 PASS; final source/inventory receipt required after root commits/documentation changes. Normally reruns inside L02, not another mandatory redundant batch.",
+      "command_template": "/usr/bin/python3 -B remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py final-release-controls-NN --command scripts/release/validate_release_system.sh",
+      "historical_evidence": "evidence/release-controls-combined-02/receipt.json",
+      "covered_scope": [
+        "251 Python tests0fail/error/skip including RL-C1,C2,C3, Xcode stale-output failure propagation, workflow contracts, CI cleanup and dependency utilities",
+        "Full workflow CLI,752-row mechanical inventory freshness at its bound hash, actual checksum-pinned ShellCheck/actionlint",
+        "Separate positive RFC3161 real disposable timestamped JAR + production validator fragment; wrong-fingerprint/tampered fixtures reject",
+        "Local own-child Darwin marker/token-bound TERM/reap probe PASS; not actual XPC or qualified CI execution"
+      ],
+      "remaining": [
+        "Do not rerun positive external timestamp probe without reviewed current harness/endpoint approval; retain original evidence and show relevant code bytes unchanged",
+        "Synthetic signing is not a real signed AAB/Store validation",
+        "Original release-controls-combined01 and native-probe01 failures remain intact"
+      ]
+    },
+    {
+      "id": "L11",
+      "gate": "Resolved dependency/SBOM/notice-source and final delivery binding",
+      "status": "BLOCKED",
+      "reason": "Four resolved input graphs and validated SBOMs exist; frozen source/final packaged delivery still need binding. No unresolved POM metadata in research03.",
+      "commands": [
+        "/usr/bin/python3 -B remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py final-dependency-graphs-NN writeResolvedDependencyInventory -I scripts/verification/resolved_dependencies.init.gradle -Pparlor.dependencyInventoryDir=<FRESH_ABSOLUTE_EVIDENCE_GRAPH_DIR>",
+        "/usr/bin/python3 -B scripts/verification/dependency_inventory.py <FRESH_GRAPH_DIR> <FRESH_DECLARATIONS_DIR>"
+      ],
+      "covered_scope": [
+        "research03:456 selected GAVs,459 exact POMs including3 parents,372 artifact occurrences,2462 deduplicated nonconstraint edges,0 unresolved metadata",
+        "Four CycloneDX1.6 input SBOMs validated against exact official schemas",
+        "Upstream native/compiler/font notice inputs independently inspected; resource-only supplement design is not yet a final delivery proof"
+      ],
+      "remaining": [
+        "Re-export/review graph changes at final source; pin output/source hash and verify official schema locally",
+        "Inspect exact embedded dependency/native/license content and applicable advisories rather than interpreting POM labels as complete redistributed content",
+        "Confirm notices/resources actually enter both final app artifacts; legal owner decisions remain O04",
+        "docs/DEPENDENCY_REVIEW.md stale no-SBOM/no-report statements flagged to root; root is updating prose, so final docs/hash require reread"
+      ]
+    },
+    {
+      "id": "L12",
+      "gate": "Focused regression descriptors and compatibility/content assertions",
+      "status": "BLOCKED",
+      "reason": "Prior focused execution is evidence, but final L02/L03 interactions and actual descriptor discovery remain required; no separate heavyweight run needed if included there.",
+      "must_inspect": [
+        "Existing Doctor flag OFF default; ON same eligible target >=3 nights (current regression uses4); OFF rejects repeats/allows alternating; skips/self eligibility/first submission/recovery/rejoin privacy tests execute",
+        "All16 repair regressions including host cancellation/late commit, readiness remount, final-two recovery, backup retention, language ownership, toast identity, cover contrast and final-role layout",
+        "Whodunit selected story corrections/current versions/digests, exact old-save rejection,84 game/mode/killer traces with deterministic repeats and snapshots, retained intentional lies",
+        "Later timer policy excludes Leave-modal time without pausing peers or changing canonical authority;6 local+4 host UI tests",
+        "LocalizationResourceContractTest key/format parity, real compact/large-font layout tests and protocol4.2/privacy contracts; no translation/a11y certification inferred",
+        "Current story versions: last-dinner1.0.2, layla-halabi1.0.2, jasmine-ring1.0.3, khan-el-khalili1.0.2, saidi-inheritance1.0.1, iskenderia-corniche1.0.2, zamalek-ramadan1.0.1. All bundles currently6players/both modes; engine support broader"
+      ]
+    },
+    {
+      "id": "L13",
+      "gate": "Final tree preservation and owned resource cleanup",
+      "status": "BLOCKED",
+      "reason": "Campaign still active; each inspected completed cycle has its own stop/cleanup evidence, not a final all-process declaration.",
+      "next": "Compare approved baseline refs/stashes/staged and working diffs/user files; bind final reports to exact code/resources/config, check git diff --check, verify task-owned outputs and workers absent. Never terminate root/other-task work. Keep required sanitized artifacts/reports only; source/dependency metadata/global caches/private data preserved."
+    }
+  ],
+  "other_host_device_and_owner_gates": [
+    {
+      "id": "C01",
+      "gate": "Linuxx64 canonical CI + managed Android runtime",
+      "status": "BLOCKED",
+      "kind": "CI_HOST_REQUIREMENT_NOT_PHYSICAL",
+      "commands": [
+        "./gradlew productionCheck productionStaticAnalysis productionReleaseAutomationCheck allTests --dependency-verification=strict --no-daemon --stacktrace --console=plain",
+        "scripts/android/run_release_managed_device_smoke.sh"
+      ],
+      "reason": "Run actual Ubuntu24.04 host graph and fresh Pixel2/API35/google x86_64 image revision9 on KVM; local macOS ARM64 emulator receipt is not this gate. Inspect actual instrumentation reports, unsigned artifact and cleanup upload receipts."
+    },
+    {
+      "id": "C02",
+      "gate": "Linuxarm64 Desktop host graph",
+      "status": "BLOCKED",
+      "kind": "CI_HOST_REQUIREMENT",
+      "commands": [
+        "./gradlew productionDesktopCheck --dependency-verification=strict --no-daemon --stacktrace --console=plain"
+      ],
+      "reason": "Actual Ubuntu24.04-arm graph/tests required; no Linuxarm64 Kotlin/Native host distribution claim."
+    },
+    {
+      "id": "C03",
+      "gate": "macOSx64 Desktop host graph and native distribution",
+      "status": "BLOCKED",
+      "kind": "CI_HOST_REQUIREMENT",
+      "commands": [
+        "./gradlew productionDesktopCheck :composeApp:downloadKotlinNativeDistribution --dependency-verification=strict --no-daemon --stacktrace --console=plain"
+      ],
+      "reason": "Actual macos15-intel host execution required. Download is not iOS/Native test runtime."
+    },
+    {
+      "id": "C04",
+      "gate": "Windowsx64 Desktop host and Android resources",
+      "status": "BLOCKED",
+      "kind": "CI_HOST_REQUIREMENT",
+      "commands": [
+        ".\\gradlew.bat productionDesktopCheck :composeApp:downloadKotlinNativeDistribution :composeApp:processDebugResources --dependency-verification=strict --no-daemon --stacktrace --console=plain"
+      ],
+      "reason": "Actual windows2025 host graph/aapt2 required; POSIX simulation is not Windows proof."
+    },
+    {
+      "id": "C05",
+      "gate": "Qualified macOSarm64/Xcode CI and native hygiene",
+      "status": "BLOCKED",
+      "kind": "QUALIFIED_TOOLCHAIN_CI_REQUIREMENT",
+      "commands": [
+        "./gradlew productionIosSimulatorRuntimeTests productionAppleCheck --dependency-verification=strict --no-daemon --stacktrace --console=plain",
+        "Exact owned-simulator xcodebuild test and unsigned Release wrapper stages in production-verification.yml"
+      ],
+      "reason": "Xcode26.3/17C529, SDK>=26, deployment16; validate actual per-cycle native/XPC tracking inheritance/path/permission support, fresh owned profile, worker+simulator cleanup, successful evidence-upload IDs/digests and exact source. Local26.5 runtime/probe does not substitute."
+    },
+    {
+      "id": "D01",
+      "gate": "Physical LAN two/three devices and mixed-platform full games",
+      "status": "BLOCKED",
+      "kind": "PHYSICAL_DEVICE",
+      "reason": "Fresh controlled Android/Android, iOS/iOS and both mixed host directions; both games, host-only reduction, own-private isolation, admissions, concurrent commands, wrong-code/rejoin/deadlines/lifecycle/net changes/leave/host loss/rematch.3 ignored physical fixtures stay ignored without actual required setup. Advertisement smoke proves neither join nor synchronization."
+    },
+    {
+      "id": "D02",
+      "gate": "Native accessibility, privacy, responsiveness and gestures",
+      "status": "BLOCKED",
+      "kind": "PHYSICAL_DEVICE_AND_HUMAN_REVIEW",
+      "reason": "Real TalkBack/VoiceOver EN/AR,200% text/compact/landscape/reduced motion, contrast/touch targets, Back/swipe guards, app-switcher screenshots, lock/unlock and performance. Desktop geometry and instrumented simulator rectangles cover only recorded cases, not full visual/a11y correctness."
+    },
+    {
+      "id": "D03",
+      "gate": "Physical iOS backup/restore and storage durability",
+      "status": "BLOCKED",
+      "kind": "PHYSICAL_DEVICE_EXTERNAL_STORAGE",
+      "reason": "Verify actual OS backup exclusion of retained legacy files under failed migration, last recoverable copy retention, backup/restore and protected Keychain behavior. Simulator Foundation flag tests/healthy synthetic app-host reads are not real backup or power-loss proof."
+    },
+    {
+      "id": "O01",
+      "gate": "Store identity ownership and publication safeguards",
+      "status": "BLOCKED",
+      "kind": "OWNER_DEPENDENT",
+      "reason": "Both Store identities remain known-colliding com.parlor.app; policy blocked flags and disabled candidate/promotion jobs remain intact. Only owner-authorized verified identity/service decisions may change them."
+    },
+    {
+      "id": "O02",
+      "gate": "Real Android/iOS Store signing, archive and eligibility",
+      "status": "BLOCKED",
+      "kind": "CREDENTIAL_AND_AUTHORIZATION_DEPENDENT",
+      "commands_not_authorized": [
+        "./gradlew productionAndroidSigningCheck --no-configuration-cache",
+        "Protected signed iOS archive/export/IPA validation on qualified Xcode"
+      ],
+      "reason": "Requires approved owner-held upload/distribution keys/profiles, team and actual signed-candidate validation. Synthetic approved self-signed certificates/RFC3161 and ad-hoc Debug simulator do not authorize or prove Store signing."
+    },
+    {
+      "id": "O03",
+      "gate": "Immutable candidate, Store readback, signed delivery and promotion",
+      "status": "BLOCKED",
+      "kind": "STORE_AND_RELEASE_AUTHORIZATION",
+      "reason": "Bind final reviewed SHA/tree/version/artifact bytes and exactly one build to candidate receipts; later real internal/TestFlight delivery/device checks and authorized Store readback/promotion consume those IDs without rebuild. History commits are not a release candidate; do not carry old no-commit-authorization statement forward or infer new Store authority."
+    },
+    {
+      "id": "O04",
+      "gate": "Legal, production editorial and Store declarations",
+      "status": "BLOCKED",
+      "kind": "OWNER_LEGAL_AND_EDITORIAL",
+      "reason": "All7 shipped stories remain testing/editorial approval only; final EN/AR editorial/balance/content-rights, project distribution license/trademark/fonts/dependency/native notices and redistribution terms, privacy/support URLs/Data safety/Apple answers/ratings/export compliance need owner approval. SBOM/schema/notices source inspection is technical input, not legal authorization."
+    }
+  ],
+  "not_applicable": [
+    {
+      "id": "N01",
+      "gate": "Desktop production packages/signing/notarization",
+      "status": "NOT_APPLICABLE",
+      "basis": "AGENTS.md and docs/RELEASE_GATES.md designate Desktop run/deterministic tests only; configured DMG/MSI/DEB conveniences are not a shipping-target decision."
+    },
+    {
+      "id": "N02",
+      "gate": "KSP/kapt task gates",
+      "status": "NOT_APPLICABLE",
+      "basis": "No KSP/kapt plugin/configuration in actual root/module/convention graph inspected; do not invent missing KSP tasks."
+    },
+    {
+      "id": "N03",
+      "gate": "Migration of ambiguous unmarked old internal iOS language overrides",
+      "status": "NOT_APPLICABLE",
+      "basis": "docs/PRE_RELEASE_COMPATIBILITY.md explicitly excludes ambiguous unpublished-build migration; current code must preserve legitimate unowned OS preferences. This exclusion does not waive current-build System/restart tests."
+    }
+  ],
+  "historical_scoped_evidence": [
+    {
+      "cycle": "focused-timer-retry-fixtures-03",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/focused-timer-retry-fixtures-03/receipt.json",
+      "sha256": "245bd48ccfb4300f73360d29d3081b9d98340b6ff68e598ad5b748bbb02ab772",
+      "recorded_status": "PASS",
+      "source_manifest_sha256": "b1c1ad695e7c2694ba1bffd25934e5553ea1a58430f6729c3dd19b799a05dab4",
+      "use": "Historical scoped evidence only; no automatic final-candidate PASS",
+      "xml_counts": {
+        "suites": 12,
+        "tests": 70,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "cycle": "focused-readiness-regressions-11",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/focused-readiness-regressions-11/receipt.json",
+      "sha256": "28bcb69eb0859a9ea72b45130bab43cb2fc21fdb5e6e4aeade909351ad5fdec6",
+      "recorded_status": "PASS",
+      "source_manifest_sha256": "6de2ea63e7cfe99b885605e58a2301918d2e6aa034b1b49043a3a49bd935ae00",
+      "use": "Historical scoped evidence only; no automatic final-candidate PASS",
+      "xml_counts": {
+        "suites": 18,
+        "tests": 111,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "cycle": "story-final-metadata-green-13",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/story-final-metadata-green-13/receipt.json",
+      "sha256": "865fd465a95936d12aa30431e453f85796b0ceedf33cffb15c790775698d1928",
+      "recorded_status": "PASS",
+      "source_manifest_sha256": "8c44bb4ed296e6aa13d1295d0276d98d7c8b91dac4ee8209bb0934d3bb2ad060",
+      "use": "Historical scoped evidence only; no automatic final-candidate PASS",
+      "xml_counts": {
+        "suites": 65,
+        "tests": 379,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "cycle": "mafia-toggle-layout-green-02",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-toggle-layout-green-02/receipt.json",
+      "sha256": "ef3a51ba8dbe320e4932c5affcaa8e475d2b827c6d68c3951b4b6fe6294e08bf",
+      "recorded_status": "PASS",
+      "source_manifest_sha256": "ca69fda738e901b57e0c7e875bb68d1042e9dbbca0c188358709ca2d991389bc",
+      "use": "Historical scoped evidence only; no automatic final-candidate PASS",
+      "xml_counts": {
+        "suites": 33,
+        "tests": 273,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "cycle": "mafia-tally-layout-green-02",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-tally-layout-green-02/receipt.json",
+      "sha256": "ce7aa8c227a9ec8b0adf689c84b7c985ea20f4587b728eeb8284465becdb2a57",
+      "recorded_status": "PASS",
+      "source_manifest_sha256": "bc18af56c1550d8ac1e430377ddf3e1fd45302563a0156a4f55dabd64002b35d",
+      "use": "Historical scoped evidence only; no automatic final-candidate PASS",
+      "xml_counts": {
+        "suites": 7,
+        "tests": 36,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "cycle": "peer-paused-cover-green-02",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/peer-paused-cover-green-02/receipt.json",
+      "sha256": "7c251be4ce2732b588a7cbc292b4019a15ef6d15bad5b5267fb39430de306bca",
+      "recorded_status": "PASS",
+      "source_manifest_sha256": "11176a1c323265417d9c1cc17c7fdf4cd2363b25a7a65223e6664237a16693ca",
+      "use": "Historical scoped evidence only; no automatic final-candidate PASS",
+      "xml_counts": {
+        "suites": 4,
+        "tests": 26,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "cycle": "ci-portability-input-green-02",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ci-portability-input-green-02/receipt.json",
+      "sha256": "2a705c85f4c0c40975f801b9ba1af97af0376fb23c831fd3f6381ee8c8f59b38",
+      "recorded_status": "PASS",
+      "source_manifest_sha256": "d3a952947d7451fde5d1679f9be21aef044ee58da507a8d9ef076ef338640054",
+      "use": "Historical scoped evidence only; no automatic final-candidate PASS",
+      "xml_counts": {
+        "suites": 2,
+        "tests": 22,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "cycle": "normal-ios-controls-02",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/normal-ios-controls-02/receipt.json",
+      "sha256": "ca0fdb1ef27644f3215f116b5c5dfbec1b20dae25cb3b2efe8eb8293ef7ca7c6",
+      "recorded_status": "PASS",
+      "source_manifest_sha256": "d3a952947d7451fde5d1679f9be21aef044ee58da507a8d9ef076ef338640054",
+      "use": "Historical scoped evidence only; no automatic final-candidate PASS",
+      "xml_counts": {
+        "suites": 0,
+        "tests": 0,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "cycle": "ci-native-and-dependency-controls-02",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ci-native-and-dependency-controls-02/receipt.json",
+      "sha256": "30c7d9341fdd8947ecca8d244205de11b890fd1d5ad4ed2b46bdde411422c9b9",
+      "recorded_status": "PASS",
+      "source_manifest_sha256": "84f32e420fc3d7928a1b61242d08624411686cf66adac894469c82cb500c3e2a",
+      "use": "Historical scoped evidence only; no automatic final-candidate PASS",
+      "xml_counts": {
+        "suites": 0,
+        "tests": 0,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "cycle": "workflow-owned-simulator-contract-01",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/workflow-owned-simulator-contract-01/receipt.json",
+      "sha256": "b772372b53e6467b88a3b8954d88b999e8dc3d35710f8f3ee2ebec7d9f978006",
+      "recorded_status": "PASS",
+      "source_manifest_sha256": "06a5fa982580949857b8df07e0f08a830a709c6f9e30a778488d5a0695d25379",
+      "use": "Historical scoped evidence only; no automatic final-candidate PASS",
+      "xml_counts": {
+        "suites": 0,
+        "tests": 0,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "cycle": "release-controls-combined-02",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/release-controls-combined-02/receipt.json",
+      "sha256": "21f7f70287d09d3c29986fb0edc7fe2effb1f6f3b7ccb936a8f0eca27eb90ff8",
+      "recorded_status": "PASS",
+      "source_manifest_sha256": "06a5fa982580949857b8df07e0f08a830a709c6f9e30a778488d5a0695d25379",
+      "use": "Historical scoped evidence only; no automatic final-candidate PASS",
+      "xml_counts": {
+        "suites": 0,
+        "tests": 0,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "cycle": "ios-readiness-04",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-04/receipt.json",
+      "sha256": "9aa2b1036ef9669be046622dfe5b613a3ba2253467e5e7579978a058a27d31a0",
+      "recorded_status": "PASS",
+      "source_manifest_sha256": "61e22ba3c507e0cb2e7d88017004cbac38c4431e6563b2a7af6bd6ec4c3e345d",
+      "use": "Historical scoped evidence only; no automatic final-candidate PASS"
+    },
+    {
+      "cycle": "android-arm64-runtime-06",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/android-arm64-runtime-06/receipt.json",
+      "sha256": "91b58a3306b84cb6e02373bb456c1524b6e8a08a5ff932d31d00d958e83b6eb0",
+      "recorded_status": "PASS",
+      "source_manifest_sha256": "c5fcaf8a166ca7f537e0d5af0fbe628d7de656c6d117415e59b60fff292d66ac",
+      "use": "Historical scoped evidence only; no automatic final-candidate PASS",
+      "xml_counts": {
+        "suites": 0,
+        "tests": 0,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "cycle": "dependency-graph-export-02",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/dependency-graph-export-02/receipt.json",
+      "sha256": "8877c86a6f7584f8b543ef7a43ce6eed0831944633b8653eaf32153ff6ec327e",
+      "recorded_status": "PASS",
+      "source_manifest_sha256": "63ac217a2f76da6f9659677054f97d430a06c71044ce775287fec3ce1021c28a",
+      "use": "Historical scoped evidence only; no automatic final-candidate PASS",
+      "xml_counts": {
+        "suites": 0,
+        "tests": 0,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "cycle": "dependency-sbom-schema-cycle-02",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/dependency-sbom-schema-cycle-02/receipt.json",
+      "sha256": "9acda34bf00655594a72cfd4df0f5c17f08d30d3378e0423f0db53119cfebec2",
+      "recorded_status": "PASS",
+      "source_manifest_sha256": "84f32e420fc3d7928a1b61242d08624411686cf66adac894469c82cb500c3e2a",
+      "use": "Historical scoped evidence only; no automatic final-candidate PASS",
+      "xml_counts": {
+        "suites": 0,
+        "tests": 0,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    }
+  ],
+  "old_41_gate_reconciliation": [
+    {
+      "old_id": "remediation-st-c1",
+      "fresh_gates": [
+        "L02",
+        "L12",
+        "L03",
+        "L08"
+      ],
+      "disposition": "Retain original fix/reviewer dossiers; inspect exact final current-source regressions, not old PASS. External limitations stay separate."
+    },
+    {
+      "old_id": "remediation-sn-c1",
+      "fresh_gates": [
+        "L02",
+        "L12"
+      ],
+      "disposition": "Retain original fix/reviewer dossiers; inspect exact final current-source regressions, not old PASS. External limitations stay separate."
+    },
+    {
+      "old_id": "remediation-sn-c2",
+      "fresh_gates": [
+        "L02",
+        "L12"
+      ],
+      "disposition": "Retain original fix/reviewer dossiers; inspect exact final current-source regressions, not old PASS. External limitations stay separate."
+    },
+    {
+      "old_id": "remediation-wd-c1",
+      "fresh_gates": [
+        "L02",
+        "L12"
+      ],
+      "disposition": "Retain original fix/reviewer dossiers; inspect exact final current-source regressions, not old PASS. External limitations stay separate."
+    },
+    {
+      "old_id": "remediation-ios-b1",
+      "fresh_gates": [
+        "L10",
+        "L02"
+      ],
+      "disposition": "Retain original fix/reviewer dossiers; inspect exact final current-source regressions, not old PASS. External limitations stay separate."
+    },
+    {
+      "old_id": "remediation-root-t3",
+      "fresh_gates": [
+        "L02",
+        "L12"
+      ],
+      "disposition": "Retain original fix/reviewer dossiers; inspect exact final current-source regressions, not old PASS. External limitations stay separate."
+    },
+    {
+      "old_id": "remediation-mf-c1",
+      "fresh_gates": [
+        "L02",
+        "L12",
+        "L03"
+      ],
+      "disposition": "Retain original fix/reviewer dossiers; inspect exact final current-source regressions, not old PASS. External limitations stay separate."
+    },
+    {
+      "old_id": "remediation-wd-c3",
+      "fresh_gates": [
+        "L02",
+        "L12"
+      ],
+      "disposition": "Retain original fix/reviewer dossiers; inspect exact final current-source regressions, not old PASS. External limitations stay separate."
+    },
+    {
+      "old_id": "remediation-m-c03",
+      "fresh_gates": [
+        "L02",
+        "L12"
+      ],
+      "disposition": "Retain original fix/reviewer dossiers; inspect exact final current-source regressions, not old PASS. External limitations stay separate."
+    },
+    {
+      "old_id": "remediation-ds-c01",
+      "fresh_gates": [
+        "L02",
+        "L12",
+        "L03",
+        "L08"
+      ],
+      "disposition": "Retain original fix/reviewer dossiers; inspect exact final current-source regressions, not old PASS. External limitations stay separate."
+    },
+    {
+      "old_id": "remediation-ds-c02",
+      "fresh_gates": [
+        "L02",
+        "L12"
+      ],
+      "disposition": "Retain original fix/reviewer dossiers; inspect exact final current-source regressions, not old PASS. External limitations stay separate."
+    },
+    {
+      "old_id": "remediation-ds-c03",
+      "fresh_gates": [
+        "L02",
+        "L12"
+      ],
+      "disposition": "Retain original fix/reviewer dossiers; inspect exact final current-source regressions, not old PASS. External limitations stay separate."
+    },
+    {
+      "old_id": "remediation-wd-c2",
+      "fresh_gates": [
+        "L02",
+        "L12"
+      ],
+      "disposition": "Retain original fix/reviewer dossiers; inspect exact final current-source regressions, not old PASS. External limitations stay separate."
+    },
+    {
+      "old_id": "remediation-rl-c1",
+      "fresh_gates": [
+        "L10",
+        "L02"
+      ],
+      "disposition": "Retain original fix/reviewer dossiers; inspect exact final current-source regressions, not old PASS. External limitations stay separate."
+    },
+    {
+      "old_id": "remediation-rl-c2",
+      "fresh_gates": [
+        "L10",
+        "L02"
+      ],
+      "disposition": "Retain original fix/reviewer dossiers; inspect exact final current-source regressions, not old PASS. External limitations stay separate."
+    },
+    {
+      "old_id": "remediation-rl-c3",
+      "fresh_gates": [
+        "L10",
+        "L02"
+      ],
+      "disposition": "Retain original fix/reviewer dossiers; inspect exact final current-source regressions, not old PASS. External limitations stay separate."
+    },
+    {
+      "old_id": "desktop-and-static-analysis",
+      "fresh_gates": [
+        "L02"
+      ],
+      "disposition": "Combined host gate includes both plain and type-aware; old scoped count invalidated by later edits."
+    },
+    {
+      "old_id": "production-check",
+      "fresh_gates": [
+        "L02"
+      ],
+      "disposition": "Rerun exact final source; current build graph includes release automation/static/R8/lint."
+    },
+    {
+      "old_id": "configured-alltests-and-native-runtime",
+      "fresh_gates": [
+        "L03"
+      ],
+      "disposition": "Old missing Mafia/engine native-test claim is obsolete: relevant pure tests now commonTest."
+    },
+    {
+      "old_id": "apple-release-frameworks-and-analysis",
+      "fresh_gates": [
+        "L04",
+        "C05"
+      ],
+      "disposition": "Links remain separate from runtime and qualified toolchain."
+    },
+    {
+      "old_id": "resource-parity-and-tracked-whitespace",
+      "fresh_gates": [
+        "L02",
+        "L12",
+        "L13"
+      ],
+      "disposition": "Current compiled parity gate discovers string bundles; do not carry old per-locale counts."
+    },
+    {
+      "old_id": "ios-actual-language-direction-and-continuity",
+      "fresh_gates": [
+        "L08"
+      ],
+      "disposition": "readiness04 adds actual OS-PRESENT and complete binary inventories; its limited instrumented scope remains explicit."
+    },
+    {
+      "old_id": "unsigned-swift-release-wrapper",
+      "fresh_gates": [
+        "L06",
+        "C05"
+      ],
+      "disposition": "Prior unsigned wrapper is not final source or Store/runtime proof."
+    },
+    {
+      "old_id": "uninstrumented-ios-app-launch",
+      "fresh_gates": [
+        "L07"
+      ],
+      "disposition": "Old one-launch/four-containment-tests result is not8launches; reviewed new8+separate ninth runtime remains pending."
+    },
+    {
+      "old_id": "frozen-source-and-preservation",
+      "fresh_gates": [
+        "L01",
+        "L13"
+      ],
+      "disposition": "Old669-input/13change freeze is obsolete; new baseline must include current inputs and preserved user material."
+    },
+    {
+      "old_id": "current-owned-resource-cleanup",
+      "fresh_gates": [
+        "L13"
+      ],
+      "disposition": "Every completed cycle has own evidence; active campaign cannot inherit an old all-clean declaration."
+    },
+    {
+      "old_id": "android-managed-runtime",
+      "fresh_gates": [
+        "C01",
+        "L09"
+      ],
+      "disposition": "Local3-test API35ARM64 runtime06 exists; pinned Linux/KVM/x86_64 gate still distinct."
+    },
+    {
+      "old_id": "other-desktop-host-graphs",
+      "fresh_gates": [
+        "C01",
+        "C02",
+        "C03",
+        "C04"
+      ],
+      "disposition": "Require actual current host-specific graphs; download is not Native runtime."
+    },
+    {
+      "old_id": "physical-p2pkit-lan",
+      "fresh_gates": [
+        "D01"
+      ],
+      "disposition": "Fixture drift repaired and5 deterministic fixture contracts pass;3 real-peer fixtures remain ignored, no device closure."
+    },
+    {
+      "old_id": "native-accessibility-layout-and-privacy",
+      "fresh_gates": [
+        "D02"
+      ],
+      "disposition": "Additional Desktop compact/large-font contrast/tally/toggle tests and simulator geometry do not close native human matrix."
+    },
+    {
+      "old_id": "ios-apphost-keychain-investigation",
+      "fresh_gates": [
+        "L08",
+        "D03"
+      ],
+      "disposition": "IOS-R1 no longer wholly uninvestigated: real synthetic production-interface healthy write/read/delete acrossboots observed. Full recovery/legacy/Store/physicaldurability remain unproven, historical-crash cause unresolved."
+    },
+    {
+      "old_id": "physical-ios-backup-and-restore",
+      "fresh_gates": [
+        "D03"
+      ],
+      "disposition": "Actual backup/restore remains external."
+    },
+    {
+      "old_id": "qualified-apple-toolchain",
+      "fresh_gates": [
+        "C05"
+      ],
+      "disposition": "Local26.5 is not pinned26.3/17C529."
+    },
+    {
+      "old_id": "real-store-signing-and-submission",
+      "fresh_gates": [
+        "O02",
+        "O03"
+      ],
+      "disposition": "Still gated by owner credentials/authorization, not waived by real positive synthetic RFC3161."
+    },
+    {
+      "old_id": "store-identity-ownership",
+      "fresh_gates": [
+        "O01"
+      ],
+      "disposition": "Known collision/publication stop stays blocked."
+    },
+    {
+      "old_id": "legal-and-store-declarations",
+      "fresh_gates": [
+        "L11",
+        "O04"
+      ],
+      "disposition": "SBOM/POM generation now exists with0 unresolved metadata; final packaged notices/legal/editorial declarations remain."
+    },
+    {
+      "old_id": "immutable-integrated-release-candidate",
+      "fresh_gates": [
+        "L01",
+        "O03"
+      ],
+      "disposition": "Old no-history-authorization claim is stale; root now manages authorized focused commits. Final release candidate/readback still not established."
+    },
+    {
+      "old_id": "wd-c4-modal-timer-policy",
+      "fresh_gates": [
+        "L12"
+      ],
+      "disposition": "No longer unresolved: explicit exclude-Leave-confirmation policy exists in local/host source and6+4 virtual-time UI tests."
+    },
+    {
+      "old_id": "production-story-editorial-approval",
+      "fresh_gates": [
+        "L12",
+        "O04"
+      ],
+      "disposition": "Not only four1.0.1 stories now: all7 revised with documented current versions; testing choices not production editorial approval."
+    },
+    {
+      "old_id": "ambiguous-development-language-migration",
+      "fresh_gates": [
+        "N03"
+      ],
+      "disposition": "Explicit pre-release policy remains applicable; no guessing or deletion of genuine unowned OS preference."
+    },
+    {
+      "old_id": "ios-actual-os-language-baseline-counterpart",
+      "fresh_gates": [
+        "L08"
+      ],
+      "disposition": "Actual OS-created PRESENT baseline was exercised in readiness04; old missing-counterpart statement is obsolete."
+    }
+  ],
+  "cleanup_contract": [
+    "Use exactly one root-owned Gradle/Xcode lane; no child starts heavyweight work.",
+    "After every successful/failed/interrupted cycle capture exit/log/report evidence, immediately ./gradlew --stop, then exact owned generated directories/copy/DerivedData cleanup. Run --stop again only if cleanup starts Gradle.",
+    "Do not delete required artifacts until following inspection completes; record the temporary retention reason and remove promptly afterward.",
+    "Do not touch global Gradle caches/source/config/signing/user profiles/unknown workers. Native helpers require exact lifetime/path/marker ownership, not broad process names.",
+    "Final outcome remains blocked if own workers, unknown holders, required evidence capture, source/control binding, or cleanup fail."
+  ],
+  "reviewer_preservation": "Only compact new reports under reviews/ written. No production edit/build/test/daemon/native backend/simulator/process signal/artifact deletion/Git-history operation performed by this reviewer during this task. Root is active and owns final cleanup; no claim to have stopped root or unrelated work."
+}

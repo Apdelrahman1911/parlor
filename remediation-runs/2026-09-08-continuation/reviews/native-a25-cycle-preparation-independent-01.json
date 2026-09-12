@@ -1,0 +1,542 @@
+{
+  "schema_version": 1,
+  "kind": "NATIVE_A25_B26_CYCLE_LABEL_INDEPENDENT_SOURCE_REVIEW",
+  "reviewer": "/root/native_ci",
+  "proposal_author": "/root/ci_workflow",
+  "created_at": "2026-09-09T04:35:14.377Z",
+  "status": "ACCEPTED_EXACT_THREE_FILE_PAIRED_LABEL_DELTA_ONLY",
+  "findings": [],
+  "readiness": "NOT_READY",
+  "authorization": {
+    "only_write": "remediation-runs/2026-09-08-continuation/reviews/native-a25-cycle-preparation-independent-01.json",
+    "canonical_source_edits": 0,
+    "project_imports": 0,
+    "tests_or_builds": 0,
+    "github_API_or_workflow_dispatches": 0,
+    "commit_push_or_cleanup_commands": 0,
+    "native_retry_authorized": false,
+    "D_qualification_authorized": false,
+    "future_B_only_implemented": false,
+    "future_B_only_design_or_execution_approved": false,
+    "scope": "Independent review of ci_workflow's exact paired23/24 ->25/26 label candidates, embedded companion assertion, proposed affected-check commands and actual historical cutoff. Root integrates only after all required reviews. Neither separate A scroll nor B failure-diagnostics source proposals are reviewed by this acceptance."
+  },
+  "source_cutoff": {
+    "branch": "fix/local-readiness-2026-09-07",
+    "head": "08d1adfbd7284f190fbab5f7baa846944bca5b68",
+    "tree": "c19beea4647ce882c02d8751d1bf82c22484b52b",
+    "tracked_status": "",
+    "observation_time": "2026-09-09T04:31:24.828306+00:00",
+    "proposal": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-a25-cycle-preparation-01.json",
+      "bytes": 42523,
+      "sha256": "d1a81fd2fbbc0fa7234e06bb18798df25b2e230e3c1fab88d686a747c83d1b26"
+    },
+    "candidate_hashes": [
+      {
+        "canonical_path": "scripts/ci/native_continuation.py",
+        "before_sha256": "e41186dc13dd94e851b449079d73b98cc4655bb6234ebcd76adc61942bb12feb",
+        "candidate_sha256": "21d5f2ba437d5aaed855e2a5f1bfd2a0c8141c625772aa1409405087025ed222",
+        "candidate_bytes": 64697,
+        "candidate_path": "remediation-runs/2026-09-08-continuation/reviews/native-a25-cycle-preparation-01/native_continuation.py.candidate"
+      },
+      {
+        "canonical_path": "scripts/ci/NATIVE_CONTINUATION.md",
+        "before_sha256": "70dfb3286a5a005f79bdfbfb116c179ef81a7e7054e337758de9dafb0539dbb8",
+        "candidate_sha256": "65888db5a545840fc72cacba1fe32f01eae3293e46e53ead72e8b0ef4b6f951a",
+        "candidate_bytes": 18880,
+        "candidate_path": "remediation-runs/2026-09-08-continuation/reviews/native-a25-cycle-preparation-01/NATIVE_CONTINUATION.md.candidate"
+      },
+      {
+        "canonical_path": "scripts/release/tests/test_native_process_probe.py",
+        "before_sha256": "513e45a9c4b46b8e58ef3058abc0da6148223bd5175d1b784a190b8153de9c8d",
+        "candidate_sha256": "8108f26cb176ecf5d9c2c63dcee762256111fa6ef32dc5bf5068a2fc40d81bbe",
+        "candidate_bytes": 43371,
+        "candidate_path": null
+      }
+    ],
+    "independence": "Reviewer did not author the cycle proposal or any of its three exact deltas. Earlier native postrun author inspection by this reviewer is not represented as an independent review of itself; relevant raw native receipts and XCTest/kernel records were reopened for this task."
+  },
+  "reviewed_delta": {
+    "before": {
+      "l08": "ios-readiness-23",
+      "normal": "ios-readiness-24"
+    },
+    "after": {
+      "l08": "ios-readiness-25",
+      "normal": "ios-readiness-26"
+    },
+    "changes": [
+      {
+        "canonical_before": {
+          "path": "scripts/ci/native_continuation.py",
+          "bytes": 64697,
+          "sha256": "e41186dc13dd94e851b449079d73b98cc4655bb6234ebcd76adc61942bb12feb"
+        },
+        "candidate": {
+          "path": "remediation-runs/2026-09-08-continuation/reviews/native-a25-cycle-preparation-01/native_continuation.py.candidate",
+          "bytes": 64697,
+          "sha256": "21d5f2ba437d5aaed855e2a5f1bfd2a0c8141c625772aa1409405087025ed222"
+        },
+        "replacement_count": 1,
+        "diff": "--- a/scripts/ci/native_continuation.py\n+++ b/scripts/ci/native_continuation.py\n@@ -40,7 +40,7 @@\n     \"l08\": OLD_CAMPAIGN + \"/native/l08-app-foundation-composition-01/compose_runner.py\",\n     \"normal\": OLD_CAMPAIGN + \"/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py\",\n }\n-CYCLES = {\"l08\": \"ios-readiness-23\", \"normal\": \"ios-readiness-24\"}\n+CYCLES = {\"l08\": \"ios-readiness-25\", \"normal\": \"ios-readiness-26\"}\n LIFECYCLE_MODE = \"direct-owned-v1\"\n NATIVE_JOB_SECONDS = 240 * 60\n NATIVE_WAIT_SECONDS = 6000\n",
+        "unchanged_except_exact_replacements": true,
+        "ast_parses": true,
+        "changed_top_level_functions_or_classes": [],
+        "entire_AST_equal_except_single_CYCLES_assignment": true
+      },
+      {
+        "canonical_before": {
+          "path": "scripts/ci/NATIVE_CONTINUATION.md",
+          "bytes": 18880,
+          "sha256": "70dfb3286a5a005f79bdfbfb116c179ef81a7e7054e337758de9dafb0539dbb8"
+        },
+        "candidate": {
+          "path": "remediation-runs/2026-09-08-continuation/reviews/native-a25-cycle-preparation-01/NATIVE_CONTINUATION.md.candidate",
+          "bytes": 18880,
+          "sha256": "65888db5a545840fc72cacba1fe32f01eae3293e46e53ead72e8b0ef4b6f951a"
+        },
+        "replacement_count": 2,
+        "diff": "--- a/scripts/ci/NATIVE_CONTINUATION.md\n+++ b/scripts/ci/NATIVE_CONTINUATION.md\n@@ -51,9 +51,9 @@\n \n The canonical runners execute serially on independently owned fresh simulators:\n \n-1. A: composed L08, next cycle `ios-readiness-23`;\n+1. A: composed L08, next cycle `ios-readiness-25`;\n 2. B: normal-source eight launches plus separate image observation, cycle\n-   `ios-readiness-24`, explicit `--image-observer=libproc`.\n+   `ios-readiness-26`, explicit `--image-observer=libproc`.\n \n The failed `ios-readiness-17/18` evidence from run `34216788568` and failed\n A19 from `34244902185` remain historical failures. A19's simulator cleanup was\n",
+        "unchanged_except_exact_replacements": true
+      },
+      {
+        "canonical_before": {
+          "path": "scripts/release/tests/test_native_process_probe.py",
+          "bytes": 43371,
+          "sha256": "513e45a9c4b46b8e58ef3058abc0da6148223bd5175d1b784a190b8153de9c8d"
+        },
+        "candidate": {
+          "storage": "Exact candidate reconstructed in memory from embedded replacement; no third candidate written.",
+          "bytes": 43371,
+          "sha256": "8108f26cb176ecf5d9c2c63dcee762256111fa6ef32dc5bf5068a2fc40d81bbe"
+        },
+        "replacement_count": 1,
+        "diff": "--- a/scripts/release/tests/test_native_process_probe.py\n+++ b/scripts/release/tests/test_native_process_probe.py\n@@ -123,7 +123,7 @@\n     def test_full_non_app_scope_is_explicit_and_cycles_do_not_reuse_failed_labels(self):\n         self.assertEqual(native.effective_scope(\"workflow_dispatch\", probe.SCOPE), probe.SCOPE)\n         self.assertEqual(native.effective_scope(\"pull_request\", probe.SCOPE), \"full\")\n-        self.assertEqual(native.CYCLES, {\"l08\": \"ios-readiness-23\", \"normal\": \"ios-readiness-24\"})\n+        self.assertEqual(native.CYCLES, {\"l08\": \"ios-readiness-25\", \"normal\": \"ios-readiness-26\"})\n         with self.assertRaisesRegex(RuntimeError, \"not-an-app-native-continuation\"):\n             native.Continuation(dict(GITHUB_EVENT_NAME=\"workflow_dispatch\", PARLOR_DISPATCH_SCOPE=probe.SCOPE))\n \n",
+        "unchanged_except_exact_replacements": true,
+        "ast_parses": true,
+        "changed_top_level_functions_or_classes": [
+          "ProbeSourceContractTest"
+        ],
+        "entire_test_AST_equal_except_exact_cycle_assertion_method": true
+      }
+    ],
+    "verdict": "Only one adapter CYCLES assignment, two usage-doc cycle lines, and one existing exact assertion change. The two on-disk candidates equal exact single-occurrence replacements of the current originals; the test candidate was independently reconstructed in memory and matches the embedded SHA. No third candidate or canonical test file was written.",
+    "static_checks": {
+      "strict_JSON_duplicate_and_nonfinite_rejection": true,
+      "all_given_hashes_recomputed": true,
+      "all_three_declared_unified_diffs_recomputed_and_equal": true,
+      "whole_adapter_AST_equal_except_single_CYCLES_assignment": true,
+      "all_adapter_functions_and_classes_unchanged": true,
+      "whole_test_AST_equal_except_one_existing_assertion_method": true,
+      "assertEqual_target_native_CYCLES_and_exact_pair_retained": true,
+      "other_three_statements_in_affected_test_method_identical": true,
+      "full_bytes_equal_except_authorized_replacements": true,
+      "static_inspection_not_unit_test_execution": true
+    }
+  },
+  "behavioral_review": [
+    {
+      "area": "Fresh paired cycle labels and no historical overwrite",
+      "source": "scripts/ci/native_continuation.py",
+      "lines": "39-48,384,918-957,1013-1019,1060-1064",
+      "conclusion": "Map keys and order remain l08 then normal; values advance to25/26 only. Existing fresh-output checks, exact lifecycle cycle membership, run receipt equality, and cleanup allowlist derive from this same map. No widening, arbitrary-cycle override, destination reuse or historical receipt relabel occurs.",
+      "limit": "Native allocation still independently requires fresh hosted destinations. Local absence of N/evidence is not native-preflight proof."
+    },
+    {
+      "area": "Both canonical runners and scope remain unchanged",
+      "source": "scripts/ci/native_continuation.py",
+      "lines": "39-42,136-140,786-795,809-864,950-1010",
+      "conclusion": "RUNNERS remains exactly composed L08 and normal-source runner, serial execution still iterates both, normal still uses explicit libproc, and PASS still requires both code0/receiptPASS. No B-only selector or synthetic A success is introduced."
+    },
+    {
+      "area": "Budget, clock, timeout and inner-failure admission",
+      "source": "scripts/ci/native_continuation.py",
+      "lines": "44-49,918-999",
+      "conclusion": "14400s job ceiling,6000s child wait,600s finalizer grace and600s reserve remain byte-identical; each lane still requires7200s via exact source/run/job-bound CLOCK_MONOTONIC_RAW. No fallback/shrinking/retry, outer-timeout waiver, or inner-error bypass is added. Whole A/B runner budgets are not edited."
+    },
+    {
+      "area": "Evidence, custody and cleanup",
+      "source": "scripts/ci/native_continuation.py",
+      "lines": "375-583,950-1001,1046-1084",
+      "conclusion": "Preserve-before-parse, exact complete preservation, source/control/worker/device/Gradle checks, retained journal hash/identity/order, uploaded artifact custody and narrow cleanup guards remain byte-identical. New labels cannot qualify or repair old23/24 evidence, and old cleanups must never be replayed through the new map."
+    },
+    {
+      "area": "Workflow, toolchain and dependency pins",
+      "source": ".github/workflows/production-verification.yml",
+      "lines": "16-44,481-576",
+      "conclusion": "No YAML edit: full default/five jobs, all three explicit focused scopes, Xcode26.3/17C529 SDK26.2 arm64 mode, first-step clock, full-history focused checkout, upload/finalizers and publication exclusion unchanged. No app identity, signing credential, Maven repository, P2pKit version, strict metadata or tool pin changes are present."
+    },
+    {
+      "area": "Hardcoded probe regression must move atomically",
+      "source": "scripts/release/tests/test_native_process_probe.py",
+      "lines": "123-128",
+      "conclusion": "Embedded new assertion still requires exactly {'l08':'ios-readiness-25','normal':'ios-readiness-26'}; it is not deleted, generalized or weakened. If root applies only adapter/docs, this existing assertion remains stale and fails. Integrate the reviewed third delta before running grouped controls/freezing."
+    },
+    {
+      "area": "Control closure freshness",
+      "source": "scripts/ci/native_process_probe.py",
+      "lines": "26,37-55",
+      "conclusion": "Probe directly imports the adapter and control-hashes adapter plus NATIVE_CONTINUATION.md. The label change invalidates old control approvals. Both official A/B source bindings/manifests and all exact source/control approval steps must likewise be regenerated for the actual new frozen revision; no probe/native rerun is itself authorized here."
+    },
+    {
+      "area": "Architecture and privacy",
+      "source": "AGENTS.md",
+      "lines": "Module boundaries and Invariants",
+      "conclusion": "Exact replacements touch no shipping app, reducer, protocol4.2, seed, snapshot/content validation, private projection, Doctor setting, or Whodunit leave/discussion-timer behavior. No domain/navigation/refactor change is reviewed or authorized."
+    }
+  ],
+  "historical_native_scope": {
+    "run": {
+      "id": 34303850578,
+      "run_attempt": 1,
+      "status": "completed",
+      "conclusion": "failure",
+      "head_sha": "08d1adfbd7284f190fbab5f7baa846944bca5b68"
+    },
+    "adapter_status": "NOT_READY",
+    "adapter_cleanup_safe": true,
+    "A": {
+      "xcodebuild_exit_code": 65,
+      "xctest_counts": {
+        "totalTestCount": 5,
+        "passedTests": 4,
+        "failedTests": 1,
+        "skippedTests": 0,
+        "expectedFailures": 0
+      },
+      "failure": [
+        {
+          "failureText": "Failed to determine hittability of \"l08-home-legacy\" Button: Activation point invalid and no suggested hit points based on element frame",
+          "targetName": "iosAppUITests",
+          "testIdentifier": 5,
+          "testIdentifierString": "IOSAppLaunchUITests/testDSC01ActualSettingsLocalSessionsAndOSWithL08FunctionalObservation()",
+          "testIdentifierURL": "test://com.apple.xcode/iosApp/iosAppUITests/IOSAppLaunchUITests/testDSC01ActualSettingsLocalSessionsAndOSWithL08FunctionalObservation",
+          "testName": "testDSC01ActualSettingsLocalSessionsAndOSWithL08FunctionalObservation()"
+        }
+      ],
+      "functional_records": 14,
+      "functional_boots": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "functional_completed": false,
+      "strict_comparisons": 24,
+      "strict_failures": 24,
+      "missing_functional_operations": [
+        "parlor-l08-storage-functional-10-continue.json",
+        "parlor-l08-storage-functional-11-legacy-neighbor.json",
+        "parlor-l08-storage-functional-11-discard-observed.json",
+        "parlor-l08-storage-functional-12-dual-preserved.json",
+        "parlor-l08-storage-functional-12-discard-observed.json",
+        "parlor-l08-storage-functional-13-final-absence.json"
+      ],
+      "missing_host_operations": 42,
+      "strict_gate": "NOT_SATISFIED_BY_COMPANION",
+      "cleanup_status": "PASS"
+    },
+    "B": {
+      "xcodebuild_exit_code": 0,
+      "runtime": "PASS",
+      "provenance": "FAIL",
+      "actual_repetitions": 8,
+      "all_pass": true,
+      "raw_three_view_unique_test_count": 1,
+      "device_summary_repetitions": 8,
+      "failed": 0,
+      "skipped": 0,
+      "kernel_query": {
+        "schema_version": 1,
+        "status": "FAIL",
+        "reason": "not-selected-executable-region",
+        "native_error": 0
+      },
+      "cleanup_status": "PASS"
+    },
+    "outer_runs": {
+      "l08": {
+        "cycle": "ios-readiness-23",
+        "command": [
+          "/usr/bin/python3",
+          "-B",
+          "/Users/runner/work/parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/compose_runner.py",
+          "ios-readiness-23",
+          "/Users/runner/work/parlor/parlor/remediation-runs/2026-09-08-continuation/ios-readiness-source-ci.json",
+          "54402bb821327f8256b04e730591ac31d349f831d64ca554678a02e819e58763",
+          "--simulator-signing=adhoc",
+          "--toolchain=qualified-xcode-26.3",
+          "--simulator-lifecycle=direct-owned-v1"
+        ],
+        "started_at": "2026-09-09T02:36:37.263171+00:00",
+        "status": "FINISHED",
+        "exit_code": 1,
+        "finished_at": "2026-09-09T03:10:09.272532+00:00",
+        "receipt_status": "FAIL",
+        "cleanup_safe": true,
+        "receipt_sha256": "f113c4189807486d96a6b9b81c2a2f09dbb8c54600c2eb9065348c15531a4a2a"
+      },
+      "normal": {
+        "cycle": "ios-readiness-24",
+        "command": [
+          "/usr/bin/python3",
+          "-B",
+          "/Users/runner/work/parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
+          "ios-readiness-24",
+          "/Users/runner/work/parlor/parlor/remediation-runs/2026-09-08-continuation/ios-readiness-source-ci.json",
+          "7cdd2dee7adb3a53be0d2c2487e0e776dbc83208693909b6ecbfb0b872e3a82f",
+          "--simulator-signing=adhoc",
+          "--toolchain=qualified-xcode-26.3",
+          "--simulator-lifecycle=direct-owned-v1",
+          "--image-observer=libproc"
+        ],
+        "started_at": "2026-09-09T03:10:09.504773+00:00",
+        "status": "FINISHED",
+        "exit_code": 1,
+        "finished_at": "2026-09-09T03:31:28.246887+00:00",
+        "receipt_status": "FAIL",
+        "cleanup_safe": true,
+        "receipt_sha256": "c8317c5612c11173746b8bb0e637f1b796b51056b3205f0713b7ac9475ff5e87"
+      }
+    },
+    "preservation": "Both complete and cleanupPASS; ordinary failed execution, not timeout/interruption success.",
+    "cleanup_file": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34303850578/native-cleanup/parlor-native-34303850578-1-cleanup.json",
+      "bytes": 3280,
+      "sha256": "fee7b754901f6e8ab4cb0b272b9db916b44d91140678f1fb2cb8fc12377a51d2"
+    },
+    "evidence_status": "RECONCILED_FOR_PROPOSAL_SCOPE_ONLY",
+    "A_expected_scope": "Canonical functional verifier requires20 operations/13 boots and26 Complete comparisons; only14 operations through boot10 legacy-load and24 failed comparisons were retained. Six functional operations and42 retained-host operations remain unexecuted. Four standalone UIKit passes do not make the combined fifth XCTest pass.",
+    "B_precise_limit": "Actual eight repeated single-method launches passed and actual ninth public Parlor libproc query failed. native_error0 in the failure is a literal branch value, not captured errno. Full proc_pidinfo return is inferable from source flow, but numeric ABI sizes/pri_* values were not emitted. Kernel vnode/backing-file checks and post-query target/helper bracket were not reached.",
+    "timeouts": "Neither actual outer run timed out/interrupted. A xcodebuild65 and B helper1 are real failures with preserved evidence and cleanupPASS; they are not proof of a successful timeout cleanup path.",
+    "new_labels": {
+      "ios-readiness-25": false,
+      "ios-readiness-26": false
+    },
+    "local_evidence_root_exists": false,
+    "no_reuse": "Actual failed A23 is not a successful-A basis for an exceptional normal-only path. Historic B runtime-pass subresults do not satisfy failed provenance or carry automatically to a newer source.",
+    "other_workstreams": "C04 and existing08d1 D-preparation were not requalified by this review. Any new source needs explicit source/control applicability reconciliation. No broad readiness or Store claim."
+  },
+  "affected_check_commands_review": {
+    "status": "APPROPRIATE_PROPOSED_ROOT_COMMANDS_NOT_EXECUTED_OR_DISPATCH_AUTHORIZATION",
+    "directly_affected": [
+      {
+        "command": "python3 -B -m unittest discover -s scripts/release/tests -p 'test_native_continuation.py' -v",
+        "reason": "Cycle-derived admission, exact receipt/journal destinations, preservation/order/cleanup fixtures use the new map. Current source was inspected; no method was executed by reviewer."
+      },
+      {
+        "command": "python3 -B -m unittest discover -s scripts/release/tests -p 'test_native_process_probe.py' -v",
+        "reason": "Direct exact assertion change and probe imported-control closure; must run against all three integrated deltas, not only the two files."
+      }
+    ],
+    "groupable_unchanged_guards": [
+      {
+        "command": "python3 -B -m unittest discover -s scripts/release/tests -p 'test_workflow_contract.py' -v",
+        "reason": "Unchanged scope/full-job/clock/budget regression guard; include in grouped controls or frozen release validator rather than duplicate identical successful work."
+      },
+      {
+        "command": "python3 -B scripts/release/workflow_contract.py",
+        "reason": "Static workflow repository validation; canonical full release validator also executes it."
+      }
+    ],
+    "frozen_validator": {
+      "command": "/bin/bash scripts/release/validate_release_system.sh",
+      "source_lines": "25-29,99-102",
+      "conclusion": "Runs all release test modules, workflow contract, inventory freshness and SHA-pinned ShellCheck/actionlint. Root may use this complete grouped command to cover components once for the final reviewed freeze. Prior464 or187 counts are historical, not promised current test counts or runtime proof.",
+      "scope": "Separate A/Swift and B/native-helper regression suites belong to their authors' reviewed source changes; this label review does not waive them."
+    },
+    "transport": {
+      "command": "./gradlew :shared:transport-p2p:desktopTest --dependency-verification=strict --no-daemon",
+      "source": "shared/transport-p2p/build.gradle.kts:32-108 and AGENTS.md Invariants",
+      "conclusion": "The exact three label-only files are not in the displayed desktopTest repositoryContractFiles footprint: docs/**/*.md is included, scripts/ci/NATIVE_CONTINUATION.md is not. This is a narrow input observation, not an exemption for the merged freeze.",
+      "root_condition": "Inspect the complete integrated change set. Changed docs/**/*.md, production-verification.yml, platform manifests/plists/build/version/checksum or other declared contract inputs trigger this suite under AGENTS.md. Report UP-TO-DATE/FROM-CACHE and physical/loopback skips honestly."
+    },
+    "freeze_and_cleanup": {
+      "order": [
+        "Apply only independently accepted exact source/control changes after all required source reviews.",
+        "Execute grouped applicable Linux checks in root's single coordinated lane and preserve actual successes/failures/skips.",
+        "Commit reviewed source/control changes.",
+        "Regenerate mechanical inventory with python3 -B scripts/generate_review_inventory.py; inspect and commit only docs/review/INDEPENDENT_REVIEW_INVENTORY.csv in the inventory-only commit.",
+        "Run python3 -B scripts/generate_review_inventory.py --check, root's frozen validator as required, and confirm final SHA/tree/remote equality.",
+        "Create fresh same-frozen-source hosted nonbuilding binding/preflight, independently verify exact source/control/API/artifact/platform/ownership, and obtain a separate explicit one-run decision before any paired native execution."
+      ],
+      "cleanup": "After each actual root cycle preserve required evidence, immediately ./gradlew --stop, remove only owned generated outputs/workers/devices or gradlew clean when safe, stop again if cleanup launches Gradle, and verify/record failures. This review itself started no build/test cycle and must not race root's lane or cleanup.",
+      "no_expensive_duplication": "No Apple/Windows matrix, probe rerun, native run or blind retry is justified merely by changing labels."
+    }
+  },
+  "future_B_only_exclusion": {
+    "candidate_has_no_selector": true,
+    "implemented": false,
+    "source_review_approval": false,
+    "design_review_approval": false,
+    "execution_approval": false,
+    "meaning": "The proposal's future_B_only_option_NOT_IMPLEMENTED_OR_AUTHORIZED section is explicitly outside this narrow acceptance. No field/wiring/status/control design in that discussion is approved here. A future exceptional mode requires separate bounded source proposal, different-agent review, negative controls, new freeze/bindings and explicit scope-aware authorization; it cannot fabricate A or paired/D qualification."
+  },
+  "remaining_admission_requirements": [
+    "Separate A preactivation acquisition and B failure-only numeric-diagnostic corrections must have their own author tests/different-agent review; this packet alone fixes neither observed native failure.",
+    "Root integrates the exact three reviewed files without broad search/replace in historical evidence or stale bindings.",
+    "Current frozen08d1 native/preflight/cleanup evidence remains immutable and failed where failed.",
+    "Fresh source/control/inventory freeze and preflight approvals are mandatory; no new reviewed hashes or run IDs are supplied by this review.",
+    "Physical-device, Store identity/signing/operations, and separate owner/legal/privacy/editorial requirements remain unexecuted and unwaived."
+  ],
+  "methods_and_limits": {
+    "methods": [
+      "Read-only Git/source reopening",
+      "Strict JSON duplicate/nonfinite rejection",
+      "SHA-256/byte checks of proposal/current originals/two candidates",
+      "In-memory exact third-candidate reconstruction",
+      "Independent unified diff comparison",
+      "ast.parse/literal_eval/dump of data and syntax only; no project import or function execution",
+      "Reopened actual A23/B24 receipts, XCTest views and kernel failure and compared to proposal"
+    ],
+    "inspection_error": {
+      "command": "find remediation-runs/2026-09-08-continuation/evidence -maxdepth 1 -type d -name 'ios-readiness-2[56]' -print",
+      "exit_code": 1,
+      "reason": "That local canonical evidence root does not exist. Subsequent stdlib Path.exists observation explicitly records absence. Read-only inspection error, not a build/test/native failure or a hosted freshness result.",
+      "side_effects": 0
+    },
+    "tests_passed_by_this_review": 0,
+    "cleanup": "No workers/devices/Gradle/output allocation. Only this retained review report is written; root-owned evidence, locks, stashes and all canonical files preserved.",
+    "review_limit": "Acceptance binds the listed exact three candidate byte hashes and their current baseline only. Any extra source change requires review. Historical scope inspection is not a replacement for independent final evidence reconciliation."
+  },
+  "source_refs": [
+    {
+      "path": "AGENTS.md",
+      "bytes": 5834,
+      "sha256": "1e8cbc4f414819f47908e1a3be9f717792a0401fb4fb35b7272c053c00e2f609"
+    },
+    {
+      "path": "shared/transport-p2p/build.gradle.kts",
+      "bytes": 4251,
+      "sha256": "6ce2fd726bd41031a5b26d0d30f8ee8f693b4dc942da90bdc48b40fbf040c3b7"
+    },
+    {
+      "path": ".github/workflows/production-verification.yml",
+      "bytes": 41331,
+      "sha256": "84888fae00e1add37dd8f39c5a86a9600c2a95b5e3bca794133c3fc28147b46c"
+    },
+    {
+      "path": "scripts/release/validate_release_system.sh",
+      "bytes": 3673,
+      "sha256": "ce52c9c08edecba968337d6de42c90895badec127c7029a5afc16737d3b8864a"
+    },
+    {
+      "path": "scripts/release/workflow_contract.py",
+      "bytes": 47465,
+      "sha256": "fa142d3bbfb3dd18e0f3dc9aba2f388a3ce634ee7fdd16612b2d9bbf2df1f429"
+    },
+    {
+      "path": "scripts/ci/native_process_probe.py",
+      "bytes": 44789,
+      "sha256": "c87f6d1289ee50a7387988bd85953d451dac9e1b7b88a4d60f7b4848f86516da"
+    },
+    {
+      "path": "scripts/release/tests/test_native_continuation.py",
+      "bytes": 80771,
+      "sha256": "366cd58febbe2f91f7cc287af8942948dd15d5372de2cec750dcbde9f9539465"
+    },
+    {
+      "path": "scripts/release/tests/test_workflow_contract.py",
+      "bytes": 39774,
+      "sha256": "695a513b227d1aa3bde6adb49f886713ccdde4f684d9e8478b476cb0c6d8c4ae"
+    },
+    {
+      "path": "scripts/verification/ios-readiness/toolchain_profiles.py",
+      "bytes": 3358,
+      "sha256": "8adacaf4c59ed823aa088ecb70ad5c6c1e3f76e7ca3520d8abf0563341591313"
+    },
+    {
+      "path": "gradle/libs.versions.toml",
+      "bytes": 5556,
+      "sha256": "87a031665605a1fb3f932be31c75afd8d2d1bc0d94cfcca36101141c50788399"
+    },
+    {
+      "path": "gradle/verification-metadata.xml",
+      "bytes": 795388,
+      "sha256": "58b5a279cc5ccc58e1088fbe3dd248fcfdf31a307707204c5438259de7960f95"
+    },
+    {
+      "path": "settings.gradle.kts",
+      "bytes": 1422,
+      "sha256": "27a40495b1adf18ca90b5a8fdd345448c2ecf2f9ac726c753468a5e627b27d18"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/l08_functional_receipts.py",
+      "bytes": 13404,
+      "sha256": "4069cdca2a9946d56107c423820a43cae513131db3c0eaf5d3db53a41919dafd"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/run_ios_readiness.py",
+      "bytes": 87139,
+      "sha256": "9580071ecec4abc8ba375ca01e722eee4245f36132e6a5b8790f5d8bb8456687"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
+      "bytes": 59858,
+      "sha256": "5524d839202211270ec1c97776f0d350b9802ecf0d1c5e6eb3d28cd960629302"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/kernel_image_region.c.in",
+      "bytes": 3773,
+      "sha256": "d42aa932e5fe83defab173670aeea6f59507fa1b10029159efc04e1bbd67fdfc"
+    }
+  ],
+  "evidence_refs": [
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34303850578/run-final.json",
+      "bytes": 12680,
+      "sha256": "8188855f6292b05045c6bb52d86e1d4b1233c1423f6d8d4edd3c654527f8f713"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34303850578/native-evidence/continuation.json",
+      "bytes": 34253,
+      "sha256": "cebf0756d209520a0d01b16dea1e6240eba9584a9164864e0a4ff8d891635a70"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34303850578/native-evidence/ios-readiness-23/receipt.json",
+      "bytes": 498476,
+      "sha256": "f113c4189807486d96a6b9b81c2a2f09dbb8c54600c2eb9065348c15531a4a2a"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34303850578/native-evidence/ios-readiness-23/xcresult-summary.json",
+      "bytes": 1627,
+      "sha256": "ec867f340b925ca095ec7038f5c6d11ab3f5dcde1ad50cbe371f70fb67691c2b"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34303850578/native-evidence/ios-readiness-23/probe-l08-storage-functional-result.json",
+      "bytes": 40021,
+      "sha256": "63a4f3522a29992c9f74b8793446d7345c14a9cc04be7c69696df97e262a8df5"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34303850578/native-evidence/ios-readiness-24/receipt.json",
+      "bytes": 425102,
+      "sha256": "c8317c5612c11173746b8bb0e637f1b796b51056b3205f0713b7ac9475ff5e87"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34303850578/native-evidence/ios-readiness-24/xcresult-summary.json",
+      "bytes": 1107,
+      "sha256": "97339ff1efb7969740c20f904f2d4f0322fd2ae1231cc4f684976fb7d62f7f94"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34303850578/native-evidence/ios-readiness-24/xcresult-tests.json",
+      "bytes": 4467,
+      "sha256": "424bc2a02befd9849f5221cc7bdcaefc6d22ead3356414c82a8bb43cb2a79a2d"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34303850578/native-evidence/ios-readiness-24/xcresult-test-details.json",
+      "bytes": 2725,
+      "sha256": "08c1f26987df66ee547e16186cd0bd8c01b2444065fbb12e7977c0d677fdff9c"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34303850578/native-evidence/ios-readiness-24/kernel-region-01.json",
+      "bytes": 96,
+      "sha256": "6b3b492f8044908b6453f0b36d292f4363294a534c2038f616407bd96a860f31"
+    }
+  ]
+}

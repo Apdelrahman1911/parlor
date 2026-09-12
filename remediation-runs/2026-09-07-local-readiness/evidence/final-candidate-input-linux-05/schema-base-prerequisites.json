@@ -1,0 +1,815 @@
+{
+  "schema_version": 1,
+  "status": "PASS_OWNED_SCHEMA_PREREQUISITES",
+  "mode": "candidate",
+  "started_at": "2026-09-09T14:40:57.333027+00:00",
+  "scope": "Owned prerequisites only; unchanged scoped consumer or synthetic tests, not application runtime/legal/Store proof",
+  "controls_before": {
+    "remediation-runs/2026-09-07-local-readiness/reviews/run_candidate_input_01.py": "2a306819fb41b1883139fb42355d493f02e1d93a687f54d06f43ffbb758afa60",
+    "remediation-runs/2026-09-07-local-readiness/reviews/run_schema_consumer_controls_01.py": "78222a79d0d19cdce28077506ce1fd74481cc419fdf9dce9e9e5b6fd8840336f",
+    "remediation-runs/2026-09-07-local-readiness/reviews/dependency-candidate-consumer-03/candidate_consumer.py": "eb6e2baaac22739b4652bc63c6b57a24374ee57fb81d4711b981b872e8ac1c7f",
+    "remediation-runs/2026-09-07-local-readiness/reviews/dependency-candidate-consumer-03/test_candidate_consumer.py": "92eef687dbf037b310b00c9b678a5718d95cf5e8313094861c398554755a3535",
+    "remediation-runs/2026-09-08-continuation/reviews/schema-base-prerequisites-research-01.json": "54c9f96db0ead50008cab5c8c960c0540351922f949757e03dc91b8c5328b13e",
+    "remediation-runs/2026-09-08-continuation/controls/run_candidate_with_schema.py": "c9d3a26fb3901b3518f7c066d91ebda906d0bb8bef67273acb4720d5c37419c9"
+  },
+  "packages": [
+    {
+      "distribution": "jsonschema",
+      "version": "4.25.1",
+      "url": "https://files.pythonhosted.org/packages/bf/9c/8c95d856233c1f82500c2450b8c68576b4cf1c871db3afac5c34ff84e6fd/jsonschema-4.25.1-py3-none-any.whl",
+      "bytes": 90040,
+      "sha256": "3fba0169e345c7175110351d456342c364814cfcf3b964ba4587f22915230a63",
+      "expanded_bytes": 475270,
+      "members": [
+        [
+          "jsonschema/__init__.py",
+          3941,
+          "a7e470e134bfd0e3c76482722260d6b1d5a099de823d61cc5cbabb06e4314c67"
+        ],
+        [
+          "jsonschema/__main__.py",
+          115,
+          "88bb197f6ba9501de294129394c9f22be1c7b760a79df930c318bf73a80bbd20"
+        ],
+        [
+          "jsonschema/_format.py",
+          15581,
+          "8a9d4dd7a08104e6fff2c33f89e8f25b4539258f645e8cf73bf0058f5487165f"
+        ],
+        [
+          "jsonschema/_keywords.py",
+          14949,
+          "afcfc3aea01f9fa40bc109e65c4820bde89253e51a20bda9da7b8f20d7a57c57"
+        ],
+        [
+          "jsonschema/_legacy_keywords.py",
+          15191,
+          "dad5aec113d66d84bb10097cc01202feb69b1aebf527875f60ba8d10fa528610"
+        ],
+        [
+          "jsonschema/_types.py",
+          5456,
+          "d296091bad5c9ffe195959eac83db8b5ac764013259d23f2d1f704082a4048c9"
+        ],
+        [
+          "jsonschema/_typing.py",
+          630,
+          "8457c011e149efa2d8025fdf7ae55ad209c79d5f5512afd48632c94beedac606"
+        ],
+        [
+          "jsonschema/_utils.py",
+          10659,
+          "5efebfc0a2ac941265c328fdfa3d9cf090c5c3ee33e1a5859d57b6a57f21ed4e"
+        ],
+        [
+          "jsonschema/cli.py",
+          8445,
+          "6aff743ada52c6e8a4a37140c841edc6923e352b97dd632da10a48c74f686c96"
+        ],
+        [
+          "jsonschema/exceptions.py",
+          15256,
+          "6f8da150339f3c5729ac8e1994da630de2cabfc93dbce86059cb768f20e5c739"
+        ],
+        [
+          "jsonschema/protocols.py",
+          7198,
+          "960cabc951ea1628d2151033f79721dd5376173fa84c5ca18fd39b732e4ffc22"
+        ],
+        [
+          "jsonschema/validators.py",
+          47147,
+          "008d1b42b189a6f107d5148edf29f059c36f7e4a8de9624f832cb454ded69521"
+        ],
+        [
+          "jsonschema/benchmarks/__init__.py",
+          70,
+          "034b10af10c15474b243ef2bbb72f5d613177f7abd815b81f71fd88076f847d3"
+        ],
+        [
+          "jsonschema/benchmarks/const_vs_enum.py",
+          830,
+          "0d5162dd60ea05a95914e89b9e3a57d6e4d2af74716b670f805728c1ded492bb"
+        ],
+        [
+          "jsonschema/benchmarks/contains.py",
+          786,
+          "81ec50a14ac23b0102a1f6edd7d05ea2c419ed614be8f0dd917e3d0d6c0194e8"
+        ],
+        [
+          "jsonschema/benchmarks/issue232.py",
+          521,
+          "dcb2d82c89411909d5bb2ca8da202ffb1932e4fe8f4451c0371e3ecc82103a81"
+        ],
+        [
+          "jsonschema/benchmarks/json_schema_test_suite.py",
+          320,
+          "3ef7da6e9518705e3fedcb180d37136ae103f2b9c510661b758e51a935c3d3cb"
+        ],
+        [
+          "jsonschema/benchmarks/nested_schemas.py",
+          1892,
+          "9a8d3b771f82220992388eb608db38839c6ed45cc79252c1a644280f159870ab"
+        ],
+        [
+          "jsonschema/benchmarks/subcomponents.py",
+          1113,
+          "7c4ca2333b1678ada977b0c4182bae63ebf31ae9f08477334415849c144b288a"
+        ],
+        [
+          "jsonschema/benchmarks/unused_registry.py",
+          940,
+          "87047038d73d71e7cfb58ce4a17fd36113b71b25288eb8afd3e61068adef9e3d"
+        ],
+        [
+          "jsonschema/benchmarks/useless_applicator_schemas.py",
+          3342,
+          "1159b9f84b4e105a0b3ff56dda3e12ac2c25c74e4d84fa8db9943a2c830fd437"
+        ],
+        [
+          "jsonschema/benchmarks/useless_keywords.py",
+          867,
+          "6e3ff32abd6855cb4596ac9968e6c2b184e01638a23603f30b486bd58f3af261"
+        ],
+        [
+          "jsonschema/benchmarks/validator_creation.py",
+          285,
+          "52451094b027bacb27aff29d08875a77ac71da95f140b998b6c5e88a2aca7964"
+        ],
+        [
+          "jsonschema/benchmarks/issue232/issue.json",
+          117105,
+          "79a3ce663311bb9bbc4692abb00f6e93bb9c3d94b9b64286e03fe190e4d0dc79"
+        ],
+        [
+          "jsonschema/tests/__init__.py",
+          0,
+          "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        ],
+        [
+          "jsonschema/tests/_suite.py",
+          8374,
+          "da4d17f7537b74e1e141ce66ad8bf8d0e29fd707a2a23e91301a9680b4faf8f2"
+        ],
+        [
+          "jsonschema/tests/fuzz_validate.py",
+          1114,
+          "7d403bc932488a1682c09a659147a165ec81f381dc5c472ab58e683c95c83bb2"
+        ],
+        [
+          "jsonschema/tests/test_cli.py",
+          28544,
+          "03cf6be4b387cbea5e2cf640e580e439a3135aacd03bfc364eef16173fefa613"
+        ],
+        [
+          "jsonschema/tests/test_deprecations.py",
+          15754,
+          "c86ea6911247a531db5a8c692c2e72e47edf93c7ab18eb3c7fff55e2d081121f"
+        ],
+        [
+          "jsonschema/tests/test_exceptions.py",
+          24310,
+          "9564d1c9e49e39a15de5d9eeb6acb5606f6ea1c9f178cff47081151ba1a018c2"
+        ],
+        [
+          "jsonschema/tests/test_format.py",
+          3188,
+          "7959b948c69617694e3cedbc6cf03036f92242f1c240acbe327b808047217c47"
+        ],
+        [
+          "jsonschema/tests/test_jsonschema_test_suite.py",
+          8461,
+          "b407f192733ae4e47d2f20cf1eed699046a899b2e08d12e727a14f8963ddc638"
+        ],
+        [
+          "jsonschema/tests/test_types.py",
+          6977,
+          "705e752930e676cc74e8cac87387d72add17f5f22c560c39ba14fc09a9956bc5"
+        ],
+        [
+          "jsonschema/tests/test_utils.py",
+          4163,
+          "b1aa3be28d4fc9833105fab07a8910378f021524baca1264e459027cc2793ec2"
+        ],
+        [
+          "jsonschema/tests/test_validators.py",
+          87975,
+          "7a26a282c64ccc7618b27890d543f281a4b9e9ad5dfbfefef4d0b8c155c0873b"
+        ],
+        [
+          "jsonschema/tests/typing/__init__.py",
+          0,
+          "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        ],
+        [
+          "jsonschema/tests/typing/test_all_concrete_validators_match_protocol.py",
+          1238,
+          "2395d4979658512668dc03e4175d25f0c9df934f685caaaf5d6b6d186777b039"
+        ],
+        [
+          "jsonschema-4.25.1.dist-info/METADATA",
+          7608,
+          "31f83c1579e46e1af62269cefa5d83534ef155f3ee21914f7881bbd544bc125c"
+        ],
+        [
+          "jsonschema-4.25.1.dist-info/WHEEL",
+          87,
+          "aad0b0a12256807936d52d4a6f88a1773236ae527564a688bab4e3fe780e8724"
+        ],
+        [
+          "jsonschema-4.25.1.dist-info/entry_points.txt",
+          51,
+          "bceeeb5f816cff1215272da99c0b4a8134b17e99e8cc0550d038c29a93319d61"
+        ],
+        [
+          "jsonschema-4.25.1.dist-info/licenses/COPYING",
+          1057,
+          "4f92a015a13c4d1a040bef018aa13430b4f1bc73b41b16bb846c346766de7439"
+        ],
+        [
+          "jsonschema-4.25.1.dist-info/RECORD",
+          3730,
+          "3f28341a55690fa428e0a45a3c266d32ce996bc19f37d6c62269799925b05923"
+        ]
+      ]
+    },
+    {
+      "distribution": "referencing",
+      "version": "0.36.2",
+      "url": "https://files.pythonhosted.org/packages/c1/b1/3baf80dc6d2b7bc27a95a67752d0208e410351e3feb4eb78de5f77454d8d/referencing-0.36.2-py3-none-any.whl",
+      "bytes": 26775,
+      "sha256": "e8699adbbf8b5c7de96d8ffa0eb5c158b3beafce084968e2ea8bb08c6794dcd0",
+      "expanded_bytes": 115431,
+      "members": [
+        [
+          "referencing/__init__.py",
+          207,
+          "e4864a5da007fc55b20894646939f55dca6d2df83d72f78b6fdbb99d853124ab"
+        ],
+        [
+          "referencing/_attrs.py",
+          791,
+          "6e04fe28c84354b786b56c4cfd218a61e2da6411734f691454574090e7178bc8"
+        ],
+        [
+          "referencing/_attrs.pyi",
+          559,
+          "27a4ad3142aa8b13b81fb1228bdf935cd7c239f4bc6879bed5ec2298e03ef28a"
+        ],
+        [
+          "referencing/_core.py",
+          24830,
+          "d1225f656ebc74eacb31a15d84ccaec98cdbd018bd77405c3e31b08a37ac7fd1"
+        ],
+        [
+          "referencing/exceptions.py",
+          4176,
+          "cc581a120e9688a793e7c310b8a36c8060e71ecce9dba738a11782eac17d8073"
+        ],
+        [
+          "referencing/jsonschema.py",
+          18628,
+          "8c55112053a7bb1b44e1da0f2f5c520deb90e0e85dc4dcd29fc31145b4de5729"
+        ],
+        [
+          "referencing/py.typed",
+          0,
+          "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        ],
+        [
+          "referencing/retrieval.py",
+          2697,
+          "41894ebe1890783235d972b07b3859dd7394cea053144f1be53a5f0136a603b2"
+        ],
+        [
+          "referencing/typing.py",
+          1445,
+          "5a351b9d9ea33c0777d5c9c214069e588544373c87b47749c8e95e96fd4663bd"
+        ],
+        [
+          "referencing/tests/__init__.py",
+          0,
+          "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        ],
+        [
+          "referencing/tests/test_core.py",
+          37854,
+          "79aa74080688db7be33086d5c848fddaa2dd769de21c7dc0c42e7908a50de0b5"
+        ],
+        [
+          "referencing/tests/test_exceptions.py",
+          934,
+          "ede39d1f2a1b5ccb7bfa1e409e71fbbbc8b0dae1cf687ed4e01b3d2612e08d6a"
+        ],
+        [
+          "referencing/tests/test_jsonschema.py",
+          11687,
+          "e109e35163803009f9c9e03c66d95d264848e78bf02962560742c3ccd771e717"
+        ],
+        [
+          "referencing/tests/test_referencing_suite.py",
+          2335,
+          "c03eaf78c7cbb14bb4b3830b8e6ee94bc720e1c21f2fb14c044367824ef7cc22"
+        ],
+        [
+          "referencing/tests/test_retrieval.py",
+          3719,
+          "bdc6e77c0e13a957aa5335b4ef7c0efa72dea9522fd2b41958d5afd33f649b8f"
+        ],
+        [
+          "referencing-0.36.2.dist-info/METADATA",
+          2843,
+          "f1ec8cf77a53d149e03e4370d19c5281753c77f24abc3468d27c614b05bd7206"
+        ],
+        [
+          "referencing-0.36.2.dist-info/WHEEL",
+          87,
+          "aad0b0a12256807936d52d4a6f88a1773236ae527564a688bab4e3fe780e8724"
+        ],
+        [
+          "referencing-0.36.2.dist-info/licenses/COPYING",
+          1057,
+          "42dcd63495f87b4eb7c7757afa379bb55a53f94afd7a5f657d9adf57236e515c"
+        ],
+        [
+          "referencing-0.36.2.dist-info/RECORD",
+          1582,
+          "d523198c6ea5fdcb2ff84e7bf84046bbb47e97dda4ef38c04f1e08db4fb43165"
+        ]
+      ]
+    },
+    {
+      "distribution": "attrs",
+      "version": "25.3.0",
+      "url": "https://files.pythonhosted.org/packages/77/06/bb80f5f86020c4551da315d78b3ab75e8228f89f0162f2c3a819e407941a/attrs-25.3.0-py3-none-any.whl",
+      "bytes": 63815,
+      "sha256": "427318ce031701fea540783410126f03899a97ffc6f61596ad581ac2e40e3bc3",
+      "expanded_bytes": 219126,
+      "members": [
+        [
+          "attr/__init__.py",
+          2057,
+          "7ce608bedd5e192a90adee2e092dec256299d26c00b82f140faa9b6b9392f7f5"
+        ],
+        [
+          "attr/__init__.pyi",
+          11281,
+          "4085e79c73e8b9c9835a46e936c5933fe7202756e7f257bb0e3c916bfc1875ec"
+        ],
+        [
+          "attr/_cmp.py",
+          4117,
+          "dcd9f54e3c659546225ff9c9a159c4917a0393484cd4360a8f90c4ec665ee22d"
+        ],
+        [
+          "attr/_cmp.pyi",
+          368,
+          "53efd153f5193b23d4110cd713a44c61041c8e4651636e704c7f7db0dd2cecc3"
+        ],
+        [
+          "attr/_compat.py",
+          2704,
+          "e219576d685d0e34020cae85285d448276773ce88782da69e78a84d27c5a1878"
+        ],
+        [
+          "attr/_config.py",
+          843,
+          "746ab7c51e9f819105e9406dfcbd13f9e507201e22e37911987d0fdbcb09570f"
+        ],
+        [
+          "attr/_funcs.py",
+          15854,
+          "e7eb54289b69de1e44979e4470397a1965c5a7af1f4fc0fc53bb8244deb8f7b2"
+        ],
+        [
+          "attr/_make.py",
+          96664,
+          "94150f3e6c6203505e1f307a3a51e808487efad56f335a335cef1e5ce6ba8387"
+        ],
+        [
+          "attr/_next_gen.py",
+          24395,
+          "ec54646ed97f374d7b4ae0617ff570de6c36736a46661b4218ecda760cfbb69e"
+        ],
+        [
+          "attr/_typing_compat.pyi",
+          469,
+          "5c33f9e13527f992a10fad9339079b9b3af0172a268540a8191a5c95be9a9510"
+        ],
+        [
+          "attr/_version_info.py",
+          2121,
+          "7b14aa6f76f913e7cc4ac819025130f5770ba448286cf391099a5c68482500ce"
+        ],
+        [
+          "attr/_version_info.pyi",
+          209,
+          "c7f3372f75ae07baff50b5c05a3c7de7db9d290e072c1f25fa1b1cd450c636f9"
+        ],
+        [
+          "attr/converters.py",
+          3861,
+          "1a50de3b33de4c581e0412db8fd1b9ec4cf994093af2e85200b45827f7b17bce"
+        ],
+        [
+          "attr/converters.pyi",
+          643,
+          "a2b5366df7fe56341ada4303caf9cc415ef7a094f6591c90bb0e19475ca6d5b1"
+        ],
+        [
+          "attr/exceptions.py",
+          1977,
+          "1d116ae22c9b9afefe0dc670ca397a3357ae33661e2552bf845c6e6811809e02"
+        ],
+        [
+          "attr/exceptions.pyi",
+          539,
+          "cd9abc6c2527280cbd983b41130e366613e1014207a1329e7434089c90fcf373"
+        ],
+        [
+          "attr/filters.py",
+          1795,
+          "64188a58ba774742df099b2aed7d75a67f565fc36c952db05cce23b272ce19cf"
+        ],
+        [
+          "attr/filters.pyi",
+          208,
+          "dc9e411be753c65b41935ffe46e351507aefdaabb5bfcbf868334043bfe689f0"
+        ],
+        [
+          "attr/py.typed",
+          0,
+          "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        ],
+        [
+          "attr/setters.py",
+          1617,
+          "e7e75c4fadc640adf938d1334a07d70a46c1ee93e4691faabf5e669b83d54b34"
+        ],
+        [
+          "attr/setters.pyi",
+          584,
+          "367564685535041e0907c13826e5f2af34d482fb4ca63f29df005d258eee8b1e"
+        ],
+        [
+          "attr/validators.py",
+          20046,
+          "59a0751cb0071ea4475acaeffcaf47fac27b1128a5dc7dc29afd9df13b55671e"
+        ],
+        [
+          "attr/validators.pyi",
+          2603,
+          "b365a128faac9316ec72425f2a4f333aeb81d3cf067e0a72c5c09848d14ba8d5"
+        ],
+        [
+          "attrs/__init__.py",
+          1107,
+          "a9e4096783b4f327334a7f38d2ff5b60e699c9113cd56b158be402ad8de4ac25"
+        ],
+        [
+          "attrs/__init__.pyi",
+          7931,
+          "9d99889e872333bb47578010c34bf13bf7e8ea82632ff3e89e557dcca296f036"
+        ],
+        [
+          "attrs/converters.py",
+          76,
+          "f244258eb5707d24d1bbc20dc0493c488d1e1abce659fb6c4fbaccd04ab2a213"
+        ],
+        [
+          "attrs/exceptions.py",
+          76,
+          "0020829a0d7dfaf0c56833d8f6f165d7df523d709030dfdb10db380c02e3ce6b"
+        ],
+        [
+          "attrs/filters.py",
+          73,
+          "54e50c66e83db8453a754b80d1d1758c89d42b43cbddf2e03f45414b977e0831"
+        ],
+        [
+          "attrs/py.typed",
+          0,
+          "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        ],
+        [
+          "attrs/setters.py",
+          73,
+          "78bd5889d6105774f687dfd2608652651d4501c1c66f54ee093cb41342efd925"
+        ],
+        [
+          "attrs/validators.py",
+          76,
+          "c5ccbac03e53b5391d086d5fe1759ba1c3d23b47da06393921f5497cfe92523d"
+        ],
+        [
+          "attrs-25.3.0.dist-info/METADATA",
+          10993,
+          "5b7f1c4448fbb35c2a35fd5f838855c1998bd7187401d4a9e0886d4cc44e8a7c"
+        ],
+        [
+          "attrs-25.3.0.dist-info/WHEEL",
+          87,
+          "aad0b0a12256807936d52d4a6f88a1773236ae527564a688bab4e3fe780e8724"
+        ],
+        [
+          "attrs-25.3.0.dist-info/licenses/LICENSE",
+          1109,
+          "882115c95dfc2af1eeb6714f8ec6d5cbcabf667caff8729f42420da63f714e9f"
+        ],
+        [
+          "attrs-25.3.0.dist-info/RECORD",
+          2570,
+          "a656f9b39f83a696bf7ca50b29767434e1b50c25cf8f713e3d0812b106c20047"
+        ]
+      ]
+    },
+    {
+      "distribution": "jsonschema-specifications",
+      "version": "2025.4.1",
+      "url": "https://files.pythonhosted.org/packages/01/0e/b27cdbaccf30b890c40ed1da9fd4a3593a5cf94dae54fb34f8a4b74fcd3f/jsonschema_specifications-2025.4.1-py3-none-any.whl",
+      "bytes": 18437,
+      "sha256": "4653bffbd6584f7de83a67e0d620ef16900b390ddc7939d56684d6c81e33f1af",
+      "expanded_bytes": 47261,
+      "members": [
+        [
+          "jsonschema_specifications/__init__.py",
+          386,
+          "aa84c1d83298eeabcdac684c3c7ea0b6600944b8a599543e7c56704faaf2ab0d"
+        ],
+        [
+          "jsonschema_specifications/_core.py",
+          1140,
+          "b4585cd42325789dc024e2bf6e3c4ea4541376bb140a51467c5c4f054fc279b3"
+        ],
+        [
+          "jsonschema_specifications/schemas/draft201909/metaschema.json",
+          1785,
+          "7b761b3e121f0a0ca1ea2a0b8e2cc856bcf801604b8268d71bacaa202bc0c13b"
+        ],
+        [
+          "jsonschema_specifications/schemas/draft201909/vocabularies/applicator",
+          1860,
+          "6895100e99726fbb107058512bbec3ecfd4b24e8fd2facee3e505ee72b0d4c31"
+        ],
+        [
+          "jsonschema_specifications/schemas/draft201909/vocabularies/content",
+          517,
+          "9b7d4f55a4e2fdb02c430068fdffabc732addce238da3f1df2690249c3353274"
+        ],
+        [
+          "jsonschema_specifications/schemas/draft201909/vocabularies/core",
+          1531,
+          "b5a2c4957f6495d0a5081f0409ebe8a14e4139acb203fc748471f8ede2af5b2c"
+        ],
+        [
+          "jsonschema_specifications/schemas/draft201909/vocabularies/meta-data",
+          892,
+          "d47e2445dd6a82271a298d83cc6c6cb8d4ae1e15e0dc56becd37a163ecf01286"
+        ],
+        [
+          "jsonschema_specifications/schemas/draft201909/vocabularies/validation",
+          2834,
+          "1e526c1d335a734805fc82cf5798c12b960ad7da2517c66cda5a1b09359c3c1c"
+        ],
+        [
+          "jsonschema_specifications/schemas/draft202012/metaschema.json",
+          2452,
+          "41da76f5afb7ce062d248f762463a92f7ca47e4e0f905b224ba6afeef91ded0f"
+        ],
+        [
+          "jsonschema_specifications/schemas/draft202012/vocabularies/applicator",
+          1659,
+          "c4a6e4147b91fef7fea6dc058cb1bf93402f7414b76578a8b16aaf1dad6aacef"
+        ],
+        [
+          "jsonschema_specifications/schemas/draft202012/vocabularies/content",
+          519,
+          "08343747764e4a5814262793cf4d652057a7913863c5950d43297e8e1fdac5b6"
+        ],
+        [
+          "jsonschema_specifications/schemas/draft202012/vocabularies/core",
+          1564,
+          "c2d12a8e4dd11d336dfc83a3f663aa4c69f0b49b3beb094ffeb25b5316f4803d"
+        ],
+        [
+          "jsonschema_specifications/schemas/draft202012/vocabularies/format",
+          403,
+          "50ebbfe790611a849b8cc400a09c1d0e0fb6ab5c0d43a0f22201fd3625056bf4"
+        ],
+        [
+          "jsonschema_specifications/schemas/draft202012/vocabularies/format-annotation",
+          448,
+          "abc775adfefd89d22358170d9bf93f4ebd2349563bbbedd60f02bef7c812bcc0"
+        ],
+        [
+          "jsonschema_specifications/schemas/draft202012/vocabularies/format-assertion",
+          445,
+          "c52242b9a1bb786b26c3e82c7add428c31f9c96e575dce99e56ea5feaa6da20c"
+        ],
+        [
+          "jsonschema_specifications/schemas/draft202012/vocabularies/meta-data",
+          892,
+          "8f76d6e14f41b9b92ef933b708cdc5144c8b5268651ad11918485fb1754f1c76"
+        ],
+        [
+          "jsonschema_specifications/schemas/draft202012/vocabularies/unevaluated",
+          506,
+          "2dbfbcb73994b670b0976492adee1fffb46c21682784d2f5a4ca561f9e2d0cb4"
+        ],
+        [
+          "jsonschema_specifications/schemas/draft202012/vocabularies/validation",
+          2834,
+          "7010a31e541f32d2be721e2de348df75c9b36876a3ed304877fc0abda1d37a58"
+        ],
+        [
+          "jsonschema_specifications/schemas/draft3/metaschema.json",
+          2600,
+          "2cf75f64436fb5be374a2eaa27ab8b7e1fd651c9b46daea6c67b02fd64e2458b"
+        ],
+        [
+          "jsonschema_specifications/schemas/draft4/metaschema.json",
+          4357,
+          "e1489d0b4755f02793302591d3fcb8f07b6893a82a94f24895f8e4edf11b82e2"
+        ],
+        [
+          "jsonschema_specifications/schemas/draft6/metaschema.json",
+          4437,
+          "c29dfce9f54835c3a06c03b3c5d5ec0eda77706568f9c4df7cfbc7566a51006d"
+        ],
+        [
+          "jsonschema_specifications/schemas/draft7/metaschema.json",
+          4819,
+          "3d5392088261606c559b603f385329c9f1ab45b5d667eb990687453b055d405e"
+        ],
+        [
+          "jsonschema_specifications/tests/__init__.py",
+          0,
+          "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        ],
+        [
+          "jsonschema_specifications/tests/test_jsonschema_specifications.py",
+          1106,
+          "5a46d8456e80e85a19d2b8af4a17ea54b482b00887276c7c4f1a840894d73d36"
+        ],
+        [
+          "jsonschema_specifications-2025.4.1.dist-info/METADATA",
+          2907,
+          "3b96923c9879c79b110613d70be996dce550ec5f1c4a2563c2fed93ce48e29c0"
+        ],
+        [
+          "jsonschema_specifications-2025.4.1.dist-info/WHEEL",
+          87,
+          "aad0b0a12256807936d52d4a6f88a1773236ae527564a688bab4e3fe780e8724"
+        ],
+        [
+          "jsonschema_specifications-2025.4.1.dist-info/licenses/COPYING",
+          1057,
+          "42dcd63495f87b4eb7c7757afa379bb55a53f94afd7a5f657d9adf57236e515c"
+        ],
+        [
+          "jsonschema_specifications-2025.4.1.dist-info/RECORD",
+          3224,
+          "ef17bd00c7e39739e63c794d35fc4e0eef27a46bfa7e60e18cf40f021b9f17a2"
+        ]
+      ]
+    },
+    {
+      "distribution": "rpds-py",
+      "version": "0.27.1",
+      "url": "https://files.pythonhosted.org/packages/ed/7b/8f4fee9ba1fb5ec856eb22d725a4efa3deb47f769597c809e03578b0f9d9/rpds_py-0.27.1-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
+      "bytes": 386883,
+      "sha256": "466bfe65bd932da36ff279ddd92de56b042f2266d752719beb97b08526268ec5",
+      "expanded_bytes": 1046710,
+      "members": [
+        [
+          "rpds_py-0.27.1.dist-info/METADATA",
+          4194,
+          "b76fe460f93be155403bdb6a74d01661c967c3e2ae522fe9963c297c7a1faea9"
+        ],
+        [
+          "rpds_py-0.27.1.dist-info/WHEEL",
+          129,
+          "b41ea2ac0fd3813307590af4cb2671d27f4e1738a0277d01698496d3cf5ab783"
+        ],
+        [
+          "rpds_py-0.27.1.dist-info/licenses/LICENSE",
+          1057,
+          "314e4e91be3baa93c0fb4bccc9e4e97cd643eb839b065af921782c2175fe9909"
+        ],
+        [
+          "rpds/__init__.py",
+          99,
+          "c373205d6ee5a530880b0d0a5dbc36d105f9ef7fe46ec12758878cb0202e82f3"
+        ],
+        [
+          "rpds/__init__.pyi",
+          2570,
+          "fa177503577506a1b12f75d9188f52a56d7ec597b6889703314e82a627a3815e"
+        ],
+        [
+          "rpds/py.typed",
+          0,
+          "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        ],
+        [
+          "rpds/rpds.cpython-312-x86_64-linux-gnu.so",
+          1038040,
+          "1a5acf297faad922c1335dc00cc2ae6e24dd907f77576bef0e200bd07e0f0e5c"
+        ],
+        [
+          "rpds_py-0.27.1.dist-info/RECORD",
+          621,
+          "d03bba2ff36c6a9ffc26616ecf18a417e7e0f52c4795a823d8ab17f226327c1f"
+        ]
+      ]
+    },
+    {
+      "distribution": "typing-extensions",
+      "version": "4.15.0",
+      "url": "https://files.pythonhosted.org/packages/18/67/36e9267722cc04a6b9f15c7f3441c2363321a3ea07da7ae0c0707beb2a9c/typing_extensions-4.15.0-py3-none-any.whl",
+      "bytes": 44614,
+      "sha256": "f0fa19c6845758ab08074a0cfa8b7aecb71c999ca73d62883bc25cc018c4e548",
+      "expanded_bytes": 178133,
+      "members": [
+        [
+          "typing_extensions.py",
+          160429,
+          "433d11d170d3a24d2eb065ebc1bfe848cea7e3d7ce68567ab52bea2d4c2f7ed8"
+        ],
+        [
+          "typing_extensions-4.15.0.dist-info/licenses/LICENSE",
+          13936,
+          "3b2f81fe21d181c499c59a256c8e1968455d6689d269aa85373bfb6af41da3bf"
+        ],
+        [
+          "typing_extensions-4.15.0.dist-info/WHEEL",
+          82,
+          "1b68144734c4b66791f27add5d425f3620775585718a03d0f9b110ba3a4d88db"
+        ],
+        [
+          "typing_extensions-4.15.0.dist-info/METADATA",
+          3259,
+          "c138378fe8f18934ac99de060535c53ec6c13aeed65e94c32641da7ee3192a72"
+        ],
+        [
+          "typing_extensions-4.15.0.dist-info/RECORD",
+          427,
+          "d115b31bd342e1ffe5c3e13291f1b633969390e029b9f64f8ddbcc9883feef3a"
+        ]
+      ]
+    }
+  ],
+  "versions": {
+    "jsonschema": "4.25.1",
+    "referencing": "0.36.2",
+    "attrs": "25.3.0",
+    "jsonschema-specifications": "2025.4.1",
+    "rpds-py": "0.27.1",
+    "typing-extensions": "4.15.0"
+  },
+  "inner_exit_code": 0,
+  "imported_modules": {
+    "jsonschema": {
+      "path": "jsonschema/__init__.py",
+      "sha256": "a7e470e134bfd0e3c76482722260d6b1d5a099de823d61cc5cbabb06e4314c67"
+    },
+    "referencing": {
+      "path": "referencing/__init__.py",
+      "sha256": "e4864a5da007fc55b20894646939f55dca6d2df83d72f78b6fdbb99d853124ab"
+    },
+    "attr": {
+      "path": "attr/__init__.py",
+      "sha256": "7ce608bedd5e192a90adee2e092dec256299d26c00b82f140faa9b6b9392f7f5"
+    },
+    "attrs": {
+      "path": "attrs/__init__.py",
+      "sha256": "a9e4096783b4f327334a7f38d2ff5b60e699c9113cd56b158be402ad8de4ac25"
+    },
+    "jsonschema_specifications": {
+      "path": "jsonschema_specifications/__init__.py",
+      "sha256": "aa84c1d83298eeabcdac684c3c7ea0b6600944b8a599543e7c56704faaf2ab0d"
+    },
+    "rpds": {
+      "path": "rpds/__init__.py",
+      "sha256": "c373205d6ee5a530880b0d0a5dbc36d105f9ef7fe46ec12758878cb0202e82f3"
+    },
+    "typing_extensions": {
+      "path": "typing_extensions.py",
+      "sha256": "433d11d170d3a24d2eb065ebc1bfe848cea7e3d7ce68567ab52bea2d4c2f7ed8"
+    },
+    "rpds.rpds": {
+      "path": "rpds/rpds.cpython-312-x86_64-linux-gnu.so",
+      "sha256": "1a5acf297faad922c1335dc00cc2ae6e24dd907f77576bef0e200bd07e0f0e5c"
+    }
+  },
+  "base_package_cleanup": true,
+  "controls_after": {
+    "remediation-runs/2026-09-07-local-readiness/reviews/run_candidate_input_01.py": "2a306819fb41b1883139fb42355d493f02e1d93a687f54d06f43ffbb758afa60",
+    "remediation-runs/2026-09-07-local-readiness/reviews/run_schema_consumer_controls_01.py": "78222a79d0d19cdce28077506ce1fd74481cc419fdf9dce9e9e5b6fd8840336f",
+    "remediation-runs/2026-09-07-local-readiness/reviews/dependency-candidate-consumer-03/candidate_consumer.py": "eb6e2baaac22739b4652bc63c6b57a24374ee57fb81d4711b981b872e8ac1c7f",
+    "remediation-runs/2026-09-07-local-readiness/reviews/dependency-candidate-consumer-03/test_candidate_consumer.py": "92eef687dbf037b310b00c9b678a5718d95cf5e8313094861c398554755a3535",
+    "remediation-runs/2026-09-08-continuation/reviews/schema-base-prerequisites-research-01.json": "54c9f96db0ead50008cab5c8c960c0540351922f949757e03dc91b8c5328b13e",
+    "remediation-runs/2026-09-08-continuation/controls/run_candidate_with_schema.py": "c9d3a26fb3901b3518f7c066d91ebda906d0bb8bef67273acb4720d5c37419c9"
+  },
+  "finished_at": "2026-09-09T14:41:14.918654+00:00"
+}

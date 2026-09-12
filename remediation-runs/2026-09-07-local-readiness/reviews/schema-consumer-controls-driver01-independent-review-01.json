@@ -1,0 +1,268 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/factory_review",
+  "implementation_author": "/root",
+  "recorded_at": "2026-09-08T05:30:04.414258+00:00",
+  "classification": "APPROVED_FOR_ROOT_RUN_SCOPED_SYNTHETIC_CONTROLS_NOT_CONSUMER_APPROVAL",
+  "scope": "Independent source-only review of root-authored run_schema_consumer_controls_01.py and root build-lane caller/public prerequisite receipts. The consumer/tests were authored by this reviewer and are NOT independently approved by this report. Root is separately reviewing them.",
+  "source_inputs": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/run_schema_consumer_controls_01.py",
+      "sha256": "6bd1834df20604c7332b8489750133549daaf101f03d7ea82b4d887f9e47772d",
+      "bytes": 8956,
+      "reviewed_lines": [
+        [
+          1,
+          187
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py",
+      "sha256": "5c0e546c819c28762cbc6b355ec2717737fc53f96712af591a27add878579d7a",
+      "bytes": 21094,
+      "reviewed_lines": [
+        [
+          1,
+          344
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/schema-optional-checker-research-01.json",
+      "sha256": "c86d42085a732ec94ba0397852abbe245fb5de0d1a154c6f960e4135a6e233db",
+      "bytes": 3471,
+      "reviewed_lines": [
+        [
+          1,
+          95
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/schema-optional-lark-research-01.json",
+      "sha256": "7522e4d9aeffd11eeb9ff862334bd40a99936442bd620e82c7371db71ea2af4f",
+      "bytes": 1626,
+      "reviewed_lines": [
+        [
+          1,
+          37
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/schema-wheel-byte-research-01.json",
+      "sha256": "fc927ded54461b0f63d846432f6d4417ab738568a2ac7f55e9305f7c8e42a2cc",
+      "bytes": 11517,
+      "reviewed_lines": [
+        [
+          1,
+          311
+        ]
+      ]
+    }
+  ],
+  "pin_reconciliation": [
+    {
+      "distribution": "rfc3987-syntax",
+      "version": "1.1.0",
+      "sha256": "6c3d97604e4c5ce9f714898e05401a0445a641cfa276432b0a648c80856f6a3f",
+      "bytes": 8046,
+      "recorded_members": 9,
+      "recorded_expanded_bytes": 18424,
+      "requires_python": ">=3.9",
+      "required_runtime_dependency": "lark>=1.2.2",
+      "result": "Driver URL/size/digest exactly match retained official PyPI metadata receipt and root byte-inspection receipt."
+    },
+    {
+      "distribution": "lark",
+      "version": "1.2.2",
+      "sha256": "c2276486b02f0f1b90be155f2c8ba4a8e194d42775786db622faccd652d8e80c",
+      "bytes": 111036,
+      "recorded_members": 46,
+      "recorded_expanded_bytes": 350066,
+      "requires_python": ">=3.8",
+      "required_runtime_dependency": "None in retained metadata; declared dependencies are extras not selected.",
+      "result": "Driver URL/size/digest exactly match retained official PyPI metadata receipt and root byte-inspection receipt."
+    }
+  ],
+  "source_conclusions": [
+    {
+      "area": "Authority and invocation",
+      "driver_lines": [
+        [
+          141,
+          149
+        ],
+        [
+          182,
+          187
+        ]
+      ],
+      "caller_lines": [
+        [
+          230,
+          266
+        ],
+        [
+          276,
+          281
+        ]
+      ],
+      "conclusion": "Driver accepts no free-form arguments and requires canonical TMPDIR shape created by outer reviewed lane. The approved invocation is a fresh outer --command /usr/bin/python3-B driver process, not direct standalone or persistent interpreter use. Candidate export, Git mutation, Gradle invocation, signing and Store operations are absent in driver."
+    },
+    {
+      "area": "Source binding",
+      "driver_lines": [
+        [
+          26,
+          41
+        ],
+        [
+          58,
+          65
+        ],
+        [
+          152,
+          156
+        ],
+        [
+          166,
+          168
+        ]
+      ],
+      "conclusion": "Both authored control files are pinned exactly and rechecked after test/cleanup; driver hash is recorded in its output. Root must compare recorded/current driver hash to this approval because generic lane runner manifest does not include this remediation driver. AST parse found16unique methods and no test decorators; these facts are source/discovery inputs, not execution or consumer approval."
+    },
+    {
+      "area": "Network and provenance",
+      "driver_lines": [
+        [
+          34,
+          40
+        ],
+        [
+          53,
+          55
+        ],
+        [
+          79,
+          85
+        ]
+      ],
+      "conclusion": "Only two fixed HTTPS wheel URLs are opened; redirects are refused, finalURL/status checked, reading bounded to declaredsize+1, exact length and reviewed SHA256 checked before ZIP interpretation. No pip/globalinstallation and no dynamic dependency resolution. TLS behavior uses standard urllib defaults; no custom insecure context."
+    },
+    {
+      "area": "Extraction",
+      "driver_lines": [
+        [
+          86,
+          110
+        ]
+      ],
+      "conclusion": "Selected wheel pins match retained metadata. Recorded9/46unique names and18424/350066expandedbytes fit actualguardbounds. Memberpath rejects absolute/traversal/emptycomponents/backslash/colon/NUL and foreign top-level namespaces; no symlink/directory/specialmode allowed, max100members/1MiBmember/2MiBexpansion. Files written exclusively under freshTempDirectory; duplicate/case-alias/pathcollisions cannot silently overwrite. ZIP CRC/read/byteerrors abort."
+    },
+    {
+      "area": "Import ownership",
+      "driver_lines": [
+        [
+          68,
+          76
+        ],
+        [
+          111,
+          122
+        ]
+      ],
+      "conclusion": "Optional parsers must not already be loaded. Both wheels extracted before ownedscratch is temporarily prepended to sys.path; metadata must identify exactlyjsonschema4.25.1/referencing0.36.2/rfc3987-syntax1.1.0/lark1.2.2. Imported optionalmodulefile paths must resolve under owned scratch. No site.addsitedir or setup/entry-point invocation; dist-info does not install scripts. This is pinned trustedpubliccode execution, not a hostilePython sandbox."
+    },
+    {
+      "area": "Discovery/results",
+      "driver_lines": [
+        [
+          133,
+          138
+        ],
+        [
+          152,
+          169
+        ]
+      ],
+      "conclusion": "AST-derived16testIDs must equal fully flattened unittest discovery IDs before execution. Result must besuccessful, testsRun16 and no skipped cases before PASS_SYNTHETIC_CONTROLS. Loader failures/unknown tests fail identity matching. Failure/errorIDs and skips retained. Root separately validates the authored assertions; this approval does not self-approve those tests."
+    },
+    {
+      "area": "Failure and cancellation",
+      "driver_lines": [
+        [
+          73,
+          130
+        ],
+        [
+          170,
+          187
+        ]
+      ],
+      "caller_lines": [
+        [
+          50,
+          75
+        ],
+        [
+          279,
+          336
+        ],
+        [
+          338,
+          344
+        ]
+      ],
+      "conclusion": "Scopedcontext restores sys.path and verifies ownedtempdir device/inode/uid/type before explicit cleanup. Download/import/test failures unwind through it. SIGINT/SIGTERM become KeyboardInterrupt; BaseException produces nonzero failurereceipt. If driver cleanup/reporting is interrupted, outer lane still owns childtermination and scratchcleanup and must not reportPASS on failure. Repeatedsignals/rawSIGKILL cannot be claimed internally handled; outerfinalizer remains required."
+    },
+    {
+      "area": "Evidence and cleanup",
+      "driver_lines": [
+        [
+          123,
+          130
+        ],
+        [
+          143,
+          149
+        ],
+        [
+          166,
+          178
+        ]
+      ],
+      "caller_lines": [
+        [
+          237,
+          255
+        ],
+        [
+          288,
+          331
+        ]
+      ],
+      "conclusion": "New receipt is exclusively written in cycle directory outside scratch, so neededtestrecords survive cleanup. Own optionalpackage tree removed before success. Outer lane locks shared execution, refusespreexisting outputs/unownedGradle, immediately stopsGradle after cycle, retiresownedworkers, preserves compactreports, removes onlytaskowned outputs/scratch and records drift/cleanupfailures. Driver starts no subprocess itself. No globalcache/signing/source cleanup requested."
+    }
+  ],
+  "counter_evidence_and_limits": [
+    "Verified path arithmetic: outerTMPDIR is evidence/CYCLE/scratch/tmp; parents[2] is evidence and parents[1] is CYCLE, matching driver checks/output location. No off-by-one path defect found.",
+    "rfc3987-syntax distribution name differs from import/package path, but dist-info in retained wheel usesrfc3987_syntax-1.1.0 and matches driver allowlist. Both optionalpackages finish extraction before either import, so RFCimport can findLark.",
+    "Retained wheelreceipt is root-reported byte/member evidence, not raw wheel retained for this reviewer. Reviewer independently reconciled fields/names/counts/hashes but did not refetch wheels, inspect ZIPmodebits/CRC or import their code. Driver must enforce actualruntimebytes and recordthem. Complete thirdpartyLark audit/vulnerability/legalapproval is outside scope.",
+    "30secondurllibtimeout is a socketoperation timeout, not a proved wholecycledeadline. Downloads are small and bytebounded from pinnedpublicorigins; root must supervise/cancel a stalled cycle and preserve outercleanup. Do not describe this driver as an autonomous hardwallclock sandbox.",
+    "TemporaryDirectory and sys.path restoration are scoped to a new root-owned process. Optionalmodules remain in sys.modules until process exit; do not reuse this function as a long-lived shared-interpreter package manager.",
+    "Parent-directory ownership relies on reviewedoutercreation and no concurrentmutations. It is not a general capabilityfilesystem defense against malicious same-user writers; only root-owned frozen workspace execution is approved.",
+    "No schema or test ran during independent review; no freshcandidate/export/license/package/native/device/Store or READY claim."
+  ],
+  "blocking_findings": [],
+  "execution_preconditions": [
+    "Complete the separate independent review of consumer/tests; this reviewer is their author and cannot supply that approval.",
+    "Verify driver SHA6bd1834d..., lane SHA5c0e546c... and exact controlpins before rootrun; do not mutate any control during execution.",
+    "Use only run_gradle_cycle.py with a new evidencecyclename and --command /usr/bin/python3-B reviews/run_schema_consumer_controls_01.py; no competing heavywork, no directdriver or preexisting cycle.",
+    "Retain actual child/outerexitcodes, runtime16descriptors/counts, error/skiprecords, exact packagepins/memberhashes/versions, driver/controlhashes and successful parsercleanup. Any mismatch remainsFAIL.",
+    "Independently reconcile outerstop0, workers/artifactworkers empty, scratchabsent, no source/runnerdrift, no retained/remainingoutputs or cleanup errors."
+  ],
+  "review_actions": "Read-only source/JSON/hash/AST analysis with /usr/bin/python3-B. No imports of reviewed modules, tests, networking, native/process queries/control, Gradle, Gitmutation or filedeletion.",
+  "cleanup": "No reviewer-owned builds, runningworkers, temporarypackages, extractedfiles or buildoutputs created. Only this additive required reviewrecord written."
+}

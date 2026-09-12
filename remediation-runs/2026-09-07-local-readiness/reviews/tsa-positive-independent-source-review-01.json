@@ -1,0 +1,67 @@
+{
+  "at": "2026-09-07T06:29:50.512643+00:00",
+  "reviewer": "/root",
+  "author": "/root/release_fix_review",
+  "conclusion": "APPROVED FOR ONE BOUNDED SYNTHETIC HTTPS RFC3161 JDK21 INVOCATION; NOT A PASS UNTIL EXECUTED",
+  "reviewed_files": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/tsa-positive-runner/run_timestamp_fixture.py",
+      "sha256": "83aae8165e8c16e30c700faeeb178e6eb0adbc7dfcb6e6b003f7f9929222a1c9",
+      "range": [
+        1,
+        294
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/tsa-positive-runner/OneTimestampInvocation.java",
+      "sha256": "837244c6323ac03af0ef5eacaff332789a000b25245cf970eb1c3a40b0d4d879",
+      "range": [
+        1,
+        30
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/tsa-positive-runner/TimestampEvidence.java",
+      "sha256": "d06920b556d53118ebec7bfd65b9727ae02558ea2d7ec274a16abe0a2bf7d5bc",
+      "range": [
+        1,
+        43
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/tsa-positive-runner/README.md",
+      "sha256": "d351bc8518495194b65a387008cd421edcc31244214b7af9aa994d9d030b92d8",
+      "range": [
+        1,
+        55
+      ]
+    },
+    {
+      "path": "scripts/release/validate_android_artifact.sh",
+      "sha256": "e0100ed6274e41113e18d1cdaa5310242f749d2f337fdb0c5b85920a011cece6",
+      "range": [
+        1,
+        245
+      ]
+    },
+    {
+      "path": "scripts/release/PrepareAndroidUploadTrust.java",
+      "sha256": "a74b92902839047353aa4b5816bc226e43526960da7c4d2df117e25c9375c211",
+      "range": [
+        1,
+        181
+      ]
+    }
+  ],
+  "reasoning": [
+    "Creates only disposable test JAR/key in ownership-attested scratch; payload is synthetic, never reads Store credentials or application data.",
+    "Pinned real production signature fragment, no trust-root overlay or weakened fingerprint/tamper/integrity checks.",
+    "Redirects disabled before actual JDK jarsigner; HTTPS only, 45-second signing bound, no outer retry. A built-in failed-write retry of the same synthetic query may occur; not exactly-one-POST claim.",
+    "Network/API uncertainty remains an honest failure if service unsupported; official hostname only, no silent fallback.",
+    "Retains numeric exit/logs, stops registered Darwin-token-attested workers, removes exact nonce/inode/UID-owned scratch after commands. Reuses reviewed ownership control148a7118.. and prior real owned-process proof, not broad pkill.",
+    "Both payloads verified via EOF and one authenticated CodeSigner/timestamp; wrong fingerprint and tamper must fail at intended boundaries."
+  ],
+  "prior_control_evidence": "reviews/android-owned-process-controls-and-runtime-verified-03.json",
+  "scope": "No Gradle or Store operation; public timestamp service receives synthetic hash/nonce only.",
+  "runtime": "PENDING"
+}

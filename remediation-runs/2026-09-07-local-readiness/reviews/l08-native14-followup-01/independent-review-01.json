@@ -1,0 +1,226 @@
+{
+  "schema_version": 1,
+  "kind": "INDEPENDENT_MINIMAL_NATIVE14_FOLLOWUP_SOURCE_REVIEW",
+  "reviewer": "/root/factory_review",
+  "author": "/root/native_fix_review",
+  "at_utc": "2026-09-08T06:57:55.097495+00:00",
+  "classification": "APPROVED_FOR_FOCUSED_CONTROLS_NOT_RUNTIME_PROOF",
+  "scope": "Full557-line diff, affected source/callers, preserved evidence, exact source-equivalence and new test/schema/launcher wiring. No production edits or execution by reviewer.",
+  "source_binding": {
+    "freeze_path": "remediation-runs/2026-09-07-local-readiness/reviews/l08-native14-followup-01/freeze.json",
+    "freeze_sha256": "6e6d3348e0197498f2ad35e61250a3266ceb9ec8070efc6ad1cc03d9847823ef",
+    "diff_sha256": "3752e2563bd7de096143955cf46372011497beb1977befb5b041ac1f4da895fd",
+    "baseline_sha256": "69cb36aa21ed9331a96332c96750ddf6dd82c5d70c764bf05f5ec0b20db65d89",
+    "draft_freeze_sha256": "1a803df85b6acab0ad4ca38fa9d43a5be0b47d95bd42bd77970f57b5c26c401c",
+    "changed_files": 13,
+    "all_allowed_files_rehashed": 88,
+    "draft_files_rehashed": 9,
+    "full_diff_independently_recreated_from_archived_before_and_current_after": true,
+    "compiled_native16_binding": "NOT YET PROVIDED; root must generate/review a new source/control binding after focused controls. Old native14 manifest cannot attest the new templates."
+  },
+  "findings": [],
+  "native_main_selection": {
+    "reviewed_file": "native/l08-app-foundation-draft-01/L08AppFoundation.m.in",
+    "reviewed_lines": [
+      [
+        372,
+        408
+      ],
+      [
+        481,
+        539
+      ]
+    ],
+    "reason": "Native14 collection deterministically rejected observed index-zero UUID7af2e14e… against Parlor71706706…; downstream validator was correct.",
+    "correction": "Canonical NSBundle executable must equal already-attested appBundlePath/Parlor. A count-bounded4096 image-name scan requires a unique exact canonical match. Missing/ambiguous headers fail; selected count/index/name/header are bracketed; thread-safe dladdr cross-checks the selected base/path. No index-zero fallback, foreign-name acceptance or binder weakening.",
+    "limits": "dyld iteration is not atomic/thread-safe; current source explicitly states this and retains subsequent UUID/hash binding. Selector-source/mutation tests are not a native dyld implementation test. Actual main-image binding still needs native execution; origin of old unmatched UUID remains unknown.",
+    "api_evidence": "Actual iPhoneSimulator26.5 SDK dyld.h51–63 and Apple archived dyld(3) man page, as recorded in ios-readiness-14-independent-postrun-review-01.json."
+  },
+  "continuation_observation": {
+    "reviewed_files": {
+      "L08MafiaSnapshots.kt.in": [
+        [
+          117,
+          205
+        ]
+      ],
+      "L08StorageFunctionalProbe.kt.in": [
+        [
+          104,
+          146
+        ],
+        [
+          248,
+          267
+        ],
+        [
+          370,
+          377
+        ]
+      ],
+      "l08_functional_receipts.py": [
+        [
+          16,
+          26
+        ],
+        [
+          87,
+          104
+        ]
+      ]
+    },
+    "correction": "Fourteen literal callback stages surround existing Mafia guards/submit boundaries; four closed probe stages distinguish actual Home counters/attachment/Whodunit continuation. Default callbacks are no-ops outside functional continuation. No new host/private/action data is emitted.",
+    "preserved": "Exact checks, actions/order, authoritative controller, first readiness flags, ON/OFF settings, seed/history, all state validation, timeouts, cancellation, terminal writer deletion and scope cleanup. Whodunit implementation and all production files unchanged.",
+    "failure_only": "New18 stages accepted only on planned continue FAIL records with existing bounded schema/reasons. Every such record remains unacceptable to full functional matrix; unknown stage, wrong action and extra private fields rejected.",
+    "not_a_fix_claim": "Native14 boot10 exact guard/cause remains UNKNOWN. These observations diagnose it; they do not prove repair of an application defect or justify relaxing any guard."
+  },
+  "independent_exact_preservation": [
+    {
+      "file": "L08MafiaSnapshots.kt.in",
+      "method": "Independently remove14 exact literal observer calls, optional callback/signature wiring only",
+      "restored_full_sha256": "7674ec0e0d5e5481e18e8e9c97c0f7299e73550f3c91c0ada60cdd743da8a5e3",
+      "equals_native14_before": true
+    },
+    {
+      "file": "L08StorageFunctionalProbe.kt.in",
+      "method": "Reverse exact4 stage names/wiring and callback argument",
+      "restored_full_sha256": "be4337e6c7c5ea60cf9c1a35a172bce4ba3ca41c4ae328814d5c0e5a3a0c2410",
+      "equals_native14_before": true
+    },
+    {
+      "file": "L08AppFoundation.m.in",
+      "method": "Remove only two new helper functions and restore old main_image invocation",
+      "restored_full_sha256": "2fd43b9c9c6d33b9ba76f5dde9eb673c46dc5784917de403ed1781e516733c09",
+      "equals_native14_before": true
+    },
+    {
+      "file": "app_foundation_receipts.py",
+      "method": "Remove only8 closed reason names",
+      "restored_full_sha256": "d72cd42eb71c321e864ae2c34dec0c2366b57915966d60b520b72bbcbe227655",
+      "equals_native14_before": true
+    }
+  ],
+  "tests_and_wiring": {
+    "new_draft_tests": [
+      "test_main_image_selects_exact_bundle_executable_with_no_index_zero_fallback",
+      "test_main_selection_failures_are_preservable_only_as_closed_control_errors",
+      "test_wrong_main_uuid_still_fails_with_correct_fixture_and_foundation"
+    ],
+    "new_companion_tests": [
+      "test_continuation_stages_are_closed_and_all_mafia_guards_actions_remain_identical",
+      "test_continuation_diagnostics_cannot_hide_removed_guards_or_dynamic_private_stages",
+      "test_each_closed_continuation_stage_is_failure_evidence_not_recovery_success",
+      "test_continuation_stages_reject_other_actions_unknown_text_and_extra_private_fields"
+    ],
+    "static_counts": {
+      "draft": 33,
+      "composition": 18,
+      "composition_command_expected": 51,
+      "companion_copy": 12,
+      "companion_receipts": 16,
+      "companion_command_expected": 28
+    },
+    "unchanged_tests": "All30 old Foundation methods AST-identical;18 composition file unchanged;14 old receipt methods AST-identical. Of10 old companion-copy tests,9 identical; clone-preservation test now enforces exact complete Mafia source after narrowly reversing observations.",
+    "test_validity": "Mutation controls reject missing guards, dynamic/private stage strings and schema widening; valid positive paths remain present. Original source assertions are not removed to get green. Driver-discovery guard now33 and aggregate guard51; module paths still exact and no physical tests enabled.",
+    "root_execution_approval": "Run existing root-controlled51 launcher then28 exact companion tests. Reusing run_controls.with_external_tmp via fresh python -B -c is approved: prepend exact module paths, require28 unique IDs and28 executions with no skips/errors/failures, SIGTERM raises KeyboardInterrupt so existing owned-parent finalizer runs. No new cleanup implementation or heavyweight parallel build.",
+    "execution_status_at_review": "NOT_RUN_BY_REVIEWER; root actual results must be reconciled separately before native binding approval."
+  },
+  "frozen_changed_files": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/L08AppFoundation.m.in",
+      "sha256": "f7b0e515b580f4bd9c49857ad4a49a3ab925218e8e52c260eb14cc75e410cba7",
+      "lines": 539,
+      "bytes": 29952
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/README.md",
+      "sha256": "0854ffec41d4eafcbfc8269b2c199d4d681e79576e4d53b77716ff0080249cc1",
+      "lines": 95,
+      "bytes": 6120
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/app_foundation_receipts.py",
+      "sha256": "0d6c5415522ec5a4645abe4839ab7865c89e916e7c752c73035d0fea1b4e6a3c",
+      "lines": 266,
+      "bytes": 17436
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/test_app_foundation.py",
+      "sha256": "b9b4cec8c93a25769a178040f5fbfb2d3002cbe1b42df33b0c09405c92e2a691",
+      "lines": 552,
+      "bytes": 34565
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/README.md",
+      "sha256": "5e9769cdfd6f4469c78b5368fc9de4270fa3e06c5a4552caf6603cdaca7a4a69",
+      "lines": 113,
+      "bytes": 6239
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/compose_runner.py",
+      "sha256": "69e5db6a9baf0746756343bbadc1bd20eeb13ddb9cdbea3ec510cbbaec93f9e2",
+      "lines": 354,
+      "bytes": 19656
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/run_controls.py",
+      "sha256": "8ca5746b092a77ba3d6ecd8b62480f118ba08db3d52c4e4a6999286d197f3e7c",
+      "lines": 104,
+      "bytes": 5391
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/L08MafiaSnapshots.kt.in",
+      "sha256": "4daa7d34b9645d0b173cf2215e233f024715d7c72ecd6169a965ffe8fae6d82e",
+      "lines": 205,
+      "bytes": 10760
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/L08StorageFunctionalProbe.kt.in",
+      "sha256": "55d9ccb998831b07a43429249fc335189227bcd344f252dbcd4dbdbda963463c",
+      "lines": 589,
+      "bytes": 30638
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/L08_FUNCTIONAL_README.md",
+      "sha256": "66cc129781125196bca34ec7bb287869dfaa080741296d6d77af3d02cff5ce89",
+      "lines": 166,
+      "bytes": 9910
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/l08_functional_receipts.py",
+      "sha256": "4069cdca2a9946d56107c423820a43cae513131db3c0eaf5d3db53a41919dafd",
+      "lines": 201,
+      "bytes": 13404
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/test_l08_functional_copy.py",
+      "sha256": "4ceb37fafe333114b4f10eac53f7093059ea99f8f04c74c361d17e37ab9d4094",
+      "lines": 359,
+      "bytes": 23909
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/test_l08_functional_receipts.py",
+      "sha256": "4f754795d9087d2a5c57e1a5f66282d62ade7b3feb5de6d5fbd139cb898f7e9d",
+      "lines": 270,
+      "bytes": 17404
+    }
+  ],
+  "docs_and_safety": {
+    "documentation": "Three changed README sections correctly identify native14 as failed, follow-up unexecuted, precise source-only capability and unresolved boot10 cause. Copy counts updated62 verbatim plus3 narrowly altered clones; original65-source/10-addition allowlist retained.",
+    "unchanged_runtime_hooks": "compose_runner only repins draft freeze;12 literal transforms, original native runner, native/Gradle/device/secondary-temp ownership finalizer, source/copy/control guards and collection gate unchanged. run_controls only updates count/message48→51; attested external tmp cleanup remains exact.",
+    "old_evidence": "Original native14 source/aggregate/Foundation failures and unsuccessful Complete metadata checks are not overwritten, reclassified or waived.",
+    "compatibility": "No production source, protocol, seed, gameplay, serialized setting/save format, role projection, backup option, entitlement, signing identity or release operation changes."
+  },
+  "cleanup": {
+    "reviewer_builds_tests_native_workers": 0,
+    "reviewer_file_changes": "This new additive JSON only during final source review; prior additive postrun JSON retained. No source cleanup, process killing, import/execution of reviewed modules, Gradle/Xcode or simulator actions.",
+    "root_lane": "Root owns any upcoming controls/native work and mandatory stop/owned-output cleanup; unrelated normal-launch work must not be stopped."
+  },
+  "required_next_evidence": [
+    "Actual51 and28 test IDs/counts and zero skip/failure/error receipts, with cleanup",
+    "New exact source/control manifest binding before root native16",
+    "Actual native selected main UUID/hash match",
+    "Boot10 completed functional proof or exact newly observed failure stage",
+    "No upgrade of strict L08 while required Complete comparisons fail; physical protection/LAN/Store remain separate"
+  ]
+}

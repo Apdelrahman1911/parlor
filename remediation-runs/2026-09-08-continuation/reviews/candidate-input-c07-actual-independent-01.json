@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/ci_review",
+  "reviewed_at": "2026-09-10T06:01:47.512990+00:00",
+  "status": "ACCEPT_C07_SCOPED_INPUT_CHAIN_COMPLETE_AT_15E8982B",
+  "findings": [],
+  "source": {
+    "branch": "fix/local-readiness-2026-09-07",
+    "commit": "15e8982b35e39006868868a11c6f4e1864e613a7",
+    "tree": "8f3fd56f86d7934fddaff068539d69fe26d4aaad",
+    "diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "source_manifest_sha256": "51edfdd6aea7b293afe9061a30d05054f1e0338661eedd8e225bd3ba2ebbb7fd",
+    "source_rows": 833
+  },
+  "binding": {
+    "path": "remediation-runs/2026-09-08-continuation/candidate-input-binding-07.json",
+    "sha256": "fa72ec6bf7aa1688004ebd80542fa48d28eba8ce266a8f270e7e2409cc46d14a"
+  },
+  "admission": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/candidate-input-admission-07.json",
+    "sha256": "e6c9b126e60cf1ef8d80565f76648dd724a6f3e9b521049f7639090a920da7df"
+  },
+  "producer_binding_review": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/candidate-input-c07-admission-independent-01.json",
+    "sha256": "4e26bacccdcf270e66cd56a4f6bf5bf06077147c5971b9fc2da2b842d5646cc8"
+  },
+  "actual_evidence_directory": "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-07",
+  "actual_sha256": {
+    "candidate-input-verification.json": "c4fad704338ac12ef56316cf319c0ede340bb3b1847124fec6fbd6b6c30e15e3",
+    "candidate-prerequisites.json": "52b961f9cab55a7c4209b94e6f438525ee417257da74953fa950a29f68d3017b",
+    "schema-base-prerequisites.json": "64b79c174477e644ebe7cadf72db3daa96f3872b3d19698f16029760ae26bd73",
+    "receipt.json": "59417b3af8e555cee28d75344eefc12e223770e26aaf719168eb978739d8c775",
+    "gradle.log": "1366576e7c5a743d9620e0d1849edc379e1dcc369335c2c0176c80d87d0a20b8",
+    "stop.log": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+  },
+  "actual_closure": {
+    "files": 511,
+    "bytes": 5571442,
+    "sha256": "542b667c63add44756d0e675ad265f5dba2aca8b5cf48249cb33efb458df699b"
+  },
+  "checks": [
+    "Fresh immediate admission pins binding/author/review and exact command, records exclusive owned-lock release before candidate starts. Same regular zero-byte lock device24/inode16276678 remains. All six producer/candidate source and runner objects equal reconstructed current833-row source; clean Git, all14 controls/schemas unchanged. Both producer receipt hashes rechecked; prior semantic review reused, not reexecuted.",
+    "Independently reconstructed full511 rows from12 fixed files and exact graph5/report465/schema3/notice26 closed regular directories. Rows, sizes, directory hashes and digest equal immediate admission and actual consumer. No symlink/special/noncanonical member. Actual4 graph/SBOM hashes and counts match retained inputs;456 Maven components,459 POMs/1507794bytes, unresolved[]. Notices26/99515bytes match actual sources and reviewed C06 result.",
+    "One candidate-mode execution:consumer PASS_SCOPED_CANDIDATE_INPUTS, adapter PASS_SCOPED_CANDIDATE_INPUT_EXECUTION/consumer0/parsercleanuptrue, bootstrap PASS_OWNED_SCHEMA_PREREQUISITES/candidate/inner0/basecleanuptrue, outerPASS/exit0/stop0. Raw three success lines and nested timestamps agree; no error or skip receipt. Four official CycloneDX graph validations executed with pinned3 schemas, jsonschema4.25.1/referencing0.36.2; encountered iri-reference is registered, missing[]. This is actual consumer/schema execution, not application runtime.",
+    "Actual8 package URL/version/size/hash receipts match unchanged AST wheel literals;192 unique safe member rows and byte sums reconcile;8 imported-module paths/hashes match member records. Bootstrap controls before/after/current and adapter pins match. Package records equal accepted C06; deleted wheel/extraction bytes were not redownloaded. Runtime hash guards plus retained receipts provide provenance, not independent inspection of deleted payloads."
+  ],
+  "cleanup": "Cycle05:51:37.950435\u201305:51:57.202212 UTC; stop0 at05:51:58.000360 (0.798148s), cleanup05:51:58.104294. No remaining owned workers/artifact workers, outputs, retention, errors or deferred signals. Both mandatory package cleanup booleans true. Independently observed16 live build roots+3 cycle scratch roots absent; candidate directory exactly10 regular retained logs/receipts, no subdirs. Empty test/artifact arrays: no application tests in C07. JDK/stop logs checked.",
+  "activity": "Read-only Git, stdlib JSON/hash/AST/path inspection; sole write this report. No tests/builds/project imports/network/procfs/lock acquisition/cleanup/source edits. Reviewer corrected a positive-size assumption for11 valid pinned zero-byte Python markers; not a control failure or rerun.",
+  "limits": "C07 complete only for resolved inputs/source-notice integrity at15e8982b. No full-suite, Parlor/native runtime, final-binary/package, A/B/D, physical-device, Store/signing/publication or owner/legal approval. C06 remains separate historical4cc evidence. Overall NOT_READY."
+}

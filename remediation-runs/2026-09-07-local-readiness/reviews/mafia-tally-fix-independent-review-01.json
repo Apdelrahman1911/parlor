@@ -1,0 +1,813 @@
+{
+  "schema_version": 1,
+  "id": "M-READINESS-TALLY",
+  "verdict": "APPROVED — root-authored two-row correction and numeric assertion amendments; focused actual Desktop tests verified",
+  "created_utc": "2026-09-07T13:24:38.490702+00:00",
+  "reviewer": "/root/native_fix_review",
+  "fix_author": "/root",
+  "original_candidate_finder": "/root/native_fix_review",
+  "original_candidate_independent_validator": "/root",
+  "test_authorship": "native_fix_review authored initial tally/setup draft tests. Root independently reviewed/reproduced them, rejected their hasVisualOverflow assumption, and authored assertion helper/replacements. This record approves root-authored production/assertion corrections; it does not self-approve initial draft tests. Root separate report supplies their independent test review.",
+  "root_independent_test_review": {
+    "path": "remediation-runs/2026-09-07-local-readiness/reviews/mafia-tally-tests-root-independent-review-01.json",
+    "sha256": "b4cb71a6d4583ea2594b9b4b8928d16eec314d48daefad36c1c72c9990328433"
+  },
+  "checkout": {
+    "commit": "711dd4163f4afa97954f47eddc98fd1a4df0b4ae",
+    "tree": "e0b610b0ad32bb7f0be4a2aac822042a8bcf1f02",
+    "branch": "fix/local-readiness-2026-09-07"
+  },
+  "scope": "Five bound Mafia files only; unrelated CI/workflow changes and broader game logic not approved. No Git/Store action authorization conferred.",
+  "reviewed_files": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/vote/VoteCastScreen.kt",
+      "sha256": "2402bb7ba945f1a6f1487bb756b4db8bf8af0806cc4325c08f056c06bc5fdd70",
+      "reviewed_lines": [
+        [
+          1,
+          173
+        ]
+      ],
+      "relevance": "production"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/night/MafiaKillVoteScreen.kt",
+      "sha256": "729be6c5c48fce2224d1701bb8b80f980298e17d727587a9a37567e77bb3e767",
+      "reviewed_lines": [
+        [
+          1,
+          96
+        ]
+      ],
+      "relevance": "production"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/MafiaTallyLayoutTest.kt",
+      "sha256": "bdfe659970993e89ab0a59043e545451401ece17c60cddcdf6bcaba8a1fabb6f",
+      "reviewed_lines": [
+        [
+          1,
+          165
+        ]
+      ],
+      "relevance": "desktopTest"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaSetupReadOnlyCountLayoutTest.kt",
+      "sha256": "9e9b7492aecaf8689cc007056e74d5e8c9cce980a1851d853760820b7a2bb118",
+      "reviewed_lines": [
+        [
+          1,
+          80
+        ]
+      ],
+      "relevance": "desktopTest"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/MafiaCountAssertions.kt",
+      "sha256": "a90b5f1c479e55ea820a9ba4acd662d27485ed98157a3ef0b921d3f4bbd9b892",
+      "reviewed_lines": [
+        [
+          1,
+          44
+        ]
+      ],
+      "relevance": "desktopTest"
+    }
+  ],
+  "reviewed_manifest_sha256": "68ba6123913d721516f360b44eb508237b77aceb190c66dc34be27ae647f296f",
+  "identity_definition": "SHA256(compact JSON array of ordered [repo-relative path,sha256] entries in reviewed_files order)",
+  "green02_current_binding": [
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/vote/VoteCastScreen.kt",
+      "current_sha256": "2402bb7ba945f1a6f1487bb756b4db8bf8af0806cc4325c08f056c06bc5fdd70",
+      "matches_before": true,
+      "matches_after": true
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/night/MafiaKillVoteScreen.kt",
+      "current_sha256": "729be6c5c48fce2224d1701bb8b80f980298e17d727587a9a37567e77bb3e767",
+      "matches_before": true,
+      "matches_after": true
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/MafiaTallyLayoutTest.kt",
+      "current_sha256": "bdfe659970993e89ab0a59043e545451401ece17c60cddcdf6bcaba8a1fabb6f",
+      "matches_before": true,
+      "matches_after": true
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaSetupReadOnlyCountLayoutTest.kt",
+      "current_sha256": "9e9b7492aecaf8689cc007056e74d5e8c9cce980a1851d853760820b7a2bb118",
+      "matches_before": true,
+      "matches_after": true
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/MafiaCountAssertions.kt",
+      "current_sha256": "a90b5f1c479e55ea820a9ba4acd662d27485ed98157a3ef0b921d3f4bbd9b892",
+      "matches_before": true,
+      "matches_after": true
+    }
+  ],
+  "source_proof": [
+    "Unweighted name Text was measured first in Row, consuming all192px card content width with legal32character names; actual count measured0px in8/8 red cases, independent of semantics paragraph reconstruction.",
+    "Both production rows now assign weight1 to name and spacedBy(s). Framework measures unweighted count first, then allots remaining width to wrapping name. Vertical alignment, sorting, text/style/semantics, scroll container and callbacks remain unchanged.",
+    "Public day tally reachable after8seat3:2+3abstention nonterminal Town elimination. Local VoteAnnouncementSegment681–692 and LAN474–517 call same public composable.",
+    "Night coordination tally reachable after default REVOTE2Mafia1:1 tie; reducer363–383→openMafiaCoordinationRevote519–548 installs prior tally. Local NightChooseScreen349–374 and LAN NightSegment266–340 call same role-owned composable.",
+    "MafiaProjectionPolicy1–94 still strips host state/other private slices. No networking/session/reducer/projection/settings/snapshot/content changes in this fix.",
+    "Numeric helper checks actual frame, one-line/fullheight/fullintrinsicwidth, and actual foreground-colored pixels; scope is plain numeric Text, not general multiline glyph-loss assertions. Corrects invalid reconstructed-geometry test without changing production to select an alternate rendering node."
+  ],
+  "framework_measurement_reference": {
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/compose/foundation/foundation-layout-desktop/1.10.3/foundation-layout-desktop-1.10.3-sources.jar",
+    "access_date": "2026-09-07",
+    "artifact_sha256": "bc3cd13b282e7ae3c1836acebfdd73f743e99c1bad66def634f0fcccf7a9acc3",
+    "archive_path": "commonMain/androidx/compose/foundation/layout/RowColumnMeasurePolicy.kt",
+    "source_sha256": "ed3c0e8a7c053bdd595bd5955bb445b96c0b3bbfc39f434a2ba5f48af706096b",
+    "reviewed_lines": [
+      [
+        77,
+        227
+      ]
+    ],
+    "claim": "zero-weight children measured104–149 using remaining width; weighted children subsequently measure156–215 from remainingToTarget."
+  },
+  "counter_evidence": {
+    "setup_readonly_classification": "FALSE POSITIVE — no code repair needed for sampled supported count/EN/AR/1x/2x",
+    "reason": "Initial hasVisualOverflow assertion compares original intrinsic-size frame to distinct semantics-only reconstructed wide MultiParagraph. Exact published framework sources explain this, including misleading RTL getBoundingBox coordinates. Setup count had positive/full intrinsic frame and visible foreground after correcting assertion, with unchanged production source.",
+    "official_source_proof": {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/compose-1.10.3-text-semantics-counterevidence-01.json",
+      "sha256": "85c92a8a95ed48ff8c2720db8f7651f2f902bb81ed574e2686f915c6a37b7f11"
+    },
+    "production_setup_sha256": "4b98a283b3d92bcfbbdeaa699a8c3e552b38440b90874795273a8edb0dada3dd"
+  },
+  "execution_evidence": [
+    {
+      "cycle": "mafia-tally-layout-red-01",
+      "receipt_sha256": "fc40693d7f651ee59e1fb4bd98fca34031acee1a0e57897a7d3b03d4c30a3ef1",
+      "command": [
+        "./gradlew",
+        ":game-modes:mafia:desktopTest",
+        "--tests",
+        "*MafiaTallyLayoutTest*",
+        "--tests",
+        "*MafiaSetupReadOnlyCountLayoutTest*",
+        "--no-daemon",
+        "--no-parallel",
+        "--max-workers=1",
+        "--no-configuration-cache",
+        "--dependency-verification=strict",
+        "-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=mafia-tally-layout-red-01",
+        "-Pkotlin.compiler.execution.strategy=in-process",
+        "-Pparlor.android.signing.storeFile=",
+        "-Pparlor.android.signing.storePassword=",
+        "-Pparlor.android.signing.keyAlias=",
+        "-Pparlor.android.signing.keyPassword="
+      ],
+      "exit_code": 1,
+      "started_at": "2026-09-07T12:59:25.844710+00:00",
+      "finished_at": "2026-09-07T12:59:53.166094+00:00",
+      "source_manifest_sha256": "2892b91af32f5b2c8247b674035e50630660e0bcc5fb7920f3fb411bf204a949",
+      "source_stable": true,
+      "stop_exit_code": 0,
+      "cleanup_completed_at": "2026-09-07T12:59:53.742470+00:00",
+      "remaining_outputs": [],
+      "workers": {
+        "terminated_owned_workers": [],
+        "remaining_owned_workers": []
+      },
+      "cleanup_errors": [],
+      "suites": [
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-tally-layout-red-01/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.MafiaTallyLayoutTest.xml",
+          "sha256": "61433a97d43ab28068e8d6c6547905ad2b30dfc6890f2d23e268564c108b8958",
+          "name": "com.parlor.games.mafia.ui.screens.MafiaTallyLayoutTest",
+          "tests": 8,
+          "failures": 8,
+          "errors": 0,
+          "skipped": 0,
+          "methods": [
+            "compact_large_text_arabic_mafia_revote_tally_keeps_each_count_visible()[desktop]",
+            "compact_large_text_english_mafia_revote_tally_keeps_each_count_visible()[desktop]",
+            "compact_large_text_english_day_tally_keeps_each_count_visible()[desktop]",
+            "compact_arabic_mafia_revote_tally_keeps_each_count_visible()[desktop]",
+            "compact_english_mafia_revote_tally_keeps_each_count_visible()[desktop]",
+            "compact_english_day_tally_keeps_each_count_visible()[desktop]",
+            "compact_large_text_arabic_day_tally_keeps_each_count_visible()[desktop]",
+            "compact_arabic_day_tally_keeps_each_count_visible()[desktop]"
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-tally-layout-red-01/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.setup.MafiaSetupReadOnlyCountLayoutTest.xml",
+          "sha256": "2162c0ad9560c73498052332a81f352504a345e2f53e6e5dd7de3484fc01e950",
+          "name": "com.parlor.games.mafia.ui.screens.setup.MafiaSetupReadOnlyCountLayoutTest",
+          "tests": 4,
+          "failures": 4,
+          "errors": 0,
+          "skipped": 0,
+          "methods": [
+            "compact_arabic_civilian_count_stays_visible()[desktop]",
+            "compact_large_text_arabic_civilian_count_stays_visible()[desktop]",
+            "compact_english_civilian_count_stays_visible()[desktop]",
+            "compact_large_text_english_civilian_count_stays_visible()[desktop]"
+          ]
+        }
+      ]
+    },
+    {
+      "cycle": "mafia-tally-layout-probe-01",
+      "receipt_sha256": "4e6b2bd6d97664a12f4d0cc8244e8b8c15e86fa3fb00fd1ca867a2a84382ff53",
+      "command": [
+        "./gradlew",
+        ":game-modes:mafia:desktopTest",
+        "--tests",
+        "*MafiaTallyLayoutTest*",
+        "--tests",
+        "*MafiaSetupReadOnlyCountLayoutTest*",
+        "--no-daemon",
+        "--no-parallel",
+        "--max-workers=1",
+        "--no-configuration-cache",
+        "--dependency-verification=strict",
+        "-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=mafia-tally-layout-probe-01",
+        "-Pkotlin.compiler.execution.strategy=in-process",
+        "-Pparlor.android.signing.storeFile=",
+        "-Pparlor.android.signing.storePassword=",
+        "-Pparlor.android.signing.keyAlias=",
+        "-Pparlor.android.signing.keyPassword="
+      ],
+      "exit_code": 1,
+      "started_at": "2026-09-07T13:07:20.805012+00:00",
+      "finished_at": "2026-09-07T13:07:45.828904+00:00",
+      "source_manifest_sha256": "fa04d3ea4048c56df0c8738338290de6428e8e04c6f9ee9307f11347c17fb3f5",
+      "source_stable": true,
+      "stop_exit_code": 0,
+      "cleanup_completed_at": "2026-09-07T13:07:46.336419+00:00",
+      "remaining_outputs": [],
+      "workers": {
+        "terminated_owned_workers": [],
+        "remaining_owned_workers": []
+      },
+      "cleanup_errors": [],
+      "suites": [
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-tally-layout-probe-01/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.MafiaTallyLayoutTest.xml",
+          "sha256": "df40898f34767e4c5b65c911fddb1787d648d9f1190b4188c45bedb49d8ae4cb",
+          "name": "com.parlor.games.mafia.ui.screens.MafiaTallyLayoutTest",
+          "tests": 8,
+          "failures": 8,
+          "errors": 0,
+          "skipped": 0,
+          "methods": [
+            "compact_large_text_arabic_mafia_revote_tally_keeps_each_count_visible()[desktop]",
+            "compact_large_text_english_mafia_revote_tally_keeps_each_count_visible()[desktop]",
+            "compact_large_text_english_day_tally_keeps_each_count_visible()[desktop]",
+            "compact_arabic_mafia_revote_tally_keeps_each_count_visible()[desktop]",
+            "compact_english_mafia_revote_tally_keeps_each_count_visible()[desktop]",
+            "compact_english_day_tally_keeps_each_count_visible()[desktop]",
+            "compact_large_text_arabic_day_tally_keeps_each_count_visible()[desktop]",
+            "compact_arabic_day_tally_keeps_each_count_visible()[desktop]"
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-tally-layout-probe-01/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.setup.MafiaSetupReadOnlyCountLayoutTest.xml",
+          "sha256": "c6438f6530ad4974dd5b78a36780d9cef9ecf75cdb806285e61a8d336561cfc7",
+          "name": "com.parlor.games.mafia.ui.screens.setup.MafiaSetupReadOnlyCountLayoutTest",
+          "tests": 4,
+          "failures": 4,
+          "errors": 0,
+          "skipped": 0,
+          "methods": [
+            "compact_arabic_civilian_count_stays_visible()[desktop]",
+            "compact_large_text_arabic_civilian_count_stays_visible()[desktop]",
+            "compact_english_civilian_count_stays_visible()[desktop]",
+            "compact_large_text_english_civilian_count_stays_visible()[desktop]"
+          ]
+        }
+      ]
+    },
+    {
+      "cycle": "mafia-tally-layout-green-01",
+      "receipt_sha256": "c673a6f56c9d091e091f30d85b3691e4122c9da9058fd4eb709abfc990124df2",
+      "command": [
+        "./gradlew",
+        ":game-modes:mafia:desktopTest",
+        "--tests",
+        "*MafiaTallyLayoutTest*",
+        "--tests",
+        "*MafiaSetupReadOnlyCountLayoutTest*",
+        "--tests",
+        "*MafiaCoverContrastTest*",
+        "--tests",
+        "*PostGameLayoutTest*",
+        "--tests",
+        "*MafiaSetupStepperLayoutTest*",
+        "--tests",
+        "*MafiaDoctorSettingUiTest*",
+        "staticAnalysis",
+        "--no-daemon",
+        "--no-parallel",
+        "--max-workers=1",
+        "--no-configuration-cache",
+        "--dependency-verification=strict",
+        "-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=mafia-tally-layout-green-01",
+        "-Pkotlin.compiler.execution.strategy=in-process",
+        "-Pparlor.android.signing.storeFile=",
+        "-Pparlor.android.signing.storePassword=",
+        "-Pparlor.android.signing.keyAlias=",
+        "-Pparlor.android.signing.keyPassword="
+      ],
+      "exit_code": 0,
+      "started_at": "2026-09-07T13:15:38.249709+00:00",
+      "finished_at": "2026-09-07T13:15:58.857184+00:00",
+      "source_manifest_sha256": "1b2249594f1f56dc09846fd042fc91c4a886a7f4b278f192717148a3918d9054",
+      "source_stable": true,
+      "stop_exit_code": 0,
+      "cleanup_completed_at": "2026-09-07T13:15:59.376137+00:00",
+      "remaining_outputs": [],
+      "workers": {
+        "terminated_owned_workers": [],
+        "remaining_owned_workers": []
+      },
+      "cleanup_errors": [],
+      "suites": [
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-tally-layout-green-01/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.components.MafiaCoverContrastTest.xml",
+          "sha256": "7dbb25e6e6056307dd1cc277643549863bfac75f06dc4e723f7547081fcab103",
+          "name": "com.parlor.games.mafia.ui.components.MafiaCoverContrastTest",
+          "tests": 8,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "methods": [
+            "arabicDarkCover()[desktop]",
+            "arabicLightCover()[desktop]",
+            "arabicLightLargeText()[desktop]",
+            "englishDarkLargeText()[desktop]",
+            "englishLightLargeText()[desktop]",
+            "arabicDarkLargeText()[desktop]",
+            "englishLightCover()[desktop]",
+            "englishDarkCover()[desktop]"
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-tally-layout-green-01/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.MafiaTallyLayoutTest.xml",
+          "sha256": "4ac94abf47ce1946a2cf439b6b5aafad7f2c55c6f9b71678338186e419af5a2e",
+          "name": "com.parlor.games.mafia.ui.screens.MafiaTallyLayoutTest",
+          "tests": 8,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "methods": [
+            "compact_large_text_arabic_mafia_revote_tally_keeps_each_count_visible()[desktop]",
+            "compact_large_text_english_mafia_revote_tally_keeps_each_count_visible()[desktop]",
+            "compact_large_text_english_day_tally_keeps_each_count_visible()[desktop]",
+            "compact_arabic_mafia_revote_tally_keeps_each_count_visible()[desktop]",
+            "compact_english_mafia_revote_tally_keeps_each_count_visible()[desktop]",
+            "compact_english_day_tally_keeps_each_count_visible()[desktop]",
+            "compact_large_text_arabic_day_tally_keeps_each_count_visible()[desktop]",
+            "compact_arabic_day_tally_keeps_each_count_visible()[desktop]"
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-tally-layout-green-01/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.setup.MafiaDoctorSettingUiTest.xml",
+          "sha256": "4f65853a0329a7347611116a61d038f14f71c3e00a993dc697f30ca4c519c5f7",
+          "name": "com.parlor.games.mafia.ui.screens.setup.MafiaDoctorSettingUiTest",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "methods": [
+            "arabic_consecutive_nights_toggle_defaults_off_and_commits_on_and_off()[desktop]",
+            "english_consecutive_nights_toggle_defaults_off_and_commits_on_and_off()[desktop]"
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-tally-layout-green-01/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.setup.MafiaSetupReadOnlyCountLayoutTest.xml",
+          "sha256": "7b864d3e834539d5f01784250dc9bb0967ff4334d4020e90466ba190905b7511",
+          "name": "com.parlor.games.mafia.ui.screens.setup.MafiaSetupReadOnlyCountLayoutTest",
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "methods": [
+            "compact_arabic_civilian_count_stays_visible()[desktop]",
+            "compact_large_text_arabic_civilian_count_stays_visible()[desktop]",
+            "compact_english_civilian_count_stays_visible()[desktop]",
+            "compact_large_text_english_civilian_count_stays_visible()[desktop]"
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-tally-layout-green-01/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.setup.MafiaSetupStepperLayoutTest.xml",
+          "sha256": "d58c206f50aecabe7236629682365b7a578f41af4b49eaef970716387c3773b0",
+          "name": "com.parlor.games.mafia.ui.screens.setup.MafiaSetupStepperLayoutTest",
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "methods": [
+            "arabic_compact_stepper_controls_keep_their_full_size()[desktop]",
+            "english_compact_stepper_controls_keep_their_full_size()[desktop]",
+            "arabic_compact_large_text_stepper_controls_keep_their_full_size()[desktop]",
+            "english_compact_large_text_stepper_controls_keep_their_full_size()[desktop]"
+          ]
+        }
+      ]
+    },
+    {
+      "cycle": "mafia-tally-layout-green-02",
+      "receipt_sha256": "ce7aa8c227a9ec8b0adf689c84b7c985ea20f4587b728eeb8284465becdb2a57",
+      "command": [
+        "./gradlew",
+        ":game-modes:mafia:desktopTest",
+        "--tests",
+        "*MafiaTallyLayoutTest*",
+        "--tests",
+        "*MafiaSetupReadOnlyCountLayoutTest*",
+        "--tests",
+        "*MafiaCoverContrastTest*",
+        "--tests",
+        "*PostGameScreenLayoutTest*",
+        "--tests",
+        "*MafiaSetupStepperLayoutTest*",
+        "--tests",
+        "*MafiaSetupToggleLayoutTest*",
+        "--tests",
+        "*MafiaDoctorSettingUiTest*",
+        "staticAnalysis",
+        "--no-daemon",
+        "--no-parallel",
+        "--max-workers=1",
+        "--no-configuration-cache",
+        "--dependency-verification=strict",
+        "-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=mafia-tally-layout-green-02",
+        "-Pkotlin.compiler.execution.strategy=in-process",
+        "-Pparlor.android.signing.storeFile=",
+        "-Pparlor.android.signing.storePassword=",
+        "-Pparlor.android.signing.keyAlias=",
+        "-Pparlor.android.signing.keyPassword="
+      ],
+      "exit_code": 0,
+      "started_at": "2026-09-07T13:18:00.559073+00:00",
+      "finished_at": "2026-09-07T13:18:22.301854+00:00",
+      "source_manifest_sha256": "bc18af56c1550d8ac1e430377ddf3e1fd45302563a0156a4f55dabd64002b35d",
+      "source_stable": true,
+      "stop_exit_code": 0,
+      "cleanup_completed_at": "2026-09-07T13:18:22.805543+00:00",
+      "remaining_outputs": [],
+      "workers": {
+        "terminated_owned_workers": [],
+        "remaining_owned_workers": []
+      },
+      "cleanup_errors": [],
+      "suites": [
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-tally-layout-green-02/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.components.MafiaCoverContrastTest.xml",
+          "sha256": "f4f5b0e3a0bb2801e6fd2cff0b3bce4f585fdc949f503aba2dd50233fe768353",
+          "name": "com.parlor.games.mafia.ui.components.MafiaCoverContrastTest",
+          "tests": 8,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "methods": [
+            "arabicDarkCover()[desktop]",
+            "arabicLightCover()[desktop]",
+            "arabicLightLargeText()[desktop]",
+            "englishDarkLargeText()[desktop]",
+            "englishLightLargeText()[desktop]",
+            "arabicDarkLargeText()[desktop]",
+            "englishLightCover()[desktop]",
+            "englishDarkCover()[desktop]"
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-tally-layout-green-02/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.MafiaTallyLayoutTest.xml",
+          "sha256": "2ec25b6bc3bc9f7c2d0c8fc945269b3d029bae2c9afb3ae405155a53600736f5",
+          "name": "com.parlor.games.mafia.ui.screens.MafiaTallyLayoutTest",
+          "tests": 8,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "methods": [
+            "compact_large_text_arabic_mafia_revote_tally_keeps_each_count_visible()[desktop]",
+            "compact_large_text_english_mafia_revote_tally_keeps_each_count_visible()[desktop]",
+            "compact_large_text_english_day_tally_keeps_each_count_visible()[desktop]",
+            "compact_arabic_mafia_revote_tally_keeps_each_count_visible()[desktop]",
+            "compact_english_mafia_revote_tally_keeps_each_count_visible()[desktop]",
+            "compact_english_day_tally_keeps_each_count_visible()[desktop]",
+            "compact_large_text_arabic_day_tally_keeps_each_count_visible()[desktop]",
+            "compact_arabic_day_tally_keeps_each_count_visible()[desktop]"
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-tally-layout-green-02/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.postgame.PostGameScreenLayoutTest.xml",
+          "sha256": "bb26981536ca1fd215ba9b81b9016f937eeca30de03cd4f1d634fe0091dce4d7",
+          "name": "com.parlor.games.mafia.ui.screens.postgame.PostGameScreenLayoutTest",
+          "tests": 6,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "methods": [
+            "compact_arabic_long_name_does_not_consume_final_role_width()[desktop]",
+            "compact_english_long_name_does_not_consume_final_role_width()[desktop]",
+            "landscape_large_text_arabic_roles_remain_scrollable()[desktop]",
+            "compact_large_text_english_preserves_every_final_role()[desktop]",
+            "landscape_large_text_english_roles_remain_scrollable()[desktop]",
+            "compact_large_text_arabic_preserves_every_final_role()[desktop]"
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-tally-layout-green-02/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.setup.MafiaDoctorSettingUiTest.xml",
+          "sha256": "22a16940ffd5eb51a2c9862892b89bde2e72beb240e029ce3964b18d02c97bf9",
+          "name": "com.parlor.games.mafia.ui.screens.setup.MafiaDoctorSettingUiTest",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "methods": [
+            "arabic_consecutive_nights_toggle_defaults_off_and_commits_on_and_off()[desktop]",
+            "english_consecutive_nights_toggle_defaults_off_and_commits_on_and_off()[desktop]"
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-tally-layout-green-02/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.setup.MafiaSetupReadOnlyCountLayoutTest.xml",
+          "sha256": "32e5703fa2191915e6319badea1f1a4cff486854795760bb19c0d6bf788672f9",
+          "name": "com.parlor.games.mafia.ui.screens.setup.MafiaSetupReadOnlyCountLayoutTest",
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "methods": [
+            "compact_arabic_civilian_count_stays_visible()[desktop]",
+            "compact_large_text_arabic_civilian_count_stays_visible()[desktop]",
+            "compact_english_civilian_count_stays_visible()[desktop]",
+            "compact_large_text_english_civilian_count_stays_visible()[desktop]"
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-tally-layout-green-02/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.setup.MafiaSetupStepperLayoutTest.xml",
+          "sha256": "cf270481e94b05a6ac6228e9fc675a5a2a5fc3d30a334fe2335e1e1e7aeb37e3",
+          "name": "com.parlor.games.mafia.ui.screens.setup.MafiaSetupStepperLayoutTest",
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "methods": [
+            "arabic_compact_stepper_controls_keep_their_full_size()[desktop]",
+            "english_compact_stepper_controls_keep_their_full_size()[desktop]",
+            "arabic_compact_large_text_stepper_controls_keep_their_full_size()[desktop]",
+            "english_compact_large_text_stepper_controls_keep_their_full_size()[desktop]"
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-tally-layout-green-02/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.setup.MafiaSetupToggleLayoutTest.xml",
+          "sha256": "402b70ea5db76ccf1dcaf1245bac156e55d0f343126fd69604c96fb205a3c41e",
+          "name": "com.parlor.games.mafia.ui.screens.setup.MafiaSetupToggleLayoutTest",
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "methods": [
+            "english_compact_toggle_keeps_room_for_its_switch()[desktop]",
+            "arabic_compact_large_text_toggle_keeps_room_for_its_switch()[desktop]",
+            "english_compact_large_text_toggle_keeps_room_for_its_switch()[desktop]",
+            "arabic_compact_toggle_keeps_room_for_its_switch()[desktop]"
+          ]
+        }
+      ]
+    }
+  ],
+  "failed_cycle_classification": {
+    "red-01": "8actual tally failures at measured countwidth0;4Setup failures at unsupported overflow inference.12actual tests, not12application manifestations.",
+    "probe-01": "Weighting gives positive tally count width.12tests fail unsupported semantics overflow diagnostic. Not a green repair result.",
+    "green-01": "26actual methods pass. Wrong PostGameLayoutTest selector matched no final-role tests; absent suites are not counted. Helper lacks final added height/one-line guards and is not exact current version.",
+    "green-02": "36actual methods7suites pass0fail/error/skip, including8tally4unchangedSetup6finalrole8cover4stepper4toggle2DoctorUI. Exact current5files match before+after inputs; desktopTest executes, not FROM-CACHE."
+  },
+  "current_test_discovery": [
+    {
+      "source": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/components/MafiaCoverContrastTest.kt",
+      "source_sha256": "6b063b9bc4e75626fcabd5330c6102d3a0329e35b57f2aa2c760d52b5e27444e",
+      "declared_test_methods": [
+        "arabicDarkCover",
+        "arabicDarkLargeText",
+        "arabicLightCover",
+        "arabicLightLargeText",
+        "englishDarkCover",
+        "englishDarkLargeText",
+        "englishLightCover",
+        "englishLightLargeText"
+      ],
+      "actual_descriptors": [
+        "arabicDarkCover()[desktop]",
+        "arabicLightCover()[desktop]",
+        "arabicLightLargeText()[desktop]",
+        "englishDarkLargeText()[desktop]",
+        "englishLightLargeText()[desktop]",
+        "arabicDarkLargeText()[desktop]",
+        "englishLightCover()[desktop]",
+        "englishDarkCover()[desktop]"
+      ],
+      "matches": true
+    },
+    {
+      "source": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/MafiaTallyLayoutTest.kt",
+      "source_sha256": "bdfe659970993e89ab0a59043e545451401ece17c60cddcdf6bcaba8a1fabb6f",
+      "declared_test_methods": [
+        "compact_arabic_day_tally_keeps_each_count_visible",
+        "compact_arabic_mafia_revote_tally_keeps_each_count_visible",
+        "compact_english_day_tally_keeps_each_count_visible",
+        "compact_english_mafia_revote_tally_keeps_each_count_visible",
+        "compact_large_text_arabic_day_tally_keeps_each_count_visible",
+        "compact_large_text_arabic_mafia_revote_tally_keeps_each_count_visible",
+        "compact_large_text_english_day_tally_keeps_each_count_visible",
+        "compact_large_text_english_mafia_revote_tally_keeps_each_count_visible"
+      ],
+      "actual_descriptors": [
+        "compact_large_text_arabic_mafia_revote_tally_keeps_each_count_visible()[desktop]",
+        "compact_large_text_english_mafia_revote_tally_keeps_each_count_visible()[desktop]",
+        "compact_large_text_english_day_tally_keeps_each_count_visible()[desktop]",
+        "compact_arabic_mafia_revote_tally_keeps_each_count_visible()[desktop]",
+        "compact_english_mafia_revote_tally_keeps_each_count_visible()[desktop]",
+        "compact_english_day_tally_keeps_each_count_visible()[desktop]",
+        "compact_large_text_arabic_day_tally_keeps_each_count_visible()[desktop]",
+        "compact_arabic_day_tally_keeps_each_count_visible()[desktop]"
+      ],
+      "matches": true
+    },
+    {
+      "source": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/postgame/PostGameScreenLayoutTest.kt",
+      "source_sha256": "27b4894a394bf06952bc1435324ab23acb5c7f38242b65df5feb01e8df16b777",
+      "declared_test_methods": [
+        "compact_arabic_long_name_does_not_consume_final_role_width",
+        "compact_english_long_name_does_not_consume_final_role_width",
+        "compact_large_text_arabic_preserves_every_final_role",
+        "compact_large_text_english_preserves_every_final_role",
+        "landscape_large_text_arabic_roles_remain_scrollable",
+        "landscape_large_text_english_roles_remain_scrollable"
+      ],
+      "actual_descriptors": [
+        "compact_arabic_long_name_does_not_consume_final_role_width()[desktop]",
+        "compact_english_long_name_does_not_consume_final_role_width()[desktop]",
+        "landscape_large_text_arabic_roles_remain_scrollable()[desktop]",
+        "compact_large_text_english_preserves_every_final_role()[desktop]",
+        "landscape_large_text_english_roles_remain_scrollable()[desktop]",
+        "compact_large_text_arabic_preserves_every_final_role()[desktop]"
+      ],
+      "matches": true
+    },
+    {
+      "source": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaDoctorSettingUiTest.kt",
+      "source_sha256": "47720879336a7ac14436a6cc9e186cce3afc8d00743a1339ff161c0fefb58055",
+      "declared_test_methods": [
+        "arabic_consecutive_nights_toggle_defaults_off_and_commits_on_and_off",
+        "english_consecutive_nights_toggle_defaults_off_and_commits_on_and_off"
+      ],
+      "actual_descriptors": [
+        "arabic_consecutive_nights_toggle_defaults_off_and_commits_on_and_off()[desktop]",
+        "english_consecutive_nights_toggle_defaults_off_and_commits_on_and_off()[desktop]"
+      ],
+      "matches": true
+    },
+    {
+      "source": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaSetupReadOnlyCountLayoutTest.kt",
+      "source_sha256": "9e9b7492aecaf8689cc007056e74d5e8c9cce980a1851d853760820b7a2bb118",
+      "declared_test_methods": [
+        "compact_arabic_civilian_count_stays_visible",
+        "compact_english_civilian_count_stays_visible",
+        "compact_large_text_arabic_civilian_count_stays_visible",
+        "compact_large_text_english_civilian_count_stays_visible"
+      ],
+      "actual_descriptors": [
+        "compact_arabic_civilian_count_stays_visible()[desktop]",
+        "compact_large_text_arabic_civilian_count_stays_visible()[desktop]",
+        "compact_english_civilian_count_stays_visible()[desktop]",
+        "compact_large_text_english_civilian_count_stays_visible()[desktop]"
+      ],
+      "matches": true
+    },
+    {
+      "source": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaSetupStepperLayoutTest.kt",
+      "source_sha256": "306d7e76f6275440b9ceab2150b8e4cbcd8d6e8e47a7fe9ad3fcea45fad9d302",
+      "declared_test_methods": [
+        "arabic_compact_large_text_stepper_controls_keep_their_full_size",
+        "arabic_compact_stepper_controls_keep_their_full_size",
+        "english_compact_large_text_stepper_controls_keep_their_full_size",
+        "english_compact_stepper_controls_keep_their_full_size"
+      ],
+      "actual_descriptors": [
+        "arabic_compact_stepper_controls_keep_their_full_size()[desktop]",
+        "english_compact_stepper_controls_keep_their_full_size()[desktop]",
+        "arabic_compact_large_text_stepper_controls_keep_their_full_size()[desktop]",
+        "english_compact_large_text_stepper_controls_keep_their_full_size()[desktop]"
+      ],
+      "matches": true
+    },
+    {
+      "source": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaSetupToggleLayoutTest.kt",
+      "source_sha256": "36bdc52bb345999bd8a43187ac74a4f44e1c9aa618419e7088cfe0b09644be50",
+      "declared_test_methods": [
+        "arabic_compact_large_text_toggle_keeps_room_for_its_switch",
+        "arabic_compact_toggle_keeps_room_for_its_switch",
+        "english_compact_large_text_toggle_keeps_room_for_its_switch",
+        "english_compact_toggle_keeps_room_for_its_switch"
+      ],
+      "actual_descriptors": [
+        "english_compact_toggle_keeps_room_for_its_switch()[desktop]",
+        "arabic_compact_large_text_toggle_keeps_room_for_its_switch()[desktop]",
+        "english_compact_large_text_toggle_keeps_room_for_its_switch()[desktop]",
+        "arabic_compact_toggle_keeps_room_for_its_switch()[desktop]"
+      ],
+      "matches": true
+    }
+  ],
+  "static_analysis": {
+    "reports": [
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-tally-layout-green-02/reports/build-logic/convention/build/reports/detekt/detekt.xml",
+        "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+        "errors": 0
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-tally-layout-green-02/reports/composeApp/build/reports/detekt/detekt.xml",
+        "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+        "errors": 0
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-tally-layout-green-02/reports/game-modes/mafia/build/reports/detekt/detekt.xml",
+        "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+        "errors": 0
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-tally-layout-green-02/reports/game-modes/whodunit/build/reports/detekt/detekt.xml",
+        "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+        "errors": 0
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-tally-layout-green-02/reports/shared/content/build/reports/detekt/detekt.xml",
+        "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+        "errors": 0
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-tally-layout-green-02/reports/shared/core/build/reports/detekt/detekt.xml",
+        "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+        "errors": 0
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-tally-layout-green-02/reports/shared/design-system/build/reports/detekt/detekt.xml",
+        "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+        "errors": 0
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-tally-layout-green-02/reports/shared/engine/build/reports/detekt/detekt.xml",
+        "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+        "errors": 0
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-tally-layout-green-02/reports/shared/engine-testing/build/reports/detekt/detekt.xml",
+        "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+        "errors": 0
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-tally-layout-green-02/reports/shared/networking/build/reports/detekt/detekt.xml",
+        "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+        "errors": 0
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-tally-layout-green-02/reports/shared/networking-testing/build/reports/detekt/detekt.xml",
+        "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+        "errors": 0
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-tally-layout-green-02/reports/shared/session/build/reports/detekt/detekt.xml",
+        "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+        "errors": 0
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-tally-layout-green-02/reports/shared/storage/build/reports/detekt/detekt.xml",
+        "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+        "errors": 0
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-tally-layout-green-02/reports/shared/transport-p2p/build/reports/detekt/detekt.xml",
+        "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+        "errors": 0
+      }
+    ],
+    "count": 14,
+    "errors": 0,
+    "caching": "Mafia detekt executed;13other reports restored FROM-CACHE. Do not claim every analyzer freshly executed."
+  },
+  "compatibility": "No protocol4.2/save/content/settings/domain or privacy-format changes. Both local and LAN reuse corrected UI. Whodunit untouched.",
+  "limitations": [
+    "Actual Desktop common-composable tests are not native Android/iOS runtime, physical VoiceOver/TalkBack or physical LAN verification.",
+    "320x640,1x/2x,English/Arabic synthetic counts/names tested, not arbitrary viewport/font/platform matrix.",
+    "Pixel test proves rendered nonblank foreground plus sufficient full numeric geometry; not screenshot-golden or per-glyph raster equality.",
+    "Unchanged Setup negative control only rejects this reported manifestation under tested valid conditions; not a proof every UI is defect-free."
+  ],
+  "hygiene": {
+    "reviewer_builds_or_tests_started": 0,
+    "reviewer_background_workers_started": 0,
+    "production_edits": 0,
+    "git_operations": 0,
+    "evidence_writes": "Only additive research/review JSON; original reports and draft tests preserved. Source download archives memory-only. All four root cycle receipts stop0/cleanup empty resources/errors; reviewer did not stop root or other tasks processes."
+  }
+}

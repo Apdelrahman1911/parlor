@@ -1,0 +1,199 @@
+{
+  "schema_version": 1,
+  "kind": "INDEPENDENT_PROCESS_PROBE_BUDGET_CONTROLS_POSTRUN_REVIEW",
+  "reviewer": "/root/portability_review",
+  "executor": "/root",
+  "recorded_at": "2026-09-08T14:05:07.393657+00:00",
+  "decision": "PASS_FOCUSED_45_SYNTHETIC_CONTROLS_AND_CYCLE_CLEANUP_NOT_NATIVE_RUNTIME",
+  "blocking_findings": [],
+  "cycle": "continuation-process-probe-budget-controls-01",
+  "command": [
+    "/usr/bin/python3",
+    "-B",
+    "-m",
+    "unittest",
+    "-v",
+    "scripts.release.tests.test_native_process_probe"
+  ],
+  "evidence": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-process-probe-budget-controls-01/artifact-receipts.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "bytes": 3
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-process-probe-budget-controls-01/gradle.log",
+      "sha256": "46fcf68465f5bda416585d1a59892b616363b498c2fee7ec009b9f994e8489d8",
+      "bytes": 15946
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-process-probe-budget-controls-01/java-toolchain.log",
+      "sha256": "a7a86ea7b20362e2c856e5e71a8b6fc51764d5aeaa9f5a8c82b386ff156f8a7c",
+      "bytes": 2026
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-process-probe-budget-controls-01/javac-toolchain.log",
+      "sha256": "157f601a5854ca28a7dc364c13a5ca2879084186be49e3462d37acd028f35755",
+      "bytes": 14
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-process-probe-budget-controls-01/receipt.json",
+      "sha256": "d2a468ee6bbedeb8c2f06c16b5afe21d38036adfc560dd1f09658c7c59796d9e",
+      "bytes": 304816
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-process-probe-budget-controls-01/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+      "bytes": 31
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-process-probe-budget-controls-01/test-receipts.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "bytes": 3
+    }
+  ],
+  "prior_independent_source_approval": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/native-process-probe-budget-independent-01.json",
+    "sha256": "53934d03592b917f311724e7e586744bfee36acad97a0fd88a7ea12c98cf7cda",
+    "bytes": 9842
+  },
+  "source_binding": {
+    "commit": "1efed50cbc7856c11867e4cb088ba3b68716c8fc",
+    "tree": "bcabd2fd29eaea276bee31ec4ff6b74b63a79366",
+    "branch": "fix/local-readiness-2026-09-07",
+    "execution_basis": "Commit1efed50 plus the independently reviewed three-file working-tree correction and held continuation ledger. Not a final frozen-source qualification.",
+    "source_before_equals_after": true,
+    "source_manifest_entries": 825,
+    "source_manifest_sha256": "fa02baf9686cb9e553157aedc35ada87e613b912f66192a4baa7a615011b179a",
+    "verification": "Independently reconstructed the complete ordinary-file set from read-only git ls-files with the runner exclusions, rehashed every current file and verified exact825-row before/after/current equality and manifest digest. No project code imported.",
+    "tracked_diff_sha256": "a7c128e8a6a14954963b8f1818885cf403c0bcd2092ff93d529df5805ed92cf5",
+    "current_tracked_diff_equals_cycle": true,
+    "held_ledger": {
+      "path": "remediation-runs/2026-09-08-continuation/CONTINUE_LATEST.md",
+      "sha256": "d88d6af76474edbbcddffadb1c413287830895e8cef531653b8aac522736b195",
+      "bytes": 26242
+    },
+    "approved_three_inputs": [
+      {
+        "path": "scripts/ci/native_process_probe.py",
+        "sha256": "c87f6d1289ee50a7387988bd85953d451dac9e1b7b88a4d60f7b4848f86516da",
+        "bytes": 44789
+      },
+      {
+        "path": "scripts/release/tests/test_native_process_probe.py",
+        "sha256": "707f394e34d8234f4617963af32a865b3620aaec7a16ee6e0c166c0e1090ef39",
+        "bytes": 43371
+      },
+      {
+        "path": "scripts/ci/NATIVE_CONTINUATION.md",
+        "sha256": "e2e5f62f4a8d876585120e32ff73e91f7c3d992963c80346e94e54f906eec846",
+        "bytes": 10879
+      }
+    ],
+    "runner_before_equals_after": true,
+    "runner_manifest": {
+      "manifest": [
+        [
+          "remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py",
+          "1b9e882514bfe5386785d5a71ae32fdc2bc3aa4cc1dd24532709899fbf4f41bc"
+        ]
+      ],
+      "manifest_sha256": "942e138764146313a59cbe1278c1357284a5701d0c125809c34ddbbe876ce912"
+    },
+    "runner_verification": "Reopened actual runner identity/invocation/finalizer source; its one control hash and manifest digest match before/after/current. Non-native --command mode means simulator allocation is not selected."
+  },
+  "executed_tests": {
+    "declared": 45,
+    "actual_unique_verbose_descriptors": 45,
+    "passed": 45,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0,
+    "unittest_summary": "Ran45 tests in0.181s; OK",
+    "raw_descriptor_location": "gradle.log lines1-45; all results exactly ok and IDs exactly equal current AST Class.test_method declarations. No synthetic receipt string was parsed as a unittest result.",
+    "sorted_descriptor_ids_sha256": "685afef9b04eb72c60425345d1b368a4ded1c0737bb07ff35f3ee3eb644a23d8",
+    "per_class": {
+      "NativeMetadataObservationTest": 4,
+      "ProbeBoundedCaptureTest": 17,
+      "ProbeLifecycleTest": 7,
+      "ProbePrivacyAndCustodyTest": 8,
+      "ProbeSimulatorGlueTest": 3,
+      "ProbeSourceContractTest": 6
+    },
+    "new_six_ids_all_actually_ran_ok": [
+      "scripts.release.tests.test_native_process_probe.ProbeBoundedCaptureTest.test_explicit_command_timeout_is_honored_or_rejected_not_silently_capped",
+      "scripts.release.tests.test_native_process_probe.ProbeBoundedCaptureTest.test_only_exact_qualified_simulator_enumerations_restore_one_hundred_twenty_seconds",
+      "scripts.release.tests.test_native_process_probe.ProbeBoundedCaptureTest.test_qualified_enumeration_timeout_with_partial_bytes_stays_failed_without_retry",
+      "scripts.release.tests.test_native_process_probe.ProbeBoundedCaptureTest.test_qualified_enumeration_without_full_budget_is_skipped_not_shortened_or_retried",
+      "scripts.release.tests.test_native_process_probe.ProbeBoundedCaptureTest.test_real_qualifier_routes_both_enumeration_budgets_and_rejects_timeout_at_either_seam",
+      "scripts.release.tests.test_native_process_probe.ProbeLifecycleTest.test_failed_qualification_is_named_and_blocks_all_observations_without_skipping_cleanup"
+    ],
+    "synthetic_scope": "These45 methods exercise inert subprocess/metadata/simulator fixtures, real qualifier-to-executor budget forwarding under mocks, fail-closed partial/timeout behavior, originalps15s preservation, custody and complete finalizer paths. They do not execute Apple tools, an app, XCTest, actual libproc process metadata, or strict file protection."
+  },
+  "expected_synthetic_output": {
+    "json_rows": 16,
+    "counts": {
+      "NATIVE_PROCESS_PROBE_NOT_APP_EVIDENCE:OBSERVATIONS_COLLECTED_NOT_RUNTIME_EVIDENCE": 1,
+      "NATIVE_PROCESS_PROBE_NOT_APP_EVIDENCE:OBSERVATIONS_WITH_FAILURES_NOT_RUNTIME_EVIDENCE": 4,
+      "PROCESS_PROBE_CUSTODY_CLEANUP:COMPLETE": 1,
+      "PROCESS_PROBE_CUSTODY_CLEANUP:FAILED": 10
+    },
+    "interpretation": "Four observation-failure, one observation-collected, ten custody-FAILED and one custody-COMPLETE JSONs are expected inert lifecycle/privacy negative and positive control output. Custody contexts use synthetic head a*40 and fake artifact identity; none is an actual Actions/native receipt. All associated unittest methods passed. These retained FAILED strings were neither erased nor relabeled."
+  },
+  "actual_toolchain": {
+    "receipt": {
+      "home": "/usr/lib/jvm/java-21-openjdk-amd64",
+      "specification_version": "21",
+      "javac_version": "21.0.12",
+      "java_log_sha256": "a7a86ea7b20362e2c856e5e71a8b6fc51764d5aeaa9f5a8c82b386ff156f8a7c",
+      "javac_log_sha256": "157f601a5854ca28a7dc364c13a5ca2879084186be49e3462d37acd028f35755"
+    },
+    "verified": "Reopened retained java/javac logs and matched both SHA pins. Actual Linux/amd64 Java runtime specification21, home/usr/lib/jvm/java-21-openjdk-amd64 and javac21.0.12; this is local harness toolchain evidence only."
+  },
+  "cleanup": {
+    "outer_status": "PASS",
+    "test_command_exit": 0,
+    "immediate_gradle_stop_exit": 0,
+    "stop_log": "No Gradle daemons are running.",
+    "timing": {
+      "started_at": "2026-09-08T13:59:02.457121+00:00",
+      "finished_at": "2026-09-08T13:59:03.651391+00:00",
+      "stopped_at": "2026-09-08T13:59:04.247484+00:00",
+      "cleanup_completed_at": "2026-09-08T13:59:04.319495+00:00"
+    },
+    "workers": {
+      "terminated_owned_workers": [],
+      "remaining_owned_workers": []
+    },
+    "artifact_workers": {
+      "terminated_owned_workers": [],
+      "remaining_owned_workers": []
+    },
+    "outputs_before": [],
+    "removed_outputs": [],
+    "retained_outputs": [],
+    "remaining_outputs_at_cycle_end": [],
+    "cleanup_errors": [],
+    "deferred_signals": [],
+    "source_changed_during_cycle": false,
+    "runner_changed_during_cycle": false,
+    "scratch": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-process-probe-budget-controls-01/scratch",
+      "independent_lstat": "ENOENT"
+    },
+    "empty_artifact_and_test_receipt_arrays": "Expected: no build artifact or JUnit XML produced by this Python unittest command. Actual execution is retained in the verbose log.",
+    "scope": "All cycle45 cleanup fields and exact owned scratch absence validated. No app build task or Gradle clean was run; exact owned cleanup did not start Gradle, so no second stop was required. The coordinator started separate transport03 after this cycle; its live outputs/workers were not inspected, touched or claimed absent by this review. Global caches and historical evidence were not deleted."
+  },
+  "next_gate": "This result satisfies the focused Linux control regression for the reviewed delta, not actual platform verification. Reconcile the separately owned affected transport gate, commit reviewed source and mechanical inventory, and generate/review fresh frozen source/control bindings before any justified focused diagnostic. The failed34232325670 receipt remains failed; originalps/runtime behavior is still not proven.",
+  "reviewer_activity": {
+    "tests": 0,
+    "builds": 0,
+    "project_imports": 0,
+    "platform_commands": 0,
+    "workflow_dispatches": 0,
+    "source_edits": 0,
+    "cleanup_actions": 0,
+    "performed": "Read retained receipts/logs/current files, read-only Git/hash/stdlib AST/JSON comparisons, exact cycle45 scratch lstat, and write only this new report."
+  },
+  "readiness": "NOT_READY. Actual A functional-storage/retained-host, strict file-protection investigation, B application libproc provenance and final combined qualification remain unresolved by these synthetic controls."
+}

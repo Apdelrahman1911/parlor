@@ -1,0 +1,30 @@
+--- a/darwin_owned_processes.py
++++ b/darwin_owned_processes.py
+@@ -102,12 +102,23 @@
+         return None if info.status == 5 else info
+ 
+     def _token(self, pid):
+-        port = ctypes.c_uint32()
+-        code = self.lib.task_name_for_pid(self.self_port, pid, ctypes.byref(port))
+-        if code != 0 or not port.value:
++        for attempt in range(3):
++            port = ctypes.c_uint32()
++            code = self.lib.task_name_for_pid(self.self_port, pid, ctypes.byref(port))
++            if code == 0 and port.value:
++                break
+             if self._basic(pid) is None:
+                 return None
+-            raise RuntimeError(f'task_name_for_pid denied for attested candidate {pid}: {code}')
++            if code != 0:
++                raise RuntimeError(f'task_name_for_pid denied for attested candidate {pid}: {code}')
++            # Exact-host XNU may succeed with MACH_PORT_NULL during task
++            # teardown OR a copyout failure. NULL alone never proves exit.
++            # Retry only that result; genuine denial and persistent live
++            # unattestability remain failures. read() still brackets the
++            # acquired token with BSD lifetime and second-token validation.
++            if attempt == 2:
++                raise RuntimeError(f'Persistent null task-name port for live candidate {pid}; no signal authorized')
++            time.sleep(0.01)
+         try:
+             token = (ctypes.c_uint32 * 8)()
+             count = ctypes.c_uint32(8)

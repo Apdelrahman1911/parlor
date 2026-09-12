@@ -1,0 +1,183 @@
+{
+  "schema_version": 1,
+  "kind": "INDEPENDENT_BOUNDED_RESEARCH_AND_EVIDENCE_REVIEW",
+  "reviewer": "/root/fixture_review",
+  "author_reviewed": "/root/l08_fixture",
+  "recorded_at": "2026-09-08T11:52:21.679392+00:00",
+  "status": "APPROVE_SCOPED_INVESTIGATION_NOT_RUNTIME_OR_READINESS_APPROVAL",
+  "reviewed_report": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/l08-strict-protection-investigation-02.md",
+    "bytes": 11293,
+    "sha256": "e44de5a5c5a8eb7a439a0ef18ead7bb176d85c890ef77641e25db18dc23fe708"
+  },
+  "reviewed_research_manifests": [
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/l08-strict-protection-investigation-02/inspection-inputs.json",
+      "bytes": 11732,
+      "sha256": "014ad34a7a04916c41679d46e118319e14fa8e3187ba0209d2cf59fe2079ca66"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/l08-strict-protection-investigation-02/source-identities.json",
+      "bytes": 3175,
+      "sha256": "6f7a6553d49dff47f40955613155fcc0581b91c6f9423b6768cfc1a7e963a7d4"
+    }
+  ],
+  "inspected_source": {
+    "commit": "25b1c5551aee7630ac22d4b34668dd4b06c71b17",
+    "tree": "629a5d2b699cddb62d61849de3bd185fd4c01378",
+    "branch": "fix/local-readiness-2026-09-07",
+    "snapshot_files": 14,
+    "all_snapshot_bytes_independently_compared_with_git_show": true,
+    "current_working_tree_clean_claimed": false,
+    "limits": "Concurrent runtime-profile and ownership/diagnostic corrections are outside this source snapshot and not approved by this research review."
+  },
+  "evidence_integrity": {
+    "input_files": 26,
+    "all_paths_bytes_and_sha256_independently_rehashed": true,
+    "public_responses": 5,
+    "all_public_response_paths_bytes_and_sha256_independently_rehashed": true,
+    "evidence_mismatches": [],
+    "source_snapshot_mismatches": []
+  },
+  "native16_raw_findings": {
+    "operation_records": 15,
+    "functional_statuses": {
+      "PASS": 14,
+      "FAIL": 1
+    },
+    "failed_record": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-16/parlor-l08-storage-functional-10-continue.json",
+      "bytes": 1467,
+      "sha256": "5026dce2c3ff30f510f9018eb9ae5fae23517e25cc563a1faea6b3f3268e0221"
+    },
+    "failed_stage": "continue-home-counters",
+    "completed_13_boot_matrix": false,
+    "retained_host_matrix_reached": false,
+    "strict_comparison_count": 24,
+    "strict_comparison_statuses": {
+      "FAIL": 24
+    },
+    "comparison_targets": {
+      "directory": 12,
+      "file": 12
+    },
+    "all_queries_returned_dictionary_missing_key_without_nserror": true,
+    "required_remaining_comparisons": "The final two of26 are boot12 dual-preserved and were not observed; functional success never overrides a failed Complete comparison.",
+    "foundation_receipt": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-16/parlor-l08-app-foundation.json",
+      "bytes": 7826,
+      "sha256": "e656f929fd9c96a58ecf7430bd3f74b5d33be2cf3c8dcb4f15d446aeb6b42d35"
+    },
+    "foundation_status": "OBSERVATIONS_COMPLETE",
+    "foundation_runtime": [
+      26,
+      5,
+      0
+    ],
+    "foundation_uuid": "2cc9fce0-08f9-3a0d-8a2f-6db229462de5",
+    "native_operations": 8,
+    "all_native_operations_succeeded_without_error": true,
+    "foundation_observations": 8,
+    "all_filemanager_keys_missing": true,
+    "regular_file_url_observation_count": 5,
+    "all_regular_file_url_values_until_first_authentication": true,
+    "all_volume_values_supported": true,
+    "backup_exclusion_change_preserved": true,
+    "fixture_cleanup": {
+      "created": true,
+      "directory_pinned": true,
+      "reason": "none",
+      "root_pinned": true,
+      "root_removed": true,
+      "status": "REMOVED"
+    },
+    "hardware_protection_verified": false,
+    "requirements_waived": false,
+    "interpretation": "Native creation, atomic/non-atomic Complete writing and explicit setters all precede the same observed omissions; speculative Kotlin/path/backup/setter app patches are not justified. Operation success and volume support are not protection enforcement proof."
+  },
+  "hosted_failure_boundary": {
+    "run_id": 34216788568,
+    "cycles": [
+      "ios-readiness-17",
+      "ios-readiness-18"
+    ],
+    "canonical_receipts": [
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34216788568/native-evidence/ios-readiness-17/receipt.json",
+        "bytes": 334590,
+        "sha256": "a25d6c67dba4d69f92d741089cfbe54f44aa8ae6158c4cd6dbb1a4b13f187512"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34216788568/native-evidence/ios-readiness-18/receipt.json",
+        "bytes": 326168,
+        "sha256": "f89b9a66db4162f8da414f5500f726134bdbdd84790f3fc0a69ada953d4778b8"
+      }
+    ],
+    "actual_failures": "Both FAIL with exact ps -axo pid=,ppid=,pgid=,lstart=,command= TimeoutExpired after15s; no app install/launch or protection/runtime/libproc observation established.",
+    "xcode_logs": "A17 raw log3949bytes ends BUILD INTERRUPTED; B18 gzip35bytes decompresses to0bytes. No XCTest count, build-phase/OOM attribution, or native app protection result can be inferred.",
+    "cleanup": "Both canonical receipts retain cleanup PASS, immediate/final isolated Gradle stop0, source/control/copied-source stability, removed owned device/temp and no owned workers/unknown holders. This is not runtime PASS.",
+    "latent_profile_defect": "At25b1 the native Foundation guard and complete-receipt parser require exact26.5.0 but the qualified Xcode26.3 profile selects26.2. A17/B18 did not reach these guards; this is not their observed ps failure cause.",
+    "correction_approval": "Not granted here. Exact trusted-profile propagation through generation/preservation/parsing/final binding requires the separately assigned author/native_ci and reviewer/portability_review, controls and fresh freeze. Historical standalone CLI remains pinned."
+  },
+  "public_source_findings": {
+    "response_identities": [
+      {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/l08-strict-protection-investigation-02/swift-6.2.3-commit.json",
+        "url": "https://api.github.com/repos/swiftlang/swift-foundation/git/commits/7242fa9cb8993aaf9a0a72522206b96a45da9c28",
+        "retrieved_at": "2026-09-08T11:36:07.586792+00:00",
+        "http_status": 200,
+        "bytes": 4805,
+        "sha256": "69ec7c1fc4bbcc8b5f7b8aeae1fa4c620805c56fd5a754f4fe11d90354a5375b"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/l08-strict-protection-investigation-02/swift-6.2.3-FileManager+Files.swift",
+        "url": "https://raw.githubusercontent.com/swiftlang/swift-foundation/7242fa9cb8993aaf9a0a72522206b96a45da9c28/Sources/FoundationEssentials/FileManager/FileManager+Files.swift",
+        "retrieved_at": "2026-09-08T11:36:08.047750+00:00",
+        "http_status": 200,
+        "bytes": 42075,
+        "sha256": "70a0ff4e281a35cbcc672cff7f2a6f7518fc28d2f55422a6c248825a9289e8d4"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/l08-strict-protection-investigation-02/xcode-26_3-release-notes.json",
+        "url": "https://developer.apple.com/tutorials/data/documentation/xcode-release-notes/xcode-26_3-release-notes.json",
+        "retrieved_at": "2026-09-08T11:36:08.749063+00:00",
+        "http_status": 200,
+        "bytes": 15561,
+        "sha256": "a879bc0e7799f8e1a0e9e647f8d5ce891e99bf4357091f7ddb4728de8959b484"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/l08-strict-protection-investigation-02/ios-ipados-26_2-release-notes.json",
+        "url": "https://developer.apple.com/tutorials/data/documentation/ios-ipados-release-notes/ios-ipados-26_2-release-notes.json",
+        "retrieved_at": "2026-09-08T11:36:09.192662+00:00",
+        "http_status": 200,
+        "bytes": 12533,
+        "sha256": "b11d041db68b89cea8a9a999a1d02ab9608268bc2ed193d87ba0fcad0378cb02"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/l08-strict-protection-investigation-02/swift-6.2.3-tag-ref-refetch.json",
+        "url": "https://api.github.com/repos/swiftlang/swift-foundation/git/ref/tags/swift-6.2.3-RELEASE",
+        "retrieved_at": "2026-09-08T11:42:03.207185+00:00",
+        "http_status": 200,
+        "bytes": 397,
+        "sha256": "4e293c556a7306a9df25a80216034d39e78099814f04a8f7dbfb5274f7b9cf06",
+        "reason": "Fresh bounded re-fetch requested by independent reviewer to preserve raw tag evidence; does not imply the earlier11:35:08 response was retained."
+      }
+    ],
+    "tag": "refs/tags/swift-6.2.3-RELEASE",
+    "commit": "7242fa9cb8993aaf9a0a72522206b96a45da9c28",
+    "tree": "74cee4137d7cf047a39dfcd2c6874fc6dd37ef45",
+    "raw_tag_retention_resolution": "Independent reviewer requested raw tag evidence. Author retained a fresh11:42:03UTC response, SHA4e293c556a7306a9df25a80216034d39e78099814f04a8f7dbfb5274f7b9cf06, and explicitly preserves the earlier11:35:08 response-not-retained fact. Fresh bytes bind exact tag to commit; no fabricated earlier archive.",
+    "source_comparison": "Independently compared complete retained Swift6.2.3 and6.3 FileManager+Files.swift: exactly two unrelated differing lines; getter656-665 and setter990-1000 protection blocks identical and excluded by !targetEnvironment(simulator) && FOUNDATION_FRAMEWORK.",
+    "official_notes": "Reopened complete retained primary Xcode26.3 and iOS26.2 release-note content. Xcode notes identify Swift6.2.3 and iOS26.2 SDK; neither supplies a positive protection/Simulator guarantee or fix.",
+    "limits": "Public source/compiler/tag cannot attest installed Foundation, explain every private NSData helper or prove universal Simulator incapability. Observed strict failures remain unresolved and are not reclassified physical-only."
+  },
+  "acceptance_and_next_work": {
+    "reviewed_plan": "Use already required coordinator-owned composed runtime after independently reviewed ownership/profile corrections, committed inventory and fresh source/control/platform binding. No extra expensive standalone protection probe justified.",
+    "unchanged_requirements": "13 functional boots/20 operations/26 protection comparisons; separate3 retained-host fixtures/42 operations. Exact equality, absence-as-failure and original strict gate remain unchanged.",
+    "classification": "At best companion PARTIALLY_VERIFIED even if every comparison matches; original strict L08 PASS and physical enforcement are not established by companion.",
+    "future_results": "Only new actual runtime/UUID/native/app rows distinguish the qualified26.2 environment. Another pre-app failure supplies no new protection observation. No future success or retry authorization asserted."
+  },
+  "open_review_findings": [],
+  "remaining_readiness": "NOT_READY: A/B incomplete, strict L08 unsatisfied; D unexecuted; physical LAN/keybag/backup-restore/power-loss/accessibility, private Store/signing and separate owner/legal/content/privacy obligations excluded or outstanding.",
+  "review_work_boundary": "Read-only Git/source/evidence/JSON/hash/XML/ZIP inspection and this uniquely named untracked review only; no tests/builds/native command/CI/network dispatch/commit/push. No build workers or disposable output created and no other agent lane stopped or cleaned. Failed receipts and concurrent changes preserved."
+}

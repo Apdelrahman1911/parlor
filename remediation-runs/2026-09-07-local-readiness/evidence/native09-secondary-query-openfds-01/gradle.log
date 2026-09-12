@@ -1,0 +1,16 @@
+{"command": ["/bin/ps", "-p", "41785,41768", "-o", "pid="], "exit_code": 1, "stdout": "", "stderr": ""}
+{"command": ["/usr/sbin/lsof", "-nP", "-w", "-t", "+D", "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-41768"], "exit_code": 1, "stdout": "52505\n", "stderr": ""}
+Traceback (most recent call last):
+  File "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/probe_native09_secondary_queries_01.py", line 27, in <module>
+    result = recovery.ExactRecovery(recovery.ROOT, recovery.NAMES, recovery.bound_plan(),
+  File "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/native09_secondary_fifo_recovery_01.py", line 128, in run
+    guard(remaining)
+  File "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/native09_secondary_fifo_recovery_01.py", line 125, in guard
+    self.holder_guard(self.root)
+  File "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/native09_secondary_fifo_recovery_01.py", line 80, in check_holders
+    require(not (query(['/usr/sbin/lsof', '-nP', '-w', '-t', '+D', str(root)]) - {os.getpid()}), 'Secondary files have other holders')
+  File "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/native09_secondary_fifo_recovery_01.py", line 70, in query
+    require((result.returncode == 0 and bool(values)) or (result.returncode == 1 and not values), 'Ambiguous ownership query')
+  File "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/native09_secondary_fifo_recovery_01.py", line 27, in require
+    raise RuntimeError(message)
+RuntimeError: Ambiguous ownership query

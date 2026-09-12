@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "kind": "L08_SINGLE_TAP_SCANNER_CORRECTION_AUTHOR_NOTES",
+  "recorded_at": "2026-09-08T09:51:36.345064+00:00",
+  "author": "/root/fixture_review",
+  "status": "CORRECTION_SOURCE_READY_FOR_INDEPENDENT_REVIEW; NOT_EXECUTED",
+  "failed_execution": {
+    "cycle": "continuation-focused-controls-01",
+    "receipt_sha256": "32d1d5a0459b64d493b78f7c61b423c6967391eabe46026895cfe13bf642ae77",
+    "single_tap_log_sha256": "752e376073d021f26a5c47e992c3e57cb734d2f45b51b5699924b3742d3dd53a",
+    "status": "FAIL;13 tests,1 ERROR; not an application or Swift runtime failure"
+  },
+  "source_before": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/l08-single-tap-scanner-correction-01/test_single_tap_fixture_review.before.py",
+    "sha256": "e0300c3d339798b4224d81f0e21b4043b78eca8145c98523abdc7110c76b68aa",
+    "preservation": "Exact previously reviewed/executed bytes retained before editing. Original failed evidence and prior source review were not modified."
+  },
+  "source_after": {
+    "path": "remediation-runs/2026-09-08-continuation/controls/test_single_tap_fixture_review.py",
+    "sha256": "6443de2ea249c74a945aee5513e74eedadc077a68c43089201b89e9c90695298",
+    "declared_test_methods": 14,
+    "ast_parse": "PASS;syntax-only,not test execution"
+  },
+  "patch": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/l08-single-tap-scanner-correction-01/scanner-delta.patch",
+    "sha256": "d88a257e1a80fa1cf0c1a02cbe88d2cd7fa6cbc227f53c44c7299d4a740a2215"
+  },
+  "diagnosis": "The scanner counted two bare for tokens: the one bounded for attempt in0..<8 loop and the XCTest argument label in XCTWaiter.wait(for:[ready],timeout:15). The actual fixture contains no second loop or repeated target activation. Its already-approved Swift bytes are unchanged.",
+  "corrections": [
+    "Distinguish for: argument labels from actual loops. The complete main body still must contain exactly one real for-loop and no while/repeat; the original bounded loop fragment remains mandatory.",
+    "Validate the actual positive baseline in setUp before any mutant. In the retained failed run the negative controls could reject for the unrelated baseline scanner error, so their individual ok lines are not valid mutation-specific proof.",
+    "Add one explicit scanner regression: two literal for tokens including the actual XCTWaiter label are accepted, while synthetic for/while/repeat activation wrappers must fail with the specific hidden-loop guard error. Original36 mutation cases remain; the new regression adds3 loop-specific witnesses, one intentionally repeats the existing for-wrapper case."
+  ],
+  "unchanged_swift": {
+    "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/L08StorageFunctionalUITests.swift.in",
+    "sha256": "5d81dfb0b5accc127a4f5510a23d610ba73efd2fc8b19a0ff12395912e2d0c59"
+  },
+  "verification": "No test,build,native process or workflow executed by author. Coordinator owns reviewed focused rerun and cleanup. Source-only/AST review is not native runtime proof.",
+  "cleanup": "Only retained source evidence,patch,notes and the owned control source were written. No generated build outputs or temporary workers allocated; no unrelated file changed."
+}

@@ -1,0 +1,150 @@
+{
+  "schema_version": 1,
+  "at_utc": "2026-09-08T08:59:11.869104+00:00",
+  "reviewer": "/root/portability_review",
+  "executor": "/root",
+  "author_of_controls": "/root/dependency_chain",
+  "classification": "INDEPENDENTLY_RECONCILED_21_CONTROL_PASSES_AND_LINUX_TOOLCHAIN_PROBES_WITH_TEST_HASH_CAPTURE_LIMITATION",
+  "scope": "Read actual retained stdout/receipt files and statically declared test IDs. No reviewer test, Gradle, native or CI execution.",
+  "cycle": "continuation-linux-lane-controls-01",
+  "recorded_status": "PASS",
+  "exit_code": 0,
+  "started_at": "2026-09-08T08:54:59.486282+00:00",
+  "finished_at": "2026-09-08T08:55:00.865547+00:00",
+  "command": [
+    "/usr/bin/python3",
+    "-B",
+    "remediation-runs/2026-09-08-continuation/controls/test_gradle_lane_portability.py"
+  ],
+  "tests": {
+    "declared_count": 21,
+    "raw_executed_count": 21,
+    "unique_raw_ids": 21,
+    "declared_ids_equal_executed_ids": true,
+    "all_raw_statuses_ok": true,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "raw_ids": [
+      "GradleLanePortabilityTests.test_actual_compiler_rejects_wrong_duplicate_or_missing_major",
+      "GradleLanePortabilityTests.test_actual_probe_failure_and_oversized_output_are_rejected",
+      "GradleLanePortabilityTests.test_actual_runtime_and_compiler_are_owned_bounded_and_recorded",
+      "GradleLanePortabilityTests.test_actual_runtime_rejects_wrong_duplicate_or_missing_major",
+      "GradleLanePortabilityTests.test_actual_runtime_requires_matching_unique_home",
+      "GradleLanePortabilityTests.test_explicit_java_home_alias_is_canonicalized",
+      "GradleLanePortabilityTests.test_jdk_requires_executable_java_and_javac",
+      "GradleLanePortabilityTests.test_linux_java_home_must_be_absolute",
+      "GradleLanePortabilityTests.test_linux_requires_explicit_java_home_without_path_fallback",
+      "GradleLanePortabilityTests.test_linux_sdk_has_no_implicit_or_relative_fallback",
+      "GradleLanePortabilityTests.test_linux_static_preflight_spawns_nothing",
+      "GradleLanePortabilityTests.test_macos_retains_bounded_java_home_selector",
+      "GradleLanePortabilityTests.test_macos_retains_existing_sdk_location_without_env_override",
+      "GradleLanePortabilityTests.test_missing_or_oversized_release_is_rejected",
+      "GradleLanePortabilityTests.test_other_hosts_are_rejected",
+      "GradleLanePortabilityTests.test_release_requires_exact_major21_and_unique_declaration",
+      "GradleLanePortabilityTests.test_runtime_probe_failure_still_stops_and_cleans_owned_lane",
+      "GradleLanePortabilityTests.test_sdk_never_falls_back_to_another_tool_version",
+      "GradleLanePortabilityTests.test_sdk_roots_must_agree_after_canonicalization",
+      "GradleLanePortabilityTests.test_sdk_tool_must_be_executable",
+      "GradleLanePortabilityTests.test_static_preflight_failure_allocates_no_evidence_or_scratch"
+    ],
+    "meaning": "Synthetic source/portability guards, not application-runtime tests. Ordinary empty XML/artifact receipt arrays are appropriate for this Python command."
+  },
+  "toolchain": {
+    "actual_java_runtime": "OpenJDK21.0.12+8-1-24.04-Ubuntu",
+    "actual_java_home": "/usr/lib/jvm/java-21-openjdk-amd64",
+    "actual_java_specification_version": "21",
+    "actual_javac_version": "21.0.12",
+    "platform": "Linux amd64; os.version6.1.72 recorded by Java",
+    "receipt_matches_actual_log_hashes": true,
+    "scope": "Actual small Java/Javac subprocess probes executed through the owned lane. They are not JVM application tests, Android execution or macOS JDK execution."
+  },
+  "source_binding": {
+    "commit": "ec0de52a2c7ff9077482a291dc4fd2591fdea01f",
+    "tree": "48b099f3cd002a3253f21d2b06a4ece5787e62cb",
+    "branch": "fix/local-readiness-2026-09-07",
+    "diff_sha256": "29fb270888ae197ac1352993a124c90441401642a670d4a677a8d64c5e7c554b",
+    "source_manifest_sha256": "95fa3b14c818024f97c5a58e0ad1e485e2a69df21f08a80b89ea0dfe4aa466e3",
+    "source_manifest_rows": 815,
+    "full_before_after_equal": true,
+    "manifest_digest_recomputed_equal": true,
+    "qualification": "Focused cycle on known dirty continuation controls, not a final clean-SHA qualification or reuse of final-source evidence."
+  },
+  "runner_binding": {
+    "before_after_equal": true,
+    "lane_sha256": "1b9e882514bfe5386785d5a71ae32fdc2bc3aa4cc1dd24532709899fbf4f41bc",
+    "manifest_sha256": "942e138764146313a59cbe1278c1357284a5701d0c125809c34ddbbe876ce912",
+    "approved_lane_hash_matches": true
+  },
+  "test_source_binding_limit": {
+    "current_sha256": "27283e41eb10bfdd9f9fdab1908d45575da75ce9322936d19ced11cd3de3eb33",
+    "current_matches_source_approval": true,
+    "execution_before_after_test_hash_manifest": "NOT_RECORDED",
+    "reason": "Ordinary lane runner manifest binds the lane only; this untracked remediation test is outside the application source manifest. Raw IDs equal approved/current declarations but do not themselves prove a separately captured execution-time source hash.",
+    "coordinator_confirmation": "Root confirmed the exact approved command ran with writes held, and confirmed no separate before/after test hash capture exists. Do not invent one.",
+    "next_binding_improvement": "Root will include these21 cheap controls in the consolidated control cycle with explicit before/after hash maps for every executed new remediation control/source; this is a concrete binding improvement, not an application rebuild."
+  },
+  "cleanup": {
+    "stop_exit_code": 0,
+    "stopped_at": "2026-09-08T08:55:05.823413+00:00",
+    "cleanup_completed_at": "2026-09-08T08:55:05.887901+00:00",
+    "stop_stdout": "Checked-in wrapper downloaded Gradle8.13 distribution to ordinary wrapper cache and reported No Gradle daemons are running.",
+    "required_wrapper_used": true,
+    "workers": {
+      "terminated_owned_workers": [],
+      "remaining_owned_workers": []
+    },
+    "artifact_workers": {
+      "terminated_owned_workers": [],
+      "remaining_owned_workers": []
+    },
+    "removed_outputs": [],
+    "retained_outputs": [],
+    "remaining_outputs": [],
+    "cleanup_errors": [],
+    "deferred_signals": [],
+    "scratch_independently_absent": true,
+    "currently_present_exact_live_module_outputs": [],
+    "reviewer_process_probe": "Not performed; process shutdown proof is the executor receipt, not an invented fresh probe.",
+    "scope": "No owned build outputs were produced by this cycle. Only attested cycle scratch was removed; global wrapper/dependency caches retained."
+  },
+  "evidence": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-lane-controls-01/artifact-receipts.json",
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-lane-controls-01/gradle.log",
+      "bytes": 3206,
+      "sha256": "a303ec923aaab97e3223ededebf653bce4b96ddd3f9059590b9da59bd7f6491e"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-lane-controls-01/java-toolchain.log",
+      "bytes": 2026,
+      "sha256": "a7a86ea7b20362e2c856e5e71a8b6fc51764d5aeaa9f5a8c82b386ff156f8a7c"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-lane-controls-01/javac-toolchain.log",
+      "bytes": 14,
+      "sha256": "157f601a5854ca28a7dc364c13a5ca2879084186be49e3462d37acd028f35755"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-lane-controls-01/receipt.json",
+      "bytes": 301976,
+      "sha256": "9538e853b2a868e1f3fac43f37b8363901f095372ec27c1676fa2c5da864c76b"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-lane-controls-01/stop.log",
+      "bytes": 544,
+      "sha256": "01cc71b2d614314df3ccd1c1422e5ae0c996070e78e0a858042b0596b36091f6"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-lane-controls-01/test-receipts.json",
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    }
+  ],
+  "readiness": "No normal Parlor libproc query, simulator L08 recovery/protection result, dependency candidate execution, or final platform qualification is established by this cycle.",
+  "reviewer_hygiene": "Read/hash/AST/JSON/stat operations and this new report only. No builds/tests, native tools, worker control, signing/publication, cache modification or repository module execution."
+}

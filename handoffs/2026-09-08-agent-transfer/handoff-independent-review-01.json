@@ -1,0 +1,201 @@
+{
+  "schema_version": 1,
+  "at": "2026-09-08T08:14:19.419826+00:00",
+  "reviewer": "/root/release_fix_review",
+  "author": "/root",
+  "status": "HANDOFF_SOURCE_APPROVED_PENDING_FINAL_DELIVERY_MANIFEST",
+  "scope": "Independent complete read of handoff/entry/attribute delta; executable CLI, evidence-meaning and transfer-preservation review. No new application audit, native/build execution, Git operation or release authority.",
+  "reviewed_documents": [
+    {
+      "path": "docs/AGENT_CONTINUATION_2026-09-08.md",
+      "sha256": "e9979e663b014f5e3289ea16544d916c60cf283a5c1e7e581c69ecf2b5017458",
+      "reviewed_lines": [
+        1,
+        546
+      ]
+    },
+    {
+      "path": "CONTINUE_HERE.md",
+      "sha256": "be73368dcb1a77dc8c77d4f4093525723865e6ea8318fc94603e71410eafb43b",
+      "reviewed_lines": [
+        1,
+        17
+      ]
+    },
+    {
+      "path": ".gitattributes",
+      "sha256": "e9c0ea26582b13ba1d7be1d859d2cb21b64bf04d328bd3a26b6834a38ec6355d",
+      "reviewed_lines": [
+        1,
+        12
+      ]
+    }
+  ],
+  "source_reopened": [
+    {
+      "path": "scripts/verification/ios-readiness/bind_source.py",
+      "sha256": "0954f5c24eb61c4f09c365efe6b3ab1fdb9f8342f86bad3e7654795464b53347"
+    },
+    {
+      "path": "scripts/verification/ios-readiness/owned_lane.py",
+      "sha256": "949091403ac669429f962120e9873a09897a87bdcae10702720ede0c68342f03"
+    },
+    {
+      "path": "scripts/generate_review_inventory.py",
+      "sha256": "c65ec66aa1ea18e91ddae521de4feda15a08ecffa024f06b8dbde0c1999c5a52"
+    },
+    {
+      "path": ".github/workflows/production-verification.yml",
+      "sha256": "f823182501d7a28dd20d117781b59dd46bc5103baef5b016316a5a672a18258f"
+    },
+    {
+      "path": "scripts/verification/resolved_dependencies.init.gradle",
+      "sha256": "5120cb8d7c12825ad889f23d73075ef29ae48b66e4966d1e2335aa2d11995f59"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
+      "sha256": "7cae22790e018dc3c57d05b77ccee597d435b441c88c41b47d620e9059ed852d"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/compose_runner.py",
+      "sha256": "69e5db6a9baf0746756343bbadc1bd20eeb13ddb9cdbea3ec510cbbaec93f9e2"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/run_candidate_input_01.py",
+      "sha256": "2a306819fb41b1883139fb42355d493f02e1d93a687f54d06f43ffbb758afa60"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/final-current-sha-verification-preparation-02.md",
+      "sha256": "b77a9c396e42a174a41a412c0c1b4e9e76425da80ed99d6a622af6d9483721ae"
+    }
+  ],
+  "source_review_ranges": {
+    "scripts/verification/ios-readiness/bind_source.py": "1-59",
+    "scripts/verification/ios-readiness/owned_lane.py": "203-228",
+    "scripts/generate_review_inventory.py": "373-409 plus prior complete source review referenced by preparation02",
+    "scripts/verification/resolved_dependencies.init.gradle": "6-28,41-104",
+    "normal-ios-runner": "71-82,527-542,852-867 plus earlier independent complete six-file review",
+    "compose_runner.py": "188-190,322-346",
+    "run_candidate_input_01.py": "1-90",
+    "final-current-sha-verification-preparation-02.md": "1-87",
+    ".github/workflows/production-verification.yml": "1-51 plus prior complete workflow review referenced by preparation02"
+  },
+  "resolved_review_comments": [
+    {
+      "topic": "Freeze/native ordering",
+      "resolution": "Lines266-272 and541-545 explicitly require reviewed source/control commits and inventory-only commit before final native A/B, dependency/CI at same frozen source; exploratory failures remain distinct and require rebind."
+    },
+    {
+      "topic": "Candidate adapter execution",
+      "resolution": "Lines424-427 give correct two-positional-argument adapter invocation through owned ordinary lane; older preparation note about an absent wrapper is superseded."
+    }
+  ],
+  "conclusions": [
+    {
+      "check": "Actual checkpoint",
+      "result": "Native15 normal/vmmap FAIL and native16 distinct foundation/L08 FAIL remain separated. Controls187, expected mutation witness, C compile and five pre-query rejects are not relabeled native provenance; actual libproc app query remains NOT_RUN."
+    },
+    {
+      "check": "Runtime/root-cause caution",
+      "result": "No guessed historical crash cause, no invented Mafia reducer defect from unreached continuation, strict L08 metadata mismatch remains observable and unresolved; physical-device proof not inferred."
+    },
+    {
+      "check": "Native CLI/safety",
+      "result": "Source binding is explicit/no-overwrite/lowercase/direct campaign JSON; normal/composed manifests and exact approved hashes are separate; native locks/finalizers are not nested inside ordinary lane. Adhoc simulator mode is not Store signing."
+    },
+    {
+      "check": "Dependency/CI",
+      "result": "Four source-defined graphs, strict verification, fresh final-candidate binding and coupled consumer/prerequisite/outer receipts required. Exact final SHA/all five jobs/cache distinctions retained. Existing verification workflow push branches main/testing/release do not automatically dispatch for this fix branch; no publication workflow requested."
+    },
+    {
+      "check": "Authorization",
+      "result": "Transfer is current-branch normal Git delivery only under root-reported user authorization; no merge/forcepush/issue change/private Store credential/signing/upload/promotion/identity replacement implied."
+    },
+    {
+      "check": "Cleanup/preservation",
+      "result": "Per-cycle stop/owned cleanup required on failure and success; archived evidence build/ paths explicitly protected; global caches/user stash/local originals preserved."
+    },
+    {
+      "check": "Percentages/readiness",
+      "result": "Four workstreams and overlapping L01-L13 are not a manufactured percentage denominator; NOT READY remains explicit. Mechanical inventory is not exhaustive line-by-line evidence."
+    }
+  ],
+  "baseline_preservation": {
+    "receipt": {
+      "path": "handoffs/2026-09-08-agent-transfer/transfer-baseline.json",
+      "sha256": "a7aac8c2bc5c6199932a6d315e4b621754d4b00961a0ca024b53592c447374bc"
+    },
+    "files_rehashed": 14712,
+    "total_bytes": 256343637,
+    "duplicate_paths": 0,
+    "missing": 0,
+    "redirected_or_nonregular": 0,
+    "private_material_suffix_candidates": 0,
+    "only_existing_file_changed": ".gitattributes expected additive delta",
+    "agents_md_unchanged": true,
+    "note": "Read-only metadata/hash comparison, not a Git staging attestation. Handoff files and reviewer additions postdate this baseline."
+  },
+  "byte_preservation": {
+    "first_six_attribute_lines_match_prior_hash": true,
+    "additional_patterns": [
+      "audit-runs/** -text",
+      "remediation-runs/** -text",
+      "project-code-audit/** -text",
+      "handoffs/** -text"
+    ],
+    "audit_evidence_crlf_text_files": 235,
+    "additional_existing_legal_crlf_file": 1,
+    "uncovered_crlf_files": 0,
+    "scope": "No dependency, source-set, linter, test or release-security gate changed. Preserve/classify intentional archived whitespace rather than rewriting evidence or blanket-waiving checks."
+  },
+  "delivery_safety": {
+    "root_scan": {
+      "path": "handoffs/2026-09-08-agent-transfer/secret-scan-candidates.json",
+      "sha256": "f3fee76650eea80fdaba9a7352c36b708d258b444983725bd508e1ec4f4142b9"
+    },
+    "root_dispositions": {
+      "path": "handoffs/2026-09-08-agent-transfer/TRANSFER_SAFETY_REVIEW.json",
+      "sha256": "910ecd8beffcac3cc894e1bdbbfc492ceee960cf683eda4713441d866bc4649e"
+    },
+    "independently_reopened_static_fixture_ranges": [
+      "remediation-runs/2026-09-07-local-readiness/native/rosetta-desktop-controls-01/test_controls.py:146-178",
+      "scripts/release/tests/test_release_tool.py:512-544",
+      "scripts/release/tests/test_third_party_notices.py:191-223"
+    ],
+    "finding": "All three reported URL candidates are explicit rejected synthetic inputs; no actual credential. Four images directly viewed: synthetic Home/recovery and public language-setting illustration, no observed personal account/player secret.",
+    "images": [
+      {
+        "path": "audit-runs/2026-09-05-source-audit/evidence/iosr1-apphost-02/attachments/37C51B0A-CC33-456F-A23D-7CCB68CDFBBC.png",
+        "sha256": "1898984f1f4c2c56176577271b5e871f8ea607807833215db818d5b9d3f50371"
+      },
+      {
+        "path": "audit-runs/2026-09-05-source-audit/evidence/xcode-ui-01/home-ar.png",
+        "sha256": "781fe81a1ac5286fc8ba2b84661c1d849da04e3e16dcf6e67fd969e3cf1dbfee"
+      },
+      {
+        "path": "audit-runs/2026-09-05-source-audit/evidence/xcode-ui-01/home-en.png",
+        "sha256": "73bb9b6a1b4cbb766a73034c653449c5d5f82716301977ef7b30ccfda4f10717"
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_05_diagnosis/research/apple-ios26-language-region.png",
+        "sha256": "57a786daaea0b494b6eef5a4f2ab32bbf38ab4c03259d2eb46869197304d18fb"
+      }
+    ],
+    "limits": "No scanner proves absence of arbitrary secrets. Private/machine/global material was not opened. Pending final staged-path/blob manifest must match intended exclusions and required raw evidence."
+  },
+  "related_evidence": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/normal-libproc-control-reconciliation-02.json",
+      "sha256": "64472e0b52d8d7819ca0f5d640b606cf7cee3817f263c53657438fcc0c76997e"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/synthetic-apk-delivery-review-01.json",
+      "sha256": "b68af1369f099d279f510024a1a8405ecad6aa010ac870866c2914dfb7caf33e"
+    }
+  ],
+  "pending": [
+    "Root final explicit staging/delivery manifest and Git blob-versus-worktree/remote/preservation receipts are not yet reviewed. This document does not claim commit, push or final staged-byte equality.",
+    "Final transferred inventory freshness and final daemon/owned-output cleanup require root evidence; no builds were initiated by this reviewer."
+  ],
+  "reviewer_cleanup": "Only short-lived stdlib source/hash/AST/JSON reads and existing-image viewing; additive reviewer deliverable. No build/test/native/API/probe/Store/Git command, repository module import, background worker, generated build output or process termination."
+}

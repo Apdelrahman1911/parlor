@@ -27,7 +27,6 @@ import kotlin.test.Test
 import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
-import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 class IosStorageSafetyTest {
@@ -77,20 +76,22 @@ class IosStorageSafetyTest {
     }
 
     @Test
-    fun unreadableProtectedSnapshotRemovesMatchingLegacyPlaintext() {
+    fun unreadableProtectedSnapshotPreservesMatchingLegacyPlaintext() {
         val name = "${NSUUID.UUID().UUIDString}${FileBackedSnapshotStore.SUFFIX}"
         val protectedPath = protectedSnapshotPath(name)
         val legacyPath = legacySnapshotPath(name)
+        val plaintext = "{\"hiddenRole\":\"secret\"}".encodeToByteArray()
         try {
             writeBytes(protectedPath, "PARSNAP".encodeToByteArray() + byteArrayOf(0, 16))
-            writeBytes(legacyPath, "{\"hiddenRole\":\"secret\"}".encodeToByteArray())
+            writeBytes(legacyPath, plaintext)
 
             assertFailsWith<SnapshotProtectionException> {
                 runBlocking {
                     IosSnapshotFileSystem().read(name)
                 }
             }
-            assertFalse(fileManager.fileExistsAtPath(legacyPath))
+            assertContentEquals(plaintext, readBoundedSnapshotBytes(legacyPath, plaintext.size))
+            assertTrue(fileManager.fileExistsAtPath(protectedPath))
         } finally {
             fileManager.removeItemAtPath(protectedPath, error = null)
             fileManager.removeItemAtPath(legacyPath, error = null)
@@ -98,7 +99,7 @@ class IosStorageSafetyTest {
     }
 
     @Test
-    fun protectedSnapshotWithMissingKeyRemovesMatchingLegacyPlaintext() {
+    fun protectedSnapshotWithMissingKeyPreservesMatchingLegacyPlaintext() {
         val name = "${NSUUID.UUID().UUIDString}${FileBackedSnapshotStore.SUFFIX}"
         val protectedPath = protectedSnapshotPath(name)
         val legacyPath = legacySnapshotPath(name)
@@ -112,7 +113,7 @@ class IosStorageSafetyTest {
                     IosSnapshotFileSystem(snapshotKeyReader = { null }).read(name)
                 }
             }
-            assertFalse(fileManager.fileExistsAtPath(legacyPath))
+            assertContentEquals(plaintext, readBoundedSnapshotBytes(legacyPath, plaintext.size))
             assertTrue(fileManager.fileExistsAtPath(protectedPath))
         } finally {
             fileManager.removeItemAtPath(protectedPath, error = null)

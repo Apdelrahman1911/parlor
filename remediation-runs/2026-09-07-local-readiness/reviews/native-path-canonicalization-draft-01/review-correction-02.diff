@@ -1,0 +1,23 @@
+--- review-revision01/test_native_paths.py
++++ review-revision02/test_native_paths.py
+@@ -117,10 +117,17 @@
+         self.assertEqual(driver.count('__PARLOR_PATH_FIXTURE_ROOT__'), 1)
+         helpers = exact_fragment(source, HELPERS_START, HELPERS_END)
+         loader = exact_fragment(source, LOADER_START, LOADER_END)
+-        with tempfile.TemporaryDirectory(prefix='parlor-owned-path-controls-') as raw:
++        # The coordinated build lane deliberately redirects TMPDIR into its
++        # repository-owned scratch directory. This ONE synthetic alias fixture
++        # needs the Darwin /var -> /private/var system alias, so allocate a fresh
++        # mode-0700 TemporaryDirectory under the explicit canonical /var/tmp
++        # parent instead. Never inspect or reuse another entry in that parent.
++        parent = Path('/var/tmp').resolve(strict=True)
++        self.assertTrue(parent.is_dir() and str(parent).startswith('/private/var/'))
++        with tempfile.TemporaryDirectory(prefix='parlor-owned-path-controls-', dir=parent) as raw:
+             root = Path(raw).resolve(strict=True)
+-            # A different TMPDIR is an unmet alias-fixture prerequisite, not a
+-            # successful reproduction of the Darwin /private-vs-/var mismatch.
++            # An unexpected filesystem alias remains an unmet prerequisite,
++            # never a successful reproduction or permission to adopt a path.
+             self.assertTrue(str(root).startswith('/private/var/'), 'Fixture needs Darwin /private/var temp root')
+             self.assertTrue(str(root).isascii())
+             (root / 'tmp').mkdir()

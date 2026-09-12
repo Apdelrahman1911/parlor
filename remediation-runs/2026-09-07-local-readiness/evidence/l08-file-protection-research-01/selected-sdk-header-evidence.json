@@ -1,0 +1,198 @@
+[
+  {
+    "line_ranges": [
+      [
+        18,
+        20
+      ],
+      [
+        150,
+        177
+      ],
+      [
+        596,
+        606
+      ]
+    ],
+    "path": "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.5.sdk/System/Library/Frameworks/Foundation.framework/Headers/NSFileManager.h",
+    "sha256": "446f238e10fec2b392bc82b54da061eebc7fcc919f827807911774ef987423eb",
+    "snippets": [
+      {
+        "end": 20,
+        "lines": [
+          "typedef NSString * NSFileAttributeKey NS_TYPED_EXTENSIBLE_ENUM;",
+          "typedef NSString * NSFileAttributeType NS_TYPED_ENUM;",
+          "typedef NSString * NSFileProtectionType NS_TYPED_ENUM;"
+        ],
+        "start": 18
+      },
+      {
+        "end": 177,
+        "lines": [
+          " ",
+          "    This method replaces changeFileAttributes:atPath:.",
+          " */",
+          "- (BOOL)setAttributes:(NSDictionary<NSFileAttributeKey, id> *)attributes ofItemAtPath:(NSString *)path error:(NSError **)error API_AVAILABLE(macos(10.5), ios(2.0), watchos(2.0), tvos(9.0));",
+          "",
+          "/* createDirectoryAtPath:withIntermediateDirectories:attributes:error: creates a directory at the specified path. If you pass 'NO' for createIntermediates, the directory must not exist at the time this call is made. Passing 'YES' for 'createIntermediates' will create any necessary intermediate directories. This method returns YES if all directories specified in 'path' were created and attributes were set. Directories are created with attributes specified by the dictionary passed to 'attributes'. If no dictionary is supplied, directories are created according to the umask of the process. This method returns NO if a failure occurs at any stage of the operation. If an error parameter was provided, a presentable NSError will be returned by reference.",
+          " ",
+          "    This method replaces createDirectoryAtPath:attributes:",
+          " */",
+          "- (BOOL)createDirectoryAtPath:(NSString *)path withIntermediateDirectories:(BOOL)createIntermediates attributes:(nullable NSDictionary<NSFileAttributeKey, id> *)attributes error:(NSError **)error API_AVAILABLE(macos(10.5), ios(2.0), watchos(2.0), tvos(9.0));",
+          "",
+          "/* contentsOfDirectoryAtPath:error: returns an NSArray of NSStrings representing the filenames of the items in the directory. If this method returns 'nil', an NSError will be returned by reference in the 'error' parameter. If the directory contains no items, this method will return the empty array.",
+          " ",
+          "    This method replaces directoryContentsAtPath:",
+          " */",
+          "- (nullable NSArray<NSString *> *)contentsOfDirectoryAtPath:(NSString *)path error:(NSError **)error API_AVAILABLE(macos(10.5), ios(2.0), watchos(2.0), tvos(9.0));",
+          "",
+          "/* subpathsOfDirectoryAtPath:error: returns an NSArray of NSStrings representing the filenames of the items in the specified directory and all its subdirectories recursively. If this method returns 'nil', an NSError will be returned by reference in the 'error' parameter. If the directory contains no items, this method will return the empty array.",
+          " ",
+          "    This method replaces subpathsAtPath:",
+          " */",
+          "- (nullable NSArray<NSString *> *)subpathsOfDirectoryAtPath:(NSString *)path error:(NSError **)error API_AVAILABLE(macos(10.5), ios(2.0), watchos(2.0), tvos(9.0));",
+          "",
+          "/* attributesOfItemAtPath:error: returns an NSDictionary of key/value pairs containing the attributes of the item (file, directory, symlink, etc.) at the path in question. If this method returns 'nil', an NSError will be returned by reference in the 'error' parameter. This method does not traverse a terminal symlink.",
+          " ",
+          "    This method replaces fileAttributesAtPath:traverseLink:.",
+          " */",
+          "- (nullable NSDictionary<NSFileAttributeKey, id> *)attributesOfItemAtPath:(NSString *)path error:(NSError **)error API_AVAILABLE(macos(10.5), ios(2.0), watchos(2.0), tvos(9.0));"
+        ],
+        "start": 150
+      },
+      {
+        "end": 606,
+        "lines": [
+          "FOUNDATION_EXPORT NSFileAttributeKey const NSFileAppendOnly;",
+          "FOUNDATION_EXPORT NSFileAttributeKey const NSFileCreationDate;",
+          "FOUNDATION_EXPORT NSFileAttributeKey const NSFileOwnerAccountID;",
+          "FOUNDATION_EXPORT NSFileAttributeKey const NSFileGroupOwnerAccountID;",
+          "FOUNDATION_EXPORT NSFileAttributeKey const NSFileBusy;",
+          "FOUNDATION_EXPORT NSFileAttributeKey const NSFileProtectionKey API_AVAILABLE(macos(10.6), ios(4.0), watchos(2.0), tvos(9.0));",
+          "FOUNDATION_EXPORT NSFileProtectionType const NSFileProtectionNone API_AVAILABLE(macos(10.6), ios(4.0), watchos(2.0), tvos(9.0));",
+          "FOUNDATION_EXPORT NSFileProtectionType const NSFileProtectionComplete API_AVAILABLE(macos(10.6), ios(4.0), watchos(2.0), tvos(9.0));",
+          "FOUNDATION_EXPORT NSFileProtectionType const NSFileProtectionCompleteUnlessOpen API_AVAILABLE(macos(10.6), ios(5.0), watchos(2.0), tvos(9.0));",
+          "FOUNDATION_EXPORT NSFileProtectionType const NSFileProtectionCompleteUntilFirstUserAuthentication API_AVAILABLE(macos(10.6), ios(5.0), watchos(2.0), tvos(9.0));",
+          "FOUNDATION_EXPORT NSFileProtectionType const NSFileProtectionCompleteWhenUserInactive API_AVAILABLE(ios(17.0), watchos(10.0), tvos(17.0)) API_UNAVAILABLE(macos);"
+        ],
+        "start": 596
+      }
+    ]
+  },
+  {
+    "line_ranges": [
+      [
+        24,
+        38
+      ]
+    ],
+    "path": "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.5.sdk/System/Library/Frameworks/Foundation.framework/Headers/NSData.h",
+    "sha256": "32f700128c672692ee168a8cf5d230cd9668328f01a75fac5f3d35682d0f49a2",
+    "snippets": [
+      {
+        "end": 38,
+        "lines": [
+          "",
+          "typedef NS_OPTIONS(NSUInteger, NSDataWritingOptions) {",
+          "    NSDataWritingAtomic = 1UL << 0,\t// Hint to use auxiliary file when saving; equivalent to atomically:YES",
+          "    NSDataWritingWithoutOverwriting API_AVAILABLE(macos(10.8), ios(6.0), watchos(2.0), tvos(9.0)) = 1UL << 1, // Hint to  prevent overwriting an existing file. Cannot be combined with NSDataWritingAtomic.",
+          "",
+          "    NSDataWritingFileProtectionNone API_AVAILABLE(macos(11.0), ios(4.0), watchos(2.0), tvos(9.0))                                  = 0x10000000,",
+          "    NSDataWritingFileProtectionComplete API_AVAILABLE(macos(11.0), ios(4.0), watchos(2.0), tvos(9.0))                              = 0x20000000,",
+          "    NSDataWritingFileProtectionCompleteUnlessOpen API_AVAILABLE(macos(11.0), ios(5.0), watchos(2.0), tvos(9.0))                    = 0x30000000,",
+          "    NSDataWritingFileProtectionCompleteUntilFirstUserAuthentication API_AVAILABLE(macos(11.0), ios(5.0), watchos(2.0), tvos(9.0))  = 0x40000000,",
+          "    NSDataWritingFileProtectionCompleteWhenUserInactive API_AVAILABLE(ios(17.0), watchos(10.0), tvos(17.0)) API_UNAVAILABLE(macos)  = 0x50000000,",
+          "    NSDataWritingFileProtectionMask API_AVAILABLE(macos(11.0), ios(4.0), watchos(2.0), tvos(9.0))                                  = 0xf0000000,",
+          "",
+          "    // Options with old names for NSData writing methods. Please stop using these old names.",
+          "    NSAtomicWrite API_DEPRECATED_WITH_REPLACEMENT(\"NSDataWritingAtomic\", macos(10.0, API_TO_BE_DEPRECATED), ios(2.0, API_TO_BE_DEPRECATED), watchos(2.0, API_TO_BE_DEPRECATED), tvos(9.0, API_TO_BE_DEPRECATED)) = NSDataWritingAtomic\t    // Deprecated name for NSDataWritingAtomic",
+          "};"
+        ],
+        "start": 24
+      }
+    ]
+  },
+  {
+    "line_ranges": [
+      [
+        288,
+        304
+      ],
+      [
+        343,
+        353
+      ]
+    ],
+    "path": "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.5.sdk/System/Library/Frameworks/Foundation.framework/Headers/NSURL.h",
+    "sha256": "97981c4e8ad70b8fc8c33c22e73b448a9ce9ad0ddfb7304d85a67d0843365f6d",
+    "snippets": [
+      {
+        "end": 304,
+        "lines": [
+          "/* Resource keys applicable only to regular files",
+          " */",
+          "FOUNDATION_EXPORT NSURLResourceKey const NSURLFileSizeKey                    API_AVAILABLE(macos(10.6), ios(4.0), watchos(2.0), tvos(9.0)); // Total file size in bytes (Read-only, value type NSNumber)",
+          "FOUNDATION_EXPORT NSURLResourceKey const NSURLFileAllocatedSizeKey           API_AVAILABLE(macos(10.6), ios(4.0), watchos(2.0), tvos(9.0)); // Total size allocated on disk for the file in bytes (number of blocks times block size) (Read-only, value type NSNumber)",
+          "FOUNDATION_EXPORT NSURLResourceKey const NSURLTotalFileSizeKey               API_AVAILABLE(macos(10.7), ios(5.0), watchos(2.0), tvos(9.0)); // Total displayable size of the file in bytes (this may include space used by metadata), or nil if not available. (Read-only, value type NSNumber)",
+          "FOUNDATION_EXPORT NSURLResourceKey const NSURLTotalFileAllocatedSizeKey      API_AVAILABLE(macos(10.7), ios(5.0), watchos(2.0), tvos(9.0)); // Total allocated size of the file in bytes (this may include space used by metadata), or nil if not available. This can be less than the value returned by NSURLTotalFileSizeKey if the resource is compressed. (Read-only, value type NSNumber)",
+          "FOUNDATION_EXPORT NSURLResourceKey const NSURLIsAliasFileKey                 API_AVAILABLE(macos(10.6), ios(4.0), watchos(2.0), tvos(9.0)); // true if the resource is a Finder alias file or a symlink, false otherwise ( Read-only, value type boolean NSNumber)",
+          "FOUNDATION_EXPORT NSURLResourceKey const NSURLFileProtectionKey              API_AVAILABLE(macos(10.11), ios(9.0), watchos(2.0), tvos(9.0)); // The protection level for this file",
+          "",
+          "typedef NSString * NSURLFileProtectionType NS_TYPED_ENUM;",
+          "/* The protection level values returned for the NSURLFileProtectionKey",
+          " */",
+          "FOUNDATION_EXPORT NSURLFileProtectionType const NSURLFileProtectionNone API_AVAILABLE(macos(11.0), ios(9.0), watchos(2.0), tvos(9.0)); // The file has no special protections associated with it. It can be read from or written to at any time.",
+          "FOUNDATION_EXPORT NSURLFileProtectionType const NSURLFileProtectionComplete API_AVAILABLE(macos(11.0), ios(9.0), watchos(2.0), tvos(9.0)); // The file is stored in an encrypted format on disk and cannot be read from or written to while the device is locked or booting. Transient data files with this protection type should be excluded from backups using NSURLIsExcludedFromBackupKey.",
+          "FOUNDATION_EXPORT NSURLFileProtectionType const NSURLFileProtectionCompleteUnlessOpen API_AVAILABLE(macos(11.0), ios(9.0), watchos(2.0), tvos(9.0)); // The file is stored in an encrypted format on disk. Files can be created while the device is locked, but once closed, cannot be opened again until the device is unlocked. If the file is opened when unlocked, you may continue to access the file normally, even if the user locks the device. There is a small performance penalty when the file is created and opened, though not when being written to or read from. This can be mitigated by changing the file protection to NSURLFileProtectionComplete when the device is unlocked. Transient data files with this protection type should be excluded from backups using NSURLIsExcludedFromBackupKey.",
+          "FOUNDATION_EXPORT NSURLFileProtectionType const NSURLFileProtectionCompleteUntilFirstUserAuthentication API_AVAILABLE(macos(11.0), ios(9.0), watchos(2.0), tvos(9.0)); // The file is stored in an encrypted format on disk and cannot be accessed until after the device has booted. After the user unlocks the device for the first time, your app can access the file and continue to access it even if the user subsequently locks the device.",
+          "FOUNDATION_EXPORT NSURLFileProtectionType const NSURLFileProtectionCompleteWhenUserInactive API_AVAILABLE(ios(17.0), watchos(10.0), tvos(17.0)) API_UNAVAILABLE(macos); // The file is stored in an encrypted format on disk and cannot be accessed until after first unlock after the device has booted. After this first unlock, your app can access the file even while the device is locked until access expiry. Access is renewed once the user unlocks the device again."
+        ],
+        "start": 288
+      },
+      {
+        "end": 353,
+        "lines": [
+          "FOUNDATION_EXPORT NSURLResourceKey const NSURLVolumeNameKey                       API_AVAILABLE(macos(10.7), ios(5.0), watchos(2.0), tvos(9.0)); // The name of the volume (Read-write if NSURLVolumeSupportsRenamingKey is YES, otherwise read-only, value type NSString)",
+          "FOUNDATION_EXPORT NSURLResourceKey const NSURLVolumeLocalizedNameKey              API_AVAILABLE(macos(10.7), ios(5.0), watchos(2.0), tvos(9.0)); // The user-presentable name of the volume (Read-only, value type NSString)",
+          "FOUNDATION_EXPORT NSURLResourceKey const NSURLVolumeIsEncryptedKey                API_AVAILABLE(macosx(10.12), ios(10.0), watchos(3.0), tvos(10.0)); // true if the volume is encrypted. (Read-only, value type boolean NSNumber)",
+          "FOUNDATION_EXPORT NSURLResourceKey const NSURLVolumeIsRootFileSystemKey           API_AVAILABLE(macosx(10.12), ios(10.0), watchos(3.0), tvos(10.0)); // true if the volume is the root filesystem. (Read-only, value type boolean NSNumber)",
+          "FOUNDATION_EXPORT NSURLResourceKey const NSURLVolumeSupportsCompressionKey        API_AVAILABLE(macosx(10.12), ios(10.0), watchos(3.0), tvos(10.0)); // true if the volume supports transparent decompression of compressed files using decmpfs. (Read-only, value type boolean NSNumber)",
+          "FOUNDATION_EXPORT NSURLResourceKey const NSURLVolumeSupportsFileCloningKey API_AVAILABLE(macosx(10.12), ios(10.0), watchos(3.0), tvos(10.0)); // true if the volume supports clonefile(2) (Read-only, value type boolean NSNumber)",
+          "FOUNDATION_EXPORT NSURLResourceKey const NSURLVolumeSupportsSwapRenamingKey API_AVAILABLE(macosx(10.12), ios(10.0), watchos(3.0), tvos(10.0)); // true if the volume supports renamex_np(2)'s RENAME_SWAP option (Read-only, value type boolean NSNumber)",
+          "FOUNDATION_EXPORT NSURLResourceKey const NSURLVolumeSupportsExclusiveRenamingKey API_AVAILABLE(macosx(10.12), ios(10.0), watchos(3.0), tvos(10.0)); // true if the volume supports renamex_np(2)'s RENAME_EXCL option (Read-only, value type boolean NSNumber)",
+          "FOUNDATION_EXPORT NSURLResourceKey const NSURLVolumeSupportsImmutableFilesKey API_AVAILABLE(macosx(10.13), ios(11.0), watchos(4.0), tvos(11.0)); // true if the volume supports making files immutable with the NSURLIsUserImmutableKey or NSURLIsSystemImmutableKey properties (Read-only, value type boolean NSNumber)",
+          "FOUNDATION_EXPORT NSURLResourceKey const NSURLVolumeSupportsAccessPermissionsKey API_AVAILABLE(macosx(10.13), ios(11.0), watchos(4.0), tvos(11.0)); // true if the volume supports setting POSIX access permissions with the NSURLFileSecurityKey property (Read-only, value type boolean NSNumber)",
+          "FOUNDATION_EXPORT NSURLResourceKey const NSURLVolumeSupportsFileProtectionKey     API_AVAILABLE(macos(11.0), ios(14.0), watchos(7.0), tvos(14.0)); // True if the volume supports the File Protection attribute (see NSURLFileProtectionKey). (Read-only, value type NSNumber)"
+        ],
+        "start": 343
+      }
+    ]
+  },
+  {
+    "line_ranges": [
+      [
+        267,
+        275
+      ]
+    ],
+    "path": "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.5.sdk/usr/include/sys/fcntl.h",
+    "sha256": "805fd8c695f8e5e1c327b6852382cc5533738bbfd8f18bc11f850531166e4fe8",
+    "snippets": [
+      {
+        "end": 275,
+        "lines": [
+          "#define F_ADDFILESIGS   61              /* add signature from same file (used by dyld for shared libs) */",
+          "",
+          "#define F_NODIRECT      62              /* used in conjunction with F_NOCACHE to indicate that DIRECT, synchonous writes */",
+          "                                        /* should not be used (i.e. its ok to temporaily create cached pages) */",
+          "",
+          "#define F_GETPROTECTIONCLASS    63              /* Get the protection class of a file from the EA, returns int */",
+          "#define F_SETPROTECTIONCLASS    64              /* Set the protection class of a file for the EA, requires int */",
+          "",
+          "#define F_LOG2PHYS_EXT  65              /* file offset to device offset, extended */"
+        ],
+        "start": 267
+      }
+    ]
+  }
+]

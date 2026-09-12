@@ -1,0 +1,765 @@
+diff --git a/docs/WHODUNIT_TEST_CONTENT.md b/docs/WHODUNIT_TEST_CONTENT.md
+index 73b9f26..994bd20 100644
+--- a/docs/WHODUNIT_TEST_CONTENT.md
++++ b/docs/WHODUNIT_TEST_CONTENT.md
+@@ -7,21 +7,37 @@ status, not a test-only source set. See [Pre-release Compatibility Policy](PRE_R
+ 
+ ## WD-C2 chronology decisions
+ 
+-The four corrected resources are under
++The resources are under
+ `game-modes/whodunit/src/commonMain/composeResources/files/cases/`.
+-Each moves from content version **1.0.0 to 1.0.1**.
++The initial four WD-C2 corrections moved from **1.0.0 to 1.0.1**:
+ 
+ | Story | Factual chronology | Deliberate deception retained |
+ |---|---|---|
+ | `last-dinner` | James leaves at 8:55, returns and lights his cigar at 9:15. His method, timeline, objective cigar clues and final explanation agree. Final evidence compares 9:15 with his false 9:10 claim, instead of asserting an unsupported 25-minute gap. | His 9:10 smoking-room alibi remains false; the pantry detour and cufflink still implicate him. |
+ | `layla-halabi` | There is one electricity outage at 9:05: `التاسعة وخمس دقائق`. Setting notes and intro match the universal clue. Sami returns at 9:35 after the outage; Ghassan's library visit after his 9:20 encounter is also after it. | The hidden office/window detours and existing guilty cover stories remain. No second outage is invented. |
+-| `jasmine-ring` | Nadim enters the cellar at 10:50, is hidden by 11:00, waits for Abu Walid's 11:10 descent, and attacks at 11:12. The final account no longer invents a full hour of hiding. | The false 11:00–11:25 cigarette-shopping story and the shopkeeper's rebuttal remain. |
++| `jasmine-ring` | In the selected Nadim variant, he enters the cellar at 10:50, is hidden by 11:00, waits for Abu Walid's 11:10 descent, and attacks at 11:12. The final account no longer invents a full hour of hiding. | The false 11:00–11:25 cigarette-shopping story and the shopkeeper's rebuttal remain. |
+ | `khan-el-khalili` | Karim poisons the cup at 9:40 and joins Refaat in records from 10:15 to 10:55. The final account correctly places poisoning 35 minutes before that corroborated interval. | His records alibi is truthful but deliberately omits the earlier poisoning, as its existing instruction requires. |
+ 
+-No character, motive, killer variant, case/character/clue ID, clue-pool order,
+-supported mode/count or round setting changes. All seven bundled stories still
+-support exactly six players in Classic Vote and Elimination. The other three
+-case versions remain 1.0.0. Engine ranges remain broader than these bundles.
++### Independently reviewed follow-up
++
++Full seven-story reading found additional factual/reference discrepancies.
++These are testing-content coherence choices, not production editorial approval:
++
++| Story | Current version | Follow-up correction |
++|---|---|---|
++| `last-dinner` | **1.0.2** | Daniel's 9:00 claim versus 9:10 lamp is ten minutes, not fifteen. Vivienne's half-burned document is in the library fireplace, matching her own timeline, companion clue and final account. Her study document-fetching and Daniel's false alibi remain. |
++| `layla-halabi` | **1.0.2** | Keep the public 8:45 speech. Amal's speech entry matches it; Rana's method and door witnesses agree with her existing 8:40 dosing/8:50 return and concealed ten-minute detour. Ghassan, Souad and Tarek's method prose now explicitly says 8:58, as their own timelines already did. Amal brings her father's note; Tarek keeps his genuine uncle relationship. |
++| `jasmine-ring` | **1.0.2** | Walid returns at 11:22 and stages his search at 11:30: eight minutes. His lie and earlier stair-witness claims remain. Fadi's note now says the following morning, matching his brief and the Thursday-evening setting metadata. The metadata is bundled but not currently displayed, so that latter correction is not claimed as a reproduced visible weekday bug. |
++| `khan-el-khalili` | **1.0.2** | Refaat's dismissal note is dated last week, when his private history says he discovered it. His 7:00 a.m. entry explicitly rereads it; preparation two days earlier and Karim's corrected alibi chain remain. |
++| `saidi-inheritance` | **1.0.1** | Preserve Zahra's age 68, elder-sister role, divorce at 18 and fifty-year history. The testing age choice makes Mahrous 62 and aligns the physician's age reference to his sixties, rather than rewriting that family history. |
++| `iskenderia-corniche` | **1.0.1** | Preserve Atif's age 70 and Magda's elder-sister/caregiver history; the testing age choice makes Magda 75. Her having cared for him at 15 is then coherent. |
++| `zamalek-ramadan` | **1.0.1** | Mokhtar's final account now agrees with the two-year secret/audit history. The fictional delay is explicitly approximate, not a two-hour minimum contradicted by 6:48 dosing and 8:30–8:45 death. This is no validation of real-world pharmacology. |
++
++The replacement ages are explicit pre-release editorial choices, not ages
++independently recovered from an author. No characters are added or removed;
++motives, killer variants, case/character/clue IDs, clue-pool ordering, supported
++modes/counts and round settings are unchanged. All seven bundles still support
++exactly six players in Classic Vote and Elimination; engine ranges remain broader.
+ 
+ ## Content identity and recovery
+ 
+@@ -32,9 +48,12 @@ no separate pinned catalog digest to regenerate.
+ 
+ Current local saves record both `caseVersion` and `caseDigest`. Recovery must
+ match both to the installed case before launching it. A pre-correction 1.0.0
+-save is **not migrated** to 1.0.1, even if character IDs or clue history still
+-look valid. Neither changing a version alone nor substituting a digest makes
+-incompatible content acceptable.
++save is **not migrated** to a corrected version, even if character IDs or clue
++history still look valid. Likewise, a prior 1.0.1 save cannot launch a current
++1.0.2 story. Neither changing a version alone nor substituting a digest makes
++incompatible content acceptable. The compatibility fixtures retain the four
++original 1.0.0 digests and all seven pre-follow-up identities; they are not
++updated to match the new prose.
+ 
+ Older saves without either identity field may still be decoded/inspected by
+ the legacy loader and codec, but cannot launch a game: a pre-clue snapshot
+@@ -53,14 +72,15 @@ seeds and own-private projection boundaries are unchanged.
+ 
+ ## Verification and remaining editorial work
+ 
+-- `TestingStoryChronologyTest` pins the selected factual chains and preserved
+-  lies against actual bundled resources and strict production validators.
+-- `TestingStoryCompatibilityTest` checks original canonical identities,
++- `TestingStoryChronologyTest` and `TestingStoryFollowupChronologyTest` pin the
++  selected factual chains, reference corrections and preserved lies against
++  actual bundled resources and strict production validators.
++- `TestingStoryCompatibilityTest` checks all eleven retired canonical identities,
+   current save/load, rejected old/crossed/missing identities, byte retention,
+   explicit deletion and exact LAN-offer content matching. Its filesystem is
+   synthetic; it is not physical-device or platform-durability evidence.
+-- `TestingStoryGameTraceTest` locates actual seeds for all 24 killer variants
+-  across the four stories and plays both modes: 48 combinations, each repeated
++- `TestingStoryGameTraceTest` iterates the actual seven-case catalog, locates
++  real seeds for all 42 killer variants and plays both modes: 84 combinations, each repeated
+   deterministically. Every action-produced state round-trips through the
+   strict codec and loaded-case recovery, including final evidence and replay.
+ - `WhodunitRecoveryInteractionTest` exercises the actual recovery UI's failure
+@@ -74,13 +94,29 @@ stop Gradle, clean only owned generated outputs, and stop again if cleanup
+ started Gradle. Passing deterministic checks is not a physical LAN playtest,
+ VoiceOver/TalkBack review, signed-release proof or editorial certification.
+ 
+-Every line and killer variant of the four files was read for this scoped
+-correction. That does not establish that every unrelated narrative claim is
+-coherent. Overlapping innocent library accounts in Last Dinner and Souad/Rana
+-alibi timing in Layla remain editorial questions, not silently rewritten
+-facts; the shipping briefing permits players to lie. The apparent Daniel
+-reconciliation-versus 8:30-toast conflict compares mutually exclusive killer
+-timelines and is not a reachable factual contradiction on that evidence.
+-Unresolved age/relationship and Zamalek-duration observations are also outside
+-these four confirmed manifestations. Full editorial and legal review under
+-[Content Review](CONTENT_REVIEW.md) remains required before production approval.
++Every line and killer variant of all seven files was read for this follow-up.
++That does not establish that every narrative claim is coherent or that a
++deterministic full-game test is a human playtest. Remaining editorial questions
++are recorded rather than repaired by inventing events:
++
++- Overlapping innocent library accounts in Last Dinner, Souad/Rana alibis in
++  Layla and cross-variant witness alibis: the shipping briefing permits lying;
++  “innocent” alone does not certify every account as an objective timeline.
++- Jasmine's two-month will knowledge versus last-week persuasion/document
++  discovery needs a decision about an earlier draft versus the same completed
++  will. Existing references to copies/drafts are counter-evidence, not proof
++  of an unmentioned revision history.
++- Jasmine's imminent shop closure versus a last-week official closure needs
++  a decision about motive-time versus current status. No administrative or
++  reopening history is invented.
++- Iskenderia's arrival/discovery/scream row may span several events; its
++  relationship to the public discovery and two-minute hesitation still needs
++  editorial confirmation.
++
++The apparent Daniel reconciliation-versus-8:30-toast conflict compares
++mutually exclusive killer timelines. Jasmine's public 11:10 request does not
++by itself forbid the selected Khaled variant's later 11:18 cellar arrival;
++Nadim's 11:10 descent must not be imposed on every killer variant. Neither is
++treated as a confirmed defect on that evidence. Full editorial and legal
++review under [Content Review](CONTENT_REVIEW.md) remains required before
++production approval.
+diff --git a/game-modes/whodunit/src/commonMain/composeResources/files/cases/iskenderia-corniche.json b/game-modes/whodunit/src/commonMain/composeResources/files/cases/iskenderia-corniche.json
+index d89448f..7740565 100644
+--- a/game-modes/whodunit/src/commonMain/composeResources/files/cases/iskenderia-corniche.json
++++ b/game-modes/whodunit/src/commonMain/composeResources/files/cases/iskenderia-corniche.json
+@@ -3,7 +3,7 @@
+   "caseId": "iskenderia-corniche",
+   "title": "صيف الإسكندرية",
+   "subtitle": "جريمة قتل في فيلا على كورنيش الإسكندرية.",
+-  "version": "1.0.0",
++  "version": "1.0.1",
+   "minimumAppVersion": "1.0.0",
+   "gameId": "whodunit",
+   "supportedPlayerCounts": [6, 6],
+@@ -26,7 +26,7 @@
+       {
+         "id": "madame-magda",
+         "displayName": "مدام ماجدة الإسكندراني",
+-        "relationshipToVictim": "شقيقته الكبرى، 65 عاماً.",
++        "relationshipToVictim": "شقيقته الكبرى، 75 عاماً.",
+         "publicIdentity": "شقيقة الحاج عاطف الكبرى. تدير مكتب الشركة في الإسكندرية منذ خمس وعشرين سنة. مسؤولة عن العمليات اليومية بميناء الدخيلة. لم تتزوّج، وأخوها هو عائلتها.",
+         "publicMotive": "خلاف معروف على بيع حصّتها في الفيلا. أخوها كان يرفض أن تشتري بيتاً مستقلاً في سان ستيفانو.",
+         "privateSecret": "تختلس من رسوم شحن الشركة منذ ست سنوات لتغطية ديون مشروع خاص فشل في بيروت. أخوها اكتشف الأمر هذا الأسبوع وأبلغها مساء أمس أنه سيفصلها ويسلّمها للقانون.",
+diff --git a/game-modes/whodunit/src/commonMain/composeResources/files/cases/jasmine-ring.json b/game-modes/whodunit/src/commonMain/composeResources/files/cases/jasmine-ring.json
+index 9b5f0f6..ca5d9cb 100644
+--- a/game-modes/whodunit/src/commonMain/composeResources/files/cases/jasmine-ring.json
++++ b/game-modes/whodunit/src/commonMain/composeResources/files/cases/jasmine-ring.json
+@@ -3,7 +3,7 @@
+   "caseId": "jasmine-ring",
+   "title": "خاتم الياسمين",
+   "subtitle": "موت تاجر الأنتيكا في حارة الياسمين.",
+-  "version": "1.0.1",
++  "version": "1.0.2",
+   "minimumAppVersion": "1.0.0",
+   "gameId": "whodunit",
+   "supportedPlayerCounts": [6, 6],
+@@ -39,7 +39,7 @@
+         },
+         "guiltyBrief": {
+           "verdictLine": "أنت القاتل.",
+-          "method": "في 11:10 حين طلب والدك من الجميع الانتظار، نزلت معه إلى القبو بحجّة مساعدته في حمل صندوق. واجهتَه بشأن الوصية الجديدة. أنكر في البداية ثم اعترف وقال إنه لن يرجع. التقطتَ الخنجر من على الجدار وطعنته بحركة واحدة. أخذتَ الوصية الجديدة من الدرج وأحرقتَها في موقد القبو. أخذت الخاتم من جيبه (كان قد التقطه من العلبة قبل أن ينزل) وخبّأتَه في معطفك. صعدتَ إلى القاعة بسرعة، ثم تظاهرتَ بعد عشر دقائق بأنك ذهبتَ للبحث عنه.",
++          "method": "في 11:10 حين طلب والدك من الجميع الانتظار، نزلت معه إلى القبو بحجّة مساعدته في حمل صندوق. واجهتَه بشأن الوصية الجديدة. أنكر في البداية ثم اعترف وقال إنه لن يرجع. التقطتَ الخنجر من على الجدار وطعنته بحركة واحدة. أخذتَ الوصية الجديدة من الدرج وأحرقتَها في موقد القبو. أخذت الخاتم من جيبه (كان قد التقطه من العلبة قبل أن ينزل) وخبّأتَه في معطفك. صعدتَ إلى القاعة بسرعة، ثم تظاهرتَ بعد ثماني دقائق بأنك ذهبتَ للبحث عنه.",
+           "timeline": [
+             { "time": "11:00 مساءً", "action": "على المنضدة. والدك يقدّم الشاي. الخاتم في العلبة." },
+             { "time": "11:10 مساءً", "action": "طلب والدك من الجميع الانتظار. نزلتَ معه." },
+@@ -308,7 +308,7 @@
+         ],
+         "fadi-darwish": [
+           { "id": "jr-fadi-fs-1", "text": "ملف مدقّق الحسابات يكشف نسبة سرّية أُخذت من أبي وليد لعشر سنوات تتجاوز ما يحق لفادي قانونياً بعشرة أضعاف." },
+-          { "id": "jr-fadi-fs-2", "text": "ملاحظة بخط أبي وليد على هامش الملف: 'إنهاء وكالته صباح الخميس، تبليغ النقابة'." }
++          { "id": "jr-fadi-fs-2", "text": "ملاحظة بخط أبي وليد على هامش الملف: 'إنهاء وكالته صباح الغد، تبليغ النقابة'." }
+         ],
+         "umm-walid": [
+           { "id": "jr-umm-fs-1", "text": "وثيقة طلاق محرّرة بخطّ يدها مع قائمة كاملة بحقوقها، مؤرّخة منذ ثلاثة أسابيع." },
+diff --git a/game-modes/whodunit/src/commonMain/composeResources/files/cases/khan-el-khalili.json b/game-modes/whodunit/src/commonMain/composeResources/files/cases/khan-el-khalili.json
+index af11343..190e2dc 100644
+--- a/game-modes/whodunit/src/commonMain/composeResources/files/cases/khan-el-khalili.json
++++ b/game-modes/whodunit/src/commonMain/composeResources/files/cases/khan-el-khalili.json
+@@ -3,7 +3,7 @@
+   "caseId": "khan-el-khalili",
+   "title": "ليلة الخان",
+   "subtitle": "جريمة قتل في ديوان تاجر أنتيكات بخان الخليلي.",
+-  "version": "1.0.1",
++  "version": "1.0.2",
+   "minimumAppVersion": "1.0.0",
+   "gameId": "whodunit",
+   "supportedPlayerCounts": [6, 6],
+@@ -201,7 +201,7 @@
+           "verdictLine": "أنت القاتل.",
+           "method": "لم يبقَ لك سوى ليلة واحدة قبل الإعلان. تعرف حديقة المحل مثل بيتك، وتعرف نبتة الدفلى منذ زرعها الحاج بنفسه. حضّرتَ المستخلص قبل يومين. حين قام الحاج للحمّام، تظاهرتَ بأنك تنظّف المنضدة وأفرغتَ الجرعة في كوبه الفضّي. نزلتَ مع كريم إلى المحفوظات لتؤكّد وجودك. صعدتَ في الحادية عشرة لتؤكّد الموت.",
+           "timeline": [
+-            { "time": "7:00 صباحاً", "action": "قرأتَ ورقة المكتب. عرفتَ مصيرك." },
++            { "time": "7:00 صباحاً", "action": "أعدتَ قراءة ورقة المكتب. تأكّدتَ من مصيرك." },
+             { "time": "8:00 مساءً", "action": "في الحديقة الخلفية. مستخلص الدفلى جاهز." },
+             { "time": "9:00 مساءً", "action": "في الديوان كخادم وفيّ." },
+             { "time": "9:40 مساءً", "action": "حين خرج صلاح للحمّام، أفرغتَ الجرعة في الكوب أثناء التنظيف." },
+@@ -332,7 +332,7 @@
+       "ustaz-hesham": "في الصباح، فُتح ملف الشريك القديم. ثلاثون سنة من شراكة بين رجلين كانا في خان الخليلي صبيّين، وشهادة تقييم واحدة مزوّرة كانت كافية لإنهاء الصداقة. لم يكن السمّ في الإبريق، كان في الكوب. وسهير لم تكن المعشوقة في القصة، كانت الذريعة. هشام البهنساوي قتل صديقاً، ثم خرج إلى الشرفة ليرتّب نَفَساً.",
+       "sheikh-mansour": "في الصباح، أُحضرت قطع ورقة عقد الوقف من سلّة المهملات وأُلصقت. خمسة وخمسون سنة من تقوى ظاهرة، وكلمة جدّ مكتوبة بدم وأرض موقوفة لله. حين قال 'أعوذ بالله من قاتل'، كان يعوذ بالله من نفسه. كأس الوضوء لم يصل إلى وجهه — وصلت يده إلى المنضدة. كان أعرف بنبتة الدفلى من رفعت، لأن جدّه هو الذي زرعها.",
+       "yasmine-almansoury": "في الصباح، فتحت الممرّضة كمّ قميصها ووجدت ما لم يُرَ من قبل. ثلاث سنوات تحت كمّ طويل. ليلة واحدة لتنتهي. الكدمات لم تكذب، ولا الورقة في درج الحاج. حين رفع الأب يده وقال 'لا طلاق'، كان قد رفع يداً على ابنته. الدفلى كانت في الحديقة، والابنة كانت في المطبخ الجانبي، والتقتا في كوب فضّي اسمه عليه.",
+-      "refaat-elsayed": "في الصباح، فُتح الدرج الأخير. الورقة بخط الحاج، والتاريخ أمس. خمس وثلاثون سنة من الباب الأول إلى المحفوظات الأخيرة، اختُزِلت في ستة أشهر مكافأة. لم يكن رفعت السيد رجلاً قاسياً — كان رجلاً متعباً. حين حمل الكوب من البساط، كان يحمل عمراً كاملاً من الإخلاص الذي تحوّل في ليلة إلى جرعة دفلى."
++      "refaat-elsayed": "في الصباح، فُتح الدرج الأخير. الورقة بخط الحاج، والتاريخ من الأسبوع الماضي. خمس وثلاثون سنة من الباب الأول إلى المحفوظات الأخيرة، اختُزِلت في ستة أشهر مكافأة. لم يكن رفعت السيد رجلاً قاسياً — كان رجلاً متعباً. حين حمل الكوب من البساط، كان يحمل عمراً كاملاً من الإخلاص الذي تحوّل في ليلة إلى جرعة دفلى."
+     },
+     "roundConfigByPlayerCount": {
+       "6": {
+diff --git a/game-modes/whodunit/src/commonMain/composeResources/files/cases/last-dinner.json b/game-modes/whodunit/src/commonMain/composeResources/files/cases/last-dinner.json
+index 67206e6..cf8ea53 100644
+--- a/game-modes/whodunit/src/commonMain/composeResources/files/cases/last-dinner.json
++++ b/game-modes/whodunit/src/commonMain/composeResources/files/cases/last-dinner.json
+@@ -3,7 +3,7 @@
+   "caseId": "last-dinner",
+   "title": "The Last Dinner",
+   "subtitle": "A country-manor murder mystery.",
+-  "version": "1.0.1",
++  "version": "1.0.2",
+   "minimumAppVersion": "1.0.0",
+   "gameId": "whodunit",
+   "supportedPlayerCounts": [6, 6],
+@@ -269,10 +269,10 @@
+           { "id": "kp-daniel-1", "text": "A page from his late mother's letters was found on the pantry counter, far from the library where he claimed to be reading." },
+           { "id": "kp-daniel-2", "text": "Maxwell's medicine bottle was found in the kitchen pantry, half-empty." },
+           { "id": "kp-daniel-3", "text": "A man's footprint near the pantry door, dried, matches Daniel's boots." },
+-          { "id": "kp-daniel-4", "text": "The library lamp was off until 9:10 — fifteen minutes later than Daniel said he began reading." }
++          { "id": "kp-daniel-4", "text": "The library lamp was off until 9:10 — ten minutes later than Daniel said he began reading." }
+         ],
+         "vivienne-cross": [
+-          { "id": "kp-vivienne-1", "text": "A document with Maxwell's signature, dated tonight, was found half-burned in the study fireplace." },
++          { "id": "kp-vivienne-1", "text": "A document with Maxwell's signature, dated tonight, was found half-burned in the library fireplace." },
+           { "id": "kp-vivienne-2", "text": "Maxwell's medicine bottle was found in the kitchen pantry, half-empty." },
+           { "id": "kp-vivienne-3", "text": "Vivienne was seen on the upper stairs at 8:50, earlier than her stated alibi." },
+           { "id": "kp-vivienne-4", "text": "The library fireplace was warm at 10:00 p.m. — recently used, in a room where no fire was lit." }
+diff --git a/game-modes/whodunit/src/commonMain/composeResources/files/cases/layla-halabi.json b/game-modes/whodunit/src/commonMain/composeResources/files/cases/layla-halabi.json
+index a461998..fe92580 100644
+--- a/game-modes/whodunit/src/commonMain/composeResources/files/cases/layla-halabi.json
++++ b/game-modes/whodunit/src/commonMain/composeResources/files/cases/layla-halabi.json
+@@ -3,7 +3,7 @@
+   "caseId": "layla-halabi",
+   "title": "ليلة العاصفة في بيت الحلبي",
+   "subtitle": "جريمة قتل في قاعة دمشقية قديمة.",
+-  "version": "1.0.1",
++  "version": "1.0.2",
+   "minimumAppVersion": "1.0.0",
+   "gameId": "whodunit",
+   "supportedPlayerCounts": [6, 6],
+@@ -42,7 +42,7 @@
+           "method": "أعددت القهوة في المطبخ. أضفت جرعة قاتلة من قطرات قلب والدك إلى فنجانه الخاص قبل أن تحمليه إليه. أخذت الزجاجة من المكتب في وقت أبكر من النهار حين كان نائماً، وأعدتها بعد أن استعملتِها.",
+           "timeline": [
+             { "time": "5:00 مساءً", "action": "أخذت زجاجة الدواء من خزانة المكتب أثناء قيلولته." },
+-            { "time": "8:30 مساءً", "action": "على المائدة، تحمّلت كلمته القاسية بصمت." },
++            { "time": "8:45 مساءً", "action": "على المائدة، تحمّلت كلمته القاسية بصمت." },
+             { "time": "8:50 مساءً", "action": "في المطبخ، أضفت الجرعة إلى الفنجان الخاص وحضّرت القهوة." },
+             { "time": "8:55 مساءً", "action": "حملت الفنجان إلى غرفة المكتب وتركته على طاولته." },
+             { "time": "9:05 مساءً", "action": "أعدت الزجاجة إلى خزانته من النافذة الجانبية." },
+@@ -106,10 +106,10 @@
+         },
+         "guiltyBrief": {
+           "verdictLine": "أنتِ القاتلة.",
+-          "method": "تشاجرت مع زوجك قبل ساعة من العشاء. هدّد بطردك من المنزل وحرمانك من نصف ميراثك إن اكتشف أنك تخفي عنه شيئاً. علمتِ أنه يشكّ. في الثامنة والنصف، حين كان منشغلاً بإلقاء كلمته، تسلّلتِ إلى غرفة المكتب، فتحتِ الخزانة بمفتاح احتياطي صنعتِه قبل أسابيع، أخذتِ الزجاجة، أضفتِ جرعة قاتلة إلى دورق القهوة الذي كانت أمل ستملأ منه فنجاناً. ثم أعدتِها وعدتِ إلى القاعة الصغيرة.",
++          "method": "تشاجرت مع زوجك قبل ساعة من العشاء. هدّد بطردك من المنزل وحرمانك من نصف ميراثك إن اكتشف أنك تخفي عنه شيئاً. علمتِ أنه يشكّ. في الثامنة وأربعين دقيقة، قبل أن يلقي كلمته في الثامنة وخمس وأربعين، تسلّلتِ إلى غرفة المكتب، فتحتِ الخزانة بمفتاح احتياطي صنعتِه قبل أسابيع، أخذتِ الزجاجة، أضفتِ جرعة قاتلة إلى دورق القهوة الذي كانت أمل ستملأ منه فنجاناً. ثم أعدتِها وعدتِ إلى القاعة الصغيرة.",
+           "timeline": [
+             { "time": "7:30 مساءً", "action": "شجار قصير مع زوجك في غرفة النوم." },
+-            { "time": "8:30 مساءً", "action": "على المائدة، تحمّلتِ كلمته بهدوء ظاهري." },
++            { "time": "8:30 مساءً", "action": "على المائدة، انتظرتِ بهدوء ظاهري." },
+             { "time": "8:40 مساءً", "action": "تسلّلت إلى المكتب بالمفتاح الاحتياطي. أضفتِ الجرعة إلى دورق القهوة." },
+             { "time": "8:50 مساءً", "action": "عدتِ إلى القاعة الصغيرة. بدأتِ حديثاً ودوداً مع الجدة." },
+             { "time": "10:10 مساءً", "action": "وصلت صرخة أمل. ركضتِ كالباقين." }
+@@ -136,7 +136,7 @@
+         },
+         "guiltyBrief": {
+           "verdictLine": "أنت القاتل.",
+-          "method": "كانت فرصتك الأخيرة. اكتشف فؤاد أمر البضاعة، ومحادثة الغد ستنهيك. عرفت من زيارات سابقة مكان زجاجة الدواء. في الثامنة وخمس وأربعين، حين خرج فؤاد من القاعة وترك مفتاح الخزانة على المائدة، التقطتَه أثناء مرورك. في الثامنة وخمسين دخلتَ المكتب، أضفت الجرعة إلى الفنجان الذي تركته أمل، أعدت الزجاجة، خرجت من النافذة الجانبية إلى الإيوان لتُلاحَظ هناك.",
++          "method": "كانت فرصتك الأخيرة. اكتشف فؤاد أمر البضاعة، ومحادثة الغد ستنهيك. عرفت من زيارات سابقة مكان زجاجة الدواء. في الثامنة وخمس وأربعين، حين خرج فؤاد من القاعة وترك مفتاح الخزانة على المائدة، التقطتَه أثناء مرورك. في الثامنة وثمانٍ وخمسين دقيقة دخلتَ المكتب، أضفت الجرعة إلى الفنجان الذي تركته أمل، أعدت الزجاجة، خرجت من النافذة الجانبية إلى الإيوان لتُلاحَظ هناك.",
+           "timeline": [
+             { "time": "8:30 مساءً", "action": "على المائدة، ابتسامة المحايد." },
+             { "time": "8:45 مساءً", "action": "أخذت المفتاح من المائدة حين مررت بها." },
+@@ -166,7 +166,7 @@
+         },
+         "guiltyBrief": {
+           "verdictLine": "أنتِ القاتلة.",
+-          "method": "عرفتِ كل شيء عنه طوال حياتك. عرفتِ أين يخفي مفتاح الخزانة الاحتياطي (في كتاب القرآن في غرفة الصلاة). في الخامسة عصراً أخذت الزجاجة. في الثامنة وخمسين، أرسلت أمل إلى الصالة لتحضر صحناً، وفي تلك الدقيقة أضفتِ الجرعة إلى الفنجان الذي كان معدّاً لابنك. أعدتِ الزجاجة عند العاشرة بعد أن تأكّدتِ من موته.",
++          "method": "عرفتِ كل شيء عنه طوال حياتك. عرفتِ أين يخفي مفتاح الخزانة الاحتياطي (في كتاب القرآن في غرفة الصلاة). في الخامسة عصراً أخذت الزجاجة. في الثامنة وثمانٍ وخمسين دقيقة، أرسلت أمل إلى الصالة لتحضر صحناً، وفي تلك الدقيقة أضفتِ الجرعة إلى الفنجان الذي كان معدّاً لابنك. أعدتِ الزجاجة عند العاشرة بعد أن تأكّدتِ من موته.",
+           "timeline": [
+             { "time": "5:00 عصراً", "action": "أخذت الزجاجة من غرفة الصلاة." },
+             { "time": "8:30 مساءً", "action": "على المائدة، نظراتك عليه طويلة." },
+@@ -196,7 +196,7 @@
+         },
+         "guiltyBrief": {
+           "verdictLine": "أنت القاتل.",
+-          "method": "قبل العشاء بساعة ذهبت إلى عمك لتجربة تسوية ودّية. سخر منك ومن ذكرى والدك واتّهمك بأنك أردتَ ابتزازه. عرفت أنك خسرتَ كل شيء. عرفت من زيارات الطفولة مكان الخزانة، ووجدتَ المفتاح الاحتياطي في كتاب القرآن. في الثامنة وخمس وأربعين أخذت الزجاجة. في الثامنة وخمسين دخلتَ المكتب من بابه الجانبي حين خرج فؤاد ليجلب شيئاً، وأضفت الجرعة إلى الفنجان. أعدت الزجاجة بعد ذلك بدقائق.",
++          "method": "قبل العشاء بساعة ذهبت إلى عمك لتجربة تسوية ودّية. سخر منك ومن ذكرى والدك واتّهمك بأنك أردتَ ابتزازه. عرفت أنك خسرتَ كل شيء. عرفت من زيارات الطفولة مكان الخزانة، ووجدتَ المفتاح الاحتياطي في كتاب القرآن. في الثامنة وخمس وأربعين أخذت الزجاجة. في الثامنة وثمانٍ وخمسين دقيقة دخلتَ المكتب من بابه الجانبي حين خرج فؤاد ليجلب شيئاً، وأضفت الجرعة إلى الفنجان. أعدت الزجاجة بعد ذلك بدقائق.",
+           "timeline": [
+             { "time": "7:00 مساءً", "action": "محادثة قاسية مع فؤاد قبل العشاء." },
+             { "time": "8:30 مساءً", "action": "على المائدة. ابتسامة المحامي." },
+@@ -235,7 +235,7 @@
+           { "id": "ld-rana-kp-1", "text": "رنا غادرت القاعة الصغيرة لخمس دقائق دون أن تنتبه الجدة سعاد، لإحضار شال كما قالت." },
+           { "id": "ld-rana-kp-2", "text": "هاتفها يحتوي على رسائل محذوفة مع رقم محفوظ باسم 'الخطّاط'." },
+           { "id": "ld-rana-kp-3", "text": "وُجد مفتاح مكرّر للخزانة في حقيبة يدها." },
+-          { "id": "ld-rana-kp-4", "text": "ادّعت أنها لم تدخل المكتب طوال السهرة، لكن خادمة البيت رأتها قرب بابه عند الثامنة والنصف." }
++          { "id": "ld-rana-kp-4", "text": "ادّعت أنها لم تدخل المكتب طوال السهرة، لكن خادمة البيت رأتها قرب بابه عند الثامنة وأربعين دقيقة." }
+         ],
+         "ghassan-shoufan": [
+           { "id": "ld-ghassan-kp-1", "text": "غسّان كان آخر من خرج من المكتب قبل العشاء بربع ساعة، وفقاً للخادمة." },
+@@ -284,7 +284,7 @@
+           { "id": "ld-sami-c-1", "text": "ادّعى أن غسّان رآه في الإيوان عند 9:20، لكن غسّان قال إنه رآه عند 9:00." }
+         ],
+         "rana-naqshabandi": [
+-          { "id": "ld-rana-c-1", "text": "قالت إنها لم تغادر القاعة الصغيرة، لكن خادمة البيت رأتها قرب المكتب عند الثامنة والنصف." }
++          { "id": "ld-rana-c-1", "text": "قالت إنها لم تغادر القاعة الصغيرة، لكن خادمة البيت رأتها قرب المكتب عند الثامنة وأربعين دقيقة." }
+         ],
+         "ghassan-shoufan": [
+           { "id": "ld-ghassan-c-1", "text": "قال إنه لم يقترب من النافذة الجانبية، لكن بصمته على إطارها." }
+@@ -327,7 +327,7 @@
+       "amal-alhalabi": "في الصباح، حين وصلت الشرطة، وجدوا الملف البنكي مفتوحاً على مكتب الحاج فؤاد. كانت أمل قد عرفت أن والدها كشف ديون زوجها واقتراضها من المحل. كانت تعرف أنه سيطردها يوم الجمعة. كانت تعرف أنها لو خسرت المحل، خسرت كل شيء. ثلاث دقائق وحدها في المطبخ قبل أن تنضمّ إليها الجدة سعاد. ثلاث دقائق كانت كافية. حين قالت 'وجدتُ والدي'، كانت تتحدّث عن قاتل أيضاً.",
+       "sami-alhalabi": "في الصباح، وجدوا في دفتر فؤاد ملاحظة من خط يده: 'الجمعة، تغيير الوصية. لا قرش لقمار سامي'. كانت ساعة سامي تنفد. ابن لا يعرف العمل، يعرف الطاولة. في النافذة الجانبية، حيث رأى أحدهم سيجارة لم تكن من نوعه، كان قد دخل وخرج. التدخين كان إقرار وجود. أما الإقرار الحقيقي فكان جرعة في فنجان، ومفتاح في كفّ تعرف ما تفعل.",
+       "rana-naqshabandi": "في الصباح، فُتحت رسائلها الصوتية. كانت تعرف أن فؤاد بدأ يشكّ. كانت تعرف أن الجمعة قد تكون الأخيرة. عشر سنوات من زواج لم تبدأه برغبة، عشر سنوات وهي تنتظر فرصة. حين دخلت المكتب بمفتاحها المكرّر، لم تكن خائفة. كانت متعبة فقط. حين قتلته، لم تشعر بشيء — وهذا ربما أصدق دليل على أنها كانت قتلته في قلبها منذ سنوات.",
+-      "ghassan-shoufan": "في الصباح، أحضرت أمل ملاحظة عمها إلى محاميه. اسمه فيها بوضوح. الصورة في ملف فؤاد كانت لفرع المالكي باسم ابن غسّان. خمس وعشرون سنة شراكة، ولحظة واحدة من الجشع كانت كافية لتنهي حياة الرجل الذي علّمه السوق. السيجارة في الإيوان كانت مزحة قدر — لكن البصمة على النافذة كانت الإجابة الحقيقية.",
++      "ghassan-shoufan": "في الصباح، أحضرت أمل ملاحظة والدها إلى محاميه. اسمه فيها بوضوح. الصورة في ملف فؤاد كانت لفرع المالكي باسم ابن غسّان. خمس وعشرون سنة شراكة، ولحظة واحدة من الجشع كانت كافية لتنهي حياة الرجل الذي علّمه السوق. السيجارة في الإيوان كانت مزحة قدر — لكن البصمة على النافذة كانت الإجابة الحقيقية.",
+       "souad-alhalabi": "في الصباح، فتحت أمل مذكّرات جدّتها. كانت تعرف. كانت تعرف منذ سنوات ما يفعله ابنها بزوجاته. كانت أمّاً، نعم، لكنها كانت قبل ذلك امرأة شاهدت أخرى تُؤذى. تسع وثمانون سنة من الصبر، وليلة واحدة من الرحمة. كتاب الاستخارة كان قد فُتح على الصفحة الصحيحة. حين رفعت الفنجان، كانت تظنّ أنها تنقذ رنا. ربما كانت محقّة.",
+       "tarek-alhalabi": "في الصباح، فتحوا حقيبته القانونية. الملف كان جاهزاً منذ ثلاثة أيام. التسجيل على هاتفه التقط كل كلمة: 'فاشل'، 'حصتك دفعتها'، 'لن تأخذ قرشاً'. كان طارق رجلاً تعلّم في كلية الحقوق أن العدل يأتي بطرق متعدّدة. الليلة اختار طريقاً واحداً منها. حين دخل المكتب من الباب الجانبي، كان قد تخلّى عن قاضي القانون لصالح قاضٍ آخر."
+     },
+diff --git a/game-modes/whodunit/src/commonMain/composeResources/files/cases/saidi-inheritance.json b/game-modes/whodunit/src/commonMain/composeResources/files/cases/saidi-inheritance.json
+index d6263ab..a02d116 100644
+--- a/game-modes/whodunit/src/commonMain/composeResources/files/cases/saidi-inheritance.json
++++ b/game-modes/whodunit/src/commonMain/composeResources/files/cases/saidi-inheritance.json
+@@ -3,7 +3,7 @@
+   "caseId": "saidi-inheritance",
+   "title": "حصاد الصعيد",
+   "subtitle": "جريمة قتل في دار عُمدة بصعيد مصر.",
+-  "version": "1.0.0",
++  "version": "1.0.1",
+   "minimumAppVersion": "1.0.0",
+   "gameId": "whodunit",
+   "supportedPlayerCounts": [6, 6],
+@@ -17,7 +17,7 @@
+   "payload": {
+     "publicIntro": "صعيد مصر. قرية الصوامعة قرب سوهاج، بعد حصاد القطن بثلاثة أيام. في 'مندرة' الحاج محروس الصعيدي الكبيرة، حيث الكنبات الخشبية المغطّاة بسجاجيد عربيّة وفانوس واحد كبير يتأرجح، تجتمع العائلة كما تجتمع كل سنة بعد الحصاد. ستة فقط: أخته، ابناه، ابن أخيه، زوجته الثانية، وإمام مسجد القرية. شربوا الكركديه البارد على عادة أهل البلد، وتحدّث الحاج عن قراراته الكبيرة لقادم الأيام: من يرث 'الغيط الكبير' خلف الترعة، من يأخذ دار الجد، ومن يتحمّل مسؤولية اسم 'الصعيدي' بعد رحيله. عند العاشرة والنصف رفع كأس الكركديه الأخير، ضرب التسبيحة على المنضدة الخشبية، وقال بصوته الجبلي المعروف: 'الكلام بكرة على الفجر، الليلة للنخل وحده'. ذهب إلى غرفته في 'الإيوان' الكبير ليرتاح. عند الحادية عشرة وربع دخل الشيخ يونس بحجّة الفجر لم يبقَ عليه إلا قليل، فوجده ساقطاً على البساط، الكأس الفخّاري المكسور بجواره، والزبد على فمه. السمّ كان في الكركديه الأخير. باب الدار الكبير مقفل بمزلاج خشبي منذ العشاء، الكلاب في الفناء، النخل من حولكم كحرّاس. أحدكم قاتل. والشرطة من المركز لن تصل قبل ساعتين. قبلها، عليكم أن تعرفوا.",
+     "bedrockClues": [
+-      "الحاج محروس الصعيدي، 72 عاماً، وُجد ميتاً في إيوان الدار عند الحادية عشرة وربع.",
++      "الحاج محروس الصعيدي، 62 عاماً، وُجد ميتاً في إيوان الدار عند الحادية عشرة وربع.",
+       "سبب الوفاة: تسمم بمستخلص من زريعة الخروع المركّز أُضيف إلى الكركديه.",
+       "وقت الوفاة بين 10:30 و11:00 مساءً، بعد انفضاض السهرة بدقائق.",
+       "كأسه الفخّاري الخاص (المرسوم عليه نخلة) وحده كان فيه التركيز السام، رغم أن الإبريق كان مشتركاً."
+@@ -106,7 +106,7 @@
+         },
+         "guiltyBrief": {
+           "verdictLine": "أنت القاتل.",
+-          "method": "أبوك خيّرك بين القاهرة والميراث. اخترتَ الكلتين معاً. تعرف زريعة الخروع منذ طفولتك في الجنينة الخلفية. تعرف أيضاً، كطبيب، الجرعة القاتلة وكيف تظهر كاحتشاء طبيعي لرجل في السبعين. أخذتَ معك علبة صغيرة منها في صباح اليوم وحضّرتَ المستخلص في حمّامك. أثناء السهرة، حين قام والدك للاستقبال، أفرغتَ المستخلص في كأسه. صعدتَ إلى السطح لتؤكّد وجودك بنباح الكلاب.",
++          "method": "أبوك خيّرك بين القاهرة والميراث. اخترتَ الكلتين معاً. تعرف زريعة الخروع منذ طفولتك في الجنينة الخلفية. تعرف أيضاً، كطبيب، الجرعة القاتلة وكيف تظهر كاحتشاء طبيعي لرجل في الستين. أخذتَ معك علبة صغيرة منها في صباح اليوم وحضّرتَ المستخلص في حمّامك. أثناء السهرة، حين قام والدك للاستقبال، أفرغتَ المستخلص في كأسه. صعدتَ إلى السطح لتؤكّد وجودك بنباح الكلاب.",
+           "timeline": [
+             { "time": "3:00 عصراً", "action": "مواجهة في الإيوان. التهديد بالبيع للأجنبي." },
+             { "time": "صباحاً", "action": "حضّرتَ المستخلص في حمّامك بحقيبة الطب." },
+diff --git a/game-modes/whodunit/src/commonMain/composeResources/files/cases/zamalek-ramadan.json b/game-modes/whodunit/src/commonMain/composeResources/files/cases/zamalek-ramadan.json
+index 1052a7b..dce9c33 100644
+--- a/game-modes/whodunit/src/commonMain/composeResources/files/cases/zamalek-ramadan.json
++++ b/game-modes/whodunit/src/commonMain/composeResources/files/cases/zamalek-ramadan.json
+@@ -3,7 +3,7 @@
+   "caseId": "zamalek-ramadan",
+   "title": "ليلة رمضان في الزمالك",
+   "subtitle": "جريمة قتل على مائدة إفطار في برج بالزمالك.",
+-  "version": "1.0.0",
++  "version": "1.0.1",
+   "minimumAppVersion": "1.0.0",
+   "gameId": "whodunit",
+   "supportedPlayerCounts": [6, 6],
+@@ -19,7 +19,7 @@
+     "bedrockClues": [
+       "الدكتور فؤاد الشيخ، 65 عاماً، وُجد ميتاً على سجّادة صلاة غرفته عند الثامنة وخمس وأربعين.",
+       "سبب الوفاة: تسمم بمسحوق من إحدى عقاقير المستشفى أُضيف إلى عصير المانجو الخاص.",
+-      "وقت الوفاة بين 8:30 و8:45 مساءً، بعد ساعتين من شرب العصير.",
++      "وقت الوفاة بين 8:30 و8:45 مساءً، بعد نحو ساعتين من شرب العصير.",
+       "الكأس الذي شرب منه كان كأسه الشخصي (بلوري بحافة ذهبية)، وحده كان فيه التركيز السام."
+     ],
+     "characters": [
+@@ -219,7 +219,7 @@
+       "publicUniversal": [
+         { "id": "zr-bedrock-1", "text": "الكأس البلوري ذو الحافة الذهبية هو كأس الدكتور فؤاد الشخصي وحده، يعرفه كل من في البيت." },
+         { "id": "zr-bedrock-2", "text": "البوتاسيوم المُركّز الذي قتل فؤاد يأتي حصرياً من خزانة الأدوية الطارئة في المستشفى." },
+-        { "id": "zr-bedrock-3", "text": "بطء مفعول السمّ يعني أنه أُضيف قبل ساعتين على الأقل من ظهور الأعراض، أي قبل الإفطار." }
++        { "id": "zr-bedrock-3", "text": "بطء مفعول السمّ يعني أنه أُضيف قبل نحو ساعتين من ظهور الأعراض، أي قبل الإفطار." }
+       ],
+       "killerPointing": {
+         "madame-hala": [
+@@ -331,7 +331,7 @@
+       "doctor-marwa": "في الصباح، فُتح ملف المريض. ثلاثة أسطر معدّلة كانت كافية لإلغاء جراحة فاشلة. خمس وثلاثون سنة من تربية والد كان يريدها أفضل منه، انتهت بأن تكون قاتلته. خزانة الأدوية الطارئة كانت قد علّمتها كل شيء، وعلّمتها كيف تنهي رجلاً من نقص لا يُكشف بسهولة. حين قالت 'كنتُ مع شريف'، كانت تعرف أن السمّ كان قد دخل قبل ساعتين، وأن الإفطار كان قد ابتدأ بدون أن يبدأ.",
+       "eng-sherif": "في الصباح، أُحضر تقرير الفحص من خزانة فؤاد. أربعون بالمئة. أربعون رصاصة في جدار مهنة. شريف الزيات كان قد بنى جناح عمليات على رمل، وكان حماه قد قرّر أن يهدمه بهدوء قانوني. لم يبقَ سوى أن يُهدم حماه أوّلاً. العلبة المعدنية في جيب جاكيته كانت أصغر من أن تحمل خياراً آخر. حين دخل المطبخ مع مروة، كان قد ترك على المائدة ما لا يُغفر.",
+       "doctor-tamer": "في الصباح، فُتح عقد الفرع الجديد. اسمان فقط، وثلث شراكة عمرها خمس وعشرون سنة طُمس في توقيع. تامر سعد كان قد علّم نصف أطباء المعادي، وعلّم نفسه أن الكلام الشفهي لا يربح في المحكمة. حين فتح خزانة الأدوية الطارئة عصر اليوم، كان يفتح أيضاً صفحة جديدة من فقدان صديق. صرخته من غرفة الصلاة كانت متأخّرة عشر دقائق — عشر دقائق كانت كافية ليعرف أن الكأس فعل ما حُمّل به.",
+-      "hagg-mokhtar": "في الصباح، فُتح تقرير التدقيق. ثلاث سنوات من اختلاسات مقنّعة، وابن في الصين كان قد بنى أحلاماً على جيوب جاره. ثلاثون سنة من المصحف على المائدة، ومن صفقات صادقة في وسط البلد، انتهت في عرض إفطار. حين دخل مع فؤاد لتحيّة كأس الإفطار، كانت يده تعرف الطريق إلى الكأس البلّوري كأنها ضربة آلة حاسبة. الحاج مختار قتل رجلاً كان يحبّه، لأن الحب لا يُسلّم رجلاً للنيابة.",
++      "hagg-mokhtar": "في الصباح، فُتح تقرير التدقيق. سنتان من اختلاسات مقنّعة، وابن في الصين كان قد بنى أحلاماً على جيوب جاره. ثلاثون سنة من المصحف على المائدة، ومن صفقات صادقة في وسط البلد، انتهت في عرض إفطار. حين دخل مع فؤاد لتحيّة كأس الإفطار، كانت يده تعرف الطريق إلى الكأس البلّوري كأنها ضربة آلة حاسبة. الحاج مختار قتل رجلاً كان يحبّه، لأن الحب لا يُسلّم رجلاً للنيابة.",
+       "mariam-elsheikh": "في الصباح، فُتحت الصور القديمة. أمّ مريم كانت أصغر من ابنتها الآن حين كُتبت على صورتها 'سامحني الله'. اثنان وعشرون سنة من اعتقاد أن أمّها كانت قد ماتت وحيدة، انتهت في اعتراف عمّ. الإفطار كان قد جمع عائلة، ولم يُجمَع لمريم أبداً. حين أفرغت المحلول في الكأس البلّوري، كانت تردّ على رسالة كُتبت قبل ميلادها. كأس الإفطار لم يكسر الصيام — كسر صمتاً طويلاً."
+     },
+     "roundConfigByPlayerCount": {
+diff --git a/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/TestingStoryChronologyTest.kt b/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/TestingStoryChronologyTest.kt
+index 6785e3d..fcd306a 100644
+--- a/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/TestingStoryChronologyTest.kt
++++ b/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/TestingStoryChronologyTest.kt
+@@ -123,12 +123,12 @@ class TestingStoryChronologyTest {
+     }
+ 
+     @Test
+-    fun correctionsBumpOnlyTheFourTestingCaseVersions() = runTest {
+-        val correctedIds = setOf("last-dinner", "layla-halabi", "jasmine-ring", "khan-el-khalili")
++    fun eachCorrectedTestingStoryUsesItsNextContentVersionWithoutSchemaChanges() = runTest {
++        val previouslyCorrectedIds = setOf("last-dinner", "layla-halabi", "jasmine-ring", "khan-el-khalili")
+         bundledWhodunitCaseIds.forEach { id ->
+             val case = loadCase(id)
+             assertEquals(
+-                if (id in correctedIds) SemVer(1, 0, 1) else SemVer(1, 0, 0),
++                if (id in previouslyCorrectedIds) SemVer(1, 0, 2) else SemVer(1, 0, 1),
+                 case.envelope.version,
+                 id,
+             )
+diff --git a/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/TestingStoryCompatibilityTest.kt b/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/TestingStoryCompatibilityTest.kt
+index 75331f1..c1442ef 100644
+--- a/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/TestingStoryCompatibilityTest.kt
++++ b/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/TestingStoryCompatibilityTest.kt
+@@ -48,22 +48,25 @@ class TestingStoryCompatibilityTest {
+     private val fixture = TestingStoryFixtures()
+ 
+     @Test
+-    fun correctedStoriesDoNotReuseAnyOriginalCanonicalContentDigest() = runTest {
++    fun correctedStoriesDoNotReuseAnyRecordedEarlierCanonicalContentDigest() = runTest {
++        assertEquals(bundledWhodunitCaseIds.toSet(), fixture.retiredIdentities.keys)
++        assertEquals(11, fixture.retiredIdentities.values.sumOf { it.size })
+         val reused = mutableListOf<String>()
+-        fixture.originalDigests.forEach { (caseId, oldDigest) ->
+-            if (fixture.loadCase(caseId).envelope.contentIdentity().digest == oldDigest) {
++        fixture.retiredIdentities.forEach { (caseId, retired) ->
++            val current = fixture.loadCase(caseId).envelope.contentIdentity()
++            if (retired.any { it.digest == current.digest }) {
+                 reused += caseId
+             }
+         }
+-        // This fails for all four uncorrected bundles, also checking that the
+-        // archived digest constants are the production Kotlin canonical digests.
++        // Keep the first four 1.0.0 identities AND all seven pre-follow-up
++        // identities: a version bump cannot silently replace older-save coverage.
+         assertEquals(emptyList(), reused)
+     }
+ 
+     @Test
+     fun identityLessPreClueSavesCannotSilentlyBindToInstalledStoryProse() = runTest {
+         val acceptedWithoutIdentity = mutableListOf<String>()
+-        fixture.originalDigests.keys.forEach { caseId ->
++        bundledWhodunitCaseIds.forEach { caseId ->
+             val case = fixture.loadCase(caseId)
+             fixture.modes.forEach { mode ->
+                 val assigned = fixture.assignedState(case, mode, seed = 91L)
+@@ -104,15 +107,12 @@ class TestingStoryCompatibilityTest {
+ 
+     @Test
+     fun currentSaveRoundTripsButOldOrCrossedIdentityIsRetainedAndRejected() = runTest {
+-        fixture.originalDigests.forEach { (caseId, oldDigest) ->
++        fixture.retiredIdentities.forEach { (caseId, retired) ->
+             val case = fixture.loadCase(caseId)
+             val current = case.envelope.contentIdentity()
+-            val identities = listOf(
+-                current,
+-                WhodunitContentIdentity("1.0.0", oldDigest),
+-                current.copy(version = "1.0.0"),
+-                current.copy(digest = oldDigest),
+-            )
++            val identities = listOf(current) + retired.flatMap { old ->
++                listOf(old, current.copy(version = old.version), current.copy(digest = old.digest))
++            }
+             fixture.modes.forEach { mode ->
+                 val assigned = fixture.assignedState(case, mode, seed = 91L)
+                 identities.forEachIndexed { index, identity ->
+@@ -162,7 +162,7 @@ class TestingStoryCompatibilityTest {
+ 
+     @Test
+     fun lanOffersMatchOnlyTheExactLoadedRevisionForAllCorrectedCasesAndModes() = runTest {
+-        fixture.originalDigests.forEach { (caseId, oldDigest) ->
++        fixture.retiredIdentities.forEach { (caseId, retired) ->
+             val case = fixture.loadCase(caseId)
+             val identity = case.envelope.contentIdentity()
+             fixture.modes.forEach { mode ->
+@@ -184,9 +184,11 @@ class TestingStoryCompatibilityTest {
+                     caseDigest = identity.digest,
+                 )
+                 assertTrue(offer.matches(case.envelope), "$caseId/${mode.raw}")
+-                assertFalse(offer.copy(caseVersion = "1.0.0", caseDigest = oldDigest).matches(case.envelope))
+-                assertFalse(offer.copy(caseVersion = "1.0.0").matches(case.envelope))
+-                assertFalse(offer.copy(caseDigest = oldDigest).matches(case.envelope))
++                retired.forEach { old ->
++                    assertFalse(offer.copy(caseVersion = old.version, caseDigest = old.digest).matches(case.envelope))
++                    assertFalse(offer.copy(caseVersion = old.version).matches(case.envelope))
++                    assertFalse(offer.copy(caseDigest = old.digest).matches(case.envelope))
++                }
+             }
+         }
+     }
+@@ -209,6 +211,40 @@ internal class TestingStoryFixtures {
+         "khan-el-khalili" to "0e690e0129c9b76fb772952b4e888e59e81610597b9294c52e8f656144393b9c",
+     )
+ 
++    // Full canonical identities at 85ded00435b4f8327ce32d3b7f5062c4438ae174,
++    // before the independently reviewed follow-up prose corrections. These
++    // are not resource-byte hashes and must not be updated with current prose.
++    private val previousIdentities = mapOf(
++        "last-dinner" to WhodunitContentIdentity(
++            "1.0.1", "f3b71cc74aaee28dcf7845b750ca773229047388a391ba9294be89efab173a05",
++        ),
++        "layla-halabi" to WhodunitContentIdentity(
++            "1.0.1", "953d5b1dae0aa26b9901e0e044f279b94fd64d4a6d8a66371a9c6577672a3cfc",
++        ),
++        "jasmine-ring" to WhodunitContentIdentity(
++            "1.0.1", "d0aab1123c08f7fb919f00f7ecc8eeb9e1ed2d5daf03df169ea90489c63199c7",
++        ),
++        "khan-el-khalili" to WhodunitContentIdentity(
++            "1.0.1", "c9979500738d7b15812b286300714db1943824aa44c29656dc6bebea72e979a0",
++        ),
++        "iskenderia-corniche" to WhodunitContentIdentity(
++            "1.0.0", "b492eddff0ccfdc3142a60ff2ee6da22566cbb39ab8717c2219e8875ac66733d",
++        ),
++        "saidi-inheritance" to WhodunitContentIdentity(
++            "1.0.0", "5d333bfb59ebf49586f5ca15a26ba55206b6d8aa9de505ca8c3e4738ffebf8b6",
++        ),
++        "zamalek-ramadan" to WhodunitContentIdentity(
++            "1.0.0", "b3fa57ea89c675bc3c5185a64adcbf0a99b4d640d6dff6fa206b58ed2c070d91",
++        ),
++    )
++
++    val retiredIdentities = previousIdentities.mapValues { (caseId, previous) ->
++        buildList {
++            add(previous)
++            originalDigests[caseId]?.let { add(WhodunitContentIdentity("1.0.0", it)) }
++        }
++    }
++
+     suspend fun loadCase(id: String): ValidatedCase<WhodunitCase> {
+         val raw = Res.readBytes("files/cases/$id.json").decodeToString()
+         val validator = DefaultCaseValidator(
+diff --git a/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/TestingStoryGameTraceTest.kt b/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/TestingStoryGameTraceTest.kt
+index ca82ca8..8c67a58 100644
+--- a/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/TestingStoryGameTraceTest.kt
++++ b/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/TestingStoryGameTraceTest.kt
+@@ -27,9 +27,9 @@ class TestingStoryGameTraceTest {
+     private val fixture = TestingStoryFixtures()
+ 
+     @Test
+-    fun everyCorrectedCaseKillerAndModeCompletesDeterministicallyAndRoundTrips() = runTest {
++    fun everyBundledCaseKillerAndModeCompletesDeterministicallyAndRoundTrips() = runTest {
+         var combinations = 0
+-        fixture.originalDigests.keys.forEach { caseId ->
++        bundledWhodunitCaseIds.forEach { caseId ->
+             val case = fixture.loadCase(caseId)
+             fixture.modes.forEach { mode ->
+                 val seeds = seedsForEveryKiller(case, mode)
+@@ -42,7 +42,7 @@ class TestingStoryGameTraceTest {
+                 }
+             }
+         }
+-        assertEquals(48, combinations)
++        assertEquals(84, combinations)
+     }
+ 
+     private fun seedsForEveryKiller(case: ValidatedCase<WhodunitCase>, mode: ModeId): Map<String, Long> {
+diff --git a/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/TestingStoryFollowupChronologyTest.kt b/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/TestingStoryFollowupChronologyTest.kt
+new file mode 100644
+index 0000000..d9a7cd7
+--- /dev/null
++++ b/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/TestingStoryFollowupChronologyTest.kt
+@@ -0,0 +1,197 @@
++package com.parlor.games.whodunit.content
++
++import kotlinx.coroutines.test.runTest
++import kotlinx.serialization.json.jsonObject
++import kotlinx.serialization.json.jsonPrimitive
++import kotlin.test.Test
++import kotlin.test.assertEquals
++import kotlin.test.assertFalse
++import kotlin.test.assertTrue
++
++/** Follow-up editorial regressions use shipping resources and the strict production validators. */
++class TestingStoryFollowupChronologyTest {
++    private val fixture = TestingStoryFixtures()
++
++    @Test
++    fun danielsLampClueUsesTenMinutesWithoutCorrectingHisDeliberateLie() = runTest {
++        val case = fixture.loadCase("last-dinner").payload
++        val daniel = case.characters.single { it.id == "daniel-hargrove" }.guiltyBrief
++        val clue = case.cluePools.killerPointing.getValue("daniel-hargrove")
++            .single { it.id == "kp-daniel-4" }.text
++
++        assertEquals(
++            "I was in the library from 9:00. Clara saw me at 9:25. I haven't moved.",
++            daniel.fakeAlibi,
++        )
++        assertTrue(daniel.timeline.any { "Light the lamp at 9:10" in it.action })
++        assertTrue("9:10 — ten minutes later" in clue)
++        assertFalse("fifteen minutes" in clue)
++        val contradiction = case.cluePools.contradiction.getValue("daniel-hargrove").single().text
++        assertTrue("9:00" in contradiction && "9:10" in contradiction)
++    }
++
++    @Test
++    fun viviennesBurnedDocumentStaysInTheLibraryAcrossEvidenceAndFinalAccount() = runTest {
++        val case = fixture.loadCase("last-dinner").payload
++        val vivienne = case.characters.single { it.id == "vivienne-cross" }.guiltyBrief
++        val burning = vivienne.timeline.single { "Burn one incriminating page" in it.action }
++        assertEquals("9:10 p.m.", burning.time)
++        assertTrue("library" in burning.action)
++
++        val clues = case.cluePools.killerPointing.getValue("vivienne-cross")
++        assertTrue("library fireplace" in clues.single { it.id == "kp-vivienne-1" }.text)
++        assertTrue("library fireplace" in clues.single { it.id == "kp-vivienne-4" }.text)
++        assertTrue("library fireplace" in case.revealNarratives.getValue("vivienne-cross"))
++        assertTrue("burned document" in case.cluePools.finalStrong.getValue("vivienne-cross")
++            .single { it.id == "fs-vivienne-1" }.text)
++        // Fetching a different document in the study is still part of this variant.
++        assertTrue("study at 8:45" in vivienne.method)
++        assertTrue("library from 9:10" in vivienne.fakeAlibi)
++    }
++
++    @Test
++    fun laylasSingle845SpeechPreservesRanasEarlierTenMinuteDetour() = runTest {
++        val case = fixture.loadCase("layla-halabi").payload
++        val amal = case.characters.single { it.id == "amal-alhalabi" }.guiltyBrief
++        val rana = case.characters.single { it.id == "rana-naqshabandi" }.guiltyBrief
++
++        assertTrue("كأسه في التاسعة إلا ربعاً" in case.publicIntro)
++        assertEquals("8:45 مساءً", amal.timeline.single { "كلمته القاسية" in it.action }.time)
++        assertTrue("انتظرتِ" in rana.timeline.single { it.time == "8:30 مساءً" }.action)
++        assertEquals("8:40 مساءً", rana.timeline.single { "أضفتِ الجرعة" in it.action }.time)
++        assertEquals("8:50 مساءً", rana.timeline.single { "عدتِ إلى القاعة الصغيرة" in it.action }.time)
++        assertTrue("في الثامنة وأربعين دقيقة، قبل أن يلقي كلمته في الثامنة وخمس وأربعين" in rana.method)
++        assertFalse("حين كان منشغلاً بإلقاء كلمته" in rana.method)
++        assertEquals(
++            "كنت طوال الوقت مع الجدة سعاد في القاعة الصغيرة. (صحيح من 8:50 فصاعداً، لكن أخفِ الدقائق العشر السابقة.)",
++            rana.fakeAlibi,
++        )
++        listOf(
++            case.cluePools.killerPointing.getValue("rana-naqshabandi").single { it.id == "ld-rana-kp-4" },
++            case.cluePools.contradiction.getValue("rana-naqshabandi").single(),
++        ).forEach { assertTrue("الثامنة وأربعين دقيقة" in it.text, it.id) }
++    }
++
++    @Test
++    fun threeLaylaMethodsSay858LikeTheirOwnTimelines() = runTest {
++        val case = fixture.loadCase("layla-halabi").payload
++        listOf("ghassan-shoufan", "souad-alhalabi", "tarek-alhalabi").forEach { characterId ->
++            val guilty = case.characters.single { it.id == characterId }.guiltyBrief
++            assertTrue("في الثامنة وثمانٍ وخمسين دقيقة" in guilty.method, characterId)
++            assertFalse("في الثامنة وخمسين" in guilty.method, characterId)
++            assertTrue("الجرعة" in guilty.timeline.single { it.time == "8:58 مساءً" }.action, characterId)
++        }
++    }
++
++    @Test
++    fun amalBringsHerFathersNoteButTarekKeepsHisUncleRelationship() = runTest {
++        val case = fixture.loadCase("layla-halabi").payload
++        val amal = case.characters.single { it.id == "amal-alhalabi" }
++        val tarek = case.characters.single { it.id == "tarek-alhalabi" }
++        val reveal = case.revealNarratives.getValue("ghassan-shoufan")
++
++        assertTrue("ابنته الكبرى" in amal.relationshipToVictim)
++        assertTrue("أحضرت أمل ملاحظة والدها إلى محاميه" in reveal)
++        assertFalse("ملاحظة عمها" in reveal)
++        assertTrue("ملاحظة من فؤاد إلى محاميه" in case.cluePools.finalStrong.getValue("ghassan-shoufan")
++            .single { it.id == "ld-ghassan-fs-2" }.text)
++        assertTrue("ابن أخيه" in tarek.relationshipToVictim)
++        assertTrue("عمه فؤاد" in tarek.privateSecret)
++    }
++
++    @Test
++    fun walidsEightMinuteReturnIntervalDoesNotRewriteHisFalseAlibiOrWitnesses() = runTest {
++        val case = fixture.loadCase("jasmine-ring").payload
++        val walid = case.characters.single { it.id == "walid-qasem" }.guiltyBrief
++
++        assertTrue("صعدتَ إلى القاعة" in walid.timeline.single { it.time == "11:22 مساءً" }.action)
++        assertTrue("نزلتَ ثانيةً" in walid.timeline.single { it.time == "11:30 مساءً" }.action)
++        assertTrue("بعد ثماني دقائق" in walid.method)
++        assertFalse("بعد عشر دقائق" in walid.method)
++        assertEquals(
++            "كنت في القاعة الخارجية طوال الوقت. لم أنزل إلا حين تأخّر والدي. اسألوا أيّ واحد منهم.",
++            walid.fakeAlibi,
++        )
++        assertTrue("قبل ذلك بعشر دقائق" in case.cluePools.killerPointing.getValue("walid-qasem")
++            .single { it.id == "jr-walid-kp-2" }.text)
++    }
++
++    @Test
++    fun fadisFollowingMorningNoteAgreesWithHisBriefAndThursdaySettingMetadata() = runTest {
++        val case = fixture.loadCase("jasmine-ring")
++        val fadi = case.payload.characters.single { it.id == "fadi-darwish" }
++        // Setting metadata ships in the envelope but is not currently rendered by the UI.
++        val setting = requireNotNull(case.envelope.metadata)
++            .jsonObject.getValue("settingNotes").jsonPrimitive.content
++        assertTrue("سهرة أعمال يوم خميس" in setting)
++        assertTrue("صباح الغد بعد توقيع الوصية" in fadi.privateSecret)
++        assertTrue("صباح الغد" in fadi.innocentBrief.mustHide)
++        val note = case.payload.cluePools.finalStrong.getValue("fadi-darwish")
++            .single { it.id == "jr-fadi-fs-2" }.text
++        assertTrue("إنهاء وكالته صباح الغد" in note)
++        assertFalse("صباح الخميس" in note)
++    }
++
++    @Test
++    fun refaatsOriginalNotePredatesHisDiscoveryAndMorningReread() = runTest {
++        val case = fixture.loadCase("khan-el-khalili").payload
++        val refaat = case.characters.single { it.id == "refaat-elsayed" }
++        assertTrue("اكتشف الأسبوع الماضي ورقة" in refaat.privateSecret)
++        assertTrue("أعدتَ قراءة" in refaat.guiltyBrief.timeline.single { it.time == "7:00 صباحاً" }.action)
++        assertTrue("حضّرتَ المستخلص قبل يومين" in refaat.guiltyBrief.method)
++        val reveal = case.revealNarratives.getValue("refaat-elsayed")
++        assertTrue("التاريخ من الأسبوع الماضي" in reveal)
++        assertFalse("التاريخ أمس" in reveal)
++        assertTrue("الورقة الأصلية بخط الحاج" in case.cluePools.finalStrong.getValue("refaat-elsayed")
++            .single { it.id == "kk-refaat-fs-1" }.text)
++    }
++
++    @Test
++    fun zahraRemainsTheElderSiblingWithoutRewritingHerFiftyYearHistory() = runTest {
++        val case = fixture.loadCase("saidi-inheritance").payload
++        val zahra = case.characters.single { it.id == "hagga-zahra" }
++        val mostafa = case.characters.single { it.id == "mostafa-saidy" }
++        assertTrue("62 عاماً" in case.bedrockClues.first())
++        assertEquals("شقيقته الكبرى، 68 عاماً.", zahra.relationshipToVictim)
++        assertTrue("قبل خمسين سنة" in zahra.publicIdentity)
++        assertTrue("في الثامنة عشرة" in requireNotNull(zahra.optionalDetails).backstory.orEmpty())
++        assertTrue("لرجل في الستين" in mostafa.guiltyBrief.method)
++        assertFalse("لرجل في السبعين" in mostafa.guiltyBrief.method)
++    }
++
++    @Test
++    fun magdasElderSiblingAgeAllowsHerExistingCaregiverHistory() = runTest {
++        val case = fixture.loadCase("iskenderia-corniche").payload
++        val magda = case.characters.single { it.id == "madame-magda" }
++        assertTrue("70 عاماً" in case.bedrockClues.first())
++        assertEquals("شقيقته الكبرى، 75 عاماً.", magda.relationshipToVictim)
++        assertTrue("وهي في الخامسة عشرة" in requireNotNull(magda.optionalDetails).backstory.orEmpty())
++        assertTrue("لم تتزوّج" in magda.publicIdentity)
++    }
++
++    @Test
++    fun mokhtarsTwoYearHistoryMatchesTheAuditAndFinalAccount() = runTest {
++        val case = fixture.loadCase("zamalek-ramadan").payload
++        val mokhtar = case.characters.single { it.id == "hagg-mokhtar" }
++        assertTrue("منذ سنتين" in mokhtar.privateSecret)
++        assertTrue("لسنتين" in case.cluePools.finalStrong.getValue("hagg-mokhtar")
++            .single { it.id == "zr-mokhtar-fs-1" }.text)
++        val reveal = case.revealNarratives.getValue("hagg-mokhtar")
++        assertTrue("سنتان من اختلاسات" in reveal)
++        assertFalse("ثلاث سنوات" in reveal)
++    }
++
++    @Test
++    fun zamalekApproximateDelayDoesNotImposeAnImpossibleTwoHourMinimum() = runTest {
++        val case = fixture.loadCase("zamalek-ramadan").payload
++        case.characters.forEach { character ->
++            assertTrue(character.guiltyBrief.timeline.any { it.time == "6:48 مساءً" }, character.id)
++        }
++        assertTrue("8:30 و8:45" in case.bedrockClues[2])
++        assertTrue("بعد نحو ساعتين" in case.bedrockClues[2])
++        val clue = case.cluePools.publicUniversal.single { it.id == "zr-bedrock-3" }.text
++        assertTrue("قبل نحو ساعتين" in clue)
++        assertTrue("قبل الإفطار" in clue)
++        assertFalse("على الأقل" in clue)
++    }
++}

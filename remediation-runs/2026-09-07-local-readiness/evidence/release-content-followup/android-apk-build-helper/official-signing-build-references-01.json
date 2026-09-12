@@ -1,0 +1,42 @@
+[
+  {
+    "url": "https://docs.gradle.org/8.13/userguide/build_environment.html",
+    "accessed_at": "2026-09-07T06:20:59.008672+00:00",
+    "scope": "Public official documentation GET only; no source/private/signing data sent",
+    "status": 200,
+    "final_url": "https://docs.gradle.org/8.13/userguide/build_environment.html",
+    "sha256": "d7b0428e485732d5f89ad751f0b4e958c4e8c5a8b19595f953bffe5463979a64",
+    "bytes": 195679,
+    "excerpts": [
+      "nt variable name looks like ORG_GRADLE_PROJECT _myProperty ='Hi, world' , then Gradle will set a myProperty property on your project object, with the value of Hi, world . $ export ORG_GRADLE_PROJECT_myProperty='Hi, world' This is typically the preferred method for supplying project properties, especially secrets, to unattended builds like those running on CI servers. It is possible to change the behavior of a task based on project properties specified at invocation time. Suppose you\u2019d like to ensure release builds are only triggered by CI. A simple way to handle this is through an isCI project property: build.gradle.kts tasks.register(\"performRelease\"",
+      "ronment version 8.13 Contents Available mechanisms Priority for configurations The gradle.properties file Project properties Command-line flags System properties Gradle properties Environment variables Configuring the build environment is a powerful way to customize the build process. There are many mechanisms available. By leveraging these mechanisms, you can make your Gradle builds more flexible and adaptable to different environments and requirements. Available mechanisms Gradle provides multiple mechanisms for configuring the behavior of Gradle itself and specific projects: Mechanism Information Example Command line interface Flags that configure bu"
+    ]
+  },
+  {
+    "url": "https://docs.oracle.com/en/java/javase/21/docs/specs/man/keytool.html",
+    "accessed_at": "2026-09-07T06:21:01.635552+00:00",
+    "scope": "Public official documentation GET only; no source/private/signing data sent",
+    "status": 200,
+    "final_url": "https://docs.oracle.com/en/java/javase/21/docs/specs/man/keytool.html",
+    "sha256": "a31f29f3910b614080f18ed5fb4c21506a347ee0d35085d9b29ae015c1f9a093",
+    "bytes": 126525,
+    "excerpts": [
+      "n is equivalent to -keystore path_to_cacerts -storetype type_of_cacerts . An error is reported if the -keystore or -storetype option is used with the -cacerts option. -storepass [ :env | :file ] argument The password that is used to protect the integrity of the keystore. If the modifier env or file isn't specified, then the password has the value argument , which must contain at least six characters. Otherwise, the password is retrieved as follows: env : Retrieve the password from the environment variable named argument . file : Retrieve the password from the file named argument . Note: All other options that require passwords, such as ",
+      "certificate request -importcert : Imports a certificate or a certificate chain -importpass : Imports a password -importkeystore : Imports one or all entries from another keystore -keypasswd : Changes the key password of an entry -list : Lists entries in a keystore -printcert : Prints the content of a certificate -printcertreq : Prints the content of a certificate request -printcrl : Prints the content of a Certificate Revocation List (CRL) file -storepasswd : Changes the store password of a keystore -showinfo : Displays security-related information -version : Prints the program version See Commands and Options for a description of these co"
+    ]
+  },
+  {
+    "url": "https://developer.android.com/tools/apksigner",
+    "accessed_at": "2026-09-07T06:21:04.943998+00:00",
+    "scope": "Public official documentation GET only; no source/private/signing data sent",
+    "status": 200,
+    "final_url": "https://developer.android.com/tools/apksigner",
+    "sha256": "f402c4ebff7e1a0af3580cc6e2bf17a355a0a20c4584778c529b698e8cca1434",
+    "bytes": 283465,
+    "excerpts": [
+      " of the file that contains the signer's certificate chain. This file must use the X.509 PEM or DER format. Verify command The apksigner verify command has the following options. --print-certs Show information about the APK's signing certificates. --print-certs-pem Show information about the APK's signing certificates and print the PEM encoding of each signing certificate to stdout. --min-sdk-version &lt;integer&gt; The lowest Android framework API level that apksigner uses to confirm that the APK's signature will be verified. Higher values allow the tool to use stronger security parameters when signing the app but limit the APK's availability ",
+      "name&gt; The location where you'd like to save the signed APK. If this option isn't provided explicitly, the APK package is signed in place, which overwrites the input APK file. --min-sdk-version &lt;integer&gt; The lowest Android framework API level that apksigner uses to confirm that the APK's signature will be verified. Higher values allow the tool to use stronger security parameters when signing the app but limit the APK's availability to devices running more recent versions of Android. By default, apksigner uses the value of the minSdkVersion attribute from the app's manifest file. --max-sdk-version &lt;integer&gt; The highest Android framewo",
+      "ners, use the --next-signer option to separate the set of general options to apply to each signer: apksigner sign [signer_1_options] --next-signer [signer_2_options] app-name .apk Verify the signature of an APK The syntax for confirming the successful verification of an APK's signature on supported platforms is as follows: apksigner verify [options] app-name .apk Rotate signing keys The syntax for rotating a signing certificate lineage , or a new sequence of signatures, is as follows: $ apksigner rotate --in /path/to/existing/lineage \\ --out /path/to/new/file \\ --old-signer --ks old-signer-jks \\ --new-signer --ks new-signer-jks Options Th"
+    ]
+  }
+]

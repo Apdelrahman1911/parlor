@@ -1,0 +1,68 @@
+{
+  "at": "2026-09-07T08:48:06.014658+00:00",
+  "commands": [
+    {
+      "command": [
+        "sw_vers"
+      ],
+      "exit_code": 0,
+      "output": "ProductName:\t\tmacOS\nProductVersion:\t\t26.2\nBuildVersion:\t\t25C56",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "uname",
+        "-m"
+      ],
+      "exit_code": 0,
+      "output": "arm64",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "xcodebuild",
+        "-version"
+      ],
+      "exit_code": 0,
+      "output": "Xcode 26.5\nBuild version 17F42",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "xcode-select",
+        "-p"
+      ],
+      "exit_code": 0,
+      "output": "/Applications/Xcode.app/Contents/Developer",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/libexec/java_home",
+        "-v",
+        "21"
+      ],
+      "exit_code": 0,
+      "output": "/opt/homebrew/Cellar/openjdk@21/21.0.11/libexec/openjdk.jdk/Contents/Home",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "df",
+        "-k",
+        "."
+      ],
+      "exit_code": 0,
+      "output": "Filesystem   1024-blocks      Used Available Capacity iused     ifree %iused  Mounted on\n/dev/disk3s5   482797652 441208084  16082012    97% 4434473 160820120    3%   /System/Volumes/Data",
+      "stderr": ""
+    }
+  ],
+  "application_xcodes": [
+    "Xcode.app"
+  ],
+  "qualified_requirement": "26.3 /17C529 per repository; installed26.5 is not relabeled equivalent",
+  "preservation": {
+    "AGENTS_sha256": "1e8cbc4f414819f47908e1a3be9f717792a0401fb4fb35b7272c053c00e2f609",
+    "unrelated_Gradle9_7_audit_worker": "Observed under separate p2pkit-audit global home; intentionally not stopped or claimed task-owned"
+  }
+}

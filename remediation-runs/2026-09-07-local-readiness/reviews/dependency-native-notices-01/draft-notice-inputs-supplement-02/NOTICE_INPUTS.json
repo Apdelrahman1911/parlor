@@ -1,0 +1,116 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/native_fix_review",
+  "created_at": "2026-09-07T14:44:06.975204+00:00",
+  "status": "ADDITIVE_DRAFT_EVIDENCE_NOT_PRODUCTION_ASSETS_OR_LEGAL_APPROVAL",
+  "base_manifest": "remediation-runs/2026-09-07-local-readiness/reviews/dependency-native-notices-01/draft-notice-inputs-01/NOTICE_INPUTS.json",
+  "base_manifest_sha256": "1a63fda721a571ee2db378b6a00372d0ec51b447b502ddeae0a3f6ccd4db2101",
+  "observed_head": "11210dc6e34811bd1dd36d6a34339851601e5112",
+  "source_input_baseline": "Original graph export01 at2085367999a1b6e998567e83e978785f02607b3d; exact artifact bytes independentlymatched. Export02 compatibility cross-reference separately in final dossier.",
+  "inputs": [
+    {
+      "draft_file": "HarfBuzz-hb-ucd-ISC-LICENSE.txt",
+      "source_evidence_file": "harfbuzz__src__hb-ucd.cc.txt",
+      "sha256": "cb95728cc2b4a3502bb8e69c019e0e5f01c0a218a855168e9c19d4df51582cd5",
+      "bytes": 795,
+      "lines": 15,
+      "classification": "EXACT_NATIVE_INPUT_FILE_LICENSE",
+      "applicability": "libharfbuzz.hb-ucd.o is in actual arm64KLIBarchive. Source1\u201315 copyright GrigoriGoronzy2012, ISClicense, not named in HarfBuzzrootCOPYING. SkiaBUILDdefines HAVE_OT but not HB_NO_UCD and matching configoverride has no UCDdisable; no final link-survival claim.",
+      "extraction": {
+        "line_range": [
+          1,
+          15
+        ],
+        "byte_extraction": "first15lines inclusive copied verbatim including Ccomment syntax"
+      },
+      "source_receipt": {
+        "url": "https://chromium.googlesource.com/external/github.com/harfbuzz/harfbuzz.git/+/08b52ae2e44931eef163dbad71697f911fadc323/src/hb-ucd.cc?format=TEXT",
+        "accessed_at": "2026-09-07T14:40:31.947981+00:00",
+        "status": 200,
+        "transport_sha256": "52cd5fcac8a8f6ee5517468e407f98596f732c9396730e26241cc05363eb9757",
+        "encoding": "base64",
+        "file": "harfbuzz__src__hb-ucd.cc.txt",
+        "size": 7196,
+        "sha256": "0bb1dc09aee15ca98a2222f7307d1a9d279646c486f8240efd50035c86554420"
+      }
+    },
+    {
+      "draft_file": "Unicode-V3-LICENSE.txt",
+      "source_evidence_file": "unicode-current-license.txt",
+      "sha256": "e7a93b009565cfce55919a381437ac4db883e9da2126fa28b91d12732bc53d96",
+      "bytes": 1995,
+      "lines": 39,
+      "classification": "CURRENT_PUBLIC_UCD_DATA_LICENSE",
+      "applicability": "HarfBuzzgeneratedhb-ucd-table.hh1\u20138 names Unicode16.0.0XML. Officialversion16ucdxmlreadme and XMLcopyright direct to UnicodeTermsOfUse; currentterms explicitly license all Publicdata under Unicodev3 unless otherwise indicated. This is access-dated current1991\u20132026Unicodegrant, not falsely claimed as immutable2024license.",
+      "extraction": "Verbatim complete source bytes",
+      "source_receipt": {
+        "url": "https://www.unicode.org/license.txt",
+        "resolved_url": "https://www.unicode.org/license.txt",
+        "accessed_at": "2026-09-07T14:40:52.148054+00:00",
+        "status": 200,
+        "sha256": "e7a93b009565cfce55919a381437ac4db883e9da2126fa28b91d12732bc53d96",
+        "size": 1995,
+        "file": "unicode-current-license.txt"
+      }
+    },
+    {
+      "draft_file": "BouncyCastle-1.85-LICENSE.md",
+      "source_evidence_file": "bcprov-jdk18on-1.85-META-INF-LICENSE.md",
+      "sha256": "0e01f1549c9022f406392ac2947d32223b7c2e977d21ea2f8c182fdeb4dae5fd",
+      "bytes": 1171,
+      "lines": 15,
+      "classification": "EXACT_ANDROID_INPUT_ARCHIVE_LICENSE",
+      "applicability": "ExactAndroidresolvedJAR1.85 META-INF/LICENSE.md, MITcopyright2000\u20132026. Rootgraph artifact hash/size matches cached JAR. HistoricAAB already included same1171bytetext: do not claim newmissingnotice.",
+      "extraction": "Verbatim complete source bytes",
+      "source_receipt": {
+        "kind": "LOCAL_EXACT_PUBLISHED_INPUT_ARCHIVE",
+        "observed_at": "2026-09-07T14:40:31.943133+00:00",
+        "gav": "org.bouncycastle:bcprov-jdk18on:1.85",
+        "source_archive": "/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/org.bouncycastle/bcprov-jdk18on/1.85/2320b854dffe134687f7266bb22021b779e576d3/bcprov-jdk18on-1.85.jar",
+        "archive_sha256": "20af26bf6060bb8005cc2389916812c1e0e998dc48d2ced7131b89461b54cff7",
+        "archive_size": 10321819,
+        "member": "META-INF/LICENSE.md",
+        "legal_text_members": [
+          "META-INF/LICENSE.md"
+        ],
+        "canonical_publication_url": "https://repo.maven.apache.org/maven2/org/bouncycastle/bcprov-jdk18on/1.85/bcprov-jdk18on-1.85.jar",
+        "file": "bcprov-jdk18on-1.85-META-INF-LICENSE.md",
+        "size": 1171,
+        "sha256": "0e01f1549c9022f406392ac2947d32223b7c2e977d21ea2f8c182fdeb4dae5fd"
+      }
+    },
+    {
+      "draft_file": "SLF4J-2.0.16-LICENSE.txt",
+      "source_evidence_file": "slf4j-api-2.0.16-META-INF-LICENSE.txt",
+      "sha256": "4e7f90c86ab51278228bce153122f1d8df30149d13ce9ef524c8444a84c32dcc",
+      "bytes": 1178,
+      "lines": 24,
+      "classification": "EXACT_ANDROID_INPUT_ARCHIVE_LICENSE",
+      "applicability": "ExactAndroidresolvedJAR2.0.16 META-INF/LICENSE.txt, MITcopyright2004\u20132022QOS.ch. JAR notice bytes present; finalproductionAAB retention not established by this input inspection.",
+      "extraction": "Verbatim complete source bytes",
+      "source_receipt": {
+        "kind": "LOCAL_EXACT_PUBLISHED_INPUT_ARCHIVE",
+        "observed_at": "2026-09-07T14:40:31.947822+00:00",
+        "gav": "org.slf4j:slf4j-api:2.0.16",
+        "source_archive": "/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-api/2.0.16/172931663a09a1fa515567af5fbef00897d3c04/slf4j-api-2.0.16.jar",
+        "archive_sha256": "a12578dde1ba00bd9b816d388a0b879928d00bab3c83c240f7013bf4196c579a",
+        "archive_size": 69435,
+        "member": "META-INF/LICENSE.txt",
+        "legal_text_members": [
+          "META-INF/LICENSE.txt"
+        ],
+        "canonical_publication_url": "https://repo.maven.apache.org/maven2/org/slf4j/slf4j-api/2.0.16/slf4j-api-2.0.16.jar",
+        "file": "slf4j-api-2.0.16-META-INF-LICENSE.txt",
+        "size": 1178,
+        "sha256": "4e7f90c86ab51278228bce153122f1d8df30149d13ce9ef524c8444a84c32dcc"
+      }
+    }
+  ],
+  "scope_limitations": [
+    "Does not replace or silently update base21file draft manifest.",
+    "Not exhaustive per-file copyrights/headers within all input archives.",
+    "Nativeinputcompilation units are not finallddead-strip proof.",
+    "No productionnotice/UIpackaging changes or publisherlegalapproval provided.",
+    "Unicodecurrentofficiallicenseisapplicable currentgrantviaofficialterms, not an inventedhistorical2024copyrighttext."
+  ]
+}

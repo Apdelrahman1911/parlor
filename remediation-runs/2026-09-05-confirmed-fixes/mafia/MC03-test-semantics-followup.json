@@ -1,0 +1,58 @@
+{
+  "at": "2026-09-05T19:37:39.293627+00:00",
+  "reviewer": "/root/mafia_cont",
+  "lead_finder": "/root/whodunit_cont",
+  "classification": "TEST SEMANTICS LIMITATION — prior intrinsic-width overflow boolean is not by itself actual clipping proof",
+  "claim": "Material3 String Text uses BasicText with no callback/selection/autosize in PostGame. BasicText takes TextStringSimpleElement path. GetTextLayoutResult rebuilds MultiParagraph at parent max dimensions, but retains actual intrinsic text layoutSize. TextLayoutResult compares actual size width against regenerated paragraph width; intrinsic-width text can therefore produce hasVisualOverflow although its glyphs fit. Actual draw uses original Paragraph and layoutCache.didOverflow instead.",
+  "files_read": [
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/whodunit/MC03-Material3Text.kt.txt",
+      "sha256": "f638817208f2ac7a6db976d085acba3cbdcee22c3eb2fb6f9cbf72ca5f570d65",
+      "reviewed_ranges": [
+        "102-151"
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/whodunit/MC03-BasicText.kt.txt",
+      "sha256": "92df0f194316e605dca53913ee2fd05d274441648550715ac966893513e0895c",
+      "reviewed_ranges": [
+        "94-169"
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/whodunit/MC03-TextStringSimpleNode.kt.txt",
+      "sha256": "17eb39f90cff510ba13784b699516f464f79c49633bcfc586815186a40f74e14",
+      "reviewed_ranges": [
+        "291-303",
+        "413-461"
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/whodunit/MC03-ParagraphLayoutCache.kt.txt",
+      "sha256": "e7dcd7051122d18adc560db6518cdc8d4b4adaad0798e08319d9d12df0bd4db4",
+      "reviewed_ranges": [
+        "291-311",
+        "366-402"
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/whodunit/MC03-TextLayoutResult.kt.txt",
+      "sha256": "1a4969fae5f0a58bb3848cee1c34a6f4134c65cb298288f287019b7f3d44edfc",
+      "reviewed_ranges": [
+        "309-325"
+      ]
+    }
+  ],
+  "research_records": [
+    "whodunit/MC03-overflow-research.json",
+    "whodunit/MC03-overflow-research-callers.json"
+  ],
+  "root_cause_consequence": "Do not describe games-session-desktop-02 six failure booleans as six proven visual clips, or reject FlowRow solely from those booleans. They remain actual test failures that must be investigated, not discarded.",
+  "original_confirmed_finding_unaffected": "Original audit repro on unmodified Row measured role width exactly 0 at legal32W/320dp. That independent positive-width failure does not use this ambiguous overflow boolean.",
+  "current_remediation": "Already-frozen full-width Column gives both names and roles full available width, solving original sibling starvation. Tests keep all original positive-width/display/viewport assertions, plus stronger no-overflow check on now-full-width Texts and detailed diagnostics.",
+  "limits": [
+    "No first-attempt layout dimensions were logged; cannot derive exact runtime numbers for those six cases retrospectively",
+    "No physical-device or new test run by this agent",
+    "Root rerun and separate-agent approval still required"
+  ]
+}

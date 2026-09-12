@@ -1,0 +1,62 @@
+{
+  "reviewer": "/root/mafia_cont",
+  "fix_author": "/root",
+  "at": "2026-09-05T19:57:43.508341+00:00",
+  "finding": "DS-C01",
+  "classification": "APPROVE NEW VALIDATION DELTA; overall PARTIAL REMEDIATION (unmarked legacy provenance remains unresolved)",
+  "prior_review": "mafia/ds-c01-independent-review-01.json",
+  "source_evidence": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/iosMain/kotlin/com/parlor/designsystem/localization/IosLanguageOverrideOwner.kt",
+      "sha256": "959ab1a8cb955e484c806c8ce5af65ca841a20cfcd9b1f205443a1cfe768da20",
+      "reviewed_lines": [
+        [
+          1,
+          61
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/iosMain/kotlin/com/parlor/designsystem/localization/LocalAppLocale.ios.kt",
+      "sha256": "0e0783ca3e38634bd3469760f5dbfa5ade8509b976d0ec676202f4513cd8e098",
+      "reviewed_lines": [
+        [
+          1,
+          83
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/iosTest/kotlin/com/parlor/designsystem/localization/IosLanguageOverrideOwnerTest.kt",
+      "sha256": "cac3e8ff47939b44bbca13917266a5c02ce52e3099ec929e3d4386bb5965a131",
+      "reviewed_lines": [
+        [
+          1,
+          138
+        ]
+      ]
+    }
+  ],
+  "validation_reasoning": [
+    "Reopened complete owner, platform composable adapter and11 native synthetic-suite tests plus original finding/independent dossier.",
+    "release permits restoration/removal only if v1, installed String, previous absent OR List containing only Strings, and full current app-domain AppleLanguages exactly equals singleton installed value.",
+    "Malformed previous String/Number/mixed-array/Map causes validPrevious=false. Explicitly present null also fails List check; absence alone represents removal. No malformed object can be passed into AppleLanguages through this restore branch.",
+    "Invalid bookkeeping removes only Parlor ownership key, not the platform value. Unmarked/non-map records and unknown installed type do not erase platform preferences.",
+    "External differing full arrays still win; fallback-only registered/global language remains absent in the app persistent domain after interrupted preparation. Marker-first preparation and interrupted-release handling unchanged.",
+    "New tests exercise malformed previous types, marker-only interruption with no prior app value, and resumed release after a differing OS array is written. All use fresh UUID NSUserDefaults suites with finally removal, not real standard preferences.",
+    "The validator intentionally preserves arbitrary original OS language-array strings rather than restricting them to the app locales. This is a typed restoration policy, not provenance authentication."
+  ],
+  "unchanged_limits": [
+    "Legacy unmarked app-written AppleLanguages is indistinguishable from legitimate per-app OS preferences and intentionally remains; cannot mark original issue universally fixed for upgrades.",
+    "Exact-value ownership cannot identify an external actor writing the exact same array. No cross-process transactional or power-loss durability guarantee; NSUserDefaults asynchronous storage acknowledged in KDoc.",
+    "Malformed pre-existing platform value can be captured when explicit override is set, but will not be reinstalled by cleanup; this intentionally preserves current explicit valid value rather than restoring invalid metadata.",
+    "Tests11/source reviewed only; no native Kotlin compile/execution, real NSLocale/Compose/UIKit language propagation, iOS app/device/restart proof by this reviewer."
+  ],
+  "no_source_edits_by_reviewer": true,
+  "no_builds_or_tests_by_reviewer": true,
+  "pending": [
+    "Root native test/build evidence",
+    "Independent review of upcoming native execution/ownership wrapper when provided",
+    "Physical language/RTL/lifecycle verification remains separate"
+  ]
+}

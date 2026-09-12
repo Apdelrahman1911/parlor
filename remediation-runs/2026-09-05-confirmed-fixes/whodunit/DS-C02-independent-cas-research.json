@@ -1,0 +1,31 @@
+{
+  "accessed_at": "2026-09-05T19:04:58.003429+00:00",
+  "reviewer": "/root/whodunit_cont",
+  "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlinx/kotlinx-coroutines-core/1.11.0/kotlinx-coroutines-core-1.11.0-sources.jar",
+  "http_status": 200,
+  "jar_sha256": "42b1e26bc792fc3d8ba702ef5bd166adcd6c8350f377f639fb7d2e01b3366e3e",
+  "member": "commonMain/flow/StateFlow.kt",
+  "member_sha256": "3345d5cc12e54dc75ad98a9eeaa36f32977bbeb9877d7d996fc66943f5a0daf2",
+  "matches_retained_original_source": true,
+  "applicability": "gradle/libs.versions.toml pins kotlinx-coroutines 1.11.0; DS-C02 new lifetime ID uses updateAndGet, whose CAS implementation returns exactly the successfully committed next value; pure retryable increment is outside independent queue CAS update.",
+  "reviewed_ranges": [
+    [
+      158,
+      180
+    ],
+    [
+      191,
+      205
+    ],
+    [
+      224,
+      237
+    ]
+  ],
+  "excerpts": {
+    "158-180": "158: public interface MutableStateFlow<T> : StateFlow<T>, MutableSharedFlow<T> {\n159:     /**\n160:      * The current value of this state flow.\n161:      *\n162:      * Setting a value that is [equal][Any.equals] to the previous one does nothing.\n163:      *\n164:      * This property is **thread-safe** and can be safely updated from concurrent coroutines without\n165:      * external synchronization.\n166:      */\n167:     public override var value: T\n168: \n169:     /**\n170:      * Atomically compares the current [value] with [expect] and sets it to [update] if it is equal to [expect].\n171:      * The result is `true` if the [value] was set to [update] and `false` otherwise.\n172:      *\n173:      * This function use a regular comparison using [Any.equals]. If both [expect] and [update] are equal to the\n174:      * current [value], this function returns `true`, but it does not actually change the reference that is\n175:      * stored in the [value].\n176:      *\n177:      * This method is **thread-safe** and can be safely invoked from concurrent coroutines without\n178:      * external synchronization.\n179:      */\n180:     public fun compareAndSet(expect: T, update: T): Boolean",
+    "191-205": "191: /**\n192:  * Updates the [MutableStateFlow.value] atomically using the specified [function] of its value, and returns the new\n193:  * value.\n194:  *\n195:  * [function] may be evaluated multiple times, if [value] is being concurrently updated.\n196:  */\n197: public inline fun <T> MutableStateFlow<T>.updateAndGet(function: (T) -> T): T {\n198:     while (true) {\n199:         val prevValue = value\n200:         val nextValue = function(prevValue)\n201:         if (compareAndSet(prevValue, nextValue)) {\n202:             return nextValue\n203:         }\n204:     }\n205: }",
+    "224-237": "224: /**\n225:  * Updates the [MutableStateFlow.value] atomically using the specified [function] of its value.\n226:  *\n227:  * [function] may be evaluated multiple times, if [value] is being concurrently updated.\n228:  */\n229: public inline fun <T> MutableStateFlow<T>.update(function: (T) -> T) {\n230:     while (true) {\n231:         val prevValue = value\n232:         val nextValue = function(prevValue)\n233:         if (compareAndSet(prevValue, nextValue)) {\n234:             return\n235:         }\n236:     }\n237: }"
+  },
+  "cleanup": "Downloaded archive stayed in bounded process memory; no dependency/cache/build outputs or background process created."
+}

@@ -1,0 +1,572 @@
+{
+  "title": "DS-C02 \u2014 independent test dispatcher follow-up approval",
+  "reviewer": "/root/native_fix_review",
+  "fix_author": "/root",
+  "reviewed_at": "2026-09-05T22:30:50.648792+00:00",
+  "classification": "APPROVED scoped test-only correction; DS-C02 production root-cause approval retained. No new counted application defect.",
+  "scope": "Independent rereading of full current toast tests/production component, original DS-C02 candidate+validation, prior fix approvals, exact published coroutine implementation and focused raw results. No source edits or builds by reviewer.",
+  "baseline": {
+    "branch": "main",
+    "commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+    "tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+    "source_manifest_sha256": "e59da533dbec2f02f6f2b460ce72e2a7337af1e44abfb0bc6d533304d4127ec7",
+    "qualification": "Dirty authorized remediation checkout; commit/diff alone excludes new untracked tests, so reviewed source hashes and manifest are required."
+  },
+  "source_review": [
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/desktopTest/kotlin/com/parlor/designsystem/components/ParlorToastLifetimeTest.kt",
+      "sha256": "bac61913c5d79ace76748320f0b073669ced0bd0c12f3063c90be7bbec142adc",
+      "reviewed_line_ranges": [
+        [
+          1,
+          89
+        ]
+      ],
+      "reviewer": "/root/native_fix_review"
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/ParlorToastHost.kt",
+      "sha256": "ea4e554c099511942e13e07281df48419c333948be7a64d65a72b7dd49ea25b0",
+      "reviewed_line_ranges": [
+        [
+          1,
+          230
+        ]
+      ],
+      "reviewer": "/root/native_fix_review"
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/desktopTest/kotlin/com/parlor/designsystem/components/ParlorToastConcurrencyTest.kt",
+      "sha256": "d1ce19edccb66916930b4fa27d90f7e390f851442de923b351bef1258a0f90d9",
+      "reviewed_line_ranges": [
+        [
+          1,
+          73
+        ]
+      ],
+      "reviewer": "/root/native_fix_review"
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonTest/kotlin/com/parlor/designsystem/components/ParlorToastStateTest.kt",
+      "sha256": "6fb9a4c16974a10c978a325c57deffcbeb80d36bb9afd394cea55837cbf79cd1",
+      "reviewed_line_ranges": [
+        [
+          1,
+          59
+        ]
+      ],
+      "reviewer": "/root/native_fix_review"
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/design-system/build.gradle.kts",
+      "sha256": "118d898f900e3b8ccc76db6fca658d69a0d211c5220b6985738f14428a99f78d",
+      "reviewed_line_ranges": [
+        [
+          1,
+          25
+        ]
+      ],
+      "reviewer": "/root/native_fix_review"
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/gradle/libs.versions.toml",
+      "sha256": "87a031665605a1fb3f932be31c75afd8d2d1bc0d94cfcca36101141c50788399",
+      "reviewed_line_ranges": [
+        [
+          1,
+          20
+        ],
+        [
+          44,
+          66
+        ]
+      ],
+      "reviewer": "/root/native_fix_review"
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/build-logic/convention/src/main/kotlin/com/parlor/buildlogic/DetektConventionPlugin.kt",
+      "sha256": "8d5fd3fb3f13d9d5cb02f89c29a57aab8d71c89cdf6dd0ac41161942109bd825",
+      "reviewed_line_ranges": [
+        [
+          1,
+          59
+        ]
+      ],
+      "reviewer": "/root/native_fix_review"
+    }
+  ],
+  "change": {
+    "before_test_sha256": "4bec7f140fa576210c1abc9c33decf1bac5b6ca24112d15d69dee2d0ad702cc9",
+    "after_test_sha256": "bac61913c5d79ace76748320f0b073669ced0bd0c12f3063c90be7bbec142adc",
+    "inverse_patch_matches_complete_previously_approved_file": true,
+    "diff": "--- before-dispatch-followup\n+++ after-dispatch-followup\n@@ -10,17 +10,18 @@\n import com.parlor.designsystem.theme.ParlorTheme\n import kotlinx.coroutines.CoroutineScope\n import kotlinx.coroutines.CoroutineStart\n-import kotlinx.coroutines.Dispatchers\n+import kotlinx.coroutines.ExperimentalCoroutinesApi\n import kotlinx.coroutines.SupervisorJob\n import kotlinx.coroutines.cancel\n import kotlinx.coroutines.flow.first\n import kotlinx.coroutines.launch\n+import kotlinx.coroutines.test.UnconfinedTestDispatcher\n import kotlin.test.Test\n import kotlin.test.assertEquals\n import kotlin.test.assertTrue\n \n /** Exercise production timers and composition with no manual dismissal. */\n-@OptIn(ExperimentalTestApi::class)\n+@OptIn(ExperimentalTestApi::class, ExperimentalCoroutinesApi::class)\n class ParlorToastLifetimeTest {\n     @Test\n     fun replacement_after_automatic_dismiss_gets_fresh_visibility_and_timer() =\n@@ -58,7 +59,7 @@\n         mainClock.autoAdvance = false\n         val state = ParlorToastState(defaultDurationMs = 1_000L)\n         state.show(\"First synthetic notification\")\n-        val producer = CoroutineScope(SupervisorJob() + Dispatchers.Unconfined)\n+        val producer = CoroutineScope(SupervisorJob() + UnconfinedTestDispatcher())\n         try {\n             setContent {\n                 ParlorTheme(reducedMotion = true) { ParlorToastHost(state) }\n",
+    "production_toast_sha256": "ea4e554c099511942e13e07281df48419c333948be7a64d65a72b7dd49ea25b0",
+    "production_unchanged": true
+  },
+  "original_dossiers": [
+    {
+      "path": "audit-runs/2026-09-05-source-audit/candidates/DS-C02-toast-identity-reuse.md",
+      "sha256": "6cf95b1ac317cfb56a7c846c0adad91ff7532e3d69b3519a3ef9b7253040e5ef",
+      "bytes": 5528
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/validations/DS-C02-root.md",
+      "sha256": "0f3991333a99bdca544ffd352d59c1d1e9f8816695be55c648c33b3163526830",
+      "bytes": 3867
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/whodunit/DS-C02-C03-independent-review.md",
+      "sha256": "18f751fa243ff134a25725cb284363f7af0990a4f374cc183a1ea3415bad55c0",
+      "bytes": 7278
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/whodunit/DS-C02-additional-tests-review.md",
+      "sha256": "033b6decd4743f196b1039505b547f247b98654e74d9eb8843c1bb612960dab3",
+      "bytes": 7445
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/whodunit/DS-C02-additional-tests-execution-approval.json",
+      "sha256": "059db45339be3d0b7f7096fd296b5e2326ac069e618b71652983d5abc5404513",
+      "bytes": 15458
+    }
+  ],
+  "dispatch_proof": [
+    "The scope still owns SupervisorJob and starts its one-shot first-empty subscriber with CoroutineStart.UNDISPATCHED before advancing the Compose clock. CoroutineStart1.11:243-281 guarantees execution to the first suspension. StateFlow.collect allocates its slot and observes the already nonempty queue before awaitPending suspends (StateFlow386-410).",
+    "Only the host production LaunchedEffect delays can empty this queue in the lifetime tests. It still sets visible=false, delays exit, then calls internal dismiss; the subscriber never calls dismiss, never mutates visibility and only invokes public show.",
+    "StateFlow.update -> compareAndSet -> updateState -> makePending resumes the registered CancellableContinuation outside its lock (229-237,279-309,323-365). CancellableContinuationImpl358-369,467-505 routes the successful resume to common DispatchedTask.dispatch.",
+    "Both the former Unconfined implementation (15) and new UnconfinedTestDispatcherImpl (90) return false from isDispatchNeeded. Common DispatchedTask136-199 therefore uses the same unconfined immediate/event-loop path. If no loop is active the continuation runs directly; if active it joins the same thread-local unconfined loop, which drains before returning to scheduler advancement. No task is enqueued into the new test time scheduler by this resume.",
+    "The subscriber body has only first(predicate) and synchronous show. Reduce.first100-111 / Limit.collectWhile123-140 stop at the first matching empty value and release the StateFlow slot. There is no delay, timeout, yield, dispatcher switch, runCurrent or frame call in the subscriber. TestDispatcher delay semantics and UnconfinedTestDispatcher dispatch/yield bookkeeping are thus not entered.",
+    "CMP1.10.3 Skiko uses a test dispatcher for effects and a scheduler-driven render loop (144,202-220,280-294). AbstractMainTestClock100-105 advances events synchronously; TestCoroutineScheduler150-172 completes processEvent before moving to the next scheduled frame. The auto-dismiss event plus unconfined subscriber reenqueue therefore remains before the next rendered empty frame for this pinned fixture. Switching this subscriber to StandardTestDispatcher would not preserve that property without explicitly scheduling it; the patch did not do so.",
+    "Only the owned test producer dispatcher/import/optin changed. Reverse transformation reproduces the exact prior full test hash, proving all calls, assertions, frame advances, scope/finally cancellation and owner-swap coverage unchanged."
+  ],
+  "counter_evidence_and_qualifications": [
+    "The exact UnconfinedTestDispatcher docs15-17,62-65 disclaim general ordering guarantees across queued coroutines. This approval is a source-level equivalence argument for the specific no-delay one-shot producer and pinned single-threaded Compose scheduling path, not a promise of global deterministic order on arbitrary dispatchers/devices.",
+    "A newly constructed test dispatcher may use a separate TestCoroutineScheduler (79-83). That is harmless here because the producer schedules no time or yield event. Adding delays/timeouts/yield/context scheduling to this fixture would require revisiting scheduler sharing and the no-empty-frame premise.",
+    "The mandatory auto-dismiss/replacement proof is not just a green count: enqueued.isCompleted, exact queue text, real rendered visibility, and subsequent automatic expiry are asserted. A missing callback or hidden replacement cannot satisfy that sequence. Distinct and identical text cases both execute.",
+    "No new negative run against reverted broken production was executed for this test-only dispatcher edit. The original production-component negative run remains retained separately; the equivalence proof and fresh positive execution connect this unchanged test body to it. Do not claim the original defect was newly reproduced with UnconfinedTestDispatcher.",
+    "The third same-number/new-owner test is unchanged defensive component API coverage; prior rejection of owner-swap as a separate shipping defect is not reversed.",
+    "The focused typeAwareStaticAnalysis aggregate succeeded with cached child analysis where inputs matched. Design-system desktopTest/test compilation/detektDesktopTest freshly ran. No all-platform fresh analysis or physical-runtime claim follows."
+  ],
+  "research": {
+    "published_source_receipts": [
+      {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/DS-C02-dispatch-review-01/authoritative-source-receipt-01.json",
+        "sha256": "09f6a817a68dc2ec596e718097e226000d5bf6d63eb853fc8977759aad1c3e66",
+        "bytes": 4348
+      },
+      {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/DS-C02-dispatch-review-01/authoritative-platform-source-receipt-02.json",
+        "sha256": "7f69e6b3f4ee186f9e995615e1e3927f7f665ba5f78702857bb609c0acda7af6",
+        "bytes": 6306
+      }
+    ],
+    "applicability": "Project pins coroutines1.11.0 and CMPui-test1.10.3; common and JVM coroutines published source members byte-match. Official Maven Central downloads were freshly fetched; URL/access date/member hashes retained.",
+    "source_ranges": [
+      {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/DS-C02-dispatch-review-01/coroutines-1.11.0-test__commonMain__TestCoroutineDispatchers.kt.txt",
+        "sha256": "8fc668e2444856aafe713841cce4fbe6fcd19b078e04e272fda0ae8fe96f7e94",
+        "bytes": 7420,
+        "reviewed_line_ranges": [
+          [
+            1,
+            154
+          ]
+        ],
+        "reviewer": "/root/native_fix_review"
+      },
+      {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/DS-C02-dispatch-review-01/coroutines-1.11.0-test__commonMain__TestDispatcher.kt.txt",
+        "sha256": "c11cd66a1375e74cbef8e6d807b40f0191c46821b9618686b56941b1ca9d6351",
+        "bytes": 2341,
+        "reviewed_line_ranges": [
+          [
+            1,
+            60
+          ]
+        ],
+        "reviewer": "/root/native_fix_review"
+      },
+      {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/DS-C02-dispatch-review-01/coroutines-1.11.0-test__commonMain__TestCoroutineScheduler.kt.txt",
+        "sha256": "3aadf1943f94d829424e42112827f31df0fdc351171d38856d51bf70f16c2a94",
+        "bytes": 10867,
+        "reviewed_line_ranges": [
+          [
+            1,
+            261
+          ]
+        ],
+        "reviewer": "/root/native_fix_review"
+      },
+      {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/DS-C02-dispatch-review-01/coroutines-1.11.0-core__commonMain__Unconfined.kt.txt",
+        "sha256": "caeae92ec98ce383c78be3f9df394a8ecd13dfc9184fcfb7fb26cdf0f13c6cd4",
+        "bytes": 1572,
+        "reviewed_line_ranges": [
+          [
+            1,
+            42
+          ]
+        ],
+        "reviewer": "/root/native_fix_review"
+      },
+      {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/DS-C02-dispatch-review-01/coroutines-1.11.0-core__commonMain__flow__StateFlow.kt.txt",
+        "sha256": "3345d5cc12e54dc75ad98a9eeaa36f32977bbeb9877d7d996fc66943f5a0daf2",
+        "bytes": 19609,
+        "reviewed_line_ranges": [
+          [
+            1,
+            432
+          ]
+        ],
+        "reviewer": "/root/native_fix_review"
+      },
+      {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/DS-C02-dispatch-review-01/coroutines-1.11.0-core__commonMain__internal__DispatchedTask.kt.txt",
+        "sha256": "6c58607949812bf9a9eec74f893249be78dad77086d58eef5c73d750e0fa32d3",
+        "bytes": 9645,
+        "reviewed_line_ranges": [
+          [
+            1,
+            219
+          ]
+        ],
+        "reviewer": "/root/native_fix_review"
+      },
+      {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/DS-C02-dispatch-review-01/coroutines-1.11.0-core__commonMain__internal__DispatchedContinuation.kt.txt",
+        "sha256": "16bcc8811b46b9feb45a43e2766480243e2e30a5691dc001e166aeb0b27a3fc1",
+        "bytes": 12493,
+        "reviewed_line_ranges": [
+          [
+            1,
+            321
+          ]
+        ],
+        "reviewer": "/root/native_fix_review"
+      },
+      {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/DS-C02-dispatch-review-01/coroutines-1.11.0-core__commonMain__CoroutineStart.kt.txt",
+        "sha256": "9df59f4965653b91ae93440ea1b3e9a546d1acbb2bb3037fef4ba8ec4b038a58",
+        "bytes": 16640,
+        "reviewed_line_ranges": [
+          [
+            228,
+            363
+          ]
+        ],
+        "reviewer": "/root/native_fix_review"
+      },
+      {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/DS-C02-dispatch-review-01/coroutines-1.11.0-core__commonMain__flow__terminal__Reduce.kt.txt",
+        "sha256": "01fc5b4ab636a875f6ada8fc2de4ac2d234d97903ccd061939911fad92299ccc",
+        "bytes": 4889,
+        "reviewed_line_ranges": [
+          [
+            80,
+            150
+          ]
+        ],
+        "reviewer": "/root/native_fix_review"
+      },
+      {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/DS-C02-dispatch-review-01/coroutines-1.11.0-core-jvm__commonMain__CancellableContinuationImpl.kt.txt",
+        "sha256": "6ff01e13c4b6ae56735748e2ed239a616533dc774da82900c92b51beb40eaf77",
+        "bytes": 30246,
+        "reviewed_line_ranges": [
+          [
+            355,
+            397
+          ],
+          [
+            467,
+            549
+          ],
+          [
+            585,
+            627
+          ]
+        ],
+        "reviewer": "/root/native_fix_review"
+      },
+      {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/DS-C02-dispatch-review-01/coroutines-1.11.0-core-jvm__commonMain__flow__operators__Limit.kt.txt",
+        "sha256": "84677f9bfe5586566e6ae69ff45d1968583a39bd1dd89244f09ef103f8351257",
+        "bytes": 5025,
+        "reviewed_line_ranges": [
+          [
+            1,
+            140
+          ]
+        ],
+        "reviewer": "/root/native_fix_review"
+      }
+    ],
+    "compose_review": [
+      {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/whodunit/DS-C02-AbstractMainTestClock.kt.txt",
+        "sha256": "63150fc407d080fe340e26ff8e6a7dce69f4034a9a8902399e5db5bdfa0df055",
+        "bytes": 4378,
+        "reviewed_line_ranges": [
+          [
+            1,
+            108
+          ]
+        ],
+        "reviewer": "/root/native_fix_review"
+      },
+      {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/whodunit/DS-C02-MainTestClock.kt.txt",
+        "sha256": "bcfe3257776484a831aeb674b5e51cf9f052ed5781220690b590e35e39706f70",
+        "bytes": 9597,
+        "reviewed_line_ranges": [
+          [
+            20,
+            107
+          ]
+        ],
+        "reviewer": "/root/native_fix_review"
+      },
+      {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/whodunit/DS-C02-ComposeUiTest.skiko.kt.txt",
+        "sha256": "4e1386cc56271860e21e035b3fb50fd3e587ecea17206b7490fb50dc1fb20f8a",
+        "bytes": 20025,
+        "reviewed_line_ranges": [
+          [
+            140,
+            398
+          ],
+          [
+            408,
+            477
+          ]
+        ],
+        "reviewer": "/root/native_fix_review"
+      }
+    ]
+  },
+  "failure_cycle": {
+    "receipt": {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/whodunit-type-aware-01/receipt.json",
+      "sha256": "0f05529c9d4be46c104f6f8d8a64af2d467c869535e0ff020b32aaf912928e89",
+      "bytes": 254123
+    },
+    "cycle": "whodunit-type-aware-01",
+    "status": "FAIL",
+    "exit_code": 1,
+    "started_at": "2026-09-05T22:19:20.955280+00:00",
+    "finished_at": "2026-09-05T22:20:11.126651+00:00",
+    "command": [
+      "./gradlew",
+      ":game-modes:whodunit:desktopTest",
+      "--tests",
+      "*WhodunitFinalTwoRecoveryTest",
+      "typeAwareStaticAnalysis",
+      "--continue",
+      "--no-daemon",
+      "--no-parallel",
+      "--max-workers=1",
+      "--no-configuration-cache",
+      "--dependency-verification=strict",
+      "-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=whodunit-type-aware-01",
+      "-Pkotlin.compiler.execution.strategy=in-process",
+      "-Pparlor.android.signing.storeFile=",
+      "-Pparlor.android.signing.storePassword=",
+      "-Pparlor.android.signing.keyAlias=",
+      "-Pparlor.android.signing.keyPassword="
+    ],
+    "env_policy": "JDK21, system Python, strict verification, signing env removed/empty Gradle signing props, cycle-owned TMPDIR/pycache",
+    "stop_exit_code": 0,
+    "stopped_at": "2026-09-05T22:20:11.444644+00:00",
+    "cleanup_completed_at": "2026-09-05T22:20:12.574694+00:00",
+    "workers": {
+      "terminated_owned_workers": [],
+      "remaining_owned_workers": []
+    },
+    "removed_outputs": [
+      "shared/core/build",
+      "shared/networking/build",
+      "shared/content/build",
+      "shared/storage/build",
+      "shared/transport-p2p/build",
+      "shared/networking-testing/build",
+      "shared/engine/build",
+      "shared/design-system/build",
+      "shared/engine-testing/build",
+      "shared/session/build",
+      "game-modes/whodunit/build",
+      "game-modes/mafia/build",
+      "build",
+      "composeApp/build",
+      "build-logic/convention/build"
+    ],
+    "remaining_outputs": [],
+    "retained_outputs": [],
+    "cleanup_errors": [],
+    "source_changed_during_cycle": false,
+    "runner_changed_during_cycle": false,
+    "cleanup_method": "Exact task-owned generated dirs; no Gradle clean daemon or global cache deletion. Unrelated processes excluded by PID/start identity and cycle ownership.",
+    "source_before": {
+      "commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+      "tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+      "branch": "main",
+      "diff_sha256": "60b555c0dd323a086e959ffbc5aa3fd7c6629ae1d0ad016021572e7ae272e4dd",
+      "source_manifest_sha256": "240be2634d99f4e0ad560502f902260189ea7ac487d44cda7ce5f69e772e2aaa"
+    },
+    "source_after": {
+      "commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+      "tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+      "branch": "main",
+      "diff_sha256": "60b555c0dd323a086e959ffbc5aa3fd7c6629ae1d0ad016021572e7ae272e4dd",
+      "source_manifest_sha256": "240be2634d99f4e0ad560502f902260189ea7ac487d44cda7ce5f69e772e2aaa"
+    },
+    "gradle_log": {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/whodunit-type-aware-01/gradle.log",
+      "sha256": "d2b4d2a3942e755ce260db33b041ffa02420c864829ab5893f7c79ddb6db12be",
+      "bytes": 44248
+    },
+    "stop_log": {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/whodunit-type-aware-01/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+      "bytes": 31
+    }
+  },
+  "failure_classification": "Real validation-policy failure: InjectDispatcher on prior Dispatchers.Unconfined at old line61, plus independent Whodunit type-aware diagnostic. No assertion weakened or policy suppressed; initial FAIL remains FAIL.",
+  "green_cycle": {
+    "receipt": {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/test-type-aware-green-02/receipt.json",
+      "sha256": "3653b225944d313205d98993092048111c972fb1fc3736e59f34f324f93e0dbf",
+      "bytes": 254215
+    },
+    "cycle": "test-type-aware-green-02",
+    "status": "PASS",
+    "exit_code": 0,
+    "started_at": "2026-09-05T22:22:36.200809+00:00",
+    "finished_at": "2026-09-05T22:23:20.265556+00:00",
+    "command": [
+      "./gradlew",
+      ":game-modes:whodunit:desktopTest",
+      "--tests",
+      "*WhodunitFinalTwoRecoveryTest",
+      ":shared:design-system:desktopTest",
+      "--tests",
+      "*ParlorToastLifetimeTest",
+      "typeAwareStaticAnalysis",
+      "--continue",
+      "--no-daemon",
+      "--no-parallel",
+      "--max-workers=1",
+      "--no-configuration-cache",
+      "--dependency-verification=strict",
+      "-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=test-type-aware-green-02",
+      "-Pkotlin.compiler.execution.strategy=in-process",
+      "-Pparlor.android.signing.storeFile=",
+      "-Pparlor.android.signing.storePassword=",
+      "-Pparlor.android.signing.keyAlias=",
+      "-Pparlor.android.signing.keyPassword="
+    ],
+    "env_policy": "JDK21, system Python, strict verification, signing env removed/empty Gradle signing props, cycle-owned TMPDIR/pycache",
+    "stop_exit_code": 0,
+    "stopped_at": "2026-09-05T22:23:20.569450+00:00",
+    "cleanup_completed_at": "2026-09-05T22:23:21.739557+00:00",
+    "workers": {
+      "terminated_owned_workers": [],
+      "remaining_owned_workers": []
+    },
+    "removed_outputs": [
+      "shared/core/build",
+      "shared/networking/build",
+      "shared/content/build",
+      "shared/storage/build",
+      "shared/transport-p2p/build",
+      "shared/networking-testing/build",
+      "shared/engine/build",
+      "shared/design-system/build",
+      "shared/engine-testing/build",
+      "shared/session/build",
+      "game-modes/whodunit/build",
+      "game-modes/mafia/build",
+      "build",
+      "composeApp/build",
+      "build-logic/convention/build"
+    ],
+    "remaining_outputs": [],
+    "retained_outputs": [],
+    "cleanup_errors": [],
+    "source_changed_during_cycle": false,
+    "runner_changed_during_cycle": false,
+    "cleanup_method": "Exact task-owned generated dirs; no Gradle clean daemon or global cache deletion. Unrelated processes excluded by PID/start identity and cycle ownership.",
+    "source_before": {
+      "commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+      "tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+      "branch": "main",
+      "diff_sha256": "60b555c0dd323a086e959ffbc5aa3fd7c6629ae1d0ad016021572e7ae272e4dd",
+      "source_manifest_sha256": "e59da533dbec2f02f6f2b460ce72e2a7337af1e44abfb0bc6d533304d4127ec7"
+    },
+    "source_after": {
+      "commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+      "tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+      "branch": "main",
+      "diff_sha256": "60b555c0dd323a086e959ffbc5aa3fd7c6629ae1d0ad016021572e7ae272e4dd",
+      "source_manifest_sha256": "e59da533dbec2f02f6f2b460ce72e2a7337af1e44abfb0bc6d533304d4127ec7"
+    },
+    "gradle_log": {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/test-type-aware-green-02/gradle.log",
+      "sha256": "500e58104408375fa8d384745dfe45f639d01896ebad5e85227acf42aba4293e",
+      "bytes": 43041
+    },
+    "stop_log": {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/test-type-aware-green-02/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+      "bytes": 31
+    }
+  },
+  "test_evidence": {
+    "xml": {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/test-type-aware-green-02/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.ParlorToastLifetimeTest.xml",
+      "sha256": "edf3f66df92d302b364fd5fc16a7f85716cc083c6c337df540aaa4b6b11edcb6",
+      "bytes": 886
+    },
+    "suite": {
+      "name": "com.parlor.designsystem.components.ParlorToastLifetimeTest",
+      "tests": "3",
+      "skipped": "0",
+      "failures": "0",
+      "errors": "0",
+      "timestamp": "2026-09-05T22:23:03.921Z",
+      "time": "0.637"
+    },
+    "actual_cases": [
+      {
+        "name": "replacement_state_owner_with_same_numeric_id_gets_its_own_lifetime()[desktop]",
+        "status": "PASS"
+      },
+      {
+        "name": "replacement_after_automatic_dismiss_gets_fresh_visibility_and_timer()[desktop]",
+        "status": "PASS"
+      },
+      {
+        "name": "identical_text_after_automatic_dismiss_is_a_new_lifetime()[desktop]",
+        "status": "PASS"
+      }
+    ],
+    "detekt_xml": {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/test-type-aware-green-02/reports/shared/design-system/build/reports/detekt/detektDesktopTest.xml",
+      "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+      "bytes": 79
+    },
+    "detekt_findings": [],
+    "fresh_task_log_lines": [
+      149,
+      155,
+      576,
+      683,
+      687
+    ],
+    "counts": "3/3 DS-C02 lifetime cases freshly PASS; the same command also executes Whodunit9/9 (separately reviewed by factory_review), total12/12 with0skips."
+  },
+  "compatibility": "Test-only dispatcher substitution/ExperimentalCoroutinesApi opt-in. Production API, toast IDs/coalescing/bounds/timers, game logic, protocol, storage, resources and platform defaults unchanged.",
+  "verdict": "APPROVE at final test hash bac61913c5d79ace76748320f0b073669ced0bd0c12f3063c90be7bbec142adc. Original DS-C02 fix remains independently supported; full frozen no-cache combined gate is root-owned and not inferred from this focused result.",
+  "hygiene": "No Gradle/Xcode/build/app/test/background workers started by this reviewer. Only compact independent evidence and public source text retained; archives were bounded in memory and discarded. No global caches, repository outputs or other agent resources altered. Failure and green receipts independently record stop0, no remaining owned workers/outputs and no cleanup errors."
+}

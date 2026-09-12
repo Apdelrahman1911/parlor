@@ -1,0 +1,77 @@
+{
+  "schema": 1,
+  "reviewer": "/root/qualification_review",
+  "status": "CONDITIONAL_D07_EXACT_REQUEST_ACCEPTED_NOT_DISPATCHED",
+  "scope": "Fresh D07 request/source binding plus narrow runtime-timeout correction review reuse; no repeat of split-workflow audit.",
+  "recorded_at": "2026-09-11T01:41:49.162556+00:00",
+  "packet": "actions/full-qualification-dispatch-07",
+  "packet_sha256": {
+    "request.json": "3dd1dddcbb29067f428624b5d232aa0f83651f740b77eae380be886c3f40a62f",
+    "source-association.json": "098ff7874af55637db92f481db470810cd995da7a2aa7084a3bbec2249177e77",
+    "controls.json": "9a9b4072972c29abeb91486ddac658a9138676c851192cad9f2e01086c17c727",
+    "preparation-failure.json": "a4ab64d0f1af038426e61b73abd0f6ffbc6c8388fcd91b3bcb566ac5a9d180e5"
+  },
+  "repository": "Apdelrahman1911/parlor",
+  "workflow": ".github/workflows/production-verification.yml",
+  "ref": "fix/local-readiness-2026-09-07",
+  "inputs": {
+    "verification_scope": "full",
+    "native_selection": "paired"
+  },
+  "head": "1c234ff026355c3f21fc1d7a589d3bd36085e74f",
+  "tree": "1706b4cad3e1a171ca2d9303690f683c5a7f2ff0",
+  "source_commit": "989e093ca1b513e7e43081fd7f1c58a276e09ce3",
+  "tracked_clean": true,
+  "inventory_sha256": "46636001b6c849e21f6056804e9b27cdddc68c89d87f0c33d8fef823730140fc",
+  "control_sha256": "8be07d3c900560969cf5e05f01da78e71fbc1bc448eb45e75b00f76a58f15e8b",
+  "control_binding": "All13 unique named controls match current bytes and frozen Git blobs; canonical JSON file-list digest and request/association hashes match. This is explicitly a named full-routing/ownership/toolchain subset, NOT an exhaustive import closure. Frozen Git tree binds all source.11 of13 are unchanged from paused1c3c33fe; only inventory and independently reviewed native_process_probe.py differ.",
+  "reused_reviews_sha256": {
+    "runtime_timeout_source": "103b5f56de3ad4691d7b3856a84ee00d7b9b20091366d1e47c6619ebbc0b2223",
+    "prior_full_contract_not_old_SHA_admission": "36bb64b1c88464ff9d7e6754c44b589a539141962d509188ad5b16ea102fe90c",
+    "collector03_source": "7d51d7feed02bcd9ca532fb5fcd7abc69ececaad164540ba4054b8bb8605fd38"
+  },
+  "delta": "989e093c follows paused1c3c33fe;1c234ff changes only inventory. Exact runtime-list90s timeout may take one bounded symbols-only sample of its owned unreaped child; opt-in defaults off, no timeout increase/retry/service mutation. Direct diff and all five correction-review pins match. Full workflow, lane bodies and cleanup controls are byte-unchanged from paused freeze; this approval does not promote diagnostic changes into native/runtime PASS.",
+  "focused_controls": {
+    "receipt_sha256": "ec949c21e92dfb0251e9d981add868211a2278758745e20f12ac8f042b3ba913",
+    "verified": "Independently reopened all three stored logs: process50+paired35+host8=93PASS, all command exits0, unittest OK, hashes match. All7 before/after/current pins match; stop log hash/exit0, errors[], scratch_removed and no remaining outputs;21 listed roots currently absent. No tests rerun; not same-SHA full qualification."
+  },
+  "preparation_failure": "Original FileNotFoundError for apple_verification_lane.py preserved; actual apple_verification_hygiene.py now pinned. Request bytes were preserved. This local preparation error was not a validation/build/dispatch run.",
+  "required_jobs": {
+    "desktop-android": "Common, desktop, and Android release",
+    "desktop-linux-arm64": "Desktop strict verification (Linux arm64)",
+    "desktop-macos-x64": "Desktop and Kotlin Native strict verification (macOS x64)",
+    "desktop-windows-x64": "Desktop, Kotlin Native, and Android resources strict verification (Windows x64)",
+    "ios": "iOS simulator runtime and Swift host",
+    "ios-release": "iOS release frameworks and Swift wrapper"
+  },
+  "required_skipped_jobs": {
+    "ios-protection-probe": "iOS strict protection diagnostic"
+  },
+  "expected_artifacts": [
+    "desktop-android-verification",
+    "desktop-verification-desktop-linux-arm64",
+    "desktop-verification-desktop-macos-x64",
+    "desktop-verification-desktop-windows-x64",
+    "ios-runtime-verification",
+    "ios-release-verification",
+    "verification-cleanup-desktop-android",
+    "verification-cleanup-desktop-linux-arm64",
+    "verification-cleanup-desktop-macos-x64",
+    "verification-cleanup-desktop-windows-x64",
+    "verification-cleanup-ios",
+    "verification-cleanup-ios-release"
+  ],
+  "final_acceptance": "One completed workflow_dispatch at this SHA, attempt1: exactly six mandatory jobs all success plus skipped probe; run/attempt/job/source and actual clean-checkout attestations match. All12 unique expected API artifacts require run/SHA, ID/size/digest/ZIP custody. Own-prefix run-1-job cleanup/ownership/stop receipts must match source/task and their main upload ID/digest; all required cycles/tasks and cleanup pass. ios owns aggregate+ui; ios-release owns aggregate+wrapper. Actual logs/current execution reports and unsigned inspections must reconcile; collector status, cached/tracked XML, linkage or upload alone are not runtime proof. No D03/focused/other-attempt/SHA stitching.",
+  "collector03_sha256": "53d6a05f4a2c591f25e3bda2104b0c15e39cd472d6519d24e6fd1aff5234f7a8",
+  "conditions": [
+    "PD05 must finish; inspect its actual result, retained evidence and cleanup/finalizers. This review has not observed PD05 outcome. No relevant source correction may remain; changed source/request requires fresh freeze/admission.",
+    "Root immediately rechecks local/remote/ref/request equality to this frozen SHA, clean tracked source, inventory/control/packet pins and no active same-ref run. Remote/concurrency were not queried by this reviewer; preserve inherited untracked evidence/locks.",
+    "One new attempt1 full+paired dispatch only after conditions hold; never overlap probe/full and no blind retry. Full ignores frozen_source_sha: preserve exact request/dispatch/API/checkout bindings rather than relying on an unused input.",
+    "Preserve failed/partial evidence and immutable collector bounds; final qualification remains conditional on all six actual lanes plus cleanup together."
+  ],
+  "run": null,
+  "eligible_now": false,
+  "findings": [],
+  "limits": "Request/source admission only, not execution, protection, app readiness or final qualification. D06 remains stale/unexecuted; PD04/historical failures unchanged. No Store/signing/publication/device authority.",
+  "activity": "Local Git/text/stdlib hash/JSON inspection and this additive untracked report only; no project imports, tests/builds/network/dispatch/cancel/source edits/Git writes/child agents. No reviewer cleanup owed."
+}

@@ -1,0 +1,147 @@
+{
+  "schema_version": 1,
+  "kind": "Independent C07 actual-producer and prospective-consumer admission review",
+  "reviewer": "/root/ci_review",
+  "author_reviewed": "/root/dependency_chain",
+  "recorded_at": "2026-09-10T05:47:56.610648+00:00",
+  "status": "APPROVED_FOR_ONE_C07_CANDIDATE_AFTER_ROOT_IMMEDIATE_ADMISSION",
+  "findings": [],
+  "binding": {
+    "path": "remediation-runs/2026-09-08-continuation/candidate-input-binding-07.json",
+    "sha256": "fa72ec6bf7aa1688004ebd80542fa48d28eba8ce266a8f270e7e2409cc46d14a",
+    "bytes": 1517
+  },
+  "author_packet": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/candidate-input-binding-author-inspection-07.json",
+    "bytes": 31607,
+    "sha256": "b29ce79b05e38d28ef8212b31040813b7558410a4a1c3d2e11527c3c5ae0893e"
+  },
+  "frozen_source": {
+    "commit": "15e8982b35e39006868868a11c6f4e1864e613a7",
+    "tree": "8f3fd56f86d7934fddaff068539d69fe26d4aaad",
+    "diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "source_manifest_sha256": "51edfdd6aea7b293afe9061a30d05054f1e0338661eedd8e225bd3ba2ebbb7fd",
+    "branch": "fix/local-readiness-2026-09-07",
+    "tracked_status": "",
+    "source_rows": 833,
+    "complete_source_object_sha256": "a95100f793d8537cd26274bf38dbf41357a8e38054314f39c2b1e8a731a316ec",
+    "runner_manifest_sha256": "942e138764146313a59cbe1278c1357284a5701d0c125809c34ddbbe876ce912"
+  },
+  "source_control_checks": "Independently reconstructed all833 current source rows via read-only Git/files, not project API imports; exact complete source and runner equal all four producer before/after objects. Clean current Git identity/diff matches. All14 control/schema pins remain C06-identical; all56 file references in author packet rehashed. Fourteen source-manifest delta paths from C06 do not change C inputs/controls. Read current consumer/adapter/bootstrap command and coupled-result guards; no control-suite rerun.",
+  "actual_producers": [
+    {
+      "receipt": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-export-linux-07/receipt.json",
+        "sha256": "bdaaeb1eeced56f873c0579669c4345eabca1af795f44f54b428bd75112a9741",
+        "bytes": 307946
+      },
+      "raw_log": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-export-linux-07/gradle.log",
+        "sha256": "722687d5b6f9ad5d74fb64848f3283e639136242d164f932121a58434eb6b275",
+        "bytes": 2483
+      },
+      "status": "PASS",
+      "exit_code": 0,
+      "stop_exit_code": 0,
+      "started_at": "2026-09-10T05:21:30.464909+00:00",
+      "finished_at": "2026-09-10T05:21:52.859984+00:00",
+      "cleanup_completed_at": "2026-09-10T05:21:53.458020+00:00",
+      "removed_outputs": [
+        "build",
+        "build-logic/convention/build"
+      ]
+    },
+    {
+      "receipt": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-render-linux-07/receipt.json",
+        "sha256": "3c1e4425b89238d27e0f2ecddf0c9a6efb8f7878c3f4406a1cd0577d94d2b034",
+        "bytes": 307417
+      },
+      "raw_log": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-render-linux-07/gradle.log",
+        "sha256": "ef1042602e31e11bb04d1d6614e648956b37c0108d001a6f016c863bb9b0ca97",
+        "bytes": 51
+      },
+      "status": "PASS",
+      "exit_code": 0,
+      "stop_exit_code": 0,
+      "started_at": "2026-09-10T05:21:53.923609+00:00",
+      "finished_at": "2026-09-10T05:24:13.590475+00:00",
+      "cleanup_completed_at": "2026-09-10T05:24:14.372697+00:00",
+      "removed_outputs": []
+    }
+  ],
+  "execution_scope": "Fresh strict writeResolvedDependencyInventory actually executed:5 actionable,4 executed/1cached convention compileKotlin. Configuration check SKIPPED, compileJava NO-SOURCE and Linux-disabled Apple-task warnings are not application tests/runtime. Actual renderer reports4 graphs/456 selected Maven components/unresolved[]. JDK21/javac21.0.12 log pins match. Empty test/artifact receipt arrays expected.",
+  "graph_and_sbom_hashes": {
+    "androidRelease": {
+      "graph": "de053f4e9a58202a7181180e6e4b25cdae429a0c0ad41edd102ad997c2abdd17",
+      "sbom": "291144d188eaca09284e15071b8bc487e3d5ec77a59d439cbcfd4eb2fc28cb79"
+    },
+    "iosArm64": {
+      "graph": "a09157b76fb27bd26aeb331b6ab905e02fd9c079d2567aa24063cebbe4743064",
+      "sbom": "fec14aa187708fac171a2b77e60c5d0100c788a085e467d1db0aa4282ad46968"
+    },
+    "iosSimulatorArm64": {
+      "graph": "88b0f153a0a924209c4e6030dd645021b03a9c653f7701831c1e00240da921a1",
+      "sbom": "d07362f2a5e7885831b77d2a0afdabd154b50b5083fe14ce9e265cf9e9ebb582"
+    },
+    "iosX64": {
+      "graph": "94c87f8250e5df8de5a711a0da01663543e4df8529378a5ff4411cf2e0bf08c0",
+      "sbom": "63ce850f9ddc78fe64e2392ab8b8b05c5323d52cd00c7a3b339b8a4f5e1f4c0e"
+    }
+  },
+  "data_checks": "All four graph objects independently equal C06 except exact fresh source. All four BOMs equal C06 after changing only metadata application version and source commit/tree. Completion+ledger graph hashes/source match actual bytes. Graph component/artifact counts239/129 and three167/81. All459 POMs/1507794bytes and declaration draft byte-identical C06; ledger differs only source/graph hashes and459 accessed_at values, each within actual render window05:21:53.923609\u201305:24:13.590475 UTC. Actual access range05:21:55.334477\u201305:24:13.522970. C06 strict-artifact/XML/inherited-license semantics reused only for exact identical bytes; no renewed legal conclusion. Source notice set26/99515bytes matches manifest and source pins; P2pKit remains Maven0.7.0-rc3.",
+  "ledger_sha256": "1e0e91c5e081b30b33680226005e110fe949a1a78ddf6689665e0a735de233ef",
+  "prospective_closure": {
+    "count": 511,
+    "bytes": 5571442,
+    "manifest_sha256": "542b667c63add44756d0e675ad265f5dba2aca8b5cf48249cb33efb458df699b",
+    "fixed_files": 12,
+    "directory_counts": {
+      "graphs": 5,
+      "report": 465,
+      "schemas": 3,
+      "notices": 26
+    },
+    "method": "Independently constructed exact12 fixed files from current consumer/binding plus every regular file in four required directories; sorted unique [repository-relative path,SHA256,bytes], compact JSON. Exact graph/report/metadata/schema/notice member sets and all directory path/row hashes match sealed author packet. No symlink, special or noncanonical member. Not an executed consumer count."
+  },
+  "reused_C06_reviews": [
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/candidate-input-binding-06-independent-01.json",
+      "sha256": "056f276e8398d38e5243650c8a4d29d6358dc09fd00f2b70ef93f21fd0ba04fd",
+      "bytes": 17932
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/candidate-input-c06-actual-independent-01.json",
+      "sha256": "4f155d59781a9e6551a4101ad8517e91a665170c73aa54bf3ea6f164702812ee",
+      "bytes": 15183
+    }
+  ],
+  "cleanup": {
+    "producer_stops": [
+      0,
+      0
+    ],
+    "stop_log_sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+    "verified": "Export cleanup completes before render starts. Raw stop logs say no daemons. Both receipts have unchanged source/runner, no retained/remaining outputs, remaining owned workers/artifact workers, errors or deferred signals. Export removed only build and build-logic/convention/build; render none. Independently observed16 exact live build roots+2 producer scratch roots absent; candidate07 destination absent. No global process/cache claim or reviewer cleanup action."
+  },
+  "root_immediate_admission_required": [
+    "Recheck complete current833 source and runner against both producers; exact binding, author, this review, C14, full closure and directory sets.",
+    "Root alone checks existing regular owned lane lock and absent07 destination, retains fresh immediate admission/full rows, then releases admission lock before one coordinated candidate lane. This report is not that lock/admission receipt.",
+    "Require consumer PASS_SCOPED_CANDIDATE_INPUTS; adapter PASS_SCOPED_CANDIDATE_INPUT_EXECUTION/consumer0/ephemeral_parser_cleanup=true; bootstrap PASS_OWNED_SCHEMA_PREREQUISITES in candidate mode/inner0/base_package_cleanup=true; outer PASS/exit0/stop0, exact full source/runner, no survivors/outputs/cleanup errors. Both package cleanup booleans are mandatory. Four official-schema validations and encountered format checkers must actually execute."
+  ],
+  "one_candidate_command_after_admission": [
+    "/usr/bin/python3",
+    "-B",
+    "remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py",
+    "final-candidate-input-linux-07",
+    "--command",
+    "/usr/bin/python3",
+    "-B",
+    "remediation-runs/2026-09-08-continuation/controls/run_candidate_with_schema.py",
+    "remediation-runs/2026-09-08-continuation/candidate-input-binding-07.json",
+    "fa72ec6bf7aa1688004ebd80542fa48d28eba8ce266a8f270e7e2409cc46d14a"
+  ],
+  "activity": "Read-only source/evidence/Git and stdlib JSON/hash/AST/path inspection; no project imports, schema/test/build/network/procfs/lock/cleanup/Git mutation. Sole write this additive review; no resources needing build cleanup allocated.",
+  "limits": "C07 producers accepted; fresh candidate/schema NOT_RUN. C06 remains historical COMPLETE at4cc. No full-suite, application/native, final binary/package, A/B/D, physical-device, Store/signing/publication or owner/legal approval. Overall NOT_READY."
+}

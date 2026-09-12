@@ -1,0 +1,82 @@
+{
+  "schema": 1,
+  "author": "/root/lifecycle_controls",
+  "created_at": "2026-09-10T10:59:00.291630+00:00",
+  "status": "HELD_DIAGNOSTIC_DRAFT_NOT_ADOPTED_NOT_EXECUTED",
+  "failed_hosted_sample": {
+    "run_id": "34464573240",
+    "source": "75c104734373703570a307de9c7a53d291bc2718",
+    "log": "remediation-runs/2026-09-08-continuation/actions/full-qualification-dispatch-03/early-desktop-android-job.log",
+    "log_sha256": "9fb6ac8b3c68c5e26615f2e641fd664bcc8285e5f70c157fc7ad65ab2572616e",
+    "interpretation": "PermissionError; operation, PID, and cause unknown. selected_uid counts only completed samples, so zero does not establish that the failed PID was unselected. Not evidence of an emulator survivor."
+  },
+  "pins": [
+    {
+      "path": "scripts/ci/verification_hygiene.py",
+      "canonical": {
+        "sha256": "f1aa6d4c5dae8360a9ff1bfd675376d78cb800e3d297fc213cdddca32c7376f6",
+        "bytes": 20930,
+        "lines": 410
+      },
+      "draft": {
+        "sha256": "1fc2fb6f0b3bb7a505edc63277e0fe974a67ccf972753eec0da60386438c16f4",
+        "bytes": 22204,
+        "lines": 429
+      }
+    },
+    {
+      "path": "scripts/release/tests/test_ci_verification_hygiene.py",
+      "canonical": {
+        "sha256": "2ba311084cd57923f85c3176b3d5ac83385022c7e0fe174ac5a38fd1c5101f63",
+        "bytes": 28576,
+        "lines": 519
+      },
+      "draft": {
+        "sha256": "1f228c62dd1de0b79b8c0add9500dd3da7572bd761d079a058f45ef502e1f8e0",
+        "bytes": 30703,
+        "lines": 547
+      }
+    }
+  ],
+  "unified_diff": {
+    "sha256": "8d69bc47d843cf3e1c7c4fbb322717cbf51676c013f9dac5e6ef04ddae1ece2c",
+    "bytes": 8303,
+    "lines": 138,
+    "recipe": "Concatenate difflib.unified_diff for pins in listed order; UTF-8 splitlines(keepends=True); a/<path>, b/<path>; no dates; default context=3. Printed only, no separate patch artifact."
+  },
+  "scope": "Failure-only sibling failure_context for OSError during one tagged process read; existing errors/result/counters/selection/lifetime/bounds/upload/deletion/retention unchanged; no workaround, retry, sudo, or process control.",
+  "failure_context": {
+    "operation": [
+      "before_stat",
+      "before_status",
+      "before_exe_readlink",
+      "before_exe_stat",
+      "after_exe_readlink",
+      "after_exe_stat",
+      "after_stat",
+      "after_status"
+    ],
+    "selection": "literal unknown until complete first identity; thereafter actual boolean; reset each PID",
+    "errno": "exact int from 1 through 4095, otherwise null",
+    "privacy": "No added PID, path, argv, process name, or exception message; omitted outside tagged process OSError."
+  },
+  "author_checks": {
+    "kind": "stdlib source/AST/hash inspection only",
+    "syntax_parse": "both drafts parsed",
+    "helper_ast": "Entire helper AST equals canonical after narrowly erasing only added diagnostics, optional signature fields, and trace arguments; both changed functions individually equal. The original lifetime guard remains in comparison.",
+    "test_ast": "Only errno import and the body of existing test_executable_read_denial_or_disappearing_pid_is_not_absence differ; all 33 test-method identities unchanged.",
+    "new_cases_by_source": "28 injected subcases: eight accesses with EACCES/ENOENT; four other-UID identity accesses following a completed selected PID; errno None/bool/negative/overbound; private-message/temp-path suppression.",
+    "limitations": "AST erasure is not runtime validation or real procfs coverage. Existing ordinary-file/symlink fixtures mock UID and cannot establish hosted permission behavior."
+  },
+  "execution_boundary": "Author made no canonical edit, project import/test/build, native/process experiment, network request, Git write, or workflow dispatch. Root alone owns adoption/overlay, execution, and experimental cleanup.",
+  "root_only_local_recipe_unexecuted": [
+    "After approval, copy exact reviewed helper plus a tiny fixed harness into a temp packet accessible to an existing actual nonroot user; verify helper SHA. Do not chmod repository parents.",
+    "Run as matching actual nonroot real/effective UID; no mocked getuid. Own SDK/emulator directory and matching ANDROID_HOME/ANDROID_SDK_ROOT; bind with exact helper.",
+    "Spawn one direct owned Python -I -B child using fixed stdlib ctypes PR_SET_DUMPABLE/PR_GET_DUMPABLE and bounded ready/stdin/exit protocol; retain only necessary bounded receipts.",
+    "Proc fixture has numeric symlinks only to real /proc observer and owned child. Audit exact helper in stable dumpable=1 then dumpable=0 phases; record actual results and stable PID/starttime/four UIDs. Do not force differing host behavior into expected PASS.",
+    "Bound waits/output/lifetime. Normal stdin EOF or explicit exit; timeout termination only through direct unreaped Popen handle, then wait/reap. Remove exact owned temp only after exit.",
+    "No emulator, Gradle, network, argv census, arbitrary PID signals, or host permission changes. A local permission-class demonstration does not identify the failed hosted PID; a separate actual no-build hosted /proc diagnostic remains needed."
+  ],
+  "integration_caution": "Held unittest file retains canonical ROOT-relative project/workflow references. Root must adopt or use a source-bound overlay before treating full-file execution as project-equivalent.",
+  "freeze": "Draft pins stable for independent source review; no further author edits without root/reviewer request."
+}

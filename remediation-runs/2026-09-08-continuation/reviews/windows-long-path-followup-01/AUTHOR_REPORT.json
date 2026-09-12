@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "kind": "HELD_WINDOWS_LONG_PATH_AND_SCOPED_FOLLOWUP_DRAFT",
+  "status": "HELD_NOT_APPLIED_NOT_EXECUTED_PENDING_INDEPENDENT_REVIEW",
+  "author": "/root/ci_workflow",
+  "reviewer_requested": "/root/portability_review",
+  "coordinator": "/root",
+  "created_at": "2026-09-10T00:40:35.619400+00:00",
+  "base_commit": "4ccfafcfc361231cfb730178b3798ebcb6304770",
+  "base_tree": "8a89fab3042b8614fc4285148a8cd645f7ac2786",
+  "failure": {
+    "run_id": 34420745957,
+    "run_attempt": 1,
+    "job_id": 102695388432,
+    "source": "4ccfafcfc361231cfb730178b3798ebcb6304770",
+    "evidence_directory": "remediation-runs/2026-09-08-continuation/actions/full-qualification-dispatch-02/early-windows-job",
+    "job_sha256": "22ecabf5ea0384e859f387f8574ca0b96cec78a42ee8f289017d4d92708ee124",
+    "job_log_sha256": "ee89bfa23be32c7fcb7212fc9251a8a3a55e38311f80641ac9b2693042999561",
+    "receipt_sha256": "7340fd4cd17dbe957fbb1e12f6441375ea3439c34fbc094e8347d2c67d67e331",
+    "observed": "54-second Windows job failed checkout with1038 Filename too long log lines; JDK, ownership, host, SDK and Gradle graph steps skipped. Gradle stop succeeded; cleanup correctly reported FAIL with no deletions because ownership prepare was skipped. Not an application/test failure or a completed full-run verdict."
+  },
+  "minimal_correction": [
+    "Per-job Git command-scope environment enables only core.longpaths before checkout and all child Git commands; pwsh verifies effective true and Git success before checkout. No global Git config or registry writes, core.autocrlf change, sparse checkout, evidence deletion/renaming or file normalization.",
+    "Keep existing checkout action pin, Windowsfetch-depth1, Linux primary inventoryfetch-depth0, other host/native history and credential policy. Windows graph does not run the inventory generator, so no unrelated history-depth change.",
+    "Add one explicit windows-only choice. Full default/push/PR five jobs remain. Windows additionally accepts windows-only; iOS skips only that exact dispatch (unknown values still reach native validator); other3 jobs unchanged.",
+    "Because Windows-only skips Apple scope validation, precheckout gate separately binds lower40 frozen_source_sha to GITHUB_SHA and GITHUB_WORKFLOW_SHA and rejects native selection other than empty/default paired. Existing host gate gains checked HEAD equality and checked clean-status command success.",
+    "Existing workflow contract now pins exact new selection, job-local config, precheckout gate/order, complete checkout parameters and source gate. Two bounded methods cover selection isolation and long-path/source/order mutations; existing scope option negative witness updates to avoid a vacuous test.",
+    "Guide distinguishes three native modes from Windows-only and prohibits relabeling prior-SHA evidence. App, protocol, privacy, dependency coordinates/verification, JDK/SDK/Gradle commands, action pins, artifacts, ownership/stop/cleanup, Apple controls and Store workflows unchanged."
+  ],
+  "files": [
+    {
+      "path": ".github/workflows/production-verification.yml",
+      "base_sha256": "5895ce4e80000b205302a987f8b603ac21380764f36e3711064029c3b1af62bc",
+      "proposed_path": "remediation-runs/2026-09-08-continuation/reviews/windows-long-path-followup-01/proposed/.github/workflows/production-verification.yml",
+      "proposed_sha256": "e6b6c43396b945d09a83aded45983652ddd5ca48247a34a380ae6b26a552101b",
+      "base_bytes": 41722,
+      "proposed_bytes": 43469
+    },
+    {
+      "path": "scripts/release/workflow_contract.py",
+      "base_sha256": "aeeb5fb01a228f9ef5419c2aae4e4e78326b39b0e62846591b184168756d7c6e",
+      "proposed_path": "remediation-runs/2026-09-08-continuation/reviews/windows-long-path-followup-01/proposed/scripts/release/workflow_contract.py",
+      "proposed_sha256": "2d45536dba2df528d210052ddc832755d4b91ca388de0db8660bec4e5c37d526",
+      "base_bytes": 48478,
+      "proposed_bytes": 52050
+    },
+    {
+      "path": "scripts/release/tests/test_workflow_contract.py",
+      "base_sha256": "b2a6a09ef5091788081bd1383e75cda188859b67001ecd376519408aa7d03d97",
+      "proposed_path": "remediation-runs/2026-09-08-continuation/reviews/windows-long-path-followup-01/proposed/scripts/release/tests/test_workflow_contract.py",
+      "proposed_sha256": "bd68ce3e1d52d5cb865e1c5a4f44e1392f13066be6ba88e12c9851d8bd95d302",
+      "base_bytes": 42277,
+      "proposed_bytes": 45730
+    },
+    {
+      "path": "scripts/ci/NATIVE_CONTINUATION.md",
+      "base_sha256": "d19d47462f2feb49dd379509b8c6c7d89e2129b1266e8ad63c6c720f53523b9c",
+      "proposed_path": "remediation-runs/2026-09-08-continuation/reviews/windows-long-path-followup-01/proposed/scripts/ci/NATIVE_CONTINUATION.md",
+      "proposed_sha256": "237d7ddd53c4f8b5531c759ce83573c8853bfea74143d940f64ca137e946b9e6",
+      "base_bytes": 20415,
+      "proposed_bytes": 20959
+    }
+  ],
+  "patch": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/windows-long-path-followup-01/proposed.patch",
+    "sha256": "486089abaaa13f70aee295ae55874ea2a96ad96b8c9523200eabbd2a4c8aa9ed"
+  },
+  "author_checks": {
+    "executed": "Read-only Git/source/evidence and stdlib hash/text/AST inspection only. Draft Python files AST-parse; frozen originals unchanged.",
+    "tests": "NOT_RUN; no Python project imports, PowerShell, Git config, validator, builds or Actions execution.",
+    "cleanup": "No workers/build outputs/global settings created; only assigned held draft files."
+  },
+  "suggested_after_review": [
+    "Root applies only independently accepted canonical hunks after current D run completes and raw evidence/cleanup are preserved. Run focused existing test_workflow_contract and repository workflow contract; the workflow is an explicit transport repository-contract input, so use one focused transport workflow contract test, not another matrix or full source campaign.",
+    "Run pinned actionlint for the changed workflow if available in the normal owned validation lane. Do not claim static guards prove real Windows long-path checkout or Gradle execution.",
+    "Commit reviewed source then regenerate/commit mechanical inventory, create fresh exact-source Windows-only request with frozen_source_sha and default paired selection, inspect no active same-ref run/remote equality, dispatch once via root only. Reconcile actual checkout/config log, executed-vs-cached tests, two Windows artifacts and unchanged cleanup guards.",
+    "Other4 D jobs are not automatically reusable: retain original4cc/run/attempt identities, inspect actual results and independently prove source/control/platform/scope applicability to the new freeze; never describe this as a fresh combined same-SHA fullD run. Strict native, physical-device, Store identity/operation and owner/legal gates remain unwaived."
+  ]
+}

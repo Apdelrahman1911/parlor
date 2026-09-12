@@ -1,0 +1,548 @@
+{
+  "reviewer": "/root/native_fix_review",
+  "created_at": "2026-09-07T06:26:36.025129+00:00",
+  "assignment": "Read-only qualified-Xcode availability, bounded Apple Keychain/status/signing documentation; no runtime execution or production changes.",
+  "HEAD_at_report": "0787b0fade803f3b8f2213b89f2fccb52a822279",
+  "policy": {
+    "xcode_version": "26.3",
+    "xcode_build": "17C529",
+    "developer_dir": "/Applications/Xcode_26.3.app/Contents/Developer",
+    "minimum_ios_sdk_major": 26,
+    "deployment_target": "16.0"
+  },
+  "exact_policy_developer_dir_exists": false,
+  "standard_bundle_paths": [
+    "/Applications/Xcode.app"
+  ],
+  "standard_user_xcode_bundle_paths": [],
+  "metadata": [
+    {
+      "path": "/Applications/Xcode.app/Contents/version.plist",
+      "sha256": "14fe47aa50107e5eebb39f6e93acb96c2c81dc39ed9bd51ad1edbcc71488b91f",
+      "values": {
+        "CFBundleShortVersionString": "26.5",
+        "CFBundleVersion": "24943",
+        "ProductBuildVersion": "17F42"
+      }
+    },
+    {
+      "path": "/Applications/Xcode.app/Contents/Info.plist",
+      "sha256": "aea95a01913a85b4f500668ce7fe9116434f2ec789ed0bb6bb091c55712a896e",
+      "values": {
+        "CFBundleShortVersionString": "26.5",
+        "CFBundleVersion": "24943",
+        "CFBundleIdentifier": "com.apple.dt.Xcode",
+        "DTXcode": "2650",
+        "DTXcodeBuild": "17F41"
+      }
+    },
+    {
+      "path": "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.5.sdk/SDKSettings.plist",
+      "sha256": "3eb2b2f2bbbafd6d77835c547bfa32d2ba510b80ec49b29189e619bedba34236",
+      "values": {
+        "CanonicalName": "iphonesimulator26.5",
+        "Version": "26.5",
+        "DisplayName": "Simulator - iOS 26.5"
+      },
+      "default_properties": {
+        "AD_HOC_CODE_SIGNING_ALLOWED": "YES",
+        "CODE_SIGN_IDENTITY": "-",
+        "CODE_SIGNING_REQUIRED": "YES",
+        "ENTITLEMENTS_DESTINATION": "__entitlements",
+        "ENTITLEMENTS_REQUIRED": "YES",
+        "CODE_SIGN_ENTITLEMENTS": "",
+        "PLATFORM_NAME": "iphonesimulator"
+      }
+    }
+  ],
+  "command_receipts": [
+    {
+      "argv": [
+        "/usr/bin/mdfind",
+        "kMDItemCFBundleIdentifier == \"com.apple.dt.Xcode\""
+      ],
+      "started_at": "2026-09-07T06:26:00.270861+00:00",
+      "finished_at": "2026-09-07T06:26:00.301133+00:00",
+      "exit_code": 0,
+      "stdout_sha256": "b1352254da57371332a88c52b86c2bda1af9612832e4a9ee16ca01461d4a19c9",
+      "stderr": "",
+      "stdout": "/Applications/Xcode.app\n"
+    },
+    {
+      "argv": [
+        "/usr/bin/xcode-select",
+        "-p"
+      ],
+      "started_at": "2026-09-07T06:26:00.301193+00:00",
+      "finished_at": "2026-09-07T06:26:00.304828+00:00",
+      "exit_code": 0,
+      "stdout_sha256": "024e83842db917ed79a567b48b5f70bf468a2a914d5dc6df59f9d19c25ad3a0e",
+      "stderr": "",
+      "stdout": "/Applications/Xcode.app/Contents/Developer\n"
+    },
+    {
+      "argv": [
+        "/usr/bin/xcodebuild",
+        "-version"
+      ],
+      "started_at": "2026-09-07T06:26:00.304869+00:00",
+      "finished_at": "2026-09-07T06:26:00.457812+00:00",
+      "exit_code": 0,
+      "stdout_sha256": "5f6350250c6f298d06e1435819ddd1539d6c84785aaa8d824c2ac74f57914d03",
+      "stderr": "",
+      "stdout": "Xcode 26.5\nBuild version 17F42\n"
+    },
+    {
+      "argv": [
+        "/usr/bin/xcodebuild",
+        "-showsdks"
+      ],
+      "started_at": "2026-09-07T06:26:00.457859+00:00",
+      "finished_at": "2026-09-07T06:26:01.136200+00:00",
+      "exit_code": 0,
+      "stdout_sha256": "5c577db8d316a5d6dcb343f01a4357bdfbc45fe7a3f8a2b3487b4765d79ce00a",
+      "stderr": "",
+      "stdout": "DriverKit SDKs:\n\tDriverKit 25.5                \t-sdk driverkit25.5\n\niOS SDKs:\n\tiOS 26.5                      \t-sdk iphoneos26.5\n\niOS Simulator SDKs:\n\tSimulator - iOS 26.5          \t-sdk iphonesimulator26.5\n\nmacOS SDKs:\n\tmacOS 26.5                    \t-sdk macosx26.5\n\tmacOS 26.5                    \t-sdk macosx26.5\n\ntvOS SDKs:\n\ttvOS 26.5                     \t-sdk appletvos26.5\n\ntvOS Simulator SDKs:\n\tSimulator - tvOS 26.5         \t-sdk appletvsimulator26.5\n\nvisionOS SDKs:\n\tvisionOS 26.5                 \t-sdk xros26.5\n\nvisionOS Simulator SDKs:\n\tSimulator - visionOS 26.5     \t-sdk xrsimulator26.5\n\nwatchOS SDKs:\n\twatchOS 26.5                  \t-sdk watchos26.5\n\nwatchOS Simulator SDKs:\n\tSimulator - watchOS 26.5      \t-sdk watchsimulator26.5\n\n"
+    },
+    {
+      "argv": [
+        "/usr/bin/xcrun",
+        "simctl",
+        "list",
+        "runtimes",
+        "--json"
+      ],
+      "started_at": "2026-09-07T06:26:01.136289+00:00",
+      "finished_at": "2026-09-07T06:26:01.340381+00:00",
+      "exit_code": 0,
+      "stdout_sha256": "7d8b4300aee1f151b33847fea9193c9705b7c532d1f63b25c1aa7b4d8bbe8581",
+      "stderr": "",
+      "public_runtime_metadata": [
+        {
+          "identifier": "com.apple.CoreSimulator.SimRuntime.iOS-26-2",
+          "name": "iOS 26.2",
+          "version": "26.2",
+          "buildversion": "23C54",
+          "isAvailable": true,
+          "supportedArchitectures": [
+            "arm64"
+          ],
+          "bundlePath": "/Library/Developer/CoreSimulator/Volumes/iOS_23C54/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 26.2.simruntime"
+        },
+        {
+          "identifier": "com.apple.CoreSimulator.SimRuntime.iOS-26-5",
+          "name": "iOS 26.5",
+          "version": "26.5",
+          "buildversion": "23F77",
+          "isAvailable": true,
+          "supportedArchitectures": [
+            "arm64"
+          ],
+          "bundlePath": "/Library/Developer/CoreSimulator/Volumes/iOS_23F77/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 26.5.simruntime"
+        }
+      ]
+    },
+    {
+      "argv": [
+        "/usr/bin/sw_vers"
+      ],
+      "started_at": "2026-09-07T06:26:01.341147+00:00",
+      "finished_at": "2026-09-07T06:26:01.348427+00:00",
+      "exit_code": 0,
+      "stdout_sha256": "50d598276e1b5fb38874dedb2e0829126024993316eb2afda985821d3946863c",
+      "stderr": "",
+      "stdout": "ProductName:\t\tmacOS\nProductVersion:\t\t26.2\nBuildVersion:\t\t25C56\n"
+    },
+    {
+      "argv": [
+        "/usr/bin/uname",
+        "-m"
+      ],
+      "started_at": "2026-09-07T06:26:01.348464+00:00",
+      "finished_at": "2026-09-07T06:26:01.350944+00:00",
+      "exit_code": 0,
+      "stdout_sha256": "c1669e1d8edca98769c37d494b76442a1d6e5ffffd7b4da1fb63aef8ebaf6f01",
+      "stderr": "",
+      "stdout": "arm64\n"
+    },
+    {
+      "argv": [
+        "/bin/df",
+        "-k",
+        "."
+      ],
+      "started_at": "2026-09-07T06:26:01.350974+00:00",
+      "finished_at": "2026-09-07T06:26:01.354449+00:00",
+      "exit_code": 0,
+      "stdout_sha256": "99334e31b4c77102d18b8b98d18e84be0dd6f1a85c6d0ef297a1a76a83b2b754",
+      "stderr": "",
+      "stdout": "Filesystem   1024-blocks      Used Available Capacity iused     ifree %iused  Mounted on\n/dev/disk3s5   482797652 441599596  17789060    97% 4412348 177890600    2%   /System/Volumes/Data\n"
+    }
+  ],
+  "SDK_source_excerpts": [
+    {
+      "path": "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.5.sdk/System/Library/Frameworks/Security.framework/Headers/SecBase.h",
+      "full_file_sha256": "89fb27ba55c7139c7d3ca15054aa92380f897b6c95e36013efb740c8beb018c4",
+      "reviewed_ranges": [
+        [
+          256,
+          364
+        ]
+      ],
+      "excerpt_file": "remediation-runs/2026-09-07-local-readiness/native/qualified-xcode-keychain-research-01/SecBase.h.excerpt.txt",
+      "excerpt_sha256": "39ddf753ca17ddc2b4c56ae9670af2a656e513887111f9ce297e2e0858964dab"
+    },
+    {
+      "path": "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.5.sdk/System/Library/Frameworks/Security.framework/Headers/SecItem.h",
+      "full_file_sha256": "1a5a731dc52e85cf7fb6ebe26d75aa467113c07b6ec3389c98e183d75c651eaf",
+      "reviewed_ranges": [
+        [
+          201,
+          217
+        ]
+      ],
+      "excerpt_file": "remediation-runs/2026-09-07-local-readiness/native/qualified-xcode-keychain-research-01/SecItem.h.excerpt.txt",
+      "excerpt_sha256": "ad8ea492a4f273e45b04bf76397230f08787bb4b3e76afbaf4ca08aac86d32d9"
+    }
+  ],
+  "source_review": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/config/release-policy.json",
+      "sha256": "316b28f75a13e0b925beb6bcd893b82e077a1a9efa850022026e830f9b1d4ad4",
+      "reviewed_lines": [
+        [
+          46,
+          61
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/.github/workflows/production-verification.yml",
+      "sha256": "965e47ddb4c47b19d8017c9494239d0a0309b26f465eb0f6b655bd90113a929c",
+      "reviewed_lines": [
+        [
+          219,
+          266
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/gradle/libs.versions.toml",
+      "sha256": "87a031665605a1fb3f932be31c75afd8d2d1bc0d94cfcca36101141c50788399",
+      "reviewed_lines": [
+        [
+          1,
+          90
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSecureKeyValueBacking.kt",
+      "sha256": "4bce714c161a892ecd66fff662561d925db7e045af8cacf28e5b698c887015c7",
+      "reviewed_lines": [
+        [
+          1,
+          262
+        ]
+      ]
+    }
+  ],
+  "qualified_Xcode_verdict": "BLOCKED LOCALLY: exact Xcode26.3/17C529 policy path absent and only26.5/17F42 found in standard/Spotlight bundle inventory. This is a toolchain evidence gap, not an app defect or an instruction to change the policy.",
+  "discovery_limits": "Standard application locations and indexed CFBundleIdentifier lookup only; unindexed external volumes/downloads/archives were not searched. No Apple Accounts, profiles, device identities, credentials or personal files inspected.",
+  "low_disk_no_credentials_options": [
+    {
+      "option": "Use already-installed Xcode26.5/17F42 + existing iOS26.5/23F77 for the reviewed root-owned unsigned Debug app-host matrix",
+      "feasibility": "No toolchain/runtime download needed; one owned simulator and bounded generated outputs still consume temporary disk. Actual native run pending.",
+      "qualification": "Does not satisfy exact Xcode26.3 Store-qualified gate, device signing or real LAN."
+    },
+    {
+      "option": "If later justified, compare the existing available iOS26.2/23C54 runtime with an owned simulator under the same Xcode26.5 compiler",
+      "feasibility": "Public simctl metadata reports available arm64 runtime; no additional runtime download. Not booted or tested here. Requires separately reviewed configuration/source binding; current controls remain unchanged.",
+      "qualification": "Runtime selection does not downgrade compiler/SDK to26.3 and is not an established Keychain remedy."
+    },
+    {
+      "option": "Exact26.3 verification on an already-provisioned authorized external machine/CI runner",
+      "feasibility": "No local download/disk pressure if owner supplies environment; no remote machine, access or successful job established in this task. Existing workflow strictly checks exact bundle/compiler.",
+      "qualification": "External owner/environment evidence remains required; no job triggered."
+    },
+    {
+      "option": "Owner-provided26.3 installation/archive",
+      "feasibility": "Not present in inspected locations. Apple resources say older Xcode downloads require Apple Account sign-in (paid membership not required). Archive/expanded/install disk size not measured; do not claim17GiB is sufficient. No download/install/sign-in/license or developer-dir changes authorized/performed.",
+      "qualification": "Needs separate owner/environment work; no bypass via renaming26.5, changing policy, or substituting command-line tools."
+    }
+  ],
+  "status_interpretation": [
+    {
+      "status": 0,
+      "symbol": "errSecSuccess",
+      "meaning": "Exact native call reports success. Reading still requires correct CFData/type/size and successful full storage boundary; not blanket durability/rejoin proof."
+    },
+    {
+      "status": -25300,
+      "symbol": "errSecItemNotFound",
+      "meaning": "No item matched this query in accessible groups. Production read returns null; delete treats it idempotently; initial update may try add. Not proof all storage is empty or that prior successful writes persisted correctly."
+    },
+    {
+      "status": -25299,
+      "symbol": "errSecDuplicateItem",
+      "meaning": "Existing item prevented add. Production updateOrAdd performs one update on this race; failure is not converted into success."
+    },
+    {
+      "status": -34018,
+      "symbol": "errSecMissingEntitlement",
+      "meaning": "A required entitlement was not satisfied for this invocation. Does NOT identify which entitlement, prove current source forgot Keychain Sharing, or prove a launch crash cause. Source omits explicit kSecAttrAccessGroup, so inspect built main-executable identity/entitlements and actual query context before a causal conclusion."
+    },
+    {
+      "status": -25308,
+      "symbol": "errSecInteractionNotAllowed",
+      "meaning": "Interaction not allowed. OS state/context and requested accessibility matter; do not diagnose lock/background cause from the integer alone."
+    },
+    {
+      "status": -25291,
+      "symbol": "errSecNotAvailable",
+      "meaning": "Installed26.5SecBase.h describes unavailable keychain. Current Apple web abstract says no trust results are available; preserve context/source distinction rather than inventing a single universal cause."
+    },
+    {
+      "status": -50,
+      "symbol": "errSecParam",
+      "meaning": "An invalid argument was reported. Need actual sanitized shape/context to determine root cause; do not globally remove query safeguards."
+    }
+  ],
+  "counter_evidence_and_version_limits": [
+    "Apple errSecMissingEntitlement explicitly recommends hardware-target, not Simulator, built-app entitlement inspection for device diagnosis. No device build/signing performed.",
+    "The current access-group article says app-specific keychain storage works without adding sharing groups; explicit groups are for sharing. Do not add entitlement/capability or kSecAttrAccessGroup blindly.",
+    "Archived TN2415 says Simulator builds are not code signed. Installed26.5Simulator SDK instead declares AD_HOC_CODE_SIGNING_ALLOWED=YES, CODE_SIGN_IDENTITY=-, CODE_SIGNING_REQUIRED=YES, ENTITLEMENTS_DESTINATION=__entitlements, ENTITLEMENTS_REQUIRED=YES. Historical prose is not proof of26.5effective build configuration; actual binary/command evidence governs.",
+    "TN3137 is a macOS-focused document, used only to distinguish native Mac SecItem/file-based behavior and library host identity. Do not assume a plain macOS CLI substitutes for an iOS app-host or that its note diagnoses a simulator issue.",
+    "Current mutable Xcode docs use Device Hub wording. General physical-versus-simulator limitations apply, but not assumed exact26.5UI instructions or private API semantics.",
+    "Native storage and locale status remains EVIDENCE GAP \u2014 PENDING NATIVE MATRIX; no new confirmed defect or final IOS-R1 blocker inferred."
+  ],
+  "skills_applied": {
+    "names": [
+      "production-readiness-audit",
+      "native-release-signing-and-packaging",
+      "secure-backup-and-blob-storage",
+      "localization-rtl-accessibility",
+      "ios-compose-navigation-rtl",
+      "cross-platform-back-policy"
+    ],
+    "version_guard": "Actual catalog Kotlin2.4.10/CMP1.10.3/Nav3runtime1.0.0/JetBrainsNav3UI1.0.0-alpha06 differs from iOS/back skill reference CMP1.11.1/Nav3UI1.1.1. No example implementation, gesture timing, or window-refresh assumption was copied into production."
+  },
+  "authoritative_references": [
+    {
+      "name": "missing-entitlement",
+      "request_url": "https://developer.apple.com/tutorials/data/documentation/security/errsecmissingentitlement.json",
+      "accessed_at": "2026-09-07T06:26:01.359065+00:00",
+      "http_status": 200,
+      "final_url": "https://developer.apple.com/tutorials/data/documentation/security/errsecmissingentitlement.json",
+      "content_type": "application/json",
+      "response_sha256": "a09771e4effdb7a2743eccdf2c3b95dd9ded4794e74bbc3dd2ef3ba06bd36410",
+      "response_bytes": 15413,
+      "retained_file": "remediation-runs/2026-09-07-local-readiness/native/qualified-xcode-keychain-research-01/public-documents/missing-entitlement.json.gz",
+      "retained_sha256": "92273a2765f8640090fcc72fad5eab866802b966d52a82048ac478f0e8f00870",
+      "title": "errSecMissingEntitlement",
+      "content": "A required entitlement is missing.                        The  SecItemAdd(_:_:)  method returns this error when you specify an access group to which your app doesn\u2019t belong:  let attributes = [kSecClass: kSecClassGenericPassword,\n                  kSecAttrService: service,\n                  kSecAttrAccount: username,\n                  kSecAttrAccessGroup: \"group\",\n                  kSecValueData: password] as [String: Any]\nlet addStatus = SecItemAdd(attributes as CFDictionary, nil) To avoid the error, either use your app\u2019s default access group by omitting the  kSecAttrAccessGroup  key in the add attributes, or make sure that the value associated with the key matches one of your app\u2019s access groups. These access groups come from your app\u2019s  Keychain Access Groups Entitlement , its app identifier, and its  App Groups Entitlement , in that order, as described in  Sharing access to keychain items among a collection of apps .  You can check the access group string by setting a breakpoint on the  SecItemAdd(_:_:)  call and using the debugger to print the query dictionary. Look for the  agrp  item:  (lldb) p attributes\n([String : Any]) $R0 = 5 key/value pairs {\n...\n  [3] = {\n    key = \"agrp\"\n    value = \"SKMME9E2Y8.com.example.AppOne\"\n  }\n...\n} If after setting the access group key correctly you still receive the  errSecMissingEntitlement  error, check to make sure the entitlements in your built app match your expectations. Build your app for a hardware target\u2014not the Simulator app\u2014and use Xcode to locate the app bundle on disk:     Then get a list of the app\u2019s entitlements. Run the codesign command-line utility shown in the following example, substituting the Xcode-provided path to your app, like the one highlighted in the preceding illustration.  $ codesign -d --entitlements :- [path]\n\n\n<plist version=\"1.0\">\n<dict>\n   <key>com.apple.developer.team-identifier</key>\n   <string>SKMME9E2Y8</string>\n   <key>application-identifier</key>\n   <string>SKMME9E2Y8.com.example.AppOne</string>\n   <key>keychain-access-groups</key>\n   <array>\n       <string>SKMME9E2Y8.com.example.SharedItems</string>\n   </array>\n   <key>com.apple.security.application-groups</key>\n   <array>\n       <string>group.com.example.AppSuite</string>\n   </array>\n</dict>\n</plist> Inspect the codesign output to determine the groups to which your app actually belongs. The following collectively define your app\u2019s access groups:  Any of the strings in the array associated with the  keychain-access-groups  key.  The string corresponding to the  application-identifier  key (or the  com.apple.application-identifier  key in macOS).  Any of the strings in the array associated with the  com.apple.security.application-groups  key.   ",
+      "status": "FETCHED"
+    },
+    {
+      "name": "item-not-found",
+      "request_url": "https://developer.apple.com/tutorials/data/documentation/security/errsecitemnotfound.json",
+      "accessed_at": "2026-09-07T06:26:04.933150+00:00",
+      "http_status": 200,
+      "final_url": "https://developer.apple.com/tutorials/data/documentation/security/errsecitemnotfound.json",
+      "content_type": "application/json",
+      "response_sha256": "a2db6e50bdc426446682b1d3084871a97af00626def4ab6aff3cc5a1459a832d",
+      "response_bytes": 7107,
+      "retained_file": "remediation-runs/2026-09-07-local-readiness/native/qualified-xcode-keychain-research-01/public-documents/item-not-found.json.gz",
+      "retained_sha256": "daaa074b984c62c68071d2a5e30edd732b0757b9b89e5fb5055e2da32e01a0fc",
+      "title": "errSecItemNotFound",
+      "content": "The item cannot be found.                     ",
+      "status": "FETCHED"
+    },
+    {
+      "name": "interaction-not-allowed",
+      "request_url": "https://developer.apple.com/tutorials/data/documentation/security/errsecinteractionnotallowed.json",
+      "accessed_at": "2026-09-07T06:26:06.312846+00:00",
+      "http_status": 200,
+      "final_url": "https://developer.apple.com/tutorials/data/documentation/security/errsecinteractionnotallowed.json",
+      "content_type": "application/json",
+      "response_sha256": "edbcda7c3c70932142bab48dd7819960fce66129d599b8270e041fa01c182009",
+      "response_bytes": 6104,
+      "retained_file": "remediation-runs/2026-09-07-local-readiness/native/qualified-xcode-keychain-research-01/public-documents/interaction-not-allowed.json.gz",
+      "retained_sha256": "213dc09c121f4c3c3d703c089eb2ad9a3745326c5597793ade5c774192abdcaa",
+      "title": "errSecInteractionNotAllowed",
+      "content": "Interaction with the Security Server is not allowed.                  ",
+      "status": "FETCHED"
+    },
+    {
+      "name": "not-available",
+      "request_url": "https://developer.apple.com/tutorials/data/documentation/security/errsecnotavailable.json",
+      "accessed_at": "2026-09-07T06:26:08.023883+00:00",
+      "http_status": 200,
+      "final_url": "https://developer.apple.com/tutorials/data/documentation/security/errsecnotavailable.json",
+      "content_type": "application/json",
+      "response_sha256": "81b78010cd4cc6cbb63581cd1c9eb37c17852471de2c25dbb53eb4ec3bb4619d",
+      "response_bytes": 5873,
+      "retained_file": "remediation-runs/2026-09-07-local-readiness/native/qualified-xcode-keychain-research-01/public-documents/not-available.json.gz",
+      "retained_sha256": "475832e9576aae452fb0af89611a251d2c4713ef094fc6a29608d03fa49843b1",
+      "title": "errSecNotAvailable",
+      "content": "No trust results are available.                  ",
+      "status": "FETCHED"
+    },
+    {
+      "name": "keychain-access-groups",
+      "request_url": "https://developer.apple.com/tutorials/data/documentation/security/sharing-access-to-keychain-items-among-a-collection-of-apps.json",
+      "accessed_at": "2026-09-07T06:26:09.927717+00:00",
+      "http_status": 200,
+      "final_url": "https://developer.apple.com/tutorials/data/documentation/security/sharing-access-to-keychain-items-among-a-collection-of-apps.json",
+      "content_type": "application/json",
+      "response_sha256": "24b1964cff5e2a1e54102758cb7b9d23626b736826a68f294c365b1e4326a98a",
+      "response_bytes": 33878,
+      "retained_file": "remediation-runs/2026-09-07-local-readiness/native/qualified-xcode-keychain-research-01/public-documents/keychain-access-groups.json.gz",
+      "retained_sha256": "9059ee5e979d8862de9de52f28e61a510b598eac838a51aa43f3f9b5ff216c32",
+      "title": "Sharing access to keychain items among a collection of apps",
+      "content": "Enable apps to share keychain items with each other by adding the apps to an access group.    If you develop a family of apps, all of which rely on the same password or cryptographic key, you can use access groups to securely share that password or key among those apps. For example, you can share credentials, so that logging into one of your apps automatically grants the user access to all of your apps. This kind of sharing doesn\u2019t require interaction with or permission from the user, but limits sharing to apps that are delivered by a single development team.  An access group is a logical collection of apps tagged with a particular group name string. Any app in a given group can share keychain items with all the other apps in the same group. You can add an app to any number of groups, but the app is always part of at least one group that contains only itself. That is, an app can always store and retrieve private keychain items, regardless of whether it also participates in any other groups. Keychain items, on the other hand, are always part of exactly one group.     This form of keychain item sharing applies to all iOS keychain items, and to macOS keychain items when you query with the  kSecUseDataProtectionKeychain  key, set the item\u2019s  kSecAttrSynchronizable  attribute, or both.        You control the groups that your app belongs to by manipulating its entitlements. In particular, an app belongs to all the groups named in a virtual array of strings that the system forms for each app as the concatenation of the following items, evaluated in this order:  The optional  Keychain Access Groups Entitlement  holds an array of strings, each of which names an access group.  Keychain access groups Xcode automatically adds the  application-identifier  entitlement (or the  com.apple.application-identifier  entitlement in macOS) to every app during code signing, formed as the team identifier (team ID) plus the bundle identifier (bundle ID).  Application identifier When you collect related apps in an application group using the  App Groups Entitlement , they share access to a group container, and gain the ability to message each other in certain ways. You can use app group names as keychain access group names, without adding them to the Keychain access groups entitlement.  Application groups  Xcode handles the application identifier (app ID) for you when you set the bundle ID. You set the others by manipulating capabilities in Xcode.     When you create a new app you assign it a bundle ID, typically using reverse DNS notation, with a string like  com.example.AppOne . When code signing your app, Xcode automatically prefixes the bundle ID with your team ID \u2014 the unique character sequence issued by Apple to each development team \u2014 and stores the combined string as the app ID. The system recognizes this app ID as the name of your app\u2019s default keychain access group by including it in your access group array:  [$(teamID).com.example.AppOne] Because app IDs are unique across all apps, and because the app ID is stored in an entitlement protected by code signing, no other app can use it, therefore no other app is in this group. Any keychain items stored with this access group are private to App One. Similarly, if you have a second app with a bundle ID of  com.example.AppTwo , it automatically belongs to its own group:  [$(teamID).com.example.AppTwo] As a result, by default, each app\u2019s keychain items remains isolated from all other apps, although you can add another app signed by the same Apple Developer team to the app\u2019s default keychain access group, using the  Keychain Access Groups Entitlement .        When you want two apps to be able to share keychain items, you can add both to the same keychain access group. Do this by enabling the Keychain Sharing capability in Xcode for each app, and adding a common string to the list of keychain groups in each case. Typically, you use the same kind of reverse DNS naming for a keychain group that you use for a bundle ID, so you might choose  com.example.SharedItems :     As with forming the app ID from the bundle ID, Xcode automatically prefixes keychain groups with your team ID. This ensures that your groups are specific to your development team. When you enable the capability for App One as shown above, its logical list of app groups becomes:  [$(teamID).com.example.SharedItems,\n $(teamID).com.example.AppOne] If you also add the same keychain group to App Two, its logical list of app groups becomes:  [$(teamID).com.example.SharedItems,\n $(teamID).com.example.AppTwo] In effect, the two apps gain a region of overlap to share items.     Notice that the distinct areas represented by the app IDs are still present, allowing each app to continue to access its own, private items. But both apps now also belong to the shared items group, enabling them to share keychain items. In this way, you can add an app to as many different groups as you like.     When your app belongs to an app group, it can share certain kinds of non-keychain data with other apps in the same group. For example, you can use the  init(suiteName:)  method to create a new  UserDefaults  instance that shares the preferences you set among all the apps in the app group. Like keychain access groups, you enable app groups with a capability in Xcode.  Starting in iOS 8, when an app belongs to an app group, it can also use this mechanism to share keychain items. In this example, add App One to the  group.com.example.AppSuite  app group:     App One\u2019s list of access groups expands to include the app group:  [$(teamID).com.example.SharedItems,\n $(teamID).com.example.AppOne,\n group.com.example.AppSuite] This allows it to share keychain items with any app in the App Suite group (distinct from any sharing it\u2019s already doing with apps in the shared items keychain access group).  Xcode doesn\u2019t prepend the app group with the team identifier. Instead, it guards against the reuse of app group names across teams when you try to add an app group to a provisioning profile.     App groups and keychain access groups aren\u2019t mutually exclusive\u2014you can use both in the same app\u2014but they do differ in several important ways that may help you decide which to use for a given situation.  First, as described above, using an app group enables additional data sharing beyond keychain items. You might want this extra sharing, or might already be using an app group for this purpose, and thus not need to add keychain access groups. On the other hand, you might not want to enable this additional sharing at all, and prefer keychain access groups instead.  Second, order matters. The system considers the first item in the list of access groups to be the app\u2019s default access group. This is the access group that keychain services assumes if you don\u2019t otherwise specify one when adding keychain items. An app group can\u2019t ever be the default, because the app ID is always present and appears earlier in the list. However, a keychain access group can be the default, because it appears before the app ID. In particular, the first keychain access group, if any, that you specify in the corresponding capability becomes the app\u2019s default access group. If you don\u2019t specify any keychain access groups, then the app ID is the default.     Unlike apps, which can belong to many access groups, keychain items belong to a single group, identified by the  kSecAttrAccessGroup  attribute. From the item\u2019s point of view, the world is a collection of disjoint groups, and the item belongs to exactly one of them.     When you create a new item with the  SecItemAdd(_:_:)  method, you can specify a group in the add attributes using the  kSecAttrAccessGroup  key. For example, you can create a new generic password item in the Shared Items group defined above:  let accessGroup = \"<# Your Team ID #>.com.example.SharedItems\"\nlet attributes = [kSecClass: kSecClassGenericPassword,\n                  kSecAttrService: service,\n                  kSecAttrAccount: username,\n                  kSecAttrAccessGroup: accessGroup,\n                  kSecValueData: password] as [String: Any]\nlet addStatus = SecItemAdd(attributes as CFDictionary, nil) Use any of the groups to which your app belongs. If you try to use an access group to which your app doesn\u2019t belong, the operation fails and returns the  errSecMissingEntitlement  status. This includes attempts to \u201cprime\u201d an entry using a zero-length string as the value for the  kSecAttrAccessGroup  key, because the empty string represents an invalid group.  If you don\u2019t specify any access group when adding an item, keychain services applies your app\u2019s default access group, which is the first group named in the concatenated list of groups described in  Set your app\u2019s access groups .  When you search for keychain items with the  SecItemCopyMatching(_:_:)  method, you can likewise specify an access group in the search query to limit your search to a particular access group:  let query = [kSecClass: kSecClassGenericPassword,\n             kSecAttrService: service,\n             kSecAttrAccount: username,\n             kSecReturnAttributes: true,\n             kSecAttrAccessGroup: accessGroup,\n             kSecReturnData: true] as [String: Any]\nvar item: CFTypeRef?\nlet readStatus = SecItemCopyMatching(query as CFDictionary, &item) If you specify a group to which your app doesn\u2019t belong, no items match and the query returns the  errSecItemNotFound  status. If you don\u2019t specify an access group in the query, the search matches any of your app\u2019s groups.  ",
+      "status": "FETCHED"
+    },
+    {
+      "name": "tn2415-archived",
+      "request_url": "https://developer.apple.com/library/archive/technotes/tn2415/_index.html",
+      "accessed_at": "2026-09-07T06:26:12.619289+00:00",
+      "http_status": 200,
+      "final_url": "https://developer.apple.com/library/archive/technotes/tn2415/_index.html",
+      "content_type": "text/html",
+      "response_sha256": "20b79893462aaff3ec021163a96b5a63c55967d99934632407f02f2d61f13fb7",
+      "response_bytes": 62256,
+      "retained_file": "remediation-runs/2026-09-07-local-readiness/native/qualified-xcode-keychain-research-01/public-documents/tn2415-archived.html.gz",
+      "retained_sha256": "ac30b219a3fa50decfcb6cfe3b3767e7d001b812af052885b0535393879b5d41",
+      "excerpts": [
+        {
+          "term": "Xcode does not code sign Simulator builds",
+          "text": "is visible in the \"Sign\" step of the build log: A few notes regarding the profile Xcode chooses for code signing: Note: Xcode does not code sign Simulator builds, so you must choose an iOS Device run destination in order to view the Code Sign step in the build log. To double check the entitlements of the profile that Xcode chose to code sign the build, follow these steps: Navigate to Xcode's local provisioning profile library . Locate the provisioning profile by the name that was printed in the build log. Control-click on the profile and choose Show in Finder . Follow the steps in section Inspecting a profile's entitlements . \ufffc Inspect the entitlements of a built app Running the following terminal command prints the entitlements from its signature: $ codesign -d --ent :- /path/to/the.app Listing 2 Example app signature entitlements. <?xml version=\"1.0\" encoding=\"UTF-8\"?> <!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\"> <plist version=\"1.0\"> <d"
+        }
+      ],
+      "status": "FETCHED"
+    },
+    {
+      "name": "tn3137",
+      "request_url": "https://developer.apple.com/tutorials/data/documentation/technotes/tn3137-on-mac-keychains.json",
+      "accessed_at": "2026-09-07T06:26:17.156652+00:00",
+      "http_status": 200,
+      "final_url": "https://developer.apple.com/tutorials/data/documentation/technotes/tn3137-on-mac-keychains.json",
+      "content_type": "application/json",
+      "response_sha256": "11d7caa69245f13b2b1c136d8fc3803256a46577f3540bd455089b13be99418d",
+      "response_bytes": 28715,
+      "retained_file": "remediation-runs/2026-09-07-local-readiness/native/qualified-xcode-keychain-research-01/public-documents/tn3137.json.gz",
+      "retained_sha256": "7105af6b47142840c32ab320db0afc260ea00c6dd3663a5554b2a3d4ad724c0d",
+      "title": "TN3137: On Mac keychain APIs and implementations",
+      "content": "Learn how the keychain on macOS differs from other Apple platforms.    All Apple platforms support the keychain.  On iOS, tvOS, and watchOS the keychain story is very simple: There\u2019s a single SecItem API with consistent behavior.  This is not the case on macOS.  The keychain on macOS has a long history, dating back to the previous millennium.  This history, combined with a requirement to maintain compatibility with existing code, complicates the keychain\u2019s design.  If you don\u2019t understand that design, you may find some of its behavior surprising.  macOS has three keychain APIs:  Keychain. This originated on traditional Mac OS.  Mac OS X supported it as a compatibility measure, and that support persists all the way through to the latest versions of macOS.  SecKeychain. This was introduced with Mac OS X and was the standard macOS keychain API until the introduction of the SecItem API.  SecItem. This was part of the original iOS SDK.  macOS gained support for it in macOS 10.6.   The Keychain API is declared in  <KeychainCore.h>  within the Core Services framework.  The SecKeychain API is declared in  <Security/SecKeychain.h> ,  <Security/SecKeychainItem.h> , and  <Security/SecKeychainSearch.h> , all within the Security framework.  The SecItem API is declared in  <Security/SecItem.h> , also within the Security framework.     macOS has two keychain implementations:  File-based keychain  Data protection keychain   The file-based keychain has its origins on traditional Mac OS.  The data protection keychain originated on iOS and came to macOS with the advent of iCloud Keychain on macOS 10.9.  iOS, tvOS, and watchOS only support the SecItem API with the data protection keychain implementation.     The Keychain and SecKeychain APIs always target the file-based keychain.  The SecItem API can target either implementation.  It defaults to targeting the file-based keychain.  To target the data protection keychain, set the  kSecUseDataProtectionKeychain  attribute or the  kSecAttrSynchronizable  attribute to true.  The file-based keychain is on the road to deprecation.  It\u2019s not officially deprecated, but some of the APIs surrounding it are.  For example,  SecKeychainCreate  was deprecated in the macOS 12 SDK.  Moreover, new features, like iCloud Keychain, require the data protection keychain.     Choosing a keychain API is easy: Use the SecItem API.  If you have existing code that uses the older Keychain or SecKeychain APIs, consider updating it to use the SecItem API as part of your ongoing maintenance work.  Choosing a keychain implementation is more nuanced.  Default to targeting the data protection keychain because:  It behaves consistently across all Apple platforms.  It benefits from new features, like iCloud Keychain.  It has an access control model that\u2019s both easier to understand and better aligned with current platform norms.   In some environments your only option is the data protection keychain, including:  Mac Catalyst apps  iOS Apps on Mac   In these environments you don\u2019t need to supply the  kSecUseDataProtectionKeychain  attribute or the  kSecAttrSynchronizable  attribute to target the data protection keychain.  It\u2019s the default and only option.  The system ignores the  kSecUseDataProtectionKeychain  attribute in these environments.  If you have cross-platform keychain code, you may choose to simplify that code by setting  kSecUseDataProtectionKeychain  in all cases.  In other situations your only option is the file-based keychain:  Programs that read existing items in a file-based keychain must target the file-based keychain.  If you find yourself in this situation, consider migrating items to the data protection keychain as you update your app.  Programs that run outside of a user context, like a  launchd  daemon, must target the file-based keychain.  The data protection keychain is only available to programs running in a user context, like an app or an app extension.      The SecItem API is well aligned with the data protection keychain.  However, when you use it to target the file-based keychain it operates through a shim.  That shim has limitations.  Some of those limitations are inherent to the keychain implementation.  For example, the access control model of the file-based keychain is completely different than that of the data protection keychain, and the shim can\u2019t make up for that.  However, some limitations are just bugs.  To avoid such problems, target the data protection keychain.  This is particularly important when you\u2019re porting keychain code from iOS.     The data protection keychain is only available in a user login context.  You can\u2019t use it, for example, from a  launchd  daemon.  Each user gets exactly one data protection keychain.  The system selects the correct keychain based on the context of the caller.  That\u2019s why the data protection keychain is only available in a user login context.  File-based keychains are stored, as the name suggests, in files.  Every context has a keychain search list and a default keychain.  In a user context the search list includes a per-user  login   keychain and a single  System   keychain, with the former being the default.  In the system context the search list includes just the  System   keychain, which is also the default keychain.  When using the SecItem API to target the file-based keychain:  SecItemAdd(_:_:)  adds the item to the default keychain.  Use  kSecUseKeychain  to override this.  Queries, like those done using  SecItemCopyMatching(_:_:) , consult all keychains in the search list.   Use  kSecMatchSearchList  to override this.   Each keychain implementation uses its own access control model:  The file-based keychain uses access control lists ( SecAccess ).  The data protection keychain uses keychain access groups, supplemented by an optional access control object ( SecAccessControl ).   macOS builds the list of data protection keychain access groups available to your program from its code signing entitlements.  For the details, see  Sharing access to keychain items among a collection of apps .  These entitlements must be authorized by a provisioning profile.  Your program needs an app-like bundle structure in which to embed that profile.  This is standard for app and app extensions but not for command-line tools.  For information on how to wrap a command-line tool in a dummy app-like structure, see  Signing a daemon with a restricted entitlement .  This command-line tool will only work when run from a user context because, regardless of the packaging, the data protection keychain is only available in that context.     If you\u2019re building library code, its data protection keychain access is determined by the entitlements of the host process\u2019s main executable.  For more on provisioning profiles, see  TN3125: Inside Code Signing: Provisioning Profiles .  The data protection keychain can hold all keychain item classes (Internet password, generic password, certificate, key).  macOS 11 and later synchronize all classes; earlier versions synchronize only the password classes.  Some keychain features require the data protection keychain, including:  iCloud Keychain.  See the  kSecAttrSynchronizable  attribute.  Protecting an item with biometrics (Touch ID and Face ID).  See  Restricting keychain item accessibility .  Protecting a key with the Secure Enclave.  See  Protecting keys with the Secure Enclave .      The Keychain Access application supports both file-based keychains and the data protection keychain.  The keychain list shows all the file-based keychains in the search list for the current user\u2014typically this is just  login   and  System  \u2014and the data protection keychain.  It displays the latter as either  iCloud Keychain   or  Local Items  , depending on whether the user has enabled iCloud Keychain.  To create, add, and remove a file-based keychain, choose the corresponding command on the File menu.  Keychain Access displays all keychain items in file-based keychains but only password items in the data protection keychain.  Keychain Access sometimes fails to reflect changes made to the keychain by other apps (r. 82556933).  If you see unexpected results, quit and relaunch Keychain Access.  The keychain support in the  security  command-line tool is primarily focused on the file-based keychain.     2022-11-01   Republished as TN3137.  Made significant editorial changes.  2021-12-10   First published as \u201dOn Mac Keychains\u201d on Apple Developer Forums.   ",
+      "status": "FETCHED"
+    },
+    {
+      "name": "tn3125",
+      "request_url": "https://developer.apple.com/tutorials/data/documentation/technotes/tn3125-inside-code-signing-provisioning-profiles.json",
+      "accessed_at": "2026-09-07T06:26:19.394147+00:00",
+      "http_status": 200,
+      "final_url": "https://developer.apple.com/tutorials/data/documentation/technotes/tn3125-inside-code-signing-provisioning-profiles.json",
+      "content_type": "application/json",
+      "response_sha256": "58f954251640ba0c9dd648a3d6f78421bf97d9e555fc9a0b0cf74576e93d8ed0",
+      "response_bytes": 37803,
+      "retained_file": "remediation-runs/2026-09-07-local-readiness/native/qualified-xcode-keychain-research-01/public-documents/tn3125.json.gz",
+      "retained_sha256": "cfdf590bb30963a7ec644c704be0eadbd4bda32515368afc5b1b137068a750f1",
+      "title": "TN3125: Inside Code Signing: Provisioning Profiles",
+      "content": "Learn how provisioning profiles enable third-party code to run on Apple platforms.    Code signing is a foundational technology on all Apple platforms.  Many documents that discuss code signing focus on solving a specific problem.  The  Inside Code Signing   technote series is different: It peeks behind the code signing curtain, to give you a better understanding of how this technology works.  Read these technotes to make better code signing choices up front, to understand why Apple\u2019s code signing tools work the way they do, to inform your investigation of any code signing issues you encounter, and because learning stuff is fun!  The other technotes in the  Inside Code Signing   series are:  TN3126: Inside Code Signing: Hashes  TN3127: Inside Code Signing: Requirements  TN3161: Inside Code Signing: Certificates   The  Inside Code Signing   technotes discuss code signing details that aren\u2019t considered API.  The structure of a code signature has changed numerous times in the past and may well change again in the future.  Don\u2019t encode this information in your product.  When signing code, use Xcode (all platforms) or the  codesign  tool (macOS only).  To get information or validate a code signature, use the  codesign  tool or the  Code Signing Services  API.  Apple updates these facilities to accommodate any changes to the code signature structure as they roll out.        Apple platforms, except macOS, won\u2019t run arbitrary third-party code.  All execution of third-party code must be authorized by Apple.  This authorization comes in the form of a provisioning profile, which ties together five criteria:  Who is allowed to sign code?  What apps are they allowed to sign?  Where can those apps run?  When can those apps run?  How can those apps be entitled?   In this document the term  app   refers to a main executable packaged in a bundle structure.  This encompasses apps, app extensions, App Clips, system extensions, and XPC Services.     You create provisioning profiles using the Apple Developer website, either directly using the website or indirectly using Xcode or the  App Store Connect API .  When the Apple Developer website creates a profile for you, it cryptographically signs it.  When you run an app on a device, the device checks this signature to determine if the profile is valid and, if so, checks that the app meets the criteria in the profile.  Unlike Apple\u2019s other platforms, macOS doesn\u2019t require a provisioning profile to run third-party code.  However, provisioning profiles are still relevant on macOS, as explained in  Entitlements on macOS .     There is one interesting edge case with provisioning profiles: When you submit your app to the App Store, the App Store re-signs the app as part of the distribution process.  Before doing that, it checks that the app is signed and provisioned correctly.  That check means that each individual device doesn\u2019t need to perform further security checks, so the final app doesn\u2019t have a provisioning profile.  However, this third-party code was still authorized by a profile, albeit during the App Store distribution process.     A provisioning profile is a property list wrapped within a Cryptographic Message Syntax (CMS) signature.  To view the original property list, remove the CMS wrapper using the  security  tool:  % security cms -D -i Profile_Explainer_iOS_Dev.mobileprovision -o Profile_Explainer_iOS_Dev-payload.plist\n% cat Profile_Explainer_iOS_Dev-payload.plist \n\u2026\n<dict>\n  \u2026 lots of properties \u2026\n</dict>\n</plist> For more details on CMS, see  RFC 5652 .  The exact format of provisioning profiles isn\u2019t documented and could change at any time.  Use the techniques shown here for understanding and debugging purposes.  Avoid building a product based on these details; if you do build such a product, be prepared to update it as the Apple development story evolves.     To illustrate this point, the traditional property list view of a profile is no longer the source of truth on modern systems.  Rather, each profile contains a  DER-Encoded-Profile  property which holds a binary form of the profile that\u2019s the new source of truth.  For more on this switch, see  The future is DER .  Still, the property list is easier to read and so the bulk of this technote focuses on that.  For more information about the tools used in these examples, read their man pages.  If you\u2019re unfamiliar with that process, see   .     Every profile has a  DeveloperCertificates  property holding the certificates of each developer who can sign code covered by the profile.  For example:  % plutil -extract DeveloperCertificates xml1 -o - Profile_Explainer_iOS_Dev-payload.plist\n\u2026\n<array>\n  <data>\n  MIIFxDCCBKygAwIBAgIQfv+ckbvr2KtCgVI1ZPkPcjANBgkqhkiG9w0BAQsFADB1MUQw\n  \u2026\n  PX0ovWucPvYp/HUcOnlbchPf/H63K8Jm5siTJlKsgGYEMX5wCJkh/+mlX1oAOH6CtOLy\n  kA==\n  </data>\n  \u2026 perhaps more \u2026\n</array>\n</plist> To extract a specific certificate, add its index to the key path:  % plutil -extract DeveloperCertificates.0 raw -o - Profile_Explainer_iOS_Dev-payload.plist | base64 -D > cert0.cer\n% certtool d cert0.cer \nSerial Number      : 7E FF 9C 91 BB EB D8 AB 42 81 52 35 64 F9 0F 72 \nIssuer Name        :\n   Common Name     : Apple Worldwide Developer Relations Certification Authority\n   \u2026\nSubject Name       :\n   \u2026\n   Common Name     : Apple Development: \u2026\n   \u2026\nNot Before         : 09:15:23 Apr 21, 2021\nNot After          : 09:15:22 Apr 21, 2022\n\u2026 To learn more about code-signing certificates, read  TN3161: Inside Code Signing: Certificates .     Most profiles apply to a single App ID, encoded in the  Entitlements  >  application-identifier  property:  % plutil -extract Entitlements.application-identifier raw -o - Profile_Explainer_iOS_Dev-payload.plist\nSKMME9E2Y8.com.example.apple-samplecode.ProfileExplainer On macOS the standard App ID entitlement is  com.apple.application-identifier .  A Mac Catalyst app uses both  com.apple.application-identifier  and  application-identifier .     This property holds an App ID, composed of an App ID prefix and a bundle ID.  In this example  SKMME9E2Y8  is the App ID prefix and  com.example.apple-samplecode.ProfileExplainer  is the bundle ID.  A profile might refer to a wildcard App ID:  % security cms -D -i Profile_Explainer_Wild_iOS_Dev.mobileprovision -o Profile_Explainer_Wild_iOS_Dev-payload.plist          \n% plutil -extract Entitlements.application-identifier raw -o - Profile_Explainer_Wild_iOS_Dev-payload.plist\nSKMME9E2Y8.com.example.apple-samplecode.* This profile applies to any app whose App ID starts with  SKMME9E2Y8.com.example.apple-samplecode.     Most profiles apply to a specific list of devices.  This is encoded in the  ProvisionedDevices  property:  % plutil -extract ProvisionedDevices xml1 -o - Profile_Explainer_iOS_Dev-payload.plist \n\u2026\n<array>\n    <string>00008030-001544522E60802E</string>\n    \u2026 perhaps more \u2026\n</array>\n</plist> App Store distribution profiles have no  ProvisionedDevices  property because you can\u2019t run an App Store distribution signed app locally.  Developer ID and In-House (Enterprise) distribution profiles have the  ProvisionsAllDevices  property, indicating that they apply to all devices.  For more details about Developer ID provisioning profiles on the Mac, see  Entitlements on macOS .     Every profile has an  ExpirationDate  property which limits how long the profile remains valid.  For example:  % plutil -extract ExpirationDate raw -o - Profile_Explainer_iOS_Dev-payload.plist    \n2022-07-23T14:30:34Z This validity period varies by profile type, but it\u2019s typically not more than a year.  The exception here is Developer ID profiles, which have an expiration date far in the future.     Every profile has an  Entitlements  property which authorizes the app to use specific entitlements.  For example:  % plutil -extract Entitlements xml1 -o - Profile_Explainer_iOS_Dev-payload.plist\n\u2026\n<dict>\n  <key>application-identifier</key>\n  <string>SKMME9E2Y8.com.example.apple-samplecode.ProfileExplainer</string>\n  <key>com.apple.developer.team-identifier</key>\n  <string>SKMME9E2Y8</string>\n  <key>get-task-allow</key>\n  <true/>\n  <key>keychain-access-groups</key>\n  <array>\n    <string>SKMME9E2Y8.*</string>\n    <string>com.apple.token</string>\n  </array>\n</dict>\n</plist> The entitlements in the profile act as an allowlist.  This isn\u2019t the same as the entitlements claimed by the app.  To actually claim an entitlement, include the entitlement in the app\u2019s code signature.  Every entitlement claimed by the app must be in the profile\u2019s allowlist but the reverse isn\u2019t true.  It\u2019s fine for the allowlist to include entitlements that the app doesn\u2019t claim.  A macOS app can claim certain entitlements without them being authorized by a provisioning profile.  For more on this, see  Entitlements on macOS .     Some entitlements in the allowlist use wildcard syntax.  In the above example,  SKMME9E2Y8.*  means that the app can claim any keychain access group with the  SKMME9E2Y8.  prefix.  Wildcards don\u2019t make sense in the app\u2019s code signature.  To dump the entitlements claimed by the app, use  codesign  with the  --entitlements  argument:  % codesign --display --entitlements - --xml ProfileExplainer.app | plutil -convert xml1 -o - -\n\u2026\n<dict>\n  <key>application-identifier</key>\n  <string>SKMME9E2Y8.com.example.apple-samplecode.ProfileExplainer</string>\n  <key>com.apple.developer.team-identifier</key>\n  <string>SKMME9E2Y8</string>\n  <key>get-task-allow</key>\n  <true/>\n  <key>keychain-access-groups</key>\n  <array>\n    <string>SKMME9E2Y8.com.example.apple-samplecode.ProfileExplainer</string>\n    <string>SKMME9E2Y8.com.example.apple-samplecode.shared</string>\n  </array>\n</dict>\n</plist> By default  --entitlements  dumps a human-readable representation of the DER-encoded entitlements.  The above example uses  --xml  to force it to output XML.  It runs the output through  plutil  to pretty print that XML.  To learn more about DER in provisioning profiles, see  The future is DER .     Every entitlement claimed by this app is authorized by its profile, and thus iOS allows the app to run.  Note that the  keychain-access-groups  value,  SKMME9E2Y8.com.example.apple-samplecode.ProfileExplainer , starts with  SKMME9E2Y8.  and thus is allowed by the wildcard.     A macOS app can claim certain entitlements without them being authorized by a provisioning profile.  These  unrestricted entitlements   include:  com.apple.security.get-task-allow  com.apple.security.application-groups  Those used to enable and configure the  App Sandbox  Those used to configure the  Hardened Runtime   On other Apple platforms the equivalent to  com.apple.security.get-task-allow  is  get-task-allow  and, as with all entitlements on those platforms, must be authorized by a profile.  Also, App Groups work differently on macOS and other platforms.  For details, see  App Groups Entitlement .     In contrast,  restricted entitlements   must be authorized by a provisioning profile.  This is an important security feature on macOS.  For example, the fact that the  keychain-access-groups  entitlement must be authorized by a profile means that other developers can\u2019t impersonate your app in order to steal its keychain items.  A Mac app that uses no restricted entitlements doesn\u2019t need a provisioning profile.  This is true even if the app is distributed on the App Store.  The only exception to this rule is TestFlight, which always requires a profile.  macOS supports provisioning profiles for both App Store and Developer ID distribution.  Some entitlements are not supported by Developer ID profiles.  For the details, see  Supported capabilities (macOS)  in  Developer Account Help .  For general information about Developer ID signing, see  Signing Mac Software with Developer ID     In the early days of iOS development it was common to install a provisioning profile on the device as a whole (in the Settings app).  That\u2019s still possible, but current best practice is to embed the profile within the app itself:  macOS expects to find the profile at  MyApp.app/Contents/embedded.provisionprofile .  Other Apple platforms expect to find the profile at  MyApp.app/embedded.mobileprovision .   Note that macOS also uses a different file name extension for provisioning profiles.  Apps that you download from the App Store don\u2019t contain an embedded provisioning profile because the App Store checks that the app is signed and provisioned correctly as part of its distribution process.  Some macOS products, like daemons and command-line tools, ship as a standalone executable.  A standalone executable can\u2019t claim a restricted entitlement because there\u2019s no place to embed the provisioning profile that authorizes that claim.  If your standalone executable needs to do this, wrap it in an app-like structure.  For an example of this, see  Signing a daemon with a restricted entitlement .     Modern systems no longer treat the profile\u2019s property list as the source of truth.  Rather, they use the binary form of the profile stored in the profile\u2019s  DER-Encoded-Profile  property:  % plutil -extract DER-Encoded-Profile raw -o - Profile_Explainer_iOS_Dev-payload.plist\nMIINQQYJKoZIhvcNAQcCoIINMjCCDS4CAQExDzANBglghkgBZQMEAgEFADCCAvwGCSqG\u2026 This form of the profile is encoded as DER, a binary encoding of ASN.1 that\u2019s common in cryptographic file formats.  To extract it, first extract the property to a file:  % plutil -extract DER-Encoded-Profile raw Profile_Explainer_iOS_Dev-payload.plist | base64 -D > Profile_Explainer_iOS_Dev.der  This is a whole new copy of the profile, so undo the CMS wrapper again:  % security cms -D -i Profile_Explainer_iOS_Dev.der -o Profile_Explainer_iOS_Dev-payload.der  Finally, dump the DER-encoded payload itself:  % openssl asn1parse -in Profile_Explainer_iOS_Dev-payload.der -inform der -i | cut -c 30- \nSET               \n \u2026\n SEQUENCE          \n  UTF8STRING        :ExpirationDate\n  UTCTIME           :220723143034Z\n \u2026\n SEQUENCE          \n  UTF8STRING        :ProvisionedDevices\n  SEQUENCE          \n   UTF8STRING        :00008030-001544522E60802E\n SEQUENCE          \n  UTF8STRING        :DeveloperCertificates\n  SEQUENCE          \n   OCTET STRING      [HEX DUMP]:1A6836292903FEFEB3A1303507436AD808BEDE7100E360F8F632579AC7EACA96\n SEQUENCE          \n  UTF8STRING        :Entitlements\n  appl [ 16 ]       \n   INTEGER           :01\n   cont [ 16 ]       \n    SEQUENCE          \n     UTF8STRING        :application-identifier\n     UTF8STRING        :SKMME9E2Y8.com.example.apple-samplecode.ProfileExplainer\n    SEQUENCE          \n     UTF8STRING        :com.apple.developer.team-identifier\n     UTF8STRING        :SKMME9E2Y8\n    SEQUENCE          \n     UTF8STRING        :get-task-allow\n     BOOLEAN           :255\n    SEQUENCE          \n     UTF8STRING        :keychain-access-groups\n     SEQUENCE          \n      UTF8STRING        :SKMME9E2Y8.*\n      UTF8STRING        :com.apple.token This output contains mostly the same information as the property list, just encoded in DER form.  The one exception is the  DeveloperCertificates  property.  This doesn\u2019t contain a full copy of each certificate, but rather a SHA-256 checksum of the certificate.  Assuming the certificate extracted from the property list earlier as  cert0.cer , run  shasum  to confirm that checksum:  % shasum -a 256 cert0.cer\n1a6836292903fefeb3a1303507436ad808bede7100e360f8f632579ac7eaca96 \u2026 This DER-encoded profile is required starting with iOS 15, iPadOS 15, tvOS 15, and watchOS 8.  For more on that change, see  Using the latest code signature format .     2024-02-06   Added a link to  TN3126: Inside Code Signing: Hashes .  Made other minor editorial changes.  2022-05-24   Made minor editorial changes.  2022-05-03   Republished as TN3125.  Added  The future is DER  section.  Updated the examples to use  plutil .  Also made significant editorial changes.  2021-07-26   First published as \u201dWhat exactly is a provisioning profile?\u201d on Apple Developer Forums.   ",
+      "status": "FETCHED"
+    },
+    {
+      "name": "running-apps",
+      "request_url": "https://developer.apple.com/tutorials/data/documentation/xcode/running-your-app-on-simulated-or-physical-devices.json",
+      "accessed_at": "2026-09-07T06:26:21.930295+00:00",
+      "http_status": 200,
+      "final_url": "https://developer.apple.com/tutorials/data/documentation/xcode/running-your-app-on-simulated-or-physical-devices.json",
+      "content_type": "application/json",
+      "response_sha256": "bba44d442e3aa168811e468592bd36dfa4ca7becd7a1efd713bda7bca57c172e",
+      "response_bytes": 18233,
+      "retained_file": "remediation-runs/2026-09-07-local-readiness/native/qualified-xcode-keychain-research-01/public-documents/running-apps.json.gz",
+      "retained_sha256": "2b3d1fce91cccd383911590ee9559aa616e44be0d916d5f3e6d131cda6151fb2",
+      "title": "Running your app on simulated or physical devices",
+      "content": "Launch your app on a simulated iOS, iPadOS, tvOS, visionOS, or watchOS device, or on a physical device paired with your Mac.    To test your app, build and run it on a simulated or physical device. Use simulated devices to debug your app on a variety of hardware that you might not have access to. Be aware that simulators run within Device Hub on your Mac and don\u2019t replicate the performance or features of a physical device. To verify that your app runs exactly as intended, run it on one or more physical devices.     Before you build and run your app, select a build scheme that includes the target for your app in Xcode. A  scheme   is a collection of project details and settings that tell Xcode how to build and run a product from your project. In the toolbar, choose a scheme from the pop-up menu on the left of the run-destination.  Then choose a simulated or physical device from the run destination pop-up menu. Xcode populates the run destination menu with a list of available devices, including simulators for common hardware and the latest operating systems, based on the scheme that you select. For example, if the scheme contains a watchOS app, Xcode shows only watchOS simulated and physical devices as available run destinations. For a scheme containing a macOS app, or the macOS version of an iPad app, choose My Mac from the run destination pop-up menu.  To add physical devices to the run destination pop-up menu, choose Manage Devices and then use Device Hub to pair devices with your Mac. For more information, see  Managing your simulated and physical devices in Device Hub .  If you don\u2019t have platform support installed for your target, you can\u2019t build and run your app on a device. To install platform support, click the Get button that appears next to the  Any [Platform] Device  run destination. Alternatively, manage your downloads later in Components settings (see  Downloading and installing additional Xcode components ).  To learn more about schemes, see  Customizing the build schemes for a project .  When running apps in a simulator in Device Hub, some hardware-specific features might not be available. Frameworks that provide access to device-specific features also provide API to tell you when those features are available. Call those APIs and handle the case where a feature isn\u2019t available. To test the feature itself, run your code on a physical device.        To build and run the app on the selected simulated or physical device, click the Run button in the toolbar or choose Product > Run. View the status of the build in the activity area of the toolbar.  If the build is successful, Xcode runs the app and opens a debugging session in the   debug area. Use the controls in the debug area to step through your code, inspect   variables, and interact with the debugger. To run the app without the debugger, turn off the Debug executable option in the Info tab of the scheme editor.  If you choose a simulator as a run destination, Device Hub opens a compact window by default that shows your app on a device screen where you can interact with it using your Mac.     The first time you run your app on a physical device other than a Mac, Xcode needs to register the device and create a provisioning profile that contains the device. To set up a profile, see  Set up code signing for physical devices . Then Xcode runs the app on the device, and you can interact with your app using both the device and Device Hub. To use Device Hub, select the device in the sidebar and click View Screen in the canvas area.  For more information on interacting with different device types in Device Hub, see   Interacting with your app in Device Hub  and  Configuring the environment of a simulated device .  If Xcode stops building the app because it encounters an error, click the indicators in the activity area to read the error and warning messages in the Issue navigator. If you want Xcode to show all build errors, toggle off \u201cStop build on first error\u201d under Issues in General settings, then run the app again.  When you\u2019re done testing your app in Device Hub, click the Stop button in the Xcode toolbar.     If you choose a physical device as the run destination, perform a few additional steps to create a development provisioning profile in Xcode.   First, sign in with your Apple Developer Program or personal Apple Account in Xcode > Settings > Apple Accounts.  Then, in the Signing & Capabilities pane of the project editor, click Set Up Signing under Signing if it appears. In the sheet, choose your team from the Team pop-up menu, enter a unique bundle ID ( CFBundleIdentifier ) in the Bundle Identifier field, and click Set Up. If your bundle ID isn\u2019t unique, Xcode shows a warning at the bottom and inactivates the Set Up button.     If the Set Up Signing button doesn\u2019t appear, toggle \u201cAutomatically manage signing\u201d on, assign your project to a team, and enter a bundle ID in the Signing & Capabilities pane instead.  In the toolbar of the project editor, choose the physical device as the run destination. When you enable the \u201cAutomatically manage signing\u201d option, Xcode registers the device and creates the development provisioning profile for you. If a Register button appears under Signing, click it to add it to the provisioning profile.  You don\u2019t need to set up signing to run your macOS app on your Mac unless you add capabilities that require provisioning.     For more information on developer accounts, see  Choosing a Membership .  ",
+      "status": "FETCHED"
+    },
+    {
+      "name": "xcode-support",
+      "request_url": "https://developer.apple.com/support/xcode/",
+      "accessed_at": "2026-09-07T06:26:25.021794+00:00",
+      "http_status": 200,
+      "final_url": "https://developer.apple.com/xcode/system-requirements",
+      "content_type": "text/html; charset=UTF-8",
+      "response_sha256": "f3b50f823fbab8f335a59e40cfa5b5699299b58718c1ef990df9051313fe2896",
+      "response_bytes": 141269,
+      "retained_file": "remediation-runs/2026-09-07-local-readiness/native/qualified-xcode-keychain-research-01/public-documents/xcode-support.html.gz",
+      "retained_sha256": "2b41c031c86e16d888561d9c04937d50a266c81f1fc86967700f510af9a42334",
+      "excerpts": [
+        {
+          "term": "Xcode 26.3",
+          "text": "15 or later watchOS 8 or later visionOS 1 or later Compiler: Swift 6.3 Language mode: Swift 6 Swift 5 Swift 4.2 Swift 4 Xcode 26.3 macOS Sequoia 15.6 - macOS Tahoe 26.x iOS 26.2 tvOS 26.2 watchOS 26.2 visionOS 26.2 macOS 26.2 DriverKit 25.1 iOS 15\u201326.2 iPadOS 15\u201326.2 tvOS 15\u201326.2 watchOS 8-26.2 visionOS 1\u201326.2 macOS 11-26.2 DriverKit 20-25.1 iOS 15 or later tvOS 15 or later watchOS 8 or later visionOS 1 or later iOS 15 or later tvOS 15 or later watchOS 8 or later visionOS 1 or later Compiler: Swift 6.2.3 Language mode: Swift 6 Swift 5 Swift 4.2 Swift 4 Xcode 26.2 macOS Sequoia 15.6 - macOS Tahoe 26.x iOS 26.2 tvOS 26.2 watchOS 26.2 visionOS 26.2 macOS 26.2 DriverKit 25.1 iOS 15\u201326.2 iPadOS 15\u201326.2 tvOS 15\u201326.2 watchOS 8-26.2 visionOS 1\u201326.2 macOS 11-26.2 DriverKit 20-25.1 iOS 15 or later tvOS 15 or later watchOS 8 or later visionOS 1 or later iOS 15 or later tvOS 15 or later watchOS 8 or later visionOS 1 or later Compiler: Swift 6.2.3 Language mode: Swift 6 Swift 5 "
+        },
+        {
+          "term": "Xcode 26.5",
+          "text": "15 or later watchOS 8 or later visionOS 1 or later Compiler: Swift 6.3 Language mode: Swift 6 Swift 5 Swift 4.2 Swift 4 Xcode 26.5 macOS Tahoe 26.2 - macOS Tahoe 26.x iOS 26.5 tvOS 26.5 watchOS 26.5 visionOS 26.5 macOS 26.5 DriverKit 25.5 iOS 15\u201326.5 iPadOS 15\u201326.5 tvOS 15\u201326.5 watchOS 8-26.5 visionOS 1\u201326.5 macOS 11-26.5 DriverKit 20-25.5 iOS 15 or later tvOS 15 or later watchOS 8 or later visionOS 1 or later iOS 15 or later tvOS 15 or later watchOS 8 or later visionOS 1 or later Compiler: Swift 6.3 Language mode: Swift 6 Swift 5 Swift 4.2 Swift 4 Xcode 26.4.1 macOS Tahoe 26.2 - macOS Tahoe 26.x iOS 26.4 tvOS 26.4 watchOS 26.4 visionOS 26.4 macOS 26.4 DriverKit 25.4 iOS 15\u201326.4 iPadOS 15\u201326.4 tvOS 15\u201326.4 watchOS 8-26.4 visionOS 1\u201326.4 macOS 11-26.4 DriverKit 20-25.4 iOS 15 or later tvOS 15 or later watchOS 8 or later visionOS 1 or later iOS 15 or later tvOS 15 or later watchOS 8 or later visionOS 1 or later Compiler: Swift 6.3 Language mode: Swift 6 Swift 5 Swift "
+        }
+      ],
+      "status": "FETCHED"
+    },
+    {
+      "name": "xcode-download-resources",
+      "request_url": "https://developer.apple.com/xcode/resources/",
+      "accessed_at": "2026-09-07T06:26:30.416520+00:00",
+      "http_status": 200,
+      "final_url": "https://developer.apple.com/xcode/resources/",
+      "content_type": "text/html; charset=UTF-8",
+      "response_sha256": "46c6d47ac8b8c029d15e1e09cf4d115360f570d489bd5809776bd7c925ac1393",
+      "response_bytes": 112967,
+      "retained_file": "remediation-runs/2026-09-07-local-readiness/native/qualified-xcode-keychain-research-01/public-documents/xcode-download-resources.html.gz",
+      "retained_sha256": "02a7c0d54f4b169f860dd99d792dc2eb347dbffa88af88fe7e3c8df48aec1ba5",
+      "excerpts": [
+        {
+          "term": "older versions of Xcode",
+          "text": "ls, and more. Download Xcode from the Mac App Store View available Xcode betas Additional tools Get command line tools, older versions of Xcode, and beta version of other software. To view downloads, simply sign in to your Apple Account. Apple Developer Program membership isn\u2019t required. View downloads Release Notes Keep up with new features and changes to APIs. Browse Release Notes Documentation Get the latest Xcode updates, essentials, and how-to articles. Browse documentation Videos Learn about the latest Xcode advances and features through video presentations. Browse videos C++ Language Support Find C++ standard features available on Apple platforms and in the Apple Clang compiler. View documentation SDK Support Learn about supported SDKs, minimum requirements, and more. View details Develop in Swift Develop in Swift Tutorials are a great first step toward a career in app development using Xcode, Swift, and SwiftUI. Learn more We\u2019re here to help Meet with Apple Join us aroun"
+        }
+      ],
+      "status": "FETCHED"
+    },
+    {
+      "name": "device-only-accessibility",
+      "request_url": "https://developer.apple.com/tutorials/data/documentation/security/ksecattraccessibleafterfirstunlockthisdeviceonly.json",
+      "accessed_at": "2026-09-07T06:26:33.439432+00:00",
+      "http_status": 200,
+      "final_url": "https://developer.apple.com/tutorials/data/documentation/security/ksecattraccessibleafterfirstunlockthisdeviceonly.json",
+      "content_type": "application/json",
+      "response_sha256": "60eb82e1cc172273be8d6b549ef20448f627bcc991356a81d120a6ca64582816",
+      "response_bytes": 8545,
+      "retained_file": "remediation-runs/2026-09-07-local-readiness/native/qualified-xcode-keychain-research-01/public-documents/device-only-accessibility.json.gz",
+      "retained_sha256": "938c1d3d2a6bbc4d7d11697a83e7b4196bb290b2674e25187f6186e1d535b0a8",
+      "title": "kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly",
+      "content": "The data in the keychain item cannot be accessed after a restart until the device has been unlocked once by the user.                    After the first unlock, the data remains accessible until the next restart. This is recommended for items that need to be accessed by background applications. Items with this attribute  do not   migrate to a new device. Thus, after restoring from a backup of a different device, these items will not be present.  ",
+      "status": "FETCHED"
+    }
+  ],
+  "unavailable_URL_leads": [
+    {
+      "url": "https://developer.apple.com/tutorials/data/documentation/xcode/running-your-app-in-simulator-or-on-a-device.json",
+      "status": 404,
+      "resolution": "Actual current URL found from official Xcode index, retained above."
+    },
+    {
+      "url": "https://developer.apple.com/tutorials/data/documentation/technotes/tn3137-on-mac-keychain-apis-and-implementations.json",
+      "status": 404,
+      "resolution": "Actual slug tn3137-on-mac-keychains found from official Technotes index, retained above."
+    }
+  ],
+  "cleanup": {
+    "Gradle_Xcode_builds_or_signing_started": false,
+    "simulators_booted_or_created": false,
+    "developer_selection_license_installation_entitlements_modified": false,
+    "private_material_read": false,
+    "metadata_network_subprocesses": "All bounded command/fetch subprocess calls completed; no retained task worker. Root build lane intentionally not stopped or cleaned by reviewer.",
+    "retained_evidence": "Only compressed public docs/runtime metadata, exactSDKexcerpts and this report. No temporary download or build directories created."
+  }
+}

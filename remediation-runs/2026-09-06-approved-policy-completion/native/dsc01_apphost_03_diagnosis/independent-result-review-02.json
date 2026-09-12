@@ -1,0 +1,884 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-09-06T11:30:46.224169+00:00",
+  "candidate": "DS-C01 native/Compose foreground integration residual",
+  "original_observer": "/root",
+  "independent_source_and_result_validator": "/root/native_fix_review",
+  "harness_author": "/root/native_fix_review",
+  "harness_independent_execution_approver": "/root/release_fix_review",
+  "classification": "CONFIRMED DEFECT \u2014 sustained native/Compose direction invariant failure in the tested instrumented iOS application path",
+  "severity": "Medium",
+  "severity_reason": "The original native host semantic direction disagrees with explicit app language/direct Compose direction after foreground. Native UIKit interaction/accessibility/navigation assumptions can diverge; gesture failure, data loss, crash, or privacy leakage was not demonstrated by this scenario.",
+  "source_baseline": {
+    "commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+    "tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+    "branch": "main",
+    "diff_sha256": "38326880d1f9332618d193f73d49cebc6de063dd26c7e87a8711be9a04a5a430",
+    "source_manifest_sha256": "de7573ed1f4e1a19969f3063e135d234cd57ec8764c4af784cf4b3eaff5ef9b4"
+  },
+  "source_locations": [
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/composeApp/src/iosMain/kotlin/com/parlor/app/MainViewController.kt",
+      "reviewed_sha256": "c77abd03ddcae230b4752d888b16c3d74231d89c967624c31129d176a5ed20ce",
+      "reviewed_lines": [
+        18,
+        24
+      ]
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/iosMain/kotlin/com/parlor/designsystem/localization/LocalAppLocale.ios.kt",
+      "reviewed_sha256": "0e0783ca3e38634bd3469760f5dbfa5ade8509b976d0ec676202f4513cd8e098",
+      "reviewed_lines": [
+        28,
+        83
+      ]
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/iosApp/iosApp/ContentView.swift",
+      "reviewed_sha256": "2e9bf560447c78c84462daccafc67cee961428dbd592adb6e12ddf085ab67a55",
+      "reviewed_lines": [
+        11,
+        62
+      ]
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/localization/ProvideAppLanguage.kt",
+      "reviewed_sha256": "b4f4286459fe923ebaa3e156f4a9995232ce40ad32ae9bc43f73a929da77dc18",
+      "reviewed_lines": [
+        1,
+        62
+      ]
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/composeApp/src/commonMain/kotlin/com/parlor/app/App.kt",
+      "reviewed_sha256": "622b679a2ef023fab17bf6c8ed8eb38c1fbc2b76a391f5f9a8298d59da9dda59",
+      "reviewed_lines": [
+        60,
+        105
+      ]
+    }
+  ],
+  "evidence": [
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-03/receipt.json",
+      "sha256": "53a8e3b6ded5a05457602b0aeaaf0bde38cebad97a74711119bff2a097db02d2"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-03/probe-settings-result.json",
+      "sha256": "bd25c3369f78085958f6d0d2d5aedb580a997c35df8db46df2c7aa67789d19f0"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-03/probe-whodunit-result.json",
+      "sha256": "34706e14a3fdd3648e0971fad718df77ed2b9efcd91342fe4ab9bdef8d4d2475"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-03/xcresult-summary.json",
+      "sha256": "18dc7609f37ac172afbf440440589d13ea4ba90c933b50112ae20a67a516832f"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-03/xcresult-tests.json",
+      "sha256": "a1facfd508b64ccd5e6c0c8821ff6261ba097273b2147f9c9ba6d20703fa2a8c"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-03/xcodebuild.log",
+      "sha256": "ef3a99bf2202e8209f010e02e9d72fa6fb95a85059cb1038f8802d0eb0edca91"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-03/copied-source.diff",
+      "sha256": "71edce923f0a635271f97d533313e58f2b37041f49254d5dd7baf0c9e363925f"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-03/copied-source-manifest.json",
+      "sha256": "73dd75ba12fbb8866ddc2ec3c572dd5bd7a1b80858fb82d2ebe33691bf234781"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-03/copied-source-inputs-after-build.json",
+      "sha256": "9f6228c3f37988d898d187840a5fb7a425dff03788c95b6471da52c3c6191f47"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-03/secondary-fifo-ownership-final.json",
+      "sha256": "b8f7595b765eb4ff534fa3bfd895eb3adbcbe8900ac3b0b31dc680acc0d93d57"
+    }
+  ],
+  "runtime": {
+    "platform": "Owned fresh arm64 iPhone 17 Pro simulator, iOS26.5/23F77, unsigned com.parlor.app.debug",
+    "xcode_exit": 65,
+    "xctest_method": "IOSAppLaunchUITests/testDSC01ActualSettingsLocalSessionsAndOSInvestigation()",
+    "xctest_total": 1,
+    "xctest_failed": 1,
+    "xctest_skipped": 0,
+    "failure_source": "IOSAppLaunchUITests.swift:276",
+    "failure_log_lines": [
+      2355,
+      2408
+    ],
+    "failure_kind": "Explicit nativeDirection XCTAssertEqual after completed passive windows; not compilation/selector failure or established app crash",
+    "settings_completed": true,
+    "settings_observations": 22,
+    "settings_actual_process_boots": 4,
+    "settings_previous_preference_is_synthetic": true,
+    "whodunit_completed": false,
+    "whodunit_observations": 23,
+    "mafia_reached": false,
+    "actual_os_settings_reached": false
+  },
+  "reachable_path": [
+    "Fresh scenario starts System using prior app-domain language fixture ar-EG/en, not a launch-argument override.",
+    "Actual Home\u2192Settings\u2192English gives English ownership/preferred language and native+Settings Compose LTR (rows5\u20136), with no synthetic language commands.",
+    "Actual Games tab, Whodunit/pass-and-play/bundled story/Classic/6 synthetic names reaches PublicIntro (row8); one actual canonical checkpoint is captured (rows9\u201310).",
+    "Actual Home/background then activate/foreground forwards unchanged production lifecycle. First resumed observation row11 has callbacks1/1, native force_rtl and direct Compose ltr.",
+    "Two bounded passive windows rows12\u201317 and18\u201323 preserve that mismatch in all12 subsequent samples; windows last1584ms/1553ms and do not publish display between samples.",
+    "The first strict direction assertion occurs only after both windows are durable. All13 post-foreground samples retain same boot, controller/StateFlow/canonical reference/value/public phase, with0disposals and0synthetic commands."
+  ],
+  "expectation_basis": "Production LocalAppLocale explicitly applies resolved app language to LocalUIViewController semantic direction to align Compose and UIKit-owned start-edge behavior; explicit English resolves LTR. Source main factory returns that exact Compose controller directly to SwiftUI.",
+  "root_cause_scope": "Confirmed ownership/synchronization invariant failure: a stable Compose controller is also SwiftUI-representable root, and production native direction application is composition-side-effect driven with no demonstrated repair after this external/lifecycle update. The exact writer that changed semanticContentAttribute is not captured; SwiftUI reset remains a hypothesis, not a proven private implementation mechanism.",
+  "counter_evidence": [
+    "Settings/restart ownership matrix remains successful in the same run; do not classify the persisted-owner fix as generally absent.",
+    "Selected setting, owner marker, preferred locale and direct Compose direction remain English/LTR during failure; not a language-store rollback.",
+    "Same actual canonical identities and0disposals reject a recreated-session explanation.",
+    "CommandOrdinal0 throughout local scenario excludes synthetic store setters as the required trigger.",
+    "Both passive windows preserve RTL without intermediate display publication, rejecting the earlier single-sample-only uncertainty.",
+    "The overlay, initial/final @Published publications, real XCTest inputs, synthetic prior OS preference, and synchronous tiny evidence writes remain instrumentation limits. No physical-device or actual OS-language UI reproduction is claimed.",
+    "No new shipping finding is inferred from the proposed, not-yet-verified containment trial."
+  ],
+  "suggested_remediation": "Establish distinct, stable ownership for the Compose native view versus SwiftUI root semantics (or prove an equally complete supported synchronization design) without replacing the active Compose/session tree, polling/reapplying direction inside the test, adding navigation layers, or changing either engine. Treat a containment patch as a trial until independent source and real UIKit/app-host verification passes.",
+  "regression_requirements": [
+    "Preserve all original Settings restart/previous-owner checks.",
+    "V6 must observe exact stable actual Compose child, not a newly language-agnostic container; bind child count/parent/identity explicitly.",
+    "Keep strict requested-language direction and every passive sample, all canonical identities and lifecycle counts, both actual local games.",
+    "Check full-window geometry, child bounds/frame and safe-area behavior, including opposing native parent/child directions and compact/landscape.",
+    "Repeat actual OS-language investigation; keep unavailable control BLOCKED.",
+    "Physical device gestures/accessibility/LAN/Store remain external evidence, not supplied by this run."
+  ],
+  "observations": [
+    {
+      "ordinal": 1,
+      "phase": "before_main",
+      "boot": "F627E1CA-120F-4DAA-BEA0-FFCD6333CB2A",
+      "setting": "system",
+      "preferred_language": "ar",
+      "native_direction": "unavailable",
+      "direct_compose_direction": null,
+      "settings_mounted": null,
+      "settings_direction": null,
+      "surface": null,
+      "public_phase": null,
+      "command_ordinal": null,
+      "command_language": null,
+      "canonical_retention": {
+        "checkpointCaptured": null,
+        "sameController": null,
+        "sameCanonicalFlow": null,
+        "sameCanonicalReference": null,
+        "sameCanonicalValue": null,
+        "samePublicPhase": null,
+        "disposalsSinceCapture": null
+      },
+      "background_since_capture": null,
+      "foreground_since_capture": null,
+      "window": 0,
+      "index": 0,
+      "elapsed_ms": 0
+    },
+    {
+      "ordinal": 2,
+      "phase": "sample",
+      "boot": "F627E1CA-120F-4DAA-BEA0-FFCD6333CB2A",
+      "setting": "system",
+      "preferred_language": "ar",
+      "native_direction": "force_rtl",
+      "direct_compose_direction": "absent",
+      "settings_mounted": false,
+      "settings_direction": "absent",
+      "surface": "none",
+      "public_phase": "none",
+      "command_ordinal": 0,
+      "command_language": "none",
+      "canonical_retention": {
+        "checkpointCaptured": false,
+        "sameController": false,
+        "sameCanonicalFlow": false,
+        "sameCanonicalReference": false,
+        "sameCanonicalValue": false,
+        "samePublicPhase": false,
+        "disposalsSinceCapture": 0
+      },
+      "background_since_capture": 0,
+      "foreground_since_capture": 0,
+      "window": 0,
+      "index": 0,
+      "elapsed_ms": 0
+    },
+    {
+      "ordinal": 3,
+      "phase": "sample",
+      "boot": "F627E1CA-120F-4DAA-BEA0-FFCD6333CB2A",
+      "setting": "system",
+      "preferred_language": "ar",
+      "native_direction": "force_rtl",
+      "direct_compose_direction": "absent",
+      "settings_mounted": false,
+      "settings_direction": "absent",
+      "surface": "none",
+      "public_phase": "none",
+      "command_ordinal": 0,
+      "command_language": "none",
+      "canonical_retention": {
+        "checkpointCaptured": false,
+        "sameController": false,
+        "sameCanonicalFlow": false,
+        "sameCanonicalReference": false,
+        "sameCanonicalValue": false,
+        "samePublicPhase": false,
+        "disposalsSinceCapture": 0
+      },
+      "background_since_capture": 0,
+      "foreground_since_capture": 0,
+      "window": 0,
+      "index": 0,
+      "elapsed_ms": 0
+    },
+    {
+      "ordinal": 4,
+      "phase": "sample",
+      "boot": "F627E1CA-120F-4DAA-BEA0-FFCD6333CB2A",
+      "setting": "system",
+      "preferred_language": "ar",
+      "native_direction": "force_rtl",
+      "direct_compose_direction": "absent",
+      "settings_mounted": true,
+      "settings_direction": "rtl",
+      "surface": "none",
+      "public_phase": "none",
+      "command_ordinal": 0,
+      "command_language": "none",
+      "canonical_retention": {
+        "checkpointCaptured": false,
+        "sameController": false,
+        "sameCanonicalFlow": false,
+        "sameCanonicalReference": false,
+        "sameCanonicalValue": false,
+        "samePublicPhase": false,
+        "disposalsSinceCapture": 0
+      },
+      "background_since_capture": 0,
+      "foreground_since_capture": 0,
+      "window": 0,
+      "index": 0,
+      "elapsed_ms": 0
+    },
+    {
+      "ordinal": 5,
+      "phase": "sample",
+      "boot": "F627E1CA-120F-4DAA-BEA0-FFCD6333CB2A",
+      "setting": "en",
+      "preferred_language": "en",
+      "native_direction": "force_ltr",
+      "direct_compose_direction": "absent",
+      "settings_mounted": true,
+      "settings_direction": "ltr",
+      "surface": "none",
+      "public_phase": "none",
+      "command_ordinal": 0,
+      "command_language": "none",
+      "canonical_retention": {
+        "checkpointCaptured": false,
+        "sameController": false,
+        "sameCanonicalFlow": false,
+        "sameCanonicalReference": false,
+        "sameCanonicalValue": false,
+        "samePublicPhase": false,
+        "disposalsSinceCapture": 0
+      },
+      "background_since_capture": 0,
+      "foreground_since_capture": 0,
+      "window": 0,
+      "index": 0,
+      "elapsed_ms": 0
+    },
+    {
+      "ordinal": 6,
+      "phase": "sample",
+      "boot": "F627E1CA-120F-4DAA-BEA0-FFCD6333CB2A",
+      "setting": "en",
+      "preferred_language": "en",
+      "native_direction": "force_ltr",
+      "direct_compose_direction": "absent",
+      "settings_mounted": true,
+      "settings_direction": "ltr",
+      "surface": "none",
+      "public_phase": "none",
+      "command_ordinal": 0,
+      "command_language": "none",
+      "canonical_retention": {
+        "checkpointCaptured": false,
+        "sameController": false,
+        "sameCanonicalFlow": false,
+        "sameCanonicalReference": false,
+        "sameCanonicalValue": false,
+        "samePublicPhase": false,
+        "disposalsSinceCapture": 0
+      },
+      "background_since_capture": 0,
+      "foreground_since_capture": 0,
+      "window": 0,
+      "index": 0,
+      "elapsed_ms": 0
+    },
+    {
+      "ordinal": 7,
+      "phase": "sample",
+      "boot": "F627E1CA-120F-4DAA-BEA0-FFCD6333CB2A",
+      "setting": "en",
+      "preferred_language": "en",
+      "native_direction": "force_ltr",
+      "direct_compose_direction": "absent",
+      "settings_mounted": false,
+      "settings_direction": "absent",
+      "surface": "none",
+      "public_phase": "none",
+      "command_ordinal": 0,
+      "command_language": "none",
+      "canonical_retention": {
+        "checkpointCaptured": false,
+        "sameController": false,
+        "sameCanonicalFlow": false,
+        "sameCanonicalReference": false,
+        "sameCanonicalValue": false,
+        "samePublicPhase": false,
+        "disposalsSinceCapture": 0
+      },
+      "background_since_capture": 0,
+      "foreground_since_capture": 0,
+      "window": 0,
+      "index": 0,
+      "elapsed_ms": 0
+    },
+    {
+      "ordinal": 8,
+      "phase": "sample",
+      "boot": "F627E1CA-120F-4DAA-BEA0-FFCD6333CB2A",
+      "setting": "en",
+      "preferred_language": "en",
+      "native_direction": "force_ltr",
+      "direct_compose_direction": "ltr",
+      "settings_mounted": false,
+      "settings_direction": "absent",
+      "surface": "whodunit-local",
+      "public_phase": "public-intro",
+      "command_ordinal": 0,
+      "command_language": "none",
+      "canonical_retention": {
+        "checkpointCaptured": false,
+        "sameController": false,
+        "sameCanonicalFlow": false,
+        "sameCanonicalReference": false,
+        "sameCanonicalValue": false,
+        "samePublicPhase": false,
+        "disposalsSinceCapture": 0
+      },
+      "background_since_capture": 0,
+      "foreground_since_capture": 0,
+      "window": 0,
+      "index": 0,
+      "elapsed_ms": 0
+    },
+    {
+      "ordinal": 9,
+      "phase": "sample",
+      "boot": "F627E1CA-120F-4DAA-BEA0-FFCD6333CB2A",
+      "setting": "en",
+      "preferred_language": "en",
+      "native_direction": "force_ltr",
+      "direct_compose_direction": "ltr",
+      "settings_mounted": false,
+      "settings_direction": "absent",
+      "surface": "whodunit-local",
+      "public_phase": "public-intro",
+      "command_ordinal": 0,
+      "command_language": "none",
+      "canonical_retention": {
+        "checkpointCaptured": true,
+        "sameController": true,
+        "sameCanonicalFlow": true,
+        "sameCanonicalReference": true,
+        "sameCanonicalValue": true,
+        "samePublicPhase": true,
+        "disposalsSinceCapture": 0
+      },
+      "background_since_capture": 0,
+      "foreground_since_capture": 0,
+      "window": 0,
+      "index": 0,
+      "elapsed_ms": 0
+    },
+    {
+      "ordinal": 10,
+      "phase": "sample",
+      "boot": "F627E1CA-120F-4DAA-BEA0-FFCD6333CB2A",
+      "setting": "en",
+      "preferred_language": "en",
+      "native_direction": "force_ltr",
+      "direct_compose_direction": "ltr",
+      "settings_mounted": false,
+      "settings_direction": "absent",
+      "surface": "whodunit-local",
+      "public_phase": "public-intro",
+      "command_ordinal": 0,
+      "command_language": "none",
+      "canonical_retention": {
+        "checkpointCaptured": true,
+        "sameController": true,
+        "sameCanonicalFlow": true,
+        "sameCanonicalReference": true,
+        "sameCanonicalValue": true,
+        "samePublicPhase": true,
+        "disposalsSinceCapture": 0
+      },
+      "background_since_capture": 0,
+      "foreground_since_capture": 0,
+      "window": 0,
+      "index": 0,
+      "elapsed_ms": 0
+    },
+    {
+      "ordinal": 11,
+      "phase": "sample",
+      "boot": "F627E1CA-120F-4DAA-BEA0-FFCD6333CB2A",
+      "setting": "en",
+      "preferred_language": "en",
+      "native_direction": "force_rtl",
+      "direct_compose_direction": "ltr",
+      "settings_mounted": false,
+      "settings_direction": "absent",
+      "surface": "whodunit-local",
+      "public_phase": "public-intro",
+      "command_ordinal": 0,
+      "command_language": "none",
+      "canonical_retention": {
+        "checkpointCaptured": true,
+        "sameController": true,
+        "sameCanonicalFlow": true,
+        "sameCanonicalReference": true,
+        "sameCanonicalValue": true,
+        "samePublicPhase": true,
+        "disposalsSinceCapture": 0
+      },
+      "background_since_capture": 1,
+      "foreground_since_capture": 1,
+      "window": 0,
+      "index": 0,
+      "elapsed_ms": 0
+    },
+    {
+      "ordinal": 12,
+      "phase": "window_sample",
+      "boot": "F627E1CA-120F-4DAA-BEA0-FFCD6333CB2A",
+      "setting": "en",
+      "preferred_language": "en",
+      "native_direction": "force_rtl",
+      "direct_compose_direction": "ltr",
+      "settings_mounted": false,
+      "settings_direction": "absent",
+      "surface": "whodunit-local",
+      "public_phase": "public-intro",
+      "command_ordinal": 0,
+      "command_language": "none",
+      "canonical_retention": {
+        "checkpointCaptured": true,
+        "sameController": true,
+        "sameCanonicalFlow": true,
+        "sameCanonicalReference": true,
+        "sameCanonicalValue": true,
+        "samePublicPhase": true,
+        "disposalsSinceCapture": 0
+      },
+      "background_since_capture": 1,
+      "foreground_since_capture": 1,
+      "window": 1,
+      "index": 1,
+      "elapsed_ms": 259
+    },
+    {
+      "ordinal": 13,
+      "phase": "window_sample",
+      "boot": "F627E1CA-120F-4DAA-BEA0-FFCD6333CB2A",
+      "setting": "en",
+      "preferred_language": "en",
+      "native_direction": "force_rtl",
+      "direct_compose_direction": "ltr",
+      "settings_mounted": false,
+      "settings_direction": "absent",
+      "surface": "whodunit-local",
+      "public_phase": "public-intro",
+      "command_ordinal": 0,
+      "command_language": "none",
+      "canonical_retention": {
+        "checkpointCaptured": true,
+        "sameController": true,
+        "sameCanonicalFlow": true,
+        "sameCanonicalReference": true,
+        "sameCanonicalValue": true,
+        "samePublicPhase": true,
+        "disposalsSinceCapture": 0
+      },
+      "background_since_capture": 1,
+      "foreground_since_capture": 1,
+      "window": 1,
+      "index": 2,
+      "elapsed_ms": 522
+    },
+    {
+      "ordinal": 14,
+      "phase": "window_sample",
+      "boot": "F627E1CA-120F-4DAA-BEA0-FFCD6333CB2A",
+      "setting": "en",
+      "preferred_language": "en",
+      "native_direction": "force_rtl",
+      "direct_compose_direction": "ltr",
+      "settings_mounted": false,
+      "settings_direction": "absent",
+      "surface": "whodunit-local",
+      "public_phase": "public-intro",
+      "command_ordinal": 0,
+      "command_language": "none",
+      "canonical_retention": {
+        "checkpointCaptured": true,
+        "sameController": true,
+        "sameCanonicalFlow": true,
+        "sameCanonicalReference": true,
+        "sameCanonicalValue": true,
+        "samePublicPhase": true,
+        "disposalsSinceCapture": 0
+      },
+      "background_since_capture": 1,
+      "foreground_since_capture": 1,
+      "window": 1,
+      "index": 3,
+      "elapsed_ms": 789
+    },
+    {
+      "ordinal": 15,
+      "phase": "window_sample",
+      "boot": "F627E1CA-120F-4DAA-BEA0-FFCD6333CB2A",
+      "setting": "en",
+      "preferred_language": "en",
+      "native_direction": "force_rtl",
+      "direct_compose_direction": "ltr",
+      "settings_mounted": false,
+      "settings_direction": "absent",
+      "surface": "whodunit-local",
+      "public_phase": "public-intro",
+      "command_ordinal": 0,
+      "command_language": "none",
+      "canonical_retention": {
+        "checkpointCaptured": true,
+        "sameController": true,
+        "sameCanonicalFlow": true,
+        "sameCanonicalReference": true,
+        "sameCanonicalValue": true,
+        "samePublicPhase": true,
+        "disposalsSinceCapture": 0
+      },
+      "background_since_capture": 1,
+      "foreground_since_capture": 1,
+      "window": 1,
+      "index": 4,
+      "elapsed_ms": 1053
+    },
+    {
+      "ordinal": 16,
+      "phase": "window_sample",
+      "boot": "F627E1CA-120F-4DAA-BEA0-FFCD6333CB2A",
+      "setting": "en",
+      "preferred_language": "en",
+      "native_direction": "force_rtl",
+      "direct_compose_direction": "ltr",
+      "settings_mounted": false,
+      "settings_direction": "absent",
+      "surface": "whodunit-local",
+      "public_phase": "public-intro",
+      "command_ordinal": 0,
+      "command_language": "none",
+      "canonical_retention": {
+        "checkpointCaptured": true,
+        "sameController": true,
+        "sameCanonicalFlow": true,
+        "sameCanonicalReference": true,
+        "sameCanonicalValue": true,
+        "samePublicPhase": true,
+        "disposalsSinceCapture": 0
+      },
+      "background_since_capture": 1,
+      "foreground_since_capture": 1,
+      "window": 1,
+      "index": 5,
+      "elapsed_ms": 1320
+    },
+    {
+      "ordinal": 17,
+      "phase": "window_sample",
+      "boot": "F627E1CA-120F-4DAA-BEA0-FFCD6333CB2A",
+      "setting": "en",
+      "preferred_language": "en",
+      "native_direction": "force_rtl",
+      "direct_compose_direction": "ltr",
+      "settings_mounted": false,
+      "settings_direction": "absent",
+      "surface": "whodunit-local",
+      "public_phase": "public-intro",
+      "command_ordinal": 0,
+      "command_language": "none",
+      "canonical_retention": {
+        "checkpointCaptured": true,
+        "sameController": true,
+        "sameCanonicalFlow": true,
+        "sameCanonicalReference": true,
+        "sameCanonicalValue": true,
+        "samePublicPhase": true,
+        "disposalsSinceCapture": 0
+      },
+      "background_since_capture": 1,
+      "foreground_since_capture": 1,
+      "window": 1,
+      "index": 6,
+      "elapsed_ms": 1584
+    },
+    {
+      "ordinal": 18,
+      "phase": "window_sample",
+      "boot": "F627E1CA-120F-4DAA-BEA0-FFCD6333CB2A",
+      "setting": "en",
+      "preferred_language": "en",
+      "native_direction": "force_rtl",
+      "direct_compose_direction": "ltr",
+      "settings_mounted": false,
+      "settings_direction": "absent",
+      "surface": "whodunit-local",
+      "public_phase": "public-intro",
+      "command_ordinal": 0,
+      "command_language": "none",
+      "canonical_retention": {
+        "checkpointCaptured": true,
+        "sameController": true,
+        "sameCanonicalFlow": true,
+        "sameCanonicalReference": true,
+        "sameCanonicalValue": true,
+        "samePublicPhase": true,
+        "disposalsSinceCapture": 0
+      },
+      "background_since_capture": 1,
+      "foreground_since_capture": 1,
+      "window": 2,
+      "index": 1,
+      "elapsed_ms": 253
+    },
+    {
+      "ordinal": 19,
+      "phase": "window_sample",
+      "boot": "F627E1CA-120F-4DAA-BEA0-FFCD6333CB2A",
+      "setting": "en",
+      "preferred_language": "en",
+      "native_direction": "force_rtl",
+      "direct_compose_direction": "ltr",
+      "settings_mounted": false,
+      "settings_direction": "absent",
+      "surface": "whodunit-local",
+      "public_phase": "public-intro",
+      "command_ordinal": 0,
+      "command_language": "none",
+      "canonical_retention": {
+        "checkpointCaptured": true,
+        "sameController": true,
+        "sameCanonicalFlow": true,
+        "sameCanonicalReference": true,
+        "sameCanonicalValue": true,
+        "samePublicPhase": true,
+        "disposalsSinceCapture": 0
+      },
+      "background_since_capture": 1,
+      "foreground_since_capture": 1,
+      "window": 2,
+      "index": 2,
+      "elapsed_ms": 518
+    },
+    {
+      "ordinal": 20,
+      "phase": "window_sample",
+      "boot": "F627E1CA-120F-4DAA-BEA0-FFCD6333CB2A",
+      "setting": "en",
+      "preferred_language": "en",
+      "native_direction": "force_rtl",
+      "direct_compose_direction": "ltr",
+      "settings_mounted": false,
+      "settings_direction": "absent",
+      "surface": "whodunit-local",
+      "public_phase": "public-intro",
+      "command_ordinal": 0,
+      "command_language": "none",
+      "canonical_retention": {
+        "checkpointCaptured": true,
+        "sameController": true,
+        "sameCanonicalFlow": true,
+        "sameCanonicalReference": true,
+        "sameCanonicalValue": true,
+        "samePublicPhase": true,
+        "disposalsSinceCapture": 0
+      },
+      "background_since_capture": 1,
+      "foreground_since_capture": 1,
+      "window": 2,
+      "index": 3,
+      "elapsed_ms": 783
+    },
+    {
+      "ordinal": 21,
+      "phase": "window_sample",
+      "boot": "F627E1CA-120F-4DAA-BEA0-FFCD6333CB2A",
+      "setting": "en",
+      "preferred_language": "en",
+      "native_direction": "force_rtl",
+      "direct_compose_direction": "ltr",
+      "settings_mounted": false,
+      "settings_direction": "absent",
+      "surface": "whodunit-local",
+      "public_phase": "public-intro",
+      "command_ordinal": 0,
+      "command_language": "none",
+      "canonical_retention": {
+        "checkpointCaptured": true,
+        "sameController": true,
+        "sameCanonicalFlow": true,
+        "sameCanonicalReference": true,
+        "sameCanonicalValue": true,
+        "samePublicPhase": true,
+        "disposalsSinceCapture": 0
+      },
+      "background_since_capture": 1,
+      "foreground_since_capture": 1,
+      "window": 2,
+      "index": 4,
+      "elapsed_ms": 1044
+    },
+    {
+      "ordinal": 22,
+      "phase": "window_sample",
+      "boot": "F627E1CA-120F-4DAA-BEA0-FFCD6333CB2A",
+      "setting": "en",
+      "preferred_language": "en",
+      "native_direction": "force_rtl",
+      "direct_compose_direction": "ltr",
+      "settings_mounted": false,
+      "settings_direction": "absent",
+      "surface": "whodunit-local",
+      "public_phase": "public-intro",
+      "command_ordinal": 0,
+      "command_language": "none",
+      "canonical_retention": {
+        "checkpointCaptured": true,
+        "sameController": true,
+        "sameCanonicalFlow": true,
+        "sameCanonicalReference": true,
+        "sameCanonicalValue": true,
+        "samePublicPhase": true,
+        "disposalsSinceCapture": 0
+      },
+      "background_since_capture": 1,
+      "foreground_since_capture": 1,
+      "window": 2,
+      "index": 5,
+      "elapsed_ms": 1299
+    },
+    {
+      "ordinal": 23,
+      "phase": "window_sample",
+      "boot": "F627E1CA-120F-4DAA-BEA0-FFCD6333CB2A",
+      "setting": "en",
+      "preferred_language": "en",
+      "native_direction": "force_rtl",
+      "direct_compose_direction": "ltr",
+      "settings_mounted": false,
+      "settings_direction": "absent",
+      "surface": "whodunit-local",
+      "public_phase": "public-intro",
+      "command_ordinal": 0,
+      "command_language": "none",
+      "canonical_retention": {
+        "checkpointCaptured": true,
+        "sameController": true,
+        "sameCanonicalFlow": true,
+        "sameCanonicalReference": true,
+        "sameCanonicalValue": true,
+        "samePublicPhase": true,
+        "disposalsSinceCapture": 0
+      },
+      "background_since_capture": 1,
+      "foreground_since_capture": 1,
+      "window": 2,
+      "index": 6,
+      "elapsed_ms": 1553
+    }
+  ],
+  "cleanup": {
+    "original_status": "PASS",
+    "gradle_stops": [
+      {
+        "label": "stop-xcode-immediate",
+        "exit_code": 0,
+        "at": "2026-09-06T11:09:03.750123+00:00"
+      },
+      {
+        "label": "stop-final",
+        "exit_code": 0,
+        "at": "2026-09-06T11:09:05.137443+00:00"
+      }
+    ],
+    "embedded_gradle_stop": "build_exit=0\nstop_exit=0\n",
+    "source_unchanged": true,
+    "controls_unchanged": true,
+    "copied_sources_unchanged": true,
+    "owned_processes_remaining": [],
+    "remaining_outputs": [],
+    "secondary_attestation_errors": [],
+    "temporary_directory_removed": true,
+    "owned_device_absent": true,
+    "cleanup_errors": [],
+    "independent_exact_recheck": {
+      "checked_at": "2026-09-06T11:28:20.912986+00:00",
+      "method": "Read-only exact task-ledger PIDs/start identities and attested paths; no signals, deletions, or global temp scanning",
+      "ps_exit_code": 1,
+      "ps_stderr": "",
+      "observed_task_identities": 58,
+      "matching_task_identities_remaining": [],
+      "pid_numbers_now_used_by_other_start_identities": [],
+      "exact_paths": [
+        {
+          "path": "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-67664",
+          "absent": true
+        },
+        {
+          "path": "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-67664/IB",
+          "absent": true
+        },
+        {
+          "path": "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-67664/IB/0E908CEB-BD5C-473D-99E9-8371C06AF154.HostToRemote",
+          "absent": true
+        },
+        {
+          "path": "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-67664/IB/0E908CEB-BD5C-473D-99E9-8371C06AF154.RemoteToHost",
+          "absent": true
+        },
+        {
+          "path": "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-dsc01-apphost-03-ljbb2lzt",
+          "absent": true
+        }
+      ]
+    }
+  },
+  "author_resources": "No builds, tests, apps, simulators, signals, or filesystem deletions performed by this reviewer. Short read-only subprocesses completed; reports/research are retained deliverables.",
+  "metadata_correction": {
+    "supersedes": "independent-result-review-01.json",
+    "sha256": "dcbe297169ed8e9e6b0f7eaf376bbf68ed63d2dcb0c41933bfde88502689bcdb",
+    "reason": "Correct ProvideAppLanguage.kt endpoint from clerical79 to actual62 lines; add directly reopened App.kt60\u2013105 composition-root caller. No runtime/source evidence or conclusion changed."
+  }
+}

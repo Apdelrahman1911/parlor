@@ -1,0 +1,105 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/fixture_review",
+  "author": "/root/l08_fixture",
+  "recorded_at": "2026-09-09T09:30:59.998322+00:00",
+  "status": "CONTROLS01_FAILURE_CONFIRMED_MINIMAL_TEST_CORRECTION_APPROVED_NOT_RETESTED",
+  "scope": "A149 actual evidence and one held test-only correction; no B implementation review or native-runtime claim.",
+  "actual_cycle": {
+    "directory": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-a27-b28-controls-01",
+    "receipt_sha256": "0a8e3b772985068a4eb9d9e600293a91467657f91bd0927569c214db843803da",
+    "combined": {
+      "tests": 211,
+      "passed": 210,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0,
+      "exit_code": 1
+    },
+    "A": {
+      "tests": 149,
+      "passed": 148,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0
+    },
+    "A_logs": [
+      {
+        "log": "test_l08_functional_copy.log",
+        "tests": 21,
+        "passed": 21,
+        "failures": 0,
+        "sha256": "babd81688b44f07425ae581400d6526a47eb59b7b9c8035da4932e01b2bbb427"
+      },
+      {
+        "log": "test_l08_host_receipts.log",
+        "tests": 12,
+        "passed": 12,
+        "failures": 0,
+        "sha256": "e093702d1efcf8c6ed7d64fd37c2cf6d3db2e1793b2adb32799285cc2d708de5"
+      },
+      {
+        "log": "test_l08_diagnostics.log",
+        "tests": 21,
+        "passed": 21,
+        "failures": 0,
+        "sha256": "60528368b2281824d9b8c466643259abdd3a4cbadf176af1270f81695d84526d"
+      },
+      {
+        "log": "test_l08_receipts.log",
+        "tests": 13,
+        "passed": 13,
+        "failures": 0,
+        "sha256": "ad3b96eac2c76c656758b013331050571d717b880e5cc29f103a813adb845fe0"
+      },
+      {
+        "log": "test_l08_functional_runner.log",
+        "tests": 11,
+        "passed": 10,
+        "failures": 1,
+        "sha256": "8ab169f5466a30e0fa7f8c6aa8553ffafc30f685ccabeea96c9ae02ed0309c30"
+      },
+      {
+        "log": "test_l08_functional_receipts.log",
+        "tests": 16,
+        "passed": 16,
+        "failures": 0,
+        "sha256": "5e0864ec24805d7c433a004c20e34462f2df18f5b8786d4802dfbddc5c6faed6"
+      },
+      {
+        "log": "composition.log",
+        "tests": 55,
+        "passed": 55,
+        "failures": 0,
+        "sha256": "bafa9e48d25300ea6ba434fdb356619ce767793c36cb8caab074ed80c2418642"
+      }
+    ],
+    "other_counted_results": "22 image-layout +10 kernel-orchestration +29 command-failure +1 label checks passed; implementation assessment belongs to their separate reviewers.",
+    "sole_failure": "test_l08_functional_runner.L08FunctionalRunnerTests.test_original_ownership_build_stop_and_cleanup_implementations_are_unchanged, line238: obsolete all-functions AST equality. Later obsolete inline preservation lookup was also reopened before correction.",
+    "controls": "216 unique inputs; control-inputs-before.json and control-inputs-after.json are byte-identical, SHA256137af9f6d5dbe97cdac840c073b6605bc8d6aa2780eb8dd524f05fa7576f78e9. All216 matched current files at reconciliation; all7 adopted A27 candidate hashes matched the prior independent review.",
+    "source": "828 entries; before/after source objects equal, manifestSHA2568e8cfcd1605a8ac89b628de95a39d4875c973c73462799f8eb8e337f6f30bd7a. No during-cycle source or runner change.",
+    "cleanup": "Immediate Gradle stop exit0; no remaining owned workers, artifact workers, generated outputs or cleanup errors. All4 composition allocation cleanup receipts PASS and all4 exact directories independently observed absent. No cleanup rewrite or failed evidence deletion.",
+    "log_accounting": "An initial one-line status inspection undercounted interleaved composition output. Closed by55 method starts,54 inline OK plus1 standalone OK, terminal55 summary/discovery/result marker. This was reviewer log parsing, not another test failure."
+  },
+  "held_correction": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/native-a27-stale-runner-guard-01/test_l08_functional_runner.py",
+    "canonical_path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/test_l08_functional_runner.py",
+    "base_sha256": "a80376da97e2b1c480c770ab5394fb279d8db3814819736a04b9d9c14fa61003",
+    "sha256": "2c4f59e4ab2f1f18fda25a20898129c73d920ff98fa00b60d3d2d7b9e5e2e29d",
+    "bytes": 19097,
+    "patch_sha256": "6fe12d110103302e122edf17e7a5ea50ad9f63e5c9d3debe04905f0639b431ec",
+    "findings": [],
+    "exact_scope": "Only stdlib hashlib import and replacement/accurate rename of the stale method. Independent reversal restores every original byte; other10 method bodies and remaining file unchanged.11 methods declared, not rerun.",
+    "binding": "Full raw-byte pins canonical85283be9681be14c18b76ef1657b596e837b4f97f978917f25ac693ae72d0ca8 and current9580071ecec4abc8ba375ca01e722eee4245f36132e6a5b8790f5d8bb8456687 match both reopened source files and the independently approved pre-A27 driver. No excluded function or finalizer region: every byte is covered.",
+    "provenance_review": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/hosted-l08-exception-budget-source-independent-01.json",
+      "sha256": "ec35843efe93b07879ce581dde38f0f1add9abb183f9ac2e6a17bb2bb2f09e2e"
+    },
+    "relationship": "The unchanged a803 test predates committed profile/lifecycle/retention changes. Currentdriver958007 is unchanged by A27. Reopened committed4276854c/347ecccf lifecycle/retention context and prior review bindings; no source repair or approved difference is normalized away.",
+    "guards": "Six selected core helpers are individually unique and AST-equal. Actual Xcode finally calls finish_xcode_attempt, whose tuple stops before raw retention; inventory then image binding then XCTest acceptance remain ordered. Serial build, signature, secondary-FIFO and two safe+preservation_safe cleanup gates remain asserted.",
+    "negative_witnesses": "Pinned real baseline precedes historical-source rejection and only2 synthetic mutations (drop actual stop; remove safety/preservation deletion gates). Both anchors independently occur exactly once and altered strings cannot match the frozen digest. No project function or test executed by reviewer."
+  },
+  "next": "Root may adopt only the exact approved test bytes and rerun the corrected11 using the existing coordinated lane with fresh input fingerprints and cleanup. Do not relabel controls01 PASS. Other successful suites can remain scoped evidence for unchanged implementations; this is not a newly executed combined211 or native run.",
+  "review_activity": "Read-only source/Git/log/JSON plus stdlib AST/literal/hash/string checks. Sole write is this authorized report; no imports of project modules, tests, builds, native/network actions or canonical edits by reviewer.",
+  "readiness": "NOT_READY. A25/B26 native outcomes and strict26 protectionFAIL remain unchanged; this correction does not diagnose or repair the retained-host runtime failure."
+}

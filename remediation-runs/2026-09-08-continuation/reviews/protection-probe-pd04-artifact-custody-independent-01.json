@@ -1,0 +1,255 @@
+{
+  "schema": 1,
+  "kind": "INDEPENDENT_PD04_FAILED_RUN_ARTIFACT_CUSTODY_REVIEW_NOT_RUNTIME_PASS",
+  "reviewer": "/root/artifact_custody",
+  "reviewed_at": "2026-09-11T01:21:34.703040+00:00",
+  "status": "CUSTODY_VERIFIED_FAILED_PRE_NATIVE_RUN_AND_FAILED_CLEANUP_PRESERVED",
+  "findings": [],
+  "binding": {
+    "run_id": 34549827411,
+    "run_attempt": 1,
+    "job_id": 103110198838,
+    "repository": "Apdelrahman1911/parlor",
+    "branch": "fix/local-readiness-2026-09-07",
+    "workflow": ".github/workflows/production-verification.yml",
+    "source_sha": "1c3c33fe1891c1a143aaf8a1298abd0da052b085",
+    "tree": "be6b74847498e1d977cc73a9f82573c9707c53b6",
+    "request_sha256": "5adeaadcdb55b8f9413196777477d7d08a3979fbcecbae4be3fd00e31815f09d",
+    "control_sha256": "f5221b88d322b1e277e3973e8f8638c924e7856b8abd87d0fe050521253d2749",
+    "control_paths": 19,
+    "frozen_blob_admission": "Reused exact pinned independent admission; no reviewer Git operation. Archived controls equal prepared controls; all19 current file hashes and canonical controls digest verified.",
+    "dispatch_association": "Root dispatch receipt request/admission pins and unique associated run match both raw API identities and created_at; actual log independently confirms paired scope/source/control values."
+  },
+  "api": {
+    "run_and_attempt_completed_conclusion": "failure",
+    "job_count": 7,
+    "executing_probe_conclusion": "failure",
+    "six_exact_full_jobs": "skipped, empty steps; all7 IDs/source/attempt/completion checked",
+    "artifact_count": 2,
+    "metadata_and_download_command_hashes": "All6 endpoint/output/size/hash/exit0 rows reconciled; complete pages, exact unique artifact identities; no missing or extra artifacts.",
+    "limits": "Reviewer read retained root/monitor API responses; no independent network request or HTTP response headers reconstructed."
+  },
+  "archives": [
+    {
+      "artifact_id": 10180411723,
+      "name": "ios-protection-probe-cleanup-34549827411-1",
+      "archive": "cleanup.zip",
+      "bytes": 4037,
+      "sha256": "dea44dd601516a4baba7bc64b3651de02c1e10dcd1ccc5602b7b897168488816",
+      "members": 17,
+      "expanded_bytes": 10725,
+      "api_size_digest_log_and_extracted_bytes_match": true
+    },
+    {
+      "artifact_id": 10180409709,
+      "name": "ios-protection-probe-34549827411-1",
+      "archive": "main.zip",
+      "bytes": 6263,
+      "sha256": "70a1ec593196bfd0a3dbd3ecdbd4342cd067e3f852d9f394c333874b472cb6b4",
+      "members": 18,
+      "expanded_bytes": 16196,
+      "api_size_digest_log_and_extracted_bytes_match": true
+    }
+  ],
+  "archive_checks": "Whole ZIP tables checked for canonical relative paths, traversal/NUL/backslash/colon, duplicate/ancestor collisions, encryption, type and finite bounds. Every member streamed to EOF for CRC/size/SHA and matched collector row and extracted bytes; exact extracted file sets, regular files/no symlinks or redirected paths. Original archives unchanged; no re-extraction.",
+  "bounds": {
+    "artifact_compressed": 67108864,
+    "selected_compressed_total": 536870912,
+    "members_per_archive": 50000,
+    "expanded_per_archive": 268435456,
+    "expanded_per_file": 134217728,
+    "actual_combined_compressed_bytes": 10300
+  },
+  "selection_and_member_binding": {
+    "mode": "paired, not H01",
+    "request_selection_field": "Absent by correct paired schema; not required.",
+    "request_source_runtime_device": "Exact run/source/tree/job/controls, positive distinct owned-directory identities, claim cycle/nonce, expected iOS26.2/iPhone17Pro/Xcode26.3 configuration verified. Runtime expectation is not successful runtime discovery.",
+    "state_log_hashes_verified": {
+      "main": 16,
+      "cleanup": 16
+    },
+    "native_and_host_bindings": "Not created: no native context/headers/compile/images/native or host readings, no owned simulator journal. Failure precedes those operations; missing outputs are not a custody mismatch or runtime success.",
+    "source_recheck": "Retained cleanup Git-output files independently match source/tree/branch/full-history/empty tracked status; initialization command rows also exited0.",
+    "immutable_upload_join": "Main and cleanup artifact names/IDs/size/digests match API, ZIPs, upload success log and final-assert environment; cleanup evidence_upload equals main. Distinct immutable uploads succeeded, but assert-result failed required-step-outcomes before qualifying them."
+  },
+  "job_log": {
+    "bytes": 39784,
+    "sha256": "ade03312602c91cdbc54448c5048e5b5c614cf4d6d8823cc70d0b242fe3e851b",
+    "monitor_receipt_sha256": "3fb15fb557efffc36978ed5368bbfe30d305e1a410cad46c912434e3ca5b85cd",
+    "copied_log_identical": true,
+    "endpoint": "repos/Apdelrahman1911/parlor/actions/jobs/103110198838/logs",
+    "job_api_id_matches": true
+  },
+  "preserved_failure": {
+    "run_status": "FAIL",
+    "collection_error": [
+      {
+        "stage": "collection",
+        "type": "RuntimeError",
+        "code": "required-command-failed"
+      }
+    ],
+    "failed_command": {
+      "label": "runtimes",
+      "command": [
+        "/usr/bin/xcrun",
+        "simctl",
+        "list",
+        "runtimes",
+        "--json"
+      ],
+      "status": "TIMEOUT",
+      "timeout_seconds": 90,
+      "started_at": "2026-09-11T01:14:36.318655+00:00",
+      "owned_pid": 11565,
+      "ownership": "direct-unreaped-Popen",
+      "timeout_observed_at": "2026-09-11T01:16:06.323168+00:00",
+      "observation_elapsed_seconds": 90.003,
+      "exit_code": -15,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 90.012,
+      "finished_at": "2026-09-11T01:16:06.332674+00:00",
+      "stdout_bytes": 0,
+      "stderr_bytes": 0
+    },
+    "execution_boundary": "90s simctl list runtimes timed out, empty stdout/stderr counters; before simulator creation or native compilation. Runtime/host observations zero; timeout cause unproven.",
+    "cleanup_status": "FAIL",
+    "cleanup_error": [
+      {
+        "stage": "cleanup",
+        "type": "RuntimeError",
+        "code": "timed-out-or-unsettled-tool-scratch-retained"
+      }
+    ],
+    "simulator": {
+      "result": "NOT_CREATED",
+      "reason": "No create intent was written"
+    },
+    "scratch": "Not removed/absence not established: unchanged timed-out-tool guard intentionally retained private scratch. Hosted runner disposal is not a cleanup PASS.",
+    "stops": [
+      {
+        "phase": "main",
+        "status": "EXITED",
+        "exit_code": 0,
+        "direct_child_reaped": true,
+        "elapsed_seconds": 5.068
+      },
+      {
+        "phase": "cleanup",
+        "status": "EXITED",
+        "exit_code": 0,
+        "direct_child_reaped": true,
+        "elapsed_seconds": 0.786
+      },
+      {
+        "phase": "cleanup",
+        "status": "EXITED",
+        "exit_code": 0,
+        "direct_child_reaped": true,
+        "elapsed_seconds": 0.696
+      }
+    ],
+    "all_recorded_direct_children_reaped": true,
+    "preservation_failures": 0,
+    "signals": [],
+    "assert_result": "FAIL required-step-outcomes; both run and cleanup workflow steps failed despite successful uploads."
+  },
+  "limits": [
+    "This is custody verification of a failed run, not source/control retesting or runtime/protection/full qualification.",
+    "A37 strict remains0PASS/26FAIL; APP04 strict0/6 unchanged. No new Complete enforcement, Simulator-wide limitation, device, Store or readiness claim.",
+    "No blind retry, timeout expansion or workflow/source change authorized. Separate runtime reviewer owns causal assessment."
+  ],
+  "pinned_files": [
+    {
+      "path": "actions/34549827411/download-receipt.json",
+      "bytes": 3770,
+      "sha256": "371140280607a5392e749e97683cfc1ee1ec90b9d91e85a4f74561e9cc0c200a"
+    },
+    {
+      "path": "actions/34549827411/run.json",
+      "bytes": 12690,
+      "sha256": "31230a774acdbc69d608d2c1240b4f8ac39efa4c1eede9a795e4acca2058cccc"
+    },
+    {
+      "path": "actions/34549827411/attempt.json",
+      "bytes": 12712,
+      "sha256": "1b49d455e34e52e6e4c1be5ef2d69d7c11d0ace61972a5878ad6d4eca28e65a2"
+    },
+    {
+      "path": "actions/34549827411/jobs.json",
+      "bytes": 8495,
+      "sha256": "d9aded195245a46221874d1e7f022da7bde91426fb0f921d531aa466e4e063c6"
+    },
+    {
+      "path": "actions/34549827411/artifacts.json",
+      "bytes": 1501,
+      "sha256": "dcaa2b19234ce6bb079aa164781e3e7f4f86a60c59600d2602790e3329d3991f"
+    },
+    {
+      "path": "actions/34549827411/job.log",
+      "bytes": 39784,
+      "sha256": "ade03312602c91cdbc54448c5048e5b5c614cf4d6d8823cc70d0b242fe3e851b"
+    },
+    {
+      "path": "actions/34549827411/main-members.json",
+      "bytes": 7621,
+      "sha256": "51c6a444176dacaf28f8d965b35f8abf794960a8a05800dc3c584e1af679a157"
+    },
+    {
+      "path": "actions/34549827411/cleanup-members.json",
+      "bytes": 7185,
+      "sha256": "6716245d603c802408464e60d7987a5481ec2f13e20591e4a6620b389cb2a8a3"
+    },
+    {
+      "path": "actions/34549827411/main/request.json",
+      "bytes": 4701,
+      "sha256": "bc723a2e2cb80de06e25d9413e0818fc8ac2997dca73ce227ac5b38f2ff9abbd"
+    },
+    {
+      "path": "actions/34549827411/main/state.json",
+      "bytes": 10723,
+      "sha256": "c071810953b1e11061241b97bdebc03f49b97c5c1a196aed6462043d27143095"
+    },
+    {
+      "path": "actions/34549827411/cleanup/state.json",
+      "bytes": 10511,
+      "sha256": "2131a2e062473181821c632f0376949986c42cf5fa74c1343f71065a8301ea1f"
+    },
+    {
+      "path": "actions/protection-probe-04/request.json",
+      "bytes": 322,
+      "sha256": "5adeaadcdb55b8f9413196777477d7d08a3979fbcecbae4be3fd00e31815f09d"
+    },
+    {
+      "path": "actions/protection-probe-04/freeze.json",
+      "bytes": 1019,
+      "sha256": "e929cc441b106cfb76f03caa74973859b0af59dbc10df2a6a4f09af7b5866948"
+    },
+    {
+      "path": "actions/protection-probe-04/controls.json",
+      "bytes": 3424,
+      "sha256": "f3ad569dbd2ef03f03fcd41128cf0bcac00216518af13ec02a16477216ebe81c"
+    },
+    {
+      "path": "actions/protection-probe-04/dispatch-receipt.json",
+      "bytes": 717,
+      "sha256": "a669cbdac3b8364810e63c6cb255b89682bfd8a7fca09df5bb8b2293db6a5622"
+    },
+    {
+      "path": "reviews/protection-probe-pd04-request-admission-independent-01.json",
+      "bytes": 3926,
+      "sha256": "16eb8e217ab68458aad73bf9974d268bc70dc1fe1203aad85fcc9d9138df02be"
+    },
+    {
+      "path": "reviews/pd04-ci-monitor-01/receipt.json",
+      "bytes": 493,
+      "sha256": "3fb15fb557efffc36978ed5368bbfe30d305e1a410cad46c912434e3ca5b85cd"
+    }
+  ],
+  "archive_helper": {
+    "path": "reviews/windows-targeted-collector-01/collect_windows.py",
+    "bytes": 18707,
+    "sha256": "87afd5bc709a5bf83a672e6acc43983783cb38b878beac00722233c6b93777d1"
+  },
+  "activity": "Stdlib JSON/hash/ZIP/CRC and local text reads; one additive review. No downloads/network, Git, project/collector imports, builds/tests, dispatch, source/evidence edits, cleanup or child agents. No reviewer resources requiring Gradle stop allocated."
+}

@@ -1,0 +1,155 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-09-07T17:06:35.993095+00:00",
+  "author": "/root",
+  "independent_reviewer": "/root/release_fix_review",
+  "baseline": {
+    "branch": "fix/local-readiness-2026-09-07",
+    "commit": "0b3090a40ff8135b04e0d6e9933c0af5d160daba",
+    "tree": "7a53259db144b3cc96722935e727a50dc99a9413",
+    "scope": "Three working-tree diffs and callers; no Git changes by reviewer."
+  },
+  "coverage": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/ProductionVerificationWorkflowContractTest.kt",
+      "sha256": "f827b3bba6f51581e874206e95431e1c3a843db2706649e7f5c6f95610a637d1",
+      "reviewed_line_ranges": [
+        [
+          1,
+          689
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py",
+      "sha256": "5c0e546c819c28762cbc6b355ec2717737fc53f96712af591a27add878579d7a",
+      "reviewed_line_ranges": [
+        [
+          1,
+          344
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/test_aab_package_inspection_02.py",
+      "sha256": "4e7faacbb708a83840507380b53eceab9a458c28c38d6561f36807668f80476c",
+      "reviewed_line_ranges": [
+        [
+          1,
+          236
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/run_package_controls_01.py",
+      "sha256": "3dfd0d545ba93b042361686f71958e750af69f2cec2452b41b08fa0d96a4ce7b",
+      "reviewed_line_ranges": [
+        [
+          1,
+          66
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/.github/workflows/production-verification.yml",
+      "sha256": "f823182501d7a28dd20d117781b59dd46bc5103baef5b016316a5a672a18258f",
+      "reviewed_line_ranges": [
+        [
+          460,
+          650
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/release/workflow_contract.py",
+      "sha256": "8907e1abd5e06812ebe2674bb175056bfb6b27423bbc9819d02404450e1141ca",
+      "reviewed_line_ranges": [
+        [
+          88,
+          140
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_workflow_contract.py",
+      "sha256": "b2e5f6af1a37f86e5e47c3c69e7a31afb1b4090034c202a39c7bfc3a93f3e219",
+      "reviewed_line_ranges": [
+        [
+          1,
+          100
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/ci/apple_verification_hygiene.py",
+      "sha256": "d9c554781750d3cbbf2a4adce3b040edb83d0de5fec4c04eac700c526fca1c3c",
+      "reviewed_line_ranges": [
+        [
+          205,
+          278
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/android_release_artifacts.py",
+      "sha256": "55d6b3ddbe4877956c383225ea8bc8b203a2b023206be60eeac519b2555e98cb",
+      "reviewed_line_ranges": [
+        [
+          1,
+          125
+        ],
+        [
+          188,
+          234
+        ],
+        [
+          234,
+          310
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/test_build_lane_group_retirement.py",
+      "sha256": "6933afa3dca7e1fa89886500806491ca09d27d499d9b94dd8c92158102509878",
+      "reviewed_line_ranges": [
+        [
+          1,
+          56
+        ]
+      ]
+    }
+  ],
+  "coordinator": {
+    "classification": "APPROVED SCOPED TIMEOUT ADJUSTMENT WITH EXECUTED SYNTHETIC CONTROL EVIDENCE",
+    "reasoning": [
+      "Only public bundletool download bounds change: curl per-attempt limit120->300, retry count3->1, subprocess outer timeout400->650. Source strictness, URL/policy pin, HTTPS restrictions, max-file-size bound, require-success exit and cleanup remain unchanged.",
+      "android_release_artifacts.inspect203-206 validates regular bounded tool input and exact policy SHA before Java use220-223. Coordinator still requires artifact-bound PASS174-180 and same AAB digest207-209; a completed download alone is never success.",
+      "The exclusively task-owned tool path is refused if pre-existing; finally181-185 removes its partial/successful download only. Timeout and cancellation propagate; outer finalization stop288, worker quiescence292/303, capture-before-clean ordering298-322 and failure receipt330 remain intact.",
+      "The revised synthetic tests assert the outer650, curl300 and retry1 values and retain failure/cancellation, pre-existing-file and unrelated-sentinel tests. No assertions were weakened."
+    ],
+    "evidence": {
+      "cycle": "package-download-controls-03",
+      "receipt_sha256": "d3cc391c1b2f16e7678c74b78787cdebc8d9ac02d6ebc85c04110ea4828fa665",
+      "log_sha256": "5fc3bf67f0963a94367cbb3c0cb45576f7e737317b6f6c7ecc458f8e05749f4c",
+      "result": "143 discovered controls, 0 failures/errors/skips; 15 package/finalizer controls include both changed timeout assertions and cancellation cleanup. Driver declarations equal discovered test IDs and self-hash remain unchanged.",
+      "cleanup": "Receipt records command0, Gradle stop0, no owned workers or retained/generated outputs, no cleanup errors, source/runner unchanged. No Gradle compilation, real download, actual AAB or iOS execution occurred in this control batch."
+    },
+    "limitations": "Does not prove a slow real network transfer will succeed or that complete package inspection passed. It keeps failure explicit when the bounded download still cannot finish."
+  },
+  "kotlin": {
+    "classification": "CHANGES REQUESTED: MISSING IMPORT BEFORE EXECUTABLE APPROVAL",
+    "frozen_sha256": "8c20907b43052cb4d40ebc50e5ccc3d56b8ea1910d77427272f09851443616ab",
+    "blocker": "New assertEquals at522 has no kotlin.test.assertEquals import in3-8 and no local/same-package definition. Static proof predicts compilation failure; no compiler executed by reviewer.",
+    "positive_review": "Named-step delimiter now ends the actual app-launch block and compares the next named step using equality plus explicit missing-delimiter fallback. Owned prepare before launch, matching finalizer outcome bindings, always execution, helper selection, fresh xcresult and nonparallel options are retained. Current YAML matches these requirements without choosing existing user profiles.",
+    "counter_evidence": "The production Python workflow contract separately requires exactly one relevant step, checks all YAML step boundaries (including unnamed steps), owned DerivedData and exact helper invocation; mutation tests cover wrong preparation/finalizer, removed guards and delayed cleanup. Kotlin remains a complementary static guard, not physical/XCTest execution evidence.",
+    "required_followup": "Add explicit kotlin.test.assertEquals import, freeze corrected hash, run focused Kotlin discovery/contract and relevant static analysis. Original stale-assertion XML remains a red receipt; do not count source-only review as green."
+  },
+  "previous_failed_cycle": {
+    "cycle": "final-production-check-01",
+    "receipt_sha256": "12bbd34d06bf9e986f4a0654f5fb502546812488be8a32e6aa9452b348923b12",
+    "result": "FAIL: productionCheck exit1 with obsolete Kotlin assertion; full artifact inspection also hit bounded curl timeout. Gradle stop0 and no surviving owned workers; primary receipt retained outputs because evidence inspection was incomplete.",
+    "cleanup_supplement_sha256": "5ecb4f7fee0ad4f5e589992a76e0edc3e2051e31f35cb6627d640166059598ca",
+    "supplement": "Explicitly preserves236 test reports, logs and structural AAB inventory, records additional stop0/exact owned directory removal/no remaining outputs. Does not recast build or full package inspection as PASS."
+  },
+  "preservation": "Reviewer only read public first-party source/compact synthetic evidence and wrote two additive reports; no builds, native tools, test execution, source changes, process signals, cleanup, credentials or Git mutations."
+}

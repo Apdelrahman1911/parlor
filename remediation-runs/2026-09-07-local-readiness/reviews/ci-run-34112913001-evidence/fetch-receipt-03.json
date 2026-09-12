@@ -1,0 +1,67 @@
+{
+  "at": "2026-09-07T11:51:13.652836+00:00",
+  "reviewer": "/root/release_fix_review",
+  "scope": "Read-only final run metadata, completed Apple job log and unsigned-test report artifact metadata; no dispatch or publication",
+  "run_id": 34112913001,
+  "expected_head": "f5ea8045bd903c255041b198f54aca67e893612f",
+  "requests": [
+    {
+      "label": "run-final-status",
+      "argv": [
+        "gh",
+        "run",
+        "view",
+        "34112913001",
+        "--repo",
+        "Apdelrahman1911/parlor",
+        "--json",
+        "status,conclusion,headSha,headBranch,createdAt,updatedAt,url,jobs"
+      ],
+      "started_at": "2026-09-07T11:51:13.652940+00:00",
+      "finished_at": "2026-09-07T11:51:14.938078+00:00",
+      "exit_code": 0,
+      "stderr": "",
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34112913001-evidence/run-final-status-01.json",
+      "sha256": "ed45ee7c859be0bba172a3b5c1e530dd9937d76830c233f05f0fa6e9c14c08df",
+      "bytes": 15110,
+      "lines": 466
+    },
+    {
+      "label": "run-artifact-metadata",
+      "argv": [
+        "gh",
+        "api",
+        "repos/Apdelrahman1911/parlor/actions/runs/34112913001/artifacts",
+        "--method",
+        "GET"
+      ],
+      "started_at": "2026-09-07T11:51:14.940226+00:00",
+      "finished_at": "2026-09-07T11:51:15.871200+00:00",
+      "exit_code": 0,
+      "stderr": "",
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34112913001-evidence/run-artifact-metadata-01.json",
+      "sha256": "085368965927d49116364a9dc746d0c6ce9ec0fff1ba542319bad9a82e081181",
+      "bytes": 1812,
+      "lines": 45
+    },
+    {
+      "label": "apple-completed-sanitized",
+      "argv": [
+        "gh",
+        "api",
+        "repos/Apdelrahman1911/parlor/actions/jobs/101713007402/logs",
+        "--method",
+        "GET"
+      ],
+      "started_at": "2026-09-07T11:51:15.873281+00:00",
+      "finished_at": "2026-09-07T11:51:28.505192+00:00",
+      "exit_code": 0,
+      "stderr": "",
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34112913001-evidence/apple-completed-sanitized.log",
+      "sha256": "9d3f92fbf5191ec826a71a5bfd01938c6b0c201c0828a914f0168b4daa7ded56",
+      "bytes": 605918,
+      "lines": 5330
+    }
+  ],
+  "raw_logs_retained": false
+}

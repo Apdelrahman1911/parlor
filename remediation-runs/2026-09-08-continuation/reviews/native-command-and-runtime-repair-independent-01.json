@@ -1,0 +1,537 @@
+{
+  "schema_version": 1,
+  "kind": "NATIVE_COMMAND_AND_FOUNDATION_RUNTIME_REPAIR_INDEPENDENT_SOURCE_REVIEW",
+  "reviewer": "/root/portability_review",
+  "implementation_author": "/root/native_ci",
+  "coordinator": "/root",
+  "recorded_at": "2026-09-08T12:07:02.338992+00:00",
+  "status": "APPROVED_FOR_COORDINATOR_FOCUSED_CONTROLS_ONLY",
+  "blocking_source_findings": [],
+  "repository": {
+    "root": "/root/projects/Parlor/parlor",
+    "branch": "fix/local-readiness-2026-09-07",
+    "base_commit": "25b1c5551aee7630ac22d4b34668dd4b06c71b17",
+    "base_tree": "629a5d2b699cddb62d61849de3bd185fd4c01378",
+    "worktree": "Reviewed exact current uncommitted source/control bytes; coordinated unrelated workflow/diagnostic/documentation edits are outside this review."
+  },
+  "author_manifest": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/native-command-and-runtime-repair-author-01.json",
+    "bytes": 17154,
+    "sha256": "5e55755c32a63b88eeeece0adf7e19ac90221113cc62100708c6dd2e5a400b73"
+  },
+  "scope": {
+    "approved": "Thirteen exact authored inputs implementing primary-error retention in the two actual mutable command paths and exact selected Foundation runtime propagation, plus their tests/docs/new additive freeze. Approval is for coordinated focused checks, not native dispatch or readiness.",
+    "excluded": "No source authoring, builds, tests, project imports, downloads, CI dispatch, commits, cleanup or shipping application changes by reviewer. ci_review owns workflow/process-diagnostic implementation and full native artifact-custody review.",
+    "native_dispatch_approved_by_this_report": false,
+    "application_runtime_pass_claimed": false
+  },
+  "reviewed_authored_inputs": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/run_ios_readiness.py",
+      "sha256": "a56f47787c5abbda301cdfcafa5c8ac4ad7eb505d21d560e86063f93453a36f7",
+      "bytes": 72609,
+      "previous_sha256": "fdae88cf835f4b0f5f5271b882641b7284db7ea5e5bdc135870754db7f61fb21",
+      "change": "MODIFIED"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
+      "sha256": "98334625a01adbe3c8b2fb1573895a5056c95e430cb9d857142809d8ef4db454",
+      "bytes": 56767,
+      "previous_sha256": "b9fa9b43ed7a422dd54adbb8b8f14ae313a2aab2f82d081d70dc32b8583af698",
+      "change": "MODIFIED"
+    },
+    {
+      "path": "scripts/verification/ios-readiness/toolchain_profiles.py",
+      "sha256": "8adacaf4c59ed823aa088ecb70ad5c6c1e3f76e7ca3520d8abf0563341591313",
+      "bytes": 3358,
+      "previous_sha256": "65ffab3c3f13785a5574b6018c61ec23f8b36c8ecd5528737a1bfb88fd21cce0",
+      "change": "MODIFIED"
+    },
+    {
+      "path": "scripts/verification/ios-readiness/test_native_command_failures.py",
+      "sha256": "7ea11e97a11cc07ba85d09c1366fe4198b95b8ee59414979fa7801122be981be",
+      "bytes": 12002,
+      "previous_sha256": null,
+      "change": "NEW"
+    },
+    {
+      "path": "scripts/verification/ios-readiness/test_foundation_toolchain_binding.py",
+      "sha256": "59f5642de0f9b7a828698ff5c37810a4076e082f4dacf1bcd78d91a8db8e6647",
+      "bytes": 22366,
+      "previous_sha256": null,
+      "change": "NEW"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/app_foundation_copy.py",
+      "sha256": "0df57639ed7bdef3fd4df62e73489dc85f4006dd587ce82cf9077e4262e1b068",
+      "bytes": 13449,
+      "previous_sha256": "07ae34ff3e6059e83ac041c55d0f380e21106666e867b1842534982c7450be08",
+      "change": "MODIFIED"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/app_foundation_receipts.py",
+      "sha256": "db69c16b7d8abfb5998f92db886a8b8c77bcbb3e72fdd1d806f0ea3dd05f1fb6",
+      "bytes": 18855,
+      "previous_sha256": "0d6c5415522ec5a4645abe4839ab7865c89e916e7c752c73035d0fea1b4e6a3c",
+      "change": "MODIFIED"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/test_app_foundation.py",
+      "sha256": "c04c7d4b1bb99207415beab77ae3b40bb3d5f59709970f7d844d5d14beab0fe5",
+      "bytes": 34661,
+      "previous_sha256": "b9b4cec8c93a25769a178040f5fbfb2d3002cbe1b42df33b0c09405c92e2a691",
+      "change": "MODIFIED"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/ROOT_INTEGRATION.md",
+      "sha256": "e3009bfe096930dbde969f239dd162da15a25d407e4b39a99f8bf4fab22d8dcb",
+      "bytes": 6638,
+      "previous_sha256": "a8396d7a9c222b12191d1fd48daf2e0082af3647210c882776e5a221d5c00790",
+      "change": "MODIFIED"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/compose_runner.py",
+      "sha256": "288c412456e130ec640f40042133ef4686554b4f63abecc097602999f2d20b18",
+      "bytes": 21106,
+      "previous_sha256": "28e0dc259096eba2b5d065710d19b83fbe15b1ee4682306277ad2450fbb6f9ec",
+      "change": "MODIFIED"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/test_composition.py",
+      "sha256": "1ee5d5889d50b94a11d3e3d2ce881899c2434eb97489e953f546a2b7d344afd5",
+      "bytes": 28101,
+      "previous_sha256": "ed10ea8bba376cbe7ddac47c25d888c6d708b1a808b2ce2cacc9a45d398d18ce",
+      "change": "MODIFIED"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/README.md",
+      "sha256": "e934ab0834cbe9776fbd410bac6f51147919c718bb8e274fb56103d087dc369e",
+      "bytes": 10614,
+      "previous_sha256": "2522dbd4cc64412c8095c06bcafde98d84ee025c245b639ac308938dcf12136e",
+      "change": "MODIFIED"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/hosted-native-repair-01/draft-freeze-relative.json",
+      "sha256": "2905ce996bad3d6e1d3d45e9fd7594cbe54cc93380e608781a7f34d73b0784a0",
+      "bytes": 2954,
+      "previous_sha256": null,
+      "change": "NEW"
+    }
+  ],
+  "protected_unchanged_inputs": [
+    {
+      "path": "scripts/verification/ios-readiness/run_ios_readiness.py",
+      "sha256": "85283be9681be14c18b76ef1657b596e837b4f97f978917f25ac693ae72d0ca8",
+      "bytes": 70167,
+      "previous_sha256": "85283be9681be14c18b76ef1657b596e837b4f97f978917f25ac693ae72d0ca8",
+      "change": "UNCHANGED"
+    },
+    {
+      "path": "scripts/verification/ios-readiness/owned_lane.py",
+      "sha256": "949091403ac669429f962120e9873a09897a87bdcae10702720ede0c68342f03",
+      "bytes": 10446,
+      "previous_sha256": "949091403ac669429f962120e9873a09897a87bdcae10702720ede0c68342f03",
+      "change": "UNCHANGED"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/owned_lane.py",
+      "sha256": "949091403ac669429f962120e9873a09897a87bdcae10702720ede0c68342f03",
+      "bytes": 10446,
+      "previous_sha256": "949091403ac669429f962120e9873a09897a87bdcae10702720ede0c68342f03",
+      "change": "UNCHANGED"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/README.md",
+      "sha256": "69afd6136fdeecf9cca3426a523e130de01389b463db60ffd25254de87294142",
+      "bytes": 11891,
+      "previous_sha256": "69afd6136fdeecf9cca3426a523e130de01389b463db60ffd25254de87294142",
+      "change": "UNCHANGED"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/l08-functional-companion-clone-manifest-01.json",
+      "sha256": "3036231a1bcfc9d567b8381ee33d89cd381377bea2b10790ddde0f90baf682fb",
+      "bytes": 11870,
+      "previous_sha256": "3036231a1bcfc9d567b8381ee33d89cd381377bea2b10790ddde0f90baf682fb",
+      "change": "UNCHANGED"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/hosted-native-portability-01/draft-freeze-relative.json",
+      "sha256": "64c02554e7ddec05b85f533c05733e0f8bbedcc843843245d82cfd1ffd98564a",
+      "bytes": 2425,
+      "previous_sha256": "64c02554e7ddec05b85f533c05733e0f8bbedcc843843245d82cfd1ffd98564a",
+      "change": "UNCHANGED"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/l08-native14-followup-01/draft-freeze.json",
+      "sha256": "1a803df85b6acab0ad4ca38fa9d43a5be0b47d95bd42bd77970f57b5c26c401c",
+      "bytes": 2964,
+      "previous_sha256": "1a803df85b6acab0ad4ca38fa9d43a5be0b47d95bd42bd77970f57b5c26c401c",
+      "change": "UNCHANGED"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/l08-native-foundation-control-03/run_control.py",
+      "sha256": "58e8daf875eaf8061ed017e10cc8c8065eb49292866b6741227814282a1b8e9f",
+      "bytes": 37730,
+      "previous_sha256": "58e8daf875eaf8061ed017e10cc8c8065eb49292866b6741227814282a1b8e9f",
+      "change": "UNCHANGED"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/l08-native-foundation-control-03/FoundationProtectionControl.m",
+      "sha256": "a6b025d7b77c3b1b1de57b93869d0beff6b4cc9e365eb5672ffd2be9d52013f2",
+      "bytes": 15988,
+      "previous_sha256": "a6b025d7b77c3b1b1de57b93869d0beff6b4cc9e365eb5672ffd2be9d52013f2",
+      "change": "UNCHANGED"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/L08AppFoundation.m.in",
+      "sha256": "f7b0e515b580f4bd9c49857ad4a49a3ab925218e8e52c260eb14cc75e410cba7",
+      "bytes": 29952,
+      "previous_sha256": "f7b0e515b580f4bd9c49857ad4a49a3ab925218e8e52c260eb14cc75e410cba7",
+      "change": "UNCHANGED"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/L08AppFoundationBridge.h.in",
+      "sha256": "b65a86e26170b313ba00d875910da7499685736240a5cb644b6f916ec71e7d08",
+      "bytes": 314,
+      "previous_sha256": "b65a86e26170b313ba00d875910da7499685736240a5cb644b6f916ec71e7d08",
+      "change": "UNCHANGED"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/L08AppFoundationLaunch.swift.in",
+      "sha256": "76e37762006d912e40b18508414dc55384aaa89be9212f7fd172b55a30edabb0",
+      "bytes": 4344,
+      "previous_sha256": "76e37762006d912e40b18508414dc55384aaa89be9212f7fd172b55a30edabb0",
+      "change": "UNCHANGED"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/L08AppFoundationUITests.swift.in",
+      "sha256": "5f3f136ec7c5925ed82f277c2ca60e6f22ba81e42e97cc22ef7bdc3954ef2e07",
+      "bytes": 3506,
+      "previous_sha256": "5f3f136ec7c5925ed82f277c2ca60e6f22ba81e42e97cc22ef7bdc3954ef2e07",
+      "change": "UNCHANGED"
+    }
+  ],
+  "independent_hash_reconciliation": {
+    "authored_current_hash_and_size_matches": 13,
+    "authored_previous_git_show_hash_or_new_file_absence_matches": 13,
+    "protected_current_and_base_byte_identical": 13,
+    "all_owned_inputs_regular_not_symlinks_current_uid_single_link": true
+  },
+  "runner_AST_comparisons": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/run_ios_readiness.py",
+      "method": "Parse full current and git-show base runners; normalize only unique BaseException handler ending in bare raise inside unique command function; compare complete AST without location attributes.",
+      "result": "ALL_OTHER_AST_IDENTICAL",
+      "execution": "STATIC_STDLIB_ONLY_NOT_TEST_EXECUTION"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
+      "method": "Parse full current and git-show base runners; normalize only unique BaseException handler ending in bare raise inside unique command function; compare complete AST without location attributes.",
+      "result": "ALL_OTHER_AST_IDENTICAL",
+      "execution": "STATIC_STDLIB_ONLY_NOT_TEST_EXECUTION"
+    }
+  ],
+  "prior_actual_failures_directly_reopened": [
+    {
+      "cycle": "ios-readiness-17",
+      "receipt": {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34216788568/native-evidence/ios-readiness-17/receipt.json",
+        "bytes": 334590,
+        "sha256": "a25d6c67dba4d69f92d741089cfbe54f44aa8ae6158c4cd6dbb1a4b13f187512"
+      },
+      "status": "FAIL",
+      "runtime_evidence_status": "FAIL",
+      "toolchain_profile": "qualified-xcode-26.3",
+      "error": {
+        "type": "TimeoutExpired",
+        "message": "Command '['ps', '-axo', 'pid=,ppid=,pgid=,lstart=,command=']' timed out after 15 seconds"
+      },
+      "cleanup_status": "PASS",
+      "xcode_command": {
+        "started_at": "2026-09-08T10:44:21.019931+00:00",
+        "log": "xcodebuild.log",
+        "finished_at": "2026-09-08T10:45:42.398584+00:00"
+      },
+      "xcode_requested_sdk": "iphonesimulator26.2",
+      "xcode_log": {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34216788568/native-evidence/ios-readiness-17/xcodebuild.log",
+        "bytes": 3949,
+        "sha256": "f9f536606fdb451a9201dd8a52e0e5197033ed4d171b19cc7d33eb666fff36f9"
+      },
+      "app_foundation_preservation": {
+        "status": "UNAVAILABLE",
+        "files": [],
+        "reason": "owned-container-unavailable"
+      },
+      "app_foundation_collection": {
+        "status": "NOT_RUN"
+      },
+      "interpretation": "A has no exit_code or interrupted_or_failed field. Early Xcode build description/tool probes followed by BUILD INTERRUPTED; no XCTest/application/Foundation evidence. Fallible stop could mask the original command exception; the first failing call is not established by the old receipt."
+    },
+    {
+      "cycle": "ios-readiness-18",
+      "receipt": {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34216788568/native-evidence/ios-readiness-18/receipt.json",
+        "bytes": 326168,
+        "sha256": "f89b9a66db4162f8da414f5500f726134bdbdd84790f3fc0a69ada953d4778b8"
+      },
+      "status": "FAIL",
+      "runtime_evidence_status": "FAIL",
+      "toolchain_profile": "qualified-xcode-26.3",
+      "error": {
+        "type": "TimeoutExpired",
+        "message": "Command '['ps', '-axo', 'pid=,ppid=,pgid=,lstart=,command=']' timed out after 15 seconds"
+      },
+      "cleanup_status": "PASS",
+      "xcode_command": {
+        "started_at": "2026-09-08T10:48:49.106557+00:00",
+        "log": "xcodebuild.log",
+        "exit_code": -15,
+        "interrupted_or_failed": true,
+        "finished_at": "2026-09-08T10:50:34.554133+00:00"
+      },
+      "xcode_requested_sdk": "iphonesimulator26.2",
+      "xcode_log_gzip": {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34216788568/native-evidence/ios-readiness-18/xcodebuild.log.gz",
+        "bytes": 35,
+        "sha256": "d52f73c89e90911d562cbbd7330a5772021a61a0d13c0e28bfb123188dc589b4"
+      },
+      "xcode_log_uncompressed_bytes": 0,
+      "xcode_log_uncompressed_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "provenance_status": "NOT_RUN",
+      "notice_package_status": "NOT_RUN",
+      "image_observer": "libproc",
+      "interpretation": "B DOES have exit_code -15 and interrupted_or_failed true. Its command stop/poll returned far enough to record those fields before propagating the primary error. The empty retained log is not executed repetitions or actual Parlor libproc evidence; do not assert both actual failures were masked."
+    }
+  ],
+  "prior_evidence_references": [
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-ps-timeout-diagnosis-01.json",
+      "bytes": 18505,
+      "sha256": "a5ac5eedd0924a5390baccf15edbbc8479145a816281c48dfa574b39af8df72f"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-run-34216788568-independent-01.json",
+      "bytes": 43971,
+      "sha256": "bd23a666945076731b2df24bc6a5044bce5d70270610ca5662020e0e3000a778"
+    }
+  ],
+  "findings_and_corrections": [
+    {
+      "id": "COMMAND_PRIMARY_EXCEPTION_MASKING",
+      "source_finding": "Old except blocks performed fallible owner.stop and child.poll before recording interruption or rethrowing. A secondary stop/poll exception could replace the original command exception. A17 missing fields are consistent with this gap but do not locate the first failure. B18 retained fields must not be discarded.",
+      "reviewed_correction": "Both actual mutable command functions now write interrupted_or_failed and bounded primary error first, retain bounded secondary stop/poll error with a closed stage separately, and bare-raise the original BaseException instance. No success exit is fabricated after a failed cleanup/poll.",
+      "limits": "Correction is specifically secondary stop/poll masking, not a guarantee against every possible logging/finally I/O failure. Finally timestamp/save, success/nonzero paths, ps15s timeout, observation cadence/backend, role predicate, PID/start ownership and subsequent finalization are unchanged. This does not fix or identify the OS process-snapshot root cause.",
+      "conclusion": "APPROVED_SOURCE"
+    },
+    {
+      "id": "FOUNDATION_SELECTED_RUNTIME_NOT_PROPAGATED",
+      "source_finding": "Qualified runner at25b selected Xcode26.3/17C529 and SDK/runtime26.2 while native template guard and complete-record parser still required26.5.0. A17 never reached the guard; no falsely successful executed Foundation observation is alleged.",
+      "reviewed_correction": "One shared closed profile authority supplies fresh exact integer triples local26.5.0 or qualified26.2.0. Copy renderer replaces exactly one whole native runtime guard using existing once-anchor validation, records explicit profile/triple in binding, and leaves original template bytes/hash intact while generated hash binds selected guard.",
+      "consumer_binding": "Actual composed copy transform explicitly passes toolchain_name. Actual Hooks pass root receipt toolchain_profile STRING through preservation; collection first crosschecks copy profile/triple against that trusted selection, then direct parse and collection reparse all use that profile. Missing/unknown root profile is rejected, not silently defaulted or derived from native output.",
+      "strictness": "Complete records require one selected exact triple, including patch0 and primitive int type; no either-profile acceptor. Binding triples reject bool/float/wrong lengths via exact equality and primitive type guard. Existing valid CONTROL_ERROR empty/mismatched bounded runtime shape remains preservable as failure; malformed shapes still reject and incomplete observations cannot validate collection. All sixteen native operations/query rows and strict metadata semantics remain unchanged.",
+      "conclusion": "APPROVED_SOURCE"
+    }
+  ],
+  "profile_and_call_path_reconciliation": {
+    "closed_profiles": [
+      {
+        "name": "local-xcode-26.5",
+        "xcode": "26.5",
+        "build": "17F42",
+        "sdk": "26.5",
+        "runtime_version": [
+          26,
+          5,
+          0
+        ]
+      },
+      {
+        "name": "qualified-xcode-26.3",
+        "xcode": "26.3",
+        "build": "17C529",
+        "sdk": "26.2",
+        "developer_dir": "/Applications/Xcode_26.3.app/Contents/Developer",
+        "runtime_version": [
+          26,
+          2,
+          0
+        ]
+      }
+    ],
+    "only_profile_code_change": "Add fresh runtime_version list to each of two closed profile return dictionaries; all existing selection/toolchain guards unchanged.",
+    "native_template_retained": {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/L08AppFoundation.m.in",
+      "bytes": 29952,
+      "sha256": "f7b0e515b580f4bd9c49857ad4a49a3ab925218e8e52c260eb14cc75e410cba7"
+    },
+    "local_render_compatibility": "Inspected renderer and new independent legacy expansion test: same exact replacement leaves local template expansion byte-compatible. Qualified expansion changes only exact native guard before existing parameter expansion. Not executed by reviewer.",
+    "parser_reuse": "Historical run_control.py remains hash-pinned and unmodified; active app parser reuses only decode_json, ROW_KINDS, validate_error and validate_query, not historical CLI local-runtime acceptance.",
+    "actual_parse_paths": [
+      "preserve_available native-result parse with root profile",
+      "Hooks.bind_available direct parse after caller/binding crosscheck",
+      "bind_collection reparse after repeated caller/binding crosscheck"
+    ],
+    "collection_success_label_unchanged": "COLLECTION_VALIDATED_NOT_L08_PASS"
+  },
+  "freeze_and_clone_reconciliation": {
+    "new_freeze": {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/hosted-native-repair-01/draft-freeze-relative.json",
+      "bytes": 2954,
+      "sha256": "2905ce996bad3d6e1d3d45e9fd7594cbe54cc93380e608781a7f34d73b0784a0"
+    },
+    "new_freeze_members": [
+      {
+        "path": "L08AppFoundation.m.in",
+        "sha256": "f7b0e515b580f4bd9c49857ad4a49a3ab925218e8e52c260eb14cc75e410cba7",
+        "lines": 539
+      },
+      {
+        "path": "L08AppFoundationBridge.h.in",
+        "sha256": "b65a86e26170b313ba00d875910da7499685736240a5cb644b6f916ec71e7d08",
+        "lines": 7
+      },
+      {
+        "path": "L08AppFoundationLaunch.swift.in",
+        "sha256": "76e37762006d912e40b18508414dc55384aaa89be9212f7fd172b55a30edabb0",
+        "lines": 74
+      },
+      {
+        "path": "L08AppFoundationUITests.swift.in",
+        "sha256": "5f3f136ec7c5925ed82f277c2ca60e6f22ba81e42e97cc22ef7bdc3954ef2e07",
+        "lines": 49
+      },
+      {
+        "path": "README.md",
+        "sha256": "0854ffec41d4eafcbfc8269b2c199d4d681e79576e4d53b77716ff0080249cc1",
+        "lines": 95
+      },
+      {
+        "path": "ROOT_INTEGRATION.md",
+        "sha256": "e3009bfe096930dbde969f239dd162da15a25d407e4b39a99f8bf4fab22d8dcb",
+        "lines": 112
+      },
+      {
+        "path": "app_foundation_copy.py",
+        "sha256": "0df57639ed7bdef3fd4df62e73489dc85f4006dd587ce82cf9077e4262e1b068",
+        "lines": 219
+      },
+      {
+        "path": "app_foundation_receipts.py",
+        "sha256": "db69c16b7d8abfb5998f92db886a8b8c77bcbb3e72fdd1d806f0ea3dd05f1fb6",
+        "lines": 285
+      },
+      {
+        "path": "test_app_foundation.py",
+        "sha256": "c04c7d4b1bb99207415beab77ae3b40bb3d5f59709970f7d844d5d14beab0fe5",
+        "lines": 553
+      }
+    ],
+    "new_freeze_exact_nine_unique_direct_regular_files_and_current_hashes": true,
+    "previous_relative_freeze": {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/hosted-native-portability-01/draft-freeze-relative.json",
+      "bytes": 2425,
+      "sha256": "64c02554e7ddec05b85f533c05733e0f8bbedcc843843245d82cfd1ffd98564a"
+    },
+    "original_absolute_freeze": {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/l08-native14-followup-01/draft-freeze.json",
+      "bytes": 2964,
+      "sha256": "1a803df85b6acab0ad4ca38fa9d43a5be0b47d95bd42bd77970f57b5c26c401c"
+    },
+    "old_freezes_untouched": true,
+    "clone_manifest": {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/l08-functional-companion-clone-manifest-01.json",
+      "bytes": 11870,
+      "sha256": "3036231a1bcfc9d567b8381ee33d89cd381377bea2b10790ddde0f90baf682fb"
+    },
+    "canonical_named_original_hash_and_size_matches": 65,
+    "exact_companion_directory_members": 75,
+    "companion_unchanged_original_hashes": 62,
+    "permitted_changed_clones": [
+      "copied_sources.py",
+      "run_ios_readiness.py"
+    ],
+    "special_existing_mafia_reconciliation": "Independently removed exactly one line for each14 closed stage names and three exact preexisting signature/call transforms in memory; result equals canonical original bytes. Current repair did not edit either Mafia source.",
+    "copied_sources_exact_inherited_import_transform_match": true,
+    "all_six_copy_dependency_pins_match_current_companion_inputs": true,
+    "composer_driver_and_freeze_pins_match_current_bytes": true,
+    "composer_support_controls": [
+      "scripts/verification/ios-readiness/test_toolchain_profiles.py",
+      "scripts/verification/ios-readiness/test_native_command_failures.py",
+      "scripts/verification/ios-readiness/test_foundation_toolchain_binding.py"
+    ],
+    "normal_control_closure": "Unchanged control_manifest enumerates all support .py/.in/.md plus inherited-controls.json, normal directory controls, Darwin identity helper and explicit source binding. Both new shared tests enter this closure.",
+    "freeze_parser_guards": "Exact nine unique direct safe paths; SHA256, nonsymlink, UID/inode/regular-file/link/bounded-read checks unchanged."
+  },
+  "control_source_review": {
+    "new_command_controls": {
+      "file": {
+        "path": "scripts/verification/ios-readiness/test_native_command_failures.py",
+        "bytes": 12002,
+        "sha256": "7ea11e97a11cc07ba85d09c1366fe4198b95b8ee59414979fa7801122be981be"
+      },
+      "static_declared_method_count": 12,
+      "coverage": "AST extracts the unique entire actual command function from each runner, then executes only in inert mocked subprocess/time/owner namespace when coordinator runs it. Unique exception instances assertIs despite same type; covers Popen/register/poll/refresh, stop/post-stop-poll, KeyboardInterrupt/SystemExit, bounded messages/no raw TimeoutExpired output or environment, actual negative/unknown exit and unchanged zero/nonzero success baseline. Exact command-role-only stop predicate checked.",
+      "execution": "NOT_EXECUTED_BY_REVIEWER_OR_AUTHOR"
+    },
+    "new_runtime_controls": {
+      "file": {
+        "path": "scripts/verification/ios-readiness/test_foundation_toolchain_binding.py",
+        "bytes": 22366,
+        "sha256": "59f5642de0f9b7a828698ff5c37810a4076e082f4dacf1bcd78d91a8db8e6647"
+      },
+      "static_declared_method_count": 20,
+      "coverage": "Thirteen parser/copy/render/binding controls plus seven actual Hook controls, no inherited surprise tests. Positive baselines for both exact profiles, legacy render reconstruction, exact one-guard difference, malformed/missing/duplicate/weakened anchors, profile/triple mutations and all three actual parse-call arguments. Root/binding/observed runtime disagreement and changes after preservation cannot validate old data. Valid CONTROL_ERROR retained byte-for-byte but collection fails; malformed error rejects with evidence preserved. Existing owned external-temp custody/cleanup wrapper reused.",
+      "execution": "NOT_EXECUTED_BY_REVIEWER_OR_AUTHOR"
+    },
+    "existing_draft_controls": {
+      "static_declared_method_count": 33,
+      "all_test_method_ASTs_identical_to_base": true,
+      "fixture_change": "Adds required local profile/triple fields."
+    },
+    "existing_composition_controls": {
+      "static_declared_method_count": 22,
+      "only_test_method_AST_change": "SourceControls.test_control_union_keeps_every_inherited_and_new_input adds exact new SUPPORT_CONTROLS union; no prior assertions removed. Root fixture adds required local profile string."
+    },
+    "required_coordinator_controls": "New12 +20; existing shared profile12, draft33+composition22, normal187, functional-copy12, single-tap14. This report declares no executed count or passed application test."
+  },
+  "reviewer_corrections": {
+    "earlier_portability_review": {
+      "reference": {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/native-portability-independent-01.json",
+        "bytes": 19885,
+        "sha256": "f6b77fac3047368fe8aec883a6f8a0daf82416e8f0b16a0e8b5d9a05a852724f"
+      },
+      "correction": "My earlier portability review missed the native/parser exact-runtime guard propagation defect. This report explicitly reopens that source finding; earlier review alone was not sufficient proof."
+    },
+    "preliminary_B18_message": "An initial filtered inspection message incorrectly treated B18 interruption fields as absent. Author queried it; full raw entry independently reopened and correction sent before approval: B18 has true/-15, A17 lacks both. Formal conclusions above use the raw facts."
+  },
+  "remaining_execution_gates": [
+    "Coordinator must execute focused affected controls in its single coordinated lane, retain exact source/control maps and logs/counts, and perform required immediate/final Gradle stop and precise owned cleanup. Harness success is not application runtime.",
+    "Separate workflow/process-diagnostic implementation requires ci_review approval. Existing ps ownership root cause remains unresolved; no blind retry or changed timeout/backend/cadence acceptance follows from this review.",
+    "Commit reviewed source/control changes, regenerate and commit mechanical inventory, then create fresh bindings for that frozen source before justified platform probe/native/final qualification. Existing25b bindings/evidence cannot be relabelled.",
+    "A functional-storage/retained-host/Settings/lifecycle/strict file-protection scenarios remain incomplete; original failed strict metadata evidence stays preserved. B actual normal Parlor libproc runtime has not run.",
+    "C candidate source25b evidence remains scoped to25b only; fresh final chain and D combined qualification/reconciliation remain coordinator work.",
+    "Physical-device/locked-keybag/LAN/backup/power-loss/Store operations and separate identity/owner/legal requirements remain excluded/unresolved, not approved by this source review."
+  ],
+  "reviewer_activity": {
+    "project_imports": 0,
+    "tests": 0,
+    "builds": 0,
+    "native_execution": 0,
+    "workflow_dispatches": 0,
+    "downloads": 0,
+    "commits": 0,
+    "source_edits": 0,
+    "performed": "Read current source/diffs/raw failure evidence; stdlib JSON, SHA256 and AST comparisons; read-only git show; wrote only this new unique untracked review report."
+  },
+  "cleanup": {
+    "build_lane_started": false,
+    "build_or_native_workers_created": 0,
+    "generated_build_outputs_created": 0,
+    "temporary_fixture_or_device_created": false,
+    "required": false,
+    "disposition": "No review build/test cycle; no Gradle stop, cache deletion or cleanup of coordinator/unrelated work. Historical evidence and source files preserved."
+  },
+  "readiness_verdict": "NOT_READY. Scoped source repairs approved for coordinated focused checks only. No new functional recovery, strict protection, actual Parlor libproc runtime or final qualification success is established."
+}

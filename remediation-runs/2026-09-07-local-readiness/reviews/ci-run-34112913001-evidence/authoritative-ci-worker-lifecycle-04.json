@@ -1,0 +1,74 @@
+{
+  "scope": "Complete Gradle launcher-system-project-property path and actual runner process-environment reader, read-only source research",
+  "references": [
+    {
+      "label": "gradle-8.13-properties-loader",
+      "url": "https://raw.githubusercontent.com/gradle/gradle/v8.13.0/subprojects/core/src/main/java/org/gradle/initialization/DefaultGradlePropertiesLoader.java",
+      "accessed_at": "2026-09-07T13:22:15.890734+00:00",
+      "status": 200,
+      "bytes": 2242,
+      "sha256": "7351ef32191c97dcd974b294990a3d93d727dc87ca087a5e00fd0c1f961d75ba",
+      "retained_source": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34112913001-evidence/gradle-8.13-properties-loader.java",
+      "relevant_hits": []
+    },
+    {
+      "label": "gradle-8.13-build-actions-factory",
+      "url": "https://raw.githubusercontent.com/gradle/gradle/v8.13.0/platforms/core-runtime/launcher/src/main/java/org/gradle/launcher/cli/BuildActionsFactory.java",
+      "accessed_at": "2026-09-07T13:22:18.006621+00:00",
+      "error": "HTTPError: HTTP Error 404: Not Found"
+    },
+    {
+      "label": "gradle-8.13-daemon-parameters",
+      "url": "https://raw.githubusercontent.com/gradle/gradle/v8.13.0/platforms/core-runtime/launcher/src/main/java/org/gradle/launcher/daemon/configuration/DaemonParameters.java",
+      "accessed_at": "2026-09-07T13:22:19.556293+00:00",
+      "error": "HTTPError: HTTP Error 404: Not Found"
+    },
+    {
+      "label": "github-runner-2.337.0-process-extensions",
+      "url": "https://raw.githubusercontent.com/actions/runner/v2.337.0/src/Runner.Common/ProcessExtensions.cs",
+      "accessed_at": "2026-09-07T13:22:23.084012+00:00",
+      "status": 200,
+      "bytes": 16943,
+      "sha256": "b3c719dc21a4e6d7e316d6b0326735644b167a463560dc9409b4910fed3157d2",
+      "retained_source": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34112913001-evidence/github-runner-2.337.0-process-extensions.cs",
+      "relevant_hits": [
+        {
+          "line": 22,
+          "text": "public static string GetEnvironmentVariable(this Process process, IHostContext hostContext, string variable)"
+        },
+        {
+          "line": 163,
+          "text": "trace.Verbose($\"PID:{process.Id} ({env[0]}={env[1]})\");"
+        },
+        {
+          "line": 291,
+          "text": "public static string GetEnvironmentVariable(this Process process, IHostContext hostContext, string variable)"
+        },
+        {
+          "line": 298,
+          "text": "string envFile = $\"/proc/{process.Id}/environ\";"
+        },
+        {
+          "line": 312,
+          "text": "trace.Verbose($\"PID:{process.Id} ({keyValuePair[0]}={keyValuePair[1]})\");"
+        },
+        {
+          "line": 324,
+          "text": "trace.Info($\"Read env from output of `ps e -p {process.Id} -o command`\");"
+        },
+        {
+          "line": 353,
+          "text": "arguments: $\"e -p {process.Id} -o command\","
+        },
+        {
+          "line": 358,
+          "text": "trace.Info($\"Successfully dump environment variables for {process.Id}\");"
+        },
+        {
+          "line": 378,
+          "text": "trace.Verbose($\"PID:{process.Id} ({variable}={env[variable]})\");"
+        }
+      ]
+    }
+  ]
+}

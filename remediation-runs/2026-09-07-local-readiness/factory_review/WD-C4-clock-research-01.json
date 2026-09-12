@@ -1,0 +1,32 @@
+{
+  "accessed_at": "2026-09-07T03:43:51.902392+00:00",
+  "reviewer": "/root/factory_review",
+  "url": "https://repo.maven.apache.org/maven2/org/jetbrains/compose/ui/ui-test/1.10.3/ui-test-1.10.3-sources.jar",
+  "http_status": 200,
+  "bytes": 150816,
+  "sha256": "6a82f74cd82174fa9c94a43c2d274a018cb9069ddfefd58adaaa57a8da1838f8",
+  "verified_preserved_entries": [
+    {
+      "entry": "skikoMain/androidx/compose/ui/test/ComposeUiTest.skiko.kt",
+      "preserved_source_path": "remediation-runs/2026-09-05-confirmed-fixes/whodunit/DS-C02-ComposeUiTest.skiko.kt.txt",
+      "sha256": "4e1386cc56271860e21e035b3fb50fd3e587ecea17206b7490fb50dc1fb20f8a"
+    },
+    {
+      "entry": "commonMain/androidx/compose/ui/test/AbstractMainTestClock.kt",
+      "preserved_source_path": "remediation-runs/2026-09-05-confirmed-fixes/whodunit/DS-C02-AbstractMainTestClock.kt.txt",
+      "sha256": "63150fc407d080fe340e26ff8e6a7dce69f4034a9a8902399e5db5bdfa0df055"
+    },
+    {
+      "entry": "commonMain/androidx/compose/ui/test/MainTestClock.kt",
+      "preserved_source_path": "remediation-runs/2026-09-05-confirmed-fixes/whodunit/DS-C02-MainTestClock.kt.txt",
+      "sha256": "bcfe3257776484a831aeb674b5e51cf9f052ed5781220690b590e35e39706f70"
+    }
+  ],
+  "claims": [
+    "Exact pinned ui-test1.10.3 Skiko entry rejects every non-empty effectContext in constructor; defaults remain valid.",
+    "AbstractMainTestClock advanceTimeBy rounds to frame multiples and advances only its own TestCoroutineScheduler.",
+    "Production writer Dispatchers.Default is not driven by MainTestClock; timer state assertions must independently await real write completion without advancing active virtual time."
+  ],
+  "method": "Fresh public Maven HTTPS download verified against preserved exact-source bytes; artifact held only in memory and not retained; no source/private data sent.",
+  "archive_retained": false
+}

@@ -1,0 +1,49 @@
+// Called once on existing readiness boot1 BEFORE its original native health action.
+// No original boot/test/operation count or required storage assertion is changed.
+extension IOSAppLaunchUITests {
+    @MainActor private func verifyL08AppFoundation(_ app: XCUIApplication, boot: String) throws {
+        XCTAssertEqual(app.launchEnvironment["PARLOR_READINESS_BOOT"], "1")
+        XCTAssertEqual(app.launchEnvironment["PARLOR_DSC01_SCENARIO"], "readiness")
+        let control = app.buttons["parlor-l08-app-foundation-run"]
+        XCTAssertTrue(control.waitForExistence(timeout: 10) && control.isEnabled && control.isHittable)
+        control.tap() // Exactly one activation; no remount retry or repeated native call.
+        let state = app.staticTexts["parlor-l08-app-foundation-state"]
+        XCTAssertTrue(state.waitForExistence(timeout: 10))
+        let completed = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            guard let value = state.value as? String else { return false }
+            return value != "pending" && value != "running"
+        }, object: nil)
+        XCTAssertEqual(XCTWaiter.wait(for: [completed], timeout: 35), .completed)
+        let bytes = try XCTUnwrap((state.value as? String)?.data(using: .utf8))
+        XCTAssertLessThanOrEqual(bytes.count, 32768)
+        let value = try XCTUnwrap(JSONSerialization.jsonObject(with: bytes) as? [String: Any])
+        XCTAssertEqual(value["kind"] as? String, "l08-app-foundation")
+        XCTAssertEqual(value["status"] as? String, "OBSERVATIONS_COMPLETE")
+        XCTAssertEqual(value["run_token"] as? String, app.launchEnvironment["PARLOR_DSC01_RUN_TOKEN"])
+        XCTAssertEqual(value["simulator_udid"] as? String, app.launchEnvironment["PARLOR_DSC01_EXPECTED_UDID"])
+        XCTAssertEqual(value["process_boot"] as? String, boot)
+        XCTAssertEqual(value["boot_ordinal"] as? Int, 1)
+        XCTAssertEqual(value["app_container"] as? Bool, true)
+        XCTAssertEqual(value["simulator_only"] as? Bool, true)
+        XCTAssertEqual(value["hardware_protection_verified"] as? Bool, false)
+        XCTAssertEqual(value["l08_requirements_waived"] as? Bool, false)
+        XCTAssertEqual((try dictionary(value, "fixture_cleanup"))["status"] as? String, "REMOVED")
+        let rows = try XCTUnwrap(value["rows"] as? [[String: Any]])
+        XCTAssertEqual(rows.count, 16)
+        XCTAssertFalse(control.isEnabled)
+        XCTAssertEqual(app.state, .runningForeground)
+        XCTAssertFalse(app.alerts.firstMatch.exists)
+        // Metadata values/operation results are observations, NEVER strict L08 acceptance.
+        // The host independently validates every row, native identity and exact image UUID.
+        let receipt: [String: Any] = ["schema_version": 1, "kind": "l08-app-foundation-xctest",
+            "run_token": try string(value, "run_token"), "process_boot": boot,
+            "process_id": try XCTUnwrap(value["process_id"] as? Int),
+            "boot_ordinal": 1, "activations": 1, "foreground": true, "alert_present": false,
+            "fixture_template_sha256": try string(value, "fixture_template_sha256"),
+            "context_sha256": try string(value, "context_sha256"),
+            "controls_sha256": try string(value, "controls_sha256")]
+        let encoded = try JSONSerialization.data(withJSONObject: receipt, options: [.sortedKeys])
+        XCTAssertLessThanOrEqual(encoded.count, 1024)
+        print("PARLOR_L08_APP_FOUNDATION " + String(decoding: encoded, as: UTF8.self))
+    }
+}

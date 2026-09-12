@@ -1,0 +1,74 @@
+// Appended to the owned copied ContentView only. Direct ObjC, not Kotlin storage.
+extension DSC01Probe {
+    var isAppFoundationBoot: Bool {
+        scenario == "readiness" && ProcessInfo.processInfo.environment["PARLOR_READINESS_BOOT"] == "1"
+    }
+
+    func startAppFoundationObservation() {
+        precondition(Thread.isMainThread)
+        guard prepared, isAppFoundationBoot, appFoundationDisplay == "pending" else { return }
+        let environment = ProcessInfo.processInfo.environment
+        guard let token = environment["PARLOR_DSC01_RUN_TOKEN"], UUID(uuidString: token) != nil,
+              let device = environment["SIMULATOR_UDID"],
+              device == environment["PARLOR_DSC01_EXPECTED_UDID"] else {
+            appFoundationDisplay = "invalid-context"; return
+        }
+        let processBoot = boot
+        appFoundationDisplay = "running" // Main-thread one-shot guard; native also has an atomic entry guard.
+        DispatchQueue.global(qos: .utility).async { [weak self] in
+            // Native @finally cleans its synthetic sibling before returning.
+            // No global process alarm/umask, caller-owned store or preferences.
+            let bytes = parlorL08AppFoundationObserve(processBoot: processBoot)
+            DispatchQueue.main.async {
+                guard let self else { return }
+                var stage = "native-delivery"
+                do {
+                    guard let bytes, (1...32768).contains(bytes.count),
+                          let row = try JSONSerialization.jsonObject(with: bytes) as? [String: Any],
+                          row["kind"] as? String == "l08-app-foundation",
+                          row["run_token"] as? String == token,
+                          row["process_boot"] as? String == processBoot,
+                          row["simulator_udid"] as? String == device,
+                          row["process_id"] as? Int == Int(ProcessInfo.processInfo.processIdentifier) else {
+                        throw self.fixtureError()
+                    }
+                    stage = "receipt-write"
+                    let path = FileManager.default.temporaryDirectory.appendingPathComponent("parlor-l08-app-foundation.json")
+                    // Exclusive result, outside the synthetic sibling so cleanup cannot erase evidence.
+                    try bytes.write(to: path, options: [.withoutOverwriting])
+                    self.appFoundationDisplay = String(decoding: bytes, as: UTF8.self)
+                } catch {
+                    do {
+                        let failure: [String: Any] = ["schema_version": 1,
+                            "kind": "l08-app-foundation-delivery-failure", "stage": stage,
+                            "run_token": token, "process_boot": processBoot, "simulator_udid": device,
+                            "process_id": Int(ProcessInfo.processInfo.processIdentifier),
+                            "boot_ordinal": 1, "scenario": "readiness",
+                            "l08_requirements_waived": false, "hardware_protection_verified": false]
+                        let encoded = try JSONSerialization.data(withJSONObject: failure, options: [.sortedKeys])
+                        guard encoded.count <= 1024 else { throw self.fixtureError() }
+                        let path = FileManager.default.temporaryDirectory.appendingPathComponent(
+                            "parlor-l08-app-foundation-failure.json")
+                        try encoded.write(to: path, options: [.withoutOverwriting])
+                        self.appFoundationDisplay = String(decoding: encoded, as: UTF8.self)
+                    } catch {
+                        self.appFoundationDisplay = "failure-receipt-unavailable"
+                    }
+                }
+            }
+        }
+    }
+}
+
+private struct L08AppFoundationControls: View {
+    @ObservedObject var probe: DSC01Probe
+    var body: some View {
+        HStack(spacing: 8) {
+            Button("App Foundation observation") { probe.startAppFoundationObservation() }
+                .disabled(probe.appFoundationDisplay != "pending")
+                .accessibilityIdentifier("parlor-l08-app-foundation-run")
+            Text("App Foundation result").accessibilityIdentifier("parlor-l08-app-foundation-state")
+                .accessibilityValue(probe.appFoundationDisplay)
+        }
+    }
+}

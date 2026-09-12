@@ -1,0 +1,592 @@
+﻿2026-09-07T10:43:20.6365230Z Current runner version: '2.337.0'
+2026-09-07T10:43:20.6403500Z ##[group]Runner Image Provisioner
+2026-09-07T10:43:20.6404590Z Hosted Compute Agent
+2026-09-07T10:43:20.6405340Z Version: 20260819.586
+2026-09-07T10:43:20.6406170Z Commit: 3cc4a88dfa507ef76119ad1bb3eccc6378bb2b76
+2026-09-07T10:43:20.6407170Z Build Date: 2026-08-18T23:20:18Z
+2026-09-07T10:43:20.6408220Z Worker ID: {f2fa4f39-ed38-4ef0-898e-285f17575649}
+2026-09-07T10:43:20.6409210Z Azure Region: westus
+2026-09-07T10:43:20.6409950Z ##[endgroup]
+2026-09-07T10:43:20.6412190Z ##[group]Operating System
+2026-09-07T10:43:20.6412990Z macOS
+2026-09-07T10:43:20.6413640Z 15.7.9
+2026-09-07T10:43:20.6414270Z 24G830
+2026-09-07T10:43:20.6414930Z ##[endgroup]
+2026-09-07T10:43:20.6415790Z ##[group]Runner Image
+2026-09-07T10:43:20.6416570Z Image: macos-15
+2026-09-07T10:43:20.6417290Z Version: 20260824.0482.1
+2026-09-07T10:43:20.6419160Z Included Software: https://github.com/actions/runner-images/blob/macos-15/20260824.0482/images/macos/macos-15-Readme.md
+2026-09-07T10:43:20.6421530Z Image Release: https://github.com/actions/runner-images/releases/tag/macos-15%2F20260824.0482
+2026-09-07T10:43:20.6423130Z ##[endgroup]
+2026-09-07T10:43:20.6424690Z ##[group]GITHUB_TOKEN Permissions
+2026-09-07T10:43:20.6427430Z Contents: read
+2026-09-07T10:43:20.6428200Z Metadata: read
+2026-09-07T10:43:20.6428910Z ##[endgroup]
+2026-09-07T10:43:20.6432420Z Secret source: Actions
+2026-09-07T10:43:20.6434430Z Prepare workflow directory
+2026-09-07T10:43:20.8845380Z Prepare all required actions
+2026-09-07T10:43:20.8954080Z Getting action download info
+2026-09-07T10:43:21.3045480Z Download action repository 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+2026-09-07T10:43:21.8975040Z Download action repository 'actions/setup-java@03ad4de0992f5dab5e18fcb136590ce7c4a0ac95' (SHA:03ad4de0992f5dab5e18fcb136590ce7c4a0ac95)
+2026-09-07T10:43:24.5519460Z Complete job name: Desktop and Kotlin Native strict verification (macOS x64)
+2026-09-07T10:43:24.7828690Z ##[group]Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+2026-09-07T10:43:24.7833690Z with:
+2026-09-07T10:43:24.7834920Z   fetch-depth: 1
+2026-09-07T10:43:24.7836480Z   persist-credentials: false
+2026-09-07T10:43:24.7838490Z   repository: Apdelrahman1911/parlor
+2026-09-07T10:43:24.7850200Z   token: <REDACTED>
+2026-09-07T10:43:24.7851410Z   ssh-strict: true
+2026-09-07T10:43:24.7852500Z   ssh-user: git
+2026-09-07T10:43:24.7853310Z   clean: true
+2026-09-07T10:43:24.7854550Z   sparse-checkout-cone-mode: true
+2026-09-07T10:43:24.7855840Z   fetch-tags: false
+2026-09-07T10:43:24.7857070Z   show-progress: true
+2026-09-07T10:43:24.7858390Z   lfs: false
+2026-09-07T10:43:24.7859670Z   submodules: false
+2026-09-07T10:43:24.7861210Z   set-safe-directory: true
+2026-09-07T10:43:24.7862330Z   allow-unsafe-pr-checkout: false
+2026-09-07T10:43:24.7865380Z ##[endgroup]
+2026-09-07T10:43:25.3474920Z Syncing repository: Apdelrahman1911/parlor
+2026-09-07T10:43:25.3479090Z ##[group]Getting Git version info
+2026-09-07T10:43:25.3480430Z Working directory is '<CI_WORKSPACE>'
+2026-09-07T10:43:25.3482200Z [command]/usr/local/bin/git version
+2026-09-07T10:43:25.3551040Z git version 2.55.0
+2026-09-07T10:43:25.3601530Z ##[endgroup]
+2026-09-07T10:43:25.3619110Z Copying '<CI_HOME>/.gitconfig' to '<CI_HOME>/work/_temp/4d1b139a-44f7-4e85-a7f5-555a29330134/.gitconfig'
+2026-09-07T10:43:25.3646760Z Temporarily overriding HOME='<CI_HOME>/work/_temp/4d1b139a-44f7-4e85-a7f5-555a29330134' before making global git config changes
+2026-09-07T10:43:25.3651470Z Adding repository directory to the temporary git global config as a safe directory
+2026-09-07T10:43:25.3656390Z [command]/usr/local/bin/git config --global --add safe.directory <CI_WORKSPACE>
+2026-09-07T10:43:25.3880190Z Deleting the contents of '<CI_WORKSPACE>'
+2026-09-07T10:43:25.3889020Z ##[group]Determining repository object format
+2026-09-07T10:43:25.3891400Z ##[endgroup]
+2026-09-07T10:43:25.3893330Z ##[group]Initializing the repository
+2026-09-07T10:43:25.3903150Z [command]/usr/local/bin/git init <CI_WORKSPACE>
+2026-09-07T10:43:25.4384950Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-09-07T10:43:25.4411730Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-09-07T10:43:25.4414410Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-09-07T10:43:25.4419010Z hint: call:
+2026-09-07T10:43:25.4422600Z hint:
+2026-09-07T10:43:25.4426930Z hint: 	git config --global init.defaultBranch <name>
+2026-09-07T10:43:25.4433550Z hint:
+2026-09-07T10:43:25.4437510Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-09-07T10:43:25.4443760Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-09-07T10:43:25.4448070Z hint:
+2026-09-07T10:43:25.4454340Z hint: 	git branch -m <name>
+2026-09-07T10:43:25.4457810Z hint:
+2026-09-07T10:43:25.4468230Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-09-07T10:43:25.4476010Z Initialized empty Git repository in <CI_WORKSPACE>/.git/
+2026-09-07T10:43:25.4503560Z [command]/usr/local/bin/git remote add origin https://github.com/Apdelrahman1911/parlor
+2026-09-07T10:43:25.4668930Z ##[endgroup]
+2026-09-07T10:43:25.4670670Z ##[group]Disabling automatic garbage collection
+2026-09-07T10:43:25.4673770Z [command]/usr/local/bin/git config --local gc.auto 0
+2026-09-07T10:43:25.4876490Z ##[endgroup]
+2026-09-07T10:43:25.4878980Z ##[group]Setting up auth
+2026-09-07T10:43:25.4880630Z Removing SSH command configuration
+2026-09-07T10:43:25.4889050Z [command]/usr/local/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-09-07T10:43:25.5018050Z [command]/usr/local/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-09-07T10:43:26.6069370Z Removing HTTP extra header
+2026-09-07T10:43:26.6117170Z [command]/usr/local/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-09-07T10:43:26.7940730Z [command]/usr/local/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-09-07T10:43:27.3989570Z Removing includeIf entries pointing to credentials config files
+2026-09-07T10:43:27.4036340Z [command]/usr/local/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-09-07T10:43:27.4172050Z [command]/usr/local/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-09-07T10:43:27.9280500Z [command]/usr/local/bin/git config --file <CI_HOME>/work/_temp/git-credentials-a59b7c11-1474-4038-b673-fe38cab9270b.config http.https://github.com/.extraheader AUTHORIZATION: <REDACTED>
+2026-09-07T10:43:27.9293750Z [command]/usr/local/bin/git config --local includeIf.gitdir:<CI_WORKSPACE>/.git.path <CI_HOME>/work/_temp/git-credentials-a59b7c11-1474-4038-b673-fe38cab9270b.config
+2026-09-07T10:43:27.9425800Z [command]/usr/local/bin/git config --local includeIf.gitdir:<CI_WORKSPACE>/.git/worktrees/*.path <CI_HOME>/work/_temp/git-credentials-a59b7c11-1474-4038-b673-fe38cab9270b.config
+2026-09-07T10:43:27.9673360Z [command]/usr/local/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-a59b7c11-1474-4038-b673-fe38cab9270b.config
+2026-09-07T10:43:27.9893490Z [command]/usr/local/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-a59b7c11-1474-4038-b673-fe38cab9270b.config
+2026-09-07T10:43:28.0197240Z ##[endgroup]
+2026-09-07T10:43:28.0200850Z ##[group]Fetching the repository
+2026-09-07T10:43:28.0208800Z [command]/usr/local/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +f5ea8045bd903c255041b198f54aca67e893612f:refs/remotes/origin/fix/local-readiness-2026-09-07
+2026-09-07T10:43:30.4801410Z From https://github.com/Apdelrahman1911/parlor
+2026-09-07T10:43:30.4827680Z  * [new ref]         f5ea8045bd903c255041b198f54aca67e893612f -> origin/fix/local-readiness-2026-09-07
+2026-09-07T10:43:30.4850160Z [command]/usr/local/bin/git branch --list --remote origin/fix/local-readiness-2026-09-07
+2026-09-07T10:43:30.5040270Z   origin/fix/local-readiness-2026-09-07
+2026-09-07T10:43:30.5063570Z [command]/usr/local/bin/git rev-parse refs/remotes/origin/fix/local-readiness-2026-09-07
+2026-09-07T10:43:30.5249430Z f5ea8045bd903c255041b198f54aca67e893612f
+2026-09-07T10:43:30.5261670Z ##[endgroup]
+2026-09-07T10:43:30.5266830Z ##[group]Determining the checkout info
+2026-09-07T10:43:30.5272380Z ##[endgroup]
+2026-09-07T10:43:30.5282700Z [command]/usr/local/bin/git sparse-checkout disable
+2026-09-07T10:43:30.5684960Z [command]/usr/local/bin/git config --local --unset-all extensions.worktreeConfig
+2026-09-07T10:43:30.5932130Z ##[group]Checking out the ref
+2026-09-07T10:43:30.5940790Z [command]/usr/local/bin/git checkout --progress --force -B fix/local-readiness-2026-09-07 refs/remotes/origin/fix/local-readiness-2026-09-07
+2026-09-07T10:43:31.8609580Z Updating files:  68% (470/683)
+2026-09-07T10:43:31.9051410Z Updating files:  69% (472/683)
+2026-09-07T10:43:31.9778320Z Updating files:  70% (479/683)
+2026-09-07T10:43:31.9850300Z Updating files:  71% (485/683)
+2026-09-07T10:43:31.9971820Z Updating files:  72% (492/683)
+2026-09-07T10:43:31.9992530Z Updating files:  73% (499/683)
+2026-09-07T10:43:32.0009680Z Updating files:  74% (506/683)
+2026-09-07T10:43:32.0130900Z Updating files:  75% (513/683)
+2026-09-07T10:43:32.0171780Z Updating files:  76% (520/683)
+2026-09-07T10:43:32.0224560Z Updating files:  77% (526/683)
+2026-09-07T10:43:32.0285920Z Updating files:  78% (533/683)
+2026-09-07T10:43:32.0299330Z Updating files:  79% (540/683)
+2026-09-07T10:43:32.0305780Z Updating files:  80% (547/683)
+2026-09-07T10:43:32.0313330Z Updating files:  81% (554/683)
+2026-09-07T10:43:32.0319700Z Updating files:  82% (561/683)
+2026-09-07T10:43:32.0342330Z Updating files:  83% (567/683)
+2026-09-07T10:43:32.0348340Z Updating files:  84% (574/683)
+2026-09-07T10:43:32.0354880Z Updating files:  85% (581/683)
+2026-09-07T10:43:32.0398630Z Updating files:  86% (588/683)
+2026-09-07T10:43:32.0601590Z Updating files:  87% (595/683)
+2026-09-07T10:43:32.0799650Z Updating files:  88% (602/683)
+2026-09-07T10:43:32.1156020Z Updating files:  89% (608/683)
+2026-09-07T10:43:32.1303250Z Updating files:  90% (615/683)
+2026-09-07T10:43:32.1415830Z Updating files:  91% (622/683)
+2026-09-07T10:43:32.1499390Z Updating files:  92% (629/683)
+2026-09-07T10:43:32.1504480Z Updating files:  93% (636/683)
+2026-09-07T10:43:32.1513820Z Updating files:  94% (643/683)
+2026-09-07T10:43:32.1546770Z Updating files:  95% (649/683)
+2026-09-07T10:43:32.1603750Z Updating files:  96% (656/683)
+2026-09-07T10:43:32.1633940Z Updating files:  97% (663/683)
+2026-09-07T10:43:32.1682500Z Updating files:  98% (670/683)
+2026-09-07T10:43:32.1724510Z Updating files:  99% (677/683)
+2026-09-07T10:43:32.1729490Z Updating files: 100% (683/683)
+2026-09-07T10:43:32.1733150Z Updating files: 100% (683/683), done.
+2026-09-07T10:43:32.1911800Z Switched to a new branch 'fix/local-readiness-2026-09-07'
+2026-09-07T10:43:32.1949860Z branch 'fix/local-readiness-2026-09-07' set up to track 'origin/fix/local-readiness-2026-09-07'.
+2026-09-07T10:43:32.1976690Z ##[endgroup]
+2026-09-07T10:43:32.2231890Z [command]/usr/local/bin/git log -1 --format=%H
+2026-09-07T10:43:32.2472440Z f5ea8045bd903c255041b198f54aca67e893612f
+2026-09-07T10:43:32.2596600Z ##[group]Removing auth
+2026-09-07T10:43:32.2602840Z Removing SSH command configuration
+2026-09-07T10:43:32.2620800Z [command]/usr/local/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-09-07T10:43:32.2800300Z [command]/usr/local/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-09-07T10:43:32.8714200Z Removing HTTP extra header
+2026-09-07T10:43:32.9395370Z [command]/usr/local/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-09-07T10:43:32.9581780Z [command]/usr/local/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-09-07T10:43:33.4617750Z Removing includeIf entries pointing to credentials config files
+2026-09-07T10:43:33.4663310Z [command]/usr/local/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-09-07T10:43:33.4708380Z includeif.gitdir:<CI_WORKSPACE>/.git.path
+2026-09-07T10:43:33.4744410Z includeif.gitdir:<CI_WORKSPACE>/.git/worktrees/*.path
+2026-09-07T10:43:33.4783940Z includeif.gitdir:/github/workspace/.git.path
+2026-09-07T10:43:33.4821160Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-09-07T10:43:33.4976740Z [command]/usr/local/bin/git config --local --get-all includeif.gitdir:<CI_WORKSPACE>/.git.path
+2026-09-07T10:43:33.5010830Z <CI_HOME>/work/_temp/git-credentials-a59b7c11-1474-4038-b673-fe38cab9270b.config
+2026-09-07T10:43:33.7865800Z [command]/usr/local/bin/git config --local --unset includeif.gitdir:<CI_WORKSPACE>/.git.path \/Users\/runner\/work\/_temp\/git\-credentials\-a59b7c11\-1474\-4038\-b673\-fe38cab9270b\.config
+2026-09-07T10:43:33.9741310Z [command]/usr/local/bin/git config --local --get-all includeif.gitdir:<CI_WORKSPACE>/.git/worktrees/*.path
+2026-09-07T10:43:33.9859650Z <CI_HOME>/work/_temp/git-credentials-a59b7c11-1474-4038-b673-fe38cab9270b.config
+2026-09-07T10:43:34.0042180Z [command]/usr/local/bin/git config --local --unset includeif.gitdir:<CI_WORKSPACE>/.git/worktrees/*.path \/Users\/runner\/work\/_temp\/git\-credentials\-a59b7c11\-1474\-4038\-b673\-fe38cab9270b\.config
+2026-09-07T10:43:34.0625810Z [command]/usr/local/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+2026-09-07T10:43:34.0665950Z /github/runner_temp/git-credentials-a59b7c11-1474-4038-b673-fe38cab9270b.config
+2026-09-07T10:43:34.0825230Z [command]/usr/local/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-a59b7c11\-1474\-4038\-b673\-fe38cab9270b\.config
+2026-09-07T10:43:34.0976830Z [command]/usr/local/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-09-07T10:43:34.1038070Z /github/runner_temp/git-credentials-a59b7c11-1474-4038-b673-fe38cab9270b.config
+2026-09-07T10:43:34.2222830Z [command]/usr/local/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-a59b7c11\-1474\-4038\-b673\-fe38cab9270b\.config
+2026-09-07T10:43:34.3930610Z [command]/usr/local/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-09-07T10:43:34.4272480Z Removing credentials config '<CI_HOME>/work/_temp/git-credentials-a59b7c11-1474-4038-b673-fe38cab9270b.config'
+2026-09-07T10:43:34.4363320Z ##[endgroup]
+2026-09-07T10:43:34.4922280Z ##[group]Run actions/setup-java@03ad4de0992f5dab5e18fcb136590ce7c4a0ac95
+2026-09-07T10:43:34.4923590Z with:
+2026-09-07T10:43:34.4924110Z   distribution: temurin
+2026-09-07T10:43:34.4924700Z   java-version: 21
+2026-09-07T10:43:34.4925250Z   check-latest: false
+2026-09-07T10:43:34.4925870Z   java-package: jdk
+2026-09-07T10:43:34.4926370Z   set-default: true
+2026-09-07T10:43:34.4927110Z   verify-signature: false
+2026-09-07T10:43:34.4927630Z   server-id: github
+2026-09-07T10:43:34.4928180Z   server-username: GITHUB_ACTOR
+2026-09-07T10:43:34.4928760Z   server-password: <REDACTED>
+2026-09-07T10:43:34.4929610Z   overwrite-settings: true
+2026-09-07T10:43:34.4930310Z   job-status: success
+2026-09-07T10:43:34.4938280Z   token: <REDACTED>
+2026-09-07T10:43:34.4938870Z   show-download-progress: false
+2026-09-07T10:43:34.4939800Z ##[endgroup]
+2026-09-07T10:43:36.0389700Z ##[group]Installed distributions
+2026-09-07T10:43:36.0909840Z Resolved Java 21.0.12+101.0 from tool-cache
+2026-09-07T10:43:36.0959100Z Setting Java 21.0.12+101.0 as the default
+2026-09-07T10:43:36.0986610Z Creating toolchains.xml for JDK version 21 from temurin
+2026-09-07T10:43:36.1006220Z Writing to <CI_HOME>/.m2/toolchains.xml
+2026-09-07T10:43:36.1056360Z 
+2026-09-07T10:43:36.1063040Z Java configuration:
+2026-09-07T10:43:36.1085190Z   Distribution: temurin
+2026-09-07T10:43:36.1089260Z   Version: 21.0.12+101.0
+2026-09-07T10:43:36.1103000Z   Path: <CI_HOME>/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-101.0/x64/Contents/Home
+2026-09-07T10:43:36.1126180Z 
+2026-09-07T10:43:36.1132570Z ##[endgroup]
+2026-09-07T10:43:36.1255380Z Creating settings.xml with server-id: github
+2026-09-07T10:43:36.1256210Z Writing to <CI_HOME>/.m2/settings.xml
+2026-09-07T10:43:36.1258020Z Configured MAVEN_ARGS to include -ntp to suppress Maven transfer progress logs. Set 'show-download-progress: true' to keep the download progress output.
+2026-09-07T10:43:36.1553160Z ##[group]Run set -euo pipefail
+2026-09-07T10:43:36.1554960Z set -euo pipefail
+2026-09-07T10:43:36.1556070Z test "$(uname -s)" = "Darwin"
+2026-09-07T10:43:36.1557320Z test "$(uname -m)" = "x86_64"
+2026-09-07T10:43:36.1558430Z git rev-parse HEAD
+2026-09-07T10:43:36.1559690Z test -z "$(git status --porcelain)"
+2026-09-07T10:43:36.1779540Z shell: /bin/bash --noprofile --norc -e -o pipefail {0}
+2026-09-07T10:43:36.1781060Z env:
+2026-09-07T10:43:36.1782220Z   JAVA_HOME: <CI_HOME>/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-101.0/x64/Contents/Home
+2026-09-07T10:43:36.1783990Z   JAVA_HOME_21_X64: <CI_HOME>/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-101.0/x64/Contents/Home
+2026-09-07T10:43:36.1786080Z   MAVEN_ARGS: -ntp
+2026-09-07T10:43:36.1787820Z ##[endgroup]
+2026-09-07T10:43:36.3093600Z f5ea8045bd903c255041b198f54aca67e893612f
+2026-09-07T10:43:36.4260450Z ##[group]Run ./gradlew productionDesktopCheck :composeApp:downloadKotlinNativeDistribution --dependency-verification=strict --no-daemon --stacktrace --console=plain
+2026-09-07T10:43:36.4269780Z ./gradlew productionDesktopCheck :composeApp:downloadKotlinNativeDistribution --dependency-verification=strict --no-daemon --stacktrace --console=plain
+2026-09-07T10:43:36.4492520Z shell: /bin/bash --noprofile --norc -e -o pipefail {0}
+2026-09-07T10:43:36.4493730Z env:
+2026-09-07T10:43:36.4495100Z   JAVA_HOME: <CI_HOME>/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-101.0/x64/Contents/Home
+2026-09-07T10:43:36.4497580Z   JAVA_HOME_21_X64: <CI_HOME>/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-101.0/x64/Contents/Home
+2026-09-07T10:43:36.4499520Z   MAVEN_ARGS: -ntp
+2026-09-07T10:43:36.4500210Z ##[endgroup]
+2026-09-07T10:43:37.9028390Z Downloading https://services.gradle.org/distributions/gradle-8.13-bin.zip
+2026-09-07T10:43:41.8310560Z .............10%.............20%.............30%.............40%.............50%.............60%.............70%.............80%.............90%.............100%
+2026-09-07T10:43:46.1414730Z 
+2026-09-07T10:43:46.1438700Z Welcome to Gradle 8.13!
+2026-09-07T10:43:46.2067720Z 
+2026-09-07T10:43:46.2111030Z Here are the highlights of this release:
+2026-09-07T10:43:46.2182260Z  - Daemon JVM auto-provisioning
+2026-09-07T10:43:46.2276640Z  - Enhancements for Scala plugin and JUnit testing
+2026-09-07T10:43:46.2331330Z  - Improvements for build authors and plugin developers
+2026-09-07T10:43:46.2404190Z 
+2026-09-07T10:43:46.2452360Z For more details see https://docs.gradle.org/8.13/release-notes.html
+2026-09-07T10:43:46.2517880Z 
+2026-09-07T10:43:46.4522370Z To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.13/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+2026-09-07T10:43:49.0925460Z Daemon will be stopped at the end of the build 
+2026-09-07T10:43:51.3010740Z Calculating task graph as no cached configuration is available for tasks: productionDesktopCheck :composeApp:downloadKotlinNativeDistribution
+2026-09-07T10:44:34.3621510Z Type-safe project accessors is an incubating feature.
+2026-09-07T10:45:26.4304590Z > Task :build-logic:convention:checkKotlinGradlePluginConfigurationErrors SKIPPED
+2026-09-07T10:45:52.8830950Z > Task :build-logic:convention:pluginDescriptors
+2026-09-07T10:45:52.9980290Z > Task :build-logic:convention:processResources
+2026-09-07T10:45:56.4257620Z > Task :build-logic:convention:compileKotlin
+2026-09-07T10:46:14.7091360Z > Task :build-logic:convention:compileJava NO-SOURCE
+2026-09-07T10:46:14.7095850Z > Task :build-logic:convention:classes
+2026-09-07T10:46:14.8106860Z > Task :build-logic:convention:jar
+2026-09-07T10:46:59.4868720Z 
+2026-09-07T10:46:59.4871550Z > Configure project :composeApp
+2026-09-07T10:46:59.4875920Z WARNING: The option setting 'android.experimental.lint.version=9.1.1' is experimental.
+2026-09-07T10:47:17.0061980Z w: ⚠️ Deprecated Gradle Version
+2026-09-07T10:47:17.0077000Z The used Gradle version (Gradle 8.13) is deprecated and will not be supported in future Kotlin Gradle Plugin releases.
+2026-09-07T10:47:17.0080970Z The minimum supported Gradle version will become Gradle 8.14.4 in Kotlin 2.5.0.
+2026-09-07T10:47:17.0083580Z 
+2026-09-07T10:47:17.0085900Z This warning can be suppressed in 'gradle.properties':
+2026-09-07T10:47:17.0089590Z     kotlin.suppressGradlePluginWarnings=DeprecatedGradleVersionWarning
+2026-09-07T10:47:17.0093470Z Solution: Please update the Gradle version to at least Gradle 8.14.4.
+2026-09-07T10:47:17.0104900Z 
+2026-09-07T10:47:17.0107580Z w: ⚠️ Native task 'iosSimulatorArm64Test' is disabled
+2026-09-07T10:47:17.0111680Z Task 'iosSimulatorArm64Test' for target 'ios_simulator_arm64' cannot run on the current host (macos-x86_64).
+2026-09-07T10:47:17.0116640Z Reason: architecture mismatch - target requires ARM64, current host is X64
+2026-09-07T10:47:17.0127830Z Solution: To suppress this warning, add 'kotlin.native.ignoreDisabledTargets=true' to gradle.properties.
+2026-09-07T10:47:17.0131230Z 
+2026-09-07T10:47:17.0133140Z w: ⚠️ Deprecated Kotlin/Native Host
+2026-09-07T10:47:17.0151240Z The current host platform 'macos_x64' is deprecated and will be removed in a future Kotlin release. The Kotlin/Native compiler will no longer be distributed for this host.
+2026-09-07T10:47:17.0161210Z Solution: Migrate your build to a non-deprecated supported host platform for Kotlin/Native.
+2026-09-07T10:47:17.0165910Z Learn more about Kotlin/Native target support and migration: https://kotl.in/native-targets-tiers
+2026-09-07T10:47:17.0168670Z 
+2026-09-07T10:48:56.9876820Z 
+2026-09-07T10:48:57.0880720Z > Task :composeApp:kmpPartiallyResolvedDependenciesChecker
+2026-09-07T10:48:57.0882620Z > Task :composeApp:checkKotlinGradlePluginConfigurationErrors SKIPPED
+2026-09-07T10:48:57.0884640Z > Task :composeApp:copyNonXmlValueResourcesForDesktopMain NO-SOURCE
+2026-09-07T10:48:57.0886690Z > Task :composeApp:convertXmlValueResourcesForDesktopMain NO-SOURCE
+2026-09-07T10:48:57.1913560Z > Task :composeApp:prepareComposeResourcesTaskForDesktopMain NO-SOURCE
+2026-09-07T10:48:57.2918030Z > Task :composeApp:generateResourceAccessorsForDesktopMain NO-SOURCE
+2026-09-07T10:48:57.3897300Z > Task :composeApp:generateParlorVersion
+2026-09-07T10:48:57.4933770Z > Task :game-modes:mafia:kmpPartiallyResolvedDependenciesChecker
+2026-09-07T10:48:57.5938690Z > Task :game-modes:mafia:checkKotlinGradlePluginConfigurationErrors SKIPPED
+2026-09-07T10:48:57.6901190Z > Task :composeApp:convertXmlValueResourcesForCommonMain
+2026-09-07T10:48:57.7906700Z > Task :composeApp:copyNonXmlValueResourcesForCommonMain NO-SOURCE
+2026-09-07T10:48:57.8913550Z > Task :composeApp:prepareComposeResourcesTaskForCommonMain
+2026-09-07T10:48:57.9923300Z > Task :game-modes:mafia:convertXmlValueResourcesForCommonMain
+2026-09-07T10:48:58.0962840Z > Task :game-modes:mafia:copyNonXmlValueResourcesForCommonMain NO-SOURCE
+2026-09-07T10:48:58.1963230Z > Task :game-modes:mafia:prepareComposeResourcesTaskForCommonMain
+2026-09-07T10:48:58.2965190Z > Task :composeApp:generateExpectResourceCollectorsForCommonMain
+2026-09-07T10:48:58.3970480Z > Task :game-modes:mafia:convertXmlValueResourcesForDesktopMain NO-SOURCE
+2026-09-07T10:48:58.4971820Z > Task :composeApp:generateComposeResClass
+2026-09-07T10:48:58.5974780Z > Task :game-modes:mafia:copyNonXmlValueResourcesForDesktopMain NO-SOURCE
+2026-09-07T10:48:58.6977410Z > Task :game-modes:mafia:prepareComposeResourcesTaskForDesktopMain NO-SOURCE
+2026-09-07T10:48:58.7981790Z > Task :game-modes:mafia:generateResourceAccessorsForDesktopMain NO-SOURCE
+2026-09-07T10:48:58.8985340Z > Task :game-modes:mafia:generateComposeResClass
+2026-09-07T10:48:58.9989840Z > Task :shared:content:kmpPartiallyResolvedDependenciesChecker
+2026-09-07T10:48:59.0992610Z > Task :shared:content:checkKotlinGradlePluginConfigurationErrors SKIPPED
+2026-09-07T10:48:59.1995880Z > Task :shared:core:kmpPartiallyResolvedDependenciesChecker
+2026-09-07T10:48:59.2996160Z > Task :shared:core:checkKotlinGradlePluginConfigurationErrors SKIPPED
+2026-09-07T10:48:59.4000800Z > Task :game-modes:mafia:generateExpectResourceCollectorsForCommonMain
+2026-09-07T10:48:59.5008500Z > Task :shared:core:desktopProcessResources NO-SOURCE
+2026-09-07T10:48:59.6012480Z > Task :shared:core:processDesktopMainResources SKIPPED
+2026-09-07T10:48:59.7013090Z > Task :shared:engine:kmpPartiallyResolvedDependenciesChecker
+2026-09-07T10:48:59.8026340Z > Task :shared:engine:checkKotlinGradlePluginConfigurationErrors SKIPPED
+2026-09-07T10:48:59.9052430Z > Task :shared:engine:desktopProcessResources NO-SOURCE
+2026-09-07T10:49:00.0077750Z > Task :shared:engine:processDesktopMainResources SKIPPED
+2026-09-07T10:49:00.1061960Z > Task :shared:content:desktopProcessResources NO-SOURCE
+2026-09-07T10:49:00.2072000Z > Task :shared:content:processDesktopMainResources SKIPPED
+2026-09-07T10:49:00.2909750Z > Task :shared:design-system:kmpPartiallyResolvedDependenciesChecker
+2026-09-07T10:49:00.4012690Z > Task :shared:design-system:checkKotlinGradlePluginConfigurationErrors SKIPPED
+2026-09-07T10:49:00.4345780Z > Task :shared:design-system:convertXmlValueResourcesForCommonMain
+2026-09-07T10:49:00.4536620Z > Task :shared:design-system:copyNonXmlValueResourcesForCommonMain
+2026-09-07T10:49:00.4835240Z > Task :shared:design-system:prepareComposeResourcesTaskForCommonMain
+2026-09-07T10:49:00.5847030Z > Task :shared:design-system:generateResourceAccessorsForCommonMain
+2026-09-07T10:49:00.6013910Z > Task :shared:design-system:convertXmlValueResourcesForDesktopMain NO-SOURCE
+2026-09-07T10:49:00.7020290Z > Task :shared:design-system:copyNonXmlValueResourcesForDesktopMain NO-SOURCE
+2026-09-07T10:49:00.8022630Z > Task :shared:design-system:prepareComposeResourcesTaskForDesktopMain NO-SOURCE
+2026-09-07T10:49:00.9025810Z > Task :shared:design-system:generateResourceAccessorsForDesktopMain NO-SOURCE
+2026-09-07T10:49:01.0023850Z > Task :shared:design-system:generateActualResourceCollectorsForDesktopMain
+2026-09-07T10:49:01.0758160Z > Task :shared:design-system:generateComposeResClass
+2026-09-07T10:49:01.0931000Z > Task :shared:design-system:generateExpectResourceCollectorsForCommonMain
+2026-09-07T10:49:01.1021420Z > Task :composeApp:generateResourceAccessorsForCommonMain
+2026-09-07T10:49:01.1061330Z > Task :composeApp:generateActualResourceCollectorsForDesktopMain
+2026-09-07T10:49:01.1199920Z > Task :shared:networking:kmpPartiallyResolvedDependenciesChecker
+2026-09-07T10:49:01.2200940Z > Task :shared:networking:checkKotlinGradlePluginConfigurationErrors SKIPPED
+2026-09-07T10:49:01.2228850Z > Task :shared:design-system:assembleDesktopMainResources
+2026-09-07T10:49:01.2252320Z > Task :shared:design-system:desktopProcessResources
+2026-09-07T10:49:01.2256730Z > Task :shared:design-system:processDesktopMainResources SKIPPED
+2026-09-07T10:49:01.2263420Z > Task :shared:session:kmpPartiallyResolvedDependenciesChecker
+2026-09-07T10:49:01.2269560Z > Task :shared:session:checkKotlinGradlePluginConfigurationErrors SKIPPED
+2026-09-07T10:49:01.2275410Z > Task :shared:session:desktopProcessResources NO-SOURCE
+2026-09-07T10:49:01.2281590Z > Task :shared:session:processDesktopMainResources SKIPPED
+2026-09-07T10:49:01.2285210Z > Task :shared:storage:kmpPartiallyResolvedDependenciesChecker
+2026-09-07T10:49:01.2288280Z > Task :shared:storage:checkKotlinGradlePluginConfigurationErrors SKIPPED
+2026-09-07T10:49:01.2293790Z > Task :shared:storage:desktopProcessResources NO-SOURCE
+2026-09-07T10:49:01.2297730Z > Task :shared:storage:processDesktopMainResources SKIPPED
+2026-09-07T10:49:01.2300860Z > Task :shared:networking:desktopProcessResources NO-SOURCE
+2026-09-07T10:49:01.2306980Z > Task :shared:networking:processDesktopMainResources SKIPPED
+2026-09-07T10:49:01.2309650Z > Task :game-modes:whodunit:kmpPartiallyResolvedDependenciesChecker
+2026-09-07T10:49:01.2313270Z > Task :game-modes:whodunit:checkKotlinGradlePluginConfigurationErrors SKIPPED
+2026-09-07T10:49:01.2317350Z > Task :game-modes:whodunit:convertXmlValueResourcesForCommonMain
+2026-09-07T10:49:01.2322150Z > Task :game-modes:whodunit:copyNonXmlValueResourcesForCommonMain
+2026-09-07T10:49:01.2326880Z > Task :game-modes:whodunit:prepareComposeResourcesTaskForCommonMain
+2026-09-07T10:49:01.2329660Z > Task :game-modes:mafia:generateResourceAccessorsForCommonMain
+2026-09-07T10:49:01.2332260Z > Task :game-modes:mafia:assembleDesktopMainResources
+2026-09-07T10:49:01.2335200Z > Task :game-modes:mafia:desktopProcessResources
+2026-09-07T10:49:01.2338320Z > Task :game-modes:mafia:processDesktopMainResources SKIPPED
+2026-09-07T10:49:01.2346020Z > Task :game-modes:whodunit:convertXmlValueResourcesForDesktopMain NO-SOURCE
+2026-09-07T10:49:01.2349010Z > Task :game-modes:whodunit:copyNonXmlValueResourcesForDesktopMain NO-SOURCE
+2026-09-07T10:49:01.2351910Z > Task :game-modes:whodunit:prepareComposeResourcesTaskForDesktopMain NO-SOURCE
+2026-09-07T10:49:01.2355040Z > Task :game-modes:whodunit:generateResourceAccessorsForDesktopMain NO-SOURCE
+2026-09-07T10:49:01.2358560Z > Task :game-modes:whodunit:generateComposeResClass
+2026-09-07T10:49:01.2363260Z > Task :game-modes:whodunit:generateExpectResourceCollectorsForCommonMain
+2026-09-07T10:49:01.2366960Z > Task :game-modes:whodunit:assembleDesktopMainResources
+2026-09-07T10:49:01.2370020Z > Task :game-modes:whodunit:desktopProcessResources
+2026-09-07T10:49:01.2373470Z > Task :game-modes:whodunit:processDesktopMainResources SKIPPED
+2026-09-07T10:49:01.2377270Z > Task :shared:transport-p2p:kmpPartiallyResolvedDependenciesChecker
+2026-09-07T10:49:01.2381650Z > Task :shared:transport-p2p:checkKotlinGradlePluginConfigurationErrors SKIPPED
+2026-09-07T10:49:01.2385920Z > Task :shared:transport-p2p:desktopProcessResources NO-SOURCE
+2026-09-07T10:49:01.2390640Z > Task :shared:transport-p2p:processDesktopMainResources SKIPPED
+2026-09-07T10:49:01.2395050Z > Task :composeApp:assembleDesktopMainResources
+2026-09-07T10:49:01.2399160Z > Task :composeApp:desktopProcessResources
+2026-09-07T10:49:01.2403190Z > Task :composeApp:processDesktopMainResources SKIPPED
+2026-09-07T10:49:01.2407520Z > Task :composeApp:convertXmlValueResourcesForCommonTest NO-SOURCE
+2026-09-07T10:49:01.2411550Z > Task :composeApp:copyNonXmlValueResourcesForCommonTest NO-SOURCE
+2026-09-07T10:49:01.2415570Z > Task :composeApp:prepareComposeResourcesTaskForCommonTest NO-SOURCE
+2026-09-07T10:49:01.2419350Z > Task :composeApp:generateResourceAccessorsForCommonTest NO-SOURCE
+2026-09-07T10:49:01.2423820Z > Task :composeApp:convertXmlValueResourcesForDesktopTest NO-SOURCE
+2026-09-07T10:49:01.2427440Z > Task :game-modes:mafia:generateActualResourceCollectorsForDesktopMain
+2026-09-07T10:49:01.2432100Z > Task :shared:engine-testing:kmpPartiallyResolvedDependenciesChecker
+2026-09-07T10:49:01.2436750Z > Task :shared:engine-testing:checkKotlinGradlePluginConfigurationErrors SKIPPED
+2026-09-07T10:49:01.2440650Z > Task :shared:engine-testing:desktopProcessResources NO-SOURCE
+2026-09-07T10:49:01.2444190Z > Task :shared:engine-testing:processDesktopMainResources SKIPPED
+2026-09-07T10:49:01.2448400Z > Task :game-modes:mafia:convertXmlValueResourcesForCommonTest NO-SOURCE
+2026-09-07T10:49:01.2452250Z > Task :game-modes:mafia:copyNonXmlValueResourcesForCommonTest NO-SOURCE
+2026-09-07T10:49:01.2456210Z > Task :game-modes:mafia:prepareComposeResourcesTaskForCommonTest NO-SOURCE
+2026-09-07T10:49:01.2463300Z > Task :game-modes:mafia:generateResourceAccessorsForCommonTest NO-SOURCE
+2026-09-07T10:49:01.2469920Z > Task :game-modes:mafia:convertXmlValueResourcesForDesktopTest NO-SOURCE
+2026-09-07T10:49:01.2474460Z > Task :game-modes:mafia:copyNonXmlValueResourcesForDesktopTest NO-SOURCE
+2026-09-07T10:49:01.2480760Z > Task :game-modes:mafia:prepareComposeResourcesTaskForDesktopTest NO-SOURCE
+2026-09-07T10:49:01.2769260Z > Task :game-modes:mafia:generateResourceAccessorsForDesktopTest NO-SOURCE
+2026-09-07T10:49:01.2898920Z > Task :shared:networking-testing:kmpPartiallyResolvedDependenciesChecker
+2026-09-07T10:49:01.2903680Z > Task :shared:networking-testing:checkKotlinGradlePluginConfigurationErrors SKIPPED
+2026-09-07T10:49:01.2908030Z > Task :shared:networking-testing:desktopProcessResources NO-SOURCE
+2026-09-07T10:49:01.2912200Z > Task :shared:networking-testing:processDesktopMainResources SKIPPED
+2026-09-07T10:49:01.2916400Z > Task :game-modes:mafia:assembleDesktopTestResources
+2026-09-07T10:49:01.2923120Z > Task :game-modes:mafia:desktopTestProcessResources
+2026-09-07T10:49:01.2926690Z > Task :game-modes:mafia:processDesktopTestResources SKIPPED
+2026-09-07T10:49:01.2933110Z > Task :game-modes:whodunit:convertXmlValueResourcesForCommonTest NO-SOURCE
+2026-09-07T10:49:01.2936890Z > Task :game-modes:whodunit:copyNonXmlValueResourcesForCommonTest NO-SOURCE
+2026-09-07T10:49:01.2941670Z > Task :game-modes:whodunit:prepareComposeResourcesTaskForCommonTest NO-SOURCE
+2026-09-07T10:49:01.2945160Z > Task :game-modes:whodunit:generateResourceAccessorsForCommonTest NO-SOURCE
+2026-09-07T10:49:01.2952190Z > Task :game-modes:whodunit:convertXmlValueResourcesForDesktopTest NO-SOURCE
+2026-09-07T10:49:01.2957400Z > Task :game-modes:whodunit:copyNonXmlValueResourcesForDesktopTest NO-SOURCE
+2026-09-07T10:49:01.2960360Z > Task :game-modes:whodunit:prepareComposeResourcesTaskForDesktopTest NO-SOURCE
+2026-09-07T10:49:01.2967790Z > Task :game-modes:whodunit:generateResourceAccessorsForDesktopTest NO-SOURCE
+2026-09-07T10:49:01.2971060Z > Task :game-modes:whodunit:assembleDesktopTestResources
+2026-09-07T10:49:01.2973820Z > Task :game-modes:whodunit:desktopTestProcessResources
+2026-09-07T10:49:01.2976620Z > Task :game-modes:whodunit:processDesktopTestResources SKIPPED
+2026-09-07T10:49:01.2979650Z > Task :shared:content:desktopTestProcessResources NO-SOURCE
+2026-09-07T10:49:01.2982240Z > Task :shared:content:processDesktopTestResources SKIPPED
+2026-09-07T10:49:01.2985340Z > Task :shared:core:desktopTestProcessResources NO-SOURCE
+2026-09-07T10:49:01.2988000Z > Task :shared:core:processDesktopTestResources SKIPPED
+2026-09-07T10:49:01.2991230Z > Task :shared:design-system:convertXmlValueResourcesForCommonTest NO-SOURCE
+2026-09-07T10:49:01.2994870Z > Task :shared:design-system:copyNonXmlValueResourcesForCommonTest NO-SOURCE
+2026-09-07T10:49:01.2997990Z > Task :shared:design-system:prepareComposeResourcesTaskForCommonTest NO-SOURCE
+2026-09-07T10:49:01.3001710Z > Task :shared:design-system:generateResourceAccessorsForCommonTest NO-SOURCE
+2026-09-07T10:49:01.3007350Z > Task :shared:design-system:convertXmlValueResourcesForDesktopTest NO-SOURCE
+2026-09-07T10:49:01.3010590Z > Task :shared:design-system:copyNonXmlValueResourcesForDesktopTest NO-SOURCE
+2026-09-07T10:49:01.3013990Z > Task :shared:design-system:prepareComposeResourcesTaskForDesktopTest NO-SOURCE
+2026-09-07T10:49:01.3017150Z > Task :shared:design-system:generateResourceAccessorsForDesktopTest NO-SOURCE
+2026-09-07T10:49:01.3021420Z > Task :shared:design-system:assembleDesktopTestResources
+2026-09-07T10:49:01.3024400Z > Task :shared:design-system:desktopTestProcessResources
+2026-09-07T10:49:01.3027330Z > Task :shared:design-system:processDesktopTestResources SKIPPED
+2026-09-07T10:49:01.3030920Z > Task :shared:engine:desktopTestProcessResources NO-SOURCE
+2026-09-07T10:49:01.3033590Z > Task :shared:engine:processDesktopTestResources SKIPPED
+2026-09-07T10:49:01.3038710Z > Task :shared:engine-testing:desktopTestProcessResources NO-SOURCE
+2026-09-07T10:49:01.3041870Z > Task :shared:engine-testing:processDesktopTestResources SKIPPED
+2026-09-07T10:49:01.3044700Z > Task :composeApp:copyNonXmlValueResourcesForDesktopTest NO-SOURCE
+2026-09-07T10:49:01.3048230Z > Task :composeApp:prepareComposeResourcesTaskForDesktopTest NO-SOURCE
+2026-09-07T10:49:01.3051740Z > Task :composeApp:generateResourceAccessorsForDesktopTest NO-SOURCE
+2026-09-07T10:49:01.3053270Z > Task :composeApp:assembleDesktopTestResources
+2026-09-07T10:49:01.3054530Z > Task :composeApp:desktopTestProcessResources
+2026-09-07T10:49:01.3055750Z > Task :composeApp:processDesktopTestResources SKIPPED
+2026-09-07T10:49:01.3057270Z > Task :shared:networking-testing:desktopTestProcessResources NO-SOURCE
+2026-09-07T10:49:01.3058920Z > Task :shared:networking-testing:processDesktopTestResources SKIPPED
+2026-09-07T10:49:01.3060780Z > Task :shared:session:desktopTestProcessResources NO-SOURCE
+2026-09-07T10:49:01.3062160Z > Task :shared:session:processDesktopTestResources SKIPPED
+2026-09-07T10:49:01.3063530Z > Task :shared:storage:desktopTestProcessResources NO-SOURCE
+2026-09-07T10:49:01.3064900Z > Task :shared:storage:processDesktopTestResources SKIPPED
+2026-09-07T10:49:01.3066480Z > Task :shared:transport-p2p:desktopTestProcessResources NO-SOURCE
+2026-09-07T10:49:01.3068040Z > Task :shared:transport-p2p:processDesktopTestResources SKIPPED
+2026-09-07T10:49:01.3069550Z > Task :shared:networking:desktopTestProcessResources NO-SOURCE
+2026-09-07T10:49:01.3071030Z > Task :shared:networking:processDesktopTestResources SKIPPED
+2026-09-07T10:49:01.3072680Z > Task :game-modes:whodunit:generateResourceAccessorsForCommonMain
+2026-09-07T10:49:01.3074540Z > Task :game-modes:whodunit:generateActualResourceCollectorsForDesktopMain
+2026-09-07T10:49:01.3075700Z 
+2026-09-07T10:49:01.3076950Z > Task :composeApp:downloadKotlinNativeDistribution
+2026-09-07T10:49:01.3079220Z Kotlin/Native bundle directory <CI_HOME>/.konan/kotlin-native-prebuilt-macos-x86_64-2.4.10 is not empty. Native bundle files will be overwritten.
+2026-09-07T10:49:27.1097620Z 
+2026-09-07T10:49:27.1100690Z > Task :shared:core:compileKotlinDesktop
+2026-09-07T10:49:28.1987660Z > Task :shared:core:compileDesktopMainJava NO-SOURCE
+2026-09-07T10:49:28.2990870Z > Task :shared:core:desktopMainClasses
+2026-09-07T10:49:28.4009550Z > Task :shared:core:desktopJar
+2026-09-07T10:49:33.3186050Z 
+2026-09-07T10:49:33.3379100Z > Task :composeApp:downloadKotlinNativeDistribution
+2026-09-07T10:49:33.3524820Z Downloading native dependencies (LLVM, sysroot etc). This is a one-time action performed only on the first run of the compiler.
+2026-09-07T10:49:33.3696270Z Downloading dependency https://download.jetbrains.com/kotlin/native/resources/llvm/21-x86_64-macos/llvm-21-x86_64-macos-essentials-83.tar.gz to <CI_HOME>/.konan/dependencies/cache/llvm-21-x86_64-macos-essentials-83.tar.gz
+2026-09-07T10:49:34.8272090Z 
+2026-09-07T10:49:34.8491310Z > Task :shared:core:compileTestKotlinDesktop
+2026-09-07T10:49:34.9491200Z > Task :shared:core:compileDesktopTestJava NO-SOURCE
+2026-09-07T10:49:35.0497650Z > Task :shared:core:desktopTestClasses
+2026-09-07T10:49:36.7918540Z > Task :shared:engine:compileKotlinDesktop
+2026-09-07T10:49:36.8339650Z > Task :shared:engine:compileDesktopMainJava NO-SOURCE
+2026-09-07T10:49:37.0454340Z > Task :shared:engine:desktopMainClasses
+2026-09-07T10:49:37.2555670Z > Task :shared:engine:desktopJar
+2026-09-07T10:49:40.5579150Z 
+2026-09-07T10:49:40.6581800Z > Task :composeApp:downloadKotlinNativeDistribution
+2026-09-07T10:49:40.7264550Z Done.
+2026-09-07T10:49:40.7646860Z Extracting dependency: <CI_HOME>/.konan/dependencies/cache/llvm-21-x86_64-macos-essentials-83.tar.gz into <CI_HOME>/.konan/dependencies
+2026-09-07T10:49:42.9888970Z 
+2026-09-07T10:49:43.0893390Z > Task :shared:core:desktopTest
+2026-09-07T10:49:53.6510620Z > Task :shared:content:compileKotlinDesktop
+2026-09-07T10:49:53.6676910Z > Task :shared:content:compileDesktopMainJava NO-SOURCE
+2026-09-07T10:49:53.7680020Z > Task :shared:content:desktopMainClasses
+2026-09-07T10:49:53.8682640Z > Task :shared:content:desktopJar
+2026-09-07T10:49:58.3334750Z > Task :shared:design-system:compileKotlinDesktop
+2026-09-07T10:50:04.2604910Z > Task :shared:storage:compileKotlinDesktop
+2026-09-07T10:50:04.3608030Z > Task :shared:storage:compileDesktopMainJava NO-SOURCE
+2026-09-07T10:50:04.4627640Z > Task :shared:storage:desktopMainClasses
+2026-09-07T10:50:04.5630720Z 
+2026-09-07T10:50:04.6008660Z > Task :composeApp:downloadKotlinNativeDistribution
+2026-09-07T10:50:04.7013670Z Downloading dependency https://download.jetbrains.com/kotlin/native/libffi-3.2.1-3-darwin-macos.tar.gz to <CI_HOME>/.konan/dependencies/cache/libffi-3.2.1-3-darwin-macos.tar.gz
+2026-09-07T10:50:04.8019660Z 
+2026-09-07T10:50:04.9021670Z > Task :shared:storage:desktopJar
+2026-09-07T10:50:05.0024910Z > Task :shared:networking:compileKotlinDesktop
+2026-09-07T10:50:05.1015520Z > Task :shared:networking:compileDesktopMainJava NO-SOURCE
+2026-09-07T10:50:05.2021050Z > Task :shared:networking:desktopMainClasses
+2026-09-07T10:50:07.0019160Z > Task :shared:networking:desktopJar
+2026-09-07T10:50:07.1022310Z 
+2026-09-07T10:50:07.2025350Z > Task :composeApp:downloadKotlinNativeDistribution
+2026-09-07T10:50:07.3029660Z Done.
+2026-09-07T10:50:07.4035780Z Extracting dependency: <CI_HOME>/.konan/dependencies/cache/libffi-3.2.1-3-darwin-macos.tar.gz into <CI_HOME>/.konan/dependencies
+2026-09-07T10:50:08.3127450Z 
+2026-09-07T10:50:08.4130760Z > Task :shared:design-system:compileDesktopMainJava NO-SOURCE
+2026-09-07T10:50:08.4296450Z > Task :shared:design-system:desktopMainClasses
+2026-09-07T10:50:08.8817790Z > Task :shared:design-system:desktopJar
+2026-09-07T10:50:10.5755690Z > Task :shared:engine-testing:compileKotlinDesktop
+2026-09-07T10:50:10.6114970Z > Task :shared:engine-testing:compileDesktopMainJava NO-SOURCE
+2026-09-07T10:50:10.7645940Z > Task :shared:engine-testing:desktopMainClasses
+2026-09-07T10:50:10.8650220Z > Task :shared:engine-testing:desktopJar
+2026-09-07T10:50:13.0731710Z > Task :shared:networking-testing:compileKotlinDesktop
+2026-09-07T10:50:13.1734360Z > Task :shared:networking-testing:compileDesktopMainJava NO-SOURCE
+2026-09-07T10:50:13.2691180Z > Task :shared:networking-testing:desktopMainClasses
+2026-09-07T10:50:13.3656160Z > Task :shared:networking-testing:desktopJar
+2026-09-07T10:50:19.4834700Z > Task :shared:content:compileTestKotlinDesktop
+2026-09-07T10:50:19.5847580Z > Task :shared:content:compileDesktopTestJava NO-SOURCE
+2026-09-07T10:50:19.6836540Z > Task :shared:content:desktopTestClasses
+2026-09-07T10:50:27.7986900Z > Task :shared:content:desktopTest
+2026-09-07T10:50:30.9795790Z > Task :shared:design-system:compileTestKotlinDesktop
+2026-09-07T10:50:31.0800200Z > Task :shared:design-system:compileDesktopTestJava NO-SOURCE
+2026-09-07T10:50:31.0802570Z > Task :shared:design-system:desktopTestClasses
+2026-09-07T10:50:31.8141290Z > Task :shared:engine:compileTestKotlinDesktop
+2026-09-07T10:50:31.9145200Z > Task :shared:engine:compileDesktopTestJava NO-SOURCE
+2026-09-07T10:50:32.0148810Z > Task :shared:engine:desktopTestClasses
+2026-09-07T10:50:36.9355220Z > Task :shared:session:compileKotlinDesktop
+2026-09-07T10:50:36.9709880Z > Task :shared:transport-p2p:compileKotlinDesktop
+2026-09-07T10:50:43.8470880Z > Task :shared:session:compileDesktopMainJava NO-SOURCE
+2026-09-07T10:50:43.9472110Z > Task :shared:session:desktopMainClasses
+2026-09-07T10:50:44.6488400Z > Task :shared:session:desktopJar
+2026-09-07T10:50:47.2834310Z > Task :shared:engine:desktopTest
+2026-09-07T10:50:53.9712830Z > Task :shared:design-system:desktopTest
+2026-09-07T10:50:54.9543330Z > Task :shared:transport-p2p:compileDesktopMainJava NO-SOURCE
+2026-09-07T10:50:55.0544460Z > Task :shared:transport-p2p:desktopMainClasses
+2026-09-07T10:50:55.4475400Z > Task :shared:transport-p2p:desktopJar
+2026-09-07T10:50:56.1866280Z > Task :shared:engine-testing:compileTestKotlinDesktop
+2026-09-07T10:50:56.2876040Z > Task :shared:engine-testing:compileDesktopTestJava NO-SOURCE
+2026-09-07T10:50:56.3876330Z > Task :shared:engine-testing:desktopTestClasses
+2026-09-07T10:50:58.9835360Z > Task :shared:engine-testing:desktopTest
+2026-09-07T10:50:59.6453720Z > Task :shared:networking:compileTestKotlinDesktop
+2026-09-07T10:50:59.7457240Z > Task :shared:networking:compileDesktopTestJava NO-SOURCE
+2026-09-07T10:50:59.8460590Z > Task :shared:networking:desktopTestClasses
+2026-09-07T10:51:01.0975790Z > Task :shared:networking-testing:compileTestKotlinDesktop
+2026-09-07T10:51:01.1976830Z > Task :shared:networking-testing:compileDesktopTestJava NO-SOURCE
+2026-09-07T10:51:01.2979420Z > Task :shared:networking-testing:desktopTestClasses
+2026-09-07T10:51:03.9770400Z > Task :shared:networking:desktopTest
+2026-09-07T10:51:04.5165750Z > Task :shared:networking-testing:desktopTest
+2026-09-07T10:51:10.4866560Z > Task :shared:storage:compileTestKotlinDesktop
+2026-09-07T10:51:10.5868250Z > Task :shared:storage:compileDesktopTestJava NO-SOURCE
+2026-09-07T10:51:10.6869330Z > Task :shared:storage:desktopTestClasses
+2026-09-07T10:51:14.5090680Z > Task :game-modes:mafia:compileKotlinDesktop
+2026-09-07T10:51:16.1321150Z > Task :shared:storage:desktopTest
+2026-09-07T10:51:17.2664050Z > Task :game-modes:whodunit:compileKotlinDesktop
+2026-09-07T10:51:30.5944870Z > Task :shared:session:compileTestKotlinDesktop
+2026-09-07T10:51:30.6135270Z > Task :shared:session:compileDesktopTestJava NO-SOURCE
+2026-09-07T10:51:30.7054810Z > Task :shared:session:desktopTestClasses
+2026-09-07T10:51:44.4171970Z > Task :shared:session:desktopTest
+2026-09-07T10:51:46.0610070Z > Task :shared:transport-p2p:compileTestKotlinDesktop
+2026-09-07T10:51:52.2669480Z > Task :game-modes:mafia:compileDesktopMainJava NO-SOURCE
+2026-09-07T10:51:52.2747460Z > Task :game-modes:mafia:desktopMainClasses
+2026-09-07T10:51:52.6270360Z > Task :game-modes:mafia:desktopJar
+2026-09-07T10:51:56.6302750Z > Task :game-modes:whodunit:compileDesktopMainJava NO-SOURCE
+2026-09-07T10:51:56.6838600Z > Task :game-modes:whodunit:desktopMainClasses
+2026-09-07T10:51:57.2793860Z > Task :game-modes:whodunit:desktopJar
+2026-09-07T10:52:00.0886380Z > Task :shared:transport-p2p:compileDesktopTestJava NO-SOURCE
+2026-09-07T10:52:00.2128070Z > Task :shared:transport-p2p:desktopTestClasses
+2026-09-07T10:52:22.5504520Z > Task :game-modes:mafia:compileTestKotlinDesktop
+2026-09-07T10:52:22.8458810Z > Task :composeApp:compileKotlinDesktop
+2026-09-07T10:52:22.8466750Z > Task :composeApp:compileDesktopMainJava NO-SOURCE
+2026-09-07T10:52:22.8496410Z > Task :composeApp:desktopMainClasses
+2026-09-07T10:52:22.8884060Z > Task :composeApp:desktopJar
+2026-09-07T10:52:25.6088940Z > Task :game-modes:mafia:compileDesktopTestJava NO-SOURCE
+2026-09-07T10:52:25.7090890Z > Task :game-modes:mafia:desktopTestClasses
+2026-09-07T10:52:27.1768590Z > Task :game-modes:whodunit:compileTestKotlinDesktop
+2026-09-07T10:52:29.8718070Z > Task :shared:transport-p2p:desktopTest
+2026-09-07T10:52:30.9219560Z > Task :composeApp:compileTestKotlinDesktop
+2026-09-07T10:52:30.9288770Z > Task :composeApp:compileDesktopTestJava NO-SOURCE
+2026-09-07T10:52:31.0294150Z > Task :composeApp:desktopTestClasses
+2026-09-07T10:52:43.6924140Z > Task :composeApp:desktopTest
+2026-09-07T10:52:46.3531190Z > Task :game-modes:whodunit:compileDesktopTestJava NO-SOURCE
+2026-09-07T10:52:46.4532470Z > Task :game-modes:whodunit:desktopTestClasses
+2026-09-07T10:52:55.5876570Z > Task :game-modes:mafia:desktopTest
+2026-09-07T10:53:16.2516490Z > Task :game-modes:whodunit:desktopTest
+2026-09-07T10:55:36.1149180Z > Task :productionDesktopCheck
+2026-09-07T10:55:36.5049620Z 
+2026-09-07T10:55:36.5176080Z [Incubating] Problems report is available at: file://<CI_WORKSPACE>/build/reports/problems/problems-report.html
+2026-09-07T10:55:36.5284300Z 
+2026-09-07T10:55:36.8462820Z BUILD SUCCESSFUL in 11m 59s
+2026-09-07T10:55:36.9375250Z 113 actionable tasks: 113 executed
+2026-09-07T10:55:37.0381040Z Configuration cache entry stored.
+2026-09-07T10:55:39.0683730Z Post job cleanup.
+2026-09-07T10:55:41.5583180Z Post job cleanup.
+2026-09-07T10:55:41.9863960Z [command]/usr/local/bin/git version
+2026-09-07T10:55:42.0594480Z git version 2.55.0
+2026-09-07T10:55:42.0670620Z Copying '<CI_HOME>/.gitconfig' to '<CI_HOME>/work/_temp/43874372-89ab-42e2-901b-7b058249ffa9/.gitconfig'
+2026-09-07T10:55:42.0672590Z Temporarily overriding HOME='<CI_HOME>/work/_temp/43874372-89ab-42e2-901b-7b058249ffa9' before making global git config changes
+2026-09-07T10:55:42.0674280Z Adding repository directory to the temporary git global config as a safe directory
+2026-09-07T10:55:42.0676790Z [command]/usr/local/bin/git config --global --add safe.directory <CI_WORKSPACE>
+2026-09-07T10:55:42.0843240Z Removing SSH command configuration
+2026-09-07T10:55:42.0847670Z [command]/usr/local/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-09-07T10:55:42.0921970Z [command]/usr/local/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-09-07T10:55:42.2719410Z Removing HTTP extra header
+2026-09-07T10:55:42.2725580Z [command]/usr/local/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-09-07T10:55:42.2821080Z [command]/usr/local/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-09-07T10:55:42.4066680Z Removing includeIf entries pointing to credentials config files
+2026-09-07T10:55:42.4073400Z [command]/usr/local/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-09-07T10:55:42.4165360Z [command]/usr/local/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-09-07T10:55:42.5517360Z Cleaning up orphan processes

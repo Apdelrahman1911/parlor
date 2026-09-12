@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "kind": "INDEPENDENT_ADDITIVE_A27_B28_ACTUAL_AND_A29_B30_LOCAL_LEDGER_REVIEW",
+  "reviewer": "/root/ci_workflow",
+  "authors": [
+    "/root/evidence_audit",
+    "/root"
+  ],
+  "reviewed_at": "2026-09-09T13:43:17.412725+00:00",
+  "status": "APPROVED_EXACT_LEDGER_DELTA_NOT_NATIVE_OR_READINESS_APPROVAL",
+  "findings": [],
+  "scope": "Bounded ledger-only review. Exact header/appendix and coordinator closure inspected; historical body proved byte-identical rather than re-reviewed. Existing source/runtime/custody reviews reused within their scope; targeted raw JSON/XML/log counts confirmed. No new source-correctness or full artifact-custody campaign.",
+  "bindings": {
+    "baseline_commit": "52f60924a89f788aab78c826096f34a32af40292",
+    "baseline_tree": "02afb528b429eecb9c1afe58217490b07f4eb190",
+    "baseline_sha256": "dfa9ac54fcfb7c894c43738575850420a858e9901914c19c7e1f670c791b5e0e",
+    "held_path": "remediation-runs/2026-09-08-continuation/reviews/continuation-ledger-a27-b28-actual-01/CONTINUE_LATEST.md",
+    "held_sha256": "e4e6fc55d4fabeb88957d0a581710a0b97a07eff632e9fa374af4cf0c5144846",
+    "held_author_report_sha256": "44231829aef39ca404ae04c152224a941fbd10b378b8d6f6c3f9be25bd990406",
+    "adoption_recipe_sha256": "2e5c23d9ccdd0a971da628d4eadaa5612d86b0719ec289e9ae3db88e013bf392",
+    "approved_path": "remediation-runs/2026-09-08-continuation/CONTINUE_LATEST.md",
+    "approved_bytes": 113262,
+    "approved_sha256": "cec00a03df62fd9b97f90e2008c8172e45cd2cc101c263b8721713afc69d379d"
+  },
+  "exact_delta": {
+    "unchanged_heading_bytes": 48,
+    "historical_bytes": 110797,
+    "historical_sha256": "50cddd010b8038d87e57b2f507d8fd133fef2d0aef83953a4cd9d764c411b15c",
+    "half_open_ranges": {
+      "baseline": [
+        734,
+        111531
+      ],
+      "held": [
+        380,
+        111177
+      ],
+      "canonical": [
+        382,
+        111179
+      ]
+    },
+    "historical_byte_identical": true,
+    "held_new_narrative_bytes": 2048,
+    "held_appendix_bytes": 1716,
+    "held_appendix_sha256": "3211ccc6589b8b157f0785e2164872a7e234f584e8a2a46041333cc219caeffe",
+    "coordinator_header_substitution": "Linux postrun review pending. -> Linux postrun reviews approved.",
+    "coordinator_header_delta_bytes": 2,
+    "coordinator_additive_closure_bytes": 367,
+    "coordinator_additive_closure_sha256": "2355631dc91c9fc6fd982cd0027e46b7968306b11d33160412c68c23578f5620",
+    "exact_reconstruction_verified": true,
+    "cutoff_handling": "The original appendix accurately preserves its13:18UTC pending-review cutoff; Latest and additive post-cutoff closure explicitly supersede that pending status, without inventing native execution."
+  },
+  "evidence_reconciliation": {
+    "reference_integrity": "All15 author-report reference hashes rechecked; both later independent closure hashes verified.",
+    "A27": "Actual34339916129/1 FAIL:4 UIKit PASS/1 integrated FAIL/0skip; sole host prepare observation FAIL at prepare-await-started.0/42 host PASS,41unreached; storage and strict comparisons not freshly reached. No particular predicate conjunct or native cause asserted. A25 historical20/20 operations,13boots,26strictFAIL remain separate.",
+    "B28": "Actual8 Home repetitions/48samples PASS, noticesPASS, provenanceFAIL.1272-byte libproc result fails selected-region predicate; retained same-artifact diagnostic __TEXT filesize=vmsize=kernel42729472 versus sample42717984. No rounding, vnode, postquery or provenance success implied.",
+    "JVM": "Raw red XML1failure/0error/skip includes Commit preceded this peer's Ready. Raw green26suites/286cases gives283PASS/3existing loopbackSKIP,0failure/error. Local fixture red/green is not native recovery or exact A27 cause proof.",
+    "Python": "Six retained logs and zero command exits confirm9+9+21+55+243+1=338 executions,0failure/error/skip; not338 unique product behaviors.217 control rows byte-identical before/after at112d5622a9561cd5f54d56755973de35989c57f188797db5ff63e51b735e8aa2. Dirty52f local source/control binding, not newly frozen/native proof.",
+    "postcutoff_A": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-a29-host-correction-independent-01.json",
+      "sha256": "ed924058075686d799d8b31f6af0262f25c1073f5b134a2459855ff6656b9d6d",
+      "result": "Independent source and actual local evidence approval; no findings; native pending."
+    },
+    "postcutoff_B": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-b30-controls-actual-independent-01.json",
+      "sha256": "6ff42680dee601dac00252aa48e9802dec6dcead89ea2a61425650ffe58ed8f8",
+      "result": "Independent actual normal243 plus label1 and cleanup approval; no findings; not native/app proof."
+    },
+    "cleanup": "Retained native child/outer and local red/green/Python cleanup approvals are correctly scoped: stops0, no recorded owned residuals/errors. No new filesystem claim about retired Mac; no reviewer resources allocated."
+  },
+  "limitations": "Approve this exact ledger narrative for freeze preparation only. Native A29/B30,C05/fullD remain NOT_RUN; fresh committed source/inventory and reviewed Apple bindings still required. Historical C04 is scoped only. NOT_READY. Physical-device, signed-candidate, application identity/Store/signing/publication and separate owner/legal requirements remain unwaived.",
+  "reviewer_activity": "Read-only Git and stdlib Python -B byte/hash/JSON/XML/log inspection; wrote only this report. No project code imported/executed, tests/builds/network/dispatch/cleanup/staging/commits or canonical edits; no new build/test cycle or cleanup obligation."
+}

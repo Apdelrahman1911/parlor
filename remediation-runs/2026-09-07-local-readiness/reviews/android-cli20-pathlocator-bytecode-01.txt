@@ -1,0 +1,763 @@
+Compiled from "AbstractAndroidLocations.kt"
+class com.android.prefs.PathLocator {
+  private final com.android.utils.EnvironmentProvider environmentProvider;
+
+  private final java.util.List<com.android.prefs.QueryResult> visitedVariables;
+
+  public com.android.prefs.PathLocator(com.android.utils.EnvironmentProvider);
+    Code:
+       0: aload_1
+       1: ldc           #9                  // String environmentProvider
+       3: invokestatic  #15                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+       6: aload_0
+       7: invokespecial #18                 // Method java/lang/Object."<init>":()V
+      10: aload_0
+      11: aload_1
+      12: putfield      #21                 // Field environmentProvider:Lcom/android/utils/EnvironmentProvider;
+      15: aload_0
+      16: new           #23                 // class java/util/ArrayList
+      19: dup
+      20: invokespecial #24                 // Method java/util/ArrayList."<init>":()V
+      23: checkcast     #26                 // class java/util/List
+      26: putfield      #30                 // Field visitedVariables:Ljava/util/List;
+      29: return
+
+  public final java.util.List<com.android.prefs.QueryResult> getVisitedVariables();
+    Code:
+       0: aload_0
+       1: getfield      #30                 // Field visitedVariables:Ljava/util/List;
+       4: areturn
+
+  public final void reset();
+    Code:
+       0: aload_0
+       1: getfield      #30                 // Field visitedVariables:Ljava/util/List;
+       4: invokeinterface #39,  1           // InterfaceMethod java/util/List.clear:()V
+       9: return
+
+  public final java.nio.file.Path firstPathOf(com.android.prefs.Global...);
+    Code:
+       0: aload_1
+       1: ldc           #44                 // String globalVars
+       3: invokestatic  #15                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+       6: iconst_0
+       7: istore_2
+       8: aload_1
+       9: arraylength
+      10: istore_3
+      11: iload_2
+      12: iload_3
+      13: if_icmpge     55
+      16: aload_1
+      17: iload_2
+      18: aaload
+      19: astore        4
+      21: aload_0
+      22: iconst_1
+      23: anewarray     #46                 // class com/android/prefs/Global
+      26: astore        6
+      28: aload         6
+      30: iconst_0
+      31: aload         4
+      33: aastore
+      34: aload         6
+      36: invokevirtual #49                 // Method singlePathOf:([Lcom/android/prefs/Global;)Ljava/nio/file/Path;
+      39: astore        5
+      41: aload         5
+      43: ifnull        49
+      46: aload         5
+      48: areturn
+      49: iinc          2, 1
+      52: goto          11
+      55: aconst_null
+      56: areturn
+
+  public final java.nio.file.Path singlePathOf(com.android.prefs.Global...);
+    Code:
+       0: aload_1
+       1: ldc           #44                 // String globalVars
+       3: invokestatic  #15                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+       6: aload_1
+       7: invokestatic  #63                 // Method kotlin/collections/ArraysKt.asSequence:([Ljava/lang/Object;)Lkotlin/sequences/Sequence;
+      10: new           #65                 // class com/android/prefs/PathLocator$singlePathOf$values$1
+      13: dup
+      14: aload_0
+      15: invokespecial #68                 // Method com/android/prefs/PathLocator$singlePathOf$values$1."<init>":(Lcom/android/prefs/PathLocator;)V
+      18: checkcast     #70                 // class kotlin/jvm/functions/Function1
+      21: invokestatic  #76                 // Method kotlin/sequences/SequencesKt.map:(Lkotlin/sequences/Sequence;Lkotlin/jvm/functions/Function1;)Lkotlin/sequences/Sequence;
+      24: getstatic     #82                 // Field com/android/prefs/PathLocator$singlePathOf$values$2.INSTANCE:Lcom/android/prefs/PathLocator$singlePathOf$values$2;
+      27: checkcast     #70                 // class kotlin/jvm/functions/Function1
+      30: invokestatic  #85                 // Method kotlin/sequences/SequencesKt.flatMap:(Lkotlin/sequences/Sequence;Lkotlin/jvm/functions/Function1;)Lkotlin/sequences/Sequence;
+      33: invokestatic  #89                 // Method kotlin/sequences/SequencesKt.toList:(Lkotlin/sequences/Sequence;)Ljava/util/List;
+      36: astore_2
+      37: nop
+      38: aload_2
+      39: invokeinterface #93,  1           // InterfaceMethod java/util/List.isEmpty:()Z
+      44: ifeq          51
+      47: aconst_null
+      48: goto          282
+      51: aload_2
+      52: invokeinterface #97,  1           // InterfaceMethod java/util/List.size:()I
+      57: iconst_1
+      58: if_icmpne     74
+      61: aload_2
+      62: invokestatic  #103                // Method kotlin/collections/CollectionsKt.single:(Ljava/util/List;)Ljava/lang/Object;
+      65: checkcast     #105                // class com/android/prefs/VariableValue
+      68: invokevirtual #109                // Method com/android/prefs/VariableValue.getCorrectPath:()Ljava/nio/file/Path;
+      71: goto          282
+      74: aload_2
+      75: checkcast     #111                // class java/lang/Iterable
+      78: astore        4
+      80: iconst_0
+      81: istore        5
+      83: aload         4
+      85: astore        6
+      87: new           #113                // class java/util/LinkedHashMap
+      90: dup
+      91: invokespecial #114                // Method java/util/LinkedHashMap."<init>":()V
+      94: checkcast     #116                // class java/util/Map
+      97: astore        7
+      99: iconst_0
+     100: istore        8
+     102: aload         6
+     104: invokeinterface #120,  1          // InterfaceMethod java/lang/Iterable.iterator:()Ljava/util/Iterator;
+     109: astore        9
+     111: aload         9
+     113: invokeinterface #125,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+     118: ifeq          223
+     121: aload         9
+     123: invokeinterface #129,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     128: astore        10
+     130: aload         10
+     132: checkcast     #105                // class com/android/prefs/VariableValue
+     135: astore        11
+     137: iconst_0
+     138: istore        12
+     140: aload         11
+     142: invokevirtual #109                // Method com/android/prefs/VariableValue.getCorrectPath:()Ljava/nio/file/Path;
+     145: astore        13
+     147: aload         7
+     149: astore        14
+     151: iconst_0
+     152: istore        15
+     154: aload         14
+     156: aload         13
+     158: invokeinterface #133,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+     163: astore        16
+     165: aload         16
+     167: ifnonnull     202
+     170: iconst_0
+     171: istore        17
+     173: new           #23                 // class java/util/ArrayList
+     176: dup
+     177: invokespecial #24                 // Method java/util/ArrayList."<init>":()V
+     180: checkcast     #26                 // class java/util/List
+     183: astore        17
+     185: aload         14
+     187: aload         13
+     189: aload         17
+     191: invokeinterface #137,  3          // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     196: pop
+     197: aload         17
+     199: goto          204
+     202: aload         16
+     204: nop
+     205: checkcast     #26                 // class java/util/List
+     208: astore        11
+     210: aload         11
+     212: aload         10
+     214: invokeinterface #141,  2          // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+     219: pop
+     220: goto          111
+     223: aload         7
+     225: nop
+     226: astore_3
+     227: aload_3
+     228: invokeinterface #142,  1          // InterfaceMethod java/util/Map.size:()I
+     233: iconst_1
+     234: if_icmpne     255
+     237: aload_3
+     238: invokeinterface #146,  1          // InterfaceMethod java/util/Map.keySet:()Ljava/util/Set;
+     243: checkcast     #111                // class java/lang/Iterable
+     246: invokestatic  #149                // Method kotlin/collections/CollectionsKt.single:(Ljava/lang/Iterable;)Ljava/lang/Object;
+     249: checkcast     #56                 // class java/nio/file/Path
+     252: goto          282
+     255: aload_2
+     256: ldc           #151                // String Several environment variables and/or system properties contain different paths to the Android Preferences folder.\nPlease correct and use only one way to inject the preference location.
+     258: ldc           #153                // String It is recommended to use ANDROID_USER_HOME as other methods are deprecated
+     260: aconst_null
+     261: bipush        8
+     263: aconst_null
+     264: invokestatic  #159                // Method com/android/prefs/AbstractAndroidLocationsKt.combineLocationValuesIntoMessage$default:(Ljava/util/List;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Ljava/lang/String;
+     267: astore        4
+     269: new           #161                // class com/android/prefs/AndroidLocationsException
+     272: dup
+     273: aload         4
+     275: aconst_null
+     276: iconst_2
+     277: aconst_null
+     278: invokespecial #164                // Method com/android/prefs/AndroidLocationsException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+     281: athrow
+     282: areturn
+
+  private final java.util.List<com.android.prefs.VariableValue> gatherPaths(com.android.prefs.Global);
+    Code:
+       0: aload_1
+       1: invokevirtual #193                // Method com/android/prefs/Global.isSysProp:()Z
+       4: ifeq          18
+       7: aload_0
+       8: aload_1
+       9: getstatic     #199                // Field com/android/prefs/VariableType.SYS_PROP:Lcom/android/prefs/VariableType;
+      12: invokespecial #203                // Method queryPath:(Lcom/android/prefs/Global;Lcom/android/prefs/VariableType;)Lcom/android/prefs/VariableValue;
+      15: goto          19
+      18: aconst_null
+      19: astore_2
+      20: aload_1
+      21: invokevirtual #206                // Method com/android/prefs/Global.isEnvVar:()Z
+      24: ifeq          38
+      27: aload_0
+      28: aload_1
+      29: getstatic     #209                // Field com/android/prefs/VariableType.ENV_VAR:Lcom/android/prefs/VariableType;
+      32: invokespecial #203                // Method queryPath:(Lcom/android/prefs/Global;Lcom/android/prefs/VariableType;)Lcom/android/prefs/VariableValue;
+      35: goto          39
+      38: aconst_null
+      39: astore_3
+      40: iconst_2
+      41: anewarray     #105                // class com/android/prefs/VariableValue
+      44: astore        4
+      46: aload         4
+      48: iconst_0
+      49: aload_2
+      50: aastore
+      51: aload         4
+      53: iconst_1
+      54: aload_3
+      55: aastore
+      56: aload         4
+      58: invokestatic  #213                // Method kotlin/collections/CollectionsKt.listOfNotNull:([Ljava/lang/Object;)Ljava/util/List;
+      61: areturn
+
+  protected java.nio.file.Path handlePath(com.android.prefs.Global, java.nio.file.Path);
+    Code:
+       0: aload_1
+       1: ldc           #219                // String globalVar
+       3: invokestatic  #15                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+       6: aload_2
+       7: ldc           #220                // String path
+       9: invokestatic  #15                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+      12: aload_1
+      13: invokevirtual #223                // Method com/android/prefs/Global.getMustExist:()Z
+      16: ifeq          34
+      19: aload_2
+      20: iconst_0
+      21: anewarray     #225                // class java/nio/file/LinkOption
+      24: invokestatic  #231                // Method com/android/io/CancellableFileIo.isDirectory:(Ljava/nio/file/Path;[Ljava/nio/file/LinkOption;)Z
+      27: ifne          34
+      30: aconst_null
+      31: goto          35
+      34: aload_2
+      35: areturn
+
+  private final com.android.prefs.VariableValue queryPath(com.android.prefs.Global, com.android.prefs.VariableType);
+    Code:
+       0: aload_2
+       1: getstatic     #237                // Field com/android/prefs/PathLocator$WhenMappings.$EnumSwitchMapping$0:[I
+       4: swap
+       5: invokevirtual #240                // Method com/android/prefs/VariableType.ordinal:()I
+       8: iaload
+       9: tableswitch   { // 1 to 2
+                     1: 32
+                     2: 48
+               default: 64
+          }
+      32: aload_0
+      33: getfield      #21                 // Field environmentProvider:Lcom/android/utils/EnvironmentProvider;
+      36: aload_1
+      37: invokevirtual #244                // Method com/android/prefs/Global.getPropName:()Ljava/lang/String;
+      40: invokeinterface #250,  2          // InterfaceMethod com/android/utils/EnvironmentProvider.getSystemProperty:(Ljava/lang/String;)Ljava/lang/String;
+      45: goto          72
+      48: aload_0
+      49: getfield      #21                 // Field environmentProvider:Lcom/android/utils/EnvironmentProvider;
+      52: aload_1
+      53: invokevirtual #244                // Method com/android/prefs/Global.getPropName:()Ljava/lang/String;
+      56: invokeinterface #253,  2          // InterfaceMethod com/android/utils/EnvironmentProvider.getEnvVariable:(Ljava/lang/String;)Ljava/lang/String;
+      61: goto          72
+      64: new           #255                // class kotlin/NoWhenBranchMatchedException
+      67: dup
+      68: invokespecial #256                // Method kotlin/NoWhenBranchMatchedException."<init>":()V
+      71: athrow
+      72: dup
+      73: ifnonnull     79
+      76: pop
+      77: aconst_null
+      78: areturn
+      79: astore_3
+      80: aload_0
+      81: getfield      #21                 // Field environmentProvider:Lcom/android/utils/EnvironmentProvider;
+      84: invokeinterface #260,  1          // InterfaceMethod com/android/utils/EnvironmentProvider.getFileSystem:()Ljava/nio/file/FileSystem;
+      89: aload_3
+      90: iconst_0
+      91: anewarray     #262                // class java/lang/String
+      94: invokevirtual #268                // Method java/nio/file/FileSystem.getPath:(Ljava/lang/String;[Ljava/lang/String;)Ljava/nio/file/Path;
+      97: astore        4
+      99: aload_0
+     100: getfield      #30                 // Field visitedVariables:Ljava/util/List;
+     103: new           #270                // class com/android/prefs/QueryResult
+     106: dup
+     107: aload_1
+     108: aload_2
+     109: aload         4
+     111: invokestatic  #274                // Method kotlin/jvm/internal/Intrinsics.checkNotNull:(Ljava/lang/Object;)V
+     114: aload         4
+     116: invokespecial #277                // Method com/android/prefs/QueryResult."<init>":(Lcom/android/prefs/Global;Lcom/android/prefs/VariableType;Ljava/nio/file/Path;)V
+     119: invokeinterface #141,  2          // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+     124: pop
+     125: aload_0
+     126: aload_1
+     127: aload         4
+     129: invokevirtual #279                // Method handlePath:(Lcom/android/prefs/Global;Ljava/nio/file/Path;)Ljava/nio/file/Path;
+     132: dup
+     133: ifnonnull     139
+     136: pop
+     137: aconst_null
+     138: areturn
+     139: astore        5
+     141: new           #105                // class com/android/prefs/VariableValue
+     144: dup
+     145: aload_1
+     146: invokevirtual #244                // Method com/android/prefs/Global.getPropName:()Ljava/lang/String;
+     149: aload_2
+     150: aload         4
+     152: aload         5
+     154: invokespecial #282                // Method com/android/prefs/VariableValue."<init>":(Ljava/lang/String;Lcom/android/prefs/VariableType;Ljava/nio/file/Path;Ljava/nio/file/Path;)V
+     157: areturn
+
+  public static final java.util.List access$gatherPaths(com.android.prefs.PathLocator, com.android.prefs.Global);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokespecial #289                // Method gatherPaths:(Lcom/android/prefs/Global;)Ljava/util/List;
+       5: areturn
+}
+Compiled from "AbstractAndroidLocations.kt"
+final class com.android.prefs.AndroidPathLocator extends com.android.prefs.PathLocator {
+  private final com.android.utils.ILogger logger;
+
+  public com.android.prefs.AndroidPathLocator(com.android.utils.EnvironmentProvider, com.android.utils.ILogger);
+    Code:
+       0: aload_1
+       1: ldc           #10                 // String environmentProvider
+       3: invokestatic  #16                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+       6: aload_0
+       7: aload_1
+       8: invokespecial #19                 // Method com/android/prefs/PathLocator."<init>":(Lcom/android/utils/EnvironmentProvider;)V
+      11: aload_0
+      12: aload_2
+      13: putfield      #23                 // Field logger:Lcom/android/utils/ILogger;
+      16: return
+
+  public com.android.prefs.AndroidPathLocator(com.android.utils.EnvironmentProvider, com.android.utils.ILogger, int, kotlin.jvm.internal.DefaultConstructorMarker);
+    Code:
+       0: iload_3
+       1: iconst_2
+       2: iand
+       3: ifeq          8
+       6: aconst_null
+       7: astore_2
+       8: aload_0
+       9: aload_1
+      10: aload_2
+      11: invokespecial #29                 // Method "<init>":(Lcom/android/utils/EnvironmentProvider;Lcom/android/utils/ILogger;)V
+      14: return
+
+  protected java.nio.file.Path handlePath(com.android.prefs.Global, java.nio.file.Path);
+    Code:
+       0: aload_1
+       1: ldc           #33                 // String globalVar
+       3: invokestatic  #16                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+       6: aload_2
+       7: ldc           #35                 // String path
+       9: invokestatic  #16                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+      12: aload_0
+      13: aload_1
+      14: aload_2
+      15: invokespecial #37                 // Method com/android/prefs/PathLocator.handlePath:(Lcom/android/prefs/Global;Ljava/nio/file/Path;)Ljava/nio/file/Path;
+      18: dup
+      19: ifnonnull     25
+      22: pop
+      23: aconst_null
+      24: areturn
+      25: pop
+      26: aload_1
+      27: getstatic     #43                 // Field com/android/prefs/Global.ANDROID_SDK_HOME:Lcom/android/prefs/Global;
+      30: if_acmpne     43
+      33: aload_0
+      34: aload_2
+      35: invokespecial #47                 // Method validateAndroidSdkHomeValue:(Ljava/nio/file/Path;)Z
+      38: ifne          43
+      41: aconst_null
+      42: areturn
+      43: aload_1
+      44: invokevirtual #51                 // Method com/android/prefs/Global.getAndroidLeaf:()Ljava/lang/String;
+      47: ifnull        63
+      50: aload_2
+      51: aload_1
+      52: invokevirtual #51                 // Method com/android/prefs/Global.getAndroidLeaf:()Ljava/lang/String;
+      55: invokeinterface #57,  2           // InterfaceMethod java/nio/file/Path.resolve:(Ljava/lang/String;)Ljava/nio/file/Path;
+      60: goto          64
+      63: aload_2
+      64: areturn
+
+  private final boolean validateAndroidSdkHomeValue(java.nio.file.Path);
+    Code:
+       0: aload_1
+       1: iconst_0
+       2: anewarray     #60                 // class java/nio/file/LinkOption
+       5: invokestatic  #66                 // Method com/android/io/CancellableFileIo.isDirectory:(Ljava/nio/file/Path;[Ljava/nio/file/LinkOption;)Z
+       8: ifne          13
+      11: iconst_0
+      12: ireturn
+      13: aload_0
+      14: aload_1
+      15: invokespecial #69                 // Method isSdkRootWithoutDotAndroid:(Ljava/nio/file/Path;)Z
+      18: ifeq          67
+      21: aload_1
+      22: invokedynamic #81,  0             // InvokeDynamic #0:makeConcatWithConstants:(Ljava/nio/file/Path;)Ljava/lang/String;
+      27: invokestatic  #87                 // Method kotlin/text/StringsKt.trimIndent:(Ljava/lang/String;)Ljava/lang/String;
+      30: astore_2
+      31: aload_0
+      32: getfield      #23                 // Field logger:Lcom/android/utils/ILogger;
+      35: ifnull        55
+      38: aload_0
+      39: getfield      #23                 // Field logger:Lcom/android/utils/ILogger;
+      42: aload_2
+      43: iconst_0
+      44: anewarray     #89                 // class java/lang/Object
+      47: invokeinterface #95,  3           // InterfaceMethod com/android/utils/ILogger.warning:(Ljava/lang/String;[Ljava/lang/Object;)V
+      52: goto          67
+      55: new           #97                 // class com/android/prefs/AndroidLocationsException
+      58: dup
+      59: aload_2
+      60: aconst_null
+      61: iconst_2
+      62: aconst_null
+      63: invokespecial #100                // Method com/android/prefs/AndroidLocationsException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+      66: athrow
+      67: iconst_1
+      68: ireturn
+
+  private final boolean isSdkRootWithoutDotAndroid(java.nio.file.Path);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: ldc           #106                // String platforms
+       4: invokespecial #110                // Method hasSubFolder:(Ljava/nio/file/Path;Ljava/lang/String;)Z
+       7: ifeq          35
+      10: aload_0
+      11: aload_1
+      12: ldc           #112                // String platform-tools
+      14: invokespecial #110                // Method hasSubFolder:(Ljava/nio/file/Path;Ljava/lang/String;)Z
+      17: ifeq          35
+      20: aload_0
+      21: aload_1
+      22: getstatic     #117                // Field com/android/prefs/AbstractAndroidLocations.FOLDER_DOT_ANDROID:Ljava/lang/String;
+      25: invokespecial #110                // Method hasSubFolder:(Ljava/nio/file/Path;Ljava/lang/String;)Z
+      28: ifne          35
+      31: iconst_1
+      32: goto          36
+      35: iconst_0
+      36: ireturn
+
+  private final boolean hasSubFolder(java.nio.file.Path, java.lang.String);
+    Code:
+       0: aload_1
+       1: aload_2
+       2: invokeinterface #57,  2           // InterfaceMethod java/nio/file/Path.resolve:(Ljava/lang/String;)Ljava/nio/file/Path;
+       7: iconst_0
+       8: anewarray     #60                 // class java/nio/file/LinkOption
+      11: invokestatic  #66                 // Method com/android/io/CancellableFileIo.isDirectory:(Ljava/nio/file/Path;[Ljava/nio/file/LinkOption;)Z
+      14: ireturn
+}
+Compiled from "AbstractAndroidLocations.kt"
+final class com.android.prefs.Global extends java.lang.Enum<com.android.prefs.Global> {
+  private final java.lang.String propName;
+
+  private final boolean isSysProp;
+
+  private final boolean isEnvVar;
+
+  private final java.lang.String androidLeaf;
+
+  private final boolean mustExist;
+
+  public static final com.android.prefs.Global ANDROID_USER_HOME;
+
+  public static final com.android.prefs.Global ANDROID_AVD_HOME;
+
+  public static final com.android.prefs.Global ANDROID_SDK_HOME;
+
+  public static final com.android.prefs.Global ANDROID_PREFS_ROOT;
+
+  public static final com.android.prefs.Global TEST_TMPDIR;
+
+  public static final com.android.prefs.Global USER_HOME;
+
+  public static final com.android.prefs.Global HOME;
+
+  public static final com.android.prefs.Global XDG_CONFIG_HOME;
+
+  private static final com.android.prefs.Global[] $VALUES;
+
+  private static final kotlin.enums.EnumEntries $ENTRIES;
+
+  private com.android.prefs.Global(java.lang.String, boolean, boolean, java.lang.String, boolean);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: iload_2
+       3: invokespecial #11                 // Method java/lang/Enum."<init>":(Ljava/lang/String;I)V
+       6: aload_0
+       7: aload_3
+       8: putfield      #15                 // Field propName:Ljava/lang/String;
+      11: aload_0
+      12: iload         4
+      14: putfield      #19                 // Field isSysProp:Z
+      17: aload_0
+      18: iload         5
+      20: putfield      #22                 // Field isEnvVar:Z
+      23: aload_0
+      24: aload         6
+      26: putfield      #25                 // Field androidLeaf:Ljava/lang/String;
+      29: aload_0
+      30: iload         7
+      32: putfield      #28                 // Field mustExist:Z
+      35: return
+
+  com.android.prefs.Global(java.lang.String, int, java.lang.String, boolean, boolean, java.lang.String, boolean, int, kotlin.jvm.internal.DefaultConstructorMarker);
+    Code:
+       0: iload         8
+       2: bipush        8
+       4: iand
+       5: ifeq          13
+       8: getstatic     #39                 // Field com/android/prefs/AbstractAndroidLocations.FOLDER_DOT_ANDROID:Ljava/lang/String;
+      11: astore        6
+      13: iload         8
+      15: bipush        16
+      17: iand
+      18: ifeq          24
+      21: iconst_1
+      22: istore        7
+      24: aload_0
+      25: aload_1
+      26: iload_2
+      27: aload_3
+      28: iload         4
+      30: iload         5
+      32: aload         6
+      34: iload         7
+      36: invokespecial #41                 // Method "<init>":(Ljava/lang/String;ILjava/lang/String;ZZLjava/lang/String;Z)V
+      39: return
+
+  public final java.lang.String getPropName();
+    Code:
+       0: aload_0
+       1: getfield      #15                 // Field propName:Ljava/lang/String;
+       4: areturn
+
+  public final boolean isSysProp();
+    Code:
+       0: aload_0
+       1: getfield      #19                 // Field isSysProp:Z
+       4: ireturn
+
+  public final boolean isEnvVar();
+    Code:
+       0: aload_0
+       1: getfield      #22                 // Field isEnvVar:Z
+       4: ireturn
+
+  public final java.lang.String getAndroidLeaf();
+    Code:
+       0: aload_0
+       1: getfield      #25                 // Field androidLeaf:Ljava/lang/String;
+       4: areturn
+
+  public final boolean getMustExist();
+    Code:
+       0: aload_0
+       1: getfield      #28                 // Field mustExist:Z
+       4: ireturn
+
+  public static com.android.prefs.Global[] values();
+    Code:
+       0: getstatic     #54                 // Field $VALUES:[Lcom/android/prefs/Global;
+       3: invokevirtual #60                 // Method java/lang/Object.clone:()Ljava/lang/Object;
+       6: checkcast     #61                 // class "[Lcom/android/prefs/Global;"
+       9: areturn
+
+  public static com.android.prefs.Global valueOf(java.lang.String);
+    Code:
+       0: ldc           #2                  // class com/android/prefs/Global
+       2: aload_0
+       3: invokestatic  #66                 // Method java/lang/Enum.valueOf:(Ljava/lang/Class;Ljava/lang/String;)Ljava/lang/Enum;
+       6: checkcast     #2                  // class com/android/prefs/Global
+       9: areturn
+
+  public static kotlin.enums.EnumEntries<com.android.prefs.Global> getEntries();
+    Code:
+       0: getstatic     #74                 // Field $ENTRIES:Lkotlin/enums/EnumEntries;
+       3: areturn
+
+  private static final com.android.prefs.Global[] $values();
+    Code:
+       0: bipush        8
+       2: anewarray     #2                  // class com/android/prefs/Global
+       5: astore_0
+       6: aload_0
+       7: iconst_0
+       8: getstatic     #78                 // Field ANDROID_USER_HOME:Lcom/android/prefs/Global;
+      11: aastore
+      12: aload_0
+      13: iconst_1
+      14: getstatic     #81                 // Field ANDROID_AVD_HOME:Lcom/android/prefs/Global;
+      17: aastore
+      18: aload_0
+      19: iconst_2
+      20: getstatic     #84                 // Field ANDROID_SDK_HOME:Lcom/android/prefs/Global;
+      23: aastore
+      24: aload_0
+      25: iconst_3
+      26: getstatic     #87                 // Field ANDROID_PREFS_ROOT:Lcom/android/prefs/Global;
+      29: aastore
+      30: aload_0
+      31: iconst_4
+      32: getstatic     #90                 // Field TEST_TMPDIR:Lcom/android/prefs/Global;
+      35: aastore
+      36: aload_0
+      37: iconst_5
+      38: getstatic     #93                 // Field USER_HOME:Lcom/android/prefs/Global;
+      41: aastore
+      42: aload_0
+      43: bipush        6
+      45: getstatic     #96                 // Field HOME:Lcom/android/prefs/Global;
+      48: aastore
+      49: aload_0
+      50: bipush        7
+      52: getstatic     #99                 // Field XDG_CONFIG_HOME:Lcom/android/prefs/Global;
+      55: aastore
+      56: aload_0
+      57: areturn
+
+  static {};
+    Code:
+       0: new           #2                  // class com/android/prefs/Global
+       3: dup
+       4: ldc           #102                // String ANDROID_USER_HOME
+       6: iconst_0
+       7: getstatic     #106                // Field com/android/prefs/AbstractAndroidLocations.Companion:Lcom/android/prefs/AbstractAndroidLocations$Companion;
+      10: invokevirtual #111                // Method com/android/prefs/AbstractAndroidLocations$Companion.getANDROID_USER_HOME:()Ljava/lang/String;
+      13: iconst_1
+      14: iconst_1
+      15: aconst_null
+      16: iconst_0
+      17: invokespecial #41                 // Method "<init>":(Ljava/lang/String;ILjava/lang/String;ZZLjava/lang/String;Z)V
+      20: putstatic     #78                 // Field ANDROID_USER_HOME:Lcom/android/prefs/Global;
+      23: new           #2                  // class com/android/prefs/Global
+      26: dup
+      27: ldc           #112                // String ANDROID_AVD_HOME
+      29: iconst_1
+      30: ldc           #112                // String ANDROID_AVD_HOME
+      32: iconst_1
+      33: iconst_1
+      34: aconst_null
+      35: iconst_0
+      36: bipush        16
+      38: aconst_null
+      39: invokespecial #114                // Method "<init>":(Ljava/lang/String;ILjava/lang/String;ZZLjava/lang/String;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+      42: putstatic     #81                 // Field ANDROID_AVD_HOME:Lcom/android/prefs/Global;
+      45: new           #2                  // class com/android/prefs/Global
+      48: dup
+      49: ldc           #115                // String ANDROID_SDK_HOME
+      51: iconst_2
+      52: ldc           #115                // String ANDROID_SDK_HOME
+      54: iconst_1
+      55: iconst_1
+      56: aconst_null
+      57: iconst_0
+      58: bipush        24
+      60: aconst_null
+      61: invokespecial #114                // Method "<init>":(Ljava/lang/String;ILjava/lang/String;ZZLjava/lang/String;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+      64: putstatic     #84                 // Field ANDROID_SDK_HOME:Lcom/android/prefs/Global;
+      67: new           #2                  // class com/android/prefs/Global
+      70: dup
+      71: ldc           #116                // String ANDROID_PREFS_ROOT
+      73: iconst_3
+      74: getstatic     #118                // Field com/android/prefs/AbstractAndroidLocations.ANDROID_PREFS_ROOT:Ljava/lang/String;
+      77: iconst_1
+      78: iconst_1
+      79: aconst_null
+      80: iconst_0
+      81: bipush        24
+      83: aconst_null
+      84: invokespecial #114                // Method "<init>":(Ljava/lang/String;ILjava/lang/String;ZZLjava/lang/String;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+      87: putstatic     #87                 // Field ANDROID_PREFS_ROOT:Lcom/android/prefs/Global;
+      90: new           #2                  // class com/android/prefs/Global
+      93: dup
+      94: ldc           #119                // String TEST_TMPDIR
+      96: iconst_4
+      97: ldc           #119                // String TEST_TMPDIR
+      99: iconst_0
+     100: iconst_1
+     101: aconst_null
+     102: iconst_0
+     103: bipush        24
+     105: aconst_null
+     106: invokespecial #114                // Method "<init>":(Ljava/lang/String;ILjava/lang/String;ZZLjava/lang/String;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+     109: putstatic     #90                 // Field TEST_TMPDIR:Lcom/android/prefs/Global;
+     112: new           #2                  // class com/android/prefs/Global
+     115: dup
+     116: ldc           #120                // String USER_HOME
+     118: iconst_5
+     119: ldc           #122                // String user.home
+     121: iconst_1
+     122: iconst_0
+     123: aconst_null
+     124: iconst_0
+     125: bipush        24
+     127: aconst_null
+     128: invokespecial #114                // Method "<init>":(Ljava/lang/String;ILjava/lang/String;ZZLjava/lang/String;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+     131: putstatic     #93                 // Field USER_HOME:Lcom/android/prefs/Global;
+     134: new           #2                  // class com/android/prefs/Global
+     137: dup
+     138: ldc           #123                // String HOME
+     140: bipush        6
+     142: ldc           #123                // String HOME
+     144: iconst_0
+     145: iconst_1
+     146: aconst_null
+     147: iconst_0
+     148: bipush        24
+     150: aconst_null
+     151: invokespecial #114                // Method "<init>":(Ljava/lang/String;ILjava/lang/String;ZZLjava/lang/String;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+     154: putstatic     #96                 // Field HOME:Lcom/android/prefs/Global;
+     157: new           #2                  // class com/android/prefs/Global
+     160: dup
+     161: ldc           #124                // String XDG_CONFIG_HOME
+     163: bipush        7
+     165: ldc           #124                // String XDG_CONFIG_HOME
+     167: iconst_1
+     168: iconst_1
+     169: aconst_null
+     170: iconst_0
+     171: bipush        24
+     173: aconst_null
+     174: invokespecial #114                // Method "<init>":(Ljava/lang/String;ILjava/lang/String;ZZLjava/lang/String;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+     177: putstatic     #99                 // Field XDG_CONFIG_HOME:Lcom/android/prefs/Global;
+     180: invokestatic  #126                // Method $values:()[Lcom/android/prefs/Global;
+     183: putstatic     #54                 // Field $VALUES:[Lcom/android/prefs/Global;
+     186: getstatic     #54                 // Field $VALUES:[Lcom/android/prefs/Global;
+     189: checkcast     #128                // class "[Ljava/lang/Enum;"
+     192: invokestatic  #134                // Method kotlin/enums/EnumEntriesKt.enumEntries:([Ljava/lang/Enum;)Lkotlin/enums/EnumEntries;
+     195: putstatic     #74                 // Field $ENTRIES:Lkotlin/enums/EnumEntries;
+     198: return
+}

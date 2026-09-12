@@ -1,0 +1,46 @@
+// Audit-only synthetic Foundation preference-domain witness. Not production app code.
+// Run two fresh processes with the same freshly generated UUID suite: seed, then restore.
+// Root owns execution/build lane and cleanup. Never pass an existing/non-audit suite.
+import Foundation
+
+let args = CommandLine.arguments
+guard args.count == 3, ["seed", "restore"].contains(args[1]),
+      args[2].hasPrefix("com.parlor.audit.DSC01."),
+      UUID(uuidString: String(args[2].dropFirst("com.parlor.audit.DSC01.".count))) != nil
+else { fatalError("Expected seed|restore and a new audit UUID suite") }
+let phase = args[1]
+let suite = args[2]
+let defaults = UserDefaults(suiteName: suite)!
+let key = "DSC01SyntheticPreferredLanguages" // no actual AppleLanguages or private value read
+defaults.register(defaults: [key: ["ar"]])
+
+if phase == "seed" {
+    guard defaults.persistentDomain(forName: suite) == nil else { fatalError("Suite already exists") }
+    let previous = defaults.array(forKey: key) as? [String]
+    precondition(previous == ["ar"])
+    defaults.set(["en"], forKey: key)
+    precondition(defaults.synchronize()) // witness wait-for-durability only; not proposed production API
+    print("seed: registered system fallback ar; app-domain explicit en persisted; no dispose simulated")
+} else {
+    defer { defaults.removePersistentDomain(forName: suite); _ = defaults.synchronize() }
+    // New process captures the prior process's explicit override as its baseline.
+    let previous = defaults.array(forKey: key) as? [String]
+    precondition(previous == ["en"])
+    defaults.set(["en"], forKey: key)
+    if (defaults.array(forKey: key) as? [String])?.first == "en" {
+        if let previous { defaults.set(previous, forKey: key) }
+        else { defaults.removeObject(forKey: key) }
+    }
+    // Production System branch performs no remove; effective lookup remains en.
+    let effectiveAfterSystem = defaults.array(forKey: key) as? [String]
+    print("restore: effective after System = \(effectiveAfterSystem ?? []); fallback = [ar]")
+    precondition(effectiveAfterSystem == ["en"])
+    // Demonstrate resolved-fallback promotion on a clean in-process restore too.
+    defaults.removeObject(forKey: key)
+    let pristineFallback = defaults.array(forKey: key) as! [String]
+    defaults.set(["en"], forKey: key)
+    defaults.set(pristineFallback, forKey: key)
+    let promoted = defaults.persistentDomain(forName: suite)?[key] as? [String]
+    precondition(promoted == ["ar"])
+    print("clean-cycle: resolved registered fallback was promoted to persistent app-domain [ar]")
+}

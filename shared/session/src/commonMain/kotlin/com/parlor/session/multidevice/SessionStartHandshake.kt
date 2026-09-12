@@ -260,15 +260,6 @@ private suspend fun runStartTransaction(
                                 SessionStartFailure.Protocol(validation),
                             )
                         }
-                        // Commit authority is irreversible. Do not keep the peer
-                        // in limbo merely because delivery confirmation was lost.
-                        sendCommitAck(
-                            room,
-                            prepared.protocol,
-                            offer.startId,
-                            sendTimeoutMs,
-                            idGenerator,
-                        )
                         return@withTimeoutOrNull Result.Success(prepared)
                     }
                     is HostMessage.SessionEnded -> {
@@ -283,6 +274,18 @@ private suspend fun runStartTransaction(
         // Kotlin does not infer the non-returning type of this receive loop.
         @Suppress("UNREACHABLE_CODE")
         startNetworkFailure(NetError.NotConnected)
+    }
+    if (committed is Result.Success) {
+        // Once a valid commit arrives, the receive deadline no longer applies.
+        // Its best-effort acknowledgement has a separate bounded send budget;
+        // a slow or lost acknowledgement cannot undo committed host authority.
+        sendCommitAck(
+            room,
+            prepared.protocol,
+            offer.startId,
+            sendTimeoutMs,
+            idGenerator,
+        )
     }
     return committed ?: startNetworkFailure(NetError.Timeout)
 }

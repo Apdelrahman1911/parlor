@@ -1,0 +1,131 @@
+{
+  "schema_version": 1,
+  "status": "ISOLATED AUTHOR DRAFT \u2014 NOT EXECUTED OR INDEPENDENTLY APPROVED",
+  "author": "/root/factory_review",
+  "created_at": "2026-09-08T00:00:27.088159+00:00",
+  "repository": "/Users/abdelrahman/Projects/parlor",
+  "branch": "fix/local-readiness-2026-09-07",
+  "head": "b6e1947c62661631d0593038db7f64dbf25f720e",
+  "tree": "f03ad1b302d951d0ca9811b1efab2751a8be6978",
+  "canonical": {
+    "scripts/verification/ios-readiness/secondary_fifo.py": {
+      "sha256": "080622194e19ef5d3ffb561e134ab8cf91e3e3ccef1e29197f59781154a7ffcc",
+      "lines": 205
+    },
+    "scripts/verification/ios-readiness/test_secondary_fifo.py": {
+      "sha256": "2d685ebcbef9930f43f1f644c5ed6fc3b5a5c5d07d975cc218a9165273bfb826",
+      "lines": 249
+    }
+  },
+  "draft": {
+    "secondary_fifo.py": {
+      "sha256": "170586ec941b02866acfa4b8e54aa3dd0842dbc7bc9c4b50410bca4b1149440a",
+      "lines": 252
+    },
+    "test_secondary_fifo.py": {
+      "sha256": "02b82b6662b735316fe303f6ba7d7affb203090374cacadd8c67909a174ff99e",
+      "lines": 401
+    },
+    "README.md": {
+      "sha256": "a86e409cb5fdc84e1ed81e772b56e6487901233946b1551a5d80cbbdbed884e6",
+      "lines": 32
+    },
+    "partial-fifo-attestation.patch": {
+      "sha256": "fb5c79dbd17164f8e58236ab9b0868438ad684d732f080ad74e17754041851cd",
+      "lines": 299
+    }
+  },
+  "caller_review": {
+    "path": "scripts/verification/ios-readiness/run_ios_readiness.py",
+    "sha256": "85283be9681be14c18b76ef1657b596e837b4f97f978917f25ac693ae72d0ca8",
+    "ranges_reopened": [
+      [
+        281,
+        317
+      ]
+    ],
+    "changed": false
+  },
+  "source_review": {
+    "secondary_fifo.py": [
+      [
+        1,
+        252
+      ]
+    ],
+    "test_secondary_fifo.py": [
+      [
+        1,
+        401
+      ]
+    ]
+  },
+  "static_analysis_only": {
+    "python_ast_parses": true,
+    "original_methods_ast_identical": [
+      "attest",
+      "fail_uid_query",
+      "setUp",
+      "stop_fixture_processes",
+      "test_attested_pair_removed_only_after_workers_stop",
+      "test_cached_pair_still_rechecks_changed_inode",
+      "test_cached_pair_still_rechecks_inode_uid_and_symlink",
+      "test_changed_child_or_parent_start_cannot_use_attested_pair",
+      "test_current_new_pair_cannot_hide_behind_members_old_argv",
+      "test_file_holder_prevents_any_unlink",
+      "test_fully_attested_same_identity_and_pair_avoids_redundant_uid_query",
+      "test_holder_query_error_never_becomes_empty_holder_success",
+      "test_initial_uid_query_failure_never_attests_or_deletes_paths",
+      "test_inode_uid_mismatch_is_not_owned",
+      "test_missing_or_duplicate_flags_rejected",
+      "test_missing_unattested_then_late_created_fifo_blocks_cleanup",
+      "test_new_pair_argv_change_during_uid_attestation_is_rejected",
+      "test_partial_record_or_pending_claim_cannot_use_cached_uid",
+      "test_pid_reuse_during_cleanup_preserves_files",
+      "test_pid_reuse_during_observation_rejected",
+      "test_preexisting_parent_birthtime_rejects_new_fifo",
+      "test_process_uid_mismatch_is_not_owned",
+      "test_replaced_inode_rejected",
+      "test_stale_preexisting_fifo_is_not_owned",
+      "test_symlink_fifo_not_followed_or_deleted",
+      "test_symlink_parent_not_followed",
+      "test_timeout_or_cancellation_cleanup_uses_same_attestation",
+      "test_unknown_directory_contents_preserve_all",
+      "test_unknown_external_argument_is_rejected",
+      "test_unknown_root_contents_preserve_all",
+      "test_unowned_child_cannot_attest_from_name_alone"
+    ],
+    "cleanup_ast_identical": true,
+    "canonical_argument_ast_identical": true,
+    "original_test_count": 27,
+    "draft_test_count": 39,
+    "new_tests": [
+      "test_fresh_metadata_failure_retains_claims_without_publishing_inode_ownership",
+      "test_partial_identity_proof_ledger_is_bounded_without_promoting_paths",
+      "test_partial_pair_bad_sibling_does_not_publish_new_leaf",
+      "test_partial_pair_cannot_attest_a_leaf_first_seen_after_worker_exit",
+      "test_partial_pair_changed_child_or_parent_command_needs_fresh_identity",
+      "test_partial_pair_failed_publication_keeps_pending_unpromoted",
+      "test_partial_pair_initial_uid_or_post_uid_failure_never_creates_cached_proof",
+      "test_partial_pair_interrupted_metadata_keeps_pending_unpromoted",
+      "test_partial_pair_new_inode_requires_identity_still_live_after_metadata",
+      "test_partial_pair_record_or_claim_mutation_cannot_reuse_its_proof",
+      "test_partial_pair_replaced_parent_is_not_accepted_from_cached_identity",
+      "test_partial_pair_reuses_its_completed_live_identity_without_requerying_uid"
+    ]
+  },
+  "author_counter_review": [
+    "Every new inode is metadata-checked and a current complete child/parent identity snapshot must still match before promotion.",
+    "A proof is cached only for one recorded leaf plus one distinct pending leaf, after successful live UID/argv attestation and persistence; copied state prevents alias-mutated metadata reuse.",
+    "Changed current argv/start/parent, dropped records, malformed pending and mutated metadata cannot reuse a partial proof.",
+    "Bad sibling metadata, metadata interruption and failed final persistence leave new inode ownership unpromoted; validated pending claims remain to fail closed on cleanup.",
+    "No pending late-path adoption, recursive deletion, process signaling, AppHostOwnership failure suppression, compatibility-schema change or canonical edit.",
+    "Existing cleanup and canonical path guards plus every original test method are AST-identical.",
+    "No guarantee all short-lived worker polling races are prevented; unobserved live inode proof remains blocked."
+  ],
+  "executed_tests": [],
+  "native_operations": [],
+  "processes_started": [],
+  "build_outputs_created": [],
+  "approval_required": "Separate reviewer plus root-owned red/green control execution and fresh source binding before native10."
+}

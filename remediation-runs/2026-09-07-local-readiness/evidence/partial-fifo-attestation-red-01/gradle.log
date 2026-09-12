@@ -1,0 +1,21 @@
+Bound canonical source: /Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/secondary_fifo.py
+test_partial_pair_reuses_its_completed_live_identity_without_requerying_uid (partial_fifo_regression.SecondaryFifoSafetyTest) ... ERROR
+
+======================================================================
+ERROR: test_partial_pair_reuses_its_completed_live_identity_without_requerying_uid (partial_fifo_regression.SecondaryFifoSafetyTest)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/partial-fifo-attestation-draft-01/test_secondary_fifo.py", line 265, in test_partial_pair_reuses_its_completed_live_identity_without_requerying_uid
+    self.attest()
+  File "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/partial-fifo-attestation-draft-01/test_secondary_fifo.py", line 42, in attest
+    self.ledger.observe(self.child, self.members, self.current)
+  File "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/secondary_fifo.py", line 116, in observe
+    if self.uid_of(pid) != os.getuid() or self.uid_of(parent_id) != os.getuid():
+  File "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/partial-fifo-attestation-draft-01/test_secondary_fifo.py", line 169, in fail_uid_query
+    raise RuntimeError('synthetic worker exited before UID query')
+RuntimeError: synthetic worker exited before UID query
+
+----------------------------------------------------------------------
+Ran 1 test in 0.003s
+
+FAILED (errors=1)

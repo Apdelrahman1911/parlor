@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "kind": "D08_LINUX_CURRENT_TEST_EVIDENCE_SUPPLEMENT",
+  "reviewer": "/root/ci_linux",
+  "qualification_result": "FAIL",
+  "scope": "Resolve only the prior pending current KMP XML/execution census; the original failure review remains unchanged.",
+  "run_id": 34553741387,
+  "run_attempt": 1,
+  "job_id": 103121858165,
+  "job_key": "desktop-android",
+  "source_sha": "59a384441f44844a79ae62ea8ee68d0c9e1e5878",
+  "source_tree": "9f06627b0dd047394de6f52adbc494e334651c74",
+  "prior_receipt": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/d08-linux-actual-failure-01.json",
+    "sha256": "31210d42a39221c2cc856f1396718442fa0692e411f0ccd5e3ed7c9fb10e890d"
+  },
+  "collector": {
+    "path": "remediation-runs/2026-09-08-continuation/actions/34553741387/download-receipt.json",
+    "sha256": "0e4be955e1fc7445e74e2d23135feb19aca62f700db390fdc496efa438f4884c",
+    "frozen_live_roots_manifest_sha256": "21ecdafa91310849e694738a32e3d6b0727a76d6f0ac89af54380536ceae860d"
+  },
+  "artifact": {
+    "artifact_id": 10181918024,
+    "name": "desktop-android-verification",
+    "archive": "remediation-runs/2026-09-08-continuation/actions/34553741387/desktop-android-verification.zip",
+    "bytes": 16909414,
+    "sha256": "30ffd5162e5ce2d34e38f03d3004b8606730c9b823990c8ec9da42b11c146274",
+    "api_digest_matches": true,
+    "commit_and_ownership_source_match": true,
+    "current_live_root_files": 4,
+    "current_live_root_contents": "commit.txt and three build-logic convention Detekt reports; the sole current XML is Detekt, not test results.",
+    "historical_test_result_xml_files_excluded": 7886,
+    "selection": "Exact collector frozen live build roots under parlor/parlor/; historical audit-runs/remediation-runs test XML is not current execution."
+  },
+  "current_kmp_and_android_unit_tests": {
+    "result": "NOT_RUN",
+    "current_test_result_xml_files": 0,
+    "current_xml_test_cases_observed": 0,
+    "executed_test_task_records": 0,
+    "from_cache_test_task_records": 0,
+    "up_to_date_test_task_records": 0,
+    "test_task_selector": "Exact desktopTest, testDebugUnitTest, testReleaseUnitTest and native test task leaves; no suffix matching of compilation/resource/lint tasks.",
+    "interpretation": "No current KMP or Android unit-test PASS is established. Test-resource preparation and cached javaPreCompile*UnitTest tasks do not execute tests. The prior 523 executed/178 cached Gradle task counts remain task counts, not test counts."
+  },
+  "raw_task_log": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/d08-pd06-ci-monitor-01/34553741387-103121858165.log",
+    "sha256": "b72dff274e7ca48a6466b94442bdb55167b8804edbdb8e9f217fd49197dc6bd9"
+  },
+  "jobs_metadata": {
+    "path": "remediation-runs/2026-09-08-continuation/actions/34553741387/jobs.json",
+    "sha256": "8f646f4099406c1b02739cec65a320d6963cd7cc60d2ceed05add47e37e3160a",
+    "managed_device_smoke_step_12": "skipped; NOT_RUN",
+    "unsigned_package_inspection_step_14": "skipped; NOT_RUN"
+  },
+  "new_actionable_findings": [],
+  "limits": [
+    "The 567 Python release-automation tests and stale assertion failure remain solely in the unchanged prior receipt.",
+    "Cleanup is independently reviewed; no builds, tests, downloads, network polling or broad source audit were performed.",
+    "This additive census is not a passing qualification and does not substitute historical, focused or other-lane evidence."
+  ]
+}

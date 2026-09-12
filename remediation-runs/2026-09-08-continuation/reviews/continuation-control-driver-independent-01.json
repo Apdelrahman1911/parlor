@@ -1,0 +1,120 @@
+{
+  "schema_version": 1,
+  "kind": "INDEPENDENT_FOCUSED_CONTINUATION_PACKET_SOURCE_REVIEW",
+  "recorded_at": "2026-09-08T09:41:25Z",
+  "reviewer": "/root/fixture_review",
+  "driver_author": "/root",
+  "classification": "SOURCE_APPROVED_FOR_COORDINATED_FOCUSED_CONTROLS; EXECUTION_NOT_YET_RECONCILED",
+  "checkout": {
+    "commit": "ec0de52a2c7ff9077482a291dc4fd2591fdea01f",
+    "tree": "48b099f3cd002a3253f21d2b06a4ece5787e62cb",
+    "branch": "fix/local-readiness-2026-09-07",
+    "scope": "Dirty continuation checkout; this approval is exact-byte source review, not frozen-source qualification or an executed control receipt."
+  },
+  "reviewed_driver": {
+    "path": "remediation-runs/2026-09-08-continuation/controls/run_continuation_controls.py",
+    "initial_reviewed_sha256": "3df65b137f8c3b11846c6621a468389867a3dd76d89b1b7a7ae3196cff0a38a7",
+    "corrected_eight_command_sha256": "3e4dd5d884da970b06ae4531c5ebef3b36bac5b47ccd32ebe3da6cafb5c05fe0",
+    "final_sha256": "1896d5a309e8802b691bfc9a37db2c0ac92dcfb6173d4cee564e5dcfcc234627",
+    "final_lines": 207,
+    "ast_parse": "PASS; syntax inspection only, not test execution",
+    "last_delta": "One fixed packet-test command inserted. Independently removing that exact single line reproduces the complete previously approved eight-command driver SHA256."
+  },
+  "purpose_and_boundaries": [
+    "Execute a fixed focused Python control packet through the existing coordinated build lane; no direct native/app/build entry point is added.",
+    "Explicit before/after control hashes cover relevant archived runners, fixtures, transformations, tests, shared support, selected dependency consumer controls and pinned prerequisites research omitted by the outer production-source inventory.",
+    "The outer lane continues to own actual JDK probes, process-group/worker custody, Gradle stops and task-owned build/scratch cleanup. This packet is not a replacement for that finalizer.",
+    "Production source, reducers, protocol4.2, deterministic seeds, privacy boundaries, strict snapshot/content/protection checks, Doctor policy and Whodunit Leave Confirmation timing are unchanged."
+  ],
+  "findings": [
+    {
+      "id": "PC01",
+      "severity": "medium",
+      "status": "CORRECTED_AND_INDEPENDENTLY_RECHECKED",
+      "finding": "Initial command rows were added only after child return; launch and timeout attempts could be absent from the aggregate evidence.",
+      "resolution": "A PENDING row is appended before log allocation/launch. Failure type, ERROR status and shutdown fields are retained and the row is printed in the finalizer. Partial logs remain evidence."
+    },
+    {
+      "id": "PC02",
+      "severity": "medium",
+      "status": "CORRECTED_AND_INDEPENDENTLY_RECHECKED",
+      "finding": "An unguarded postflight manifest failure could mask the original failure and prevent composite results from being written.",
+      "resolution": "Postflight hashing/writing is separately guarded. The result document records the original error type and independent postflight error type, and input equality cannot pass when the postflight fails. Exclusive result-file writing is attempted even after preflight, child or postflight errors."
+    },
+    {
+      "id": "PC03",
+      "severity": "medium",
+      "status": "CORRECTED_AND_INDEPENDENTLY_RECHECKED",
+      "finding": "TMPDIR shape alone did not establish a real owned running coordinated lane or exact command.",
+      "resolution": "TMPDIR, scratch and cycle directories must be existing canonical directories owned by the current UID. The bounded regular current-UID lane receipt is opened O_NOFOLLOW and must be RUNNING with the matching cycle and exact /usr/bin/python3 -B packet command."
+    },
+    {
+      "id": "PC04",
+      "severity": "medium",
+      "status": "CORRECTED_AND_INDEPENDENTLY_RECHECKED",
+      "finding": "Default SIGTERM exit bypassed Python finalization; asynchronous interruption during child assignment also needed explicit handling.",
+      "resolution": "The installed SIGINT/SIGTERM handler records pending signals during launch, defers signals during child shutdown and packet finalization, and raises otherwise. A returned child is finalized after a pending launch signal. Pending/deferred signals prevent a success exit."
+    },
+    {
+      "id": "PC05",
+      "severity": "medium",
+      "status": "CORRECTED_AND_INDEPENDENTLY_RECHECKED_WITH_EXPLICIT_LIMIT",
+      "finding": "subprocess.run timeout immediately kills the child, preventing the composition-control launcher's external temporary-parent finalizer from running. Outer scratch deletion cannot prove retirement of that external allocation.",
+      "resolution": "Popen waits at most600 seconds; a live child receives TERM and20 seconds before KILL and a further5-second wait. Escalation and shutdown errors are retained. Composition KILL escalation sets external_cleanup_requires_inspection rather than declaring external cleanup successful.",
+      "remaining_limit": "Actual signal delivery, descendant cleanup and external-parent retirement must be judged from raw execution/finalizer evidence. SIGKILL or infrastructure failure cannot be made successful by this synthetic source review."
+    }
+  ],
+  "source_conclusions": [
+    "No argument-controlled test selection, shell invocation or publication path. Exactly nine fixed entries: packet, lane, single-tap, schema-bootstrap, toolchain, functional-copy, composition, normal, schema-closure.",
+    "The driver requires -B and no arguments. Each child uses explicit /usr/bin/python3 -B, the repository cwd, an exclusive binary log and the inherited coordinator-owned scratch environment.",
+    "Control manifests hash exact regular-file bytes with a4MiB bound and canonical-path checks; traversed symlinks are rejected. Entries are sorted and exclusive output creation preserves preexisting evidence rather than overwriting it.",
+    "Child nonzero exit remains FAIL; other attempted failures remain ERROR with original row error information. A source drift or missing/erroring postflight cannot pass even if all children exited0.",
+    "Return0 additionally requires a complete fixed command set and no pending/deferred signals. Outer source manifests and finalizer receipts still need independent reconciliation.",
+    "The last one-line packet-test addition changes no previously reviewed command, custody, hashing, exception or cleanup behavior. Synthetic controls use fake Popen objects; the packet suite does not recurse into another actual lane."
+  ],
+  "support_reopened": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py",
+      "sha256": "1b9e882514bfe5386785d5a71ae32fdc2bc3aa4cc1dd24532709899fbf4f41bc",
+      "scope": "Inspected relevant owned lane receipt, TMPDIR, process-custody and finalizer integration. Separate portability source review and coordinator execution evidence remain authoritative for that delta."
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/run_controls.py",
+      "sha256": "03c115d45474ee082204d38c6315e19909108148b2de8804898dd66c40c14dbf",
+      "scope": "Reopened external-parent allocation, owned cleanup and TERM finalizer to assess packet timeout escalation; no native command executed."
+    }
+  ],
+  "independent_synthetic_controls": {
+    "path": "remediation-runs/2026-09-08-continuation/controls/test_continuation_packet.py",
+    "author": "/root/fixture_review",
+    "initial_sha256": "08edbf93fac763888ce0f31941ae36840b4885e7dfcc9cae491da50a3f6c23c3",
+    "final_sha256": "3229ee84a80ec116a172b725b3005b24cb6c252ef1b11ca907109d4301af1d47",
+    "final_lines": 315,
+    "declared_test_methods": 16,
+    "ast_parse": "PASS; source syntax only",
+    "independent_reviewer": "/root",
+    "cross_review_status": "APPROVED by separate agent at the exact corrected SHA256; requested independent drift/nonzero coverage correction rechecked before execution",
+    "cross_review_report": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/control-packet-tests-independent-01.json",
+      "sha256": "bb47a464d292f23a67a69ff1ca4c1e242701c06ab30f865d388ab83c5c648b90"
+    },
+    "cross_review_correction": "Split the combined source-drift/nonzero failure case into two independent tests with separate fresh synthetic directories: drift alone with exit0, and nonzero exit23 alone with stable manifests. This prevents either acceptance guard from being silently untested.",
+    "coverage": [
+      "Fixed reviewed entry labels and exact optional packet command; synthetic source manifest byte hashing, sorted paths, drift, symlink/nonregular/oversize rejection.",
+      "Canonical owned destination, current UID, exact running receipt, no-follow receipt open, and no argument/-B bypass.",
+      "PASS and nonzero rows/logs, attempted launch failure with partial raw log, graceful TERM timeout, KILL escalation and composition external-cleanup warning, unreaped child error, pending launch signal retirement.",
+      "Actual driver main/finalization under fake Popen and manifest inputs: complete success, simultaneous child/postflight failures, failed preflight, source-drift-only failure and stable-source nonzero failure.",
+      "Exact AST-isolated signal handler called directly for normal, launch, shutdown and finalization states; no actual signals are sent or installed."
+    ],
+    "execution_status": "NOT_RUN_BY_REVIEWER; COORDINATOR_LANE_QUEUED",
+    "limits": "All actual Popen calls and signal-handler changes forbidden by default mocks. Each test owns a TemporaryDirectory. These are synthetic/source-control assertions, not actual OS signal/worker cleanup, compiler, native ABI, app, simulator, file-protection or Store proof."
+  },
+  "execution_and_cleanup": {
+    "reviewer_executed_tests": false,
+    "coordinator_execution_receipts": [],
+    "reconciliation": "Pending; inspect every raw command log, both explicit control manifests, focused results and the outer lane receipt before reporting execution counts or cleanup success.",
+    "reviewer_operations": "Read-only source/Git/evidence inspection, SHA256 hashing, AST parsing; authored only the independent synthetic test source and this review. No Gradle, compiler, native application, simulator, workflow or test process started by reviewer.",
+    "reviewer_owned_generated_outputs": [],
+    "reviewer_cleanup": "No reviewer-owned generated build output or temporary worker exists; no unrelated outputs were touched. Coordinator owns future execution cleanup."
+  }
+}

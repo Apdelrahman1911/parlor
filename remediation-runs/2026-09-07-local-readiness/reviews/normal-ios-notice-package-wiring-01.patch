@@ -1,0 +1,140 @@
+diff --git a/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_control_tests.py b/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_control_tests.py
+index efa5962..21f5eea 100644
+--- a/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_control_tests.py
++++ b/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_control_tests.py
+@@ -10,7 +10,7 @@ HERE = Path(__file__).resolve().parent
+ sys.path.insert(0, str(HERE))
+ import run_normal_ios_launch as control
+ 
+-EXPECTED_COUNT = 74
++EXPECTED_COUNT = 78
+ 
+ 
+ def declared_tests():
+diff --git a/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py b/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py
+index f53c3ed..bd5b9f2 100644
+--- a/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py
++++ b/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py
+@@ -128,7 +128,8 @@ class Lane:
+         self.receipt = dict(schema_version=1, cycle=name, started_at=now(), status='RUNNING',
+             execution_kind='normal-source-fixed-eight-plus-separate-public-tool-provenance',
+             signing_mode=mode, approved_control_sha256=approved, commands=[], gradle_stops=[],
+-            runtime_evidence_status='NOT_RUN', provenance_status='NOT_RUN', cleanup_status='BLOCKED',
++            runtime_evidence_status='NOT_RUN', provenance_status='NOT_RUN',
++            notice_package_status='NOT_RUN', cleanup_status='BLOCKED',
+             scope='Eight fixed English XCTest repetitions observing unchanged production app source '
+                   'through normal Home accessibility for at least ten post-home seconds each. '
+                   'One additional simctl launch observes image provenance separately. No settings '
+@@ -376,6 +377,24 @@ class Lane:
+             raise RuntimeError('Failed xcodebuild cannot become successful because extracted tests passed')
+         self.receipt['runtime_evidence_status'] = 'PASS'
+ 
++    def verify_notice_packages(self, built, installed):
++        # The caller first binds both canonical directories to our owned build
++        # and simulator. Execute the same source-bound verifier copied with the
++        # app; retain its compact byte receipts before deleting either package.
++        self.receipt['notice_package_status'] = 'RUNNING'
++        self.receipt['notice_packages'] = []
++        copy = self.temporary / 'copy'
++        for origin, app in (('built', built), ('installed', installed)):
++            filename = origin + '-notice-package.json'
++            self.require(['/usr/bin/python3', '-B', copy / 'scripts/verification/third_party_notices.py',
++                          '--root', copy, '--package', app, '--json'], filename, limit=1024 * 1024)
++            report = read_json((self.destination / filename).read_text(), maximum=1024 * 1024)
++            if not isinstance(report, dict) or report.get('status') != 'PASS' or not report.get('package'):
++                raise RuntimeError('Packaged-notice verification did not provide a successful package receipt')
++            self.receipt['notice_packages'].append(dict(origin=origin, file=filename,
++                                                       sha256=digest(self.destination / filename)))
++        self.receipt['notice_package_status'] = 'PASS'
++
+     def artifact_inventory(self):
+         app = self.temporary / 'DerivedData/Build/Products/Debug-iphonesimulator/Parlor.app'
+         if app.is_symlink() or app.resolve(strict=True) != app:
+@@ -392,6 +411,7 @@ class Lane:
+         actual = inventory_bundle(installed)
+         if built != actual:
+             raise RuntimeError('Installed native bundle differs from this exact built application')
++        self.verify_notice_packages(app, installed)
+         write_json(self.destination / 'built-installed-binary-inventory.json', built)
+         self.receipt['built_installed_native_inventory_sha256'] = digest(self.destination / 'built-installed-binary-inventory.json')
+         executable = built['bundle_identity']['CFBundleExecutable']
+@@ -597,6 +617,7 @@ class Lane:
+             'unknown-holder checks; exact copied-input verification; unlink shared-cache pointers '
+             'without deleting global caches; remove only this allocation including generated build and DerivedData.')
+         complete = (self.receipt['runtime_evidence_status'] == self.receipt['provenance_status'] == 'PASS' and
++                    self.receipt['notice_package_status'] == 'PASS' and
+                     self.receipt['cleanup_status'] == 'PASS' and not self.receipt.get('error') and
+                     self.receipt['source_unchanged'] and self.receipt['controls_unchanged'] and
+                     self.receipt.get('copied_sources_unchanged') is True and not self.receipt['original_outputs_preserved'])
+@@ -608,7 +629,7 @@ class Lane:
+             self.run_xctest()
+             self.observe_external_images()
+         except BaseException as error:
+-            for field in ('runtime_evidence_status', 'provenance_status'):
++            for field in ('runtime_evidence_status', 'provenance_status', 'notice_package_status'):
+                 if self.receipt[field] == 'RUNNING':
+                     self.receipt[field] = 'FAIL'
+             self.receipt['error'] = dict(type=type(error).__name__, message=str(error)[:800])
+diff --git a/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_normal_launch_controls.py b/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_normal_launch_controls.py
+index 184250e..d2bf861 100644
+--- a/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_normal_launch_controls.py
++++ b/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_normal_launch_controls.py
+@@ -476,7 +476,7 @@ class RunnerGuards(unittest.TestCase):
+         value.gradle_attempted, value.approved = True, 'a' * 64
+         value.stop_gradle, value.shutdown_device, value.delete_device = Mock(), Mock(), Mock()
+         value.stop_gradle.return_value = value.shutdown_device.return_value = value.delete_device.return_value = None
+-        value.receipt = dict(runtime_evidence_status='PASS', provenance_status='PASS',
++        value.receipt = dict(runtime_evidence_status='PASS', provenance_status='PASS', notice_package_status='PASS',
+                              source_before={'frozen': True}, copied_sources_unchanged=True, gradle_stops=[])
+         value.environment = dict(SDK_NAME='iphonesimulator26.5')
+         value.signing = runner.signing_overrides('disabled')
+@@ -646,6 +646,49 @@ class RunnerGuards(unittest.TestCase):
+             lane.run_xctest()
+         lane.stop_gradle.assert_called_once_with('stop-xcode-immediate')
+ 
++    def test_notices_check_built_and_installed_apps_using_frozen_copy(self):
++        lane = self.lane()
++        apps = [lane.temporary / 'DerivedData/Parlor.app', lane.temporary / 'simulator/Parlor.app']
++        def successful_receipt(arguments, filename, **options):
++            self.assertEqual(1024 * 1024, options['limit'])
++            (lane.destination / filename).write_text(json.dumps({'status': 'PASS', 'package': {'verified': 26}}))
++        lane.require = Mock(side_effect=successful_receipt)
++        lane.verify_notice_packages(*apps)
++        self.assertEqual(2, lane.require.call_count)
++        for call, app in zip(lane.require.call_args_list, apps):
++            self.assertEqual(['/usr/bin/python3', '-B', lane.temporary / 'copy/scripts/verification/third_party_notices.py',
++                              '--root', lane.temporary / 'copy', '--package', app, '--json'], call.args[0])
++        self.assertEqual('PASS', lane.receipt['notice_package_status'])
++        self.assertEqual(['built', 'installed'], [row['origin'] for row in lane.receipt['notice_packages']])
++        for row in lane.receipt['notice_packages']:
++            self.assertEqual(runner.digest(lane.destination / row['file']), row['sha256'])
++
++    def test_failed_notice_verifier_cannot_pass_package_gate(self):
++        lane = self.lane()
++        lane.require = Mock(side_effect=RuntimeError('synthetic missing package resource'))
++        with self.assertRaises(RuntimeError):
++            lane.verify_notice_packages(Path('/built'), Path('/installed'))
++        self.assertNotEqual('PASS', lane.receipt['notice_package_status'])
++        self.assertEqual([], lane.receipt['notice_packages'])
++
++    def test_source_only_or_failed_notice_receipt_is_not_package_evidence(self):
++        lane = self.lane()
++        for value in ({'status': 'PASS'}, {'status': 'FAIL', 'package': {'verified': 26}}, []):
++            with self.subTest(value=value):
++                def receipt(arguments, filename, **options):
++                    (lane.destination / filename).write_text(json.dumps(value))
++                lane.require = Mock(side_effect=receipt)
++                with self.assertRaises(RuntimeError):
++                    lane.verify_notice_packages(Path('/built'), Path('/installed'))
++                self.assertNotEqual('PASS', lane.receipt['notice_package_status'])
++
++    def test_unexecuted_notice_verification_cannot_be_overall_pass(self):
++        lane = self.lane()
++        lane.receipt['notice_package_status'] = 'NOT_RUN'
++        self.finish(lane)
++        self.assertEqual('PASS', lane.receipt['cleanup_status'])
++        self.assertEqual('FAIL', lane.receipt['status'])
++
+     def test_interrupted_xcode_attempt_immediately_stops_gradle(self):
+         lane = self.lane()
+         lane.save = Mock()

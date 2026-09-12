@@ -41,6 +41,7 @@ import com.parlor.games.mafia.ui.screens.night.DetectiveResultScreen
 import com.parlor.games.mafia.ui.screens.night.DoctorProtectScreen
 import com.parlor.games.mafia.ui.screens.night.MafiaKillVoteScreen
 import com.parlor.games.mafia.ui.screens.night.PickableTarget
+import com.parlor.games.mafia.ui.screens.night.isDoctorTargetEligible
 import com.parlor.games.mafia.ui.screens.postgame.PostGameScreen
 import com.parlor.games.mafia.ui.screens.reveal.PrivateRoleCardScreen
 import com.parlor.games.mafia.ui.screens.reveal.roleDisplayName
@@ -388,10 +389,8 @@ private fun NightChooseScreen(
         Role.Doctor -> {
             val previousTarget = state.privatePerPlayer[current.id]?.previousDoctorProtect
             val targets = aliveIds
-                .filter { settings.doctorCanSelfHeal || it != current.id }
                 .filter {
-                    settings.doctorCanProtectSamePlayerConsecutively ||
-                        it != previousTarget
+                    isDoctorTargetEligible(it, current.id, previousTarget, settings)
                 }
                 .map { id -> PickableTarget(id = id, name = displayNameOf(state, id) ?: id.raw) }
             DoctorProtectScreen(

@@ -1,0 +1,144 @@
+// COPY-ONLY native host witness. Setup still runs through actual UI callbacks.
+package com.parlor.games.mafia.readiness
+
+import com.parlor.core.result.Result
+import com.parlor.engine.session.SubmitError
+import com.parlor.games.mafia.MafiaIds
+import com.parlor.games.mafia.domain.action.MafiaAction
+import com.parlor.games.mafia.domain.phase.MafiaPhase
+import com.parlor.games.mafia.domain.settings.MafiaSettings
+import com.parlor.games.mafia.domain.state.MafiaState
+import com.parlor.games.mafia.ui.flow.multidevice.MafiaHostRuntime
+import com.parlor.networking.protocol.HostMessage
+import com.parlor.session.multidevice.HostStartGateState
+import com.parlor.session.multidevice.ProcessMultiplayerSession
+import com.parlor.games.mafia.domain.event.MafiaEvent
+import com.parlor.session.SessionController
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.Job
+
+object L08MafiaSetupObservation {
+    private var enabled = false
+    var repeatClicks = 0
+        private set
+    var startClicks = 0
+        private set
+    private var chosenRepeat: Boolean? = null
+    private var initialRepeat: Boolean? = null
+    private var latestRepeat: Boolean? = null
+
+    fun enable() { check(!enabled); enabled = true }
+
+    fun observeDraft(settings: MafiaSettings) {
+        if (!enabled) return
+        if (initialRepeat == null) initialRepeat = settings.doctorCanProtectSamePlayerConsecutively
+        latestRepeat = settings.doctorCanProtectSamePlayerConsecutively
+    }
+
+    fun repeatChanged(value: Boolean) {
+        if (!enabled) return
+        check(repeatClicks == 0 && value)
+        repeatClicks++
+    }
+    fun start(settings: MafiaSettings) {
+        if (!enabled) return
+        check(startClicks == 0)
+        chosenRepeat = settings.doctorCanProtectSamePlayerConsecutively
+        startClicks++
+    }
+    fun verify(expected: Boolean) {
+        check(enabled)
+        check(repeatClicks == if (expected) 1 else 0)
+        check(initialRepeat == false && latestRepeat == expected)
+        check(startClicks == 1 && chosenRepeat == expected)
+    }
+}
+
+class L08MafiaHost(private val owned: ProcessMultiplayerSession, private val repeat: Boolean) {
+    init { L08MafiaSetupObservation.enable() }
+    private val runtime get() = owned.runtime.value as? MafiaHostRuntime
+    private var capturedRuntime: MafiaHostRuntime? = null
+    private var baseline: MafiaState? = null
+    private var controller: SessionController<MafiaState, MafiaAction, MafiaEvent>? = null
+    private var canonical: StateFlow<MafiaState>? = null
+    private var captured = false
+
+    fun waiting(): Boolean {
+        val value = runtime ?: return false
+        check(value.startGate.value == HostStartGateState.Starting)
+        val state = checkNotNull(value.session.canonicalState).value
+        check(state.phase == MafiaPhase.Setup && state.privatePerPlayer.isEmpty())
+        return true
+    }
+    fun protocol() = checkNotNull(runtime).bridge.protocol
+    fun accepts(offer: HostMessage.SessionStarting) = offer.caseId == "default" &&
+        offer.modeId == MafiaIds.ClassicModeId.raw && offer.caseVersion == null && offer.caseDigest == null
+
+    fun started(): Boolean {
+        val value = runtime ?: return false
+        if (value.startGate.value != HostStartGateState.Started) return false
+        val state = checkNotNull(value.session.canonicalState).value
+        check(state.phase == MafiaPhase.Setup && state.privatePerPlayer.isEmpty())
+        check(!state.public.settings.doctorCanProtectSamePlayerConsecutively)
+        return true
+    }
+    fun assigned(): Boolean = runtime?.let { value ->
+        value.startGate.value == HostStartGateState.Started &&
+            checkNotNull(value.session.canonicalState).value.phase == MafiaPhase.RoleAssignment
+    } ?: false
+
+    fun capture() {
+        check(!captured && assigned())
+        L08MafiaSetupObservation.verify(repeat)
+        val value = checkNotNull(runtime)
+        val state = checkNotNull(value.session.canonicalState).value
+        check(state.players.size == 6 && state.privatePerPlayer.size == 6)
+        check(state.public.settings.doctorCanProtectSamePlayerConsecutively == repeat)
+        check(!state.privatePerPlayer.getValue(owned.room.selfPlayerId).roleAcknowledged)
+        capturedRuntime = value
+        controller = value.session
+        canonical = value.session.canonicalState
+        baseline = state
+        captured = true
+        retained()
+    }
+
+    fun retained() {
+        val value = checkNotNull(capturedRuntime)
+        val initial = checkNotNull(baseline)
+        check(runtime === value && value.session === controller && value.session.canonicalState === canonical)
+        val current = checkNotNull(value.session.canonicalState).value
+        check(current === initial && current == initial)
+        check(current.hostOnly == initial.hostOnly && current.privatePerPlayer == initial.privatePerPlayer)
+        check(current.public.settings == initial.public.settings)
+        check(value.seed == owned.hostSeed && current.hostOnly.randomSeed == owned.hostSeed)
+        check(value.scope.coroutineContext[Job]?.isActive == true)
+        check(value.startGate.value == HostStartGateState.Started && current.phase == MafiaPhase.RoleAssignment)
+        L08MafiaSetupObservation.verify(repeat)
+    }
+
+    suspend fun suspendedAck() {
+        retained()
+        val value = checkNotNull(capturedRuntime)
+        val result = value.session.submit(MafiaAction.AcknowledgeRoleViewed(owned.room.selfPlayerId))
+        check(result == Result.Failure(SubmitError.SessionSuspended))
+        retained()
+    }
+
+    suspend fun activeAck() {
+        retained()
+        val value = checkNotNull(capturedRuntime)
+        val initial = checkNotNull(baseline)
+        val id = owned.room.selfPlayerId
+        val result = value.session.submit(MafiaAction.AcknowledgeRoleViewed(id))
+        check(result is Result.Success && result.data.stateChanged && !result.data.awaitingAuthority)
+        val current = checkNotNull(value.session.canonicalState).value
+        check(current == initial.copy(privatePerPlayer = initial.privatePerPlayer +
+            (id to initial.privatePerPlayer.getValue(id).copy(roleAcknowledged = true))))
+        check(runtime === value && current.phase == MafiaPhase.RoleAssignment)
+        // This legal command ends the continuity matrix. Never capture a new baseline.
+    }
+
+    fun runtimeClosed() { check(checkNotNull(capturedRuntime).scope.coroutineContext[Job]?.isCompleted == true) }
+    fun release() { baseline = null; canonical = null; controller = null; capturedRuntime = null }
+}

@@ -1,0 +1,49 @@
+{
+  "schema": 1,
+  "reviewer": "/root/protection_host",
+  "status": "APPROVED_SAME_INODE_HOST_COMPARISON_NOT_PROTECTION_QUALIFICATION",
+  "scope": "PD08 actual read-only host comparison, context, generated-source, image and target-mapping bindings; not cleanup, writer causality or full qualification.",
+  "packet": {
+    "root": "remediation-runs/2026-09-08-continuation/actions/34558762289",
+    "run_id": 34558762289,
+    "run_attempt": 1,
+    "job_id": 103136950608,
+    "source_sha": "50a2d2d112220507faaa2a7f185d47b331423999",
+    "tree": "3076d1f51de0612b4eb46757e4d5ad4ee234fe5b",
+    "control_sha256": "890d207a012cdfebc8ae41f756dd246a37784488aaea06907885364e52323d06",
+    "collector_sha256": "43179585bcb43a7d39f871ceefe18ce90fc7424337a44cd81be4d91c12d14cea"
+  },
+  "pins": {
+    "main/request.json": "93c5dd0fd7475ab57f6c6ddee27af9aa1cb611b0f98bce5dd99a9502caf40e9a",
+    "main/state.json": "e75cec2e636aa9809aae81e5523f8a36f6b8ecf634cded10170ea6ad844b2623",
+    "main/native.stdout.jsonl": "2be78b74fbda1dd1059bbf17353cc3ac1395d1032949c667539b2b8dfe26dde2",
+    "main/native.stderr.txt": "19eade0b3413ad07e847c81f78dbe496fa8c21e05a42bf617f9fff9742021ba5",
+    "main/host.stdout.json": "9170fa551704b3f15314f717257313a24ce63623fba68ed8a5b3e941c80d3c21",
+    "main/host.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "main/native-report.json": "b6ab01381ff17fe58040e13de4d57b9949fb4f07b2a378a2ea2343c327dc0b85",
+    "main/host-report.json": "8ae063e7d7e7141fb7d5031d4e96eb2363ba4bcfdb1bc114317f849b7fb94d79",
+    "main/native-context.json": "d7049ade7af6514fa6fae830e511f751fb7f8ac1e65c7d5a7e6e67b8a1f1ad99",
+    "main/host-bindings.json": "d5fb800606eaf1d63da6ce3ab0b5cf38bced1038f44f4c4df29d76a5efda378f",
+    "main/OwnedProbeContext.h": "54b705c7e71b237911b8d3de2e21132fdb432ea4f5930b0f0afc3664ff20e385",
+    "main/OwnedHostReadContext.h": "b189c7008d5c32f56cd2f08cb947ec77f074dcb226fa6a17f8eb22dd6fcfc4f7",
+    "main/host-sampler.diff": "7b7010e333e9742072afdcbb8daf3fb7beb7736a6924bd05591448caab158b03"
+  },
+  "actual_execution": "Simulator observation exited0/reaped in5.162s within40s, stdout41981 bytes/18 JSON rows and stderr124 bytes containing all three fixed phase markers. Native report.events exactly equals raw rows. Host compiled, ad-hoc signed and verified; direct host PID16520 exited0/reaped in0.056s within30s, stdout20193 bytes/one PASS record and stderr empty. Host runtime15.7.9, Simulator26.2.0, arm64, Xcode26.3/17C529; host SDK26.2 was bound before simulator creation. This is actual host execution, not merely successful compilation or CI status.",
+  "bindings": [
+    "Local retained run/attempt source and Git commit tree agree with the request. Recomputed request control-list digest agrees. The seven relevant source blobs (driver, simulator main/sampler/header, host template/transform and shared receipt validator) match their frozen Git blobs, request pins and current bytes. This is not a separate audit of every workflow control.",
+    "Request source/control/nonce16808631f83040d9b5203b8b215e98ef, simulatorCA2857C9-4FF4-47E6-A5EE-1896440FFD6D and fixture root dev16777227/inode3586323 agree with native-context, both raw runtime contexts and generated headers. Host SDK record agrees with source/control/nonce. Host runtime, UID501 and PID agree with platform/request/direct-child record.",
+    "Ordered targets are directory-final/created inode3607751; complete-after-replace/created/complete.bin inode3607758; none-after-url-set/created/none.bin inode3607755; default-baseline/created/default.bin inode3607756; nonatomic-complete-baseline/created/nonatomic-complete.bin inode3607759. Every device/inode/uid/mode/link/size/type field agrees across native sample, compiled expected header, host binding and host observation. Four regular targets are distinct single-link inodes. The complete file is the final replacement inode, not its earlier baseline.",
+    "Each of five host samples and its paired native sample has exactly five ordered per-API before/after full-identity witnesses, descriptor/path same-inode=true and closed descriptor. Host source checks the canonical owned root and final parent/target before and after each sample and opens descriptors read-only. Host report was independently reconstructed from these raw records and exactly equals the retained report, without importing project validators.",
+    "Original sampler remains3f4f49af81d396a07beabeed45be649314495fd286327baa931aa5eb2dcca137. Independent byte reconstruction of the narrowly transformed host sampler yields7656cc25a7e2d9ab3a6715713acf177f5c3f02855ac24fc2757df663ecc77d50/13927 bytes and exactly the retained diff. Both generated headers and all five generated-input hashes/sizes match; recorded input identities are equal before compile and after read. Recorded host image identity/hash is unchanged after read. Remote executable bytes are not retained for independent local rehashing. Getter/key/value mapping is otherwise unchanged: FileManager reads NSFileProtectionKey, regular fresh NSURL reads NSURLFileProtectionKey, and until-first-authentication is a symbolic Foundation-value match, not a translation invented from kernel class3. Directory NSURL protection is deliberately unrequested/N/A."
+  ],
+  "images": {
+    "main": "Simulator ProtectionProbe UUID0f0150b1-d6e2-4e42-8321-ede3bbd16cf2 offset2568/platform[7]; host ProtectionHostRead UUIDe066fe4d-b7f6-4d02-badd-7a194a634755 offset2264/platform[1]. Both before/after records are equal and match their retained dwarfdump/build UUIDs.",
+    "simulator_getters": "All9 samples: NSFileManager attributesOfItemAtPath:error: -> Foundation UUIDc153116f-dd31-3fa9-89bb-04b47c1fa83d offset8363460; NSURL resourceValuesForKeys:error: -> CoreFoundation UUID4f6d050d-95ee-3a95-969c-3a98b29df6ff offset1443152. Both platform[7], stable before/after and across samples.",
+    "host_getters": "All5 samples: NSFileManager attributesOfItemAtPath:error: -> Foundation UUID39be75ac-350f-3b8c-9c10-8b2b5321ce8e offset211688; NSURL resourceValuesForKeys:error: -> CoreFoundation UUIDbdc82415-a029-3463-ac49-1a792208ce00 offset520524. Both ordered platforms[1,6], cputype16777228/cpusubtype-2147483646, stable before/after and across samples. The host-only getter-role policy is now actually exercised; it does not admit[1,6] for either main or any simulator image."
+  },
+  "discriminator": "On all5 paired final inodes, both FileManager dictionaries are present without NSError, but simulator protection key is absent while host key is present and until-first-authentication. All4 regular-file NSURL values agree until-first-authentication; directory NSURL is N/A on both sides. Both sides' fcntl GET63 returns3/errno0, attrlist returns class3 with actual protection bit/length28/mask0xc0000000 and no error, and APFS/URL capabilities say unsupported. Thus missing simulator FileManager exposure is not equivalent to absent/unreadable class metadata on those inodes: an actual same-inode API/runtime-context exposure difference is established. Particular Foundation implementation causality, universal simulator behavior and enforcement are not established.",
+  "strict_boundary": "Host comparison carries forward the native0PASS/5FAIL unchanged and explicitly sets runtime_implementation_causality_proven=false, same_simulator_process=false and production_snapshots_observed=false. Strict-count/writer and cleanup reviews have separate owners. No A37/APP04 change, shipping fallback, app runtime, full six-job or physical-device/Store qualification follows.",
+  "next_smallest_action": "Preserve this discriminator; do not repeat the same read-only matrix. If another causal diagnostic is selected, consider one separately labelled, source-reviewed public host FileManager Complete setter on one preobserved owned class3 regular inode, with same-identity FM/fresh-URL/fcntl/attrlist before/after observations and the existing custody/image/cleanup bounds. This would test one host mutation response, not prove the precise simulator implementation cause. It must not alter this read-only packet, guess a private protection constant, become a production fallback or execute without a new reviewed freeze/admission.",
+  "findings": [],
+  "operations": "Read-only local evidence/source/Git-blob and stdlib JSON/hash/byte inspections, plus this additive review only. No project imports, tests, builds, native execution, network/CI, source changes or Git writes; no cleanup inspection or reviewer scratch owed."
+}

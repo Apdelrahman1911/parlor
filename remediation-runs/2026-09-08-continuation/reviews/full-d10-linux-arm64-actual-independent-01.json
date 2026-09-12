@@ -1,0 +1,218 @@
+{
+  "kind": "INDEPENDENT_D10_LINUX_ARM64_ACTUAL_DESKTOP_REVIEW",
+  "reviewer": "/root/ci_linux_arm",
+  "reviewed_at": "2026-09-11T15:54:14.657805+00:00",
+  "result": "PASS_DESKTOP_LANE_WITH_3_SKIPPED_CASES",
+  "identity": {
+    "run_id": 34610163120,
+    "run_attempt": 1,
+    "job_id": 103298347425,
+    "job": "desktop-linux-arm64",
+    "source_sha": "25cd7f57b031bebdcfb4931615782b906610703f",
+    "source_tree": "1e44e982216bfc4fda32dc370a0d1b3d77fee836"
+  },
+  "custody": {
+    "collector_receipt": "remediation-runs/2026-09-08-continuation/actions/34610163120/download-receipt.json",
+    "collector_receipt_sha256": "d89caddb61aa452599560efeb77aefd5aefda49cddefb88f22eadbe16f083e91",
+    "main_artifact_id": 10268322313,
+    "main_artifact_name": "desktop-verification-desktop-linux-arm64",
+    "main_zip_sha256": "4e3ad00ed7b1e2bb222973210ebe764a68ea712b28ff2b50a4a2a1bcd862e988",
+    "main_zip_bytes": 22160318,
+    "api_source_run_digest_and_local_zip_bound": true,
+    "ownership_member": "_temp/parlor-verification-34610163120-1-desktop-linux-arm64-ownership.json",
+    "ownership_sha256": "a87f96851243a2a9fb75584121b3a51548ca0412268c465babef04600e0c6068",
+    "ownership_source_tree_task_bound": true,
+    "log_zip": "run-attempt-1-logs.zip",
+    "log_zip_sha256": "e86553af4102f5e6724610da815d7e99e6d0de9ceb8f2979624ec07248082f46",
+    "log_member": "1_Desktop strict verification (Linux arm64).txt",
+    "log_member_bytes": 99140,
+    "log_member_sha256": "0e2fa234c98aa96fb8562d58040af8b54486e05ff031345097c3564b3dd0ebb7"
+  },
+  "execution": {
+    "api_lane_conclusion": "success",
+    "host": "ubuntu-24.04-arm; Linux/aarch64 assertions successful",
+    "jdk": "Temurin 21.0.12+101.0.LTS arm64",
+    "command": "./gradlew productionDesktopCheck --dependency-verification=strict --no-daemon --stacktrace --console=plain",
+    "result": "BUILD SUCCESSFUL in 4m 26s",
+    "actionable_tasks": 113,
+    "executed_tasks": 113,
+    "desktopTest_tasks_executed_not_cached": 13,
+    "composeApp_compileKotlinDesktop": "EXECUTED",
+    "productionDesktopCheck": "EXECUTED",
+    "command_window": [
+      "2026-09-11T14:27:11+00:00",
+      "2026-09-11T14:31:38.254544+00:00"
+    ]
+  },
+  "actual_xml": {
+    "xml_files": 203,
+    "cases": 1343,
+    "passed": 1340,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 3,
+    "bytes_read": 304789,
+    "selection": "Exact parlor/parlor/<frozen live module build root>/test-results/desktopTest/TEST-*.xml, collector current-candidate members only.",
+    "raw_member_hashes_counts_unique_case_ids_and_current_timestamps_verified": true,
+    "suite_duration_within_current_command": true,
+    "first_timestamp": "2026-09-11T14:30:00.279Z",
+    "last_timestamp": "2026-09-11T14:31:38.072Z",
+    "hostnames": [
+      "runnervmec22z"
+    ],
+    "member_manifest_digest": "74e9aae88471c7cadc5859e3f92d2b6f0188ba270565271f4330ecd77f6e83c4",
+    "module_columns": [
+      "xml_files",
+      "cases",
+      "passed",
+      "skipped",
+      "executed_desktopTest_log_line"
+    ],
+    "modules": {
+      "composeApp": [
+        21,
+        96,
+        96,
+        0,
+        861
+      ],
+      "game-modes/mafia": [
+        37,
+        297,
+        297,
+        0,
+        863
+      ],
+      "game-modes/whodunit": [
+        63,
+        360,
+        360,
+        0,
+        864
+      ],
+      "shared/content": [
+        5,
+        24,
+        24,
+        0,
+        804
+      ],
+      "shared/core": [
+        2,
+        12,
+        12,
+        0,
+        772
+      ],
+      "shared/design-system": [
+        18,
+        40,
+        40,
+        0,
+        820
+      ],
+      "shared/engine": [
+        5,
+        13,
+        13,
+        0,
+        797
+      ],
+      "shared/engine-testing": [
+        3,
+        6,
+        6,
+        0,
+        808
+      ],
+      "shared/networking": [
+        8,
+        34,
+        34,
+        0,
+        819
+      ],
+      "shared/networking-testing": [
+        2,
+        5,
+        5,
+        0,
+        828
+      ],
+      "shared/session": [
+        13,
+        145,
+        145,
+        0,
+        836
+      ],
+      "shared/storage": [
+        4,
+        31,
+        31,
+        0,
+        832
+      ],
+      "shared/transport-p2p": [
+        22,
+        280,
+        277,
+        3,
+        862
+      ]
+    }
+  },
+  "current_sentinels": [
+    {
+      "xml": "parlor/parlor/composeApp/build/test-results/desktopTest/TEST-com.parlor.app.DesktopPlatformBackHandlerTest.xml",
+      "sha256": "1044002998d6708f0e2d5ecfd1b6009ab6f02a812ecfc8adef6bbbe450a8ab20",
+      "passed": 4,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "xml": "parlor/parlor/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.localization.ProvideAppLanguageDesktopTest.xml",
+      "sha256": "3d74738340cc9a26759ddcfc78d3e2e1da872fa109bb28273362fe009e6b8eca",
+      "passed": 1,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "xml": "parlor/parlor/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.DesktopDependencyVerificationContractTest.xml",
+      "sha256": "c6a32cc6ccad4873f4dea10a9bc5a94f347bffbe0aa8075c956b5845c45fbeba",
+      "passed": 3,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "xml": "parlor/parlor/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.ProductionVerificationWorkflowContractTest.xml",
+      "sha256": "fea25f93b69ba5d73f3e62178cba3329755bdf1c2f55c26d8aa78b1b510c0930",
+      "passed": 12,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  ],
+  "skips": {
+    "suite": "com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest",
+    "cases": [
+      "peer_to_host_message_round_trips_and_host_to_peer_message_arrives_back()[desktop]",
+      "peer_can_join_a_hosted_room_and_membership_appears_on_host()[desktop]",
+      "host_broadcast_reaches_every_peer()[desktop]"
+    ],
+    "evidence": "Explicit skipped testcase nodes, no reason text in XML; excluded from PASS and runtime-validation count."
+  },
+  "scope": {
+    "strict_dependency_verification": "Actual command uses strict mode and current host-dependency checksum contract3/3 passes. No independent downloaded-artifact byte measurement claimed.",
+    "native": "NOT_APPLICABLE: raw log explicitly reports Kotlin/Native unsupported on linux-aarch64. Desktop/JVM only.",
+    "historical_members_excluded": 17279,
+    "prior_run_reports_used": false,
+    "cleanup": "EXCLUDED; separately owned",
+    "aggregate": "EXCLUDED; separately owned"
+  },
+  "findings": [],
+  "review_operations": "Read completed pinned collection and own raw ZIP members only. No network/build/recollection/extraction/source edits. Only this assigned receipt was written."
+}

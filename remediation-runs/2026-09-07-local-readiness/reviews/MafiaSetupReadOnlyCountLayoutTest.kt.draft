@@ -1,0 +1,86 @@
+package com.parlor.games.mafia.ui.screens.setup
+
+import androidx.compose.foundation.layout.size
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.semantics.SemanticsActions
+import androidx.compose.ui.test.ExperimentalTestApi
+import androidx.compose.ui.test.SemanticsMatcher
+import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.hasText
+import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performScrollTo
+import androidx.compose.ui.test.performSemanticsAction
+import androidx.compose.ui.test.runComposeUiTest
+import androidx.compose.ui.text.TextLayoutResult
+import androidx.compose.ui.unit.Density
+import androidx.compose.ui.unit.dp
+import com.parlor.designsystem.localization.AppLanguage
+import com.parlor.designsystem.localization.ProvideAppLanguage
+import com.parlor.designsystem.theme.ParlorAccent
+import com.parlor.designsystem.theme.ParlorAccentScope
+import com.parlor.designsystem.theme.ParlorTheme
+import com.parlor.designsystem.theme.ThemeMode
+import com.parlor.games.mafia.domain.settings.MafiaRoleCounts
+import com.parlor.games.mafia.domain.settings.MafiaSettings
+import com.parlor.games.mafia.domain.settings.MafiaSettingsValidation
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
+
+/** Negative-control sibling: short authored labels are not arbitrary player names. */
+@OptIn(ExperimentalTestApi::class)
+class MafiaSetupReadOnlyCountLayoutTest {
+    @Test
+    fun compact_english_civilian_count_stays_visible(): Unit = verifyCount(AppLanguage.English, 1f)
+
+    @Test
+    fun compact_arabic_civilian_count_stays_visible(): Unit = verifyCount(AppLanguage.Arabic, 1f)
+
+    @Test
+    fun compact_large_text_english_civilian_count_stays_visible(): Unit = verifyCount(AppLanguage.English, 2f)
+
+    @Test
+    fun compact_large_text_arabic_civilian_count_stays_visible(): Unit = verifyCount(AppLanguage.Arabic, 2f)
+
+    private fun verifyCount(language: AppLanguage, fontScale: Float): Unit = runComposeUiTest {
+        val settings = MafiaSettings(MafiaRoleCounts(mafia = 1, detective = 0, doctor = 0))
+        val playerCount = MafiaSettings.MAX_PLAYERS
+        assertEquals(MafiaSettingsValidation.Valid, settings.validate(playerCount))
+        val label = if (language == AppLanguage.Arabic) "مدني" else "Civilian"
+        val expected = settings.roleCounts.civilians(playerCount).toString()
+        setContent {
+            CompositionLocalProvider(LocalDensity provides Density(1f, fontScale)) {
+                ProvideAppLanguage(language) {
+                    ParlorTheme(themeMode = ThemeMode.Light, reducedMotion = true) {
+                        ParlorAccentScope(ParlorAccent.Crimson) {
+                            MafiaSetupScreen(
+                                playerCount = playerCount,
+                                initialSettings = settings,
+                                onStart = {},
+                                modifier = Modifier.size(320.dp, 640.dp),
+                            )
+                        }
+                    }
+                }
+            }
+        }
+        val name = onNodeWithText(label, useUnmergedTree = true).performScrollTo()
+        val row = checkNotNull(name.fetchSemanticsNode().layoutInfo.parentInfo)
+        val count = onNode(
+            hasText(expected) and SemanticsMatcher("value in the civilian read-only row") {
+                it.layoutInfo.parentInfo === row
+            },
+            useUnmergedTree = true,
+        )
+        val measured = count.fetchSemanticsNode().size
+        assertTrue(measured.width > 0 && measured.height > 0, "$language fontScale=$fontScale: $measured")
+        count.performScrollTo().assertIsDisplayed()
+        val layouts = mutableListOf<TextLayoutResult>()
+        count.performSemanticsAction(SemanticsActions.GetTextLayoutResult) { it(layouts) }
+        assertEquals(1, layouts.size)
+        assertFalse(layouts.single().hasVisualOverflow)
+    }
+}

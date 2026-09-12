@@ -1,0 +1,3555 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/release_fix_review",
+  "created_at": "2026-09-07T21:26:46.274423+00:00",
+  "method": "Read-only XML parsing and exact successful Python method lines extracted from retained raw CI34152138368 job logs; selected methods only, not another test execution. C01/C05 task events checked against raw logs. Test sources hashed at current checkout and Git CI blob.",
+  "source_commit_executed": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+  "current_checkout": "b6e1947c62661631d0593038db7f64dbf25f720e",
+  "original16_and_timer_scope_note": "Repeated platform executions are separate observations, not additional defects or unique test methods. Eight corrected active Jupiter signatures execute; two corrected physical methods remain skipped alongside one previously discoverable physical method.",
+  "read_only_parser_note": "Default python3 Homebrew3.14.6 failed to load pyexpat due to missing system libexpat symbol. Parsing rerun successfully with /usr/bin/python3 3.9.6; no environment changes or application/build inference.",
+  "rows": [
+    {
+      "key": "C01:com.parlor.games.mafia.domain.MafiaDoctorRulesTest",
+      "issue_ids": [
+        "MF-C1"
+      ],
+      "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+      "ci_run_id": 34152138368,
+      "job": "C01",
+      "task": ":game-modes:mafia:desktopTest",
+      "task_log": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/101836439057.log",
+      "task_log_sha256": "80dbdb299846b9b41835e4b436f12213dd8cbf5f0075b36a99c3eb62728bed7a",
+      "actual_task_events": [
+        {
+          "line": 2256,
+          "text": "2026-09-07T18:42:54.8590173Z > Task :game-modes:mafia:desktopTest"
+        }
+      ],
+      "xml_path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/desktop-android-verification/parlor/parlor/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.MafiaDoctorRulesTest.xml",
+      "xml_sha256": "2ecfec74f3ea53ca2868e21569b6f0c8a2fae3b02b9283e75ded6f59c2251176",
+      "suite": "com.parlor.games.mafia.domain.MafiaDoctorRulesTest",
+      "timestamp": "2026-09-07T18:42:26.997Z",
+      "raw_suite_counts": {
+        "tests": 8,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "selected_counts": {
+        "PASS": 8,
+        "FAIL": 0,
+        "SKIP": 0
+      },
+      "selection": "All methods in raw suite",
+      "descriptors": [
+        {
+          "name": "enabled_setting_saves_same_living_target_for_four_consecutive_nights()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "repeat_is_default_off_for_every_supported_player_count()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "enabling_repeats_does_not_allow_dead_targets_or_a_non_doctor_actor()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "skipped_night_clears_previous_effective_target_but_consumes_submission()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "repeat_and_self_protection_settings_are_independent()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "setup_draft_and_action_codec_commit_selection_once_without_changing_assignment()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "disabled_setting_rejects_repeat_and_allows_alternating_targets()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "first_valid_target_cannot_be_replaced_or_skipped_later_that_night()[desktop]",
+          "outcome": "PASS"
+        }
+      ],
+      "current_test_sources": [
+        {
+          "path": "game-modes/mafia/src/commonTest/kotlin/com/parlor/games/mafia/domain/MafiaDoctorRulesTest.kt",
+          "sha256": "5fe2144436f87162e2d29bcbef6d57ac9b9cede6ab328b406b63cceebcdd501b",
+          "same_bytes_as_ci": true
+        }
+      ]
+    },
+    {
+      "key": "C01:com.parlor.games.mafia.multidevice.MafiaDoctorLanTest",
+      "issue_ids": [
+        "MF-C1"
+      ],
+      "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+      "ci_run_id": 34152138368,
+      "job": "C01",
+      "task": ":game-modes:mafia:desktopTest",
+      "task_log": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/101836439057.log",
+      "task_log_sha256": "80dbdb299846b9b41835e4b436f12213dd8cbf5f0075b36a99c3eb62728bed7a",
+      "actual_task_events": [
+        {
+          "line": 2256,
+          "text": "2026-09-07T18:42:54.8590173Z > Task :game-modes:mafia:desktopTest"
+        }
+      ],
+      "xml_path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/desktop-android-verification/parlor/parlor/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.multidevice.MafiaDoctorLanTest.xml",
+      "xml_sha256": "7a8ec298f5ec7727259b1c3af6246b0b93c64e3bdfbab8b1f8f9e4a6d348e891",
+      "suite": "com.parlor.games.mafia.multidevice.MafiaDoctorLanTest",
+      "timestamp": "2026-09-07T18:42:38.265Z",
+      "raw_suite_counts": {
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "selected_counts": {
+        "PASS": 2,
+        "FAIL": 0,
+        "SKIP": 0
+      },
+      "selection": "All methods in raw suite",
+      "descriptors": [
+        {
+          "name": "only_host_can_commit_setup_selection_and_no_one_can_change_it_after_start()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "rejoin_preserves_doctor_restriction_setting_and_first_submission_without_host_secrets()[desktop]",
+          "outcome": "PASS"
+        }
+      ],
+      "current_test_sources": [
+        {
+          "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/multidevice/MafiaDoctorLanTest.kt",
+          "sha256": "570e8f18c12f15c480a48c38e6a09025d5aef2ab1aa38cbac246b2f2f0b5a5a5",
+          "same_bytes_as_ci": true
+        }
+      ]
+    },
+    {
+      "key": "C01:com.parlor.games.mafia.snapshot.MafiaDoctorHistoryRecoveryTest",
+      "issue_ids": [
+        "MF-C1"
+      ],
+      "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+      "ci_run_id": 34152138368,
+      "job": "C01",
+      "task": ":game-modes:mafia:desktopTest",
+      "task_log": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/101836439057.log",
+      "task_log_sha256": "80dbdb299846b9b41835e4b436f12213dd8cbf5f0075b36a99c3eb62728bed7a",
+      "actual_task_events": [
+        {
+          "line": 2256,
+          "text": "2026-09-07T18:42:54.8590173Z > Task :game-modes:mafia:desktopTest"
+        }
+      ],
+      "xml_path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/desktop-android-verification/parlor/parlor/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.snapshot.MafiaDoctorHistoryRecoveryTest.xml",
+      "xml_sha256": "d144ede88018c78b6ac367fdde46278fd0224dfae45c1da4b1be3807fab8ac81",
+      "suite": "com.parlor.games.mafia.snapshot.MafiaDoctorHistoryRecoveryTest",
+      "timestamp": "2026-09-07T18:42:39.746Z",
+      "raw_suite_counts": {
+        "tests": 15,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "selected_counts": {
+        "PASS": 15,
+        "FAIL": 0,
+        "SKIP": 0
+      },
+      "selection": "All methods in raw suite",
+      "descriptors": [
+        {
+          "name": "killed_doctor_keeps_last_effective_target_until_next_resolution_then_clears_it()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "terminal_cleanup_does_not_require_historical_protection_to_be_erased()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "repeated_protection_history_is_valid_only_with_setting_enabled()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "mafia_coordination_revote_preserves_doctor_history_and_own_submission()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "resumed_local_controller_enforces_the_persisted_repeat_setting()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "peer_projections_keep_only_own_private_history_and_do_not_require_host_logs()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "no_doctor_configuration_keeps_null_history_and_rejects_foreign_private_history()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "private_previous_protection_must_match_retained_history_in_every_active_phase()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "initial_setup_role_assignment_and_first_night_have_no_previous_protection()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "null_effective_protection_cannot_be_replaced_by_an_old_legal_target()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "doctor_eliminated_by_day_vote_retains_previous_night_binding()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "history_binding_also_applies_during_a_day_revote()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "latest_binding_survives_history_capping_without_requiring_missing_predecessors()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "death_of_previous_target_does_not_erase_last_effective_protection()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "normal_terminal_win_also_clears_private_history_without_discarding_host_history()[desktop]",
+          "outcome": "PASS"
+        }
+      ],
+      "current_test_sources": [
+        {
+          "path": "game-modes/mafia/src/commonTest/kotlin/com/parlor/games/mafia/snapshot/MafiaDoctorHistoryRecoveryTest.kt",
+          "sha256": "d1d830e0330d5a47f2011b9f87d025a5ce1e0bc2d3cb08be742ca1ff4403f743",
+          "same_bytes_as_ci": true
+        }
+      ]
+    },
+    {
+      "key": "C01:com.parlor.games.mafia.ui.components.MafiaCoverContrastTest",
+      "issue_ids": [
+        "M-READINESS-COVER"
+      ],
+      "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+      "ci_run_id": 34152138368,
+      "job": "C01",
+      "task": ":game-modes:mafia:desktopTest",
+      "task_log": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/101836439057.log",
+      "task_log_sha256": "80dbdb299846b9b41835e4b436f12213dd8cbf5f0075b36a99c3eb62728bed7a",
+      "actual_task_events": [
+        {
+          "line": 2256,
+          "text": "2026-09-07T18:42:54.8590173Z > Task :game-modes:mafia:desktopTest"
+        }
+      ],
+      "xml_path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/desktop-android-verification/parlor/parlor/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.components.MafiaCoverContrastTest.xml",
+      "xml_sha256": "8969bd9f1aa6605d3a5bdc623bbebc0ea42b57abd78e9571e6f65fa6f44fe577",
+      "suite": "com.parlor.games.mafia.ui.components.MafiaCoverContrastTest",
+      "timestamp": "2026-09-07T18:42:40.549Z",
+      "raw_suite_counts": {
+        "tests": 8,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "selected_counts": {
+        "PASS": 8,
+        "FAIL": 0,
+        "SKIP": 0
+      },
+      "selection": "All methods in raw suite",
+      "descriptors": [
+        {
+          "name": "arabicDarkCover()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "arabicLightCover()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "arabicLightLargeText()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "englishDarkLargeText()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "englishLightLargeText()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "arabicDarkLargeText()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "englishLightCover()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "englishDarkCover()[desktop]",
+          "outcome": "PASS"
+        }
+      ],
+      "current_test_sources": [
+        {
+          "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/components/MafiaCoverContrastTest.kt",
+          "sha256": "6b063b9bc4e75626fcabd5330c6102d3a0329e35b57f2aa2c760d52b5e27444e",
+          "same_bytes_as_ci": true
+        }
+      ]
+    },
+    {
+      "key": "C01:com.parlor.games.mafia.ui.flow.multidevice.MafiaHostLanguageContinuityTest",
+      "issue_ids": [
+        "DS-C01"
+      ],
+      "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+      "ci_run_id": 34152138368,
+      "job": "C01",
+      "task": ":game-modes:mafia:desktopTest",
+      "task_log": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/101836439057.log",
+      "task_log_sha256": "80dbdb299846b9b41835e4b436f12213dd8cbf5f0075b36a99c3eb62728bed7a",
+      "actual_task_events": [
+        {
+          "line": 2256,
+          "text": "2026-09-07T18:42:54.8590173Z > Task :game-modes:mafia:desktopTest"
+        }
+      ],
+      "xml_path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/desktop-android-verification/parlor/parlor/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.flow.multidevice.MafiaHostLanguageContinuityTest.xml",
+      "xml_sha256": "c6b955dc42b33460b2c0705a6ff85e58612205d2a2b3bf4830f031eaba9bc27d",
+      "suite": "com.parlor.games.mafia.ui.flow.multidevice.MafiaHostLanguageContinuityTest",
+      "timestamp": "2026-09-07T18:42:44.468Z",
+      "raw_suite_counts": {
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "selected_counts": {
+        "PASS": 2,
+        "FAIL": 0,
+        "SKIP": 0
+      },
+      "selection": "All methods in raw suite",
+      "descriptors": [
+        {
+          "name": "languageChangesAndRemountRetainStartedHostWithRepeatProtectionOn()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "suspendedHostRetainsIdentityAndGuardsCommandsWithRepeatProtectionOff()[desktop]",
+          "outcome": "PASS"
+        }
+      ],
+      "current_test_sources": [
+        {
+          "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaHostLanguageContinuityTest.kt",
+          "sha256": "027f36dda4a27b68fad6d5abf1740f9778cce897a2ba7dea7fc152acf7bce743",
+          "same_bytes_as_ci": true
+        }
+      ]
+    },
+    {
+      "key": "C01:com.parlor.games.mafia.ui.screens.MafiaTallyLayoutTest",
+      "issue_ids": [
+        "M-READINESS-TALLY"
+      ],
+      "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+      "ci_run_id": 34152138368,
+      "job": "C01",
+      "task": ":game-modes:mafia:desktopTest",
+      "task_log": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/101836439057.log",
+      "task_log_sha256": "80dbdb299846b9b41835e4b436f12213dd8cbf5f0075b36a99c3eb62728bed7a",
+      "actual_task_events": [
+        {
+          "line": 2256,
+          "text": "2026-09-07T18:42:54.8590173Z > Task :game-modes:mafia:desktopTest"
+        }
+      ],
+      "xml_path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/desktop-android-verification/parlor/parlor/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.MafiaTallyLayoutTest.xml",
+      "xml_sha256": "1e7c2f63ee6792dee141358b26dd838172d9815fece5a4d25bb296ba5e3113d5",
+      "suite": "com.parlor.games.mafia.ui.screens.MafiaTallyLayoutTest",
+      "timestamp": "2026-09-07T18:42:47.217Z",
+      "raw_suite_counts": {
+        "tests": 8,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "selected_counts": {
+        "PASS": 8,
+        "FAIL": 0,
+        "SKIP": 0
+      },
+      "selection": "All methods in raw suite",
+      "descriptors": [
+        {
+          "name": "compact_large_text_arabic_mafia_revote_tally_keeps_each_count_visible()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "compact_large_text_english_mafia_revote_tally_keeps_each_count_visible()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "compact_large_text_english_day_tally_keeps_each_count_visible()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "compact_arabic_mafia_revote_tally_keeps_each_count_visible()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "compact_english_mafia_revote_tally_keeps_each_count_visible()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "compact_english_day_tally_keeps_each_count_visible()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "compact_large_text_arabic_day_tally_keeps_each_count_visible()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "compact_arabic_day_tally_keeps_each_count_visible()[desktop]",
+          "outcome": "PASS"
+        }
+      ],
+      "current_test_sources": [
+        {
+          "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/MafiaTallyLayoutTest.kt",
+          "sha256": "bdfe659970993e89ab0a59043e545451401ece17c60cddcdf6bcaba8a1fabb6f",
+          "same_bytes_as_ci": true
+        }
+      ]
+    },
+    {
+      "key": "C01:com.parlor.games.mafia.ui.screens.night.DoctorTargetEligibilityTest",
+      "issue_ids": [
+        "MF-C1"
+      ],
+      "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+      "ci_run_id": 34152138368,
+      "job": "C01",
+      "task": ":game-modes:mafia:desktopTest",
+      "task_log": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/101836439057.log",
+      "task_log_sha256": "80dbdb299846b9b41835e4b436f12213dd8cbf5f0075b36a99c3eb62728bed7a",
+      "actual_task_events": [
+        {
+          "line": 2256,
+          "text": "2026-09-07T18:42:54.8590173Z > Task :game-modes:mafia:desktopTest"
+        }
+      ],
+      "xml_path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/desktop-android-verification/parlor/parlor/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.night.DoctorTargetEligibilityTest.xml",
+      "xml_sha256": "eeafb24b1827f6544610beee66766d29cf0c4b687eaec6fe68f661ae25411c14",
+      "suite": "com.parlor.games.mafia.ui.screens.night.DoctorTargetEligibilityTest",
+      "timestamp": "2026-09-07T18:42:50.244Z",
+      "raw_suite_counts": {
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "selected_counts": {
+        "PASS": 2,
+        "FAIL": 0,
+        "SKIP": 0
+      },
+      "selection": "All methods in raw suite",
+      "descriptors": [
+        {
+          "name": "canonical_local_and_projected_lan_choices_honor_both_independent_settings()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "eligibility_matches_reducer_acceptance_before_each_first_submission()[desktop]",
+          "outcome": "PASS"
+        }
+      ],
+      "current_test_sources": [
+        {
+          "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/night/DoctorTargetEligibilityTest.kt",
+          "sha256": "c2d196af55bbf14d3518973e86df9da3de3954ffbab27038aca4c2ef14ed70f1",
+          "same_bytes_as_ci": true
+        }
+      ]
+    },
+    {
+      "key": "C01:com.parlor.games.mafia.ui.screens.postgame.PostGameScreenLayoutTest",
+      "issue_ids": [
+        "M-C03"
+      ],
+      "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+      "ci_run_id": 34152138368,
+      "job": "C01",
+      "task": ":game-modes:mafia:desktopTest",
+      "task_log": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/101836439057.log",
+      "task_log_sha256": "80dbdb299846b9b41835e4b436f12213dd8cbf5f0075b36a99c3eb62728bed7a",
+      "actual_task_events": [
+        {
+          "line": 2256,
+          "text": "2026-09-07T18:42:54.8590173Z > Task :game-modes:mafia:desktopTest"
+        }
+      ],
+      "xml_path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/desktop-android-verification/parlor/parlor/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.postgame.PostGameScreenLayoutTest.xml",
+      "xml_sha256": "2eb055c9f46efdb56bf04101d9e2519983ad6afe3d1c45975803adc8268bab6b",
+      "suite": "com.parlor.games.mafia.ui.screens.postgame.PostGameScreenLayoutTest",
+      "timestamp": "2026-09-07T18:42:50.266Z",
+      "raw_suite_counts": {
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "selected_counts": {
+        "PASS": 6,
+        "FAIL": 0,
+        "SKIP": 0
+      },
+      "selection": "All methods in raw suite",
+      "descriptors": [
+        {
+          "name": "compact_arabic_long_name_does_not_consume_final_role_width()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "compact_english_long_name_does_not_consume_final_role_width()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "landscape_large_text_arabic_roles_remain_scrollable()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "compact_large_text_english_preserves_every_final_role()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "landscape_large_text_english_roles_remain_scrollable()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "compact_large_text_arabic_preserves_every_final_role()[desktop]",
+          "outcome": "PASS"
+        }
+      ],
+      "current_test_sources": [
+        {
+          "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/postgame/PostGameScreenLayoutTest.kt",
+          "sha256": "27b4894a394bf06952bc1435324ab23acb5c7f38242b65df5feb01e8df16b777",
+          "same_bytes_as_ci": true
+        }
+      ]
+    },
+    {
+      "key": "C01:com.parlor.games.mafia.ui.screens.setup.MafiaDoctorSettingUiTest",
+      "issue_ids": [
+        "MF-C1"
+      ],
+      "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+      "ci_run_id": 34152138368,
+      "job": "C01",
+      "task": ":game-modes:mafia:desktopTest",
+      "task_log": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/101836439057.log",
+      "task_log_sha256": "80dbdb299846b9b41835e4b436f12213dd8cbf5f0075b36a99c3eb62728bed7a",
+      "actual_task_events": [
+        {
+          "line": 2256,
+          "text": "2026-09-07T18:42:54.8590173Z > Task :game-modes:mafia:desktopTest"
+        }
+      ],
+      "xml_path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/desktop-android-verification/parlor/parlor/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.setup.MafiaDoctorSettingUiTest.xml",
+      "xml_sha256": "2364564959598b79aa00ecddbfb15317bdc5aa81b5240995dcdbb11bfde027cd",
+      "suite": "com.parlor.games.mafia.ui.screens.setup.MafiaDoctorSettingUiTest",
+      "timestamp": "2026-09-07T18:42:54.820Z",
+      "raw_suite_counts": {
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "selected_counts": {
+        "PASS": 2,
+        "FAIL": 0,
+        "SKIP": 0
+      },
+      "selection": "All methods in raw suite",
+      "descriptors": [
+        {
+          "name": "arabic_consecutive_nights_toggle_defaults_off_and_commits_on_and_off()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "english_consecutive_nights_toggle_defaults_off_and_commits_on_and_off()[desktop]",
+          "outcome": "PASS"
+        }
+      ],
+      "current_test_sources": [
+        {
+          "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaDoctorSettingUiTest.kt",
+          "sha256": "47720879336a7ac14436a6cc9e186cce3afc8d00743a1339ff161c0fefb58055",
+          "same_bytes_as_ci": true
+        }
+      ]
+    },
+    {
+      "key": "C01:com.parlor.games.mafia.ui.screens.setup.MafiaSetupReadOnlyCountLayoutTest",
+      "issue_ids": [
+        "M-READINESS-TALLY"
+      ],
+      "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+      "ci_run_id": 34152138368,
+      "job": "C01",
+      "task": ":game-modes:mafia:desktopTest",
+      "task_log": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/101836439057.log",
+      "task_log_sha256": "80dbdb299846b9b41835e4b436f12213dd8cbf5f0075b36a99c3eb62728bed7a",
+      "actual_task_events": [
+        {
+          "line": 2256,
+          "text": "2026-09-07T18:42:54.8590173Z > Task :game-modes:mafia:desktopTest"
+        }
+      ],
+      "xml_path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/desktop-android-verification/parlor/parlor/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.setup.MafiaSetupReadOnlyCountLayoutTest.xml",
+      "xml_sha256": "c013cd64de94672e7394bff727d29f5299d73194c34a5121563f70de426854f0",
+      "suite": "com.parlor.games.mafia.ui.screens.setup.MafiaSetupReadOnlyCountLayoutTest",
+      "timestamp": "2026-09-07T18:42:58.954Z",
+      "raw_suite_counts": {
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "selected_counts": {
+        "PASS": 4,
+        "FAIL": 0,
+        "SKIP": 0
+      },
+      "selection": "All methods in raw suite",
+      "descriptors": [
+        {
+          "name": "compact_arabic_civilian_count_stays_visible()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "compact_large_text_arabic_civilian_count_stays_visible()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "compact_english_civilian_count_stays_visible()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "compact_large_text_english_civilian_count_stays_visible()[desktop]",
+          "outcome": "PASS"
+        }
+      ],
+      "current_test_sources": [
+        {
+          "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaSetupReadOnlyCountLayoutTest.kt",
+          "sha256": "9e9b7492aecaf8689cc007056e74d5e8c9cce980a1851d853760820b7a2bb118",
+          "same_bytes_as_ci": true
+        }
+      ]
+    },
+    {
+      "key": "C01:com.parlor.games.mafia.ui.screens.setup.MafiaSetupStepperLayoutTest",
+      "issue_ids": [
+        "FOLLOWUP-MAFIA-STEPPER"
+      ],
+      "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+      "ci_run_id": 34152138368,
+      "job": "C01",
+      "task": ":game-modes:mafia:desktopTest",
+      "task_log": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/101836439057.log",
+      "task_log_sha256": "80dbdb299846b9b41835e4b436f12213dd8cbf5f0075b36a99c3eb62728bed7a",
+      "actual_task_events": [
+        {
+          "line": 2256,
+          "text": "2026-09-07T18:42:54.8590173Z > Task :game-modes:mafia:desktopTest"
+        }
+      ],
+      "xml_path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/desktop-android-verification/parlor/parlor/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.setup.MafiaSetupStepperLayoutTest.xml",
+      "xml_sha256": "670292314f9a774d241a053a664f4918eca779161dc84f03d21f5949d6bfa636",
+      "suite": "com.parlor.games.mafia.ui.screens.setup.MafiaSetupStepperLayoutTest",
+      "timestamp": "2026-09-07T18:42:59.963Z",
+      "raw_suite_counts": {
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "selected_counts": {
+        "PASS": 4,
+        "FAIL": 0,
+        "SKIP": 0
+      },
+      "selection": "All methods in raw suite",
+      "descriptors": [
+        {
+          "name": "arabic_compact_stepper_controls_keep_their_full_size()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "english_compact_stepper_controls_keep_their_full_size()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "arabic_compact_large_text_stepper_controls_keep_their_full_size()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "english_compact_large_text_stepper_controls_keep_their_full_size()[desktop]",
+          "outcome": "PASS"
+        }
+      ],
+      "current_test_sources": [
+        {
+          "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaSetupStepperLayoutTest.kt",
+          "sha256": "306d7e76f6275440b9ceab2150b8e4cbcd8d6e8e47a7fe9ad3fcea45fad9d302",
+          "same_bytes_as_ci": true
+        }
+      ]
+    },
+    {
+      "key": "C01:com.parlor.games.mafia.ui.screens.setup.MafiaSetupToggleLayoutTest",
+      "issue_ids": [
+        "FOLLOWUP-MAFIA-TOGGLE"
+      ],
+      "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+      "ci_run_id": 34152138368,
+      "job": "C01",
+      "task": ":game-modes:mafia:desktopTest",
+      "task_log": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/101836439057.log",
+      "task_log_sha256": "80dbdb299846b9b41835e4b436f12213dd8cbf5f0075b36a99c3eb62728bed7a",
+      "actual_task_events": [
+        {
+          "line": 2256,
+          "text": "2026-09-07T18:42:54.8590173Z > Task :game-modes:mafia:desktopTest"
+        }
+      ],
+      "xml_path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/desktop-android-verification/parlor/parlor/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.setup.MafiaSetupToggleLayoutTest.xml",
+      "xml_sha256": "8c58471e38dc27c8c0a93209150f852482ce78403ea23b02434b093a04f2763f",
+      "suite": "com.parlor.games.mafia.ui.screens.setup.MafiaSetupToggleLayoutTest",
+      "timestamp": "2026-09-07T18:43:02.328Z",
+      "raw_suite_counts": {
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "selected_counts": {
+        "PASS": 4,
+        "FAIL": 0,
+        "SKIP": 0
+      },
+      "selection": "All methods in raw suite",
+      "descriptors": [
+        {
+          "name": "english_compact_toggle_keeps_room_for_its_switch()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "arabic_compact_large_text_toggle_keeps_room_for_its_switch()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "english_compact_large_text_toggle_keeps_room_for_its_switch()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "arabic_compact_toggle_keeps_room_for_its_switch()[desktop]",
+          "outcome": "PASS"
+        }
+      ],
+      "current_test_sources": [
+        {
+          "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaSetupToggleLayoutTest.kt",
+          "sha256": "36bdc52bb345999bd8a43187ac74a4f44e1c9aa618419e7088cfe0b09644be50",
+          "same_bytes_as_ci": true
+        }
+      ]
+    },
+    {
+      "key": "C01:com.parlor.games.whodunit.content.TestingStoryChronologyTest",
+      "issue_ids": [
+        "WD-C2"
+      ],
+      "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+      "ci_run_id": 34152138368,
+      "job": "C01",
+      "task": ":game-modes:whodunit:desktopTest",
+      "task_log": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/101836439057.log",
+      "task_log_sha256": "80dbdb299846b9b41835e4b436f12213dd8cbf5f0075b36a99c3eb62728bed7a",
+      "actual_task_events": [
+        {
+          "line": 2275,
+          "text": "2026-09-07T18:43:26.2563161Z > Task :game-modes:whodunit:desktopTest"
+        }
+      ],
+      "xml_path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/desktop-android-verification/parlor/parlor/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.TestingStoryChronologyTest.xml",
+      "xml_sha256": "b7a7cb095e07cfb9f346852a6ca1e407ba8cf1da3ad772fc461e095bbda1a050",
+      "suite": "com.parlor.games.whodunit.content.TestingStoryChronologyTest",
+      "timestamp": "2026-09-07T18:43:00.920Z",
+      "raw_suite_counts": {
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "selected_counts": {
+        "PASS": 5,
+        "FAIL": 0,
+        "SKIP": 0
+      },
+      "selection": "All methods in raw suite",
+      "descriptors": [
+        {
+          "name": "nadimsShortCellarWaitMatchesTheFinalAccountWithoutChangingHisLie()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "jamesLightsOneCigarAt915WhileHis910AlibiRemainsFalse()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "eachCorrectedTestingStoryUsesItsNextContentVersionWithoutSchemaChanges()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "laylaHasOne905OutageAcrossIntroEvidenceAndWitnesses()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "karims940PoisoningPrecedesHisCorroborated1015RecordsAlibi()[desktop]",
+          "outcome": "PASS"
+        }
+      ],
+      "current_test_sources": [
+        {
+          "path": "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/TestingStoryChronologyTest.kt",
+          "sha256": "13f75cdb5e546242706b26fd4896eb0b778942b956532d52f239662457f45231",
+          "same_bytes_as_ci": true
+        }
+      ]
+    },
+    {
+      "key": "C01:com.parlor.games.whodunit.content.TestingStoryCompatibilityTest",
+      "issue_ids": [
+        "WD-C2"
+      ],
+      "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+      "ci_run_id": 34152138368,
+      "job": "C01",
+      "task": ":game-modes:whodunit:desktopTest",
+      "task_log": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/101836439057.log",
+      "task_log_sha256": "80dbdb299846b9b41835e4b436f12213dd8cbf5f0075b36a99c3eb62728bed7a",
+      "actual_task_events": [
+        {
+          "line": 2275,
+          "text": "2026-09-07T18:43:26.2563161Z > Task :game-modes:whodunit:desktopTest"
+        }
+      ],
+      "xml_path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/desktop-android-verification/parlor/parlor/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.TestingStoryCompatibilityTest.xml",
+      "xml_sha256": "fdcb68bfa3b98ab2c40209fbf9f31b28199a775a373e3372756e5b5c9778d97d",
+      "suite": "com.parlor.games.whodunit.content.TestingStoryCompatibilityTest",
+      "timestamp": "2026-09-07T18:43:01.182Z",
+      "raw_suite_counts": {
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "selected_counts": {
+        "PASS": 4,
+        "FAIL": 0,
+        "SKIP": 0
+      },
+      "selection": "All methods in raw suite",
+      "descriptors": [
+        {
+          "name": "correctedStoriesDoNotReuseAnyRecordedEarlierCanonicalContentDigest()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "currentSaveRoundTripsButOldOrCrossedIdentityIsRetainedAndRejected()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "identityLessPreClueSavesCannotSilentlyBindToInstalledStoryProse()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "lanOffersMatchOnlyTheExactLoadedRevisionForAllCorrectedCasesAndModes()[desktop]",
+          "outcome": "PASS"
+        }
+      ],
+      "current_test_sources": [
+        {
+          "path": "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/TestingStoryCompatibilityTest.kt",
+          "sha256": "a5d75b8dbdc6de73906be77cc15225e503583643172642da32197377fca8af6c",
+          "same_bytes_as_ci": true
+        }
+      ]
+    },
+    {
+      "key": "C01:com.parlor.games.whodunit.content.TestingStoryFollowupChronologyTest",
+      "issue_ids": [
+        "WD-C2"
+      ],
+      "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+      "ci_run_id": 34152138368,
+      "job": "C01",
+      "task": ":game-modes:whodunit:desktopTest",
+      "task_log": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/101836439057.log",
+      "task_log_sha256": "80dbdb299846b9b41835e4b436f12213dd8cbf5f0075b36a99c3eb62728bed7a",
+      "actual_task_events": [
+        {
+          "line": 2275,
+          "text": "2026-09-07T18:43:26.2563161Z > Task :game-modes:whodunit:desktopTest"
+        }
+      ],
+      "xml_path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/desktop-android-verification/parlor/parlor/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.TestingStoryFollowupChronologyTest.xml",
+      "xml_sha256": "761167af2e7beb43f1829c39effe4bd9efd3b1bb776dc21f6e8ad2627216354e",
+      "suite": "com.parlor.games.whodunit.content.TestingStoryFollowupChronologyTest",
+      "timestamp": "2026-09-07T18:43:02.885Z",
+      "raw_suite_counts": {
+        "tests": 13,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "selected_counts": {
+        "PASS": 13,
+        "FAIL": 0,
+        "SKIP": 0
+      },
+      "selection": "All methods in raw suite",
+      "descriptors": [
+        {
+          "name": "viviennesBurnedDocumentStaysInTheLibraryAcrossEvidenceAndFinalAccount()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "zahraRemainsTheElderSiblingWithoutRewritingHerFiftyYearHistory()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "laylasSingle845SpeechPreservesRanasEarlierTenMinuteDetour()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "magdasElderSiblingAgeAllowsHerExistingCaregiverHistory()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "threeLaylaMethodsSay858LikeTheirOwnTimelines()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "walidsEightMinuteReturnIntervalDoesNotRewriteHisFalseAlibiOrWitnesses()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "refaatsOriginalNotePredatesHisDiscoveryAndMorningReread()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "fadisFollowingMorningNoteAgreesWithHisBriefAndThursdaySettingMetadata()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "danielsLampClueUsesTenMinutesWithoutCorrectingHisDeliberateLie()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "fatmasPreparationMatchesHerFactualTimelineAndBottleEvidence()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "zamalekApproximateDelayDoesNotImposeAnImpossibleTwoHourMinimum()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "amalBringsHerFathersNoteButTarekKeepsHisUncleRelationship()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "mokhtarsTwoYearHistoryMatchesTheAuditAndFinalAccount()[desktop]",
+          "outcome": "PASS"
+        }
+      ],
+      "current_test_sources": [
+        {
+          "path": "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/TestingStoryFollowupChronologyTest.kt",
+          "sha256": "b2e006c1064476413b6196a737fe8b26e790c1ffbc046989174c5cd471920dfd",
+          "same_bytes_as_ci": true
+        }
+      ]
+    },
+    {
+      "key": "C01:com.parlor.games.whodunit.content.TestingStoryGameTraceTest",
+      "issue_ids": [
+        "WD-C2"
+      ],
+      "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+      "ci_run_id": 34152138368,
+      "job": "C01",
+      "task": ":game-modes:whodunit:desktopTest",
+      "task_log": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/101836439057.log",
+      "task_log_sha256": "80dbdb299846b9b41835e4b436f12213dd8cbf5f0075b36a99c3eb62728bed7a",
+      "actual_task_events": [
+        {
+          "line": 2275,
+          "text": "2026-09-07T18:43:26.2563161Z > Task :game-modes:whodunit:desktopTest"
+        }
+      ],
+      "xml_path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/desktop-android-verification/parlor/parlor/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.TestingStoryGameTraceTest.xml",
+      "xml_sha256": "18046f37dea63ee1cae4dbf8f48e98dbced35750261d7fd309edc92b7247e865",
+      "suite": "com.parlor.games.whodunit.content.TestingStoryGameTraceTest",
+      "timestamp": "2026-09-07T18:43:03.046Z",
+      "raw_suite_counts": {
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "selected_counts": {
+        "PASS": 1,
+        "FAIL": 0,
+        "SKIP": 0
+      },
+      "selection": "All methods in raw suite",
+      "descriptors": [
+        {
+          "name": "everyBundledCaseKillerAndModeCompletesDeterministicallyAndRoundTrips()[desktop]",
+          "outcome": "PASS"
+        }
+      ],
+      "current_test_sources": [
+        {
+          "path": "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/TestingStoryGameTraceTest.kt",
+          "sha256": "488152774e309e4c297896a995000b712cd4cdc53a1582c12f702cb6d40ba99d",
+          "same_bytes_as_ci": true
+        }
+      ]
+    },
+    {
+      "key": "C01:com.parlor.games.whodunit.content.TestingStoryRemainingChronologyTest",
+      "issue_ids": [
+        "WD-C2"
+      ],
+      "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+      "ci_run_id": 34152138368,
+      "job": "C01",
+      "task": ":game-modes:whodunit:desktopTest",
+      "task_log": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/101836439057.log",
+      "task_log_sha256": "80dbdb299846b9b41835e4b436f12213dd8cbf5f0075b36a99c3eb62728bed7a",
+      "actual_task_events": [
+        {
+          "line": 2275,
+          "text": "2026-09-07T18:43:26.2563161Z > Task :game-modes:whodunit:desktopTest"
+        }
+      ],
+      "xml_path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/desktop-android-verification/parlor/parlor/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.TestingStoryRemainingChronologyTest.xml",
+      "xml_sha256": "0a09b895f167447c4a288a763f1e42edc5a36fd321e77587c99ba98468ec5f7e",
+      "suite": "com.parlor.games.whodunit.content.TestingStoryRemainingChronologyTest",
+      "timestamp": "2026-09-07T18:43:15.996Z",
+      "raw_suite_counts": {
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "selected_counts": {
+        "PASS": 3,
+        "FAIL": 0,
+        "SKIP": 0
+      },
+      "selection": "All methods in raw suite",
+      "descriptors": [
+        {
+          "name": "guiltyCaptainsDiscoveryAndTwoMinuteHesitationMatchPublicFactsAndCamera()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "walidsKnowledgeMatchesTheSameLastWeekWillWithoutInventingAnEarlierRevision()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "nadimsCurrentClosureMatchesTheRegisterWithoutRewritingHisFalseCigaretteAlibi()[desktop]",
+          "outcome": "PASS"
+        }
+      ],
+      "current_test_sources": [
+        {
+          "path": "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/TestingStoryRemainingChronologyTest.kt",
+          "sha256": "d767fcb31ff85e3d90a36f686a72b69eeda6ef57113f9fb943c5b557674c3566",
+          "same_bytes_as_ci": true
+        }
+      ]
+    },
+    {
+      "key": "C01:com.parlor.games.whodunit.snapshot.WhodunitFinalTwoRecoveryTest",
+      "issue_ids": [
+        "WD-C3"
+      ],
+      "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+      "ci_run_id": 34152138368,
+      "job": "C01",
+      "task": ":game-modes:whodunit:desktopTest",
+      "task_log": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/101836439057.log",
+      "task_log_sha256": "80dbdb299846b9b41835e4b436f12213dd8cbf5f0075b36a99c3eb62728bed7a",
+      "actual_task_events": [
+        {
+          "line": 2275,
+          "text": "2026-09-07T18:43:26.2563161Z > Task :game-modes:whodunit:desktopTest"
+        }
+      ],
+      "xml_path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/desktop-android-verification/parlor/parlor/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.snapshot.WhodunitFinalTwoRecoveryTest.xml",
+      "xml_sha256": "0546d9ed9c162970895956b875a411af54cd10b0d7bd1766c005441cdc6eecef",
+      "suite": "com.parlor.games.whodunit.snapshot.WhodunitFinalTwoRecoveryTest",
+      "timestamp": "2026-09-07T18:43:29.370Z",
+      "raw_suite_counts": {
+        "tests": 9,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "selected_counts": {
+        "PASS": 9,
+        "FAIL": 0,
+        "SKIP": 0
+      },
+      "selection": "All methods in raw suite",
+      "descriptors": [
+        {
+          "name": "everyOwnPrivatePeerBoundaryRejectsAReopenedFinalTwo()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "earlyEndWithAndWithoutDisclosureRemainRecoverable()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "currentDecoderRejectsCanonicalJsonThatReopensTheFinalTwo()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "aLegalLastRoundKillerEliminationStillAllowsTwoInnocentSurvivors()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "legalFinalTwoKillerVictoryStillRecoversThroughPostGameAndReplay()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "productionLocalResumeLoaderRejectsAnImpossibleTrustedPayload()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "currentEncoderRejectsEveryReopenedFinalTwoSubstate()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "bareLegacyPayloadCannotRepairAnImpossibleActiveFinalTwo()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "caseBoundRecoveryRejectsFinalTwoEvenWithTheCorrectContentIdentity()[desktop]",
+          "outcome": "PASS"
+        }
+      ],
+      "current_test_sources": [
+        {
+          "path": "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/snapshot/WhodunitFinalTwoRecoveryTest.kt",
+          "sha256": "b6f36aa2ea3615dcee2c563087d67120e321146d4ae0a2e40cb0f696e865d906",
+          "same_bytes_as_ci": true
+        }
+      ]
+    },
+    {
+      "key": "C01:com.parlor.games.whodunit.snapshot.WhodunitSnapshotValidationTest",
+      "issue_ids": [
+        "WD-C3"
+      ],
+      "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+      "ci_run_id": 34152138368,
+      "job": "C01",
+      "task": ":game-modes:whodunit:desktopTest",
+      "task_log": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/101836439057.log",
+      "task_log_sha256": "80dbdb299846b9b41835e4b436f12213dd8cbf5f0075b36a99c3eb62728bed7a",
+      "actual_task_events": [
+        {
+          "line": 2275,
+          "text": "2026-09-07T18:43:26.2563161Z > Task :game-modes:whodunit:desktopTest"
+        }
+      ],
+      "xml_path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/desktop-android-verification/parlor/parlor/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.snapshot.WhodunitSnapshotValidationTest.xml",
+      "xml_sha256": "40ff659e1a119393d2cf59924e47ac8bb4ea37647974d3170f2b0805e9c7ff82",
+      "suite": "com.parlor.games.whodunit.snapshot.WhodunitSnapshotValidationTest",
+      "timestamp": "2026-09-07T18:43:29.908Z",
+      "raw_suite_counts": {
+        "tests": 46,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "selected_counts": {
+        "PASS": 46,
+        "FAIL": 0,
+        "SKIP": 0
+      },
+      "selection": "All methods in raw suite",
+      "descriptors": [
+        {
+          "name": "retiredPrivateReviewFlagIsRejectedEvenDuringCharacterReveal()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "reducerGeneratedEliminationFinalTwoRoundTripsAndIsValidForPeerInstallation()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "syntacticallyValidSnapshotWithOverlappingVoteAndAbstentionIsRejected()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "currentWritesUseTheExplicitCanonicalSnapshotEnvelope()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "oversizedSnapshotIsRejectedBeforeJsonParsing()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "snapshotDecodeAcceptsStructurallyValidButCaseInconsistentClueUntilCaseBinding()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "exactDuplicateRosterNamesAreRejectedBySnapshotRecovery()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "classicFinalBallotMustUseTheExactCanonicalRosterAndCandidates()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "privateRevealFlagsCannotSurviveOutsideCharacterReveal()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "reservedEnvelopeKeysCannotFallBackToLegacyDecoding()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "eliminatedAudienceCannotBeRestoredAsGameplayDisconnected()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "revealedCluesMustBeOrderedAndWithinCurrentRound()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "simultaneousCharacterRevealRejectsLegacySequentialCursor()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "collectingVoteMustContainCanonicalBallotPrefix()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "viewedRoleCannotRetainPrivateRevealFlags()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "aLaterRoundCannotResumeWithoutItsContiguousPriorClues()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "assignmentGenerationMustMatchWhetherRolesExist()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "currentRoundCannotExceedModeMaximum()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "revoteCandidatesNeedAtLeastTwoAndCanonicalTableOrder()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "voteAndVerdictCannotBeAttachedToAnUnreachablePhaseOrKiller()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "peerFinalTwoProjectionRejectsAKnownKillerInTheEliminationHistory()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "loadedCaseBoundaryRejectsStaleCaseAndUnknownAssignedCharacter()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "legacyTieCountdownIsNormalizedToExplicitlyUntimedState()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "validAuthoritativeStateStillRoundTripsExactly()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "earlyTerminationClearsPhaseLocalStateBeforeItCanBePersisted()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "syntacticallyValidSnapshotWithDivergentRosterIsRejected()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "activeStateCannotContainAFormerlyDroppedCompatibilitySeat()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "currentSnapshotPreservesLaterAssignmentGeneration()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "loadedCaseBoundaryRejectsUnknownOrChangedClue()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "graceExpiryRevealRoundTripsAndIsValidForPeerInstallation()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "eliminationTerminalOutcomesRejectReducerImpossibleHistories()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "legacyAssignedSnapshotWithoutGenerationMigratesButExplicitZeroDoesNot()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "eliminationProgressCannotOutrunRoundsOrEliminateTheKillerBeforeTerminalVictory()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "currentEnvelopeNeverReceivesLegacyMissingFieldRepair()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "activeTimerRequiresCurrentRoundClue()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "syntacticallyValidSnapshotWithTwoKillersIsRejected()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "unassigned_terminal_state_accepts_only_the_exact_setup_disconnect_cancellation_shape()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "malformedUtf8IsRejectedBeforeJsonInterpretation()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "syntacticallyValidSnapshotWithIncompletePrivateMapIsRejected()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "phaseSpecificReadinessAndBriefingCursorCannotLeakIntoAnotherPhase()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "peerCaseBoundaryRejectsFinalFallbackWhilePreferredEvidenceIsAvailable()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "peerCaseBoundaryBindsClueHistoryToTheTerminalVerdictCharacter()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "callerJsonSettingsCannotMakeSnapshotDecodingPermissive()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "loadedCaseBoundaryAcceptsMatchingAssignedState()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "legacySnapshotReconstructsFilteredKillerTargetsFromHostAuthority()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "currentEnvelopeRejectsWrongKindUnknownSchemaAndUnknownFields()[desktop]",
+          "outcome": "PASS"
+        }
+      ],
+      "current_test_sources": [
+        {
+          "path": "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/snapshot/WhodunitSnapshotValidationTest.kt",
+          "sha256": "28e40104e0b6929aae16ccf22235e32d2017feb99a8931f612306f9631542965",
+          "same_bytes_as_ci": true
+        }
+      ]
+    },
+    {
+      "key": "C01:com.parlor.games.whodunit.ui.flow.PeerPausedCoverContrastTest",
+      "issue_ids": [
+        "FOLLOWUP-WHODUNIT-PEER-COVER"
+      ],
+      "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+      "ci_run_id": 34152138368,
+      "job": "C01",
+      "task": ":game-modes:whodunit:desktopTest",
+      "task_log": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/101836439057.log",
+      "task_log_sha256": "80dbdb299846b9b41835e4b436f12213dd8cbf5f0075b36a99c3eb62728bed7a",
+      "actual_task_events": [
+        {
+          "line": 2275,
+          "text": "2026-09-07T18:43:26.2563161Z > Task :game-modes:whodunit:desktopTest"
+        }
+      ],
+      "xml_path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/desktop-android-verification/parlor/parlor/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.PeerPausedCoverContrastTest.xml",
+      "xml_sha256": "231327a83cbf00d9441fef36e1f6a3dac372ed2b55aa310daafaf1b41b25b5ea",
+      "suite": "com.parlor.games.whodunit.ui.flow.PeerPausedCoverContrastTest",
+      "timestamp": "2026-09-07T18:43:40.067Z",
+      "raw_suite_counts": {
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "selected_counts": {
+        "PASS": 4,
+        "FAIL": 0,
+        "SKIP": 0
+      },
+      "selection": "All methods in raw suite",
+      "descriptors": [
+        {
+          "name": "arabicLightCoverTextRemainsReadable()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "arabicDarkCoverTextRemainsReadable()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "englishLightCoverTextRemainsReadable()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "englishDarkCoverTextRemainsReadable()[desktop]",
+          "outcome": "PASS"
+        }
+      ],
+      "current_test_sources": [
+        {
+          "path": "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/PeerPausedCoverContrastTest.kt",
+          "sha256": "681c049792b523c33d431b15650e3f6832d513314186525872cfe417a5ac7d9e",
+          "same_bytes_as_ci": true
+        }
+      ]
+    },
+    {
+      "key": "C01:com.parlor.games.whodunit.ui.flow.PeerReadinessRemountTest",
+      "issue_ids": [
+        "WD-C1"
+      ],
+      "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+      "ci_run_id": 34152138368,
+      "job": "C01",
+      "task": ":game-modes:whodunit:desktopTest",
+      "task_log": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/101836439057.log",
+      "task_log_sha256": "80dbdb299846b9b41835e4b436f12213dd8cbf5f0075b36a99c3eb62728bed7a",
+      "actual_task_events": [
+        {
+          "line": 2275,
+          "text": "2026-09-07T18:43:26.2563161Z > Task :game-modes:whodunit:desktopTest"
+        }
+      ],
+      "xml_path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/desktop-android-verification/parlor/parlor/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.PeerReadinessRemountTest.xml",
+      "xml_sha256": "f6d974734874c17dc1b947d3cc0bfcc5519fa1ea912a8e7c901e58786770c05b",
+      "suite": "com.parlor.games.whodunit.ui.flow.PeerReadinessRemountTest",
+      "timestamp": "2026-09-07T18:43:40.666Z",
+      "raw_suite_counts": {
+        "tests": 12,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "selected_counts": {
+        "PASS": 12,
+        "FAIL": 0,
+        "SKIP": 0
+      },
+      "selection": "All methods in raw suite",
+      "descriptors": [
+        {
+          "name": "introAcknowledgementDoesNotRepeatAfterCommandCoverRemount()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "freshIntroSnapshotWinsOverAStaleComposeProjection()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "replayInTheSameRenderedPhaseAcknowledgesTheNewGeneration()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "replayBeforeEffectDoesNotAcknowledgeTheStaleAssignmentGeneration()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "freshBriefingSnapshotWinsOverAStaleComposeProjection()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "acknowledgedBriefingSurvivesUiRecreationAndDisconnectPause()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "rejectionWithoutHostAcknowledgementDoesNotCreateOptimisticReadiness()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "briefingAcknowledgementDoesNotRepeatAfterCommandCoverRemount()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "phaseChangeBeforeEffectDoesNotSendThePreviousPhaseAcknowledgement()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "aReplacementControllerRechecksReadinessInTheSamePhase()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "unrelatedBriefingUpdatesDoNotResendWhileAuthorityHasNotResponded()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "acknowledgedIntroSurvivesUiRecreationAndDisconnectPause()[desktop]",
+          "outcome": "PASS"
+        }
+      ],
+      "current_test_sources": [
+        {
+          "path": "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/PeerReadinessRemountTest.kt",
+          "sha256": "e443c59bc953b1e35113ce26bf3a2638839cd44723e6a36c90c014b77f5cb6d3",
+          "same_bytes_as_ci": true
+        }
+      ]
+    },
+    {
+      "key": "C01:com.parlor.games.whodunit.ui.flow.WhodunitLocalLeaveTimerTest",
+      "issue_ids": [
+        "WD-C4-AUTHORIZED-POLICY"
+      ],
+      "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+      "ci_run_id": 34152138368,
+      "job": "C01",
+      "task": ":game-modes:whodunit:desktopTest",
+      "task_log": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/101836439057.log",
+      "task_log_sha256": "80dbdb299846b9b41835e4b436f12213dd8cbf5f0075b36a99c3eb62728bed7a",
+      "actual_task_events": [
+        {
+          "line": 2275,
+          "text": "2026-09-07T18:43:26.2563161Z > Task :game-modes:whodunit:desktopTest"
+        }
+      ],
+      "xml_path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/desktop-android-verification/parlor/parlor/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.WhodunitLocalLeaveTimerTest.xml",
+      "xml_sha256": "fa0859c8e52124189fccba6e4110bc83acf4370d176a3ec68d5f3e83410683c8",
+      "suite": "com.parlor.games.whodunit.ui.flow.WhodunitLocalLeaveTimerTest",
+      "timestamp": "2026-09-07T18:43:43.521Z",
+      "raw_suite_counts": {
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "selected_counts": {
+        "PASS": 6,
+        "FAIL": 0,
+        "SKIP": 0
+      },
+      "selection": "All methods in raw suite",
+      "descriptors": [
+        {
+          "name": "eliminationConfirmationTimeIsExcludedAndStayRestartsOnlyOneTicker()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "stayDoesNotReleaseAnExistingPerTimerPause()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "lastSecondCannotExpireBehindConfirmationButExpiresAfterStay()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "failedSaveKeepsTimeFrozenAndSuccessfulSaveResumesWithoutCatchingUp()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "stayDoesNotReleaseAnExistingSessionPause()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "classicConfirmationTimeIsExcludedAndStayRestartsOnlyOneTicker()[desktop]",
+          "outcome": "PASS"
+        }
+      ],
+      "current_test_sources": [
+        {
+          "path": "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitLocalLeaveTimerTest.kt",
+          "sha256": "6d5a70f96b33c067e3247a9ea085cf7fa1e2f3b6768b9a8d6f8e0a3e5606c7e6",
+          "same_bytes_as_ci": true
+        }
+      ]
+    },
+    {
+      "key": "C01:com.parlor.games.whodunit.ui.flow.WhodunitRecoveryInteractionTest",
+      "issue_ids": [
+        "WD-C2"
+      ],
+      "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+      "ci_run_id": 34152138368,
+      "job": "C01",
+      "task": ":game-modes:whodunit:desktopTest",
+      "task_log": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/101836439057.log",
+      "task_log_sha256": "80dbdb299846b9b41835e4b436f12213dd8cbf5f0075b36a99c3eb62728bed7a",
+      "actual_task_events": [
+        {
+          "line": 2275,
+          "text": "2026-09-07T18:43:26.2563161Z > Task :game-modes:whodunit:desktopTest"
+        }
+      ],
+      "xml_path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/desktop-android-verification/parlor/parlor/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.WhodunitRecoveryInteractionTest.xml",
+      "xml_sha256": "def7d5cdb4afe3474b93f7e7df7c6ddc86e2d20395db2ec4be2e6d297e90f005",
+      "suite": "com.parlor.games.whodunit.ui.flow.WhodunitRecoveryInteractionTest",
+      "timestamp": "2026-09-07T18:45:01.667Z",
+      "raw_suite_counts": {
+        "tests": 9,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "selected_counts": {
+        "PASS": 9,
+        "FAIL": 0,
+        "SKIP": 0
+      },
+      "selection": "All methods in raw suite",
+      "descriptors": [
+        {
+          "name": "englishRetiredSoloSaveIsKeptUntilExplicitDiscard()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "arabicTransientSnapshotFailureRetriesIntoTheSameSavedInvestigation()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "arabicRetiredSoloSaveIsKeptUntilExplicitDiscard()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "arabicIncompatibleSaveIsExplainedAndKeptUntilExplicitDiscard()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "englishIncompatibleSaveIsExplainedAndKeptUntilExplicitDiscard()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "englishTransientSnapshotFailureRetriesIntoTheSameSavedInvestigation()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "equalSuccessfulSnapshotReadsCannotRepairAnImmutableBundledIdentityMismatch()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "englishIdentityLessSaveIsKeptUntilExplicitDiscard()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "arabicIdentityLessSaveIsKeptUntilExplicitDiscard()[desktop]",
+          "outcome": "PASS"
+        }
+      ],
+      "current_test_sources": [
+        {
+          "path": "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitRecoveryInteractionTest.kt",
+          "sha256": "2e6203337195197a33e5a6e46dd5bf91fc30c8e6d96bf9589af3ddff0d36ff6f",
+          "same_bytes_as_ci": true
+        }
+      ]
+    },
+    {
+      "key": "C01:com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostLanguageContinuityTest",
+      "issue_ids": [
+        "DS-C01"
+      ],
+      "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+      "ci_run_id": 34152138368,
+      "job": "C01",
+      "task": ":game-modes:whodunit:desktopTest",
+      "task_log": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/101836439057.log",
+      "task_log_sha256": "80dbdb299846b9b41835e4b436f12213dd8cbf5f0075b36a99c3eb62728bed7a",
+      "actual_task_events": [
+        {
+          "line": 2275,
+          "text": "2026-09-07T18:43:26.2563161Z > Task :game-modes:whodunit:desktopTest"
+        }
+      ],
+      "xml_path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/desktop-android-verification/parlor/parlor/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostLanguageContinuityTest.xml",
+      "xml_sha256": "1fa756b998066deb44d11829d92a88a3eb58078c095fde7237115716f5c3d578",
+      "suite": "com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostLanguageContinuityTest",
+      "timestamp": "2026-09-07T18:45:04.476Z",
+      "raw_suite_counts": {
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "selected_counts": {
+        "PASS": 2,
+        "FAIL": 0,
+        "SKIP": 0
+      },
+      "selection": "All methods in raw suite",
+      "descriptors": [
+        {
+          "name": "suspendedAndResumingHostRetainsIdentityAndGuardsCommands()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "languageChangesAndRemountRetainActualStartedHost()[desktop]",
+          "outcome": "PASS"
+        }
+      ],
+      "current_test_sources": [
+        {
+          "path": "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/multiplayer/WhodunitHostLanguageContinuityTest.kt",
+          "sha256": "97e55bc43b465a0efc241810520db0e6e642f4991860b3f7fc843effa5667323",
+          "same_bytes_as_ci": true
+        }
+      ]
+    },
+    {
+      "key": "C01:com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostLeaveTimerTest",
+      "issue_ids": [
+        "WD-C4-AUTHORIZED-POLICY"
+      ],
+      "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+      "ci_run_id": 34152138368,
+      "job": "C01",
+      "task": ":game-modes:whodunit:desktopTest",
+      "task_log": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/101836439057.log",
+      "task_log_sha256": "80dbdb299846b9b41835e4b436f12213dd8cbf5f0075b36a99c3eb62728bed7a",
+      "actual_task_events": [
+        {
+          "line": 2275,
+          "text": "2026-09-07T18:43:26.2563161Z > Task :game-modes:whodunit:desktopTest"
+        }
+      ],
+      "xml_path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/desktop-android-verification/parlor/parlor/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostLeaveTimerTest.xml",
+      "xml_sha256": "447cade9cde6142ab2979c5d450bb6efd807876ee9dd47ed648fb017a776bdb8",
+      "suite": "com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostLeaveTimerTest",
+      "timestamp": "2026-09-07T18:45:05.462Z",
+      "raw_suite_counts": {
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "selected_counts": {
+        "PASS": 4,
+        "FAIL": 0,
+        "SKIP": 0
+      },
+      "selection": "All methods in raw suite",
+      "descriptors": [
+        {
+          "name": "classicHostConfirmationExcludesTimeAndConfirmedLeaveStopsTicker()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "lifecycleResumeBehindConfirmationDoesNotRestartHiddenDiscussion()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "eliminationHostConfirmationExcludesTimeAndConfirmedLeaveStopsTicker()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "stayAndLifecycleResumeDoNotReleaseManualPause()[desktop]",
+          "outcome": "PASS"
+        }
+      ],
+      "current_test_sources": [
+        {
+          "path": "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/multiplayer/WhodunitHostLeaveTimerTest.kt",
+          "sha256": "24d6a0f768a0140b8ff89d8707f2f25181c99d3c41803089bc668a5f4b2075e2",
+          "same_bytes_as_ci": true
+        }
+      ]
+    },
+    {
+      "key": "C01:com.parlor.designsystem.components.ParlorToastConcurrencyTest",
+      "issue_ids": [
+        "DS-C02"
+      ],
+      "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+      "ci_run_id": 34152138368,
+      "job": "C01",
+      "task": ":shared:design-system:desktopTest",
+      "task_log": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/101836439057.log",
+      "task_log_sha256": "80dbdb299846b9b41835e4b436f12213dd8cbf5f0075b36a99c3eb62728bed7a",
+      "actual_task_events": [
+        {
+          "line": 2235,
+          "text": "2026-09-07T18:42:21.9569971Z > Task :shared:design-system:desktopTest"
+        }
+      ],
+      "xml_path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/desktop-android-verification/parlor/parlor/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.ParlorToastConcurrencyTest.xml",
+      "xml_sha256": "007fe50b6973d5ce94042596dd8b9959533be3781ba715e98165e0e211bf3991",
+      "suite": "com.parlor.designsystem.components.ParlorToastConcurrencyTest",
+      "timestamp": "2026-09-07T18:42:17.862Z",
+      "raw_suite_counts": {
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "selected_counts": {
+        "PASS": 2,
+        "FAIL": 0,
+        "SKIP": 0
+      },
+      "selection": "All methods in raw suite",
+      "descriptors": [
+        {
+          "name": "concurrent_identical_messages_still_coalesce_and_floods_remain_bounded()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "concurrent_producers_cannot_reuse_lifetime_ids_or_lose_a_non_overflowing_wave()[desktop]",
+          "outcome": "PASS"
+        }
+      ],
+      "current_test_sources": [
+        {
+          "path": "shared/design-system/src/desktopTest/kotlin/com/parlor/designsystem/components/ParlorToastConcurrencyTest.kt",
+          "sha256": "d1ce19edccb66916930b4fa27d90f7e390f851442de923b351bef1258a0f90d9",
+          "same_bytes_as_ci": true
+        }
+      ]
+    },
+    {
+      "key": "C01:com.parlor.designsystem.components.ParlorToastLifetimeTest",
+      "issue_ids": [
+        "DS-C02"
+      ],
+      "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+      "ci_run_id": 34152138368,
+      "job": "C01",
+      "task": ":shared:design-system:desktopTest",
+      "task_log": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/101836439057.log",
+      "task_log_sha256": "80dbdb299846b9b41835e4b436f12213dd8cbf5f0075b36a99c3eb62728bed7a",
+      "actual_task_events": [
+        {
+          "line": 2235,
+          "text": "2026-09-07T18:42:21.9569971Z > Task :shared:design-system:desktopTest"
+        }
+      ],
+      "xml_path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/desktop-android-verification/parlor/parlor/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.ParlorToastLifetimeTest.xml",
+      "xml_sha256": "9a15f07087fabe30a668182de476f0084125238736ae75ee0bc9733f092b6ee6",
+      "suite": "com.parlor.designsystem.components.ParlorToastLifetimeTest",
+      "timestamp": "2026-09-07T18:42:17.985Z",
+      "raw_suite_counts": {
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "selected_counts": {
+        "PASS": 3,
+        "FAIL": 0,
+        "SKIP": 0
+      },
+      "selection": "All methods in raw suite",
+      "descriptors": [
+        {
+          "name": "replacement_state_owner_with_same_numeric_id_gets_its_own_lifetime()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "replacement_after_automatic_dismiss_gets_fresh_visibility_and_timer()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "identical_text_after_automatic_dismiss_is_a_new_lifetime()[desktop]",
+          "outcome": "PASS"
+        }
+      ],
+      "current_test_sources": [
+        {
+          "path": "shared/design-system/src/desktopTest/kotlin/com/parlor/designsystem/components/ParlorToastLifetimeTest.kt",
+          "sha256": "bac61913c5d79ace76748320f0b073669ced0bd0c12f3063c90be7bbec142adc",
+          "same_bytes_as_ci": true
+        }
+      ]
+    },
+    {
+      "key": "C01:com.parlor.designsystem.components.ParlorToastStateTest",
+      "issue_ids": [
+        "DS-C02"
+      ],
+      "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+      "ci_run_id": 34152138368,
+      "job": "C01",
+      "task": ":shared:design-system:desktopTest",
+      "task_log": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/101836439057.log",
+      "task_log_sha256": "80dbdb299846b9b41835e4b436f12213dd8cbf5f0075b36a99c3eb62728bed7a",
+      "actual_task_events": [
+        {
+          "line": 2235,
+          "text": "2026-09-07T18:42:21.9569971Z > Task :shared:design-system:desktopTest"
+        }
+      ],
+      "xml_path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/desktop-android-verification/parlor/parlor/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.ParlorToastStateTest.xml",
+      "xml_sha256": "7ee1db32c1389e39e72f767a60a3512993b9ece5adfd607f48cd39da22b189b5",
+      "suite": "com.parlor.designsystem.components.ParlorToastStateTest",
+      "timestamp": "2026-09-07T18:42:20.644Z",
+      "raw_suite_counts": {
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "selected_counts": {
+        "PASS": 4,
+        "FAIL": 0,
+        "SKIP": 0
+      },
+      "selection": "All methods in raw suite",
+      "descriptors": [
+        {
+          "name": "queue_is_bounded_and_keeps_the_latest_distinct_messages()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "adjacent_duplicate_message_is_coalesced()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "dismissed_identity_cannot_dismiss_a_new_lifetime_even_with_identical_text()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "coalescing_preserves_existing_lifetime_and_eviction_does_not_recycle_it()[desktop]",
+          "outcome": "PASS"
+        }
+      ],
+      "current_test_sources": [
+        {
+          "path": "shared/design-system/src/commonTest/kotlin/com/parlor/designsystem/components/ParlorToastStateTest.kt",
+          "sha256": "6fb9a4c16974a10c978a325c57deffcbeb80d36bb9afd394cea55837cbf79cd1",
+          "same_bytes_as_ci": true
+        }
+      ]
+    },
+    {
+      "key": "C01:com.parlor.designsystem.components.RecoveryActionContrastTest",
+      "issue_ids": [
+        "DS-C03"
+      ],
+      "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+      "ci_run_id": 34152138368,
+      "job": "C01",
+      "task": ":shared:design-system:desktopTest",
+      "task_log": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/101836439057.log",
+      "task_log_sha256": "80dbdb299846b9b41835e4b436f12213dd8cbf5f0075b36a99c3eb62728bed7a",
+      "actual_task_events": [
+        {
+          "line": 2235,
+          "text": "2026-09-07T18:42:21.9569971Z > Task :shared:design-system:desktopTest"
+        }
+      ],
+      "xml_path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/desktop-android-verification/parlor/parlor/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.RecoveryActionContrastTest.xml",
+      "xml_sha256": "ab9db98bf830d8f9397fda340c5260f723a0f522dfec87d5b3b061611e434c6a",
+      "suite": "com.parlor.designsystem.components.RecoveryActionContrastTest",
+      "timestamp": "2026-09-07T18:42:21.049Z",
+      "raw_suite_counts": {
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "selected_counts": {
+        "PASS": 3,
+        "FAIL": 0,
+        "SKIP": 0
+      },
+      "selection": "All methods in raw suite",
+      "descriptors": [
+        {
+          "name": "disconnected_host_leave_is_readable_in_both_themes()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "reconnecting_leave_is_readable_in_both_themes()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "ordinary_ghost_button_retains_its_theme_appropriate_foreground()[desktop]",
+          "outcome": "PASS"
+        }
+      ],
+      "current_test_sources": [
+        {
+          "path": "shared/design-system/src/desktopTest/kotlin/com/parlor/designsystem/components/RecoveryActionContrastTest.kt",
+          "sha256": "bf9742cdc49fa3b8765b3219774e4b6e7f6e849c4725e9049dca5fc7343d5e20",
+          "same_bytes_as_ci": true
+        }
+      ]
+    },
+    {
+      "key": "C01:com.parlor.designsystem.localization.ProvideAppLanguageDesktopTest",
+      "issue_ids": [
+        "DS-C01"
+      ],
+      "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+      "ci_run_id": 34152138368,
+      "job": "C01",
+      "task": ":shared:design-system:desktopTest",
+      "task_log": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/101836439057.log",
+      "task_log_sha256": "80dbdb299846b9b41835e4b436f12213dd8cbf5f0075b36a99c3eb62728bed7a",
+      "actual_task_events": [
+        {
+          "line": 2235,
+          "text": "2026-09-07T18:42:21.9569971Z > Task :shared:design-system:desktopTest"
+        }
+      ],
+      "xml_path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/desktop-android-verification/parlor/parlor/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.localization.ProvideAppLanguageDesktopTest.xml",
+      "xml_sha256": "279265e469193dfad40f70791ab45f16e6e4f2adadfbdd14defdcb2ebc788bc2",
+      "suite": "com.parlor.designsystem.localization.ProvideAppLanguageDesktopTest",
+      "timestamp": "2026-09-07T18:42:21.623Z",
+      "raw_suite_counts": {
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "selected_counts": {
+        "PASS": 1,
+        "FAIL": 0,
+        "SKIP": 0
+      },
+      "selection": "All methods in raw suite",
+      "descriptors": [
+        {
+          "name": "locale_switches_resources_without_replacing_remembered_content_state()[desktop]",
+          "outcome": "PASS"
+        }
+      ],
+      "current_test_sources": [
+        {
+          "path": "shared/design-system/src/desktopTest/kotlin/com/parlor/designsystem/localization/ProvideAppLanguageDesktopTest.kt",
+          "sha256": "7a4cbdada5fdf0591cca21d4168e34ab9216c5b0cc70220ac1a81e3b9dd6af27",
+          "same_bytes_as_ci": true
+        }
+      ]
+    },
+    {
+      "key": "C01:com.parlor.session.multidevice.SessionStartCommitDeadlineTest",
+      "issue_ids": [
+        "SN-C1"
+      ],
+      "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+      "ci_run_id": 34152138368,
+      "job": "C01",
+      "task": ":shared:session:desktopTest",
+      "task_log": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/101836439057.log",
+      "task_log_sha256": "80dbdb299846b9b41835e4b436f12213dd8cbf5f0075b36a99c3eb62728bed7a",
+      "actual_task_events": [
+        {
+          "line": 2274,
+          "text": "2026-09-07T18:43:24.8563355Z > Task :shared:session:desktopTest"
+        }
+      ],
+      "xml_path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/desktop-android-verification/parlor/parlor/shared/session/build/test-results/desktopTest/TEST-com.parlor.session.multidevice.SessionStartCommitDeadlineTest.xml",
+      "xml_sha256": "9dabd9eb8fff948f8fd8730dd9ae6a42fd8ddb3ec85c1dc824c7b8eff0ad14c0",
+      "suite": "com.parlor.session.multidevice.SessionStartCommitDeadlineTest",
+      "timestamp": "2026-09-07T18:43:24.039Z",
+      "raw_suite_counts": {
+        "tests": 9,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "selected_counts": {
+        "PASS": 9,
+        "FAIL": 0,
+        "SKIP": 0
+      },
+      "selection": "All methods in raw suite",
+      "descriptors": [
+        {
+          "name": "coordinatorReacknowledgesDuplicateAndAcceptsFirstSnapshotAfterLateCommit()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "callerCancellationDuringAcknowledgementStillPropagates()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "lateAcceptedCommitSurvivesSlowAcknowledgement()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "acknowledgementAdapterExceptionDoesNotUndoAcceptedStart()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "matchingStartWithInvalidVersionIsRejectedWithoutAcknowledgement()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "acknowledgementFailureAfterReceiveDeadlineStillEntersCommittedStart()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "absentCommitStillTimesOutWithoutAnAcknowledgement()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "acknowledgementTimeoutOnlyBoundsDeliveryAfterAcceptedCommit()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "commitForAnotherStartCannotEscapeTheReceiveDeadline()[desktop]",
+          "outcome": "PASS"
+        }
+      ],
+      "current_test_sources": [
+        {
+          "path": "shared/session/src/commonTest/kotlin/com/parlor/session/multidevice/SessionStartCommitDeadlineTest.kt",
+          "sha256": "9f0dc6cb2904dc14b24114ea0e019422e2e84e912e80e359276ab4fd38c816b2",
+          "same_bytes_as_ci": true
+        }
+      ]
+    },
+    {
+      "key": "C01:com.parlor.transport.p2p.AppLifecycleRoomRegistrationTest",
+      "issue_ids": [
+        "SN-C2"
+      ],
+      "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+      "ci_run_id": 34152138368,
+      "job": "C01",
+      "task": ":shared:transport-p2p:desktopTest",
+      "task_log": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/101836439057.log",
+      "task_log_sha256": "80dbdb299846b9b41835e4b436f12213dd8cbf5f0075b36a99c3eb62728bed7a",
+      "actual_task_events": [
+        {
+          "line": 2295,
+          "text": "2026-09-07T18:44:08.1563710Z > Task :shared:transport-p2p:desktopTest"
+        }
+      ],
+      "xml_path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/desktop-android-verification/parlor/parlor/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.AppLifecycleRoomRegistrationTest.xml",
+      "xml_sha256": "4368ecb8314aa5964b9c270e4eaed6ce1879234f217ad8957db5e524c3688424",
+      "suite": "com.parlor.transport.p2p.AppLifecycleRoomRegistrationTest",
+      "timestamp": "2026-09-07T18:43:42.831Z",
+      "raw_suite_counts": {
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "selected_counts": {
+        "PASS": 3,
+        "FAIL": 0,
+        "SKIP": 0
+      },
+      "selection": "All methods in raw suite",
+      "descriptors": [
+        {
+          "name": "cancellationBeforeRegistrationLockDoesNotDetachExistingRoom()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "cancelledRegistrationDetachesBeforeQueuedForeground()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "failedRegistrationDetachesBeforeQueuedForeground()[desktop]",
+          "outcome": "PASS"
+        }
+      ],
+      "current_test_sources": [
+        {
+          "path": "shared/transport-p2p/src/commonTest/kotlin/com/parlor/transport/p2p/AppLifecycleRoomRegistrationTest.kt",
+          "sha256": "bfda11cf208b13b039ae74061d81fcf04a11fdfe3945c490371aa71b730f6d6b",
+          "same_bytes_as_ci": true
+        }
+      ]
+    },
+    {
+      "key": "C01:com.parlor.transport.p2p.HostOpeningCancellationTest",
+      "issue_ids": [
+        "SN-C2"
+      ],
+      "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+      "ci_run_id": 34152138368,
+      "job": "C01",
+      "task": ":shared:transport-p2p:desktopTest",
+      "task_log": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/101836439057.log",
+      "task_log_sha256": "80dbdb299846b9b41835e4b436f12213dd8cbf5f0075b36a99c3eb62728bed7a",
+      "actual_task_events": [
+        {
+          "line": 2295,
+          "text": "2026-09-07T18:44:08.1563710Z > Task :shared:transport-p2p:desktopTest"
+        }
+      ],
+      "xml_path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/desktop-android-verification/parlor/parlor/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.HostOpeningCancellationTest.xml",
+      "xml_sha256": "5bd265a20cc727e61768c9784e836670705c50c2dd30a3cf4e9f263df810f9f8",
+      "suite": "com.parlor.transport.p2p.HostOpeningCancellationTest",
+      "timestamp": "2026-09-07T18:43:44.151Z",
+      "raw_suite_counts": {
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "selected_counts": {
+        "PASS": 5,
+        "FAIL": 0,
+        "SKIP": 0
+      },
+      "selection": "All methods in raw suite",
+      "descriptors": [
+        {
+          "name": "cancelledRegistrationClosesRoomBeforeQueuedForegroundCanReviveIt()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "returnedHostRetainsOwnershipUntilIdempotentLeave()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "registrationFailureClosesUnreturnedRoomAndDetachesLifecycle()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "cancellationDuringAdvertisingClosesArmedRoom()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "cancellationDuringKitStartStopsUnownedKit()[desktop]",
+          "outcome": "PASS"
+        }
+      ],
+      "current_test_sources": [
+        {
+          "path": "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/HostOpeningCancellationTest.kt",
+          "sha256": "13cdebd30a42ff4ed04be36f9e2ffe3693b488badd05e19edb2a004a180c6bff",
+          "same_bytes_as_ci": true
+        }
+      ]
+    },
+    {
+      "key": "C01:com.parlor.transport.p2p.JupiterDiscoveryContractTest",
+      "issue_ids": [
+        "ROOT-T3"
+      ],
+      "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+      "ci_run_id": 34152138368,
+      "job": "C01",
+      "task": ":shared:transport-p2p:desktopTest",
+      "task_log": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/101836439057.log",
+      "task_log_sha256": "80dbdb299846b9b41835e4b436f12213dd8cbf5f0075b36a99c3eb62728bed7a",
+      "actual_task_events": [
+        {
+          "line": 2295,
+          "text": "2026-09-07T18:44:08.1563710Z > Task :shared:transport-p2p:desktopTest"
+        }
+      ],
+      "xml_path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/desktop-android-verification/parlor/parlor/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.JupiterDiscoveryContractTest.xml",
+      "xml_sha256": "3890e026d3e8b2b7901f84a93886d86e661d60715fa01747039eaef75625cd86",
+      "suite": "com.parlor.transport.p2p.JupiterDiscoveryContractTest",
+      "timestamp": "2026-09-07T18:43:44.417Z",
+      "raw_suite_counts": {
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "selected_counts": {
+        "PASS": 1,
+        "FAIL": 0,
+        "SKIP": 0
+      },
+      "selection": "All methods in raw suite",
+      "descriptors": [
+        {
+          "name": "annotated_tests_including_disabled_tests_are_discoverable()[desktop]",
+          "outcome": "PASS"
+        }
+      ],
+      "current_test_sources": [
+        {
+          "path": "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/JupiterDiscoveryContractTest.kt",
+          "sha256": "94682d196381d97a37f6c5e925b63646f102b864d76eb55252cfbd082abcb305",
+          "same_bytes_as_ci": true
+        }
+      ]
+    },
+    {
+      "key": "C01:com.parlor.transport.p2p.P2pKitCreationTest",
+      "issue_ids": [
+        "SN-C2"
+      ],
+      "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+      "ci_run_id": 34152138368,
+      "job": "C01",
+      "task": ":shared:transport-p2p:desktopTest",
+      "task_log": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/101836439057.log",
+      "task_log_sha256": "80dbdb299846b9b41835e4b436f12213dd8cbf5f0075b36a99c3eb62728bed7a",
+      "actual_task_events": [
+        {
+          "line": 2295,
+          "text": "2026-09-07T18:44:08.1563710Z > Task :shared:transport-p2p:desktopTest"
+        }
+      ],
+      "xml_path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/desktop-android-verification/parlor/parlor/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitCreationTest.xml",
+      "xml_sha256": "684c13f26d7bd25ff46f0be4b2bd123c92ffe445290e6f1c588a8c9751f9af6e",
+      "suite": "com.parlor.transport.p2p.P2pKitCreationTest",
+      "timestamp": "2026-09-07T18:43:47.477Z",
+      "raw_suite_counts": {
+        "tests": 9,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "selected_counts": {
+        "PASS": 9,
+        "FAIL": 0,
+        "SKIP": 0
+      },
+      "selection": "All methods in raw suite",
+      "descriptors": [
+        {
+          "name": "cancellationBeforeDispatcherEntryDoesNotConstructKit()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "cancellationDuringSameDispatcherConstructionStopsKit()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "hostAndJoinPreserveFactoryCancellationWithoutStartingOrStoppingTwice()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "cancellationDuringDifferentDispatcherConstructionStopsKit()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "cancelledReturnDispatchStopsSuccessfullyConstructedKit()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "failedConstructionPreservesOriginalFailure()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "cleanupFailureDoesNotReplaceOriginalCallerCancellation()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "cancelledOwnerAwaitsSuspendingNonCancellableStop()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "successfulCreationTransfersOwnershipWithoutStoppingKit()[desktop]",
+          "outcome": "PASS"
+        }
+      ],
+      "current_test_sources": [
+        {
+          "path": "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitCreationTest.kt",
+          "sha256": "aa03b4fc5e37dbd234848594641dd46eec5aef5bf78dcc478783987d6ee0dc70",
+          "same_bytes_as_ci": true
+        }
+      ]
+    },
+    {
+      "key": "C01:com.parlor.transport.p2p.P2pKitRoomTransportLifecycleTest",
+      "issue_ids": [
+        "ROOT-T3"
+      ],
+      "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+      "ci_run_id": 34152138368,
+      "job": "C01",
+      "task": ":shared:transport-p2p:desktopTest",
+      "task_log": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/101836439057.log",
+      "task_log_sha256": "80dbdb299846b9b41835e4b436f12213dd8cbf5f0075b36a99c3eb62728bed7a",
+      "actual_task_events": [
+        {
+          "line": 2295,
+          "text": "2026-09-07T18:44:08.1563710Z > Task :shared:transport-p2p:desktopTest"
+        }
+      ],
+      "xml_path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/desktop-android-verification/parlor/parlor/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitRoomTransportLifecycleTest.xml",
+      "xml_sha256": "a22897ce38ea4643eb93f509b3c14bf5ef11f031b1a12550e4e971d62d211c66",
+      "suite": "com.parlor.transport.p2p.P2pKitRoomTransportLifecycleTest",
+      "timestamp": "2026-09-07T18:43:47.579Z",
+      "raw_suite_counts": {
+        "tests": 130,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "selected_counts": {
+        "PASS": 8,
+        "FAIL": 0,
+        "SKIP": 0
+      },
+      "selection": "Only the eight corrected lifecycle signatures; other suite methods intentionally omitted",
+      "descriptors": [
+        {
+          "name": "admission_pending_opens_a_separate_host_approval_window()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "host_send_propagates_coroutine_cancellation()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "disconnect_during_acceptance_rolls_back_the_seat_without_a_ghost_member()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "cancellation_during_acceptance_propagates_after_rolling_back_the_seat()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "fatal_send_and_cleanup_failures_are_never_converted_to_normal_results()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "peer_send_propagates_coroutine_cancellation()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "wrong_room_does_not_end_search_before_a_late_correct_candidate_appears()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "kit_factory_cancellation_is_never_mapped_to_transport_failure()[desktop]",
+          "outcome": "PASS"
+        }
+      ],
+      "current_test_sources": [
+        {
+          "path": "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitRoomTransportLifecycleTest.kt",
+          "sha256": "947a86aebdca10d7d9cfa97a5677c1a79733601dca887effc6c218280a098b1b",
+          "same_bytes_as_ci": true
+        }
+      ]
+    },
+    {
+      "key": "C01:com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest",
+      "issue_ids": [
+        "ROOT-T3"
+      ],
+      "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+      "ci_run_id": 34152138368,
+      "job": "C01",
+      "task": ":shared:transport-p2p:desktopTest",
+      "task_log": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/101836439057.log",
+      "task_log_sha256": "80dbdb299846b9b41835e4b436f12213dd8cbf5f0075b36a99c3eb62728bed7a",
+      "actual_task_events": [
+        {
+          "line": 2295,
+          "text": "2026-09-07T18:44:08.1563710Z > Task :shared:transport-p2p:desktopTest"
+        }
+      ],
+      "xml_path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/desktop-android-verification/parlor/parlor/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest.xml",
+      "xml_sha256": "fb0663cdcf618579dbc887ee1c6e5d2a19f55317be96b930157f97fce2cc586e",
+      "suite": "com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest",
+      "timestamp": "2026-09-07T18:44:01.719Z",
+      "raw_suite_counts": {
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 3
+      },
+      "selected_counts": {
+        "PASS": 1,
+        "FAIL": 0,
+        "SKIP": 3
+      },
+      "selection": "All methods in raw suite",
+      "descriptors": [
+        {
+          "name": "peer_to_host_message_round_trips_and_host_to_peer_message_arrives_back()[desktop]",
+          "outcome": "SKIP"
+        },
+        {
+          "name": "peer_can_join_a_hosted_room_and_membership_appears_on_host()[desktop]",
+          "outcome": "SKIP"
+        },
+        {
+          "name": "host_broadcast_reaches_every_peer()[desktop]",
+          "outcome": "SKIP"
+        },
+        {
+          "name": "host_advertises_a_room_code_that_join_resolves_to()[desktop]",
+          "outcome": "PASS"
+        }
+      ],
+      "current_test_sources": [
+        {
+          "path": "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitRoomTransportLoopbackTest.kt",
+          "sha256": "21451bf407d791ec85066227a2670ccf61d3506efaae47375c0bba557fe3be73",
+          "same_bytes_as_ci": true
+        }
+      ]
+    },
+    {
+      "key": "C01:com.parlor.transport.p2p.PeerOpeningCancellationTest",
+      "issue_ids": [
+        "SN-C2"
+      ],
+      "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+      "ci_run_id": 34152138368,
+      "job": "C01",
+      "task": ":shared:transport-p2p:desktopTest",
+      "task_log": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/101836439057.log",
+      "task_log_sha256": "80dbdb299846b9b41835e4b436f12213dd8cbf5f0075b36a99c3eb62728bed7a",
+      "actual_task_events": [
+        {
+          "line": 2295,
+          "text": "2026-09-07T18:44:08.1563710Z > Task :shared:transport-p2p:desktopTest"
+        }
+      ],
+      "xml_path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/desktop-android-verification/parlor/parlor/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.PeerOpeningCancellationTest.xml",
+      "xml_sha256": "1999e92295288c247c4d3bf467b89b0fc143c4c2bed33d1e791a277675a867b4",
+      "suite": "com.parlor.transport.p2p.PeerOpeningCancellationTest",
+      "timestamp": "2026-09-07T18:44:08.273Z",
+      "raw_suite_counts": {
+        "tests": 12,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "selected_counts": {
+        "PASS": 12,
+        "FAIL": 0,
+        "SKIP": 0
+      },
+      "selection": "All methods in raw suite",
+      "descriptors": [
+        {
+          "name": "cancellingResumeReadyClosesUnreturnedRoomWithoutRevokingMembership()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "failedJoinRegistrationReleasesRoomAndDetachesLifecycle()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "cancellingResumeAckClosesUnreturnedRoomWithoutRevokingMembership()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "failedResumeRegistrationReleasesRoomAndDetachesLifecycle()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "cancellingAdmissionAckClosesUnreturnedRoomWithoutRevokingMembership()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "failedAdmissionReadyStopsKitOnlyOnceAndReleasesCollectors()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "failedResumeReadyStopsKitOnlyOnceAndReleasesCollectors()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "ordinaryAdmissionAckLossStillReturnsAnOwnedRoom()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "ordinaryResumeAckLossStillReturnsAnOwnedRoom()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "cancellingAdmissionReadyClosesUnreturnedRoomWithoutRevokingMembership()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "cancelledResumeRegistrationCannotResumeOrExpireAReplacementCredential()[desktop]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "cancelledJoinRegistrationCannotResumeOrExpireAReplacementCredential()[desktop]",
+          "outcome": "PASS"
+        }
+      ],
+      "current_test_sources": [
+        {
+          "path": "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/PeerOpeningCancellationTest.kt",
+          "sha256": "e72ab2b4e013af3a626f50677e3284518120b4320a556c7d5cb7a662fe4c0e68",
+          "same_bytes_as_ci": true
+        }
+      ]
+    },
+    {
+      "key": "C05:com.parlor.app.storage.IosLegacySnapshotBackupTest",
+      "issue_ids": [
+        "ST-C1"
+      ],
+      "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+      "ci_run_id": 34152138368,
+      "job": "C05",
+      "task": ":composeApp:iosSimulatorArm64Test",
+      "task_log": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/101836438981.log",
+      "task_log_sha256": "1a0fe5199142cba9a90ee7b87272805c01a220c301bc87b93a6226ad7f84689c",
+      "actual_task_events": [
+        {
+          "line": 974,
+          "text": "2026-09-07T18:48:03.6386060Z > Task :composeApp:iosSimulatorArm64Test"
+        }
+      ],
+      "xml_path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/composeApp/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.app.storage.IosLegacySnapshotBackupTest.xml",
+      "xml_sha256": "c1382ce91cfe6c138b70850cbd5aecf93f338e0a2435c2b8f8d280037986c6c5",
+      "suite": "com.parlor.app.storage.IosLegacySnapshotBackupTest",
+      "timestamp": "2026-09-07T18:48:03.385Z",
+      "raw_suite_counts": {
+        "tests": 14,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "selected_counts": {
+        "PASS": 14,
+        "FAIL": 0,
+        "SKIP": 0
+      },
+      "selection": "All methods in raw suite",
+      "descriptors": [
+        {
+          "name": "coldInventoryProtectsMalformedLegacyWithoutDestroyingItsLastCopy[iosSimulatorArm64]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "directReadProtectsMalformedLegacyWithoutPriorInventory[iosSimulatorArm64]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "damagedCurrentHeaderKeepsPrecedenceAndExcludesRetainedLegacy[iosSimulatorArm64]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "oversizedLegacyIsExcludedBeforeBoundedReadRejectsIt[iosSimulatorArm64]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "exclusionFailureIsNotSwallowedByInventoryAndDoesNotPreventExplicitDiscard[iosSimulatorArm64]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "retryReappliesLegacyExclusionInsteadOfCachingIt[iosSimulatorArm64]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "nativeExclusionRejectsMissingPathsRatherThanClaimingProtection[iosSimulatorArm64]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "nativeExclusionIsReappliedAfterSyntheticDirectoryRecreation[iosSimulatorArm64]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "recognizedDamagedCurrentRetainsValidLegacyDuringColdInventoryAndRetry[iosSimulatorArm64]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "missingKeyKeepsValidLegacyButNeverFallsBackToIt[iosSimulatorArm64]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "keyReadFailureKeepsValidLegacyAndRemainsAnError[iosSimulatorArm64]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "failedAuthenticationRetainsValidLegacyAcrossInventoryAndExplicitDiscard[iosSimulatorArm64]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "cancelledKeyReadPreservesBothCopiesAndOriginalCancellation[iosSimulatorArm64]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "authenticatedCurrentLoadRemovesStaleLegacyOnlyAfterSuccessfulDecrypt[iosSimulatorArm64]",
+          "outcome": "PASS"
+        }
+      ],
+      "current_test_sources": [
+        {
+          "path": "composeApp/src/iosTest/kotlin/com/parlor/app/storage/IosLegacySnapshotBackupTest.kt",
+          "sha256": "a730f7fe3063e6fb2802cef76d68c7a19b6f35afe82ffc642852bad386adf3f2",
+          "same_bytes_as_ci": true
+        }
+      ]
+    },
+    {
+      "key": "C05:com.parlor.app.storage.IosStorageSafetyTest",
+      "issue_ids": [
+        "ST-C1"
+      ],
+      "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+      "ci_run_id": 34152138368,
+      "job": "C05",
+      "task": ":composeApp:iosSimulatorArm64Test",
+      "task_log": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/101836438981.log",
+      "task_log_sha256": "1a0fe5199142cba9a90ee7b87272805c01a220c301bc87b93a6226ad7f84689c",
+      "actual_task_events": [
+        {
+          "line": 974,
+          "text": "2026-09-07T18:48:03.6386060Z > Task :composeApp:iosSimulatorArm64Test"
+        }
+      ],
+      "xml_path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/composeApp/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.app.storage.IosStorageSafetyTest.xml",
+      "xml_sha256": "0c8e5c57e2a63c6a9791a07cb9f5eb18d3ad424181633006fb3eeadecb9d9749",
+      "suite": "com.parlor.app.storage.IosStorageSafetyTest",
+      "timestamp": "2026-09-07T18:48:03.387Z",
+      "raw_suite_counts": {
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "selected_counts": {
+        "PASS": 6,
+        "FAIL": 0,
+        "SKIP": 0
+      },
+      "selection": "All methods in raw suite",
+      "descriptors": [
+        {
+          "name": "boundedReaderRejectsAfterReadingOnlyLimitPlusOneBytes[iosSimulatorArm64]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "boundedReaderAcceptsAFileExactlyAtTheLimit[iosSimulatorArm64]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "keychainDataSupportsAnEmptyValueWithoutAddressingAMissingElement[iosSimulatorArm64]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "commonCryptoRoundTripsAnEmptySnapshotPayload[iosSimulatorArm64]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "unreadableProtectedSnapshotPreservesMatchingLegacyPlaintext[iosSimulatorArm64]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "protectedSnapshotWithMissingKeyPreservesMatchingLegacyPlaintext[iosSimulatorArm64]",
+          "outcome": "PASS"
+        }
+      ],
+      "current_test_sources": [
+        {
+          "path": "composeApp/src/iosTest/kotlin/com/parlor/app/storage/IosStorageSafetyTest.kt",
+          "sha256": "84b6701e1adc272d2b822ca509e5c66bc8162143d78802c1d8c9732445e62cca",
+          "same_bytes_as_ci": true
+        }
+      ]
+    },
+    {
+      "key": "C05:com.parlor.games.mafia.domain.MafiaDoctorRulesTest",
+      "issue_ids": [
+        "MF-C1"
+      ],
+      "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+      "ci_run_id": 34152138368,
+      "job": "C05",
+      "task": ":game-modes:mafia:iosSimulatorArm64Test",
+      "task_log": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/101836438981.log",
+      "task_log_sha256": "1a0fe5199142cba9a90ee7b87272805c01a220c301bc87b93a6226ad7f84689c",
+      "actual_task_events": [
+        {
+          "line": 883,
+          "text": "2026-09-07T18:45:49.1881340Z > Task :game-modes:mafia:iosSimulatorArm64Test"
+        }
+      ],
+      "xml_path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/game-modes/mafia/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.games.mafia.domain.MafiaDoctorRulesTest.xml",
+      "xml_sha256": "6d398522d89b928facca50a61098af603235287732526ea5f38305a103d030e8",
+      "suite": "com.parlor.games.mafia.domain.MafiaDoctorRulesTest",
+      "timestamp": "2026-09-07T18:45:47.710Z",
+      "raw_suite_counts": {
+        "tests": 8,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "selected_counts": {
+        "PASS": 8,
+        "FAIL": 0,
+        "SKIP": 0
+      },
+      "selection": "All methods in raw suite",
+      "descriptors": [
+        {
+          "name": "repeat_is_default_off_for_every_supported_player_count[iosSimulatorArm64]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "enabled_setting_saves_same_living_target_for_four_consecutive_nights[iosSimulatorArm64]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "disabled_setting_rejects_repeat_and_allows_alternating_targets[iosSimulatorArm64]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "skipped_night_clears_previous_effective_target_but_consumes_submission[iosSimulatorArm64]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "repeat_and_self_protection_settings_are_independent[iosSimulatorArm64]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "first_valid_target_cannot_be_replaced_or_skipped_later_that_night[iosSimulatorArm64]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "enabling_repeats_does_not_allow_dead_targets_or_a_non_doctor_actor[iosSimulatorArm64]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "setup_draft_and_action_codec_commit_selection_once_without_changing_assignment[iosSimulatorArm64]",
+          "outcome": "PASS"
+        }
+      ],
+      "current_test_sources": [
+        {
+          "path": "game-modes/mafia/src/commonTest/kotlin/com/parlor/games/mafia/domain/MafiaDoctorRulesTest.kt",
+          "sha256": "5fe2144436f87162e2d29bcbef6d57ac9b9cede6ab328b406b63cceebcdd501b",
+          "same_bytes_as_ci": true
+        }
+      ]
+    },
+    {
+      "key": "C05:com.parlor.games.mafia.snapshot.MafiaDoctorHistoryRecoveryTest",
+      "issue_ids": [
+        "MF-C1"
+      ],
+      "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+      "ci_run_id": 34152138368,
+      "job": "C05",
+      "task": ":game-modes:mafia:iosSimulatorArm64Test",
+      "task_log": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/101836438981.log",
+      "task_log_sha256": "1a0fe5199142cba9a90ee7b87272805c01a220c301bc87b93a6226ad7f84689c",
+      "actual_task_events": [
+        {
+          "line": 883,
+          "text": "2026-09-07T18:45:49.1881340Z > Task :game-modes:mafia:iosSimulatorArm64Test"
+        }
+      ],
+      "xml_path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/game-modes/mafia/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.games.mafia.snapshot.MafiaDoctorHistoryRecoveryTest.xml",
+      "xml_sha256": "f33e49f21b1f8b69e663798bbe8acf5eb22dd8bb994151ceb991b7eb8ebb564b",
+      "suite": "com.parlor.games.mafia.snapshot.MafiaDoctorHistoryRecoveryTest",
+      "timestamp": "2026-09-07T18:45:47.718Z",
+      "raw_suite_counts": {
+        "tests": 15,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "selected_counts": {
+        "PASS": 15,
+        "FAIL": 0,
+        "SKIP": 0
+      },
+      "selection": "All methods in raw suite",
+      "descriptors": [
+        {
+          "name": "private_previous_protection_must_match_retained_history_in_every_active_phase[iosSimulatorArm64]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "history_binding_also_applies_during_a_day_revote[iosSimulatorArm64]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "mafia_coordination_revote_preserves_doctor_history_and_own_submission[iosSimulatorArm64]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "null_effective_protection_cannot_be_replaced_by_an_old_legal_target[iosSimulatorArm64]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "initial_setup_role_assignment_and_first_night_have_no_previous_protection[iosSimulatorArm64]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "repeated_protection_history_is_valid_only_with_setting_enabled[iosSimulatorArm64]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "latest_binding_survives_history_capping_without_requiring_missing_predecessors[iosSimulatorArm64]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "killed_doctor_keeps_last_effective_target_until_next_resolution_then_clears_it[iosSimulatorArm64]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "doctor_eliminated_by_day_vote_retains_previous_night_binding[iosSimulatorArm64]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "death_of_previous_target_does_not_erase_last_effective_protection[iosSimulatorArm64]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "no_doctor_configuration_keeps_null_history_and_rejects_foreign_private_history[iosSimulatorArm64]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "terminal_cleanup_does_not_require_historical_protection_to_be_erased[iosSimulatorArm64]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "normal_terminal_win_also_clears_private_history_without_discarding_host_history[iosSimulatorArm64]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "peer_projections_keep_only_own_private_history_and_do_not_require_host_logs[iosSimulatorArm64]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "resumed_local_controller_enforces_the_persisted_repeat_setting[iosSimulatorArm64]",
+          "outcome": "PASS"
+        }
+      ],
+      "current_test_sources": [
+        {
+          "path": "game-modes/mafia/src/commonTest/kotlin/com/parlor/games/mafia/snapshot/MafiaDoctorHistoryRecoveryTest.kt",
+          "sha256": "d1d830e0330d5a47f2011b9f87d025a5ce1e0bc2d3cb08be742ca1ff4403f743",
+          "same_bytes_as_ci": true
+        }
+      ]
+    },
+    {
+      "key": "C05:com.parlor.designsystem.localization.IosLanguageOverrideOwnerTest",
+      "issue_ids": [
+        "DS-C01"
+      ],
+      "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+      "ci_run_id": 34152138368,
+      "job": "C05",
+      "task": ":shared:design-system:iosSimulatorArm64Test",
+      "task_log": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/101836438981.log",
+      "task_log_sha256": "1a0fe5199142cba9a90ee7b87272805c01a220c301bc87b93a6226ad7f84689c",
+      "actual_task_events": [
+        {
+          "line": 897,
+          "text": "2026-09-07T18:46:06.6313600Z > Task :shared:design-system:iosSimulatorArm64Test"
+        }
+      ],
+      "xml_path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/shared/design-system/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.designsystem.localization.IosLanguageOverrideOwnerTest.xml",
+      "xml_sha256": "8e69f95e4b8d03c0dee932bcdfefe5c2822baacde4d874d33738a03eca2a2d82",
+      "suite": "com.parlor.designsystem.localization.IosLanguageOverrideOwnerTest",
+      "timestamp": "2026-09-07T18:46:06.446Z",
+      "raw_suite_counts": {
+        "tests": 11,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "selected_counts": {
+        "PASS": 11,
+        "FAIL": 0,
+        "SKIP": 0
+      },
+      "selection": "All methods in raw suite",
+      "descriptors": [
+        {
+          "name": "system_after_interrupted_lifetime_removes_only_owned_override[iosSimulatorArm64]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "explicit_choice_after_restart_keeps_original_os_value_for_later_system[iosSimulatorArm64]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "fallback_language_is_never_promoted_to_the_application_domain[iosSimulatorArm64]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "external_preference_changes_win_over_owned_cleanup[iosSimulatorArm64]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "unmarked_identical_values_are_not_claimed_or_removed[iosSimulatorArm64]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "interrupted_preparation_does_not_delete_an_unmodified_preference[iosSimulatorArm64]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "malformed_owner_record_cannot_clear_os_preferences[iosSimulatorArm64]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "malformed_previous_value_is_never_installed_as_a_language_array[iosSimulatorArm64]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "interrupted_preparation_without_previous_value_keeps_fallback_unowned[iosSimulatorArm64]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "interrupted_release_cannot_restore_over_a_new_os_preference[iosSimulatorArm64]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "multiple_runtime_switches_restore_original_preference[iosSimulatorArm64]",
+          "outcome": "PASS"
+        }
+      ],
+      "current_test_sources": [
+        {
+          "path": "shared/design-system/src/iosTest/kotlin/com/parlor/designsystem/localization/IosLanguageOverrideOwnerTest.kt",
+          "sha256": "dbf610cd2fe07dd690b994c70434c863a96833305d5fc47c0e0c9d95072acf7e",
+          "same_bytes_as_ci": true
+        }
+      ]
+    },
+    {
+      "key": "C05:com.parlor.session.multidevice.SessionStartCommitDeadlineTest",
+      "issue_ids": [
+        "SN-C1"
+      ],
+      "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+      "ci_run_id": 34152138368,
+      "job": "C05",
+      "task": ":shared:session:iosSimulatorArm64Test",
+      "task_log": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/101836438981.log",
+      "task_log_sha256": "1a0fe5199142cba9a90ee7b87272805c01a220c301bc87b93a6226ad7f84689c",
+      "actual_task_events": [
+        {
+          "line": 942,
+          "text": "2026-09-07T18:46:43.4137390Z > Task :shared:session:iosSimulatorArm64Test"
+        }
+      ],
+      "xml_path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/shared/session/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.session.multidevice.SessionStartCommitDeadlineTest.xml",
+      "xml_sha256": "6140aa7f29ca93fbb9c64be3af21f9830b35e5f2cdc3d2db4f75bae8b356ed82",
+      "suite": "com.parlor.session.multidevice.SessionStartCommitDeadlineTest",
+      "timestamp": "2026-09-07T18:46:43.179Z",
+      "raw_suite_counts": {
+        "tests": 9,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "selected_counts": {
+        "PASS": 9,
+        "FAIL": 0,
+        "SKIP": 0
+      },
+      "selection": "All methods in raw suite",
+      "descriptors": [
+        {
+          "name": "lateAcceptedCommitSurvivesSlowAcknowledgement[iosSimulatorArm64]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "acknowledgementTimeoutOnlyBoundsDeliveryAfterAcceptedCommit[iosSimulatorArm64]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "acknowledgementFailureAfterReceiveDeadlineStillEntersCommittedStart[iosSimulatorArm64]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "acknowledgementAdapterExceptionDoesNotUndoAcceptedStart[iosSimulatorArm64]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "callerCancellationDuringAcknowledgementStillPropagates[iosSimulatorArm64]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "absentCommitStillTimesOutWithoutAnAcknowledgement[iosSimulatorArm64]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "commitForAnotherStartCannotEscapeTheReceiveDeadline[iosSimulatorArm64]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "matchingStartWithInvalidVersionIsRejectedWithoutAcknowledgement[iosSimulatorArm64]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "coordinatorReacknowledgesDuplicateAndAcceptsFirstSnapshotAfterLateCommit[iosSimulatorArm64]",
+          "outcome": "PASS"
+        }
+      ],
+      "current_test_sources": [
+        {
+          "path": "shared/session/src/commonTest/kotlin/com/parlor/session/multidevice/SessionStartCommitDeadlineTest.kt",
+          "sha256": "9f0dc6cb2904dc14b24114ea0e019422e2e84e912e80e359276ab4fd38c816b2",
+          "same_bytes_as_ci": true
+        }
+      ]
+    },
+    {
+      "key": "C05:com.parlor.transport.p2p.AppLifecycleRoomRegistrationTest",
+      "issue_ids": [
+        "SN-C2"
+      ],
+      "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+      "ci_run_id": 34152138368,
+      "job": "C05",
+      "task": ":shared:transport-p2p:iosSimulatorArm64Test",
+      "task_log": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/101836438981.log",
+      "task_log_sha256": "1a0fe5199142cba9a90ee7b87272805c01a220c301bc87b93a6226ad7f84689c",
+      "actual_task_events": [
+        {
+          "line": 944,
+          "text": "2026-09-07T18:46:50.3350660Z > Task :shared:transport-p2p:iosSimulatorArm64Test"
+        }
+      ],
+      "xml_path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/shared/transport-p2p/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.transport.p2p.AppLifecycleRoomRegistrationTest.xml",
+      "xml_sha256": "6f101d17603f4c3d985b367d11187d8de091aa724dee576d868d5e57bc27b3bb",
+      "suite": "com.parlor.transport.p2p.AppLifecycleRoomRegistrationTest",
+      "timestamp": "2026-09-07T18:46:43.253Z",
+      "raw_suite_counts": {
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "selected_counts": {
+        "PASS": 3,
+        "FAIL": 0,
+        "SKIP": 0
+      },
+      "selection": "All methods in raw suite",
+      "descriptors": [
+        {
+          "name": "cancelledRegistrationDetachesBeforeQueuedForeground[iosSimulatorArm64]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "failedRegistrationDetachesBeforeQueuedForeground[iosSimulatorArm64]",
+          "outcome": "PASS"
+        },
+        {
+          "name": "cancellationBeforeRegistrationLockDoesNotDetachExistingRoom[iosSimulatorArm64]",
+          "outcome": "PASS"
+        }
+      ],
+      "current_test_sources": [
+        {
+          "path": "shared/transport-p2p/src/commonTest/kotlin/com/parlor/transport/p2p/AppLifecycleRoomRegistrationTest.kt",
+          "sha256": "bfda11cf208b13b039ae74061d81fcf04a11fdfe3945c490371aa71b730f6d6b",
+          "same_bytes_as_ci": true
+        }
+      ]
+    },
+    {
+      "key": "C01:test_xcode_framework_phase",
+      "issue_ids": [
+        "IOS-B1"
+      ],
+      "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+      "ci_run_id": 34152138368,
+      "job": "C01",
+      "task": "verifyReleaseSystem/Python unittest discovery (actual productionCheck release suite)",
+      "log_path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/101836439057.log",
+      "log_sha256": "80dbdb299846b9b41835e4b436f12213dd8cbf5f0075b36a99c3eb62728bed7a",
+      "selected_counts": {
+        "PASS": 5,
+        "FAIL": 0,
+        "SKIP": 0
+      },
+      "descriptors": [
+        {
+          "name": "test_failed_directory_change_cannot_build_from_previous_directory (test_xcode_framework_phase.XcodeFrameworkPhaseTest.test_failed_directory_change_cannot_build_from_previous_directory)",
+          "outcome": "PASS",
+          "line": 2026,
+          "raw_log_line": "2026-09-07T18:40:44.2122026Z test_failed_directory_change_cannot_build_from_previous_directory (test_xcode_framework_phase.XcodeFrameworkPhaseTest.test_failed_directory_change_cannot_build_from_previous_directory) ... ok"
+        },
+        {
+          "name": "test_failed_gradle_with_stale_framework_fails_without_normalizing (test_xcode_framework_phase.XcodeFrameworkPhaseTest.test_failed_gradle_with_stale_framework_fails_without_normalizing)",
+          "outcome": "PASS",
+          "line": 2027,
+          "raw_log_line": "2026-09-07T18:40:44.2150220Z test_failed_gradle_with_stale_framework_fails_without_normalizing (test_xcode_framework_phase.XcodeFrameworkPhaseTest.test_failed_gradle_with_stale_framework_fails_without_normalizing) ... ok"
+        },
+        {
+          "name": "test_intentional_ide_override_still_skips_gradle_and_normalization (test_xcode_framework_phase.XcodeFrameworkPhaseTest.test_intentional_ide_override_still_skips_gradle_and_normalization)",
+          "outcome": "PASS",
+          "line": 2028,
+          "raw_log_line": "2026-09-07T18:40:44.2180243Z test_intentional_ide_override_still_skips_gradle_and_normalization (test_xcode_framework_phase.XcodeFrameworkPhaseTest.test_intentional_ide_override_still_skips_gradle_and_normalization) ... ok"
+        },
+        {
+          "name": "test_successful_embed_normalizes_case_only_framework_name (test_xcode_framework_phase.XcodeFrameworkPhaseTest.test_successful_embed_normalizes_case_only_framework_name)",
+          "outcome": "PASS",
+          "line": 2029,
+          "raw_log_line": "2026-09-07T18:40:44.2199994Z test_successful_embed_normalizes_case_only_framework_name (test_xcode_framework_phase.XcodeFrameworkPhaseTest.test_successful_embed_normalizes_case_only_framework_name) ... ok"
+        },
+        {
+          "name": "test_successful_gradle_still_rejects_missing_framework (test_xcode_framework_phase.XcodeFrameworkPhaseTest.test_successful_gradle_still_rejects_missing_framework)",
+          "outcome": "PASS",
+          "line": 2030,
+          "raw_log_line": "2026-09-07T18:40:44.2569335Z test_successful_gradle_still_rejects_missing_framework (test_xcode_framework_phase.XcodeFrameworkPhaseTest.test_successful_gradle_still_rejects_missing_framework) ... ok"
+        }
+      ],
+      "current_test_sources": [
+        {
+          "path": "scripts/release/tests/test_xcode_framework_phase.py",
+          "sha256": "3033307b0a029d87ab9c8c14d3b3b4d3a0d4db9d183012d6da58fb1e8b5c4a73",
+          "same_bytes_as_ci": true
+        }
+      ]
+    },
+    {
+      "key": "C01:test_android_artifact_size",
+      "issue_ids": [
+        "RL-C1"
+      ],
+      "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+      "ci_run_id": 34152138368,
+      "job": "C01",
+      "task": "verifyReleaseSystem/Python unittest discovery (actual productionCheck release suite)",
+      "log_path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/101836439057.log",
+      "log_sha256": "80dbdb299846b9b41835e4b436f12213dd8cbf5f0075b36a99c3eb62728bed7a",
+      "selected_counts": {
+        "PASS": 7,
+        "FAIL": 0,
+        "SKIP": 0
+      },
+      "descriptors": [
+        {
+          "name": "test_both_small_files_with_spaces_pass_gnu_shaped_stat_preflight (test_android_artifact_size.AndroidArtifactSizeTest.test_both_small_files_with_spaces_pass_gnu_shaped_stat_preflight)",
+          "outcome": "PASS",
+          "line": 1457,
+          "raw_log_line": "2026-09-07T18:39:24.7565042Z test_both_small_files_with_spaces_pass_gnu_shaped_stat_preflight (test_android_artifact_size.AndroidArtifactSizeTest.test_both_small_files_with_spaces_pass_gnu_shaped_stat_preflight) ... ok"
+        },
+        {
+          "name": "test_empty_dependency_report_is_rejected (test_android_artifact_size.AndroidArtifactSizeTest.test_empty_dependency_report_is_rejected)",
+          "outcome": "PASS",
+          "line": 1458,
+          "raw_log_line": "2026-09-07T18:39:24.7566555Z test_empty_dependency_report_is_rejected (test_android_artifact_size.AndroidArtifactSizeTest.test_empty_dependency_report_is_rejected) ... ok"
+        },
+        {
+          "name": "test_exact_artifact_bound_is_accepted_without_allocating_512_mib (test_android_artifact_size.AndroidArtifactSizeTest.test_exact_artifact_bound_is_accepted_without_allocating_512_mib)",
+          "outcome": "PASS",
+          "line": 1459,
+          "raw_log_line": "2026-09-07T18:39:24.7568053Z test_exact_artifact_bound_is_accepted_without_allocating_512_mib (test_android_artifact_size.AndroidArtifactSizeTest.test_exact_artifact_bound_is_accepted_without_allocating_512_mib) ... ok"
+        },
+        {
+          "name": "test_exact_dependency_report_bound_is_accepted (test_android_artifact_size.AndroidArtifactSizeTest.test_exact_dependency_report_bound_is_accepted)",
+          "outcome": "PASS",
+          "line": 1460,
+          "raw_log_line": "2026-09-07T18:39:24.7569943Z test_exact_dependency_report_bound_is_accepted (test_android_artifact_size.AndroidArtifactSizeTest.test_exact_dependency_report_bound_is_accepted) ... ok"
+        },
+        {
+          "name": "test_missing_directory_and_symlink_inputs_are_rejected (test_android_artifact_size.AndroidArtifactSizeTest.test_missing_directory_and_symlink_inputs_are_rejected)",
+          "outcome": "PASS",
+          "line": 1461,
+          "raw_log_line": "2026-09-07T18:39:24.7570806Z test_missing_directory_and_symlink_inputs_are_rejected (test_android_artifact_size.AndroidArtifactSizeTest.test_missing_directory_and_symlink_inputs_are_rejected) ... ok"
+        },
+        {
+          "name": "test_oversized_artifact_is_rejected (test_android_artifact_size.AndroidArtifactSizeTest.test_oversized_artifact_is_rejected)",
+          "outcome": "PASS",
+          "line": 1462,
+          "raw_log_line": "2026-09-07T18:39:24.7571604Z test_oversized_artifact_is_rejected (test_android_artifact_size.AndroidArtifactSizeTest.test_oversized_artifact_is_rejected) ... ok"
+        },
+        {
+          "name": "test_oversized_dependency_report_is_rejected (test_android_artifact_size.AndroidArtifactSizeTest.test_oversized_dependency_report_is_rejected)",
+          "outcome": "PASS",
+          "line": 1463,
+          "raw_log_line": "2026-09-07T18:39:24.7572355Z test_oversized_dependency_report_is_rejected (test_android_artifact_size.AndroidArtifactSizeTest.test_oversized_dependency_report_is_rejected) ... ok"
+        }
+      ],
+      "current_test_sources": [
+        {
+          "path": "scripts/release/tests/test_android_artifact_size.py",
+          "sha256": "1bdf6fe45be629ed8ea6d435727e88d87644319257127732b61a529f1ce1a0b1",
+          "same_bytes_as_ci": true
+        }
+      ]
+    },
+    {
+      "key": "C01:test_android_upload_signature",
+      "issue_ids": [
+        "RL-C2"
+      ],
+      "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+      "ci_run_id": 34152138368,
+      "job": "C01",
+      "task": "verifyReleaseSystem/Python unittest discovery (actual productionCheck release suite)",
+      "log_path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/101836439057.log",
+      "log_sha256": "80dbdb299846b9b41835e4b436f12213dd8cbf5f0075b36a99c3eb62728bed7a",
+      "selected_counts": {
+        "PASS": 21,
+        "FAIL": 0,
+        "SKIP": 0
+      },
+      "descriptors": [
+        {
+          "name": "test_additional_unapproved_signer_is_rejected (test_android_upload_signature.AndroidUploadSignatureTest.test_additional_unapproved_signer_is_rejected)",
+          "outcome": "PASS",
+          "line": 1496,
+          "raw_log_line": "2026-09-07T18:39:31.5580712Z test_additional_unapproved_signer_is_rejected (test_android_upload_signature.AndroidUploadSignatureTest.test_additional_unapproved_signer_is_rejected) ... ok"
+        },
+        {
+          "name": "test_certificate_usage_must_allow_code_signing (test_android_upload_signature.AndroidUploadSignatureTest.test_certificate_usage_must_allow_code_signing)",
+          "outcome": "PASS",
+          "line": 1503,
+          "raw_log_line": "2026-09-07T18:39:35.7570540Z test_certificate_usage_must_allow_code_signing (test_android_upload_signature.AndroidUploadSignatureTest.test_certificate_usage_must_allow_code_signing) ... ok"
+        },
+        {
+          "name": "test_corrupt_signature_block_is_rejected (test_android_upload_signature.AndroidUploadSignatureTest.test_corrupt_signature_block_is_rejected)",
+          "outcome": "PASS",
+          "line": 1506,
+          "raw_log_line": "2026-09-07T18:39:37.5580729Z test_corrupt_signature_block_is_rejected (test_android_upload_signature.AndroidUploadSignatureTest.test_corrupt_signature_block_is_rejected) ... ok"
+        },
+        {
+          "name": "test_disabled_certificate_algorithm_is_rejected_with_modern_jar_signature (test_android_upload_signature.AndroidUploadSignatureTest.test_disabled_certificate_algorithm_is_rejected_with_modern_jar_signature)",
+          "outcome": "PASS",
+          "line": 1512,
+          "raw_log_line": "2026-09-07T18:39:42.3620860Z test_disabled_certificate_algorithm_is_rejected_with_modern_jar_signature (test_android_upload_signature.AndroidUploadSignatureTest.test_disabled_certificate_algorithm_is_rejected_with_modern_jar_signature) ... ok"
+        },
+        {
+          "name": "test_disabled_jar_algorithm_is_rejected_with_modern_certificate (test_android_upload_signature.AndroidUploadSignatureTest.test_disabled_jar_algorithm_is_rejected_with_modern_certificate)",
+          "outcome": "PASS",
+          "line": 1515,
+          "raw_log_line": "2026-09-07T18:39:44.5581307Z test_disabled_jar_algorithm_is_rejected_with_modern_certificate (test_android_upload_signature.AndroidUploadSignatureTest.test_disabled_jar_algorithm_is_rejected_with_modern_certificate) ... ok"
+        },
+        {
+          "name": "test_disabled_rsa_key_size_is_rejected (test_android_upload_signature.AndroidUploadSignatureTest.test_disabled_rsa_key_size_is_rejected)",
+          "outcome": "PASS",
+          "line": 1560,
+          "raw_log_line": "2026-09-07T18:39:48.6594341Z test_disabled_rsa_key_size_is_rejected (test_android_upload_signature.AndroidUploadSignatureTest.test_disabled_rsa_key_size_is_rejected) ... ok"
+        },
+        {
+          "name": "test_entirely_unsigned_bundle_is_rejected (test_android_upload_signature.AndroidUploadSignatureTest.test_entirely_unsigned_bundle_is_rejected)",
+          "outcome": "PASS",
+          "line": 1566,
+          "raw_log_line": "2026-09-07T18:39:50.2590528Z test_entirely_unsigned_bundle_is_rejected (test_android_upload_signature.AndroidUploadSignatureTest.test_entirely_unsigned_bundle_is_rejected) ... ok"
+        },
+        {
+          "name": "test_expired_self_signed_certificate_is_rejected (test_android_upload_signature.AndroidUploadSignatureTest.test_expired_self_signed_certificate_is_rejected)",
+          "outcome": "PASS",
+          "line": 1567,
+          "raw_log_line": "2026-09-07T18:39:54.6580698Z test_expired_self_signed_certificate_is_rejected (test_android_upload_signature.AndroidUploadSignatureTest.test_expired_self_signed_certificate_is_rejected) ... ok"
+        },
+        {
+          "name": "test_extended_usage_must_allow_code_signing (test_android_upload_signature.AndroidUploadSignatureTest.test_extended_usage_must_allow_code_signing)",
+          "outcome": "PASS",
+          "line": 1579,
+          "raw_log_line": "2026-09-07T18:39:59.8564687Z test_extended_usage_must_allow_code_signing (test_android_upload_signature.AndroidUploadSignatureTest.test_extended_usage_must_allow_code_signing) ... ok"
+        },
+        {
+          "name": "test_failed_java_preparation_cannot_be_masked_by_later_verification (test_android_upload_signature.AndroidUploadSignatureTest.test_failed_java_preparation_cannot_be_masked_by_later_verification)",
+          "outcome": "PASS",
+          "line": 1582,
+          "raw_log_line": "2026-09-07T18:39:59.9564347Z test_failed_java_preparation_cannot_be_masked_by_later_verification (test_android_upload_signature.AndroidUploadSignatureTest.test_failed_java_preparation_cannot_be_masked_by_later_verification) ... ok"
+        },
+        {
+          "name": "test_not_yet_valid_self_signed_certificate_is_rejected (test_android_upload_signature.AndroidUploadSignatureTest.test_not_yet_valid_self_signed_certificate_is_rejected)",
+          "outcome": "PASS",
+          "line": 1601,
+          "raw_log_line": "2026-09-07T18:40:04.3580740Z test_not_yet_valid_self_signed_certificate_is_rejected (test_android_upload_signature.AndroidUploadSignatureTest.test_not_yet_valid_self_signed_certificate_is_rejected) ... ok"
+        },
+        {
+          "name": "test_registered_self_signed_upload_certificate_passes_strict_verification (test_android_upload_signature.AndroidUploadSignatureTest.test_registered_self_signed_upload_certificate_passes_strict_verification)",
+          "outcome": "PASS",
+          "line": 1613,
+          "raw_log_line": "2026-09-07T18:40:08.1625665Z test_registered_self_signed_upload_certificate_passes_strict_verification (test_android_upload_signature.AndroidUploadSignatureTest.test_registered_self_signed_upload_certificate_passes_strict_verification) ... ok"
+        },
+        {
+          "name": "test_signedjar_specific_certificate_policy_cannot_be_bypassed_by_trusting_leaf (test_android_upload_signature.AndroidUploadSignatureTest.test_signedjar_specific_certificate_policy_cannot_be_bypassed_by_trusting_leaf)",
+          "outcome": "PASS",
+          "line": 1633,
+          "raw_log_line": "2026-09-07T18:40:10.1592925Z test_signedjar_specific_certificate_policy_cannot_be_bypassed_by_trusting_leaf (test_android_upload_signature.AndroidUploadSignatureTest.test_signedjar_specific_certificate_policy_cannot_be_bypassed_by_trusting_leaf) ... ok"
+        },
+        {
+          "name": "test_stale_trust_store_is_not_overwritten_or_used_after_preparation_failure (test_android_upload_signature.AndroidUploadSignatureTest.test_stale_trust_store_is_not_overwritten_or_used_after_preparation_failure)",
+          "outcome": "PASS",
+          "line": 1637,
+          "raw_log_line": "2026-09-07T18:40:12.1600803Z test_stale_trust_store_is_not_overwritten_or_used_after_preparation_failure (test_android_upload_signature.AndroidUploadSignatureTest.test_stale_trust_store_is_not_overwritten_or_used_after_preparation_failure) ... ok"
+        },
+        {
+          "name": "test_tampered_signed_payload_is_rejected (test_android_upload_signature.AndroidUploadSignatureTest.test_tampered_signed_payload_is_rejected)",
+          "outcome": "PASS",
+          "line": 1638,
+          "raw_log_line": "2026-09-07T18:40:13.0575464Z test_tampered_signed_payload_is_rejected (test_android_upload_signature.AndroidUploadSignatureTest.test_tampered_signed_payload_is_rejected) ... ok"
+        },
+        {
+          "name": "test_unknown_critical_certificate_extension_is_rejected (test_android_upload_signature.AndroidUploadSignatureTest.test_unknown_critical_certificate_extension_is_rejected)",
+          "outcome": "PASS",
+          "line": 1639,
+          "raw_log_line": "2026-09-07T18:40:19.0590739Z test_unknown_critical_certificate_extension_is_rejected (test_android_upload_signature.AndroidUploadSignatureTest.test_unknown_critical_certificate_extension_is_rejected) ... ok"
+        },
+        {
+          "name": "test_unsigned_extra_payload_including_meta_inf_is_rejected (test_android_upload_signature.AndroidUploadSignatureTest.test_unsigned_extra_payload_including_meta_inf_is_rejected)",
+          "outcome": "PASS",
+          "line": 1644,
+          "raw_log_line": "2026-09-07T18:40:21.2610959Z test_unsigned_extra_payload_including_meta_inf_is_rejected (test_android_upload_signature.AndroidUploadSignatureTest.test_unsigned_extra_payload_including_meta_inf_is_rejected) ... ok"
+        },
+        {
+          "name": "test_untrusted_ca_path_does_not_become_a_new_trust_anchor (test_android_upload_signature.AndroidUploadSignatureTest.test_untrusted_ca_path_does_not_become_a_new_trust_anchor)",
+          "outcome": "PASS",
+          "line": 1670,
+          "raw_log_line": "2026-09-07T18:40:31.3581877Z test_untrusted_ca_path_does_not_become_a_new_trust_anchor (test_android_upload_signature.AndroidUploadSignatureTest.test_untrusted_ca_path_does_not_become_a_new_trust_anchor) ... ok"
+        },
+        {
+          "name": "test_upload_trust_cannot_be_reused_as_timestamp_authority_trust (test_android_upload_signature.AndroidUploadSignatureTest.test_upload_trust_cannot_be_reused_as_timestamp_authority_trust)",
+          "outcome": "PASS",
+          "line": 1677,
+          "raw_log_line": "2026-09-07T18:40:33.7591251Z test_upload_trust_cannot_be_reused_as_timestamp_authority_trust (test_android_upload_signature.AndroidUploadSignatureTest.test_upload_trust_cannot_be_reused_as_timestamp_authority_trust) ... ok"
+        },
+        {
+          "name": "test_wrong_approved_fingerprint_is_rejected (test_android_upload_signature.AndroidUploadSignatureTest.test_wrong_approved_fingerprint_is_rejected)",
+          "outcome": "PASS",
+          "line": 1683,
+          "raw_log_line": "2026-09-07T18:40:35.8571262Z test_wrong_approved_fingerprint_is_rejected (test_android_upload_signature.AndroidUploadSignatureTest.test_wrong_approved_fingerprint_is_rejected) ... ok"
+        },
+        {
+          "name": "test_timeout_stops_term_resistant_redirected_descendant (test_android_upload_signature.OwnedSignatureProcessTest.test_timeout_stops_term_resistant_redirected_descendant)",
+          "outcome": "PASS",
+          "line": 1717,
+          "raw_log_line": "2026-09-07T18:40:41.4602219Z test_timeout_stops_term_resistant_redirected_descendant (test_android_upload_signature.OwnedSignatureProcessTest.test_timeout_stops_term_resistant_redirected_descendant) ... ok"
+        }
+      ],
+      "current_test_sources": [
+        {
+          "path": "scripts/release/tests/test_android_upload_signature.py",
+          "sha256": "fd9723397cd3ae4336371cd6fdd93164d225919d1ed615d5fd48f75055b3eade",
+          "same_bytes_as_ci": true
+        }
+      ]
+    },
+    {
+      "key": "C01:test_google_promotion_edit",
+      "issue_ids": [
+        "RL-C3"
+      ],
+      "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+      "ci_run_id": 34152138368,
+      "job": "C01",
+      "task": "verifyReleaseSystem/Python unittest discovery (actual productionCheck release suite)",
+      "log_path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/101836439057.log",
+      "log_sha256": "80dbdb299846b9b41835e4b436f12213dd8cbf5f0075b36a99c3eb62728bed7a",
+      "selected_counts": {
+        "PASS": 9,
+        "FAIL": 0,
+        "SKIP": 0
+      },
+      "descriptors": [
+        {
+          "name": "test_already_present_candidate_is_validated_and_edit_is_deleted (test_google_promotion_edit.GooglePromotionEditTest.test_already_present_candidate_is_validated_and_edit_is_deleted)",
+          "outcome": "PASS",
+          "line": 1809,
+          "raw_log_line": "2026-09-07T18:40:41.6391034Z test_already_present_candidate_is_validated_and_edit_is_deleted (test_google_promotion_edit.GooglePromotionEditTest.test_already_present_candidate_is_validated_and_edit_is_deleted) ... ok"
+        },
+        {
+          "name": "test_commit_failure_is_not_blindly_retried (test_google_promotion_edit.GooglePromotionEditTest.test_commit_failure_is_not_blindly_retried)",
+          "outcome": "PASS",
+          "line": 1810,
+          "raw_log_line": "2026-09-07T18:40:41.6392369Z test_commit_failure_is_not_blindly_retried (test_google_promotion_edit.GooglePromotionEditTest.test_commit_failure_is_not_blindly_retried) ... ok"
+        },
+        {
+          "name": "test_external_change_after_reads_invalidates_mutation_without_retry (test_google_promotion_edit.GooglePromotionEditTest.test_external_change_after_reads_invalidates_mutation_without_retry)",
+          "outcome": "PASS",
+          "line": 1811,
+          "raw_log_line": "2026-09-07T18:40:41.6393779Z test_external_change_after_reads_invalidates_mutation_without_retry (test_google_promotion_edit.GooglePromotionEditTest.test_external_change_after_reads_invalidates_mutation_without_retry) ... ok"
+        },
+        {
+          "name": "test_missing_configured_destination_is_rejected (test_google_promotion_edit.GooglePromotionEditTest.test_missing_configured_destination_is_rejected)",
+          "outcome": "PASS",
+          "line": 1812,
+          "raw_log_line": "2026-09-07T18:40:41.6395287Z test_missing_configured_destination_is_rejected (test_google_promotion_edit.GooglePromotionEditTest.test_missing_configured_destination_is_rejected) ... ok"
+        },
+        {
+          "name": "test_read_validation_and_commit_use_the_same_edit_snapshot (test_google_promotion_edit.GooglePromotionEditTest.test_read_validation_and_commit_use_the_same_edit_snapshot)",
+          "outcome": "PASS",
+          "line": 1813,
+          "raw_log_line": "2026-09-07T18:40:41.6396879Z test_read_validation_and_commit_use_the_same_edit_snapshot (test_google_promotion_edit.GooglePromotionEditTest.test_read_validation_and_commit_use_the_same_edit_snapshot) ... ok"
+        },
+        {
+          "name": "test_staged_destination_in_mutation_snapshot_is_not_completed (test_google_promotion_edit.GooglePromotionEditTest.test_staged_destination_in_mutation_snapshot_is_not_completed)",
+          "outcome": "PASS",
+          "line": 1814,
+          "raw_log_line": "2026-09-07T18:40:41.6398399Z test_staged_destination_in_mutation_snapshot_is_not_completed (test_google_promotion_edit.GooglePromotionEditTest.test_staged_destination_in_mutation_snapshot_is_not_completed) ... ok"
+        },
+        {
+          "name": "test_unavailable_or_unfinished_source_in_mutation_snapshot_is_rejected (test_google_promotion_edit.GooglePromotionEditTest.test_unavailable_or_unfinished_source_in_mutation_snapshot_is_rejected)",
+          "outcome": "PASS",
+          "line": 1815,
+          "raw_log_line": "2026-09-07T18:40:41.6400241Z test_unavailable_or_unfinished_source_in_mutation_snapshot_is_rejected (test_google_promotion_edit.GooglePromotionEditTest.test_unavailable_or_unfinished_source_in_mutation_snapshot_is_rejected) ... ok"
+        },
+        {
+          "name": "test_validation_failure_deletes_uncommitted_edit_without_retry (test_google_promotion_edit.GooglePromotionEditTest.test_validation_failure_deletes_uncommitted_edit_without_retry)",
+          "outcome": "PASS",
+          "line": 1816,
+          "raw_log_line": "2026-09-07T18:40:41.6402208Z test_validation_failure_deletes_uncommitted_edit_without_retry (test_google_promotion_edit.GooglePromotionEditTest.test_validation_failure_deletes_uncommitted_edit_without_retry) ... ok"
+        },
+        {
+          "name": "test_wrong_bundle_digest_in_mutation_snapshot_is_rejected (test_google_promotion_edit.GooglePromotionEditTest.test_wrong_bundle_digest_in_mutation_snapshot_is_rejected)",
+          "outcome": "PASS",
+          "line": 1817,
+          "raw_log_line": "2026-09-07T18:40:41.6403756Z test_wrong_bundle_digest_in_mutation_snapshot_is_rejected (test_google_promotion_edit.GooglePromotionEditTest.test_wrong_bundle_digest_in_mutation_snapshot_is_rejected) ... ok"
+        }
+      ],
+      "current_test_sources": [
+        {
+          "path": "scripts/release/tests/test_google_promotion_edit.py",
+          "sha256": "b6ed5e950782ef5581f86cabd7a263937da52d3dfcf7c84cc45df5bcc2d147db",
+          "same_bytes_as_ci": true
+        }
+      ]
+    }
+  ]
+}

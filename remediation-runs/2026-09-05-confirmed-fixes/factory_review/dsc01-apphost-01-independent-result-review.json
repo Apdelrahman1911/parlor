@@ -1,0 +1,245 @@
+{
+  "schema_version": 1,
+  "at": "2026-09-06T01:13:11.708672+00:00",
+  "reviewer": "/root/factory_review",
+  "operator": "/root",
+  "author": "/root/native_fix_review",
+  "cycle": "dsc01-apphost-01",
+  "conclusion": "EXECUTED RUNTIME FAIL; DS-C01 actual-app restart/System behavior NOT VERIFIED by this attempt; CLEANUP PASS",
+  "failure_classification": "TEST/EVIDENCE GAP: exact-label Settings query failed before first language mutation. Not enough evidence to classify a production Settings/accessibility defect or app crash.",
+  "identity": {
+    "commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+    "tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+    "branch": "main",
+    "diff_sha256": "60b555c0dd323a086e959ffbc5aa3fd7c6629ae1d0ad016021572e7ae272e4dd",
+    "source_manifest_sha256": "e59da533dbec2f02f6f2b460ce72e2a7337af1e44abfb0bc6d533304d4127ec7"
+  },
+  "controls_sha256": "82c4efd11d4c9885423066e6318967321c5dc1a7c3afe550cae42c3ff1cdb375",
+  "controls_and_source_unchanged": true,
+  "execution": {
+    "started_at": "2026-09-06T00:57:11.058087+00:00",
+    "finished_at": "2026-09-06T01:01:09.423608+00:00",
+    "xcodebuild_exit_code": 65,
+    "test": "IOSAppLaunchUITests/testDSC01ActualSettingsAcrossProcessRestartAndSystem()",
+    "total": 1,
+    "passed": 0,
+    "failed": 1,
+    "skipped": 0,
+    "expected_failures": 0,
+    "device": {
+      "architecture": "arm64",
+      "deviceId": "5E8DF832-0068-4422-9E19-D46E6994A3C1",
+      "deviceName": "Parlor-Audit-parlor-audit-dsc01-apphost-01-fjwb30zo",
+      "modelName": "iPhone 17 Pro",
+      "osBuildNumber": "23F77",
+      "osVersion": "26.5",
+      "platform": "iOS Simulator"
+    },
+    "app": {
+      "CFBundleIdentifier": "com.parlor.app.debug",
+      "CFBundleVersion": "1",
+      "CFBundleShortVersionString": "1.0.0",
+      "MinimumOSVersion": "16.0"
+    },
+    "scope": "Copied observed Swift wrapper with original production Kotlin App/Settings, unsigned Debug owned simulator; not a physical/device/Store test."
+  },
+  "failure_evidence": {
+    "raw_message": "XCTAssertTrue failed - Missing exact actual-app label",
+    "source": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/dsc01_apphost/IOSAppLaunchUITests.swift.in",
+    "source_sha256": "4a198288c8deda3c66821370e171859876591f3ee6bf0ff47dd70abb0d02b4e4",
+    "line_ranges": [
+      [
+        15,
+        32
+      ],
+      [
+        91,
+        119
+      ]
+    ],
+    "complete_path": "launch() observed foreground/Home brand/observer -> observe() produced initial synthetic state -> first loop calls openSettings(language=en) -> tap(label=\"Open settings.\") -> exact label query times out at line115 -> XCTest fails with continueAfterFailure=false -> no Arabic submission or restart",
+    "probe_observations": [
+      {
+        "nativeDirection": "unavailable",
+        "controllerCreations": 0,
+        "preferences": {
+          "ownerPrevious": [],
+          "preferredLanguage": "en",
+          "setting": "system",
+          "ownerPresent": false,
+          "ownerPreviousPresent": false,
+          "ownerInstalled": "none",
+          "appLanguages": [],
+          "hasAppOverride": false
+        },
+        "fixture": "fresh",
+        "phase": "before_main",
+        "boot": "22BA4D8C-DA0C-4E9F-A14C-0F5F204B68AF",
+        "ordinal": 1
+      },
+      {
+        "nativeDirection": "force_ltr",
+        "controllerCreations": 1,
+        "preferences": {
+          "ownerPrevious": [],
+          "preferredLanguage": "en",
+          "setting": "system",
+          "ownerPresent": false,
+          "ownerPreviousPresent": false,
+          "ownerInstalled": "none",
+          "appLanguages": [],
+          "hasAppOverride": false
+        },
+        "fixture": "fresh",
+        "phase": "sample",
+        "boot": "22BA4D8C-DA0C-4E9F-A14C-0F5F204B68AF",
+        "ordinal": 2
+      }
+    ],
+    "probe_completed": false,
+    "limitations": "Accessibility hierarchy was requested by XCTest but retained summary/log does not contain the actual missing control semantics. Exact cause beyond failed selector is not established; no guess that an app crash, OS termination, or Kotlin exception caused it. General simulator warnings are not proof of those failures."
+  },
+  "receipt_reporting_discrepancy": {
+    "original_field": "runtime_evidence_status",
+    "original_value": "NOT_RUN",
+    "independent_actual_status": "FAIL_EXECUTED",
+    "cause": "Harness raises on failed one-pass summary before assigning success runtime_evidence_status. Test discovery and execution still occurred. Original receipt kept intact; author notified for separate versioned reporting repair."
+  },
+  "evidence_binding": {
+    "independent_check": "remediation-runs/2026-09-05-confirmed-fixes/factory_review/dsc01-runtime-binding-cleanup-01.json",
+    "sha256": "7557bd2976a95fb212427903d5782e36b6c9451bd05079bf851761236e9106da",
+    "all_18_current_originals_and_reconstructed_copies_match": true,
+    "changed_copies_only": [
+      "iosApp/iosApp/iOSApp.swift",
+      "iosApp/iosApp/ContentView.swift",
+      "iosApp/iosAppUITests/IOSAppLaunchUITests.swift",
+      "iosApp/iosApp.xcodeproj/project.pbxproj"
+    ],
+    "reconstruction_method": "Retained unified diff applied in memory with every original context/removal/hunk count checked; reconstructed bytes hash-equal preserved copy manifest. Nothing written into application tree."
+  },
+  "cleanup": {
+    "conclusion": "PASS within exact owned-task scope",
+    "embedded_build_exit": 0,
+    "embedded_stop_exit": 0,
+    "outer_stops": [
+      {
+        "label": "stop-xcode-immediate",
+        "exit_code": 0,
+        "at": "2026-09-06T01:01:00.860581+00:00"
+      },
+      {
+        "label": "stop-final",
+        "exit_code": 0,
+        "at": "2026-09-06T01:01:02.501872+00:00"
+      }
+    ],
+    "cleanup_completed_at": "2026-09-06T01:01:09.212331+00:00",
+    "simulator_shutdown_exit": 0,
+    "simulator_delete_exit": 0,
+    "owned_device_absent_in_retained_post_delete_query": true,
+    "secondary_cleanup": {
+      "status": "PASS",
+      "removed": [
+        "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-88445/IB/B80B37CD-55C7-4F43-980B-951FCD6F91E8.RemoteToHost",
+        "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-88445/IB/B80B37CD-55C7-4F43-980B-951FCD6F91E8.HostToRemote",
+        "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-88445/IB",
+        "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-88445"
+      ],
+      "remaining": []
+    },
+    "secondary_attestation_errors": [],
+    "owned_processes_remaining_in_root_receipt": [],
+    "unknown_holders": [],
+    "remaining_outputs_in_root_receipt": [],
+    "cleanup_errors": [],
+    "independent_current_path_check_remaining": [],
+    "independent_targeted_ps_exit": 1,
+    "independent_targeted_ps_rows": [],
+    "independent_targeted_ps_error": "",
+    "cache_directories_still_exist": {
+      "/Users/abdelrahman/.gradle/caches": true,
+      "/Users/abdelrahman/.gradle/wrapper": true
+    },
+    "limitations": "Reviewer used no simctl or global process cleanup; only exact task-owned path existence and known PID identities rechecked. Unrelated user processes, global cache contents, and private material not inspected or changed."
+  },
+  "next_required_verification": [
+    "Diagnose actual Compose iOS semantics for Settings control using exact pinned dependency source and/or bounded owned runtime observations; no shipping hook or guessed fallback coordinate.",
+    "Versioned harness change requires independent review, root-only safety tests if applicable, fresh cycle ID, same binding and cleanup.",
+    "Repeat full actual-app English/Arabic/System four-process matrix; require before-App persistent-owner preconditions. Prior source/Kotlin fixture tests remain separate evidence; this failed attempt cannot replace them."
+  ],
+  "evidence_files": [
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/dsc01-apphost-01/receipt.json",
+      "sha256": "33b7d8a4ee78dd34903aa4b3131fabc0df578b4148deafe30b818dff7885e89c",
+      "bytes": 320729
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/dsc01-apphost-01/input-manifest.json",
+      "sha256": "0d7f8483c1198a923bd2fa4da87b09214eb447bc04718048f7ffd377f380ddb4",
+      "bytes": 127875
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/dsc01-apphost-01/copied-wrapper-manifest.json",
+      "sha256": "9d82683d207cc6006f040f4caf4a514cbcd0117f006f9045d76e737e315ce26d",
+      "bytes": 4535
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/dsc01-apphost-01/copied-wrapper.diff",
+      "sha256": "6f6fdb0075d7571765e82d741259c375d87cd4725e1f2e7bdf71632e19eb3680",
+      "bytes": 26192
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/dsc01-apphost-01/xcodebuild.log",
+      "sha256": "8353492ada0a19c9aef1d2a3c1277166b0026ce128ad882ab6ae605e12557422",
+      "bytes": 219397
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/dsc01-apphost-01/xcresult-summary.json",
+      "sha256": "5ff56f9fd7d257ba1d197faf60610ed6e36954f4f8de1f42bf1009e31a2787e7",
+      "bytes": 1489
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/dsc01-apphost-01/xcresult-tests.json",
+      "sha256": "92d9d3621dbc7ba6b6dfb83ec5716fdd2487e365543542f088e5be2be013664d",
+      "bytes": 2000
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/dsc01-apphost-01/probe-result.json",
+      "sha256": "478f184e9417f27cc586edd2964a18e29e5d124ddb480692109f67d924edb272",
+      "bytes": 797
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/dsc01-apphost-01/embedded-gradle-stop.txt",
+      "sha256": "fb55a963c8d30249ea6b8be68a62b5921facefdc7823c16ad139fea885be972f",
+      "bytes": 25
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/dsc01-apphost-01/stop-xcode-immediate.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+      "bytes": 31
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/dsc01-apphost-01/stop-final.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+      "bytes": 31
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/dsc01-apphost-01/secondary-fifo-ownership-final.json",
+      "sha256": "d7bbfbdd5a8fdbd07e2fad2644b22392f5caf7c3ea50b438b8c4113dd330e01e",
+      "bytes": 2942
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/dsc01-apphost-01/owned-device-after-delete.json",
+      "sha256": "755d442cf44919879856407fe199e916c770d206e3f6b050d6eb286b7af73782",
+      "bytes": 20
+    }
+  ],
+  "reviewer_actions": {
+    "source_edits": 0,
+    "build_or_test_launches": 0,
+    "native_tool_invocations": 0,
+    "process_signals": 0,
+    "git_state_mutations": 0,
+    "new_outputs": "This report and compact read-only binding/cleanup evidence only"
+  }
+}

@@ -1,0 +1,70 @@
+{
+  "author": "/root/release_fix_review",
+  "independent_review": "PENDING /root; author cannot independently approve this authored implementation",
+  "created_at": "2026-09-07T14:17:28.872818+00:00",
+  "head": "11210dc6e34811bd1dd36d6a34339851601e5112",
+  "files": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/.github/workflows/production-verification.yml",
+      "sha256": "916207fd2d0a42d17c088dbf7899afe06d3ae070e1f8b1d6749661785a88d8fd",
+      "lines": 650
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/ci/verification_hygiene.py",
+      "sha256": "9eab427aeb3d810c033a3827aa44f7201cbb261345a2e6667a8d085df2fbd603",
+      "lines": 276
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/ci/apple_verification_hygiene.py",
+      "sha256": "d9c554781750d3cbbf2a4adce3b040edb83d0de5fec4c04eac700c526fca1c3c",
+      "lines": 278
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/ci/darwin_worker_identity.py",
+      "sha256": "a3830b131614d059d7a2047dfbaa11117141ac2b02f1603fe0482f9dd5c94cc2",
+      "lines": 247
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/ci/owned_ci_simulator.py",
+      "sha256": "717c8c02dc06e4eac175c5dde5c7f9bdd6ebbd5e7028cc94c6ba4f84b44388af",
+      "lines": 213
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_ci_verification_hygiene.py",
+      "sha256": "3fc6f1d4a15152bcca6d86d77bcbc782b3936c6c47336a3ff7b3067d3790e4c8",
+      "lines": 339
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_apple_ci_hygiene.py",
+      "sha256": "39f0bafac0ab9b49fa396d4767403bd6884cf295dac9f9bd38801ea1dcc2b094",
+      "lines": 530
+    }
+  ],
+  "test_execution": "NOT RUN by child; root owns exclusive verification lane",
+  "planned_tests_declared": 33,
+  "prior_root_tests_sha256_reconstructed": "bc8c69ad664587e569c48d552cd9576ddd14479ae7ea06a0018adfee54ea5de0",
+  "preserved_root_tests_expected_sha256": "bc8c69ad664587e569c48d552cd9576ddd14479ae7ea06a0018adfee54ea5de0",
+  "scope": [
+    "Fresh per-cycle source/task/Xcode/unchanged tracking binding before Apple commands",
+    "All same-UID pre-cycle lifetimes excluded; narrow exact executable allowlist + native audit identity + exact runner marker; no PID or PGID fallback",
+    "Gradle stop first; quiesce Xcode before owned-device shutdown/delete; recheck workers afterward",
+    "Fresh simulator pre-create intent, exact returned/recovered UUID, durable adoption before mutation, explicit ambiguous outcomes",
+    "Current always-finalizer outcomes + current source/claim-bound receipts gate final output cleanup after preserved upload",
+    "Root compiler strategy and real-Git integration tests preserved; physical tests untouched"
+  ],
+  "limitations": [
+    "No tests, native workers, simulators, builds or other runtime checks executed by child",
+    "Local installed Xcode is26.5/17F41; its manpage/filesystem paths are only supporting comparison, not proof of pinned CI26.3 layout or behavior",
+    "Must execute fresh Xcode26.3/macOS15 ARM64 CI to attest exact worker paths, RUNNER_TRACKING_ID propagation/readability, port APIs, actual worker retirement, and owned-simulator cleanup",
+    "KERN_PROCARGS2 may omit restricted-process environment variables: failure is retained, no entitlement or broad signal workaround",
+    "KGP standalone simulator lifecycle is not owned-device UI evidence; no physical LAN, Store, signing or publication proof",
+    "simctl uses fixed trusted commands with90s subprocess timeout and a1MiB accepted response bound; subprocess PIPE buffering is not a streaming cap"
+  ],
+  "research": [
+    "reviews/ci-run-34112913001-evidence/apple-ci-cleanup-research-01.json",
+    "reviews/ci-run-34112913001-evidence/apple-ci-cleanup-research-02.json",
+    "reviews/ci-run-34112913001-evidence/github-runner-2.337.0-jobextension.cs",
+    "read-only archived darwin_owned_processes.py; archive unchanged"
+  ],
+  "cleanup": "Child started only short source-reading/research/editor commands; all tool sessions exited. No task-owned build output, daemon, native worker or device was created. Root output/process ownership untouched."
+}

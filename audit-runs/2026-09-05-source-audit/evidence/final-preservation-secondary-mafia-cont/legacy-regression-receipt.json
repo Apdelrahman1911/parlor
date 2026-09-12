@@ -1,0 +1,115 @@
+{
+  "recorded_at": "2026-09-05T14:41:10.389576+00:00",
+  "reviewer": "/root/mafia_cont",
+  "source_path": "/Users/abdelrahman/Projects/parlor/audit-runs/2026-09-05-source-audit/evidence/final-preservation-secondary-mafia-cont/final_preservation_check-93d85c.py",
+  "source_sha256": "93d85c028fbb0050f2c53b2fdebe3b653aec4151356cbf5077b569ab95fd89dc",
+  "execution": "Pure extracted AST with mocked ps/lsof; no subprocess, Gradle, ADB, emulator, device, or process-termination command executed.",
+  "assertions": 25,
+  "results": [
+    {
+      "name": "self-process parsed; no synthetic workers",
+      "status": "PASS"
+    },
+    {
+      "name": "PID+start attested worker blocks",
+      "status": "PASS"
+    },
+    {
+      "name": "PID reuse not misclassified as owned",
+      "status": "PASS"
+    },
+    {
+      "name": "recorded temp argv marker detected",
+      "status": "PASS"
+    },
+    {
+      "name": "recorded simulator UUID marker detected",
+      "status": "PASS"
+    },
+    {
+      "name": "Gradle8.13 conservatively blocks",
+      "status": "PASS"
+    },
+    {
+      "name": "unrelated Gradle version preserved",
+      "status": "PASS"
+    },
+    {
+      "name": "missing checker PID fails closed",
+      "status": "PASS"
+    },
+    {
+      "name": "no listener exit1 accepted",
+      "status": "PASS"
+    },
+    {
+      "name": "new listener is uncertainty, not presumed exited",
+      "status": "PASS"
+    },
+    {
+      "name": "lsof invalid exit fails closed",
+      "status": "PASS"
+    },
+    {
+      "name": "lsof stderr fails closed",
+      "status": "PASS"
+    },
+    {
+      "name": "lsof malformed PID fails closed",
+      "status": "PASS"
+    },
+    {
+      "name": "empty synthetic cleanup state accepted",
+      "status": "PASS"
+    },
+    {
+      "name": "cleanup blocks remaining_outputs",
+      "status": "PASS"
+    },
+    {
+      "name": "cleanup blocks remaining_temp",
+      "status": "PASS"
+    },
+    {
+      "name": "cleanup blocks owned_matches",
+      "status": "PASS"
+    },
+    {
+      "name": "cleanup blocks attested_still_alive",
+      "status": "PASS"
+    },
+    {
+      "name": "cleanup blocks port_check_errors",
+      "status": "PASS"
+    },
+    {
+      "name": "cleanup blocks gradle8",
+      "status": "PASS"
+    },
+    {
+      "name": "cleanup blocks running_receipts",
+      "status": "PASS"
+    },
+    {
+      "name": "cleanup blocks any observed port listener",
+      "status": "PASS"
+    },
+    {
+      "name": "cleanup blocks owned simulator directory",
+      "status": "PASS"
+    },
+    {
+      "name": "early checkpoint invalidates previous PASS",
+      "status": "PASS"
+    },
+    {
+      "name": "exception receipt remains fail closed and sanitizes message",
+      "status": "PASS"
+    }
+  ],
+  "limits": [
+    "Does not reproduce kernel races, I/O failures, permission denial, or actual runtime cleanup.",
+    "Only exact fragments are executed; complete helper and dependency source also read separately."
+  ],
+  "cleanup": "No build outputs/processes created. Only this script and compact JSON retained as required evidence."
+}

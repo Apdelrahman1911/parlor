@@ -1,0 +1,167 @@
+{
+  "reviewer": "/root/release_fix_review",
+  "reviewed_at": "2026-09-05T21:47:09.640780+00:00",
+  "scope": "Final independent broader release-system evidence addendum; no execution or production edits by reviewer",
+  "conclusion": "APPROVE LOCAL BROADER VERIFICATION RECEIPT \u2014 172 EXECUTED TESTS PASS, NO SKIPS; SCOPED RELEASE REPAIRS REMAIN SOURCE-APPROVED",
+  "source_identity": {
+    "branch": "main",
+    "commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+    "tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+    "diff_sha256": "6667f42559c6099cd34c95c3879feb7b96abaa7fde11a2d4bef6c2ec6601baa1",
+    "source_manifest_sha256": "1ec1541532ba78549efebbeef28e82f31a7a16d83c7ffec5c80b9611ca8423b4"
+  },
+  "scoped_sources": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/docs/RELEASE_AUTOMATION.md",
+      "sha256": "5598e91447aae3f111654b217118aa64cc9ea0c0c3c34d36f0440c51c0b7f206",
+      "current_matches_both_executed_manifests": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/release/PrepareAndroidUploadTrust.java",
+      "sha256": "a74b92902839047353aa4b5816bc226e43526960da7c4d2df117e25c9375c211",
+      "current_matches_both_executed_manifests": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/release/validate_android_artifact.sh",
+      "sha256": "e0100ed6274e41113e18d1cdaa5310242f749d2f337fdb0c5b85920a011cece6",
+      "current_matches_both_executed_manifests": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/release/store_api.py",
+      "sha256": "95ba5a18b5e78d85eb15c8764f011db76293d0bdcf8ee088151321ad5d6b7012",
+      "current_matches_both_executed_manifests": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_android_upload_signature.py",
+      "sha256": "fd9723397cd3ae4336371cd6fdd93164d225919d1ed615d5fd48f75055b3eade",
+      "current_matches_both_executed_manifests": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_android_artifact_size.py",
+      "sha256": "1bdf6fe45be629ed8ea6d435727e88d87644319257127732b61a529f1ce1a0b1",
+      "current_matches_both_executed_manifests": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_google_promotion_edit.py",
+      "sha256": "b6ed5e950782ef5581f86cabd7a263937da52d3dfcf7c84cc45df5bcc2d147db",
+      "current_matches_both_executed_manifests": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_store_api.py",
+      "sha256": "18d49c5deb8cc5383b5a9888f7f14f21884bbbfeb577348412f1930f4972a1d1",
+      "current_matches_both_executed_manifests": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_xcode_framework_phase.py",
+      "sha256": "3033307b0a029d87ab9c8c14d3b3b4d3a0d4db9d183012d6da58fb1e8b5c4a73",
+      "current_matches_both_executed_manifests": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/release/validate_release_system.sh",
+      "sha256": "ce52c9c08edecba968337d6de42c90895badec127c7029a5afc16737d3b8864a",
+      "current_matches_both_executed_manifests": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/config/release-policy.json",
+      "sha256": "316b28f75a13e0b925beb6bcd893b82e077a1a9efa850022026e830f9b1d4ad4",
+      "current_matches_both_executed_manifests": true
+    }
+  ],
+  "verification": {
+    "cycle": "release-system-green-01",
+    "started_at": "2026-09-05T21:37:00.583616+00:00",
+    "command": [
+      "bash",
+      "scripts/release/validate_release_system.sh"
+    ],
+    "env_policy": "JDK21, system Python, strict verification, signing env removed/empty Gradle signing props, cycle-owned TMPDIR/pycache",
+    "outputs_before": [],
+    "status": "PASS",
+    "exit_code": 0,
+    "finished_at": "2026-09-05T21:38:25.671710+00:00",
+    "stop_exit_code": 0,
+    "stopped_at": "2026-09-05T21:38:25.929391+00:00",
+    "workers": {
+      "terminated_owned_workers": [],
+      "remaining_owned_workers": []
+    },
+    "removed_outputs": [],
+    "retained_outputs": [],
+    "remaining_outputs": [],
+    "cleanup_completed_at": "2026-09-05T21:38:25.989717+00:00",
+    "source_changed_during_cycle": false,
+    "runner_changed_during_cycle": false,
+    "cleanup_errors": [],
+    "deferred_signals": [],
+    "cleanup_method": "Exact task-owned generated dirs; no Gradle clean daemon or global cache deletion. Unrelated processes excluded by PID/start identity and cycle ownership.",
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-05-confirmed-fixes/evidence/release-system-green-01/receipt.json",
+    "sha256": "5b330259a8ae0c0bed366bc7131f356bd3c4363030b93917a712a70559c84139",
+    "log_sha256": "2bcab5ae1243fde620a0205af0fae788fbe3910ae22b44c83b8cfb1b0dff83aa",
+    "stop_log_sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+    "task_owned_scratch_absent_independently_checked": true
+  },
+  "executed_counts_by_module": {
+    "test_android_artifact_size": 7,
+    "test_android_upload_signature": 21,
+    "test_google_promotion_edit": 9,
+    "test_normalize_embedded_apple_framework": 3,
+    "test_release_tool": 36,
+    "test_review_inventory": 3,
+    "test_store_api": 51,
+    "test_workflow_contract": 37,
+    "test_xcode_framework_phase": 5
+  },
+  "gates": [
+    {
+      "gate": "Python compilation",
+      "status": "PASS",
+      "basis": "Real script line25 precedes unittest under set-e; whole script exit0. This is Python syntax verification, not application runtime."
+    },
+    {
+      "gate": "Python release tests",
+      "status": "PASS",
+      "executed": 172,
+      "passed": 172,
+      "skipped": 0,
+      "basis": "Read all185 log lines;172 named executions match unittest summary. Includes both updated existing GoogleTrack tests and all new RL/IOS-B1 tests."
+    },
+    {
+      "gate": "Release workflow contract",
+      "status": "PASS",
+      "basis": "Explicit release workflow contract PASS in real script log; existing identity-disablement/no-publication/no-rebuild assertions passed."
+    },
+    {
+      "gate": "Tracked-only legacy inventory freshness",
+      "status": "PASS",
+      "basis": "Verified628 rows logged. Only structural tracked-index/history freshness; not dirty/untracked file coverage or proof that REVIEWED rows were manually inspected."
+    },
+    {
+      "gate": "Pinned ShellCheck0.11.0",
+      "status": "PASS",
+      "basis": "Real script downloads pinned asset, verifies configured checksum (OK log), then unconditionally executes binary with -x over scripts/release/*.sh under set-e. Whole script exit0."
+    },
+    {
+      "gate": "Pinned actionlint1.7.12",
+      "status": "PASS",
+      "basis": "Pinned download/checksum OK; unconditional final actionlint with pinned ShellCheck over workflows returned0."
+    },
+    {
+      "gate": "Real signed Store candidate/full RFC3161/device verification",
+      "status": "NOT EXECUTED / EXTERNAL OR ADDITIONAL FIXTURE EVIDENCE REMAINS",
+      "basis": "Synthetic certificates/JAR fixtures, mocked API boundaries and synthetic shell output are not Store signing, live Play edits, full positive timestamp interoperability or physical-device evidence."
+    }
+  ],
+  "compatibility_assessment": "The same approved sources/docs ran together without changing candidate metadata, receipt fields, app identities, publication policy, game/protocol/save behavior. This broader test pass supports but does not replace source review or prove absence of all defects.",
+  "counter_evidence": [
+    "The log line Switched to a new branch unrelated comes from test_release_tool.py536\u2013589. Every Git command has cwd=self.repo in an owned TemporaryDirectory. Actual Parlor source_before/source_after remain main/sameHEAD/tree/diff.",
+    "API tests replace requests and forbid live network/signing; validation-only output is not a Store receipt.",
+    "Not every unchanged test source line was rereviewed by this bounded release reviewer; the entire real log was read, exact changed tests/callers are documented in prior addenda.",
+    "No daemon was running at recorded stop time; root may subsequently start a new legitimate full-production cycle. This reviewer does not stop another task\u2019s processes."
+  ],
+  "review_chain": [
+    "RL-C2-independent-remediation-review-01.json",
+    "release-docs-interactions-01.json",
+    "release-docs-approval-02.json"
+  ],
+  "cleanup": "Cycle completed21:38:25Z, immediate stop0; no recorded remaining owned workers/output/errors; own scratch absent on metadata inspection. Required compact receipt/log/test/artifact metadata preserved. Reviewer launched no build/test/server or Store process."
+}

@@ -1,0 +1,451 @@
+{
+  "schema_version": 1,
+  "kind": "FULL_D10_WINDOWS_CURRENT_SOURCE_CUSTODY_AND_ACTUAL_RUNTIME_REVIEW",
+  "reviewer": "/root/ci_windows",
+  "reviewed_at": "2026-09-11T15:53:36.067960+00:00",
+  "status": "ACCEPTED_D10_WINDOWS_CURRENT_DESKTOP_RUNTIME_NATIVE_DISTRIBUTION_AND_RESOURCES",
+  "findings": [],
+  "independence_scope": "Independent of collector/CI executor; this agent authored the earlier CRLF correction, independently source-reviewed by ci_linux_arm. Current Windows runtime evidence is independently reconciled here, not a second source approval.",
+  "source": {
+    "run_id": 34610163120,
+    "run_attempt": 1,
+    "workflow_id": 335554528,
+    "job_id": 103298347391,
+    "job": "desktop-windows-x64",
+    "scope": "full",
+    "native_selection": "paired",
+    "commit": "25cd7f57b031bebdcfb4931615782b906610703f",
+    "tree": "1e44e982216bfc4fda32dc370a0d1b3d77fee836",
+    "branch": "fix/local-readiness-2026-09-07",
+    "job_conclusion": "success",
+    "checkout_root": "D:\\a\\parlor\\parlor",
+    "tracked_paths": 36488,
+    "frozen_path_manifest_sha256": "9f59ae8dc14e2ef1bd66d51f60e2d2fc8be4b631493061b01cb34dfcfb88932b",
+    "same_run_context": "All7 API jobs source/run/attempt-bound:6 full jobs success, focused protection diagnostic skipped. Other lanes and final cleanup require their separate reviews."
+  },
+  "custody": {
+    "pin_format": [
+      "path_relative_to_continuation",
+      "bytes",
+      "sha256"
+    ],
+    "pins": [
+      [
+        "actions/34610163120/download-receipt.json",
+        64982714,
+        "d89caddb61aa452599560efeb77aefd5aefda49cddefb88f22eadbe16f083e91"
+      ],
+      [
+        "actions/34610163120/run.json",
+        12680,
+        "32d60c60f3d79b024142b5d8e3f72260d7c12cda6f7aeae92e5020a650c67839"
+      ],
+      [
+        "actions/34610163120/attempt.json",
+        12702,
+        "f3afda3e2ec8f2f3e58332efec1eeaa53c14321940aa94589777595f78a0c19c"
+      ],
+      [
+        "actions/34610163120/jobs.json",
+        26575,
+        "e751e09e572c98248a959b9c908a7455dc2e4ccf38e110f5b018246f7a31a3ba"
+      ],
+      [
+        "actions/34610163120/artifacts.json",
+        8823,
+        "2250a3079d851dc63524442dcb2ab96a5de207647d96c556c29f6c8dffa2b729"
+      ],
+      [
+        "actions/34610163120/artifact-10268555858.json",
+        823,
+        "9370701c90e9e4f67884ed31af402e988f161789c4f3cb3619b6a390fc8049a8"
+      ],
+      [
+        "actions/34610163120/frozen-tree-paths.z",
+        6075285,
+        "9f59ae8dc14e2ef1bd66d51f60e2d2fc8be4b631493061b01cb34dfcfb88932b"
+      ]
+    ],
+    "main_artifact": {
+      "artifact_id": 10268555858,
+      "pin": [
+        "actions/34610163120/desktop-verification-desktop-windows-x64.zip",
+        22164737,
+        "9d9e3389be6b6a9a961839ba55dcf49f1683c130c662b75d92700de7d8277efb"
+      ],
+      "members": 17810,
+      "expanded_bytes": 42478036,
+      "classifications": {
+        "FROZEN_TRACKED_FILE_ARCHIVE_ONLY": 17279,
+        "CURRENT_PATH_CANDIDATE_NOT_EXECUTION": 529,
+        "CURRENT_NAMED_RECEIPT_CONTENT_UNREVIEWED": 2
+      },
+      "extracted_files": 531
+    },
+    "log_zip": [
+      "actions/34610163120/run-attempt-1-logs.zip",
+      433213,
+      "e86553af4102f5e6724610da815d7e99e6d0de9ceb8f2979624ec07248082f46"
+    ],
+    "windows_log_member": [
+      "0_Desktop, Kotlin Native, and Android resources strict verification (Windows x64).txt",
+      103922,
+      "66602d4a2bbe9aa273d807de3d85bc952c9b060aaa1244a7a5f98d671f7c97af"
+    ],
+    "checks": "Terminal collector receipt verified before verdict. Entire Windows main ZIP safe table/member bounds and every CRC/size/SHA independently checked against collector. API artifact identity,size,digest,run/source and exact extracted file set agree.17279 frozen tracked historical entries excluded from current runtime. Entire compact log ZIP independently CRC/size/SHA checked. No extraction/download."
+  },
+  "actual_host": {
+    "os": "Microsoft Windows Server2025 x64",
+    "runner_image": "windows-2025-vs2026 20260907.229.1",
+    "jdk": "Temurin21.0.12+101.0",
+    "gradle": "8.13",
+    "guards": "Raw full/paired scope, job-local core.longpaths=true, exact checkout SHA, fresh ownership and clean Windows/x64 guard; every Windows API step succeeds. Pinned SDK platform android-36/build-tools36.0.0/platform-tools installation succeeds."
+  },
+  "execution": {
+    "command": ".\\gradlew.bat productionDesktopCheck :composeApp:downloadKotlinNativeDistribution :composeApp:processDebugResources --dependency-verification=strict --no-daemon --stacktrace --console=plain",
+    "started_at": "2026-09-11T14:27:39.9687039Z",
+    "finished_at": "2026-09-11T14:35:45.2996275Z",
+    "result": "BUILD SUCCESSFUL in8m4s",
+    "actionable_tasks": {
+      "total": 233,
+      "executed": 178,
+      "from_cache": 55
+    },
+    "task_row_format": [
+      "task",
+      "current_raw_log_timestamp",
+      "outcome"
+    ],
+    "desktop_tasks": [
+      [
+        ":composeApp:desktopTest",
+        "2026-09-11T14:34:36.7107967Z",
+        "EXECUTED_NOT_CACHED"
+      ],
+      [
+        ":game-modes:mafia:desktopTest",
+        "2026-09-11T14:34:47.1148492Z",
+        "EXECUTED_NOT_CACHED"
+      ],
+      [
+        ":game-modes:whodunit:desktopTest",
+        "2026-09-11T14:35:07.8943418Z",
+        "EXECUTED_NOT_CACHED"
+      ],
+      [
+        ":shared:content:desktopTest",
+        "2026-09-11T14:33:24.5726790Z",
+        "EXECUTED_NOT_CACHED"
+      ],
+      [
+        ":shared:core:desktopTest",
+        "2026-09-11T14:33:19.4524330Z",
+        "EXECUTED_NOT_CACHED"
+      ],
+      [
+        ":shared:design-system:desktopTest",
+        "2026-09-11T14:33:54.1092175Z",
+        "EXECUTED_NOT_CACHED"
+      ],
+      [
+        ":shared:engine:desktopTest",
+        "2026-09-11T14:33:50.9436460Z",
+        "EXECUTED_NOT_CACHED"
+      ],
+      [
+        ":shared:engine-testing:desktopTest",
+        "2026-09-11T14:33:59.7040151Z",
+        "EXECUTED_NOT_CACHED"
+      ],
+      [
+        ":shared:networking:desktopTest",
+        "2026-09-11T14:34:10.3116397Z",
+        "EXECUTED_NOT_CACHED"
+      ],
+      [
+        ":shared:networking-testing:desktopTest",
+        "2026-09-11T14:34:12.5992648Z",
+        "EXECUTED_NOT_CACHED"
+      ],
+      [
+        ":shared:session:desktopTest",
+        "2026-09-11T14:34:28.5113558Z",
+        "EXECUTED_NOT_CACHED"
+      ],
+      [
+        ":shared:storage:desktopTest",
+        "2026-09-11T14:34:44.4064479Z",
+        "EXECUTED_NOT_CACHED"
+      ],
+      [
+        ":shared:transport-p2p:desktopTest",
+        "2026-09-11T14:35:33.8064691Z",
+        "EXECUTED_NOT_CACHED"
+      ]
+    ],
+    "compile_native_resource_tasks": [
+      [
+        ":composeApp:compileKotlinDesktop",
+        "2026-09-11T14:34:14.4926470Z",
+        "EXECUTED_NOT_CACHED"
+      ],
+      [
+        ":shared:transport-p2p:compileTestKotlinDesktop",
+        "2026-09-11T14:35:03.8077084Z",
+        "EXECUTED_NOT_CACHED"
+      ],
+      [
+        ":composeApp:downloadKotlinNativeDistribution",
+        "2026-09-11T14:32:00.0926780Z",
+        "EXECUTED_NOT_CACHED"
+      ],
+      [
+        ":composeApp:processDebugResources",
+        "2026-09-11T14:34:55.3157933Z",
+        "EXECUTED_NOT_CACHED"
+      ]
+    ],
+    "native_distribution": {
+      "coordinate": "org.jetbrains.kotlin:kotlin-native-prebuilt:2.4.10",
+      "artifact": "kotlin-native-prebuilt-2.4.10-windows-x86_64.zip",
+      "source_verification_sha256": [
+        "ce99eba1f4faec1d77f4bbd747bb722404ef11f2c349ec70c59d4c002859380f"
+      ]
+    },
+    "windows_aapt2": {
+      "coordinate": "com.android.tools.build:aapt2:8.13.2-14304508",
+      "artifact": "aapt2-8.13.2-14304508-windows.jar",
+      "source_verification_sha256": [
+        "5dc730c3dc454b76d779a46036c06fd9c874039a31e22214434ecdbe64c3300a"
+      ]
+    },
+    "limits": "Actual strict host-selected tasks succeeded. Native distribution explicitly overwrote a pre-existing .konan bundle; no clean-cache or native-app runtime claim. Android resource processing was uncached; pinned source artifact checksum is not separately measured runtime binary identity. No Android/iOS app launch, release AAB/R8, full desktop UI, physical-device or Store evidence inferred."
+  },
+  "actual_tests": {
+    "totals": {
+      "xml_files": 203,
+      "descriptors": 1343,
+      "passed": 1340,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 3
+    },
+    "module_row_format": [
+      "module",
+      "xml_files",
+      "descriptors",
+      "passed",
+      "failures",
+      "errors",
+      "skipped"
+    ],
+    "modules": [
+      [
+        "composeApp",
+        21,
+        96,
+        96,
+        0,
+        0,
+        0
+      ],
+      [
+        "game-modes/mafia",
+        37,
+        297,
+        297,
+        0,
+        0,
+        0
+      ],
+      [
+        "game-modes/whodunit",
+        63,
+        360,
+        360,
+        0,
+        0,
+        0
+      ],
+      [
+        "shared/content",
+        5,
+        24,
+        24,
+        0,
+        0,
+        0
+      ],
+      [
+        "shared/core",
+        2,
+        12,
+        12,
+        0,
+        0,
+        0
+      ],
+      [
+        "shared/design-system",
+        18,
+        40,
+        40,
+        0,
+        0,
+        0
+      ],
+      [
+        "shared/engine",
+        5,
+        13,
+        13,
+        0,
+        0,
+        0
+      ],
+      [
+        "shared/engine-testing",
+        3,
+        6,
+        6,
+        0,
+        0,
+        0
+      ],
+      [
+        "shared/networking",
+        8,
+        34,
+        34,
+        0,
+        0,
+        0
+      ],
+      [
+        "shared/networking-testing",
+        2,
+        5,
+        5,
+        0,
+        0,
+        0
+      ],
+      [
+        "shared/session",
+        13,
+        145,
+        145,
+        0,
+        0,
+        0
+      ],
+      [
+        "shared/storage",
+        4,
+        31,
+        31,
+        0,
+        0,
+        0
+      ],
+      [
+        "shared/transport-p2p",
+        22,
+        280,
+        277,
+        0,
+        0,
+        3
+      ]
+    ],
+    "timestamp_range": [
+      "2026-09-11T14:33:18.731Z",
+      "2026-09-11T14:35:44.299Z"
+    ],
+    "hostnames": [
+      "runnervmvmocb"
+    ],
+    "xml_manifest_format": "Sorted [ZIP member path,bytes,SHA256,timestamp,hostname] rows serialized compact JSON",
+    "xml_manifest_sha256": "382a0d3c8ceceed873d362884f60cf964a8e23c4b6aeef7b84b628a8766b577b",
+    "binding": "All203 suite/case counts freshly parsed; all13 desktopTest leaves plus current test/application compilation executed without cache/skip status. XML timestamps fall inside this D10 build; exact live paths are absent from frozen tracked tree and covered by fresh source/run ownership. Counts were not copied from D09.",
+    "skipped_methods": [
+      [
+        "com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest",
+        "peer_to_host_message_round_trips_and_host_to_peer_message_arrives_back()[desktop]"
+      ],
+      [
+        "com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest",
+        "peer_can_join_a_hosted_room_and_membership_appears_on_host()[desktop]"
+      ],
+      [
+        "com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest",
+        "host_broadcast_reaches_every_peer()[desktop]"
+      ]
+    ],
+    "skip_limit": "The same3 explicitly ignored peer-loopback methods need physical same-LAN devices; no peer interoperability or end-to-end LAN claim."
+  },
+  "workflow_contract_current_execution": {
+    "frozen_test_path": "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/ProductionVerificationWorkflowContractTest.kt",
+    "frozen_test_sha256": "9008fec636b7734f05bb4299e492fe32ffc345be8639e44981367e4bfa547377",
+    "current_xml_pin": [
+      "parlor/parlor/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.ProductionVerificationWorkflowContractTest.xml",
+      2725,
+      "3e2fce83c1919d3cbfff0a95673f828d6903025adb2726d484e8b6e61e6863a3"
+    ],
+    "suite": {
+      "name": "com.parlor.transport.p2p.ProductionVerificationWorkflowContractTest",
+      "tests": "12",
+      "skipped": "0",
+      "failures": "0",
+      "errors": "0",
+      "timestamp": "2026-09-11T14:35:30.880Z",
+      "hostname": "runnervmvmocb",
+      "time": "1.356"
+    },
+    "focused_method_row_format": [
+      "name",
+      "seconds",
+      "outcome"
+    ],
+    "focused_methods": [
+      [
+        "split_apple_jobs_keep_independent_source_toolchain_cycles_and_evidence()[desktop]",
+        "0.003",
+        "PASS"
+      ],
+      [
+        "protection_diagnostic_is_the_seventh_opt_in_job_not_a_full_gate()[desktop]",
+        "0.004",
+        "PASS"
+      ],
+      [
+        "apple_jobs_run_kotlin_and_app_launch_tests_all_link_targets_and_unsigned_swift_release()[desktop]",
+        "0.003",
+        "PASS"
+      ],
+      [
+        "workflow_job_boundaries_are_preserved_for_lf_and_windows_crlf_checkouts()[desktop]",
+        "0.005",
+        "PASS"
+      ]
+    ],
+    "acceptance": "All12 frozen class methods exactly match current XML and pass. Former3 D08 failures and the LF/CRLF boundary/missing-marker regression actually reran on Windows in D10. Neither D09 nor the earlier local12-test cycle substitutes for this result."
+  },
+  "ownership_and_post_build_stop": {
+    "ownership_member": [
+      "_temp/parlor-verification-34610163120-1-desktop-windows-x64-ownership.json",
+      19817,
+      "1a5bb1bdc0dcaae8bafa9131b1f7c7b891f26479cf192f0524a806895c4c77e6"
+    ],
+    "prepared_at": "2026-09-11T14:27:27.752045+00:00",
+    "stop_member": [
+      "_temp/parlor-verification-34610163120-1-desktop-windows-x64-stop-windows-x64.json",
+      426,
+      "368c85336586c66b10380a59e09650d09e85fb96e1564e92b30e2a8747f5ad87"
+    ],
+    "post_build_stop_exit_code": 0,
+    "scope": "Source/run/job ownership and main-artifact stop checked. Final cleanup assigned to separate owner; no final deletion/worker-cleanup verdict asserted here."
+  },
+  "disposition": "D10 Windows strict desktop runtime, native-distribution and Android-resource execution accepted at exact25cd7f57 source. One lane only; other lane actual reviews and separate cleanup evidence remain distinct. Historical failures preserved, no cross-run/SHA stitching and no protection/device/Store readiness certificate.",
+  "reviewer_activity": "Read-only Git/stdlib JSON/hash/ZIP/XML reconciliation; only this additive review written. No project imports, tests, builds, network/API, dispatch, source/helper edits, archive expansion to disk or process operations."
+}

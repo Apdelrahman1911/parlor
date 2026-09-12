@@ -1,0 +1,143 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/factory_review",
+  "author": "/root",
+  "candidate_finder": "/root/factory_review",
+  "candidate_independent_validator": "/root",
+  "created_at": "2026-09-07T08:17:07.965146+00:00",
+  "conclusion": "FIX REVIEW PASS for scoped ToggleRow measurement correction; no code regression found in reviewed diff/call paths. Remaining runtime/visual limits explicit.",
+  "baseline_commit": "94e0c4c7f5c97fe95c3ced5b220cb0ff201523dc",
+  "scope": "Full two-line production correction and complete new66-line regression; original root RED+fresh full Mafia GREEN evidence; no source/test changes by reviewer.",
+  "sources": {
+    "production": {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaSetupScreen.kt",
+      "sha256": "91fdd1317981899fbd2af1ede5461895d6e20571a81d286b2bd5bd9efb8fe9be",
+      "reviewed_ranges": [
+        [
+          1,
+          527
+        ]
+      ]
+    },
+    "regression": {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaSetupToggleLayoutTest.kt",
+      "sha256": "36bdc52bb345999bd8a43187ac74a4f44e1c9aa618419e7088cfe0b09644be50",
+      "reviewed_ranges": [
+        [
+          1,
+          67
+        ]
+      ]
+    },
+    "functional": {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaDoctorSettingUiTest.kt",
+      "sha256": "47720879336a7ac14436a6cc9e186cce3afc8d00743a1339ff161c0fefb58055",
+      "reviewed_ranges": [
+        [
+          1,
+          71
+        ]
+      ]
+    },
+    "draft": {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaSetupDraft.kt",
+      "sha256": "e91e3e9d17bab4f725117c83e42096b5e9086809108a933ab5e48df4b9fb7a16",
+      "reviewed_ranges": [
+        [
+          1,
+          66
+        ]
+      ]
+    },
+    "local_router": {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/passandplay/MafiaPassAndPlayPhaseRouter.kt",
+      "sha256": "1371eb747579362548f3962a520c2c3f3c2f6225ef551bad93e3e690e08a1fe6",
+      "reviewed_ranges": [
+        [
+          135,
+          159
+        ]
+      ]
+    },
+    "lan_router": {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaMultiDevicePhaseRouter.kt",
+      "sha256": "09de10c3735f1afeb7b36550dca57c4e9fd190d985faf6ff0eae8c0b8d21a784",
+      "reviewed_ranges": [
+        [
+          199,
+          229
+        ]
+      ]
+    }
+  },
+  "proof": [
+    "Original actual RED has4executed failures EN/AR fontScale1/2 at320dp: every label256px equals row256px; not a selector/discovery error.",
+    "Patch changes only label measurement weight and16dp relative spacing. Exact pinned Row measures fixed Switch first then remaining188dp weighted label within256dp row, reserving52dp indicator+16dp gap.",
+    "No change to checked/default state, toggleable Role.Switch, single callback owner, null child callback, setup draft, ConfigureAndStart or phase ownership. Common local and LAN-host screen receives same correction.",
+    "English/Arabic source strings unchanged; relative arrangement receives layoutDirection; Text has no new maxLines/ellipsis/font cap and verticalScroll remains for wrapping/large text.",
+    "No data, reducer, seed, protocol, snapshot, resource format or secret-projection change. Whodunit files untouched.",
+    "Full actual Mafia GREEN contains273tests/33suites,0failures/errors/skips including4newlayout,2ON/OFFsettings,2hostcontinuity,8Doctorrules,15Doctorhistory,2LANrejoin and2targeteligibility tests. These are JVM/in-memory transport tests, not physicalLAN.",
+    "Mafia detekt task actually executed; BUILD SUCCESSFUL35s, strictdependencyverification, no-build-cache+rerun-tasks.",
+    "RED andGREEN have immediate Gradle stop0, no remainingoutputs/workers, no cleanup errors, preserved compactXML/logs; reviewer started no heavyweightprocess."
+  ],
+  "evidence": {
+    "mafia-toggle-layout-red-01": {
+      "receipt": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-toggle-layout-red-01/receipt.json",
+      "receipt_sha256": "4c2a8c8f084a15dafd2a5bdaeb347d2746a0744c1842bc0501d7cd4ba75f8415",
+      "status": "FAIL",
+      "exit": 1,
+      "counts": {
+        "tests": 4,
+        "failures": 4,
+        "errors": 0,
+        "skipped": 0
+      },
+      "suite_count": 1,
+      "source_manifest_sha256": "2033d1e34ba61d4c1492c72f34716a8416f8bf6698fb14df8bd122295cdf2b03",
+      "source_unchanged": true,
+      "stop_exit": 0,
+      "remaining_outputs": [],
+      "workers": {
+        "terminated_owned_workers": [],
+        "remaining_owned_workers": []
+      },
+      "cleanup_errors": []
+    },
+    "mafia-toggle-layout-green-01": {
+      "receipt": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-toggle-layout-green-01/receipt.json",
+      "receipt_sha256": "25f38847b360bdac90f5b3357c7909568c0f1b3c1f78f7819f034c84936789d4",
+      "status": "PASS",
+      "exit": 0,
+      "counts": {
+        "tests": 273,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "suite_count": 33,
+      "source_manifest_sha256": "f9ef9e99a0d3224d4c40d47539cc3baa18cc932af6730592ea8e58fcbf177c4d",
+      "source_unchanged": true,
+      "stop_exit": 0,
+      "remaining_outputs": [],
+      "workers": {
+        "terminated_owned_workers": [],
+        "remaining_owned_workers": []
+      },
+      "cleanup_errors": []
+    }
+  },
+  "counter_evidence": [
+    "Switch requiredSize52 may render beyond constrained reportedwidth, so original report must say unreserved/overflowing/overlapping layout, not guaranteed invisible pixels.",
+    "Merged row click semantics can function in broken layout, so existing ON/OFF UI tests were insufficient as geometry witnesses.",
+    "48px assertion catches original0reserve but is below exact52dp track; strengthening to52/68 on future run is recommended, not proof current source leaves only48.",
+    "Current test bounds are actual Compose semantics/layout, not screenshots or physical VoiceOver/TalkBack proof."
+  ],
+  "nonblocking_test_recommendation": "At fixture density1, assert at least52px (or68 including spacing.m) to preserve exact full track reservation.",
+  "separate_unconfirmed_candidate": "RoleCountStepperRow343\u2013390 also measures unweighted name before144dp controls inside192dp card at320dp; can compress size48 buttons. No executable witness yet; not counted as confirmed, not a regression or part of this patch.",
+  "compatibility": "No persisted/protocol/game/content versions change. Doctor repeated-protection behavior unchanged.",
+  "cleanup": {
+    "reviewer_started_builds": false,
+    "reviewer_created_generated_outputs": false,
+    "root_green_receipt_cleanup_verified": true
+  }
+}

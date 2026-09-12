@@ -75,11 +75,12 @@ private fun PreviousTallyCard(
                 .forEach { (id, count) ->
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
+                        horizontalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.s),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Text(
                             text = targetNameLookup(id),
+                            modifier = Modifier.weight(1f),
                             style = ParlorTheme.typography.bodyLarge,
                             color = ParlorTheme.colors.textPrimary,
                         )

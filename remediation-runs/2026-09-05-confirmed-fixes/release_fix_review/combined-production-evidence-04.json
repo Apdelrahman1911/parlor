@@ -1,0 +1,3243 @@
+{
+  "reviewer": "/root/release_fix_review",
+  "author": "/root",
+  "reviewed_at": "2026-09-05T22:47:17.920472+00:00",
+  "decision": "APPROVED \u2014 combined-production-04 passes its actual host-independent scope; not global readiness or native/physical/Store evidence",
+  "scope": "Independent retained-evidence and task-wiring review only. No builds, source edits, Git mutations, Store calls or worker stops. Other issue authors/reviewers retain source-fix ownership. Native-alltests-01 and subsequent Apple lane are separate and untouched.",
+  "source_identity": {
+    "branch": "main",
+    "commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+    "tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+    "diff_sha256": "60b555c0dd323a086e959ffbc5aa3fd7c6629ae1d0ad016021572e7ae272e4dd",
+    "source_manifest_sha256": "e59da533dbec2f02f6f2b460ce72e2a7337af1e44abfb0bc6d533304d4127ec7"
+  },
+  "source_manifest_files": 658,
+  "current_and_cycle_source_match": true,
+  "runner_hash": "d2d18c2311d59554db88be3f92e609ec5ca46fc8af4c79702836f9e4c130240f",
+  "runner_hash_matches_cycle": true,
+  "command": [
+    "./gradlew",
+    "productionCheck",
+    "--no-build-cache",
+    "--continue",
+    "--no-daemon",
+    "--no-parallel",
+    "--max-workers=1",
+    "--no-configuration-cache",
+    "--dependency-verification=strict",
+    "-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=combined-production-04",
+    "-Pkotlin.compiler.execution.strategy=in-process",
+    "-Pparlor.android.signing.storeFile=",
+    "-Pparlor.android.signing.storePassword=",
+    "-Pparlor.android.signing.keyAlias=",
+    "-Pparlor.android.signing.keyPassword="
+  ],
+  "cycle_started_at": "2026-09-05T22:24:12.261351+00:00",
+  "cycle_finished_at": "2026-09-05T22:30:19.979017+00:00",
+  "command_exit_code": 0,
+  "receipt_status": "PASS",
+  "raw_log_read_lines": [
+    [
+      1,
+      1577
+    ]
+  ],
+  "test_summary": {
+    "suites": 216,
+    "tests": 1375,
+    "passed": 1372,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 3
+  },
+  "by_test_task": {
+    ":composeApp:desktopTest": {
+      "suites": 21,
+      "tests": 95,
+      "passed": 95,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    ":composeApp:testDebugUnitTest": {
+      "suites": 17,
+      "tests": 76,
+      "passed": 76,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    ":composeApp:testReleaseUnitTest": {
+      "suites": 17,
+      "tests": 76,
+      "passed": 76,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    ":game-modes:mafia:desktopTest": {
+      "suites": 31,
+      "tests": 267,
+      "passed": 267,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    ":game-modes:whodunit:desktopTest": {
+      "suites": 53,
+      "tests": 309,
+      "passed": 309,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    ":shared:content:desktopTest": {
+      "suites": 5,
+      "tests": 24,
+      "passed": 24,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    ":shared:core:desktopTest": {
+      "suites": 2,
+      "tests": 12,
+      "passed": 12,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    ":shared:design-system:desktopTest": {
+      "suites": 18,
+      "tests": 40,
+      "passed": 40,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    ":shared:engine-testing:desktopTest": {
+      "suites": 3,
+      "tests": 6,
+      "passed": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    ":shared:engine:desktopTest": {
+      "suites": 3,
+      "tests": 4,
+      "passed": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    ":shared:networking-testing:desktopTest": {
+      "suites": 1,
+      "tests": 4,
+      "passed": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    ":shared:networking:desktopTest": {
+      "suites": 8,
+      "tests": 34,
+      "passed": 34,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    ":shared:session:desktopTest": {
+      "suites": 13,
+      "tests": 145,
+      "passed": 145,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    ":shared:storage:desktopTest": {
+      "suites": 4,
+      "tests": 31,
+      "passed": 31,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    ":shared:transport-p2p:desktopTest": {
+      "suites": 20,
+      "tests": 252,
+      "passed": 249,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 3
+    }
+  },
+  "raw_xml_header_counts_match_cases": true,
+  "compact_test_receipts_match_raw_xml": true,
+  "duplicate_descriptors": 0,
+  "raw_xml_timestamp_range": [
+    "2026-09-05T22:27:38.555Z",
+    "2026-09-05T22:28:38.841Z"
+  ],
+  "skips": [
+    {
+      "suite": "com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest",
+      "method": "peer_to_host_message_round_trips_and_host_to_peer_message_arrives_back()[desktop]",
+      "raw_xml": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest.xml"
+    },
+    {
+      "suite": "com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest",
+      "method": "peer_can_join_a_hosted_room_and_membership_appears_on_host()[desktop]",
+      "raw_xml": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest.xml"
+    },
+    {
+      "suite": "com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest",
+      "method": "host_broadcast_reaches_every_peer()[desktop]",
+      "raw_xml": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest.xml"
+    }
+  ],
+  "skip_reason_source": "P2pKitRoomTransportLoopbackTest.kt:125\u2013128,157\u2013160,207\u2013210. Explicit real-LAN two/three-device requirement remains @Ignore; no peer exchange/device evidence fabricated. Only host advertisement case runs.",
+  "freshness": {
+    "all_15_test_tasks_fresh": true,
+    "from_cache_task_count": 0,
+    "no_preexisting_build_outputs": true,
+    "gradle_actionable_summary": "903 actionable tasks: 826 executed, 77 up-to-date",
+    "all_printed_task_labels": {
+      "SKIPPED": 43,
+      "NO_SUFFIX_EXECUTION_OR_ACTIONLESS_AGGREGATE": 860,
+      "NO-SOURCE": 308,
+      "UP-TO-DATE": 142
+    },
+    "label_caveat": "Printed labels include actionless tasks and included builds; they are not the same denominator as the Gradle actionable summary. --no-build-cache does not mean all actionless/preparation tasks execute."
+  },
+  "detekt": {
+    "xml_reports": 43,
+    "findings": 0,
+    "gate": "PASS",
+    "apple_type_aware_not_in_this_cycle": true
+  },
+  "lint": {
+    "report": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/composeApp/build/reports/lint-results-release.xml",
+    "sha256": "c13b213c1bd45cd821a5e156b0aac6005dd76fec4dd4d5fc155142c4e1fe2b96",
+    "engine": "lint 9.1.1",
+    "warning_count": 32,
+    "ids": {
+      "OldTargetApi": 1,
+      "AndroidGradlePluginVersion": 4,
+      "GradleDependency": 3,
+      "NewerVersionAvailable": 24
+    },
+    "severities": {
+      "Warning": 32
+    },
+    "accepted_inventory_exact_multiset": true,
+    "accepted_inventory_unchanged": true,
+    "gate": "PASS under the unchanged existing advisory policy, not zero warnings"
+  },
+  "release_automation": {
+    "tests": 172,
+    "passed": 172,
+    "skipped": 0,
+    "by_module": {
+      "test_android_artifact_size": 7,
+      "test_android_upload_signature": 21,
+      "test_google_promotion_edit": 9,
+      "test_normalize_embedded_apple_framework": 3,
+      "test_release_tool": 36,
+      "test_review_inventory": 3,
+      "test_store_api": 51,
+      "test_workflow_contract": 37,
+      "test_xcode_framework_phase": 5
+    },
+    "workflow_contract": "PASS",
+    "inventory_freshness": "628 tracked/history-derived rows PASS; not dirty-tree line review coverage",
+    "shellcheck_actionlint": "Mandatory script invocation returned success; log records checksum-verified archive inputs, pinned script versions reviewed previously",
+    "limits": [
+      "Fake Store API clients and disposable signing fixtures only; no credentialed publication or signed Store candidate.",
+      "Temporary Git fixture emitted unrelated-branch text; root refs/HEAD/tree unchanged."
+    ]
+  },
+  "other_warnings": [
+    "Gradle8.13 deprecation notice relative to future Kotlin2.5.0; current pinned Kotlin2.4.10 completed.",
+    "Lint9.1.1 override experimental-option notice.",
+    "iosX64 native runtime disabled on macOS ARM64 warning; not in productionCheck dependencies.",
+    "Two R8 async-parsing provider warnings; minifyReleaseWithR8 completed.",
+    "libandroidx.graphics.path.so unstripped warning; artifact receipt retains four ABI entries.",
+    "SLF4J no-provider/NOP notices in three test XML stderr streams."
+  ],
+  "nonempty_test_streams": [
+    {
+      "xml": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.ArabicCaseValidationTest.xml",
+      "channel": "system-err",
+      "text": "SLF4J(W): No SLF4J providers were found.\nSLF4J(W): Defaulting to no-operation (NOP) logger implementation\nSLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details."
+    },
+    {
+      "xml": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/content/build/test-results/desktopTest/TEST-com.parlor.content.datasource.OfflineRemoteCaseDataSourceTest.xml",
+      "channel": "system-err",
+      "text": "SLF4J(W): No SLF4J providers were found.\nSLF4J(W): Defaulting to no-operation (NOP) logger implementation\nSLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details."
+    },
+    {
+      "xml": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest.xml",
+      "channel": "system-err",
+      "text": "SLF4J: No SLF4J providers were found.\nSLF4J: Defaulting to no-operation (NOP) logger implementation\nSLF4J: See https://www.slf4j.org/codes.html#noProviders for further details."
+    }
+  ],
+  "artifact": {
+    "recorded_path": "composeApp/build/outputs/bundle/release/composeApp-release.aab",
+    "recorded_bytes": 8802894,
+    "recorded_sha256": "d046d2a2ed9856d5e77888acc9a31a41dd46d1bd64faa3585a16008be8d3f01e",
+    "zip_entry_count": 354,
+    "signature_entries": [],
+    "nature": "Fresh unsigned R8-shrunk release AAB; compiled/packaged evidence, not installation/runtime/Store proof.",
+    "evidence_limit": "Archive removed by mandatory cleanup after root streamed digest/inventory. Reviewer inspected receipt/merged manifest/task wiring, not retained AAB bytes or decoded DEX. Full signed validator/bundletool Store checks did not run on this artifact."
+  },
+  "gate_ledger": [
+    {
+      "gate": "productionDesktopCheck",
+      "status": "PASS",
+      "reason": "13 actual desktop test tasks, 1223 descriptors: 1220 passed, 3 explicit physical-loopback skips; Desktop application compiled through test dependency."
+    },
+    {
+      "gate": "productionAndroidCheck",
+      "status": "PASS",
+      "reason": "App Debug/Release JVM unit suites each76 passed; Kotlin compile, R8 minification, bundle, lint, lint inventory, merged manifest and identity contract tasks execute fresh. Not Android instrumented runtime."
+    },
+    {
+      "gate": "productionStaticAnalysis",
+      "status": "PASS",
+      "reason": "43 zero-finding plain/type-aware Detekt XML reports; absent-source branches NO-SOURCE; Apple-specific type-aware tasks separate."
+    },
+    {
+      "gate": "productionReleaseAutomationCheck",
+      "status": "PASS",
+      "reason": "172 Python tests, workflow contract, inventory freshness, mandatory checksum-verified ShellCheck/actionlint."
+    },
+    {
+      "gate": "verifyGameShellDispatch",
+      "status": "PASS",
+      "reason": "Fresh declared generic-shell textual invariant task."
+    },
+    {
+      "gate": "productionCheck",
+      "status": "PASS",
+      "reason": "Actual aggregate exit0 with all children successful within its defined scope."
+    }
+  ],
+  "not_evidenced_by_this_cycle": [
+    "allTests and iosSimulatorArm64 runtime: separate native-alltests cycle, not reviewed here.",
+    "productionAppleCheck / Apple type-aware analysis and all release framework linkage: separate root lane.",
+    "Android managed/emulator instrumentation and physical Android/iOS, app-host lifecycle/keychain/privacy/accessibility: not executed here.",
+    "Physical P2pKit admission, command exchange, disconnection/rejoin and multicast: the three descriptor skips remain an evidence gap.",
+    "Real Store signing, full signed artifact validation, identity ownership, uploading/promotion/legal/owner gates: not performed/authorized. Known com.parlor.app identity collision and disabled publication remain.",
+    "No statement that WD-C2 story authoring decision or WD-C4 modal-timer policy is resolved; combined tests do not close product questions."
+  ],
+  "safeguard_hashes": [
+    {
+      "path": ".github/workflows/production-promotion.yml",
+      "sha256": "94ca7f617c24cb4c9ffafa5860c7ebc104f08cfa46b2a2e13fbae3ed816c461b",
+      "matches_baseline": true
+    },
+    {
+      "path": ".github/workflows/production-verification.yml",
+      "sha256": "965e47ddb4c47b19d8017c9494239d0a0309b26f465eb0f6b655bd90113a929c",
+      "matches_baseline": true
+    },
+    {
+      "path": ".github/workflows/testing-candidate.yml",
+      "sha256": "0488fc5e0c4e520a767408cfb5e7fa387bc5fdfa0edfeb9dcd29a4cb0d2c7976",
+      "matches_baseline": true
+    },
+    {
+      "path": ".github/workflows/testing-external-promotion.yml",
+      "sha256": "5874b8b435e3b6fbfc02bb1cb54f8ab1d26ab01cf25b4220b2d81985fecc8a86",
+      "matches_baseline": true
+    },
+    {
+      "path": "build.gradle.kts",
+      "sha256": "bd6199e1f097eb236c50c46efb91d291550110f6b4d95a8e95ff0db4d8da192b",
+      "matches_baseline": true
+    },
+    {
+      "path": "config/android-lint-accepted-warnings.txt",
+      "sha256": "e196948d55ae455b7d59a4532b9a8f680e109daef5a704b555d1b903afb9ecbd",
+      "matches_baseline": true
+    },
+    {
+      "path": "config/detekt/detekt.yml",
+      "sha256": "0e50363aaffe4959659e8fca90cadb70a36d210cd9184f02e75c938abbd03894",
+      "matches_baseline": true
+    },
+    {
+      "path": "config/parlor-version.xcconfig",
+      "sha256": "4975e763730608718095d3c7342f34f333a86e20cf562eb221b9e3478fa93f9e",
+      "matches_baseline": true
+    },
+    {
+      "path": "config/release-policy.json",
+      "sha256": "316b28f75a13e0b925beb6bcd893b82e077a1a9efa850022026e830f9b1d4ad4",
+      "matches_baseline": true
+    },
+    {
+      "path": "gradle.properties",
+      "sha256": "2df8685921ad2c6eead097a6d9994bbcc93dbc5cbdeb0bce8911ffa4e83162ce",
+      "matches_baseline": true
+    },
+    {
+      "path": "gradle/libs.versions.toml",
+      "sha256": "87a031665605a1fb3f932be31c75afd8d2d1bc0d94cfcca36101141c50788399",
+      "matches_baseline": true
+    },
+    {
+      "path": "gradle/verification-metadata.xml",
+      "sha256": "58b5a279cc5ccc58e1088fbe3dd248fcfdf31a307707204c5438259de7960f95",
+      "matches_baseline": true
+    },
+    {
+      "path": "gradle/wrapper/gradle-wrapper.jar",
+      "sha256": "81a82aaea5abcc8ff68b3dfcb58b3c3c429378efd98e7433460610fecd7ae45f",
+      "matches_baseline": true
+    },
+    {
+      "path": "gradle/wrapper/gradle-wrapper.properties",
+      "sha256": "c040b6ef2fb893ff5beea5a281614f2848f1c3996a7886f650b713f8240656a2",
+      "matches_baseline": true
+    },
+    {
+      "path": "settings.gradle.kts",
+      "sha256": "27a40495b1adf18ca90b5a8fdd345448c2ecf2f9ac726c753468a5e627b27d18",
+      "matches_baseline": true
+    },
+    {
+      "path": "shared/networking/src/commonMain/kotlin/com/parlor/networking/protocol/Protocol.kt",
+      "sha256": "82e65dc7ec04855a192106766b97c658934e160ed7cf4fc299e8c7b0e3953d9f",
+      "matches_baseline": true
+    },
+    {
+      "path": "shared/networking/src/commonMain/kotlin/com/parlor/networking/protocol/ProtocolValidation.kt",
+      "sha256": "c4c6ee42e4c890fc99be0fe8dcae5677c614e872e53eb15a0393dd3e3d20e628",
+      "matches_baseline": true
+    },
+    {
+      "path": "shared/networking/src/commonMain/kotlin/com/parlor/networking/protocol/RoomMessageCodec.kt",
+      "sha256": "63fbbc001e0d711815068cd512b635b4aa3c92183b83ec4dd0b538559d523aba",
+      "matches_baseline": true
+    },
+    {
+      "path": "AGENTS.md",
+      "sha256": "1e8cbc4f414819f47908e1a3be9f717792a0401fb4fb35b7272c053c00e2f609",
+      "matches_baseline": true
+    }
+  ],
+  "refs_and_stashes_match_baseline": {
+    "refs": true,
+    "stashes": true
+  },
+  "followup_review_references": [
+    "remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/DS-C01-source-contract-review-03.json",
+    "remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/DS-C01-source-contract-green-review-04.json",
+    "remediation-runs/2026-09-05-confirmed-fixes/factory_review/mafia-detekt-review-01/independent-followup-approval-01.json",
+    "remediation-runs/2026-09-05-confirmed-fixes/factory_review/whodunit-detekt-review-01/independent-followup-approval-01.json",
+    "remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/DS-C02-dispatch-review-01/independent-followup-approval-01.json"
+  ],
+  "followup_scope": "Current five-file delta versus previously reviewed broad-release source consists of locale source contract and its Gradle invalidation inputs, explicit Mafia fixture types, actual suspending Whodunit loader reference, and test-owned toast dispatcher. Relevant changed blocks reopened; full prior author-independent reviews referenced above. No additional shipping production logic delta since prior broad-release review.",
+  "cleanup": {
+    "stop_exit_code": 0,
+    "stopped_at": "2026-09-05T22:30:20.307635+00:00",
+    "workers": {
+      "terminated_owned_workers": [],
+      "remaining_owned_workers": []
+    },
+    "removed_outputs": [
+      "shared/core/build",
+      "shared/networking/build",
+      "shared/content/build",
+      "shared/storage/build",
+      "shared/transport-p2p/build",
+      "shared/networking-testing/build",
+      "shared/engine/build",
+      "shared/design-system/build",
+      "shared/engine-testing/build",
+      "shared/session/build",
+      "game-modes/whodunit/build",
+      "game-modes/mafia/build",
+      "build",
+      "composeApp/build",
+      "build-logic/convention/build"
+    ],
+    "retained_outputs": [],
+    "remaining_outputs": [],
+    "cleanup_errors": [],
+    "cleanup_completed_at": "2026-09-05T22:30:22.205283+00:00",
+    "cleanup_method": "Exact task-owned generated dirs; no Gradle clean daemon or global cache deletion. Unrelated processes excluded by PID/start identity and cycle ownership."
+  },
+  "cleanup_independent_observation": {
+    "stop_log": "No Gradle daemons are running.",
+    "cycle_scratch_absent": true,
+    "limitation": "Historical process/output zero-state is attested by terminal receipt and reviewed finalization path. Other root-owned native/Apple cycles may legitimately reuse build directories; reviewer did not stop or delete them.",
+    "reviewer_builds_workers_or_generated_outputs": false
+  },
+  "reviewer_tool_note": "Initial read-only XML parsing through Homebrew Python3.14 failed to load pyexpat due a missing libexpat symbol. Repeated with /usr/bin/python3 3.9.6 succeeded. No build/test outcome was inferred from that failed parsing attempt; -B ensured no pycache outputs.",
+  "source_read_ledger": [
+    {
+      "path": "build.gradle.kts",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/build.gradle.kts",
+      "sha256": "bd6199e1f097eb236c50c46efb91d291550110f6b4d95a8e95ff0db4d8da192b",
+      "read_ranges": [
+        [
+          1,
+          204
+        ]
+      ]
+    },
+    {
+      "path": "settings.gradle.kts",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/settings.gradle.kts",
+      "sha256": "27a40495b1adf18ca90b5a8fdd345448c2ecf2f9ac726c753468a5e627b27d18",
+      "read_ranges": [
+        [
+          1,
+          55
+        ]
+      ]
+    },
+    {
+      "path": "gradle/libs.versions.toml",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/gradle/libs.versions.toml",
+      "sha256": "87a031665605a1fb3f932be31c75afd8d2d1bc0d94cfcca36101141c50788399",
+      "read_ranges": [
+        [
+          1,
+          106
+        ]
+      ]
+    },
+    {
+      "path": "composeApp/build.gradle.kts",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/composeApp/build.gradle.kts",
+      "sha256": "c23525d6b06f9b536fb5e8ef6be68c653952fa9764e276f831772b864621fdd5",
+      "read_ranges": [
+        [
+          1,
+          627
+        ]
+      ]
+    },
+    {
+      "path": "build-logic/convention/src/main/kotlin/com/parlor/buildlogic/DetektConventionPlugin.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/build-logic/convention/src/main/kotlin/com/parlor/buildlogic/DetektConventionPlugin.kt",
+      "sha256": "8d5fd3fb3f13d9d5cb02f89c29a57aab8d71c89cdf6dd0ac41161942109bd825",
+      "read_ranges": [
+        [
+          1,
+          59
+        ]
+      ]
+    },
+    {
+      "path": "config/android-lint-accepted-warnings.txt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/config/android-lint-accepted-warnings.txt",
+      "sha256": "e196948d55ae455b7d59a4532b9a8f680e109daef5a704b555d1b903afb9ecbd",
+      "read_ranges": [
+        [
+          1,
+          39
+        ]
+      ]
+    },
+    {
+      "path": "docs/ANDROID_LINT_TRIAGE.md",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/docs/ANDROID_LINT_TRIAGE.md",
+      "sha256": "425d39b620add895c1f8f43c502b2012dd0f5f5a57688a9d9f937f4d923ee209",
+      "read_ranges": [
+        [
+          1,
+          82
+        ]
+      ]
+    },
+    {
+      "path": "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitRoomTransportLoopbackTest.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitRoomTransportLoopbackTest.kt",
+      "sha256": "cda4755e373172719f6fc7a4d72a38416ec061b44f356d9ef4f3529e29588737",
+      "read_ranges": [
+        [
+          1,
+          291
+        ]
+      ]
+    },
+    {
+      "path": "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/JupiterDiscoveryContractTest.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/JupiterDiscoveryContractTest.kt",
+      "sha256": "94682d196381d97a37f6c5e925b63646f102b864d76eb55252cfbd082abcb305",
+      "read_ranges": [
+        [
+          1,
+          40
+        ]
+      ]
+    },
+    {
+      "path": "shared/design-system/src/desktopTest/kotlin/com/parlor/designsystem/components/ParlorToastLifetimeTest.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/desktopTest/kotlin/com/parlor/designsystem/components/ParlorToastLifetimeTest.kt",
+      "sha256": "bac61913c5d79ace76748320f0b073669ced0bd0c12f3063c90be7bbec142adc",
+      "read_ranges": [
+        [
+          1,
+          89
+        ]
+      ]
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/multidevice/MafiaDoctorLanTest.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/multidevice/MafiaDoctorLanTest.kt",
+      "sha256": "570e8f18c12f15c480a48c38e6a09025d5aef2ab1aa38cbac246b2f2f0b5a5a5",
+      "read_ranges": [
+        [
+          195,
+          248
+        ]
+      ]
+    },
+    {
+      "path": "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/snapshot/WhodunitFinalTwoRecoveryTest.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/snapshot/WhodunitFinalTwoRecoveryTest.kt",
+      "sha256": "b6f36aa2ea3615dcee2c563087d67120e321146d4ae0a2e40cb0f696e865d906",
+      "read_ranges": [
+        [
+          279,
+          349
+        ]
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/run_gradle_cycle.py",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-05-confirmed-fixes/run_gradle_cycle.py",
+      "sha256": "d2d18c2311d59554db88be3f92e609ec5ca46fc8af4c79702836f9e4c130240f",
+      "read_ranges": [
+        [
+          1,
+          283
+        ]
+      ]
+    }
+  ],
+  "raw_evidence_hashes": [
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/receipt.json",
+      "sha256": "4f8374afedbc3fec40353f0a95556766eaf8fa393daf1f8d307104e05694b9f4"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/gradle.log",
+      "sha256": "2eb2574058d05bbd292dcef2ba2126cf37cb86ad7ab0c41cdcabd4e57088f776"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/test-receipts.json",
+      "sha256": "09482233f71c032691d047033c420cecc00761a912261abdf04495b518893a33"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/artifact-receipts.json",
+      "sha256": "b2baac0fac690255c23004a682f756696b09698c3b3d28a095d870cc378102be"
+    }
+  ],
+  "raw_junit_inventory": [
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/composeApp/build/test-results/desktopTest/TEST-com.parlor.app.AppBackPolicyTest.xml",
+      "sha256": "7f5a5cf969155e704a11bb2ad4be0720efbb9b664add60f68228b7918add0a7f",
+      "suite": "com.parlor.app.AppBackPolicyTest",
+      "task": ":composeApp:desktopTest",
+      "tests": 5,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 5
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/composeApp/build/test-results/desktopTest/TEST-com.parlor.app.AppNavigationTest.xml",
+      "sha256": "5ea2790d925297ec6cc4f5117b12748ba7a19a9342b888752b9bdb88ceb3f7a6",
+      "suite": "com.parlor.app.AppNavigationTest",
+      "task": ":composeApp:desktopTest",
+      "tests": 11,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 11
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/composeApp/build/test-results/desktopTest/TEST-com.parlor.app.DesktopPlatformBackHandlerTest.xml",
+      "sha256": "78eb057030621074f7364ac8f64da703236b3ceb320bd423418cc9b2a9715ffa",
+      "suite": "com.parlor.app.DesktopPlatformBackHandlerTest",
+      "task": ":composeApp:desktopTest",
+      "tests": 4,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 4
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/composeApp/build/test-results/desktopTest/TEST-com.parlor.app.DesktopProcessShutdownTest.xml",
+      "sha256": "4f160cf1ee743a55f84c7707aef3ad965e4b9c2016748876eed5a726cc166d2b",
+      "suite": "com.parlor.app.DesktopProcessShutdownTest",
+      "task": ":composeApp:desktopTest",
+      "tests": 3,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 3
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/composeApp/build/test-results/desktopTest/TEST-com.parlor.app.HostLobbyOperationFeedbackContractTest.xml",
+      "sha256": "f68db0848521fd48e2016b4055adee64f5f49e1f345946e21c337569089864fe",
+      "suite": "com.parlor.app.HostLobbyOperationFeedbackContractTest",
+      "task": ":composeApp:desktopTest",
+      "tests": 1,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 1
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/composeApp/build/test-results/desktopTest/TEST-com.parlor.app.LocalResumeRouterTest.xml",
+      "sha256": "a98a55540ecb0b5ec926bc39c9b2c5da15e75e5bd42b952ec02eff46ac1271f4",
+      "suite": "com.parlor.app.LocalResumeRouterTest",
+      "task": ":composeApp:desktopTest",
+      "tests": 10,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 10
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/composeApp/build/test-results/desktopTest/TEST-com.parlor.app.LocalizationResourceContractTest.xml",
+      "sha256": "725043a5f22f9394ae39a2f740ed5dc20631883c8a1f79f5871b4da568af7bc5",
+      "suite": "com.parlor.app.LocalizationResourceContractTest",
+      "task": ":composeApp:desktopTest",
+      "tests": 1,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 1
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/composeApp/build/test-results/desktopTest/TEST-com.parlor.app.MultiplayerRouteRestorationTest.xml",
+      "sha256": "f7da0d23f12c337b02c4664aa830561999d1db9a005177bef47aefaa15137d0c",
+      "suite": "com.parlor.app.MultiplayerRouteRestorationTest",
+      "task": ":composeApp:desktopTest",
+      "tests": 3,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 3
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/composeApp/build/test-results/desktopTest/TEST-com.parlor.app.ProductionUiAccessibilityContractTest.xml",
+      "sha256": "193bb50411184f664af36815ba5493390e270b7f882962d43f965389e9a735b4",
+      "suite": "com.parlor.app.ProductionUiAccessibilityContractTest",
+      "task": ":composeApp:desktopTest",
+      "tests": 13,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 13
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/composeApp/build/test-results/desktopTest/TEST-com.parlor.app.di.GameShellCompositionTest.xml",
+      "sha256": "1f0f9161f75182339250332d197f556989cadd92bb938c9271c8052470fe33e0",
+      "suite": "com.parlor.app.di.GameShellCompositionTest",
+      "task": ":composeApp:desktopTest",
+      "tests": 1,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 1
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/composeApp/build/test-results/desktopTest/TEST-com.parlor.app.di.ProductionSessionSeedSourceTest.xml",
+      "sha256": "3d9f3069bd341e2540feb98ccdcae43b94264c1abf27113095da4d906c2733f4",
+      "suite": "com.parlor.app.di.ProductionSessionSeedSourceTest",
+      "task": ":composeApp:desktopTest",
+      "tests": 1,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 1
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/composeApp/build/test-results/desktopTest/TEST-com.parlor.app.lifecycle.AppLifecycleCoordinatorTest.xml",
+      "sha256": "52a6ac49b69748d2f2ccfdf2f34224e436a49d60888e0f1e273f810fcdf3b119",
+      "suite": "com.parlor.app.lifecycle.AppLifecycleCoordinatorTest",
+      "task": ":composeApp:desktopTest",
+      "tests": 9,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 9
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/composeApp/build/test-results/desktopTest/TEST-com.parlor.app.shell.game.GameShellRegistryCompositionTest.xml",
+      "sha256": "bb6025c82e3f575d2bca6e966d1bfeae9ed7253ea447a1297e12f96fc21bbd32",
+      "suite": "com.parlor.app.shell.game.GameShellRegistryCompositionTest",
+      "task": ":composeApp:desktopTest",
+      "tests": 1,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 1
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/composeApp/build/test-results/desktopTest/TEST-com.parlor.app.shell.game.GameShellRegistryExtensibilityTest.xml",
+      "sha256": "1834f74090a421ef3b89dac196ff0250501550e2ab29c550d93555598b1a3483",
+      "suite": "com.parlor.app.shell.game.GameShellRegistryExtensibilityTest",
+      "task": ":composeApp:desktopTest",
+      "tests": 11,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 11
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/composeApp/build/test-results/desktopTest/TEST-com.parlor.app.shell.game.WhodunitShippedPlayerCountTest.xml",
+      "sha256": "a99877b3f92649ac779931c39158676ebedfd37fefcadcbb3f91bc46486fc7a8",
+      "suite": "com.parlor.app.shell.game.WhodunitShippedPlayerCountTest",
+      "task": ":composeApp:desktopTest",
+      "tests": 2,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 2
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/composeApp/build/test-results/desktopTest/TEST-com.parlor.app.shell.home.HomeRecoveryAvailabilityTest.xml",
+      "sha256": "89a08ede1b3a71596b0f048f04520aaf8cc4aa19308cb63b50ada6fa5410e645",
+      "suite": "com.parlor.app.shell.home.HomeRecoveryAvailabilityTest",
+      "task": ":composeApp:desktopTest",
+      "tests": 8,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 8
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/composeApp/build/test-results/desktopTest/TEST-com.parlor.app.shell.multiplayer.NameInputPolicyTest.xml",
+      "sha256": "dc23e81b621e3fbbc3a271e321e143d6fd5136c2410eb86945345c118388bd57",
+      "suite": "com.parlor.app.shell.multiplayer.NameInputPolicyTest",
+      "task": ":composeApp:desktopTest",
+      "tests": 2,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 2
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/composeApp/build/test-results/desktopTest/TEST-com.parlor.app.shell.settings.SettingsMutationDispatcherTest.xml",
+      "sha256": "84a0482a556e7a8461ce4b76a5c15ae849051a84240b2d61c52044ace86a44a9",
+      "suite": "com.parlor.app.shell.settings.SettingsMutationDispatcherTest",
+      "task": ":composeApp:desktopTest",
+      "tests": 2,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 2
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/composeApp/build/test-results/desktopTest/TEST-com.parlor.app.storage.DesktopSnapshotFileSystemTest.xml",
+      "sha256": "c07ac5114e6093e4d09d7d08df91622631ca109937e9bf43ab931fcdcfc29893",
+      "suite": "com.parlor.app.storage.DesktopSnapshotFileSystemTest",
+      "task": ":composeApp:desktopTest",
+      "tests": 1,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 1
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/composeApp/build/test-results/desktopTest/TEST-com.parlor.app.storage.PlatformStorageMigrationTest.xml",
+      "sha256": "b5fc53c801948002c8cf96f9807a6adf3a9bc2063a1b10659b55c6dcc6875854",
+      "suite": "com.parlor.app.storage.PlatformStorageMigrationTest",
+      "task": ":composeApp:desktopTest",
+      "tests": 2,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 2
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/composeApp/build/test-results/desktopTest/TEST-com.parlor.app.storage.SnapshotProtectionPolicyTest.xml",
+      "sha256": "417b9c1c75a840a3d2794ed8fcf3bd3ec2d8fb46dc5cec32977dc9839fc1fd82",
+      "suite": "com.parlor.app.storage.SnapshotProtectionPolicyTest",
+      "task": ":composeApp:desktopTest",
+      "tests": 4,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 4
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/composeApp/build/test-results/testDebugUnitTest/TEST-com.parlor.app.AppBackPolicyTest.xml",
+      "sha256": "08ebd16d51fd58697643b87adbd36ced5e96da307da7d62b8b6ec16fda83424a",
+      "suite": "com.parlor.app.AppBackPolicyTest",
+      "task": ":composeApp:testDebugUnitTest",
+      "tests": 5,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 5
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/composeApp/build/test-results/testDebugUnitTest/TEST-com.parlor.app.AppNavigationTest.xml",
+      "sha256": "1e24c88fb871665335fd239610fd119fa46dc9911513db35b4ed5568750d14fd",
+      "suite": "com.parlor.app.AppNavigationTest",
+      "task": ":composeApp:testDebugUnitTest",
+      "tests": 11,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 11
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/composeApp/build/test-results/testDebugUnitTest/TEST-com.parlor.app.LocalResumeRouterTest.xml",
+      "sha256": "353a9373568c9d0cbbc5f2269c712a563b0f3aa3a48356d1850786efc9542807",
+      "suite": "com.parlor.app.LocalResumeRouterTest",
+      "task": ":composeApp:testDebugUnitTest",
+      "tests": 10,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 10
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/composeApp/build/test-results/testDebugUnitTest/TEST-com.parlor.app.MainActivityStartupTest.xml",
+      "sha256": "a7bccba08168d6de490c9cbcb1537e20af291aaa3885a3e26f11d99d90cb3b23",
+      "suite": "com.parlor.app.MainActivityStartupTest",
+      "task": ":composeApp:testDebugUnitTest",
+      "tests": 1,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 1
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/composeApp/build/test-results/testDebugUnitTest/TEST-com.parlor.app.MultiplayerRouteRestorationTest.xml",
+      "sha256": "4ff0fae51e053a00d9d43df204f22c394c35b7f98d4ee77d1cf5a050f1a3380f",
+      "suite": "com.parlor.app.MultiplayerRouteRestorationTest",
+      "task": ":composeApp:testDebugUnitTest",
+      "tests": 3,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 3
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/composeApp/build/test-results/testDebugUnitTest/TEST-com.parlor.app.di.GameShellCompositionTest.xml",
+      "sha256": "652abf5a3392105d283c82d6d4ef452cae1351e00df5ba5ca8f718c211ed7863",
+      "suite": "com.parlor.app.di.GameShellCompositionTest",
+      "task": ":composeApp:testDebugUnitTest",
+      "tests": 1,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 1
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/composeApp/build/test-results/testDebugUnitTest/TEST-com.parlor.app.di.ProductionSessionSeedSourceTest.xml",
+      "sha256": "5f550d270f371f39f2ebd7044f9fe702e515ccc281bcd3d812b12f584c454c2c",
+      "suite": "com.parlor.app.di.ProductionSessionSeedSourceTest",
+      "task": ":composeApp:testDebugUnitTest",
+      "tests": 1,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 1
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/composeApp/build/test-results/testDebugUnitTest/TEST-com.parlor.app.lifecycle.AppLifecycleCoordinatorTest.xml",
+      "sha256": "49a1f1265b7c3f77dd9332e6a352c289ce54c7b60d43d757c2a0192c010763fc",
+      "suite": "com.parlor.app.lifecycle.AppLifecycleCoordinatorTest",
+      "task": ":composeApp:testDebugUnitTest",
+      "tests": 9,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 9
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/composeApp/build/test-results/testDebugUnitTest/TEST-com.parlor.app.shell.game.GameShellRegistryExtensibilityTest.xml",
+      "sha256": "326de19a07fec5d861edeccda0507746a5a8f9fd191b73f858f1083aedfcf81d",
+      "suite": "com.parlor.app.shell.game.GameShellRegistryExtensibilityTest",
+      "task": ":composeApp:testDebugUnitTest",
+      "tests": 11,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 11
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/composeApp/build/test-results/testDebugUnitTest/TEST-com.parlor.app.shell.game.WhodunitShippedPlayerCountTest.xml",
+      "sha256": "ab19355cfa44945e104b2848fccb5129e8f755adafd14a3aa57f85c6405bdff1",
+      "suite": "com.parlor.app.shell.game.WhodunitShippedPlayerCountTest",
+      "task": ":composeApp:testDebugUnitTest",
+      "tests": 2,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 2
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/composeApp/build/test-results/testDebugUnitTest/TEST-com.parlor.app.shell.home.HomeRecoveryAvailabilityTest.xml",
+      "sha256": "19633a3d1c0588386630ba2d158daabaa16c406640010d9944d2d3aa83bf4707",
+      "suite": "com.parlor.app.shell.home.HomeRecoveryAvailabilityTest",
+      "task": ":composeApp:testDebugUnitTest",
+      "tests": 8,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 8
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/composeApp/build/test-results/testDebugUnitTest/TEST-com.parlor.app.shell.multiplayer.NameInputPolicyTest.xml",
+      "sha256": "ad004d167e26be9ae2c85c37df487cfacd8adb189a01553291a1b80c24317a94",
+      "suite": "com.parlor.app.shell.multiplayer.NameInputPolicyTest",
+      "task": ":composeApp:testDebugUnitTest",
+      "tests": 2,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 2
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/composeApp/build/test-results/testDebugUnitTest/TEST-com.parlor.app.shell.settings.SettingsMutationDispatcherTest.xml",
+      "sha256": "edbadbb26c92fd15c29622919b3d3acdcd90a7e8ae4dc9d9b077ac305ec74818",
+      "suite": "com.parlor.app.shell.settings.SettingsMutationDispatcherTest",
+      "task": ":composeApp:testDebugUnitTest",
+      "tests": 2,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 2
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/composeApp/build/test-results/testDebugUnitTest/TEST-com.parlor.app.storage.AndroidSettingsKeyValueBackingTest.xml",
+      "sha256": "62762dcf30dc505ea3fbb54551a26928805c90b4a3c35360391e8394c0c6284d",
+      "suite": "com.parlor.app.storage.AndroidSettingsKeyValueBackingTest",
+      "task": ":composeApp:testDebugUnitTest",
+      "tests": 2,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 2
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/composeApp/build/test-results/testDebugUnitTest/TEST-com.parlor.app.storage.AndroidSnapshotDirectoryListingTest.xml",
+      "sha256": "a8cde2d1a440be974013693f862c925ecf6adcca0ea4f38ec526619232ba4008",
+      "suite": "com.parlor.app.storage.AndroidSnapshotDirectoryListingTest",
+      "task": ":composeApp:testDebugUnitTest",
+      "tests": 2,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 2
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/composeApp/build/test-results/testDebugUnitTest/TEST-com.parlor.app.storage.PlatformStorageMigrationTest.xml",
+      "sha256": "f5ada14f9058616a6bf250ebb20b84c76cc99a23a9ca6c138f9fe86c93f96ee4",
+      "suite": "com.parlor.app.storage.PlatformStorageMigrationTest",
+      "task": ":composeApp:testDebugUnitTest",
+      "tests": 2,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 2
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/composeApp/build/test-results/testDebugUnitTest/TEST-com.parlor.app.storage.SnapshotProtectionPolicyTest.xml",
+      "sha256": "23965a4f5f924240f5108f792c8c6ce8cf20acaa4ae7a742152fe1e9fb24e18a",
+      "suite": "com.parlor.app.storage.SnapshotProtectionPolicyTest",
+      "task": ":composeApp:testDebugUnitTest",
+      "tests": 4,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 4
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/composeApp/build/test-results/testReleaseUnitTest/TEST-com.parlor.app.AppBackPolicyTest.xml",
+      "sha256": "7a3cbb4f04be500b5e6903978cdebc17f3af8ede91623c75c4e7b73fd4a4653e",
+      "suite": "com.parlor.app.AppBackPolicyTest",
+      "task": ":composeApp:testReleaseUnitTest",
+      "tests": 5,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 5
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/composeApp/build/test-results/testReleaseUnitTest/TEST-com.parlor.app.AppNavigationTest.xml",
+      "sha256": "ef7926997c08d55baf20333e6c6e88fd364f5cc6d7cc93f938b6d4d0528e7740",
+      "suite": "com.parlor.app.AppNavigationTest",
+      "task": ":composeApp:testReleaseUnitTest",
+      "tests": 11,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 11
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/composeApp/build/test-results/testReleaseUnitTest/TEST-com.parlor.app.LocalResumeRouterTest.xml",
+      "sha256": "67d061d4bc27c42b142c79bcb2e1841685569674cc44bf32985a9d4fdac13d35",
+      "suite": "com.parlor.app.LocalResumeRouterTest",
+      "task": ":composeApp:testReleaseUnitTest",
+      "tests": 10,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 10
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/composeApp/build/test-results/testReleaseUnitTest/TEST-com.parlor.app.MainActivityStartupTest.xml",
+      "sha256": "d8369a0faa481dce1bd1a13ad8438aceebb482c17fbedeca0989015d7b0d8e8a",
+      "suite": "com.parlor.app.MainActivityStartupTest",
+      "task": ":composeApp:testReleaseUnitTest",
+      "tests": 1,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 1
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/composeApp/build/test-results/testReleaseUnitTest/TEST-com.parlor.app.MultiplayerRouteRestorationTest.xml",
+      "sha256": "c50d3c6965c51752a056c6e3ae34dc6ea426a08c9fe843b0e7cbc5ff3aa129c2",
+      "suite": "com.parlor.app.MultiplayerRouteRestorationTest",
+      "task": ":composeApp:testReleaseUnitTest",
+      "tests": 3,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 3
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/composeApp/build/test-results/testReleaseUnitTest/TEST-com.parlor.app.di.GameShellCompositionTest.xml",
+      "sha256": "3723db4a0078722e30aaf5bc5f93797aac9fa92ef863cf600bd6c868a84f093e",
+      "suite": "com.parlor.app.di.GameShellCompositionTest",
+      "task": ":composeApp:testReleaseUnitTest",
+      "tests": 1,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 1
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/composeApp/build/test-results/testReleaseUnitTest/TEST-com.parlor.app.di.ProductionSessionSeedSourceTest.xml",
+      "sha256": "321bc0f04eda85d955a32426c572fe632c60cd1644f9764ea31fa314cf0a45e9",
+      "suite": "com.parlor.app.di.ProductionSessionSeedSourceTest",
+      "task": ":composeApp:testReleaseUnitTest",
+      "tests": 1,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 1
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/composeApp/build/test-results/testReleaseUnitTest/TEST-com.parlor.app.lifecycle.AppLifecycleCoordinatorTest.xml",
+      "sha256": "f27d54dfe591571f49c9cdfc57a6371ad6949de70ba1ce5319f342c0d7ee9f70",
+      "suite": "com.parlor.app.lifecycle.AppLifecycleCoordinatorTest",
+      "task": ":composeApp:testReleaseUnitTest",
+      "tests": 9,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 9
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/composeApp/build/test-results/testReleaseUnitTest/TEST-com.parlor.app.shell.game.GameShellRegistryExtensibilityTest.xml",
+      "sha256": "41bddcbdabc907c847f384f03c7258f630b3a0fe5e01bb5cf7e0dc9528284c3c",
+      "suite": "com.parlor.app.shell.game.GameShellRegistryExtensibilityTest",
+      "task": ":composeApp:testReleaseUnitTest",
+      "tests": 11,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 11
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/composeApp/build/test-results/testReleaseUnitTest/TEST-com.parlor.app.shell.game.WhodunitShippedPlayerCountTest.xml",
+      "sha256": "6eae6ebaf50f0597237b4f51b9bc7ff747cc1d24639476f1c597414cc88ea4b5",
+      "suite": "com.parlor.app.shell.game.WhodunitShippedPlayerCountTest",
+      "task": ":composeApp:testReleaseUnitTest",
+      "tests": 2,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 2
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/composeApp/build/test-results/testReleaseUnitTest/TEST-com.parlor.app.shell.home.HomeRecoveryAvailabilityTest.xml",
+      "sha256": "27e521a53c6cc13af4e0765d6e302ea938038ddcdda6022f7c47d833685667c4",
+      "suite": "com.parlor.app.shell.home.HomeRecoveryAvailabilityTest",
+      "task": ":composeApp:testReleaseUnitTest",
+      "tests": 8,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 8
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/composeApp/build/test-results/testReleaseUnitTest/TEST-com.parlor.app.shell.multiplayer.NameInputPolicyTest.xml",
+      "sha256": "cc47e6648de59786f3d28c26d1eb4e71d4ee184f14fcd5b7fa5578500c9113ac",
+      "suite": "com.parlor.app.shell.multiplayer.NameInputPolicyTest",
+      "task": ":composeApp:testReleaseUnitTest",
+      "tests": 2,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 2
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/composeApp/build/test-results/testReleaseUnitTest/TEST-com.parlor.app.shell.settings.SettingsMutationDispatcherTest.xml",
+      "sha256": "e0b570eca1148bd3c0f13e75fcabfafa38d665cb6361bbf7f0f628c888f24683",
+      "suite": "com.parlor.app.shell.settings.SettingsMutationDispatcherTest",
+      "task": ":composeApp:testReleaseUnitTest",
+      "tests": 2,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 2
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/composeApp/build/test-results/testReleaseUnitTest/TEST-com.parlor.app.storage.AndroidSettingsKeyValueBackingTest.xml",
+      "sha256": "793bfc223ebe490492904eb702396493ea76b117b834c2d37b160a76bbaf178a",
+      "suite": "com.parlor.app.storage.AndroidSettingsKeyValueBackingTest",
+      "task": ":composeApp:testReleaseUnitTest",
+      "tests": 2,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 2
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/composeApp/build/test-results/testReleaseUnitTest/TEST-com.parlor.app.storage.AndroidSnapshotDirectoryListingTest.xml",
+      "sha256": "bd94a6d117628e6232c8d23b480575f5ea297a9d0a59e23cffb669a0a1412cb6",
+      "suite": "com.parlor.app.storage.AndroidSnapshotDirectoryListingTest",
+      "task": ":composeApp:testReleaseUnitTest",
+      "tests": 2,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 2
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/composeApp/build/test-results/testReleaseUnitTest/TEST-com.parlor.app.storage.PlatformStorageMigrationTest.xml",
+      "sha256": "f8a43686969b5fef7469cdef0d3d5f709eef9edefa641352460671731f6040fc",
+      "suite": "com.parlor.app.storage.PlatformStorageMigrationTest",
+      "task": ":composeApp:testReleaseUnitTest",
+      "tests": 2,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 2
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/composeApp/build/test-results/testReleaseUnitTest/TEST-com.parlor.app.storage.SnapshotProtectionPolicyTest.xml",
+      "sha256": "78c3462e043ddef095a27aaaa3b571744e0de71bdece96dbcbec5c5ef52bac97",
+      "suite": "com.parlor.app.storage.SnapshotProtectionPolicyTest",
+      "task": ":composeApp:testReleaseUnitTest",
+      "tests": 4,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 4
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.MafiaDoctorRulesTest.xml",
+      "sha256": "5e7c8303b0a4223b90e355ba5d7bd45f0adb371265203379f1462213b534bdee",
+      "suite": "com.parlor.games.mafia.domain.MafiaDoctorRulesTest",
+      "task": ":game-modes:mafia:desktopTest",
+      "tests": 8,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 8
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.action.MafiaActionCodecTest.xml",
+      "sha256": "de2804e21d411910e587417ea54b079f8bfa253ef03edefa720a3d73040a61ff",
+      "suite": "com.parlor.games.mafia.domain.action.MafiaActionCodecTest",
+      "task": ":game-modes:mafia:desktopTest",
+      "tests": 16,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 16
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.projection.MafiaHostOnlyRedactionSentinelTest.xml",
+      "sha256": "2365b043cc604eae3571f6d9f7f2f94ce37bdeb104759915351b76ee8abfd4e6",
+      "suite": "com.parlor.games.mafia.domain.projection.MafiaHostOnlyRedactionSentinelTest",
+      "task": ":game-modes:mafia:desktopTest",
+      "tests": 4,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 4
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.projection.MafiaProjectionPolicyTest.xml",
+      "sha256": "147e331c804a817cb054a88107ce86f295617008c6fc313d3a112b048e5399ec",
+      "suite": "com.parlor.games.mafia.domain.projection.MafiaProjectionPolicyTest",
+      "task": ":game-modes:mafia:desktopTest",
+      "tests": 11,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 11
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.reducer.MafiaReducerEdgeCasesTest.xml",
+      "sha256": "1e000e8efb2cf07dc24186b2774af00be598b50df3879c7077841164ceb0b5d2",
+      "suite": "com.parlor.games.mafia.domain.reducer.MafiaReducerEdgeCasesTest",
+      "task": ":game-modes:mafia:desktopTest",
+      "tests": 27,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 27
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.reducer.MafiaReducerTest.xml",
+      "sha256": "f5ef0299ff506ecbdbe06b0aed13ded9ad81719530984b15b5edd99a225b61f0",
+      "suite": "com.parlor.games.mafia.domain.reducer.MafiaReducerTest",
+      "task": ":game-modes:mafia:desktopTest",
+      "tests": 24,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 24
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.rules.MafiaSessionRulesTest.xml",
+      "sha256": "64c4a454e1c72fb367fd97b8c33e8268c7088d5b6e0ec455085c28114f6f8729",
+      "suite": "com.parlor.games.mafia.domain.rules.MafiaSessionRulesTest",
+      "task": ":game-modes:mafia:desktopTest",
+      "tests": 5,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 5
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.rules.NightResolutionTest.xml",
+      "sha256": "b5baac32c8f0cef57e7a607521e4d1721e9a59e5113196ae554e81b878b8b5b6",
+      "suite": "com.parlor.games.mafia.domain.rules.NightResolutionTest",
+      "task": ":game-modes:mafia:desktopTest",
+      "tests": 13,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 13
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.rules.RoleAssignmentTest.xml",
+      "sha256": "a093cc1fe671a219f95423ef8d8e37bd684fb6c2b7f51d21177be2f8fb5ca627",
+      "suite": "com.parlor.games.mafia.domain.rules.RoleAssignmentTest",
+      "task": ":game-modes:mafia:desktopTest",
+      "tests": 6,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 6
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.rules.VoteResolutionTest.xml",
+      "sha256": "de58334eebccdd059393e880ea2111cabe3e2c79d6a5db5b5472cda2db29ad31",
+      "suite": "com.parlor.games.mafia.domain.rules.VoteResolutionTest",
+      "task": ":game-modes:mafia:desktopTest",
+      "tests": 9,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 9
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.rules.WinCheckTest.xml",
+      "sha256": "9154d4c54475f578bf612f251f5fdea2062dc057ae4c319cba3898977793a709",
+      "suite": "com.parlor.games.mafia.domain.rules.WinCheckTest",
+      "task": ":game-modes:mafia:desktopTest",
+      "tests": 5,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 5
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.settings.MafiaSettingsValidationTest.xml",
+      "sha256": "10621775f5dd9f1d5e4adb837571c721f9a2451aae902200ecc8cadb92b04845",
+      "suite": "com.parlor.games.mafia.domain.settings.MafiaSettingsValidationTest",
+      "task": ":game-modes:mafia:desktopTest",
+      "tests": 20,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 20
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.state.MafiaPeerSnapshotValidatorTest.xml",
+      "sha256": "2a897ee26d5ff46b36cc5b30851941401d4d9958d32e295dc34543c616144755",
+      "suite": "com.parlor.games.mafia.domain.state.MafiaPeerSnapshotValidatorTest",
+      "task": ":game-modes:mafia:desktopTest",
+      "tests": 5,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 5
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.flow.FullGameDriveTest.xml",
+      "sha256": "2b9781224c0978f92b4ad447202e673fbe073bbf3da9fb74ea810e7359e0d6ba",
+      "suite": "com.parlor.games.mafia.flow.FullGameDriveTest",
+      "task": ":game-modes:mafia:desktopTest",
+      "tests": 4,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 4
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.flow.MafiaLocalSessionConfigTest.xml",
+      "sha256": "35fabc02c07e277cfa78aab5ebdd02704ae32d2fbd940a6a7e50479ed9244f7e",
+      "suite": "com.parlor.games.mafia.flow.MafiaLocalSessionConfigTest",
+      "task": ":game-modes:mafia:desktopTest",
+      "tests": 2,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 2
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.multidevice.MafiaAuthoritativeLifecycleTest.xml",
+      "sha256": "04dc2919a14c9abfe1f46137b6d424df594396ebf039574363a45c401d9240e9",
+      "suite": "com.parlor.games.mafia.multidevice.MafiaAuthoritativeLifecycleTest",
+      "task": ":game-modes:mafia:desktopTest",
+      "tests": 15,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 15
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.multidevice.MafiaDoctorLanTest.xml",
+      "sha256": "a34634a220d646cc3b04ae713d69c3ea0c9dd8b1027066d312d284742c4500d9",
+      "suite": "com.parlor.games.mafia.multidevice.MafiaDoctorLanTest",
+      "task": ":game-modes:mafia:desktopTest",
+      "tests": 2,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 2
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.multidevice.MafiaMultiDeviceProgressionTest.xml",
+      "sha256": "4e0f59b17a6d759b6f7ca26bc3e2ed5315836c85dede3abda02ae2705c8a9fbb",
+      "suite": "com.parlor.games.mafia.multidevice.MafiaMultiDeviceProgressionTest",
+      "task": ":game-modes:mafia:desktopTest",
+      "tests": 6,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 6
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.multidevice.MafiaPeerActionAuthorityTest.xml",
+      "sha256": "c645b20dd753814f0acd58e84711c3a6ff5cc5e23a5eb68422cb885cb99542d3",
+      "suite": "com.parlor.games.mafia.multidevice.MafiaPeerActionAuthorityTest",
+      "task": ":game-modes:mafia:desktopTest",
+      "tests": 7,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 7
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.multidevice.MafiaPeerPrivateTargetGateTest.xml",
+      "sha256": "57b1506b214060ba826d7416838b49a729022b866a3202843128f2eb7cc3d56f",
+      "suite": "com.parlor.games.mafia.multidevice.MafiaPeerPrivateTargetGateTest",
+      "task": ":game-modes:mafia:desktopTest",
+      "tests": 8,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 8
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.multidevice.MafiaProjectionLeakTest.xml",
+      "sha256": "17d9690c553593faa2176b2a9d092c5ccede1dd8cccbf7efa840e863f3dcba71",
+      "suite": "com.parlor.games.mafia.multidevice.MafiaProjectionLeakTest",
+      "task": ":game-modes:mafia:desktopTest",
+      "tests": 3,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 3
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.snapshot.MafiaDoctorHistoryRecoveryTest.xml",
+      "sha256": "ba6d3c53eadcce0887ba308a70455a043be5a802a2e0373275d5114f3cb1a0c4",
+      "suite": "com.parlor.games.mafia.snapshot.MafiaDoctorHistoryRecoveryTest",
+      "task": ":game-modes:mafia:desktopTest",
+      "tests": 15,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 15
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.snapshot.MafiaSnapshotCodecTest.xml",
+      "sha256": "ad51091d77339aab7861447479bbd9fc9ebb82facdc3bad909dceeaa99d75dfd",
+      "suite": "com.parlor.games.mafia.snapshot.MafiaSnapshotCodecTest",
+      "task": ":game-modes:mafia:desktopTest",
+      "tests": 9,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 9
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.snapshot.MafiaSnapshotRecoveryTest.xml",
+      "sha256": "677468645454fe18937f991d331d585494fb2173424e5b93ec8e82c5b1c9a29b",
+      "suite": "com.parlor.games.mafia.snapshot.MafiaSnapshotRecoveryTest",
+      "task": ":game-modes:mafia:desktopTest",
+      "tests": 23,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 23
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.flow.multidevice.MafiaNetworkErrorMessageKeyTest.xml",
+      "sha256": "9d21d042c237d7c9a0514d7341071a17fe26eeb3ad39d4543864791442aa99f1",
+      "suite": "com.parlor.games.mafia.ui.flow.multidevice.MafiaNetworkErrorMessageKeyTest",
+      "task": ":game-modes:mafia:desktopTest",
+      "tests": 1,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 1
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.flow.passandplay.MafiaPassAndPlayNightQueueTest.xml",
+      "sha256": "2f92761b4877c2250cbd49cc4dc2e809a1bd025850fb98881dd5a7d27028f3ff",
+      "suite": "com.parlor.games.mafia.ui.flow.passandplay.MafiaPassAndPlayNightQueueTest",
+      "task": ":game-modes:mafia:desktopTest",
+      "tests": 2,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 2
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.night.DoctorTargetEligibilityTest.xml",
+      "sha256": "629c1c083192f329780fecdb927f9144fed4516261b20f7f0baa128423301c98",
+      "suite": "com.parlor.games.mafia.ui.screens.night.DoctorTargetEligibilityTest",
+      "task": ":game-modes:mafia:desktopTest",
+      "tests": 2,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 2
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.night.TargetPickerSelectionTest.xml",
+      "sha256": "efa207964f40cb73064b6f139051b189a0e6d250ad9ab0548c1bf224dbbab512",
+      "suite": "com.parlor.games.mafia.ui.screens.night.TargetPickerSelectionTest",
+      "task": ":game-modes:mafia:desktopTest",
+      "tests": 3,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 3
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.postgame.PostGameScreenLayoutTest.xml",
+      "sha256": "7efad80cf4da29cfc75c4ecf7ddeee9bc77f2b605a5a036517ccda3d6c18b9da",
+      "suite": "com.parlor.games.mafia.ui.screens.postgame.PostGameScreenLayoutTest",
+      "task": ":game-modes:mafia:desktopTest",
+      "tests": 6,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 6
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.setup.MafiaDoctorSettingUiTest.xml",
+      "sha256": "b9f8571c3f0dc6ab69b6c84c43543e1b4a22ba605fc48c0f21fc48972e64a0e4",
+      "suite": "com.parlor.games.mafia.ui.screens.setup.MafiaDoctorSettingUiTest",
+      "task": ":game-modes:mafia:desktopTest",
+      "tests": 2,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 2
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.setup.MafiaSetupDraftTest.xml",
+      "sha256": "06fe18c084d1e056a678b28a7c422a905a046fa12a240eae64da342882fe96ec",
+      "suite": "com.parlor.games.mafia.ui.screens.setup.MafiaSetupDraftTest",
+      "task": ":game-modes:mafia:desktopTest",
+      "tests": 4,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 4
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.WhodunitPlayModePolicyTest.xml",
+      "sha256": "7b5d2c2664b5ca7913ddc76c42bc725295816a3280638debd6c40c558a6995e3",
+      "suite": "com.parlor.games.whodunit.WhodunitPlayModePolicyTest",
+      "task": ":game-modes:whodunit:desktopTest",
+      "tests": 1,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 1
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.action.WhodunitActionCodecTest.xml",
+      "sha256": "40fe71735990907a6a1a6eed88db45bbb9016acb0350f437509cda0c894449a8",
+      "suite": "com.parlor.games.whodunit.action.WhodunitActionCodecTest",
+      "task": ":game-modes:whodunit:desktopTest",
+      "tests": 12,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 12
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.authority.WhodunitActionAuthorityTest.xml",
+      "sha256": "ed3ba109ea39fabc7106ca8034b739fcbe620ec2f451ef1470f89fa95d91f212",
+      "suite": "com.parlor.games.whodunit.authority.WhodunitActionAuthorityTest",
+      "task": ":game-modes:whodunit:desktopTest",
+      "tests": 7,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 7
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.ArabicCaseValidationTest.xml",
+      "sha256": "5f19b25539f7aec553e4465dd74032a30405d66633b2fa6e9ec5af801f2d4e9c",
+      "suite": "com.parlor.games.whodunit.content.ArabicCaseValidationTest",
+      "task": ":game-modes:whodunit:desktopTest",
+      "tests": 3,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 3
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.BundledCaseLoadingTest.xml",
+      "sha256": "ca1d3193bd4ae5f445f7e3e9d74e5c396b0fefac599ec184ee7766b7596f2a8e",
+      "suite": "com.parlor.games.whodunit.content.BundledCaseLoadingTest",
+      "task": ":game-modes:whodunit:desktopTest",
+      "tests": 5,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 5
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.CasePickerDiscoveryTest.xml",
+      "sha256": "661e93d487b995a162651ab2d2569286bb506774c802dd9214cdcab614700145",
+      "suite": "com.parlor.games.whodunit.content.CasePickerDiscoveryTest",
+      "task": ":game-modes:whodunit:desktopTest",
+      "tests": 5,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 5
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.ResReadBytesProbeTest.xml",
+      "sha256": "63f6ccec3f32f0d631fc92b3a789d2a5520f0fbb32bb1787e3f4986266db775a",
+      "suite": "com.parlor.games.whodunit.content.ResReadBytesProbeTest",
+      "task": ":game-modes:whodunit:desktopTest",
+      "tests": 1,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 1
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.WhodunitContentIdentityTest.xml",
+      "sha256": "ddfdb71515ca8da6b5f8e9fb2fdf7e7af8437728b12687f8dac21d9fc7985622",
+      "suite": "com.parlor.games.whodunit.content.WhodunitContentIdentityTest",
+      "task": ":game-modes:whodunit:desktopTest",
+      "tests": 2,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 2
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.WhodunitPayloadHardeningTest.xml",
+      "sha256": "91507fe63976a2b0fb5e269ba149b256e6649dc62fee36d2cf48535ecc5ca233",
+      "suite": "com.parlor.games.whodunit.content.WhodunitPayloadHardeningTest",
+      "task": ":game-modes:whodunit:desktopTest",
+      "tests": 10,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 10
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.domain.CluePolicyTest.xml",
+      "sha256": "76feab67d671ef33730c6b6fdc753b888cb27d9dfc42cb2a7b253e78ac1f5e63",
+      "suite": "com.parlor.games.whodunit.domain.CluePolicyTest",
+      "task": ":game-modes:whodunit:desktopTest",
+      "tests": 5,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 5
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.domain.PartyReadinessTest.xml",
+      "sha256": "74ed1bf61620a5d68fa45e278e6847f4e56d8a38544548a4d354f8336b113a15",
+      "suite": "com.parlor.games.whodunit.domain.PartyReadinessTest",
+      "task": ":game-modes:whodunit:desktopTest",
+      "tests": 9,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 9
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.domain.WhodunitReducerProductionGuardsTest.xml",
+      "sha256": "7dedfe45271aea82bb781cb3b775beba48179c08041565dc13e0d416ffb17a34",
+      "suite": "com.parlor.games.whodunit.domain.WhodunitReducerProductionGuardsTest",
+      "task": ":game-modes:whodunit:desktopTest",
+      "tests": 8,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 8
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.domain.WhodunitRulesInvariantTest.xml",
+      "sha256": "68cbe26312bf99d6307dfcb033df83f0292db0a40c0a85d5ec3fab0575356f0e",
+      "suite": "com.parlor.games.whodunit.domain.WhodunitRulesInvariantTest",
+      "task": ":game-modes:whodunit:desktopTest",
+      "tests": 9,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 9
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.domain.WhodunitTerminalAndCluePolicyTest.xml",
+      "sha256": "e585af859a81efba88a780034bce4d1db18b76df0e106c046621c91315330c1a",
+      "suite": "com.parlor.games.whodunit.domain.WhodunitTerminalAndCluePolicyTest",
+      "task": ":game-modes:whodunit:desktopTest",
+      "tests": 6,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 6
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.domain.rules.WhodunitPolicyGoldenTest.xml",
+      "sha256": "753fa2344b8f7cde2e7722d72d3f3968ad1c8da3326cdc45bda18ad1523862ce",
+      "suite": "com.parlor.games.whodunit.domain.rules.WhodunitPolicyGoldenTest",
+      "task": ":game-modes:whodunit:desktopTest",
+      "tests": 2,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 2
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.flow.ContinueWithoutPlayerTest.xml",
+      "sha256": "3426f8897a77a8baea9b0c21f07485500209d052aedad70243d099bfdf0997f7",
+      "suite": "com.parlor.games.whodunit.flow.ContinueWithoutPlayerTest",
+      "task": ":game-modes:whodunit:desktopTest",
+      "tests": 8,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 8
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.flow.FullGameDriveTest.xml",
+      "sha256": "906c4c38064e5830747f31420fcc5237bed4b3fbcefeb463e4ea63ba8f3f571e",
+      "suite": "com.parlor.games.whodunit.flow.FullGameDriveTest",
+      "task": ":game-modes:whodunit:desktopTest",
+      "tests": 6,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 6
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.flow.IntroAndBriefingReadinessTest.xml",
+      "sha256": "dd4ad2e19c90727c6fc21d6aa0502015f1dce2319b2ecaf9ac6a151b7013518c",
+      "suite": "com.parlor.games.whodunit.flow.IntroAndBriefingReadinessTest",
+      "task": ":game-modes:whodunit:desktopTest",
+      "tests": 4,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 4
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.flow.PartyFlowControllerTest.xml",
+      "sha256": "8e2eb72f1637fbef6fdacc8dd7b9636a3f098f89e3546530e785d50fc79f3c54",
+      "suite": "com.parlor.games.whodunit.flow.PartyFlowControllerTest",
+      "task": ":game-modes:whodunit:desktopTest",
+      "tests": 7,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 7
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.flow.PauseRefuseLeaveTest.xml",
+      "sha256": "e8ac13719605e3ae3fb8925f69e95320f5d110cf4a35bcc32f073061abd55b56",
+      "suite": "com.parlor.games.whodunit.flow.PauseRefuseLeaveTest",
+      "task": ":game-modes:whodunit:desktopTest",
+      "tests": 10,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 10
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.flow.SimultaneousCharacterRevealTest.xml",
+      "sha256": "242aec4819b29b801318e7013213987a073a98021ee7754dedc919f5cd968f1e",
+      "suite": "com.parlor.games.whodunit.flow.SimultaneousCharacterRevealTest",
+      "task": ":game-modes:whodunit:desktopTest",
+      "tests": 6,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 6
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.flow.TickerAndRerollTest.xml",
+      "sha256": "b700a3beeb18b5b57ee97fad39c760e8030271a18c41c69698790b2e46d48c4d",
+      "suite": "com.parlor.games.whodunit.flow.TickerAndRerollTest",
+      "task": ":game-modes:whodunit:desktopTest",
+      "tests": 9,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 9
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.flow.TiedRevoteTest.xml",
+      "sha256": "0f09c0f9e93cee6808e3cf0b75e18786b36557d2383182057fc4bcd49b8fedcc",
+      "suite": "com.parlor.games.whodunit.flow.TiedRevoteTest",
+      "task": ":game-modes:whodunit:desktopTest",
+      "tests": 7,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 7
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.flow.WhodunitLocalSessionConfigTest.xml",
+      "sha256": "fe373163725e7af8f1118ee8d0d904baaf3446269ade830a15cf83759f920546",
+      "suite": "com.parlor.games.whodunit.flow.WhodunitLocalSessionConfigTest",
+      "task": ":game-modes:whodunit:desktopTest",
+      "tests": 2,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 2
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.layout.ResponsiveLayoutAuditTest.xml",
+      "sha256": "82f0950c8558a5aae02587de964a1e95db5828f96451d77490df1d804f08ad3c",
+      "suite": "com.parlor.games.whodunit.layout.ResponsiveLayoutAuditTest",
+      "task": ":game-modes:whodunit:desktopTest",
+      "tests": 1,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 1
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.layout.TokenDisciplineTest.xml",
+      "sha256": "2ab202ca451f0fa24c1c683afff246679e09800f338b239d52c753679dea9891",
+      "suite": "com.parlor.games.whodunit.layout.TokenDisciplineTest",
+      "task": ":game-modes:whodunit:desktopTest",
+      "tests": 2,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 2
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.multidevice.HostLostTimeoutTest.xml",
+      "sha256": "acad191296c57df524467827e7d36867a665481dc98f64bce1247b09b4e303b0",
+      "suite": "com.parlor.games.whodunit.multidevice.HostLostTimeoutTest",
+      "task": ":game-modes:whodunit:desktopTest",
+      "tests": 3,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 3
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.multidevice.MultiDevicePartyPlayContractTest.xml",
+      "sha256": "f6db8369e3aa3f2f62cd65f5d50f99f3ed240b3bbc5a3a630c1c7281b4bdd3a3",
+      "suite": "com.parlor.games.whodunit.multidevice.MultiDevicePartyPlayContractTest",
+      "task": ":game-modes:whodunit:desktopTest",
+      "tests": 3,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 3
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.multidevice.PartyConnectionEventsTest.xml",
+      "sha256": "8004f279af7a86f06586aa508d90356d70b5a86e21990b2d01dd10b61fd199b2",
+      "suite": "com.parlor.games.whodunit.multidevice.PartyConnectionEventsTest",
+      "task": ":game-modes:whodunit:desktopTest",
+      "tests": 17,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 17
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.multidevice.PartyPlayPassAndPlayParityTest.xml",
+      "sha256": "da5390879554d52ef57f61febced35bdbbbce325e9a1df99ef344be4bce1130d",
+      "suite": "com.parlor.games.whodunit.multidevice.PartyPlayPassAndPlayParityTest",
+      "task": ":game-modes:whodunit:desktopTest",
+      "tests": 1,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 1
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.multidevice.QueuedActionSafetyTest.xml",
+      "sha256": "0432687f1bc5cebf6ba7e43087e8cdce626c5b154454ad4e0f1a72f43504b84f",
+      "suite": "com.parlor.games.whodunit.multidevice.QueuedActionSafetyTest",
+      "task": ":game-modes:whodunit:desktopTest",
+      "tests": 2,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 2
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.multidevice.SelfOfflineTimeoutTest.xml",
+      "sha256": "ddba21a05775cb659e8374b7796e29c7ebf7aa40836e1e1eb8499bc0af1d63fe",
+      "suite": "com.parlor.games.whodunit.multidevice.SelfOfflineTimeoutTest",
+      "task": ":game-modes:whodunit:desktopTest",
+      "tests": 1,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 1
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.multidevice.WhodunitMultiDeviceShapeTest.xml",
+      "sha256": "2d12c75075596d7cd915c27f87f9938fd1e9ab4efa480900c95987090664525d",
+      "suite": "com.parlor.games.whodunit.multidevice.WhodunitMultiDeviceShapeTest",
+      "task": ":game-modes:whodunit:desktopTest",
+      "tests": 6,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 6
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.multidevice.WhodunitPeerProjectionBoundaryTest.xml",
+      "sha256": "af92352f19d4cf2826f46b5942840a6e6f00476e130d8ba275f1513a4cd569b4",
+      "suite": "com.parlor.games.whodunit.multidevice.WhodunitPeerProjectionBoundaryTest",
+      "task": ":game-modes:whodunit:desktopTest",
+      "tests": 7,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 7
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.projection.VoteRedactionTest.xml",
+      "sha256": "2754118d848a192cb9a514bf5ed8dee05060553d42ced3067e79b1caac4842b1",
+      "suite": "com.parlor.games.whodunit.projection.VoteRedactionTest",
+      "task": ":game-modes:whodunit:desktopTest",
+      "tests": 6,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 6
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.snapshot.WhodunitCaseBindingTest.xml",
+      "sha256": "39baf23ab12f8f015e7df06de78e6666ef9270fe479baf51b1c557e177f1dd5b",
+      "suite": "com.parlor.games.whodunit.snapshot.WhodunitCaseBindingTest",
+      "task": ":game-modes:whodunit:desktopTest",
+      "tests": 8,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 8
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.snapshot.WhodunitFinalTwoRecoveryTest.xml",
+      "sha256": "f7e17520f7fcd8978256aa041fa545cd9c39a0c59d1a2c2970e4967c1947d531",
+      "suite": "com.parlor.games.whodunit.snapshot.WhodunitFinalTwoRecoveryTest",
+      "task": ":game-modes:whodunit:desktopTest",
+      "tests": 9,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 9
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.snapshot.WhodunitLegacySnapshotGoldenTest.xml",
+      "sha256": "b11619c9f6caff168ecb83922432735fc1e5d4a75b644fcdb16ee17a943bdb39",
+      "suite": "com.parlor.games.whodunit.snapshot.WhodunitLegacySnapshotGoldenTest",
+      "task": ":game-modes:whodunit:desktopTest",
+      "tests": 1,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 1
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.snapshot.WhodunitResumeReconstructionTest.xml",
+      "sha256": "51e13ec16901cd2d0697e6e93a4b7842854c1506594c2a052baf97a27e9e55f5",
+      "suite": "com.parlor.games.whodunit.snapshot.WhodunitResumeReconstructionTest",
+      "task": ":game-modes:whodunit:desktopTest",
+      "tests": 11,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 11
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.snapshot.WhodunitSnapshotRoundTripTest.xml",
+      "sha256": "b03321eb335890f0401d66d5f56bfb34f64aef196f02b15c48c45338aa7ae7c0",
+      "suite": "com.parlor.games.whodunit.snapshot.WhodunitSnapshotRoundTripTest",
+      "task": ":game-modes:whodunit:desktopTest",
+      "tests": 4,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 4
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.snapshot.WhodunitSnapshotValidationTest.xml",
+      "sha256": "b94a9939bb8115a87bbf5153986964f971679132b4881dd3c54db8b3ded9cb80",
+      "suite": "com.parlor.games.whodunit.snapshot.WhodunitSnapshotValidationTest",
+      "task": ":game-modes:whodunit:desktopTest",
+      "tests": 46,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 46
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.PrivacyConcernPolicyTest.xml",
+      "sha256": "6db0dd85425a25c25aa0e25c7691051bb1d53a72c2dabe7fbf5623c99bc9c5a6",
+      "suite": "com.parlor.games.whodunit.ui.PrivacyConcernPolicyTest",
+      "task": ":game-modes:whodunit:desktopTest",
+      "tests": 2,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 2
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.RtlFormattingTest.xml",
+      "sha256": "463dcd20b38e9109e12e1a1858088bb5be215bd3a14e68452a0385994ab90ba4",
+      "suite": "com.parlor.games.whodunit.ui.RtlFormattingTest",
+      "task": ":game-modes:whodunit:desktopTest",
+      "tests": 2,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 2
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.WhodunitAccessibilitySemanticsTest.xml",
+      "sha256": "805f971b01cb4025ee4c0edcb5c8b2b703105d41665b327cdd5978a7533fdce1",
+      "suite": "com.parlor.games.whodunit.ui.WhodunitAccessibilitySemanticsTest",
+      "task": ":game-modes:whodunit:desktopTest",
+      "tests": 5,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 5
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.WhodunitCasePickerScreenTest.xml",
+      "sha256": "5d68a053a85dc6ec9ceb1d80df13cc2d2ca647fac4b61073d355898e379db0d9",
+      "suite": "com.parlor.games.whodunit.ui.WhodunitCasePickerScreenTest",
+      "task": ":game-modes:whodunit:desktopTest",
+      "tests": 1,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 1
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.WhodunitNetErrorMessageKeyTest.xml",
+      "sha256": "bc79c185a30e1e824b7b7e391ffbf4eec4802aa493d93df7cd5678afca9e08a2",
+      "suite": "com.parlor.games.whodunit.ui.WhodunitNetErrorMessageKeyTest",
+      "task": ":game-modes:whodunit:desktopTest",
+      "tests": 1,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 1
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.components.RevealCompletionGateTest.xml",
+      "sha256": "c149a7d51009d99e71b709d4403894ac802a35bb0dafed222712e109a1d9dd44",
+      "suite": "com.parlor.games.whodunit.ui.components.RevealCompletionGateTest",
+      "task": ":game-modes:whodunit:desktopTest",
+      "tests": 1,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 1
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.EliminationVoteOwnershipIntegrationTest.xml",
+      "sha256": "d94dd134658501b49ffa136234b99083e8dae51ef1da6b6c44fe5debd0a10fa2",
+      "suite": "com.parlor.games.whodunit.ui.flow.EliminationVoteOwnershipIntegrationTest",
+      "task": ":game-modes:whodunit:desktopTest",
+      "tests": 2,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 2
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.PeerReadinessRemountTest.xml",
+      "sha256": "d5c2d5a2695d411f99b391a2337bcf564f8b3a150ab2f13c20fe5c7c8c869499",
+      "suite": "com.parlor.games.whodunit.ui.flow.PeerReadinessRemountTest",
+      "task": ":game-modes:whodunit:desktopTest",
+      "tests": 12,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 12
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.VoteTurnPolicyTest.xml",
+      "sha256": "0f0ad75683283f0948be89542f7ed4b893b80eb0136f72814b519222b2ead1a2",
+      "suite": "com.parlor.games.whodunit.ui.flow.VoteTurnPolicyTest",
+      "task": ":game-modes:whodunit:desktopTest",
+      "tests": 5,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 5
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitPeerSessionFlowPolicyTest.xml",
+      "sha256": "67a5b97e50b21145569ee74e30a2ae83e46db5c6bd3c5acf6cddfe5b48e9d68a",
+      "suite": "com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitPeerSessionFlowPolicyTest",
+      "task": ":game-modes:whodunit:desktopTest",
+      "tests": 2,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 2
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.screens.setup.WhodunitCaseLanguageLabelTest.xml",
+      "sha256": "6056c9a6ef3c98442154e8708564d0e6299445635edd94fa7b047b3fd3974d3d",
+      "suite": "com.parlor.games.whodunit.ui.screens.setup.WhodunitCaseLanguageLabelTest",
+      "task": ":game-modes:whodunit:desktopTest",
+      "tests": 2,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 2
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.screens.setup.WhodunitModeChoiceTest.xml",
+      "sha256": "c1194521dae2f69910a304d59b2b6193e7a86b41203b9f247b56524ea699ccc4",
+      "suite": "com.parlor.games.whodunit.ui.screens.setup.WhodunitModeChoiceTest",
+      "task": ":game-modes:whodunit:desktopTest",
+      "tests": 2,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 2
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/content/build/test-results/desktopTest/TEST-com.parlor.content.datasource.OfflineRemoteCaseDataSourceTest.xml",
+      "sha256": "0d2c7c0f025259864fb9c2be680a6da409809a6ba7353d98860767c82b774200",
+      "suite": "com.parlor.content.datasource.OfflineRemoteCaseDataSourceTest",
+      "task": ":shared:content:desktopTest",
+      "tests": 7,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 7
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/content/build/test-results/desktopTest/TEST-com.parlor.content.repository.DefaultCaseRepositoryTest.xml",
+      "sha256": "5fa39700c9ff09dd4495063f0332f76d2967c6572930019ab49bca30de5feb7c",
+      "suite": "com.parlor.content.repository.DefaultCaseRepositoryTest",
+      "task": ":shared:content:desktopTest",
+      "tests": 9,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 9
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/content/build/test-results/desktopTest/TEST-com.parlor.content.schema.IntRangePairSerializerTest.xml",
+      "sha256": "c7612977ac7408c1b74b1608d23ae8e243650aea7f5a5703c62f607fb63b12b3",
+      "suite": "com.parlor.content.schema.IntRangePairSerializerTest",
+      "task": ":shared:content:desktopTest",
+      "tests": 2,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 2
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/content/build/test-results/desktopTest/TEST-com.parlor.content.validation.CaseSummaryValidatorTest.xml",
+      "sha256": "9943aeb609961c66fdd1a1815b52316c544bdc9047ad2622f87222adf599a7b2",
+      "suite": "com.parlor.content.validation.CaseSummaryValidatorTest",
+      "task": ":shared:content:desktopTest",
+      "tests": 3,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 3
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/content/build/test-results/desktopTest/TEST-com.parlor.content.validation.DefaultCaseValidatorBoundaryTest.xml",
+      "sha256": "1c0da00846116b78d9c8554dd36f7f3a3c5e365d4fe6c06e53e238ac2ba9d7ea",
+      "suite": "com.parlor.content.validation.DefaultCaseValidatorBoundaryTest",
+      "task": ":shared:content:desktopTest",
+      "tests": 3,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 3
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/core/build/test-results/desktopTest/TEST-com.parlor.core.result.ResultTest.xml",
+      "sha256": "ea2a2a4256387c414629d98a5c0983f2f7573fa9a7206b95ea287505850ebe1d",
+      "suite": "com.parlor.core.result.ResultTest",
+      "task": ":shared:core:desktopTest",
+      "tests": 10,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 10
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/core/build/test-results/desktopTest/TEST-com.parlor.core.versioning.SemVerTest.xml",
+      "sha256": "24fb7aa8289142630bc76193e3698dec43cc74da7df4fc3e2d8abbb54bea68cd",
+      "suite": "com.parlor.core.versioning.SemVerTest",
+      "task": ":shared:core:desktopTest",
+      "tests": 2,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 2
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.ActiveTextContrastCallSiteTest.xml",
+      "sha256": "59e80fe6031ecd48d430e88eeccee359c763a6bc08edc45773eacd34c78b3872",
+      "suite": "com.parlor.designsystem.ActiveTextContrastCallSiteTest",
+      "task": ":shared:design-system:desktopTest",
+      "tests": 2,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 2
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.ParlorSafeAreaTest.xml",
+      "sha256": "4fb963a3769a71d6e49d519cf749610e94eae654e4b237a4444946dde079bfd9",
+      "suite": "com.parlor.designsystem.components.ParlorSafeAreaTest",
+      "task": ":shared:design-system:desktopTest",
+      "tests": 1,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 1
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.ParlorToastConcurrencyTest.xml",
+      "sha256": "da28a92581d5a03acfcd520098720548fc76e0c8b323d7bccf3fd6f0460c69f4",
+      "suite": "com.parlor.designsystem.components.ParlorToastConcurrencyTest",
+      "task": ":shared:design-system:desktopTest",
+      "tests": 2,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 2
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.ParlorToastHostInsetsTest.xml",
+      "sha256": "815a6dab0a9686fe2c976ce8ffcc4e13734bfd70a41a311b567372e740ee07cb",
+      "suite": "com.parlor.designsystem.components.ParlorToastHostInsetsTest",
+      "task": ":shared:design-system:desktopTest",
+      "tests": 1,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 1
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.ParlorToastLifetimeTest.xml",
+      "sha256": "678ad6441194194421246e565917ebec1145db9beab3e71b1387080707fd7944",
+      "suite": "com.parlor.designsystem.components.ParlorToastLifetimeTest",
+      "task": ":shared:design-system:desktopTest",
+      "tests": 3,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 3
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.ParlorToastStateTest.xml",
+      "sha256": "613d2851dfde61f5e3601fe88cfc6132653df27cd50a7474350d39b7607b1b1f",
+      "suite": "com.parlor.designsystem.components.ParlorToastStateTest",
+      "task": ":shared:design-system:desktopTest",
+      "tests": 4,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 4
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.ReconnectingOverlayFocusTest.xml",
+      "sha256": "ebff4bb136cd1fae469c69f2b35b1c4f1e4ca2514d9c0ad24124f57f5686fcb7",
+      "suite": "com.parlor.designsystem.components.ReconnectingOverlayFocusTest",
+      "task": ":shared:design-system:desktopTest",
+      "tests": 1,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 1
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.RecoveryActionContrastTest.xml",
+      "sha256": "1e291db4192be70f901c52c47aafef91b39a5461aede20df3db02750ce96e588",
+      "suite": "com.parlor.designsystem.components.RecoveryActionContrastTest",
+      "task": ":shared:design-system:desktopTest",
+      "tests": 3,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 3
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.SessionExitBackPolicyTest.xml",
+      "sha256": "ea1f2493e1c32f985f528038636eb4dbf9b2fd8cff6f4362d59390d3c145288a",
+      "suite": "com.parlor.designsystem.components.SessionExitBackPolicyTest",
+      "task": ":shared:design-system:desktopTest",
+      "tests": 2,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 2
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.SessionExitOverlayLayoutTest.xml",
+      "sha256": "be1224167ccfaef3c5058bfa0f6dddeefe983647c2638580aea90e58845c65d3",
+      "suite": "com.parlor.designsystem.components.SessionExitOverlayLayoutTest",
+      "task": ":shared:design-system:desktopTest",
+      "tests": 1,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 1
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.SessionExitOverlayTest.xml",
+      "sha256": "20310aa1ca4bf506daf0d973535ed6d4d0c83ce056ccee2634dfce61203ceb53",
+      "suite": "com.parlor.designsystem.components.SessionExitOverlayTest",
+      "task": ":shared:design-system:desktopTest",
+      "tests": 1,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 1
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.StickyActionLayoutTest.xml",
+      "sha256": "03cda49bb6993991b991e756887e6fc25f086eef4e63cf99a332efbd31b95779",
+      "suite": "com.parlor.designsystem.components.StickyActionLayoutTest",
+      "task": ":shared:design-system:desktopTest",
+      "tests": 1,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 1
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.icons.ParlorIconsTest.xml",
+      "sha256": "64231b34a66ad99f6224e537e2aff8c859f189aa1d62330690fb99a2539244f9",
+      "suite": "com.parlor.designsystem.icons.ParlorIconsTest",
+      "task": ":shared:design-system:desktopTest",
+      "tests": 1,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 1
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.localization.AppLanguageSelectionTest.xml",
+      "sha256": "052827b0ac9df81a6577c29135b1dcbea644220dde9d6647b73b76d0df409d4a",
+      "suite": "com.parlor.designsystem.localization.AppLanguageSelectionTest",
+      "task": ":shared:design-system:desktopTest",
+      "tests": 3,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 3
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.localization.PlatformAppLocaleLoadingContractTest.xml",
+      "sha256": "318bb2825db6ea9b0132cedf85343b0c6f1559e51428895e2cd8d4cc27b714ec",
+      "suite": "com.parlor.designsystem.localization.PlatformAppLocaleLoadingContractTest",
+      "task": ":shared:design-system:desktopTest",
+      "tests": 3,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 3
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.localization.ProvideAppLanguageDesktopTest.xml",
+      "sha256": "81407dca963b28cac9e022ca479cdf9aa9f0f40f5275163534057fc5f923e47d",
+      "suite": "com.parlor.designsystem.localization.ProvideAppLanguageDesktopTest",
+      "task": ":shared:design-system:desktopTest",
+      "tests": 1,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 1
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.motion.ParlorMotionTest.xml",
+      "sha256": "aaed4c9b25e8da7e7f28f4a77ffca9ba9c6bf872eca008e93c839965d01127a3",
+      "suite": "com.parlor.designsystem.motion.ParlorMotionTest",
+      "task": ":shared:design-system:desktopTest",
+      "tests": 2,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 2
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.tokens.PaletteCoverageTest.xml",
+      "sha256": "e7c00bd9d4c4dd10e511923ebd77f9ae286a6c19959698e83ec30da00be2a12c",
+      "suite": "com.parlor.designsystem.tokens.PaletteCoverageTest",
+      "task": ":shared:design-system:desktopTest",
+      "tests": 8,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 8
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/engine/build/test-results/desktopTest/TEST-com.parlor.engine.architecture.NoWhodunitInEngineTest.xml",
+      "sha256": "b96e3cf478064b6ec371f00489463fe38d63c6204cdb95aab08bb1f60199d130",
+      "suite": "com.parlor.engine.architecture.NoWhodunitInEngineTest",
+      "task": ":shared:engine:desktopTest",
+      "tests": 1,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 1
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/engine/build/test-results/desktopTest/TEST-com.parlor.engine.architecture.ProjectionDocumentationContractTest.xml",
+      "sha256": "ade6faffae7df6596bf1bb388f3db478b16c33f4b9078af52e1b3da2e2cc5475",
+      "suite": "com.parlor.engine.architecture.ProjectionDocumentationContractTest",
+      "task": ":shared:engine:desktopTest",
+      "tests": 2,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 2
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/engine/build/test-results/desktopTest/TEST-com.parlor.engine.architecture.PurityTest.xml",
+      "sha256": "05a11ba597ac839a5fd0b7899967b319fcf5f8daa3cc5903ac9f40d94a32a12f",
+      "suite": "com.parlor.engine.architecture.PurityTest",
+      "task": ":shared:engine:desktopTest",
+      "tests": 1,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 1
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/engine-testing/build/test-results/desktopTest/TEST-com.parlor.engine.testing.fakes.RrSnapshotCodecTest.xml",
+      "sha256": "f917bb95bb106079b5c2f9bf629419939c05b346377d939b8c84891e63c04165",
+      "suite": "com.parlor.engine.testing.fakes.RrSnapshotCodecTest",
+      "task": ":shared:engine-testing:desktopTest",
+      "tests": 2,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 2
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/engine-testing/build/test-results/desktopTest/TEST-com.parlor.engine.testing.reducer.ReducerSmokeTest.xml",
+      "sha256": "6827eb5b51c05ac4f7a9d0c67530a1fe05acf4cd91f2d76c5d26cdcc7a7024f2",
+      "suite": "com.parlor.engine.testing.reducer.ReducerSmokeTest",
+      "task": ":shared:engine-testing:desktopTest",
+      "tests": 2,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 2
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/engine-testing/build/test-results/desktopTest/TEST-com.parlor.engine.testing.registry.GameRegistryExtensibilityTest.xml",
+      "sha256": "d5c74ba27251963e70d064e613122d6f9612f63ff0c8d01e5f2c38f327116a85",
+      "suite": "com.parlor.engine.testing.registry.GameRegistryExtensibilityTest",
+      "task": ":shared:engine-testing:desktopTest",
+      "tests": 2,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 2
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/networking/build/test-results/desktopTest/TEST-com.parlor.networking.protocol.ProtocolValidationTest.xml",
+      "sha256": "5ab0a1ca471963ce78e912a813d88161f573f9d1d1c1f9b1617d0d72bdda0ec2",
+      "suite": "com.parlor.networking.protocol.ProtocolValidationTest",
+      "task": ":shared:networking:desktopTest",
+      "tests": 8,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 8
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/networking/build/test-results/desktopTest/TEST-com.parlor.networking.protocol.RoomMessageCodecTest.xml",
+      "sha256": "f600c85d92656ccc1e966007097bba9a09bd552acd4806888f1e33f5faaa6ba6",
+      "suite": "com.parlor.networking.protocol.RoomMessageCodecTest",
+      "task": ":shared:networking:desktopTest",
+      "tests": 9,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 9
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/networking/build/test-results/desktopTest/TEST-com.parlor.networking.room.LocalRoomRetryContractTest.xml",
+      "sha256": "365b74c891c2b67240d33eeaa583b859257e142b8d9d2c1efb5634e46d66c9a7",
+      "suite": "com.parlor.networking.room.LocalRoomRetryContractTest",
+      "task": ":shared:networking:desktopTest",
+      "tests": 3,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 3
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/networking/build/test-results/desktopTest/TEST-com.parlor.networking.room.PeerSessionRetryPolicyTest.xml",
+      "sha256": "20c3f2ba82ab72d09a063e2833943ccbb1b90df3e61cd7da1249e6258458b6a6",
+      "suite": "com.parlor.networking.room.PeerSessionRetryPolicyTest",
+      "task": ":shared:networking:desktopTest",
+      "tests": 3,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 3
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/networking/build/test-results/desktopTest/TEST-com.parlor.networking.room.RoomInputPolicyTest.xml",
+      "sha256": "8a06dfc8e5785aa46459c1112b13e07d6ebe28f3d11f0ddc165fb08687c599bc",
+      "suite": "com.parlor.networking.room.RoomInputPolicyTest",
+      "task": ":shared:networking:desktopTest",
+      "tests": 5,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 5
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/networking/build/test-results/desktopTest/TEST-com.parlor.networking.security.SecureHashesTest.xml",
+      "sha256": "0ce2ae8b342d4e60e1cf67af3a95e5e279374c52571185ced44d122c1a8858b0",
+      "suite": "com.parlor.networking.security.SecureHashesTest",
+      "task": ":shared:networking:desktopTest",
+      "tests": 3,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 3
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/networking/build/test-results/desktopTest/TEST-com.parlor.networking.security.SecureIdsTest.xml",
+      "sha256": "2d4d9873fba1528f534d3b0d686b4e38a90a0bfc9bf167b14253b7c7009a0246",
+      "suite": "com.parlor.networking.security.SecureIdsTest",
+      "task": ":shared:networking:desktopTest",
+      "tests": 2,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 2
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/networking/build/test-results/desktopTest/TEST-com.parlor.networking.transport.LocalNetworkAccessTest.xml",
+      "sha256": "6ebd783bc2e423213d2323e7d689bfda08a2754e4e2dc2980292ee4acd3c934a",
+      "suite": "com.parlor.networking.transport.LocalNetworkAccessTest",
+      "task": ":shared:networking:desktopTest",
+      "tests": 1,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 1
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/networking-testing/build/test-results/desktopTest/TEST-com.parlor.networking.testing.InMemoryRoomBusTest.xml",
+      "sha256": "14d5d8fca7248982a5957faadb19291afae0a319214ac36bd16861bbf4e2ffcd",
+      "suite": "com.parlor.networking.testing.InMemoryRoomBusTest",
+      "task": ":shared:networking-testing:desktopTest",
+      "tests": 4,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 4
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/session/build/test-results/desktopTest/TEST-com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest.xml",
+      "sha256": "438fa10affe10d050c6ae5be5d74c508a8ab71bf462f164330a1a989b78c3183",
+      "suite": "com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest",
+      "task": ":shared:session:desktopTest",
+      "tests": 42,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 42
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/session/build/test-results/desktopTest/TEST-com.parlor.session.multidevice.BoundedPeerOutboxTest.xml",
+      "sha256": "8d71263d5f531ef7ff9deaaa92e0206eb04b97c5406e26f84e3d70fe61504d18",
+      "suite": "com.parlor.session.multidevice.BoundedPeerOutboxTest",
+      "task": ":shared:session:desktopTest",
+      "tests": 8,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 8
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/session/build/test-results/desktopTest/TEST-com.parlor.session.multidevice.MultiDeviceShapeTest.xml",
+      "sha256": "aee9eae94cd32a4e97c4c5086a358c8b5ed88e24009f80c7df72dee8b2fe2559",
+      "suite": "com.parlor.session.multidevice.MultiDeviceShapeTest",
+      "task": ":shared:session:desktopTest",
+      "tests": 1,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 1
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/session/build/test-results/desktopTest/TEST-com.parlor.session.multidevice.PeerConnectionTrackerTest.xml",
+      "sha256": "fa4c30b74e702e5a31ef1430b451b2b12bbf75b7b4ee7f851c4bfe5531b5ab71",
+      "suite": "com.parlor.session.multidevice.PeerConnectionTrackerTest",
+      "task": ":shared:session:desktopTest",
+      "tests": 8,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 8
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/session/build/test-results/desktopTest/TEST-com.parlor.session.multidevice.ProcessMultiplayerSessionOwnerTest.xml",
+      "sha256": "9952496b12f05f8a3e2a294045a74e421accbf4272d073f19dd0f5d4fa6cf2c3",
+      "suite": "com.parlor.session.multidevice.ProcessMultiplayerSessionOwnerTest",
+      "task": ":shared:session:desktopTest",
+      "tests": 30,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 30
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/session/build/test-results/desktopTest/TEST-com.parlor.session.multidevice.RetainedSessionOperationTest.xml",
+      "sha256": "c7b3170f1daa8acf198f7b84e153c77fa419175b10042017a80b9c4ccfee697e",
+      "suite": "com.parlor.session.multidevice.RetainedSessionOperationTest",
+      "task": ":shared:session:desktopTest",
+      "tests": 4,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 4
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/session/build/test-results/desktopTest/TEST-com.parlor.session.multidevice.SessionStartCommitDeadlineTest.xml",
+      "sha256": "28fd1648e590ef0720414d613ac335be00238a391a27d39ac1675b66dc9a2b4f",
+      "suite": "com.parlor.session.multidevice.SessionStartCommitDeadlineTest",
+      "task": ":shared:session:desktopTest",
+      "tests": 9,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 9
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/session/build/test-results/desktopTest/TEST-com.parlor.session.multidevice.SessionStartHandshakeTest.xml",
+      "sha256": "a88cef7d099f5d99088b819c14fcafa1e7740880cc7c5e52e35d7a284dbbf97b",
+      "suite": "com.parlor.session.multidevice.SessionStartHandshakeTest",
+      "task": ":shared:session:desktopTest",
+      "tests": 31,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 31
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/session/build/test-results/desktopTest/TEST-com.parlor.session.multidevice.ShadowSessionControllerTest.xml",
+      "sha256": "ab8605d8da87264382c2a26f4a79fa280b0431470fe9610c0978e32a0d3d07ee",
+      "suite": "com.parlor.session.multidevice.ShadowSessionControllerTest",
+      "task": ":shared:session:desktopTest",
+      "tests": 3,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 3
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/session/build/test-results/desktopTest/TEST-com.parlor.session.party.PartyAwareCanonicalStateTest.xml",
+      "sha256": "895e2731e83778ebc38bd164364f240f1ac39668ced7c012cc0b234ce44997d1",
+      "suite": "com.parlor.session.party.PartyAwareCanonicalStateTest",
+      "task": ":shared:session:desktopTest",
+      "tests": 1,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 1
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/session/build/test-results/desktopTest/TEST-com.parlor.session.passandplay.OrderedEventEmissionTurnTest.xml",
+      "sha256": "384df0654cd89d8260eab5e8b73f0dfd5315ccb78e6c7bf915b64e6881d267f7",
+      "suite": "com.parlor.session.passandplay.OrderedEventEmissionTurnTest",
+      "task": ":shared:session:desktopTest",
+      "tests": 2,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 2
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/session/build/test-results/desktopTest/TEST-com.parlor.session.passandplay.PassAndPlaySessionControllerCloseRaceTest.xml",
+      "sha256": "3256fb9b28ca947b5dde843a7025d427a9b949857be6c9309d9f2c9b6f1176fd",
+      "suite": "com.parlor.session.passandplay.PassAndPlaySessionControllerCloseRaceTest",
+      "task": ":shared:session:desktopTest",
+      "tests": 1,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 1
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/session/build/test-results/desktopTest/TEST-com.parlor.session.passandplay.RestoredStateTest.xml",
+      "sha256": "1c8537b5d3af94a14e5fa2ea49d31609b08728de64ea3bbbf282be614da4e31b",
+      "suite": "com.parlor.session.passandplay.RestoredStateTest",
+      "task": ":shared:session:desktopTest",
+      "tests": 5,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 5
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/storage/build/test-results/desktopTest/TEST-com.parlor.storage.secure.PlatformKeyedSecureStorageTest.xml",
+      "sha256": "c508c6ffc49f5c77c5dde2d44a5afa7ae986f799e3a732cef765f30f9d873941",
+      "suite": "com.parlor.storage.secure.PlatformKeyedSecureStorageTest",
+      "task": ":shared:storage:desktopTest",
+      "tests": 4,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 4
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/storage/build/test-results/desktopTest/TEST-com.parlor.storage.settings.PersistentSettingsStoreTest.xml",
+      "sha256": "b33fffeb6362164ae5f56ce8c0cec18fdd6aeb36180580a6c33aa5b25c68f9ee",
+      "suite": "com.parlor.storage.settings.PersistentSettingsStoreTest",
+      "task": ":shared:storage:desktopTest",
+      "tests": 5,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 5
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/storage/build/test-results/desktopTest/TEST-com.parlor.storage.snapshot.FileBackedSnapshotStoreTest.xml",
+      "sha256": "b4b439666eac90ec6275b448e2bb0d32f6574a2dce34d84805ef6e6b8ee2dcab",
+      "suite": "com.parlor.storage.snapshot.FileBackedSnapshotStoreTest",
+      "task": ":shared:storage:desktopTest",
+      "tests": 11,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 11
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/storage/build/test-results/desktopTest/TEST-com.parlor.storage.snapshot.SerializedSnapshotWriterTest.xml",
+      "sha256": "997ab276c4c3cb6033f4ddaf2f3c1067345af3745be5ca8cc2734bb942950628",
+      "suite": "com.parlor.storage.snapshot.SerializedSnapshotWriterTest",
+      "task": ":shared:storage:desktopTest",
+      "tests": 11,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 11
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.AndroidManifestLanPermissionTest.xml",
+      "sha256": "2781582987c69b020011c3b96a32043610ce3f58a6c9048c1c65005178ffc91b",
+      "suite": "com.parlor.transport.p2p.AndroidManifestLanPermissionTest",
+      "task": ":shared:transport-p2p:desktopTest",
+      "tests": 2,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 2
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.AndroidReleaseLintContractTest.xml",
+      "sha256": "75a9b591b71e7551dfa0496ffc163a889d413b8dac7d5ce90ba026adc85a2cca",
+      "suite": "com.parlor.transport.p2p.AndroidReleaseLintContractTest",
+      "task": ":shared:transport-p2p:desktopTest",
+      "tests": 6,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 6
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.AppLifecycleRoomCoordinatorTest.xml",
+      "sha256": "808a15bf1aa643061011d2490baa4394ce97491d5d3908e1fde66388b13bd275",
+      "suite": "com.parlor.transport.p2p.AppLifecycleRoomCoordinatorTest",
+      "task": ":shared:transport-p2p:desktopTest",
+      "tests": 2,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 2
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.AppLifecycleRoomRegistrationTest.xml",
+      "sha256": "692159a8451a8302cc3dc8b312c6fb1a232b9147c157abdd84dbb6f5b8b8c94e",
+      "suite": "com.parlor.transport.p2p.AppLifecycleRoomRegistrationTest",
+      "task": ":shared:transport-p2p:desktopTest",
+      "tests": 3,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 3
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.DesktopDependencyVerificationContractTest.xml",
+      "sha256": "62059d2398a6bf1d1a4e19c30c1e80e6950eb75d537041189f88551502b2baef",
+      "suite": "com.parlor.transport.p2p.DesktopDependencyVerificationContractTest",
+      "task": ":shared:transport-p2p:desktopTest",
+      "tests": 3,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 3
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.DiscoveryCandidateSchedulerTest.xml",
+      "sha256": "b7f74006f5115be2c9a2e9597b70de4119620aaf7a7babdf938a3d154003a790",
+      "suite": "com.parlor.transport.p2p.DiscoveryCandidateSchedulerTest",
+      "task": ":shared:transport-p2p:desktopTest",
+      "tests": 13,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 13
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.HostOpeningCancellationTest.xml",
+      "sha256": "f7b4a2074b9b65e05e37df5fb17318907d3d47ab4d44c5c7b4f88d39191c5ed1",
+      "suite": "com.parlor.transport.p2p.HostOpeningCancellationTest",
+      "task": ":shared:transport-p2p:desktopTest",
+      "tests": 5,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 5
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.IosInfoPlistBonjourTest.xml",
+      "sha256": "bdbe6f8469120bfcdb8bf3f3f33becfd204849aecc73ec48c75d8978ad5e9359",
+      "suite": "com.parlor.transport.p2p.IosInfoPlistBonjourTest",
+      "task": ":shared:transport-p2p:desktopTest",
+      "tests": 1,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 1
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.JupiterDiscoveryContractTest.xml",
+      "sha256": "fabc170786e0432c35c368921dd956ba4a2a5e8e1f47616b919552aa9aacc384",
+      "suite": "com.parlor.transport.p2p.JupiterDiscoveryContractTest",
+      "task": ":shared:transport-p2p:desktopTest",
+      "tests": 1,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 1
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.MultiplayerDocumentationContractTest.xml",
+      "sha256": "2328d71c8a52e4b76025af4c63cd9b199bc0205947f229dad854b694b8cf5035",
+      "suite": "com.parlor.transport.p2p.MultiplayerDocumentationContractTest",
+      "task": ":shared:transport-p2p:desktopTest",
+      "tests": 11,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 11
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pDiagnosticsTest.xml",
+      "sha256": "bc295d82ff76953d5cde4b4e9bba896816d347cfb826141324a4e12882d9f052",
+      "suite": "com.parlor.transport.p2p.P2pDiagnosticsTest",
+      "task": ":shared:transport-p2p:desktopTest",
+      "tests": 5,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 5
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitCreationTest.xml",
+      "sha256": "40ad32707bf2053de5388ab63de3e87058481d82d621a096de93c27458969dc8",
+      "suite": "com.parlor.transport.p2p.P2pKitCreationTest",
+      "task": ":shared:transport-p2p:desktopTest",
+      "tests": 9,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 9
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitMavenProvenanceContractTest.xml",
+      "sha256": "c5752a8434ae9b92c943825684c94b1bbe0ef1aaa0aec2949fe0499a39f38662",
+      "suite": "com.parlor.transport.p2p.P2pKitMavenProvenanceContractTest",
+      "task": ":shared:transport-p2p:desktopTest",
+      "tests": 2,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 2
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitRoomTransportLifecycleTest.xml",
+      "sha256": "fbc99c0eb90e77cd07b6a9b716ccac9a460e0ca135cfaa270d7caa948d33a435",
+      "suite": "com.parlor.transport.p2p.P2pKitRoomTransportLifecycleTest",
+      "task": ":shared:transport-p2p:desktopTest",
+      "tests": 130,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 130
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest.xml",
+      "sha256": "c20906d82ef865b7a737c855567d2073765b9a80d9a198ae4ca5eb9445d08bbc",
+      "suite": "com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest",
+      "task": ":shared:transport-p2p:desktopTest",
+      "tests": 4,
+      "skipped": 3,
+      "failures": 0,
+      "errors": 0,
+      "passed": 1
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pTrafficPolicyTest.xml",
+      "sha256": "39d1384b2699e84349b129c57412e6dfb2ed33f2d3fc66bb1fe79ea9ecaec1fb",
+      "suite": "com.parlor.transport.p2p.P2pTrafficPolicyTest",
+      "task": ":shared:transport-p2p:desktopTest",
+      "tests": 7,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 7
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.PeerOpeningCancellationTest.xml",
+      "sha256": "2a3b0dd5970049f896c603d8cd9c44ddce1ffff38e07bf12e4743658c07df0fe",
+      "suite": "com.parlor.transport.p2p.PeerOpeningCancellationTest",
+      "task": ":shared:transport-p2p:desktopTest",
+      "tests": 12,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 12
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.ProductionVerificationWorkflowContractTest.xml",
+      "sha256": "cc046530a67e31eff0c2e2cd887adf9c02cc033472cbb39ae2171d3a0749d8d0",
+      "suite": "com.parlor.transport.p2p.ProductionVerificationWorkflowContractTest",
+      "task": ":shared:transport-p2p:desktopTest",
+      "tests": 9,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 9
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.ResumableCredentialStoreTest.xml",
+      "sha256": "75028f2b15aa5236a4742159262229314b3732b71efcaf23029ff0d5f553813d",
+      "suite": "com.parlor.transport.p2p.ResumableCredentialStoreTest",
+      "task": ":shared:transport-p2p:desktopTest",
+      "tests": 23,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 23
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.TestTransportIsolationContractTest.xml",
+      "sha256": "238b445f12c3257e594607441e191b32f0d80985c99ceabb1046b25a71969805",
+      "suite": "com.parlor.transport.p2p.TestTransportIsolationContractTest",
+      "task": ":shared:transport-p2p:desktopTest",
+      "tests": 4,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "passed": 4
+    }
+  ],
+  "raw_detekt_inventory": [
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/build-logic/convention/build/reports/detekt/detekt.xml",
+      "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+      "findings": 0
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/composeApp/build/reports/detekt/detekt.xml",
+      "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+      "findings": 0
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/composeApp/build/reports/detekt/detektAndroidRelease.xml",
+      "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+      "findings": 0
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/composeApp/build/reports/detekt/detektAndroidReleaseUnitTest.xml",
+      "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+      "findings": 0
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/composeApp/build/reports/detekt/detektDesktopMain.xml",
+      "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+      "findings": 0
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/composeApp/build/reports/detekt/detektDesktopTest.xml",
+      "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+      "findings": 0
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/composeApp/build/reports/detekt/detektMetadataCommonMain.xml",
+      "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+      "findings": 0
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/mafia/build/reports/detekt/detekt.xml",
+      "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+      "findings": 0
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/mafia/build/reports/detekt/detektDesktopTest.xml",
+      "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+      "findings": 0
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/mafia/build/reports/detekt/detektMetadataCommonMain.xml",
+      "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+      "findings": 0
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/whodunit/build/reports/detekt/detekt.xml",
+      "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+      "findings": 0
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/whodunit/build/reports/detekt/detektDesktopTest.xml",
+      "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+      "findings": 0
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/whodunit/build/reports/detekt/detektMetadataCommonMain.xml",
+      "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+      "findings": 0
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/content/build/reports/detekt/detekt.xml",
+      "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+      "findings": 0
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/content/build/reports/detekt/detektMetadataCommonMain.xml",
+      "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+      "findings": 0
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/core/build/reports/detekt/detekt.xml",
+      "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+      "findings": 0
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/core/build/reports/detekt/detektMetadataCommonMain.xml",
+      "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+      "findings": 0
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/design-system/build/reports/detekt/detekt.xml",
+      "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+      "findings": 0
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/design-system/build/reports/detekt/detektAndroidRelease.xml",
+      "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+      "findings": 0
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/design-system/build/reports/detekt/detektDesktopMain.xml",
+      "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+      "findings": 0
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/design-system/build/reports/detekt/detektDesktopTest.xml",
+      "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+      "findings": 0
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/design-system/build/reports/detekt/detektMetadataCommonMain.xml",
+      "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+      "findings": 0
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/engine/build/reports/detekt/detekt.xml",
+      "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+      "findings": 0
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/engine/build/reports/detekt/detektDesktopTest.xml",
+      "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+      "findings": 0
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/engine/build/reports/detekt/detektMetadataCommonMain.xml",
+      "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+      "findings": 0
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/engine-testing/build/reports/detekt/detekt.xml",
+      "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+      "findings": 0
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/engine-testing/build/reports/detekt/detektMetadataCommonMain.xml",
+      "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+      "findings": 0
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/networking/build/reports/detekt/detekt.xml",
+      "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+      "findings": 0
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/networking/build/reports/detekt/detektAndroidRelease.xml",
+      "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+      "findings": 0
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/networking/build/reports/detekt/detektDesktopMain.xml",
+      "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+      "findings": 0
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/networking/build/reports/detekt/detektMetadataCommonMain.xml",
+      "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+      "findings": 0
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/networking-testing/build/reports/detekt/detekt.xml",
+      "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+      "findings": 0
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/networking-testing/build/reports/detekt/detektMetadataCommonMain.xml",
+      "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+      "findings": 0
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/session/build/reports/detekt/detekt.xml",
+      "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+      "findings": 0
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/session/build/reports/detekt/detektDesktopTest.xml",
+      "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+      "findings": 0
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/session/build/reports/detekt/detektMetadataCommonMain.xml",
+      "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+      "findings": 0
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/storage/build/reports/detekt/detekt.xml",
+      "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+      "findings": 0
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/storage/build/reports/detekt/detektMetadataCommonMain.xml",
+      "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+      "findings": 0
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/transport-p2p/build/reports/detekt/detekt.xml",
+      "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+      "findings": 0
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/transport-p2p/build/reports/detekt/detektAndroidRelease.xml",
+      "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+      "findings": 0
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/transport-p2p/build/reports/detekt/detektDesktopMain.xml",
+      "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+      "findings": 0
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/transport-p2p/build/reports/detekt/detektDesktopTest.xml",
+      "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+      "findings": 0
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/transport-p2p/build/reports/detekt/detektMetadataCommonMain.xml",
+      "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+      "findings": 0
+    }
+  ],
+  "recommendation": "Accept this combined host-independent verification receipt. Keep earlier failed cycles and every platform/product/external limitation intact; do not convert gate success into a 16/16 repair or production-ready claim."
+}

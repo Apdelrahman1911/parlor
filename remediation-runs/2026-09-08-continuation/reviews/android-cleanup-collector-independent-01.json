@@ -1,0 +1,38 @@
+{
+  "kind": "INDEPENDENT_FOCUSED_ANDROID_COLLECTOR_SOURCE_REVIEW",
+  "reviewer": "/root",
+  "author": "/root/ci_review",
+  "at": "2026-09-10T14:55:19.321646+00:00",
+  "decision": "APPROVE_PINNED_COLLECTOR_FOR_ONE_COORDINATED_ADC_COLLECTION_NOT_RUNTIME",
+  "collector": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/android-cleanup-collector-01.py",
+    "bytes": 10108,
+    "sha256": "2469d61bcbd093943a3d63dc850ed958aff3534e1fb25655e42ebab8c999751f"
+  },
+  "unchanged_helper": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/full-d-compact-collector-02.py",
+    "bytes": 17464,
+    "sha256": "3af9603aff8e20aa1380f844897ed356426ba29c4dd5172cc5c60edb2dea10de"
+  },
+  "findings": [],
+  "checks": [
+    "Read complete collector and reopened pinned helper implementation, not author summary only. No edits requested.",
+    "Only stdlib AST/hash/JSON/schema inspection executed by reviewer; no project import, collector, network, archive extraction, build or test.",
+    "Exact run/attempt1/source/ref/repo/workflow and five job identities; four unrelated jobs must be skipped. Only active desktop context; completed successful ADC validation plus checkout/ownership required for extracting live candidates.",
+    "Two exact standard artifacts, positive IDs and sizes, source/ref identity, API size/SHA agreement; original ZIP bytes retained. All members stream CRC/SHA with unchanged path/type/collision and byte/count guards before exclusive selected extraction.",
+    "Frozen Git path table/live roots and unchanged classifier exclude tracked/historical/unknown scopes from live extraction. Extracted XML is explicitly a candidate, never evidence its tests executed.",
+    "Main raw job log and API metadata preserved before archive parsing; failures retain additive receipts/partial files. Destination and files must be new. No source or cache deletion. Finally local Gradle stop and exit failure on stop error."
+  ],
+  "bounds": {
+    "zip": 67108864,
+    "total_zip": 134217728,
+    "expanded_per_zip": 268435456,
+    "members": 50000
+  },
+  "limits": [
+    "Download caps are checked after transfer (180s bound), not a streaming throttle; API-reported artifact sizes are checked before ZIP requests.",
+    "Unexpected/missing artifact set is collection failure, not runtime failure diagnosis; metadata/raw log survive, but an individually available ZIP may require separately approved additive preservation.",
+    "No same-SHA combined qualification, application execution, AVD retirement, Store or iOS protection result is inferred."
+  ],
+  "resource_scope": "Read-only inspection created no build/cache/worker resources; only this compact review JSON is added."
+}

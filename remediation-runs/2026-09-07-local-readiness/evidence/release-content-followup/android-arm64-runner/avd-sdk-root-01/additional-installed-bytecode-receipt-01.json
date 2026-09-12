@@ -1,0 +1,52 @@
+{
+  "reviewer": "/root/release_fix_review",
+  "javap": "/opt/homebrew/Cellar/openjdk@21/21.0.11/libexec/openjdk.jdk/Contents/Home/bin/javap",
+  "javap_sha256": "9e25404d11b1c023c983dda026e91f6a374575b441dd1be46b057eb2e7e0babe",
+  "cycles": [
+    {
+      "command": [
+        "/opt/homebrew/Cellar/openjdk@21/21.0.11/libexec/openjdk.jdk/Contents/Home/bin/javap",
+        "-J-Xmx64m",
+        "-c",
+        "-p",
+        "-classpath",
+        "/opt/homebrew/share/android-commandlinetools/cmdline-tools/latest/lib/repository/tools.repository.jar",
+        "com.android.repository.impl.manager.LocalRepoLoaderImpl"
+      ],
+      "start_utc": "2026-09-07T09:56:13.923829+00:00",
+      "end_utc": "2026-09-07T09:56:14.166096+00:00",
+      "exit_code": 0,
+      "jar_sha256": "a7a21557650dd695cb2f612ee3fafdba822d816dbe3418d0ed5aa90fc992b08a",
+      "stdout_sha256": "02f94a1bd32daadc5374ec56f9e056ca353b7fb9f96ea7c325bdf9c70854828c",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "outputs": [
+        "repo-local-loader-cli20-bytecode-01.txt",
+        "repo-local-loader-cli20-bytecode-01-stderr"
+      ],
+      "kind": "bounded bytecode inspection; no target class initialization or build"
+    },
+    {
+      "command": [
+        "/opt/homebrew/Cellar/openjdk@21/21.0.11/libexec/openjdk.jdk/Contents/Home/bin/javap",
+        "-J-Xmx64m",
+        "-c",
+        "-p",
+        "-classpath",
+        "/opt/homebrew/share/android-commandlinetools/cmdline-tools/latest/lib/sdklib/tools.sdklib.jar",
+        "com.android.sdklib.internal.avd.AvdManager"
+      ],
+      "start_utc": "2026-09-07T09:56:14.166725+00:00",
+      "end_utc": "2026-09-07T09:56:14.414429+00:00",
+      "exit_code": 0,
+      "jar_sha256": "e0374dde0b08d80c92ce1fc223e661d2d165b83324babe4f3368b71f654f4cd6",
+      "stdout_sha256": "8722f2867cdc00306b88a51dfce6a68561048582538c5144b7f4d0748d01e55c",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "outputs": [
+        "avd-manager-cli20-bytecode-01.txt",
+        "avd-manager-cli20-bytecode-01-stderr"
+      ],
+      "kind": "bounded bytecode inspection; no target class initialization or build"
+    }
+  ],
+  "cleanup": "Both inspection subprocesses waited to exit; no build outputs, imports, emulator or VM was started; only compact required bytecode evidence retained."
+}

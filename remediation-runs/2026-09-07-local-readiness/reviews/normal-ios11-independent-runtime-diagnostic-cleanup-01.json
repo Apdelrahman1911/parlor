@@ -1,0 +1,276 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/release_fix_review",
+  "reviewed_at": "2026-09-08T03:14:31.019196+00:00",
+  "classification": "XCTEST AND NOTICES VERIFIED; EXTERNAL PROVENANCE FAIL; EXACT ROW DIAGNOSIS BLOCKED; CLEANUP VERIFIED",
+  "execution_owner": "/root; reviewer executed only read-only Git and stdlib data/hash reconciliation",
+  "source_identity": {
+    "commit": "484f82c3bcc273c0014a946376c1ee9fc7de8d83",
+    "tree": "548625b4a49bef5df8db723c1e59a4edd5676ddc",
+    "branch": "fix/local-readiness-2026-09-07",
+    "tracked_status": "",
+    "diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "source_manifest_sha256": "c4d3387a95ff1a4462071147afe92411f5a08ee8b10f78852a59494c8d3e4420"
+  },
+  "source_and_controls": {
+    "all800_source_rows_current": true,
+    "all79_control_rows_current": true,
+    "binding": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/ios-readiness-source-10.json",
+      "sha256": "a59e4bab9d8f9fca64337c2af86c381e77f7dd339a5f832ea6fdcf17ca2bf266"
+    },
+    "controls": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/normal-source10-control-manifest-01.json",
+      "sha256": "d88cade526bc318d0d8ad1416c9d4e0032480a787efcdfac0455eb0f22e6c069"
+    },
+    "control_sha256": "491c2f45360e13be3ab895a2bdee678b57b65fca4cf3cd72925f74f8d3d65eb2",
+    "all740_copied_build_inputs_bound_and_postworker_unchanged": true,
+    "two_copy_changes": [
+      "iosApp/iosApp.xcodeproj/project.pbxproj",
+      "iosApp/iosAppUITests/IOSAppLaunchUITests.swift"
+    ],
+    "production_source_transformations": 0
+  },
+  "cycle_receipt": {
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-11/receipt.json",
+    "sha256": "d06746d020ca6601e8c5398076c64a4684bd5081687eb519e0de986914df91f5"
+  },
+  "gate_results": [
+    {
+      "gate": "Eight fixed normal-source XCTest launches",
+      "status": "PASS",
+      "evidence": "Actual single test case has8 direct Passed Repetition leaves; details identical; destination8passes; summary1method. Failures/skips/expectedFailures0. Not8distinct methods."
+    },
+    {
+      "gate": "Normal Home observations",
+      "status": "PASS",
+      "evidence": "64 raw anchored marker lines independently parsed as8 unique sequential begin/6sample/complete trains, exact equality to extracted report.48 samples all foreground=true, Home=true, alert=false; each final sample and completion>=10seconds."
+    },
+    {
+      "gate": "Built and installed notices",
+      "status": "PASS",
+      "evidence": "Both source-bound verifier commands exit0, exact JSON equality26resources/99515bytes; all26 source hashes independently current."
+    },
+    {
+      "gate": "Native artifact file binding and signatures",
+      "status": "PASS",
+      "evidence": "4built/installed native images, identical size/hash per relative path;10inventory bindings match10 actual ARM64 dwarfdump rows and exact command paths. Both codesign verification commands exit0. This proves retained file receipts, not runtime mapped origin."
+    },
+    {
+      "gate": "Separate external image provenance",
+      "status": "FAIL",
+      "evidence": "sample exits0 but bound parse_sample rejects an unbound Parlor/Parlor.debug.dylib/ComposeApp image at214-218; vmmap never invoked."
+    },
+    {
+      "gate": "Exact unbound row/root-cause diagnosis",
+      "status": "BLOCKED",
+      "evidence": "Offending Binary Images path/row/UUID/kind were not retained; raw sample destroyed by designed finalizer. Header-only receipt cannot identify row. No alias, parser or application defect determination permitted."
+    },
+    {
+      "gate": "Source/control preservation",
+      "status": "PASS",
+      "evidence": "Receipt before/after equals source10 binding; current800 hashes/control79/sourceSHA/tree/branch/emptytrackedstatus/emptydiff verified."
+    },
+    {
+      "gate": "Task resource cleanup",
+      "status": "PASS",
+      "evidence": "Immediate and final stops0, embedded stop0;12finalization stagesPASS, exact device removal receipts,81observed process records with none remaining/unknown.23known output paths independently lstat absent."
+    }
+  ],
+  "runtime": {
+    "device": {
+      "architecture": "arm64",
+      "deviceId": "142659A7-1FE5-4B84-934A-6E18D5945658",
+      "deviceName": "Parlor-Audit-parlor-audit-ios-readiness-11-w1yr71eq",
+      "modelName": "iPhone 17 Pro",
+      "osBuildNumber": "23F77",
+      "osVersion": "26.5",
+      "platform": "iOS Simulator"
+    },
+    "method": "IOSAppLaunchUITests/testColdLaunchRendersComposeHomeWithoutUnexpectedAlert()",
+    "repetition_ids": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7",
+      "8"
+    ],
+    "test_durations_seconds": [
+      17.50063705444336,
+      13.846889972686768,
+      13.828500986099243,
+      13.796742916107178,
+      13.811493039131165,
+      13.825193047523499,
+      13.797746896743774,
+      13.78875994682312
+    ],
+    "post_home_seconds": [
+      10.416019416676136,
+      10.430138249997981,
+      10.400351708332892,
+      10.400265083342674,
+      10.415848125005141,
+      10.41968387500674,
+      10.432520833332092,
+      10.425905833326397
+    ],
+    "raw_log_bytes": 296028,
+    "raw_log_lines": 2423,
+    "raw_log_sha256": "f56524b428fde048975f172619b6ecf7f4409273efb5c0f302d8f3a9ed73bbe0",
+    "observations": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-11/normal-launch-observations.json",
+      "sha256": "f38951e04289d3d539ddf3b2736d85821d31471443d908e74bb3d1a59f45dac7"
+    },
+    "xcresult_summary": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-11/xcresult-summary.json",
+      "sha256": "6879f8fa452d1af1be4dd3d05592a9d7636816b6a545cff67083a10ae7994be6"
+    },
+    "xcresult_tests": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-11/xcresult-tests.json",
+      "sha256": "2f0d0f46455eb4f092b4c1a3be36016c8b4b4acb4ed50b7156996ab94c6d9455"
+    },
+    "xcresult_details": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-11/xcresult-test-details.json",
+      "sha256": "6120db006e460a005362fafa6124387f7f2dd81405ec482e01534606f26d425b"
+    }
+  },
+  "provenance_failure": {
+    "error": {
+      "type": "RuntimeError",
+      "message": "Runtime contains an unbound application/framework image"
+    },
+    "initial_launch_attestation": {
+      "pid": 29877,
+      "uid": 501,
+      "started": [
+        1788836494,
+        29792
+      ],
+      "executable": "/Users/abdelrahman/Library/Developer/CoreSimulator/Devices/142659A7-1FE5-4B84-934A-6E18D5945658/data/Containers/Bundle/Application/5885B4B7-7FB9-41C8-A085-9B1E52C12A03/Parlor.app/Parlor",
+      "generation": 1770770,
+      "audit_token_sha256": "5b9607deafaf06a4cd014a94d4a18f27f7a0460819a7a159daf21f0e2685951e",
+      "bracketed_lifetime_unchanged": true
+    },
+    "durability_limit": "Only initial double-read attestation retained. Reaching parse row rejection implies the later source-level middle unchanged_target check did not throw, but no durable middle/after attestation exists in failed receipt. No images are confirmed runtime mapped.",
+    "source_proof": [
+      "external_image_provenance.py194-200 validates inventory/policy and accepts header first.",
+      "201-203 establishes exactly one Binary Images table.",
+      "207-218: an actual regex-parsed row resolves outside artifacts and has protected application basename. Exact thrown message unique in this source.",
+      "run_normal_ios_launch.py508-511: parse_sample precedes vmmap; command ledger contains no vmmap.",
+      "535-551: every parser RuntimeError triggers header-only diagnostic regardless of failing branch."
+    ],
+    "header_receipt": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-11/sample-header-failure.json",
+      "sha256": "2780afdf1fc13468902a703d775164aa3426b133353e4384d4d34a1814e849b8"
+    },
+    "header_fact": "Exactly one matching PID and15pathcomponents; only index2 is USER, all others exact expected indexes. original_header_predicate_matches=false describes the obsolete exact-only predicate, not current header acceptance. No inference about Binary Images spelling follows.",
+    "artifact_binding": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-11/external-image-artifact-bindings.json",
+      "sha256": "14628217b22af992c10a4f72c2efe38e29030b7a99b211c88246175a404fb157"
+    },
+    "native_inventory": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-11/built-installed-binary-inventory.json",
+      "sha256": "46ba0053c4eec24de187a49ad9b7e867d5a132b3f12190e11ff2bf98e516d816"
+    },
+    "copied_framework_distinction": "Two owned-copy framework bindings are82410632bytes/sha256bbc18117f9bbf784b6b215f4a1b06e93130ea70be847980e54f8200d1b55d135; embedded81949648bytes/0e2441577576a5f01329b8bfb8ad2d8df6f13d77e565c3fb48b965d9015dfd60; sameUUIDdcda7fe6-e946-37d6-982b-e3d86be419e4. UUID equality is not byte equality or observed mapping proof.",
+    "candidate_classification": "TEST/EVIDENCE GAP; exact alias/format/foreign-image root cause UNCONFIRMED\u2014BLOCKED. Do not relax inventory/path/UUID checks or convert this cycle toPASS."
+  },
+  "diagnostic_only_recommendation": {
+    "scope": "Failure-only sanitized diagnostics from already collected bounded text. Preserve acceptance rules, original exception and overallFAIL. Any additional vmmap-after-sample-failure invocation is a separately reviewed root-owned scope change, not implied by this approval.",
+    "sample_rows": [
+      "Recognize only app candidate basenames or malformed rows containing exact bound raw/USER forms. Preserve rejecting branch/error code without arbitrary exception text.",
+      "Record bounded row hash/bytes, parse success, closed app-basename enum, exact/ownedUSER/unbound path classification, indices into exact bound artifact inventory, origins and UUID-equality booleans. Unknown path/UUID parts hashed; only closed public markers labeled.",
+      "Artifact/component comparisons are diagnostic candidates only, never new path authority. No generic normalization, wildcard/user/container expansion or row ignoring.",
+      "Explicit missing/duplicate table, malformed/unknown format, raw+alias duplicates, wrongUUID, absentrequiredkind and range failures. Unknown/truncated remains diagnostic insufficiency."
+    ],
+    "vmmap_siblings": [
+      "Header rejection and malformed __TEXT address syntax.",
+      "Unbound app/framework __TEXT mapping or no matching selected form.",
+      "Ambiguous/duplicate canonical+USER rows, missing selected mappings, address start/range mismatch.",
+      "Only compare against already-bound sampled metadata when available. If sample failed there is no approved selected set; diagnostic cannot become bind_vmmap success."
+    ],
+    "privacy_and_bounds": [
+      "Retain current16MiB input bounds; closed schema, bounded relevant rows/component/comparison counts and serializedoutput budget.",
+      "Never persist raw unknown paths, unrelated system rows, process lists, stacks, symbols, unknown UUIDs or arbitrary exceptionmessages. No extra account/filesystem/process queries in pure collector.",
+      "Persist collection/truncation/errorclass status separately without replacing original parser error. Diagnostic-write failures retain original failure."
+    ],
+    "required_tests": [
+      "Original sample/vmmap rejections remain unchanged; successful provenance outputs unchanged.",
+      "Failure-only collection/write failure cannot mask originalRuntimeError; no success fallback or extra nativequery through purecollector.",
+      "Malformedraw/USERrows, missing/duplicatetables, foreignuser/container, copiedframeworkdifferentbytes, unknownUUID, duplicatealias, wrongrange.",
+      "Small closed-schema limits/truncation; sentinel unknown path/stack/symbol never serialized; only fixture expected indices/hashes escape.",
+      "Synthetic diagnostics do not recover native11 missing row. Fresh exactsource/control-bound nativecycle still required after independent draftreview."
+    ]
+  },
+  "cleanup": {
+    "receipt_status": "PASS",
+    "gradle_stops": [
+      {
+        "label": "stop-xcode-immediate",
+        "exit_code": 0,
+        "at": "2026-09-08T03:01:29.190466+00:00"
+      },
+      {
+        "label": "stop-final",
+        "exit_code": 0,
+        "at": "2026-09-08T03:01:50.511246+00:00"
+      }
+    ],
+    "embedded_gradle_stop": "build_exit=0;stop_exit=0",
+    "first_stop_delay_seconds": 0.002622,
+    "known_output_paths_lstat_absent": [
+      "/Users/abdelrahman/Projects/parlor/build",
+      "/Users/abdelrahman/Projects/parlor/build-logic/build",
+      "/Users/abdelrahman/Projects/parlor/build-logic/convention/build",
+      "/Users/abdelrahman/Projects/parlor/composeApp/build",
+      "/Users/abdelrahman/Projects/parlor/game-modes/mafia/build",
+      "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/build",
+      "/Users/abdelrahman/Projects/parlor/iosApp/build",
+      "/Users/abdelrahman/Projects/parlor/shared/content/build",
+      "/Users/abdelrahman/Projects/parlor/shared/core/build",
+      "/Users/abdelrahman/Projects/parlor/shared/design-system/build",
+      "/Users/abdelrahman/Projects/parlor/shared/engine/build",
+      "/Users/abdelrahman/Projects/parlor/shared/engine-testing/build",
+      "/Users/abdelrahman/Projects/parlor/shared/networking/build",
+      "/Users/abdelrahman/Projects/parlor/shared/networking-testing/build",
+      "/Users/abdelrahman/Projects/parlor/shared/session/build",
+      "/Users/abdelrahman/Projects/parlor/shared/storage/build",
+      "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/build",
+      "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-ios-readiness-11-w1yr71eq",
+      "/Users/abdelrahman/Library/Developer/CoreSimulator/Devices/142659A7-1FE5-4B84-934A-6E18D5945658",
+      "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-28819/IB/5FD55DBE-09B1-416F-9F66-ECEAA9F026D5.RemoteToHost",
+      "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-28819/IB/5FD55DBE-09B1-416F-9F66-ECEAA9F026D5.HostToRemote",
+      "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-28819/IB",
+      "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-28819"
+    ],
+    "secondary_fifo_evidence": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-11/secondary-fifo-final.json",
+      "sha256": "ad38d6ebfd48daa711ec8daa2e65d5a75569320445fb1f1f9f66f28ec8e06e33"
+    },
+    "secondary_metadata_records": 2,
+    "secondary_objects_removed": 4,
+    "original_outputs_preserved": [],
+    "owned_processes_remaining": [],
+    "unknown_holders": [],
+    "cleanup_errors": [],
+    "live_process_assertion_limit": "Reviewer did not query process/account APIs or perform cleanup; process/stop assertions come from source-bound root receipt and logs. Exact named filesystem absences independently checked."
+  },
+  "limitations": [
+    "OneXcode26.5/17F42/macOS26.2/ARM64iOS26.5Debugadhocsimulator, not pinnedStoreXcode26.3, physicaldevice or iOS16runtime.",
+    "PeriodicHomeobservations are not continuousliveness/PIDidentity or proof against intervening OSrestart. Separate ninth sample/provenance is not perrepetition mapping proof andfailed.",
+    "NoFollowSystem/L08, healthyKeychain/IOS-R1, fullgames, LAN, historicalfourlaunchcrashcause, actualStoreidentity/signing/legal/publicationproof.",
+    "Buildwarnings include experimentalLintpin and twoAppIntentsmetadata-extractionwarnings; no skipped XCTest methods implied.",
+    "Originalnative09/native10/native11 receipts remain immutable andFAIL; later successfuldiagnostics cannot retroactively upgrade them."
+  ],
+  "hygiene": {
+    "new_review_json_only": true,
+    "repository_python_imports_or_tests_executed": false,
+    "native_process_account_queries_signals_or_deletion": false,
+    "Git_mutations": false,
+    "reviewer_workers_or_generated_build_outputs": 0
+  }
+}

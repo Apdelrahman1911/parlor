@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "author": "/root/factory_review",
+  "frozen_at": "2026-09-07T23:27:48.490844+00:00",
+  "status": "DRAFT02; ROOT INDEPENDENT SOURCE REVIEW AND24SYNTHETIC EXECUTIONS REQUIRED; NO NEW TEST/QUERY/DELETION RUN BY AUTHOR",
+  "files": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/native09_secondary_fifo_recovery_02.py",
+      "sha256": "7ae5a99dd4e916529c4d3f108a97cd13eb21168e2b2a8f06a82062a81107c088",
+      "lines": 198
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/test_native09_secondary_fifo_recovery_02.py",
+      "sha256": "3afea3bbb96dd192bea2791115e5f97a510ac352af9930a03b8431acf42f8114",
+      "lines": 205
+    }
+  ],
+  "patch": {
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/native09-secondary-fifo-recovery-01-to-02.patch",
+    "sha256": "a844e4a007c1c061576f89f296dc6937b121a54816f7f6fbf00c28a89a01f69f"
+  },
+  "original01_preserved": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/native09_secondary_fifo_recovery_01.py",
+      "sha256": "aaad39c1ff54639bd14212cd03439b5f0d285e2bac2347a18f97d344e3dc82f0"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/test_native09_secondary_fifo_recovery_01.py",
+      "sha256": "4d26eb413dbd6a2016a4981ed1719b7178741ca6ee54185b84295d3f2261faf3"
+    }
+  ],
+  "expected_tests": 24,
+  "test_ids": [
+    "ExactRecoveryTests.test_verification_does_not_delete",
+    "ExactRecoveryTests.test_exact_positive_removes_four_objects_and_preserves_sibling",
+    "ExactRecoveryTests.test_replaced_leaf_inode_is_preserved",
+    "ExactRecoveryTests.test_replaced_parent_inode_is_preserved",
+    "ExactRecoveryTests.test_symlink_leaf_is_not_followed",
+    "ExactRecoveryTests.test_symlink_parent_is_not_followed",
+    "ExactRecoveryTests.test_non_fifo_is_preserved",
+    "ExactRecoveryTests.test_uid_and_birth_mismatch_are_rejected",
+    "ExactRecoveryTests.test_extra_hard_link_is_rejected",
+    "ExactRecoveryTests.test_unknown_contents_preserve_all",
+    "ExactRecoveryTests.test_changed_nonce_is_not_adopted",
+    "ExactRecoveryTests.test_live_or_reused_pid_blocks_all_mutation",
+    "ExactRecoveryTests.test_holder_or_query_failure_blocks_all_mutation",
+    "ExactRecoveryTests.test_new_unknown_content_during_query_blocks_before_first_unlink",
+    "ExactRecoveryTests.test_partial_failure_keeps_remaining_objects_and_progress_receipt",
+    "QueryControlTests.test_query_requires_exact_empty_exit_and_bounded_integer_output",
+    "QueryControlTests.test_pid_check_never_accepts_reused_id",
+    "QueryControlTests.test_holder_exemption_is_only_this_helpers_directory_fds",
+    "QueryControlTests.test_exact_lsof_partial_selection_keeps_all_reported_pids",
+    "QueryControlTests.test_lsof_partial_selection_with_only_helpers_dirfds_is_accepted",
+    "QueryControlTests.test_lsof_partial_selection_cannot_hide_another_holder",
+    "QueryControlTests.test_ps_and_other_lsof_targets_keep_strict_exit_output_contract",
+    "QueryControlTests.test_exact_lsof_still_rejects_errors_stderr_malformed_or_oversized_output",
+    "QueryControlTests.test_plan_hash_failure_never_reads_or_mutates_recovery_paths"
+  ],
+  "delta": "Only exact allowlisted lsof+Draw root may return1 with a complete bounded integer PID list and empty stderr; every reported PID retained. Default ps/other query strictness, bounds, stderr/error handling, frozen metadata/receipt proofs, O_NOFOLLOW descriptor operations, per-action guards and four-object-only deletion unchanged. Output evidence names02; helperPID explicitly recorded to validate own-dirfd exemption. Existing19test bodies unchanged except loading02;5new command-specific controls.",
+  "scope": "Actual held-dirfd witness proves original query01 mismatch. This repairs only one-shot verification cleanup query semantics, not canonical secondary observation or app/storage behavior. Native09FAIL stays immutable. Native10 suspended."
+}

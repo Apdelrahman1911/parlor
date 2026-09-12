@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "kind": "HELD_SETTINGS_WORKFLOW_CONTRACT_OVERLAY",
+  "status": "HELD_NOT_APPLIED_NOT_TESTED_PENDING_COMPOSITE_INDEPENDENT_REVIEW",
+  "author": "/root/ci_workflow",
+  "workflow_author": "/root/l08_fixture",
+  "coordinator": "/root",
+  "reviewer_requested": "/root/portability_review",
+  "created_at": "2026-09-10T01:34:11.994379+00:00",
+  "base": {
+    "head": "4ccfafcfc361231cfb730178b3798ebcb6304770",
+    "layer": "Independently approved Windowsrevision02; root has adopted that four-file layer uncommitted after D completed. Author writes only this held two-file overlay.",
+    "windows_review_sha256": "976d56ec9192b7ed1f2bba396fd8219484e7ef871a387176d808e63785e7c3a7"
+  },
+  "composed_workflow": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/proposed/.github/workflows/production-verification.yml",
+    "sha256": "5437a0da79512e8c0ae90145972b65074791e6f3ce4b4edd6c6fd2d4e697eb86",
+    "lines_changed_or_added_over_windows": 5
+  },
+  "files": [
+    {
+      "path": "scripts/release/workflow_contract.py",
+      "base_sha256": "4e65fa76afce936e007f46b4987f140b885ce58a2b19719feef75a336e08a2c5",
+      "proposed_path": "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/workflow-contract-overlay-01/proposed/scripts/release/workflow_contract.py",
+      "proposed_sha256": "d59a7531555b0cc869beb629c0b7167b4c6150be225d0956d86c4d887f70ce7e",
+      "added_lines": 8,
+      "removed_lines": 4
+    },
+    {
+      "path": "scripts/release/tests/test_workflow_contract.py",
+      "base_sha256": "dda15ea413bbb912ac96972c7f6247b1569eb16cc75250c4c60b20832749d5d5",
+      "proposed_path": "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/workflow-contract-overlay-01/proposed/scripts/release/tests/test_workflow_contract.py",
+      "proposed_sha256": "84df23b6aae1e47eb1d0d953c9c713fe1055ff90462f69351ca3643e648bdba0",
+      "added_lines": 27,
+      "removed_lines": 3
+    }
+  ],
+  "patch": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/workflow-contract-overlay-01/proposed.patch",
+    "sha256": "f8264da5b883ca4b6f2115a8e388719247a1e6e0330bb2f6d581384572163f6c",
+    "added_lines": 35,
+    "removed_lines": 7
+  },
+  "changes": [
+    "Pin the closed paired/l08-only/settings-sheet-only enum and exact40-minute diagnostic evidence branch; keep10-minute process-probe,120-minute full/preflight and240-minute other native evidence branches.",
+    "Pin the native continuation producer to the explicit shared approved_probe_control_sha256 input. Exactly3 allowed binding locations: producer plus unchanged process-probe run/cleanup. Settings/process-probe control-domain rejection is owned by the native implementation and its focused tests, not inferred from this binding guard.",
+    "Update existing enum and budget mutation witnesses, add one small producer-binding method, and retarget existing process-probe mutations to their named run/cleanup blocks so shared input does not redirect a first-global-match witness to the wrong mode.",
+    "Every other workflow validator function, including the complete independently reviewed Windows validator, remains AST-identical. Windows workflow job bytes are unchanged; no edits to canonical workflow/native code or any existing held packet."
+  ],
+  "author_checks": {
+    "executed": "Stdlib read/hash/text/AST and read-only Git only. Both proposed Python modules AST-parse; no imports or execution of project code.",
+    "tests": "NOT_RUN; no PowerShell, app, Gradle, actionlint or CI execution.",
+    "cleanup": "No workers/generated build outputs created; only assigned overlay files."
+  },
+  "next": "Root/sibling integrate exact held overlay in one final packet for different-agent review, then root alone adopts/batches affected tests+source consumer+unchanged pinned actionlint, stops/cleans, freezes source/inventory and dispatches deliberately. This source-only packet is neither platform/runtime acceptance nor cross-domain control proof."
+}

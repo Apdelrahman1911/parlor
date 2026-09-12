@@ -1,0 +1,125 @@
+{
+  "schema_version": 1,
+  "kind": "SETTINGS36_ACTUAL_OBSERVATION_FAILURE_AND_CUSTODY_REVIEW",
+  "reviewer": "/root/native_ci",
+  "reviewed_at": "2026-09-10T04:58:23.408Z",
+  "status": "RAW_LABEL_OBSERVATION_ADMISSIBLE_DIAGNOSTIC_FAIL_CUSTODY_CLEANUP_PASS",
+  "source": "bd939632975e6e7802896322b514af06b6a7f6c3",
+  "run": "34437980623/1",
+  "scoped_observation": {
+    "status": "ADMITTED_FOR_COPY_ONLY_SELECTOR_CORRECTION_EVIDENCE_ONLY",
+    "marker": {
+      "labels": [
+        "Use Arabic",
+        "Use English (US)",
+        "Cancel"
+      ],
+      "schemaVersion": 1,
+      "selectionTapped": false,
+      "simulator": "9BF62C80-5F13-499C-B7B0-07DB6AB08BE6"
+    },
+    "decompressed_log_line": 989,
+    "marker_json_bytes": 146,
+    "xctest": {
+      "method": "IOSAppLaunchUITests/testSettingsPrimaryLanguageSheet()",
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0,
+      "seconds": 80.9858410358429
+    },
+    "basis": "One unique bounded marker agrees with actual XCTest summary/tree on the exact owned arm64 iOS26.2/23C54 simulator. Raw ownership and English-primary/no-Arabic prerequisites pass. Re-rendered reviewed Swift equals actual copied-input hash; log confirms one dependency-free UI-test target compiled/executed."
+  },
+  "failure": {
+    "diagnostic": "FAIL",
+    "workflow": "failure",
+    "error": {
+      "type": "TimeoutExpired",
+      "message": "Command '['ps', '-axo', 'pid=,ppid=,pgid=,lstart=,command=']' timed out after 15 seconds"
+    },
+    "command_exception_cleanup_child_exit_code": 0,
+    "command_interrupted_or_failed": true,
+    "top_level_xcodebuild_exit_code_present": false,
+    "canonical_public_sheet_actions_present": false,
+    "interpretation": "Original strict ps15s ownership polling raised. Exception cleanup records child.poll()=0 and log says TEST SUCCEEDED, but command never returned successfully: top-level exit assignment/capture validator were not reached. Neither child0 nor XCTest1PASS promotes the diagnostic."
+  },
+  "admissibility": "Exact observed 'Use English (US)' is usable to develop a narrowly scoped copied-fixture whitelist correction, subject to separate independent source review. Preserve unique-match/single-tap/prerequisite guards; do not fabricate public-sheet-actions.json, weaken ps ownership, relabel this run, or repeat this diagnostic merely for green.",
+  "custody_cleanup": "Producer/source/attempt,7 GET hashes,all3 bounded ZIPs/CRC/member digests and extracted equality reconcile;27 cycle files retained. Reviewed source/control binding and758 copied inputs unchanged. Inner/outer cleanupPASS:2stops0,17stagesPASS,14/14 simulator children reaped,owned device/temp removed,no workers/unknown holders/errors. Upload precedes deletion; raw cleanup JSON matches. Local watch1/stop0 retained.",
+  "limits": "No Parlor outputs/build/launch; normal runtime/provenance/notices NOT_RUN and A/B NOT_RUN_THIS_RUN. No L08 retained-host completion, strict protection, full qualification, Store or physical-device PASS. Overall NOT_READY.",
+  "pins": {
+    "receipt": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34437980623/native-evidence/ios-readiness-36/receipt.json",
+      "bytes": 376965,
+      "sha256": "e2c2613f64373c24e3c04601a0f6ba4d221134b6babf289e9957d1de1808ef16"
+    },
+    "raw_xcode": {
+      "bytes": 156231,
+      "sha256": "ce219cd506efb64bcae10481571c23677f3c6c42f53625eadf7323333295698c"
+    },
+    "compressed_xcode": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34437980623/native-evidence/ios-readiness-36/xcodebuild.log.gz",
+      "bytes": 12958,
+      "sha256": "264e2d6c67dc2447d91c159d971b04d273a2ae0e80fd3ffa2cf236c3ea03f141"
+    },
+    "summary": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34437980623/native-evidence/ios-readiness-36/xcresult-summary.json",
+      "bytes": 1002,
+      "sha256": "8b46b07428fbfbb64532c9704318af18666ffad1b63963ada7ab8affc244efad"
+    },
+    "test_tree": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34437980623/native-evidence/ios-readiness-36/xcresult-tests.json",
+      "bytes": 1671,
+      "sha256": "af819f025264ec4447d436cd4354cb64f28f418b38d66d45983f57aba304eb0b"
+    },
+    "retention": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34437980623/native-evidence/ios-readiness-36/diagnostic-retention.json",
+      "bytes": 177,
+      "sha256": "091d4369fbed69bd4451cde6934fbb0b898b60e54e9bae00b2fe6e5f05f98508"
+    },
+    "download_receipt": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34437980623/download-receipt.json",
+      "bytes": 29958,
+      "sha256": "08a3e8f03ee13bb82f49083ff5d093958acf86512103aeb0e6c1e730fab240a9"
+    },
+    "archives": [
+      {
+        "pin": {
+          "path": "remediation-runs/2026-09-08-continuation/actions/34437980623/native-cleanup.zip",
+          "bytes": 1260,
+          "sha256": "2d2d65783017483cee6bde080bada442ccf581e3de9eb3bae4c170728169fdf7"
+        },
+        "members": 1,
+        "uncompressed_bytes": 2364
+      },
+      {
+        "pin": {
+          "path": "remediation-runs/2026-09-08-continuation/actions/34437980623/native-evidence.zip",
+          "bytes": 361621,
+          "sha256": "61fe19ad1050c2d5605d90db488fc2d468b9ee2aaabea744717489a746533245"
+        },
+        "members": 34,
+        "uncompressed_bytes": 1432523
+      },
+      {
+        "pin": {
+          "path": "remediation-runs/2026-09-08-continuation/actions/34437980623/run-attempt-1-logs.zip",
+          "bytes": 25630,
+          "sha256": "a8678e3ec9920b8812fdba1893793ffdd882329c7d0d126749ad54146a6fdb80"
+        },
+        "members": 14,
+        "uncompressed_bytes": 82124
+      }
+    ],
+    "cleanup": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34437980623/native-cleanup/parlor-native-34437980623-1-cleanup.json",
+      "bytes": 2364,
+      "sha256": "70a71717a5d95bcea5967168a61d225428ee8772f29964cbd77f3b4d4e2de82c"
+    },
+    "watcher": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/settings-sheet-evidence-02/watcher-collection-receipt.json",
+      "bytes": 666,
+      "sha256": "e7f8836f4f92e93ff0a4a9979cfcbdadb013da2c84e5a1a87bac9aa6b1cc785e"
+    },
+    "reviewed_control_sha256": "10c7553a8cc297f8084ada5f6af993ed3df448a0ab0da7c024b328fc64f59023"
+  },
+  "activity": "Read-only local evidence/source and stdlib inspection only; no project imports/tests/builds/network/dispatch/source edits. Sole additive report; no reviewer cleanup owed."
+}

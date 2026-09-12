@@ -1,0 +1,461 @@
+{
+  "schema_version": 1,
+  "status": "DRAFT_AUTHOR_SOURCE_REASONING_NOT_INDEPENDENT_APPROVAL_NOT_RUNTIME_VERIFICATION",
+  "author": "/root/factory_review",
+  "recorded_at": "2026-09-08T05:12:09.310815+00:00",
+  "observed_source": {
+    "repository": "/Users/abdelrahman/Projects/parlor",
+    "branch": "fix/local-readiness-2026-09-07",
+    "commit": "8b9e3b0cdfdab82e7cff3ad8135d0eae9a0b8ca3",
+    "tree": "c1e92b5e00ab64a293c4d7f9c9b5e2b85887be88",
+    "tracked_status": "",
+    "preexisting_untracked": "AGENTS.md, audits, design, handoff, remediation evidence preserved; current draft also untracked. No global clean/source inventory recapture."
+  },
+  "baseline_transition": {
+    "earlier_commit": "484f82c3bcc273c0014a946376c1ee9fc7de8d83",
+    "current_commit": "8b9e3b0cdfdab82e7cff3ad8135d0eae9a0b8ca3",
+    "method": "Read-only git diff --name-only484f82c3HEAD scoped to exporter/renderer/notices/verification-metadata/notice manifest returned empty; current hashes recorded below. Earlier native/control evidence stays bound to its recorded source, not relabeled."
+  },
+  "scope": {
+    "authorization": "Fresh additive self-contained candidate consumer and synthetic controls only. Root owns execution, package provisioning, full source freeze, candidate binding, adoption and cleanup. No production source edits.",
+    "reuse": {
+      "dependency_inventory.py": [
+        "read_graphs",
+        "coordinates",
+        "parse_pom",
+        "make_bom",
+        "GRAPHS",
+        "MAVEN_BASES",
+        "MAX_POM_BYTES"
+      ],
+      "third_party_notices.py": [
+        "source_receipt",
+        "MANIFEST_PATH",
+        "CATALOG_PATH",
+        "BUILD_PATH",
+        "RESOURCE_DIRECTORY"
+      ]
+    },
+    "not_implemented": [
+      "No new dependency resolver or inventory framework",
+      "No network/POM fetch/schema download",
+      "No Git/source-inventory recapture",
+      "No package extraction or artifact inspection",
+      "No signing, promotion, Store or legal decision"
+    ]
+  },
+  "trust_and_binding": [
+    "Root independently reviews and externally pins binding SHA; a self-consistent malicious root receipt is not authenticated by this consumer.",
+    "New exact-field binding supplies candidate/source-manifest digest, source/control paths and receipt hashes. No old output paths are hardcoded.",
+    "Modern export and renderer receipts must agree on complete clean source snapshots and runner identity; all exit/stop/cleanup/drift conditions are checked. Old custom metadata-only receipts lacking this contract intentionally fail.",
+    "The root lane is separately bound because remediation controls are outside its application source manifest. This consumer is separately byte-bound to its running source.",
+    "Consumer checks the source manifest digest but does not independently recapture all repository bytes. Root must independently attest the final source freeze and actual execution receipts.",
+    "Four exact graph names/COMPLETE hashes are required. Reuse read_graphs validates components, edges, artifact identities and strict mode. Consumer adds expected configurations, fixture exclusion and exact strict XML artifact SHA/variant reconciliation.",
+    "Retained POM declarations are checked against exact saved bytes, parsed identities, approved origins, rendering window, direct/inherited licenses and bounded parent chains. Output equality is checked using bound make_bom and exact declaration-draft reconstruction.",
+    "Official schemas are pinned retained bytes and checked locally; no arbitrary resource fetcher. Source notices reuse their existing validated implementation and are subsequently matched to root source hashes.",
+    "Reads are bounded regular-file/no-leaf-symlink reads with identity/hash checks and final file/directory rechecks. Parent traversal checks assume an owned frozen workspace; not a dirfd-capability hostile-filesystem sandbox.",
+    "The only main output is a new exclusively created JSON file under an already existing canonical-root parent. Failure status is nonzero and contains error type rather than raw source/metadata/OS exception text."
+  ],
+  "reviewed_first_party_sources": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/resolved_dependencies.init.gradle",
+      "sha256": "5120cb8d7c12825ad889f23d73075ef29ae48b66e4966d1e2335aa2d11995f59",
+      "bytes": 7170,
+      "reviewed_lines": [
+        [
+          1,
+          107
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/dependency_inventory.py",
+      "sha256": "fc0238d4d6ea0abd60d2985ed214af6516a239e439269978139fcc9519a20534",
+      "bytes": 14449,
+      "reviewed_lines": [
+        [
+          1,
+          271
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/third_party_notices.py",
+      "sha256": "d5a9e8e0cafd9c2d0de9ecd8dfcb040053fa52d25d798abd9998e84ab6676bdf",
+      "bytes": 30079,
+      "reviewed_lines": [
+        [
+          1,
+          405
+        ],
+        [
+          575,
+          613
+        ]
+      ],
+      "method": "Source-notice path/callees and module-entry guards reopened; package-only bodies406-574 are outside this draft task, not claimed as freshly reviewed."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py",
+      "sha256": "5c0e546c819c28762cbc6b355ec2717737fc53f96712af591a27add878579d7a",
+      "bytes": 21094,
+      "reviewed_lines": [
+        [
+          1,
+          344
+        ]
+      ],
+      "method": "Read-only command/identity/stop/cleanup contract review; never imported or executed by author."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/gradle/verification-metadata.xml",
+      "sha256": "58b5a279cc5ccc58e1088fbe3dd248fcfdf31a307707204c5438259de7960f95",
+      "bytes": 795388,
+      "method": "Hash identity only in this continuation; actual artifact reconciliation is deferred to root execution. Not a new full-line XML audit."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/config/third-party-notices.json",
+      "sha256": "4b501223b3841017477a226515d3758bc60848fe00d579fac3152a81928d6406",
+      "bytes": 26026,
+      "method": "JSON structure and source resource list inspected; executing existing source_receipt remains deferred."
+    }
+  ],
+  "draft_python_static_checks": {
+    "candidate_consumer.py": {
+      "sha256": "eb6e2baaac22739b4652bc63c6b57a24374ee57fb81d4711b981b872e8ac1c7f",
+      "bytes": 23404,
+      "lines": 416,
+      "result": "PARSED_SYNTAX_ONLY_NOT_IMPORTED_OR_EXECUTED"
+    },
+    "test_candidate_consumer.py": {
+      "sha256": "4d66d4ed83d7bf1be1137c45455c28957b335fc05ba3ae0952ee2b7c3743b9dd",
+      "bytes": 21854,
+      "lines": 359,
+      "result": "PARSED_SYNTAX_ONLY_NOT_IMPORTED_OR_EXECUTED",
+      "controls": [
+        {
+          "name": "test_complete_synthetic_candidate_uses_real_bound_apis_and_offline_schema",
+          "lines": [
+            152,
+            161
+          ],
+          "status": "NOT_EXECUTED"
+        },
+        {
+          "name": "test_import_has_no_evidence_reads_writes_network_or_commands",
+          "lines": [
+            163,
+            171
+          ],
+          "status": "NOT_EXECUTED"
+        },
+        {
+          "name": "test_binding_hash_unknown_fields_and_executing_consumer_are_required",
+          "lines": [
+            173,
+            185
+          ],
+          "status": "NOT_EXECUTED"
+        },
+        {
+          "name": "test_receipt_rehash_does_not_waive_failures_cleanup_or_source_drift",
+          "lines": [
+            187,
+            202
+          ],
+          "status": "NOT_EXECUTED"
+        },
+        {
+          "name": "test_candidate_identity_and_wrong_cycle_commands_do_not_pass",
+          "lines": [
+            204,
+            215
+          ],
+          "status": "NOT_EXECUTED"
+        },
+        {
+          "name": "test_missing_extra_graph_and_completion_bytes_fail_closed",
+          "lines": [
+            217,
+            229
+          ],
+          "status": "NOT_EXECUTED"
+        },
+        {
+          "name": "test_symlink_traversal_duplicate_json_and_size_controls",
+          "lines": [
+            231,
+            242
+          ],
+          "status": "NOT_EXECUTED"
+        },
+        {
+          "name": "test_bound_renderer_and_notice_edits_fail_before_execution",
+          "lines": [
+            244,
+            250
+          ],
+          "status": "NOT_EXECUTED"
+        },
+        {
+          "name": "test_strict_pins_and_variants_survive_consistent_evidence_rehash",
+          "lines": [
+            252,
+            266
+          ],
+          "status": "NOT_EXECUTED"
+        },
+        {
+          "name": "test_metadata_tamper_timestamp_and_extra_files_are_not_declared_success",
+          "lines": [
+            268,
+            283
+          ],
+          "status": "NOT_EXECUTED"
+        },
+        {
+          "name": "test_schema_integrity_and_actual_official_validation_remain_required",
+          "lines": [
+            285,
+            295
+          ],
+          "status": "NOT_EXECUTED"
+        },
+        {
+          "name": "test_missing_optional_format_checker_is_not_silent_schema_success",
+          "lines": [
+            297,
+            307
+          ],
+          "status": "NOT_EXECUTED"
+        },
+        {
+          "name": "test_recording_checker_preserves_registered_library_rejection",
+          "lines": [
+            309,
+            317
+          ],
+          "status": "NOT_EXECUTED"
+        },
+        {
+          "name": "test_wrong_sbom_edges_and_notice_bytes_cannot_pass",
+          "lines": [
+            319,
+            331
+          ],
+          "status": "NOT_EXECUTED"
+        },
+        {
+          "name": "test_final_recheck_catches_late_file_and_directory_changes",
+          "lines": [
+            333,
+            343
+          ],
+          "status": "NOT_EXECUTED"
+        },
+        {
+          "name": "test_main_failure_is_nonzero_sanitized_and_never_overwrites_evidence",
+          "lines": [
+            345,
+            355
+          ],
+          "status": "NOT_EXECUTED"
+        }
+      ]
+    }
+  },
+  "synthetic_control_scope": {
+    "declared_control_count": 16,
+    "executed_control_count": 0,
+    "fixture_basis": "Fabricated clean source/runner/cycle identities plus tiny hand-authored graph and BOM. Copies only public source controls/notices/schemas into TemporaryDirectory; existing parser/notices APIs execute only when root runs tests. Synthetic fixture success is not real Gradle evidence.",
+    "remaining": "Independent source/diff review, schema format prerequisites, root-owned real test execution and discovery reconciliation."
+  },
+  "schema_inputs": {
+    "provenance_file": "SCHEMA_PROVENANCE.json",
+    "method": "Verbatim retained official bytes compared by SHA and standard-library JSON-parsed for structural format pointers. Not a full source-line schema review and not schema validation.",
+    "license_url_pointer": "/definitions/license/properties/url/format",
+    "license_url_format": "iri-reference",
+    "other_format_keyword_names_in_pinned_schema_definitions": [
+      "date-time",
+      "idn-email",
+      "uri"
+    ],
+    "unused_definitions": "Unused schema definitions are not required optional-format dependencies. Data properties named format are not themselves format keywords."
+  },
+  "schema_engine_research": {
+    "method": "Read-only installed-source and standard-library distribution metadata inspection, no jsonschema/referencing implementation import or checker execution.",
+    "reviewed_engine_versions": {
+      "jsonschema": "4.25.1",
+      "referencing": "0.36.2"
+    },
+    "observed_distribution_metadata": {
+      "jsonschema": "4.25.1",
+      "referencing": "0.36.2",
+      "rfc3987-syntax": null,
+      "rfc3987": null,
+      "rfc3986-validator": null,
+      "rfc3339-validator": null,
+      "idna": null
+    },
+    "reopened_library_sources": [
+      {
+        "path": "/Users/abdelrahman/Library/Python/3.9/lib/python/site-packages/jsonschema/validators.py",
+        "sha256": "008d1b42b189a6f107d5148edf29f059c36f7e4a8de9624f832cb454ded69521",
+        "bytes": 47147,
+        "reviewed_lines": [
+          [
+            235,
+            325
+          ],
+          [
+            517,
+            617
+          ]
+        ]
+      },
+      {
+        "path": "/Users/abdelrahman/Library/Python/3.9/lib/python/site-packages/jsonschema/_format.py",
+        "sha256": "8a9d4dd7a08104e6fff2c33f89e8f25b4539258f645e8cf73bf0058f5487165f",
+        "bytes": 15581,
+        "reviewed_lines": [
+          [
+            19,
+            88
+          ],
+          [
+            110,
+            148
+          ],
+          [
+            229,
+            242
+          ],
+          [
+            304,
+            405
+          ]
+        ]
+      },
+      {
+        "path": "/Users/abdelrahman/Library/Python/3.9/lib/python/site-packages/jsonschema/_keywords.py",
+        "sha256": "afcfc3aea01f9fa40bc109e65c4820bde89253e51a20bda9da7b8f20d7a57c57",
+        "bytes": 14949,
+        "reviewed_lines": [
+          [
+            218,
+            241
+          ]
+        ]
+      },
+      {
+        "path": "/Users/abdelrahman/Library/Python/3.9/lib/python/site-packages/referencing/_core.py",
+        "sha256": "d1225f656ebc74eacb31a15d84ccaec98cdbd018bd77405c3e31b08a37ac7fd1",
+        "bytes": 24830,
+        "reviewed_lines": [
+          [
+            285,
+            345
+          ],
+          [
+            410,
+            443
+          ],
+          [
+            520,
+            548
+          ]
+        ]
+      }
+    ],
+    "source_backed_claims": [
+      {
+        "claim": "Unknown formats silently return without validation in the library; a nonthrowing FormatChecker by itself does not establish that optional checks ran.",
+        "source": "jsonschema/_format.py",
+        "lines": [
+          111,
+          142
+        ]
+      },
+      {
+        "claim": "The normal format validator delegates to provided FormatChecker.check and yields library FormatError as a validation error. RecordingChecker delegates super().check unchanged rather than replacing validation algorithms.",
+        "source": "jsonschema/_keywords.py",
+        "lines": [
+          223,
+          228
+        ]
+      },
+      {
+        "claim": "idn-email uses the built-in basic @ check; missing idna distribution is not proof that this checker is absent.",
+        "source": "jsonschema/_format.py",
+        "lines": [
+          234,
+          239
+        ]
+      },
+      {
+        "claim": "iri/iri-reference use optional rfc3987 or rfc3987_syntax; date-time uses optional rfc3339_validator; actual registry still requires runtime observation.",
+        "source": "jsonschema/_format.py",
+        "lines": [
+          304,
+          402
+        ]
+      },
+      {
+        "claim": "Explicit Registry defaults retrieve to _fail_to_retrieve, which raises NoSuchResource; only retained official resources and library specifications are supplied.",
+        "source": "referencing/_core.py",
+        "lines": [
+          [
+            293,
+            294
+          ],
+          [
+            322,
+            329
+          ],
+          [
+            410,
+            438
+          ],
+          [
+            520,
+            535
+          ]
+        ]
+      }
+    ],
+    "planned_format_handling": "Original validator class; record encountered FormatChecker.check calls then delegate unchanged. A valid iter_errors traversal is exhausted to None. Registered/encountered/missing are retained, cumulative across graphs. Failure records only the observed prefix/graph, never claims full validation. Encountered-but-unregistered keywords make success impossible.",
+    "minimal_prerequisite_lead": {
+      "package": "rfc3987-syntax>=1.1.0",
+      "basis": "Installed jsonschema4.25.1 format-nongpl requirement and concrete nonempty license URL output map to iri-reference. This is a research lead, not approved package selection or proof of Python3.9compatibility.",
+      "alternative": "rfc3987 optional GPL format path; no package installed or selected by author.",
+      "public_metadata_targets": [
+        "https://pypi.org/pypi/rfc3987-syntax/1.1.0/json",
+        "https://pypi.org/pypi/rfc3987-syntax/json"
+      ],
+      "accessed_online": false,
+      "required_root_research": [
+        "Version-specific requires_python and transitive dependencies",
+        "Official PyPI wheel/sdist SHA-256 and provenance",
+        "Applicable parser source and registered checker behavior",
+        "Isolated owned environment and compact version/hash receipt; no global install"
+      ]
+    },
+    "unresolved": "Actual format registry, complete control execution and final-candidate schema validation are NOT_RUN. Optional package absence is metadata evidence, not a runtime checker inventory. Historical schema receipts remain untouched and do not prove optional formats ran."
+  },
+  "resource_hygiene": {
+    "commands_by_author": "Read-only source/Git commands and short-lived /usr/bin/python3-B standard-library AST/JSON/hash/metadata analysis only.",
+    "builds_tests_native_network_or_install": "NONE",
+    "process_control": "NONE; root owns active lane, no competing Gradle stop or worker queries.",
+    "generated_build_or_scratch_outputs": "NONE",
+    "preserved_deliverables": "Draft Python, README, schema provenance, three public schemas, this reasoning record and additive freeze manifest.",
+    "cleanup": "No author-owned build processes or generated build/scratch folders were created. No user files, caches, artifacts or prior evidence deleted."
+  },
+  "next_authority_actions": [
+    "Separate independent reviewer reopens full draft and surrounding production APIs; original author cannot approve it.",
+    "Root researches/provisions actually needed optional checker dependencies without unrecorded global mutation.",
+    "Root executes focused controls in coordinated lane, retains runtime descriptors and immediate stop/cleanup receipts.",
+    "After native/gate completion and a fresh clean final-source freeze, root runs real exporter then renderer in new coordinated cycles with exact documented renderer command.",
+    "Root reviews/pins new binding, runs consumer, independently reconciles actual receipt and output hashes; no runtime or candidate success before then."
+  ],
+  "verdict": "DRAFT_ONLY. No final-candidate, package, legal, iOSruntime, physicaldevice, signing, Store or production-readiness approval."
+}

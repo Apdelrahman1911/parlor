@@ -1,0 +1,106 @@
+{
+  "schema_version": 1,
+  "author": "/root/release_fix_review",
+  "frozen_at": "2026-09-07T23:47:38.104391+00:00",
+  "status": "DRAFT03; authored after independent02 destructive BLOCK. Independent root review plus27 actual synthetic controls and guarded non-destructive preflight required; NOT author approval, native execution, deletion or cleanup PASS.",
+  "files": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/native09_secondary_fifo_recovery_03.py",
+      "sha256": "5e0b2dbcc82ee4af777437c8c6c0181869411dc7e564d3930b1a4d84a805a458",
+      "lines": 199
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/test_native09_secondary_fifo_recovery_03.py",
+      "sha256": "c0f14540737a0ba4738fde2caf34bd8198fc11a7faf4a0ad652f4232d8362300",
+      "lines": 233
+    }
+  ],
+  "patch": {
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/native09-secondary-fifo-recovery-02-to-03.patch",
+    "sha256": "da6c2952cf21226ea1a2aee34ef88ddf94020dcb65bd027c697012ce2a1ea506"
+  },
+  "preserved02": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/native09_secondary_fifo_recovery_02.py",
+      "sha256": "7ae5a99dd4e916529c4d3f108a97cd13eb21168e2b2a8f06a82062a81107c088"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/test_native09_secondary_fifo_recovery_02.py",
+      "sha256": "3afea3bbb96dd192bea2791115e5f97a510ac352af9930a03b8431acf42f8114"
+    }
+  ],
+  "plan_path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/native09-secondary-fifo-recovery-independent-proposal-01.json",
+  "plan_sha256": "691caf73451570aae8cab30279ef84d180d15496d8d3fa39625593901855cc37",
+  "expected_tests": 27,
+  "test_ids": [
+    "ExactRecoveryTests.test_verification_does_not_delete",
+    "ExactRecoveryTests.test_exact_positive_removes_four_objects_and_preserves_sibling",
+    "ExactRecoveryTests.test_replaced_leaf_inode_is_preserved",
+    "ExactRecoveryTests.test_replaced_parent_inode_is_preserved",
+    "ExactRecoveryTests.test_symlink_leaf_is_not_followed",
+    "ExactRecoveryTests.test_symlink_parent_is_not_followed",
+    "ExactRecoveryTests.test_non_fifo_is_preserved",
+    "ExactRecoveryTests.test_uid_and_birth_mismatch_are_rejected",
+    "ExactRecoveryTests.test_extra_hard_link_is_rejected",
+    "ExactRecoveryTests.test_unknown_contents_preserve_all",
+    "ExactRecoveryTests.test_changed_nonce_is_not_adopted",
+    "ExactRecoveryTests.test_live_or_reused_pid_blocks_all_mutation",
+    "ExactRecoveryTests.test_holder_or_query_failure_blocks_all_mutation",
+    "ExactRecoveryTests.test_new_unknown_content_during_query_blocks_before_first_unlink",
+    "ExactRecoveryTests.test_partial_failure_keeps_remaining_objects_and_progress_receipt",
+    "QueryControlTests.test_query_requires_exact_empty_exit_and_bounded_integer_output",
+    "QueryControlTests.test_pid_check_never_accepts_reused_id",
+    "QueryControlTests.test_holder_exemption_is_only_this_helpers_directory_fds",
+    "QueryControlTests.test_exact_lsof_partial_selection_keeps_all_reported_pids",
+    "QueryControlTests.test_lsof_partial_selection_with_only_helpers_dirfds_is_accepted",
+    "QueryControlTests.test_lsof_partial_selection_cannot_hide_another_holder",
+    "QueryControlTests.test_ps_and_other_lsof_targets_keep_strict_exit_output_contract",
+    "QueryControlTests.test_exact_lsof_still_rejects_errors_stderr_malformed_or_oversized_output",
+    "QueryControlTests.test_holder_query_constructs_exact_warning_enabled_command",
+    "QueryControlTests.test_relaxed_lsof_contract_rejects_suppressed_missing_or_misordered_warning_flags",
+    "QueryControlTests.test_warning_stderr_is_fatal_regardless_of_exit_or_reported_pids",
+    "QueryControlTests.test_plan_hash_failure_never_reads_or_mutates_recovery_paths"
+  ],
+  "new_test_ids": [
+    "QueryControlTests.test_holder_query_constructs_exact_warning_enabled_command",
+    "QueryControlTests.test_relaxed_lsof_contract_rejects_suppressed_missing_or_misordered_warning_flags",
+    "QueryControlTests.test_warning_stderr_is_fatal_regardless_of_exit_or_reported_pids"
+  ],
+  "source_scope": "Only exact canonical holder argv and its partial-selection allowlist become /usr/sbin/lsof -nP -t +w +D <frozen root>; warning enable follows -t. Evidence directories03. No inode/UID/birth/receipt/descriptor/process/removal semantic changes.",
+  "static_comparisons": {
+    "ExactRecovery_AST_identical_to02": true,
+    "unchanged_top_level_functions": [
+      "require",
+      "identity",
+      "checked_bytes",
+      "bound_plan",
+      "check_pids"
+    ],
+    "changed_top_level_functions": [
+      "query",
+      "check_holders",
+      "main"
+    ],
+    "all24_existing_test_AST_identical_after_argv_normalization": true
+  },
+  "evidence_interpretation": "02 controls24PASS and verify-only results are reported by root but not reconciled by this author yet. No03 tests or native queries run. Original native09 statusFAIL/cleanupFAIL and02 evidence remain immutable.",
+  "required_before_execution": [
+    "Root independent full-diff/source review; author cannot approve own fix.",
+    "Actual27 controls with exact descriptors, failures/errors/skips recorded and cleanup.",
+    "Root-owned guarded verify03 against immutable plan/source bytes; no deletion until separately approved.",
+    "Surface every warning as failure, even if benign/unrelated; no automatic warning filter or retry.",
+    "Preserve compact per-cycle receipts, stop only task-owned workers and clean outputs under root shared lane."
+  ],
+  "limitations": [
+    "Not creator-PID forensic proof or hostile same-UID race protection.",
+    "+D remains bounded to pre/post-inspected exact four-object tree; no new recursive removal or arbitrary traversal authorization.",
+    "Query capture limits are post-capture acceptance limits, not streaming RAM ceilings.",
+    "Any actual native warning/inability to enumerate is BLOCKED, not waived; no native03 success asserted."
+  ],
+  "original_statuses": {
+    "native09_runtime": "FAIL",
+    "native09_cleanup": "FAIL",
+    "next_native_cycle": "SUSPENDED pending independently reconciled cleanup and separate source/control approval"
+  },
+  "author_activity": "Only static source/evidence/AST/hash processing and bounded public-source research. No repository executable imports, tests, builds, native queries, process signals or deletions. Additive03 proposal/test/patch/manifest only."
+}

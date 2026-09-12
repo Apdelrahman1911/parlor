@@ -1,0 +1,546 @@
+{
+  "actual_a25": {
+    "branch": "fix/local-readiness-2026-09-07",
+    "cleanup_errors": [],
+    "cleanup_status": "PASS",
+    "evidence": [
+      {
+        "bytes": 721006,
+        "path": "remediation-runs/2026-09-08-continuation/actions/34321128224/native-evidence/ios-readiness-25/xcodebuild.log",
+        "sha256": "99644bd519173eeae92688c1de2e1f3f2932a939080e73d25eb0f32dce193694"
+      },
+      {
+        "bytes": 1577,
+        "path": "remediation-runs/2026-09-08-continuation/actions/34321128224/native-evidence/ios-readiness-25/xcresult-summary.json",
+        "sha256": "19eebf802e270810f879d533d818886bb77b4f412636f8398a56036e33d53dec"
+      },
+      {
+        "bytes": 5003,
+        "path": "remediation-runs/2026-09-08-continuation/actions/34321128224/native-evidence/ios-readiness-25/xcresult-tests.json",
+        "sha256": "c40bbedafa707eb07ce226e317b3c6587314fd3d79113e96cc33ce9df9d0d839"
+      },
+      {
+        "bytes": 1329,
+        "path": "remediation-runs/2026-09-08-continuation/actions/34321128224/native-evidence/ios-readiness-25/parlor-l08-host-1-prepare.json",
+        "sha256": "f1f29488d0c2cd05d7185ec7dc06924c70297ae9defe0f73fd3cfacebb93eae9"
+      },
+      {
+        "bytes": 5719,
+        "path": "remediation-runs/2026-09-08-continuation/actions/34321128224/native-evidence/ios-readiness-25/probe-l08-host-result.json",
+        "sha256": "fa78f17c48702c18d33391ed03ea2cec2e944dbb6e2b09f3829d330d33dd5a7a"
+      },
+      {
+        "bytes": 55205,
+        "path": "remediation-runs/2026-09-08-continuation/actions/34321128224/native-evidence/ios-readiness-25/probe-l08-storage-functional-result.json",
+        "sha256": "40cc5e642e746e8c0876c2f268c6fc135cc8bd518441c1e8953250f4571dbf8b"
+      },
+      {
+        "bytes": 431906,
+        "path": "remediation-runs/2026-09-08-continuation/actions/34321128224/native-evidence/ios-readiness-25/copied-source.diff",
+        "sha256": "dfa69f00aed6d156eea1dc3e713a9e88ccf3a21250ff2f0ff686581b67aa1c8b"
+      },
+      {
+        "bytes": 530294,
+        "path": "remediation-runs/2026-09-08-continuation/actions/34321128224/native-evidence/ios-readiness-25/receipt.json",
+        "sha256": "bb26e097e37c54cf2b66fae405595c302bad8df11901d27c8a22ec8cef2f51fd"
+      }
+    ],
+    "first_failure": {
+      "action": "prepare",
+      "boot_ordinal": 1,
+      "generated_statement": "XCTAssertEqual(try dictionary(value, \"observation\")[\"status\"] as? String, \"PASS\")",
+      "generated_swift_line": 2735,
+      "host_completed_boots": 0,
+      "host_durable_operation_count": 1,
+      "host_plan_operations": 42,
+      "host_unreached_operations": 41,
+      "log_line": 7754,
+      "observation": {
+        "action": "prepare",
+        "boot_ordinal": 1,
+        "reason": "fixture_or_boundary_failure",
+        "run_token": "43FC2BBD-DFC6-487A-9012-D969FC7D2A36",
+        "schema_version": 1,
+        "stage": "prepare",
+        "status": "FAIL"
+      },
+      "observation_sequence": 4,
+      "probe_completed": false,
+      "process_boot": "ACE93F1F-D030-40EC-93CD-7B6BCB80F9B6",
+      "statement_mapping": "Read-only unified-diff new-line cursor reconstruction; original L08HostUITests.swift.in line86."
+    },
+    "functional_progress": {
+      "actual_attribute_observation": {
+        "dictionary_present": true,
+        "key_present": false,
+        "native_error": {
+          "code": 0,
+          "domain": "none",
+          "present": false
+        },
+        "query": "returned",
+        "value": "missing"
+      },
+      "all_attribute_reads_identical": true,
+      "comparison_count": 26,
+      "comparison_status_counts": {
+        "FAIL": 26
+      },
+      "completed_boot_ordinals": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "distinct_completed_process_boots": 13,
+      "durable_operations": 20,
+      "functional_status_counts": {
+        "PASS": 20
+      },
+      "limits": "Operation PASS and completed boot records are not an overall successful qualification: integrated XCTest remains FAIL at first retained-host prepare. Full image/source/evidence reconciliation is independently owned.",
+      "progress_vs_a23": "A23 stopped before boot10 legacy activation with14 functionalPASS/9completedboots/24strictFAIL. A25 completes20 functionalPASS/13boots; the last retained-dual pair atboot12 raises strict comparison count to26, allFAIL. This is actual functional progress, not strict protection success."
+    },
+    "functional_receipt_identities": [
+      {
+        "bytes": 2075,
+        "path": "remediation-runs/2026-09-08-continuation/actions/34321128224/native-evidence/ios-readiness-25/parlor-l08-storage-functional-1-save.json",
+        "sha256": "61282f4380352c9912fb0db849421fe21351b6accaec2a6c6052a701f2d638f9"
+      },
+      {
+        "bytes": 1596,
+        "path": "remediation-runs/2026-09-08-continuation/actions/34321128224/native-evidence/ios-readiness-25/parlor-l08-storage-functional-10-continue.json",
+        "sha256": "1bfbde989ac847c8a46a5f4c3fe963471bcd95325810b987ec4b41c280c5e494"
+      },
+      {
+        "bytes": 2798,
+        "path": "remediation-runs/2026-09-08-continuation/actions/34321128224/native-evidence/ios-readiness-25/parlor-l08-storage-functional-10-legacy-load.json",
+        "sha256": "58dd764686748dca96a3e89c07c323fb3a97e89cc2675f23ab7e6f15ede70941"
+      },
+      {
+        "bytes": 1574,
+        "path": "remediation-runs/2026-09-08-continuation/actions/34321128224/native-evidence/ios-readiness-25/parlor-l08-storage-functional-11-discard-observed.json",
+        "sha256": "e337bf4c80b41456765a8176c9a4cc3f92e83f602dc4059862a50796893d2326"
+      },
+      {
+        "bytes": 1546,
+        "path": "remediation-runs/2026-09-08-continuation/actions/34321128224/native-evidence/ios-readiness-25/parlor-l08-storage-functional-11-legacy-neighbor.json",
+        "sha256": "7599efbb9b213e92c934b2b78108bbc3648adceb480ca6c850d0cf0acae5b96d"
+      },
+      {
+        "bytes": 1574,
+        "path": "remediation-runs/2026-09-08-continuation/actions/34321128224/native-evidence/ios-readiness-25/parlor-l08-storage-functional-12-discard-observed.json",
+        "sha256": "3abd810c6b4dae134489f6d8656a501cbf8b383bf20eb0265f3ddbd93ea5c9e8"
+      },
+      {
+        "bytes": 2202,
+        "path": "remediation-runs/2026-09-08-continuation/actions/34321128224/native-evidence/ios-readiness-25/parlor-l08-storage-functional-12-dual-preserved.json",
+        "sha256": "f907239a922ad6a95a8282fbd0383ef242dcd52c269d8b495294eafe99f692ed"
+      },
+      {
+        "bytes": 1516,
+        "path": "remediation-runs/2026-09-08-continuation/actions/34321128224/native-evidence/ios-readiness-25/parlor-l08-storage-functional-13-final-absence.json",
+        "sha256": "26324448ae7715c074db28c69bd80e778bc5be637a5192668332008d6bd5d2d2"
+      },
+      {
+        "bytes": 1594,
+        "path": "remediation-runs/2026-09-08-continuation/actions/34321128224/native-evidence/ios-readiness-25/parlor-l08-storage-functional-2-continue.json",
+        "sha256": "875c4ac3d7d75b6ce4d2cd8f56afd5e546fe18792aba89db3923c0790142e09c"
+      },
+      {
+        "bytes": 2078,
+        "path": "remediation-runs/2026-09-08-continuation/actions/34321128224/native-evidence/ios-readiness-25/parlor-l08-storage-functional-2-load.json",
+        "sha256": "2a3a7232d9ddbeb0997e1ad41e865507ed3ae53f801917289bc0be1a5d1eab95"
+      },
+      {
+        "bytes": 2075,
+        "path": "remediation-runs/2026-09-08-continuation/actions/34321128224/native-evidence/ios-readiness-25/parlor-l08-storage-functional-3-save.json",
+        "sha256": "7b2ba8959850d0189650fe9bc3ead17744a2b9a9244a970b215a084b4a253adc"
+      },
+      {
+        "bytes": 1594,
+        "path": "remediation-runs/2026-09-08-continuation/actions/34321128224/native-evidence/ios-readiness-25/parlor-l08-storage-functional-4-continue.json",
+        "sha256": "b0a95de84c7c6e93d0e61b3c17c938ddd4f9d5e1a28b2ce01a1ad4593539e438"
+      },
+      {
+        "bytes": 2078,
+        "path": "remediation-runs/2026-09-08-continuation/actions/34321128224/native-evidence/ios-readiness-25/parlor-l08-storage-functional-4-load.json",
+        "sha256": "325b1fe9fa01e3523c67618cae7890a8ccdbd0aaad9dfc8ad800d37e723d66cf"
+      },
+      {
+        "bytes": 2077,
+        "path": "remediation-runs/2026-09-08-continuation/actions/34321128224/native-evidence/ios-readiness-25/parlor-l08-storage-functional-5-save.json",
+        "sha256": "d564aa38a10ec0772c24da8a904962d782586b31a90ed818cb2be42ecf47f410"
+      },
+      {
+        "bytes": 1594,
+        "path": "remediation-runs/2026-09-08-continuation/actions/34321128224/native-evidence/ios-readiness-25/parlor-l08-storage-functional-6-continue.json",
+        "sha256": "b1eb3eafa226b7997d5ac37bbdbe705ce9af8ff35f67778b199e2b57629ac785"
+      },
+      {
+        "bytes": 2080,
+        "path": "remediation-runs/2026-09-08-continuation/actions/34321128224/native-evidence/ios-readiness-25/parlor-l08-storage-functional-6-load.json",
+        "sha256": "684e4ce1d9130e0addc31f1f4b03933d2a0655f0fb8cbb2fddecf26fd9368f11"
+      },
+      {
+        "bytes": 2079,
+        "path": "remediation-runs/2026-09-08-continuation/actions/34321128224/native-evidence/ios-readiness-25/parlor-l08-storage-functional-7-save.json",
+        "sha256": "fd1cfc159832b309ef2be740620660addce82c8b37f8bbe78f4985dfea64bc8d"
+      },
+      {
+        "bytes": 1594,
+        "path": "remediation-runs/2026-09-08-continuation/actions/34321128224/native-evidence/ios-readiness-25/parlor-l08-storage-functional-8-continue.json",
+        "sha256": "4f82664ffff0c0c0eb49b0d5448cc13e8440615d37c00bf7d8e57040c38ec0c9"
+      },
+      {
+        "bytes": 2082,
+        "path": "remediation-runs/2026-09-08-continuation/actions/34321128224/native-evidence/ios-readiness-25/parlor-l08-storage-functional-8-load.json",
+        "sha256": "6426788875fe8091c1f54bb6a7eafc6bc8bde5621d26057080b5e82858726e74"
+      },
+      {
+        "bytes": 2747,
+        "path": "remediation-runs/2026-09-08-continuation/actions/34321128224/native-evidence/ios-readiness-25/parlor-l08-storage-functional-9-legacy-seed.json",
+        "sha256": "3fa530b190168a88c7b1197e97ecdac3663146b87bb02b67c63a6813248fcbe1"
+      }
+    ],
+    "independent_actual_review": {
+      "bytes": 22235,
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-a25-actual-independent-01.json",
+      "sha256": "adb0c7321fc2d9c57053f5a5e83065555e23fa471d14ded99b80ba7e590ee744"
+    },
+    "overall_status": "FAIL",
+    "source_commit": "0303a76771794c52ea96a7d7f47eb689f5b236ba"
+  },
+  "author": "/root/l08_fixture",
+  "cleanup": {
+    "build_test_cycle_started": false,
+    "cleanup_owed_by_author": false,
+    "generated_workers": 0,
+    "gradle_stop": "not run: no build/test lane owned by author",
+    "held_sources_and_reports_preserved": true,
+    "temporary_native_artifacts_created": 0
+  },
+  "correction": {
+    "base_identities": [
+      {
+        "bytes": 22619,
+        "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/L08HostProbe.kt.in",
+        "sha256": "62dfce06e71cf84f9e80c710f02a1fcb54308104af583d3d9d3033cf41b4bd79"
+      },
+      {
+        "bytes": 33871,
+        "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/l08_receipts.py",
+        "sha256": "43200492a5fae3cb31f89ecafe9985eee84b9c30b4549cd2933788dac056bfbd"
+      },
+      {
+        "bytes": 33100,
+        "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/test_l08_functional_copy.py",
+        "sha256": "a630c0002261e09a114390e5661ae0a95b75dc9a2548b249b425fac456077a1e"
+      },
+      {
+        "bytes": 2509,
+        "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/l08_functional_copy.py",
+        "sha256": "417865a86daca8c09e1d650abc2d46b20920a128d95d2021ad365e38e7a207a4"
+      }
+    ],
+    "canonical_base_unchanged_after_authoring": [
+      {
+        "bytes": 22619,
+        "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/L08HostProbe.kt.in",
+        "sha256": "62dfce06e71cf84f9e80c710f02a1fcb54308104af583d3d9d3033cf41b4bd79",
+        "unchanged_since_authoring": true
+      },
+      {
+        "bytes": 33871,
+        "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/l08_receipts.py",
+        "sha256": "43200492a5fae3cb31f89ecafe9985eee84b9c30b4549cd2933788dac056bfbd",
+        "unchanged_since_authoring": true
+      },
+      {
+        "bytes": 33100,
+        "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/test_l08_functional_copy.py",
+        "sha256": "a630c0002261e09a114390e5661ae0a95b75dc9a2548b249b425fac456077a1e",
+        "unchanged_since_authoring": true
+      },
+      {
+        "bytes": 2509,
+        "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/l08_functional_copy.py",
+        "sha256": "417865a86daca8c09e1d650abc2d46b20920a128d95d2021ad365e38e7a207a4",
+        "unchanged_since_authoring": true
+      }
+    ],
+    "canonical_replacements": [
+      {
+        "bytes": 23947,
+        "path": "remediation-runs/2026-09-08-continuation/reviews/native-a25-followup-01/revision-02/L08HostProbe.kt.in",
+        "sha256": "a1ee0677b9e3f013a887a52e32f5bdf183a4c15ede6e497a9960d1306826014f"
+      },
+      {
+        "bytes": 34928,
+        "path": "remediation-runs/2026-09-08-continuation/reviews/native-a25-followup-01/revision-02/l08_receipts.py",
+        "sha256": "b3f50e4e1359d9e1dfe424add35f0bd2d20ec3d3d6101d4aee6047349be98bed"
+      },
+      {
+        "bytes": 50536,
+        "path": "remediation-runs/2026-09-08-continuation/reviews/native-a25-followup-01/revision-02/test_l08_functional_copy.py",
+        "sha256": "45a2f798a7e0cd11f30561d4f64d3c0893006bd43ae627951e546d87235c8ccb"
+      },
+      {
+        "bytes": 3171,
+        "path": "remediation-runs/2026-09-08-continuation/reviews/native-a25-followup-01/revision-02/l08_functional_copy.py",
+        "sha256": "a73cc7b21e702a0ed8cb01da4582fc2fd5d99a69f48d2c43fb24ca37aeb29267"
+      }
+    ],
+    "clone_contract": {
+      "baseline_permitted_changed_clones": [
+        "copied_sources.py",
+        "run_ios_readiness.py"
+      ],
+      "canonical_filename_count": 75,
+      "documentation_followup": "Root/documentation owner should update the pristine-clone prose count from62to60 if adopted; do not edit the historical clone manifest or claim original strict harness was rerun.",
+      "existing_diagnostic_reversal": [
+        "L08MafiaSnapshots.kt.in"
+      ],
+      "historical_clone_manifest_unchanged": true,
+      "new_canonical_files": 0,
+      "new_exact_diagnostic_reversals": [
+        "L08HostProbe.kt.in",
+        "l08_receipts.py"
+      ],
+      "new_exceptions_do_not_accept_free_edits": "Each host/parser exception must reverse exact reviewed insertions and match the entire current canonical original whose SHA remains tied to the unchanged manifest.",
+      "original_file_count": 65,
+      "remaining_byte_identical_original_clones": 60
+    },
+    "host_probe": {
+      "data_scope": "Existing seven-field failure schema unchanged; stage values are fixed literals only. No exception, player, seed, role map, path, room ID, payload, snapshot value, or new diagnostic field is emitted.",
+      "every_original_statement_preserved": true,
+      "inserted_literal_assignments": 28,
+      "limitations": "A stage identifies the last narrow boundary attempted, not necessarily the internals of an exception swallowed by a production Result boundary. In particular prepare-acquire-result may report failed acquisition without disclosing underlying room details; a wait-stage can include strict witness or owned-worker failure. No success is synthesized.",
+      "proof": "Removing the28exact marker lines restores complete original source SHA62dfce06e71cf84f9e80c710f02a1fcb54308104af583d3d9d3033cf41b4bd79, including plan, predicates, state mutations, real flow callbacks, authority, seed, all timeouts, catch/cancellation, finalLeave and emergencyCleanup.",
+      "stages": [
+        "prepare-initial-state",
+        "prepare-presentation-slot",
+        "prepare-koin",
+        "prepare-owner-binding",
+        "prepare-transport-binding",
+        "prepare-scope-binding",
+        "prepare-transport-identity",
+        "prepare-system-language",
+        "prepare-owner-idle",
+        "prepare-fixture-roster",
+        "prepare-content-load",
+        "prepare-content-result",
+        "prepare-route",
+        "prepare-acquire",
+        "prepare-acquire-result",
+        "prepare-runtime-empty",
+        "prepare-admissions-freeze",
+        "prepare-room-identity",
+        "prepare-frozen-roster",
+        "prepare-witness",
+        "prepare-presentation",
+        "prepare-await-offers",
+        "prepare-ready-empty",
+        "prepare-release-ready",
+        "prepare-await-started",
+        "prepare-committed-roster",
+        "prepare-no-drops",
+        "prepare-return"
+      ]
+    },
+    "kind": "Diagnostic visibility plus same-matrix fail-fast ordering; not a demonstrated application defect repair.",
+    "parser": {
+      "closed_addition": "HOST_PREPARE_FAILURE_STAGES frozenset with28literal labels, admissible only on l08-host/prepare/FAIL.",
+      "legacy_failures": "All historical context/action stages and both reasons remain preservable; old receipts are not rewritten.",
+      "storage_metadata": "Strict protection tests/parsers/classes and every comparison remain unchanged;26FAIL is preserved.",
+      "strict_qualification": "verify_host, verify_storage, image binding, matrix counts/order, checks, privacy, and all other sanitization bytes remain original after reversing exact three parser insertions/replacement. FAIL cannot become PASS."
+    },
+    "same_matrix_order": {
+      "assessment": {
+        "bytes": 4996,
+        "path": "remediation-runs/2026-09-08-continuation/reviews/a27-failfast-order-assessment-01.json",
+        "sha256": "afd47452f85863df8b7fad30e44d6af425c2ceb8261eba62056681c4419a057f"
+      },
+      "mechanism": "One strict.once replacement of the exact adjacent native-readiness/storage/host call block in l08_functional_copy.instrument_ui_test. Only the latter two calls exchange positions.",
+      "order": [
+        "settings",
+        "native-readiness",
+        "retained-host",
+        "functional-storage",
+        "whodunit-local",
+        "mafia-local",
+        "os"
+      ],
+      "original_controls_untouched": "scripts/verification/ios-readiness and strict cloned l08_copy.py ordering remain byte-identical. No runner/workflow change is included.",
+      "readiness_first": "Readiness boot1 performs existing token-bound synthetic AppleLanguages cleanup against completed Settings evidence. Host-before-readiness was deliberately not chosen.",
+      "runtime_limit": "Changed order is source-assessed, not yet native executed. If a future run fails early at host, later storage/local/OS are unexecuted for that run; A25 receipts remain separately source-bound historical evidence, not a new pass.",
+      "same_required_scope": "8native readiness boots,42host actions/3boots,20storage actions/13boots, originalSettings/localWhodunit/localMafia/OS checks and4UIKit tests remain required; no host-only mode or skip branch is introduced."
+    }
+  },
+  "created_at": "2026-09-09T08:33:26.002432+00:00",
+  "delivery": {
+    "held_patch": {
+      "bytes": 29078,
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-a25-followup-01/revision-02/held-combined.patch",
+      "sha256": "91b0f9ebbfa576f2f9334426c1aa921e468d72433a3432cf3145d1cde78f6e73"
+    },
+    "historical_initial_diagnostic_files_preserved": [
+      {
+        "bytes": 23947,
+        "path": "remediation-runs/2026-09-08-continuation/reviews/native-a25-followup-01/L08HostProbe.kt.in",
+        "sha256": "a1ee0677b9e3f013a887a52e32f5bdf183a4c15ede6e497a9960d1306826014f"
+      },
+      {
+        "bytes": 34928,
+        "path": "remediation-runs/2026-09-08-continuation/reviews/native-a25-followup-01/l08_receipts.py",
+        "sha256": "b3f50e4e1359d9e1dfe424add35f0bd2d20ec3d3d6101d4aee6047349be98bed"
+      },
+      {
+        "bytes": 48795,
+        "path": "remediation-runs/2026-09-08-continuation/reviews/native-a25-followup-01/test_l08_functional_copy.py",
+        "sha256": "f7f6813c78f377b863170225b3ceaaca8ede48e78bd6f547b464199b6cb9e5ee"
+      },
+      {
+        "bytes": 25352,
+        "path": "remediation-runs/2026-09-08-continuation/reviews/native-a25-followup-01/held-diagnostic.patch",
+        "sha256": "5a0b2470f52ba8a7d355027e9319dca4fe6eba0face634d1f1f1b70d62334939"
+      },
+      {
+        "bytes": 1643,
+        "path": "remediation-runs/2026-09-08-continuation/reviews/native-a25-followup-01/author-input-identities.json",
+        "sha256": "eed1c22d66f5d0ff5e280194aecb5bb6e890d71937be7e4493c5573d7274b7a8"
+      }
+    ],
+    "initial_authoring_note": "An initial in-memory drafting pass refused a non-line-anchored source substring before writing any outputs. The retained author generator uses exact newline-bound anchors. This was a drafting refusal, not an executed control/test result.",
+    "next_steps": "Different-agent source review of revision02; root adoption and one focused Linux control cycle with cleanup; review actual receipt; commit reviewed controls/regenerate inventory/freeze; one selectively justified native run with new bindings; read actual stage before any further repair.",
+    "revision02_identity_manifest": {
+      "bytes": 2398,
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-a25-followup-01/revision-02/author-input-identities.json",
+      "sha256": "1ae6930529d3645fccbb8d00946c13a2bd26115598a5ff0854802e24f650b5f5"
+    }
+  },
+  "diagnosis": {
+    "async_hypothesis": "Real WhodunitHostRuntime initializes its start gate as Starting. The witness checks are strict barrier assertions. No evidence establishes an early-readiness predicate bug warranting softened predicates or retry.",
+    "exact_application_or_fixture_cause": "NOT_ESTABLISHED",
+    "reason": "A25 catches a general Exception in prepare and emits only stage=prepare/reason=fixture_or_boundary_failure. This merges owner/DI/content/frozen-roster/host-flow/barrier checks. No raw exception or private state is retained; no specific failing guard can honestly be inferred.",
+    "reopened_a25_bound_sources": [
+      {
+        "bytes": 2632,
+        "matches_a25_source_manifest": true,
+        "path": "composeApp/src/commonMain/kotlin/com/parlor/app/di/AppModule.kt",
+        "sha256": "b449781eb52418300504344c1af978ef7cb41e4e1f35f8d50faa4b8662bbdb76"
+      },
+      {
+        "bytes": 3119,
+        "matches_a25_source_manifest": true,
+        "path": "composeApp/src/commonMain/kotlin/com/parlor/app/di/ContentModule.kt",
+        "sha256": "86321739a143ff494b8ff42c19d728119b81163eb572afaeed6a89da52a62635"
+      },
+      {
+        "bytes": 17384,
+        "matches_a25_source_manifest": true,
+        "path": "composeApp/src/commonMain/kotlin/com/parlor/app/App.kt",
+        "sha256": "622b679a2ef023fab17bf6c8ed8eb38c1fbc2b76a391f5f9a8298d59da9dda59"
+      },
+      {
+        "bytes": 3898,
+        "matches_a25_source_manifest": true,
+        "path": "shared/storage/src/commonMain/kotlin/com/parlor/storage/settings/PersistentSettingsStore.kt",
+        "sha256": "179e00506a2f3c7083d9f9231aa683e8bb73220a807ef6f1f5b04bb5496dac10"
+      },
+      {
+        "bytes": 43545,
+        "matches_a25_source_manifest": true,
+        "path": "shared/session/src/commonMain/kotlin/com/parlor/session/multidevice/ProcessMultiplayerSessionOwner.kt",
+        "sha256": "daba67ff9106b54f73eff57635bd36547674df5f5b861177932687498296320c"
+      },
+      {
+        "bytes": 9003,
+        "matches_a25_source_manifest": true,
+        "path": "shared/networking-testing/src/commonMain/kotlin/com/parlor/networking/testing/ControlledStartRoom.kt",
+        "sha256": "147692e570bcc0e8c191a6373c61fd4f636c62891b604fdc1c5fee52990861f0"
+      },
+      {
+        "bytes": 7848,
+        "matches_a25_source_manifest": true,
+        "path": "shared/networking-testing/src/commonMain/kotlin/com/parlor/networking/testing/InMemoryRoomBus.kt",
+        "sha256": "695af1d049de439eeb081edf1d2698af677343d18097215db366023f8bc1c275"
+      },
+      {
+        "bytes": 62490,
+        "matches_a25_source_manifest": true,
+        "path": "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitGameFlow.kt",
+        "sha256": "73f75eb87e2636e5e616c9bbade054fd0f44ed8bcd9ad158b930eba99fd8aa14"
+      },
+      {
+        "bytes": 7537,
+        "matches_a25_source_manifest": true,
+        "path": "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/multiplayer/WhodunitRetainedMultiplayerRuntime.kt",
+        "sha256": "4cca409cc9f8703295b0e75259f3e0dec382a012271dcd86696cfef480797148"
+      }
+    ],
+    "settings_hypothesis": "All4 host probe observations show System/no override owner; XCTest initial System/no-owner assertions did not fail. PersistentSettingsStore initializes its language flow from the same backing language_override key. No source/evidence support exists for silently resetting Settings.",
+    "timing_limit": "The broad failure reason is not the cancelled path, but elapsed time alone does not identify the throwing predicate. No time-based causal correction is made.",
+    "verbatim_controlled_room": "ControlledStartRoom.kt.in and InMemoryRoomBus.kt.in exactly match their shared/networking-testing source bytes. They remain explicitly synthetic pre-admitted transport, not P2pKit LAN."
+  },
+  "readiness_verdict": "NOT_READY: A25strict protection26FAIL and retained-hostprepareFAIL remain actual failures; new diagnostic/order controls are unexecuted and cannot satisfy them. Physical-device, Store operations and owner/legal requirements remain external and unchanged.",
+  "regression_controls": {
+    "author_checks_actually_performed": [
+      "stdlibAST parsing of held Python sources",
+      "exact source text reversal and original-byte SHA comparison",
+      "literal mutation-anchor occurrence census",
+      "source-manifest equality for9reopened production/test-fixture paths",
+      "rawJSON/hash/Xcode failure mapping"
+    ],
+    "execution_status": "NOT_EXECUTED_BY_AUTHOR",
+    "existing_methods": 12,
+    "existing_order_guard_extended": "Count1for each reordered call; exact reversal to complete original namespaced UIKit source plus exact unchanged local/OS suffix. Existing missing/duplicate/already-transformed input refusal checks remain.",
+    "method_count_from_ast": 21,
+    "negative_mutation_counts": {
+      "original_execution_privacy_mutations": 18,
+      "parser_mutations": 4,
+      "stage_delete_duplicate_dynamic_move": 112
+    },
+    "new_methods": [
+      "test_exact_closed_stages_preserve_complete_original_host_source",
+      "test_parser_extension_does_not_touch_storage_or_strict_host_verification",
+      "test_every_stage_is_failure_only_preservable_without_record_mutation",
+      "test_prepare_diagnostics_cannot_appear_on_another_action_or_storage",
+      "test_no_preservable_diagnostic_failure_can_satisfy_the_complete_host_matrix",
+      "test_failure_payload_rejects_dynamic_unknown_or_sensitive_metadata",
+      "test_every_stage_must_remain_unique_literal_and_at_the_exact_original_boundary",
+      "test_diagnostics_cannot_hide_execution_guard_reset_timeout_cleanup_or_privacy_changes",
+      "test_parser_contract_rejects_relaxed_failure_scope_unknown_stage_and_success_laundering"
+    ],
+    "not_performed": [
+      "unittest or project helper import",
+      "Gradle or Swift/Kotlin compilation",
+      "XCTest/Simulator execution",
+      "network or workflow dispatch",
+      "Git writes"
+    ],
+    "oracle_controls": "Validate positive synthetic source and matrix baselines before negative mutations; original strict verifiers are unmodified. Imported synthetic host_matrix is test-only and not claimed as native execution.",
+    "sanitizer_scope_cases": "All28stages \u00d7 both2closed reasons preserve failures without mutation; all28\u00d713otherhostactions reject; all28reject onstorage; failed/synthetically relabeledPASS cannot satisfy complete42operation host matrix; addedstage cannot enterPASS schema."
+  },
+  "schema_version": 1,
+  "scope": {
+    "allowed_writes": "remediation-runs/2026-09-08-continuation/reviews/native-a25-followup-01",
+    "builds_executed": false,
+    "canonical_paths_written": [],
+    "coordinator_owns": "adoption, tests, cleanup, fresh source/control binding, CI dispatch and commits",
+    "git_writes": false,
+    "network_used": false,
+    "project_module_imports": false,
+    "reviewer_requested": "/root/fixture_review",
+    "tests_executed": false
+  },
+  "status": "HELD_SOURCE_DIAGNOSTIC_AND_FAILFAST_ORDER_REQUIRES_INDEPENDENT_REVIEW_AND_ROOT_EXECUTION"
+}

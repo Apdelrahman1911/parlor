@@ -1,0 +1,136 @@
+{
+  "schema_version": 1,
+  "status": "HELD_SOURCE_ONLY_REVIEW_REQUIRED_NOT_ADOPTED_NOT_TESTED",
+  "author": "/root/l08_fixture",
+  "reviewer": "/root/portability_review",
+  "coordinator": "/root",
+  "created_at": "2026-09-10T03:51:02.163121+00:00",
+  "base": {
+    "branch": "fix/local-readiness-2026-09-07",
+    "head": "730a91e4dade4dbc2168b5367e20c3d0f42237e1",
+    "tree": "1f71dc64bc7680f461efc3e841dc051579a0d993"
+  },
+  "failure": {
+    "run_id": 34433711685,
+    "run_attempt": 1,
+    "cycle": "ios-readiness-35",
+    "log": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34433711685/native-evidence/ios-readiness-35/xcodebuild.log.gz",
+      "sha256": "740554450e2271a96cc0213d5a10cc8da724fb0644132567332abb00195c64cc",
+      "bytes": 104
+    },
+    "decompressed_sha256": "ce4e83dd5528a01a356303dff0386e1c1e54ed87cc496e24041a5a6cd6c3444f",
+    "decompressed_bytes": 77,
+    "decompressed_text": "xcodebuild: error: Must specify -test-iterations with more than 1 iteration.\n",
+    "receipt": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34433711685/native-evidence/ios-readiness-35/receipt.json",
+      "sha256": "286a54f1df14cf430ce0008c9aa03f3de502ea882c6a24c966c6e0e506c45d7d",
+      "bytes": 349508
+    },
+    "retention": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34433711685/native-evidence/ios-readiness-35/diagnostic-retention.json",
+      "sha256": "0b8898790f301fce17cf71993e787642f90fca909a5f53fb90a642d97f8e3f35",
+      "bytes": 177
+    },
+    "summary": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34433711685/native-evidence/ios-readiness-35/xcresult-summary.json",
+      "sha256": "74866e06fb01f18d78d287c20511e793e843783f9b73cf34f49581b43de2843e",
+      "bytes": 381
+    },
+    "tests": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34433711685/native-evidence/ios-readiness-35/xcresult-tests.json",
+      "sha256": "410ad17f24efc5095ca1ba1e1e472290bb12eaf0c1a4cc5f471c7139ed525ce0",
+      "bytes": 242
+    },
+    "result": "Xcode CLI exit64, structured0tests, no Swift/Settings capture. Targetless feasibility unproved. Receipt cleanupPASS, source/control unchanged, no Parlor outputs, exact temporary removed; no A/B proof."
+  },
+  "files": [
+    {
+      "path": "scripts/verification/ios-settings-sheet/settings_sheet_probe.py",
+      "base_sha256": "626a5096b4aab37ee449abe45ec8f6d4d8c0d4801fb2acb8c83b1e17e8a3f3ed",
+      "proposed": {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/settings-single-execution-cli-fix-01/proposed/scripts/verification/ios-settings-sheet/settings_sheet_probe.py",
+        "sha256": "5271e261ad4359140ee6218ca2c493a404e40b646d8e508a3aa16f5b79efa391",
+        "bytes": 12972
+      },
+      "added_lines": 4,
+      "removed_lines": 2
+    },
+    {
+      "path": "scripts/verification/ios-settings-sheet/test_settings_sheet_probe.py",
+      "base_sha256": "1f3716f315f990a02b9e21e7b71f7db91833de852f4cd3f97530d6c1d4db9292",
+      "proposed": {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/settings-single-execution-cli-fix-01/proposed/scripts/verification/ios-settings-sheet/test_settings_sheet_probe.py",
+        "sha256": "23ae50a1d5bc36eebe677022c9332cf6c4669d6fcaf579498612dd9a7367bc98",
+        "bytes": 9446
+      },
+      "added_lines": 8,
+      "removed_lines": 0
+    },
+    {
+      "path": "scripts/ci/native_continuation.py",
+      "base_sha256": "971fdeca3fa27d6b8fb356bae50f11909365af30d7a6af8cd058a3487684f4d2",
+      "proposed": {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/settings-single-execution-cli-fix-01/proposed/scripts/ci/native_continuation.py",
+        "sha256": "d1246105417eed3b6fee30cf9333ae307a88e8025c9d83df26e6a9c329d426df",
+        "bytes": 68409
+      },
+      "added_lines": 1,
+      "removed_lines": 1
+    },
+    {
+      "path": "scripts/release/tests/test_native_process_probe.py",
+      "base_sha256": "8ccd48b4f8fd2bca04f9b81fd8ed93cdf5b92c240ac9e84571792103bab2a118",
+      "proposed": {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/settings-single-execution-cli-fix-01/proposed/scripts/release/tests/test_native_process_probe.py",
+        "sha256": "33707329a8606c2d41427552602a2ffaad59c701cd22f26db9142abb0ce41db2",
+        "bytes": 43409
+      },
+      "added_lines": 1,
+      "removed_lines": 1
+    },
+    {
+      "path": "scripts/ci/NATIVE_CONTINUATION.md",
+      "base_sha256": "d350ee860a7b6d4d67fa6fc73ab139153c8fd4f9cd78a45c75175ed5c51bf169",
+      "proposed": {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/settings-single-execution-cli-fix-01/proposed/scripts/ci/NATIVE_CONTINUATION.md",
+        "sha256": "e86be1e4487fd81d71fac9cd9e8c11f4c2d22e61c57efe4ceeaa9c992cdbf7e0",
+        "bytes": 23094
+      },
+      "added_lines": 1,
+      "removed_lines": 1
+    }
+  ],
+  "patch": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/settings-single-execution-cli-fix-01/proposed.patch",
+    "sha256": "15af3f60f7e31fec362d1af9d18cd8b3baf1318abc01b964359ae1f40603bb52",
+    "bytes": 5241
+  },
+  "changes": [
+    "Remove BOTH inherited repetition option/value pairs; XCTest defaults to one execution. Exact1 successful/unskipped method/device/capture acceptance and180/240/600/900/600/600-second bounds unchanged. No retry/fallback option.",
+    "Extend existing failed-build/cleanup-barrier test with absent repetition flags, exact one selector and unchanged test/Xcode bounds. Five existing Settings test methods remain; no new suite/test method.",
+    "Mechanical Settings cycle35→36 only in adapter, existing process-probe expectation and guide. A33/B34 unchanged; laterA37 is separate. No workflow/Swift/modal-selector/app/normal control edit."
+  ],
+  "preserved": {
+    "original_normal_control_count": 98,
+    "original_normal_unbound_control_sha256": "7d598e39bd718e0f8347d0eee839b5aad2bece2bddb82e08ce7f6c1ea592c413",
+    "normal_runner": {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
+      "sha256": "766087ddf72b50f51b1c4072c64afb1a7dd231f047d26e534817cddf9be295bf",
+      "bytes": 67784
+    },
+    "swift": {
+      "path": "scripts/verification/ios-settings-sheet/SettingsSheetUITest.swift.in",
+      "sha256": "547155ee3cbcf1259ef02a803b9e442b90bb390c0c3ab16dca61c53ede67b8e7",
+      "bytes": 27559
+    },
+    "scheme": {
+      "path": "scripts/verification/ios-settings-sheet/SettingsSheet.xcscheme.in",
+      "sha256": "d8688e9e4e00757c9f348b52c44d14875bc3328dc99cb754dff31edae837bab3",
+      "bytes": 1295
+    }
+  },
+  "execution": "Source reads, bounded gzip/JSON evidence inspection, stdlib hashing/diff and fourPython AST parses only. No project imports/tests/build/CI; no native resources allocated. Canonical source and all failed evidence untouched.",
+  "next": "Root adopts only after different-agent source review; focused existing5 Settings controls plus affected cycle consumer, preserve/stop/ownedcleanup under root lane. Commit reviewed controls+mechanical inventory, fresh source/control bindings and independently reviewed preflight before one Settings36 dispatch. Do not reuse prior control approval or label diagnostic success A/B/D.",
+  "readiness": "NOT_READY; zero actual XCTest executions and no captured label. Strict A/current language flow, physical-device, Store/owner/legal requirements not discharged."
+}

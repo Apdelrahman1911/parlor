@@ -1,0 +1,101 @@
+--- native09_secondary_fifo_recovery_02.py
++++ native09_secondary_fifo_recovery_03.py
+@@ -68,8 +68,9 @@
+     require(all(line.strip().isdigit() for line in text.splitlines()), 'Malformed PID query')
+     values = {int(line) for line in text.splitlines()}
+     # Apple lsof sets1 if ANY +D file selection was unused, even with other holders.
++    # Re-enable warnings AFTER -t (which suppresses them); any stderr fails above.
+     # Only this exact reviewed query gets that contract; retain every reported PID.
+-    partial_lsof_selection = (arguments == ['/usr/sbin/lsof', '-nP', '-w', '-t', '+D', str(ROOT)]
++    partial_lsof_selection = (arguments == ['/usr/sbin/lsof', '-nP', '-t', '+w', '+D', str(ROOT)]
+                               and result.returncode == 1 and bool(values))
+     require((result.returncode == 0 and bool(values)) or (result.returncode == 1 and not values)
+             or partial_lsof_selection, 'Ambiguous ownership query')
+@@ -82,7 +83,7 @@
+ 
+ def check_holders(root):
+     # Our own directory descriptors are deliberate; no FIFO is ever opened/read.
+-    require(not (query(['/usr/sbin/lsof', '-nP', '-w', '-t', '+D', str(root)]) - {os.getpid()}), 'Secondary files have other holders')
++    require(not (query(['/usr/sbin/lsof', '-nP', '-t', '+w', '+D', str(root)]) - {os.getpid()}), 'Secondary files have other holders')
+ 
+ 
+ class ExactRecovery:
+@@ -168,7 +169,7 @@
+     actual_sha = hashlib.sha256(checked_bytes(self_path, 32768)).hexdigest()
+     require(actual_sha == args.approved_script_sha256, 'Script differs from reviewed approved bytes')
+     expected = bound_plan()
+-    destination = CAMPAIGN / ('evidence/native09-secondary-fifo-recovery-' + ('execute-02' if args.execute else 'verify-02'))
++    destination = CAMPAIGN / ('evidence/native09-secondary-fifo-recovery-' + ('execute-03' if args.execute else 'verify-03'))
+     require(destination.parent.resolve(strict=True) == destination.parent, 'Redirected evidence destination')
+     destination.mkdir(mode=0o700)  # Deliberately fail if old evidence already exists.
+     receipt = dict(status='RUNNING', started_at=time.time(), script_sha256=actual_sha, plan_sha256=PLAN_SHA,
+
+--- test_native09_secondary_fifo_recovery_02.py
++++ test_native09_secondary_fifo_recovery_03.py
+@@ -7,7 +7,7 @@
+ import unittest
+ from unittest.mock import patch
+ 
+-PATH = Path(__file__).with_name('native09_secondary_fifo_recovery_02.py')
++PATH = Path(__file__).with_name('native09_secondary_fifo_recovery_03.py')
+ SPEC = importlib.util.spec_from_file_location('native09_recovery', PATH)
+ recovery = importlib.util.module_from_spec(SPEC)
+ SPEC.loader.exec_module(recovery)
+@@ -166,7 +166,7 @@
+             with self.assertRaises(RuntimeError): recovery.check_holders(recovery.ROOT)
+ 
+     def test_exact_lsof_partial_selection_keeps_all_reported_pids(self):
+-        arguments = ['/usr/sbin/lsof', '-nP', '-w', '-t', '+D', str(recovery.ROOT)]
++        arguments = ['/usr/sbin/lsof', '-nP', '-t', '+w', '+D', str(recovery.ROOT)]
+         result = subprocess.CompletedProcess(arguments, 1, b'123\n456\n', b'')
+         with patch.object(recovery.subprocess, 'run', return_value=result):
+             self.assertEqual({123, 456}, recovery.query(arguments))
+@@ -184,18 +184,46 @@
+ 
+     def test_ps_and_other_lsof_targets_keep_strict_exit_output_contract(self):
+         commands = [['/bin/ps', '-p', '41785,41768', '-o', 'pid='],
+-            ['/usr/sbin/lsof', '-nP', '-w', '-t', '+D', '/unrelated-task'], ['synthetic']]
++            ['/usr/sbin/lsof', '-nP', '-t', '+w', '+D', '/unrelated-task'], ['synthetic']]
+         for command in commands:
+             with patch.object(recovery.subprocess, 'run', return_value=subprocess.CompletedProcess(command, 1, b'123\n', b'')):
+                 with self.assertRaisesRegex(RuntimeError, 'Ambiguous ownership query'): recovery.query(command)
+ 
+     def test_exact_lsof_still_rejects_errors_stderr_malformed_or_oversized_output(self):
+-        arguments = ['/usr/sbin/lsof', '-nP', '-w', '-t', '+D', str(recovery.ROOT)]
++        arguments = ['/usr/sbin/lsof', '-nP', '-t', '+w', '+D', str(recovery.ROOT)]
+         for code, out, err in ((2,b'123\n',b''),(-1,b'',b''),(1,b'123\n',b'error'),
+                               (1,b'not-a-pid',b''),(1,b'1\n'*20000,b''),(0,b'',b'')):
+             with patch.object(recovery.subprocess, 'run', return_value=subprocess.CompletedProcess(arguments, code, out, err)):
+                 with self.assertRaises(RuntimeError): recovery.query(arguments)
+ 
++    def test_holder_query_constructs_exact_warning_enabled_command(self):
++        arguments = ['/usr/sbin/lsof', '-nP', '-t', '+w', '+D', str(recovery.ROOT)]
++        result = subprocess.CompletedProcess(arguments, 1, (str(os.getpid()) + '\n').encode(), b'')
++        with patch.object(recovery.subprocess, 'run', return_value=result) as run:
++            recovery.check_holders(recovery.ROOT)
++        run.assert_called_once_with(arguments, capture_output=True, timeout=15, check=False)
++
++    def test_relaxed_lsof_contract_rejects_suppressed_missing_or_misordered_warning_flags(self):
++        # -t itself enables warning suppression. Only later +w reverses it.
++        prefix = ['/usr/sbin/lsof', '-nP']
++        suffix = ['+D', str(recovery.ROOT)]
++        for flags in (['-w', '-t'], ['-t'], ['+w', '-t'], ['-t', '+w', '-w'], ['-w', '-t', '+w']):
++            arguments = prefix + flags + suffix
++            result = subprocess.CompletedProcess(arguments, 1, (str(os.getpid()) + '\n').encode(), b'')
++            with patch.object(recovery.subprocess, 'run', return_value=result):
++                with self.assertRaisesRegex(RuntimeError, 'Ambiguous ownership query'):
++                    recovery.query(arguments)
++
++    def test_warning_stderr_is_fatal_regardless_of_exit_or_reported_pids(self):
++        arguments = ['/usr/sbin/lsof', '-nP', '-t', '+w', '+D', str(recovery.ROOT)]
++        for code in (0, 1):
++            for output in (b'', (str(os.getpid()) + '\n').encode(), b'123\n456\n'):
++                result = subprocess.CompletedProcess(arguments, code, output,
++                    b'lsof: WARNING: cannot inspect a synthetic selected object\n')
++                with patch.object(recovery.subprocess, 'run', return_value=result):
++                    with self.assertRaisesRegex(RuntimeError, 'Ownership query failed'):
++                        recovery.query(arguments)
++
+     def test_plan_hash_failure_never_reads_or_mutates_recovery_paths(self):
+         with patch.object(recovery, 'checked_bytes', return_value=b'{}'):
+             with self.assertRaisesRegex(RuntimeError, 'Independent plan changed'): recovery.bound_plan()

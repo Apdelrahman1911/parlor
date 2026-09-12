@@ -1,0 +1,191 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/release_fix_review",
+  "reviewed_at": "2026-09-08T01:51:41.841269+00:00",
+  "classification": "CONDITIONALLY APPROVED DESIGN FOR A MINIMAL EXPLICIT USER-ONLY PRESENTATION POLICY — NOT IMPLEMENTATION OR NATIVE EXECUTION APPROVAL",
+  "author": "/root",
+  "proposal": {
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/normal-user-only-alias-policy-01.json",
+    "sha256": "2e01cf76a2b2f26b3fbb0a6c937628d510590f8da59e9a1e3635b75cb9b05335"
+  },
+  "actual_observation_review": {
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/normal-ios10-independent-runtime-diagnostic-cleanup-01.json",
+    "sha256": "549dfe3f071f830bb5b8cc367b66f39888cad48d74ad275a250d7f3af26bc258"
+  },
+  "current_source": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/external_image_provenance.py",
+      "sha256": "ec19eb8c910f42c180ea17bae1af2fed259cb989174c61cf306a0324800200ef"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
+      "sha256": "36276fb27423ca04c9fe41d033042c3ae25d5a512183b96b80230b4f58ad2e8d"
+    }
+  ],
+  "reopened_source_ranges": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/external_image_provenance.py",
+      "lines": [
+        [
+          1,
+          192
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
+      "lines": [
+        [
+          432,
+          536
+        ]
+      ]
+    }
+  ],
+  "finding": {
+    "kind": "Bounded validation-tool format incompatibility; no application-defect claim",
+    "actual": "Native10 has exactly one correct PID and one15-component executable path; component2 is USER, all other components preserve the exact attested device/app suffix. Header validation fails before Binary Images, and vmmap never executes.",
+    "basis": "Direct closed failure metadata plus exact source and artifact bindings; not speculation from crash-report documentation or prior failed native08.",
+    "unresolved": "Actual Binary Images and vmmap path-row formats/aliases remain unverified. The header observation cannot be generalized to those tables as accomplished runtime evidence."
+  },
+  "required_policy": [
+    {
+      "id": "P01",
+      "rule": "Opt-in only. With no explicitly supplied trusted alias policy, verify_header, parse_sample and bind_vmmap retain exact raw-path behavior. A diagnostic receipt can never synthesize or enable acceptance."
+    },
+    {
+      "id": "P02",
+      "rule": "Obtain current UID/home independently in the root-owned preflight from the OS account database, not USER/LOGNAME, unverified HOME, parsed tool output or a generic expected path. Validate the actual process UID and trusted home agree; fail rather than guess on unsupported/noncanonical home layouts. An example suitable source is pwd.getpwuid(os.getuid()).pw_dir, with real/effective UID consistency checked by the owner. This reviewer performed no account query."
+    },
+    {
+      "id": "P03",
+      "rule": "Require the trusted home to be exactly canonical /Users/<one account component> and the device root to be its exact Library/Developer/CoreSimulator/Devices/<this owned UUID>. The owned device identity and installed app container must already be independently established. Keep all separators, UUID spelling/case and suffix bytes unchanged."
+    },
+    {
+      "id": "P04",
+      "rule": "Construct a bounded one-to-one presentation-to-canonical allowlist only from complete already-verified current-cycle artifacts. Grant USER aliases only within this exact owned installed-app subtree; paths outside the exact owned device subtree receive raw-only matching. DerivedData and copied-build frameworks stay raw-only in this policy. The transformation changes account component2 only, never every occurrence of an account token."
+    },
+    {
+      "id": "P05",
+      "rule": "Exact raw path remains accepted. The sole additional spelling is /Users/USER plus the unchanged allowlisted suffix. Do not resolve/canonicalize strings from tools, collapse dot/dotdot or separators, case-fold, Unicode-normalize, URL-decode, expand tilde or glob, accept wildcard/truncation/ellipsis/extra redaction, or infer from basename/UUID alone."
+    },
+    {
+      "id": "P06",
+      "rule": "Reject ambiguous maps and raw-versus-alias collisions between different canonical artifacts before consuming text. Resolve the accepted spelling to its canonical key before duplicate detection, so raw+USER duplicate rows cannot count as two distinct images. If the real home account is literally USER, do not manufacture a second spelling or mislabel exact equality as independently recovered redaction."
+    },
+    {
+      "id": "P07",
+      "rule": "Use the same closed policy only on the parsed Path header and parsed complete sample/vmmap path field. No global raw-text replacement. Require one selected launcher, one debug dylib and one Compose image with unchanged origin, file size/hash, UUID and executable mapping/address checks. Unknown/unbound app images, missing maps, duplicate aliases, wrong UUIDs and changed lifetimes still fail."
+    },
+    {
+      "id": "P08",
+      "rule": "Malformed-owned-row detection must recognize approved alias spellings too. A malformed USER row must not be silently skipped merely because another valid raw row supplies the required image. No newly unsupported or lossy Binary Images/vmmap shape should be accepted by generic normalization."
+    },
+    {
+      "id": "P09",
+      "rule": "Preserve exact independent kernel executable/UID/audit-token/start-time preconditions and surrounding lifetime checks. The full attested executable cannot be replaced by a redacted string. Keep raw-path artifacts and their independently captured SHA/size/UUID inventories unchanged."
+    },
+    {
+      "id": "P10",
+      "rule": "Record an explicit policy name, trusted-input basis and which fields used exact or USER presentation. A non-launcher alias is a lossy interpretation in an owned trusted-host context, not an independently kernel-attested per-image path, unredacted-path recovery, atomic PID reservation or mapped-page digest."
+    },
+    {
+      "id": "P11",
+      "rule": "Keep original failed native08/native10 receipts immutable. A deterministic fixture accepting this header would prove parser behavior only. New source/control review, actual unique execution IDs, fresh source binding, root-coordinated execution and normal cleanup remain required before any native gate can change."
+    }
+  ],
+  "trust_boundary_and_counterevidence": [
+    "The launcher has an independently attested full kernel executable path, giving a stronger cross-binding than a redacted image row. Same UID by itself does not prove every loaded image came from that user home.",
+    "A lossy image path could theoretically also represent another user home with the same suffix. Matching allowed suffix, UUID and vmmap address constrains the interpretation but does not reconstruct the undisclosed component or hash mapped memory. Approval is only for the explicit trusted-current-user/fresh-owned-simulator local evidence scope, not hostile multi-user provenance.",
+    "If the intended claim requires independently unredacted kernel paths for each image, this policy is insufficient; that stronger evidence gate must remain unverified.",
+    "Apple crash-report examples include /Users/USER/*/... . They do not authorize wildcard or additional redaction here and do not establish sample/vmmap implementation semantics.",
+    "The exact /bin/sleep host header success and copied-user-path sleep exit255 are different observations. They do not invalidate native10 direct metadata or explain native08.",
+    "No path/UUID/signature/string observation becomes proof of correct game, storage, locale or physical-device behavior."
+  ],
+  "required_preimplementation_and_regression_evidence": [
+    {
+      "case": "Actual observed header shape",
+      "expectation": "Fail against current strict parser under the desired opt-in context; preserve a failing-reproducer receipt. Both raw exact and the sole USER spelling pass only after independently reviewed implementation. The no-policy case remains strict."
+    },
+    {
+      "case": "Trusted-input provenance",
+      "expectation": "Wrong UID/home, environment-spoofed user/home, unsupported home layout, wrong owned device or container root, outside-scope artifact and traversal inputs fail or remain raw-only as specified. Tests must show the runner derives context independently, not solely call a pure parser with assumed values."
+    },
+    {
+      "case": "Exact spelling",
+      "expectation": "Wrong numeric PID, duplicate/missing header, changed UUID/suffix/case/separators, alternative account, wildcard, extra USER substitution, ellipsis, tilde, encoded/control characters and normalization tricks remain rejected."
+    },
+    {
+      "case": "Alias inventory and duplicate isolation",
+      "expectation": "Map budget/collision/ambiguous alias reject; raw+USER aliases of one image reject as duplicates in both sample and vmmap. Unknown and malformed owned alias rows cannot be skipped into PASS."
+    },
+    {
+      "case": "Unchanged image and lifetime guards",
+      "expectation": "Missing launcher/debug/framework, extra Compose mapping, wrong image UUID, file-size/hash drift, wrong address/range, duplicate __TEXT, process disappearance/exec/token change and foreign launcher origin remain failures."
+    },
+    {
+      "case": "Execution hygiene and evidence semantics",
+      "expectation": "All declared/discovered control IDs actually execute with no skips and imported control hashes stable. Failure diagnostics remain bounded and failure-only. No synthetic table is labelled an actual native Binary Images/vmmap observation. Every root cycle stops workers and removes only its owned outputs."
+    }
+  ],
+  "research": {
+    "inspection_date": "2026-09-08",
+    "network_retrieval_date": "2026-09-07; archived root-team evidence reopened, no new external request by this reviewer",
+    "authoritative_crash_document": {
+      "url": "https://developer.apple.com/documentation/xcode/examining-the-fields-in-a-crash-report",
+      "data_url": "https://developer.apple.com/tutorials/data/documentation/xcode/examining-the-fields-in-a-crash-report.json",
+      "archive": {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/sample-path-format-research-01/apple-crash-fields.json",
+        "sha256": "f6afc0c61e56a8f1420ea961da52341caccb1d55d4a94b3e3075b50e79a365af"
+      },
+      "reread_sections": [
+        "primaryContentSections[0].content[7].items[5]",
+        "primaryContentSections[0].content[41:50]"
+      ],
+      "archive_matches_preserved_excerpt": true,
+      "applicability": "Explicit macOS crash-report privacy placeholders; not the exact sample/vmmap contract."
+    },
+    "installed_manuals": [
+      {
+        "source": {
+          "path": "/usr/share/man/man1/sample.1",
+          "sha256": "fdd0929543a726027215630b471e1fe4d551e7c8cdd8d3cbba4e0c6ea8195853"
+        },
+        "reread_lines": [
+          [
+            39,
+            81
+          ]
+        ],
+        "claim": "-fullPaths expands symbol source-code paths for available debug info, not a documented executable/Binary Images unredaction switch."
+      },
+      {
+        "source": {
+          "path": "/usr/share/man/man1/vmmap.1",
+          "sha256": "cdd8195c81895d2dd261717aa73056e94546969ee4f887aed37888be3baaa18a"
+        },
+        "reread_lines": [
+          [
+            21,
+            61
+          ]
+        ],
+        "claim": "-w prints wide/full mapped-file paths; no explicit privacy-unredaction guarantee."
+      }
+    ],
+    "broader_research_reference": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/sample-path-format-authoritative-research-01.json",
+      "sha256": "df1e961f98d31b18edccd1196f93f34f7bb2c1239917ab84118291c468b8baf7"
+    },
+    "uncertainty": "Exact private formatter implementation was not located; do not invent API guarantees or use unreviewed flags/entitlements to force unredaction."
+  },
+  "next_gate": "Root authors the minimal policy implementation and isolated tests; a separate nonauthor reopens its full diff/callers/tests and actual pure-control receipts before any new native run is approved. This report does not approve unobserved table parsing, Git actions, signing/publication or native execution.",
+  "hygiene": {
+    "application_or_control_source_changes": false,
+    "only_write": "This new additive JSON report",
+    "repository_imports_tests_builds": false,
+    "process_or_simulator_queries_signals_cleanup": false,
+    "workers_outputs_started": 0,
+    "private_data_read": false
+  }
+}

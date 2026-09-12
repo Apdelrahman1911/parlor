@@ -1,0 +1,276 @@
+// Copied XCTest only. Public Apple Support109358 flow on the exact NEW runner-
+// owned simulator: Settings > General > Language & Region > Add Language.
+// This is a bounded experiment, not a documented guarantee that any particular
+// iOS26.5 Settings selector/per-app language row must exist after two languages.
+private enum DSC01OSPrerequisiteStage: String {
+    case ownership, settingsRoot, general, languageRegion, initialEnglishPrimary
+    case addLanguage, searchArabic, selectArabic, retainEnglishPrimary, finalPreferredLanguages
+}
+
+private enum DSC01OSPrerequisiteControl: String {
+    case general, languageRegion, addLanguage, arabic
+
+    var labels: [String] {
+        switch self {
+        case .general: return ["General"]
+        case .languageRegion: return ["Language & Region"]
+        case .addLanguage: return ["Add Language…", "Add Language...", "Add Language"]
+        case .arabic: return ["Arabic", "العربية", "Arabic, العربية", "العربية, Arabic"]
+        }
+    }
+}
+
+@MainActor private final class DSC01OSPrerequisiteDiagnostics {
+    private var ordinal = 0
+    private var bytes = 0
+
+    func append(stage: DSC01OSPrerequisiteStage, status: String, fields: [String: Any]) throws {
+        guard ["observe", "before-activation", "after-activation", "PASS", "BLOCKED"].contains(status),
+              ordinal < 96 else { throw NSError(domain: "DSC01OSPrerequisiteDiagnosticBudget", code: 1) }
+        ordinal += 1
+        let row: [String: Any] = ["schemaVersion": 1, "ordinal": ordinal, "stage": stage.rawValue,
+            "status": status, "fields": fields]
+        let encoded = try JSONSerialization.data(withJSONObject: row, options: [.sortedKeys])
+        bytes += encoded.count
+        guard encoded.count <= 8192, bytes <= 196608,
+              let text = String(data: encoded, encoding: .utf8) else {
+            throw NSError(domain: "DSC01OSPrerequisiteDiagnosticBudget", code: 2)
+        }
+        print("DSC01_OS_PREREQUISITE " + text)
+    }
+}
+
+extension IOSAppLaunchUITests {
+    @MainActor private func osPrerequisiteQueries(_ settings: XCUIApplication,
+        control: DSC01OSPrerequisiteControl) -> [(String, XCUIElementQuery)] {
+        let predicate = NSPredicate(format: "label IN %@", control.labels)
+        // Exact whitelisted semantic row only. UITableView and SwiftUI can
+        // expose the same PUBLIC row as a cell/button/text. A unique cell is
+        // preferred, then a unique button, then a unique exact visible text.
+        // An ambiguous nonempty class fails; it never falls through to another.
+        return [("cell-containing-known-text", settings.cells.containing(predicate)),
+                ("known-button", settings.buttons.matching(predicate)),
+                ("known-text", settings.staticTexts.matching(predicate))]
+    }
+
+    @MainActor private func osPrerequisiteMetadata(_ settings: XCUIApplication,
+        control: DSC01OSPrerequisiteControl? = nil) -> [String: Any] {
+        var value: [String: Any] = ["foreground": settings.state == .runningForeground,
+            "viewport": dsc01CatalogRectFields(settings.frame),
+            "alertCountCapped16": min(settings.alerts.count, 16),
+            "keyboardPresent": settings.keyboards.firstMatch.exists]
+        let titles = ["Settings", "General", "Language & Region", "Add Language", "iPhone Language"]
+        value["knownNavigationTitles"] = titles.map { title -> [String: Any] in
+            ["knownTitle": title, "countCapped16": min(settings.navigationBars.matching(identifier: title).count, 16)]
+        }
+        if let control {
+            value["knownControl"] = control.rawValue
+            value["selectorClasses"] = osPrerequisiteQueries(settings, control: control).map { kind, query in
+                let count = query.count
+                let samples = count < 16 ? Array(query.allElementsBoundByIndex.prefix(2)) : []
+                return ["kind": kind, "countCapped16": min(count, 16), "atMostTwo": samples.map { item in
+                    ["hittable": item.isHittable, "enabled": item.isEnabled, "frame": dsc01CatalogRectFields(item.frame)]
+                }] as [String: Any]
+            }
+        }
+        return value
+    }
+
+    @MainActor private func osPrerequisiteBlock(_ stage: DSC01OSPrerequisiteStage,
+        diagnostics: DSC01OSPrerequisiteDiagnostics, fields: [String: Any]) throws -> Never {
+        try diagnostics.append(stage: stage, status: "BLOCKED", fields: fields)
+        XCTFail("Actual OS multilingual prerequisite BLOCKED at public stage: " + stage.rawValue)
+        throw NSError(domain: "DSC01OSPrerequisiteBlocked." + stage.rawValue, code: 1)
+    }
+
+    @MainActor private func osPrerequisiteTitle(_ settings: XCUIApplication, title: String,
+        stage: DSC01OSPrerequisiteStage, diagnostics: DSC01OSPrerequisiteDiagnostics) throws {
+        try diagnostics.append(stage: stage, status: "observe", fields: osPrerequisiteMetadata(settings))
+        let query = settings.navigationBars.matching(identifier: title)
+        let appeared = query.firstMatch.waitForExistence(timeout: 15)
+        let fields = osPrerequisiteMetadata(settings)
+        guard appeared, query.count == 1, settings.state == .runningForeground, settings.alerts.count == 0 else {
+            try osPrerequisiteBlock(stage, diagnostics: diagnostics, fields: fields)
+        }
+        try diagnostics.append(stage: stage, status: "PASS", fields: fields)
+    }
+
+    @MainActor private func osPrerequisiteTapRow(_ settings: XCUIApplication,
+        control: DSC01OSPrerequisiteControl, stage: DSC01OSPrerequisiteStage,
+        diagnostics: DSC01OSPrerequisiteDiagnostics, allowScroll: Bool = true) throws {
+        var selected: XCUIElement?
+        for attempt in 1...6 {
+            var fields = osPrerequisiteMetadata(settings, control: control)
+            fields["attempt"] = attempt
+            try diagnostics.append(stage: stage, status: "observe", fields: fields)
+            guard settings.state == .runningForeground, settings.alerts.count == 0 else {
+                try osPrerequisiteBlock(stage, diagnostics: diagnostics, fields: fields)
+            }
+            for (_, query) in osPrerequisiteQueries(settings, control: control) {
+                let count = query.count
+                if count == 0 { continue }
+                guard count == 1 else { try osPrerequisiteBlock(stage, diagnostics: diagnostics, fields: fields) }
+                let target = query.firstMatch
+                if target.isHittable && target.isEnabled && dsc01CatalogFinite(target.frame) {
+                    selected = target
+                }
+                break
+            }
+            if selected != nil { break }
+            if attempt < 6 {
+                if allowScroll && !settings.keyboards.firstMatch.exists { settings.swipeUp(velocity: .slow) }
+                try catalogSamplingInterval()
+            }
+        }
+        guard let selected else {
+            try osPrerequisiteBlock(stage, diagnostics: diagnostics, fields: osPrerequisiteMetadata(settings, control: control))
+        }
+        // One activation of this semantic OS step, never retried on missing successor.
+        try diagnostics.append(stage: stage, status: "before-activation",
+            fields: osPrerequisiteMetadata(settings, control: control))
+        guard selected.isHittable, selected.isEnabled, settings.state == .runningForeground,
+              settings.alerts.count == 0 else {
+            try osPrerequisiteBlock(stage, diagnostics: diagnostics, fields: osPrerequisiteMetadata(settings, control: control))
+        }
+        selected.tap()
+        try diagnostics.append(stage: stage, status: "after-activation",
+            fields: osPrerequisiteMetadata(settings, control: control))
+    }
+
+    @MainActor private func osPreferredLanguagesMetadata(_ settings: XCUIApplication) -> [String: Any] {
+        let englishCells = settings.cells.containing(NSPredicate(format: "label == %@", "English"))
+            .containing(NSPredicate(format: "label == %@", "iPhone Language"))
+        let mergedEnglish = settings.descendants(matching: .any)
+            .matching(NSPredicate(format: "label == %@", "English, iPhone Language"))
+        let arabicCells = settings.cells.containing(NSPredicate(format: "label IN %@", ["Arabic", "العربية"]))
+        let arabicTexts = settings.staticTexts.matching(NSPredicate(format: "label IN %@", ["Arabic", "العربية"]))
+        let titles = settings.navigationBars.matching(identifier: "Language & Region")
+        let english = englishCells.count == 1 ? englishCells.firstMatch :
+            (mergedEnglish.count == 1 ? mergedEnglish.firstMatch : nil)
+        let arabic = arabicCells.count == 1 ? arabicCells.firstMatch : nil
+        var addLanguage: XCUIElement?
+        for (_, query) in osPrerequisiteQueries(settings, control: .addLanguage) {
+            let count = query.count
+            if count == 0 { continue }
+            if count == 1 { addLanguage = query.firstMatch }
+            break
+        }
+        let englishFrame = english?.frame
+        let arabicFrame = arabic?.frame
+        let addFrame = addLanguage?.frame
+        var orderedPreferredRows = false
+        if let englishFrame, let arabicFrame, let addFrame,
+           [englishFrame, arabicFrame, addFrame].allSatisfy(dsc01CatalogFinite) {
+            orderedPreferredRows = englishFrame.maxY <= arabicFrame.minY + 1 && arabicFrame.maxY <= addFrame.minY + 1
+        }
+        var fields = osPrerequisiteMetadata(settings, control: .addLanguage)
+        fields["englishPrimaryCellCountCapped16"] = min(englishCells.count, 16)
+        fields["mergedEnglishPrimaryCountCapped16"] = min(mergedEnglish.count, 16)
+        fields["arabicCellCountCapped16"] = min(arabicCells.count, 16)
+        fields["arabicTextCountCapped16"] = min(arabicTexts.count, 16)
+        fields["englishPrimaryObserved"] = englishCells.count == 1 || mergedEnglish.count == 1
+        fields["arabicObserved"] = arabicCells.count == 1 || (1...2).contains(arabicTexts.count)
+        fields["languageRegionTitleObserved"] = titles.count == 1
+        fields["languageRegionTitleHittable"] = titles.count == 1 && titles.firstMatch.isHittable
+        fields["searchFieldCountCapped16"] = min(settings.searchFields.count, 16)
+        fields["englishPrimaryHittable"] = english?.isHittable ?? false
+        fields["addLanguageSuccessorHittableEnabled"] = (addLanguage?.isHittable ?? false) && (addLanguage?.isEnabled ?? false)
+        fields["arabicPreferredRowObserved"] = arabic != nil && (arabic?.isHittable ?? false) && orderedPreferredRows
+        fields["englishPrimaryFrame"] = dsc01CatalogRectFields(englishFrame)
+        fields["arabicPreferredRowFrame"] = dsc01CatalogRectFields(arabicFrame)
+        fields["addLanguageSuccessorFrame"] = dsc01CatalogRectFields(addFrame)
+        return fields
+    }
+
+    private func osPreferredListIsUncovered(_ observed: [String: Any]) -> Bool {
+        // A presented picker can leave underlying labels in the AX tree. The
+        // actual preferred list must be exposed, ordered and interactable after
+        // English-primary selection; a global Arabic search result is not proof.
+        observed["foreground"] as? Bool == true && observed["alertCountCapped16"] as? Int == 0 &&
+            observed["keyboardPresent"] as? Bool == false && observed["searchFieldCountCapped16"] as? Int == 0 &&
+            ["languageRegionTitleObserved", "languageRegionTitleHittable", "englishPrimaryObserved",
+             "englishPrimaryHittable", "arabicObserved", "arabicPreferredRowObserved", "addLanguageSuccessorHittableEnabled"]
+            .allSatisfy { observed[$0] as? Bool == true }
+    }
+
+    @MainActor private func prepareActualOSMultilingualPrerequisite(_ app: XCUIApplication,
+        expectedSimulator: String) throws {
+        let diagnostics = DSC01OSPrerequisiteDiagnostics()
+        #if DEBUG && targetEnvironment(simulator)
+        let environment = ProcessInfo.processInfo.environment
+        let sameSimulator = environment["SIMULATOR_UDID"] == expectedSimulator && UUID(uuidString: expectedSimulator) != nil
+        let ownedName = environment["SIMULATOR_DEVICE_NAME"]?.hasPrefix("Parlor-Audit-parlor-audit-dsc01-apphost-") == true
+        let ownership: [String: Any] = ["sameExpectedSimulator": sameSimulator, "ownedSyntheticDeviceName": ownedName,
+            "debugSimulatorBuild": true]
+        guard sameSimulator, ownedName else { try osPrerequisiteBlock(.ownership, diagnostics: diagnostics, fields: ownership) }
+        try diagnostics.append(stage: .ownership, status: "PASS", fields: ownership)
+        #else
+        try osPrerequisiteBlock(.ownership, diagnostics: diagnostics, fields: ["debugSimulatorBuild": false])
+        #endif
+        // Both complete local-game receipts precede this. Do not mutate a user
+        // phone/profile, another task's simulator, or a retained active session.
+        app.terminate()
+        guard app.wait(for: .notRunning, timeout: 15) else {
+            try osPrerequisiteBlock(.ownership, diagnostics: diagnostics, fields: ["testAppTerminated": false])
+        }
+        let settings = XCUIApplication(bundleIdentifier: "com.apple.Preferences")
+        settings.launchArguments = [] // Never inject AppleLanguages/AppleLocale.
+        defer { settings.terminate() }
+        settings.launch()
+        try osPrerequisiteTitle(settings, title: "Settings", stage: .settingsRoot, diagnostics: diagnostics)
+        try osPrerequisiteTapRow(settings, control: .general, stage: .general, diagnostics: diagnostics)
+        try osPrerequisiteTitle(settings, title: "General", stage: .general, diagnostics: diagnostics)
+        try osPrerequisiteTapRow(settings, control: .languageRegion, stage: .languageRegion, diagnostics: diagnostics)
+        try osPrerequisiteTitle(settings, title: "Language & Region", stage: .languageRegion, diagnostics: diagnostics)
+        let initial = osPreferredLanguagesMetadata(settings)
+        try diagnostics.append(stage: .initialEnglishPrimary, status: "observe", fields: initial)
+        guard initial["englishPrimaryObserved"] as? Bool == true, initial["arabicObserved"] as? Bool == false else {
+            try osPrerequisiteBlock(.initialEnglishPrimary, diagnostics: diagnostics, fields: initial)
+        }
+        try diagnostics.append(stage: .initialEnglishPrimary, status: "PASS", fields: initial)
+        try osPrerequisiteTapRow(settings, control: .addLanguage, stage: .addLanguage, diagnostics: diagnostics)
+        try diagnostics.append(stage: .searchArabic, status: "observe", fields: osPrerequisiteMetadata(settings, control: .arabic))
+        let search = settings.searchFields
+        guard search.firstMatch.waitForExistence(timeout: 15), search.count == 1,
+              search.firstMatch.isHittable, search.firstMatch.isEnabled, settings.alerts.count == 0 else {
+            try osPrerequisiteBlock(.searchArabic, diagnostics: diagnostics, fields: osPrerequisiteMetadata(settings, control: .arabic))
+        }
+        try diagnostics.append(stage: .searchArabic, status: "before-activation",
+            fields: ["uniqueSearchField": true, "frame": dsc01CatalogRectFields(search.firstMatch.frame)])
+        search.firstMatch.tap()
+        search.firstMatch.typeText("Arabic") // Real public Settings search, once; no backing preference write.
+        try diagnostics.append(stage: .searchArabic, status: "after-activation", fields: osPrerequisiteMetadata(settings, control: .arabic))
+        try osPrerequisiteTapRow(settings, control: .arabic, stage: .selectArabic, diagnostics: diagnostics, allowScroll: false)
+        try diagnostics.append(stage: .retainEnglishPrimary, status: "observe", fields: osPrerequisiteMetadata(settings))
+        let alert = settings.alerts
+        guard alert.firstMatch.waitForExistence(timeout: 15), alert.count == 1 else {
+            try osPrerequisiteBlock(.retainEnglishPrimary, diagnostics: diagnostics, fields: osPrerequisiteMetadata(settings))
+        }
+        // These exact English-primary action labels are bounded candidate UI
+        // selectors, not a claim that Apple guarantees them on every version.
+        // No generic OK/Continue/Cancel or unknown alert is ever dismissed.
+        let keepEnglish = alert.firstMatch.buttons.matching(NSPredicate(format: "label IN %@", ["Use English", "Keep English"]))
+        var keepFields = osPrerequisiteMetadata(settings)
+        keepFields["englishPrimaryChoiceCountCapped16"] = min(keepEnglish.count, 16)
+        keepFields["alertButtonCountCapped16"] = min(alert.firstMatch.buttons.count, 16)
+        try diagnostics.append(stage: .retainEnglishPrimary, status: "before-activation", fields: keepFields)
+        guard keepEnglish.count == 1, (1...4).contains(alert.firstMatch.buttons.count),
+              keepEnglish.firstMatch.isHittable, keepEnglish.firstMatch.isEnabled else {
+            try osPrerequisiteBlock(.retainEnglishPrimary, diagnostics: diagnostics, fields: keepFields)
+        }
+        keepEnglish.firstMatch.tap() // Exactly once; final actual preferred list must prove the result.
+        try diagnostics.append(stage: .retainEnglishPrimary, status: "after-activation", fields: osPrerequisiteMetadata(settings))
+        let settled = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            let observed = self.osPreferredLanguagesMetadata(settings)
+            return self.osPreferredListIsUncovered(observed)
+        }, object: nil)
+        let outcome = XCTWaiter.wait(for: [settled], timeout: 20)
+        let final = osPreferredLanguagesMetadata(settings)
+        guard outcome == .completed, osPreferredListIsUncovered(final) else {
+            try osPrerequisiteBlock(.finalPreferredLanguages, diagnostics: diagnostics, fields: final)
+        }
+        try diagnostics.append(stage: .finalPreferredLanguages, status: "PASS", fields: final)
+        // This only establishes the actual global UI prerequisite. The original
+        // per-app Settings selection/AR→System/restart proof runs independently.
+    }
+}

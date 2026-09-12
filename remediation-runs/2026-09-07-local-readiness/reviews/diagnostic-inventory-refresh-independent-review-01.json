@@ -1,0 +1,226 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-09-07T20:26:34.971672+00:00",
+  "reviewer": "/root/factory_review",
+  "author_executor": "/root",
+  "decision": "ACCEPT CSV-ONLY MECHANICAL INVENTORY REFRESH; NOT INDEPENDENT SOURCE-COVERAGE ATTESTATION",
+  "baseline": {
+    "repository": "/Users/abdelrahman/Projects/parlor",
+    "commit": "bca3e2d9fce4b8b47bf17ddd4bb9fdceb7b40d6e",
+    "tree": "93fa7690655135a6ccc1e261c345d00847e832b8",
+    "tracked_status": " M docs/review/INDEPENDENT_REVIEW_INVENTORY.csv\n",
+    "diff_sha256": "74901193e11445ac8f7367538e8a132d36320f52e8ba50012b273d3567dabaaa",
+    "source_manifest_sha256": "4be6d9cbd07c891b60356921be1828c4c8f44501c979e435105494d261c65ffa",
+    "source_manifest_rows": 799
+  },
+  "csv": {
+    "path": "docs/review/INDEPENDENT_REVIEW_INVENTORY.csv",
+    "sha256": "969e35bdf3466b6d2fb77af8e5a626c8612d0abe61ea1213ea90225ac2fcdc30",
+    "physical_lines": 815,
+    "data_rows": 814,
+    "previous_rows": 811
+  },
+  "mechanical_review": {
+    "full_changed_lines_read": true,
+    "git_diff_numstat": {
+      "additions": 8,
+      "deletions": 5
+    },
+    "path_rows_added": [
+      "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_xcode26_repetitions.py",
+      "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/xcresult-26.5-repetitions.json.in",
+      "scripts/verification/ios-readiness/test_l08_diagnostics.py"
+    ],
+    "path_rows_removed": [],
+    "changed_existing_row_fields": {
+      "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_control_tests.py": [
+        "historical_change_or_finding_reference"
+      ],
+      "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/README.md": [
+        "historical_change_or_finding_reference"
+      ],
+      "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/normal_launch_receipts.py": [
+        "historical_change_or_finding_reference"
+      ],
+      "scripts/verification/ios-readiness/L08StorageProbe.kt.in": [
+        "historical_change_or_finding_reference"
+      ],
+      "scripts/verification/ios-readiness/l08_receipts.py": [
+        "historical_change_or_finding_reference"
+      ]
+    },
+    "unchanged_existing_rows": 806,
+    "unique_sorted_paths": true,
+    "complete_current_tracked_set_plus_output": true,
+    "missing_paths": [],
+    "extra_paths": [],
+    "every_row_disclaimer": "MECHANICALLY INVENTORIED; INDEPENDENT REVIEW NOT ATTESTED",
+    "all_fields_nonempty": true,
+    "affected_latest_refs_checked_individually": [
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/README.md",
+        "commit": "75f29dcd9f1777a70a307bb9522e055ea8cc6e29",
+        "subject": "fix(verification): validate Xcode 26 leaf repetition receipts"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/normal_launch_receipts.py",
+        "commit": "75f29dcd9f1777a70a307bb9522e055ea8cc6e29",
+        "subject": "fix(verification): validate Xcode 26 leaf repetition receipts"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_control_tests.py",
+        "commit": "75f29dcd9f1777a70a307bb9522e055ea8cc6e29",
+        "subject": "fix(verification): validate Xcode 26 leaf repetition receipts"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_xcode26_repetitions.py",
+        "commit": "75f29dcd9f1777a70a307bb9522e055ea8cc6e29",
+        "subject": "fix(verification): validate Xcode 26 leaf repetition receipts"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/xcresult-26.5-repetitions.json.in",
+        "commit": "75f29dcd9f1777a70a307bb9522e055ea8cc6e29",
+        "subject": "fix(verification): validate Xcode 26 leaf repetition receipts"
+      },
+      {
+        "path": "scripts/verification/ios-readiness/L08StorageProbe.kt.in",
+        "commit": "bca3e2d9fce4b8b47bf17ddd4bb9fdceb7b40d6e",
+        "subject": "test(ios): distinguish native recovery failure boundaries"
+      },
+      {
+        "path": "scripts/verification/ios-readiness/l08_receipts.py",
+        "commit": "bca3e2d9fce4b8b47bf17ddd4bb9fdceb7b40d6e",
+        "subject": "test(ios): distinguish native recovery failure boundaries"
+      },
+      {
+        "path": "scripts/verification/ios-readiness/test_l08_diagnostics.py",
+        "commit": "bca3e2d9fce4b8b47bf17ddd4bb9fdceb7b40d6e",
+        "subject": "test(ios): distinguish native recovery failure boundaries"
+      }
+    ],
+    "all814_history_fields_checked_against_raw_git_log_and_unchanged_overrides": true,
+    "history_categories": {
+      "latest": 605,
+      "no_changes": 175,
+      "override": 29,
+      "infra": 5
+    },
+    "new_path_classification": "Three new control/fixture paths infer repository-tooling-or-config; none is placed in production source sets. No runtime reachability proof is inferred from the CSV.",
+    "self_reference": "Inventory/review infrastructure uses fixed non-attestation history text, not its own commit SHA; a CSV-only commit does not invalidate mechanical freshness.",
+    "diff_check_exit_code": 0
+  },
+  "unchanged_human_and_generator_inputs": [
+    {
+      "path": "scripts/generate_review_inventory.py",
+      "sha256": "c65ec66aa1ea18e91ddae521de4feda15a08ecffa024f06b8dbde0c1999c5a52"
+    },
+    {
+      "path": "docs/review/README.md",
+      "sha256": "65c8afcce2708c4574229a7d4e3215ca70bd7f0075738bf7fd646982b4429565"
+    },
+    {
+      "path": "docs/review/INDEPENDENT_REVIEW_FINDING_OVERRIDES.csv",
+      "sha256": "6bb9316a9e6bdf34e0b6325ed213ac299dadf62846a4b9d2910c50590b2e5467"
+    },
+    {
+      "path": "docs/review/INDEPENDENT_REVIEW_FINDINGS.md",
+      "sha256": "da682bfa54d0c83ec689312537931d3ab58c4aae730e8049644e313c7aabaecd"
+    }
+  ],
+  "source_readings": [
+    {
+      "path": "scripts/generate_review_inventory.py",
+      "sha256": "c65ec66aa1ea18e91ddae521de4feda15a08ecffa024f06b8dbde0c1999c5a52",
+      "reviewed_ranges": [
+        [
+          1,
+          409
+        ]
+      ]
+    },
+    {
+      "path": "docs/review/README.md",
+      "sha256": "65c8afcce2708c4574229a7d4e3215ca70bd7f0075738bf7fd646982b4429565",
+      "reviewed_ranges": [
+        [
+          1,
+          50
+        ]
+      ]
+    },
+    {
+      "path": "scripts/release/tests/test_review_inventory.py",
+      "sha256": "841961fda25e9d4455c3178a3beab93f713e41667592538fcaef0621af74b78c",
+      "reviewed_ranges": [
+        [
+          1,
+          173
+        ]
+      ]
+    },
+    {
+      "path": "scripts/release/validate_release_system.sh",
+      "sha256": "ce52c9c08edecba968337d6de42c90895badec127c7029a5afc16737d3b8864a",
+      "reviewed_ranges": [
+        [
+          1,
+          104
+        ]
+      ]
+    }
+  ],
+  "executed_verification": {
+    "receipt": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/refreshed-diagnostic-release-controls-01/receipt.json",
+      "sha256": "31a54228611dad15eeee8882a0aaf82566db56a6e436dadcc5b73c918ac8392d"
+    },
+    "raw_log": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/refreshed-diagnostic-release-controls-01/gradle.log",
+      "sha256": "dc857b252f2a3c0510b71fbabb3f0fb98bf04b5b834652e346b3c09deec7a3e5"
+    },
+    "stop_log": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/refreshed-diagnostic-release-controls-01/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    "command": [
+      "scripts/release/validate_release_system.sh"
+    ],
+    "started_at": "2026-09-07T20:19:05.610743+00:00",
+    "finished_at": "2026-09-07T20:20:11.849672+00:00",
+    "status": "PASS",
+    "exit_code": 0,
+    "tests": 347,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "independent_current_AST_and_unique_executed_ID_sets_equal": true,
+    "descriptor_note": "345 single-line ok descriptors and two completed split descriptors(Git CRLF synthetic warning; synthetic unrelated branch), each immediately followed by ok. Read source confirms these messages originate from isolated fixture repositories, not Parlor checkout changes.",
+    "gate_outputs": [
+      "Release workflow contract PASS",
+      "Verified freshness of814 inventory rows; source review not attested",
+      "Pinned shellcheck/actionlint archive hashes OK; set-e script proceeds through both analyzers and exits0",
+      "Validation-only messages confirm no App Store Connect or Google Play request in rehearsal paths"
+    ],
+    "source_before_after_equal": true,
+    "runner_before_after_equal": true,
+    "current799_file_hashes_equal_verified_source": true
+  },
+  "cleanup": {
+    "stop_exit_code": 0,
+    "remaining_workers": [],
+    "remaining_artifact_workers": [],
+    "remaining_outputs": [],
+    "retained_outputs": [],
+    "errors": [],
+    "scratch_absent": true,
+    "reviewer_started_build_test_or_native_processes": false,
+    "reviewer_written_file": "remediation-runs/2026-09-07-local-readiness/reviews/diagnostic-inventory-refresh-independent-review-01.json"
+  },
+  "limits": [
+    "This approval covers only the exact CSV bytes; it does not authorize unrelated Git, signing, publication or Store operations.",
+    "All prior human findings, overrides, scripts and audit receipts are preserved.",
+    "814 mechanical rows is not814 fully reviewed source files, a coverage percentage, absence of defects or Store readiness. Untracked user material remains excluded by documented inventory semantics.",
+    "Root must create a fresh source07/control/copy freeze after any separately authorized CSV-only commit, then obtain independent native-execution approval.",
+    "Native05 L08 failure and unfinished normal ninth-launch provenance remain unchanged pending actual new execution."
+  ]
+}

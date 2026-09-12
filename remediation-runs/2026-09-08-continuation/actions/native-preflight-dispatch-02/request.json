@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "requested_at": "2026-09-08T15:04:15.778181+00:00",
+  "repository": "Apdelrahman1911/parlor",
+  "workflow": ".github/workflows/production-verification.yml",
+  "ref": "fix/local-readiness-2026-09-07",
+  "inputs": {
+    "verification_scope": "native-preflight",
+    "frozen_source_sha": "5f35a20d3c9c846cd98b38a16881997ecf577497"
+  },
+  "approval": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/native-process-probe-34239707887-independent-01.json",
+    "sha256": "e281ebb0e606febac31c3ac012f495d11715430b9947a38d89acc200c7f99984",
+    "field": "next_native_preflight_decision"
+  },
+  "source_before": {
+    "commit": "5f35a20d3c9c846cd98b38a16881997ecf577497",
+    "tree": "e0e7abfff89975682a96a884cb745bcbc12e7238",
+    "full_history": true,
+    "tracked_diff_empty": true
+  },
+  "remote_before": "5f35a20d3c9c846cd98b38a16881997ecf577497\trefs/heads/fix/local-readiness-2026-09-07",
+  "prior_run_ids": [
+    34239707887,
+    34232325670,
+    34216788568,
+    34214410629,
+    34152138368,
+    34143924756,
+    34112913001
+  ],
+  "command": [
+    "gh",
+    "workflow",
+    "run",
+    "production-verification.yml",
+    "--repo",
+    "Apdelrahman1911/parlor",
+    "--ref",
+    "fix/local-readiness-2026-09-07",
+    "-f",
+    "verification_scope=native-preflight",
+    "-f",
+    "frozen_source_sha=5f35a20d3c9c846cd98b38a16881997ecf577497"
+  ],
+  "scope": "ONE_FRESH_BINDING_ONLY_PREFLIGHT_INITIAL_ATTEMPT_ONLY; no A/B, full, diagnostic retry or Store workflows"
+}

@@ -1,0 +1,96 @@
+{
+  "reviewer": "/root/factory_review",
+  "author": "/root/release_fix_review",
+  "candidate_finder": "/root/factory_review",
+  "candidate_independent_validation_required_from": "/root",
+  "reviewed_at": "2026-09-07T05:29:04.795953+00:00",
+  "scope": "CONTROL-DARWIN-LIST-ERRNO; excluded campaign verification control, not additional production-app finding",
+  "conclusion": "FIX SOURCE APPROVED; ROOT INDEPENDENT VALIDATION AND41-TEST EXECUTION REQUIRED BEFORE REAL CHILD PROBE",
+  "freeze_sha256": "ca77042e2b6b799ef7e3ac1474727d9866d0c568c286ccef76edf45c4f4cc903",
+  "files": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/darwin_owned_processes.py",
+      "sha256": "148a71180b6768858f47d7cf5607104169898dafdee48ecbf41937cd46e71a1d",
+      "line_count": 357,
+      "reviewed_ranges": [
+        [
+          1,
+          357
+        ]
+      ],
+      "method": "Complete previous control/test source read, all new guard/tests reopened, exact original rawhash independently reconstructed by removing only those new lines; README reread in full."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/test_darwin_owned_processes.py",
+      "sha256": "30e28929a5305fbef65c855d56e5e2c16d9fc2c5b30c1c7e3bc5f0ef5350f9c9",
+      "line_count": 333,
+      "reviewed_ranges": [
+        [
+          1,
+          333
+        ]
+      ],
+      "method": "Complete previous control/test source read, all new guard/tests reopened, exact original rawhash independently reconstructed by removing only those new lines; README reread in full."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/README.md",
+      "sha256": "6b3161a3458cb44b8da51430e31cd40619318b6204940566bec77cdee05e7d74",
+      "line_count": 106,
+      "reviewed_ranges": [
+        [
+          1,
+          106
+        ]
+      ],
+      "method": "Complete previous control/test source read, all new guard/tests reopened, exact original rawhash independently reconstructed by removing only those new lines; README reread in full."
+    }
+  ],
+  "root_cause_proof": "Exact-host Apple libproc.c45\u201358 maps failing __proc_info -1 into0 while leaving errno set; wrappers76\u201396 divide0by4 and return0. Previously _list count<0 guard returned[]for0+EPERM. finish could treat empty group as complete then retire/reap the foreground worker while new descendants were unobserved.",
+  "fix_proof": "_list152\u2013165 still resets errno before call, now samples errno immediately after returned count and raises for negative or zero+nonzeroerrno. Legitimate0+errno0, positive PID counts and512ceiling unchanged. Errors propagate through refresh/live/finish; no fallback signal or false empty result.",
+  "new_tests": [
+    {
+      "name": "test_failed_group_enumeration_cannot_report_finished_or_reap_worker",
+      "lines": [
+        220,
+        236
+      ],
+      "proof": "Actual OwnedProcesses.finish\u2192refresh uses actual DarwinBackend._list mocked syscall returning0+EPERM, asserts exception exacterrno and no retirement/reap/signal."
+    },
+    {
+      "name": "test_zero_count_native_errors_are_rejected_by_both_list_wrappers",
+      "lines": [
+        254,
+        271
+      ],
+      "proof": "Each actual group/children wrapper tested with EPERM andEINTR; verifiesowner andbufferbytecapacity and exacterrno."
+    },
+    {
+      "name": "test_zero_count_without_errno_is_empty_and_clears_stale_errno",
+      "lines": [
+        273,
+        286
+      ],
+      "proof": "Both wrappers start with stale ENOMEM; native fake checks zeroerrno at entry, returns0; validempty remains[]."
+    },
+    {
+      "name": "test_negative_process_count_remains_failed",
+      "lines": [
+        288,
+        298
+      ],
+      "proof": "Negative count withEINVAL still raises exacterrno."
+    }
+  ],
+  "counter_evidence": [
+    "No automatic retry or failure normalization introduced. Denied/temporarilyfailed list remains failure even if later cleanup succeeds.",
+    "Native syscalls anderrorconventions are source-backed, but mocks do not prove availability of liveAPI.",
+    "No change to registeredownership lifetime, audit-token kernel signal, queuebounds, APK/device sourcebinding or destructiveAVD restrictions.",
+    "Historical37test receipt remains originalversion evidence, not result for41tests."
+  ],
+  "probe_approval": "Original111-line probe SHAc28d355945c358b135e690fa6ba9be664fcc7f6d07ff5550ae32d7c9a5cb89b7 source approval remains applicable with this stricter control after root new41tests. No test/native execution by reviewer.",
+  "references": [
+    "reviews/darwin-probe-authoritative-references-01.json",
+    "reviews/android-owned-process-probe-independent-review-01.json"
+  ],
+  "cleanup": "Read/hash/AST only; no build/test/native/emulator/server processes started or outputs created by reviewer; no source modifications."
+}

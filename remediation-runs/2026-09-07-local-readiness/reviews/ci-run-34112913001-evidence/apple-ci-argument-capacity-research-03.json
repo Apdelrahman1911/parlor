@@ -1,0 +1,103 @@
+{
+  "reviewer": "/root/release_fix_review",
+  "scope": "Public XNU argument payload versus argc-prefixed record bounds; no native process backend initialized, no build/test executed.",
+  "observed_system": {
+    "system": "Darwin",
+    "release": "25.2.0",
+    "kernel": "Darwin Kernel Version 25.2.0: Tue Nov 18 21:08:48 PST 2025; root:xnu-12377.61.12~1/RELEASE_ARM64_T8132",
+    "SC_ARG_MAX": 1048576,
+    "native_int_bytes": 4
+  },
+  "references": [
+    {
+      "url": "https://raw.githubusercontent.com/apple-oss-distributions/xnu/xnu-12377.61.12/bsd/sys/syslimits.h",
+      "accessed_at": "2026-09-07T14:38:36.878261+00:00",
+      "status": 200,
+      "sha256": "c82fe60eac5d7864220e1468e6b75740b07d2ad6d18fe923b495059e48c2f100",
+      "bytes": 6639,
+      "line_count": 142,
+      "excerpts": [
+        {
+          "from": 69,
+          "to": 83,
+          "text": "69: \n70: #if !defined(_ANSI_SOURCE)\n71: \n72: /* max bytes for an exec function */\n73: #ifdef XNU_KERNEL_PRIVATE\n74: #if defined(XNU_TARGET_OS_OSX)\n75: #define ARG_MAX           (1024 * 1024)\n76: #else\n77: #define ARG_MAX            (256 * 1024)\n78: #endif\n79: #else /* XNU_KERNEL_PRIVATE */\n80: #if defined(__ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__)\n81: #define ARG_MAX           (1024 * 1024)\n82: #else\n83: #define ARG_MAX            (256 * 1024)"
+        },
+        {
+          "from": 71,
+          "to": 85,
+          "text": "71: \n72: /* max bytes for an exec function */\n73: #ifdef XNU_KERNEL_PRIVATE\n74: #if defined(XNU_TARGET_OS_OSX)\n75: #define ARG_MAX           (1024 * 1024)\n76: #else\n77: #define ARG_MAX            (256 * 1024)\n78: #endif\n79: #else /* XNU_KERNEL_PRIVATE */\n80: #if defined(__ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__)\n81: #define ARG_MAX           (1024 * 1024)\n82: #else\n83: #define ARG_MAX            (256 * 1024)\n84: #endif\n85: #endif /* XNU_KERNEL_PRIVATE */"
+        },
+        {
+          "from": 75,
+          "to": 89,
+          "text": "75: #define ARG_MAX           (1024 * 1024)\n76: #else\n77: #define ARG_MAX            (256 * 1024)\n78: #endif\n79: #else /* XNU_KERNEL_PRIVATE */\n80: #if defined(__ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__)\n81: #define ARG_MAX           (1024 * 1024)\n82: #else\n83: #define ARG_MAX            (256 * 1024)\n84: #endif\n85: #endif /* XNU_KERNEL_PRIVATE */\n86: \n87: /*\n88:  * Note: CHILD_MAX *must* be less than hard_maxproc, which is set at\n89:  * compile time; you *cannot* set it higher than the hard limit!!"
+        },
+        {
+          "from": 77,
+          "to": 91,
+          "text": "77: #define ARG_MAX            (256 * 1024)\n78: #endif\n79: #else /* XNU_KERNEL_PRIVATE */\n80: #if defined(__ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__)\n81: #define ARG_MAX           (1024 * 1024)\n82: #else\n83: #define ARG_MAX            (256 * 1024)\n84: #endif\n85: #endif /* XNU_KERNEL_PRIVATE */\n86: \n87: /*\n88:  * Note: CHILD_MAX *must* be less than hard_maxproc, which is set at\n89:  * compile time; you *cannot* set it higher than the hard limit!!\n90:  */\n91: "
+        }
+      ]
+    },
+    {
+      "url": "https://raw.githubusercontent.com/apple-oss-distributions/xnu/xnu-12377.61.12/bsd/kern/kern_sysctl.c",
+      "accessed_at": "2026-09-07T14:38:37.698728+00:00",
+      "status": 200,
+      "sha256": "2ac008ff3b3e454f9ee871dbd0b42053a09d68f77b2a597b1ce31b4fa33a0f19",
+      "bytes": 230672,
+      "line_count": 6911,
+      "excerpts": [
+        {
+          "from": 1363,
+          "to": 1377,
+          "text": "1363: \tif (namelen < 1) {\n1364: \t\terror = EINVAL;\n1365: \t\tgoto finish;\n1366: \t}\n1367: \n1368: \tif (argc_yes) {\n1369: \t\tbuflen -= sizeof(int);          /* reserve first word to return argc */\n1370: \t}\n1371: \t/* we only care about buflen when where (oldp from sysctl) is not NULL. */\n1372: \t/* when where (oldp from sysctl) is NULL and sizep (oldlenp from sysctl */\n1373: \t/* is not NULL then the caller wants us to return the length needed to */\n1374: \t/* hold the data we would return */\n1375: \tif (where != USER_ADDR_NULL && (buflen <= 0 || buflen > ARG_MAX)) {\n1376: \t\terror = EINVAL;\n1377: \t\tgoto finish;"
+        },
+        {
+          "from": 1369,
+          "to": 1383,
+          "text": "1369: \t\tbuflen -= sizeof(int);          /* reserve first word to return argc */\n1370: \t}\n1371: \t/* we only care about buflen when where (oldp from sysctl) is not NULL. */\n1372: \t/* when where (oldp from sysctl) is NULL and sizep (oldlenp from sysctl */\n1373: \t/* is not NULL then the caller wants us to return the length needed to */\n1374: \t/* hold the data we would return */\n1375: \tif (where != USER_ADDR_NULL && (buflen <= 0 || buflen > ARG_MAX)) {\n1376: \t\terror = EINVAL;\n1377: \t\tgoto finish;\n1378: \t}\n1379: \n1380: \t/*\n1381: \t *\tLookup process by pid\n1382: \t */\n1383: \tpid = name[0];"
+        },
+        {
+          "from": 1619,
+          "to": 1633,
+          "text": "1619: \t}\n1620: \n1621: \tif (argc_yes) {\n1622: \t\t/* Put processes argc as the first word in the copyout buffer */\n1623: \t\tsuword(where, argc);\n1624: \t\terror = copyout(data, (where + sizeof(int)), size);\n1625: \t\tsize += sizeof(int);\n1626: \t} else {\n1627: \t\terror = copyout(data, where, size);\n1628: \n1629: \t\t/*\n1630: \t\t * Make the old PROCARGS work to return the executable's path\n1631: \t\t * But, only if there is enough space in the provided buffer\n1632: \t\t *\n1633: \t\t * on entry: data [possibily] points to the beginning of the path"
+        },
+        {
+          "from": 1696,
+          "to": 1710,
+          "text": "1696: \n1697: calculate_size:\n1698: \t/* Size has already been calculated for the where != NULL case */\n1699: \tif (where == USER_ADDR_NULL) {\n1700: \t\tsize = argslen;\n1701: \t\tif (argc_yes) {\n1702: \t\t\tsize += sizeof(int);\n1703: \t\t} else {\n1704: \t\t\t/*\n1705: \t\t\t * old PROCARGS will return the executable's path and plus some\n1706: \t\t\t * extra space for work alignment and data tags\n1707: \t\t\t */\n1708: \t\t\tsize += PATH_MAX + (6 * sizeof(int));\n1709: \t\t}\n1710: \t\tsize += (size & (sizeof(int) - 1)) ? (sizeof(int) - (size & (sizeof(int) - 1))) : 0;"
+        }
+      ]
+    },
+    {
+      "url": "https://raw.githubusercontent.com/apple-oss-distributions/xnu/xnu-11215.1.10/bsd/sys/syslimits.h",
+      "accessed_at": "2026-09-07T14:38:40.705908+00:00",
+      "status": 200,
+      "sha256": "464fc2a7014f17288139ca2cf389e4d8d1fc1b13fd89ed605d3ee09bf4dffd76",
+      "bytes": 6507,
+      "line_count": 137,
+      "excerpts": [
+        {
+          "from": 69,
+          "to": 83,
+          "text": "69: \n70: #if !defined(_ANSI_SOURCE)\n71: \n72: /* max bytes for an exec function */\n73: #ifdef XNU_KERNEL_PRIVATE\n74: #if defined(XNU_TARGET_OS_OSX)\n75: #define ARG_MAX           (1024 * 1024)\n76: #else\n77: #define ARG_MAX            (256 * 1024)\n78: #endif\n79: #else /* XNU_KERNEL_PRIVATE */\n80: #if defined(__ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__)\n81: #define ARG_MAX           (1024 * 1024)\n82: #else\n83: #define ARG_MAX            (256 * 1024)"
+        },
+        {
+          "from": 71,
+          "to": 85,
+          "text": "71: \n72: /* max bytes for an exec function */\n73: #ifdef XNU_KERNEL_PRIVATE\n74: #if defined(XNU_TARGET_OS_OSX)\n75: #define ARG_MAX           (1024 * 1024)\n76: #else\n77: #define ARG_MAX            (256 * 1024)\n78: #endif\n79: #else /* XNU_KERNEL_PRIVATE */\n80: #if defined(__ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__)\n81: #define ARG_MAX           (1024 * 1024)\n82: #else\n83: #define ARG_MAX            (256 * 1024)\n84: #endif\n85: #endif /* XNU_KERNEL_PRIVATE */"
+        },
+        {
+          "from": 75,
+          "to": 89,
+          "text": "75: #define ARG_MAX           (1024 * 1024)\n76: #else\n77: #define ARG_MAX            (256 * 1024)\n78: #endif\n79: #else /* XNU_KERNEL_PRIVATE */\n80: #if defined(__ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__)\n81: #define ARG_MAX           (1024 * 1024)\n82: #else\n83: #define ARG_MAX            (256 * 1024)\n84: #endif\n85: #endif /* XNU_KERNEL_PRIVATE */\n86: \n87: /*\n88:  * Note: CHILD_MAX *must* be less than hard_maxproc, which is set at\n89:  * compile time; you *cannot* set it higher than the hard limit!!"
+        },
+        {
+          "from": 77,
+          "to": 91,
+          "text": "77: #define ARG_MAX            (256 * 1024)\n78: #endif\n79: #else /* XNU_KERNEL_PRIVATE */\n80: #if defined(__ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__)\n81: #define ARG_MAX           (1024 * 1024)\n82: #else\n83: #define ARG_MAX            (256 * 1024)\n84: #endif\n85: #endif /* XNU_KERNEL_PRIVATE */\n86: \n87: /*\n88:  * Note: CHILD_MAX *must* be less than hard_maxproc, which is set at\n89:  * compile time; you *cannot* set it higher than the hard limit!!\n90:  */\n91: "
+        }
+      ]
+    }
+  ]
+}

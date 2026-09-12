@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "status": "APPROVED_SOURCE_ONLY",
+  "reviewer": "/root/portability_review",
+  "author": "/root/l08_fixture",
+  "reviewed_at": "2026-09-10T04:05:07.715648+00:00",
+  "base": {
+    "branch": "fix/local-readiness-2026-09-07",
+    "head": "730a91e4dade4dbc2168b5367e20c3d0f42237e1",
+    "tree": "1f71dc64bc7680f461efc3e841dc051579a0d993"
+  },
+  "scope": "Bounded additive review of five Settings single-execution CLI/cycle deltas; no repeat of the unchanged normal98 campaign.",
+  "pins": {
+    "packet_seal": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/settings-single-execution-cli-fix-01/SEALED_MANIFEST.json",
+      "bytes": 1918,
+      "sha256": "1860258ce2933eaf436e86a93323dda0bfcc9e8fbfffeb1c56df6ba7afc005a3"
+    },
+    "author_report": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/settings-single-execution-cli-fix-01/AUTHOR_REPORT.json",
+      "bytes": 7452,
+      "sha256": "ab1886784d8254424f3b4506c9aef86f934092fce82654d849cdb31566acfbc3"
+    },
+    "patch": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/settings-single-execution-cli-fix-01/proposed.patch",
+      "bytes": 5241,
+      "sha256": "15af3f60f7e31fec362d1af9d18cd8b3baf1318abc01b964359ae1f40603bb52"
+    },
+    "actual_failure_review": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-settings35-34433711685-failure-independent-01.json",
+      "bytes": 4086,
+      "sha256": "8a8888b37ca50f94f181e70c901eddbb3ba128870e65a80ff206557e01c87760"
+    }
+  },
+  "files": [
+    {
+      "path": "scripts/verification/ios-settings-sheet/settings_sheet_probe.py",
+      "base_sha256": "626a5096b4aab37ee449abe45ec8f6d4d8c0d4801fb2acb8c83b1e17e8a3f3ed",
+      "proposed_sha256": "5271e261ad4359140ee6218ca2c493a404e40b646d8e508a3aa16f5b79efa391"
+    },
+    {
+      "path": "scripts/verification/ios-settings-sheet/test_settings_sheet_probe.py",
+      "base_sha256": "1f3716f315f990a02b9e21e7b71f7db91833de852f4cd3f97530d6c1d4db9292",
+      "proposed_sha256": "23ae50a1d5bc36eebe677022c9332cf6c4669d6fcaf579498612dd9a7367bc98"
+    },
+    {
+      "path": "scripts/ci/native_continuation.py",
+      "base_sha256": "971fdeca3fa27d6b8fb356bae50f11909365af30d7a6af8cd058a3487684f4d2",
+      "proposed_sha256": "d1246105417eed3b6fee30cf9333ae307a88e8025c9d83df26e6a9c329d426df"
+    },
+    {
+      "path": "scripts/release/tests/test_native_process_probe.py",
+      "base_sha256": "8ccd48b4f8fd2bca04f9b81fd8ed93cdf5b92c240ac9e84571792103bab2a118",
+      "proposed_sha256": "33707329a8606c2d41427552602a2ffaad59c701cd22f26db9142abb0ce41db2"
+    },
+    {
+      "path": "scripts/ci/NATIVE_CONTINUATION.md",
+      "base_sha256": "d350ee860a7b6d4d67fa6fc73ab139153c8fd4f9cd78a45c75175ed5c51bf169",
+      "proposed_sha256": "e86be1e4487fd81d71fac9cd9e8c11f4c2d22e61c57efe4ceeaa9c992cdbf7e0"
+    }
+  ],
+  "checks": [
+    "All seven sealed packet entries match byte counts/SHA256. Each of five canonical files equals its exact 730a91e4 Git blob and declared base hash; fresh difflib reconstruction equals the sealed patch byte-for-byte.",
+    "Settings run_xctest removes both complete inherited option/value pairs (-test-iterations and -test-repetition-relaunch-enabled), recomputing each index. The pinned normal helper contains each pair once and remains byte-identical; normal B continues to use its original eight-iteration helper.",
+    "All other Settings functions are AST-identical. Reopened strict acceptance still requires exactly one passed/unskipped expected method on the exact arm64 iOS Simulator plus one bounded capture marker. No retry/fallback or extra selector is introduced.",
+    "Reviewed unchanged real-build lifecycle barrier, immediate stop, evidence-retention-before-ack/no-app-output checks and inherited finalizer. Test allowances 180/240s and Xcode600s remain; adapter child/finalizer/custody budgets and binding/ownership/cleanup guards are unchanged by its sole cycle scalar delta.",
+    "Existing failed-build/cleanup-barrier test gains absent repetition flags, exact selector, 180/240s and 600s/8MiB assertions. The same five Settings test-method names remain; no new suite/method. No tests were executed by this reviewer.",
+    "Adapter, existing process-probe expectation and guide contain only the exact Settings35->36 replacement; A33/B34 unchanged. Swift and scheme hashes equal approved revision03. Original normal helper hash remains766087ddf72b50f51b1c4072c64afb1a7dd231f047d26e534817cddf9be295bf."
+  ],
+  "findings": [],
+  "evidence_boundary": "Actual34433711685/1 Settings35 failed Xcode CLI parsing with exit64 and zero tests/no capture. This approval repairs the observed command shape only; it establishes neither targetless build feasibility nor native Settings capture, A/B application qualification, strict file-protection success or readiness.",
+  "next": "Root may adopt exact five reviewed proposals, run focused existing5+1 controls, freeze reviewed source/mechanical inventory and obtain fresh source/control bindings and preflight before one capped Settings36 dispatch. This source approval is not itself dispatch approval.",
+  "reviewer_activity": "Read-only canonical/Git/evidence, stdlib hash/diff/AST/JSON inspection only. Sole write is this additive report. No project imports, tests, builds, native/network/Actions execution, workers or owned outputs; no cleanup owed."
+}

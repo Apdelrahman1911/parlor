@@ -1,0 +1,625 @@
+{
+  "schema_version": 1,
+  "scope": "REVIEWED_INPUT_NOTICE_SUPPLEMENT_NOT_EXHAUSTIVE_OR_LEGAL_APPROVAL",
+  "resource_directory": "composeApp/src/commonMain/composeResources/files/legal",
+  "resource_namespace": "com.parlor.app.resources",
+  "resource_count": 26,
+  "catalog": {
+    "path": "gradle/libs.versions.toml",
+    "sha256": "87a031665605a1fb3f932be31c75afd8d2d1bc0d94cfcca36101141c50788399",
+    "pins": {
+      "kotlin": "2.4.10",
+      "kotlinx-coroutines": "1.11.0",
+      "kotlinx-serialization": "1.11.0",
+      "kotlinx-datetime": "0.7.1",
+      "compose-multiplatform": "1.10.3",
+      "compose-material3": "1.9.0-beta03",
+      "navigation3-runtime": "1.0.0",
+      "navigation3-ui": "1.0.0-alpha06",
+      "agp": "8.13.2",
+      "android-min-sdk": "26",
+      "android-compile-sdk": "36",
+      "android-target-sdk": "36",
+      "koin": "4.0.0",
+      "ktor": "3.0.3",
+      "p2pkit": "0.7.0-rc3",
+      "konsist": "0.16.1",
+      "detekt": "1.23.7",
+      "turbine": "1.2.0",
+      "assertk": "0.28.1"
+    },
+    "line_ending_policy": "CRLF_TO_LF"
+  },
+  "upstream_versions": {
+    "skiko": "0.9.37.4",
+    "skiko_commit": "84b34aa8bf3eea606464aba0cc9b12f94bc3554e",
+    "skia_pack": "m138-80d088a-1",
+    "skia_pack_commit": "9481c9b3b8e740d240c7f300cf3a0398abbdb052",
+    "skia_commit": "80d088ad6ee869e6b511763b5238cff5de72684d",
+    "kotlin_native": "2.4.10",
+    "kotlin_commit": "5687445832cd835b4509b9fbc264cdf1a8201093",
+    "icu_commit": "364118a1d9da24bb5b770ac3d762ac144d6da5a4",
+    "harfbuzz_commit": "08b52ae2e44931eef163dbad71697f911fadc323",
+    "expat_commit": "8e49998f003d693213b538ef765814c7d21abada",
+    "webp_commit": "845d5476a866141ba35ac133f856fa62f0b7445f",
+    "dng_sdk_commit": "dbe0a676450d9b8c71bf00688bb306409b779e90",
+    "libjpeg_turbo_commit": "e14cbfaa85529d47f9f55b0f104a579c1061f9ad",
+    "libpng_commit": "ed217e3e601d8e462f7fd1e04bed43ac42212429",
+    "zlib_commit": "646b7f569718921d7d4b5b8e22572ff6c76f2596",
+    "wuffs": "0.3.3",
+    "harfbuzz_unicode_data": "16.0.0",
+    "kotlin_unicode_data": "13.0.0",
+    "unicode_license_accessed": "2026-09-07",
+    "bouncycastle": "1.85",
+    "slf4j": "2.0.16"
+  },
+  "files": [
+    {
+      "name": "APACHE-2.0.txt",
+      "kind": "upstream-text",
+      "bytes": 11358,
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+      "components": [
+        "Kotlin",
+        "Compose Multiplatform",
+        "Skiko",
+        "Wuffs 0.3.3",
+        "Piex",
+        "Apache-derived components"
+      ],
+      "platforms": [
+        "android",
+        "ios",
+        "desktop-development"
+      ],
+      "classification": "SHARED_LICENSE_TEXT",
+      "applicability": "Shared Apache License 2.0 text; component-specific notices and other licenses are retained separately. This is not a claim that every dependency is Apache-licensed.",
+      "provenance": {
+        "method": "full-text",
+        "url": "https://raw.githubusercontent.com/JetBrains/kotlin/5687445832cd835b4509b9fbc264cdf1a8201093/license/LICENSE.txt",
+        "accessed_on": "2026-09-07",
+        "source_sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+        "source_bytes": 11358
+      }
+    },
+    {
+      "name": "BouncyCastle-1.85-LICENSE.md",
+      "kind": "upstream-text",
+      "bytes": 1171,
+      "sha256": "0e01f1549c9022f406392ac2947d32223b7c2e977d21ea2f8c182fdeb4dae5fd",
+      "components": [
+        "Bouncy Castle bcprov-jdk18on 1.85"
+      ],
+      "platforms": [
+        "android"
+      ],
+      "classification": "ANDROID_INPUT_LICENSE",
+      "applicability": "Exact published Android input JAR member. Earlier AAB inspection already found this license text; this resource copy is a supplement, not evidence that Android previously shipped no licenses.",
+      "provenance": {
+        "method": "archive-member",
+        "url": "https://repo.maven.apache.org/maven2/org/bouncycastle/bcprov-jdk18on/1.85/bcprov-jdk18on-1.85.jar",
+        "accessed_on": "2026-09-07",
+        "source_sha256": "0e01f1549c9022f406392ac2947d32223b7c2e977d21ea2f8c182fdeb4dae5fd",
+        "source_bytes": 1171,
+        "archive_sha256": "20af26bf6060bb8005cc2389916812c1e0e998dc48d2ced7131b89461b54cff7",
+        "archive_bytes": 10321819,
+        "member": "META-INF/LICENSE.md"
+      }
+    },
+    {
+      "name": "DNG-SDK-NOTICE.txt",
+      "kind": "upstream-text",
+      "bytes": 5422,
+      "sha256": "b60660d2a5a3ee1a49366400e7e9b01c1872356d6f08942f095d356a44deb5f6",
+      "components": [
+        "Adobe DNG SDK",
+        "Google DNG SDK patches"
+      ],
+      "platforms": [
+        "ios"
+      ],
+      "classification": "NATIVE_INPUT_CUSTOM_LICENSE",
+      "applicability": "Compiled DNG objects are input to Skiko iOS. This is the custom Adobe license, technology notice and Google patch attribution, not Apache-2.0. Final object retention and publisher acceptance of custom terms require separate review.",
+      "provenance": {
+        "method": "full-text",
+        "url": "https://android.googlesource.com/platform/external/dng_sdk.git/+/dbe0a676450d9b8c71bf00688bb306409b779e90/NOTICE?format=TEXT",
+        "accessed_on": "2026-09-07",
+        "source_sha256": "b60660d2a5a3ee1a49366400e7e9b01c1872356d6f08942f095d356a44deb5f6",
+        "source_bytes": 5422
+      }
+    },
+    {
+      "name": "DNG-SDK-PATENTS.txt",
+      "kind": "upstream-text",
+      "bytes": 3496,
+      "sha256": "bd958835863f42d8479457503a7ed716424d35b6e76ef76db06b72b109696ec4",
+      "components": [
+        "Adobe DNG SDK"
+      ],
+      "platforms": [
+        "ios"
+      ],
+      "classification": "NATIVE_INPUT_COMPANION_TERMS",
+      "applicability": "Exact DNG patent grant and technology-notice wording. Legal applicability and acceptance remain the publisher's responsibility.",
+      "provenance": {
+        "method": "full-text",
+        "url": "https://android.googlesource.com/platform/external/dng_sdk.git/+/dbe0a676450d9b8c71bf00688bb306409b779e90/PATENTS?format=TEXT",
+        "accessed_on": "2026-09-07",
+        "source_sha256": "bd958835863f42d8479457503a7ed716424d35b6e76ef76db06b72b109696ec4",
+        "source_bytes": 3496
+      }
+    },
+    {
+      "name": "Expat-COPYING.txt",
+      "kind": "upstream-text",
+      "bytes": 1144,
+      "sha256": "31b15de82aa19a845156169a17a5488bf597e561b2c318d159ed583139b25e87",
+      "components": [
+        "Expat"
+      ],
+      "platforms": [
+        "ios"
+      ],
+      "classification": "NATIVE_INPUT_LICENSE",
+      "applicability": "Expat objects are present both in a separate archive and within libskia.a; this is the exact source-revision MIT copyright and permission text.",
+      "provenance": {
+        "method": "full-text",
+        "url": "https://chromium.googlesource.com/external/github.com/libexpat/libexpat.git/+/8e49998f003d693213b538ef765814c7d21abada/COPYING?format=TEXT",
+        "accessed_on": "2026-09-07",
+        "source_sha256": "31b15de82aa19a845156169a17a5488bf597e561b2c318d159ed583139b25e87",
+        "source_bytes": 1144
+      }
+    },
+    {
+      "name": "HarfBuzz-COPYING.txt",
+      "kind": "upstream-text",
+      "bytes": 1971,
+      "sha256": "ba8f810f2455c2f08e2d56bb49b72f37fcf68f1f4fade38977cfd7372050ad64",
+      "components": [
+        "HarfBuzz"
+      ],
+      "platforms": [
+        "ios"
+      ],
+      "classification": "NATIVE_INPUT_LICENSE",
+      "applicability": "Text-shaping archives and objects are present in the inspected iOS inputs. The separate hb-ucd source and Unicode data notices supplement this root COPYING file.",
+      "provenance": {
+        "method": "full-text",
+        "url": "https://chromium.googlesource.com/external/github.com/harfbuzz/harfbuzz.git/+/08b52ae2e44931eef163dbad71697f911fadc323/COPYING?format=TEXT",
+        "accessed_on": "2026-09-07",
+        "source_sha256": "ba8f810f2455c2f08e2d56bb49b72f37fcf68f1f4fade38977cfd7372050ad64",
+        "source_bytes": 1971
+      }
+    },
+    {
+      "name": "HarfBuzz-hb-ucd-ISC-LICENSE.txt",
+      "kind": "upstream-text",
+      "bytes": 795,
+      "sha256": "cb95728cc2b4a3502bb8e69c019e0e5f01c0a218a855168e9c19d4df51582cd5",
+      "components": [
+        "HarfBuzz hb-ucd"
+      ],
+      "platforms": [
+        "ios"
+      ],
+      "classification": "NATIVE_INPUT_LICENSE",
+      "applicability": "Exact hb-ucd.cc lines 1-15 retain the Grigori Goronzy ISC notice. The compiled hb-ucd object occurs in inspected iOS archives; this notice is distinct from HarfBuzz root COPYING.",
+      "provenance": {
+        "method": "source-lines",
+        "url": "https://chromium.googlesource.com/external/github.com/harfbuzz/harfbuzz.git/+/08b52ae2e44931eef163dbad71697f911fadc323/src/hb-ucd.cc?format=TEXT",
+        "accessed_on": "2026-09-07",
+        "source_sha256": "0bb1dc09aee15ca98a2222f7307d1a9d279646c486f8240efd50035c86554420",
+        "source_bytes": 7196,
+        "line_range": [
+          1,
+          15
+        ]
+      }
+    },
+    {
+      "name": "ICU-LICENSE.txt",
+      "kind": "upstream-text",
+      "bytes": 25185,
+      "sha256": "17510cf7a58b4879b887ec05a45d72cf1b73544dd9ec7e72f20110ed104229ee",
+      "components": [
+        "ICU",
+        "SkUnicode ICU adapter"
+      ],
+      "platforms": [
+        "ios"
+      ],
+      "classification": "NATIVE_INPUT_LICENSE",
+      "applicability": "libicu.a and libskunicode_icu.a are compiled inputs. The complete upstream combined license includes build-script terms; those sections do not make ICU runtime or this application GPL-licensed.",
+      "provenance": {
+        "method": "full-text",
+        "url": "https://chromium.googlesource.com/chromium/deps/icu.git/+/364118a1d9da24bb5b770ac3d762ac144d6da5a4/LICENSE?format=TEXT",
+        "accessed_on": "2026-09-07",
+        "source_sha256": "17510cf7a58b4879b887ec05a45d72cf1b73544dd9ec7e72f20110ed104229ee",
+        "source_bytes": 25185
+      }
+    },
+    {
+      "name": "INDEX.txt",
+      "kind": "index",
+      "bytes": 5031,
+      "sha256": "53b6a73e28b2aa88bc2084bae2923348d109a9e6d117b9f98c5b6b37495d4764",
+      "components": [
+        "Parlor dependency-input notice supplement"
+      ],
+      "platforms": [
+        "android",
+        "ios",
+        "desktop-development"
+      ],
+      "classification": "INDEX",
+      "applicability": "First-party guide to the exact upstream texts, input-level platform applicability, optional notices and remaining review limits.",
+      "provenance": {
+        "method": "authored-index"
+      }
+    },
+    {
+      "name": "Kotlin-Boost-LICENSE.txt",
+      "kind": "upstream-text",
+      "bytes": 1337,
+      "sha256": "8d8291caf1cee26d23acf3eb67c9f9a2d58f1c681b16a4fbe8cbfb9e3c0b5a9b",
+      "components": [
+        "Boost-derived Kotlin/Native code",
+        "UTFCPP"
+      ],
+      "platforms": [
+        "ios"
+      ],
+      "classification": "OBJECT_CODE_NOTICE_EXCEPTION",
+      "applicability": "Boost-derived runtime utilities and UTFCPP have a machine-executable object-code notice exception. Included as a helpful license copy, not an independently mandatory binary-only acknowledgement.",
+      "provenance": {
+        "method": "full-text",
+        "url": "https://raw.githubusercontent.com/JetBrains/kotlin/5687445832cd835b4509b9fbc264cdf1a8201093/license/third_party/boost_LICENSE.txt",
+        "accessed_on": "2026-09-07",
+        "source_sha256": "8d8291caf1cee26d23acf3eb67c9f9a2d58f1c681b16a4fbe8cbfb9e3c0b5a9b",
+        "source_bytes": 1337
+      }
+    },
+    {
+      "name": "Kotlin-Harmony-NOTICE.txt",
+      "kind": "upstream-text",
+      "bytes": 563,
+      "sha256": "8a6725437c8f16af6322496d8e22169fdb8988ad43c5b300350ef867fd7d48e4",
+      "components": [
+        "Apache Harmony portions of Kotlin/Native"
+      ],
+      "platforms": [
+        "ios"
+      ],
+      "classification": "RUNTIME_INPUT_NOTICE",
+      "applicability": "Native regex and native floating-point parsing/conversion derive from Apache Harmony; runtime inputs include dtoa. Apache-2.0 terms are in the shared license file.",
+      "provenance": {
+        "method": "full-text",
+        "url": "https://raw.githubusercontent.com/JetBrains/kotlin/5687445832cd835b4509b9fbc264cdf1a8201093/kotlin-native/licenses/third_party/harmony_NOTICE.txt",
+        "accessed_on": "2026-09-07",
+        "source_sha256": "8a6725437c8f16af6322496d8e22169fdb8988ad43c5b300350ef867fd7d48e4",
+        "source_bytes": 563
+      }
+    },
+    {
+      "name": "Kotlin-MPMC-QUEUE-LICENSE.txt",
+      "kind": "upstream-text",
+      "bytes": 1537,
+      "sha256": "bd41bc36bf821736a2ad3a2f081da9acc9c53ab96c9e375191003c7176d2ef96",
+      "components": [
+        "Dmitry Vyukov bounded MPMC queue"
+      ],
+      "platforms": [
+        "ios"
+      ],
+      "classification": "NATIVE_INPUT_LICENSE",
+      "applicability": "The pinned default concurrent-mark-and-sweep runtime uses ConcurrentMark, ParallelProcessor and BoundedQueue. This preserves the exact BSD notice, without asserting every path executes.",
+      "provenance": {
+        "method": "full-text",
+        "url": "https://raw.githubusercontent.com/JetBrains/kotlin/5687445832cd835b4509b9fbc264cdf1a8201093/kotlin-native/licenses/third_party/mpmc_queue_LICENSE.txt",
+        "accessed_on": "2026-09-07",
+        "source_sha256": "bd41bc36bf821736a2ad3a2f081da9acc9c53ab96c9e375191003c7176d2ef96",
+        "source_bytes": 1537
+      }
+    },
+    {
+      "name": "Kotlin-ThreeTenBP-LICENSE.txt",
+      "kind": "upstream-text",
+      "bytes": 1520,
+      "sha256": "d1bc53b493a3ab387b42717ed5c4b1976a5048996f81154278100bff86d39331",
+      "components": [
+        "ThreeTenBP portions of Kotlin time"
+      ],
+      "platforms": [
+        "ios"
+      ],
+      "classification": "STDLIB_INPUT_LICENSE",
+      "applicability": "Kotlin/Native 2.4.10 Instant derives from ThreeTenBP. Parlor uses kotlin.time.Instant for clocks and snapshot timestamps.",
+      "provenance": {
+        "method": "full-text",
+        "url": "https://raw.githubusercontent.com/JetBrains/kotlin/5687445832cd835b4509b9fbc264cdf1a8201093/license/third_party/threetenbp_license.txt",
+        "accessed_on": "2026-09-07",
+        "source_sha256": "d1bc53b493a3ab387b42717ed5c4b1976a5048996f81154278100bff86d39331",
+        "source_bytes": 1520
+      }
+    },
+    {
+      "name": "Kotlin-Unicode-LICENSE.txt",
+      "kind": "upstream-text",
+      "bytes": 3397,
+      "sha256": "1c3ddd6cc94ad4357e76a589325dd46520850348770536ef66bf8f2b56c77463",
+      "components": [
+        "Unicode portions of Kotlin/Native Apache-Harmony-derived regex"
+      ],
+      "platforms": [
+        "ios"
+      ],
+      "classification": "STDLIB_INPUT_LICENSE",
+      "applicability": "Four native regex range/set sources retain these legacy Unicode notices. The implementation contains upstream Kotlin/Native adaptations; Parlor has not authored modifications to Unicode data. This is separate from modern generated character tables.",
+      "provenance": {
+        "method": "full-text",
+        "url": "https://raw.githubusercontent.com/JetBrains/kotlin/5687445832cd835b4509b9fbc264cdf1a8201093/kotlin-native/licenses/third_party/unicode_LICENSE.txt",
+        "accessed_on": "2026-09-07",
+        "source_sha256": "1c3ddd6cc94ad4357e76a589325dd46520850348770536ef66bf8f2b56c77463",
+        "source_bytes": 3397
+      }
+    },
+    {
+      "name": "Kotlin-libbacktrace-LICENSE.txt",
+      "kind": "upstream-text",
+      "bytes": 1470,
+      "sha256": "660729a7713d03d375b81ec8126f9c801b11d1eacefbe9685185d4c6a24e79cf",
+      "components": [
+        "libbacktrace in Kotlin/Native runtime"
+      ],
+      "platforms": [
+        "ios"
+      ],
+      "classification": "NATIVE_INPUT_LICENSE",
+      "applicability": "Kotlin 2.4.10 CompilerOutput collects libbacktrace runtime modules for Apple targets based on target support, independently of NOOP source-information dispatch. Default iOS input inclusion is established; final optimized code survival is not asserted.",
+      "provenance": {
+        "method": "full-text",
+        "url": "https://raw.githubusercontent.com/JetBrains/kotlin/5687445832cd835b4509b9fbc264cdf1a8201093/kotlin-native/licenses/third_party/libbacktrace_LICENSE.txt",
+        "accessed_on": "2026-09-07",
+        "source_sha256": "660729a7713d03d375b81ec8126f9c801b11d1eacefbe9685185d4c6a24e79cf",
+        "source_bytes": 1470
+      }
+    },
+    {
+      "name": "SLF4J-2.0.16-LICENSE.txt",
+      "kind": "upstream-text",
+      "bytes": 1178,
+      "sha256": "4e7f90c86ab51278228bce153122f1d8df30149d13ce9ef524c8444a84c32dcc",
+      "components": [
+        "SLF4J API 2.0.16"
+      ],
+      "platforms": [
+        "android"
+      ],
+      "classification": "ANDROID_INPUT_LICENSE",
+      "applicability": "Exact published Android input JAR member, including original CRLF bytes. Source-input presence alone does not establish earlier final-package retention.",
+      "provenance": {
+        "method": "archive-member",
+        "url": "https://repo.maven.apache.org/maven2/org/slf4j/slf4j-api/2.0.16/slf4j-api-2.0.16.jar",
+        "accessed_on": "2026-09-07",
+        "source_sha256": "4e7f90c86ab51278228bce153122f1d8df30149d13ce9ef524c8444a84c32dcc",
+        "source_bytes": 1178,
+        "archive_sha256": "a12578dde1ba00bd9b816d388a0b879928d00bab3c83c240f7013bf4196c579a",
+        "archive_bytes": 69435,
+        "member": "META-INF/LICENSE.txt"
+      }
+    },
+    {
+      "name": "Skia-LICENSE.txt",
+      "kind": "upstream-text",
+      "bytes": 1507,
+      "sha256": "5f787c1dee3c56547f09ccc2906ab5f5293c4d8dd6c8654e573216c38e908dbd",
+      "components": [
+        "Skia",
+        "skcms"
+      ],
+      "platforms": [
+        "ios"
+      ],
+      "classification": "NATIVE_INPUT_LICENSE",
+      "applicability": "Skiko iOS inputs contain libskia.a and rendering components. This BSD notice also matches the inspected skcms source header; individual final-link survival is not asserted.",
+      "provenance": {
+        "method": "full-text",
+        "url": "https://raw.githubusercontent.com/JetBrains/skia/80d088ad6ee869e6b511763b5238cff5de72684d/LICENSE",
+        "accessed_on": "2026-09-07",
+        "source_sha256": "5f787c1dee3c56547f09ccc2906ab5f5293c4d8dd6c8654e573216c38e908dbd",
+        "source_bytes": 1507
+      }
+    },
+    {
+      "name": "Skiko-NOTICE.txt",
+      "kind": "upstream-text",
+      "bytes": 197,
+      "sha256": "35dd077c24768b53625101cfcc0ad853ae7e2abc08bd2a111a0267760d1406d8",
+      "components": [
+        "Skiko 0.9.37.4"
+      ],
+      "platforms": [
+        "ios"
+      ],
+      "classification": "NATIVE_INPUT_NOTICE",
+      "applicability": "Exact upstream Skiko NOTICE acknowledges Android Open Source Project adaptations in the inspected published iOS input.",
+      "provenance": {
+        "method": "full-text",
+        "url": "https://raw.githubusercontent.com/JetBrains/skiko/v0.9.37.4/NOTICE",
+        "accessed_on": "2026-09-07",
+        "source_sha256": "35dd077c24768b53625101cfcc0ad853ae7e2abc08bd2a111a0267760d1406d8",
+        "source_bytes": 197
+      }
+    },
+    {
+      "name": "Unicode-V3-LICENSE.txt",
+      "kind": "upstream-text",
+      "bytes": 1995,
+      "sha256": "e7a93b009565cfce55919a381437ac4db883e9da2126fa28b91d12732bc53d96",
+      "components": [
+        "Unicode 16.0.0 data in HarfBuzz",
+        "Unicode 13.0.0 data in Kotlin/Native"
+      ],
+      "platforms": [
+        "ios"
+      ],
+      "classification": "GENERATED_DATA_LICENSE",
+      "applicability": "The access-dated current Unicode License v3 applies to Public data under the official current terms unless otherwise indicated. This 1991-2026 grant is not misrepresented as an immutable historical 2024 grant; legacy regex terms remain separate.",
+      "provenance": {
+        "method": "full-text",
+        "url": "https://www.unicode.org/license.txt",
+        "accessed_on": "2026-09-07",
+        "source_sha256": "e7a93b009565cfce55919a381437ac4db883e9da2126fa28b91d12732bc53d96",
+        "source_bytes": 1995
+      }
+    },
+    {
+      "name": "WebP-COPYING.txt",
+      "kind": "upstream-text",
+      "bytes": 1496,
+      "sha256": "5aec868f669e384a22372a4e8a1a6cd7d44c64cd451f960ca69cc170d1e13acf",
+      "components": [
+        "WebP"
+      ],
+      "platforms": [
+        "ios"
+      ],
+      "classification": "NATIVE_INPUT_LICENSE",
+      "applicability": "The inspected Skiko iOS archives include WebP inputs; this preserves their BSD copyright and permission text.",
+      "provenance": {
+        "method": "full-text",
+        "url": "https://chromium.googlesource.com/webm/libwebp.git/+/845d5476a866141ba35ac133f856fa62f0b7445f/COPYING?format=TEXT",
+        "accessed_on": "2026-09-07",
+        "source_sha256": "5aec868f669e384a22372a4e8a1a6cd7d44c64cd451f960ca69cc170d1e13acf",
+        "source_bytes": 1496
+      }
+    },
+    {
+      "name": "WebP-PATENTS.txt",
+      "kind": "upstream-text",
+      "bytes": 1436,
+      "sha256": "cc3273e0694ea5896145e0677699b53471b03ea43021ddc50e7923fbb9f5023c",
+      "components": [
+        "WebP"
+      ],
+      "platforms": [
+        "ios"
+      ],
+      "classification": "NATIVE_INPUT_COMPANION_TERMS",
+      "applicability": "Exact companion patent grant for the inspected input; retaining the text is not publisher patent or legal approval.",
+      "provenance": {
+        "method": "full-text",
+        "url": "https://chromium.googlesource.com/webm/libwebp.git/+/845d5476a866141ba35ac133f856fa62f0b7445f/PATENTS?format=TEXT",
+        "accessed_on": "2026-09-07",
+        "source_sha256": "cc3273e0694ea5896145e0677699b53471b03ea43021ddc50e7923fbb9f5023c",
+        "source_bytes": 1436
+      }
+    },
+    {
+      "name": "Wuffs-Skia-wrapper-LICENSE.txt",
+      "kind": "upstream-text",
+      "bytes": 1635,
+      "sha256": "e59bb5c5c6ba426a9ac4ba9fe667ad14c5166b12aa25be8af1d122b14fbe2e36",
+      "components": [
+        "Skia Wuffs wrapper"
+      ],
+      "platforms": [
+        "ios"
+      ],
+      "classification": "NATIVE_INPUT_LICENSE",
+      "applicability": "The SkWuffsCodec wrapper is BSD-licensed. Generated Wuffs 0.3.3 input has Apache-2.0 terms covered by the shared Apache text; these are separate components.",
+      "provenance": {
+        "method": "full-text",
+        "url": "https://raw.githubusercontent.com/JetBrains/skia/80d088ad6ee869e6b511763b5238cff5de72684d/third_party/wuffs/LICENSE",
+        "accessed_on": "2026-09-07",
+        "source_sha256": "e59bb5c5c6ba426a9ac4ba9fe667ad14c5166b12aa25be8af1d122b14fbe2e36",
+        "source_bytes": 1635
+      }
+    },
+    {
+      "name": "libjpeg-turbo-LICENSE.md",
+      "kind": "upstream-text",
+      "bytes": 5620,
+      "sha256": "96f5b328adbb78eeaaec6980d73fd558cb1e4d62560ed615646bc3cf5e532430",
+      "components": [
+        "libjpeg-turbo",
+        "Independent JPEG Group"
+      ],
+      "platforms": [
+        "ios"
+      ],
+      "classification": "NATIVE_INPUT_LICENSE",
+      "applicability": "Inspected inputs include libjpeg API and SIMD objects. This upstream rollup distinguishes IJG and TurboJPEG API terms; no TurboJPEG API object was identified in the inspected arm64 inputs.",
+      "provenance": {
+        "method": "full-text",
+        "url": "https://chromium.googlesource.com/chromium/deps/libjpeg_turbo.git/+/e14cbfaa85529d47f9f55b0f104a579c1061f9ad/LICENSE.md?format=TEXT",
+        "accessed_on": "2026-09-07",
+        "source_sha256": "96f5b328adbb78eeaaec6980d73fd558cb1e4d62560ed615646bc3cf5e532430",
+        "source_bytes": 5620
+      }
+    },
+    {
+      "name": "libjpeg-turbo-README.ijg.txt",
+      "kind": "upstream-text",
+      "bytes": 12799,
+      "sha256": "75815e3bf6484201a3c3d17a1bbf10f2e8e3237f84df10a2357ea896db2a81d6",
+      "components": [
+        "Independent JPEG Group"
+      ],
+      "platforms": [
+        "ios"
+      ],
+      "classification": "NATIVE_INPUT_LICENSE",
+      "applicability": "Complete upstream IJG README and terms; the separate INDEX also preserves the exact required acknowledgement sentence.",
+      "provenance": {
+        "method": "full-text",
+        "url": "https://chromium.googlesource.com/chromium/deps/libjpeg_turbo.git/+/e14cbfaa85529d47f9f55b0f104a579c1061f9ad/README.ijg?format=TEXT",
+        "accessed_on": "2026-09-07",
+        "source_sha256": "75815e3bf6484201a3c3d17a1bbf10f2e8e3237f84df10a2357ea896db2a81d6",
+        "source_bytes": 12799
+      }
+    },
+    {
+      "name": "libpng-LICENSE.txt",
+      "kind": "upstream-text",
+      "bytes": 5345,
+      "sha256": "7317e078e2d3b5d7ba5a6159e650945153262b44b76f6700f8e9edb261c5143e",
+      "components": [
+        "libpng"
+      ],
+      "platforms": [
+        "ios"
+      ],
+      "classification": "OPTIONAL_BINARY_ACKNOWLEDGEMENT",
+      "applicability": "Input is present. The PNG license says binary-product acknowledgement is appreciated, not required; this optional copy preserves the source terms without inventing a missing-notice obligation.",
+      "provenance": {
+        "method": "full-text",
+        "url": "https://skia.googlesource.com/third_party/libpng.git/+/ed217e3e601d8e462f7fd1e04bed43ac42212429/LICENSE?format=TEXT",
+        "accessed_on": "2026-09-07",
+        "source_sha256": "7317e078e2d3b5d7ba5a6159e650945153262b44b76f6700f8e9edb261c5143e",
+        "source_bytes": 5345
+      }
+    },
+    {
+      "name": "zlib-LICENSE.txt",
+      "kind": "upstream-text",
+      "bytes": 910,
+      "sha256": "e1cfcc55c325b3f78cf55df9664abaa066e2271dffe8213347d9fccdfbac8f2c",
+      "components": [
+        "zlib"
+      ],
+      "platforms": [
+        "ios"
+      ],
+      "classification": "OPTIONAL_BINARY_ACKNOWLEDGEMENT",
+      "applicability": "Input is present. The zlib license says acknowledgement is appreciated, not required; source notices must not be removed.",
+      "provenance": {
+        "method": "full-text",
+        "url": "https://chromium.googlesource.com/chromium/src/third_party/zlib/+/646b7f569718921d7d4b5b8e22572ff6c76f2596/LICENSE?format=TEXT",
+        "accessed_on": "2026-09-07",
+        "source_sha256": "e1cfcc55c325b3f78cf55df9664abaa066e2271dffe8213347d9fccdfbac8f2c",
+        "source_bytes": 910
+      }
+    }
+  ]
+}

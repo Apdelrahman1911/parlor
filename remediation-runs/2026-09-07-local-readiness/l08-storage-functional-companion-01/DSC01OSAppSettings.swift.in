@@ -1,0 +1,400 @@
+// Copy-only XCTest. Public Settings UI is observed, never manufactured.
+// Apple Support121430 documents Settings > Apps > a chosen app. UI labels are
+// runtime prerequisites, not API guarantees. Parlor/بارلور are bound resources.
+private enum DSC01OSPane: String, CaseIterable {
+    case settings, apps, parlor, language, audit
+    var titles: [String] {
+        switch self {
+        case .settings: return ["Settings"]
+        case .apps: return ["Apps"]
+        case .parlor: return ["Parlor", "بارلور"]
+        case .language: return ["Language", "Preferred Language"]
+        case .audit: return []
+        }
+    }
+}
+
+private enum DSC01OSControl: String {
+    case apps, parlor, language, arabic, showMarkers, noRow, noSelection, verified, complete
+    var labels: [String] {
+        switch self {
+        case .apps: return ["Apps"]
+        case .parlor: return ["Parlor", "بارلور"]
+        case .language: return ["Language"]
+        case .arabic: return ["Arabic", "العربية", "Arabic, العربية", "العربية, Arabic"]
+        default: return []
+        }
+    }
+    var auditIdentifier: String? {
+        switch self {
+        case .showMarkers: return "parlor-dsc01-os-show-markers"
+        case .noRow: return "parlor-dsc01-os-no-row"
+        case .noSelection: return "parlor-dsc01-os-no-selection"
+        case .verified: return "parlor-dsc01-os-verified"
+        case .complete: return "parlor-dsc01-complete"
+        default: return nil
+        }
+    }
+}
+
+@MainActor private final class DSC01OSAppDiagnostics {
+    private var ordinal = 0
+    private var bytes = 0
+    func append(_ stage: String, _ status: String, _ fields: [String: Any]) throws {
+        guard ["initialPane", "apps", "appsSuccessor", "parlor", "appPane", "language", "arabic",
+               "markerControls", "marker", "complete"].contains(stage),
+              ["observe", "before-activation", "after-activation", "PASS", "BLOCKED"].contains(status),
+              ordinal < 128 else { throw NSError(domain: "DSC01OSAppDiagnosticBudget", code: 1) }
+        ordinal += 1
+        let data = try JSONSerialization.data(withJSONObject: ["schemaVersion": 1,
+            "ordinal": ordinal, "stage": stage, "status": status, "fields": fields], options: [.sortedKeys])
+        bytes += data.count
+        guard data.count <= 8192, bytes <= 262144, let text = String(data: data, encoding: .utf8) else {
+            throw NSError(domain: "DSC01OSAppDiagnosticBudget", code: 2)
+        }
+        print("DSC01_OS_APP_INTERACTION " + text)
+    }
+}
+
+// These five public attributes are exactly those documented for
+// XCUIElementQuery.matching(identifier:). A broad match does not identify which
+// individual attribute matched; record only known literal/property provenance.
+private let dsc01OSIdentifyingProperties = ["identifier", "title", "label", "value", "placeholderValue"]
+
+private func dsc01OSPaneNamePredicate(_ titles: [String]) -> NSPredicate {
+    NSCompoundPredicate(orPredicateWithSubpredicates: dsc01OSIdentifyingProperties.map {
+        NSPredicate(format: "%K IN %@", $0, titles)
+    })
+}
+
+private func dsc01OSKnownPropertyMatches(_ attributes: [String: Any], titles: [String]) -> [[String: String]] {
+    dsc01OSIdentifyingProperties.compactMap { property in
+        guard let value = attributes[property] as? String, titles.contains(value) else { return nil }
+        return ["property": property, "knownLiteral": value]
+    }
+}
+
+private func dsc01OSFrame(_ fields: [String: Any], _ key: String) -> CGRect? {
+    guard let value = fields[key] as? [String: Any], value["present"] as? Bool == true,
+          value["validFiniteRectangle"] as? Bool == true,
+          let numbers = value["rectangle"] as? [CGFloat], numbers.count == 4 else { return nil }
+    let frame = CGRect(x: numbers[0], y: numbers[1], width: numbers[2], height: numbers[3])
+    return dsc01CatalogFinite(frame) ? frame : nil
+}
+
+private func dsc01OSPaneEligible(_ fields: [String: Any]) -> Bool {
+    guard fields["foreground"] as? Bool == true, fields["alertCountCapped16"] as? Int == 0,
+          fields["keyboardPresent"] as? Bool == false, fields["paneCountCapped16"] as? Int == 1,
+          fields["paneHittable"] as? Bool == true, fields["paneIdentityMatchesKnown"] as? Bool == true,
+          let viewport = dsc01OSFrame(fields, "viewport"), let pane = dsc01OSFrame(fields, "paneFrame") else { return false }
+    return viewport.contains(pane)
+}
+
+private func dsc01OSRowEligible(_ fields: [String: Any]) -> Bool {
+    guard dsc01OSPaneEligible(fields), fields["targetCountCapped16"] as? Int == 1,
+          fields["targetHittable"] as? Bool == true, fields["targetEnabled"] as? Bool == true,
+          let viewport = dsc01OSFrame(fields, "viewport"), let target = dsc01OSFrame(fields, "targetFrame") else { return false }
+    return viewport.contains(target)
+}
+
+private func dsc01OSStable(_ first: CGRect, _ second: CGRect) -> Bool {
+    zip([first.minX, first.minY, first.width, first.height],
+        [second.minX, second.minY, second.width, second.height]).allSatisfy { pair in abs(pair.0 - pair.1) <= 0.5 }
+}
+
+private func dsc01OSStableTrain(_ frames: [CGRect], final: CGRect) -> Bool {
+    frames.count == 3 && frames.allSatisfy { dsc01OSStable($0, final) }
+}
+
+extension IOSAppLaunchUITests {
+    @MainActor private func osPaneMetadata(_ app: XCUIApplication, pane: DSC01OSPane) -> [String: Any] {
+        let query = pane == .audit ? app.staticTexts.matching(identifier: "parlor-dsc01-state") :
+            app.navigationBars.matching(dsc01OSPaneNamePredicate(pane.titles))
+        let count = query.count
+        let item = count == 1 ? query.firstMatch : nil
+        let knownMatches: [[String: String]]
+        if pane != .audit, let item {
+            knownMatches = dsc01OSKnownPropertyMatches([
+                "identifier": item.identifier, "title": item.title, "label": item.label,
+                "value": item.value as? String ?? "", "placeholderValue": item.placeholderValue ?? ""
+            ], titles: pane.titles)
+        } else { knownMatches = [] }
+        let knownTitles = ["Settings", "Apps", "Parlor", "بارلور", "Language", "Preferred Language", "General", "Language & Region"]
+        return ["pane": pane.rawValue, "foreground": app.state == .runningForeground,
+            "paneSelectorMethod": pane == .audit ? "unchanged-audit-control" : "known-public-identifying-properties-union",
+            "paneKnownPropertyMatches": knownMatches,
+            "paneIdentityMatchesKnown": pane == .audit ? count == 1 : !knownMatches.isEmpty,
+            "viewport": dsc01CatalogRectFields(app.frame), "alertCountCapped16": min(app.alerts.count, 16),
+            "keyboardPresent": app.keyboards.firstMatch.exists,
+            "paneCountCapped16": min(count, 16), "paneHittable": item?.isHittable ?? false,
+            "paneFrame": dsc01CatalogRectFields(item?.frame),
+            "knownNavigationTitles": knownTitles.map { title -> [String: Any] in
+                ["knownTitle": title, "countCapped16": min(app.navigationBars.matching(identifier: title).count, 16)]
+            }]
+    }
+
+    @MainActor private func osRowObservation(_ app: XCUIApplication, control: DSC01OSControl,
+        pane: DSC01OSPane) -> (XCUIElement?, [String: Any]) {
+        var fields = osPaneMetadata(app, pane: pane)
+        fields["control"] = control.rawValue
+        let queries: [(String, XCUIElementQuery)]
+        if let identifier = control.auditIdentifier {
+            queries = [("audit-button", app.buttons.matching(identifier: identifier))]
+        } else {
+            let predicate = NSPredicate(format: "label IN %@", control.labels)
+            queries = [("known-cell", app.cells.containing(predicate)),
+                       ("known-button", app.buttons.matching(predicate)),
+                       ("known-text", app.staticTexts.matching(predicate))]
+        }
+        var selected: XCUIElement?
+        fields["targetCountCapped16"] = 0
+        fields["targetHittable"] = false; fields["targetEnabled"] = false
+        fields["targetFrame"] = dsc01CatalogRectFields(nil); fields["selectorKind"] = "absent"
+        // An ambiguous nonempty class never falls through to a convenient one.
+        for (kind, query) in queries {
+            let count = query.count
+            if count == 0 { continue }
+            fields["selectorKind"] = kind; fields["targetCountCapped16"] = min(count, 16)
+            if count == 1 {
+                selected = query.firstMatch
+                fields["targetHittable"] = selected!.isHittable
+                fields["targetEnabled"] = selected!.isEnabled
+                fields["targetFrame"] = dsc01CatalogRectFields(selected!.frame)
+            }
+            break
+        }
+        return (selected, fields)
+    }
+
+    @MainActor private func awaitOSPane(_ settings: XCUIApplication, allowed: [DSC01OSPane],
+        diagnostics: DSC01OSAppDiagnostics, stage: String) throws -> Bool {
+        for attempt in 1...6 {
+            let observations = allowed.map { osPaneMetadata(settings, pane: $0) }
+            let eligible = observations.filter(dsc01OSPaneEligible)
+            if eligible.count == 1 {
+                try diagnostics.append(stage, "PASS", eligible[0]); return true
+            }
+            try diagnostics.append(stage, "observe", ["attempt": attempt, "eligiblePaneCount": eligible.count,
+                "knownPanes": observations])
+            if eligible.count > 1 { break }
+            if attempt < 6 { try catalogSamplingInterval() }
+        }
+        try diagnostics.append(stage, "BLOCKED", ["reason": "actual-known-pane-unavailable-or-ambiguous"])
+        return false
+    }
+
+    @MainActor private func establishOSAppPane(_ settings: XCUIApplication,
+        diagnostics: DSC01OSAppDiagnostics) throws -> Bool {
+        guard try awaitOSPane(settings, allowed: [.settings, .apps, .parlor],
+                              diagnostics: diagnostics, stage: "initialPane") else { return false }
+        if dsc01OSPaneEligible(osPaneMetadata(settings, pane: .settings)) {
+            guard try activateOSRow(settings, control: .apps, pane: .settings, diagnostics: diagnostics, allowScroll: true),
+                  try awaitOSPane(settings, allowed: [.apps], diagnostics: diagnostics, stage: "appsSuccessor") else { return false }
+        }
+        if dsc01OSPaneEligible(osPaneMetadata(settings, pane: .apps)) {
+            guard try activateOSRow(settings, control: .parlor, pane: .apps,
+                                    diagnostics: diagnostics, allowScroll: true) else { return false }
+        }
+        return try awaitOSPane(settings, allowed: [.parlor], diagnostics: diagnostics, stage: "appPane")
+    }
+
+    @MainActor private func activateOSRow(_ app: XCUIApplication, control: DSC01OSControl,
+        pane: DSC01OSPane, diagnostics: DSC01OSAppDiagnostics, allowScroll: Bool,
+        stage: String? = nil) throws -> Bool {
+        let eventStage = stage ?? control.rawValue
+        var stable: [CGRect] = []
+        for attempt in 1...8 {
+            let (candidate, observed) = osRowObservation(app, control: control, pane: pane)
+            var fields = observed; fields["attempt"] = attempt
+            try diagnostics.append(eventStage, "observe", fields)
+            guard dsc01OSPaneEligible(fields), (fields["targetCountCapped16"] as? Int ?? 16) <= 1 else { break }
+            if dsc01OSRowEligible(fields), let candidate, let frame = dsc01OSFrame(fields, "targetFrame") {
+                if stable.contains(where: { !dsc01OSStable($0, frame) }) { stable.removeAll() }
+                stable.append(frame)
+                if stable.count == 3 {
+                    // Re-query the unique semantic target immediately before
+                    // the only activation; no guessed coordinate or tap retry.
+                    let (current, finalFields) = osRowObservation(app, control: control, pane: pane)
+                    guard let current, dsc01OSRowEligible(finalFields),
+                          let currentFrame = dsc01OSFrame(finalFields, "targetFrame"),
+                          dsc01OSStableTrain(stable, final: currentFrame), candidate.exists else { break }
+                    var before = finalFields
+                    before["stableFrames"] = stable.map { dsc01CatalogRectFields($0) }
+                    try diagnostics.append(eventStage, "before-activation", before)
+                    current.tap()
+                    try diagnostics.append(eventStage, "after-activation", ["control": control.rawValue,
+                        "activationCount": 1, "expectedSourcePane": pane.rawValue])
+                    return true
+                }
+            } else {
+                stable.removeAll()
+                // Navigation-only search within a currently proven public pane.
+                // No scroll is allowed for language selection or audit markers.
+                if allowScroll && attempt < 6 { app.swipeUp(velocity: .slow) }
+            }
+            if attempt < 8 { try catalogSamplingInterval() }
+        }
+        try diagnostics.append(eventStage, "BLOCKED", osRowObservation(app, control: control, pane: pane).1)
+        return false
+    }
+
+    @MainActor private func osMarkerSnapshot(_ app: XCUIApplication) throws -> [String: Any] {
+        let observed = try readDisplayedObservation(app)
+        let statuses = ["not-investigated", "opening", "opened", "open-rejected",
+                        "language-control-unavailable", "selection-unavailable", "verified-arabic"]
+        guard observed["scenario"] as? String == "os", let sequence = observed["sequence"] as? Int,
+              (1...256).contains(sequence), let status = observed["osDisposition"] as? String,
+              statuses.contains(status), let completed = observed["completed"] as? Bool else {
+            throw NSError(domain: "DSC01OSMarkerUnexpectedObservation", code: 1)
+        }
+        return ["sequence": sequence, "osDisposition": status, "completed": completed]
+    }
+
+    @MainActor private func awaitOSMarkerPanel(_ app: XCUIApplication,
+        diagnostics: DSC01OSAppDiagnostics) throws -> Bool {
+        for attempt in 1...6 {
+            let rows = [DSC01OSControl.noRow, .noSelection, .verified].map {
+                osRowObservation(app, control: $0, pane: .audit).1
+            }
+            let frames = rows.compactMap { dsc01OSFrame($0, "targetFrame") }
+            if rows.allSatisfy(dsc01OSRowEligible), frames.count == 3,
+               frames.allSatisfy({ $0.height >= 44 }),
+               frames[0].maxY <= frames[1].minY + 0.5, frames[1].maxY <= frames[2].minY + 0.5 {
+                try diagnostics.append("markerControls", "PASS", ["visibleMarkerRows": rows]); return true
+            }
+            try diagnostics.append("markerControls", "observe", ["attempt": attempt, "visibleMarkerRows": rows])
+            if attempt < 6 { try catalogSamplingInterval() }
+        }
+        try diagnostics.append("markerControls", "BLOCKED", ["reason": "expanded-reporting-panel-not-visible"])
+        return false
+    }
+
+    @MainActor private func finishOSInvestigation(_ app: XCUIApplication, status: String,
+        diagnostics: DSC01OSAppDiagnostics) throws {
+        let control: DSC01OSControl
+        switch status {
+        case "language-control-unavailable": control = .noRow
+        case "selection-unavailable": control = .noSelection
+        case "verified-arabic": control = .verified
+        default: throw NSError(domain: "DSC01OSMarkerUnknownStatus", code: 1)
+        }
+        // The supported URL callback must already have durably reported opened.
+        // This is ordering evidence, not the original witness's assumed cause.
+        var before: [String: Any]?
+        for attempt in 1...6 {
+            let observed = try osMarkerSnapshot(app)
+            if observed["osDisposition"] as? String == "opened", observed["completed"] as? Bool == false {
+                before = observed; break
+            }
+            if attempt < 6 { try catalogSamplingInterval() }
+        }
+        guard let before, let previousSequence = before["sequence"] as? Int,
+              try activateOSRow(app, control: .showMarkers, pane: .audit, diagnostics: diagnostics,
+                                allowScroll: false, stage: "markerControls"),
+              try awaitOSMarkerPanel(app, diagnostics: diagnostics),
+              try activateOSRow(app, control: control, pane: .audit, diagnostics: diagnostics,
+                                allowScroll: false, stage: "marker") else {
+            XCTFail("Task-owned OS marker is not uniquely visible/hittable or URL callback is unobserved")
+            throw NSError(domain: "DSC01OSMarkerBlocked", code: 1)
+        }
+        var marked: [String: Any]?
+        for attempt in 1...6 {
+            let observed = try osMarkerSnapshot(app)
+            if observed["osDisposition"] as? String == status, observed["completed"] as? Bool == false,
+               (observed["sequence"] as? Int ?? 0) > previousSequence { marked = observed; break }
+            if attempt < 6 { try catalogSamplingInterval() }
+        }
+        guard let marked, let markedSequence = marked["sequence"] as? Int else {
+            XCTFail("Task marker activation produced no durable matching observation; never complete it")
+            throw NSError(domain: "DSC01OSMarkerNoReceipt", code: 1)
+        }
+        try diagnostics.append("marker", "PASS", marked)
+        guard try activateOSRow(app, control: .complete, pane: .audit, diagnostics: diagnostics,
+                                allowScroll: false, stage: "complete") else {
+            throw NSError(domain: "DSC01OSCompletionBlocked", code: 1)
+        }
+        for attempt in 1...6 {
+            let completed = try osMarkerSnapshot(app)
+            if completed["osDisposition"] as? String == status, completed["completed"] as? Bool == true,
+               (completed["sequence"] as? Int ?? 0) > markedSequence {
+                try diagnostics.append("complete", "PASS", completed); return
+            }
+            if attempt < 6 { try catalogSamplingInterval() }
+        }
+        XCTFail("Task completion produced no durable matching terminal observation")
+        throw NSError(domain: "DSC01OSCompletionNoReceipt", code: 1)
+    }
+
+    @MainActor private func verifyOSInteractionDecisionContract() throws {
+        let good: [String: Any] = ["foreground": true, "alertCountCapped16": 0, "keyboardPresent": false, "paneIdentityMatchesKnown": true,
+            "paneCountCapped16": 1, "paneHittable": true, "paneFrame": dsc01CatalogRectFields(CGRect(x: 0, y: 44, width: 402, height: 54)),
+            "viewport": dsc01CatalogRectFields(CGRect(x: 0, y: 0, width: 402, height: 874)),
+            "targetCountCapped16": 1, "targetHittable": true, "targetEnabled": true,
+            "targetFrame": dsc01CatalogRectFields(CGRect(x: 20, y: 200, width: 362, height: 44))]
+        var cases: [([String: Any], Bool)] = [(good, true)]
+        for (key, value) in [("foreground", false), ("keyboardPresent", true), ("paneHittable", false),
+                             ("targetHittable", false), ("targetEnabled", false)] {
+            var changed = good; changed[key] = value; cases.append((changed, false))
+        }
+        for (key, value) in [("alertCountCapped16", 1), ("paneCountCapped16", 0), ("paneCountCapped16", 2),
+                             ("targetCountCapped16", 0), ("targetCountCapped16", 2)] {
+            var changed = good; changed[key] = value; cases.append((changed, false))
+        }
+        for key in ["targetFrame", "paneFrame", "viewport"] {
+            var missing = good; missing.removeValue(forKey: key); cases.append((missing, false))
+            var offscreen = good
+            offscreen[key] = dsc01CatalogRectFields(CGRect(x: -500, y: -500, width: 30, height: 30))
+            cases.append((offscreen, false))
+        }
+        var invalid = good
+        invalid["targetFrame"] = ["present": true, "validFiniteRectangle": false]
+        cases.append((invalid, false))
+        XCTAssertEqual(cases.count, 18)
+        for (index, item) in cases.enumerated() { XCTAssertEqual(dsc01OSRowEligible(item.0), item.1, "OS guard case \(index)") }
+        XCTAssertTrue(dsc01OSStable(CGRect(x: 1, y: 2, width: 3, height: 4), CGRect(x: 1, y: 2, width: 3, height: 4)))
+        XCTAssertFalse(dsc01OSStable(CGRect(x: 1, y: 2, width: 3, height: 4), CGRect(x: 1, y: 3, width: 3, height: 4)))
+        let frame: (CGFloat) -> CGRect = { CGRect(x: $0, y: 2, width: 30, height: 44) }
+        XCTAssertFalse(dsc01OSStableTrain([frame(0), frame(0.4), frame(0.8)], final: frame(1.2)), "Cumulative drift is not stability")
+        XCTAssertTrue(dsc01OSStableTrain([frame(0), frame(0.2), frame(0.4)], final: frame(0.4)))
+        XCTAssertFalse(dsc01OSStableTrain([frame(0), frame(0.2), frame(0.4)], final: frame(2)), "Final re-query cannot drift")
+        XCTAssertFalse(dsc01OSStableTrain([frame(0), frame(0)], final: frame(0)), "All three samples are mandatory")
+        print("DSC01_OS_INTERACTION_DECISION_CONTRACT {\"schemaVersion\":1,\"cases\":24,\"passed\":true}")
+        try verifyOSPaneIdentityDecisionContract(good: good)
+    }
+
+    @MainActor private func verifyOSPaneIdentityDecisionContract(good: [String: Any]) throws {
+        var cases: [([String: Any], [String], Bool)] = dsc01OSIdentifyingProperties.map {
+            ([$0: "Settings"], ["Settings"], true)
+        }
+        cases += [
+            (["label": "General"], ["Settings"], false),
+            (["label": "Settings"], ["Apps"], false),
+            (["value": true], ["Settings"], false),
+            (["label": "", "title": "Settings"], ["Settings"], true),
+            (["label": "بارلور"], ["Parlor", "بارلور"], true),
+            (["title": "Preferred Language"], ["Language", "Preferred Language"], true),
+            ([:], ["Settings"], false)
+        ]
+        XCTAssertEqual(cases.count, 12)
+        for (index, item) in cases.enumerated() {
+            XCTAssertEqual(dsc01OSPaneNamePredicate(item.1).evaluate(with: item.0), item.2, "Public pane predicate case \(index)")
+            XCTAssertEqual(!dsc01OSKnownPropertyMatches(item.0, titles: item.1).isEmpty, item.2, "Known property provenance case \(index)")
+        }
+        // Synthetic title-only fixture demonstrates the old predicate's blind
+        // spot without claiming which actual property matched in apphost08.
+        XCTAssertFalse(NSPredicate(format: "label IN %@", ["Settings"]).evaluate(with: cases[8].0))
+        let sameElement: [String: Any] = ["title": "Parlor", "label": "بارلور", "value": "synthetic-unlisted"]
+        let union = dsc01OSPaneNamePredicate(["Parlor", "بارلور"])
+        XCTAssertEqual([sameElement].filter { union.evaluate(with: $0) }.count, 1)
+        XCTAssertEqual(dsc01OSKnownPropertyMatches(sameElement, titles: ["Parlor", "بارلور"]),
+                       [["property": "title", "knownLiteral": "Parlor"], ["property": "label", "knownLiteral": "بارلور"]])
+        XCTAssertEqual([sameElement, sameElement].filter { union.evaluate(with: $0) }.count, 2)
+        var ambiguous = good; ambiguous["paneCountCapped16"] = 2
+        XCTAssertFalse(dsc01OSPaneEligible(ambiguous), "Different matching elements remain ambiguous")
+        var missing = good; missing.removeValue(forKey: "paneIdentityMatchesKnown")
+        XCTAssertFalse(dsc01OSPaneEligible(missing), "A diagnostic count cannot replace fresh identity provenance")
+        var stale = good; stale["paneIdentityMatchesKnown"] = false
+        XCTAssertFalse(dsc01OSPaneEligible(stale), "A stale query/property mismatch must fail closed")
+        print("DSC01_OS_PANE_IDENTITY_DECISION_CONTRACT {\"schemaVersion\":1,\"attributeCases\":12,\"unionCases\":2,\"identityGuardCases\":2,\"passed\":true}")
+    }
+}

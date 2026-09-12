@@ -1,0 +1,337 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/release_fix_review",
+  "author": "/root/native_fix_review",
+  "recorded_at": "2026-09-06T23:23:05.926296+00:00",
+  "status": "APPROVED_FOR_ROOT_FOCUSED_CONTROLS_ONLY",
+  "native_execution_approval": false,
+  "method": "Complete400line helper, complete153line new tests, complete66line parser, complete46line README and all394final delta lines read; reopened full control-expression/gating/finalizer. Prior full V10runner review plus exact reconstructed delta accounts for V11runner; AST/byte/hash arithmetic only, no harness imports/tests/builds.",
+  "control_manifest_sha256": "87b924da2d8b39f6c965d4d94321282e130faf30d5dcffe91a723273bb9505e5",
+  "control_count_independently_rehashed": 137,
+  "frozen_manifest": {
+    "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v11/author-frozen-control-manifest-01.json",
+    "sha256": "fe83be618f34745e58d67b5631f0050cfff14ea83f882cd734af00a791df6ff9"
+  },
+  "source_binding": {
+    "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v11/source-bindings.json",
+    "sha256": "50bcbd098ed51cf310821e3aa679dbe094bf043a08613f03e3f2c22aecccb263"
+  },
+  "binding_receipt": {
+    "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/native-binding-11/receipt.json",
+    "sha256": "c8bfdcfd3510466badca70e615c901ea9e968abd180385fa800f71e9c5d25353",
+    "source_and_runner_unchanged": true,
+    "exit_code": 0,
+    "stop_exit_code": 0,
+    "cleanup_errors": []
+  },
+  "source_manifest_sha256": "9ac2be536979f2216b39c10a6d148125a12380987d4efd483bbcbaeb1733318e",
+  "source_inputs_independently_rehashed": 669,
+  "copy_inputs_independently_rehashed": 613,
+  "commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+  "tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+  "tracked_diff_sha256": "148fb4583d8fa8341b3cbc48a7fc0bc7564bf4df5c27e9d80e32c6bfdc57b784",
+  "delta": {
+    "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v11/v10-to-v11-controls-final-01.diff",
+    "sha256": "437f261395e6258aa566dcce4bd80d2af3c6e6aa7940dcbd9a73e5c101bde14f",
+    "lines": 394,
+    "reviewed_ranges": [
+      [
+        1,
+        394
+      ]
+    ],
+    "byte_identical_independent_reconstruction": true
+  },
+  "read_coverage": [
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v11/DSC01OSAppSettings.swift.in",
+      "sha256": "b0f427d976f886e2f092dc0c59752f0fe010316f7dd7621f8c08b3c563b34210",
+      "lines": 400,
+      "reviewed_ranges": [
+        [
+          1,
+          400
+        ]
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v11/v11_receipts.py",
+      "sha256": "8307a118d414900fbf43399b569ac066c687470f8ac7fb74ce4fadb1b73b7f7b",
+      "lines": 66,
+      "reviewed_ranges": [
+        [
+          1,
+          66
+        ]
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v11/test_v11_contract.py",
+      "sha256": "c555f583205c2fa288be9334eb24f5eb50a4fa55161c13c43fdb36f01979f4f0",
+      "lines": 153,
+      "reviewed_ranges": [
+        [
+          1,
+          153
+        ]
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v11/README.md",
+      "sha256": "5e7c9dafcf189738040756d7e0cfb4f1f53e3cfd40a7739c3487c34d499f9da7",
+      "lines": 46,
+      "reviewed_ranges": [
+        [
+          1,
+          46
+        ]
+      ]
+    }
+  ],
+  "runner_coverage": {
+    "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v11/run_dsc01_apphost_cycle.py",
+    "sha256": "29a579cd7b1908786d3a9de21a3cf6b43365a51de1360ad99673cdc550cf0889",
+    "lines": 841,
+    "unchanged_v10_full_read_reference": {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-v10-frozen-focused-approval-01.json",
+      "sha256": "7eb8b487e6e851718fb3867862cb0dbddb7d02d8637b744054c138e3c84c2f59"
+    },
+    "full_delta_read": true,
+    "directly_reopened_ranges": [
+      [
+        1,
+        170
+      ],
+      [
+        695,
+        841
+      ]
+    ],
+    "every_unchanged_declaration_byte_compared": true
+  },
+  "immutable_original_v10_references": 26,
+  "original_actions_sampling_reporting_identical": {
+    "sha256": "fd6e1fc6f550dae103bfd7f070fe4a0bb4d382f6caaec7e776340fffccf8d355",
+    "start_line": 136,
+    "end_line": 327
+  },
+  "finalizer_identical": {
+    "sha256": "7b1c9a2faa58be765205acfae064d203b896069fd382c1f2bfb1923ceac032c0",
+    "v11_start_line": 733
+  },
+  "expected_test_methods_static_only": 177,
+  "original_test_method_bodies_byte_identical": 168,
+  "new_test_methods_static_only": 9,
+  "method_identities": {
+    "test_catalog_contract.CatalogControlTest.test_synthetic_receipt_is_only_a_parser_check": "16c9bb60029db0f811718f366720586acb82630d90eda3b7ceb0289a6a7480a6",
+    "test_catalog_contract.CatalogControlTest.test_missing_swift_contract_or_game_cannot_pass": "a3326b237bc2ba8b418794b54a6983d2fd2401b2c79118a4c23b61bbd20ddf29",
+    "test_catalog_contract.CatalogControlTest.test_repeated_activation_or_missing_successor_cannot_pass": "b85934caa0861678efd5f33d8e99aba08546ad86d6cbadffa12e75e58a6636c1",
+    "test_catalog_contract.CatalogControlTest.test_incomplete_train_unknown_game_and_oversized_row_fail": "3e567a34841049666eb8065bf4f6b45955a69ca3ac87cf509fd113aecb0185e0",
+    "test_catalog_contract.CatalogControlTest.test_only_catalog_entry_call_changes_original_matrix_and_geometry_checks_execute": "6025f7a9bce75c0667b64477a2c8ef8d3f4a8c1caae30e03376112ea3fd17bb4",
+    "test_catalog_contract.CatalogControlTest.test_physical_activation_is_outside_all_readiness_retries": "7b3118daa036ef9e94b7b25eb9bf1a9b3c466a2e773f509791b6e1f6a2717619",
+    "test_catalog_contract.CatalogControlTest.test_public_metadata_bounds_and_measured_exclusions_are_explicit": "e116a63348f885dabc49c6b79717f70820ffe0452b877f51313273aa02e9a2d5",
+    "test_catalog_contract.CatalogControlTest.test_old_native_matrix_and_cleanup_controls_remain_identical": "a553242e09435fb5ccbac70ba5215fac3270895610422527ec45f488955ac61c",
+    "test_catalog_contract.CatalogControlTest.test_os_prefix_queries_are_diagnostics_only_not_action_fallbacks": "a23f2583977fc8adee2c3310c9f83ed4016e13f7bb3861e442e0b3a489f60db6",
+    "test_catalog_contract.CatalogControlTest.test_added_xctest_helper_and_contract_are_hashed_build_copy_inputs": "ba13987ecfb1e750609e6dcb6d514895e829dcd82bf870be16d821c0c48f8e61",
+    "test_catalog_contract.CatalogControlTest.test_every_consumed_v6_reference_is_bound_by_full_path_and_bytes": "a7992b98687d0655aa5ced736555450d578b697076c10000224c3f3a8ab09e48",
+    "test_catalog_contract.CatalogControlTest.test_each_v6_reference_affects_control_identity_without_mutating_files": "bec84bf0ce9d807a144176e0b9df347125e05de29721ac36a4745b0612027358",
+    "test_copy_observation_contract.DirectObservationReceiptTest.test_valid_synthetic_settings_direction_receipt_is_only_a_schema_check": "66db9d833b8773f9dd1306957534b4f622884c41eac310b0a0f5193aced93edb",
+    "test_copy_observation_contract.DirectObservationReceiptTest.test_correct_native_direction_does_not_replace_direct_compose_observation": "2e3a986a2e834f0338f5632d17ba3dc02449e6cb80852868af7f085c2d8ea972",
+    "test_copy_observation_contract.DirectObservationReceiptTest.test_both_actual_game_phase_schemas_are_exercised_without_runtime_claim": "7f3d21337f5ed197b42eb9bc3314f6043574465f9cb9d89533d386d63b671c2e",
+    "test_copy_observation_contract.DirectObservationReceiptTest.test_equal_value_cannot_hide_a_replaced_controller_or_flow_or_state_reference": "9838bec3096b3c38f05d31dc850de43506c3cdcf8b555ebfda58e98fc561b70c",
+    "test_copy_observation_contract.DirectObservationReceiptTest.test_a_disposed_session_cannot_be_rebased_to_a_passing_checkpoint": "8715d43e8294424606f5c9ea7bded0391a676f3befa44739c8bcf4cdc5708702",
+    "test_copy_observation_contract.DirectObservationReceiptTest.test_root_controller_count_and_locale_do_not_prove_session_retention": "8e192604bcb05299a265ca4e31b6ea27ca40afe60d99c5fd17ddc5b560ebae39",
+    "test_copy_observation_contract.DirectObservationReceiptTest.test_process_recreation_is_not_same_process_continuity": "c72512f7473526bee6488831f756289bcfaa2146db587e90b1bdede4fbd8ed0c",
+    "test_copy_observation_contract.DirectObservationReceiptTest.test_a_language_command_must_have_its_own_lifecycle_witness": "955a36e1a7810f693a943e382b21edfc20644ea0911a25ce24e19e3f29a386b3",
+    "test_copy_observation_contract.DirectObservationReceiptTest.test_explicit_language_cannot_pass_when_locale_and_direction_both_stay_stale": "4fe48df455890788daa6938f101b7cc28d4581e20bd020591468d9eff2de7ecc",
+    "test_copy_observation_contract.DirectObservationReceiptTest.test_system_cannot_accept_a_plausible_but_replaced_os_preference": "57ae832188601246d26050f98ba35a4a989fd41fe1c74c3439eb1db48757f986",
+    "test_copy_observation_contract.DirectObservationReceiptTest.test_private_or_unknown_data_is_rejected": "4ae8e1a642dcf3b19dcecd46021599e74ac7acc10eff93e401d994e7261f0b57",
+    "test_copy_observation_contract.DirectObservationReceiptTest.test_kotlin_observation_cannot_run_before_original_app_initialization": "6b588e9dc42e95a89175a225dba6331ddbb4271619a956499b2773deb7ddea65",
+    "test_copy_observation_contract.DirectObservationReceiptTest.test_failed_and_cancelled_synthetic_commands_are_not_success": "df57f6ef32ea7a03cb7ab099ac406a38927772c44ff01494eb56c0352e0d7cfb",
+    "test_copy_observation_contract.DirectObservationReceiptTest.test_initial_language_must_use_actual_settings_with_zero_synthetic_commands": "c2d8df43b3d3b01dfefd41d900e4ee4ac2b761225940db19f95bb9c1139f45c8",
+    "test_copy_observation_contract.DirectObservationReceiptTest.test_first_post_foreground_mismatch_cannot_be_erased_by_good_passive_windows": "3da2cbe8d3484d4529539cfda9371165609b59d2ee4e227481ced5cb7abe650e",
+    "test_copy_observation_contract.DirectObservationReceiptTest.test_any_early_middle_or_second_window_divergence_fails_despite_good_final_sample": "ed75a26e69ce6d9472fff4187af16dd477c35852ff6be8ae4ee4592d8c2f924d",
+    "test_copy_observation_contract.DirectObservationReceiptTest.test_passive_windows_require_all_six_samples_and_original_order": "740806af9a01d8d2562af33c7853be378fdeffa52d28464d764564805b0de3f0",
+    "test_copy_observation_contract.DirectObservationReceiptTest.test_every_passive_sample_requires_own_lifecycle_and_canonical_reference": "7e328a51098337a705ed462da9918c60bc6fb80e61b41dbeb50e32c27241bde1",
+    "test_copy_observation_contract.DirectObservationReceiptTest.test_window_only_schema_is_not_accepted_in_settings_or_nonwindow_events": "79aea382827927f20355893f2d00552bdd63789b5b422487a952806eac5f7df5",
+    "test_copy_observation_contract.DirectObservationReceiptTest.test_six_full_public_snapshot_rows_fit_the_existing_accessibility_budget": "34362fcadbca2369d82fa0679ae0dd12e32eadb5ed1e788cc1f2be10d8e9fdfc",
+    "test_copy_observation_contract.DirectObservationReceiptTest.test_complete_raw_geometric_receipts_fit_the_retained_file_budget": "3ab715dffafd5fbce0611fe70abba5655d986fbccf1c64264635b079b2bdf6b6",
+    "test_copy_observation_contract.DirectObservationReceiptTest.test_distinct_outer_direction_is_not_mistaken_for_compose_native_direction": "84b5553d6b0e1ffd377065ab5dd4cc6e92b00d0a5987533f6b981bf998b7f3bb",
+    "test_copy_observation_contract.DirectObservationReceiptTest.test_actual_native_child_outer_view_window_or_parent_replacement_is_rejected": "ab2c9c62f1ca878310df1445ba33e18699b3913aa14a6bb583716f7851111e91",
+    "test_copy_observation_contract.DirectObservationReceiptTest.test_matching_but_inset_child_and_parent_do_not_prove_full_window_geometry": "ddf1f93899ede88e5d520b0ec9df704416c9ff127d62b34875a3f41572f249fa",
+    "test_copy_observation_contract.DirectObservationReceiptTest.test_every_raw_geometry_field_is_independently_checked": "953f4dd209fc27d6b2131285df6591cc7d8ac0fe095dff12737fad3d676d2d3a",
+    "test_copy_observation_contract.DirectObservationReceiptTest.test_zero_safe_areas_cannot_false_green_even_when_all_three_match": "7193ac2e270e62ec1f8fe24bda30be4817ccea3449b63f429651c1c1b299754e",
+    "test_copy_observation_contract.DirectObservationReceiptTest.test_oversized_negative_nan_and_bool_geometry_is_rejected": "1059ac4dab1b0ec5212549fcf93135b1639ccfca0e9a2938ca1c629e851e0a98",
+    "test_copy_observation_contract.DirectObservationReceiptTest.test_rotations_must_cover_both_actual_directions_and_not_fake_orientation": "2166697881dfb3982d6f8163fd5f2c99f80ea823444c1fb0fa6181febb4cbb56",
+    "test_copy_observation_contract.DirectObservationReceiptTest.test_geometry_window_must_not_add_a_background_cycle": "62e8c66da9939fbbaf608550d2ae48d63c85dcf1fc344a6aed8c504430572c4c",
+    "test_copy_observation_contract.DirectObservationReceiptTest.test_native_observer_cannot_rebase_after_disposal_or_call_before_main": "82ddb119893e0aafdea31bac13f2ca3bc340418be16abfb881d1d7f270207971",
+    "test_copy_observation_contract.DirectObservationReceiptTest.test_missing_os_language_ui_is_blocked_never_pass_or_not_applicable": "905e6e1e02c59fa376357eea55a1737bb0ffbc64b5830a841b1286cf8037ce94",
+    "test_copy_observation_contract.DirectObservationReceiptTest.test_os_owned_preference_requires_restoration_and_restart": "22c7932dec271bbccc2e1877c1483c3ad6acb972e89d568082a4bb9ceb15ad78",
+    "test_copy_observation_contract.DirectObservationReceiptTest.test_os_gate_requires_an_accepted_public_settings_url_invocation": "e168b6e46549ddaf4dbb48fcd7be1cc7777a614377cdcf9a2a37682bc183a459",
+    "test_copy_observation_contract.CopyBoundaryContractTest.test_exact_compose_controller_is_captured_from_local_not_a_child_type_guess": "583848e351cfda5e63e25fe10b7077a582541259c7203ee3076137e6fb07b0c4",
+    "test_copy_observation_contract.CopyBoundaryContractTest.test_observation_never_loads_or_reconfigures_a_native_view": "f0b2031a552b1d572b398722a758d039cfe6f6526b33196bee86cd99203e52e7",
+    "test_copy_observation_contract.CopyBoundaryContractTest.test_both_en_ar_geometries_use_actual_orientation_then_a_complete_passive_window": "e6385eeab8edc294c747cf86576fe9290816e7c759bcb9a7921bd31812d99939",
+    "test_copy_observation_contract.CopyBoundaryContractTest.test_native_source_additions_and_explicit_swift_outer_are_closed_manifest_inputs": "b6d366145a3aed4812bb0aa5ea0d7ff36d697aa50bb40d0456d3afbb4089ae0d",
+    "test_copy_observation_contract.CopyBoundaryContractTest.test_local_checkpoint_uses_real_settings_then_home_before_synthetic_language_calls": "de9a506c2d530e8cc45bb712a15467ae9af123c7cdaeac5bdc0176e6f8083409",
+    "test_copy_observation_contract.CopyBoundaryContractTest.test_foreground_collects_both_windows_before_any_direction_assertion": "54bef711a508aecb8f30b77eb9a89777d64d6a1fec4e73e700f11bb0494bcb6d",
+    "test_copy_observation_contract.CopyBoundaryContractTest.test_passive_samples_are_durable_nonblocking_and_do_not_publish_between_samples": "1b03b412c556a7351c6b8a8fff519362be8a72dc11030b45dde1e9c63821f620",
+    "test_copy_observation_contract.CopyBoundaryContractTest.test_protected_traversal_hidden_generated_and_nonbuild_inputs_are_excluded": "b4e96e49cb6e9b4b941dcfdab715e9ac9ce8bbf461bf65733f8958ca8b4cb290",
+    "test_copy_observation_contract.CopyBoundaryContractTest.test_all_actual_source_anchors_apply_only_to_owned_copies": "15a114f2dbed2552245a6f1d31835a1cd27a8686854ab3c78de9442189cf260d",
+    "test_copy_observation_contract.CopyBoundaryContractTest.test_missing_or_duplicate_anchor_is_not_a_dynamic_fallback": "37827c52f3d3cc27d230856bcaa57926fc1c4caf15e889a39073edd8944f17e2",
+    "test_copy_observation_contract.CopyBoundaryContractTest.test_copy_refuses_unbound_manifest_and_nonempty_destination": "5765a6d3cc37f9cb88c9072f045cf0c7a490ec021752906f0d7f1fb5bcfcf347",
+    "test_copy_observation_contract.CopyBoundaryContractTest.test_original_build_outputs_never_enter_copy_only_cleanup_set": "16916f4001fe9b1c89839b1de66b689d29f3035cd48737ba5b1f0fe3f8130cfe",
+    "test_copy_observation_contract.CopyBoundaryContractTest.test_final_copy_attestation_rejects_input_drift_but_not_owned_outputs": "71a2a42c8daa5fb3a64778490a1966243ea8b61fd16d6d99683206417af4840c",
+    "test_copy_observation_contract.CopyBoundaryContractTest.test_final_copy_attestation_rejects_new_inputs_and_source_symlinks": "a07d948413fb595493e063fc3a72abb533c21cef80970cd49f9ae89145a45155",
+    "test_copy_observation_contract.CopyBoundaryContractTest.test_after_build_identity_precedes_owned_copy_deletion_and_gates_pass": "464d2ee7fe68611dd34a36494885eb8ec345a47e12add24e94f14ed0fff8f26f",
+    "test_copy_observation_contract.CopyBoundaryContractTest.test_public_setup_selectors_are_source_whitelisted_and_bounded": "9afcdd3b7ae1c67f7c50e83b410925f5bd1d7cbb981226a855f0c71ee9f734cd",
+    "test_copy_observation_contract.CopyBoundaryContractTest.test_name_entry_uses_real_ime_next_done_without_fling_or_backing_state_bypass": "a7724099ba7aa6c216ddbd98f14e1ea134fb9b0bbfdb827ebac44606006545bd",
+    "test_copy_observation_contract.CopyBoundaryContractTest.test_original_name_fields_still_own_next_and_final_done": "680990dd7070f5542dd01f9981af62b046a661fa601e45839beae1a053daf3a7",
+    "test_copy_observation_contract.CopyBoundaryContractTest.test_actual_os_api_used_not_private_settings_urls_or_global_defaults": "4448e0f8cdb6d1f0fc3857fe027209f661286311f6c60640f83fa5ef6e02af0e",
+    "test_harness_contract.ReceiptContractTest.test_complete_synthetic_schema_is_accepted_not_runtime_evidence": "75fb0d52db7aed2391687e0027f7d4c0d9add5ef35c70488c698443490abe69f",
+    "test_harness_contract.ReceiptContractTest.test_missing_no_disposal_precondition_is_rejected": "07dc4e254c855f3a5143a2e51fafc2e77f86004e80198d210603ae2ed9178481",
+    "test_harness_contract.ReceiptContractTest.test_changed_boot_identity_cannot_impersonate_restart": "9d8ac14aeb660fcc79ee6eaceb7a9a4f2b7f61b115ac12bf4060436058b9bb2e",
+    "test_harness_contract.ReceiptContractTest.test_unknown_data_is_not_exported_as_trusted_observation": "4daf83689d6d293d07f3c97d9f542b2d9f712a765e09ea07013572df341c323a",
+    "test_harness_contract.ReceiptContractTest.test_missing_system_restoration_or_wrong_native_direction_fails": "e1fec10bde7e9a1ba4f962e49fdff65a1a01a302bf8edcc9ffeb37b3aa8cc7ca",
+    "test_harness_contract.ReceiptContractTest.test_test_summary_with_skip_cannot_pass": "ee2c491b23c781ca33314999e07e5277d9345dc34cc7eaafe5c77c460e065d15",
+    "test_harness_contract.ReceiptContractTest.test_exact_five_test_receipt_is_required_not_just_the_app_matrix": "455e54ad24bf0252c2bd8fdd8c8d7d7d90f1e095ac538c90ec28b0895cdbb7cc",
+    "test_harness_contract.ReceiptContractTest.test_production_container_test_names_signatures_and_actual_project_wiring_are_bound": "5bd5fa00cc557f752a52061d41088ecd8056a84e3507b014fb656dad8b225e20",
+    "test_harness_contract.RuntimeStatusContractTest.test_executed_failed_xctest_summary_cannot_remain_not_run": "dea5f45af47bd788fc8ff21628fbadf03d619936442f4fac4b469d352ddf16ab",
+    "test_harness_contract.RuntimeStatusContractTest.test_preflight_failure_is_still_not_run": "d01b289f5aba19861359a32fd0468743b5733c6c507d8a2c1892890a6b3dc09d",
+    "test_harness_contract.RuntimeStatusContractTest.test_later_evidence_failure_cannot_leave_pass": "f06d4512244d967701de9e63930b9b0b3787941b768358b7bd13fbb8f6a887f9",
+    "test_harness_contract.RuntimeStatusContractTest.test_running_is_persisted_before_the_guarded_xcode_call": "0cc72de710709f998dcbf23af57ec26c30feef576ca1a790b63a1223ef77fcf1",
+    "test_harness_contract.SelectorSourceContractTest.test_exact_tab_selector_matches_reviewed_pinned_merge_and_actual_resources": "dd1ab084330c5b48912e0353a08f6e174c5b25468704da5fdd1754958e539156",
+    "test_harness_contract.SelectorSourceContractTest.test_games_return_uses_original_resources_and_the_same_actual_tab_bar": "41d6406f6d96d37f08ef78ef2a3dd998eaaba4e78b601b652fb9be8b34ed4dc1",
+    "test_harness_contract.SelectorSourceContractTest.test_diagnostics_are_exact_whitelisted_bounded_and_never_a_fallback_tap": "da9d3b9b2d572c1778ac7b44dec23c10e9b89b4ce010ae23f7df65fcafcca240",
+    "test_harness_contract.CopiedPhaseContractTest.test_failed_build_with_stale_output_stops_and_never_normalizes": "03253bae8f2d20725b1b434116a9328fa0ba48b57bd114543bda091cc37eaeda",
+    "test_harness_contract.CopiedPhaseContractTest.test_failed_directory_change_never_builds_or_normalizes": "d272d12889e4b86ff002d15a154a1e3b2d9f523fe9124e1df78e98354f2b8229",
+    "test_harness_contract.CopiedPhaseContractTest.test_failed_stop_cannot_normalize_or_look_green": "48a98f482022a7f24e72443431faa615dac365f2384c444abfe2759d510e7286",
+    "test_harness_contract.CopiedPhaseContractTest.test_normalization_failure_propagates_after_immediate_stop": "c0005fa99ae2cb7ee7471c764f2caba1789712843a013e137734813cc4bf01fb",
+    "test_harness_contract.CopiedPhaseContractTest.test_successful_phase_stops_before_normalizing": "a578f9b0fb68074e31e17a18009243c6900ad2c43cc5793402ba380cb3ade807",
+    "test_secondary_fifo.SecondaryFifoSafetyTest.test_attested_pair_removed_only_after_workers_stop": "fc9c4ae09be750d52695c47ca887e8edd9292d6ece7b46611a9e907e888c22f9",
+    "test_secondary_fifo.SecondaryFifoSafetyTest.test_unowned_child_cannot_attest_from_name_alone": "f4a7f9ac65a7c0463bb614bd24481b78608938f8bff96bfbc59e8e2301420d39",
+    "test_secondary_fifo.SecondaryFifoSafetyTest.test_pid_reuse_during_observation_rejected": "4fd7a7903e5fabd6b93044556c37b69ba80ec03259ee9e28ee13f648b98bed59",
+    "test_secondary_fifo.SecondaryFifoSafetyTest.test_pid_reuse_during_cleanup_preserves_files": "4a2d5cfd71c5ad33f35bf7fa46ae7f24504d645c21be431974e2a182a3d613cf",
+    "test_secondary_fifo.SecondaryFifoSafetyTest.test_stale_preexisting_fifo_is_not_owned": "9cbdc70d01054e55e58587b8be833093def09f4a8a9d36d35e5b71617095d1f1",
+    "test_secondary_fifo.SecondaryFifoSafetyTest.test_process_uid_mismatch_is_not_owned": "f65a642fab43d75e44edd82f77ea46773e0511c54fd647bf26aa8a3aca386216",
+    "test_secondary_fifo.SecondaryFifoSafetyTest.test_inode_uid_mismatch_is_not_owned": "b6ebaf41ae8b2fb8266325d7fff5b9dfd189963be7067fde522bebcb8acf27e7",
+    "test_secondary_fifo.SecondaryFifoSafetyTest.test_preexisting_parent_birthtime_rejects_new_fifo": "79dc01425a346a69f4af9c82844be5a8321c4fc41b57639b0c9eada9d0411ae6",
+    "test_secondary_fifo.SecondaryFifoSafetyTest.test_holder_query_error_never_becomes_empty_holder_success": "b8069631cbcd293460cfdd47dfd7d9ae43a7b46ad27699892f9f1734fa68c330",
+    "test_secondary_fifo.SecondaryFifoSafetyTest.test_symlink_fifo_not_followed_or_deleted": "ab0b8e721bea20098b63d623dfe583174e73963290366248f4461753fef9bebd",
+    "test_secondary_fifo.SecondaryFifoSafetyTest.test_symlink_parent_not_followed": "a5a2001e449c6b6a26181b612ebf62d983c636163ba229563fc57f4ca9a4558f",
+    "test_secondary_fifo.SecondaryFifoSafetyTest.test_replaced_inode_rejected": "8f8034bb7c9c116bd7e3a3d51db1c2fe2ad4f375be69fc6712aed753bbcb5563",
+    "test_secondary_fifo.SecondaryFifoSafetyTest.test_unknown_directory_contents_preserve_all": "fd854d8657f031097d7eb196f31604b1c8087da7512a8670430ea8722acebae8",
+    "test_secondary_fifo.SecondaryFifoSafetyTest.test_unknown_root_contents_preserve_all": "883cbe3cd6b4c0071254721cd04000c72cae088f2508fef31b9243b08b2a8556",
+    "test_secondary_fifo.SecondaryFifoSafetyTest.test_file_holder_prevents_any_unlink": "bf15ff24aa9b7a9bf4839f553d158833fb98e9d036a55519c21ce250ddd8245b",
+    "test_secondary_fifo.SecondaryFifoSafetyTest.test_timeout_or_cancellation_cleanup_uses_same_attestation": "bada80d2484d09f21c652fba0ce8faa8075bfdefbc5fe9d7a53c485f4ac0b1ed",
+    "test_secondary_fifo.SecondaryFifoSafetyTest.test_missing_unattested_then_late_created_fifo_blocks_cleanup": "de0a41cce9ada61a5560236d1636adcca3186d83ed546ec2d6369851841f6b0d",
+    "test_secondary_fifo.SecondaryFifoSafetyTest.test_unknown_external_argument_is_rejected": "3e974739eb5c69694f3bcfc74fb3777220d5dd58c1edcbead1b78ac25c516292",
+    "test_secondary_fifo.SecondaryFifoSafetyTest.test_missing_or_duplicate_flags_rejected": "9bddb006eca7058eaef2bcda9bf425deb0987978be17374b22b06c72e54d9bd5",
+    "test_secondary_fifo.SecondaryFifoSafetyTest.test_fully_attested_same_identity_and_pair_avoids_redundant_uid_query": "d5bccd4c7c69e4f9742b47764dcaf7888bba4a0f8e53e214da4f4419705a3d03",
+    "test_secondary_fifo.SecondaryFifoSafetyTest.test_initial_uid_query_failure_never_attests_or_deletes_paths": "29c058d889284159196c75cde72cd593983da53cb6fd0b94de629efa155877f2",
+    "test_secondary_fifo.SecondaryFifoSafetyTest.test_partial_record_or_pending_claim_cannot_use_cached_uid": "385b00ce411aee21ec5cc5e43c8c9aa2a1b5de6e18bfa6cb4e9cd392e99a9d46",
+    "test_secondary_fifo.SecondaryFifoSafetyTest.test_current_new_pair_cannot_hide_behind_members_old_argv": "47507be4e9b06af61129d9be79636848b16ff4206aa1bd8b00e45525a4c40464",
+    "test_secondary_fifo.SecondaryFifoSafetyTest.test_changed_child_or_parent_start_cannot_use_attested_pair": "c46cd99b1be75beba142f115036bda5973a95bf7638a97a80f462066e6b9f8c1",
+    "test_secondary_fifo.SecondaryFifoSafetyTest.test_cached_pair_still_rechecks_changed_inode": "c7e13489864150e7b86e128c1c18827ec40a8adfed1645f804711b0273a4c158",
+    "test_secondary_fifo.SecondaryFifoSafetyTest.test_cached_pair_still_rechecks_inode_uid_and_symlink": "370972b01df95aa86f2bd9c17f3efc79f1fcb62f753f5c86558a02cd30ae59cb",
+    "test_secondary_fifo.SecondaryFifoSafetyTest.test_new_pair_argv_change_during_uid_attestation_is_rejected": "d73cb09b86c25630c14b3040c75d8476ff12c63a07017dc5ec842df82cb5f4af",
+    "test_v10_contract.V10OSReceiptTest.test_all_observed_public_entry_panes_keep_full_original_os_oracles": "165b105e979c7e6a5a5fb55879a35a5c96190e1601f5a1acdcd3740c2df3a11d",
+    "test_v10_contract.V10OSReceiptTest.test_unproven_pane_or_unavailable_language_remains_explicitly_blocked": "4602ecc85c8491d42f6481ee2e9087e10a62c381afd52077ff396aeeb88317b7",
+    "test_v10_contract.V10OSReceiptTest.test_opened_or_verified_marker_alone_cannot_manufacture_os_selection": "9387d26f75b1b146361bf7cc641f4565ad03027ffefaaaeea7014a5e820fdcc0",
+    "test_v10_contract.V10OSReceiptTest.test_contract_must_be_executed_once_with_all_twenty_four_cases": "5c765f85e765f474b716ef786b25c74d96bb042b7084ff42ee5e3d57c2c45527",
+    "test_v10_contract.V10OSReceiptTest.test_missing_repeated_or_reordered_actions_fail_closed": "9f49ec8364e85102582aca4616e78f3f187aab0574c2361c8ff1c0decbd35cb6",
+    "test_v10_contract.V10OSReceiptTest.test_page_and_target_guards_reject_hidden_ambiguous_offscreen_and_wrong_pane": "f1a2212851760e13587c69e9e0db7286334c80723f1faec895adc82b7dc5d84b",
+    "test_v10_contract.V10OSReceiptTest.test_three_real_stable_samples_and_finite_frames_are_mandatory": "bd095c3740724b8194d02e859346af63d5627d1d2951e2a69f432aeeec45bf2e",
+    "test_v10_contract.V10OSReceiptTest.test_expander_successor_requires_all_three_visible_ordered_full_height_markers": "7a4e8474da66d5977a33c0175758d6fae9f6ec86de418833aabb9a023d5dc8e3",
+    "test_v10_contract.V10OSReceiptTest.test_marker_requires_matching_durable_sample_before_completed_report": "879bfa94f90cb06401c11092322bef41dbc935d780d32215082fbb8efa444d36",
+    "test_v10_contract.V10OSReceiptTest.test_report_expansion_and_complete_cannot_precede_their_receipts": "01a1ecb657b8dab6c16d6950095a54cf555907dd09d3b9669d561dec22cb2296",
+    "test_v10_contract.V10OSReceiptTest.test_original_os_preference_restoration_and_restart_assertions_are_not_bypassed": "9d92560e485c94abbf71a92690d3dc4d83e20a09cb25e420374d2d883a3976f5",
+    "test_v10_contract.V10OSReceiptTest.test_unknown_stages_bool_counts_payload_bounds_and_missing_receipts_fail": "fda27bb88dcee8dc89494ea32560716c7f77eb3824bd2d874e2c8b567c8650d2",
+    "test_v10_contract.V10CopySourceContractTest.test_all_original_templates_tests_kotlin_probes_and_cleanup_remain_immutable": "c72b07c441a8bb05e131be71a54173eff9bcefca2fc9dcc2caa91c9684c06917",
+    "test_v10_contract.V10CopySourceContractTest.test_renderer_preserves_every_original_postselection_assertion_and_non_os_byte": "5378c098dd35cf654ea82b3eb6b7346f2b181cec406c57e7d40579a5ef643cc1",
+    "test_v10_contract.V10CopySourceContractTest.test_renderer_fails_closed_on_changed_inputs_missing_or_duplicate_boundaries": "8167876222a7072c0e5e877e9eeeab5fedd7a94325b92878aa2d70955c929e0f",
+    "test_v10_contract.V10CopySourceContractTest.test_probe_only_adds_terminal_report_visibility_not_preference_or_native_behavior": "1ca33c4906cdf3899cb24cbc12f9e16b3c7c7714c1548f362713cd27d2f98583",
+    "test_v10_contract.V10CopySourceContractTest.test_expansion_only_occurs_inside_terminal_finish_after_original_restart_oracles": "13b1184f0de1e66136c05b5afd8507b144fd2520000f57b98d413b13d0deb7ba",
+    "test_v10_contract.V10CopySourceContractTest.test_source_whitelisted_english_and_arabic_app_names_match_shipped_resources": "801b251fc566d973852f1d378290c2656b63b836d0853410be9dc16976e4ed9a",
+    "test_v10_contract.V10CopySourceContractTest.test_new_real_swift_contract_and_complete_original_probe_gate_are_both_wired": "9061817f18dd317fca4585e2a68259416c0092c9cc76ee8e65444fc503522798",
+    "test_v10_contract.V10CopySourceContractTest.test_every_consumed_old_and_new_control_is_bound_by_full_path": "c0158cc1f0d53745700b54b5ab974b99139b15128ce7a5e630d079a05a91f759",
+    "test_v11_contract.V11PaneIdentityContractTest.test_every_old_control_except_targeted_helper_and_wiring_is_byte_identical": "4aa206a6b25a1525fdb33955618d7dc23be809e2f1f44acbe35453fe17d7583a",
+    "test_v11_contract.V11PaneIdentityContractTest.test_exact_public_predicate_and_allowlisted_provenance_are_executed_in_original_matrix": "6c206cc1e2d23c06e842df60c3f40a17cf69c9b95833a98495a01401b49f903d",
+    "test_v11_contract.V11PaneIdentityContractTest.test_each_documented_property_can_provide_bounded_provenance_not_os_authority": "cd8f86567cfa44b4294b9503b02fd5d57f4cb4fad2f763151c809d34f811d8c9",
+    "test_v11_contract.V11PaneIdentityContractTest.test_missing_unknown_duplicate_wrong_pane_and_bool_provenance_fail": "8d0f9626be7d437bda35f579a0a57872c795150ce890a098ae69ed1aa02cf821",
+    "test_v11_contract.V11PaneIdentityContractTest.test_aliases_on_one_element_do_not_double_count_but_two_elements_remain_ambiguous": "dc2f510fe94a911ac3d4891a199e067a86309e83e96afd09c1b5f3dc020bd75e",
+    "test_v11_contract.V11PaneIdentityContractTest.test_successful_actions_need_actual_known_provenance_including_stable_samples": "a2c283612f46aa460bd55f4c37d69b4af4b118902ef7bffb72160399b74a125a",
+    "test_v11_contract.V11PaneIdentityContractTest.test_fresh_names_never_override_hidden_offscreen_ambiguous_or_stale_guards": "c050197cf9e0581ab8cb892c7744752f669e8dce06ffb23d8d0feb6cbfb92181",
+    "test_v11_contract.V11PaneIdentityContractTest.test_absent_os_pane_stays_blocked_and_missing_contract_never_becomes_green": "0c8392df38132d775649360be8b360fbd6b8f4837ab9081cbda9695e2214f0af",
+    "test_v11_contract.V11PaneIdentityContractTest.test_additional_gate_is_after_original_gates_and_all_consumed_inputs_are_bound": "b342f29eb33056c23b885c99ec8ed377e49b30cd54b45e5f5fa8d29644639afa",
+    "test_v8_contract.V8ReceiptTest.test_complete_synthetic_receipts_only_exercise_parsers": "43baccaa9a206890a1e76c75a69298b468c59b5dc5bbc557024a2ddef3442ef8",
+    "test_v8_contract.V8ReceiptTest.test_start_requires_executed_geometry_contract": "02597d7c22354a455f930fdb6ef60306c13ec558df405f97e1a261ce46671b7d",
+    "test_v8_contract.V8ReceiptTest.test_start_activation_is_not_repeatable_or_an_incomplete_window": "9d883e5d9532e6bebae7273c8677a3228bc575990a605ce8728e5ed12fb7e2da",
+    "test_v8_contract.V8ReceiptTest.test_start_setup_and_canonical_successor_are_both_mandatory": "ad719f7ff1be7be780871eef51ba9c57b783ed2c25c78cf27f897679ab4936da",
+    "test_v8_contract.V8ReceiptTest.test_start_disabled_hidden_occluded_and_nonfinite_fail": "96ceef6a66727183503f3e7c6048ae5253d46e48967168ced01e4a737d0087e7",
+    "test_v8_contract.V8ReceiptTest.test_start_last_window_and_dynamic_coordinate_drift_fail": "51d5a2d0c45b521a96ce9b255cefc5f78baa2041f997c86633010bf4d7610595",
+    "test_v8_contract.V8ReceiptTest.test_public_diagnostic_bounds_are_strict": "70795dd6cde6ae4d633e8cc6f415c9b7363120b999efd74adf7369a1140709e1",
+    "test_v8_contract.V8ReceiptTest.test_os_precondition_never_passes_from_missing_unknown_or_blocked_step": "17cf13253cd4aaead6379f6e219b0e42fc53ac888011d312cbdb89dc1e5378e1",
+    "test_v8_contract.V8ReceiptTest.test_os_prerequisite_requires_owned_profile_and_english_primary_not_arabic_primary": "2fd5a075fb90a8c74223bab1b1de5edb377bc1d97c211fab616a27c0d72d7a11",
+    "test_v8_contract.V8ReceiptTest.test_os_step_activation_cannot_repeat_or_disappear": "2fae8b3e8d9f537dec8434e9eb1e980869772d6c60224eb9162b3e64a0f34a79",
+    "test_v8_contract.V8ReceiptTest.test_arabic_picker_result_cannot_masquerade_as_exposed_preferred_list": "dfb3c930242367dfb2ce88754b6f795f4334bcd25709c0446543b17812205bf5",
+    "test_v8_contract.V8SourceControlTest.test_start_keeps_one_activation_outside_readiness_and_proves_canonical_successor": "8f6ea9d75a33489acbd551e7a14f5c3b9e6e7d08145afffe550b01eb550a7e15",
+    "test_v8_contract.V8SourceControlTest.test_complete_original_matrix_changes_only_the_authorized_calls_and_wait_diagnostics": "955adf578cc412d4e1e0e5fdddfdf31e5430877f5e328867e860af62f83fc2b6",
+    "test_v8_contract.V8SourceControlTest.test_original_app_observers_catalog_cleanup_and_oracle_controls_remain_byte_identical": "d19f592f97bf3052de91725de8974facd41f2942d91212b555a016fa86ae7f3c",
+    "test_v8_contract.V8SourceControlTest.test_every_observation_predicate_is_named_without_logging_preferences_or_private_state": "91319a4fa17121e97f9e93d937924f0094e26a231ca3d2e3f7ae336a57836272",
+    "test_v8_contract.V8SourceControlTest.test_os_prerequisite_is_supported_ui_only_fresh_owned_and_after_both_complete_games": "fee914704136c1eb9e37b386c9c7f51b5c96b9e559805952bd9666295dbd2f6d",
+    "test_v8_contract.V8SourceControlTest.test_new_controls_are_bound_and_appended_to_only_the_copied_xctest": "4e6c2cb1f814040404a5e87a5c5e1b178a45f902076aeef480ceba1ba7e637f8",
+    "test_v8_contract.V8SourceControlTest.test_every_consumed_v7_reference_is_bound_by_full_path_and_bytes": "79f79f6da2fe82edced0da99eb119a1d1b297820e4c79f575d052c4cb18bf915",
+    "test_v8_contract.V8SourceControlTest.test_each_v7_reference_changes_identity_without_changing_any_file": "49b4a2107813fc5ddd4c661c6560f33ba062d89de6aa07b44638cd1d896ac269",
+    "test_v9_contract.V9PrerequisiteReceiptTest.test_preexisting_pair_passes_without_claiming_addition_or_origin": "d8b084963d89cb22bb234c80c2ed5b818152a0e947c92d9acc49a49b8790125b",
+    "test_v9_contract.V9PrerequisiteReceiptTest.test_missing_arabic_retains_every_original_addition_oracle": "79f6590bac112c66618cae770d5db764d0f30cbf075599088889b9c92a7363c0",
+    "test_v9_contract.V9PrerequisiteReceiptTest.test_executed_swift_decision_contract_is_mandatory_and_unique": "952e6e7eea426e2c4f8003ec1b8e72883409a3c191388e1f90fa6672686d01cb",
+    "test_v9_contract.V9PrerequisiteReceiptTest.test_present_language_boolean_alone_never_passes": "c58efcf899d8d62d56ce732c94ea03ee1e8a0ffab30c00a4aa234fb77a725500",
+    "test_v9_contract.V9PrerequisiteReceiptTest.test_wrong_row_order_cannot_be_hidden_by_true_flags": "ccbc6eac6d3beaf59eadaeb82bc894db56fd8a292f4f06233cad40ea5bcc1fcd",
+    "test_v9_contract.V9PrerequisiteReceiptTest.test_covered_picker_ambiguity_and_wrong_primary_block_both_observations": "8bbd30b46edc42daac0964d2daf511f2226f9b66822ae4f929a6bdb8c854004f",
+    "test_v9_contract.V9PrerequisiteReceiptTest.test_invalid_missing_or_offscreen_rectangles_block": "f16fa6015a5afd914fde0ecac0e57010397f11b4d6601dadeb2992419704dee0",
+    "test_v9_contract.V9PrerequisiteReceiptTest.test_distinct_outcome_cannot_falsely_claim_language_addition": "8ae785cd167aee8d426bd843c05b0a04ee6b55aeb23a125e03c7c5adbb80c01a",
+    "test_v9_contract.V9PrerequisiteReceiptTest.test_incomplete_or_covered_missing_arabic_baseline_blocks": "d4d698436db8ec2b3c5dab011389ba8806422fbcc9ca32ba0ae2731e04422b86",
+    "test_v9_contract.V9PrerequisiteReceiptTest.test_language_mutation_must_not_occur_on_already_satisfied_branch": "0a7795fce1692fb741bcab0592b6617b0e121cf9840f607f1834cbdecca9cc57",
+    "test_v9_contract.V9PrerequisiteReceiptTest.test_navigation_and_required_addition_steps_cannot_repeat_or_disappear": "0bbeedd98c4da97ba4743c8ebf3a5b1dad89a9318fbfa614a57e3d03a7ba2200",
+    "test_v9_contract.V9PrerequisiteReceiptTest.test_blocked_unknown_wrong_owner_and_budget_are_not_success": "ab0ea63de9c86a686a896fd98e9e969bbc752d464d54bcc327cfe0963a3686b4",
+    "test_v9_contract.V9PrerequisiteReceiptTest.test_unique_merged_english_primary_is_supported_without_duplicate_rows": "f11e79e2edc0fa020408cb9d43e0fd95f6d2fe065909fcf9c22571cdd4f4ece8",
+    "test_v9_contract.V9SourceControlTest.test_original_per_app_matrix_probes_start_and_cleanup_stay_byte_identical": "6caa4bcfc6a50c1dfbacd98b9c659d80b5e87bb6f57d29b016e5d6b5a258a4f1",
+    "test_v9_contract.V9SourceControlTest.test_missing_arabic_still_executes_unchanged_real_settings_actions": "f46071958b1372b4428f33d3432e4d78a3bafdcd663c674224eb58d00aa25068",
+    "test_v9_contract.V9SourceControlTest.test_satisfied_branch_reobserves_and_returns_without_mutating_languages": "e547736c9f92b979cae959299b1002d776a7066f78eca834deb324aa77c5c246",
+    "test_v9_contract.V9SourceControlTest.test_v9_result_is_after_exact_xctest_and_before_original_probe_gate": "9b2654cc60cd3976494143a2c7530e5db651919af53747e72afcf3203e4c5799",
+    "test_v9_contract.V9SourceControlTest.test_every_consumed_v8_reference_and_before_after_binding_are_explicit": "b4468110d159a817e1cc754ae44c03d546dfc87af638f1bbbb687ccd495fbc44"
+  },
+  "research": [
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-v11-exact-identifier-research-02.json",
+      "sha256": "ee19e160e055ca4aa4d75b153ae1b744d252aead063003b361917227db8f3104"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-v11-pinned-xctest-declarations-01.json",
+      "sha256": "3ae9f472739f166dc85d0e198627ddc6d2a0b7c8c27d93a0d5ed6c191e3f83a6"
+    }
+  ],
+  "review_conclusions": [
+    "Exact pane union follows all five documented XCUI identifying properties, not an invented identifier-only semantic. Only allowlisted actual attribute/literal matches are logged.",
+    "Union counts elements once, not matching aliases/properties; ambiguous or stale identities fail existing geometric/foreground guards.",
+    "Original target/action selectors, all stable samples, one-action routing, terminal reporting, and post-OS Arabic/System/restart assertions remain unchanged.",
+    "Additional provenance parser supplements unchanged V10/probe gates and explicitly disclaims actual OS-selection authority. A BLOCKED OS gate cannot be replaced by synthetic/provenance PASS.",
+    "No source-level blocking concern remains for root focused177method execution on this exact control/source identity."
+  ],
+  "limitations": [
+    "177methods are static expectations only, not executed/passing tests. Root must provide raw focused descriptors/results and cleanup for independent review before separate native GO.",
+    "This bounded review is not a fresh reread of all137inherited controls or669application inputs. Unchanged inherited code is identity-bound to prior reviews.",
+    "Native decision cases are24old plus12attribute/two union/two identityguard cases inside one of five XCTest methods, not40XCTest methods.",
+    "The actual property producing apphost08matchingSettings diagnostic has not been observed. Corrected query still does not prove public Language availability or OS selection.",
+    "README is independently read but is not in the executable control graph. It is a proposal/binding note, not a runtime result.",
+    "Author proposal metadata raw08witness section was not fully line-by-line read; independent raw08and authoritative research evidence separately establishes the bounded selector claim.",
+    "Artifact receipt still omits Parlor.debug.dylib; binary-artifact provenance cannot be called complete.",
+    "DS-C01 remains PARTIALLY_VERIFIED until original real OS English→appArabic→System→restart oracles execute successfully. No physical-device, LAN, Store-qualified Xcode, signing or Store claim."
+  ],
+  "cleanup": {
+    "reviewer_builds_tests_apps_started": 0,
+    "reviewer_background_workers_started": 0,
+    "generated_build_outputs_created": 0,
+    "other_tasks_resources_touched": false
+  }
+}

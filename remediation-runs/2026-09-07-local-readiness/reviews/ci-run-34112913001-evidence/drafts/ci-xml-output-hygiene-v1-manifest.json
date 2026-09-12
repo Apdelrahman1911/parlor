@@ -1,0 +1,47 @@
+{
+  "at": "2026-09-07T12:12:50.195041+00:00",
+  "author": "/root/release_fix_review",
+  "status": "DRAFT ONLY \u2014 NOT APPLIED, COMPILED, TESTED OR RUN; independent review and root-coordinated verification required",
+  "baseline_head": "f5ea8045bd903c255041b198f54aca67e893612f",
+  "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34112913001-evidence/drafts/ci-xml-output-hygiene-v1-draft.patch",
+  "sha256": "690332430b224756e3b615fb554b58bacaf0a7e388805dc18e3252dc2419c248",
+  "changes": [
+    {
+      "path": ".github/workflows/production-verification.yml",
+      "before_sha256": "965e47ddb4c47b19d8017c9494239d0a0309b26f465eb0f6b655bd90113a929c",
+      "proposed_sha256": "40bd44cf6b35d965a4e0d6cdc7234489e9312ba7923a0a587eacb1fdbfea56a8",
+      "proposed_lines": 582
+    },
+    {
+      "path": "scripts/ci/verification_hygiene.py",
+      "before_sha256": null,
+      "proposed_sha256": "f22637cc75de7fb6da58b21d5cd2b798881e4b3957b083a670cf17e4e0b944b2",
+      "proposed_lines": 188
+    },
+    {
+      "path": "scripts/release/tests/test_ci_verification_hygiene.py",
+      "before_sha256": null,
+      "proposed_sha256": "c87eeee933b5bd43f59fb4bbc813dc971e475f48493da55511501444d272bf32",
+      "proposed_lines": 170
+    }
+  ],
+  "implemented_scope": [
+    "All5 verification jobs retain actual JUnit XML",
+    "Pre-build fresh checkout/source/output ownership journal and explicit same-job retention reason",
+    "Always-run Gradle stop after8 build/test cycles, failure status retained by separate workflow steps",
+    "Always-run final stop plus attested root/module/build-logic/Xcode build/Python-cache cleanup after artifact upload",
+    "Cleanup result outside deleted outputs, uploaded separately; no source/global-cache cleanup or Store workflow changes"
+  ],
+  "limitations": [
+    "This draft attests Gradle stop and exact output cleanup only. It does NOT claim to terminate Kotlin compiler daemons, Xcode services, native ibtoold processes, CoreSimulator services, or GMD global AVD state. Those remain separately inspectable process/resource hygiene gaps if created.",
+    "No successful local or CI execution of these new scripts/steps exists yet.",
+    "Generated build outputs are retained as one same-job dependent verification batch until reports/artifact upload; this is explicitly recorded instead of deleting inputs needed by subsequent builds.",
+    "The cleanup helper is not intended as a security sandbox against a malicious PR already executing arbitrary build code. It still rejects changed/tampered source/path/task claims and avoids unrelated/source deletion."
+  ],
+  "tests_proposed": [
+    "12 unittest tests including actual owned filesystem cleanup/protection; no Gradle invocation in fixtures",
+    "ActualWindows/Linux/macOS wrapper stop and conditional cleanup execution in next CI job",
+    "Actionlint and existing174release tests after source inventory update as necessary",
+    "Review native/Kotlin worker handling before claiming complete process cleanup"
+  ]
+}

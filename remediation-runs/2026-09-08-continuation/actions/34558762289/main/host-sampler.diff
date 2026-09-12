@@ -1,0 +1,27 @@
+--- ProtectionSampler.m
++++ HostProtectionSampler.m
+@@ -12,6 +12,14 @@
+ #include <sys/mount.h>
+ #include <sys/stat.h>
+ #include <unistd.h>
++
++// H01 supports exactly this ordered host platform policy, not arbitrary pairs.
++#if !TARGET_OS_OSX || TARGET_OS_SIMULATOR || TARGET_OS_MACCATALYST || !defined(__arm64__)
++#error The copied host sampler requires native arm64 macOS, never a simulator.
++#endif
++#if PLATFORM_MACOS != 1 || PLATFORM_MACCATALYST != 6
++#error Host platform constants differ from the observed public SDK identities.
++#endif
+ 
+ static void demand(BOOL value, NSString *reason) {
+     if (!value) @throw [NSException exceptionWithName:@"ProtectionBoundary" reason:reason userInfo:nil];
+@@ -69,7 +77,8 @@
+         }
+         offset += command->cmdsize;
+     }
+-    demand(offset == header->sizeofcmds && uuid && platforms.count == 1 && executableAddress &&
++    demand(offset == header->sizeofcmds && uuid && ([platforms isEqualToArray:@[@(PLATFORM_MACOS)]] ||
++               [platforms isEqualToArray:@[@(PLATFORM_MACOS), @(PLATFORM_MACCATALYST)]]) && executableAddress &&
+            (uintptr_t)address >= (uintptr_t)header, @"image-executable-address");
+     NSString *name = [[NSString stringWithUTF8String:info.dli_fname] lastPathComponent];
+     demand(name.length > 0 && name.length <= 256, @"image-name");

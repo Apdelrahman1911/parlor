@@ -1,0 +1,148 @@
+{
+  "schema_version": 1,
+  "reviewed_at": "2026-09-06T20:29:52.574592+00:00",
+  "reviewer": "/root/release_fix_review",
+  "executor": "/root",
+  "decision": "GO \u2014 exactly one unsigned owned-simulator apphost07 attempt on frozenV9; not a repair-completion claim",
+  "source": {
+    "commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+    "tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+    "branch": "main",
+    "source_files": 669,
+    "source_manifest_sha256": "9ac2be536979f2216b39c10a6d148125a12380987d4efd483bbcbaeb1733318e",
+    "diff_sha256": "148fb4583d8fa8341b3cbc48a7fc0bc7564bf4df5c27e9d80e32c6bfdc57b784",
+    "source_before_after_current_exactly_equal": true
+  },
+  "control_binding": {
+    "control_count": 79,
+    "control_sha256": "1ffbfd452294562711d36a17107b6880cef22ac7657f54f979b29b2987db4d95",
+    "all_frozen79_current_hashes_equal": true,
+    "pre_execution_review_sha256": "a78eb0ec360ab342805fec7af2143613017fcd035468bb4c0cc8e699ed71f99a",
+    "author_manifest_sha256": "80fd31001de227a1bad7e847be4f7436e012ab027f2eae194ca7f896c046a269",
+    "generic_runner_hash_before_after": {
+      "manifest": [
+        [
+          "remediation-runs/2026-09-06-approved-policy-completion/run_gradle_cycle.py",
+          "d2d18c2311d59554db88be3f92e609ec5ca46fc8af4c79702836f9e4c130240f"
+        ]
+      ],
+      "manifest_sha256": "a2a8e6b33d5ada67bb344623c0a00e340f1b2fef209108d0c58f7e837fe765da"
+    },
+    "limit": "Generic root cycle receipt binds its runner and source, not a full79-control manifest. Independent before-execution review and present post-execution rehash supply that explicit control cross-check; no mid-run edits observed or claimed."
+  },
+  "execution": {
+    "cycle": "native-controls-09",
+    "command": [
+      "/usr/bin/python3",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v9",
+      "-p",
+      "test_*.py",
+      "-v"
+    ],
+    "started": "2026-09-06T20:25:29.940532+00:00",
+    "finished": "2026-09-06T20:25:36.702571+00:00",
+    "exit": 0,
+    "status": "PASS",
+    "actual_tests": 148,
+    "all_raw_descriptors_matched_independent_pre_execution_AST": true,
+    "passes": 148,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "duplicate_ids": 0,
+    "missing_ids": [],
+    "extra_ids": [],
+    "unparsed_result_lines": [],
+    "seconds": 6.367,
+    "test_counts_by_file": {
+      "test_catalog_contract.py": 12,
+      "test_copy_observation_contract.py": 52,
+      "test_harness_contract.py": 20,
+      "test_secondary_fifo.py": 27,
+      "test_v8_contract.py": 19,
+      "test_v9_contract.py": 18
+    },
+    "swift_or_device_tests_executed": 0,
+    "evidence_sha256": {
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/native-controls-09/receipt.json": "c37b51e9c0e77b46a025c5df27c873c3323aed15704f5dec4d1e8359b3864ec8",
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/native-controls-09/gradle.log": "8b6bc7e8b18dc01f3b48440433060e675afd9611f1c3e92b3cf8a902aa5133c1",
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/native-controls-09/stop.log": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/native-controls-09/test-receipts.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/native-controls-09/artifact-receipts.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    }
+  },
+  "cleanup": {
+    "stop_exit": 0,
+    "stop_log": "No Gradle daemons are running.",
+    "stopped_at": "2026-09-06T20:25:37.121805+00:00",
+    "stop_completed_seconds_after_command": 0.419234,
+    "finished": "2026-09-06T20:25:37.187854+00:00",
+    "scratch_absent": true,
+    "task_unittest_processes_currently_absent": true,
+    "generated_output_dirs_checked": [
+      "build",
+      "composeApp/build",
+      "build-logic/build",
+      "build-logic/convention/build",
+      "iosApp/build",
+      "shared/core/build",
+      "shared/networking/build",
+      "shared/content/build",
+      "shared/storage/build",
+      "shared/transport-p2p/build",
+      "shared/networking-testing/build",
+      "shared/engine/build",
+      "shared/design-system/build",
+      "shared/engine-testing/build",
+      "shared/session/build",
+      "game-modes/whodunit/build",
+      "game-modes/mafia/build"
+    ],
+    "all_output_dirs_absent": true,
+    "no_retained_artifacts": true,
+    "no_cleanup_errors": true,
+    "no_unrelated_processes_adopted_or_stopped": true,
+    "global_process_idle_not_claimed": true
+  },
+  "native_go": {
+    "command": [
+      "/usr/bin/python3",
+      "-B",
+      "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v9/run_dsc01_apphost_cycle.py",
+      "dsc01-apphost-07",
+      "1ffbfd452294562711d36a17107b6880cef22ac7657f54f979b29b2987db4d95"
+    ],
+    "attempts": 1,
+    "executor": "Root only; existing shared build lane and ownership guards",
+    "conditions": [
+      "Freeze02 source669 and all79control hashes remain unchanged; no source edits or rebind.",
+      "Use only a new manifest-owned Debugsimulator and copied sourcegraph; never userdevice/profile.",
+      "Preserve exact five XCTest+public interaction+fourprobe results including explicit OS status.",
+      "Immediate nested and outer Gradlestops, workerPID/start ownership, attestedsecondaryFIFO cleanup, device shutdown/delete, exactcopiedinput before/aftermanifest, allownedbuild/temp cleanup on success/failure.",
+      "No Store/signing/publication/physicalLAN claim.",
+      "Independent review of actual native rawresults/cleanup before final DS-C01 status."
+    ]
+  },
+  "important_limits": [
+    "148Python tests validate verification controls, not Swift runtime or application correctness.",
+    "The planned24Swiftdecision cases will be inside one matrix XCTest, not24extra standaloneXCTest methods.",
+    "Original runner can explicitly classify os_settings_gate=BLOCKED while runtime harness succeeds; do not interpret a generic runtime PASS or5passed tests as actualOS per-app ownership PASS. Require the OSgate details.",
+    "Apphost06 remains failed at a false monolingual prerequisite; its Settings/localgame observations stand but originalOSprobe didnotrun.",
+    "DS-C01 remains PARTIALLY VERIFIED until applicable actual per-app language/restart evidence passes; overall scoped progress remains15/16=93.75% at this approval.",
+    "Artifact receipt still excludes Parlor.debug.dylib; do not claim complete artifactdigest provenance."
+  ],
+  "reviewer_actions": {
+    "builds": 0,
+    "test_runs": 0,
+    "apps": 0,
+    "simulators": 0,
+    "background_workers": 0,
+    "production_edits": 0,
+    "cleanup_needed": false
+  }
+}

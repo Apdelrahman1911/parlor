@@ -1,0 +1,88 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-09-07T20:04:21.893439+00:00",
+  "reviewer": "/root/factory_review",
+  "author_executor": "/root",
+  "decision": "ACCEPT FOR PURE43-TEST EXECUTION ONLY THROUGH BYTE-BOUND COORDINATED CYCLE WRAPPER WITH OWNED TMPDIR; NOT NATIVE APPROVAL",
+  "baseline": {
+    "commit": "75f29dcd9f1777a70a307bb9522e055ea8cc6e29",
+    "tree": "901459e75c916ac8a1afbb45a747565da853495c",
+    "tracked_status": ""
+  },
+  "driver": {
+    "path": "remediation-runs/2026-09-07-local-readiness/reviews/run_l08_diagnostics_isolated_01.py",
+    "sha256": "25c4187cff6dbe5122cda3c82f96533ed3e5a9dc2190b061da44e3fea84dab5e",
+    "reviewed_lines": [
+      [
+        1,
+        101
+      ]
+    ]
+  },
+  "required_outer_wrapper": {
+    "path": "remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py",
+    "sha256": "5c0e546c819c28762cbc6b355ec2717737fc53f96712af591a27add878579d7a",
+    "reviewed_paths": [
+      "invoke50\u201375: owned-group termination on outer cancellation; previously read unchanged",
+      "main230\u2013270: exclusive build lane, no existing outputs/unowned daemon, new cycle scratch and owned TMPDIR/pycache",
+      "finally279\u2013330: immediate stop, owned process shutdown, exact scratch/output cleanup and source-drift status; prior/current focused readings",
+      "main338\u2013344: SIGINT/SIGTERM converted to finally-reaching interruption"
+    ]
+  },
+  "input_proof": {
+    "historical_binding": {
+      "path": "remediation-runs/2026-09-07-local-readiness/ios-readiness-source-06.json",
+      "sha256": "1d7165a7029165a5450919c2771e09d51f206d124e41b082b52eec22f76b73fa"
+    },
+    "current_original_rows": 738,
+    "unique_rows": 738,
+    "current_original_bytes_match": true,
+    "original_total_bytes": 10054861,
+    "draft_review": {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/l08-save-diagnostics-draft-independent-review-01.json",
+      "sha256": "3fbdac0dcb86a61440f09ad35244fdecbff65b244d61bd64da0a243f53a7646d"
+    },
+    "draft_files": [
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/drafts/l08-save-diagnostics-01/L08StorageProbe.kt.in",
+        "sha256": "28f4158cc701f1355a9320da1edd9a6d7825cf76828b2b0472ea194611750b75"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/drafts/l08-save-diagnostics-01/l08_receipts.py",
+        "sha256": "3cab6914886db081ba883629242d33a262158c0106e8658bc7b777387826f867"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/drafts/l08-save-diagnostics-01/test_l08_diagnostics.py",
+        "sha256": "97d6bb76316151b850e2e85ed84aac5524743184a78c499fb9b2c7db1bf9980a"
+      }
+    ],
+    "expected_copy_rows": 739,
+    "note": "Two overrides replace existing files; one new test adds a row. This is a synthetic control-copy proof, not a new native source binding or native execution."
+  },
+  "safety": {
+    "input_paths": "Before copying: exact SHA-bound historical manifest,738 unique observed rows, canonical relative paths without parent traversal and all inputs regular/nonsymlink with identical current hashes. No protected/signing files added outside previously reviewed738 inputs. Draft constants match accepted bytes.",
+    "writes": "Only shutil.copyfile into exclusively allocated TemporaryDirectory under the wrapper-owned TMPDIR; no repository target writes. Copy hashes checked before imports. Existing copy tests write their own nested temporary directories and reject symlink source roots/targets.",
+    "imports": "Fresh system Python-B process, copied control directory first in sys.path; four selected test modules and l08_receipts must be imported at exact copied paths. All reported copied imports must be hash-inventoried inputs. Transitive imports reviewed as existing fixture/definition modules; owned_lane imports definitions only and selected tests call only owns_java_tmp_argument fixture helper. No native/build methods execute on import.",
+    "discovery": "Current AST contains43 unique methods(13storage+12host+9copy+9diagnostic). Actual discovered IDs must exactly equal AST IDs and count43 before execution. unittest FailedTest/import failures cannot satisfy this set.",
+    "results": "Success requires test success,exact43 executions,no skips,all copied bytes unchanged and all original bytes unchanged. Driver exits nonzero on discovery/error/hash/drift failures.",
+    "cleanup": "TemporaryDirectory context deletes copy on normal return/Python exception. Standalone SIGTERM would not guarantee Python finalization; required outer wrapper ensures process stop followed by exact owned scratch deletion, covering primary and child test temporary directories under owned TMPDIR. Do not run this driver outside that wrapper or with unowned/default temp paths.",
+    "stop": "Only root wrapper owns Gradle stop/process control; reviewer starts none."
+  },
+  "evidence_to_collect": [
+    "Raw first JSON with copied739input rows, actual imported module paths,43 declared/discovered IDs.",
+    "43 actual raw method descriptors and final counts, original/copy unchanged status, owned-copy removed status.",
+    "Wrapper exit/stop/worker/scratch/output cleanup result and source identity.",
+    "Hash this driver before/after; root broad source manifest may not treat reviews/ as shipping inputs."
+  ],
+  "remaining": [
+    "No control tests executed by reviewer. This source approval is not a passing test result.",
+    "Before adopting the diagnostic files obtain actual control PASS; fresh complete native source/control/copy approval still required after adoption.",
+    "Actual native05 failing storage boundary and full normal-iOS provenance remain separate unfinished gates."
+  ],
+  "reviewer_cleanup": {
+    "owned_workers_started": 0,
+    "generated_build_outputs_created": 0,
+    "application_or_git_writes": false,
+    "new_file_only": "remediation-runs/2026-09-07-local-readiness/reviews/l08-diagnostics-isolated-driver-independent-review-01.json"
+  }
+}

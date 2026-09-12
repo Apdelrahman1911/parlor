@@ -1,0 +1,179 @@
+{
+  "schema": 1,
+  "recorded_at": "2026-09-06T08:50:43.705224+00:00",
+  "reviewer": "/root/factory_review",
+  "scope": "Root-requested read-only feasibility assessment of retained multiplayer-host locale/lifecycle evidence after local DS-C01 matrix; not new finding or proof of native host success.",
+  "source_manifest_sha256": "de7573ed1f4e1a19969f3063e135d234cd57ec8764c4af784cf4b3eaff5ef9b4",
+  "conclusion": "NOT YET EXECUTED native retained-host continuity; source and generic owner tests support separation/retention design but do not satisfy actual runtime/nativeLAN verification.",
+  "paths": [
+    "AppModule binds one ProcessMultiplayerSessionOwner to independent Default+SupervisorJob process scope. Actual App language provider/navigator do not replace the Koin singleton.",
+    "ProcessMultiplayerSession owns runtime/checkpoint/room/job; acquire returns same active route/session and private host seed; getOrCreateRuntime retains exact instance by kind, not locale. Close/release is explicit owner/expiry operation.",
+    "WhodunitMultiplayerHostFlow1001\u20131045 and MafiaMultiDeviceHostFlow99\u2013141 lookup by ownedSession only; actual game-host runtimes own canonical PassAndPlay reducer wrapped through host bridge and PartyAwareSession. Local SessionDrivenFlow is a different ownership/orchestration path.",
+    "Actual host UI entry requires connected-roster count and no pending admissions, frozen admissions plus authoritative start handshake; bundled Whodunit6total seats, Mafia minimum5. Advertising an empty room on one simulator cannot prove an active host session.",
+    "Actual iOS inactive callbacks preserve transport; background forwards to host suspension, marks peers disconnected, retires/closes transport sessions; foreground resumes advertising/rejoins within original120sdeadline. Consequently whole canonical-state equality across background is not a correct host oracle: legitimate disconnect/pause/reconnect transitions may change state.",
+    "No current in-game Settings route exists. A synthetic call to actual singleton SettingsStore can test retention under locale change honestly, but must not be described as a user Settings journey or used to invent a new route."
+  ],
+  "existing_executed_evidence": {
+    "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-03/reports/shared/session/build/test-results/desktopTest/TEST-com.parlor.session.multidevice.ProcessMultiplayerSessionOwnerTest.xml",
+    "tests": 30,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "relevant_cases": [
+      "sameRouteReattachesWithoutOpeningAnotherRoom",
+      "checkpointAndRuntimeSurviveUiReattachmentAndRejectWrongKinds"
+    ],
+    "limits": "Source test uses FakeRoom/FakeRuntime, not actual game runtime/Compose/iOS/P2pKit. Native common-test rerun, if executed, still would not become real-LAN evidence."
+  },
+  "feasible_followups": [
+    {
+      "kind": "deterministic runtime/Compose interaction",
+      "plan": "Separate isolated test using actual game-host runtime/owner and production protocol with synthetic LocalRoom/peer fixtures, actual language provider, bounded reference/seed/assignment retention booleans, exact lifecycle transition assertions and expected rejoin gates. Must be independently reviewed and root lane run.",
+      "proof_limit": "Would verify production orchestration under injected transport only, not native network lifecycle."
+    },
+    {
+      "kind": "actual app-host LAN interaction",
+      "plan": "Requires coordinated admitted peers reaching genuine5/6-seatstart, own stable closed/public phase, same-process language setter observation, explicit inactive vsbackground callbacks and validated same-host peer recovery. Never bypass start/validation rules or disclose canonical secrets.",
+      "proof_limit": "Current one-simulator local matrix has no such peers; cannot infer feasibility/success from advertisement. Multiple owned test instances potentially feasible but require separate reviewed harness/resource plan; physical-device gates remain separate."
+    }
+  ],
+  "covered_source_ranges": [
+    {
+      "path": "composeApp/src/commonMain/kotlin/com/parlor/app/di/AppModule.kt",
+      "sha256": "b449781eb52418300504344c1af978ef7cb41e4e1f35f8d50faa4b8662bbdb76",
+      "reviewed_ranges": [
+        [
+          33,
+          74
+        ]
+      ]
+    },
+    {
+      "path": "composeApp/src/commonMain/kotlin/com/parlor/app/lifecycle/AppLifecycleCoordinator.kt",
+      "sha256": "9872f507bc2d719516249b40e50ba46262366ea7afae5e8b8b28448cce620932",
+      "reviewed_ranges": [
+        [
+          1,
+          144
+        ]
+      ]
+    },
+    {
+      "path": "shared/session/src/commonMain/kotlin/com/parlor/session/multidevice/ProcessMultiplayerSessionOwner.kt",
+      "sha256": "daba67ff9106b54f73eff57635bd36547674df5f5b861177932687498296320c",
+      "reviewed_ranges": [
+        [
+          1,
+          550
+        ]
+      ]
+    },
+    {
+      "path": "shared/session/src/commonTest/kotlin/com/parlor/session/multidevice/ProcessMultiplayerSessionOwnerTest.kt",
+      "sha256": "5216462432de54405b19cfcaf8a912d312b9edebbd6204ce9e56d336f53723d8",
+      "reviewed_ranges": [
+        [
+          72,
+          137
+        ],
+        [
+          286,
+          367
+        ],
+        [
+          693,
+          827
+        ]
+      ]
+    },
+    {
+      "path": "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/multiplayer/WhodunitRetainedMultiplayerRuntime.kt",
+      "sha256": "4cca409cc9f8703295b0e75259f3e0dec382a012271dcd86696cfef480797148",
+      "reviewed_ranges": [
+        [
+          1,
+          189
+        ]
+      ]
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaRetainedMultiplayerRuntime.kt",
+      "sha256": "cb196e3457759dbb0766b02d342d3698f6e90512d674d70e34a76f8516ff0543",
+      "reviewed_ranges": [
+        [
+          1,
+          172
+        ]
+      ]
+    },
+    {
+      "path": "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitGameFlow.kt",
+      "sha256": "b5b57dfe7675a0f85e299719f5161d9e50d75e6c0f1c25cfb72379e7b032ec36",
+      "reviewed_ranges": [
+        [
+          952,
+          1140
+        ]
+      ]
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaMultiDeviceHostFlow.kt",
+      "sha256": "9bc03d15725da5ace2e5b4c4e79947b516a8e04cce8fbc2e203edde2da9194a1",
+      "reviewed_ranges": [
+        [
+          1,
+          230
+        ]
+      ]
+    },
+    {
+      "path": "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/multiplayer/WhodunitHostSessionFlow.kt",
+      "sha256": "6f65f1c35b2f5ecf6b7f5a18d2c8f022e595c0dccca3f82e4b1c602e1dea61cd",
+      "reviewed_ranges": [
+        [
+          224,
+          322
+        ],
+        [
+          367,
+          389
+        ]
+      ]
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaHostLobbyFlow.kt",
+      "sha256": "86dbe5ba625445dd9f8a33d754f919c1d2515e9b16f2cff6b88924ddd14c86ff",
+      "reviewed_ranges": [
+        [
+          202,
+          279
+        ],
+        [
+          309,
+          342
+        ]
+      ]
+    },
+    {
+      "path": "shared/transport-p2p/src/commonMain/kotlin/com/parlor/transport/p2p/AppLifecycleRoomCoordinator.kt",
+      "sha256": "7761d49b0de180d34daa32f790768a541f2af8d0de98b94eeb89ab20bf2d1e68",
+      "reviewed_ranges": [
+        [
+          1,
+          76
+        ]
+      ]
+    },
+    {
+      "path": "shared/transport-p2p/src/commonMain/kotlin/com/parlor/transport/p2p/P2pKitRoomTransport.kt",
+      "sha256": "a5e2536e41c81c54b58ec27da135ea9046969db9cb80084e2a0da3b15ddde7c7",
+      "reviewed_ranges": [
+        [
+          3218,
+          3385
+        ]
+      ]
+    }
+  ],
+  "hygiene": "No tests/builds/devices/processes started or source edits; new evidence only."
+}

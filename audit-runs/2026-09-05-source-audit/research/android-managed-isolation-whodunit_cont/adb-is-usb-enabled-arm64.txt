@@ -1,0 +1,20 @@
+/Users/abdelrahman/Library/Android/sdk/platform-tools/adb:
+(__TEXT,__text) section
+__Z14is_usb_enabledv:
+10008f8dc:	fd 7b bf a9	stp	x29, x30, [sp, #-0x10]!
+10008f8e0:	fd 03 00 91	mov	x29, sp
+10008f8e4:	20 2c 00 f0	adrp	x0, 1415 ; 0x100616000
+10008f8e8:	00 0c 0c 91	add	x0, x0, #0x303 ; literal pool for: "ADB_USB"
+10008f8ec:	50 f0 15 94	bl	0x10060ba2c ; symbol stub for: _getenv
+10008f8f0:	20 01 00 b4	cbz	x0, 0x10008f914
+10008f8f4:	08 00 40 39	ldrb	w8, [x0]
+10008f8f8:	1f c1 00 71	cmp	w8, #0x30
+10008f8fc:	c1 00 00 54	b.ne	0x10008f914
+10008f900:	08 04 40 39	ldrb	w8, [x0, #0x1]
+10008f904:	1f 01 00 71	cmp	w8, #0x0
+10008f908:	e0 07 9f 1a	cset	w0, ne
+10008f90c:	fd 7b c1 a8	ldp	x29, x30, [sp], #0x10
+10008f910:	c0 03 5f d6	ret
+10008f914:	20 00 80 52	mov	w0, #0x1
+10008f918:	fd 7b c1 a8	ldp	x29, x30, [sp], #0x10
+10008f91c:	c0 03 5f d6	ret

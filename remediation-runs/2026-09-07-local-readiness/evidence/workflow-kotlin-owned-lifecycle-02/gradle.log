@@ -1,0 +1,90 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.13/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+Type-safe project accessors is an incubating feature.
+> Task :build-logic:convention:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :build-logic:convention:compileKotlin FROM-CACHE
+> Task :build-logic:convention:compileJava NO-SOURCE
+> Task :build-logic:convention:pluginDescriptors
+> Task :build-logic:convention:processResources
+> Task :build-logic:convention:classes
+> Task :build-logic:convention:jar
+
+> Configure project :composeApp
+WARNING: The option setting 'android.experimental.lint.version=9.1.1' is experimental.
+w: [33m[1m⚠️ Deprecated Gradle Version[0m[0m
+The used Gradle version (Gradle 8.13) is deprecated and will not be supported in future Kotlin Gradle Plugin releases.
+The minimum supported Gradle version will become Gradle 8.14.4 in Kotlin 2.5.0.
+
+This warning can be suppressed in 'gradle.properties':
+    kotlin.suppressGradlePluginWarnings=DeprecatedGradleVersionWarning
+[32m[1mSolution:[0m[0m
+[32m[3mPlease update the Gradle version to at least Gradle 8.14.4.[0m[0m
+
+w: [33m[1m⚠️ Native task 'iosX64Test' is disabled[0m[0m
+Task 'iosX64Test' for target 'ios_x64' cannot run on the current host (macos-aarch64).
+Reason: architecture mismatch - target requires X64, current host is ARM64
+[32m[1mSolution:[0m[0m
+[32m[3mTo suppress this warning, add 'kotlin.native.ignoreDisabledTargets=true' to gradle.properties.[0m[0m
+
+
+> Task :shared:core:kmpPartiallyResolvedDependenciesChecker
+> Task :shared:core:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :shared:core:compileKotlinDesktop FROM-CACHE
+> Task :shared:core:compileDesktopMainJava NO-SOURCE
+> Task :shared:core:desktopProcessResources NO-SOURCE
+> Task :shared:core:processDesktopMainResources SKIPPED
+> Task :shared:core:desktopMainClasses UP-TO-DATE
+> Task :shared:core:desktopJar
+> Task :shared:engine:kmpPartiallyResolvedDependenciesChecker
+> Task :shared:engine:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :shared:engine:compileKotlinDesktop FROM-CACHE
+> Task :shared:engine:compileDesktopMainJava NO-SOURCE
+> Task :shared:engine:desktopProcessResources NO-SOURCE
+> Task :shared:engine:processDesktopMainResources SKIPPED
+> Task :shared:engine:desktopMainClasses UP-TO-DATE
+> Task :shared:engine:desktopJar
+> Task :shared:networking:kmpPartiallyResolvedDependenciesChecker
+> Task :shared:networking:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :shared:networking:compileKotlinDesktop FROM-CACHE
+> Task :shared:networking:compileDesktopMainJava NO-SOURCE
+> Task :shared:networking:desktopProcessResources NO-SOURCE
+> Task :shared:networking:processDesktopMainResources SKIPPED
+> Task :shared:networking:desktopMainClasses UP-TO-DATE
+> Task :shared:networking:desktopJar
+> Task :shared:storage:kmpPartiallyResolvedDependenciesChecker
+> Task :shared:storage:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :shared:storage:compileKotlinDesktop FROM-CACHE
+> Task :shared:storage:compileDesktopMainJava NO-SOURCE
+> Task :shared:storage:desktopProcessResources NO-SOURCE
+> Task :shared:storage:processDesktopMainResources SKIPPED
+> Task :shared:storage:desktopMainClasses UP-TO-DATE
+> Task :shared:storage:desktopJar
+> Task :shared:transport-p2p:kmpPartiallyResolvedDependenciesChecker
+> Task :shared:transport-p2p:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :shared:transport-p2p:compileKotlinDesktop FROM-CACHE
+> Task :shared:transport-p2p:compileDesktopMainJava NO-SOURCE
+> Task :shared:transport-p2p:desktopProcessResources NO-SOURCE
+> Task :shared:transport-p2p:processDesktopMainResources SKIPPED
+> Task :shared:transport-p2p:desktopMainClasses UP-TO-DATE
+> Task :shared:transport-p2p:desktopJar
+
+> Task :shared:transport-p2p:compileTestKotlinDesktop FAILED
+e: file:///Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/ProductionVerificationWorkflowContractTest.kt:522:9 Unresolved reference 'assertEquals'.
+
+[Incubating] Problems report is available at: file:///Users/abdelrahman/Projects/parlor/build/reports/problems/problems-report.html
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':shared:transport-p2p:compileTestKotlinDesktop'.
+> A failure occurred while executing org.jetbrains.kotlin.compilerRunner.btapi.BuildToolsApiCompilationWork
+   > Compilation error. See log for more details
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+
+BUILD FAILED in 13s
+20 actionable tasks: 14 executed, 6 from cache

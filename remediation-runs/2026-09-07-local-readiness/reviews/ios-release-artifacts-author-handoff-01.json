@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "author": "/root/release_fix_review",
+  "recorded_at": "2026-09-07T16:00:44.772247+00:00",
+  "status": "IMPLEMENTED_FROZEN_FOR_INDEPENDENT_REVIEW_NOT_EXECUTED",
+  "commit": "5d9f5f4c81ff51ee70922c876eefb91c6e669d56",
+  "files": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios_release_artifacts.py",
+      "sha256": "e1b597f6513d18a1e35ea293e08a99d6ff7a3baefb383bb100f24988e5e83938",
+      "bytes": 19655,
+      "lines": 357,
+      "static_test_ids": []
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_ios_release_artifacts.py",
+      "sha256": "e5239b6587b963d009a2a477de6d6e1e36bac5c03e144059c92657527ec3e1c6",
+      "bytes": 21891,
+      "lines": 375,
+      "static_test_ids": [
+        "ReleaseArtifactTest.test_every_file_and_extra_debug_dylib_is_inventoried_with_uuid",
+        "ReleaseArtifactTest.test_framework_deployment_floor_may_be_lower_than_app_floor",
+        "ReleaseArtifactTest.test_wrong_native_architecture_platform_floor_and_output_shape_fail",
+        "ReleaseArtifactTest.test_uuid_is_single_arm64_and_bound_to_actual_path",
+        "ReleaseArtifactTest.test_required_native_must_exist_and_have_macho_header",
+        "ReleaseArtifactTest.test_non_macho_extra_native_file_is_not_hidden_as_resource",
+        "ReleaseArtifactTest.test_release_identity_version_platform_deployment_and_language_are_checked",
+        "ReleaseArtifactTest.test_known_identity_collision_cannot_be_promoted_by_package_inspector",
+        "ReleaseArtifactTest.test_duplicate_version_assignments_fail",
+        "ReleaseArtifactTest.test_privacy_structural_match_accepts_binary_plist_but_not_changed_declaration",
+        "ReleaseArtifactTest.test_exact_case_and_font_bytes_are_checked_in_shipping_namespaces",
+        "ReleaseArtifactTest.test_missing_source_categories_or_unknown_font_namespace_fail",
+        "ReleaseArtifactTest.test_symlinked_package_or_resource_is_rejected",
+        "ReleaseArtifactTest.test_private_material_is_rejected_before_reading_file_bytes",
+        "ReleaseArtifactTest.test_unreviewed_extension_and_nonregular_entry_fail",
+        "ReleaseArtifactTest.test_file_total_and_plist_bounds_fail_without_large_fixture",
+        "ReleaseArtifactTest.test_package_mutation_during_native_inspection_is_rejected",
+        "ReleaseArtifactTest.test_full_verifier_binds_source_and_does_not_invalidate_for_excluded_review_evidence",
+        "ReleaseArtifactTest.test_changed_source_identity_cannot_pass",
+        "ReleaseArtifactTest.test_cli_executes_real_package_checks_with_injected_native_metadata",
+        "NativeCommandAndCliTest.test_native_probe_uses_only_fixed_readonly_commands",
+        "NativeCommandAndCliTest.test_nonmac_native_probe_cannot_claim_execution",
+        "NativeCommandAndCliTest.test_command_output_exit_and_timeout_guards_close_owned_spool",
+        "NativeCommandAndCliTest.test_cli_returns_nonzero_json_on_verification_failure",
+        "NativeCommandAndCliTest.test_cli_rejects_oversized_success_report",
+        "GitSourceIdentityTest.test_head_tree_and_dirty_and_untracked_build_input_hashes_are_actual",
+        "GitSourceIdentityTest.test_protected_and_unrelated_untracked_files_are_not_read",
+        "GitSourceIdentityTest.test_untracked_symlinked_build_input_is_rejected",
+        "GitSourceIdentityTest.test_subdirectory_cannot_masquerade_as_full_source_checkout"
+      ]
+    }
+  ],
+  "preserved_original": {
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/native/ios_release_wrapper_v1/release_artifacts.py",
+    "sha256": "12ebbf1959095915c825dc8cba80da527e092963c0201e7197add1f7ca003152"
+  },
+  "actual_resource_layout_reference": {
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/ios-wrapper-release-01/release-artifact-inventory.json",
+    "sha256": "10b73d091b9c5db832691072b0d9c0751fccc064c816af8d0edcdebf63ea3a63",
+    "scope": "Historicalfullpackageinventoryestablishescases/fontnamespaceonly; oldartifactisnotproofnewcode/sourcepasses."
+  },
+  "implemented": [
+    "StreamedSHA256foreachregularfile, nativeheaderdiscoveryincludingunexpecteddebugdylibs, per-fileandtotalbounds,path/symlink/private-materialrejection, earlysizeceilingandmutationfingerprintchecks.",
+    "Fixedfile/lipo/vtool/dwarfdumpcalls,30-secondtimeout,boundedacceptedtooloutput, UTF8, exactsinglearm64UUIDwithfullartifactpathbinding;allnativeplatformIOSSIMULATOR/minos<=16.",
+    "Versionxcconfigbinding,actualReleasevsDebugID,currentknownStoreidentitycollisionremainsexplicitblockedbuild-only. NoStoreidentityapproval/signingcommands.",
+    "Source/shippedprivacystructuralequalitywithindependentbytehashes;LANdeclarationsmatchsource;exactrawcase/fontbytesincurrentactualComposenamespacesratherthanbasenameanywhere.",
+    "HEAD/tree+safe-scopedtrackedbinarydiffhash+streamedfilemanifestincludingbuildrelevantuntrackedinputs;ignoredprotected/audit/personalinputsnotread. Before/aftersourceidentitycomparisonexceptexcluded-audit-countonly.",
+    "CLI--app/--source/--json; actualGitrootrequired;source-onlycopiesnotacceptedwithoutGitidentity. NoticeCLIremainsseparatetool,avoidingcouplingandduplicatelegalinterpretation.",
+    "29staticallydeclaredtestmethods,puretempfilepackages+injectednativemetadata,realdisposableGitfixturestests,noMacOSnativecallonLinux."
+  ],
+  "limitations": [
+    "Thecallermustprovefreshsuccessfulsame-sourcebuildandstopworkersbeforeinspection. Tooldoesnotfabricateoldlocalnestedstopreceiptornativeruntimeevidence.",
+    "CommandoutputisRAM-safeTempFilespoolwithpostexecutionacceptancelimit,notstreamingdiskcap;commandsfixedreadonlyandtimebounded. Noapp/nativebackend/buildprocessislaunched.",
+    "Source-diffhashscopeexplicitlyexcludesprotected/privatefilesratherthanreadingthemtogetglobaldiffdigest. Finalrootbaseline/fulltreereceiptsremainseparate.",
+    "RawnamespaceconfigdeliberatelyboundtocurrentshippingWhodunitcases/DSfonts;unknownnewrawfontnamespacefailsforreview.",
+    "Noactualsourcevalidator,testcase,nativetool,Gradle/XcodeorStoreexecutionbythisauthor. Staticast.parse/hashinspectiononly."
+  ],
+  "required_next": [
+    "Independentroot/factoryfullsource+testsreview; rootworkflowguard/stop-before-inspection/upload-before-cleanupwiring.",
+    "Rootsingle-lanefocused29testexecutionandworkflowcontrols withmandatorycleanupreceipts.",
+    "Source-boundqualifiedCIactualunsignedSwiftReleaseappinspection; fieldstatusPASSalonecannotsubstituteforactualartifactreceipt."
+  ],
+  "preservation_and_cleanup": "Onlytwoauthorizednewsource/testfilesandthisadditivehandoffwritten. Archivedsource/evidenceunchanged;existinguserworknotmodified. Nobuild/test/worker/app/temporarynativeprocessesstarted; noartifactsorprocessesdeleted/stopped."
+}

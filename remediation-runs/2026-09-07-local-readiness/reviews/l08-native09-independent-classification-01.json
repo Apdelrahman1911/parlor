@@ -1,0 +1,733 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/release_fix_review",
+  "reviewed_at": "2026-09-07T23:09:06.429699+00:00",
+  "task": "Independent read-only classification of completed ios-readiness-09; no source fix or native execution authorized by this report",
+  "classification": "TEST/EVIDENCE GAP \u2014 required native file-protection metadata verification FAILED; application/platform root cause UNCONFIRMED",
+  "original_statuses": {
+    "cycle": "ios-readiness-09",
+    "started_at": "2026-09-07T22:38:46.676423+00:00",
+    "finished_at": "2026-09-07T22:51:22.826740+00:00",
+    "status": "FAIL",
+    "runtime_evidence_status": "FAIL",
+    "cleanup_status": "FAIL",
+    "xcodebuild_exit_code": 65
+  },
+  "source_binding": {
+    "binding": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/ios-readiness-source-08.json",
+      "sha256": "149ec7a539036855d78ad1542a5487b6dd51b84469f6ab267d3e22169f5d49a2"
+    },
+    "identity": {
+      "commit": "b6e1947c62661631d0593038db7f64dbf25f720e",
+      "tree": "f03ad1b302d951d0ca9811b1efab2751a8be6978",
+      "branch": "fix/local-readiness-2026-09-07",
+      "tracked_status": "M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/README.md\n M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/external_image_provenance.py\n M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_control_tests.py\n M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py\n M scripts/verification/ios-readiness/L08StorageProbe.kt.in\n M scripts/verification/ios-readiness/l08_receipts.py\n M scripts/verification/ios-readiness/test_l08_diagnostics.py",
+      "diff_sha256": "36dd70117778d1f5d038acfab1ab46ffb464cd8c78b2428552214bfe6fdffed1",
+      "source_manifest_sha256": "b8baa32067fdf29135e3e935429768b710c65897c334f2bb8ac8108f6aa85359"
+    },
+    "source_before_after_binding_input_exact": true,
+    "source_inventory_count": 799,
+    "current_source_inventory_hash_mismatches": [],
+    "method": "Standard-library JSON comparisons and SHA256 of every named inventory entry; read-only Git diff hash. This is binding verification, not fresh whole-repository line-by-line coverage.",
+    "copy_inputs": 739,
+    "copied_inputs": 751,
+    "additive_copy_only_files": 12,
+    "post_build_all_751_expected_observed_hashes_equal": true,
+    "post_build_unexpected_or_missing_inputs_or_source_symlinks": false,
+    "copied_probe": {
+      "path": "composeApp/src/iosMain/kotlin/com/parlor/app/readiness/L08StorageProbe.kt",
+      "original_sha256": null,
+      "copied_sha256": "a1202e47e1b41feb7e5c558e4df9515704e27762e437778b6ae79c777bfce651"
+    },
+    "unchanged_production_filesystem": {
+      "path": "composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSnapshotFileSystem.kt",
+      "original_sha256": "c2852fafb293a693be830171f4674947289fafb07f8ecdbafa5c0aaae6d1bf8b",
+      "copied_sha256": "c2852fafb293a693be830171f4674947289fafb07f8ecdbafa5c0aaae6d1bf8b"
+    },
+    "copy_only_modified_input_paths": [
+      "composeApp/src/commonMain/kotlin/com/parlor/app/App.kt",
+      "composeApp/src/commonMain/kotlin/com/parlor/app/shell/home/HomeScreen.kt",
+      "composeApp/src/commonMain/kotlin/com/parlor/app/shell/home/LocalResumeFailureScreen.kt",
+      "composeApp/src/commonMain/kotlin/com/parlor/app/shell/settings/SettingsScreen.kt",
+      "composeApp/src/iosMain/kotlin/com/parlor/app/MainViewController.kt",
+      "composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSecureKeyValueBacking.kt",
+      "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/passandplay/MafiaGameFlow.kt",
+      "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaPlayerEntryScreen.kt",
+      "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaSetupScreen.kt",
+      "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitGameFlow.kt",
+      "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/screens/setup/PlayerEntryScreen.kt",
+      "iosApp/iosApp.xcodeproj/project.pbxproj",
+      "iosApp/iosApp/ContentView.swift",
+      "iosApp/iosApp/iOSApp.swift",
+      "iosApp/iosAppUITests/IOSAppLaunchUITests.swift",
+      "shared/design-system/src/iosMain/kotlin/com/parlor/designsystem/localization/LocalAppLocale.ios.kt"
+    ],
+    "control_manifest": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/l08-source08-control-manifest-01.json",
+      "sha256": "04eb6dd28eaf5caa1a3f198880dd80550a73ee1c69090e46f1e1e4860f50778b"
+    },
+    "control_count": 65,
+    "control_sha256": "d7aad2e238b1d50335c4ea74741bb91d86354cfa37805ce73b78f4fe81fd9beb",
+    "control_approved_input_after_current_exact": true,
+    "execution_approval": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/ios-readiness-source08-independent-approval-01.json",
+      "sha256": "0aea28c6a23ebe6135389a3e3672f12ae6ef9e96863a868ee83f53563ac7f474"
+    }
+  },
+  "actual_environment": {
+    "xcode": {
+      "CFBundleShortVersionString": "26.5",
+      "ProductBuildVersion": "17F42"
+    },
+    "sdk": "iphonesimulator26.5",
+    "device": {
+      "architecture": "arm64",
+      "deviceId": "E1EDEEA7-5470-492B-98DE-A3005E6277AE",
+      "deviceName": "Parlor-Audit-parlor-audit-ios-readiness-09-cdayj8e_",
+      "modelName": "iPhone 17 Pro",
+      "osBuildNumber": "23F77",
+      "osVersion": "26.5",
+      "platform": "iOS Simulator"
+    },
+    "signing_mode": "adhoc",
+    "application_identity": {
+      "CFBundleIdentifier": "com.parlor.app.debug",
+      "CFBundleExecutable": "Parlor",
+      "CFBundleVersion": "1",
+      "CFBundleShortVersionString": "1.0.0",
+      "MinimumOSVersion": "16.0"
+    },
+    "limits": "Owned ARM64 iOS 26.5 Simulator, local ad-hoc Debug execution. Not pinned Store-qualified Xcode26.3, iOS16 runtime, physical-device storage/LAN, release signing or Store proof."
+  },
+  "execution": {
+    "xcodebuild_command": {
+      "command": [
+        "xcodebuild",
+        "-project",
+        "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-ios-readiness-09-cdayj8e_/copy/iosApp/iosApp.xcodeproj",
+        "-scheme",
+        "iosApp",
+        "-configuration",
+        "Debug",
+        "-sdk",
+        "iphonesimulator26.5",
+        "-destination",
+        "id=E1EDEEA7-5470-492B-98DE-A3005E6277AE",
+        "-derivedDataPath",
+        "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-ios-readiness-09-cdayj8e_/DerivedData",
+        "-resultBundlePath",
+        "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-ios-readiness-09-cdayj8e_/Results.xcresult",
+        "-parallel-testing-enabled",
+        "NO",
+        "-maximum-concurrent-test-simulator-destinations",
+        "1",
+        "-disable-concurrent-destination-testing",
+        "-jobs",
+        "1",
+        "-test-timeouts-enabled",
+        "YES",
+        "-default-test-execution-time-allowance",
+        "1200",
+        "-maximum-test-execution-time-allowance",
+        "1500",
+        "CODE_SIGNING_ALLOWED=YES",
+        "CODE_SIGNING_REQUIRED=YES",
+        "CODE_SIGN_IDENTITY=-",
+        "CODE_SIGN_STYLE=Manual",
+        "DEVELOPMENT_TEAM=",
+        "PROVISIONING_PROFILE=",
+        "PROVISIONING_PROFILE_SPECIFIER=",
+        "CODE_SIGN_ENTITLEMENTS=",
+        "OTHER_CODE_SIGN_FLAGS=",
+        "ONLY_ACTIVE_ARCH=YES",
+        "COMPILER_INDEX_STORE_ENABLE=NO",
+        "test"
+      ],
+      "started_at": "2026-09-07T22:39:28.168908+00:00",
+      "log": "xcodebuild.log",
+      "exit_code": 65,
+      "finished_at": "2026-09-07T22:51:12.197727+00:00"
+    },
+    "xctest_extraction_exit_codes": {
+      "summary": 0,
+      "tests": 0
+    },
+    "discovered_exact_methods": [
+      {
+        "nodeIdentifier": "ComposeContainerViewControllerTests/testChildUsesFullBoundsAcrossSizesAndOpposingSemanticDirections()",
+        "result": "Passed",
+        "durationInSeconds": 0.23190701007843018
+      },
+      {
+        "nodeIdentifier": "ComposeContainerViewControllerTests/testDefaultAppearanceForwardingReachesTheSameChildExactlyOnce()",
+        "result": "Passed",
+        "durationInSeconds": 0.042649030685424805
+      },
+      {
+        "nodeIdentifier": "ComposeContainerViewControllerTests/testOneStableChildKeepsItsExplicitSemanticsIndependentOfTheOuterView()",
+        "result": "Passed",
+        "durationInSeconds": 0.03666496276855469
+      },
+      {
+        "nodeIdentifier": "ComposeContainerViewControllerTests/testSystemDecorationAndOrientationPoliciesStillBelongToTheChild()",
+        "result": "Passed",
+        "durationInSeconds": 0.03557407855987549
+      },
+      {
+        "nodeIdentifier": "IOSAppLaunchUITests/testDSC01ActualSettingsLocalSessionsAndOSInvestigation()",
+        "result": "Failed",
+        "durationInSeconds": 505.0924109220505
+      }
+    ],
+    "summary": {
+      "result": "Failed",
+      "totalTestCount": 5,
+      "passedTests": 4,
+      "failedTests": 1,
+      "skippedTests": 0,
+      "expectedFailures": 0
+    },
+    "kotlin_compile_and_link_observed": {
+      "log": "xcodebuild.log",
+      "compose_compile_line": 1039,
+      "compose_link_line": 1060,
+      "gradle_success_line": 1137,
+      "executed_gradle_tasks_line": 1138,
+      "description": "New diagnostic Kotlin observer was compiled and linked in actual iOS simulator framework; 138 tasks executed. Compilation does not prove unexecuted branches or iOS16 API compatibility."
+    },
+    "actual_failure": {
+      "test": "IOSAppLaunchUITests/testDSC01ActualSettingsLocalSessionsAndOSInvestigation()",
+      "copied_file": "iosApp/iosAppUITests/IOSAppLaunchUITests.swift",
+      "copied_line": 2319,
+      "template": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/L08StorageUITests.swift.in",
+      "template_line": 74,
+      "copied_diff_line": 3416,
+      "xcodebuild_log_line": 3483,
+      "assertion": "XCTAssertEqual(result[\"status\"] as? String, \"PASS\")",
+      "actual": "Optional(\"FAIL\")",
+      "single_exact_save_control_activation_log_lines": [
+        3465,
+        3477
+      ],
+      "classification": "An executed app-host assertion failed on a retained FAIL result. Not a compilation failure, absent test, failed control selector, or demonstrated launch crash."
+    }
+  },
+  "l08_observation": {
+    "action": "save",
+    "boot_ordinal": 1,
+    "loaded_app_images": [
+      "Parlor",
+      "Parlor.debug.dylib"
+    ],
+    "loaded_compose_framework": {
+      "file_bytes": 84025752,
+      "file_sha256": "008acbac7e02fd1ee6d9ae1dbc08e7d13de16a8ac62830eeed12b06d6d1e7422",
+      "image_uuid": "be20d762-6597-34dd-959b-7c685794db28",
+      "origin": "owned-copy-build",
+      "path": "xcode-frameworks/Debug/iphonesimulator26.5/ComposeApp.framework/ComposeApp"
+    },
+    "loader_environment": {
+      "DYLD_FALLBACK_FRAMEWORK_PATH": {
+        "present": true,
+        "redacted_entry_count": 1,
+        "task_owned_paths": []
+      },
+      "DYLD_FALLBACK_LIBRARY_PATH": {
+        "present": true,
+        "redacted_entry_count": 1,
+        "task_owned_paths": []
+      },
+      "DYLD_FRAMEWORK_PATH": {
+        "present": true,
+        "redacted_entry_count": 0,
+        "task_owned_paths": [
+          "DerivedData/Build/Products/Debug-iphonesimulator"
+        ]
+      },
+      "DYLD_LIBRARY_PATH": {
+        "present": true,
+        "redacted_entry_count": 0,
+        "task_owned_paths": [
+          "DerivedData/Build/Products/Debug-iphonesimulator"
+        ]
+      }
+    },
+    "observation": {
+      "action": "save",
+      "boot_ordinal": 1,
+      "protection_metadata": {
+        "directory": {
+          "attributes": {
+            "dictionary_present": true,
+            "key_present": false,
+            "native_error": {
+              "code": 0,
+              "domain": "none",
+              "present": false
+            },
+            "query": "returned",
+            "value": "missing"
+          },
+          "role": "required-failed",
+          "volume": {
+            "dictionary_present": true,
+            "key_present": true,
+            "native_error": {
+              "code": 0,
+              "domain": "none",
+              "present": false
+            },
+            "query": "returned",
+            "value": "supported"
+          }
+        },
+        "failed_target": "directory",
+        "file": {
+          "attributes": {
+            "dictionary_present": true,
+            "key_present": false,
+            "native_error": {
+              "code": 0,
+              "domain": "none",
+              "present": false
+            },
+            "query": "returned",
+            "value": "missing"
+          },
+          "role": "diagnostic-only",
+          "volume": {
+            "dictionary_present": true,
+            "key_present": true,
+            "native_error": {
+              "code": 0,
+              "domain": "none",
+              "present": false
+            },
+            "query": "returned",
+            "value": "supported"
+          }
+        },
+        "schema_version": 1
+      },
+      "reason": "fixture_or_boundary_failure",
+      "run_token": "54B4E3F4-DAD8-4DD2-A7A0-6DEB295D2609",
+      "schema_version": 1,
+      "stage": "metadata-directory-protection",
+      "status": "FAIL"
+    },
+    "process_boot": "50B89890-962C-4776-82EA-ECDD27A9BCD8",
+    "run_token": "54B4E3F4-DAD8-4DD2-A7A0-6DEB295D2609",
+    "scenario": "l08-storage",
+    "schema_version": 1,
+    "signing_mode": "adhoc"
+  },
+  "reachable_interpretation": {
+    "scenario": "L08 boot1 save of wc (Whodunit Classic), not Mafia and not a restart/load scenario.",
+    "path": "XCTest verifyL08RealStoreResume -> exact l08-action-save button -> DSC01Probe.startL08Storage -> MainViewControllerKt.L08StorageCommand -> L08StorageProbe.command/execute -> actual SnapshotStore.save/load -> OwnedSnapshotPaths.protectedMetadata -> directory NSFileProtectionKey equality fails -> bounded FAIL -> XCTest equality fails.",
+    "earlier_sequential_checks_reached_without_throwing": [
+      {
+        "source_lines": "L08StorageProbe.kt.in:150-177",
+        "checks": "SnapshotStore is FileBackedSnapshotStore, filesystem is IosSnapshotFileSystem, transport binding is P2pKitRoomTransport; allowed owned-path context; initial absence; reducer-built Classic envelope; real store.save returned Success."
+      },
+      {
+        "source_lines": "L08StorageProbe.kt.in:312-319",
+        "checks": "Real store.load returned Success and exact full envelope equality passed in the same process. This is distinct from later restart recovery."
+      },
+      {
+        "source_lines": "L08StorageProbe.kt.in:491-503",
+        "checks": "Exact protected file path/existence; directory and file backup-exclusion readback; NSFileProtectionKey and Complete constants available."
+      }
+    ],
+    "directory_original_getter": "Returned a dictionary with NSFileProtectionKey absent and NSError absent. Complete equality therefore failed. This invocation is not a nil-dictionary, getter-exception, explicit None/other protection-class, or missing-constant observation.",
+    "file_diagnostic_only": "On original directory failure, the already-attested file was sampled additionally. Its dictionary also lacks NSFileProtectionKey with no NSError. This is NOT the original file assertion running or passing.",
+    "volume_observations": "Both fresh URL volume queries returned NSNumber true (supported), with a dictionary/key and no NSError. Do not relabel as unsupported. Volume support alone cannot establish each item Complete, hardware protection, or a Simulator exemption.",
+    "unreached_in_this_cycle": [
+      "Original required file protection assertion at L08StorageProbe.kt.in:507-510.",
+      "Independent ciphertext-header observer at lines511-517. Successful prior read/decrypt is separate evidence and does not credit this assertion.",
+      "Later L08 process boots2-13, actual Home resume/continue, Mafia ON/OFF native fixtures, legacy migration, damaged-record Retry/Discard, dual-record preservation, final absence.",
+      "Three L08 host locale/lifecycle scenarios, injected after L08 real-store scenario.",
+      "Later Whodunit/Mafia local UI matrix and OS-language investigation scenarios after the failing L08 insertion.",
+      "protectionValue iOS17 enum guard: a missing key took the earlier missing branch, so its runtime branch did not execute; no iOS16 runtime evidence."
+    ],
+    "counter_evidence_and_remaining_uncertainty": [
+      "Production IosSnapshotFileSystem already requests Complete on directory creation and Complete+Atomic on write; both calls return success on this reached path. No source omission is independently established by a missing returned metadata key alone.",
+      "Synthetic real-store roundtrip and backup-exclusion readbacks succeeded earlier. Therefore this result is not evidence that all storage is unavailable or all snapshots fail.",
+      "Neither successful APIs, successful synthetic roundtrip nor reported volume support proves Complete at the item level. Required assertion remains FAIL.",
+      "Extra diagnostics are copy-only and failure-only; no production snapshot reader/validator, recovery semantics, host authority, protocol or privacy setting was relaxed.",
+      "IOS-R1/storage native root cause remains UNCONFIRMED; do not add entitlements, waive protection checks, treat errors as absence or call this an application repair."
+    ]
+  },
+  "artifact_binding": {
+    "built_and_installed_inventory_exact": true,
+    "owned_bundle_macho_files": 4,
+    "observed_loaded_framework": {
+      "file_bytes": 84025752,
+      "file_sha256": "008acbac7e02fd1ee6d9ae1dbc08e7d13de16a8ac62830eeed12b06d6d1e7422",
+      "image_uuid": "be20d762-6597-34dd-959b-7c685794db28",
+      "origin": "owned-copy-build",
+      "path": "xcode-frameworks/Debug/iphonesimulator26.5/ComposeApp.framework/ComposeApp"
+    },
+    "embedded_framework": {
+      "path": "Frameworks/ComposeApp.framework/ComposeApp",
+      "resolved_path": "Frameworks/ComposeApp.framework/ComposeApp",
+      "bytes": 83555360,
+      "sha256": "df9352ce48b8b916dd79210f1be3b069ac8e26361ce848310b6f544f0a17dc05",
+      "symbolic_link": false,
+      "magic": "cffaedfe"
+    },
+    "embedded_uuid": {
+      "path": "Frameworks/ComposeApp.framework/ComposeApp",
+      "sha256": "df9352ce48b8b916dd79210f1be3b069ac8e26361ce848310b6f544f0a17dc05",
+      "architectures": [
+        {
+          "architecture": "arm64",
+          "uuid": "be20d762-6597-34dd-959b-7c685794db28"
+        }
+      ]
+    },
+    "same_uuid_not_same_bytes": true,
+    "strict_gate_failure": "run_ios_readiness.py:783 calls verify_xctest, which threw at179-183 before framework inventory/binding and L08 final validation.",
+    "external_executed_framework_inventory_created": false,
+    "final_external_loaded_framework_binding_executed": false,
+    "unreached_final_validation_ranges": [
+      "run_ios_readiness.py:819-841",
+      "run_ios_readiness.py:845-860"
+    ],
+    "interpretation": "Observed framework is owned-copy-build, not the different embedded bytes. Do not substitute embedded inventory or matching UUID for final external byte binding. Frozen copied input and the actual diagnostic receipt support bounded diagnosis, but no complete artifact-bound native readiness PASS was produced."
+  },
+  "earlier_partial_observations": {
+    "settings": {
+      "completed_flag": true,
+      "observations": 22,
+      "process_starts": 4
+    },
+    "native_readiness": {
+      "completed_flag": true,
+      "observations": 74,
+      "process_starts": 8,
+      "raw_boot_files": 8
+    },
+    "l08_storage": {
+      "completed_flag": false,
+      "observations": 3,
+      "process_starts": 1,
+      "operation_results": 1
+    },
+    "scope": "Earlier eight boot observations and settings receipts are retained, not discarded because L08 failed. Their completed flags are not substitutes for the final strict source/artifact validation that was not reached. Earlier native synthetic credential/store results do not fulfill the separate L08 Complete metadata/resume/legacy requirements."
+  },
+  "cleanup_original_fail": {
+    "status": "FAIL",
+    "gradle_stops": [
+      {
+        "label": "stop-xcode-immediate",
+        "exit_code": 0,
+        "at": "2026-09-07T22:51:12.877416+00:00"
+      },
+      {
+        "label": "stop-final",
+        "exit_code": 0,
+        "at": "2026-09-07T22:51:16.214395+00:00"
+      }
+    ],
+    "embedded_gradle_receipt": "build_exit=0\nstop_exit=0\n",
+    "stop_logs": "Both root-owned Gradle stop logs say No Gradle daemons are running.",
+    "finalization_stages": [
+      {
+        "stage": "final-isolated-gradle-stop",
+        "status": "PASS",
+        "at": "2026-09-07T22:51:16.214401+00:00"
+      },
+      {
+        "stage": "shutdown-owned-simulator-and-app",
+        "status": "PASS",
+        "at": "2026-09-07T22:51:19.812610+00:00"
+      },
+      {
+        "stage": "delete-owned-simulator",
+        "status": "PASS",
+        "at": "2026-09-07T22:51:20.308577+00:00"
+      },
+      {
+        "stage": "stop-owned-command-workers",
+        "status": "PASS",
+        "at": "2026-09-07T22:51:20.716702+00:00"
+      },
+      {
+        "stage": "cleanup-attested-secondary-fifos",
+        "status": "FAIL",
+        "at": "2026-09-07T22:51:20.737384+00:00"
+      },
+      {
+        "stage": "verify-workers-before-file-removal",
+        "status": "PASS",
+        "at": "2026-09-07T22:51:20.907760+00:00"
+      },
+      {
+        "stage": "verify-copied-input-identity-after-workers-stop",
+        "status": "PASS",
+        "at": "2026-09-07T22:51:21.074361+00:00"
+      },
+      {
+        "stage": "remove-owned-copy-derived-data-home-temp",
+        "status": "PASS",
+        "at": "2026-09-07T22:51:22.392147+00:00"
+      },
+      {
+        "stage": "read-final-source-identity",
+        "status": "PASS",
+        "at": "2026-09-07T22:51:22.822896+00:00"
+      }
+    ],
+    "owned_device_deleted_and_absent": true,
+    "shutdown_exit": 0,
+    "delete_exit": 0,
+    "task_worker_and_original_output_observations": {
+      "owned_processes_remaining": [],
+      "unknown_holders": [],
+      "remaining_outputs": [],
+      "temporary_directory_removed": true,
+      "unexpected_original_outputs_preserved": []
+    },
+    "secondary_attestation_error": [
+      {
+        "pid": 41785,
+        "start": "Tue Sep 8 01:41:57 2026",
+        "error_type": "UnsafeSecondaryPath",
+        "message": "Apple process changed during UID verification"
+      }
+    ],
+    "cleanup_errors": [
+      {
+        "stage": "cleanup-attested-secondary-fifos",
+        "error_type": "UnsafeSecondaryPath",
+        "message": "Observed but never inode-attested secondary path remains"
+      },
+      {
+        "stage": "secondary-attestation-completeness",
+        "error_type": "UnattestedSecondaryPath",
+        "message": "Known attestation errors require targeted ownership review; no success claim"
+      }
+    ],
+    "secondary_pending_count": 1,
+    "secondary_removed_count": 0,
+    "process_exit_not_proven": "Apple process changed during UID verification proves a failed post-UID equality/ownership check, not its cause. Exit, argv/identity or parent change cannot be distinguished from the retained error. Do not claim the worker merely exited.",
+    "next_cycle_condition": "Original cleanup FAIL remains immutable. Ownership-safe recovery is separately assigned to factory_review/root. Do not execute next native cycle solely on this report; append separately reviewed recovery evidence before satisfying sequential approval.",
+    "reviewer_cleanup_actions": "None. Reviewer did not inspect, terminate or delete secondary paths/processes and did not touch another task build lane."
+  },
+  "reviewed_source_and_locations": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/l08_copy.py",
+      "sha256": "c2bf28bf0efd9449d646c451d7b8e665000e8d11a3a6eea76de95e1fb4a55a5f",
+      "reviewed_line_ranges_this_reconciliation": [
+        [
+          1,
+          166
+        ]
+      ],
+      "scope": "Complete copy-only transformation/command bridge and XCTest insertion order reopened."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/L08StorageProbe.kt.in",
+      "sha256": "a1202e47e1b41feb7e5c558e4df9515704e27762e437778b6ae79c777bfce651",
+      "reviewed_line_ranges_this_reconciliation": [
+        [
+          1,
+          188
+        ],
+        [
+          282,
+          328
+        ],
+        [
+          480,
+          630
+        ]
+      ],
+      "scope": "Runtime failure path and bounded diagnostic control branches reopened; full630 had prior independent draft review, not claimed freshly read in this reconciliation."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/L08StorageUITests.swift.in",
+      "sha256": "2f0ce45e329efa15a8e28f681af0b201c4d503e59348a1ad507e2a2a8883e864",
+      "reviewed_line_ranges_this_reconciliation": [
+        [
+          1,
+          111
+        ]
+      ],
+      "scope": "Complete exact control activation, per-boot sequence and original failure assertion."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/L08StorageLaunch.swift.in",
+      "sha256": "679532441cf6c8fcf6ada88d6e94d0452d1ea3e3979fe0f981aa1935ba83947f",
+      "reviewed_line_ranges_this_reconciliation": [
+        [
+          1,
+          71
+        ]
+      ],
+      "scope": "Complete real Swift-to-Kotlin command bridge and bounded durable failure receipt."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/run_ios_readiness.py",
+      "sha256": "85283be9681be14c18b76ef1657b596e837b4f97f978917f25ac693ae72d0ca8",
+      "reviewed_line_ranges_this_reconciliation": [
+        [
+          55,
+          105
+        ],
+        [
+          175,
+          225
+        ],
+        [
+          645,
+          703
+        ],
+        [
+          740,
+          875
+        ]
+      ],
+      "scope": "Exact method set, strict failure gate, preserve-before-validation and unexecuted final binding."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/owned_lane.py",
+      "sha256": "4bf3bbb4abfa22cd1604e6b4381bf481c95662ab15bf3fbdc86355a083102742",
+      "reviewed_line_ranges_this_reconciliation": [
+        [
+          165,
+          228
+        ]
+      ],
+      "scope": "Read-only identity/owned-output semantics; no process methods executed."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSnapshotFileSystem.kt",
+      "sha256": "c2852fafb293a693be830171f4674947289fafb07f8ecdbafa5c0aaae6d1bf8b",
+      "reviewed_line_ranges_this_reconciliation": [
+        [
+          70,
+          205
+        ],
+        [
+          365,
+          473
+        ]
+      ],
+      "scope": "Original successful API contract, read/migrate ordering, Complete request, backup readback; not modified."
+    }
+  ],
+  "evidence": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-09/receipt.json",
+      "sha256": "7035d9505efe8cf1d5d9012024c6c5883c0e9371b97a5a5c5a0cfa15ccf36567"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-09/input-manifest.json",
+      "sha256": "3704aaecab9fe4c93c31f819a66afdc559d89c1b064a2ea10a7789560aefdb32"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-09/copied-source-manifest.json",
+      "sha256": "fbeaf1a0187c33742c8e3d18cd046034e17d2de1ed616d718d5a64a55b20d9a5"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-09/copied-source-inputs-after-build.json",
+      "sha256": "2e2d5b5b1733eb15bc33de34f181a2e735f54026959b999fd86241371b7554f0"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-09/copied-source.diff",
+      "sha256": "b4a4762beeb7fdde7c5eea7b6d4f60bb7ed031400877036653459ac4667642d5"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-09/xcodebuild.log",
+      "sha256": "66f3c182664968de8c90a5986d749c55316c98e36babdfa45b743558658dcfca"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-09/xcresult-summary.json",
+      "sha256": "da98531f052f485f1b31ed02eec50d8218da3c6d971048df178bb3f82c18b5d8"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-09/xcresult-tests.json",
+      "sha256": "adb7f5afee3ccf4db4a9f6d5cedb4da17bc4640d33eaab077e91d4484d301c2d"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-09/parlor-l08-storage-1-save.json",
+      "sha256": "c2e85bf1895334d9c1ad18c5216a5094846c80b235ad500c12f2893acc955132"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-09/probe-settings-result.json",
+      "sha256": "30d22707c68fc6f624a27521c0020fee907cf2bf1acb6049271e0ddc4a4c97f6"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-09/probe-readiness-result.json",
+      "sha256": "a26945342d330e0f24de948136afa0b29b95e32b6a733ed68018452aa5f3b4c0"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-09/probe-l08-storage-result.json",
+      "sha256": "0e015133b16bc9493c1758e71124795e3dadb2a1ac85b29fcaaa519103627b5e"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-09/built-app-binary-inventory.json",
+      "sha256": "7cb8608e5ff53bc8c6227b9a2aa1be2d824af2a789004e82c8b784ba2148f69b"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-09/installed-app-binary-inventory.json",
+      "sha256": "7cb8608e5ff53bc8c6227b9a2aa1be2d824af2a789004e82c8b784ba2148f69b"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-09/built-app-linker-entitlements.json",
+      "sha256": "63263ca46349fe935cfefd84900029acccc1316fae6c6af8302fba936ef81531"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-09/installed-app-linker-entitlements.json",
+      "sha256": "63263ca46349fe935cfefd84900029acccc1316fae6c6af8302fba936ef81531"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-09/effective-simulator-app-phase.json",
+      "sha256": "4468f2527c5038816f99610cf4c717cde93ba5d0c0fcc6d3ae4dd8b64c00c537"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-09/embedded-gradle-stop.txt",
+      "sha256": "fb55a963c8d30249ea6b8be68a62b5921facefdc7823c16ad139fea885be972f"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-09/stop-xcode-immediate.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-09/stop-final.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-09/secondary-fifo-errors.json",
+      "sha256": "80fcf698958a9ebfa9ada802c344c53a9117bb1ac0fc81b27a45db0396daae37"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-09/secondary-fifo-ownership.json",
+      "sha256": "8645acb761687bfe6144a8cf6c3508f310efa81ab6c7716ab1ba625b0ddc7a6d"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-09/secondary-fifo-ownership-final.json",
+      "sha256": "8645acb761687bfe6144a8cf6c3508f310efa81ab6c7716ab1ba625b0ddc7a6d"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-09/owned-device-after-delete.json",
+      "sha256": "755d442cf44919879856407fe199e916c770d206e3f6b050d6eb286b7af73782"
+    }
+  ],
+  "recommended_next_investigation_only": [
+    "Keep the directory Complete requirement intact. If proceeding, review a bounded synthetic native API experiment to distinguish getter/API/runtime behavior from actual item protection on the exact pinned platform; do not silently adopt a Simulator waiver.",
+    "If more native execution is authorized, fully capture external loaded-framework bytes/UUID binding before a known failed semantic gate while retaining the same acceptance requirements. Current missing final inventory cannot be recreated from deleted outputs or matching embedded UUID alone.",
+    "Continue required physical-device protection, lock/unlock and legacy/restart checks as explicit unavailable evidence, never as a JVM/mock substitute.",
+    "Resolve exact ownership-attested FIFO cleanup separately; preserve original cycle failure and append recovery evidence rather than rewriting it."
+  ],
+  "reviewer_activity": {
+    "repository_modules_executed_or_imported": false,
+    "new_builds_tests_compilers_native_tools_or_simulators": false,
+    "new_background_workers_or_generated_build_outputs": false,
+    "process_control_or_output_deletion": false,
+    "source_test_configuration_git_or_store_mutations": false,
+    "only_write": "This exclusive-create additive JSON review; source, original receipts and previous user/audit material preserved."
+  }
+}

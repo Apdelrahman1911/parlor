@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "kind": "ONE_CAPPED_PUBLIC_SETTINGS_SHEET_DIAGNOSTIC_REQUEST",
+  "created_at": "2026-09-10T03:23:57.418900+00:00",
+  "coordinator": "/root",
+  "status": "PREPARED_PENDING_INDEPENDENT_PREFLIGHT_BINDING_AND_EXACT_REQUEST_ADMISSION",
+  "repository": "Apdelrahman1911/parlor",
+  "branch": "fix/local-readiness-2026-09-07",
+  "frozen_source_sha": "730a91e4dade4dbc2168b5367e20c3d0f42237e1",
+  "tree": "1f71dc64bc7680f461efc3e841dc051579a0d993",
+  "inputs": {
+    "verification_scope": "native-evidence",
+    "native_selection": "settings-sheet-only",
+    "frozen_source_sha": "730a91e4dade4dbc2168b5367e20c3d0f42237e1",
+    "preflight_run_id": "34432704582",
+    "preflight_run_attempt": "1",
+    "preflight_artifact_id": "10135078432",
+    "preflight_artifact_sha256": "07b2072270d6f181da76fc973e9e9e49f0ad7672ebb613bc2169224f92605f6c",
+    "approved_probe_control_sha256": "6d489d0735ece9a7966c2c987b43a20003d5bc44821cc4193f3f47d1f815a35a"
+  },
+  "command": [
+    "gh",
+    "workflow",
+    "run",
+    "production-verification.yml",
+    "--repo",
+    "Apdelrahman1911/parlor",
+    "--ref",
+    "fix/local-readiness-2026-09-07",
+    "-f",
+    "verification_scope=native-evidence",
+    "-f",
+    "native_selection=settings-sheet-only",
+    "-f",
+    "frozen_source_sha=730a91e4dade4dbc2168b5367e20c3d0f42237e1",
+    "-f",
+    "preflight_run_id=34432704582",
+    "-f",
+    "preflight_run_attempt=1",
+    "-f",
+    "preflight_artifact_id=10135078432",
+    "-f",
+    "preflight_artifact_sha256=07b2072270d6f181da76fc973e9e9e49f0ad7672ebb613bc2169224f92605f6c",
+    "-f",
+    "approved_probe_control_sha256=6d489d0735ece9a7966c2c987b43a20003d5bc44821cc4193f3f47d1f815a35a"
+  ],
+  "maximum_dispatches": 1,
+  "cycle": "ios-readiness-35",
+  "budget_seconds": {
+    "job": 2400,
+    "native_child_wait": 900,
+    "xcodebuild": 600,
+    "finalizer_grace": 600,
+    "upload_cleanup_reserve": 600
+  },
+  "binding": [
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34432704582/native-preflight.zip",
+      "sha256": "07b2072270d6f181da76fc973e9e9e49f0ad7672ebb613bc2169224f92605f6c"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34432704582/native-preflight/preflight.json",
+      "sha256": "788dee1c9eab12761f359daf7244840ba256e61560e739f741beca4c0778282f"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34432704582/native-preflight/ios-readiness-source-ci.json",
+      "sha256": "c5790cb0d104727ea5d760190bcdcbe51ab3ac8a9077f6b5626d4808b2f36b93"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34432704582/native-preflight/settings_sheet-controls.json",
+      "sha256": "4774360f5c96e701092696d8eddf688350cc290e86ca6a0abb2ca8e55b897f38"
+    }
+  ],
+  "required_before_execution": [
+    "Different-agent actual preflight105-row/source/platform/archive/custody and request approval",
+    "Immediate remote/local730a equality and tracked clean source",
+    "Intended active workflow; no active same-ref run"
+  ],
+  "scope": "One newly owned simulator; targetless Swift XCTest public Settings\u2192Add Arabic sheet, retain only3 capped public button labels and do NOT tap a primary-language choice. No Parlor/Kotlin build or launch, normal B libproc/provenance/notices, functional storage, strict protection, whole L08, physical-device or Store qualification. Capture failure is retained, not grounds for a blind expensive retry."
+}

@@ -1,0 +1,1450 @@
+{
+  "finding_id": "SN-C2",
+  "severity": "Medium",
+  "reviewer": "/root/factory_review",
+  "fix_authors": [
+    "/root/session_cont (host/peer/coordinator)",
+    "/root (factory helper and actual factory wiring)"
+  ],
+  "independence": "Reviewer authored no production/test/configuration change in this repair; original factory sibling independently confirmed before patch.",
+  "review_time": "2026-09-05T21:55:52.449369+00:00",
+  "baseline": {
+    "root": "/Users/abdelrahman/Projects/parlor",
+    "branch": "main",
+    "head": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+    "git_tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+    "dirty_checkout": true
+  },
+  "review_conclusion": "APPROVED — scoped host, join, cold-resume, lifecycle-registration and all-platform factory ownership correction addresses the original root cause; the deterministic JVM tests execute and pass. Unexecuted platform gates are not approved.",
+  "verification_scope": "Common/JVM behavior and complete touched source diff independently approved. Android/iOS actual factory wiring reviewed as source; this dossier does not claim their compilation, runtime, physical LAN or Store verification.",
+  "scoped_source_manifest_sha256": "265f570510cd249f30b6f881ef79e35b2b0a4a44ce6c129e07f252427711a885",
+  "scoped_tracked_production_diff_sha256": "3523b3ae0b02e7d9662f21679ee363b3982dce3a852039566ed7fd168077fc3a",
+  "source_review": [
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/commonMain/kotlin/com/parlor/transport/p2p/P2pKitCreation.kt",
+      "relative_path": "shared/transport-p2p/src/commonMain/kotlin/com/parlor/transport/p2p/P2pKitCreation.kt",
+      "sha256": "e924988dfcbde7eb1ac2eae763e5078a28bdd568ca1b05e4ece6284a3183a95e",
+      "line_count": 39,
+      "reviewed_line_ranges": [
+        [
+          1,
+          39
+        ]
+      ],
+      "full_file_reviewed": true,
+      "relevance": "production-common",
+      "reviewer": "/root/factory_review"
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/commonMain/kotlin/com/parlor/transport/p2p/P2pKitFactory.kt",
+      "relative_path": "shared/transport-p2p/src/commonMain/kotlin/com/parlor/transport/p2p/P2pKitFactory.kt",
+      "sha256": "5c45ff87104b0ed58b03ce57141020ec898aeeab27a949e9167593f05942dd6f",
+      "line_count": 28,
+      "reviewed_line_ranges": [
+        [
+          1,
+          28
+        ]
+      ],
+      "full_file_reviewed": true,
+      "relevance": "production-common",
+      "reviewer": "/root/factory_review"
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/commonMain/kotlin/com/parlor/transport/p2p/AppLifecycleRoomCoordinator.kt",
+      "relative_path": "shared/transport-p2p/src/commonMain/kotlin/com/parlor/transport/p2p/AppLifecycleRoomCoordinator.kt",
+      "sha256": "7761d49b0de180d34daa32f790768a541f2af8d0de98b94eeb89ab20bf2d1e68",
+      "line_count": 76,
+      "reviewed_line_ranges": [
+        [
+          1,
+          76
+        ]
+      ],
+      "full_file_reviewed": true,
+      "relevance": "production-common",
+      "reviewer": "/root/factory_review"
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/commonMain/kotlin/com/parlor/transport/p2p/P2pKitRoomTransport.kt",
+      "relative_path": "shared/transport-p2p/src/commonMain/kotlin/com/parlor/transport/p2p/P2pKitRoomTransport.kt",
+      "sha256": "a5e2536e41c81c54b58ec27da135ea9046969db9cb80084e2a0da3b15ddde7c7",
+      "line_count": 4811,
+      "reviewed_line_ranges": [
+        [
+          1,
+          630
+        ],
+        [
+          684,
+          865
+        ],
+        [
+          1604,
+          2248
+        ],
+        [
+          3120,
+          4811
+        ]
+      ],
+      "full_file_reviewed": false,
+      "relevance": "production-common",
+      "reviewer": "/root/factory_review"
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/androidMain/kotlin/com/parlor/transport/p2p/P2pTransportModule.android.kt",
+      "relative_path": "shared/transport-p2p/src/androidMain/kotlin/com/parlor/transport/p2p/P2pTransportModule.android.kt",
+      "sha256": "280b7f13d26939972416c805a184efe8fb8041f48db219f2e41797adbe456a11",
+      "line_count": 97,
+      "reviewed_line_ranges": [
+        [
+          1,
+          97
+        ]
+      ],
+      "full_file_reviewed": true,
+      "relevance": "production-android",
+      "reviewer": "/root/factory_review"
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/desktopMain/kotlin/com/parlor/transport/p2p/P2pTransportModule.desktop.kt",
+      "relative_path": "shared/transport-p2p/src/desktopMain/kotlin/com/parlor/transport/p2p/P2pTransportModule.desktop.kt",
+      "sha256": "7bb0e36a15dfde7e193c74f1ab2a3d10f35c01e04c0fb3ba4e08a8a8cf88d3cb",
+      "line_count": 94,
+      "reviewed_line_ranges": [
+        [
+          1,
+          94
+        ]
+      ],
+      "full_file_reviewed": true,
+      "relevance": "development-desktop",
+      "reviewer": "/root/factory_review"
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/iosMain/kotlin/com/parlor/transport/p2p/P2pTransportModule.ios.kt",
+      "relative_path": "shared/transport-p2p/src/iosMain/kotlin/com/parlor/transport/p2p/P2pTransportModule.ios.kt",
+      "sha256": "bea599aa4d6dd9820477f2cbee57c213a9988da33e51eada0eb061d25fd77753",
+      "line_count": 71,
+      "reviewed_line_ranges": [
+        [
+          1,
+          71
+        ]
+      ],
+      "full_file_reviewed": true,
+      "relevance": "production-ios",
+      "reviewer": "/root/factory_review"
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/commonTest/kotlin/com/parlor/transport/p2p/AppLifecycleRoomRegistrationTest.kt",
+      "relative_path": "shared/transport-p2p/src/commonTest/kotlin/com/parlor/transport/p2p/AppLifecycleRoomRegistrationTest.kt",
+      "sha256": "bfda11cf208b13b039ae74061d81fcf04a11fdfe3945c490371aa71b730f6d6b",
+      "line_count": 139,
+      "reviewed_line_ranges": [
+        [
+          1,
+          139
+        ]
+      ],
+      "full_file_reviewed": true,
+      "relevance": "test-common",
+      "reviewer": "/root/factory_review"
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/HostOpeningCancellationTest.kt",
+      "relative_path": "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/HostOpeningCancellationTest.kt",
+      "sha256": "13cdebd30a42ff4ed04be36f9e2ffe3693b488badd05e19edb2a004a180c6bff",
+      "line_count": 187,
+      "reviewed_line_ranges": [
+        [
+          1,
+          187
+        ]
+      ],
+      "full_file_reviewed": true,
+      "relevance": "test-desktop",
+      "reviewer": "/root/factory_review"
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/PeerOpeningCancellationTest.kt",
+      "relative_path": "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/PeerOpeningCancellationTest.kt",
+      "sha256": "e72ab2b4e013af3a626f50677e3284518120b4320a556c7d5cb7a662fe4c0e68",
+      "line_count": 392,
+      "reviewed_line_ranges": [
+        [
+          1,
+          392
+        ]
+      ],
+      "full_file_reviewed": true,
+      "relevance": "test-desktop",
+      "reviewer": "/root/factory_review"
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitCreationTest.kt",
+      "relative_path": "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitCreationTest.kt",
+      "sha256": "aa03b4fc5e37dbd234848594641dd46eec5aef5bf78dcc478783987d6ee0dc70",
+      "line_count": 273,
+      "reviewed_line_ranges": [
+        [
+          1,
+          273
+        ]
+      ],
+      "full_file_reviewed": true,
+      "relevance": "test-desktop",
+      "reviewer": "/root/factory_review"
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/JupiterDiscoveryContractTest.kt",
+      "relative_path": "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/JupiterDiscoveryContractTest.kt",
+      "sha256": "94682d196381d97a37f6c5e925b63646f102b864d76eb55252cfbd082abcb305",
+      "line_count": 40,
+      "reviewed_line_ranges": [
+        [
+          1,
+          40
+        ]
+      ],
+      "full_file_reviewed": true,
+      "relevance": "test-desktop-supporting-ROOT-T3",
+      "reviewer": "/root/factory_review"
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitRoomTransportLifecycleTest.kt",
+      "relative_path": "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitRoomTransportLifecycleTest.kt",
+      "sha256": "947a86aebdca10d7d9cfa97a5677c1a79733601dca887effc6c218280a098b1b",
+      "line_count": 5466,
+      "reviewed_line_ranges": [
+        [
+          5185,
+          5413
+        ]
+      ],
+      "full_file_reviewed": false,
+      "relevance": "test-desktop-fake-support",
+      "reviewer": "/root/factory_review"
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/build.gradle.kts",
+      "relative_path": "shared/transport-p2p/build.gradle.kts",
+      "sha256": "ac439a069b3c99d1bef803bbc053580c4b99cbd7f4775a98d98a2b40482d96d7",
+      "line_count": 95,
+      "reviewed_line_ranges": [
+        [
+          1,
+          95
+        ]
+      ],
+      "full_file_reviewed": true,
+      "relevance": "build-source-set-and-contract-inputs",
+      "reviewer": "/root/factory_review"
+    }
+  ],
+  "cross_file_review": "Both shipping-game host/join/resume flows -> ProcessMultiplayerSessionOwner -> actual platform factories -> P2pKit rc3 construction -> transport host/join/resume -> coordinator -> HostP2pRoom/PeerP2pRoom lifecycle, return, close, retry, invalidation and stale-generation guards. Prior factory proof JSON retains caller/SDK coverage.",
+  "proof": [
+    "Original archived host regression was independently reopened: one executed failure expected kit.stopCalls=1 but was0 during cancelled post-advertise registration. This is defect evidence, not a repair PASS.",
+    "Original factory proof independently established rc3 parentless workers and secure-identity lease during construction, withContext result loss on same/different dispatcher cancellation, and explicit stop requirement.",
+    "Host ownership finally now extends through lifecycle registration and success diagnostics; every unsuccessful opening closes its room/kit NonCancellable.",
+    "Coordinator rollback detaches only the exact failed registration before releasing transitionMutex; stateMutex avoids reentrant close deadlock. Cancellation while awaiting the transition lock cannot detach an existing room.",
+    "Peer opening finalizers retain the constructed room and call existing closeForRetry via abandonFailedResume instead of stopping only the kit; collectors, expiry/resume jobs, channels and matching lifecycle registration are released. No LeaveNotice or credential invalidation is introduced.",
+    "Factory helper retains the synchronous constructed kit before withContext completion; pending ownership is stopped NonCancellable on failure/cancellation, preserves the original failure, and suppresses cleanup failure only at the helper boundary. All actual platform factories call it without a post-construction suspension."
+  ],
+  "counter_evidence": [
+    "Existing process-owner orphan cleanup can close only returned Success rooms, not resources lost before return.",
+    "Original host inner finally already covered start/advertising failure but not later registration; original peer false-return cleanup did not cover thrown/cancelled handoff paths.",
+    "rc3 stop() is idempotent; corrected fake comments truthfully describe the intentionally stricter duplicate-cleanup detector. Duplicate native-stop throwing is not used as a defect premise.",
+    "Native advertising/session close can finish NonCancellable. Regression barriers preserve this property; they do not assume native cleanup aborts promptly.",
+    "Ordinary admission/resume ACK failure is still best-effort, while genuine caller cancellation propagates; tests assert both.",
+    "The first factory test cycle failed six overly strict exception identity assertions. Exact coroutines1.11.0 stacktrace-copying source justifies bounded cause-identity assertions and direct-boundary suppression checks; no production behavior, recovery setting or cancellation type was weakened."
+  ],
+  "test_evidence": [
+    {
+      "cycle": "transport-static-green-02",
+      "receipt_path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/transport-static-green-02/receipt.json",
+      "receipt_sha256": "df1dde732388bad7cbb37ffe6294eea973fca7dfc7b4a30d49a9a4d338cf1ff4",
+      "command": [
+        "./gradlew",
+        ":shared:transport-p2p:desktopTest",
+        "staticAnalysis",
+        "--no-daemon",
+        "--no-parallel",
+        "--max-workers=1",
+        "--no-configuration-cache",
+        "--dependency-verification=strict",
+        "-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=transport-static-green-02",
+        "-Pkotlin.compiler.execution.strategy=in-process",
+        "-Pparlor.android.signing.storeFile=",
+        "-Pparlor.android.signing.storePassword=",
+        "-Pparlor.android.signing.keyAlias=",
+        "-Pparlor.android.signing.keyPassword="
+      ],
+      "started_at": "2026-09-05T21:30:38.209679+00:00",
+      "finished_at": "2026-09-05T21:31:18.369194+00:00",
+      "exit_code": 0,
+      "overall_status": "PASS",
+      "source_manifest_sha256": "353e5843b782befea35cf48cf144a96e490054abc9f78948668c18dd8d53b580",
+      "source_unchanged_during_cycle": true,
+      "reviewed_current_source_matches": {
+        "shared/transport-p2p/src/commonMain/kotlin/com/parlor/transport/p2p/P2pKitCreation.kt": true,
+        "shared/transport-p2p/src/commonMain/kotlin/com/parlor/transport/p2p/P2pKitFactory.kt": true,
+        "shared/transport-p2p/src/commonMain/kotlin/com/parlor/transport/p2p/AppLifecycleRoomCoordinator.kt": true,
+        "shared/transport-p2p/src/commonMain/kotlin/com/parlor/transport/p2p/P2pKitRoomTransport.kt": true,
+        "shared/transport-p2p/src/androidMain/kotlin/com/parlor/transport/p2p/P2pTransportModule.android.kt": true,
+        "shared/transport-p2p/src/desktopMain/kotlin/com/parlor/transport/p2p/P2pTransportModule.desktop.kt": true,
+        "shared/transport-p2p/src/iosMain/kotlin/com/parlor/transport/p2p/P2pTransportModule.ios.kt": true,
+        "shared/transport-p2p/src/commonTest/kotlin/com/parlor/transport/p2p/AppLifecycleRoomRegistrationTest.kt": true,
+        "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/HostOpeningCancellationTest.kt": true,
+        "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/PeerOpeningCancellationTest.kt": true,
+        "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitCreationTest.kt": true,
+        "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/JupiterDiscoveryContractTest.kt": true,
+        "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitRoomTransportLifecycleTest.kt": true,
+        "shared/transport-p2p/build.gradle.kts": true
+      },
+      "xml_counts": [
+        {
+          "module": "shared/transport-p2p",
+          "status": "PASS",
+          "count": 249
+        },
+        {
+          "module": "shared/transport-p2p",
+          "status": "SKIP",
+          "count": 3
+        }
+      ],
+      "focused_tests": [
+        {
+          "class": "com.parlor.transport.p2p.AppLifecycleRoomRegistrationTest",
+          "test": "cancellationBeforeRegistrationLockDoesNotDetachExistingRoom()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "class": "com.parlor.transport.p2p.AppLifecycleRoomRegistrationTest",
+          "test": "cancelledRegistrationDetachesBeforeQueuedForeground()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "class": "com.parlor.transport.p2p.AppLifecycleRoomRegistrationTest",
+          "test": "failedRegistrationDetachesBeforeQueuedForeground()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "class": "com.parlor.transport.p2p.HostOpeningCancellationTest",
+          "test": "cancelledRegistrationClosesRoomBeforeQueuedForegroundCanReviveIt()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "class": "com.parlor.transport.p2p.HostOpeningCancellationTest",
+          "test": "returnedHostRetainsOwnershipUntilIdempotentLeave()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "class": "com.parlor.transport.p2p.HostOpeningCancellationTest",
+          "test": "registrationFailureClosesUnreturnedRoomAndDetachesLifecycle()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "class": "com.parlor.transport.p2p.HostOpeningCancellationTest",
+          "test": "cancellationDuringAdvertisingClosesArmedRoom()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "class": "com.parlor.transport.p2p.HostOpeningCancellationTest",
+          "test": "cancellationDuringKitStartStopsUnownedKit()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "class": "com.parlor.transport.p2p.JupiterDiscoveryContractTest",
+          "test": "annotated_tests_including_disabled_tests_are_discoverable()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "class": "com.parlor.transport.p2p.P2pKitCreationTest",
+          "test": "cancellationBeforeDispatcherEntryDoesNotConstructKit()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "class": "com.parlor.transport.p2p.P2pKitCreationTest",
+          "test": "cancellationDuringSameDispatcherConstructionStopsKit()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "class": "com.parlor.transport.p2p.P2pKitCreationTest",
+          "test": "hostAndJoinPreserveFactoryCancellationWithoutStartingOrStoppingTwice()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "class": "com.parlor.transport.p2p.P2pKitCreationTest",
+          "test": "cancellationDuringDifferentDispatcherConstructionStopsKit()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "class": "com.parlor.transport.p2p.P2pKitCreationTest",
+          "test": "cancelledReturnDispatchStopsSuccessfullyConstructedKit()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "class": "com.parlor.transport.p2p.P2pKitCreationTest",
+          "test": "failedConstructionPreservesOriginalFailure()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "class": "com.parlor.transport.p2p.P2pKitCreationTest",
+          "test": "cleanupFailureDoesNotReplaceOriginalCallerCancellation()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "class": "com.parlor.transport.p2p.P2pKitCreationTest",
+          "test": "cancelledOwnerAwaitsSuspendingNonCancellableStop()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "class": "com.parlor.transport.p2p.P2pKitCreationTest",
+          "test": "successfulCreationTransfersOwnershipWithoutStoppingKit()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "class": "com.parlor.transport.p2p.PeerOpeningCancellationTest",
+          "test": "cancellingResumeReadyClosesUnreturnedRoomWithoutRevokingMembership()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "class": "com.parlor.transport.p2p.PeerOpeningCancellationTest",
+          "test": "failedJoinRegistrationReleasesRoomAndDetachesLifecycle()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "class": "com.parlor.transport.p2p.PeerOpeningCancellationTest",
+          "test": "cancellingResumeAckClosesUnreturnedRoomWithoutRevokingMembership()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "class": "com.parlor.transport.p2p.PeerOpeningCancellationTest",
+          "test": "failedResumeRegistrationReleasesRoomAndDetachesLifecycle()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "class": "com.parlor.transport.p2p.PeerOpeningCancellationTest",
+          "test": "cancellingAdmissionAckClosesUnreturnedRoomWithoutRevokingMembership()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "class": "com.parlor.transport.p2p.PeerOpeningCancellationTest",
+          "test": "failedAdmissionReadyStopsKitOnlyOnceAndReleasesCollectors()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "class": "com.parlor.transport.p2p.PeerOpeningCancellationTest",
+          "test": "failedResumeReadyStopsKitOnlyOnceAndReleasesCollectors()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "class": "com.parlor.transport.p2p.PeerOpeningCancellationTest",
+          "test": "ordinaryAdmissionAckLossStillReturnsAnOwnedRoom()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "class": "com.parlor.transport.p2p.PeerOpeningCancellationTest",
+          "test": "ordinaryResumeAckLossStillReturnsAnOwnedRoom()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "class": "com.parlor.transport.p2p.PeerOpeningCancellationTest",
+          "test": "cancellingAdmissionReadyClosesUnreturnedRoomWithoutRevokingMembership()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "class": "com.parlor.transport.p2p.PeerOpeningCancellationTest",
+          "test": "cancelledResumeRegistrationCannotResumeOrExpireAReplacementCredential()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "class": "com.parlor.transport.p2p.PeerOpeningCancellationTest",
+          "test": "cancelledJoinRegistrationCannotResumeOrExpireAReplacementCredential()[desktop]",
+          "status": "PASS"
+        }
+      ],
+      "skipped_tests": [
+        {
+          "class": "com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest",
+          "test": "peer_to_host_message_round_trips_and_host_to_peer_message_arrives_back()[desktop]",
+          "status": "SKIP"
+        },
+        {
+          "class": "com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest",
+          "test": "peer_can_join_a_hosted_room_and_membership_appears_on_host()[desktop]",
+          "status": "SKIP"
+        },
+        {
+          "class": "com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest",
+          "test": "host_broadcast_reaches_every_peer()[desktop]",
+          "status": "SKIP"
+        }
+      ],
+      "raw_xml_reports": [
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/transport-static-green-02/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.AndroidManifestLanPermissionTest.xml",
+          "sha256": "6294e82abcf84600cb073d1c334cd8774d97a04b66e755200f29f24b5de95d63",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/transport-static-green-02/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.AndroidReleaseLintContractTest.xml",
+          "sha256": "6c5f97e253a9880c7fae65c6c59b2363d2269f2db413e9f8c3e52375ea9c30da",
+          "tests": 6,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/transport-static-green-02/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.AppLifecycleRoomCoordinatorTest.xml",
+          "sha256": "7ba536df75ed73eef9a07dfd8eb8ecf2f098a0366dc1bbf658ef6df0f4bcdae8",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/transport-static-green-02/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.AppLifecycleRoomRegistrationTest.xml",
+          "sha256": "0099ce6a434c36cf235f6f64366865ba0f70f85b8586a729fb278cd88f4f7fb0",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/transport-static-green-02/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.DesktopDependencyVerificationContractTest.xml",
+          "sha256": "298f1acd9a0b8631f483b297537393956f3b15ae4149c6d11f5d4c5572de04d6",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/transport-static-green-02/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.DiscoveryCandidateSchedulerTest.xml",
+          "sha256": "ce0945090b5952c4cd0c9064a8955349702a223b329128be13d2b4c46c91354d",
+          "tests": 13,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/transport-static-green-02/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.HostOpeningCancellationTest.xml",
+          "sha256": "286b09408c29945ed7c700af0b8f5511ef339b5ea3efe07769c23b38ae489be2",
+          "tests": 5,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/transport-static-green-02/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.IosInfoPlistBonjourTest.xml",
+          "sha256": "2404c761bbc79f3403b8d706de682fe8e23efc84a12a0534f48b9a505d5895fb",
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/transport-static-green-02/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.JupiterDiscoveryContractTest.xml",
+          "sha256": "dc215c94e2d6e0750fa2c52e57b14f8423b1ef528ef9d011de78441816c46134",
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/transport-static-green-02/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.MultiplayerDocumentationContractTest.xml",
+          "sha256": "c08856b54d5d745729254b7f25ffd972f35494093b8af17ade7f2be5389f7a1f",
+          "tests": 11,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/transport-static-green-02/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pDiagnosticsTest.xml",
+          "sha256": "2b0e1a04dc6e03907e18d291e8975fd6eeeb8a8207cd495da0261ed84dd2d9a2",
+          "tests": 5,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/transport-static-green-02/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitCreationTest.xml",
+          "sha256": "26c59d499d18c0b2caf4f82c2127dd60248effff789efc3bec0c4025e92885f2",
+          "tests": 9,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/transport-static-green-02/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitMavenProvenanceContractTest.xml",
+          "sha256": "49400ec8e121239733dcf0b818bfafcd22d5f1d61883b259115994ba7f07c1f4",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/transport-static-green-02/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitRoomTransportLifecycleTest.xml",
+          "sha256": "c553824cfaffc14184e7388b81fba2e0a44c5ef2cdbcbdaac5c43d083d1f2865",
+          "tests": 130,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/transport-static-green-02/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest.xml",
+          "sha256": "f04dd0ef4d357d63b7812f061580d5c51233191cab0582bfd7e89a897118a67c",
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 3
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/transport-static-green-02/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pTrafficPolicyTest.xml",
+          "sha256": "c0d45e3033aff1905807ac33bf28674f0fbcc9d4128ffd6849c5b24f297f43e5",
+          "tests": 7,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/transport-static-green-02/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.PeerOpeningCancellationTest.xml",
+          "sha256": "6aff398c1b8e2c6f3c6e9deec334b2a017072a9ca0a37ab06b48652cbb5b33ab",
+          "tests": 12,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/transport-static-green-02/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.ProductionVerificationWorkflowContractTest.xml",
+          "sha256": "17d743b1096e6762b3bc18ee3308a76bf231a3ad91d248cd3aae32a5288ef43b",
+          "tests": 9,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/transport-static-green-02/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.ResumableCredentialStoreTest.xml",
+          "sha256": "ba80654d6956ebf4d03f06d29c6808428e0da1720f225ac999e031ac1cb521d7",
+          "tests": 23,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/transport-static-green-02/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.TestTransportIsolationContractTest.xml",
+          "sha256": "c304446de4ef521e2f27ec06ba58251899f418b7d59acad463155ef57b3d2b48",
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        }
+      ],
+      "cleanup": {
+        "stop_exit_code": 0,
+        "stopped_at": "2026-09-05T21:31:18.629220+00:00",
+        "removed_outputs": [
+          "shared/core/build",
+          "shared/networking/build",
+          "shared/content/build",
+          "shared/storage/build",
+          "shared/transport-p2p/build",
+          "shared/networking-testing/build",
+          "shared/engine/build",
+          "shared/design-system/build",
+          "shared/engine-testing/build",
+          "shared/session/build",
+          "game-modes/whodunit/build",
+          "game-modes/mafia/build",
+          "build",
+          "composeApp/build",
+          "build-logic/convention/build"
+        ],
+        "retained_outputs": [],
+        "remaining_outputs": [],
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        },
+        "cleanup_errors": [],
+        "cleanup_completed_at": "2026-09-05T21:31:18.814411+00:00"
+      }
+    },
+    {
+      "cycle": "games-session-desktop-03",
+      "receipt_path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/receipt.json",
+      "receipt_sha256": "b7dd7cbcd744cc9ba75cb01a53ac747b875f9467c96ebcbc9c6659595fa11ae5",
+      "command": [
+        "./gradlew",
+        ":game-modes:mafia:desktopTest",
+        ":game-modes:whodunit:desktopTest",
+        ":shared:session:desktopTest",
+        ":shared:transport-p2p:desktopTest",
+        "--continue",
+        "--no-daemon",
+        "--no-parallel",
+        "--max-workers=1",
+        "--no-configuration-cache",
+        "--dependency-verification=strict",
+        "-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=games-session-desktop-03",
+        "-Pkotlin.compiler.execution.strategy=in-process",
+        "-Pparlor.android.signing.storeFile=",
+        "-Pparlor.android.signing.storePassword=",
+        "-Pparlor.android.signing.keyAlias=",
+        "-Pparlor.android.signing.keyPassword="
+      ],
+      "started_at": "2026-09-05T19:41:01.693890+00:00",
+      "finished_at": "2026-09-05T19:42:03.940194+00:00",
+      "exit_code": 1,
+      "overall_status": "FAIL",
+      "source_manifest_sha256": "a4f16c504c995b0d8992307aa5a45b4ca117135dd8be330b8101d6787469b6b0",
+      "source_unchanged_during_cycle": true,
+      "reviewed_current_source_matches": {
+        "shared/transport-p2p/src/commonMain/kotlin/com/parlor/transport/p2p/P2pKitCreation.kt": false,
+        "shared/transport-p2p/src/commonMain/kotlin/com/parlor/transport/p2p/P2pKitFactory.kt": true,
+        "shared/transport-p2p/src/commonMain/kotlin/com/parlor/transport/p2p/AppLifecycleRoomCoordinator.kt": true,
+        "shared/transport-p2p/src/commonMain/kotlin/com/parlor/transport/p2p/P2pKitRoomTransport.kt": false,
+        "shared/transport-p2p/src/androidMain/kotlin/com/parlor/transport/p2p/P2pTransportModule.android.kt": false,
+        "shared/transport-p2p/src/desktopMain/kotlin/com/parlor/transport/p2p/P2pTransportModule.desktop.kt": false,
+        "shared/transport-p2p/src/iosMain/kotlin/com/parlor/transport/p2p/P2pTransportModule.ios.kt": false,
+        "shared/transport-p2p/src/commonTest/kotlin/com/parlor/transport/p2p/AppLifecycleRoomRegistrationTest.kt": true,
+        "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/HostOpeningCancellationTest.kt": true,
+        "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/PeerOpeningCancellationTest.kt": true,
+        "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitCreationTest.kt": false,
+        "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/JupiterDiscoveryContractTest.kt": true,
+        "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitRoomTransportLifecycleTest.kt": false,
+        "shared/transport-p2p/build.gradle.kts": true
+      },
+      "xml_counts": [
+        {
+          "module": "game-modes/mafia",
+          "status": "PASS",
+          "count": 267
+        },
+        {
+          "module": "shared/session",
+          "status": "PASS",
+          "count": 145
+        },
+        {
+          "module": "shared/transport-p2p",
+          "status": "PASS",
+          "count": 240
+        },
+        {
+          "module": "shared/transport-p2p",
+          "status": "SKIP",
+          "count": 3
+        }
+      ],
+      "focused_tests": [
+        {
+          "class": "com.parlor.transport.p2p.AppLifecycleRoomRegistrationTest",
+          "test": "cancellationBeforeRegistrationLockDoesNotDetachExistingRoom()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "class": "com.parlor.transport.p2p.AppLifecycleRoomRegistrationTest",
+          "test": "cancelledRegistrationDetachesBeforeQueuedForeground()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "class": "com.parlor.transport.p2p.AppLifecycleRoomRegistrationTest",
+          "test": "failedRegistrationDetachesBeforeQueuedForeground()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "class": "com.parlor.transport.p2p.HostOpeningCancellationTest",
+          "test": "cancelledRegistrationClosesRoomBeforeQueuedForegroundCanReviveIt()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "class": "com.parlor.transport.p2p.HostOpeningCancellationTest",
+          "test": "returnedHostRetainsOwnershipUntilIdempotentLeave()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "class": "com.parlor.transport.p2p.HostOpeningCancellationTest",
+          "test": "registrationFailureClosesUnreturnedRoomAndDetachesLifecycle()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "class": "com.parlor.transport.p2p.HostOpeningCancellationTest",
+          "test": "cancellationDuringAdvertisingClosesArmedRoom()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "class": "com.parlor.transport.p2p.HostOpeningCancellationTest",
+          "test": "cancellationDuringKitStartStopsUnownedKit()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "class": "com.parlor.transport.p2p.JupiterDiscoveryContractTest",
+          "test": "annotated_tests_including_disabled_tests_are_discoverable()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "class": "com.parlor.transport.p2p.PeerOpeningCancellationTest",
+          "test": "cancellingResumeReadyClosesUnreturnedRoomWithoutRevokingMembership()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "class": "com.parlor.transport.p2p.PeerOpeningCancellationTest",
+          "test": "failedJoinRegistrationReleasesRoomAndDetachesLifecycle()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "class": "com.parlor.transport.p2p.PeerOpeningCancellationTest",
+          "test": "cancellingResumeAckClosesUnreturnedRoomWithoutRevokingMembership()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "class": "com.parlor.transport.p2p.PeerOpeningCancellationTest",
+          "test": "failedResumeRegistrationReleasesRoomAndDetachesLifecycle()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "class": "com.parlor.transport.p2p.PeerOpeningCancellationTest",
+          "test": "cancellingAdmissionAckClosesUnreturnedRoomWithoutRevokingMembership()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "class": "com.parlor.transport.p2p.PeerOpeningCancellationTest",
+          "test": "failedAdmissionReadyStopsKitOnlyOnceAndReleasesCollectors()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "class": "com.parlor.transport.p2p.PeerOpeningCancellationTest",
+          "test": "failedResumeReadyStopsKitOnlyOnceAndReleasesCollectors()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "class": "com.parlor.transport.p2p.PeerOpeningCancellationTest",
+          "test": "ordinaryAdmissionAckLossStillReturnsAnOwnedRoom()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "class": "com.parlor.transport.p2p.PeerOpeningCancellationTest",
+          "test": "ordinaryResumeAckLossStillReturnsAnOwnedRoom()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "class": "com.parlor.transport.p2p.PeerOpeningCancellationTest",
+          "test": "cancellingAdmissionReadyClosesUnreturnedRoomWithoutRevokingMembership()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "class": "com.parlor.transport.p2p.PeerOpeningCancellationTest",
+          "test": "cancelledResumeRegistrationCannotResumeOrExpireAReplacementCredential()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "class": "com.parlor.transport.p2p.PeerOpeningCancellationTest",
+          "test": "cancelledJoinRegistrationCannotResumeOrExpireAReplacementCredential()[desktop]",
+          "status": "PASS"
+        }
+      ],
+      "skipped_tests": [
+        {
+          "class": "com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest",
+          "test": "peer_to_host_message_round_trips_and_host_to_peer_message_arrives_back()[desktop]",
+          "status": "SKIP"
+        },
+        {
+          "class": "com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest",
+          "test": "peer_can_join_a_hosted_room_and_membership_appears_on_host()[desktop]",
+          "status": "SKIP"
+        },
+        {
+          "class": "com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest",
+          "test": "host_broadcast_reaches_every_peer()[desktop]",
+          "status": "SKIP"
+        }
+      ],
+      "raw_xml_reports": [
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.MafiaDoctorRulesTest.xml",
+          "sha256": "5f445dc1aa3cdcfdc985ed0c7bb757663dcc818ceb31141c4f48a17e0cc26769",
+          "tests": 8,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.action.MafiaActionCodecTest.xml",
+          "sha256": "52bbb2adb2302dba5a54d36a698ac4b9c74ee06722de3cf0cb35e0930781e1bd",
+          "tests": 16,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.projection.MafiaHostOnlyRedactionSentinelTest.xml",
+          "sha256": "92c2aa984d54905fad5c39d6b0792380ff9708b1b6df731b300d5fefdefbe6bc",
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.projection.MafiaProjectionPolicyTest.xml",
+          "sha256": "791e35b9ccb391d28e6bcff78e479f5867a66dd4ceb243e1c15a1b4c67b5d1ce",
+          "tests": 11,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.reducer.MafiaReducerEdgeCasesTest.xml",
+          "sha256": "fba94c9f6f196065c4f001c1fae5cee59eaade5de389c030b3e9d6a0cccd94bd",
+          "tests": 27,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.reducer.MafiaReducerTest.xml",
+          "sha256": "d4983ff083552d85b88e364e9854e9e24ab914552f3b4cd07fdfad4751aaea6a",
+          "tests": 24,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.rules.MafiaSessionRulesTest.xml",
+          "sha256": "535d8e3a5d0c9eee6bc3ef7432b352da85aedd7fe2dc38f167828afea701108a",
+          "tests": 5,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.rules.NightResolutionTest.xml",
+          "sha256": "270032a9b71ebb79b0f8a9a4c8431729db321eb090039b01fc58e99bb28e2e97",
+          "tests": 13,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.rules.RoleAssignmentTest.xml",
+          "sha256": "4d9e2b697edbdf97fc219eabb92631f1a437a6a9bf6877d2908af0bd4ce29074",
+          "tests": 6,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.rules.VoteResolutionTest.xml",
+          "sha256": "089fb25f58cae58579c694f887a3df963d2ecf6c7073a924859dee71a7514359",
+          "tests": 9,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.rules.WinCheckTest.xml",
+          "sha256": "9d27d6d2b9f3e366818be20ec1dcf2aa922f5746b7f38a4ba326cafe63e4201d",
+          "tests": 5,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.settings.MafiaSettingsValidationTest.xml",
+          "sha256": "bc1b3f22aedfc422c79eea241fb0407dd5a270b0581cadcaa931923ab80e56b2",
+          "tests": 20,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.state.MafiaPeerSnapshotValidatorTest.xml",
+          "sha256": "765b8ab6b83f2c699d775e55fac59400a8bd2b25b7d76ced362e1678eaf39f5c",
+          "tests": 5,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.flow.FullGameDriveTest.xml",
+          "sha256": "4cf930de8b8b490c2ff9c2e75224ab3a3616f74408f1617dedd070053ea6ba51",
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.flow.MafiaLocalSessionConfigTest.xml",
+          "sha256": "fedc5b8167ae915991e6d2206ae542355f2f5a444df2e091fccb0054141fcafd",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.multidevice.MafiaAuthoritativeLifecycleTest.xml",
+          "sha256": "699e1723a3d25938399d1dab00a6905ba106bf3608b8b62ba626990ef5442221",
+          "tests": 15,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.multidevice.MafiaDoctorLanTest.xml",
+          "sha256": "a719d214eb686a2dfadadbfd5caf9e30f291b65edd3f548d221b4636fa63c09e",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.multidevice.MafiaMultiDeviceProgressionTest.xml",
+          "sha256": "daac94e58f475a31dca380904e302264701247693143ed6384061747150cfde5",
+          "tests": 6,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.multidevice.MafiaPeerActionAuthorityTest.xml",
+          "sha256": "565b1aac390090e518dd1863658a918ac1347de2a93fd71e541703b408c7d676",
+          "tests": 7,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.multidevice.MafiaPeerPrivateTargetGateTest.xml",
+          "sha256": "a9f4937d99223a68445be7b0805538f395093f35eded054ac6e6e02480551bc7",
+          "tests": 8,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.multidevice.MafiaProjectionLeakTest.xml",
+          "sha256": "14beeae2ab67c2bf2ac8b16b1f59b06c867bc31af2c8e9787d4cd95c2e5554de",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.snapshot.MafiaDoctorHistoryRecoveryTest.xml",
+          "sha256": "e2be79ec9e5b5855e28174b3b795b16056bdec32851852caa9a8fd4c2d97a29e",
+          "tests": 15,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.snapshot.MafiaSnapshotCodecTest.xml",
+          "sha256": "2c5bc1a0ee06f1ec994702d9bcaf044b8a3ead6fda43528e52c4ab10e92912bc",
+          "tests": 9,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.snapshot.MafiaSnapshotRecoveryTest.xml",
+          "sha256": "9cf11197a076581b78eac553bdab05bcce622381231fa6e55bf3d3a4a62be30d",
+          "tests": 23,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.flow.multidevice.MafiaNetworkErrorMessageKeyTest.xml",
+          "sha256": "a99627b24691a579bfd192527a0f608739783c41f989cdbd5ea6958866726d38",
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.flow.passandplay.MafiaPassAndPlayNightQueueTest.xml",
+          "sha256": "059463a56451d36bf5d2e0f53d9ee63b1174058045ca6fd4f62816517bd969ce",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.night.DoctorTargetEligibilityTest.xml",
+          "sha256": "53d3d4d2927520297d26c07805953abf6215eb52b8a1d97afa6fc6c7cb704aa6",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.night.TargetPickerSelectionTest.xml",
+          "sha256": "6ac99e7adebb887c9a7a6d7b49d08b25d84130ded76947ba9bd49a822ff4e9e7",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.postgame.PostGameScreenLayoutTest.xml",
+          "sha256": "6512c799cfcdf12d94af62319f3ef45036dcd855d7ef5372e6368948f40584ef",
+          "tests": 6,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.setup.MafiaDoctorSettingUiTest.xml",
+          "sha256": "c5bc4063f6311e7ae9286bd27a1be0c433bfa3ed8d1fb31130e2aceefb1db8bc",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.setup.MafiaSetupDraftTest.xml",
+          "sha256": "7698bb8ae709554a8075996aae6f26e9c02b9bade0c4190ee371711c29fbc7e6",
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/shared/session/build/test-results/desktopTest/TEST-com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest.xml",
+          "sha256": "ac2bc903ecb80d079d39250667572dea37f8eca0f1cae64e4d0ece338780839d",
+          "tests": 42,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/shared/session/build/test-results/desktopTest/TEST-com.parlor.session.multidevice.BoundedPeerOutboxTest.xml",
+          "sha256": "61d745c6e61c0c0f0e50781b92b1d40188e4d6f0be5fae5b123e716e730ee147",
+          "tests": 8,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/shared/session/build/test-results/desktopTest/TEST-com.parlor.session.multidevice.MultiDeviceShapeTest.xml",
+          "sha256": "e234518196bc08927f5bc47a231e754fc1a55d08c9b388f5360396d03fd4419e",
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/shared/session/build/test-results/desktopTest/TEST-com.parlor.session.multidevice.PeerConnectionTrackerTest.xml",
+          "sha256": "32dcc76138eea0782d61d951fa38919110b9751c1e28e89e1c8694889f83448d",
+          "tests": 8,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/shared/session/build/test-results/desktopTest/TEST-com.parlor.session.multidevice.ProcessMultiplayerSessionOwnerTest.xml",
+          "sha256": "312c5b21bf02c9a342c14013a17f4428cda139a60d5997b14303f4c922bfd248",
+          "tests": 30,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/shared/session/build/test-results/desktopTest/TEST-com.parlor.session.multidevice.RetainedSessionOperationTest.xml",
+          "sha256": "c59734cbd51dd59810f732802b65976f7f8910e062ad0f0ccbccb3ceebbcb37c",
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/shared/session/build/test-results/desktopTest/TEST-com.parlor.session.multidevice.SessionStartCommitDeadlineTest.xml",
+          "sha256": "2350b143779ed4aad41acff19dae4bf3fa96deaea4bd415b16def7948368253e",
+          "tests": 9,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/shared/session/build/test-results/desktopTest/TEST-com.parlor.session.multidevice.SessionStartHandshakeTest.xml",
+          "sha256": "9306c412b6637a9fac8ab9cacca54c7ee5d168939f1e2d67abce85a8c107ff4b",
+          "tests": 31,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/shared/session/build/test-results/desktopTest/TEST-com.parlor.session.multidevice.ShadowSessionControllerTest.xml",
+          "sha256": "57569a75352c77199394c0862009e960da013bf42ba4d0a5a5aabf780b049963",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/shared/session/build/test-results/desktopTest/TEST-com.parlor.session.party.PartyAwareCanonicalStateTest.xml",
+          "sha256": "9356d170b860908c45ad44c40b0e2a6d7829a3bed50acfc2264ee639e577e9d1",
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/shared/session/build/test-results/desktopTest/TEST-com.parlor.session.passandplay.OrderedEventEmissionTurnTest.xml",
+          "sha256": "786cf61a70af8f392008f41dc686b2d492b6d402bf84ceec5b7e1617dd5418a9",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/shared/session/build/test-results/desktopTest/TEST-com.parlor.session.passandplay.PassAndPlaySessionControllerCloseRaceTest.xml",
+          "sha256": "f5eb925ad105623e7a86a04bf15c6efc041c4d424589563f315e7bc2e0c4f81a",
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/shared/session/build/test-results/desktopTest/TEST-com.parlor.session.passandplay.RestoredStateTest.xml",
+          "sha256": "32d9928084b6aecb5467c306134fa7c3717d8a78e1600953b967a85b25cc1352",
+          "tests": 5,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.AndroidManifestLanPermissionTest.xml",
+          "sha256": "a425e96649a5882ccabb3f575387c4e9453a75086719342e1acb92b06c70acfd",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.AndroidReleaseLintContractTest.xml",
+          "sha256": "80d4e60b0b797eac5ccf0baf82f597d0f134ab29868b1931d963fd05f7947151",
+          "tests": 6,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.AppLifecycleRoomCoordinatorTest.xml",
+          "sha256": "618bc1ec7bb77001c4a5f796c70d2fbb076715144b787512c691533c716ce20e",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.AppLifecycleRoomRegistrationTest.xml",
+          "sha256": "0481ea782ac6eba1a96581b1df59d8c703c6e3540fc8dda31b76d6675f0bace5",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.DesktopDependencyVerificationContractTest.xml",
+          "sha256": "42acd8303959c49556f23f08638965988b9f013e49e0338abc326b190de8c10c",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.DiscoveryCandidateSchedulerTest.xml",
+          "sha256": "4dc83d77b14e03010bd6236a0956c1966bc09c5e686025265ddc6d1d525604cb",
+          "tests": 13,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.HostOpeningCancellationTest.xml",
+          "sha256": "4dea8b46bd20288fca6f60c062d95a2d8ca788e607822dca97079093208e23b1",
+          "tests": 5,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.IosInfoPlistBonjourTest.xml",
+          "sha256": "9013443cae35b2c68dcfe7664ee089664dfade94562c8f6903adae77504f4dce",
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.JupiterDiscoveryContractTest.xml",
+          "sha256": "47f4a748c61eda58c4877dff2577298a0c816bc678da381db73b072f57f89007",
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.MultiplayerDocumentationContractTest.xml",
+          "sha256": "2e4489e92ef5e931cf4e89ad05e23d17e00f69311af0d0997c778cdde289e90a",
+          "tests": 11,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pDiagnosticsTest.xml",
+          "sha256": "cb6aba82856fa212aace24379b1d1fd4c19fcd441f2c97a4a83a2ab905c4e0ac",
+          "tests": 5,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitMavenProvenanceContractTest.xml",
+          "sha256": "cbb34afbad29df12c70e0f1f1f2cfc5de5ceab2a07728b290e4f75c6c56ce1c7",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitRoomTransportLifecycleTest.xml",
+          "sha256": "35e2acc94e7fe0c77ac5e7ac98d2dce518a99a3c2419e32c59b28e56378f2119",
+          "tests": 130,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest.xml",
+          "sha256": "d185d667cacf9e4721a8a71ef2ee78007c0287aebd30d512a88fc02d7a40a218",
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 3
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pTrafficPolicyTest.xml",
+          "sha256": "80e4875f4f76c7e8feeaa4a2a15259ec0c6383f21ca81009aefdfcd07b649cc4",
+          "tests": 7,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.PeerOpeningCancellationTest.xml",
+          "sha256": "1cb54a831e2d4e716770bc06683a0092086edd47e8ac54453d9119cb7b1b6163",
+          "tests": 12,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.ProductionVerificationWorkflowContractTest.xml",
+          "sha256": "e5c8d08e71b9a59ac6b42b4fce47ea878a3bb299a5232759e8c85419b4d72d67",
+          "tests": 9,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.ResumableCredentialStoreTest.xml",
+          "sha256": "5dd828ae4b0e6789ab12d65c98bc5de96110ab3e641af07a8f5d9f6991368f89",
+          "tests": 23,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.TestTransportIsolationContractTest.xml",
+          "sha256": "4cdbd126800c351d1b6604d0e1e332d1aae3aaa79a2d637c8beba7d3f58c7671",
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        }
+      ],
+      "cleanup": {
+        "stop_exit_code": 0,
+        "stopped_at": "2026-09-05T19:42:04.204530+00:00",
+        "removed_outputs": [
+          "shared/core/build",
+          "shared/networking/build",
+          "shared/content/build",
+          "shared/storage/build",
+          "shared/transport-p2p/build",
+          "shared/networking-testing/build",
+          "shared/engine/build",
+          "shared/design-system/build",
+          "shared/engine-testing/build",
+          "shared/session/build",
+          "game-modes/whodunit/build",
+          "game-modes/mafia/build",
+          "build",
+          "build-logic/convention/build"
+        ],
+        "retained_outputs": [],
+        "remaining_outputs": [],
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        },
+        "cleanup_errors": [],
+        "cleanup_completed_at": "2026-09-05T19:42:04.581043+00:00"
+      }
+    }
+  ],
+  "compatibility": {
+    "protocol": "Exact4.2 unchanged; no wire fields, validators or identities modified.",
+    "p2pkit": "Both components remain0.7.0-rc3 from existing verified coordinates; no dependency metadata edit.",
+    "save_credential_content_versions": "No format/version/migration/content changes. Failed peer opening retains committed credentials and never transmits them to another peer.",
+    "games": "No reducers, seeds, rules, private/public projections or game-specific session logic modified. Both games share this generic transport; pass-and-play does not use these factories.",
+    "authority_privacy": "Host-only authority and actor binding unchanged; no host/private state or runtime secrets added to logs/transmission."
+  },
+  "remaining_limits": [
+    "No physical Android/iOS LAN, OS lifecycle scheduling, Bonjour, socket shutdown or radio behavior was measured by this reviewer.",
+    "The three physical loopback test methods remain intentionally skipped; their descriptors are listed, not counted as PASS.",
+    "Android/iOS compilation/linkage and broader final combined gates must be bound to the final source by root. Post-cycle documentation edits invalidate old doc-contract input coverage but not the matched SN-C2 code/test hashes.",
+    "games-session-desktop-03 has145 session and240 transport executed PASS plus3 skips, but the batch as a whole FAILED due Whodunit test compilation; it is supporting evidence only, never a combined PASS."
+  ],
+  "evidence_refs": [
+    {
+      "path": "audit-runs/2026-09-05-source-audit/candidates/SN-C2-host-registration-cancellation.md",
+      "sha256": "6ac3313fad5c6ed698e9c9c481e4385f7bca06a4de28bbead16ecbe284f8d5f7"
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/validations/SN-C2-root.md",
+      "sha256": "853c0098a995d0585289adff7c6d9e419fb0cdc6376790466b4e7b527d97a5be"
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/evidence/repro-ui-transport-02/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.SN_C2HostRegistrationCancellationTest.xml",
+      "sha256": "edb1985f8f23169d2673272d56a2e8bc145f66c67aa96042aec5c706ea4ad276"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/factory_review/SN-C2-factory-independent-proof-01.md",
+      "sha256": "b20eb7b9f2085350d46510344c2ef5376e1fb61f1724f95fd1f830fa2b5b9a01"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/factory_review/SN-C2-factory-independent-proof-01.json",
+      "sha256": "a6dad796ae421b260baa95c2f3f1255c921622baebe4b57cc0998405129649b1"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/factory_review/independent-version-research-01.json",
+      "sha256": "e4fb74cb25d34a4dafa3b03c69e31fc3e62cb0b700e0b2025761fd25771dbdd0"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/factory_review/stacktrace-recovery-research-01.json",
+      "sha256": "381f16b9519e297df27171da298f37d61d61977b93a497d3667df653db5587ee"
+    }
+  ],
+  "reviewer_hygiene": "Only compact owned evidence created. No builds/native tools/application or Git changes; no task-owned background workers or generated build directories started. Root build receipts show stop exit0, no remaining owned workers/outputs and no cleanup errors. System /usr/bin/python3 -B parsed XML after unrelated Homebrew Python expat import failed; that parser failure is not an application/test failure."
+}

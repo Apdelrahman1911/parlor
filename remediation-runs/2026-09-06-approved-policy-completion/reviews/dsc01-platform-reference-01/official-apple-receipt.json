@@ -1,0 +1,266 @@
+[
+  {
+    "key": "background",
+    "url": "https://developer.apple.com/tutorials/data/documentation/xctest/xcuiapplication/state-swift.enum/runningbackground.json",
+    "access_utc": "2026-09-06T08:20:59.059475+00:00",
+    "error": "HTTP Error 404: Not Found"
+  },
+  {
+    "key": "suspended",
+    "url": "https://developer.apple.com/tutorials/data/documentation/xctest/xcuiapplication/state-swift.enum/runningbackgroundsuspended.json",
+    "access_utc": "2026-09-06T08:21:03.664791+00:00",
+    "error": "HTTP Error 404: Not Found"
+  },
+  {
+    "key": "wait",
+    "url": "https://developer.apple.com/tutorials/data/documentation/xctest/xcuiapplication/wait(for:timeout:).json",
+    "access_utc": "2026-09-06T08:21:06.685528+00:00",
+    "error": "HTTP Error 404: Not Found"
+  },
+  {
+    "key": "settings",
+    "url": "https://developer.apple.com/tutorials/data/documentation/uikit/uiapplication/opensettingsurlstring.json",
+    "access_utc": "2026-09-06T08:21:10.320978+00:00",
+    "http_status": 200,
+    "raw_bytes": 16866,
+    "raw_sha256": "ab4dcfd71f9e6f7232a2b70f4ba428b9ca736407d54a5e15fec1202e067d2e77",
+    "selected_doc_sections": {
+      "abstract": [
+        {
+          "text": "The URL string you use to deep link to your app\u2019s custom settings in the Settings app.",
+          "type": "text"
+        }
+      ],
+      "metadata": {
+        "extendedModule": "UIKit",
+        "externalID": "c:@UIApplicationOpenSettingsURLString",
+        "fragments": [
+          {
+            "kind": "keyword",
+            "text": "class"
+          },
+          {
+            "kind": "text",
+            "text": " "
+          },
+          {
+            "kind": "keyword",
+            "text": "let"
+          },
+          {
+            "kind": "text",
+            "text": " "
+          },
+          {
+            "kind": "identifier",
+            "text": "openSettingsURLString"
+          },
+          {
+            "kind": "text",
+            "text": ": "
+          },
+          {
+            "kind": "typeIdentifier",
+            "preciseIdentifier": "s:SS",
+            "text": "String"
+          }
+        ],
+        "modules": [
+          {
+            "name": "UIKit"
+          }
+        ],
+        "navigatorTitle": [
+          {
+            "kind": "identifier",
+            "text": "UIApplicationOpenSettingsURLString"
+          }
+        ],
+        "platforms": [
+          {
+            "beta": false,
+            "deprecated": false,
+            "introducedAt": "8.0",
+            "name": "iOS",
+            "unavailable": false
+          },
+          {
+            "beta": false,
+            "deprecated": false,
+            "introducedAt": "8.0",
+            "name": "iPadOS",
+            "unavailable": false
+          },
+          {
+            "beta": false,
+            "deprecated": false,
+            "introducedAt": "13.1",
+            "name": "Mac Catalyst",
+            "unavailable": false
+          },
+          {
+            "beta": false,
+            "deprecated": false,
+            "name": "tvOS",
+            "unavailable": false
+          },
+          {
+            "beta": false,
+            "deprecated": false,
+            "introducedAt": "1.0",
+            "name": "visionOS",
+            "unavailable": false
+          }
+        ],
+        "role": "symbol",
+        "roleHeading": "Type Property",
+        "symbolKind": "property",
+        "title": "openSettingsURLString"
+      },
+      "primaryContentSections": [
+        {
+          "declarations": [
+            {
+              "languages": [
+                "swift"
+              ],
+              "platforms": [
+                "iOS",
+                "iPadOS",
+                "Mac Catalyst",
+                "tvOS",
+                "visionOS"
+              ],
+              "tokens": [
+                {
+                  "kind": "attribute",
+                  "text": "nonisolated"
+                },
+                {
+                  "kind": "text",
+                  "text": " "
+                },
+                {
+                  "kind": "keyword",
+                  "text": "class"
+                },
+                {
+                  "kind": "text",
+                  "text": " "
+                },
+                {
+                  "kind": "keyword",
+                  "text": "let"
+                },
+                {
+                  "kind": "text",
+                  "text": " "
+                },
+                {
+                  "kind": "identifier",
+                  "text": "openSettingsURLString"
+                },
+                {
+                  "kind": "text",
+                  "text": ": "
+                },
+                {
+                  "identifier": "doc://com.apple.documentation/documentation/Swift/String",
+                  "kind": "typeIdentifier",
+                  "preciseIdentifier": "s:SS",
+                  "text": "String"
+                }
+              ]
+            }
+          ],
+          "kind": "declarations"
+        },
+        {
+          "content": [
+            {
+              "anchor": "Discussion",
+              "level": 2,
+              "text": "Discussion",
+              "type": "heading"
+            },
+            {
+              "inlineContent": [
+                {
+                  "text": "Create a URL from this value and pass it to the ",
+                  "type": "text"
+                },
+                {
+                  "identifier": "doc://com.apple.uikit/documentation/UIKit/UIApplication/open(_:options:completionHandler:)",
+                  "isActive": true,
+                  "type": "reference"
+                },
+                {
+                  "text": " method to launch the Settings app and display your app\u2019s custom settings, if it has any.",
+                  "type": "text"
+                }
+              ],
+              "type": "paragraph"
+            },
+            {
+              "tabs": [
+                {
+                  "content": [
+                    {
+                      "code": [
+                        "// Create the URL that deep links to your app's custom settings.",
+                        "if let url = URL(string: UIApplication.openSettingsURLString) {",
+                        "    // Ask the system to open that URL.",
+                        "    await UIApplication.shared.open(url)",
+                        "}"
+                      ],
+                      "syntax": "swift",
+                      "type": "codeListing"
+                    }
+                  ],
+                  "title": "Swift"
+                },
+                {
+                  "content": [
+                    {
+                      "code": [
+                        "// Create the URL that deep links to your app's custom settings.",
+                        "NSURL *url = [[NSURL alloc] initWithString:UIApplicationOpenSettingsURLString];",
+                        "// Ask the system to open that URL.",
+                        "[[UIApplication sharedApplication] openURL:url",
+                        "                                   options:@{}",
+                        "                         completionHandler:nil];"
+                      ],
+                      "syntax": "objc",
+                      "type": "codeListing"
+                    }
+                  ],
+                  "title": "Objective-C"
+                }
+              ],
+              "type": "tabNavigator"
+            },
+            {
+              "inlineContent": [
+                {
+                  "text": "For design guidance, see ",
+                  "type": "text"
+                },
+                {
+                  "identifier": "https://developer.apple.com/design/human-interface-guidelines/ios/app-architecture/settings/",
+                  "isActive": true,
+                  "type": "reference"
+                },
+                {
+                  "text": ".",
+                  "type": "text"
+                }
+              ],
+              "type": "paragraph"
+            }
+          ],
+          "kind": "content"
+        }
+      ]
+    }
+  }
+]

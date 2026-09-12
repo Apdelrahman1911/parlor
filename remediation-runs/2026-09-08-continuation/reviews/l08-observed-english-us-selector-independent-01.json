@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "status": "APPROVED_REVISION02_SOURCE_ONLY",
+  "reviewer": "/root/portability_review",
+  "author": "/root/l08_fixture",
+  "reviewed_at": "2026-09-10T04:58:34.107753+00:00",
+  "base": {
+    "branch": "fix/local-readiness-2026-09-07",
+    "head": "bd939632975e6e7802896322b514af06b6a7f6c3",
+    "tree": "b3f7fc54702e5dd0c6d8401f44b51d1a45706652"
+  },
+  "packet": {
+    "seal": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/l08-observed-english-us-selector-01/revision-02/SEALED_MANIFEST.json",
+      "bytes": 2332,
+      "sha256": "bbb623119ece85eb9a58e6d29cb6ef0652bf6398c318dfc501b36e847aff85eb"
+    },
+    "patch": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/l08-observed-english-us-selector-01/revision-02/proposed.patch",
+      "bytes": 6756,
+      "sha256": "18d4690ad7f25d0760089c6756e6a159462e719163d427c050c79071228ba074"
+    },
+    "revision_delta": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/l08-observed-english-us-selector-01/revision-02/revision-delta.patch",
+      "bytes": 604,
+      "sha256": "3779771bff994591083c8dcdb51e8cb612afc1dcf802aa0fe984b4afd6c1544e"
+    }
+  },
+  "approved_files": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/DSC01OSPrerequisite.swift.in",
+      "base_sha256": "586bfc5e18058537a375355ba8ef273856403a9ff0ae29ab03253fba734eae09",
+      "proposed_sha256": "f23bda7d97b13dd69ad2f0f4c9413f40c23b8039abebdfaca124b0b05991afad"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/test_l08_functional_copy.py",
+      "base_sha256": "8710a7e163312d59e286ce18d5a23f9989a8a0b9c1a9b2a38d5c4306358b8a30",
+      "proposed_sha256": "364a0595765083517ed0b8f2777767bf68b9b936a5e3339b76dd83d171933719"
+    },
+    {
+      "path": "scripts/ci/native_continuation.py",
+      "base_sha256": "d1246105417eed3b6fee30cf9333ae307a88e8025c9d83df26e6a9c329d426df",
+      "proposed_sha256": "b06277bb7738d8a4cc5c0d54defddb6885495c4b1e001b634eeffea908248f9b"
+    },
+    {
+      "path": "scripts/release/tests/test_native_process_probe.py",
+      "base_sha256": "33707329a8606c2d41427552602a2ffaad59c701cd22f26db9142abb0ce41db2",
+      "proposed_sha256": "8a34a9e4998779362fb779a5f188f70f7f77c3e67e01f7cf409265905f698e70"
+    },
+    {
+      "path": "scripts/ci/NATIVE_CONTINUATION.md",
+      "base_sha256": "e86be1e4487fd81d71fac9cd9e8c11f4c2d22e61c57efe4ceeaa9c992cdbf7e0",
+      "proposed_sha256": "57862b980efb9be92c2bcf648aa59b38f472f273c76a3181381b85c70a90b3d6"
+    }
+  ],
+  "checks": [
+    "Both packet seals and all entries hash/size-match. Five canonical bases equal their bd939632 Git blobs; independently reconstructed complete patch equals revision02 byte-for-byte. Three Python proposals parse; no project code executed.",
+    "Copied companion Swift differs only by appending observed exact Use English (US) to the two known-choice arrays. No guessed variant, production or diagnostic Swift edit. Exclusive one Alert-or-Sheet, foreground/unchanged-modal/unique-action/hittable/enabled guards, exactly one real tap, 15/20s waits and complete uncovered ordered preferred-list postproof remain byte-identical.",
+    "Independently sliced both changed Swift blocks and recomputed 11c59d4c810fa11960b84f539943c2aeef6ee4d2a1f42a7c9f2ccfe0d35dae6b and e2e6ad2740470ce75e81bc3c71aa75ab5c31b418e3ced1bae2eb152abf0377e7. Test changes are exactly these two pins and one existing unknown-action mutation retarget. All28 existing test method names remain; strict restored-source equality/other mutations unchanged.",
+    "Current adapter/expectation A33/B34 become A37/B38; Settings36 unchanged. Guide includes matching current A37/B38 and corrected NOT_RUN_THIS_RUN B38. Historical B30 wording remains historical.",
+    "Driver9580071e\u2026, composition0a97dee5\u2026, foundation freeze72aaebc7\u2026 and diagnostic Swift547155ee\u2026 match packet pins. No driver/freeze repins or normal-control source deltas. Unchanged normal98 campaign not rerun. Root-owned Android hygiene changes remain outside review and untouched."
+  ],
+  "resolved_finding": "Initial guide left current l08-only B34 NOT_RUN_THIS_RUN beside new B38. Revision02 changes only that additional token; other four proposals are byte-identical to initial packet. Initial evidence preserved.",
+  "findings": [],
+  "observation": {
+    "run": "34437980623/1",
+    "cycle": "ios-readiness-36",
+    "raw_log_gzip_sha256": "264e2d6c67dc2447d91c159d971b04d273a2ae0e80fd3ffa2cf236c3ea03f141",
+    "raw_log_sha256": "ce219cd506efb64bcae10481571c23677f3c6c42f53625eadf7323333295698c",
+    "receipt_sha256": "e2c2613f64373c24e3c04601a0f6ba4d221134b6babf289e9957d1de1808ef16",
+    "reopened": "One raw marker has labels Use Arabic / Use English (US) / Cancel, selectionTapped=false and exact simulator9BF62C80-5F13-499C-B7B0-07DB6AB08BE6; structured summary/tests show exactly1 expected method PASS,0failed/0skipped. Overall status/diagnosticFAIL remains from strict ps15s TimeoutExpired; xcodebuild_exit_code absent, no accepted public-sheet-actions.json. Receipt cleanupPASS. Native_ci owns separate custody/admissibility review."
+  },
+  "limits": "Source approval only, not native success or dispatch approval. The raw label supports the narrow selector addition, not actual English-primary activation, final preferred-list proof, strict storage/protection, retained-host, fresh normalB or combined qualification.",
+  "next": "Root may adopt exact five revision02 proposals after separate custody review, run affected existing controls in its coordinated lane, freeze source/inventory, then obtain fresh source/control bindings and focused preflight before deliberately selected native work.",
+  "activity": "Read-only Git/source/evidence and stdlib hashes/diff/AST/JSON; sole write this report. One inspection display-range error was corrected before full successful static audit. No tests/builds/imports/network/native resources or owned outputs; no cleanup owed."
+}

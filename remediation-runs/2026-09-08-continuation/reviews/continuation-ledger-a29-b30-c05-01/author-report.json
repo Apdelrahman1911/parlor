@@ -1,0 +1,284 @@
+{
+  "schema_version": 1,
+  "kind": "HELD_ADDITIVE_A29_B30_C05_ACTUAL_LEDGER",
+  "author": "/root/evidence_audit",
+  "recorded_at": "2026-09-09T16:39:43.568312+00:00",
+  "status": "AUTHOR_COMPLETE_PENDING_DIFFERENT_AGENT_LEDGER_REVIEW",
+  "aliases": {
+    "N": "remediation-runs/2026-09-08-continuation",
+    "C": "remediation-runs/2026-09-07-local-readiness"
+  },
+  "canonical_base": {
+    "path": "remediation-runs/2026-09-08-continuation/CONTINUE_LATEST.md",
+    "bytes": 113262,
+    "sha256": "cec00a03df62fd9b97f90e2008c8172e45cd2cc101c263b8721713afc69d379d"
+  },
+  "held_ledger": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/continuation-ledger-a29-b30-c05-01/CONTINUE_LATEST.md",
+    "bytes": 116783,
+    "sha256": "e66230a1cec1340e0b788d8537fc6872e5981f104417d2ea092f23edd4c302ec"
+  },
+  "preservation": {
+    "replacement_base_byte_range": [
+      48,
+      382
+    ],
+    "new_latest_bytes": 329,
+    "appendix_bytes": 3526,
+    "total_new_narrative_bytes": 3855,
+    "maximum_new_narrative_bytes": 4096,
+    "original_latest_sha256": "7e77723c900cbe7c07cf378fccee52f3378b9a16586ef86764f37e18af0d1650",
+    "prefix_bytes_preserved": 48,
+    "historical_tail_base_range": [
+      382,
+      113262
+    ],
+    "historical_tail_candidate_range": [
+      377,
+      113257
+    ],
+    "historical_tail_bytes": 112880,
+    "historical_tail_sha256": "d158f23e96177ce03a5c91ffbdc1b279f683149ca9c6f9f094c7acf1b71a7aa8",
+    "historical_bytes_preserved_exactly": true,
+    "appendix_sha256": "3458fecce8e8be4bc4378aa96d9a4c2cc6bf669a334b9e9af5deed9433ffdbc4",
+    "canonical_unchanged": true
+  },
+  "frozen_execution": {
+    "branch": "fix/local-readiness-2026-09-07",
+    "source_commit": "b8683056ff1e312acf5571d231e13a7643f43686",
+    "inventory_execution_commit": "360fc797a85e1e494334fd8cc11b4e739981cea8",
+    "tree": "8bfe56a21074ba51a4b668bad0728e42007a7593",
+    "remote": "Exact360fc normal-push network observation retained in freeze receipt; not a new query by this author.",
+    "native_run": "34362984912/1 FAIL; A29 FAIL, B30 scoped PASS; four other jobs skipped, not fullD.",
+    "C05": "Three actual lanes PASS at clean360fc; later working-tree selector is not their executed source."
+  },
+  "independent_dispositions": {
+    "A29": "NOT_READY: three blocking findings. 42 host statuses/156 flags are not host acceptance; exact EN-bound observations violate preserved ownership predicates.",
+    "B30": "APPROVED_SCOPED_B30_NATIVE_PASS; no findings; eight repetitions,48 samples and separate ninth real libproc provenance.",
+    "custody": "No findings in archive/source/recorded inner+outer cleanup scope; not application/combined acceptance.",
+    "C05": "PASS_SCOPED_C05_EXPORT_RENDER_CANDIDATE_CHAIN_AT_360fc; no findings; exact-source policy preserves C05 and requires new chain at settled different final SHA."
+  },
+  "author_raw_crosschecks": {
+    "host_statuses": 42,
+    "host_true_flags": 156,
+    "host_bound_EN_mismatches": [
+      8,
+      39,
+      70
+    ],
+    "functional_statuses": 20,
+    "functional_true_flags": 106,
+    "functional_processes": 13,
+    "strict_comparisons_failed": 26,
+    "B_repetitions": 8,
+    "B_samples": 48,
+    "B_selected_images": 3,
+    "C_outer_receipts_pass": 3,
+    "method": "Read actual primary JSON/log evidence and all four independent reports; stdlib count/hash comparisons only, not execution of validators or app tests."
+  },
+  "source_preparation_cutoff": {
+    "selector": "Seven current canonical byte strings and Git executable-bit classes equal independently approved held packet; adopted, not tested/executed. Full filesystem permission bits are preserved, not equated with Git mode.",
+    "selector_rows_fields": [
+      "repository_path",
+      "bytes",
+      "sha256",
+      "Git_executable_class",
+      "observed_filesystem_mode"
+    ],
+    "selector_rows": [
+      [
+        ".github/workflows/production-verification.yml",
+        41722,
+        "5895ce4e80000b205302a987f8b603ac21380764f36e3711064029c3b1af62bc",
+        "100644",
+        "0o600"
+      ],
+      [
+        "scripts/ci/native_continuation.py",
+        66688,
+        "cac70087f29356074f7a6870ede578ca4e8a4cd765b7c895e95381fb1a2c7a00",
+        "100644",
+        "0o600"
+      ],
+      [
+        "scripts/ci/NATIVE_CONTINUATION.md",
+        20415,
+        "2f7556f9c0e901fbd07df722429fc96ea617b33afc83d11508b64dcabe3b4233",
+        "100644",
+        "0o600"
+      ],
+      [
+        "scripts/release/workflow_contract.py",
+        48478,
+        "aeeb5fb01a228f9ef5419c2aae4e4e78326b39b0e62846591b184168756d7c6e",
+        "100755",
+        "0o700"
+      ],
+      [
+        "scripts/release/tests/test_native_continuation.py",
+        95171,
+        "824a95f46b21f6b679b85cd211913a37906c041668a18d9be94967d51e525605",
+        "100644",
+        "0o600"
+      ],
+      [
+        "scripts/release/tests/test_workflow_contract.py",
+        42277,
+        "b2a6a09ef5091788081bd1383e75cda188859b67001ecd376519408aa7d03d97",
+        "100644",
+        "0o600"
+      ],
+      [
+        "scripts/release/tests/test_native_process_probe.py",
+        43371,
+        "ecef057e4d90b532d74eb002ee53ebfe1699ab75e084ffb1eafe22388b75f1ff",
+        "100644",
+        "0o600"
+      ]
+    ],
+    "catalogue": "Held source-only proposal61b133f4; current canonical template is not the held candidate. No claimed adoption or execution.",
+    "current_catalogue_sha256": "2649fb97fe27e74539dfd9867f6677c6a390e722129f8e2434231f44b1d91465",
+    "host_acknowledgement": "Separately owned pending correction; not certified or executed by this ledger.",
+    "local_A31_selector_tests": "NOT_RUN at this checkpoint; root will append later reviewed actual results separately.",
+    "A31_B32_native": "NOT_RUN",
+    "full_D": "NOT_RUN;0/5 full-mode jobs",
+    "source_binding_limit": "New selector working-tree bytes do not relocate actual360fc evidence. Next freeze and native/preflight/selected-lane applicability remain coordinator-owned."
+  },
+  "reference_rows_fields": [
+    "aliased_path",
+    "bytes",
+    "sha256"
+  ],
+  "reference_pins": [
+    [
+      "N/reviews/a29-b30-source-freeze-01.json",
+      46469,
+      "8aa27322bc63e1abe667a355bb9bcb75ecca3a308df51b40190e8fb7c5213c95"
+    ],
+    [
+      "N/actions/34362984912/download-receipt.json",
+      47012,
+      "a978328eeb51338f790d297bd6abaf4c6ed33d480cc3efadd880094c9ece913f"
+    ],
+    [
+      "N/actions/34362984912/native-evidence/continuation.json",
+      46259,
+      "7e5dd324c407c11d2d7fbe76f21e832706b28d983d688aff6636d14147b03285"
+    ],
+    [
+      "N/actions/34362984912/native-evidence/ios-readiness-29/receipt.json",
+      519155,
+      "bc0bf25113a9399d2491ffd2f33770815468a7aabb418d921137528e683ec30f"
+    ],
+    [
+      "N/actions/34362984912/native-evidence/ios-readiness-29/xcresult-summary.json",
+      1742,
+      "c35a94bad1e33ecfe3aa6f5b1029712750ba9568fc5cb7fc40808ee7c56616e7"
+    ],
+    [
+      "N/actions/34362984912/native-evidence/ios-readiness-29/probe-l08-host-result.json",
+      150205,
+      "7a2b4f6b857f1260b0e97f643ea73be5b45d233420bd3c96d00406c7eb4b67c1"
+    ],
+    [
+      "N/actions/34362984912/native-evidence/ios-readiness-29/probe-l08-storage-functional-result.json",
+      55205,
+      "64c6ec6eab47a811fc9d1eb0c014cf3ba77c876ab9054e5357b2f77f8428c151"
+    ],
+    [
+      "N/actions/34362984912/native-evidence/ios-readiness-30/receipt.json",
+      446052,
+      "29cb6106fa32866da27e5b85ee676b87d4103d354125a22675c98b0bc57da982"
+    ],
+    [
+      "N/actions/34362984912/native-evidence/ios-readiness-30/normal-launch-observations.json",
+      14852,
+      "9cc42d74fbb977a026d2ff9a026f24437e339e8c68a1e0592e7bd814b121088f"
+    ],
+    [
+      "N/actions/34362984912/native-evidence/ios-readiness-30/separate-external-image-provenance.json",
+      9049,
+      "0971ee6d7c9da5fb37bbd18229e5baaf7a3ae660f5fcecb0b5f2cf7fbb7330d0"
+    ],
+    [
+      "N/actions/34362984912/native-cleanup/parlor-native-34362984912-1-cleanup.json",
+      3280,
+      "12cc7659688a41c8e4097395e6f1b4339e9ff434cdaaa0d9dc84022496953033"
+    ],
+    [
+      "N/reviews/candidate-c05-actual-independent-01.json",
+      19820,
+      "2de9deae2eb17a833e1c413d4caf15fa70e63ef89bc1c8429b190ea84f16d2ea"
+    ],
+    [
+      "N/reviews/c05-after-a31-applicability-policy-01.json",
+      9342,
+      "9e49b1d7768c352968bbc681bce677e22b5036c01165d6e65bb8257dc8580483"
+    ],
+    [
+      "N/reviews/native-l08-only-selection-01/author-report.json",
+      10499,
+      "b3a36d1956b7bd707d2e94100d2e47961e9569fdef8a28c2da8452da29fc3411"
+    ],
+    [
+      "N/reviews/native-a29-actual-independent-01.json",
+      14739,
+      "64a5dc0eb85decfaf0595f8fac0da05f84dadb25152ab968e5d9572ddf9e46e0"
+    ],
+    [
+      "N/reviews/native34362984912-postrun-custody-independent-01.json",
+      9769,
+      "f0606578324150da8252d897d7d7b66cb57ee87308020c24afd5217fbfe51e7c"
+    ],
+    [
+      "N/reviews/native-a31-catalog-followup-01/author-report.json",
+      12664,
+      "61b133f478115a6604bc78264eb5421867470d8f3c7c1dc84ac884b13ca2cf04"
+    ],
+    [
+      "N/reviews/native-b30-actual-independent-01.json",
+      29223,
+      "f2426faf649d1a9b13fbdfa8ef59741c7cf38d62f5f38f54e4afadbf8a3788fd"
+    ],
+    [
+      "N/reviews/native-l08-only-selection-independent-01.json",
+      15709,
+      "59cdc22e7c3ed384300818d1c641edceb4cb9151f07ba62e96780c17270fa859"
+    ],
+    [
+      "C/evidence/final-dependency-export-linux-05/receipt.json",
+      306586,
+      "81cec4ad5c3ce5d89543620f1f982af7867bcee032bdf074282c4e68826516a4"
+    ],
+    [
+      "C/evidence/final-dependency-render-linux-05/receipt.json",
+      306057,
+      "e13e49d37923f6d023f88741fc83828a62ee3b7d4e9008d462f7ccb69d2ef761"
+    ],
+    [
+      "C/evidence/final-candidate-input-linux-05/receipt.json",
+      306008,
+      "c9869e07c8aab14c20fed27881a950036222200d05afd4cd06715dc148e59e27"
+    ],
+    [
+      "C/evidence/final-candidate-input-linux-05/candidate-input-verification.json",
+      8078,
+      "eea1917e84685bd43bb1c1721532a49638e006814cbf1756aea9734ec087bac9"
+    ],
+    [
+      "C/evidence/final-candidate-input-linux-05/candidate-prerequisites.json",
+      9943,
+      "bf680ceacc4287a5e196e1a18c5103774a4f26a6aafb780aa7dcf4ab9870ca83"
+    ],
+    [
+      "C/evidence/final-candidate-input-linux-05/schema-base-prerequisites.json",
+      28590,
+      "a8881c6adb581bc3edc9bf46f3bda283c911af81c3aaa30f0c9b09cf477e9f6a"
+    ]
+  ],
+  "cleanup_and_limits": "Native immediate/final stops0, both inner finalizers and outer recorded cleanupPASS. C three stops0/cleanupPASS. Required failures retained. No live retired-Mac inspection or global cleanup claim. Physical/signed-candidate/Store identity+operations/owner+legal gates remain.",
+  "ETA_policy": "Conditional roughly one-hour A lane plus queue/preflight/review after successful corrections/control checks/freeze, using actual A29 approximately60min as planning scale only. New failures invalidate estimate; strict/D/Store completion date unknown. Scope denominators are not project/Store percentages.",
+  "activity": "No project imports/functions, tests/builds/native tools, network/API/Git operations, canonical writes or cleanup/process operations. Only this exclusive held ledger and author report authored; no build/test resources allocated.",
+  "inspection_preparation_note": "An initial read-only writer guard compared full filesystem permissions to Git mode and rejected0600 versus100644 before any output writes. Corrected to compare Git executable-bit class, retaining exact observed permissions; no chmod/source/test/evidence change.",
+  "review_boundary": "Different agent must review exact held delta before root adoption. Later source adoption/test/freeze results need an explicit later update; do not rewrite this cutoff."
+}

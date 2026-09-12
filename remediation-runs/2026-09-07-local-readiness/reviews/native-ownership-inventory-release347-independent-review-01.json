@@ -1,0 +1,376 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/release_fix_review",
+  "reviewed_at": "2026-09-08T00:56:40.637763+00:00",
+  "decision": "INDEPENDENT REVIEW PASS \u2014 exact inventory refresh matches current Git; actual release347 and non-test validation gates pass with source-bound clean finalization. No application, physical-device or Store-readiness claim.",
+  "inventory": {
+    "before": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/native-ownership-inventory-before-01.csv",
+      "sha256": "969e35bdf3466b6d2fb77af8e5a626c8612d0abe61ea1213ea90225ac2fcdc30"
+    },
+    "after": {
+      "path": "/Users/abdelrahman/Projects/parlor/docs/review/INDEPENDENT_REVIEW_INVENTORY.csv",
+      "sha256": "7666c581772cbe378d59319b79e56e43e44974900e356b9e72b805dc5a507f08"
+    },
+    "before_equals_HEAD_inventory": true,
+    "rows_before": 814,
+    "rows_after": 815,
+    "raw_diff_lines": {
+      "added": 4,
+      "removed": 3
+    },
+    "semantic_delta": {
+      "added_paths": [
+        "scripts/verification/ios-readiness/test_owned_lane_lsof.py"
+      ],
+      "removed_paths": [],
+      "history_reference_only_replacements": [
+        "scripts/verification/ios-readiness/owned_lane.py",
+        "scripts/verification/ios-readiness/secondary_fifo.py",
+        "scripts/verification/ios-readiness/test_secondary_fifo.py"
+      ],
+      "unchanged_rows": 811
+    },
+    "duplicate_paths": [],
+    "sorted_paths_equal_git_ls_files_cached": true,
+    "tracked_paths": 815,
+    "all_status_values": [
+      "MECHANICALLY INVENTORIED; INDEPENDENT REVIEW NOT ATTESTED"
+    ],
+    "exact_mappings": [
+      {
+        "path": "scripts/verification/ios-readiness/owned_lane.py",
+        "sha256": "949091403ac669429f962120e9873a09897a87bdcae10702720ede0c68342f03",
+        "latest_commit": "6b8cd6ad2ee7c25f2fb64f85f19e38ee636ac8a3",
+        "subject": "fix(verification): preserve native ownership query warnings",
+        "canonical_HEAD_equals_reviewed_working_bytes": true,
+        "old_reference": "Latest tracked change cc1679788fa7dc0c5c1a106aebee6d9b50531d49 (test(ios): preserve owned language and storage readiness controls); independent review not attested",
+        "new_reference": "Latest tracked change 6b8cd6ad2ee7c25f2fb64f85f19e38ee636ac8a3 (fix(verification): preserve native ownership query warnings); independent review not attested",
+        "current_csv_line": 552
+      },
+      {
+        "path": "scripts/verification/ios-readiness/secondary_fifo.py",
+        "sha256": "170586ec941b02866acfa4b8e54aa3dd0842dbc7bc9c4b50410bca4b1149440a",
+        "latest_commit": "2ca7f19c0d1f062d655a681c6efce1c5780ad7d7",
+        "subject": "fix(verification): retain attested partial FIFO identities",
+        "canonical_HEAD_equals_reviewed_working_bytes": true,
+        "old_reference": "Latest tracked change cc1679788fa7dc0c5c1a106aebee6d9b50531d49 (test(ios): preserve owned language and storage readiness controls); independent review not attested",
+        "new_reference": "Latest tracked change 2ca7f19c0d1f062d655a681c6efce1c5780ad7d7 (fix(verification): retain attested partial FIFO identities); independent review not attested",
+        "current_csv_line": 557
+      },
+      {
+        "path": "scripts/verification/ios-readiness/test_owned_lane_lsof.py",
+        "sha256": "72a1f9bd5f23d7124e6d8679333e4071c07f67b812ff861e5ac727f7e875ede8",
+        "latest_commit": "6b8cd6ad2ee7c25f2fb64f85f19e38ee636ac8a3",
+        "subject": "fix(verification): preserve native ownership query warnings",
+        "canonical_HEAD_equals_reviewed_working_bytes": true,
+        "old_reference": null,
+        "new_reference": "Latest tracked change 6b8cd6ad2ee7c25f2fb64f85f19e38ee636ac8a3 (fix(verification): preserve native ownership query warnings); independent review not attested",
+        "current_csv_line": 569
+      },
+      {
+        "path": "scripts/verification/ios-readiness/test_secondary_fifo.py",
+        "sha256": "02b82b6662b735316fe303f6ba7d7affb203090374cacadd8c67909a174ff99e",
+        "latest_commit": "2ca7f19c0d1f062d655a681c6efce1c5780ad7d7",
+        "subject": "fix(verification): retain attested partial FIFO identities",
+        "canonical_HEAD_equals_reviewed_working_bytes": true,
+        "old_reference": "Latest tracked change cc1679788fa7dc0c5c1a106aebee6d9b50531d49 (test(ios): preserve owned language and storage readiness controls); independent review not attested",
+        "new_reference": "Latest tracked change 2ca7f19c0d1f062d655a681c6efce1c5780ad7d7 (fix(verification): retain attested partial FIFO identities); independent review not attested",
+        "current_csv_line": 570
+      }
+    ],
+    "source_semantics": "Generator uses tracked cached Git file set plus inventory output, no-merges history from fixed baseline, and reference overrides. These4 paths have no finding overrides. Existing fields are unchanged; new path is correctly classified repository/build tooling. Mechanical freshness does not attest source correctness or exhaustive first-party coverage.",
+    "coverage_limitation": "This permanent mechanical inventory excludes untracked files and supplies inferred labels, unlike an exhaustive audit ledger. Regeneration is not permission to replace or rewrite human findings/review evidence.",
+    "self_refresh_stability": "Inventory/review infrastructure references deliberately omit own commit SHA, so a focused CSV-only commit does not demand a self-referential regeneration."
+  },
+  "git_mapping": {
+    "repository": "/Users/abdelrahman/Projects/parlor",
+    "branch": "fix/local-readiness-2026-09-07",
+    "HEAD": "6b8cd6ad2ee7c25f2fb64f85f19e38ee636ac8a3",
+    "tree": "d1d11aded475d2765c2f0cfa836db65a99a3fd1e",
+    "commits": [
+      {
+        "sha": "2ca7f19c0d1f062d655a681c6efce1c5780ad7d7",
+        "parent": "b6e1947c62661631d0593038db7f64dbf25f720e",
+        "tree": "cffd1c7311f6eecd57ec4d62f2ad95641601c98c",
+        "files": [
+          "scripts/verification/ios-readiness/secondary_fifo.py",
+          "scripts/verification/ios-readiness/test_secondary_fifo.py"
+        ]
+      },
+      {
+        "sha": "6b8cd6ad2ee7c25f2fb64f85f19e38ee636ac8a3",
+        "parent": "2ca7f19c0d1f062d655a681c6efce1c5780ad7d7",
+        "tree": "d1d11aded475d2765c2f0cfa836db65a99a3fd1e",
+        "files": [
+          "scripts/verification/ios-readiness/owned_lane.py",
+          "scripts/verification/ios-readiness/test_owned_lane_lsof.py"
+        ]
+      }
+    ],
+    "read_only_commands": [
+      "git rev-parse",
+      "git log -2 / git log -1 -- path",
+      "git show --stat / git show HEAD:path",
+      "git ls-files --cached",
+      "git diff / git diff --cached"
+    ],
+    "optional_locks_disabled": true,
+    "staged_name_status": "",
+    "remaining_unstaged_name_status": "M\tdocs/review/INDEPENDENT_REVIEW_INVENTORY.csv\nM\tremediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/README.md\nM\tremediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/external_image_provenance.py\nM\tremediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_control_tests.py\nM\tremediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py\nM\tscripts/verification/ios-readiness/L08StorageProbe.kt.in\nM\tscripts/verification/ios-readiness/l08_receipts.py\nM\tscripts/verification/ios-readiness/test_l08_diagnostics.py\n",
+    "meaning": "Root made the commits. Independent read-only verification confirms exact reviewed canonical source/test bytes are committed with no unrelated paths. Diagnostics and normal-runner working changes remain separate; current checkout is intentionally not clean."
+  },
+  "release_cycle": {
+    "name": "native-ownership-release-controls-01",
+    "receipt": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/native-ownership-release-controls-01/receipt.json",
+      "sha256": "e68d140cddd2dcc2fbb778e4f0694b61cd389a4f3ff8a37fc9e38f73bf7bac9f"
+    },
+    "raw_log": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/native-ownership-release-controls-01/gradle.log",
+      "sha256": "b15715b57a959b916a67fec0672dd21be05ae0764baa3bb57f8a5afc25d3774d"
+    },
+    "stop_log": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/native-ownership-release-controls-01/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    "command": [
+      "/bin/bash",
+      "scripts/release/validate_release_system.sh"
+    ],
+    "started_at": "2026-09-08T00:28:22.414541+00:00",
+    "finished_at": "2026-09-08T00:29:21.021370+00:00",
+    "status": "PASS",
+    "exit_code": 0,
+    "source": {
+      "commit": "6b8cd6ad2ee7c25f2fb64f85f19e38ee636ac8a3",
+      "tree": "d1d11aded475d2765c2f0cfa836db65a99a3fd1e",
+      "branch": "fix/local-readiness-2026-09-07",
+      "diff_sha256": "b5cc3b102378d9b8c1b8497dabbe230365f498785808f663559c7b18d0c12538",
+      "source_manifest_sha256": "35f9d58c3d1a151ed34a9f7c62c3a32cdcf147cf010fe621571ca888957eedbc"
+    },
+    "source_manifest_rows": 800,
+    "source_manifest_digests_independently_recomputed": true,
+    "source_before_after_exact": true,
+    "inventory_after_hash_bound_to_cycle": true,
+    "manifest_delta_since_normal99": [
+      "docs/review/INDEPENDENT_REVIEW_INVENTORY.csv"
+    ],
+    "runner_before_after_exact": true,
+    "runner": {
+      "manifest": [
+        [
+          "remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py",
+          "5c0e546c819c28762cbc6b355ec2717737fc53f96712af591a27add878579d7a"
+        ]
+      ],
+      "manifest_sha256": "c8978207adf3c6d0ea416e39f7f9b309130bc73f8f56da435163b630353d5aa5"
+    }
+  },
+  "verification": {
+    "unit_tests": 347,
+    "passes": 347,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "missing_descriptors": [],
+    "extra_descriptors": [],
+    "duplicate_descriptors": [],
+    "test_sources": [
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_android_artifact_size.py",
+        "sha256": "1bdf6fe45be629ed8ea6d435727e88d87644319257127732b61a529f1ce1a0b1",
+        "tests": 7,
+        "hash_bound_to_cycle": true
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_android_release_artifacts.py",
+        "sha256": "f8b9a707ef2a023fce7fa1a2cd658a0820042af4e28aae647d91567d80004963",
+        "tests": 17,
+        "hash_bound_to_cycle": true
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_android_upload_signature.py",
+        "sha256": "fd9723397cd3ae4336371cd6fdd93164d225919d1ed615d5fd48f75055b3eade",
+        "tests": 21,
+        "hash_bound_to_cycle": true
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_apple_ci_hygiene.py",
+        "sha256": "0ceea9e5afacd3feeaa8b0aa55134dd559482ffeaaff259906c605cfc41e3549",
+        "tests": 50,
+        "hash_bound_to_cycle": true
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_ci_verification_hygiene.py",
+        "sha256": "3fc6f1d4a15152bcca6d86d77bcbc782b3936c6c47336a3ff7b3067d3790e4c8",
+        "tests": 22,
+        "hash_bound_to_cycle": true
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_dependency_inventory.py",
+        "sha256": "a3c454f08af038a59381360a1290a470d2b04e3ad4201fa1ca63bc96d01f1b91",
+        "tests": 15,
+        "hash_bound_to_cycle": true
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_google_promotion_edit.py",
+        "sha256": "b6ed5e950782ef5581f86cabd7a263937da52d3dfcf7c84cc45df5bcc2d147db",
+        "tests": 9,
+        "hash_bound_to_cycle": true
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_ios_release_artifacts.py",
+        "sha256": "e5239b6587b963d009a2a477de6d6e1e36bac5c03e144059c92657527ec3e1c6",
+        "tests": 29,
+        "hash_bound_to_cycle": true
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_normalize_embedded_apple_framework.py",
+        "sha256": "f05aebef486c23bc9bf28fe4eafdf17bbb3789d8c807cb69c7ec10de6aedecc9",
+        "tests": 3,
+        "hash_bound_to_cycle": true
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_notice_git_bytes.py",
+        "sha256": "a1a4196e301f7a310efd4ce4a6f92b2be16cefeafa5b5feabe409200d74f6ba6",
+        "tests": 2,
+        "hash_bound_to_cycle": true
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_release_documentation.py",
+        "sha256": "414579949e9668da6971d41dd4ef7434271fd17b8af4547b0009162ea5c83046",
+        "tests": 1,
+        "hash_bound_to_cycle": true
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_release_tool.py",
+        "sha256": "89a2f83994e461184706e9c2ec50d13bffabc622f615793802a6f7e040f9c140",
+        "tests": 36,
+        "hash_bound_to_cycle": true
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_review_inventory.py",
+        "sha256": "841961fda25e9d4455c3178a3beab93f713e41667592538fcaef0621af74b78c",
+        "tests": 4,
+        "hash_bound_to_cycle": true
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_store_api.py",
+        "sha256": "18d49c5deb8cc5383b5a9888f7f14f21884bbbfeb577348412f1930f4972a1d1",
+        "tests": 51,
+        "hash_bound_to_cycle": true
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_third_party_notices.py",
+        "sha256": "0a395e8b064dea6ec229509026abfd5ec7c7f5a5a23969f606e461100f42eed3",
+        "tests": 32,
+        "hash_bound_to_cycle": true
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_workflow_contract.py",
+        "sha256": "b2e5f6af1a37f86e5e47c3c69e7a31afb1b4090034c202a39c7bfc3a93f3e219",
+        "tests": 43,
+        "hash_bound_to_cycle": true
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_xcode_framework_phase.py",
+        "sha256": "3033307b0a029d87ab9c8c14d3b3b4d3a0d4db9d183012d6da58fb1e8b5c4a73",
+        "tests": 5,
+        "hash_bound_to_cycle": true
+      }
+    ],
+    "inventory_regression_tests_executed": 4,
+    "raw_results_reconciled": "Actual347 verbose method IDs agree with independent AST of all17 current release-test files; every terminal result ok. Separate in-test CRLF warning and branch message do not replace their subsequent ok results.",
+    "non_test_gates": [
+      {
+        "gate": "Python py_compile",
+        "status": "PASS",
+        "basis": "validate_release_system.sh:25 is nonoptional under set -e; batch reaches following stages and exits0."
+      },
+      {
+        "gate": "Release workflow contract",
+        "status": "PASS",
+        "basis": "Actual raw lines357-358; one invocation also occurs in tests."
+      },
+      {
+        "gate": "Inventory freshness",
+        "status": "PASS",
+        "basis": "Actual raw line359 reports815 rows; exact current CSV hash is in both cycle manifests."
+      },
+      {
+        "gate": "Pinned ShellCheck/actionlint download integrity",
+        "status": "PASS",
+        "basis": "Raw lines360-361 show both SHA256 archive checks OK; script reads pins from unchanged release-policy and rejects extraction failures."
+      },
+      {
+        "gate": "ShellCheck",
+        "status": "PASS",
+        "basis": "Sequential mandatory command at script103; set-e batch exits0. Silent success, not a separate invented report."
+      },
+      {
+        "gate": "actionlint",
+        "status": "PASS",
+        "basis": "Final mandatory command at script104; set-e batch exits0. Silent success, not a separate invented report."
+      }
+    ],
+    "tool_versions_from_bound_policy": {
+      "shellcheck": "0.11.0",
+      "actionlint": "1.7.12"
+    },
+    "scope_limit": "Release-tool unit/integration fixtures and repository static gates. No candidate signing, real Store client operation, application runtime, physical LAN, or legal approval asserted. Test source/hash/result reconciliation here is not a fresh full assertion review of every pre-existing release test."
+  },
+  "source_reopened": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/generate_review_inventory.py",
+      "sha256": "c65ec66aa1ea18e91ddae521de4feda15a08ecffa024f06b8dbde0c1999c5a52",
+      "reviewed_lines": [
+        [
+          1,
+          409
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/release/validate_release_system.sh",
+      "sha256": "ce52c9c08edecba968337d6de42c90895badec127c7029a5afc16737d3b8864a",
+      "reviewed_lines": [
+        [
+          1,
+          104
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_review_inventory.py",
+      "sha256": "841961fda25e9d4455c3178a3beab93f713e41667592538fcaef0621af74b78c",
+      "reviewed_lines": [
+        [
+          1,
+          173
+        ]
+      ]
+    }
+  ],
+  "cleanup": {
+    "stop_exit_code": 0,
+    "stopped_at": "2026-09-08T00:29:21.537990+00:00",
+    "stop_text": "No Gradle daemons are running.",
+    "completed_at": "2026-09-08T00:29:21.680567+00:00",
+    "remaining_outputs": [],
+    "retained_outputs": [],
+    "remaining_owned_workers": [],
+    "remaining_artifact_workers": [],
+    "errors": [],
+    "deferred_signals": [],
+    "method": "Exact task-owned generated dirs; no Gradle clean daemon or global cache deletion. Unrelated processes excluded by PID/start identity and cycle ownership.",
+    "release_script_temporary_ownership": "Script7 allocates a unique directory under cycle-owned TMPDIR. EXIT/INT/TERM traps preserve original failure and report cleanup failure. Outer lane owns pycache and scratch finalization.",
+    "reviewer_activity": "No builds, tests, repository imports, native process queries/signals or file deletion. Only read-only Git/stdlib hash+AST inspection and this additive report. No persistent background workers or generated build outputs created."
+  },
+  "remaining_limits": [
+    "Inventory approval does not reclassify original native09 FAIL or unresolved storage diagnostics.",
+    "Canonical source changes still require fresh native execution binding; these Python/release gates are not iOS execution.",
+    "This review does not authorize Store publication or certify owner-dependent signing, identity, accessibility, physical-device or legal gates.",
+    "Human audit receipts and inventory backup are unchanged; no reviewer history operations were performed."
+  ]
+}

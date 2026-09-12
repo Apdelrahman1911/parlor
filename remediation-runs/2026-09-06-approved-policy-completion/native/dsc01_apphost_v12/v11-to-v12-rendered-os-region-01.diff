@@ -1,0 +1,56 @@
+--- V11-copy-only-IOSAppLaunchUITests.swift
++++ V12-copy-only-IOSAppLaunchUITests.swift
+@@ -397,9 +397,10 @@
+     }
+ 
+     @MainActor private func investigateActualOSPerAppLanguage(_ app: XCUIApplication) throws {
++        try verifyOSPreferenceBaselineDecisionContract()
+         try verifyOSInteractionDecisionContract()
+         try startScenario(app, name: "os")
+-        _ = try syntheticLanguage(app, language: "system")
++        let beforeOSChoice = try syntheticLanguage(app, language: "system")
+         app.buttons["parlor-dsc01-open-os"].tap()
+         let settings = XCUIApplication(bundleIdentifier: "com.apple.Preferences")
+         let osDiagnostics = DSC01OSAppDiagnostics()
+@@ -433,11 +434,10 @@
+             let preferences = try self.dictionary(snapshot, "now")
+             return preferences["setting"] as? String == "system" &&
+                    preferences["ownerPresent"] as? Bool == false &&
+-                   preferences["preferredLanguage"] as? String == "en" &&
+-                   preferences["hasAppOverride"] as? Bool == true
+-        }
+-        let actualOSPreferences = try XCTUnwrap(try dictionary(afterOS, "now")["appLanguages"] as? [String])
+-        XCTAssertFalse(actualOSPreferences.isEmpty)
++                   preferences["preferredLanguage"] as? String == "en"
++        }
++        let osBaseline = try captureOSPreferenceBaseline(afterOS, beforeChoice: beforeOSChoice)
++        let actualOSPreferences = osBaseline.value.languages
+         try openSettings(app, language: "en")
+         try tap(app, label: "العربية")
+         try assertSettingsStrings(app, language: "ar")
+@@ -445,9 +445,12 @@
+             try self.dictionary(snapshot, "now")["ownerInstalled"] as? String == "ar"
+         }
+         try assertOwned(explicit, explicit: "ar", previous: actualOSPreferences)
++        try recordOSPreferenceStage("arabic", snapshot: explicit, baseline: osBaseline)
+         try tap(app, label: "لغة النظام")
+         try assertSettingsStrings(app, language: "en")
+-        try assertSystem(try observe(app), expected: "en", previous: actualOSPreferences)
++        let restoredOS = try observe(app)
++        try assertSystem(restoredOS, expected: "en", previous: actualOSPreferences)
++        try recordOSPreferenceStage("system", snapshot: restoredOS, baseline: osBaseline)
+         // An OS language selection can intentionally restart a process. Its
+         // ownership/restart proof is separate from same-process game retention.
+         let beforeBoot = try string(try observe(app), "boot")
+@@ -456,6 +459,11 @@
+         let restarted = try observe(app)
+         XCTAssertNotEqual(try string(restarted, "boot"), beforeBoot)
+         try assertSystem(restarted, expected: "en", previous: actualOSPreferences)
++        // Read actual localized Settings and Compose direction after the fresh
++        // restart too, not merely a locale or root UIKit approximation.
++        try openSettings(app, language: "en")
++        let restartedSettings = try observe(app)
++        try recordOSPreferenceStage("restart", snapshot: restartedSettings, baseline: osBaseline)
+         try finishOSInvestigation(app, status: "verified-english", diagnostics: osDiagnostics)
+         XCTAssertEqual(try observe(app)["osDisposition"] as? String, "verified-english")
+     }

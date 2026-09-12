@@ -1,0 +1,937 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-09-06T19:14:29.052966+00:00",
+  "reviewer": "/root/native_fix_review",
+  "classification": "TEST/EVIDENCE GAP",
+  "purpose": "Read-only applicability and proposed control delta; no executable edits or execution authorization implied",
+  "baseline": {
+    "branch": "main",
+    "commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+    "tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+    "source_manifest_sha256": "9ac2be536979f2216b39c10a6d148125a12380987d4efd483bbcbaeb1733318e",
+    "tracked_diff_sha256": "148fb4583d8fa8341b3cbc48a7fc0bc7564bf4df5c27e9d80e32c6bfdc57b784",
+    "identity_basis": "Commit/branch/tree reopened; dirty-source binding inherited from completed freeze02 receipts, not falsely described as a clean commit"
+  },
+  "implementation_evidence": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/docs/RELEASE_GATES.md",
+      "sha256": "19ee19acf35f833e3bd61b03d3113c6a3ea05b67afcbe1b956e9d4aa070a3f32",
+      "read_ranges": [
+        [
+          13,
+          24
+        ],
+        [
+          35,
+          47
+        ],
+        [
+          76,
+          86
+        ]
+      ],
+      "total_lines": 109
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/docs/IOS_SETUP.md",
+      "sha256": "c911af6990b22d550b31e36e1663cb6fda7150ba94a0ff53e724f560c085d823",
+      "read_ranges": [
+        [
+          202,
+          232
+        ]
+      ],
+      "total_lines": 263
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/docs/RELEASE_RUNBOOK.md",
+      "sha256": "174e69fd28dfc4556713a92403ab9d306faf37b8e283ad13ff447c2daa09ede1",
+      "read_ranges": [
+        [
+          35,
+          81
+        ]
+      ],
+      "total_lines": 203
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/build.gradle.kts",
+      "sha256": "bd6199e1f097eb236c50c46efb91d291550110f6b4d95a8e95ff0db4d8da192b",
+      "read_ranges": [
+        [
+          128,
+          136
+        ]
+      ],
+      "total_lines": 204
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/.github/workflows/production-verification.yml",
+      "sha256": "965e47ddb4c47b19d8017c9494239d0a0309b26f465eb0f6b655bd90113a929c",
+      "read_ranges": [
+        [
+          245,
+          339
+        ]
+      ],
+      "total_lines": 347
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/iosApp/iosApp/ComposeContainerViewController.swift",
+      "sha256": "9bdeeaf67a569f4016bc5359ae865b6df9eeaa2a9f6ee36e01041bf79000a903",
+      "read_ranges": [
+        [
+          1,
+          48
+        ]
+      ],
+      "total_lines": 48
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/iosApp/iosApp/Info.plist",
+      "sha256": "db09f2c4a3cc378f4bb24b6de29653283c90227795a27f64370c9da87ef0d0a5",
+      "read_ranges": [
+        [
+          1,
+          61
+        ]
+      ],
+      "total_lines": 61
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/iosApp/iosApp/PrivacyInfo.xcprivacy",
+      "sha256": "179da3a1bcd19580aacbfa5e847f08ae35074f024b28d189e394d451feb7455b",
+      "read_ranges": [
+        [
+          1,
+          39
+        ]
+      ],
+      "total_lines": 39
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/config/parlor-version.xcconfig",
+      "sha256": "4975e763730608718095d3c7342f34f333a86e20cf562eb221b9e3478fa93f9e",
+      "read_ranges": [
+        [
+          1,
+          4
+        ]
+      ],
+      "total_lines": 4
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/native/ios_wrapper_smoke_v1/run_ios_wrapper_smoke_cycle.py",
+      "sha256": "400df728409ebd713467d3b741c1a0f7db67b8eab616554e26e3cb290bdc3859",
+      "read_ranges": [
+        [
+          1,
+          629
+        ]
+      ],
+      "total_lines": 629
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/native/ios_wrapper_smoke_v1/copied-kotlin-phase.sh.in",
+      "sha256": "1a8a5ee2c87fb4a4d8294ac3d5e2f057baaf9bd1c5a74b04564586b5f1b4baf8",
+      "read_ranges": [
+        [
+          1,
+          41
+        ]
+      ],
+      "total_lines": 42
+    }
+  ],
+  "completed_receipt_inventory": [
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-apple-01/receipt.json",
+      "sha256": "41dd813e36c349daefb5f45237b70e85571d4238e1be0e9ef1e363b7afd6f82c",
+      "cycle": "combined-apple-01",
+      "source_manifest_sha256": "e59da533dbec2f02f6f2b460ce72e2a7337af1e44abfb0bc6d533304d4127ec7",
+      "matches_freeze_02": false,
+      "selected_commands": [
+        {
+          "tool": "gradle",
+          "task": "productionAppleCheck",
+          "scope": "KMP Release frameworks and Apple static analysis only; task source reopened"
+        }
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-01/receipt.json",
+      "sha256": "c31513337d13649489920c1c2dfc604b76ca8f8121df1a3d9581516ae82d4509",
+      "cycle": "combined-production-01",
+      "source_manifest_sha256": "1ec1541532ba78549efebbeef28e82f31a7a16d83c7ffec5c80b9611ca8423b4",
+      "matches_freeze_02": false,
+      "selected_commands": []
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-02/receipt.json",
+      "sha256": "449e46f258aae6a13a3543a9a4fe30b9bcf3848870675a042b2a567c436e8bbb",
+      "cycle": "combined-production-02",
+      "source_manifest_sha256": "9d9841ef0c9fb115ff6792f6bd276265ebec16c6c851dd684bc647cf2a966310",
+      "matches_freeze_02": false,
+      "selected_commands": []
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-03/receipt.json",
+      "sha256": "e8d122edb2506dbe5a9b4100656c319ab561dcb434752f8c7a08d51c784b552c",
+      "cycle": "combined-production-03",
+      "source_manifest_sha256": "283020fbc279db238c3c3cf449a7c0f76d1c493d2c2b07ef6f29b06f795337cb",
+      "matches_freeze_02": false,
+      "selected_commands": []
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/receipt.json",
+      "sha256": "4f8374afedbc3fec40353f0a95556766eaf8fa393daf1f8d307104e05694b9f4",
+      "cycle": "combined-production-04",
+      "source_manifest_sha256": "e59da533dbec2f02f6f2b460ce72e2a7337af1e44abfb0bc6d533304d4127ec7",
+      "matches_freeze_02": false,
+      "selected_commands": []
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-toast-cover-01/receipt.json",
+      "sha256": "30544f878300dfde4218b282cc9cf0d92ab87249bb6489f8bd942e850aa85a5e",
+      "cycle": "design-toast-cover-01",
+      "source_manifest_sha256": "ba0bbb51ea6fa06baf2c6cc856b42bd3994259f6a55d11b481f94154a76f14e5",
+      "matches_freeze_02": false,
+      "selected_commands": []
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-toast-cover-02/receipt.json",
+      "sha256": "1623724c52d9c7dcc3eb6e5279b4d350c584a32a3dc514ddffb5397665ee847a",
+      "cycle": "design-toast-cover-02",
+      "source_manifest_sha256": "c9b114757de5b70204623023e76de7498b7fdd5e63ba36faf20f2709bb949cfc",
+      "matches_freeze_02": false,
+      "selected_commands": []
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-whodunit-desktop-01/receipt.json",
+      "sha256": "6ec583de55d5b45847ece8177a5c09124958c078d795db5abe2a4d2b13055aae",
+      "cycle": "design-whodunit-desktop-01",
+      "source_manifest_sha256": "f98bd829b6cf77875c08a175cd521d6c23e4b3ba2f3d8f77ee2a674a43c6e24f",
+      "matches_freeze_02": false,
+      "selected_commands": []
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/dsc01-apphost-01/receipt.json",
+      "sha256": "33b7d8a4ee78dd34903aa4b3131fabc0df578b4148deafe30b818dff7885e89c",
+      "cycle": "dsc01-apphost-01",
+      "source_manifest_sha256": "e59da533dbec2f02f6f2b460ce72e2a7337af1e44abfb0bc6d533304d4127ec7",
+      "matches_freeze_02": false,
+      "selected_commands": [
+        {
+          "tool": "xcodebuild",
+          "configuration": "Debug",
+          "action": "test"
+        }
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/dsc01-apphost-02/receipt.json",
+      "sha256": "7ce472e0296c985d152d02c0dbdf6b6979830c12906c7653291c5237bf5ac660",
+      "cycle": "dsc01-apphost-02",
+      "source_manifest_sha256": "e59da533dbec2f02f6f2b460ce72e2a7337af1e44abfb0bc6d533304d4127ec7",
+      "matches_freeze_02": false,
+      "selected_commands": [
+        {
+          "tool": "xcodebuild",
+          "configuration": "Debug",
+          "action": "test"
+        }
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/dsc01-harness-contracts-01/receipt.json",
+      "sha256": "e754b3a6b475f154d27216a100d753b7271f50a6a32926459d561adbe7301c92",
+      "cycle": "dsc01-harness-contracts-01",
+      "source_manifest_sha256": "e59da533dbec2f02f6f2b460ce72e2a7337af1e44abfb0bc6d533304d4127ec7",
+      "matches_freeze_02": false,
+      "selected_commands": []
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/dsc01-harness-contracts-02/receipt.json",
+      "sha256": "b80456d15f4fa6f428050c25b6fca57f1ee3751ebd7f51c9d97fc0cbdd608bc9",
+      "cycle": "dsc01-harness-contracts-02",
+      "source_manifest_sha256": "e59da533dbec2f02f6f2b460ce72e2a7337af1e44abfb0bc6d533304d4127ec7",
+      "matches_freeze_02": false,
+      "selected_commands": []
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/final-continuation-assembly-01/receipt.json",
+      "sha256": "0930eddafde6d39f41158cb082a96e9ffd029ba8113bfd3d8ecd244c7b642bfa",
+      "cycle": "final-continuation-assembly-01",
+      "source_manifest_sha256": "e59da533dbec2f02f6f2b460ce72e2a7337af1e44abfb0bc6d533304d4127ec7",
+      "matches_freeze_02": false,
+      "selected_commands": []
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/final-continuation-validation-01/receipt.json",
+      "sha256": "7d145f9e7400c1f2a3b8fa5e2a934ab8f45af3c86336453c41916abc06eff40f",
+      "cycle": "final-continuation-validation-01",
+      "source_manifest_sha256": "e59da533dbec2f02f6f2b460ce72e2a7337af1e44abfb0bc6d533304d4127ec7",
+      "matches_freeze_02": false,
+      "selected_commands": []
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/final-continuation-validation-02/receipt.json",
+      "sha256": "c8284f9df6375484509fbcd1a4296ee6037ace1fece39327dd26601ae88ef1a5",
+      "cycle": "final-continuation-validation-02",
+      "source_manifest_sha256": "e59da533dbec2f02f6f2b460ce72e2a7337af1e44abfb0bc6d533304d4127ec7",
+      "matches_freeze_02": false,
+      "selected_commands": []
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/final-evidence-assembly-01/receipt.json",
+      "sha256": "f25af494e43e733f4eaffb258cc31d3f3742575552f7988205ec128c084be2d7",
+      "cycle": "final-evidence-assembly-01",
+      "source_manifest_sha256": "e59da533dbec2f02f6f2b460ce72e2a7337af1e44abfb0bc6d533304d4127ec7",
+      "matches_freeze_02": false,
+      "selected_commands": []
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/final-indexes-01/receipt.json",
+      "sha256": "79ba6f7c43c4ff62970a62b8722a282c26fe2a56eacaab053958ccc5d00e032c",
+      "cycle": "final-indexes-01",
+      "source_manifest_sha256": "e59da533dbec2f02f6f2b460ce72e2a7337af1e44abfb0bc6d533304d4127ec7",
+      "matches_freeze_02": false,
+      "selected_commands": []
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/final-ledger-validation-01/receipt.json",
+      "sha256": "144805e1bd47ba7aa812e4c831a665d6aff9abf8aa91f3928665bb47a213c482",
+      "cycle": "final-ledger-validation-01",
+      "source_manifest_sha256": "e59da533dbec2f02f6f2b460ce72e2a7337af1e44abfb0bc6d533304d4127ec7",
+      "matches_freeze_02": false,
+      "selected_commands": []
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/final-observation-contracts-01/receipt.json",
+      "sha256": "d0e8ad7b8be4aab7c42c014c4cbf68778cd3807e2e2fbdf7d9fb102c6160a3f7",
+      "cycle": "final-observation-contracts-01",
+      "source_manifest_sha256": "e59da533dbec2f02f6f2b460ce72e2a7337af1e44abfb0bc6d533304d4127ec7",
+      "matches_freeze_02": false,
+      "selected_commands": []
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/final-observation-contracts-02/receipt.json",
+      "sha256": "3b5059cf1aead0a41a86033cb64a5a047692d5db67b9933fa9a072c06e144d71",
+      "cycle": "final-observation-contracts-02",
+      "source_manifest_sha256": "e59da533dbec2f02f6f2b460ce72e2a7337af1e44abfb0bc6d533304d4127ec7",
+      "matches_freeze_02": false,
+      "selected_commands": []
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/final-observation-contracts-03/receipt.json",
+      "sha256": "9949837ab9e54e3ecc044ef47727b6db4c2337003f450470bd644e8ec6c39fb0",
+      "cycle": "final-observation-contracts-03",
+      "source_manifest_sha256": "e59da533dbec2f02f6f2b460ce72e2a7337af1e44abfb0bc6d533304d4127ec7",
+      "matches_freeze_02": false,
+      "selected_commands": []
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/final-resource-checks-01/receipt.json",
+      "sha256": "42d363bcc04f84e49deac1d608f81cb92a70b97fbf51c3b9dc41c353d183f731",
+      "cycle": "final-resource-checks-01",
+      "source_manifest_sha256": "e59da533dbec2f02f6f2b460ce72e2a7337af1e44abfb0bc6d533304d4127ec7",
+      "matches_freeze_02": false,
+      "selected_commands": []
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/foundation-transport-green/receipt.json",
+      "sha256": "f2b412ec493dbaf36b00e95480e4b152a32326fb4811ac41a26b94cdd1ba6992",
+      "cycle": "foundation-transport-green",
+      "source_manifest_sha256": "097a4977a8287bdb0c501f6c9b6856a17be3886f1a1f1783d63797a8875aa770",
+      "matches_freeze_02": false,
+      "selected_commands": []
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-01/receipt.json",
+      "sha256": "0e8e6a3d7471e10b80a77a34697f7f27b347c86c066d1b52f9e9896ff128b4e0",
+      "cycle": "games-session-desktop-01",
+      "source_manifest_sha256": "600df8856e92dc0facfc87aa65d1808f1b9a86f562e5429608fc0879813f9250",
+      "matches_freeze_02": false,
+      "selected_commands": []
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-02/receipt.json",
+      "sha256": "5e845371c19e0c25b730d580f62b09a31f673b087665a93020f1881a76c9adf5",
+      "cycle": "games-session-desktop-02",
+      "source_manifest_sha256": "6a8d21515b3bd753e347927444fc091a1872bab4fa35dadc0fc8f245afddc214",
+      "matches_freeze_02": false,
+      "selected_commands": []
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/receipt.json",
+      "sha256": "b7dd7cbcd744cc9ba75cb01a53ac747b875f9467c96ebcbc9c6659595fa11ae5",
+      "cycle": "games-session-desktop-03",
+      "source_manifest_sha256": "a4f16c504c995b0d8992307aa5a45b4ca117135dd8be330b8101d6787469b6b0",
+      "matches_freeze_02": false,
+      "selected_commands": []
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/ios-b1-green/receipt.json",
+      "sha256": "66088528454ff016f3c7ac6bb6ec5241ed07889e63b377ffdde43fabaf23745d",
+      "cycle": "ios-b1-green",
+      "source_manifest_sha256": "349b4f8c35be6757e972fa6499c879e219ecfc1eda8c8319d1ddf84a2742dace",
+      "matches_freeze_02": false,
+      "selected_commands": []
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/ios-b1-phase-green/receipt.json",
+      "sha256": "06726b151d585a80f8df7c1ff67b7238dd1d3df39fb5437aab2e6bf43258c045",
+      "cycle": "ios-b1-phase-green",
+      "source_manifest_sha256": "349b4f8c35be6757e972fa6499c879e219ecfc1eda8c8319d1ddf84a2742dace",
+      "matches_freeze_02": false,
+      "selected_commands": []
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/ios-b1-red/receipt.json",
+      "sha256": "1a1c0d0f2d68cf0f4be5b93033918fdae373c7ca1cd07c8686e680b3d77a5772",
+      "cycle": "ios-b1-red",
+      "source_manifest_sha256": "68d84a6a5d1e1453c6930eb097a4e0121d806c02654bcca11e2c1b7058b4e6db",
+      "matches_freeze_02": false,
+      "selected_commands": []
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/locale-source-contract-green-01/receipt.json",
+      "sha256": "ad2e08caea2cc9009a33532d9158842edb5ff436ad827f7008b7d8465c54fc95",
+      "cycle": "locale-source-contract-green-01",
+      "source_manifest_sha256": "9d9841ef0c9fb115ff6792f6bd276265ebec16c6c851dd684bc647cf2a966310",
+      "matches_freeze_02": false,
+      "selected_commands": []
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/mafia-type-aware-green-01/receipt.json",
+      "sha256": "284534c7f6e5b73c16c329c80bdb3ac9803cef0cf0bf4c8c96b9cb22abfa81bd",
+      "cycle": "mafia-type-aware-green-01",
+      "source_manifest_sha256": "283020fbc279db238c3c3cf449a7c0f76d1c493d2c2b07ef6f29b06f795337cb",
+      "matches_freeze_02": false,
+      "selected_commands": []
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/native-alltests-01/receipt.json",
+      "sha256": "fae1ca61e3eb2854c2d21fae7a79c747cf5093d451a99fe957ec091fcc7043eb",
+      "cycle": "native-alltests-01",
+      "source_manifest_sha256": "e59da533dbec2f02f6f2b460ce72e2a7337af1e44abfb0bc6d533304d4127ec7",
+      "matches_freeze_02": false,
+      "selected_commands": []
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/native-storage-language-01/receipt.json",
+      "sha256": "7b3afd96138795f98a5f3fa2ac341ab0e517147d0cfa093116e2b922347b562d",
+      "cycle": "native-storage-language-01",
+      "source_manifest_sha256": "c9b114757de5b70204623023e76de7498b7fdd5e63ba36faf20f2709bb949cfc",
+      "matches_freeze_02": false,
+      "selected_commands": []
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/native-storage-language-02/receipt.json",
+      "sha256": "3708df669d6ec74a668b701eca5dcfca97cafbe6e6262d65712cc3d0630ab331",
+      "cycle": "native-storage-language-02",
+      "source_manifest_sha256": "fbea29c6e4f53108c632b49ff4e8b9da644f6caeb9e48876b70948d6a90e430f",
+      "matches_freeze_02": false,
+      "selected_commands": []
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/native-wrapper-safety-01/receipt.json",
+      "sha256": "7b73230fd303d4b02e6bd9eafff8ff9897d4ec1b0792efd327ef42fe5597d7cb",
+      "cycle": "native-wrapper-safety-01",
+      "source_manifest_sha256": "6246c383e8a3eda61e48aa7e711e23aac316295ed89d029cf3f83cd940cf19ca",
+      "matches_freeze_02": false,
+      "selected_commands": []
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/release-system-green-01/receipt.json",
+      "sha256": "5b330259a8ae0c0bed366bc7131f356bd3c4363030b93917a712a70559c84139",
+      "cycle": "release-system-green-01",
+      "source_manifest_sha256": "1ec1541532ba78549efebbeef28e82f31a7a16d83c7ffec5c80b9611ca8423b4",
+      "matches_freeze_02": false,
+      "selected_commands": []
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/rl-c1-green/receipt.json",
+      "sha256": "d6890d31fb004bb56ad11542c082b3201130b5e6cb586c2df6639ae41bd70adb",
+      "cycle": "rl-c1-green",
+      "source_manifest_sha256": "2ea96223d1a0d345bd8807d18050f1352d5322d9dee81030599b90c1ae3ef100",
+      "matches_freeze_02": false,
+      "selected_commands": []
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/rl-c1-red/receipt.json",
+      "sha256": "9c28f83ea3934710bae4e9e7dbb861be93625c60d7645a0a6672dca13f91f41c",
+      "cycle": "rl-c1-red",
+      "source_manifest_sha256": "efbce8b3d84281e66e1e1989074258cb0e2690a91a8f7822a08928e546f58459",
+      "matches_freeze_02": false,
+      "selected_commands": []
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/rl-c2-green-01/receipt.json",
+      "sha256": "321e471ed49bcb176c03505ca05089bf198abba897532cfade9881c3970bc69b",
+      "cycle": "rl-c2-green-01",
+      "source_manifest_sha256": "c9b114757de5b70204623023e76de7498b7fdd5e63ba36faf20f2709bb949cfc",
+      "matches_freeze_02": false,
+      "selected_commands": []
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/rl-c2-green-02/receipt.json",
+      "sha256": "cbd27e89676f8ea5bdd575ab45462b7861e5bf3e11ca1929dba42871f7515979",
+      "cycle": "rl-c2-green-02",
+      "source_manifest_sha256": "e3015f25d2c5ee501251af007b8769aa994b8139a9fdcd1f307aed040094db12",
+      "matches_freeze_02": false,
+      "selected_commands": []
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/rl-c2-red/receipt.json",
+      "sha256": "00a2741dfff4aeedf827a7983834ad2d50ea5e8d3ff61f943ecb9f40c575dc1f",
+      "cycle": "rl-c2-red",
+      "source_manifest_sha256": "cba7bd7afc424b2be45d32e5d9599da69963c52e0e3293fda76d9d889073e7cd",
+      "matches_freeze_02": false,
+      "selected_commands": []
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/rl-c3-green/receipt.json",
+      "sha256": "14ddb8cfe944b0e1b61a4129cfdfee66596c33c3e96887f498d37a29fe89ca17",
+      "cycle": "rl-c3-green",
+      "source_manifest_sha256": "a4f16c504c995b0d8992307aa5a45b4ca117135dd8be330b8101d6787469b6b0",
+      "matches_freeze_02": false,
+      "selected_commands": []
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/rl-c3-red/receipt.json",
+      "sha256": "640f37c234fc95f80bbee4302367d5a29a4d3a1194977149368c73b7e9b7f071",
+      "cycle": "rl-c3-red",
+      "source_manifest_sha256": "3740d7aa5a8c8c809c846afccf0c4f9b4d0f9be83bfc245dbaf2d8a371dc9dab",
+      "matches_freeze_02": false,
+      "selected_commands": []
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/rl-c3-red-02/receipt.json",
+      "sha256": "f0ad03ec518d3d83ec1459258348ad390665d610ad4cf7b636af66d42362fc0a",
+      "cycle": "rl-c3-red-02",
+      "source_manifest_sha256": "5a3f187dc6b516bb7e18dbde5ed91211e556188fb23886c7cf9acd4c44dbe916",
+      "matches_freeze_02": false,
+      "selected_commands": []
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/root-t3-red/receipt.json",
+      "sha256": "e92746b003e83a0099cd09a511295cc94a620276e96a4504591eafe2f3e48e37",
+      "cycle": "root-t3-red",
+      "source_manifest_sha256": "1fa4c2769109449d9d175b8d6ff922a0c0c21595da67752d207b11dd141f0a1f",
+      "matches_freeze_02": false,
+      "selected_commands": []
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/sn-c2-factory-green-01/receipt.json",
+      "sha256": "e05ed0279180af13c09c2a4b3cdf4108f9360460c2918ca70af949332046f161",
+      "cycle": "sn-c2-factory-green-01",
+      "source_manifest_sha256": "e31d4a45bf03a2a765351f873501f7c541073713a001521d574dd0a4e865b695",
+      "matches_freeze_02": false,
+      "selected_commands": []
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/test-type-aware-green-02/receipt.json",
+      "sha256": "3653b225944d313205d98993092048111c972fb1fc3736e59f34f324f93e0dbf",
+      "cycle": "test-type-aware-green-02",
+      "source_manifest_sha256": "e59da533dbec2f02f6f2b460ce72e2a7337af1e44abfb0bc6d533304d4127ec7",
+      "matches_freeze_02": false,
+      "selected_commands": []
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/transport-static-green-02/receipt.json",
+      "sha256": "df1dde732388bad7cbb37ffe6294eea973fca7dfc7b4a30d49a9a4d338cf1ff4",
+      "cycle": "transport-static-green-02",
+      "source_manifest_sha256": "353e5843b782befea35cf48cf144a96e490054abc9f78948668c18dd8d53b580",
+      "matches_freeze_02": false,
+      "selected_commands": []
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/whodunit-type-aware-01/receipt.json",
+      "sha256": "0f05529c9d4be46c104f6f8d8a64af2d467c869535e0ff020b32aaf912928e89",
+      "cycle": "whodunit-type-aware-01",
+      "source_manifest_sha256": "240be2634d99f4e0ad560502f902260189ea7ac487d44cda7ce5f69e772e2aaa",
+      "matches_freeze_02": false,
+      "selected_commands": []
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-apple-01/receipt.json",
+      "sha256": "63558a7a098971ce9ddfe577c65bcfee4375b1d76b267988a4f396b94b824e42",
+      "cycle": "combined-apple-01",
+      "source_manifest_sha256": "de7573ed1f4e1a19969f3063e135d234cd57ec8764c4af784cf4b3eaff5ef9b4",
+      "matches_freeze_02": false,
+      "selected_commands": [
+        {
+          "tool": "gradle",
+          "task": "productionAppleCheck",
+          "scope": "KMP Release frameworks and Apple static analysis only; task source reopened"
+        }
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-apple-02/receipt.json",
+      "sha256": "dd75d054341870316ff21a8106e245e5859c83a347399aa59afc57d0eea68d16",
+      "cycle": "combined-apple-02",
+      "source_manifest_sha256": "9ac2be536979f2216b39c10a6d148125a12380987d4efd483bbcbaeb1733318e",
+      "matches_freeze_02": true,
+      "selected_commands": [
+        {
+          "tool": "gradle",
+          "task": "productionAppleCheck",
+          "scope": "KMP Release frameworks and Apple static analysis only; task source reopened"
+        }
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-desktop-static-04/receipt.json",
+      "sha256": "74f68916fa8ad3ecee3eb4f4e03a68cfc93a839f40bf8bc2104fbbd1ab365a7f",
+      "cycle": "combined-desktop-static-04",
+      "source_manifest_sha256": "9ac2be536979f2216b39c10a6d148125a12380987d4efd483bbcbaeb1733318e",
+      "matches_freeze_02": true,
+      "selected_commands": []
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-native-alltests-01/receipt.json",
+      "sha256": "70652660de120710bdbb4cde2780332da9ede8b29f3b93d99b751d5cad12a9db",
+      "cycle": "combined-native-alltests-01",
+      "source_manifest_sha256": "de7573ed1f4e1a19969f3063e135d234cd57ec8764c4af784cf4b3eaff5ef9b4",
+      "matches_freeze_02": false,
+      "selected_commands": []
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-native-alltests-02/receipt.json",
+      "sha256": "2253a31979d575c1915e0445a9a1e1234abf963db9d49c98a628c386706c4fc0",
+      "cycle": "combined-native-alltests-02",
+      "source_manifest_sha256": "9ac2be536979f2216b39c10a6d148125a12380987d4efd483bbcbaeb1733318e",
+      "matches_freeze_02": true,
+      "selected_commands": []
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-01/receipt.json",
+      "sha256": "bdcf9e7128e84df8d2d63f17804a11e8f78780c5669a2c3d0dba72afd33d617f",
+      "cycle": "combined-production-01",
+      "source_manifest_sha256": "de7573ed1f4e1a19969f3063e135d234cd57ec8764c4af784cf4b3eaff5ef9b4",
+      "matches_freeze_02": false,
+      "selected_commands": []
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-02/receipt.json",
+      "sha256": "fc5f914ddfa6937d069192a87d1ac8baf19c260a0f75774e51c80a574816d0a2",
+      "cycle": "combined-production-02",
+      "source_manifest_sha256": "de7573ed1f4e1a19969f3063e135d234cd57ec8764c4af784cf4b3eaff5ef9b4",
+      "matches_freeze_02": false,
+      "selected_commands": []
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-03/receipt.json",
+      "sha256": "12d240d9db448e8ad008c59d77e1049d3847811897fe5726357847bc8504f073",
+      "cycle": "combined-production-03",
+      "source_manifest_sha256": "de7573ed1f4e1a19969f3063e135d234cd57ec8764c4af784cf4b3eaff5ef9b4",
+      "matches_freeze_02": false,
+      "selected_commands": []
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/receipt.json",
+      "sha256": "ee8e31280b0f2d45b869b6b5fffa23dee89944ea52e36bd6027f33e48415a47a",
+      "cycle": "combined-production-04",
+      "source_manifest_sha256": "9ac2be536979f2216b39c10a6d148125a12380987d4efd483bbcbaeb1733318e",
+      "matches_freeze_02": true,
+      "selected_commands": []
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-01/receipt.json",
+      "sha256": "ac4b9691556c92e2e7b18de02189f099ad0fa20d8e7ba26018a5c7a8ce151a7f",
+      "cycle": "dsc01-apphost-01",
+      "source_manifest_sha256": "de7573ed1f4e1a19969f3063e135d234cd57ec8764c4af784cf4b3eaff5ef9b4",
+      "matches_freeze_02": false,
+      "selected_commands": [
+        {
+          "tool": "xcodebuild",
+          "configuration": "Debug",
+          "action": "test"
+        }
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-02/receipt.json",
+      "sha256": "c03616f76e91061c810debf7884b98d7b0bf02abcfd83cbcfa21c4ba8049e13e",
+      "cycle": "dsc01-apphost-02",
+      "source_manifest_sha256": "de7573ed1f4e1a19969f3063e135d234cd57ec8764c4af784cf4b3eaff5ef9b4",
+      "matches_freeze_02": false,
+      "selected_commands": [
+        {
+          "tool": "xcodebuild",
+          "configuration": "Debug",
+          "action": "test"
+        }
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-03/receipt.json",
+      "sha256": "53a8e3b6ded5a05457602b0aeaaf0bde38cebad97a74711119bff2a097db02d2",
+      "cycle": "dsc01-apphost-03",
+      "source_manifest_sha256": "de7573ed1f4e1a19969f3063e135d234cd57ec8764c4af784cf4b3eaff5ef9b4",
+      "matches_freeze_02": false,
+      "selected_commands": [
+        {
+          "tool": "xcodebuild",
+          "configuration": "Debug",
+          "action": "test"
+        }
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-04/receipt.json",
+      "sha256": "0a16f241de2dc2769ec680ba6925108a6191771e2d9d10be611923eec15a4955",
+      "cycle": "dsc01-apphost-04",
+      "source_manifest_sha256": "9ac2be536979f2216b39c10a6d148125a12380987d4efd483bbcbaeb1733318e",
+      "matches_freeze_02": true,
+      "selected_commands": [
+        {
+          "tool": "xcodebuild",
+          "configuration": "Debug",
+          "action": "test"
+        }
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-05/receipt.json",
+      "sha256": "7003fc8092850e167a99277a3553b709870bb820d2976c01540b63020e50318e",
+      "cycle": "dsc01-apphost-05",
+      "source_manifest_sha256": "9ac2be536979f2216b39c10a6d148125a12380987d4efd483bbcbaeb1733318e",
+      "matches_freeze_02": true,
+      "selected_commands": [
+        {
+          "tool": "xcodebuild",
+          "configuration": "Debug",
+          "action": "test"
+        }
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-v8-binding-01/receipt.json",
+      "sha256": "ace71dfb52159f9c0ff69fffdee3c55d2054b8823ea9a8addd8c55cd2271a6cf",
+      "cycle": "dsc01-v8-binding-01",
+      "source_manifest_sha256": "9ac2be536979f2216b39c10a6d148125a12380987d4efd483bbcbaeb1733318e",
+      "matches_freeze_02": true,
+      "selected_commands": []
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/final-source-materialize-01/receipt.json",
+      "sha256": "bcdfc3712157df60197847a50b3a07c26f6de80acd00f3c0ceaf0a351f88bb51",
+      "cycle": "final-source-materialize-01",
+      "source_manifest_sha256": "9ac2be536979f2216b39c10a6d148125a12380987d4efd483bbcbaeb1733318e",
+      "matches_freeze_02": true,
+      "selected_commands": []
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/host-continuity-focused-02/receipt.json",
+      "sha256": "67d65f4c312e79bd903770a8518a8c2154ae93a6120ae773857146998ae6aea8",
+      "cycle": "host-continuity-focused-02",
+      "source_manifest_sha256": "31fd9f9b73ef6118c3f295fa1734a365cce32db8a12f5f8afb1a003735bf5b9e",
+      "matches_freeze_02": false,
+      "selected_commands": []
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/ios-wrapper-smoke-01/receipt.json",
+      "sha256": "72c13301a3e9882d4742ed10f8801108a028201d4a40c5dd8f2050e69576bbe3",
+      "cycle": "ios-wrapper-smoke-01",
+      "source_manifest_sha256": "9ac2be536979f2216b39c10a6d148125a12380987d4efd483bbcbaeb1733318e",
+      "matches_freeze_02": true,
+      "selected_commands": [
+        {
+          "tool": "xcodebuild",
+          "configuration": "Debug",
+          "action": "test"
+        }
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/ios-wrapper-smoke-controls-01/receipt.json",
+      "sha256": "320babddc67bc38ec268f0fe4314f8906594cf5111281f2096922453380b8043",
+      "cycle": "ios-wrapper-smoke-controls-01",
+      "source_manifest_sha256": "9ac2be536979f2216b39c10a6d148125a12380987d4efd483bbcbaeb1733318e",
+      "matches_freeze_02": true,
+      "selected_commands": []
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/legacy-identity-red-04/receipt.json",
+      "sha256": "cdfb8cc7ba7d1a20452713693000f038c323b235ed42dea19be3a75646d42c0d",
+      "cycle": "legacy-identity-red-04",
+      "source_manifest_sha256": "0672b02d2e068d7426ea59bae44de087259b2c022d30e230ecb7cab8226d7f73",
+      "matches_freeze_02": false,
+      "selected_commands": []
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/locale-continuity-focused-01/receipt.json",
+      "sha256": "9aaf8fd5c0a6fe624e106d59c364a5678f99efefd2ce187ad1cf9bcbb0b2ea62",
+      "cycle": "locale-continuity-focused-01",
+      "source_manifest_sha256": "7fc8f85b3c7fbf6094d3b5de95a9a4a33f45fefdac6198573540ce50c0094ebf",
+      "matches_freeze_02": false,
+      "selected_commands": []
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/native-controls-01/receipt.json",
+      "sha256": "b62405b0f115a0199329fb6bfb128cede2c3f84fc85fa6de96bc8707320ed4b9",
+      "cycle": "native-controls-01",
+      "source_manifest_sha256": "de7573ed1f4e1a19969f3063e135d234cd57ec8764c4af784cf4b3eaff5ef9b4",
+      "matches_freeze_02": false,
+      "selected_commands": []
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/native-controls-02/receipt.json",
+      "sha256": "816dc2a81c93c9a1dc94fa4f8eb4fc8c2caef86288f061a19a3ad5c0db6413b0",
+      "cycle": "native-controls-02",
+      "source_manifest_sha256": "de7573ed1f4e1a19969f3063e135d234cd57ec8764c4af784cf4b3eaff5ef9b4",
+      "matches_freeze_02": false,
+      "selected_commands": []
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/native-controls-03/receipt.json",
+      "sha256": "d50fd441d37b9ef2e31c3d9a9dc7b42758b212276af8c037995b0e4927c24fd8",
+      "cycle": "native-controls-03",
+      "source_manifest_sha256": "de7573ed1f4e1a19969f3063e135d234cd57ec8764c4af784cf4b3eaff5ef9b4",
+      "matches_freeze_02": false,
+      "selected_commands": []
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/native-controls-04/receipt.json",
+      "sha256": "5473d3842753fe8ba8f98efb61bbf03934357947a813faff65f5ab0d4df014cf",
+      "cycle": "native-controls-04",
+      "source_manifest_sha256": "de7573ed1f4e1a19969f3063e135d234cd57ec8764c4af784cf4b3eaff5ef9b4",
+      "matches_freeze_02": false,
+      "selected_commands": []
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/native-controls-05/receipt.json",
+      "sha256": "200befae5256ee8944a475367ba091e750da95f406864a329c05175c75870f07",
+      "cycle": "native-controls-05",
+      "source_manifest_sha256": "de7573ed1f4e1a19969f3063e135d234cd57ec8764c4af784cf4b3eaff5ef9b4",
+      "matches_freeze_02": false,
+      "selected_commands": []
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/native-controls-06/receipt.json",
+      "sha256": "7274863d5d1fca1d63890a292b463fc654d38ebff6cad598ea8ca3b2d63195db",
+      "cycle": "native-controls-06",
+      "source_manifest_sha256": "9ac2be536979f2216b39c10a6d148125a12380987d4efd483bbcbaeb1733318e",
+      "matches_freeze_02": true,
+      "selected_commands": []
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/native-controls-07/receipt.json",
+      "sha256": "47363b58309620663520ef42e7678bd7ddd07658f304cf12dd6086fbd560c311",
+      "cycle": "native-controls-07",
+      "source_manifest_sha256": "9ac2be536979f2216b39c10a6d148125a12380987d4efd483bbcbaeb1733318e",
+      "matches_freeze_02": true,
+      "selected_commands": []
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/native-controls-08/receipt.json",
+      "sha256": "e73aeec0d78f70349eaaadd998545b0405e2f04c80657188e02b7938268c26bc",
+      "cycle": "native-controls-08",
+      "source_manifest_sha256": "9ac2be536979f2216b39c10a6d148125a12380987d4efd483bbcbaeb1733318e",
+      "matches_freeze_02": true,
+      "selected_commands": []
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/recovery-red-03/receipt.json",
+      "sha256": "0b1e09612b5fbb9fa1428b610b6a26f052c6196e8fe01b36a3dc0d1ec02d3754",
+      "cycle": "recovery-red-03",
+      "source_manifest_sha256": "7e852d13225413cd70469a9f7fa365defc42ac161f70a68785a10584b817a6e6",
+      "matches_freeze_02": false,
+      "selected_commands": []
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/resources-and-diff-01/receipt.json",
+      "sha256": "6ec29dc00aef2f4f8a30142b871e1597466082b9737e4078de0fe670f85e2d7a",
+      "cycle": "resources-and-diff-01",
+      "source_manifest_sha256": "de7573ed1f4e1a19969f3063e135d234cd57ec8764c4af784cf4b3eaff5ef9b4",
+      "matches_freeze_02": false,
+      "selected_commands": []
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/resources-and-diff-02/receipt.json",
+      "sha256": "0973f253d65b3a77b445ddf6f4ac29faeb4e6965011fcbacc0264b61ff0b082d",
+      "cycle": "resources-and-diff-02",
+      "source_manifest_sha256": "9ac2be536979f2216b39c10a6d148125a12380987d4efd483bbcbaeb1733318e",
+      "matches_freeze_02": true,
+      "selected_commands": []
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/story-recovery-green-01/receipt.json",
+      "sha256": "d03323ea7d67567d5446526d5b8e5754c80d9f25e79a79eb068a6db733390950",
+      "cycle": "story-recovery-green-01",
+      "source_manifest_sha256": "de7573ed1f4e1a19969f3063e135d234cd57ec8764c4af784cf4b3eaff5ef9b4",
+      "matches_freeze_02": false,
+      "selected_commands": []
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/story-recovery-red-01/receipt.json",
+      "sha256": "608ae97596a50140055734b961f4f4f394b6cbe40679238ab8e816030d8e7f2f",
+      "cycle": "story-recovery-red-01",
+      "source_manifest_sha256": "a630ca6205d9d4fad81c24dadab4addb32591145bfe20d61922e1faf70b5ac52",
+      "matches_freeze_02": false,
+      "selected_commands": []
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/story-recovery-red-02/receipt.json",
+      "sha256": "0e7a0a130ba2bf1a003c9bd598ba4cda3482a693f7bf62bc90a0dcf17267d975",
+      "cycle": "story-recovery-red-02",
+      "source_manifest_sha256": "0a6e8bdb0057d9cde7da4a06616349c2f5aafd60a043772f5975a83826942c29",
+      "matches_freeze_02": false,
+      "selected_commands": []
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/wd-retired-save-green-01/receipt.json",
+      "sha256": "24af7b7ae67f13f597ccdfa29eb353456bf21dcb6a57acf29aa8650a069216be",
+      "cycle": "wd-retired-save-green-01",
+      "source_manifest_sha256": "eae905fe193e4d6578f4616d8fdf6846b312492725b3a6a8b2b380e8f6f3553a",
+      "matches_freeze_02": false,
+      "selected_commands": []
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/wd-retired-save-red-01/receipt.json",
+      "sha256": "629f655f710519c4381a475d157e0b72b5b974e46a85811808964e80f369187a",
+      "cycle": "wd-retired-save-red-01",
+      "source_manifest_sha256": "eee3392d48f040b3a91e06e9b8724aad96471627b2d95e1b564eb02ab7f0a6f0",
+      "matches_freeze_02": false,
+      "selected_commands": []
+    }
+  ],
+  "inventory_conclusion": {
+    "receipts": 86,
+    "exact_freeze_02_receipts": 14,
+    "release_xcodebuild_commands": 0,
+    "live_cycle_excluded": "2026-09-06-approved-policy-completion/evidence/dsc01-apphost-06; root executing, not opened",
+    "scope_limitation": "This inventory covers completed remediation-cycle receipts in the two named remediation runs; earlier unrelated evidence was not substituted for current source identity."
+  },
+  "proposed_delta": [
+    "Create a separate versioned ios_release_wrapper_v1; preserve executed Debug smoke and frozen V8 controls.",
+    "Reuse manifest-owned source copy (669 bound source inputs, 613 copy inputs), every Kotlin/Swift/test/resource byte unchanged, only reviewed copied immediate-stop Gradle phase substitution.",
+    "Preserve build-lane lock, whitelisted unsigned environment, absent EXPANDED_CODE_SIGN_IDENTITY, isolated Gradle registry, JDK21, strict dependency verification, no parallel build, one worker, no private local.properties/signing inputs.",
+    "Change build configuration to Release; generic/platform=iOS Simulator; ARCHS=arm64; ONLY_ACTIVE_ARCH=YES; CODE_SIGNING_ALLOWED=NO; CODE_SIGNING_REQUIRED=NO; CODE_SIGN_IDENTITY=; DEVELOPMENT_TEAM=; xcodebuild build. No archive/export/publication.",
+    "Omit simulator creation/boot/app installation, XCTest/runtime extraction and simulator finalization; do not claim runtime verification from compilation.",
+    "Inspect freshly built Release-iphonesimulator/Parlor.app executable plus ComposeApp framework; arm64 architecture, executable mode, nonempty artifacts, plist BundleIdentifier com.parlor.app, version/build from config/parlor-version.xcconfig, minimum OS16, simulator platform and EN/AR localizations; compare shipped privacy manifest structurally against bound source. Record compact sizes/hashes and actual toolchain.",
+    "Require successful Xcode and immediate embedded Gradle build/stop receipts even when artifacts exist; inspect explicit production Swift container compilation in Release log; tests must reject stale/incomplete output or wrong identity/configuration.",
+    "Keep source/control/copied-input checks before/after; ownership-attested primary temp/DerivedData and secondary-FIFO cleanup; immediate Gradle stop after Xcode, final isolated stop, task-worker verification; no unrelated outputs/processes deleted.",
+    "Add source-contract/artifact-validation/failure fixtures; require separate independent control review, root-run focused tests, separate native execution approval; root is sole lane."
+  ],
+  "qualification_limits": [
+    "Local unsigned Release compilation under installed Xcode26.5 is feasible; it is not Store-qualified Xcode26.3/17C529 evidence.",
+    "Fresh source/diff hashes honestly bind dirty remediation changes; this is not a clean-SHA exact-candidate release receipt.",
+    "com.parlor.app remains build-only, never installed by proposed runner; identity collision/publication safeguards must remain untouched.",
+    "No new application defect is established by missing Release evidence; this does not change the16-finding count.",
+    "No simulator, physical device, real LAN, signed delivery, accessibility, legal or Store validation is inferred."
+  ],
+  "execution_and_cleanup": {
+    "review_only": true,
+    "tests_run": false,
+    "builds_run": false,
+    "app_or_simulator_started": false,
+    "background_workers_started": false,
+    "production_edits": false,
+    "executed_controls_edits": false,
+    "cleanup_required": "None: read-only inspections plus this compact evidence file; no generated build outputs or task workers."
+  }
+}

@@ -1,0 +1,262 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/release_fix_review",
+  "reviewed_at": "2026-09-08T01:24:40.957027+00:00",
+  "classification": "SOURCE/EVIDENCE SCOPE REVIEW COMPLETE \u2014 TWO SEPARATE DIAGNOSTIC-ONLY COMMIT CANDIDATES; NO STAGING/COMMIT/BUILD OR NATIVE-RUNTIME APPROVAL CONFERRED",
+  "baseline": {
+    "commit": "e1dd40c0f1ff14561ecac6c25967fced8cda74d2",
+    "tree": "1d4822ebea89148635e0d71c74060fce1ab61824",
+    "branch": "fix/local-readiness-2026-09-07",
+    "tracked_status": "M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/README.md\n M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/external_image_provenance.py\n M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_control_tests.py\n M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py\n M scripts/verification/ios-readiness/L08StorageProbe.kt.in\n M scripts/verification/ios-readiness/l08_receipts.py\n M scripts/verification/ios-readiness/test_l08_diagnostics.py",
+    "diff_sha256": "36dd70117778d1f5d038acfab1ab46ffb464cd8c78b2428552214bfe6fdffed1",
+    "source_manifest_sha256": "35f9d58c3d1a151ed34a9f7c62c3a32cdcf147cf010fe621571ca888957eedbc"
+  },
+  "frozen_during_review": true,
+  "scope": "Root-requested read-only parallel review of seven pre-existing tracked modifications plus one untracked header test. Entire changed hunks and relevant enclosing acceptance/cleanup paths were read; current normal helper/driver/readme/header test and all L08 test assertions were reopened. This is not a new full review of every unchanged L08 source line. Native10 runtime evidence will be reviewed only after root reports finalization.",
+  "candidate_groups": [
+    {
+      "id": "NORMAL-HEADER-DIAGNOSTICS",
+      "suggested_subject": "test(ios): preserve bounded launch-header failure diagnostics",
+      "files": [
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/README.md",
+          "sha256": "59b5a3947e3c160078778b66bba8e7c5b56fe51e19b4cf5ec8c32c5f451fa51e",
+          "tracked": true
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/external_image_provenance.py",
+          "sha256": "ec19eb8c910f42c180ea17bae1af2fed259cb989174c61cf306a0324800200ef",
+          "tracked": true
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_control_tests.py",
+          "sha256": "3ffc9c3836f61f86d573ad0b3dce5f3105fcd1ea4fd8ab677f9806b6eb8bf2b2",
+          "tracked": true
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
+          "sha256": "36276fb27423ca04c9fe41d033042c3ae25d5a512183b96b80230b4f58ad2e8d",
+          "tracked": true
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_header_diagnostics.py",
+          "sha256": "e2d835d4c7919c1448eebc51079d5f0673e71b3a1a8998ed97b616325e5bd06a",
+          "tracked": false
+        }
+      ],
+      "scope": "Four tracked normal-runner files plus the one104-line untracked test_header_diagnostics.py. Keep the count99 change, new eight tests, wrapper, encoder and its explanatory README in the same focused commit.",
+      "source_review": "All seven pre-existing external provenance function ASTs are unchanged. Runner pre-existing functions are unchanged except observe_external_images delegates the same two parsers through the new failure-only wrapper. Original RuntimeError object survives; diagnostic exception retains type only. Success returns the original result without diagnostics. No lifetime, PID/path, UUID, artifact, mapping, source-copy, signing, ownership or cleanup relaxation.",
+      "evidence": [
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/normal-header-diagnostics-independent-source-review-01.json",
+          "sha256": "79c453bfbc7f469aae74a023d1563d1fe3776160db5fc35e73018452ca1ef747"
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/normal-header-diagnostics-independent-verified-02.json",
+          "sha256": "d6b7c0b543b60dc4718bc303addfd6a058a0fb5bb02225bd0243feaf7a8c1d25"
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/normal-after-ownership99-independent-reconciliation-01.json",
+          "sha256": "28898a58dbd3ee47bf50ac0f3a1525c2dd20a2ce65dc04899662649e000c0976"
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/normal-after-ownership-controls-01/receipt.json",
+          "sha256": "be91d1835b93e3d21bb08cdafd8579692e3f81d397ef0dfe1b8b717e258a4f44"
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/normal-after-ownership-controls-01/gradle.log",
+          "sha256": "6f519776c046f8fbe064cc0fc2a886a32ee7c940ed88bcf074e4d9d82f921c85"
+        }
+      ],
+      "independently_rechecked_tests": {
+        "current_AST_header_methods": 8,
+        "actual_all_eight_ok_once_in_normal99": true,
+        "current99_discovery_and_execution_previously_independently_reconciled": true,
+        "before_after_manifest_files": 77,
+        "current_all_eight_candidate_files_hash_bound": true,
+        "failures": 0,
+        "errors": 0,
+        "skips": 0
+      },
+      "after_native10_condition": "Do not change/stage/commit any of these while native10 is using source09. After finalized native10, independently reconcile any sample/vmmap header diagnostic hash and closed fields, original provenance rejection and raw-output cleanup. If the run fails before reaching the diagnostic, it remains only source/control verified; do not invent native diagnostic evidence or call the underlying failure repaired.",
+      "README_note": "Current README truthfully records historical06/08 failures and99 control count. Its generic requirement for an execution receipt is not a failed code gate; existing99 receipts satisfy that requirement. If native10 actually executes vmmap or a fresh result paragraph is added, update only the now-stale current-tense claim and obtain a new documentation review after the frozen run; do not edit it mid-cycle.",
+      "compatibility": "Only a newly added diagnostic field named decoded_text_sha256 and campaign test/control behavior. No shipping app API, game, protocol, content, save, credentials or Store setting change.",
+      "status": "SOURCE AND PURE CONTROLS VERIFIED; ACTUAL NORMAL10 DIAGNOSTIC RESULT AND FINALIZATION STILL AWAITED"
+    },
+    {
+      "id": "L08-PROTECTION-DIAGNOSTICS",
+      "suggested_subject": "test(ios): preserve closed storage-protection observations",
+      "files": [
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/L08StorageProbe.kt.in",
+          "sha256": "a1202e47e1b41feb7e5c558e4df9515704e27762e437778b6ae79c777bfce651",
+          "tracked": true
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/l08_receipts.py",
+          "sha256": "43200492a5fae3cb31f89ecafe9985eee84b9c30b4549cd2933788dac056bfbd",
+          "tracked": true
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/test_l08_diagnostics.py",
+          "sha256": "925be779c7b03f148995061f1e769290ec4fa014c2e7f4dbab202fd1b84d8d9c",
+          "tracked": true
+        }
+      ],
+      "scope": "Exactly three canonical verification-control files. Producer, strict optional-failure receipt validation and all21 diagnostics tests stay atomic. Do not combine this with actual storage changes, waiver, entitlement change or native ownership fixes.",
+      "source_review": "Original two required protection equalities and order remain. Each original getter now records its own NSError/value result. Only original directory failure additionally samples the already-owned exact file, explicitly diagnostic-only. Fresh URL volume support cannot turn failure into success. Closed categories and signed64 native error code replace raw descriptions/paths. Per-command/terminal reset and cancellation propagation remain. The iOS17 enum remains runtime guarded. Python existing verifiers are AST-identical except validate_preservable_operation accepts the bounded optional diagnostic strictly on the two failure stages.",
+      "evidence": [
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/l08-protection-metadata-draft-independent-01.json",
+          "sha256": "c83e79029341239c6706a1a2e86f65f0fddbacd4b5a0f568e825b41703076459"
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/l08-protection-metadata-adopted-controls-independent-01.json",
+          "sha256": "68f8f688e4339507229023888fc8788197fe5126f999722d3642d574b3e41b1d"
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/partial-fifo-and-canonical172-independent-reconciliation-01.json",
+          "sha256": "5117406b0aec39d831171c3f5cccda6184cc48ef5bab17b069245360fde03995"
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/native-ownership-canonical-controls-01/receipt.json",
+          "sha256": "3b89c91d02128a8b82ca4ca8f765f1fbc3065104721ef6264d8d59d9bcf0716f"
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/native-ownership-canonical-controls-01/gradle.log",
+          "sha256": "cf14e8906da4ccc09b9d6705116ce31356046e9d4909bc122e01d7536c7bf88d"
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/l08-native09-independent-classification-01.json",
+          "sha256": "89e82e99a8bf0477cb67e8b37081216851ccb38e5f93dc83360e4395341a6cc1"
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-09/receipt.json",
+          "sha256": "7035d9505efe8cf1d5d9012024c6c5883c0e9371b97a5a5c5a0cfa15ccf36567"
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-09/parlor-l08-storage-1-save.json",
+          "sha256": "c2e85bf1895334d9c1ad18c5216a5094846c80b235ad500c12f2893acc955132"
+        }
+      ],
+      "independently_rechecked_tests": {
+        "current_AST_diagnostic_methods": 21,
+        "all_twenty_one_ok_once_in_canonical172": true,
+        "current_three_source_hashes_bound_before_and_after_canonical172": true,
+        "all172_discovery_execution_previously_independently_reconciled": true,
+        "failures": 0,
+        "errors": 0,
+        "skips": 0
+      },
+      "actual_native_scope": "Native09 copied probe compiled and actual boot1 WhodunitClassic save/same-process load/envelope equality reached missing directory-protection metadata; it emitted the new closed diagnostic. Directory and diagnostic-only file getters returned dictionaries missing NSFileProtectionKey, no NSError; both volume queries said supported. This is actual diagnostic execution, NOT a repaired storage gate. Original09 overall/runtime/cleanup FAIL is unchanged; supplemental recovery separately closes its exact residual.",
+      "unreached": "Original file assertion, later13-boot recovery matrix and three host cases were not reached. The present missing-key branch did not execute the iOS17 enum classifier, and there is no iOS16/physical-device protection proof or final external framework-byte binding.",
+      "compatibility": "Changes are .in copy-only Kotlin probe plus Python evidence schema/tests; they do not enter a shipping app build. Existing closed failure records without the optional protection_metadata remain accepted; PASS fields/stages remain unchanged. No app save/schema/game/content/protocol migration.",
+      "status": "SOURCE/CONTROLS AND LIMITED NATIVE FAILURE-DIAGNOSTIC EXECUTION VERIFIED; READY AS DIAGNOSTIC-ONLY CANDIDATE AFTER FROZEN RUN ENDS, NOT AS STORAGE FIX"
+    }
+  ],
+  "ordering_and_safety": [
+    "Root remains sole executor and Git authority. No reviewer staging, commit, push or publication. This scope recommendation does not grant missing user authorization.",
+    "Do not touch source09 or its78 controls until native10 runtime and mandatory cleanup are finished and its exact-source results are independently reconciled.",
+    "Use exactly the listed five normal paths and three L08 paths in separate focused commits if authorized; do not broadly add untracked remediation evidence, archived outputs, synthetic fixtures or unrelated user work.",
+    "The untracked test_header_diagnostics.py must not be forgotten: count99 intentionally fails discovery without it. All eight tests execute in normal99; its bytes are bound even though source identity excludes remediation paths.",
+    "No shipping source dependency requires combining these groups. Their normal/support import coupling is already covered by actual canonical172 then dependent normal99 at exact current bytes.",
+    "Git commits invalidate an exact binding that includes HEAD/tree/tracked diff even if file bytes are unchanged. Any later native cycle needs a new source/control binding and independent approval.",
+    "After authorized focused source commits, refresh mechanical review inventory separately: the newly tracked header test adds a row and seven latest-change references move. Preserve human audit findings; mechanical inventory is not source-review evidence.",
+    "Then root runs the appropriate scoped combined controls/release-validator freshness checks at the resulting identity with immediate stop/owned cleanup; do not reuse prior full-tree green without explicitly comparing all changed bytes.",
+    "Normal08/Native09 failed receipts and diagnostic support do not become PASS retrospectively. IOS-R1/storage uncertainty remains an evidence gap; no entitlement, storage error-as-empty or test waiver is recommended."
+  ],
+  "independent_source_ranges": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/README.md",
+      "reviewed_lines": [
+        [
+          1,
+          158
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/external_image_provenance.py",
+      "reviewed_lines": [
+        [
+          1,
+          192
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_control_tests.py",
+      "reviewed_lines": [
+        [
+          1,
+          65
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
+      "reviewed_lines": [
+        [
+          1,
+          697
+        ]
+      ],
+      "note": "Full reopening in immediately preceding exact source09 execution approval; full current delta reread for this task; same hash."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_header_diagnostics.py",
+      "reviewed_lines": [
+        [
+          1,
+          104
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/L08StorageProbe.kt.in",
+      "reviewed_lines": [
+        [
+          80,
+          180
+        ],
+        [
+          310,
+          402
+        ],
+        [
+          477,
+          630
+        ]
+      ],
+      "note": "Additionally every changed import and hunk read in complete diff."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/l08_receipts.py",
+      "reviewed_lines": [
+        [
+          374,
+          486
+        ]
+      ],
+      "note": "Complete delta and surrounding validation previously reopened; all other function ASTs independently compared unchanged to HEAD."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/test_l08_diagnostics.py",
+      "reviewed_lines": [
+        [
+          1,
+          348
+        ]
+      ],
+      "note": "Original1\u2013170 reopened plus complete new assertion hunks170\u2013348 read."
+    }
+  ],
+  "hygiene": {
+    "no_source_or_control_edits": true,
+    "no_native10_output_inspection_while_active": true,
+    "no_repository_imports_tests_or_native_queries": true,
+    "no_build_or_background_workers": true,
+    "no_Git_mutation_or_deletion": true,
+    "write": "Only this new additive review; no task-owned generated outputs or running processes require cleanup."
+  }
+}

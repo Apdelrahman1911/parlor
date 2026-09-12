@@ -623,6 +623,14 @@ internal object WhodunitStateValidator {
             require(public.eliminatedPlayers.size <= public.currentRound) {
                 "Elimination history exceeds completed rounds"
             }
+            if (state.phase is WhodunitPhase.Round || state.phase == WhodunitPhase.TiedRevote) {
+                // The reducer ends play immediately on reaching the final two.
+                // A new ballot here could reverse that outcome and exceed the
+                // authored round bound. Apply this to canonical and peer state.
+                require(state.players.size - public.eliminatedPlayers.size > FINAL_TWO_PLAYERS) {
+                    "Active elimination phase has reached the final two"
+                }
+            }
         }
         require(state.phase == WhodunitPhase.PublicIntro || public.introAcknowledged.isEmpty()) {
             "Intro readiness survived outside the intro phase"

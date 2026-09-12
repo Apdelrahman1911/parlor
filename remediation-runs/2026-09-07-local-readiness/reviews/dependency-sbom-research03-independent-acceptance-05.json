@@ -1,0 +1,268 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/factory_review",
+  "author": "/root",
+  "reviewed_at": "2026-09-07T14:50:38.729036+00:00",
+  "decision": "APPROVED_SCOPED_RESOLVED_INPUT_SBOM_AND_PUBLISHER_DECLARATION_TOOLING_WITH_EXECUTED_EVIDENCE",
+  "blocking_findings": [],
+  "source_coverage": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/resolved_dependencies.init.gradle",
+      "sha256": "5120cb8d7c12825ad889f23d73075ef29ae48b66e4966d1e2335aa2d11995f59",
+      "reviewed_line_ranges": [
+        [
+          1,
+          107
+        ]
+      ],
+      "method": "Completecurrentdocsread; exactrenderer/tests/emitterhashesretainfullindependentreview01/02/04, allcurrentlyrechecked."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/dependency_inventory.py",
+      "sha256": "fc0238d4d6ea0abd60d2985ed214af6516a239e439269978139fcc9519a20534",
+      "reviewed_line_ranges": [
+        [
+          1,
+          271
+        ]
+      ],
+      "method": "Completecurrentdocsread; exactrenderer/tests/emitterhashesretainfullindependentreview01/02/04, allcurrentlyrechecked."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_dependency_inventory.py",
+      "sha256": "a3c454f08af038a59381360a1290a470d2b04e3ad4201fa1ca63bc96d01f1b91",
+      "reviewed_line_ranges": [
+        [
+          1,
+          216
+        ]
+      ],
+      "method": "Completecurrentdocsread; exactrenderer/tests/emitterhashesretainfullindependentreview01/02/04, allcurrentlyrechecked."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/docs/DEPENDENCY_INVENTORY.md",
+      "sha256": "ba13764bc6e544c9cf5803c5b9fbbe8262469fd9fe4474eaa6477be7e6876fb8",
+      "reviewed_line_ranges": [
+        [
+          1,
+          68
+        ]
+      ],
+      "method": "Completecurrentdocsread; exactrenderer/tests/emitterhashesretainfullindependentreview01/02/04, allcurrentlyrechecked."
+    }
+  ],
+  "research_execution": {
+    "receipt_path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/dependency-license-research-03/receipt.json",
+    "receipt_sha256": "f30a1a4f0eccfa8e354c3eac88a253045961b85afd7b7621ea5f3ad45e7ee5b8",
+    "log_sha256": "ef1042602e31e11bb04d1d6614e648956b37c0108d001a6f016c863bb9b0ca97",
+    "command": [
+      "/usr/bin/python3",
+      "-B",
+      "scripts/verification/dependency_inventory.py",
+      "remediation-runs/2026-09-07-local-readiness/evidence/dependency-graph-export-02/raw-graphs",
+      "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/dependency-license-research-03/report"
+    ],
+    "started_at": "2026-09-07T14:31:20.274938+00:00",
+    "finished_at": "2026-09-07T14:37:23.594166+00:00",
+    "status": "PASS",
+    "exit_code": 0,
+    "control_before": {
+      "scripts/verification/dependency_inventory.py": "fc0238d4d6ea0abd60d2985ed214af6516a239e439269978139fcc9519a20534",
+      "scripts/verification/resolved_dependencies.init.gradle": "5120cb8d7c12825ad889f23d73075ef29ae48b66e4966d1e2335aa2d11995f59",
+      "scripts/release/tests/test_dependency_inventory.py": "a3c454f08af038a59381360a1290a470d2b04e3ad4201fa1ca63bc96d01f1b91"
+    },
+    "control_after": {
+      "scripts/verification/dependency_inventory.py": "fc0238d4d6ea0abd60d2985ed214af6516a239e439269978139fcc9519a20534",
+      "scripts/verification/resolved_dependencies.init.gradle": "5120cb8d7c12825ad889f23d73075ef29ae48b66e4966d1e2335aa2d11995f59",
+      "scripts/release/tests/test_dependency_inventory.py": "a3c454f08af038a59381360a1290a470d2b04e3ad4201fa1ca63bc96d01f1b91"
+    },
+    "cleanup": "Metadata only; script process waited/reaped, no build outputs or workers created. Required compact public metadata and reports retained."
+  },
+  "graph_source": {
+    "commit": "11210dc6e34811bd1dd36d6a34339851601e5112",
+    "tree": "cb97cc572dff903b8555ec20144c6df2995f2512",
+    "diff_sha256": "f40d88169f213b5b5be3935ad7c06de6180acf65997ce6a887e4072ac9f2eed0"
+  },
+  "license_evidence": {
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/dependency-license-research-03/report/license-evidence.json",
+    "sha256": "df96db8b3c0a9e7140732cb78e20aeb8f8558e97c74fbfb26d6d99286f6b4271",
+    "resolved_gav_count": 456,
+    "declared_pom_count": 459,
+    "additional_parent_poms": [
+      "com.google.guava:guava-parent:26.0-android",
+      "org.slf4j:slf4j-bom:2.0.16",
+      "org.slf4j:slf4j-parent:2.0.16"
+    ],
+    "direct_license_poms": 456,
+    "inherited_license_poms": 3,
+    "unresolved": [],
+    "metadata_bytes": 1507794,
+    "metadata_file_hash_ledger": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/dependency-research03-pom-evidence-ledger-01.json",
+    "metadata_file_hash_ledger_sha256": "476413a879dcc38c34a9fd7a1428e9dc257b4418e602605813f7a907ad2b1066",
+    "validation": "All459metadatarecords/entireXMLdocs independentlyparsed. ExactGAV includingparentfallback,filenameSHAandbytes,fixedrepositoryURL,access time withinrun,directlicensefields/inheritedchainschecked; cyclesabsent. Noissuer/privateuserdata used.",
+    "existing_strict_pom_pins": {
+      "matching": 26,
+      "not_pom_pinned": 433,
+      "mismatch": 0,
+      "interpretation": "A partialadditionalcrosscheck only; allPOMsremainpublicresearch evidence, nevermetadatareplacement."
+    }
+  },
+  "graph_to_bom_integrity": {
+    "method": "Independentstdlib data-walk, notimportingrenderer: everygraphcomponent/reference/sourceproperty/license andeachnestedartifactname/bytes/SHA256 compared; everydeduplicatednonconstraintedge exactlymatched. Source/rawgraphhashes matchcompletion/outerexport02receipt.",
+    "artifact_occurrences": 372,
+    "nonconstraint_deduplicated_edges": 2462,
+    "graphs": [
+      {
+        "name": "androidRelease",
+        "components": 239,
+        "artifacts": 129,
+        "edges": 914,
+        "file": "remediation-runs/2026-09-07-local-readiness/evidence/dependency-license-research-03/report/androidRelease.cdx.json",
+        "sha256": "aabbe9eddd21e97b3c172e602c2fe3a177a97775d71fbbdbaaa2671c5768b4c1"
+      },
+      {
+        "name": "iosArm64",
+        "components": 167,
+        "artifacts": 81,
+        "edges": 516,
+        "file": "remediation-runs/2026-09-07-local-readiness/evidence/dependency-license-research-03/report/iosArm64.cdx.json",
+        "sha256": "a70e39f44375502041bcb8f79ab3f1a1d13664d8cb570c784d4ca5fa0c5b0156"
+      },
+      {
+        "name": "iosSimulatorArm64",
+        "components": 167,
+        "artifacts": 81,
+        "edges": 516,
+        "file": "remediation-runs/2026-09-07-local-readiness/evidence/dependency-license-research-03/report/iosSimulatorArm64.cdx.json",
+        "sha256": "75701e0ea9d5218acf577830741341ccd61dd4ec8e1707937a29395a5644df14"
+      },
+      {
+        "name": "iosX64",
+        "components": 167,
+        "artifacts": 81,
+        "edges": 516,
+        "file": "remediation-runs/2026-09-07-local-readiness/evidence/dependency-license-research-03/report/iosX64.cdx.json",
+        "sha256": "cb46c0c9d865b75a23713b8955c6701c136025b5170b8e18bbeff50ea12f2595"
+      }
+    ],
+    "notice": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/dependency-license-research-03/report/THIRD_PARTY_DECLARATIONS_DRAFT.md",
+      "sha256": "d4556ac0fd25d0a2980dfb4440f29ec7e9dcec53bf3101f8b756fc7ac99245bf",
+      "sections": 456,
+      "all_sections_match_exact_license_and_URL_declarations": true,
+      "status": "DRAFT_NOT_APPROVED_LEGAL_NOTICE"
+    }
+  },
+  "schema_verification": {
+    "verifier_path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/validate_dependency_sbom_02.py",
+    "verifier_sha256": "12e7e391b6bccb772db23aee9bd56bf0a14b56739ba9bf0e800fd988a327abf5",
+    "reviewed_lines": [
+      [
+        1,
+        48
+      ]
+    ],
+    "full_diff_from01": "Onlyoutputdirectorydependency-sbom-schema-01\u219202; originalverifier/evidenceunchanged.",
+    "source_binding": "RecordedrootcommandassertsexactreviewedSHAwithshasumbeforePythonexecutionandafter; actuallogcontainsbothsuccessfulchecks. Thisresolves01missingverifier-sourceattestation.",
+    "result_path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/dependency-sbom-schema-02/schema-validation.json",
+    "result_sha256": "513dcc7af3220e8d0582634530f4b93e8c5f9138e4741d2c345d928da6752374",
+    "jsonschema_version": "4.25.1",
+    "official_schemas": [
+      {
+        "file": "remediation-runs/2026-09-07-local-readiness/evidence/dependency-inventory-preparation-01/bom-1.6.schema.json",
+        "sha256": "3e92dddbc30cf7f6a02b80f0942b1a4cfd4fb1c26f1dfc4310afa9d613cafb93"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/CycloneDX/specification/1.6/schema/spdx.schema.json",
+        "sha256": "baa9d3bd1ed57b6751b0887edead6b5063ff53ff7429cf85d476c6c94af0166e",
+        "bytes": 14269,
+        "accessed_at": "2026-09-07T14:45:47.006484+00:00"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/CycloneDX/specification/1.6/schema/jsf-0.82.schema.json",
+        "sha256": "8bae002c25e723db7ee1f26afde680ae1a2b1a8f6b4b4b0fd65dc3becb090aae",
+        "bytes": 8058,
+        "accessed_at": "2026-09-07T14:45:48.001612+00:00"
+      }
+    ],
+    "all_four_exact_output_hashes_match": true,
+    "actual_results": [
+      {
+        "file": "remediation-runs/2026-09-07-local-readiness/evidence/dependency-license-research-03/report/androidRelease.cdx.json",
+        "sha256": "aabbe9eddd21e97b3c172e602c2fe3a177a97775d71fbbdbaaa2671c5768b4c1",
+        "errors": []
+      },
+      {
+        "file": "remediation-runs/2026-09-07-local-readiness/evidence/dependency-license-research-03/report/iosArm64.cdx.json",
+        "sha256": "a70e39f44375502041bcb8f79ab3f1a1d13664d8cb570c784d4ca5fa0c5b0156",
+        "errors": []
+      },
+      {
+        "file": "remediation-runs/2026-09-07-local-readiness/evidence/dependency-license-research-03/report/iosSimulatorArm64.cdx.json",
+        "sha256": "75701e0ea9d5218acf577830741341ccd61dd4ec8e1707937a29395a5644df14",
+        "errors": []
+      },
+      {
+        "file": "remediation-runs/2026-09-07-local-readiness/evidence/dependency-license-research-03/report/iosX64.cdx.json",
+        "sha256": "cb46c0c9d865b75a23713b8955c6701c136025b5170b8e18bbeff50ea12f2595",
+        "errors": []
+      }
+    ],
+    "semantics": "validator_foractualdraft7schema;check_schema;iter_errorsoneachof4actualSBOMs;FormatChecker;registeredlocalofficialrefs; unresolvedrefhandlersfailclosed; failsexit1ifanyerrors.",
+    "warnings": [
+      "RefResolver deprecation warningvisible; retainedversion4.25.1stillimplementsAPI. No suppressedwarning or replacementdependencyrequiredforthisone-offevidence."
+    ],
+    "cycle": {
+      "receipt_path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/dependency-sbom-schema-cycle-02/receipt.json",
+      "receipt_sha256": "9acda34bf00655594a72cfd4df0f5c17f08d30d3378e0423f0db53119cfebec2",
+      "log_sha256": "b54f60ace929292ad72cca57cf0a64671f5d5152ab44b7f0c43a7359c9ce7dfe",
+      "command": [
+        "/bin/bash",
+        "-c",
+        "printf '%s  %s\\n' '12e7e391b6bccb772db23aee9bd56bf0a14b56739ba9bf0e800fd988a327abf5' 'remediation-runs/2026-09-07-local-readiness/reviews/validate_dependency_sbom_02.py' | shasum -a 256 -c - && /usr/bin/python3 -B remediation-runs/2026-09-07-local-readiness/reviews/validate_dependency_sbom_02.py && printf '%s  %s\\n' '12e7e391b6bccb772db23aee9bd56bf0a14b56739ba9bf0e800fd988a327abf5' 'remediation-runs/2026-09-07-local-readiness/reviews/validate_dependency_sbom_02.py' | shasum -a 256 -c -"
+      ],
+      "started_at": "2026-09-07T14:45:45.785086+00:00",
+      "finished_at": "2026-09-07T14:45:48.311514+00:00",
+      "status": "PASS",
+      "exit_code": 0,
+      "stop_exit_code": 0,
+      "workers": {
+        "terminated_owned_workers": [],
+        "remaining_owned_workers": []
+      },
+      "remaining_outputs": [],
+      "cleanup_errors": [],
+      "source_changed_during_cycle": false,
+      "runner_changed_during_cycle": false
+    }
+  },
+  "documentation_review": {
+    "path": "/Users/abdelrahman/Projects/parlor/docs/DEPENDENCY_INVENTORY.md",
+    "lines": [
+      [
+        1,
+        68
+      ]
+    ],
+    "status": "ACCURATE_WITH_SCOPED_LIMITATIONS",
+    "claims_verified": [
+      "Requestedcatalogvsactualresolvedversions",
+      "Explicitnewoutputdirectoryandstrict/no-config-cachecommand",
+      "All4native/Androidconfiguredgraphs",
+      "Artifactaliasgroupingdoesnothidecontentconflicts",
+      "BoundedXML/network/parentlicensehandlingwithUNRESOLVEDandfataldiskerrors",
+      "ImmediateGradlestopandownedbuildcleanup",
+      "PublisherPOMnotstrictGradlemetadata/legalapproval",
+      "PreR8/nativeinputsnotfinalbinaryorinternalvendoredcodecompleteness"
+    ]
+  },
+  "counter_evidence_and_remaining_obligations": [
+    "Graphsourceis11210dc6e34811bd1dd36d6a34339851601e5112 treecb97cc572dff903b8555ec20144c6df2995f2512 plusdiff f40d88169f213b5b5be3935ad7c06de6180acf65997ce6a887e4072ac9f2eed0, notanylatercommit. Finalfrozenrepositorygatesstillrequired.",
+    "All372graphartifacthashesmatchedstrictverificationXML inindependentreview03;456POMlabelsarenotproofallbinarycontentslicensed.",
+    "No licenseclassifier inferredfromfilename. BouncyCastlecustomlicenseandSkiko/Skiaembeddedobligationsrequireexactbinary/upstreaminspection; firstpartycode/contentrightsremainownerdecisions.",
+    "Newdocs invalidate transportdesktop doc-inputcontractasexpected; finalcombinedtest rerunrequired.",
+    "Approvalauthorizestechnicaladoptionofexact4filesunderparent-userGitpermission, notGit/Storemutationbyreviewer.",
+    "No physicalLAN/app/nativeruntime/signing/Storegateisclosedbytheseutilities."
+  ],
+  "preservation_and_cleanup": "Onlynewreviewreportswrittenbyreviewer; originalfailures/export/POM/schema01materialpreserved. Reviewer launchedread/parse/hash/HTTPSresearch processesonly, allexited. Parentnetworkprocesswaited/reapedwithoutbuildoutputs; schema02rootreceiptstop0, noleftoverworkers/buildoutputs/cleanuperrors."
+}

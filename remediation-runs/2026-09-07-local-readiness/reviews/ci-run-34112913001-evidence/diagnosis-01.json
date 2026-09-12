@@ -1,0 +1,380 @@
+{
+  "at": "2026-09-07T11:33:31.142827+00:00",
+  "reviewer": "/root/release_fix_review",
+  "scope": "Independent source and existing-CI-evidence diagnosis, plus unapplied draft repairs. Not implementation/test certification.",
+  "baseline": {
+    "branch": "fix/local-readiness-2026-09-07",
+    "head": "f5ea8045bd903c255041b198f54aca67e893612f",
+    "tree": "b109c8ec6ec579b9197f449b36bda2c39105a652",
+    "tracked_diff": "",
+    "status_short": [
+      "?? AGENTS.md",
+      "?? audit-runs/",
+      "?? design/",
+      "?? docs/PARLOR_PROJECT_HANDOFF.md",
+      "?? project-code-audit/",
+      "?? remediation-runs/",
+      "?? scripts/verification/"
+    ],
+    "source_files": [
+      {
+        "path": ".github/workflows/production-verification.yml",
+        "absolute_path": "/Users/abdelrahman/Projects/parlor/.github/workflows/production-verification.yml",
+        "sha256": "965e47ddb4c47b19d8017c9494239d0a0309b26f465eb0f6b655bd90113a929c",
+        "lines": 347
+      },
+      {
+        "path": "build-logic/convention/build.gradle.kts",
+        "absolute_path": "/Users/abdelrahman/Projects/parlor/build-logic/convention/build.gradle.kts",
+        "sha256": "d97140c79c500416f3ef1b5a54b2d05f6d0aa895f92b6cd85c26a70c8852ac67",
+        "lines": 62
+      },
+      {
+        "path": "build-logic/settings.gradle.kts",
+        "absolute_path": "/Users/abdelrahman/Projects/parlor/build-logic/settings.gradle.kts",
+        "sha256": "d86cd60d448dfb6ebf0c9b6977456dc7b93865afe5c415dc368a56ab6ef1f729",
+        "lines": 18
+      },
+      {
+        "path": "build.gradle.kts",
+        "absolute_path": "/Users/abdelrahman/Projects/parlor/build.gradle.kts",
+        "sha256": "bd6199e1f097eb236c50c46efb91d291550110f6b4d95a8e95ff0db4d8da192b",
+        "lines": 204
+      },
+      {
+        "path": "composeApp/build.gradle.kts",
+        "absolute_path": "/Users/abdelrahman/Projects/parlor/composeApp/build.gradle.kts",
+        "sha256": "c23525d6b06f9b536fb5e8ef6be68c653952fa9764e276f831772b864621fdd5",
+        "lines": 627
+      },
+      {
+        "path": "composeApp/src/desktopTest/kotlin/com/parlor/app/ProductionUiAccessibilityContractTest.kt",
+        "absolute_path": "/Users/abdelrahman/Projects/parlor/composeApp/src/desktopTest/kotlin/com/parlor/app/ProductionUiAccessibilityContractTest.kt",
+        "sha256": "00e0d9c8af2d59562ae1a68cc514382f6e017b0c63613ac43810ad407a9d4ba6",
+        "lines": 381
+      },
+      {
+        "path": "config/android-lint-accepted-warnings.txt",
+        "absolute_path": "/Users/abdelrahman/Projects/parlor/config/android-lint-accepted-warnings.txt",
+        "sha256": "e196948d55ae455b7d59a4532b9a8f680e109daef5a704b555d1b903afb9ecbd",
+        "lines": 39
+      },
+      {
+        "path": "docs/ANDROID_LINT_TRIAGE.md",
+        "absolute_path": "/Users/abdelrahman/Projects/parlor/docs/ANDROID_LINT_TRIAGE.md",
+        "sha256": "425d39b620add895c1f8f43c502b2012dd0f5f5a57688a9d9f937f4d923ee209",
+        "lines": 82
+      },
+      {
+        "path": "game-modes/mafia/build.gradle.kts",
+        "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/build.gradle.kts",
+        "sha256": "7aceb370331f84b2fee70bb039b7779bdd818ea78aab15da3bfcfd137a76ad2d",
+        "lines": 43
+      },
+      {
+        "path": "game-modes/whodunit/build.gradle.kts",
+        "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/build.gradle.kts",
+        "sha256": "2eb4b00a53ff1eff42f2a64b3de1a1c4d28b08d419ad2828045a063320e4696c",
+        "lines": 53
+      },
+      {
+        "path": "gradle.properties",
+        "absolute_path": "/Users/abdelrahman/Projects/parlor/gradle.properties",
+        "sha256": "2df8685921ad2c6eead097a6d9994bbcc93dbc5cbdeb0bce8911ffa4e83162ce",
+        "lines": 29
+      },
+      {
+        "path": "gradle/libs.versions.toml",
+        "absolute_path": "/Users/abdelrahman/Projects/parlor/gradle/libs.versions.toml",
+        "sha256": "87a031665605a1fb3f932be31c75afd8d2d1bc0d94cfcca36101141c50788399",
+        "lines": 106
+      },
+      {
+        "path": "gradle/verification-metadata.xml",
+        "absolute_path": "/Users/abdelrahman/Projects/parlor/gradle/verification-metadata.xml",
+        "sha256": "58b5a279cc5ccc58e1088fbe3dd248fcfdf31a307707204c5438259de7960f95",
+        "lines": 12067
+      },
+      {
+        "path": "gradle/wrapper/gradle-wrapper.properties",
+        "absolute_path": "/Users/abdelrahman/Projects/parlor/gradle/wrapper/gradle-wrapper.properties",
+        "sha256": "c040b6ef2fb893ff5beea5a281614f2848f1c3996a7886f650b713f8240656a2",
+        "lines": 8
+      },
+      {
+        "path": "settings.gradle.kts",
+        "absolute_path": "/Users/abdelrahman/Projects/parlor/settings.gradle.kts",
+        "sha256": "27a40495b1adf18ca90b5a8fdd345448c2ecf2f9ac726c753468a5e627b27d18",
+        "lines": 55
+      },
+      {
+        "path": "shared/content/build.gradle.kts",
+        "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/content/build.gradle.kts",
+        "sha256": "f956862a089a95ba41f4de714e95d1ac44a23d80994c323ba61a1c0c28d34939",
+        "lines": 24
+      },
+      {
+        "path": "shared/core/build.gradle.kts",
+        "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/core/build.gradle.kts",
+        "sha256": "05bafd928b020cd386aab5593ba73c5e470d44005f9c23dff739a42b577f31dd",
+        "lines": 23
+      },
+      {
+        "path": "shared/design-system/build.gradle.kts",
+        "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/design-system/build.gradle.kts",
+        "sha256": "118d898f900e3b8ccc76db6fca658d69a0d211c5220b6985738f14428a99f78d",
+        "lines": 25
+      },
+      {
+        "path": "shared/design-system/src/desktopTest/kotlin/com/parlor/designsystem/localization/PlatformAppLocaleLoadingContractTest.kt",
+        "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/desktopTest/kotlin/com/parlor/designsystem/localization/PlatformAppLocaleLoadingContractTest.kt",
+        "sha256": "2df61534d82b5a6ad4de887d485a8655167a38bd929626df347f49e26ac8879f",
+        "lines": 67
+      },
+      {
+        "path": "shared/design-system/src/iosMain/kotlin/com/parlor/designsystem/localization/IosLanguageOverrideOwner.kt",
+        "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/iosMain/kotlin/com/parlor/designsystem/localization/IosLanguageOverrideOwner.kt",
+        "sha256": "959ab1a8cb955e484c806c8ce5af65ca841a20cfcd9b1f205443a1cfe768da20",
+        "lines": 61
+      },
+      {
+        "path": "shared/design-system/src/iosMain/kotlin/com/parlor/designsystem/localization/LocalAppLocale.ios.kt",
+        "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/iosMain/kotlin/com/parlor/designsystem/localization/LocalAppLocale.ios.kt",
+        "sha256": "0e0783ca3e38634bd3469760f5dbfa5ade8509b976d0ec676202f4513cd8e098",
+        "lines": 83
+      },
+      {
+        "path": "shared/engine-testing/build.gradle.kts",
+        "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/engine-testing/build.gradle.kts",
+        "sha256": "096e9f4f67d514fd0a41de6853ad599cf5e3f3168b3294d8c3d71db5eaeac87f",
+        "lines": 20
+      },
+      {
+        "path": "shared/engine/build.gradle.kts",
+        "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/engine/build.gradle.kts",
+        "sha256": "4cbe86781aa8f11d2ef91381855ab3bcb3b126ef53b6a8272b79c478f90fc38a",
+        "lines": 24
+      },
+      {
+        "path": "shared/networking-testing/build.gradle.kts",
+        "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/networking-testing/build.gradle.kts",
+        "sha256": "81ed6260d7ac49fada4f0a922dde7db77fc557b86ab0a5884d5b20a64ec74f7e",
+        "lines": 17
+      },
+      {
+        "path": "shared/networking/build.gradle.kts",
+        "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/networking/build.gradle.kts",
+        "sha256": "765ac532634f0dc088a5ded8c32bfc6550aa6408155b44d2956be395d131d621",
+        "lines": 23
+      },
+      {
+        "path": "shared/session/build.gradle.kts",
+        "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/session/build.gradle.kts",
+        "sha256": "3be79bcdba5c593eed5ac93d6000043911cd913ab1d7d2c70ab0be7ea37c80b8",
+        "lines": 22
+      },
+      {
+        "path": "shared/storage/build.gradle.kts",
+        "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/storage/build.gradle.kts",
+        "sha256": "096e9f4f67d514fd0a41de6853ad599cf5e3f3168b3294d8c3d71db5eaeac87f",
+        "lines": 20
+      },
+      {
+        "path": "shared/transport-p2p/build.gradle.kts",
+        "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/build.gradle.kts",
+        "sha256": "ac439a069b3c99d1bef803bbc053580c4b99cbd7f4775a98d98a2b40482d96d7",
+        "lines": 95
+      },
+      {
+        "path": "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/AndroidReleaseLintContractTest.kt",
+        "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/AndroidReleaseLintContractTest.kt",
+        "sha256": "649d3d91daffa9f8a2df92a373d6ba0729d591cfc158abeb0a62df78270b0fc2",
+        "lines": 252
+      }
+    ]
+  },
+  "run_id": 34112913001,
+  "run_head_sha": "f5ea8045bd903c255041b198f54aca67e893612f",
+  "diagnoses": [
+    {
+      "id": "CI-WIN-CRLF",
+      "classification": "CONFIRMED TEST PORTABILITY DEFECT by deterministic source proof; observed Windows failure matches; Windows source bytes were not captured",
+      "severity": "Medium: blocks Windows verification but does not prove a production locale failure",
+      "observed": {
+        "job_id": 101713007167,
+        "log": "windows-x64-sanitized.log",
+        "line_ranges": [
+          [
+            691,
+            707
+          ]
+        ],
+        "failure": "ProductionUiAccessibilityContractTest.platform_locale_overrides_are_commit_scoped_and_do_not_mutate_shared_resources at source line221",
+        "count": "composeApp:desktopTest 95 tests completed, 1 failed; not repository total"
+      },
+      "path": "composeApp/src/desktopTest/kotlin/com/parlor/app/ProductionUiAccessibilityContractTest.kt",
+      "source_ranges": [
+        [
+          194,
+          227
+        ],
+        [
+          356,
+          356
+        ]
+      ],
+      "proof": "read() returns raw File.readText(); two positive content assertions require LF newline byte sequences at221-222. The same correct production file checked out with CRLF cannot contain either LF-only sequence. LocalAppLocale.ios.kt41-49 contains the expected effect/apply/dispose/release structure.",
+      "counter_evidence": [
+        "Sibling PlatformAppLocaleLoadingContractTest already normalizes CRLF. Linux-arm64/macOS-x64 same-SHA full desktop gates pass.",
+        "Exact Windows image installer preserves Git default CRLFAlways/core.autocrlf=true; official Git2.55 docs describe LF-to-CRLF checkout. CI did not directly print git config or production file bytes; keep this limitation.",
+        "No production DS-C01 regression established by this failure."
+      ],
+      "introducing_commit": "85ded00435b4f8327ce32d3b7f5062c4438ae174",
+      "proposed_fix": "Normalize only CRLF to LF in the shared local source reader. Retain all substantive assertions; add executable guard proving LF and CRLF equivalence without changing tabs/literal escapes/lone CR.",
+      "draft": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34112913001-evidence/drafts/windows-source-crlf-draft.patch",
+        "sha256": "d84c28ffa3e934d3dce87ecb9f048ef73b88e7899b5cde5f363faa87d83e95ec"
+      },
+      "verification_remaining": [
+        "Independent review of draft",
+        "Focused actual desktop tests and guard execution",
+        "Actual Windows rerun on reviewed corrected source"
+      ],
+      "fixed": false
+    },
+    {
+      "id": "CI-LINUX-KOTLIN-ADVISORIES",
+      "classification": "EXPECTED FAIL-CLOSED ADVISORY INVENTORY CHANGE requiring reviewed exact triage; documentation mismatch; not demonstrated application defect",
+      "observed": {
+        "job_id": 101713007567,
+        "log": "linux-common-desktop-android-sanitized.log",
+        "line_ranges": [
+          [
+            1939,
+            1944
+          ],
+          [
+            1978,
+            1990
+          ]
+        ],
+        "task": ":composeApp:verifyReleaseLintWarnings",
+        "unexpected": [
+          "DependencyUpdate|gradle/libs.versions.toml|A newer version of org.jetbrains.kotlin.multiplatform than 2.4.10",
+          "DependencyUpdate|gradle/libs.versions.toml|A newer version of org.jetbrains.kotlin.plugin.compose than 2.4.10",
+          "DependencyUpdate|gradle/libs.versions.toml|A newer version of org.jetbrains.kotlin.plugin.serialization than 2.4.10"
+        ],
+        "missing": []
+      },
+      "source_ranges": {
+        "composeApp/build.gradle.kts": [
+          [
+            345,
+            436
+          ]
+        ],
+        "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/AndroidReleaseLintContractTest.kt": [
+          [
+            41,
+            95
+          ]
+        ],
+        "config/android-lint-accepted-warnings.txt": "all32 accepted noncomment rows",
+        "docs/ANDROID_LINT_TRIAGE.md": "accepted32/current-version/no-new-failure claims"
+      },
+      "proof": "The verifier compares canonicalized exact sorted multisets. Three formerly-current Kotlin plugin coordinates now have newer publications (Kotlin2.4.20 published before this run). Old inventory omits exactly those rows; strict gate correctly fails instead of silently waiving them.",
+      "proposed_fix": "Add exactly3 reviewed canonical rows (32to35; DependencyUpdate26to29), exact assertions, and accurate first-advisory documentation. Preserve all version pins, verification metadata, issue-ID/path/current-version binding and exact counts.",
+      "security_counter_evidence": {
+        "advisory": "GHSA-r937-wjx7-w2jp / CVE-2026-53914",
+        "affected": "org.jetbrains.kotlin:kotlin-gradle-plugin <2.4.20-Beta1; pinned2.4.10 is in the affected-version range",
+        "upstream_patch": "bf51df665b458fda7c3eaf436c4d88dc119d7ec6",
+        "actual_reader": "KAPT incremental apt-cache.bin/java-cache.bin unrestricted ObjectInputStream in v2.4.10 cache.kt139-164; KaptContext58-60 instantiates cache manager",
+        "registration": "v2.4.10 SubpluginEnvironment20-22 loads applied project plugins;30-42 configures them. Kapt3KotlinGradleSubplugin owns kapt extension/tasks.",
+        "project_applicability": "No KAPT plugin/application/processor runtime in current declared module/convention builds or annotation-processing component in strict verification metadata. That specific path is not configured; upstream vulnerability is not fixed or universally harmless.",
+        "condition": "No-KAPT structural guard and explicit re-review before KAPT/runtime additions or advisory-scope change. Not protection against deliberately obfuscated build/plugin injection or unreviewed user init scripts.",
+        "no_blanket_claim": "No dependency-security-clean claim; stdlib query returned empty but does not prove absence of vulnerabilities."
+      },
+      "drafts": [
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34112913001-evidence/drafts/linux-exact-kotlin-advisory-triage-draft.patch",
+          "sha256": "1047dfc96c89305dc0af2ca1a2cc94b1d084a3a27ae5d7cb8572e60227058ebb"
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34112913001-evidence/drafts/linux-no-kapt-applicability-guard-draft.patch",
+          "sha256": "576599bee03f133be5a6d182503993ee8b480375498c889e14e95d0d28bf55c5"
+        }
+      ],
+      "verification_remaining": [
+        "Independent applicability/diff review",
+        "Compile/discover/run revised contract tests",
+        "Adversarial guard cases: synthetic KAPT application and annotation-processing metadata addition",
+        "Actual Linux exact lint multiset verification",
+        "Run downstream managed-device and artifact checks that this failed job skipped"
+      ],
+      "fixed": false
+    }
+  ],
+  "verification_scope": {
+    "executed_by_this_child": "Read-only gh GET/status commands, source reading, research retrieval, report generation. No Gradle/Xcode/test/build cycle.",
+    "existing_ci_release_validators": "Linux log1910-1916: 174 Python tests, OK; source-inventory freshness683 rows explicitly not source-review attestation.",
+    "successful_job_logs": "Linux arm64 and macOS x64 both run all13 module desktopTest tasks; no per-test successful-descriptor/count details are emitted by console. Do not invent count/skip evidence from job-green.",
+    "apple": "Await completed job log for exact Xcode26.3/build17C529/source binding, simulator tests and unsigned wrapper. Observation02 is in-progress, not whole-run pass.",
+    "not_proven": [
+      "Physical LAN/devices",
+      "Store signing/upload/submission",
+      "Artifact hashes for uninspected outputs",
+      "Individual silent Jupiter results/skips in successful desktop jobs",
+      "Cleanup of CI files beyond recorded hosted-runner post-job steps"
+    ]
+  },
+  "artifacts": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34112913001-evidence/fetch-receipt-01.json",
+      "sha256": "6413d3422587edbb54eec8a5a6985dc954fd746f0acd5623de88b0a9373667a1"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34112913001-evidence/fetch-receipt-02.json",
+      "sha256": "f21531a1a6cd6d658b8ee1512ab136c1daaf832aad3db79a79640f82cb0a23e2"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34112913001-evidence/run-status-observation-02.json",
+      "sha256": "33a4d0135ed78aed632928b2a1f422b2ebf533c289e7d4f0ffff4726cd56fa50"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34112913001-evidence/drafts/draft-manifest-01.json",
+      "sha256": "02e8c9af899c2916903a6dd6ae64d9f1be4d41e67f125cd35d1834a84e32834b"
+    }
+  ],
+  "research_receipts": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34112913001-evidence/authoritative-kapt-registration-01.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34112913001-evidence/authoritative-kapt-registration-02.json",
+      "sha256": "26034a277dbc0819a460453a55195b35264484c55211d80093d23144da4c9b20"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34112913001-evidence/authoritative-kapt-registration-03.json",
+      "sha256": "27396743c22b62e28c6db130aa6d61740b3991fcab9e405eaf7e30cebade3984"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34112913001-evidence/authoritative-research-fetch-01.json",
+      "sha256": "54d39469f1629a400401a622f9b3b0450e6a9dda851db79a45b5a8bd68aaf20c"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34112913001-evidence/authoritative-research-fetch-02.json",
+      "sha256": "c1a234eca031b2735687dd67c762ca132b5e13f00a0ffaea11c23366789f6fe9"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34112913001-evidence/authoritative-research-fetch-03.json",
+      "sha256": "5725f66ad82d9ed5cf30130cc2981a803ca068324300af0ec7aa1a9077f297d1"
+    }
+  ],
+  "cleanup": {
+    "local_build_or_workers_started": false,
+    "production_files_modified": false,
+    "required_evidence_only": true,
+    "note": "No source edits, build outputs, temp fixtures or background workers generated by this child; no unrelated process or file cleanup attempted. Original receipts preserved."
+  }
+}

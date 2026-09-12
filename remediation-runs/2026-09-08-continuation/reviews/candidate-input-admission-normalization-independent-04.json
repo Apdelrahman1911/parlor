@@ -1,0 +1,257 @@
+{
+  "schema_version": 1,
+  "kind": "INDEPENDENT_REVIEW_OF_C04_PREEXECUTION_ADMINISTRATIVE_NORMALIZATION",
+  "reviewer": "/root/fixture_review",
+  "author": "/root",
+  "recorded_at": "2026-09-09T02:46:10.281815+00:00",
+  "status": "APPROVED_EXACT_ADMINISTRATIVE_GATE_ONCE_NOT_CONSUMER_RESULT",
+  "findings": [],
+  "scope": [
+    "Read-only inspection of the actual retained preexecution failure receipt, exact proposed 9668-byte administrative gate, canonical lane identity functions, accepted binding/author/independent-review artifacts, and compact unchanged current source/control/producer/input hashes.",
+    "This approves only a representation correction in the one-shot administrative admission recheck. No canonical lane, consumer, source, schema, build/test, protocol, application or production validation correction is made.",
+    "The already accepted export/render/binding campaign is not rerun or requalified as new execution. Official-schema/candidate execution remains pending."
+  ],
+  "exact_artifacts": {
+    "proposed_gate": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/candidate-input-immediate-admission-04.py",
+      "sha256": "290d62d00a83a4c7fc77294fea4c8fc2711f9443ed487e11007f1b1b53e46f84",
+      "bytes": 9668
+    },
+    "failure_receipt": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/candidate-input-preexecution-failure-04.json",
+      "sha256": "d8d57bdcc16ca04a530d0ea550f399af0e55cc9bdee92d1141e05699e63b52db",
+      "bytes": 116469
+    },
+    "author_capture": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/candidate-input-binding-author-inspection-04.json",
+      "sha256": "91f76f850dafe424d6aa9564c44b623ad645cb60728f59d7d3f3edf2cf65ba6b",
+      "bytes": 180602
+    },
+    "independent_binding_review": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/candidate-input-binding-independent-04.json",
+      "sha256": "189086dea69cd62fef4c56dc85c9e3034d31ead889c5d282fed053308a4fa987",
+      "bytes": 33190
+    },
+    "binding": {
+      "path": "remediation-runs/2026-09-08-continuation/candidate-input-binding-04.json",
+      "sha256": "641d4a894084f6d4fc76360d964b21e1920faa74912bff1d463a1e826351bc0d",
+      "bytes": 1517
+    }
+  },
+  "failure_assessment": {
+    "historical_entrypoint": [
+      "/usr/bin/python3",
+      "-B",
+      "-"
+    ],
+    "historical_exit_code": 1,
+    "retained_traceback": "Traceback (most recent call last):\n  File \"<stdin>\", line 18, in <module>\nAssertionError\n",
+    "original_command_evidence_limit": "The receipt retains the root-reported traceback and executed comparison excerpt; the full original stdin script was not retained. Neither this reviewer nor the receipt can present the excerpt as the full original command.",
+    "retained_comparison_excerpt": "source = lane.identity()\nrunner = lane.runner_identity(False)\nassert source == author[\"current_full_capture\"][\"source\"] and runner == author[\"current_full_capture\"][\"runner\"]\nassert source[\"tracked_status\"] == \"\" and source[\"commit\"] == binding[\"source\"][\"commit\"] and source[\"tree\"] == binding[\"source\"][\"tree\"]\n",
+    "current_investigation_evidence": "Independently read all 829 retained pointer/type records, not a truncated sample; the expected set and order are exactly /runner/manifest/0 and /source/source_manifest/0 through /source/source_manifest/827, each fresh tuple versus persisted list.",
+    "mismatches": {
+      "source_row_types": 828,
+      "runner_row_types": 1,
+      "total": 829,
+      "fresh_type": "tuple",
+      "persisted_type": "list",
+      "scalar_value_mismatches_recorded": [],
+      "key_or_length_mismatches_recorded": []
+    },
+    "root_reported_fresh_capture_result": "The failure receipt reports two complete JSON-normalized fresh source/runner captures equal to the retained author source/runner objects. Reviewer did not import or invoke the project lane to replay that investigation.",
+    "independent_support": "Actual pinned lane source appends tuple rows in both identity() and runner_identity(False), while the actual persisted author/producer JSON has list rows. All 828 persisted source hashes, the exact current Git path scope, one runner hash, both producer complete source/runner objects, and all fourteen control/schema pins independently matched current files. This supports a representation-only cause, not a hidden source/control substitution.",
+    "capture_reference": "remediation-runs/2026-09-08-continuation/reviews/candidate-input-binding-author-inspection-04.json#/current_full_capture",
+    "capture_reference_type": "String JSON reference to the existing author capture, not a nested fresh capture object.",
+    "candidate_state": "NOT_RUN; reported failure precedes consumer/bootstrap/schema installation/build/test and all three exact candidate destinations remain absent at this review.",
+    "classification": "Administrative preexecution assertion failure, not an executed candidate-consumer failure or consumer retry."
+  },
+  "static_gate_audit": {
+    "method": "Read complete proposed source and AST; no import, eval, extracted-function execution or gate invocation.",
+    "complete_normalization": {
+      "expression": "json.loads(json.dumps({'source': lane.identity(), 'runner': lane.runner_identity(False)}, allow_nan=False))",
+      "conclusion": "The complete canonical source and runner objects are normalized, including every manifest row and all scalar fields. For these inspected string-key/string-value objects, JSON serialization only resolves tuple/list row representation. No selected-field/hash-only comparison replaces complete equality; allow_nan=False fails closed for nonfinite values.",
+      "observed_at_limit": "The author capture wrapper also has observed_at. That observation timestamp is intentionally not a canonical source/runner field; neither canonical object is reduced.",
+      "mandatory_equalities": [
+        "first complete normalized source/runner equals the author canonical objects",
+        "clean exact08d commit, c19 tree and continuation branch",
+        "binding source fields equal the matching complete source object",
+        "both pinned producer source_before/source_after and runner_before/runner_after equal current complete objects",
+        "second complete normalized source/runner capture equals the first while the existing lane lock is held"
+      ]
+    },
+    "pin_and_input_preservation": [
+      "Author, prior independent binding review, exact binding and canonical lane have fixed HELD SHA256 values; all are rechecked initially and while locked.",
+      "Exactly fourteen unique author control/schema paths retain mandatory byte-length and SHA256 checks initially and while locked.",
+      "Both producer receipts are rehashed against the exact binding and their complete before/after source and runner values are compared.",
+      "All prospective Inputs.read closure paths are read: fixed binding/consumer/lane/producer/exporter/renderer/notices/verification/config/catalog/build inputs plus all graph/report/schema/notice-directory descendants.",
+      "Directory counts remain [5,465,3,26]; exact path-sorted [path,SHA256,bytes] closure is 511 rows with hash a1cd2e26dd6d6264dea7213df114772643575a362787f9ee2ca340576e94b94a. The full row set/bytes and directory membership are rechecked while locked."
+    ],
+    "owned_read_behavior": {
+      "retained_checks": [
+        "repository-relative paths and no .. components",
+        "no symlink path components below fixed ROOT at inspection",
+        "regular same-UID file, maximum16MiB",
+        "O_RDONLY|O_NOFOLLOW final open",
+        "descriptor and path stable identity before/after read",
+        "exact byte count"
+      ],
+      "stable_stat_fields": [
+        "st_dev",
+        "st_ino",
+        "st_mode",
+        "st_nlink",
+        "st_uid",
+        "st_gid",
+        "st_size",
+        "st_mtime_ns",
+        "st_ctime_ns"
+      ],
+      "atime": "Excluded from stable read identity because ordinary reads may update access time; nanosecond modification/change times, content hashes, ownership and all listed identity fields remain mandatory. This is not suppression of content or ownership drift.",
+      "hardlink_limit": "nlink is checked for stability; read_owned does not require nlink==1. This review does not claim single-link enforcement or add a new requirement to the unchanged consumer."
+    },
+    "import_and_activity_boundary": {
+      "imports": "Standard-library imports plus only the hash-bound ordinary lane via importlib.util; that lane module defines helpers/globals, with main and signal registration behind __name__ == __main__.",
+      "project_calls": "Only lane.identity() and lane.runner_identity(False), twice through capture(). Lane identity executes bounded read-only Git children; runner_identity(False) reads only the ordinary lane control.",
+      "not_called": [
+        "lane.main",
+        "lane.invoke",
+        "JDK probe/build/test entrypoints",
+        "candidate adapter or consumer",
+        "bootstrap/package installation",
+        "schema validator",
+        "Gradle",
+        "native/Actions/Store operation"
+      ],
+      "required_entrypoint": "Root must use /usr/bin/python3 -B so the permitted import does not allocate bytecode."
+    },
+    "lane_and_output_behavior": {
+      "lock": "Requires the existing build-lane.lock to be a regular same-UID file, opens it read-only with O_NOFOLLOW, checks descriptor stat and takes exclusive nonblocking flock. Does not create, delete or retain a new lock file.",
+      "critical_section": "Second complete capture, full closure bytes/membership checks, HELD and fourteen pin rechecks and destination absence checks all precede output while this lock is held.",
+      "only_created_path": "remediation-runs/2026-09-08-continuation/reviews/candidate-input-current-bindings-04.json",
+      "exclusive_output": "O_WRONLY|O_CREAT|O_EXCL|O_NOFOLLOW, explicit flush/fsync and descriptor close. Report records the unchanged approved consumer command only as NOT_YET_EXECUTED.",
+      "failure_behavior": "Any precondition/read/hash/equality/lock mismatch raises before output. If actual output I/O itself fails, a partial exclusive report may remain and must be preserved/inspected, not overwritten or blindly retried.",
+      "lock_release": "finally closes the lock descriptor on success/failure. The subsequent consumer is a separate root-owned ordinary-lane execution, not an invocation or continuous lock handoff by this gate.",
+      "destination_checks": "All three candidate destinations must be absent initially and again just before report creation; gate does not create the candidate evidence directory or controller log."
+    },
+    "unexecuted_draft_limit": "Only the held290d62d0 gate is approved. Earlier unexecuted draft discussions are not a test result, failed admission attempt or authorization for different bytes."
+  },
+  "independent_current_observation": {
+    "started_at": "2026-09-09T02:42:41.794578+00:00",
+    "finished_at": "2026-09-09T02:42:42.522635+00:00",
+    "source": {
+      "commit": "08d1adfbd7284f190fbab5f7baa846944bca5b68",
+      "tree": "c19beea4647ce882c02d8751d1bf82c22484b52b",
+      "branch": "fix/local-readiness-2026-09-07",
+      "tracked_status": "",
+      "diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "source_manifest": {
+      "count": 828,
+      "sha256": "d7d6bd8802fb36ab75e566adc183500db24555dce36f0fafd0a1ac91034bf08e",
+      "all_current_row_hashes_and_exact_git_path_scope_match": true
+    },
+    "runner_manifest": {
+      "count": 1,
+      "sha256": "942e138764146313a59cbe1278c1357284a5701d0c125809c34ddbbe876ce912",
+      "current_row_matches": true
+    },
+    "all14_control_schema_pins_current": true,
+    "control_schema_pin_location": "remediation-runs/2026-09-08-continuation/reviews/candidate-input-binding-author-inspection-04.json#/current_control_pins and #/official_schema_pins",
+    "producer_receipts": [
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-export-linux-04/receipt.json",
+        "sha256": "509f37bc84dc69bdb5935406ea81656a91fbb971eb69202820ddf8ad22f782dd",
+        "bytes": 306150
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-render-linux-04/receipt.json",
+        "sha256": "c3cb580003f48c5f7eb7c884a435261dca96a870b2d4c009dcf1d4f03728b35d",
+        "bytes": 305621
+      }
+    ],
+    "producer_full_source_runner_equality": true,
+    "producer_status_limit": "Pinned previous PASS/exit0/stop0 and cleanup summaries remain unchanged; no new producer execution claimed.",
+    "prospective_input_closure": {
+      "count": 511,
+      "bytes": 5567850,
+      "sha256": "a1cd2e26dd6d6264dea7213df114772643575a362787f9ee2ca340576e94b94a",
+      "directory_counts": [
+        5,
+        465,
+        3,
+        26
+      ],
+      "recipe": "path-sorted [repository-relative path,SHA256,byte length], compact JSON separators comma/colon, UTF8, no newline",
+      "classification": "STATIC_EXPECTED_READ_CLOSURE_NOT_EXECUTED_CONSUMER_RESULT"
+    },
+    "unique_files_rehashed": 1316,
+    "destination_absence": [
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-04",
+        "method": "lstat and lexists",
+        "result": "ENOENT"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/candidate-input-current-bindings-04.json",
+        "method": "lstat and lexists",
+        "result": "ENOENT"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/candidate-input-04-controller.log",
+        "method": "lstat and lexists",
+        "result": "ENOENT"
+      }
+    ],
+    "existing_lock": "Reviewer lstat confirms regular same-UID existing lock; reviewer neither opened nor locked it.",
+    "write_time_recheck": "Held gate/failure/author/review/binding and all fourteen controls/schemas rehashed again; exact08d clean tracked checkout and all three destination absences rechecked before this additive review write."
+  },
+  "decision": {
+    "coordinator": "/root only",
+    "approved_one_administrative_command": [
+      "/usr/bin/python3",
+      "-B",
+      "remediation-runs/2026-09-08-continuation/reviews/candidate-input-immediate-admission-04.py"
+    ],
+    "exact_gate_sha256": "290d62d00a83a4c7fc77294fea4c8fc2711f9443ed487e11007f1b1b53e46f84",
+    "conditions": [
+      "Root hash-checks this completed review and the exact held gate; source/control/inputs remain frozen and no competing local lane is introduced.",
+      "Root executes this administrative gate once from the fixed checkout and inspects its successful fresh complete-binding output.",
+      "Only after that success may root immediately execute the unchanged already approved C04 consumer command through the ordinary coordinated build lane, with an exclusive controller log.",
+      "A failed or partially written admission must be retained and investigated; this report does not authorize overwriting evidence, retries, changed bindings, another export/render campaign or new commands."
+    ],
+    "unchanged_previously_approved_consumer_command": [
+      "/usr/bin/python3",
+      "-B",
+      "remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py",
+      "final-candidate-input-linux-04",
+      "--command",
+      "/usr/bin/python3",
+      "-B",
+      "remediation-runs/2026-09-08-continuation/controls/run_candidate_with_schema.py",
+      "remediation-runs/2026-09-08-continuation/candidate-input-binding-04.json",
+      "641d4a894084f6d4fc76360d964b21e1920faa74912bff1d463a1e826351bc0d"
+    ],
+    "administrative_gate_execution": "NOT_RUN as of this review",
+    "candidate_consumer_execution": "NOT_RUN as of this review",
+    "required_postrun_conjunction": [
+      "consumer PASS_SCOPED_CANDIDATE_INPUTS with exact binding/source, four actual official-schema-validated SBOMs, no unresolved or missing encountered formats, actual consumed-file/source-notice integrity",
+      "adapter PASS_SCOPED_CANDIDATE_INPUT_EXECUTION, consumer_exit_code0, no error_type, ephemeral_parser_cleanup true",
+      "bootstrap PASS_OWNED_SCHEMA_PREREQUISITES in candidate mode, inner_exit_code0, no error_type, before/after control and actual package/version/import integrity, base_package_cleanup true",
+      "outer PASS/exit0/stop0, complete matching frozen source/runner snapshots, no deferred signals/errors/survivors/live or retained outputs and exact scratch/package cleanup"
+    ],
+    "postrun_review_required": true,
+    "native_Actions_Store_authorization": false
+  },
+  "independence_and_cleanup": {
+    "author_and_reviewer_different": true,
+    "activity": "Reviewer used only read-only Git and stdlib AST/JSON/hash/stat/path operations; no project imports, extracted-function execution, tests, build/toolchain/package execution, network or source/ledger/index edits.",
+    "reviewer_inspection_error": "One earlier read-only inspection treated the string capture reference as a dict and raised TypeError; corrected by reading the referenced retained author object. No project execution or file write resulted.",
+    "only_write": "remediation-runs/2026-09-08-continuation/reviews/candidate-input-admission-normalization-independent-04.json",
+    "resource_allocation": "No reviewer build outputs, temporary package/parser/simulator fixtures, Gradle daemon, project worker or lane-lock mutation. No build/test cycle and therefore no reviewer Gradle cleanup command is started.",
+    "preservation": "All historical receipts, source, controls and other-agent files preserved; no cleanup performed. Root remains owner of future cycle stop/cleanup and evidence."
+  },
+  "readiness": {
+    "verdict": "NOT_READY",
+    "limits": "Administrative admission approval and prior scoped producers are not executed candidate/schema evidence, application runtime, Apple L08 recovery/protection, normal Debug libproc, full frozen qualification or Store/legal proof. Physical-device, Store-operation and owner/legal requirements are unchanged."
+  }
+}

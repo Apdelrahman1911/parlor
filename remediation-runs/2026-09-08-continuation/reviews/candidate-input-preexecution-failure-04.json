@@ -1,0 +1,4317 @@
+{
+  "schema_version": 1,
+  "kind": "ADMINISTRATIVE_PREEXECUTION_COMPARISON_FAILURE_PRESERVED_NOT_CONSUMER_FAILURE",
+  "author": "/root",
+  "recorded_at": "2026-09-09T02:28:42.868186+00:00",
+  "historical_failure": {
+    "provenance": "Exact traceback and executed comparison excerpt preserved from the preceding root tool result as supplied by this thread continuation checkpoint; no separate full original stdin script file was retained. Do not represent the excerpt as the full command.",
+    "entrypoint": [
+      "/usr/bin/python3",
+      "-B",
+      "-"
+    ],
+    "exit_code": 1,
+    "traceback": "Traceback (most recent call last):\n  File \"<stdin>\", line 18, in <module>\nAssertionError\n",
+    "executed_comparison_excerpt": "source = lane.identity()\nrunner = lane.runner_identity(False)\nassert source == author[\"current_full_capture\"][\"source\"] and runner == author[\"current_full_capture\"][\"runner\"]\nassert source[\"tracked_status\"] == \"\" and source[\"commit\"] == binding[\"source\"][\"commit\"] and source[\"tree\"] == binding[\"source\"][\"tree\"]\n",
+    "candidate_command_not_reached": [
+      "/usr/bin/python3",
+      "-B",
+      "remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py",
+      "final-candidate-input-linux-04",
+      "--command",
+      "/usr/bin/python3",
+      "-B",
+      "remediation-runs/2026-09-08-continuation/controls/run_candidate_with_schema.py",
+      "remediation-runs/2026-09-08-continuation/candidate-input-binding-04.json",
+      "641d4a894084f6d4fc76360d964b21e1920faa74912bff1d463a1e826351bc0d"
+    ],
+    "candidate_execution": "NOT_RUN",
+    "before_any_consumer_bootstrap_schema_install_build_or_test": true
+  },
+  "current_investigation": {
+    "raw_source_equal_persisted": false,
+    "raw_runner_equal_persisted": false,
+    "type_mismatch_count": 829,
+    "type_mismatch_kinds": {
+      "source.source_manifest.rows": {
+        "count": 828,
+        "fresh": "tuple",
+        "persisted": "list"
+      },
+      "runner.manifest.rows": {
+        "count": 1,
+        "fresh": "tuple",
+        "persisted": "list"
+      }
+    },
+    "all_type_mismatch_pointers": [
+      {
+        "pointer": "/runner/manifest/0",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/0",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/1",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/2",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/3",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/4",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/5",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/6",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/7",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/8",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/9",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/10",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/11",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/12",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/13",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/14",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/15",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/16",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/17",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/18",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/19",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/20",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/21",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/22",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/23",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/24",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/25",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/26",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/27",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/28",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/29",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/30",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/31",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/32",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/33",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/34",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/35",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/36",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/37",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/38",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/39",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/40",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/41",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/42",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/43",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/44",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/45",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/46",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/47",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/48",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/49",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/50",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/51",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/52",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/53",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/54",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/55",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/56",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/57",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/58",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/59",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/60",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/61",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/62",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/63",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/64",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/65",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/66",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/67",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/68",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/69",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/70",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/71",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/72",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/73",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/74",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/75",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/76",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/77",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/78",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/79",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/80",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/81",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/82",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/83",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/84",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/85",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/86",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/87",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/88",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/89",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/90",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/91",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/92",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/93",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/94",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/95",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/96",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/97",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/98",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/99",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/100",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/101",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/102",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/103",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/104",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/105",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/106",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/107",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/108",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/109",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/110",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/111",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/112",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/113",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/114",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/115",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/116",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/117",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/118",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/119",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/120",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/121",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/122",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/123",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/124",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/125",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/126",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/127",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/128",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/129",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/130",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/131",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/132",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/133",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/134",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/135",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/136",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/137",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/138",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/139",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/140",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/141",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/142",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/143",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/144",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/145",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/146",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/147",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/148",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/149",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/150",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/151",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/152",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/153",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/154",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/155",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/156",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/157",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/158",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/159",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/160",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/161",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/162",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/163",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/164",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/165",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/166",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/167",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/168",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/169",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/170",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/171",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/172",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/173",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/174",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/175",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/176",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/177",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/178",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/179",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/180",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/181",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/182",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/183",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/184",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/185",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/186",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/187",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/188",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/189",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/190",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/191",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/192",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/193",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/194",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/195",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/196",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/197",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/198",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/199",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/200",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/201",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/202",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/203",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/204",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/205",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/206",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/207",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/208",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/209",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/210",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/211",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/212",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/213",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/214",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/215",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/216",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/217",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/218",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/219",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/220",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/221",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/222",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/223",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/224",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/225",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/226",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/227",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/228",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/229",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/230",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/231",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/232",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/233",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/234",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/235",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/236",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/237",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/238",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/239",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/240",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/241",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/242",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/243",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/244",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/245",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/246",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/247",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/248",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/249",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/250",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/251",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/252",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/253",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/254",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/255",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/256",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/257",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/258",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/259",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/260",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/261",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/262",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/263",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/264",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/265",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/266",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/267",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/268",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/269",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/270",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/271",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/272",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/273",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/274",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/275",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/276",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/277",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/278",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/279",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/280",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/281",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/282",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/283",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/284",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/285",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/286",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/287",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/288",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/289",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/290",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/291",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/292",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/293",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/294",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/295",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/296",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/297",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/298",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/299",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/300",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/301",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/302",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/303",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/304",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/305",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/306",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/307",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/308",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/309",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/310",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/311",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/312",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/313",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/314",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/315",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/316",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/317",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/318",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/319",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/320",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/321",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/322",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/323",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/324",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/325",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/326",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/327",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/328",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/329",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/330",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/331",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/332",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/333",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/334",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/335",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/336",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/337",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/338",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/339",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/340",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/341",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/342",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/343",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/344",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/345",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/346",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/347",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/348",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/349",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/350",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/351",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/352",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/353",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/354",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/355",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/356",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/357",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/358",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/359",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/360",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/361",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/362",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/363",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/364",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/365",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/366",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/367",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/368",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/369",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/370",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/371",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/372",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/373",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/374",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/375",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/376",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/377",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/378",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/379",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/380",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/381",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/382",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/383",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/384",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/385",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/386",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/387",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/388",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/389",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/390",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/391",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/392",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/393",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/394",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/395",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/396",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/397",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/398",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/399",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/400",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/401",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/402",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/403",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/404",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/405",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/406",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/407",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/408",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/409",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/410",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/411",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/412",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/413",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/414",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/415",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/416",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/417",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/418",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/419",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/420",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/421",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/422",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/423",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/424",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/425",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/426",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/427",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/428",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/429",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/430",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/431",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/432",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/433",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/434",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/435",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/436",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/437",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/438",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/439",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/440",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/441",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/442",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/443",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/444",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/445",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/446",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/447",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/448",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/449",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/450",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/451",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/452",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/453",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/454",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/455",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/456",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/457",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/458",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/459",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/460",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/461",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/462",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/463",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/464",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/465",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/466",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/467",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/468",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/469",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/470",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/471",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/472",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/473",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/474",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/475",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/476",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/477",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/478",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/479",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/480",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/481",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/482",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/483",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/484",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/485",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/486",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/487",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/488",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/489",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/490",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/491",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/492",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/493",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/494",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/495",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/496",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/497",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/498",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/499",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/500",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/501",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/502",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/503",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/504",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/505",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/506",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/507",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/508",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/509",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/510",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/511",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/512",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/513",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/514",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/515",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/516",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/517",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/518",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/519",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/520",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/521",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/522",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/523",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/524",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/525",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/526",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/527",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/528",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/529",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/530",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/531",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/532",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/533",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/534",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/535",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/536",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/537",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/538",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/539",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/540",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/541",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/542",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/543",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/544",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/545",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/546",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/547",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/548",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/549",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/550",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/551",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/552",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/553",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/554",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/555",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/556",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/557",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/558",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/559",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/560",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/561",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/562",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/563",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/564",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/565",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/566",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/567",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/568",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/569",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/570",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/571",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/572",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/573",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/574",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/575",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/576",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/577",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/578",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/579",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/580",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/581",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/582",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/583",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/584",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/585",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/586",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/587",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/588",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/589",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/590",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/591",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/592",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/593",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/594",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/595",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/596",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/597",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/598",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/599",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/600",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/601",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/602",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/603",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/604",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/605",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/606",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/607",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/608",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/609",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/610",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/611",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/612",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/613",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/614",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/615",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/616",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/617",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/618",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/619",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/620",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/621",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/622",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/623",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/624",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/625",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/626",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/627",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/628",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/629",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/630",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/631",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/632",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/633",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/634",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/635",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/636",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/637",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/638",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/639",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/640",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/641",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/642",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/643",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/644",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/645",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/646",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/647",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/648",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/649",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/650",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/651",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/652",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/653",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/654",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/655",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/656",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/657",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/658",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/659",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/660",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/661",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/662",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/663",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/664",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/665",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/666",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/667",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/668",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/669",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/670",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/671",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/672",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/673",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/674",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/675",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/676",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/677",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/678",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/679",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/680",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/681",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/682",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/683",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/684",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/685",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/686",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/687",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/688",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/689",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/690",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/691",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/692",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/693",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/694",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/695",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/696",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/697",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/698",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/699",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/700",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/701",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/702",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/703",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/704",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/705",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/706",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/707",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/708",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/709",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/710",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/711",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/712",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/713",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/714",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/715",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/716",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/717",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/718",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/719",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/720",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/721",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/722",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/723",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/724",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/725",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/726",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/727",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/728",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/729",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/730",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/731",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/732",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/733",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/734",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/735",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/736",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/737",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/738",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/739",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/740",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/741",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/742",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/743",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/744",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/745",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/746",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/747",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/748",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/749",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/750",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/751",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/752",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/753",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/754",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/755",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/756",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/757",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/758",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/759",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/760",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/761",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/762",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/763",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/764",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/765",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/766",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/767",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/768",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/769",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/770",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/771",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/772",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/773",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/774",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/775",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/776",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/777",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/778",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/779",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/780",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/781",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/782",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/783",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/784",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/785",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/786",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/787",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/788",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/789",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/790",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/791",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/792",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/793",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/794",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/795",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/796",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/797",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/798",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/799",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/800",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/801",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/802",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/803",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/804",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/805",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/806",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/807",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/808",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/809",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/810",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/811",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/812",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/813",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/814",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/815",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/816",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/817",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/818",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/819",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/820",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/821",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/822",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/823",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/824",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/825",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/826",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      },
+      {
+        "pointer": "/source/source_manifest/827",
+        "fresh_type": "tuple",
+        "persisted_type": "list"
+      }
+    ],
+    "scalar_value_mismatches": [],
+    "key_or_length_mismatches": [],
+    "complete_normalized_source_and_runner_equal_persisted": true,
+    "second_fresh_complete_normalized_capture_equal": true,
+    "normalization_recipe": "json.loads(json.dumps(raw_complete_object, allow_nan=False)); full equality remains mandatory, no selected-field/hash-only substitution.",
+    "scope": "Representation-only administrative gate correction proposed; canonical lane/consumer and frozen source/control unchanged."
+  },
+  "held_author": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/candidate-input-binding-author-inspection-04.json",
+    "sha256": "91f76f850dafe424d6aa9564c44b623ad645cb60728f59d7d3f3edf2cf65ba6b",
+    "bytes": 180602
+  },
+  "held_independent_binding_review": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/candidate-input-binding-independent-04.json",
+    "sha256": "189086dea69cd62fef4c56dc85c9e3034d31ead889c5d282fed053308a4fa987",
+    "bytes": 33190
+  },
+  "all14_current_control_and_schema_pins": [
+    {
+      "bytes": 25106,
+      "path": "remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py",
+      "sha256": "1b9e882514bfe5386785d5a71ae32fdc2bc3aa4cc1dd24532709899fbf4f41bc"
+    },
+    {
+      "bytes": 7170,
+      "path": "scripts/verification/resolved_dependencies.init.gradle",
+      "sha256": "5120cb8d7c12825ad889f23d73075ef29ae48b66e4966d1e2335aa2d11995f59"
+    },
+    {
+      "bytes": 14449,
+      "path": "scripts/verification/dependency_inventory.py",
+      "sha256": "fc0238d4d6ea0abd60d2985ed214af6516a239e439269978139fcc9519a20534"
+    },
+    {
+      "bytes": 30079,
+      "path": "scripts/verification/third_party_notices.py",
+      "sha256": "d5a9e8e0cafd9c2d0de9ecd8dfcb040053fa52d25d798abd9998e84ab6676bdf"
+    },
+    {
+      "bytes": 23404,
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/dependency-candidate-consumer-03/candidate_consumer.py",
+      "sha256": "eb6e2baaac22739b4652bc63c6b57a24374ee57fb81d4711b981b872e8ac1c7f"
+    },
+    {
+      "bytes": 4319,
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/run_candidate_input_01.py",
+      "sha256": "2a306819fb41b1883139fb42355d493f02e1d93a687f54d06f43ffbb758afa60"
+    },
+    {
+      "bytes": 8956,
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/run_schema_consumer_controls_01.py",
+      "sha256": "78222a79d0d19cdce28077506ce1fd74481cc419fdf9dce9e9e5b6fd8840336f"
+    },
+    {
+      "bytes": 14663,
+      "path": "remediation-runs/2026-09-08-continuation/controls/run_candidate_with_schema.py",
+      "sha256": "c9d3a26fb3901b3518f7c066d91ebda906d0bb8bef67273acb4720d5c37419c9"
+    },
+    {
+      "bytes": 19518,
+      "path": "remediation-runs/2026-09-08-continuation/controls/test_schema_base_bootstrap.py",
+      "sha256": "3923b1a3451ac7bcdb54293f93ae6dd8f55d334f69e4a4e297405ea99c6a028c"
+    },
+    {
+      "bytes": 55180,
+      "path": "remediation-runs/2026-09-08-continuation/reviews/schema-base-prerequisites-research-01.json",
+      "sha256": "54c9f96db0ead50008cab5c8c960c0540351922f949757e03dc91b8c5328b13e"
+    },
+    {
+      "bytes": 22210,
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/dependency-candidate-consumer-03/test_candidate_consumer.py",
+      "sha256": "92eef687dbf037b310b00c9b678a5718d95cf5e8313094861c398554755a3535"
+    },
+    {
+      "bytes": 252625,
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/dependency-candidate-consumer-03/schemas/bom-1.6.schema.json",
+      "sha256": "3e92dddbc30cf7f6a02b80f0942b1a4cfd4fb1c26f1dfc4310afa9d613cafb93"
+    },
+    {
+      "bytes": 14269,
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/dependency-candidate-consumer-03/schemas/spdx.schema.json",
+      "sha256": "baa9d3bd1ed57b6751b0887edead6b5063ff53ff7429cf85d476c6c94af0166e"
+    },
+    {
+      "bytes": 8058,
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/dependency-candidate-consumer-03/schemas/jsf-0.82.schema.json",
+      "sha256": "8bae002c25e723db7ee1f26afde680ae1a2b1a8f6b4b4b0fd65dc3becb090aae"
+    }
+  ],
+  "candidate_destinations_absent": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-04",
+      "method": "lstat",
+      "result": "ENOENT"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/candidate-input-current-bindings-04.json",
+      "method": "lstat",
+      "result": "ENOENT"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/candidate-input-04-controller.log",
+      "method": "lstat",
+      "result": "ENOENT"
+    }
+  ],
+  "new_capture_reference": {
+    "persisted_full_source_and_runner": "remediation-runs/2026-09-08-continuation/reviews/candidate-input-binding-author-inspection-04.json#/current_full_capture",
+    "source_manifest_sha256": "d7d6bd8802fb36ab75e566adc183500db24555dce36f0fafd0a1ac91034bf08e",
+    "runner_manifest_sha256": "942e138764146313a59cbe1278c1357284a5701d0c125809c34ddbbe876ce912",
+    "commit": "08d1adfbd7284f190fbab5f7baa846944bca5b68",
+    "tree": "c19beea4647ce882c02d8751d1bf82c22484b52b",
+    "tracked_status": ""
+  },
+  "activity_and_cleanup": {
+    "project_functions_invoked": "identity() and runner_identity(False), twice; no main/invoke/build/test/JDK/bootstrap function",
+    "new_processes": "Only bounded read-only Git children launched by identity; exited; Python exits after receipt.",
+    "bytecode_disabled": true,
+    "temporary_files_or_workers_created": false,
+    "gradle_started": false,
+    "cleanup_action_required": "No task scratch/build/toolchain/process resource allocated; retained evidence only. No unrelated caches/processes touched."
+  },
+  "review_state": "Different-agent review pending; no invocation authorized solely by this receipt."
+}

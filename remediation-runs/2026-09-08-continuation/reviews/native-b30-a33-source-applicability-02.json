@@ -1,0 +1,245 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/native_ci",
+  "reviewed_at": "2026-09-09T21:51:50.541724+00:00",
+  "status": "APPROVED_SCOPED_HISTORICAL_B30_APPLICABILITY_TO_CORRECTED_A33_FREEZE",
+  "findings": [],
+  "scope": "Additive, bounded extension of immutable applicability01 from f5d3100 to4ccfafcf; not a new normal-source run, artifact identity assertion or native dispatch admission.",
+  "decision": "Historical B30 scoped launch/provenance/notices/cleanup evidence remains applicable to the unchanged shipping application/build and closed normal controls at exact4ccfafcf. This justifies not repeating B in the separately reviewed l08-only A33 request. Whole source/copy manifests and future artifact bytes are NOT claimed identical.",
+  "source": {
+    "branch": "fix/local-readiness-2026-09-07",
+    "historical_b30": {
+      "run_id": 34362984912,
+      "run_attempt": 1,
+      "commit": "360fc797a85e1e494334fd8cc11b4e739981cea8",
+      "tree": "8bfe56a21074ba51a4b668bad0728e42007a7593"
+    },
+    "prior_freeze": "f5d3100dc92d7d1f3415a2be8c0ef6ccc93d3aac",
+    "source_commit": "b90c1759aed567b184ab8bb9cd1312c0cbacb489",
+    "frozen_commit": "4ccfafcfc361231cfb730178b3798ebcb6304770",
+    "tree": "8a89fab3042b8614fc4285148a8cd645f7ac2786",
+    "history": "Exactly two new linear commits: b90c1759 afterf5, then inventory-only4ccfafcf. Read-only local HEAD/tree/full-history and tracked cleanliness verified.",
+    "remote": "Coordinator's pinned freeze03 retains normal push and exact direct ls-remote equality; no reviewer network request."
+  },
+  "references": [
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-b30-a33-source-applicability-01.json",
+      "bytes": 15030,
+      "sha256": "98770b96213aba2c0c9eda42e4e7fe076142f8575eb8bab2070690d155b90d0a"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/a33-source-freeze-03.json",
+      "bytes": 17227,
+      "sha256": "3df46b60b2bb19002c74462221de0db75df77be7e12ee272a353074da29a0a92"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/a33-cycle-label-correction-independent-01.json",
+      "bytes": 5001,
+      "sha256": "2dbb9b3ad558422b65e6e8a4e8b82cc205600daf5c2d0ecd955e9c1bc37ad30c"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/a33-source-freeze-02.json",
+      "bytes": 3858,
+      "sha256": "2814291291d2cb775c4dfa393dde9d591834baf21171534c9bdffcb16cca8c60"
+    }
+  ],
+  "prior_report_distinct_review": {
+    "reviewer": "/root/portability_review",
+    "method": "Separate collaboration message reviewing immutable98770b96 report content",
+    "conclusion": "No scoped applicability findings: closed normal98, shipping/build equality, source/copy deltas and11 evidence pins verified. Express f5 dispatch/admission HOLD retained. That review was not native execution or a new file."
+  },
+  "incremental_delta": {
+    "modified": [
+      "docs/review/INDEPENDENT_REVIEW_INVENTORY.csv",
+      "scripts/ci/NATIVE_CONTINUATION.md",
+      "scripts/release/tests/test_native_process_probe.py"
+    ],
+    "added_count": 36,
+    "added_by_prefix": {
+      "C/evidence": 7,
+      "N/actions": 23,
+      "N/reviews": 6
+    },
+    "deleted_count": 0
+  },
+  "cumulative_delta_from_B30": {
+    "additions": 1075,
+    "modifications": 14,
+    "deletions": 0,
+    "renames": 0,
+    "interpretation": "Cumulative modified path count remains14 because both new test/guide paths already differed historically. Normal and shipping scopes are unchanged, not the entire repository."
+  },
+  "exact_correction_adoption": {
+    "files": [
+      {
+        "path": "scripts/release/tests/test_native_process_probe.py",
+        "bytes": 43371,
+        "sha256": "32280e091ea19838812d815962094b67417cba7b2498d456d8f075dd5357c41d"
+      },
+      {
+        "path": "scripts/ci/NATIVE_CONTINUATION.md",
+        "bytes": 20415,
+        "sha256": "d19d47462f2feb49dd379509b8c6c7d89e2129b1266e8ad63c6c720f53523b9c"
+      }
+    ],
+    "reviewer": "/root/ci_workflow",
+    "author": "/root",
+    "reconstruction": "Independently applied precisely the reviewed single31/32→33/34 test literal and three guide label substitutions to f5 Git blobs; complete resulting file bytes and modes equal committed4cc. Adapter script remains byte/mode-identical to f5. No test guard was removed; no runtime/runner/fixture/workflow behavior changed."
+  },
+  "actual_local_evidence": {
+    "references": [
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/a33-cycle-label-focused-linux-01/receipt.json",
+        "bytes": 306141,
+        "sha256": "b601eb023f851c753a1bc19852996b5d9eb51c25de0e384590f6d4baf88b76a9"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/a33-cycle-label-focused-linux-01/gradle.log",
+        "bytes": 326,
+        "sha256": "b6c42af9add74670e9e1abdb64cdd0e27199b7cc8768d73977200e4636fca6e0"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/a33-cycle-label-focused-linux-01/stop.log",
+        "bytes": 31,
+        "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/a33-cycle-label-focused-linux-01/test-receipts.json",
+        "bytes": 3,
+        "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/a33-cycle-label-focused-linux-01/artifact-receipts.json",
+        "bytes": 3,
+        "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+      }
+    ],
+    "result": "One affected existing unittest executed and PASS, no failures/errors/skips. Reopened raw Ran1/OK and exact method, receipt source/runner before-after equality and stop0/raw no-daemons. No full-suite, validator, JVM/Gradle build or native-runtime pass inferred.",
+    "distinct_review": "Sealed correction review2dbb9b3a independently reconciles the one-method execution, stable829 source binding and absence of owned workers/outputs/cleanup errors. Reused within exact scope, not rerun."
+  },
+  "unchanged_normal_scope": {
+    "rows": 98,
+    "aggregate_sha256": "7d598e39bd718e0f8347d0eee839b5aad2bece2bddb82e08ce7f6c1ea592c413",
+    "directories": [
+      "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01",
+      "scripts/verification/ios-readiness"
+    ],
+    "pinned_helper": "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/darwin_owned_processes.py",
+    "comparison": "Independently derived exact closed direct-file selection at f5 and4cc from unchanged runner rule; all98 path sets, Git blob identities and modes are equal. Transitive reviewed360fc→965eb→f5 equality retained, including libproc, provenance, signing, ownership, toolchain/lifecycle and notices.",
+    "shipping_subtrees": {
+      "composeApp": "27e88880f97d3148184c80c1fa40bae958530a22",
+      "shared": "03addf8feb5d9722b69539aa21857e522c8c00f2",
+      "game-modes": "d56b07334d549c3a6d4d3819f2bff645c149aa50",
+      "build-logic": "3fa3848246aa0204b6daf067617b0aed69c7510c",
+      "gradle": "56fe4ae6668625c7cd9f357c52bb7ba9c684a8c9",
+      "config": "3081d67d7c14ca8ffc7b30824dc5b1a81c0f0fd4",
+      "iosApp": "da6d918bb46c4c29640b8ce5c4484ca57fc5101e"
+    },
+    "root_build_blobs": {
+      "build.gradle.kts": [
+        "100644",
+        "blob",
+        "638e4c7d0a4056168c1bc0560fbcde4cf849561f"
+      ],
+      "settings.gradle.kts": [
+        "100644",
+        "blob",
+        "4beca55a8d697ca0c840e6410a3a3015118bd15c"
+      ],
+      "gradle.properties": [
+        "100644",
+        "blob",
+        "21fe7eb8e2b4ccb19473272cb8aaa45faa2bd38b"
+      ],
+      "gradlew": [
+        "100755",
+        "blob",
+        "faf93008b77e7b52e18c44e4eef257fc2f8fd76d"
+      ],
+      "gradlew.bat": [
+        "100644",
+        "blob",
+        "9d21a21834d5195c278ba17baec3115b2aaab06e"
+      ]
+    },
+    "source_manifest": {
+      "rows": 829,
+      "new_modified_paths": [
+        "docs/review/INDEPENDENT_REVIEW_INVENTORY.csv",
+        "scripts/ci/NATIVE_CONTINUATION.md",
+        "scripts/release/tests/test_native_process_probe.py"
+      ],
+      "cumulative_modified_paths": [
+        ".github/workflows/production-verification.yml",
+        "docs/review/INDEPENDENT_REVIEW_INVENTORY.csv",
+        "scripts/ci/NATIVE_CONTINUATION.md",
+        "scripts/ci/native_continuation.py",
+        "scripts/release/tests/test_native_continuation.py",
+        "scripts/release/tests/test_native_process_probe.py",
+        "scripts/release/tests/test_workflow_contract.py",
+        "scripts/release/workflow_contract.py"
+      ],
+      "method": "Source/copy path sets inherited from pinned f5 binding and unchanged closed policy; every new addition is excluded evidence. Incremental differences derived from exact Git tree comparison. Fresh source-binding content will be independently rehashed only in the separate fresh-preflight admission."
+    },
+    "copied_originals": {
+      "rows": 754,
+      "new_modified_paths": [
+        "scripts/ci/NATIVE_CONTINUATION.md",
+        "scripts/release/tests/test_native_process_probe.py"
+      ],
+      "cumulative_modified_paths": [
+        "scripts/ci/NATIVE_CONTINUATION.md",
+        "scripts/ci/native_continuation.py",
+        "scripts/release/tests/test_native_continuation.py",
+        "scripts/release/tests/test_native_process_probe.py",
+        "scripts/release/tests/test_workflow_contract.py",
+        "scripts/release/workflow_contract.py"
+      ]
+    },
+    "interpretation": "New copied differences are one regression expectation and guide prose, neither imported/executed by the unchanged normal build/launch recipe. Entire copied input manifest is NOT identical; cumulative six nonshipping script differences remain. Seven production/build subtree objects and five root build blob objects/modes are identical."
+  },
+  "mechanical_inventory": {
+    "path": "docs/review/INDEPENDENT_REVIEW_INVENTORY.csv",
+    "bytes": 12230030,
+    "sha256": "a8ff0784363d0b79ac68d086e9be3041ac448b8ebb39dcedf94cbfdff132f93a",
+    "rows": 19702,
+    "policy": "Exact19702 unique CSV paths equal current tracked file set; root generator/check commands exit0. Mechanical freshness is not line-by-line independent source review."
+  },
+  "freeze_attempts": {
+    "failed02": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/a33-source-freeze-02.json",
+      "bytes": 3858,
+      "sha256": "2814291291d2cb775c4dfa393dde9d591834baf21171534c9bdffcb16cca8c60",
+      "status": "FAILED",
+      "reason": "Blanket whitespace check exited2 on retained raw JDK log trailing spaces before commit; preserve failed receipt and log bytes, no runtime outcome."
+    },
+    "successful03": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/a33-source-freeze-03.json",
+      "bytes": 17227,
+      "sha256": "3df46b60b2bb19002c74462221de0db75df77be7e12ee272a353074da29a0a92",
+      "commands": 21,
+      "all_exit_codes": 0,
+      "stop_exit_code": 0,
+      "policy": "Root used source-only whitespace check, then reviewed source commit, inventory-only commit, freshness check and push/direct remote equality. No log stripping or source/control gate weakening."
+    }
+  },
+  "historical_actual_evidence": {
+    "run_id": 34362984912,
+    "run_attempt": 1,
+    "source": "360fc797a85e1e494334fd8cc11b4e739981cea8",
+    "status": "B30 scoped runtime/provenance/notices/cleanup PASS within the failed A29/B30 Actions run; overall run/A29 remain failure/NOT_READY.",
+    "scope": "Eight normal-source repetitions/48 periodic samples and separate ninth public launch with three actual libproc queries, native size1272/exact-owned-text-extent. Immutable artifact/raw/image pins and independent reviews remain in applicability01.",
+    "limitation": "Not continuous liveness, memory-content hashing, whole-map enumeration, a new4cc binary, B34 execution/PASS, physical-device behavior, or complete qualification."
+  },
+  "fresh_preflight_and_dispatch": {
+    "status": "NOT_APPROVED_BY_THIS_REPORT",
+    "requirement": "Fresh4cc paired nonbuilding preflight34408391427/1, exact both99 control manifests and new l08-only request10 require separate bounded admission. f5 preflight34402764126/request09 remain preserved but must not be dispatched/reused for4cc.",
+    "selection": "If separately admitted, only A33; normal/B34 must be NOT_RUN_THIS_RUN, with no B child/receipt/artifact/PASS synthesized."
+  },
+  "readiness": "NOT_READY. A33 actual runtime, strict protection, current C06/fullD and independent final reconciliation remain distinct. Physical-device, Store/signing/publication, identity collision and owner/legal obligations unchanged.",
+  "reviewer_execution": {
+    "read_only_checks": 52,
+    "errors": [],
+    "method": "Local read-only Git/stdlib hash/JSON/CSV comparison; no project import, tests/builds, API/network, dispatch, source/index/Git writes. Only this additive report authored. No reviewer workers/outputs or build-cleanup obligation."
+  }
+}

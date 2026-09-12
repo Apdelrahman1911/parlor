@@ -1,0 +1,204 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/release_fix_review",
+  "scope": "Independent read-only approval of one-off supplemental cleanup for ios-readiness-03 secondary Apple FIFO pair only",
+  "classification": "APPROVE CONDITIONALLY — exact inode/parent-bound supplemental cleanup",
+  "baseline": {
+    "branch": "fix/local-readiness-2026-09-07",
+    "head": "f5ea8045bd903c255041b198f54aca67e893612f",
+    "tree": "b109c8ec6ec579b9197f449b36bda2c39105a652",
+    "tracked_clean": true
+  },
+  "source_review": {
+    "path": "scripts/verification/ios-readiness/secondary_fifo.py",
+    "lines": [
+      [
+        1,
+        205
+      ]
+    ],
+    "sha256": "080622194e19ef5d3ffb561e134ab8cf91e3e3ccef1e29197f59781154a7ffcc",
+    "matches_executed_input_manifest": true
+  },
+  "evidence_hashes": {
+    "evidence/ios-readiness-03/secondary-fifo-ownership.json": "700f5add8d8bdc49114fc07e442012435c16ddf821dcb9b5112e0aeb2df48f2c",
+    "evidence/ios-readiness-03/secondary-fifo-ownership-final.json": "700f5add8d8bdc49114fc07e442012435c16ddf821dcb9b5112e0aeb2df48f2c",
+    "evidence/ios-readiness-03/secondary-fifo-readonly-followup-01.json": "24018e5e71863e327c283aa1e6551922ee49caee89bd0fb581547715765ce840",
+    "evidence/ios-readiness-03/secondary-fifo-errors.json": "7a4c9f8100332aa97c06c5a52882bea77089f0caccf75b5a9fef9d186c1856ac",
+    "evidence/ios-readiness-03/receipt.json": "46316b3b8f80b86645e14746da1dbd08d511e0e77acc390233491c2f6af0fcd6",
+    "evidence/ios-readiness-03/input-manifest.json": "23102be041be10500526ad7c657a43efd0d4cf6b1c4d5098b4079412e9069b70"
+  },
+  "reasoning": [
+    "The original persisted claim names exactly one HostToRemote and one RemoteToHost with the same UUID, directory and attested parent PID65831; recorded childPID67137/parent start identities agree with selected ownership_observed receipt rows.",
+    "At secondary_fifo.py113–138 pending claims are created only after live child and parent UID checks and post-query start/argv/PPID checks. The next failed revalidation precedes claim mutation; it does not invalidate the earlier durable exact pending claim.",
+    "The original record inode-attests both parent directories and RemoteToHost while live. Their device/inode/UID/mode/birth values still match. The late HostToRemote inode's creation is inside the original run interval, 2.6066354 seconds after the sibling. It matches the subsequent fixed read-only followup's entire metadata.",
+    "Both exact files are zero-byte FIFOs with one link, beneath two unchanged directories containing only the expected child set; no path component is a symlink. Independent exact PID and holder probes returned no matches and no errors.",
+    "The ordinary cleanup correctly failed closed because pending HostToRemote was never live inode-attested. Supplemental evidence supports a narrow ownership judgment for disposing two recreatable FIFOs, not a retroactive PASS or generalized adoption of unrecorded temporary files."
+  ],
+  "independent_observation": {
+    "at": "2026-09-07T10:43:11.704719+00:00",
+    "operation": "read-only exact already-claimed metadata/process/holder verification; no unlink/rmdir/signals",
+    "observer": "/root/release_fix_review",
+    "uid": 501,
+    "paths": [
+      {
+        "path": "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-65831",
+        "exists": true,
+        "dev": 16777232,
+        "ino": 84580825,
+        "uid": 501,
+        "mode": 16877,
+        "links": 3,
+        "birth": 1788776485.281553,
+        "bytes": 96,
+        "children": [
+          "IB"
+        ],
+        "matches_followup": true
+      },
+      {
+        "path": "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-65831/IB",
+        "exists": true,
+        "dev": 16777232,
+        "ino": 84580826,
+        "uid": 501,
+        "mode": 16877,
+        "links": 4,
+        "birth": 1788776485.2816148,
+        "bytes": 128,
+        "children": [
+          "1971E2DC-A034-4F1D-9D64-A6E0DF1DC753.HostToRemote",
+          "1971E2DC-A034-4F1D-9D64-A6E0DF1DC753.RemoteToHost"
+        ],
+        "matches_followup": true
+      },
+      {
+        "path": "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-65831/IB/1971E2DC-A034-4F1D-9D64-A6E0DF1DC753.HostToRemote",
+        "exists": true,
+        "dev": 16777232,
+        "ino": 84581339,
+        "uid": 501,
+        "mode": 4589,
+        "links": 1,
+        "birth": 1788776487.8883045,
+        "bytes": 0,
+        "children": null,
+        "matches_followup": true
+      },
+      {
+        "path": "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-65831/IB/1971E2DC-A034-4F1D-9D64-A6E0DF1DC753.RemoteToHost",
+        "exists": true,
+        "dev": 16777232,
+        "ino": 84580827,
+        "uid": 501,
+        "mode": 4589,
+        "links": 1,
+        "birth": 1788776485.2816691,
+        "bytes": 0,
+        "children": null,
+        "matches_followup": true
+      }
+    ],
+    "components": [
+      {
+        "path": "/",
+        "symlink": false
+      },
+      {
+        "path": "/private",
+        "symlink": false
+      },
+      {
+        "path": "/private/var",
+        "symlink": false
+      },
+      {
+        "path": "/private/var/folders",
+        "symlink": false
+      },
+      {
+        "path": "/private/var/folders/6m",
+        "symlink": false
+      },
+      {
+        "path": "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn",
+        "symlink": false
+      },
+      {
+        "path": "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T",
+        "symlink": false
+      },
+      {
+        "path": "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-65831",
+        "symlink": false
+      },
+      {
+        "path": "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-65831/IB",
+        "symlink": false
+      },
+      {
+        "path": "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-65831/IB/1971E2DC-A034-4F1D-9D64-A6E0DF1DC753.HostToRemote",
+        "symlink": false
+      },
+      {
+        "path": "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-65831/IB/1971E2DC-A034-4F1D-9D64-A6E0DF1DC753.RemoteToHost",
+        "symlink": false
+      }
+    ],
+    "probes": [
+      {
+        "argv": [
+          "/bin/ps",
+          "-p",
+          "65831,67137",
+          "-o",
+          "pid=",
+          "-o",
+          "lstart=",
+          "-o",
+          "command="
+        ],
+        "exit_code": 1,
+        "stdout": "",
+        "stderr": ""
+      },
+      {
+        "argv": [
+          "/usr/sbin/lsof",
+          "-nP",
+          "-t",
+          "+D",
+          "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-65831"
+        ],
+        "exit_code": 1,
+        "stdout": "",
+        "stderr": ""
+      }
+    ]
+  },
+  "required_conditions_before_any_mutation": [
+    "Root alone performs deletion. Revalidate all evidence hashes, exact original parent/process claims, and original cycle birth interval. Abort on changes.",
+    "Require both original PIDs absent, including any reused PID. Query exact root holders and require recognized no-match exit with empty stdout/stderr; timeout/permissions/other error is BLOCKED.",
+    "Open directory components with O_DIRECTORY|O_NOFOLLOW, use fstat and fd-relative non-following stat to pin the exact directories and FIFO dev/inode/UID/mode/birth. Do not open/read FIFO contents.",
+    "Require exact initial child sets, FIFO nlink1,size0, no symlinks/unknowns. Persist late-attestation evidence before deletion. Recheck immediately before each mutation.",
+    "Only descriptor-relative unlink of the two exact UUID FIFO names, then descriptor-relative rmdir of empty IB and empty ibtoold-65831. No recursion/globs, parent/temp-root deletion, signaling, arbitrary path adoption, or source edits.",
+    "Recheck stable directory identity and expected remaining children after each step; stop on interference. Preserve success/failure step receipts even if later operation fails.",
+    "Keep original FAIL receipt and ledger byte-identical. Write only an additive supplemental cleanup result with actual operations, exit/errors, final path absence, and source/evidence preservation."
+  ],
+  "limitations": [
+    "HostToRemote did not receive a live inode record. Its ownership is inferred from the earlier live exact claim, unchanged parent identities, creation during the original run, and stable later metadata.",
+    "Read-only process/holder/metadata observations are point-in-time, not an atomic lock or a proof against a malicious same-UID actor racing deletion. Mutation-time checks are required.",
+    "This approval covers the proposed bounded algorithm and exact four paths only; no cleanup implementation has been executed or signed off by this reviewer.",
+    "The ios03 native diagnostic/runtime failure remains FAIL regardless of successful supplemental filesystem cleanup."
+  ],
+  "reviewer_actions": {
+    "mutations": "Created this additive review only",
+    "builds": 0,
+    "tests": 0,
+    "simulators": 0,
+    "background_workers_started": 0,
+    "signals": 0,
+    "deletions": 0
+  },
+  "reviewed_at": "2026-09-07T10:44:57.808021+00:00"
+}

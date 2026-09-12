@@ -1,0 +1,423 @@
+Compiled from "AbstractAndroidLocations.kt"
+public abstract class com.android.prefs.AbstractAndroidLocations implements com.android.prefs.AndroidLocationsProvider {
+  public static final com.android.prefs.AbstractAndroidLocations$Companion Companion;
+
+  private final com.android.utils.EnvironmentProvider environmentProvider;
+
+  private final com.android.utils.ILogger logger;
+
+  private final boolean silent;
+
+  private java.nio.file.Path internalPrefsLocation;
+
+  private java.nio.file.Path internalAvdLocation;
+
+  private java.nio.file.Path internalGradleAvdLocation;
+
+  private java.nio.file.Path internalUserHomeLocation;
+
+  public static final java.lang.String FOLDER_DOT_ANDROID;
+
+  public static final java.lang.String FOLDER_AVD;
+
+  public static final java.lang.String FOLDER_GRADLE_AVD;
+
+  public static final java.lang.String ANDROID_PREFS_ROOT;
+
+  private static final java.lang.String ANDROID_USER_HOME;
+
+  protected com.android.prefs.AbstractAndroidLocations(com.android.utils.EnvironmentProvider, com.android.utils.ILogger, boolean);
+    Code:
+       0: aload_1
+       1: ldc           #11                 // String environmentProvider
+       3: invokestatic  #17                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+       6: aload_2
+       7: ldc           #19                 // String logger
+       9: invokestatic  #17                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+      12: aload_0
+      13: invokespecial #22                 // Method java/lang/Object."<init>":()V
+      16: aload_0
+      17: aload_1
+      18: putfield      #25                 // Field environmentProvider:Lcom/android/utils/EnvironmentProvider;
+      21: aload_0
+      22: aload_2
+      23: putfield      #28                 // Field logger:Lcom/android/utils/ILogger;
+      26: aload_0
+      27: iload_3
+      28: putfield      #32                 // Field silent:Z
+      31: return
+
+  public com.android.prefs.AbstractAndroidLocations(com.android.utils.EnvironmentProvider, com.android.utils.ILogger, boolean, int, kotlin.jvm.internal.DefaultConstructorMarker);
+    Code:
+       0: iload         4
+       2: iconst_4
+       3: iand
+       4: ifeq          9
+       7: iconst_1
+       8: istore_3
+       9: aload_0
+      10: aload_1
+      11: aload_2
+      12: iload_3
+      13: invokespecial #37                 // Method "<init>":(Lcom/android/utils/EnvironmentProvider;Lcom/android/utils/ILogger;Z)V
+      16: return
+
+  public java.nio.file.Path getPrefsLocation() throws com.android.prefs.AndroidLocationsException;
+    Code:
+       0: aload_0
+       1: getfield      #47                 // Field internalPrefsLocation:Ljava/nio/file/Path;
+       4: dup
+       5: ifnonnull     98
+       8: pop
+       9: aload_0
+      10: invokevirtual #50                 // Method computeAndroidFolder:()Ljava/nio/file/Path;
+      13: astore_1
+      14: aload_1
+      15: astore_2
+      16: iconst_0
+      17: istore_3
+      18: aload_0
+      19: aload_2
+      20: putfield      #47                 // Field internalPrefsLocation:Ljava/nio/file/Path;
+      23: aload_2
+      24: iconst_0
+      25: anewarray     #52                 // class java/nio/file/LinkOption
+      28: invokestatic  #58                 // Method com/android/io/CancellableFileIo.notExists:(Ljava/nio/file/Path;[Ljava/nio/file/LinkOption;)Z
+      31: ifeq          68
+      34: nop
+      35: aload_2
+      36: iconst_0
+      37: anewarray     #60                 // class java/nio/file/attribute/FileAttribute
+      40: invokestatic  #66                 // Method java/nio/file/Files.createDirectories:(Ljava/nio/file/Path;[Ljava/nio/file/attribute/FileAttribute;)Ljava/nio/file/Path;
+      43: pop
+      44: goto          96
+      47: astore        4
+      49: new           #41                 // class com/android/prefs/AndroidLocationsException
+      52: dup
+      53: aload_2
+      54: invokedynamic #78,  0             // InvokeDynamic #0:makeConcatWithConstants:(Ljava/nio/file/Path;)Ljava/lang/String;
+      59: aload         4
+      61: checkcast     #80                 // class java/lang/Throwable
+      64: invokespecial #83                 // Method com/android/prefs/AndroidLocationsException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+      67: athrow
+      68: aload_2
+      69: iconst_0
+      70: anewarray     #52                 // class java/nio/file/LinkOption
+      73: invokestatic  #86                 // Method com/android/io/CancellableFileIo.isRegularFile:(Ljava/nio/file/Path;[Ljava/nio/file/LinkOption;)Z
+      76: ifeq          96
+      79: new           #41                 // class com/android/prefs/AndroidLocationsException
+      82: dup
+      83: aload_2
+      84: invokedynamic #89,  0             // InvokeDynamic #1:makeConcatWithConstants:(Ljava/nio/file/Path;)Ljava/lang/String;
+      89: aconst_null
+      90: iconst_2
+      91: aconst_null
+      92: invokespecial #92                 // Method com/android/prefs/AndroidLocationsException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+      95: athrow
+      96: nop
+      97: aload_1
+      98: areturn
+    Exception table:
+       from    to  target type
+          34    44    47   Class java/lang/SecurityException
+
+  public java.nio.file.Path getAvdLocation() throws com.android.prefs.AndroidLocationsException;
+    Code:
+       0: aload_0
+       1: getfield      #103                // Field internalAvdLocation:Ljava/nio/file/Path;
+       4: dup
+       5: ifnonnull     69
+       8: pop
+       9: new           #105                // class com/android/prefs/PathLocator
+      12: dup
+      13: aload_0
+      14: getfield      #25                 // Field environmentProvider:Lcom/android/utils/EnvironmentProvider;
+      17: invokespecial #108                // Method com/android/prefs/PathLocator."<init>":(Lcom/android/utils/EnvironmentProvider;)V
+      20: iconst_1
+      21: anewarray     #110                // class com/android/prefs/Global
+      24: astore_2
+      25: aload_2
+      26: iconst_0
+      27: getstatic     #114                // Field com/android/prefs/Global.ANDROID_AVD_HOME:Lcom/android/prefs/Global;
+      30: aastore
+      31: aload_2
+      32: invokevirtual #118                // Method com/android/prefs/PathLocator.singlePathOf:([Lcom/android/prefs/Global;)Ljava/nio/file/Path;
+      35: dup
+      36: ifnonnull     52
+      39: pop
+      40: aload_0
+      41: invokevirtual #120                // Method getPrefsLocation:()Ljava/nio/file/Path;
+      44: getstatic     #124                // Field FOLDER_AVD:Ljava/lang/String;
+      47: invokeinterface #128,  2          // InterfaceMethod java/nio/file/Path.resolve:(Ljava/lang/String;)Ljava/nio/file/Path;
+      52: astore_1
+      53: aload_1
+      54: astore_2
+      55: iconst_0
+      56: istore_3
+      57: aload_0
+      58: aload_2
+      59: putfield      #103                // Field internalAvdLocation:Ljava/nio/file/Path;
+      62: aload_1
+      63: dup
+      64: ldc           #130                // String also(...)
+      66: invokestatic  #133                // Method kotlin/jvm/internal/Intrinsics.checkNotNullExpressionValue:(Ljava/lang/Object;Ljava/lang/String;)V
+      69: areturn
+
+  public java.nio.file.Path getGradleAvdLocation() throws com.android.prefs.AndroidLocationsException;
+    Code:
+       0: aload_0
+       1: getfield      #140                // Field internalGradleAvdLocation:Ljava/nio/file/Path;
+       4: dup
+       5: ifnonnull     38
+       8: pop
+       9: aload_0
+      10: invokevirtual #142                // Method getAvdLocation:()Ljava/nio/file/Path;
+      13: getstatic     #145                // Field FOLDER_GRADLE_AVD:Ljava/lang/String;
+      16: invokeinterface #128,  2          // InterfaceMethod java/nio/file/Path.resolve:(Ljava/lang/String;)Ljava/nio/file/Path;
+      21: astore_1
+      22: aload_1
+      23: astore_2
+      24: iconst_0
+      25: istore_3
+      26: aload_0
+      27: aload_2
+      28: putfield      #140                // Field internalGradleAvdLocation:Ljava/nio/file/Path;
+      31: aload_1
+      32: dup
+      33: ldc           #130                // String also(...)
+      35: invokestatic  #133                // Method kotlin/jvm/internal/Intrinsics.checkNotNullExpressionValue:(Ljava/lang/Object;Ljava/lang/String;)V
+      38: areturn
+
+  public java.nio.file.Path getUserHomeLocation();
+    Code:
+       0: aload_0
+       1: getfield      #150                // Field internalUserHomeLocation:Ljava/nio/file/Path;
+       4: dup
+       5: ifnull        14
+       8: astore_3
+       9: iconst_0
+      10: istore        4
+      12: aload_3
+      13: areturn
+      14: pop
+      15: new           #105                // class com/android/prefs/PathLocator
+      18: dup
+      19: aload_0
+      20: getfield      #25                 // Field environmentProvider:Lcom/android/utils/EnvironmentProvider;
+      23: invokespecial #108                // Method com/android/prefs/PathLocator."<init>":(Lcom/android/utils/EnvironmentProvider;)V
+      26: astore_1
+      27: aload_1
+      28: iconst_4
+      29: anewarray     #110                // class com/android/prefs/Global
+      32: astore_3
+      33: aload_3
+      34: iconst_0
+      35: getstatic     #153                // Field com/android/prefs/Global.TEST_TMPDIR:Lcom/android/prefs/Global;
+      38: aastore
+      39: aload_3
+      40: iconst_1
+      41: getstatic     #156                // Field com/android/prefs/Global.XDG_CONFIG_HOME:Lcom/android/prefs/Global;
+      44: aastore
+      45: aload_3
+      46: iconst_2
+      47: getstatic     #159                // Field com/android/prefs/Global.USER_HOME:Lcom/android/prefs/Global;
+      50: aastore
+      51: aload_3
+      52: iconst_3
+      53: getstatic     #162                // Field com/android/prefs/Global.HOME:Lcom/android/prefs/Global;
+      56: aastore
+      57: aload_3
+      58: invokevirtual #165                // Method com/android/prefs/PathLocator.firstPathOf:([Lcom/android/prefs/Global;)Ljava/nio/file/Path;
+      61: astore_2
+      62: aload_2
+      63: ifnull        87
+      66: aload_2
+      67: astore        4
+      69: aload         4
+      71: astore        5
+      73: iconst_0
+      74: istore        6
+      76: aload_0
+      77: aload         5
+      79: putfield      #150                // Field internalUserHomeLocation:Ljava/nio/file/Path;
+      82: aload         4
+      84: goto          98
+      87: getstatic     #169                // Field com/android/prefs/AndroidLocationsException.Companion:Lcom/android/prefs/AndroidLocationsException$Companion;
+      90: aload_1
+      91: invokevirtual #173                // Method com/android/prefs/PathLocator.getVisitedVariables:()Ljava/util/List;
+      94: invokevirtual #179                // Method com/android/prefs/AndroidLocationsException$Companion.createForHomeLocation$common:(Ljava/util/List;)Lcom/android/prefs/AndroidLocationsException;
+      97: athrow
+      98: areturn
+
+  public final java.nio.file.Path computeAndroidFolder();
+    Code:
+       0: new           #185                // class com/android/prefs/AndroidPathLocator
+       3: dup
+       4: aload_0
+       5: getfield      #25                 // Field environmentProvider:Lcom/android/utils/EnvironmentProvider;
+       8: aload_0
+       9: getfield      #32                 // Field silent:Z
+      12: ifne          22
+      15: aload_0
+      16: getfield      #28                 // Field logger:Lcom/android/utils/ILogger;
+      19: goto          32
+      22: new           #187                // class com/android/utils/NullLogger
+      25: dup
+      26: invokespecial #188                // Method com/android/utils/NullLogger."<init>":()V
+      29: checkcast     #190                // class com/android/utils/ILogger
+      32: invokespecial #193                // Method com/android/prefs/AndroidPathLocator."<init>":(Lcom/android/utils/EnvironmentProvider;Lcom/android/utils/ILogger;)V
+      35: astore_1
+      36: aload_1
+      37: iconst_3
+      38: anewarray     #110                // class com/android/prefs/Global
+      41: astore_3
+      42: aload_3
+      43: iconst_0
+      44: getstatic     #196                // Field com/android/prefs/Global.ANDROID_USER_HOME:Lcom/android/prefs/Global;
+      47: aastore
+      48: aload_3
+      49: iconst_1
+      50: getstatic     #199                // Field com/android/prefs/Global.ANDROID_PREFS_ROOT:Lcom/android/prefs/Global;
+      53: aastore
+      54: aload_3
+      55: iconst_2
+      56: getstatic     #202                // Field com/android/prefs/Global.ANDROID_SDK_HOME:Lcom/android/prefs/Global;
+      59: aastore
+      60: aload_3
+      61: invokevirtual #203                // Method com/android/prefs/AndroidPathLocator.singlePathOf:([Lcom/android/prefs/Global;)Ljava/nio/file/Path;
+      64: astore_2
+      65: aload_2
+      66: ifnull        124
+      69: aload_1
+      70: invokevirtual #204                // Method com/android/prefs/AndroidPathLocator.getVisitedVariables:()Ljava/util/List;
+      73: invokeinterface #210,  1          // InterfaceMethod java/util/List.size:()I
+      78: iconst_1
+      79: if_icmple     122
+      82: aload_0
+      83: getfield      #32                 // Field silent:Z
+      86: ifne          122
+      89: aload_1
+      90: invokevirtual #204                // Method com/android/prefs/AndroidPathLocator.getVisitedVariables:()Ljava/util/List;
+      93: ldc           #212                // String More than one location points to the Android preference location\nbut only one is valid
+      95: aconst_null
+      96: getstatic     #218                // Field com/android/prefs/AbstractAndroidLocations$computeAndroidFolder$message$1.INSTANCE:Lcom/android/prefs/AbstractAndroidLocations$computeAndroidFolder$message$1;
+      99: checkcast     #220                // class kotlin/jvm/functions/Function1
+     102: iconst_4
+     103: aconst_null
+     104: invokestatic  #226                // Method com/android/prefs/AbstractAndroidLocationsKt.combineLocationValuesIntoMessage$default:(Ljava/util/List;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Ljava/lang/String;
+     107: astore_3
+     108: aload_0
+     109: getfield      #28                 // Field logger:Lcom/android/utils/ILogger;
+     112: aload_3
+     113: iconst_0
+     114: anewarray     #4                  // class java/lang/Object
+     117: invokeinterface #230,  3          // InterfaceMethod com/android/utils/ILogger.warning:(Ljava/lang/String;[Ljava/lang/Object;)V
+     122: aload_2
+     123: areturn
+     124: new           #105                // class com/android/prefs/PathLocator
+     127: dup
+     128: aload_0
+     129: getfield      #25                 // Field environmentProvider:Lcom/android/utils/EnvironmentProvider;
+     132: invokespecial #108                // Method com/android/prefs/PathLocator."<init>":(Lcom/android/utils/EnvironmentProvider;)V
+     135: astore_3
+     136: aload_3
+     137: iconst_4
+     138: anewarray     #110                // class com/android/prefs/Global
+     141: astore        5
+     143: aload         5
+     145: iconst_0
+     146: getstatic     #153                // Field com/android/prefs/Global.TEST_TMPDIR:Lcom/android/prefs/Global;
+     149: aastore
+     150: aload         5
+     152: iconst_1
+     153: getstatic     #156                // Field com/android/prefs/Global.XDG_CONFIG_HOME:Lcom/android/prefs/Global;
+     156: aastore
+     157: aload         5
+     159: iconst_2
+     160: getstatic     #159                // Field com/android/prefs/Global.USER_HOME:Lcom/android/prefs/Global;
+     163: aastore
+     164: aload         5
+     166: iconst_3
+     167: getstatic     #162                // Field com/android/prefs/Global.HOME:Lcom/android/prefs/Global;
+     170: aastore
+     171: aload         5
+     173: invokevirtual #165                // Method com/android/prefs/PathLocator.firstPathOf:([Lcom/android/prefs/Global;)Ljava/nio/file/Path;
+     176: astore        4
+     178: aload         4
+     180: ifnull        205
+     183: aload         4
+     185: getstatic     #233                // Field FOLDER_DOT_ANDROID:Ljava/lang/String;
+     188: invokeinterface #128,  2          // InterfaceMethod java/nio/file/Path.resolve:(Ljava/lang/String;)Ljava/nio/file/Path;
+     193: astore        5
+     195: aload         5
+     197: ifnull        205
+     200: aload         5
+     202: goto          243
+     205: new           #41                 // class com/android/prefs/AndroidLocationsException
+     208: dup
+     209: aload_1
+     210: invokevirtual #204                // Method com/android/prefs/AndroidPathLocator.getVisitedVariables:()Ljava/util/List;
+     213: checkcast     #235                // class java/util/Collection
+     216: aload_3
+     217: invokevirtual #173                // Method com/android/prefs/PathLocator.getVisitedVariables:()Ljava/util/List;
+     220: checkcast     #237                // class java/lang/Iterable
+     223: invokestatic  #243                // Method kotlin/collections/CollectionsKt.plus:(Ljava/util/Collection;Ljava/lang/Iterable;)Ljava/util/List;
+     226: ldc           #245                // String Unable to find the location for the android preferences.\nThe following locations have been checked, but they do not exist:
+     228: aconst_null
+     229: aconst_null
+     230: bipush        12
+     232: aconst_null
+     233: invokestatic  #226                // Method com/android/prefs/AbstractAndroidLocationsKt.combineLocationValuesIntoMessage$default:(Ljava/util/List;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Ljava/lang/String;
+     236: aconst_null
+     237: iconst_2
+     238: aconst_null
+     239: invokespecial #92                 // Method com/android/prefs/AndroidLocationsException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+     242: athrow
+     243: areturn
+
+  public final void resetPathsForTest();
+    Code:
+       0: aload_0
+       1: aconst_null
+       2: putfield      #47                 // Field internalPrefsLocation:Ljava/nio/file/Path;
+       5: aload_0
+       6: aconst_null
+       7: putfield      #103                // Field internalAvdLocation:Ljava/nio/file/Path;
+      10: aload_0
+      11: aconst_null
+      12: putfield      #140                // Field internalGradleAvdLocation:Ljava/nio/file/Path;
+      15: aload_0
+      16: aconst_null
+      17: putfield      #150                // Field internalUserHomeLocation:Ljava/nio/file/Path;
+      20: return
+
+  public static final java.lang.String getANDROID_USER_HOME();
+    Code:
+       0: getstatic     #258                // Field Companion:Lcom/android/prefs/AbstractAndroidLocations$Companion;
+       3: invokevirtual #262                // Method com/android/prefs/AbstractAndroidLocations$Companion.getANDROID_USER_HOME:()Ljava/lang/String;
+       6: areturn
+
+  public static final java.lang.String access$getANDROID_USER_HOME$cp();
+    Code:
+       0: getstatic     #265                // Field ANDROID_USER_HOME:Ljava/lang/String;
+       3: areturn
+
+  static {};
+    Code:
+       0: new           #260                // class com/android/prefs/AbstractAndroidLocations$Companion
+       3: dup
+       4: aconst_null
+       5: invokespecial #269                // Method com/android/prefs/AbstractAndroidLocations$Companion."<init>":(Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+       8: putstatic     #258                // Field Companion:Lcom/android/prefs/AbstractAndroidLocations$Companion;
+      11: ldc_w         #271                // String .android
+      14: putstatic     #233                // Field FOLDER_DOT_ANDROID:Ljava/lang/String;
+      17: ldc_w         #273                // String avd
+      20: putstatic     #124                // Field FOLDER_AVD:Ljava/lang/String;
+      23: ldc_w         #275                // String gradle-managed
+      26: putstatic     #145                // Field FOLDER_GRADLE_AVD:Ljava/lang/String;
+      29: ldc_w         #276                // String ANDROID_PREFS_ROOT
+      32: putstatic     #278                // Field ANDROID_PREFS_ROOT:Ljava/lang/String;
+      35: ldc_w         #279                // String ANDROID_USER_HOME
+      38: putstatic     #265                // Field ANDROID_USER_HOME:Ljava/lang/String;
+      41: return
+}

@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "kind": "EXACT_FRESH_A25_B26_NATIVE_EVIDENCE_REQUEST",
+  "coordinator": "/root",
+  "created_at": "2026-09-09T06:30:53.462462+00:00",
+  "status": "PENDING_INDEPENDENT_ACTUAL_PREFLIGHT_BINDING_AND_SINGLE_RUN_APPROVAL",
+  "repository": "Apdelrahman1911/parlor",
+  "branch": "fix/local-readiness-2026-09-07",
+  "frozen_source_sha": "0303a76771794c52ea96a7d7f47eb689f5b236ba",
+  "frozen_source_tree": "4d2364b41a5a29b3c66a3ccc5307a9d84c4f5900",
+  "inputs": {
+    "verification_scope": "native-evidence",
+    "frozen_source_sha": "0303a76771794c52ea96a7d7f47eb689f5b236ba",
+    "preflight_run_id": "34318962397",
+    "preflight_run_attempt": "1",
+    "preflight_artifact_id": "10091130552",
+    "preflight_artifact_sha256": "36c3a564a15cd3d07fa89ce7cb193706e39f9dd9dcf32763b9528b73f0a17faf",
+    "approved_l08_control_sha256": "e948215a6c725dcef47d1461045320ecd4d6f454f7354fc0be31c7c48fa1b83b",
+    "approved_normal_control_sha256": "5660d813d41f3e1dc2a86a932b8f3fca3bcdf214ca7dbd372da7197820e5f73a"
+  },
+  "command": [
+    "gh",
+    "workflow",
+    "run",
+    "production-verification.yml",
+    "--repo",
+    "Apdelrahman1911/parlor",
+    "--ref",
+    "fix/local-readiness-2026-09-07",
+    "-f",
+    "verification_scope=native-evidence",
+    "-f",
+    "frozen_source_sha=0303a76771794c52ea96a7d7f47eb689f5b236ba",
+    "-f",
+    "preflight_run_id=34318962397",
+    "-f",
+    "preflight_run_attempt=1",
+    "-f",
+    "preflight_artifact_id=10091130552",
+    "-f",
+    "preflight_artifact_sha256=36c3a564a15cd3d07fa89ce7cb193706e39f9dd9dcf32763b9528b73f0a17faf",
+    "-f",
+    "approved_l08_control_sha256=e948215a6c725dcef47d1461045320ecd4d6f454f7354fc0be31c7c48fa1b83b",
+    "-f",
+    "approved_normal_control_sha256=5660d813d41f3e1dc2a86a932b8f3fca3bcdf214ca7dbd372da7197820e5f73a"
+  ],
+  "maximum_new_dispatches": 1,
+  "intended_cycles": {
+    "l08": "ios-readiness-25",
+    "normal": "ios-readiness-26"
+  },
+  "preflight_collection": {
+    "path": "remediation-runs/2026-09-08-continuation/actions/34318962397/download-receipt.json",
+    "sha256": "1b59e1e88a3ef78f3d6ae75007ce92b8b4a94167cf9f8ceda77492d46f18098e"
+  },
+  "freeze_and_checks_review": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/native-preflight-a25-b26-freeze-independent-01.json",
+    "sha256": "afeb038e8dc6241b0c0ba0a5e93e1d4b79c586008a37671a66b6f366f6bcae9e"
+  },
+  "independent_actual_preflight_and_dispatch_review_required": "remediation-runs/2026-09-08-continuation/reviews/native-preflight34318962397-a25-b26-dispatch-independent-01.json",
+  "purpose": "A: complete planned functional-storage and retained-host scenarios after reviewed copy-only scroll correction; retain strict Complete mismatches. B: actual normal Debug launch/provenance with failure-only numeric diagnostics after prior real libproc failure. No repeated unchanged standalone protection campaign.",
+  "pre_dispatch": "Fresh complete same-ref no-overlap, exact local/remote source/tree and preflight attempt/artifact identity checks; max one dispatch. No blind retry on uncertain dispatch or failure.",
+  "safety": "Original ownership, toolchain, source/control, budget and cleanup guards unchanged. B only after A cleanup and interruption admission succeed. No Store/signing/publication/physical-device operation.",
+  "scope": "Fresh binding is not runtime proof. A25/B26 remain NOT_RUN at this request. Strict failure must not be disguised; diagnostic metadata is not successful provenance. FullD and final C05 remain separately required."
+}

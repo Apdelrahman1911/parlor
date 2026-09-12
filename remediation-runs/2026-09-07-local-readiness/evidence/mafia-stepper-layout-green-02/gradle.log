@@ -1,0 +1,146 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.13/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+Type-safe project accessors is an incubating feature.
+> Task :build-logic:convention:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :build-logic:convention:compileKotlin
+> Task :build-logic:convention:compileJava NO-SOURCE
+> Task :build-logic:convention:pluginDescriptors
+> Task :build-logic:convention:processResources
+> Task :build-logic:convention:classes
+> Task :build-logic:convention:jar
+
+> Configure project :composeApp
+WARNING: The option setting 'android.experimental.lint.version=9.1.1' is experimental.
+w: [33m[1m⚠️ Deprecated Gradle Version[0m[0m
+The used Gradle version (Gradle 8.13) is deprecated and will not be supported in future Kotlin Gradle Plugin releases.
+The minimum supported Gradle version will become Gradle 8.14.4 in Kotlin 2.5.0.
+
+This warning can be suppressed in 'gradle.properties':
+    kotlin.suppressGradlePluginWarnings=DeprecatedGradleVersionWarning
+[32m[1mSolution:[0m[0m
+[32m[3mPlease update the Gradle version to at least Gradle 8.14.4.[0m[0m
+
+w: [33m[1m⚠️ Native task 'iosX64Test' is disabled[0m[0m
+Task 'iosX64Test' for target 'ios_x64' cannot run on the current host (macos-aarch64).
+Reason: architecture mismatch - target requires X64, current host is ARM64
+[32m[1mSolution:[0m[0m
+[32m[3mTo suppress this warning, add 'kotlin.native.ignoreDisabledTargets=true' to gradle.properties.[0m[0m
+
+
+> Task :game-modes:mafia:kmpPartiallyResolvedDependenciesChecker
+> Task :game-modes:mafia:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :game-modes:mafia:convertXmlValueResourcesForCommonMain
+> Task :game-modes:mafia:copyNonXmlValueResourcesForCommonMain NO-SOURCE
+> Task :game-modes:mafia:prepareComposeResourcesTaskForCommonMain
+> Task :game-modes:mafia:generateResourceAccessorsForCommonMain
+> Task :game-modes:mafia:convertXmlValueResourcesForDesktopMain NO-SOURCE
+> Task :game-modes:mafia:copyNonXmlValueResourcesForDesktopMain NO-SOURCE
+> Task :game-modes:mafia:prepareComposeResourcesTaskForDesktopMain NO-SOURCE
+> Task :game-modes:mafia:generateResourceAccessorsForDesktopMain NO-SOURCE
+> Task :game-modes:mafia:generateActualResourceCollectorsForDesktopMain
+> Task :game-modes:mafia:generateComposeResClass
+> Task :game-modes:mafia:generateExpectResourceCollectorsForCommonMain
+> Task :shared:content:kmpPartiallyResolvedDependenciesChecker
+> Task :shared:content:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :shared:core:kmpPartiallyResolvedDependenciesChecker
+> Task :shared:core:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :shared:core:compileKotlinDesktop
+> Task :shared:core:compileDesktopMainJava NO-SOURCE
+> Task :shared:core:desktopProcessResources NO-SOURCE
+> Task :shared:core:processDesktopMainResources SKIPPED
+> Task :shared:core:desktopMainClasses
+> Task :shared:core:desktopJar
+> Task :shared:engine:kmpPartiallyResolvedDependenciesChecker
+> Task :shared:engine:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :shared:engine:compileKotlinDesktop
+> Task :shared:engine:compileDesktopMainJava NO-SOURCE
+> Task :shared:engine:desktopProcessResources NO-SOURCE
+> Task :shared:engine:processDesktopMainResources SKIPPED
+> Task :shared:engine:desktopMainClasses
+> Task :shared:engine:desktopJar
+> Task :shared:content:compileKotlinDesktop
+> Task :shared:content:compileDesktopMainJava NO-SOURCE
+> Task :shared:content:desktopProcessResources NO-SOURCE
+> Task :shared:content:processDesktopMainResources SKIPPED
+> Task :shared:content:desktopMainClasses
+> Task :shared:content:desktopJar
+> Task :shared:design-system:kmpPartiallyResolvedDependenciesChecker
+> Task :shared:design-system:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :shared:design-system:convertXmlValueResourcesForCommonMain
+> Task :shared:design-system:copyNonXmlValueResourcesForCommonMain
+> Task :shared:design-system:prepareComposeResourcesTaskForCommonMain
+> Task :shared:design-system:generateResourceAccessorsForCommonMain
+> Task :shared:design-system:convertXmlValueResourcesForDesktopMain NO-SOURCE
+> Task :shared:design-system:copyNonXmlValueResourcesForDesktopMain NO-SOURCE
+> Task :shared:design-system:prepareComposeResourcesTaskForDesktopMain NO-SOURCE
+> Task :shared:design-system:generateResourceAccessorsForDesktopMain NO-SOURCE
+> Task :shared:design-system:generateActualResourceCollectorsForDesktopMain
+> Task :shared:design-system:generateComposeResClass
+> Task :shared:design-system:generateExpectResourceCollectorsForCommonMain
+> Task :shared:design-system:compileKotlinDesktop
+> Task :shared:design-system:compileDesktopMainJava NO-SOURCE
+> Task :shared:design-system:assembleDesktopMainResources
+> Task :shared:design-system:desktopProcessResources
+> Task :shared:design-system:processDesktopMainResources SKIPPED
+> Task :shared:design-system:desktopMainClasses
+> Task :shared:design-system:desktopJar
+> Task :shared:networking:kmpPartiallyResolvedDependenciesChecker
+> Task :shared:networking:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :shared:networking:compileKotlinDesktop
+> Task :shared:networking:compileDesktopMainJava NO-SOURCE
+> Task :shared:networking:desktopProcessResources NO-SOURCE
+> Task :shared:networking:processDesktopMainResources SKIPPED
+> Task :shared:networking:desktopMainClasses
+> Task :shared:networking:desktopJar
+> Task :shared:session:kmpPartiallyResolvedDependenciesChecker
+> Task :shared:session:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :shared:session:compileKotlinDesktop
+> Task :shared:session:compileDesktopMainJava NO-SOURCE
+> Task :shared:session:desktopProcessResources NO-SOURCE
+> Task :shared:session:processDesktopMainResources SKIPPED
+> Task :shared:session:desktopMainClasses
+> Task :shared:session:desktopJar
+> Task :shared:storage:kmpPartiallyResolvedDependenciesChecker
+> Task :shared:storage:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :shared:storage:compileKotlinDesktop
+> Task :shared:storage:compileDesktopMainJava NO-SOURCE
+> Task :shared:storage:desktopProcessResources NO-SOURCE
+> Task :shared:storage:processDesktopMainResources SKIPPED
+> Task :shared:storage:desktopMainClasses
+> Task :shared:storage:desktopJar
+> Task :game-modes:mafia:compileKotlinDesktop
+> Task :game-modes:mafia:compileDesktopMainJava NO-SOURCE
+> Task :game-modes:mafia:assembleDesktopMainResources
+> Task :game-modes:mafia:desktopProcessResources
+> Task :game-modes:mafia:processDesktopMainResources SKIPPED
+> Task :game-modes:mafia:desktopMainClasses
+> Task :game-modes:mafia:desktopJar
+> Task :game-modes:mafia:convertXmlValueResourcesForCommonTest NO-SOURCE
+> Task :game-modes:mafia:copyNonXmlValueResourcesForCommonTest NO-SOURCE
+> Task :game-modes:mafia:prepareComposeResourcesTaskForCommonTest NO-SOURCE
+> Task :game-modes:mafia:generateResourceAccessorsForCommonTest NO-SOURCE
+> Task :game-modes:mafia:convertXmlValueResourcesForDesktopTest NO-SOURCE
+> Task :game-modes:mafia:copyNonXmlValueResourcesForDesktopTest NO-SOURCE
+> Task :game-modes:mafia:prepareComposeResourcesTaskForDesktopTest NO-SOURCE
+> Task :game-modes:mafia:generateResourceAccessorsForDesktopTest NO-SOURCE
+> Task :shared:networking-testing:kmpPartiallyResolvedDependenciesChecker
+> Task :shared:networking-testing:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :shared:networking-testing:compileKotlinDesktop
+> Task :shared:networking-testing:compileDesktopMainJava NO-SOURCE
+> Task :shared:networking-testing:desktopProcessResources NO-SOURCE
+> Task :shared:networking-testing:processDesktopMainResources SKIPPED
+> Task :shared:networking-testing:desktopMainClasses
+> Task :shared:networking-testing:desktopJar
+> Task :game-modes:mafia:compileTestKotlinDesktop
+> Task :game-modes:mafia:compileDesktopTestJava NO-SOURCE
+> Task :game-modes:mafia:assembleDesktopTestResources
+> Task :game-modes:mafia:desktopTestProcessResources
+> Task :game-modes:mafia:processDesktopTestResources SKIPPED
+> Task :game-modes:mafia:desktopTestClasses
+> Task :game-modes:mafia:desktopTest
+> Task :game-modes:mafia:detekt
+
+[Incubating] Problems report is available at: file:///Users/abdelrahman/Projects/parlor/build/reports/problems/problems-report.html
+
+BUILD SUCCESSFUL in 30s
+53 actionable tasks: 53 executed

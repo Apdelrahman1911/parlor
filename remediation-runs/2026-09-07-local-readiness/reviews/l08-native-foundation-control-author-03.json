@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "author": "/root/native_fix_review",
+  "at_utc": "2026-09-08T01:47:31.514971+00:00",
+  "status": "DRAFT_FOR_INDEPENDENT_REVIEW_NOT_EXECUTED",
+  "manifest_sha256": "9efdb9f7918b75c0c4315fa4ecf208ece85ba4b37a8c66bb6d35cab8612c2f3b",
+  "manifest": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/l08-native-foundation-control-03/manifest.json",
+  "baseline_head": "e1dd40c0f1ff14561ecac6c25967fced8cda74d2",
+  "root_cause": "Actual frozen02 native01 emits integer0/1 for all three comparison-boxed presence fields. .m Objective-C uses C int comparison result; NSNumber factory selects numberWithInt, unlike BOOL and @YES/@NO. Strict parser correctly rejected.",
+  "source_changes": {
+    "FoundationProtectionControl.m": "Exactly three replacements: @(error != nil), @(values != nil), @(value != nil) -> ternary selecting @YES/@NO. Same comparisons, null semantics, queries, row ordering, API calls and data.",
+    "test_control.py": "Original33 tests preserved. Add immutable real failed-native01 replay;288 rejection subcases at144 Boolean wire slots plus valid integer NSError.code; source guards and single-site mutant guards for all three actual producer expressions.",
+    "README.md": "Record precise revision and failure limits, independent review/execution next; no native success claims."
+  },
+  "unchanged": [
+    "run_control.py (complete byte identity, including strict Python Boolean checks and ownership/cleanup)",
+    "public-tool-evidence.json",
+    "All production/app/build/Gradle/L08 strict files",
+    "Frozen01/frozen02 manifests and source; native01 raw/receipt"
+  ],
+  "patch": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/l08-native-foundation-control02-to03.patch",
+  "patch_sha256": "6c8f06e404a5ca3a7393498a3b15895c307ddefdc4e942b7ed5c7ee09f9c6df8",
+  "research": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/l08-foundation-wire-types-research-01.json",
+  "research_sha256": "3988ff3ab3cb2b26fd5ffa200e6a8ba8004324de4777ad9b73938e4bbfd7b6ed",
+  "execution": {
+    "tests": "NOT_RUN by author; root to execute all36",
+    "native": "NOT_RUN for03; actual01 failure preserved",
+    "compilation": "NOT_RUN by author"
+  },
+  "required_followup": "Separate factory full diff/source/test review, root-owned control execution, then fresh manifest-approved native run. Parser must not coerce historical/current fields. No L08 PASS from the metadata control.",
+  "cleanup": "No build/test/native/Simulator/process tasks or generated build artifacts created by author. Only isolated required draft/report/research/patch deliverables added."
+}

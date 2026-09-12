@@ -1,0 +1,235 @@
+{
+  "at": "2026-09-05T18:56:14.029376+00:00",
+  "reviewer": "/root/mafia_cont",
+  "source_files": [
+    {
+      "path": "game-modes/mafia/build.gradle.kts",
+      "sha256": "7aceb370331f84b2fee70bb039b7779bdd818ea78aab15da3bfcfd137a76ad2d",
+      "lines": 43
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/composeResources/values-ar/strings.xml",
+      "sha256": "a9416283c7bf130d9ca98b4ff0e08ae420bad4b935f476ed7166178c42c3bdcc",
+      "lines": 307
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/snapshot/MafiaSnapshotRecovery.kt",
+      "sha256": "64525b0d14b07d87e99729c3707dd0af4a083f8f4a98a5a948575755482ea3fd",
+      "lines": 535
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaMultiDevicePhaseRouter.kt",
+      "sha256": "09de10c3735f1afeb7b36550dca57c4e9fd190d985faf6ff0eae8c0b8d21a784",
+      "lines": 628
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/passandplay/MafiaPassAndPlayPhaseRouter.kt",
+      "sha256": "1371eb747579362548f3962a520c2c3f3c2f6225ef551bad93e3e690e08a1fe6",
+      "lines": 751
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/night/DoctorTargetEligibility.kt",
+      "sha256": "e6f616148cd77a6832c08175b769c31885e7b8b16bfb272d19729dc507bcb34a",
+      "lines": 14
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/postgame/PostGameScreen.kt",
+      "sha256": "37c690b3ee249dcd23eaff555c1d23b90b06eac0c710dbeef646cfb153f6deef",
+      "lines": 105
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaSetupScreen.kt",
+      "sha256": "c1dc2d1e5f4bf72ac1c2946341143f22936dd7903aab2d02b58c0d63709e87e4",
+      "lines": 526
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/domain/MafiaDoctorRulesTest.kt",
+      "sha256": "5fe2144436f87162e2d29bcbef6d57ac9b9cede6ab328b406b63cceebcdd501b",
+      "lines": 156
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/multidevice/MafiaDoctorLanTest.kt",
+      "sha256": "f263c4139ad0cdfc933faa21e81ef81b69b5b9c8536dcb63558cd110d42e66a3",
+      "lines": 240
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/snapshot/MafiaDoctorHistoryRecoveryTest.kt",
+      "sha256": "d1d830e0330d5a47f2011b9f87d025a5ce1e0bc2d3cb08be742ca1ff4403f743",
+      "lines": 383
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/testing/MafiaDoctorFixture.kt",
+      "sha256": "fa5a85db72638033569368062722fc1e1f97fcf1c3948e912c7954324e1e2ba7",
+      "lines": 120
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/night/DoctorTargetEligibilityTest.kt",
+      "sha256": "c2d196af55bbf14d3518973e86df9da3de3954ffbab27038aca4c2ef14ed70f1",
+      "lines": 75
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/postgame/PostGameScreenLayoutTest.kt",
+      "sha256": "a75ef987eaa01bd25e0b0bcc4ffa5cd0fdf0b696d44c6b574c072048cd5dad56",
+      "lines": 119
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaDoctorSettingUiTest.kt",
+      "sha256": "47720879336a7ac14436a6cc9e186cce3afc8d00743a1339ff161c0fefb58055",
+      "lines": 71
+    }
+  ],
+  "source_check": "git diff --check -- game-modes/mafia",
+  "source_check_exit_code": 0,
+  "resource_parity": {
+    "base_keys": 269,
+    "arabic_keys": 269,
+    "match": true,
+    "english_repeat_label": "Doctor can protect the same player on consecutive nights",
+    "arabic_repeat_label": "يستطيع الدكتور حماية نفس اللاعب في ليالٍ متتالية"
+  },
+  "explicit_unit_tests": [
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/domain/MafiaDoctorRulesTest.kt",
+      "method": "repeat_is_default_off_for_every_supported_player_count"
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/domain/MafiaDoctorRulesTest.kt",
+      "method": "enabled_setting_saves_same_living_target_for_four_consecutive_nights"
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/domain/MafiaDoctorRulesTest.kt",
+      "method": "disabled_setting_rejects_repeat_and_allows_alternating_targets"
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/domain/MafiaDoctorRulesTest.kt",
+      "method": "skipped_night_clears_previous_effective_target_but_consumes_submission"
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/domain/MafiaDoctorRulesTest.kt",
+      "method": "repeat_and_self_protection_settings_are_independent"
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/domain/MafiaDoctorRulesTest.kt",
+      "method": "first_valid_target_cannot_be_replaced_or_skipped_later_that_night"
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/domain/MafiaDoctorRulesTest.kt",
+      "method": "enabling_repeats_does_not_allow_dead_targets_or_a_non_doctor_actor"
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/domain/MafiaDoctorRulesTest.kt",
+      "method": "setup_draft_and_action_codec_commit_selection_once_without_changing_assignment"
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/multidevice/MafiaDoctorLanTest.kt",
+      "method": "only_host_can_commit_setup_selection_and_no_one_can_change_it_after_start"
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/multidevice/MafiaDoctorLanTest.kt",
+      "method": "rejoin_preserves_doctor_restriction_setting_and_first_submission_without_host_secrets"
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/snapshot/MafiaDoctorHistoryRecoveryTest.kt",
+      "method": "private_previous_protection_must_match_retained_history_in_every_active_phase"
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/snapshot/MafiaDoctorHistoryRecoveryTest.kt",
+      "method": "history_binding_also_applies_during_a_day_revote"
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/snapshot/MafiaDoctorHistoryRecoveryTest.kt",
+      "method": "mafia_coordination_revote_preserves_doctor_history_and_own_submission"
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/snapshot/MafiaDoctorHistoryRecoveryTest.kt",
+      "method": "null_effective_protection_cannot_be_replaced_by_an_old_legal_target"
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/snapshot/MafiaDoctorHistoryRecoveryTest.kt",
+      "method": "initial_setup_role_assignment_and_first_night_have_no_previous_protection"
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/snapshot/MafiaDoctorHistoryRecoveryTest.kt",
+      "method": "repeated_protection_history_is_valid_only_with_setting_enabled"
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/snapshot/MafiaDoctorHistoryRecoveryTest.kt",
+      "method": "latest_binding_survives_history_capping_without_requiring_missing_predecessors"
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/snapshot/MafiaDoctorHistoryRecoveryTest.kt",
+      "method": "killed_doctor_keeps_last_effective_target_until_next_resolution_then_clears_it"
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/snapshot/MafiaDoctorHistoryRecoveryTest.kt",
+      "method": "doctor_eliminated_by_day_vote_retains_previous_night_binding"
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/snapshot/MafiaDoctorHistoryRecoveryTest.kt",
+      "method": "death_of_previous_target_does_not_erase_last_effective_protection"
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/snapshot/MafiaDoctorHistoryRecoveryTest.kt",
+      "method": "no_doctor_configuration_keeps_null_history_and_rejects_foreign_private_history"
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/snapshot/MafiaDoctorHistoryRecoveryTest.kt",
+      "method": "terminal_cleanup_does_not_require_historical_protection_to_be_erased"
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/snapshot/MafiaDoctorHistoryRecoveryTest.kt",
+      "method": "normal_terminal_win_also_clears_private_history_without_discarding_host_history"
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/snapshot/MafiaDoctorHistoryRecoveryTest.kt",
+      "method": "peer_projections_keep_only_own_private_history_and_do_not_require_host_logs"
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/snapshot/MafiaDoctorHistoryRecoveryTest.kt",
+      "method": "resumed_local_controller_enforces_the_persisted_repeat_setting"
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/night/DoctorTargetEligibilityTest.kt",
+      "method": "canonical_local_and_projected_lan_choices_honor_both_independent_settings"
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/night/DoctorTargetEligibilityTest.kt",
+      "method": "eligibility_matches_reducer_acceptance_before_each_first_submission"
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/postgame/PostGameScreenLayoutTest.kt",
+      "method": "compact_english_long_name_does_not_consume_final_role_width"
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/postgame/PostGameScreenLayoutTest.kt",
+      "method": "compact_arabic_long_name_does_not_consume_final_role_width"
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/postgame/PostGameScreenLayoutTest.kt",
+      "method": "compact_large_text_english_preserves_every_final_role"
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/postgame/PostGameScreenLayoutTest.kt",
+      "method": "compact_large_text_arabic_preserves_every_final_role"
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/postgame/PostGameScreenLayoutTest.kt",
+      "method": "landscape_large_text_english_roles_remain_scrollable"
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/postgame/PostGameScreenLayoutTest.kt",
+      "method": "landscape_large_text_arabic_roles_remain_scrollable"
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaDoctorSettingUiTest.kt",
+      "method": "english_consecutive_nights_toggle_defaults_off_and_commits_on_and_off"
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaDoctorSettingUiTest.kt",
+      "method": "arabic_consecutive_nights_toggle_defaults_off_and_commits_on_and_off"
+    }
+  ],
+  "unit_test_count": 35,
+  "execution": "No Gradle/compiler/native/device/server command executed by this reviewer; root owns build lane. Added tests NOT RUN at this checkpoint.",
+  "cleanup": "No build outputs/processes created by these Git/text/XML checks; no daemons started or stopped by review agent."
+}

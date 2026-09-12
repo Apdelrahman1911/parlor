@@ -1,11 +1,14 @@
 from __future__ import annotations
 
+import ast
 import json
 import re
+import textwrap
+from types import SimpleNamespace
 import unittest
 from pathlib import Path
 from tempfile import TemporaryDirectory
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 import sys
 
@@ -14,6 +17,794 @@ import workflow_contract  # noqa: E402
 
 
 class WorkflowContractTest(unittest.TestCase):
+    def test_only_explicit_protection_dispatch_has_separate_concurrency(self) -> None:
+        workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text(encoding="utf-8")
+        self.assertEqual(re.findall(r"(?m)^[ \t]*concurrency:", workflow), ["concurrency:"])
+        block = workflow.split("\nconcurrency:\n", 1)[1].split("\npermissions:\n", 1)[0]
+        actual = [line for line in block.splitlines() if line.strip() and not line.lstrip().startswith("#")]
+        self.assertEqual(actual, [
+            "  group: production-verification-${{ github.event_name == 'workflow_dispatch' "
+            "&& inputs.verification_scope == 'ios-protection-probe' && 'protection' || 'qualification' }}-${{ github.ref }}",
+            "  cancel-in-progress: true",
+        ])
+
+    def test_windows_only_selection_cannot_skip_full_or_run_other_jobs(self) -> None:
+        workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text(encoding="utf-8")
+        workflow_contract.verify_verification_scopes(workflow)
+        for original, replacement in (
+            ("default: full", "default: windows-only"),
+            ("[full, native-preflight, native-evidence, native-process-probe, windows-only, linux-process-probe, android-cleanup-only, ios-protection-probe]",
+             "[full, native-preflight, native-evidence, native-process-probe, linux-process-probe, android-cleanup-only, ios-protection-probe]"),
+            ("if: " + workflow_contract.WINDOWS_VERIFICATION_SCOPE, "if: " + workflow_contract.FULL_VERIFICATION_SCOPE),
+            ("if: " + workflow_contract.IOS_VERIFICATION_SCOPE, "if: true"),
+            ("    if: " + workflow_contract.FULL_VERIFICATION_SCOPE + "\n",
+             "    if: " + workflow_contract.WINDOWS_VERIFICATION_SCOPE + "\n"),
+        ):
+            changed = workflow.replace(original, replacement, 1)
+            self.assertNotEqual(changed, workflow)
+            with self.subTest(original=original), self.assertRaisesRegex(RuntimeError, "verification scope"):
+                workflow_contract.verify_verification_scopes(changed)
+
+    def test_windows_checkout_long_paths_and_exact_source_are_required_before_checkout(self) -> None:
+        workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text(encoding="utf-8")
+        windows = workflow.split("\n  desktop-windows-x64:\n", 1)[1].split("\n  ios:\n", 1)[0]
+        workflow_contract.verify_windows_checkout(windows)
+        for original, replacement in (
+            ('GIT_CONFIG_COUNT: "1"', 'GIT_CONFIG_COUNT: "0"'),
+            ('GIT_CONFIG_KEY_0: core.longpaths', 'GIT_CONFIG_KEY_0: core.autocrlf'),
+            ('GIT_CONFIG_VALUE_0: "true"', 'GIT_CONFIG_VALUE_0: "false"'),
+            ('git config --bool --get core.longpaths', 'git config --global core.longpaths true'),
+            ('$LASTEXITCODE -ne 0 -or $longPaths', '$false -or $longPaths'),
+            ('$env:PARLOR_WINDOWS_SCOPE -cne "windows-only"', '$env:PARLOR_WINDOWS_SCOPE -ne "windows-only"'),
+            ('${{ inputs.frozen_source_sha }}', '${{ github.sha }}'),
+            ("'^[0-9a-f]{40}$'", "'.*'"),
+            ('$source -cne $env:GITHUB_WORKFLOW_SHA', '$false'),
+            ('$source -cne $env:GITHUB_SHA', '$false'),
+            ('$env:PARLOR_WINDOWS_NATIVE_SELECTION -cnotin', '$env:PARLOR_WINDOWS_NATIVE_SELECTION -cin'),
+            ('$LASTEXITCODE -ne 0 -or $head -cne $env:GITHUB_SHA', '$false'),
+            ('$LASTEXITCODE -ne 0 -or $status', '$false'),
+            ('fetch-depth: 1', 'fetch-depth: 1\n          sparse-checkout: scripts'),
+        ):
+            changed = windows.replace(original, replacement, 1)
+            self.assertNotEqual(changed, windows)
+            with self.subTest(original=original), self.assertRaisesRegex(RuntimeError, "Windows checkout"):
+                workflow_contract.verify_windows_checkout(changed)
+        gate = "\n      - name: Validate Windows checkout prerequisites\n" + workflow_contract.validation_step(
+            windows, "Validate Windows checkout prerequisites")
+        checkout = "\n      - name: Check out source\n" + workflow_contract.validation_step(windows, "Check out source")
+        moved = windows.replace(gate, "", 1).replace(checkout, checkout + gate, 1)
+        self.assertNotEqual(moved, windows)
+        with self.assertRaisesRegex(RuntimeError, "before checkout"):
+            workflow_contract.verify_windows_checkout(moved)
+
+    def test_native_selection_is_closed_paired_default_and_cannot_be_duplicated(self) -> None:
+        workflow = (workflow_contract.ROOT / '.github/workflows/production-verification.yml').read_text(encoding='utf-8')
+        block = '      native_selection:\n' + workflow.split('      native_selection:\n', 1)[1].split('      frozen_source_sha:\n', 1)[0]
+        workflow_contract.verify_verification_scopes(workflow)
+        mutations = [block.replace('type: choice', 'type: string', 1),
+                     block.replace('default: paired', 'default: l08-only', 1),
+                     block.replace('[paired, l08-only, settings-sheet-only, os-recovery-only, protection-application-only, protection-host-only]', '[paired, l08-only, settings-sheet-only, os-recovery-only, protection-application-only, protection-host-only, l08]', 1),
+                     block.replace('[paired, l08-only, settings-sheet-only, os-recovery-only, protection-application-only, protection-host-only]', '[l08-only, paired, settings-sheet-only, os-recovery-only, protection-application-only, protection-host-only]', 1),
+                     block.replace(', os-recovery-only', '', 1),
+                     block.replace(', protection-application-only', '', 1),
+                     block.replace(', protection-host-only', '', 1),
+                     block.replace('default: paired', 'default: protection-host-only', 1),
+                     block + block, '']
+        for replacement in mutations:
+            changed = workflow.replace(block, replacement, 1)
+            self.assertNotEqual(changed, workflow)
+            with self.subTest(replacement=replacement), self.assertRaisesRegex(RuntimeError, 'verification scope'):
+                workflow_contract.verify_verification_scopes(changed)
+
+    def test_native_selection_validation_execution_and_cleanup_use_identical_input(self) -> None:
+        workflow = (workflow_contract.ROOT / '.github/workflows/production-verification.yml').read_text(encoding='utf-8')
+        original = '          PARLOR_NATIVE_SELECTION: ${{ inputs.native_selection }}\n'
+        for name in ('Validate verification scope', 'Run focused native continuation',
+                     'Verify focused native cleanup and uploaded custody'):
+            block = workflow_contract.validation_step(workflow, name)
+            self.assertEqual(block.count(original), 1)
+            for replacement in ('', original.replace('inputs.native_selection', 'inputs.verification_scope'),
+                                original.replace('${{ inputs.native_selection }}', 'paired'), original + original):
+                changed = workflow.replace(block, block.replace(original, replacement, 1), 1)
+                self.assertNotEqual(changed, workflow)
+                with self.subTest(name=name, replacement=replacement), self.assertRaisesRegex(RuntimeError, 'verification scope'):
+                    workflow_contract.verify_verification_scopes(changed)
+        changed = workflow.replace('env:\n', 'env:\n' + original, 1)
+        with self.assertRaisesRegex(RuntimeError, 'verification scope'):
+            workflow_contract.verify_verification_scopes(changed)
+
+    def test_settings_os_and_protection_selections_require_the_explicit_shared_probe_hash_binding(self) -> None:
+        workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text(encoding="utf-8")
+        block = workflow_contract.validation_step(workflow, "Run focused native continuation")
+        original = "          PARLOR_APPROVED_PROBE_CONTROL_SHA256: ${{ inputs.approved_probe_control_sha256 }}\n"
+        self.assertEqual(block.count(original), 1)
+        for replacement in ("", original.replace("inputs.approved_probe_control_sha256", "inputs.approved_normal_control_sha256"),
+                            original + original):
+            changed = workflow.replace(block, block.replace(original, replacement, 1), 1)
+            self.assertNotEqual(workflow, changed)
+            with self.subTest(replacement=replacement), self.assertRaisesRegex(RuntimeError, "verification scope"):
+                workflow_contract.verify_verification_scopes(changed)
+        changed = workflow.replace("env:\n", "env:\n" + original, 1)
+        with self.assertRaisesRegex(RuntimeError, "verification scope"):
+            workflow_contract.verify_verification_scopes(changed)
+
+    def test_focused_native_modes_do_not_weaken_full_verification(self) -> None:
+        workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text(encoding="utf-8")
+        workflow_contract.verify_verification_scopes(workflow)
+        for original, replacement in (
+            ("default: full", "default: native-preflight"),
+            ("options: [full, native-preflight, native-evidence, native-process-probe, windows-only, linux-process-probe, android-cleanup-only, ios-protection-probe]", "options: [full, skip]"),
+            ("  desktop-linux-arm64:\n", "  unreviewed-eighth-job:\n    runs-on: ubuntu-latest\n  desktop-linux-arm64:\n"),
+            ("    if: " + workflow_contract.FULL_VERIFICATION_SCOPE, "    if: false"),
+            ("scripts/ci/native_continuation.py validate-scope", "true"),
+        ):
+            with self.subTest(original=original), self.assertRaisesRegex(RuntimeError, "verification scope"):
+                workflow_contract.verify_verification_scopes(workflow.replace(original, replacement, 1))
+
+    def test_linux_probe_cannot_run_full_work_or_other_hosts(self) -> None:
+        workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text()
+        workflow_contract.verify_verification_scopes(workflow)
+        for original, replacement in (
+            ("default: full", "default: linux-process-probe"),
+            (workflow_contract.LINUX_VERIFICATION_SCOPE, workflow_contract.FULL_VERIFICATION_SCOPE),
+            (workflow_contract.IOS_VERIFICATION_SCOPE, "github.event_name != 'workflow_dispatch' || inputs.verification_scope != 'windows-only'"),
+            ("'linux-process-probe' && 10 ||", "'linux-process-probe' && 90 ||"),
+            ("      - name: Install pinned Android SDK packages\n        if: " + workflow_contract.ANDROID_RUNTIME_SCOPE,
+             "      - name: Install pinned Android SDK packages\n        if: always()"),
+            ("      - name: Observe Linux process access without a build\n", "      - name: Unreviewed build\n        run: ./gradlew allTests\n      - name: Observe Linux process access without a build\n"),
+        ):
+            changed = workflow.replace(original, replacement, 1)
+            self.assertNotEqual(changed, workflow)
+            with self.subTest(original=original), self.assertRaisesRegex(RuntimeError, "verification scope"):
+                workflow_contract.verify_verification_scopes(changed)
+
+    def test_linux_probe_requires_bound_inputs_and_exact_compact_uploads(self) -> None:
+        workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text()
+        for name, original, replacement in (
+            ("Validate Linux process-probe source and controls", "${{ toJSON(inputs) }}", "{}"),
+            ("Observe Linux process access without a build", "steps.verification_ownership.outcome", "steps.linux_process_probe.outcome"),
+            ("Observe Linux process access without a build", "linux_process_probe.py run", "native_process_probe.py run"),
+            ("Upload bounded Linux process-probe evidence", "if-no-files-found: error", "if-no-files-found: warn"),
+            ("Upload bounded Linux process-probe evidence", "-linux-probe.json", "-*.json"),
+            ("Finalize Linux process-probe resources and uploaded custody", "steps.linux_process_probe_artifact.outputs.artifact-digest", "steps.verification_artifact.outputs.artifact-digest"),
+            ("Upload Linux process-probe cleanup receipt", "-cleanup.json", "-ownership.json"),
+        ):
+            block = workflow_contract.validation_step(workflow, name)
+            changed = workflow.replace(block, block.replace(original, replacement, 1), 1)
+            self.assertNotEqual(changed, workflow)
+            with self.subTest(name=name, original=original), self.assertRaisesRegex(RuntimeError, "verification scope"):
+                workflow_contract.verify_verification_scopes(changed)
+
+    def test_linux_probe_emulator_package_prerequisite_is_bounded_and_after_admission(self) -> None:
+        workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text()
+        name = "Install Linux process-probe emulator package"
+        block = workflow_contract.validation_step(workflow, name)
+        workflow_contract.verify_verification_scopes(workflow)
+        for original, replacement in (
+            ("if: " + workflow_contract.LINUX_PREREQUISITE_SCOPE, "if: always()"),
+            ("timeout-minutes: 4", "timeout-minutes: 10"),
+            ("--kill-after=10s 180s", "--kill-after=10s 600s"),
+            ('--sdk_root="${ANDROID_HOME}"', '--sdk_root="/tmp/another-sdk"'),
+            ('"emulator"', '"emulator" "system-images;android-35;google_apis;x86_64"'),
+            ('"emulator"', '"platforms;android-36"'),
+            ('"emulator"', '"emulator"\n          "${ANDROID_HOME}/emulator/emulator" -version'),
+            ('"${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager"', 'sudo "${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager"'),
+        ):
+            changed = workflow.replace(block, block.replace(original, replacement, 1), 1)
+            self.assertNotEqual(changed, workflow)
+            with self.subTest(original=original), self.assertRaisesRegex(RuntimeError, "verification scope"):
+                workflow_contract.verify_verification_scopes(changed)
+        step = "\n      - name: " + name + "\n" + block
+        without = workflow.replace(step, "", 1)
+        for anchor in ("Validate Linux process-probe source and controls", "Install pinned Android SDK packages"):
+            changed = without.replace("\n      - name: " + anchor + "\n", step + "\n      - name: " + anchor + "\n", 1)
+            self.assertNotEqual(changed, workflow)
+            with self.subTest(anchor=anchor), self.assertRaisesRegex(RuntimeError, "verification scope"):
+                workflow_contract.verify_verification_scopes(changed)
+
+    def test_linux_full_cleanup_reader_is_explicit_and_cannot_leak_to_other_jobs(self) -> None:
+        workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text()
+        linux = workflow.split("\n  desktop-android:\n", 1)[1].split("\n  desktop-linux-arm64:\n", 1)[0]
+        block = workflow_contract.validation_step(linux, "Clean only attested verification outputs")
+        flag = ', "--android-reader=sudo-proc-exe-v2"'
+        workflow_contract.verify_verification_scopes(workflow)
+        for original, replacement in (
+            (flag, ""), (flag, flag + flag),
+            ("sudo-proc-exe-v2", "unprivileged"),
+            ("sudo-proc-exe-v2", "sudo-proc-exe-v1"),
+            (flag, flag + ', "--unreviewed"'),
+            ("if: " + workflow_contract.ANDROID_RUNTIME_FINALIZER, "if: always()"),
+            (workflow_contract.ANDROID_RUNTIME_FINALIZER, workflow_contract.LINUX_PROBE_SCOPE),
+            ("steps.verification_ownership.outcome", "steps.verification_artifact.outcome"),
+            ("steps.verification_artifact.outcome", "steps.linux_process_probe_artifact.outcome"),
+            ("steps.verification_artifact.outputs.artifact-id", "steps.linux_process_probe_artifact.outputs.artifact-id"),
+            ("steps.verification_artifact.outputs.artifact-digest", "steps.linux_process_probe_artifact.outputs.artifact-digest"),
+            ('"scripts/ci/verification_hygiene.py"', '"scripts/ci/unreviewed.py"'),
+            ("import runpy, sys", "import os, runpy, sys\n          os.seteuid(0)"),
+        ):
+            changed = workflow.replace(block, block.replace(original, replacement, 1), 1)
+            self.assertNotEqual(changed, workflow)
+            with self.subTest(original=original, replacement=replacement), self.assertRaisesRegex(RuntimeError, "verification scope"):
+                workflow_contract.verify_verification_scopes(changed)
+        for name in ("desktop-linux-arm64", "desktop-macos-x64", "desktop-windows-x64", "ios", "ios-release"):
+            before, after = workflow.split("\n  " + name + ":\n", 1)
+            changed = before + "\n  " + name + ":\n" + after.replace(
+                '["verification_hygiene.py", "cleanup"]', '["verification_hygiene.py", "cleanup"' + flag + ']', 1)
+            self.assertNotEqual(changed, workflow)
+            with self.subTest(job=name), self.assertRaisesRegex(RuntimeError, "verification scope"):
+                workflow_contract.verify_verification_scopes(changed)
+
+    def test_android_cleanup_scope_runs_only_managed_runtime_and_standard_custody(self) -> None:
+        workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text()
+        linux = workflow.split("\n  desktop-android:\n", 1)[1].split("\n  desktop-linux-arm64:\n", 1)[0]
+        workflow_contract.verify_verification_scopes(workflow)
+        for original, replacement in (
+            ("default: full", "default: android-cleanup-only"),
+            (", android-cleanup-only", ""),
+            (workflow_contract.LINUX_VERIFICATION_SCOPE,
+             workflow_contract.LINUX_VERIFICATION_SCOPE.replace(" || inputs.verification_scope == 'android-cleanup-only'", "")),
+            (workflow_contract.IOS_VERIFICATION_SCOPE,
+             workflow_contract.IOS_VERIFICATION_SCOPE.replace(" && inputs.verification_scope != 'android-cleanup-only'", "")),
+            ("'android-cleanup-only' && 45 || 90", "'android-cleanup-only' && 10 || 90"),
+            ("run: scripts/android/run_release_managed_device_smoke.sh", "run: ./gradlew productionCheck allTests"),
+        ):
+            changed = workflow.replace(original, replacement, 1)
+            self.assertNotEqual(changed, workflow)
+            with self.subTest(original=original), self.assertRaisesRegex(RuntimeError, "verification scope"):
+                workflow_contract.verify_verification_scopes(changed)
+        for name, condition in (
+            ("Run common, desktop, Android, static-analysis, and release gates", workflow_contract.ANDROID_RUNTIME_SCOPE),
+            ("Stop Gradle after common-android", workflow_contract.ANDROID_RUNTIME_FINALIZER),
+            ("Inspect unsigned Android release artifact and merged manifest", workflow_contract.ANDROID_RUNTIME_SCOPE),
+            ("Install pinned Android SDK packages", workflow_contract.FULL_VERIFICATION_SCOPE),
+            ("Record exact source and require a clean checkout", workflow_contract.FULL_VERIFICATION_SCOPE),
+            ("Run release Android managed-device smoke tests", workflow_contract.FULL_VERIFICATION_SCOPE),
+            ("Stop Gradle after managed-device", workflow_contract.FULL_VERIFICATION_FINALIZER),
+            ("Upload verification reports, mappings, and unsigned AAB", workflow_contract.FULL_VERIFICATION_FINALIZER),
+            ("Clean only attested verification outputs", workflow_contract.FULL_VERIFICATION_FINALIZER),
+            ("Upload verification cleanup receipt", workflow_contract.FULL_VERIFICATION_FINALIZER),
+            ("Observe Linux process access without a build", workflow_contract.ANDROID_CLEANUP_SCOPE),
+        ):
+            block = workflow_contract.validation_step(linux, name)
+            changed = workflow.replace(block, re.sub(r"(?m)^        if: .*$", "        if: " + condition, block), 1)
+            self.assertNotEqual(changed, workflow)
+            with self.subTest(step=name), self.assertRaisesRegex(RuntimeError, "verification scope"):
+                workflow_contract.verify_verification_scopes(changed)
+
+    def test_android_cleanup_admission_is_bound_and_before_sdk_and_ownership(self) -> None:
+        workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text()
+        name = "Validate Android cleanup source and controls"
+        block = workflow_contract.validation_step(workflow, name)
+        for original, replacement in (
+            ("if: " + workflow_contract.ANDROID_CLEANUP_SCOPE, "if: always()"),
+            ("${{ toJSON(inputs) }}", "{}"),
+            ("PARLOR_LINUX_PROBE_INPUTS:", "UNBOUND_INPUTS:"),
+            ("validate-android-cleanup", "validate"),
+            ("validate-android-cleanup", "controls-android-cleanup"),
+            ("/usr/bin/python3 -B", "python3 -B"),
+            ("        env:\n", "        env:\n          GH_TOKEN: ${{ github.token }}\n"),
+            ("validate-android-cleanup", "validate-android-cleanup; ./gradlew allTests"),
+        ):
+            changed = workflow.replace(block, block.replace(original, replacement, 1), 1)
+            self.assertNotEqual(changed, workflow)
+            with self.subTest(original=original, replacement=replacement), self.assertRaisesRegex(RuntimeError, "verification scope"):
+                workflow_contract.verify_verification_scopes(changed)
+        step = "\n      - name: " + name + "\n" + block
+        without = workflow.replace(step, "", 1)
+        with self.assertRaisesRegex(RuntimeError, "verification scope"):
+            workflow_contract.verify_verification_scopes(without)
+        for anchor in ("Claim fresh verification output ownership", "Install pinned Android SDK packages"):
+            changed = without.replace("\n      - name: " + anchor + "\n", step + "\n      - name: " + anchor + "\n", 1)
+            self.assertNotEqual(changed, workflow)
+            with self.subTest(anchor=anchor), self.assertRaisesRegex(RuntimeError, "verification scope"):
+                workflow_contract.verify_verification_scopes(changed)
+
+    def test_non_app_probe_requires_explicit_review_no_token_and_uploaded_custody(self) -> None:
+        workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text(encoding="utf-8")
+        for original, replacement in (
+            ("run: /usr/bin/python3 -B scripts/ci/native_process_probe.py run", "run: /usr/bin/python3 -B scripts/ci/native_continuation.py run"),
+            ("PARLOR_APPROVED_PROBE_CONTROL_SHA256: ${{ inputs.approved_probe_control_sha256 }}", "UNREVIEWED: yes"),
+            ("PARLOR_PROBE_UPLOAD_OUTCOME: ${{ steps.process_probe_artifact.outcome }}", "PARLOR_PROBE_UPLOAD_OUTCOME: success"),
+            ("PARLOR_PROBE_ARTIFACT_ID: ${{ steps.process_probe_artifact.outputs.artifact-id }}", "PARLOR_PROBE_ARTIFACT_ID: 1"),
+            ("PARLOR_PROBE_ARTIFACT_DIGEST: ${{ steps.process_probe_artifact.outputs.artifact-digest }}", "PARLOR_PROBE_ARTIFACT_DIGEST: cached"),
+            ("if: " + workflow_contract.PROCESS_PROBE_SCOPE, "if: always()"),
+        ):
+            name = ("Verify process-probe cleanup and uploaded custody" if "PARLOR_PROBE_" in original else
+                    "Observe hosted native processes without an app build")
+            block = workflow_contract.validation_step(workflow, name)
+            self.assertIn(original, block)
+            changed = workflow.replace(block, block.replace(original, replacement, 1), 1)
+            self.assertNotEqual(workflow, changed)
+            with self.subTest(original=original), self.assertRaisesRegex(RuntimeError, "verification scope"):
+                workflow_contract.verify_verification_scopes(changed)
+        step = workflow_contract.validation_step(workflow, "Observe hosted native processes without an app build")
+        changed = workflow.replace(step, step.replace("        env:\n", "        env:\n          GH_TOKEN: ${{ github.token }}\n"), 1)
+        with self.assertRaisesRegex(RuntimeError, "verification scope"):
+            workflow_contract.verify_verification_scopes(changed)
+
+    def test_probe_cleanup_binding_timeout_and_artifact_paths_are_exact(self) -> None:
+        workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text(encoding="utf-8")
+        for name, original, replacement in (
+            ("Verify process-probe cleanup and uploaded custody", "PARLOR_FROZEN_SOURCE_SHA", "UNBOUND_SOURCE"),
+            ("Verify process-probe cleanup and uploaded custody", "PARLOR_APPROVED_PROBE_CONTROL_SHA256", "UNREVIEWED"),
+            ("Verify process-probe cleanup and uploaded custody", "PARLOR_DISPATCH_SCOPE", "UNSCOPED"),
+            ("Verify process-probe cleanup and uploaded custody", "        env:\n", "        env:\n          GH_TOKEN: ${{ github.token }}\n"),
+            ("Upload bounded process-probe evidence", "id: process_probe_artifact", "id: unrelated"),
+            ("Upload bounded process-probe evidence", "/bundle/", "/resources/"),
+            ("Upload bounded process-probe evidence", "name: native-process-probe-", "name: unrelated-"),
+            ("Upload bounded process-probe evidence", "if-no-files-found: error", "if-no-files-found: warn"),
+            ("Upload process-probe cleanup receipt", "-cleanup.json", "-unknown.json"),
+            ("Upload process-probe cleanup receipt", "name: native-process-probe-cleanup-", "name: unrelated-"),
+        ):
+            block = workflow_contract.validation_step(workflow, name)
+            self.assertIn(original, block)
+            changed = workflow.replace(block, block.replace(original, replacement, 1), 1)
+            with self.subTest(name=name, original=original), self.assertRaisesRegex(RuntimeError, "verification scope"):
+                workflow_contract.verify_verification_scopes(changed)
+
+    def test_native_evidence_only_job_budget_and_all_other_scope_ceilings_are_exact(self) -> None:
+        workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text(encoding="utf-8")
+        expression = ("${{ inputs.verification_scope == 'native-process-probe' && 10 || "
+                      "inputs.verification_scope == 'native-evidence' && inputs.native_selection == 'settings-sheet-only' && 40 || "
+                      "inputs.verification_scope == 'native-evidence' && inputs.native_selection == 'os-recovery-only' && 120 || "
+                      "inputs.verification_scope == 'native-evidence' && inputs.native_selection == 'protection-application-only' && 90 || "
+                      "inputs.verification_scope == 'native-evidence' && 240 || 120 }}")
+        ios = workflow_contract.validation_job(workflow, "ios")
+        self.assertEqual([expression], re.findall(r"(?m)^    timeout-minutes: (.*)$", ios))
+        workflow_contract.verify_verification_scopes(workflow)
+        for replacement in (
+            expression.replace("&& 10", "&& 30"),
+            expression.replace("&& 40", "&& 240"),
+            expression.replace("'settings-sheet-only'", "'l08-only'"),
+            expression.replace("'os-recovery-only'", "'l08-only'"),
+            expression.replace("'os-recovery-only' && 120", "'os-recovery-only' && 240"),
+            expression.replace("'protection-application-only' && 90", "'protection-application-only' && 240"),
+            expression.replace("'protection-application-only' && 90", "'protection-application-only' && 120"),
+            expression.replace("'protection-application-only'", "'paired'"),
+            expression.replace("&& 240", "&& 120"),
+            expression.replace("&& 240", "&& 241"),
+            expression.replace("|| 120", "|| 240"),
+            expression.replace("'native-evidence'", "'native-preflight'"),
+            expression.replace("'native-evidence'", "'full'"),
+            "${{ inputs.verification_scope == 'native-process-probe' && 10 || 120 }}",
+            "${{ inputs.native_timeout_minutes || 240 }}",
+        ):
+            changed = workflow.replace(expression, replacement, 1)
+            self.assertNotEqual(workflow, changed)  # No vacuous mutation witness after expression drift.
+            with self.subTest(replacement=replacement), self.assertRaisesRegex(RuntimeError, "verification scope"):
+                workflow_contract.verify_verification_scopes(changed)
+
+    def test_actual_first_step_clock_producer_emits_exact_shared_kernel_and_run_source_token(self) -> None:
+        workflow = (workflow_contract.ROOT / '.github/workflows/production-verification.yml').read_text(encoding='utf-8')
+        block = workflow_contract.validation_step(workflow, 'Start focused native job clock')
+        body = block.split("<<'PY' >> \"$GITHUB_ENV\"\n", 1)[1].split('\n          PY', 1)[0]
+        tree = ast.parse(textwrap.dedent(body))
+        self.assertEqual(['json', 'os', 'time'], [node.names[0].name for node in tree.body if isinstance(node, ast.Import)])
+        # Compile only the actual Python heredoc with inert clock/environment/output;
+        # no workflow shell, real clock, runner, build, or GITHUB_ENV write executes.
+        tree.body = [node for node in tree.body if not isinstance(node, ast.Import)]
+        raw_clock = object()
+        for observed in (123456789012345, True, 0, -1, None, 1.0, '1000'):
+            output = Mock()
+            clock = SimpleNamespace(CLOCK_MONOTONIC_RAW=raw_clock, clock_gettime_ns=Mock(return_value=observed))
+            namespace = dict(json=json, time=clock, print=output, os=SimpleNamespace(environ=dict(
+                GITHUB_RUN_ID='201', GITHUB_RUN_ATTEMPT='3', GITHUB_JOB='ios', GITHUB_SHA='a' * 40)))
+            with self.subTest(observed=observed):
+                if type(observed) is int and observed > 0:
+                    exec(compile(tree, '<isolated-workflow-clock-producer>', 'exec'), namespace)
+                    output.assert_called_once()
+                    text = output.call_args.args[0]
+                    self.assertTrue(text.startswith('PARLOR_NATIVE_JOB_CLOCK='))
+                    self.assertEqual(dict(clock='CLOCK_MONOTONIC_RAW', start_ns=observed, run_id=201,
+                                          run_attempt=3, job='ios', head_sha='a' * 40),
+                                     json.loads(text.split('=', 1)[1]))
+                else:
+                    with self.assertRaisesRegex(RuntimeError, 'invalid-native-job-kernel-clock'):
+                        exec(compile(tree, '<isolated-workflow-clock-producer>', 'exec'), namespace)
+                    output.assert_not_called()
+                clock.clock_gettime_ns.assert_called_once_with(raw_clock)
+
+    def test_native_clock_step_rejects_unshared_clocks_extra_code_fields_and_context_weakening(self) -> None:
+        workflow = (workflow_contract.ROOT / '.github/workflows/production-verification.yml').read_text(encoding='utf-8')
+        name = 'Start focused native job clock'
+        block = workflow_contract.validation_step(workflow, name)
+        workflow_contract.verify_verification_scopes(workflow)
+        mutations = [
+            block.replace('time.clock_gettime_ns(time.CLOCK_MONOTONIC_RAW)', 'time.monotonic_ns()', 1),
+            block.replace('time.CLOCK_MONOTONIC_RAW', 'time.CLOCK_MONOTONIC', 1),
+            block.replace('start_ns=value', 'start_ns=1', 1),
+            block.replace('run_id=int(os.environ["GITHUB_RUN_ID"])', 'run_id=1', 1),
+            block.replace('run_attempt=int(os.environ["GITHUB_RUN_ATTEMPT"])', 'run_attempt=1', 1),
+            block.replace('job=os.environ["GITHUB_JOB"]', 'job="ios"', 1),
+            block.replace('head_sha=os.environ["GITHUB_SHA"]', 'head_sha="unbound"', 1),
+            block.replace("inputs.verification_scope == 'native-evidence'", "inputs.verification_scope != 'full'", 1),
+            block.replace('        shell: bash\n', '        shell: bash\n        continue-on-error: true\n', 1),
+            block.replace('        shell: bash\n', '        shell: bash\n        env:\n          UNREVIEWED: yes\n', 1),
+            # Preserve the entire old allowed heredoc then append executable code:
+            # an inclusion-only checker would incorrectly accept these variants.
+            block + '          printf unreviewed >> "$GITHUB_ENV"\n',
+            block + "          /usr/bin/python3 -B -c 'print(1)' >> \"$GITHUB_ENV\"\n",
+            block.replace('          PY\n', '          value = 0\n          PY\n', 1),
+        ]
+        for index, replacement in enumerate(mutations):
+            changed = workflow.replace(block, replacement, 1)
+            self.assertNotEqual(workflow, changed)
+            with self.subTest(mutation=index), self.assertRaisesRegex(RuntimeError, 'clock'):
+                workflow_contract.verify_verification_scopes(changed)
+
+    def test_native_clock_cannot_be_restarted_later_or_moved_after_checkout(self) -> None:
+        workflow = (workflow_contract.ROOT / '.github/workflows/production-verification.yml').read_text(encoding='utf-8')
+        clock = '\n      - name: Start focused native job clock\n' + workflow_contract.validation_step(
+            workflow, 'Start focused native job clock')
+        checkout = '\n      - name: Check out source\n' + workflow_contract.validation_step(
+            workflow_contract.validation_job(workflow, 'ios'), 'Check out source')
+        moved = workflow.replace(clock, '\nSYNTHETIC_CLOCK_HOLE\n', 1).replace(checkout, checkout + clock, 1).replace(
+            '\nSYNTHETIC_CLOCK_HOLE\n', '', 1)
+        duplicated = workflow.replace(clock, clock + clock, 1)
+        for changed in (moved, duplicated):
+            self.assertNotEqual(workflow, changed)
+            with self.subTest(duplicate=changed == duplicated), self.assertRaisesRegex(RuntimeError, 'clock'):
+                workflow_contract.verify_verification_scopes(changed)
+
+    def test_probe_cannot_precede_scope_validation_or_upload(self) -> None:
+        workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text(encoding="utf-8")
+        for first, second in (
+            ("Validate verification scope", "Observe hosted native processes without an app build"),
+            ("Upload bounded process-probe evidence", "Verify process-probe cleanup and uploaded custody"),
+        ):
+            def complete_step(name):
+                return "\n      - name: " + name + "\n" + workflow_contract.validation_step(workflow, name)
+            a, b = complete_step(first), complete_step(second)
+            changed = workflow.replace(a, "SYNTHETIC_STEP_HOLE", 1).replace(b, a, 1).replace("SYNTHETIC_STEP_HOLE", b, 1)
+            with self.subTest(first=first), self.assertRaisesRegex(RuntimeError, "verification scope"):
+                workflow_contract.verify_verification_scopes(changed)
+
+    def test_scoped_full_finalizers_reject_every_nonexact_predicate(self) -> None:
+        workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text(encoding="utf-8")
+        original = "if: " + workflow_contract.FULL_VERIFICATION_FINALIZER
+        for job_id, cycles in (("ios", ("apple-aggregate", "apple-ui")),
+                               ("ios-release", ("apple-aggregate", "apple-wrapper"))):
+            job = workflow_contract.validation_job(workflow, job_id)
+            for cycle in cycles:
+                name = f"Stop Gradle after {cycle} and retire owned Apple resources"
+                block = workflow_contract.validation_step(job, name)
+                for replacement in ("if: always()", "if: success()", "if: always() && false",
+                                    "if: always() && inputs.verification_scope == 'full'"):
+                    changed = job.replace(block, block.replace(original, replacement), 1)
+                    broken = workflow.replace(job, changed, 1)
+                    self.assertNotEqual(broken, workflow)
+                    with self.subTest(job=job_id, name=name, replacement=replacement), self.assertRaises(RuntimeError):
+                        workflow_contract.verify_validation(broken)
+
+    def test_split_apple_jobs_are_six_full_jobs_plus_one_opt_in_probe(self) -> None:
+        workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text()
+        self.assertEqual(re.findall(r"(?m)^  ([a-z][a-z0-9-]+):$", workflow.split("\njobs:\n", 1)[1]), [
+            "desktop-android", "desktop-linux-arm64", "desktop-macos-x64", "desktop-windows-x64",
+            "ios", "ios-release", "ios-protection-probe"])
+        workflow_contract.verify_validation(workflow)
+        for original, replacement in (
+            ("\n  ios-release:\n", "\n  unreviewed-release:\n"),
+            ("\n  ios-release:\n", "\n  Unreviewed_Job:\n    runs-on: ubuntu-24.04\n  ios-release:\n"),
+            ("name: iOS simulator runtime and Swift host", "name: iOS tests, release frameworks, and Swift wrapper"),
+            ("name: iOS release frameworks and Swift wrapper", "name: Optional release linkage"),
+            ("\n  ios-release:\n    if: " + workflow_contract.FULL_VERIFICATION_SCOPE,
+             "\n  ios-release:\n    if: " + workflow_contract.PROTECTION_PROBE_SCOPE),
+            ("\n  ios-release:\n", "\n  ios-release:\n    needs: ios\n"),
+            ("\n  ios:\n", "\n  ios:\n    strategy:\n      matrix:\n        arch: [arm64, x64]\n"),
+        ):
+            changed = workflow.replace(original, replacement, 1)
+            self.assertNotEqual(changed, workflow)
+            with self.subTest(original=original), self.assertRaisesRegex(RuntimeError, "verification scope"):
+                workflow_contract.verify_verification_scopes(changed)
+
+    def test_split_apple_aggregates_cannot_drop_static_analysis_or_duplicate_runtime(self) -> None:
+        workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text()
+        for job_id, task, wrong_task in (
+            ("ios", "productionIosSimulatorRuntimeTests", "productionAppleCheck"),
+            ("ios-release", "productionAppleCheck", ":composeApp:linkReleaseFrameworkIosArm64"),
+        ):
+            job = workflow_contract.validation_job(workflow, job_id)
+            original = "./gradlew " + task + " --dependency-verification=strict --no-daemon --stacktrace --console=plain"
+            self.assertEqual(job.count(original), 1)
+            for replacement in (
+                original.replace(task, wrong_task), original.replace(task, task + " productionIosSimulatorRuntimeTests"),
+                original.replace("strict", "lenient"), original.replace(" --no-daemon", ""),
+                original.replace(task, "allTests"), "# " + original,
+                original + "\n          ./gradlew allTests --dependency-verification=strict",
+            ):
+                changed = workflow.replace(job, job.replace(original, replacement, 1), 1)
+                self.assertNotEqual(changed, workflow)
+                with self.subTest(job=job_id, replacement=replacement), self.assertRaisesRegex(RuntimeError, "split Apple aggregate"):
+                    workflow_contract.verify_validation(changed)
+
+    def test_each_apple_job_requires_its_own_exact_source_and_toolchain_guard_body(self) -> None:
+        workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text()
+        for job_id in ("ios", "ios-release"):
+            job = workflow_contract.validation_job(workflow, job_id)
+            block = workflow_contract.validation_step(job, "Record Xcode toolchain and exact source")
+            for original, replacement in (
+                ("Xcode 26.3", "Xcode 26.4"), ("Build version 17C529", "Build version 17E000"),
+                (".toolchains.apple.developer_dir", ".toolchains.apple.unreviewed_dir"),
+                (".toolchains.apple.xcode_build", ".toolchains.apple.unreviewed_build"),
+                (".toolchains.apple.minimum_ios_sdk_major", ".toolchains.apple.unreviewed_floor"),
+                ('test -x "$DEVELOPER_DIR/usr/bin/xcodebuild"', '# test -x "$DEVELOPER_DIR/usr/bin/xcodebuild"'),
+                ("xcrun --sdk iphonesimulator --show-sdk-version", "echo 26.2"),
+                ("git rev-parse HEAD", "echo cached-source"),
+                ('test -z "$(git status --porcelain)"', '# test -z "$(git status --porcelain)"'),
+                ("set -euo pipefail", "set +e"),
+            ):
+                changed_job = job.replace(block, block.replace(original, replacement, 1), 1)
+                changed = workflow.replace(job, changed_job, 1)
+                self.assertNotEqual(changed, workflow)
+                with self.subTest(job=job_id, original=original), self.assertRaisesRegex(RuntimeError, "source/toolchain"):
+                    workflow_contract.verify_validation(changed)
+
+    def test_each_apple_job_requires_its_own_checkout_jdk_and_common_cleanup_commands(self) -> None:
+        workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text()
+        for job_id in ("ios", "ios-release"):
+            job = workflow_contract.validation_job(workflow, job_id)
+            for name, original, replacement in (
+                ("Check out source", "persist-credentials: false", "persist-credentials: true"),
+                ("Check out source", "persist-credentials: false", "persist-credentials: false\n          ref: main"),
+                ("Set up JDK 21", 'java-version: "21"', 'java-version: "17"'),
+                ("Claim fresh verification output ownership", '"verification_hygiene.py", "prepare"', '"verification_hygiene.py", "cleanup"'),
+                ("Claim fresh verification output ownership", "runpy.run_path(", "# runpy.run_path("),
+                ("Clean only attested verification outputs", '"verification_hygiene.py", "cleanup"', '"verification_hygiene.py", "stop", "apple-ui"'),
+                ("Clean only attested verification outputs", '"scripts/ci/verification_hygiene.py"', '"scripts/ci/unreviewed.py"'),
+                ("Clean only attested verification outputs", "import runpy, sys", "import runpy, sys\n          print('no cleanup')"),
+            ):
+                block = workflow_contract.validation_step(job, name)
+                changed = workflow.replace(job, job.replace(block, block.replace(original, replacement, 1), 1), 1)
+                self.assertNotEqual(changed, workflow)
+                with self.subTest(job=job_id, name=name, original=original), self.assertRaisesRegex(RuntimeError, "verification scope"):
+                    workflow_contract.verify_verification_scopes(changed)
+
+    def test_each_apple_cleanup_binds_only_its_two_actual_cycles(self) -> None:
+        workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text()
+        for job_id, cycle, other in (("ios", "apple-ui", "apple-wrapper"), ("ios-release", "apple-wrapper", "apple-ui")):
+            job = workflow_contract.validation_job(workflow, job_id)
+            block = workflow_contract.validation_step(job, "Clean only attested verification outputs")
+            for original, replacement in (
+                ('"' + cycle + '":', '"' + other + '":'),
+                ('"apple-aggregate":{', '"apple-aggregate":{},"apple-aggregate":{'),
+                ('"prepare":"${{ steps.apple_aggregate_prepare.outcome }}"', '"prepare":"success"'),
+                ('"prepare":"${{ steps.apple_aggregate_prepare.outcome }}"',
+                 '"prepare":"skipped","prepare":"${{ steps.apple_aggregate_prepare.outcome }}"'),
+                ("steps.apple_aggregate_finish.outcome", "steps.apple_aggregate_run.outcome"),
+                ("steps.verification_artifact.outputs.artifact-id", "steps.native_artifact.outputs.artifact-id"),
+                ("steps.verification_artifact.outputs.artifact-digest", "steps.native_artifact.outputs.artifact-digest"),
+                ("steps.verification_ownership.outcome", "steps.apple_aggregate_prepare.outcome"),
+            ):
+                changed = workflow.replace(job, job.replace(block, block.replace(original, replacement, 1), 1), 1)
+                self.assertNotEqual(changed, workflow)
+                with self.subTest(job=job_id, original=original), self.assertRaisesRegex(RuntimeError, "verification scope"):
+                    workflow_contract.verify_verification_scopes(changed)
+
+    def test_split_apple_evidence_names_reports_and_cleanup_paths_are_job_bound(self) -> None:
+        workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text()
+        for job_id, kind in (("ios", "runtime"), ("ios-release", "release")):
+            job = workflow_contract.validation_job(workflow, job_id)
+            for name, original, replacement in (
+                (f"Upload Apple {kind} verification evidence", f"name: ios-{kind}-verification", "name: ios-verification"),
+                (f"Upload Apple {kind} verification evidence", "id: verification_artifact", "id: cached_artifact"),
+                (f"Upload Apple {kind} verification evidence", "build/ci-evidence/", "build/cached-evidence/"),
+                (f"Upload Apple {kind} verification evidence", "-apple-*-ownership.json", "-apple-ui-ownership.json"),
+                ("Upload verification cleanup receipt", "${{ github.job }}", "ios"),
+                ("Upload verification cleanup receipt", "-cleanup.json", "-ownership.json"),
+            ):
+                block = workflow_contract.validation_step(job, name)
+                changed = workflow.replace(job, job.replace(block, block.replace(original, replacement, 1), 1), 1)
+                self.assertNotEqual(changed, workflow)
+                with self.subTest(job=job_id, name=name, original=original), self.assertRaisesRegex(RuntimeError, "verification scope"):
+                    workflow_contract.verify_verification_scopes(changed)
+
+    def test_protection_probe_is_opt_in_and_excluded_from_every_full_job(self) -> None:
+        workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text()
+        for original, replacement in (
+            ("default: full", "default: ios-protection-probe"),
+            (", ios-protection-probe]", "]"),
+            ("    if: " + workflow_contract.PROTECTION_PROBE_SCOPE, "    if: " + workflow_contract.FULL_VERIFICATION_SCOPE),
+            (" && inputs.verification_scope != 'ios-protection-probe'", ""),
+        ):
+            changed = workflow.replace(original, replacement, 1)
+            self.assertNotEqual(changed, workflow)
+            with self.subTest(original=original), self.assertRaisesRegex(RuntimeError, "verification scope"):
+                workflow_contract.verify_verification_scopes(changed)
+        for job_id in ("desktop-android", "desktop-linux-arm64", "desktop-macos-x64", "desktop-windows-x64", "ios", "ios-release"):
+            job = workflow_contract.validation_job(workflow, job_id)
+            changed_job = re.sub(r"(?m)^    if: (.*)$", r"    if: \1 || inputs.verification_scope == 'ios-protection-probe'", job)
+            changed = workflow.replace(job, changed_job, 1)
+            self.assertNotEqual(changed, workflow)
+            with self.subTest(job=job_id), self.assertRaisesRegex(RuntimeError, "verification scope"):
+                workflow_contract.verify_verification_scopes(changed)
+
+    def test_protection_probe_requires_exact_reviewed_source_control_toolchain_and_jdk(self) -> None:
+        workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text()
+        job = workflow_contract.validation_job(workflow, "ios-protection-probe")
+        for original, replacement in (
+            ("timeout-minutes: 20", "timeout-minutes: 120"),
+            ("runs-on: macos-15", "runs-on: macos-latest"),
+            ("/Applications/Xcode_26.3.app", "/Applications/Xcode.app"),
+            ("${{ inputs.verification_scope }}", "ios-protection-probe"),
+            ("${{ inputs.frozen_source_sha }}", "${{ github.sha }}"),
+            ("${{ inputs.approved_probe_control_sha256 }}", "${{ inputs.approved_l08_control_sha256 }}"),
+            ("    env:\n", "    env:\n      GH_TOKEN: ${{ github.token }}\n"),
+            ("fetch-depth: 0", "fetch-depth: 1"),
+            ("persist-credentials: false", "persist-credentials: true"),
+            ('java-version: "21"', 'java-version: "17"'),
+        ):
+            changed = workflow.replace(job, job.replace(original, replacement, 1), 1)
+            self.assertNotEqual(changed, workflow)
+            with self.subTest(original=original), self.assertRaisesRegex(RuntimeError, "verification scope"):
+                workflow_contract.verify_verification_scopes(changed)
+
+    def test_protection_probe_requires_only_the_standalone_commands_and_order(self) -> None:
+        workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text()
+        job = workflow_contract.validation_job(workflow, "ios-protection-probe")
+        for original, replacement in (
+            ("run_probe.py run", "run_probe.py controls"),
+            ("run_probe.py cleanup", "run_probe.py run"),
+            ("run_probe.py assert-result", "run_probe.py controls"),
+            ("run_probe.py run", "run_probe.py run; ./gradlew allTests"),
+            ("run_probe.py run\n", "run_probe.py run\n          unreviewed-scalar-continuation\n"),
+            ("        id: protection_probe\n", "        id: protection_probe\n        continue-on-error: true\n"),
+            ("      - name: Run independently approved strict protection diagnostic\n",
+             "      - name: Unreviewed extra build\n        run: ./gradlew productionAppleCheck\n\n"
+             "      - name: Run independently approved strict protection diagnostic\n"),
+        ):
+            changed = workflow.replace(job, job.replace(original, replacement, 1), 1)
+            self.assertNotEqual(changed, workflow)
+            with self.subTest(original=original), self.assertRaisesRegex(RuntimeError, "verification scope"):
+                workflow_contract.verify_verification_scopes(changed)
+        for first, second in (
+            ("Upload strict protection diagnostic evidence", "Finalize strict protection diagnostic resources and custody"),
+            ("Upload strict protection diagnostic cleanup", "Assert diagnostic collection and cleanup outcomes"),
+        ):
+            a = "\n      - name: " + first + "\n" + workflow_contract.validation_step(job, first)
+            b = "\n      - name: " + second + "\n" + workflow_contract.validation_step(job, second)
+            changed_job = job.replace(a, "SYNTHETIC_STEP_HOLE", 1).replace(b, a, 1).replace("SYNTHETIC_STEP_HOLE", b, 1)
+            self.assertNotEqual(changed_job, job)
+            with self.subTest(first=first), self.assertRaisesRegex(RuntimeError, "verification scope"):
+                workflow_contract.verify_verification_scopes(workflow.replace(job, changed_job, 1))
+
+    def test_protection_selection_is_bound_once_without_step_or_global_override(self) -> None:
+        workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text()
+        job = workflow_contract.validation_job(workflow, "ios-protection-probe")
+        original = "      PARLOR_PROTECTION_SELECTION: ${{ inputs.native_selection }}\n"
+        self.assertEqual(workflow.count(original), 1)
+        for replacement in ("", original + original,
+                            original.replace("inputs.native_selection", "inputs.verification_scope"),
+                            original.replace("${{ inputs.native_selection }}", "paired"),
+                            original.replace("${{ inputs.native_selection }}", "protection-host-only"),
+                            original.replace("PARLOR_PROTECTION_SELECTION", "PARLOR_NATIVE_SELECTION")):
+            changed = workflow.replace(job, job.replace(original, replacement, 1), 1)
+            self.assertNotEqual(changed, workflow)
+            with self.subTest(replacement=replacement), self.assertRaisesRegex(RuntimeError, "verification scope"):
+                workflow_contract.verify_verification_scopes(changed)
+        changed = workflow.replace("\nenv:\n", "\nenv:\n  PARLOR_PROTECTION_SELECTION: paired\n", 1)
+        self.assertNotEqual(changed, workflow)
+        with self.assertRaisesRegex(RuntimeError, "verification scope"):
+            workflow_contract.verify_verification_scopes(changed)
+        for name in ("Run independently approved strict protection diagnostic",
+                     "Finalize strict protection diagnostic resources and custody",
+                     "Assert diagnostic collection and cleanup outcomes"):
+            block = workflow_contract.validation_step(job, name)
+            changed_block = block.replace("        shell: bash\n", "        shell: bash\n        env:\n"
+                                          "          PARLOR_PROTECTION_SELECTION: protection-host-only\n", 1)
+            changed = workflow.replace(job, job.replace(block, changed_block, 1), 1)
+            self.assertNotEqual(changed, workflow)
+            with self.subTest(name=name), self.assertRaisesRegex(RuntimeError, "verification scope"):
+                workflow_contract.verify_verification_scopes(changed)
+
+    def test_protection_routes_keep_closed_identical_cases_and_literal_commands(self) -> None:
+        workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text()
+        job = workflow_contract.validation_job(workflow, "ios-protection-probe")
+        runner = "/usr/bin/python3 -B remediation-runs/2026-09-08-continuation/protection-diagnostic-01/run_probe.py "
+        host_runner = "/usr/bin/python3 -B remediation-runs/2026-09-08-continuation/protection-host-image-01/run_host_probe.py "
+        scripts = []
+        for name, command in (("Run independently approved strict protection diagnostic", "run"),
+                              ("Finalize strict protection diagnostic resources and custody", "cleanup"),
+                              ("Assert diagnostic collection and cleanup outcomes", "assert-result")):
+            block = workflow_contract.validation_step(job, name)
+            script = block.split("        run: |\n", 1)[1].rstrip()
+            scripts.append(script.replace(runner + command, runner + "VERB").replace(host_runner + command, host_runner + "VERB"))
+            self.assertEqual(script.count(runner + command + "\n"), 1)
+            self.assertEqual(script.count(host_runner + command + "\n"), 1)
+            for original, replacement in (
+                ('case "$PARLOR_PROTECTION_SELECTION" in', 'case "paired" in'),
+                ('$PARLOR_PROTECTION_SELECTION', '${PARLOR_PROTECTION_SELECTION:-paired}'),
+                ('$PARLOR_PROTECTION_SELECTION', '${{ inputs.native_selection }}'),
+                ("            paired)\n", "            *)\n"),
+                ("            paired)\n", "            paired|l08-only)\n"),
+                ("            protection-host-only)\n", "            protection-host-only|protection-application-only)\n"),
+                ("            protection-host-only)\n", "            protection-application-only)\n"),
+                ("            protection-host-only)\n", "            protection-*)\n"),
+                ("              exit 64\n", "              exit 0\n"),
+                ("              exit 64\n", ""),
+                ("              exit 64\n", "              " + runner + command + "\n"),
+                ("          set -euo pipefail\n", "          set -euo pipefail\n          PARLOR_PROTECTION_SELECTION=paired\n"),
+                (runner + command, host_runner + command),
+                (host_runner + command, runner + command),
+                (host_runner + command, host_runner + "controls"),
+                (host_runner + command, host_runner + "$PARLOR_PROTECTION_SELECTION"),
+                (host_runner + command, '/usr/bin/python3 -B "$RUNNER_TEMP/run_host_probe.py" ' + command),
+                (host_runner + command, host_runner + command + " || true"),
+                ("          esac", "          esac\n          ./gradlew productionAppleCheck"),
+            ):
+                changed = workflow.replace(job, job.replace(block, block.replace(original, replacement, 1), 1), 1)
+                self.assertNotEqual(changed, workflow)
+                with self.subTest(name=name, original=original, replacement=replacement), self.assertRaisesRegex(RuntimeError, "verification scope"):
+                    workflow_contract.verify_verification_scopes(changed)
+        self.assertEqual(scripts[0], scripts[1])
+        self.assertEqual(scripts[0], scripts[2])
+
+    def test_host_protection_routing_is_confined_to_the_separate_diagnostic_job(self) -> None:
+        workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text()
+        job = workflow_contract.validation_job(workflow, "ios-protection-probe")
+        self.assertEqual(workflow.count("protection-host-only"), 4)  # one choice, three closed arms
+        self.assertEqual(workflow.count("PARLOR_PROTECTION_SELECTION:"), 1)
+        self.assertEqual(workflow.count("PARLOR_NATIVE_SELECTION:"), 3)
+        for job_id in ("desktop-android", "desktop-linux-arm64", "desktop-macos-x64", "desktop-windows-x64", "ios", "ios-release"):
+            with self.subTest(job=job_id):
+                block = workflow_contract.validation_job(workflow, job_id)
+                self.assertNotIn("protection-host-only", block)
+                self.assertNotIn("PARLOR_PROTECTION_SELECTION", block)
+        self.assertEqual(job.count("protection-host-image-01/run_host_probe.py"), 3)
+        self.assertEqual(job.count("protection-diagnostic-01/run_probe.py"), 3)
+
+    def test_protection_probe_finalizers_bind_actual_upload_run_and_cleanup_outcomes(self) -> None:
+        workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text()
+        job = workflow_contract.validation_job(workflow, "ios-protection-probe")
+        for name in ("Upload strict protection diagnostic evidence", "Finalize strict protection diagnostic resources and custody",
+                     "Upload strict protection diagnostic cleanup", "Assert diagnostic collection and cleanup outcomes"):
+            block = workflow_contract.validation_step(job, name)
+            mutations = [("if: always()", "if: success()")]
+            mutations += [(value, "success") for value in re.findall(r"(?m)^          PARLOR_PROTECTION_[A-Z_]+: (.*)$", block)]
+            for original, replacement in mutations:
+                changed = workflow.replace(job, job.replace(block, block.replace(original, replacement, 1), 1), 1)
+                self.assertNotEqual(changed, workflow)
+                with self.subTest(name=name, original=original), self.assertRaisesRegex(RuntimeError, "verification scope"):
+                    workflow_contract.verify_verification_scopes(changed)
+
+    def test_protection_assertion_rebinds_main_custody_instead_of_inheriting_cleanup_step_env(self) -> None:
+        workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text()
+        job = workflow_contract.validation_job(workflow, "ios-protection-probe")
+        cleanup = workflow_contract.validation_step(job, "Finalize strict protection diagnostic resources and custody")
+        assertion = workflow_contract.validation_step(job, "Assert diagnostic collection and cleanup outcomes")
+        workflow_contract.verify_verification_scopes(workflow)
+        for field, value in (
+            ("PARLOR_PROTECTION_UPLOAD_OUTCOME", "${{ steps.protection_probe_artifact.outcome }}"),
+            ("PARLOR_PROTECTION_ARTIFACT_ID", "${{ steps.protection_probe_artifact.outputs.artifact-id }}"),
+            ("PARLOR_PROTECTION_ARTIFACT_DIGEST", "${{ steps.protection_probe_artifact.outputs.artifact-digest }}"),
+        ):
+            line = f"          {field}: {value}\n"
+            self.assertEqual(cleanup.count(line), 1)
+            self.assertEqual(assertion.count(line), 1)
+            for replacement in ("", line.replace("protection_probe_artifact", "protection_probe_cleanup_artifact")):
+                changed_job = job.replace(assertion, assertion.replace(line, replacement, 1), 1)
+                changed = workflow.replace(job, changed_job, 1)
+                self.assertNotEqual(changed, workflow)
+                self.assertIn(line, workflow_contract.validation_step(changed_job, "Finalize strict protection diagnostic resources and custody"))
+                with self.subTest(field=field, replacement=replacement), self.assertRaisesRegex(RuntimeError, "verification scope"):
+                    workflow_contract.verify_verification_scopes(changed)
+
+    def test_protection_probe_artifacts_are_strict_compact_and_run_bound(self) -> None:
+        workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text()
+        job = workflow_contract.validation_job(workflow, "ios-protection-probe")
+        for name in ("Upload strict protection diagnostic evidence", "Upload strict protection diagnostic cleanup"):
+            block = workflow_contract.validation_step(job, name)
+            for original, replacement in (
+                ("if-no-files-found: error", "if-no-files-found: warn"),
+                ("${{ github.run_attempt }}", "1"),
+                ("${{ runner.temp }}/parlor-protection-probe-", "${{ github.workspace }}/"),
+                ("retention-days: 14", "retention-days: 1"),
+                ("        with:\n", "        with:\n          include-hidden-files: true\n"),
+            ):
+                changed = workflow.replace(job, job.replace(block, block.replace(original, replacement, 1), 1), 1)
+                self.assertNotEqual(changed, workflow)
+                with self.subTest(name=name, original=original), self.assertRaisesRegex(RuntimeError, "verification scope"):
+                    workflow_contract.verify_verification_scopes(changed)
+
     def test_repository_workflows_satisfy_release_contract(self) -> None:
         self.assertEqual(workflow_contract.main(), 0)
 
@@ -40,6 +831,90 @@ class WorkflowContractTest(unittest.TestCase):
         )
         with self.assertRaisesRegex(RuntimeError, "app-launch test"):
             workflow_contract.verify_validation(broken)
+
+    def test_ios_app_launch_requires_owned_simulator_and_nonparallel_execution(self) -> None:
+        workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text(
+            encoding="utf-8"
+        )
+        mutations = (
+            ("create-simulator apple-ui", "list devices available --json"),
+            ("-parallel-testing-enabled NO", "-parallel-testing-enabled YES"),
+            ("-maximum-concurrent-test-simulator-destinations 1", "-maximum-concurrent-test-simulator-destinations 2"),
+            ("test ! -e build/ci-evidence/ios-ui-tests.xcresult", "true"),
+            ("-derivedDataPath build/xcode-derived-data", "-derivedDataPath /tmp/unowned"),
+        )
+        for original, replacement in mutations:
+            with self.subTest(original=original):
+                self.assertIn(original, workflow)
+                with self.assertRaisesRegex(RuntimeError, "owned iOS app-launch"):
+                    workflow_contract.verify_validation(workflow.replace(original, replacement, 1))
+
+    def test_ios_app_launch_requires_its_own_preparation_and_finalization(self) -> None:
+        workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text(
+            encoding="utf-8"
+        )
+        for original, replacement in (
+            ("prepare apple-ui", "prepare apple-wrapper"),
+            ("finish apple-ui", "finish apple-wrapper"),
+            ("id: apple_ui_prepare", "id: another_prepare"),
+            ("steps.apple_ui_prepare.outcome", "steps.apple_wrapper_prepare.outcome"),
+            ("steps.apple_ui_run.outcome", "steps.apple_wrapper_run.outcome"),
+        ):
+            with self.subTest(original=original):
+                with self.assertRaisesRegex(RuntimeError, "owned iOS app-launch"):
+                    workflow_contract.verify_validation(workflow.replace(original, replacement, 1))
+        finish = workflow_contract.validation_step(
+            workflow, "Stop Gradle after apple-ui and retire owned Apple resources"
+        )
+        for condition in ("if: success()", "if: failure()", "# if removed"):
+            with self.subTest(condition=condition):
+                broken = workflow.replace(finish, finish.replace("if: always()", condition), 1)
+                with self.assertRaisesRegex(RuntimeError, "finalizer must always run"):
+                    workflow_contract.verify_validation(broken)
+
+    def test_ios_app_launch_cannot_delay_finalization_or_claim_ownership_after_launch(self) -> None:
+        workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text(
+            encoding="utf-8"
+        )
+        finish_marker = "      - name: Stop Gradle after apple-ui and retire owned Apple resources\n"
+        delayed = workflow.replace(finish_marker, "      - name: Another build\n        run: ./gradlew build\n\n" + finish_marker, 1)
+        with self.assertRaisesRegex(RuntimeError, "immediately after app-launch"):
+            workflow_contract.verify_validation(delayed)
+        prepare_name = "Claim apple-ui native resource ownership"
+        prepare = f"      - name: {prepare_name}\n" + workflow_contract.validation_step(workflow, prepare_name)
+        misplaced = workflow.replace(prepare, "", 1).replace(finish_marker, prepare + "\n" + finish_marker, 1)
+        with self.assertRaisesRegex(RuntimeError, "ownership before launch"):
+            workflow_contract.verify_validation(misplaced)
+
+    def test_android_and_ios_release_packages_must_verify_notice_bytes(self) -> None:
+        workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text(
+            encoding="utf-8"
+        )
+        for artifact in ("$aab", "$app"):
+            command = f'scripts/verification/third_party_notices.py --package "{artifact}" --json'
+            with self.subTest(artifact=artifact):
+                self.assertEqual(1, workflow.count(command))
+                with self.assertRaisesRegex(RuntimeError, "packaged-notice verification"):
+                    workflow_contract.verify_validation(workflow.replace(command, "removed-package-check", 1))
+
+    def test_unsigned_android_inventory_is_required_and_tool_cleanup_is_scoped(self) -> None:
+        workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text(
+            encoding="utf-8"
+        )
+        for command in ('scripts/verification/android_release_artifacts.py --package "$aab"',
+                        'trap \'rm -rf "$tools"\' EXIT'):
+            with self.subTest(command=command), self.assertRaisesRegex(RuntimeError, "complete unsigned Android"):
+                workflow_contract.verify_validation(workflow.replace(command, "removed-package-check", 1))
+
+    def test_complete_ios_inventory_requires_successful_build_and_cleanup(self) -> None:
+        workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text(
+            encoding="utf-8"
+        )
+        for command in ('/usr/bin/python3 -B scripts/verification/ios_release_artifacts.py',
+                        "&& steps.apple_wrapper_finish.outcome == 'success'",
+                        '--source "$GITHUB_WORKSPACE" --json >build/ci-evidence/ios-release-artifact-inventory.json'):
+            with self.subTest(command=command), self.assertRaisesRegex(RuntimeError, "complete iOS artifact"):
+                workflow_contract.verify_validation(workflow.replace(command, "removed-package-check", 1))
 
     def test_mobile_release_kit_android_signing_fallbacks_remain_bounded(self) -> None:
         gradle = (workflow_contract.ROOT / "composeApp/build.gradle.kts").read_text(

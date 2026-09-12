@@ -1,0 +1,222 @@
+{
+  "schema_version": 1,
+  "kind": "TERMINAL_NATIVE_API_COLLECTION_NOT_RUNTIME_QUALIFICATION",
+  "coordinator": "/root",
+  "started_at": "2026-09-09T03:41:16.659447+00:00",
+  "run_id": 34303850578,
+  "run_attempt": 1,
+  "watch_session": 73777,
+  "watch_exit_code": 1,
+  "commands": [
+    {
+      "command": [
+        "sh",
+        "-c",
+        "date -u +%FT%TZ; df -h / /tmp; free -h; pgrep -af \"[j]ava|[g]radle|[x]codebuild|[s]imctl\" || true"
+      ],
+      "started_at": "2026-09-09T03:41:16.659489+00:00",
+      "timeout_seconds": 180,
+      "exit_code": 0,
+      "finished_at": "2026-09-09T03:41:16.692279+00:00",
+      "stdout": {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34303850578/resources-before.txt",
+        "bytes": 360,
+        "sha256": "2c4e79ee28938879c1c694bf8f994927fffb1cee76e7da3825d602923ef684cf"
+      },
+      "stderr": {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34303850578/resources-before.txt.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD",
+        "HEAD^{tree}"
+      ],
+      "started_at": "2026-09-09T03:41:16.693807+00:00",
+      "timeout_seconds": 180,
+      "exit_code": 0,
+      "finished_at": "2026-09-09T03:41:16.702682+00:00",
+      "stdout": {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34303850578/source-after.txt",
+        "bytes": 82,
+        "sha256": "1959184b1f08ca4c13925615cdffcefdfc700ce97b10d4025b6479249cf63814"
+      },
+      "stderr": {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34303850578/source-after.txt.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "command": [
+        "git",
+        "status",
+        "--porcelain=v1",
+        "--untracked-files=no"
+      ],
+      "started_at": "2026-09-09T03:41:16.702979+00:00",
+      "timeout_seconds": 180,
+      "exit_code": 0,
+      "finished_at": "2026-09-09T03:41:16.767744+00:00",
+      "stdout": {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34303850578/tracked-status-after.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34303850578/tracked-status-after.txt.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "command": [
+        "git",
+        "ls-remote",
+        "origin",
+        "refs/heads/fix/local-readiness-2026-09-07"
+      ],
+      "started_at": "2026-09-09T03:41:16.768808+00:00",
+      "timeout_seconds": 180,
+      "exit_code": 0,
+      "finished_at": "2026-09-09T03:41:17.387540+00:00",
+      "stdout": {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34303850578/remote-after.txt",
+        "bytes": 83,
+        "sha256": "cb81d06eaec99ab0414202a8235bb447b968eea3e4ada721c87f5725d1df5d01"
+      },
+      "stderr": {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34303850578/remote-after.txt.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "command": [
+        "gh",
+        "api",
+        "repos/Apdelrahman1911/parlor/actions/workflows/production-verification.yml"
+      ],
+      "started_at": "2026-09-09T03:41:17.388435+00:00",
+      "timeout_seconds": 180,
+      "exit_code": 0,
+      "finished_at": "2026-09-09T03:41:17.855814+00:00",
+      "stdout": {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34303850578/workflow-final.json",
+        "bytes": 533,
+        "sha256": "8345984073768616fd6aff6682c95051f186881c5fa4727b120c80e019841ece"
+      },
+      "stderr": {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34303850578/workflow-final.json.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "command": [
+        "gh",
+        "api",
+        "repos/Apdelrahman1911/parlor/actions/runs/34303850578"
+      ],
+      "started_at": "2026-09-09T03:41:17.856428+00:00",
+      "timeout_seconds": 180,
+      "exit_code": 0,
+      "finished_at": "2026-09-09T03:41:18.373055+00:00",
+      "stdout": {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34303850578/run-final.json",
+        "bytes": 12680,
+        "sha256": "8188855f6292b05045c6bb52d86e1d4b1233c1423f6d8d4edd3c654527f8f713"
+      },
+      "stderr": {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34303850578/run-final.json.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "command": [
+        "gh",
+        "api",
+        "repos/Apdelrahman1911/parlor/actions/runs/34303850578/attempts/1"
+      ],
+      "started_at": "2026-09-09T03:41:18.373909+00:00",
+      "timeout_seconds": 180,
+      "exit_code": 0,
+      "finished_at": "2026-09-09T03:41:18.891260+00:00",
+      "stdout": {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34303850578/attempt-1-final.json",
+        "bytes": 12702,
+        "sha256": "46f9897f1be14c8732f225c94b9cafd5ce20e11d71096209ed0da12d753ab2f6"
+      },
+      "stderr": {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34303850578/attempt-1-final.json.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "command": [
+        "gh",
+        "api",
+        "--paginate",
+        "repos/Apdelrahman1911/parlor/actions/runs/34303850578/attempts/1/jobs?per_page=100"
+      ],
+      "started_at": "2026-09-09T03:41:18.892076+00:00",
+      "timeout_seconds": 180,
+      "exit_code": 0,
+      "finished_at": "2026-09-09T03:41:19.460063+00:00",
+      "stdout": {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34303850578/jobs-attempt-1.pages.raw.json",
+        "bytes": 10733,
+        "sha256": "5ed6d5f92b4e46530bf8273ee0b31d907c2ecb64cb28c5b54b82f890c7e76d45"
+      },
+      "stderr": {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34303850578/jobs-attempt-1.pages.raw.json.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "command": [
+        "gh",
+        "api",
+        "--paginate",
+        "repos/Apdelrahman1911/parlor/actions/runs/34303850578/artifacts?per_page=100"
+      ],
+      "started_at": "2026-09-09T03:41:19.470971+00:00",
+      "timeout_seconds": 180,
+      "exit_code": 0,
+      "finished_at": "2026-09-09T03:41:19.988747+00:00",
+      "stdout": {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34303850578/artifacts.pages.raw.json",
+        "bytes": 1484,
+        "sha256": "65a53ad54399d0ecc544e39ef33264f6729d0dada93a004c694831a78e894b46"
+      },
+      "stderr": {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34303850578/artifacts.pages.raw.json.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  ],
+  "errors": [],
+  "normalizations": [
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34303850578/jobs-attempt-1.pages.json",
+      "bytes": 16746,
+      "sha256": "548812bd1af809066c92d4fa1e464e22986afa3fa35c11b3dcbb00de44c16d53"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34303850578/artifacts.pages.json",
+      "bytes": 2355,
+      "sha256": "189d9ae2d296a384acf3d0588cfdab7bac2d96903683e05e9c729d29c8d0be46"
+    }
+  ],
+  "status": "COLLECTED_TERMINAL_METADATA_NOT_RUNTIME_PROOF",
+  "finished_at": "2026-09-09T03:41:19.998787+00:00",
+  "cleanup": "Capture subprocesses reaped; no build or test invoked; no temporary source/tool/cache installed. API outputs retained as evidence."
+}

@@ -1,0 +1,672 @@
+{
+  "schema": 1,
+  "recorded_at": "2026-09-06T08:05:38.147376+00:00",
+  "reviewer": "/root/factory_review",
+  "harness_author": "/root/native_fix_review",
+  "assignment": "Independent adversarial review of DS-C01 v3 copy-only observation, actual UI steps, receipt oracles, privacy, source binding and cleanup controls.",
+  "review_status": "SOURCE REVIEW ACCEPTED for root-owned focused contract execution; actual iOS verification remains unexecuted at this review.",
+  "approved_control_sha256": "745fd6cd4f6bb6cd25c611cf2a56e71f8602a4932ef336e8c0ab568f848dbb92",
+  "controls": [
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v3/run_dsc01_apphost_cycle.py",
+      "sha256": "05e5a45e18cbbeccad63adb24216e33cdb0e64c14dd53d7ad0008ea7815b07f7"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/run_gradle_cycle.py",
+      "sha256": "d2d18c2311d59554db88be3f92e609ec5ca46fc8af4c79702836f9e4c130240f"
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/run_android_managed_cycle.py",
+      "sha256": "b34ad4662ac906bff0a2f4e8ebe25c0757229098361e8e34c29b7c06681730c0"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v3/secondary_fifo.py",
+      "sha256": "e1546ef645e2f87dfadd41d4e7f3f1c97cef1e38fe6392fb6a778f6db6333dbd"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v3/test_secondary_fifo.py",
+      "sha256": "81ba5e75fbb5c7a6fb4acd7e728880f8e7a63a38defdc2715ff2d78395cb5155"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v3/test_harness_contract.py",
+      "sha256": "db20274bc3e33241539544e35afa2a56910d8f105130f264af8195968236c40e"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v3/DSC01Probe.swift.in",
+      "sha256": "de9548e828ad7730e1e0a0a2e8104a2258941b237770b5baec7b7083eac058ac"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v3/IOSAppLaunchUITests.swift.in",
+      "sha256": "4a16537122be9c86d486c6020378d60438045e15fb67a63d05916e04ed590e67"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v3/copied-kotlin-phase.sh.in",
+      "sha256": "1a8a5ee2c87fb4a4d8294ac3d5e2f057baaf9bd1c5a74b04564586b5f1b4baf8"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v3/source-bindings.json",
+      "sha256": "690215bbbc72dadc1a639ba6aa514b43e51a029ba0c07c03a0b7aa3b4f3fa31a"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v3/copied_sources.py",
+      "sha256": "845f1fa9e3e96347329b050bc323bd89967dce7cb9ebe357c97cc1d392573ee1"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v3/bind_source.py",
+      "sha256": "13d987a7d3e3f93bf885cd26a09614dc72cfd2bef735953d7ed7f5118c58ad7d"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v3/DSC01ComposeObservation.kt.in",
+      "sha256": "e54503b0d39a1c1055a5334dd835ccad30a96a887ff62560f22202b7231c266c"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v3/DSC01InvocationBridge.kt.in",
+      "sha256": "48276d08fbac7734838ac4c63cf6520cca63c8fe3abd22464d18e1b2178a81fa"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v3/probe_validation.py",
+      "sha256": "44596e00a822ff93ff5f956b38278e183fd49a2f41e6cde4af365e1192d8c1e8"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v3/test_copy_observation_contract.py",
+      "sha256": "d477365769c134c0a5ec32a3a342b9968633a98258aded543068d721bfb8a9b2"
+    }
+  ],
+  "baseline": {
+    "repository": "/Users/abdelrahman/Projects/parlor",
+    "branch": "main",
+    "commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+    "tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+    "source_manifest_sha256": "de7573ed1f4e1a19969f3063e135d234cd57ec8764c4af784cf4b3eaff5ef9b4",
+    "tracked_diff_sha256": "38326880d1f9332618d193f73d49cebc6de063dd26c7e87a8711be9a04a5a430",
+    "current_source_matches_binding": true,
+    "bound_copy_input_count": 608,
+    "bound_input_hashes_checked": true,
+    "copy_input_missing_or_symlinked": [],
+    "copy_input_hash_mismatches": []
+  },
+  "coverage_ledger": [
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v3/DSC01ComposeObservation.kt.in",
+      "sha256": "e54503b0d39a1c1055a5334dd835ccad30a96a887ff62560f22202b7231c266c",
+      "reviewed_line_ranges": [
+        [
+          1,
+          178
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "kind": "Harness/control/test text; complete source reading, not execution"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v3/DSC01InvocationBridge.kt.in",
+      "sha256": "48276d08fbac7734838ac4c63cf6520cca63c8fe3abd22464d18e1b2178a81fa",
+      "reviewed_line_ranges": [
+        [
+          1,
+          51
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "kind": "Harness/control/test text; complete source reading, not execution"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v3/DSC01Probe.swift.in",
+      "sha256": "de9548e828ad7730e1e0a0a2e8104a2258941b237770b5baec7b7083eac058ac",
+      "reviewed_line_ranges": [
+        [
+          1,
+          272
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "kind": "Harness/control/test text; complete source reading, not execution"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v3/IOSAppLaunchUITests.swift.in",
+      "sha256": "4a16537122be9c86d486c6020378d60438045e15fb67a63d05916e04ed590e67",
+      "reviewed_line_ranges": [
+        [
+          1,
+          478
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "kind": "Harness/control/test text; complete source reading, not execution"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v3/README.md",
+      "sha256": "8c2e007d6879d01044f79f8ee414d55d7148bfe1e3e7d78a9e1eb02c69ece83f",
+      "reviewed_line_ranges": [
+        [
+          1,
+          124
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "kind": "Harness/control/test text; complete source reading, not execution"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v3/bind_source.py",
+      "sha256": "13d987a7d3e3f93bf885cd26a09614dc72cfd2bef735953d7ed7f5118c58ad7d",
+      "reviewed_line_ranges": [
+        [
+          1,
+          36
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "kind": "Harness/control/test text; complete source reading, not execution"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v3/copied-kotlin-phase.sh.in",
+      "sha256": "1a8a5ee2c87fb4a4d8294ac3d5e2f057baaf9bd1c5a74b04564586b5f1b4baf8",
+      "reviewed_line_ranges": [
+        [
+          1,
+          42
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "kind": "Harness/control/test text; complete source reading, not execution"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v3/copied_sources.py",
+      "sha256": "845f1fa9e3e96347329b050bc323bd89967dce7cb9ebe357c97cc1d392573ee1",
+      "reviewed_line_ranges": [
+        [
+          1,
+          189
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "kind": "Harness/control/test text; complete source reading, not execution"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v3/probe_validation.py",
+      "sha256": "44596e00a822ff93ff5f956b38278e183fd49a2f41e6cde4af365e1192d8c1e8",
+      "reviewed_line_ranges": [
+        [
+          1,
+          207
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "kind": "Harness/control/test text; complete source reading, not execution"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v3/run_dsc01_apphost_cycle.py",
+      "sha256": "05e5a45e18cbbeccad63adb24216e33cdb0e64c14dd53d7ad0008ea7815b07f7",
+      "reviewed_line_ranges": [
+        [
+          1,
+          719
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "kind": "Harness/control/test text; complete source reading, not execution"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v3/secondary_fifo.py",
+      "sha256": "e1546ef645e2f87dfadd41d4e7f3f1c97cef1e38fe6392fb6a778f6db6333dbd",
+      "reviewed_line_ranges": [
+        [
+          1,
+          182
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "kind": "Harness/control/test text; complete source reading, not execution"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v3/test_copy_observation_contract.py",
+      "sha256": "d477365769c134c0a5ec32a3a342b9968633a98258aded543068d721bfb8a9b2",
+      "reviewed_line_ranges": [
+        [
+          1,
+          333
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "kind": "Harness/control/test text; complete source reading, not execution"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v3/test_harness_contract.py",
+      "sha256": "db20274bc3e33241539544e35afa2a56910d8f105130f264af8195968236c40e",
+      "reviewed_line_ranges": [
+        [
+          1,
+          233
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "kind": "Harness/control/test text; complete source reading, not execution"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v3/test_secondary_fifo.py",
+      "sha256": "81ba5e75fbb5c7a6fb4acd7e728880f8e7a63a38defdc2715ff2d78395cb5155",
+      "reviewed_line_ranges": [
+        [
+          1,
+          169
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "kind": "Harness/control/test text; complete source reading, not execution"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/run_gradle_cycle.py",
+      "sha256": "d2d18c2311d59554db88be3f92e609ec5ca46fc8af4c79702836f9e4c130240f",
+      "reviewed_line_ranges": [
+        [
+          1,
+          180
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "kind": "Imported ROOT/OUT/identity/owned_outputs definitions; native harness never executes this file main()"
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/run_android_managed_cycle.py",
+      "sha256": "b34ad4662ac906bff0a2f4e8ebe25c0757229098361e8e34c29b7c06681730c0",
+      "reviewed_line_ranges": [
+        [
+          1,
+          335
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "kind": "Imported ownership/hash/log helpers; Android main/task code not applicable to native execution"
+    },
+    {
+      "path": "composeApp/src/iosMain/kotlin/com/parlor/app/MainViewController.kt",
+      "sha256": "c77abd03ddcae230b4752d888b16c3d74231d89c967624c31129d176a5ed20ce",
+      "reviewed_line_ranges": [
+        [
+          1,
+          56
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "kind": "Application caller/callee re-opened for harness reachability; not full re-audit",
+      "path_reasoning": "Original Main/App initialization and lifecycle forwarding remain before appended observation"
+    },
+    {
+      "path": "iosApp/iosApp/iOSApp.swift",
+      "sha256": "01d47afe5d13eb9ec48d9e8987c7920e72f2fefa5b06ec525087025caa809386",
+      "reviewed_line_ranges": [
+        [
+          1,
+          10
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "kind": "Application caller/callee re-opened for harness reachability; not full re-audit",
+      "path_reasoning": "Probe prepare is appended only to copied App init before Koin/Compose"
+    },
+    {
+      "path": "iosApp/iosApp/ContentView.swift",
+      "sha256": "2e9bf560447c78c84462daccafc67cee961428dbd592adb6e12ddf085ab67a55",
+      "reviewed_line_ranges": [
+        [
+          1,
+          62
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "kind": "Application caller/callee re-opened for harness reachability; not full re-audit",
+      "path_reasoning": "ScenePhase forwards actual active/inactive/background; privacy cover remains"
+    },
+    {
+      "path": "composeApp/src/commonMain/kotlin/com/parlor/app/App.kt",
+      "sha256": "622b679a2ef023fab17bf6c8ed8eb38c1fbc2b76a391f5f9a8298d59da9dda59",
+      "reviewed_line_ranges": [
+        [
+          55,
+          117
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "kind": "Application caller/callee re-opened for harness reachability; not full re-audit",
+      "path_reasoning": "Actual Koin SettingsStore flow drives stable ProvideAppLanguage and remembered navigator"
+    },
+    {
+      "path": "composeApp/src/commonMain/kotlin/com/parlor/app/shell/settings/SettingsScreen.kt",
+      "sha256": "f97da085d85ed5fe01ac9f4725580ea2f86e399dcd330f532d9babc1925535c5",
+      "reviewed_line_ranges": [
+        [
+          64,
+          164
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "kind": "Application caller/callee re-opened for harness reachability; not full re-audit",
+      "path_reasoning": "Real Settings callbacks submit singleton mutations; hook inside actual composition"
+    },
+    {
+      "path": "composeApp/src/commonMain/kotlin/com/parlor/app/shell/settings/SettingsMutationDispatcher.kt",
+      "sha256": "915149f63b117f3516c749070abea6c538942c2d61c2b9c7224f3551aad45ce5",
+      "reviewed_line_ranges": [
+        [
+          1,
+          29
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "kind": "Application caller/callee re-opened for harness reachability; not full re-audit",
+      "path_reasoning": "Actual user mutation scope/error/cancellation semantics are not replaced in Settings scenario"
+    },
+    {
+      "path": "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/localization/ProvideAppLanguage.kt",
+      "sha256": "b4f4286459fe923ebaa3e156f4a9995232ce40ad32ae9bc43f73a929da77dc18",
+      "reviewed_line_ranges": [
+        [
+          1,
+          62
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "kind": "Application caller/callee re-opened for harness reachability; not full re-audit",
+      "path_reasoning": "Actual LocalLayoutDirection provider; no language-keyed subtree"
+    },
+    {
+      "path": "shared/design-system/src/iosMain/kotlin/com/parlor/designsystem/localization/LocalAppLocale.ios.kt",
+      "sha256": "0e0783ca3e38634bd3469760f5dbfa5ade8509b976d0ec676202f4513cd8e098",
+      "reviewed_line_ranges": [
+        [
+          1,
+          83
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "kind": "Application caller/callee re-opened for harness reachability; not full re-audit",
+      "path_reasoning": "Actual ownership apply/release and UIKit direction synchronization"
+    },
+    {
+      "path": "shared/design-system/src/iosMain/kotlin/com/parlor/designsystem/localization/IosLanguageOverrideOwner.kt",
+      "sha256": "959ab1a8cb955e484c806c8ce5af65ca841a20cfcd9b1f205443a1cfe768da20",
+      "reviewed_line_ranges": [
+        [
+          1,
+          61
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "kind": "Application caller/callee re-opened for harness reachability; not full re-audit",
+      "path_reasoning": "Prior persistent-domain preference preserved; only exact owned override released"
+    },
+    {
+      "path": "composeApp/src/iosMain/kotlin/com/parlor/app/storage/PlatformStorage.ios.kt",
+      "sha256": "cb69b6de029bf7d9f84dbc5bf19139150906a29d64cf29a60994259ca657a0c0",
+      "reviewed_line_ranges": [
+        [
+          1,
+          19
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "kind": "Application caller/callee re-opened for harness reachability; not full re-audit",
+      "path_reasoning": "Exactly one production SettingsStore binding"
+    },
+    {
+      "path": "composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSettingsKeyValueBacking.kt",
+      "sha256": "c8162e6713905b66d10aa8bc7e284d18f6815a2ae1754ba836c7241382014a10",
+      "reviewed_line_ranges": [
+        [
+          1,
+          40
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "kind": "Application caller/callee re-opened for harness reachability; not full re-audit",
+      "path_reasoning": "Production Foundation backing; async durability limitation not hidden"
+    },
+    {
+      "path": "shared/storage/src/commonMain/kotlin/com/parlor/storage/settings/PersistentSettingsStore.kt",
+      "sha256": "179e00506a2f3c7083d9f9231aa683e8bb73220a807ef6f1f5b04bb5496dac10",
+      "reviewed_line_ranges": [
+        [
+          1,
+          110
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "kind": "Application caller/callee re-opened for harness reachability; not full re-audit",
+      "path_reasoning": "Serialized actual setter writes backing before flow publication"
+    },
+    {
+      "path": "composeApp/src/commonMain/kotlin/com/parlor/app/di/AppModule.kt",
+      "sha256": "b449781eb52418300504344c1af978ef7cb41e4e1f35f8d50faa4b8662bbdb76",
+      "reviewed_line_ranges": [
+        [
+          1,
+          74
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "kind": "Application caller/callee re-opened for harness reachability; not full re-audit",
+      "path_reasoning": "Actual allModules/platform/Koin bootstrap; observer introduces no substitute modules"
+    },
+    {
+      "path": "shared/core/build.gradle.kts",
+      "sha256": "05bafd928b020cd386aab5593ba73c5e470d44005f9c23dff739a42b577f31dd",
+      "reviewed_line_ranges": [
+        [
+          1,
+          23
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "kind": "Application caller/callee re-opened for harness reachability; not full re-audit",
+      "path_reasoning": "Coroutines/serialization APIs available through existing core dependency"
+    },
+    {
+      "path": "shared/design-system/build.gradle.kts",
+      "sha256": "118d898f900e3b8ccc76db6fca658d69a0d211c5220b6985738f14428a99f78d",
+      "reviewed_line_ranges": [
+        [
+          1,
+          25
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "kind": "Application caller/callee re-opened for harness reachability; not full re-audit",
+      "path_reasoning": "Existing graph suffices for copy-only observer; no dependency change"
+    },
+    {
+      "path": "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitGameFlow.kt",
+      "sha256": "b5b57dfe7675a0f85e299719f5161d9e50d75e6c0f1c25cfb72379e7b032ec36",
+      "reviewed_line_ranges": [
+        [
+          775,
+          918
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "kind": "Application caller/callee re-opened for harness reachability; not full re-audit",
+      "path_reasoning": "Actual remembered PartyAwareSession/delegate canonicalState and action-produced public intro"
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/passandplay/MafiaGameFlow.kt",
+      "sha256": "8f250d62f8afb48e407c30e5382eb4758bc4ad53dee5168af8e3452ad3e840f6",
+      "reviewed_line_ranges": [
+        [
+          231,
+          339
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "kind": "Application caller/callee re-opened for harness reachability; not full re-audit",
+      "path_reasoning": "Actual remembered PartyAwareSession/delegate canonicalState; no mock/peer projection"
+    },
+    {
+      "path": "shared/session/src/commonMain/kotlin/com/parlor/session/party/PartyAwareSession.kt",
+      "sha256": "9eb291761264e54b509cdd8baa5cbb8d54348f616646746a44801bdcd783a483",
+      "reviewed_line_ranges": [
+        [
+          1,
+          86
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "kind": "Application caller/callee re-opened for harness reachability; not full re-audit",
+      "path_reasoning": "CanonicalState delegates actual authoritative StateFlow; no projected counterfeit"
+    },
+    {
+      "path": "shared/session/src/commonMain/kotlin/com/parlor/session/passandplay/PassAndPlaySessionController.kt",
+      "sha256": "d2a6b6fbc0a78685fe192e16894907cc98a51f1a30dd48ce0095a0d2745d8008",
+      "reviewed_line_ranges": [
+        [
+          36,
+          125
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "kind": "Application caller/callee re-opened for harness reachability; not full re-audit",
+      "path_reasoning": "Actual authoritative flow updates only inside reducer commit path"
+    },
+    {
+      "path": "composeApp/src/commonMain/kotlin/com/parlor/app/lifecycle/AppLifecycleCoordinator.kt",
+      "sha256": "9872f507bc2d719516249b40e50ba46262366ea7afae5e8b8b28448cce620932",
+      "reviewed_line_ranges": [
+        [
+          1,
+          144
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "kind": "Application caller/callee re-opened for harness reachability; not full re-audit",
+      "path_reasoning": "Real lifecycle forwarding/transport dedup policy retained"
+    },
+    {
+      "path": "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/screens/setup/PlayerEntryScreen.kt",
+      "sha256": "878a154d1b5e44a6d857c73fb77119f2a1ff5e6d5727b2346c620fb4f87e0977",
+      "reviewed_line_ranges": [
+        [
+          1,
+          143
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "kind": "Application caller/callee re-opened for harness reachability; not full re-audit",
+      "path_reasoning": "Copy-only seat tags leave sanitizer, onDone/focus and enabled/confirm unchanged"
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaPlayerEntryScreen.kt",
+      "sha256": "2daf4b0f890e14fa33b9fea37db42bc15d2e9cf0c396c5e82f9e40876b8bc7a5",
+      "reviewed_line_ranges": [
+        [
+          98,
+          138
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "kind": "Application caller/callee re-opened for harness reachability; not full re-audit",
+      "path_reasoning": "Copy-only seat tags do not replace input/IME callback"
+    },
+    {
+      "path": "iosApp/iosApp.xcodeproj/xcshareddata/xcschemes/iosApp.xcscheme",
+      "sha256": "b883fb73d15c7cf4faf868d2cdc8c2fb921c7ffe3606893733b1f89a33747312",
+      "reviewed_line_ranges": [
+        [
+          1,
+          103
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "kind": "Application caller/callee re-opened for harness reachability; not full re-audit",
+      "path_reasoning": "Actual test target wired; tests unskipped/nonparallel, no injected language args"
+    },
+    {
+      "path": "docs/PRE_RELEASE_COMPATIBILITY.md",
+      "sha256": "2f5d46b17ca70d89042b94357a413d244cbd6abc467aa570d02082bd9f883559",
+      "reviewed_line_ranges": [
+        [
+          1,
+          56
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "kind": "Application caller/callee re-opened for harness reachability; not full re-audit",
+      "path_reasoning": "Current-build/fresh profile policy; no unmarked-old-development migration promise"
+    }
+  ],
+  "source_conclusions": [
+    {
+      "area": "Actual local session continuity",
+      "conclusion": "No false-green path found in reviewed bounded scenario.",
+      "proof": "Exact anchors append observer immediately after canonicalState on real remembered PartyAwareSession in each local flow. One checkpoint stores controller, actual StateFlow and immutable canonical value; cannot recapture. Per-sample === controller/flow/value, == value, stable public phase and zero disposals required from capture through complete. Actual process UUID and root-controller count independently enforced."
+    },
+    {
+      "area": "Direction oracle independence",
+      "conclusion": "Corrected requested-language oracle rejects mutually stale locale/directions.",
+      "proof": "Swift159-197 and probe_validation141-159 use requested AR/EN or captured pre-command System baseline. Production preferences, original root native direction and directly sampled LocalLayoutDirection inside actual game composition must all match. Tests150-171 mutate locale/native/Compose together and replace prior System preferences; those negative fixtures still require rejection."
+    },
+    {
+      "area": "Actual Settings and restart",
+      "conclusion": "Four process boots with before-App persistent ownership receipts, real English/Arabic/System UI callbacks, direct Settings composition and native direction.",
+      "proof": "Probe prepare precedes original App initialization; before_main composition is literal empty JSON and never calls Koin/Compose. Normal Settings callbacks are untouched. Prior ar-EG/en is explicitly synthetic, not called real OS Settings proof."
+    },
+    {
+      "area": "No invented in-game Settings route",
+      "conclusion": "Synthetic active-game mutations accurately labeled.",
+      "proof": "Bridge invokes the actual production singleton SettingsStore with finite, one-at-a-time Main coroutine jobs. It never edits backing defaults or submits game actions. Actual UI entry/setup starts both games. This verifies stable local sessions under store changes, not a nonexistent in-game Settings journey."
+    },
+    {
+      "area": "OS language and current policy",
+      "conclusion": "Actual Settings app proof separate; absence is BLOCKED, never PASS or NOT_APPLICABLE.",
+      "proof": "Public openSettingsURLString only; exact public Language/English row selection; subsequent actual Arabic/System actions verify preserved OS preference and process restart. Source declares en/ar. Unavailable controls retain bounded public diagnostics and yield overall PARTIALLY_VERIFIED exit2. No global defaults/reset/private URL."
+    },
+    {
+      "area": "Privacy export boundary",
+      "conclusion": "Actual canonical secrets remain in process memory only.",
+      "proof": "Only allowlisted public phase tags, equality booleans, bounded counters, directions and synthetic language preferences are encoded. Unknown observation keys/oversized values fail validation. No state serialization/string/hash/player ID/seed/role/credential export; private handoff stays closed. No hierarchy/screenshot export from xcresult; diagnostic labels exact bounded allowlists."
+    },
+    {
+      "area": "Copied source and graph",
+      "conclusion": "No original source/dependency/protocol replacement.",
+      "proof": "Fresh empty task-owned destination; all608 bound applicable inputs copied with original hashes checked; exact one-occurrence anchors; named modification allowlist and sole observer addition; copied diff recorded. Original lifecycle reducers/DI/navigation remain. After-build attestation now checks same input bytes/inventory after workers stop before deletion."
+    },
+    {
+      "area": "Cleanup controls",
+      "conclusion": "Cleanup acceptance is conditional on real receipts, not source reading.",
+      "proof": "One shared build lock, fresh unique owned simulator, isolated Gradle daemon registry, immediate embedded and post-Xcode stops; borrowed cache symlinks unlinked without cache deletion. Owned PID/start/ancestry and FIFO inode/UID/birthtime/holder verification precede exact removal; unknown holders/paths fail. Original repository outputs preserved and flagged, never deleted by copied build."
+    }
+  ],
+  "review_candidates": [
+    {
+      "id": "DSV3-REVIEW-INPUT-DRIFT",
+      "classification": "TEST/EVIDENCE GAP in prior harness controls; not an application defect",
+      "finder": "/root/factory_review",
+      "independent_adjudicator": "/root/release_fix_review",
+      "original_proof": "Prior runner8f271407... wrote copied-source manifest before Xcode, but compared only original source/control hashes after run; a copied-input mutation would be unobserved by final status.",
+      "correction": "Author added inspect_copied_inputs_after_build; post-stop exact input digest/inventory mismatches retained and gate PASS before temp removal; 3 new synthetic source/tamper/order contracts.",
+      "recheck": "Source correction independently reopened/accepted; new contracts require actual root execution. No current production build-induced mutation is alleged."
+    },
+    {
+      "id": "DSV3-COUNTEREVIDENCE-IME",
+      "classification": "FALSE POSITIVE",
+      "question": "Would final synthetic name newline automatically submit setup, causing a repeated continue?",
+      "counter_evidence": "Actual Whodunit/Mafia NameField onDone only clears focus/hides keyboard; explicit setup click remains actual single submission."
+    },
+    {
+      "id": "DSV3-COUNTEREVIDENCE-DEPENDENCIES",
+      "classification": "FALSE POSITIVE",
+      "question": "Does adding JSON/coroutines observer require a changed dependency graph?",
+      "counter_evidence": "design-system already api depends on core; core api exports kotlinx coroutines/serialization. No extra plugin/source-set/dependency override added."
+    }
+  ],
+  "execution_claims": {
+    "tests_started_by_this_reviewer": 0,
+    "builds_or_background_workers_started": 0,
+    "contract_suites": "NOT RUN by this reviewer; root must preserve actual results and independently evaluate new tests.",
+    "native_runtime": "NOT RUN as evidence for this review. Compilation or previous v2 success does not satisfy current source."
+  },
+  "limitations": [
+    "This review authorizes neither Store/signing/publishing/Git operations nor device access outside root-owned simulator.",
+    "No physical LAN, retained multiplayer-host, full-game, cold resume, app-switcher screenshot, navigation gesture, visual accessibility, durable power-loss or Store evidence.",
+    "No support promised for ambiguous unmarked pre-owner internal-development override migration; current approved policy preserves indistinguishable OS preferences.",
+    "Successful native runtime will need exact XCTest/raw probe/copy-before-after/source/control/cleanup receipts independently reviewed; row unavailability remains an explicit evidence gap."
+  ],
+  "hygiene": "Only read-only source/metadata examination and new review evidence writes. No tests/build/app/server/simulator or persistent worker started; no generated build outputs created; original audit receipts and application source untouched."
+}

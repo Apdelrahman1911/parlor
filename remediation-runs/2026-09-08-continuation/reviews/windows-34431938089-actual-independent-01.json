@@ -1,0 +1,308 @@
+{
+  "schema_version": 1,
+  "kind": "TARGETED_WINDOWS_SOURCE_CUSTODY_AND_ACTUAL_RUNTIME_REVIEW",
+  "reviewer": "/root/ci_review",
+  "reviewed_at": "2026-09-10T03:24:50.126502+00:00",
+  "status": "ACCEPTED_WINDOWS_ONLY_ACTUAL_AT_730A_FULL_D_4CC_REMAINS_FAILURE",
+  "findings": [],
+  "base_path": "remediation-runs/2026-09-08-continuation",
+  "pin_format": [
+    "path_relative_to_base_unless_canonical",
+    "bytes",
+    "sha256"
+  ],
+  "source": {
+    "branch": "fix/local-readiness-2026-09-07",
+    "commit": "730a91e4dade4dbc2168b5367e20c3d0f42237e1",
+    "tree": "1f71dc64bc7680f461efc3e841dc051579a0d993",
+    "run_id": 34431938089,
+    "attempt": 1,
+    "workflow_id": 335554528,
+    "windows_job_id": 102729090438,
+    "job_conclusion": "success",
+    "other_jobs": "desktop-android,desktop-linux-arm64,desktop-macos-x64,ios each skipped with empty steps. Neither skips nor targeted success are full five-job qualification.",
+    "source_inventory": "Retained frozen-tree-paths.z exactly matches Git ls-tree at730a:23403 tracked paths; SHAf7eafc24a7413af12c11a3bec7dc7e897b27d4c238e1a75813d8c3003b047a0b"
+  },
+  "admission": {
+    "pins": [
+      [
+        "actions/windows-only-dispatch-01/request.json",
+        2069,
+        "0d493c1c6ae4af81465d7706430cceab100c5a506bc4af320b36d40470bf3bd7"
+      ],
+      [
+        "actions/windows-only-dispatch-01/push-receipt.json",
+        563,
+        "82695534cf500d987747095c837f4fc452615227900d247362afdb23a0195389"
+      ],
+      [
+        "actions/windows-only-dispatch-01/push.log",
+        111,
+        "9aad6cc818cc182308b5ba57e0007d56315e9fc58d745f57818ce22cd973b6d2"
+      ],
+      [
+        "actions/windows-only-dispatch-01/immediate-admission.json",
+        652,
+        "9b44b9fe7dc7f2764502f5fe83419674a2b2352787e69123f4c4e0a700f16854"
+      ],
+      [
+        "actions/windows-only-dispatch-01/dispatch-result.json",
+        513,
+        "7e3ee22d2ee315c0572b7eab1ac1776e2c68109aa33907ede48223e34f2ce009"
+      ],
+      [
+        "actions/windows-only-dispatch-01/run-association.json",
+        879,
+        "fb13614ac16065b8661ff36c7e3b0e4006aa1f54e5b0475ec86d1a2826ad8f68"
+      ],
+      [
+        "actions/windows-only-dispatch-01/runs-before.json",
+        7753,
+        "f17a52e942d6484cead21c821c6fe3bcdb2f353ce56ef5a9a86b1fe20c0321a7"
+      ]
+    ],
+    "review": "Normal push4cc→730a exit0 and exact remote confirmation. Immediate admission binds reviewed source/tree, empty tracked diff, active intended workflow/no active same-ref run. Exact approved one-dispatch command executed0. Unique new34431938089/source730a/workflow_dispatch candidate absent before; final run/attempt metadata confirms exact source/repository/workflow/attempt. Raw prerequisite log separately confirms windows-only/paired inputs, not API shape alone."
+  },
+  "custody": {
+    "receipt": [
+      "actions/34431938089/download-receipt.json",
+      6421991,
+      "838b580e312343ce88255e8c29c09833b958a87f1acf759a8ab56c1b9f06cefe"
+    ],
+    "metadata": [
+      [
+        "actions/34431938089/run.json",
+        12682,
+        "7f38e59440eae6a27a9273b894f68a93b1acebf577fe76d7e3180fb285577b86"
+      ],
+      [
+        "actions/34431938089/attempt.json",
+        12704,
+        "bd152d7f0ad6ec9e3d84acc81ca0f7d575efee822ee71fd345fadbb3cce9f997"
+      ],
+      [
+        "actions/34431938089/jobs.json",
+        7321,
+        "045db4b7b73b7f6de70c9d4cd45aaf96e293a36a7011d5fe1e3a37939407c23f"
+      ],
+      [
+        "actions/34431938089/artifacts.json",
+        1509,
+        "bed4d94ba786814fb7262bcf6f12fd63f1632deeb84e62ffb55c218862d2641d"
+      ]
+    ],
+    "collector": [
+      "reviews/windows-targeted-collector-01/collect_windows.py",
+      18707,
+      "87afd5bc709a5bf83a672e6acc43983783cb38b878beac00722233c6b93777d1"
+    ],
+    "source_review": [
+      "reviews/windows-targeted-collector-independent-01.json",
+      10667,
+      "c0fdc9f581f7f7ac4170a3426e99e4f419286f5373948ce861ffc56db995c50f"
+    ],
+    "actual_control_review": [
+      "reviews/windows-settings-local-actual-independent-01.json",
+      12698,
+      "5f3cb4073e3a10d040a25d1a67baa8979ad253e9d7db8f37c827f93fd42b0f5a"
+    ],
+    "archives": [
+      {
+        "artifact_id": 10134970736,
+        "pin": [
+          "actions/34431938089/verification-cleanup-desktop-windows-x64.zip",
+          2566,
+          "a11faa27ba3ff3ca383de928e74275999c8f1749f68cafc324f38cf6b47523f8"
+        ],
+        "members": 1,
+        "expanded_bytes": 17687,
+        "classifications": {
+          "CURRENT_NAMED_RECEIPT_CONTENT_UNREVIEWED": 1
+        }
+      },
+      {
+        "artifact_id": 10134969345,
+        "pin": [
+          "actions/34431938089/desktop-verification-desktop-windows-x64.zip",
+          10335813,
+          "64e4406dd77b80f30501509bc3bcd5b243ec5039f44764c95368b080564bb2f8"
+        ],
+        "members": 9103,
+        "expanded_bytes": 18427633,
+        "classifications": {
+          "FROZEN_TRACKED_FILE_ARCHIVE_ONLY": 8572,
+          "CURRENT_PATH_CANDIDATE_NOT_EXECUTION": 529,
+          "CURRENT_NAMED_RECEIPT_CONTENT_UNREVIEWED": 2
+        }
+      }
+    ],
+    "independent_checks": "All9104 artifact entries independently streamed: full ZIP table,size,CRC,SHA agree with receipt; compressed originals match API IDs,size,digest,run/source. Extraction set and every extracted file hash exactly match selected members.8572 historical paths independently belong to frozen Git tree and remain archive-only; never counted as current. Desktop531 extracted files=529 current candidates+ownership/stop; cleanup1. No missing/unexpected artifacts.",
+    "log_archive": [
+      "actions/34431938089/run-attempt-1-logs.zip",
+      45114,
+      "c5a2872cca25c80a299abe624274f6304b9df4a775e30c925d7020c1aa668e6f"
+    ],
+    "logs": "All17 log members independently checked against retained table/CRC/SHA. Logs read in memory, not extracted."
+  },
+  "actual_platform": {
+    "os": "Microsoft Windows Server2025 10.0.26100 Datacenter x64",
+    "runner_image": "windows-2025-vs2026 20260824.214.3",
+    "jdk": "Temurin21.0.12+101.0 x64 selected from hosted tool-cache; Gradle8.13 downloaded/launched. Python3.12.10 used by hygiene.",
+    "precheckout": "Raw step2 records job-local core.longpaths=true, verification scope windows-only, Windows-only=true, frozen730a, paired. Exact frozen-source==GITHUB_SHA==GITHUB_WORKFLOW_SHA and scope/native-selection guards ran successfully before checkout.",
+    "checkout": "Checkout/source guard succeeds with HEAD730a and clean tracked checkout; Windows/x64 guard passes. Ownership receipt exact HEAD/tree/root D:\\a\\parlor\\parlor prepared before build. No autocrlf override or history/evidence omission introduced.",
+    "command": ".\\gradlew.bat productionDesktopCheck :composeApp:downloadKotlinNativeDistribution :composeApp:processDebugResources --dependency-verification=strict --no-daemon --stacktrace --console=plain",
+    "execution": "BUILD SUCCESSFUL in7m9s;233 actionable=178executed+55cached. All13 desktopTest leaves executed without FROM-CACHE/UP-TO-DATE/SKIPPED; every cached leaf is Android Debug resource/navigation preparation. Native-distribution download and Debug resource processing executed, not native app runtime. Fresh configuration computed, cache stored only afterward.",
+    "log_member_pins": [
+      [
+        "Desktop, Kotlin Native, and Android resources strict verification (Windows x64)/2_Validate Windows checkout prerequisites.txt",
+        2119,
+        "fce00d33ba8590353948789c75f7ab66300d33e533ff0a41c1d6dd419151d1ee"
+      ],
+      [
+        "Desktop, Kotlin Native, and Android resources strict verification (Windows x64)/6_Require the Windows x64 host.txt",
+        1772,
+        "c66811b718bf7097d52460705382970172b57ccab63581b6c0d0d5a283c4c0cd"
+      ],
+      [
+        "Desktop, Kotlin Native, and Android resources strict verification (Windows x64)/8_Resolve and test the Windows x64 host-selected graphs.txt",
+        43800,
+        "af2855707eda4c42effaeebd887982528f971db372879004e8da4938e76ffdf1"
+      ]
+    ]
+  },
+  "actual_tests": {
+    "xml_files": 203,
+    "descriptors": 1340,
+    "passed": 1337,
+    "skipped": 3,
+    "failures": 0,
+    "errors": 0,
+    "module_row_format": [
+      "module",
+      "xml_files",
+      "descriptors",
+      "skipped"
+    ],
+    "modules": [
+      [
+        "composeApp",
+        21,
+        96,
+        0
+      ],
+      [
+        "game-modes/mafia",
+        37,
+        297,
+        0
+      ],
+      [
+        "game-modes/whodunit",
+        63,
+        360,
+        0
+      ],
+      [
+        "shared/content",
+        5,
+        24,
+        0
+      ],
+      [
+        "shared/core",
+        2,
+        12,
+        0
+      ],
+      [
+        "shared/design-system",
+        18,
+        40,
+        0
+      ],
+      [
+        "shared/engine",
+        5,
+        13,
+        0
+      ],
+      [
+        "shared/engine-testing",
+        3,
+        6,
+        0
+      ],
+      [
+        "shared/networking",
+        8,
+        34,
+        0
+      ],
+      [
+        "shared/networking-testing",
+        2,
+        5,
+        0
+      ],
+      [
+        "shared/session",
+        13,
+        145,
+        0
+      ],
+      [
+        "shared/storage",
+        4,
+        31,
+        0
+      ],
+      [
+        "shared/transport-p2p",
+        22,
+        277,
+        3
+      ]
+    ],
+    "timestamp_range": [
+      "2026-09-10T03:10:04.806Z",
+      "2026-09-10T03:12:43.234Z"
+    ],
+    "hostname": "runnervmeef0v",
+    "binding": "All203 XML suite/case counts directly parsed; current live roots match13 actually executed task leaves. Times lie inside current Windows build; source paths untracked at frozen revision and admitted by fresh ownership. XML manifest hash uses sorted[source_path,bytes,SHA256,timestamp,hostname] rows serialized compact JSON.",
+    "xml_manifest_sha256": "9611b06225f79aae7a4abcae4d3143ae67401ad916f760073eca44193e972fb7",
+    "skipped_methods": [
+      "peer_to_host_message_round_trips_and_host_to_peer_message_arrives_back()[desktop]",
+      "peer_can_join_a_hosted_room_and_membership_appears_on_host()[desktop]",
+      "host_broadcast_reaches_every_peer()[desktop]"
+    ],
+    "skip_reason": "P2pKitRoomTransportLoopbackTest explicitly ignores peer join, peer-host roundtrip and host broadcast because single-JVM multicast is unreliable; controlled physical-device manual tests remain separate. Host advertising smoke executes, but no peer interoperability/end-to-end game proof."
+  },
+  "cleanup": {
+    "ownership": [
+      "actions/34431938089/desktop-verification-desktop-windows-x64/_temp/parlor-verification-34431938089-1-desktop-windows-x64-ownership.json",
+      17182,
+      "1525a75240b985d2e84c1b79e6c4a44017e4c3efbd2344f16a843d6dc107eecc"
+    ],
+    "post_build_stop": [
+      "actions/34431938089/desktop-verification-desktop-windows-x64/_temp/parlor-verification-34431938089-1-desktop-windows-x64-stop-windows-x64.json",
+      426,
+      "4d268712286008156beb0faeb596d1930a985a92587b2c607864de0403adde96"
+    ],
+    "final_cleanup": [
+      "actions/34431938089/verification-cleanup-desktop-windows-x64/parlor-verification-34431938089-1-desktop-windows-x64-cleanup.json",
+      17687,
+      "0efc67bcdc705786e8c6fd3239b35740b142051bf653c9cadff617e7907354eb"
+    ],
+    "scope": "Exact167-root ownership set independently reconstructed from frozen Gradle/Python paths; none contains tracked files.15removed+152not-created form unique disjoint complete partition. No retained outputs/errors. Both Windows cmd /d /c gradlew.bat --stop commands exit0 and report no Gradle daemons. Workflow pins in-process Kotlin.",
+    "custody_order": "Desktop artifact10134969345 finalized03:13:00.244 before cleanup began03:13:00.405; receipt binds exact64e440… digest. Cleanup PASS ends03:13:03.270 before cleanup artifact10134970736 upload. No global caches/source/evidence deletion.",
+    "limit": "Worker scope is Gradle stop/in-process Kotlin; no claim of independent all-process inventory or native/emulator retirement. No emulator/native application workload requested here.",
+    "local_collector": [
+      "actions/windows-only-dispatch-01/watcher-collection-receipt.json",
+      963,
+      "0a6e69783ae0f5d1d769d7168536c14db73798e48c494302fa60336d362a9a81"
+    ],
+    "local": "Watch and collector synchronous children exit0; local post-collection stop0,31-byte no-daemon log verified against receipt. Retained archives/selected reports are evidence, not disposable build outputs."
+  },
+  "disposition": "Scoped Windows checkout/host-selected desktop-test/resource/dependency-verification and cleanup follow-up accepted at730a. Original full-D34420745957/4cc remains failure (including its failed Windows checkout/cleanup). Do not stitch its four passing jobs with this different-source Windows run as final combined qualification. No Android/iOS app runtime, Settings/L08/protection/libproc result, full desktop UI, physical-device, Store operation or owner/legal readiness inferred.",
+  "reviewer_activity": "Read-only source/Git/stdlib JSON/hash/ZIP/XML inspection; no project/collector imports, tests, builds, network, dispatch, archive extraction or process operations. Only this additive review written; no reviewer cleanup owed."
+}

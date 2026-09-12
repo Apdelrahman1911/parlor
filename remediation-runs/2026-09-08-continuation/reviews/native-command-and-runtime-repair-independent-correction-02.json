@@ -1,0 +1,159 @@
+{
+  "schema_version": 1,
+  "kind": "NATIVE_REPAIR_INDEPENDENT_ENTRY_CANCELLATION_CORRECTION_REVIEW",
+  "reviewer": "/root/portability_review",
+  "implementation_author": "/root/native_ci",
+  "finding_by": "/root/dependency_chain",
+  "recorded_at": "2026-09-08T12:11:40.793410+00:00",
+  "status": "APPROVED_CORRECTED_SOURCE_FOR_COORDINATOR_FOCUSED_CONTROLS_ONLY",
+  "blocking_source_findings": [],
+  "superseded_approval": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/native-command-and-runtime-repair-independent-01.json",
+    "sha256": "6523965c11e3a18c8487e531d72b81c4fce489cc854c385294fb1fb983f3a2f5",
+    "bytes": 30465,
+    "disposition": "Preserved unchanged. Its general source analysis remains reference evidence, but its old Foundation20 hash and incomplete entry-cancellation approval must not authorize execution. This addendum is the current source approval."
+  },
+  "prior_author": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/native-command-and-runtime-repair-author-01.json",
+    "sha256": "5e55755c32a63b88eeeece0adf7e19ac90221113cc62100708c6dd2e5a400b73",
+    "bytes": 17154
+  },
+  "corrected_author": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/native-command-and-runtime-repair-author-correction-02.json",
+    "sha256": "ce1437de2bef9202777a74f3711cf59556ce7f0719b2bbe080df3f56b20ad4a7",
+    "bytes": 4885
+  },
+  "finding": "The original new Foundation20 direct entry imported run_controls.py but did not execute its guarded SIGTERM handler. Calling with_external_tmp alone preserves ordinary exceptions/KeyboardInterrupt, not default SIGTERM termination; a timeout could bypass the finalizer and leave the external parent. Initial review missed this distinction. Root and author were explicitly placed on HOLD before execution; old report is not accepted for changed bytes.",
+  "correction": {
+    "path": "scripts/verification/ios-readiness/test_foundation_toolchain_binding.py",
+    "previous_sha256": "59f5642de0f9b7a828698ff5c37810a4076e082f4dacf1bcd78d91a8db8e6647",
+    "current": {
+      "path": "scripts/verification/ios-readiness/test_foundation_toolchain_binding.py",
+      "sha256": "df030e500c035fc65ede190a8c11b795f7b4a40e2933a86a4b8529b4bdac4c13",
+      "bytes": 24389
+    },
+    "implementation": "Import signal, define exactly the existing interrupted(sig, _frame) handler raising KeyboardInterrupt, and register SIGTERM before the first with_external_tmp allocation call. Handler installation occurs only in direct __main__, not imports. No native signal, process, temporary allocation or test was executed by this review.",
+    "entry_order": [
+      "define handler",
+      "install SIGTERM handler",
+      "invoke existing owned external-temp wrapper and unittest main",
+      "read result",
+      "exit fail-closed on failures/count/skips"
+    ],
+    "limits": "Catchable SIGTERM uses the existing finally cleanup path; no guarantee is made for SIGKILL or an independently failing filesystem cleanup. Coordinator still must preserve/verify allocation and cleanup receipts even after nonzero exit or timeout."
+  },
+  "independent_static_checks": {
+    "exact_previous_bytes_reconstructed": "Removed only the two new imports, the appended entry regression block and the three main handler lines in memory. Result SHA59f5642de0f9b7a828698ff5c37810a4076e082f4dacf1bcd78d91a8db8e6647 proves all other previous source bytes identical.",
+    "actual_handler_and_registration_AST_equal_existing_launcher_main": true,
+    "launcher_current_bytes_equal_base25b": true,
+    "launcher_reference": {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/run_controls.py",
+      "sha256": "03c115d45474ee082204d38c6315e19909108148b2de8804898dd66c40c14dbf",
+      "bytes": 5918
+    },
+    "static_test_declarations": 20,
+    "test_names_unchanged": true,
+    "changed_test_methods": [
+      "FoundationToolchainControls.test_composed_copy_hook_passes_selected_runner_profile_without_default"
+    ],
+    "new_entry_regression_source_review": "Existing composed-source test now compiles only the actual unique __main__ block under inert signal/unittest/allocator substitutes. It asserts SIGTERM registration first, allocation next and tests last; captures actual handler function, checks one registration and KeyboardInterrupt(signal15). Fake allocator/test results avoid recursion, process creation and real signal installation. Existing method assertions are retained. No claim of a real OS SIGTERM exercise.",
+    "existing_launcher_cleanup_regression": "Existing LauncherControls.test_external_parent_and_environment_are_finalized_on_success_failure_and_cancellation supplies positive, ValueError and KeyboardInterrupt callback paths with exact external allocation/environment restoration/removal assertions. Existing55 remains required; source inspected, not executed by reviewer.",
+    "all_current_authored_hash_size_matches": 13,
+    "other_authored_inputs_unchanged_since_prior_review": 12,
+    "all_protected_hash_size_matches_unchanged": 13,
+    "new_nine_file_freeze_current_and_unchanged": true,
+    "source_control_binding": "New support script is explicitly in composer SUPPORT_CONTROLS and naturally included by normal all-support-Python manifest; current hash must replace59f... in future controls. No draft freeze or driver pins need rewriting for this directly bound support-only correction."
+  },
+  "current_reviewed_authored_inputs": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/run_ios_readiness.py",
+      "sha256": "a56f47787c5abbda301cdfcafa5c8ac4ad7eb505d21d560e86063f93453a36f7",
+      "bytes": 72609
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
+      "sha256": "98334625a01adbe3c8b2fb1573895a5056c95e430cb9d857142809d8ef4db454",
+      "bytes": 56767
+    },
+    {
+      "path": "scripts/verification/ios-readiness/toolchain_profiles.py",
+      "sha256": "8adacaf4c59ed823aa088ecb70ad5c6c1e3f76e7ca3520d8abf0563341591313",
+      "bytes": 3358
+    },
+    {
+      "path": "scripts/verification/ios-readiness/test_native_command_failures.py",
+      "sha256": "7ea11e97a11cc07ba85d09c1366fe4198b95b8ee59414979fa7801122be981be",
+      "bytes": 12002
+    },
+    {
+      "path": "scripts/verification/ios-readiness/test_foundation_toolchain_binding.py",
+      "sha256": "df030e500c035fc65ede190a8c11b795f7b4a40e2933a86a4b8529b4bdac4c13",
+      "bytes": 24389
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/app_foundation_copy.py",
+      "sha256": "0df57639ed7bdef3fd4df62e73489dc85f4006dd587ce82cf9077e4262e1b068",
+      "bytes": 13449
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/app_foundation_receipts.py",
+      "sha256": "db69c16b7d8abfb5998f92db886a8b8c77bcbb3e72fdd1d806f0ea3dd05f1fb6",
+      "bytes": 18855
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/test_app_foundation.py",
+      "sha256": "c04c7d4b1bb99207415beab77ae3b40bb3d5f59709970f7d844d5d14beab0fe5",
+      "bytes": 34661
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/ROOT_INTEGRATION.md",
+      "sha256": "e3009bfe096930dbde969f239dd162da15a25d407e4b39a99f8bf4fab22d8dcb",
+      "bytes": 6638
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/compose_runner.py",
+      "sha256": "288c412456e130ec640f40042133ef4686554b4f63abecc097602999f2d20b18",
+      "bytes": 21106
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/test_composition.py",
+      "sha256": "1ee5d5889d50b94a11d3e3d2ce881899c2434eb97489e953f546a2b7d344afd5",
+      "bytes": 28101
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/README.md",
+      "sha256": "e934ab0834cbe9776fbd410bac6f51147919c718bb8e274fb56103d087dc369e",
+      "bytes": 10614
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/hosted-native-repair-01/draft-freeze-relative.json",
+      "sha256": "2905ce996bad3d6e1d3d45e9fd7594cbe54cc93380e608781a7f34d73b0784a0",
+      "bytes": 2954
+    }
+  ],
+  "execution_conditions": [
+    "Coordinator may run the focused controls against exactly these13 source hashes and the separately reviewed workflow/diagnostic packet; preserve full source/control maps before/after and actual outcomes.",
+    "Static counts remain new12+20, existing55, profile12, normal187, functional12 and single-tap14. No test has been run by this reviewer/author and no harness result is application-runtime proof.",
+    "Verify both external parent allocation/cleanup receipts and absence even after failure/timeout. Preserve evidence and execute required immediate/final Gradle stop and exact task-owned cleanup in the coordinator lane.",
+    "Existing A17/B18 remain failed before application runtime. A missing interruption/exit and B true/-15 distinction from prior report remains mandatory. SIGTERM entry repair and primary-error recording do not solve the ps root cause.",
+    "Future platform/native/final qualification still requires separately reviewed source/control commit, mechanical inventory commit and fresh frozen-source bindings. No dispatch authorization is granted by this report."
+  ],
+  "reviewer_activity": {
+    "tests": 0,
+    "builds": 0,
+    "project_imports": 0,
+    "signals_installed_or_sent": 0,
+    "process_or_fixture_allocations": 0,
+    "downloads": 0,
+    "workflow_dispatches": 0,
+    "commits": 0,
+    "source_edits": 0,
+    "performed": "Read source/author reports, stdlib hash and AST comparisons, read-only git-show, wrote only this new addendum."
+  },
+  "cleanup": {
+    "cycle_started": false,
+    "needed": false,
+    "disposition": "No review-owned build/test worker, temp root or native fixture. No Gradle stop or unrelated cleanup attempted; prior evidence preserved."
+  },
+  "readiness_verdict": "NOT_READY. Corrected source approved for focused controls only. Actual functional/recovery/strict protection, normal Parlor libproc runtime, fresh final dependency chain and combined qualification remain separate requirements."
+}

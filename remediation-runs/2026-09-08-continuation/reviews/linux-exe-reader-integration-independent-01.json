@@ -1,0 +1,205 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/native_ci",
+  "review_date_utc": "2026-09-10",
+  "authors": {
+    "workflow_and_contracts": "/root/ci_workflow",
+    "probe_integration": "/root"
+  },
+  "decision": "APPROVE_PINNED_SOURCE_INTEGRATION_AND_ACCEPT_ACTUAL_FOCUSED_CONTROLS",
+  "status": "SOURCE_AND_LOCAL_CONTROLS_PASS_REAL_PRIVILEGED_RUNTIME_PENDING",
+  "baseline": {
+    "head": "055f9fd3ac4ff714ada9ac0a582075739653199e",
+    "tree": "896ccc027ed48b0c08b80d10bbbd6145bc66f0f2",
+    "branch": "fix/local-readiness-2026-09-07"
+  },
+  "reviewed_integration_files": [
+    {
+      "path": ".github/workflows/production-verification.yml",
+      "bytes": 48550,
+      "sha256": "f455e2b7327009935fe4503d340237bc78dcaa2a65763a662a3dcf54318ac7b5"
+    },
+    {
+      "path": "scripts/release/workflow_contract.py",
+      "bytes": 60087,
+      "sha256": "98b722d0ac5c0ec3711522ca2b5e8367ebcaa1873342425f01d1c9a464a7f0a6"
+    },
+    {
+      "path": "scripts/release/tests/test_workflow_contract.py",
+      "bytes": 55673,
+      "sha256": "1b322f47e96c68f3b8e690e8a0ef01159e33bd751d3c48204d141b61a9051872"
+    },
+    {
+      "path": "scripts/ci/linux_process_probe.py",
+      "bytes": 16474,
+      "sha256": "e449163d97161f570ed61227df2b345a9a3a7d652784f224109610c04a561e50"
+    },
+    {
+      "path": "scripts/release/tests/test_linux_process_probe.py",
+      "bytes": 14702,
+      "sha256": "225effb84ef4bd58c91354cd98619200e780e3d771aa6b40383ca554059683bd"
+    }
+  ],
+  "diff_bindings": {
+    "ci_three_files": {
+      "bytes": 6932,
+      "sha256": "3d00b4bd963bfeed897e4f0cc0b3c138d347ba5b11b1fa988d2aaf383be08e24"
+    },
+    "probe_two_files": {
+      "bytes": 15891,
+      "sha256": "572d8c1cd90bb6ad4aabb17c52169959df764b87e29795296e26229376aa8514"
+    }
+  },
+  "separate_core_safety_review": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/linux-privileged-exe-read-independent-01.json",
+    "bytes": 11498,
+    "sha256": "cf96258a64884f5841d69f1bc55758881780f363cb4115449c71683fa0bc8936"
+  },
+  "source_conclusions": {
+    "workflow": "Sole workflow delta is --android-reader=sudo-proc-exe-v1 in ordinary-Python desktop-android full cleanup. Removing it gives frozen baseline bytes exactly: probe SDK prerequisite, all other steps/jobs, full-only predicates and existing custody bindings are unchanged. No whole-cleanup sudo. Exact cleanup body and one-token/one-mode contract prevent alternate-host leakage.",
+    "probe_bindings": "Twelve-file digest now includes scripts/ci/linux_exe_reader.py and scripts/release/tests/test_linux_exe_reader.py. require/file_bytes/controls/admit are AST-identical; fresh source/control/run/task/nonroot UID/SDK proof is still mandatory before execution, after observation and before cleanup. Old ten-file approval cannot substitute for the new digest.",
+    "control_modes": [
+      [
+        1,
+        "unprivileged"
+      ],
+      [
+        0,
+        "unprivileged"
+      ],
+      [
+        0,
+        "sudo-proc-exe-v1"
+      ]
+    ],
+    "control_oracle": "Existing unprivileged dumpable1 PASS and dumpable0 EACCES auditFAIL/CONTROL_PASS remain. Added nondumpable reader-positive requires actual auditPASS,2 enumerated/sampled/selected,0 matches/errors, and exact exe_reader={mode:sudo-proc-exe-v1,eacces_denials:1,privileged_reads:1}. An expected negative is never turned into host PASS.",
+    "host_and_cleanup": "Real-host audit opts in explicitly and its PASS must report the chosen mode. Finalizer requires observation reader plus exact three-control mode/order and child/fixture retirement; it passes android_reader explicitly to unchanged ownership/upload/final-absence deletion gates. Cleanup may complete after an observation failure only with its own valid guard evidence; that does not repair the failed probe step.",
+    "retirement": "Fixed child program, launch/readiness/symlink setup, exception handlers and entire child retirement/signal/fixture finalizer are AST-identical. The next control still waits for prior child/fixture retirement. Immediate finally Gradle stop is AST-identical.",
+    "compatibility": "Core keyword APIs and default unprivileged mode match both call sites and CLI. Core/helper safety belongs to the pinned different-agent review, read and reconciled here; its four pins match current bytes. This retains the trusted source-bound checkout boundary, not a claim of immutable privileged script deployment or a sandbox against compromised same-UID mutation.",
+    "regression_source": "Workflow preserves60 existing methods and adds1 with13 mutations/4 alternate-job leak cases. Probe keeps7 old methods AST-identical, extends2 for three-mode retirement/custody and adds1 privileged-result method; explicit Linux applicability remains."
+  },
+  "motivating_evidence": {
+    "run_id": 34479469398,
+    "observation_sha256": "34f3fe7826ecb5d0d77f1ea363071ab43f3dc0cd4e47d4505a7c19032ffd3892",
+    "cleanup_sha256": "69ad7d0efa7456955ef6556611b96e8a2f7ad3dcc2418a069399809cc2c97ca2",
+    "reopened": "LP02 initial/final auditFAIL:162 enumerated,145 sampled,0 completed selected, selected=true/before_exe_readlink/errno13. Both old owned controls and retirement behaved as specified.",
+    "limit": "LP02 failure remains failed. Its classified denial is not proof of old D03's unclassified cause or a completed managed-device cleanup."
+  },
+  "actual_local_controls": {
+    "decision": "ACCEPT_SCOPED_ACTUAL_RESULTS_AND_CUSTODY",
+    "cycle": "continuation-linux-readonly-reader-controls-01",
+    "test_counts": {
+      "scripts.release.tests.test_ci_verification_hygiene": 38,
+      "scripts.release.tests.test_linux_exe_reader": 10,
+      "scripts.release.tests.test_linux_process_probe": 10,
+      "scripts.release.tests.test_workflow_contract": 61
+    },
+    "total": 119,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "raw_summary_seconds": 0.705,
+    "focused_actionlint_exit_code": 0,
+    "pinned_archives": "ShellCheck and actionlint checksum lines both OK; exact source-derived changed-workflow-only command reconciled.",
+    "source_binding": {
+      "kind": "REVIEWED_NINE_FILE_WORKTREE_NOT_PRISTINE_FROZEN055F",
+      "manifest_rows": 844,
+      "manifest_sha256": "9cf35716bebf153191a0b37810e3e3319b9325a57413ed16022439f48ce9086c",
+      "explicit_controls": 15,
+      "control_file_sha256": "12eae26b2cf3060d67fe57520ce56d6d084114e777db8b253cb873d92762bd4f",
+      "before_after_and_current_hashes_match": true,
+      "runner_unchanged": true
+    },
+    "started_at": "2026-09-10T13:46:45.291234+00:00",
+    "finished_at": "2026-09-10T13:46:50.349897+00:00",
+    "inner_exit_code": 0,
+    "outer_exit_code": 0,
+    "outer_session": 3198,
+    "outer_completion_chunk": "49b152",
+    "outer_attribution": "Coordinator's retained outer-invocation receipt reports exec replacement and exit0; independently reconciled its inner/stop/result fields. Reviewer did not replay the session.",
+    "stop_exit_code": 0,
+    "stopped_at": "2026-09-10T13:46:51.102670+00:00",
+    "cleanup_completed_at": "2026-09-10T13:46:51.203941+00:00",
+    "cleanup": "No signaled/remaining workers, artifacts, build outputs or cleanup errors in receipts;17 live generated roots plus scratch/tool paths independently absent. Stop log: No Gradle daemons are running. Raw logs/receipts preserved.",
+    "excluded_execution": "No real sudo/helper or procfs permission experiment, SDK/emulator, Kotlin/application/Gradle build, native, Windows or Store execution. These are mocked/owned-file control tests, not privileged platform proof.",
+    "evidence": [
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-readonly-reader-controls-01/artifact-receipts.json",
+        "bytes": 3,
+        "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-readonly-reader-controls-01/control-inputs-after.json",
+        "bytes": 2177,
+        "sha256": "12eae26b2cf3060d67fe57520ce56d6d084114e777db8b253cb873d92762bd4f"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-readonly-reader-controls-01/control-inputs-before.json",
+        "bytes": 2177,
+        "sha256": "12eae26b2cf3060d67fe57520ce56d6d084114e777db8b253cb873d92762bd4f"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-readonly-reader-controls-01/focused-commands.json",
+        "bytes": 4755,
+        "sha256": "8c430567a6a47d059ab44ecb1f3f20256e5813eb56892c51ecf5bcf534d47919"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-readonly-reader-controls-01/gradle.log",
+        "bytes": 24763,
+        "sha256": "47c0ff3db170c1a47009c474086f61f854378c35c18314f836505fb420c36224"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-readonly-reader-controls-01/java-toolchain.log",
+        "bytes": 2026,
+        "sha256": "a7a86ea7b20362e2c856e5e71a8b6fc51764d5aeaa9f5a8c82b386ff156f8a7c"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-readonly-reader-controls-01/javac-toolchain.log",
+        "bytes": 14,
+        "sha256": "157f601a5854ca28a7dc364c13a5ca2879084186be49e3462d37acd028f35755"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-readonly-reader-controls-01/outer-invocation.json",
+        "bytes": 659,
+        "sha256": "0f2a4a41ddc87d9d2b4e0f6624f88971fcb1c6ecfd9703bb003e92eac0021444"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-readonly-reader-controls-01/receipt.json",
+        "bytes": 314430,
+        "sha256": "4d50e328d2e44215ea1ade15b2b512e719dee2e6a1e0f725b94ece5e4c170955"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-readonly-reader-controls-01/stop.log",
+        "bytes": 31,
+        "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-readonly-reader-controls-01/test-receipts.json",
+        "bytes": 3,
+        "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+      }
+    ]
+  },
+  "independent_audits": {
+    "ci_source_chunk": "425a8d",
+    "probe_source_chunk": "de681e",
+    "actual_evidence_chunk": "f6f690",
+    "all_exit_codes": 0,
+    "method": "Read-only Git/source/raw logs/receipts plus standard-library AST/hash/JSON/count/equality/filesystem assertions. All119 raw testcase identities matched their four source modules. No project import, extracted-function execution, tests, builds, process scans, network, dispatch or canonical edit by reviewer."
+  },
+  "findings": [],
+  "required_next": "Commit reviewed source, regenerate/commit mechanical inventory, and obtain fresh twelve-control request admission before one narrowly scoped hosted reader proof. Mocks do not establish actual privilege, original-UID kernel semantics or post-emulator cleanup; combined qualification remains separate.",
+  "preserved": {
+    "LP01": "FAIL",
+    "LP02": "FAIL",
+    "D03": "FAIL",
+    "historical_outer_exit143": "PRESERVED",
+    "strict_protection": {
+      "passed": 0,
+      "failed": 26,
+      "status": "UNRESOLVED"
+    },
+    "readiness": "NOT_READY",
+    "physical_device_store_owner_legal": "Separate unmet requirements; no credit from this review."
+  }
+}

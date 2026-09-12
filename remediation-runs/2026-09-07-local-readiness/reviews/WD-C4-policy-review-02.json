@@ -1,0 +1,185 @@
+{
+  "schema": 1,
+  "recorded_at": "2026-09-07T04:03:09.509392+00:00",
+  "author": "/root",
+  "independent_reviewer": "/root/factory_review",
+  "supersedes_source_review_only": "reviews/WD-C4-policy-review-01.json",
+  "status": "SOURCE APPROVED; host executable verification still pending focused03",
+  "scope": "Root-authored WD-C4 policy comments/tests and test-only ControlledStartRoom roster correction. Reviewer-authored recovery/transport/engine/Mafia relocation patches are not independently approved here.",
+  "baseline_head": "85ded00435b4f8327ce32d3b7f5062c4438ae174",
+  "conclusion": [
+    "The supplied policy that confirmation time is excluded is already realized by removing presentation-owned ticker while retaining canonical session. No game/protocol/save migration is necessary.",
+    "Previous unsupported effectContext and Paused selector errors corrected to pinned supported APIs and actual PAUSED text.",
+    "Failure injection now precedes changed tick state; attempted/durable state are distinct and bounded persistence waits avoid treating real Default dispatcher as virtual time.",
+    "Host clock is explicitly advanced alongside retained host scheduler per frame; bulk advancement is used only behind confirmation or after termination.",
+    "Host fixture now freezes remote-only members. Production HostP2pRoom starts with empty remote map, records admitted peers, and closeAdmissions returns that map. Outer host flow prepends the host. Original fixture duplicated the host when exercised through that outer route.",
+    "Both existing language-continuity consumers supply their original full player list to inner runtime and only compare frozen list to room.members, so no caller depends on the old duplicate-host roster. Focused rerun remains required.",
+    "All reviewed modified production lines are comments; architecture, pure reducers, host-only clock ownership, private projections, deterministic seeds, snapshot formats and exact protocol4.2 unchanged."
+  ],
+  "coverage": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/networking-testing/src/commonMain/kotlin/com/parlor/networking/testing/ControlledStartRoom.kt",
+      "sha256": "147692e570bcc0e8c191a6373c61fd4f636c62891b604fdc1c5fee52990861f0",
+      "reviewed_ranges": [
+        [
+          1,
+          188
+        ]
+      ],
+      "reviewer": "/root/factory_review"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitDiscussionFixture.kt",
+      "sha256": "9656ee3f05824b0572019ac672334c06ef7b3ddc996ab7bee8158e41c367a1ac",
+      "reviewed_ranges": [
+        [
+          1,
+          139
+        ]
+      ],
+      "reviewer": "/root/factory_review"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitLocalLeaveTimerTest.kt",
+      "sha256": "d04913884e838590cfc3d34aa0c0640a3500b4bd4cd7bef04954d6df2d94e343",
+      "reviewed_ranges": [
+        [
+          1,
+          237
+        ]
+      ],
+      "reviewer": "/root/factory_review"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/multiplayer/WhodunitHostLeaveTimerTest.kt",
+      "sha256": "4adb53690ae19d5bd63fb556122b0b84d594cb283ffaa3e3352e112c78008a6c",
+      "reviewed_ranges": [
+        [
+          1,
+          274
+        ]
+      ],
+      "reviewer": "/root/factory_review"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/multiplayer/WhodunitHostLanguageContinuityTest.kt",
+      "sha256": "97e55bc43b465a0efc241810520db0e6e642f4991860b3f7fc843effa5667323",
+      "reviewed_ranges": [
+        [
+          1,
+          320
+        ]
+      ],
+      "reviewer": "/root/factory_review"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaHostLanguageContinuityTest.kt",
+      "sha256": "027f36dda4a27b68fad6d5abf1740f9778cce897a2ba7dea7fc152acf7bce743",
+      "reviewed_ranges": [
+        [
+          1,
+          338
+        ]
+      ],
+      "reviewer": "/root/factory_review"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/timer/DiscussionTickerLoop.kt",
+      "sha256": "dfbcc16abc38e99131e014a0656e4a31c576cca487e732e2ef36084ffc54f07a",
+      "reviewed_ranges": [
+        [
+          1,
+          67
+        ]
+      ],
+      "reviewer": "/root/factory_review"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/docs/WHODUNIT_DISCUSSION_TIMING.md",
+      "sha256": "877084e47d0e823278057da1f0881fbab0a52e5a8e57aa48eec5fbabc49cece1",
+      "reviewed_ranges": [
+        [
+          1,
+          39
+        ]
+      ],
+      "reviewer": "/root/factory_review"
+    }
+  ],
+  "cross_file_paths": [
+    "WhodunitGameFlow.kt:SessionDrivenFlow canonical controller, snapshot writer, exit request, pause/confirmation/router branches",
+    "WhodunitHostSessionFlow.kt:owned route acquisition, frozen roster, confirmation replacement, host+remote roster construction",
+    "WhodunitPhaseRouter.kt:RoundSegment sole authoritative LaunchedEffect ticker",
+    "WhodunitRetainedMultiplayerRuntime.kt:strict start barrier, state ownership and close",
+    "ProcessMultiplayerSessionOwner.kt:freezeAdmissions returns room result unchanged",
+    "P2pKitRoomTransport.kt:HostP2pRoom members map, admission registration and closeAdmissions"
+  ],
+  "cycle02": {
+    "receipt": "remediation-runs/2026-09-07-local-readiness/evidence/focused-timer-retry-fixtures-02/receipt.json",
+    "exit_code": 1,
+    "suites": [
+      {
+        "file": "game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.flow.TickerAndRerollTest.xml",
+        "suite": "com.parlor.games.whodunit.flow.TickerAndRerollTest",
+        "tests": "9",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0"
+      },
+      {
+        "file": "game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.WhodunitLocalLeaveTimerTest.xml",
+        "suite": "com.parlor.games.whodunit.ui.flow.WhodunitLocalLeaveTimerTest",
+        "tests": "6",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0"
+      },
+      {
+        "file": "game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.WhodunitRecoveryInteractionTest.xml",
+        "suite": "com.parlor.games.whodunit.ui.flow.WhodunitRecoveryInteractionTest",
+        "tests": "9",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0"
+      },
+      {
+        "file": "game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostLeaveTimerTest.xml",
+        "suite": "com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostLeaveTimerTest",
+        "tests": "4",
+        "failures": "4",
+        "errors": "0",
+        "skipped": "0"
+      }
+    ],
+    "source_changed": false,
+    "cleanup": {
+      "stop_exit_code": 0,
+      "removed_outputs": [
+        "shared/core/build",
+        "shared/networking/build",
+        "shared/content/build",
+        "shared/storage/build",
+        "shared/networking-testing/build",
+        "shared/engine/build",
+        "shared/design-system/build",
+        "shared/session/build",
+        "game-modes/whodunit/build",
+        "build",
+        "build-logic/convention/build"
+      ],
+      "remaining_outputs": [],
+      "cleanup_errors": [],
+      "workers": {
+        "terminated_owned_workers": [],
+        "remaining_owned_workers": []
+      },
+      "cleanup_completed_at": "2026-09-07T03:47:10.973470+00:00"
+    }
+  },
+  "pending": [
+    "Four latest host timer tests must execute successfully, not merely compile.",
+    "Existing both-game host-language fixtures require rerun after roster correction.",
+    "Not physical LAN, platform lifecycle callbacks or OS gestures."
+  ],
+  "author_owned_processes": "No author build/test/server/native processes started."
+}

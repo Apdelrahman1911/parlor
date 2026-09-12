@@ -1,0 +1,336 @@
+{
+  "schema_version": 1,
+  "kind": "DIRECT_OWNED_SIMULATOR_LIFECYCLE_FEASIBILITY_INDEPENDENT_REVIEW",
+  "author": "/root/portability_review",
+  "recorded_at": "2026-09-08T16:19:23.185490+00:00",
+  "status": "CONDITIONALLY_FEASIBLE_AS_NEW_EXPLICIT_PATH_NOT_IMPLEMENTATION_OR_EXECUTION_APPROVAL",
+  "scope": "Read-only feasibility/safety assessment of ci_workflow proposal. This new report is the only reviewer-created file; no source edits, project imports, tests, builds, native commands or CI dispatches. Separate forthcoming full-delta source review is required.",
+  "repository": {
+    "root": "/root/projects/Parlor/parlor",
+    "branch": "fix/local-readiness-2026-09-07",
+    "head": "5f35a20d3c9c846cd98b38a16881997ecf577497",
+    "tree": "e0e7abfff89975682a96a884cb745bcbc12e7238",
+    "remote_query_executed": false
+  },
+  "decision": {
+    "recommendation": "Permit bounded independently reviewed implementation, not native execution. A direct-child command owner plus a durable exact simulator resource journal is a legitimate narrower authority boundary for lifecycle operations only; removing irrelevant global argv enumeration from that explicitly selected path need not weaken build/runtime ownership. The design must satisfy the minimum requirements below.",
+    "not_proven": "This is neither an Apple root-cause diagnosis nor proof the path will pass. A17/B18 ps failures under attempted Xcode build remain separately relevant and unchanged strict build ownership may still fail. A19 and its cleanup failures remain historical FAIL; B20 did not start.",
+    "coordinator_update": "After preliminary recommendation and own raw/source review, root authorized ci_workflow bounded helper/tests plus minimal wrapper/control/CI integration with legacy default and fresh future cycles21/22. Root explicitly withholds execution pending independent source review, focused checks, freeze and fresh bindings.",
+    "review_division": "portability_review: implementation/ownership safety; fixture_review: regression and integration/control closure; native_ci separate metadata exception-preservation correction reviewed by ci_review."
+  },
+  "raw_A19": {
+    "run_id": 34244902185,
+    "attempt": 1,
+    "source": "5f35a20d3c9c846cd98b38a16881997ecf577497",
+    "receipt": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence/ios-readiness-19/receipt.json",
+      "sha256": "872ba1e34987928fbe8981f6abe39cab8bd6b517d6f1bcd8fca2dc4f9bdb65c1",
+      "bytes": 322627
+    },
+    "status": "FAIL",
+    "runtime_evidence_status": "NOT_RUN",
+    "cleanup_status": "FAIL",
+    "owned_uuid": "2BE2D866-E8C8-42E6-B5EC-22D6789EECDA",
+    "primary_command": {
+      "command": [
+        "xcrun",
+        "simctl",
+        "bootstatus",
+        "2BE2D866-E8C8-42E6-B5EC-22D6789EECDA",
+        "-b"
+      ],
+      "started_at": "2026-09-08T15:29:35.600927+00:00",
+      "log": "bootstatus.log",
+      "interrupted_or_failed": true,
+      "primary_error": {
+        "type": "TimeoutExpired",
+        "message": "Command '['ps', '-axo', 'pid=,ppid=,pgid=,lstart=,command=']' timed out after 15 seconds"
+      },
+      "command_cleanup_error": {
+        "stage": "stop-owned-command-workers",
+        "type": "TimeoutExpired",
+        "message": "Command '['/usr/sbin/lsof', '-nP', '-t', '+w', '+D', '/private/var/folders/bl/vzjcvbz95c3dk19cb0fw46180000gn/T/parlor-audit-ios-readiness-19-93fjrjgh']' timed out after 30 seconds"
+      },
+      "finished_at": "2026-09-08T15:31:01.112444+00:00"
+    },
+    "command_count": 13,
+    "app_build_commands": [],
+    "gradle_stops_present": false,
+    "shutdown_delete_commands": [],
+    "owned_device_absence_attested": false,
+    "cleanup_errors": [
+      {
+        "stage": "shutdown-owned-simulator-and-app",
+        "error_type": "TimeoutExpired",
+        "message": "Command '['/usr/sbin/lsof', '-nP', '-t', '+w', '+D', '/private/var/folders/bl/vzjcvbz95c3dk19cb0fw46180000gn/T/parlor-audit-ios-readiness-19-93fjrjgh']' timed out after 30 seconds"
+      },
+      {
+        "stage": "delete-owned-simulator",
+        "error_type": "TimeoutExpired",
+        "message": "Command '['ps', '-axo', 'pid=,ppid=,pgid=,lstart=,command=']' timed out after 15 seconds"
+      }
+    ],
+    "later_workers": [],
+    "later_unknown_holders": [],
+    "temporary_directory_removed": true,
+    "outer_status": "FAIL",
+    "outer_cleanup_safe": false,
+    "outer_error": "native-cleanup-or-source-identity-unsafe-do-not-start-another-cycle",
+    "executed_lane_labels": [
+      "l08"
+    ],
+    "outer_custody_status": "FAIL",
+    "outer_removed": [],
+    "evidence": [
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence/continuation.json",
+        "sha256": "27ffc9124098845dfd80b3af82bc3a4db42aeb0c933b87d1d518c002e0edb93d",
+        "bytes": 8034
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence/failure.json",
+        "sha256": "9905a886e7445860f66bc0f94406deb5177e4b79e742f69afd7389ca799510a4",
+        "bytes": 137
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence/ios-readiness-19/create.log",
+        "sha256": "358552271a9ca610001ce76abd97c1f61eb85b966e967b31368bae61296f6d8a",
+        "bytes": 37
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence/ios-readiness-19/bootstatus.log",
+        "sha256": "5cfee89af832bf58d99076c25184e7ab2f716c3b62e3f1839aa781075a9915e7",
+        "bytes": 1684
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34244902185/native-cleanup/parlor-native-34244902185-1-cleanup.json",
+        "sha256": "a771df59e74c61cfb89d580a7c75f256bece1b630138c34f9a1d8eb192956631",
+        "bytes": 814
+      }
+    ],
+    "interpretation": "Full ps15 primary is preserved during owned bootstatus before the first app build marker. The bootstatus log continues to a terminal Finished line at15:31:15 after the failing command row finished15:31:01; no exit/reap success is inferred. Metadata finalization failed before any shutdown/delete command and the original underlying metadata error can be masked. Later worker/temp checks do not prove CoreSimulator resource retirement. No actual Parlor libproc, L08 or protection observation."
+  },
+  "precedent_limits": [
+    "native_process_probe.Commands is an injectable generic diagnostic command engine, not a closed native lifecycle API. Its SimBackend checks do not independently reject every stderr/pipe/selector/cleanup defect; Probe.failed supplies additional final rejection. Reuse requires all acceptance/cleanup semantics, not only its capture return tuple.",
+    "owned_ci_simulator.create uses first available iPhone runtime/type and Parlor-ci name. New app-host integration requires exact selected runtime/iPhone17Pro and existing copied_sources Parlor-Audit name; default create/cleanup cannot be invoked as a drop-in.",
+    "Current canonical ps15 and lsof30 remain essential for AppHost/build/JVM/FIFO/final file authority. Do not reinterpret partial libproc metadata as a safe substitute, and do not route normal app image provenance through this lifecycle helper."
+  ],
+  "minimum_requirements": [
+    {
+      "id": "S01",
+      "requirement": "Mode must be parsed explicitly and immutably before simulator creation; preserve legacy default. Unknown, duplicate, missing or changed selectors reject. Never switch after ps failure or adopt a failed legacy allocation into the new mode."
+    },
+    {
+      "id": "S02",
+      "requirement": "Dedicated simulator lifecycle API only: exact inventory/create/boot/bootstatus/shutdown/delete commands via /usr/bin/xcrun, no shell, extras, arbitrary UUID, all/booted selectors, app launch/install/get_app_container, Xcode, Gradle or public image-observer routing. Those other commands retain canonical ownership."
+    },
+    {
+      "id": "S03",
+      "requirement": "Own only actual direct unreaped Popen handles created in this helper. Defer/record parent SIGINT/SIGTERM across launch/handle assignment without leaking a blocked mask to children; bounded live stdout/stderr draining, count/byte/time limits, finite terminate/wait/kill/wait retirement and explicit reaped proof. No descendant, numeric-PID, PGID, CoreSimulator-service or global process adoption."
+    },
+    {
+      "id": "S04",
+      "requirement": "Latch the primary timeout/interruption/output/parse/persistence failure before best-effort retirement. Record separate bounded secondary failures. Pipe/selector/reap/checkpoint defects may not disappear behind EXITED0. New work is prohibited after sticky evidence loss; independent safe cleanup remains attempted. Raw inventory/foreign argv/private output is not persisted."
+    },
+    {
+      "id": "S05",
+      "requirement": "Use exact qualified profile runtime and iPhone-17-Pro type, preserving the existing Parlor-Audit synthetic name contract. Exclusive/fsynced journal before create binds mode, task/cycle, nonce, frozen source/control, temporary/evidence custody and normalized complete UUID baseline; record immutable create outcome separately, never fabricated success. Do not use owned_ci_simulator.create default template/name policy."
+    },
+    {
+      "id": "S06",
+      "requirement": "Revalidate exact name/runtime/type/UUID against authoritative bounded inventory before destructive transitions. Refuse pre-existing UUID/name, ambiguity, duplicate/malformed records, changed source/task/custody, journal replacement/symlinks, renamed UUID, changed type/runtime and unjournaled clone. Interrupted-create recovery needs the unique durable intent and nonbaseline exact identity, not create stdout alone. Missing result plus no matching device remains unsettled failure."
+    },
+    {
+      "id": "S07",
+      "requirement": "Retire outstanding direct simctl handles first. Before any build attempt, simulator UUID cleanup can be independent of global ps because resource authority comes from its journal. After any build attempt, successful existing owner.stop plus fresh strict owned-build-worker/direct-handle quiescence must precede shutdown/delete; failure latches nonauthorization. Persist attempted-build before xcode Popen; do not infer prebuild from missing log, exit or outputs."
+    },
+    {
+      "id": "S08",
+      "requirement": "Keep immediate Gradle stop at the existing Xcode finally seam; do not move it behind evidence processing. Retain final Gradle stop and all available Foundation/raw application evidence before device destruction. Preserve strict FIFO/unknown-holder checks, final ps/lsof before copy/file removal, exact copy-input/source/control comparison, simulator directory plus inventory absence and outer upload/custody gate. Later cleanup recovery does not convert original runtime failure to PASS."
+    },
+    {
+      "id": "S09",
+      "requirement": "Existing native lifecycle allowances are metadata45s, ordinary command120s and bootstatus300s. Any differing helper/cleanup budget requires explicit review; do not silently inherit diagnostic20/120 or squeeze full allowances to the no-app probe deadline. Essential finalizers have an independent bounded budget; exhaustion is a recorded failure, not a skip/pass."
+    },
+    {
+      "id": "S10",
+      "requirement": "Bind every transitive helper/control in actual companion, composition and normal control manifests. Update exact composer driver pins/transforms and command-line forwarding without wildcard edits. CI must request and validate the same explicit mode and future fresh cycle IDs; preflight/control approval cannot authorize different native behavior. Preserve canonical owned_lane, AppHost, JVM/FIFO semantics and all application/runtime assertions."
+    },
+    {
+      "id": "S11",
+      "requirement": "Every allocation/constructor/plan-write/create-return/journal-write/boot/timeout/signal/finalizer failure is inside the owned cleanup lifetime; partial failures are retained additively. A complete synthetic positive path must retain exact cleanup proof and original strict protection/nonruntime limitations."
+    },
+    {
+      "id": "S12",
+      "requirement": "After independent source/control review and focused controls, coordinator freezes reviewed changes, regenerates/commits inventory, verifies remote equality and creates fresh platform/source/control preflight bindings. No execution authorization follows from feasibility alone; no unchanged A/B retry or expensive full matrix as diagnosis."
+    }
+  ],
+  "minimum_controls_to_execute_later": [
+    {
+      "area": "Selection and routing",
+      "minimum": "Default remains legacy; accepted explicit mode selected once before create; unknown/duplicate/late selection fails; ps failure cannot activate new backend; every nonlifecycle command including get_app_container/build/Gradle/libproc remains canonical."
+    },
+    {
+      "area": "Closed subprocess boundary",
+      "minimum": "Exact argv/UUID/option negative mutations; fake direct children for clean exit, immediate exit, timeout, output flood, separate stderr diagnostics, SIGINT/SIGTERM during launch and after launch, selector/read/pipe/reap errors; bounded retirement and sticky primary evidence; no kill of arbitrary PID/group or shared service."
+    },
+    {
+      "area": "Durable ownership and partial create",
+      "minimum": "Intent precedes create and failed intent never launches; interrupted create after device registration but before result uses only exact intent/baseline; result-write failure remains failed while safe cleanup is attempted; unresolved no-match, invalid/stale/redirected/replaced journal, UUID/name/runtime/type/source/control/custody mutations and unknown clone refuse destructive work."
+    },
+    {
+      "area": "End-to-end finalizer safety",
+      "minimum": "Actual wrapper/helper glue, not assertions of fake success: prebuild ps unavailability does not prevent journaled UUID retirement but still fails final ps/lsof gate; postbuild failed worker proof never sends shutdown/delete. Sticky build marker covers Popen exception. Foundation/raw retention precedes destruction; immediate/final Gradle, direct children, FIFO, final holder and copy/custody checks remain mandatory under every earlier failure."
+    },
+    {
+      "area": "Bounded success and output custody",
+      "minimum": "Complete synthetic integration can succeed with all required receipts; missing/malformed/replaced/partial receipt or direct handle not reaped cannot pass cleanup_is_safe or begin B. Simulator absence requires exact authoritative inventory and absent nonsymlink directory; upload/digest/source/mode mismatch retains evidence. Parser/privacy/budget controls are bound to exact runtime code."
+    },
+    {
+      "area": "Control closure and freeze",
+      "minimum": "Companion/composer/normal complete input manifests, pin and transform checks, explicit CI mode and next cycle forwarding, immutable ownership/AppHost method comparisons. fixture_review independently owns detailed regression/closure assessment and actual control evidence review."
+    }
+  ],
+  "working_tree_cutoff": {
+    "independent_scope": "Source citations use exact5f35/A19 bytes, reopened before source edits. Native_ci has since authored a distinct metadata-only handler delta; it is not approved by this feasibility report. Other reviewers/coordinator may be writing owned ledger/evidence. No reviewer reset/stash/clean was performed.",
+    "tracked_changes_at_report": [
+      "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/run_ios_readiness.py",
+      "remediation-runs/2026-09-08-continuation/CONTINUE_LATEST.md",
+      "scripts/verification/ios-readiness/test_native_command_failures.py"
+    ]
+  },
+  "source_citations": [
+    {
+      "path": "scripts/ci/native_process_probe.py",
+      "revision": "5f35a20d3c9c846cd98b38a16881997ecf577497",
+      "sha256": "c87f6d1289ee50a7387988bd85953d451dac9e1b7b88a4d60f7b4848f86516da",
+      "bytes": 44789,
+      "lines": "139-318,430-451,526-624",
+      "meaning": "Direct-child bounded-command and journaled no-app precedent only. SimBackend result checks depend on Probe.failed; not a ready-made native ownership backend.",
+      "current_sha256_at_report": "c87f6d1289ee50a7387988bd85953d451dac9e1b7b88a4d60f7b4848f86516da",
+      "current_equals_reviewed_baseline": true
+    },
+    {
+      "path": "scripts/ci/owned_ci_simulator.py",
+      "revision": "5f35a20d3c9c846cd98b38a16881997ecf577497",
+      "sha256": "717c8c02dc06e4eac175c5dde5c7f9bdd6ebbd5e7028cc94c6ba4f84b44388af",
+      "bytes": 11229,
+      "lines": "16-52,84-147,150-213",
+      "meaning": "UUID normalization and baseline/name/runtime/type checks; exclusive intent before create; unresolved create and unknown clones fail closed. Default arbitrary available template/Parlor-ci naming is not the required new integration.",
+      "current_sha256_at_report": "717c8c02dc06e4eac175c5dde5c7f9bdd6ebbd5e7028cc94c6ba4f84b44388af",
+      "current_equals_reviewed_baseline": true
+    },
+    {
+      "path": "scripts/ci/verification_hygiene.py",
+      "revision": "5f35a20d3c9c846cd98b38a16881997ecf577497",
+      "sha256": "9eab427aeb3d810c033a3827aa44f7201cbb261345a2e6667a8d085df2fbd603",
+      "bytes": 13802,
+      "lines": "70-75",
+      "meaning": "Existing exclusive fsynced intent writer precedent.",
+      "current_sha256_at_report": "9eab427aeb3d810c033a3827aa44f7201cbb261345a2e6667a8d085df2fbd603",
+      "current_equals_reviewed_baseline": true
+    },
+    {
+      "path": "scripts/ci/native_continuation.py",
+      "revision": "5f35a20d3c9c846cd98b38a16881997ecf577497",
+      "sha256": "d5c6faf5a33187a9bed855f8d82b17ea2c90d72c3b22df0a041975f7a6bc7b21",
+      "bytes": 42095,
+      "lines": "136-158,364-387,603-650,686-729",
+      "meaning": "Frozen source/platform/control approval, sequential native safety gate, preservation before qualification and upload/custody safety guards.",
+      "current_sha256_at_report": "d5c6faf5a33187a9bed855f8d82b17ea2c90d72c3b22df0a041975f7a6bc7b21",
+      "current_equals_reviewed_baseline": true
+    },
+    {
+      "path": "scripts/verification/ios-readiness/owned_lane.py",
+      "revision": "5f35a20d3c9c846cd98b38a16881997ecf577497",
+      "sha256": "949091403ac669429f962120e9873a09897a87bdcae10702720ede0c68342f03",
+      "bytes": 10446,
+      "lines": "42-79,94-188",
+      "meaning": "Immutable full-argv ps15, strict lsof30, PID/start and exact JVM tmpdir authority; retain unchanged.",
+      "current_sha256_at_report": "949091403ac669429f962120e9873a09897a87bdcae10702720ede0c68342f03",
+      "current_equals_reviewed_baseline": true
+    },
+    {
+      "path": "scripts/verification/ios-readiness/run_ios_readiness.py",
+      "revision": "5f35a20d3c9c846cd98b38a16881997ecf577497",
+      "sha256": "85283be9681be14c18b76ef1657b596e837b4f97f978917f25ac693ae72d0ca8",
+      "bytes": 70167,
+      "lines": "278-326,378-446",
+      "meaning": "Canonical AppHost/FIFO implementation imported by normal runner; do not replace its ownership behavior.",
+      "current_sha256_at_report": "85283be9681be14c18b76ef1657b596e837b4f97f978917f25ac693ae72d0ca8",
+      "current_equals_reviewed_baseline": true
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/owned_lane.py",
+      "revision": "5f35a20d3c9c846cd98b38a16881997ecf577497",
+      "sha256": "949091403ac669429f962120e9873a09897a87bdcae10702720ede0c68342f03",
+      "bytes": 10446,
+      "lines": "42-79,94-188",
+      "meaning": "Byte-identical immutable companion ownership source.",
+      "current_sha256_at_report": "949091403ac669429f962120e9873a09897a87bdcae10702720ede0c68342f03",
+      "current_equals_reviewed_baseline": true
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/run_ios_readiness.py",
+      "revision": "5f35a20d3c9c846cd98b38a16881997ecf577497",
+      "sha256": "a56f47787c5abbda301cdfcafa5c8ac4ad7eb505d21d560e86063f93453a36f7",
+      "bytes": 72609,
+      "lines": "290-327,341-425,434-520,672-700,926-1031",
+      "meaning": "A19 baseline wrapper, create/build markers and finalizer; metadata exception-preservation correction separately authored by native_ci after this raw run.",
+      "current_sha256_at_report": "030e15b39d728195a1f331aa28dbfa4eef3fa8e55e352e22febebc57f827ddb8",
+      "current_equals_reviewed_baseline": false
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
+      "revision": "5f35a20d3c9c846cd98b38a16881997ecf577497",
+      "sha256": "98334625a01adbe3c8b2fb1573895a5056c95e430cb9d857142809d8ef4db454",
+      "bytes": 56767,
+      "lines": "73-88,138-225,275-295,319-420,733-869",
+      "meaning": "Normal explicit source mode, legacy command owner, lifecycle commands and finalizer; app image observer remains a separate unchanged path.",
+      "current_sha256_at_report": "98334625a01adbe3c8b2fb1573895a5056c95e430cb9d857142809d8ef4db454",
+      "current_equals_reviewed_baseline": true
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/compose_runner.py",
+      "revision": "5f35a20d3c9c846cd98b38a16881997ecf577497",
+      "sha256": "288c412456e130ec640f40042133ef4686554b4f63abecc097602999f2d20b18",
+      "bytes": 21106,
+      "lines": "21-31,38-127,188-207,286-296,343-367",
+      "meaning": "Exact driver pins/transforms, Foundation preservation before simulator cleanup and complete approved input closure.",
+      "current_sha256_at_report": "288c412456e130ec640f40042133ef4686554b4f63abecc097602999f2d20b18",
+      "current_equals_reviewed_baseline": true
+    },
+    {
+      "path": "scripts/release/tests/test_native_process_probe.py",
+      "revision": "5f35a20d3c9c846cd98b38a16881997ecf577497",
+      "sha256": "707f394e34d8234f4617963af32a865b3620aaec7a16ee6e0c166c0e1090ef39",
+      "bytes": 43371,
+      "lines": "140-382,470-671",
+      "meaning": "Read-only inspection of existing diagnostic synthetic cases; not newly executed or sufficient integration qualification.",
+      "current_sha256_at_report": "707f394e34d8234f4617963af32a865b3620aaec7a16ee6e0c166c0e1090ef39",
+      "current_equals_reviewed_baseline": true
+    },
+    {
+      "path": "scripts/release/tests/test_apple_ci_hygiene.py",
+      "revision": "5f35a20d3c9c846cd98b38a16881997ecf577497",
+      "sha256": "0ceea9e5afacd3feeaa8b0aa55134dd559482ffeaaff259906c605cfc41e3549",
+      "bytes": 38960,
+      "lines": "477-623",
+      "meaning": "Read-only inspection of existing synthetic simulator journal cases; not newly executed or sufficient new backend qualification.",
+      "current_sha256_at_report": "0ceea9e5afacd3feeaa8b0aa55134dd559482ffeaaff259906c605cfc41e3549",
+      "current_equals_reviewed_baseline": true
+    }
+  ],
+  "activity": {
+    "project_code_imports": 0,
+    "tests_executed": 0,
+    "builds": 0,
+    "native_commands": 0,
+    "CI_dispatches": 0,
+    "remote_queries": 0,
+    "source_edits": 0,
+    "performed": "Read-only Git and source/raw-evidence/stdlib JSON/hash/AST inspection, author/coordinator/reviewer messages; exclusively create this new review JSON.",
+    "cleanup": "No task build/test/native allocation or worker started, so no Gradle stop or environment cleanup was run; do not interfere with coordinator lane."
+  },
+  "readiness": "NOT_READY. This feasibility assessment cannot close A/B or strict file protection. C and D need their own bound execution/reconciliation. Physical-device/keybag/backup/LAN checks, Store publication/signing, known Store identity collision and separate owner/legal/editorial/privacy requirements remain separate and unwaived."
+}

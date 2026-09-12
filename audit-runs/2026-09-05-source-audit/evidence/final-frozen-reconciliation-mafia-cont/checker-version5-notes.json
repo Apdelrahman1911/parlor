@@ -1,0 +1,15 @@
+{
+  "at": "2026-09-05T15:49:10.749640+00:00",
+  "reviewer": "/root/mafia_cont",
+  "from": "reconcile-v4.py",
+  "from_sha256": "49aac825555a7808f4bb356e374b9fa98993e36be1959c66ad81c320d7ba4255",
+  "to": "reconcile-v5.py",
+  "to_sha256": "704d9dc0ef8d5ba6430b7bbc4afa194d8e3797744dce1b1d67bb29df0751a28a",
+  "correction": "Root integrity02 is a narrowly scoped hash/material projection receipt, not a new copy of integrity01 counts/links schema. Keep independent current counts already derived in checker; re-reconcile hash-bound historical01 count/link claims, and additionally verify all10 current02 frozen output hashes. No audit application or report change.",
+  "prior_attempt": {
+    "execution": "reconciliation-03-execution.json",
+    "exit_code": 1,
+    "reason": "KeyError on a checker-assumed classification_counts field absent from intentionally narrow integrity02. No reconciliation result emitted; this attempt is not PASS."
+  },
+  "assertions_weakened": false
+}

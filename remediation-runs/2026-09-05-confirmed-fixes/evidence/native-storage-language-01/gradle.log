@@ -1,0 +1,137 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.13/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+Type-safe project accessors is an incubating feature.
+> Task :build-logic:convention:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :build-logic:convention:compileKotlin FROM-CACHE
+> Task :build-logic:convention:compileJava NO-SOURCE
+> Task :build-logic:convention:pluginDescriptors
+> Task :build-logic:convention:processResources
+> Task :build-logic:convention:classes
+> Task :build-logic:convention:jar
+
+> Configure project :composeApp
+WARNING: The option setting 'android.experimental.lint.version=9.1.1' is experimental.
+w: [33m[1m⚠️ Deprecated Gradle Version[0m[0m
+The used Gradle version (Gradle 8.13) is deprecated and will not be supported in future Kotlin Gradle Plugin releases.
+The minimum supported Gradle version will become Gradle 8.14.4 in Kotlin 2.5.0.
+
+This warning can be suppressed in 'gradle.properties':
+    kotlin.suppressGradlePluginWarnings=DeprecatedGradleVersionWarning
+[32m[1mSolution:[0m[0m
+[32m[3mPlease update the Gradle version to at least Gradle 8.14.4.[0m[0m
+
+w: [33m[1m⚠️ Native task 'iosX64Test' is disabled[0m[0m
+Task 'iosX64Test' for target 'ios_x64' cannot run on the current host (macos-aarch64).
+Reason: architecture mismatch - target requires X64, current host is ARM64
+[32m[1mSolution:[0m[0m
+[32m[3mTo suppress this warning, add 'kotlin.native.ignoreDisabledTargets=true' to gradle.properties.[0m[0m
+
+AUDIT_SIMULATOR_BOUND :shared:design-system:iosSimulatorArm64Test device=124CC16C-87B4-4C2A-9401-3DBDB4088FDB standalone=false
+AUDIT_SIMULATOR_BOUND :composeApp:iosSimulatorArm64Test device=124CC16C-87B4-4C2A-9401-3DBDB4088FDB standalone=false
+
+> Task :shared:core:kmpPartiallyResolvedDependenciesChecker
+> Task :shared:core:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :shared:core:downloadKotlinNativeDistribution
+> Task :shared:core:compileKotlinIosSimulatorArm64 FROM-CACHE
+> Task :shared:design-system:kmpPartiallyResolvedDependenciesChecker
+> Task :shared:design-system:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :shared:core:exportCrossCompilationMetadataForIosSimulatorArm64ApiElements
+> Task :shared:design-system:downloadKotlinNativeDistribution
+> Task :shared:design-system:convertXmlValueResourcesForAppleMain NO-SOURCE
+> Task :shared:design-system:copyNonXmlValueResourcesForAppleMain NO-SOURCE
+> Task :shared:design-system:prepareComposeResourcesTaskForAppleMain NO-SOURCE
+> Task :shared:design-system:generateResourceAccessorsForAppleMain NO-SOURCE
+> Task :shared:design-system:convertXmlValueResourcesForCommonMain
+> Task :shared:design-system:copyNonXmlValueResourcesForCommonMain
+> Task :shared:design-system:prepareComposeResourcesTaskForCommonMain UP-TO-DATE
+> Task :shared:design-system:generateResourceAccessorsForCommonMain
+> Task :shared:design-system:convertXmlValueResourcesForIosMain NO-SOURCE
+> Task :shared:design-system:copyNonXmlValueResourcesForIosMain NO-SOURCE
+> Task :shared:design-system:prepareComposeResourcesTaskForIosMain NO-SOURCE
+> Task :shared:design-system:generateResourceAccessorsForIosMain NO-SOURCE
+> Task :shared:design-system:convertXmlValueResourcesForIosSimulatorArm64Main NO-SOURCE
+> Task :shared:design-system:copyNonXmlValueResourcesForIosSimulatorArm64Main NO-SOURCE
+> Task :shared:design-system:prepareComposeResourcesTaskForIosSimulatorArm64Main NO-SOURCE
+> Task :shared:design-system:generateResourceAccessorsForIosSimulatorArm64Main NO-SOURCE
+> Task :shared:design-system:convertXmlValueResourcesForNativeMain NO-SOURCE
+> Task :shared:design-system:copyNonXmlValueResourcesForNativeMain NO-SOURCE
+> Task :shared:design-system:prepareComposeResourcesTaskForNativeMain NO-SOURCE
+> Task :shared:design-system:generateResourceAccessorsForNativeMain NO-SOURCE
+> Task :shared:design-system:generateActualResourceCollectorsForIosSimulatorArm64Main
+> Task :shared:design-system:generateComposeResClass
+> Task :shared:design-system:generateExpectResourceCollectorsForCommonMain
+> Task :shared:design-system:compileKotlinIosSimulatorArm64
+> Task :shared:design-system:convertXmlValueResourcesForAppleTest NO-SOURCE
+> Task :shared:design-system:copyNonXmlValueResourcesForAppleTest NO-SOURCE
+> Task :shared:design-system:prepareComposeResourcesTaskForAppleTest NO-SOURCE
+> Task :shared:design-system:generateResourceAccessorsForAppleTest NO-SOURCE
+> Task :shared:design-system:convertXmlValueResourcesForCommonTest NO-SOURCE
+> Task :shared:design-system:copyNonXmlValueResourcesForCommonTest NO-SOURCE
+> Task :shared:design-system:prepareComposeResourcesTaskForCommonTest NO-SOURCE
+> Task :shared:design-system:generateResourceAccessorsForCommonTest NO-SOURCE
+> Task :shared:design-system:convertXmlValueResourcesForIosSimulatorArm64Test NO-SOURCE
+> Task :shared:design-system:copyNonXmlValueResourcesForIosSimulatorArm64Test NO-SOURCE
+> Task :shared:design-system:prepareComposeResourcesTaskForIosSimulatorArm64Test NO-SOURCE
+> Task :shared:design-system:generateResourceAccessorsForIosSimulatorArm64Test NO-SOURCE
+> Task :shared:design-system:convertXmlValueResourcesForIosTest NO-SOURCE
+> Task :shared:design-system:copyNonXmlValueResourcesForIosTest NO-SOURCE
+> Task :shared:design-system:prepareComposeResourcesTaskForIosTest NO-SOURCE
+> Task :shared:design-system:generateResourceAccessorsForIosTest NO-SOURCE
+> Task :shared:design-system:convertXmlValueResourcesForNativeTest NO-SOURCE
+> Task :shared:design-system:copyNonXmlValueResourcesForNativeTest NO-SOURCE
+> Task :shared:design-system:prepareComposeResourcesTaskForNativeTest NO-SOURCE
+> Task :shared:design-system:generateResourceAccessorsForNativeTest NO-SOURCE
+> Task :shared:design-system:iosSimulatorArm64ResolveResourcesFromDependencies
+> Task :shared:design-system:assembleIosSimulatorArm64MainResources
+> Task :shared:design-system:iosSimulatorArm64ResolveSelfResourcesCopyHierarchicalMultiplatformResources
+> Task :shared:design-system:iosSimulatorArm64AggregateResources
+> Task :shared:design-system:iosSimulatorArm64ProcessResources
+> Task :shared:design-system:iosSimulatorArm64MainKlibrary
+> Task :shared:design-system:compileTestKotlinIosSimulatorArm64
+> Task :shared:design-system:computeLocalPackageDependencyInputFiles
+> Task :shared:design-system:generateSyntheticLinkageSwiftPMImportProjectForCinteropsAndLdDump SKIPPED
+> Task :composeApp:serializeSwiftPMDependenciesMetadataForLockFiles
+> Task :game-modes:mafia:serializeSwiftPMDependenciesMetadataForLockFiles
+> Task :game-modes:whodunit:serializeSwiftPMDependenciesMetadataForLockFiles
+> Task :shared:content:serializeSwiftPMDependenciesMetadataForLockFiles
+> Task :shared:core:serializeSwiftPMDependenciesMetadataForLockFiles
+> Task :shared:design-system:serializeSwiftPMDependenciesMetadataForLockFiles
+> Task :shared:engine:serializeSwiftPMDependenciesMetadataForLockFiles
+> Task :shared:engine-testing:serializeSwiftPMDependenciesMetadataForLockFiles
+> Task :shared:networking:serializeSwiftPMDependenciesMetadataForLockFiles
+> Task :shared:networking-testing:serializeSwiftPMDependenciesMetadataForLockFiles
+> Task :shared:session:serializeSwiftPMDependenciesMetadataForLockFiles
+> Task :shared:storage:serializeSwiftPMDependenciesMetadataForLockFiles
+> Task :shared:transport-p2p:serializeSwiftPMDependenciesMetadataForLockFiles
+> Task :composeApp:generateUmbrellaPackageIdentifierBasedResolutionForDefault SKIPPED
+> Task :composeApp:fetchUmbrellaPackageIdentifierForDefault SKIPPED
+> Task :shared:design-system:syncPersistedPackageResolvedToSynthetic SKIPPED
+> Task :shared:design-system:fetchSyntheticImportProjectPackages SKIPPED
+> Task :shared:design-system:convertSyntheticImportProjectIntoDefFileIphonesimulator
+> Task :shared:design-system:assembleIosSimulatorArm64TestResources
+> Task :shared:design-system:copyTestComposeResourcesForIosSimulatorArm64
+> Task :shared:design-system:linkDebugTestIosSimulatorArm64
+
+com.parlor.designsystem.localization.IosLanguageOverrideOwnerTest.system_after_interrupted_lifetime_removes_only_owned_override[iosSimulatorArm64] FAILED
+    kotlin.AssertionError at null:-1
+
+com.parlor.designsystem.localization.IosLanguageOverrideOwnerTest.interrupted_preparation_without_previous_value_keeps_fallback_unowned[iosSimulatorArm64] FAILED
+    kotlin.AssertionError at null:-1
+
+> Task :shared:design-system:iosSimulatorArm64Test FAILED
+
+26 tests completed, 2 failed
+
+[Incubating] Problems report is available at: file:///Users/abdelrahman/Projects/parlor/build/reports/problems/problems-report.html
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':shared:design-system:iosSimulatorArm64Test'.
+> There were failing tests. See the report at: file:///Users/abdelrahman/Projects/parlor/shared/design-system/build/reports/tests/iosSimulatorArm64Test/index.html
+
+* Try:
+> Run with --scan to get full insights.
+
+BUILD FAILED in 41s
+43 actionable tasks: 40 executed, 2 from cache, 1 up-to-date

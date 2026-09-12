@@ -1,0 +1,71 @@
+--- owned_arm64_smoke_sdk.py (active unchanged)
++++ owned_arm64_smoke_sdk.py (proposed)
+@@ -50,7 +50,8 @@
+     """Read-only metadata observation; do not scan unrelated profiles/data."""
+     rows = []
+     for relative in (Path(".knownPackages"), IMAGE_RELATIVE / "package.xml",
+-                     IMAGE_RELATIVE / "source.properties"):
++                     IMAGE_RELATIVE / "source.properties", Path("emulator/package.xml"),
++                     Path("emulator/source.properties"), Path("emulator/lib/hardware-properties.ini")):
+         path = sdk / relative
+         if not path.exists() and not path.is_symlink():
+             rows.append({"path": relative.as_posix(), "present": False})
+
+--- test_root_integration.py (active unchanged)
++++ test_root_integration.py (proposed)
+@@ -107,6 +107,17 @@
+             before = {p.name: p.read_bytes() for p in image.iterdir()}
+             metadata = {name: hashlib.sha256(before[name]).hexdigest()
+                         for name in adapter.METADATA_HASHES}
++            emulator = sdk / adapter.EMULATOR_RELATIVE
++            emulator.mkdir()
++            for name in adapter.EMULATOR_HASHES:
++                path = emulator / name
++                path.parent.mkdir(parents=True, exist_ok=True)
++                path.write_bytes(b"synthetic complete-emulator fixture")
++                if name in adapter.EMULATOR_EXECUTABLES:
++                    path.chmod(0o755)
++            emulator_metadata = {name: hashlib.sha256((emulator / name).read_bytes()).hexdigest()
++                                 for name in adapter.EMULATOR_HASHES}
++            emulator_before = adapter._inventory(emulator)
+             owned = runner.OwnedDirectory()
+             calls = []
+             def clone(source_fd, parent_fd, name):
+@@ -120,12 +131,14 @@
+                     raise InterruptedError("synthetic interruption after first clone")
+             try:
+                 with patch.object(adapter, "METADATA_HASHES", metadata), \
++                        patch.object(adapter, "EMULATOR_HASHES", emulator_metadata), \
+                         patch.object(adapter, "MIN_FREE_BYTES", 0):
+                     with self.assertRaises(InterruptedError):
+                         adapter.clone_installed_image(sdk, owned, cancelled_after_clone, clone_one=clone)
+                 self.assertEqual(1, len(calls))
+                 self.assertTrue((owned.path / "sdk").exists())
+                 self.assertEqual(before, {p.name: p.read_bytes() for p in image.iterdir()})
++                self.assertEqual(emulator_before, adapter._inventory(emulator))
+             finally:
+                 owned.remove()
+             self.assertFalse(owned.path.exists())
+
+--- run_integration_controls.py (active unchanged)
++++ run_integration_controls.py (proposed)
+@@ -42,8 +42,8 @@
+                              and method.name.startswith("test_")]
+     suite = unittest.defaultTestLoader.discover(str(HERE), pattern="test_*.py")
+     actual = sorted(test.id() for test in flatten(suite))
+-    if len(actual) != 22 or len(set(actual)) != 22 or sorted(declared) != actual:
+-        raise RuntimeError("Actual discovery differs from the 22 source signatures")
++    if len(actual) != 38 or len(set(actual)) != 38 or sorted(declared) != actual:
++        raise RuntimeError("Actual discovery differs from the 38 source signatures")
+     imports = {name: str(Path(sys.modules[name].__file__).resolve()) for name in
+                ("test_root_integration", "test_owned_sdk_image", "owned_sdk_image",
+                 "owned_arm64_smoke_sdk", "darwin_owned_processes")}
+@@ -57,7 +57,7 @@
+                           source_unchanged=before == after, tests=result.testsRun,
+                           failures=len(result.failures), errors=len(result.errors),
+                           skips=len(result.skipped))), flush=True)
+-    return 0 if (result.wasSuccessful() and result.testsRun == 22 and
++    return 0 if (result.wasSuccessful() and result.testsRun == 38 and
+                  not result.skipped and before == after) else 1
+ 
+ 

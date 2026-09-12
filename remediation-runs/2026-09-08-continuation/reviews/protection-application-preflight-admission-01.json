@@ -1,0 +1,141 @@
+{
+  "schema": 1,
+  "kind": "INDEPENDENT_FRESH_APP_ONLY_PREFLIGHT_AND_REQUEST_ADMISSION_NOT_RUNTIME_PROOF",
+  "reviewer": "/root/fixture_review",
+  "reviewed_at": "2026-09-10T21:07:02.428620+00:00",
+  "status": "APPROVED_ONE_FOCUSED_PA40_NATIVE_EVIDENCE_DISPATCH",
+  "scope": "Fresh source/control/toolchain/artifact/request bindings only. Existing application source approval plus independently reviewed shared-sampler boolean correction remain the implementation basis; no repeated broad audit or new native execution.",
+  "source": {
+    "commit": "09f613c491af909043b69050c12b43baff81b23a",
+    "tree": "ef5f83fadab880101df88d3e986765ba57582b40",
+    "branch": "fix/local-readiness-2026-09-07",
+    "tracked_status": "",
+    "source_manifest_sha256": "8bb3df1c74b84377acdead38e9fd4107d5079d260aeb351dbcece634f5ae0f33",
+    "source_manifest_rows": 844,
+    "copy_only_rows": 769,
+    "verification": "Current HEAD/tree/branch and clean tracked status match. All844 listed source bytes match local files and canonical manifest hash recomputes. All769 copy rows match source manifest. All111 unbound controls independently match working bytes and09f Git blobs."
+  },
+  "controls": {
+    "approved_unbound_count": 111,
+    "approved_unbound_sha256": "236d00fa8888e6895e23e3f3f6a32d615ad1dfbf4446ae963943a56e1beae5e5",
+    "fresh_bound_count": 112,
+    "fresh_bound_sha256": "9a612db858d26a04cfe0a83ebc4a047bf980fe6790749b3859a0be3d40dca5d3",
+    "sole_added_row": {
+      "path": "remediation-runs/2026-09-08-continuation/ios-readiness-source-ci.json",
+      "sha256": "f9151959c3caea58b3546e0ab0bb3964bb3d068acdf2c520bb42facf08652053"
+    },
+    "other_added_removed_or_changed_rows": 0,
+    "manifest_file_sha256": "f34d53bc446ed559223eaaf475450ddb61f0f6cadc010af98ee9a2acb5604d89",
+    "basis": [
+      {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/protection-application-independent-01.json",
+        "bytes": 11664,
+        "sha256": "2df056d635e0935295a46818464a30c4ea9dbe6dfa58f9c01a2fc67ce0d4fb9c"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/protection-native-boolean-independent-01.json",
+        "bytes": 11123,
+        "sha256": "407b33d37c8afab2baa8f5282f10c7844d22fd5b8a09c1ea67e92f5bfb052375"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-protection-boolean-controls-01/controls-after.json",
+        "bytes": 24612,
+        "sha256": "616b5734c5544c189115c27a24c89daa39b6713e0cab73c597cd67246a5a2370"
+      }
+    ]
+  },
+  "hosted_preflight": {
+    "run_id": 34529609395,
+    "attempt": 1,
+    "job_id": 103046854445,
+    "event": "workflow_dispatch",
+    "conclusion": "success",
+    "package_status": "REVIEW_REQUIRED_NOT_RUNTIME_EVIDENCE",
+    "source_binding_status": "REVIEW_REQUIRED_BOUND",
+    "toolchain": {
+      "name": "qualified-xcode-26.3",
+      "xcode": "26.3",
+      "build": "17C529",
+      "sdk": "26.2",
+      "runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-2",
+      "runtime_version": [
+        26,
+        2,
+        0
+      ],
+      "developer_dir": "/Applications/Xcode_26.3.app/Contents/Developer",
+      "scope": "Xcode26.3/17C529 qualified compiler; Debug iOS26.2 simulator observation only, not Store-signing or physical-device evidence",
+      "selected_developer_dir": "/Applications/Xcode_26.3.app/Contents/Developer",
+      "architecture": "arm64",
+      "sdk_name": "iphonesimulator26.2",
+      "runtime_build": "23C54",
+      "device_type": "com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro",
+      "simulator_sdk_path": "/Applications/Xcode_26.3.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.2.sdk",
+      "android_sdk": "/Users/runner/Library/Android/sdk",
+      "java_home": "/Users/runner/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-101.0/arm64/Contents/Home",
+      "runtime_scope": "Toolchain observation only; no application/ABI/protection/runtime claim"
+    },
+    "actual_scope": "No application build, XCTest, libproc ABI/query or storage/protection validation executed.",
+    "artifact_id": 10172998268,
+    "zip": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34529609395/preflight.zip",
+      "bytes": 91169,
+      "sha256": "0b00a059960eee4b9b69c561f83a4a51b7f72bca147b36c4adbec59afc085bab"
+    },
+    "members": [
+      "preflight.json",
+      "ios-readiness-source-ci.json",
+      "protection_application-controls.json"
+    ],
+    "artifact_verification": "GitHub run/artifact source, repository, workflow and IDs match. ZIP digest, exact3-member contents, CRC and extracted bytes match; member hashes in preflight.json match. No l08/normal control package substituted."
+  },
+  "preflight_cleanup": {
+    "status": "PASS",
+    "artifact_id": 10172999954,
+    "zip": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34529609395/cleanup.zip",
+      "bytes": 836,
+      "sha256": "6c4df2e00d777545da1b1ba189a4f2c330b10c3e5b471dd31c1e820b43d497e4"
+    },
+    "receipt": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34529609395/cleanup/parlor-native-34529609395-1-cleanup.json",
+      "bytes": 1147,
+      "sha256": "9b972ba5388b74f7ee0adedb797ed76da02954136cdff90080df7af642ba723c"
+    },
+    "removed": [
+      "remediation-runs/2026-09-08-continuation/ios-readiness-source-ci.json"
+    ],
+    "errors": [],
+    "source_unchanged": true,
+    "scope": "Only fresh source binding removed; no application build, simulator, XCTest or native lane ran. Existing no-build preflight stop policy applies; no new Gradle stop execution asserted."
+  },
+  "pending_request": {
+    "file": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/protection-application-01/request.json",
+      "bytes": 556,
+      "sha256": "d3da948a2cfba8d6a6964fb81b39ee5652f598ed3a9d99bd1885cf641013dc77"
+    },
+    "body": {
+      "ref": "fix/local-readiness-2026-09-07",
+      "inputs": {
+        "verification_scope": "native-evidence",
+        "native_selection": "protection-application-only",
+        "frozen_source_sha": "09f613c491af909043b69050c12b43baff81b23a",
+        "preflight_run_id": "34529609395",
+        "preflight_run_attempt": "1",
+        "preflight_artifact_id": "10172998268",
+        "preflight_artifact_sha256": "0b00a059960eee4b9b69c561f83a4a51b7f72bca147b36c4adbec59afc085bab",
+        "approved_probe_control_sha256": "9a612db858d26a04cfe0a83ebc4a047bf980fe6790749b3859a0be3d40dca5d3"
+      }
+    },
+    "admission": "Exactly native-evidence + protection-application-only at09f, using34529609395/1 preflight artifact10172998268 with SHA0b00a059960eee4b9b69c561f83a4a51b7f72bca147b36c4adbec59afc085bab and approved112-control digest9a612db858d26a04cfe0a83ebc4a047bf980fe6790749b3859a0be3d40dca5d3. No unselected l08/normal approval is supplied."
+  },
+  "kept_failures_and_limits": [
+    "PD03 run34528539328 native-observation timed out at40s with no stdout/stderr; main FAIL and cleanup FAIL (timed-out-or-unsettled-tool-scratch-retained) remain preserved. This admission does not promote that attempt or authorize a fourth standalone retry.",
+    "PD01 pre-runtime timeout and PD02 typed native rejection remain historical failures. Shared sampler correction is source/control-approved, not yet proven by this preflight.",
+    "A37 strict Complete remains0 PASS/26 FAIL. This copied application diagnostic invokes unchanged actual filesystem/Keychain with public synthetic bytes; it is not strict L08, normal Debug launch/provenance, game snapshot or same-SHA combined qualification.",
+    "Actual PA40 must freshly satisfy the existing source/control/toolchain/ownership/copy-only/cleanup guards, capture real app and host metadata and retain any failure. No timeout, typed validator, ownership or protection rule is relaxed.",
+    "No physical-device, Store-operation, owner/legal or release-readiness approval follows."
+  ],
+  "reviewer_operations": "Read-only Git and standard-library JSON/hash/path/text/ZIP inspection plus this authorized additive report. No project imports, tests/builds, simulator, signals, cleanup, network, dispatch, staging or commits."
+}

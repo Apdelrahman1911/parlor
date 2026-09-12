@@ -1,0 +1,97 @@
+// Evidence-only geometry/identity schema, appended to the owned Debug copy.
+// Numeric coordinates are public layout metadata, never player/session data.
+#if DEBUG && targetEnvironment(simulator)
+private struct DSC01Geometry: Codable {
+    let windowBounds: [Double]
+    let outerBounds: [Double]
+    let composeBounds: [Double]
+    let outerInWindow: [Double]
+    let composeInWindow: [Double]
+    let composeFrameInOuter: [Double]
+    let windowSafeArea: [Double]
+    let outerSafeArea: [Double]
+    let composeSafeArea: [Double]
+    let orientation: String
+
+    // A separate Python validator rechecks EVERY raw numeric sample, not this
+    // derived UI boolean. Half a point admits floating pixel-rounding only.
+    var valid: Bool {
+        let rectangles = [windowBounds, outerBounds, composeBounds, outerInWindow,
+                          composeInWindow, composeFrameInOuter]
+        let insets = [windowSafeArea, outerSafeArea, composeSafeArea]
+        guard rectangles.allSatisfy({ row in
+            row.count == 4 && row.allSatisfy({ $0.isFinite && abs($0) <= 100000 }) &&
+            row[2] > 0 && row[3] > 0
+        }), insets.allSatisfy({ row in
+            row.count == 4 && row.allSatisfy({ $0.isFinite && $0 >= 0 && $0 <= 100000 })
+        }) else { return false }
+        func equal(_ left: [Double], _ right: [Double]) -> Bool {
+            zip(left, right).allSatisfy { abs($0.0 - $0.1) <= 0.5 }
+        }
+        let local = [0.0, 0.0, windowBounds[2], windowBounds[3]]
+        guard equal(outerBounds, local), equal(composeBounds, local),
+              equal(outerInWindow, windowBounds), equal(composeInWindow, windowBounds),
+              equal(composeFrameInOuter, outerBounds),
+              equal(outerSafeArea, windowSafeArea), equal(composeSafeArea, windowSafeArea),
+              windowSafeArea.contains(where: { $0 > 0.5 }),
+              windowSafeArea[0] + windowSafeArea[2] < windowBounds[3],
+              windowSafeArea[1] + windowSafeArea[3] < windowBounds[2] else { return false }
+        switch orientation {
+        case "portrait": return windowBounds[3] > windowBounds[2]
+        case "landscape": return windowBounds[2] > windowBounds[3]
+        default: return false
+        }
+    }
+}
+
+private struct DSC01NativeObservation: Codable {
+    let sameOuterController: Bool
+    let sameComposeController: Bool
+    let sameOuterView: Bool
+    let sameComposeView: Bool
+    let childParentIsOuter: Bool
+    let singleComposeChild: Bool
+    let directSubview: Bool
+    let sameWindow: Bool
+    let attachments: Int
+    let disposals: Int
+    let outerDirection: String
+    let geometry: DSC01Geometry?
+
+    static let unavailable = DSC01NativeObservation(
+        sameOuterController: false, sameComposeController: false,
+        sameOuterView: false, sameComposeView: false, childParentIsOuter: false,
+        singleComposeChild: false, directSubview: false, sameWindow: false,
+        attachments: 0, disposals: 0, outerDirection: "unavailable", geometry: nil)
+
+    // Compact keys keep ALL six samples below the original 8192-byte a11y cap.
+    // Full component booleans and numeric geometry live in each durable event.
+    var compact: [String: Any] {
+        ["o": sameOuterController, "c": sameComposeController,
+         "v": sameOuterView && sameComposeView,
+         "p": childParentIsOuter && singleComposeChild && directSubview,
+         "w": sameWindow, "a": attachments, "d": disposals,
+         "g": geometry?.valid ?? false, "i": geometry?.orientation ?? "unavailable"]
+    }
+}
+
+private func dsc01Rectangle(_ value: CGRect) -> [Double] {
+    [Double(value.origin.x), Double(value.origin.y), Double(value.size.width), Double(value.size.height)]
+}
+
+private func dsc01Insets(_ value: UIEdgeInsets) -> [Double] {
+    [Double(value.top), Double(value.left), Double(value.bottom), Double(value.right)]
+}
+
+private func dsc01Direction(_ view: UIView?) -> String {
+    guard let view else { return "unavailable" }
+    switch view.semanticContentAttribute {
+    case .forceLeftToRight: return "force_ltr"
+    case .forceRightToLeft: return "force_rtl"
+    case .unspecified: return "unspecified"
+    default: return "other"
+    }
+}
+#else
+#error("DSC01 geometry observer may compile ONLY as Debug iOS simulator")
+#endif

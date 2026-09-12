@@ -1,0 +1,315 @@
+{
+  "schema_version": 1,
+  "kind": "NATIVE_17_18_PS_TIMEOUT_DIAGNOSIS_NOT_CORRECTION_OR_RUNTIME_PASS",
+  "author": "/root/native_ci",
+  "recorded_at": "2026-09-08T11:19:27.437704+00:00",
+  "status": "FAILURE_SITE_VERIFIED_OS_ROOT_CAUSE_UNRESOLVED_NO_SOURCE_EDIT",
+  "source": {
+    "head": "25b1c5551aee7630ac22d4b34668dd4b06c71b17",
+    "tree": "629a5d2b699cddb62d61849de3bd185fd4c01378",
+    "branch": "fix/local-readiness-2026-09-07",
+    "tracked_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "workflow": {
+    "run_id": 34216788568,
+    "attempt": 1,
+    "workflow": ".github/workflows/production-verification.yml",
+    "mode": "native-evidence",
+    "conclusion": "failure",
+    "actual_image": "macos-15-arm64",
+    "actual_image_version": "20260829.0321.1",
+    "actual_os": "macOS15.7.9/24G830",
+    "actual_toolchain": "Xcode26.3/17C529, simulatorSDK/runtime26.2, arm64"
+  },
+  "cycles": [
+    {
+      "cycle": "ios-readiness-17",
+      "receipt": {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34216788568/native-evidence/ios-readiness-17/receipt.json",
+        "bytes": 334590,
+        "sha256": "a25d6c67dba4d69f92d741089cfbe54f44aa8ae6158c4cd6dbb1a4b13f187512"
+      },
+      "status": "FAIL",
+      "runtime_evidence_status": "FAIL",
+      "provenance_status": "NOT_REACHED_BY_COMPOSITION",
+      "foundation_collection_status": "NOT_RUN",
+      "error": {
+        "type": "TimeoutExpired",
+        "message": "Command '['ps', '-axo', 'pid=,ppid=,pgid=,lstart=,command=']' timed out after 15 seconds"
+      },
+      "xcodebuild": {
+        "started_at": "2026-09-08T10:44:21.019931+00:00",
+        "finished_at": "2026-09-08T10:45:42.398584+00:00",
+        "elapsed_seconds": 81.378653,
+        "exit_code_recorded": false,
+        "exit_code": null,
+        "interrupted_or_failed_recorded": false,
+        "interrupted_or_failed": null
+      },
+      "bootstatus": {
+        "started_at": "2026-09-08T10:43:13.078273+00:00",
+        "finished_at": "2026-09-08T10:44:20.998120+00:00",
+        "elapsed_seconds": 67.919847,
+        "exit_code": 0
+      },
+      "owned_worker_rows": 34,
+      "observed_gradle_build_worker_rows": [],
+      "gradle_stops": [
+        {
+          "label": "stop-xcode-immediate",
+          "exit_code": 0,
+          "at": "2026-09-08T10:46:39.142166+00:00"
+        },
+        {
+          "label": "stop-final",
+          "exit_code": 0,
+          "at": "2026-09-08T10:46:43.675311+00:00"
+        }
+      ],
+      "cleanup": {
+        "cleanup_status": "PASS",
+        "cleanup_errors": [],
+        "owned_device_absent": true,
+        "owned_processes_remaining": [],
+        "unknown_holders": [],
+        "temporary_directory_removed": true,
+        "source_unchanged": true,
+        "controls_unchanged": true,
+        "copied_sources_unchanged": true
+      }
+    },
+    {
+      "cycle": "ios-readiness-18",
+      "receipt": {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34216788568/native-evidence/ios-readiness-18/receipt.json",
+        "bytes": 326168,
+        "sha256": "f89b9a66db4162f8da414f5500f726134bdbdd84790f3fc0a69ada953d4778b8"
+      },
+      "status": "FAIL",
+      "runtime_evidence_status": "FAIL",
+      "provenance_status": "NOT_RUN",
+      "foundation_collection_status": "NOT_APPLICABLE",
+      "error": {
+        "type": "TimeoutExpired",
+        "message": "Command '['ps', '-axo', 'pid=,ppid=,pgid=,lstart=,command=']' timed out after 15 seconds"
+      },
+      "xcodebuild": {
+        "started_at": "2026-09-08T10:48:49.106557+00:00",
+        "finished_at": "2026-09-08T10:50:34.554133+00:00",
+        "elapsed_seconds": 105.447576,
+        "exit_code_recorded": true,
+        "exit_code": -15,
+        "interrupted_or_failed_recorded": true,
+        "interrupted_or_failed": true
+      },
+      "bootstatus": {
+        "started_at": "2026-09-08T10:47:15.363214+00:00",
+        "finished_at": "2026-09-08T10:48:47.704498+00:00",
+        "elapsed_seconds": 92.341284,
+        "exit_code": 0
+      },
+      "owned_worker_rows": 25,
+      "observed_gradle_build_worker_rows": [],
+      "gradle_stops": [
+        {
+          "label": "stop-xcode-immediate",
+          "exit_code": 0,
+          "at": "2026-09-08T10:50:39.697980+00:00"
+        },
+        {
+          "label": "stop-final",
+          "exit_code": 0,
+          "at": "2026-09-08T10:50:48.940361+00:00"
+        }
+      ],
+      "cleanup": {
+        "cleanup_status": "PASS",
+        "cleanup_errors": [],
+        "owned_device_absent": true,
+        "owned_processes_remaining": [],
+        "unknown_holders": [],
+        "temporary_directory_removed": true,
+        "source_unchanged": true,
+        "controls_unchanged": true,
+        "copied_sources_unchanged": true
+      }
+    }
+  ],
+  "inputs": [
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34216788568/run.log",
+      "bytes": 75933,
+      "sha256": "1d37e3fefbe3548007935bf083e228b048cfdb9ba49ba341becf0f5ded204b8d"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34216788568/run.json",
+      "bytes": 12677,
+      "sha256": "ccf41da35a27545b998dc9e2df025eed1ca4c29a99c19afc8d8c84f2da09123b"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34216788568/native-cleanup/parlor-native-34216788568-1-cleanup.json",
+      "bytes": 3182,
+      "sha256": "fbbd6bcbd873405a5918aefba95cfc6580676d7ec9cc4b301e895b13638430c6"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34216788568/native-evidence/continuation.json",
+      "bytes": 17095,
+      "sha256": "91b731ab092e1121d178d623a791db517a6c9efecf337d7a9a474c537b88b9c9"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34216788568/native-evidence/ios-readiness-17/xcodebuild.log",
+      "bytes": 3949,
+      "sha256": "f9f536606fdb451a9201dd8a52e0e5197033ed4d171b19cc7d33eb666fff36f9"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34216788568/native-evidence/ios-readiness-18/xcodebuild.log.gz",
+      "bytes": 35,
+      "sha256": "d52f73c89e90911d562cbbd7330a5772021a61a0d13c0e28bfb123188dc589b4"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34216788568/native-evidence/normal-runner.log",
+      "bytes": 404,
+      "sha256": "d687b9f5863bfdee0644525a7d43022ddeae185cb7e6e58393c01d0e57472091"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/environment-inventory.json",
+      "bytes": 7140,
+      "sha256": "bc80a7b78c14be272311633040bc10ab0720bce185754d8d712837930a5cb6c6"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/environment-continuation-01.json",
+      "bytes": 1717,
+      "sha256": "32668ecd4bfe86762ac0990185b345d8476987f2105ead19a4d1fb5db08d6880"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-16/receipt.json",
+      "bytes": 450903,
+      "sha256": "56094f40132dd9beaeda52fdc737c61c242e897e0356b2722c4b50ad75bbf576"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-run-34216788568-independent-01.json",
+      "bytes": 43971,
+      "sha256": "bd23a666945076731b2df24bc6a5044bce5d70270610ca5662020e0e3000a778"
+    }
+  ],
+  "source_controls": [
+    {
+      "path": "scripts/verification/ios-readiness/owned_lane.py",
+      "bytes": 10446,
+      "sha256": "949091403ac669429f962120e9873a09897a87bdcae10702720ede0c68342f03"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/owned_lane.py",
+      "bytes": 10446,
+      "sha256": "949091403ac669429f962120e9873a09897a87bdcae10702720ede0c68342f03"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/run_ios_readiness.py",
+      "bytes": 72070,
+      "sha256": "fdae88cf835f4b0f5f5271b882641b7284db7ea5e5bdc135870754db7f61fb21"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
+      "bytes": 56256,
+      "sha256": "b9fa9b43ed7a422dd54adbb8b8f14ae313a2aab2f82d081d70dc32b8583af698"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/darwin_owned_processes.py",
+      "bytes": 17128,
+      "sha256": "2f2ad2a5d68cea999709a4c3c3e384cd9e6767258ad34aed4181ee2118962378"
+    },
+    {
+      "path": "scripts/ci/darwin_worker_identity.py",
+      "bytes": 12894,
+      "sha256": "939ac6c98628046f9f45547135cbc439f217403e60c7e4033db5f541ab017ecc"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/l08-functional-companion-clone-manifest-01.json",
+      "bytes": 11870,
+      "sha256": "3036231a1bcfc9d567b8381ee33d89cd381377bea2b10790ddde0f90baf682fb"
+    }
+  ],
+  "verified_findings": [
+    {
+      "id": "PS01",
+      "finding": "Both retained final errors are subprocess.TimeoutExpired for exact ps -axo pid=,ppid=,pgid=,lstart=,command= after15s. This is an ownership-observation failure, not an XCTest assertion or application crash."
+    },
+    {
+      "id": "PS02",
+      "finding": "Canonical and companion owned_lane.snapshot_processes are byte-identical. Each register/refresh/signal-owned uses this global ps command. Both command loops refresh then sleep0.25s; the 15s subprocess budget is distinct from xcodebuild2700s. The unchanged archived DarwinBackend is only called during the later normal external-image observation, which was never reached."
+    },
+    {
+      "id": "PS03",
+      "finding": "A raw xcodebuild output reached initial build graph/clang/swift version and actool asset metadata preparation, ending BUILD INTERRUPTED. No Kotlin phase, application installation, XCTest, Foundation row or functional receipt is present. B compressed raw xcodebuild output decompresses to empty bytes and its retained uncompressed hash is SHA256(empty); exit -15 reflects owned failure cleanup, not an independently observed app crash."
+    },
+    {
+      "id": "PS04",
+      "finding": "Neither final ownership ledger contains a Gradle build daemon/wrapper invocation. A immediate stop downloaded the Gradle8.13 distribution and reported no daemons. B stop likewise reported no daemons. Both configured -Xmx6g, but a launched build JVM is not evidenced before this failure, so blaming its heap for this incident is unsupported."
+    },
+    {
+      "id": "PS05",
+      "finding": "A command row has neither exit_code nor interrupted_or_failed. Source catches BaseException, calls owner.stop, then writes those fields; a fallible stop/ps observation can raise before that assignment and replace the original exception. A owned XcodePID4588 subsequently spawned recorded Xcode/SwiftBuild/actool descendants during later finalization. Final owned stop and cleanup passed, but this missing-field receipt does not identify the first failing call site or prove immediate command retirement."
+    },
+    {
+      "id": "PS06",
+      "finding": "Both canonical final cleanup receipts and outer uploaded-custody cleanup pass; owned devices absent, task workers/unknown holders empty, exact temporary allocations removed, source/controls unchanged. This is cleanup evidence only, not runtime success."
+    }
+  ],
+  "resource_comparison": {
+    "historical_local": {
+      "measured_memsize_bytes": 17179869184,
+      "measured_memsize_gib": 16,
+      "measurement_source": "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/environment-inventory.json",
+      "measurement_at": "2026-09-07T03:27:09.869567+00:00",
+      "cpu_count": "NOT_FOUND_IN_INSPECTED_RETAINED_INVENTORY",
+      "host_os": "macOS26.2/25C56 arm64",
+      "native16_bootstatus_seconds": 33.018456
+    },
+    "hosted": {
+      "actual_cpu_memory_pressure": "NOT_RETAINED; no actual hw.ncpu/hw.memsize/vm_stat/loadavg/swap or per-ps elapsed/partial-output receipt",
+      "published_specification_only": {
+        "cpu": "3 (M1)",
+        "ram": "7 GB",
+        "source_url": "https://github.com/github/docs/blob/062800c32b5d12ccae18d1a4a542e94069d827f8/data/reusables/actions/supported-github-runners.md",
+        "commit": "062800c32b5d12ccae18d1a4a542e94069d827f8",
+        "response_sha256": "ffce1176fb7f6571c2beabacc95ba78600b275152ff92e2c051935583a56070c",
+        "response_bytes": 9435,
+        "lines_78_91": "78:     <tr>\n79:       <td>macOS</td>\n80:       <td>3 (M1)</td>\n81:       <td>7 GB</td>\n82:       <td>14 GB</td>\n83:       <td> arm64 </td>\n84:       <td>\n85:         <code><a href=\"https://github.com/actions/runner-images/blob/main/images/macos/macos-26-arm64-Readme.md\">macos-latest</a></code>,\n86:         <code><a href=\"https://github.com/actions/runner-images/blob/main/images/macos/macos-14-arm64-Readme.md\">macos-14</a></code>,\n87:         <code><a href=\"https://github.com/actions/runner-images/blob/main/images/macos/macos-15-arm64-Readme.md\">macos-15</a></code>,\n88:         <code><a href=\"https://github.com/actions/runner-images/blob/main/images/macos/macos-26-arm64-Readme.md\">macos-26</a></code>,\n89:         <code><a href=\"https://github.com/actions/runner-images/blob/main/images/macos/xcode-27-arm64-Readme.md\">xcode-27</a></code> ({% data variables.release-phases.public_preview_caps %})\n90:       </td>\n91:     </tr>"
+      }
+    },
+    "interpretation": "Hosted bootstatus67.92s/92.34s versus native16 local33.02s establishes slower observed boot completion on different host/OS/runtime, not resource exhaustion, OOM, or a particular ps syscall delay. Published lower capacity makes pressure plausible but is not a measurement of the failed host."
+  },
+  "alternative_review": {
+    "upstream_ps_note": "Read Apple adv_cmds237 at immutable6bed8737a34dbb54782a18f47dccf933a9967a12: ps.c737-738 performs get_task_info per kept row in !PS_ENTITLEMENT_ENFORCED builds; tasks.c includes task_threads. print.c uses KERN_PROCARGS2 for command/comm. Current upstream code is not an attestation of installed /bin/ps or evidence of the blocking syscall. ci_workflow separately owns retained upstream analysis.",
+    "existing_libproc_backend": "scripts/ci/darwin_worker_identity.py has reviewed bounded PROC_UID_ONLY/_basic metadata and separately attested task-name/audit-token/path/argv functionality. It is not a drop-in replacement for the broad old snapshot: PID/PPID/PGID/start/command shape, baseline-other-UID handling, argv[0] matching, live owned ibtoold arguments and PID-disappearance/reuse semantics must be explicitly preserved or made stricter.",
+    "rejected_shortcuts": [
+      "Do not increase timeout, swallow TimeoutExpired, use stale ownership rows to signal, drop missing processes, whitelist only command names, kill by unbound PID/PGID, remove all-user baseline checks, disable strict storage validation, or switch qualified toolchains as an unexplained workaround.",
+      "Changing ps command to comm/-c/ucomm alone does not establish equivalent command-argv ownership and may not avoid unconditional entitled Mach-task collection.",
+      "Simply lowering Xmx cannot be claimed to fix a timeout that preceded any evidenced build JVM.",
+      "Do not edit immutable original canonical/companion owned_lane controls or their clone manifest expectations. Additional behavior belongs in a separately reviewed explicit adapter/composition path."
+    ]
+  },
+  "smallest_safe_recommendation": {
+    "behavioral_fix_supported_now": false,
+    "first_correction": "Preserve command primary exception/call phase before attempted worker cleanup, then independently preserve any cleanup exception while maintaining failure and all finalization steps. Add bounded nonprivate process-observation diagnostics, not acceptance/fallback changes. Original evidence is insufficient to select a changed ownership sampling mechanism.",
+    "discriminating_platform_probe": "After separate source/control review and frozen-source/inventory commit, run one focused source-bound comparison, not an expensive qualification matrix: retain actual CPU/memory/pressure and exact ps binary/toolchain identities; compare existing full ps15s observation versus true bounded public libproc metadata and scoped argv reads before and after one exclusively owned simulator boot. Preserve both outcomes, elapsed time, counts/coverage, failure phase and byte counts without raw unrelated argv/environment. Use current ownership, source binding and exact simulator cleanup; no fallback from a failed original observation can authorize A/B runtime or a process signal. A no-app probe can only discriminate that workload, not prove Xcode-build behavior.",
+    "scope_limits": "If the probe does not reproduce the failure, do not claim a correction. Additional on-failure diagnostics during one reviewed required A/B run may be justified, preserving the 15s fail-closed check; do not blindly rerun both paths unchanged. A bounded native snapshot adapter requires independent tests for completeness, other-UID baseline conflicts, newly detached argv[0]=java workers, fresh ibtoold args, PID/generation drift, permission failures, output ceilings and cleanup paths before adopting it.",
+    "coordinator_note": "Tracked files remain frozen while current candidate/source25b work completes. Any accepted correction requires new source and mechanical inventory commits, fresh preflight/control approval, and fresh C binding evaluation; no existing binding is silently refreshed."
+  },
+  "execution": {
+    "tests": 0,
+    "builds": 0,
+    "native_commands": 0,
+    "workflow_dispatches": 0,
+    "commits": 0,
+    "source_edits": 0,
+    "performed": [
+      "Read retained raw native logs/receipts and current source",
+      "Read old environment inventory and native16 command timing",
+      "Read-only GitHub upstream source/document queries",
+      "Write this one new untracked diagnosis"
+    ]
+  },
+  "cleanup": "No build/runtime/simulator workers or generated build outputs created by this investigation. Original native failures, cleanup receipts and all existing source/evidence remain untouched.",
+  "verdict": "Native17/18 remain FAIL before application runtime. A functional/recovery/strict-protection and B actual libproc provenance remain unexecuted by these runs. Root cause of slow/incomplete ps is unresolved; no Apple runtime, physical-device, Store, owner/legal or release-readiness success claimed."
+}

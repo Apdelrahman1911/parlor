@@ -1,0 +1,72 @@
+2111:             {
+2112:                 Name = "CODE_SIGNING_ALLOWED";
+2113:                 Type = bool;
+2114:                 DefaultValue = NO;
+2115:             },
+2116:             {
+2117:                 Name = "CODE_SIGN_IDENTITY";
+2118:                 Type = CodeSignIdentity;
+2119:                 Category = "Code Signing";
+2120:                 ConditionFlavors = (
+2121:                     sdk,
+2122:                 );
+2123:                 DefaultValue = "";
+2124:             },
+2125:             {   Name = "CODE_SIGN_STYLE";
+2126:                 DisplayName = "Code Sign Style";
+2127:                 Type = CodeSignStyle;
+2128:                 Category = "Code Signing";
+2129:                 ConditionFlavors = (
+2130:                     sdk,
+2131:                 );
+2132:                 Values = (
+2133:                     "",
+2134:                     "Automatic",
+2135:                     "Manual"
+2136:                 );
+2137:                 DefaultValue = "";
+2138:             },
+2139:             {
+2140:                 Name = "DEVELOPMENT_TEAM";
+2141:                 DisplayName = "Development Team";
+2142:                 Type = DevelopmentTeam;
+2143:                 Category = "Code Signing";
+2144:                 ConditionFlavors = (
+2145:                     sdk,
+2146:                 );
+2147:                 DefaultValue = "";
+2148:             },
+2149:             {
+2150:                 Name = "PROVISIONING_PROFILE_SPECIFIER";
+2151:                 DisplayName = "Provisioning Profile";
+2152:                 Type = ProvisioningProfileSpecifier;
+2153:                 Category = "Code Signing";
+2154:                 ConditionFlavors = (
+2155:                     sdk,
+2156:                 );
+2157:                 DefaultValue = "";
+2158:             },
+2159:             {
+2160:                 Name = "OTHER_CODE_SIGN_FLAGS";
+2161:                 Type = StringList;
+2162:                 Category = "Code Signing";
+2163:                 ConditionFlavors = (
+2164:                     sdk,
+2165:                 );
+2166:                 DefaultValue = "";
+2167:             },
+2168:             {
+2169:                 Name = "CODE_SIGN_ENTITLEMENTS";
+2170:                 Type = Path;
+2171:                 ConditionFlavors = (
+2172:                     sdk,
+2173:                 );
+2174:                 DefaultValue = "";
+2175:                 Category = "Code Signing";
+2176:             },
+2177:             {
+2178:                 Name = "CODE_SIGN_INJECT_BASE_ENTITLEMENTS";
+2179:                 Type = Boolean;
+2180:                 DefaultValue = YES;
+2181:                 Category = "Code Signing";
+2182:             },

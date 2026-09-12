@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-09-06T02:21:50.426594+00:00",
+  "recorder": "/root",
+  "capture_method": "Explicit later transcription of actual exec_command tool result be4531 in this turn; not a fabricated lane receipt and no recorder rerun.",
+  "actual_invocation": {
+    "cwd": "/Users/abdelrahman/Projects/parlor",
+    "command": "shasum -a 256 remediation-runs/2026-09-05-confirmed-fixes/final/FINALIZATION.md remediation-runs/2026-09-05-confirmed-fixes/release_fix_review/final-report-continuation-review-03.json remediation-runs/2026-09-05-confirmed-fixes/record_final_observation_v2.py; /usr/bin/python3 -B remediation-runs/2026-09-05-confirmed-fixes/record_final_observation_v2.py",
+    "tool_chunk_id": "be4531",
+    "exit_code": 0,
+    "wall_time_seconds": 0.434549792,
+    "tool_output": "991056ced3962cc893b5b10f48622944a1db55699d1e641861814ba3d8e495bf  remediation-runs/2026-09-05-confirmed-fixes/final/FINALIZATION.md\n43866cabd6e8c1ee6b3cd4f972af573946e59dd7fe7b2fc80284648c4435dcb4  remediation-runs/2026-09-05-confirmed-fixes/release_fix_review/final-report-continuation-review-03.json\nf5dabf6f162f4b4e359e928a5b371a6f42e1e1420c1c357b738707fc1753533d  remediation-runs/2026-09-05-confirmed-fixes/record_final_observation_v2.py\n{\n  \"status\": \"PASS\",\n  \"observation\": {\n    \"path\": \"remediation-runs/2026-09-05-confirmed-fixes/final/final-observation.json\",\n    \"sha256\": \"1dc184c09e6b5ee74387844cb1fd7273acc327684a96e812f499c0e7af566119\"\n  },\n  \"checks\": {\n    \"head_unchanged\": true,\n    \"branch_unchanged\": true,\n    \"refs_unchanged\": true,\n    \"stash_unchanged\": true,\n    \"index_empty\": true,\n    \"all_original_files_present\": true,\n    \"all_preexisting_untracked_unchanged\": true\n  },\n  \"cleanup_verdict\": \"PASS\",\n  \"remaining_outputs\": [],\n  \"historical_cleanup_evidence_complete\": false,\n  \"observed_workers\": []\n}\n",
+    "tool_output_sha256": "cbc18823b8ccde94114a766564bca336974b687fe7459374e69de8025ac83c82",
+    "before_recorder_sha256_from_actual_output": "f5dabf6f162f4b4e359e928a5b371a6f42e1e1420c1c357b738707fc1753533d",
+    "output_and_exit_source": "Actual tool output and tool return metadata; shell stdout/stderr not claimed separately."
+  },
+  "observation": {
+    "path": "remediation-runs/2026-09-05-confirmed-fixes/final/final-observation.json",
+    "sha256": "1dc184c09e6b5ee74387844cb1fd7273acc327684a96e812f499c0e7af566119"
+  },
+  "observation_recorded_at": "2026-09-06T02:17:24.537745+00:00",
+  "later_current_control_check": {
+    "observed_at": "2026-09-06T02:21:50.426594+00:00",
+    "recorder": {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/record_final_observation_v2.py",
+      "sha256": "f5dabf6f162f4b4e359e928a5b371a6f42e1e1420c1c357b738707fc1753533d"
+    }
+  },
+  "limitations": [
+    "No independent immediate post-process control hash or separate shell start/end timestamps were captured; these are not backfilled. The later control check is explicitly timestamped.",
+    "The immutable observation itself includes the recorder hash sampled during recording, finished-cycle cleanup evidence, and point-in-time output/process checks.",
+    "This transcription is supplementary execution evidence, not another test run, build, independent observation approval or claim of whole-project readiness."
+  ],
+  "task_owned_processes_or_outputs_created": "Only this short-lived -B Python evidence writer and this required JSON; no Gradle/native/simulator/build process or disposable build artifact."
+}

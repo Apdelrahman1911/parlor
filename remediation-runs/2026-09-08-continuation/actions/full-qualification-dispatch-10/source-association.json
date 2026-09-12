@@ -1,0 +1,27 @@
+{
+  "kind": "PREPARED_NOT_DISPATCHED_AWAITING_H03_ACTUAL_AND_STABLE_SOURCE",
+  "recorded_at": "2026-09-11T13:55:30.659059+00:00",
+  "source_sha": "25cd7f57b031bebdcfb4931615782b906610703f",
+  "tree": "1e44e982216bfc4fda32dc370a0d1b3d77fee836",
+  "source_commit": "3fa4ef1e3f398124846b29d0b5c1a52341ea9d96",
+  "request_sha256": "3dd1dddcbb29067f428624b5d232aa0f83651f740b77eae380be886c3f40a62f",
+  "controls_document_sha256": "dc9a1e791a8cff4da05c9be5caf93b725af59a49c2ba840d2f5a80b54a8d749a",
+  "source_freeze_receipt": "remediation-runs/2026-09-08-continuation/actions/protection-host-image-03/source-freeze-receipt.json",
+  "source_freeze_receipt_sha256": "e5c2ce9dbb6b65622e468d31a11bf86302d7b496e392c69c5fa18e167914e269",
+  "source_reviews": [
+    "reviews/protection-host-error-chain-native-source-independent-01.json",
+    "reviews/protection-host-error-chain-driver-controls-independent-01.json"
+  ],
+  "focused_controls_receipts": [
+    "remediation-runs/2026-09-07-local-readiness/evidence/continuation-protection-error-chain-controls-02/receipt.json"
+  ],
+  "previous_successful_full": {
+    "run_id": 34561630512,
+    "source": "d3c0df9ccba51463708728c3c618d3652e76aafa",
+    "aggregate_review": "reviews/full-d09-aggregate-actual-independent-01.json",
+    "aggregate_review_sha256": "53ec6e0136a2dd161b3e0c90eba9ac734fe1edabf74b27669ec4f6261dcc9acb",
+    "applicability": "Original candidate only; not this changed diagnostic source"
+  },
+  "requires": "No POST before H03 run34606946362 actual output and cleanup reviewed, source remains stable, and separate full admission. Immediately recheck exact local/remote/source/control/inventory equality and no active qualification/legacy group run. Full ignores frozen_source_sha; bind actual API/job/checkout to this source. All6 mandatory jobs+cleanup pass together in attempt1; focused probe skipped; no stitching.",
+  "strict_protection": "A37_0_PASS_26_FAIL_UNCHANGED_NOT_A_SUBSTITUTE_FOR_STRICT_PASS"
+}

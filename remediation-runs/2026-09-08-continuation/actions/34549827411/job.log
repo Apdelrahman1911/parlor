@@ -1,0 +1,481 @@
+﻿2026-09-11T01:14:08.3743870Z Current runner version: '2.337.0'
+2026-09-11T01:14:08.3765190Z ##[group]Runner Image Provisioner
+2026-09-11T01:14:08.3765780Z Hosted Compute Agent
+2026-09-11T01:14:08.3766170Z Version: 20260828.587
+2026-09-11T01:14:08.3766620Z Commit: abac92662cab4cc7352de4f9f9d2e2419aad9c29
+2026-09-11T01:14:08.3767160Z Build Date: 2026-08-28T16:44:25Z
+2026-09-11T01:14:08.3767600Z Worker ID: {036c389d-c507-4f1e-905c-13a12fa48953}
+2026-09-11T01:14:08.3768060Z Azure Region: westus
+2026-09-11T01:14:08.3768510Z ##[endgroup]
+2026-09-11T01:14:08.3769520Z ##[group]Operating System
+2026-09-11T01:14:08.3769890Z macOS
+2026-09-11T01:14:08.3770200Z 15.7.9
+2026-09-11T01:14:08.3770520Z 24G830
+2026-09-11T01:14:08.3770890Z ##[endgroup]
+2026-09-11T01:14:08.3771290Z ##[group]Runner Image
+2026-09-11T01:14:08.3771650Z Image: macos-15-arm64
+2026-09-11T01:14:08.3772010Z Version: 20260907.0337.1
+2026-09-11T01:14:08.3773630Z Included Software: https://github.com/actions/runner-images/blob/macos-15-arm64/20260907.0337/images/macos/macos-15-arm64-Readme.md
+2026-09-11T01:14:08.3774770Z Image Release: https://github.com/actions/runner-images/releases/tag/macos-15-arm64%2F20260907.0337
+2026-09-11T01:14:08.3775420Z ##[endgroup]
+2026-09-11T01:14:08.3776140Z ##[group]GITHUB_TOKEN Permissions
+2026-09-11T01:14:08.3777380Z Contents: read
+2026-09-11T01:14:08.3778400Z Metadata: read
+2026-09-11T01:14:08.3779630Z ##[endgroup]
+2026-09-11T01:14:08.3781340Z Secret source: Actions
+2026-09-11T01:14:08.3781920Z Cache mode: write
+2026-09-11T01:14:08.3782490Z Prepare workflow directory
+2026-09-11T01:14:08.4299190Z Prepare all required actions
+2026-09-11T01:14:08.4341200Z Getting action download info
+2026-09-11T01:14:08.8615760Z Download action repository 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+2026-09-11T01:14:09.3091290Z Download action repository 'actions/setup-java@03ad4de0992f5dab5e18fcb136590ce7c4a0ac95' (SHA:03ad4de0992f5dab5e18fcb136590ce7c4a0ac95)
+2026-09-11T01:14:09.9274230Z Download action repository 'actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a' (SHA:043fb46d1a93c77aae656e7c1c64a875d1fc6a0a)
+2026-09-11T01:14:10.1873050Z Complete job name: iOS strict protection diagnostic
+2026-09-11T01:14:10.2651320Z ##[group]Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+2026-09-11T01:14:10.2652490Z with:
+2026-09-11T01:14:10.2653080Z   fetch-depth: 0
+2026-09-11T01:14:10.2653630Z   persist-credentials: false
+2026-09-11T01:14:10.2654290Z   repository: Apdelrahman1911/parlor
+2026-09-11T01:14:10.2662620Z   token: ***
+2026-09-11T01:14:10.2664090Z   ssh-strict: true
+2026-09-11T01:14:10.2665700Z   ssh-user: git
+2026-09-11T01:14:10.2666310Z   clean: true
+2026-09-11T01:14:10.2666870Z   sparse-checkout-cone-mode: true
+2026-09-11T01:14:10.2668390Z   fetch-tags: false
+2026-09-11T01:14:10.2669040Z   show-progress: true
+2026-09-11T01:14:10.2669590Z   lfs: false
+2026-09-11T01:14:10.2670110Z   submodules: false
+2026-09-11T01:14:10.2670750Z   set-safe-directory: true
+2026-09-11T01:14:10.2671780Z   allow-unsafe-pr-checkout: false
+2026-09-11T01:14:10.2673160Z env:
+2026-09-11T01:14:10.2674100Z   GRADLE_OPTS: -Dorg.gradle.project.kotlin.compiler.execution.strategy=in-process
+2026-09-11T01:14:10.2675440Z   DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
+2026-09-11T01:14:10.2676350Z   PARLOR_DISPATCH_SCOPE: ios-protection-probe
+2026-09-11T01:14:10.2677110Z   PARLOR_PROTECTION_SELECTION: paired
+2026-09-11T01:14:10.2677940Z   PARLOR_FROZEN_SOURCE_SHA: 1c3c33fe1891c1a143aaf8a1298abd0da052b085
+2026-09-11T01:14:10.2679700Z   PARLOR_APPROVED_PROBE_CONTROL_SHA256: f5221b88d322b1e277e3973e8f8638c924e7856b8abd87d0fe050521253d2749
+2026-09-11T01:14:10.2680940Z ##[endgroup]
+2026-09-11T01:14:10.7494820Z Syncing repository: Apdelrahman1911/parlor
+2026-09-11T01:14:10.7497050Z ##[group]Getting Git version info
+2026-09-11T01:14:10.7497870Z Working directory is '/Users/runner/work/parlor/parlor'
+2026-09-11T01:14:10.7500150Z [command]/opt/homebrew/bin/git version
+2026-09-11T01:14:10.8214120Z git version 2.55.0
+2026-09-11T01:14:10.8227100Z ##[endgroup]
+2026-09-11T01:14:10.8238880Z Copying '/Users/runner/.gitconfig' to '/Users/runner/work/_temp/35b2e0c5-078c-4c7f-b910-cc8585defb36/.gitconfig'
+2026-09-11T01:14:10.8245210Z Temporarily overriding HOME='/Users/runner/work/_temp/35b2e0c5-078c-4c7f-b910-cc8585defb36' before making global git config changes
+2026-09-11T01:14:10.8249960Z Adding repository directory to the temporary git global config as a safe directory
+2026-09-11T01:14:10.8253660Z [command]/opt/homebrew/bin/git config --global --add safe.directory /Users/runner/work/parlor/parlor
+2026-09-11T01:14:10.8370740Z Deleting the contents of '/Users/runner/work/parlor/parlor'
+2026-09-11T01:14:10.8374390Z ##[group]Determining repository object format
+2026-09-11T01:14:10.8377200Z ##[endgroup]
+2026-09-11T01:14:10.8379390Z ##[group]Initializing the repository
+2026-09-11T01:14:10.8381750Z [command]/opt/homebrew/bin/git init /Users/runner/work/parlor/parlor
+2026-09-11T01:14:10.8789090Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-09-11T01:14:10.8790570Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-09-11T01:14:10.8791830Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-09-11T01:14:10.8792760Z hint: call:
+2026-09-11T01:14:10.8793270Z hint:
+2026-09-11T01:14:10.8793900Z hint: 	git config --global init.defaultBranch <name>
+2026-09-11T01:14:10.8794650Z hint:
+2026-09-11T01:14:10.8795350Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-09-11T01:14:10.8796500Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-09-11T01:14:10.8797400Z hint:
+2026-09-11T01:14:10.8797920Z hint: 	git branch -m <name>
+2026-09-11T01:14:10.8798510Z hint:
+2026-09-11T01:14:10.8799330Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-09-11T01:14:10.8800550Z Initialized empty Git repository in /Users/runner/work/parlor/parlor/.git/
+2026-09-11T01:14:10.8803000Z [command]/opt/homebrew/bin/git remote add origin https://github.com/Apdelrahman1911/parlor
+2026-09-11T01:14:10.8890840Z ##[endgroup]
+2026-09-11T01:14:10.8892820Z ##[group]Disabling automatic garbage collection
+2026-09-11T01:14:10.8895780Z [command]/opt/homebrew/bin/git config --local gc.auto 0
+2026-09-11T01:14:10.8968980Z ##[endgroup]
+2026-09-11T01:14:10.8971380Z ##[group]Setting up auth
+2026-09-11T01:14:10.8973190Z Removing SSH command configuration
+2026-09-11T01:14:10.8975780Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-09-11T01:14:10.9044410Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-09-11T01:14:11.0036590Z Removing HTTP extra header
+2026-09-11T01:14:11.0042020Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-09-11T01:14:11.0127920Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-09-11T01:14:11.1048220Z Removing includeIf entries pointing to credentials config files
+2026-09-11T01:14:11.1051510Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-09-11T01:14:11.1327720Z [command]/opt/homebrew/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-09-11T01:14:11.2359270Z [command]/opt/homebrew/bin/git config --file /Users/runner/work/_temp/git-credentials-ddb44222-c846-4b51-bdcb-0dde1b5ea66c.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-09-11T01:14:11.2440710Z [command]/opt/homebrew/bin/git config --local includeIf.gitdir:/Users/runner/work/parlor/parlor/.git.path /Users/runner/work/_temp/git-credentials-ddb44222-c846-4b51-bdcb-0dde1b5ea66c.config
+2026-09-11T01:14:11.2514490Z [command]/opt/homebrew/bin/git config --local includeIf.gitdir:/Users/runner/work/parlor/parlor/.git/worktrees/*.path /Users/runner/work/_temp/git-credentials-ddb44222-c846-4b51-bdcb-0dde1b5ea66c.config
+2026-09-11T01:14:11.2592290Z [command]/opt/homebrew/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-ddb44222-c846-4b51-bdcb-0dde1b5ea66c.config
+2026-09-11T01:14:11.2669780Z [command]/opt/homebrew/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-ddb44222-c846-4b51-bdcb-0dde1b5ea66c.config
+2026-09-11T01:14:11.2763500Z ##[endgroup]
+2026-09-11T01:14:11.2764740Z ##[group]Fetching the repository
+2026-09-11T01:14:11.2767280Z [command]/opt/homebrew/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules origin +refs/heads/*:refs/remotes/origin/* +refs/tags/*:refs/tags/*
+2026-09-11T01:14:17.7972420Z From https://github.com/Apdelrahman1911/parlor
+2026-09-11T01:14:17.7973520Z  * [new branch]        codex/parlor-fr-remediation -> origin/codex/parlor-fr-remediation
+2026-09-11T01:14:17.7974250Z  * [new branch]        codex/parlor-independent-review-9cd4040 -> origin/codex/parlor-independent-review-9cd4040
+2026-09-11T01:14:17.7975000Z  * [new branch]        dependabot/github_actions/ci-actions-6bc1927ba3 -> origin/dependabot/github_actions/ci-actions-6bc1927ba3
+2026-09-11T01:14:17.7975680Z  * [new branch]        fix/issue-103 -> origin/fix/issue-103
+2026-09-11T01:14:17.7976220Z  * [new branch]        fix/issue-72  -> origin/fix/issue-72
+2026-09-11T01:14:17.7976650Z  * [new branch]        fix/issue-73  -> origin/fix/issue-73
+2026-09-11T01:14:17.7977180Z  * [new branch]        fix/local-readiness-2026-09-07 -> origin/fix/local-readiness-2026-09-07
+2026-09-11T01:14:17.7978030Z  * [new branch]        mafia/module-and-platform-updates -> origin/mafia/module-and-platform-updates
+2026-09-11T01:14:17.7997050Z  * [new branch]        main          -> origin/main
+2026-09-11T01:14:17.7997560Z  * [new branch]        release       -> origin/release
+2026-09-11T01:14:17.7997940Z  * [new branch]        testing       -> origin/testing
+2026-09-11T01:14:17.8001380Z  * [new branch]        whodunit/round-config-and-clue-pool -> origin/whodunit/round-config-and-clue-pool
+2026-09-11T01:14:17.8003030Z [command]/opt/homebrew/bin/git branch --list --remote origin/fix/local-readiness-2026-09-07
+2026-09-11T01:14:17.8090250Z   origin/fix/local-readiness-2026-09-07
+2026-09-11T01:14:17.8099120Z [command]/opt/homebrew/bin/git rev-parse refs/remotes/origin/fix/local-readiness-2026-09-07
+2026-09-11T01:14:17.8173960Z 1c3c33fe1891c1a143aaf8a1298abd0da052b085
+2026-09-11T01:14:17.8177830Z ##[endgroup]
+2026-09-11T01:14:17.8178370Z ##[group]Determining the checkout info
+2026-09-11T01:14:17.8179880Z ##[endgroup]
+2026-09-11T01:14:17.8189830Z [command]/opt/homebrew/bin/git sparse-checkout disable
+2026-09-11T01:14:17.8309480Z [command]/opt/homebrew/bin/git config --local --unset-all extensions.worktreeConfig
+2026-09-11T01:14:17.8391780Z ##[group]Checking out the ref
+2026-09-11T01:14:17.8396260Z [command]/opt/homebrew/bin/git checkout --progress --force -B fix/local-readiness-2026-09-07 refs/remotes/origin/fix/local-readiness-2026-09-07
+2026-09-11T01:14:19.0096960Z Updating files:  10% (3126/30053)
+2026-09-11T01:14:19.1369810Z Updating files:  11% (3306/30053)
+2026-09-11T01:14:19.2272840Z Updating files:  12% (3607/30053)
+2026-09-11T01:14:19.3192850Z Updating files:  13% (3907/30053)
+2026-09-11T01:14:19.4515750Z Updating files:  14% (4208/30053)
+2026-09-11T01:14:19.5997830Z Updating files:  15% (4508/30053)
+2026-09-11T01:14:19.6700740Z Updating files:  16% (4809/30053)
+2026-09-11T01:14:19.7887940Z Updating files:  17% (5110/30053)
+2026-09-11T01:14:19.8715160Z Updating files:  18% (5410/30053)
+2026-09-11T01:14:19.8952130Z Updating files:  19% (5711/30053)
+2026-09-11T01:14:19.9451160Z Updating files:  19% (5836/30053)
+2026-09-11T01:14:20.0700600Z Updating files:  20% (6011/30053)
+2026-09-11T01:14:20.1717790Z Updating files:  21% (6312/30053)
+2026-09-11T01:14:20.2612060Z Updating files:  22% (6612/30053)
+2026-09-11T01:14:20.3238870Z Updating files:  23% (6913/30053)
+2026-09-11T01:14:20.4264690Z Updating files:  24% (7213/30053)
+2026-09-11T01:14:20.5676700Z Updating files:  25% (7514/30053)
+2026-09-11T01:14:20.6285490Z Updating files:  26% (7814/30053)
+2026-09-11T01:14:20.6960700Z Updating files:  27% (8115/30053)
+2026-09-11T01:14:20.7784830Z Updating files:  28% (8415/30053)
+2026-09-11T01:14:20.8342450Z Updating files:  29% (8716/30053)
+2026-09-11T01:14:20.8881440Z Updating files:  30% (9016/30053)
+2026-09-11T01:14:20.9173460Z Updating files:  30% (9193/30053)
+2026-09-11T01:14:20.9977320Z Updating files:  31% (9317/30053)
+2026-09-11T01:14:21.0995190Z Updating files:  32% (9617/30053)
+2026-09-11T01:14:21.1501450Z Updating files:  33% (9918/30053)
+2026-09-11T01:14:21.2184520Z Updating files:  34% (10219/30053)
+2026-09-11T01:14:21.2964160Z Updating files:  35% (10519/30053)
+2026-09-11T01:14:21.3724480Z Updating files:  36% (10820/30053)
+2026-09-11T01:14:21.4471260Z Updating files:  37% (11120/30053)
+2026-09-11T01:14:21.5388770Z Updating files:  38% (11421/30053)
+2026-09-11T01:14:21.6082130Z Updating files:  39% (11721/30053)
+2026-09-11T01:14:21.6829730Z Updating files:  40% (12022/30053)
+2026-09-11T01:14:21.7569110Z Updating files:  41% (12322/30053)
+2026-09-11T01:14:21.8323580Z Updating files:  42% (12623/30053)
+2026-09-11T01:14:21.8901470Z Updating files:  43% (12923/30053)
+2026-09-11T01:14:21.9122250Z Updating files:  43% (13095/30053)
+2026-09-11T01:14:22.0221870Z Updating files:  44% (13224/30053)
+2026-09-11T01:14:22.1019510Z Updating files:  45% (13524/30053)
+2026-09-11T01:14:22.1867180Z Updating files:  46% (13825/30053)
+2026-09-11T01:14:22.2712820Z Updating files:  47% (14125/30053)
+2026-09-11T01:14:22.3472820Z Updating files:  48% (14426/30053)
+2026-09-11T01:14:22.4227840Z Updating files:  49% (14726/30053)
+2026-09-11T01:14:22.5869760Z Updating files:  50% (15027/30053)
+2026-09-11T01:14:22.6720770Z Updating files:  51% (15328/30053)
+2026-09-11T01:14:22.7617430Z Updating files:  52% (15628/30053)
+2026-09-11T01:14:22.8221780Z Updating files:  53% (15929/30053)
+2026-09-11T01:14:22.8935690Z Updating files:  54% (16229/30053)
+2026-09-11T01:14:22.9066060Z Updating files:  54% (16492/30053)
+2026-09-11T01:14:22.9952200Z Updating files:  55% (16530/30053)
+2026-09-11T01:14:23.0716420Z Updating files:  56% (16830/30053)
+2026-09-11T01:14:23.1403560Z Updating files:  57% (17131/30053)
+2026-09-11T01:14:23.2468740Z Updating files:  58% (17431/30053)
+2026-09-11T01:14:23.3193940Z Updating files:  59% (17732/30053)
+2026-09-11T01:14:23.3815830Z Updating files:  60% (18032/30053)
+2026-09-11T01:14:23.4700010Z Updating files:  61% (18333/30053)
+2026-09-11T01:14:23.5304910Z Updating files:  62% (18633/30053)
+2026-09-11T01:14:23.6104750Z Updating files:  63% (18934/30053)
+2026-09-11T01:14:23.6711350Z Updating files:  64% (19234/30053)
+2026-09-11T01:14:23.7315000Z Updating files:  65% (19535/30053)
+2026-09-11T01:14:23.8016080Z Updating files:  66% (19835/30053)
+2026-09-11T01:14:23.8869210Z Updating files:  67% (20136/30053)
+2026-09-11T01:14:23.8891070Z Updating files:  68% (20437/30053)
+2026-09-11T01:14:24.0556990Z Updating files:  68% (20443/30053)
+2026-09-11T01:14:24.1024900Z Updating files:  69% (20737/30053)
+2026-09-11T01:14:24.1912060Z Updating files:  70% (21038/30053)
+2026-09-11T01:14:24.2788130Z Updating files:  71% (21338/30053)
+2026-09-11T01:14:24.3936390Z Updating files:  72% (21639/30053)
+2026-09-11T01:14:24.4890870Z Updating files:  73% (21939/30053)
+2026-09-11T01:14:24.5453110Z Updating files:  74% (22240/30053)
+2026-09-11T01:14:24.6207920Z Updating files:  75% (22540/30053)
+2026-09-11T01:14:24.8633380Z Updating files:  76% (22841/30053)
+2026-09-11T01:14:24.8905000Z Updating files:  77% (23141/30053)
+2026-09-11T01:14:24.9887090Z Updating files:  77% (23251/30053)
+2026-09-11T01:14:25.0650820Z Updating files:  78% (23442/30053)
+2026-09-11T01:14:25.1885960Z Updating files:  79% (23742/30053)
+2026-09-11T01:14:25.3477140Z Updating files:  80% (24043/30053)
+2026-09-11T01:14:25.4149590Z Updating files:  81% (24343/30053)
+2026-09-11T01:14:25.4466310Z Updating files:  82% (24644/30053)
+2026-09-11T01:14:25.4930630Z Updating files:  83% (24944/30053)
+2026-09-11T01:14:25.5481170Z Updating files:  84% (25245/30053)
+2026-09-11T01:14:25.7585090Z Updating files:  85% (25546/30053)
+2026-09-11T01:14:25.8175830Z Updating files:  86% (25846/30053)
+2026-09-11T01:14:25.8903190Z Updating files:  87% (26147/30053)
+2026-09-11T01:14:25.9072790Z Updating files:  87% (26299/30053)
+2026-09-11T01:14:25.9490520Z Updating files:  88% (26447/30053)
+2026-09-11T01:14:26.0134190Z Updating files:  89% (26748/30053)
+2026-09-11T01:14:26.0636160Z Updating files:  90% (27048/30053)
+2026-09-11T01:14:26.2856260Z Updating files:  91% (27349/30053)
+2026-09-11T01:14:26.4193180Z Updating files:  92% (27649/30053)
+2026-09-11T01:14:26.4749680Z Updating files:  93% (27950/30053)
+2026-09-11T01:14:26.5488510Z Updating files:  94% (28250/30053)
+2026-09-11T01:14:26.6164370Z Updating files:  95% (28551/30053)
+2026-09-11T01:14:26.7300190Z Updating files:  96% (28851/30053)
+2026-09-11T01:14:26.8360790Z Updating files:  97% (29152/30053)
+2026-09-11T01:14:26.8877620Z Updating files:  98% (29452/30053)
+2026-09-11T01:14:26.9330730Z Updating files:  98% (29601/30053)
+2026-09-11T01:14:27.0359450Z Updating files:  99% (29753/30053)
+2026-09-11T01:14:27.0360430Z Updating files: 100% (30053/30053)
+2026-09-11T01:14:27.0361240Z Updating files: 100% (30053/30053), done.
+2026-09-11T01:14:27.1014790Z Switched to a new branch 'fix/local-readiness-2026-09-07'
+2026-09-11T01:14:27.1021370Z branch 'fix/local-readiness-2026-09-07' set up to track 'origin/fix/local-readiness-2026-09-07'.
+2026-09-11T01:14:27.1222860Z ##[endgroup]
+2026-09-11T01:14:27.1430510Z [command]/opt/homebrew/bin/git log -1 --format=%H
+2026-09-11T01:14:27.1532630Z 1c3c33fe1891c1a143aaf8a1298abd0da052b085
+2026-09-11T01:14:27.1544660Z ##[group]Removing auth
+2026-09-11T01:14:27.1545260Z Removing SSH command configuration
+2026-09-11T01:14:27.1549320Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-09-11T01:14:27.1635830Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-09-11T01:14:27.3064540Z Removing HTTP extra header
+2026-09-11T01:14:27.3069750Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-09-11T01:14:27.3197220Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-09-11T01:14:27.5542030Z Removing includeIf entries pointing to credentials config files
+2026-09-11T01:14:27.5642400Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-09-11T01:14:27.5739520Z includeif.gitdir:/Users/runner/work/parlor/parlor/.git.path
+2026-09-11T01:14:27.5763090Z includeif.gitdir:/Users/runner/work/parlor/parlor/.git/worktrees/*.path
+2026-09-11T01:14:27.5803850Z includeif.gitdir:/github/workspace/.git.path
+2026-09-11T01:14:27.5837140Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-09-11T01:14:27.5838720Z [command]/opt/homebrew/bin/git config --local --get-all includeif.gitdir:/Users/runner/work/parlor/parlor/.git.path
+2026-09-11T01:14:27.5839500Z /Users/runner/work/_temp/git-credentials-ddb44222-c846-4b51-bdcb-0dde1b5ea66c.config
+2026-09-11T01:14:27.5841020Z [command]/opt/homebrew/bin/git config --local --unset includeif.gitdir:/Users/runner/work/parlor/parlor/.git.path \/Users\/runner\/work\/_temp\/git\-credentials\-ddb44222\-c846\-4b51\-bdcb\-0dde1b5ea66c\.config
+2026-09-11T01:14:27.5842800Z [command]/opt/homebrew/bin/git config --local --get-all includeif.gitdir:/Users/runner/work/parlor/parlor/.git/worktrees/*.path
+2026-09-11T01:14:27.5847500Z /Users/runner/work/_temp/git-credentials-ddb44222-c846-4b51-bdcb-0dde1b5ea66c.config
+2026-09-11T01:14:27.5850020Z [command]/opt/homebrew/bin/git config --local --unset includeif.gitdir:/Users/runner/work/parlor/parlor/.git/worktrees/*.path \/Users\/runner\/work\/_temp\/git\-credentials\-ddb44222\-c846\-4b51\-bdcb\-0dde1b5ea66c\.config
+2026-09-11T01:14:27.5851640Z [command]/opt/homebrew/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+2026-09-11T01:14:27.5893310Z /github/runner_temp/git-credentials-ddb44222-c846-4b51-bdcb-0dde1b5ea66c.config
+2026-09-11T01:14:27.5973880Z [command]/opt/homebrew/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-ddb44222\-c846\-4b51\-bdcb\-0dde1b5ea66c\.config
+2026-09-11T01:14:27.6020070Z [command]/opt/homebrew/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-09-11T01:14:27.6085110Z /github/runner_temp/git-credentials-ddb44222-c846-4b51-bdcb-0dde1b5ea66c.config
+2026-09-11T01:14:27.6094390Z [command]/opt/homebrew/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-ddb44222\-c846\-4b51\-bdcb\-0dde1b5ea66c\.config
+2026-09-11T01:14:27.6257720Z [command]/opt/homebrew/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-09-11T01:14:27.7515740Z Removing credentials config '/Users/runner/work/_temp/git-credentials-ddb44222-c846-4b51-bdcb-0dde1b5ea66c.config'
+2026-09-11T01:14:27.7530710Z ##[endgroup]
+2026-09-11T01:14:27.7986010Z ##[group]Run actions/setup-java@03ad4de0992f5dab5e18fcb136590ce7c4a0ac95
+2026-09-11T01:14:27.7986370Z with:
+2026-09-11T01:14:27.7986510Z   distribution: temurin
+2026-09-11T01:14:27.7986670Z   java-version: 21
+2026-09-11T01:14:27.7986860Z   check-latest: false
+2026-09-11T01:14:27.7987020Z   java-package: jdk
+2026-09-11T01:14:27.7987160Z   set-default: true
+2026-09-11T01:14:27.7987350Z   verify-signature: false
+2026-09-11T01:14:27.7987530Z   server-id: github
+2026-09-11T01:14:27.7987730Z   server-username: GITHUB_ACTOR
+2026-09-11T01:14:27.7987920Z   server-password: GITHUB_TOKEN
+2026-09-11T01:14:27.7988100Z   overwrite-settings: true
+2026-09-11T01:14:27.7988260Z   job-status: success
+2026-09-11T01:14:27.7990630Z   token: ***
+2026-09-11T01:14:27.7990900Z   show-download-progress: false
+2026-09-11T01:14:27.7991140Z env:
+2026-09-11T01:14:27.7991410Z   GRADLE_OPTS: -Dorg.gradle.project.kotlin.compiler.execution.strategy=in-process
+2026-09-11T01:14:27.7991900Z   DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
+2026-09-11T01:14:27.7992250Z   PARLOR_DISPATCH_SCOPE: ios-protection-probe
+2026-09-11T01:14:27.7992530Z   PARLOR_PROTECTION_SELECTION: paired
+2026-09-11T01:14:27.7992840Z   PARLOR_FROZEN_SOURCE_SHA: 1c3c33fe1891c1a143aaf8a1298abd0da052b085
+2026-09-11T01:14:27.7993290Z   PARLOR_APPROVED_PROBE_CONTROL_SHA256: f5221b88d322b1e277e3973e8f8638c924e7856b8abd87d0fe050521253d2749
+2026-09-11T01:14:27.7994410Z ##[endgroup]
+2026-09-11T01:14:28.0495770Z ##[group]Installed distributions
+2026-09-11T01:14:28.0576170Z Resolved Java 21.0.12+101.0 from tool-cache
+2026-09-11T01:14:28.0577000Z Setting Java 21.0.12+101.0 as the default
+2026-09-11T01:14:28.0589290Z Creating toolchains.xml for JDK version 21 from temurin
+2026-09-11T01:14:28.0687830Z Writing to /Users/runner/.m2/toolchains.xml
+2026-09-11T01:14:28.0760100Z 
+2026-09-11T01:14:28.0764340Z Java configuration:
+2026-09-11T01:14:28.0773350Z   Distribution: temurin
+2026-09-11T01:14:28.0792810Z   Version: 21.0.12+101.0
+2026-09-11T01:14:28.0817270Z   Path: /Users/runner/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-101.0/arm64/Contents/Home
+2026-09-11T01:14:28.0817730Z 
+2026-09-11T01:14:28.0818240Z ##[endgroup]
+2026-09-11T01:14:28.0844350Z Creating settings.xml with server-id: github
+2026-09-11T01:14:28.0844670Z Writing to /Users/runner/.m2/settings.xml
+2026-09-11T01:14:28.0845230Z Configured MAVEN_ARGS to include -ntp to suppress Maven transfer progress logs. Set 'show-download-progress: true' to keep the download progress output.
+2026-09-11T01:14:28.0956720Z ##[group]Run set -euo pipefail
+2026-09-11T01:14:28.0957090Z [36;1mset -euo pipefail[0m
+2026-09-11T01:14:28.0957340Z [36;1mcase "$PARLOR_PROTECTION_SELECTION" in[0m
+2026-09-11T01:14:28.0957640Z [36;1m  paired)[0m
+2026-09-11T01:14:28.0958240Z [36;1m    /usr/bin/python3 -B remediation-runs/2026-09-08-continuation/protection-diagnostic-01/run_probe.py run[0m
+2026-09-11T01:14:28.0958660Z [36;1m    ;;[0m
+2026-09-11T01:14:28.0958840Z [36;1m  protection-host-only)[0m
+2026-09-11T01:14:28.0959360Z [36;1m    /usr/bin/python3 -B remediation-runs/2026-09-08-continuation/protection-host-image-01/run_host_probe.py run[0m
+2026-09-11T01:14:28.0959810Z [36;1m    ;;[0m
+2026-09-11T01:14:28.0960020Z [36;1m  *)[0m
+2026-09-11T01:14:28.0960270Z [36;1m    printf '%s\n' 'Unsupported protection diagnostic selection' >&2[0m
+2026-09-11T01:14:28.0960590Z [36;1m    exit 64[0m
+2026-09-11T01:14:28.0960760Z [36;1m    ;;[0m
+2026-09-11T01:14:28.0960930Z [36;1mesac[0m
+2026-09-11T01:14:28.1040090Z shell: /bin/bash --noprofile --norc -e -o pipefail {0}
+2026-09-11T01:14:28.1040380Z env:
+2026-09-11T01:14:28.1040720Z   GRADLE_OPTS: -Dorg.gradle.project.kotlin.compiler.execution.strategy=in-process
+2026-09-11T01:14:28.1041130Z   DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
+2026-09-11T01:14:28.1041450Z   PARLOR_DISPATCH_SCOPE: ios-protection-probe
+2026-09-11T01:14:28.1041720Z   PARLOR_PROTECTION_SELECTION: paired
+2026-09-11T01:14:28.1042100Z   PARLOR_FROZEN_SOURCE_SHA: 1c3c33fe1891c1a143aaf8a1298abd0da052b085
+2026-09-11T01:14:28.1042620Z   PARLOR_APPROVED_PROBE_CONTROL_SHA256: f5221b88d322b1e277e3973e8f8638c924e7856b8abd87d0fe050521253d2749
+2026-09-11T01:14:28.1043170Z   JAVA_HOME: /Users/runner/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-101.0/arm64/Contents/Home
+2026-09-11T01:14:28.1043740Z   JAVA_HOME_21_ARM64: /Users/runner/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-101.0/arm64/Contents/Home
+2026-09-11T01:14:28.1044150Z   MAVEN_ARGS: -ntp
+2026-09-11T01:14:28.1044330Z ##[endgroup]
+2026-09-11T01:16:11.4376360Z ##[error]Process completed with exit code 1.
+2026-09-11T01:16:11.4655350Z ##[group]Run actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+2026-09-11T01:16:11.4655750Z with:
+2026-09-11T01:16:11.4656100Z   name: ios-protection-probe-34549827411-1
+2026-09-11T01:16:11.4656920Z   if-no-files-found: error
+2026-09-11T01:16:11.4657170Z   retention-days: 14
+2026-09-11T01:16:11.4657580Z   path: /Users/runner/work/_temp/parlor-protection-probe-34549827411-1/evidence
+2026-09-11T01:16:11.4657960Z   compression-level: 6
+2026-09-11T01:16:11.4658400Z   overwrite: false
+2026-09-11T01:16:11.4658630Z   include-hidden-files: false
+2026-09-11T01:16:11.4658990Z   archive: true
+2026-09-11T01:16:11.4659240Z env:
+2026-09-11T01:16:11.4659790Z   GRADLE_OPTS: -Dorg.gradle.project.kotlin.compiler.execution.strategy=in-process
+2026-09-11T01:16:11.4660330Z   DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
+2026-09-11T01:16:11.4660790Z   PARLOR_DISPATCH_SCOPE: ios-protection-probe
+2026-09-11T01:16:11.4661150Z   PARLOR_PROTECTION_SELECTION: paired
+2026-09-11T01:16:11.4662120Z   PARLOR_FROZEN_SOURCE_SHA: 1c3c33fe1891c1a143aaf8a1298abd0da052b085
+2026-09-11T01:16:11.4662820Z   PARLOR_APPROVED_PROBE_CONTROL_SHA256: f5221b88d322b1e277e3973e8f8638c924e7856b8abd87d0fe050521253d2749
+2026-09-11T01:16:11.4663440Z   JAVA_HOME: /Users/runner/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-101.0/arm64/Contents/Home
+2026-09-11T01:16:11.4664130Z   JAVA_HOME_21_ARM64: /Users/runner/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-101.0/arm64/Contents/Home
+2026-09-11T01:16:11.4664590Z   MAVEN_ARGS: -ntp
+2026-09-11T01:16:11.4664870Z ##[endgroup]
+2026-09-11T01:16:11.9733700Z With the provided path, there will be 18 files uploaded
+2026-09-11T01:16:11.9735450Z Artifact name is valid!
+2026-09-11T01:16:11.9736870Z Root directory input is valid!
+2026-09-11T01:16:12.4553940Z Uploading artifact: ios-protection-probe-34549827411-1.zip
+2026-09-11T01:16:12.4614770Z Beginning upload of artifact content to blob storage
+2026-09-11T01:16:12.8308850Z Uploaded bytes 6263
+2026-09-11T01:16:12.9093970Z Finished uploading artifact content to blob storage!
+2026-09-11T01:16:12.9098000Z SHA256 digest of uploaded artifact is 70a1ec593196bfd0a3dbd3ecdbd4342cd067e3f852d9f394c333874b472cb6b4
+2026-09-11T01:16:12.9098610Z Finalizing artifact upload
+2026-09-11T01:16:13.3126520Z Artifact ios-protection-probe-34549827411-1 successfully finalized. Artifact ID 10180409709
+2026-09-11T01:16:13.3127800Z Artifact ios-protection-probe-34549827411-1 has been successfully uploaded! Final size is 6263 bytes. Artifact ID is 10180409709
+2026-09-11T01:16:13.3130440Z Artifact download URL: https://github.com/Apdelrahman1911/parlor/actions/runs/34549827411/artifacts/10180409709
+2026-09-11T01:16:13.3264850Z ##[group]Run set -euo pipefail
+2026-09-11T01:16:13.3265110Z [36;1mset -euo pipefail[0m
+2026-09-11T01:16:13.3265320Z [36;1mcase "$PARLOR_PROTECTION_SELECTION" in[0m
+2026-09-11T01:16:13.3265570Z [36;1m  paired)[0m
+2026-09-11T01:16:13.3265970Z [36;1m    /usr/bin/python3 -B remediation-runs/2026-09-08-continuation/protection-diagnostic-01/run_probe.py cleanup[0m
+2026-09-11T01:16:13.3266380Z [36;1m    ;;[0m
+2026-09-11T01:16:13.3266570Z [36;1m  protection-host-only)[0m
+2026-09-11T01:16:13.3267000Z [36;1m    /usr/bin/python3 -B remediation-runs/2026-09-08-continuation/protection-host-image-01/run_host_probe.py cleanup[0m
+2026-09-11T01:16:13.3267420Z [36;1m    ;;[0m
+2026-09-11T01:16:13.3267560Z [36;1m  *)[0m
+2026-09-11T01:16:13.3267810Z [36;1m    printf '%s\n' 'Unsupported protection diagnostic selection' >&2[0m
+2026-09-11T01:16:13.3268100Z [36;1m    exit 64[0m
+2026-09-11T01:16:13.3268260Z [36;1m    ;;[0m
+2026-09-11T01:16:13.3268410Z [36;1mesac[0m
+2026-09-11T01:16:13.5373150Z shell: /bin/bash --noprofile --norc -e -o pipefail {0}
+2026-09-11T01:16:13.5373450Z env:
+2026-09-11T01:16:13.5373800Z   GRADLE_OPTS: -Dorg.gradle.project.kotlin.compiler.execution.strategy=in-process
+2026-09-11T01:16:13.5374270Z   DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
+2026-09-11T01:16:13.5374600Z   PARLOR_DISPATCH_SCOPE: ios-protection-probe
+2026-09-11T01:16:13.5374870Z   PARLOR_PROTECTION_SELECTION: paired
+2026-09-11T01:16:13.5375150Z   PARLOR_FROZEN_SOURCE_SHA: 1c3c33fe1891c1a143aaf8a1298abd0da052b085
+2026-09-11T01:16:13.5375610Z   PARLOR_APPROVED_PROBE_CONTROL_SHA256: f5221b88d322b1e277e3973e8f8638c924e7856b8abd87d0fe050521253d2749
+2026-09-11T01:16:13.5376170Z   JAVA_HOME: /Users/runner/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-101.0/arm64/Contents/Home
+2026-09-11T01:16:13.5376790Z   JAVA_HOME_21_ARM64: /Users/runner/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-101.0/arm64/Contents/Home
+2026-09-11T01:16:13.5377230Z   MAVEN_ARGS: -ntp
+2026-09-11T01:16:13.5377450Z   PARLOR_PROTECTION_UPLOAD_OUTCOME: success
+2026-09-11T01:16:13.5377690Z   PARLOR_PROTECTION_ARTIFACT_ID: 10180409709
+2026-09-11T01:16:13.5378150Z   PARLOR_PROTECTION_ARTIFACT_DIGEST: 70a1ec593196bfd0a3dbd3ecdbd4342cd067e3f852d9f394c333874b472cb6b4
+2026-09-11T01:16:13.5378560Z ##[endgroup]
+2026-09-11T01:16:16.9982750Z ##[error]Process completed with exit code 1.
+2026-09-11T01:16:17.0065290Z ##[group]Run actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+2026-09-11T01:16:17.0066530Z with:
+2026-09-11T01:16:17.0067090Z   name: ios-protection-probe-cleanup-34549827411-1
+2026-09-11T01:16:17.0067910Z   if-no-files-found: error
+2026-09-11T01:16:17.0068420Z   retention-days: 14
+2026-09-11T01:16:17.0069300Z   path: /Users/runner/work/_temp/parlor-protection-probe-34549827411-1/cleanup
+2026-09-11T01:16:17.0070200Z   compression-level: 6
+2026-09-11T01:16:17.0070690Z   overwrite: false
+2026-09-11T01:16:17.0071170Z   include-hidden-files: false
+2026-09-11T01:16:17.0071710Z   archive: true
+2026-09-11T01:16:17.0072130Z env:
+2026-09-11T01:16:17.0072880Z   GRADLE_OPTS: -Dorg.gradle.project.kotlin.compiler.execution.strategy=in-process
+2026-09-11T01:16:17.0074110Z   DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
+2026-09-11T01:16:17.0076140Z   PARLOR_DISPATCH_SCOPE: ios-protection-probe
+2026-09-11T01:16:17.0076840Z   PARLOR_PROTECTION_SELECTION: paired
+2026-09-11T01:16:17.0077720Z   PARLOR_FROZEN_SOURCE_SHA: 1c3c33fe1891c1a143aaf8a1298abd0da052b085
+2026-09-11T01:16:17.0078970Z   PARLOR_APPROVED_PROBE_CONTROL_SHA256: f5221b88d322b1e277e3973e8f8638c924e7856b8abd87d0fe050521253d2749
+2026-09-11T01:16:17.0080460Z   JAVA_HOME: /Users/runner/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-101.0/arm64/Contents/Home
+2026-09-11T01:16:17.0082250Z   JAVA_HOME_21_ARM64: /Users/runner/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-101.0/arm64/Contents/Home
+2026-09-11T01:16:17.0083360Z   MAVEN_ARGS: -ntp
+2026-09-11T01:16:17.0083810Z ##[endgroup]
+2026-09-11T01:16:17.3690400Z With the provided path, there will be 17 files uploaded
+2026-09-11T01:16:17.3709680Z Artifact name is valid!
+2026-09-11T01:16:17.3710160Z Root directory input is valid!
+2026-09-11T01:16:17.7778740Z Uploading artifact: ios-protection-probe-cleanup-34549827411-1.zip
+2026-09-11T01:16:17.7836450Z Beginning upload of artifact content to blob storage
+2026-09-11T01:16:18.0950650Z Uploaded bytes 4037
+2026-09-11T01:16:18.1734160Z Finished uploading artifact content to blob storage!
+2026-09-11T01:16:18.1735860Z SHA256 digest of uploaded artifact is dea44dd601516a4baba7bc64b3651de02c1e10dcd1ccc5602b7b897168488816
+2026-09-11T01:16:18.1736520Z Finalizing artifact upload
+2026-09-11T01:16:18.5591210Z Artifact ios-protection-probe-cleanup-34549827411-1 successfully finalized. Artifact ID 10180411723
+2026-09-11T01:16:18.5592090Z Artifact ios-protection-probe-cleanup-34549827411-1 has been successfully uploaded! Final size is 4037 bytes. Artifact ID is 10180411723
+2026-09-11T01:16:18.5602850Z Artifact download URL: https://github.com/Apdelrahman1911/parlor/actions/runs/34549827411/artifacts/10180411723
+2026-09-11T01:16:18.5698260Z ##[group]Run set -euo pipefail
+2026-09-11T01:16:18.5698530Z [36;1mset -euo pipefail[0m
+2026-09-11T01:16:18.5698790Z [36;1mcase "$PARLOR_PROTECTION_SELECTION" in[0m
+2026-09-11T01:16:18.5699560Z [36;1m  paired)[0m
+2026-09-11T01:16:18.5700000Z [36;1m    /usr/bin/python3 -B remediation-runs/2026-09-08-continuation/protection-diagnostic-01/run_probe.py assert-result[0m
+2026-09-11T01:16:18.5700470Z [36;1m    ;;[0m
+2026-09-11T01:16:18.5701310Z [36;1m  protection-host-only)[0m
+2026-09-11T01:16:18.5702560Z [36;1m    /usr/bin/python3 -B remediation-runs/2026-09-08-continuation/protection-host-image-01/run_host_probe.py assert-result[0m
+2026-09-11T01:16:18.5703080Z [36;1m    ;;[0m
+2026-09-11T01:16:18.5703230Z [36;1m  *)[0m
+2026-09-11T01:16:18.5703480Z [36;1m    printf '%s\n' 'Unsupported protection diagnostic selection' >&2[0m
+2026-09-11T01:16:18.5703840Z [36;1m    exit 64[0m
+2026-09-11T01:16:18.5703990Z [36;1m    ;;[0m
+2026-09-11T01:16:18.5704130Z [36;1mesac[0m
+2026-09-11T01:16:18.9941290Z shell: /bin/bash --noprofile --norc -e -o pipefail {0}
+2026-09-11T01:16:18.9941580Z env:
+2026-09-11T01:16:18.9942040Z   GRADLE_OPTS: -Dorg.gradle.project.kotlin.compiler.execution.strategy=in-process
+2026-09-11T01:16:18.9943480Z   DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
+2026-09-11T01:16:18.9943820Z   PARLOR_DISPATCH_SCOPE: ios-protection-probe
+2026-09-11T01:16:18.9944100Z   PARLOR_PROTECTION_SELECTION: paired
+2026-09-11T01:16:18.9944470Z   PARLOR_FROZEN_SOURCE_SHA: 1c3c33fe1891c1a143aaf8a1298abd0da052b085
+2026-09-11T01:16:18.9945090Z   PARLOR_APPROVED_PROBE_CONTROL_SHA256: f5221b88d322b1e277e3973e8f8638c924e7856b8abd87d0fe050521253d2749
+2026-09-11T01:16:18.9946620Z   JAVA_HOME: /Users/runner/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-101.0/arm64/Contents/Home
+2026-09-11T01:16:18.9947300Z   JAVA_HOME_21_ARM64: /Users/runner/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-101.0/arm64/Contents/Home
+2026-09-11T01:16:18.9947710Z   MAVEN_ARGS: -ntp
+2026-09-11T01:16:18.9948030Z   PARLOR_PROTECTION_RUN_OUTCOME: failure
+2026-09-11T01:16:18.9948300Z   PARLOR_PROTECTION_CLEANUP_OUTCOME: failure
+2026-09-11T01:16:18.9950460Z   PARLOR_PROTECTION_UPLOAD_OUTCOME: success
+2026-09-11T01:16:18.9950700Z   PARLOR_PROTECTION_ARTIFACT_ID: 10180409709
+2026-09-11T01:16:18.9951120Z   PARLOR_PROTECTION_ARTIFACT_DIGEST: 70a1ec593196bfd0a3dbd3ecdbd4342cd067e3f852d9f394c333874b472cb6b4
+2026-09-11T01:16:18.9951610Z   PARLOR_PROTECTION_CLEANUP_UPLOAD_OUTCOME: success
+2026-09-11T01:16:18.9951910Z   PARLOR_PROTECTION_CLEANUP_ARTIFACT_ID: 10180411723
+2026-09-11T01:16:18.9952980Z   PARLOR_PROTECTION_CLEANUP_ARTIFACT_DIGEST: dea44dd601516a4baba7bc64b3651de02c1e10dcd1ccc5602b7b897168488816
+2026-09-11T01:16:18.9953430Z ##[endgroup]
+2026-09-11T01:16:20.6113490Z {"status": "FAIL", "error": {"type": "RuntimeError", "code": "required-step-outcomes"}, "scope": "ios-protection-probe"}
+2026-09-11T01:16:20.6219100Z ##[error]Process completed with exit code 1.
+2026-09-11T01:16:20.6414470Z Post job cleanup.
+2026-09-11T01:16:20.8342910Z Post job cleanup.
+2026-09-11T01:16:20.9882690Z [command]/opt/homebrew/bin/git version
+2026-09-11T01:16:21.0288470Z git version 2.55.0
+2026-09-11T01:16:21.0650570Z Copying '/Users/runner/.gitconfig' to '/Users/runner/work/_temp/26ca1137-bd24-436b-9f6d-7decb2bc4505/.gitconfig'
+2026-09-11T01:16:21.0716200Z Temporarily overriding HOME='/Users/runner/work/_temp/26ca1137-bd24-436b-9f6d-7decb2bc4505' before making global git config changes
+2026-09-11T01:16:21.0717470Z Adding repository directory to the temporary git global config as a safe directory
+2026-09-11T01:16:21.0818720Z [command]/opt/homebrew/bin/git config --global --add safe.directory /Users/runner/work/parlor/parlor
+2026-09-11T01:16:21.1133770Z Removing SSH command configuration
+2026-09-11T01:16:21.1241830Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-09-11T01:16:21.1550880Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-09-11T01:16:21.2694230Z Removing HTTP extra header
+2026-09-11T01:16:21.2796610Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-09-11T01:16:21.3187600Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-09-11T01:16:21.5674560Z Removing includeIf entries pointing to credentials config files
+2026-09-11T01:16:21.5777520Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-09-11T01:16:21.6083790Z [command]/opt/homebrew/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-09-11T01:16:21.7734080Z Cleaning up orphan processes

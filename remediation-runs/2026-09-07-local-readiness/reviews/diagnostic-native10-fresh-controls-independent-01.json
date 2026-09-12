@@ -1,0 +1,300 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/release_fix_review",
+  "reviewed_at": "2026-09-08T01:47:42.196468+00:00",
+  "classification": "SOURCE/EVIDENCE APPROVED AS TWO FOCUSED DIAGNOSTIC-ONLY GROUPS; ORIGINAL NATIVE FAILURES UNCHANGED; NO GIT AUTHORIZATION CONFERRED",
+  "baseline": {
+    "commit": "e1dd40c0f1ff14561ecac6c25967fced8cda74d2",
+    "tree": "1d4822ebea89148635e0d71c74060fce1ab61824",
+    "branch": "fix/local-readiness-2026-09-07",
+    "diff_sha256": "36dd70117778d1f5d038acfab1ab46ffb464cd8c78b2428552214bfe6fdffed1",
+    "source_manifest_sha256": "35f9d58c3d1a151ed34a9f7c62c3a32cdcf147cf010fe621571ca888957eedbc"
+  },
+  "scope_review": {
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/diagnostic-pending-commit-scope-independent-01.json",
+    "sha256": "71c7089463a94883498e768c6018799553a8ef9f474941dcfdd9242d99d57075"
+  },
+  "all_eight_candidate_hashes_still_identical": true,
+  "candidate_groups": [
+    {
+      "id": "NORMAL-HEADER-DIAGNOSTICS",
+      "files": [
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/README.md",
+          "sha256": "59b5a3947e3c160078778b66bba8e7c5b56fe51e19b4cf5ec8c32c5f451fa51e",
+          "tracked": true
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/external_image_provenance.py",
+          "sha256": "ec19eb8c910f42c180ea17bae1af2fed259cb989174c61cf306a0324800200ef",
+          "tracked": true
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_control_tests.py",
+          "sha256": "3ffc9c3836f61f86d573ad0b3dce5f3105fcd1ea4fd8ab677f9806b6eb8bf2b2",
+          "tracked": true
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
+          "sha256": "36276fb27423ca04c9fe41d033042c3ae25d5a512183b96b80230b4f58ad2e8d",
+          "tracked": true
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_header_diagnostics.py",
+          "sha256": "e2d835d4c7919c1448eebc51079d5f0673e71b3a1a8998ed97b616325e5bd06a",
+          "tracked": false
+        }
+      ],
+      "compatibility": "Only a newly added diagnostic field named decoded_text_sha256 and campaign test/control behavior. No shipping app API, game, protocol, content, save, credentials or Store setting change."
+    },
+    {
+      "id": "L08-PROTECTION-DIAGNOSTICS",
+      "files": [
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/L08StorageProbe.kt.in",
+          "sha256": "a1202e47e1b41feb7e5c558e4df9515704e27762e437778b6ae79c777bfce651",
+          "tracked": true
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/l08_receipts.py",
+          "sha256": "43200492a5fae3cb31f89ecafe9985eee84b9c30b4549cd2933788dac056bfbd",
+          "tracked": true
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/test_l08_diagnostics.py",
+          "sha256": "925be779c7b03f148995061f1e769290ec4fa014c2e7f4dbab202fd1b84d8d9c",
+          "tracked": true
+        }
+      ],
+      "compatibility": "Changes are .in copy-only Kotlin probe plus Python evidence schema/tests; they do not enter a shipping app build. Existing closed failure records without the optional protection_metadata remain accepted; PASS fields/stages remain unchanged. No app save/schema/game/content/protocol migration."
+    }
+  ],
+  "fresh_cycles": [
+    {
+      "name": "normal-after-native10-controls-01",
+      "receipt": {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/normal-after-native10-controls-01/receipt.json",
+        "sha256": "74492dbbe16fe99a53d5a834dafc163a32cfbee440948242813c81a396019a16"
+      },
+      "log": {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/normal-after-native10-controls-01/gradle.log",
+        "sha256": "499ef02b186bd26af89905db746aa295aea2ef7260a2a4e910d13354b9c974aa"
+      },
+      "stop_log": {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/normal-after-native10-controls-01/stop.log",
+        "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+      },
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_control_tests.py"
+      ],
+      "started_at": "2026-09-08T01:33:57.588555+00:00",
+      "finished_at": "2026-09-08T01:33:58.381724+00:00",
+      "cleanup_completed_at": "2026-09-08T01:33:58.979369+00:00",
+      "actual_ok_count": 99,
+      "actual_ok_ids": [
+        "test_header_diagnostics.HeaderDiagnosticTests.test_diagnostic_input_headers_and_component_counts_remain_bounded",
+        "test_header_diagnostics.HeaderDiagnosticTests.test_diagnostic_write_failure_cannot_replace_or_hide_original_failure",
+        "test_header_diagnostics.HeaderDiagnosticTests.test_duplicate_missing_and_wrong_pid_headers_do_not_become_success",
+        "test_header_diagnostics.HeaderDiagnosticTests.test_exact_headers_are_only_diagnostics_and_do_not_retain_paths_or_stacks",
+        "test_header_diagnostics.HeaderDiagnosticTests.test_public_redaction_shapes_remain_rejected_by_original_header_validator",
+        "test_header_diagnostics.HeaderDiagnosticTests.test_runner_keeps_parser_failure_and_only_preserves_sanitized_receipt",
+        "test_header_diagnostics.HeaderDiagnosticTests.test_successful_parser_does_not_emit_or_consume_diagnostics",
+        "test_header_diagnostics.HeaderDiagnosticTests.test_unknown_text_components_are_hashed_instead_of_disclosed",
+        "test_normal_launch_controls.CopiedSourceTests.test_ambiguous_or_wrong_shell_phase_is_rejected",
+        "test_normal_launch_controls.CopiedSourceTests.test_app_instrumentation_is_rejected",
+        "test_normal_launch_controls.CopiedSourceTests.test_kotlin_instrumentation_is_rejected",
+        "test_normal_launch_controls.CopiedSourceTests.test_missing_input_and_redirected_input_are_rejected",
+        "test_normal_launch_controls.CopiedSourceTests.test_only_ui_test_and_owned_phase_may_change",
+        "test_normal_launch_controls.CopiedSourceTests.test_unregistered_addition_is_rejected",
+        "test_normal_launch_controls.ExternalProvenanceTests.test_copied_framework_uuid_must_match_embedded_but_signing_bytes_remain_distinct",
+        "test_normal_launch_controls.ExternalProvenanceTests.test_disappearance_reuse_and_token_change_fail",
+        "test_normal_launch_controls.ExternalProvenanceTests.test_duplicate_framework_or_image_fails",
+        "test_normal_launch_controls.ExternalProvenanceTests.test_exact_new_target_attestation",
+        "test_normal_launch_controls.ExternalProvenanceTests.test_exact_public_launch_pid_is_required",
+        "test_normal_launch_controls.ExternalProvenanceTests.test_known_build_framework_remains_distinct_from_installed",
+        "test_normal_launch_controls.ExternalProvenanceTests.test_missing_binary_images_is_not_disk_provenance",
+        "test_normal_launch_controls.ExternalProvenanceTests.test_tool_images_and_addresses_bind_only_allowed_artifacts",
+        "test_normal_launch_controls.ExternalProvenanceTests.test_unbound_compose_framework_cannot_be_silently_ignored",
+        "test_normal_launch_controls.ExternalProvenanceTests.test_vmmap_mapping_cannot_exceed_sample_image_range",
+        "test_normal_launch_controls.ExternalProvenanceTests.test_vmmap_must_map_same_load_address",
+        "test_normal_launch_controls.ExternalProvenanceTests.test_vmmap_without_all_text_mappings_fails",
+        "test_normal_launch_controls.ExternalProvenanceTests.test_wrong_executable_uid_old_lifetime_or_preexisting_pid_fails",
+        "test_normal_launch_controls.ExternalProvenanceTests.test_wrong_runtime_uuid_fails",
+        "test_normal_launch_controls.ExternalProvenanceTests.test_wrong_tool_pid_or_executable_fails",
+        "test_normal_launch_controls.MarkerTests.test_boolean_duration_is_not_a_number",
+        "test_normal_launch_controls.MarkerTests.test_clock_regression_fails",
+        "test_normal_launch_controls.MarkerTests.test_complete_cannot_move_back_before_last_sample",
+        "test_normal_launch_controls.MarkerTests.test_duplicate_json_keys_fail",
+        "test_normal_launch_controls.MarkerTests.test_duplicate_lifetime_fails",
+        "test_normal_launch_controls.MarkerTests.test_eight_complete_trains_are_48_samples_not_48_tests",
+        "test_normal_launch_controls.MarkerTests.test_failing_foreground_home_alert_observations_fail",
+        "test_normal_launch_controls.MarkerTests.test_final_sample_must_itself_reach_ten_seconds",
+        "test_normal_launch_controls.MarkerTests.test_interleaved_trains_fail",
+        "test_normal_launch_controls.MarkerTests.test_ninth_attempt_fails_even_if_it_is_incomplete",
+        "test_normal_launch_controls.MarkerTests.test_nonfinite_json_fails",
+        "test_normal_launch_controls.MarkerTests.test_out_of_order_or_repeated_sample_fails",
+        "test_normal_launch_controls.MarkerTests.test_seven_launches_fail",
+        "test_normal_launch_controls.MarkerTests.test_unrecognized_marker_field_fails",
+        "test_normal_launch_controls.RunnerGuards.test_adhoc_is_explicit_and_does_not_inherit_a_real_identity",
+        "test_normal_launch_controls.RunnerGuards.test_allocation_canonicalizes_parent_before_mkdtemp_and_retains_exact_identity",
+        "test_normal_launch_controls.RunnerGuards.test_allocation_receipt_failure_does_not_strand_owned_directory",
+        "test_normal_launch_controls.RunnerGuards.test_cache_link_cleanup_does_not_remove_dependency_cache",
+        "test_normal_launch_controls.RunnerGuards.test_changed_cache_link_preserves_allocation",
+        "test_normal_launch_controls.RunnerGuards.test_control_drift_invalidates_overall_result",
+        "test_normal_launch_controls.RunnerGuards.test_deferred_interrupt_after_mkdtemp_keeps_finalizer_ownership",
+        "test_normal_launch_controls.RunnerGuards.test_environment_drops_probes_loader_credentials_and_foreign_gradle_options",
+        "test_normal_launch_controls.RunnerGuards.test_existing_allocation_cannot_be_replaced",
+        "test_normal_launch_controls.RunnerGuards.test_failed_gradle_stop_does_not_skip_device_workers_and_file_cleanup",
+        "test_normal_launch_controls.RunnerGuards.test_failed_notice_verifier_cannot_pass_package_gate",
+        "test_normal_launch_controls.RunnerGuards.test_failed_observation_releases_watch_before_final_shutdown",
+        "test_normal_launch_controls.RunnerGuards.test_failed_xcode_attempt_immediately_stops_gradle",
+        "test_normal_launch_controls.RunnerGuards.test_finalization_removes_only_exact_task_allocation",
+        "test_normal_launch_controls.RunnerGuards.test_fixed_test_arguments_have_no_retry_or_parallel_escape",
+        "test_normal_launch_controls.RunnerGuards.test_interrupted_xcode_attempt_immediately_stops_gradle",
+        "test_normal_launch_controls.RunnerGuards.test_mkdtemp_failure_has_no_allocation_or_cleanup_target",
+        "test_normal_launch_controls.RunnerGuards.test_notices_check_built_and_installed_apps_using_frozen_copy",
+        "test_normal_launch_controls.RunnerGuards.test_oversized_watch_file_is_rejected",
+        "test_normal_launch_controls.RunnerGuards.test_owned_name_failure_retains_preowner_cleanup_identity",
+        "test_normal_launch_controls.RunnerGuards.test_owner_constructor_failure_retains_preworker_cleanup_identity",
+        "test_normal_launch_controls.RunnerGuards.test_preexisting_original_output_is_preserved_not_deleted",
+        "test_normal_launch_controls.RunnerGuards.test_replaced_allocation_inode_refuses_removal",
+        "test_normal_launch_controls.RunnerGuards.test_secondary_path_attestation_failure_is_not_cleanup_success",
+        "test_normal_launch_controls.RunnerGuards.test_source_drift_invalidates_overall_result",
+        "test_normal_launch_controls.RunnerGuards.test_source_only_or_failed_notice_receipt_is_not_package_evidence",
+        "test_normal_launch_controls.RunnerGuards.test_timed_out_xcode_attempt_immediately_stops_gradle",
+        "test_normal_launch_controls.RunnerGuards.test_unexecuted_notice_verification_cannot_be_overall_pass",
+        "test_normal_launch_controls.RunnerGuards.test_unknown_holders_preserve_allocation_and_fail_cleanup",
+        "test_normal_launch_controls.XCTestTests.test_actual_runs_not_aggregate_method_count_establish_eight",
+        "test_normal_launch_controls.XCTestTests.test_additional_test_case_cannot_hide_in_summary",
+        "test_normal_launch_controls.XCTestTests.test_aggregate_skip_even_with_passed_case_nodes_fails",
+        "test_normal_launch_controls.XCTestTests.test_aggregate_without_actual_runs_fails",
+        "test_normal_launch_controls.XCTestTests.test_any_skip_failure_expected_failure_or_unknown_fails",
+        "test_normal_launch_controls.XCTestTests.test_boolean_count_fails",
+        "test_normal_launch_controls.XCTestTests.test_duplicate_run_hierarchy_fails",
+        "test_normal_launch_controls.XCTestTests.test_nested_actual_runs_cannot_inflate_count",
+        "test_normal_launch_controls.XCTestTests.test_repeated_leaf_names_beneath_distinct_repetitions_are_valid",
+        "test_normal_launch_controls.XCTestTests.test_seventh_or_ninth_actual_run_fails",
+        "test_normal_launch_controls.XCTestTests.test_too_short_actual_run_fails_even_with_good_markers",
+        "test_normal_launch_controls.XCTestTests.test_unknown_result_structure_fails_closed",
+        "test_normal_launch_controls.XCTestTests.test_wrong_device_architecture_platform_and_configuration_fail",
+        "test_normal_launch_controls.XCTestTests.test_wrong_selected_method_fails",
+        "test_xcode26_repetitions.ObservedXcodeRepetitionTests.test_destination_execution_count_is_not_method_count",
+        "test_xcode26_repetitions.ObservedXcodeRepetitionTests.test_direct_repetition_counts_must_match_both_queries",
+        "test_xcode26_repetitions.ObservedXcodeRepetitionTests.test_duplicate_repetition_ids_fail_despite_distinct_names",
+        "test_xcode26_repetitions.ObservedXcodeRepetitionTests.test_extra_repetition_outside_selected_case_is_rejected",
+        "test_xcode26_repetitions.ObservedXcodeRepetitionTests.test_independent_query_duration_must_agree",
+        "test_xcode26_repetitions.ObservedXcodeRepetitionTests.test_leaf_layout_requires_the_observed_single_method_summary",
+        "test_xcode26_repetitions.ObservedXcodeRepetitionTests.test_leaf_repetition_identity_is_required",
+        "test_xcode26_repetitions.ObservedXcodeRepetitionTests.test_missing_tree_repetitions_cannot_be_replaced_with_details",
+        "test_xcode26_repetitions.ObservedXcodeRepetitionTests.test_mixed_leaf_and_nested_run_layout_is_rejected",
+        "test_xcode26_repetitions.ObservedXcodeRepetitionTests.test_nonpassing_repetition_or_summary_is_never_accepted",
+        "test_xcode26_repetitions.ObservedXcodeRepetitionTests.test_observed_one_method_eight_destination_leaf_repetitions_pass",
+        "test_xcode26_repetitions.ObservedXcodeRepetitionTests.test_reordered_repetitions_fail",
+        "test_xcode26_repetitions.ObservedXcodeRepetitionTests.test_repetition_durations_are_bounded_and_not_boolean"
+      ],
+      "exit_code": 0,
+      "stop_exit_code": 0,
+      "source_before_after_equal_native10_binding": true,
+      "output_and_owned_worker_residuals": [],
+      "declared_discovered_actual_unique_ids_equal": true,
+      "before_after_control_rows": 77,
+      "before_after_controls_equal_current": true,
+      "all_eight_diagnostic_files_in_control_binding": true,
+      "actual_header_diagnostic_tests": 8,
+      "reported_failures": 0,
+      "reported_errors": 0,
+      "reported_skips": 0
+    },
+    {
+      "name": "l08-after-native01-diagnostic-controls-01",
+      "receipt": {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-after-native01-diagnostic-controls-01/receipt.json",
+        "sha256": "c03b253c653d2b12b50e51d1956fd4ac0a94b35c63dec57e1eb49028d04d09b7"
+      },
+      "log": {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-after-native01-diagnostic-controls-01/gradle.log",
+        "sha256": "e8a51c270dd04465fe404c3a112f39b6609cbb32478014af6e4f8f2530dd577c"
+      },
+      "stop_log": {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-after-native01-diagnostic-controls-01/stop.log",
+        "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+      },
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "scripts/verification/ios-readiness",
+        "-p",
+        "test_l08_diagnostics.py",
+        "-v"
+      ],
+      "started_at": "2026-09-08T01:34:20.788430+00:00",
+      "finished_at": "2026-09-08T01:34:21.515135+00:00",
+      "cleanup_completed_at": "2026-09-08T01:34:21.945966+00:00",
+      "actual_ok_count": 21,
+      "actual_ok_ids": [
+        "test_l08_diagnostics.L08DiagnosticsTests.test_additional_file_getter_is_explicitly_diagnostic_only_and_can_remain_unknown",
+        "test_l08_diagnostics.L08DiagnosticsTests.test_all_legacy_and_diagnostic_stages_are_preservable_only_as_closed_failures",
+        "test_l08_diagnostics.L08DiagnosticsTests.test_closed_metadata_distinguishes_nil_error_missing_and_public_protection_classes",
+        "test_l08_diagnostics.L08DiagnosticsTests.test_every_emitted_stage_is_a_closed_literal_with_no_silent_schema_drift",
+        "test_l08_diagnostics.L08DiagnosticsTests.test_extra_queries_are_read_only_bounded_and_failure_unknown_does_not_become_success",
+        "test_l08_diagnostics.L08DiagnosticsTests.test_metadata_checks_remain_bounded_strict_and_observation_only",
+        "test_l08_diagnostics.L08DiagnosticsTests.test_metadata_identity_roles_and_required_comparison_cannot_disagree",
+        "test_l08_diagnostics.L08DiagnosticsTests.test_metadata_is_rejected_on_host_cancellation_and_other_storage_stages",
+        "test_l08_diagnostics.L08DiagnosticsTests.test_missing_or_unknown_read_cannot_claim_an_observed_value",
+        "test_l08_diagnostics.L08DiagnosticsTests.test_native_error_values_are_closed_bounded_and_do_not_coerce_booleans",
+        "test_l08_diagnostics.L08DiagnosticsTests.test_nested_metadata_stage_restores_only_after_all_checks_and_zeroization",
+        "test_l08_diagnostics.L08DiagnosticsTests.test_nested_unknown_fields_and_raw_native_values_never_enter_evidence",
+        "test_l08_diagnostics.L08DiagnosticsTests.test_new_command_resets_context_and_cancellation_still_propagates",
+        "test_l08_diagnostics.L08DiagnosticsTests.test_newer_public_enum_is_runtime_guarded_and_arbitrary_strings_stay_redacted",
+        "test_l08_diagnostics.L08DiagnosticsTests.test_no_diagnostic_failure_can_become_a_successful_native_storage_result",
+        "test_l08_diagnostics.L08DiagnosticsTests.test_producer_keeps_required_getter_order_equality_and_failure_only_scope",
+        "test_l08_diagnostics.L08DiagnosticsTests.test_save_load_and_equality_remain_separate_required_boundaries",
+        "test_l08_diagnostics.L08DiagnosticsTests.test_storage_diagnostics_do_not_expand_host_failure_stages",
+        "test_l08_diagnostics.L08DiagnosticsTests.test_supported_volume_and_complete_diagnostic_sibling_never_satisfy_the_storage_gate",
+        "test_l08_diagnostics.L08DiagnosticsTests.test_unknown_dynamic_non_string_or_sensitive_failure_metadata_is_rejected",
+        "test_l08_diagnostics.L08DiagnosticsTests.test_volume_unavailable_supported_unsupported_and_error_remain_observations"
+      ],
+      "exit_code": 0,
+      "stop_exit_code": 0,
+      "source_before_after_equal_native10_binding": true,
+      "output_and_owned_worker_residuals": [],
+      "actual_unique_ids_equal_current_AST_methods": true,
+      "skip_error_failure_log_lines": []
+    }
+  ],
+  "native10_review": {
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/normal-ios10-independent-runtime-diagnostic-cleanup-01.json",
+    "sha256": "549dfe3f071f830bb5b8cc367b66f39888cad48d74ad275a250d7f3af26bc258"
+  },
+  "review_conclusion": [
+    "Normal header encoder captured the exact USER-only mismatch without accepting it; original strict header predicate and FAIL remain. 8 diagnostics tests execute within all99 pure controls.",
+    "L08 new diagnostics preserve required getter equality/order and fail-only scope. All21 actual diagnostics tests execute, independently matched to current AST. Native09 provides limited failed-storage diagnostic execution, not a storage fix or a complete recovery matrix.",
+    "The current eight file hashes are identical to the full changed-hunk/source review in the referenced independent scope report. No acceptance alias change is part of either group.",
+    "README native06/native08 descriptions are explicitly historical; they do not claim native10 success or describe its raw headers. The new native10 diagnosis is separately recorded."
+  ],
+  "ordering": [
+    "Native10 and both fresh focused cycles have ended with cleanup evidence. Preserve original receipts unchanged.",
+    "If separately authorized, use exactly normal5 and L08three file sets in separate focused commits; do not stage broad evidence/user directories. The new untracked header test must accompany the99-test driver count.",
+    "Git commit/tree/diff changes invalidate source09, even if app file bytes remain unchanged. Obtain a new exact source/control binding before any subsequent native execution.",
+    "Keep USER-only alias policy/implementation and future proof distinct; neither current diagnostic group relaxes any acceptance predicate.",
+    "Refresh mechanical source inventory separately if authorized; mechanical inventory is not substitute review. Then run root-coordinated applicable combined checks with cleanup."
+  ],
+  "limits": [
+    "These are pure Python control suites, not Kotlin/Swift test execution, native launch runtime, physical LAN, storage repair, Store signing or release readiness.",
+    "Original native09 remains runtime/cleanup FAIL; supplemental exact cleanup recovery is separate. IOS-R1 remains evidence gap.",
+    "No approval to waive failed provenance, change entitlements, claim per-image kernel path proof, or execute another native run is granted by this scope review."
+  ],
+  "hygiene": {
+    "writes": "Only new independent JSON reports",
+    "source_controls_evidence_overwritten": false,
+    "repository_modules_imported": false,
+    "tests_builds_native_queries_process_operations": false,
+    "new_background_workers_or_generated_outputs": false
+  }
+}

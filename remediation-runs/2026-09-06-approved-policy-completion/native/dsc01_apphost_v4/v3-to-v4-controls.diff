@@ -1,0 +1,131 @@
+--- frozen-v3/IOSAppLaunchUITests.swift.in
++++ proposed-v4/IOSAppLaunchUITests.swift.in
+@@ -214,22 +214,39 @@
+     }
+ 
+     @MainActor private func enterActualPlayerNames(_ app: XCUIApplication, count: Int) throws {
++        XCTAssertTrue([5, 6].contains(count))
+         for index in 1...count {
+             // Only a copy-only testTag is added to the original OutlinedTextField.
+             // Its original sanitizer/IME/focus/callback/state are unchanged.
+             let query = app.descendants(matching: .any).matching(identifier: "dsc01-player-\(index)")
+             XCTAssertTrue(query.firstMatch.waitForExistence(timeout: 10))
+             XCTAssertLessThan(query.count, 8)
+-            var field = query.allElementsBoundByIndex.first(where: { $0.isHittable })
+-            for _ in 0..<8 where field == nil {
+-                app.swipeUp(velocity: .slow)
+-                field = query.allElementsBoundByIndex.first(where: { $0.isHittable })
+-            }
+-            let actual = try XCTUnwrap(field, "Actual synthetic-name field is not reachable")
+-            actual.tap()
++            let actual = query.firstMatch
++            let visible = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
++                actual.exists && actual.isHittable
++            }, object: nil)
++            XCTAssertEqual(XCTWaiter.wait(for: [visible], timeout: 10), .completed)
++            if index == 1 { actual.tap() }
++            // After the initial tap, use the real existing IME Next flow rather
++            // than a swipe followed by a possibly still-moving tap target.
++            // typeText on this exact field requires its keyboard focus; never
++            // type into the app generically or use a private focus predicate.
+             actual.typeText("Audit Player \(index)")
+-            if index == count { actual.typeText("\n") }
+-        }
++            let inserted = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
++                actual.value as? String == "Audit Player \(index)"
++            }, object: nil)
++            XCTAssertEqual(XCTWaiter.wait(for: [inserted], timeout: 10), .completed,
++                           "The exact requested synthetic field must receive its exact name once")
++            // Pinned CMP 1.10.3 treats a standalone newline as the configured
++            // ImeAction. Original Next moves focus; original final Done clears
++            // focus and hides the keyboard. No callback/backing-state bypass.
++            actual.typeText("\n")
++        }
++        let hidden = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
++            !app.keyboards.firstMatch.exists
++        }, object: nil)
++        XCTAssertEqual(XCTWaiter.wait(for: [hidden], timeout: 10), .completed,
++                       "Original final Done must dismiss the real keyboard")
+     }
+ 
+     @MainActor private func tapPublicSetupPrefix(_ app: XCUIApplication, prefix: String) throws {
+--- frozen-v3/test_copy_observation_contract.py
++++ proposed-v4/test_copy_observation_contract.py
+@@ -317,6 +317,29 @@
+         self.assertNotIn('app.textFields', source)  # real fields have copy-only stable public-seat tags
+         self.assertIn('actual.typeText("Audit Player \\(index)")', source)
+ 
++    def test_name_entry_uses_real_ime_next_done_without_fling_or_backing_state_bypass(self):
++        source = (copies.HERE / 'IOSAppLaunchUITests.swift.in').read_text()
++        start = source.index('@MainActor private func enterActualPlayerNames(')
++        end = source.index('@MainActor private func tapPublicSetupPrefix(', start)
++        body = source[start:end]
++        self.assertIn('if index == 1 { actual.tap() }', body)
++        self.assertEqual(1, body.count('actual.typeText("Audit Player \\(index)")'))
++        self.assertIn('actual.value as? String == "Audit Player \\(index)"', body)
++        self.assertIn('actual.typeText("\\n")', body)
++        self.assertIn('XCTWaiter.wait(for: [inserted], timeout: 10)', body)
++        self.assertIn('!app.keyboards.firstMatch.exists', body)
++        for forbidden in ('swipeUp', 'hasKeyboardFocus', 'value(forKey:', 'app.typeText(',
++                          'onValueChange', 'setText', 'UserDefaults', 'sleep(', 'Thread.sleep'):
++            self.assertNotIn(forbidden, body)
++
++    def test_original_name_fields_still_own_next_and_final_done(self):
++        for path in copies.NAME_FIELDS:
++            source = (runner.ROOT / path).read_text()
++            self.assertIn('imeAction = if (isLast) ImeAction.Done else ImeAction.Next', source)
++            self.assertIn('focusManager.clearFocus()', source)
++            self.assertIn('keyboardController?.hide()', source)
++            self.assertNotIn('onNext =', source)
++
+     def test_actual_os_api_used_not_private_settings_urls_or_global_defaults(self):
+         swift = (copies.HERE / 'DSC01Probe.swift.in').read_text()
+         self.assertIn('UIApplication.openSettingsURLString', swift)
+--- frozen-v3/README.md
++++ proposed-v4/README.md
+@@ -1,9 +1,19 @@
+-# DS-C01 v3 — Copy-only application evidence
++# DS-C01 v4 — Copy-only application evidence
+ 
+ **Status: authored, source-bound by root, NOT EXECUTED or independently approved.**
+-This supplements, and never overwrites, frozen v1/v2 evidence. The earlier v2
++This supplements, and never overwrites, frozen v1/v2/v3 evidence. The earlier v2
+ Settings/restart test passed on its separately recorded source; that is not a
+ result for this harness or the later source.
++
++V3 `evidence/dsc01-apphost-01` compiled and completed the real four-boot Settings
++matrix (22 observations), but the full XCTest failed while entering Whodunit's
++sixth synthetic name. Its first `typeText("Audit Player 6")` failed after a swipe
++and tap; field 5 retained keyboard focus. It did not reach the final newline or
++either local-session checkpoint. No app crash was established. V4 changes only
++that evidence path: first-field tap, actual original IME Next between fields,
++exact synthetic-value checks, and original final Done/keyboard dismissal.
++This does not establish the exact cause of the prior failed tap or repair an
++application input defect. A passing v4 run must still be observed independently.
+ 
+ ## Finite runtime scenarios
+ 
+@@ -53,6 +63,8 @@
+   in this bounded iteration; it must not be inferred from local continuity.
+ - Copied name fields gain only public seat-index test tags. Their production
+   callbacks, sanitizer, focus/IME policy, state and layout are not replaced.
++  No fling or generic `app.typeText` is used during name entry; each exact field
++  must accept its own one-shot name and the existing standalone-newline action.
+ 
+ ## Source binding and execution — root only
+ 
+@@ -119,6 +131,14 @@
+   dossier. Settings uses the proven exact merged tab labels. New public-setup
+   prefixes and field tags are closed, bounded observation seams, not fallbacks
+   that invoke app callbacks or disclose arbitrary accessible content.
++- Exact-version keyboard source is retained at sibling
++  `dsc01_apphost_v3/research/keyboard-source/`: UIKitTextInputService lines 293–316
++  and 495–500 map standalone newline to the configured IME action;
++  CoreTextField lines 883–887 and KeyboardActionRunner lines 49–86 dispatch it,
++  with default Next calling `focusManager.moveFocus(FocusDirection.Next)`.
++  Both original name-field implementations supply only final Done to clear focus
++  and hide the keyboard. This is source-backed interaction design, not runtime
++  proof that focus actually advanced; exact-target XCTest entry still must pass.
+ 
+ No build, test, simulator, app or background worker has been launched by this
+ harness author. Root owns execution and cleanup receipts.

@@ -1,0 +1,209 @@
+{
+  "recorded_at": "2026-09-05T15:40:17.096742+00:00",
+  "reviewer": "/root/mafia_cont",
+  "classification": "APPROVED_AUDIT_HELPER_ORDERING_DELTA",
+  "source_hashes": {
+    "/Users/abdelrahman/Projects/parlor/audit-runs/2026-09-05-source-audit/evidence/final-generation-order-history-01/assemble_coverage.py": "09b2a9003e9c0c3cf0e78bd79ca495fcea7a7778b636d8f3a4d4257881619c29",
+    "/Users/abdelrahman/Projects/parlor/audit-runs/2026-09-05-source-audit/evidence/final-frozen-reconciliation-mafia-cont/order-correction-review/inputs/assemble_coverage.py": "e7105933194aa93bbe9bd0db33f6c932907deb139cc9d4a809392235933531c2"
+  },
+  "test_script_sha256": "fa9cb80566c187931586a0c3e20d843fee63da571b5562ae9de2c248fed099dc",
+  "assertions": 47,
+  "results": [
+    {
+      "name": "moved source-comparison block AST unchanged",
+      "status": "PASS"
+    },
+    {
+      "name": "entire module AST is only source-comparison block relocation",
+      "status": "PASS"
+    },
+    {
+      "name": "exact textual delta is unchanged28-line block moved plus3comments",
+      "status": "PASS"
+    },
+    {
+      "name": "old helper deterministically records stale current digest for its own final-state",
+      "status": "PASS"
+    },
+    {
+      "name": "old resolver reads final-state before overwriting it",
+      "status": "PASS"
+    },
+    {
+      "name": "corrected helper writes final-state before receipt resolution",
+      "status": "PASS"
+    },
+    {
+      "name": "corrected own-final-state receipt archive-binds exact historical bytes and actual current digest",
+      "status": "PASS"
+    },
+    {
+      "name": "ordering correction leaves canonical source coverage bytes unchanged",
+      "status": "PASS"
+    },
+    {
+      "name": "audit-material receipts excluded from finite source accounting",
+      "status": "PASS"
+    },
+    {
+      "name": "later verifier overwrite reproduces three stale current attestations without a final pass",
+      "status": "PASS"
+    },
+    {
+      "name": "final corrected pass archive-binds all4historical rows with actual current digests",
+      "status": "PASS"
+    },
+    {
+      "name": "repeat corrected pass leaves source ledger and candidate-independent counts unchanged",
+      "status": "PASS"
+    },
+    {
+      "name": "unchanged current text receipt still attests only matching current bytes",
+      "status": "PASS"
+    },
+    {
+      "name": "changed receipt without historical reference stays rejected",
+      "status": "PASS"
+    },
+    {
+      "name": "missing historical file stays rejected",
+      "status": "PASS"
+    },
+    {
+      "name": "wrong historical digest stays rejected",
+      "status": "PASS"
+    },
+    {
+      "name": "outside-audit historical archive stays rejected",
+      "status": "PASS"
+    },
+    {
+      "name": "escaping historical symlink stays rejected",
+      "status": "PASS"
+    },
+    {
+      "name": "missing current path cannot borrow historical evidence",
+      "status": "PASS"
+    },
+    {
+      "name": "escaping current symlink stays rejected before content inspection",
+      "status": "PASS"
+    },
+    {
+      "name": "out-of-range current audit text receipt stays rejected",
+      "status": "PASS"
+    },
+    {
+      "name": "out-of-range historical audit text receipt stays rejected",
+      "status": "PASS"
+    },
+    {
+      "name": "baseline source hash mismatch stays rejected",
+      "status": "PASS"
+    },
+    {
+      "name": "baseline source range mismatch stays rejected",
+      "status": "PASS"
+    },
+    {
+      "name": "unknown non-audit receipt path stays rejected",
+      "status": "PASS"
+    },
+    {
+      "name": "audit binary is accepted without text decoding or source coverage credit",
+      "status": "PASS"
+    },
+    {
+      "name": "other explicit binary classification with null optional counts remains accepted",
+      "status": "PASS"
+    },
+    {
+      "name": "malformed binary metadata rejected: reviewed_ranges=[[1, 1]]",
+      "status": "PASS"
+    },
+    {
+      "name": "malformed binary metadata rejected: total_lines=0",
+      "status": "PASS"
+    },
+    {
+      "name": "malformed binary metadata rejected: reviewed_line_count=1",
+      "status": "PASS"
+    },
+    {
+      "name": "malformed binary metadata rejected: read_method=''",
+      "status": "PASS"
+    },
+    {
+      "name": "malformed binary metadata rejected: read_method=' \\t'",
+      "status": "PASS"
+    },
+    {
+      "name": "malformed binary metadata rejected: read_method=None",
+      "status": "PASS"
+    },
+    {
+      "name": "malformed binary metadata rejected: read_method=True",
+      "status": "PASS"
+    },
+    {
+      "name": "binary mislabelled text fails strict decode rather than inferred exemption",
+      "status": "PASS"
+    },
+    {
+      "name": "preservation rejection retained: changed baseline source",
+      "status": "PASS"
+    },
+    {
+      "name": "preservation rejection retained: missing baseline source",
+      "status": "PASS"
+    },
+    {
+      "name": "preservation rejection retained: added non-audit source",
+      "status": "PASS"
+    },
+    {
+      "name": "preservation rejection retained: changed branch",
+      "status": "PASS"
+    },
+    {
+      "name": "preservation rejection retained: changed refs",
+      "status": "PASS"
+    },
+    {
+      "name": "preservation rejection retained: changed stashes",
+      "status": "PASS"
+    },
+    {
+      "name": "preservation rejection retained: changed untracked listing",
+      "status": "PASS"
+    },
+    {
+      "name": "preservation rejection retained: tracked modification",
+      "status": "PASS"
+    },
+    {
+      "name": "documentation change is append-only: README.md",
+      "status": "PASS"
+    },
+    {
+      "name": "documentation change is append-only: RESEARCH_AND_CLEANUP.md",
+      "status": "PASS"
+    },
+    {
+      "name": "README explicitly requires preservation-checker-last after verification generation",
+      "status": "PASS"
+    },
+    {
+      "name": "one root historical read merely adds exact snapshot binding, does not alter original attestation",
+      "status": "PASS"
+    }
+  ],
+  "scope": "Exact AST/text delta inspection plus hash-bound function AST invocation against a wholly in-memory filesystem, clock, Git, subprocess and inventory. No actual helper script, production code, Gradle, Xcode, process query, device, server or build executed.",
+  "limitations": [
+    "Does not approve actual regenerated ledgers before a fresh independent reconciliation.",
+    "Only ordering and unchanged validation/accounting semantics established; no application finding count or behavior changes.",
+    "Historical/current bindings remain valid only if no subsequent writer alters indexed paths.",
+    "Binary fixture validates metadata/decoding/accounting, not image pixels or artifact validity."
+  ],
+  "cleanup": "No generated build outputs or persistent workers. Compact audit-only snapshots, test source and receipt retained."
+}

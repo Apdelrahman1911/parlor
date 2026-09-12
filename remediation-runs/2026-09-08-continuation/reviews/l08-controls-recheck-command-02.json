@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "author": "/root",
+  "scope": "Only the two failed focused control scopes, after independently reviewed scanner/documentation corrections. Existing packet manifest function supplies explicit before/after hashes; no native/build command or arbitrary selection.",
+  "command": [
+    "/bin/bash",
+    "-c",
+    "set -u -o pipefail -C\ndestination=$(dirname \"$(dirname \"$TMPDIR\")\")\nmanifest() {\n  /usr/bin/python3 -B -c 'import json,runpy; p=runpy.run_path(\"remediation-runs/2026-09-08-continuation/controls/run_continuation_controls.py\",run_name=\"control_input_observation\"); print(json.dumps(p[\"manifest\"](),indent=2))'\n}\nmanifest > \"$destination/l08-control-inputs-before.json\" || exit 2\nsingle=0\n/usr/bin/python3 -B remediation-runs/2026-09-08-continuation/controls/test_single_tap_fixture_review.py > \"$destination/single-tap-recheck.log\" 2>&1 || single=$?\nfunctional=0\n/usr/bin/python3 -B -m unittest discover -s remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02 -p test_l08_functional_copy.py -v > \"$destination/functional-copy-recheck.log\" 2>&1 || functional=$?\nprintf '{\"single_tap_exit_code\":%s,\"functional_copy_exit_code\":%s}\\n' \"$single\" \"$functional\" > \"$destination/l08-command-exits.json\" || exit 2\nmanifest > \"$destination/l08-control-inputs-after.json\" || exit 2\ncmp \"$destination/l08-control-inputs-before.json\" \"$destination/l08-control-inputs-after.json\" || exit 2\nprintf '{\"single_tap_exit_code\":%s,\"functional_copy_exit_code\":%s,\"control_inputs_unchanged\":true,\"scope\":\"Focused control recheck, not application/runtime proof\"}\\n' \"$single\" \"$functional\" > \"$destination/l08-control-recheck-results.json\" || exit 2\ntest \"$single\" -eq 0 && test \"$functional\" -eq 0\n"
+  ],
+  "outer_cycle": "continuation-l08-control-recheck-01",
+  "review_required": true,
+  "supersedes_review_draft": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/l08-controls-recheck-command-01.json",
+    "sha256": "2ad7b411e9de09f97cf7967a9bc3314a8389cf1b6d4ab2131f31d0d7044cd9af",
+    "findings_corrected": [
+      "Preserve suite exit codes before a possible postflight manifest/comparison failure.",
+      "Failure writing the exclusive final result cannot be masked by later successful exit tests."
+    ]
+  }
+}

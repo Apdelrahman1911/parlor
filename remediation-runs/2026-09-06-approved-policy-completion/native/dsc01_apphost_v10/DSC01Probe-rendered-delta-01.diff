@@ -1,0 +1,51 @@
+--- immutable-v9/DSC01Probe.swift.in
++++ temporary-v10/DSC01Probe.swift.in
+@@ -47,6 +47,7 @@
+     private var beforeMain: DSC01Preferences?
+     private var fixture = ""
+     private var scenario = ""
++    @Published private(set) var osMarkerControlsVisible = false
+     private var osDisposition = "not-investigated"
+     var isOSScenario: Bool { scenario == "os" }
+     private var prepared = false
+@@ -223,6 +224,12 @@
+                 self.sample()
+             }
+         }
++    }
++
++    func showOSMarkerControls() {
++        precondition(Thread.isMainThread && scenario == "os" && report?.completed == false)
++        precondition(!osMarkerControlsVisible, "OS reporting controls must expand once")
++        osMarkerControlsVisible = true
+     }
+ 
+     func markOS(_ status: String) {
+@@ -401,10 +408,23 @@
+                     .accessibilityIdentifier("parlor-dsc01-window-portrait")
+             }
+             if probe.isOSScenario {
+-                HStack(spacing: 8) {
+-                    Button("OS row unavailable") { probe.markOS("language-control-unavailable") }.accessibilityIdentifier("parlor-dsc01-os-no-row")
+-                    Button("OS selection unavailable") { probe.markOS("selection-unavailable") }.accessibilityIdentifier("parlor-dsc01-os-no-selection")
+-                    Button("OS verified") { probe.markOS("verified-english") }.accessibilityIdentifier("parlor-dsc01-os-verified")
++                // Keep the audit overlay compact during all actual Settings
++                // actions. Expand only after entering terminal reporting.
++                if probe.osMarkerControlsVisible {
++                    VStack(spacing: 4) {
++                        Button { probe.markOS("language-control-unavailable") } label: {
++                            Text("OS row unavailable").frame(maxWidth: .infinity, minHeight: 44).contentShape(Rectangle())
++                        }.buttonStyle(.plain).accessibilityIdentifier("parlor-dsc01-os-no-row")
++                        Button { probe.markOS("selection-unavailable") } label: {
++                            Text("OS selection unavailable").frame(maxWidth: .infinity, minHeight: 44).contentShape(Rectangle())
++                        }.buttonStyle(.plain).accessibilityIdentifier("parlor-dsc01-os-no-selection")
++                        Button { probe.markOS("verified-english") } label: {
++                            Text("OS verified").frame(maxWidth: .infinity, minHeight: 44).contentShape(Rectangle())
++                        }.buttonStyle(.plain).accessibilityIdentifier("parlor-dsc01-os-verified")
++                    }
++                } else {
++                    Button("OS receipt controls") { probe.showOSMarkerControls() }
++                        .accessibilityIdentifier("parlor-dsc01-os-show-markers")
+                 }
+             }
+         }

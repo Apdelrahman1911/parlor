@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.parlor.transport.p2p.ProductionVerificationWorkflowContractTest" tests="11" skipped="0" failures="3" errors="0" timestamp="2026-09-11T02:20:51.631Z" hostname="runnervmvmocb" time="1.182">
+  <properties/>
+  <testcase name="clean_ci_can_resolve_required_artifacts_with_strict_dependency_verification()[desktop]" classname="com.parlor.transport.p2p.ProductionVerificationWorkflowContractTest" time="0.005"/>
+  <testcase name="split_apple_jobs_keep_independent_source_toolchain_cycles_and_evidence()[desktop]" classname="com.parlor.transport.p2p.ProductionVerificationWorkflowContractTest" time="0.01">
+    <failure message="org.opentest4j.AssertionFailedError: Expected the char sequence to contain the substring.&#10;CharSequence &lt;name: Production verification&#13;&#10;&#13;&#10;on:&#13;&#10;  pull_request:&#13;&#10;    branches:&#13;&#10;      - main&#13;&#10;      - testing&#13;&#10;      - release&#13;&#10;  push:&#13;&#10;    branches:&#13;&#10;      - main&#13;&#10;      - testing&#13;&#10;      - release&#13;&#10;  workflow_dispatch:&#13;&#10;    inputs:&#13;&#10;      verification_scope:&#13;&#10;        description: Full qualification (default), native continuation, probes, or focused Windows/Android follow-up&#13;&#10;        type: choice&#13;&#10;        default: full&#13;&#10;        options: [full, native-preflight, native-evidence, native-process-probe, windows-only, linux-process-probe, android-cleanup-only, ios-protection-probe]&#13;&#10;      native_selection:&#13;&#10;        description: Native lanes, Settings, OS recovery, or protection diagnostics (explicit approval)&#13;&#10;        type: choice&#13;&#10;        default: paired&#13;&#10;        options: [paired, l08-only, settings-sheet-only, os-recovery-only, protection-application-only, protection-host-only]&#13;&#10;      frozen_source_sha:&#13;&#10;        description: Exact reviewed source/inventory SHA (required for every focused mode)&#13;&#10;        type: string&#13;&#10;      preflight_run_id:&#13;&#10;        description: Successful native-preflight run ID (native-evidence only)&#13;&#10;        type: string&#13;&#10;      preflight_run_attempt:&#13;&#10;        description: Exact successful preflight attempt (native-evidence only)&#13;&#10;        type: string&#13;&#10;      preflight_artifact_id:&#13;&#10;        description: Exact preflight artifact ID (native-evidence only)&#13;&#10;        type: string&#13;&#10;      preflight_artifact_sha256:&#13;&#10;        description: Independently verified preflight ZIP SHA256 (native-evidence only)&#13;&#10;        type: string&#13;&#10;      approved_l08_control_sha256:&#13;&#10;        description: Independently approved composed L08 control hash (native-evidence only)&#13;&#10;        type: string&#13;&#10;      approved_normal_control_sha256:&#13;&#10;        description: Independently approved normal libproc control hash (native-evidence only)&#13;&#10;        type: string&#13;&#10;      approved_probe_control_sha256:&#13;&#10;        description: Independently approved native/Linux/protection probe, Android cleanup, Settings, or OS-recovery hash&#13;&#10;        type: string&#13;&#10;&#13;&#10;concurrency:&#13;&#10;  # Standalone protection has its own runners; all qualification scopes stay together.&#13;&#10;  group: production-verification-${{ github.event_name == 'workflow_dispatch' &amp;&amp; inputs.verification_scope == 'ios-protection-probe' &amp;&amp; 'protection' || 'qualification' }}-${{ github.ref }}&#13;&#10;  cancel-in-progress: true&#13;&#10;&#13;&#10;permissions:&#13;&#10;  contents: read&#13;&#10;&#13;&#10;env:&#13;&#10;  # --no-daemon controls Gradle, not Kotlin's separate compiler daemon.&#13;&#10;  # Keep compiler work inside the explicitly stopped verification Gradle lane,&#13;&#10;  # including Gradle invocations from the Xcode shell phase.&#13;&#10;  GRADLE_OPTS: -Dorg.gradle.project.kotlin.compiler.execution.strategy=in-process&#13;&#10;&#13;&#10;jobs:&#13;&#10;  desktop-android:&#13;&#10;    if: github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full' || inputs.verification_scope == 'linux-process-probe' || inputs.verification_scope == 'android-cleanup-only'&#13;&#10;    name: Common, desktop, and Android release&#13;&#10;    runs-on: ubuntu-24.04&#13;&#10;    timeout-minutes: ${{ inputs.verification_scope == 'linux-process-probe' &amp;&amp; 10 || inputs.verification_scope == 'android-cleanup-only' &amp;&amp; 45 || 90 }}&#13;&#10;&#13;&gt;, substring &lt;runs-on: macos-15&gt;, ignoreCase &lt;false&gt;." type="org.opentest4j.AssertionFailedError">org.opentest4j.AssertionFailedError: Expected the char sequence to contain the substring.
+CharSequence &lt;name: Production verification
+
+on:
+  pull_request:
+    branches:
+      - main
+      - testing
+      - release
+  push:
+    branches:
+      - main
+      - testing
+      - release
+  workflow_dispatch:
+    inputs:
+      verification_scope:
+        description: Full qualification (default), native continuation, probes, or focused Windows/Android follow-up
+        type: choice
+        default: full
+        options: [full, native-preflight, native-evidence, native-process-probe, windows-only, linux-process-probe, android-cleanup-only, ios-protection-probe]
+      native_selection:
+        description: Native lanes, Settings, OS recovery, or protection diagnostics (explicit approval)
+        type: choice
+        default: paired
+        options: [paired, l08-only, settings-sheet-only, os-recovery-only, protection-application-only, protection-host-only]
+      frozen_source_sha:
+        description: Exact reviewed source/inventory SHA (required for every focused mode)
+        type: string
+      preflight_run_id:
+        description: Successful native-preflight run ID (native-evidence only)
+        type: string
+      preflight_run_attempt:
+        description: Exact successful preflight attempt (native-evidence only)
+        type: string
+      preflight_artifact_id:
+        description: Exact preflight artifact ID (native-evidence only)
+        type: string
+      preflight_artifact_sha256:
+        description: Independently verified preflight ZIP SHA256 (native-evidence only)
+        type: string
+      approved_l08_control_sha256:
+        description: Independently approved composed L08 control hash (native-evidence only)
+        type: string
+      approved_normal_control_sha256:
+        description: Independently approved normal libproc control hash (native-evidence only)
+        type: string
+      approved_probe_control_sha256:
+        description: Independently approved native/Linux/protection probe, Android cleanup, Settings, or OS-recovery hash
+        type: string
+
+concurrency:
+  # Standalone protection has its own runners; all qualification scopes stay together.
+  group: production-verification-${{ github.event_name == 'workflow_dispatch' &amp;&amp; inputs.verification_scope == 'ios-protection-probe' &amp;&amp; 'protection' || 'qualification' }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  # --no-daemon controls Gradle, not Kotlin's separate compiler daemon.
+  # Keep compiler work inside the explicitly stopped verification Gradle lane,
+  # including Gradle invocations from the Xcode shell phase.
+  GRADLE_OPTS: -Dorg.gradle.project.kotlin.compiler.execution.strategy=in-process
+
+jobs:
+  desktop-android:
+    if: github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full' || inputs.verification_scope == 'linux-process-probe' || inputs.verification_scope == 'android-cleanup-only'
+    name: Common, desktop, and Android release
+    runs-on: ubuntu-24.04
+    timeout-minutes: ${{ inputs.verification_scope == 'linux-process-probe' &amp;&amp; 10 || inputs.verification_scope == 'android-cleanup-only' &amp;&amp; 45 || 90 }}
+&gt;, substring &lt;runs-on: macos-15&gt;, ignoreCase &lt;false&gt;.
+	at app//org.junit.jupiter.api.AssertionUtils.fail(AssertionUtils.java:38)
+	at app//org.junit.jupiter.api.Assertions.fail(Assertions.java:138)
+	at app//kotlin.test.junit5.JUnit5Asserter.fail(JUnitSupport.kt:56)
+	at app//kotlin.test.Asserter.assertTrue(Assertions.kt:767)
+	at app//kotlin.test.junit5.JUnit5Asserter.assertTrue(JUnitSupport.kt:30)
+	at app//kotlin.test.AssertionsKt__AssertionsKt.assertContains(Assertions.kt:344)
+	at app//kotlin.test.AssertionsKt.assertContains(Unknown Source)
+	at app//kotlin.test.AssertionsKt__AssertionsKt.assertContains$default(Assertions.kt:343)
+	at app//kotlin.test.AssertionsKt.assertContains$default(Unknown Source)
+	at app//com.parlor.transport.p2p.ProductionVerificationWorkflowContractTest.split_apple_jobs_keep_independent_source_toolchain_cycles_and_evidence(ProductionVerificationWorkflowContractTest.kt:531)
+	at java.base@21.0.12.1/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base@21.0.12.1/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base@21.0.12.1/java.util.ArrayList.forEach(ArrayList.java:1596)
+</failure>
+  </testcase>
+  <testcase name="protection_diagnostic_is_the_seventh_opt_in_job_not_a_full_gate()[desktop]" classname="com.parlor.transport.p2p.ProductionVerificationWorkflowContractTest" time="0.007">
+    <failure message="org.opentest4j.AssertionFailedError: expected: &lt;[desktop-android, desktop-linux-arm64, desktop-macos-x64, desktop-windows-x64, ios, ios-release, ios-protection-probe]&gt; but was: &lt;[push, desktop-android, desktop-linux-arm64, desktop-macos-x64, desktop-windows-x64, ios, ios-release, ios-protection-probe]&gt;" type="org.opentest4j.AssertionFailedError">org.opentest4j.AssertionFailedError: expected: &lt;[desktop-android, desktop-linux-arm64, desktop-macos-x64, desktop-windows-x64, ios, ios-release, ios-protection-probe]&gt; but was: &lt;[push, desktop-android, desktop-linux-arm64, desktop-macos-x64, desktop-windows-x64, ios, ios-release, ios-protection-probe]&gt;
+	at app//org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
+	at app//org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
+	at app//org.junit.jupiter.api.AssertEquals.failNotEqual(AssertEquals.java:197)
+	at app//org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:182)
+	at app//org.junit.jupiter.api.Assertions.assertEquals(Assertions.java:1156)
+	at app//kotlin.test.junit5.JUnit5Asserter.assertEquals(JUnitSupport.kt:32)
+	at app//kotlin.test.AssertionsKt__AssertionsKt.assertEquals(Assertions.kt:63)
+	at app//kotlin.test.AssertionsKt.assertEquals(Unknown Source)
+	at app//kotlin.test.AssertionsKt__AssertionsKt.assertEquals$default(Assertions.kt:62)
+	at app//kotlin.test.AssertionsKt.assertEquals$default(Unknown Source)
+	at app//com.parlor.transport.p2p.ProductionVerificationWorkflowContractTest.protection_diagnostic_is_the_seventh_opt_in_job_not_a_full_gate(ProductionVerificationWorkflowContractTest.kt:567)
+	at java.base@21.0.12.1/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base@21.0.12.1/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base@21.0.12.1/java.util.ArrayList.forEach(ArrayList.java:1596)
+</failure>
+  </testcase>
+  <testcase name="every_version_catalog_alias_has_a_real_build_consumer()[desktop]" classname="com.parlor.transport.p2p.ProductionVerificationWorkflowContractTest" time="1.126"/>
+  <testcase name="one_version_source_drives_android_desktop_ios_and_runtime_compatibility()[desktop]" classname="com.parlor.transport.p2p.ProductionVerificationWorkflowContractTest" time="0.003"/>
+  <testcase name="linux_job_enforces_tests_analysis_android_release_and_artifact_inspection()[desktop]" classname="com.parlor.transport.p2p.ProductionVerificationWorkflowContractTest" time="0.003"/>
+  <testcase name="xcode_resource_artifacts_are_covered_by_strict_dependency_verification()[desktop]" classname="com.parlor.transport.p2p.ProductionVerificationWorkflowContractTest" time="0.007"/>
+  <testcase name="repository_contract_inputs_invalidate_cached_results_when_ci_or_build_gates_change()[desktop]" classname="com.parlor.transport.p2p.ProductionVerificationWorkflowContractTest" time="0.0"/>
+  <testcase name="apple_jobs_run_kotlin_and_app_launch_tests_all_link_targets_and_unsigned_swift_release()[desktop]" classname="com.parlor.transport.p2p.ProductionVerificationWorkflowContractTest" time="0.003">
+    <failure message="org.opentest4j.AssertionFailedError: Expected value to be false." type="org.opentest4j.AssertionFailedError">org.opentest4j.AssertionFailedError: Expected value to be false.
+	at app//org.junit.jupiter.api.AssertionUtils.fail(AssertionUtils.java:38)
+	at app//org.junit.jupiter.api.Assertions.fail(Assertions.java:138)
+	at app//kotlin.test.junit5.JUnit5Asserter.fail(JUnitSupport.kt:56)
+	at app//kotlin.test.Asserter.assertTrue(Assertions.kt:767)
+	at app//kotlin.test.junit5.JUnit5Asserter.assertTrue(JUnitSupport.kt:30)
+	at app//kotlin.test.Asserter.assertTrue(Assertions.kt:777)
+	at app//kotlin.test.junit5.JUnit5Asserter.assertTrue(JUnitSupport.kt:30)
+	at app//kotlin.test.AssertionsKt__AssertionsKt.assertFalse(Assertions.kt:58)
+	at app//kotlin.test.AssertionsKt.assertFalse(Unknown Source)
+	at app//kotlin.test.AssertionsKt__AssertionsKt.assertFalse$default(Assertions.kt:56)
+	at app//kotlin.test.AssertionsKt.assertFalse$default(Unknown Source)
+	at app//com.parlor.transport.p2p.ProductionVerificationWorkflowContractTest.apple_jobs_run_kotlin_and_app_launch_tests_all_link_targets_and_unsigned_swift_release(ProductionVerificationWorkflowContractTest.kt:361)
+	at java.base@21.0.12.1/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base@21.0.12.1/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base@21.0.12.1/java.util.ArrayList.forEach(ArrayList.java:1596)
+</failure>
+  </testcase>
+  <testcase name="third_party_actions_are_pinned_to_reviewed_immutable_commits()[desktop]" classname="com.parlor.transport.p2p.ProductionVerificationWorkflowContractTest" time="0.002"/>
+  <testcase name="supported_desktop_hosts_execute_real_host_selected_gradle_graphs()[desktop]" classname="com.parlor.transport.p2p.ProductionVerificationWorkflowContractTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

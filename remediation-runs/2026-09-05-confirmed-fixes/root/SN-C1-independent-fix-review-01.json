@@ -1,0 +1,33 @@
+{
+  "id": "SN-C1",
+  "at": "2026-09-05T20:43:37.459295+00:00",
+  "author": "/root/session_cont",
+  "independent_reviewer": "/root",
+  "conclusion": "APPROVED \u2014 focused root cause and regression review; final combined verification pending",
+  "baseline_commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+  "reviewed_source": "Dirty scoped remediation checkout, not pristine HEAD",
+  "files": [
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/session/src/commonMain/kotlin/com/parlor/session/multidevice/SessionStartHandshake.kt",
+      "sha256": "eab3e1743484280bbdf1731f033b9984ad0b9e1d2aea31a94e40a6c29fe17512"
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/session/src/commonTest/kotlin/com/parlor/session/multidevice/SessionStartCommitDeadlineTest.kt",
+      "sha256": "9f0dc6cb2904dc14b24114ea0e019422e2e84e912e80e359276ab4fd38c816b2"
+    }
+  ],
+  "review_reasoning": [
+    "Reopened complete changed handshake and regression file, original root source/dynamic reproduction and both games peer-start/host-authority/coordinator callers. Matching valid commit now leaves the receive deadline before a separately bounded best-effort acknowledgement; explicit CancellationException still propagates and incoming collector finalizer still runs.",
+    "Nine executed tests cover slow/failing/throwing/timed-out ACK near deadline, genuine cancellation, absent/foreign/invalid commit, duplicate re-ACK and revision-zero snapshot through actual peer coordinator. No protocol, reducer, projection, or persistence format change. Entire session145passed; overall cycle separately failed on Whodunit test compilation.",
+    "No physical transport/device execution is inferred from deterministic synthetic LocalRoom tests."
+  ],
+  "focused_evidence": {
+    "cycle": "games-session-desktop-03",
+    "suite": "SessionStartCommitDeadlineTest",
+    "tests": 9,
+    "failures": 0,
+    "skips": 0,
+    "receipt_sha256": "b7dd7cbcd744cc9ba75cb01a53ac747b875f9467c96ebcbc9c6659595fa11ae5"
+  },
+  "original_dossiers": "audit-runs/2026-09-05-source-audit/canonical-register.json references; originals preserved"
+}

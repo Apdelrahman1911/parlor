@@ -1,0 +1,210 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/factory_review",
+  "reviewed_at": "2026-09-07T22:35:06.931502+00:00",
+  "classification": "EXACT-BOUND CONDITIONAL SEQUENTIAL EXECUTION APPROVED; NOT A NATIVE PASS, STORAGE FIX, PROVENANCE FIX, RELEASE OR GIT AUTHORIZATION",
+  "binding": {
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/ios-readiness-source-08.json",
+    "sha256": "149ec7a539036855d78ad1542a5487b6dd51b84469f6ab267d3e22169f5d49a2"
+  },
+  "baseline": {
+    "commit": "b6e1947c62661631d0593038db7f64dbf25f720e",
+    "tree": "f03ad1b302d951d0ca9811b1efab2751a8be6978",
+    "branch": "fix/local-readiness-2026-09-07",
+    "tracked_status": "M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/README.md\n M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/external_image_provenance.py\n M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_control_tests.py\n M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py\n M scripts/verification/ios-readiness/L08StorageProbe.kt.in\n M scripts/verification/ios-readiness/l08_receipts.py\n M scripts/verification/ios-readiness/test_l08_diagnostics.py",
+    "diff_sha256": "36dd70117778d1f5d038acfab1ab46ffb464cd8c78b2428552214bfe6fdffed1",
+    "source_manifest_sha256": "b8baa32067fdf29135e3e935429768b710c65897c334f2bb8ac8108f6aa85359"
+  },
+  "fresh_inventory_verification": {
+    "files": 799,
+    "copy_inputs": 739,
+    "source_identity_and_every_hash_match": true,
+    "complete_current_applicable_copy_selection_matches": true,
+    "changed_inventory_paths_from_source07": [
+      "scripts/verification/ios-readiness/L08StorageProbe.kt.in",
+      "scripts/verification/ios-readiness/l08_receipts.py",
+      "scripts/verification/ios-readiness/test_l08_diagnostics.py"
+    ],
+    "shipping_source_changed_from_source07": false,
+    "normal_controls_are_separately_bound": true,
+    "method": "Fresh Git cached/untracked inventory + standard-library hashing with reviewed protected/excluded policy; no executable repository import. These counts are binding coverage, not new line-by-line audit coverage."
+  },
+  "control_manifests": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/l08-source08-control-manifest-01.json",
+      "sha256": "04eb6dd28eaf5caa1a3f198880dd80550a73ee1c69090e46f1e1e4860f50778b",
+      "files": 65,
+      "control_sha256": "d7aad2e238b1d50335c4ea74741bb91d86354cfa37805ce73b78f4fe81fd9beb",
+      "fresh_directory_enumeration_matches": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/normal-source08-control-manifest-01.json",
+      "sha256": "260560dbd3d5e6f2d8c31310369a0fdc4cd575af870dc839c9265c532541e770",
+      "files": 77,
+      "control_sha256": "5597d0fd68ebe4130c01e0790b8f7ca561ac9fbd678dea1ce5302e4ee08b4119",
+      "fresh_directory_enumeration_matches": true
+    }
+  ],
+  "source_review_evidence": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/normal-header-diagnostics-independent-source-review-01.json",
+      "sha256": "79c453bfbc7f469aae74a023d1563d1fe3776160db5fc35e73018452ca1ef747"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/normal-header-diagnostics-independent-verified-02.json",
+      "sha256": "d6b7c0b543b60dc4718bc303addfd6a058a0fb5bb02225bd0243feaf7a8c1d25"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/l08-protection-metadata-draft-independent-01.json",
+      "sha256": "c83e79029341239c6706a1a2e86f65f0fddbacd4b5a0f568e825b41703076459"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/l08-protection-metadata-adopted-controls-independent-01.json",
+      "sha256": "68f8f688e4339507229023888fc8788197fe5126f999722d3642d574b3e41b1d"
+    }
+  ],
+  "independent_source_review_summary": {
+    "normal_diagnostics": "Root-authored five-file diagnostic change reviewed by factory_review. Original Process/Path validation, sample/vmmap and artifact acceptance stay unchanged. Failure-only bounded redacted metadata, decoded_text_sha256 accurately named, original exception preserved, raw output still removed.",
+    "l08_diagnostics": "native_fix_review-authored three-file change independently source-reviewed and actual153 controls reconciled by release_fix_review; factory_review also read complete delta and original assertion/ownership/reset paths. Original directory/file Complete assertions retained. Same original getter captures closed NSError/value observations; additional exact-file getter on directory failure explicitly diagnostic-only; fresh NSURL support queries cannot relax PASS. iOS17 symbol version guard preserves iOS16 target.",
+    "ownership_cleanup": "No runner process/simulator/temp/fifo ownership or cleanup relaxation. Parent has sole native build lane; source/control freeze enforced by existing bindings. No secrets, real user records, private keys, Store services or user simulator profiles involved."
+  },
+  "executed_control_receipts": [
+    {
+      "cycle": "l08-protection-metadata-controls-01",
+      "receipt": {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-protection-metadata-controls-01/receipt.json",
+        "sha256": "809f9db2f8f57cb2056c43178343054a2aa0dcfd1fbda5a68d4e76970cc36f87"
+      },
+      "log": {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-protection-metadata-controls-01/gradle.log",
+        "sha256": "2d4b3d533eca28e7bb60cc08e557c70fea0c24f755261e5e45d4b0edcb68d525"
+      },
+      "tests": 153,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "exact_raw_and_AST_discovery_match": true,
+      "per_module": {
+        "test_controls": 14,
+        "test_l08_copy": 9,
+        "test_l08_diagnostics": 21,
+        "test_l08_host_receipts": 12,
+        "test_l08_receipts": 13,
+        "test_native_failure_receipts": 7,
+        "test_native_paths": 3,
+        "test_native_readiness": 25,
+        "test_os_preference_receipts": 5,
+        "test_secondary_fifo": 27,
+        "test_simulator_entitlements": 11,
+        "test_simulator_signing": 6
+      },
+      "host_multiline_record": [
+        {
+          "line": 77,
+          "test_id": "test_native_paths.NativePathControlTests.test_actual_host_foundation_alias_and_owned_origin_controls",
+          "shape": "PARLOR_HOST_PATH_CONTROLS JSON then standalone ok",
+          "fixture_cases": 18
+        }
+      ],
+      "cleanup_receipt_verified": true,
+      "scope": "Python synthetic controls plus existing macOS Swift/Foundation helper controls; NOT new Kotlin observer compilation or iOS app runtime."
+    },
+    {
+      "cycle": "normal-header-diagnostics-controls-02",
+      "receipt": {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/normal-header-diagnostics-controls-02/receipt.json",
+        "sha256": "6a1d17e08d56f664dec169388bbc1da890306b347d563a995edcec43a02f1342"
+      },
+      "log": {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/normal-header-diagnostics-controls-02/gradle.log",
+        "sha256": "8b9e49d66c416f0ea34318dea31973c400fa0cfb3a2e99f8256afbafdd3adc39"
+      },
+      "tests": 99,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "exact_raw_declared_and_discovered_ids_match": true,
+      "current_control_files": 76,
+      "current_before_after_control_sha256": "10a2ade47e5c4ea2b80858248cec42646afa6daa58303b7f9e14e28ac931fb75",
+      "cleanup_receipt_verified": true,
+      "scope": "Synthetic Python controls; not app runtime or production repair."
+    }
+  ],
+  "static_preflight": {
+    "unused_destinations": [
+      "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-09",
+      "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-10"
+    ],
+    "checked_original_outputs_absent": [
+      "/Users/abdelrahman/Projects/parlor/shared/core/build",
+      "/Users/abdelrahman/Projects/parlor/shared/networking/build",
+      "/Users/abdelrahman/Projects/parlor/shared/content/build",
+      "/Users/abdelrahman/Projects/parlor/shared/storage/build",
+      "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/build",
+      "/Users/abdelrahman/Projects/parlor/shared/networking-testing/build",
+      "/Users/abdelrahman/Projects/parlor/shared/engine/build",
+      "/Users/abdelrahman/Projects/parlor/shared/design-system/build",
+      "/Users/abdelrahman/Projects/parlor/shared/engine-testing/build",
+      "/Users/abdelrahman/Projects/parlor/shared/session/build",
+      "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/build",
+      "/Users/abdelrahman/Projects/parlor/game-modes/mafia/build",
+      "/Users/abdelrahman/Projects/parlor/build",
+      "/Users/abdelrahman/Projects/parlor/composeApp/build",
+      "/Users/abdelrahman/Projects/parlor/build-logic/build",
+      "/Users/abdelrahman/Projects/parlor/build-logic/convention/build",
+      "/Users/abdelrahman/Projects/parlor/iosApp/build"
+    ],
+    "available_bytes_at_review": 12943679488,
+    "available_GiB_at_review": 12.05,
+    "process_preflight": "Parent reports no active build workers; reviewer did not run process enumeration/control. Parent must perform lane ownership preflight before each invocation."
+  },
+  "approved_sequence": [
+    {
+      "cycle": "ios-readiness-09",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/run_ios_readiness.py",
+        "ios-readiness-09",
+        "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/ios-readiness-source-08.json",
+        "d7aad2e238b1d50335c4ea74741bb91d86354cfa37805ce73b78f4fe81fd9beb",
+        "--simulator-signing=adhoc"
+      ],
+      "purpose": "Instrumented copy diagnostic of original L08 failure; new Kotlin compile/runtime unexecuted at approval."
+    },
+    {
+      "cycle": "ios-readiness-10",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
+        "ios-readiness-10",
+        "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/ios-readiness-source-08.json",
+        "5597d0fd68ebe4130c01e0790b8f7ca561ac9fbd678dea1ce5302e4ee08b4119",
+        "--simulator-signing=adhoc"
+      ],
+      "prerequisites": [
+        "09 fully finished; compact failed or successful result evidence retained.",
+        "09 cleanup PASS with no remaining owned workers/temporary outputs or original output changes.",
+        "Source08 binding and exact relevant controls still unchanged; destinations still unused.",
+        "Fresh root-owned lane/process/disk preflight passes."
+      ],
+      "purpose": "Normal production-source home repetitions followed by independent ninth-launch image provenance; bounded failure diagnostic if strict header validation rejects."
+    }
+  ],
+  "interpretation_constraints": [
+    "09 may fail; preserve actual metadata and original failure. Diagnostic success does not repair storage. Unknown metadata/support is not evidence of unsupported Simulator behavior.",
+    "On 09 directory failure, extra file observation is not credit for reaching or passing the original file assertion.",
+    "10 eight repeated-home PASS and ninth provenance PASS/FAIL are distinct; neither revises native08 FAIL retroactively.",
+    "Do not infer app crash, historical first-four-launch cause, physical-device/LAN, iOS16 runtime, Store identity/signing or release readiness from these controls.",
+    "Any source/control change invalidates this approval and requires fresh binding/review before executing.",
+    "No pause in per-cycle evidence/Gradle-stop/owned-cleanup rules. If cleanup fails, do not start next cycle."
+  ],
+  "reviewer_activity": {
+    "repository_modules_imported": false,
+    "builds_tests_native_probes_or_process_control": false,
+    "Git_Store_or_application_mutations": false,
+    "new_workers_or_build_outputs": false,
+    "only_write": "This new additive JSON report; existing reports, receipts, source, user work preserved."
+  }
+}

@@ -1,0 +1,92 @@
+{
+  "schema": 1,
+  "author": "/root/release_fix_review",
+  "created_at": "2026-09-07T14:41:47.015000+00:00",
+  "head": "11210dc6e34811bd1dd36d6a34339851601e5112",
+  "source_frozen": true,
+  "independent_review": "PENDING /root; implementation author cannot approve own correction",
+  "original_failure": {
+    "finder": "/root",
+    "independently_reopened_by": "/root/release_fix_review",
+    "receipt": "evidence/ci-native-probe-and-lint-01/receipt.json",
+    "receipt_sha256": "8f1d7cfcfc850c7f877076c8537204ac7225966f31da00f636a23bda3cb484df",
+    "log_sha256": "ee03cd43aeb778a559ab76300272239e820a8b3db8318e68ca4c875d32203fa1",
+    "proof": "macOS26.2/Darwin25.2 xnu-12377.61.12 SC_ARG_MAX=1048576; original constructor adds argc4 then incorrectly compares1048580 to a1048576 record cap. Probe FAILED before creating child."
+  },
+  "correction": "Keep1MiB ARG_MAX payload ceiling; reserve exactly one native argc int (4bytes on supported ARM64) separately. Constructor allocation, KERN_PROCARGS2 accepted response, and parser share the1048580-byte record limit; reject larger payloads. No PID fallback/marker/worker allowlist changes.",
+  "files_changed": [
+    {
+      "path": "scripts/ci/darwin_worker_identity.py",
+      "before_sha256": "a3830b131614d059d7a2047dfbaa11117141ac2b02f1603fe0482f9dd5c94cc2",
+      "after_sha256": "ee61ed6ff7f3b3333ad540431a5f6764d0acd24e0a4d9a5617a59f0dba9b2b86",
+      "before_lines": 247,
+      "after_lines": 253,
+      "syntax": "AST parse succeeded; no module imported or test executed"
+    },
+    {
+      "path": "scripts/release/tests/test_apple_ci_hygiene.py",
+      "before_sha256": "39f0bafac0ab9b49fa396d4767403bd6884cf295dac9f9bd38801ea1dcc2b094",
+      "after_sha256": "28ad6d083da0088087b2196ff1c102e19944e190d9d4484facd511b1d4063be1",
+      "before_lines": 530,
+      "after_lines": 576,
+      "syntax": "AST parse succeeded; no module imported or test executed"
+    }
+  ],
+  "full_frozen_ci_manifest": [
+    {
+      "path": ".github/workflows/production-verification.yml",
+      "sha256": "916207fd2d0a42d17c088dbf7899afe06d3ae070e1f8b1d6749661785a88d8fd",
+      "lines": 650
+    },
+    {
+      "path": "scripts/ci/verification_hygiene.py",
+      "sha256": "9eab427aeb3d810c033a3827aa44f7201cbb261345a2e6667a8d085df2fbd603",
+      "lines": 276
+    },
+    {
+      "path": "scripts/ci/apple_verification_hygiene.py",
+      "sha256": "d9c554781750d3cbbf2a4adce3b040edb83d0de5fec4c04eac700c526fca1c3c",
+      "lines": 278
+    },
+    {
+      "path": "scripts/ci/darwin_worker_identity.py",
+      "sha256": "ee61ed6ff7f3b3333ad540431a5f6764d0acd24e0a4d9a5617a59f0dba9b2b86",
+      "lines": 253
+    },
+    {
+      "path": "scripts/ci/owned_ci_simulator.py",
+      "sha256": "717c8c02dc06e4eac175c5dde5c7f9bdd6ebbd5e7028cc94c6ba4f84b44388af",
+      "lines": 213
+    },
+    {
+      "path": "scripts/release/tests/test_ci_verification_hygiene.py",
+      "sha256": "3fc6f1d4a15152bcca6d86d77bcbc782b3936c6c47336a3ff7b3067d3790e4c8",
+      "lines": 339
+    },
+    {
+      "path": "scripts/release/tests/test_apple_ci_hygiene.py",
+      "sha256": "28ad6d083da0088087b2196ff1c102e19944e190d9d4484facd511b1d4063be1",
+      "lines": 576
+    }
+  ],
+  "diff": {
+    "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-native-argument-capacity-fix-02.patch",
+    "sha256": "ed9afb187487d43acace774b997b6f124c8bf643f5cde98ce9f260bf9e3eab00"
+  },
+  "research": {
+    "path": "reviews/ci-run-34112913001-evidence/apple-ci-argument-capacity-research-03.json",
+    "sha256": "ea52787cbdceb8ffb62eccf39e455bb37dac87ed8712bdc37750b83fbd9023ca",
+    "exact_local_kernel_source": "https://raw.githubusercontent.com/apple-oss-distributions/xnu/xnu-12377.61.12/bsd/kern/kern_sysctl.c",
+    "applicability": "Matches locally observed kernel base tag; macOS15 initial-release syslimits also1MiB. Exact fresh CI patch runtime/XPC behavior not proven."
+  },
+  "regression_methods_added": [
+    "test_argument_capacity_reserves_argc_beyond_the_payload_limit",
+    "test_argument_capacity_rejects_invalid_or_excessive_payload_limits",
+    "test_full_argmax_record_is_accepted_but_an_extra_payload_byte_is_not",
+    "test_tracking_read_uses_the_bounded_argc_prefixed_capacity"
+  ],
+  "regression_design": "Tests preserve exactly1MiB payload limit, permit the4-byte header, cover lower/quarter/full system limits and excess/invalid rejection, and call actual tracking reader/parser with a fake sysctl writing a full owned byte buffer. No native process API or simulator invoked. Original oversized fixture remains over record limit, not merely over payload limit.",
+  "declared_apple_python_methods": 37,
+  "execution": "NOT RUN by child. Root must run focused Python controls and repeat actual local synthetic-child probe; qualified CI remains required. Prior68-pass receipt is pre-fix synthetic evidence, not verification of this change.",
+  "cleanup": "Only short read/research/editor/hash/AST commands started by child and all exited. No Gradle, build outputs, native backend, app/device/simulator, or background worker created. No unrelated source/evidence removed."
+}

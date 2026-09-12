@@ -1,0 +1,138 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/factory_review",
+  "reviewed_at": "2026-09-07T22:01:18.992528+00:00",
+  "classification": "TWO ACTUAL HOST-ONLY OBSERVATIONS INDEPENDENTLY READ; FIRST SCOPED PASS /SECOND FAIL; NEITHER ESTABLISHES native08CAUSE",
+  "cycles": [
+    {
+      "cycle": "normal-sample-header-probe-01",
+      "status": "PASS",
+      "probe_exit_code": 0,
+      "probe_source_sha256": "8c00d487da35bcaf3197471b1c35a57762b55d4e5106433327b0c1ef32ecabd1",
+      "approval_path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/owned-sample-header-probe-independent-safety-01.json",
+      "approval_sha256": "d0d1bb69407d65195a0dc2b36270e2b08c31225a5be6820eb9cccdc3461a7301",
+      "started_at": "2026-09-07T21:39:18.955674+00:00",
+      "finished_at": "2026-09-07T21:39:20.622394+00:00",
+      "output": {
+        "scope": "Owned host sleep process only; not iOS app or repair verification",
+        "executable_sha256": "54b2ad63fca50492d3021ecdf199deb97f8b4ee2559677e9aec7746227700cbf",
+        "sample_sha256": "744c6bd1d85ababe41a5e8ae058ea6ed04819e960102560acac15c2a1615c5bf",
+        "owned_pid": 21895,
+        "sample_exit_code": 0,
+        "headers": [
+          "Process:         sleep [21895]",
+          "Path:            /bin/sleep"
+        ],
+        "process_matches": [
+          "21895"
+        ],
+        "path_matches": [
+          "/bin/sleep"
+        ],
+        "raw_sample_sha256": "2adb4a73a973a6b233d1e55a11395bf6722608d9627f84549e0d991d6d9e0682",
+        "target_reaped": true,
+        "owned_temporary_removed": true
+      },
+      "cleanup": {
+        "status": "PASS corroborated",
+        "target_reaped": true,
+        "owned_temporary_removed": true,
+        "scratch_independently_absent": true,
+        "gradle_stop_exit_code": 0,
+        "remaining_owned_workers": [],
+        "remaining_outputs": [],
+        "errors": []
+      },
+      "evidence": [
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/normal-sample-header-probe-01/receipt.json",
+          "sha256": "e2054432e30b6616bafa86dc20fb7b07ef02d48a613547516e13f12b2f629037"
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/normal-sample-header-probe-01/gradle.log",
+          "sha256": "477d0585fdd9d84e6c86794866e284647b5cc0d1af5ac36da1685a326245b723"
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/normal-sample-header-probe-01/stop.log",
+          "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/normal-sample-header-probe-01/artifact-receipts.json",
+          "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/normal-sample-header-probe-01/test-receipts.json",
+          "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+        }
+      ],
+      "classification": "PASS narrow installed-hostsampleformat observation for direct /bin/sleep only; supplied headers satisfy unchanged PID/path regex semantics"
+    },
+    {
+      "cycle": "normal-sample-user-path-probe-01",
+      "status": "FAIL",
+      "probe_exit_code": 1,
+      "probe_source_sha256": "9b40a5d341b0f1a8615ea265f6a311c418d07b1e48e614df36e73db91f86438f",
+      "approval_path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/owned-sample-user-path-probe-independent-safety-01.json",
+      "approval_sha256": "620b88ebba13733afaab61d8c01c57224a884ceb7a4dbc52603d99b228f07849",
+      "started_at": "2026-09-07T21:52:07.406709+00:00",
+      "finished_at": "2026-09-07T21:52:08.085418+00:00",
+      "output": {
+        "scope": "Owned host copied-sleep only; not iOS or repair verification",
+        "original_sha256": "54b2ad63fca50492d3021ecdf199deb97f8b4ee2559677e9aec7746227700cbf",
+        "sample_sha256": "744c6bd1d85ababe41a5e8ae058ea6ed04819e960102560acac15c2a1615c5bf",
+        "observations": [
+          {
+            "options": [],
+            "sample_exit_code": 255
+          }
+        ],
+        "owned_pid": 25308,
+        "copied_executable": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/normal-sample-user-path-probe-01/scratch/tmp/owned-user-path-k_iscu8k/OwnedSleepHeaderProbe",
+        "target_reaped": true,
+        "owned_temporary_removed": true
+      },
+      "cleanup": {
+        "status": "PASS corroborated",
+        "target_reaped": true,
+        "owned_temporary_removed": true,
+        "scratch_independently_absent": true,
+        "gradle_stop_exit_code": 0,
+        "remaining_owned_workers": [],
+        "remaining_outputs": [],
+        "errors": []
+      },
+      "evidence": [
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/normal-sample-user-path-probe-01/receipt.json",
+          "sha256": "8a8e95b858ab90b978f05abe0d9ab81bd9860d3a977afab573aa7bc1427aad1e"
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/normal-sample-user-path-probe-01/gradle.log",
+          "sha256": "2e7db55792b495d588caf43ee704ac25e12e81b30c77cc6c338645a9a4ecc678"
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/normal-sample-user-path-probe-01/stop.log",
+          "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/normal-sample-user-path-probe-01/artifact-receipts.json",
+          "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/normal-sample-user-path-probe-01/test-receipts.json",
+          "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+        }
+      ],
+      "classification": "FAIL hostcopiedsleep observation; defaultsample255; -fullPaths not run; no header collected; exacttarget/toolfailurecause unresolved"
+    }
+  ],
+  "limitations": [
+    "First installedhostsample Process sleep[21895]/Path/bin/sleep demonstrates only that directpublichostexecutable case. It cannot establish actual iOSapplication sampleheader spelling or replay the deleted native08headers.",
+    "Second copiedpublicsleep header experiment exited1 after firstsamplecommand255. No header/rawsamplehash or commandstdout/stderr was retained; no proof whether targetexit,permission,toolformat or signature behavior causedfailure. -fullPaths observation did not run. No follow-onapplication repair inferred.",
+    "Wrapper beforeafter identity attests799application/sourcefiles and wrapper bytes,not a dedicated beforeafter --command script hash. Current scripts match independent presafetyreview hashes; no stronger runtime scriptattestationclaimed.",
+    "No tests or applicationbehavior gate ran; testreceipts[]/artifactreceipts[] expected for this hosttoolformatcommand. Counts must not enter applicationregression/passpercentage.",
+    "Workerabsence uses retained ownerwrapper evidence,not separate processenumeration byreviewer. Exactcyclescratchabsence independently checked.",
+    "native07storage andnative08provenance failures remainunchanged; productionrootcause stillunconfirmed. No simulator/device/Store/launchcrashreadiness claim."
+  ],
+  "reviewer_hygiene": "No build,test,probe,nativeAPI,processcontrol or repositorymoduleimport executed by reviewer; only standard-library retained JSON/hash/read analysis and this newadditivereport. No generatedoutputs or backgroundworkers created."
+}

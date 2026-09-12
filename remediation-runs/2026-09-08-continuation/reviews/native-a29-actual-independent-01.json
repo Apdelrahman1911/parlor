@@ -1,0 +1,233 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/fixture_review",
+  "review_kind": "independent retained A29 runtime semantic reconciliation",
+  "verdict": "NOT_READY",
+  "method": "Read-only frozen Git, literal/AST/string reconstruction, and stdlib JSON/hash inspection. No project imports, extracted-function execution, tests, builds, native tools or network. Full archive/API/source/control/cleanup custody is separately owned by /root/native_ci; this report binds inspected members, not a Linux reinspection of the retired Mac.",
+  "binding": {
+    "run_id": 34362984912,
+    "attempt": 1,
+    "cycle": "ios-readiness-29",
+    "branch": "fix/local-readiness-2026-09-07",
+    "commit": "360fc797a85e1e494334fd8cc11b4e739981cea8",
+    "tree": "8bfe56a21074ba51a4b668bad0728e42007a7593",
+    "approved_control_sha256": "04b915fc1390e909d7075ee46deede1a1eadb1e8faa24c0e5a8753b88ac71acf",
+    "source_manifest_sha256": "f7fba4adbed9cd963c53486ee57300a940f3f3fe4e61cc6d661159a706c125f8",
+    "run_token": "217002BD-D169-40FC-8138-AB4831656E8D",
+    "collection_receipt_sha256": "a978328eeb51338f790d297bd6abaf4c6ed33d480cc3efadd880094c9ece913f",
+    "platform": "macOS15.7.9; Xcode26.3/17C529; arm64 iPhone17Pro iOS Simulator26.2/23C54; Debug adhoc",
+    "simulator_udid": "D2EABE0F-F3C7-4D8A-AD23-4AD501ADB44B"
+  },
+  "evidence": {
+    "base": "remediation-runs/2026-09-08-continuation/actions/34362984912/native-evidence/ios-readiness-29",
+    "sha256": {
+      "receipt.json": "bc0bf25113a9399d2491ffd2f33770815468a7aabb418d921137528e683ec30f",
+      "input-manifest.json": "65e1236acbfb927242e7058ff657401840ef611a2d3eed33278e1ecd83236baa",
+      "copied-source.diff": "b3ff5c373503bc777c12f70ee0afe4eef2f5fabaa2a7fd43b9baf3fcac68730b",
+      "xcodebuild.log": "640d8f5d530796d06427d4bfb966e918f8007e0667ae31216fae30a3d74042cb",
+      "xcresult-summary.json": "c35a94bad1e33ecfe3aa6f5b1029712750ba9568fc5cb7fc40808ee7c56616e7",
+      "xcresult-tests.json": "6e82d4771b5225bbee1ca24e197a7869860133ea98ab6dfce452f1fdb5009339",
+      "probe-l08-host-result.json": "7a2b4f6b857f1260b0e97f643ea73be5b45d233420bd3c96d00406c7eb4b67c1",
+      "probe-l08-storage-functional-result.json": "64c6ec6eab47a811fc9d1eb0c014cf3ba77c876ab9054e5357b2f77f8428c151",
+      "probe-settings-result.json": "20d322c90c1a678592555d71ed6c21debebcc765214db637918d92ef7ec4e7a5",
+      "probe-readiness-result.json": "fd17f63ca97a813053b06c6702bf2da3d43ad436ea52f4993ded2968d9ea2445",
+      "probe-whodunit-result.json": "ad523a8156224794d4213288f9d8e3bea800158e6971a637be6860442e41326b",
+      "parlor-l08-app-foundation.json": "8b4d8450b6d7ebd1b06d764261bc26c240e36c2dbb4a7d80e346cf82ee9d0124"
+    }
+  },
+  "actual_execution": {
+    "xcodebuild_exit": 65,
+    "xctest": {
+      "total": 5,
+      "passed": 4,
+      "failed": 1,
+      "skipped": 0,
+      "expected_failures": 0,
+      "passed_scope": "Four production ComposeContainer UIKit tests: full bounds/opposing directions, appearance forwarding, stable child semantics, decoration/orientation ownership.",
+      "failed_test": "IOSAppLaunchUITests/testDSC01ActualSettingsLocalSessionsAndOSWithL08FunctionalObservation()",
+      "failed_duration_seconds": 1934.4069629907608
+    },
+    "runner_status": "FAIL",
+    "runtime_evidence_status": "FAIL",
+    "final_semantic_verifiers": "NOT_REACHED: exact-five-successful-XCTest assertion aborts at run_ios_readiness.py1120 before catalogue/public interaction, native_readiness, functional storage, host and complete DSC01 validators. Independent raw-row conclusions below are not fabricated runner PASS sections."
+  },
+  "findings": [
+    {
+      "id": "A29-CATALOG-POSTTAP",
+      "severity": "blocking",
+      "observation": "Later local Whodunit catalogue entry fails after one measured coordinate activation, not at host preparation. XCResult and xcodebuild.log10614 report missing old Whodunit button at generated Swift840.",
+      "source": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/DSC01CatalogSelection.swift.in:123-140,219-236",
+      "copied_source": {
+        "path": "iosApp/iosAppUITests/IOSAppLaunchUITests.swift",
+        "sha256": "c9f0082700e23af3afaaa40c322a39bed3cd3018569b1a7f2b5dc22787d3fd35",
+        "bytes": 177659,
+        "lines": 2845,
+        "binding": "Reconstructed in memory from frozen original and retained unified diff; matches both before/after copied manifest rows.",
+        "line840": "hittable: target?.isHittable ?? false, enabled: target?.isEnabled ?? false, viewport: app.frame,",
+        "tap_line": 923,
+        "immediate_posttap_sample_line": 924
+      },
+      "raw_catalogue": {
+        "metadata_rows": 7,
+        "search_rows": 6,
+        "before_activation_rows": 1,
+        "after_activation_rows": 0,
+        "successor_rows": 0,
+        "failed_metadata_rows": 0,
+        "before_activation_log_line": 10591,
+        "tap_log_line": 10592,
+        "tap_seconds": 1928.49,
+        "target_frame": [
+          24,
+          376,
+          354,
+          369.3333740234375
+        ],
+        "point": [
+          201,
+          560.6666870117188
+        ],
+        "normalized_point": [
+          0.5,
+          0.5
+        ],
+        "visible_interior": [
+          36,
+          388,
+          330,
+          345.3333740234375
+        ],
+        "target_count": 1,
+        "enabled_hittable_foreground": true,
+        "alert_keyboard_present": false,
+        "tabs": [
+          1,
+          1
+        ],
+        "successor_count": 0
+      },
+      "conclusion": "Observed element property resolution fails during post-tap transition; optional XCUIElement retained after count==1 is not a durable snapshot. Disappearance/tap is not proof of navigation. A count-only postactivation diagnostic correction remains subject to independent review and fresh runtime."
+    },
+    {
+      "id": "A29-HOST-EN-OWNERSHIP",
+      "severity": "blocking latent final-validator mismatch",
+      "observation": "All 42 host operation statuses and all 156 exact invariant booleans are PASS, but the three exact language-en UIKit sequences do not satisfy the unchanged host ownership validator.",
+      "source": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/l08_receipts.py:329-338",
+      "operation_files": [
+        "parlor-l08-host-1-language-en.json",
+        "parlor-l08-host-2-language-en.json",
+        "parlor-l08-host-3-language-en.json"
+      ],
+      "bound_sequences": [
+        8,
+        39,
+        70
+      ],
+      "observed": {
+        "setting": "en",
+        "preferredLanguage": "en",
+        "ownerInstalled": "none",
+        "ownerPresent": false,
+        "appLanguages": [],
+        "ownerPrevious": [],
+        "nativeDirection": "force_ltr"
+      },
+      "required": {
+        "ownerInstalled": "en",
+        "appLanguages": [
+          "en"
+        ],
+        "ownerPrevious": []
+      },
+      "later_sequences": [
+        9,
+        40,
+        71
+      ],
+      "later_observation": "Same-boot following samples show en ownership/[en], with backgroundCallbacks still0; these are not the operation-bound sequences and cannot replace them.",
+      "conclusion": "Host matrix NOT_ACCEPTED. Investigate fixture completion acknowledgement of actual production preference application; do not weaken validation, rewrite receipts, choose later rows retrospectively, or infer a production language regression solely from an asynchronous observation boundary."
+    },
+    {
+      "id": "A29-STRICT-PROTECTION",
+      "severity": "blocking unresolved strict gate",
+      "observation": "26/26 actually returned Complete comparisons FAIL across 13 directory/file checkpoint pairs. All have dictionary_present=true, key_present=false, value=missing, no NSError (domain none/code0).",
+      "checks": "Exact boot/action/site/alias/target/ordinal plan reconciles: ordinary save/load wc,we,mon,moff; dual before seed/after tag damage; legacy+dual load; retained dual. Functional owned_metadata_and_header is not Complete equality.",
+      "foundation": "Same first-health app process: 8 successful returned native operations and 8 checkpoints. FileManager protection key absent8/8; volume protection unsupported8/8; file URL protection until-first-authentication5/5. Backup switches and direct setters do not establish Complete. Foundation main/debug-image UUIDs match raw built UUID logs; fixture reports owned root removed.",
+      "foundation_uuid": "c153116f-dd31-3fa9-89bb-04b47c1fa83d",
+      "conclusion": "Fresh corroboration of unresolved strict failure, not an exemption, proven simulator-only cause, hardware protection, or absence of a coexisting product defect. original strict_l08_gate remains NOT_SATISFIED_BY_COMPANION."
+    }
+  ],
+  "reconciled_partial_coverage": {
+    "host": {
+      "operations": 42,
+      "processes": 3,
+      "probe_rows": 95,
+      "phases": {
+        "before_main": 3,
+        "sample": 91,
+        "complete": 1
+      },
+      "boot_log_lines": [
+        4077,
+        5120,
+        6071
+      ],
+      "checks": "Exact 14-action order per variant, 156 true check flags, unique increasing sample sequences, room/counter/worker schema, all other bound preferences, stable per-process images and real UIKit callback increases reconcile.",
+      "variants": [
+        "whodunit-classic",
+        "mafia-doctor-on",
+        "mafia-doctor-off"
+      ],
+      "background_foreground_cycles": 9,
+      "remounts": 3,
+      "suspended_resuming_guards": 18,
+      "final_leave_worker_cleanup_observations": 3,
+      "scope": "Production owner/controller/flows/lifecycle with copy-only presentation seam and synthetic pre-admitted ControlledStartRoom transport. Not physical LAN/discovery/lobby/credential recovery/full multiplayer playthrough; ownership finding prevents matrix PASS."
+    },
+    "functional_storage": {
+      "operation_statuses": "20/20 PASS; all106 exact functional check flags true",
+      "processes": 13,
+      "probe_rows": 41,
+      "phases": {
+        "before_main": 13,
+        "sample": 27,
+        "complete": 1
+      },
+      "checks": "Exact 13-boot/20-operation plan, tokens/processes, all13 XCTest boot markers, geometry, loaded-image stability and all26 comparison identities reconcile. No additional functional final-validator mismatch found in retained rows.",
+      "actual_home_activations": 7,
+      "legal_resumed_controller_terminal_traces": 5,
+      "retry_discard_pairs": 2,
+      "raw_controls": "70 Home metadata rows (7 identifiers; each one before-tap/after-tap pair, six geometry samples). After taps: resume_taps1 for all7; recovery_shows0 for healthy5 and1 for damaged/dual2. Actual l08-recovery-retry and l08-recovery-discard taps retained for each damaged boot; durable functional checks confirm fail-closed retry, explicit deletion and next-boot absence.",
+      "scope": "Synthetic legal action drivers through actual copied Debug app stores/Home/resumed controllers, not full UI playthrough or strict protection PASS. Covers Whodunit classic/elimination, Mafia Doctor ON/OFF, valid legacy migration, malformed neighbor isolation, recognized-damaged protected+valid legacy fail-closed retention and explicit discard."
+    },
+    "settings_and_readiness": {
+      "settings": "Completed22rows/4distinctboots: original Settings Arabic/English selection, restart, System restoration including task-only ar-EG/en prior array. Seed-cleanup receipt and actual next before-main absence reconcile.",
+      "readiness": "Completed74rows/8distinctboots;48 bound foreground samples with no alerts; each6-sample train spans28.251\u201329.097seconds. Actual credential add/update/remove/read status chronology and snapshot match/delete/absence chronology reconcile. Numeric attribution remains credential-only, not original Home invocation or snapshot native status.",
+      "all_retained_geometry": "210 post-main rows across Settings/readiness/host/storage/partialWhodunit retain one outer/child/root/window, full portrait bounds and safe areas; no observed-row schema/geometry mismatch found."
+    },
+    "loaded_images": {
+      "operation_rows": 70,
+      "process_groups": 24,
+      "grouping": "8 readiness +3 host +13 functional; image group operation counts reconcile every raw operation. Not Settings/local-continuity process proof.",
+      "loaded_framework_origin": "owned-copy-build",
+      "loaded_framework_path": "xcode-frameworks/Debug/iphonesimulator26.2/ComposeApp.framework/ComposeApp",
+      "loaded_bytes": 84032296,
+      "loaded_sha256": "4439f0e73d144b8e180bd2334e83f80e76353b8c866eeaea80ab2846dbd6233a",
+      "embedded_bytes": 84050448,
+      "embedded_sha256": "d6152844161d2f165aa9f88bb0e37e55402e630cf38d028041ce87d7d5b996f2",
+      "uuid": "26cc7bca-2ebe-3e70-b528-a840146077c5",
+      "scope": "Built/installed inventory equality and raw dwarfdump UUID logs reconcile. Loaded external and embedded framework bytes differ; same UUID does not make them identical. Single non-atomic dyld/file observations, not mapped-page hashing or normal uninstrumented Debug provenance."
+    }
+  },
+  "uncompleted": {
+    "whodunit_local": "Probe incomplete7rows (1before_main+6samples), one processA772C9AC-2CC7-4C3E-97E5-C42EC2C70D5E; actual Settings EN selected but no game/checkpoint/command observed. No local retention/orientation/background-language matrix completion.",
+    "mafia_local": "No durable probe; later catalogue/Start/continuity unexecuted.",
+    "os": "No durable probe or later public per-app OS language investigation; not passed/skipped-as-success.",
+    "other_lanes": "Normal Debug libproc B30, C05 dependency/candidate, final combined qualification and publication/legal requirements are outside this report."
+  },
+  "cleanup": {
+    "a_inner_recorded": "PASS: immediate/final isolated Gradle stops exit0; shutdown/delete exit0; simulator absent; direct children12/12 reaped; build handles31/31 reaped; exact secondary FIFOs/parents removed; no owned processes, unknown holders, remaining outputs or cleanup errors; temporary copy/DerivedData removed.",
+    "custody_limit": "Corroborated receipt/finalization stages; separate native_ci full inner/outer cleanup and archive custody review remains authoritative for its assigned scope. No build/test cycle or cleanup process was initiated by this reviewer."
+  },
+  "disposition": "Preserve A29 failure and all partial evidence. Functional recovery observations are materially complete at their bounded scope, but neither host semantics nor integrated DSC01 nor strict protection qualifies. Review/execute minimally scoped source-bound catalogue and host observation corrections before a justified fresh frozen-source A run; no unchanged blind rerun or readiness claim."
+}

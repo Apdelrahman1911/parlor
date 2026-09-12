@@ -1,0 +1,203 @@
+{
+  "schema": 1,
+  "recorded_at": "2026-09-06T08:45:44.732408+00:00",
+  "reviewer": "/root/factory_review",
+  "role_caveat": "Reviewer authored WD-C2 story/test corrections. This record independently inspects root-run test receipts and root-authored recovery path, NOT independent approval of own story changes; /root/release_fix_review supplies that approval.",
+  "source_manifest_sha256": "de7573ed1f4e1a19969f3063e135d234cd57ec8764c4af784cf4b3eaff5ef9b4",
+  "tracked_diff_sha256": "38326880d1f9332618d193f73d49cebc6de063dd26c7e87a8711be9a04a5a430",
+  "overall_cycle_status": "FAIL:productionCheck verifyReleaseLintWarnings; successful issue-specific tests do not change this gate to PASS. Separate lint dossier owns classification.",
+  "command": [
+    "./gradlew",
+    "productionCheck",
+    "--continue",
+    "--no-build-cache",
+    "--no-daemon",
+    "--no-parallel",
+    "--max-workers=1",
+    "--no-configuration-cache",
+    "--dependency-verification=strict",
+    "-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=combined-production-03",
+    "-Pkotlin.compiler.execution.strategy=in-process",
+    "-Pparlor.android.signing.storeFile=",
+    "-Pparlor.android.signing.storePassword=",
+    "-Pparlor.android.signing.keyAlias=",
+    "-Pparlor.android.signing.keyPassword="
+  ],
+  "actual_modules": {
+    "game-modes/whodunit": {
+      "suites": 57,
+      "tests": 323,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "shared/content": {
+      "suites": 5,
+      "tests": 24,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  "new_issue_test_suites": [
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-03/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.TestingStoryChronologyTest.xml",
+      "sha256": "26372f75b4f0d88aa3c83c5f583c1f340a6d2c4507bd67ef23ecd208feca41dd",
+      "suite": "com.parlor.games.whodunit.content.TestingStoryChronologyTest",
+      "timestamp": "2026-09-06T07:42:32.434Z",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        "nadimsShortCellarWaitMatchesTheFinalAccountWithoutChangingHisLie()[desktop]",
+        "jamesLightsOneCigarAt915WhileHis910AlibiRemainsFalse()[desktop]",
+        "correctionsBumpOnlyTheFourTestingCaseVersions()[desktop]",
+        "laylaHasOne905OutageAcrossIntroEvidenceAndWitnesses()[desktop]",
+        "karims940PoisoningPrecedesHisCorroborated1015RecordsAlibi()[desktop]"
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-03/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.TestingStoryCompatibilityTest.xml",
+      "sha256": "abc8b1405363fe7f797dde00fd3cb8f3600dcaed697c75ebd17f8d62aa8e6208",
+      "suite": "com.parlor.games.whodunit.content.TestingStoryCompatibilityTest",
+      "timestamp": "2026-09-06T07:42:32.459Z",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        "correctedStoriesDoNotReuseAnyOriginalCanonicalContentDigest()[desktop]",
+        "currentSaveRoundTripsButOldOrCrossedIdentityIsRetainedAndRejected()[desktop]",
+        "identityLessPreClueSavesCannotSilentlyBindToInstalledStoryProse()[desktop]",
+        "lanOffersMatchOnlyTheExactLoadedRevisionForAllCorrectedCasesAndModes()[desktop]"
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-03/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.TestingStoryGameTraceTest.xml",
+      "sha256": "66ac6124c74fb69a1ecc337df5b7fb16f0f1a7d71055eb0dca72c0ec0805a91b",
+      "suite": "com.parlor.games.whodunit.content.TestingStoryGameTraceTest",
+      "timestamp": "2026-09-06T07:42:32.628Z",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        "everyCorrectedCaseKillerAndModeCompletesDeterministicallyAndRoundTrips()[desktop]"
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-03/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.WhodunitRecoveryInteractionTest.xml",
+      "sha256": "ac8924e5194524b586d54de2253ad80cae5266efbbcccac5851d39802b7439dc",
+      "suite": "com.parlor.games.whodunit.ui.flow.WhodunitRecoveryInteractionTest",
+      "timestamp": "2026-09-06T07:42:38.222Z",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        "arabicIncompatibleSaveIsExplainedAndKeptUntilExplicitDiscard()[desktop]",
+        "englishIncompatibleSaveIsExplainedAndKeptUntilExplicitDiscard()[desktop]",
+        "englishIdentityLessSaveIsKeptUntilExplicitDiscard()[desktop]",
+        "arabicIdentityLessSaveIsKeptUntilExplicitDiscard()[desktop]"
+      ]
+    }
+  ],
+  "execution_reasoning": "Relevant desktopTest task lines1185/1191 lack FROM-CACHE/UP-TO-DATE markers; outputs_before empty; --no-build-cache selected. Raw report timestamps inside cycle. All57Whodunit/5content XML reopened for counts/error/skip assertions; new4suites individually reopened for exact executed cases.",
+  "coverage_claim": "10story tests +4root recovery UI tests execute. Trace test explicitly completes48case/killer/mode combinations twice=96action-produced full-game traces, strict codec+loaded-case validation at every action; this is one test method, not96separate JUnit tests.",
+  "policy_recheck": [
+    "Fresh/legacy decoded saves cannot launch without exact nonnull matching version+digest (WhodunitGameFlow476–491). Current matching saves still undergo requireValidForCase.",
+    "Actual branch219–375 routes incompatible/corrupt resume to explanation/retry/explicit discard, never new-game fallback. Deletion is explicit except pre-existing retired Solo policy outside supported PassAndPlay scope.",
+    "Actual4UI tests use real GameFlow/repository/codec and synthetic store, bothEnglish/Arabic320x640density1.3; back/retry preserve selected+unrelated saves, only explicit discard deletes selected, zero saves/writes.",
+    "Version1.0.1fourbundles/schema1/protocol4.2and strict LAN offer digest equality match docs; gameplay text is identity-bearing; no old-internal-save migration promised.",
+    "Prose edit authorization is testing-content correction, not final editorial/legal approval."
+  ],
+  "reviewed_sources": [
+    {
+      "path": "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/TestingStoryCompatibilityTest.kt",
+      "sha256": "dfdd8aed4bc9f199fadfddf644bc321d1e293cafda2d201d2ec6055bac313fa9"
+    },
+    {
+      "path": "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/TestingStoryChronologyTest.kt",
+      "sha256": "9325933fab3a9547d14898319c4964e2d791af3bab8011eff68a68f768333c9b"
+    },
+    {
+      "path": "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/TestingStoryGameTraceTest.kt",
+      "sha256": "ca31ec98fc19aaeba3675e6d56135abec745d9307a471fc81543e57bd6f6c058"
+    },
+    {
+      "path": "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitRecoveryInteractionTest.kt",
+      "sha256": "6a6adb88b4de74294e9874d8a94c2b5fe977968a12c895f677114befecf605d2"
+    },
+    {
+      "path": "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/content/WhodunitContentIdentity.kt",
+      "sha256": "0ea49d8d310092e3445dc024ffca9ffb85341fcdb15e15df34a90410d7178c94"
+    },
+    {
+      "path": "docs/PRE_RELEASE_COMPATIBILITY.md",
+      "sha256": "2f5d46b17ca70d89042b94357a413d244cbd6abc467aa570d02082bd9f883559"
+    },
+    {
+      "path": "docs/WHODUNIT_TEST_CONTENT.md",
+      "sha256": "442715d8e015c5c433569039adf731b4e0b55e17919880ca2ea6051e7c969a53"
+    }
+  ],
+  "recovery_source_reopened_ranges": [
+    [
+      207,
+      518
+    ],
+    [
+      560,
+      750
+    ]
+  ],
+  "cleanup": {
+    "stop_exit_code": 0,
+    "workers": {
+      "terminated_owned_workers": [],
+      "remaining_owned_workers": []
+    },
+    "removed_outputs": [
+      "shared/core/build",
+      "shared/networking/build",
+      "shared/content/build",
+      "shared/storage/build",
+      "shared/transport-p2p/build",
+      "shared/networking-testing/build",
+      "shared/engine/build",
+      "shared/design-system/build",
+      "shared/engine-testing/build",
+      "shared/session/build",
+      "game-modes/whodunit/build",
+      "game-modes/mafia/build",
+      "build",
+      "composeApp/build",
+      "build-logic/convention/build"
+    ],
+    "remaining_outputs": [],
+    "cleanup_errors": [],
+    "source_changed_during_cycle": false,
+    "runner_changed_during_cycle": false
+  },
+  "evidence": [
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-03/receipt.json",
+      "sha256": "12d240d9db448e8ad008c59d77e1049d3847811897fe5726357847bc8504f073"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-03/gradle.log",
+      "sha256": "d9d072558249f81184251fa3d3e92f712be5c74f6314b3237ab67c9674d4692f"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-03/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    }
+  ],
+  "limitations": [
+    "Not physical LAN/iOS durability/Store/editorial proof.",
+    "New literal content digests still not emitted in Kotlin XML; author Python cross-check literals must remain labeled cross-checks.",
+    "Retry candidate is separately recorded as evidence gap, not a confirmed repair/regression."
+  ],
+  "hygiene": "No source modifications or build/test/app/background processes by this reviewer; append-only evidence only."
+}

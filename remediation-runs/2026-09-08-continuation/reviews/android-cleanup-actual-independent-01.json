@@ -1,0 +1,320 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/native_ci",
+  "decision": "ACCEPT_ADC01_CURRENT_THREE_MANAGED_TESTS_AND_STRICT_POST_EMULATOR_CLEANUP",
+  "status": "PASS_SCOPED_ANDROID_RUNTIME_AND_CLEANUP_NOT_COMBINED_QUALIFICATION",
+  "completed_at": "2026-09-10T16:12:23.960Z",
+  "source": {
+    "head": "9e40261e0dc5bd224526eda6126350ac6a6b8bcb",
+    "tree": "dfd8021abc17ebf56f796f787b46b375cade68d2",
+    "control_files": 18,
+    "control_sha256": "93f103582c052f0263e571a09f295998daa4735e40a4c147664c924df554defe",
+    "branch": "fix/local-readiness-2026-09-07"
+  },
+  "run": {
+    "id": 34498027425,
+    "attempt": 1,
+    "workflow_id": 335554528,
+    "job_id": 102941382495,
+    "conclusion": "success",
+    "dispatches": 1,
+    "url": "https://github.com/Apdelrahman1911/parlor/actions/runs/34498027425"
+  },
+  "platform": {
+    "os": "ubuntu-24.04",
+    "machine": "x86_64",
+    "kernel": "6.17.0-1022-azure",
+    "python": "3.12.3",
+    "ubuntu": "24.04.5",
+    "image": "20260907.300.1",
+    "runner": "2.337.0",
+    "jdk": "21.0.12+1",
+    "device": "pixel2Api35 / emulator-5554 / Android35 google_apis x86_64"
+  },
+  "sdk_binding": {
+    "sdk_path_sha256": "e507a12011d2294b5329bb26fe44164d883087cb9d582c7ec9335a39e4c551e1",
+    "sdk_device": 2049,
+    "sdk_inode": 795534,
+    "uid": 1001
+  },
+  "admission": "Exact ci_review-approved request, immediate local/remote clean-source/no-live-same-ref guards, single dispatch/new-run association, run/attempt/jobs tree and all18 frozen/current control hashes reconcile. Logged ADC admission inputs equal request plus default native_selection=paired. Admission precedes SDK/ownership/build; successful source-recording step9 and current commit.txt bind the application execution to9e4.",
+  "review_reuse": {
+    "request": "reviews/android-cleanup-request-independent-01.json",
+    "source": "Unchanged v2 core and ADC integration/123-controls source reviews reused; no source rereview or successful-test rerun.",
+    "lp04_prerequisite_sha256": "e4ac8efc966fb8e930288fe5663933add2c3eb68a98f93088aead79ccb58cb24",
+    "collector_review_sha256": "bc905cf7bf875047643e65f8cd92ef4e53f825226480a3e41cd7a238305a9cfe",
+    "collector_sha256": "2469d61bcbd093943a3d63dc850ed958aff3534e1fb25655e42ebab8c999751f",
+    "helper_sha256": "3af9603aff8e20aa1380f844897ed356426ba29c4dd5172cc5c60edb2dea10de"
+  },
+  "actual_runtime": {
+    "tests": 3,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "testcases": [
+      {
+        "name": "testColdStartDisplaysContentWhileSettingsIoIsBlocked",
+        "classname": "com.parlor.app.MainActivityColdStartTest",
+        "time": "1.467"
+      },
+      {
+        "name": "testReleaseBuildCanAcquireDeclaredMulticastLock",
+        "classname": "com.parlor.app.ReleaseRuntimeSmokeTest",
+        "time": "0.275"
+      },
+      {
+        "name": "testReleaseBuildLaunchesCanonicalActivityWithoutDebuggableFlag",
+        "classname": "com.parlor.app.ReleaseRuntimeSmokeTest",
+        "time": "5.102"
+      }
+    ],
+    "xml_timestamp": "2026-09-10T16:03:05",
+    "execution": "Current live XML is the sole extracted XML, outside frozen tracked/historical paths. Raw Gradle log1284 executes :composeApp:pixel2Api35ReleaseAndroidTest without FROM-CACHE/UP-TO-DATE;1285 starts3 tests and1287 finishes3, then1289 productionAndroidRuntimeCheck and1296 BUILD SUCCESSFUL in13m50s.",
+    "corroboration": "Current ZIP-only test-results.log contains start/pass codes1,0 for each exact case, OK(3 tests) and instrumentation code-1; UTP installs current release/test APKs on emulator-5554 and records the same3 PASSED. Current textproto has suite+3case PASSED and the same16:03:05 date; each case logcat records start/finish. Read in memory only; no recursive historical XML counted.",
+    "gradle_summary": "487 actionable tasks: 417 executed, 70 from cache",
+    "cache_limit": "70 FROM-CACHE tasks are not fresh execution. Gradle also logs SKIPPED/NO-SOURCE/UP-TO-DATE tasks; zero skipped applies only to these3 instrumentation cases, not every Gradle task.",
+    "signing_scope": "Actual smoke script generated a fresh two-day managed-device certificate. This is disposable non-Store installation signing, not Store signing/publication or resolution of the known canonical identity collision.",
+    "warnings": "Existing experimental lint-version, Gradle/Kotlin compatibility/disabled native-target and R8 async-parsing warnings remain in raw log; no build failure or instrumentation error."
+  },
+  "skipped_scope": "Only Ubuntu x64 job ran. Full common/JVM/static/release aggregate steps10-11, AAB inspection14, LP path4/18-21 and other4 platform jobs skipped. Required source/SDK/KVM/managed/build/upload/stop/cleanup steps succeeded. No newly executed Apple/Windows/Linux-arm64, full aggregate, AAB or same-SHA combined qualification credit.",
+  "custody": {
+    "archives": [
+      {
+        "path": "actions/34498027425/verification-cleanup-desktop-android.zip",
+        "bytes": 3082,
+        "sha256": "c31ec05bed3ce08c8fee5318921b7b63f3d1d9736f14275775242a3afe3879d9",
+        "artifact_id": 10161279770,
+        "members": 1,
+        "expanded_bytes": 20695,
+        "classifications": {
+          "CURRENT_NAMED_RECEIPT_CONTENT_UNREVIEWED": 1
+        }
+      },
+      {
+        "path": "actions/34498027425/desktop-android-verification.zip",
+        "bytes": 21761617,
+        "sha256": "972767cf41ace2fe6cc488400ef07ed58f293c12ab8de8a0918cbde23cc7174d",
+        "artifact_id": 10161277633,
+        "members": 13182,
+        "expanded_bytes": 105011363,
+        "classifications": {
+          "FROZEN_TRACKED_FILE_ARCHIVE_ONLY": 13146,
+          "CURRENT_PATH_CANDIDATE_NOT_EXECUTION": 16,
+          "LIVE_SCOPE_COMPRESSED_ONLY_NOT_EXECUTION": 18,
+          "CURRENT_NAMED_RECEIPT_CONTENT_UNREVIEWED": 2
+        }
+      }
+    ],
+    "independent_checks": "Both original ZIP hashes/sizes match API list+individual metadata, collector and raw upload digest/ID lines. All13183 members streamed in memory for CRC/SHA/size/type/path/unique-name/flags/bounds checks against receipt. No reviewer extraction.",
+    "classification": "Frozen29091-path NUL table equals git ls-tree at9e4; independently derived17 live build roots. Main ZIP contains13146 frozen-tracked historical files,16 live candidates,18 live compressed-only files and2 current receipts; cleanup ZIP contains1receipt. Historical reports remain archived and are not current test executions.",
+    "selected": "Exact19 existing extracted files match ZIP bytes;5 key current files pinned below, remaining14 are HTML/CSS/JS report copies/assets, not additional tests.",
+    "json_log_lines": [
+      262,
+      1310,
+      1369
+    ],
+    "json_check": "Raw admission controls/source/platform/SDK agree with frozen request and ownership; raw managed stop and final cleanup JSON exactly match retained files.",
+    "collection": "All7 collection commands0; watcher0/collection0/collector-stop0/finally-stop0. Pinned collector/helper and their approved review unchanged. Collection metadata alone is not runtime proof."
+  },
+  "cleanup": {
+    "result": "PASS",
+    "claimed": 184,
+    "removed": [
+      "build",
+      "build-logic/convention/build",
+      "composeApp/build",
+      "game-modes/mafia/build",
+      "game-modes/whodunit/build",
+      "shared/content/build",
+      "shared/core/build",
+      "shared/design-system/build",
+      "shared/engine/build",
+      "shared/networking/build",
+      "shared/session/build",
+      "shared/storage/build",
+      "shared/transport-p2p/build"
+    ],
+    "not_created": 171,
+    "retained": [],
+    "errors": [],
+    "roots_check": "Removed13 plus not-created171 partition the exact184 independently derived/claimed build and Python-cache roots; no tracked source lies beneath them. Archived evidence build directories were not live roots.",
+    "managed_stop": "./gradlew --stop exit0,16:03:07.943223–16:03:08.584453 UTC; No Gradle daemons are running.",
+    "final_stop": "./gradlew --stop exit0,16:03:23.375652–16:03:23.999584 UTC; No Gradle daemons are running.",
+    "final_host": {
+      "result": "PASS",
+      "started_at": "2026-09-10T16:03:24.962072+00:00",
+      "finished_at": "2026-09-10T16:03:25.075128+00:00",
+      "enumerated": 152,
+      "sampled": 152,
+      "selected_uid": 8,
+      "mixed_uid_samples": 1,
+      "mixed_uid_privileged_samples": 1,
+      "exe_reader": {
+        "mode": "sudo-proc-exe-v2",
+        "eacces_denials": 3,
+        "privileged_reads": 3
+      },
+      "matching_executables": 0,
+      "errors": []
+    },
+    "timing": "Explicit stop follows managed execution; successful main artifact ID10161277633/digest precedes cleanup. Final host audit precedes owned-root removal completion at16:03:25.362944 UTC.",
+    "binding": "Final audit repeats exact9e4 source/tree and admission/ownership SDK path hash/device/inode/UID. Complete counters satisfy both separate mixed/selected/enumeration and privilege/EACCES inequalities.",
+    "scope": "Attested owned checkout outputs plus sampled visible selected-UID bound-SDK/emulator executable-path absence only. Not all-process termination/ownership, AVD retirement, other SDKs/UIDs, global-cache deletion or continuous absence. No independent temporary-key absence receipt is claimed."
+  },
+  "evidence_root": "remediation-runs/2026-09-08-continuation",
+  "pin_columns": [
+    "path_relative_to_evidence_root",
+    "bytes",
+    "sha256"
+  ],
+  "pins": [
+    [
+      "actions/android-cleanup-only-01/request.json",
+      8013,
+      "089c44de140a04f84336a753eba4f32c351bd7fa4dedb31491bf932e64508379"
+    ],
+    [
+      "actions/android-cleanup-only-01/immediate-admission.json",
+      734,
+      "6632c3f80546cf6c01c258109b29d61e138429e52b8db3fabed5e0964467a5f8"
+    ],
+    [
+      "actions/android-cleanup-only-01/dispatch-result.json",
+      592,
+      "e9932e1470fa851f907afcb75e8f35cb9eaeddd9d04dd8c420e319a50b4a2793"
+    ],
+    [
+      "actions/android-cleanup-only-01/run-association.json",
+      879,
+      "856f29da3a346f78f8596e9953171fb3cce55bc496533662622de2d0771c920c"
+    ],
+    [
+      "actions/android-cleanup-only-01/watcher-collection-receipt.json",
+      414,
+      "7f897111fb19be55cbb5f0651655586bd8f2b2b45895b67200c501aa5f527fb7"
+    ],
+    [
+      "reviews/android-cleanup-request-independent-01.json",
+      3285,
+      "591f465d8ead642cce7a97f268a617507ad05d3485b247c199f6660c8dcfdfdc"
+    ],
+    [
+      "actions/34498027425/run.json",
+      12685,
+      "885ffba55256756f60bd51d0334d98e3af9f9c89e23686ea0253dfbd0fd4b579"
+    ],
+    [
+      "actions/34498027425/attempt.json",
+      12707,
+      "c433ac1276db3287d1a86cba2e809d65d3b3cd70ea1d5af8de7dd6fe461c79be"
+    ],
+    [
+      "actions/34498027425/jobs.json",
+      9073,
+      "c2bd979c4fb2e1afb553952363f6c299a757dae8cde1270c44b83f028add9c38"
+    ],
+    [
+      "actions/34498027425/artifacts.json",
+      1493,
+      "bb70b06911b321aba1f8826355dbd51016ca383590e31d8fe7ac1bbb575ec11e"
+    ],
+    [
+      "actions/34498027425/artifact-10161277633.json",
+      811,
+      "a0a2827201bb6d7cfd1e195be3478e07618c9ca71f955fee6c0931c05c0aaa55"
+    ],
+    [
+      "actions/34498027425/artifact-10161279770.json",
+      815,
+      "22d2243032ce89e0b87a0748a2e54bc8c02488ec4e0a5ce3350b7c102843ad85"
+    ],
+    [
+      "actions/34498027425/desktop-android.log",
+      147179,
+      "4c067a395b4e36f4387c1fa9cfb9493fa746d540156b2064995f5194fa717d9b"
+    ],
+    [
+      "actions/34498027425/download-receipt.json",
+      9321488,
+      "6d76672e4b326eaeb19e84db067c8e7c429de9fb5b9ca7805376a922bc93c855"
+    ],
+    [
+      "actions/34498027425/frozen-tree-paths.z",
+      4730759,
+      "67a6d0682662189fa14b7ee46ba7f926cf42c466e7c4b818cbff1a5839cd7d38"
+    ],
+    [
+      "actions/34498027425/verification-cleanup-desktop-android/parlor-verification-34498027425-1-desktop-android-cleanup.json",
+      20695,
+      "1bebe83974efcd250732f906aee5ce2f0567ab377bebc2a07c336c0bd6f71abd"
+    ],
+    [
+      "actions/34498027425/desktop-android-verification/parlor/parlor/build/ci-evidence/commit.txt",
+      41,
+      "f179a1ef43a079aaf26a5904f28de3e0e0363717de8e4b137fcea36eb2c6f762"
+    ],
+    [
+      "actions/34498027425/desktop-android-verification/parlor/parlor/composeApp/build/outputs/androidTest-results/managedDevice/release/pixel2Api35/TEST-pixel2Api35-_composeApp-.xml",
+      832,
+      "9bdf74a7804e39460091a1b9cdb724b6a4a60a38d9702219fe953e27414e8e96"
+    ],
+    [
+      "actions/34498027425/desktop-android-verification/_temp/parlor-verification-34498027425-1-desktop-android-ownership.json",
+      19465,
+      "b434269fe450769f2d389b4714812d25510d2abf404e21d6b7a2dae4bd6e6a2d"
+    ],
+    [
+      "actions/34498027425/desktop-android-verification/_temp/parlor-verification-34498027425-1-desktop-android-stop-managed-device.json",
+      344,
+      "58800315614d05d484796747fdd7c8d51a99619ade6fc3d418ddabad9e7825c7"
+    ]
+  ],
+  "zip_only_runtime_evidence": {
+    "archive": "actions/34498027425/desktop-android-verification.zip",
+    "member_prefix": "parlor/parlor/composeApp/build/outputs/androidTest-results/managedDevice/release/pixel2Api35/",
+    "columns": [
+      "member_relative_to_prefix",
+      "bytes",
+      "sha256"
+    ],
+    "members": [
+      [
+        "testlog/test-results.log",
+        2248,
+        "50f313b4264023dbf13d6bf754e0001d9f568b7a8cce5d8513837279372143fe"
+      ],
+      [
+        "utp.0.log",
+        2029,
+        "10f1b6d2ea0e3805e2f3aa6a69e9e687093d086e373e7346165d2a6d169b2e81"
+      ],
+      [
+        "test-result.textproto",
+        5281,
+        "58ca264f598bfe74532306a43d92e66f0b20da35eaa764a89251cabca3845c33"
+      ],
+      [
+        "logcat-com.parlor.app.MainActivityColdStartTest-testColdStartDisplaysContentWhileSettingsIoIsBlocked.txt",
+        10697,
+        "a1c204f5eed62397382b0afc003220993e6741bc5d57c5bbe1d87672f748a3ba"
+      ],
+      [
+        "logcat-com.parlor.app.ReleaseRuntimeSmokeTest-testReleaseBuildCanAcquireDeclaredMulticastLock.txt",
+        6509,
+        "6cf368d0af96d35a3d958c53b73c02f6bc7502bcbf1b5b64769f2336791d9b8a"
+      ],
+      [
+        "logcat-com.parlor.app.ReleaseRuntimeSmokeTest-testReleaseBuildLaunchesCanonicalActivityWithoutDebuggableFlag.txt",
+        59529,
+        "7551cf1a18715f692723cf0c4c17aa0fa9d806a74d38be0704894d0dafcc34ce"
+      ]
+    ]
+  },
+  "findings": [],
+  "limits": {
+    "history": "Original D03 remainsFAIL with its21 retained roots; LP01/02/03 and prior outer143 remain preserved. This new successful post-emulator run does not repair historical observations, identify D03's original error cause or prove its worker/AVD retirement.",
+    "ios": "A37 and strict Complete0PASS/26FAIL remain unresolved; no waiver or physical-only relabelling.",
+    "readiness": "NOT_READY; this scoped fresh Android runtime/cleanup result does not establish overall readiness, physical-device enforcement, Store operations or separate owner/legal requirements."
+  },
+  "reviewer_activity": "Only read-only Git and standard-library/in-memory evidence assertions; audit exit0 chunkf609e2. No project imports/validators/tests/builds, network/Actions, signals, cleanup, source/config/Git edits or archive extraction. Sole write this additive report; no reviewer build/fixture/worker resources created."
+}

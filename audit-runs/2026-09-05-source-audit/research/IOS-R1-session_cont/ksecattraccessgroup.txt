@@ -1,0 +1,24 @@
+A key with a value that’s a string indicating the access group the item is in.
+The corresponding value is of type 
+ and indicates the item’s one and only access group.
+For an app to access a keychain item, one of the groups to which the app belongs must be the item’s group. The list of an app’s access groups consists of the following string identifiers, in this order:
+The strings in the app’s 
+The app ID string
+The strings in the 
+Two or more apps that are in the same access group can share keychain items. For more details, see 
+.
+Specify which access group a keychain item belongs to when you create it by setting the 
+ attribute in the query you send to the 
+ method. Naming a group that’s not among the creating app’s access groups—including the empty string, which is always an invalid group—generates an error. If you don’t explicitly set a group, keychain services defaults to the app’s first access group, which is either the first keychain access group, or the app ID when the app has no keychain groups. In the latter case, the item is only accessible to the app creating the item, since no other app can be in that group.
+By default, the 
+, 
+, and 
+ methods search all the app’s access groups. Add the 
+ attribute to the query to limit the search to a particular group.
+
+ 
+This attribute applies to macOS keychain items only if you also set a value of 
+true
+ for the 
+ key, the 
+ key, or both.

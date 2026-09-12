@@ -1,0 +1,198 @@
+{
+  "schema_version": 1,
+  "kind": "OS_RECOVERY_ONLY_CI_SOURCE_INDEPENDENT_REVIEW_NOT_RUNTIME_EVIDENCE",
+  "reviewer": "/root/ci_review",
+  "author": "/root/ci_workflow",
+  "reviewed_at": "2026-09-10T08:25:11.082239+00:00",
+  "status": "APPROVED_SEVEN_FILE_SCOPED_SOURCE_NO_OPEN_FINDINGS_TESTS_AND_PLATFORM_PENDING",
+  "readiness": "NOT_READY",
+  "baseline": {
+    "branch": "fix/local-readiness-2026-09-07",
+    "commit": "15e8982b35e39006868868a11c6f4e1864e613a7",
+    "tree": "8f3fd56f86d7934fddaff068539d69fe26d4aaad",
+    "scope": "Reviewed working-tree delta over this commit, not new execution at a frozen commit."
+  },
+  "approved_files": [
+    {
+      "bytes": 76146,
+      "path": "scripts/ci/native_continuation.py",
+      "sha256": "8ce34c26e05a858577d98988415e99e1d3fd72881be325544974841ad820563f"
+    },
+    {
+      "bytes": 44037,
+      "path": ".github/workflows/production-verification.yml",
+      "sha256": "9a8021ec1ba27f44d7d2ac18f0bcc7a4a254445ba1baae1a420287094c89414b"
+    },
+    {
+      "bytes": 116901,
+      "path": "scripts/release/tests/test_native_continuation.py",
+      "sha256": "0af0ce58d3b1b9ad43819d0f301d2340c0c2c8746c238ea53cda0f52c94938d7"
+    },
+    {
+      "bytes": 26369,
+      "path": "scripts/ci/NATIVE_CONTINUATION.md",
+      "sha256": "6305a9158a45523619b068702966efff31561e86c629bbd91292eb38ea1bfc6c"
+    },
+    {
+      "bytes": 52993,
+      "path": "scripts/release/workflow_contract.py",
+      "sha256": "40bc1dc521676043be6c70a8d6e7e775e4b902350e0177acd19500ee69576e0d"
+    },
+    {
+      "bytes": 48211,
+      "path": "scripts/release/tests/test_workflow_contract.py",
+      "sha256": "5c3b0af5ee60f024e417750b10cee69ba8fb75170d80127e3e835b3929c354b3"
+    },
+    {
+      "bytes": 43485,
+      "path": "scripts/release/tests/test_native_process_probe.py",
+      "sha256": "7efadf720ca16081ce9955f33610062b25ec2b661b845962c7d59ac151a793bf"
+    }
+  ],
+  "author_packet": [
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/os-recovery-ci-source-01/author-report.json",
+      "bytes": 7373,
+      "sha256": "25aec9dca7347c964f01803b1edffc6d2f3c80cbc85337cc1a178d1672cf7311"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/os-recovery-ci-source-01/pins.json",
+      "bytes": 1501,
+      "sha256": "60ddebd53b53e80dfe064af77e3577b0faf2640d3e5206b8b94c38a45013aeaf"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/os-recovery-ci-source-01/source.diff",
+      "bytes": 52224,
+      "sha256": "cc61f5c29139ebb268112c1d780bbb256a30b3e555a4d9f4de0ff48f0425c1b4"
+    }
+  ],
+  "review_scope": "The seven CI adapter/workflow/contract/test/documentation files only. Independently reopened changed source and its inherited admission, cleanup and interruption paths. Separate OS driver/copy authors and reviewers retain full implementation ownership; their source is an interface reference here, not substituted approval.",
+  "findings": [],
+  "closed_findings": [
+    {
+      "id": "OS-CI-NO-BUILD-STOPS",
+      "origin": "Coordinator observation independently confirmed by reviewer",
+      "issue": "A genuinely unattempted build must not invent a final Gradle stop: inherited normal finalizer emits stop-final only after gradle_attempted and owner exist.",
+      "resolution": "All three unattempted stages must be exactly attempted=false/status=NOT_RUN, explicit build_attempted=false, no actual Xcode action rows and no stops. Nonempty prefixes retain exact ordered immediate stops followed by final, every strict integer zero. Other lifecycle/source/control/custody guards remain. Empty prefix cannot qualify.",
+      "source": "scripts/ci/native_continuation.py:612-662",
+      "regressions": "test_no_build_has_no_invented_stops_or_runtime_success and actual adapter prebuild-failed/direct-journal path; source inspected, not executed."
+    },
+    {
+      "id": "OS-CI-ACTUAL-EXIT-JOIN",
+      "origin": "Independent reviewer",
+      "issue": "Checking only summarized stage exits could conceal an actual bootstrap Xcode exit65 behind claimed PASS/exit0.",
+      "resolution": "Retain actual command rows; strict integer returned stage exit equals actual row exit, PASS requires zero, logs/actions/selectors/results joined. Exceptions explicitly command_completed=false/status=FAIL with no returned stage exit and actual primary-error marker; cleanup/reap exit is not synthesized into success. All scoped-success stages require command_completed=true. Unchanged inner interruption detector still rejects timeouts, signals, cancellation and malformed errors.",
+      "source": "scripts/ci/native_continuation.py:637-684,1127-1132",
+      "regressions": "Actual exit65/-9/bool/None mutations and actual adapter concealed-bootstrap-exit are rejected by source; exceptional absent/None/0/-15 command exits have distinct cleanup-only coverage. Tests pending."
+    }
+  ],
+  "independent_checks": {
+    "identity": "All seven canonical files rehashed and byte counts matched sealed pins; three author packet hashes matched. Five changed Python files parsed with stdlib ast only. No target imports.",
+    "closed_selection": "os-recovery-only is admitted only to native-preflight/native-evidence. Default paired and l08-only/Settings rules remain; invalid scope/selection fails before context/native allocation. os39 is unique; existing A37/B38/Settings36 labels and runner paths unchanged.",
+    "fresh_admission": "New runners map yields exactly preflight.json, ios-readiness-source-ci.json and os_recovery-controls.json. Exact ZIP member closure rejects paired/Settings packages. Explicit approved_probe_control_sha256 binds the new os_recovery hash, never the other approval inputs. Existing full-history/clean frozen HEAD/tree/branch/workflow/run/attempt/repository/artifact digest/API producer/source observation/source-binding member/control-manifest and qualified toolchain equality guards remain. Live control bytes recomputed after approved package restoration.",
+    "no_credit_drift": "OS-only driver has no --image-observer=libproc argument; original A/B remain NOT_RUN_THIS_RUN and normal runtime/provenance/notice statuses must all remain NOT_RUN. Unique SCOPED_OS_RECOVERY_VERIFIED is accepted only with outer exit0, both explicit PASS summaries, all three completed/strict0 stage records joined to actual command rows, safe lifecycle/cleanup and no inner/outer interruption. Bootstrap FAIL with independently passing OS subgate returns OS_RECOVERY_NOT_READY, not A/B/full PASS.",
+    "cleanup": "OS helper selected explicitly only when label=os_recovery; receipt fields cannot auto-select it. The previous normal two-stop acceptance remains semantically unchanged for all old lanes. Common source/control/copy integrity, direct-owned-v1 source/control/journal ownership, postbuild evidence barrier, reaped direct handles, no unknown workers/holders/outputs, precise deletion and upload-before-cleanup custody remain mandatory. Failed/partial preservation retains canonical evidence.",
+    "budgets": {
+      "stage_command_caps_seconds": {
+        "build": 2700,
+        "bootstrap": 600,
+        "proof": 900
+      },
+      "stage_command_cap_sum": 4200,
+      "child_wait_seconds": 5400,
+      "finalizer_grace_seconds": 600,
+      "evidence_cleanup_reserve_seconds": 600,
+      "job_budget_seconds": 7200,
+      "admission_required_seconds": 6600,
+      "startup_margin_seconds": 600,
+      "policy": "Workflow expression and explicit adapter budgets agree. Source/run/job-bound CLOCK_MONOTONIC_RAW token precedes checkout. Late admission fails before a child. Timeout sends exact child SIGTERM and waits unchanged grace; no new SIGKILL shortcut. These are interruption bounds, not proof every inherited operation maximum fits. Existing A37/B38 waits, Settings40, full/preflight120 and process-probe10 unchanged."
+    },
+    "workflow": "Only existing manual choice/description and iOS timeout expression changed. Same five jobs, no new matrix/input/permission/token source/Store operation; focused path cannot replace full gates. Production/promotion/testing Store workflow bytes remain HEAD-identical.",
+    "static_regressions": {
+      "new_OS_methods": 8,
+      "declared_methods_in_three_changed_test_files": {
+        "test_native_continuation.py": 81,
+        "test_workflow_contract.py": 57,
+        "test_native_process_probe.py": 45
+      },
+      "scope": "Declared AST counts only, not discovery/execution. Original tests retained; one existing workflow shared-hash test renamed without dropping its body. Added coverage includes closed selection/preflight/hash rejection, all attempted prefixes/no-build contradictions, exact stops/log/action/filter/result joins, hidden actual exit, exceptions, failure-not-PASS, direct journal adapter, raw preservation, child timeout/grace and denied startup budget."
+    },
+    "compatibility": "No tracked diff in original functional/composition/normal/Settings/ios-readiness support directories. No application/game/protocol/storage/dependency changes by these files. Host-only reducer authority, protocol4.2, deterministic seeds, privacy boundaries, strict protection/content checks, Doctor and Leave timing semantics not altered."
+  },
+  "unchanged_native_AST_definitions": [
+    "context",
+    "effective_scope",
+    "qualified_platform",
+    "describe",
+    "validate_controls",
+    "controls",
+    "unpack_preflight",
+    "validate_producer",
+    "producer_evidence",
+    "validate_package",
+    "direct_lifecycle_is_safe",
+    "lifecycle_journal_matches",
+    "inner_execution_completed",
+    "native_job_clock_ns",
+    "preserve_native_evidence",
+    "Continuation.preflight",
+    "Continuation.cleanup",
+    "Continuation.selected_lanes",
+    "Continuation.unselected_lanes"
+  ],
+  "producer_interface_references": [
+    {
+      "path": "scripts/verification/ios-os-recovery/os_recovery_probe.py",
+      "bytes": 19615,
+      "sha256": "1297554fab7ae1c99d7051a63049bf1685828214e0cd208f506f65cdca7c7352"
+    },
+    {
+      "path": "scripts/verification/ios-os-recovery/os_recovery_receipts.py",
+      "bytes": 8752,
+      "sha256": "2f281ae42643d73d0e0591bed80ea472e766bab4ae3231a7d8e54e5d75b1a5e9"
+    },
+    {
+      "path": "scripts/verification/ios-os-recovery/os_recovery_copy.py",
+      "bytes": 8076,
+      "sha256": "279b2b0a9f751f8819642a15391229cd39bba1d9e0fd86e094636aa6766b72ff"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
+      "bytes": 67784,
+      "sha256": "766087ddf72b50f51b1c4072c64afb1a7dd231f047d26e534817cddf9be295bf"
+    }
+  ],
+  "producer_interface_observation": "Reopened exact stage names/actions/selector methods/log/result labels, attempted/command_completed initialization, strict returned exits, per-stage immediate stop and inherited final stop, unique successful status and independent bootstrap/subgate statuses. Current producer agrees. Native reviewer owns full driver/receipt implementation review and termination tests. A later producer-interface change requires rechecking applicability, not automatic approval.",
+  "historical_evidence_reopened": [
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-a37-actual-independent-01.json",
+      "bytes": 18301,
+      "sha256": "47ba04e2e6cb18d4d17da8f01f97c326c43b1bafd0713dcfa2b500b5783318f6"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-a37-retrospective-actual-independent-01.json",
+      "bytes": 11754,
+      "sha256": "d6f7f58582b8c3f602876c59549cac3586b259eaced02aad1bb9f76717721318"
+    }
+  ],
+  "historical_truth": "A37 remains natural Xcode65/XCTest4PASS+1FAIL+0SKIP, signal-kill sender unknown near actual Use English (US) tap; no OS postproof and no timeout diagnosis. Separately executed retrospective functional20/13boot and host42/3boot component PASS cannot upgrade A37 or strict0/26. B30 and C07 remain at their recorded execution/source scope; this source review supplies none of their runtime or final-D evidence.",
+  "verification_performed": {
+    "read_only_Git_and_text_hash_AST_inspection": true,
+    "project_imports": false,
+    "test_execution": false,
+    "native_execution": false,
+    "Gradle_or_builds": false,
+    "process_sampling_or_signals": false,
+    "network_or_Actions": false,
+    "archive_extraction": false,
+    "canonical_edits": false,
+    "new_outputs": "This exclusively created additive review JSON only."
+  },
+  "cleanup": "No build/test/native cycle, project imports or owned worker was started by reviewer. No build cleanup cycle owed; source/configuration/global caches/evidence untouched.",
+  "required_after_source_approval": [
+    "Combine different-agent OS driver and copy approvals; execute focused Linux tests once in coordinator-owned lane and independently reconcile actual results/cleanup.",
+    "Commit reviewed source/control changes, regenerate/commit inventory, verify normal push/remote, then create fresh source/control/preflight bindings.",
+    "Independently approve actual new scoped native producer artifact before evidence dispatch; retain failures and separately report bootstrap/OS subgate.",
+    "Refresh final-source dependency chain/applicability and final combined qualification under coordinator; no Store/physical/owner/legal readiness claim."
+  ]
+}

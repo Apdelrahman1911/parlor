@@ -1,0 +1,32 @@
+{
+  "schema": 1,
+  "reviewer": "/root/qualification_review",
+  "status": "ENDORSED_ACTUAL_DOCUMENTATION_FIX_REGRESSION_1_PASS_NOT_FULL_QUALIFICATION",
+  "recorded_at": "2026-09-11T02:35:23.648585+00:00",
+  "source_review": "reviews/d08-release-documentation-source-independent-01.json",
+  "source_review_sha256": "305aee7fa26f529927ba6696bcfed1fcbbb2fb09311432a0b2d297e22cddd9aa",
+  "test_path": "scripts/release/tests/test_release_documentation.py",
+  "test_sha256": "811fb9719189e4ca4bc17918b8d0d282141c6f56d3e0bbe58d26c5d3d7ca8a2d",
+  "evidence_root": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-d08-contract-fixes-01",
+  "receipt_sha256": "7341f27f4aa3b473a1d7b2e3ac853c1bf76508983e998418d662ad76c93c0ac1",
+  "python_log_sha256": "bf4874c02c2076c8ab6f325ba52bc8d7c2bebb2dd68ae9f071cf184ad09df410",
+  "actual": {
+    "executor": "/root",
+    "source_head": "59a384441f44844a79ae62ea8ee68d0c9e1e5878",
+    "scope": "Reviewed modified worktree controls, not a new frozen full-CI SHA.",
+    "test": "test_protected_branches_require_every_current_full_verification_job",
+    "tests": 1,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "verified": "Read full raw log: exact corrected test reports ok, Ran1 and OK. Exact python3 -B unittest-discover command recorded exit0. Receipt and all five command-log hashes match. All11 before/after/current control pins agree, including reviewed811fb971 test and unchanged workflow/release-contract documents."
+  },
+  "cleanup": {
+    "verified": "Read matching raw stop logs: no Gradle daemons; both recorded exits0. Raw clean log BUILD SUCCESSFUL/recorded exit0. Receipt errors[]/remaining[]; independently observed all20 listed output/cache roots absent. Global caches preserved.",
+    "scratch": "Receipt records scratch_absent=true; no scratch pathname is present to independently recheck, so no separate scratch-path observation is claimed."
+  },
+  "other_batch_scope": "The companion Kotlin12 result has a separate owner; this endorsement covers the documentation regression and shared recorded cleanup only, not Kotlin source/Windows runtime qualification.",
+  "findings": [],
+  "conclusion": "Prior source-review focused-execution condition is satisfied for the exact documentation fix. D08 remains failed and historical failures are not reclassified. Bundled correction review/tests, fresh source/inventory freeze and D09 exact admission remain required before any new full dispatch. No cross-run or focused-pass stitching.",
+  "activity": "Read-only local files/hash/JSON inspection and this additive review; no tests/builds/project imports/network/dispatch/source edits or edits to the previous review. No reviewer cleanup owed."
+}

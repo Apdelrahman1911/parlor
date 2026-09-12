@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-09-06T12:16:47.024549+00:00",
+  "reviewer": "/root/factory_review",
+  "classification": "CURRENT APPLICATION DOES NOT REQUIRE A shouldAutorotate FORWARDING OVERRIDE",
+  "supersedes": {
+    "record": "research-conclusion-01.json",
+    "sha256": "e8c0de765c840500d3d0e7dc97d0536057c84028d2c36d161b31d5aeb96b44d6",
+    "corrections": [
+      "Earlier generic seven-policy/shouldAutorotate-forwarding recommendation was intentionally cautious before the actual Compose superclass was inspected. Complete pinned ancestry proves current child inherits UIKit defaulttrue; leaving the same default on Swiftcontainer preserves actual behavior without introducing deprecated custompolicy. Omit this hook in scoped patch rather than enforcing an arbitraryfalsechild test contract.",
+      "Metadata inspection scanned51fragments, not50as typed in earlierprose; exactklib-inspection manifest already contains all51."
+    ]
+  },
+  "reopened_source": [
+    {
+      "file": "remediation-runs/2026-09-06-approved-policy-completion/reviews/dsc01-native-direction-research-factory-01/uikitMain__androidx__compose__ui__scene__ComposeHostingViewController.uikit.kt",
+      "sha256": "ceb338238097d4df741d7b94293efccd815e6604cd770643c2aabc6c1be55d37",
+      "reviewed_lines": "1-637",
+      "proof": "ComposeHostingViewController directly extends CMPViewController at101; all implementation read. No shouldAutorotate override or mutation; configuration delegate only controls supportedBase statusbar callbacks, lifecycle/content and platform interactions."
+    },
+    {
+      "file": "official-CMPViewController.h",
+      "sha256": "9b62e0d2bc0b66091008e66b99d9c764854a0a07e34229fb317904f6fcb0d353",
+      "reviewed_lines": "1-50",
+      "proof": "CMPViewController directly extends UIViewController at29. Onlyexplicitcategory redeclaration is viewSafeAreaInsetsDidChange46."
+    },
+    {
+      "file": "official-CMPViewController.m",
+      "sha256": "98df00e1405ec3cd2097ef02fe5cd3f09ce11809219927b3993dd5f90868de92",
+      "reviewed_lines": "1-172",
+      "proof": "Categoryonlychecks windowhierarchy. Superclass body forwards lifecycle and safearea; no rotationgetter, dynamicselector installer, or shouldAutorotate override."
+    },
+    {
+      "file": "composeApp/src/iosMain/kotlin/com/parlor/app/MainViewController.kt",
+      "sha256": "c77abd03ddcae230b4752d888b16c3d74231d89c967624c31129d176a5ed20ce",
+      "reviewed_lines": "1-38",
+      "proof": "Actual MainViewController directly creates ComposeUIViewController with Koinconfigure and App content; no alternative rotation child/override."
+    },
+    {
+      "file": "iosApp/iosApp/ComposeContainerViewController.swift",
+      "sha256": "9bdeeaf67a569f4016bc5359ae865b6df9eeaa2a9f6ee36e01041bf79000a903",
+      "reviewed_lines": "1-48",
+      "proof": "Plain UIViewController parentinherits same shouldAutorotate default. Sixnondeprecated policydelegations remain normal Swift overrides."
+    }
+  ],
+  "applicability": {
+    "kotlin": "2.4.10",
+    "compose_ui": "1.10.3",
+    "native_compose_published_binary_compiler_version": "2.2.20 per itsmanifest, distinct from repository toolchain",
+    "tag_source_tree": "c6b30f209d13913cb34d414db927f9a6bc41127d",
+    "minimum_iOS": "16.0",
+    "public_source_fetch_receipt": "fetch-receipts-03.json",
+    "cached_source_bindings": [],
+    "native_binary_supplement": {
+      "artifact": "/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/org.jetbrains.compose.ui/ui-uikit-uikitsimarm64/1.10.3/fb256c6fa3c83bd2638a779ce15372e89b031b8b/ui-uikit-uikitSimArm64Main-1.10.3.klib",
+      "artifact_sha256": "7f12f1dc64bf9a6ede351d5e7094c7ca79ca1b74d9780e46dd232cd2ee603364",
+      "entry": "default/targets/ios_simulator_arm64/included/libCMPUIKitUtils.a",
+      "entry_sha256": "fcfe4aea9bb9340a51ecf6f009da4e8ee026ecdfb60ad2da55efdd340c210cce",
+      "entry_bytes": 183944,
+      "shouldAutorotate_literal_present": false,
+      "CMPViewController_literal_present": true,
+      "method": "Read-only archive byte inspection, supplementary to full original superclass source; not native execution/disassembly."
+    }
+  },
+  "authoritative_basis": {
+    "apple_url": "https://developer.apple.com/documentation/uikit/uiviewcontroller/shouldautorotate",
+    "stored_json": "apple-autorotate.json",
+    "claim": "ReturnValue states thismethod returns true bydefault. ExactSDK header369marks deprecatediOS16, notremoved. No assertion that UIKit never calls it; supportedInterfaceOrientations docs stillmention it."
+  },
+  "recommendation": [
+    "Keep currentSwiftcontainer omission for actualapplication; do not claim fullytransparentrotationpolicyforwarding for arbitrary UIViewControllers.",
+    "A shortsourcecomment can record why thereis no shouldAutorotate override and note reinspection on Composeupgrade/customchildrotationpolicy. No warning suppression or globalrotationpolicy needed.",
+    "NativeSwift tests should exercise siximplemented policyforwards and actualUIKitcontainment. No need to manufacture false-returning child in a deprecatedhook merely tohonor an abandoned genericproposal.",
+    "Sourceproof is sufficient to decide minimalpatch shape, but stillrun nativecompile/apphostlifecycle/geometry/navigation checks in rootlane."
+  ],
+  "cleanup": "Read-onlyvendor/network/source/archiveinspection; noKotlincompiler,Gradle,Xcode,simulator,app/server orpersistentworkerstarted. Requiredsmallresearchoutputs preserved; globalsunchanged."
+}

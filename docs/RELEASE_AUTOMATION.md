@@ -130,6 +130,26 @@ or production promotion re-reads Play's app-bundle inventory and refuses to
 mutate a track unless the selected version code still resolves to the exact
 candidate AAB SHA-256.
 
+Android artifact and dependency-report sizes are checked as regular files with
+portable Python metadata reads (512 MiB and 10 MiB limits respectively).
+`PrepareAndroidUploadTrust.java` is a JDK 21 validation-only helper: it verifies
+every payload signer against the approved upload-certificate SHA-256 before
+creating temporary **public-only** trust for an approved self-signed leaf.
+Explicit certificate validity, critical-extension, and algorithm checks precede
+that trust; strict `jarsigner` must then succeed, including code-signing purpose
+checks. Timestamp authority trust remains the original JDK public roots, not
+the upload leaf.
+The helper's narrowly scoped internal `AlgorithmChecker`/`Validator` exports
+require JDK 21 and fail closed on an incompatible JDK. Verification isolates
+the user-home keystore and retains no private key. Disposable synthetic tests
+verify these local controls, not Store signing or full RFC3161 interoperability.
+
+Google promotion inserts its mutation edit before reading track and bundle
+state. Source/destination guards, staged-rollout protection, candidate digest
+validation, update, validation, and commit all use that same edit snapshot.
+Uncommitted edit cleanup is attempted and failures are reported; post-commit
+readback remains separate and no mutating request is blindly retried.
+
 The candidate concurrency group serializes every candidate-creation dispatch,
 not only identical SHAs. That makes the claim lookup and durable artifact
 creation one repository-wide transaction: two different commits carrying the
@@ -324,7 +344,18 @@ the old evidence expires.
 Configure `main`, `testing`, and `release` independently:
 
 - require pull requests and at least the organization's approved reviewer count;
-- require the two **Production verification** jobs and require branches to be up to date;
+- require all six mandatory full **Production verification** jobs and require branches to be up to date.
+  The check names in `.github/workflows/production-verification.yml` are:
+  - `Common, desktop, and Android release`;
+  - `Desktop strict verification (Linux arm64)`;
+  - `Desktop and Kotlin Native strict verification (macOS x64)`;
+  - `Desktop, Kotlin Native, and Android resources strict verification (Windows x64)`;
+  - `iOS simulator runtime and Swift host`; and
+  - `iOS release frameworks and Swift wrapper`.
+  The opt-in `iOS strict protection diagnostic` is not a mandatory full check.
+  An authorized owner must update external branch-protection settings for these
+  two Apple check names; this source contract does not prove those settings were
+  changed. Include newly added mandatory full jobs when updating protection;
 - require conversation resolution and disallow force pushes and deletion;
 - restrict direct pushes to the approved release maintainers/bot;
 - do not permit bypass for Store promotion operators unless explicitly governed;

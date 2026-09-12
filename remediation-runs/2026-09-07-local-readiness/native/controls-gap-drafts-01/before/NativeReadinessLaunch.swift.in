@@ -1,0 +1,104 @@
+// Copy-only app-host entry. No direct SecItem query and no second DI graph.
+import MachO
+
+extension DSC01Probe {
+    // V12's synthetic prior-language fixture intentionally writes this one
+    // app-domain value. Undo ONLY that attested test write before investigating
+    // a real OS-created preference. This is not production migration logic.
+    func restoreOwnedSyntheticSettingsSeed(token: String) throws {
+        precondition(Thread.isMainThread && scenario == "readiness" && !prepared)
+        let url = FileManager.default.temporaryDirectory.appendingPathComponent("parlor-dsc01-settings-result.json")
+        let bytes = try FileManager.default.attributesOfItem(atPath: url.path)[.size] as? NSNumber
+        guard let bytes, (1...262144).contains(bytes.intValue),
+              !FileManager.default.fileExists(atPath: resultURL.path) else { throw fixtureError() }
+        let settings = try JSONDecoder().decode(DSC01Report.self, from: Data(contentsOf: url))
+        let completions = settings.observations.filter { $0.phase == "complete" }
+        guard settings.schemaVersion == 6, settings.runToken == token, settings.scenario == "settings", settings.completed,
+              (3...256).contains(settings.observations.count), completions.count == 1,
+              let completed = completions.first,
+              let first = settings.observations.first, let last = settings.observations.last,
+              first.phase == "before_main", first.fixture == "fresh",
+              first.preferences.setting == "system", !first.preferences.hasAppOverride,
+              !first.preferences.ownerPresent, first.preferences.appLanguages == [],
+              completed.preferences == last.preferences, completed.boot == last.boot,
+              last.preferences.setting == "system", !last.preferences.ownerPresent,
+              last.preferences.appLanguages == ["ar-EG", "en"],
+              settings.observations.enumerated().allSatisfy({ $0.element.ordinal == $0.offset + 1 }),
+              settings.observations.filter({ $0.ordinal > completed.ordinal }).allSatisfy({
+                  $0.phase == "sample" && $0.boot == completed.boot && $0.preferences == completed.preferences
+              }),
+              settings.observations.contains(where: {
+                  $0.phase == "before_main" && $0.fixture == "previous-ar" &&
+                      $0.ordinal < completed.ordinal &&
+                      $0.preferences.appLanguages == ["ar-EG", "en"] && !$0.preferences.ownerPresent
+              }), settings.observations.allSatisfy({ $0.osDisposition == "not-investigated" }),
+              try preferences() == last.preferences else { throw fixtureError() }
+        UserDefaults.standard.removeObject(forKey: "AppleLanguages")
+        let restored = try preferences()
+        guard restored.setting == "system", !restored.hasAppOverride, !restored.ownerPresent else { throw fixtureError() }
+        let record: [String: Any] = ["schema_version": 1, "run_token": token,
+            "original_present": false, "synthetic_previous": ["ar-EG", "en"], "restored_present": false,
+            "source": "completed-token-bound-owned-settings-fixture-only"]
+        print("PARLOR_NATIVE_SYNTHETIC_SEED_CLEANUP " + String(decoding:
+            try JSONSerialization.data(withJSONObject: record, options: [.sortedKeys]), as: UTF8.self))
+    }
+
+    func startNativeReadiness() {
+        precondition(Thread.isMainThread && scenario == "readiness" && nativeReadinessDisplay == "pending")
+        guard let value = ProcessInfo.processInfo.environment["PARLOR_READINESS_BOOT"],
+              let ordinal = Int(value), (1...8).contains(ordinal) else {
+            nativeReadinessDisplay = "invalid-context"; return
+        }
+        nativeReadinessDisplay = "running"
+        MainViewControllerKt.NativeReadinessStart(boot: Int32(ordinal)) { [weak self] json in
+            DispatchQueue.main.async {
+                guard let self else { return }
+                do {
+                    let data = Data(json.utf8)
+                    guard data.count <= 32768,
+                          let observed = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
+                        throw self.fixtureError()
+                    }
+                    let report: [String: Any] = ["schema_version": 1, "boot_ordinal": ordinal,
+                        "process_boot": self.boot, "process_id": ProcessInfo.processInfo.processIdentifier,
+                        "run_token": ProcessInfo.processInfo.environment["PARLOR_DSC01_RUN_TOKEN"] ?? "",
+                        "loaded_app_images": try nativeReadinessLoadedAppImages(), "observation": observed]
+                    let encoded = try JSONSerialization.data(withJSONObject: report, options: [.sortedKeys])
+                    guard encoded.count <= 49152 else { throw self.fixtureError() }
+                    let url = FileManager.default.temporaryDirectory.appendingPathComponent(
+                        "parlor-native-readiness-boot-\(ordinal).json")
+                    guard !FileManager.default.fileExists(atPath: url.path) else { throw self.fixtureError() }
+                    try encoded.write(to: url, options: [.atomic])
+                    self.nativeReadinessDisplay = String(decoding: encoded, as: UTF8.self)
+                } catch {
+                    self.nativeReadinessDisplay = "receipt-failed"
+                }
+            }
+        }
+    }
+}
+
+private func nativeReadinessLoadedAppImages() throws -> [String] {
+    let root = Bundle.main.bundleURL.resolvingSymlinksInPath().path + "/"
+    let count = _dyld_image_count()
+    guard count > 0, count <= 4096 else { throw NSError(domain: "NativeReadinessImageLimit", code: 1) }
+    var result = [String]()
+    for index in 0..<count {
+        guard let pointer = _dyld_get_image_name(index) else { continue }
+        let raw = String(cString: pointer)
+        guard raw.utf8.count <= 4096 else { throw NSError(domain: "NativeReadinessImageLimit", code: 2) }
+        let path = URL(fileURLWithPath: raw).resolvingSymlinksInPath().path
+        guard path.hasPrefix(root) else { continue } // Never retain system or another app's paths.
+        let relative = String(path.dropFirst(root.count))
+        guard !relative.isEmpty, relative.utf8.count <= 512,
+              !relative.split(separator: "/").contains(".."), result.count < 128 else {
+            throw NSError(domain: "NativeReadinessImageLimit", code: 3)
+        }
+        result.append(relative)
+    }
+    guard let executable = Bundle.main.executableURL?.lastPathComponent,
+          result.contains(executable), Set(result).count == result.count else {
+        throw NSError(domain: "NativeReadinessMainImageMissing", code: 1)
+    }
+    return result.sorted()
+}

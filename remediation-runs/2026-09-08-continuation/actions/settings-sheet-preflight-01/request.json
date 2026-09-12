@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "kind": "ONE_NONBUILDING_SETTINGS_SHEET_PREFLIGHT_REQUEST",
+  "coordinator": "/root",
+  "created_at": "2026-09-10T03:08:38.041240+00:00",
+  "status": "PREPARED_NOT_DISPATCHED_PENDING_WINDOWS_COMPLETION_AND_INDEPENDENT_REQUEST_REVIEW",
+  "repository": "Apdelrahman1911/parlor",
+  "branch": "fix/local-readiness-2026-09-07",
+  "frozen_source_sha": "730a91e4dade4dbc2168b5367e20c3d0f42237e1",
+  "tree": "1f71dc64bc7680f461efc3e841dc051579a0d993",
+  "inputs": {
+    "verification_scope": "native-preflight",
+    "native_selection": "settings-sheet-only",
+    "frozen_source_sha": "730a91e4dade4dbc2168b5367e20c3d0f42237e1"
+  },
+  "command": [
+    "gh",
+    "workflow",
+    "run",
+    "production-verification.yml",
+    "--repo",
+    "Apdelrahman1911/parlor",
+    "--ref",
+    "fix/local-readiness-2026-09-07",
+    "-f",
+    "verification_scope=native-preflight",
+    "-f",
+    "native_selection=settings-sheet-only",
+    "-f",
+    "frozen_source_sha=730a91e4dade4dbc2168b5367e20c3d0f42237e1"
+  ],
+  "maximum_dispatches": 1,
+  "source_freeze": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/windows-settings-source-freeze-01.json",
+    "bytes": 2383,
+    "sha256": "1c2e4b7390cf1b74bd2da15209dff062bf52cc52509943b58fb0168d311ed53d"
+  },
+  "source_review": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-independent-01.json",
+    "bytes": 9413,
+    "sha256": "52cb9183a049e98ba8681ffd2077b8ee9c95606178092432516efefaf24d4295"
+  },
+  "local_checks_review": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/windows-settings-local-actual-independent-01.json",
+    "bytes": 12698,
+    "sha256": "5f3cb4073e3a10d040a25d1a67baa8979ad253e9d7db8f37c827f93fd42b0f5a"
+  },
+  "b30_applicability_review": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/native-b30-730a-source-applicability-01.json",
+    "bytes": 8900,
+    "sha256": "56241f2a4c709ac95d9094b227eb310d0455005c82f512e9416eb3f159232990"
+  },
+  "expected_preflight_files": [
+    "preflight.json",
+    "ios-readiness-source-ci.json",
+    "settings_sheet-controls.json"
+  ],
+  "expected_selected_job": "ios",
+  "expected_skipped_jobs": [
+    "desktop-android",
+    "desktop-linux-arm64",
+    "desktop-macos-x64",
+    "desktop-windows-x64"
+  ],
+  "required_before_execution": [
+    "Windows34431938089 completed; no overlapping same-ref workflow",
+    "Independent exact request review",
+    "Immediate exact remote/local730a equality, clean tracked source and active intended workflow"
+  ],
+  "scope": "Nonbuilding source/control/toolchain binding for one capped public Settings-only diagnostic. No app/Kotlin build, simulator allocation, XCTest, libproc, protection or runtime acceptance in preflight. Artifact and fresh105-control binding need independent approval before separate evidence execution. No Store/physical-device work."
+}

@@ -1,0 +1,28 @@
+{
+  "at": "2026-09-07T11:34:56.406172+00:00",
+  "author": "/root/release_fix_review",
+  "status": "DRAFT ONLY \u2014 NOT APPLIED, COMPILED OR TESTED",
+  "root_review_request": "Include Kotlin precompiled .gradle.kts convention sources and matching task inputs; add executable fixture coverage for that path.",
+  "supersedes": "linux-no-kapt-applicability-guard-draft.patch (v1 preserved)",
+  "depends_on": "linux-exact-kotlin-advisory-triage-draft.patch",
+  "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34112913001-evidence/drafts/linux-no-kapt-applicability-guard-v2-draft.patch",
+  "sha256": "089fa6e65b7b37974dfc3a600df0c76e678e91ec385ce9a3a9166e2610f15a19",
+  "source_changes": [
+    {
+      "path": "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/AndroidReleaseLintContractTest.kt",
+      "before_sha256": "f9732210b5fc08686d97e52282f9bc4985ab310771d34b8233ec435f9b956fee",
+      "proposed_sha256": "65de8f54c89ff24fb21e563c216c94408d53fbd036892ff7e090ce1dcbe50fc1"
+    },
+    {
+      "path": "shared/transport-p2p/build.gradle.kts",
+      "before_sha256": "ac439a069b3c99d1bef803bbc053580c4b99cbd7f4775a98d98a2b40482d96d7",
+      "proposed_sha256": "ff98166cb38c9f6d36cf69aa2246e54014d0a38bbcb833b80692f2d2358762b5"
+    }
+  ],
+  "coverage": "Recursive .kt and .kts scanner; nested precompiled.gradle.kts initially accepted then rejected when KAPT is applied; non-source .txt ignored; fixture owned temp directory cleaned in finally. Main prerequisite check uses same scanner/rejector. Source guard also asserts both suffixes enter desktopTest task inputs.",
+  "limitations": [
+    "Still structural verification of current declared build topology, not a defense against deliberate obfuscation/injection/user init scripts.",
+    "Dependency vulnerability remains in pinned upstream KGP; current configured affected KAPT path is absent.",
+    "Reviewers must compile/discover/run both tests and inspect fixture cleanup; no runtime result is claimed."
+  ]
+}

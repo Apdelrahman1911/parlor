@@ -1,0 +1,107 @@
+import groovy.json.JsonOutput
+import java.security.MessageDigest
+import org.gradle.api.artifacts.component.ModuleComponentIdentifier
+import org.gradle.api.artifacts.component.ProjectComponentIdentifier
+import org.gradle.api.artifacts.result.ResolvedDependencyResult
+
+// Opt-in evidence task, not a repository override or a dependency change.
+// Resolve the actual application graphs under the caller's STRICT policy.
+gradle.projectsEvaluated {
+    if (gradle.rootProject.name != 'parlor') return
+    def root = gradle.rootProject
+    root.tasks.register('writeResolvedDependencyInventory') {
+        group = 'verification'
+        description = 'Records external release-input artifacts and dependency edges without compiling the app.'
+        notCompatibleWithConfigurationCache('Opt-in source-bound resolution evidence reads the configured graph at execution time')
+        doLast {
+            if (gradle.startParameter.dependencyVerificationMode.name() != 'STRICT') {
+                throw new GradleException('Dependency inventory requires strict dependency verification')
+            }
+            def output = root.providers.gradleProperty('parlor.dependencyInventoryDir').orNull
+            if (output == null) throw new GradleException('An explicit fresh dependencyInventoryDir is required')
+            def directory = root.file(output)
+            if (!directory.mkdir()) throw new GradleException('Dependency inventory destination must be new')
+            def git = { args ->
+                root.providers.exec {
+                    workingDir(root.rootDir)
+                    commandLine(['git'] + args)
+                }.standardOutput.asText.get()
+            }
+            def sourceIdentity = {
+                def untracked = git(['ls-files', '--others', '--exclude-standard']).readLines().findAll { path ->
+                    ['composeApp/', 'shared/', 'game-modes/', 'build-logic/', 'gradle/', 'config/', 'iosApp/'].any {
+                        path.startsWith(it)
+                    }
+                }
+                if (!untracked.isEmpty()) throw new GradleException('Untracked build inputs must be reviewed before dependency inventory')
+                [commit: git(['rev-parse', 'HEAD']).trim(), tree: git(['rev-parse', 'HEAD^{tree}']).trim(),
+                 diff_sha256: MessageDigest.getInstance('SHA-256').digest(git(['diff', '--binary', 'HEAD']).getBytes('UTF-8')).encodeHex().toString()]
+            }
+            def source = sourceIdentity()
+            def app = root.project(':composeApp')
+            def kotlin = app.extensions.getByName('kotlin')
+            def graphs = [androidRelease: app.configurations.getByName('releaseRuntimeClasspath')]
+            ['iosArm64', 'iosSimulatorArm64', 'iosX64'].each { target ->
+                def compilation = kotlin.targets.getByName(target).compilations.getByName('main')
+                graphs[target] = app.configurations.getByName(compilation.compileDependencyConfigurationName)
+            }
+            def identifier = { id ->
+                if (id instanceof ModuleComponentIdentifier) return "${id.group}:${id.module}:${id.version}".toString()
+                if (id instanceof ProjectComponentIdentifier) return "project:${id.projectPath}".toString()
+                throw new GradleException("Unclassified dependency identifier: ${id.class.name}")
+            }
+            def digest = { file ->
+                def sha = MessageDigest.getInstance('SHA-256')
+                file.withInputStream { stream ->
+                    byte[] buffer = new byte[64 * 1024]
+                    int length
+                    while ((length = stream.read(buffer)) != -1) sha.update(buffer, 0, length)
+                }
+                sha.digest().encodeHex().toString()
+            }
+            graphs.each { label, configuration ->
+                def result = configuration.incoming.resolutionResult
+                def components = result.allComponents.collect { component ->
+                    def dependencies = component.dependencies.collect { dependency ->
+                        if (!(dependency instanceof ResolvedDependencyResult)) {
+                            throw new GradleException("Unresolved dependency: ${dependency.requested.displayName}")
+                        }
+                        [selected: identifier(dependency.selected.id), constraint: dependency.constraint]
+                    }.sort { a, b -> a.selected <=> b.selected ?: a.constraint <=> b.constraint }
+                    def id = component.id
+                    [id: identifier(id), kind: id instanceof ModuleComponentIdentifier ? 'maven' : 'project',
+                     dependencies: dependencies]
+                }.sort { it.id }
+                // Filtering projects prevents evidence generation from compiling first-party modules.
+                def artifactRows = configuration.incoming.artifactView {
+                    componentFilter { id -> id instanceof ModuleComponentIdentifier }
+                }.artifacts.artifacts.collect { artifact ->
+                    def file = artifact.file
+                    [component: identifier(artifact.id.componentIdentifier), name: file.name,
+                     bytes: file.length(), sha256: digest(file), variant: artifact.variant.displayName]
+                }
+                // One input file can be selected through multiple variants.
+                // Coalesce only exact content identities and retain every variant;
+                // same-name/different-byte conflicts remain separate and are rejected by the reader.
+                def artifacts = artifactRows.groupBy { row ->
+                    row.subMap(['component', 'name', 'bytes', 'sha256'])
+                }.collect { identity, rows ->
+                    identity + [variants: rows.collect { it.variant }.unique().sort()]
+                }.sort { a, b -> a.component <=> b.component ?: a.name <=> b.name }
+                def value = [schema_version: 1, graph: label, configuration: configuration.name,
+                             source: source,
+                             root_component: identifier(result.rootComponent.get().id),
+                             strict_dependency_verification: true, components: components, artifacts: artifacts]
+                new File(directory, "${label}.json").text = JsonOutput.prettyPrint(JsonOutput.toJson(value)) + '\n'
+                println("Dependency inventory ${label}: ${components.size()} components, ${artifacts.size()} artifacts")
+            }
+            if (source != sourceIdentity()) throw new GradleException('Source changed during graph resolution; evidence is invalid')
+            // A failed or interrupted run deliberately has no completion manifest.
+            def completion = [schema_version: 1, status: 'COMPLETE', source: source,
+                              graph_sha256: graphs.keySet().collectEntries { label ->
+                                  [(label): digest(new File(directory, "${label}.json"))]
+                              }]
+            new File(directory, 'resolution-complete.json').text = JsonOutput.prettyPrint(JsonOutput.toJson(completion)) + '\n'
+        }
+    }
+}

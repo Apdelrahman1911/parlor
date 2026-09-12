@@ -1,0 +1,402 @@
+{
+  "schema_version": 1,
+  "kind": "INDEPENDENT_ACTUAL_HOSTED_PREFLIGHT_AND_EXACT_NATIVE_DISPATCH_APPROVAL",
+  "reviewer": "/root/ci_review",
+  "source_author": "/root/ci_workflow",
+  "coordinator": "/root",
+  "recorded_at": "2026-09-08T10:39:51.871196+00:00",
+  "status": "APPROVED_EXACT_NATIVE_EVIDENCE_DISPATCH_ONLY_NO_RUNTIME_PASS",
+  "native_execution_approved": true,
+  "approved_dispatch": {
+    "repository": "Apdelrahman1911/parlor",
+    "workflow": ".github/workflows/production-verification.yml",
+    "ref": "fix/local-readiness-2026-09-07",
+    "inputs": {
+      "verification_scope": "native-evidence",
+      "frozen_source_sha": "25b1c5551aee7630ac22d4b34668dd4b06c71b17",
+      "preflight_run_id": "34214410629",
+      "preflight_run_attempt": "1",
+      "preflight_artifact_id": "10051166213",
+      "preflight_artifact_sha256": "a64a699e4dd895b14089c9fcd867d3d2aa4166f745891864918aefc944d9de48",
+      "approved_l08_control_sha256": "07ee6204dc12ff9fb53253818209893f4de7649f21c3e51cc477bf4157d7322a",
+      "approved_normal_control_sha256": "8128bafc217e491d09ca0a7b54d70c1cb67ff9392ade958b910933d247394750"
+    }
+  },
+  "producer": {
+    "run_id": 34214410629,
+    "run_attempt": 1,
+    "workflow_id": 335554528,
+    "workflow_path": ".github/workflows/production-verification.yml",
+    "workflow_state": "active",
+    "head_sha": "25b1c5551aee7630ac22d4b34668dd4b06c71b17",
+    "tree": "629a5d2b699cddb62d61849de3bd185fd4c01378",
+    "head_branch": "fix/local-readiness-2026-09-07",
+    "repository_id": 1247560518,
+    "repository": "Apdelrahman1911/parlor",
+    "head_repository": "Apdelrahman1911/parlor",
+    "head_repository_id": 1247560518,
+    "event": "workflow_dispatch",
+    "status": "completed",
+    "conclusion": "success",
+    "created_at": "2026-09-08T10:14:45Z",
+    "updated_at": "2026-09-08T10:15:44Z",
+    "verified": "Archived raw API observations, run log, original ZIP bytes, download receipt and decoded package crosschecked; native consumer must independently recheck live producer/artifact metadata before execution."
+  },
+  "artifacts": [
+    {
+      "id": 10051167436,
+      "name": "native-cleanup-34214410629-1",
+      "size_in_bytes": 766,
+      "digest": "sha256:984a7de91727e89b0505d32081a1fb1d5b78408d9227e47ad9179fda2669da81",
+      "expired": false,
+      "created_at": "2026-09-08T10:15:40Z",
+      "expires_at": "2026-09-22T10:15:38Z",
+      "workflow_run": {
+        "id": 34214410629,
+        "repository_id": 1247560518,
+        "head_repository_id": 1247560518,
+        "head_branch": "fix/local-readiness-2026-09-07",
+        "head_sha": "25b1c5551aee7630ac22d4b34668dd4b06c71b17"
+      }
+    },
+    {
+      "id": 10051166213,
+      "name": "native-preflight-34214410629-1",
+      "size_in_bytes": 92593,
+      "digest": "sha256:a64a699e4dd895b14089c9fcd867d3d2aa4166f745891864918aefc944d9de48",
+      "expired": false,
+      "created_at": "2026-09-08T10:15:37Z",
+      "expires_at": "2026-09-22T10:15:35Z",
+      "workflow_run": {
+        "id": 34214410629,
+        "repository_id": 1247560518,
+        "head_repository_id": 1247560518,
+        "head_branch": "fix/local-readiness-2026-09-07",
+        "head_sha": "25b1c5551aee7630ac22d4b34668dd4b06c71b17"
+      }
+    }
+  ],
+  "evidence": [
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34214410629/artifacts.json",
+      "bytes": 1483,
+      "sha256": "c733213559b707a197ae78febc4aefab0abf3664293ac63b8f9c47608e1f9897"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34214410629/download-receipt.json",
+      "bytes": 1720,
+      "sha256": "a3d9f32b4ae0521c851ec67ba7b1addcae85ddb5bc1f1c8bc1d68fc5cb92e42c"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34214410629/jobs.json",
+      "bytes": 9819,
+      "sha256": "ed9b5a44e4d079919c72febbdf8e909fe440ef49d995d1d4684c9781d2cf8fa4"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34214410629/native-cleanup/parlor-native-34214410629-1-cleanup.json",
+      "bytes": 977,
+      "sha256": "12ac3fa63903a844089e895576d60bbfb8ae5ff78cd80523905028d3887d109e"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34214410629/native-cleanup.zip",
+      "bytes": 766,
+      "sha256": "984a7de91727e89b0505d32081a1fb1d5b78408d9227e47ad9179fda2669da81"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34214410629/native-preflight/ios-readiness-source-ci.json",
+      "bytes": 297717,
+      "sha256": "84628f5e410be23d282680f5db9d5366a92dfe30ef23ac2a90bf605ec6526fe8"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34214410629/native-preflight/l08-controls.json",
+      "bytes": 20369,
+      "sha256": "1ddcf37aca1871646598c8c457e14ff459b310c51b2b3e5af41de91c4f04d7c8"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34214410629/native-preflight/normal-controls.json",
+      "bytes": 16495,
+      "sha256": "cc9911f15c2f738076abb9d55243c6574b24037d61dd84dd52fb3b8cc2d18f65"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34214410629/native-preflight/preflight.json",
+      "bytes": 2644,
+      "sha256": "13152860a8f67790b4d52a2e8f2db23b20dd567476160d80964a1d35d886a689"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34214410629/native-preflight.zip",
+      "bytes": 92593,
+      "sha256": "a64a699e4dd895b14089c9fcd867d3d2aa4166f745891864918aefc944d9de48"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34214410629/run.json",
+      "bytes": 12677,
+      "sha256": "a278e1cb55bc11366d7e3439071c1e8ba2eb6d2958eb56e2d479d87ab2cbb346"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34214410629/run.log",
+      "bytes": 63445,
+      "sha256": "ac72bb9814f258d08129904c5575ffe67d17ab5e721f260fe5ba0f64c272ec14"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34214410629/workflow.json",
+      "bytes": 533,
+      "sha256": "8345984073768616fd6aff6682c95051f186881c5fa4727b120c80e019841ece"
+    }
+  ],
+  "archive_checks": {
+    "preflight_exact_members": [
+      "ios-readiness-source-ci.json",
+      "l08-controls.json",
+      "normal-controls.json",
+      "preflight.json"
+    ],
+    "cleanup_exact_members": [
+      "parlor-native-34214410629-1-cleanup.json"
+    ],
+    "duplicate_or_unexpected_members": false,
+    "regular_files_only": true,
+    "encrypted_or_unsupported_compression": false,
+    "bounded_file_and_total_sizes": true,
+    "every_extracted_byte_equals_original_archive_member": true,
+    "archive_size_and_digest_equal_API_and_download_receipt_and_upload_log": true,
+    "preflight_internal_file_digests_recomputed": true,
+    "duplicate_JSON_keys_rejected": true
+  },
+  "source_binding": {
+    "hosted_root": "/Users/runner/work/parlor/parlor",
+    "binding_relative": "remediation-runs/2026-09-08-continuation/ios-readiness-source-ci.json",
+    "binding_schema": 3,
+    "binding_status": "REVIEW_REQUIRED_BOUND",
+    "binding_created_at": "2026-09-08T10:15:34.537600+00:00",
+    "binding_file_sha256": "84628f5e410be23d282680f5db9d5366a92dfe30ef23ac2a90bf605ec6526fe8",
+    "commit": "25b1c5551aee7630ac22d4b34668dd4b06c71b17",
+    "tree": "629a5d2b699cddb62d61849de3bd185fd4c01378",
+    "branch": "fix/local-readiness-2026-09-07",
+    "tracked_status": "",
+    "diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "source_manifest_sha256": "6e83dcdccc950fde35ccbf8fe2d4c73671a05a5f4a6a3a5068799af86bbd2334",
+    "source_rows": 820,
+    "copy_only_rows": 745,
+    "independently_recomputed_source_selection_equals_manifest": true,
+    "every_current_source_byte_matches": true,
+    "full_source_identity_equals_frozen_Linux_release_validator": true,
+    "copy_only_exactly_equals_independently_reconstructed_allowed_source_subset": true,
+    "local_HEAD_tree_clean_tracked_status_and_origin_tracking_ref_match": true,
+    "full_history_checkout": "Actual run log fetch-depth0; successful frozen context guard additionally requires --is-shallow-repository=false.",
+    "binding_installed_or_rewritten_in_Linux_checkout": false
+  },
+  "controls": {
+    "l08": {
+      "rows": 93,
+      "control_sha256": "07ee6204dc12ff9fb53253818209893f4de7649f21c3e51cc477bf4157d7322a",
+      "manifest_file_sha256": "1ddcf37aca1871646598c8c457e14ff459b310c51b2b3e5af41de91c4f04d7c8",
+      "every_nonbinding_path_owned_nonsymlink_and_current_bytes_equal": true,
+      "binding_row_equals_unmodified_hosted_binding_artifact": true,
+      "exact_coverage_and_order_independently_reconstructed": true,
+      "control_digest_independently_recomputed": true
+    },
+    "normal": {
+      "rows": 89,
+      "control_sha256": "8128bafc217e491d09ca0a7b54d70c1cb67ff9392ade958b910933d247394750",
+      "manifest_file_sha256": "cc9911f15c2f738076abb9d55243c6574b24037d61dd84dd52fb3b8cc2d18f65",
+      "every_nonbinding_path_owned_nonsymlink_and_current_bytes_equal": true,
+      "binding_row_equals_unmodified_hosted_binding_artifact": true,
+      "exact_coverage_and_order_independently_reconstructed": true,
+      "control_digest_independently_recomputed": true
+    }
+  },
+  "l08_generated_runner": {
+    "generated_runner_sha256": "c61b51c6f74369ad7dcbe4d4ae6b3f64b44639904100fd0295f75bb4a4a2b7dd",
+    "independently_reproduced": true,
+    "method": "AST literal extraction of the12 exact string transforms, unique-anchor checks, in-memory substitution against the pinned companion driver and AST parsing only; no runner import or execution.",
+    "driver_sha256": "fdae88cf835f4b0f5f5271b882641b7284db7ea5e5bdc135870754db7f61fb21",
+    "draft_freeze_sha256": "64c02554e7ddec05b85f533c05733e0f8bbedcc843843245d82cfd1ffd98564a",
+    "draft_files": 9,
+    "reference_pins": 2,
+    "all_frozen_draft_and_reference_bytes_match": true
+  },
+  "actual_platform_observation": {
+    "toolchain": {
+      "name": "qualified-xcode-26.3",
+      "xcode": "26.3",
+      "build": "17C529",
+      "sdk": "26.2",
+      "runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-2",
+      "developer_dir": "/Applications/Xcode_26.3.app/Contents/Developer",
+      "scope": "Xcode26.3/17C529 qualified compiler; Debug iOS26.2 simulator observation only, not Store-signing or physical-device evidence",
+      "selected_developer_dir": "/Applications/Xcode_26.3.app/Contents/Developer",
+      "architecture": "arm64",
+      "sdk_name": "iphonesimulator26.2",
+      "runtime_build": "23C54",
+      "device_type": "com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro",
+      "simulator_sdk_path": "/Applications/Xcode_26.3.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.2.sdk",
+      "android_sdk": "/Users/runner/Library/Android/sdk",
+      "java_home": "/Users/runner/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-101.0/arm64/Contents/Home",
+      "runtime_scope": "Toolchain observation only; no application/ABI/protection/runtime claim"
+    },
+    "os": "macOS15.7.9/build24G830",
+    "runner_image": "macos-15-arm64",
+    "image_version": "20260829.0321.1",
+    "runner_version": "2.337.0",
+    "source": "Structured observations produced by the exact hash-bound qualified_platform checks; actual runner/setup-Java/selected-DEVELOPER_DIR metadata crosschecked in run.log.",
+    "raw_xcode_or_simctl_stdout_separately_retained": false,
+    "scope": "Read-only toolchain/sdk/runtime/device-type availability observation, not a Simulator allocation, application build, XCTest, libproc ABI/query, Foundation protection or runtime behavior assertion."
+  },
+  "actual_workflow_scope": {
+    "jobs": [
+      {
+        "id": 102022666844,
+        "name": "iOS tests, release frameworks, and Swift wrapper",
+        "status": "completed",
+        "conclusion": "success",
+        "labels": [
+          "macos-15"
+        ]
+      },
+      {
+        "id": 102022668034,
+        "name": "Desktop, Kotlin Native, and Android resources strict verification (Windows x64)",
+        "status": "completed",
+        "conclusion": "skipped",
+        "labels": [
+          "windows-2025"
+        ]
+      },
+      {
+        "id": 102022668782,
+        "name": "Desktop strict verification (Linux arm64)",
+        "status": "completed",
+        "conclusion": "skipped",
+        "labels": [
+          "ubuntu-24.04-arm"
+        ]
+      },
+      {
+        "id": 102022668814,
+        "name": "Desktop and Kotlin Native strict verification (macOS x64)",
+        "status": "completed",
+        "conclusion": "skipped",
+        "labels": [
+          "macos-15-intel"
+        ]
+      },
+      {
+        "id": 102022708341,
+        "name": "Common, desktop, and Android release",
+        "status": "completed",
+        "conclusion": "skipped",
+        "labels": [
+          "ubuntu-24.04"
+        ]
+      }
+    ],
+    "successful_jobs": 1,
+    "skipped_nonApple_jobs": 4,
+    "skipped_full_Apple_steps": 17,
+    "scoped_validate_run_upload_cleanup_and_cleanup_upload_steps": "All success; every full application/build/finalization step9..25 skipped as designed.",
+    "no_normal_full_matrix_claim": true
+  },
+  "cleanup": {
+    "receipt_sha256": "12ac3fa63903a844089e895576d60bbfb8ae5ff78cd80523905028d3887d109e",
+    "receipt": {
+      "schema_version": 1,
+      "context": {
+        "repository": "Apdelrahman1911/parlor",
+        "branch": "fix/local-readiness-2026-09-07",
+        "head_sha": "25b1c5551aee7630ac22d4b34668dd4b06c71b17",
+        "tree": "629a5d2b699cddb62d61849de3bd185fd4c01378",
+        "workflow": ".github/workflows/production-verification.yml",
+        "root": "/Users/runner/work/parlor/parlor",
+        "run_id": 34214410629,
+        "run_attempt": 1
+      },
+      "started_at": "2026-09-08T10:15:37.934870+00:00",
+      "status": "PASS",
+      "removed": [
+        "remediation-runs/2026-09-08-continuation/ios-readiness-source-ci.json"
+      ],
+      "errors": [],
+      "upload": {
+        "artifact_id": "10051166213",
+        "sha256": "a64a699e4dd895b14089c9fcd867d3d2aa4166f745891864918aefc944d9de48"
+      },
+      "native_runs": {},
+      "cache_policy": null,
+      "stop_policy": "Canonical native receipts attest immediate/final isolated Gradle stops; preflight builds nothing.",
+      "source_unchanged": true,
+      "finished_at": "2026-09-08T10:15:38.018985+00:00"
+    },
+    "interpretation": "Successful source-bound outer cleaner verified preflight upload custody and unchanged staging/binding before removing binding and private staging. No native run or dependency-cache bootstrap occurred. No Gradle stop was needed or claimed because preflight built/tested nothing.",
+    "source_unchanged": true,
+    "upload_digest_and_artifact_ID_equal_preflight_archive": true,
+    "public_setup_Java_outputs": "Ordinary hosted setup-java toolchain/settings/cache metadata is not represented as task-owned native build output or deleted globally."
+  },
+  "related_review_evidence": [
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-continuation-source-independent-01.json",
+      "sha256": "ff5b4cc4a6362f9199458ada427bda4ca9f0a7dfe1d579fe1618be32c069253d"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-continuation-controls-independent-01.json",
+      "sha256": "4c37fe9e332b0feafdc1e1f05e91011aacefd138e1e08c80c2f95210e34fff0a"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/release-validator-independent-01.json",
+      "sha256": "8f72f2e09e6af59fbd18c47517db11ca39a6272d8ad1783541ccc37411e49493"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-portability-independent-01.json",
+      "sha256": "f6b77fac3047368fe8aec883a6f8a0daf82416e8f0b16a0e8b5d9a05a852724f"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-portability-doc-correction-independent-01.json",
+      "sha256": "f14a23ae25e24946c73d0ec93f7d8e901be667c80ad1aab8f8cdddd80ec82588"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/focused-controls-evidence-independent-01.json",
+      "sha256": "5bc68543ef589bb76e076eaecb8ce221593fd9537a9a118b26698f373c55ab1f"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/l08-single-tap-independent-01.json",
+      "sha256": "7e8584012393a899aa3c5423c586834ee2703251c26d443513d03a4e5e16e8ac"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/l08-single-tap-scanner-correction-independent-01.json",
+      "sha256": "f63242eb367d6b227c2bc2b38391a3963b50672821e20c1617cce8c0c9b65083"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/l08-control-recheck-01-independent-postrun-review.json",
+      "sha256": "50e037f9ba514e44a38612a09737e9654e2a52498d80b66513944aa6e707e2ec"
+    }
+  ],
+  "retained_failure_context": "Earlier focused control packet remains FAIL with scanner and inherited-README failures. Separate corrected14single-tap+12functional-copy evidence reviewed subsequently; no historical failure is relabeled or upgraded by this preflight.",
+  "execution_conditions": [
+    "Coordinator only; dispatch existing verification workflow once with exactly approved ref/inputs and frozen SHA. No source/control or mechanical-inventory change before native execution.",
+    "Consumer must revalidate live same-repository producer/workflow/artifact ownership, successful exact attempt, unexpired ZIP digest, source binding, absolute root and all current manifest/toolchain bytes. Any drift fails; do not relax or refresh approval implicitly.",
+    "A is composed L08 ios-readiness-17 with explicit adhoc signing and qualified-xcode-26.3; B is normal Debug ios-readiness-18 with identical explicit signing/toolchain plus image-observer=libproc. Serial only; B requires actual safe A cleanup/source/control receipts.",
+    "Preserve failed/partial/strict native evidence and canonical immediate/final Gradle, simulator, copy, worker and outer upload/cleanup receipts. Do not turn strict protection failure, unavailable observer or unsafe cleanup into success.",
+    "Read actual XCTest repetition/scenario results, app/runtime image identities, libproc ABI/target/region evidence and Foundation protection records before drawing runtime conclusions. This approval supplies none of those future results.",
+    "Full final five-job qualification, fresh dependency export/rendering/candidate-consumer chain, physical-device exclusions, Store identity/operation prohibition and separate owner/legal requirements remain unaffected."
+  ],
+  "blockers": [],
+  "runtime_pass_claimed": false,
+  "Store_or_physical_device_authorization": false,
+  "reviewer_activity": {
+    "builds_or_tests_run": 0,
+    "gradle_or_native_commands": 0,
+    "workflow_dispatches": 0,
+    "commits": 0,
+    "performed": [
+      "Read actual archived API metadata, upload/run log, ZIP members and cleanup",
+      "Independently hash every820source and93/89control row",
+      "Reconstruct source/copy/control allowlists",
+      "Pure AST/literal composition verification",
+      "Compare frozen local Git identities",
+      "Write only this untracked review"
+    ]
+  },
+  "reviewer_cleanup": {
+    "needed": false,
+    "detail": "No reviewer build/test/native workers, temporary copies or bindings allocated. Original archives/evidence/source preserved; unrelated external P2pKit worker was not interrupted or stopped."
+  }
+}

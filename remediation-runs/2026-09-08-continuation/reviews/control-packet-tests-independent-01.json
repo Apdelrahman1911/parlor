@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "kind": "INDEPENDENT_CONTROL_PACKET_TEST_SOURCE_REVIEW",
+  "recorded_at": "2026-09-08T09:42:54.098200+00:00",
+  "author": "/root/fixture_review",
+  "reviewer": "/root",
+  "status": "SOURCE_APPROVED_EXECUTION_PENDING",
+  "input": {
+    "path": "remediation-runs/2026-09-08-continuation/controls/test_continuation_packet.py",
+    "sha256": "3229ee84a80ec116a172b725b3005b24cb6c252ef1b11ca907109d4301af1d47"
+  },
+  "declared_test_methods": [
+    "test_fixed_packet_has_only_declared_control_entries",
+    "test_manifest_records_sorted_bytes_and_rejects_redirects_or_bad_types",
+    "test_destination_requires_existing_uid_and_exact_running_receipt",
+    "test_destination_and_cli_reject_redirect_or_argument_bypass",
+    "test_success_and_failed_exit_keep_distinct_attempt_rows_and_logs",
+    "test_launch_failure_keeps_attempt_and_raw_partial_log",
+    "test_timeout_attempt_gets_graceful_termination_before_escalation",
+    "test_stubborn_composition_child_records_unproven_external_cleanup",
+    "test_shutdown_timeout_stays_error_and_does_not_lose_attempt",
+    "test_signal_during_launch_still_retires_returned_child",
+    "test_actual_main_writes_both_manifests_and_all_command_results",
+    "test_actual_main_preserves_child_failure_when_postflight_manifest_also_fails",
+    "test_preflight_failure_retains_closed_results_without_launching_children",
+    "test_source_drift_alone_cannot_pass_outer_packet",
+    "test_nonzero_child_alone_cannot_pass_outer_packet",
+    "test_signal_handler_defers_only_launch_shutdown_and_finalization"
+  ],
+  "scope": "Independent source review only. AST inspection is not unittest or actual process/signal execution.",
+  "conclusions": [
+    "All allocations are per-test TemporaryDirectory children of the coordinated TMPDIR; current UID files/symlinks are synthetic and cleaned through registered test cleanup.",
+    "Real subprocess.Popen and signal.signal are forbidden by default; each process outcome uses explicit mocks. Import does not run a lane/native command.",
+    "Tests call actual packet main, manifest, ownership, per-command and finalization helpers rather than duplicating the production acceptance algorithm.",
+    "Fixed command allowlist permits only eight prior control entries and the exact new packet test command; it does not authorize native/Gradle entry points.",
+    "Launch failure, graceful timeout, recorded KILL escalation/external-cleanup limitation, shutdown failure, pending launch signals and isolated signal-handler branches have bounded synthetic coverage.",
+    "Original error plus failing postflight preserves results; preflight failure launches no child; success binds before/after manifests and all command results.",
+    "Root review finding corrected: source drift and nonzero child are now independent negative cases, each with the other acceptance condition valid, in separate owned test roots.",
+    "No application, simulator, ABI, callback, strict-protection or real OS process cleanup claim is conferred by these tests."
+  ],
+  "execution": "NOT_EXECUTED_AT_REVIEW; coordinator will run in fixed manifest-bound packet",
+  "cleanup": "Review only; no build/test/native worker or generated output allocated by reviewer."
+}

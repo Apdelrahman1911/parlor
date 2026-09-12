@@ -1,0 +1,105 @@
+{
+  "issue": "RL-C2",
+  "reviewer": "/root/release_fix_review",
+  "author": "/root",
+  "reviewed_at": "2026-09-05T21:10:55.255283+00:00",
+  "status": "PRELIMINARY SOURCE REVIEW \u2014 NO BLOCKER IDENTIFIED; AWAIT FROZEN SOURCE AND NEW EXECUTION RECEIPT",
+  "baseline": {
+    "branch": "main",
+    "head": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+    "tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+    "reviewing": "preserved working tree; hashes identify reviewed bytes"
+  },
+  "files": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/release/PrepareAndroidUploadTrust.java",
+      "sha256": "a74b92902839047353aa4b5816bc226e43526960da7c4d2df117e25c9375c211",
+      "reviewed_lines": [
+        [
+          1,
+          181
+        ]
+      ],
+      "relevance": "release validator/build-tooling"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/release/validate_android_artifact.sh",
+      "sha256": "e0100ed6274e41113e18d1cdaa5310242f749d2f337fdb0c5b85920a011cece6",
+      "reviewed_lines": [
+        [
+          1,
+          295
+        ]
+      ],
+      "relevance": "release validator/build-tooling"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_android_upload_signature.py",
+      "sha256": "e5e40a929c344bbbf51b61544c54bf12abc05cdcf265ac456f12047f99a2a164",
+      "reviewed_lines": [
+        [
+          1,
+          324
+        ]
+      ],
+      "relevance": "test"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/release/validate_release_system.sh",
+      "sha256": "ce52c9c08edecba968337d6de42c90895badec127c7029a5afc16737d3b8864a",
+      "reviewed_lines": [
+        [
+          1,
+          104
+        ]
+      ],
+      "relevance": "release validator/build-tooling"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_android_artifact_size.py",
+      "sha256": "1bdf6fe45be629ed8ea6d435727e88d87644319257127732b61a529f1ce1a0b1",
+      "reviewed_lines": [
+        [
+          1,
+          117
+        ]
+      ],
+      "relevance": "test"
+    }
+  ],
+  "read_original_dossier": "audit-runs/2026-09-05-source-audit/validations/RL-C2-session_cont.md",
+  "read_sibling_reviews": [
+    "remediation-runs/2026-09-05-confirmed-fixes/mafia/rl-c1-independent-fix-review-01.json",
+    "remediation-runs/2026-09-05-confirmed-fixes/mafia/rl-c3-independent-fix-review-01.json"
+  ],
+  "proof": [
+    "JarFile true verification fully consumes each nondirectory entry, then checks every CodeSigner leaf SHA256 against approved fingerprint; no signed payload and nonmetadata unsigned entries fail. Manifest/signature-only exclusions match exact JAR rules. Strict jarsigner independently handles data-bearing directories.",
+    "Approved selfsigned leaf requires subject/issuer identity and valid selfsignature, full explicit nonanchor PKIX path at current/validated timestamp date, plus active code-signing AlgorithmChecker. This prevents imported-leaf shortcuts from waiving expiry, disabled certificate algorithms and unknown critical extensions.",
+    "CodeSigner timestamps are validated against original JDK public roots through VAR_TSA_SERVER before their dates can authorize the upload leaf. Newly trusted upload certificate is not TSA authority. Different CodeSigners are independently checked.",
+    "Only approved selfsigned leaf is inserted into a CREATE_NEW public-cert-only temporary PKCS12. Nonselfsigned CA certificates are not inserted, strict ordinary path behavior continues with isolated user.home.",
+    "Mandatory successful strict jarsigner and exact approved signer verification precede actual_certificate assignment. No severe-status waiver, first-display fingerprint parsing or private keystore reads.",
+    "File count/duplicate/declared+consumed expanded bounds use overflow-safe arithmetic, fixed-size reads and resource closure; source-mode JVM has256MiB cap. Archive size gate and RL-C1 dependency gate remain before signature work.",
+    "Workflow Java21 pin, private-key removal before validation, approved identity/fingerprint caller and publication disablement are unchanged. No app/session/protocol/snapshot/content format changes."
+  ],
+  "counter_evidence": [
+    "Existing unzip -t precedes helper expansion/count preflight, so this fix does not claim a new complete hostile archive resource sandbox. Later complete artifact structure/DEX validation is unchanged.",
+    "Implicit personal ~/.keystore trust is deliberately removed, not a claim that all private custom trust configurations are backward compatible.",
+    "Source uses two narrow internal OpenJDK21 APIs; full implementation checked against21.0.11 tag and installed extraction. API mismatch fails closed; no support claim beyond required JDK21.",
+    "Current CA and timestamp regressions are a synthetic untrusted chain/full JAR test and direct synthetic CodeSigner negative policy test respectively. No real positive RFC3161 integration, live TSA or Store artifact proof.",
+    "Root is strengthening test run_owned timeout cleanup; previously communicate completion could overlook TERM-resistant descendants whose output was redirected. Pending code/receipt must be rereviewed."
+  ],
+  "evidence_read": [
+    "evidence/rl-c2-red/receipt.json",
+    "evidence/rl-c2-red/gradle.log",
+    "evidence/rl-c2-green-01/receipt.json",
+    "evidence/rl-c2-green-01/gradle.log"
+  ],
+  "execution_assessment": "Original positive selfsigned test failed exit4, reproducing RL-C2. Red Java-stub exit mismatch is new plumbing oracle, not another original defect. Green01=19 executed tests; current shell/test changed since it, so no final current-tree execution approval yet.",
+  "remaining_gaps": [
+    "Latest frozen source and green receipt",
+    "Full positive trusted TSA/RFC3161 integration and PSS parameter-specific fixture not executed",
+    "Real signed candidate/Store owner credentials and identity clearance not authorized",
+    "Broad release system/combined repository checks remain root-owned"
+  ],
+  "cleanup": "No build, compilation, signing, Store/device operation or worker launched by this reviewer. Read-only research commands completed; only owned review evidence retained. No cleanup of another task or Gradle stop attempted."
+}

@@ -1,0 +1,55 @@
+{
+  "reviewer": "/root/mafia_cont",
+  "at": "2026-09-05T18:20:00.467100+00:00",
+  "file": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-05-confirmed-fixes/run_gradle_cycle.py",
+  "sha256": "8f62a505750e0e0a948ce3fc4ad579f60914ef24974808c5e204d93e36b56519",
+  "reviewed_lines": [
+    1,
+    178
+  ],
+  "classification": "CHANGES REQUESTED \u2014 safety/evidence finalization",
+  "no_execution": true,
+  "positives": [
+    "Root is resolved correctly; one nonblocking fcntl build-lane lock.",
+    "Pre-existing build outputs cause refusal; module/build-logic output paths explicit; symlink cleanup refused.",
+    "JDK21, strict verification, one worker, no parallel, no daemon; no global caches removed.",
+    "Stops Gradle before capture/cleanup; source before/after identity includes modified + untracked files."
+  ],
+  "required_changes": [
+    {
+      "id": "RUNNER-MF-1",
+      "lines": [
+        139,
+        170
+      ],
+      "proof": "collect_reports/artifact inspection exceptions are only recorded, then every task output is deleted; neither capture error affects PASS expression. Copy failure therefore loses required results and may still pass.",
+      "recommendation": "Make preservation failures fail the receipt, retain exact remaining required artifacts with explicit cleanup debt, and always record failed capture + recovery path."
+    },
+    {
+      "id": "RUNNER-MF-2",
+      "lines": [
+        139,
+        170
+      ],
+      "proof": "Second SIGTERM/KeyboardInterrupt raised during finally is BaseException and bypasses Exception guards; scratch removal, source identity and process scan also sit outside protective finalizers. A cleanup error can prevent remaining safety steps/final receipt.",
+      "recommendation": "Defer repeated cancellation during finalization; guard each stage independently; use nested guaranteed finalizers for stop/output cleanup/final receipt."
+    },
+    {
+      "id": "RUNNER-MF-3",
+      "lines": [
+        21,
+        30,
+        167,
+        169
+      ],
+      "proof": "invoke terminates the direct command process only on interruption. The final pgrep records but never classifies/stops task-owned surviving workers/descendants, so app/test/subprocess survival is not excluded by PASS.",
+      "recommendation": "Run task command in a distinct process group/record its descendants; verify only task-owned survivors, terminate them when no longer needed, never terminate unrelated processes; record inability to establish ownership as failure."
+    }
+  ],
+  "additional_notes": [
+    "Metadata parsing errors should be visible as evidence failures, not a green verification gate.",
+    "source_changed_during_cycle must prevent attributing success to one frozen source identity; coordinate freezes around root lane.",
+    "Before arbitrary --command usage re-review effective toolchain/signing arguments and ownership (Gradle common flags are intentionally not appended).",
+    "Sensitive-file exclusions omit .jks/.pem/.key; do not inventory any private material of these kinds if present."
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "author": "/root/factory_review",
+  "created_at": "2026-09-07T17:12:00.434418+00:00",
+  "base_commit": "b26a3947b763e262b488d52761f050df5d57cfc1",
+  "files": [
+    {
+      "path": "scripts/ci/darwin_worker_identity.py",
+      "base_sha256": "ee61ed6ff7f3b3333ad540431a5f6764d0acd24e0a4d9a5617a59f0dba9b2b86",
+      "draft_sha256": "939ac6c98628046f9f45547135cbc439f217403e60c7e4033db5f541ab017ecc",
+      "base_lines": 253,
+      "draft_lines": 273
+    },
+    {
+      "path": "scripts/release/tests/test_apple_ci_hygiene.py",
+      "base_sha256": "28ad6d083da0088087b2196ff1c102e19944e190d9d4484facd511b1d4063be1",
+      "draft_sha256": "0ceea9e5afacd3feeaa8b0aa55134dd559482ffeaaff259906c605cfc41e3549",
+      "base_lines": 576,
+      "draft_lines": 749
+    }
+  ],
+  "patch_sha256": "22e3ddeccade733190658549cb85f4d8183a77fba9c1ff60e8c08a286c4acc18",
+  "new_test_methods": [
+    "NativeInventoryAndBasicInfoTest.test_constructor_binds_uid_selector_and_byte_buffer_pointer_abi",
+    "NativeInventoryAndBasicInfoTest.test_denial_short_record_and_wrong_pid_remain_explicit_numeric_failures",
+    "NativeInventoryAndBasicInfoTest.test_denied_selected_candidate_never_becomes_missing_or_cleanup_success",
+    "NativeInventoryAndBasicInfoTest.test_exact_maximum_is_accepted_but_full_buffer_truncation_is_not",
+    "NativeInventoryAndBasicInfoTest.test_failed_zero_negative_unaligned_and_over_capacity_counts_fail_closed",
+    "NativeInventoryAndBasicInfoTest.test_inventory_diagnostic_retains_only_numeric_boundary_failure",
+    "NativeInventoryAndBasicInfoTest.test_inventory_uses_effective_uid_and_byte_count_not_global_scan",
+    "NativeInventoryAndBasicInfoTest.test_lifetimes_reads_only_kernel_uid_selected_processes",
+    "NativeInventoryAndBasicInfoTest.test_negative_and_duplicate_pid_records_are_not_normalized_away",
+    "NativeInventoryAndBasicInfoTest.test_only_actual_absence_or_zombie_can_be_no_basic_identity",
+    "NativeInventoryAndBasicInfoTest.test_self_only_inventory_is_a_valid_empty_worker_set",
+    "NativeInventoryAndBasicInfoTest.test_snapshot_preserves_baseline_exclusion_and_full_identity_read",
+    "NativeInventoryAndBasicInfoTest.test_uid_change_after_kernel_selection_is_still_excluded"
+  ],
+  "prior_tests_retained": true,
+  "test_counts": {
+    "base": 37,
+    "draft": 50,
+    "added": 13
+  },
+  "execution": "NOT RUN. Python AST parsed only. No draft imports, tests, native calls, builds, live source edits or Git writes.",
+  "independent_review": "PENDING /root/release_fix_review after root adopts the exact proposed bytes; author cannot independently approve this draft."
+}

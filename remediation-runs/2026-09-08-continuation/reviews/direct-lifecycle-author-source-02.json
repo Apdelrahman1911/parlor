@@ -1,0 +1,178 @@
+{
+  "schema_version": 1,
+  "kind": "DIRECT_OWNED_SIMULATOR_LIFECYCLE_AUTHOR_SOURCE_REPORT",
+  "author": "/root/ci_workflow",
+  "recorded_at": "2026-09-08T17:40:23.311776+00:00",
+  "status": "HELD_AUTHOR_SOURCE_V2_REQUIRES_INDEPENDENT_REVIEW_AND_EXECUTION",
+  "branch": "fix/local-readiness-2026-09-07",
+  "head_at_hold": "700243c3426db2da3855a9d3a3df58ada607ffc5",
+  "baseline_application_and_control_source": "5f35a20d3c9c846cd98b38a16881997ecf577497",
+  "scope": "Explicit opt-in simulator-lifecycle helper; mutable companion/normal wrappers, composition and exact driver freeze; focused adapter and regression/docs integration. No shipping application, architecture, protocol, storage, rule, toolchain or immutable ownership change.",
+  "held_source_files": [
+    {
+      "path": "scripts/verification/ios-readiness/simulator_lifecycle.py",
+      "sha256": "8d799475f1e92fc7943ca05b2d1e59655cbb8b0973031029440662059e65f248",
+      "bytes": 37085,
+      "lines": 689
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/run_ios_readiness.py",
+      "sha256": "b0f3794fe89537d5108a2c24c22c33ed94d9330ee220e7fa257bfb2c4a7b1e29",
+      "bytes": 76990,
+      "lines": 1099
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/README.md",
+      "sha256": "69afd6136fdeecf9cca3426a523e130de01389b463db60ffd25254de87294142",
+      "bytes": 11891,
+      "lines": 195
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
+      "sha256": "5524d839202211270ec1c97776f0d350b9802ecf0d1c5e6eb3d28cd960629302",
+      "bytes": 59858,
+      "lines": 940
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/README.md",
+      "sha256": "16ae9dbdaf680add4eeb965dee0b96910d8ecf3ef6bb89c3b8afead1a8975451",
+      "bytes": 23054,
+      "lines": 355
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/compose_runner.py",
+      "sha256": "cf41c413d321d87689b97b86e4fe7981052dab6b629c8ffcd57b15a00be6555c",
+      "bytes": 21878,
+      "lines": 384
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/README.md",
+      "sha256": "ab3e78c11a796e2122f666ca8522d0eeea44da5b0c180292140ba28c645a300b",
+      "bytes": 12318,
+      "lines": 210
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/app_foundation_copy.py",
+      "sha256": "241bc0e199be2699fe49b1552d993e7389de79ff8fb88f2d1fe53bed99847840",
+      "bytes": 13449,
+      "lines": 219
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/direct-lifecycle-draft-freeze-01.json",
+      "sha256": "4a18e36224c895581515d538f995e6f8a1bd7016a3cf6eba3328712e5535bd08",
+      "bytes": 2956,
+      "lines": 73
+    },
+    {
+      "path": "scripts/ci/native_continuation.py",
+      "sha256": "3c974b93e202359c12aa2647984b624024986676eb058ace9ecdf4e7663200bb",
+      "bytes": 57512,
+      "lines": 978
+    },
+    {
+      "path": "scripts/ci/NATIVE_CONTINUATION.md",
+      "sha256": "b5ae13ab4f6158d3d5d067445286098f1aab72b177591bdb0e5252a1e2d06709",
+      "bytes": 14826,
+      "lines": 242
+    },
+    {
+      "path": "scripts/release/tests/test_native_continuation.py",
+      "sha256": "dac139c779e33b795aa6f36fc0f853ee071099b927c901a9b993323c6f6edb35",
+      "bytes": 55155,
+      "lines": 864
+    },
+    {
+      "path": "scripts/release/tests/test_native_process_probe.py",
+      "sha256": "2730119da9d074d490a259669d3e9f9b4fec655da2045bfd9401ee44dc91e4ea",
+      "bytes": 43371,
+      "lines": 727
+    },
+    {
+      "path": "scripts/verification/ios-readiness/test_native_command_failures.py",
+      "sha256": "2dae0e77803d5c6b98bd3d4bc1ee4f84a366b799da7e21c16e2068312e0d9b8c",
+      "bytes": 27564,
+      "lines": 482
+    },
+    {
+      "path": "scripts/verification/ios-readiness/test_toolchain_profiles.py",
+      "sha256": "aee9e30948813929393acedfaad5767fee2a47eb896a7eddd81db96208f14672",
+      "bytes": 12166,
+      "lines": 195
+    },
+    {
+      "path": "scripts/verification/ios-readiness/test_foundation_toolchain_binding.py",
+      "sha256": "613f255556f052d553a2e85dc7d84e4f137957f47732356449e22d6991f7fc53",
+      "bytes": 24627,
+      "lines": 384
+    }
+  ],
+  "implementation": [
+    "Exact --simulator-lifecycle=direct-owned-v1 requires qualified-xcode-26.3 before allocation. Default legacy-apphost and its native authorities remain selected unless explicitly opted in; no automatic fallback.",
+    "Closed simulator-only inventory/create/boot/bootstatus plus dedicated shutdown/delete authority. Original generic AppHost command handlers remain unchanged, including separately reviewed metadata primary-error preservation.",
+    "Direct subprocess capture has durable intent/launch/result, exact returned Popen-handle custody, live separate2MiB stream caps, closed diagnostic codes plus actual owned PID/elapsed/exit/reap proof, sticky primary failure and bounded secondary retirement/pipe/selector errors. No numeric PID/group/name adoption/signals.",
+    "Exclusive append/fsynced journal binds source/control, exact temporary/evidence device-inode-uid custody, random nonce, synthetic name/runtime/type, precreate baseline UUID hashes and issued-create proof. Recovery never manufactures a successful create result or adopts from intent/name/printed output alone.",
+    "Fresh exact device metadata and Shutdown before deletion; actual zero-exit delete and both authoritative metadata and device-directory absence. Malformed/ambiguous/preexisting/renamed/cloned records and custody/journal/source/control drift refuse authority.",
+    "Command allowances unchanged metadata45/ordinary120/bootstatus300. Independent480s lifecycle-cleanup deadline admits only complete per-command allowance plus10s direct-child retirement inside unchanged outer600s grace; failure retains evidence/resources, not shortened deadlines or successful skips.",
+    "Durable build-attempt marker precedes actual Xcode Popen. Postbuild cleanup needs successful raw-retention acknowledgement, composed Foundation preservation, strict original owner.stop/freshrefresh/no unknown or FIFO-attestation errors and every direct AppHost handle wait-reaped.",
+    "Acknowledgement is retained-evidence proof only: normal after3 rawXCResult views, companion after2 views and bounded app/container/operation/native records. Missing/failed acknowledgement or its persistence blocks simulator destruction and temporary copy/DerivedData/XCResult removal but does not prevent original worker/FIFO/final-holder stages.",
+    "Adapter selects freshA21/B22 and exact mode, requires nonvacuous direct-child/build barrier summary, actual journal bytes+filecustody+source/temp/evidence bindings and chronology before admitting next lane. Legacy schema controls remain accepted only without new-mode authorization.",
+    "Mechanical integration binds helper and both regression files in companion/composed/normal manifests. New additive nine-file draftfreeze changes only mutable adaptor driver pin; original freezes/native templates/strict operation assertions preserved."
+  ],
+  "reviewer_findings_addressed": [
+    "Issued-create proof distinct from never-dispatched durable intent.",
+    "Closed error codes/PID/elapsed diagnostics rather than undifferentiated RuntimeError.",
+    "Retirement integer-result and cancellation-after-context checks, semantic cleanup failures latched.",
+    "Full cleanup-budget recheck immediately before launch; command deadline includes launch and fsynced launched-event work.",
+    "Evidence acknowledgement, revocation on persistence failure, composed staged persistence and no destructive/file cleanup after missing raw evidence.",
+    "Actual adapter journal custody/name-cycle binding, single initial allocation, ordered intent/launch/result and fresh exact pre-delete metadata; matching create-outcome.",
+    "Root static review: functional clone allowlist permits no companion README divergence; reverted ONLY author-added companion README usage section to exact committed bytes. Shared CI and permitted normal/composition docs retain lifecycle usage; immutable clone guard unchanged. No tests had run."
+  ],
+  "declarations_not_executed": {
+    "native_adapter": 40,
+    "native_metadata_command_failures": 26,
+    "toolchain_profiles": 12,
+    "foundation_toolchain_binding": 20,
+    "probe_cycle_expectation": 1,
+    "probe_other_38": "UNCHANGED_NOT_REQUESTED_FOR_THIS_DELTA",
+    "composition": 22,
+    "foundation_draft": 33,
+    "low_level_lifecycle": "Separate author /root/lifecycle_controls final count/hash pending",
+    "actual_wrapper_integration": {
+      "author": "/root/native_ci",
+      "count": 32,
+      "path": "scripts/verification/ios-readiness/test_simulator_lifecycle_integration.py",
+      "sha256": "93d88840fcef436dbf45cc20de071e784daa4c6bc0e7683b623da8df7197100c"
+    }
+  },
+  "independent_review": {
+    "ownership_safety": "/root/portability_review",
+    "regression_control_closure": "/root/fixture_review",
+    "execution_invocation_author": "/root/dependency_chain",
+    "invocation_reviewer": "/root/ci_review",
+    "status": "PENDING_EXACT_HELD_BYTES_REVIEW"
+  },
+  "execution": {
+    "tests": "NOT_RUN_BY_AUTHOR",
+    "builds": "NOT_RUN_BY_AUTHOR",
+    "native_tools": "NOT_RUN_BY_AUTHOR",
+    "actions": "NOT_DISPATCHED_BY_AUTHOR",
+    "cleanup": "No build/test/native cycle or temporary fixture executed by this author; no generated lane outputs or workers to clean. Sole coordinator owns later cycles, Gradle stops and cleanup receipts."
+  },
+  "historical_evidence": {
+    "A19": "34244902185 FAIL; original ps15 and secondary lsof30, simulator retirement unproven; not reclassified",
+    "B20": "NOT_RUN",
+    "probe": "34239707887 separate own lifecycle precedent only; overall observation FAIL, cleanup PASS, no app/libproc runtime proof"
+  },
+  "limits": [
+    "This author source report and even successful Linux controls do not authorize native execution or establish Parlor runtime correctness.",
+    "Build-era AppHost ps/lsof failures remain separately unresolved; direct lifecycle deliberately does not replace them.",
+    "Strict L08 protection, functional storage/retained-host completion, normal Debug libproc, final combined qualification and independent evidence reconciliation remain runtime work for coordinator.",
+    "All controls, tests, corrected source and mechanical inventory require reviewed frozen commits and fresh platform/source/control bindings before any native lane.",
+    "No Store signing/publication/promotion, physical-device test, owner/legal clearance, force-push or unrelated repository/cache cleanup performed."
+  ],
+  "previous_author_report": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/direct-lifecycle-author-source-01.json",
+    "sha256": "bc35e4b89fc48129dc60c176806753fe8a8b0ba2047638bfeb8770d6a5bc8ab2",
+    "status": "SUPERSEDED_SOURCE_SNAPSHOT_NOT_AN_EXECUTED_CYCLE"
+  }
+}

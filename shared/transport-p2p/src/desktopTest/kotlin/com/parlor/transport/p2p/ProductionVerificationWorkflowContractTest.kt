@@ -3,6 +3,8 @@ package com.parlor.transport.p2p
 import java.io.File
 import kotlin.test.Test
 import kotlin.test.assertContains
+import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
@@ -294,8 +296,10 @@ class ProductionVerificationWorkflowContractTest {
     }
 
     @Test
-    fun apple_job_runs_kotlin_and_app_launch_tests_all_link_targets_and_unsigned_swift_release() {
+    fun apple_jobs_run_kotlin_and_app_launch_tests_all_link_targets_and_unsigned_swift_release() {
         val workflow = read(".github/workflows/production-verification.yml")
+        val runtimeJob = workflow.substringAfter("\n  ios:\n").substringBefore("\n  ios-release:\n")
+        val releaseJob = workflow.substringAfter("\n  ios-release:\n").substringBefore("\n  ios-protection-probe:\n")
         val rootBuild = read("build.gradle.kts")
         val composeBuild = read("composeApp/build.gradle.kts")
         val xcodeProject = read("iosApp/iosApp.xcodeproj/project.pbxproj")
@@ -335,18 +339,28 @@ class ProductionVerificationWorkflowContractTest {
             )
         }
 
-        val appleTestStep = workflow
-            .substringAfter("- name: Run iOS simulator tests, Apple static analysis, and release linkage gates")
-            .substringBefore("- name: Validate iOS plist and privacy manifest")
+        val appleTestStep = runtimeJob
+            .substringAfter("- name: Run all KMP iOS simulator runtime tests")
+            .substringBefore("\n      - name:")
         assertContains(
             appleTestStep,
-            "./gradlew productionIosSimulatorRuntimeTests productionAppleCheck",
-            message = "Apple CI must run the dedicated executable simulator aggregate before linkage gates",
+            "./gradlew productionIosSimulatorRuntimeTests --dependency-verification=strict --no-daemon",
+            message = "The runtime job must run every executable KMP simulator test",
+        )
+        val appleReleaseStep = releaseJob
+            .substringAfter("- name: Run complete Apple static analysis and release linkage gates")
+            .substringBefore("\n      - name:")
+        assertContains(
+            appleReleaseStep,
+            "./gradlew productionAppleCheck --dependency-verification=strict --no-daemon",
+            message = "The release job must run complete Apple analysis and all three serial release links",
         )
         assertFalse(
-            "./gradlew allTests" in appleTestStep,
+            "./gradlew allTests" in runtimeJob || "./gradlew allTests" in releaseJob,
             "Apple CI must not duplicate the Linux common/desktop/Android aggregate",
         )
+        assertFalse("./gradlew productionAppleCheck" in runtimeJob)
+        assertFalse("./gradlew productionIosSimulatorRuntimeTests" in releaseJob)
 
         val simulatorRuntimeGate = rootBuild
             .substringAfter("val productionIosSimulatorRuntimeTests")
@@ -387,14 +401,18 @@ class ProductionVerificationWorkflowContractTest {
 
         val appLaunchMarker = "- name: Launch Swift host and Compose root on iOS Simulator"
         val swiftReleaseMarker = "- name: Build unsigned Swift Release wrapper"
-        assertContains(workflow, appLaunchMarker)
-        val appLaunchStep = workflow
+        assertContains(runtimeJob, appLaunchMarker)
+        val appLaunchStep = runtimeJob
             .substringAfter(appLaunchMarker)
-            .substringBefore(swiftReleaseMarker)
+            .substringBefore("\n      - name:")
         listOf(
-            "xcrun simctl list devices available --json",
+            "id: apple_ui_run",
+            "scripts.ci.apple_verification_hygiene create-simulator apple-ui",
+            "test ! -e build/ci-evidence/ios-ui-tests.xcresult",
             "-configuration Debug",
             "platform=iOS Simulator,id=\$simulator_udid",
+            "-parallel-testing-enabled NO",
+            "-maximum-concurrent-test-simulator-destinations 1",
             "-resultBundlePath build/ci-evidence/ios-ui-tests.xcresult",
             "test | tee build/ci-evidence/xcode-ui-test.log",
         ).forEach { required ->
@@ -404,6 +422,8 @@ class ProductionVerificationWorkflowContractTest {
                 message = "Apple CI must launch the real app through XCTest: $required",
             )
         }
+        assertFalse("xcrun simctl list devices available --json" in appLaunchStep)
+        assertOwnedAppleUiLifecycle(runtimeJob, appLaunchMarker)
         listOf(
             "com.apple.product-type.bundle.ui-testing",
             "IOSAppLaunchUITests.swift in Sources",
@@ -431,10 +451,10 @@ class ProductionVerificationWorkflowContractTest {
             )
         }
 
-        val appleEvidenceMarker = "- name: Upload Apple verification evidence"
-        assertContains(workflow, swiftReleaseMarker)
-        assertContains(workflow, appleEvidenceMarker)
-        val swiftReleaseStep = workflow
+        val appleEvidenceMarker = "- name: Upload Apple release verification evidence"
+        assertContains(releaseJob, swiftReleaseMarker)
+        assertContains(releaseJob, appleEvidenceMarker)
+        val swiftReleaseStep = releaseJob
             .substringAfter(swiftReleaseMarker)
             .substringBefore(appleEvidenceMarker)
         listOf(
@@ -499,6 +519,133 @@ class ProductionVerificationWorkflowContractTest {
         }
         assertContains(rootBuild, "tasks.named(\"productionAppleStaticAnalysis\")")
         assertContains(rootBuild, "tasks.matching { it.name in appleTypeAwareDetektTasks }.all")
+    }
+
+    @Test
+    fun split_apple_jobs_keep_independent_source_toolchain_cycles_and_evidence() {
+        val workflow = read(".github/workflows/production-verification.yml")
+        val runtime = workflow.substringAfter("\n  ios:\n").substringBefore("\n  ios-release:\n")
+        val release = workflow.substringAfter("\n  ios-release:\n").substringBefore("\n  ios-protection-probe:\n")
+        listOf(runtime to listOf("apple-aggregate", "apple-ui"), release to listOf("apple-aggregate", "apple-wrapper"))
+            .forEach { (job, cycles) ->
+                val header = job.substringBefore("\n    steps:")
+                assertContains(header, "runs-on: macos-15")
+                assertContains(header, "DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer")
+                assertFalse("needs:" in header || "strategy:" in header)
+                listOf(
+                    "java-version: \"21\"",
+                    "Build version 17C529",
+                    ".toolchains.apple.minimum_ios_sdk_major",
+                    "git rev-parse HEAD | tee build/ci-evidence/commit.txt",
+                    "test -z \"\$(git status --porcelain)\"",
+                    "[\"verification_hygiene.py\", \"prepare\"]",
+                    "[\"verification_hygiene.py\", \"cleanup\"]",
+                    "name: verification-cleanup-\${{ github.job }}",
+                ).forEach { required -> assertContains(job, required) }
+                assertEquals(
+                    cycles,
+                    Regex("scripts\\.ci\\.apple_verification_hygiene finish (apple-[a-z]+)")
+                        .findAll(job).map { it.groupValues[1] }.toList(),
+                )
+                val cleanup = job.substringAfter("- name: Clean only attested verification outputs")
+                    .substringBefore("\n      - name:")
+                assertEquals(cycles, Regex("\"(apple-[a-z]+)\":").findAll(cleanup).map { it.groupValues[1] }.toList())
+                assertContains(cleanup, "steps.verification_artifact.outputs.artifact-id")
+                assertContains(cleanup, "steps.verification_artifact.outputs.artifact-digest")
+            }
+        assertContains(runtime, "name: ios-runtime-verification")
+        assertContains(runtime, "**/build/test-results/**/*.xml")
+        assertContains(release, "name: ios-release-verification")
+        assertContains(release, "**/build/reports/detekt/")
+        assertContains(release, "Inspect complete unsigned iOS Release package")
+        assertFalse("- name: Build unsigned Swift Release wrapper" in runtime)
+        assertFalse("- name: Launch Swift host and Compose root on iOS Simulator" in release)
+    }
+
+    @Test
+    fun protection_diagnostic_is_the_seventh_opt_in_job_not_a_full_gate() {
+        val workflow = read(".github/workflows/production-verification.yml")
+        assertEquals(
+            listOf("desktop-android", "desktop-linux-arm64", "desktop-macos-x64", "desktop-windows-x64",
+                "ios", "ios-release", "ios-protection-probe"),
+            Regex("(?m)^  ([a-z][a-z0-9-]+):$").findAll(workflow.substringAfter("\njobs:\n"))
+                .map { it.groupValues[1] }.toList(),
+        )
+        val probe = workflow.substringAfter("\n  ios-protection-probe:\n")
+        assertContains(probe, "if: github.event_name == 'workflow_dispatch' && inputs.verification_scope == 'ios-protection-probe'")
+        assertContains(probe, "timeout-minutes: 20")
+        assertContains(probe, "PARLOR_FROZEN_SOURCE_SHA: \${{ inputs.frozen_source_sha }}")
+        assertContains(probe, "PARLOR_APPROVED_PROBE_CONTROL_SHA256: \${{ inputs.approved_probe_control_sha256 }}")
+        assertContains(probe, "run_probe.py assert-result")
+        assertContains(probe, "PARLOR_PROTECTION_CLEANUP_ARTIFACT_DIGEST:")
+        assertFalse("./gradlew" in probe || "github.token" in probe || "secrets." in probe)
+    }
+
+    @Test
+    fun workflow_job_boundaries_are_preserved_for_lf_and_windows_crlf_checkouts() {
+        val jobs = listOf(
+            "desktop-android", "desktop-linux-arm64", "desktop-macos-x64", "desktop-windows-x64",
+            "ios", "ios-release", "ios-protection-probe",
+        )
+        val lf = "on:\n  push:\njobs:\n" + jobs.joinToString("") { job -> "  $job:\n    name: $job\n" }
+        fun assertJobBoundaries(checkoutText: String) {
+            val workflow = normalizeContractText(checkoutText)
+            assertEquals(
+                jobs,
+                Regex("(?m)^  ([a-z][a-z0-9-]+):$").findAll(workflow.substringAfter("\njobs:\n"))
+                    .map { it.groupValues[1] }.toList(),
+            )
+            assertEquals(
+                "    name: ios",
+                workflow.substringAfter("\n  ios:\n").substringBefore("\n  ios-release:\n"),
+            )
+            assertEquals(
+                "    name: ios-release",
+                workflow.substringAfter("\n  ios-release:\n").substringBefore("\n  ios-protection-probe:\n"),
+            )
+            assertEquals(
+                "    name: ios-protection-probe\n",
+                workflow.substringAfter("\n  ios-protection-probe:\n"),
+            )
+        }
+        listOf("\n", "\r\n").forEach { lineEnding ->
+            val checkoutText = lf.replace("\n", lineEnding)
+            assertEquals(lf, normalizeContractText(checkoutText))
+            assertJobBoundaries(checkoutText)
+            listOf("\njobs:\n", "\n  ios:\n", "\n  ios-release:\n", "\n  ios-protection-probe:\n")
+                .forEach { marker ->
+                    val missingBoundary = lf.replace(marker, "\n").replace("\n", lineEnding)
+                    assertFailsWith<AssertionError> { assertJobBoundaries(missingBoundary) }
+                }
+        }
+        assertEquals("literal\\r\\n and lone\rreturn", normalizeContractText("literal\\r\\n and lone\rreturn"))
+    }
+
+    private fun assertOwnedAppleUiLifecycle(workflow: String, appLaunchMarker: String) {
+        val prepareMarker = "- name: Claim apple-ui native resource ownership"
+        val finishMarker = "- name: Stop Gradle after apple-ui and retire owned Apple resources"
+        assertContains(workflow, prepareMarker)
+        assertContains(workflow, finishMarker)
+        val prepareStep = workflow.substringAfter(prepareMarker).substringBefore("\n      - name:")
+        assertContains(prepareStep, "id: apple_ui_prepare")
+        assertContains(prepareStep, "scripts.ci.apple_verification_hygiene prepare apple-ui")
+        assertTrue(workflow.indexOf(prepareMarker) < workflow.indexOf(appLaunchMarker))
+        val nextStepName = workflow.substringAfter(appLaunchMarker)
+            .substringAfter("\n      - name:", missingDelimiterValue = "")
+            .lineSequence().first().trim()
+        assertEquals(
+            finishMarker.removePrefix("- name:").trim(),
+            nextStepName,
+            "Owned UI cleanup must immediately follow XCTest",
+        )
+        val finishStep = workflow.substringAfter(finishMarker).substringBefore("\n      - name:")
+        listOf(
+            "id: apple_ui_finish",
+            "if: always()",
+            "PARLOR_APPLE_PREPARE_OUTCOME: \${{ steps.apple_ui_prepare.outcome }}",
+            "PARLOR_APPLE_RUN_OUTCOME: \${{ steps.apple_ui_run.outcome }}",
+            "scripts.ci.apple_verification_hygiene finish apple-ui",
+        ).forEach { required -> assertContains(finishStep, required) }
     }
 
     @Test
@@ -615,8 +762,12 @@ class ProductionVerificationWorkflowContractTest {
     private fun read(relativePath: String): String {
         val file = File(repositoryRoot, relativePath)
         assertTrue(file.isFile, "Missing release contract file: ${file.absolutePath}")
-        return file.readText()
+        return normalizeContractText(file.readText())
     }
+
+    // Git may check out semantic contract text as CRLF on Windows. Keep exact
+    // content and section boundaries; only the physical line ending differs.
+    private fun normalizeContractText(text: String): String = text.replace("\r\n", "\n")
 
     private fun catalogAliases(catalog: String, wantedSection: String): List<String> {
         return catalogSectionAssignments(catalog, wantedSection).map { assignment ->

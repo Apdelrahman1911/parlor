@@ -1,0 +1,484 @@
+{
+  "reviewer": "/root/release_fix_review",
+  "author_and_executor": "/root",
+  "reviewed_at": "2026-09-05T23:11:40.664451+00:00",
+  "conclusion": "APPROVED \u2014 productionAppleCheck passes locally for Apple analysis and three release framework links. NOT Store-qualified / Swift-wrapper / runtime / signing evidence.",
+  "source": {
+    "branch": "main",
+    "commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+    "tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+    "diff_sha256": "60b555c0dd323a086e959ffbc5aa3fd7c6629ae1d0ad016021572e7ae272e4dd",
+    "source_manifest_sha256": "e59da533dbec2f02f6f2b460ce72e2a7337af1e44abfb0bc6d533304d4127ec7"
+  },
+  "manifest_files": 658,
+  "current_cycle_before_and_after_identical": true,
+  "command": [
+    "./gradlew",
+    "productionAppleCheck",
+    "--no-build-cache",
+    "--continue",
+    "--no-daemon",
+    "--no-parallel",
+    "--max-workers=1",
+    "--no-configuration-cache",
+    "--dependency-verification=strict",
+    "-Dorg.gradle.jvmargs=-Xmx6g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=combined-apple-01",
+    "-Pkotlin.compiler.execution.strategy=in-process",
+    "-Pparlor.android.signing.storeFile=",
+    "-Pparlor.android.signing.storePassword=",
+    "-Pparlor.android.signing.keyAlias=",
+    "-Pparlor.android.signing.keyPassword="
+  ],
+  "start": "2026-09-05T22:43:34.494607+00:00",
+  "finish": "2026-09-05T22:53:15.708031+00:00",
+  "exit_code": 0,
+  "log_lines_read": [
+    [
+      1,
+      454
+    ]
+  ],
+  "task_wiring": {
+    "productionAppleCheck": [
+      "productionAppleStaticAnalysis",
+      ":composeApp:linkReleaseFrameworkIosArm64",
+      ":composeApp:linkReleaseFrameworkIosSimulatorArm64",
+      ":composeApp:linkReleaseFrameworkIosX64"
+    ],
+    "apple_analysis_family": [
+      "detektMetadataNativeMain",
+      "detektMetadataAppleMain",
+      "detektMetadataIosMain",
+      "detektIosArm64Main",
+      "detektIosArm64Test",
+      "detektIosSimulatorArm64Main",
+      "detektIosSimulatorArm64Test",
+      "detektIosX64Main",
+      "detektIosX64Test"
+    ],
+    "registration": "Root adds matching registered tasks from every KMP project;13 modules. Hierarchical iosMain contains all authored Apple production source. Leaf/native/apple folders contain no authored .kt files. Test fixtures are registered for analysis but not shipping framework dependencies.",
+    "link_ownership": "ComposeApp dynamic framework baseName ComposeApp for all3targets; commonMain depends on shipping game/shared modules. Library convention uses default hierarchy; app serializes three framework link tasks with mustRunAfter and command disables parallelism.",
+    "actual_apple_source_counts": {
+      "composeApp": {
+        "iosMain": 9,
+        "iosTest": 2
+      },
+      "shared/content": {},
+      "shared/core": {},
+      "shared/design-system": {
+        "iosMain": 3,
+        "iosTest": 1
+      },
+      "shared/engine": {},
+      "shared/engine-testing": {},
+      "shared/networking": {
+        "iosMain": 2
+      },
+      "shared/networking-testing": {},
+      "shared/session": {},
+      "shared/storage": {},
+      "shared/transport-p2p": {
+        "iosMain": 2
+      },
+      "game-modes/mafia": {},
+      "game-modes/whodunit": {}
+    }
+  },
+  "task_results": {
+    "gradle_actionable_summary": "147 actionable tasks: 143 executed, 4 up-to-date",
+    "printed_task_outcomes": {
+      "SKIPPED": 17,
+      "NO_SUFFIX_EXECUTION_OR_AGGREGATE": 146,
+      "NO-SOURCE": 260,
+      "UP-TO-DATE": 4
+    },
+    "no_from_cache": true,
+    "fresh_native_compiles": {
+      "IosArm64": 11,
+      "IosSimulatorArm64": 11,
+      "IosX64": 11
+    },
+    "fresh_apple_detekt": [
+      ":composeApp:detektMetadataIosMain",
+      ":shared:design-system:detektMetadataIosMain",
+      ":shared:networking:detektMetadataIosMain",
+      ":shared:transport-p2p:detektMetadataIosMain"
+    ],
+    "no_source_apple_detekt_count": 113,
+    "up_to_date": [
+      ":composeApp:prepareComposeResourcesTaskForCommonMain",
+      ":game-modes:mafia:prepareComposeResourcesTaskForCommonMain",
+      ":game-modes:whodunit:prepareComposeResourcesTaskForCommonMain",
+      ":shared:design-system:prepareComposeResourcesTaskForCommonMain"
+    ],
+    "framework_links_fresh": true,
+    "test_execution_count": 0
+  },
+  "detekt_reports": [
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-apple-01/reports/composeApp/build/reports/detekt/detektMetadataIosMain.xml",
+      "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+      "findings": 0
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-apple-01/reports/shared/design-system/build/reports/detekt/detektMetadataIosMain.xml",
+      "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+      "findings": 0
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-apple-01/reports/shared/networking/build/reports/detekt/detektMetadataIosMain.xml",
+      "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+      "findings": 0
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-apple-01/reports/shared/transport-p2p/build/reports/detekt/detektMetadataIosMain.xml",
+      "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+      "findings": 0
+    }
+  ],
+  "analysis_limits": "Four iosMain metadata reports have zero findings.113 other registered Apple analysis tasks are NO-SOURCE, not actual successful rule executions. commonTest/iosTest do not have hierarchical type-aware metadata tasks; root productionCheck plain Detekt scans authored test files and native runtime belongs to a separate cycle. This link-only cycle executes no tests.",
+  "artifacts": [
+    {
+      "path": "composeApp/build/bin/iosX64/releaseFramework/ComposeApp.framework/ComposeApp",
+      "bytes": 53549512,
+      "sha256": "dce4720c19d635b26f9f306b11b1f668d24b6f347bbcb6a0501a752613434b9b",
+      "file": "/Users/abdelrahman/Projects/parlor/composeApp/build/bin/iosX64/releaseFramework/ComposeApp.framework/ComposeApp: Mach-O 64-bit dynamically linked shared library x86_64",
+      "target": "iosX64",
+      "expected_architecture": "x86_64",
+      "expected_platform": "iPhoneSimulator",
+      "fresh_link_task": ":composeApp:linkReleaseFrameworkIosX64",
+      "plist_path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-apple-01/artifacts/composeApp/build/bin/iosX64/releaseFramework/ComposeApp.framework/Info.plist",
+      "plist_sha256": "07c9f1efc03121023e533670716e9bbf1e3803739d0792b14c7f085fd021da09",
+      "plist": {
+        "CFBundleExecutable": "ComposeApp",
+        "CFBundleIdentifier": "com.parlor.app.ComposeApp",
+        "CFBundleInfoDictionaryVersion": "6.0",
+        "CFBundleName": "ComposeApp",
+        "CFBundlePackageType": "FMWK",
+        "CFBundleShortVersionString": "1.0",
+        "CFBundleSupportedPlatforms": [
+          "iPhoneSimulator"
+        ],
+        "CFBundleVersion": "1",
+        "MinimumOSVersion": "15.0",
+        "UIDeviceFamily": [
+          1,
+          2
+        ]
+      },
+      "binary_not_retained": true
+    },
+    {
+      "path": "composeApp/build/bin/iosSimulatorArm64/releaseFramework/ComposeApp.framework/ComposeApp",
+      "bytes": 52265480,
+      "sha256": "b38bef11efdad166858d6b3ef45cae96e1783647d1d61a8f08f2a4b78caa016d",
+      "file": "/Users/abdelrahman/Projects/parlor/composeApp/build/bin/iosSimulatorArm64/releaseFramework/ComposeApp.framework/ComposeApp: Mach-O 64-bit dynamically linked shared library arm64",
+      "target": "iosSimulatorArm64",
+      "expected_architecture": "arm64",
+      "expected_platform": "iPhoneSimulator",
+      "fresh_link_task": ":composeApp:linkReleaseFrameworkIosSimulatorArm64",
+      "plist_path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-apple-01/artifacts/composeApp/build/bin/iosSimulatorArm64/releaseFramework/ComposeApp.framework/Info.plist",
+      "plist_sha256": "07c9f1efc03121023e533670716e9bbf1e3803739d0792b14c7f085fd021da09",
+      "plist": {
+        "CFBundleExecutable": "ComposeApp",
+        "CFBundleIdentifier": "com.parlor.app.ComposeApp",
+        "CFBundleInfoDictionaryVersion": "6.0",
+        "CFBundleName": "ComposeApp",
+        "CFBundlePackageType": "FMWK",
+        "CFBundleShortVersionString": "1.0",
+        "CFBundleSupportedPlatforms": [
+          "iPhoneSimulator"
+        ],
+        "CFBundleVersion": "1",
+        "MinimumOSVersion": "15.0",
+        "UIDeviceFamily": [
+          1,
+          2
+        ]
+      },
+      "binary_not_retained": true
+    },
+    {
+      "path": "composeApp/build/bin/iosArm64/releaseFramework/ComposeApp.framework/ComposeApp",
+      "bytes": 52067408,
+      "sha256": "70e113c4e73d993eb4545748e62ee1c9b7dd8e1dff1b4c3ffd99374f9ad33632",
+      "file": "/Users/abdelrahman/Projects/parlor/composeApp/build/bin/iosArm64/releaseFramework/ComposeApp.framework/ComposeApp: Mach-O 64-bit dynamically linked shared library arm64",
+      "target": "iosArm64",
+      "expected_architecture": "arm64",
+      "expected_platform": "iPhoneOS",
+      "fresh_link_task": ":composeApp:linkReleaseFrameworkIosArm64",
+      "plist_path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-apple-01/artifacts/composeApp/build/bin/iosArm64/releaseFramework/ComposeApp.framework/Info.plist",
+      "plist_sha256": "63062e5cf7dfaec7b571199ba49329077afced9f1adbe52f262b27354fd251db",
+      "plist": {
+        "CFBundleExecutable": "ComposeApp",
+        "CFBundleIdentifier": "com.parlor.app.ComposeApp",
+        "CFBundleInfoDictionaryVersion": "6.0",
+        "CFBundleName": "ComposeApp",
+        "CFBundlePackageType": "FMWK",
+        "CFBundleShortVersionString": "1.0",
+        "CFBundleSupportedPlatforms": [
+          "iPhoneOS"
+        ],
+        "CFBundleVersion": "1",
+        "MinimumOSVersion": "15.0",
+        "UIDeviceFamily": [
+          1,
+          2
+        ],
+        "UIRequiredDeviceCapabilities": [
+          "arm64"
+        ]
+      },
+      "binary_not_retained": true
+    }
+  ],
+  "artifact_limits": [
+    "Root hashed original binary streams and recorded file(1) output before cleanup; reviewer read/hash-checked retained receipts and plists, not already-deleted binary bytes.",
+    "file(1) records CPU architecture only; iPhoneOS/iPhoneSimulator distinction comes from target/plist. LC_BUILD_VERSION, install names/UUIDs, dSYM, signatures and entitlements were not retained or independently inspected in this cycle.",
+    "Framework MinimumOSVersion15.0 is below wrapper deployment16.0; a reusable nested-framework plist is not the app wrapper deployment/version/identity contract. Framework1.0/version1 is not proof of Store application1.0.0/version1.",
+    "No Swift wrapper build, Xcode embedding phase execution, app host, launch, simulator/device runtime, archive/export/IPA, signing, installation, Store interaction or privacy snapshot validation."
+  ],
+  "current_toolchain_query": {
+    "command": [
+      "/usr/bin/xcodebuild",
+      "-version"
+    ],
+    "result": "Xcode 26.5\nBuild version 17F42",
+    "exit_code": 0,
+    "active_developer_dir": "/Applications/Xcode.app/Contents/Developer",
+    "method": "Independent post-cycle version-only query and xcode-select -p; neither builds nor launches an app. Cycle lacks embedded DTXcodeBuild metadata; root separately attests selected local version."
+  },
+  "store_qualification": {
+    "status": "BLOCKED",
+    "required": "Xcode26.3 build17C529 at /Applications/Xcode_26.3.app/Contents/Developer; pinned policy/CI checks unchanged.",
+    "observed_local": "Xcode26.5 build17F42",
+    "reason": "Successful generic Gradle linkage does not satisfy exact release toolchain qualification. No policy waiver, upgrade, signing or Store operation authorized/performed."
+  },
+  "other_warnings": [
+    "Experimental lint-version option; Gradle8.13 deprecation relative to future Kotlin2.5.0.",
+    "iosX64 runtime cannot execute on ARM64 host; this does not prevent inspected x86_64 framework cross-linking."
+  ],
+  "safeguard_hashes": [
+    {
+      "path": "config/release-policy.json",
+      "sha256": "316b28f75a13e0b925beb6bcd893b82e077a1a9efa850022026e830f9b1d4ad4",
+      "matches_remediation_baseline": true
+    },
+    {
+      "path": "gradle/verification-metadata.xml",
+      "sha256": "58b5a279cc5ccc58e1088fbe3dd248fcfdf31a307707204c5438259de7960f95",
+      "matches_remediation_baseline": true
+    },
+    {
+      "path": "gradle/libs.versions.toml",
+      "sha256": "87a031665605a1fb3f932be31c75afd8d2d1bc0d94cfcca36101141c50788399",
+      "matches_remediation_baseline": true
+    },
+    {
+      "path": "gradle.properties",
+      "sha256": "2df8685921ad2c6eead097a6d9994bbcc93dbc5cbdeb0bce8911ffa4e83162ce",
+      "matches_remediation_baseline": true
+    },
+    {
+      "path": "settings.gradle.kts",
+      "sha256": "27a40495b1adf18ca90b5a8fdd345448c2ecf2f9ac726c753468a5e627b27d18",
+      "matches_remediation_baseline": true
+    },
+    {
+      "path": "build.gradle.kts",
+      "sha256": "bd6199e1f097eb236c50c46efb91d291550110f6b4d95a8e95ff0db4d8da192b",
+      "matches_remediation_baseline": true
+    },
+    {
+      "path": ".github/workflows/production-verification.yml",
+      "sha256": "965e47ddb4c47b19d8017c9494239d0a0309b26f465eb0f6b655bd90113a929c",
+      "matches_remediation_baseline": true
+    },
+    {
+      "path": ".github/workflows/testing-candidate.yml",
+      "sha256": "0488fc5e0c4e520a767408cfb5e7fa387bc5fdfa0edfeb9dcd29a4cb0d2c7976",
+      "matches_remediation_baseline": true
+    },
+    {
+      "path": ".github/workflows/production-promotion.yml",
+      "sha256": "94ca7f617c24cb4c9ffafa5860c7ebc104f08cfa46b2a2e13fbae3ed816c461b",
+      "matches_remediation_baseline": true
+    },
+    {
+      "path": ".github/workflows/testing-external-promotion.yml",
+      "sha256": "5874b8b435e3b6fbfc02bb1cb54f8ab1d26ab01cf25b4220b2d81985fecc8a86",
+      "matches_remediation_baseline": true
+    }
+  ],
+  "cleanup": {
+    "stop_exit_code": 0,
+    "stopped_at": "2026-09-05T22:53:15.982579+00:00",
+    "workers": {
+      "terminated_owned_workers": [],
+      "remaining_owned_workers": []
+    },
+    "removed_outputs": [
+      "shared/core/build",
+      "shared/networking/build",
+      "shared/content/build",
+      "shared/storage/build",
+      "shared/transport-p2p/build",
+      "shared/networking-testing/build",
+      "shared/engine/build",
+      "shared/design-system/build",
+      "shared/engine-testing/build",
+      "shared/session/build",
+      "game-modes/whodunit/build",
+      "game-modes/mafia/build",
+      "build",
+      "composeApp/build",
+      "build-logic/convention/build"
+    ],
+    "retained_outputs": [],
+    "remaining_outputs": [],
+    "cleanup_errors": [],
+    "cleanup_completed_at": "2026-09-05T22:53:16.378042+00:00",
+    "cleanup_method": "Exact task-owned generated dirs; no Gradle clean daemon or global cache deletion. Unrelated processes excluded by PID/start identity and cycle ownership."
+  },
+  "cleanup_observation": {
+    "raw_stop_log": "No Gradle daemons are running.",
+    "cycle_scratch_absent": true,
+    "original_three_framework_binaries_absent": true,
+    "metadata_queries_completed": true,
+    "no_reviewer_cleanup_or_worker_stop": "Root owns lane; reviewer did not disturb current/future work."
+  },
+  "reviewer_builds_or_source_git_store_mutations": false,
+  "source_read_ranges": [
+    {
+      "path": "build.gradle.kts",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/build.gradle.kts",
+      "sha256": "bd6199e1f097eb236c50c46efb91d291550110f6b4d95a8e95ff0db4d8da192b",
+      "ranges": [
+        [
+          72,
+          204
+        ]
+      ]
+    },
+    {
+      "path": "composeApp/build.gradle.kts",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/composeApp/build.gradle.kts",
+      "sha256": "c23525d6b06f9b536fb5e8ef6be68c653952fa9764e276f831772b864621fdd5",
+      "ranges": [
+        [
+          103,
+          158
+        ],
+        [
+          207,
+          220
+        ]
+      ]
+    },
+    {
+      "path": "build-logic/convention/src/main/kotlin/com/parlor/buildlogic/KmpLibraryConventionPlugin.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/build-logic/convention/src/main/kotlin/com/parlor/buildlogic/KmpLibraryConventionPlugin.kt",
+      "sha256": "9d3b07942123f5a4c2da229aa873d5d7b7d422b120d1ff42014cfe066eefbc63",
+      "ranges": [
+        [
+          1,
+          72
+        ]
+      ]
+    },
+    {
+      "path": "build-logic/convention/src/main/kotlin/com/parlor/buildlogic/KmpComposeLibraryConventionPlugin.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/build-logic/convention/src/main/kotlin/com/parlor/buildlogic/KmpComposeLibraryConventionPlugin.kt",
+      "sha256": "d8a7cd25a7062f20ae871a068b724c061c98f3831aae4d90701c5cbbf7b4e660",
+      "ranges": [
+        [
+          1,
+          19
+        ]
+      ]
+    },
+    {
+      "path": "config/release-policy.json",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/config/release-policy.json",
+      "sha256": "316b28f75a13e0b925beb6bcd893b82e077a1a9efa850022026e830f9b1d4ad4",
+      "ranges": [
+        [
+          1,
+          92
+        ]
+      ]
+    },
+    {
+      "path": ".github/workflows/production-verification.yml",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/.github/workflows/production-verification.yml",
+      "sha256": "965e47ddb4c47b19d8017c9494239d0a0309b26f465eb0f6b655bd90113a929c",
+      "ranges": [
+        [
+          215,
+          286
+        ]
+      ]
+    }
+  ],
+  "raw_evidence_hashes": [
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-apple-01/receipt.json",
+      "sha256": "41dd813e36c349daefb5f45237b70e85571d4238e1be0e9ef1e363b7afd6f82c"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-apple-01/gradle.log",
+      "sha256": "4faa639043c65843e2c1e41d3134797782fd00e7f1bf274272b2dce8a67be62f"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-apple-01/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-apple-01/artifact-receipts.json",
+      "sha256": "7e8b901616e872aee7af864dd66605be20477557675894544f179398bed7f5bd"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-apple-01/test-receipts.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    }
+  ],
+  "runner": {
+    "path": "remediation-runs/2026-09-05-confirmed-fixes/run_gradle_cycle.py",
+    "sha256": "d2d18c2311d59554db88be3f92e609ec5ca46fc8af4c79702836f9e4c130240f",
+    "source_review": "Full283lines reviewed for combined-production-evidence-04; same cycle-pinned runner hash, separate directory.",
+    "matches_cycle": true
+  },
+  "reviewer_evidence_generation_note": "An initial inline evidence-writer parse failed on an invalid comprehension before any execution or writes; corrected writer produced this dossier. No repository build/test result was changed or inferred from that helper error.",
+  "gate_ledger": [
+    {
+      "gate": "productionAppleStaticAnalysis",
+      "status": "PASS",
+      "reason": "4fresh zero-finding iosMain metadata reports;113empty-source task branches explicit."
+    },
+    {
+      "gate": ":composeApp:linkReleaseFrameworkIosArm64",
+      "status": "PASS",
+      "reason": "Fresh link task and matching recorded architecture/plist artifact; no runtime claim."
+    },
+    {
+      "gate": ":composeApp:linkReleaseFrameworkIosSimulatorArm64",
+      "status": "PASS",
+      "reason": "Fresh link task and matching recorded architecture/plist artifact; no runtime claim."
+    },
+    {
+      "gate": ":composeApp:linkReleaseFrameworkIosX64",
+      "status": "PASS",
+      "reason": "Fresh link task and matching recorded architecture/plist artifact; no runtime claim."
+    },
+    {
+      "gate": "productionAppleCheck",
+      "status": "PASS",
+      "reason": "Actual task graph completes exit0 on selected local toolchain."
+    },
+    {
+      "gate": "Store-qualified Apple release",
+      "status": "BLOCKED",
+      "reason": "Wrong exact Xcode qualification and no signed final app/artifact/owner evidence."
+    }
+  ]
+}

@@ -1,0 +1,88 @@
+269: internal class LaunchedEffectImpl(
+270:     private val parentCoroutineContext: CoroutineContext,
+271:     private val task: suspend CoroutineScope.() -> Unit,
+272: ) : RememberObserver, CoroutineExceptionHandler {
+273:     private val scope = CoroutineScope(parentCoroutineContext + this)
+274:     private var job: Job? = null
+275: 
+276:     override fun onRemembered() {
+277:         // This should never happen but is left here for safety
+278:         job?.cancel("Old job was still running!")
+279:         job = scope.launch(block = task)
+280:     }
+281: 
+282:     override fun onForgotten() {
+283:         job?.cancel(LeftCompositionCancellationException())
+284:         job = null
+285:     }
+286: 
+287:     override fun onAbandoned() {
+288:         job?.cancel(LeftCompositionCancellationException())
+289:         job = null
+290:     }
+291: 
+292:     // CoroutineExceptionHandler implementation to save on allocations
+293:     override val key: CoroutineContext.Key<*>
+294:         get() = CoroutineExceptionHandler.Key
+295: 
+296:     override fun handleException(context: CoroutineContext, exception: Throwable) {
+297:         context[CompositionErrorContextImpl]?.apply {
+298:             exception.attachComposeStackTrace(this@LaunchedEffectImpl)
+299:         }
+300:         parentCoroutineContext[CoroutineExceptionHandler]?.handleException(context, exception)
+301:             ?: throw exception
+302:     }
+303: }
+304: 
+305: /**
+306:  * When [LaunchedEffect] enters the composition it will launch [block] into the composition's
+307:  * [CoroutineContext]. The coroutine will be [cancelled][Job.cancel] when the [LaunchedEffect]
+308:  * leaves the composition.
+309:  *
+310:  * It is an error to call [LaunchedEffect] without at least one `key` parameter.
+311:  */
+312: // This deprecated-error function shadows the varargs overload so that the varargs version
+313: // is not used without key parameters.
+314: @Deprecated(LaunchedEffectNoParamError, level = DeprecationLevel.ERROR)
+315: @Suppress("DeprecatedCallableAddReplaceWith", "UNUSED_PARAMETER")
+316: @Composable
+317: public fun LaunchedEffect(block: suspend CoroutineScope.() -> Unit): Unit =
+318:     error(LaunchedEffectNoParamError)
+319: 
+320: /**
+321:  * When [LaunchedEffect] enters the composition it will launch [block] into the composition's
+322:  * [CoroutineContext]. The coroutine will be [cancelled][Job.cancel] and **re-launched** when
+323:  * [LaunchedEffect] is recomposed with a different [key1]. The coroutine will be
+324:  * [cancelled][Job.cancel] when the [LaunchedEffect] leaves the composition.
+325:  *
+326:  * This function should **not** be used to (re-)launch ongoing tasks in response to callback events
+327:  * by way of storing callback data in [MutableState] passed to [key1]. Instead, see
+328:  * [rememberCoroutineScope] to obtain a [CoroutineScope] that may be used to launch ongoing jobs
+329:  * scoped to the composition in response to event callbacks.
+330:  */
+331: @Composable
+332: @NonRestartableComposable
+333: @OptIn(InternalComposeApi::class)
+334: public fun LaunchedEffect(key1: Any?, block: suspend CoroutineScope.() -> Unit) {
+335:     val applyContext = currentComposer.applyCoroutineContext
+336:     remember(key1) { LaunchedEffectImpl(applyContext, block) }
+337: }
+338: 
+339: /**
+340:  * When [LaunchedEffect] enters the composition it will launch [block] into the composition's
+341:  * [CoroutineContext]. The coroutine will be [cancelled][Job.cancel] and **re-launched** when
+342:  * [LaunchedEffect] is recomposed with a different [key1] or [key2]. The coroutine will be
+343:  * [cancelled][Job.cancel] when the [LaunchedEffect] leaves the composition.
+344:  *
+345:  * This function should **not** be used to (re-)launch ongoing tasks in response to callback events
+346:  * by way of storing callback data in [MutableState] passed to [key]. Instead, see
+347:  * [rememberCoroutineScope] to obtain a [CoroutineScope] that may be used to launch ongoing jobs
+348:  * scoped to the composition in response to event callbacks.
+349:  */
+350: @Composable
+351: @NonRestartableComposable
+352: @OptIn(InternalComposeApi::class)
+353: public fun LaunchedEffect(key1: Any?, key2: Any?, block: suspend CoroutineScope.() -> Unit) {
+354:     val applyContext = currentComposer.applyCoroutineContext
+355:     remember(key1, key2) { LaunchedEffectImpl(applyContext, block) }
+356: }

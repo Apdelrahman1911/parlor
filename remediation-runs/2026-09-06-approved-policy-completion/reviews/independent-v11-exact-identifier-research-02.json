@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "researcher": "/root/release_fix_review",
+  "url": "https://developer.apple.com/tutorials/data/documentation/xcuiautomation/xcuielementquery/matching(identifier:).json",
+  "accessed_at": "2026-09-06T22:46:43.297165+00:00",
+  "http_status": 200,
+  "response_sha256": "bbc83b5811d94233522b117beca6063f1474101ba07ddb1c0432d01d5996b78a",
+  "title": "matching(identifier:)",
+  "resolved_authoritative_text": "Returns a new query that matches elements that have an identifying property that matches a provided identifier.A string to match against any one of each element\u2019s identifying properties: identifier, title, label, value, or placeholderValue.\nA new query that defines a search that extends the search criteria of the receiver. The new search matches elements that match the original search and have an identifying property that matches a provided identifier.\n",
+  "referenced_attributes": [
+    {
+      "title": "identifier",
+      "url": "https://developer.apple.com/documentation/xcuiautomation/xcuielementattributes/identifier"
+    },
+    {
+      "title": "label",
+      "url": "https://developer.apple.com/documentation/xcuiautomation/xcuielementattributes/label"
+    },
+    {
+      "title": "placeholderValue",
+      "url": "https://developer.apple.com/documentation/xcuiautomation/xcuielementattributes/placeholdervalue"
+    },
+    {
+      "title": "title",
+      "url": "https://developer.apple.com/documentation/xcuiautomation/xcuielementattributes/title"
+    },
+    {
+      "title": "value",
+      "url": "https://developer.apple.com/documentation/xcuiautomation/xcuielementattributes/value"
+    }
+  ],
+  "applicability": "The inspected XCTest API used by V10 diagnostics at DSC01OSAppSettings.swift.in101\u2013105 matches more than the actual identifier property. It is not equivalent to a label predicate or necessarily to identifier-or-label. Exact pinned26.5 headers/runtime applicability still subject to actual future observed predicate/attribute guards.",
+  "conclusion": "08 proves query divergence but not which alternative attribute supplied Settings. A true exact identifier/label predicate is conservative and must classify zero/ambiguous/hidden target as BLOCKED. Never turn diagnostic count alone into app-pane success.",
+  "supersedes": "Research01 plain texts omitted inline property-link labels; use this resolved section for matching semantics.01 original responses/hashes remain preserved."
+}

@@ -1,0 +1,371 @@
+{
+  "schema": 1,
+  "recorded_at_utc": "2026-09-06T06:54:39.651829+00:00",
+  "finding": "WD-C2",
+  "author": "/root/factory_review",
+  "independent_reviewer": "/root/release_fix_review",
+  "author_verdict": "Focused correction and regression checks passed; independent reviewer final disposition is separate; broader combined and physical verification remain root-owned.",
+  "baseline": {
+    "branch": "main",
+    "commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+    "git_tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+    "green_source_manifest_sha256": "de7573ed1f4e1a19969f3063e135d234cd57ec8764c4af784cf4b3eaff5ef9b4",
+    "green_whole_tracked_diff_sha256": "38326880d1f9332618d193f73d49cebc6de063dd26c7e87a8711be9a04a5a430",
+    "dirty_checkout": true,
+    "preservation": "This record does not claim HEAD alone identifies the tested source. New and modified source hashes are bound below and by root full manifest."
+  },
+  "author_scope_identity": {
+    "manifest_sha256": "6b27c5c9036bbc65c9ccbff920f847aed3efa26febf71eb223033e6d062027ca",
+    "tracked_diff_sha256": "cb1decb9bb94aba68ea0cc8870311f2716e4e4ba8dd658ccaf72dbfef2c6988a",
+    "manifest_encoding": "UTF-8 JSON array of sorted [relative_path,sha256] entries, ensure_ascii=false and separators comma/colon",
+    "files": [
+      {
+        "path": "docs/WHODUNIT_TEST_CONTENT.md",
+        "absolute_path": "/Users/abdelrahman/Projects/parlor/docs/WHODUNIT_TEST_CONTENT.md",
+        "sha256": "442715d8e015c5c433569039adf731b4e0b55e17919880ca2ea6051e7c969a53",
+        "bytes": 5914,
+        "lines": 83
+      },
+      {
+        "path": "game-modes/whodunit/src/commonMain/composeResources/files/cases/jasmine-ring.json",
+        "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/composeResources/files/cases/jasmine-ring.json",
+        "sha256": "a33966e792ce1727991150659e03e79b5ae418cef457252a8b4f71009832af7b",
+        "bytes": 41273,
+        "lines": 342
+      },
+      {
+        "path": "game-modes/whodunit/src/commonMain/composeResources/files/cases/khan-el-khalili.json",
+        "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/composeResources/files/cases/khan-el-khalili.json",
+        "sha256": "12167f59be005d880c3a4861e58cb9ec2f5ff94dbbda8ddfc02a2846e5df6fef",
+        "bytes": 40914,
+        "lines": 348
+      },
+      {
+        "path": "game-modes/whodunit/src/commonMain/composeResources/files/cases/last-dinner.json",
+        "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/composeResources/files/cases/last-dinner.json",
+        "sha256": "f4c5ff253a82220f937328de09161d09110b05a98eb6bb012934a80f60a5b96d",
+        "bytes": 36988,
+        "lines": 391
+      },
+      {
+        "path": "game-modes/whodunit/src/commonMain/composeResources/files/cases/layla-halabi.json",
+        "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/composeResources/files/cases/layla-halabi.json",
+        "sha256": "a0db6acb459d69bf75a4c15a809b64d1b7cd5c21714dceaedc5973ba2d951826",
+        "bytes": 39869,
+        "lines": 345
+      },
+      {
+        "path": "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/TestingStoryChronologyTest.kt",
+        "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/TestingStoryChronologyTest.kt",
+        "sha256": "9325933fab3a9547d14898319c4964e2d791af3bab8011eff68a68f768333c9b",
+        "bytes": 7374,
+        "lines": 152
+      },
+      {
+        "path": "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/TestingStoryCompatibilityTest.kt",
+        "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/TestingStoryCompatibilityTest.kt",
+        "sha256": "dfdd8aed4bc9f199fadfddf644bc321d1e293cafda2d201d2ec6055bac313fa9",
+        "bytes": 12197,
+        "lines": 248
+      },
+      {
+        "path": "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/TestingStoryGameTraceTest.kt",
+        "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/TestingStoryGameTraceTest.kt",
+        "sha256": "ca31ec98fc19aaeba3675e6d56135abec745d9307a471fc81543e57bd6f6c058",
+        "bytes": 7377,
+        "lines": 157
+      },
+      {
+        "path": "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/WhodunitContentIdentityTest.kt",
+        "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/WhodunitContentIdentityTest.kt",
+        "sha256": "c6f88217dc835c33f93e0af0de8a086c005056b13ae436441990c48f21b8f3a1",
+        "bytes": 3110,
+        "lines": 83
+      }
+    ]
+  },
+  "resources": [
+    {
+      "case_id": "last-dinner",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/composeResources/files/cases/last-dinner.json",
+      "path": "game-modes/whodunit/src/commonMain/composeResources/files/cases/last-dinner.json",
+      "original_raw_sha256": "c36b20ed19f94b7eea5809f7c2f1ef38be1f97ac6e2598a8a5de0233ee9e89af",
+      "current_raw_sha256": "f4c5ff253a82220f937328de09161d09110b05a98eb6bb012934a80f60a5b96d",
+      "lines": 391,
+      "version_before": "1.0.0",
+      "version_after": "1.0.1",
+      "changed_json_pointers": [
+        "/payload/characters/3/guiltyBrief/method",
+        "/payload/characters/3/guiltyBrief/timeline/3/time",
+        "/payload/cluePools/finalStrong/james-sutton/1/text",
+        "/version"
+      ],
+      "no_other_json_paths_changed": true,
+      "original_canonical_digest_runtime_confirmed_by_red02": "a8593bdab776bb5dc1723b6fb562f37009aa2e02ddd11fc7e848284916452f26",
+      "current_canonical_digest_python_algorithm_crosscheck": "f3b71cc74aaee28dcf7845b750ca773229047388a391ba9294be89efab173a05",
+      "literal_current_canonical_digest_runtime_emitted": false,
+      "runtime_evidence_scope": "Production Kotlin green test proves current canonical identity differs from the original and exact identity gates save/load and LAN offers; it does not print the new digest literal."
+    },
+    {
+      "case_id": "layla-halabi",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/composeResources/files/cases/layla-halabi.json",
+      "path": "game-modes/whodunit/src/commonMain/composeResources/files/cases/layla-halabi.json",
+      "original_raw_sha256": "954752e02c72ab8b4ac8fe7b03598857252c539ba07d1f781683be3b42c07d1d",
+      "current_raw_sha256": "a0db6acb459d69bf75a4c15a809b64d1b7cd5c21714dceaedc5973ba2d951826",
+      "lines": 345,
+      "version_before": "1.0.0",
+      "version_after": "1.0.1",
+      "changed_json_pointers": [
+        "/metadata/settingNotes",
+        "/payload/characters/3/innocentBrief/alibi",
+        "/payload/publicIntro",
+        "/version"
+      ],
+      "no_other_json_paths_changed": true,
+      "original_canonical_digest_runtime_confirmed_by_red02": "b98ca82b8cc2334e4f241f6bcefad96c7846f15096f3a043c4126911404345a5",
+      "current_canonical_digest_python_algorithm_crosscheck": "953d5b1dae0aa26b9901e0e044f279b94fd64d4a6d8a66371a9c6577672a3cfc",
+      "literal_current_canonical_digest_runtime_emitted": false,
+      "runtime_evidence_scope": "Production Kotlin green test proves current canonical identity differs from the original and exact identity gates save/load and LAN offers; it does not print the new digest literal."
+    },
+    {
+      "case_id": "jasmine-ring",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/composeResources/files/cases/jasmine-ring.json",
+      "path": "game-modes/whodunit/src/commonMain/composeResources/files/cases/jasmine-ring.json",
+      "original_raw_sha256": "d1397ac1e0dc3669d3e5ff5e147aabf88647bc6726621cb7239392eb4e4cd9ca",
+      "current_raw_sha256": "a33966e792ce1727991150659e03e79b5ae418cef457252a8b4f71009832af7b",
+      "lines": 342,
+      "version_before": "1.0.0",
+      "version_after": "1.0.1",
+      "changed_json_pointers": [
+        "/payload/characters/1/guiltyBrief/timeline/2/action",
+        "/payload/revealNarratives/nadim-shams",
+        "/version"
+      ],
+      "no_other_json_paths_changed": true,
+      "original_canonical_digest_runtime_confirmed_by_red02": "5cd26321aecef56a82afb56ec61f8ebad77329de39f413cb59b26de766d0d714",
+      "current_canonical_digest_python_algorithm_crosscheck": "d0aab1123c08f7fb919f00f7ecc8eeb9e1ed2d5daf03df169ea90489c63199c7",
+      "literal_current_canonical_digest_runtime_emitted": false,
+      "runtime_evidence_scope": "Production Kotlin green test proves current canonical identity differs from the original and exact identity gates save/load and LAN offers; it does not print the new digest literal."
+    },
+    {
+      "case_id": "khan-el-khalili",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/composeResources/files/cases/khan-el-khalili.json",
+      "path": "game-modes/whodunit/src/commonMain/composeResources/files/cases/khan-el-khalili.json",
+      "original_raw_sha256": "b1b1d73cedc751f321c51f1e1523b74e57d515d408a7760add328c73c8dcc5e4",
+      "current_raw_sha256": "12167f59be005d880c3a4861e58cb9ec2f5ff94dbbda8ddfc02a2846e5df6fef",
+      "lines": 348,
+      "version_before": "1.0.0",
+      "version_after": "1.0.1",
+      "changed_json_pointers": [
+        "/payload/characters/1/guiltyBrief/fakeAlibi",
+        "/payload/characters/1/guiltyBrief/timeline/3/time",
+        "/payload/revealNarratives/karim-almansoury",
+        "/version"
+      ],
+      "no_other_json_paths_changed": true,
+      "original_canonical_digest_runtime_confirmed_by_red02": "0e690e0129c9b76fb772952b4e888e59e81610597b9294c52e8f656144393b9c",
+      "current_canonical_digest_python_algorithm_crosscheck": "c9979500738d7b15812b286300714db1943824aa44c29656dc6bebea72e979a0",
+      "literal_current_canonical_digest_runtime_emitted": false,
+      "runtime_evidence_scope": "Production Kotlin green test proves current canonical identity differs from the original and exact identity gates save/load and LAN offers; it does not print the new digest literal."
+    }
+  ],
+  "canonical_digest_method": {
+    "python_command": "/usr/bin/python3 -B (evidence-only JSON processing; no build)",
+    "algorithm": "Read resource JSON; emit default envelope subtitle/metadata if missing and signature=null; recursive sorted object keys; compact UTF-8 JSON without ASCII escaping; SHA-256.",
+    "authority": "Cross-checked against CaseEnvelope serializer and WhodunitContentIdentity implementation; old constants separately proven by actual red02 Kotlin tests.",
+    "limitation": "New literal digest values are Python algorithm cross-checks, NOT emitted production Kotlin results. Green actual Kotlin tests prove inequality to all original identities and exact-boundary behavior."
+  },
+  "focused_cycle": {
+    "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/story-recovery-green-01",
+    "command": [
+      "./gradlew",
+      ":game-modes:whodunit:desktopTest",
+      ":shared:content:desktopTest",
+      "--no-daemon",
+      "--no-parallel",
+      "--max-workers=1",
+      "--no-configuration-cache",
+      "--dependency-verification=strict",
+      "-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=story-recovery-green-01",
+      "-Pkotlin.compiler.execution.strategy=in-process",
+      "-Pparlor.android.signing.storeFile=",
+      "-Pparlor.android.signing.storePassword=",
+      "-Pparlor.android.signing.keyAlias=",
+      "-Pparlor.android.signing.keyPassword="
+    ],
+    "started_at": "2026-09-06T06:41:56.134479+00:00",
+    "finished_at": "2026-09-06T06:42:31.342027+00:00",
+    "status": "PASS",
+    "exit_code": 0,
+    "source_manifest_before": "de7573ed1f4e1a19969f3063e135d234cd57ec8764c4af784cf4b3eaff5ef9b4",
+    "source_manifest_after": "de7573ed1f4e1a19969f3063e135d234cd57ec8764c4af784cf4b3eaff5ef9b4",
+    "source_changed_during_cycle": false,
+    "xml_totals": {
+      "game-modes:whodunit": {
+        "suites": 57,
+        "tests": 323,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "task_execution": "EXECUTED"
+      },
+      "shared:content": {
+        "suites": 5,
+        "tests": 24,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "task_execution": "FROM-CACHE, not newly executed in this cycle"
+      }
+    },
+    "relevant_executed_suites": [
+      {
+        "suite": "com.parlor.games.whodunit.content.TestingStoryChronologyTest",
+        "xml": "remediation-runs/2026-09-06-approved-policy-completion/evidence/story-recovery-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.TestingStoryChronologyTest.xml",
+        "xml_sha256": "9b852425e739b79c2bcddd35d28a535b67812fc1d2ac17a0e2e740ac0ee3caf3",
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "executed_cases": [
+          "nadimsShortCellarWaitMatchesTheFinalAccountWithoutChangingHisLie()[desktop]",
+          "jamesLightsOneCigarAt915WhileHis910AlibiRemainsFalse()[desktop]",
+          "correctionsBumpOnlyTheFourTestingCaseVersions()[desktop]",
+          "laylaHasOne905OutageAcrossIntroEvidenceAndWitnesses()[desktop]",
+          "karims940PoisoningPrecedesHisCorroborated1015RecordsAlibi()[desktop]"
+        ]
+      },
+      {
+        "suite": "com.parlor.games.whodunit.content.TestingStoryCompatibilityTest",
+        "xml": "remediation-runs/2026-09-06-approved-policy-completion/evidence/story-recovery-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.TestingStoryCompatibilityTest.xml",
+        "xml_sha256": "f3340b3a7826aa637006e18cc15287731bf5c11af98dfc19cee8590f93265e42",
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "executed_cases": [
+          "correctedStoriesDoNotReuseAnyOriginalCanonicalContentDigest()[desktop]",
+          "currentSaveRoundTripsButOldOrCrossedIdentityIsRetainedAndRejected()[desktop]",
+          "identityLessPreClueSavesCannotSilentlyBindToInstalledStoryProse()[desktop]",
+          "lanOffersMatchOnlyTheExactLoadedRevisionForAllCorrectedCasesAndModes()[desktop]"
+        ]
+      },
+      {
+        "suite": "com.parlor.games.whodunit.content.TestingStoryGameTraceTest",
+        "xml": "remediation-runs/2026-09-06-approved-policy-completion/evidence/story-recovery-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.TestingStoryGameTraceTest.xml",
+        "xml_sha256": "ce88eea80c25e87453e06045eda38d0646049fae189ebc5886d299eb26ddaab4",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "executed_cases": [
+          "everyCorrectedCaseKillerAndModeCompletesDeterministicallyAndRoundTrips()[desktop]"
+        ]
+      },
+      {
+        "suite": "com.parlor.games.whodunit.content.WhodunitContentIdentityTest",
+        "xml": "remediation-runs/2026-09-06-approved-policy-completion/evidence/story-recovery-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.WhodunitContentIdentityTest.xml",
+        "xml_sha256": "3d484e26b9c0767d32987dcfd30ae12b2e44e5407749001d97aabc9bf6c301b4",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "executed_cases": [
+          "same_case_id_with_different_version_or_payload_is_rejected()[desktop]",
+          "canonical_digest_ignores_object_key_order_and_delivery_signature()[desktop]"
+        ]
+      },
+      {
+        "suite": "com.parlor.games.whodunit.snapshot.WhodunitCaseBindingTest",
+        "xml": "remediation-runs/2026-09-06-approved-policy-completion/evidence/story-recovery-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.snapshot.WhodunitCaseBindingTest.xml",
+        "xml_sha256": "85fd51b0460b91c59bfc15f475c5995e67c529b21117cf2970c5ac4d8cdd4307",
+        "tests": 8,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "executed_cases": [
+          "authoredFilteredDeflectionTargetsMustMatchExactly()[desktop]",
+          "recoveredTimerMustMatchAuthoredIdDurationAndRemainderPolicy()[desktop]",
+          "shippingCaseRejectsFourPlayersAndAcceptsAValidSixPlayerAssignment()[desktop]",
+          "validatedEnvelopeBindsCaseIdModeAndEffectivePlayerCount()[desktop]",
+          "reducerAcceptsOnlyTheExactAuthoredDiscussionDuration()[desktop]",
+          "drawnClueSetMustEqualTheReconstructedPrefixExactly()[desktop]",
+          "deterministicCluePrefixRejectsASeedMismatchAndNonFinalEvidenceInFinalRound()[desktop]",
+          "deterministicCluePrefixRejectsAnotherSeedChoiceAndWrongRoundCategory()[desktop]"
+        ]
+      },
+      {
+        "suite": "com.parlor.games.whodunit.snapshot.WhodunitResumeReconstructionTest",
+        "xml": "remediation-runs/2026-09-06-approved-policy-completion/evidence/story-recovery-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.snapshot.WhodunitResumeReconstructionTest.xml",
+        "xml_sha256": "fd30ac416f03e22843017f626100ec6e30c7b13d045cc184b45c8fb1e1823840",
+        "tests": 11,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "executed_cases": [
+          "resume_accepts_supportedBareVersionsAndCurrentVersionedPayload()[desktop]",
+          "resume_deletes_a_retired_solo_snapshot_before_decoding_private_state()[desktop]",
+          "resume_propagates_cancellation_during_retired_snapshot_cleanup()[desktop]",
+          "resume_rejects_partial_or_malformed_content_identity_metadata()[desktop]",
+          "resume_rejects_unknown_play_mode_metadata_instead_of_changing_ceremony()[desktop]",
+          "resumed_controller_state_equals_saved_state_and_advances_correctly()[desktop]",
+          "resume_rejects_another_game_before_decoding_its_payload()[desktop]",
+          "deleting_snapshot_removes_it_from_listUnfinished()[desktop]",
+          "loaded_case_boundary_requires_exact_identity_and_content_compatible_state()[desktop]",
+          "corrupt_snapshot_payload_does_not_blow_up_decoder()[desktop]",
+          "resume_rejects_a_future_engine_version_before_decoding_its_payload()[desktop]"
+        ]
+      },
+      {
+        "suite": "com.parlor.games.whodunit.ui.flow.WhodunitRecoveryInteractionTest",
+        "xml": "remediation-runs/2026-09-06-approved-policy-completion/evidence/story-recovery-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.WhodunitRecoveryInteractionTest.xml",
+        "xml_sha256": "e26b655641771c547b501bb4323d5af874cbaf71ff2ded36823aebafc0e6f1bf",
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "executed_cases": [
+          "arabicIncompatibleSaveIsExplainedAndKeptUntilExplicitDiscard()[desktop]",
+          "englishIncompatibleSaveIsExplainedAndKeptUntilExplicitDiscard()[desktop]",
+          "englishIdentityLessSaveIsKeptUntilExplicitDiscard()[desktop]",
+          "arabicIdentityLessSaveIsKeptUntilExplicitDiscard()[desktop]"
+        ]
+      }
+    ]
+  },
+  "behavior_verified": [
+    "All four corrected chronology chains, preserved James/Nadim false alibis, Karim truthful but incomplete records interval, versions and unaffected stories.",
+    "24 killer variants x 2 modes = 48 full game traces, each replayed deterministically (96 runs); strict snapshot and loaded-case checks after every action.",
+    "Exact current identity accepts save/load; old, crossed and absent identity reject without rewriting/deleting the persisted fixture.",
+    "8 real assigned pre-clue case/mode states reject identity-less recovery; identical states with exact identity pass, avoiding vacuous green.",
+    "LAN start-offer identity matcher rejects all old/crossed identities; actual transport not exercised by these added tests.",
+    "Root-owned actual Compose recovery interaction in English/Arabic explains failure, retains on Back, requires explicit discard."
+  ],
+  "compatibility": {
+    "four_content_versions": "1.0.0 -> 1.0.1",
+    "other_three_bundled_versions": "unchanged 1.0.0",
+    "app_game_save_schema_protocol_versions": "unchanged; protocol remains exact 4.2",
+    "old_save_policy": "No automatic migration/deletion. Missing or mismatched identity cannot launch; bytes remain available until explicit discard.",
+    "authority_privacy_determinism": "No reducer, role, pool-order, protocol projection, host authority or private-data transmission change by this author."
+  },
+  "remaining_limits": [
+    "Independent reviewer final conclusion recorded separately; original author cannot approve own patch.",
+    "Fresh no-build-cache combined check pending; shared-content24 XML in focused green restored FROM-CACHE.",
+    "No physical LAN, iOS/Android screen behavior, native storage protection/durability or cold process-rejoin evidence from these tests.",
+    "No production editorial/content-rights or Store readiness sign-off. Unrelated witness-testimony candidates remain unresolved; rejected cross-variant toast observation remains rejected."
+  ],
+  "hygiene": {
+    "author_builds_started": [],
+    "author_background_workers_started": [],
+    "root_cycle_stop_exit_code": 0,
+    "root_cycle_cleanup_completed_at": "2026-09-06T06:42:31.919591+00:00",
+    "root_cycle_cleanup_errors": [],
+    "root_cycle_remaining_outputs": [],
+    "root_cycle_workers": {
+      "terminated_owned_workers": [],
+      "remaining_owned_workers": []
+    },
+    "source_freeze_preserved": true,
+    "git_history_index_branch_operations": "none; source/evidence only, original audit receipts untouched"
+  }
+}

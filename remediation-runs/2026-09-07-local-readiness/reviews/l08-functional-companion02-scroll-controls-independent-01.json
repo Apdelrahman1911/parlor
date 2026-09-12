@@ -1,0 +1,221 @@
+{
+  "schema_version": 1,
+  "id": "L08-FUNCTIONAL-COMPANION02-SCROLL-CONTROLS-INDEPENDENT-01",
+  "created_at_utc": "2026-09-08T04:18:11.944549+00:00",
+  "reviewer": "/root/factory_review",
+  "executor": "/root",
+  "requested_by": "/root",
+  "status": "PASS_FOCUSED_CONTROLS_INDEPENDENTLY_RECONCILED_NOT_NATIVE_APPROVAL",
+  "baseline": {
+    "branch": "fix/local-readiness-2026-09-07",
+    "commit": "484f82c3bcc273c0014a946376c1ee9fc7de8d83",
+    "tree": "548625b4a49bef5df8db723c1e59a4edd5676ddc",
+    "tracked_status": "",
+    "diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "source_manifest_sha256": "c4d3387a95ff1a4462071147afe92411f5a08ee8b10f78852a59494c8d3e4420"
+  },
+  "bound_evidence": {
+    "source_approval": {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/l08-functional-companion02-scroll-independent-source-review-01.json",
+      "sha256": "6ced1bb63828e66933f7b82dc6e3e2861acc5e6540f63c329d3cfb077916edbe"
+    },
+    "freeze": {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/l08-functional-companion02-scroll-frozen-02.json",
+      "sha256": "84a7d0598ab3117ab3e80cc11e221bced0d9545af8b96bda6c02f9a6bbf7751d"
+    },
+    "full_diff": {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/l08-functional-companion02-scroll-frozen-02.diff",
+      "sha256": "3e837493954588551a43c8e8b54ea8561fe401e021b2f53cf115a91dc404a946"
+    },
+    "receipt": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-functional-companion02-scroll-controls-01/receipt.json",
+      "sha256": "ee9a0eb13ecafde08850e7b837149aac81317f01796a700e61b362ab6f15e561"
+    },
+    "test_log": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-functional-companion02-scroll-controls-01/gradle.log",
+      "sha256": "08d78da7e90b549d8a3ac645f01952a38e1eee642cccc0e1076a7b43ab3ec27d"
+    },
+    "stop_log": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-functional-companion02-scroll-controls-01/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    "executor_reconciliation": {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/l08-functional-companion02-scroll-controls-root-01.json",
+      "sha256": "ba3fb5195dfeaee9a8bf2aa7d72991ff76f317d51a55267fd438d7ec62f2670c"
+    }
+  },
+  "verification": {
+    "command": [
+      "/usr/bin/python3",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02",
+      "-p",
+      "test_*.py",
+      "-v"
+    ],
+    "started_at": "2026-09-08T04:01:23.457346+00:00",
+    "finished_at": "2026-09-08T04:02:01.463179+00:00",
+    "exit_code": 0,
+    "test_result": {
+      "ran": 207,
+      "passed": 207,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "runtime_seconds": 37.236
+    },
+    "test_modules_and_counts": {
+      "test_controls.py": 14,
+      "test_l08_copy.py": 9,
+      "test_l08_diagnostics.py": 21,
+      "test_l08_functional_copy.py": 10,
+      "test_l08_functional_receipts.py": 14,
+      "test_l08_functional_runner.py": 11,
+      "test_l08_host_receipts.py": 12,
+      "test_l08_receipts.py": 13,
+      "test_native_failure_receipts.py": 7,
+      "test_native_paths.py": 3,
+      "test_native_readiness.py": 25,
+      "test_os_preference_receipts.py": 5,
+      "test_owned_lane_lsof.py": 7,
+      "test_secondary_fifo.py": 39,
+      "test_simulator_entitlements.py": 11,
+      "test_simulator_signing.py": 6
+    },
+    "discovery_method": "Read retained verbose log; split at every full unittest descriptor, check each block independently, compare exact unique descriptor set to freshly parsed AST class/test declarations. No repository imports or tests executed by reviewer.",
+    "all_unique_runtime_ids_equal_fresh_ast": true,
+    "sorted_id_list_sha256": "3134850eb745f3b1f287fe0be2b4650104fd2844bd26158deb5b3a08b47e5483",
+    "interleaved_output": {
+      "descriptor": "test_native_paths.NativePathControlTests.test_actual_host_foundation_alias_and_owned_origin_controls",
+      "explanation": "The PASS JSON for18 host path subcases occurs between descriptor and newline ok. It is one test, not an extra descriptor or a skipped test; strict206 one-line +1 interleaved blocks total207.",
+      "subcases": 18,
+      "host_foundation_only": true,
+      "physical_or_app_runtime_evidence": false
+    },
+    "new_test_ids": [
+      "test_l08_functional_copy.L08FunctionalCopyTests.test_home_list_tag_preserves_every_other_production_character",
+      "test_l08_functional_copy.L08FunctionalCopyTests.test_home_scrolling_and_diagnostics_preserve_strict_public_activation",
+      "test_l08_functional_copy.L08FunctionalCopyTests.test_scroll_contract_rejects_bypass_ambiguity_unbounded_or_private_diagnostics"
+    ],
+    "preserved_prior_tests": 204,
+    "new_assertion_semantics": "Exact-copy Home-tag preservation, one public tap after strict exists/enabled/hittable checks, exactly tagged list bounded to8 swipeUp attempts, closed bounded primitive diagnostics;14 unsafe source mutations rejected. String/source contracts do not prove actual scrolling or Simulator recovery.",
+    "host_native_subtests": "Two bounded macOS Swift/Foundation compile-and-execute fixtures ran as successful unittest methods:7 bounded diagnostic encoder cases and18 path/origin cases. Sources enforce compile/runtime exit0 and exact stdout; these are not iOS Simulator/app/physical-device evidence.",
+    "negative_skip_evidence": "Darwin-specific host Foundation test has skipUnless but descriptor actually ended ok on this host. No runtime skipped/failed/error descriptors and summary is exactly Ran207 / OK."
+  },
+  "preservation": {
+    "frozen_companion02_files": 75,
+    "paths_hashes_sizes_line_counts_match": true,
+    "original_companion01_files_hash_checked": 75,
+    "companion02_verbatim_parent_files": 71,
+    "production_source_before_equals_after": true,
+    "fresh_current_protected_excluded_git_inventory_matches": 800,
+    "inventory_sha256": "c4d3387a95ff1a4462071147afe92411f5a08ee8b10f78852a59494c8d3e4420",
+    "runner_before_equals_after_and_current": true,
+    "runner": {
+      "manifest": [
+        [
+          "remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py",
+          "5c0e546c819c28762cbc6b355ec2717737fc53f96712af591a27add878579d7a"
+        ]
+      ],
+      "manifest_sha256": "c8978207adf3c6d0ea416e39f7f9b309130bc73f8f56da435163b630353d5aa5"
+    },
+    "git_inventory_scope": "git ls-files cached+others exclude-standard, excluding audit-runs/, remediation-runs/, project-code-audit/, design/ and protected credential/signing/local.properties patterns. This is identity coverage, not a new semantic review of800 files. No ignored private material opened.",
+    "no_production_or_original_evidence_modified_by_reviewer": true
+  },
+  "cleanup": {
+    "stop_exit_code": 0,
+    "stop_log": "No Gradle daemons are running.",
+    "stopped_at": "2026-09-08T04:02:01.937061+00:00",
+    "stop_completed_after_test_finish_seconds": 0.473882,
+    "timing_limit": "Receipt records stop completion, not a separate start timestamp; source finalizer calls stop immediately after finish timestamp, before collection/cleanup.",
+    "workers": {
+      "terminated_owned_workers": [],
+      "remaining_owned_workers": []
+    },
+    "artifact_workers": {
+      "terminated_owned_workers": [],
+      "remaining_owned_workers": []
+    },
+    "outputs_before": [],
+    "removed_outputs": [],
+    "retained_outputs": [],
+    "remaining_outputs": [],
+    "cleanup_errors": [],
+    "deferred_signals": [],
+    "cleanup_completed_at": "2026-09-08T04:02:02.070002+00:00",
+    "exact_cycle_scratch_currently_absent": true,
+    "relevant_repository_build_outputs_currently_absent": true,
+    "external_host_fixture_cleanup": "Host path test asserts its allocated /private/var/tmp path absent after TemporaryDirectory disposal. Raw random path is not retained; reviewer did not enumerate unrelated temporary directories.",
+    "no_reviewer_process_queries_or_signals": true,
+    "no_reviewer_builds_or_cleanup": true
+  },
+  "reopened_source": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/test_l08_functional_copy.py",
+      "sha256": "066f215d6c79da16a32a9183370ee5637ee4beee54e48c5083641d14e7b00760",
+      "reviewed_line_ranges": [
+        [
+          1,
+          295
+        ]
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/l08_functional_copy.py",
+      "sha256": "417865a86daca8c09e1d650abc2d46b20920a128d95d2021ad365e38e7a207a4",
+      "reviewed_line_ranges": [
+        [
+          1,
+          47
+        ]
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/test_native_failure_receipts.py",
+      "sha256": "9d015aa4ce2cac5ac6e6aa770fcb0c0df00dd40435002529d807b744baa7c19b",
+      "reviewed_line_ranges": [
+        [
+          1,
+          137
+        ]
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/test_native_paths.py",
+      "sha256": "11c0bcbba09de36d5e2eb5a276c8f8d3c52024c3b395558e6aebd2f12875007a",
+      "reviewed_line_ranges": [
+        [
+          1,
+          173
+        ]
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py",
+      "sha256": "5c0e546c819c28762cbc6b355ec2717737fc53f96712af591a27add878579d7a",
+      "reviewed_line_ranges": [
+        [
+          1,
+          155
+        ],
+        [
+          215,
+          345
+        ]
+      ]
+    }
+  ],
+  "approval_scope": [
+    "F2 source approval is augmented by independently reconciled root-executed207 control tests. No new source objection in these changes.",
+    "No native-cycle approval without the final exact source/control binding and separately reviewed combined direct-Foundation/app-container changes, if added.",
+    "The native12 failure remains a test/evidence gap: offscreen/overlay cause plausible but exact geometry and false predicate conjunct unproved; bounded scrolling may still fail.",
+    "Strict L08 Complete equality is not satisfied by these controls or by the functional companion. Existing24/24 observed failures are not waived.",
+    "No game rule/protocol/save-format/privacy change and no physical LAN, signing, Store, lock/keybag or backup proof is supplied."
+  ],
+  "reviewer_write_scope": "Only this root-authorized additive JSON report created with exclusive mode; all original reports, controls, source, untracked user work and Git history preserved."
+}

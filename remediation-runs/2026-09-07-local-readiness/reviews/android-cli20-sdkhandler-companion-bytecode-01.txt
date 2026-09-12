@@ -1,0 +1,456 @@
+Compiled from "AndroidSdkHandler.kt"
+public final class com.android.sdklib.repository.AndroidSdkHandler$Companion {
+  private com.android.sdklib.repository.AndroidSdkHandler$Companion();
+    Code:
+       0: aload_0
+       1: invokespecial #8                  // Method java/lang/Object."<init>":()V
+       4: return
+
+  public final com.android.repository.api.SchemaModule<com.android.sdklib.repository.meta.AddonFactory> getAddonModule();
+    Code:
+       0: invokestatic  #19                 // Method com/android/sdklib/repository/AndroidSdkHandler.access$getAddonModule$cp:()Lcom/android/repository/api/SchemaModule;
+       3: areturn
+
+  public static void getAddonModule$annotations();
+    Code:
+       0: return
+
+  public final com.android.repository.api.SchemaModule<com.android.sdklib.repository.meta.RepoFactory> getRepositoryModule();
+    Code:
+       0: invokestatic  #26                 // Method com/android/sdklib/repository/AndroidSdkHandler.access$getRepositoryModule$cp:()Lcom/android/repository/api/SchemaModule;
+       3: areturn
+
+  public static void getRepositoryModule$annotations();
+    Code:
+       0: return
+
+  public final com.android.repository.api.SchemaModule<com.android.sdklib.repository.meta.SysImgFactory> getSysImgModule();
+    Code:
+       0: invokestatic  #32                 // Method com/android/sdklib/repository/AndroidSdkHandler.access$getSysImgModule$cp:()Lcom/android/repository/api/SchemaModule;
+       3: areturn
+
+  public static void getSysImgModule$annotations();
+    Code:
+       0: return
+
+  public final com.android.repository.api.SchemaModule<com.android.sdklib.repository.meta.SdkCommonFactory> getCommonModule();
+    Code:
+       0: invokestatic  #38                 // Method com/android/sdklib/repository/AndroidSdkHandler.access$getCommonModule$cp:()Lcom/android/repository/api/SchemaModule;
+       3: areturn
+
+  public static void getCommonModule$annotations();
+    Code:
+       0: return
+
+  public static void getLOCAL_ADDONS_FILENAME$annotations();
+    Code:
+       0: return
+
+  public final com.android.sdklib.repository.AndroidSdkHandler$InstanceProvider getInstanceProvider$sdklib();
+    Code:
+       0: invokestatic  #46                 // Method com/android/sdklib/repository/AndroidSdkHandler.access$getInstanceProvider$cp:()Lcom/android/sdklib/repository/AndroidSdkHandler$InstanceProvider;
+       3: areturn
+
+  public final void setInstanceProvider$sdklib(com.android.sdklib.repository.AndroidSdkHandler$InstanceProvider);
+    Code:
+       0: aload_1
+       1: ldc           #51                 // String <set-?>
+       3: invokestatic  #57                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+       6: aload_1
+       7: invokestatic  #60                 // Method com/android/sdklib/repository/AndroidSdkHandler.access$setInstanceProvider$cp:(Lcom/android/sdklib/repository/AndroidSdkHandler$InstanceProvider;)V
+      10: return
+
+  public final com.android.sdklib.repository.AndroidSdkHandler getInstance(com.android.prefs.AndroidLocationsProvider, java.nio.file.Path);
+    Code:
+       0: aload_1
+       1: ldc           #66                 // String locationProvider
+       3: invokestatic  #57                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+       6: aload_0
+       7: invokevirtual #68                 // Method getInstanceProvider$sdklib:()Lcom/android/sdklib/repository/AndroidSdkHandler$InstanceProvider;
+      10: aload_1
+      11: aload_2
+      12: invokeinterface #72,  3           // InterfaceMethod com/android/sdklib/repository/AndroidSdkHandler$InstanceProvider.getInstance:(Lcom/android/prefs/AndroidLocationsProvider;Ljava/nio/file/Path;)Lcom/android/sdklib/repository/AndroidSdkHandler;
+      17: areturn
+
+  public final void reset();
+    Code:
+       0: aload_0
+       1: invokevirtual #68                 // Method getInstanceProvider$sdklib:()Lcom/android/sdklib/repository/AndroidSdkHandler$InstanceProvider;
+       4: invokeinterface #78,  1           // InterfaceMethod com/android/sdklib/repository/AndroidSdkHandler$InstanceProvider.reset:()V
+       9: return
+
+  public final <P extends com.android.repository.api.RepoPackage, T extends java.lang.Comparable<? super T>> P getLatestPackageFromPrefixCollection(java.util.Collection<? extends P>, kotlin.jvm.functions.Function1<? super com.android.repository.Revision, java.lang.Boolean>, boolean, kotlin.jvm.functions.Function1<? super java.lang.String, ? extends T>);
+    Code:
+       0: aload_1
+       1: ldc           #83                 // String packages
+       3: invokestatic  #57                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+       6: aload_2
+       7: ldc           #85                 // String filter
+       9: invokestatic  #57                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+      12: aload         4
+      14: ldc           #87                 // String mapper
+      16: invokestatic  #57                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+      19: aload_1
+      20: checkcast     #89                 // class java/lang/Iterable
+      23: astore        6
+      25: nop
+      26: iconst_0
+      27: istore        7
+      29: aload         6
+      31: astore        8
+      33: new           #91                 // class java/util/ArrayList
+      36: dup
+      37: invokespecial #92                 // Method java/util/ArrayList."<init>":()V
+      40: checkcast     #94                 // class java/util/Collection
+      43: astore        9
+      45: iconst_0
+      46: istore        10
+      48: aload         8
+      50: invokeinterface #98,  1           // InterfaceMethod java/lang/Iterable.iterator:()Ljava/util/Iterator;
+      55: astore        11
+      57: aload         11
+      59: invokeinterface #104,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+      64: ifeq          152
+      67: aload         11
+      69: invokeinterface #108,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      74: astore        12
+      76: aload         12
+      78: checkcast     #110                // class com/android/repository/api/RepoPackage
+      81: astore        13
+      83: iconst_0
+      84: istore        14
+      86: aload_2
+      87: aload         13
+      89: invokeinterface #114,  1          // InterfaceMethod com/android/repository/api/RepoPackage.getVersion:()Lcom/android/repository/Revision;
+      94: dup
+      95: ldc           #116                // String getVersion(...)
+      97: invokestatic  #119                // Method kotlin/jvm/internal/Intrinsics.checkNotNullExpressionValue:(Ljava/lang/Object;Ljava/lang/String;)V
+     100: invokeinterface #125,  2          // InterfaceMethod kotlin/jvm/functions/Function1.invoke:(Ljava/lang/Object;)Ljava/lang/Object;
+     105: checkcast     #127                // class java/lang/Boolean
+     108: invokevirtual #130                // Method java/lang/Boolean.booleanValue:()Z
+     111: ifeq          135
+     114: iload_3
+     115: ifne          131
+     118: aload         13
+     120: invokeinterface #114,  1          // InterfaceMethod com/android/repository/api/RepoPackage.getVersion:()Lcom/android/repository/Revision;
+     125: invokevirtual #135                // Method com/android/repository/Revision.isPreview:()Z
+     128: ifne          135
+     131: iconst_1
+     132: goto          136
+     135: iconst_0
+     136: ifeq          57
+     139: aload         9
+     141: aload         12
+     143: invokeinterface #139,  2          // InterfaceMethod java/util/Collection.add:(Ljava/lang/Object;)Z
+     148: pop
+     149: goto          57
+     152: aload         9
+     154: checkcast     #141                // class java/util/List
+     157: nop
+     158: checkcast     #89                 // class java/lang/Iterable
+     161: astore        6
+     163: nop
+     164: iconst_0
+     165: istore        7
+     167: aload         6
+     169: astore        8
+     171: new           #91                 // class java/util/ArrayList
+     174: dup
+     175: invokespecial #92                 // Method java/util/ArrayList."<init>":()V
+     178: checkcast     #94                 // class java/util/Collection
+     181: astore        9
+     183: iconst_0
+     184: istore        10
+     186: aload         8
+     188: astore        11
+     190: iconst_0
+     191: istore        12
+     193: aload         11
+     195: invokeinterface #98,  1           // InterfaceMethod java/lang/Iterable.iterator:()Ljava/util/Iterator;
+     200: astore        13
+     202: aload         13
+     204: invokeinterface #104,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+     209: ifeq          358
+     212: aload         13
+     214: invokeinterface #108,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     219: astore        14
+     221: aload         14
+     223: astore        15
+     225: iconst_0
+     226: istore        16
+     228: aload         15
+     230: checkcast     #110                // class com/android/repository/api/RepoPackage
+     233: astore        17
+     235: iconst_0
+     236: istore        18
+     238: aload         17
+     240: invokeinterface #145,  1          // InterfaceMethod com/android/repository/api/RepoPackage.getPath:()Ljava/lang/String;
+     245: dup
+     246: ldc           #147                // String getPath(...)
+     248: invokestatic  #119                // Method kotlin/jvm/internal/Intrinsics.checkNotNullExpressionValue:(Ljava/lang/Object;Ljava/lang/String;)V
+     251: astore        19
+     253: aload         17
+     255: invokeinterface #145,  1          // InterfaceMethod com/android/repository/api/RepoPackage.getPath:()Ljava/lang/String;
+     260: dup
+     261: ldc           #147                // String getPath(...)
+     263: invokestatic  #119                // Method kotlin/jvm/internal/Intrinsics.checkNotNullExpressionValue:(Ljava/lang/Object;Ljava/lang/String;)V
+     266: checkcast     #149                // class java/lang/CharSequence
+     269: bipush        59
+     271: iconst_0
+     272: iconst_0
+     273: bipush        6
+     275: aconst_null
+     276: invokestatic  #155                // Method kotlin/text/StringsKt.lastIndexOf$default:(Ljava/lang/CharSequence;CIZILjava/lang/Object;)I
+     279: iconst_1
+     280: iadd
+     281: istore        20
+     283: aload         19
+     285: iload         20
+     287: invokevirtual #161                // Method java/lang/String.substring:(I)Ljava/lang/String;
+     290: dup
+     291: ldc           #163                // String substring(...)
+     293: invokestatic  #119                // Method kotlin/jvm/internal/Intrinsics.checkNotNullExpressionValue:(Ljava/lang/Object;Ljava/lang/String;)V
+     296: astore        21
+     298: aload         4
+     300: aload         21
+     302: invokeinterface #125,  2          // InterfaceMethod kotlin/jvm/functions/Function1.invoke:(Ljava/lang/Object;)Ljava/lang/Object;
+     307: checkcast     #165                // class java/lang/Comparable
+     310: dup
+     311: ifnull        329
+     314: astore        22
+     316: iconst_0
+     317: istore        23
+     319: aload         17
+     321: aload         22
+     323: invokestatic  #171                // Method kotlin/TuplesKt.to:(Ljava/lang/Object;Ljava/lang/Object;)Lkotlin/Pair;
+     326: goto          331
+     329: pop
+     330: aconst_null
+     331: dup
+     332: ifnull        353
+     335: astore        24
+     337: iconst_0
+     338: istore        25
+     340: aload         9
+     342: aload         24
+     344: invokeinterface #139,  2          // InterfaceMethod java/util/Collection.add:(Ljava/lang/Object;)Z
+     349: pop
+     350: goto          354
+     353: pop
+     354: nop
+     355: goto          202
+     358: nop
+     359: aload         9
+     361: checkcast     #141                // class java/util/List
+     364: nop
+     365: checkcast     #89                 // class java/lang/Iterable
+     368: astore        6
+     370: nop
+     371: iconst_0
+     372: istore        7
+     374: aload         6
+     376: invokeinterface #98,  1           // InterfaceMethod java/lang/Iterable.iterator:()Ljava/util/Iterator;
+     381: astore        8
+     383: aload         8
+     385: invokeinterface #104,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+     390: ifne          397
+     393: aconst_null
+     394: goto          502
+     397: aload         8
+     399: invokeinterface #108,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     404: astore        9
+     406: aload         8
+     408: invokeinterface #104,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+     413: ifne          421
+     416: aload         9
+     418: goto          502
+     421: aload         9
+     423: checkcast     #173                // class kotlin/Pair
+     426: astore        10
+     428: iconst_0
+     429: istore        11
+     431: aload         10
+     433: invokevirtual #176                // Method kotlin/Pair.getSecond:()Ljava/lang/Object;
+     436: checkcast     #165                // class java/lang/Comparable
+     439: astore        10
+     441: aload         8
+     443: invokeinterface #108,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     448: astore        11
+     450: aload         11
+     452: checkcast     #173                // class kotlin/Pair
+     455: astore        12
+     457: iconst_0
+     458: istore        13
+     460: aload         12
+     462: invokevirtual #176                // Method kotlin/Pair.getSecond:()Ljava/lang/Object;
+     465: checkcast     #165                // class java/lang/Comparable
+     468: astore        12
+     470: aload         10
+     472: aload         12
+     474: invokeinterface #180,  2          // InterfaceMethod java/lang/Comparable.compareTo:(Ljava/lang/Object;)I
+     479: ifge          490
+     482: aload         11
+     484: astore        9
+     486: aload         12
+     488: astore        10
+     490: aload         8
+     492: invokeinterface #104,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+     497: ifne          441
+     500: aload         9
+     502: checkcast     #173                // class kotlin/Pair
+     505: astore        5
+     507: aload         5
+     509: ifnull        523
+     512: aload         5
+     514: invokevirtual #183                // Method kotlin/Pair.getFirst:()Ljava/lang/Object;
+     517: checkcast     #110                // class com/android/repository/api/RepoPackage
+     520: goto          524
+     523: aconst_null
+     524: areturn
+
+  public final <P extends com.android.repository.api.RepoPackage, T extends java.lang.Comparable<? super T>> P getLatestPackageFromPrefixCollection(java.util.Collection<? extends P>, boolean, kotlin.jvm.functions.Function1<? super java.lang.String, ? extends T>);
+    Code:
+       0: aload_1
+       1: ldc           #83                 // String packages
+       3: invokestatic  #57                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+       6: aload_3
+       7: ldc           #87                 // String mapper
+       9: invokestatic  #57                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+      12: aload_0
+      13: aload_1
+      14: getstatic     #233                // Field com/android/sdklib/repository/AndroidSdkHandler$Companion$getLatestPackageFromPrefixCollection$4.INSTANCE:Lcom/android/sdklib/repository/AndroidSdkHandler$Companion$getLatestPackageFromPrefixCollection$4;
+      17: checkcast     #121                // class kotlin/jvm/functions/Function1
+      20: iload_2
+      21: aload_3
+      22: invokevirtual #235                // Method getLatestPackageFromPrefixCollection:(Ljava/util/Collection;Lkotlin/jvm/functions/Function1;ZLkotlin/jvm/functions/Function1;)Lcom/android/repository/api/RepoPackage;
+      25: areturn
+
+  public final java.util.List<com.android.repository.api.SchemaModule<?>> getAllModules();
+    Code:
+       0: bipush        6
+       2: anewarray     #240                // class com/android/repository/api/SchemaModule
+       5: astore_1
+       6: aload_1
+       7: iconst_0
+       8: aload_0
+       9: invokevirtual #242                // Method getRepositoryModule:()Lcom/android/repository/api/SchemaModule;
+      12: aastore
+      13: aload_1
+      14: iconst_1
+      15: aload_0
+      16: invokevirtual #244                // Method getAddonModule:()Lcom/android/repository/api/SchemaModule;
+      19: aastore
+      20: aload_1
+      21: iconst_2
+      22: aload_0
+      23: invokevirtual #246                // Method getSysImgModule:()Lcom/android/repository/api/SchemaModule;
+      26: aastore
+      27: aload_1
+      28: iconst_3
+      29: aload_0
+      30: invokevirtual #248                // Method getCommonModule:()Lcom/android/repository/api/SchemaModule;
+      33: aastore
+      34: aload_1
+      35: iconst_4
+      36: getstatic     #254                // Field com/android/repository/api/RepoManager.Companion:Lcom/android/repository/api/RepoManager$Companion;
+      39: invokevirtual #257                // Method com/android/repository/api/RepoManager$Companion.getCommonModule:()Lcom/android/repository/api/SchemaModule;
+      42: aastore
+      43: aload_1
+      44: iconst_5
+      45: getstatic     #254                // Field com/android/repository/api/RepoManager.Companion:Lcom/android/repository/api/RepoManager$Companion;
+      48: invokevirtual #260                // Method com/android/repository/api/RepoManager$Companion.getGenericModule:()Lcom/android/repository/api/SchemaModule;
+      51: aastore
+      52: aload_1
+      53: invokestatic  #266                // Method kotlin/collections/CollectionsKt.listOf:([Ljava/lang/Object;)Ljava/util/List;
+      56: areturn
+
+  public final com.android.repository.impl.sources.LocalSourceProvider createUserSourceProvider(java.nio.file.Path);
+    Code:
+       0: aload_1
+       1: ldc_w         #270                // String androidFolder
+       4: invokestatic  #57                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+       7: new           #272                // class com/android/repository/impl/sources/LocalSourceProvider
+      10: dup
+      11: aload_1
+      12: ldc_w         #274                // String repositories.cfg
+      15: invokeinterface #280,  2          // InterfaceMethod java/nio/file/Path.resolve:(Ljava/lang/String;)Ljava/nio/file/Path;
+      20: iconst_2
+      21: anewarray     #240                // class com/android/repository/api/SchemaModule
+      24: astore_2
+      25: aload_2
+      26: iconst_0
+      27: aload_0
+      28: invokevirtual #246                // Method getSysImgModule:()Lcom/android/repository/api/SchemaModule;
+      31: aastore
+      32: aload_2
+      33: iconst_1
+      34: aload_0
+      35: invokevirtual #244                // Method getAddonModule:()Lcom/android/repository/api/SchemaModule;
+      38: aastore
+      39: aload_2
+      40: invokestatic  #266                // Method kotlin/collections/CollectionsKt.listOf:([Ljava/lang/Object;)Ljava/util/List;
+      43: checkcast     #94                 // class java/util/Collection
+      46: iconst_4
+      47: anewarray     #240                // class com/android/repository/api/SchemaModule
+      50: astore_2
+      51: aload_2
+      52: iconst_0
+      53: aload_0
+      54: invokevirtual #246                // Method getSysImgModule:()Lcom/android/repository/api/SchemaModule;
+      57: aastore
+      58: aload_2
+      59: iconst_1
+      60: aload_0
+      61: invokevirtual #244                // Method getAddonModule:()Lcom/android/repository/api/SchemaModule;
+      64: aastore
+      65: aload_2
+      66: iconst_2
+      67: aload_0
+      68: invokevirtual #242                // Method getRepositoryModule:()Lcom/android/repository/api/SchemaModule;
+      71: aastore
+      72: aload_2
+      73: iconst_3
+      74: aload_0
+      75: invokevirtual #248                // Method getCommonModule:()Lcom/android/repository/api/SchemaModule;
+      78: aastore
+      79: aload_2
+      80: invokestatic  #266                // Method kotlin/collections/CollectionsKt.listOf:([Ljava/lang/Object;)Ljava/util/List;
+      83: checkcast     #94                 // class java/util/Collection
+      86: invokespecial #283                // Method com/android/repository/impl/sources/LocalSourceProvider."<init>":(Ljava/nio/file/Path;Ljava/util/Collection;Ljava/util/Collection;)V
+      89: areturn
+
+  private final synchronized com.android.sdklib.repository.AndroidSdkHandler$RepoConfig getRepoConfig(com.android.repository.api.ProgressIndicator);
+    Code:
+       0: invokestatic  #289                // Method com/android/sdklib/repository/AndroidSdkHandler.access$getRepoConfig$cp:()Lcom/android/sdklib/repository/AndroidSdkHandler$RepoConfig;
+       3: dup
+       4: ifnonnull     31
+       7: pop
+       8: new           #291                // class com/android/sdklib/repository/AndroidSdkHandler$RepoConfig
+      11: dup
+      12: aload_1
+      13: invokespecial #294                // Method com/android/sdklib/repository/AndroidSdkHandler$RepoConfig."<init>":(Lcom/android/repository/api/ProgressIndicator;)V
+      16: astore_2
+      17: aload_2
+      18: astore_3
+      19: iconst_0
+      20: istore        4
+      22: getstatic     #296                // Field com/android/sdklib/repository/AndroidSdkHandler.Companion:Lcom/android/sdklib/repository/AndroidSdkHandler$Companion;
+      25: pop
+      26: aload_3
+      27: invokestatic  #300                // Method com/android/sdklib/repository/AndroidSdkHandler.access$setRepoConfig$cp:(Lcom/android/sdklib/repository/AndroidSdkHandler$RepoConfig;)V
+      30: aload_2
+      31: areturn
+
+  public static final com.android.sdklib.repository.AndroidSdkHandler$RepoConfig access$getRepoConfig(com.android.sdklib.repository.AndroidSdkHandler$Companion, com.android.repository.api.ProgressIndicator);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokespecial #308                // Method getRepoConfig:(Lcom/android/repository/api/ProgressIndicator;)Lcom/android/sdklib/repository/AndroidSdkHandler$RepoConfig;
+       5: areturn
+
+  public com.android.sdklib.repository.AndroidSdkHandler$Companion(kotlin.jvm.internal.DefaultConstructorMarker);
+    Code:
+       0: aload_0
+       1: invokespecial #311                // Method "<init>":()V
+       4: return
+}

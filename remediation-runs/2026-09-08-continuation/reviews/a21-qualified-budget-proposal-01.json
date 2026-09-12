@@ -1,0 +1,249 @@
+{
+  "schema_version": 1,
+  "kind": "READ_ONLY_A21_QUALIFIED_EXECUTION_BUDGET_PROPOSAL",
+  "author": "/root/l08_fixture",
+  "recorded_at": "2026-09-08T21:51:15.233049+00:00",
+  "status": "PROPOSAL_ONLY_NOT_SOURCE_REVIEW_EXECUTION_OR_DISPATCH_APPROVAL",
+  "frozen_source": "e5111ea49113c3f12cb577058c3f926dfebdc325",
+  "frozen_tree": "a88872673bd4cfc366236362f287c1db0a04a5cd",
+  "scope": "Read-only actual A21/native16 timing, historical normal15 and frozen runner/composition/toolchain/CI inspection. Only this new additive proposal is written; no frozen bytes changed.",
+  "recommendation": {
+    "approach": "Preserve one existing combined xcodebuild test command; select finite A-only allowances through the already explicit validated qualified toolchain.",
+    "qualified_l08": {
+      "command_seconds": 5400,
+      "default_test_seconds": 3000,
+      "maximum_test_seconds": 3300
+    },
+    "unchanged_local_l08": {
+      "command_seconds": 2700,
+      "default_test_seconds": 1200,
+      "maximum_test_seconds": 1500
+    },
+    "unchanged_normal_all_profiles": {
+      "command_seconds": 2700,
+      "default_test_seconds": 120,
+      "maximum_test_seconds": 240
+    },
+    "arbitrary_override_allowed": false,
+    "scope_boundary": "No test selection/order/count or Swift action/activation/protection/ownership change. Prefer a separate closed pure budget function rather than adding fields to the strict toolchain-observation schema.",
+    "command_limit_is_not_separate_build_budget": true
+  },
+  "actual_a21": {
+    "artifact_root": "remediation-runs/2026-09-08-continuation/actions/34275491965/native-evidence/ios-readiness-21",
+    "receipt": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34275491965/native-evidence/ios-readiness-21/receipt.json",
+      "sha256": "2d8168608c71fbc4bbed03cc23f595eafc95473e7e4fa3ec1277f61961ed18a3",
+      "bytes": 425426
+    },
+    "raw_log": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34275491965/native-evidence/ios-readiness-21/xcodebuild.log",
+      "sha256": "dd68f0f5ee696408953e9b3dcdc11bf6a9c9a70d2593ea4c57c13333b48ac468",
+      "bytes": 408545
+    },
+    "xcode_started_at": "2026-09-08T20:37:55.663079+00:00",
+    "first_test_suite_at": "2026-09-08T21:12:17.384+00:00",
+    "pre_first_test_seconds": 2061.720921,
+    "pre_first_test_scope": "Compilation plus Xcode preparation/install/startup, not a separately timed build-for-testing result.",
+    "gradle_reported_seconds": 1847,
+    "gradle_log_line": 1152,
+    "first_test_suite_log_line": 1775,
+    "ui_kit_pass_count": 4,
+    "combined_test_start_log_line": 1801,
+    "last_combined_test_elapsed_seconds": 639.75,
+    "last_combined_test_log_line": 3790,
+    "interruption_log_line": 3791,
+    "xcode_command_exit": -15,
+    "xcode_finished_at": "2026-09-08T21:23:19.811275+00:00",
+    "old_command_seconds": 2700,
+    "old_remaining_after_first_suite_seconds": 638.279079,
+    "observed_failure": "Parent command TimeoutExpired; no XCTest assertion, method-allowance expiry or ps/lsof timeout evidenced as this interruption trigger.",
+    "milestones": {
+      "readiness_boot8_last_t": 567.38,
+      "functional_boot1_last_t": 592.46,
+      "home_zero_last_t": 634.73,
+      "geometry_sample1_last_t": 636.64,
+      "geometry_sample2_last_t": 639.16,
+      "home_target_tap_reached": false
+    },
+    "runtime_limit": "These logs/markers are partial observations, not completed functional/protection/normal-B proof. Formal postrun/cleanup reconciliation belongs to native_ci."
+  },
+  "historical_native16": {
+    "receipt": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-16/receipt.json",
+      "sha256": "56094f40132dd9beaeda52fdc737c61c242e897e0356b2722c4b50ad75bbf576",
+      "bytes": 450903
+    },
+    "raw_log": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-16/xcodebuild.log",
+      "sha256": "c4d7c7ab7d34dbe171364eb9847beb08f714570319c22464e500d0edd21ee425",
+      "bytes": 476188
+    },
+    "gradle_reported_seconds": 336,
+    "total_xcode_seconds": 1119.842416,
+    "main_test_seconds": 709.328,
+    "method_allowances": [
+      1200,
+      1500
+    ],
+    "xcode_exit": 65,
+    "settings_plus_readiness_boot8_last_t": 486.47,
+    "functional_boot1_last_t": 507.26,
+    "functional_boot9_last_t": 680.57,
+    "remaining_scope": "Failed during boot10; boots11-13, three host fixtures, later local game/OS portions were not reached. This is not a full-method duration. Raw local XCTest clock is UTC+3 relative to UTC receipt timestamps; use relative test durations for comparison.",
+    "profile_limit": "Local Xcode26.5/SDK26.5 observations do not establish qualified hosted Xcode26.3/SDK26.2 speed."
+  },
+  "historical_normal15": {
+    "receipt": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-15/receipt.json",
+      "sha256": "7b4235bc8d869db573ffbdf65a246be7d25ac1ebefb81b7affe01ffd97818c50",
+      "bytes": 378246
+    },
+    "compressed_log": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-15/xcodebuild.log.gz",
+      "sha256": "13e0734a152ded1a4e76aca7d951dd9bd077efdd08d6d9e8d1ebbcc20f4f9f9c",
+      "bytes": 27043
+    },
+    "gradle_reported_seconds": 135,
+    "total_xcode_seconds": 297.213697,
+    "test_observer_elapsed_seconds": 131.122,
+    "overall_status": "FAIL",
+    "runtime_evidence_status": "PASS",
+    "limit": "Eight historical local normal launches passed, ninth vmmap provenance failed. No actual hosted normal libproc execution or timing evidence follows; do not assume a warm/shared-cache speed for B."
+  },
+  "planning": {
+    "new_remaining_after_observed_first_suite_seconds": 3338.279079,
+    "remaining_after_default_method_seconds": 338.279079,
+    "rationale": "At the measured cold pre-test cost the new total allows the fifty-minute default method plus about5.64minutes driver/teardown overhead. This is a bounded planning allowance, not a proven full-method duration or assurance that another cold run has the same latency.",
+    "method_default_is_candidate_not_measured_requirement": true,
+    "unmeasured": "Full corrected13-boot storage, three42-operation host fixtures, and subsequent two local games/actual OS language flows have no completed hosted timing. Home geometry/ack remains strict and adds queries absent from native16.",
+    "timeouts_not_scaled": [
+      "single-tap geometry sample count/epsilon",
+      "zero/one callback counter contract",
+      "75s per operation waits",
+      "strict protection comparisons",
+      "ps15s",
+      "exact-owned-root lsof30s",
+      "simulator metadata45/ordinary120/bootstatus300",
+      "600s finalizer grace"
+    ],
+    "no_full_completion_guarantee": true
+  },
+  "ci_accounting": {
+    "current_job_minutes": 120,
+    "current_native_child_seconds": 6000,
+    "current_child_finalizer_grace_seconds": 600,
+    "current_serial_policy": "A then B, only when A preservation/source/ownership/cleanup is safe.",
+    "current_has_cumulative_job_admission": false,
+    "a_command_plus_b_command_minutes": 135,
+    "both_outer_bounds_plus_graces_minutes": 220,
+    "focused_native_evidence_job_ceiling_proposal_minutes": 240,
+    "other_scopes_unchanged": {
+      "full_minutes": 120,
+      "preflight_minutes": 120,
+      "process_probe_minutes": 10
+    },
+    "planning_reserve_minutes": 20,
+    "warning": "240minutes is a finite focused-mode ceiling, not expected cost or proof all setup/global scans/preservation/upload/finalizers fit. Keep6000+600 per child and all finalizer guards. One justified independently reviewed new frozen A/B dispatch, not a matrix or retry loop.",
+    "alternative_if_120_must_remain": "Add source/preflight-bound exact A-only/B-only lane scopes and run B on a new hosted job after A safe-cleanup review; never silently skip B or treat it as PASS."
+  },
+  "split_alternative": {
+    "recommended_for_this_patch": false,
+    "reason": "build-for-testing then test-without-building gives independent phase budgets but creates new build-product/xctestrun provenance and execution contracts not required to address this observed cumulative watchdog.",
+    "required_guards": [
+      "Current-cycle build exit0 and embedded phase/stop receipt before any runtime launch.",
+      "Same exact owned copy, SDK, simulator UUID, signing mode and DerivedData; no stale/shared framework or unrelated xctestrun adoption.",
+      "Bind generated xctestrun and built app/framework/test-runner artifacts before test-without-building and compare unchanged afterward.",
+      "Retain separate build/runtime command receipts and logs; test-without-building must execute all exact5 tests without skips/retries.",
+      "Use distinct result bundles or a reviewed no-build-result-bundle policy; do not overwrite Results.xcresult or mistake build success for test evidence.",
+      "Immediate Gradle stops, failure retention, exceptional extraction and postbuild authorization remain independently required.",
+      "Re-budget aggregate within outer6000 plus finalizer600 and Actions job; assigning2700build+3300runtime exhausts6000 before setup/extraction and is not safe accounting."
+    ]
+  },
+  "implementation_paths": [
+    "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/run_ios_readiness.py",
+    "scripts/verification/ios-readiness/toolchain_profiles.py",
+    "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/compose_runner.py",
+    "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/app_foundation_copy.py",
+    "scripts/ci/native_continuation.py",
+    ".github/workflows/production-verification.yml",
+    "scripts/ci/NATIVE_CONTINUATION.md",
+    "scripts/release/workflow_contract.py"
+  ],
+  "mechanical_binding_requirement": "Refresh companion pins in composer and draft adapter; produce a NEW reviewed draft freeze record rather than modifying the historical freeze. Commit reviewed source/control changes, regenerate/commit inventory, normal push/remote equality, and obtain fresh independent source/control/preflight/dispatch binding.",
+  "affected_regression_paths": [
+    "scripts/verification/ios-readiness/test_toolchain_profiles.py",
+    "scripts/verification/ios-readiness/test_native_command_failures.py",
+    "scripts/verification/ios-readiness/test_simulator_lifecycle_integration.py",
+    "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/test_l08_functional_runner.py",
+    "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/test_l08_functional_copy.py",
+    "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/test_composition.py",
+    "scripts/release/tests/test_native_continuation.py",
+    "scripts/release/tests/test_workflow_contract.py"
+  ],
+  "required_regression_oracles": [
+    "Exact unchanged local and normal budgets, qualified-only bounded A selection, and rejection of unknown/arbitrary overrides.",
+    "Inspect actual composed command argv and watchdog timeout, not just a helper returning expected numbers.",
+    "No retry/parallel/test-selection escape; all5 exact tests and helper order remain.",
+    "Timeout/nonzero/cancellation cannot become PASS; immediate stops and primary-error preservation remain.",
+    "Exceptional extraction/control pins/raw preservation and fail-closed postbuild cleanup get their own authored/reviewed correction; longer budget does not repair A21 cleanup.",
+    "Only native-evidence gets changed job ceiling; full/preflight/probe scopes and disabled Store workflows unchanged.",
+    "If retaining serial A/B, explicit inner/outer timeout and unsafe A must prevent B.",
+    "Affected documentation/hash transport suite runs under coordinator single lane; harness results are not native runtime.",
+    "Current workflow_contract.py:157-159 pins the exact old timeout expression; update this guard and its negative mutation controls, not just workflow YAML."
+  ],
+  "activity": {
+    "edits": "Only this additive proposal file; no frozen source/control/evidence edits.",
+    "tests": false,
+    "builds": false,
+    "runner_imports": false,
+    "native_commands": false,
+    "network": false,
+    "dispatch": false,
+    "cleanup": false
+  },
+  "readiness": "NOT_READY; budget proposal does not close A21 failure/cleanup, unfinished A/B, strict protection, final D, physical-device/Store or owner/legal requirements.",
+  "frozen_sources_reopened": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/run_ios_readiness.py",
+      "sha256": "b0f3794fe89537d5108a2c24c22c33ed94d9330ee220e7fa257bfb2c4a7b1e29",
+      "bytes": 76990,
+      "revision": "e5111ea49113c3f12cb577058c3f926dfebdc325"
+    },
+    {
+      "path": "scripts/verification/ios-readiness/toolchain_profiles.py",
+      "sha256": "8adacaf4c59ed823aa088ecb70ad5c6c1e3f76e7ca3520d8abf0563341591313",
+      "bytes": 3358,
+      "revision": "e5111ea49113c3f12cb577058c3f926dfebdc325"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/compose_runner.py",
+      "sha256": "cf41c413d321d87689b97b86e4fe7981052dab6b629c8ffcd57b15a00be6555c",
+      "bytes": 21878,
+      "revision": "e5111ea49113c3f12cb577058c3f926dfebdc325"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/app_foundation_copy.py",
+      "sha256": "241bc0e199be2699fe49b1552d993e7389de79ff8fb88f2d1fe53bed99847840",
+      "bytes": 13449,
+      "revision": "e5111ea49113c3f12cb577058c3f926dfebdc325"
+    },
+    {
+      "path": "scripts/ci/native_continuation.py",
+      "sha256": "3c974b93e202359c12aa2647984b624024986676eb058ace9ecdf4e7663200bb",
+      "bytes": 57512,
+      "revision": "e5111ea49113c3f12cb577058c3f926dfebdc325"
+    },
+    {
+      "path": ".github/workflows/production-verification.yml",
+      "sha256": "d347a4cd3e22181b37e5aec91203d3aa37779cb7bb7976fb74ed01cc29ba328d",
+      "bytes": 40414,
+      "revision": "e5111ea49113c3f12cb577058c3f926dfebdc325"
+    },
+    {
+      "path": "scripts/release/workflow_contract.py",
+      "sha256": "30357f2ac67567f65a5e3af316b44497a6a08b6faf370f56161f642f6e5788a9",
+      "bytes": 46085,
+      "revision": "e5111ea49113c3f12cb577058c3f926dfebdc325"
+    }
+  ]
+}

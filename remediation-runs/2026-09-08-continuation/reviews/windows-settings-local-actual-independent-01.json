@@ -1,0 +1,252 @@
+{
+  "schema_version": 1,
+  "kind": "COMBINED_SCOPED_LOCAL_CONTROLS_AND_ACTUAL_REGRESSION_REVIEW",
+  "reviewer": "/root/ci_review",
+  "reviewed_at": "2026-09-10T03:03:48.724552+00:00",
+  "status": "ACCEPTED_SCOPED_LOCAL_EVIDENCE_AND_CORRECTION_SOURCE_NOT_NATIVE_OR_WINDOWS_RUNTIME",
+  "findings": [],
+  "paths": {
+    "C": "remediation-runs/2026-09-07-local-readiness/evidence",
+    "N": "remediation-runs/2026-09-08-continuation",
+    "pin_format": [
+      "path",
+      "bytes",
+      "sha256"
+    ]
+  },
+  "source": {
+    "branch": "fix/local-readiness-2026-09-07",
+    "current_commit": "730a91e4dade4dbc2168b5367e20c3d0f42237e1",
+    "tree": "1f71dc64bc7680f461efc3e841dc051579a0d993",
+    "source_manifest_sha256": "4e9a00fec5ed979179f4f66ebb47656395d5ebf04c86db765eaf40798e4e73ea",
+    "freeze": [
+      "N/reviews/windows-settings-source-freeze-01.json",
+      2383,
+      "1c2e4b7390cf1b74bd2da15209dff062bf52cc52509943b58fb0168d311ed53d"
+    ],
+    "scope": "Remainder/transport executed at clean730a. Validator05 executed at cleanc797bd2172489f7ac4c62a816d3ab6bf4daf89d6, manifestb75e30944f01a3dd214af4c8c32ed27c9f052840ab51222e177345b68179676a. Between manifests only native timeout test fixture and mechanical inventory changed. Eight controls executed at4ccfafcfc361231cfb730178b3798ebcb6304770 WIP, manifest8f33e584b97af2e4d20eb76cdc0aac1a5076cd7c30bb6ece6ac49e575bf2f1e8; not frozen730a execution. Their four explicit file hashes equal current frozen bytes."
+  },
+  "evidence": {
+    "continuation-windows-settings-controls-01": {
+      "receipt": [
+        "C/continuation-windows-settings-controls-01/receipt.json",
+        308641,
+        "a35830d271606e1335c02594dc241c579f48051d39fa81cbc8dee27ac9c99367"
+      ],
+      "log": [
+        "C/continuation-windows-settings-controls-01/gradle.log",
+        2978,
+        "7c051fa2647af816be88d63f70517890c5b6cc56e3a50044cc167a09cf07cba5"
+      ],
+      "status": "PASS",
+      "exit_code": 0,
+      "tests": 8,
+      "passed": 8,
+      "errors": 0,
+      "failures": 0,
+      "skipped": 0
+    },
+    "continuation-release-validator-05": {
+      "receipt": [
+        "C/continuation-release-validator-05/receipt.json",
+        307166,
+        "48e257e902c6983be7392f9eabc30974ce8b23ce8e695b9f08d2caf67a485fb9"
+      ],
+      "log": [
+        "C/continuation-release-validator-05/gradle.log",
+        94432,
+        "d46b5d7aa95e3cf66b226d02dd57c2f0494217566277ba413e1c1c9c0f1e9bcf"
+      ],
+      "status": "FAIL",
+      "exit_code": 1,
+      "tests": 479,
+      "passed": 477,
+      "errors": 2,
+      "failures": 0,
+      "skipped": 0
+    },
+    "continuation-release-remainder-01": {
+      "receipt": [
+        "C/continuation-release-remainder-01/receipt.json",
+        307452,
+        "4047aa966c02dc8242c69c013850fb358fe878defb06b4eaf3e2c6dcec654cd3"
+      ],
+      "log": [
+        "C/continuation-release-remainder-01/gradle.log",
+        17382,
+        "4e13f010dc0aeb5bd9dafbae48b0285189f882bceedc2e05c98fd51b77129fcc"
+      ],
+      "status": "PASS",
+      "exit_code": 0,
+      "tests": 73,
+      "passed": 73,
+      "errors": 0,
+      "failures": 0,
+      "skipped": 0
+    },
+    "continuation-windows-settings-transport-01": {
+      "receipt": [
+        "C/continuation-windows-settings-transport-01/receipt.json",
+        307985,
+        "8fa55fdd09338ec7fa0e3979504baf4a8fd3ccd1900727971826045c773c09ec"
+      ],
+      "log": [
+        "C/continuation-windows-settings-transport-01/gradle.log",
+        4691,
+        "aadec4c5e228e0aceb07d90e890734378658c8ba6a5ae72aeaf685c86322e895"
+      ],
+      "status": "PASS",
+      "exit_code": 0,
+      "tests": 9,
+      "passed": 9,
+      "errors": 0,
+      "failures": 0,
+      "skipped": 0
+    }
+  },
+  "source_approvals": [
+    [
+      "N/reviews/windows-long-path-followup-independent-01.json",
+      9598,
+      "976d56ec9192b7ed1f2bba396fd8219484e7ef871a387176d808e63785e7c3a7"
+    ],
+    [
+      "N/reviews/native-settings-sheet-diagnostic-independent-01.json",
+      9413,
+      "52cb9183a049e98ba8681ffd2077b8ee9c95606178092432516efefaf24d4295"
+    ],
+    [
+      "N/reviews/native-timeout-fixture-correction-01.json",
+      1640,
+      "7b127f3c5a0f75e66ac7341fad3e16d6bbd3cd9b4e18077031c8969c47a4826f"
+    ],
+    [
+      "N/reviews/windows-targeted-collector-independent-01.json",
+      10667,
+      "c0fdc9f581f7f7ac4170a3426e99e4f419286f5373948ce861ffc56db995c50f"
+    ]
+  ],
+  "eight_controls": {
+    "scope": "Five Settings and three Windows-collector synthetic methods passed; actual names exactly match reviewed AST. Four explicit hashes appear before and after in raw log and match frozen730a. No Swift/native/Windows execution inferred.",
+    "controls": [
+      [
+        "scripts/verification/ios-settings-sheet/settings_sheet_probe.py",
+        12852,
+        "626a5096b4aab37ee449abe45ec8f6d4d8c0d4801fb2acb8c83b1e17e8a3f3ed"
+      ],
+      [
+        "scripts/verification/ios-settings-sheet/test_settings_sheet_probe.py",
+        8786,
+        "1f3716f315f990a02b9e21e7b71f7db91833de852f4cd3f97530d6c1d4db9292"
+      ],
+      [
+        "N/reviews/windows-targeted-collector-01/collect_windows.py",
+        18707,
+        "87afd5bc709a5bf83a672e6acc43983783cb38b878beac00722233c6b93777d1"
+      ],
+      [
+        "N/reviews/windows-targeted-collector-01/test_collect_windows.py",
+        5749,
+        "86ba36a466b82a57af610cafaddb4d28e979ed96978f6c703abe9bf6e0ecb53d"
+      ]
+    ]
+  },
+  "validator05": {
+    "failure": "Two __new__ NativeCleanupTest fixtures lacked selection; invoke_native line930 raised AttributeError before child.wait.479 actual methods:477pass,2errors,0failures/skip.05 remains FAIL.",
+    "error_methods": [
+      "NativeCleanupTest.test_native_timeout_sends_term_and_waits_for_finalizer_without_kill",
+      "NativeCleanupTest.test_native_unfinished_finalizer_keeps_cleanup_unsafe_and_does_not_kill"
+    ],
+    "not_reached": [
+      "standalone workflow_contract.py",
+      "mechanical inventory --check",
+      "pinned ShellCheck/actionlint downloads and execution"
+    ],
+    "caution": "set-e stopped at unittest failure. Fixture-emitted workflow PASS and synthetic process/custody JSON are not later gate execution or native evidence."
+  },
+  "independently_reviewed_root_correction": {
+    "author": "/root",
+    "reviewer": "/root/ci_review",
+    "status": "APPROVED_BEFORE_EXECUTION",
+    "fixture": [
+      "scripts/release/tests/test_native_continuation.py",
+      98601,
+      "940bded8d0cbfaa18c9f321cbd7e7bbb064d82496a40d4160ed3eea95e12ca9f"
+    ],
+    "diff_sha256": "1db791836ea61ad0b131690e64bc8f86fbac3a409f4d9dfbb28305f4673c183c",
+    "finding": "Only two failing methods changed: explicit paired selection restores real initialized state; complete6000/600 wait-call assertions strengthen SIGTERM/no-kill behavior.4inserted/1removed lines, same73method identities; no production correction or fallback.",
+    "unchanged_production": [
+      "scripts/ci/native_continuation.py",
+      68409,
+      "971fdeca3fa27d6b8fb356bae50f11909365af30d7a6af8cd058a3487684f4d2"
+    ],
+    "unchanged_validator": [
+      "scripts/release/validate_release_system.sh",
+      3673,
+      "ce52c9c08edecba968337d6de42c90895badec127c7029a5afc16737d3b8864a"
+    ],
+    "composition": [
+      "N/reviews/run_targeted_release_remainder_01.py",
+      1455,
+      "2e601a2eb9575574a65a30e6df1467428491a01c4930e51000abad1605cc74f9"
+    ],
+    "composition_review": "Exact validator hash and unique anchors required before execution. Only already-reached py_compile/full-unittest lines removed; affected73 execute with check=True first. Remaining canonical set-e/root/traps/workflow/inventory/pinned-download/hash/archive/ShellCheck/actionlint script unchanged. Helper outside source_manifest is explicitly hashed before/after in actual remainder log; both match reviewed frozen bytes."
+  },
+  "remainder": {
+    "actual": "All73 actual ok method names exactly equal affected file AST; both old errors pass. Standalone workflow contract PASS; inventory23403 rows fresh (not independent review); pinned Linux-amd64 ShellCheck0.11.0 and actionlint1.7.12 archive digests OK. Unchanged canonical script completed0 after its two terminal tool invocations. Tools silent on success; no separate --version log.",
+    "segmentation": "NOT a fresh479-test full-validator PASS.406 unchanged method identities retain c797 evidence; affected73 rechecked at730a. No full479 repetition or new runtime inference."
+  },
+  "transport": {
+    "xml": [
+      "C/continuation-windows-settings-transport-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.ProductionVerificationWorkflowContractTest.xml",
+      2117,
+      "8c8a331ca8e089a685b9cbff04d5fb3b2b2cbd0cc93769ff252cf433921d8e77"
+    ],
+    "test_receipts": [
+      "C/continuation-windows-settings-transport-01/test-receipts.json",
+      2682,
+      "d1dc193ce944191291da03e045a2784526049830979c723b6d0734d73ae7237f"
+    ],
+    "actual": "ProductionVerificationWorkflowContractTest:9PASS,0errors/failures/skip; exact nine XML names match source. XML timestamp2026-09-10T02:46:25.576Z lies within cycle. desktopTest leaf actually executed, no cache/up-to-date marker.21actionable tasks:14executed,7cached compile preparations.",
+    "command_scope": "--tests *ProductionVerificationWorkflowContractTest*, strict verification, one worker/no-parallel, no configuration cache, in-process Kotlin; exact command retained in receipt.",
+    "limits": "Repository/build/workflow contract tests on Linux, not Windows, Apple or LAN execution. Host-disabled iOS warnings/incidental preparation skips are not test passes.",
+    "source": [
+      "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/ProductionVerificationWorkflowContractTest.kt",
+      30925,
+      "f827b3bba6f51581e874206e95431e1c3a843db2706649e7f5c6f95610a637d1"
+    ]
+  },
+  "cleanup": {
+    "all_four_cycles": "Source_before=source_after and runner_before=runner_after; stop_exit_code0; no remaining owned/compiler/artifact workers, retained/remaining outputs, cleanup errors or deferred signals. Cycle scratch independently absent. Raw receipts retain exact stop/cleanup timestamps.",
+    "runner": [
+      "remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py",
+      25106,
+      "1b9e882514bfe5386785d5a71ae32fdc2bc3aa4cc1dd24532709899fbf4f41bc"
+    ],
+    "stop_log_sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+    "stop_text": "All four: No Gradle daemons are running.",
+    "transport_removed_and_independently_absent": [
+      "shared/networking/build",
+      "shared/transport-p2p/build",
+      "shared/core/build",
+      "shared/storage/build",
+      "shared/engine/build",
+      "build",
+      "build-logic/convention/build"
+    ],
+    "scope": "Seven exact owned live roots removed; archived reports retained. No reviewer workers/build resources/cleanup created or owed."
+  },
+  "windows_request_review": {
+    "request": [
+      "N/actions/windows-only-dispatch-01/request.json",
+      2069,
+      "0d493c1c6ae4af81465d7706430cceab100c5a506bc4af320b36d40470bf3bd7"
+    ],
+    "status": "APPROVED_EXACT_REQUEST_CONDITIONAL_IMMEDIATE_PRE_DISPATCH_CHECKS",
+    "approved": "One production-verification.yml dispatch to Apdelrahman1911/parlor continuation branch, windows-only/paired/frozen730a; maximum_dispatches1. Exact command+inputs inspected. Expected active desktop-windows-x64; desktop-android,desktop-linux-arm64,desktop-macos-x64,ios skipped. Collector87afd5… unchanged.",
+    "conditions": "Normal fast-forward push only; immediately confirm remote/local730a, clean tracked source, intended active workflow and no active same-ref run (cancel-in-progress otherwise cancels it). Reviewer verified local4cc ancestry, not remote/network. Retain actual request/result/run association before runtime collection.",
+    "runtime_boundary": "Approval is not dispatch or runtime. Inspect actual Windows prerequisite/source/ownership/task logs and four skips; checkout/ownership only admits candidate-not-execution. Historical XML archive-only. Original full-D4cc failure immutable. No Store/native approvals."
+  },
+  "limits": "No new full combined qualification PASS, Windows runtime, Settings Swift/iOS UI success, L08 strict protection pass, or normal Debug/libproc app proof from these synthetic controls. Physical-device, Store identity/operations and owner/legal requirements remain separate.",
+  "reviewer_activity": "Read-only Git/source and stdlib JSON/hash/AST/XML/string inspection; no project imports/tests/builds/network/dispatch/large extraction/Git writes/source edits. Only this additive review written."
+}

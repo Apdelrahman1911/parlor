@@ -1,0 +1,133 @@
+{
+  "schema": 1,
+  "reviewer": "/root/probe_identity",
+  "status": "APPROVED_ADDITIVE_H01_DRIVER_AND_ACTUAL_FOCUSED_CONTROLS_NOT_NATIVE_PASS",
+  "source_base": "d3c0df9ccba51463708728c3c618d3652e76aafa",
+  "scope": "Bounded additive H01 run_host_probe.py/test_host_probe.py/README.md delta; native template approval is separate. No broader old-source audit.",
+  "pins": {
+    "remediation-runs/2026-09-08-continuation/protection-host-image-01/run_host_probe.py": "34f2ffb667e6957adb4f57a0166e2ef2fd6b901eecb0059ef3f66d7ac13f5ea5",
+    "remediation-runs/2026-09-08-continuation/protection-host-image-01/test_host_probe.py": "69547e0bce3d0d77e77cf152d7a6ddd2bf1009b5ba105929a1f024340b5fe100",
+    "remediation-runs/2026-09-08-continuation/protection-host-image-01/README.md": "1e609df5ba9efb469c09dd8befc1456207e4442eb7e2161fd2d06e6371910d08",
+    "remediation-runs/2026-09-08-continuation/protection-host-image-01/HostSetterProbe.m.in": "be3f272644ea1284552f6622ed7aa02e035548802bfa5e78908e296e234c2b9b"
+  },
+  "native_source_approval": {
+    "reviewer": "/root/storage_boundary",
+    "path": "remediation-runs/2026-09-08-continuation/reviews/protection-host-origin-setter-native-source-independent-01.json",
+    "sha256": "fb6377caf1d9f752963a8487916d2b7052a1663cd6d19598bd2b1314aa5faf80",
+    "status": "APPROVED_NATIVE_TEMPLATE_SOURCE_ONLY",
+    "integration": "Exact five binding keys/values, exclusive fixture lifecycle, frozen full identity, no-argument invocation and source/header/binary custody obligations checked in driver."
+  },
+  "controls_closure": {
+    "method": "Static AST/literal extraction and stdlib byte hashing only; no project imports or controls execution.",
+    "prior_count": 29,
+    "count": 30,
+    "sorted_unique": true,
+    "control_sha256": "91e18dec83251b4e040fc9f706d652a660bdb8d46414ef08321589e8c575d5b0",
+    "added": [
+      "remediation-runs/2026-09-08-continuation/protection-host-image-01/HostSetterProbe.m.in"
+    ],
+    "removed": [],
+    "changed_from_base": [
+      "remediation-runs/2026-09-08-continuation/protection-host-image-01/HostSetterProbe.m.in",
+      "remediation-runs/2026-09-08-continuation/protection-host-image-01/README.md",
+      "remediation-runs/2026-09-08-continuation/protection-host-image-01/run_host_probe.py",
+      "remediation-runs/2026-09-08-continuation/protection-host-image-01/test_host_probe.py"
+    ],
+    "remaining_26_controls_byte_identical_to_base": true,
+    "paired_workflow_shipping_delta": "None in declared controls. Reviewed common helpers, sampler, receipts, workflow and shipping storage control bytes remain unchanged."
+  },
+  "original_image_path": {
+    "functions_byte_identical_to_base": [
+      "validate_report",
+      "HostProbe.compile_and_run",
+      "HostProbe.load_request",
+      "HostProbe.platform_binding",
+      "HostProbe.prepare",
+      "HostProbe.capture",
+      "HostProbe.retain",
+      "HostProbe.bindings",
+      "HostProbe.__init__"
+    ],
+    "unchanged_files": {
+      "HostImageProbe.m.in": "e015aa4234346596cca8f20776bea777e7159c276ba7620b3a1557b7db3bd595",
+      "image_hook.py": "bc130612a6a5f18841a7d156ee2f1ebb446da8d73be225d81b02ce2c1c23d6ab",
+      "test_image_hook.py": "6cc2a3d973891eca62d76f2a3f9e259ba92fd4c6dd598ab685fc4b34097f4a5a"
+    },
+    "order": "Original image observation completes, is preserved and validated, then its exact raw stdout/stderr/summary and command index are rebound and revalidated before the separate setter phase. Its original source/image bindings and raw receipt hashes are unchanged across that phase."
+  },
+  "driver_findings_checked": {
+    "fixture": "Exclusively created0700 resources/host-fixtures and0600 regular single-link probe.bin containing fixed public bytes. Resource/root device and owner are bound; all seven file identity fields are frozen before compile. Initial protection is observed default, never assumed None or inherited from a simulator receipt.",
+    "compiled_context": "OwnedHostSetterContext.h binds canonical owned root path/device/inode, full fixture identity and exact current-run {run_token,source_sha,control_sha256,run_id,run_attempt}. Existing request generation/load and raw-report equality close the native count-only binding check. No path arguments or simulator identity are supplied.",
+    "sampler_and_inputs": "Uses the unchanged reviewed host_sampler transform, not the original H01 image-hook transform. HostProtectionSampler.m, HostSetterProbe.m, OwnedHostSetterContext.h and shared ProtectionSampler.h are full stat/hash bound before compile, after capture and at retirement; the shared header is checked, not overwritten. Retained header and input hashes/lengths reconstruct in final assertion.",
+    "compiled_image": "Qualified existing macOS SDK reused. Fixed arm64-apple-macosx15.0/O0 compile, ad-hoc sign/verify and dwarfdump UUID precede one direct image invocation. Full image stat/hash and runtime main UUID/basename are bound; runtime main stays singleton[1] and identical before/after. Source and binary hashes are rechecked after capture and at retirement.",
+    "raw_native_validation": "Closed metadata-only host-origin shape, bounded raw report, actual direct owned PID/uid/macOS15 runtime and exact context required. Both samples validate all seven identity fields against frozen fixture plus all five per-API path/descriptor witnesses and closed descriptors. The before sample is retained as the actual default baseline.",
+    "method_and_operation": "Exactly host-origin-fm-set requesting complete with typed actual BOOL and bounded native-error shape. Setter receiver and setAttributes:ofItemAtPath:error: selector, stable before/after IMP and Foundation host image policy are checked; getter IMPs remain stable across samples. BOOL, NSError and unchanged/missing class remain observations, not success prerequisites.",
+    "ordering_and_preservation": "Prior collection and no prior setter state/command are required before exclusive creation. Exact prior-image plus four build commands plus one setter command are ordered with fixed argv/timeouts, EXITED0, reaped direct-Popen ownership and no child-cleanup error. Raw setter stdout/stderr are retained before process/result validation; preservation failures remain sticky.",
+    "retirement": "Existing settled/uploaded/owned-scratch cleanup admission is unchanged. Additive retirement joins new inputs, image and full fixture/root identity before descriptor-safe tree removal; final assertion checks exact removed entries, reconstructed bindings, raw reports and command order without executing the setter.",
+    "nonpromotion": "HOST_ORIGIN_ONLY and CAPTURED_HOST_ORIGIN_SETTER_NOT_PROTECTION_PASS. No simulator/production observation, historical strict change, protection qualification or runtime-implementation causality. Final success requires both original capture and new capture plus verified cleanup; no absent PD09 sample or PD08 inode is reused."
+  },
+  "bounds": {
+    "added_commands": 5,
+    "added_timeouts_seconds": {
+      "compile": 90,
+      "sign": 30,
+      "verify": 30,
+      "uuid": 30,
+      "direct_setter": 30
+    },
+    "native_self_alarm_seconds": 25,
+    "run_seconds": 300,
+    "run_finalization_seconds": 90,
+    "cleanup_seconds": 180,
+    "cleanup_final_stop_reserve_seconds": 65,
+    "static_command_maxima": {
+      "run": 37,
+      "cleanup": 20
+    },
+    "unchanged_command_cap": 96,
+    "limits": "Timeouts are not shortened to fit; command ceilings do not guarantee fit in wall-time budgets. Self-alarm begins in main; direct-child timeout covers the invocation. No simulator/debugger/sample or workflow input was added."
+  },
+  "actual_focused_controls": {
+    "owner": "/root",
+    "receipt": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-protection-host-origin-controls-01/receipt.json",
+    "receipt_sha256": "25ae5d3b56e2bcf28d1cc2f3c677b16490c7b820bd592d86c2761867234980e8",
+    "log": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-protection-host-origin-controls-01/host-origin.log",
+    "log_sha256": "bb670461cd17d8ec34db2ff7e5b3f1bf2532bdc9c51957a7f6315a193953935c",
+    "stop_log_sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+    "command": [
+      "python3",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "/root/projects/Parlor/parlor/remediation-runs/2026-09-08-continuation/protection-host-image-01",
+      "-p",
+      "test_host_probe.py",
+      "-v"
+    ],
+    "exit_code": 0,
+    "tests": 13,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "new_focused_tests": 5,
+    "source_pins_before_after_equal_reviewed_pins": true,
+    "coverage": "Synthetic BOOL/error/class nonpromotion; identity/context/process/method drift rejection; prerequisite and exact bounded sequence; failed raw output and sticky preservation failure; exclusive fixture and source/image/fixture retirement drift. Existing eight H01 controls also pass.",
+    "recorded_post_test_hygiene": {
+      "gradle_stop_exit": 0,
+      "scratch_removed": true,
+      "checked_live_roots": 25,
+      "checked_live_outputs_remaining": [],
+      "errors": []
+    },
+    "interpretation": "Verified existing root-produced receipt and log bytes. No reviewer rerun or live cleanup audit; these Python controls do not compile or execute the native setter."
+  },
+  "findings": [],
+  "limits": [
+    "Native compilation and actual host-origin observation remain pending CI; no native, protection, application, full or Store PASS is claimed.",
+    "Root/path/file checks bracket pathname operations; they are not atomic locks or a global absence proof.",
+    "Public fixture payload is fixed at exclusive creation; identity checks are not a claim of later payload-content verification.",
+    "Reviewer performed read-only source/evidence/AST/hash/Git inspection and wrote only this approval receipt; no project imports, tests/reruns, builds, network, dispatch, source edits or cleanup."
+  ]
+}

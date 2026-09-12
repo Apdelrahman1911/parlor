@@ -1,0 +1,107 @@
+1: //===----------------------------------------------------------------------===//
+2: //
+3: // This source file is part of the Swift open source project
+4: //
+5: // Copyright (c) 2025 Apple Inc. and the Swift project authors
+6: // Licensed under Apache License v2.0 with Runtime Library Exception
+7: //
+8: // See http://swift.org/LICENSE.txt for license information
+9: // See http://swift.org/CONTRIBUTORS.txt for the list of Swift project authors
+10: //
+11: //===----------------------------------------------------------------------===//
+12: 
+13: (
+14:     {   Type = Tool;
+15:         Identifier = com.apple.build-tools.codesign;
+16:         Name = "Code Sign";
+17:         Description = "Code-sign a framework, application, or other built target.";
+18:         ExecDescription = "Sign $(InputFileName)";
+19:         ProgressDescription = "Signing product";
+20:         ExecPath = "/usr/bin/codesign";
+21:         // codesign is currently not safe to interrupt, tracked by 20712615.
+22:         IsUnsafeToInterrupt = YES;
+23:         CommandOutputParser = (
+24:             ("()()(codesign: .+)",  emit-error),
+25:             ("()()(error: .+)",  emit-error),
+26:             ("()()(Warning: .+)",  emit-warning),
+27:             ("()()(Usage: .+)",  emit-notice),
+28:         );
+29:         EnvironmentVariables = {
+30:             CODESIGN_ALLOCATE = "codesign_allocate";
+31:         };
+32:         Options = (
+33:             {   Name = CODE_SIGN_IDENTITY;
+34:                 Type = CodeSignIdentity;
+35:                 DefaultValue = "";
+36:             },
+37:             {   Name = PROVISIONING_PROFILE;
+38:                 Type = ProvisioningProfile;
+39:                 DefaultValue = "";
+40:             },
+41:             {   Name = OTHER_CODE_SIGN_FLAGS;
+42:                 Type = StringList;
+43:                 DefaultValue = "";
+44:             },
+45:             {
+46:                 Name = "CODE_SIGN_KEYCHAIN";
+47:                 Type = string;
+48:                 DefaultValue = "";
+49:             },
+50:         );
+51:     },
+52: 
+53:     {   Type = Tool;
+54:         Identifier = com.apple.tools.product-pkg-utility;
+55:         Name = "Product Packaging Utility";
+56:         IsAbstract = Yes;       // This is an internal tool, so we keep it out of the user interface
+57:         CommandIdentifier = "create:$(OutputPath)";
+58:         CommandLine = "builtin-productPackagingUtility [inputs] [options] -o [output]";
+59:         RuleName = "ProcessProductPackaging $(InputPath) $(OutputPath)";
+60:         ExecDescription = "Process product packaging";
+61:         ProgressDescription = "Processing product packaging";
+62:         Options = (
+63:             {   Name = "RemoveFile";
+64:                 Type = Boolean;
+65:                 CommandLineFlag = "-removefile";
+66:             },
+67:             {   Name = "CodeSignEntitlements";
+68:                 Type = Boolean;
+69:                 CommandLineFlag = "-entitlements";
+70:             },
+71:             {   Name = "CodeSignResourceRules";
+72:                 Type = Boolean;
+73:                 CommandLineFlag = "-resourcerules";
+74:             },
+75:             {   Name = PROVISIONING_PROFILE_DESTINATION_PATH;
+76:                 Type = string;
+77:                 DefaultValue = "$(TARGET_BUILD_DIR)/$(CONTENTS_FOLDER_PATH)";
+78:             },
+79:             {   Name = "OutputFormat";
+80:                 Type = Enumeration;
+81:                 Values = (
+82:                     {   Value = "openstep";
+83:                         CommandLineArgs = ( "-format", "$(value)" );
+84:                     },
+85:                     {   Value = "none";
+86:                         // this is the default, and so we generate no command line flag
+87:                         CommandLineArgs = ( );
+88:                     },
+89:                     {   Value = "xml";
+90:                         CommandLineArgs = ( "-format", "$(value)" );
+91:                     },
+92:                     {   Value = "binary";
+93:                         CommandLineArgs = ( "-format", "$(value)" );
+94:                     },
+95:                 );
+96:                 DefaultValue = "none";
+97:             },
+98:         );
+99:         CommandOutputParser = (
+100:             ("()()(^[^:]+: [^:]+: No such file or directory)",  emit-error),
+101:             ("()()(^[^:]+: [^:]+: Permission denied)",  emit-error),
+102:             ("()()(^[^:]+: [^:]+: Is a directory)",  emit-error),
+103:             ("()()(error: .+)",  emit-error),
+104:             ("()()(warning: .+)", emit-warning),
+105:         );
+106:     },
+107: )

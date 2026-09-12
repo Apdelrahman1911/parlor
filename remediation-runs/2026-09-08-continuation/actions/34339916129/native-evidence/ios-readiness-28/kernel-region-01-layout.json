@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "kind": "SELECTED_IMAGE_TEXT_LAYOUT_FAILURE_DIAGNOSTIC",
+  "status": "OBSERVED_NOT_PROVENANCE",
+  "proves_provenance": false,
+  "original_failure_preserved": true,
+  "artifact": {
+    "origin": "installed-app",
+    "relative_path": "Frameworks/ComposeApp.framework/ComposeApp",
+    "kind": "compose-framework",
+    "bytes": 82428752,
+    "sha256": "f66190b75670c3387dd1001161f0beb8fb7b818694e8ba07430c22633bbeec2a",
+    "uuid": "778d39b8-c432-3c5a-b597-8e95cca2d559"
+  },
+  "selected_sample": {
+    "start": 4461772800,
+    "end_inclusive": 4504490783,
+    "observed_tool_uuid": "778d39b8-c432-3c5a-b597-8e95cca2d559"
+  },
+  "original_region_diagnostic": {
+    "requested_start": 4461772800,
+    "requested_end_exclusive": 4504490784,
+    "pri_address": 4461772800,
+    "pri_size": 42729472,
+    "pri_offset": 0,
+    "pri_protection": 5,
+    "pri_max_protection": 7,
+    "pri_flags": 2,
+    "native_structure_bytes": 1272,
+    "native_return_bytes": 1272,
+    "query_errno": 0
+  },
+  "native_layout": {
+    "uuid": "778d39b8-c432-3c5a-b597-8e95cca2d559",
+    "text_segment": {
+      "vmaddr": 0,
+      "vmsize": 42729472,
+      "fileoff": 0,
+      "filesize": 42729472,
+      "maxprot": 5,
+      "initprot": 5,
+      "nsects": 24,
+      "flags": 0
+    }
+  },
+  "native_output": {
+    "bytes": 19242,
+    "sha256": "1f115133ef9cad46cb608f24714d51a62ca6c93a7d786e55967cfd4fa2e696b0"
+  },
+  "host_page_size": {
+    "value": 16384,
+    "api": "os.sysconf(SC_PAGE_SIZE)",
+    "target_page_size_proven": false
+  },
+  "limitation": "On-disk selected ARM64 artifact load commands from one bounded otool query, not mapped-memory reads or kernel vnode corroboration. Host page size is measured, not assumed to be the target VM granularity. No interval rounding, boundary acceptance, fallback or provenance PASS is performed.",
+  "source": {
+    "commit": "52f60924a89f788aab78c826096f34a32af40292",
+    "tree": "02afb528b429eecb9c1afe58217490b07f4eb190",
+    "source_manifest_sha256": "eddd7e04b98f519fc0da26b0f1f305825409ed7c2a4e36fbf07ef7c8aa3c049c"
+  },
+  "approved_control_sha256": "342bed59c3d058976b8097e095a8b877c25507c833aab1bd48be24bce6a62769",
+  "original_failure_file": "kernel-region-01.json",
+  "original_failure_sha256": "096127c5f9aad53c95061257d05191ae2209839ac13f9a5594117be202006e08",
+  "kernel_helper_sha256": "2b5737a3b95d5b0fa9d8b1895d092835de366b54f86ee390108f48da6e614354",
+  "artifact_rehashed_before_and_after": true,
+  "helper_unchanged": true,
+  "lifetime_before_and_after_verified": true
+}

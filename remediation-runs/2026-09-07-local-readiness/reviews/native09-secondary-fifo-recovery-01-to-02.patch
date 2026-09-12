@@ -1,0 +1,80 @@
+--- native09_secondary_fifo_recovery_01.py
++++ native09_secondary_fifo_recovery_02.py
+@@ -67,7 +67,12 @@
+     text = result.stdout.decode('ascii', errors='strict').strip()
+     require(all(line.strip().isdigit() for line in text.splitlines()), 'Malformed PID query')
+     values = {int(line) for line in text.splitlines()}
+-    require((result.returncode == 0 and bool(values)) or (result.returncode == 1 and not values), 'Ambiguous ownership query')
++    # Apple lsof sets1 if ANY +D file selection was unused, even with other holders.
++    # Only this exact reviewed query gets that contract; retain every reported PID.
++    partial_lsof_selection = (arguments == ['/usr/sbin/lsof', '-nP', '-w', '-t', '+D', str(ROOT)]
++                              and result.returncode == 1 and bool(values))
++    require((result.returncode == 0 and bool(values)) or (result.returncode == 1 and not values)
++            or partial_lsof_selection, 'Ambiguous ownership query')
+     return values
+ 
+ 
+@@ -163,11 +168,11 @@
+     actual_sha = hashlib.sha256(checked_bytes(self_path, 32768)).hexdigest()
+     require(actual_sha == args.approved_script_sha256, 'Script differs from reviewed approved bytes')
+     expected = bound_plan()
+-    destination = CAMPAIGN / ('evidence/native09-secondary-fifo-recovery-' + ('execute-01' if args.execute else 'verify-01'))
++    destination = CAMPAIGN / ('evidence/native09-secondary-fifo-recovery-' + ('execute-02' if args.execute else 'verify-02'))
+     require(destination.parent.resolve(strict=True) == destination.parent, 'Redirected evidence destination')
+     destination.mkdir(mode=0o700)  # Deliberately fail if old evidence already exists.
+     receipt = dict(status='RUNNING', started_at=time.time(), script_sha256=actual_sha, plan_sha256=PLAN_SHA,
+-                   execute=args.execute, original_native09_status='FAIL', original_native09_cleanup_status='FAIL')
++                   execute=args.execute, helper_pid=os.getpid(), original_native09_status='FAIL', original_native09_cleanup_status='FAIL')
+     try:
+         with (destination / 'new-independent-claim.json').open('x') as stream:
+             json.dump([dict(path=str(path), **expected[path]) for path in (ROOT, ROOT / 'IB', *(ROOT / 'IB' / name for name in NAMES))], stream, indent=2)
+
+--- test_native09_secondary_fifo_recovery_01.py
++++ test_native09_secondary_fifo_recovery_02.py
+@@ -7,7 +7,7 @@
+ import unittest
+ from unittest.mock import patch
+ 
+-PATH = Path(__file__).with_name('native09_secondary_fifo_recovery_01.py')
++PATH = Path(__file__).with_name('native09_secondary_fifo_recovery_02.py')
+ SPEC = importlib.util.spec_from_file_location('native09_recovery', PATH)
+ recovery = importlib.util.module_from_spec(SPEC)
+ SPEC.loader.exec_module(recovery)
+@@ -165,6 +165,37 @@
+         with patch.object(recovery, 'query', return_value={os.getpid(), 99999}):
+             with self.assertRaises(RuntimeError): recovery.check_holders(recovery.ROOT)
+ 
++    def test_exact_lsof_partial_selection_keeps_all_reported_pids(self):
++        arguments = ['/usr/sbin/lsof', '-nP', '-w', '-t', '+D', str(recovery.ROOT)]
++        result = subprocess.CompletedProcess(arguments, 1, b'123\n456\n', b'')
++        with patch.object(recovery.subprocess, 'run', return_value=result):
++            self.assertEqual({123, 456}, recovery.query(arguments))
++
++    def test_lsof_partial_selection_with_only_helpers_dirfds_is_accepted(self):
++        result = subprocess.CompletedProcess(['synthetic'], 1, (str(os.getpid())+'\n').encode(), b'')
++        with patch.object(recovery.subprocess, 'run', return_value=result):
++            recovery.check_holders(recovery.ROOT)
++
++    def test_lsof_partial_selection_cannot_hide_another_holder(self):
++        other = os.getpid() + 1
++        result = subprocess.CompletedProcess(['synthetic'], 1, (str(os.getpid())+'\n'+str(other)+'\n').encode(), b'')
++        with patch.object(recovery.subprocess, 'run', return_value=result):
++            with self.assertRaisesRegex(RuntimeError, 'other holders'): recovery.check_holders(recovery.ROOT)
++
++    def test_ps_and_other_lsof_targets_keep_strict_exit_output_contract(self):
++        commands = [['/bin/ps', '-p', '41785,41768', '-o', 'pid='],
++            ['/usr/sbin/lsof', '-nP', '-w', '-t', '+D', '/unrelated-task'], ['synthetic']]
++        for command in commands:
++            with patch.object(recovery.subprocess, 'run', return_value=subprocess.CompletedProcess(command, 1, b'123\n', b'')):
++                with self.assertRaisesRegex(RuntimeError, 'Ambiguous ownership query'): recovery.query(command)
++
++    def test_exact_lsof_still_rejects_errors_stderr_malformed_or_oversized_output(self):
++        arguments = ['/usr/sbin/lsof', '-nP', '-w', '-t', '+D', str(recovery.ROOT)]
++        for code, out, err in ((2,b'123\n',b''),(-1,b'',b''),(1,b'123\n',b'error'),
++                              (1,b'not-a-pid',b''),(1,b'1\n'*20000,b''),(0,b'',b'')):
++            with patch.object(recovery.subprocess, 'run', return_value=subprocess.CompletedProcess(arguments, code, out, err)):
++                with self.assertRaises(RuntimeError): recovery.query(arguments)
++
+     def test_plan_hash_failure_never_reads_or_mutates_recovery_paths(self):
+         with patch.object(recovery, 'checked_bytes', return_value=b'{}'):
+             with self.assertRaisesRegex(RuntimeError, 'Independent plan changed'): recovery.bound_plan()

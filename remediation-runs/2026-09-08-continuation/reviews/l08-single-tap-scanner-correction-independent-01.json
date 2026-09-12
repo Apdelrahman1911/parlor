@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "kind": "INDEPENDENT_SOURCE_REVIEW_OF_L08_SCANNER_CORRECTION",
+  "recorded_at": "2026-09-08T09:51:56.377849+00:00",
+  "reviewer": "/root/l08_fixture",
+  "author": "/root/fixture_review",
+  "verdict": "APPROVED_FOR_COORDINATOR_FOCUSED_CONTROL_EXECUTION_NOT_RUNTIME_PROOF",
+  "reviewed_source": {
+    "path": "remediation-runs/2026-09-08-continuation/controls/test_single_tap_fixture_review.py",
+    "sha256": "6443de2ea249c74a945aee5513e74eedadc077a68c43089201b89e9c90695298"
+  },
+  "preserved_before": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/l08-single-tap-scanner-correction-01/test_single_tap_fixture_review.before.py",
+    "sha256": "e0300c3d339798b4224d81f0e21b4043b78eca8145c98523abdc7110c76b68aa"
+  },
+  "unchanged_swift": {
+    "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/L08StorageFunctionalUITests.swift.in",
+    "sha256": "5d81dfb0b5accc127a4f5510a23d610ba73efd2fc8b19a0ff12395912e2d0c59"
+  },
+  "failed_execution": {
+    "receipt": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-focused-controls-01/receipt.json",
+      "sha256": "32d1d5a0459b64d493b78f7c61b423c6967391eabe46026895cfe13bf642ae77"
+    },
+    "single_tap_log": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-focused-controls-01/single-tap.log",
+      "sha256": "752e376073d021f26a5c47e992c3e57cb734d2f45b51b5699924b3742d3dd53a"
+    },
+    "outer_status": "FAIL",
+    "outer_exit_code": 1,
+    "single_tap_declared_executed_methods": 13,
+    "ok": 12,
+    "errors": 1,
+    "failures": 0,
+    "skips": 0,
+    "error_method": "SingleTapFixtureContractTests.test_actual_swift_matches_independently_reviewed_contract",
+    "error": "ValueError: No hidden activation retry loop",
+    "negative_mutation_limit": "The invalid baseline could reject mutations for an unrelated reason; their prior OK labels are not reused as independent mutation witnesses."
+  },
+  "diagnosis": {
+    "classification": "SOURCE_SCANNER_FALSE_POSITIVE_NOT_SWIFT_OR_APPLICATION_FAILURE",
+    "exact_guard": "main_tokens.count(\"for\") == 1",
+    "actual_control_flow": "The unchanged helper contains one bounded for-attempt loop plus XCTWaiter.wait(for: [ready], timeout: 15). The scanner counted the external argument label for: as a second loop.",
+    "application_source_change_required": false
+  },
+  "reviewed_delta": [
+    "Exclude only a for token immediately followed by a colon from loop-keyword counting; a real for-statement cannot have a colon immediately after its keyword.",
+    "Keep exactly one loop keyword equal to for after that exclusion; additional for/while/repeat loops remain rejected and the original exact bounded loop fragment remains pinned.",
+    "Validate the unmutated source in setUp before every SingleTapFixtureContractTests method; malformed baseline rejection can no longer make a negative mutant witness appear to pass.",
+    "Add one test demonstrating the real for: argument label and requiring explicit for/while/repeat activation wrappers to fail at the exact no-hidden-loop guard."
+  ],
+  "reviewed_test_validity": {
+    "current_declared_methods": 14,
+    "mutations": "In-memory strings only; no reviewed file, simulator or application mutation.",
+    "new_mutation_target": "First executable target.tap() in the current Swift; the prior comment with the same spelling was already removed before the failed run.",
+    "explicit_error_guard": "assertRaisesRegex(ValueError, \"No hidden activation retry loop\") prevents a different earlier guard from supplying the new three loop witnesses.",
+    "limits": "This is a bounded source-token scanner, not a general Swift parser, compiler, XCTest executor, application callback test or native runtime verifier."
+  },
+  "preservation": {
+    "before_hash": "e0300c3d339798b4224d81f0e21b4043b78eca8145c98523abdc7110c76b68aa",
+    "failed_receipt_and_logs": "Original files were read only and retain their FAIL/error outcomes.",
+    "prior_crossreview_limit": "The reviewer previously approved the controls by reading and missed the for: false positive. Actual execution exposed it; this correction does not rewrite that failed execution."
+  },
+  "failed_cycle_cleanup": {
+    "stop_exit_code": 0,
+    "source_changed_during_cycle": false,
+    "runner_changed_during_cycle": false,
+    "cleanup_errors": [],
+    "remaining_outputs": [],
+    "workers": {
+      "terminated_owned_workers": [],
+      "remaining_owned_workers": []
+    },
+    "artifact_workers": {
+      "terminated_owned_workers": [],
+      "remaining_owned_workers": []
+    }
+  },
+  "reviewer_execution": {
+    "performed": "Read exact retained log/receipt, full control source, exact before/current diff and current Swift source/hashes; wrote only this new review record.",
+    "tests_or_builds_executed": false,
+    "runtime_executed": false,
+    "workers_started": false,
+    "new_control_execution": "Pending coordinator-only full14method suite; neither source review nor previous12 OK labels are application-runtime proof."
+  }
+}

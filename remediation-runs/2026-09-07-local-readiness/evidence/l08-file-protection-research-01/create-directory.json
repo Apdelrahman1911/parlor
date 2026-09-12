@@ -1,0 +1,501 @@
+{
+  "abstract": [
+    {
+      "text": "Creates a directory with given attributes at the specified path.",
+      "type": "text"
+    }
+  ],
+  "accessed_at_utc": "2026-09-07T20:24:55.658412+00:00",
+  "bytes": 39611,
+  "canonical_url": "doc://com.apple.foundation/documentation/Foundation/FileManager/createDirectory(atPath:withIntermediateDirectories:attributes:)",
+  "final_url": "https://developer.apple.com/tutorials/data/documentation/foundation/filemanager/createdirectory(atpath:withintermediatedirectories:attributes:).json",
+  "name": "create-directory",
+  "platforms": [
+    {
+      "beta": false,
+      "deprecated": false,
+      "introducedAt": "2.0",
+      "name": "iOS",
+      "unavailable": false
+    },
+    {
+      "beta": false,
+      "deprecated": false,
+      "introducedAt": "2.0",
+      "name": "iPadOS",
+      "unavailable": false
+    },
+    {
+      "beta": false,
+      "deprecated": false,
+      "introducedAt": "13.1",
+      "name": "Mac Catalyst",
+      "unavailable": false
+    },
+    {
+      "beta": false,
+      "deprecated": false,
+      "introducedAt": "10.5",
+      "name": "macOS",
+      "unavailable": false
+    },
+    {
+      "beta": false,
+      "deprecated": false,
+      "introducedAt": "9.0",
+      "name": "tvOS",
+      "unavailable": false
+    },
+    {
+      "beta": false,
+      "deprecated": false,
+      "introducedAt": "1.0",
+      "name": "visionOS",
+      "unavailable": false
+    },
+    {
+      "beta": false,
+      "deprecated": false,
+      "introducedAt": "2.0",
+      "name": "watchOS",
+      "unavailable": false
+    }
+  ],
+  "primaryContentSections": [
+    {
+      "declarations": [
+        {
+          "languages": [
+            "swift"
+          ],
+          "platforms": [
+            "iOS",
+            "iPadOS",
+            "Mac Catalyst",
+            "macOS",
+            "tvOS",
+            "visionOS",
+            "watchOS"
+          ],
+          "tokens": [
+            {
+              "kind": "keyword",
+              "text": "func"
+            },
+            {
+              "kind": "text",
+              "text": " "
+            },
+            {
+              "kind": "identifier",
+              "text": "createDirectory"
+            },
+            {
+              "kind": "text",
+              "text": "("
+            },
+            {
+              "kind": "externalParam",
+              "text": "atPath"
+            },
+            {
+              "kind": "text",
+              "text": " "
+            },
+            {
+              "kind": "internalParam",
+              "text": "path"
+            },
+            {
+              "kind": "text",
+              "text": ": "
+            },
+            {
+              "identifier": "doc://com.apple.documentation/documentation/Swift/String",
+              "kind": "typeIdentifier",
+              "preciseIdentifier": "s:SS",
+              "text": "String"
+            },
+            {
+              "kind": "text",
+              "text": ", "
+            },
+            {
+              "kind": "externalParam",
+              "text": "withIntermediateDirectories"
+            },
+            {
+              "kind": "text",
+              "text": " "
+            },
+            {
+              "kind": "internalParam",
+              "text": "createIntermediates"
+            },
+            {
+              "kind": "text",
+              "text": ": "
+            },
+            {
+              "identifier": "doc://com.apple.documentation/documentation/Swift/Bool",
+              "kind": "typeIdentifier",
+              "preciseIdentifier": "s:Sb",
+              "text": "Bool"
+            },
+            {
+              "kind": "text",
+              "text": ", "
+            },
+            {
+              "kind": "externalParam",
+              "text": "attributes"
+            },
+            {
+              "kind": "text",
+              "text": ": ["
+            },
+            {
+              "identifier": "doc://com.apple.foundation/documentation/Foundation/FileAttributeKey",
+              "kind": "typeIdentifier",
+              "preciseIdentifier": "c:@T@NSFileAttributeKey",
+              "text": "FileAttributeKey"
+            },
+            {
+              "kind": "text",
+              "text": " : "
+            },
+            {
+              "kind": "keyword",
+              "text": "Any"
+            },
+            {
+              "kind": "text",
+              "text": "]? = nil) "
+            },
+            {
+              "kind": "keyword",
+              "text": "throws"
+            }
+          ]
+        }
+      ],
+      "kind": "declarations"
+    },
+    {
+      "kind": "parameters",
+      "parameters": [
+        {
+          "content": [
+            {
+              "inlineContent": [
+                {
+                  "text": "A path string identifying the directory to create. You may specify a full path or a path that is relative to the current working directory. This parameter must not be ",
+                  "type": "text"
+                },
+                {
+                  "code": "nil",
+                  "type": "codeVoice"
+                },
+                {
+                  "text": ".",
+                  "type": "text"
+                }
+              ],
+              "type": "paragraph"
+            }
+          ],
+          "name": "path"
+        },
+        {
+          "content": [
+            {
+              "inlineContent": [
+                {
+                  "text": "If ",
+                  "type": "text"
+                },
+                {
+                  "identifier": "doc://com.apple.documentation/documentation/Swift/true",
+                  "isActive": true,
+                  "type": "reference"
+                },
+                {
+                  "text": ", this method creates any nonexistent parent directories as part of creating the directory in ",
+                  "type": "text"
+                },
+                {
+                  "code": "path",
+                  "type": "codeVoice"
+                },
+                {
+                  "text": ". If ",
+                  "type": "text"
+                },
+                {
+                  "identifier": "doc://com.apple.documentation/documentation/Swift/false",
+                  "isActive": true,
+                  "type": "reference"
+                },
+                {
+                  "text": ", this method fails if any of the intermediate parent directories does not exist. This method also fails if any of the intermediate path elements corresponds to a file and not a directory.",
+                  "type": "text"
+                }
+              ],
+              "type": "paragraph"
+            }
+          ],
+          "name": "createIntermediates"
+        },
+        {
+          "content": [
+            {
+              "inlineContent": [
+                {
+                  "text": "The file attributes for the new directory and any newly created intermediate directories. You can set the owner and group numbers, file permissions, and modification date. If you specify ",
+                  "type": "text"
+                },
+                {
+                  "code": "nil",
+                  "type": "codeVoice"
+                },
+                {
+                  "text": " for this parameter or omit a particular value, one or more default values are used as described in the discussion. For a list of keys you can include in this dictionary, see Supporting Types. Some of the keys, such as ",
+                  "type": "text"
+                },
+                {
+                  "identifier": "doc://com.apple.foundation/documentation/Foundation/FileAttributeKey/hfsCreatorCode",
+                  "isActive": true,
+                  "type": "reference"
+                },
+                {
+                  "text": " and ",
+                  "type": "text"
+                },
+                {
+                  "identifier": "doc://com.apple.foundation/documentation/Foundation/FileAttributeKey/hfsTypeCode",
+                  "isActive": true,
+                  "type": "reference"
+                },
+                {
+                  "text": ", do not apply to directories.",
+                  "type": "text"
+                }
+              ],
+              "type": "paragraph"
+            }
+          ],
+          "name": "attributes"
+        }
+      ]
+    },
+    {
+      "content": [
+        {
+          "anchor": "Discussion",
+          "level": 2,
+          "text": "Discussion",
+          "type": "heading"
+        },
+        {
+          "inlineContent": [
+            {
+              "text": "If you specify ",
+              "type": "text"
+            },
+            {
+              "code": "nil",
+              "type": "codeVoice"
+            },
+            {
+              "text": " for the ",
+              "type": "text"
+            },
+            {
+              "code": "attributes",
+              "type": "codeVoice"
+            },
+            {
+              "text": " parameter, this method uses a default set of values for the owner, group, and permissions of any newly created directories in the path. Similarly, if you omit a specific attribute, the default value is used. The default values for newly created directories are as follows:",
+              "type": "text"
+            }
+          ],
+          "type": "paragraph"
+        },
+        {
+          "items": [
+            {
+              "content": [
+                {
+                  "inlineContent": [
+                    {
+                      "text": "Permissions are set according to the umask of the current process. For more information, see umask.",
+                      "type": "text"
+                    }
+                  ],
+                  "type": "paragraph"
+                }
+              ]
+            },
+            {
+              "content": [
+                {
+                  "inlineContent": [
+                    {
+                      "text": "The owner ID is set to the effective user ID of the process.",
+                      "type": "text"
+                    }
+                  ],
+                  "type": "paragraph"
+                }
+              ]
+            },
+            {
+              "content": [
+                {
+                  "inlineContent": [
+                    {
+                      "text": "The group ID is set to that of the parent directory.",
+                      "type": "text"
+                    }
+                  ],
+                  "type": "paragraph"
+                }
+              ]
+            }
+          ],
+          "type": "unorderedList"
+        },
+        {
+          "content": [
+            {
+              "inlineContent": [
+                {
+                  "text": "",
+                  "type": "text"
+                },
+                {
+                  "text": " ",
+                  "type": "text"
+                },
+                {
+                  "text": "In Swift, this method returns ",
+                  "type": "text"
+                },
+                {
+                  "code": "Void",
+                  "type": "codeVoice"
+                },
+                {
+                  "text": " and is marked with the ",
+                  "type": "text"
+                },
+                {
+                  "code": "throws",
+                  "type": "codeVoice"
+                },
+                {
+                  "text": " keyword to indicate that it throws an error in cases of failure.",
+                  "type": "text"
+                }
+              ],
+              "type": "paragraph"
+            },
+            {
+              "inlineContent": [
+                {
+                  "text": "You call this method in a ",
+                  "type": "text"
+                },
+                {
+                  "code": "try",
+                  "type": "codeVoice"
+                },
+                {
+                  "text": " expression and handle any errors in the ",
+                  "type": "text"
+                },
+                {
+                  "code": "catch",
+                  "type": "codeVoice"
+                },
+                {
+                  "text": " clauses of a ",
+                  "type": "text"
+                },
+                {
+                  "code": "do",
+                  "type": "codeVoice"
+                },
+                {
+                  "text": " statement, as described in ",
+                  "type": "text"
+                },
+                {
+                  "identifier": "https://docs.swift.org/swift-book/LanguageGuide/ErrorHandling.html",
+                  "isActive": true,
+                  "type": "reference"
+                },
+                {
+                  "text": " in ",
+                  "type": "text"
+                },
+                {
+                  "identifier": "https://docs.swift.org/swift-book/",
+                  "isActive": true,
+                  "type": "reference"
+                },
+                {
+                  "text": " and ",
+                  "type": "text"
+                },
+                {
+                  "code": "About Imported Cocoa Error Parameters",
+                  "type": "codeVoice"
+                },
+                {
+                  "text": ".",
+                  "type": "text"
+                }
+              ],
+              "type": "paragraph"
+            }
+          ],
+          "name": "Handling Errors in Swift",
+          "style": "note",
+          "type": "aside"
+        }
+      ],
+      "kind": "content"
+    }
+  ],
+  "references": {
+    "https://docs.swift.org/swift-book/": {
+      "identifier": "https://docs.swift.org/swift-book/",
+      "title": "The Swift Programming Language",
+      "titleInlineContent": [
+        {
+          "text": "The Swift Programming Language",
+          "type": "text"
+        }
+      ],
+      "type": "link",
+      "url": "https://docs.swift.org/swift-book/"
+    },
+    "https://docs.swift.org/swift-book/LanguageGuide/ErrorHandling.html": {
+      "identifier": "https://docs.swift.org/swift-book/LanguageGuide/ErrorHandling.html",
+      "title": "Error Handling",
+      "titleInlineContent": [
+        {
+          "text": "Error Handling",
+          "type": "text"
+        }
+      ],
+      "type": "link",
+      "url": "https://docs.swift.org/swift-book/LanguageGuide/ErrorHandling.html"
+    }
+  },
+  "request_url": "https://developer.apple.com/tutorials/data/documentation/foundation/filemanager/createdirectory(atpath:withintermediatedirectories:attributes:).json",
+  "response_sha256": "ec47b77c3ff9fc96bba8129b239ff6b379c002b2f5c0ab4cfe7c52873a8d3c4c",
+  "status": 200,
+  "title": "createDirectory(atPath:withIntermediateDirectories:attributes:)"
+}

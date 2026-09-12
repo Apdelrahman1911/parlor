@@ -1,0 +1,22 @@
+--- review12-before/TestingStoryRemainingChronologyTest.kt
++++ review12-supplement/TestingStoryRemainingChronologyTest.kt
+@@ -68,8 +68,17 @@
+         assertTrue("كان قد انتظر دقيقتين كاملتين" in case.revealNarratives.getValue("captain-adel"))
+         assertTrue("من 8:40 إلى 9:10" in captain.innocentBrief.alibi)
+         // Other characters' guilty-only timelines are mutually exclusive variants.
+-        case.characters.filter { it.id != captain.id }.forEach { character ->
+-            assertTrue(character.guiltyBrief.timeline.any { it.time == "9:15 مساءً" }, character.id)
++        val alternateShouts = mapOf(
++            "madame-magda" to "صرخة الكابتن عادل من الشرفة.",
++            "tarek-aliskandarany" to "صرخة الكابتن عادل من الشرفة.",
++            "nour-elbatrony" to "صرخة عادل من الشرفة.",
++            "ustaz-wagdy" to "صرخة عادل. ركضتَ مع الباقين.",
++            "hagga-fatma" to "صراخ. ركضتِ مع الباقين كأم تخسر ابناً.",
++        )
++        assertEquals(alternateShouts.keys, case.characters.filter { it.id != captain.id }.map { it.id }.toSet())
++        alternateShouts.forEach { (id, shout) ->
++            val alternate = case.characters.single { it.id == id }.guiltyBrief.timeline
++            assertEquals(shout, alternate.single { it.time == "9:15 مساءً" }.action, id)
+         }
+     }
+ }

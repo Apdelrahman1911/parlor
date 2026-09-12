@@ -1,0 +1,94 @@
+{
+  "schema": 1,
+  "id": "CONTENT-VIVIENNE-FIREPLACE",
+  "created_at": "2026-09-07T03:51:40.769448+00:00",
+  "source_commit": "85ded00435b4f8327ce32d3b7f5062c4438ae174",
+  "finder": "/root",
+  "independent_validator": "/root/release_fix_review",
+  "classification": "CONFIRMED DEFECT",
+  "scope": "Authored evidence location mismatch, source-level confirmation; no new runtime reproduction executed.",
+  "severity": "Medium",
+  "finding": "Selected Vivienne guilty dossier/reveal establish the incriminating burning in the library, whereas selected killer-pointing clue275 locates the half-burned document in the study.",
+  "proof": [
+    "Six-player current bundle assigns every character; seeded selection can make Vivienne the sole killer. Only her guilty dossier is selected for that seat.",
+    "Her timeline122 burns one incriminating page after settling into the library. Reveal375 explicitly says the library fireplace and the one paper that would have ended her.",
+    "Clue278 independently reports the recently used library fireplace. Killer-pointing clue275 instead describes a half-burned signed document in the study fireplace; finalStrong355 refers to the burned document with Vivienne marginal notes.",
+    "WhodunitCluePolicy79/83 includes selected Vivienne killerPointing clues in opening/middle draws and66 includes her finalStrong clues at final round. There is no platform/mode-specific text rewrite or field distinguishing an additional burned page in another room.",
+    "This compares one jointly applicable guilty branch and its evidence trail, not mutually exclusive killer timelines or a player fakeAlibi."
+  ],
+  "counter_evidence_considered": [
+    "The public study and library are distinct named rooms throughout the same story; method117 routes through study, later library burning122.",
+    "Players may lie about alibis, but candidate text is authored killer-pointing evidence plus own method/timeline and final account, not the proposed lie.",
+    "A second paper or moved ashes could be invented to explain two locations, but no relevant guilty action or authored evidence introduces it. Such a fix would expand story rather than correct this drift.",
+    "The exact culprit seed and joint clue draw were not newly executed; no runtime PASS claimed."
+  ],
+  "recommended_minimum_fix": "Change only kp-vivienne-1 location from study fireplace to library fireplace; preserve clue ID, order, other text, timeline, motives and false alibi.",
+  "proposed_tests": [
+    "Real-resource chronology assertion links kp-vivienne-1, timeline burning, kp-vivienne-4 and final reveal to library, while preserving guilty fakeAlibi.",
+    "Run all7-story84-mode/killer deterministic trace + strict loaded-case/codec recovery once extended, keeping historical four-digest compatibility tests separate.",
+    "Content version/digest binding: new prose must not resume earlier same-session content silently; retain old saves until explicit discard."
+  ],
+  "refs": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/composeResources/files/cases/last-dinner.json",
+      "sha256": "f4c5ff253a82220f937328de09161d09110b05a98eb6bb012934a80f60a5b96d",
+      "reviewed_ranges": [
+        [
+          102,
+          136
+        ],
+        [
+          274,
+          278
+        ],
+        [
+          354,
+          356
+        ],
+        [
+          375,
+          375
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/reducer/WhodunitReducer.kt",
+      "sha256": "40db7e4fab766f77d893c7001e57e3395fd50112399937d39be44632ff6456c0",
+      "reviewed_ranges": [
+        [
+          147,
+          199
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/rules/WhodunitCluePolicy.kt",
+      "sha256": "e57491c3df9260254c1d80c9be372789775c1381c63bd9c46a0bd17420c7657f",
+      "reviewed_ranges": [
+        [
+          17,
+          87
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/components/DossierCard.kt",
+      "sha256": "44b266b675de9da122130ed50e10de7d17b104c066147de706b8a756e07a60ee",
+      "reviewed_ranges": [
+        [
+          76,
+          93
+        ],
+        [
+          147,
+          163
+        ],
+        [
+          243,
+          267
+        ]
+      ]
+    }
+  ],
+  "unauthorized_actions": "None; no content edits, build execution, Git mutation, Store operations, credentials, or device operations."
+}

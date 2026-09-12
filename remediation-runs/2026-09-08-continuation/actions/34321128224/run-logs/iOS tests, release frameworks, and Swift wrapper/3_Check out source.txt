@@ -1,0 +1,191 @@
+﻿2026-09-09T06:53:28.5069090Z ##[group]Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+2026-09-09T06:53:28.5070240Z with:
+2026-09-09T06:53:28.5070850Z   fetch-depth: 0
+2026-09-09T06:53:28.5071530Z   persist-credentials: false
+2026-09-09T06:53:28.5072340Z   repository: Apdelrahman1911/parlor
+2026-09-09T06:53:28.5078610Z   token: ***
+2026-09-09T06:53:28.5079510Z   ssh-strict: true
+2026-09-09T06:53:28.5080120Z   ssh-user: git
+2026-09-09T06:53:28.5080700Z   clean: true
+2026-09-09T06:53:28.5081330Z   sparse-checkout-cone-mode: true
+2026-09-09T06:53:28.5082070Z   fetch-tags: false
+2026-09-09T06:53:28.5082700Z   show-progress: true
+2026-09-09T06:53:28.5083330Z   lfs: false
+2026-09-09T06:53:28.5083890Z   submodules: false
+2026-09-09T06:53:28.5084530Z   set-safe-directory: true
+2026-09-09T06:53:28.5085260Z   allow-unsafe-pr-checkout: false
+2026-09-09T06:53:28.5086000Z env:
+2026-09-09T06:53:28.5086960Z   GRADLE_OPTS: -Dorg.gradle.project.kotlin.compiler.execution.strategy=in-process
+2026-09-09T06:53:28.5088360Z   DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
+2026-09-09T06:53:28.5090520Z   PARLOR_NATIVE_JOB_CLOCK: {"clock":"CLOCK_MONOTONIC_RAW","start_ns":54903606208,"run_id":34321128224,"run_attempt":1,"job":"ios","head_sha":"0303a76771794c52ea96a7d7f47eb689f5b236ba"}
+2026-09-09T06:53:28.5092440Z ##[endgroup]
+2026-09-09T06:53:28.7723210Z Syncing repository: Apdelrahman1911/parlor
+2026-09-09T06:53:28.7725300Z ##[group]Getting Git version info
+2026-09-09T06:53:28.7726330Z Working directory is '/Users/runner/work/parlor/parlor'
+2026-09-09T06:53:28.7727830Z [command]/opt/homebrew/bin/git version
+2026-09-09T06:53:28.7905430Z git version 2.55.0
+2026-09-09T06:53:28.7921890Z ##[endgroup]
+2026-09-09T06:53:28.7927560Z Copying '/Users/runner/.gitconfig' to '/Users/runner/work/_temp/69bbe817-d555-4e37-a7f1-26720fb73496/.gitconfig'
+2026-09-09T06:53:28.7930050Z Temporarily overriding HOME='/Users/runner/work/_temp/69bbe817-d555-4e37-a7f1-26720fb73496' before making global git config changes
+2026-09-09T06:53:28.7932170Z Adding repository directory to the temporary git global config as a safe directory
+2026-09-09T06:53:28.7934010Z [command]/opt/homebrew/bin/git config --global --add safe.directory /Users/runner/work/parlor/parlor
+2026-09-09T06:53:28.8019610Z Deleting the contents of '/Users/runner/work/parlor/parlor'
+2026-09-09T06:53:28.8021790Z ##[group]Determining repository object format
+2026-09-09T06:53:28.8023270Z ##[endgroup]
+2026-09-09T06:53:28.8024510Z ##[group]Initializing the repository
+2026-09-09T06:53:28.8026230Z [command]/opt/homebrew/bin/git init /Users/runner/work/parlor/parlor
+2026-09-09T06:53:28.8209070Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-09-09T06:53:28.8211010Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-09-09T06:53:28.8212710Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-09-09T06:53:28.8214070Z hint: call:
+2026-09-09T06:53:28.8215690Z hint:
+2026-09-09T06:53:28.8216680Z hint: 	git config --global init.defaultBranch <name>
+2026-09-09T06:53:28.8219160Z hint:
+2026-09-09T06:53:28.8220720Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-09-09T06:53:28.8222260Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-09-09T06:53:28.8224320Z hint:
+2026-09-09T06:53:28.8225260Z hint: 	git branch -m <name>
+2026-09-09T06:53:28.8226140Z hint:
+2026-09-09T06:53:28.8227320Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-09-09T06:53:28.8229450Z Initialized empty Git repository in /Users/runner/work/parlor/parlor/.git/
+2026-09-09T06:53:28.8233740Z [command]/opt/homebrew/bin/git remote add origin https://github.com/Apdelrahman1911/parlor
+2026-09-09T06:53:28.8283990Z ##[endgroup]
+2026-09-09T06:53:28.8285160Z ##[group]Disabling automatic garbage collection
+2026-09-09T06:53:28.8286370Z [command]/opt/homebrew/bin/git config --local gc.auto 0
+2026-09-09T06:53:28.8336250Z ##[endgroup]
+2026-09-09T06:53:28.8337350Z ##[group]Setting up auth
+2026-09-09T06:53:28.8339110Z Removing SSH command configuration
+2026-09-09T06:53:28.8340450Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-09-09T06:53:28.8388820Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-09-09T06:53:28.9084060Z Removing HTTP extra header
+2026-09-09T06:53:28.9087490Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-09-09T06:53:28.9148050Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-09-09T06:53:28.9728830Z Removing includeIf entries pointing to credentials config files
+2026-09-09T06:53:28.9731620Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-09-09T06:53:28.9779530Z [command]/opt/homebrew/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-09-09T06:53:29.0645720Z [command]/opt/homebrew/bin/git config --file /Users/runner/work/_temp/git-credentials-f3d1b29a-3e08-459e-a70e-59794c1319e1.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-09-09T06:53:29.0653360Z [command]/opt/homebrew/bin/git config --local includeIf.gitdir:/Users/runner/work/parlor/parlor/.git.path /Users/runner/work/_temp/git-credentials-f3d1b29a-3e08-459e-a70e-59794c1319e1.config
+2026-09-09T06:53:29.0671030Z [command]/opt/homebrew/bin/git config --local includeIf.gitdir:/Users/runner/work/parlor/parlor/.git/worktrees/*.path /Users/runner/work/_temp/git-credentials-f3d1b29a-3e08-459e-a70e-59794c1319e1.config
+2026-09-09T06:53:29.0720720Z [command]/opt/homebrew/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-f3d1b29a-3e08-459e-a70e-59794c1319e1.config
+2026-09-09T06:53:29.0770800Z [command]/opt/homebrew/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-f3d1b29a-3e08-459e-a70e-59794c1319e1.config
+2026-09-09T06:53:29.0814630Z ##[endgroup]
+2026-09-09T06:53:29.0815780Z ##[group]Fetching the repository
+2026-09-09T06:53:29.0819840Z [command]/opt/homebrew/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules origin +refs/heads/*:refs/remotes/origin/* +refs/tags/*:refs/tags/*
+2026-09-09T06:53:33.9011240Z From https://github.com/Apdelrahman1911/parlor
+2026-09-09T06:53:33.9012010Z  * [new branch]        codex/parlor-fr-remediation -> origin/codex/parlor-fr-remediation
+2026-09-09T06:53:33.9012730Z  * [new branch]        codex/parlor-independent-review-9cd4040 -> origin/codex/parlor-independent-review-9cd4040
+2026-09-09T06:53:33.9013640Z  * [new branch]        dependabot/github_actions/ci-actions-6bc1927ba3 -> origin/dependabot/github_actions/ci-actions-6bc1927ba3
+2026-09-09T06:53:33.9014340Z  * [new branch]        fix/issue-103 -> origin/fix/issue-103
+2026-09-09T06:53:33.9014820Z  * [new branch]        fix/issue-72  -> origin/fix/issue-72
+2026-09-09T06:53:33.9015280Z  * [new branch]        fix/issue-73  -> origin/fix/issue-73
+2026-09-09T06:53:33.9015920Z  * [new branch]        fix/local-readiness-2026-09-07 -> origin/fix/local-readiness-2026-09-07
+2026-09-09T06:53:33.9016620Z  * [new branch]        mafia/module-and-platform-updates -> origin/mafia/module-and-platform-updates
+2026-09-09T06:53:33.9017130Z  * [new branch]        main          -> origin/main
+2026-09-09T06:53:33.9017530Z  * [new branch]        release       -> origin/release
+2026-09-09T06:53:33.9017890Z  * [new branch]        testing       -> origin/testing
+2026-09-09T06:53:33.9018360Z  * [new branch]        whodunit/round-config-and-clue-pool -> origin/whodunit/round-config-and-clue-pool
+2026-09-09T06:53:33.9022920Z [command]/opt/homebrew/bin/git branch --list --remote origin/fix/local-readiness-2026-09-07
+2026-09-09T06:53:33.9091330Z   origin/fix/local-readiness-2026-09-07
+2026-09-09T06:53:33.9097780Z [command]/opt/homebrew/bin/git rev-parse refs/remotes/origin/fix/local-readiness-2026-09-07
+2026-09-09T06:53:33.9147080Z 0303a76771794c52ea96a7d7f47eb689f5b236ba
+2026-09-09T06:53:33.9164250Z ##[endgroup]
+2026-09-09T06:53:33.9164850Z ##[group]Determining the checkout info
+2026-09-09T06:53:33.9165170Z ##[endgroup]
+2026-09-09T06:53:33.9165400Z [command]/opt/homebrew/bin/git sparse-checkout disable
+2026-09-09T06:53:33.9229520Z [command]/opt/homebrew/bin/git config --local --unset-all extensions.worktreeConfig
+2026-09-09T06:53:33.9282030Z ##[group]Checking out the ref
+2026-09-09T06:53:33.9285200Z [command]/opt/homebrew/bin/git checkout --progress --force -B fix/local-readiness-2026-09-07 refs/remotes/origin/fix/local-readiness-2026-09-07
+2026-09-09T06:53:35.0283380Z Updating files:  42% (7688/17948)
+2026-09-09T06:53:35.0661620Z Updating files:  43% (7718/17948)
+2026-09-09T06:53:35.0931920Z Updating files:  44% (7898/17948)
+2026-09-09T06:53:35.1181990Z Updating files:  45% (8077/17948)
+2026-09-09T06:53:35.1352200Z Updating files:  46% (8257/17948)
+2026-09-09T06:53:35.1505880Z Updating files:  47% (8436/17948)
+2026-09-09T06:53:35.1827450Z Updating files:  48% (8616/17948)
+2026-09-09T06:53:35.2018910Z Updating files:  49% (8795/17948)
+2026-09-09T06:53:35.2177280Z Updating files:  50% (8974/17948)
+2026-09-09T06:53:35.2391550Z Updating files:  51% (9154/17948)
+2026-09-09T06:53:35.2540610Z Updating files:  52% (9333/17948)
+2026-09-09T06:53:35.2750000Z Updating files:  53% (9513/17948)
+2026-09-09T06:53:35.2905680Z Updating files:  54% (9692/17948)
+2026-09-09T06:53:35.3063130Z Updating files:  55% (9872/17948)
+2026-09-09T06:53:35.3244860Z Updating files:  56% (10051/17948)
+2026-09-09T06:53:35.3385530Z Updating files:  57% (10231/17948)
+2026-09-09T06:53:35.3536540Z Updating files:  58% (10410/17948)
+2026-09-09T06:53:35.3706540Z Updating files:  59% (10590/17948)
+2026-09-09T06:53:35.3896830Z Updating files:  60% (10769/17948)
+2026-09-09T06:53:35.4071800Z Updating files:  61% (10949/17948)
+2026-09-09T06:53:35.4274750Z Updating files:  62% (11128/17948)
+2026-09-09T06:53:35.4505940Z Updating files:  63% (11308/17948)
+2026-09-09T06:53:35.5436770Z Updating files:  64% (11487/17948)
+2026-09-09T06:53:35.5618680Z Updating files:  65% (11667/17948)
+2026-09-09T06:53:35.5793930Z Updating files:  66% (11846/17948)
+2026-09-09T06:53:35.5959090Z Updating files:  67% (12026/17948)
+2026-09-09T06:53:35.6121460Z Updating files:  68% (12205/17948)
+2026-09-09T06:53:35.6279300Z Updating files:  69% (12385/17948)
+2026-09-09T06:53:35.6447880Z Updating files:  70% (12564/17948)
+2026-09-09T06:53:35.6704600Z Updating files:  71% (12744/17948)
+2026-09-09T06:53:35.6929930Z Updating files:  72% (12923/17948)
+2026-09-09T06:53:35.7173920Z Updating files:  73% (13103/17948)
+2026-09-09T06:53:35.7396130Z Updating files:  74% (13282/17948)
+2026-09-09T06:53:35.7616560Z Updating files:  75% (13461/17948)
+2026-09-09T06:53:35.7899040Z Updating files:  76% (13641/17948)
+2026-09-09T06:53:35.8068320Z Updating files:  77% (13820/17948)
+2026-09-09T06:53:35.8274780Z Updating files:  78% (14000/17948)
+2026-09-09T06:53:35.8529980Z Updating files:  79% (14179/17948)
+2026-09-09T06:53:35.8776870Z Updating files:  80% (14359/17948)
+2026-09-09T06:53:35.8976520Z Updating files:  81% (14538/17948)
+2026-09-09T06:53:35.9145850Z Updating files:  82% (14718/17948)
+2026-09-09T06:53:35.9305800Z Updating files:  83% (14897/17948)
+2026-09-09T06:53:35.9473640Z Updating files:  84% (15077/17948)
+2026-09-09T06:53:35.9520320Z Updating files:  85% (15256/17948)
+2026-09-09T06:53:35.9643820Z Updating files:  85% (15310/17948)
+2026-09-09T06:53:35.9818060Z Updating files:  86% (15436/17948)
+2026-09-09T06:53:36.0034890Z Updating files:  87% (15615/17948)
+2026-09-09T06:53:36.0356060Z Updating files:  88% (15795/17948)
+2026-09-09T06:53:36.0585730Z Updating files:  89% (15974/17948)
+2026-09-09T06:53:36.0842240Z Updating files:  90% (16154/17948)
+2026-09-09T06:53:36.1112680Z Updating files:  91% (16333/17948)
+2026-09-09T06:53:36.1291060Z Updating files:  92% (16513/17948)
+2026-09-09T06:53:36.1578810Z Updating files:  93% (16692/17948)
+2026-09-09T06:53:36.1879960Z Updating files:  94% (16872/17948)
+2026-09-09T06:53:36.2060600Z Updating files:  95% (17051/17948)
+2026-09-09T06:53:36.2307290Z Updating files:  96% (17231/17948)
+2026-09-09T06:53:36.2924010Z Updating files:  97% (17410/17948)
+2026-09-09T06:53:36.3191380Z Updating files:  98% (17590/17948)
+2026-09-09T06:53:36.3425110Z Updating files:  99% (17769/17948)
+2026-09-09T06:53:36.3425590Z Updating files: 100% (17948/17948)
+2026-09-09T06:53:36.3425910Z Updating files: 100% (17948/17948), done.
+2026-09-09T06:53:36.3690030Z Switched to a new branch 'fix/local-readiness-2026-09-07'
+2026-09-09T06:53:36.3698710Z branch 'fix/local-readiness-2026-09-07' set up to track 'origin/fix/local-readiness-2026-09-07'.
+2026-09-09T06:53:36.3732880Z ##[endgroup]
+2026-09-09T06:53:36.3843870Z [command]/opt/homebrew/bin/git log -1 --format=%H
+2026-09-09T06:53:36.3907720Z 0303a76771794c52ea96a7d7f47eb689f5b236ba
+2026-09-09T06:53:36.3914590Z ##[group]Removing auth
+2026-09-09T06:53:36.3914790Z Removing SSH command configuration
+2026-09-09T06:53:36.3917700Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-09-09T06:53:36.3970790Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-09-09T06:53:36.4654170Z Removing HTTP extra header
+2026-09-09T06:53:36.4656870Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-09-09T06:53:36.4708410Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-09-09T06:53:36.5349700Z Removing includeIf entries pointing to credentials config files
+2026-09-09T06:53:36.5351720Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-09-09T06:53:36.5399580Z includeif.gitdir:/Users/runner/work/parlor/parlor/.git.path
+2026-09-09T06:53:36.5399970Z includeif.gitdir:/Users/runner/work/parlor/parlor/.git/worktrees/*.path
+2026-09-09T06:53:36.5400320Z includeif.gitdir:/github/workspace/.git.path
+2026-09-09T06:53:36.5400670Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-09-09T06:53:36.5405340Z [command]/opt/homebrew/bin/git config --local --get-all includeif.gitdir:/Users/runner/work/parlor/parlor/.git.path
+2026-09-09T06:53:36.5474490Z /Users/runner/work/_temp/git-credentials-f3d1b29a-3e08-459e-a70e-59794c1319e1.config
+2026-09-09T06:53:36.5489760Z [command]/opt/homebrew/bin/git config --local --unset includeif.gitdir:/Users/runner/work/parlor/parlor/.git.path \/Users\/runner\/work\/_temp\/git\-credentials\-f3d1b29a\-3e08\-459e\-a70e\-59794c1319e1\.config
+2026-09-09T06:53:36.5545400Z [command]/opt/homebrew/bin/git config --local --get-all includeif.gitdir:/Users/runner/work/parlor/parlor/.git/worktrees/*.path
+2026-09-09T06:53:36.5591450Z /Users/runner/work/_temp/git-credentials-f3d1b29a-3e08-459e-a70e-59794c1319e1.config
+2026-09-09T06:53:36.5596740Z [command]/opt/homebrew/bin/git config --local --unset includeif.gitdir:/Users/runner/work/parlor/parlor/.git/worktrees/*.path \/Users\/runner\/work\/_temp\/git\-credentials\-f3d1b29a\-3e08\-459e\-a70e\-59794c1319e1\.config
+2026-09-09T06:53:36.5653220Z [command]/opt/homebrew/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+2026-09-09T06:53:36.5699980Z /github/runner_temp/git-credentials-f3d1b29a-3e08-459e-a70e-59794c1319e1.config
+2026-09-09T06:53:36.5705270Z [command]/opt/homebrew/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-f3d1b29a\-3e08\-459e\-a70e\-59794c1319e1\.config
+2026-09-09T06:53:36.5824940Z [command]/opt/homebrew/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-09-09T06:53:36.5826340Z /github/runner_temp/git-credentials-f3d1b29a-3e08-459e-a70e-59794c1319e1.config
+2026-09-09T06:53:36.5834210Z [command]/opt/homebrew/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-f3d1b29a\-3e08\-459e\-a70e\-59794c1319e1\.config
+2026-09-09T06:53:36.5877530Z [command]/opt/homebrew/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-09-09T06:53:36.6646190Z Removing credentials config '/Users/runner/work/_temp/git-credentials-f3d1b29a-3e08-459e-a70e-59794c1319e1.config'
+2026-09-09T06:53:36.6653080Z ##[endgroup]

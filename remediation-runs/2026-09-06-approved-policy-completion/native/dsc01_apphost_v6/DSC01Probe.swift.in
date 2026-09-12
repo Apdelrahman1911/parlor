@@ -1,0 +1,416 @@
+// Appended ONLY to the source-bound temporary Debug simulator ContentView copy.
+// It neither imports a fake SettingsStore nor replaces MainViewController/App.
+#if DEBUG && targetEnvironment(simulator)
+private struct DSC01Preferences: Codable, Equatable {
+    let setting: String
+    let appLanguages: [String]
+    let hasAppOverride: Bool
+    let ownerPresent: Bool
+    let ownerInstalled: String
+    let ownerPreviousPresent: Bool
+    let ownerPrevious: [String]
+    let preferredLanguage: String
+}
+
+private struct DSC01Observation: Codable {
+    let ordinal: Int
+    let phase: String
+    let fixture: String
+    let boot: String
+    let preferences: DSC01Preferences
+    let nativeDirection: String
+    let native: DSC01NativeObservation
+    let controllerCreations: Int
+    let composition: String
+    let osDisposition: String
+    let samplingWindow: Int
+    let samplingIndex: Int
+    let samplingElapsedMilliseconds: Int
+    let samplingContext: String
+}
+
+private struct DSC01Report: Codable {
+    let schemaVersion: Int
+    let runToken: String
+    let scenario: String
+    var completed: Bool
+    var observations: [DSC01Observation]
+}
+
+// Internal to copied Swift target so iOSApp.init can prepare BEFORE any Koin or
+// Compose initialization (including scenePhase callbacks). Never shipped.
+final class DSC01Probe: ObservableObject {
+    static let shared = DSC01Probe()
+    @Published private(set) var display = "{}"
+    private let boot = UUID().uuidString
+    private var report: DSC01Report?
+    private var beforeMain: DSC01Preferences?
+    private var fixture = ""
+    private var scenario = ""
+    private var osDisposition = "not-investigated"
+    var isOSScenario: Bool { scenario == "os" }
+    private var prepared = false
+    private var controllerCreations = 0
+    private weak var controller: UIViewController?
+    private weak var firstOuter: UIViewController?
+    private weak var firstCompose: UIViewController?
+    private weak var firstOuterView: UIView?
+    private weak var firstComposeView: UIView?
+    private weak var firstWindow: UIWindow?
+    private var capturedCompose = false
+    private var capturedViews = false
+    private var capturedWindow = false
+    private var samplingOrdinal = 0
+    private var samplingStatus = "none"
+    private var samplingStarted: TimeInterval = 0
+    private var samplingRows: [DSC01Observation] = []
+    private var samplingContext = "none"
+    private let appID = "com.parlor.app.debug"
+    private let ownerKey = "com.parlor.languageOverrideOwner.v1"
+    private var resultURL: URL {
+        FileManager.default.temporaryDirectory.appendingPathComponent("parlor-dsc01-\(scenario)-result.json")
+    }
+
+    func prepare() {
+        precondition(Thread.isMainThread && !prepared, "DSC01 fixture initialization repeated/off-main")
+        let environment = ProcessInfo.processInfo.environment
+        guard Bundle.main.bundleIdentifier == appID,
+              let simulator = environment["SIMULATOR_UDID"], UUID(uuidString: simulator) != nil,
+              simulator == environment["PARLOR_DSC01_EXPECTED_UDID"],
+              let token = environment["PARLOR_DSC01_RUN_TOKEN"], UUID(uuidString: token) != nil,
+              let selected = environment["PARLOR_DSC01_FIXTURE"],
+              ["fresh", "continue", "previous-ar", "existing"].contains(selected),
+              let requestedScenario = environment["PARLOR_DSC01_SCENARIO"],
+              ["settings", "whodunit", "mafia", "os"].contains(requestedScenario),
+              !ProcessInfo.processInfo.arguments.contains("-AppleLanguages"),
+              !ProcessInfo.processInfo.arguments.contains("-AppleLocale") else {
+            fatalError("DSC01 requires explicitly owned unsigned Debug simulator context")
+        }
+        fixture = selected
+        scenario = requestedScenario
+        do {
+            if selected == "fresh" {
+                guard scenario == "settings", !FileManager.default.fileExists(atPath: resultURL.path) else { throw fixtureError() }
+                let original = try preferences()
+                guard original.setting == "system", !original.hasAppOverride, !original.ownerPresent else {
+                    throw fixtureError()
+                }
+                report = DSC01Report(schemaVersion: 6, runToken: token, scenario: scenario, completed: false, observations: [])
+            } else if selected == "existing" && !FileManager.default.fileExists(atPath: resultURL.path) {
+                guard scenario != "settings" else { throw fixtureError() }
+                // Preserve all existing preferences and local synthetic saved games.
+                // Starting this observation scenario does not reset application data.
+                report = DSC01Report(schemaVersion: 6, runToken: token, scenario: scenario, completed: false, observations: [])
+            } else {
+                let size = try FileManager.default.attributesOfItem(atPath: resultURL.path)[.size] as? NSNumber
+                guard let size, size.intValue <= 262144 else { throw fixtureError() }
+                let recovered = try JSONDecoder().decode(DSC01Report.self, from: Data(contentsOf: resultURL))
+                guard recovered.schemaVersion == 6, recovered.scenario == scenario, recovered.runToken == token,
+                      !recovered.completed, recovered.observations.count < 256 else { throw fixtureError() }
+                report = recovered
+                osDisposition = recovered.observations.last?.osDisposition ?? "not-investigated"
+                if selected == "previous-ar" {
+                    guard scenario == "settings" else { throw fixtureError() }
+                    let beforeSeed = try preferences()
+                    guard beforeSeed.setting == "system", !beforeSeed.hasAppOverride,
+                          !beforeSeed.ownerPresent else { throw fixtureError() }
+                    // Synthetic previous OS-managed preference representation ONLY,
+                    // inside this owned app sandbox. No global prefs or plist edits.
+                    UserDefaults.standard.set(["ar-EG", "en"], forKey: "AppleLanguages")
+                }
+            }
+            beforeMain = try preferences()
+            prepared = true
+            try appendObservation(phase: "before_main")
+        } catch {
+            fatalError("DSC01 synthetic fixture preparation failed; not application defect attribution")
+        }
+    }
+
+    func attach(_ actualController: UIViewController) {
+        precondition(Thread.isMainThread && prepared, "DSC01 observer was not prepared")
+        if controllerCreations == 0 { firstOuter = actualController }
+        controllerCreations += 1
+        controller = actualController
+    }
+
+    func sample() {
+        precondition(Thread.isMainThread && prepared)
+        do {
+            guard samplingStatus != "running" else { throw fixtureError() }
+            try appendObservation(phase: "sample")
+        }
+        catch { display = "{\"harnessError\":\"bounded_observation_failed\"}" }
+    }
+
+    func beginStabilityWindow(context: String = "foreground") {
+        precondition(Thread.isMainThread && prepared && ["whodunit", "mafia"].contains(scenario))
+        guard samplingStatus != "running", samplingOrdinal < 12,
+              ["foreground", "landscape", "portrait"].contains(context) else {
+            display = "{\"harnessError\":\"sampling_window_precondition_failed\"}"; return
+        }
+        samplingOrdinal += 1
+        samplingStatus = "running"
+        samplingRows = []
+        samplingContext = context
+        samplingStarted = ProcessInfo.processInfo.systemUptime
+        scheduleStabilitySample()
+    }
+
+    private func scheduleStabilitySample() {
+        // Timed main-queue observations, not Thread.sleep or a busy/main-blocking
+        // loop. No display/@Published assignment occurs between these samples.
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { [weak self] in
+            self?.stabilitySample()
+        }
+    }
+
+    private func stabilitySample() {
+        precondition(Thread.isMainThread && samplingStatus == "running")
+        do {
+            let elapsed = Int((ProcessInfo.processInfo.systemUptime - samplingStarted) * 1000)
+            guard elapsed >= 0 && elapsed <= 10000, samplingRows.count < 6 else { throw fixtureError() }
+            let observation = try appendObservation(phase: "window_sample", publish: false,
+                samplingWindow: samplingOrdinal, samplingIndex: samplingRows.count + 1,
+                samplingElapsedMilliseconds: elapsed, samplingContext: samplingContext)
+            samplingRows.append(observation)
+            if samplingRows.count == 6 {
+                samplingStatus = "complete"
+                // Publish once after all six durable samples. A second complete
+                // window is then collected by XCTest to expose recurring resets
+                // after this SwiftUI invalidation; neither window may be dropped.
+                try publishObservation(observation)
+            } else {
+                scheduleStabilitySample()
+            }
+        } catch {
+            samplingStatus = "failed"
+            display = "{\"harnessError\":\"bounded_sampling_window_failed\"}"
+        }
+    }
+
+    func complete() {
+        precondition(Thread.isMainThread && prepared)
+        do {
+            guard samplingStatus != "running" else { throw fixtureError() }
+            guard var value = report else { throw fixtureError() }
+            value.completed = true; report = value
+            try appendObservation(phase: "complete")
+            MainViewControllerKt.DSC01ReleaseSyntheticObservation()
+        } catch { display = "{\"harnessError\":\"completion_receipt_failed\"}" }
+    }
+
+    func capture() {
+        precondition(Thread.isMainThread && ["whodunit", "mafia"].contains(scenario))
+        MainViewControllerKt.DSC01CaptureActualSession()
+        sample()
+    }
+
+    func syntheticLanguage(_ language: String) {
+        precondition(Thread.isMainThread && ["en", "ar", "system"].contains(language))
+        MainViewControllerKt.DSC01SyntheticLanguage(language: language)
+    }
+
+    func openOSSettings() {
+        precondition(Thread.isMainThread && scenario == "os")
+        osDisposition = "opening"
+        guard let url = URL(string: UIApplication.openSettingsURLString) else {
+            osDisposition = "open-rejected"; sample(); return
+        }
+        UIApplication.shared.open(url, options: [:]) { accepted in
+            DispatchQueue.main.async {
+                self.osDisposition = accepted ? "opened" : "open-rejected"
+                self.sample()
+            }
+        }
+    }
+
+    func markOS(_ status: String) {
+        precondition(Thread.isMainThread && scenario == "os")
+        precondition(["language-control-unavailable", "selection-unavailable", "verified-english"].contains(status))
+        osDisposition = status
+        sample()
+    }
+
+    @discardableResult
+    private func appendObservation(phase: String, publish: Bool = true,
+                                   samplingWindow: Int = 0, samplingIndex: Int = 0,
+                                   samplingElapsedMilliseconds: Int = 0,
+                                   samplingContext: String = "none") throws -> DSC01Observation {
+        guard var value = report, value.observations.count < 256, beforeMain != nil else { throw fixtureError() }
+        let now = try preferences()
+        // The native oracle is EXACTLY the controller observed at the actual
+        // LocalUIViewController read, never Main's return value or a type guess.
+        // Before App starts, no Kotlin bridge call or premature view load occurs.
+        let child = phase == "before_main" ? nil : MainViewControllerKt.DSC01ActualUIKitController()
+        let direction = dsc01Direction(child?.viewIfLoaded)
+        let native = phase == "before_main" ? DSC01NativeObservation.unavailable : nativeObservation(child)
+        // This direct read is deliberately unavailable before original Main/App
+        // initialization; invoking the Kotlin bridge there would invalidate the
+        // persisted-ownership startup witness.
+        let composition = phase == "before_main" ? "{}" : MainViewControllerKt.DSC01ActualCompositionObservation()
+        guard composition.utf8.count <= 4096 else { throw fixtureError() }
+        let observation = DSC01Observation(
+            ordinal: value.observations.count + 1, phase: phase, fixture: fixture,
+            boot: boot, preferences: now, nativeDirection: direction, native: native,
+            controllerCreations: controllerCreations,
+            composition: composition, osDisposition: osDisposition, samplingWindow: samplingWindow,
+            samplingIndex: samplingIndex, samplingElapsedMilliseconds: samplingElapsedMilliseconds,
+            samplingContext: samplingContext
+        )
+        value.observations.append(observation)
+        let encoded = try JSONEncoder().encode(value)
+        guard encoded.count <= 262144 else { throw fixtureError() }
+        try encoded.write(to: resultURL, options: .atomic)
+        report = value
+        if publish { try publishObservation(observation) }
+        return observation
+    }
+
+    private func nativeObservation(_ child: UIViewController?) -> DSC01NativeObservation {
+        // Every captured identity is weak and write-once. This instrumentation
+        // cannot keep a removed controller alive or rebase after replacement.
+        if let child, !capturedCompose { firstCompose = child; capturedCompose = true }
+        let outerView = controller?.viewIfLoaded
+        let composeView = child?.viewIfLoaded
+        if let outerView, let composeView, !capturedViews {
+            firstOuterView = outerView; firstComposeView = composeView; capturedViews = true
+        }
+        let window = outerView?.window
+        if let window, composeView?.window === window, !capturedWindow {
+            firstWindow = window; capturedWindow = true
+        }
+        var geometry: DSC01Geometry?
+        if let outerView, let composeView, let window, composeView.window === window {
+            let orientation: String
+            switch window.windowScene?.interfaceOrientation {
+            case .portrait: orientation = "portrait"
+            case .landscapeLeft, .landscapeRight: orientation = "landscape"
+            default: orientation = "other"
+            }
+            // Read-only public UIKit geometry. No layoutIfNeeded, forced view
+            // loading, lifecycle callback, semantic setter or direction repair.
+            geometry = DSC01Geometry(windowBounds: dsc01Rectangle(window.bounds),
+                outerBounds: dsc01Rectangle(outerView.bounds), composeBounds: dsc01Rectangle(composeView.bounds),
+                outerInWindow: dsc01Rectangle(outerView.convert(outerView.bounds, to: window)),
+                composeInWindow: dsc01Rectangle(composeView.convert(composeView.bounds, to: window)),
+                composeFrameInOuter: dsc01Rectangle(composeView.frame),
+                windowSafeArea: dsc01Insets(window.safeAreaInsets),
+                outerSafeArea: dsc01Insets(outerView.safeAreaInsets),
+                composeSafeArea: dsc01Insets(composeView.safeAreaInsets), orientation: orientation)
+        }
+        return DSC01NativeObservation(
+            sameOuterController: controller != nil && controller === firstOuter,
+            sameComposeController: child != nil && child === firstCompose,
+            sameOuterView: outerView != nil && outerView === firstOuterView,
+            sameComposeView: composeView != nil && composeView === firstComposeView,
+            childParentIsOuter: child != nil && controller != nil && child?.parent === controller,
+            singleComposeChild: controller?.children.count == 1 && controller?.children.first === child,
+            directSubview: outerView != nil && composeView != nil && composeView?.superview === outerView,
+            sameWindow: window != nil && composeView?.window === window && window === firstWindow,
+            attachments: Int(MainViewControllerKt.DSC01UIKitAttachmentCount()),
+            disposals: Int(MainViewControllerKt.DSC01UIKitDisposalCount()),
+            outerDirection: dsc01Direction(outerView), geometry: geometry)
+    }
+
+    private func publishObservation(_ observation: DSC01Observation) throws {
+        guard let value = report, let beforeMain else { throw fixtureError() }
+        let window: [[String: Any]] = try samplingRows.map { sample -> [String: Any] in
+            ["sequence": sample.ordinal, "boot": sample.boot,
+             "controllerCreations": sample.controllerCreations, "nativeDirection": sample.nativeDirection,
+             "native": sample.native.compact,
+             "now": try JSONSerialization.jsonObject(with: JSONEncoder().encode(sample.preferences)),
+             "composition": try JSONSerialization.jsonObject(with: Data(sample.composition.utf8)),
+             "index": sample.samplingIndex, "elapsedMilliseconds": sample.samplingElapsedMilliseconds]
+        }
+        // Fixed-schema public synthetic settings ONLY: no stores, game state,
+        // seeds, role maps, credentials, diagnostics, or accessibility secrets.
+        let payload: [String: Any] = [
+            "sequence": value.observations.count, "boot": boot, "completed": value.completed,
+            "beforeMain": try JSONSerialization.jsonObject(with: JSONEncoder().encode(beforeMain)),
+            "now": try JSONSerialization.jsonObject(with: JSONEncoder().encode(observation.preferences)),
+            "nativeDirection": observation.nativeDirection, "controllerCreations": controllerCreations,
+            "native": observation.native.compact,
+            "composition": try JSONSerialization.jsonObject(with: Data(observation.composition.utf8)),
+            "scenario": scenario, "osDisposition": osDisposition,
+            "sampling": ["ordinal": samplingOrdinal, "status": samplingStatus,
+                         "context": samplingContext, "samples": window],
+        ]
+        let displayData = try JSONSerialization.data(withJSONObject: payload, options: [.sortedKeys])
+        guard displayData.count <= 8192 else { throw fixtureError() }
+        display = String(decoding: displayData, as: UTF8.self)
+    }
+
+    private func preferences() throws -> DSC01Preferences {
+        let domain = UserDefaults.standard.persistentDomain(forName: appID) ?? [:]
+        let rawSetting = domain["language_override"]
+        let setting = rawSetting as? String ?? "system"
+        guard rawSetting == nil || ["en", "ar"].contains(setting) else { throw fixtureError() }
+        let languages = try safeLanguages(domain["AppleLanguages"])
+        let owner = domain[ownerKey] as? [String: Any]
+        guard domain[ownerKey] == nil || owner != nil else { throw fixtureError() }
+        var installed = "none"
+        var previous: [String] = []
+        if let owner {
+            guard Set(owner.keys).isSubset(of: ["version", "installed", "previous"]),
+                  owner["version"] as? String == "1", let tag = owner["installed"] as? String,
+                  ["en", "ar"].contains(tag) else { throw fixtureError() }
+            installed = tag; previous = try safeLanguages(owner["previous"])
+        }
+        let preferred = Locale.preferredLanguages.first?.lowercased() ?? "en"
+        let resolved = preferred == "ar" || preferred.hasPrefix("ar-") || preferred.hasPrefix("ar_") ? "ar" : "en"
+        return DSC01Preferences(setting: setting, appLanguages: languages, hasAppOverride: domain["AppleLanguages"] != nil,
+                                ownerPresent: owner != nil, ownerInstalled: installed,
+                                ownerPreviousPresent: owner?["previous"] != nil, ownerPrevious: previous,
+                                preferredLanguage: resolved)
+    }
+
+    private func safeLanguages(_ value: Any?) throws -> [String] {
+        guard let value else { return [] }
+        guard let items = value as? [String], !items.isEmpty, items.count <= 8,
+              items.allSatisfy({ $0.utf8.count <= 35 && $0.range(of: "^(en|ar)(-[A-Za-z0-9]{2,8})*$", options: .regularExpression) != nil }) else {
+            throw fixtureError()
+        }
+        return items
+    }
+
+    private func fixtureError() -> NSError { NSError(domain: "DSC01SyntheticHarness", code: 1) }
+}
+
+private struct DSC01Overlay: View {
+    @ObservedObject private var probe = DSC01Probe.shared
+    var body: some View {
+        VStack(spacing: 4) {
+            HStack(spacing: 8) {
+                Button("Observe") { probe.sample() }.accessibilityIdentifier("parlor-dsc01-observe")
+                Button("Window") { probe.beginStabilityWindow() }.accessibilityIdentifier("parlor-dsc01-window")
+                Text("DS-C01 observer").accessibilityIdentifier("parlor-dsc01-state").accessibilityValue(probe.display)
+                Button("Capture") { probe.capture() }.accessibilityIdentifier("parlor-dsc01-capture")
+                Button("Complete") { probe.complete() }.accessibilityIdentifier("parlor-dsc01-complete")
+            }
+            HStack(spacing: 8) {
+                Button("Synthetic EN") { probe.syntheticLanguage("en") }.accessibilityIdentifier("parlor-dsc01-synthetic-en")
+                Button("Synthetic AR") { probe.syntheticLanguage("ar") }.accessibilityIdentifier("parlor-dsc01-synthetic-ar")
+                Button("Synthetic SYS") { probe.syntheticLanguage("system") }.accessibilityIdentifier("parlor-dsc01-synthetic-system")
+                Button("OS Settings") { probe.openOSSettings() }.accessibilityIdentifier("parlor-dsc01-open-os")
+            }
+            HStack(spacing: 8) {
+                Button("Landscape window") { probe.beginStabilityWindow(context: "landscape") }
+                    .accessibilityIdentifier("parlor-dsc01-window-landscape")
+                Button("Portrait window") { probe.beginStabilityWindow(context: "portrait") }
+                    .accessibilityIdentifier("parlor-dsc01-window-portrait")
+            }
+            if probe.isOSScenario {
+                HStack(spacing: 8) {
+                    Button("OS row unavailable") { probe.markOS("language-control-unavailable") }.accessibilityIdentifier("parlor-dsc01-os-no-row")
+                    Button("OS selection unavailable") { probe.markOS("selection-unavailable") }.accessibilityIdentifier("parlor-dsc01-os-no-selection")
+                    Button("OS verified") { probe.markOS("verified-english") }.accessibilityIdentifier("parlor-dsc01-os-verified")
+                }
+            }
+        }
+        .font(.system(size: 9)).padding(4).background(Color.black).foregroundColor(.white)
+    }
+}
+#else
+#error("DSC01 temporary observer may compile ONLY as Debug iOS simulator")
+#endif

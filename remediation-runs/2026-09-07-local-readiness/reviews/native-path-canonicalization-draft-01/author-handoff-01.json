@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "author": "/root/native_fix_review",
+  "created_at": "2026-09-07T10:52:06.237323+00:00",
+  "status": "SOURCE_DRAFT_UNEXECUTED_REVIEW_REQUIRED",
+  "files": [
+    {
+      "path": "scripts/verification/ios-readiness/NativeReadinessLaunch.swift.in",
+      "sha256": "df8f0cce3f45bedbfea47df3ca0b2e56c6a777383395fc170f0f07b83f8d143a",
+      "bytes": 20170
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/native-path-canonicalization-draft-01/test_native_paths.py",
+      "sha256": "0b8a82d377bd551c9918450f4d18b7fa12ab94faba33e8a6662190879d51b809",
+      "bytes": 9701
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/native-path-canonicalization-draft-01/NativeReadinessPathControls.swift.in",
+      "sha256": "efc84b3b49c099185d17ff56ceb53b0134ee2332ff35220a537dade5168a76c9",
+      "bytes": 12090
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/native-path-canonicalization-draft-01/template-correction.diff",
+      "sha256": "af1efba83b251553c0ccc75d82e7b4f899e24ac5de2aa01a5f2d7070a0507521",
+      "bytes": 9860
+    }
+  ],
+  "test_signatures_declared": 3,
+  "native_host_subcases_in_one_test": 18,
+  "test_execution": "NONE; root owns all execution",
+  "scope": "Copy-only NativeReadinessLaunch.swift.in path observer; no app/platform production sources or protocol/state changes. New controls remain in campaign draft until root releases Android3 source freeze.",
+  "preserved_originals": "reviews/native-path-canonicalization-prepatch-01",
+  "policy": [
+    "Same POSIX canonical representation as Python literals",
+    "Trusted roots must be existing and unchanged by realpath",
+    "Unavailable noncandidate dyld and loader paths are skipped/redacted, never mislabeled as app",
+    "Unknown/sibling/escaped/invalid relative paths fail before content callback",
+    "Current hash/UUID/bundle/SDK validation retained",
+    "Original03 exact rejected path unavailable; do not claim causal proof from source correction alone"
+  ],
+  "authoritative_reference": {
+    "url": "https://developer.apple.com/library/archive/documentation/System/Conceptual/ManPages_iPhoneOS/man3/realpath.3.html",
+    "access_date": "2026-09-07",
+    "sha256": "d6a5299de86797e5b0d91801c500c4998e1c193df5bdb07d3b80bbebb35304f7",
+    "applicability": "POSIX realpath resolves links, extra separators and dot components to an absolute name; all components must exist; requires caller-owned PATH_MAX output buffer, as used here. Native test must verify selected modern SDK behavior; not relying on NULL-allocation extension."
+  },
+  "limitations": [
+    "No Swift compile or native probe run by author",
+    "Host Foundation fixtures cannot establish iOS runtime launch or app-storage health",
+    "Path classification and subsequent file open are not one atomic filesystem transaction; this patch does not claim protection against an adversary concurrently swapping task-owned directories after validation. Existing post-runtime host hash/path binding stays mandatory.",
+    "Root controls Android3 lane and release of source freeze; only campaign drafts created since freeze"
+  ]
+}

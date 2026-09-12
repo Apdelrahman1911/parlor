@@ -1,0 +1,316 @@
+{
+  "schema_version": 1,
+  "kind": "INDEPENDENT_STRICT_PROTECTION_A23_CONTEXT_DOCUMENT_REVIEW",
+  "reviewer": "/root/fixture_review",
+  "author": "/root/l08_fixture",
+  "recorded_at": "2026-09-08T23:51:26.504Z",
+  "status": "APPROVED_EXACT_DOCUMENT_CONTEXT_ONLY_NOT_DISPATCH_OR_RUNTIME_APPROVAL",
+  "subject": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/strict-protection-a23-investigation-context-01.json",
+    "sha256": "fd3d4e86a11e220f055bbe9f79a0bad00d4bdafdf55d53dcc66b18617d01d103",
+    "bytes": 20399
+  },
+  "findings": [],
+  "scope": "Independently compare the held investigation document to actual cited source, completed A16/A21 raw receipts/logs and retained functional operation records. Not a new protection experiment, validator execution, source freeze or native-dispatch review.",
+  "source_inspection": [
+    "Current IosSnapshotFileSystem requests NSFileProtectionComplete when creating Application Support/Parlor/snapshots, then backup exclusion; protected writes use NSDataWritingAtomic|NSDataWritingFileProtectionComplete, then backup exclusion. Its current hash equals the production-path entry in both historical source manifests; that does not make the entire old runs current-source qualification.",
+    "Canonical and inherited L08StorageProbe.kt.in hashes are identical a1202e47e1b41feb7e5c558e4df9515704e27762e437778b6ae79c777bfce651. Actual strict directory/file value==Complete checks remain. Diagnostic sibling reads cannot masquerade as a reached/passed required assertion.",
+    "Namespaced functional probe preserves the same equality but records PASS/FAIL separately. Closed validator requires labels to match actual Complete values, all planned operations/cold starts and26 comparisons. Functional success with metadataFAIL never satisfies original strictL08; final companion classifier cannot return overallPASS.",
+    "Native Objective-C fixture observes fresh task-owned ParlorFoundationControl-<token>-<boot>/created files, not the production Parlor/snapshots files. Its sequence preserves create/backup/atomic-Complete/backup, then explicit directory setter, non-atomic Complete write, and default atomic write before/after explicit file setter.",
+    "Each NSURL query constructs a fresh URL; NSURLFileProtectionKey is sampled only for regular files. Directory observations still query volume and backup keys. Functional production-path checks use FileManager attributes, not same-file NSURL protection queries.",
+    "Foundation collection requires built==installed inventories, source/control/template context, UUID/hash image bindings and the actual unique first-boot XCTest marker. A preserved raw record is not sufficient. Current finish_xcode_attempt rethrows a timeout after raw retention, before later inventories/binding; normal postbuild validation can establish binding before a later classifier rejects functional evidence."
+  ],
+  "actual_completed_run_observations": {
+    "A16": {
+      "operations": 8,
+      "observation_rows": 8,
+      "successful_operations": 8,
+      "fm": {
+        "missing": 8
+      },
+      "fm_missing_key_without_error": 8,
+      "url": {
+        "until-first-authentication": 5
+      },
+      "volume": {
+        "supported": 8
+      },
+      "backup": {
+        "included": 5,
+        "excluded": 3
+      },
+      "raw_status": "OBSERVATIONS_COMPLETE",
+      "runtime": [
+        26,
+        5,
+        0
+      ],
+      "foundation_uuid": "2cc9fce0-08f9-3a0d-8a2f-6db229462de5",
+      "hardware_protection_verified": false,
+      "requirements_waived": false,
+      "fixture_cleanup": "REMOVED",
+      "collection_status": "COLLECTION_VALIDATED_NOT_L08_PASS",
+      "preservation_status": "PRESERVED",
+      "run_status": "FAIL",
+      "cleanup_status": "PASS",
+      "source": {
+        "commit": "8b9e3b0cdfdab82e7cff3ad8135d0eae9a0b8ca3",
+        "tree": "c1e92b5e00ab64a293c4d7f9c9b5e2b85887be88",
+        "source_manifest_sha256": "c4d3387a95ff1a4462071147afe92411f5a08ee8b10f78852a59494c8d3e4420"
+      },
+      "recorded_tracked_clean": false,
+      "current_production_matches_historical_source_manifest": true,
+      "sdk_name": "iphonesimulator26.5",
+      "inventory_presence": {
+        "built-app-binary-inventory.json": true,
+        "installed-app-binary-inventory.json": true
+      },
+      "compiled_context_matches_copy_binding": true,
+      "marker_count": 1,
+      "marker_line": 2315,
+      "marker_compiled_fields_match": true
+    },
+    "A21": {
+      "operations": 8,
+      "observation_rows": 8,
+      "successful_operations": 8,
+      "fm": {
+        "missing": 8
+      },
+      "fm_missing_key_without_error": 8,
+      "url": {
+        "until-first-authentication": 5
+      },
+      "volume": {
+        "unsupported": 8
+      },
+      "backup": {
+        "included": 5,
+        "excluded": 3
+      },
+      "raw_status": "OBSERVATIONS_COMPLETE",
+      "runtime": [
+        26,
+        2,
+        0
+      ],
+      "foundation_uuid": "c153116f-dd31-3fa9-89bb-04b47c1fa83d",
+      "hardware_protection_verified": false,
+      "requirements_waived": false,
+      "fixture_cleanup": "REMOVED",
+      "collection_status": "NOT_RUN",
+      "preservation_status": "PRESERVED",
+      "run_status": "FAIL",
+      "cleanup_status": "FAIL",
+      "source": {
+        "commit": "e5111ea49113c3f12cb577058c3f926dfebdc325",
+        "tree": "a88872673bd4cfc366236362f287c1db0a04a5cd",
+        "source_manifest_sha256": "6e313ce760d840aa08b617229c03263ce90eda715cb6c442cbe9738045a63e8e"
+      },
+      "recorded_tracked_clean": true,
+      "current_production_matches_historical_source_manifest": true,
+      "sdk_name": "iphonesimulator26.2",
+      "inventory_presence": {
+        "built-app-binary-inventory.json": false,
+        "installed-app-binary-inventory.json": false
+      },
+      "compiled_context_matches_copy_binding": true,
+      "marker_count": 1,
+      "marker_line": 2306,
+      "marker_compiled_fields_match": true
+    },
+    "direct_raw_row_difference_check": {
+      "compared_rows_per_run": 16,
+      "differences": [
+        {
+          "path": "/1/volume/value",
+          "A16": "supported",
+          "A21": "unsupported"
+        },
+        {
+          "path": "/3/volume/value",
+          "A16": "supported",
+          "A21": "unsupported"
+        },
+        {
+          "path": "/5/volume/value",
+          "A16": "supported",
+          "A21": "unsupported"
+        },
+        {
+          "path": "/7/volume/value",
+          "A16": "supported",
+          "A21": "unsupported"
+        },
+        {
+          "path": "/9/volume/value",
+          "A16": "supported",
+          "A21": "unsupported"
+        },
+        {
+          "path": "/11/volume/value",
+          "A16": "supported",
+          "A21": "unsupported"
+        },
+        {
+          "path": "/13/volume/value",
+          "A16": "supported",
+          "A21": "unsupported"
+        },
+        {
+          "path": "/15/volume/value",
+          "A16": "supported",
+          "A21": "unsupported"
+        }
+      ],
+      "only_eight_volume_value_fields_differ": true,
+      "qualification": "Only the16 operation/observation row payloads have this equality, not the entire receipts, executable binaries or environments. Runtime/Foundation UUIDs, host/backing volume and source/control/build contexts are not a controlled SDK-only crossover."
+    }
+  },
+  "production_path_accounting": {
+    "actual_A16_retained_operation_records": 15,
+    "functional_statuses": {
+      "PASS": 14,
+      "FAIL": 1
+    },
+    "metadata_bearing_records": 10,
+    "observed_required_comparisons": 24,
+    "observed_comparison_results": {
+      "FAIL": 24
+    },
+    "observed_values": {
+      "missing": 24
+    },
+    "all_actual_dictionaries_present": true,
+    "all_actual_keys_missing": true,
+    "all_actual_native_errors_absent": true,
+    "incomplete_boundary": {
+      "file": "parlor-l08-storage-functional-10-continue.json",
+      "stage": "continue-home-counters",
+      "status": "FAIL",
+      "comparisons": 0
+    },
+    "A21_retained_operation_JSON_count": 0,
+    "A21_limit": "No retained operationJSON is not proof that no action/comparison executed. Partial XCTest traces cannot constitute a complete26-comparison matrix.",
+    "actual_current_plan": {
+      "cold_boots": 13,
+      "durable_operations": 20,
+      "metadata_checkpoints": 13,
+      "required_comparisons": 26,
+      "arithmetic": "8 save/load sites +2 legacy-seed sites +2 legacy-load sites +1 retained-dual site; each has directory+file comparisons",
+      "missing_from_A16": "boot12 dual-preserved retained-dual directory/file pair",
+      "boot11": "legacy-neighbor/discard-observed, not the missing metadata checkpoint"
+    },
+    "no_count_conflation": "Eight Foundation FileManager readings plus five regular-file URL readings are13 separate native API observations, not13 production comparisons. A default-write-before-set observation is a baseline. They must not be added to24 or presented as the missing26-row application matrix."
+  },
+  "retained_limits": [
+    "A16 reports volumeSUPPORTED and A21 volumeUNSUPPORTED, with the same missing FileManager/non-Complete URL observations. Neither value proves Complete, and unsupported is notPASS, N/A, a waiver or a universal Simulator incapability finding.",
+    "A21 raw OBSERVATIONS_COMPLETE and PRESERVED coexist with collectionNOT_RUN, absent built/installed inventory artifacts, runFAIL and cleanupFAIL. Its matching context/template/control and public marker do not promote it to A16-quality complete image-bound collection.",
+    "Foundation fixture_cleanupREMOVED is scoped to the synthetic Foundation directory; it does not overwrite the native lane cleanupFAIL.",
+    "Direct Objective-C results make Kotlin bridging alone, atomic replacement alone or backup exclusion alone insufficient sole explanations. They do not rule out a coexisting production-path defect because different files are sampled.",
+    "No SDK-only causality, effective protection-class equality, device keybag enforcement, physical lock/unlock/pre-first-unlock, backup, power-loss, LAN or Store proof is established.",
+    "A future independently bound qualified run can add run-specific observations and attempt all26 comparisons; it cannot retroactively complete A16/A21 or waive current strict assertions.",
+    "The document proposes no app/protection change or extra campaign. Root controls, reviewed commits, mechanical inventory, fresh bindings and later actual postrun review remain separate gates."
+  ],
+  "activity": {
+    "method": "Read-only file/JSON/AST/literal/hash inspection; no project imports or project validators executed.",
+    "inspection_only_key_correction": "An initial reviewer aggregation used an incorrect native_error_present field and raised KeyError. Reopened actual raw shape and recomputed using attributes.native_error.present. This was a read-only inspector correction, not an application/control-test failure.",
+    "project_tests": 0,
+    "builds_or_native_tools": 0,
+    "network_API_or_Actions": 0,
+    "active_cycle_artifacts_opened": false,
+    "source_edits": 0,
+    "only_written_path": "remediation-runs/2026-09-08-continuation/reviews/strict-protection-a23-investigation-context-independent-01.json",
+    "cleanup": "NOT_APPLICABLE: no process/build/fixture resources allocated; no stop/clean/deletion attempted. Failed and historical evidence preserved."
+  },
+  "conclusion": {
+    "documentation": "APPROVED",
+    "strict_protection": "UNRESOLVED_NOT_WAIVED",
+    "readiness": "NOT_READY",
+    "dispatch_approval": false,
+    "application_runtime_proof_created": false
+  },
+  "citation_identity_reconciliation": {
+    "cited_files_checked": 40,
+    "all_exact_hashes_and_lengths_match": true,
+    "sorted_citation_manifest_sha256": "661d237d9a3219cf2ea5fb4f7c630b320510bfa7dba15ac6a2c221bf6651a6b7",
+    "manifest_recipe": "All12 current source references,15 A16/A21 evidence references,11 A16 metadata/failure records and2 prior review files from subject; sorted by path, canonical JSON keys with comma/colon separators."
+  },
+  "actual_A16_all15_functional_records": [
+    {
+      "file": "parlor-l08-storage-functional-1-save.json",
+      "sha256": "efee0b3694db22d6a34bb72df85a37edd9c681156e698662d72a438af53e1342",
+      "bytes": 2075
+    },
+    {
+      "file": "parlor-l08-storage-functional-10-continue.json",
+      "sha256": "5026dce2c3ff30f510f9018eb9ae5fae23517e25cc563a1faea6b3f3268e0221",
+      "bytes": 1467
+    },
+    {
+      "file": "parlor-l08-storage-functional-10-legacy-load.json",
+      "sha256": "3380950b2bae18c351bb2aeeebc033d47f027ec7c31e3cd618381c3b5488071c",
+      "bytes": 2798
+    },
+    {
+      "file": "parlor-l08-storage-functional-2-continue.json",
+      "sha256": "6dde45c841d652bdd7e149664de3516e34e09a47b773655c80cfe7bf55d00d79",
+      "bytes": 1594
+    },
+    {
+      "file": "parlor-l08-storage-functional-2-load.json",
+      "sha256": "c0615961e229560df2e1601fbe6940fe597a33a6b4d8f70a661a5b6afddb40b3",
+      "bytes": 2078
+    },
+    {
+      "file": "parlor-l08-storage-functional-3-save.json",
+      "sha256": "475faf120b424bca74b6d709c31312f49a6a2ddbb1a05f684b13779a48a5ff77",
+      "bytes": 2075
+    },
+    {
+      "file": "parlor-l08-storage-functional-4-continue.json",
+      "sha256": "b84eec96dee1726458c33337b84cac97701a88147ef4142d82f557c2b35ad203",
+      "bytes": 1594
+    },
+    {
+      "file": "parlor-l08-storage-functional-4-load.json",
+      "sha256": "982a1491f56d4aa873cfd1f7f9d65d6ca3d9fbb35af02977a07cea88f599ca08",
+      "bytes": 2078
+    },
+    {
+      "file": "parlor-l08-storage-functional-5-save.json",
+      "sha256": "4f57dd1631fd4c20f9078db99410ef39edab5beb3482c45b678548afc7d4cbcf",
+      "bytes": 2077
+    },
+    {
+      "file": "parlor-l08-storage-functional-6-continue.json",
+      "sha256": "46c5cfcd3fedfa908d266a2b45f98df0b553174d17c68f6d2fe37014bee10ec7",
+      "bytes": 1594
+    },
+    {
+      "file": "parlor-l08-storage-functional-6-load.json",
+      "sha256": "8a2c56437c1c292bce044ab8ffb8a342d7c35b0b5dbda3f0b590256ce24b3922",
+      "bytes": 2080
+    },
+    {
+      "file": "parlor-l08-storage-functional-7-save.json",
+      "sha256": "170409e0783e6d1964c3f86280a36d25eabf2cef281267133f7a7b1c6f9ee1cd",
+      "bytes": 2079
+    },
+    {
+      "file": "parlor-l08-storage-functional-8-continue.json",
+      "sha256": "60d7423d071e8aba3b7dbdf953fca32e144952d7626076db8c6a7c2ca7172b37",
+      "bytes": 1594
+    },
+    {
+      "file": "parlor-l08-storage-functional-8-load.json",
+      "sha256": "85db52e5cd6bfaa4451ad20903015a882c9c9d3cf11b9e7f6dc51bbe1a643f07",
+      "bytes": 2082
+    },
+    {
+      "file": "parlor-l08-storage-functional-9-legacy-seed.json",
+      "sha256": "0285380d7f1c4eb5c6848c6e3a7ad05dd7f3dacc635fd988447c10c95753e5e8",
+      "bytes": 2747
+    }
+  ]
+}

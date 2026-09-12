@@ -1,0 +1,122 @@
+360: // To make it more convenient for applications to adopt rotation, a view controller may implement the below methods. Your UIWindow's frame should use [UIScreen mainScreen].bounds as its frame.
+361: @interface UIViewController (UIViewControllerRotation)
+362: 
+363: + (void)attemptRotationToDeviceOrientation API_DEPRECATED("Please use instance method `setNeedsUpdateOfSupportedInterfaceOrientations`.", ios(5.0, 16.0), visionos(1.0, 1.0)) API_UNAVAILABLE(tvos) API_UNAVAILABLE(watchos);
+364: 
+365: // Applications should use supportedInterfaceOrientations and/or shouldAutorotate.
+366: - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation API_DEPRECATED("", ios(2.0, 6.0)) API_UNAVAILABLE(tvos) API_UNAVAILABLE(visionos, watchos);
+367: 
+368: // New Autorotation support.
+369: @property(nonatomic, readonly) BOOL shouldAutorotate API_DEPRECATED("Update supported interface orientations and call setNeedsUpdateOfSupportedInterfaceOrientations to indicate a change.", ios(6.0, 16.0), visionos(1.0, 1.0)) API_UNAVAILABLE(tvos) API_UNAVAILABLE(watchos);
+370: @property(nonatomic, readonly) UIInterfaceOrientationMask supportedInterfaceOrientations API_AVAILABLE(ios(6.0)) API_UNAVAILABLE(tvos);
+371: // Returns interface orientation masks.
+372: @property(nonatomic, readonly) UIInterfaceOrientation preferredInterfaceOrientationForPresentation API_AVAILABLE(ios(6.0)) API_UNAVAILABLE(tvos);
+373: 
+374: /// Notifies the view controller that a change occurred that affects supported interface orientations or the preferred interface orientation for presentation.
+375: /// By default, this will animate any changes to orientation. To perform a non-animated update, call within `[UIView performWithoutAnimation:]`.
+376: - (void)setNeedsUpdateOfSupportedInterfaceOrientations API_AVAILABLE(ios(16.0)) API_UNAVAILABLE(watchos);
+
+421: /*
+422:   The methods in the UIContainerViewControllerProtectedMethods and the UIContainerViewControllerCallbacks
+423:   categories typically should only be called by subclasses which are implementing new container view
+424:   controllers. They may be overridden but must call super.
+425: */
+426: @interface UIViewController (UIContainerViewControllerProtectedMethods)
+427: 
+428: // An array of children view controllers. This array does not include any presented view controllers.
+429: @property(nonatomic,readonly) NSArray<__kindof UIViewController *> *childViewControllers API_AVAILABLE(ios(5.0));
+430: 
+431: /*
+432:   If the child controller has a different parent controller, it will first be removed from its current parent
+433:   by calling removeFromParentViewController. If this method is overridden then the super implementation must
+434:   be called.
+435: */
+436: - (void)addChildViewController:(UIViewController *)childController API_AVAILABLE(ios(5.0));
+437: 
+438: /*
+439:   Removes the the receiver from its parent's children controllers array. If this method is overridden then
+440:   the super implementation must be called.
+441: */
+442: - (void)removeFromParentViewController API_AVAILABLE(ios(5.0));
+
+459: // If a custom container controller manually forwards its appearance callbacks, then rather than calling
+460: // viewWillAppear:, viewDidAppear: viewWillDisappear:, or viewDidDisappear: on the children these methods
+461: // should be used instead. This will ensure that descendent child controllers appearance methods will be
+462: // invoked. It also enables more complex custom transitions to be implemented since the appearance callbacks are
+463: // now tied to the final matching invocation of endAppearanceTransition.
+464: - (void)beginAppearanceTransition:(BOOL)isAppearing animated:(BOOL)animated __OSX_AVAILABLE_STARTING(__MAC_NA,__IPHONE_5_0);
+465: - (void)endAppearanceTransition __OSX_AVAILABLE_STARTING(__MAC_NA,__IPHONE_5_0);
+466: 
+467: // Override to return a child view controller or nil. If non-nil, that view controller's status bar appearance attributes will be used. If nil, self is used. Whenever the return values from these methods change, -setNeedsStatusBarAppearanceUpdate should be called.
+468: @property(nonatomic, readonly, nullable) UIViewController *childViewControllerForStatusBarStyle API_AVAILABLE(ios(7.0)) API_DEPRECATED("Has no effect on visionOS", visionos(1.0, 1.0)) API_UNAVAILABLE(tvos);
+469: @property(nonatomic, readonly, nullable) UIViewController *childViewControllerForStatusBarHidden API_AVAILABLE(ios(7.0)) API_DEPRECATED("Has no effect on visionOS", visionos(1.0, 1.0)) API_UNAVAILABLE(tvos);
+470: 
+471: // Call to modify the trait collection for child view controllers.
+472: - (void)setOverrideTraitCollection:(nullable UITraitCollection *)collection forChildViewController:(UIViewController *)childViewController API_DEPRECATED("Use the traitOverrides property on the child view controller instead", ios(8.0, 17.0), visionos(1.0, 1.0)) API_UNAVAILABLE(watchos);
+473: - (nullable UITraitCollection *)overrideTraitCollectionForChildViewController:(UIViewController *)childViewController API_DEPRECATED("Use the traitOverrides property on the child view controller instead", ios(8.0, 17.0), visionos(1.0, 1.0)) API_UNAVAILABLE(watchos);
+474: 
+475: // Override to return a child view controller or nil. If non-nil, that view controller's preferred user interface style will be used. If nil, self is used. Whenever the preferredUserInterfaceStyle for a view controller has changed setNeedsUserInterfaceAppearanceUpdate should be called.
+
+480: @interface UIViewController (UIContainerViewControllerCallbacks)
+481: 
+482: /*
+483:   This method is consulted to determine if a view controller manually forwards its containment callbacks to
+484:   any children view controllers. Subclasses of UIViewController that implement containment logic may override
+485:   this method. The default implementation returns YES. If it is overridden and returns NO, then the subclass is
+486:   responsible for forwarding the following methods as appropriate - viewWillAppear: viewDidAppear: viewWillDisappear:
+487:   viewDidDisappear: willRotateToInterfaceOrientation:duration:
+488:   willAnimateRotationToInterfaceOrientation:duration: didRotateFromInterfaceOrientation:
+489: */
+490: 
+491: - (BOOL)automaticallyForwardAppearanceAndRotationMethodsToChildViewControllers API_DEPRECATED("", ios(5.0, 6.0)) API_UNAVAILABLE(tvos) API_UNAVAILABLE(visionos, watchos);
+492: - (BOOL)shouldAutomaticallyForwardRotationMethods API_DEPRECATED("Manually forward viewWillTransitionToSize:withTransitionCoordinator: if necessary", ios(6.0, 8.0)) API_UNAVAILABLE(tvos) API_UNAVAILABLE(visionos, watchos);
+493: 
+494: @property(nonatomic, readonly) BOOL shouldAutomaticallyForwardAppearanceMethods API_AVAILABLE(ios(6.0));
+495: 
+496: 
+497: /*
+498:   These two methods are public for container subclasses to call when transitioning between child
+499:   controllers. If they are overridden, the overrides should ensure to call the super. The parent argument in
+500:   both of these methods is nil when a child is being removed from its parent; otherwise it is equal to the new
+501:   parent view controller.
+502: 
+503:   addChildViewController: will call [child willMoveToParentViewController:self] before adding the
+504:   child. However, it will not call didMoveToParentViewController:. It is expected that a container view
+505:   controller subclass will make this call after a transition to the new child has completed or, in the
+506:   case of no transition, immediately after the call to addChildViewController:. Similarly,
+507:   removeFromParentViewController does not call [self willMoveToParentViewController:nil] before removing the
+508:   child. This is also the responsibility of the container subclass. Container subclasses will typically define
+509:   a method that transitions to a new child by first calling addChildViewController:, then executing a
+510:   transition which will add the new child's view into the view hierarchy of its parent, and finally will call
+511:   didMoveToParentViewController:. Similarly, subclasses will typically define a method that removes a child in
+512:   the reverse manner by first calling [child willMoveToParentViewController:nil].
+513: */
+514: - (void)willMoveToParentViewController:(nullable UIViewController *)parent API_AVAILABLE(ios(5.0));
+515: - (void)didMoveToParentViewController:(nullable UIViewController *)parent API_AVAILABLE(ios(5.0));
+
+652: @interface UIViewController (UIScreenEdgesDeferringSystemGestures)
+653: 
+654: // Override to return a child view controller or nil. If non-nil, that view controller's screen edges deferring system gestures will be used. If nil, self is used. Whenever the return value changes, -setNeedsScreenEdgesDeferringSystemGesturesUpdate should be called.
+655: @property (nonatomic, readonly, nullable) UIViewController *childViewControllerForScreenEdgesDeferringSystemGestures API_AVAILABLE(ios(11.0)) API_UNAVAILABLE(tvos) API_UNAVAILABLE(watchos);
+656: 
+657: // Controls the application's preferred screen edges deferring system gestures when this view controller is shown. Default is UIRectEdgeNone.
+658: @property (nonatomic, readonly) UIRectEdge preferredScreenEdgesDeferringSystemGestures API_AVAILABLE(ios(11.0)) API_UNAVAILABLE(tvos) API_UNAVAILABLE(watchos);
+659: 
+660: // This should be called whenever the return values for the view controller's screen edges deferring system gestures have changed.
+661: - (void)setNeedsUpdateOfScreenEdgesDeferringSystemGestures API_AVAILABLE(ios(11.0)) API_UNAVAILABLE(tvos) API_UNAVAILABLE(watchos);
+662: 
+663: @end
+664: 
+665: 
+666: @interface UIViewController (UIHomeIndicatorAutoHidden)
+667: 
+668: // Override to return a child view controller or nil. If non-nil, that view controller's home indicator auto-hiding will be used. If nil, self is used. Whenever the return value changes, -setNeedsHomeIndicatorAutoHiddenUpdate should be called.
+669: @property (nonatomic, readonly, nullable) UIViewController *childViewControllerForHomeIndicatorAutoHidden API_AVAILABLE(ios(11.0)) API_UNAVAILABLE(tvos) API_UNAVAILABLE(watchos);
+670: 
+671: // Controls the application's preferred home indicator auto-hiding when this view controller is shown.
+672: @property (nonatomic, readonly) BOOL prefersHomeIndicatorAutoHidden API_AVAILABLE(ios(11.0)) API_UNAVAILABLE(tvos) API_UNAVAILABLE(watchos);
+673: 
+674: // This should be called whenever the return values for the view controller's home indicator auto-hiding have changed.
+675: - (void)setNeedsUpdateOfHomeIndicatorAutoHidden API_AVAILABLE(ios(11.0)) API_UNAVAILABLE(tvos) API_UNAVAILABLE(watchos);
+676: 
+677: @end

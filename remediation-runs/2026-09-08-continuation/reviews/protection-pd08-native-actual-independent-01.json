@@ -1,0 +1,72 @@
+{
+  "schema": 1,
+  "reviewer": "/root/probe_identity",
+  "status": "VERIFIED_ACTUAL_NATIVE_COLLECTION_STRICT_COMPLETE_FAIL_NOT_APP_PASS",
+  "run_id": 34558762289,
+  "attempt": 1,
+  "job_id": 103136950608,
+  "source": "50a2d2d112220507faaa2a7f185d47b331423999",
+  "tree": "3076d1f51de0612b4eb46757e4d5ad4ee234fe5b",
+  "control_sha256": "890d207a012cdfebc8ae41f756dd246a37784488aaea06907885364e52323d06",
+  "evidence_root": "remediation-runs/2026-09-08-continuation/actions/34558762289",
+  "hashes": {
+    "download-receipt.json": "43179585bcb43a7d39f871ceefe18ce90fc7424337a44cd81be4d91c12d14cea",
+    "main.zip": "14b49f1efd88293579d54c57407bc461693b3852fb3680692b9271f778a83ea8",
+    "main/state.json": "e75cec2e636aa9809aae81e5523f8a36f6b8ecf634cded10170ea6ad844b2623",
+    "main/request.json": "93c5dd0fd7475ab57f6c6ddee27af9aa1cb611b0f98bce5dd99a9502caf40e9a",
+    "main/native-context.json": "d7049ade7af6514fa6fae830e511f751fb7f8ac1e65c7d5a7e6e67b8a1f1ad99",
+    "main/OwnedProbeContext.h": "54b705c7e71b237911b8d3de2e21132fdb432ea4f5930b0f0afc3664ff20e385",
+    "main/native.stdout.jsonl": "2be78b74fbda1dd1059bbf17353cc3ac1395d1032949c667539b2b8dfe26dde2",
+    "main/native.stderr.txt": "19eade0b3413ad07e847c81f78dbe496fa8c21e05a42bf617f9fff9742021ba5",
+    "main/native-report.json": "b6ab01381ff17fe58040e13de4d57b9949fb4f07b2a378a2ea2343c327dc0b85",
+    "main/public-sdk-macros.txt": "d846113800f009f2b4d503586f884e83edca3e5aeecb94b5a8235557996b90e7"
+  },
+  "custody": "API run/attempt/job, paired job-log source/control and main artifact10183649899 agree. Main ZIP digest matches API/collector; all118 unique members pass CRC and equal extracted bytes. All102 retained command-log sizes/hashes match state. All19 sorted unique controls match frozen Git bytes and reconstruct the approved digest. JSON inspected with duplicate-key/nonfinite-value rejection.",
+  "context": {
+    "nonce": "16808631f83040d9b5203b8b215e98ef",
+    "simulator_udid": "CA2857C9-4FF4-47E6-A5EE-1896440FFD6D",
+    "fixture_root_device": 16777227,
+    "fixture_root_inode": 3586323,
+    "uid": 501,
+    "join": "Request/source/control/claim, create plan/result, state UUID, native-context and raw final context agree; created UUID was absent from the recorded baseline. Retained header exactly reconstructs the command-bound private fixture path and context. No ownership exception used."
+  },
+  "platform": "macOS15.7.9/build24G830, arm64; Xcode26.3/17C529; Simulator SDK26.2; available iOS26.2 runtime23C54 and requested iPhone17Pro. Raw native runtime26.2.0 and all main/method images arm64/platform[7] agree. Retained public SDK macros support observed numeric API fields; unavailable class constant is not invented.",
+  "binary": {
+    "uuid": "0f0150b1-d6e2-4e42-8321-ede3bbd16cf2",
+    "recorded_sha256": "7732de52d09312bd9d37bf4dcca7e9f25184c4d4b68335f061531fd9eed14e7f",
+    "recorded_inode": 3587961,
+    "recorded_bytes": 112160,
+    "join": "Exact arm64-ios16-simulator/O0 compile, ad-hoc sign/verify and dwarfdump exited0/reaped. Built UUID equals raw ProtectionProbe main image before/after; recorded file/digest agree with state. Reviewed prelaunch identity and postrun digest guards remain the evidence basis: binary bytes were not retained for independent rehash."
+  },
+  "native_capture": {
+    "direct_simctl_launcher_pid": 15470,
+    "timeout_seconds": 40,
+    "elapsed_seconds": 5.162,
+    "exit_code": 0,
+    "direct_child_reaped": true,
+    "stdout_bytes": 41981,
+    "stderr_bytes": 124,
+    "phase_markers_in_exact_order": ["c-main-entry", "foundation-initialized", "first-operation"],
+    "join": "One exact owned-UUID/resources/ProtectionProbe simctl spawn. Exactly17 ordered events plus final; report events equal raw JSONL. Native final collectionPASS, stateCAPTURED, errors/signals empty and preservation failures0. Timeout sampling was not exercised. Launcher PID/reaping is not an independent simulator-descendant PID/exit or global-process-absence attestation."
+  },
+  "native_metadata": "Nine collectionPASS/descriptor-closed samples provide45 exact seven-field before/after descriptor/path identity witnesses across fm,url,fcntl,attrlist,filesystem. Five method identities remain stable across stages. All9 FileManager dictionaries omit the protection key;7 file URL reads report until-first-authentication and2 directory URL reads are not applicable. All9 fcntl/attrlist observations return numeric class3 with successful calls/valid returned masks; all9 APFS observations lack MNT_CPROTECT and report unsupported capability. These are metadata observations, not encryption/enforcement proof.",
+  "strict_synthetic_complete": {
+    "required_sample_ids": ["directory-baseline", "complete-baseline", "complete-after-replace", "none-after-url-set", "nonatomic-complete-baseline"],
+    "independently_recomputed_pass": 0,
+    "independently_recomputed_fail": 5,
+    "status": "FAIL",
+    "matches_raw_final_report_and_state": true
+  },
+  "transitions": "Complete atomic replacement changes inode3607753/45B to3607758/49B with no observer descriptor held across write. Directory inode3607751 remains fixed while size/links advance64/2 to192/6; none inode3607755/full identity stays fixed across baseline/kernel-stage/URL-stage. Four final file inodes are distinct. Atomic/None/default/non-atomic options match retained SDK constants. URL Complete setter returns success but subsequent native metadata remains as above; unavailable kernel-set stage did not execute.",
+  "source_guards": "All36 recorded Git queries exited0/reaped in original six-query groups; all6 full tracked/staged status checks remained60s with only invocation-local core.preloadIndex=false, empty stdout/stderr. Other Git commands retained20s. All30 retained Git-command outputs exactly match source root/HEAD/branch/non-shallow/tree or clean status; initial six have recorded completion/byte counts but no retained raw streams.",
+  "postboot_git_comparison": {
+    "prior_run": 34556255462,
+    "prior_state_sha256": "0e1e9519272ffd875b060a940e124e58ea93c0d3b9c831f3fdb741285b59aef0",
+    "pd07_status": "Unmodified full-status argv;60s bound; TIMEOUT observed60.973s, total elapsed61.144s, exit-15/reaped, empty streams; no native spawn.",
+    "pd08_status": "Full-status argv plus -c core.preloadIndex=false; unchanged60s bound; EXITED0/reaped45.523s, empty streams, then native spawn.",
+    "pd08_other_postboot_git_elapsed_seconds_in_query_order": [16.974, 2.826, 7.663, 6.572, 0.233],
+    "limit": "Different runs/hosts/source: observed progress, not an established preload/archive timeout cause or controlled performance improvement. Other postboot Git calls also remained slow."
+  },
+  "findings": [],
+  "limits": "Successful CI collection is not strict protection success:0/5 remains FAIL; production_snapshots_observed=false and historical_a37_strict_result_changed=false. Paired-host interpretation and cleanup are delegated to their assigned reviewers, not attested here. No app/full/Store promotion or inferred missing evidence. Read-only actual JSON/archive/log/frozen-byte inspection plus this receipt only; no broad source review, project imports, tests, builds, network, dispatch or deletion."
+}

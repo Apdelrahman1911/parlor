@@ -1,0 +1,373 @@
+{
+  "schema_version": 1,
+  "reviewed_at": "2026-09-06T20:24:51.121093+00:00",
+  "reviewer": "/root/release_fix_review",
+  "author": "/root/native_fix_review",
+  "decision": "GO — root focused Python controls only; native apphost07 NOT YET APPROVED",
+  "source": {
+    "commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+    "tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+    "branch": "main",
+    "source_count": 669,
+    "source_manifest_sha256": "9ac2be536979f2216b39c10a6d148125a12380987d4efd483bbcbaeb1733318e",
+    "diff_sha256": "148fb4583d8fa8341b3cbc48a7fc0bc7564bf4df5c27e9d80e32c6bfdc57b784",
+    "all_current_source_hashes_unchanged": true
+  },
+  "controls": {
+    "count": 79,
+    "sha256": "1ffbfd452294562711d36a17107b6880cef22ac7657f54f979b29b2987db4d95",
+    "all_files_rehashed": true,
+    "full_path_categories": {
+      "current_v9": 25,
+      "immutable_v8": 23,
+      "immutable_v7": 17,
+      "immutable_v6": 12,
+      "shared_root_helpers": 2
+    },
+    "manifest": {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v9/author-frozen-control-manifest-01.json",
+      "sha256": "80fd31001de227a1bad7e847be4f7436e012ab027f2eae194ca7f896c046a269"
+    },
+    "binding": {
+      "sha256": "378743969f70e641208c344bd4c6241c8d106e010ad5c1a72e5e14a7fccc357f",
+      "source_inputs": 669,
+      "copy_inputs": 613,
+      "only_difference_from_v8": "created_at",
+      "root_bind_receipt_sha256": "80978aa6e0e694b5e6c2bf5ef0ca0034aaa4a2dd763d9e9d988190395157e197",
+      "root_bind_status": "PASS",
+      "exit": 0,
+      "stop_exit": 0,
+      "no_outputs_or_cleanup_errors": true
+    },
+    "delta": {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v9/v8-to-v9-controls.diff",
+      "sha256": "d99be7ffbd3ac01a14f9e4be950c3393e2e58532e259bb383f240b530858741e",
+      "reviewed_lines": [
+        [
+          1,
+          617
+        ]
+      ],
+      "independently_regenerated_exact": true
+    }
+  },
+  "reviewed_current_text": [
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v9/DSC01OSPrerequisite.swift.in",
+      "sha256": "f32e6fb10aea909569461e97ac2a4bb9bcde0d8ef0d9b1ed2a5b431f80060404",
+      "line_ranges": [
+        [
+          1,
+          396
+        ]
+      ],
+      "scope": "Complete new/current control text or complete diff plus unchanged V8 body binding as noted"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v9/v9_receipts.py",
+      "sha256": "6f2a543008de3b82084d28f4926dc0c9ed2122ecfec197fe0ee635ad2d51d719",
+      "line_ranges": [
+        [
+          1,
+          124
+        ]
+      ],
+      "scope": "Complete new/current control text or complete diff plus unchanged V8 body binding as noted"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v9/test_v9_contract.py",
+      "sha256": "59d070e45a01d0f28a2bbd8cee519d033791e22ac8b8a1bb4390761c66a63a56",
+      "line_ranges": [
+        [
+          1,
+          238
+        ]
+      ],
+      "scope": "Complete new/current control text or complete diff plus unchanged V8 body binding as noted"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v9/README.md",
+      "sha256": "d50d736339bec341dcc823044bd94b67c9dd6c9ccef4c1924b532a3ae8d1cfe3",
+      "line_ranges": [
+        [
+          1,
+          66
+        ]
+      ],
+      "scope": "Complete new/current control text or complete diff plus unchanged V8 body binding as noted"
+    }
+  ],
+  "preserved": {
+    "matrix_lines": 662,
+    "matrix_sha256": "82471590bf434cb0b174f6ba44f0d8c0b377e4fee3c4eb0dfe39bbfaa21946e5",
+    "matrix_bytes_equal_v8": true,
+    "byte_identical_control_files": [
+      "DSC01InvocationBridge.kt.in",
+      "DSC01ComposeObservation.kt.in",
+      "DSC01UIKitObservation.kt.in",
+      "DSC01CatalogSelection.swift.in",
+      "DSC01NativeObservation.swift.in",
+      "test_catalog_contract.py",
+      "copied-kotlin-phase.sh.in",
+      "secondary_fifo.py",
+      "DSC01PublicDiagnostics.swift.in",
+      "probe_validation.py",
+      "copied_sources.py",
+      "test_secondary_fifo.py",
+      "DSC01Probe.swift.in",
+      "test_harness_contract.py",
+      "v8_receipts.py",
+      "DSC01MafiaStartSelection.swift.in",
+      "IOSAppLaunchUITests.swift.in",
+      "bind_source.py",
+      "test_copy_observation_contract.py"
+    ],
+    "runner_unchanged_top_level_helpers_and_classes": 10,
+    "runner_changed_top_level_functions": [
+      "control_files",
+      "main"
+    ],
+    "entire_runner_finalizer_byte_identical": true,
+    "original_probe_validation_unchanged": true,
+    "original_start_and_catalog_unchanged": true,
+    "original_v8_receipt_validation_unchanged": true,
+    "original_v8_tests_only_expected_receipt_name_changed": true
+  },
+  "reasoning": [
+    {
+      "topic": "Original apphost06 failure",
+      "conclusion": "Harness-only insufficient prerequisite assumption",
+      "evidence": "Raw public Settings list at xcodebuild.log5086-5087 already has unique hittable English primary + real Arabic cell + AddLanguage in that order, no picker/search/keyboard/alert. V8 incorrectly requires Arabic absent. Independent apphost06 dossier retained; no app crash/regression inferred."
+    },
+    {
+      "topic": "Already-satisfied path",
+      "conclusion": "Strong observable precondition retained/strengthened, no forced language changes",
+      "evidence": "396line Swift helper now classifies only current uncovered/hittable/finite in-viewport ordered preferred rows. English representation counts0..1 and at leastone, unique real Arabic cell, title/search/keyboard/alert guards required. Fresh second metadata read revalidates; final receipt already-satisfied plus arabicAddedByThisPrerequisite=false. Branch returns before Add/search/primary actions; original per-app matrix continues."
+    },
+    {
+      "topic": "Missing-Arabic path",
+      "conclusion": "Existing public action path preserved",
+      "evidence": "Requires same current exposed English-primary list and zero Arabic cell/text counts. V8 AddLanguage/search/select/KeepEnglish path byte-identical except final var+disposition fields. Actual V8 addition parser still required by v9 when added; English+Arabic final viewport/ordering proof strengthened."
+    },
+    {
+      "topic": "Receipt validity",
+      "conclusion": "No synthetic prerequisite receipt can replace original native outcome",
+      "evidence": "V9 requires one24case Swift decision contract plus exact ownership/status/cardinality/stage/sequence/activation guards. Unknown/BLOCKED rows fail. Already-satisfied cannot contain language mutationstages; addition must retain fullsteps. Runner requires exact five actual XCTest results before V9 proof and unchanged four scenario/ownership/local-game/OS probe afterward."
+    },
+    {
+      "topic": "Tests and counterevidence",
+      "conclusion": "18 new discoverable tests meaningfully exercise parser/source invariants; not yet run",
+      "evidence": "True-flag-only proof, coveredpicker, wrongprimary, duplicatecells, missing/offscreen/NaNframes, wrongorder, absent/repeatednavigation, falseaddedclaim, missingSwiftcontract, incorrectownership and diagnosticsbudget negativefixtures reviewed. Sourcecontracts assert whole662matrix/probes/Start/finalizer unchanged; source hashes cover every consumed V8/V7/V6 reference. XCTAssert statements can print a contract despite failure, but mandatory exactXCTest pass prevents false-green overall."
+    },
+    {
+      "topic": "Architecture and privacy",
+      "conclusion": "No production change or new preference shortcut",
+      "evidence": "Only isolatedcopied XCTest/receiptcontrols changed. No direct platformpreferencewrite, UIroute bypass, reducer/session/substitution, navigation migration, userprofile mutation, privateOSURL, physicalLAN or Storeoperation. ExistingownedfreshDebugsimulator barriers and failurefinalizers unchanged."
+    },
+    {
+      "topic": "Uncertain OS behavior",
+      "conclusion": "Still an experiment; no guarantee that multilingual list reveals per-app selector",
+      "evidence": "Authoritative Apple references in reviews/independent-os-prerequisite-research-01.json establish public multilingual/per-app flow, not specificiOS26.5 selectors. Current helper blocks unknown state. Original per-app probe remains required and may still block."
+    }
+  ],
+  "focused_execution": {
+    "command": [
+      "/usr/bin/python3",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v9",
+      "-p",
+      "test_*.py",
+      "-v"
+    ],
+    "expected_tests": 148,
+    "counts_by_file": {
+      "test_catalog_contract.py": 12,
+      "test_copy_observation_contract.py": 52,
+      "test_harness_contract.py": 20,
+      "test_secondary_fifo.py": 27,
+      "test_v8_contract.py": 19,
+      "test_v9_contract.py": 18
+    },
+    "ast_expected_test_ids": [
+      "test_catalog_contract.CatalogControlTest.test_added_xctest_helper_and_contract_are_hashed_build_copy_inputs",
+      "test_catalog_contract.CatalogControlTest.test_each_v6_reference_affects_control_identity_without_mutating_files",
+      "test_catalog_contract.CatalogControlTest.test_every_consumed_v6_reference_is_bound_by_full_path_and_bytes",
+      "test_catalog_contract.CatalogControlTest.test_incomplete_train_unknown_game_and_oversized_row_fail",
+      "test_catalog_contract.CatalogControlTest.test_missing_swift_contract_or_game_cannot_pass",
+      "test_catalog_contract.CatalogControlTest.test_old_native_matrix_and_cleanup_controls_remain_identical",
+      "test_catalog_contract.CatalogControlTest.test_only_catalog_entry_call_changes_original_matrix_and_geometry_checks_execute",
+      "test_catalog_contract.CatalogControlTest.test_os_prefix_queries_are_diagnostics_only_not_action_fallbacks",
+      "test_catalog_contract.CatalogControlTest.test_physical_activation_is_outside_all_readiness_retries",
+      "test_catalog_contract.CatalogControlTest.test_public_metadata_bounds_and_measured_exclusions_are_explicit",
+      "test_catalog_contract.CatalogControlTest.test_repeated_activation_or_missing_successor_cannot_pass",
+      "test_catalog_contract.CatalogControlTest.test_synthetic_receipt_is_only_a_parser_check",
+      "test_copy_observation_contract.CopyBoundaryContractTest.test_actual_os_api_used_not_private_settings_urls_or_global_defaults",
+      "test_copy_observation_contract.CopyBoundaryContractTest.test_after_build_identity_precedes_owned_copy_deletion_and_gates_pass",
+      "test_copy_observation_contract.CopyBoundaryContractTest.test_all_actual_source_anchors_apply_only_to_owned_copies",
+      "test_copy_observation_contract.CopyBoundaryContractTest.test_both_en_ar_geometries_use_actual_orientation_then_a_complete_passive_window",
+      "test_copy_observation_contract.CopyBoundaryContractTest.test_copy_refuses_unbound_manifest_and_nonempty_destination",
+      "test_copy_observation_contract.CopyBoundaryContractTest.test_exact_compose_controller_is_captured_from_local_not_a_child_type_guess",
+      "test_copy_observation_contract.CopyBoundaryContractTest.test_final_copy_attestation_rejects_input_drift_but_not_owned_outputs",
+      "test_copy_observation_contract.CopyBoundaryContractTest.test_final_copy_attestation_rejects_new_inputs_and_source_symlinks",
+      "test_copy_observation_contract.CopyBoundaryContractTest.test_foreground_collects_both_windows_before_any_direction_assertion",
+      "test_copy_observation_contract.CopyBoundaryContractTest.test_local_checkpoint_uses_real_settings_then_home_before_synthetic_language_calls",
+      "test_copy_observation_contract.CopyBoundaryContractTest.test_missing_or_duplicate_anchor_is_not_a_dynamic_fallback",
+      "test_copy_observation_contract.CopyBoundaryContractTest.test_name_entry_uses_real_ime_next_done_without_fling_or_backing_state_bypass",
+      "test_copy_observation_contract.CopyBoundaryContractTest.test_native_source_additions_and_explicit_swift_outer_are_closed_manifest_inputs",
+      "test_copy_observation_contract.CopyBoundaryContractTest.test_observation_never_loads_or_reconfigures_a_native_view",
+      "test_copy_observation_contract.CopyBoundaryContractTest.test_original_build_outputs_never_enter_copy_only_cleanup_set",
+      "test_copy_observation_contract.CopyBoundaryContractTest.test_original_name_fields_still_own_next_and_final_done",
+      "test_copy_observation_contract.CopyBoundaryContractTest.test_passive_samples_are_durable_nonblocking_and_do_not_publish_between_samples",
+      "test_copy_observation_contract.CopyBoundaryContractTest.test_protected_traversal_hidden_generated_and_nonbuild_inputs_are_excluded",
+      "test_copy_observation_contract.CopyBoundaryContractTest.test_public_setup_selectors_are_source_whitelisted_and_bounded",
+      "test_copy_observation_contract.DirectObservationReceiptTest.test_a_disposed_session_cannot_be_rebased_to_a_passing_checkpoint",
+      "test_copy_observation_contract.DirectObservationReceiptTest.test_a_language_command_must_have_its_own_lifecycle_witness",
+      "test_copy_observation_contract.DirectObservationReceiptTest.test_actual_native_child_outer_view_window_or_parent_replacement_is_rejected",
+      "test_copy_observation_contract.DirectObservationReceiptTest.test_any_early_middle_or_second_window_divergence_fails_despite_good_final_sample",
+      "test_copy_observation_contract.DirectObservationReceiptTest.test_both_actual_game_phase_schemas_are_exercised_without_runtime_claim",
+      "test_copy_observation_contract.DirectObservationReceiptTest.test_complete_raw_geometric_receipts_fit_the_retained_file_budget",
+      "test_copy_observation_contract.DirectObservationReceiptTest.test_correct_native_direction_does_not_replace_direct_compose_observation",
+      "test_copy_observation_contract.DirectObservationReceiptTest.test_distinct_outer_direction_is_not_mistaken_for_compose_native_direction",
+      "test_copy_observation_contract.DirectObservationReceiptTest.test_equal_value_cannot_hide_a_replaced_controller_or_flow_or_state_reference",
+      "test_copy_observation_contract.DirectObservationReceiptTest.test_every_passive_sample_requires_own_lifecycle_and_canonical_reference",
+      "test_copy_observation_contract.DirectObservationReceiptTest.test_every_raw_geometry_field_is_independently_checked",
+      "test_copy_observation_contract.DirectObservationReceiptTest.test_explicit_language_cannot_pass_when_locale_and_direction_both_stay_stale",
+      "test_copy_observation_contract.DirectObservationReceiptTest.test_failed_and_cancelled_synthetic_commands_are_not_success",
+      "test_copy_observation_contract.DirectObservationReceiptTest.test_first_post_foreground_mismatch_cannot_be_erased_by_good_passive_windows",
+      "test_copy_observation_contract.DirectObservationReceiptTest.test_geometry_window_must_not_add_a_background_cycle",
+      "test_copy_observation_contract.DirectObservationReceiptTest.test_initial_language_must_use_actual_settings_with_zero_synthetic_commands",
+      "test_copy_observation_contract.DirectObservationReceiptTest.test_kotlin_observation_cannot_run_before_original_app_initialization",
+      "test_copy_observation_contract.DirectObservationReceiptTest.test_matching_but_inset_child_and_parent_do_not_prove_full_window_geometry",
+      "test_copy_observation_contract.DirectObservationReceiptTest.test_missing_os_language_ui_is_blocked_never_pass_or_not_applicable",
+      "test_copy_observation_contract.DirectObservationReceiptTest.test_native_observer_cannot_rebase_after_disposal_or_call_before_main",
+      "test_copy_observation_contract.DirectObservationReceiptTest.test_os_gate_requires_an_accepted_public_settings_url_invocation",
+      "test_copy_observation_contract.DirectObservationReceiptTest.test_os_owned_preference_requires_restoration_and_restart",
+      "test_copy_observation_contract.DirectObservationReceiptTest.test_oversized_negative_nan_and_bool_geometry_is_rejected",
+      "test_copy_observation_contract.DirectObservationReceiptTest.test_passive_windows_require_all_six_samples_and_original_order",
+      "test_copy_observation_contract.DirectObservationReceiptTest.test_private_or_unknown_data_is_rejected",
+      "test_copy_observation_contract.DirectObservationReceiptTest.test_process_recreation_is_not_same_process_continuity",
+      "test_copy_observation_contract.DirectObservationReceiptTest.test_root_controller_count_and_locale_do_not_prove_session_retention",
+      "test_copy_observation_contract.DirectObservationReceiptTest.test_rotations_must_cover_both_actual_directions_and_not_fake_orientation",
+      "test_copy_observation_contract.DirectObservationReceiptTest.test_six_full_public_snapshot_rows_fit_the_existing_accessibility_budget",
+      "test_copy_observation_contract.DirectObservationReceiptTest.test_system_cannot_accept_a_plausible_but_replaced_os_preference",
+      "test_copy_observation_contract.DirectObservationReceiptTest.test_valid_synthetic_settings_direction_receipt_is_only_a_schema_check",
+      "test_copy_observation_contract.DirectObservationReceiptTest.test_window_only_schema_is_not_accepted_in_settings_or_nonwindow_events",
+      "test_copy_observation_contract.DirectObservationReceiptTest.test_zero_safe_areas_cannot_false_green_even_when_all_three_match",
+      "test_harness_contract.CopiedPhaseContractTest.test_failed_build_with_stale_output_stops_and_never_normalizes",
+      "test_harness_contract.CopiedPhaseContractTest.test_failed_directory_change_never_builds_or_normalizes",
+      "test_harness_contract.CopiedPhaseContractTest.test_failed_stop_cannot_normalize_or_look_green",
+      "test_harness_contract.CopiedPhaseContractTest.test_normalization_failure_propagates_after_immediate_stop",
+      "test_harness_contract.CopiedPhaseContractTest.test_successful_phase_stops_before_normalizing",
+      "test_harness_contract.ReceiptContractTest.test_changed_boot_identity_cannot_impersonate_restart",
+      "test_harness_contract.ReceiptContractTest.test_complete_synthetic_schema_is_accepted_not_runtime_evidence",
+      "test_harness_contract.ReceiptContractTest.test_exact_five_test_receipt_is_required_not_just_the_app_matrix",
+      "test_harness_contract.ReceiptContractTest.test_missing_no_disposal_precondition_is_rejected",
+      "test_harness_contract.ReceiptContractTest.test_missing_system_restoration_or_wrong_native_direction_fails",
+      "test_harness_contract.ReceiptContractTest.test_production_container_test_names_signatures_and_actual_project_wiring_are_bound",
+      "test_harness_contract.ReceiptContractTest.test_test_summary_with_skip_cannot_pass",
+      "test_harness_contract.ReceiptContractTest.test_unknown_data_is_not_exported_as_trusted_observation",
+      "test_harness_contract.RuntimeStatusContractTest.test_executed_failed_xctest_summary_cannot_remain_not_run",
+      "test_harness_contract.RuntimeStatusContractTest.test_later_evidence_failure_cannot_leave_pass",
+      "test_harness_contract.RuntimeStatusContractTest.test_preflight_failure_is_still_not_run",
+      "test_harness_contract.RuntimeStatusContractTest.test_running_is_persisted_before_the_guarded_xcode_call",
+      "test_harness_contract.SelectorSourceContractTest.test_diagnostics_are_exact_whitelisted_bounded_and_never_a_fallback_tap",
+      "test_harness_contract.SelectorSourceContractTest.test_exact_tab_selector_matches_reviewed_pinned_merge_and_actual_resources",
+      "test_harness_contract.SelectorSourceContractTest.test_games_return_uses_original_resources_and_the_same_actual_tab_bar",
+      "test_secondary_fifo.SecondaryFifoSafetyTest.test_attested_pair_removed_only_after_workers_stop",
+      "test_secondary_fifo.SecondaryFifoSafetyTest.test_cached_pair_still_rechecks_changed_inode",
+      "test_secondary_fifo.SecondaryFifoSafetyTest.test_cached_pair_still_rechecks_inode_uid_and_symlink",
+      "test_secondary_fifo.SecondaryFifoSafetyTest.test_changed_child_or_parent_start_cannot_use_attested_pair",
+      "test_secondary_fifo.SecondaryFifoSafetyTest.test_current_new_pair_cannot_hide_behind_members_old_argv",
+      "test_secondary_fifo.SecondaryFifoSafetyTest.test_file_holder_prevents_any_unlink",
+      "test_secondary_fifo.SecondaryFifoSafetyTest.test_fully_attested_same_identity_and_pair_avoids_redundant_uid_query",
+      "test_secondary_fifo.SecondaryFifoSafetyTest.test_holder_query_error_never_becomes_empty_holder_success",
+      "test_secondary_fifo.SecondaryFifoSafetyTest.test_initial_uid_query_failure_never_attests_or_deletes_paths",
+      "test_secondary_fifo.SecondaryFifoSafetyTest.test_inode_uid_mismatch_is_not_owned",
+      "test_secondary_fifo.SecondaryFifoSafetyTest.test_missing_or_duplicate_flags_rejected",
+      "test_secondary_fifo.SecondaryFifoSafetyTest.test_missing_unattested_then_late_created_fifo_blocks_cleanup",
+      "test_secondary_fifo.SecondaryFifoSafetyTest.test_new_pair_argv_change_during_uid_attestation_is_rejected",
+      "test_secondary_fifo.SecondaryFifoSafetyTest.test_partial_record_or_pending_claim_cannot_use_cached_uid",
+      "test_secondary_fifo.SecondaryFifoSafetyTest.test_pid_reuse_during_cleanup_preserves_files",
+      "test_secondary_fifo.SecondaryFifoSafetyTest.test_pid_reuse_during_observation_rejected",
+      "test_secondary_fifo.SecondaryFifoSafetyTest.test_preexisting_parent_birthtime_rejects_new_fifo",
+      "test_secondary_fifo.SecondaryFifoSafetyTest.test_process_uid_mismatch_is_not_owned",
+      "test_secondary_fifo.SecondaryFifoSafetyTest.test_replaced_inode_rejected",
+      "test_secondary_fifo.SecondaryFifoSafetyTest.test_stale_preexisting_fifo_is_not_owned",
+      "test_secondary_fifo.SecondaryFifoSafetyTest.test_symlink_fifo_not_followed_or_deleted",
+      "test_secondary_fifo.SecondaryFifoSafetyTest.test_symlink_parent_not_followed",
+      "test_secondary_fifo.SecondaryFifoSafetyTest.test_timeout_or_cancellation_cleanup_uses_same_attestation",
+      "test_secondary_fifo.SecondaryFifoSafetyTest.test_unknown_directory_contents_preserve_all",
+      "test_secondary_fifo.SecondaryFifoSafetyTest.test_unknown_external_argument_is_rejected",
+      "test_secondary_fifo.SecondaryFifoSafetyTest.test_unknown_root_contents_preserve_all",
+      "test_secondary_fifo.SecondaryFifoSafetyTest.test_unowned_child_cannot_attest_from_name_alone",
+      "test_v8_contract.V8ReceiptTest.test_arabic_picker_result_cannot_masquerade_as_exposed_preferred_list",
+      "test_v8_contract.V8ReceiptTest.test_complete_synthetic_receipts_only_exercise_parsers",
+      "test_v8_contract.V8ReceiptTest.test_os_precondition_never_passes_from_missing_unknown_or_blocked_step",
+      "test_v8_contract.V8ReceiptTest.test_os_prerequisite_requires_owned_profile_and_english_primary_not_arabic_primary",
+      "test_v8_contract.V8ReceiptTest.test_os_step_activation_cannot_repeat_or_disappear",
+      "test_v8_contract.V8ReceiptTest.test_public_diagnostic_bounds_are_strict",
+      "test_v8_contract.V8ReceiptTest.test_start_activation_is_not_repeatable_or_an_incomplete_window",
+      "test_v8_contract.V8ReceiptTest.test_start_disabled_hidden_occluded_and_nonfinite_fail",
+      "test_v8_contract.V8ReceiptTest.test_start_last_window_and_dynamic_coordinate_drift_fail",
+      "test_v8_contract.V8ReceiptTest.test_start_requires_executed_geometry_contract",
+      "test_v8_contract.V8ReceiptTest.test_start_setup_and_canonical_successor_are_both_mandatory",
+      "test_v8_contract.V8SourceControlTest.test_complete_original_matrix_changes_only_the_authorized_calls_and_wait_diagnostics",
+      "test_v8_contract.V8SourceControlTest.test_each_v7_reference_changes_identity_without_changing_any_file",
+      "test_v8_contract.V8SourceControlTest.test_every_consumed_v7_reference_is_bound_by_full_path_and_bytes",
+      "test_v8_contract.V8SourceControlTest.test_every_observation_predicate_is_named_without_logging_preferences_or_private_state",
+      "test_v8_contract.V8SourceControlTest.test_new_controls_are_bound_and_appended_to_only_the_copied_xctest",
+      "test_v8_contract.V8SourceControlTest.test_original_app_observers_catalog_cleanup_and_oracle_controls_remain_byte_identical",
+      "test_v8_contract.V8SourceControlTest.test_os_prerequisite_is_supported_ui_only_fresh_owned_and_after_both_complete_games",
+      "test_v8_contract.V8SourceControlTest.test_start_keeps_one_activation_outside_readiness_and_proves_canonical_successor",
+      "test_v9_contract.V9PrerequisiteReceiptTest.test_blocked_unknown_wrong_owner_and_budget_are_not_success",
+      "test_v9_contract.V9PrerequisiteReceiptTest.test_covered_picker_ambiguity_and_wrong_primary_block_both_observations",
+      "test_v9_contract.V9PrerequisiteReceiptTest.test_distinct_outcome_cannot_falsely_claim_language_addition",
+      "test_v9_contract.V9PrerequisiteReceiptTest.test_executed_swift_decision_contract_is_mandatory_and_unique",
+      "test_v9_contract.V9PrerequisiteReceiptTest.test_incomplete_or_covered_missing_arabic_baseline_blocks",
+      "test_v9_contract.V9PrerequisiteReceiptTest.test_invalid_missing_or_offscreen_rectangles_block",
+      "test_v9_contract.V9PrerequisiteReceiptTest.test_language_mutation_must_not_occur_on_already_satisfied_branch",
+      "test_v9_contract.V9PrerequisiteReceiptTest.test_missing_arabic_retains_every_original_addition_oracle",
+      "test_v9_contract.V9PrerequisiteReceiptTest.test_navigation_and_required_addition_steps_cannot_repeat_or_disappear",
+      "test_v9_contract.V9PrerequisiteReceiptTest.test_preexisting_pair_passes_without_claiming_addition_or_origin",
+      "test_v9_contract.V9PrerequisiteReceiptTest.test_present_language_boolean_alone_never_passes",
+      "test_v9_contract.V9PrerequisiteReceiptTest.test_unique_merged_english_primary_is_supported_without_duplicate_rows",
+      "test_v9_contract.V9PrerequisiteReceiptTest.test_wrong_row_order_cannot_be_hidden_by_true_flags",
+      "test_v9_contract.V9SourceControlTest.test_every_consumed_v8_reference_and_before_after_binding_are_explicit",
+      "test_v9_contract.V9SourceControlTest.test_missing_arabic_still_executes_unchanged_real_settings_actions",
+      "test_v9_contract.V9SourceControlTest.test_original_per_app_matrix_probes_start_and_cleanup_stay_byte_identical",
+      "test_v9_contract.V9SourceControlTest.test_satisfied_branch_reobserves_and_returns_without_mutating_languages",
+      "test_v9_contract.V9SourceControlTest.test_v9_result_is_after_exact_xctest_and_before_original_probe_gate"
+    ],
+    "executor": "Root shared build lane only",
+    "requirements": [
+      "Use frozen79controls and source669; no applicationchanges/rebinding.",
+      "Capture compact complete raw148method results and exit; retainbefore/afteridentity.",
+      "Stop Gradle immediately, clean only generatedtaskoutputs, attestownedworkers per rootfinalizer evenonfailure.",
+      "Independent reviewer must inspect exact execution evidence before any apphost07 nativeGO."
+    ]
+  },
+  "open_blockers": [
+    "No148test execution claimed by this record.",
+    "NoSwift24decisioncase execution/compilation from this record.",
+    "Actual per-app OSsettingsflow remains unverified; DS-C01 PARTIALLY VERIFIED.",
+    "No physicalLAN, retainedmultiplayerhostruntime, Store/signing or Store-qualifiedXcode proof."
+  ],
+  "apphost06_evidence": {
+    "path": "remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-dsc01-apphost06-outcome-01.json",
+    "sha256": "103223383585eeaf02e9c40548f203a33d71fd821034e83dbcc13cb40c8a404b"
+  },
+  "reviewer_execution": {
+    "builds": 0,
+    "tests": 0,
+    "apps": 0,
+    "simulators": 0,
+    "background_workers": 0,
+    "production_changes": 0,
+    "cleanup_required": false,
+    "private_material_read": false
+  }
+}

@@ -61,6 +61,7 @@ import com.parlor.games.mafia.ui.screens.night.DetectiveResultScreen
 import com.parlor.games.mafia.ui.screens.night.DoctorProtectScreen
 import com.parlor.games.mafia.ui.screens.night.MafiaKillVoteScreen
 import com.parlor.games.mafia.ui.screens.night.PickableTarget
+import com.parlor.games.mafia.ui.screens.night.isDoctorTargetEligible
 import com.parlor.games.mafia.ui.screens.postgame.PostGameScreen
 import com.parlor.games.mafia.ui.screens.reveal.PrivateRoleCardScreen
 import com.parlor.games.mafia.ui.screens.reveal.roleDisplayName
@@ -577,11 +578,8 @@ private fun buildTargets(
                     }
                 }
                 Role.Doctor -> {
-                    val canTargetSelf = settings.doctorCanSelfHeal || slot.playerId != selfPlayerId
                     val previousTarget = state.privatePerPlayer[selfPlayerId]?.previousDoctorProtect
-                    val notConsecutive = settings.doctorCanProtectSamePlayerConsecutively ||
-                        slot.playerId != previousTarget
-                    canTargetSelf && notConsecutive
+                    isDoctorTargetEligible(slot.playerId, selfPlayerId, previousTarget, settings)
                 }
                 Role.Detective -> if (settings.detectiveCanInspectSelf) true else slot.playerId != selfPlayerId
                 Role.Civilian -> slot.playerId != selfPlayerId

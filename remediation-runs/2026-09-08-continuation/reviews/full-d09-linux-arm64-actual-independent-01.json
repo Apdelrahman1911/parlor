@@ -1,0 +1,333 @@
+{
+  "kind": "INDEPENDENT_FULL_D09_LINUX_ARM64_ACTUAL_DESKTOP_REVIEW",
+  "reviewer": "/root/ci_linux_arm",
+  "reviewed_at": "2026-09-11T13:20:31.092972+00:00",
+  "result": "PASS_DESKTOP_LANE_WITH_3_EXPLICITLY_IGNORED_CASES",
+  "run_id": 34561630512,
+  "run_attempt": 1,
+  "job_id": 103145382861,
+  "job": "desktop-linux-arm64",
+  "source_sha": "d3c0df9ccba51463708728c3c618d3652e76aafa",
+  "source_tree": "3169657a10279eb2bfad6c59a60a5054c6092b61",
+  "custody": {
+    "collector_receipt": "remediation-runs/2026-09-08-continuation/actions/34561630512/download-receipt.json",
+    "collector_receipt_sha256": "64d973465fa1a2d8b43aafa4a4c0e40d52638caaa7e7e4b9dc4bb6b13d265a2e",
+    "collector_status": "COLLECTED_NOT_RUNTIME_REVIEW",
+    "artifact_id": 10184603884,
+    "artifact_name": "desktop-verification-desktop-linux-arm64",
+    "archive_sha256": "741a0adb1a5fb31d260f853d5ceef33b9f3abc34660bc5badc8bd52beae8ad45",
+    "archive_bytes": 17850140,
+    "api_digest_matches": true,
+    "collector_whole_archive_crc_and_bounds": true,
+    "ownership_member": "_temp/parlor-verification-34561630512-1-desktop-linux-arm64-ownership.json",
+    "ownership_sha256": "1712f67e8e454ca74ae4e91e89e7fa2e3bbf54c83d71d3e679a01bcc825e500b",
+    "source_attempt_job_ownership_bound": true,
+    "log_archive": "run-attempt-1-logs.zip",
+    "log_archive_sha256": "25f90391edc685b735dbdccc49ca0c501641e36979087a80a138724bc2000708",
+    "log_member": "1_Desktop strict verification (Linux arm64).txt",
+    "log_member_bytes": 98416,
+    "log_member_sha256": "c1e99017e3bd85730504d2643e477604a55dded848728aa1a4e6162fd5991cbc",
+    "log_read": "Exact member only in memory, bounded to 256KiB; no log extraction."
+  },
+  "execution": {
+    "api_job_conclusion": "success",
+    "all_api_steps_success": true,
+    "runner": "ubuntu-24.04-arm",
+    "host": "Linux/aarch64 checks successful; Gradle reports linux-aarch64.",
+    "jdk": "Temurin 21.0.12+101.0.LTS arm64",
+    "command": "./gradlew productionDesktopCheck --dependency-verification=strict --no-daemon --stacktrace --console=plain",
+    "gradle_result": "BUILD SUCCESSFUL in 4m 1s",
+    "actionable_tasks": 113,
+    "executed_actionable_tasks": 113,
+    "desktop_tasks_all_executed_not_cached": [
+      {
+        "task": ":composeApp:desktopTest",
+        "log_line": 848
+      },
+      {
+        "task": ":game-modes:mafia:desktopTest",
+        "log_line": 853
+      },
+      {
+        "task": ":game-modes:whodunit:desktopTest",
+        "log_line": 854
+      },
+      {
+        "task": ":shared:content:desktopTest",
+        "log_line": 794
+      },
+      {
+        "task": ":shared:core:desktopTest",
+        "log_line": 762
+      },
+      {
+        "task": ":shared:design-system:desktopTest",
+        "log_line": 810
+      },
+      {
+        "task": ":shared:engine:desktopTest",
+        "log_line": 793
+      },
+      {
+        "task": ":shared:engine-testing:desktopTest",
+        "log_line": 801
+      },
+      {
+        "task": ":shared:networking:desktopTest",
+        "log_line": 809
+      },
+      {
+        "task": ":shared:networking-testing:desktopTest",
+        "log_line": 818
+      },
+      {
+        "task": ":shared:session:desktopTest",
+        "log_line": 826
+      },
+      {
+        "task": ":shared:storage:desktopTest",
+        "log_line": 822
+      },
+      {
+        "task": ":shared:transport-p2p:desktopTest",
+        "log_line": 852
+      }
+    ],
+    "composeApp_compileKotlinDesktop": "EXECUTED",
+    "productionDesktopCheck": "EXECUTED"
+  },
+  "current_xml": {
+    "selection": "Only extracted current candidates at parlor/parlor/<frozen live module build root>/test-results/desktopTest/TEST-*.xml.",
+    "files": 203,
+    "cases": 1343,
+    "passed": 1340,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 3,
+    "raw_hashes_match_all203_collector_members": true,
+    "suite_counts_match_testcase_nodes": true,
+    "case_ids_unique_with_module_class_name": true,
+    "all_suite_timestamps_and_durations_within_current_command": true,
+    "first_timestamp": "2026-09-11T04:20:01.467Z",
+    "last_timestamp": "2026-09-11T04:21:34.757Z",
+    "hostname": "runnervmec22z",
+    "sorted_path_bytes_sha256_manifest_digest": "f80d3047957eb44733f84aa893f9e0d6584ecf7c53732e0232cc4bb730e1721c",
+    "per_module": {
+      "composeApp": {
+        "xml_files": 21,
+        "tests": 96,
+        "passed": 96,
+        "skipped": 0
+      },
+      "game-modes/mafia": {
+        "xml_files": 37,
+        "tests": 297,
+        "passed": 297,
+        "skipped": 0
+      },
+      "game-modes/whodunit": {
+        "xml_files": 63,
+        "tests": 360,
+        "passed": 360,
+        "skipped": 0
+      },
+      "shared/content": {
+        "xml_files": 5,
+        "tests": 24,
+        "passed": 24,
+        "skipped": 0
+      },
+      "shared/core": {
+        "xml_files": 2,
+        "tests": 12,
+        "passed": 12,
+        "skipped": 0
+      },
+      "shared/design-system": {
+        "xml_files": 18,
+        "tests": 40,
+        "passed": 40,
+        "skipped": 0
+      },
+      "shared/engine": {
+        "xml_files": 5,
+        "tests": 13,
+        "passed": 13,
+        "skipped": 0
+      },
+      "shared/engine-testing": {
+        "xml_files": 3,
+        "tests": 6,
+        "passed": 6,
+        "skipped": 0
+      },
+      "shared/networking": {
+        "xml_files": 8,
+        "tests": 34,
+        "passed": 34,
+        "skipped": 0
+      },
+      "shared/networking-testing": {
+        "xml_files": 2,
+        "tests": 5,
+        "passed": 5,
+        "skipped": 0
+      },
+      "shared/session": {
+        "xml_files": 13,
+        "tests": 145,
+        "passed": 145,
+        "skipped": 0
+      },
+      "shared/storage": {
+        "xml_files": 4,
+        "tests": 31,
+        "passed": 31,
+        "skipped": 0
+      },
+      "shared/transport-p2p": {
+        "xml_files": 22,
+        "tests": 280,
+        "passed": 277,
+        "skipped": 3
+      }
+    }
+  },
+  "strict_dependency_verification": {
+    "frozen_metadata_path": "gradle/verification-metadata.xml",
+    "frozen_metadata_sha256": "58b5a279cc5ccc58e1088fbe3dd248fcfdf31a307707204c5438259de7960f95",
+    "verify_metadata": true,
+    "gradle_command_mode": "strict",
+    "host_selection": "Frozen composeApp uses implementation(compose.desktop.currentOs); real strict graph executed on checked Linux ARM64.",
+    "linux_arm64_pins": [
+      {
+        "component": "org.jetbrains.compose.desktop:desktop-jvm-linux-arm64:1.10.3",
+        "artifact": "desktop-jvm-linux-arm64-1.10.3.pom",
+        "sha256": "8571cd36d2b46b38fd70eb5feea96cdd82011f93b2c049b142979ea997330edc"
+      },
+      {
+        "component": "org.jetbrains.skiko:skiko-awt-runtime-linux-arm64:0.9.37.4",
+        "artifact": "skiko-awt-runtime-linux-arm64-0.9.37.4.jar",
+        "sha256": "3abcbaa542278fd7b938a08ac05b50139a905ced79075c257adfeae878413330"
+      },
+      {
+        "component": "org.jetbrains.skiko:skiko-awt-runtime-linux-arm64:0.9.37.4",
+        "artifact": "skiko-awt-runtime-linux-arm64-0.9.37.4.pom",
+        "sha256": "fbcda0bce219b70da5de78280b5cd6567822e12823f99793a76bdde1b017fada"
+      }
+    ],
+    "runtime_support": "Current Compose UI/Skiko sentinel tests pass; dependency checksum contract3/3 passes.",
+    "limitation": "No standalone resolved-component dump or independent measurement of downloaded-library bytes is claimed; metadata-native tests are static guards only."
+  },
+  "sentinels": [
+    {
+      "suite": "com.parlor.app.DesktopPlatformBackHandlerTest",
+      "xml": "parlor/parlor/composeApp/build/test-results/desktopTest/TEST-com.parlor.app.DesktopPlatformBackHandlerTest.xml",
+      "sha256": "88a58e73730ce62ecbf7a17d925c8e0d3b6da8715444169e4b54b0d42706715f",
+      "tests": 4,
+      "passed": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "case_names": [
+        "disabling_after_back_prevents_a_repeated_event_from_double_handling()[desktop]",
+        "escape_key_down_invokes_the_shared_handler_once_and_key_up_is_ignored()[desktop]",
+        "settings_and_game_actions_both_enable_the_same_desktop_handler()[desktop]",
+        "disabled_desktop_back_event_is_left_to_the_dispatcher_fallback()[desktop]"
+      ]
+    },
+    {
+      "suite": "com.parlor.designsystem.localization.ProvideAppLanguageDesktopTest",
+      "xml": "parlor/parlor/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.localization.ProvideAppLanguageDesktopTest.xml",
+      "sha256": "0a22de58b6f045bd771a5936516204b89fd2c3828d0d979582a51357c13effda",
+      "tests": 1,
+      "passed": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "case_names": [
+        "locale_switches_resources_without_replacing_remembered_content_state()[desktop]"
+      ]
+    },
+    {
+      "suite": "com.parlor.transport.p2p.DesktopDependencyVerificationContractTest",
+      "xml": "parlor/parlor/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.DesktopDependencyVerificationContractTest.xml",
+      "sha256": "33f3e4269531b3b95cb2d66fe28d0d74db360e094c8fe01ccd183c58be9404c7",
+      "tests": 3,
+      "passed": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "case_names": [
+        "android_aapt2_covers_every_supported_desktop_operating_system()[desktop]",
+        "kotlin_native_distributions_cover_every_supported_native_toolchain_host()[desktop]",
+        "compose_desktop_and_skiko_runtime_cover_every_repository_supported_host()[desktop]"
+      ]
+    },
+    {
+      "suite": "com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest",
+      "xml": "parlor/parlor/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest.xml",
+      "sha256": "bef9f0cbaa5f4d7b8e593e54f716040b38f84f3ac2cd810458ec3f699e75a5d7",
+      "tests": 4,
+      "passed": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 3,
+      "case_names": [
+        "peer_to_host_message_round_trips_and_host_to_peer_message_arrives_back()[desktop]",
+        "peer_can_join_a_hosted_room_and_membership_appears_on_host()[desktop]",
+        "host_broadcast_reaches_every_peer()[desktop]",
+        "host_advertises_a_room_code_that_join_resolves_to()[desktop]"
+      ]
+    },
+    {
+      "suite": "com.parlor.transport.p2p.ProductionVerificationWorkflowContractTest",
+      "xml": "parlor/parlor/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.ProductionVerificationWorkflowContractTest.xml",
+      "sha256": "216149c06aa90bd5430810899e7745ffa51c60f96f09c0d20f63a2aa0161897a",
+      "tests": 12,
+      "passed": 12,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "case_names": [
+        "clean_ci_can_resolve_required_artifacts_with_strict_dependency_verification()[desktop]",
+        "split_apple_jobs_keep_independent_source_toolchain_cycles_and_evidence()[desktop]",
+        "protection_diagnostic_is_the_seventh_opt_in_job_not_a_full_gate()[desktop]",
+        "every_version_catalog_alias_has_a_real_build_consumer()[desktop]",
+        "one_version_source_drives_android_desktop_ios_and_runtime_compatibility()[desktop]",
+        "workflow_job_boundaries_are_preserved_for_lf_and_windows_crlf_checkouts()[desktop]",
+        "linux_job_enforces_tests_analysis_android_release_and_artifact_inspection()[desktop]",
+        "xcode_resource_artifacts_are_covered_by_strict_dependency_verification()[desktop]",
+        "repository_contract_inputs_invalidate_cached_results_when_ci_or_build_gates_change()[desktop]",
+        "apple_jobs_run_kotlin_and_app_launch_tests_all_link_targets_and_unsigned_swift_release()[desktop]",
+        "third_party_actions_are_pinned_to_reviewed_immutable_commits()[desktop]",
+        "supported_desktop_hosts_execute_real_host_selected_gradle_graphs()[desktop]"
+      ]
+    }
+  ],
+  "skips": {
+    "suite": "com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest",
+    "cases": [
+      "peer_to_host_message_round_trips_and_host_to_peer_message_arrives_back()[desktop]",
+      "peer_can_join_a_hosted_room_and_membership_appears_on_host()[desktop]",
+      "host_broadcast_reaches_every_peer()[desktop]"
+    ],
+    "xml_reason": "No reason text in raw XML.",
+    "frozen_source_path": "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitRoomTransportLoopbackTest.kt",
+    "frozen_source_sha256": "21451bf407d791ec85066227a2670ccf61d3506efaae47375c0bba557fe3be73",
+    "source_reason": "Each exact skipped function has @Ignore: needs two/three physical same-LAN devices; single-JVM loopback mDNS unreliable.",
+    "claim": "Skipped cases are not PASS or physical-device peer-transport evidence. The same suite has one executed advertising smoke PASS."
+  },
+  "excluded": {
+    "historical_frozen_archive_members": 14108,
+    "prior_runs_local_batches_other_lanes": "Not counted",
+    "cleanup": "API steps successful; independent cleanup-content qualification remains the assigned cleanup reviewer."
+  },
+  "findings": [],
+  "scope_limits": [
+    "Linux ARM64 Desktop/JVM only; log explicitly reports Kotlin/Native compiler unsupported on linux-aarch64.",
+    "No Kotlin Native, Android, iOS, physical-device, Store or product-readiness claim.",
+    "Other five mandatory lanes and cleanup require their own same-run/source reviews; this receipt does not replace them.",
+    "Reviewer ran no tests/builds/dispatch/network or source edits; wrote only this assigned review receipt."
+  ]
+}

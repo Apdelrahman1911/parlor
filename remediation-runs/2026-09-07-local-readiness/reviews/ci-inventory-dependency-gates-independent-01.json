@@ -1,0 +1,634 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/release_fix_review",
+  "recorded_at": "2026-09-07T18:39:30.520961+00:00",
+  "scope": "Bounded independent C01\u2013C05 verification workflow, fresh mechanical inventory, and dependency/notices documentation-claim review. Not a replacement application line-by-line audit or Store approval.",
+  "baseline": {
+    "branch": "fix/local-readiness-2026-09-07",
+    "commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+    "tree": "c65463bdf1f3656f90dfe6e6dbe1d94b3c588dac",
+    "tracked_status": "",
+    "preservation": "Pre-existing untracked AGENTS/design/audit/evidence retained and not claimed covered by tracked CSV."
+  },
+  "source_reading": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/.github/workflows/production-verification.yml",
+      "sha256": "f823182501d7a28dd20d117781b59dd46bc5103baef5b016316a5a672a18258f",
+      "lines": 669,
+      "reviewed_ranges": [
+        [
+          1,
+          669
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/build.gradle.kts",
+      "sha256": "bd6199e1f097eb236c50c46efb91d291550110f6b4d95a8e95ff0db4d8da192b",
+      "lines": 204,
+      "reviewed_ranges": [
+        [
+          1,
+          204
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/release/workflow_contract.py",
+      "sha256": "8907e1abd5e06812ebe2674bb175056bfb6b27423bbc9819d02404450e1141ca",
+      "lines": 745,
+      "reviewed_ranges": [
+        [
+          1,
+          745
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/release/validate_release_system.sh",
+      "sha256": "ce52c9c08edecba968337d6de42c90895badec127c7029a5afc16737d3b8864a",
+      "lines": 104,
+      "reviewed_ranges": [
+        [
+          1,
+          104
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/ci/verification_hygiene.py",
+      "sha256": "9eab427aeb3d810c033a3827aa44f7201cbb261345a2e6667a8d085df2fbd603",
+      "lines": 276,
+      "reviewed_ranges": [
+        [
+          1,
+          276
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/ci/apple_verification_hygiene.py",
+      "sha256": "d9c554781750d3cbbf2a4adce3b040edb83d0de5fec4c04eac700c526fca1c3c",
+      "lines": 278,
+      "reviewed_ranges": [
+        [
+          1,
+          278
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/android/run_release_managed_device_smoke.sh",
+      "sha256": "5b6dc8fcdd7b11c9cefd39da3adb8783321b647cd9a8459ff761ef7fa031262d",
+      "lines": 58,
+      "reviewed_ranges": [
+        [
+          1,
+          58
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/generate_review_inventory.py",
+      "sha256": "c65ec66aa1ea18e91ddae521de4feda15a08ecffa024f06b8dbde0c1999c5a52",
+      "lines": 409,
+      "reviewed_ranges": [
+        [
+          1,
+          409
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_review_inventory.py",
+      "sha256": "841961fda25e9d4455c3178a3beab93f713e41667592538fcaef0621af74b78c",
+      "lines": 173,
+      "reviewed_ranges": [
+        [
+          1,
+          173
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/config/release-policy.json",
+      "sha256": "316b28f75a13e0b925beb6bcd893b82e077a1a9efa850022026e830f9b1d4ad4",
+      "lines": 119,
+      "reviewed_ranges": [
+        [
+          1,
+          119
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/resolved_dependencies.init.gradle",
+      "sha256": "5120cb8d7c12825ad889f23d73075ef29ae48b66e4966d1e2335aa2d11995f59",
+      "lines": 107,
+      "reviewed_ranges": [
+        [
+          1,
+          107
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/dependency_inventory.py",
+      "sha256": "fc0238d4d6ea0abd60d2985ed214af6516a239e439269978139fcc9519a20534",
+      "lines": 271,
+      "reviewed_ranges": [
+        [
+          1,
+          271
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/third_party_notices.py",
+      "sha256": "d5a9e8e0cafd9c2d0de9ecd8dfcb040053fa52d25d798abd9998e84ab6676bdf",
+      "lines": 613,
+      "reviewed_ranges": [
+        [
+          1,
+          613
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/docs/DEPENDENCY_REVIEW.md",
+      "sha256": "92f82c2b4b3c9d6f2da08100e223cd84bb84333d62533c71366a04a1fcf73572",
+      "lines": 93,
+      "reviewed_ranges": [
+        [
+          1,
+          93
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/docs/DEPENDENCY_INVENTORY.md",
+      "sha256": "ba13764bc6e544c9cf5803c5b9fbbe8262469fd9fe4474eaa6477be7e6876fb8",
+      "lines": 68,
+      "reviewed_ranges": [
+        [
+          1,
+          68
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/docs/RELEASE_GATES.md",
+      "sha256": "19ee19acf35f833e3bd61b03d3113c6a3ea05b67afcbe1b956e9d4aa070a3f32",
+      "lines": 109,
+      "reviewed_ranges": [
+        [
+          1,
+          109
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/docs/review/README.md",
+      "sha256": "65c8afcce2708c4574229a7d4e3215ca70bd7f0075738bf7fd646982b4429565",
+      "lines": 50,
+      "reviewed_ranges": [
+        [
+          1,
+          50
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/docs/RELEASE_AUTOMATION.md",
+      "sha256": "5105189dd5562e8fc39f7141a36e2e878aaaf41b7b183d2acb8664c64a6a0794",
+      "lines": 645,
+      "reviewed_ranges": [
+        [
+          1,
+          75
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/validate_dependency_sbom_02.py",
+      "sha256": "12e7e391b6bccb772db23aee9bd56bf0a14b56739ba9bf0e800fd988a327abf5",
+      "lines": 48,
+      "reviewed_ranges": [
+        [
+          1,
+          48
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/.github/workflows/testing-candidate.yml",
+      "sha256": "0488fc5e0c4e520a767408cfb5e7fa387bc5fdfa0edfeb9dcd29a4cb0d2c7976",
+      "lines": 1244,
+      "reviewed_ranges": [
+        [
+          1,
+          90
+        ],
+        [
+          177,
+          196
+        ],
+        [
+          622,
+          645
+        ],
+        [
+          1158,
+          1175
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/.github/workflows/testing-external-promotion.yml",
+      "sha256": "5874b8b435e3b6fbfc02bb1cb54f8ab1d26ab01cf25b4220b2d81985fecc8a86",
+      "lines": 429,
+      "reviewed_ranges": [
+        [
+          1,
+          90
+        ],
+        [
+          148,
+          165
+        ],
+        [
+          237,
+          254
+        ],
+        [
+          345,
+          360
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/.github/workflows/production-promotion.yml",
+      "sha256": "94ca7f617c24cb4c9ffafa5860c7ebc104f08cfa46b2a2e13fbae3ed816c461b",
+      "lines": 466,
+      "reviewed_ranges": [
+        [
+          1,
+          90
+        ],
+        [
+          243,
+          260
+        ],
+        [
+          349,
+          366
+        ]
+      ]
+    }
+  ],
+  "conclusion": "Scoped CSV and workflow verification design accepted. All five original hosted failures have reviewed targeted corrections, but no new hosted PASS is asserted. Fresh inventory fixes only freshness; it cannot qualify C01\u2013C05. No source edits recommended from the dependency-doc claim check.",
+  "gate_denominator": "Use canonical finite template: 13 local + 5 hosted + 3 physical + 4 owner/Store gates, with 3 additional N/A dispositions. Old41 denominator and 16-defect fix count are not a readiness percentage. No new readiness numerator asserted here.",
+  "hosted_gates": [
+    {
+      "id": "C01",
+      "job": "desktop-android",
+      "source_lines": [
+        30,
+        178
+      ],
+      "required_commands": [
+        "./gradlew productionCheck productionStaticAnalysis productionReleaseAutomationCheck allTests --dependency-verification=strict --no-daemon --stacktrace --console=plain",
+        "scripts/android/run_release_managed_device_smoke.sh"
+      ],
+      "original_run": {
+        "run_id": 34143924756,
+        "attempt": 1,
+        "source_sha": "0b3090a40ff8135b04e0d6e9933c0af5d160daba",
+        "job_id": 101811725277,
+        "conclusion": "FAIL",
+        "log_path": "reviews/ci-run-34143924756-evidence/101811725277.log",
+        "log_sha256": "9de639a4916101aad76b3cf553cc1a6e245eb84fc17f3ede657fff53c5472785",
+        "evidence_lines": [
+          [
+            2226,
+            2232
+          ],
+          [
+            2291,
+            2300
+          ],
+          [
+            2383,
+            2386
+          ],
+          [
+            2752,
+            2764
+          ],
+          [
+            2936,
+            2939
+          ]
+        ],
+        "verified_failure": "Locale test assertion, stale Kotlin workflow contract assertion, four timer test real-timeouts. allTests ultimately fails. No stale inventory failure in this original run."
+      },
+      "scoped_repairs_committed": [
+        "21c354d003ecb681f24a0c53c248fa3b37073180",
+        "d453f80586ae76d37fba953731758e20f5c4bd67",
+        "cf49b57258c138cefc4a0743a1142a73ac253a72"
+      ],
+      "current_status": "BLOCKED \u2014 NEW EXACT-SHA HOSTED RESULT NOT YET REVIEWED",
+      "remaining": "Run actual Ubuntu24.04 host graph and fresh Pixel2/API35/google x86_64 image revision9 on KVM; local macOS ARM64 emulator receipt is not this gate. Inspect actual instrumentation reports, unsigned artifact and cleanup upload receipts."
+    },
+    {
+      "id": "C02",
+      "job": "desktop-linux-arm64",
+      "source_lines": [
+        179,
+        263
+      ],
+      "required_commands": [
+        "./gradlew productionDesktopCheck --dependency-verification=strict --no-daemon --stacktrace --console=plain"
+      ],
+      "original_run": {
+        "run_id": 34143924756,
+        "attempt": 1,
+        "source_sha": "0b3090a40ff8135b04e0d6e9933c0af5d160daba",
+        "job_id": 101811724991,
+        "conclusion": "FAIL",
+        "log_path": "reviews/ci-run-34143924756-evidence/101811724991.log",
+        "log_sha256": "f96a5d3bad1a3c1377599db1ed913bdcb814e684a4c9763a54e68c6d220c843a",
+        "evidence_lines": [
+          [
+            816,
+            823
+          ]
+        ],
+        "verified_failure": "Kotlin workflow contract line401 assertion; 277 transport tests, 1 failure, 3 intentional physical skips."
+      },
+      "scoped_repairs_committed": [
+        "21c354d003ecb681f24a0c53c248fa3b37073180"
+      ],
+      "current_status": "BLOCKED \u2014 NEW EXACT-SHA HOSTED RESULT NOT YET REVIEWED",
+      "remaining": "Actual Ubuntu24.04-arm graph/tests required; no Linuxarm64 Kotlin/Native host distribution claim."
+    },
+    {
+      "id": "C03",
+      "job": "desktop-macos-x64",
+      "source_lines": [
+        264,
+        348
+      ],
+      "required_commands": [
+        "./gradlew productionDesktopCheck :composeApp:downloadKotlinNativeDistribution --dependency-verification=strict --no-daemon --stacktrace --console=plain"
+      ],
+      "original_run": {
+        "run_id": 34143924756,
+        "attempt": 1,
+        "source_sha": "0b3090a40ff8135b04e0d6e9933c0af5d160daba",
+        "job_id": 101811725145,
+        "conclusion": "FAIL",
+        "log_path": "reviews/ci-run-34143924756-evidence/101811725145.log",
+        "log_sha256": "c0c00b64ed5dfce33ce6230e79e802c6d5049461b051f5ecfc1179687dccd03c",
+        "evidence_lines": [
+          [
+            545,
+            552
+          ]
+        ],
+        "verified_failure": "Same stale Kotlin workflow contract assertion, not native runtime proof."
+      },
+      "scoped_repairs_committed": [
+        "21c354d003ecb681f24a0c53c248fa3b37073180"
+      ],
+      "current_status": "BLOCKED \u2014 NEW EXACT-SHA HOSTED RESULT NOT YET REVIEWED",
+      "remaining": "Actual macos15-intel host execution required. Download is not iOS/Native test runtime."
+    },
+    {
+      "id": "C04",
+      "job": "desktop-windows-x64",
+      "source_lines": [
+        349,
+        443
+      ],
+      "required_commands": [
+        ".\\gradlew.bat productionDesktopCheck :composeApp:downloadKotlinNativeDistribution :composeApp:processDebugResources --dependency-verification=strict --no-daemon --stacktrace --console=plain"
+      ],
+      "original_run": {
+        "run_id": 34143924756,
+        "attempt": 1,
+        "source_sha": "0b3090a40ff8135b04e0d6e9933c0af5d160daba",
+        "job_id": 101811725175,
+        "conclusion": "FAIL",
+        "log_path": "reviews/ci-run-34143924756-evidence/101811725175.log",
+        "log_sha256": "e694d4a8f4ebcdefbc21019d0dbec0d90021cce7022bd8c603b2a2bf705c594c",
+        "evidence_lines": [
+          [
+            714,
+            719
+          ]
+        ],
+        "verified_failure": "Same stale Kotlin workflow contract assertion. Actual Windows resource/host tasks still need a complete successful run."
+      },
+      "scoped_repairs_committed": [
+        "21c354d003ecb681f24a0c53c248fa3b37073180"
+      ],
+      "current_status": "BLOCKED \u2014 NEW EXACT-SHA HOSTED RESULT NOT YET REVIEWED",
+      "remaining": "Actual windows2025 host graph/aapt2 required; POSIX simulation is not Windows proof."
+    },
+    {
+      "id": "C05",
+      "job": "ios",
+      "source_lines": [
+        444,
+        669
+      ],
+      "required_commands": [
+        "./gradlew productionIosSimulatorRuntimeTests productionAppleCheck --dependency-verification=strict --no-daemon --stacktrace --console=plain",
+        "Exact owned-simulator xcodebuild test and unsigned Release wrapper stages in production-verification.yml"
+      ],
+      "original_run": {
+        "run_id": 34143924756,
+        "attempt": 1,
+        "source_sha": "0b3090a40ff8135b04e0d6e9933c0af5d160daba",
+        "job_id": 101811725263,
+        "conclusion": "FAIL",
+        "log_path": "reviews/ci-run-34143924756-evidence/101811725263.log",
+        "log_sha256": "cbd13502d4c1c5827cb22a9011b57625e6b72bbb79087fb5123d868927bab1d2",
+        "evidence_lines": [
+          [
+            207,
+            223
+          ],
+          [
+            233,
+            237
+          ],
+          [
+            318,
+            324
+          ]
+        ],
+        "verified_failure": "Apple ownership preparation could not read complete native process identity; tests/toolchain recording did not run. Finalization and cleanup correctly fail closed. Raw hosted log does not identify a specific PID/errno, so no invented hosted EPERM cause."
+      },
+      "scoped_repairs_committed": [
+        "8c04d5e2294c40fc3341b1dbeb1711b3721145c8"
+      ],
+      "current_status": "BLOCKED \u2014 NEW EXACT-SHA HOSTED RESULT NOT YET REVIEWED",
+      "remaining": "Xcode26.3/17C529, SDK>=26, deployment16; validate actual per-cycle native/XPC tracking inheritance/path/permission support, fresh owned profile, worker+simulator cleanup, successful evidence-upload IDs/digests and exact source. Local26.5 runtime/probe does not substitute."
+    }
+  ],
+  "manual_dispatch": {
+    "reviewer_executed": false,
+    "workflow": "production-verification.yml",
+    "exact_branch_ref": "fix/local-readiness-2026-09-07",
+    "command_for_authorized_root": "gh workflow run production-verification.yml --repo Apdelrahman1911/parlor --ref fix/local-readiness-2026-09-07",
+    "inputs": {},
+    "expected_head_sha": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+    "prerequisites": [
+      "Workflow must exist on the repository default branch; dispatch availability/write authorization must be confirmed by root.",
+      "No needed same-ref run active: concurrency cancels prior same-ref verification.",
+      "Freeze/push reviewed source before dispatch, then compare actual run head_sha and per-job checkout SHA to expected full SHA.",
+      "--ref is the workflow-event branch selection, not an input named ref. Do not use -f ref.",
+      "A rerun of34143924756 uses its original event SHA and does not test these repairs.",
+      "Inspect all5job conclusions, individual tests/skips, artifact IDs/digests and cleanup receipts; intermediate jobs-observation-01 is not final completion evidence."
+    ],
+    "safety": "This workflow is verification only: contents:read, no Store secrets, no publishing/signing workflow called. Android runtime uses a disposable2day synthetic keystore; unsigned package/linkage and simulator checks are not Store signing."
+  },
+  "publication_guards": {
+    "policy": "Both configured com.parlor.app Store identities remain blocked/public_store_collision. Debug suffix remains unchanged.",
+    "all_jobs_disabled": {
+      "testing-candidate.yml": 4,
+      "testing-external-promotion.yml": 4,
+      "production-promotion.yml": 3
+    },
+    "exact_condition": "if: ${{ always() && false }}",
+    "code_enforcement": "workflow_contract.py242\u2013275 rejects any Store job without exactly that condition; policy checks513\u2013516 forbid flag-only approval of known-colliding IDs.",
+    "remote_state": "No new authenticated GitHub workflow-enablement or Store-state inspection by reviewer. Checked-in disabling is independently verified.",
+    "documentation": "RELEASE_GATES89\u201394 describes lifecycle and links RELEASE_AUTOMATION. The latter explicitly states guards/current release-stop and intended post-authorization lifecycle; not classified as a new documentation defect."
+  },
+  "ownership_and_cleanup": {
+    "workflow": "Every Gradle batch has an immediate always-run stop. Apple aggregate/UI/wrapper cycles claim native ownership before operations and finish immediately after the batch, preserving failure status.",
+    "output_lifetime": "Same-job generated outputs deliberately retained only for follow-up build/linkage/package/evidence upload. Claim records reason. Deletion occurs after successful nonempty upload with numeric ID+SHA256, not merely warn-on-missing artifact status.",
+    "source_ownership": "verification_hygiene.prepare rejects dirty/pre-existing outputs. Cleanup rechecks source HEAD/tree, tracked-derived paths, clean status, symlink/redirect exclusions; removes only claimed output dirs, never global caches.",
+    "apple": "Final output deletion additionally requires source/task/claim-bound per-cycle receipts, actual prepare/run/finish outcomes, and successful worker/device retirement. New UID inventory repair does not bypass unreadable-identity failure or use raw-PID signaling. Hosted tracking inheritance/permissions require actual C05.",
+    "failure": "Failed prepare/upload/native cleanup retains evidence and reports failure, never fabricated cleanup PASS. Abrupt runner loss/OS termination still requires honest missing evidence classification.",
+    "non_apple_limit": "General helper proves Gradle stop and in-process Kotlin ownership; managed-emulator retirement must be verified from actual C01 lifecycle evidence, not inferred from desktop mocks."
+  },
+  "inventory": {
+    "review_report": {
+      "path": "reviews/refreshed-inventory-independent-01.json",
+      "sha256": "46fbe88f73d6438cfc4c558bc8fee56f4a25489573e3e831944fe2323b99aee6"
+    },
+    "csv_sha256": "1b8bae4b74436771f92b1f4306ce850d6edf4ae385298db0388254d1dced03b0",
+    "rows": 811,
+    "changed_from_parent": {
+      "added": 19,
+      "history_reference_only": 16,
+      "removed": 0
+    },
+    "all_rows_unattested": true,
+    "freshness_execution": "Root refreshed-release-controls-01:347Python tests,0failure/error/skip, script+workflow contract+811row check+pinned ShellCheck/actionlint exit0; source stable; stop0/cleanup clean. Exact receipt reviewed.",
+    "commit_rule": "All actual source changes must precede generation; CSV-only89dbe8 commit does not stale its excluded infrastructure row. New actual source commits can require refresh.",
+    "not_proof": [
+      "No reviewed line ranges/hashes/caller analysis in this CSV; it is not the audit coverage ledger.",
+      "Path-based production/test labels are inferred, not dynamically checked shipping reachability.",
+      "Untracked user inputs intentionally excluded; final build/source freeze must account for applicable ones separately."
+    ]
+  },
+  "dependency_claim_check": {
+    "decision": "Historical technical claims supported and limitations correctly stated, not fresh final-source evidence.",
+    "exporter": "Explicit opt-in task, strict verification guard, fresh output dir, actual Android releaseRuntimeClasspath +3main Apple compilation graphs, external-only artifact inspection, commit/tree/diff bound, untracked-input guard, completed-graph digest manifest only after stable successful resolution. No repository override or verification-metadata rewrite.",
+    "renderer": "Source/completion hashes checked; bounded MavenCentral/Google POM research, redirects rejected, XML unsafe constructs rejected, max5parent chain, unresolved gives nonzero, write errors abort. Emits4CycloneDX1.6 input SBOMs, not post-R8/native-binary component inventory.",
+    "historical_source": {
+      "commit": "11210dc6e34811bd1dd36d6a34339851601e5112",
+      "tree": "cb97cc572dff903b8555ec20144c6df2995f2512",
+      "diff_sha256": "f40d88169f213b5b5be3935ad7c06de6180acf65997ce6a887e4072ac9f2eed0"
+    },
+    "counts": {
+      "unique_maven_coordinates": 456,
+      "publisher_declarations": 459,
+      "retained_pom_files": 459,
+      "inherited_parent_coordinates": [
+        "com.google.guava:guava-parent:26.0-android",
+        "org.slf4j:slf4j-bom:2.0.16",
+        "org.slf4j:slf4j-parent:2.0.16"
+      ],
+      "unresolved": 0,
+      "sboms": 4
+    },
+    "schema_evidence": {
+      "path": "evidence/dependency-sbom-schema-02/schema-validation.json",
+      "sha256": "513dcc7af3220e8d0582634530f4b93e8c5f9138e4741d2c345d928da6752374",
+      "jsonschema_version": "4.25.1",
+      "results": [
+        {
+          "file": "remediation-runs/2026-09-07-local-readiness/evidence/dependency-license-research-03/report/androidRelease.cdx.json",
+          "sha256": "aabbe9eddd21e97b3c172e602c2fe3a177a97775d71fbbdbaaa2671c5768b4c1",
+          "errors": []
+        },
+        {
+          "file": "remediation-runs/2026-09-07-local-readiness/evidence/dependency-license-research-03/report/iosArm64.cdx.json",
+          "sha256": "a70e39f44375502041bcb8f79ab3f1a1d13664d8cb570c784d4ca5fa0c5b0156",
+          "errors": []
+        },
+        {
+          "file": "remediation-runs/2026-09-07-local-readiness/evidence/dependency-license-research-03/report/iosSimulatorArm64.cdx.json",
+          "sha256": "75701e0ea9d5218acf577830741341ccd61dd4ec8e1707937a29395a5644df14",
+          "errors": []
+        },
+        {
+          "file": "remediation-runs/2026-09-07-local-readiness/evidence/dependency-license-research-03/report/iosX64.cdx.json",
+          "sha256": "cb46c0c9d865b75a23713b8955c6701c136025b5170b8e18bbeff50ea12f2595",
+          "errors": []
+        }
+      ],
+      "method": "Reopened actual validation script: official1.6 root+SPDX/JSF schema local resolver, no remote-ref fallback, schema check, format checker and all4 iter_errors lists empty; actual schema-cycle02 exit0 retained. Not reexecuted by reviewer."
+    },
+    "notices": "third_party_notices.py verifies the separate reviewed26resource supplement, catalog pin identity, byte-exact source/packaged AAB/iOS paths and bounded archive/filesystem handling. Its explicit scope is not exhaustive/legal approval. C01/C05 call package inspection after real applicable builds; final candidate artifacts must be reinspected. POM draft alone is not shipped-license completeness.",
+    "remaining": [
+      "Regenerate source-bound graph and license/SBOM evidence for the final candidate or explicitly keep historical scope;11210dc6+diff is not89dbe8.",
+      "Reinspect final shrunk/native package contents, compiler/runtime/font/content and embedded-native notices separately; exact source resources alone do not prove delivery.",
+      "Owner product/source licensing, content rights, custom/patent redistribution approvals and Store declarations remain O04\u2014not mocked local PASS."
+    ]
+  },
+  "independent_scoped_evidence": [
+    {
+      "path": "reviews/refreshed-inventory-independent-01.json",
+      "sha256": "46fbe88f73d6438cfc4c558bc8fee56f4a25489573e3e831944fe2323b99aee6"
+    },
+    {
+      "path": "reviews/verification-dispatch-authoritative-research-01.json",
+      "sha256": "73f6ee3d3400387b5b83e5530ea62aec454cdb61f306fb2159acdfe8976ea58a"
+    },
+    {
+      "path": "reviews/workflow-kotlin-owned-lifecycle-independent-03.json",
+      "sha256": "76d6a0e9528b87de50be162e2d99c9d3c095b82f1436e6b849c3f5ab0a414ba4"
+    },
+    {
+      "path": "reviews/darwin-ci-uid-inventory-independent-02.json",
+      "sha256": "ac4e4021cde60b361d3ecb2a9c60beffae4b6f1513362e92f4269ff0ed353520"
+    },
+    {
+      "path": "reviews/whodunit-timer-resource-fixtures-independent-01.json",
+      "sha256": "1b6e981e256aad2603eea99b97c082f82d5f6836159263b099124e875fe06245"
+    },
+    {
+      "path": "reviews/locale-public-idle-fix-independent-01.json",
+      "sha256": "2cd9ae4d66882f5fe4406ddf33eeb40383cd11afb9f5b91d40b854a754a679ea"
+    }
+  ],
+  "next_executable_steps": [
+    "Authorized root may dispatch verification-only new final SHA and independently review C01\u2013C05 raw results and cleanup.",
+    "Reconcile remaining L01\u2013L13 against their own exact final-source receipts; do not import this bounded review as local full-suite PASS.",
+    "Keep D01\u2013D03/O01\u2013O04 external gaps distinct; do not unblock Store workflows."
+  ],
+  "reviewer_hygiene": {
+    "started_gradle_xcode_app_native_or_test_workers": false,
+    "started_background_servers": false,
+    "changed_production_tests_config_or_git": false,
+    "wrote_only_additive_review_json": true,
+    "public_research": "3 bounded official GitHub documentation GETs completed; only compact text/hash receipts retained; no downloaded tool/archive artifacts.",
+    "process_cleanup": "Only synchronous read-only shell/Python inspection and completed public-doc fetch; no reviewer-owned build outputs/daemons to clean or stop. Root active lane was not touched."
+  }
+}

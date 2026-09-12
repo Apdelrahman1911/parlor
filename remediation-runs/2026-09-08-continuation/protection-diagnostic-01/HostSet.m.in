@@ -1,0 +1,140 @@
+// One public macOS setter on the compiled, pre-observed synthetic None inode.
+// The driver, not this executable, proves the earlier five-target read completed.
+#import "ProtectionSampler.h"
+#import <TargetConditionals.h>
+#include <limits.h>
+#include <mach-o/loader.h>
+#include <signal.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include "OwnedProbeContext.h"
+#include "OwnedHostReadContext.h"
+
+#if !TARGET_OS_OSX || TARGET_OS_SIMULATOR || TARGET_OS_MACCATALYST || !defined(__arm64__)
+#error This entry point requires native arm64 macOS, never a simulator.
+#endif
+
+extern char **environ;
+
+static void demand(BOOL value, NSString *reason) {
+    if (!value) @throw [NSException exceptionWithName:@"ProtectionBoundary" reason:reason userInfo:nil];
+}
+
+static BOOL hostEnvironment(void) {
+    for (char **entry = environ; entry && *entry; entry++) {
+        if (strncmp(*entry, "SIMULATOR_", sizeof("SIMULATOR_") - 1) == 0) return NO;
+    }
+    return YES;
+}
+
+static NSDictionary *errorRecord(NSError *error) {
+    return @{@"present": error != nil ? @YES : @NO, @"code": error ? @(error.code) : @0,
+        @"domain": !error ? @"none" : [error.domain isEqual:NSCocoaErrorDomain] ? @"cocoa" :
+            [error.domain isEqual:NSPOSIXErrorDomain] ? @"posix" : @"other"};
+}
+
+static NSDictionary *namedIdentity(NSString *path) {
+    char canonical[PATH_MAX];
+    struct stat value;
+    demand(path.isAbsolutePath && [path isEqual:path.stringByStandardizingPath] &&
+        realpath(path.fileSystemRepresentation, canonical) &&
+        [path isEqual:[NSString stringWithUTF8String:canonical]] &&
+        lstat(path.fileSystemRepresentation, &value) == 0 && value.st_uid == getuid() &&
+        (uint64_t)value.st_dev == PROBE_ROOT_DEVICE &&
+        (S_ISDIR(value.st_mode) || S_ISREG(value.st_mode) && value.st_nlink == 1) &&
+        value.st_size >= 0 && value.st_size <= 16 * 1024 * 1024, @"owned-canonical-entry");
+    return @{@"device": @((uint64_t)value.st_dev), @"inode": @((uint64_t)value.st_ino),
+        @"uid": @(value.st_uid), @"mode": @(value.st_mode), @"links": @(value.st_nlink),
+        @"size": @(value.st_size), @"type": S_ISDIR(value.st_mode) ? @"directory" : @"regular"};
+}
+
+static void attestRoot(void) {
+    NSDictionary *root = namedIdentity(PROBE_ROOT);
+    demand(getuid() > 0 && getuid() == geteuid() && [root[@"type"] isEqual:@"directory"] &&
+        ([root[@"mode"] unsignedIntValue] & 0777) == 0700 &&
+        [root[@"inode"] unsignedLongLongValue] == PROBE_ROOT_INODE, @"owned-root-custody");
+}
+
+static NSString *attestTarget(NSDictionary *expected, NSDictionary *parent) {
+    attestRoot();
+    NSString *directory = [PROBE_ROOT stringByAppendingPathComponent:@"created"];
+    demand([parent[@"type"] isEqual:@"directory"] && ([parent[@"mode"] unsignedIntValue] & 0777) == 0700 &&
+        [namedIdentity(directory) isEqual:parent], @"owned-final-directory-custody");
+    NSString *path = [PROBE_ROOT stringByAppendingPathComponent:@"created/none.bin"];
+    NSDictionary *identity = namedIdentity(path);
+    demand([identity[@"type"] isEqual:@"regular"] && [identity[@"size"] unsignedLongLongValue] <= 256 &&
+        [identity isEqual:expected], @"expected-none-full-identity");
+    return path;
+}
+
+static NSDictionary *sampleTarget(NSDictionary *expected, NSDictionary *parent, NSMutableDictionary *receipt, NSString *key) {
+    NSString *path = attestTarget(expected, parent);
+    NSDictionary *sample = ParlorProtectionSample(path);
+    receipt[key] = sample; // Preserve a partial/failed observation before any later guard.
+    attestTarget(expected, parent);
+    demand([sample[@"collection_status"] isEqual:@"PASS"] && [sample[@"descriptor_closed"] isEqual:@YES] &&
+        [sample[@"identity"] isEqual:expected], @"host-set-same-inode-collection");
+    return sample;
+}
+
+int main(int argc, const char *argv[]) {
+    (void)argv;
+    signal(SIGALRM, SIG_DFL);
+    alarm(25); // Self-only bound, including Foundation startup; the driver owns/reaps this child.
+    @autoreleasepool {
+        NSMutableDictionary *receipt = [@{@"schema": @1, @"kind": @"synthetic-protection-host-setter",
+            @"collection_status": @"FAIL", @"process_id": @(getpid()), @"uid": @(getuid()),
+            @"read_only": @NO, @"same_simulator_process": @NO, @"production_snapshots_observed": @NO,
+            @"historical_a37_strict_result_changed": @NO, @"target_id": @"none-after-url-set",
+            @"target_leaf": @"created/none.bin", @"expected_index": @2,
+            @"context": @{@"source_sha": PROBE_SOURCE, @"control_sha256": PROBE_CONTROL,
+                @"nonce": PROBE_NONCE, @"simulator_udid": PROBE_UDID,
+                @"fixture_root_device": @(PROBE_ROOT_DEVICE), @"fixture_root_inode": @(PROBE_ROOT_INODE)}} mutableCopy];
+        @try {
+            demand(argc == 1 && hostEnvironment(), @"host-only-invocation");
+            attestRoot();
+            NSOperatingSystemVersion version = NSProcessInfo.processInfo.operatingSystemVersion;
+            demand(version.majorVersion == 15, @"host-runtime-major");
+            receipt[@"runtime_version"] = @[@(version.majorVersion), @(version.minorVersion), @(version.patchVersion)];
+            receipt[@"main_image_before"] = ParlorProtectionImageIdentity((const void *)&main);
+            demand([receipt[@"main_image_before"][@"platforms"] isEqual:@[@(PLATFORM_MACOS)]], @"host-main-platform");
+            NSArray *expected = [NSJSONSerialization JSONObjectWithData:[HOST_EXPECTED_JSON dataUsingEncoding:NSUTF8StringEncoding]
+                options:0 error:NULL];
+            demand([expected isKindOfClass:NSArray.class] && expected.count == 5 &&
+                [expected[0] isKindOfClass:NSDictionary.class] && [expected[2] isKindOfClass:NSDictionary.class],
+                @"compiled-identity-count");
+            sampleTarget(expected[2], expected[0], receipt, @"before");
+
+            NSFileManager *manager = NSFileManager.defaultManager;
+            SEL setter = @selector(setAttributes:ofItemAtPath:error:);
+            NSDictionary *implementationBefore = ParlorProtectionImplementation(manager, setter);
+            NSMutableDictionary *operation = [@{@"id": @"none-host-fm-set", @"requested_protection": @"complete",
+                @"implementation_before": implementationBefore} mutableCopy];
+            receipt[@"operation"] = operation;
+            NSError *error = nil;
+            NSString *path = attestTarget(expected[2], expected[0]);
+            BOOL result = [manager setAttributes:@{NSFileProtectionKey: NSFileProtectionComplete} ofItemAtPath:path error:&error];
+            // Keep BOOL/error even if post-call custody, image attestation or sampling fails.
+            [operation addEntriesFromDictionary:@{@"returned": @(result), @"native_error": errorRecord(error)}];
+            attestTarget(expected[2], expected[0]);
+            NSDictionary *implementationAfter = ParlorProtectionImplementation(manager, setter);
+            operation[@"implementation_after"] = implementationAfter;
+            demand([implementationBefore isEqual:implementationAfter], @"host-set-implementation-changed");
+            sampleTarget(expected[2], expected[0], receipt, @"after");
+
+            receipt[@"main_image_after"] = ParlorProtectionImageIdentity((const void *)&main);
+            demand([receipt[@"main_image_before"] isEqual:receipt[@"main_image_after"]], @"host-main-image-changed");
+            // Collection validity is independent of setter success and of every strict protection result.
+            receipt[@"collection_status"] = @"PASS";
+        } @catch (NSException *exception) {
+            receipt[@"failure"] = [exception.name isEqual:@"ProtectionBoundary"] ? exception.reason : @"native-exception";
+        }
+        NSData *data = [NSJSONSerialization dataWithJSONObject:receipt options:NSJSONWritingSortedKeys error:NULL];
+        if (!data || data.length > 256 * 1024 || fwrite(data.bytes, 1, data.length, stdout) != data.length ||
+            fputc('\n', stdout) == EOF || fflush(stdout) != 0) return 2;
+        return [receipt[@"collection_status"] isEqual:@"PASS"] ? 0 : 1;
+    }
+}

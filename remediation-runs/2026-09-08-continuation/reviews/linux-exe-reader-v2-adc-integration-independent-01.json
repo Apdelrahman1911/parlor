@@ -1,0 +1,224 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/native_ci",
+  "authors": {
+    "probe": "/root",
+    "workflow": "/root/ci_workflow",
+    "core": "/root/lifecycle_controls"
+  },
+  "decision": "APPROVE_PINNED_INTEGRATION_AND_ACCEPT_123_FOCUSED_CONTROLS",
+  "status": "SOURCE_AND_LOCAL_CONTROLS_PASS_V2_HOSTED_AND_ADC_RUNTIME_PENDING",
+  "completed_at": "2026-09-10T14:57:36.015Z",
+  "baseline": {
+    "head": "e4d49e17f5f1099a742ab3985c6257d090d61ba6",
+    "tree": "1e3697d7eab93cc856166f85a791fe3cdd62941a",
+    "branch": "fix/local-readiness-2026-09-07"
+  },
+  "reviewed_integration_files": [
+    {
+      "path": ".github/workflows/production-verification.yml",
+      "bytes": 49527,
+      "sha256": "1b023983dc8591c2c6023c8a65369ffdb70d0cfa200269593e6ed98eec2cee08"
+    },
+    {
+      "path": "scripts/release/workflow_contract.py",
+      "bytes": 61537,
+      "sha256": "d2c15a250737814cad9aa4d8375bebfd6f57688e82d5328187bbf89b4b34fcb1"
+    },
+    {
+      "path": "scripts/release/tests/test_workflow_contract.py",
+      "bytes": 60728,
+      "sha256": "c385c8e54d64e2d35c787e74f7fba3b221cfaee0ce6768a4c2c56993f792997f"
+    },
+    {
+      "path": "scripts/ci/linux_process_probe.py",
+      "bytes": 17622,
+      "sha256": "a75d9531c5e753f6ff57993a71085594f00399f913121d51b0979f4d8454def9"
+    },
+    {
+      "path": "scripts/release/tests/test_linux_process_probe.py",
+      "bytes": 16752,
+      "sha256": "329971007427514fd48d11db16eb883aae851ad5f6cfa05a766b9dba8020ffc2"
+    }
+  ],
+  "diff_bindings": {
+    "workflow_three": {
+      "bytes": 31583,
+      "sha256": "91a9ba5fd3427f072d8999216e185215749278e0d8461e3717fb2a04ccfd782e"
+    },
+    "probe_two": {
+      "bytes": 14067,
+      "sha256": "4ff6706d58eb081f4850155a8681a09a4605f9768d4a1e97dde67238eb9c863a"
+    }
+  },
+  "separate_core_review": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/linux-exe-reader-v2-independent-01.json",
+    "bytes": 7836,
+    "sha256": "66e72a7a39c4187a992d7bd5a956eb325b7557a18e4944706b27ef92ccc110c5",
+    "reviewer": "/root/portability_review",
+    "reconciliation": "Read sealed review, independently matched its four current file sizes/hashes and integration-facing AST signatures/counter fields. Source/core safety approval reused, not replaced by this integration review.",
+    "contract": "Explicit mode is only sudo-proc-exe-v2; private schema2 binds ordered four uids. Original nonroot UID membership remains selection, not root replacement or process ownership. Default mixed-UID rejection and first-readlink-EACCES-only fallback remain. Top-level mixed counters increment after outer identity completion but may be positive in an overall failed SDK-executable observation."
+  },
+  "source_conclusions": [
+    "Exact reversal of only the declared ADC routing/admission and v1-to-v2 flag edits reproduces baseline workflow bytes. Twenty closed Linux steps: LP10-minute no-build path, ADC45-minute managed-runtime path, full90-minute complete path. Other three jobs unchanged; iOS only gains ADC exclusion.",
+    "ADC initial admission checks exact source, branch, workflow SHA, full-history clean checkout, Ubuntu24.04x64 and independently approved18-file control digest before bounded emulator-package prerequisite and fresh output ownership. Full/common aggregate and common-stop/AAB inspection remain full-only; LP observations remain LP-only.",
+    "ADC reuses the unchanged managed-device smoke script, strict dependency verification, ephemeral nonproduction install key, explicit managed stop, normal upload, source/ownership/SDK guards and exact cleanup. No AAB prerequisite or private Store operation. Normal upload body is unchanged; its warn-on-no-files setting does not waive cleanup's required successful artifact ID/digest.",
+    "Cleanup remains ordinary Python with exactly one explicit --android-reader=sudo-proc-exe-v2 flag, not whole-cleanup sudo. Existing upload/ownership bindings, finalizers, report paths and deletion gates remain. Workflow contract seals scope partition, step order, exact smoke/admission/cleanup commands and sole reader mode.",
+    "Probe controls are closed12 for LP and18 for ADC, adding only six unchanged smoke/build/policy files. Scope is included in proof; cross-scope input/digest use is rejected. New controls-android-cleanup and validate-android-cleanup only expose hashing/admission, never ADC build/run/cleanup.",
+    "Probe require/file_bytes/run/cleanup and CHILD plus the whole owned-control exception/retirement finalizer are AST-identical to baseline. The new zero-mixed-counter expectation does not replace original unprivileged positive/negative or privileged nondumpable control requirements."
+  ],
+  "regression_review": {
+    "probe": {
+      "old": 10,
+      "new": 11,
+      "unchanged_old": 8,
+      "added": "test_android_cleanup_control_binding_cannot_use_the_smaller_probe_manifest"
+    },
+    "workflow": {
+      "old": 61,
+      "new": 63,
+      "unchanged_old": 56,
+      "added": [
+        "test_android_cleanup_admission_is_bound_and_before_sdk_and_ownership",
+        "test_android_cleanup_scope_runs_only_managed_runtime_and_standard_custody"
+      ]
+    },
+    "coverage": "Both admission scopes, cross-scope rejection,18vs12 digest separation and changed/symlinked extra controls;17 workflow route/budget/smoke mutations and8 admission mutations plus removal/two reorder cases. No original test method removed.",
+    "closed_point": {
+      "id": "INTEGRATION-MIXED-COUNTER-NEGATIVES",
+      "initial_test_sha256": "9dab4aa665a977b641ad68f19e3913e7061296b956a6402924bfb0e698ac886c",
+      "resolution": "Root extended the existing privileged-control test with each nonzero mixed counter and a missing counter; all require CONTROL_FAIL while preserving child/fixture retirement. Final test pin329971... independently reviewed and its complete method actually passed in the focused cycle."
+    }
+  },
+  "actual_local_controls": {
+    "root": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-mixed-uid-android-scope-controls-01",
+    "execution": {
+      "total": 123,
+      "methods": {
+        "scripts.release.tests.test_ci_verification_hygiene": 39,
+        "scripts.release.tests.test_linux_exe_reader": 10,
+        "scripts.release.tests.test_linux_process_probe": 11,
+        "scripts.release.tests.test_workflow_contract": 63
+      },
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "seconds": 0.814,
+      "lint_exit": 0,
+      "tool_archive_hashes_ok": 2
+    },
+    "evidence_checks": "All123 unique raw unittest IDs equal the four current source AST method sets. Raw summary is Ran123 tests in0.814s, OK. Two focused commands exit0. Lint adaptation compared as text to the unchanged pinned release script: only redundant unrelated checks removed and actionlint narrowed to changed workflow; archive hash checks bothOK.",
+    "binding": {
+      "source_rows": 844,
+      "source_manifest_sha256": "04c1fc5da19c0c30bdbc96e11d24c3fdb674da13f7dc631f60e192c8fca3c9b6",
+      "controls": 20,
+      "before_after_controls_file_sha256": "668f85f24fcded1668ba8382d6625f09cc69e01bfcd5a64a5fcc1e7a048e70a8",
+      "diff_sha256": "14d44f433ced9c9be580dd90ffde479406e76a433c7d6d78077bece79d0431ef",
+      "runner_sha256": "1b9e882514bfe5386785d5a71ae32fdc2bc3aa4cc1dd24532709899fbf4f41bc",
+      "equality": "All844 source rows and20 controls before=after=current; nine reviewed pins match. Source/runner changed flags false. Independent manifest coverage and hashes reconcile; this was a reviewed modified worktree, not yet a frozen commit."
+    },
+    "outer": {
+      "session_id": 49336,
+      "start_chunk": "e4e300",
+      "completion_chunk": "a6681d",
+      "inner": 0,
+      "stop": 0,
+      "outer": 0,
+      "launcher": "exec replacement; no marker-bearing awaiting shell"
+    },
+    "evidence_pins": [
+      {
+        "path": "artifact-receipts.json",
+        "bytes": 3,
+        "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+      },
+      {
+        "path": "control-inputs-after.json",
+        "bytes": 2843,
+        "sha256": "668f85f24fcded1668ba8382d6625f09cc69e01bfcd5a64a5fcc1e7a048e70a8"
+      },
+      {
+        "path": "control-inputs-before.json",
+        "bytes": 2843,
+        "sha256": "668f85f24fcded1668ba8382d6625f09cc69e01bfcd5a64a5fcc1e7a048e70a8"
+      },
+      {
+        "path": "focused-commands.json",
+        "bytes": 4793,
+        "sha256": "27757ac3492b96d5b9f53c998ce0461a10781a401576a0547de67b5568f60be1"
+      },
+      {
+        "path": "gradle.log",
+        "bytes": 25668,
+        "sha256": "01b59ad774496c03b04cae5ae75325fb8687e3ae62cabeb6d96e508ecdc81680"
+      },
+      {
+        "path": "java-toolchain.log",
+        "bytes": 2026,
+        "sha256": "a7a86ea7b20362e2c856e5e71a8b6fc51764d5aeaa9f5a8c82b386ff156f8a7c"
+      },
+      {
+        "path": "javac-toolchain.log",
+        "bytes": 14,
+        "sha256": "157f601a5854ca28a7dc364c13a5ca2879084186be49e3462d37acd028f35755"
+      },
+      {
+        "path": "outer-invocation.json",
+        "bytes": 644,
+        "sha256": "1bec0f86294ad5719c79c354469604b5fe1d8a6c6145101f9a7331d398bd67b4"
+      },
+      {
+        "path": "receipt.json",
+        "bytes": 314807,
+        "sha256": "cff09049a949f8d4b79af72bbbd69bf9acdb1099c8940f9cb03ef5d67a8966a5"
+      },
+      {
+        "path": "stop.log",
+        "bytes": 31,
+        "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+      },
+      {
+        "path": "test-receipts.json",
+        "bytes": 3,
+        "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+      }
+    ],
+    "limits": "No real sudo helper, live procfs permission/mixed-UID experiment, emulator, Gradle/Kotlin/application build or application test, Apple/Windows or Store runtime. Release-contract PASS text is control-suite stdout, not a newly executed full release qualification."
+  },
+  "cleanup": {
+    "owned_build_roots_absent": 16,
+    "additional_ios_build_root_absent": true,
+    "scratch_absent": true,
+    "signals": [],
+    "workers_remaining": [],
+    "errors": [],
+    "inner": 0,
+    "stop": 0,
+    "outer": 0,
+    "times": {
+      "started_at": "2026-09-10T14:43:27.626484+00:00",
+      "finished_at": "2026-09-10T14:43:32.729509+00:00",
+      "stopped_at": "2026-09-10T14:43:33.482311+00:00",
+      "cleanup_completed_at": "2026-09-10T14:43:33.583933+00:00"
+    },
+    "conclusion": "No signals, remaining owned workers, retained/live generated outputs or cleanup errors. Sixteen runner-owned build roots plus separately checked iosApp/build and exact scratch/tool archive paths absent. Raw evidence retained. No Gradle clean daemon or global-cache deletion was required for this no-build cycle."
+  },
+  "findings": [],
+  "required_next": "Commit reviewed source/controls, regenerate and commit mechanical inventory, then create fresh LP04 source/control bindings. Require complete initial/final host and cleanup PASS, with positive completed mixed/privileged observations to claim that v2 path was exercised; no blind rerun if coverage absent. A later separately admitted18-control ADC managed-runtime execution is not authorized by LP or these mock tests alone.",
+  "preserved": {
+    "LP01": "FAIL",
+    "LP02": "FAIL",
+    "LP03": "FAIL",
+    "D03": "FAIL",
+    "historical_local_outer143": "PRESERVED",
+    "LP03_reader_credit": "Valid real v1 helper success remains scoped to its old frozen source; it is not schema2/v2 runtime proof.",
+    "strict_ios_protection": "0PASS/26FAIL unresolved; no new protection claim",
+    "verdict": "NOT_READY; no new application/combined, physical-device, Store or separate owner/legal qualification."
+  },
+  "reviewer_activity": {
+    "method": "Read-only Git/source/raw evidence and standard-library AST/hash/text/JSON assertions; no project imports, validators, tests, native/process probes, signals, network, Git mutation or canonical edits. Only this additive report.",
+    "static_audit": "PASS chunk5caa17; core API/pins chunk04785e; actual evidence audit PASS chunk3c1350.",
+    "corrected_review_assertion": "First evidence assertion expected17 runner roots; read-only enumeration established16 plus the additional iosApp/build check. Reviewer corrected this count, not source/evidence; no project test rerun.",
+    "author_reported_pre_stable_note": "Root reported and corrected a transient test indentation error before final stable AST and actual123-test cycle; no runtime success is inferred from that earlier edit."
+  }
+}

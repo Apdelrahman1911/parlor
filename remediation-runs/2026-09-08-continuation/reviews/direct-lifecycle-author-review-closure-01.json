@@ -1,0 +1,97 @@
+{
+  "schema_version": 1,
+  "kind": "DIRECT_OWNED_SIMULATOR_LIFECYCLE_AUTHOR_REVIEW_CLOSURE",
+  "author": "/root/ci_workflow",
+  "status": "FINAL_ALL_BYTES_HELD_AND_INDEPENDENTLY_SOURCE_REVIEWED_NOT_EXECUTED",
+  "marker_scope": "Implementation and regression source/oracle hold only. Not a Git freeze, execution result, runtime evidence, or native authorization.",
+  "held_source_report": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/direct-lifecycle-author-source-02.json",
+    "sha256": "0e3ef86e9e66708be391630e864f01bfeb9f03bbfa183a0a027bec4a12f951ec",
+    "all_16_listed_worktree_file_hashes_reopened_and_match": true,
+    "preserved_unchanged": true
+  },
+  "resolved_pending_test_hold": {
+    "path": "scripts/verification/ios-readiness/test_simulator_lifecycle.py",
+    "author": "/root/lifecycle_controls",
+    "sha256": "2f7c957e47aa63804866a71e3b5a8566342c6f7deca2f80e57f0cd42af1a5a46",
+    "bytes": 75257,
+    "declared_methods": 51,
+    "synthetic_methods": 46,
+    "python_subprocess_standin_methods": 5,
+    "side_effect_scope": "The five stand-ins replace only the Popen factory after validating the closed request, then use sys.executable -B -c for real bounded draining/journal/reaping. Timeout/cancel paths are injected at an owned wait seam; no Apple command, simulator, Xcode, Gradle, process scan or global signals. The other methods use synthetic seams. Counts/source inspection are not execution evidence."
+  },
+  "other_final_control_holds": [
+    {
+      "path": "scripts/verification/ios-readiness/test_simulator_lifecycle_integration.py",
+      "author": "/root/native_ci",
+      "sha256": "93d88840fcef436dbf45cc20de071e784daa4c6bc0e7683b623da8df7197100c",
+      "bytes": 56392,
+      "declared_methods": 32,
+      "scope": "Actual wrapper/composition glue under synthetic external seams; not application or platform execution."
+    },
+    {
+      "path": "scripts/release/tests/test_native_continuation.py",
+      "author": "/root/ci_workflow",
+      "sha256": "dac139c779e33b795aa6f36fc0f853ee071099b927c901a9b993323c6f6edb35",
+      "bytes": 55155,
+      "declared_methods": 40,
+      "scope": "35 existing adapter methods preserved plus five new adversarial direct-lifecycle journal/admission methods."
+    }
+  ],
+  "independent_reviews_reopened": [
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/direct-owned-simulator-lifecycle-implementation-independent-01.json",
+      "sha256": "44239859c10b762b6447234eddbc993ac1e9e65982a0e149250e943941194bdf",
+      "reviewer": "/root/portability_review",
+      "conclusion": "Held V2 implementation/ownership source approved; no blocking findings; controls/execution/bindings separate."
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/direct-owned-simulator-lifecycle-persistence-policy-independent-01.json",
+      "sha256": "756a549e40145cb659c7ac2829974413f179bdd588c5a9f5a41d599531a02f0e",
+      "reviewer": "/root/portability_review",
+      "conclusion": "Additive late-summary-save nuance approved without source change: earlier successful raw acknowledgement and strict journal authority remain prerequisites; sticky evidence failure prevents PASS/admission."
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/direct-simulator-lifecycle-controls-independent-01.json",
+      "sha256": "719427b07d3cad552bf638e3c424f09c3e1f334c8aaea855b98e1559913791f7",
+      "reviewer": "/root/fixture_review",
+      "conclusion": "Exact held V2 source, low-level 51, integration 32, adapter 40, clone/freeze/control closure and regression oracles approved with no open findings; NOT_RUN at review."
+    }
+  ],
+  "count_correction": {
+    "addendum": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/direct-lifecycle-author-count-addendum-01.json",
+      "sha256": "6c34261e6903cf7f4d27fbd2ccaa1e44de9ce4c3981a625ee0cc66d89ebe003b"
+    },
+    "independent_review": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/direct-lifecycle-author-count-independent-01.json",
+      "sha256": "30a6cc2bceb26fb1d70b68a5cc6d30351802212df76c2d90b8e7720df8c8044f",
+      "reviewer": "/root/evidence_audit"
+    },
+    "conclusion": "The probe test file declares 45 methods: one changed cycle expectation and 44 unchanged methods. The held report's probe_other_38 label is superseded only by this additive correction; no test was removed or executed."
+  },
+  "author_edit_hold": {
+    "implementation_changes_pending": false,
+    "new_test_authors_reported_changes_pending": false,
+    "listed_v2_source_and_control_bytes_changed_after_v2_hold": false,
+    "only_author_additions_after_v2": [
+      "direct-lifecycle-author-count-addendum-01.json",
+      "direct-lifecycle-author-review-closure-01.json"
+    ]
+  },
+  "next_ownership": {
+    "focused_invocation_packet_author": "/root/dependency_chain",
+    "invocation_packet_independent_reviewer": "/root/ci_review",
+    "execution_cleanup_commit_push_actions_coordinator": "/root",
+    "required_before_native": "Coordinator execution and failure inspection, independent result review, reviewed source/control commit, regenerated committed mechanical inventory, remote equality, fresh source/control/platform bindings and separate native decision. This report is not authorization to bypass any of those steps."
+  },
+  "execution_and_cleanup": {
+    "tests_by_this_author": "NOT_RUN",
+    "builds_by_this_author": "NOT_RUN",
+    "native_tools_by_this_author": "NOT_RUN",
+    "actions_by_this_author": "NOT_DISPATCHED",
+    "method": "Read-only SHA256, JSON, Git and AST source inspection plus additive reports; no module import or test discovery.",
+    "cleanup": "No test/build/native cycle, simulator, temporary worker or generated lane output was created by this reporting activity. No Gradle or cleanup cycle was started."
+  },
+  "readiness": "NOT_READY unchanged. A19 remains failed with simulator retirement unproven and B20 NOT_RUN. Build-era AppHost observation remains separate. L08 functional-storage/retained-host/strict protection, actual normal Debug Parlor libproc and final frozen combined qualification still require real runtime evidence. Physical-device checks, Store operations/identity collision and owner/legal/privacy/editorial obligations remain outside this review closure."
+}

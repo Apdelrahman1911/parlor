@@ -132,11 +132,12 @@ fun VoteAnnouncementScreen(
                         .forEach { (id, count) ->
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceBetween,
+                                horizontalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.s),
                                 verticalAlignment = Alignment.CenterVertically,
                             ) {
                                 Text(
                                     text = nameLookup(id),
+                                    modifier = Modifier.weight(1f),
                                     style = ParlorTheme.typography.bodyLarge,
                                     color = ParlorTheme.colors.textPrimary,
                                 )

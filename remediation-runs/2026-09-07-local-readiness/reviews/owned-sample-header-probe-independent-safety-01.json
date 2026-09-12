@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/factory_review",
+  "reviewed_at": "2026-09-07T21:38:42.933804+00:00",
+  "classification": "APPROVED FOR ROOT-ONLY BOUNDED HOST TOOL-FORMAT OBSERVATION",
+  "script": {
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/probe_owned_sample_header_01.py",
+    "sha256": "8c00d487da35bcaf3197471b1c35a57762b55d4e5106433327b0c1ef32ecabd1",
+    "reviewed_lines": [
+      1,
+      84
+    ]
+  },
+  "wrapper": {
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py",
+    "sha256": "5c0e546c819c28762cbc6b355ec2717737fc53f96712af591a27add878579d7a",
+    "reviewed_lines": [
+      1,
+      344
+    ]
+  },
+  "authorized_invocation": [
+    "/usr/bin/python3",
+    "-B",
+    "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py",
+    "normal-sample-header-probe-01",
+    "--command",
+    "/usr/bin/python3",
+    "-B",
+    "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/probe_owned_sample_header_01.py"
+  ],
+  "safety_reasoning": [
+    "Root uses shared nonblocking build-lane lock, refuses pre-existing output directories and competing Gradle8.13 daemon, and allocates exact new campaign cycle scratch.",
+    "Probe requires the exact wrapper-provided TMPDIR suffix and exclusively creates a private mkdtemp directory. It hashes only public /bin/sleep and /usr/bin/sample executables.",
+    "Probe spawns its own /bin/sleep60 via Popen and passes its numeric PID\u2014not an application name\u2014to sample for1second/10ms. No iOS app/simulator, private material or external Store operation is used.",
+    "sample execution has15second subprocess timeout. Only Process/Path header lines (<=8,<=4096bytes each), matched fields and whole raw-file digest are retained. Raw stacks/mappings are not printed.",
+    "Probe finally terminates and reaps only its direct Popen sleep child with a bounded kill fallback; validates original allocated-directory device/inode/uid, refuses directory substitution/symlink/raw nonregular files, unlinks only expected sample.txt and rmdirs only that exact empty allocation.",
+    "Wrapper independently observes command descendants by owned process group/PID/start identity, invokes Gradle stop, terminates remaining owned workers before cleanup, and removes only newly allocated cycle scratch and eligible generated outputs; no competing native build is involved.",
+    "Stdlib AST parsing succeeded; no probe or wrapper executable code was imported or run by reviewer."
+  ],
+  "precision_note": "The script attests the allocation directory inode, not the raw sample file inode. The approved cleanup authority is that private newly allocated directory plus the exact expected regular filename. Do not describe it as a recorded raw-file-inode check.",
+  "conditions": [
+    "Execute unchanged bytes through exact approved wrapper/cycle only after native08 owned cleanup is confirmed.",
+    "Keep all prior failed native05/07/08 receipts unchanged.",
+    "Preserve header/exit/cleanup output and source/control identity; check target_reaped and owned_temporary_removed plus wrapper workers/stop/scratch results.",
+    "Probe success establishes at most installed host sample header format for a disposable sleep process, never native08 app root cause, complete app provenance, a fix, physical-device correctness or release readiness.",
+    "Do not use a observed path mismatch to weaken provenance header binding or accept arbitrary target paths; investigate exact tool/API behavior and independent post-launch identity."
+  ],
+  "reviewer_hygiene": "No processes/builds/tests launched, stopped or deleted by reviewer; no source/control changes; only this additive report was created."
+}

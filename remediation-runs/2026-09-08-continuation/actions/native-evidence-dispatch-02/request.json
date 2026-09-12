@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "requested_at": "2026-09-08T15:27:46.657233+00:00",
+  "repository": "Apdelrahman1911/parlor",
+  "workflow": ".github/workflows/production-verification.yml",
+  "ref": "fix/local-readiness-2026-09-07",
+  "inputs": {
+    "verification_scope": "native-evidence",
+    "frozen_source_sha": "5f35a20d3c9c846cd98b38a16881997ecf577497",
+    "preflight_run_id": "34242374948",
+    "preflight_run_attempt": "1",
+    "preflight_artifact_id": "10062533514",
+    "preflight_artifact_sha256": "fde8891243b7a33a70f4bfa275325844f7949e55c3bf00192fff9476213902e3",
+    "approved_l08_control_sha256": "b2afb7dc5b900ff7ac8dac9fb9458b1aa762fba6ef4cd0c16513ac9757c37a99",
+    "approved_normal_control_sha256": "e0fd9c7859af3bdc20b82ca8807a6f5a053c09fde4e5d5a4b96896aafc3ebc71"
+  },
+  "approval": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/native-preflight-34242374948-independent-01.json",
+    "sha256": "fc0a6a976cca30ee86a74137fc8b7fefcb8ab80c234c5754120ac0418a96038c",
+    "field": "dispatch_decision"
+  },
+  "source_before": {
+    "commit": "5f35a20d3c9c846cd98b38a16881997ecf577497",
+    "tree": "e0e7abfff89975682a96a884cb745bcbc12e7238",
+    "full_history": true,
+    "tracked_diff_empty": true
+  },
+  "remote_before": "5f35a20d3c9c846cd98b38a16881997ecf577497\trefs/heads/fix/local-readiness-2026-09-07",
+  "prior_run_ids": [
+    34242374948,
+    34239707887,
+    34232325670,
+    34216788568,
+    34214410629,
+    34152138368,
+    34143924756,
+    34112913001
+  ],
+  "command": [
+    "gh",
+    "workflow",
+    "run",
+    "production-verification.yml",
+    "--repo",
+    "Apdelrahman1911/parlor",
+    "--ref",
+    "fix/local-readiness-2026-09-07",
+    "-f",
+    "verification_scope=native-evidence",
+    "-f",
+    "frozen_source_sha=5f35a20d3c9c846cd98b38a16881997ecf577497",
+    "-f",
+    "preflight_run_id=34242374948",
+    "-f",
+    "preflight_run_attempt=1",
+    "-f",
+    "preflight_artifact_id=10062533514",
+    "-f",
+    "preflight_artifact_sha256=fde8891243b7a33a70f4bfa275325844f7949e55c3bf00192fff9476213902e3",
+    "-f",
+    "approved_l08_control_sha256=b2afb7dc5b900ff7ac8dac9fb9458b1aa762fba6ef4cd0c16513ac9757c37a99",
+    "-f",
+    "approved_normal_control_sha256=e0fd9c7859af3bdc20b82ca8807a6f5a053c09fde4e5d5a4b96896aafc3ebc71"
+  ],
+  "scope": "ONE_NEW_NATIVE_EVIDENCE_INITIAL_ATTEMPT_ONLY: A19 then B20 only through preserved-source/ownership/cleanup guards; no full, diagnostic, automatic retry or Store workflows"
+}

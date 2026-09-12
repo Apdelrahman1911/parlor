@@ -1,0 +1,205 @@
+{
+  "issue": "RL-C2",
+  "classification": "FIXED AND VERIFIED \u2014 SCOPED LOCAL REGRESSION + INDEPENDENT SOURCE REVIEW",
+  "reviewer": "/root/release_fix_review",
+  "author": "/root",
+  "reviewed_at": "2026-09-05T21:15:03.954009+00:00",
+  "no_production_or_test_edits_by_reviewer": true,
+  "no_build_or_test_or_signing_or_store_execution_by_reviewer": true,
+  "baseline": {
+    "branch": "main",
+    "head": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+    "tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+    "working_tree": "User-authorized implementation work; recorded scoped hashes match executed before/after bytes"
+  },
+  "source_manifest_sha256": "0880160b1159e1b9b9c3cd068e6b65911e372c2327156affb7d624d372ef4c8d",
+  "files": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/release/PrepareAndroidUploadTrust.java",
+      "sha256": "a74b92902839047353aa4b5816bc226e43526960da7c4d2df117e25c9375c211",
+      "reviewed_line_ranges": [
+        [
+          1,
+          181
+        ]
+      ],
+      "range_sha256": {
+        "1-181": "a74b92902839047353aa4b5816bc226e43526960da7c4d2df117e25c9375c211"
+      }
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/release/validate_android_artifact.sh",
+      "sha256": "e0100ed6274e41113e18d1cdaa5310242f749d2f337fdb0c5b85920a011cece6",
+      "reviewed_line_ranges": [
+        [
+          1,
+          295
+        ]
+      ],
+      "range_sha256": {
+        "1-295": "e0100ed6274e41113e18d1cdaa5310242f749d2f337fdb0c5b85920a011cece6"
+      }
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_android_upload_signature.py",
+      "sha256": "fd9723397cd3ae4336371cd6fdd93164d225919d1ed615d5fd48f75055b3eade",
+      "reviewed_line_ranges": [
+        [
+          1,
+          373
+        ]
+      ],
+      "range_sha256": {
+        "1-373": "fd9723397cd3ae4336371cd6fdd93164d225919d1ed615d5fd48f75055b3eade"
+      }
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_android_artifact_size.py",
+      "sha256": "1bdf6fe45be629ed8ea6d435727e88d87644319257127732b61a529f1ce1a0b1",
+      "reviewed_line_ranges": [
+        [
+          1,
+          117
+        ]
+      ],
+      "range_sha256": {
+        "1-117": "1bdf6fe45be629ed8ea6d435727e88d87644319257127732b61a529f1ce1a0b1"
+      }
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/release/validate_release_system.sh",
+      "sha256": "ce52c9c08edecba968337d6de42c90895badec127c7029a5afc16737d3b8864a",
+      "reviewed_line_ranges": [
+        [
+          1,
+          104
+        ]
+      ],
+      "range_sha256": {
+        "1-104": "ce52c9c08edecba968337d6de42c90895badec127c7029a5afc16737d3b8864a"
+      }
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/build.gradle.kts",
+      "sha256": "bd6199e1f097eb236c50c46efb91d291550110f6b4d95a8e95ff0db4d8da192b",
+      "reviewed_line_ranges": [
+        [
+          1,
+          90
+        ]
+      ],
+      "range_sha256": {
+        "1-90": "ab7f8840e498e53c5b5ba0992a7cca5e1b068aa531bbb32f3da58b2aac015606"
+      }
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/.github/workflows/testing-candidate.yml",
+      "sha256": "0488fc5e0c4e520a767408cfb5e7fa387bc5fdfa0edfeb9dcd29a4cb0d2c7976",
+      "reviewed_line_ranges": [
+        [
+          310,
+          325
+        ],
+        [
+          373,
+          430
+        ]
+      ],
+      "range_sha256": {
+        "310-325": "ad7bf804c18803a68e3b76d734b00a1f95d001d1a76768222f355ae4096285eb",
+        "373-430": "a13420375830fb048dd6846c9d7e10507e02b79a0d21d1c19cbd042671e1a2a5"
+      }
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/config/release-policy.json",
+      "sha256": "316b28f75a13e0b925beb6bcd893b82e077a1a9efa850022026e830f9b1d4ad4",
+      "reviewed_line_ranges": [
+        [
+          1,
+          119
+        ]
+      ],
+      "range_sha256": {
+        "1-119": "316b28f75a13e0b925beb6bcd893b82e077a1a9efa850022026e830f9b1d4ad4"
+      }
+    }
+  ],
+  "original_finder": "/root/whodunit_cont",
+  "original_audit_validator": "/root/session_cont",
+  "original_dossier": "audit-runs/2026-09-05-source-audit/validations/RL-C2-session_cont.md",
+  "conclusion": "APPROVE: ordinary approved Android selfsigned upload certificates pass without waiving strict verification, certificate policy, approved-fingerprint binding or TSA isolation. No remaining blocking defect identified in scoped diff.",
+  "reasoning": [
+    "Actual JarFile signed payloads, not certificate display ordering, establish every signer identity. Full verified reads precede signers access. Unknown/unapproved/missing payload signers are rejected; ordinary META-INF files remain signed data.",
+    "Explicit selfsignature and full nonanchor PKIX leaf validation preserve validity, critical-extension and active certpath policy. Extra AlgorithmChecker uses exact JDK21 code-signing variant and applicable validation date; it is not a custom weaker allowlist.",
+    "Each distinct CodeSigner timestamp is checked with original JDK public roots and VAR_TSA_SERVER before its date is used. The upload trust store does not authorize a timestamp itself. Final strict jarsigner still verifies TSA/JAR metadata and manual signer purpose checks.",
+    "The helper creates only a CREATE_NEW public-certificate PKCS12 after validation. Final jarsigner success remains mandatory. Personal default keystore lookup is isolated. Nonselfsigned CA paths do not gain a newly trusted issuer/leaf.",
+    "Runtime.feature21 and scoped add-exports make internal API incompatibility fail closed. No dependency-verification, Gradle/application exports, app identity, publication state or candidate schema changes.",
+    "Tests consume the production shell fragment and real JDK21 source helper; invalid cases do not mock away signature verification. Wrong-ca test asserts real strict invocation exit4; stale-output test proves no overwrite/no later jarsigner. Positive test checks public trustedCertEntry and absence of PrivateKeyEntry.",
+    "The latest timeout regression starts an actual redirected TERM-resistant child, observes its attested PID/PGID, and verifies stopped/zombie/no-process status after group cleanup. run_owned now SIGKILLs its group in finally even if the leader exits during TERM grace; fixture also has independent last-resort owned cleanup.",
+    "RL-C1 input checks continue ahead of trust creation. Output signing_certificate_sha256 is assigned only after all actual signers agree and strict verification succeeds. This preserves the candidate fingerprint/digest fields used by existing RL-C3 promotion checks. Publication-disablement and collision guards are untouched."
+  ],
+  "counter_evidence": [
+    "Not all certificate-pinning schemes are safe: importing the leaf alone bypasses critical checks. This fix explicitly validates leaf as a path element and isolates TSA roots, so that counterexample is addressed.",
+    "JarFile alone neither trusts certificates nor treats unsigned entries as an error. The implementation explicitly inspects CodeSigners and retains a separate strict verifier.",
+    "Data-bearing directory entries are skipped in helper streaming but are rejected by preserved downstream strict jarsigner logic Main.java838\u2013842; helper skip is not an unsigned-data bypass.",
+    "Additional arbitrary embedded certificates do not become trusted. Exact JDK SignerInfo.getCertificateChain255\u2013269 stops a self-issued leaf chain; nonselfsigned paths preserve original strict path behavior.",
+    "The original red Java-preparation expected77 failure is not an independent defect witness; the original approved-selfsigned positive case exit4 supplies the actual RL-C2 reproduction.",
+    "Generic private/custom ~/.keystore trust is deliberately no longer consulted, so no claim of compatibility with implicit personal trust additions is made. Approved selfsigned and ordinary JDK-public-CA policies are the supported release boundary."
+  ],
+  "verification": {
+    "cycle": "rl-c2-green-02",
+    "started_at": "2026-09-05T21:12:58.902903+00:00",
+    "command": [
+      "/usr/bin/python3",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "scripts/release/tests",
+      "-p",
+      "test_android_upload_signature.py",
+      "-v"
+    ],
+    "env_policy": "JDK21, system Python, strict verification, signing env removed/empty Gradle signing props, cycle-owned TMPDIR/pycache",
+    "outputs_before": [],
+    "status": "PASS",
+    "exit_code": 0,
+    "finished_at": "2026-09-05T21:13:18.767587+00:00",
+    "stop_exit_code": 0,
+    "stopped_at": "2026-09-05T21:13:19.175839+00:00",
+    "workers": {
+      "terminated_owned_workers": [],
+      "remaining_owned_workers": []
+    },
+    "removed_outputs": [],
+    "retained_outputs": [],
+    "remaining_outputs": [],
+    "cleanup_completed_at": "2026-09-05T21:13:19.238428+00:00",
+    "source_changed_during_cycle": false,
+    "runner_changed_during_cycle": false,
+    "cleanup_errors": [],
+    "deferred_signals": [],
+    "cleanup_method": "Exact task-owned generated dirs; no Gradle clean daemon or global cache deletion. Unrelated processes excluded by PID/start identity and cycle ownership.",
+    "receipt_path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-05-confirmed-fixes/evidence/rl-c2-green-02/receipt.json",
+    "receipt_sha256": "cbd27e89676f8ea5bdd575ab45462b7861e5bf3e11ca1929dba42871f7515979",
+    "log_sha256": "8f6e39bd215c5a40bd85f7e6ec9e4d1f3dc305de1b16b751b7f9c306532d8710",
+    "stop_log_sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+    "executed_tests": 21,
+    "skipped_tests": 0,
+    "scope": "20 synthetic signature/policy tests plus1 real timeout/descendant cleanup regression; not complete artifact/Store validation"
+  },
+  "original_regression_evidence": {
+    "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/rl-c2-red",
+    "real_original_failure": "Registered-selfsigned positive test failed expected0/actual4 under original strict fragment.16tests overall,2 failures; other failure is new-preparation-plumbing oracle."
+  },
+  "remaining_evidence_limits": [
+    "No live positive trusted RFC3161 timestamped-JAR integration or Store TSA; negative direct CodeSigner policy test is not reported as that.",
+    "No PSS parameter-specific fixture, direct >1GiB expanded/100000-entry adversarial helper fixture or complete signed AAB/DEX structure validation in focused signature suite. Source checks and preserved strict path inspected; broader verification remains separate.",
+    "Real signed candidate, owner upload certificate approval, Play App Signing setup, physical devices and Store operations were not authorized or performed.",
+    "Local pinned-source/Java21.0.11 evidence does not establish every future JDK21 patch or every CI host. Incompatible internal APIs fail closed.",
+    "Current unzip -t occurs before helper expansion/count preflight; no new claim of a complete hostile-archive resource sandbox. This behavior predates scoped change."
+  ],
+  "research": "release_fix_review/research-01.json (fresh authoritative URLs + exact-source hash matches); session_cont/RL-C2-research reopened, not accepted as sole proof",
+  "cleanup": "Root green02 receipt: stop exit0; No Gradle daemons are running; no remaining owned workers, outputs or cleanup errors. Reviewer launched no build/test/server or long-lived worker and retained only owned reference/review deliverables."
+}

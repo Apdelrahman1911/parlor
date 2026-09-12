@@ -31,11 +31,21 @@ strict minority. Civilians fill all seats not assigned an explicit role.
 | Doctor | Town | Protect one active living player or skip | Their own previous effective protection |
 | Civilian | Town | Record an optional suspicion | Their latest suspicion; it has no rules effect |
 
-By default, the Doctor cannot self-protect or protect the same player on two
+By default, the Doctor cannot self-protect or protect the same player on
 consecutive nights; the Detective cannot inspect themself; a player cannot vote
 for themself; and Mafia cannot target Mafia. Each option can be changed only
 where represented by a validated setup setting. Even when Mafia-on-Mafia
 targeting is enabled, a Mafia player cannot target themself.
+
+The organizer (local) or host (LAN) sets
+`doctorCanProtectSamePlayerConsecutively` in setup; its default remains OFF.
+ON allows the same eligible living target for three or more consecutive nights,
+without a fixed streak limit. OFF rejects the previous resolved night's
+effective protection target. An explicit skipped night resolves to no protection,
+so that target becomes legal on the next night if still living and otherwise
+eligible. Self-protection is a separate option. Neither option changes
+one-submission-per-night or permits resurrection,
+and settings cannot change once the game starts.
 
 ## State machine
 
@@ -178,6 +188,17 @@ State is split into public, per-player private, and host-only buckets.
 - Host close/advance commands re-check readiness in the reducer. UI button state
   is never treated as a rules boundary.
 - Votes and night submissions are first-valid-write wins.
+
+## Recovery
+
+Saved canonical state retains the chosen Doctor settings. Outside PostGame, the
+Doctor's private previous-protection value must match the latest retained
+resolved-night record, including null after a skip or a night without an active
+Doctor. Validation checks this even with repeat protection ON, after the Doctor
+dies, and when old history entries have been capped. PostGame intentionally
+clears private night state. Peers receive their own private value and public
+settings, never the host-only history; local recovery and LAN rejoin do not
+silently change these rules.
 
 ## Timers
 

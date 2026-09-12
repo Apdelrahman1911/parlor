@@ -1,0 +1,14 @@
+{"validator_before": "168ba20d710e4fa2537c3b4dc093bad14298f3dfff3cbcb5b0b830be41e24ffa"}
+Traceback (most recent call last):
+  File "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-05-confirmed-fixes/verify_continuation_deliverables.py", line 163, in <module>
+    main()
+  File "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-05-confirmed-fixes/verify_continuation_deliverables.py", line 83, in main
+    before = {str(p): sha(p) for p in PINS}
+  File "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-05-confirmed-fixes/verify_continuation_deliverables.py", line 83, in <dictcomp>
+    before = {str(p): sha(p) for p in PINS}
+  File "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-05-confirmed-fixes/verify_continuation_deliverables.py", line 37, in sha
+    need(not any(p.is_symlink() for p in (path, *path.parents)), f"Symlink ancestry: {path}")
+  File "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-05-confirmed-fixes/verify_continuation_deliverables.py", line 33, in need
+    raise RuntimeError(reason)
+RuntimeError: Symlink ancestry: /Users/abdelrahman/.agents/skills/production-readiness-audit/scripts/validate_evidence_ledger.py
+{"validator_after": "168ba20d710e4fa2537c3b4dc093bad14298f3dfff3cbcb5b0b830be41e24ffa", "unchanged": true, "validation_exit_code": 1}

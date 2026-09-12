@@ -1,0 +1,95 @@
+{
+  "at": "2026-09-05T14:36:10.894788+00:00",
+  "reviewer": "/root/whodunit_cont",
+  "cycle": "iosr1-apphost-02",
+  "prior_failure_receipt": "audit-runs/2026-09-05-source-audit/evidence/iosr1-apphost-02-cleanup-independent-whodunit-cont.json",
+  "prior_failure_receipt_sha256": "a25e292a631345d300791ef05a6dd22f32f990f5744479a9d8d9617120fb0bc4",
+  "root_supplemental_receipt": "audit-runs/2026-09-05-source-audit/evidence/iosr1-apphost-02-secondary-cleanup/receipt.json",
+  "root_supplemental_receipt_sha256": "86f62321ef1c39952b6f9a9aeeae54b7d273e810335622655540f2991ba8359d",
+  "ps_command": [
+    "/bin/ps",
+    "-p",
+    "66806,66813,66815,66856,67231,67233,67236,67253,67366,67369,67389,67393,67395,67396,67397,67409,67414,67421,67435,67817,67880,67889,67890,67919,67921,67934,67938,67962,67965,67967,67968,67969,67982,67992,68073,68092,68142,68144,68188,68196,68203,68206,68210,68216,68222,68227,68233,68240,68246,68249,68253,68263,68269,68270,68277,68281,68286,68287,68318,68322,68419,68468,68493,68501,68506,68513,68523,68546,68550,68565,68569,68573,68578",
+    "-o",
+    "pid=,lstart="
+  ],
+  "ps_exit_code": 1,
+  "ps_stdout": "",
+  "ps_stderr": "",
+  "total_pids_checked": 73,
+  "owned_path_absence": {
+    "/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-iosr1-apphost-02-11osw_58": true,
+    "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-iosr1-apphost-02-11osw_58": true,
+    "/Users/abdelrahman/Library/Developer/CoreSimulator/Devices/441CC892-68AB-4C6A-8B0C-739C6B21B06B": true,
+    "/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-67921": true
+  },
+  "generated_output_absence": {
+    "shared/core/build": true,
+    "shared/networking/build": true,
+    "shared/content/build": true,
+    "shared/storage/build": true,
+    "shared/transport-p2p/build": true,
+    "shared/networking-testing/build": true,
+    "shared/engine/build": true,
+    "shared/design-system/build": true,
+    "shared/engine-testing/build": true,
+    "shared/session/build": true,
+    "game-modes/whodunit/build": true,
+    "game-modes/mafia/build": true,
+    "build": true,
+    "composeApp/build": true,
+    "build-logic/build": true,
+    "build-logic/convention/build": true,
+    "iosApp/build": true
+  },
+  "global_cache_targets_preserved": {
+    "/Users/abdelrahman/.gradle/caches": true,
+    "/Users/abdelrahman/.gradle/wrapper": true
+  },
+  "tracked_status": "",
+  "earlier_recorded_path_checks": [
+    {
+      "cycle": "iosr1-apphost-01",
+      "receipt_sha256": "ec187a2c78a4552fab526609c98ecbb7fcdad4d49c887ae45dde543d9e1ca457",
+      "exact_recorded_primary_paths": [
+        {
+          "field": "allocated_temporary_path",
+          "path": "/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-iosr1-apphost-01-9p7mxa6a",
+          "absent": true
+        },
+        {
+          "field": "owned_temporary_directory",
+          "path": "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-iosr1-apphost-01-9p7mxa6a",
+          "absent": true
+        },
+        {
+          "field": "owned_uuid_directory",
+          "path": "/Users/abdelrahman/Library/Developer/CoreSimulator/Devices/4929DE7C-346D-4143-95B3-D200F9B7ACA3",
+          "absent": true
+        }
+      ],
+      "recorded_secondary_roots": [],
+      "limitation": "No global temp scan, reconstructed ownership or claim of absent unrecorded secondary Apple files."
+    },
+    {
+      "cycle": "xcode-ui-01",
+      "receipt_sha256": "aedcaad0cfddea800d4a3b4113d5307f083d9875abe5ac580312b4b80cb10c7c",
+      "exact_recorded_primary_paths": [
+        {
+          "field": "owned_temporary_directory",
+          "path": "/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-xcode-ui-01-jg2b13yz",
+          "absent": true
+        },
+        {
+          "field": "owned_uuid_directory",
+          "path": "/Users/abdelrahman/Library/Developer/CoreSimulator/Devices/65D69AA5-9B5A-4419-AD11-566E34758A7A",
+          "absent": true
+        }
+      ],
+      "recorded_secondary_roots": [],
+      "limitation": "No global temp scan, reconstructed ownership or claim of absent unrecorded secondary Apple files."
+    }
+  ],
+  "status": "PASS",
+  "meaning": "Combined cleanup complete for all currently attested cycle02 paths/processes AFTER additive root secondary Apple FIFO cleanup; original runner-only cleanup scope was incomplete. No blanket global-temp guarantee."
+}

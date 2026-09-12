@@ -1,0 +1,146 @@
+--- frozen02/FoundationProtectionControl.m
++++ frozen03/FoundationProtectionControl.m
+@@ -32,7 +32,7 @@
+ }
+ 
+ static NSDictionary *nativeError(NSError *error) {
+-    return @{@"present": @(error != nil), @"domain": error == nil ? @"none" :
++    return @{@"present": (error != nil ? @YES : @NO), @"domain": error == nil ? @"none" :
+         ([error.domain isEqual:NSCocoaErrorDomain] ? @"cocoa" :
+          ([error.domain isEqual:NSPOSIXErrorDomain] ? @"posix" : @"other")),
+         @"code": error == nil ? @0 : @(error.code)};
+@@ -82,8 +82,8 @@
+                 ([kind isEqual:@"backup"] ? ([value boolValue] ? @"excluded" : @"included") :
+                  ([value boolValue] ? @"supported" : @"unsupported")) : @"non-number") :
+                 protectionName(value, [kind isEqual:@"url"]));
+-        return @{@"returned": @YES, @"dictionary_present": @(values != nil),
+-            @"key_present": @(value != nil), @"value": summary,
++        return @{@"returned": @YES, @"dictionary_present": (values != nil ? @YES : @NO),
++            @"key_present": (value != nil ? @YES : @NO), @"value": summary,
+             @"exception": @"none", @"native_error": nativeError(error)};
+     } @catch (__unused NSException *exception) {
+         return @{@"returned": @NO, @"dictionary_present": @NO,
+--- frozen02/test_control.py
++++ frozen03/test_control.py
+@@ -4,6 +4,7 @@
+ """
+ import copy
+ import importlib.util
++import hashlib
+ import json
+ import os
+ from pathlib import Path
+@@ -153,6 +154,77 @@
+         self.check_rejected(value)
+ 
+ 
++class WireTypeRegressionTests(unittest.TestCase):
++    def test_actual_native01_numeric_boolean_receipt_stays_rejected_and_unchanged(self):
++        # Immutable actual defect witness, not a fabricated passing native result.
++        path = control.CAMPAIGN / "evidence/l08-foundation-control-01/native-observations.stdout"
++        self.assertFalse(path.is_symlink())
++        with path.open("rb") as stream:
++            raw = stream.read(32769)
++        self.assertLessEqual(len(raw), 32768)
++        expected_hash = "ff5dd1d002b4d2d63a86eb54f6504766a806bb70b3ac3368251f8ef8db3e1811"
++        self.assertEqual(hashlib.sha256(raw).hexdigest(), expected_hash)
++        value = control.decode_json(raw, 32768)
++        self.assertIs(type(value["rows"][0]["native_error"]["present"]), int)
++        self.assertIs(type(value["rows"][1]["fm"]["dictionary_present"]), int)
++        self.assertIs(type(value["rows"][1]["fm"]["key_present"]), int)
++        with self.assertRaisesRegex(control.BoundaryError, "^native-error-types$"):
++            control.validate_observations(raw, "565c48a1cf244bafaf506fcff4263453",
++                "403432717c00b518d81a109415ad4c20c85a7307f733dfb6d53900c8cd327ff0",
++                "1095c417-c4ec-3f71-b258-d4da02b2255e")
++        self.assertEqual(hashlib.sha256(path.read_bytes()).hexdigest(), expected_hash)
++
++    def test_every_boolean_wire_slot_rejects_numeric_zero_and_one(self):
++        # Test JSON bytes, not Python truthiness. Includes all errors/queries,
++        # operation flags and top-level claim flags, not only the first failure.
++        base = fixture()
++        slots = []
++
++        def visit(value, path=()):
++            if type(value) is bool:
++                slots.append(path)
++            elif isinstance(value, dict):
++                for key, item in value.items():
++                    visit(item, path + (key,))
++            elif isinstance(value, list):
++                for index, item in enumerate(value):
++                    visit(item, path + (index,))
++
++        visit(base)
++        self.assertEqual(len(slots), 144)
++        for path in slots:
++            for number in (0, 1):
++                value = copy.deepcopy(base)
++                parent = value
++                for key in path[:-1]:
++                    parent = parent[key]
++                parent[path[-1]] = number
++                with self.subTest(path=path, numeric=number), self.assertRaises(control.BoundaryError):
++                    control.validate_observations(encoded(value), TOKEN, SOURCE, IMAGE)
++        accepted = control.validate_observations(encoded(base), TOKEN, SOURCE, IMAGE)
++        self.assertIs(accepted["rows"][0]["native_error"]["present"], False)
++        self.assertIs(type(accepted["rows"][0]["native_error"]["code"]), int)
++
++    def test_actual_producer_comparisons_select_boolean_objects_not_integer_boxing(self):
++        # Executable source guard only. It cannot stand in for compiling/running
++        # this producer on the pinned Simulator and validating actual JSON.
++        fields = (("present", "error"), ("dictionary_present", "values"), ("key_present", "value"))
++        source = (HERE / "FoundationProtectionControl.m").read_text()
++
++        def assert_guards(candidate):
++            for field, variable in fields:
++                explicit = '@"' + field + '": (' + variable + ' != nil ? @YES : @NO)'
++                self.assertEqual(candidate.count(explicit), 1)
++                self.assertNotIn('@(' + variable + ' != nil)', candidate)
++
++        assert_guards(source)
++        for field, variable in fields:
++            explicit = '@"' + field + '": (' + variable + ' != nil ? @YES : @NO)'
++            broken = '@"' + field + '": @(' + variable + ' != nil)'
++            with self.subTest(field=field), self.assertRaises(AssertionError):
++                assert_guards(source.replace(explicit, broken))
++
++
+ class DevicePlanTests(unittest.TestCase):
+     def test_exact_private_device_only(self):
+         self.assertEqual(control.selected_device(device_data(), "ParlorFoundationControl-" + TOKEN, DEVICE)["udid"], DEVICE)
+--- frozen02/README.md
++++ frozen03/README.md
+@@ -4,7 +4,23 @@
+ launch, Simulator operation or fixture cleanup has been performed by the author.
+ Independent review and root's exclusive build lane are required before execution.
+ 
+-**Revision02:** preserves rejected frozen01 and its review. Addresses the three
++**Revision03:** preserves frozen01, frozen02, their reviews and actual native01
++failure without rewriting any evidence. Only three C-comparison boxes in the
++producer now select explicit `@YES`/`@NO` objects; runner/parser/native operations,
++ownership and cleanup remain identical to02. Native01 compiled and exited0 but
++correctly failed the strict parser (`native-error-types`): Objective-C C
++comparisons boxed as JSON0/1, not Boolean. It remains `CONTROL_FAILED`.
++Authoritative language/SDK reasoning and exact actual receipt hashes:
++`../l08-foundation-wire-types-research-01.json`.
++
++The original33 synthetic tests are preserved; three new tests replay the immutable
++failed native01 wire receipt, reject numeric0/1 at every one of144 Boolean slots,
++and guard all three actual producer expressions (including single-site reversions).
++These are wire/parser/source controls, **not compiled-producer or native proof**.
++This03 revision requires fresh independent review, all36 controls executed, then
++strict validation of a fresh actual native output before collection success.
++
++**Prior Revision02:** preserved rejected frozen01 and its review. Addresses the three
+ independently reported control-safety roots: warning suppression, repeated-signal
+ finalization, and private-device-set custody/empty proof. Review receipt:
+ `../l08-native-foundation-control01-independent-review-01.json`.
+@@ -91,7 +107,7 @@
+ 
+ ```bash
+ PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover \
+-  -s remediation-runs/2026-09-07-local-readiness/reviews/l08-native-foundation-control-02 \
++  -s remediation-runs/2026-09-07-local-readiness/reviews/l08-native-foundation-control-03 \
+   -p test_control.py -v
+ ```
+ 

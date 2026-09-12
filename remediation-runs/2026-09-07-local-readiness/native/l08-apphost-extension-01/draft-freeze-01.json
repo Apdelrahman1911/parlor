@@ -1,0 +1,478 @@
+{
+  "schema_version": 1,
+  "status": "DRAFT_NOT_APPLIED_NOT_EXECUTED",
+  "author": "/root/native_fix_review",
+  "created_at": "2026-09-07T17:37:31.912479+00:00",
+  "repository": "/Users/abdelrahman/Projects/parlor",
+  "authoring_source": {
+    "branch": "fix/local-readiness-2026-09-07",
+    "head": "b26a3947b763e262b488d52761f050df5d57cfc1",
+    "tree": "cfb2134489da4d0d038bd34e547cc1cf0be9b66a",
+    "unstaged_tracked_diff_sha256": "0ec1de1de127ed852ea696700246109f6552422492565a464be1f7a995bf6d34",
+    "working_tree_tracked_status": [
+      " M composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSnapshotFileSystem.kt",
+      " M composeApp/src/iosTest/kotlin/com/parlor/app/storage/IosLegacySnapshotBackupTest.kt",
+      " M composeApp/src/iosTest/kotlin/com/parlor/app/storage/IosStorageSafetyTest.kt",
+      " M docs/PRODUCTION_ARCHITECTURE.md",
+      " M game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitLocalLeaveTimerTest.kt",
+      " M game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/multiplayer/WhodunitHostLeaveTimerTest.kt",
+      " M scripts/ci/darwin_worker_identity.py",
+      " M scripts/release/tests/test_apple_ci_hygiene.py",
+      " M shared/design-system/src/desktopTest/kotlin/com/parlor/designsystem/localization/ProvideAppLanguageDesktopTest.kt"
+    ],
+    "note": "Root continues coordinated changes. Source-reference hashes identify consulted current inputs, not a complete shipping-source freeze or exhaustive coverage claim. Root must create fresh dirty+untracked full binding before execution."
+  },
+  "draft_scope": "remediation-runs/2026-09-07-local-readiness/native/l08-apphost-extension-01",
+  "draft_content_manifest_sha256": "e425f29c8518b41ba7603b20e59930ba3963b95c32fdacbba65e06182c2986f4",
+  "manifest_digest_definition": "UTF-8 sorted relative-to-repository path + NUL + lowercase sha256 + LF for each files entry; excludes this self-referential freeze file.",
+  "files": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-apphost-extension-01/ControlledStartRoom.kt.in",
+      "sha256": "147692e570bcc0e8c191a6373c61fd4f636c62891b604fdc1c5fee52990861f0",
+      "bytes": 9003,
+      "lines": 188
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-apphost-extension-01/InMemoryRoomBus.kt.in",
+      "sha256": "695af1d049de439eeb081edf1d2698af677343d18097215db366023f8bc1c275",
+      "bytes": 7848,
+      "lines": 203
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-apphost-extension-01/L08HostLaunch.swift.in",
+      "sha256": "debfe4c2cee191443bb3a2f480b61ae075d181fc4bca139e2ed77c57870fffc3",
+      "bytes": 3706,
+      "lines": 65
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-apphost-extension-01/L08HostProbe.kt.in",
+      "sha256": "62dfce06e71cf84f9e80c710f02a1fcb54308104af583d3d9d3033cf41b4bd79",
+      "bytes": 22619,
+      "lines": 440
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-apphost-extension-01/L08HostUITests.swift.in",
+      "sha256": "0156fdbb6210f1257c49eba9eee7fc7ac42fce2ad85870525131a7adf9ea99a9",
+      "bytes": 9077,
+      "lines": 146
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-apphost-extension-01/L08MafiaHost.kt.in",
+      "sha256": "24f21ff212ff3b871b0a70483d552b3f108f654116212700d2b6ccd3c507b885",
+      "bytes": 6597,
+      "lines": 144
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-apphost-extension-01/L08MafiaSnapshots.kt.in",
+      "sha256": "7674ec0e0d5e5481e18e8e9c97c0f7299e73550f3c91c0ada60cdd743da8a5e3",
+      "bytes": 9936,
+      "lines": 190
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-apphost-extension-01/L08StorageLaunch.swift.in",
+      "sha256": "679532441cf6c8fcf6ada88d6e94d0452d1ea3e3979fe0f981aa1935ba83947f",
+      "bytes": 4447,
+      "lines": 71
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-apphost-extension-01/L08StorageProbe.kt.in",
+      "sha256": "f6eaa5f087b483b34ec6d2e335ec3cbc054fd5f52d22c3c3574c17ca79bce151",
+      "bytes": 24473,
+      "lines": 466
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-apphost-extension-01/L08StorageUITests.swift.in",
+      "sha256": "2f0ce45e329efa15a8e28f681af0b201c4d503e59348a1ad507e2a2a8883e864",
+      "bytes": 6996,
+      "lines": 111
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-apphost-extension-01/L08UiSeam.kt.in",
+      "sha256": "22d9e352ba6c4b8e161b2e69f1aae208a0c9a654ed85284ef4a34c2ea63399e4",
+      "bytes": 2111,
+      "lines": 71
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-apphost-extension-01/L08WhodunitHost.kt.in",
+      "sha256": "a4f9031fd0bbe0ab6be4a8378ddd26632cc9d519d010d4d3009e9d7092045a7f",
+      "bytes": 4536,
+      "lines": 94
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-apphost-extension-01/L08WhodunitSnapshots.kt.in",
+      "sha256": "2440e1d032e35171127b68ee69c42a35ef933bcdc8cea30cc991cb7a02ade0fb",
+      "bytes": 9300,
+      "lines": 190
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-apphost-extension-01/L08_README.md",
+      "sha256": "9dc26f6b437edd24d896745e6def3ea9cbb84e54513911b82f215d3178a6ce4a",
+      "bytes": 6802,
+      "lines": 106
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-apphost-extension-01/README.md",
+      "sha256": "34e736a718bda5cc10377ffc1434edcb2a81de6b28124ad664da67e8d921cb6c",
+      "bytes": 4145,
+      "lines": 71
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-apphost-extension-01/l08_copy.py",
+      "sha256": "c2bf28bf0efd9449d646c451d7b8e665000e8d11a3a6eea76de95e1fb4a55a5f",
+      "bytes": 10248,
+      "lines": 166
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-apphost-extension-01/l08_receipts.py",
+      "sha256": "8d28d8d8fc0b1a5b4fef874c53e277fa388c8fa175a0dfd0b23d2e56850889b3",
+      "bytes": 29026,
+      "lines": 411
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-apphost-extension-01/make_promotion_patch.py",
+      "sha256": "0a66c439d37ed4ae956e433dad13c3161fad2add0b77606778f8ab9ee6d3677f",
+      "bytes": 9285,
+      "lines": 116
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-apphost-extension-01/promotion-02.patch",
+      "sha256": "8839b7f348296abef501bc7616c061e6f2183daec0936189f49a44313561c843",
+      "bytes": 15903,
+      "lines": 196
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-apphost-extension-01/promotion-inputs-02.json",
+      "sha256": "b4e39b46a51678783e7dcd2b7d0ad04d8fe92144f2f59b14121a5e95b7daea39",
+      "bytes": 866,
+      "lines": 20
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-apphost-extension-01/promotion-inputs.json",
+      "sha256": "3f0b4a24d47ec350d6b9bea16f90a297f700832a2c1ac55d74e37adb0196e261",
+      "bytes": 866,
+      "lines": 20
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-apphost-extension-01/promotion.patch",
+      "sha256": "0d0d5efeb1e86afa129ca461945848fa3505abddc11642d5fc230b25a25cdebf",
+      "bytes": 15882,
+      "lines": 196
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-apphost-extension-01/research-koin-4-0-0-order.json",
+      "sha256": "251f79f99f23b79046ef06ae01726f26017805ddf79a479db14c6b63f8758bd3",
+      "bytes": 15670,
+      "lines": 641
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-apphost-extension-01/research-koin-4-0-0.json",
+      "sha256": "cd5b060e676a73dd641e9d34a16561c69d1d675b02299b5ac27d38c794a19a58",
+      "bytes": 6968,
+      "lines": 218
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-apphost-extension-01/test_l08_copy.py",
+      "sha256": "22092b2b03dd004c12d77c9c092b5e322a75e73d1a2a2da47da717de1f5a78ea",
+      "bytes": 9290,
+      "lines": 150
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-apphost-extension-01/test_l08_host_receipts.py",
+      "sha256": "a3a6f6c0a6363fbfaa5fff887652cbab9cf17513d03c0bf7eba5029b3babfd4d",
+      "bytes": 11645,
+      "lines": 177
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-apphost-extension-01/test_l08_receipts.py",
+      "sha256": "eb0fa17a95550b4b266afe9cae34e318004c7fa1ce32b097fc66a4107456dedc",
+      "bytes": 10785,
+      "lines": 167
+    }
+  ],
+  "source_references": [
+    {
+      "path": "AGENTS.md",
+      "sha256": "1e8cbc4f414819f47908e1a3be9f717792a0401fb4fb35b7272c053c00e2f609",
+      "bytes": 5834,
+      "lines": 112
+    },
+    {
+      "path": "composeApp/src/commonMain/kotlin/com/parlor/app/App.kt",
+      "sha256": "622b679a2ef023fab17bf6c8ed8eb38c1fbc2b76a391f5f9a8298d59da9dda59",
+      "bytes": 17384,
+      "lines": 338
+    },
+    {
+      "path": "composeApp/src/commonMain/kotlin/com/parlor/app/di/AppModule.kt",
+      "sha256": "b449781eb52418300504344c1af978ef7cb41e4e1f35f8d50faa4b8662bbdb76",
+      "bytes": 2632,
+      "lines": 74
+    },
+    {
+      "path": "composeApp/src/commonMain/kotlin/com/parlor/app/lifecycle/AppLifecycleCoordinator.kt",
+      "sha256": "9872f507bc2d719516249b40e50ba46262366ea7afae5e8b8b28448cce620932",
+      "bytes": 5029,
+      "lines": 144
+    },
+    {
+      "path": "composeApp/src/commonMain/kotlin/com/parlor/app/shell/home/HomeScreen.kt",
+      "sha256": "ae11eb3dd97c28520205237b95c28766ccd6ce8dd0e005f82a0d63866323e152",
+      "bytes": 21306,
+      "lines": 555
+    },
+    {
+      "path": "composeApp/src/commonMain/kotlin/com/parlor/app/shell/home/LocalResumeFailureScreen.kt",
+      "sha256": "0e76227cfb46ad37e17892fa4bd698e21c9f45e0e00021dc257d38891a2b3447",
+      "bytes": 4570,
+      "lines": 103
+    },
+    {
+      "path": "composeApp/src/iosMain/kotlin/com/parlor/app/MainViewController.kt",
+      "sha256": "c77abd03ddcae230b4752d888b16c3d74231d89c967624c31129d176a5ed20ce",
+      "bytes": 1519,
+      "lines": 56
+    },
+    {
+      "path": "composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSnapshotFileSystem.kt",
+      "sha256": "c2852fafb293a693be830171f4674947289fafb07f8ecdbafa5c0aaae6d1bf8b",
+      "bytes": 20807,
+      "lines": 500
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaRetainedMultiplayerRuntime.kt",
+      "sha256": "cb196e3457759dbb0766b02d342d3698f6e90512d674d70e34a76f8516ff0543",
+      "bytes": 6456,
+      "lines": 172
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/passandplay/MafiaGameFlow.kt",
+      "sha256": "8f250d62f8afb48e407c30e5382eb4758bc4ad53dee5168af8e3452ad3e840f6",
+      "bytes": 21011,
+      "lines": 509
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaSetupScreen.kt",
+      "sha256": "4b98a283b3d92bcfbbdeaa699a8c3e552b38440b90874795273a8edb0dada3dd",
+      "bytes": 22824,
+      "lines": 529
+    },
+    {
+      "path": "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitGameFlow.kt",
+      "sha256": "73f75eb87e2636e5e616c9bbade054fd0f44ed8bcd9ad158b930eba99fd8aa14",
+      "bytes": 62490,
+      "lines": 1432
+    },
+    {
+      "path": "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/multiplayer/WhodunitRetainedMultiplayerRuntime.kt",
+      "sha256": "4cca409cc9f8703295b0e75259f3e0dec382a012271dcd86696cfef480797148",
+      "bytes": 7537,
+      "lines": 189
+    },
+    {
+      "path": "gradle/libs.versions.toml",
+      "sha256": "87a031665605a1fb3f932be31c75afd8d2d1bc0d94cfcca36101141c50788399",
+      "bytes": 5556,
+      "lines": 106
+    },
+    {
+      "path": "gradle/wrapper/gradle-wrapper.properties",
+      "sha256": "c040b6ef2fb893ff5beea5a281614f2848f1c3996a7886f650b713f8240656a2",
+      "bytes": 338,
+      "lines": 8
+    },
+    {
+      "path": "scripts/verification/ios-readiness/README.md",
+      "sha256": "744558b8b8a4782dbdda43b572cbfdaab4e7917c9a213e83ddd29c5aea1beb1f",
+      "bytes": 11241,
+      "lines": 184
+    },
+    {
+      "path": "scripts/verification/ios-readiness/copied_sources.py",
+      "sha256": "5597d1e4b6a123a1c23bd82c66e30fdd86cb00cf85c831d6c6f281e023cbd752",
+      "bytes": 12916,
+      "lines": 229
+    },
+    {
+      "path": "scripts/verification/ios-readiness/run_ios_readiness.py",
+      "sha256": "9bd997ec5836fe8da4e3afcdb3604eb10f180d3b55a63718c1ea9ba1f9893f2c",
+      "bytes": 67681,
+      "lines": 977
+    },
+    {
+      "path": "shared/engine/src/commonMain/kotlin/com/parlor/engine/snapshot/SnapshotCodec.kt",
+      "sha256": "010c2df47f3803d60a80a428e459e052c715d3eb29a55444f1eeeff7c28ebad1",
+      "bytes": 2350,
+      "lines": 64
+    },
+    {
+      "path": "shared/networking-testing/src/commonMain/kotlin/com/parlor/networking/testing/ControlledStartRoom.kt",
+      "sha256": "147692e570bcc0e8c191a6373c61fd4f636c62891b604fdc1c5fee52990861f0",
+      "bytes": 9003,
+      "lines": 188
+    },
+    {
+      "path": "shared/networking-testing/src/commonMain/kotlin/com/parlor/networking/testing/InMemoryRoomBus.kt",
+      "sha256": "695af1d049de439eeb081edf1d2698af677343d18097215db366023f8bc1c275",
+      "bytes": 7848,
+      "lines": 203
+    },
+    {
+      "path": "shared/session/src/commonMain/kotlin/com/parlor/session/multidevice/ProcessMultiplayerSessionOwner.kt",
+      "sha256": "daba67ff9106b54f73eff57635bd36547674df5f5b861177932687498296320c",
+      "bytes": 43545,
+      "lines": 1048
+    },
+    {
+      "path": "shared/storage/src/commonMain/kotlin/com/parlor/storage/snapshot/FileBackedSnapshotStore.kt",
+      "sha256": "e2ca0be28fd2f0eafee1a55022653190cf30a8c6da620dc3dfe56f361e0da27f",
+      "bytes": 9237,
+      "lines": 246
+    }
+  ],
+  "python_authoring": {
+    "interpreter": "/usr/bin/python3 3.9.6",
+    "files": [
+      {
+        "path": "l08_copy.py",
+        "syntax": "AST_PARSED",
+        "test_methods_declared": 0,
+        "tests_executed": 0
+      },
+      {
+        "path": "l08_receipts.py",
+        "syntax": "AST_PARSED",
+        "test_methods_declared": 0,
+        "tests_executed": 0
+      },
+      {
+        "path": "make_promotion_patch.py",
+        "syntax": "AST_PARSED",
+        "test_methods_declared": 0,
+        "tests_executed": 0
+      },
+      {
+        "path": "test_l08_copy.py",
+        "syntax": "AST_PARSED",
+        "test_methods_declared": 9,
+        "tests_executed": 0
+      },
+      {
+        "path": "test_l08_host_receipts.py",
+        "syntax": "AST_PARSED",
+        "test_methods_declared": 12,
+        "tests_executed": 0
+      },
+      {
+        "path": "test_l08_receipts.py",
+        "syntax": "AST_PARSED",
+        "test_methods_declared": 13,
+        "tests_executed": 0
+      }
+    ],
+    "test_methods_declared": 34,
+    "tests_executed": 0,
+    "compilation_or_native_runtime": false
+  },
+  "authoring_attempt_notes": [
+    "Initial freeze-authoring command exited 1 because reference filenames were incorrectly assumed to be MafiaHostRuntime.kt/WhodunitHostRuntime.kt. Actual source classes are in *RetainedMultiplayerRuntime.kt. No freeze was written and no production behavior was tested. Corrected exact reference names in this successful authoring pass."
+  ],
+  "planned_native_matrix": {
+    "storage_cold_boots": 13,
+    "storage_operations": 20,
+    "host_cold_boots": 3,
+    "host_operations": 42,
+    "real_home_resume_terminal_traces": 5,
+    "test_transport_host_variants": [
+      "whodunit-classic",
+      "mafia-doctor-on",
+      "mafia-doctor-off"
+    ],
+    "no_physical_or_store_evidence": true
+  },
+  "promotion": {
+    "patch": "promotion-02.patch",
+    "patch_inputs": "promotion-inputs-02.json",
+    "superseded_preserved": [
+      "promotion.patch",
+      "promotion-inputs.json"
+    ],
+    "copy_templates": [
+      "L08WhodunitSnapshots.kt.in",
+      "L08MafiaSnapshots.kt.in",
+      "L08WhodunitHost.kt.in",
+      "L08MafiaHost.kt.in",
+      "L08UiSeam.kt.in",
+      "L08StorageProbe.kt.in",
+      "L08HostProbe.kt.in",
+      "ControlledStartRoom.kt.in",
+      "InMemoryRoomBus.kt.in",
+      "L08StorageLaunch.swift.in",
+      "L08StorageUITests.swift.in",
+      "L08HostLaunch.swift.in",
+      "L08HostUITests.swift.in"
+    ],
+    "copy_helpers_tests_docs": [
+      "l08_copy.py",
+      "l08_receipts.py",
+      "test_l08_copy.py",
+      "test_l08_receipts.py",
+      "test_l08_host_receipts.py",
+      "L08_README.md"
+    ],
+    "destination": "scripts/verification/ios-readiness",
+    "applied": false
+  },
+  "verification": [
+    {
+      "gate": "Python draft/generated-patch AST",
+      "status": "PASS",
+      "limitation": "Syntax only; imports/tests/native compilation not executed"
+    },
+    {
+      "gate": "Control unittest execution",
+      "status": "NOT_RUN",
+      "reason": "Root owns coordinated execution after independent review"
+    },
+    {
+      "gate": "Independent full draft/source review",
+      "status": "PENDING",
+      "reason": "Author cannot approve own implementation"
+    },
+    {
+      "gate": "New Kotlin/Swift build and actual native matrix",
+      "status": "NOT_RUN",
+      "reason": "No root approval/source binding/execution yet"
+    },
+    {
+      "gate": "Physical LAN/Store/device lock/backup",
+      "status": "NOT_APPLICABLE_TO_THIS_FIXTURE",
+      "reason": "Controlled test host adapter and owned Debug simulator; retain separate external gaps"
+    }
+  ],
+  "continuation": [
+    "Review every proposed helper/template/test/patch; inspect original surrounding production callers and cleanup",
+    "Run 34 new Python methods and existing control suite, preserving failures; fix harness defects without weakening predicates",
+    "Bind actual current root recognized-protected/valid-legacy preservation repair and all dirty/untracked build inputs",
+    "Independently approve exact source/control binding, then run root-owned native build/runtime matrix",
+    "Inspect Kotlin/Swift interop, actual selector reachability, complete per-operation provenance, real callback timing, source preservation, and cleanup"
+  ],
+  "cleanup": {
+    "gradle_tasks_started": 0,
+    "xcode_tasks_started": 0,
+    "simulators_apps_servers_started": 0,
+    "persistent_background_workers_started": 0,
+    "generated_build_outputs_created": 0,
+    "task_owned_build_outputs_remaining": false,
+    "bytecode_caches_in_draft": false,
+    "gradle_stop_executed_by_child": false,
+    "reason": "This agent authored/read source only. No child Gradle lane existed; stopping root or another task's workers would violate ownership. Required draft/research deliverables retained."
+  },
+  "protection": {
+    "production_edits_by_child": false,
+    "existing_controls_edits_by_child": false,
+    "commit_push_merge_or_issue_operations_by_child": false,
+    "original_audit_receipts_changed": false,
+    "signing_credentials_read": false,
+    "user_data_or_personal_device_access": false
+  }
+}

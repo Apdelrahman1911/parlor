@@ -1,0 +1,489 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/native_ci",
+  "execution_coordinator": "/root",
+  "review_date_utc": "2026-09-10",
+  "review_kind": "Independent actual local Linux control-result and evidence-custody review; read-only source/Git/filesystem and standard-library assertions only",
+  "status": "SCOPED_RESULTS_ACCEPTED_OUTER_INVOCATION_FAILED",
+  "decision": "ACCEPT_SCOPED_CONTROL_RESULTS_WITH_OUTER_EXIT143_PRESERVED",
+  "scope": {
+    "evidence_directory": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-proc-controls-01",
+    "actual_executions": "Coordinator's four sequential focused commands; reviewer did not rerun them.",
+    "independent_actions": "Read underlying raw logs, retained Gradle XML, receipts, command manifest, local recipe, archived runner source, independent implementation reviews, and before/after controls. Recomputed source/evidence hashes and reconciled raw observations with receipts using standard-library assertions and read-only Git.",
+    "not_performed_by_reviewer": [
+      "Project-module imports or validator/test execution",
+      "Builds or Gradle invocations",
+      "Fresh process enumeration or signaling",
+      "Network/GitHub/Actions calls",
+      "Canonical source, Git index, commit or push changes"
+    ],
+    "no_new_ci_dispatch_admission": "This report neither dispatches nor qualifies a hosted probe; frozen-source/control bindings and distinct actual hosted evidence would still be required."
+  },
+  "source_binding": {
+    "head": "75c104734373703570a307de9c7a53d291bc2718",
+    "tree": "4d5b660c5f508a3eb8d01cd9203f2503570dbb18",
+    "branch": "fix/local-readiness-2026-09-07",
+    "qualification_state": "REVIEWED_DIRTY_ADOPTION_NOT_NEW_FROZEN_SOURCE",
+    "reviewed_adopted_files": 7,
+    "tracked_modifications": 5,
+    "untracked_new_source_files": 2,
+    "source_manifest_rows": 842,
+    "source_manifest_sha256": "63b033fa13dd98883570cde730c381121b725f8b4dd3bd3757d6ea6e387c79b3",
+    "git_diff_sha256": "aed85ba03cc3033d2d702c044df526ddafd983369e7c872223d5c4add37596c9",
+    "equality": "Source-before equals source-after, and every source-manifest row matched the current filesystem at this independent audit. The seven adopted files matched their separately reviewed pins; these bytes are not described as pristine commit 75c1047.",
+    "explicit_control_files": 13,
+    "explicit_control_manifest_sha256": "411f3ff029d857ad8d9bd15bccb91a3fb82c209e2217dcaf90edc8c9db973243",
+    "explicit_control_equality": "Before and after manifests are byte-identical; all thirteen paths, byte lengths and hashes independently matched at audit time.",
+    "archived_runner": {
+      "path": "remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py",
+      "bytes": 25106,
+      "sha256": "1b9e882514bfe5386785d5a71ae32fdc2bc3aa4cc1dd24532709899fbf4f41bc",
+      "changed_during_cycle": false
+    }
+  },
+  "actual_execution": {
+    "toolchain": {
+      "java_home": "/usr/lib/jvm/java-21-openjdk-amd64",
+      "java_version": "21.0.12",
+      "javac_version": "21.0.12",
+      "evidence": "Actual java/javac toolchain logs retained; not inferred solely from configured JAVA_HOME."
+    },
+    "commands": [
+      {
+        "label": "python-hygiene-probe-workflow",
+        "started_at": "2026-09-10T11:41:02.102792+00:00",
+        "finished_at": "2026-09-10T11:41:03.370833+00:00",
+        "exit_code": 0
+      },
+      {
+        "label": "actual-nonroot-mechanism",
+        "started_at": "2026-09-10T11:41:03.370995+00:00",
+        "finished_at": "2026-09-10T11:41:03.786362+00:00",
+        "exit_code": 0
+      },
+      {
+        "label": "focused-workflow-actionlint",
+        "started_at": "2026-09-10T11:41:03.786528+00:00",
+        "finished_at": "2026-09-10T11:41:06.308878+00:00",
+        "exit_code": 0
+      },
+      {
+        "label": "transport-workflow",
+        "started_at": "2026-09-10T11:41:06.309116+00:00",
+        "finished_at": "2026-09-10T11:41:28.486803+00:00",
+        "exit_code": 0
+      }
+    ],
+    "python": {
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "scripts.release.tests.test_ci_verification_hygiene",
+        "scripts.release.tests.test_linux_process_probe",
+        "scripts.release.tests.test_workflow_contract",
+        "-v"
+      ],
+      "modules": {
+        "scripts.release.tests.test_ci_verification_hygiene": 33,
+        "scripts.release.tests.test_linux_process_probe": 9,
+        "scripts.release.tests.test_workflow_contract": 59
+      },
+      "tests": 101,
+      "failures": 0,
+      "skipped": 0,
+      "raw_summary": "Ran 101 tests in 0.562s; OK",
+      "verification": "Independently enumerated all 101 raw testcase result lines, checked exact module counts and absence of failures/skips against the raw summary. These are actual control tests, not application-runtime proof."
+    },
+    "focused_actionlint": {
+      "exit_code": 0,
+      "target": ".github/workflows/production-verification.yml",
+      "provenance": "Command retained in focused-commands.json derives from scripts/release/validate_release_system.sh. Both pinned shellcheck and actionlint archive SHA checks actually logged OK before actionlint.",
+      "omissions": "Broad pycompile/unittest/inventory/shellcheck-all commands were deliberately omitted. No full release-system suite credit is assigned.",
+      "cleanup": "Retained command includes its task-owned temporary-tool-directory cleanup trap; the focused shell command returned zero."
+    },
+    "gradle": {
+      "command": [
+        "./gradlew",
+        ":shared:transport-p2p:desktopTest",
+        "--tests",
+        "*ProductionVerificationWorkflowContractTest*",
+        "--no-daemon",
+        "--no-parallel",
+        "--max-workers=1",
+        "--no-configuration-cache",
+        "--dependency-verification=strict",
+        "-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=continuation-linux-proc-controls-01",
+        "-Pkotlin.compiler.execution.strategy=in-process",
+        "-Pparlor.android.signing.storeFile=",
+        "-Pparlor.android.signing.storePassword=",
+        "-Pparlor.android.signing.keyAlias=",
+        "-Pparlor.android.signing.keyPassword="
+      ],
+      "exit_code": 0,
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "xml_suite_timestamp": "2026-09-10T11:41:27.454Z",
+      "xml_suite_duration_seconds": 0.623,
+      "test_task": "EXECUTED",
+      "raw_task_line": "> Task :shared:transport-p2p:desktopTest",
+      "build_duration_seconds": 21,
+      "actionable_tasks": 21,
+      "executed_tasks": 14,
+      "from_cache_tasks": 7,
+      "verification": "Retained raw XML was parsed and reconciled with the command interval and actual desktopTest task line; that task was neither FROM-CACHE nor UP-TO-DATE.",
+      "cache_limit": "The seven cached tasks include compilation work and receive no fresh-runtime credit.",
+      "retained_warnings": [
+        "Gradle 8.13 compatibility deprecation for a future Kotlin release",
+        "Experimental lint integration",
+        "Apple targets disabled on Linux"
+      ],
+      "scope_limit": "Nine JVM workflow-contract tests only; no complete module suite, Apple runtime, Android emulator or application binary execution."
+    }
+  },
+  "actual_nonroot_mechanism": {
+    "result": "PASS_MECHANISM_ONLY",
+    "uid": 65534,
+    "euid": 65534,
+    "command": [
+      "/usr/sbin/runuser",
+      "--user",
+      "nobody",
+      "--",
+      "/usr/bin/env",
+      "-i",
+      "PATH=/usr/bin:/bin",
+      "LANG=C.UTF-8",
+      "ANDROID_HOME=/tmp/parlor-linux-proc-local-zkwispza/sdk",
+      "ANDROID_SDK_ROOT=/tmp/parlor-linux-proc-local-zkwispza/sdk",
+      "/usr/bin/python3",
+      "-I",
+      "-B",
+      "/tmp/parlor-linux-proc-local-zkwispza/entry.py"
+    ],
+    "runuser_exit_code": 0,
+    "permission_boundary": "Fresh root-owned readonly packet; only its private owned/ directory was assigned UID 65534. No repository, shared SDK or global cache permissions were changed. Recipe was separately authored/reviewed and reopened for this review.",
+    "sdk_binding": {
+      "sdk_path_sha256": "d2db3690550ededaf753ae795509e452208eb8cee94d1b645f907136da253381",
+      "sdk_device": 27,
+      "sdk_inode": 1975169,
+      "uid": 65534
+    },
+    "observations": [
+      {
+        "kind": "LIVE_LINUX_CONTROL_SYNTHETIC_ENUMERATION",
+        "dumpable": 1,
+        "owned_pid": 12585,
+        "readiness": {
+          "pid": 12585,
+          "uid": 65534,
+          "dumpable": 1
+        },
+        "control_result": "CONTROL_PASS",
+        "audit": {
+          "result": "PASS",
+          "enumerated": 2,
+          "sampled": 2,
+          "selected_uid": 2,
+          "matching_executables": 0,
+          "errors": []
+        },
+        "child_reaped": true,
+        "child_exit_code": 0,
+        "fixture_removed": true,
+        "errors": [],
+        "interrupted": false
+      },
+      {
+        "kind": "LIVE_LINUX_CONTROL_SYNTHETIC_ENUMERATION",
+        "dumpable": 0,
+        "owned_pid": 12586,
+        "readiness": {
+          "pid": 12586,
+          "uid": 65534,
+          "dumpable": 0
+        },
+        "control_result": "CONTROL_PASS",
+        "audit": {
+          "result": "FAIL",
+          "enumerated": 2,
+          "sampled": 1,
+          "selected_uid": 1,
+          "matching_executables": 0,
+          "errors": [
+            {
+              "code": "PermissionError"
+            }
+          ],
+          "failure_context": {
+            "operation": "before_exe_readlink",
+            "selection": true,
+            "errno": 13
+          }
+        },
+        "child_reaped": true,
+        "child_exit_code": 0,
+        "fixture_removed": true,
+        "errors": [],
+        "interrupted": false
+      }
+    ],
+    "negative_oracle": "Actual selected-process exe readlink EACCES remains audit FAIL. CONTROL_PASS expresses only the expected negative; it does not convert that audit to PASS or weaken absence validation.",
+    "retirement": "First direct child was reaped and its exact synthetic fixture removed before the second control began. Both child exit codes were zero. The outer packet removal receipt is true, and the packet was independently absent from the filesystem.",
+    "reconciliation": "Parsed nonroot-control.log equals nonroot-control.json.observation exactly, and the outer nonroot record matches its raw JSON log line in gradle.log.",
+    "host_audit": "NOT_RUN",
+    "scope_limit": "The observations used real procfs reads through explicitly synthetic self/direct-child enumeration under a real nonroot UID. They are neither a host-wide audit nor emulator/application runtime, and did not invoke a fake GitHub context."
+  },
+  "cleanup": {
+    "inner_receipt_status": "PASS",
+    "inner_command_exit_code": 0,
+    "started_at": "2026-09-10T11:41:01.392975+00:00",
+    "inner_finished_at": "2026-09-10T11:41:28.516625+00:00",
+    "immediate_stop_exit_code": 0,
+    "stopped_at": "2026-09-10T11:41:29.158335+00:00",
+    "stop_log": "No Gradle daemons are running.\n",
+    "cleanup_completed_at": "2026-09-10T11:41:35.752161+00:00",
+    "generated_roots_removed_and_independently_absent": [
+      "shared/networking/build",
+      "shared/transport-p2p/build",
+      "shared/core/build",
+      "shared/storage/build",
+      "shared/engine/build",
+      "build",
+      "build-logic/convention/build"
+    ],
+    "owned_scratch_independently_absent": true,
+    "nonroot_packet_independently_absent": true,
+    "remaining_outputs": [],
+    "retained_outputs": [],
+    "cleanup_errors": [],
+    "deferred_signals": [],
+    "artifact_receipts": [],
+    "artifact_workers": {
+      "terminated_owned_workers": [],
+      "remaining_owned_workers": []
+    },
+    "preserved_evidence": "Raw test XML and all retained logs/receipts remain beneath the evidence directory. Archived build/ report paths are evidence and were not treated as disposable live output.",
+    "cleanup_limit": "These inner output/fixture/stop observations are accepted, but the outer launcher failure and process-identity evidence gap below prevent describing the complete invocation as an unqualified clean PASS."
+  },
+  "outer_exit143": {
+    "tool_session_id": 67223,
+    "observed_tool_exit_code": 143,
+    "status": "FAILURE_PRESERVED_NOT_RELABELLED",
+    "coordinator_record": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/linux-proc-local-outer-exit-01.json",
+      "bytes": 4837,
+      "sha256": "1c68735a351e98e1febd83203ecc0ddea4528e04161aab0f50a0d7712380a56b"
+    },
+    "observed_signals": [
+      {
+        "pid": 12380,
+        "signal": 15,
+        "started": "Thu Sep 10 11:41:00 2026"
+      },
+      {
+        "pid": 12383,
+        "signal": 15,
+        "started": "Thu Sep 10 11:41:00 2026"
+      }
+    ],
+    "runner_remaining_owned_workers": [],
+    "supported_mechanism": "The coordinator records a marker-bearing bash command and Python subprocess.run awaiting wrapper rather than exec replacement. Independently reopened track_processes() excludes only its own PID and admits current process-group members, descendants of recorded PID/start identities, or commands containing CYCLE_MARKER. This can select marker-bearing awaiting ancestors.",
+    "signaling_guard": "stop_owned_workers() waits five seconds, rechecks PID/start/command identity before SIGTERM/SIGKILL, and records PID/start/signal but not the selected command.",
+    "exact_signaled_command_identities": "NOT_RETAINED_NOT_INFERRED",
+    "inference_limit": "No retained pre-signal PID-to-command mapping proves that these exact two PIDs were bash/Python. Matching start times corroborate the mechanism but are not proof. The inner receipt's generic unrelated-process exclusion sentence is not independent evidence of exact selected process identities.",
+    "distinction": "The four focused commands and Gradle stop each returned zero, while the enclosing tool session actually returned 143. Scoped test/mechanism results are supportable; calling the whole invocation PASS is not.",
+    "future_invocation_correction": "Use exec replacement of the launcher by the unchanged archived runner, without cycle-marker-bearing waiting ancestors. No archived runner edit or repeat of this already completed batch is requested.",
+    "coordinator_followup": {
+      "attribution": "Read from root's retained discrepancy receipt; reviewer did not rerun a process scan or Gradle stop.",
+      "tool_exec_chunk": "37e5c8",
+      "exit_code": 0,
+      "gradle_stop_output": "No Gradle daemons are running.\n",
+      "matching_java_or_owned_probe_workers": [],
+      "packet_absent": true,
+      "scratch_absent": true,
+      "filesystem_crosscheck": "Packet, scratch and seven generated-output-root absences were separately checked read-only by this reviewer."
+    }
+  },
+  "findings": [
+    {
+      "id": "LPROC-ACTUAL-01",
+      "severity": "evidence-boundary",
+      "disposition": "PRESERVED_WITH_SCOPED_ACCEPTANCE",
+      "finding": "Outer tool exit143 is real; only inner actual control/test results and bounded cleanup observations are accepted. Exact selected process command identities were not retained.",
+      "required_action": "Keep the failed outer invocation and discrepancy receipt intact; use exec replacement on future coordinator launches. Do not infer host-wide absence or complete invocation PASS."
+    }
+  ],
+  "related_independent_reviews_and_recipe": [
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/linux-process-probe-independent-01.json",
+      "bytes": 13025,
+      "sha256": "a9184100bb521387e85cb1d540ef8e329f368c112eb1d8f6aac28321be056458",
+      "role": "Independent adapter/workflow/source compatibility review"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/android-proc-permission-diagnostic-independent-01.json",
+      "bytes": 7501,
+      "sha256": "6efe702c65fd9370f1c6d9c0643fe889af5d14993a00547e78af46c167df5d87",
+      "role": "Independent diagnostic-only hygiene helper review"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/linux-process-probe-local-01.py",
+      "bytes": 5176,
+      "sha256": "e1d6fb0694bf8b695f70433df50349ef94d1ce3e9ac63f55d55db0aecdb24702",
+      "role": "Executed bounded nonroot local mechanism recipe"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/linux-process-probe-local-independent-01.json",
+      "bytes": 5223,
+      "sha256": "66623b77201f2047ec5af0a02bfeeb6d9c3f2ced734766fda9c1c29f0049baed",
+      "role": "Different agent's independent local recipe review"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/linux-process-probe-adoption-01.json",
+      "bytes": 2369,
+      "sha256": "4797512395f713a3459ab424da7c45de2af681f4188f93eec39f7658cd536823",
+      "role": "Coordinator's exact seven-file adoption receipt"
+    }
+  ],
+  "independent_read_only_audit": {
+    "tool_chunk_id": "d46886",
+    "exit_code": 0,
+    "result": {
+      "status": "ACTUAL_SCOPED_LINUX_CONTROL_RESULTS_AND_CUSTODY_PASS_OUTER143_PRESERVED",
+      "source_manifest_rows": 842,
+      "source_manifest_sha256": "63b033fa13dd98883570cde730c381121b725f8b4dd3bd3757d6ea6e387c79b3",
+      "reviewed_adopted_files": 7,
+      "explicit_control_files": 13,
+      "python_control_methods": {
+        "scripts.release.tests.test_ci_verification_hygiene": 33,
+        "scripts.release.tests.test_linux_process_probe": 9,
+        "scripts.release.tests.test_workflow_contract": 59
+      },
+      "python_total": 101,
+      "python_failed": 0,
+      "python_skipped": 0,
+      "gradle_xml_tests": 9,
+      "gradle_failures": 0,
+      "gradle_skipped": 0,
+      "gradle_test_task": "EXECUTED",
+      "cached_compilation_not_runtime_credit": true,
+      "actual_nonroot_uid": 65534,
+      "actual_child_pids": [
+        12585,
+        12586
+      ],
+      "positive_audit": "PASS",
+      "negative_audit": "FAIL_EXPECTED_EACCES",
+      "real_host_audit": "NOT_RUN",
+      "hosted_original_cause": "NOT_ESTABLISHED",
+      "inner_command_exit": 0,
+      "inner_receipt": "PASS",
+      "stop_exit": 0,
+      "outer_tool_exit": 143,
+      "exact_signaled_pid_command_identity": "NOT_RETAINED_NOT_INFERRED",
+      "owned_generated_roots_absent": 7,
+      "owned_scratch_absent": true,
+      "nonroot_packet_absent": true,
+      "artifact_inspection": "NONE_REQUIRED_OR_RUN",
+      "evidence_files": [
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-proc-controls-01/artifact-receipts.json",
+          "bytes": 3,
+          "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-proc-controls-01/control-inputs-after.json",
+          "bytes": 2296,
+          "sha256": "411f3ff029d857ad8d9bd15bccb91a3fb82c209e2217dcaf90edc8c9db973243"
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-proc-controls-01/control-inputs-before.json",
+          "bytes": 2296,
+          "sha256": "411f3ff029d857ad8d9bd15bccb91a3fb82c209e2217dcaf90edc8c9db973243"
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-proc-controls-01/focused-commands.json",
+          "bytes": 6244,
+          "sha256": "cea8378986d27c88b54b096f694ac221c48ad5cb5079e7a9a8c610686f8f4b03"
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-proc-controls-01/gradle.log",
+          "bytes": 33797,
+          "sha256": "5e00bbd333188460b1ef429156c50ae1108f9d27d2367c597e15ec3b244fedf1"
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-proc-controls-01/java-toolchain.log",
+          "bytes": 2026,
+          "sha256": "a7a86ea7b20362e2c856e5e71a8b6fc51764d5aeaa9f5a8c82b386ff156f8a7c"
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-proc-controls-01/javac-toolchain.log",
+          "bytes": 14,
+          "sha256": "157f601a5854ca28a7dc364c13a5ca2879084186be49e3462d37acd028f35755"
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-proc-controls-01/nonroot-control.json",
+          "bytes": 4275,
+          "sha256": "2c226e93326623bb0f2e6076f0b7f65841a7baa2d74939a66ed1314d73d4e3e4"
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-proc-controls-01/nonroot-control.log",
+          "bytes": 2602,
+          "sha256": "f88bc17f966442b128a23a578aa5ca82d6190a3fc2b52c6f5353a69f57e54e5d"
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-proc-controls-01/receipt.json",
+          "bytes": 315276,
+          "sha256": "a3201bb90198d96b8c4f2911ba04c809bdf83693c8182f68f668a3f42aaa35dc"
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-proc-controls-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.ProductionVerificationWorkflowContractTest.xml",
+          "bytes": 2117,
+          "sha256": "e2642ba86bc0ad0e1f890d45f1f10159958a8cd37d2bcf31e7c9c0c1989f6182"
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-proc-controls-01/stop.log",
+          "bytes": 31,
+          "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-proc-controls-01/test-receipts.json",
+          "bytes": 2682,
+          "sha256": "d1dc193ce944191291da03e045a2784526049830979c723b6d0734d73ae7237f"
+        }
+      ],
+      "outer_failure_record": {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/linux-proc-local-outer-exit-01.json",
+        "bytes": 4837,
+        "sha256": "1c68735a351e98e1febd83203ecc0ddea4528e04161aab0f50a0d7712380a56b"
+      }
+    },
+    "methodology": "Standard-library parsing/hashing/XML/count/timestamp/equality assertions and read-only Git/source/filesystem inspection. No project imports, tests, production validators, builds, execution recipe, network calls or process probes were executed by this reviewer.",
+    "rerun_policy": "Completed audit was retained and used to seal this report; successful project checks were not repeated."
+  },
+  "readiness": {
+    "verdict": "NOT_READY",
+    "accepted": "101 actual Python control tests, 9 actually executed Gradle workflow-contract tests, focused pinned actionlint exit0, and the two explicitly scoped real nonroot procfs mechanism controls at the reviewed adopted byte identities.",
+    "original_hosted_failure": "Full D03 run 34464573240 remains failed. Its historical PermissionError did not retain operation/selection classification; the new mechanism observations do not establish its cause or repair that post-emulator cleanup.",
+    "strict_ios_file_protection": {
+      "observations": 26,
+      "passed": 0,
+      "failed": 26,
+      "status": "UNRESOLVED"
+    },
+    "excluded_credit": [
+      "Normal Parlor Debug-binary/libproc runtime",
+      "Apple/iOS or Windows execution in this local batch",
+      "Application runtime or whole-host emulator absence",
+      "Fresh combined frozen-source qualification",
+      "Physical-device verification",
+      "Store publication/signing/promotion readiness",
+      "Separate owner/legal requirements"
+    ],
+    "no_source_or_oracle_relaxation": "No application/protocol/privacy/storage/file-protection contract or validation was edited or waived by this review."
+  }
+}

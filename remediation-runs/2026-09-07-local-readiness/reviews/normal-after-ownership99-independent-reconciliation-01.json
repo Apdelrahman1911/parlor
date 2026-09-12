@@ -1,0 +1,211 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/release_fix_review",
+  "reviewed_at": "2026-09-08T00:25:29.525035+00:00",
+  "decision": "INDEPENDENT INTEGRATION CONTROL RECONCILIATION PASS \u2014 actual99 tests, exact imports and77-file before/after manifest verified after canonical172. The two canonical verification-tooling fixes have focused, combined and dependent-runner controls; no new native/app/Store approval.",
+  "scope": "Supplement to partial-FIFO/canonical-holder source reviews and canonical172 reconciliation. Read-only evidence reconciliation; not a fresh line-by-line assertion review of all existing normal-runner tests.",
+  "prior_review": {
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/partial-fifo-and-canonical172-independent-reconciliation-01.json",
+    "sha256": "5117406b0aec39d831171c3f5cccda6184cc48ef5bab17b069245360fde03995"
+  },
+  "cycle": {
+    "name": "normal-after-ownership-controls-01",
+    "receipt": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/normal-after-ownership-controls-01/receipt.json",
+      "sha256": "be91d1835b93e3d21bb08cdafd8579692e3f81d397ef0dfe1b8b717e258a4f44"
+    },
+    "raw_log": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/normal-after-ownership-controls-01/gradle.log",
+      "sha256": "6f519776c046f8fbe064cc0fc2a886a32ee7c940ed88bcf074e4d9d82f921c85"
+    },
+    "stop_log": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/normal-after-ownership-controls-01/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    "command": [
+      "/usr/bin/python3",
+      "-B",
+      "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_control_tests.py"
+    ],
+    "started_at": "2026-09-08T00:20:15.895544+00:00",
+    "finished_at": "2026-09-08T00:20:16.497290+00:00",
+    "status": "PASS",
+    "exit_code": 0,
+    "source": {
+      "commit": "b6e1947c62661631d0593038db7f64dbf25f720e",
+      "tree": "f03ad1b302d951d0ca9811b1efab2751a8be6978",
+      "branch": "fix/local-readiness-2026-09-07",
+      "diff_sha256": "fb48004c2f54689cdbb9837f102e89dd0d6ee1db85781ba85aa3291ec6860039",
+      "source_manifest_sha256": "b3acf683ae72cf446c9f02f0fbce9b6ed12d28bc4afe173123870b75fd8d4929"
+    },
+    "source_before_after_exact": true,
+    "source_unchanged_since_canonical172": true,
+    "runner_before_after_exact": true,
+    "runner": {
+      "manifest": [
+        [
+          "remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py",
+          "5c0e546c819c28762cbc6b355ec2717737fc53f96712af591a27add878579d7a"
+        ]
+      ],
+      "manifest_sha256": "c8978207adf3c6d0ea416e39f7f9b309130bc73f8f56da435163b630353d5aa5"
+    }
+  },
+  "test_reconciliation": {
+    "expected_from_independently_parsed_AST": 99,
+    "actual_verbose_descriptors": 99,
+    "passes": 99,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "all_four_lists_agree": "Independent current AST, emitted declared_ids, emitted discovered_ids, actual verbose execution IDs match exactly.",
+    "missing": [],
+    "extra": [],
+    "duplicates": [],
+    "per_file": [
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_header_diagnostics.py",
+        "sha256": "e2d835d4c7919c1448eebc51079d5f0673e71b3a1a8998ed97b616325e5bd06a",
+        "tests": 8,
+        "hash_bound_before_after": true
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_normal_launch_controls.py",
+        "sha256": "af5c912dbc9655468d5d428b18f5a7c16d7b0f2fa421e14cf559ee674eaceb76",
+        "tests": 78,
+        "hash_bound_before_after": true
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_xcode26_repetitions.py",
+        "sha256": "3e51f197304d1b7f16da4ee3269fcd48bf0fa6f0632d2dbc36ab395e68d5e66a",
+        "tests": 13,
+        "hash_bound_before_after": true
+      }
+    ],
+    "raw_descriptor_lines": [
+      [
+        2,
+        100
+      ]
+    ],
+    "raw_totals_lines": [
+      [
+        101,
+        105
+      ]
+    ],
+    "fixture_oracle": "Driver source65 lines read completely. It refuses argument injection, wrong/missing/duplicate source IDs and actual discovery, uses real unittest runner, captures after-manifest, and requires result.wasSuccessful, exact99, no skipped and no source drift for exit0.",
+    "driver_source": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_control_tests.py",
+      "sha256": "3ffc9c3836f61f86d573ad0b3dce5f3105fcd1ea4fd8ab677f9806b6eb8bf2b2",
+      "reviewed_lines": [
+        [
+          1,
+          65
+        ]
+      ]
+    }
+  },
+  "source_and_import_binding": {
+    "nested_control_manifest_files": 77,
+    "before_after_exact": true,
+    "current_bytes_match_all77": true,
+    "nested_manifest_digest_method": "SHA256(JSON before rows, sort_keys=True, separators=(comma,colon)); independent review digest, not an extra emitted runner field.",
+    "nested_manifest_digest": "76bd2b67188108f192ec501cf812171d0c3d4b90272bddd6db5fd7cefd8766dd",
+    "actual_import_count": 26,
+    "all_actual_imports_in_nested_manifest": true,
+    "canonical_imports": {
+      "owned_lane": {
+        "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/owned_lane.py",
+        "sha256": "949091403ac669429f962120e9873a09897a87bdcae10702720ede0c68342f03"
+      },
+      "secondary_fifo": {
+        "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/secondary_fifo.py",
+        "sha256": "170586ec941b02866acfa4b8e54aa3dd0842dbc7bc9c4b50410bca4b1149440a"
+      },
+      "run_ios_readiness": {
+        "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/run_ios_readiness.py",
+        "sha256": "85283be9681be14c18b76ef1657b596e837b4f97f978917f25ac693ae72d0ca8"
+      }
+    },
+    "normal_imports": {
+      "run_normal_ios_launch": {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
+        "sha256": "36276fb27423ca04c9fe41d033042c3ae25d5a512183b96b80230b4f58ad2e8d"
+      },
+      "external_image_provenance": {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/external_image_provenance.py",
+        "sha256": "ec19eb8c910f42c180ea17bae1af2fed259cb989174c61cf306a0324800200ef"
+      },
+      "normal_launch_receipts": {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/normal_launch_receipts.py",
+        "sha256": "c1335e043f91c1a5e995fb03e9464a291cd5566e0eabfaf1f981f339c5660ae0"
+      },
+      "normal_source_copy": {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/normal_source_copy.py",
+        "sha256": "5920d07a43c64eb7193a1c1d03aea93948bfa21597591ee13d79073666ed54d2"
+      }
+    },
+    "coverage_of_generic_receipt_exclusions": "Generic source manifest excludes remediation controls. Unlike the draft-only focused run, this normal driver emits before/after hashes for its actual normal controls plus canonical support. All77 current hashes independently reconciled; all26 observed import paths covered.",
+    "new_holder_test_is_bound_not_executed_here": {
+      "path": "scripts/verification/ios-readiness/test_owned_lane_lsof.py",
+      "sha256": "72a1f9bd5f23d7124e6d8679333e4071c07f67b812ff861e5ac727f7e875ede8",
+      "meaning": "Present in77-file manifest; actual7 test execution belongs to canonical172 and focused lsof7 cycles, not the normal99 count."
+    },
+    "fifo_test_is_bound_not_executed_here": {
+      "path": "scripts/verification/ios-readiness/test_secondary_fifo.py",
+      "sha256": "02b82b6662b735316fe303f6ba7d7affb203090374cacadd8c67909a174ff99e",
+      "meaning": "Actual39 execution belongs to draft39 and canonical172. Normal99 imports the changed canonical module as dependent support but does not claim to execute its39 tests again."
+    }
+  },
+  "cross_module_source_reopened": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
+      "sha256": "36276fb27423ca04c9fe41d033042c3ae25d5a512183b96b80230b4f58ad2e8d",
+      "reviewed_lines": [
+        [
+          1,
+          66
+        ]
+      ],
+      "conclusion": "Imports canonical owned_lane and AppHostOwnership, not a stale draft; exact control_manifest rejects missing/symlinked/redirected entries and binds normal+support+frozen helper bytes."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/run_ios_readiness.py",
+      "sha256": "85283be9681be14c18b76ef1657b596e837b4f97f978917f25ac693ae72d0ca8",
+      "reviewed_lines": [
+        [
+          278,
+          315
+        ],
+        [
+          920,
+          936
+        ]
+      ],
+      "conclusion": "AppHostOwnership constructs updated SecondaryFifoLedger and updated lsof callback; original first-error retention, ownership constraints and fail-closed cleanup gates are preserved."
+    }
+  ],
+  "cleanup": {
+    "stop_exit_code": 0,
+    "stopped_at": "2026-09-08T00:20:16.981765+00:00",
+    "stop_text": "No Gradle daemons are running.",
+    "cleanup_completed_at": "2026-09-08T00:20:17.104816+00:00",
+    "remaining_outputs": [],
+    "retained_outputs": [],
+    "remaining_owned_workers": [],
+    "remaining_artifact_workers": [],
+    "errors": [],
+    "deferred_signals": [],
+    "method": "Exact task-owned generated dirs; no Gradle clean daemon or global cache deletion. Unrelated processes excluded by PID/start identity and cycle ownership.",
+    "scope": "Verified finalized root receipt/log, not an independent native process probe. This reviewer started no test/build/native processes or background workers and created no generated build outputs."
+  },
+  "limits_and_preservation": [
+    "PURE_CONTROL_TESTS_NOT_APP_RUNTIME is the actual emitted evidence kind. No normal app launch, XCTest invocation, simulated8 launch train or fixture sample is upgraded into actual iOS execution.",
+    "The77-file and26-import manifests do not imply every imported support method was executed. Canonical172 separately executes the exact focused holder/FIFO controls.",
+    "Pending-path/fresh-live-inode safety and warning-visible holder rejection retain conservative failure modes; this does not guarantee every short-lived native worker is observed.",
+    "Fresh exact source/control binding is still required for a later native cycle. No old execution approval is silently rebound.",
+    "Original red and native09 failed receipts remain unchanged. Diagnostics and unresolved native storage readback remain separate from these verified cleanup-tooling fixes.",
+    "No source/application mutation, process signaling, deletion, Git history operation or Store operation was performed by reviewer. Additive review only."
+  ]
+}

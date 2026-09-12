@@ -1,0 +1,650 @@
+--- a/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/external_image_provenance.py
++++ b/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/external_image_provenance.py
+@@ -21,8 +21,8 @@
+               'sample and matched to dwarf/file inventories, not independently read from mapped '
+               'Mach-O headers. Pre/post kernel audit-token/lifetime checks, matching tool PID/path '
+               'headers and mapped addresses fail closed, but numeric-PID tools do not reserve a '
+-              'process generation atomically. An explicitly enabled USER-only path is a lossy tool '
+-              'presentation alias for an approved current-user device artifact, not independently '
++              'process generation atomically. An explicitly enabled USER-only path, or a sample-table-only '
++              'literal-star user component, is a lossy tool presentation alias for an approved current-user device artifact, not independently '
+               'kernel-attested non-launcher image-path proof. No hash of every mapped page, physical-device or Store proof.')
+ 
+ 
+@@ -89,6 +89,7 @@
+             raise RuntimeError('Invalid independent account/device path context')
+         self.artifacts = {path: dict(row) for path, row in artifacts.items()}
+         self.aliases = {path: path for path in artifacts}
++        self.sample_aliases = dict(self.aliases)
+         prefix = home + '/Library/Developer/CoreSimulator/Devices/' + str(device_uuid) + '/data/Containers/Bundle/Application/'
+         suffix = app[len(prefix):].split('/') if app.startswith(prefix) else []
+         if len(suffix) != 2 or re.fullmatch(UUID, suffix[0]) is None or suffix[1] != 'Parlor.app':
+@@ -106,10 +107,14 @@
+             if not path.startswith(app + '/') or path[len(app) + 1:] != row['relative_path']:
+                 raise RuntimeError('Installed artifact does not match its complete app-container path')
+             if redact_home:
+-                alias = '/Users/USER' + path[len(home):]
+-                if alias in self.aliases and self.aliases[alias] != path:
+-                    raise RuntimeError('Ambiguous exact or USER-only artifact presentation')
+-                self.aliases[alias] = path
++                # Literal full-string keys only. Native13 observed '*' solely
++                # in sample Binary Images, not headers or vmmap mappings.
++                for marker, aliases in (('USER', self.aliases), ('USER', self.sample_aliases),
++                                        ('*', self.sample_aliases)):
++                    alias = '/Users/' + marker + path[len(home):]
++                    if alias in aliases and aliases[alias] != path:
++                        raise RuntimeError('Ambiguous exact or user-component artifact presentation')
++                    aliases[alias] = path
+ 
+     @staticmethod
+     def safe_path(path):
+@@ -118,23 +123,33 @@
+                 not any(part in {'.', '..'} for part in Path(path).parts) and
+                 not any(ord(char) < 32 or ord(char) == 127 for char in path))
+ 
+-    def resolve(self, raw):
+-        return self.aliases.get(raw)
+-
+-    def forms(self, canonical):
+-        return tuple(raw for raw, path in self.aliases.items() if path == canonical)
++    def resolve(self, raw, *, sample=False):
++        return (self.sample_aliases if sample else self.aliases).get(raw)
++
++    def forms(self, canonical, *, sample=False):
++        aliases = self.sample_aliases if sample else self.aliases
++        return tuple(raw for raw, path in aliases.items() if path == canonical)
++
++    def path_kind(self, raw, *, sample=False):
++        canonical = self.resolve(raw, sample=sample)
++        if canonical is None:
++            return None
++        if canonical == raw:
++            return 'exact'
++        return ('owned-literal-star-user-presentation' if raw.startswith('/Users/*/') else
++                'owned-USER-only-presentation')
+ 
+     def require_inventory(self, artifacts):
+         if artifacts != self.artifacts:
+             raise RuntimeError('Tool aliases are not bound to this exact artifact inventory')
+ 
+ 
+-def resolve_tool_path(raw, tool_paths):
++def resolve_tool_path(raw, tool_paths, *, sample=False):
+     if tool_paths is None:
+         return raw
+     if not isinstance(tool_paths, OwnedToolPaths):
+         raise RuntimeError('Tool path policy was not built from owned artifact inputs')
+-    return tool_paths.resolve(raw)
++    return tool_paths.resolve(raw, sample=sample)
+ 
+ 
+ def verify_header(raw, pid, executable, budget=16 * 1024 * 1024, *, tool_paths=None):
+@@ -202,7 +217,7 @@
+         raise RuntimeError('Actual sample result lacks one unambiguous binary-image table')
+     table = raw.split('\nBinary Images:\n', 1)[1]
+     selected = {}
+-    owned_forms = artifacts if tool_paths is None else tool_paths.aliases
++    owned_forms = artifacts if tool_paths is None else tool_paths.sample_aliases
+     for line in table.splitlines():
+         match = SAMPLE_ROW.fullmatch(line)
+         if match is None:
+@@ -210,7 +225,7 @@
+                 raise RuntimeError('Unrecognized owned binary-image row; parser review required')
+             continue
+         reported_path = match[4]
+-        path = resolve_tool_path(reported_path, tool_paths)
++        path = resolve_tool_path(reported_path, tool_paths, sample=True)
+         if path not in artifacts:
+             # Do not retain paths to unrelated images. A second, unexpected
+             # Parlor/Compose image cannot silently stand in for the owned one.
+@@ -222,7 +237,7 @@
+             raise RuntimeError('Duplicate, invalid or wrong-UUID owned mapped image')
+         selected[path] = dict(**artifacts[path], sample_start=start, sample_end_inclusive=end,
+                               observed_tool_uuid=match[3].lower(), sample_header_path_kind=header_kind,
+-                              sample_path_kind='exact' if path == reported_path else 'owned-USER-only-presentation')
++                              sample_path_kind='exact' if tool_paths is None else tool_paths.path_kind(reported_path, sample=True))
+     kinds = [row['kind'] for row in selected.values()]
+     if any(kinds.count(kind) != 1 for kind in ('launcher', 'debug-dylib', 'compose-framework')):
+         raise RuntimeError('One launcher, one debug dylib and one actual Compose framework must be observed')
+--- a/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/external_image_diagnostics.py
++++ b/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/external_image_diagnostics.py
+@@ -27,6 +27,38 @@
+ ABSOLUTE_TAIL = re.compile(r'(?:^|[ \t])(/[^\r\n]*?)\s*$')
+ SAMPLE_ADDRESS = re.compile(r'^\s*(0x[0-9a-fA-F]+)\s*-\s*(0x[0-9a-fA-F]+)\s+')
+ VMMAP_ADDRESS = re.compile(r'^\s*__TEXT\s+([0-9a-fA-F]+)-([0-9a-fA-F]+)\s+')
++COMMAND_WORDS = frozenset(('vmmap process pid task port for could cannot not obtain get failed failure error '
++    'operation permitted permission denied is because it no longer appears to be running examine the target '
++    'this often protected debuggable a an requested access invalid argument resource shortage kernel mach '
++    'rights unavailable unable read memory map of must run as root sudo insufficient privilege privileges '
++    'entitlement entitlements requires unsupported supported architecture architectures rosetta translated '
++    '(os/kern) (os/errno)').split())
++
++
++def vmmap_command_diagnostic(raw, pid, exit_code):
++    """Closed failure tokens only; never raw paths/mappings or an inferred cause."""
++    if (not isinstance(raw, bytes) or len(raw) > MAX_INPUT_BYTES or type(pid) is not int or not 1 < pid <= 0x7fffffff or
++            type(exit_code) is not int or not -255 <= exit_code <= 255 or exit_code == 0):
++        raise RuntimeError('Invalid bounded failed-vmmap command context')
++    lines = []
++    for line in raw.split(b'\n', 8)[:8]:
++        tokens = []
++        for token in line[:512].split()[:32]:
++            word = token.decode('ascii', errors='replace').lower().rstrip('.,:;')
++            if word.strip('[]()') == str(pid):
++                tokens.append('REQUESTED_PID')
++            elif word in COMMAND_WORDS:
++                tokens.append(word)
++            else:
++                tokens.append(dict(sha256=hashlib.sha256(token).hexdigest(), bytes=len(token)))
++        lines.append(dict(bytes=len(line), sha256=hashlib.sha256(line).hexdigest(), tokens=tokens,
++                          truncated=len(line) > 512 or len(line[:512].split()) > 32))
++    result = dict(schema_version=1, kind='FAILURE_ONLY_VMMAP_COMMAND', proves_provenance=False,
++        exit_code=exit_code, bytes=len(raw), sha256=hashlib.sha256(raw).hexdigest(), lines=lines,
++        line_limit_reached=raw.count(b'\n') >= 8, interpretation='TOKEN_DIAGNOSTIC_ONLY_NO_INFERRED_FAILURE_CAUSE')
++    if len((json.dumps(result, indent=2) + '\n').encode()) > 65536:
++        raise RuntimeError('Failed-vmmap diagnostic output budget exceeded')
++    return result
+ 
+ 
+ def _context(artifacts, tool_paths, selected):
+@@ -54,14 +86,14 @@
+     return paths, components
+ 
+ 
+-def _path_shape(value, paths, components, tool_paths):
++def _path_shape(value, paths, components, tool_paths, *, sample=False):
+     if not isinstance(value, str) or not 0 < len(value.encode()) <= MAX_PATH_BYTES:
+         raise RuntimeError('Diagnostic candidate path budget exceeded')
+     parts = value.split('/')
+     if len(parts) > MAX_COMPONENTS:
+         raise RuntimeError('Diagnostic candidate component budget exceeded')
+     exact = [index for index, path in enumerate(paths) if value == path]
+-    canonical = value if tool_paths is None else tool_paths.resolve(value)
++    canonical = value if tool_paths is None else tool_paths.resolve(value, sample=sample)
+     aliases = [index for index, path in enumerate(paths) if canonical == path and value != path]
+     shape, relationships = [], 0
+     for part in parts:
+@@ -78,9 +110,11 @@
+             shape.append(dict(public_marker=part))
+         else:
+             shape.append(dict(unknown_sha256=hashlib.sha256(part.encode()).hexdigest(), bytes=len(part.encode())))
++    literal_star = bool(aliases) and tool_paths.path_kind(value, sample=sample) == 'owned-literal-star-user-presentation'
+     return dict(bytes=len(value.encode()), component_shape=shape,
+                 exact_artifact_indexes=exact, owned_presentation_artifact_indexes=aliases,
+-                classification='EXACT_BOUND' if exact else 'OWNED_USER_PRESENTATION' if aliases else 'UNBOUND')
++                classification='EXACT_BOUND' if exact else 'OWNED_LITERAL_STAR_USER_PRESENTATION' if literal_star else
++                               'OWNED_USER_PRESENTATION' if aliases else 'UNBOUND')
+ 
+ 
+ def _interval(line, tool):
+@@ -141,7 +175,8 @@
+             not isinstance(raw, str) or not 0 < len(raw.encode()) <= budget):
+         raise RuntimeError('Empty or unbounded failure-only image diagnostic')
+     paths, components = _context(artifacts, tool_paths, selected)
+-    forms = {path: path for path in paths} if tool_paths is None else tool_paths.aliases
++    forms = ({path: path for path in paths} if tool_paths is None else
++             tool_paths.sample_aliases if tool == 'sample' else tool_paths.aliases)
+     value = dict(schema_version=1, kind='FAILURE_ONLY_EXTERNAL_IMAGE_FORMAT', proves_provenance=False,
+         tool=tool, decoded_input_bytes=len(raw.encode()),
+         inventory_value_sha256=hashlib.sha256(json.dumps(artifacts, sort_keys=True, separators=(',', ':')).encode()).hexdigest(),
+@@ -168,13 +203,13 @@
+         tail = ABSOLUTE_TAIL.search(line)
+         reported = strict[4] if strict is not None else tail[1] if tail is not None else None
+         contains = sorted({paths.index(path) for form, path in forms.items() if form in line})
+-        resolved = (reported if tool_paths is None else tool_paths.resolve(reported)) if reported is not None else None
++        resolved = (reported if tool_paths is None else tool_paths.resolve(reported, sample=tool == 'sample')) if reported is not None else None
+         name = Path(reported).name if reported is not None else None
+         if name not in IMAGE_NAMES and resolved not in artifacts and not contains:
+             continue  # No unrelated system row or arbitrary symbol is retained.
+         if len(value['candidates']) >= MAX_CANDIDATES:
+             raise RuntimeError('Failure-only image candidate budget exceeded')
+-        shape = _path_shape(reported, paths, components, tool_paths) if reported is not None else None
++        shape = _path_shape(reported, paths, components, tool_paths, sample=tool == 'sample') if reported is not None else None
+         indexes = [] if shape is None else shape['exact_artifact_indexes'] + shape['owned_presentation_artifact_indexes']
+         interval = _interval(line, tool)
+         row = dict(table_line=ordinal, bytes=len(line.encode()),
+--- a/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py
++++ b/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py
+@@ -43,7 +43,7 @@
+ from normal_launch_receipts import read_json, verify_markers, verify_xctest, METHOD, SELECTOR, UUID
+ from external_image_provenance import (APP_ID, parse_launch_pid, attest_target, unchanged_target,
+                                        parse_sample, bind_vmmap, header_diagnostic, OwnedToolPaths, LIMITATION)
+-from external_image_diagnostics import image_diagnostic
++from external_image_diagnostics import image_diagnostic, vmmap_command_diagnostic
+ 
+ 
+ def now():
+@@ -207,7 +207,39 @@
+             finally:
+                 entry['finished_at'] = now()
+                 self.save()
++        if (entry['exit_code'] != 0 and len(entry['command']) == 3 and
++                entry['command'][:2] == ['/usr/bin/vmmap', '-w']):
++            try:
++                self.collect_vmmap_command_failure(path, int(entry['command'][2]), entry['exit_code'])
++            except BaseException as diagnostic_error:
++                # The command already failed. Keep its nonzero result and only
++                # the closed diagnostic error type, including interruptions.
++                self.receipt['vmmap_command_diagnostic_error_type'] = type(diagnostic_error).__name__
+         return entry['exit_code']
++
++    def collect_vmmap_command_failure(self, path, pid, exit_code):
++        if path != self.temporary / 'owned-app.vmmap.txt' or path.resolve() != path:
++            raise RuntimeError('Failed-vmmap output is not the exact owned temporary file')
++        before = path.lstat()
++        if (not stat.S_ISREG(before.st_mode) or before.st_uid != os.getuid() or before.st_nlink != 1 or
++                not 0 <= before.st_size <= 16 * 1024 * 1024):
++            raise RuntimeError('Failed-vmmap output changed type, owner or bound')
++        fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
++        try:
++            opened = os.fstat(fd)
++            if (opened.st_dev, opened.st_ino, opened.st_size) != (before.st_dev, before.st_ino, before.st_size):
++                raise RuntimeError('Failed-vmmap output was replaced')
++            with os.fdopen(fd, 'rb', closefd=False) as source:
++                raw = source.read(16 * 1024 * 1024 + 1)
++            after = os.fstat(fd)
++            if (len(raw) != opened.st_size or opened.st_size != after.st_size or
++                    opened.st_mtime_ns != after.st_mtime_ns):
++                raise RuntimeError('Failed-vmmap output changed while reading')
++        finally:
++            os.close(fd)
++        name = 'vmmap-command-failure.json'
++        write_json(self.destination / name, vmmap_command_diagnostic(raw, pid, exit_code))
++        self.receipt['vmmap_command_failure_sha256'] = digest(self.destination / name)
+ 
+     def check_watched_outputs(self):
+         for path, maximum in self.watched_outputs:
+--- a/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_control_tests.py
++++ b/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_control_tests.py
+@@ -10,7 +10,7 @@
+ sys.path.insert(0, str(HERE))
+ import run_normal_ios_launch as control
+ 
+-EXPECTED_COUNT = 163
++EXPECTED_COUNT = 177
+ 
+ 
+ def declared_tests():
+--- a/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/README.md
++++ b/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/README.md
+@@ -9,9 +9,10 @@
+ The original controls had independent source review and **78 passing synthetic
+ tests** in `evidence/package-controls-01/` (2026-09-07). The subsequent **99** controls
+ passed in `evidence/normal-after-native10-controls-01/`. The current suite declares
+-**163 tests** (43 added failure-only diagnostic, negative, orchestration and
+-mutation controls beyond the previous 120). Existing assertions and test
+-signatures are preserved. Test-control success is not app-runtime evidence.
++**177 tests**: the original 163 unchanged tests plus 14 sample-only literal-star
++and failed-command diagnostic controls. The added tests have not yet executed;
++root must independently review and run this exact version. Existing assertions
++and test signatures are preserved. Test-control success is not app-runtime evidence.
+ 
+ `ios-readiness-06` executed eight successful XCTest repetitions but then failed
+ report parsing, before the separate ninth-launch provenance observation. Its
+@@ -42,10 +43,23 @@
+ malformed owned rows, raw/alias duplicates, wrong UUIDs and mapping ranges still
+ fail. Other callers keep strict exact matching by default.
+ 
+-This presentation map is deliberately lossy, not independent kernel attestation
+-of each loaded non-launcher image's full path or mapped-memory bytes. Actual
+-Binary Images and `vmmap` support remain unverified until a new approved native
+-cycle exercises them; synthetic fixtures do not prove those tool formats.
++`ios-readiness-13` passed eight repetitions, notices and cleanup, but failed the
++separate image observation. Its retained diagnostics established a `USER` header
++and literal `*` in the username component of three Binary Images paths: launcher,
++debug dylib and Compose framework. Each other component and UUID matched its
++unique installed artifact. That original **FAIL** remains unchanged. The finite
++exact-string policy now additionally recognizes `/Users/*/...` for **sample
++Binary Images only**. This is not glob matching: other components must match in
++full, headers and `vmmap` still accept exact/`USER` only, and copied-build/DerivedData
++origins remain exact-only. Literal-star observations receive a distinct lossy
++presentation label. Existing origin, collision, UUID, address and lifetime checks
++remain strict.
++
++These presentation maps are deliberately lossy, not independent kernel attestation
++of each loaded non-launcher image's full path or mapped-memory bytes. The new
++sample-table policy and successful app `vmmap` binding remain unverified until
++a fresh approved native cycle exercises them; synthetic fixtures do not prove
++actual provenance or tool support.
+ 
+ ## Failure-only image diagnostics
+ 
+@@ -89,6 +103,30 @@
+ Failure-only records never substitute for the provenance document. Original raw
+ file deletion, process ownership, simulator cleanup, copied-input validation,
+ source/control binding and final PASS predicates remain unchanged.
++
++### Completed nonzero `vmmap` commands
++
++Native13 actually ran `/usr/bin/vmmap -w` against the attested app and exited
++**255**. Its raw output was deleted without command diagnostics; the cause is
++**unknown**, not retrospectively inferred. The separate harmless-child capability
++probe passed, but is not application provenance or mapping evidence.
++
++The existing command boundary now preserves `vmmap-command-failure.json` only
++after an actual completed nonzero `vmmap -w PID` command. Both the normal and
++sample-rejection paths use this boundary. The owned, single-link, regular temporary
++file is checked before/after a no-follow bounded read, then removed by the existing
++finalizer. At most eight lines, 512 bytes and 32 tokens per line are considered.
++A closed generic-error vocabulary and the `REQUESTED_PID` marker are retained;
++unknown text, paths, addresses and numeric codes are hashed with lengths. Input
++is bounded to 16 MiB and serialized diagnostics to 64 KiB. Full-output and line
++hashes, lengths, truncation flags and the actual exit status are retained.
++
++The result is explicitly failure-only, `proves_provenance=false`, with **no
++inferred failure cause**. Empty output stays explicitly empty. Successful commands,
++timeouts, interruptions and output-budget failures cannot become completed
++nonzero-command evidence. Diagnostic errors preserve the original failure and
++record only their type. No command retry, extra native invocation, entitlement
++change or provenance waiver is introduced.
+ 
+ ## What this runner does
+ 
+@@ -153,9 +191,10 @@
+   Store-qualified Xcode26.3/17C529. Read-only host observation on2026-09-07 found
+   macOS26.2/25C56, Darwin25.2.0. An earlier helper's “Darwin26” prose must not be
+   interpreted as the actual kernel release; its approved implementation is reused.
+-- The actual app `sample` invocation succeeded in native08, but its header failed
+-  validation before image binding; app `vmmap` remains unexecuted. A
+-  denial/unknown format remains a failed or blocked evidence gate, not an app
++- The actual app `sample` invocation succeeded in native13, but sample-table
++  validation failed. Its app `vmmap` invocation exited 255; the cause is unknown
++  because raw output was deleted. A denial/unknown format remains a failed or
++  blocked evidence gate, not an app
+   defect and not authorization to change entitlements, attach by name, or use sudo.
+ 
+ ## Cleanup and resource ownership
+@@ -186,7 +225,7 @@
+ ## Root review and execution
+ 
+ Do not execute while another lane is active. Independent review must examine all
+-new source and the referenced approved helper hashes, then run the **163** synthetic
++new source and the referenced approved helper hashes, then run the **177** synthetic
+ control tests (not Swift compilation or app runtime):
+ 
+ ```sh
+--- /dev/null
++++ b/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_sample_literal_star.py
+@@ -0,0 +1,118 @@
++"""Synthetic sample-only literal-star controls; never native image evidence."""
++import copy
++import json
++import unittest
++
++import external_image_diagnostics as diagnostic
++import external_image_provenance as provenance
++from test_owned_tool_paths import APP, CONTAINER, DEVICE, EXE, HOME, PID, RELATIVES, alias, header, image_row, inventory, vmmap
++
++
++def star(path):
++    return '/Users/*' + str(path)[len(HOME):]
++
++
++def star_sample(artifacts=None):
++    artifacts = inventory() if artifacts is None else artifacts
++    return header(alias(EXE)) + '\nBinary Images:\n' + ''.join(
++        image_row(star(path) if row['origin'] == 'installed-app' else path, index, row)
++        for index, (path, row) in enumerate(artifacts.items()))
++
++
++def star_vmmap_rows():
++    return header() + ''.join(vmmap().splitlines(True)[2:]).replace(HOME, '/Users/*')
++
++
++class SampleLiteralStarTests(unittest.TestCase):
++    def setUp(self):
++        self.artifacts = inventory()
++        self.policy = provenance.OwnedToolPaths(self.artifacts, HOME, DEVICE, APP)
++
++    def parse(self, raw):
++        return provenance.parse_sample(raw, PID, EXE, self.artifacts, tool_paths=self.policy)
++
++    def test_observed_user_header_and_literal_star_rows_bind_with_distinct_lossy_labels(self):
++        with self.assertRaises(RuntimeError):
++            provenance.parse_sample(star_sample(), PID, EXE, self.artifacts)
++        selected = self.parse(star_sample())
++        self.assertEqual(set(selected), set(self.artifacts))
++        for path, row in selected.items():
++            self.assertEqual('owned-literal-star-user-presentation', row['sample_path_kind'])
++            self.assertEqual('owned-USER-only-presentation', row['sample_header_path_kind'])
++            self.assertEqual(self.artifacts[path]['sha256'], row['sha256'])
++            self.assertIsNone(self.policy.resolve(star(path)))
++            self.assertEqual(path, self.policy.resolve(star(path), sample=True))
++        self.assertLessEqual(len(self.policy.sample_aliases), 3 * len(self.artifacts))
++        for redacted in (False, True):
++            result = provenance.bind_vmmap(vmmap(redacted=redacted), PID, EXE, selected, tool_paths=self.policy)
++            self.assertEqual('PASS', result['status'])
++            self.assertIn('lossy tool presentation alias', result['limitation'])
++            self.assertTrue(all(row['vmmap_path_kind'] == ('owned-USER-only-presentation' if redacted else 'exact')
++                                for row in result['images']))
++
++    def test_literal_star_is_not_authorized_in_headers_or_vmmap(self):
++        with self.assertRaises(RuntimeError): provenance.verify_header(header(star(EXE)), PID, EXE, tool_paths=self.policy)
++        with self.assertRaises(RuntimeError): self.parse(star_sample().replace(header(alias(EXE)), header(star(EXE))))
++        with self.assertRaises(RuntimeError):
++            provenance.bind_vmmap(star_vmmap_rows(), PID, EXE, self.parse(star_sample()), tool_paths=self.policy)
++
++    def test_every_other_component_partial_star_and_foreign_username_remain_exact(self):
++        parts = star(EXE).split('/')
++        values = []
++        for index in range(1, len(parts)):
++            changed = list(parts); changed[index] = 'OTHER' if index == 2 else '*'
++            values.append('/'.join(changed))
++        values += [star(EXE).replace('/Users/*/', '/Users/' + marker + '/')
++                   for marker in ('**', '*owner', 'owner*', '?', '...', '~', '<redacted>', 'OTHER')]
++        for value in values:
++            with self.subTest(value=value), self.assertRaises(RuntimeError):
++                self.parse(star_sample().replace(star(EXE), value))
++
++    def test_copied_build_and_derived_origins_never_gain_star_aliases(self):
++        for origin in ('owned-copy-build', 'owned-derived-app'):
++            artifacts = copy.deepcopy(self.artifacts)
++            embedded = str(APP / RELATIVES[2]); owned = HOME + '/Projects/owned/' + origin + '/ComposeApp.framework/ComposeApp'
++            artifacts[owned] = dict(artifacts[embedded], origin=origin, sha256='f' * 64)
++            observed = {path: row for path, row in artifacts.items() if path != embedded}
++            policy = provenance.OwnedToolPaths(artifacts, HOME, DEVICE, APP)
++            self.assertEqual((owned,), policy.forms(owned, sample=True))
++            selected = provenance.parse_sample(star_sample(observed), PID, EXE, artifacts, tool_paths=policy)
++            self.assertEqual(origin, selected[owned]['origin'])
++            self.assertFalse(selected[owned]['same_file_bytes_as_embedded'])
++            with self.subTest(origin=origin), self.assertRaises(RuntimeError):
++                provenance.parse_sample(star_sample(observed).replace(owned, star(owned)), PID, EXE, artifacts, tool_paths=policy)
++
++    def test_exact_star_collision_and_inventory_mutation_fail_closed(self):
++        artifacts = copy.deepcopy(self.artifacts)
++        artifacts[star(EXE)] = dict(artifacts[str(EXE)], origin='owned-derived-app')
++        with self.assertRaises(RuntimeError): provenance.OwnedToolPaths(artifacts, HOME, DEVICE, APP)
++        changed = copy.deepcopy(self.artifacts); changed[str(EXE)]['sha256'] = 'f' * 64
++        with self.assertRaises(RuntimeError):
++            provenance.parse_sample(star_sample(), PID, EXE, changed, tool_paths=self.policy)
++
++    def test_literal_star_cannot_bypass_uuid_ranges_duplicates_or_container_binding(self):
++        raw = star_sample()
++        for value in (raw.replace('00000001-', 'ffffffff-'), raw.replace('0x100000', '0x0'),
++                      raw.replace('0x100000', '0x104000'), raw.replace('0x100000', '0x10000000000000000'),
++                      raw + image_row(str(EXE), 0, self.artifacts[str(EXE)]),
++                      raw + image_row(alias(EXE), 0, self.artifacts[str(EXE)]),
++                      raw + 'malformed ' + star(EXE) + '\n',
++                      raw.replace(star(APP / RELATIVES[2]), star(APP / RELATIVES[2]).replace(CONTAINER, DEVICE))):
++            with self.subTest(value=value), self.assertRaises(RuntimeError): self.parse(value)
++
++    def test_failure_diagnostics_distinguish_star_without_granting_vmmap_authority(self):
++        value = diagnostic.image_diagnostic(star_sample(), 'sample', self.artifacts, tool_paths=self.policy)
++        self.assertFalse(value['proves_provenance'])
++        self.assertNotIn(HOME, json.dumps(value))
++        for row in value['candidates']:
++            self.assertEqual('OWNED_LITERAL_STAR_USER_PRESENTATION', row['path']['classification'])
++            self.assertEqual(1, len(row['path']['owned_presentation_artifact_indexes']))
++            self.assertTrue(row['uuid']['matches_bound_path_uuid'])
++        without_policy = diagnostic.image_diagnostic(star_sample(), 'sample', self.artifacts)
++        mappings = diagnostic.image_diagnostic(star_vmmap_rows(), 'vmmap', self.artifacts, tool_paths=self.policy)
++        for rejected in (without_policy, mappings):
++            self.assertTrue(all(row['path']['classification'] == 'UNBOUND' for row in rejected['candidates']))
++
++
++if __name__ == '__main__':
++    unittest.main()
+--- /dev/null
++++ b/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_vmmap_command_failure.py
+@@ -0,0 +1,161 @@
++"""Closed command diagnostics and mocked real Lane.command; no native process."""
++from contextlib import contextmanager, nullcontext
++import hashlib
++import json
++from pathlib import Path
++import subprocess
++import tempfile
++from types import MethodType, SimpleNamespace
++import unittest
++from unittest.mock import patch
++
++import external_image_diagnostics as diagnostic
++import run_normal_ios_launch as runner
++import test_image_diagnostic_orchestration as fixtures
++from test_normal_launch_controls import PID
++
++
++class VmmapCommandFailureTests(unittest.TestCase):
++    def setUp(self):
++        allocation = tempfile.TemporaryDirectory(prefix='parlor-vmmap-failure-control-')
++        self.addCleanup(allocation.cleanup)
++        self.base, self.ordinal = Path(allocation.name).resolve(), 0
++
++    def fixture(self):
++        context = fixtures.ImageDiagnosticOrchestrationTests.fixture(self)
++        context['lane'].require = MethodType(runner.Lane.require, context['lane'])
++        context['lane'].receipt['commands'] = []
++        return context
++
++    @contextmanager
++    def execution(self, context, code=255, failure=None):
++        def child(arguments, *, stdout, **_options):
++            if arguments[:3] == ['xcrun', 'simctl', 'launch']:
++                stdout.write(f'{runner.APP_ID}: {PID}\n'.encode()); result = 0
++            elif arguments[0] == '/usr/bin/sample':
++                Path(arguments[-1]).write_text(context['raw_sample']); result = 0
++            elif arguments[:2] == ['/usr/bin/vmmap', '-w']:
++                stdout.write(b'vmmap: could not obtain task port for process ' + str(PID).encode() +
++                             b': permission denied /Users/PRIVATE_COMMAND_PATH 0xdeadbeef\n')
++                stdout.flush()
++                if failure is not None: raise failure
++                result = code
++            else:
++                self.fail('Unexpected command in synthetic control')
++            return SimpleNamespace(pid=51001, returncode=result, poll=lambda: result)
++        with fixtures.ImageDiagnosticOrchestrationTests.mocked_native(self, context), \
++             patch.object(runner.subprocess, 'Popen', side_effect=child), \
++             patch.object(runner, 'defer_parent_signals', side_effect=nullcontext):
++            yield
++
++    def test_closed_vocabulary_unknown_bytes_and_requested_pid_never_expose_raw_output(self):
++        raw = (f'vmmap: could not obtain task port for process {PID}: permission denied\n'.encode() +
++               b'/Users/PRIVATE_NAME/map 0xdeadbeef OtherProcess [83] secret\xff\x00\n')
++        value = diagnostic.vmmap_command_diagnostic(raw, PID, 255)
++        self.assertEqual('FAILURE_ONLY_VMMAP_COMMAND', value['kind'])
++        self.assertFalse(value['proves_provenance'])
++        self.assertEqual(255, value['exit_code'])
++        self.assertEqual(['vmmap', 'could', 'not', 'obtain', 'task', 'port', 'for', 'process', 'REQUESTED_PID',
++                          'permission', 'denied'], value['lines'][0]['tokens'])
++        encoded = json.dumps(value)
++        for secret in ('PRIVATE_NAME', '0xdeadbeef', 'OtherProcess', '[83]', 'secret', str(PID)):
++            self.assertNotIn(secret, encoded)
++        self.assertEqual(hashlib.sha256(raw).hexdigest(), value['sha256'])
++        unknown = diagnostic.vmmap_command_diagnostic(b'new-unknown-format\n', PID, 255)
++        self.assertNotIn('permission', json.dumps(unknown))
++        self.assertEqual('TOKEN_DIAGNOSTIC_ONLY_NO_INFERRED_FAILURE_CAUSE', unknown['interpretation'])
++
++    def test_empty_output_strict_context_and_line_token_byte_budgets(self):
++        self.assertEqual(0, diagnostic.vmmap_command_diagnostic(b'', PID, 255)['bytes'])
++        raw = (b'unknown ' * 100 + b'\n') * 10
++        value = diagnostic.vmmap_command_diagnostic(raw, PID, 255)
++        self.assertEqual(8, len(value['lines']))
++        self.assertTrue(value['line_limit_reached'])
++        self.assertTrue(all(row['truncated'] and len(row['tokens']) == 32 for row in value['lines']))
++        self.assertLessEqual(len((json.dumps(value, indent=2) + '\n').encode()), 65536)
++        for data, pid, code in ((None, PID, 255), ('text', PID, 255), (b'x', True, 255), (b'x', 1, 255),
++                                (b'x', PID, True), (b'x', PID, 0), (b'x', PID, 256),
++                                (b'x' * (diagnostic.MAX_INPUT_BYTES + 1), PID, 255)):
++            with self.subTest(pid=pid, code=code), self.assertRaises(RuntimeError):
++                diagnostic.vmmap_command_diagnostic(data, pid, code)
++
++    def test_actual_command_nonzero_preserves_diagnostic_on_both_existing_paths(self):
++        for failed_sample in (False, True):
++            with self.subTest(failed_sample=failed_sample):
++                context = self.fixture(); lane = context['lane']
++                original = RuntimeError('original sample rejection')
++                parse = patch.object(runner, 'parse_sample', side_effect=original) if failed_sample else nullcontext()
++                with self.execution(context), parse, self.assertRaises(RuntimeError) as raised:
++                    lane.observe_external_images()
++                if failed_sample:
++                    self.assertIs(original, raised.exception)
++                    event = lane.receipt['failure_only_vmmap_after_sample']
++                    self.assertEqual('FAILED_COMMAND_OR_LIFETIME', event['status'])
++                    self.assertTrue(event['lifetime_after_verified'])
++                else:
++                    self.assertEqual('Required owned command failed; consult its retained receipt', str(raised.exception))
++                path = lane.destination / 'vmmap-command-failure.json'; value = json.loads(path.read_text())
++                self.assertEqual(255, value['exit_code'])
++                self.assertFalse(value['proves_provenance'])
++                self.assertEqual(runner.digest(path), lane.receipt['vmmap_command_failure_sha256'])
++                self.assertNotIn('PRIVATE_COMMAND_PATH', path.read_text())
++                self.assertNotIn('0xdeadbeef', path.read_text())
++                commands = [row for row in lane.receipt['commands'] if row['command'][:2] == ['/usr/bin/vmmap', '-w']]
++                self.assertEqual([255], [row['exit_code'] for row in commands])
++                self.assertNotEqual('PASS', lane.receipt['provenance_status'])
++                self.assertFalse((lane.destination / 'separate-external-image-provenance.json').exists())
++                fixtures.ImageDiagnosticOrchestrationTests.assert_raw_removed(self, lane)
++
++    def test_diagnostic_failure_or_interruption_cannot_mask_original_nonzero_command(self):
++        for error in (ValueError('PRIVATE_COLLECTOR_ERROR'), KeyboardInterrupt()):
++            context = self.fixture(); lane = context['lane']
++            with self.execution(context), patch.object(runner, 'vmmap_command_diagnostic', side_effect=error), \
++                 self.assertRaisesRegex(RuntimeError, '^Required owned command failed; consult its retained receipt$'):
++                lane.observe_external_images()
++            self.assertEqual(type(error).__name__, lane.receipt['vmmap_command_diagnostic_error_type'])
++            self.assertNotIn('PRIVATE_COLLECTOR_ERROR', json.dumps(lane.receipt))
++            self.assertNotIn('vmmap_command_failure_sha256', lane.receipt)
++            fixtures.ImageDiagnosticOrchestrationTests.assert_raw_removed(self, lane)
++
++    def test_interrupted_or_timed_out_command_does_not_gain_completed_failure_evidence(self):
++        for error in (KeyboardInterrupt(), subprocess.TimeoutExpired('synthetic', 45)):
++            context = self.fixture(); lane = context['lane']
++            with self.execution(context, failure=error), patch.object(runner, 'vmmap_command_diagnostic') as collect, \
++                 self.assertRaises(type(error)) as raised:
++                lane.observe_external_images()
++            self.assertIs(error, raised.exception)
++            collect.assert_not_called()
++            self.assertNotIn('vmmap_command_failure_sha256', lane.receipt)
++            fixtures.ImageDiagnosticOrchestrationTests.assert_raw_removed(self, lane)
++
++    def test_completed_success_and_other_commands_do_not_create_failure_diagnostics(self):
++        for arguments, code in ((['/usr/bin/vmmap', '-w', str(PID)], 0), (['/bin/false'], 255)):
++            context = self.fixture(); lane = context['lane']
++            with patch.object(runner.subprocess, 'Popen', return_value=SimpleNamespace(
++                    pid=51001, returncode=code, poll=lambda: code)), \
++                 patch.object(runner, 'defer_parent_signals', side_effect=nullcontext), \
++                 patch.object(runner, 'vmmap_command_diagnostic') as collect:
++                self.assertEqual(code, lane.command(arguments, 'synthetic', output=lane.temporary / 'owned-app.vmmap.txt'))
++            collect.assert_not_called()
++            self.assertNotIn('vmmap_command_failure_sha256', lane.receipt)
++
++    def test_command_diagnostic_only_reads_exact_owned_single_link_file_and_closes_fd(self):
++        context = self.fixture(); lane = context['lane']; path = lane.temporary / 'owned-app.vmmap.txt'
++        other = lane.temporary / 'unrelated-synthetic'; other.write_bytes(b'private synthetic bytes')
++        with self.assertRaises(RuntimeError): lane.collect_vmmap_command_failure(other, PID, 255)
++        path.symlink_to(other)
++        with self.assertRaises(RuntimeError): lane.collect_vmmap_command_failure(path, PID, 255)
++        path.unlink(); runner.os.link(other, path)
++        with self.assertRaises(RuntimeError): lane.collect_vmmap_command_failure(path, PID, 255)
++        path.unlink(); path.write_bytes(b'vmmap: failed\n')
++        close = runner.os.close
++        with patch.object(runner.os, 'close', wraps=close) as closed, \
++             patch.object(runner, 'vmmap_command_diagnostic', side_effect=ValueError('synthetic')):
++            with self.assertRaises(ValueError): lane.collect_vmmap_command_failure(path, PID, 255)
++        self.assertEqual(1, closed.call_count)
++        self.assertEqual(b'private synthetic bytes', other.read_bytes())
++        self.assertFalse((lane.destination / 'vmmap-command-failure.json').exists())
++
++
++if __name__ == '__main__':
++    unittest.main()

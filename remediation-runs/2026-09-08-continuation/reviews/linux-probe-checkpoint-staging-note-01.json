@@ -1,0 +1,28 @@
+{
+  "kind": "CHECKPOINT_STAGING_SCOPE_NOTE",
+  "at": "2026-09-10T12:09:42.830023+00:00",
+  "initial_selected_files": 4117,
+  "selected_bytes": 144094649,
+  "all_evidence_whitespace_command": "git diff --cached --check",
+  "all_evidence_whitespace_exit_code": 2,
+  "tool_output_chunk": "4fd238",
+  "disposition": "Retained generated logs/graphs/reports contain original trailing whitespace and blank EOF lines. Required evidence bytes remain unchanged; they are not source-format failures. No repeat or normalization of these retained bytes.",
+  "affected_source_whitespace_command": [
+    "git",
+    "diff",
+    "--cached",
+    "--check",
+    "--",
+    ".github/workflows/production-verification.yml",
+    "scripts/ci/verification_hygiene.py",
+    "scripts/ci/linux_process_probe.py",
+    "scripts/release/tests/test_ci_verification_hygiene.py",
+    "scripts/release/tests/test_workflow_contract.py",
+    "scripts/release/tests/test_linux_process_probe.py",
+    "scripts/release/workflow_contract.py",
+    "remediation-runs/2026-09-08-continuation/CONTINUE_LATEST.md"
+  ],
+  "affected_source_whitespace_exit_code": 0,
+  "preserved_local_exclusion": "remediation-runs/2026-09-07-local-readiness/build-lane.lock",
+  "test_or_build_executed": false
+}

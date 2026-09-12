@@ -1,0 +1,42 @@
+{
+  "schema": 1,
+  "reviewer": "/root/probe_identity",
+  "author": "/root/ci_ios_runtime",
+  "status": "APPROVED_SOURCE_AND_FOCUSED_CONTROLS_NOT_NATIVE_RUNTIME",
+  "source_base": "1c3c33fe1891c1a143aaf8a1298abd0da052b085",
+  "pins": {
+    "scripts/ci/native_process_probe.py": "ac9b80dde0a48c7c93fcdfcce14b117765fb29a492c3892e5af3ba2dd3b9e22f",
+    "scripts/release/tests/test_native_process_probe.py": "43ff2e36f8bd3ad41fa8477e1554ca555523e3c7b2b8250f5123502a1e141ef1",
+    "remediation-runs/2026-09-08-continuation/protection-diagnostic-01/run_probe.py": "f146640334b31ba5cb6d91ef9bd8180b4ccd76c510de96df585c1f9268788c0e",
+    "remediation-runs/2026-09-08-continuation/protection-diagnostic-01/test_probe.py": "e4359d78434416163d4a2d3c37ac1366113b53bea2077460ba53d21673f927bb",
+    "remediation-runs/2026-09-08-continuation/protection-diagnostic-01/README.md": "fe38dbfdb7d6cba887dcdfc41f395966ff65e63475fc9211066ff9ef7c5ad9b2"
+  },
+  "actual_basis": {
+    "run_id": 34549827411,
+    "attempt": 1,
+    "main_state_sha256": "c071810953b1e11061241b97bdebc03f49b97c5c1a196aed6462043d27143095",
+    "cleanup_state_sha256": "2131a2e062473181821c632f0376949986c42cf5fa74c1343f71065a8301ea1f",
+    "finding": "Exact runtime-list command timed out at90s with stdout/stderr counters0/0; direct child reaped. No create intent, compilation or native/host observation. Cleanup retained scratch under unchanged timeout guard. Both downloaded archives matched API digests, CRCs and extracted members. Cause and global service state remain unproven."
+  },
+  "review": [
+    "Additive sample_runtime flag is strictly bool. True admits only /usr/bin/xcrun simctl list runtimes --json with integer90, no executable/environment override and no simultaneous original-ps sample. No arbitrary target PID or service selector is accepted.",
+    "Only standalone platform_binding opts in. Both Probe.capture and Probe.execute omit the new keyword for default False, preserving H01's borrowed execute and legacy capture signature without changing H01 or opting it into sampling.",
+    "Both timeout paths retain TIMEOUT; required durable checkpoint precedes sampling. The target PID comes solely from the exact direct Popen handle, remains unreaped throughout the nested one4s sample, then uses inherited direct-child retirement. Late exit0, failed sampling, interruption or preservation failure cannot promote the primary result.",
+    "Existing stack_frames parser is byte-unchanged: numeric symbol/module frames only, at most512 lines/512characters each. Raw sample headers, image paths, stderr and exception text are not retained. Sample is itself a bounded, owned/reaped child. No global CoreSimulator service, descendant, PID-name or process-group cleanup authority is introduced.",
+    "Original ps15 predicate/scope remain unchanged. Runtime90, shared enumeration120, aggregate deadlines, output/command limits and environments are unchanged; runtime sampling requires the existing12s sample/retirement reserve and skips launch if it cannot fit. No retry, spawn observation or service mutation added.",
+    "Source-segment comparisons to base confirm unchanged checkpoint, retire, interrupted, shared execute, stack_frames, child environments, standalone source bindings, prepare/run/cleanup/assert-result, native/host compilation and strict report validators. Existing timeout scratch-retention and mandatory stops remain intact."
+  ],
+  "findings_closed": [
+    "Runtime executable/environment substitutions rejected before launch; original ps executable seam preserved.",
+    "Root-identified H01 legacy-signature concern closed by conditional keyword forwarding in both wrappers and a direct borrowed-execute regression."
+  ],
+  "focused_controls": {
+    "executor": "/root",
+    "receipt": "../2026-09-07-local-readiness/evidence/continuation-protection-runtime-timeout-controls-01/receipt.json",
+    "receipt_sha256": "ec949c21e92dfb0251e9d981add868211a2278758745e20f12ac8f042b3ba913",
+    "result": "Independently read receipt and underlying logs; hashes match. Process50 + paired35 + H01host8 =93PASS, zero failures/errors/skips, each command exit0 and unittest OK. Expected negative-fixture FAILED JSON is not a unittest failure. Five new helper and two integration/legacy controls are present and passing.",
+    "custody_cleanup": "All7 receipt pins before=after=current. Stop log hash matches and states no Gradle daemons; receipt stop0/scratch_removed=true/errors[]. Reviewer also confirmed all21 explicitly checked live output/cache roots absent. Reviewer did not rerun tests."
+  },
+  "limits": "Source/control approval only. Fresh committed/inventoried source and approved control digest required before execution. Actual new timeout stack NOT_RUN; PD04 and historical strict failures are not reclassified. No native same-inode joins, protection-enforcement, application/full qualification, hardware or Store proof follows from these unit tests.",
+  "operations": "Reviewer used only local Git/read/stdlib AST/JSON/hash inspection and wrote this additive receipt. No project imports, test/build/native runs, network, dispatch, commits or child agents. No reviewer cleanup owed."
+}

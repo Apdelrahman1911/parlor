@@ -1,0 +1,145 @@
+{
+  "schema": 1,
+  "reviewer": "/root/release_fix_review",
+  "captured_at": "2026-09-07T03:27:10.765354+00:00",
+  "source_commit": "85ded00435b4f8327ce32d3b7f5062c4438ae174",
+  "source_tree": "0b0facb91b11b87f71c01454f470e21cfc2222ca",
+  "worktree_status": " M game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitGameFlow.kt\n M game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitPhaseRouter.kt\n M game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/multiplayer/WhodunitHostSessionFlow.kt\n M game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/timer/DiscussionTickerLoop.kt\n M game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitRecoveryInteractionTest.kt\n M shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitRoomTransportLoopbackTest.kt\n?? AGENTS.md\n?? audit-runs/\n?? design/\n?? docs/PARLOR_PROJECT_HANDOFF.md\n?? docs/WHODUNIT_DISCUSSION_TIMING.md\n?? game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitDiscussionFixture.kt\n?? game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitLocalLeaveTimerTest.kt\n?? game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/multiplayer/WhodunitHostLeaveTimerTest.kt\n?? project-code-audit/\n?? remediation-runs/\n?? scripts/verification/\n?? shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/LoopbackDeviceFixture.kt\n?? shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/LoopbackFixtureContractTest.kt\n",
+  "commands": [
+    {
+      "command": [
+        "uname",
+        "-m"
+      ],
+      "at": "2026-09-07T03:27:09.860037+00:00",
+      "exit_code": 0,
+      "output": "arm64\n"
+    },
+    {
+      "command": [
+        "sw_vers"
+      ],
+      "at": "2026-09-07T03:27:09.866837+00:00",
+      "exit_code": 0,
+      "output": "ProductName:\t\tmacOS\nProductVersion:\t\t26.2\nBuildVersion:\t\t25C56\n"
+    },
+    {
+      "command": [
+        "sysctl",
+        "-n",
+        "hw.memsize"
+      ],
+      "at": "2026-09-07T03:27:09.869567+00:00",
+      "exit_code": 0,
+      "output": "17179869184\n"
+    },
+    {
+      "command": [
+        "vm_stat"
+      ],
+      "at": "2026-09-07T03:27:09.871796+00:00",
+      "exit_code": 0,
+      "output": "Mach Virtual Memory Statistics: (page size of 16384 bytes)\nPages free:                              239003.\nPages active:                            186078.\nPages inactive:                          179801.\nPages speculative:                         5687.\nPages throttled:                              0.\nPages wired down:                        147143.\nPages purgeable:                           2189.\n\"Translation faults\":                 478764223.\nPages copy-on-write:                   60130173.\nPages zero filled:                    185317071.\nPages reactivated:                     17447654.\nPages purged:                           3119237.\nFile-backed pages:                       226131.\nAnonymous pages:                         145435.\nPages stored in compressor:              700286.\nPages occupied by compressor:            249703.\nDecompressions:                        11429817.\nCompressions:                          16879000.\nPageins:                                9536428.\nPageouts:                                147172.\nSwapins:                                 129735.\nSwapouts:                                240910.\n"
+    },
+    {
+      "command": [
+        "sysctl",
+        "vm.swapusage"
+      ],
+      "at": "2026-09-07T03:27:09.873772+00:00",
+      "exit_code": 0,
+      "output": "vm.swapusage: total = 2048.00M  used = 1014.44M  free = 1033.56M  (encrypted)\n"
+    },
+    {
+      "command": [
+        "df",
+        "-k",
+        "."
+      ],
+      "at": "2026-09-07T03:27:09.876072+00:00",
+      "exit_code": 0,
+      "output": "Filesystem   1024-blocks      Used Available Capacity iused     ifree %iused  Mounted on\n/dev/disk3s5   482797652 440670276  18718380    96% 4383111 187183800    2%   /System/Volumes/Data\n"
+    },
+    {
+      "command": [
+        "pkgutil",
+        "--pkg-info",
+        "com.apple.pkg.RosettaUpdateAuto"
+      ],
+      "at": "2026-09-07T03:27:09.903573+00:00",
+      "exit_code": 0,
+      "output": "package-id: com.apple.pkg.RosettaUpdateAuto\nversion: 1.0.0.0.1763820096\nvolume: /\nlocation: /\ninstall-time: 1766788898\n"
+    },
+    {
+      "command": [
+        "/usr/bin/arch",
+        "-x86_64",
+        "/usr/bin/true"
+      ],
+      "at": "2026-09-07T03:27:10.366442+00:00",
+      "exit_code": 0,
+      "output": ""
+    },
+    {
+      "command": [
+        "/usr/libexec/java_home",
+        "-V"
+      ],
+      "at": "2026-09-07T03:27:10.375254+00:00",
+      "exit_code": 0,
+      "output": "Matching Java Virtual Machines (2):\n    21.0.11 (arm64) \"Homebrew\" - \"OpenJDK 21.0.11\" /opt/homebrew/Cellar/openjdk@21/21.0.11/libexec/openjdk.jdk/Contents/Home\n    17.0.17 (arm64) \"Homebrew\" - \"OpenJDK 17.0.17\" /opt/homebrew/Cellar/openjdk@17/17.0.17/libexec/openjdk.jdk/Contents/Home\n/opt/homebrew/Cellar/openjdk@21/21.0.11/libexec/openjdk.jdk/Contents/Home\n"
+    },
+    {
+      "command": [
+        "docker",
+        "--version"
+      ],
+      "at": "2026-09-07T03:27:10.426683+00:00",
+      "exit_code": 0,
+      "output": "Docker version 29.6.1, build 8900f1d330\n"
+    },
+    {
+      "command": [
+        "colima",
+        "version"
+      ],
+      "at": "2026-09-07T03:27:10.680546+00:00",
+      "exit_code": 0,
+      "output": "colima version 0.10.3\ngit commit: 00f6c297e92a82c04a4ab507db0a61435650d7e8\n"
+    },
+    {
+      "command": [
+        "limactl",
+        "--version"
+      ],
+      "at": "2026-09-07T03:27:10.697803+00:00",
+      "exit_code": 0,
+      "output": "limactl version 2.1.4\n"
+    },
+    {
+      "command": [
+        "xcodebuild",
+        "-version"
+      ],
+      "at": "2026-09-07T03:27:10.765319+00:00",
+      "exit_code": 0,
+      "output": "Xcode 26.5\nBuild version 17F42\n"
+    }
+  ],
+  "protected_exclusions": [
+    "No user VM/AVD profiles, Docker contexts, keys, signing stores, player data, private configuration, or connected device lists read.",
+    "Only public install roots and read-only CLI/help/version probes; no workers or VMs started."
+  ],
+  "public_tools": {
+    "avdmanager_realpath": "/opt/homebrew/share/android-commandlinetools/cmdline-tools/latest/bin/avdmanager",
+    "avdmanager_revision": "20.0",
+    "emulator_version": "36.6.11.0 (15507667)",
+    "adb_version": "37.0.0-14910828",
+    "qemu_system_commands_in_path": false
+  },
+  "interpretation": [
+    "Rosetta execution works, but only registered arm64 JDK21/17 were found; a temporary SHA-bound official x64 JDK can exercise a translated JVM graph, not native Intel hardware.",
+    "VZ offers a real Linux arm64 guest on this host; x86 guest/KVM evidence cannot be substituted with Rosetta translation.",
+    "18GiB available disk at first probe; run VM/emulator/Gradle/Xcode cycles sequentially and inspect resources before downloads."
+  ]
+}

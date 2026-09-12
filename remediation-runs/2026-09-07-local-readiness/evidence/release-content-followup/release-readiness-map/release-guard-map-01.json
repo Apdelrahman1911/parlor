@@ -1,0 +1,144 @@
+{
+  "created_at": "2026-09-07T07:34:06.632694+00:00",
+  "reviewer": "/root/release_fix_review",
+  "branch": "fix/local-readiness-2026-09-07",
+  "commit": "1f809b87c15a4deb079809bc14718a58cf0fe451",
+  "tree": "6f6912d8612f71e07d2c338d860e906333ce8aad",
+  "working_tree_qualification": "Root owns concurrent story repair and Android build lane. DOC/INV edits by this reviewer frozen; MT draft excluded. This is not a clean release-candidate attestation.",
+  "store_workflows": [
+    {
+      "path": ".github/workflows/testing-candidate.yml",
+      "sha256": "0488fc5e0c4e520a767408cfb5e7fa387bc5fdfa0edfeb9dcd29a4cb0d2c7976",
+      "method": "Structural job/condition inspection only; complete source read ranges are separate",
+      "jobs": [
+        {
+          "job": "preflight",
+          "line": 31,
+          "conditions": [
+            {
+              "line": 32,
+              "condition": "if: ${{ always() && false }}"
+            }
+          ]
+        },
+        {
+          "job": "android",
+          "line": 177,
+          "conditions": [
+            {
+              "line": 178,
+              "condition": "if: ${{ always() && false }}"
+            }
+          ]
+        },
+        {
+          "job": "ios",
+          "line": 622,
+          "conditions": [
+            {
+              "line": 623,
+              "condition": "if: ${{ always() && false }}"
+            }
+          ]
+        },
+        {
+          "job": "finalize",
+          "line": 1158,
+          "conditions": [
+            {
+              "line": 1161,
+              "condition": "if: ${{ always() && false }}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "path": ".github/workflows/testing-external-promotion.yml",
+      "sha256": "5874b8b435e3b6fbfc02bb1cb54f8ab1d26ab01cf25b4220b2d81985fecc8a86",
+      "method": "Structural job/condition inspection only; complete source read ranges are separate",
+      "jobs": [
+        {
+          "job": "preflight",
+          "line": 41,
+          "conditions": [
+            {
+              "line": 42,
+              "condition": "if: ${{ always() && false }}"
+            }
+          ]
+        },
+        {
+          "job": "android",
+          "line": 148,
+          "conditions": [
+            {
+              "line": 154,
+              "condition": "if: ${{ always() && false }}"
+            }
+          ]
+        },
+        {
+          "job": "ios",
+          "line": 237,
+          "conditions": [
+            {
+              "line": 243,
+              "condition": "if: ${{ always() && false }}"
+            }
+          ]
+        },
+        {
+          "job": "finalize",
+          "line": 345,
+          "conditions": [
+            {
+              "line": 348,
+              "condition": "if: ${{ always() && false }}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "path": ".github/workflows/production-promotion.yml",
+      "sha256": "94ca7f617c24cb4c9ffafa5860c7ebc104f08cfa46b2a2e13fbae3ed816c461b",
+      "method": "Structural job/condition inspection only; complete source read ranges are separate",
+      "jobs": [
+        {
+          "job": "preflight",
+          "line": 62,
+          "conditions": [
+            {
+              "line": 63,
+              "condition": "if: ${{ always() && false }}"
+            }
+          ]
+        },
+        {
+          "job": "android",
+          "line": 243,
+          "conditions": [
+            {
+              "line": 249,
+              "condition": "if: ${{ always() && false }}"
+            }
+          ]
+        },
+        {
+          "job": "ios",
+          "line": 349,
+          "conditions": [
+            {
+              "line": 355,
+              "condition": "if: ${{ always() && false }}"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "shadow_store_metadata_directory_exists": false,
+  "private_exclusions": "No private/signing/credential/tester/player files read.",
+  "execution": "Source/hash inspection only; no build/test/app/Store command."
+}

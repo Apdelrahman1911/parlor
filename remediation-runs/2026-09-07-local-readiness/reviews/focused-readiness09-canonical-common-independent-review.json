@@ -1,0 +1,638 @@
+{
+  "reviewer": "/root/native_fix_review",
+  "reviewed_at": "2026-09-07T06:09:24.420942+00:00",
+  "status": "PASS \u2014 actual Desktop09 receipts independently corroborated; not native/device/release evidence",
+  "scope": "Fresh independent receipt/source/hash/XML review. No build rerun and no implementation modifications.",
+  "execution_author": "/root",
+  "identity_helper_author": "/root/release_fix_review",
+  "executed_source": {
+    "commit": "875d849e0079452557374690b14e42c546ba2c06",
+    "tree": "3be52230c713999cfa182755e69578ff6fd67797",
+    "branch": "fix/local-readiness-2026-09-07",
+    "diff_sha256": "e367bd8eef2aaa1fb7378a5197d00e7e9a99a79091b87fad625ee764d77b30a6",
+    "source_manifest_sha256": "4c0986f7c893f2cc9ffa4350e34749784d83e67cab117c75a5cd1af73e4b85e9"
+  },
+  "current_source_mapping": {
+    "HEAD": "0787b0fade803f3b8f2213b89f2fccb52a822279",
+    "tree": "0f1086c2f38c7316945ede7ceb79a80e11afafd7",
+    "branch": "fix/local-readiness-2026-09-07",
+    "source_file_count": 716,
+    "entire_716_entry_actual_file_manifest_equals_run_before_after": true,
+    "git_identity_differs": "Parent explicitly confirmed coordinated scoped history-only commits during this review. Cycle09 is NOT rebound or represented as executed at the later commit. Native binding must follow completion of commits."
+  },
+  "identity": {
+    "records": 18,
+    "groups": {
+      "3625d0663ba6eb51338cbd5f9dc45f859ec18846": 4,
+      "85ded00435b4f8327ce32d3b7f5062c4438ae174": 7,
+      "current": 7
+    },
+    "historical_source_bytes_checked_using_git_show": 11,
+    "current_source_bytes_checked": 7,
+    "rows_match_input_manifest_pins_and_expected_versions": true,
+    "actual_execution": "Java21 invoked actual compiled CaseEnvelope.Companion.serializer() and WhodunitContentIdentityKt.contentIdentity(), not duplicate canonicalization.",
+    "classpath_sha256": "f1d9e3679e4b849347d548bb773edb7d80e5404e385568e6ecd91ff9d8cff88d",
+    "classpath_state_sha256": "bc455b7fcb552033a213e283c7fd9aeeca5963960b0f39c86f259694720818e8",
+    "unchanged_entries": 115,
+    "captured_JARs": 109,
+    "captured_required_directories": 4,
+    "only_allowed_missing_successful_NO_SOURCE_outputs": [
+      "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/build/classes/java/desktopMain",
+      "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/build/classes/java/desktopTest"
+    ],
+    "six_reviewed_helpers_match_freeze": true,
+    "five_executable_controls_match_before_after": true,
+    "java_home": "/opt/homebrew/Cellar/openjdk@21/21.0.11/libexec/openjdk.jdk/Contents/Home",
+    "gradle_exit": 0,
+    "java_exit": 0
+  },
+  "tests": {
+    "suites": 18,
+    "tests": 110,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "raw_xml_agrees_with_summary": true,
+    "suite_evidence": [
+      {
+        "file": "remediation-runs/2026-09-07-local-readiness/evidence/focused-readiness-regressions-09/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.MafiaDoctorRulesTest.xml",
+        "sha256": "65587a50d79a1451d2f03c2cd55d815942712f921ef95b96e5f674c12cb084f4",
+        "suite": "com.parlor.games.mafia.domain.MafiaDoctorRulesTest",
+        "tests": 8
+      },
+      {
+        "file": "remediation-runs/2026-09-07-local-readiness/evidence/focused-readiness-regressions-09/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.snapshot.MafiaDoctorHistoryRecoveryTest.xml",
+        "sha256": "e014c105a560a3edc9460a5212750e2e5a1af00c2eb5b5bf55daaa36ec6c4546",
+        "suite": "com.parlor.games.mafia.snapshot.MafiaDoctorHistoryRecoveryTest",
+        "tests": 15
+      },
+      {
+        "file": "remediation-runs/2026-09-07-local-readiness/evidence/focused-readiness-regressions-09/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.BundledCaseLoadingTest.xml",
+        "sha256": "58b4f8600ee0768d256366a5ccca79a744021c892ffb5ccb813ad77fa39e9d1c",
+        "suite": "com.parlor.games.whodunit.content.BundledCaseLoadingTest",
+        "tests": 5
+      },
+      {
+        "file": "remediation-runs/2026-09-07-local-readiness/evidence/focused-readiness-regressions-09/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.TestingStoryChronologyTest.xml",
+        "sha256": "a9686d2a0c11fee2bdd689e9646a81e0225fe052ce61f3f8a4314481ef257576",
+        "suite": "com.parlor.games.whodunit.content.TestingStoryChronologyTest",
+        "tests": 5
+      },
+      {
+        "file": "remediation-runs/2026-09-07-local-readiness/evidence/focused-readiness-regressions-09/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.TestingStoryCompatibilityTest.xml",
+        "sha256": "747cae42cd82e511c6dfa8c704a069851d0ca86e962f57da9938c20902fba7dc",
+        "suite": "com.parlor.games.whodunit.content.TestingStoryCompatibilityTest",
+        "tests": 4
+      },
+      {
+        "file": "remediation-runs/2026-09-07-local-readiness/evidence/focused-readiness-regressions-09/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.TestingStoryFollowupChronologyTest.xml",
+        "sha256": "69e52944fdf8044acbe1da51af35ae6bc4ccc87f362c15dd81b3a37b22e50bfa",
+        "suite": "com.parlor.games.whodunit.content.TestingStoryFollowupChronologyTest",
+        "tests": 12
+      },
+      {
+        "file": "remediation-runs/2026-09-07-local-readiness/evidence/focused-readiness-regressions-09/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.TestingStoryGameTraceTest.xml",
+        "sha256": "f0c15bf771de613620b494f3abe73edc7c40d0a9fa61b94c022ea104367f695f",
+        "suite": "com.parlor.games.whodunit.content.TestingStoryGameTraceTest",
+        "tests": 1
+      },
+      {
+        "file": "remediation-runs/2026-09-07-local-readiness/evidence/focused-readiness-regressions-09/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.WhodunitContentIdentityTest.xml",
+        "sha256": "9b6aff2322e0dc7f7261226cdf7e7dc6840acb6172b8c97f400454cf59f572ba",
+        "suite": "com.parlor.games.whodunit.content.WhodunitContentIdentityTest",
+        "tests": 2
+      },
+      {
+        "file": "remediation-runs/2026-09-07-local-readiness/evidence/focused-readiness-regressions-09/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.WhodunitPayloadHardeningTest.xml",
+        "sha256": "bd67673e875f67b54ded7e83c9efb6c4b9c8957ae94ed22eb4700cc51825a869",
+        "suite": "com.parlor.games.whodunit.content.WhodunitPayloadHardeningTest",
+        "tests": 1
+      },
+      {
+        "file": "remediation-runs/2026-09-07-local-readiness/evidence/focused-readiness-regressions-09/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.snapshot.WhodunitResumeReconstructionTest.xml",
+        "sha256": "77cc5797fa5315b6789651c2266289d856037c675f87441ca231b4f390b3127c",
+        "suite": "com.parlor.games.whodunit.snapshot.WhodunitResumeReconstructionTest",
+        "tests": 11
+      },
+      {
+        "file": "remediation-runs/2026-09-07-local-readiness/evidence/focused-readiness-regressions-09/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.PeerReadinessRemountTest.xml",
+        "sha256": "188b9fc7de2267146ba938cab24118850d4a05c8cc9287429b98155f9e36bd32",
+        "suite": "com.parlor.games.whodunit.ui.flow.PeerReadinessRemountTest",
+        "tests": 12
+      },
+      {
+        "file": "remediation-runs/2026-09-07-local-readiness/evidence/focused-readiness-regressions-09/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.WhodunitLocalLeaveTimerTest.xml",
+        "sha256": "a4240cddbded08b20f76528b56511e4ac251c4c193578e5294affaa3bb24c937",
+        "suite": "com.parlor.games.whodunit.ui.flow.WhodunitLocalLeaveTimerTest",
+        "tests": 6
+      },
+      {
+        "file": "remediation-runs/2026-09-07-local-readiness/evidence/focused-readiness-regressions-09/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.WhodunitRecoveryInteractionTest.xml",
+        "sha256": "5e1606eb2de888003da4913c2cc234eedf218c41bfe332a896e1f17c5132d65d",
+        "suite": "com.parlor.games.whodunit.ui.flow.WhodunitRecoveryInteractionTest",
+        "tests": 9
+      },
+      {
+        "file": "remediation-runs/2026-09-07-local-readiness/evidence/focused-readiness-regressions-09/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostLeaveTimerTest.xml",
+        "sha256": "ae19b4bb5a8eb38bba4963a67a17374aad38f548d927b8cc15371f9c53e7a70a",
+        "suite": "com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostLeaveTimerTest",
+        "tests": 4
+      },
+      {
+        "file": "remediation-runs/2026-09-07-local-readiness/evidence/focused-readiness-regressions-09/reports/shared/engine/build/test-results/desktopTest/TEST-com.parlor.engine.registry.GameRegistryTest.xml",
+        "sha256": "5c08ce9f1239ef93fa5efc557fc75fb1b893bf342eb64bbf80fd04917f96d30f",
+        "suite": "com.parlor.engine.registry.GameRegistryTest",
+        "tests": 5
+      },
+      {
+        "file": "remediation-runs/2026-09-07-local-readiness/evidence/focused-readiness-regressions-09/reports/shared/engine/build/test-results/desktopTest/TEST-com.parlor.engine.snapshot.GameSnapshotTest.xml",
+        "sha256": "151d5abea1e82062664f622c2622e2ddce51a15baf3480d842de4e7f6b10c219",
+        "suite": "com.parlor.engine.snapshot.GameSnapshotTest",
+        "tests": 4
+      },
+      {
+        "file": "remediation-runs/2026-09-07-local-readiness/evidence/focused-readiness-regressions-09/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.JupiterDiscoveryContractTest.xml",
+        "sha256": "5e4a1cea78a08a29c9a3012fe8f63e7f662ba5d8b9467068042090d012e7a749",
+        "suite": "com.parlor.transport.p2p.JupiterDiscoveryContractTest",
+        "tests": 1
+      },
+      {
+        "file": "remediation-runs/2026-09-07-local-readiness/evidence/focused-readiness-regressions-09/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.LoopbackFixtureContractTest.xml",
+        "sha256": "458e7ecfb15d1fc396f5075081bfc3f5913448240158c9e1dadb2871b813ae13",
+        "suite": "com.parlor.transport.p2p.LoopbackFixtureContractTest",
+        "tests": 5
+      }
+    ],
+    "common_descriptors": 32,
+    "common_source_annotation_to_xml_exact_match": true,
+    "common_test_execution_PLATFORM": "DESKTOP ONLY",
+    "common_test_sources": [
+      {
+        "path": "game-modes/mafia/src/commonTest/kotlin/com/parlor/games/mafia/domain/MafiaDoctorRulesTest.kt",
+        "sha256": "5fe2144436f87162e2d29bcbef6d57ac9b9cede6ab328b406b63cceebcdd501b",
+        "reviewed_lines": [
+          1,
+          156
+        ],
+        "methods": [
+          {
+            "method": "repeat_is_default_off_for_every_supported_player_count",
+            "annotation_line": 20,
+            "descriptor": "com.parlor.games.mafia.domain.MafiaDoctorRulesTest#repeat_is_default_off_for_every_supported_player_count()[desktop]"
+          },
+          {
+            "method": "enabled_setting_saves_same_living_target_for_four_consecutive_nights",
+            "annotation_line": 28,
+            "descriptor": "com.parlor.games.mafia.domain.MafiaDoctorRulesTest#enabled_setting_saves_same_living_target_for_four_consecutive_nights()[desktop]"
+          },
+          {
+            "method": "disabled_setting_rejects_repeat_and_allows_alternating_targets",
+            "annotation_line": 46,
+            "descriptor": "com.parlor.games.mafia.domain.MafiaDoctorRulesTest#disabled_setting_rejects_repeat_and_allows_alternating_targets()[desktop]"
+          },
+          {
+            "method": "skipped_night_clears_previous_effective_target_but_consumes_submission",
+            "annotation_line": 64,
+            "descriptor": "com.parlor.games.mafia.domain.MafiaDoctorRulesTest#skipped_night_clears_previous_effective_target_but_consumes_submission()[desktop]"
+          },
+          {
+            "method": "repeat_and_self_protection_settings_are_independent",
+            "annotation_line": 86,
+            "descriptor": "com.parlor.games.mafia.domain.MafiaDoctorRulesTest#repeat_and_self_protection_settings_are_independent()[desktop]"
+          },
+          {
+            "method": "first_valid_target_cannot_be_replaced_or_skipped_later_that_night",
+            "annotation_line": 112,
+            "descriptor": "com.parlor.games.mafia.domain.MafiaDoctorRulesTest#first_valid_target_cannot_be_replaced_or_skipped_later_that_night()[desktop]"
+          },
+          {
+            "method": "enabling_repeats_does_not_allow_dead_targets_or_a_non_doctor_actor",
+            "annotation_line": 126,
+            "descriptor": "com.parlor.games.mafia.domain.MafiaDoctorRulesTest#enabling_repeats_does_not_allow_dead_targets_or_a_non_doctor_actor()[desktop]"
+          },
+          {
+            "method": "setup_draft_and_action_codec_commit_selection_once_without_changing_assignment",
+            "annotation_line": 140,
+            "descriptor": "com.parlor.games.mafia.domain.MafiaDoctorRulesTest#setup_draft_and_action_codec_commit_selection_once_without_changing_assignment()[desktop]"
+          }
+        ]
+      },
+      {
+        "path": "game-modes/mafia/src/commonTest/kotlin/com/parlor/games/mafia/snapshot/MafiaDoctorHistoryRecoveryTest.kt",
+        "sha256": "d1d830e0330d5a47f2011b9f87d025a5ce1e0bc2d3cb08be742ca1ff4403f743",
+        "reviewed_lines": [
+          1,
+          383
+        ],
+        "methods": [
+          {
+            "method": "private_previous_protection_must_match_retained_history_in_every_active_phase",
+            "annotation_line": 35,
+            "descriptor": "com.parlor.games.mafia.snapshot.MafiaDoctorHistoryRecoveryTest#private_previous_protection_must_match_retained_history_in_every_active_phase()[desktop]"
+          },
+          {
+            "method": "history_binding_also_applies_during_a_day_revote",
+            "annotation_line": 58,
+            "descriptor": "com.parlor.games.mafia.snapshot.MafiaDoctorHistoryRecoveryTest#history_binding_also_applies_during_a_day_revote()[desktop]"
+          },
+          {
+            "method": "mafia_coordination_revote_preserves_doctor_history_and_own_submission",
+            "annotation_line": 75,
+            "descriptor": "com.parlor.games.mafia.snapshot.MafiaDoctorHistoryRecoveryTest#mafia_coordination_revote_preserves_doctor_history_and_own_submission()[desktop]"
+          },
+          {
+            "method": "null_effective_protection_cannot_be_replaced_by_an_old_legal_target",
+            "annotation_line": 108,
+            "descriptor": "com.parlor.games.mafia.snapshot.MafiaDoctorHistoryRecoveryTest#null_effective_protection_cannot_be_replaced_by_an_old_legal_target()[desktop]"
+          },
+          {
+            "method": "initial_setup_role_assignment_and_first_night_have_no_previous_protection",
+            "annotation_line": 124,
+            "descriptor": "com.parlor.games.mafia.snapshot.MafiaDoctorHistoryRecoveryTest#initial_setup_role_assignment_and_first_night_have_no_previous_protection()[desktop]"
+          },
+          {
+            "method": "repeated_protection_history_is_valid_only_with_setting_enabled",
+            "annotation_line": 139,
+            "descriptor": "com.parlor.games.mafia.snapshot.MafiaDoctorHistoryRecoveryTest#repeated_protection_history_is_valid_only_with_setting_enabled()[desktop]"
+          },
+          {
+            "method": "latest_binding_survives_history_capping_without_requiring_missing_predecessors",
+            "annotation_line": 155,
+            "descriptor": "com.parlor.games.mafia.snapshot.MafiaDoctorHistoryRecoveryTest#latest_binding_survives_history_capping_without_requiring_missing_predecessors()[desktop]"
+          },
+          {
+            "method": "killed_doctor_keeps_last_effective_target_until_next_resolution_then_clears_it",
+            "annotation_line": 173,
+            "descriptor": "com.parlor.games.mafia.snapshot.MafiaDoctorHistoryRecoveryTest#killed_doctor_keeps_last_effective_target_until_next_resolution_then_clears_it()[desktop]"
+          },
+          {
+            "method": "doctor_eliminated_by_day_vote_retains_previous_night_binding",
+            "annotation_line": 197,
+            "descriptor": "com.parlor.games.mafia.snapshot.MafiaDoctorHistoryRecoveryTest#doctor_eliminated_by_day_vote_retains_previous_night_binding()[desktop]"
+          },
+          {
+            "method": "death_of_previous_target_does_not_erase_last_effective_protection",
+            "annotation_line": 212,
+            "descriptor": "com.parlor.games.mafia.snapshot.MafiaDoctorHistoryRecoveryTest#death_of_previous_target_does_not_erase_last_effective_protection()[desktop]"
+          },
+          {
+            "method": "no_doctor_configuration_keeps_null_history_and_rejects_foreign_private_history",
+            "annotation_line": 227,
+            "descriptor": "com.parlor.games.mafia.snapshot.MafiaDoctorHistoryRecoveryTest#no_doctor_configuration_keeps_null_history_and_rejects_foreign_private_history()[desktop]"
+          },
+          {
+            "method": "terminal_cleanup_does_not_require_historical_protection_to_be_erased",
+            "annotation_line": 245,
+            "descriptor": "com.parlor.games.mafia.snapshot.MafiaDoctorHistoryRecoveryTest#terminal_cleanup_does_not_require_historical_protection_to_be_erased()[desktop]"
+          },
+          {
+            "method": "normal_terminal_win_also_clears_private_history_without_discarding_host_history",
+            "annotation_line": 262,
+            "descriptor": "com.parlor.games.mafia.snapshot.MafiaDoctorHistoryRecoveryTest#normal_terminal_win_also_clears_private_history_without_discarding_host_history()[desktop]"
+          },
+          {
+            "method": "peer_projections_keep_only_own_private_history_and_do_not_require_host_logs",
+            "annotation_line": 280,
+            "descriptor": "com.parlor.games.mafia.snapshot.MafiaDoctorHistoryRecoveryTest#peer_projections_keep_only_own_private_history_and_do_not_require_host_logs()[desktop]"
+          },
+          {
+            "method": "resumed_local_controller_enforces_the_persisted_repeat_setting",
+            "annotation_line": 309,
+            "descriptor": "com.parlor.games.mafia.snapshot.MafiaDoctorHistoryRecoveryTest#resumed_local_controller_enforces_the_persisted_repeat_setting()[desktop]"
+          }
+        ]
+      },
+      {
+        "path": "shared/engine/src/commonTest/kotlin/com/parlor/engine/registry/GameRegistryTest.kt",
+        "sha256": "e16468873595153fc0c560146fd905df8b04cbb25842b9414c2f9fb3a2e5262b",
+        "reviewed_lines": [
+          1,
+          98
+        ],
+        "methods": [
+          {
+            "method": "empty_registry_has_no_catalog_or_lookup_entries",
+            "annotation_line": 22,
+            "descriptor": "com.parlor.engine.registry.GameRegistryTest#empty_registry_has_no_catalog_or_lookup_entries()[desktop]"
+          },
+          {
+            "method": "catalog_preserves_registration_order_and_lookup_returns_original_definitions",
+            "annotation_line": 30,
+            "descriptor": "com.parlor.engine.registry.GameRegistryTest#catalog_preserves_registration_order_and_lookup_returns_original_definitions()[desktop]"
+          },
+          {
+            "method": "duplicate_ids_on_distinct_definitions_fail_before_a_catalog_is_published",
+            "annotation_line": 42,
+            "descriptor": "com.parlor.engine.registry.GameRegistryTest#duplicate_ids_on_distinct_definitions_fail_before_a_catalog_is_published()[desktop]"
+          },
+          {
+            "method": "registering_the_same_definition_twice_is_also_rejected",
+            "annotation_line": 58,
+            "descriptor": "com.parlor.engine.registry.GameRegistryTest#registering_the_same_definition_twice_is_also_rejected()[desktop]"
+          },
+          {
+            "method": "mutating_the_input_list_cannot_change_the_captured_catalog_or_lookup",
+            "annotation_line": 69,
+            "descriptor": "com.parlor.engine.registry.GameRegistryTest#mutating_the_input_list_cannot_change_the_captured_catalog_or_lookup()[desktop]"
+          }
+        ]
+      },
+      {
+        "path": "shared/engine/src/commonTest/kotlin/com/parlor/engine/snapshot/GameSnapshotTest.kt",
+        "sha256": "f6f32ce9109a6fcc73082931ba9857f356b001b3da41566080acc7a3ce9be91f",
+        "reviewed_lines": [
+          1,
+          105
+        ],
+        "methods": [
+          {
+            "method": "equal_payload_bytes_use_content_equality_and_consistent_hash_codes",
+            "annotation_line": 18,
+            "descriptor": "com.parlor.engine.snapshot.GameSnapshotTest#equal_payload_bytes_use_content_equality_and_consistent_hash_codes()[desktop]"
+          },
+          {
+            "method": "each_envelope_field_and_payload_or_metadata_change_affects_equality",
+            "annotation_line": 30,
+            "descriptor": "com.parlor.engine.snapshot.GameSnapshotTest#each_envelope_field_and_payload_or_metadata_change_affects_equality()[desktop]"
+          },
+          {
+            "method": "json_round_trip_preserves_the_exact_envelope_byte_values_and_metadata",
+            "annotation_line": 52,
+            "descriptor": "com.parlor.engine.snapshot.GameSnapshotTest#json_round_trip_preserves_the_exact_envelope_byte_values_and_metadata()[desktop]"
+          },
+          {
+            "method": "legacy_envelope_without_metadata_restores_with_an_empty_map",
+            "annotation_line": 76,
+            "descriptor": "com.parlor.engine.snapshot.GameSnapshotTest#legacy_envelope_without_metadata_restores_with_an_empty_map()[desktop]"
+          }
+        ]
+      }
+    ]
+  },
+  "static_analysis": {
+    "reports": [
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/focused-readiness-regressions-09/reports/game-modes/mafia/build/reports/detekt/detekt.xml",
+        "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+        "issues": 0
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/focused-readiness-regressions-09/reports/game-modes/mafia/build/reports/detekt/detektDesktopTest.xml",
+        "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+        "issues": 0
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/focused-readiness-regressions-09/reports/game-modes/whodunit/build/reports/detekt/detekt.xml",
+        "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+        "issues": 0
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/focused-readiness-regressions-09/reports/game-modes/whodunit/build/reports/detekt/detektDesktopTest.xml",
+        "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+        "issues": 0
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/focused-readiness-regressions-09/reports/shared/engine/build/reports/detekt/detekt.xml",
+        "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+        "issues": 0
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/focused-readiness-regressions-09/reports/shared/engine/build/reports/detekt/detektDesktopTest.xml",
+        "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+        "issues": 0
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/focused-readiness-regressions-09/reports/shared/transport-p2p/build/reports/detekt/detekt.xml",
+        "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+        "issues": 0
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/focused-readiness-regressions-09/reports/shared/transport-p2p/build/reports/detekt/detektDesktopTest.xml",
+        "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+        "issues": 0
+      }
+    ],
+    "issues": 0
+  },
+  "cleanup": {
+    "immediate_stop_exit": 0,
+    "outer_stop_exit": 0,
+    "removed_cycle_owned_directories": [
+      {
+        "path": "shared/core/build",
+        "absent_now": true
+      },
+      {
+        "path": "shared/networking/build",
+        "absent_now": true
+      },
+      {
+        "path": "shared/content/build",
+        "absent_now": true
+      },
+      {
+        "path": "shared/storage/build",
+        "absent_now": true
+      },
+      {
+        "path": "shared/transport-p2p/build",
+        "absent_now": true
+      },
+      {
+        "path": "shared/networking-testing/build",
+        "absent_now": true
+      },
+      {
+        "path": "shared/engine/build",
+        "absent_now": true
+      },
+      {
+        "path": "shared/design-system/build",
+        "absent_now": true
+      },
+      {
+        "path": "shared/session/build",
+        "absent_now": true
+      },
+      {
+        "path": "game-modes/whodunit/build",
+        "absent_now": true
+      },
+      {
+        "path": "game-modes/mafia/build",
+        "absent_now": true
+      },
+      {
+        "path": "build",
+        "absent_now": true
+      },
+      {
+        "path": "build-logic/convention/build",
+        "absent_now": true
+      }
+    ],
+    "identity_scratch_absent": true,
+    "remaining_owned_workers_recorded": [],
+    "current_cycle_marked_java_workers": [],
+    "child_created_build_outputs_and_long_lived_workers": false
+  },
+  "review_retries": [
+    {
+      "tool": "Homebrew Python3.14.6",
+      "result": "Review parser ImportError: pyexpat missing _XML_SetAllocTrackerActivationThreshold against system libexpat. No app/test/build failure and no evidence file written.",
+      "action": "Reran using /usr/bin/python3 -B without changing environment."
+    },
+    {
+      "tool": "system Python fresh-head assertion",
+      "result": "Correctly detected coordinated post-run Git commits. Source-byte manifest remained identical, so report preserves original run identity and records later mapping, not rebind."
+    }
+  ],
+  "limitations": [
+    "Compiled classpath outputs intentionally cleaned. This is captured-state/receipt validation, not fabricated post-cleanup classpath reexecution.",
+    "32 common tests executed on Desktop only; does not prove Android, Kotlin/Native, app-host or device execution.",
+    "Actual native Settings, secure storage, launch matrix and game-session flows remain pending the separate root lane.",
+    "Synthetic transport fixture tests are not physical P2pKit LAN. Jupiter signature checks inspect disabled methods without executing physical tests.",
+    "110 selected descriptors are not the entire repository suite. Existing Gradle future-version/experimental-lint, incompatible iosX64 host and SLF4J no-provider warnings remain reported.",
+    "No Store signing, publishing, physical-device, or historical launch-crash conclusions."
+  ],
+  "evidence": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/focused-readiness-regressions-09/receipt.json",
+      "sha256": "932cf4b900df567555772247796c3d7195eb77bf8292bda8bc62f543128d5e2e"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/focused-readiness-regressions-09/test-receipts.json",
+      "sha256": "c8ca1d754e76c735ae9445e71b1433e361dfc96187cfdac8afd7bcea7996fc5d"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/focused-readiness-regressions-09/artifact-receipts.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/focused-readiness-regressions-09/identity/identity-receipt.json",
+      "sha256": "b536f10b003f020f8e5eb5460b4fa9307fe0e79d78c616652451d2a3e72f6fa2"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/focused-readiness-regressions-09/identity/canonical-identities.tsv",
+      "sha256": "0755d8f877f863f67f8e8709afa64325a6458fd5af4b653251f67969cfef6f89"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/focused-readiness-regressions-09/identity/input-manifest.tsv",
+      "sha256": "d4e27bfcb610033e63626e3d38926e514413190a518e63e64fd0f73cd9dd9d10"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/focused-readiness-regressions-09/identity/desktop-test-classpath.txt",
+      "sha256": "f1d9e3679e4b849347d548bb773edb7d80e5404e385568e6ecd91ff9d8cff88d"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/focused-readiness-regressions-09/identity/desktop-test-classpath.txt.state.json",
+      "sha256": "bc455b7fcb552033a213e283c7fd9aeeca5963960b0f39c86f259694720818e8"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/focused-readiness-regressions-09/identity/focused-gradle.log",
+      "sha256": "a52a43a83bcaec7aa773fd75b0128f8a625285109de6038a2b1565d27778de98"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/focused-readiness-regressions-09/identity/immediate-gradle-stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/focused-readiness-regressions-09/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/canonical-identity-helper/classpath-correction-freeze.json",
+      "sha256": "364cc631db07701e957e995803fa527b5f574a13ac723efa7919ecc956249658"
+    }
+  ],
+  "fresh_source_review_ranges": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/canonical-identity-helper/run_with_identity.py",
+      "sha256": "e8396c59ab871ee7b8222875d24f22fd28456f4105b745963f57774053888e3e",
+      "lines": [
+        1,
+        222
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/canonical-identity-helper/capture-runtime-classpath.init.gradle",
+      "sha256": "6fc59f266231486563a10dac6613d1da3862f9f3f869f4dce5a7835604a464a9",
+      "lines": [
+        1,
+        51
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/canonical-identity-helper/VerifyContentIdentity.java",
+      "sha256": "82b022878c56fe180f056f937a9d4e51b2a19e53e8bb22df75c433c1e18358c5",
+      "lines": [
+        1,
+        52
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/canonical-identity-helper/classpath_validation.py",
+      "sha256": "2f8a730d1f3a7259bc76e43f5d5de142dd4739f374cfcea6c34f4c73ab8bcfb7",
+      "lines": [
+        1,
+        91
+      ]
+    },
+    {
+      "path": "game-modes/mafia/src/commonTest/kotlin/com/parlor/games/mafia/testing/MafiaDoctorFixture.kt",
+      "sha256": "fa5a85db72638033569368062722fc1e1f97fcf1c3948e912c7954324e1e2ba7",
+      "lines": [
+        1,
+        120
+      ]
+    },
+    {
+      "path": "shared/engine/build.gradle.kts",
+      "sha256": "4cbe86781aa8f11d2ef91381855ab3bcb3b126ef53b6a8272b79c478f90fc38a",
+      "lines": [
+        1,
+        24
+      ]
+    },
+    {
+      "path": "game-modes/mafia/build.gradle.kts",
+      "sha256": "7aceb370331f84b2fee70bb039b7779bdd818ea78aab15da3bfcfd137a76ad2d",
+      "lines": [
+        1,
+        43
+      ]
+    },
+    {
+      "path": "build-logic/convention/src/main/kotlin/com/parlor/buildlogic/KmpLibraryConventionPlugin.kt",
+      "sha256": "9d3b07942123f5a4c2da229aa873d5d7b7d422b120d1ff42014cfe066eefbc63",
+      "lines": [
+        1,
+        72
+      ]
+    },
+    {
+      "path": "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/content/WhodunitContentIdentity.kt",
+      "sha256": "0ea49d8d310092e3445dc024ffca9ffb85341fcdb15e15df34a90410d7178c94",
+      "lines": [
+        1,
+        95
+      ]
+    },
+    {
+      "path": "shared/content/src/commonMain/kotlin/com/parlor/content/schema/CaseEnvelope.kt",
+      "sha256": "7babaccc7cbd543e0b149796be2652de00e70bba8568015c4051d64903ca8b0c",
+      "lines": [
+        1,
+        92
+      ]
+    }
+  ],
+  "runner_source_partial_review": {
+    "path": "remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py",
+    "sha256": "172c4f3162dc6a6b20e912e6551eaca9f33a32ba3d0d6f150ad8becfd30865ea",
+    "lines": [
+      1,
+      175
+    ]
+  }
+}

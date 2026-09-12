@@ -1,0 +1,107 @@
+{
+  "schema_version": 1,
+  "author": "/root/native_ci",
+  "recorded_at": "2026-09-08T09:16:27.202552+00:00",
+  "status": "IMPLEMENTED_AWAITING_INDEPENDENT_REVIEW_AND_ROOT_EXECUTION",
+  "files": [
+    {
+      "path": "scripts/verification/ios-readiness/toolchain_profiles.py",
+      "bytes": 3262,
+      "sha256": "65ffab3c3f13785a5574b6018c61ec23f8b36c8ecd5528737a1bfb88fd21cce0"
+    },
+    {
+      "path": "scripts/verification/ios-readiness/test_toolchain_profiles.py",
+      "bytes": 12098,
+      "sha256": "77ee3b78862c23bee045ff9ca049f312a20b45bff1257768b13e2c5f2ca6bf4a"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/run_ios_readiness.py",
+      "bytes": 72070,
+      "sha256": "fdae88cf835f4b0f5f5271b882641b7284db7ea5e5bdc135870754db7f61fb21"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/README.md",
+      "bytes": 13019,
+      "sha256": "911f1b73bba672da8b344c1523723d4b9ced77b0ca200901230a48ad1aca448f"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
+      "bytes": 56256,
+      "sha256": "b9fa9b43ed7a422dd54adbb8b8f14ae313a2aab2f82d081d70dc32b8583af698"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/README.md",
+      "bytes": 21350,
+      "sha256": "f1d77ff98814e515461f9d91f0e3c640638552b26990227c6d5069181f588e88"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/compose_runner.py",
+      "bytes": 20532,
+      "sha256": "28e0dc259096eba2b5d065710d19b83fbe15b1ee4682306277ad2450fbb6f9ec"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/run_controls.py",
+      "bytes": 5918,
+      "sha256": "03c115d45474ee082204d38c6315e19909108148b2de8804898dd66c40c14dbf"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/test_composition.py",
+      "bytes": 27965,
+      "sha256": "ed10ea8bba376cbe7ddac47c25d888c6d708b1a808b2ce2cacc9a45d398d18ce"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/README.md",
+      "bytes": 8201,
+      "sha256": "2522dbd4cc64412c8095c06bcafde98d84ee025c245b639ac308938dcf12136e"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/app_foundation_copy.py",
+      "bytes": 12292,
+      "sha256": "07ae34ff3e6059e83ac041c55d0f380e21106666e867b1842534982c7450be08"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/hosted-native-portability-01/draft-freeze-relative.json",
+      "bytes": 2425,
+      "sha256": "64c02554e7ddec05b85f533c05733e0f8bbedcc843843245d82cfd1ffd98564a"
+    }
+  ],
+  "execution": {
+    "builds": 0,
+    "native_runs": 0,
+    "tests": 0,
+    "workflow_dispatches": 0,
+    "commits": 0,
+    "only_static_ast_source_inspection": true
+  },
+  "scope": [
+    "Explicit qualified-xcode-26.3 selection, exact inherited Developer propagation, actual retained Xcode26.3/17C529 + simulator SDK26.2 + arm64 validation; default local26.5 retained.",
+    "Normal and companion simulator creation/ownership metadata use exact selected runtime; no fallback, signing, protection or provenance guard changed.",
+    "New direct-child relative nine-file draft freeze, preserving old absolute freeze; only original driver hash updated in app_foundation_copy.py.",
+    "Linux/Darwin control temporary parent canonicalized before allocation, original inode/device/UID/private-mode custody and exact cleanup retained."
+  ],
+  "declared_controls": {
+    "profile_and_stubbed_runtime": 12,
+    "composition": 22,
+    "foundation_draft": 33,
+    "composition_aggregate": 55,
+    "normal_existing": 187
+  },
+  "strict_l08_hypothesis": {
+    "name": "runtime-host-specific-versus-reproduced-on-qualified-environment",
+    "old": "iOS26.5/Foundation UUID2cc9fce0-08f9-3a0d-8a2f-6db229462de5 on macOS26.2",
+    "new": "Required same-fixture A run on iOS26.2 under Xcode26.3/macOS15.7.9, actual image identity still to obtain",
+    "unchanged_inputs": [
+      "L08AppFoundation.m.in native operation/query sequence",
+      "Foundation Complete assertions",
+      "No new direct syscall probe"
+    ],
+    "prediction": "Compare sixteen exact ordered Foundation rows with native16. Different Complete observation suggests environment-specific behavior; identical missing/UntilFirstAuthentication metadata reproduces across the distinct host/runtime and still fails strict L08. Neither result proves universal Simulator capability or hardware enforcement."
+  },
+  "cleanup": "Only short-lived source/hash/AST and gh read-only commands. No build/runtime workers or temporary generated outputs created; no global caches, source outside owned paths or unrelated work deleted.",
+  "predecessor": {
+    "path": "remediation-runs/2026-09-07-local-readiness/reviews/hosted-native-portability-01/author-notes-01.json",
+    "sha256": "92d74aa76b06768b4d95aa8b729e5735cc5ee17ca80a595f8b955b21d6d5ca90",
+    "preserved": true
+  },
+  "revision_reason": "Independent reviewer correction: update the run_controls.py exact-discovery rejection diagnostic from 'reviewed 51' to 'reviewed 55', matching enforced EXPECTED_TESTS=55. No guard, control, runtime or other source change."
+}

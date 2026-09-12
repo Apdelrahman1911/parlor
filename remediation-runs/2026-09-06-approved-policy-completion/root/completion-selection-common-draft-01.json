@@ -1,0 +1,418 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-09-06T21:28:05.376514+00:00",
+  "status": "DRAFT_NATIVE_AND_FINAL_PRESERVATION_UNSELECTED",
+  "author": "/root",
+  "purpose": "Common final-report inputs only. This draft must NOT be passed to the completion materializer. Native language and last preservation remain unselected pending executed evidence and independent review.",
+  "native_language": null,
+  "preservation_observation": null,
+  "release_wrapper": {
+    "receipt": {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/ios-wrapper-release-01/receipt.json",
+      "sha256": "edab3832dfd32e65eab0e882ef51746f7157e77483a55ef22c3e6707b61f5e75"
+    },
+    "independent_review": {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-ios-release-wrapper-result-review-01.json",
+      "sha256": "ba0afe497cbb6d7348102d1a746debba6d1ebf64bf3cb226be4679b5c8442885"
+    },
+    "artifact_inventory": {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/ios-wrapper-release-01/release-artifact-inventory.json",
+      "sha256": "10b73d091b9c5db832691072b0d9c0751fccc064c816af8d0edcdebf63ea3a63"
+    },
+    "gate_scope": "Source-bound unsigned arm64 iOS Simulator Release Swift wrapper build and exhaustive30-file artifact inventory PASS. Xcode26.5,build only;no simulator/app launch,signing,archive,physical or Store evidence. Only copied pbx phase wrapped for immediate owned Gradle stopping."
+  },
+  "uninstrumented_smoke": {
+    "receipt": {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/ios-wrapper-smoke-01/receipt.json",
+      "sha256": "72c13301a3e9882d4742ed10f8801108a028201d4a40c5dd8f2050e69576bbe3"
+    },
+    "independent_review": {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-ios-wrapper-smoke01-outcome-01.json",
+      "sha256": "622ef6da86af7595c9c0753d053d712dd2ff5ee306ce523b7706c337a657d48c"
+    },
+    "gate_scope": "Uninstrumented-source Debug simulator wrapper5/5 XCTest:one actual cold launch/Home/no-alert check plus four UIKit containment fixtures. Not5 launches,language/session matrix or Release runtime. Parlor.debug.dylib was not inventoried."
+  },
+  "combined_gate_reasons": {
+    "combined-desktop-static-04": "Configured Desktop tests/compile and static analysis executed on freeze02:188 suites,1243 descriptors=1240 passes+3 physical-P2P skips. No physical or native UI inference.",
+    "combined-production-04": "Configured host-independent productionCheck passed on freeze02:222 suites,1395 descriptors=1392 passes+3 physical skips;172 release Python tests,Detekt,lint/R8,unsigned AAB,shell dispatch/release validators.32 accepted lint warnings retained.",
+    "combined-native-alltests-02": "Configured allTests plus actual owned ARM64 iOS simulator runtime:398 suites,2481 descriptors=2478 passes+3 physical skips. Desktop1243,Android debug-unit406/release-unit406,iOS426.13 x64 test tasks host-disabled; Mafia/engine native test sources absent,not executed.",
+    "combined-apple-02": "All three Release frameworks link;four actual iOS-main Detekt reports clean;147 tasks/143 executed. Linkage is not runtime,Swift wrapper,signing or Store-qualified Xcode evidence.",
+    "resources-and-diff-02": "EN/AR structural parity:139 shell,16 design-system,324 Whodunit,269 Mafia per locale. Keys/types/placeholders/emptiness and tracked git diff --check pass. Not translation-quality or accessibility certification."
+  },
+  "remaining_gates": [
+    {
+      "id": "android-managed-runtime",
+      "status": "BLOCKED",
+      "reason": "Pinned Linux/KVM/x86_64 managed-device runtime not available on current Apple Silicon host. Desktop and Android unit tests are not the R8-shrunk Android runtime gate.",
+      "owner": "CI/repository owner",
+      "references": [
+        {
+          "path": "docs/RELEASE_GATES.md",
+          "sha256": "19ee19acf35f833e3bd61b03d3113c6a3ea05b67afcbe1b956e9d4aa070a3f32"
+        },
+        {
+          "path": "build.gradle.kts",
+          "sha256": "bd6199e1f097eb236c50c46efb91d291550110f6b4d95a8e95ff0db4d8da192b"
+        }
+      ]
+    },
+    {
+      "id": "other-desktop-host-graphs",
+      "status": "BLOCKED",
+      "reason": "Linux x64/arm64, macOS x64 and Windows x64 dependency/runtime graphs not executed by this macOS arm64 run.",
+      "owner": "CI/repository owner",
+      "references": [
+        {
+          "path": "docs/RELEASE_GATES.md",
+          "sha256": "19ee19acf35f833e3bd61b03d3113c6a3ea05b67afcbe1b956e9d4aa070a3f32"
+        }
+      ]
+    },
+    {
+      "id": "physical-p2pkit-lan",
+      "status": "BLOCKED",
+      "reason": "Three physical tests remain skipped and have historical admission assumptions. No two-device host/peer, denial/rejoin, radio or lifecycle evidence provided by in-memory tests.",
+      "owner": "device validation owner",
+      "references": [
+        {
+          "path": "docs/RELEASE_GATES.md",
+          "sha256": "19ee19acf35f833e3bd61b03d3113c6a3ea05b67afcbe1b956e9d4aa070a3f32"
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/native-final-verification-01.json",
+          "sha256": "c0235ccee1d68e85ecaa98ed3aee277eb50c22fc82fba3998ea9fdd1a6d4d245"
+        }
+      ]
+    },
+    {
+      "id": "native-accessibility-layout-and-privacy",
+      "status": "BLOCKED",
+      "reason": "Physical VoiceOver/TalkBack, compact/large-text RTL, gestures, app-switcher and lifecycle/performance matrix remain unexecuted. Desktop layout and current instrumented iOS geometry/language checks cover only their declared cases.",
+      "owner": "device/accessibility owner",
+      "references": [
+        {
+          "path": "docs/RELEASE_GATES.md",
+          "sha256": "19ee19acf35f833e3bd61b03d3113c6a3ea05b67afcbe1b956e9d4aa070a3f32"
+        }
+      ]
+    },
+    {
+      "id": "physical-ios-backup-and-keychain",
+      "status": "BLOCKED",
+      "reason": "Backup resource-flag tests are not real backup/restore or app-host Keychain migration evidence. IOS-R1 remains an evidence gap, not a new confirmed defect.",
+      "owner": "device validation owner",
+      "references": [
+        {
+          "path": "docs/RELEASE_GATES.md",
+          "sha256": "19ee19acf35f833e3bd61b03d3113c6a3ea05b67afcbe1b956e9d4aa070a3f32"
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/independent-review.json",
+          "sha256": "f2daf4d18fc856bbe2ae45f269c6e612f7d63e4ab9253fb36c75a2809e0cd334"
+        }
+      ]
+    },
+    {
+      "id": "qualified-apple-toolchain",
+      "status": "BLOCKED",
+      "reason": "Installed Xcode26.5/17F42 differs from pinned Store-qualified26.3/17C529.",
+      "owner": "release owner",
+      "references": [
+        {
+          "path": "config/release-policy.json",
+          "sha256": "316b28f75a13e0b925beb6bcd893b82e077a1a9efa850022026e830f9b1d4ad4"
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-ios-release-wrapper-result-review-01.json",
+          "sha256": "ba0afe497cbb6d7348102d1a746debba6d1ebf64bf3cb226be4679b5c8442885"
+        }
+      ]
+    },
+    {
+      "id": "real-store-signing-and-submission",
+      "status": "BLOCKED",
+      "reason": "No authority to read/use private Store keys, sign Store candidates, upload, promote or publish. Local synthetic certificate tests do not satisfy this gate.",
+      "owner": "release owner",
+      "references": [
+        {
+          "path": "docs/RELEASE_GATES.md",
+          "sha256": "19ee19acf35f833e3bd61b03d3113c6a3ea05b67afcbe1b956e9d4aa070a3f32"
+        }
+      ]
+    },
+    {
+      "id": "store-identity-ownership",
+      "status": "BLOCKED",
+      "reason": "Known com.parlor.app identity collision unresolved; disabled publication and identity checks are deliberately preserved.",
+      "owner": "repository/release owner",
+      "references": [
+        {
+          "path": "config/release-policy.json",
+          "sha256": "316b28f75a13e0b925beb6bcd893b82e077a1a9efa850022026e830f9b1d4ad4"
+        },
+        {
+          "path": ".github/workflows/testing-candidate.yml",
+          "sha256": "0488fc5e0c4e520a767408cfb5e7fa387bc5fdfa0edfeb9dcd29a4cb0d2c7976"
+        },
+        {
+          "path": ".github/workflows/production-promotion.yml",
+          "sha256": "94ca7f617c24cb4c9ffafa5860c7ebc104f08cfa46b2a2e13fbae3ed816c461b"
+        }
+      ]
+    },
+    {
+      "id": "legal-and-store-declarations",
+      "status": "BLOCKED",
+      "reason": "Owner approval of content rights, licenses, privacy declarations, metadata and Store setup not independently established by tests.",
+      "owner": "product/legal/release owner",
+      "references": [
+        {
+          "path": "docs/RELEASE_GATES.md",
+          "sha256": "19ee19acf35f833e3bd61b03d3113c6a3ea05b67afcbe1b956e9d4aa070a3f32"
+        }
+      ]
+    },
+    {
+      "id": "immutable-integrated-release-candidate",
+      "status": "BLOCKED",
+      "reason": "Authorized changes are intentionally uncommitted. No commit/merge authorization; base SHA/tree alone cannot identify a clean reviewed release candidate.",
+      "owner": "repository owner",
+      "references": [
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/final/source-identity.json",
+          "sha256": "0f0545086a19d2e15cf592cd07dd2c9fd109d10794fa5f736837928ca71760ff"
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/final/diff-identity.json",
+          "sha256": "88f62f3dffc7d8204b11db5fa40fd9ed72fc2d980c1c277d43a82c3637b091ce"
+        }
+      ]
+    },
+    {
+      "id": "wd-c4-modal-timer-policy",
+      "status": "BLOCKED",
+      "reason": "Outside16 repairs: whether Leave-confirmation modal time counts as discussion time is unresolved; no policy or code change invented.",
+      "owner": "product owner",
+      "references": [
+        {
+          "path": "audit-runs/2026-09-05-source-audit/canonical-register.json",
+          "sha256": "2767d98befc138dc9222ab0007209b52032f31033d1cbf8a71e6b4e665fe897e"
+        }
+      ]
+    },
+    {
+      "id": "production-story-editorial-approval",
+      "status": "BLOCKED",
+      "owner": "content/editorial and legal owner",
+      "reason": "Four corrected 1.0.1 stories are approved as testing content only. All bundled stories still require final production editorial, translation and content-rights review. Reducers and sampling were not changed to accommodate prose.",
+      "references": [
+        {
+          "path": "docs/WHODUNIT_TEST_CONTENT.md",
+          "sha256": "19a2ca3a4cba3d60117f76897c7fc0d1cc55f97beb5002aead43fdc020b12756"
+        },
+        {
+          "path": "docs/PRE_RELEASE_COMPATIBILITY.md",
+          "sha256": "32ae112de9fd761636191c3308faf28fa5a3a8f3fd694064bbeaf3f2ffe69060"
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-wdc2-remediation-focused-01.json",
+          "sha256": "563998b215bc002f3902bd035fda8e0db913f22497628ff5e74c42dceb73b631"
+        }
+      ]
+    },
+    {
+      "id": "ambiguous-development-language-migration",
+      "status": "NOT_APPLICABLE",
+      "reason": "Owner explicitly excludes ambiguous unmarked language overrides from older unpublished development builds from supported migration. Clean/current-build behavior remains required; genuine unmarked OS preferences remain preserved.",
+      "references": [
+        {
+          "path": "docs/PRE_RELEASE_COMPATIBILITY.md",
+          "sha256": "32ae112de9fd761636191c3308faf28fa5a3a8f3fd694064bbeaf3f2ffe69060"
+        }
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "name": "unsigned-release-aab",
+      "sha256": "f30780bf995741a372646dd9c6a27705cb4eb0368c1d5a4de7197386d3a61473",
+      "bytes": 8803044,
+      "source_commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+      "source_tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+      "source_manifest_sha256": "9ac2be536979f2216b39c10a6d148125a12380987d4efd483bbcbaeb1733318e",
+      "tracked_diff_sha256": "148fb4583d8fa8341b3cbc48a7fc0bc7564bf4df5c27e9d80e32c6bfdc57b784",
+      "retained": "Compact manifest/logs only;owned large artifact cleaned after inspection.",
+      "qualification": "Unsigned Android bundle,354 archive entries. Not signed/Store-approved.",
+      "inspection_receipt": {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/artifact-receipts.json",
+        "sha256": "e0741b994c1dd56ed3b9b5ef6a11ff2af024c4b745b9ee6533c108627374fdc4"
+      }
+    },
+    {
+      "name": "unsigned-arm64-ios-simulator-release-app-executable",
+      "sha256": "a17b0ab1363e88957d05fb0312f79add70ee8962330763b7b9c248423bd4f8f5",
+      "bytes": 130504,
+      "source_commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+      "source_tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+      "source_manifest_sha256": "9ac2be536979f2216b39c10a6d148125a12380987d4efd483bbcbaeb1733318e",
+      "tracked_diff_sha256": "148fb4583d8fa8341b3cbc48a7fc0bc7564bf4df5c27e9d80e32c6bfdc57b784",
+      "retained": "Compact manifest/logs only;owned large artifact cleaned after inspection.",
+      "qualification": "Unsigned simulator Release executable;no installation/runtime/signing evidence.",
+      "inspection_receipt": {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/ios-wrapper-release-01/release-artifact-inventory.json",
+        "sha256": "10b73d091b9c5db832691072b0d9c0751fccc064c816af8d0edcdebf63ea3a63"
+      }
+    },
+    {
+      "name": "unsigned-arm64-ios-simulator-release-compose-framework",
+      "sha256": "b211e375ec48e30c649211d49d40c74c64d8b11b9059f6e326520a1bb08b0120",
+      "bytes": 52266120,
+      "source_commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+      "source_tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+      "source_manifest_sha256": "9ac2be536979f2216b39c10a6d148125a12380987d4efd483bbcbaeb1733318e",
+      "tracked_diff_sha256": "148fb4583d8fa8341b3cbc48a7fc0bc7564bf4df5c27e9d80e32c6bfdc57b784",
+      "retained": "Compact manifest/logs only;owned large artifact cleaned after inspection.",
+      "qualification": "Unsigned simulator Release dynamic framework. Not physical-device binary or signed Store artifact.",
+      "inspection_receipt": {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/ios-wrapper-release-01/release-artifact-inventory.json",
+        "sha256": "10b73d091b9c5db832691072b0d9c0751fccc064c816af8d0edcdebf63ea3a63"
+      }
+    }
+  ],
+  "manual_actions": [
+    {
+      "id": "android-managed-runtime",
+      "owner": "CI/repository owner",
+      "action": "Pinned Linux/KVM/x86_64 managed-device runtime not available on current Apple Silicon host. Desktop and Android unit tests are not the R8-shrunk Android runtime gate.",
+      "blocking": true
+    },
+    {
+      "id": "other-desktop-host-graphs",
+      "owner": "CI/repository owner",
+      "action": "Linux x64/arm64, macOS x64 and Windows x64 dependency/runtime graphs not executed by this macOS arm64 run.",
+      "blocking": true
+    },
+    {
+      "id": "physical-p2pkit-lan",
+      "owner": "device validation owner",
+      "action": "Three physical tests remain skipped and have historical admission assumptions. No two-device host/peer, denial/rejoin, radio or lifecycle evidence provided by in-memory tests.",
+      "blocking": true
+    },
+    {
+      "id": "native-accessibility-layout-and-privacy",
+      "owner": "device/accessibility owner",
+      "action": "Physical VoiceOver/TalkBack, compact/large-text RTL, gestures, app-switcher and lifecycle/performance matrix remain unexecuted. Desktop layout and current instrumented iOS geometry/language checks cover only their declared cases.",
+      "blocking": true
+    },
+    {
+      "id": "physical-ios-backup-and-keychain",
+      "owner": "device validation owner",
+      "action": "Backup resource-flag tests are not real backup/restore or app-host Keychain migration evidence. IOS-R1 remains an evidence gap, not a new confirmed defect.",
+      "blocking": true
+    },
+    {
+      "id": "qualified-apple-toolchain",
+      "owner": "release owner",
+      "action": "Installed Xcode26.5/17F42 differs from pinned Store-qualified26.3/17C529.",
+      "blocking": true
+    },
+    {
+      "id": "real-store-signing-and-submission",
+      "owner": "release owner",
+      "action": "No authority to read/use private Store keys, sign Store candidates, upload, promote or publish. Local synthetic certificate tests do not satisfy this gate.",
+      "blocking": true
+    },
+    {
+      "id": "store-identity-ownership",
+      "owner": "repository/release owner",
+      "action": "Known com.parlor.app identity collision unresolved; disabled publication and identity checks are deliberately preserved.",
+      "blocking": true
+    },
+    {
+      "id": "legal-and-store-declarations",
+      "owner": "product/legal/release owner",
+      "action": "Owner approval of content rights, licenses, privacy declarations, metadata and Store setup not independently established by tests.",
+      "blocking": true
+    },
+    {
+      "id": "immutable-integrated-release-candidate",
+      "owner": "repository owner",
+      "action": "Authorized changes are intentionally uncommitted. No commit/merge authorization; base SHA/tree alone cannot identify a clean reviewed release candidate.",
+      "blocking": true
+    },
+    {
+      "id": "wd-c4-modal-timer-policy",
+      "owner": "product owner",
+      "action": "Outside16 repairs: whether Leave-confirmation modal time counts as discussion time is unresolved; no policy or code change invented.",
+      "blocking": true
+    },
+    {
+      "id": "production-story-editorial-approval",
+      "owner": "content/editorial and legal owner",
+      "action": "Four corrected 1.0.1 stories are approved as testing content only. All bundled stories still require final production editorial, translation and content-rights review. Reducers and sampling were not changed to accommodate prose.",
+      "blocking": true
+    }
+  ],
+  "remaining_audit_items": [
+    {
+      "id": "WD-C4",
+      "classification": "UNRESOLVED PRODUCT DECISION",
+      "action": "Owner must decide whether Leave-confirmation time counts toward discussion time. Outside16 fixes;no timer policy invented."
+    },
+    {
+      "id": "IOS-R1",
+      "classification": "TEST/EVIDENCE GAP",
+      "action": "Actual platform/Keychain persistence/recovery evidence remains required. Do not hide errors,return empty stores or add entitlements blindly."
+    },
+    {
+      "id": "retry-case-producer-candidate",
+      "classification": "TEST/EVIDENCE GAP",
+      "action": "Retain independent candidate dossier;not a17th confirmed defect or authorized repair.",
+      "evidence": {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/reviews/retry-case-producer-candidate-01.json",
+        "sha256": "e1b04483dc20cbb67ca3ef0db33f9f9bd68c02972dd0f8936c28074f6b9e191c"
+      }
+    },
+    {
+      "id": "historical-first-four-launch-crashes",
+      "classification": "UNCONFIRMED — NO ESTABLISHED CAUSE",
+      "action": "A selector failure,toolchain failure,app exception and OS termination require distinct evidence. No cause was invented from current smoke/runtime results."
+    }
+  ],
+  "native_report_markdown": null,
+  "preservation_report_markdown": null,
+  "release_report_markdown": "**Unsigned Swift Release wrapper:** `ios-wrapper-release-01` is independently approved **PASS** for source-bound unsigned **arm64 iOS Simulator Release compilation and artifact inspection only**. The exact 613 copied inputs differ only in the owned stop-wrapped Gradle embedding phase; all original Kotlin/Swift/test/resource bytes remain unchanged. All **30 app files / 58,247,504 bytes**, including two Mach-O binaries and nine source-matching case/font assets, were inventoried; privacy matches source. Xcode exited 0; nested Gradle and immediate/final stops exited 0; owned outputs/workers were cleaned. No simulator was created, app installed/launched, XCTest run, Store key used or artifact signed/uploaded. App minimum iOS16/SDK26.5 and framework minimum15/SDK26.4 are separate inspected values, not a claim of identical metadata. See [independent Release outcome](../reviews/independent-ios-release-wrapper-result-review-01.json).",
+  "additional_remaining_markdown": "- **Retry-case producer candidate:** remains a [test/evidence gap](../reviews/retry-case-producer-candidate-01.json), not a seventeenth confirmed defect or repaired application issue.",
+  "final_scope_evidence": [
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-ios-release-wrapper-result-review-01.json",
+      "sha256": "ba0afe497cbb6d7348102d1a746debba6d1ebf64bf3cb226be4679b5c8442885"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-dsc01-apphost07-outcome-01.json",
+      "sha256": "c05ca3adc41bc1a1c665ce8712f1ed2c59aa9d2d1d12a1ffd3dab8bfde5a3f6b"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-completion-materializer-control-review-01.json",
+      "sha256": "596d0e6c5e98d3bc67c3f46d5318f0adfcb7a66d0172200a10b3a184efd31f92"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-completion-materializer-focused-result-review-01.json",
+      "sha256": "0de1994dedbece6fabccc942209101db074243de203c0e34b6121e44a63690d2"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/research/os-settings-routing-07.json",
+      "sha256": "9e137edc66f102e3abb8905958c8b133ba55335fbe711cf7b6202646091c4f37"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/research/xcuiautomation-hittable-07.json",
+      "sha256": "3286a096f7fea9f96bd43662fc7e3395ee6c320c59c2c64d5c44ed39bab50356"
+    }
+  ],
+  "unselected_fields_require_separate_review": [
+    "native_language",
+    "preservation_observation",
+    "native_report_markdown",
+    "preservation_report_markdown"
+  ]
+}

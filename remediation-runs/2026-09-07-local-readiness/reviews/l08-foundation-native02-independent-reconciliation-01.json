@@ -1,0 +1,982 @@
+{
+  "actual_platform_attribution": {
+    "approved_and_actual": "One fresh UUID/token-named iPhone17 Pro under exclusive private device set; no existing app/phone/profile. Public tool hashes recorded in root receipt. This is not repository Store-qualified Xcode26.3.",
+    "artifact": {
+      "config_sha256": "7026eded183083e417a476ce28371ffc2077e6a706a1ab2257f09212e4b67452",
+      "sha256": "c3ed966ce0ecd110f1a4d401b09be6443932e65e3f06b385ddb3529c62c7af2b",
+      "source_sha256": "a6b025d7b77c3b1b1de57b93869d0beff6b4cc9e365eb5672ffd2be9d52013f2",
+      "uuid": "f1cba8f6-0dc4-3297-a2be-4f0b6437c918"
+    },
+    "coresimulator": "1051.54",
+    "device_uuid": "DA41AAF7-F521-4608-BF61-8C625C2ED36A",
+    "foundation_image": {
+      "platform": 7,
+      "status": "observed",
+      "uuid": "2cc9fce0-08f9-3a0d-8a2f-6db229462de5"
+    },
+    "main_image": {
+      "platform": 7,
+      "status": "observed",
+      "uuid": "f1cba8f6-0dc4-3297-a2be-4f0b6437c918"
+    },
+    "native_pid_observed_not_adopted": 8790,
+    "native_target": "arm64-apple-ios16.0-simulator",
+    "runtime": {
+      "buildversion": "23F77",
+      "bundlePath": "/Library/Developer/CoreSimulator/Volumes/iOS_23F77/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 26.5.simruntime",
+      "identifier": "com.apple.CoreSimulator.SimRuntime.iOS-26-5",
+      "isAvailable": true,
+      "name": "iOS 26.5",
+      "platform": "iOS",
+      "runtimeRoot": "/Library/Developer/CoreSimulator/Volumes/iOS_23F77/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 26.5.simruntime/Contents/Resources/RuntimeRoot",
+      "supportedArchitectures": [
+        "arm64"
+      ],
+      "version": "26.5"
+    },
+    "sdk": "iPhoneSimulator26.5",
+    "xcode": "26.5 / 17F42"
+  },
+  "author_of_control_fix": "/root/native_fix_review",
+  "classification_and_counter_evidence": {
+    "limits_and_counter_evidence": [
+      "This CLI uses an attested host-root temporary filesystem path, not Parlor app sandbox. Per-container protection handling/relocation/entitlements could differ; do not generalize beyond exact runtime/path/control.",
+      "Loaded Foundation UUID agrees with prior native01; exact private Foundation implementation/source provenance is not attested. Upstream TARGET_OS_SIMULATOR guards are supporting research, not installed-binary proof.",
+      "Volume reports supported while key absent and URL class different; supported alone does not establish desired Complete class. Successful setter return alone is also insufficient.",
+      "No payload readback, encryption, key retrieval, physical lock/unlock, app state/recovery, 13-boot storage or3-variant host matrix was performed by this CLI.",
+      "The original app-host L08 first-save metadata assertion remains failed. Do not waive it, silently treat missing as Complete, add entitlements blindly, or downgrade production policy to make simulator green.",
+      "No observed application crash is established by these diagnostic assertion/metadata results.",
+      "Frozen README/public-tool prose documents draft-time status; actual fresh execution is represented by immutable run receipts, not editing historical drafts."
+    ],
+    "metadata_classification": "TEST/EVIDENCE GAP; L08 still FAILED/UNRESOLVED, no newly proven production defect or universal Simulator-capability claim",
+    "positive_inference": "The observed omission also occurs without Kotlin maps/strings, Koin, session/recovery or Parlor storage orchestration. Those application layers are therefore not necessary causes of this control result."
+  },
+  "cleanup_reconciliation": {
+    "cancel_signals": [],
+    "cleanup_errors": [],
+    "device": "Token/type/runtime/UUID is identical at create/booted/cleanup/shutdown. Shutdown and delete exit0, positive deleted-identity shows empty arrays.",
+    "exact_absence": [
+      {
+        "method": "exact os.lstat; no directory scan, native query or deletion",
+        "path": "/private/tmp/parlor-foundation-control-f8zfyj2k",
+        "state": "ABSENT"
+      },
+      {
+        "method": "exact os.lstat; no directory scan, native query or deletion",
+        "path": "/private/tmp/parlor-foundation-control-f8zfyj2k/devices",
+        "state": "ABSENT"
+      }
+    ],
+    "gradle": "Both --stop commands exit0 with No Gradle daemons are running; all baseline/pre/post pgrep recorded exit1 with empty streams. No reviewer live process scan.",
+    "holders": "Exact /usr/sbin/lsof -nP -t +w +D scratch returns1/stdout0/stderr0; warning-enabled query no ignored error.",
+    "limits": "Scratch/private device and recorded stop evidence only. No assertion that all system shared-service logs/cache files or unrelated temporary files are absent; none inspected/deleted by reviewer.",
+    "quarantine": false,
+    "recorded_devices_identity": [
+      16777232,
+      86088357,
+      501
+    ],
+    "recorded_scratch_identity": [
+      16777232,
+      86088356,
+      501
+    ],
+    "scratch_removed": true
+  },
+  "cleanup_status": "PASS",
+  "command_reconciliation": {
+    "all66_actual_stream_byte_counts_match": true,
+    "commands": [
+      {
+        "argv": [
+          "/usr/bin/plutil",
+          "-convert",
+          "json",
+          "-o",
+          "-",
+          "/Applications/Xcode.app/Contents/version.plist"
+        ],
+        "error": null,
+        "exit_code": 0,
+        "label": "xcode-plist",
+        "stderr": {
+          "bytes": 0,
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/xcode-plist.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "bytes": 179,
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/xcode-plist.stdout",
+          "sha256": "73d48e17eea41bd1ed439d80bbff0cbb87ab5c423807ed473115701617de969f"
+        }
+      },
+      {
+        "argv": [
+          "/usr/bin/plutil",
+          "-convert",
+          "json",
+          "-o",
+          "-",
+          "/Library/Developer/PrivateFrameworks/CoreSimulator.framework/Versions/A/Resources/Info.plist"
+        ],
+        "error": null,
+        "exit_code": 0,
+        "label": "coresimulator-plist",
+        "stderr": {
+          "bytes": 0,
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/coresimulator-plist.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "bytes": 733,
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/coresimulator-plist.stdout",
+          "sha256": "bf7084a8204882386b961415fae9f78b7b348751fa1d9711c3d906bc6be1c73b"
+        }
+      },
+      {
+        "argv": [
+          "/opt/homebrew/Cellar/openjdk@21/21.0.11/libexec/openjdk.jdk/Contents/Home/bin/java",
+          "-version"
+        ],
+        "error": null,
+        "exit_code": 0,
+        "label": "jdk-version",
+        "stderr": {
+          "bytes": 161,
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/jdk-version.stderr",
+          "sha256": "30b5b10762a8ff64f7513be4354be86724a53322c3d52106cf2587d90570bb32"
+        },
+        "stdout": {
+          "bytes": 0,
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/jdk-version.stdout",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "argv": [
+          "/usr/bin/pgrep",
+          "-f",
+          "[o]rg.gradle.launcher.daemon.bootstrap.GradleDaemon"
+        ],
+        "error": null,
+        "exit_code": 1,
+        "label": "gradle-baseline",
+        "stderr": {
+          "bytes": 0,
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/gradle-baseline.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "bytes": 0,
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/gradle-baseline.stdout",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "argv": [
+          "/usr/bin/git",
+          "rev-parse",
+          "HEAD"
+        ],
+        "error": null,
+        "exit_code": 0,
+        "label": "baseline-commit",
+        "stderr": {
+          "bytes": 0,
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/baseline-commit.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "bytes": 41,
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/baseline-commit.stdout",
+          "sha256": "532f601a40c467a7193a09332b5b1048c30b2abca9d0fdaf9d03ca064153544c"
+        }
+      },
+      {
+        "argv": [
+          "/usr/bin/git",
+          "rev-parse",
+          "HEAD^{tree}"
+        ],
+        "error": null,
+        "exit_code": 0,
+        "label": "baseline-tree",
+        "stderr": {
+          "bytes": 0,
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/baseline-tree.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "bytes": 41,
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/baseline-tree.stdout",
+          "sha256": "578713962c4250f245a735c060b1f5e1298e2b3f3ec44d7ee1e660dfc0e9e04c"
+        }
+      },
+      {
+        "argv": [
+          "/usr/bin/git",
+          "branch",
+          "--show-current"
+        ],
+        "error": null,
+        "exit_code": 0,
+        "label": "baseline-branch",
+        "stderr": {
+          "bytes": 0,
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/baseline-branch.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "bytes": 31,
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/baseline-branch.stdout",
+          "sha256": "1c1c717d880304c7c17517f6d21c918e2d035438b7c843525b049a2f050c4692"
+        }
+      },
+      {
+        "argv": [
+          "/usr/bin/git",
+          "status",
+          "--porcelain=v1",
+          "--untracked-files=no"
+        ],
+        "error": null,
+        "exit_code": 0,
+        "label": "baseline-tracked-status",
+        "stderr": {
+          "bytes": 0,
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/baseline-tracked-status.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "bytes": 0,
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/baseline-tracked-status.stdout",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "argv": [
+          "/Library/Developer/PrivateFrameworks/CoreSimulator.framework/Versions/A/Resources/bin/simctl",
+          "--set",
+          "/private/tmp/parlor-foundation-control-f8zfyj2k/devices",
+          "list",
+          "-j",
+          "runtimes"
+        ],
+        "error": null,
+        "exit_code": 0,
+        "label": "runtimes",
+        "stderr": {
+          "bytes": 0,
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/runtimes.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "bytes": 41059,
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/runtimes.stdout",
+          "sha256": "ca58f434619a31a6961b784325b1edb19adcee42532e3211e45d401851e3fc5a"
+        }
+      },
+      {
+        "argv": [
+          "/Library/Developer/PrivateFrameworks/CoreSimulator.framework/Versions/A/Resources/bin/simctl",
+          "--set",
+          "/private/tmp/parlor-foundation-control-f8zfyj2k/devices",
+          "list",
+          "-j",
+          "devicetypes"
+        ],
+        "error": null,
+        "exit_code": 0,
+        "label": "device-types",
+        "stderr": {
+          "bytes": 0,
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/device-types.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "bytes": 61947,
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/device-types.stdout",
+          "sha256": "70376c78091566520db3fa3b1b868e122223a65056b552f1db9ae50753d7dd20"
+        }
+      },
+      {
+        "argv": [
+          "/Library/Developer/PrivateFrameworks/CoreSimulator.framework/Versions/A/Resources/bin/simctl",
+          "--set",
+          "/private/tmp/parlor-foundation-control-f8zfyj2k/devices",
+          "list",
+          "-j",
+          "devices"
+        ],
+        "error": null,
+        "exit_code": 0,
+        "label": "empty-device-set",
+        "stderr": {
+          "bytes": 0,
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/empty-device-set.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "bytes": 147,
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/empty-device-set.stdout",
+          "sha256": "0c8dc472862c0b8ca70aea04c9d395f002b03735d71469ad44057d35910e34cf"
+        }
+      },
+      {
+        "argv": [
+          "/Library/Developer/PrivateFrameworks/CoreSimulator.framework/Versions/A/Resources/bin/simctl",
+          "--set",
+          "/private/tmp/parlor-foundation-control-f8zfyj2k/devices",
+          "create",
+          "ParlorFoundationControl-d5797b7d09aa4f78ab622e67a1d330a8",
+          "com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro",
+          "com.apple.CoreSimulator.SimRuntime.iOS-26-5"
+        ],
+        "error": null,
+        "exit_code": 0,
+        "label": "create",
+        "stderr": {
+          "bytes": 0,
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/create.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "bytes": 37,
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/create.stdout",
+          "sha256": "70307fe6eac902ecd6b855b0192312ae46e4f3f0dd5b90ab1b6121cbbcc0b157"
+        }
+      },
+      {
+        "argv": [
+          "/Library/Developer/PrivateFrameworks/CoreSimulator.framework/Versions/A/Resources/bin/simctl",
+          "--set",
+          "/private/tmp/parlor-foundation-control-f8zfyj2k/devices",
+          "list",
+          "-j",
+          "devices"
+        ],
+        "error": null,
+        "exit_code": 0,
+        "label": "created-identity",
+        "stderr": {
+          "bytes": 0,
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/created-identity.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "bytes": 718,
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/created-identity.stdout",
+          "sha256": "e3c83d9a6b5970e9f9f77af1700954157d5cbf2ac55f93ad198a834a1c1a6d51"
+        }
+      },
+      {
+        "argv": [
+          "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang",
+          "-fobjc-arc",
+          "-fmodules",
+          "-fmodules-cache-path=/private/tmp/parlor-foundation-control-f8zfyj2k/cache",
+          "-target",
+          "arm64-apple-ios16.0-simulator",
+          "-isysroot",
+          "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.5.sdk",
+          "-framework",
+          "Foundation",
+          "-Wall",
+          "-Wextra",
+          "-Werror",
+          "/private/tmp/parlor-foundation-control-f8zfyj2k/FoundationProtectionControl.m",
+          "-o",
+          "/private/tmp/parlor-foundation-control-f8zfyj2k/FoundationProtectionControl"
+        ],
+        "error": null,
+        "exit_code": 0,
+        "label": "compile",
+        "stderr": {
+          "bytes": 0,
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/compile.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "bytes": 0,
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/compile.stdout",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "argv": [
+          "/usr/bin/pgrep",
+          "-f",
+          "[o]rg.gradle.launcher.daemon.bootstrap.GradleDaemon"
+        ],
+        "error": null,
+        "exit_code": 1,
+        "label": "stop-after-compile-preflight",
+        "stderr": {
+          "bytes": 0,
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/stop-after-compile-preflight.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "bytes": 0,
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/stop-after-compile-preflight.stdout",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "argv": [
+          "/Users/abdelrahman/Projects/parlor/gradlew",
+          "--stop"
+        ],
+        "error": null,
+        "exit_code": 0,
+        "label": "stop-after-compile",
+        "stderr": {
+          "bytes": 0,
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/stop-after-compile.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "bytes": 31,
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/stop-after-compile.stdout",
+          "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+        }
+      },
+      {
+        "argv": [
+          "/usr/bin/pgrep",
+          "-f",
+          "[o]rg.gradle.launcher.daemon.bootstrap.GradleDaemon"
+        ],
+        "error": null,
+        "exit_code": 1,
+        "label": "stop-after-compile-verified",
+        "stderr": {
+          "bytes": 0,
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/stop-after-compile-verified.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "bytes": 0,
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/stop-after-compile-verified.stdout",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "argv": [
+          "/usr/bin/codesign",
+          "--force",
+          "--sign",
+          "-",
+          "--timestamp=none",
+          "/private/tmp/parlor-foundation-control-f8zfyj2k/FoundationProtectionControl"
+        ],
+        "error": null,
+        "exit_code": 0,
+        "label": "adhoc-fixture-sign",
+        "stderr": {
+          "bytes": 106,
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/adhoc-fixture-sign.stderr",
+          "sha256": "47b8251176f8b250be4575ffd73039904e8e5fb2b4b2acb69e387b75738eb55e"
+        },
+        "stdout": {
+          "bytes": 0,
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/adhoc-fixture-sign.stdout",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "argv": [
+          "/usr/bin/codesign",
+          "--verify",
+          "--strict",
+          "/private/tmp/parlor-foundation-control-f8zfyj2k/FoundationProtectionControl"
+        ],
+        "error": null,
+        "exit_code": 0,
+        "label": "fixture-signature-check",
+        "stderr": {
+          "bytes": 0,
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/fixture-signature-check.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "bytes": 0,
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/fixture-signature-check.stdout",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "argv": [
+          "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/dwarfdump",
+          "--uuid",
+          "/private/tmp/parlor-foundation-control-f8zfyj2k/FoundationProtectionControl"
+        ],
+        "error": null,
+        "exit_code": 0,
+        "label": "image-uuid",
+        "stderr": {
+          "bytes": 0,
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/image-uuid.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "bytes": 127,
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/image-uuid.stdout",
+          "sha256": "38c7d1953f79e7c5a5ee020989817f4ee71f58518c6cbab25e259674f485b4ab"
+        }
+      },
+      {
+        "argv": [
+          "/Library/Developer/PrivateFrameworks/CoreSimulator.framework/Versions/A/Resources/bin/simctl",
+          "--set",
+          "/private/tmp/parlor-foundation-control-f8zfyj2k/devices",
+          "boot",
+          "DA41AAF7-F521-4608-BF61-8C625C2ED36A"
+        ],
+        "error": null,
+        "exit_code": 0,
+        "label": "boot",
+        "stderr": {
+          "bytes": 0,
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/boot.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "bytes": 0,
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/boot.stdout",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "argv": [
+          "/Library/Developer/PrivateFrameworks/CoreSimulator.framework/Versions/A/Resources/bin/simctl",
+          "--set",
+          "/private/tmp/parlor-foundation-control-f8zfyj2k/devices",
+          "bootstatus",
+          "DA41AAF7-F521-4608-BF61-8C625C2ED36A",
+          "-b"
+        ],
+        "error": null,
+        "exit_code": 0,
+        "label": "boot-status",
+        "stderr": {
+          "bytes": 0,
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/boot-status.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "bytes": 5575,
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/boot-status.stdout",
+          "sha256": "7e0b35a19a6dfce82f350aea272f05bc301f205992054a2fc6bffc021eb8995c"
+        }
+      },
+      {
+        "argv": [
+          "/Library/Developer/PrivateFrameworks/CoreSimulator.framework/Versions/A/Resources/bin/simctl",
+          "--set",
+          "/private/tmp/parlor-foundation-control-f8zfyj2k/devices",
+          "list",
+          "-j",
+          "devices"
+        ],
+        "error": null,
+        "exit_code": 0,
+        "label": "booted-identity",
+        "stderr": {
+          "bytes": 0,
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/booted-identity.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "bytes": 797,
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/booted-identity.stdout",
+          "sha256": "1cb8bb2493614303867c166778bb02f8b119cf6277c25e1bcb52a9bacc612f48"
+        }
+      },
+      {
+        "argv": [
+          "/Library/Developer/PrivateFrameworks/CoreSimulator.framework/Versions/A/Resources/bin/simctl",
+          "--set",
+          "/private/tmp/parlor-foundation-control-f8zfyj2k/devices",
+          "spawn",
+          "DA41AAF7-F521-4608-BF61-8C625C2ED36A",
+          "/private/tmp/parlor-foundation-control-f8zfyj2k/FoundationProtectionControl"
+        ],
+        "error": null,
+        "exit_code": 0,
+        "label": "native-observations",
+        "stderr": {
+          "bytes": 0,
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/native-observations.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "bytes": 7047,
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/native-observations.stdout",
+          "sha256": "7a250d962336621fed327a1173f22f3c08bf9aa16db22861cb69a257881bf417"
+        }
+      },
+      {
+        "argv": [
+          "/usr/bin/pgrep",
+          "-f",
+          "[o]rg.gradle.launcher.daemon.bootstrap.GradleDaemon"
+        ],
+        "error": null,
+        "exit_code": 1,
+        "label": "stop-final-preflight",
+        "stderr": {
+          "bytes": 0,
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/stop-final-preflight.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "bytes": 0,
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/stop-final-preflight.stdout",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "argv": [
+          "/Users/abdelrahman/Projects/parlor/gradlew",
+          "--stop"
+        ],
+        "error": null,
+        "exit_code": 0,
+        "label": "stop-final",
+        "stderr": {
+          "bytes": 0,
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/stop-final.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "bytes": 31,
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/stop-final.stdout",
+          "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+        }
+      },
+      {
+        "argv": [
+          "/usr/bin/pgrep",
+          "-f",
+          "[o]rg.gradle.launcher.daemon.bootstrap.GradleDaemon"
+        ],
+        "error": null,
+        "exit_code": 1,
+        "label": "stop-final-verified",
+        "stderr": {
+          "bytes": 0,
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/stop-final-verified.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "bytes": 0,
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/stop-final-verified.stdout",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "argv": [
+          "/Library/Developer/PrivateFrameworks/CoreSimulator.framework/Versions/A/Resources/bin/simctl",
+          "--set",
+          "/private/tmp/parlor-foundation-control-f8zfyj2k/devices",
+          "list",
+          "-j",
+          "devices"
+        ],
+        "error": null,
+        "exit_code": 0,
+        "label": "cleanup-device-identity",
+        "stderr": {
+          "bytes": 0,
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/cleanup-device-identity.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "bytes": 797,
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/cleanup-device-identity.stdout",
+          "sha256": "9902a2f1b42f55f7cdf3f46d40a859bb11cdedba2f403c782598f5e8743213ee"
+        }
+      },
+      {
+        "argv": [
+          "/Library/Developer/PrivateFrameworks/CoreSimulator.framework/Versions/A/Resources/bin/simctl",
+          "--set",
+          "/private/tmp/parlor-foundation-control-f8zfyj2k/devices",
+          "shutdown",
+          "DA41AAF7-F521-4608-BF61-8C625C2ED36A"
+        ],
+        "error": null,
+        "exit_code": 0,
+        "label": "shutdown",
+        "stderr": {
+          "bytes": 0,
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/shutdown.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "bytes": 0,
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/shutdown.stdout",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "argv": [
+          "/Library/Developer/PrivateFrameworks/CoreSimulator.framework/Versions/A/Resources/bin/simctl",
+          "--set",
+          "/private/tmp/parlor-foundation-control-f8zfyj2k/devices",
+          "list",
+          "-j",
+          "devices"
+        ],
+        "error": null,
+        "exit_code": 0,
+        "label": "shutdown-identity",
+        "stderr": {
+          "bytes": 0,
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/shutdown-identity.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "bytes": 799,
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/shutdown-identity.stdout",
+          "sha256": "8ff28a72e1e65f8deb79cc45062482ad07a0a91af8fc50d08c8be03fe58e80f6"
+        }
+      },
+      {
+        "argv": [
+          "/Library/Developer/PrivateFrameworks/CoreSimulator.framework/Versions/A/Resources/bin/simctl",
+          "--set",
+          "/private/tmp/parlor-foundation-control-f8zfyj2k/devices",
+          "delete",
+          "DA41AAF7-F521-4608-BF61-8C625C2ED36A"
+        ],
+        "error": null,
+        "exit_code": 0,
+        "label": "delete",
+        "stderr": {
+          "bytes": 0,
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/delete.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "bytes": 0,
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/delete.stdout",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "argv": [
+          "/Library/Developer/PrivateFrameworks/CoreSimulator.framework/Versions/A/Resources/bin/simctl",
+          "--set",
+          "/private/tmp/parlor-foundation-control-f8zfyj2k/devices",
+          "list",
+          "-j",
+          "devices"
+        ],
+        "error": null,
+        "exit_code": 0,
+        "label": "deleted-identity",
+        "stderr": {
+          "bytes": 0,
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/deleted-identity.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "bytes": 147,
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/deleted-identity.stdout",
+          "sha256": "0c8dc472862c0b8ca70aea04c9d395f002b03735d71469ad44057d35910e34cf"
+        }
+      },
+      {
+        "argv": [
+          "/usr/sbin/lsof",
+          "-nP",
+          "-t",
+          "+w",
+          "+D",
+          "/private/tmp/parlor-foundation-control-f8zfyj2k"
+        ],
+        "error": null,
+        "exit_code": 1,
+        "label": "scratch-holders",
+        "stderr": {
+          "bytes": 0,
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/scratch-holders.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "bytes": 0,
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/scratch-holders.stdout",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    ],
+    "count": 33,
+    "errors": [],
+    "finished_at": "2026-09-08T02:05:14.788513+00:00",
+    "ordering": "Compile finishes02:04:36.095941, immediate stop/pre+post succeeds; native finishes02:05:09.604448, final stop/pre+post then exact owned device shutdown/delete/empty-set/lsof+cleanup. No competing heavy run by reviewer.",
+    "started_at": "2026-09-08T02:04:31.521618+00:00"
+  },
+  "decision": "COLLECTION_VALIDATED_ONLY",
+  "evidence": {
+    "approval": {
+      "bytes": 12098,
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/l08-native-foundation-control03-native-approval-01.json",
+      "sha256": "47240106caf99ca5f56c121a876e65fed9ad0e269e2c9f73a0b0c58a7a5ccf0f"
+    },
+    "prior_failed_witness_review": {
+      "bytes": 20452,
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/l08-foundation-native01-independent-classification-01.json",
+      "sha256": "fe45a0709a10a05ef91ea0dad8a524bd8e64400814d33b097bd8ab3794323811"
+    },
+    "raw_stderr": {
+      "bytes": 0,
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/native-observations.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "raw_stdout": {
+      "bytes": 7047,
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/native-observations.stdout",
+      "sha256": "7a250d962336621fed327a1173f22f3c08bf9aa16db22861cb69a257881bf417"
+    },
+    "receipt": {
+      "bytes": 18928,
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/receipt.json",
+      "sha256": "55b51c77c8f962d0d4e45fc2f18dac296ebf99d1e5d2224066993d0907000998"
+    },
+    "source_review": {
+      "bytes": 14940,
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/l08-native-foundation-control03-independent-review-01.json",
+      "sha256": "72e7e7d1e9c376704982d766b427d4fd10c5b78928d2a75d266bcfb6483dbd89"
+    },
+    "validated_observations": {
+      "bytes": 11611,
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/observations.json",
+      "sha256": "e93b1e246467764f7aa3eecd53ef5ad5fc9451f2a7925e61cec6b2768e4386e3"
+    }
+  },
+  "execution_owner": "/root",
+  "l08_status": "UNCHANGED_FAILED_UNRESOLVED",
+  "metadata_observations": {
+    "all29_queries": "returned=true, dictionary_present=true, exception=none and no NSError; Boolean presence fields remain distinct",
+    "all8_operations": "returned=true, result=true, exception=none, native_error present=false/domain=none/code0",
+    "consequence": "The actual installed Foundation CLI path independently exhibits FileManager protection-key omission despite successful Complete requests. Regular-file URL protection reads until-first-authentication before/after Complete writes and explicit setter. Explicit backup exclusion reads included->excluded on directory/atomic file. These are actual observation facts, not a passing Complete-class requirement.",
+    "ordered_rows": [
+      {
+        "backup": "included",
+        "filemanager_protection": "missing",
+        "id": "directory-after-create",
+        "regular_file_url_protection": null,
+        "volume": "supported"
+      },
+      {
+        "backup": "excluded",
+        "filemanager_protection": "missing",
+        "id": "directory-after-backup",
+        "regular_file_url_protection": null,
+        "volume": "supported"
+      },
+      {
+        "backup": "included",
+        "filemanager_protection": "missing",
+        "id": "atomic-after-write",
+        "regular_file_url_protection": "until-first-authentication",
+        "volume": "supported"
+      },
+      {
+        "backup": "excluded",
+        "filemanager_protection": "missing",
+        "id": "atomic-after-backup",
+        "regular_file_url_protection": "until-first-authentication",
+        "volume": "supported"
+      },
+      {
+        "backup": "excluded",
+        "filemanager_protection": "missing",
+        "id": "directory-after-set",
+        "regular_file_url_protection": null,
+        "volume": "supported"
+      },
+      {
+        "backup": "included",
+        "filemanager_protection": "missing",
+        "id": "direct-after-write",
+        "regular_file_url_protection": "until-first-authentication",
+        "volume": "supported"
+      },
+      {
+        "backup": "included",
+        "filemanager_protection": "missing",
+        "id": "file-before-set",
+        "regular_file_url_protection": "until-first-authentication",
+        "volume": "supported"
+      },
+      {
+        "backup": "included",
+        "filemanager_protection": "missing",
+        "id": "file-after-set",
+        "regular_file_url_protection": "until-first-authentication",
+        "volume": "supported"
+      }
+    ]
+  },
+  "native_control_status": "COLLECTION_VALIDATED_NOT_L08_PASS",
+  "next_checkpoint": [
+    "No further work needed for the isolated03 producer Boolean correction at this observed runtime, unless its source changes. Approval consumed by this one execution.",
+    "Continue exact app-container/L08 investigation without weakening original required assertions. Later storage boots and host-retention variants remain unexecuted under full L08 until separately established.",
+    "Use local-runtime evidence only for its bounded claim; physical device protection/backup, Store identity/signing/legal/manual/LAN remain separate.",
+    "Final current-source combined verification, source freeze/evidence reconciliation remain required per campaign ledger."
+  ],
+  "recorded_at": "2026-09-08T02:12:15.620165+00:00",
+  "reviewer": "/root/factory_review",
+  "reviewer_actions": {
+    "canonical_application_changes": false,
+    "generated_outputs_or_workers": false,
+    "native_process_queries_signals_or_deletions": false,
+    "repository_executable_imports": false,
+    "tests_builds_compilers_native_commands": false,
+    "writes": "Only additive independent reports under campaign reviews/; no reviewer cleanup needed."
+  },
+  "schema_version": 1,
+  "scope": "Independent interpretation of frozen03 native Foundation control02. Full591-line command receipt and504-line observations read; raw7047-byte JSON independently decoded with duplicate-key/nonfinite rejection and compared type-sensitively to preserved observations. No application changes, builds/tests or native/process operations executed by reviewer.",
+  "source_and_version_binding": {
+    "all5_current_frozen_file_hashes_match": true,
+    "branch": "fix/local-readiness-2026-09-07",
+    "commit": "aecaa1bb07f560d7550951ec90c9bce038b77d23",
+    "context_before_after_current_match": true,
+    "context_source_hashes": {
+      "composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSnapshotFileSystem.kt": "c2852fafb293a693be830171f4674947289fafb07f8ecdbafa5c0aaae6d1bf8b",
+      "scripts/verification/ios-readiness/L08StorageProbe.kt.in": "a1202e47e1b41feb7e5c558e4df9515704e27762e437778b6ae79c777bfce651"
+    },
+    "frozen_manifest": {
+      "bytes": 822,
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/l08-native-foundation-control-03/manifest.json",
+      "sha256": "9efdb9f7918b75c0c4315fa4ecf208ece85ba4b37a8c66bb6d35cab8612c2f3b"
+    },
+    "manifest_matches_approval_and_receipt": true,
+    "producer_sha256": "a6b025d7b77c3b1b1de57b93869d0beff6b4cc9e365eb5672ffd2be9d52013f2",
+    "run_token": "d5797b7d09aa4f78ab622e67a1d330a8",
+    "source_review_limits": "Source identity/raw metadata and recorded temporary artifact hashes are reconciled; cleaned binary is not falsely claimed available for fresh post-cleanup binary hashing.",
+    "strict_runner_sha256_unchanged_from02": "58e8daf875eaf8061ed017e10cc8c8065eb49292866b6741227814282a1b8e9f",
+    "tracked_status": "",
+    "tree": "adf87af6858a0b53adcbc406da9974c57f2e4408"
+  },
+  "wire_fix_verification": {
+    "all95_presence_slots_are_actual_json_booleans_now": true,
+    "boolean_slots": 144,
+    "classification": "ISOLATED PRODUCER DEFECT FIXED AND VERIFIED IN ACTUAL NATIVE CONTROL",
+    "compile_exit_code": 0,
+    "complete_path": "Frozen03 producer -> root owned copied .m/config -> pinned Clang arm64 Simulator binary -> strict ad-hoc signature check -> simctl spawn exact new owned device -> Native JSON with image/source/token -> unchanged strict Python validator -> observations.json -> cleanup.",
+    "integer_fields_intentionally_retained": 44,
+    "limits": "This repairs the isolated control serializer only. Not another Parlor application fix, not a privacy/recovery success, and not evidence of physical Data Protection.",
+    "native01_remains": "CONTROL_FAILED(native-error-types); original bytes preserved. Native02 is a fresh producer execution, not transformation of failed native01.",
+    "native_execution_exit_code": 0,
+    "no_postprocessing_or_type_coercion": true,
+    "previously_malformed_presence_slots": 95,
+    "raw_to_observations_type_sensitive_equality": true,
+    "row_count": 16,
+    "row_order_matches_exact_source_ROW_KINDS": true,
+    "strict_signature_exit_code": 0
+  }
+}

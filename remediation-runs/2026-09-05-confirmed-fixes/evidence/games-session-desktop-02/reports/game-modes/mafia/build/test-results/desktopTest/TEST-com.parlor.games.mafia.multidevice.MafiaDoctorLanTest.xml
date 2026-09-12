@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.parlor.games.mafia.multidevice.MafiaDoctorLanTest" tests="2" skipped="0" failures="1" errors="0" timestamp="2026-09-05T19:21:47.402Z" hostname="192.168.1.11" time="0.098">
+  <properties/>
+  <testcase name="only_host_can_commit_setup_selection_and_no_one_can_change_it_after_start()[desktop]" classname="com.parlor.games.mafia.multidevice.MafiaDoctorLanTest" time="0.089"/>
+  <testcase name="rejoin_preserves_doctor_restriction_setting_and_first_submission_without_host_secrets()[desktop]" classname="com.parlor.games.mafia.multidevice.MafiaDoctorLanTest" time="0.009">
+    <failure message="org.opentest4j.AssertionFailedError: expected: &lt;[PlayerId(raw=doctor-test-1)]&gt; but was: &lt;[]&gt;" type="org.opentest4j.AssertionFailedError">org.opentest4j.AssertionFailedError: expected: &lt;[PlayerId(raw=doctor-test-1)]&gt; but was: &lt;[]&gt;
+	at app//org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
+	at app//org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
+	at app//org.junit.jupiter.api.AssertEquals.failNotEqual(AssertEquals.java:197)
+	at app//org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:182)
+	at app//org.junit.jupiter.api.Assertions.assertEquals(Assertions.java:1156)
+	at app//kotlin.test.junit5.JUnit5Asserter.assertEquals(JUnitSupport.kt:32)
+	at app//kotlin.test.AssertionsKt__AssertionsKt.assertEquals(Assertions.kt:63)
+	at app//kotlin.test.AssertionsKt.assertEquals(Unknown Source)
+	at app//kotlin.test.AssertionsKt__AssertionsKt.assertEquals$default(Assertions.kt:62)
+	at app//kotlin.test.AssertionsKt.assertEquals$default(Unknown Source)
+	at app//com.parlor.games.mafia.multidevice.MafiaDoctorLanTest.assertPrivateProjection-NvghsDY(MafiaDoctorLanTest.kt:187)
+	at app//com.parlor.games.mafia.multidevice.MafiaDoctorLanTest.access$assertPrivateProjection-NvghsDY(MafiaDoctorLanTest.kt:34)
+	at app//com.parlor.games.mafia.multidevice.MafiaDoctorLanTest$rejoin_preserves_doctor_restriction_setting_and_first_submission_without_host_secrets$1.invokeSuspend(MafiaDoctorLanTest.kt:83)
+	at app//com.parlor.games.mafia.multidevice.MafiaDoctorLanTest$rejoin_preserves_doctor_restriction_setting_and_first_submission_without_host_secrets$1.invoke(MafiaDoctorLanTest.kt)
+	at app//com.parlor.games.mafia.multidevice.MafiaDoctorLanTest$rejoin_preserves_doctor_restriction_setting_and_first_submission_without_host_secrets$1.invoke(MafiaDoctorLanTest.kt)
+	at app//kotlinx.coroutines.test.TestBuildersKt__TestBuildersKt$runTest$2$1$1.invokeSuspend(TestBuilders.kt:317)
+	at app//kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:34)
+	at app//kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:100)
+	at app//kotlinx.coroutines.test.TestDispatcher.processEvent$kotlinx_coroutines_test(TestDispatcher.kt:24)
+	at app//kotlinx.coroutines.test.TestCoroutineScheduler.tryRunNextTaskUnless$kotlinx_coroutines_test(TestCoroutineScheduler.kt:98)
+	at app//kotlinx.coroutines.test.TestBuildersKt__TestBuildersKt$runTest$2$1$workRunner$1.invokeSuspend(TestBuilders.kt:326)
+	at app//kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:34)
+	at app//kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:100)
+	at app//kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.common.kt:256)
+	at app//kotlinx.coroutines.BlockingCoroutine.joinBlocking(Builders.kt:54)
+	at app//kotlinx.coroutines.BuildersKt__BuildersKt.runBlockingImpl(Builders.kt:30)
+	at app//kotlinx.coroutines.BuildersKt.runBlockingImpl(Unknown Source)
+	at app//kotlinx.coroutines.BuildersKt__Builders_concurrentKt.runBlockingK(Builders.concurrent.kt:172)
+	at app//kotlinx.coroutines.BuildersKt.runBlockingK(Unknown Source)
+	at app//kotlinx.coroutines.BuildersKt__Builders_concurrentKt.runBlockingK$default(Builders.concurrent.kt:157)
+	at app//kotlinx.coroutines.BuildersKt.runBlockingK$default(Unknown Source)
+	at app//kotlinx.coroutines.test.TestBuildersJvmKt.createTestResult(TestBuildersJvm.kt:10)
+	at app//kotlinx.coroutines.test.TestBuildersKt__TestBuildersKt.runTest-8Mi8wO0(TestBuilders.kt:309)
+	at app//kotlinx.coroutines.test.TestBuildersKt.runTest-8Mi8wO0(TestBuilders.kt:1)
+	at app//kotlinx.coroutines.test.TestBuildersKt__TestBuildersKt.runTest-8Mi8wO0(TestBuilders.kt:167)
+	at app//kotlinx.coroutines.test.TestBuildersKt.runTest-8Mi8wO0(TestBuilders.kt:1)
+	at app//kotlinx.coroutines.test.TestBuildersKt__TestBuildersKt.runTest-8Mi8wO0$default(TestBuilders.kt:159)
+	at app//kotlinx.coroutines.test.TestBuildersKt.runTest-8Mi8wO0$default(TestBuilders.kt:1)
+	at app//com.parlor.games.mafia.multidevice.MafiaDoctorLanTest.rejoin_preserves_doctor_restriction_setting_and_first_submission_without_host_secrets(MafiaDoctorLanTest.kt:72)
+	at java.base@21.0.11/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base@21.0.11/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base@21.0.11/java.util.ArrayList.forEach(ArrayList.java:1596)
+</failure>
+  </testcase>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

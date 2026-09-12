@@ -1,0 +1,42 @@
+# Research-only proposal: not created, downloaded, booted, or validated.
+minimumLimaVersion: "2.1.4"
+vmType: vz
+os: Linux
+arch: aarch64
+cpus: 2
+memory: "3GiB"
+disk: "4GiB"
+plain: true
+images:
+  - location: "https://cloud-images.ubuntu.com/releases/noble/release-20260615/ubuntu-24.04-server-cloudimg-arm64.img"
+    arch: aarch64
+    digest: "sha256:cafa1a965b591b7c4184b484ffd8e625981a79d48f9b4ae8a4adf7b4c5ade927"
+mounts: []
+networks: []
+portForwards: []
+copyToHost: []
+containerd:
+  system: false
+  user: false
+ssh:
+  loadDotSSHPubKeys: false
+  forwardAgent: false
+  forwardX11: false
+  forwardX11Trusted: false
+  overVsock: true
+video:
+  display: none
+vmOpts:
+  vz:
+    diskImageFormat: raw
+    rosetta:
+      enabled: false
+      binfmt: false
+propagateProxyEnv: false
+upgradePackages: false
+user:
+  name: parlor
+  comment: Parlor disposable verification guest
+  home: /home/parlor
+  shell: /bin/bash
+env: {}

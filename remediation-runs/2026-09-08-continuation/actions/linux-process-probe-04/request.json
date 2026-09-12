@@ -1,0 +1,103 @@
+{
+  "kind": "EXPLICIT_V2_EXACT_UID_TUPLE_READ_ONLY_HOSTED_PROBE_REQUEST",
+  "at": "2026-09-10T15:14:48.495978+00:00",
+  "repository": "Apdelrahman1911/parlor",
+  "branch": "fix/local-readiness-2026-09-07",
+  "frozen_source_sha": "9e40261e0dc5bd224526eda6126350ac6a6b8bcb",
+  "tree": "dfd8021abc17ebf56f796f787b46b375cade68d2",
+  "remote_before": "9e40261e0dc5bd224526eda6126350ac6a6b8bcb\trefs/heads/fix/local-readiness-2026-09-07",
+  "controls": {
+    "files": [
+      {
+        "path": ".github/workflows/production-verification.yml",
+        "sha256": "1b023983dc8591c2c6023c8a65369ffdb70d0cfa200269593e6ed98eec2cee08"
+      },
+      {
+        "path": "gradle/wrapper/gradle-wrapper.jar",
+        "sha256": "81a82aaea5abcc8ff68b3dfcb58b3c3c429378efd98e7433460610fecd7ae45f"
+      },
+      {
+        "path": "gradle/wrapper/gradle-wrapper.properties",
+        "sha256": "c040b6ef2fb893ff5beea5a281614f2848f1c3996a7886f650b713f8240656a2"
+      },
+      {
+        "path": "gradlew",
+        "sha256": "734b3879d3501dce471cf0522d3bcbafe76873d9fc5129345b67fb43bd15e933"
+      },
+      {
+        "path": "scripts/ci/linux_exe_reader.py",
+        "sha256": "0600e84e29647158bf39b64fad73d5548d63f2e661dd42bbcb2a55d63a4eda6c"
+      },
+      {
+        "path": "scripts/ci/linux_process_probe.py",
+        "sha256": "a75d9531c5e753f6ff57993a71085594f00399f913121d51b0979f4d8454def9"
+      },
+      {
+        "path": "scripts/ci/verification_hygiene.py",
+        "sha256": "d412a2cfe0d59c3cce6cdf4d67a978abf9c8981e745168ddae9d02b3a3ad372c"
+      },
+      {
+        "path": "scripts/release/tests/test_ci_verification_hygiene.py",
+        "sha256": "5ef040f31cd893304f6c94e15e7d0c2bca709c8b193f69bf9956ba4cb9c1aa5c"
+      },
+      {
+        "path": "scripts/release/tests/test_linux_exe_reader.py",
+        "sha256": "4dd542609e8e71da8f5cd4778985ddc818fcd2b238f59d819758220e63ff52a2"
+      },
+      {
+        "path": "scripts/release/tests/test_linux_process_probe.py",
+        "sha256": "329971007427514fd48d11db16eb883aae851ad5f6cfa05a766b9dba8020ffc2"
+      },
+      {
+        "path": "scripts/release/tests/test_workflow_contract.py",
+        "sha256": "c385c8e54d64e2d35c787e74f7fba3b221cfaee0ce6768a4c2c56993f792997f"
+      },
+      {
+        "path": "scripts/release/workflow_contract.py",
+        "sha256": "d2c15a250737814cad9aa4d8375bebfd6f57688e82d5328187bbf89b4b34fcb1"
+      }
+    ],
+    "control_sha256": "5d253ee71d35f601910a897fc211b00861360052bd554df3837bdf3acf410f41"
+  },
+  "inputs": {
+    "verification_scope": "linux-process-probe",
+    "frozen_source_sha": "9e40261e0dc5bd224526eda6126350ac6a6b8bcb",
+    "approved_probe_control_sha256": "5d253ee71d35f601910a897fc211b00861360052bd554df3837bdf3acf410f41"
+  },
+  "command": [
+    "gh",
+    "workflow",
+    "run",
+    "production-verification.yml",
+    "--repo",
+    "Apdelrahman1911/parlor",
+    "--ref",
+    "fix/local-readiness-2026-09-07",
+    "-f",
+    "verification_scope=linux-process-probe",
+    "-f",
+    "frozen_source_sha=9e40261e0dc5bd224526eda6126350ac6a6b8bcb",
+    "-f",
+    "approved_probe_control_sha256=5d253ee71d35f601910a897fc211b00861360052bd554df3837bdf3acf410f41"
+  ],
+  "reviews": [
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/linux-exe-reader-v2-independent-01.json",
+      "sha256": "66e72a7a39c4187a992d7bd5a956eb325b7557a18e4944706b27ef92ccc110c5"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/linux-exe-reader-v2-adc-integration-independent-01.json",
+      "sha256": "6c0025361f1f8525a5f6a0410850d90deac968761568ac62a0cdb4f2285b607c"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/linux-probe-03-actual-independent-01.json",
+      "sha256": "3afe98a3ac8243fc10fb6c978fe41f1591055ada11756d591f52e34d3a55d4ec"
+    }
+  ],
+  "freeze_push_receipt_sha256": "146177f7036c9b17329a3e02cd63c0266b0d8a60380d6f90824f0c67b71169a8",
+  "scope": "Exactly one Ubuntu24.04x64 job; bounded emulator-package installation only, no system-image/platform install, emulator/app build or Store operations. Explicit sudo-proc-exe-v2 initial/final host scans and three existing real owned controls. V2 permits stable ordered mixed UID tuples containing the original nonroot caller; this is selected read-only sampling, not process ownership. Default reader remains unprivileged. Exact source/control/SDK/lifetime/upload/ownership/deletion guards remain. Other four jobs skipped.",
+  "runtime_acceptance": "Complete successful initial and final host scans; no errors or matching SDK executables. All three CONTROL_PASS, exact child exit0/reaped and fixtures removed. Privileged nondumpable control must observe exactly one EACCES/one successful privileged read and zero mixed counters; original unprivileged nondumpable audit deliberately FAIL. At least one completed successful host scan must report positive mixed_uid_privileged_samples, with mixed_uid_privileged_samples <= mixed_uid_samples <= selected_uid and <= privileged_reads. No mixed samples means this new runtime branch is not proven even if workflow succeeds; no blind retry. A failed host scan cannot be promoted by successful controls.",
+  "preserved_failures": "LP01/LP02/LP03 and D03 remain FAIL; no retroactive retirement or D03 cause, no application/combined qualification from bare-host scope. Strict iOS Complete0PASS26FAIL unresolved. Prior local outer143 retained.",
+  "local_validation": "123 focused Python controls and changed-workflow pinned actionlint/ShellCheck actually passed; equal20controls/844source rows, inner/outer/stop0 and cleanup PASS. This is not actual hosted v2 mixed-UID or Android runtime proof.",
+  "next_scope": "Only after independent acceptance of the required LP04 runtime scope may root dispatch one fresh 18-control android-cleanup-only request against this frozen source."
+}

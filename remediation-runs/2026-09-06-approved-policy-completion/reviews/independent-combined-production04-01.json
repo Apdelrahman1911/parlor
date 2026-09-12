@@ -1,0 +1,1217 @@
+{
+  "at": "2026-09-06T12:32:19.603500+00:00",
+  "reviewer": "/root/release_fix_review",
+  "conclusion": "PASS \u2014 current productionCheck at the exact669sourceinputs; previouscyclesremainFAIL. Not a repositoryREADY/Storeapproval.",
+  "source": {
+    "branch": "main",
+    "commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+    "tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+    "diff_sha256": "148fb4583d8fa8341b3cbc48a7fc0bc7564bf4df5c27e9d80e32c6bfdc57b784",
+    "source_manifest_sha256": "9ac2be536979f2216b39c10a6d148125a12380987d4efd483bbcbaeb1733318e"
+  },
+  "input_count": 669,
+  "rechecked_current_drift": [],
+  "source_changed_during_cycle": false,
+  "receipt_path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/receipt.json",
+  "receipt_sha256": "ee8e31280b0f2d45b869b6b5fffa23dee89944ea52e36bd6027f33e48415a47a",
+  "gradle_log_sha256": "195ca59c870a0ed1d01332aa8bcdcf28dde2f7e04c689c326debe73dac0e193d",
+  "command": [
+    "./gradlew",
+    "productionCheck",
+    "--no-build-cache",
+    "--continue",
+    "--no-daemon",
+    "--no-parallel",
+    "--max-workers=1",
+    "--no-configuration-cache",
+    "--dependency-verification=strict",
+    "-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=combined-production-04",
+    "-Pkotlin.compiler.execution.strategy=in-process",
+    "-Pparlor.android.signing.storeFile=",
+    "-Pparlor.android.signing.storePassword=",
+    "-Pparlor.android.signing.keyAlias=",
+    "-Pparlor.android.signing.keyPassword="
+  ],
+  "started_at": "2026-09-06T12:15:50.742332+00:00",
+  "finished_at": "2026-09-06T12:21:22.403650+00:00",
+  "exit_code": 0,
+  "raw_test_counts": {
+    "suites": 222,
+    "passed": 1392,
+    "tests": 1395,
+    "skipped": 3
+  },
+  "raw_counts_by_task": {
+    "desktopTest": {
+      "suites": 188,
+      "passed": 1240,
+      "tests": 1243,
+      "skipped": 3
+    },
+    "testDebugUnitTest": {
+      "suites": 17,
+      "passed": 76,
+      "tests": 76
+    },
+    "testReleaseUnitTest": {
+      "suites": 17,
+      "passed": 76,
+      "tests": 76
+    }
+  },
+  "xml_manifest": [
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/composeApp/build/test-results/desktopTest/TEST-com.parlor.app.AppBackPolicyTest.xml",
+      "8562e943688da712b2e282380f1551693c3df738c104179086554d1e3f29cee0"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/composeApp/build/test-results/desktopTest/TEST-com.parlor.app.AppNavigationTest.xml",
+      "e0dc604da7ba22271fbb6d3ecb59cea0591f8053f36b20486ccfb98a7e337093"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/composeApp/build/test-results/desktopTest/TEST-com.parlor.app.DesktopPlatformBackHandlerTest.xml",
+      "36c20a9238066eb3bdfd1ceb98626f623a4bed936dc565fb6d8e7c6b35a9075f"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/composeApp/build/test-results/desktopTest/TEST-com.parlor.app.DesktopProcessShutdownTest.xml",
+      "51697ab3bb9756d22c63165325bcfbd4b3147161729b631609e72cccbc56aa18"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/composeApp/build/test-results/desktopTest/TEST-com.parlor.app.HostLobbyOperationFeedbackContractTest.xml",
+      "8566511191fbc6b98fc11f54af93438b3f1a9dd61802aad6552e42cdab3667ce"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/composeApp/build/test-results/desktopTest/TEST-com.parlor.app.LocalResumeRouterTest.xml",
+      "40292c7b9e092c82b46b4a47b1bf77711ad5d868aaf69fed38e6b6bcd3a8184e"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/composeApp/build/test-results/desktopTest/TEST-com.parlor.app.LocalizationResourceContractTest.xml",
+      "11c49484b7d493c9bbaa977257647cfc0d1e17ef5fc69f548c2c02cfeeac2e76"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/composeApp/build/test-results/desktopTest/TEST-com.parlor.app.MultiplayerRouteRestorationTest.xml",
+      "af3c873189cad64ec490c73ef8ae4c96c120fed040ccbc37e8353398089983de"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/composeApp/build/test-results/desktopTest/TEST-com.parlor.app.ProductionUiAccessibilityContractTest.xml",
+      "585e37a18d16560bc14b9f98dbb97100865e4607ba7b37e2904af76bed907109"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/composeApp/build/test-results/desktopTest/TEST-com.parlor.app.di.GameShellCompositionTest.xml",
+      "283bf3c8853a9a0df848cbcf0d5b40dec64ce9181f6bb3c45c414db5b9e873df"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/composeApp/build/test-results/desktopTest/TEST-com.parlor.app.di.ProductionSessionSeedSourceTest.xml",
+      "dc885b5e861a858bb453f5c1092c9b6ad25862519369c4e3f029fe04949b686f"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/composeApp/build/test-results/desktopTest/TEST-com.parlor.app.lifecycle.AppLifecycleCoordinatorTest.xml",
+      "0111165603154b45784b38e5c205e301cd02623fb03e1354f88532918d3f7466"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/composeApp/build/test-results/desktopTest/TEST-com.parlor.app.shell.game.GameShellRegistryCompositionTest.xml",
+      "fcd3124c688b859ffd87ce88b50ee3a1c01b923548803af89cfe5e68d887a041"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/composeApp/build/test-results/desktopTest/TEST-com.parlor.app.shell.game.GameShellRegistryExtensibilityTest.xml",
+      "7e931072768ea474e04c6f5e76009494cfd8d812f0a4bfd26a7e082de8147f31"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/composeApp/build/test-results/desktopTest/TEST-com.parlor.app.shell.game.WhodunitShippedPlayerCountTest.xml",
+      "b03bb9ef6a30322b058ba4e8fe19db411d7b9ff967ee5b9247d839d8774afa08"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/composeApp/build/test-results/desktopTest/TEST-com.parlor.app.shell.home.HomeRecoveryAvailabilityTest.xml",
+      "c3200b9d98fa1076025543882d30526a03fa1dabacbb78d944b4600ff50a059b"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/composeApp/build/test-results/desktopTest/TEST-com.parlor.app.shell.multiplayer.NameInputPolicyTest.xml",
+      "7f60650fcc14b9e01993cb9b3ea6f87745c247f3ee02d0e3ae67618b9f512435"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/composeApp/build/test-results/desktopTest/TEST-com.parlor.app.shell.settings.SettingsMutationDispatcherTest.xml",
+      "518e1d6b1011ce33256742ce70053d2726453946b7a4e6aea2ec6b0eee2210e1"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/composeApp/build/test-results/desktopTest/TEST-com.parlor.app.storage.DesktopSnapshotFileSystemTest.xml",
+      "ddf97bb3a65d6dbe041ddaaa4837fd010a1ff3959b13e84608183204d4e9f819"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/composeApp/build/test-results/desktopTest/TEST-com.parlor.app.storage.PlatformStorageMigrationTest.xml",
+      "5ed0476ee532b84abcba7853d5c9a8632974d39955a5d947ba64fd119821a288"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/composeApp/build/test-results/desktopTest/TEST-com.parlor.app.storage.SnapshotProtectionPolicyTest.xml",
+      "0831516de7c951e8576c5754930108b7f0b03fc590d0b465a461ebb5f51efd03"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/composeApp/build/test-results/testDebugUnitTest/TEST-com.parlor.app.AppBackPolicyTest.xml",
+      "17b17e9b246eaba7b92889b702c035d7b8190873ed86718e7d16b4ad1b0bf22e"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/composeApp/build/test-results/testDebugUnitTest/TEST-com.parlor.app.AppNavigationTest.xml",
+      "707f65715f809331d4121d01873ff28c6e2321f11354e6b35f6bfef998c08ec4"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/composeApp/build/test-results/testDebugUnitTest/TEST-com.parlor.app.LocalResumeRouterTest.xml",
+      "e79a9e4ce2392d7f39d32efe38bd7b6e4f9a8ae1afe93964f98f361e9adfea81"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/composeApp/build/test-results/testDebugUnitTest/TEST-com.parlor.app.MainActivityStartupTest.xml",
+      "a5bff9a45dffd2c383ec5f2503500770f564ac87b0e66a53f42fddc7895d2c84"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/composeApp/build/test-results/testDebugUnitTest/TEST-com.parlor.app.MultiplayerRouteRestorationTest.xml",
+      "170640fdf2b868ceeba9acac08ca469402e316f794d547e28069b09982834713"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/composeApp/build/test-results/testDebugUnitTest/TEST-com.parlor.app.di.GameShellCompositionTest.xml",
+      "5121528cefe6f9deed0644ededffaaac8647f2acca60d25bbc88d2fe979a3c06"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/composeApp/build/test-results/testDebugUnitTest/TEST-com.parlor.app.di.ProductionSessionSeedSourceTest.xml",
+      "c4454c2395593847de353a3620fe5785a24f1e6a08d35229a3deee0b0bed5cc1"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/composeApp/build/test-results/testDebugUnitTest/TEST-com.parlor.app.lifecycle.AppLifecycleCoordinatorTest.xml",
+      "0897e7525637cf673c78170ce0ab6f5cc1278790d0d41fded5fbd13786951169"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/composeApp/build/test-results/testDebugUnitTest/TEST-com.parlor.app.shell.game.GameShellRegistryExtensibilityTest.xml",
+      "86dd5cf1344cf57e17131dbdcffb0ed909f10bbad45adbfa743070175519ef3f"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/composeApp/build/test-results/testDebugUnitTest/TEST-com.parlor.app.shell.game.WhodunitShippedPlayerCountTest.xml",
+      "a0c1a931cc03f74c4bfccdc9eb005e17849a03e1860e5fec915b61fbc83f54d6"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/composeApp/build/test-results/testDebugUnitTest/TEST-com.parlor.app.shell.home.HomeRecoveryAvailabilityTest.xml",
+      "ef4b61bb45871e6947afbcc7ea1910e01882fef32edbd9bb6f522356aa9b8e52"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/composeApp/build/test-results/testDebugUnitTest/TEST-com.parlor.app.shell.multiplayer.NameInputPolicyTest.xml",
+      "1911edb3f3623051bbdd529bd9ba1e7453d1012b481711eaf513cc967a8260a5"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/composeApp/build/test-results/testDebugUnitTest/TEST-com.parlor.app.shell.settings.SettingsMutationDispatcherTest.xml",
+      "446826bec12709e3f38178c987eac0eef5361f9dbcc6d27de97169f49c4da060"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/composeApp/build/test-results/testDebugUnitTest/TEST-com.parlor.app.storage.AndroidSettingsKeyValueBackingTest.xml",
+      "a87d1a9937054b59d74e496ec24d380a5c3dfd53ae7389c35cc842331dfa2eeb"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/composeApp/build/test-results/testDebugUnitTest/TEST-com.parlor.app.storage.AndroidSnapshotDirectoryListingTest.xml",
+      "bee70afa56a3387ec0d1eb51e716f64fd5112f93acaf5e10d2c35758abc91827"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/composeApp/build/test-results/testDebugUnitTest/TEST-com.parlor.app.storage.PlatformStorageMigrationTest.xml",
+      "b3cc53dfb6ad60ee5f8f4313fe69d07d6608bf734863dc43762af34d282494f3"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/composeApp/build/test-results/testDebugUnitTest/TEST-com.parlor.app.storage.SnapshotProtectionPolicyTest.xml",
+      "94537c76586f864a51fb2ccee6cf7ef3d46ba1bebbb4ccd095d1dfeb6894ab31"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/composeApp/build/test-results/testReleaseUnitTest/TEST-com.parlor.app.AppBackPolicyTest.xml",
+      "4c62e4bf4fad24c23721ab1a1e96aefabeed1494d5534bb48991e7b7922fe79f"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/composeApp/build/test-results/testReleaseUnitTest/TEST-com.parlor.app.AppNavigationTest.xml",
+      "4953cec175c438c548df1bdfb7cccc31bcc04fb12f32a9babaf128ccf33a8208"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/composeApp/build/test-results/testReleaseUnitTest/TEST-com.parlor.app.LocalResumeRouterTest.xml",
+      "c7eb2e196ca9bcab01143cb03e91949b45c7dc4561fd6704fc069259f33d62a3"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/composeApp/build/test-results/testReleaseUnitTest/TEST-com.parlor.app.MainActivityStartupTest.xml",
+      "b3ef0a9944c398b0fdca02190468b5ef8302cd56e0fdbc6f8ed45b5806750e2c"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/composeApp/build/test-results/testReleaseUnitTest/TEST-com.parlor.app.MultiplayerRouteRestorationTest.xml",
+      "3dac9ac64229f6e5ee44f3ff8e3fe76560d3428bf88c3493185d7cee47f767ae"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/composeApp/build/test-results/testReleaseUnitTest/TEST-com.parlor.app.di.GameShellCompositionTest.xml",
+      "9c4abc4eff4e6f219d1327c369c054573acf34912e6f57a0abb2c65222aaade3"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/composeApp/build/test-results/testReleaseUnitTest/TEST-com.parlor.app.di.ProductionSessionSeedSourceTest.xml",
+      "c2124fed8ebdc854b787213648d3a5ff585093a3daa6e8e52b23ea6a770c4e3d"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/composeApp/build/test-results/testReleaseUnitTest/TEST-com.parlor.app.lifecycle.AppLifecycleCoordinatorTest.xml",
+      "74cf40f68cca7758c6d6bca4e3f948c0cc4d21fe1e4276655929ff4d820c171a"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/composeApp/build/test-results/testReleaseUnitTest/TEST-com.parlor.app.shell.game.GameShellRegistryExtensibilityTest.xml",
+      "ba0b73389d660c8afbcb29162eb5491e38bb28bad53c686d4df415d68f0a0790"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/composeApp/build/test-results/testReleaseUnitTest/TEST-com.parlor.app.shell.game.WhodunitShippedPlayerCountTest.xml",
+      "9c2e93af0e61a552a170286fb0383debaae57abf9f74ca339014951ebde9798f"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/composeApp/build/test-results/testReleaseUnitTest/TEST-com.parlor.app.shell.home.HomeRecoveryAvailabilityTest.xml",
+      "18113861f4d56a90faa26a29280ce4117dbefa0d9a7b3c41e5161a292ffd3606"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/composeApp/build/test-results/testReleaseUnitTest/TEST-com.parlor.app.shell.multiplayer.NameInputPolicyTest.xml",
+      "1d4b10cd7b66255aa7a78b6839a4d89270c2ab8d067e8e2dfb5cca90edc7c0d5"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/composeApp/build/test-results/testReleaseUnitTest/TEST-com.parlor.app.shell.settings.SettingsMutationDispatcherTest.xml",
+      "bb61d70c786495d4fa2fc38a92812be18b4cf9e05265023cc04a9969e3b53a1c"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/composeApp/build/test-results/testReleaseUnitTest/TEST-com.parlor.app.storage.AndroidSettingsKeyValueBackingTest.xml",
+      "15e9952f8cb89a0c219eb8ff7a1c83775efcf249a1c9171a9333517b91ab2738"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/composeApp/build/test-results/testReleaseUnitTest/TEST-com.parlor.app.storage.AndroidSnapshotDirectoryListingTest.xml",
+      "b5ca954f3266c5f5c55c1cb3fcb58db94010072fabcf4de011fd7a00ea792072"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/composeApp/build/test-results/testReleaseUnitTest/TEST-com.parlor.app.storage.PlatformStorageMigrationTest.xml",
+      "cf7757b554139b7f233a74d3e8b925f0298398c177639e5d2870ffd7cdb2ec1f"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/composeApp/build/test-results/testReleaseUnitTest/TEST-com.parlor.app.storage.SnapshotProtectionPolicyTest.xml",
+      "e8d7cc53be76d1f5fa226dabc0dff0dd3cc2bbb97e3407d4fae6a9a9e51c626d"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.MafiaDoctorRulesTest.xml",
+      "764709097a1511deac34e221ffebafe3896f41d8c44069384ef3937d853ea31d"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.action.MafiaActionCodecTest.xml",
+      "b92dd3a71ac31dda32aa362d58ce8af12d40240eb9c8c9f44325186c9ac8ce55"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.projection.MafiaHostOnlyRedactionSentinelTest.xml",
+      "eca5206d2aac880d50d782faa6dd53a621528f0ee4c359cb37f25dfd38c38f34"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.projection.MafiaProjectionPolicyTest.xml",
+      "237b6eb567d2e78042d2d0e0b93c7151b22a14734bcbe528665e3dbfc256cabd"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.reducer.MafiaReducerEdgeCasesTest.xml",
+      "718d4a2c3cdd178d8fd7196d74f09c75272e3ad3f4c39aff8821f7c0fda9f332"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.reducer.MafiaReducerTest.xml",
+      "e23e39e98939ec1e19820535635316012c720b0db5910a85cd8e37c9c24961af"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.rules.MafiaSessionRulesTest.xml",
+      "6aaa25fd9045dcd106b19bc201f4b7dcb892185d24ecc1c5afba5a42fb3c1246"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.rules.NightResolutionTest.xml",
+      "78004115639d6bb1634347d1981406f44f51652dc381019c236f4fd41f35701d"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.rules.RoleAssignmentTest.xml",
+      "f02bbb9935187b54f93c63224a5c98be89c99eb04091ae24fffb1b9c6d59411f"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.rules.VoteResolutionTest.xml",
+      "da1426dd052e8e71a94c7c7e7367e7d0c5cda382752722d8ad0020d509c2dbef"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.rules.WinCheckTest.xml",
+      "b6ad8489f456137c7abd9ec9c2d53f1851497bc46d6abc5495c9afef942605bf"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.settings.MafiaSettingsValidationTest.xml",
+      "39da4489deca22b872becc875d0a99de844b74175d99d7355fb2851f57db7242"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.state.MafiaPeerSnapshotValidatorTest.xml",
+      "c7fc4b4129912dfdd7c0d3cc06efe56c56a13361a47cf0a84bd0d119dee0a06c"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.flow.FullGameDriveTest.xml",
+      "8a3674a46b4ac1ad7e1939d052a898da8f2a50b1f40d5a0d4cb7e0f262605ed9"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.flow.MafiaLocalSessionConfigTest.xml",
+      "f88abeb7458b1bc9d268c3ea2aaf29b2f178ab032461166aa9729ea7bb659ed3"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.multidevice.MafiaAuthoritativeLifecycleTest.xml",
+      "7dab7fccaf22ceec7158cbcafa97cce5c4785247be23e7dcac5adbe19dc96bd6"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.multidevice.MafiaDoctorLanTest.xml",
+      "7074e253fe9dc520303ade021e084a13e81d47380fa3d03c0f9aba5c894c8c71"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.multidevice.MafiaMultiDeviceProgressionTest.xml",
+      "6ca0dee042120fe276efeb34a7ec790483efa2580bcc5a808c4ebed36aa863d5"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.multidevice.MafiaPeerActionAuthorityTest.xml",
+      "f2a6cc6673873d880809480869bd46952ff3fdb10ed30b5e51add3f18c21f925"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.multidevice.MafiaPeerPrivateTargetGateTest.xml",
+      "034870348071793d841f78edde3cee1bfe841deae1d2625e73d63822a0e3f237"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.multidevice.MafiaProjectionLeakTest.xml",
+      "ed6680c83984fb1e8a2a5470eb2acda061254aecdc2c2de8b8af7f6700783fe0"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.snapshot.MafiaDoctorHistoryRecoveryTest.xml",
+      "1ad2da57fa3cf8fb917c3953e0875b2514eb0d68ee8f412775aa41c503c8589e"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.snapshot.MafiaSnapshotCodecTest.xml",
+      "a21957feff063526f2d053ce2841947ab400d399e9c5349b170b9f069fd53192"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.snapshot.MafiaSnapshotRecoveryTest.xml",
+      "811e025e3be7d5ef9300a3820c018cf3deb94a283f9486b1ec18e6821fa440f2"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.flow.multidevice.MafiaHostLanguageContinuityTest.xml",
+      "4603f3aa903930dddc5382d95373c22b07cf585101130dbdd4c0548f20078c08"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.flow.multidevice.MafiaNetworkErrorMessageKeyTest.xml",
+      "131de37e0d2877e21124ee0dd7eb84146900e7ab470b940fcb285266f30f822f"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.flow.passandplay.MafiaPassAndPlayNightQueueTest.xml",
+      "a3c758db0c2e9d570713d64117002f61065225423f3c8d6404d0206f73c78968"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.night.DoctorTargetEligibilityTest.xml",
+      "f535a10e8d42ee63ad0d3a0fbdf60310eade0cab21d548a74f12e81afaf452d2"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.night.TargetPickerSelectionTest.xml",
+      "981819a994b401be022dd176e8349860362155fcd8ba5e6ae9187f6e75e87496"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.postgame.PostGameScreenLayoutTest.xml",
+      "138f30e670b24c69c14e3f3f26e61b222da6a34393d764634f047f400e14be2b"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.setup.MafiaDoctorSettingUiTest.xml",
+      "47774db0c8598bd899b86fc249c8b9dc27df8d51c2976969a7173ad45d4394d3"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.setup.MafiaSetupDraftTest.xml",
+      "c9111a7f61045e0c6694a688355841fd9acd30263de9eead32dc11c324c0f56a"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.WhodunitPlayModePolicyTest.xml",
+      "3ab2584f811dd0f1f9b28a27c112330dee41d26dbea9b4b818a5fb13216d68f8"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.action.WhodunitActionCodecTest.xml",
+      "096fb3bac6dd1406f67f9e204462f0e0e7fc272da629f9e98912794cd495449e"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.authority.WhodunitActionAuthorityTest.xml",
+      "98ebd6c3f126e64426448490188ac7befd8c9717c3840ee7e84fcb7b1aea4592"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.ArabicCaseValidationTest.xml",
+      "a657fc540f578e3b46a07484c6bc1bef4651a4bb8caf398cfcae76b8386eb322"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.BundledCaseLoadingTest.xml",
+      "4d3f217430cdd6ab8a294d40478f2175677ca4648998ed672f762054eced532d"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.CasePickerDiscoveryTest.xml",
+      "2edca0dd9e3e0eb258c06ecec226df469723c1df680828b83def136b03b064c0"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.ResReadBytesProbeTest.xml",
+      "584886aa23fa909db15e2d34d4b18c4a7c1feb5a0985da63dfa4dd51e07bc2b0"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.TestingStoryChronologyTest.xml",
+      "00b9dc81e7fd715be1894b98b92b409fa5d432e4c2122ec1e840ad86dd2deafc"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.TestingStoryCompatibilityTest.xml",
+      "406d981e1e576e9160de04ed0908760a20d8dd7de715c454d1e7c61e80dbcb13"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.TestingStoryGameTraceTest.xml",
+      "ba9bbfd72b98739f3c654b7caa769f3174adafd6b791ef039543966a6607f991"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.WhodunitContentIdentityTest.xml",
+      "7567018505f89623e5175196b4dbc62b585d67bc353c15510e96a9e732501d03"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.WhodunitPayloadHardeningTest.xml",
+      "bb9c5145d0bf9129869d1d554c500553bd9b36d8aa9ae98b44d8aab54cca50b9"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.domain.CluePolicyTest.xml",
+      "3ecbf4796b91415690f7a90d608ea960d9ea7f5035c8c55ef155ee15507cbc6c"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.domain.PartyReadinessTest.xml",
+      "cf9842e2562f6d5aa6d787036690440838a64081bf3e5a9bf36348f97d1148dc"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.domain.WhodunitReducerProductionGuardsTest.xml",
+      "e00008aee80dffffe36a142a08510dc240392669eaa7be3bee88c779164dae3c"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.domain.WhodunitRulesInvariantTest.xml",
+      "6d0d54de59a60f622b361f0931b874a71422d7a5170f3ce93079fb43bc19ef62"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.domain.WhodunitTerminalAndCluePolicyTest.xml",
+      "b02a78b740a19662cec60ba14cedd187840b5a3e3517021cc54d42335ceb3de0"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.domain.rules.WhodunitPolicyGoldenTest.xml",
+      "d94f40bb6aeff343029f03f271d7954437e8678525a8ad5a78b8b9dd6c5cb84e"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.flow.ContinueWithoutPlayerTest.xml",
+      "0a11c5c591656805b43403d1ccfaa0141f0557c630bbfd6d7b28ea26f70e316b"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.flow.FullGameDriveTest.xml",
+      "06bff04530507f8bf006b93a0d9bb1892f9cc0de39f6e4d8383fa57a6ca26e9e"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.flow.IntroAndBriefingReadinessTest.xml",
+      "e3747f25ab16c5f355d1b3069b707612885a652641063f24aba802aeb42359c6"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.flow.PartyFlowControllerTest.xml",
+      "8015b4ecf47abc53984327ee5fc2e8007d76ebf219b87704249343e1440d715c"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.flow.PauseRefuseLeaveTest.xml",
+      "9c02bca53057d5086162568e97539f84663c9aae30b70bd092928b2742c8a7ca"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.flow.SimultaneousCharacterRevealTest.xml",
+      "5429e80f2e80995f277d10218e293ad573381c157e9ef0bde3bf3abec61f0711"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.flow.TickerAndRerollTest.xml",
+      "4cd0aa968bd94afdb8d4ac7edfb88e55b286689cab0cd8fa53a80be33255a36a"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.flow.TiedRevoteTest.xml",
+      "af15d57d0bed4832c567906c2e5a718f7cfb630bc250dd013d75f6eabd265e9f"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.flow.WhodunitLocalSessionConfigTest.xml",
+      "0847889c650d2a937514c8785a36733acc25408c4b1a93b046a9cdf0ea56ed01"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.layout.ResponsiveLayoutAuditTest.xml",
+      "4e8392ac4d7120f4b9e3064566ef7b530a85c916de52314673508009a2cdce61"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.layout.TokenDisciplineTest.xml",
+      "d39e180f1998683fdb0bdbc177371811c4f2865f1561ce1b3daf11c33132790d"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.multidevice.HostLostTimeoutTest.xml",
+      "e0626202f609dbb2a1eddba7df728b8e0fbf79364f54c792fee73b2fb6833f6c"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.multidevice.MultiDevicePartyPlayContractTest.xml",
+      "a25041470f89b0a5ec498502db39786b7a4e69b7936d2e7279e0e091b73d707c"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.multidevice.PartyConnectionEventsTest.xml",
+      "ffe7f1242ffe4ae8869c4092365ef3986da3fb52ca79039d1f01551864580189"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.multidevice.PartyPlayPassAndPlayParityTest.xml",
+      "27e941376ba0b1d8ea25bf96434e925542e4ee1fd96b3f36ebd2de0e505a96b5"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.multidevice.QueuedActionSafetyTest.xml",
+      "588a52b4ec509e217a2aa6f46bf4d125b6841104e991c72cff924697071c7f4e"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.multidevice.SelfOfflineTimeoutTest.xml",
+      "227b285e78d9b1c3292e3f34154a31fe4112d754967fbd376a4b06df5ff1beea"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.multidevice.WhodunitMultiDeviceShapeTest.xml",
+      "e8569b3ae72ff4b1ada798ff02651957ec3ab73d6bcf24dc2b12176de682bffd"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.multidevice.WhodunitPeerProjectionBoundaryTest.xml",
+      "d8a0e72b20fc48ee44356b9441fe7b33b8f7a9364d381efd89f77428e9e84b38"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.projection.VoteRedactionTest.xml",
+      "90ac722dbd3842802e451f6ccd7a011c86a64db68b7bccc47b978e02e3c82fe1"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.snapshot.WhodunitCaseBindingTest.xml",
+      "e09c2e92ac2e6314f5c630a2d6d490780dd8a7347d2ee82bbd18ca233d9cfedb"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.snapshot.WhodunitFinalTwoRecoveryTest.xml",
+      "4d448bc3fa7a2fead2be5c62593a023e2d3b76c0d7c3b8fd07de616e43c3ba83"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.snapshot.WhodunitLegacySnapshotGoldenTest.xml",
+      "f9488d2df7ef480c6be670a6f1bec89cf0c4da3472b95b537104ffd7e30026c9"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.snapshot.WhodunitResumeReconstructionTest.xml",
+      "f33df8b4a4f140b0921045cd0d95cf798b9ba7c2f8975c5259446353d817775a"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.snapshot.WhodunitSnapshotRoundTripTest.xml",
+      "05216041417f237cae9ca4a08edb2be36766181ff82952e9299dfd266ec656bf"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.snapshot.WhodunitSnapshotValidationTest.xml",
+      "18f2a3969cb8a32ee4112b4fad05d0b89e0667994f88c21385e8ad33e83ee872"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.PrivacyConcernPolicyTest.xml",
+      "9646e8e64067416192c36efdc718a5e7a11ca325d8e79f620860a3cc1de47ca8"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.RtlFormattingTest.xml",
+      "1ff6d2cf736b9a7e206d6a78f6ddaa159af6f8b2c126bbe93bb75f15ada57b6b"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.WhodunitAccessibilitySemanticsTest.xml",
+      "3f9d49d589f13588bc6d1d1359a3d8e996de77394b862b4edf24806481a67b27"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.WhodunitCasePickerScreenTest.xml",
+      "02cc95e60689906787a06fed33e6d04e55d8c3437efa21121320500eb28c9d78"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.WhodunitNetErrorMessageKeyTest.xml",
+      "f9be9c7c07a80730d550afdb7a5881982747788c3a1cdadab347e563dcab8e5b"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.components.RevealCompletionGateTest.xml",
+      "d7b31a01dbf2b02729f792773872096a2a7e59a4a166bdca82dca1b566e3fc8d"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.EliminationVoteOwnershipIntegrationTest.xml",
+      "6275da47d3b9f6b844c18689306bde45b47be1be9a39cda6f49ef4d3dfa9d10d"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.PeerReadinessRemountTest.xml",
+      "8d8792a00a936fe13ae2d7e92b7e12c5f2f959320adab5fab0317404c6ae7adb"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.VoteTurnPolicyTest.xml",
+      "e721b24487e79300c326aebf8ba5c67f1a6c6f2409c0d1b4a824aeb34d5c85c4"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.WhodunitRecoveryInteractionTest.xml",
+      "96e2475c9a181ee9e816b0dbc0d0eaf06d309648e40a426e266417615b659e43"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostLanguageContinuityTest.xml",
+      "4396bfd0b0a52c4b846d24a1fb855f2dcb48ec4e3a91461c3ce07ebfebcc6b55"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitPeerSessionFlowPolicyTest.xml",
+      "8ac2780e7638aa150c9c1424d6f2e3a27a92f82a548a73d904799fad106a34d4"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.screens.setup.WhodunitCaseLanguageLabelTest.xml",
+      "af89deede7667a1119febb7f513b2b36fd9b7b3848921f4a78b2e4992cb12312"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.screens.setup.WhodunitModeChoiceTest.xml",
+      "9e5994b5d1edca8cb91a4ea38b1cc256c35e4c4acccc3506d16c4ffc148d5587"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/content/build/test-results/desktopTest/TEST-com.parlor.content.datasource.OfflineRemoteCaseDataSourceTest.xml",
+      "4180354e0cb2d7b69e2a130386f465eae74caaedec57bf4ac3bd9f42464a5765"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/content/build/test-results/desktopTest/TEST-com.parlor.content.repository.DefaultCaseRepositoryTest.xml",
+      "f8625c42defd056391813d974e6c4580a4e3c350539c5fde28ec199062de2428"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/content/build/test-results/desktopTest/TEST-com.parlor.content.schema.IntRangePairSerializerTest.xml",
+      "34d860427022121c7d9614ced779632cd78c0aafeb34536a938739623da222de"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/content/build/test-results/desktopTest/TEST-com.parlor.content.validation.CaseSummaryValidatorTest.xml",
+      "8d5d029314c76500aff3c4b3e88e9358425250175015f9d9e332587cfa7fb043"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/content/build/test-results/desktopTest/TEST-com.parlor.content.validation.DefaultCaseValidatorBoundaryTest.xml",
+      "d808be545efd85b9fc23ac50a935ec75a2648cfc12d6912c2213065c15583b2e"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/core/build/test-results/desktopTest/TEST-com.parlor.core.result.ResultTest.xml",
+      "01c1831615cc4ede471606e350219946baf08f2000c13bf9fcfb391415ccd323"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/core/build/test-results/desktopTest/TEST-com.parlor.core.versioning.SemVerTest.xml",
+      "5474fb9ad504d42f764d34ca9d9e0df1257a1424ca0a466498897718d2f9f1b9"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.ActiveTextContrastCallSiteTest.xml",
+      "d8e92772fd6677bce3c9e99c1667809af0ce97d548661481a9825414af2c09be"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.ParlorSafeAreaTest.xml",
+      "2b69ab58d5730f00d338b29688256f75f42e0345365bbac3b740ddbbaba7f877"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.ParlorToastConcurrencyTest.xml",
+      "deedb79822203a51f47c2115ed01516423a85cc130527cd56d19c2099c3d425b"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.ParlorToastHostInsetsTest.xml",
+      "42d51551e2e1907a773da39a8a9b2afbb921230822d621e6bbd7de7b9302f1a8"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.ParlorToastLifetimeTest.xml",
+      "b90074714e0d4094d92ba5bc3e9c4f2ea54735c725a85a4a788842ab85eee455"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.ParlorToastStateTest.xml",
+      "43ea22ca2a3b3c4bbca8e26404bb0d1f852a7a4fd481a532dca89d8db10bbd6e"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.ReconnectingOverlayFocusTest.xml",
+      "539150030c5f519eb6660758b9890493721a6c8b705fb0cccf52306123c713d7"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.RecoveryActionContrastTest.xml",
+      "d594dea88cb85fa50f1be837fa96e6752cb5b4c5acafd53b4279e68d9c89cd20"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.SessionExitBackPolicyTest.xml",
+      "e702ae98bf7ea78ee91640ffcf193b353bcde72037b797db1cd94194a9d7d0de"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.SessionExitOverlayLayoutTest.xml",
+      "49cde41280d9b99cff4945166fcb87599ad63c8586187904759150db994a950a"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.SessionExitOverlayTest.xml",
+      "917756599aba39b919dba9ff4846cfd2fa6277ad0b36f071e51e08fc71e117a8"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.StickyActionLayoutTest.xml",
+      "db8ad99bc6dc3a0960f2788d6d2e09f1dcb7c9455a59fb94a098042058837c44"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.icons.ParlorIconsTest.xml",
+      "fe30c527d07c91bd96889e8cf343802a26bc652fec697e73fbbe62db3677e167"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.localization.AppLanguageSelectionTest.xml",
+      "08692f182b00b7c944737d542ccb22f35a48402767c2cc32a4f59267e7c7c53f"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.localization.PlatformAppLocaleLoadingContractTest.xml",
+      "1573b16126dce3f4e1b0fa80f24b886dc683d2e037c84dd8808885896128f58f"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.localization.ProvideAppLanguageDesktopTest.xml",
+      "ca79518ff09027297dd26930a7066861ad77d098cb7716fb7b915b0c89157e9e"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.motion.ParlorMotionTest.xml",
+      "ad538092c14c5e460d08b5d312000f105ab2ee594ddeb2d1fbc47d364b92fad3"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.tokens.PaletteCoverageTest.xml",
+      "d7d0109e68e1544410d3c95ec55819d82a02f80f55ff32f892383160c4f561b6"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/engine/build/test-results/desktopTest/TEST-com.parlor.engine.architecture.NoWhodunitInEngineTest.xml",
+      "091e95f2b128a7aa13e5333628d5f984226281b06ad440464544bb0c5badb126"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/engine/build/test-results/desktopTest/TEST-com.parlor.engine.architecture.ProjectionDocumentationContractTest.xml",
+      "14fb495713f80c54375a436d41b01ecc2656f4c5b5a92a1ab232b16c926e147d"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/engine/build/test-results/desktopTest/TEST-com.parlor.engine.architecture.PurityTest.xml",
+      "65caf910f8174a73d9aa85ef42e79a2eba7a8d15b5129baa37047841a8e2aed2"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/engine-testing/build/test-results/desktopTest/TEST-com.parlor.engine.testing.fakes.RrSnapshotCodecTest.xml",
+      "d93e6a529d55ccc9bebe0b3585404c7488fc7f9d8cf3a36dd36da1eae3e3b56c"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/engine-testing/build/test-results/desktopTest/TEST-com.parlor.engine.testing.reducer.ReducerSmokeTest.xml",
+      "e9b85c086b490ae2beeac6d98217aeecabf1382986b9d6ff26e05adc2e1862d3"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/engine-testing/build/test-results/desktopTest/TEST-com.parlor.engine.testing.registry.GameRegistryExtensibilityTest.xml",
+      "ccf5cafe5d4eb753e2670e4c783f5639c55c4bf1d79896b51f456fad9d648833"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/networking/build/test-results/desktopTest/TEST-com.parlor.networking.protocol.ProtocolValidationTest.xml",
+      "6b7e39b892a19a019de208a21e0d419d12c3b3c601c55fd1dd77869b18da2c1d"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/networking/build/test-results/desktopTest/TEST-com.parlor.networking.protocol.RoomMessageCodecTest.xml",
+      "7a7c019998013ee1eab7a9bbcf7a193c664ffc811ffbe6b0f40d9d1ea0acb376"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/networking/build/test-results/desktopTest/TEST-com.parlor.networking.room.LocalRoomRetryContractTest.xml",
+      "a903dd645d04f5ed98dbdda9de1e5f606f2fecc98a45f4f054f55726ead07463"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/networking/build/test-results/desktopTest/TEST-com.parlor.networking.room.PeerSessionRetryPolicyTest.xml",
+      "4b89da28fc9173a80a6eed9828a9df635b102233e0f2d05e0b489012125081a5"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/networking/build/test-results/desktopTest/TEST-com.parlor.networking.room.RoomInputPolicyTest.xml",
+      "e734941224a0a2662116bd58cadb69cd90f6d373a27b7461ab2f21c16ff213a1"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/networking/build/test-results/desktopTest/TEST-com.parlor.networking.security.SecureHashesTest.xml",
+      "35aa5298836ffa0248a1dcdff2762625c91959e2feb240ed074094543d8e9812"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/networking/build/test-results/desktopTest/TEST-com.parlor.networking.security.SecureIdsTest.xml",
+      "b43be88cc4c182a1b3854a99c218cc0f4eacc149752af28674baa080cfa28f21"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/networking/build/test-results/desktopTest/TEST-com.parlor.networking.transport.LocalNetworkAccessTest.xml",
+      "902ab8bba1d3242c06b4adb88e3c1aab4808038998e2514a88f2fbce88784023"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/networking-testing/build/test-results/desktopTest/TEST-com.parlor.networking.testing.InMemoryRoomBusTest.xml",
+      "6878d8ac77ba76d9441ea91c573273b59940e6693cd8f8f068ed0e37fd330440"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/session/build/test-results/desktopTest/TEST-com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest.xml",
+      "5dba32d1ae0d8555d6dcad2c87a79ae002ce8a325906029218297e1f44b01b10"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/session/build/test-results/desktopTest/TEST-com.parlor.session.multidevice.BoundedPeerOutboxTest.xml",
+      "b21beb869092b813ae1b9f63aca6264a9c09a0d5c7e18a5bbe3464917013ef77"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/session/build/test-results/desktopTest/TEST-com.parlor.session.multidevice.MultiDeviceShapeTest.xml",
+      "22c0eb9f91d2f2114232d7af9adb209b446a15be3fb96073a26a6ec41b243b84"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/session/build/test-results/desktopTest/TEST-com.parlor.session.multidevice.PeerConnectionTrackerTest.xml",
+      "2acc4117148a5cb3ffb2b6f6e66d886299b98001564a15ddebaa62a86c2cd957"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/session/build/test-results/desktopTest/TEST-com.parlor.session.multidevice.ProcessMultiplayerSessionOwnerTest.xml",
+      "d41629e9893101462f2302e5082b0081168d1267b267062ed3e8b9b581500220"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/session/build/test-results/desktopTest/TEST-com.parlor.session.multidevice.RetainedSessionOperationTest.xml",
+      "acfac0e1e4e0616a26ea6e392322d8090e1d270e30b706caf64835b4116ac4b9"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/session/build/test-results/desktopTest/TEST-com.parlor.session.multidevice.SessionStartCommitDeadlineTest.xml",
+      "bc9cbc67de11195ca9f059e1d79500523fe5374776e90a8b8551ff7a393539b3"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/session/build/test-results/desktopTest/TEST-com.parlor.session.multidevice.SessionStartHandshakeTest.xml",
+      "d2ebd986edd7721c129fce202ab824142009a8b7f12433293d79e9ea564e3635"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/session/build/test-results/desktopTest/TEST-com.parlor.session.multidevice.ShadowSessionControllerTest.xml",
+      "db8e1585f53dec2f434718a546d4fb9a304ea6298ed8d4251be6b3b62a2d338d"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/session/build/test-results/desktopTest/TEST-com.parlor.session.party.PartyAwareCanonicalStateTest.xml",
+      "7a231fac6137855aeec1be58ba72b6c03b7341abbe375f620a3142066d9df563"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/session/build/test-results/desktopTest/TEST-com.parlor.session.passandplay.OrderedEventEmissionTurnTest.xml",
+      "fdac0ac8ff9143ded92a65ec34edd4af0ecc3eeb1d564e90312ef8eda1a55f66"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/session/build/test-results/desktopTest/TEST-com.parlor.session.passandplay.PassAndPlaySessionControllerCloseRaceTest.xml",
+      "ecd25ac587aca5b804bd9937e0b8bc4c80dc0eb57de66c57067b1a54ce68c311"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/session/build/test-results/desktopTest/TEST-com.parlor.session.passandplay.RestoredStateTest.xml",
+      "ffbdcd6f264ed59493acf84fe9aa838db68ec39a2d5f52cbf106dc0b99992a79"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/storage/build/test-results/desktopTest/TEST-com.parlor.storage.secure.PlatformKeyedSecureStorageTest.xml",
+      "8bff24dd4783e1947f82625136c5c80654aba53cb593d4a582f62106db751988"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/storage/build/test-results/desktopTest/TEST-com.parlor.storage.settings.PersistentSettingsStoreTest.xml",
+      "4cbc659271bfb6340b85fcebf2eac6c0945d6ff38a88203980b670721b6539f7"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/storage/build/test-results/desktopTest/TEST-com.parlor.storage.snapshot.FileBackedSnapshotStoreTest.xml",
+      "a85587003ef4e260b5f10262b361885ad8981f0a74d872adb81d2f0fbfce316d"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/storage/build/test-results/desktopTest/TEST-com.parlor.storage.snapshot.SerializedSnapshotWriterTest.xml",
+      "81bc2548e5ec145d67a3ebee18fd25d1784d4d0671d02781abedc172a96600eb"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.AndroidManifestLanPermissionTest.xml",
+      "e12df03f9258d4ac9c5a46bd93073c8eb93abb80b003163b0865dfa78176a421"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.AndroidReleaseLintContractTest.xml",
+      "718bd20630a9a2a394abf000de2446aa05a7f11b3cb7b168265729885e25c87c"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.AppLifecycleRoomCoordinatorTest.xml",
+      "a7e1aed3ea98ee125c39c6cb3c08de8961c2b1c9270b923a26d79ee7fbafdfe9"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.AppLifecycleRoomRegistrationTest.xml",
+      "76d7a8011ea98d81ed2d010b0a440e5fb8487dac4f483bfe83f45c9a44a02771"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.DesktopDependencyVerificationContractTest.xml",
+      "4656298ddd1652d77171d60eb98b59f109edcb38bbe1805d88887401cca3e2af"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.DiscoveryCandidateSchedulerTest.xml",
+      "8106966b1bc7da86ffdb37e084a1c9282e907a0bce45fcc43e3b259213ad2631"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.HostOpeningCancellationTest.xml",
+      "cd810b48e14d4ecc3a8f7912b3140901c81ea1418bd543a7ce4a1df3375b73a6"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.IosInfoPlistBonjourTest.xml",
+      "a68dd9365ed23602cb3317c86ab7cf9119feea6fe05b95858a5084fd71ef83de"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.JupiterDiscoveryContractTest.xml",
+      "05db637c9ec14f70629a8647b63505802f82817de07591411edd904f6ea273fe"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.MultiplayerDocumentationContractTest.xml",
+      "5502b2a76a1c669859bb61a04fcfb0f49a44ef63bef4a81ec038fd1a2e141c4e"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pDiagnosticsTest.xml",
+      "3dcb53da9c067295afc52df1c2f71faa5f8ac123cafdfb4f69d04dda2d652266"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitCreationTest.xml",
+      "08d1c8987e1e80ccf276024f1c284615461a1c41f7a45484f0b7adb5410abd92"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitMavenProvenanceContractTest.xml",
+      "c9f21f120c679a09f5dea04b7a9dc3d5815451b104fb944e8439f41c4ee80e08"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitRoomTransportLifecycleTest.xml",
+      "83e9b88af424ff40969ec588697d350af4ff9723f99832259c0f27c2fa944825"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest.xml",
+      "6d0d6d4083ea65d346f8895870a4b91e0a46e99932b8b4d4e9ecbeb181e8898e"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pTrafficPolicyTest.xml",
+      "73c4a5a2533e13c58db066d4c1db235bcd564949cd39b0d432aa526ad01ea96f"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.PeerOpeningCancellationTest.xml",
+      "a1f1370c626eeb8eca96f6e4fc9bb282dda1ebd95f8bd42d1cb06de9001d225b"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.ProductionVerificationWorkflowContractTest.xml",
+      "b255470c173de3c7372fed29cbe5d83bd3d7b2fc7405d0139e4f11ac1b66e411"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.ResumableCredentialStoreTest.xml",
+      "dfd10de011bf25d7c30b81f29ef44ad19f2f2eba24c0bfa8906de1741d702812"
+    ],
+    [
+      "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.TestTransportIsolationContractTest.xml",
+      "911a29891b977c83206e41e964ad25bdd57997b7afa814262a2152f5c624f565"
+    ]
+  ],
+  "skips": [
+    [
+      "com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest",
+      "peer_to_host_message_round_trips_and_host_to_peer_message_arrives_back()[desktop]"
+    ],
+    [
+      "com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest",
+      "peer_can_join_a_hosted_room_and_membership_appears_on_host()[desktop]"
+    ],
+    [
+      "com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest",
+      "host_broadcast_reaches_every_peer()[desktop]"
+    ]
+  ],
+  "runtime_limits": "1243Desktopdescriptors=1240pass3physicalskip;76composeAppAndroidDebug+76ReleaseJVMunit tests. These are notphysicalAndroidruntime, notallmoduleAndroidtests, notiOSexecution.",
+  "release_checks": {
+    "unittest_count": 172,
+    "individual_test_descriptor_lines": 172,
+    "unittest_result": "Ran172testsin23.659s;OK;nodeclaredskips/failures",
+    "python_descriptor_lines_sha256": "6589cafb6fc615a2f5dfb4aed9a2ccb2eb1f520794258d16079f1aeac8254363",
+    "named_regressions": "7artifactsize,20uploadsignature+1ownedprocesscleanup,9Googlemutationedit,5Xcodephase+3frameworknormalizer; exactlognamesread.",
+    "further_checks": "workflowcontract PASS, freshinventorycheck completed; pinneddigestverifiedshellcheck/actionlintdownload andexecutioncontinued tosuccessfulaggregate. NoStoreAPIclients invalidation-only paths.",
+    "synthetic_limits": "GNU-shapedstat/preflightfixtures, syntheticJDK21certificates/JARs, fakeHTTPedits and disposableGitfixturebranches arenotrealLinuxStorecandidate/approveduploadkey/GooglePlay/productionrepositoryGitactions."
+  },
+  "lint": {
+    "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/composeApp/build/reports/lint-results-release.xml",
+    "sha256": "c13b213c1bd45cd821a5e156b0aac6005dd76fec4dd4d5fc155142c4e1fe2b96",
+    "actual": 32,
+    "expected": 32,
+    "severities": {
+      "Warning": 32
+    },
+    "exact_normalized_multiset_match": true,
+    "normalized_actual": [
+      "AndroidGradlePluginVersion|gradle/libs.versions.toml|A newer version of com.android.application than 8.13.2",
+      "AndroidGradlePluginVersion|gradle/libs.versions.toml|A newer version of com.android.library than 8.13.2",
+      "AndroidGradlePluginVersion|gradle/libs.versions.toml|A newer version of com.android.tools.build:gradle than 8.13.2",
+      "AndroidGradlePluginVersion|gradle/wrapper/gradle-wrapper.properties|A newer version of Gradle than 8.13",
+      "DependencyUpdate|gradle/libs.versions.toml|A newer version of androidx.activity:activity-compose than 1.9.3",
+      "DependencyUpdate|gradle/libs.versions.toml|A newer version of androidx.navigation3:navigation3-runtime than 1.0.0",
+      "DependencyUpdate|gradle/libs.versions.toml|A newer version of app.cash.turbine:turbine than 1.2.0",
+      "DependencyUpdate|gradle/libs.versions.toml|A newer version of com.lemonappdev:konsist than 0.16.1",
+      "DependencyUpdate|gradle/libs.versions.toml|A newer version of io.gitlab.arturbosch.detekt than 1.23.7",
+      "DependencyUpdate|gradle/libs.versions.toml|A newer version of io.gitlab.arturbosch.detekt:detekt-gradle-plugin than 1.23.7",
+      "DependencyUpdate|gradle/libs.versions.toml|A newer version of io.insert-koin:koin-android than 4.0.0",
+      "DependencyUpdate|gradle/libs.versions.toml|A newer version of io.insert-koin:koin-compose than 4.0.0",
+      "DependencyUpdate|gradle/libs.versions.toml|A newer version of io.insert-koin:koin-compose-viewmodel than 4.0.0",
+      "DependencyUpdate|gradle/libs.versions.toml|A newer version of io.insert-koin:koin-core than 4.0.0",
+      "DependencyUpdate|gradle/libs.versions.toml|A newer version of io.insert-koin:koin-test than 4.0.0",
+      "DependencyUpdate|gradle/libs.versions.toml|A newer version of io.ktor:ktor-client-content-negotiation than 3.0.3",
+      "DependencyUpdate|gradle/libs.versions.toml|A newer version of io.ktor:ktor-client-core than 3.0.3",
+      "DependencyUpdate|gradle/libs.versions.toml|A newer version of io.ktor:ktor-client-mock than 3.0.3",
+      "DependencyUpdate|gradle/libs.versions.toml|A newer version of io.ktor:ktor-serialization-kotlinx-json than 3.0.3",
+      "DependencyUpdate|gradle/libs.versions.toml|A newer version of org.jetbrains.androidx.navigation3:navigation3-ui than 1.0.0-alpha06",
+      "DependencyUpdate|gradle/libs.versions.toml|A newer version of org.jetbrains.compose than 1.10.3",
+      "DependencyUpdate|gradle/libs.versions.toml|A newer version of org.jetbrains.compose.components:components-resources than 1.10.3",
+      "DependencyUpdate|gradle/libs.versions.toml|A newer version of org.jetbrains.compose.components:components-ui-tooling-preview than 1.10.3",
+      "DependencyUpdate|gradle/libs.versions.toml|A newer version of org.jetbrains.compose.foundation:foundation than 1.10.3",
+      "DependencyUpdate|gradle/libs.versions.toml|A newer version of org.jetbrains.compose.material3:material3 than 1.9.0-beta03",
+      "DependencyUpdate|gradle/libs.versions.toml|A newer version of org.jetbrains.compose.runtime:runtime than 1.10.3",
+      "DependencyUpdate|gradle/libs.versions.toml|A newer version of org.jetbrains.compose.ui:ui than 1.10.3",
+      "DependencyUpdate|gradle/libs.versions.toml|A newer version of org.jetbrains.compose.ui:ui-test than 1.10.3",
+      "DependencyUpdate|gradle/libs.versions.toml|A newer version of org.jetbrains.compose:compose-gradle-plugin than 1.10.3",
+      "DependencyUpdate|gradle/libs.versions.toml|A newer version of org.jetbrains.kotlinx:kotlinx-datetime than 0.7.1",
+      "GradleDependency|gradle.properties|Newer version of lint available",
+      "OldTargetApi|composeApp/build.gradle.kts|Not targeting the latest versions of Android; compatibility modes apply. Consider testing and updating this version. Consult the `android.os.Build.VERSION_CODES` javadoc for details."
+    ],
+    "previous03_sha256": "337c3dd83b1c4dd75f629fc8fa7e84cee4cbf9d19960704d481c41d9fe6040ba",
+    "previous03_actual": 30,
+    "previous03_verdict": "FAIL unchanged (missing2updateadvisories);notrelabeled",
+    "restored_advisories": [
+      "AndroidGradlePluginVersion|gradle/libs.versions.toml|A newer version of com.android.application than 8.13.2",
+      "DependencyUpdate|gradle/libs.versions.toml|A newer version of org.jetbrains.compose.components:components-ui-tooling-preview than 1.10.3"
+    ],
+    "reviewed_gate_code": "composeApp/build.gradle.kts349\u2013435:rejectmissingreport/sourceoutsideRepo,limitednormalization,sortwholelists/preservedduplicates, exactactual==expected. Currentcodeandacceptedinventoryunchangedfrom03.",
+    "interpretation": "Freshupdatedsourcecycle04genuinelypassedwithoutweakenedgate. Priorremote/cache-sensitiveinventoryvariance remainshistoricalevidence, notassertedrepaired; exactremoteeventbehindvarianceunknown."
+  },
+  "release_foundations_rebind": [
+    {
+      "issue": "IOS-B1",
+      "path": "/Users/abdelrahman/Projects/parlor/iosApp/iosApp.xcodeproj/project.pbxproj",
+      "previous_sha256": "dbf9c4d8f1c8e51cf78682afd5f32729566f75df6355735d3df37841e46fabfe",
+      "current_sha256": "625103b4676a017beb4619c61b705efc84c2be47b71603bddd840c1d3856ea9d",
+      "unchanged": false
+    },
+    {
+      "issue": "IOS-B1",
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_xcode_framework_phase.py",
+      "previous_sha256": "3033307b0a029d87ab9c8c14d3b3b4d3a0d4db9d183012d6da58fb1e8b5c4a73",
+      "current_sha256": "3033307b0a029d87ab9c8c14d3b3b4d3a0d4db9d183012d6da58fb1e8b5c4a73",
+      "unchanged": true
+    },
+    {
+      "issue": "ROOT-T3",
+      "path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/JupiterDiscoveryContractTest.kt",
+      "previous_sha256": "94682d196381d97a37f6c5e925b63646f102b864d76eb55252cfbd082abcb305",
+      "current_sha256": "94682d196381d97a37f6c5e925b63646f102b864d76eb55252cfbd082abcb305",
+      "unchanged": true
+    },
+    {
+      "issue": "ROOT-T3",
+      "path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitRoomTransportLifecycleTest.kt",
+      "previous_sha256": "947a86aebdca10d7d9cfa97a5677c1a79733601dca887effc6c218280a098b1b",
+      "current_sha256": "947a86aebdca10d7d9cfa97a5677c1a79733601dca887effc6c218280a098b1b",
+      "unchanged": true
+    },
+    {
+      "issue": "ROOT-T3",
+      "path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitRoomTransportLoopbackTest.kt",
+      "previous_sha256": "cda4755e373172719f6fc7a4d72a38416ec061b44f356d9ef4f3529e29588737",
+      "current_sha256": "cda4755e373172719f6fc7a4d72a38416ec061b44f356d9ef4f3529e29588737",
+      "unchanged": true
+    },
+    {
+      "issue": "RL-C1",
+      "path": "/Users/abdelrahman/Projects/parlor/docs/RELEASE_AUTOMATION.md",
+      "previous_sha256": "5598e91447aae3f111654b217118aa64cc9ea0c0c3c34d36f0440c51c0b7f206",
+      "current_sha256": "5598e91447aae3f111654b217118aa64cc9ea0c0c3c34d36f0440c51c0b7f206",
+      "unchanged": true
+    },
+    {
+      "issue": "RL-C1",
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_android_artifact_size.py",
+      "previous_sha256": "1bdf6fe45be629ed8ea6d435727e88d87644319257127732b61a529f1ce1a0b1",
+      "current_sha256": "1bdf6fe45be629ed8ea6d435727e88d87644319257127732b61a529f1ce1a0b1",
+      "unchanged": true
+    },
+    {
+      "issue": "RL-C1",
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/release/validate_android_artifact.sh",
+      "previous_sha256": "e0100ed6274e41113e18d1cdaa5310242f749d2f337fdb0c5b85920a011cece6",
+      "current_sha256": "e0100ed6274e41113e18d1cdaa5310242f749d2f337fdb0c5b85920a011cece6",
+      "unchanged": true
+    },
+    {
+      "issue": "RL-C2",
+      "path": "/Users/abdelrahman/Projects/parlor/docs/RELEASE_AUTOMATION.md",
+      "previous_sha256": "5598e91447aae3f111654b217118aa64cc9ea0c0c3c34d36f0440c51c0b7f206",
+      "current_sha256": "5598e91447aae3f111654b217118aa64cc9ea0c0c3c34d36f0440c51c0b7f206",
+      "unchanged": true
+    },
+    {
+      "issue": "RL-C2",
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/release/PrepareAndroidUploadTrust.java",
+      "previous_sha256": "a74b92902839047353aa4b5816bc226e43526960da7c4d2df117e25c9375c211",
+      "current_sha256": "a74b92902839047353aa4b5816bc226e43526960da7c4d2df117e25c9375c211",
+      "unchanged": true
+    },
+    {
+      "issue": "RL-C2",
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_android_upload_signature.py",
+      "previous_sha256": "fd9723397cd3ae4336371cd6fdd93164d225919d1ed615d5fd48f75055b3eade",
+      "current_sha256": "fd9723397cd3ae4336371cd6fdd93164d225919d1ed615d5fd48f75055b3eade",
+      "unchanged": true
+    },
+    {
+      "issue": "RL-C2",
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/release/validate_android_artifact.sh",
+      "previous_sha256": "e0100ed6274e41113e18d1cdaa5310242f749d2f337fdb0c5b85920a011cece6",
+      "current_sha256": "e0100ed6274e41113e18d1cdaa5310242f749d2f337fdb0c5b85920a011cece6",
+      "unchanged": true
+    },
+    {
+      "issue": "RL-C3",
+      "path": "/Users/abdelrahman/Projects/parlor/docs/RELEASE_AUTOMATION.md",
+      "previous_sha256": "5598e91447aae3f111654b217118aa64cc9ea0c0c3c34d36f0440c51c0b7f206",
+      "current_sha256": "5598e91447aae3f111654b217118aa64cc9ea0c0c3c34d36f0440c51c0b7f206",
+      "unchanged": true
+    },
+    {
+      "issue": "RL-C3",
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/release/store_api.py",
+      "previous_sha256": "95ba5a18b5e78d85eb15c8764f011db76293d0bdcf8ee088151321ad5d6b7012",
+      "current_sha256": "95ba5a18b5e78d85eb15c8764f011db76293d0bdcf8ee088151321ad5d6b7012",
+      "unchanged": true
+    },
+    {
+      "issue": "RL-C3",
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_google_promotion_edit.py",
+      "previous_sha256": "b6ed5e950782ef5581f86cabd7a263937da52d3dfcf7c84cc45df5bcc2d147db",
+      "current_sha256": "b6ed5e950782ef5581f86cabd7a263937da52d3dfcf7c84cc45df5bcc2d147db",
+      "unchanged": true
+    },
+    {
+      "issue": "RL-C3",
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_store_api.py",
+      "previous_sha256": "18d49c5deb8cc5383b5a9888f7f14f21884bbbfeb577348412f1930f4972a1d1",
+      "current_sha256": "18d49c5deb8cc5383b5a9888f7f14f21884bbbfeb577348412f1930f4972a1d1",
+      "unchanged": true
+    }
+  ],
+  "changed_pbxproj_reason": "OnlynewSwiftcontainerfileref+appsources+UITestsources additions; entireexactdiffindependentlyreviewed in independent-dsc01-swift-container-source-01.json. Fail-propagating set-e/cd/Gradle/normalizerphase unchanged and5regressions actuallyrerunPASS.",
+  "protected_config_rebind": [
+    {
+      "path": "config/android-lint-accepted-warnings.txt",
+      "sha256": "e196948d55ae455b7d59a4532b9a8f680e109daef5a704b555d1b903afb9ecbd",
+      "unchanged_from_previous_failedcycle": true
+    },
+    {
+      "path": "gradle/libs.versions.toml",
+      "sha256": "87a031665605a1fb3f932be31c75afd8d2d1bc0d94cfcca36101141c50788399",
+      "unchanged_from_previous_failedcycle": true
+    },
+    {
+      "path": "gradle/verification-metadata.xml",
+      "sha256": "58b5a279cc5ccc58e1088fbe3dd248fcfdf31a307707204c5438259de7960f95",
+      "unchanged_from_previous_failedcycle": true
+    },
+    {
+      "path": "config/release-policy.json",
+      "sha256": "316b28f75a13e0b925beb6bcd893b82e077a1a9efa850022026e830f9b1d4ad4",
+      "unchanged_from_previous_failedcycle": true
+    },
+    {
+      "path": ".github/workflows/testing-candidate.yml",
+      "sha256": "0488fc5e0c4e520a767408cfb5e7fa387bc5fdfa0edfeb9dcd29a4cb0d2c7976",
+      "unchanged_from_previous_failedcycle": true
+    },
+    {
+      "path": ".github/workflows/testing-external-promotion.yml",
+      "sha256": "5874b8b435e3b6fbfc02bb1cb54f8ab1d26ab01cf25b4220b2d81985fecc8a86",
+      "unchanged_from_previous_failedcycle": true
+    },
+    {
+      "path": ".github/workflows/production-promotion.yml",
+      "sha256": "94ca7f617c24cb4c9ffafa5860c7ebc104f08cfa46b2a2e13fbae3ed816c461b",
+      "unchanged_from_previous_failedcycle": true
+    },
+    {
+      "path": "scripts/release/workflow_contract.py",
+      "sha256": "bee1eeab0bd18bd8222d6c29bbba46de6228e925e46b57ee001c1f0778cc3691",
+      "unchanged_from_previous_failedcycle": true
+    },
+    {
+      "path": "scripts/release/validate_release_system.sh",
+      "sha256": "ce52c9c08edecba968337d6de42c90895badec127c7029a5afc16737d3b8864a",
+      "unchanged_from_previous_failedcycle": true
+    }
+  ],
+  "unsigned_artifact": [
+    {
+      "path": "composeApp/build/outputs/bundle/release/composeApp-release.aab",
+      "bytes": 8803044,
+      "sha256": "f30780bf995741a372646dd9c6a27705cb4eb0368c1d5a4de7197386d3a61473",
+      "entries": 354
+    }
+  ],
+  "artifact_limit": "UnsignedAAB ZIP354entries,noRSA/DSA/EC/SFsignatureentries;hash/sizeinventoryretainedthenbinarydeleted. R8compilationcompleted butthisisnotruntime/signing/Storequalifiedartifactproof.",
+  "cleanup": {
+    "stop_exit_code": 0,
+    "stop_log_sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+    "receipt_remaining_outputs": [],
+    "receipt_remaining_workers": [],
+    "errors": [],
+    "completed_at": "2026-09-06T12:21:24.761643+00:00",
+    "independently_rechecked_cycle_output_paths_present": [],
+    "cycle_scratch_present": false,
+    "reviewer_process_actions": "None; no reviewerbuilds/apps/tests/processstop/deletions."
+  },
+  "remaining": [
+    "Source-boundV6actualSwift/Composeapphostand4UIKitdescriptorsmustcompile/executewithactualchildoracle.",
+    "Currentnative/allTestsandApplelinkage/typecheckswhereapplicable; earlieroldsourcepassesnotnewSwiftproof.",
+    "3physicalLANskips,OSSettingsUI,physicalaccessibility/gestures,StorequalifiedXcode/signing/approvedIDs/legal/editorialremainexplicit.",
+    "Currentidentity-collisionandpublication-disablementguardsremainintact; noapprovaltosign/upload/push/merge/closeissues."
+  ]
+}

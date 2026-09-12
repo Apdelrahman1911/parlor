@@ -1,0 +1,349 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/factory_review",
+  "created_at": "2026-09-07T23:00:20.305647+00:00",
+  "classification": "CONFIRMED VERIFICATION-HARNESS PARTIAL-FIFO CLEANUP FAILURE; APPLICATION RESULT DISTINCT. NARROW RECOVERY PROPOSAL CONDITIONALLY SUPPORTED; NO DELETION/EXECUTION PERFORMED OR ORIGINAL RESULT UPGRADED.",
+  "source_version": {
+    "commit": "b6e1947c62661631d0593038db7f64dbf25f720e",
+    "tree": "f03ad1b302d951d0ca9811b1efab2751a8be6978",
+    "branch": "fix/local-readiness-2026-09-07",
+    "diff_sha256": "36dd70117778d1f5d038acfab1ab46ffb464cd8c78b2428552214bfe6fdffed1",
+    "source_manifest_sha256": "b8baa32067fdf29135e3e935429768b710c65897c334f2bb8ac8108f6aa85359",
+    "control_sha256": "d7aad2e238b1d50335c4ea74741bb91d86354cfa37805ce73b78f4fe81fd9beb",
+    "source_and_controls_unchanged_in_original_cycle": true
+  },
+  "immutable_evidence": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-09/receipt.json",
+      "sha256": "7035d9505efe8cf1d5d9012024c6c5883c0e9371b97a5a5c5a0cfa15ccf36567"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-09/secondary-fifo-ownership.json",
+      "sha256": "8645acb761687bfe6144a8cf6c3508f310efa81ab6c7716ab1ba625b0ddc7a6d"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-09/secondary-fifo-ownership-final.json",
+      "sha256": "8645acb761687bfe6144a8cf6c3508f310efa81ab6c7716ab1ba625b0ddc7a6d"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-09/secondary-fifo-errors.json",
+      "sha256": "80fcf698958a9ebfa9ada802c344c53a9117bb1ac0fc81b27a45db0396daae37"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-09/stop-xcode-immediate.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-09/stop-final.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    }
+  ],
+  "reviewed_sources": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/secondary_fifo.py",
+      "sha256": "080622194e19ef5d3ffb561e134ab8cf91e3e3ccef1e29197f59781154a7ffcc",
+      "lines": [
+        [
+          1,
+          205
+        ]
+      ],
+      "scope": "complete"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/test_secondary_fifo.py",
+      "sha256": "2d685ebcbef9930f43f1f644c5ed6fc3b5a5c5d07d975cc218a9165273bfb826",
+      "lines": [
+        [
+          1,
+          249
+        ]
+      ],
+      "scope": "complete; all27test bodies, no execution"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/run_ios_readiness.py",
+      "sha256": "85283be9681be14c18b76ef1657b596e837b4f97f978917f25ac693ae72d0ca8",
+      "lines": [
+        [
+          277,
+          315
+        ],
+        [
+          902,
+          991
+        ]
+      ],
+      "scope": "ownership adapter and failure/finalization path"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/owned_lane.py",
+      "sha256": "4bf3bbb4abfa22cd1604e6b4381bf481c95662ab15bf3fbdc86355a083102742",
+      "lines": [
+        [
+          94,
+          185
+        ]
+      ],
+      "scope": "task process membership, live snapshots, stop policy"
+    }
+  ],
+  "actual_observation": {
+    "historical_child": {
+      "pid": 41785,
+      "ppid": 41768,
+      "pgid": 41768,
+      "start": "Tue Sep 8 01:41:57 2026",
+      "command": "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/Library/Xcode/Overlays/AssetCatalogSimulatorAgent --hostToRemoteFIFO /var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-41768/IB/1F091456-2735-42C0-A7F7-942CBB4E01BE.HostToRemote --remoteToHostFIFO /var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-41768/IB/1F091456-2735-42C0-A7F7-942CBB4E01BE.RemoteToHost",
+      "role": "command",
+      "proof": "Observed child/group of identity-checked task process"
+    },
+    "historical_parent": {
+      "pid": 41768,
+      "ppid": 41767,
+      "pgid": 41768,
+      "start": "Tue Sep 8 01:41:54 2026",
+      "command": "/Applications/Xcode.app/Contents/Developer/usr/bin/ibtoold --sending-client-environment",
+      "role": "command",
+      "proof": "Observed child/group of identity-checked task process"
+    },
+    "recorded_remote_to_host": {
+      "path": "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-41768/IB/1F091456-2735-42C0-A7F7-942CBB4E01BE.RemoteToHost",
+      "process": {
+        "pid": 41785,
+        "start": "Tue Sep 8 01:41:57 2026"
+      },
+      "parent": {
+        "pid": 41768,
+        "start": "Tue Sep 8 01:41:54 2026"
+      },
+      "metadata": [
+        {
+          "path": "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-41768",
+          "device": 16777232,
+          "inode": 85822480,
+          "uid": 501,
+          "mode": 16877,
+          "birth_at": 1788820917.643962
+        },
+        {
+          "path": "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-41768/IB",
+          "device": 16777232,
+          "inode": 85822481,
+          "uid": 501,
+          "mode": 16877,
+          "birth_at": 1788820917.6440296
+        },
+        {
+          "path": "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-41768/IB/1F091456-2735-42C0-A7F7-942CBB4E01BE.RemoteToHost",
+          "device": 16777232,
+          "inode": 85822482,
+          "uid": 501,
+          "mode": 4589,
+          "birth_at": 1788820917.6440833
+        }
+      ]
+    },
+    "pending_host_to_remote": {
+      "path": "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-41768/IB/1F091456-2735-42C0-A7F7-942CBB4E01BE.HostToRemote",
+      "process": {
+        "pid": 41785,
+        "start": "Tue Sep 8 01:41:57 2026"
+      },
+      "parent": {
+        "pid": 41768,
+        "start": "Tue Sep 8 01:41:54 2026"
+      }
+    },
+    "current_lstat_observations": [
+      {
+        "path": "/",
+        "device": 16777232,
+        "inode": 2,
+        "uid": 0,
+        "mode": 16877,
+        "birth_at": 1763819368.0,
+        "mtime": 1763819368.0,
+        "ctime": 1763819368.0,
+        "size": 704
+      },
+      {
+        "path": "/private",
+        "device": 16777232,
+        "inode": 564499,
+        "uid": 0,
+        "mode": 16877,
+        "birth_at": 1763819368.0,
+        "mtime": 1788724628.4402432,
+        "ctime": 1788724628.4402432,
+        "size": 192
+      },
+      {
+        "path": "/private/var",
+        "device": 16777232,
+        "inode": 564922,
+        "uid": 0,
+        "mode": 16877,
+        "birth_at": 1763819368.0,
+        "mtime": 1766701919.072005,
+        "ctime": 1766701919.072005,
+        "size": 1120
+      },
+      {
+        "path": "/private/var/folders",
+        "device": 16777232,
+        "inode": 565632,
+        "uid": 0,
+        "mode": 16877,
+        "birth_at": 1752898412.0,
+        "mtime": 1766701919.072766,
+        "ctime": 1766701919.072766,
+        "size": 128
+      },
+      {
+        "path": "/private/var/folders/6m",
+        "device": 16777232,
+        "inode": 272638,
+        "uid": 0,
+        "mode": 16877,
+        "birth_at": 1766676470.3019807,
+        "mtime": 1766676470.3021832,
+        "ctime": 1766701919.0726233,
+        "size": 96
+      },
+      {
+        "path": "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn",
+        "device": 16777232,
+        "inode": 272639,
+        "uid": 501,
+        "mode": 16877,
+        "birth_at": 1766676470.3021777,
+        "mtime": 1766676470.3029544,
+        "ctime": 1766676470.3034954,
+        "size": 192
+      },
+      {
+        "path": "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T",
+        "device": 16777232,
+        "inode": 272642,
+        "uid": 501,
+        "mode": 16832,
+        "birth_at": 1766676470.3027442,
+        "mtime": 1788822015.686342,
+        "ctime": 1788822015.686342,
+        "size": 42176
+      },
+      {
+        "path": "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-41768",
+        "device": 16777232,
+        "inode": 85822480,
+        "uid": 501,
+        "mode": 16877,
+        "birth_at": 1788820917.643962,
+        "mtime": 1788820917.6440313,
+        "ctime": 1788820917.6440313,
+        "size": 96
+      },
+      {
+        "path": "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-41768/IB",
+        "device": 16777232,
+        "inode": 85822481,
+        "uid": 501,
+        "mode": 16877,
+        "birth_at": 1788820917.6440296,
+        "mtime": 1788820920.5330808,
+        "ctime": 1788820920.5330808,
+        "size": 128
+      },
+      {
+        "path": "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-41768/IB/1F091456-2735-42C0-A7F7-942CBB4E01BE.RemoteToHost",
+        "device": 16777232,
+        "inode": 85822482,
+        "uid": 501,
+        "mode": 4589,
+        "birth_at": 1788820917.6440833,
+        "mtime": 1788820920.851963,
+        "ctime": 1788820920.851963,
+        "size": 0
+      },
+      {
+        "path": "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-41768/IB/1F091456-2735-42C0-A7F7-942CBB4E01BE.HostToRemote",
+        "device": 16777232,
+        "inode": 85822501,
+        "uid": 501,
+        "mode": 4589,
+        "birth_at": 1788820920.5330684,
+        "mtime": 1788820920.577305,
+        "ctime": 1788820920.577305,
+        "size": 0
+      }
+    ],
+    "external_inspection_scope": "Only exact two listed FIFO paths and their literal ancestors; no directory enumeration, reads from FIFO, process queries, signals, deletion or broad temp traversal.",
+    "parent_and_recorded_fifo_metadata_match_original": true,
+    "pending_fifo_first_independent_inode_observation": {
+      "path": "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-41768/IB/1F091456-2735-42C0-A7F7-942CBB4E01BE.HostToRemote",
+      "device": 16777232,
+      "inode": 85822501,
+      "uid": 501,
+      "mode": 4589,
+      "birth_at": 1788820920.5330684,
+      "mtime": 1788820920.577305,
+      "ctime": 1788820920.577305,
+      "size": 0
+    },
+    "pending_birth_seconds_after_recorded_sibling": 2.8889851570129395,
+    "errors": [
+      {
+        "pid": 41785,
+        "start": "Tue Sep 8 01:41:57 2026",
+        "error_type": "UnsafeSecondaryPath",
+        "message": "Apple process changed during UID verification"
+      }
+    ],
+    "original_remaining_worker_and_output_receipt": {
+      "owned_processes_remaining": [],
+      "unknown_holders": [],
+      "remaining_outputs": [],
+      "temporary_directory_removed": true
+    },
+    "current_worker_or_holder_presence": "NOT QUERIED by reviewer; root exclusively owns this live preflight."
+  },
+  "reachable_proof": [
+    "observe validates both flags, exact common nonce/directory/parent PID, current child+parent membership/start/argv and both live UIDs plus post-UID snapshot before writing any pending claim (78-136). The retained pending claim therefore originated from a successful pair identity check; it is not a name-only discovery.",
+    "For a not-yet-existing HostToRemote leaf, lines136-138 retain only the exact pending claim. The existing RemoteToHost receives the two parent plus leaf inode/type/uid/birth proof (139-152). Native09 durable ledger exactly has this partial state.",
+    "The next incomplete-pair observation cannot use fully_attested_pair cache107-124 and re-queries UIDs/process snapshot. The retained error proves the snapshot equality predicate failed. It does not distinguish disappearance, argv/ppid change or PID/start change; timestamps and before/after differences were not retained.",
+    "AppHostOwnership295-303 records that identity error permanently for this lifetime and stops further secondary observations for it. At finalization the pending exact HostToRemote exists, so cleanup154-158 correctly refuses deletion before either recorded FIFO is touched.",
+    "The original runtime matrix failed independently. This secondary failure is a verification cleanup gap, not evidence of an application crash or storage cause."
+  ],
+  "ownership_decision": {
+    "original_ledger": "Pending HostToRemote is NOT retroactively an originally inode-attested record. Existing cleanup refusal and test154-157 are correct under the original contract and must remain intact.",
+    "narrow_new_claim": "For an explicit, independently reviewed ONE-CYCLE recovery, the complete historical intended pair argv with live UID/start/ancestry proof, unchanged cycle-created owner-only-write parent inodes and known sibling inode, matching unique nonce and exact current FIFO uid/type/birth permit a NEW restricted path-origin claim for the one pending leaf. This is materially stronger than same UID/name/birth alone; do not generalize to arbitrary pending paths.",
+    "identity_limit": "The pending leaf inode was not observed while the worker was live. This reconstruction proves narrowly scoped operational path ownership under the same trusted-user assumption as the original harness, not creator-PID forensic proof or immunity to a hostile same-UID actor. No silently fabricated historical inode, UID receipt, timestamp or metadata continuity claim.",
+    "decision": "CONDITIONALLY SUPPORT A NEW HASH-BOUND ONE-SHOT RECOVERY PLAN for exactly these two FIFOs and then the two empty recorded parents. Keep files unchanged until root has executed missing live preflight and reviewed/tested recovery implementation. Do not relax canonical pending cleanup to make native09 green."
+  },
+  "recovery_proposal": [
+    "Freeze a new additive recovery input binding to hashes of original final ledger, errors, receipt and this independent report; include exact four task-owned inode records. First assert the source cycle and original failure remain untouched.",
+    "Use ONLY the exact two leaves above and two recorded parent dirs. New pending metadata must equal the exact independently captured inode85822501/device16777232/uid501/mode4589/birth1788820920.5330684; old sibling and parents must still equal their ORIGINAL ledger metadata. No current-discovery glob or prefix selection; no replacing missing evidence with current names.",
+    "Root checks both old PIDs absent (including reuse) and queries all holders only for these exact files/dirs with errors remaining fatal. No signals or adoption of another process. Defer recovery if any holder or current PID exists.",
+    "Before ANY deletion verify no symlink components, same parents, exact directory children (only IB at root and exact nonce pair under IB); abort/preserve everything on any unknown entry or changed metadata. Parent temp directory is only traversed, never deleted.",
+    "Retain a distinct durable new ownership-reconstruction receipt before deletion. If reusing reviewed SecondaryFifoLedger.cleanup, instantiate an isolated recovery ledger from the frozen new claim, NOT mutate the original evidence; clearly distinguish new pending adoption evidence from original observation.",
+    "Recheck all four inode identities and holders immediately before unlink. Prefer descriptor-relative no-follow inspection/removal under opened exact parent dirs if a new helper is authored. Unlink each exact FIFO only, then rmdir IB and ibtoold-41768 ONLY IF EMPTY. No rmtree, wildcard, /var/folders sweep, global cleanup or arbitrary neighboring PID path.",
+    "Retain compact action/failure/absence receipts and independently reconcile them. Any changed path, non-FIFO, UID/birth mismatch, unknown contents, holder-query error, active/reused PID or operation failure remains BLOCKED, not success. No blind fallback.",
+    "Preserve native09 statusFAIL/cleanupFAIL. A later supplemental RECOVERED CLEANUP receipt can close residual-artifact ownership only; it cannot upgrade runtime tests or original cleanup. Native10 remains suspended until recovery independently reconciles and a fresh exact control/source freeze approves its command."
+  ],
+  "prevention_proposal": {
+    "minimal_direction": "Separate successful live pair-identity attestation from completed leaf-inode attestation. Persist the exact child/parent lifetime, verified argv, canonical pair and already observed parent metadata even when one leaf is initially absent. A later same-live-identity/exact-pair observation can avoid redundant UID queries by using an explicit completed identity proof while STILL validating every new inode, UID, birth and parent. Never infer this proof from one record, a pending name or a stale member command.",
+    "cache_guards": "Current child and parent starts, parent PID, complete current commands and exact pair must match; malformed/incomplete proof, changed/new pair, dropped existing record, replaced parent/leaf or synthetic pending-only insertion invalidates cache and fails safely. Bound ledgers and persist proof before worker disappearance. Preserve existing tests185-196: arbitrary partial/malformed record state is not cached UID authority.",
+    "remaining_exit_gap": "Do NOT automatically promote a late leaf from pending merely because the original worker has exited. Without new independently attested path-origin proof it remains an explicit blocked residual; keep test154-157 negative. The prevention reduces redundant-query race, not a claim that every race becomes impossible.",
+    "better_failure_evidence": "Closed diagnostic categories and timestamps distinguishing missing child, missing parent, changed start, argv or ppid after UID would make the next actual mismatch interpretable without recording unrelated processes. Error receipts must not silently stop evidence collection forever if a separately valid new current snapshot can safely retry attestation; any prior failure stays preserved.",
+    "tests_required": [
+      "Reproduce partial pair: first snapshot has only RemoteToHost; valid live UID/pair proof retained; HostToRemote appears later; exact same current live pair; second UID source would fail; both leaf metadata independently attested and cleanup after process absence succeeds.",
+      "Prove first UID failure or post-UID argv/start/parent change creates no reusable pair proof.",
+      "Same-PID new nonce, changed parent, missing prior record, arbitrary pending insertion, changed inode/UID/birth/mode/symlink all reject.",
+      "Retain negative post-death late-created-pending case without new evidence; root cause is not repaired by enabling automatic late adoption.",
+      "Recovery helper fixtures reject changed parents, sibling/leaf, wrong nonce, stale/future birth, non-FIFO, wrongUID, unknown contents, active/reusedPID and holder errors; complete positive and interrupted-removal paths preserve original evidence.",
+      "Author and separate reviewer inspect full controls diff, execute synthetic suite in root lane, then refresh binding/control manifests before next native cycle."
+    ]
+  },
+  "reviewer_hygiene": "Only read source/evidence and exact-path lstat. No builds/tests/processes/imported repository code/signals/deletion/Git or Store operations. Only this new additive report created."
+}

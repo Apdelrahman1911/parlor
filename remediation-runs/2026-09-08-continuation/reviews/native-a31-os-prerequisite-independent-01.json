@@ -1,0 +1,127 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/portability_review",
+  "author": "/root/l08_fixture",
+  "status": "APPROVED_SCOPED_SOURCE_ONLY_PENDING_EXECUTION",
+  "findings": [],
+  "scope": "Independent review of exactly two held companion-only replacements: public Settings primary-choice Alert-or-Sheet handling, bounded diagnostics and source-contract tests. Not a full source freeze, dispatch admission, runtime result or A31 evidence reconciliation.",
+  "decision": "Approve exact held bytes for coordinator adoption and focused testing. No guard weakening found. One subsequent existing l08-only attempt is justified for changed native UI risk plus discriminating diagnostics after fresh reviewed source/control binding; it is not a retry of unchanged controls. The review does not authorize dispatch.",
+  "inputs_and_replacements": [
+    {
+      "destination": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/DSC01OSPrerequisite.swift.in",
+      "before_bytes": 26454,
+      "before_sha256": "f266cc919734bd840a6a6e9288088e9e437a67b2ed41d16c8a02337ad19627d8",
+      "held_path": "remediation-runs/2026-09-08-continuation/reviews/native-a31-os-prerequisite-followup-01/DSC01OSPrerequisite.swift.in",
+      "held_bytes": 28379,
+      "held_sha256": "586bfc5e18058537a375355ba8ef273856403a9ff0ae29ab03253fba734eae09"
+    },
+    {
+      "destination": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/test_l08_functional_copy.py",
+      "before_bytes": 64859,
+      "before_sha256": "b7a760577d86b7cc1c5a192fb20164afc21e06b8fa74e63c1f7dfb2bd58ec75e",
+      "held_path": "remediation-runs/2026-09-08-continuation/reviews/native-a31-os-prerequisite-followup-01/test_l08_functional_copy.py",
+      "held_bytes": 71283,
+      "held_sha256": "52489b877ccf6abea0ff2dda4bad505b6c0acc4578d74481494024f8e2dbeef0"
+    }
+  ],
+  "author_report": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/native-a31-os-prerequisite-followup-01/author-report.json",
+    "bytes": 9254,
+    "sha256": "8f3d08ff2ab984cb90cd4656cc19db05556f4e9729fb493006ab1befa78652d7"
+  },
+  "actual_failure_reopened": {
+    "run": "34384037292/1",
+    "cycle": "ios-readiness-31",
+    "source": {
+      "commit": "965eb79cea7dd40ced8efa0b1fcd98596f7a952b",
+      "tree": "334bf3a1fe15fc8acd55715bbc40eb78e2a0646f",
+      "branch": "fix/local-readiness-2026-09-07",
+      "tracked_status": "",
+      "source_manifest_sha256": "ed52f946cd5241f41fe8b8b25c4e42253741656bf68c688926a55f6e2979ed6e"
+    },
+    "control_sha256": "d80a89608fe17d35c0676b5f18b24acaddbecc782eecf852048b3a6c9b9e86c6",
+    "platform": "Qualified Xcode 26.3 profile; SDK iphonesimulator26.2; actual iOS 26.2/23C54 ARM64 iPhone 17 Pro simulator.",
+    "status": "FAIL",
+    "runtime_evidence_status": "FAIL",
+    "xcodebuild_exit_code": 65,
+    "tests": {
+      "total": 5,
+      "passed": 4,
+      "failed": 1,
+      "skipped": 0,
+      "expected_failures": 0
+    },
+    "boundary": "xcodebuild.log13310/13343, rows23/24: one Arabic-row activation; keyboard disappears and former Arabic controls become nonhittable. Rows25/26 at13352/13410 report Alert count0; lines13353ff show the original 15-second Alert-only wait. Failure occurs before exact-English-choice lookup, with no keep-choice activation or final preferred-list receipt.",
+    "conclusion": "The actual presentation class and English-choice availability remain UNKNOWN. A31 does not establish that a Sheet was present, that this candidate succeeds, that public OS support is absent, or that Parlor production is defective.",
+    "source_binding": "Reopened input-manifest99 controls and matched old OS template f266cc91. Receipt before/after source identities are equal; source/control/copied-input unchanged fields are true.",
+    "recorded_cleanup": "Receipt cleanup_status PASS. This bounded review did not repeat whole archive/lifecycle custody or independently perform cleanup.",
+    "pins": [
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34384037292/native-evidence/ios-readiness-31/receipt.json",
+        "bytes": 541719,
+        "sha256": "0251827d0d25f1c4f1afbe1591fc20a2b96e4aed61058070891b3564d18862a5"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34384037292/native-evidence/ios-readiness-31/input-manifest.json",
+        "bytes": 173163,
+        "sha256": "bb6c1a1d19f31864bd9a7dde6f36954da23738662675c5da05a11d5670333907"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34384037292/native-evidence/ios-readiness-31/xcodebuild.log",
+        "bytes": 1209410,
+        "sha256": "61290374ed5929fe111d20edf021197fcd77dcf4aecb7025f4691627c7c1af94"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34384037292/native-evidence/ios-readiness-31/xcresult-summary.json",
+        "bytes": 1579,
+        "sha256": "06a846d90a4d634e8ca5e4d05c17a5f780a9ecf95f717960c9e322ea95d8cf9f"
+      }
+    ]
+  },
+  "source_findings": {
+    "modality": "Exactly one public Preferences Alert XOR exactly one Sheet; neither, both or multiple fail. No generic Other/global-button fallback. Shared wait remains15s, not sequential30s; native representation is not asserted from historical evidence.",
+    "activation": "Choice remains scoped to selected modal, exact Use English/Keep English whitelist, count1, modalbuttons1..4, hittable and enabled. Fresh both-class counts and foreground are revalidated before the single tap. Missing/unknown/ambiguous choices remain BLOCKED.",
+    "diagnostics": "Two fixed representation rows contain capped public container/button/known-choice counts, plus sheetCountCapped16. No unknown label/value/hierarchy export. Postactivation metadata uses fresh count queries, not required properties of the disappearing selected modal. Original96row/8192byte-row/196608byte-total limits retained.",
+    "final_proof": "Existing 20s actual exposed, hittable, viewport-contained ordered English-primary -> Arabic -> Add Language oracle is unchanged. Additional sheet-absence guards protect initial, already-satisfied final, postactivation wait and final verification. Pure24case decision helper, final geometry and per-app Settings/System/restart proof are not substituted.",
+    "complete_source_restoration": "Independently removed exact831B metadata helper, restored exact choice block and reversed five small sheet metadata/absence additions; result equals complete26454B old companion and scripts/verification/ios-readiness canonical template, SHA f266cc919734bd840a6a6e9288088e9e437a67b2ed41d16c8a02337ad19627d8.",
+    "helper_sha256": "9676f40fef94f11c2f9897fd662876f57bbefa6219517a04348f713c8086bea0",
+    "choice_block_sha256": "97c024957cf52c33d58d4b75b29d74227556a76184596d8cb92787ef34af49df",
+    "parser_compatibility": "Read prerequisite_receipts.py and public_interaction_receipts.py. Added bounded fields are compatible with unchanged envelopes; one before/after activation per required step, strict ordered final preferred-list,24case contract and later original probes remain required. Parsers and runner are not modified by these replacements.",
+    "application_scope": "No shipping source, protocol, reducer, session-seed, storage behavior, dependency, identity, language preference injection, simulator ownership or cleanup change is contained in these two held replacements."
+  },
+  "tests_review": {
+    "static_only": true,
+    "methods_before": 26,
+    "methods_after": 28,
+    "added_functions": [
+      "assert_os_primary_choice_contract",
+      "test_os_primary_choice_delta_preserves_the_complete_existing_prerequisite",
+      "test_os_primary_choice_rejects_ambiguity_unknown_actions_retries_and_false_proof"
+    ],
+    "removed_functions": [],
+    "changed_existing_functions": [
+      "test_all_original_controls_and_exact_clone_allowlist_are_preserved"
+    ],
+    "preservation": "All prior function ASTs are unchanged except the exact OS-template clone-guard addition. Immutable old canonical template/clone checks remain; new helper hashes the entire new metadata/choice blocks and restores every other original source byte.",
+    "negative_source_mutations": 20,
+    "anchors": "Independently parsed literal mutation list and verified all20 target anchors unique and replacements distinct. Covers ambiguity, fallback, generic labels, duplicate activation, removed guards, expanded budgets, diagnostic privacy and weakened initial/final proof.",
+    "limitation": "These are proposed source-integrity tests, not executed Swift semantics or OS runtime. No project tests/imports/extracted functions were run by this reviewer; coordinator must execute focused tests on adopted exact bytes."
+  },
+  "replay_investigation": {
+    "current_runner": "No per-helper OS-only selector exists. run_ios_readiness.py617ff strictly accepts cycle/binding/control and signing/toolchain/lifecycle; sanitized env842ff supplies no arbitrary phase flag. xcode1006ff runs the scheme; expected five tests461ff and complete required scenario receipts1141ff are fixed. Main copied UI test is monolithic.",
+    "feasibility": "An explicitly nonqualifying early copied-XCTest diagnostic could technically reuse existing failed-run retention/cleanup, but requires reviewed controls and cannot be represented as full A. No such mode was implemented or executed.",
+    "coordinator_choice": "Coordinator declined a separate temporary diagnostic-only scope/freeze/restore cycle. The approved proposal uses the existing l08-only lane after source/test review and fresh admission; normal remains NOT_RUN_THIS_RUN."
+  },
+  "requirements_and_limits": [
+    "Coordinator must adopt only exact reviewed held bytes, execute focused tests in the sole lane and retain actual results/cleanup.",
+    "Commit reviewed changes, regenerate/commit inventory and create fresh source and both-control bindings before any native execution; independent native admission remains separate.",
+    "Preserve A31 FAIL and all strict file-protection failures. This review grants no OS/prerequisite PASS, full A PASS, fresh B, combined qualification, physical-device, Store or owner/legal readiness upgrade.",
+    "If a follow-up still lacks a recognized modal or exact known choice, retain bounded diagnostics and BLOCK; do not blind-retry or broaden selectors from conjecture."
+  ],
+  "reviewer_operations": {
+    "performed": "Read-only source/evidence inspection, JSON/hash/AST/arithmetic/string comparisons; only this independent report written.",
+    "not_performed": "No tests, project imports, extracted-function execution, builds, toolchain/native commands, network/API/Actions, Git writes, process signals or cleanup.",
+    "tooling_note": "One overly verbose JSON inspection was truncated and its orchestration parse failed; reran compact read-only extraction successfully. No project command/test failed in this review.",
+    "cleanup": "No reviewer fixtures/workers/build outputs allocated; no cleanup obligation created."
+  }
+}

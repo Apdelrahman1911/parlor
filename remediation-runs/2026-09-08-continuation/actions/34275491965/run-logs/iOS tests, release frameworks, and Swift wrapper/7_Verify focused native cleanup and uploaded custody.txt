@@ -1,0 +1,43 @@
+﻿2026-09-08T21:23:49.7972050Z ##[group]Run /usr/bin/python3 -B scripts/ci/native_continuation.py cleanup
+2026-09-08T21:23:49.7972550Z [36;1m/usr/bin/python3 -B scripts/ci/native_continuation.py cleanup[0m
+2026-09-08T21:23:50.0792270Z shell: /bin/bash --noprofile --norc -e -o pipefail {0}
+2026-09-08T21:23:50.0792630Z env:
+2026-09-08T21:23:50.0793080Z   GRADLE_OPTS: -Dorg.gradle.project.kotlin.compiler.execution.strategy=in-process
+2026-09-08T21:23:50.0793650Z   DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
+2026-09-08T21:23:50.0794150Z   JAVA_HOME: /Users/runner/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-101.0/arm64/Contents/Home
+2026-09-08T21:23:50.0794810Z   JAVA_HOME_21_ARM64: /Users/runner/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-101.0/arm64/Contents/Home
+2026-09-08T21:23:50.0795250Z   MAVEN_ARGS: -ntp
+2026-09-08T21:23:50.0795470Z   PARLOR_DISPATCH_SCOPE: native-evidence
+2026-09-08T21:23:50.0796020Z   PARLOR_FROZEN_SOURCE_SHA: e5111ea49113c3f12cb577058c3f926dfebdc325
+2026-09-08T21:23:50.0796650Z   PARLOR_NATIVE_UPLOAD_OUTCOME: success
+2026-09-08T21:23:50.0796930Z   PARLOR_NATIVE_ARTIFACT_ID: 10077343585
+2026-09-08T21:23:50.0797330Z   PARLOR_NATIVE_ARTIFACT_DIGEST: ea22338008d089a93ab7baa2c3a86dfb4cc090e6bb885306597f797a8fec442c
+2026-09-08T21:23:50.0820200Z ##[endgroup]
+2026-09-08T21:23:52.9594420Z {
+2026-09-08T21:23:52.9599730Z   "schema_version": 1,
+2026-09-08T21:23:52.9609700Z   "context": {
+2026-09-08T21:23:52.9610090Z     "repository": "Apdelrahman1911/parlor",
+2026-09-08T21:23:52.9610600Z     "branch": "fix/local-readiness-2026-09-07",
+2026-09-08T21:23:52.9611110Z     "head_sha": "e5111ea49113c3f12cb577058c3f926dfebdc325",
+2026-09-08T21:23:52.9611580Z     "tree": "a88872673bd4cfc366236362f287c1db0a04a5cd",
+2026-09-08T21:23:52.9612100Z     "workflow": ".github/workflows/production-verification.yml",
+2026-09-08T21:23:52.9614040Z     "root": "/Users/runner/work/parlor/parlor",
+2026-09-08T21:23:52.9615530Z     "run_id": 34275491965,
+2026-09-08T21:23:52.9616600Z     "run_attempt": 1
+2026-09-08T21:23:52.9617370Z   },
+2026-09-08T21:23:52.9618010Z   "started_at": "2026-09-08T21:23:52.957437+00:00",
+2026-09-08T21:23:52.9618790Z   "status": "FAIL",
+2026-09-08T21:23:52.9619460Z   "removed": [],
+2026-09-08T21:23:52.9620050Z   "errors": [
+2026-09-08T21:23:52.9620670Z     {
+2026-09-08T21:23:52.9621210Z       "type": "RuntimeError",
+2026-09-08T21:23:52.9622070Z       "reason": "native-cleanup-unsafe-retain-owned-evidence"
+2026-09-08T21:23:52.9622810Z     }
+2026-09-08T21:23:52.9626020Z   ],
+2026-09-08T21:23:52.9634020Z   "upload": {
+2026-09-08T21:23:52.9718970Z     "artifact_id": "10077343585",
+2026-09-08T21:23:52.9720230Z     "sha256": "ea22338008d089a93ab7baa2c3a86dfb4cc090e6bb885306597f797a8fec442c"
+2026-09-08T21:23:52.9721400Z   },
+2026-09-08T21:23:52.9722090Z   "finished_at": "2026-09-08T21:23:52.958403+00:00"
+2026-09-08T21:23:52.9722850Z }
+2026-09-08T21:23:52.9773290Z ##[error]Process completed with exit code 1.

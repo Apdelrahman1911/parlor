@@ -1,0 +1,19 @@
+--- a/remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/test_l08_functional_copy.py
++++ b/remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/test_l08_functional_copy.py
+@@ -404,6 +404,16 @@
+         self.assertTrue(all(path.is_file() and not path.is_symlink() for path in HERE.iterdir()))
+         for row in manifest['files']:
+             with self.subTest(path=row['path']):
++                if row['path'] == 'ControlledStartRoom.kt.in':
++                    # Reviewed nonshipping reentrancy repair; retain the immutable
++                    # old manifest and bind all three complete replacement copies.
++                    self.assertEqual(row['original_sha256'],
++                                     '147692e570bcc0e8c191a6373c61fd4f636c62891b604fdc1c5fee52990861f0')
++                    reviewed = '1de4cad503f42fc3e9cb198a8df04b7613eab303a3cafd6b31cfabd14e142ab9'
++                    for path in (CANONICAL / row['path'], HERE / row['path'],
++                                 ROOT / 'shared/networking-testing/src/commonMain/kotlin/com/parlor/networking/testing/ControlledStartRoom.kt'):
++                        self.assertEqual(sha(path), reviewed)
++                    continue
+                 self.assertEqual(sha(CANONICAL / row['path']), row['original_sha256'])
+                 if row['path'] == 'L08MafiaSnapshots.kt.in':
+                     self.assertEqual(strip_mafia_continuation_stages((HERE / row['path']).read_text()),

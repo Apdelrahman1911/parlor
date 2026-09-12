@@ -1,0 +1,741 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/release_fix_review",
+  "recorded_at": "2026-09-07T20:57:19.990311+00:00",
+  "scope": "Additive independent read-only reconciliation of existing dependency/SBOM/notice evidence to current inputs, plus code-backed L04 linkage-gate interpretation. This is not a new resolution/build/runtime execution or whole-project source audit.",
+  "decision": "ACCEPT_SCOPED_INPUT_EQUIVALENCE_AND_RETAINED_EVIDENCE_INTEGRITY; FINAL_CURRENT_SHA_AGGREGATE_REMAINS_PENDING",
+  "baseline": {
+    "head": "b6e1947c62661631d0593038db7f64dbf25f720e",
+    "tree": "f03ad1b302d951d0ca9811b1efab2751a8be6978",
+    "branch": "fix/local-readiness-2026-09-07",
+    "tracked_status": "",
+    "diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "actual_execution_identity": {
+    "graphs_and_sboms": {
+      "commit": "11210dc6e34811bd1dd36d6a34339851601e5112",
+      "tree": "cb97cc572dff903b8555ec20144c6df2995f2512",
+      "diff_sha256": "f40d88169f213b5b5be3935ad7c06de6180acf65997ce6a887e4072ac9f2eed0"
+    },
+    "graph_manifest_sha256": "63ac217a2f76da6f9659677054f97d430a06c71044ce775287fec3ce1021c28a",
+    "graph_source_manifest_rows": 742,
+    "ci": {
+      "run": 34152138368,
+      "attempt": 1,
+      "commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+      "tree": "c65463bdf1f3656f90dfe6e6dbe1d94b3c588dac",
+      "source_manifest_sha256": "60e421f9ee3fcd2ea2a55c45684e7b1a5c473ad175f946c6c047b0b9e35e59ca",
+      "source_manifest_files": 796
+    },
+    "current": {
+      "head": "b6e1947c62661631d0593038db7f64dbf25f720e",
+      "tree": "f03ad1b302d951d0ca9811b1efab2751a8be6978",
+      "branch": "fix/local-readiness-2026-09-07",
+      "tracked_status": "",
+      "diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "not_relabelled": "Original graph/SBOM source remains11210dc6+recorded working diff. Actual successful CI remains89dbe8. Neither executed at currentb6e1947, and no prior artifact/source fields were rewritten.",
+    "current_delta_from_ci": "M\tdocs/review/INDEPENDENT_REVIEW_INVENTORY.csv\nM\tremediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/README.md\nM\tremediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/normal_launch_receipts.py\nM\tremediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_control_tests.py\nA\tremediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_xcode26_repetitions.py\nA\tremediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/xcresult-26.5-repetitions.json.in\nM\tscripts/verification/ios-readiness/L08StorageProbe.kt.in\nM\tscripts/verification/ios-readiness/l08_receipts.py\nA\tscripts/verification/ios-readiness/test_l08_diagnostics.py\n",
+    "delta_classification": "All9 changed/added tracked paths are diagnostic-copy fixtures, normal-launch evidence parsers/control tests, or mechanical review CSV. No shipping application source, module build, dependency configuration, resource, manifest, plist, or notice input changed from CI89dbe8. This is byte-equivalence evidence, not an exact-current-SHA aggregate receipt."
+  },
+  "executed_read_only_checks": {
+    "command": "/usr/bin/python3 -B remediation-runs/2026-09-07-local-readiness/reviews/reconcile_dependency_inputs_01.py",
+    "exit_code": 0,
+    "started_at": "2026-09-07T20:51:28.347278+00:00",
+    "finished_at": "2026-09-07T20:51:28.989787+00:00",
+    "script": {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/reconcile_dependency_inputs_01.py",
+      "sha256": "3c3727489d495e833e3216ba3d9611d7de87a8b289bec533696c3629e7487b14",
+      "bytes": 19802
+    },
+    "result": {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/dependency-current-input-static-checks-01.json",
+      "sha256": "91f8f8889e9d579754af9b213e905bc213b13185133ac70b3cf84492330935e7",
+      "bytes": 24988
+    },
+    "method": "Independent Python standard-library full-byte SHA/XML/JSON graph walks and synchronous read-only Git blob lookups; no production renderer/verifier imports. Assertions not optimized away. All inspected input bytes stable before/after; required evidence only was written.",
+    "not_a_test_run": "This is evidence parsing and provenance checking, not an application test suite, native runtime, Gradle task, or new schema-validator execution."
+  },
+  "dependency_input_equivalence": {
+    "conclusion": "Technical equivalence can be demonstrated without another Gradle build solely for these unchanged inputs.",
+    "files": [
+      {
+        "path": "build-logic/convention/build.gradle.kts",
+        "bytes": 1663,
+        "sha256": "d97140c79c500416f3ef1b5a54b2d05f6d0aa895f92b6cd85c26a70c8852ac67",
+        "old_actual_manifest_matches": true,
+        "ci_actual_manifest_and_git_blob_match": true
+      },
+      {
+        "path": "build-logic/convention/src/main/kotlin/com/parlor/buildlogic/DetektConventionPlugin.kt",
+        "bytes": 2447,
+        "sha256": "8d5fd3fb3f13d9d5cb02f89c29a57aab8d71c89cdf6dd0ac41161942109bd825",
+        "old_actual_manifest_matches": true,
+        "ci_actual_manifest_and_git_blob_match": true
+      },
+      {
+        "path": "build-logic/convention/src/main/kotlin/com/parlor/buildlogic/KmpComposeLibraryConventionPlugin.kt",
+        "bytes": 614,
+        "sha256": "d8a7cd25a7062f20ae871a068b724c061c98f3831aae4d90701c5cbbf7b4e660",
+        "old_actual_manifest_matches": true,
+        "ci_actual_manifest_and_git_blob_match": true
+      },
+      {
+        "path": "build-logic/convention/src/main/kotlin/com/parlor/buildlogic/KmpLibraryConventionPlugin.kt",
+        "bytes": 2590,
+        "sha256": "9d3b07942123f5a4c2da229aa873d5d7b7d422b120d1ff42014cfe066eefbc63",
+        "old_actual_manifest_matches": true,
+        "ci_actual_manifest_and_git_blob_match": true
+      },
+      {
+        "path": "build-logic/settings.gradle.kts",
+        "bytes": 342,
+        "sha256": "d86cd60d448dfb6ebf0c9b6977456dc7b93865afe5c415dc368a56ab6ef1f729",
+        "old_actual_manifest_matches": true,
+        "ci_actual_manifest_and_git_blob_match": true
+      },
+      {
+        "path": "build.gradle.kts",
+        "bytes": 8766,
+        "sha256": "bd6199e1f097eb236c50c46efb91d291550110f6b4d95a8e95ff0db4d8da192b",
+        "old_actual_manifest_matches": true,
+        "ci_actual_manifest_and_git_blob_match": true
+      },
+      {
+        "path": "composeApp/build.gradle.kts",
+        "bytes": 27271,
+        "sha256": "c23525d6b06f9b536fb5e8ef6be68c653952fa9764e276f831772b864621fdd5",
+        "old_actual_manifest_matches": true,
+        "ci_actual_manifest_and_git_blob_match": true
+      },
+      {
+        "path": "config/detekt/detekt.yml",
+        "bytes": 4400,
+        "sha256": "0e50363aaffe4959659e8fca90cadb70a36d210cd9184f02e75c938abbd03894",
+        "old_actual_manifest_matches": true,
+        "ci_actual_manifest_and_git_blob_match": true
+      },
+      {
+        "path": "config/parlor-version.xcconfig",
+        "bytes": 202,
+        "sha256": "4975e763730608718095d3c7342f34f333a86e20cf562eb221b9e3478fa93f9e",
+        "old_actual_manifest_matches": true,
+        "ci_actual_manifest_and_git_blob_match": true
+      },
+      {
+        "path": "game-modes/mafia/build.gradle.kts",
+        "bytes": 1544,
+        "sha256": "7aceb370331f84b2fee70bb039b7779bdd818ea78aab15da3bfcfd137a76ad2d",
+        "old_actual_manifest_matches": true,
+        "ci_actual_manifest_and_git_blob_match": true
+      },
+      {
+        "path": "game-modes/whodunit/build.gradle.kts",
+        "bytes": 2204,
+        "sha256": "2eb4b00a53ff1eff42f2a64b3de1a1c4d28b08d419ad2828045a063320e4696c",
+        "old_actual_manifest_matches": true,
+        "ci_actual_manifest_and_git_blob_match": true
+      },
+      {
+        "path": "gradle.properties",
+        "bytes": 973,
+        "sha256": "2df8685921ad2c6eead097a6d9994bbcc93dbc5cbdeb0bce8911ffa4e83162ce",
+        "old_actual_manifest_matches": true,
+        "ci_actual_manifest_and_git_blob_match": true
+      },
+      {
+        "path": "gradle/libs.versions.toml",
+        "bytes": 5556,
+        "sha256": "87a031665605a1fb3f932be31c75afd8d2d1bc0d94cfcca36101141c50788399",
+        "old_actual_manifest_matches": true,
+        "ci_actual_manifest_and_git_blob_match": true
+      },
+      {
+        "path": "gradle/verification-metadata.xml",
+        "bytes": 795388,
+        "sha256": "58b5a279cc5ccc58e1088fbe3dd248fcfdf31a307707204c5438259de7960f95",
+        "old_actual_manifest_matches": true,
+        "ci_actual_manifest_and_git_blob_match": true
+      },
+      {
+        "path": "gradle/wrapper/gradle-wrapper.jar",
+        "bytes": 43705,
+        "sha256": "81a82aaea5abcc8ff68b3dfcb58b3c3c429378efd98e7433460610fecd7ae45f",
+        "old_actual_manifest_matches": true,
+        "ci_actual_manifest_and_git_blob_match": true
+      },
+      {
+        "path": "gradle/wrapper/gradle-wrapper.properties",
+        "bytes": 338,
+        "sha256": "c040b6ef2fb893ff5beea5a281614f2848f1c3996a7886f650b713f8240656a2",
+        "old_actual_manifest_matches": true,
+        "ci_actual_manifest_and_git_blob_match": true
+      },
+      {
+        "path": "gradlew",
+        "bytes": 8752,
+        "sha256": "734b3879d3501dce471cf0522d3bcbafe76873d9fc5129345b67fb43bd15e933",
+        "old_actual_manifest_matches": true,
+        "ci_actual_manifest_and_git_blob_match": true
+      },
+      {
+        "path": "gradlew.bat",
+        "bytes": 2872,
+        "sha256": "2209f919a22528af59a2af2ad97e8d056cca18e39f7d87aa3fd549a73b180150",
+        "old_actual_manifest_matches": true,
+        "ci_actual_manifest_and_git_blob_match": true
+      },
+      {
+        "path": "iosApp/Configuration/Config.xcconfig",
+        "bytes": 767,
+        "sha256": "102b93364c12cb6d9055fcb88acdb5ab15bc1a3724bdc350799539bc09d9c0df",
+        "old_actual_manifest_matches": true,
+        "ci_actual_manifest_and_git_blob_match": true
+      },
+      {
+        "path": "settings.gradle.kts",
+        "bytes": 1422,
+        "sha256": "27a40495b1adf18ca90b5a8fdd345448c2ecf2f9ac726c753468a5e627b27d18",
+        "old_actual_manifest_matches": true,
+        "ci_actual_manifest_and_git_blob_match": true
+      },
+      {
+        "path": "shared/content/build.gradle.kts",
+        "bytes": 793,
+        "sha256": "f956862a089a95ba41f4de714e95d1ac44a23d80994c323ba61a1c0c28d34939",
+        "old_actual_manifest_matches": true,
+        "ci_actual_manifest_and_git_blob_match": true
+      },
+      {
+        "path": "shared/core/build.gradle.kts",
+        "bytes": 763,
+        "sha256": "05bafd928b020cd386aab5593ba73c5e470d44005f9c23dff739a42b577f31dd",
+        "old_actual_manifest_matches": true,
+        "ci_actual_manifest_and_git_blob_match": true
+      },
+      {
+        "path": "shared/design-system/build.gradle.kts",
+        "bytes": 749,
+        "sha256": "118d898f900e3b8ccc76db6fca658d69a0d211c5220b6985738f14428a99f78d",
+        "old_actual_manifest_matches": true,
+        "ci_actual_manifest_and_git_blob_match": true
+      },
+      {
+        "path": "shared/engine-testing/build.gradle.kts",
+        "bytes": 551,
+        "sha256": "096e9f4f67d514fd0a41de6853ad599cf5e3f3168b3294d8c3d71db5eaeac87f",
+        "old_actual_manifest_matches": true,
+        "ci_actual_manifest_and_git_blob_match": true
+      },
+      {
+        "path": "shared/engine/build.gradle.kts",
+        "bytes": 625,
+        "sha256": "4cbe86781aa8f11d2ef91381855ab3bcb3b126ef53b6a8272b79c478f90fc38a",
+        "old_actual_manifest_matches": true,
+        "ci_actual_manifest_and_git_blob_match": true
+      },
+      {
+        "path": "shared/networking-testing/build.gradle.kts",
+        "bytes": 409,
+        "sha256": "81ed6260d7ac49fada4f0a922dde7db77fc557b86ab0a5884d5b20a64ec74f7e",
+        "old_actual_manifest_matches": true,
+        "ci_actual_manifest_and_git_blob_match": true
+      },
+      {
+        "path": "shared/networking/build.gradle.kts",
+        "bytes": 764,
+        "sha256": "765ac532634f0dc088a5ded8c32bfc6550aa6408155b44d2956be395d131d621",
+        "old_actual_manifest_matches": true,
+        "ci_actual_manifest_and_git_blob_match": true
+      },
+      {
+        "path": "shared/session/build.gradle.kts",
+        "bytes": 673,
+        "sha256": "3be79bcdba5c593eed5ac93d6000043911cd913ab1d7d2c70ab0be7ea37c80b8",
+        "old_actual_manifest_matches": true,
+        "ci_actual_manifest_and_git_blob_match": true
+      },
+      {
+        "path": "shared/storage/build.gradle.kts",
+        "bytes": 551,
+        "sha256": "096e9f4f67d514fd0a41de6853ad599cf5e3f3168b3294d8c3d71db5eaeac87f",
+        "old_actual_manifest_matches": true,
+        "ci_actual_manifest_and_git_blob_match": true
+      },
+      {
+        "path": "shared/transport-p2p/build.gradle.kts",
+        "bytes": 4251,
+        "sha256": "6ce2fd726bd41031a5b26d0d30f8ee8f693b4dc942da90bdc48b40fbf040c3b7",
+        "old_actual_manifest_matches": true,
+        "ci_actual_manifest_and_git_blob_match": true
+      },
+      {
+        "path": "scripts/verification/resolved_dependencies.init.gradle",
+        "bytes": 7170,
+        "sha256": "5120cb8d7c12825ad889f23d73075ef29ae48b66e4966d1e2335aa2d11995f59",
+        "old_actual_manifest_matches": true,
+        "ci_actual_manifest_and_git_blob_match": true
+      }
+    ],
+    "count_definition": "30 tracked build/configuration inputs including Detekt config plus1 opt-in exporter. This is not a source-review percentage or count of shipped components.",
+    "coverage": "Root+all15 build.gradle.kts scripts (including build-logic), both settings scripts, all3 convention sources, version catalog, properties, strict metadata, wrapper scripts/JAR/properties, version/ios configuration and Detekt policy. The detailed machine ledger enumerates exact paths and hashes.",
+    "equality": "Each31 current file equals the export02 actual source-manifest hash and CI89dbe8 actual manifest/hash AND independently reopened CI Git blob. The exporter was then untracked outside configured app/build input directories but was included in the outer actual-source manifest; Git11210dc6 alone would not bind it.",
+    "renderer": "All3 research03 control hashes (exporter, renderer, tests) still match current and CI. The renderer changed after raw export, but the accepted research03 execution already used exactly the current renderer; there is no stale-renderer substitution.",
+    "configured_directory_equality": {
+      "files": 632,
+      "description": "All tracked files under composeApp/shared/game-modes/build-logic/gradle/config/iosApp, INCLUDING tests and configuration, equal CI89dbe8 and have the identical path set. They are not all described as shipping production files.",
+      "untracked_configured_inputs": []
+    },
+    "closure_reasoning": "Reopened module/settings/convention configuration fixes dependencies and repositories; root/main source or later raw notice additions do not declare new dependency edges. Existing resource-bearing modules were already configured. Build logic does not discover a sibling Maven repository or dynamically include source-conditional games. Signing/SDK path environment does not define these Maven graph coordinates.",
+    "limitations": [
+      "No global/private Gradle user configuration or signing material inspected. This is equivalence of repository-owned inputs and previously observed resolved bytes, not proof against every possible external resolver mutation.",
+      "Host-specific dependency resolution is not inferred from macOS export; actual fresh CI runs separately exercised selected Linux/macOS/Windows host graphs under strict verification.",
+      "Pinned configurations/bytes do not turn old receipts into final-current-source executions."
+    ]
+  },
+  "resolved_evidence": {
+    "historical_export_receipt": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/dependency-graph-export-02/receipt.json",
+      "sha256": "8877c86a6f7584f8b543ef7a43ce6eed0831944633b8653eaf32153ff6ec327e",
+      "bytes": 277535
+    },
+    "historical_export_log": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/dependency-graph-export-02/gradle.log",
+      "sha256": "55596a92ea487581a706aa8f9ca9533f54904da0586c57930879dbde9a4fb5bc",
+      "bytes": 2164
+    },
+    "historical_stop_log": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/dependency-graph-export-02/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+      "bytes": 31
+    },
+    "source_manifest_canonical_hash_recomputed": true,
+    "before_after_source_identical": true,
+    "actual_resolution_task": "writeResolvedDependencyInventory executed under --dependency-verification=strict;5 actionable tasks=4executed+1cached build-convention compilation. App was not compiled by this opt-in export.",
+    "graphs": [
+      {
+        "graph": "androidRelease",
+        "raw_graph": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/dependency-graph-export-02/raw-graphs/androidRelease.json",
+          "sha256": "97aafb48c1e50f78ef1d1b6ff830a308448a82cef8919da07fbd6972ce3598a0",
+          "bytes": 277318
+        },
+        "configuration": "releaseRuntimeClasspath",
+        "components": 239,
+        "maven_components": 228,
+        "artifacts": 129,
+        "strict_artifact_sha_matches": 129,
+        "edges_including_constraints": 1198,
+        "deduplicated_nonconstraint_edges": 914,
+        "project_components": [
+          "project::composeApp",
+          "project::game-modes:mafia",
+          "project::game-modes:whodunit",
+          "project::shared:content",
+          "project::shared:core",
+          "project::shared:design-system",
+          "project::shared:engine",
+          "project::shared:networking",
+          "project::shared:session",
+          "project::shared:storage",
+          "project::shared:transport-p2p"
+        ]
+      },
+      {
+        "graph": "iosArm64",
+        "raw_graph": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/dependency-graph-export-02/raw-graphs/iosArm64.json",
+          "sha256": "b761e0d7059cd37fe1212190eb9d5c71eec4bdc3cce7479964c1cc12d86adf63",
+          "bytes": 154639
+        },
+        "configuration": "iosArm64CompileKlibraries",
+        "components": 167,
+        "maven_components": 156,
+        "artifacts": 81,
+        "strict_artifact_sha_matches": 81,
+        "edges_including_constraints": 577,
+        "deduplicated_nonconstraint_edges": 516,
+        "project_components": [
+          "project::composeApp",
+          "project::game-modes:mafia",
+          "project::game-modes:whodunit",
+          "project::shared:content",
+          "project::shared:core",
+          "project::shared:design-system",
+          "project::shared:engine",
+          "project::shared:networking",
+          "project::shared:session",
+          "project::shared:storage",
+          "project::shared:transport-p2p"
+        ]
+      },
+      {
+        "graph": "iosSimulatorArm64",
+        "raw_graph": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/dependency-graph-export-02/raw-graphs/iosSimulatorArm64.json",
+          "sha256": "3c8a7d69e853e893a58cf0b951f03918e6a8baf63c7be5815ce119bd5c0fbcad",
+          "bytes": 157924
+        },
+        "configuration": "iosSimulatorArm64CompileKlibraries",
+        "components": 167,
+        "maven_components": 156,
+        "artifacts": 81,
+        "strict_artifact_sha_matches": 81,
+        "edges_including_constraints": 577,
+        "deduplicated_nonconstraint_edges": 516,
+        "project_components": [
+          "project::composeApp",
+          "project::game-modes:mafia",
+          "project::game-modes:whodunit",
+          "project::shared:content",
+          "project::shared:core",
+          "project::shared:design-system",
+          "project::shared:engine",
+          "project::shared:networking",
+          "project::shared:session",
+          "project::shared:storage",
+          "project::shared:transport-p2p"
+        ]
+      },
+      {
+        "graph": "iosX64",
+        "raw_graph": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/dependency-graph-export-02/raw-graphs/iosX64.json",
+          "sha256": "dc8f07642fe1d3ff4a37008b47fff36eb3f242ca3799cfb170aee14cbd741aa3",
+          "bytes": 153736
+        },
+        "configuration": "iosX64CompileKlibraries",
+        "components": 167,
+        "maven_components": 156,
+        "artifacts": 81,
+        "strict_artifact_sha_matches": 81,
+        "edges_including_constraints": 577,
+        "deduplicated_nonconstraint_edges": 516,
+        "project_components": [
+          "project::composeApp",
+          "project::game-modes:mafia",
+          "project::game-modes:whodunit",
+          "project::shared:content",
+          "project::shared:core",
+          "project::shared:design-system",
+          "project::shared:engine",
+          "project::shared:networking",
+          "project::shared:session",
+          "project::shared:storage",
+          "project::shared:transport-p2p"
+        ]
+      }
+    ],
+    "unique_maven_coordinates": 456,
+    "unique_artifact_content_identities": 372,
+    "strict_verification": "Every372 exact(component, filename, SHA256) matches current strict verification metadata. No metadata changed, generated or used as a substitute for resolution evidence.",
+    "edges": {
+      "raw_including_constraints": 2929,
+      "deduplicated_nonconstraint": 2462
+    },
+    "fixture_isolation": "Each production graph has11 first-party components and excludes shared:engine-testing/shared:networking-testing.",
+    "publisher_metadata": {
+      "files": 459,
+      "bytes": 1507794,
+      "all_entire_xml_documents_reparsed": true,
+      "hashes_urls_coordinates_access_times_direct_and_inherited_licenses_match": true,
+      "inherited_license_records": 3,
+      "extra_parent_coordinates": [
+        "com.google.guava:guava-parent:26.0-android",
+        "org.slf4j:slf4j-bom:2.0.16",
+        "org.slf4j:slf4j-parent:2.0.16"
+      ],
+      "original_independent_ledger": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/dependency-research03-pom-evidence-ledger-01.json",
+        "sha256": "476413a879dcc38c34a9fd7a1428e9dc257b4418e602605813f7a907ad2b1066",
+        "bytes": 244396
+      },
+      "source_record": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/dependency-license-research-03/report/license-evidence.json",
+        "sha256": "df96db8b3c0a9e7140732cb78e20aeb8f8558e97c74fbfb26d6d99286f6b4271",
+        "bytes": 332551
+      },
+      "research_receipt": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/dependency-license-research-03/receipt.json",
+        "sha256": "f30a1a4f0eccfa8e354c3eac88a253045961b85afd7b7621ea5f3ad45e7ee5b8",
+        "bytes": 1585
+      },
+      "unresolved": 0
+    },
+    "sboms": [
+      {
+        "graph": "androidRelease",
+        "evidence": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/dependency-license-research-03/report/androidRelease.cdx.json",
+          "sha256": "aabbe9eddd21e97b3c172e602c2fe3a177a97775d71fbbdbaaa2671c5768b4c1",
+          "bytes": 294860
+        },
+        "all_components_artifacts_licenses_edges_match": true,
+        "historical_official_schema_receipt_still_binds_same_bytes": true
+      },
+      {
+        "graph": "iosArm64",
+        "evidence": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/dependency-license-research-03/report/iosArm64.cdx.json",
+          "sha256": "a70e39f44375502041bcb8f79ab3f1a1d13664d8cb570c784d4ca5fa0c5b0156",
+          "bytes": 198842
+        },
+        "all_components_artifacts_licenses_edges_match": true,
+        "historical_official_schema_receipt_still_binds_same_bytes": true
+      },
+      {
+        "graph": "iosSimulatorArm64",
+        "evidence": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/dependency-license-research-03/report/iosSimulatorArm64.cdx.json",
+          "sha256": "75701e0ea9d5218acf577830741341ccd61dd4ec8e1707937a29395a5644df14",
+          "bytes": 201956
+        },
+        "all_components_artifacts_licenses_edges_match": true,
+        "historical_official_schema_receipt_still_binds_same_bytes": true
+      },
+      {
+        "graph": "iosX64",
+        "evidence": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/dependency-license-research-03/report/iosX64.cdx.json",
+          "sha256": "cb46c0c9d865b75a23713b8955c6701c136025b5170b8e18bbeff50ea12f2595",
+          "bytes": 197981
+        },
+        "all_components_artifacts_licenses_edges_match": true,
+        "historical_official_schema_receipt_still_binds_same_bytes": true
+      }
+    ],
+    "schema": "All4 unchanged SBOM bytes still bind to actual prior jsonschema4.25.1/officialCycloneDX1.6 schema execution. Root/SPDX/JSF schema files were rehashed; original schema cycle exit0+stop0+cleanup inspected. Schema validator was not rerun by this reviewer.",
+    "schema_receipt": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/dependency-sbom-schema-02/schema-validation.json",
+      "sha256": "513dcc7af3220e8d0582634530f4b93e8c5f9138e4741d2c345d928da6752374",
+      "bytes": 2006
+    },
+    "earlier_independent_validation": {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/dependency-sbom-research03-independent-acceptance-05.json",
+      "sha256": "12076beaaab98f9ba0ec3ecf82363f0b73aacdb5a255e60472d0ecc4cec34269",
+      "bytes": 14251
+    }
+  },
+  "notice_source_and_delivery": {
+    "manifest": {
+      "path": "config/third-party-notices.json",
+      "sha256": "4b501223b3841017477a226515d3758bc60848fe00d579fac3152a81928d6406",
+      "bytes": 26026
+    },
+    "catalog": {
+      "path": "gradle/libs.versions.toml",
+      "sha256": "87a031665605a1fb3f932be31c75afd8d2d1bc0d94cfcca36101141c50788399",
+      "bytes": 5556
+    },
+    "source_files": 26,
+    "source_bytes": 99515,
+    "upstream_match": "All25 current verbatim notice texts still match the earlier independent native/compiler/Android input-integrity report byte-for-byte; INDEX.txt is separately authored. Original243 AppleKLIB component/name/hash entries all exactly match accepted graphs. These are source/input applicability checks, not final-link symbol survival or new legal analysis.",
+    "upstream_input_integrity": {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/dependency-native-notice-integrity-independent-01.json",
+      "sha256": "2384614434e2ed7b06b26c9ee4c311ef4e742230273088f9fdebfc7a5d889851",
+      "bytes": 91660
+    },
+    "upstream_applicability": {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/dependency-native-notice-adoption-independent-supplement-02.json",
+      "sha256": "1a897c0f31a689422d963fa4c4a599ed374c0034cb3727acb95e79b89f931e00",
+      "bytes": 25842
+    },
+    "package_binding": [
+      {
+        "platform": "android",
+        "notice_receipt": {
+          "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/desktop-android-verification/parlor/parlor/build/ci-evidence/android-release-notices.json",
+          "sha256": "aa9d81fc220f24be8bf0b3a45cd3e9ecb1f4f1e25a161d6cff6f0feca3adcf03",
+          "bytes": 10256
+        },
+        "inventory": {
+          "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/desktop-android-verification/parlor/parlor/build/ci-evidence/android-release-artifact-inventory.json",
+          "sha256": "49fb18241cddf124b5a2f78aff1dc5d18cd9c1a4a0650c673be62389fc07dfd5",
+          "bytes": 78248
+        },
+        "exact_source_manifest_and_26_entries_match": true,
+        "artifact_sha256": "386f59a9c75b8582ba9dcec2326c24cfdf564fc0e6d77d50e90385d237843701",
+        "total_notice_bytes": 99515,
+        "limitation": "Android raw AAB independently rehashed/inspected in previous C01 report; iOS raw app not uploaded, source-bound producer inventory only."
+      },
+      {
+        "platform": "ios",
+        "notice_receipt": {
+          "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/build/ci-evidence/ios-release-notices.json",
+          "sha256": "c93389a737fd210660da444522e0d126e06f51c18106b4a6ec2d2563f98d59f7",
+          "bytes": 10407
+        },
+        "inventory": {
+          "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/build/ci-evidence/ios-release-artifact-inventory.json",
+          "sha256": "6ffb8e2581591664773f77af276c3fc98f6e35159382267c51886843349a82b9",
+          "bytes": 184462
+        },
+        "exact_source_manifest_and_26_entries_match": true,
+        "artifact_sha256": null,
+        "total_notice_bytes": 99515,
+        "limitation": "Android raw AAB independently rehashed/inspected in previous C01 report; iOS raw app not uploaded, source-bound producer inventory only."
+      }
+    ],
+    "android": "C01 unsigned AAB SHA256386f59a9c75b8582ba9dcec2326c24cfdf564fc0e6d77d50e90385d237843701,8,872,910bytes. Prior independent download/hash/380entry inspection accepted; all26 exact current notice bytes crosschecked against both producer notice and complete AAB inventories again here.",
+    "ios": "C05 unsigned simulator Release wrapper56files58,477,207bytes. All26 current notice files crosschecked against both source-bound producer inventories. Raw remote.app was not uploaded; do not claim independent reinspection of its native binary bytes. Prior C05 report separately records9story/font resource and plist/privacy checks.",
+    "no_backdating": "Notice manifest/verifiers/resources were added after export02. They are correctly bound through CI89dbe8 package/source evidence, not falsely included in the old11210dc6 resolved-graph identity.",
+    "limits": [
+      "The26-file resource supplement is expressly not all456dependency-license completeness.",
+      "No new all-coordinate advisory sweep, exhaustive third-party per-file copyright review, final post-R8/native binary SBOM, legal/custom-patent acceptance or product/content distribution license is claimed.",
+      "Raw authored assets and retained runtime secrets are distinct; this evidence never reads player/save/signing data."
+    ]
+  },
+  "L04_code_backed_decision": {
+    "conclusion": "NO_ADDITIONAL_LOCAL_BUILD_REQUIRED_SOLELY_FOR_MISSING_DEVICE_X64_FRAMEWORK_HASH_ARCH_RECEIPTS",
+    "actual_gate": "productionAppleCheck depends only on registered Apple type-aware analysis and3specific release link tasks. Named targets and serial ordering are declared in actual build logic; CI explicitly labels nonnative-runtime targets linkage-only.",
+    "source": [
+      {
+        "path": "build.gradle.kts",
+        "sha256": "bd6199e1f097eb236c50c46efb91d291550110f6b4d95a8e95ff0db4d8da192b",
+        "bytes": 8766,
+        "absolute_path": "/Users/abdelrahman/Projects/parlor/build.gradle.kts",
+        "reviewed_relevant_ranges": [
+          [
+            91,
+            111
+          ],
+          [
+            128,
+            137
+          ]
+        ]
+      },
+      {
+        "path": "composeApp/build.gradle.kts",
+        "sha256": "c23525d6b06f9b536fb5e8ef6be68c653952fa9764e276f831772b864621fdd5",
+        "bytes": 27271,
+        "absolute_path": "/Users/abdelrahman/Projects/parlor/composeApp/build.gradle.kts",
+        "reviewed_relevant_ranges": [
+          [
+            103,
+            119
+          ],
+          [
+            207,
+            220
+          ]
+        ]
+      },
+      {
+        "path": ".github/workflows/production-verification.yml",
+        "sha256": "f823182501d7a28dd20d117781b59dd46bc5103baef5b016316a5a672a18258f",
+        "bytes": 30979,
+        "absolute_path": "/Users/abdelrahman/Projects/parlor/.github/workflows/production-verification.yml",
+        "reviewed_relevant_ranges": [
+          [
+            482,
+            522
+          ],
+          [
+            580,
+            642
+          ]
+        ]
+      },
+      {
+        "path": "scripts/release/workflow_contract.py",
+        "sha256": "8907e1abd5e06812ebe2674bb175056bfb6b27423bbc9819d02404450e1141ca",
+        "bytes": 37820,
+        "absolute_path": "/Users/abdelrahman/Projects/parlor/scripts/release/workflow_contract.py",
+        "reviewed_relevant_ranges": [
+          [
+            153,
+            160
+          ],
+          [
+            196,
+            207
+          ]
+        ]
+      },
+      {
+        "path": "docs/RELEASE_GATES.md",
+        "sha256": "19ee19acf35f833e3bd61b03d3113c6a3ea05b67afcbe1b956e9d4aa070a3f32",
+        "bytes": 9623,
+        "absolute_path": "/Users/abdelrahman/Projects/parlor/docs/RELEASE_GATES.md",
+        "reviewed_relevant_ranges": [
+          [
+            14,
+            24
+          ],
+          [
+            76,
+            87
+          ]
+        ]
+      }
+    ],
+    "executed_evidence": {
+      "source_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+      "framework_links": [
+        {
+          "task": ":composeApp:linkReleaseFrameworkIosArm64",
+          "first_outcome": "EXECUTED",
+          "log_line": 973
+        },
+        {
+          "task": ":composeApp:linkReleaseFrameworkIosSimulatorArm64",
+          "first_outcome": "EXECUTED",
+          "log_line": 981
+        },
+        {
+          "task": ":composeApp:linkReleaseFrameworkIosX64",
+          "first_outcome": "EXECUTED",
+          "log_line": 982
+        }
+      ],
+      "apple_analysis": "4nonempty fresh typedDetekt reports,0violations; leafNO-SOURCE rows not counted as analyzed reports.253aggregate actionable tasks all executed."
+    },
+    "template_reconciliation": "The reviewer-authored earlier L04 template phrase \"actual architecture identities/hashes\" exceeded the executable linkage acceptance contract. Preserve the original template/report; this supplement classifies nonpackaged device/x64 framework raw-binary receipts as optional additional linkage diagnostics, not a newly required local gate or runtime failure.",
+    "not_a_waiver": [
+      "L06 actual packaged simulator executables/frameworks still require native metadata/hash/UUID inventory; C05 producer receipts supplied those.",
+      "A later device archive or signed Store candidate MUST validate its actual device/platform/architecture/signature/artifact identity under O02. The3link task outcomes do not replace that.",
+      "All3architectures linked, but onlyARM64simulator executed runtime tests. Raw device/x64framework binary reinspection remains unperformed and is not labelledPASS.",
+      "Current exact-SHA final aggregate remains pending regardless of source-equivalent linkage evidence."
+    ]
+  },
+  "final_gate_reconciliation": {
+    "C05": "PASS at actual89dbe8 CI source for qualified toolchain/native runtime/three links/Swift tests/wrapper/package/cleanup. Currentb6e1947 is not that executed CI SHA.",
+    "L04": "Existing linkage+analysis scope fully evidenced at89dbe8; no separate rerun solely for optional rawdevice/x64hashes. FinalcurrentSHAaggregate pending as part of plannedfinalCI.",
+    "L11": "Source-input equivalence, retained372artifact/459POM/4SBOM integrity and26notice delivery are independently reconciled. This closes the narrow stale-input uncertainty; it does not manufacture new final-current-source export/CI or sweep outstanding advisory/legal scope.",
+    "exact_candidate_policy": "docs/RELEASE_GATES.md35\u201337 explicitly requires start/end identical clean recorded commit and new run after later code/repository-contract changes. Root plans a final verification dispatch AFTER native diagnostics/controls finish. This report does not relax that requirement.",
+    "dependency_candidate_policy": "docs/DEPENDENCY_INVENTORY.md66\u201368 and DEPENDENCY_REVIEW.md80\u201389 still prescribe regeneration for the actual release candidate. This local equivalence record can reuse the unchanged historical technical research without another Gradle batch merely to explain it, but is not a waiver of candidate-specific export/review/archive procedures.",
+    "unaffected_blockers": "L08/IOS-R1 real app-host storage failure/evidence investigation; normal-launch native verification; physical LAN/accessibility/signed-delivery; canonical Store identity collision/publication disablement; owner Store/legal decisions. Successful C05 does not close them.",
+    "percentages": "No readiness numerator or100% source-review claim is made here. Use explicit25applicable canonical gate denominator only after root binds each actualfinalscope;16originalrepair count is a different measure."
+  },
+  "prior_reports_preserved": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/final-gate-reconciliation-template-01.json",
+      "sha256": "e3095de31521cf6fc2122f188b810ed2ff64a30dab265c2d816bbb31018eabb5",
+      "bytes": 52434
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-inventory-dependency-gates-independent-01.json",
+      "sha256": "8b024db84415ab3ae9ca72d3ebcbcfb3f054b59845163f3dc0ae7b4887d88dd6",
+      "bytes": 26445
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/fresh-ci-34152138368-independent-01.json",
+      "sha256": "b8c35c710fa83e411f03d3eefc005c856a4065e81e2ca798ca162332b8d786fd",
+      "bytes": 52723
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/fresh-ci-34152138368-c05-independent-supplement-01.json",
+      "sha256": "f5996ee52f2889f5617b07444a723b1946d8e3e34a232f41cbfb26cd51934caf",
+      "bytes": 36191
+    }
+  ],
+  "reviewer_hygiene": {
+    "started_gradle_xcode_app_native_test_network_or_background_processes": false,
+    "processes": "Only synchronous read-only shell/Python/Git readers; every command completed. No reviewer-owned daemons, simulators, servers, build or test workers.",
+    "outputs": "Created only one small review script, its staticJSON result, and this additive review. All are required evidence; no generated build outputs or downloadedarchives created in this reconciliation. Earlier C05 read-onlyxcresulttool parsing already exited and is attested in that report.",
+    "preservation": "No production, test, resource, buildconfiguration, dependencyverification or Git edits; no commits/merges/workflowdispatch/Store/signing actions; preexisting audit/design/user files retained. Root active buildlane untouched.",
+    "historical_cleanup": "Export02 immediate Gradlestop0; exactroot/buildlogicgenerated outputs removed and noownedworkers/errors. Schema02stop0 andcleanup accepted. C05separateper-cyclestop/upload/worker/device/output cleanup remains in source-bound supplementalreport.",
+    "final_tracked_status": ""
+  }
+}

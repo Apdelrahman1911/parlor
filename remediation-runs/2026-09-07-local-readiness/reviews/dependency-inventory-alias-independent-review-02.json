@@ -1,0 +1,286 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/factory_review",
+  "author": "/root",
+  "reviewed_at": "2026-09-07T14:10:33.733691+00:00",
+  "decision": "APPROVED_EXACT_CONTENT_GROUPING_FOR_EXPORT02",
+  "blocking_findings": [],
+  "coverage": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/resolved_dependencies.init.gradle",
+      "sha256": "5120cb8d7c12825ad889f23d73075ef29ae48b66e4966d1e2335aa2d11995f59",
+      "reviewed_lines": [
+        [
+          1,
+          107
+        ]
+      ],
+      "method": "FULL_SOURCE_READ; unchanged renderer hash rechecked against independentreview01"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/dependency_inventory.py",
+      "sha256": "f82c3365ff59b602d3ad03ad19fa085f6831e79fff5753898785a06c478045ce",
+      "reviewed_lines": [
+        [
+          1,
+          265
+        ]
+      ],
+      "method": "FULL_SOURCE_READ; unchanged renderer hash rechecked against independentreview01"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_dependency_inventory.py",
+      "sha256": "a129437daa50caf0e355c4a492b5e896781b25aa73ac25dc9385d7c66d9d4065",
+      "reviewed_lines": [
+        [
+          1,
+          179
+        ]
+      ],
+      "method": "FULL_SOURCE_READ; unchanged renderer hash rechecked against independentreview01"
+    }
+  ],
+  "actual_prior_evidence": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/dependency-inventory-controls-01/receipt.json",
+      "sha256": "008e5016fe3e7500830210e0d6be8ee4eb90805688b1810991e4311056435ba6",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "scripts/release/tests",
+        "-p",
+        "test_dependency_inventory.py",
+        "-v"
+      ],
+      "status": "PASS",
+      "exit_code": 0,
+      "started_at": "2026-09-07T13:59:00.246447+00:00",
+      "finished_at": "2026-09-07T13:59:00.620021+00:00",
+      "stop_exit_code": 0,
+      "workers": {
+        "terminated_owned_workers": [],
+        "remaining_owned_workers": []
+      },
+      "removed_outputs": [],
+      "remaining_outputs": [],
+      "cleanup_errors": [],
+      "source_changed_during_cycle": false,
+      "runner_changed_during_cycle": false
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/dependency-graph-export-01/receipt.json",
+      "sha256": "b03257074624cc0746b3532358a657cd947930c047cd711319cdb674c12e90ae",
+      "command": [
+        "./gradlew",
+        "writeResolvedDependencyInventory",
+        "-I",
+        "scripts/verification/resolved_dependencies.init.gradle",
+        "-Pparlor.dependencyInventoryDir=/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/dependency-graph-export-01/raw-graphs",
+        "--no-daemon",
+        "--no-parallel",
+        "--max-workers=1",
+        "--no-configuration-cache",
+        "--dependency-verification=strict",
+        "-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=dependency-graph-export-01",
+        "-Pkotlin.compiler.execution.strategy=in-process",
+        "-Pparlor.android.signing.storeFile=",
+        "-Pparlor.android.signing.storePassword=",
+        "-Pparlor.android.signing.keyAlias=",
+        "-Pparlor.android.signing.keyPassword="
+      ],
+      "status": "PASS",
+      "exit_code": 0,
+      "started_at": "2026-09-07T13:59:27.880905+00:00",
+      "finished_at": "2026-09-07T13:59:38.631946+00:00",
+      "stop_exit_code": 0,
+      "workers": {
+        "terminated_owned_workers": [],
+        "remaining_owned_workers": []
+      },
+      "removed_outputs": [
+        "build",
+        "build-logic/convention/build"
+      ],
+      "remaining_outputs": [],
+      "cleanup_errors": [],
+      "source_changed_during_cycle": false,
+      "runner_changed_during_cycle": false
+    }
+  ],
+  "raw_graph_analysis": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/dependency-graph-export-01/raw-graphs/androidRelease.json",
+      "sha256": "575b481f183cae2408aa12f6a56193298b712e7bc1343c40d5a8985f438d39c9",
+      "component_count": 239,
+      "maven_count": 228,
+      "artifacts": 130,
+      "unique_content_identities": 129,
+      "duplicates": [
+        {
+          "key": [
+            "androidx.core:core:1.16.0",
+            "core-1.16.0.aar"
+          ],
+          "rows": [
+            {
+              "component": "androidx.core:core:1.16.0",
+              "name": "core-1.16.0.aar",
+              "bytes": 1377184,
+              "sha256": "6bf03d39dbe3744acce227d3b697374c3625aae1025fbec8ad9fd7bd58bce431"
+            },
+            {
+              "component": "androidx.core:core:1.16.0",
+              "name": "core-1.16.0.aar",
+              "bytes": 1377184,
+              "sha256": "6bf03d39dbe3744acce227d3b697374c3625aae1025fbec8ad9fd7bd58bce431"
+            }
+          ],
+          "exact_equal": true
+        }
+      ],
+      "component_uniqueness_and_edges": "PASS_STATIC_DATA_VALIDATION"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/dependency-graph-export-01/raw-graphs/iosArm64.json",
+      "sha256": "dbc4edb6470176932f0401eaabe130288a211875e8a60e8e4c9f4ad5c56aaab1",
+      "component_count": 167,
+      "maven_count": 156,
+      "artifacts": 81,
+      "unique_content_identities": 81,
+      "duplicates": [],
+      "component_uniqueness_and_edges": "PASS_STATIC_DATA_VALIDATION"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/dependency-graph-export-01/raw-graphs/iosSimulatorArm64.json",
+      "sha256": "25b64b3ced8950cea187c984a94fc30b2c412b398660c69033099d656c7f0994",
+      "component_count": 167,
+      "maven_count": 156,
+      "artifacts": 81,
+      "unique_content_identities": 81,
+      "duplicates": [],
+      "component_uniqueness_and_edges": "PASS_STATIC_DATA_VALIDATION"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/dependency-graph-export-01/raw-graphs/iosX64.json",
+      "sha256": "8418d89da868f19cfb3858dbc5c76f88e6425833710010a0d8665b70b522cbe5",
+      "component_count": 167,
+      "maven_count": 156,
+      "artifacts": 81,
+      "unique_content_identities": 81,
+      "duplicates": [],
+      "component_uniqueness_and_edges": "PASS_STATIC_DATA_VALIDATION"
+    }
+  ],
+  "controls01": {
+    "log": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/dependency-inventory-controls-01/gradle.log",
+    "sha256": "feb9555b8708dc181548e721aa8d2135e02017164759196d99245901cb3a0d48",
+    "actual_unique_tests": [
+      "test_constraints_are_not_misrepresented_as_runtime_dependency_edges",
+      "test_coordinates_cannot_escape_metadata_repository",
+      "test_cycle_and_excessive_inheritance_fail_closed",
+      "test_direct_pom_license_identity_and_parent_are_explicit",
+      "test_gradle_exporter_never_adds_repositories_or_weakens_verification",
+      "test_graph_receipt_binds_success_source_and_exact_consumed_bytes",
+      "test_graph_rejects_unverified_duplicate_dangling_and_forged_inputs",
+      "test_missing_license_is_reported_as_unresolved_never_a_default",
+      "test_parent_license_is_fetched_bound_and_attributed",
+      "test_pom_inherited_group_and_version_do_not_erase_identity",
+      "test_redirect_handler_refuses_before_following_another_origin",
+      "test_resolved_graph_and_cyclonedx_keep_edges_bytes_and_declared_status",
+      "test_unsafe_or_unresolved_pom_metadata_is_not_accepted"
+    ],
+    "test_count": 13,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "limitation": "These actual13 tests precede2new sourceassertions in currenttesthash; currentrevision still requires reexecution."
+  },
+  "research01_failure": {
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/dependency-license-research-01/receipt.json",
+    "sha256": "798b75959091747b28e902ed9bbfd3a9ef5d1fa5f87d15f261c1627223d29d0d",
+    "status": "FAIL",
+    "cause": "validate_graph rejected duplicate exactcore artifact row before network/outputdir creation. This is neither a licensefailure nor a successful finalSBOM."
+  },
+  "correction_proof": [
+    "Emitter groups only exactcomponent/name/bytes/SHA256 map equality after strictresolution. Distinctfiles or hashes cannot be hidden bythisgrouping.",
+    "Selectedvariant displaynames are retained sorteduniquely on eachcoalesced row. Components/dependencyedges remainunchanged.",
+    "Unchanged renderer still rejects duplicatecomponent+filename keys, including conflictingbytes/hash. No parser/security/strictverification checks wereweakened.",
+    "Rawexport01 remainsintact; export02 mustuse a freshowneddirectory and newsource/controlreceipt."
+  ],
+  "research": [
+    {
+      "url": "https://raw.githubusercontent.com/gradle/gradle/v8.13.0/subprojects/core-api/src/main/java/org/gradle/api/artifacts/result/ResolvedArtifactResult.java",
+      "sha256": "40ca0a1a68e9883a138384a13ebc783c9057b932cf9f00e0e84379d07bc984ae",
+      "lines": [
+        [
+          25,
+          34
+        ]
+      ],
+      "claim": "Artifact API exposes selected variant independently from file identity.",
+      "accessed_at": "2026-09-07T14:10:33.733691+00:00"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/gradle/gradle/v8.13.0/platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/result/DefaultResolvedArtifactResult.java",
+      "sha256": "c0b665b1f316f4449e348aeb1aee02f521f779c8f32f4e88e43723d1d05d5b00",
+      "lines": [
+        [
+          28,
+          70
+        ]
+      ],
+      "claim": "Resolved wrapper stores full artifactidentifier+variant+file. Inventory projects only4contentfields.",
+      "accessed_at": "2026-09-07T14:10:33.733691+00:00"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/gradle/gradle/v8.13.0/platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/ResolvedArtifactCollectingVisitor.java",
+      "sha256": "61446b180f8d5e88403db7442679140a4b55363572ba82e0e4db72d863efcbdf",
+      "lines": [
+        [
+          34,
+          53
+        ]
+      ],
+      "claim": "Collector deduplicates full ComponentArtifactIdentifier, not projected component/name/bytes/hash fields. Duplicate inventory rows therefore do not prove duplicateGraphComponents or aGradle resolution failure.",
+      "accessed_at": "2026-09-07T14:10:33.733691+00:00"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/gradle/gradle/v8.13.0/platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/configurations/DefaultArtifactCollection.java",
+      "sha256": "4cea7266d721af614263db054a366a0e052219b381745ebb9ebcc0e1b2d13679",
+      "lines": [
+        [
+          36,
+          55
+        ],
+        [
+          73,
+          77
+        ]
+      ],
+      "claim": "Nonlenient collection rethrows resolutionfailures; setofartifactresults does not establish uniqueness in reduced exporter keys.",
+      "accessed_at": "2026-09-07T14:10:33.733691+00:00"
+    },
+    {
+      "url": "https://dl.google.com/dl/android/maven2/androidx/core/core/1.16.0/core-1.16.0.module",
+      "sha256": "4ab4a3b0bc1664e3a2c60dec699af635778e15c6ee373971690948f073dd721e",
+      "claim": "Official core1.16.0 api/runtime variants both declare exact same1,377,184-byte AAR SHA6bf03d39dbe3744acce227d3b697374c3625aae1025fbec8ad9fd7bd58bce431. Both metadata andAAR digests match checked-in strictverification metadata. Actual export01 omitted fullvariant/id labels; exact selectedalias cause must not be invented.",
+      "accessed_at": "2026-09-07T14:10:33.733691+00:00"
+    }
+  ],
+  "counter_evidence": [
+    "Publicmetadata verifies identicalapi/runtimeAAR declarations, not which specificArtifactIdentifiers theactualrunselected. Upcomingvariantcapture isnecessary to explain actualaliaslabels.",
+    "ActualGradleexport01 succeeded, notcompiledapplicationtests; buildlogic compilationwasFROM-CACHE and normalKGP host-target/deprecatedGradlewarnings remainvisible.",
+    "No licensePOM networkresearch/schemaoutput hadsucceeded atthisreview. Legalapproval remains external and scopedartifactcompleteness limits fromreview01 stillapply."
+  ],
+  "cleanup": "Root receipts confirm immediateGradlestop0, no remainingownedworkers/outputs and no cleanuperrors. Reviewer launched onlybounded read/parse/HTTPSresearch processes, allfinished; no builds/nativeapps/Gradledaemons/cachewrites/sourceedits.",
+  "next_verification": [
+    "Root-owned export02 withcurrenthashes",
+    "Reexecute current13controltests includingnewsourceassertions",
+    "Compare component/edge graph andexactcontentset across01/02",
+    "Readactualvariants andrenderer/POM/schemaresults; do notclaimsuccess inadvance"
+  ]
+}

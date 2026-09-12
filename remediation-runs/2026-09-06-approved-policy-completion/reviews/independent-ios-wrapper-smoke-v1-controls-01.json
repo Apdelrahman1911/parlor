@@ -1,0 +1,167 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-09-06T14:51:53.545087+00:00",
+  "reviewer": "/root/release_fix_review",
+  "author": "/root/factory_review",
+  "classification": "SOURCE_REVIEW_APPROVED_FOR_ROOT_CONTROL_TESTS_ONLY",
+  "control_sha256": "59e97515d3fa919edc0232d7717bee987d0ad3d7a30a89ac2a743933651619cd",
+  "author_manifest_sha256": "a307e2dc9ac17407bd5fc68e7eef3537ab4b369a6e453936dd655807849dc7f7",
+  "source": {
+    "branch": "main",
+    "commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+    "tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+    "source_manifest_sha256": "9ac2be536979f2216b39c10a6d148125a12380987d4efd483bbcbaeb1733318e",
+    "tracked_diff_sha256": "148fb4583d8fa8341b3cbc48a7fc0bc7564bf4df5c27e9d80e32c6bfdc57b784",
+    "bound_inputs": 669,
+    "copy_inputs": 613,
+    "current_bound_inputs_byte_identical": true
+  },
+  "source_check": "All 669 current inputs independently rehashed; zero drift; all 11 controls match; aggregate 59e97515... independently recomputed. Final delta independently exactly matches current smoke versus V6.",
+  "source_coverage": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/native/ios_wrapper_smoke_v1/run_ios_wrapper_smoke_cycle.py",
+      "sha256": "400df728409ebd713467d3b741c1a0f7db67b8eab616554e26e3cb290bdc3859",
+      "reviewed_line_ranges": [
+        [
+          1,
+          629
+        ]
+      ],
+      "notes": "Complete runner read; exact final executable delta against independently reviewed V6 checked."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/native/ios_wrapper_smoke_v1/test_smoke_contract.py",
+      "sha256": "d344fa70f4a527b5f5d2bfe2330b4661926df9c1ac4beb2c893fe60ff445cbff",
+      "reviewed_line_ranges": [
+        [
+          1,
+          146
+        ]
+      ],
+      "notes": "All ten proposed contract tests read; no test execution by reviewer."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/native/ios_wrapper_smoke_v1/copied_sources.py",
+      "sha256": "a33fee7e8ac9cae3d80de0c9d906b252cbc0cc939ff2b670fcdd62eb349a2221",
+      "reviewed_line_ranges": [
+        [
+          1,
+          203
+        ]
+      ],
+      "notes": "Complete helper read; instrumenting functions retained byte-identically but unreachable from smoke. Bound create/copy/post-build functions used."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/native/ios_wrapper_smoke_v1/copied-kotlin-phase.sh.in",
+      "sha256": "1a8a5ee2c87fb4a4d8294ac3d5e2f057baaf9bd1c5a74b04564586b5f1b4baf8",
+      "reviewed_line_ranges": [
+        [
+          1,
+          42
+        ]
+      ],
+      "notes": "Immediate nested Gradle stop including failure/interruption; failed cd/build/stop/normalization cannot PASS."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/native/ios_wrapper_smoke_v1/bind_source.py",
+      "sha256": "13d987a7d3e3f93bf885cd26a09614dc72cfd2bef735953d7ed7f5118c58ad7d",
+      "reviewed_line_ranges": [
+        [
+          1,
+          36
+        ]
+      ],
+      "notes": "No automatic rebind; existing binding retained."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/iosApp/iosApp/ContentView.swift",
+      "sha256": "5881b354ccc45340100356fbf37480e94efdcc2e8fe823f0bb6b5b60f8ccaa87",
+      "reviewed_line_ranges": [
+        [
+          1,
+          62
+        ]
+      ],
+      "notes": "Same production stable factory/update no-op; no added observer."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/iosApp/iosApp/ComposeContainerViewController.swift",
+      "sha256": "9bdeeaf67a569f4016bc5359ae865b6df9eeaa2a9f6ee36e01041bf79000a903",
+      "reviewed_line_ranges": [
+        [
+          1,
+          48
+        ]
+      ],
+      "notes": "Existing independent source review e1842a06... reopened in full."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/iosApp/iosAppUITests/IOSAppLaunchUITests.swift",
+      "sha256": "e903278fc8defcac9a4d03a52495c1364a361222e5f369059c5d6b6416fb6eb7",
+      "reviewed_line_ranges": [
+        [
+          1,
+          32
+        ]
+      ],
+      "notes": "One unchanged explicit-English cold launch; 30s foreground/home and 2s no-alert interval."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/iosApp/iosAppUITests/ComposeContainerViewControllerTests.swift",
+      "sha256": "a4730b77ad93d01df60a4b6fde558bfea264f71b19ee5aa6c4a08d33480eacc8",
+      "reviewed_line_ranges": [
+        [
+          1,
+          104
+        ]
+      ],
+      "notes": "Four unchanged production-container fixtures; not actual Compose child fixtures."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/iosApp/iosApp.xcodeproj/xcshareddata/xcschemes/iosApp.xcscheme",
+      "sha256": "b883fb73d15c7cf4faf868d2cdc8c2fb921c7ffe3606893733b1f89a33747312",
+      "reviewed_line_ranges": [
+        [
+          1,
+          103
+        ]
+      ],
+      "notes": "Actual test target enabled, nonparallel; runner selects exactly five methods and verifies discovered identities/device."
+    }
+  ],
+  "reused_reviews": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-dsc01-v6-execution-approval-01.json",
+      "sha256": "68384bb6b8d6a8e57ea432be9b630c4d1b13a984dc048e863b45e0f5bd2d4057",
+      "scope": "Earlier complete FIFO/ownership/imported helper source reviews and 99 executed controls are prior evidence only. New smoke contracts not executed yet."
+    }
+  ],
+  "independent_checks": [
+    "All 19 declared ownership/finalizer helpers AST-identical to V6. Six reused local helper/binding files byte-identical.",
+    "Sibling V6 runner read by AST-equivalence test is now explicitly included in final control manifest; earlier provenance concern resolved before freeze.",
+    "Only PBX shellScript is replaced in controlled code. Every other application/test/resource input must hash-identically; exact additional/missing/symlink checks before and after build.",
+    "No original test replaced, observer injected, data container read, synthetic Settings invocation or screenshot export. Fresh isolated copy/framework path/DerivedData, unsigned Debug identity required.",
+    "Control tests exercise five exact descriptors, skips/failures/duplicates/wrong devices, copy input drift and unchanged ownership/finalizer contracts. Synthetic temporary paths now canonicalized before post-build checks.",
+    "Shared lane lock and pre-existing output/worker rejection retained. Immediate isolated stops; exact owned simulator shutdown/delete; PID/start/UID/FIFO attestations; cache symlinks unlinked without deleting global caches.",
+    "Runtime and cleanup must both PASS, source/control/copy identities unchanged, and xcode exit0 plus exact five unskipped descriptors; mere compilation cannot pass."
+  ],
+  "authorization": {
+    "root_python_controls": "GO only for /usr/bin/python3 -B -m unittest discover -s remediation-runs/2026-09-06-approved-policy-completion/native/ios_wrapper_smoke_v1 -p test_*.py -v under root recorded finalizer",
+    "expected_methods": 37,
+    "native_execution": "PENDING actual control PASS and cleanup receipt review; no native GO yet"
+  },
+  "limitations": [
+    "Not DS-C01 matrix closure: actual Settings/System ownership, active sessions, Arabic Compose semantics, geometry/gesture/physical LAN remain separate.",
+    "Five tests are not five launches: four fixture methods and one actual cold launch only.",
+    "Original launch test has no defer terminate; exact owned simulator shutdown/delete handles post-failure app cleanup.",
+    "Xcode26.5/iOS26.5 unsigned simulator is not Store-qualified26.3, signing or physical-device proof.",
+    "A signature/AST contract is not native runtime evidence."
+  ],
+  "preservation": {
+    "source_edits": false,
+    "tests_executed": false,
+    "build_or_app_processes_started": false,
+    "cleanup_actions": false,
+    "output": "This compact reviewer record only; no parent-owned process/output modified."
+  }
+}

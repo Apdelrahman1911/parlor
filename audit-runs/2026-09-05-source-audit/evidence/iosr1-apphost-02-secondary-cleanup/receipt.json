@@ -1,0 +1,94 @@
+{
+  "cycle": "iosr1-apphost-02-secondary-cleanup",
+  "execution_kind": "targeted-apple-fifo-cleanup",
+  "started_at": "2026-09-05T14:30:53.978285+00:00",
+  "status": "PASS",
+  "cleanup_status": "PASS",
+  "original_receipt": "audit-runs/2026-09-05-source-audit/evidence/iosr1-apphost-02/receipt.json",
+  "original_receipt_sha256": "2dd7b901ddc2f33dda5fcb91c108f97156fb94f2d209e565754858d6032ec332",
+  "qualification": "Additive correction: original runner removed main owned root but did not inventory external ibtoold FIFO directory. No runtime result or old receipt rewritten. No build executed.",
+  "owned_secondary_temporary_roots": [
+    "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-67921"
+  ],
+  "metadata_only": true,
+  "no_process_termination": true,
+  "cleanup_errors": [],
+  "removed_paths": [
+    "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-67921/IB/613ED9B4-D4E6-4CDA-ACB8-AA81DFFB0280.HostToRemote",
+    "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-67921/IB/613ED9B4-D4E6-4CDA-ACB8-AA81DFFB0280.RemoteToHost",
+    "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-67921/IB",
+    "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-67921"
+  ],
+  "ownership_evidence": [
+    {
+      "pid": 67921,
+      "ppid": 67919,
+      "pgid": 67921,
+      "start": "Sat Sep 5 17:14:45 2026",
+      "command": "/Applications/Xcode.app/Contents/Developer/usr/bin/ibtoold --sending-client-environment",
+      "role": "command",
+      "proof": "Observed child/group of identity-checked task process"
+    },
+    {
+      "pid": 68144,
+      "ppid": 67921,
+      "pgid": 67921,
+      "start": "Sat Sep 5 17:15:08 2026",
+      "command": "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/Library/Xcode/Overlays/AssetCatalogSimulatorAgent --hostToRemoteFIFO /var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-67921/IB/613ED9B4-D4E6-4CDA-ACB8-AA81DFFB0280.HostToRemote --remoteToHostFIFO /var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-67921/IB/613ED9B4-D4E6-4CDA-ACB8-AA81DFFB0280.RemoteToHost",
+      "role": "command",
+      "proof": "Observed child/group of identity-checked task process"
+    }
+  ],
+  "metadata_before": [
+    {
+      "path": "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-67921",
+      "device": 16777230,
+      "inode": 71640064,
+      "mode": "0o40755",
+      "uid": 501,
+      "bytes": 96,
+      "birth_at": "2026-09-05T14:15:08.968404+00:00"
+    },
+    {
+      "path": "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-67921/IB",
+      "device": 16777230,
+      "inode": 71640065,
+      "mode": "0o40755",
+      "uid": 501,
+      "bytes": 128,
+      "birth_at": "2026-09-05T14:15:08.968466+00:00"
+    },
+    {
+      "path": "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-67921/IB/613ED9B4-D4E6-4CDA-ACB8-AA81DFFB0280.HostToRemote",
+      "device": 16777230,
+      "inode": 71640555,
+      "mode": "0o10755",
+      "uid": 501,
+      "bytes": 0,
+      "birth_at": "2026-09-05T14:15:11.066312+00:00"
+    },
+    {
+      "path": "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-67921/IB/613ED9B4-D4E6-4CDA-ACB8-AA81DFFB0280.RemoteToHost",
+      "device": 16777230,
+      "inode": 71640066,
+      "mode": "0o10755",
+      "uid": 501,
+      "bytes": 0,
+      "birth_at": "2026-09-05T14:15:08.968522+00:00"
+    }
+  ],
+  "pid_check": {
+    "exit_code": 1,
+    "stdout": "",
+    "stderr": ""
+  },
+  "file_holder_check": {
+    "exit_code": 1,
+    "stdout": "",
+    "stderr": ""
+  },
+  "remaining_owned_secondary_temporaries": [],
+  "cleanup_completed_at": "2026-09-05T14:30:54.042352+00:00",
+  "finished_at": "2026-09-05T14:30:54.042362+00:00",
+  "cleanup_method": "Exact recorded FIFO names unlinked after PID/start-lineage, uid/birthtime/inode and no-open-holder checks; only empty IB and ibtoold67921 directories removed. No glob/rmtree or unrelated process operations."
+}

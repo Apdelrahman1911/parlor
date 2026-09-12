@@ -1,0 +1,582 @@
+{
+  "schema_version": 1,
+  "kind": "INDEPENDENT_CONTINUATION_LEDGER_PROBE_AND_CORRECTION_EVIDENCE_REVIEW",
+  "reviewer": "/root/fixture_review",
+  "ledger_author": "/root/l08_fixture",
+  "recorded_at": "2026-09-08T14:14:34.837245+00:00",
+  "decision": "APPROVE_EXACT_LEDGER_BYTES_FOR_SOURCE_CONTROL_AND_INVENTORY_FREEZE_PREPARATION_NOT_NATIVE_DISPATCH",
+  "reviewed_ledger": {
+    "path": "remediation-runs/2026-09-08-continuation/CONTINUE_LATEST.md",
+    "bytes": 30338,
+    "sha256": "d240958b6b24ef79f50279fe3462cfd7a6ab73d391ef5429a9a62bb96426c165"
+  },
+  "scope": "Review of new delta from the previously approved0ca030 ledger: pushed22467846/1efed50 freeze, actual426 validator, failed34232325670 diagnostic, reviewed qualifier-budget correction, actual45 focused controls and transport03. Raw new evidence reopened; unchanged earlier remediation campaign not rerun or broadly re-audited.",
+  "previous_checkpoint": {
+    "ledger_bytes": 21949,
+    "ledger_sha256": "0ca030e55d14cb76c0bce18651ddc69ceb5126418cce8a885f8896af0e9a84a1",
+    "review": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/continuation-ledger-native-repair-independent-02.json",
+      "bytes": 32972,
+      "sha256": "867baf1f40a1cddc9f50b4fa2146a32227754e6f5ac382f8c8c27b10d33ef2c2"
+    },
+    "retained_scope": "Historical failures and reviewed results retain their original source/control/platform limits; this review adds no new historical application-runtime evidence."
+  },
+  "freeze_and_remote": {
+    "source_control_commit": "22467846fbd48934226de5f06026b511d15c1b63",
+    "source_control_tree": "25b6f87943867d2b5efe4e2b6820519db7779a8d",
+    "inventory_commit": "1efed50cbc7856c11867e4cb088ba3b68716c8fc",
+    "tree": "bcabd2fd29eaea276bee31ec4ff6b74b63a79366",
+    "branch": "fix/local-readiness-2026-09-07",
+    "parent_chain_read_from_git": true,
+    "inventory_rows": 15553,
+    "inventory_sha256": "3e067a3ccf70967663c2f6ddedff1c078a993312b13c968fd8d34d524fa7cc89",
+    "frozen_source_manifest_entries": 825,
+    "frozen_source_manifest_sha256": "9aafa1d908884f2c083d75c2959be625806ea7984da4c72e07b0f2e60f45ff4c",
+    "all825_frozen_git_blobs_and_manifest_digest_independently_matched": true,
+    "normal_push_log": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/hosted-probe-freeze-01-push.log",
+      "bytes": 111,
+      "sha256": "b92a019340612e714227f9177d5750ef010c31fb91891b68951f80a559787001"
+    },
+    "reviewer_direct_read_only_remote_query": {
+      "command": [
+        "git",
+        "ls-remote",
+        "origin",
+        "refs/heads/fix/local-readiness-2026-09-07"
+      ],
+      "exit_code": 0,
+      "stdout": "1efed50cbc7856c11867e4cb088ba3b68716c8fc\trefs/heads/fix/local-readiness-2026-09-07\n",
+      "exact": true
+    },
+    "limit": "Observed current checkpoint only, not a future correction freeze or final delivery confirmation."
+  },
+  "new_linux_cycles": [
+    {
+      "cycle": "continuation-release-validator-02",
+      "receipt": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-release-validator-02/receipt.json",
+        "bytes": 304360,
+        "sha256": "1c538a25c7fdb6da3a6b0b6a72ce5d87047f7cf18e30963f8f061c07413bff6b"
+      },
+      "raw_evidence": [
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-release-validator-02/gradle.log",
+          "bytes": 81344,
+          "sha256": "20f6c5be38524930a00335ea8765b4c6274c41926618fcd26ab957211cc1e196"
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-release-validator-02/stop.log",
+          "bytes": 31,
+          "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-release-validator-02/java-toolchain.log",
+          "bytes": 2026,
+          "sha256": "a7a86ea7b20362e2c856e5e71a8b6fc51764d5aeaa9f5a8c82b386ff156f8a7c"
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-release-validator-02/javac-toolchain.log",
+          "bytes": 14,
+          "sha256": "157f601a5854ca28a7dc364c13a5ca2879084186be49e3462d37acd028f35755"
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-release-validator-02/test-receipts.json",
+          "bytes": 3,
+          "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-release-validator-02/artifact-receipts.json",
+          "bytes": 3,
+          "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+        }
+      ],
+      "command": [
+        "/bin/bash",
+        "scripts/release/validate_release_system.sh"
+      ],
+      "status": "PASS",
+      "exit_code": 0,
+      "source": {
+        "commit": "1efed50cbc7856c11867e4cb088ba3b68716c8fc",
+        "tree": "bcabd2fd29eaea276bee31ec4ff6b74b63a79366",
+        "branch": "fix/local-readiness-2026-09-07",
+        "tracked_status": "",
+        "diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "source_manifest_sha256": "9aafa1d908884f2c083d75c2959be625806ea7984da4c72e07b0f2e60f45ff4c"
+      },
+      "source_manifest_entries": 825,
+      "source_and_runner_before_after_equal": true,
+      "actual_unique_tests": 426,
+      "passed": 426,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "descriptor_reconciliation": "426 unique verbose IDs,424 inline ok and2 Git-noise interleavings immediately followed by standalone ok; raw Ran426/OK. Synthetic FAILED JSON strings are not unittest failures.",
+      "cleanup": {
+        "stop_exit_code": 0,
+        "stopped_at": "2026-09-08T13:20:39.472751+00:00",
+        "cleanup_completed_at": "2026-09-08T13:20:39.564856+00:00",
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        },
+        "artifact_workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        },
+        "outputs_before": [],
+        "removed_outputs": [],
+        "retained_outputs": [],
+        "remaining_outputs": [],
+        "cleanup_errors": [],
+        "deferred_signals": [],
+        "scratch_independently_observed_absent": true
+      }
+    },
+    {
+      "cycle": "continuation-process-probe-budget-controls-01",
+      "receipt": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-process-probe-budget-controls-01/receipt.json",
+        "bytes": 304816,
+        "sha256": "d2a468ee6bbedeb8c2f06c16b5afe21d38036adfc560dd1f09658c7c59796d9e"
+      },
+      "raw_evidence": [
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-process-probe-budget-controls-01/gradle.log",
+          "bytes": 15946,
+          "sha256": "46fcf68465f5bda416585d1a59892b616363b498c2fee7ec009b9f994e8489d8"
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-process-probe-budget-controls-01/stop.log",
+          "bytes": 31,
+          "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-process-probe-budget-controls-01/java-toolchain.log",
+          "bytes": 2026,
+          "sha256": "a7a86ea7b20362e2c856e5e71a8b6fc51764d5aeaa9f5a8c82b386ff156f8a7c"
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-process-probe-budget-controls-01/javac-toolchain.log",
+          "bytes": 14,
+          "sha256": "157f601a5854ca28a7dc364c13a5ca2879084186be49e3462d37acd028f35755"
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-process-probe-budget-controls-01/test-receipts.json",
+          "bytes": 3,
+          "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-process-probe-budget-controls-01/artifact-receipts.json",
+          "bytes": 3,
+          "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+        }
+      ],
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "-v",
+        "scripts.release.tests.test_native_process_probe"
+      ],
+      "status": "PASS",
+      "exit_code": 0,
+      "source": {
+        "commit": "1efed50cbc7856c11867e4cb088ba3b68716c8fc",
+        "tree": "bcabd2fd29eaea276bee31ec4ff6b74b63a79366",
+        "branch": "fix/local-readiness-2026-09-07",
+        "tracked_status": "M remediation-runs/2026-09-08-continuation/CONTINUE_LATEST.md\n M scripts/ci/NATIVE_CONTINUATION.md\n M scripts/ci/native_process_probe.py\n M scripts/release/tests/test_native_process_probe.py",
+        "diff_sha256": "a7c128e8a6a14954963b8f1818885cf403c0bcd2092ff93d529df5805ed92cf5",
+        "source_manifest_sha256": "fa02baf9686cb9e553157aedc35ada87e613b912f66192a4baa7a615011b179a"
+      },
+      "source_manifest_entries": 825,
+      "source_and_runner_before_after_equal": true,
+      "actual_unique_tests": 45,
+      "passed": 45,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "descriptor_reconciliation": "45 unique verbose IDs,45 inline ok, raw Ran45 in0.181s/OK.16 diagnostic/custody JSONs are synthetic negative/positive fixtures, not native receipts.",
+      "cleanup": {
+        "stop_exit_code": 0,
+        "stopped_at": "2026-09-08T13:59:04.247484+00:00",
+        "cleanup_completed_at": "2026-09-08T13:59:04.319495+00:00",
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        },
+        "artifact_workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        },
+        "outputs_before": [],
+        "removed_outputs": [],
+        "retained_outputs": [],
+        "remaining_outputs": [],
+        "cleanup_errors": [],
+        "deferred_signals": [],
+        "scratch_independently_observed_absent": true
+      }
+    }
+  ],
+  "release_validator_scope": {
+    "script_reopened_at_executed_git_revision": true,
+    "actual_log_inventory_rows": 15553,
+    "observed": "Actual426 release controls, workflow contract, inventory freshness and pinned ShellCheck/actionlint stage complete with script exit0. Download digests reported OK; fail-closed script invokes both tools. Retained JDK21.0.12 logs match receipt. Empty XML/artifact arrays expected for this command.",
+    "limit": "Linux control/static/tooling execution only; not productionCheck, native platform/runtime, Store call or final full qualification. No pass claim is made for diagnostic runtime."
+  },
+  "failed_diagnostic": {
+    "run_id": 34232325670,
+    "attempt": 1,
+    "head_sha": "1efed50cbc7856c11867e4cb088ba3b68716c8fc",
+    "tree": "bcabd2fd29eaea276bee31ec4ff6b74b63a79366",
+    "workflow": ".github/workflows/production-verification.yml",
+    "ios_job_id": 102081312949,
+    "run_and_job_conclusion": "failure",
+    "step_exit_code": 2,
+    "other_jobs_skipped": 4,
+    "full_apple_and_A_B_steps_skipped": true,
+    "raw_evidence": [
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34232325670/artifacts.json",
+        "bytes": 1500,
+        "sha256": "985b8b409d79c708a9e3ef42d8857a769a333b944b456209d2ce6f4cc63e956d"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34232325670/attempt.json",
+        "bytes": 12711,
+        "sha256": "5033b0d9e301b7700a2ddb3e3522403b5166ef10b60d44d306a9998d19f0091a"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34232325670/download-receipt.json",
+        "bytes": 3846,
+        "sha256": "7ec4795e201e40c396988b5c635946d35994ad1831d6b4d23e389ed85f52180c"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34232325670/jobs.json",
+        "bytes": 10561,
+        "sha256": "f7c6c283d0a699b8b5fbe6b6d3a2f999dfd35635c9145b6934cce5a723fbe1a7"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34232325670/native-process-probe/probe.json",
+        "bytes": 18477,
+        "sha256": "31a911983e53ae2095738e84ccd37f5e36c4d85975707b78f6e5511f95abd10c"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34232325670/native-process-probe-cleanup/parlor-process-probe-34232325670-1-cleanup.json",
+        "bytes": 913,
+        "sha256": "567e5b06e6f99edd4a857872e0497ff54287a354252164198de188e9b37fdd84"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34232325670/native-process-probe-cleanup.zip",
+        "bytes": 786,
+        "sha256": "4acbc5e2cdeb23c897412ac7437b75b3d920c525db2fe3511514a9776cbc321c"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34232325670/native-process-probe.zip",
+        "bytes": 3347,
+        "sha256": "123a83ba96d901d13ad10c4b06b53c3f394c79e6d458ee53a102d85b63b3bbcb"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34232325670/run.json",
+        "bytes": 12689,
+        "sha256": "bf153f69813dda9e42af61c981e96d2be490455543d70ae3313dfcedbeb7f977"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34232325670/run.log",
+        "bytes": 61167,
+        "sha256": "ba93d5f458fe4cd3e32debc827423134f09643520af5c900c8ed7ab860dcbaa5"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34232325670/workflow.json",
+        "bytes": 533,
+        "sha256": "8345984073768616fd6aff6682c95051f186881c5fa4727b120c80e019841ece"
+      }
+    ],
+    "request": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/native-process-probe-dispatch-01/request.json",
+      "bytes": 1410,
+      "sha256": "c111afe28f23b4a395109270f9abc87bd396228f99e75b4dd3bc2ac94b8b7b74"
+    },
+    "controls": {
+      "count": 13,
+      "sha256": "0b60d4219b279c1022232d18a261a21ac7c577357cafbac2d695e58fbcf92a87",
+      "approved_manifest_equals_artifact": true,
+      "all13_frozen_git_blobs_and_canonical_digest_matched": true,
+      "approval_consumed_not_reusable_for_changed_source": true
+    },
+    "artifacts": [
+      {
+        "artifact_id": 10058341166,
+        "artifact_name": "native-process-probe-34232325670-1",
+        "archive": {
+          "path": "remediation-runs/2026-09-08-continuation/actions/34232325670/native-process-probe.zip",
+          "bytes": 3347,
+          "sha256": "123a83ba96d901d13ad10c4b06b53c3f394c79e6d458ee53a102d85b63b3bbcb"
+        },
+        "member": {
+          "path": "remediation-runs/2026-09-08-continuation/actions/34232325670/native-process-probe/probe.json",
+          "bytes": 18477,
+          "sha256": "31a911983e53ae2095738e84ccd37f5e36c4d85975707b78f6e5511f95abd10c"
+        },
+        "api_digest_and_size_match": true,
+        "archive_extracted_bytes_equal": true,
+        "zip_crc_errors": null
+      },
+      {
+        "artifact_id": 10058342975,
+        "artifact_name": "native-process-probe-cleanup-34232325670-1",
+        "archive": {
+          "path": "remediation-runs/2026-09-08-continuation/actions/34232325670/native-process-probe-cleanup.zip",
+          "bytes": 786,
+          "sha256": "4acbc5e2cdeb23c897412ac7437b75b3d920c525db2fe3511514a9776cbc321c"
+        },
+        "member": {
+          "path": "remediation-runs/2026-09-08-continuation/actions/34232325670/native-process-probe-cleanup/parlor-process-probe-34232325670-1-cleanup.json",
+          "bytes": 913,
+          "sha256": "567e5b06e6f99edd4a857872e0497ff54287a354252164198de188e9b37fdd84"
+        },
+        "api_digest_and_size_match": true,
+        "archive_extracted_bytes_equal": true,
+        "zip_crc_errors": null
+      }
+    ],
+    "commands": {
+      "total": 23,
+      "exited": 22,
+      "timed_out": 1,
+      "note": "EXITED does not mean all exit0; lsof empty-holder status is1.",
+      "failure": {
+        "label": "binding-or-platform",
+        "command": [
+          "/usr/bin/xcrun",
+          "simctl",
+          "list",
+          "runtimes",
+          "--json"
+        ],
+        "status": "TIMEOUT",
+        "timeout_seconds": 20,
+        "started_at": "2026-09-08T13:30:25.489644+00:00",
+        "owned_pid": 3395,
+        "ownership": "direct-unreaped-Popen",
+        "timeout_observed_at": "2026-09-08T13:30:45.494598+00:00",
+        "observation_elapsed_seconds": 20.003,
+        "exit_code": -15,
+        "direct_child_reaped": true,
+        "elapsed_seconds": 20.017,
+        "finished_at": "2026-09-08T13:30:45.509360+00:00",
+        "stdout_bytes": 0,
+        "stderr_bytes": 0
+      }
+    },
+    "stages": [],
+    "qualified_toolchain_record_absent": true,
+    "platform": "Actions setup log advertises macOS15.7.9/build24G830, macos-15-arm64 image20260829.0321.1, DEVELOPER_DIR Xcode26.3. Version/SDK/developer commands returned exit0, but runtime enumeration timed out and qualified_platform never returned. No persisted full toolchain/runtime/device qualification or runtime-availability observation; advertised runner metadata is not completed probe qualification.",
+    "not_executed": [
+      "Installed ps identity/signature/entitlements",
+      "Original15s ps or metadata-ps/libproc comparison",
+      "Host metrics/sample stacks",
+      "Owned simulator create/boot",
+      "Nonbuilding showBuildSettings overlap",
+      "Parlor app/XCTest/L08/normal Debug application libproc provenance"
+    ],
+    "diagnosis_boundary": "The enforced20s qualifier cap and source-visible120s shared default mismatch are established. Empty output provides no OS-level reason for delay, no proof of unavailable runtime, no proof that120s will succeed, and no reproduction/resolution of earlier A17/B18 ps15s timeout.",
+    "cleanup": {
+      "five_complete_stages": [
+        {
+          "label": "stop-immediate",
+          "status": "COMPLETE",
+          "started_at": "2026-09-08T13:30:45.513944+00:00",
+          "result": {
+            "exit_code": 0,
+            "isolated_registry": true,
+            "no_build_or_test_task": true
+          },
+          "finished_at": "2026-09-08T13:30:52.075603+00:00"
+        },
+        {
+          "label": "owned-simulator-retirement",
+          "status": "COMPLETE",
+          "started_at": "2026-09-08T13:30:52.076378+00:00",
+          "result": {
+            "result": "NOT_CREATED",
+            "reason": "No create intent was written"
+          },
+          "finished_at": "2026-09-08T13:30:52.077192+00:00"
+        },
+        {
+          "label": "stop-final",
+          "status": "COMPLETE",
+          "started_at": "2026-09-08T13:30:52.077975+00:00",
+          "result": {
+            "exit_code": 0,
+            "isolated_registry": true,
+            "no_build_or_test_task": true
+          },
+          "finished_at": "2026-09-08T13:30:52.707471+00:00"
+        },
+        {
+          "label": "exact-owned-resource-cleanup",
+          "status": "COMPLETE",
+          "started_at": "2026-09-08T13:30:52.709331+00:00",
+          "result": {
+            "resources_removed": true,
+            "global_cache_deleted": false
+          },
+          "finished_at": "2026-09-08T13:30:53.086067+00:00"
+        },
+        {
+          "label": "source-control-reconciliation",
+          "status": "COMPLETE",
+          "started_at": "2026-09-08T13:30:53.087331+00:00",
+          "result": {
+            "source_unchanged": true,
+            "controls_unchanged": true
+          },
+          "finished_at": "2026-09-08T13:30:53.521840+00:00"
+        }
+      ],
+      "preservation": {
+        "failures": 0,
+        "errors": []
+      },
+      "signals": [],
+      "cleanup_safe": true,
+      "post_upload_custody": {
+        "schema_version": 1,
+        "context": {
+          "repository": "Apdelrahman1911/parlor",
+          "branch": "fix/local-readiness-2026-09-07",
+          "head_sha": "1efed50cbc7856c11867e4cb088ba3b68716c8fc",
+          "tree": "bcabd2fd29eaea276bee31ec4ff6b74b63a79366",
+          "workflow": ".github/workflows/production-verification.yml",
+          "root": "/Users/runner/work/parlor/parlor",
+          "run_id": 34232325670,
+          "run_attempt": 1
+        },
+        "kind": "PROCESS_PROBE_CUSTODY_CLEANUP",
+        "status": "COMPLETE",
+        "started_at": "2026-09-08T13:30:56.654684+00:00",
+        "upload": {
+          "artifact_id": "10058341166",
+          "sha256": "123a83ba96d901d13ad10c4b06b53c3f394c79e6d458ee53a102d85b63b3bbcb"
+        },
+        "removed_owned_staging": true,
+        "probe_status": "OBSERVATIONS_WITH_FAILURES_NOT_RUNTIME_EVIDENCE",
+        "scope": "Custody cleanup only; probe status is preserved, not an application result.",
+        "finished_at": "2026-09-08T13:30:56.656007+00:00"
+      },
+      "limit": "Exact remote custody/resource retirement evidenced by bound receipts/API/ZIPs and command rows; not reviewer remote filesystem observation or a system-wide no-worker claim. Public wrapper cache retained by policy. No app/DerivedData/simulator build existed. Diagnostic failure remains failure."
+    }
+  },
+  "reviewed_budget_correction": {
+    "independent_source_review": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-process-probe-budget-independent-01.json",
+      "bytes": 9842,
+      "sha256": "53934d03592b917f311724e7e586744bfee36acad97a0fd88a7ea12c98cf7cda"
+    },
+    "approved_three_inputs": [
+      {
+        "path": "scripts/ci/native_process_probe.py",
+        "sha256": "c87f6d1289ee50a7387988bd85953d451dac9e1b7b88a4d60f7b4848f86516da",
+        "bytes": 44789
+      },
+      {
+        "path": "scripts/release/tests/test_native_process_probe.py",
+        "sha256": "707f394e34d8234f4617963af32a865b3620aaec7a16ee6e0c166c0e1090ef39",
+        "bytes": 43371
+      },
+      {
+        "path": "scripts/ci/NATIVE_CONTINUATION.md",
+        "sha256": "e2e5f62f4a8d876585120e32ff73e91f7c3d992963c80346e94e54f906eec846",
+        "bytes": 10879
+      }
+    ],
+    "ledger_claims_match_reopened_source_diff": true,
+    "scope": "Only exact absolute runtimes/devicetypes enumeration tuples restore120s. Ordinary adapter commands20s; valid explicit smaller values honored/invalid rejected. Whole observation allowance+4s reserve admission; named qualifier failure stage. Observation300s, cleanup225s, originalps15s, strict platform checks, ownership/privacy and five finalizers preserved. Finalizing Git keeps prior bounded remaining-time adaptation.",
+    "actual_focused_execution": "45 actual passing synthetic controls, not45 native observations; distinct from earlier frozen426 and original187 normal-provenance controls.",
+    "native_status": "No corrected probe or A19/B20 execution established. New source/inventory freeze, fresh control binding and independent one-run approval still required."
+  },
+  "transport03": {
+    "independent_report": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/transport-contracts-03-evidence-independent-01.json",
+      "bytes": 23797,
+      "sha256": "73e05c66850697a44583673b7ac5b7851690f4d4b7f91713aaaa50315faee651"
+    },
+    "receipt": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-03/receipt.json",
+      "bytes": 305441,
+      "sha256": "230bea21323f6443e2d87e82d90e6326bf66651d05a9e667adadf242ccecb312"
+    },
+    "actual": "All22 raw XML suites/277 unique cases=274PASS+3 existing single-JVM loopback skips;0 failures/errors. desktopTest actually executed.21 actionable tasks:14 executed,7 compile-cache hits.",
+    "source": "1efed50+dirty reviewed correction and then-held ledger; source825 fa02baf9686cb9e553157aedc35ada87e613b912f66192a4baa7a615011b179a and diff a7c128e8a6a14954963b8f1818885cf403c0bcd2092ff93d529df5805ed92cf5. Full before/after equality and all825 live source rehash verified in separate raw review.",
+    "cleanup": "Immediate stop0; no workers/errors/remaining outputs;7 exact generated paths and cycle scratch independently observed absent; raw XML archives preserved.",
+    "limit": "JVM static/contracts scope only; cached compilation and Linux-disabled Apple targets are not fresh native evidence."
+  },
+  "ledger_consistency": {
+    "source_bindings_preserved": "426 at clean1efed50;45/transport03 at1efed50+held dirty delta; later ledger bytes outside those executed diff bindings; C only25b1. No result relocated to future freeze.",
+    "outer_cycle_count": "11 table cycles+3 C cycles=14. Two historical failed outer cycles retained as failures; count is not14 application passes.",
+    "C": "Successful prior4graph456component/export/render/candidate chain remains25b1-only. No execution at22467846/1efed50 or future freeze; refresh still required.",
+    "A_B": "Functional13boots/20operations/26strict comparisons plus3hostfixtures/42operations remain incomplete. Historical native16 strict failures unresolved and not declared physical-only. Actual Parlor libproc provenance still not supplied by controls or failed no-app probe.",
+    "D": "All5 combined jobs still pending. Focused skipped jobs not promoted to passes.",
+    "exclusions": "Physical/device/keybag/backup/restore/LAN/accessibility, private signing/Store operation and separate owner/legal/editorial/privacy requirements unchanged; NOT_READY.",
+    "original_failed_receipts_not_modified": true
+  },
+  "referenced_new_reviews": [
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/hosted-probe-freeze-01.json",
+      "bytes": 2372,
+      "sha256": "7b4f526bd800d9228d5caa5351cc904de4fb27780ebc82d6233c44de23387bd8"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-process-probe-frozen-controls-01.json",
+      "bytes": 2058,
+      "sha256": "f01e05a1cb0ed3dae54d6bbf980d806e5114e0600d4be69a4f3b2b45784be3a8"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-process-probe-dispatch-independent-01.json",
+      "bytes": 7452,
+      "sha256": "61d0d98068c6bcaca454909f99a0fbf016b80566bba9024d9a7c4b34498cf9ee"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-process-probe-34232325670-independent-01.json",
+      "bytes": 9694,
+      "sha256": "adec30935b187f7a6acd5aab5b889e674f4f045cc9796a9c12f4f8a414d438d9"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-process-probe-platform-diagnosis-01.json",
+      "bytes": 18787,
+      "sha256": "7437cee01eb25eb854890fad9a19052a25b73d632900109a693fe0aa007c6998"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-process-probe-budget-independent-01.json",
+      "bytes": 9842,
+      "sha256": "53934d03592b917f311724e7e586744bfee36acad97a0fd88a7ea12c98cf7cda"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/process-probe-budget-controls-independent-01.json",
+      "bytes": 11128,
+      "sha256": "bc2de7978febf58d17813762b16b8f36c78d5be7b60bbf39924ee74a6c73a08b"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/transport-contracts-03-evidence-independent-01.json",
+      "bytes": 23797,
+      "sha256": "73e05c66850697a44583673b7ac5b7851690f4d4b7f91713aaaa50315faee651"
+    }
+  ],
+  "findings": [],
+  "approval_boundary": "Exact ledger bytes approved for reviewed source/control commit and subsequent mechanical inventory preparation. This report is NOT a native retry/dispatch approval, A/B/C/D final qualification or readiness attestation. The coordinator must freeze new source/controls/inventory and obtain fresh bindings before justified next diagnostic.",
+  "reviewer_actions": {
+    "tests": 0,
+    "builds": 0,
+    "project_imports": 0,
+    "native_commands": 0,
+    "workflow_dispatches": 0,
+    "tracked_edits": 0,
+    "cleanup_actions": 0,
+    "performed": "Read-only raw JSON/log/XML/ZIP/Git/hash/source-diff inspection, direct read-only remote query, scoped git diff --check, and this uniquely named untracked review JSON. No temporary worker/generated build output created; did not stop or clean another lane."
+  }
+}

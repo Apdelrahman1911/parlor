@@ -1,0 +1,150 @@
+[
+  {
+    "name": "primary-errors",
+    "command": [
+      "/usr/bin/python3",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-v",
+      "-s",
+      "scripts/verification/ios-readiness",
+      "-p",
+      "test_native_command_failures.py"
+    ],
+    "log": "primary-errors.log",
+    "status": "PASS",
+    "exit_code": 0
+  },
+  {
+    "name": "simulator-lifecycle",
+    "command": [
+      "/usr/bin/python3",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-v",
+      "-s",
+      "scripts/verification/ios-readiness",
+      "-p",
+      "test_simulator_lifecycle.py"
+    ],
+    "log": "simulator-lifecycle.log",
+    "status": "PASS",
+    "exit_code": 0,
+    "external_cleanup_requires_independent_inspection": true
+  },
+  {
+    "name": "lifecycle-integration",
+    "command": [
+      "/usr/bin/python3",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-v",
+      "-s",
+      "scripts/verification/ios-readiness",
+      "-p",
+      "test_simulator_lifecycle_integration.py"
+    ],
+    "log": "lifecycle-integration.log",
+    "status": "PASS",
+    "exit_code": 0
+  },
+  {
+    "name": "toolchain-profile",
+    "command": [
+      "/usr/bin/python3",
+      "-B",
+      "scripts/verification/ios-readiness/test_toolchain_profiles.py",
+      "-v"
+    ],
+    "log": "toolchain-profile.log",
+    "status": "PASS",
+    "exit_code": 0
+  },
+  {
+    "name": "foundation-profile",
+    "command": [
+      "/usr/bin/python3",
+      "-B",
+      "scripts/verification/ios-readiness/test_foundation_toolchain_binding.py"
+    ],
+    "log": "foundation-profile.log",
+    "status": "PASS",
+    "exit_code": 0,
+    "external_cleanup_requires_independent_inspection": true
+  },
+  {
+    "name": "functional-copy",
+    "command": [
+      "/usr/bin/python3",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-v",
+      "-s",
+      "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02",
+      "-p",
+      "test_l08_functional_copy.py"
+    ],
+    "log": "functional-copy.log",
+    "status": "PASS",
+    "exit_code": 0
+  },
+  {
+    "name": "composition",
+    "command": [
+      "/usr/bin/python3",
+      "-B",
+      "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/run_controls.py"
+    ],
+    "log": "composition.log",
+    "status": "PASS",
+    "exit_code": 0,
+    "external_cleanup_requires_independent_inspection": true
+  },
+  {
+    "name": "normal",
+    "command": [
+      "/usr/bin/python3",
+      "-B",
+      "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_control_tests.py"
+    ],
+    "log": "normal.log",
+    "status": "FAIL",
+    "exit_code": 1
+  },
+  {
+    "name": "native-adapter",
+    "command": [
+      "/usr/bin/python3",
+      "-B",
+      "-m",
+      "unittest",
+      "-v",
+      "scripts/release/tests/test_native_continuation.py"
+    ],
+    "log": "native-adapter.log",
+    "status": "PASS",
+    "exit_code": 0
+  },
+  {
+    "name": "probe-cycle-guard",
+    "command": [
+      "/usr/bin/python3",
+      "-B",
+      "-m",
+      "unittest",
+      "-v",
+      "scripts.release.tests.test_native_process_probe.ProbeSourceContractTest.test_full_non_app_scope_is_explicit_and_cycles_do_not_reuse_failed_labels"
+    ],
+    "log": "probe-cycle-guard.log",
+    "status": "PASS",
+    "exit_code": 0
+  }
+]

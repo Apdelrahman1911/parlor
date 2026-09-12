@@ -1,0 +1,369 @@
+{
+  "schema_version": 1,
+  "kind": "FAILED_WINDOWS_CURRENT_RUNTIME_AND_CONTRACT_FAILURE_RECONCILIATION",
+  "reviewer": "/root/ci_windows",
+  "reviewed_at": "2026-09-11T02:42:04.532990+00:00",
+  "status": "D08_WINDOWS_FAILED_THREE_CRLF_CONTRACT_ASSERTIONS",
+  "source": {
+    "run_id": 34553741387,
+    "run_attempt": 1,
+    "job_id": 103121857877,
+    "job": "desktop-windows-x64",
+    "commit": "59a384441f44844a79ae62ea8ee68d0c9e1e5878",
+    "tree": "9f06627b0dd047394de6f52adbc494e334651c74",
+    "checkout_root": "D:\\a\\parlor\\parlor",
+    "binding": "Artifact API run/SHA, run/job-specific ownership, checked-out source and clean Windows/x64 guard in failed log agree."
+  },
+  "custody": {
+    "pin_format": [
+      "path_relative_to_continuation",
+      "bytes",
+      "sha256"
+    ],
+    "pins": [
+      [
+        "reviews/d08-pd06-ci-monitor-01/34553741387-103121857877.log",
+        127811,
+        "f4ab7b7d5667c4d888fab4b40cebd509e8fbdefb72a25f36ea47dc254df40a39"
+      ],
+      [
+        "reviews/d08-windows-failure-01/artifact.json",
+        823,
+        "835b8c336924de188ceffa3e6fc9dc121bde6092886f6bce63e73cc0555f7241"
+      ],
+      [
+        "reviews/d08-windows-failure-01/main.zip",
+        15371111,
+        "a2ffe977c6aed2e91708fc10102fc87082b2ac096df130e3885fd91a1e223b1c"
+      ],
+      [
+        "reviews/d08-windows-failure-01/members.json",
+        7852663,
+        "301587be2ef4a215a84579b84dcba010d301b9b748811d77d7744dca36478f2c"
+      ],
+      [
+        "reviews/d08-windows-failure-01/receipt.json",
+        485,
+        "02a46cc051b7b26f0e3fd0fab89092e3ae75eac96af6b03b242a1b5414b306ca"
+      ],
+      [
+        "reviews/d08-windows-failure-01/selected/parlor/parlor/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.ProductionVerificationWorkflowContractTest.xml",
+        14413,
+        "c6efa02bd751e5a0b065e72ec56886142fd0ee9c637182ee10c6b9e51c9c0ecd"
+      ]
+    ],
+    "artifact_id": 10181931494,
+    "archive_members": 12808,
+    "reviewed_member_bytes": 353698,
+    "method": "Rehashed retained ZIP to API size/digest; complete member-name set agrees with retained collector manifest. Streamed only203 exact live module XML plus ownership/stop and failed-suite crosscheck, validating CRC/size/SHA against manifest. All selected XML paths absent from frozen tracked tree; historical/other entries not counted. Full-archive CRC already retained by root collector, not repeated here. No archive extraction/download."
+  },
+  "host": {
+    "os": "Microsoft Windows Server2025",
+    "image": "windows-2025-vs2026 20260907.229.1",
+    "architecture": "x64",
+    "jdk": "Temurin21.0.12+101.0",
+    "gradle": "8.13",
+    "job_local_core_longpaths": true
+  },
+  "execution": {
+    "command": ".\\gradlew.bat productionDesktopCheck :composeApp:downloadKotlinNativeDistribution :composeApp:processDebugResources --dependency-verification=strict --no-daemon --stacktrace --console=plain",
+    "started_at": "2026-09-11T02:13:54.5631532Z",
+    "failed_at": "2026-09-11T02:20:56.8135942Z",
+    "result": "BUILD FAILED in7m1s",
+    "actionable_tasks": {
+      "total": 233,
+      "executed": 178,
+      "from_cache": 55
+    },
+    "desktop_task_row_format": [
+      "task",
+      "logged_at",
+      "outcome"
+    ],
+    "desktop_tasks": [
+      [
+        ":composeApp:desktopTest",
+        "2026-09-11T02:20:13.1093384Z",
+        "EXECUTED"
+      ],
+      [
+        ":game-modes:mafia:desktopTest",
+        "2026-09-11T02:20:23.5466163Z",
+        "EXECUTED"
+      ],
+      [
+        ":game-modes:whodunit:desktopTest",
+        "2026-09-11T02:20:41.2061410Z",
+        "EXECUTED"
+      ],
+      [
+        ":shared:content:desktopTest",
+        "2026-09-11T02:19:12.1271783Z",
+        "EXECUTED"
+      ],
+      [
+        ":shared:core:desktopTest",
+        "2026-09-11T02:19:06.6997892Z",
+        "EXECUTED"
+      ],
+      [
+        ":shared:design-system:desktopTest",
+        "2026-09-11T02:19:33.4152425Z",
+        "EXECUTED"
+      ],
+      [
+        ":shared:engine:desktopTest",
+        "2026-09-11T02:19:32.8142600Z",
+        "EXECUTED"
+      ],
+      [
+        ":shared:engine-testing:desktopTest",
+        "2026-09-11T02:19:39.5266270Z",
+        "EXECUTED"
+      ],
+      [
+        ":shared:networking:desktopTest",
+        "2026-09-11T02:19:41.2992983Z",
+        "EXECUTED"
+      ],
+      [
+        ":shared:networking-testing:desktopTest",
+        "2026-09-11T02:19:46.8132982Z",
+        "EXECUTED"
+      ],
+      [
+        ":shared:session:desktopTest",
+        "2026-09-11T02:20:01.9963308Z",
+        "EXECUTED"
+      ],
+      [
+        ":shared:storage:desktopTest",
+        "2026-09-11T02:20:09.5276368Z",
+        "EXECUTED"
+      ],
+      [
+        ":shared:transport-p2p:desktopTest",
+        "2026-09-11T02:20:55.2957333Z",
+        "FAILED"
+      ]
+    ],
+    "auxiliary_tasks": [
+      [
+        ":composeApp:downloadKotlinNativeDistribution",
+        "2026-09-11T02:18:07.7933388Z",
+        "EXECUTED_NOT_CACHED"
+      ],
+      [
+        ":composeApp:processDebugResources",
+        "2026-09-11T02:20:20.3979101Z",
+        "EXECUTED_NOT_CACHED"
+      ]
+    ],
+    "auxiliary_limit": "Native distribution download and Windows Android resource processing executed; neither is Android/iOS or Kotlin/Native application runtime."
+  },
+  "current_xml": {
+    "totals": {
+      "xml_files": 203,
+      "descriptors": 1342,
+      "passed": 1336,
+      "failures": 3,
+      "errors": 0,
+      "skipped": 3
+    },
+    "module_row_format": [
+      "module",
+      "xml_files",
+      "descriptors",
+      "passed",
+      "failures",
+      "errors",
+      "skipped"
+    ],
+    "modules": [
+      [
+        "composeApp",
+        21,
+        96,
+        96,
+        0,
+        0,
+        0
+      ],
+      [
+        "game-modes/mafia",
+        37,
+        297,
+        297,
+        0,
+        0,
+        0
+      ],
+      [
+        "game-modes/whodunit",
+        63,
+        360,
+        360,
+        0,
+        0,
+        0
+      ],
+      [
+        "shared/content",
+        5,
+        24,
+        24,
+        0,
+        0,
+        0
+      ],
+      [
+        "shared/core",
+        2,
+        12,
+        12,
+        0,
+        0,
+        0
+      ],
+      [
+        "shared/design-system",
+        18,
+        40,
+        40,
+        0,
+        0,
+        0
+      ],
+      [
+        "shared/engine",
+        5,
+        13,
+        13,
+        0,
+        0,
+        0
+      ],
+      [
+        "shared/engine-testing",
+        3,
+        6,
+        6,
+        0,
+        0,
+        0
+      ],
+      [
+        "shared/networking",
+        8,
+        34,
+        34,
+        0,
+        0,
+        0
+      ],
+      [
+        "shared/networking-testing",
+        2,
+        5,
+        5,
+        0,
+        0,
+        0
+      ],
+      [
+        "shared/session",
+        13,
+        145,
+        145,
+        0,
+        0,
+        0
+      ],
+      [
+        "shared/storage",
+        4,
+        31,
+        31,
+        0,
+        0,
+        0
+      ],
+      [
+        "shared/transport-p2p",
+        22,
+        279,
+        273,
+        3,
+        0,
+        3
+      ]
+    ],
+    "timestamp_range": [
+      "2026-09-11T02:19:05.862Z",
+      "2026-09-11T02:20:56.477Z"
+    ],
+    "hostnames": [
+      "runnervmvmocb"
+    ],
+    "manifest_format": "Sorted [ZIP member path,bytes,SHA256,timestamp,hostname] rows serialized compact JSON",
+    "manifest_sha256": "db5d12670fcfd2be799b9e09a544257503b71432c35fae6e46dee39d221642e9"
+  },
+  "failure": {
+    "class": "com.parlor.transport.p2p.ProductionVerificationWorkflowContractTest",
+    "methods": [
+      "split_apple_jobs_keep_independent_source_toolchain_cycles_and_evidence()[desktop]",
+      "protection_diagnostic_is_the_seventh_opt_in_job_not_a_full_gate()[desktop]",
+      "apple_jobs_run_kotlin_and_app_launch_tests_all_link_targets_and_unsigned_swift_release()[desktop]"
+    ],
+    "frozen_source_lines": [
+      531,
+      567,
+      361
+    ],
+    "failed_suite": {
+      "tests": 11,
+      "failures": 3,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "c6efa02bd751e5a0b065e72ec56886142fd0ee9c637182ee10c6b9e51c9c0ecd"
+    },
+    "cause": "File.readText preserves Windows checkout CRLF; LF-only newline-terminated job/jobs delimiters do not match, so substringAfter returns the whole workflow rather than its intended section.",
+    "observed_confirmation": [
+      "Line531 message has70 CRLFs and exactly the frozen workflow CRLF-converted prefix through the first Ubuntu job header, not the macOS runtime header.",
+      "Line567 actual job list contains extraneous pre-jobs push followed by all seven expected jobs.",
+      "Line361 fails the unchanged negative productionAppleCheck-in-runtime assertion after the runtime slice fell back to the whole workflow."
+    ],
+    "diagnostic_source_sha256": "d8868fdd407c0513fe4205b67b205af510c74b267e8ee83a1efac0b0f8fede94"
+  },
+  "skips": {
+    "class": "com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest",
+    "methods": [
+      "peer_to_host_message_round_trips_and_host_to_peer_message_arrives_back()[desktop]",
+      "peer_can_join_a_hosted_room_and_membership_appears_on_host()[desktop]",
+      "host_broadcast_reaches_every_peer()[desktop]"
+    ],
+    "scope": "Existing ignored peer join, peer/host roundtrip and host broadcast require physical same-LAN device evidence; no interoperability PASS inferred."
+  },
+  "ownership_and_stop": {
+    "ownership_member": [
+      "_temp/parlor-verification-34553741387-1-desktop-windows-x64-ownership.json",
+      19736,
+      "211f5b9fa8a091776b8b6711de52856816c6ae2bc34d540bf3296b0dc0b3de8a"
+    ],
+    "prepared_at": "2026-09-11T02:13:28.404612+00:00",
+    "post_build_stop_member": [
+      "_temp/parlor-verification-34553741387-1-desktop-windows-x64-stop-windows-x64.json",
+      426,
+      "c7c29cbe728e4c3b1b795f694035f439fcf755cc8984ac6b08631a8ff30465a5"
+    ],
+    "post_build_stop_exit_code": 0,
+    "final_cleanup": "Outside this receipt; assigned to independent ci_cleanup_review and not inferred from the main artifact."
+  },
+  "correction_status": {
+    "source_patch_sha256": "9008fec636b7734f05bb4299e492fe32ffc345be8639e44981367e4bfa547377",
+    "independent_source_review": "reviews/d08-windows-workflow-line-endings-independent-01.json",
+    "corrected_windows_execution": "NOT_RUN_IN_THIS_EVIDENCE"
+  },
+  "disposition": "D08 Windows remains FAILED and cannot qualify the six-job full run. Preserve original failure; corrected source/local tests do not retroactively pass D08 or prove a fresh Windows run. PD06, physical devices and Store readiness are outside this evidence.",
+  "activity": "Only stdlib/Git read-only evidence reconciliation and this additive JSON write; no source edit, tests, builds, downloads, archive extraction or process operation."
+}

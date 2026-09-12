@@ -1,0 +1,194 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/native_ci",
+  "author": "/root/ci_workflow",
+  "review_date_utc": "2026-09-10",
+  "decision": "APPROVE_REVIEWED_PROBE_SDK_PREREQUISITE_WITH_ACTUAL_FOCUSED_CONTROLS_ACCEPTED",
+  "status": "SOURCE_AND_SCOPED_LOCAL_CONTROLS_PASS_NOT_HOSTED_RUNTIME",
+  "baseline": {
+    "head": "7d9ea1eac42ebe7630a01e3dbe9aafcf4f36306b",
+    "tree": "6d2337b11a07f64cf677bbc9ae3d21138a245c5f",
+    "branch": "fix/local-readiness-2026-09-07"
+  },
+  "diff": {
+    "files": 3,
+    "insertions": 51,
+    "deletions": 4,
+    "bytes": 6795,
+    "sha256": "0749d01bf6ceca6eabe8822784ce2c0cbac928f0c1b5af753ffb189b374cc80c"
+  },
+  "reviewed_files": [
+    {
+      "path": ".github/workflows/production-verification.yml",
+      "bytes": 48513,
+      "sha256": "79d9fa5cdf487ad87849e19fb1baeb71d7694db7f2b62123e9cec729519a3be0"
+    },
+    {
+      "path": "scripts/release/workflow_contract.py",
+      "bytes": 58967,
+      "sha256": "b834e45c87a0f45e426e3b5b113b62986ba00bc2edb0e2daa12757540035b3a6"
+    },
+    {
+      "path": "scripts/release/tests/test_workflow_contract.py",
+      "bytes": 53183,
+      "sha256": "69f1cbc3775896fe297314a867b864062527e4ac3f7417ca13880afefe5cc0a9"
+    }
+  ],
+  "failure_evidence": {
+    "run_id": "34476522188",
+    "attempt": 1,
+    "source": "7d9ea1eac42ebe7630a01e3dbe9aafcf4f36306b",
+    "log": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/linux-process-probe-01/early-failed-log.txt",
+      "bytes": 34115,
+      "sha256": "76b7790a95cd6b8c2e85496a372a45739c6c4fcd6ec1c9f9c855ecc68dc390ff"
+    },
+    "observation": "Initial host audit, both synthetic-enumeration controls, and final cleanup audit all FAIL/FileNotFoundError before completed enumeration: enumerated=sampled=selected_uid=matching_executables=0. SDK root binding passed with UID1001; both child readiness/dumpability records and child/fixture retirement succeeded. Immediate and final Gradle stops were zero; observation and cleanup remained FAIL.",
+    "inference_limit": "The skipped full SDK setup never established the strict audit's required SDK/emulator subtree. This correction installs the real prerequisite rather than faking a directory or weakening that guard. Raw error receipts do not identify the exact missing pathname; no /proc permission observation, original D03 cause, or application-runtime proof is inferred."
+  },
+  "source_conclusions": {
+    "minimality": "Only the three owned canonical files changed. Removing the new nine-line workflow step reproduces frozen7d9e workflow bytes exactly, including all other jobs/full steps/guards. No application or toolchain-policy changes.",
+    "ordering": "Exact source/control admission occurs before SDK mutation; fresh ownership preparation occurs afterward. The existing run/finalizer re-admit source/control/task/nonroot UID/SDK binding and retain the strict real-host and control oracles.",
+    "package": "Uses the existing SDK's sdkmanager with explicit --sdk_root=\"${ANDROID_HOME}\" and exactly \"emulator\". No system image, platform/build-tools addition, fake directory, sudo/permission relaxation, AVD/emulator launch, app build or Store operation.",
+    "bounds": "GNU timeout TERM at180s with kill-after10s bounds the owned package-manager command; step timeout4minutes within unchanged Ubuntu24.04 probe job10minutes. Shell remains set -euo pipefail; no failure suppression or retry loop.",
+    "custody": "All existing evidence uploads, source/control/ownership checks, strict final host-absence gate and Gradle-stop cleanup paths are unchanged. Package/observation/upload/cleanup errors remain failures; no global SDK/cache deletion is added.",
+    "contract": "Expected prerequisite name/order/scope/timeout/shell/body are exact. All other contract functions are AST-identical, and source outside verify_linux_process_probe is byte-identical.",
+    "tests": "All59 existing test methods are AST-identical. One added method provides canonical acceptance plus8 mutations (scope/timeouts/SDK root/additional or wrong package/emulator invocation/sudo) and2 ordering changes. Reordered fixtures independently remain single steps and differ from canonical source; no vacuous deletion/duplication was found."
+  },
+  "unchanged_core_guards": [
+    {
+      "path": "scripts/ci/linux_process_probe.py",
+      "bytes": 15616,
+      "sha256": "2696b0d81f1113eeaea20b431191788925053703d2ed6e12d72489041c6f76b6"
+    },
+    {
+      "path": "scripts/ci/verification_hygiene.py",
+      "bytes": 22204,
+      "sha256": "1fc2fb6f0b3bb7a505edc63277e0fe974a67ccf972753eec0da60386438c16f4"
+    }
+  ],
+  "independent_verification": {
+    "source_audit_chunk": "6295ac",
+    "source_audit_exit_code": 0,
+    "failure_log_audit_chunk": "f21d09",
+    "failure_log_audit_exit_code": 0,
+    "method": "Read-only Git/source/log reads and standard-library JSON/hash/AST/string assertions only. No project import, validator/test/SDK/build execution, process probing, network, workflow dispatch or canonical edit by reviewer."
+  },
+  "findings": [],
+  "next_execution": "Focused workflow tests and pinned actionlint completed as separately reviewed below; no extra test loop requested. A new reviewed source/inventory freeze and fresh ten-file control/request admission are still required before one justified hosted follow-up.",
+  "boundaries": {
+    "failed_first_probe": "PRESERVED",
+    "full_D03": "FAIL_PRESERVED",
+    "local_outer_launcher": "EXIT143_PRESERVED",
+    "strict_ios_file_protection": {
+      "passed": 0,
+      "failed": 26,
+      "status": "UNRESOLVED"
+    },
+    "readiness": "NOT_READY",
+    "no_credit": "Source correction/review only; not hosted runtime, D03 cause/repair, combined qualification, physical-device or Store/owner/legal readiness."
+  },
+  "actual_control_evidence": {
+    "decision": "ACCEPT_ACTUAL_60_WORKFLOW_TESTS_AND_FOCUSED_ACTIONLINT_WITH_BOUND_CLEANUP",
+    "reviewed_after_source": "Root authorized this separately labelled actual-evidence extension to the same uncommitted review before any coordinator commit/dispatch pin; source-review conclusions remain unchanged.",
+    "independent_audit": {
+      "tool_chunk_id": "e16553",
+      "exit_code": 0,
+      "method": "Read underlying complete raw60 testcase lines/summary, two-command manifest and source-derived actionlint recipe, both archive checksum OK lines, before/after six controls and842 source rows, runner/stop/cleanup receipts. Recomputed every bound source/control hash and checked17 live generated roots plus scratch/tool paths absent. No test, validator, SDK, Gradle or probe execution by reviewer."
+    },
+    "result": {
+      "status": "ACTUAL_PREREQUISITE_WORKFLOW_CONTROLS_AND_CUSTODY_ACCEPTED",
+      "python_tests": 60,
+      "python_failures": 0,
+      "python_errors": 0,
+      "python_skips": 0,
+      "python_summary_seconds": 0.251,
+      "focused_actionlint_exit_code": 0,
+      "both_pinned_archive_checks": "OK",
+      "source_manifest_rows": 842,
+      "source_manifest_sha256": "7145c39e8328ea1ea6e26707445c7d115984b68499e91603f13ab84153f362a7",
+      "explicit_controls": 6,
+      "source_and_controls_unchanged": true,
+      "inner_receipt": "PASS",
+      "inner_exit_code": 0,
+      "stop_exit_code": 0,
+      "workers": {
+        "terminated_owned_workers": [],
+        "remaining_owned_workers": []
+      },
+      "artifact_workers": {
+        "terminated_owned_workers": [],
+        "remaining_owned_workers": []
+      },
+      "cleanup_errors": [],
+      "remaining_outputs": [],
+      "live_generated_roots_independently_absent": 17,
+      "scratch_and_task_tools_independently_absent": true,
+      "started_at": "2026-09-10T12:42:02.589835+00:00",
+      "finished_at": "2026-09-10T12:42:07.164576+00:00",
+      "stopped_at": "2026-09-10T12:42:07.819239+00:00",
+      "cleanup_completed_at": "2026-09-10T12:42:07.904947+00:00",
+      "scope": "No SDK install, emulator, host procfs probe, Gradle build, Kotlin or application runtime in this batch",
+      "evidence_files": [
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-probe-prereq-controls-01/artifact-receipts.json",
+          "bytes": 3,
+          "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-probe-prereq-controls-01/control-inputs-after.json",
+          "bytes": 898,
+          "sha256": "ccf024c8b0d96a5297b0a38528343c5f6a84ea3bbeed231ad013dc6459126302"
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-probe-prereq-controls-01/control-inputs-before.json",
+          "bytes": 898,
+          "sha256": "ccf024c8b0d96a5297b0a38528343c5f6a84ea3bbeed231ad013dc6459126302"
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-probe-prereq-controls-01/focused-commands.json",
+          "bytes": 4298,
+          "sha256": "0d5b8544c94f3db63fb748538774dd332cc2f4ac4320cacecc8198f823dc7db5"
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-probe-prereq-controls-01/gradle.log",
+          "bytes": 12490,
+          "sha256": "a1c1737af7b127d49a0c659046378ec920d3f6542e288a3afeb52a9ee20f61a2"
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-probe-prereq-controls-01/java-toolchain.log",
+          "bytes": 2026,
+          "sha256": "a7a86ea7b20362e2c856e5e71a8b6fc51764d5aeaa9f5a8c82b386ff156f8a7c"
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-probe-prereq-controls-01/javac-toolchain.log",
+          "bytes": 14,
+          "sha256": "157f601a5854ca28a7dc364c13a5ca2879084186be49e3462d37acd028f35755"
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-probe-prereq-controls-01/receipt.json",
+          "bytes": 312696,
+          "sha256": "a94672ce9bdfb718aea6e2a3b459bc870a8cab6d6b1e5981c7559bfd804c1654"
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-probe-prereq-controls-01/stop.log",
+          "bytes": 31,
+          "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-probe-prereq-controls-01/test-receipts.json",
+          "bytes": 3,
+          "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+        }
+      ]
+    },
+    "binding_limit": "Actual commands ran against reviewed three-file modifications atop7d9e, not an untouched frozen7d9e checkout. Before/after source and six controls matched; tests do not execute SDK installation or provide fresh hosted/application runtime.",
+    "outer_invocation": {
+      "tool_session_id": 31608,
+      "completion_chunk_id": "2c8719",
+      "exit_code": 0,
+      "attribution": "Coordinator's actual completed tool observation communicated to reviewer; independently parsed inner receipt/command and Gradle stop also return0. Coordinator reports exec replacement, and retained worker receipts contain no signals or remaining workers. Reviewer did not invoke or independently replay that tool session."
+    },
+    "scope_limit": "Exactly60 actual workflow Python tests:0failures/errors/skips, including the new prerequisite method; focused actionlint/ShellCheck exit0 with both archive digests verified. Broad release-suite/inventory execution, unchanged hygiene/probe mechanics, SDK setup, Gradle builds and application runtimes were intentionally not repeated."
+  }
+}

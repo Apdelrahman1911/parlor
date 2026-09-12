@@ -1,0 +1,889 @@
+{
+  "schema_version": 1,
+  "kind": "UNBOUND_FULL_QUALIFICATION_AFTER_FUTURE_REVIEWED_FREEZE_EXECUTION_AND_COLLECTION_PACKET_V2",
+  "author": "/root/ci_workflow",
+  "recorded_at": "2026-09-08T23:32:17.443128+00:00",
+  "classification": "PREPARATION_ONLY_D_NOT_RUN_NOT_READY_NO_DISPATCH_AUTHORIZATION",
+  "scope": "Additive replacement preparation for the existing five-job production-verification.yml full dispatch and evidence collection. Only this new JSON packet is authored. Read-only source/Git/retained-evidence/hash/AST inspection; no tests, builds, project imports, API/network calls, Actions, runtime, cleanup, staging or commits. The old packet and its independent review are preserved unchanged.",
+  "preparation_reuses_prior_reviews": true,
+  "independent_review_of_this_packet_required_before_use": true,
+  "future_binding": {
+    "source_control_commit": null,
+    "inventory_execution_commit": null,
+    "frozen_source_sha": null,
+    "frozen_source_tree": null,
+    "frozen_workflow_sha256": null,
+    "source_control_manifest_sha256": null,
+    "inventory_sha256": null,
+    "scope_reconciliation_receipt": null,
+    "independent_packet_review": null,
+    "independent_dispatch_approval": null,
+    "dispatch_time_utc": null,
+    "run_id": null,
+    "run_attempt": null,
+    "execution_status": "NOT_EXECUTED"
+  },
+  "workflow": {
+    "repository": "Apdelrahman1911/parlor",
+    "branch": "fix/local-readiness-2026-09-07",
+    "path": ".github/workflows/production-verification.yml",
+    "file_name": "production-verification.yml",
+    "expected_name": "Production verification",
+    "historically_observed_workflow_id": 335554528,
+    "workflow_id_newly_queried": false,
+    "scope_input": "full",
+    "trigger_warning": "Continuation-branch pushes do not automatically invoke this full workflow; push filters are main/testing/release. Use a separately approved workflow_dispatch.",
+    "concurrency_group": "production-verification-${{ github.ref }}",
+    "cancel_in_progress": true,
+    "full_frozen_sha_input_warning": "FULL IGNORES frozen_source_sha. No full build job passes PARLOR_FROZEN_SOURCE_SHA and full checkout has no ref pin derived from that input. The iOS validate-scope path validates/selects allowed scope and returns before focused context()/Continuation checks. The held effective_scope/main function ASTs equal the reviewed 700243 reference. Therefore neither a supplied frozen_source_sha, a successful focused preflight nor the new native clock binds a full job. Reconcile actual run/attempt, each of five jobs and each checkout ownership head/tree/task against the future approved SHA/tree; keep the branch stable and do not relabel a mismatch.",
+    "expected_jobs": 5,
+    "expected_main_artifacts": 5,
+    "expected_cleanup_artifacts": 5,
+    "focused_steps_intentionally_skipped_in_full": 9,
+    "numeric_job_and_artifact_identities": "Unknown until actual initial-attempt execution; null fields are intentional, not omitted proof.",
+    "focused_only_skip_names_in_workflow_order": [
+      "Start focused native job clock",
+      "Run focused native continuation",
+      "Upload focused native evidence",
+      "Verify focused native cleanup and uploaded custody",
+      "Upload native continuation cleanup receipt",
+      "Observe hosted native processes without an app build",
+      "Upload bounded process-probe evidence",
+      "Verify process-probe cleanup and uploaded custody",
+      "Upload process-probe cleanup receipt"
+    ],
+    "skip_boundary": "All nine are deliberately condition-false in full. Validate verification scope is NOT one of them: it executes and returns after effective_scope. The four other jobs are required full jobs, not permitted focused-mode skips. A required full step skipped after an earlier failure remains NOT_RUN.",
+    "ios_timeout_expression": "${{ inputs.verification_scope == 'native-process-probe' && 10 || inputs.verification_scope == 'native-evidence' && 240 || 120 }}",
+    "full_ios_timeout_minutes": 120,
+    "focused_budget_is_not_full_budget": "The new 240-minute job clock/budget applies only to native-evidence. Full remains 120 minutes, does not start or require PARLOR_NATIVE_JOB_CLOCK, and does not acquire focused native/probe roots."
+  },
+  "pre_dispatch_gates_in_order": [
+    "Finish and independently review required narrowly scoped source/control corrections and actual focused Linux regressions; preserve all failures. Do not repeat the unchanged original16 campaign without an applicable delta.",
+    "Coordinator commits reviewed source/controls, regenerates the history-dependent mechanical inventory with full Git history, commits the inventory separately, and records actual freshness evidence. Inventory rows are not independent reviews.",
+    "Normally push only to the continuation branch. Reconcile selected future source SHA/tree, exact reviewed workflow/control blobs, inventory and scope-delta receipts; inspect branch advances rather than reset. No force-push/merge, unrelated stash changes or blanket cleaning.",
+    "A different agent reviews this exact new packet. Then obtain a separate root-owned one-new-initial-full-run approval bound to the actual future freeze and applicable A/B/C status. This packet itself authorizes no execution or API query.",
+    "Inspect and preserve all tracked, untracked and ignored user/evidence work. Require no tracked source/control diff at the selected freeze; allocate a new canonical same-owner evidence directory exclusively. Do not overwrite old packets, failed receipts or previous collection attempts.",
+    "One coordinator queries exact workflow identity and all same-branch workflow runs using complete pagination, not an event-filtered incomplete no-overlap check. Require no noncompleted same-ref full/focused/probe run; cancel-in-progress is shared across scopes.",
+    "Reconcile local branch/HEAD/tree and direct remote ref immediately before dispatch. Hold source/controls/branch stable, invoke exactly one approved full workflow_dispatch, and uniquely associate its initial attempt before any result is attributed.",
+    "After completion reconcile all run/job/checkout/evidence/custody identities and direct remote/local freeze again. A/B/C gaps are not closed by full green; source changes require new applicability review and approval, not a blind expensive matrix retry."
+  ],
+  "command_templates_NOT_EXECUTED_NOT_AUTHORIZED": {
+    "placeholder_policy": "SOURCE_SHA, SOURCE_TREE, QUALIFICATION_PACKET and PACKET_DIR must come from a later independently approved freeze/packet receipt. PACKET_DIR is a new absolute canonical same-owner directory. Never default SOURCE_SHA to observed e511 or another historical freeze. RUN_ID/JOB_ID/ARTIFACT_ID are assigned only from actual checked API records; all future IDs remain null here.",
+    "capture_policy": "Each template must run through the coordinator capture wrapper, with recorded exact argv, UTC start/finish, command exit and retained raw stdout/stderr in exclusive new files. Disable overwrite (shell noclobber or exclusive-open wrapper). No automatic retries, GH_DEBUG/HTTP headers, authentication tokens or signed-redirect URLs in evidence. Retain partial stdout and failure receipts. Metadata/API preparation failure is not a workflow or application failure.",
+    "collection_timeout_proposal_seconds_not_executed": {
+      "metadata_query": 180,
+      "attempt_log_zip": 300,
+      "one_artifact_zip": 600
+    },
+    "timeout_limit": "These finite coordinator collection allowances do not change any application, ownership, cleanup or Actions job budget. A timeout is preserved and reviewed; it does not authorize another dispatch or overwrite.",
+    "environment_after_approval": [
+      "REPO=Apdelrahman1911/parlor",
+      "BRANCH=fix/local-readiness-2026-09-07",
+      "WORKFLOW=production-verification.yml",
+      ": \"${SOURCE_SHA:?future reviewed frozen source SHA required}\"",
+      ": \"${SOURCE_TREE:?future reviewed frozen source tree required}\"",
+      ": \"${QUALIFICATION_PACKET:?exact independently reviewed packet path required}\"",
+      ": \"${PACKET_DIR:?new absolute task-owned evidence directory required}\""
+    ],
+    "pre_dispatch_read_only_git": [
+      "git status --short",
+      "test \"$(git rev-parse --is-shallow-repository)\" = false",
+      "test \"$(git symbolic-ref HEAD)\" = \"refs/heads/$BRANCH\"",
+      "git rev-parse HEAD HEAD^{tree}",
+      "test \"$(git rev-parse HEAD)\" = \"$SOURCE_SHA\"",
+      "test \"$(git rev-parse HEAD^{tree})\" = \"$SOURCE_TREE\"",
+      "test -z \"$(git status --porcelain=v1 --untracked-files=no)\"",
+      "git ls-remote origin \"refs/heads/$BRANCH\" > \"$PACKET_DIR/remote-before.txt\""
+    ],
+    "remote_record_gate": "Require exactly one record containing the approved SOURCE_SHA and exact refs/heads/BRANCH; do not use the cached origin tracking ref. Repeat into a new remote-after.txt after execution and compare with local HEAD/tree.",
+    "pre_dispatch_api_capture": [
+      "gh api \"repos/$REPO/actions/workflows/$WORKFLOW\" > \"$PACKET_DIR/workflow-before.json\"",
+      "gh api --paginate \"repos/$REPO/actions/workflows/$WORKFLOW/runs?branch=$BRANCH&per_page=100\" > \"$PACKET_DIR/workflow-runs-before.pages.raw.json\""
+    ],
+    "normalizer_materialization": {
+      "destination": "${PACKET_DIR}/normalize_gh_pages.py",
+      "source_sha256": "48ca12d9ec8a02410ac4ea645716902efc37842b23050e450c60074aabbdd270",
+      "syntax_inspection": "ast.parse succeeded during author preparation only; the source was not imported, executed or regression-tested.",
+      "required_later": "After independent packet approval, exclusively materialize exactly normalization_python_source_NOT_EXECUTED below into the new collection directory, compare its SHA256, then use python3 -B. It is an evidence derivative helper, not new repository verification source or a dispatch authority."
+    },
+    "normalize_successful_complete_capture_example": "python3 -B \"$PACKET_DIR/normalize_gh_pages.py\" \"$PACKET_DIR/workflow-runs-before.pages.raw.json\" workflow_runs \"$PACKET_DIR/workflow-runs-before.pages.json\" \"$RECORDED_API_EXIT_CODE\"",
+    "normalization_required_for_every_paginated_capture": [
+      {
+        "raw": "workflow-runs-before.pages.raw.json",
+        "key": "workflow_runs",
+        "normalized": "workflow-runs-before.pages.json"
+      },
+      {
+        "raw": "workflow-runs-after.pages.raw.json",
+        "key": "workflow_runs",
+        "normalized": "workflow-runs-after.pages.json"
+      },
+      {
+        "raw": "jobs-attempt-1.pages.raw.json",
+        "key": "jobs",
+        "normalized": "jobs-attempt-1.pages.json"
+      },
+      {
+        "raw": "artifacts.pages.raw.json",
+        "key": "artifacts",
+        "normalized": "artifacts.pages.json"
+      }
+    ],
+    "normalization_limit": "Only the actual recorded API exit0 is accepted. The parser consumes every concatenated JSON object and trailing JSON whitespace, rejects trailing garbage/partial pages/duplicate keys/nonfinite numbers/duplicate or nonpositive IDs/unstable counts, and requires sum of distinct IDs equal total_count. Bounded at64MiB/64pages/100items per page; reaching a limit, an API search cap or pagination drift is a preserved completeness gap, not permission to ignore pages. The helper does not validate repository/ref/source/run/attempt, active-run absence, dispatch association or readiness: those gates below remain mandatory.",
+    "normalization_python_source_NOT_EXECUTED": "#!/usr/bin/env python3\n\"\"\"Linux collection only: normalize complete gh api --paginate stdout.\n\nNot a run/dispatch/readiness validator. Execute only after recording the actual\nAPI exit code. The immutable raw stream is retained alongside this derivative.\n\"\"\"\nimport hashlib\nimport json\nimport math\nimport os\nimport stat\nimport sys\nfrom pathlib import Path\n\nMAX_RAW_BYTES = 64 * 1024 * 1024\nMAX_PAGES = 64\nPAGE_SIZE = 100\nJSON_WHITESPACE = \" \\t\\r\\n\"\n\n\ndef require(value, reason):\n    if not value:\n        raise ValueError(reason)\n\n\ndef unique(pairs):\n    value = {}\n    for key, item in pairs:\n        require(key not in value, \"duplicate-json-key\")\n        value[key] = item\n    return value\n\n\ndef nonfinite(_value):\n    raise ValueError(\"nonfinite-json-number\")\n\n\ndef finite_float(value):\n    parsed = float(value)\n    require(math.isfinite(parsed), \"overflowed-json-number\")\n    return parsed\n\n\ndef stable_identity(value):\n    return (value.st_dev, value.st_ino, value.st_uid, value.st_mode,\n            value.st_nlink, value.st_size, value.st_mtime_ns, value.st_ctime_ns)\n\n\ndef main(arguments):\n    require(len(arguments) == 4, \"need-raw-path-collection-output-api-exit\")\n    raw_path, collection, output, api_exit = arguments\n    require(api_exit == \"0\", \"api-command-did-not-succeed\")\n    require(collection in {\"workflow_runs\", \"jobs\", \"artifacts\"}, \"unknown-collection\")\n    raw_path, output = Path(raw_path), Path(output)\n    require(raw_path.is_absolute() and output.is_absolute(), \"absolute-owned-paths-required\")\n    parent = raw_path.parent\n    require(parent == parent.resolve(strict=True) and parent == output.parent,\n            \"same-canonical-owned-directory-required\")\n    parent_before = parent.stat()\n    require(parent_before.st_uid == os.getuid() and stat.S_ISDIR(parent_before.st_mode),\n            \"unowned-collection-directory\")\n    require(not raw_path.is_symlink(), \"symlink-raw-stream\")\n    descriptor = os.open(raw_path, os.O_RDONLY | os.O_NOFOLLOW)\n    try:\n        with os.fdopen(descriptor, \"rb\") as stream:\n            descriptor = None\n            before = os.fstat(stream.fileno())\n            require(stat.S_ISREG(before.st_mode) and before.st_uid == os.getuid()\n                    and before.st_nlink == 1 and 0 < before.st_size <= MAX_RAW_BYTES,\n                    \"invalid-or-oversized-raw-stream\")\n            raw = stream.read(MAX_RAW_BYTES + 1)\n            after = os.fstat(stream.fileno())\n            require(stable_identity(before) == stable_identity(after)\n                    == stable_identity(raw_path.lstat()) and len(raw) == before.st_size,\n                    \"raw-stream-changed-during-read\")\n    finally:\n        if descriptor is not None:\n            os.close(descriptor)\n    source = raw.decode(\"utf-8\")\n    decoder = json.JSONDecoder(object_pairs_hook=unique, parse_constant=nonfinite,\n                               parse_float=finite_float)\n    pages, ids, total, offset = [], set(), None, 0\n    while True:\n        while offset < len(source) and source[offset] in JSON_WHITESPACE:\n            offset += 1\n        if offset == len(source):\n            break\n        require(len(pages) < MAX_PAGES, \"page-ceiling-exceeded\")\n        page, end = decoder.raw_decode(source, offset)\n        require(end > offset and type(page) is dict, \"invalid-page-root\")\n        count, items = page.get(\"total_count\"), page.get(collection)\n        require(type(count) is int and 0 <= count <= MAX_PAGES * PAGE_SIZE,\n                \"invalid-total-count\")\n        require(type(items) is list and len(items) <= PAGE_SIZE, \"invalid-page-items\")\n        require(total is None or count == total, \"pagination-total-changed\")\n        total = count\n        for item in items:\n            require(type(item) is dict and type(item.get(\"id\")) is int and item[\"id\"] > 0,\n                    \"invalid-item-identity\")\n            require(item[\"id\"] not in ids, \"duplicate-item-identity\")\n            ids.add(item[\"id\"])\n        pages.append(page)\n        offset = end\n    require(pages and offset == len(source), \"empty-or-incomplete-json-stream\")\n    require(total == len(ids), \"pagination-count-incomplete\")\n    parent_after = parent.stat()\n    require((parent_after.st_dev, parent_after.st_ino, parent_after.st_uid)\n            == (parent_before.st_dev, parent_before.st_ino, parent_before.st_uid),\n            \"collection-directory-changed\")\n    result = dict(schema_version=1, kind=\"COMPLETE_API_PAGES_NOT_QUALIFICATION\",\n                  collection=collection, raw_file=raw_path.name,\n                  raw_bytes=len(raw), raw_sha256=hashlib.sha256(raw).hexdigest(),\n                  api_exit_code=0, page_count=len(pages), total_count=total,\n                  distinct_ids=len(ids), pages=pages)\n    encoded = (json.dumps(result, indent=2, allow_nan=False) + \"\\n\").encode(\"utf-8\")\n    # Never replace a prior derivative or raw file. A failed write is retained.\n    descriptor = os.open(output, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600)\n    try:\n        with os.fdopen(descriptor, \"wb\") as stream:\n            descriptor = None\n            stream.write(encoded)\n            stream.flush()\n            os.fsync(stream.fileno())\n    finally:\n        if descriptor is not None:\n            os.close(descriptor)\n    print(json.dumps(dict(collection=collection, page_count=len(pages), total_count=total,\n                          raw_sha256=result[\"raw_sha256\"],\n                          normalized_sha256=hashlib.sha256(encoded).hexdigest())))\n\n\nif __name__ == \"__main__\":\n    main(sys.argv[1:])\n",
+    "single_dispatch_only_after_all_gates": "gh workflow run production-verification.yml --repo Apdelrahman1911/parlor --ref fix/local-readiness-2026-09-07 -f verification_scope=full",
+    "dispatch_inputs_exact": {
+      "verification_scope": "full"
+    },
+    "omit_focused_only_inputs": [
+      "frozen_source_sha (ignored by full, not a freeze guard)",
+      "All native-preflight run/attempt/artifact ID/digest fields",
+      "All approved L08, normal-launch and process-probe control hash fields"
+    ],
+    "associate_one_new_initial_attempt": [
+      "gh api --paginate \"repos/$REPO/actions/workflows/$WORKFLOW/runs?branch=$BRANCH&event=workflow_dispatch&per_page=100\" > \"$PACKET_DIR/workflow-runs-after.pages.raw.json\"",
+      "gh api \"repos/$REPO/actions/runs/$RUN_ID\" > \"$PACKET_DIR/run-initial.json\"",
+      "gh api \"repos/$REPO/actions/runs/$RUN_ID/attempts/1\" > \"$PACKET_DIR/attempt-1-initial.json\""
+    ],
+    "association_gate": "Compare all normalized pre/post run IDs and recorded dispatch timing. Require exactly one newly created matching workflow_dispatch for the repository, workflow ID/path, expected coordinator actor, branch and SOURCE_SHA with API run_attempt exact integer1. Reconcile ambiguity before doing anything else; a network/CLI error after dispatch may still have created the run and never authorizes a second call. Full scope is additionally corroborated by five required executed job conditions and nine focused-only skips, not an invented run-API input field.",
+    "responsible_status_observation": "At a bounded non-busy cadence, capture a new uniquely timestamped gh api repos/$REPO/actions/runs/$RUN_ID response and read its run_attempt/status/conclusion. Do not request the unsupported gh run view --json attempt field. The API field is run_attempt. Keep raw API, not merely a filtered status summary.",
+    "completion_collection_no_busy_loop": [
+      "gh api \"repos/$REPO/actions/runs/$RUN_ID\" > \"$PACKET_DIR/run-final.json\"",
+      "gh api \"repos/$REPO/actions/runs/$RUN_ID/attempts/1\" > \"$PACKET_DIR/attempt-1-final.json\"",
+      "gh api --paginate \"repos/$REPO/actions/runs/$RUN_ID/attempts/1/jobs?per_page=100\" > \"$PACKET_DIR/jobs-attempt-1.pages.raw.json\"",
+      "gh api --paginate \"repos/$REPO/actions/runs/$RUN_ID/artifacts?per_page=100\" > \"$PACKET_DIR/artifacts.pages.raw.json\"",
+      "gh api \"repos/$REPO/actions/runs/$RUN_ID/attempts/1/logs\" > \"$PACKET_DIR/run-attempt-1-logs.zip\"",
+      "gh api \"repos/$REPO/actions/jobs/$JOB_ID/logs\" > \"$PACKET_DIR/job-$JOB_ID.log\"",
+      "gh api \"repos/$REPO/actions/artifacts/$ARTIFACT_ID\" > \"$PACKET_DIR/artifact-$ARTIFACT_ID.json\"",
+      "gh api \"repos/$REPO/actions/artifacts/$ARTIFACT_ID/zip\" > \"$PACKET_DIR/artifact-$ARTIFACT_ID.zip\"",
+      "sha256sum \"$PACKET_DIR/run-attempt-1-logs.zip\" \"$PACKET_DIR/artifact-$ARTIFACT_ID.zip\"",
+      "git rev-parse HEAD HEAD^{tree}",
+      "git ls-remote origin \"refs/heads/$BRANCH\" > \"$PACKET_DIR/remote-after.txt\""
+    ],
+    "all_jobs_and_artifacts": "Collect each of the five actual JOB_IDs and each of the ten actual required ARTIFACT_IDs. The run artifacts endpoint is run-level, not attempt-scoped; require initial attempt1 unchanged and cross-bind IDs/digests to exact job upload logs and same-attempt task claims. A name, total_count, ZIP download or gh run download extraction alone is not custody proof.",
+    "json_decode_for_single_records": "Retain each exact run/workflow/attempt/artifact API response; decode one complete JSON object with duplicate/nonfinite rejection, then validate required identity fields. Do not apply the paginated collection normalizer to a single run object without total_count/list fields."
+  },
+  "dispatch_budget_and_failure_policy": [
+    "One newly approved full run, initial attempt1 only; no automatic rerun-all/rerun-failed or repeated expensive matrices for small changes.",
+    "An ambiguous dispatch response is not permission for a second call: reconcile pre/post run lists, timestamps, actor/ref/source and actual run before any additional request.",
+    "Observe completion at a bounded responsible cadence, not busy polling. Coordinator owns all workflow dispatches.",
+    "No overlapping same-ref full/focused workflows: cancel-in-progress means even a different scope can destroy current evidence.",
+    "After any failure, cancellation, timeout, unexpected skip or cache-only runtime gap, first retain raw logs, artifact identities and cleanup receipts; diagnose source/control/platform cause, independently review a minimal change or narrow follow-up, then obtain a fresh approval/binding if needed. Do not weaken toolchain, ownership, source or cleanup validation.",
+    "Cancel only a separately authorized own obsolete run when safe after evidence-preservation review; never cancel other agents or unrelated user work.",
+    "No Store publication/promotion workflow, private Store credentials, physical-device execution, application identity change or unrelated repository/dependency substitution."
+  ],
+  "jobs": [
+    {
+      "job_key": "desktop-android",
+      "expected_api_name": "Common, desktop, and Android release",
+      "runs_on": "ubuntu-24.04",
+      "full_timeout_minutes": 90,
+      "actual_job_id": null,
+      "actual_runner": null,
+      "actual_head_sha": null,
+      "commands_already_wired_in_workflow_not_executed_by_this_packet": [
+        "./gradlew productionCheck productionStaticAnalysis productionReleaseAutomationCheck allTests --dependency-verification=strict --no-daemon --stacktrace --console=plain",
+        "scripts/android/run_release_managed_device_smoke.sh"
+      ],
+      "runtime_scope_if_actually_executed": [
+        "Executed module desktop/JVM and Android unit-test descriptors in the host-selected aggregate graph.",
+        "Executed release managed-device instrumentation from productionAndroidRuntimeCheck / :composeApp:pixel2Api35ReleaseAndroidTest; require instrumentation results and task/log outcome."
+      ],
+      "nonruntime_and_excluded_scope": [
+        "Linux allTests is not all-platform runtime.",
+        "Static analysis, strict dependency resolution, unsigned AAB/manifest/notices/dex/resource checks and artifact inventory are separate nonruntime gates.",
+        "Synthetic task-owned smoke signing is not Store signing or publication."
+      ],
+      "main_artifact_name": "desktop-android-verification",
+      "cleanup_artifact_name": "verification-cleanup-desktop-android",
+      "main_artifact_id": null,
+      "main_artifact_digest": null,
+      "cleanup_artifact_id": null,
+      "cleanup_artifact_digest": null,
+      "main_upload_paths": [
+        "build/ci-evidence/",
+        "**/build/reports/detekt/",
+        "**/build/reports/tests/",
+        "**/build/test-results/**/*.xml",
+        "${RUNNER_TEMP}/parlor-verification-${RUN_ID}-${ATTEMPT}-${JOB}-ownership.json",
+        "${RUNNER_TEMP}/parlor-verification-${RUN_ID}-${ATTEMPT}-${JOB}-stop-*.json",
+        "**/build/reports/androidTests/managedDevice/",
+        "**/build/outputs/androidTest-results/managedDevice/",
+        "**/build/reports/lint-results-*",
+        "composeApp/build/outputs/mapping/release/",
+        "composeApp/build/outputs/bundle/release/*.aab"
+      ],
+      "required_cycle_stop_labels": [
+        "common-android",
+        "managed-device"
+      ],
+      "required_checkout_evidence": "build/ci-evidence/commit.txt and ownership head/tree/task",
+      "actual_run_attempt": null,
+      "actual_tree_from_claim": null,
+      "cleanup_upload_path": "${RUNNER_TEMP}/parlor-verification-${RUN_ID}-${ATTEMPT}-desktop-android-cleanup.json",
+      "artifact_member_path_limit": "Upload paths are runner-source paths, not promised ZIP-root paths. The upload action may prefix them from the least common ancestor of workspace and RUNNER_TEMP. Use the retained ZIP member inventory and exact same-job claim/name/run/attempt; require one unambiguous safe member for each expected receipt rather than inventing or flattening paths."
+    },
+    {
+      "job_key": "desktop-linux-arm64",
+      "expected_api_name": "Desktop strict verification (Linux arm64)",
+      "runs_on": "ubuntu-24.04-arm",
+      "full_timeout_minutes": 45,
+      "actual_job_id": null,
+      "actual_runner": null,
+      "actual_head_sha": null,
+      "commands_already_wired_in_workflow_not_executed_by_this_packet": [
+        "./gradlew productionDesktopCheck --dependency-verification=strict --no-daemon --stacktrace --console=plain"
+      ],
+      "runtime_scope_if_actually_executed": [
+        "Executed desktopTest descriptors on the asserted Linux aarch64 host."
+      ],
+      "nonruntime_and_excluded_scope": [
+        "Desktop compilation/strict graph resolution is not mobile runtime or a shippable Desktop release."
+      ],
+      "main_artifact_name": "desktop-verification-desktop-linux-arm64",
+      "cleanup_artifact_name": "verification-cleanup-desktop-linux-arm64",
+      "main_artifact_id": null,
+      "main_artifact_digest": null,
+      "cleanup_artifact_id": null,
+      "cleanup_artifact_digest": null,
+      "main_upload_paths": [
+        "**/build/reports/tests/",
+        "**/build/test-results/**/*.xml",
+        "${RUNNER_TEMP}/parlor-verification-${RUN_ID}-${ATTEMPT}-${JOB}-ownership.json",
+        "${RUNNER_TEMP}/parlor-verification-${RUN_ID}-${ATTEMPT}-${JOB}-stop-*.json"
+      ],
+      "required_cycle_stop_labels": [
+        "linux-arm64"
+      ],
+      "required_checkout_evidence": "host-gate raw git rev-parse HEAD log and ownership head/tree/task",
+      "actual_run_attempt": null,
+      "actual_tree_from_claim": null,
+      "cleanup_upload_path": "${RUNNER_TEMP}/parlor-verification-${RUN_ID}-${ATTEMPT}-desktop-linux-arm64-cleanup.json",
+      "artifact_member_path_limit": "Upload paths are runner-source paths, not promised ZIP-root paths. The upload action may prefix them from the least common ancestor of workspace and RUNNER_TEMP. Use the retained ZIP member inventory and exact same-job claim/name/run/attempt; require one unambiguous safe member for each expected receipt rather than inventing or flattening paths."
+    },
+    {
+      "job_key": "desktop-macos-x64",
+      "expected_api_name": "Desktop and Kotlin Native strict verification (macOS x64)",
+      "runs_on": "macos-15-intel",
+      "full_timeout_minutes": 45,
+      "actual_job_id": null,
+      "actual_runner": null,
+      "actual_head_sha": null,
+      "commands_already_wired_in_workflow_not_executed_by_this_packet": [
+        "./gradlew productionDesktopCheck :composeApp:downloadKotlinNativeDistribution --dependency-verification=strict --no-daemon --stacktrace --console=plain"
+      ],
+      "runtime_scope_if_actually_executed": [
+        "Executed desktopTest descriptors on the asserted Darwin x86_64 host."
+      ],
+      "nonruntime_and_excluded_scope": [
+        "Downloading the Kotlin Native distribution is dependency/toolchain resolution, not iOS or Kotlin Native test execution."
+      ],
+      "main_artifact_name": "desktop-verification-desktop-macos-x64",
+      "cleanup_artifact_name": "verification-cleanup-desktop-macos-x64",
+      "main_artifact_id": null,
+      "main_artifact_digest": null,
+      "cleanup_artifact_id": null,
+      "cleanup_artifact_digest": null,
+      "main_upload_paths": [
+        "**/build/reports/tests/",
+        "**/build/test-results/**/*.xml",
+        "${RUNNER_TEMP}/parlor-verification-${RUN_ID}-${ATTEMPT}-${JOB}-ownership.json",
+        "${RUNNER_TEMP}/parlor-verification-${RUN_ID}-${ATTEMPT}-${JOB}-stop-*.json"
+      ],
+      "required_cycle_stop_labels": [
+        "macos-x64"
+      ],
+      "required_checkout_evidence": "host-gate raw git rev-parse HEAD log and ownership head/tree/task",
+      "actual_run_attempt": null,
+      "actual_tree_from_claim": null,
+      "cleanup_upload_path": "${RUNNER_TEMP}/parlor-verification-${RUN_ID}-${ATTEMPT}-desktop-macos-x64-cleanup.json",
+      "artifact_member_path_limit": "Upload paths are runner-source paths, not promised ZIP-root paths. The upload action may prefix them from the least common ancestor of workspace and RUNNER_TEMP. Use the retained ZIP member inventory and exact same-job claim/name/run/attempt; require one unambiguous safe member for each expected receipt rather than inventing or flattening paths."
+    },
+    {
+      "job_key": "desktop-windows-x64",
+      "expected_api_name": "Desktop, Kotlin Native, and Android resources strict verification (Windows x64)",
+      "runs_on": "windows-2025",
+      "full_timeout_minutes": 60,
+      "actual_job_id": null,
+      "actual_runner": null,
+      "actual_head_sha": null,
+      "commands_already_wired_in_workflow_not_executed_by_this_packet": [
+        ".\\gradlew.bat productionDesktopCheck :composeApp:downloadKotlinNativeDistribution :composeApp:processDebugResources --dependency-verification=strict --no-daemon --stacktrace --console=plain"
+      ],
+      "runtime_scope_if_actually_executed": [
+        "Executed desktopTest descriptors on the asserted Windows X64 host."
+      ],
+      "nonruntime_and_excluded_scope": [
+        "Kotlin Native distribution download is not native runtime.",
+        "processDebugResources is Android resource processing, not Android device/instrumentation execution."
+      ],
+      "main_artifact_name": "desktop-verification-desktop-windows-x64",
+      "cleanup_artifact_name": "verification-cleanup-desktop-windows-x64",
+      "main_artifact_id": null,
+      "main_artifact_digest": null,
+      "cleanup_artifact_id": null,
+      "cleanup_artifact_digest": null,
+      "main_upload_paths": [
+        "**/build/reports/tests/",
+        "**/build/test-results/**/*.xml",
+        "${RUNNER_TEMP}/parlor-verification-${RUN_ID}-${ATTEMPT}-${JOB}-ownership.json",
+        "${RUNNER_TEMP}/parlor-verification-${RUN_ID}-${ATTEMPT}-${JOB}-stop-*.json"
+      ],
+      "required_cycle_stop_labels": [
+        "windows-x64"
+      ],
+      "required_checkout_evidence": "host-gate raw git rev-parse HEAD log and ownership head/tree/task",
+      "actual_run_attempt": null,
+      "actual_tree_from_claim": null,
+      "cleanup_upload_path": "${RUNNER_TEMP}/parlor-verification-${RUN_ID}-${ATTEMPT}-desktop-windows-x64-cleanup.json",
+      "artifact_member_path_limit": "Upload paths are runner-source paths, not promised ZIP-root paths. The upload action may prefix them from the least common ancestor of workspace and RUNNER_TEMP. Use the retained ZIP member inventory and exact same-job claim/name/run/attempt; require one unambiguous safe member for each expected receipt rather than inventing or flattening paths."
+    },
+    {
+      "job_key": "ios",
+      "expected_api_name": "iOS tests, release frameworks, and Swift wrapper",
+      "runs_on": "macos-15",
+      "full_timeout_minutes": 120,
+      "actual_job_id": null,
+      "actual_runner": null,
+      "actual_head_sha": null,
+      "commands_already_wired_in_workflow_not_executed_by_this_packet": [
+        "./gradlew productionIosSimulatorRuntimeTests productionAppleCheck --dependency-verification=strict --no-daemon --stacktrace --console=plain",
+        "/usr/bin/python3 -B -m scripts.ci.apple_verification_hygiene create-simulator apple-ui",
+        "xcodebuild -project iosApp/iosApp.xcodeproj -scheme iosApp -configuration Debug -sdk iphonesimulator -destination \"platform=iOS Simulator,id=$simulator_udid\" -parallel-testing-enabled NO -maximum-concurrent-test-simulator-destinations 1 -destination-timeout 120 -derivedDataPath build/xcode-derived-data -resultBundlePath build/ci-evidence/ios-ui-tests.xcresult test | tee build/ci-evidence/xcode-ui-test.log",
+        "xcodebuild -project iosApp/iosApp.xcodeproj -scheme iosApp -configuration Release -sdk iphonesimulator -destination \"generic/platform=iOS Simulator\" -derivedDataPath build/xcode-derived-data ARCHS=arm64 ONLY_ACTIVE_ARCH=YES CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO build | tee build/ci-evidence/xcode-release-build.log"
+      ],
+      "runtime_scope_if_actually_executed": [
+        "Every registered KMP iosSimulatorArm64Test only when actually executed in productionIosSimulatorRuntimeTests and reconciled with current descriptors.",
+        "The committed scheme has one active nonparallel iosAppUITests testable, with one Home-launch method plus four UIKit containment methods (five source declarations, not five executed or passed results). Full xcodebuild test has no only-testing selector; reconcile actual XCResult and raw test execution for both classes."
+      ],
+      "nonruntime_and_excluded_scope": [
+        "productionAppleCheck provides type-aware static analysis and release framework linkage for iosArm64, iosSimulatorArm64 and iosX64; linkage is not three-platform runtime.",
+        "The one Home-launch method proves only its foreground/Home/no-unexpected-alert assertions; the four UIKit methods exercise the compiled production container source, not actual SwiftUI/Compose host integration. The full suite is not A functional-storage/protection/retained-host interaction coverage, eight B normal launches or the ninth actual Parlor libproc query.",
+        "Unsigned Release simulator wrapper build, identity/version/file/hash/notices and package inventory are nonruntime checks, not physical-device or Store archive/signing/publication proof.",
+        "Parlor.app is not an upload path: retain reports/hash/package inventories and optional dSYM, not an invented retained application/IPA."
+      ],
+      "main_artifact_name": "ios-verification",
+      "cleanup_artifact_name": "verification-cleanup-ios",
+      "main_artifact_id": null,
+      "main_artifact_digest": null,
+      "cleanup_artifact_id": null,
+      "cleanup_artifact_digest": null,
+      "main_upload_paths": [
+        "build/ci-evidence/",
+        "build/xcode-derived-data/Build/Products/Release-iphonesimulator/Parlor.app.dSYM/",
+        "**/build/reports/detekt/",
+        "**/build/reports/tests/",
+        "**/build/test-results/**/*.xml",
+        "${RUNNER_TEMP}/parlor-verification-${RUN_ID}-${ATTEMPT}-${JOB}-ownership.json",
+        "${RUNNER_TEMP}/parlor-verification-${RUN_ID}-${ATTEMPT}-${JOB}-stop-*.json",
+        "${RUNNER_TEMP}/parlor-verification-${RUN_ID}-${ATTEMPT}-${JOB}-apple-*-ownership.json",
+        "${RUNNER_TEMP}/parlor-verification-${RUN_ID}-${ATTEMPT}-${JOB}-apple-ui-simulator-*.json"
+      ],
+      "required_cycle_stop_labels": [
+        "apple-aggregate",
+        "apple-ui",
+        "apple-wrapper"
+      ],
+      "required_checkout_evidence": "build/ci-evidence/commit.txt and ownership head/tree/task",
+      "xcode_test_declarations_from_committed_scheme": {
+        "scheme": "iosApp/iosApp.xcodeproj/xcshareddata/xcschemes/iosApp.xcscheme",
+        "testable": "iosAppUITests",
+        "testable_skipped": false,
+        "testable_parallelizable": false,
+        "only_testing_selector": null,
+        "declaration_count": 5,
+        "declarations_not_executed_results": [
+          "IOSAppLaunchUITests.testColdLaunchRendersComposeHomeWithoutUnexpectedAlert",
+          "ComposeContainerViewControllerTests.testOneStableChildKeepsItsExplicitSemanticsIndependentOfTheOuterView",
+          "ComposeContainerViewControllerTests.testChildUsesFullBoundsAcrossSizesAndOpposingSemanticDirections",
+          "ComposeContainerViewControllerTests.testSystemDecorationAndOrientationPoliciesStillBelongToTheChild",
+          "ComposeContainerViewControllerTests.testDefaultAppearanceForwardingReachesTheSameChildExactlyOnce"
+        ],
+        "wiring": "PBX iosAppUITests Sources compiles IOSAppLaunchUITests.swift, the production ComposeContainerViewController.swift and ComposeContainerViewControllerTests.swift. This is source/wiring inspection only; runtime counts remain unknown until actual execution and descriptor reconciliation."
+      },
+      "actual_run_attempt": null,
+      "actual_tree_from_claim": null,
+      "cleanup_upload_path": "${RUNNER_TEMP}/parlor-verification-${RUN_ID}-${ATTEMPT}-ios-cleanup.json",
+      "artifact_member_path_limit": "Upload paths are runner-source paths, not promised ZIP-root paths. The upload action may prefix them from the least common ancestor of workspace and RUNNER_TEMP. Use the retained ZIP member inventory and exact same-job claim/name/run/attempt; require one unambiguous safe member for each expected receipt rather than inventing or flattening paths."
+    }
+  ],
+  "platform_gates_to_observe_not_assume": {
+    "all_gradle_jobs": "Actual JDK21 and repository Gradle8.13 wrapper; dependency verification strict. Capture setup logs/versions and selected task graph. No system Gradle or weakened verification.",
+    "desktop_platforms": "Record actual runner OS/image/version/architecture from setup and explicit uname/OSArchitecture gate outputs. Hosted labels alone are expected routing, not freshly observed platform proof.",
+    "android_common": "Require usable /dev/kvm; platforms;android-36, build-tools;36.0.0, platform-tools/emulator and system-images;android-35;google_apis;x86_64. Reconcile actual image source.properties revision against current config/release-policy.json. Managed-device script uses productionAndroidRuntimeCheck with strict verification, --no-daemon and --max-workers=2 plus synthetic task-owned signing values. Preserve outcome/cleanup without any key material.",
+    "android_windows": "Pinned platform36/build-tools36.0.0/platform-tools and Debug resources; no emulator/runtime claim.",
+    "ios": "macos-15 routing, actual Xcode26.3 / Build17C529 at DEVELOPER_DIR=/Applications/Xcode_26.3.app/Contents/Developer; policy consistency and iphoneos SDK major>=policy minimum26, actual iphonesimulator SDK recorded. Physical SDK availability is not physical-device runtime.",
+    "checkout_depth": "Common desktop-android checkout uses full history for inventory tooling. Full iOS and the three other desktop jobs intentionally use depth1. Do not label their individual checkouts full-history.",
+    "dependency_invariant": "Pinned P2pKit0.7.0-rc3 remains Maven Central. No mavenLocal, sibling composite build or metadata regeneration to silence a dependency failure."
+  },
+  "actual_source_run_job_reconciliation": [
+    "Require raw workflow/run/attempt identity: exact repository and head_repository, workflow ID/path, event workflow_dispatch, branch, uniquely associated dispatch, future SOURCE_SHA, actor/timestamps and API run_attempt exact integer1. Workflow335554528 is historical observation only until freshly queried. No rerun is silently folded into initial-attempt evidence.",
+    "Exactly five required job keys/API display names, distinct positive numeric IDs and correct run_id/run_attempt/head_branch/head_sha. Require completed outcomes and retain each steps array including failures/skips, labels and actual runner metadata. No focused-mode four-job skips are allowed to satisfy full.",
+    "Require all nine named focused-only iOS steps skipped by their full condition; require validate-scope to execute and select full. A clock absence is intentional in full; no focused clock/context check establishes the full source SHA.",
+    "For common desktop-android and ios, parse retained build/ci-evidence/commit.txt and the raw source-step log. For the other desktop jobs, parse host-gate git rev-parse HEAD. Reconcile all five ownership JSON head/tree/task exactly against SOURCE_SHA/SOURCE_TREE and the same GITHUB_RUN_ID/GITHUB_RUN_ATTEMPT/GITHUB_JOB.",
+    "Preparation claims attest the actual Git identity, allowed output roots and task, not a whole-checkout raw-byte manifest. Only common desktop-android has checkout depth0; other full jobs have depth1. Windows checkout line-ending normalization is not Linux-identical source-byte evidence.",
+    "Archive and hash the actual frozen workflow/control Git blobs, compare relevant held-source/reviewed deltas, and capture source/cleanliness evidence before and after the job. Full ignores frozen_source_sha and checkout has no input-based source guard; any actual mismatch remains differently bound evidence, not final freeze qualification.",
+    "A newer branch or evidence-delivery/inventory SHA does not erase an older run but cannot be claimed as its execution SHA. Compare direct remote/local freeze again after completion and require separate source/control/platform/scope applicability for any later-delivery reuse."
+  ],
+  "test_task_cache_and_skip_reconciliation": {
+    "task_ledger_fields": [
+      "run_id",
+      "run_attempt",
+      "job_id",
+      "job_key",
+      "actual_source_sha",
+      "platform",
+      "fully_qualified_gradle_task",
+      "observed_task_outcome",
+      "task_log_locator",
+      "descriptor_path_and_sha256",
+      "suite",
+      "testcase",
+      "tests",
+      "failures",
+      "errors",
+      "skips",
+      "runtime_or_nonruntime",
+      "fresh_execution_or_reused_evidence"
+    ],
+    "outcomes_to_preserve": [
+      "EXECUTED",
+      "FROM-CACHE",
+      "UP-TO-DATE",
+      "NO-SOURCE",
+      "SKIPPED",
+      "FAILED",
+      "NOT_RUN",
+      "UNKNOWN"
+    ],
+    "requirements": [
+      "Read actual Gradle task lines and task outcomes; a successful aggregate is insufficient to prove every requested test ran.",
+      "Bind each XML descriptor to its job/platform/task/source and actual task outcome. Cache-restored XML may document reused evidence but must not be counted as newly executed runtime. Preserve cache keys/origin/limitations when available.",
+      "Reconcile descriptors and raw logs for zero-test/no-source/unsupported-target cases, test skips, failures, errors and aborted tails. Missing descriptors cannot be replaced with a historical summary or compilation success.",
+      "Count by unique job/platform/task/suite/testcase. Cross-platform repeats are separate executions of shared behavior, not additional unique behavioral coverage; duplicated uploaded files are not repeated executions.",
+      "Inspect XCTest raw xcode-ui-test.log and ios-ui-tests.xcresult for actual execution/pass/failure/skip and destination/toolchain for the one Home-launch plus four UIKit containment declarations in the committed testable. Neither five declarations, an xcresult directory nor a linked XCTest bundle proves runtime or five passes.",
+      "If XCResult parsing requires Apple APIs unavailable on Linux, use already retained bytes and an existing read-only parser path or separately justified nonbuilding Apple extraction; do not rerun the whole app matrix just to parse.",
+      "Retain deliberate physical-device skips and unsupported host target omissions explicitly. Do not call Linux allTests all-platform execution, framework linkage runtime, Android resource processing instrumentation or Kotlin Native download tests.",
+      "If a required fresh-runtime task is only cached/up-to-date, record a freshness gap. Reuse valid prior evidence only with exact source/control/platform/scope reconciliation; any narrow uncached follow-up requires separate review/approval, never an automatic full rerun."
+    ]
+  },
+  "artifact_and_cleanup_custody": {
+    "expected_total": 10,
+    "retention_days": 14,
+    "upload_if_no_files_found": "warn",
+    "warning": "Ten is the expected successful-run main/cleanup set, not a count already observed. Every upload uses warn on no files and retention14days, so upload green alone is insufficient. Bind original ZIP IDs/digests/size/expiry and API run to exact job upload logs and inner task claims; retain missing/expired/partial artifacts as gaps after failures.",
+    "collection": [
+      "Preserve all five original main ZIPs and five original cleanup ZIPs while available, API JSON IDs/digests/size/created time/expiry, actual run/attempt/job association, download exit codes, local SHA256/size and safe member inventories/extracted-byte hashes. Compare API/upload digest under documented archive representation; absence or mismatch is not silently accepted.",
+      "Do not conflate API name/count with complete evidence. Verify every required artifact is nonempty, unexpired and attributable; reconcile upload step IDs and digests with cleanup custody references. Missing ZIPs, zero files or omitted expected reports remain gaps.",
+      "Safely enumerate ZIP members, reject traversal/absolute paths/symlink/special-file extraction and preserve raw archives. Do not overwrite unrelated retained evidence. Use compact collection manifests; keep original failed receipts intact.",
+      "Upload source paths and ZIP member paths can differ because of least-common-ancestor packaging with RUNNER_TEMP. Preserve exact member names, detect duplicate/case-colliding entries, enforce total/member size and compression limits before extraction, reject traversal/absolute/drive/backslash-redirection/symlink/special-file paths, and use new owned destinations only. Do not flatten colliding members or use artifact extraction as a replacement for retained original ZIP hashes.",
+      "Expected common reports include current commit, unsigned AAB/hash/manifest/notices/package inventory, Detekt/lint, unit/desktop results, Android managed-device instrumentation results and two cycle-stop receipts plus ownership.",
+      "Expected three desktop reports include executed-or-reused XML descriptors, test reports, correct ownership and per-cycle Gradle-stop receipts. Their raw logs supply source/host gates absent build/ci-evidence/commit.txt.",
+      "Expected iOS reports include commit/toolchain/SDKs, effective Debug/Release settings, KMP test XML/static reports, full iosAppUITests XCResult/raw log (one Home-launch and four UIKit containment declarations to reconcile), Release wrapper log/binary identity/hash/notices/full-package inventory, three Apple ownership/finish-stop receipts and owned UI simulator create/retirement evidence. Optional dSYM absence is not an invented retained app. Failure may correctly leave later expected files absent: classify scope NOT_RUN instead of PASS."
+    ],
+    "ownership_and_stop": {
+      "prefix": "parlor-verification-${RUN_ID}-${ATTEMPT}-${JOB}",
+      "preparation_fields": [
+        "root",
+        "head",
+        "tree",
+        "task",
+        "prepared_at",
+        "outputs (exact generated output roots)"
+      ],
+      "cycle_stops": "After each configured cycle, inspect actual wrapper --stop command/exit and receipt. verification_hygiene stop has a90s bound; POSIX uses ./gradlew --stop and Windows cmd /d /c gradlew.bat --stop. Generic prose or finalizer success is not an executed stop.",
+      "nonapple_worker_limit": "Non-Apple worker_scope is Gradle/in-process Kotlin only. Emulator/native/other worker termination requires its own actual evidence; do not derive it from Gradle stop.",
+      "final_cleanup": "Requires actual Gradle stop, valid same-task preparation and unchanged source/output-root authority, successful nonempty upload positive ID/64hex digest, then exact owned output deletion. Inspect result, gradle_stop.exit_code, errors, retained, removed, not_created and upload fields; failure is not a successful cleanup.",
+      "no_delete_policy": "No global caches, source/config/signing files, unrelated stashes/work, retained evidence build/ directories or lock deletion by a collector. Current local task-owned build-lane lock belongs to another lane; this packet author never acquired or altered it."
+    },
+    "apple_cycles": {
+      "order": [
+        "apple-aggregate",
+        "apple-ui",
+        "apple-wrapper"
+      ],
+      "finish_requirements": "Each finish preserves failures, stops Gradle first, checks exact source/task/claim hashes, records bounded native-worker quiescence before/after simulator cleanup and retires only owned simulator resources. Final verification_hygiene cleanup must reconcile all three current prepare/run/finish outcomes and claim hashes, stop0/errors[] and native-worker PASS.",
+      "ui_simulator": "Exact create claim UUID, raw outcome, actual scoped shutdown/delete attempts when required, final absence/retirement receipt and source/task binding. Generic orphan cleanup, later finalizers or an eventual boot log line do not prove retirement.",
+      "not_run_semantics": "NOT_RUN cleanup can be legitimate only when prepare/run were skipped and no owned claim exists. It never proves a test ran successfully. Required full runtime skipped after a failure remains NOT_RUN.",
+      "partial_failure": "Preserve worker/simulator/DerivedData retention and custody errors honestly; uploaded reports do not repair a failed stop or unverified simulator absence."
+    },
+    "local_packet_cycle": "No build/test/project import/native/API execution or owned runtime resource allocation occurred. Only read-only -B Python JSON/hash/AST/Git inspection and this additive report write; no Gradle stop/clean or other cleanup was necessary or run. Future read-only collection likewise must not masquerade as an application cleanup cycle.",
+    "full_only_paths_and_order": {
+      "main_claim": "${RUNNER_TEMP}/parlor-verification-${RUN_ID}-${ATTEMPT}-${JOB}-ownership.json",
+      "per_cycle_stop": "${RUNNER_TEMP}/parlor-verification-${RUN_ID}-${ATTEMPT}-${JOB}-stop-${LABEL}.json",
+      "apple_cycle_claim": "${RUNNER_TEMP}/parlor-verification-${RUN_ID}-${ATTEMPT}-ios-${APPLE_CYCLE}-ownership.json",
+      "apple_ui_simulator_records": "${RUNNER_TEMP}/parlor-verification-${RUN_ID}-${ATTEMPT}-ios-apple-ui-simulator-*.json",
+      "final_receipt": "${RUNNER_TEMP}/parlor-verification-${RUN_ID}-${ATTEMPT}-${JOB}-cleanup.json",
+      "final_receipt_artifact": "verification-cleanup-${JOB}",
+      "full_cleanup_entry": "scripts/ci/verification_hygiene.py cleanup, wired through shell: python / runpy; not native_continuation.py cleanup or native_process_probe.py cleanup.",
+      "owned_output_set": "Fresh preparation claim output_roots from tracked build scripts/Python sources, including root build, iosApp/build, module/build-logic build roots and applicable __pycache__ paths. Derive the exact set from the current claim, not a broad find/rm. build/xcode-derived-data lies under the owned root build and is removed only after custody and Apple-resource gates.",
+      "retention_between_cycles": "Configured immediate Gradle stops and Apple resource retirement execute after each cycle; same-job outputs needed for later linkage/inspection are retained under the preparation retention_reason until main artifact upload succeeds. Final cleanup stops Gradle again before validated deletion. It does not run another build/clean task, so no invented later Gradle stop is claimed.",
+      "scope_exclusions": "The full run does not create parlor-native-* or parlor-process-probe-* focused roots. Collection does not delete simulator profiles, task lock, global caches, signing/source files, unrelated work, retained raw ZIPs or archived evidence build/ directories. RUNNER_TEMP receipts must survive worktree-output deletion and be uploaded separately."
+    }
+  },
+  "result_and_final_reconciliation_contract": {
+    "d_status_now": "NOT_RUN",
+    "d_pass_requires": [
+      "A future reviewed frozen source/control/inventory binding plus exact actual run/job/checkouts on that SHA/tree.",
+      "All five required full jobs and required runtime/static/linkage/package checks have applicable evidence, with every task outcome/descriptor/cache/skip independently reconciled. Any required newly executed runtime that is only cached/up-to-date retains a freshness gap unless a separately reviewed valid evidence-reuse contract closes that exact scope; compilation or aggregate success never does.",
+      "Ten attributable nonempty original artifacts with current evidence and all five valid cleanup receipts, including all three Apple cycles.",
+      "Different-agent review of actual raw run/job/log/descriptors/artifact/claim/cleanup evidence; not only workflow green, this packet or coordinator/agent summaries.",
+      "A/B/C/D scope-by-scope reconciliation, updated held-historical-safe continuation ledger and normally committed/pushed completed reviewed work with direct remote equality."
+    ],
+    "scoped_evidence_not_replaced": {
+      "A": "Latest retained A21 at e511/run34275491965 timed out after partial application observations; runtime and cleanup FAIL. Missing general postbuild extraction was not a PASS. Strict-protection and functional/retained-host recovery remain unresolved. New A23 controls/approvals and a future run are distinct, unexecuted requirements at this packet cutoff.",
+      "B": "B22 did not start because A21 cleanup/source safety was not proven. Actual normal Parlor Debug libproc provenance has not executed. Passing187 controls, source reviews, non-app probe evidence and full Home/containment tests cannot replace B runtime; future B24 remains unexecuted here.",
+      "C": "Latest separate C03 export/render/official-schema resolved-input consumer chain is independently accepted only at e511/source828. It is not final signed/unsigned candidate-binary verification, nor evidence executed at a future freeze. Reopen its actual receipts and source/control/freshness applicability after the new inventory freeze; no full green silently refreshes C.",
+      "D": "This additive packet is preparation only. No full dispatch, run/attempt/job ID, ten-artifact set, test count or successful cleanup has been observed by it."
+    },
+    "readiness_verdict_now": "NOT_READY",
+    "remaining_separate_requirements": [
+      "Physical-device checks, deliberately not executed or authorized here.",
+      "Store signing/publication/promotion and private credentials, deliberately excluded; disabled Store workflows remain disabled.",
+      "Known com.parlor.app Store-identity collision and separate owner/legal/editorial/privacy/release-operation approvals; do not alter the application identity to make this workflow green.",
+      "Unresolved strict storage/protection, retained-host/interaction, real normal-Debug libproc provenance and future combined/final evidence gaps must remain visible."
+    ]
+  },
+  "prior_review_references": [
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/frozen-source-reconciliation-prep-01.json",
+      "bytes": 111413,
+      "sha256": "c0f0f14bcfb01f24d63d79be434f46d74fc88dddab8bd6bd938ce788371d33b3"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/frozen-source-scope-reconciliation-5f35a20d-01.json",
+      "bytes": 33746,
+      "sha256": "c22bce87856e880b1f0f27a2410a8b385746f2885016b1495f4f50a237babcf0"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-final-run-cache-evidence-supplement-01.json",
+      "bytes": 1871,
+      "sha256": "509454acc9a164137a96068eeabded58c8865d3c0cc5791f7d7622416cad7bcc"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/full-package-wiring-independent-review-01.json",
+      "bytes": 26797,
+      "sha256": "b2cdfc7164c18e90d3e702452f46af39e67d76a534ff992af55a115dfe96a79d"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/workflow-kotlin-owned-lifecycle-independent-03.json",
+      "bytes": 3428,
+      "sha256": "76d6a0e9528b87de50be162e2d99c9d3c095b82f1436e6b849c3f5ab0a414ba4"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/workflow-owned-simulator-contract-independent-review-01.json",
+      "bytes": 9493,
+      "sha256": "df123404690600ddf079e2caa688dcb43cc398f601f0220ae94e234ee7bb6bf5"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-apple-native-cleanup-evidence-supplement-01.json",
+      "bytes": 13902,
+      "sha256": "f54427cdf5717251d6e5fe7444150847ae25e2a8bb9b4de811bb51f9991167e4"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-process-probe-source-independent-01.json",
+      "bytes": 38922,
+      "sha256": "7d214ea0e6b93b46670713518bd822079ee843fb1fe22ff233abbfa1571adadb"
+    }
+  ],
+  "reference_limits": [
+    "Old packet01 and its independent review were reopened in full; the current complete workflow and relevant full cleanup/task/scope sources were reopened and all17 control paths rehashed. Eight inherited evidence references were hash/size-checked only; no new claim of reopening their full historical evidence is made.",
+    "The held exact workflow/adapter source review is source-only; its additive precision note must accompany it. This author does not independently approve their own previously authored code or the new packet.",
+    "Current A/B/C facts reference retained run/evidence/independent reviews at their actual e511 binding. This packet did not re-execute or comprehensively re-audit those chains and does not authorize their future reuse.",
+    "ci-apple-native-cleanup-evidence-supplement-01.json is an author supplement, not independent review. No future source hash/run ID/test result or PASS has been invented."
+  ],
+  "current_worktree_is_not_a_freeze": {
+    "observed_head": "e5111ea49113c3f12cb577058c3f926dfebdc325",
+    "observed_tree": "a88872673bd4cfc366236362f287c1db0a04a5cd",
+    "historical_head_kind": "Reviewed direct-owned lifecycle inventory execution freeze for A21/C03, not approval of current uncommitted budget/retention/control changes or future D.",
+    "current_source_edits_present": true,
+    "current_workflow_origin": "Held working-tree bytes, not the committed HEAD blob.",
+    "workflow": {
+      "path": ".github/workflows/production-verification.yml",
+      "bytes": 41331,
+      "sha256": "84888fae00e1add37dd8f39c5a86a9600c2a95b5e3bca794133c3fc28147b46c"
+    },
+    "native_adapter": {
+      "path": "scripts/ci/native_continuation.py",
+      "bytes": 64697,
+      "sha256": "e41186dc13dd94e851b449079d73b98cc4655bb6234ebcd76adc61942bb12feb"
+    },
+    "held_source_review": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/hosted-native-budget-admission-source-independent-01.json",
+      "bytes": 28096,
+      "sha256": "579614bf2bb71a8440acaa811e7b63a20d058576fe1579fb29bc940868e281a8"
+    },
+    "held_source_review_precision": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/hosted-native-budget-admission-source-precision-01.json",
+      "bytes": 2312,
+      "sha256": "34c374048e169531a34380dda00f57ee2b84b8408054311bdabc277bfe627711"
+    },
+    "approval_limit": "The exact four-file source review is not this packet review, execution evidence, a clean source/inventory freeze, or authorization to dispatch. Later approved bytes must be rehashed and freshly bound.",
+    "remote": "No new remote query by this author; current local HEAD/tree are observations only.",
+    "inventory": "No inventory generation or freshness execution here; reusing the historical e511 inventory SHA cannot qualify the changed working tree."
+  },
+  "cli_portability_corrections": {
+    "observed_client_from_retained_receipt": "gh version 2.45.0 (2025-07-18 Ubuntu 2.45.0-1ubuntu0.3)",
+    "new_client_probe_executed": false,
+    "unsupported_paginate_flag": {
+      "receipt": {
+        "path": "remediation-runs/2026-09-08-continuation/actions/native-evidence-dispatch-03-preparation-failure.json",
+        "bytes": 1464,
+        "sha256": "c50339374284170f800687540a349245da74c349e33ed721b47d4a2c6e3b9e4e"
+      },
+      "diagnostic": "unknown flag: --slurp",
+      "correction": "Same gh api --paginate without --slurp; preserve the original concatenated JSON stream and completely decode every page. The recorded failure reached no workflow dispatch."
+    },
+    "unsupported_view_field": {
+      "receipt": {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34275491965/collection-preparation-01.json",
+        "bytes": 2467,
+        "sha256": "b3a2fa2655fd4ab2512e7441c5ca9214b9b66537cca7f97547189a06d026dfdf"
+      },
+      "diagnostic": "Unknown JSON field: \"attempt\"",
+      "correction": "Read run_attempt from the raw REST run/attempt response. The documented failure is --json attempt, not proof that gh run view --attempt is unsupported. This packet avoids gh run view entirely and selects log attempt through the REST /attempts/1/logs endpoint."
+    },
+    "limitations": "These are retained local collection/preparation failures, not new tests, app runtime failures or permission for another Actions run. Old receipts and packet remain untouched; all replacement commands/parser code remain unexecuted by this author."
+  },
+  "observed_control_bindings_NOT_FUTURE_FREEZE": [
+    {
+      "path": ".github/workflows/production-verification.yml",
+      "bytes": 41331,
+      "sha256": "84888fae00e1add37dd8f39c5a86a9600c2a95b5e3bca794133c3fc28147b46c",
+      "bytes_origin": "current_worktree",
+      "observed_git_head": "e5111ea49113c3f12cb577058c3f926dfebdc325",
+      "equal_observed_head_blob": false,
+      "equal_packet01_committed_reference": false
+    },
+    {
+      "path": "scripts/ci/verification_hygiene.py",
+      "bytes": 13802,
+      "sha256": "9eab427aeb3d810c033a3827aa44f7201cbb261345a2e6667a8d085df2fbd603",
+      "bytes_origin": "current_worktree",
+      "observed_git_head": "e5111ea49113c3f12cb577058c3f926dfebdc325",
+      "equal_observed_head_blob": true,
+      "equal_packet01_committed_reference": true
+    },
+    {
+      "path": "scripts/ci/apple_verification_hygiene.py",
+      "bytes": 14908,
+      "sha256": "d9c554781750d3cbbf2a4adce3b040edb83d0de5fec4c04eac700c526fca1c3c",
+      "bytes_origin": "current_worktree",
+      "observed_git_head": "e5111ea49113c3f12cb577058c3f926dfebdc325",
+      "equal_observed_head_blob": true,
+      "equal_packet01_committed_reference": true
+    },
+    {
+      "path": "scripts/ci/owned_ci_simulator.py",
+      "bytes": 11229,
+      "sha256": "717c8c02dc06e4eac175c5dde5c7f9bdd6ebbd5e7028cc94c6ba4f84b44388af",
+      "bytes_origin": "current_worktree",
+      "observed_git_head": "e5111ea49113c3f12cb577058c3f926dfebdc325",
+      "equal_observed_head_blob": true,
+      "equal_packet01_committed_reference": true
+    },
+    {
+      "path": "scripts/ci/darwin_worker_identity.py",
+      "bytes": 12894,
+      "sha256": "939ac6c98628046f9f45547135cbc439f217403e60c7e4033db5f541ab017ecc",
+      "bytes_origin": "current_worktree",
+      "observed_git_head": "e5111ea49113c3f12cb577058c3f926dfebdc325",
+      "equal_observed_head_blob": true,
+      "equal_packet01_committed_reference": true
+    },
+    {
+      "path": "scripts/ci/native_continuation.py",
+      "bytes": 64697,
+      "sha256": "e41186dc13dd94e851b449079d73b98cc4655bb6234ebcd76adc61942bb12feb",
+      "bytes_origin": "current_worktree",
+      "observed_git_head": "e5111ea49113c3f12cb577058c3f926dfebdc325",
+      "equal_observed_head_blob": false,
+      "equal_packet01_committed_reference": false
+    },
+    {
+      "path": "scripts/android/run_release_managed_device_smoke.sh",
+      "bytes": 1511,
+      "sha256": "5b6dc8fcdd7b11c9cefd39da3adb8783321b647cd9a8459ff761ef7fa031262d",
+      "bytes_origin": "current_worktree",
+      "observed_git_head": "e5111ea49113c3f12cb577058c3f926dfebdc325",
+      "equal_observed_head_blob": true,
+      "equal_packet01_committed_reference": true
+    },
+    {
+      "path": "scripts/verification/android_release_artifacts.py",
+      "bytes": 16937,
+      "sha256": "55d6b3ddbe4877956c383225ea8bc8b203a2b023206be60eeac519b2555e98cb",
+      "bytes_origin": "current_worktree",
+      "observed_git_head": "e5111ea49113c3f12cb577058c3f926dfebdc325",
+      "equal_observed_head_blob": true,
+      "equal_packet01_committed_reference": true
+    },
+    {
+      "path": "scripts/verification/ios_release_artifacts.py",
+      "bytes": 19655,
+      "sha256": "e1b597f6513d18a1e35ea293e08a99d6ff7a3baefb383bb100f24988e5e83938",
+      "bytes_origin": "current_worktree",
+      "observed_git_head": "e5111ea49113c3f12cb577058c3f926dfebdc325",
+      "equal_observed_head_blob": true,
+      "equal_packet01_committed_reference": true
+    },
+    {
+      "path": "scripts/verification/third_party_notices.py",
+      "bytes": 30079,
+      "sha256": "d5a9e8e0cafd9c2d0de9ecd8dfcb040053fa52d25d798abd9998e84ab6676bdf",
+      "bytes_origin": "current_worktree",
+      "observed_git_head": "e5111ea49113c3f12cb577058c3f926dfebdc325",
+      "equal_observed_head_blob": true,
+      "equal_packet01_committed_reference": true
+    },
+    {
+      "path": "build.gradle.kts",
+      "bytes": 8766,
+      "sha256": "bd6199e1f097eb236c50c46efb91d291550110f6b4d95a8e95ff0db4d8da192b",
+      "bytes_origin": "current_worktree",
+      "observed_git_head": "e5111ea49113c3f12cb577058c3f926dfebdc325",
+      "equal_observed_head_blob": true,
+      "equal_packet01_committed_reference": true
+    },
+    {
+      "path": "config/release-policy.json",
+      "bytes": 4481,
+      "sha256": "316b28f75a13e0b925beb6bcd893b82e077a1a9efa850022026e830f9b1d4ad4",
+      "bytes_origin": "current_worktree",
+      "observed_git_head": "e5111ea49113c3f12cb577058c3f926dfebdc325",
+      "equal_observed_head_blob": true,
+      "equal_packet01_committed_reference": true
+    },
+    {
+      "path": "iosApp/iosAppUITests/IOSAppLaunchUITests.swift",
+      "bytes": 1097,
+      "sha256": "e903278fc8defcac9a4d03a52495c1364a361222e5f369059c5d6b6416fb6eb7",
+      "bytes_origin": "current_worktree",
+      "observed_git_head": "e5111ea49113c3f12cb577058c3f926dfebdc325",
+      "equal_observed_head_blob": true,
+      "equal_packet01_committed_reference": true
+    },
+    {
+      "path": "iosApp/iosApp.xcodeproj/project.pbxproj",
+      "bytes": 21657,
+      "sha256": "625103b4676a017beb4619c61b705efc84c2be47b71603bddd840c1d3856ea9d",
+      "bytes_origin": "current_worktree",
+      "observed_git_head": "e5111ea49113c3f12cb577058c3f926dfebdc325",
+      "equal_observed_head_blob": true,
+      "equal_packet01_committed_reference": true
+    },
+    {
+      "path": "iosApp/iosApp.xcodeproj/xcshareddata/xcschemes/iosApp.xcscheme",
+      "bytes": 3880,
+      "sha256": "b883fb73d15c7cf4faf868d2cdc8c2fb921c7ffe3606893733b1f89a33747312",
+      "bytes_origin": "current_worktree",
+      "observed_git_head": "e5111ea49113c3f12cb577058c3f926dfebdc325",
+      "equal_observed_head_blob": true,
+      "equal_packet01_committed_reference": true
+    },
+    {
+      "path": "iosApp/iosApp/ComposeContainerViewController.swift",
+      "bytes": 2150,
+      "sha256": "9bdeeaf67a569f4016bc5359ae865b6df9eeaa2a9f6ee36e01041bf79000a903",
+      "bytes_origin": "current_worktree",
+      "observed_git_head": "e5111ea49113c3f12cb577058c3f926dfebdc325",
+      "equal_observed_head_blob": true,
+      "equal_packet01_committed_reference": true
+    },
+    {
+      "path": "iosApp/iosAppUITests/ComposeContainerViewControllerTests.swift",
+      "bytes": 4899,
+      "sha256": "a4730b77ad93d01df60a4b6fde558bfea264f71b19ee5aa6c4a08d33480eacc8",
+      "bytes_origin": "current_worktree",
+      "observed_git_head": "e5111ea49113c3f12cb577058c3f926dfebdc325",
+      "equal_observed_head_blob": true,
+      "equal_packet01_committed_reference": true
+    }
+  ],
+  "control_binding_reconciliation": {
+    "total_rehashed": 17,
+    "equal_packet01_committed_reference": 15,
+    "changed_paths": [
+      ".github/workflows/production-verification.yml",
+      "scripts/ci/native_continuation.py"
+    ],
+    "full_cleanup_and_job_graph": "The15 other packet01 controls are byte-identical, including general/Apple cleanup, root Gradle graph, package controls and five-test Swift/PBX/scheme wiring. Current workflow was reopened completely; general and Apple cleanup and relevant root/native scope source were reopened. This is bounded author source inspection, not a new independent full source campaign or test execution.",
+    "workflow_delta": "Held workflow adds the focused native job clock and selects240minutes only for native-evidence. Existing five full jobs, full120minute iOS timeout, required tasks, source/ownership checks, main/cleanup uploads and9 full-mode focused skips are reconciled in this packet.",
+    "native_full_entry_ast": {
+      "effective_scope_equal_700243": true,
+      "main_equal_700243": true,
+      "comparison": "ast.dump(..., include_attributes=False) for source nodes only; no import/execution."
+    },
+    "future_rehash_required": true
+  },
+  "preserved_packet01": {
+    "packet": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/full-qualification-afterfreeze-01.json",
+      "bytes": 45031,
+      "sha256": "1c455d0dfc2405a9c3205782efbc31acf0fbd9ee356aeade25a74eeaa3c1aad5"
+    },
+    "independent_review": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/full-qualification-afterfreeze-independent-01.json",
+      "bytes": 10869,
+      "sha256": "2d49153881be3dc9ddc2ef9a9f08768ea288a921435d450cbc09fbea15aeb36c"
+    },
+    "preserved_unchanged": true,
+    "limited_supersession": "Use02 only for later separately approved preparation after its independent review. Old01 remains a historical approved preparation at its own byte/control baseline, including its now-inapplicable8-skip count and unsupported --slurp templates. Neither packet authorizes execution."
+  },
+  "additional_current_references": [
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/hosted-native-budget-admission-source-independent-01.json",
+      "bytes": 28096,
+      "sha256": "579614bf2bb71a8440acaa811e7b63a20d058576fe1579fb29bc940868e281a8"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/hosted-native-budget-admission-source-precision-01.json",
+      "bytes": 2312,
+      "sha256": "34c374048e169531a34380dda00f57ee2b84b8408054311bdabc277bfe627711"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-34275491965-postrun-independent-01.json",
+      "bytes": 34488,
+      "sha256": "85ca368c5ee2850cc8fdad3449eca87c1a057e5d3adbad89585e525d608adc31"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/candidate-input-postrun-independent-03.json",
+      "bytes": 24875,
+      "sha256": "6e6d21a6fb9b085fbbcbcf3cba8d74bde392ee09f45085e59c17a84b926b5df3"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34275491965/native-evidence/continuation.json",
+      "bytes": 9741,
+      "sha256": "92d0128851378a445ab8ecccc779539adfa4b58a8c6a93172b00c990c5cbe07d"
+    }
+  ],
+  "additive_revision_summary": {
+    "old_packet_preserved": true,
+    "changes": [
+      "Rebind the current held workflow84888fae and native adaptere41186dc as observed working-tree bytes; leave every future freeze/approval/run identity null.",
+      "Correct8 to9 deliberate full-mode focused-step skips by adding Start focused native job clock; preserve five required jobs, ten artifact expectations and full120minute iOS limit.",
+      "Replace unsupported gh --slurp templates with complete bounded concatenated-JSON parsing of raw --paginate stdout, retained unchanged; use REST run_attempt and attempt-specific logs rather than gh view attempt JSON.",
+      "Make full frozen_source_sha/context/clock limitations explicit, require actual five checkout/source/task claims, and preserve shallow/full-history and Windows-byte distinctions.",
+      "Clarify exact full cleanup paths/order, artifact ZIP versus upload-source paths, run-level artifact versus attempt1 custody, and failure/cache/runtime limits.",
+      "Update latest A21FAIL/B22NOT_RUN/C03-scoped-e511 context without converting controls or preparation to native/full runtime evidence."
+    ],
+    "independent_review_status": "PENDING_DIFFERENT_AGENT_REVIEW_OF_EXACT_NEW_BYTES",
+    "execution_authorization": false
+  },
+  "activity_and_cleanup": {
+    "tests": 0,
+    "builds": 0,
+    "project_imports": 0,
+    "api_or_network_calls": 0,
+    "workflow_dispatches": 0,
+    "native_actions": 0,
+    "source_edits": 0,
+    "cleanup_actions": 0,
+    "staging_commits_or_pushes": 0,
+    "written_files": [
+      "remediation-runs/2026-09-08-continuation/reviews/full-qualification-afterfreeze-02.json"
+    ],
+    "inspection": "Read-only Git/status/ls-files-independent blob inspection, ordinary source/evidence reads, JSON/SHA256 comparison and AST parsing using Python -B. The prospective normalizer was only syntax-parsed, not executed.",
+    "preservation": "No task lock, historical packet/review/failure, other agents source changes, evidence, output/cache or signing file was altered. No build cycle/resources were created and no cleanup receipt is fabricated."
+  }
+}

@@ -1,0 +1,557 @@
+--- a/remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/L08AppFoundation.m.in
++++ b/remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/L08AppFoundation.m.in
+@@ -367,6 +367,44 @@
+     NSMutableDictionary *result = [imageIdentity(info.dli_fbase) mutableCopy];
+     if ([result[@"status"] isEqual:@"observed"]) result[@"app_relative"] = relative;
+     return result;
++}
++
++static NSString *canonicalImagePath(const char *path) {
++    if (path == NULL || path[0] != '/' || strnlen(path, PATH_MAX) >= PATH_MAX) return nil;
++    char canonical[PATH_MAX];
++    if (realpath(path, canonical) == NULL) return nil;
++    return [NSString stringWithUTF8String:canonical];
++}
++
++static NSDictionary *mainImage(void) {
++    NSString *supplied = [NSBundle mainBundle].executablePath;
++    NSString *executable = canonicalImagePath(supplied.fileSystemRepresentation);
++    requireControl(executable != nil, @"main-executable-unavailable");
++    requireControl([executable isEqual:[appBundlePath stringByAppendingPathComponent:@"Parlor"]],
++        @"main-executable-path");
++    // dyld enumeration is not thread-safe. Never infer that image zero is the
++    // app; require one exact canonical match and recheck the selected identity.
++    uint32_t count = _dyld_image_count();
++    requireControl(count > 0 && count <= 4096, @"main-image-count");
++    uint32_t selectedIndex = count;
++    const struct mach_header *selected = NULL;
++    for (uint32_t index = 0; index < count; index++) {
++        if (![canonicalImagePath(_dyld_get_image_name(index)) isEqual:executable]) continue;
++        requireControl(selected == NULL, @"main-image-ambiguous");
++        selected = _dyld_get_image_header(index);
++        requireControl(selected != NULL, @"main-image-header");
++        selectedIndex = index;
++    }
++    requireControl(selected != NULL, @"main-image-missing");
++    requireControl(_dyld_image_count() == count && _dyld_get_image_header(selectedIndex) == selected &&
++        [canonicalImagePath(_dyld_get_image_name(selectedIndex)) isEqual:executable], @"main-image-changed");
++    Dl_info info;
++    requireControl(dladdr(selected, &info) != 0 && info.dli_fbase == selected &&
++        [canonicalImagePath(info.dli_fname) isEqual:executable], @"main-image-address");
++    NSDictionary *identity = imageIdentity(selected);
++    requireControl(_dyld_image_count() == count && _dyld_get_image_header(selectedIndex) == selected &&
++        [canonicalImagePath(_dyld_get_image_name(selectedIndex)) isEqual:executable], @"main-image-changed");
++    return identity; // Bracketed checks are not an atomic loader reservation.
+ }
+ 
+ static void cleanupFixture(void) {
+@@ -456,7 +494,7 @@
+             receipt[@"app_container"] = @YES;
+             receipt[@"container"] = @{@"status": @"observed", @"id": containerPath.lastPathComponent,
+                 @"device": @(containerIdentity.st_dev), @"inode": @(containerIdentity.st_ino), @"uid": @(getuid())};
+-            receipt[@"main_image"] = imageIdentity(_dyld_get_image_header(0));
++            receipt[@"main_image"] = mainImage();
+             receipt[@"fixture_image"] = fixtureImage();
+             receipt[@"foundation_image"] = foundationIdentity();
+             allocateFixture(token, processBoot);
+--- a/remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/README.md
++++ b/remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/README.md
+@@ -1,9 +1,19 @@
+ # L08 app-container Foundation discriminator — draft01
+ 
+-Author: `/root/native_fix_review`. **NOT EXECUTED, NOT ADOPTED.** This is a small
+-additive adapter for a separately reviewed future composition over functional
+-companion02. Existing strict L08 and companion01/02 remain unchanged. No production
+-source, storage option, entitlement, receipt, test count or release gate is edited.
++Author: `/root/native_fix_review`. Native14 executed the prior adapter and retained
++an overall **FAIL**; this follow-up is **NOT YET EXECUTED**. The copy-only adapter
++runs over functional companion02. No production source, storage option, entitlement,
++original receipt or release gate is edited. Strict L08 remains unsatisfied.
++
++Native14 reported main UUID `7af2e14e…`, unlike built/installed Parlor `71706706…`;
++fixture and Foundation UUIDs matched their comparison evidence. The identity of
++that mismatched image is unknown. The old image-zero assumption is replaced by a
++bounded unique canonical `NSBundle.mainBundle.executablePath` match to the attested
++app's `Parlor`. Selected dyld path/header/count are bracketed and cross-checked with
++`dladdr`; missing, ambiguous, changed or foreign bindings fail with closed labels.
++There is no index-zero fallback. SDK `dyld.h` explicitly says enumeration is not
++thread-safe; these checks do not claim an atomic loader reservation. The downstream
++UUID/hash binder and eight-operation/eight-checkpoint sequence remain unchanged.
+ 
+ ## Question
+ 
+@@ -70,15 +80,15 @@
+ 
+ ## Evidence and remaining work
+ 
+-The six executable/template files are frozen for independent source review in
+-`../../reviews/l08-app-foundation-executable-freeze-01.json`. Thirty synthetic
+-controls are authored with an exact discovery guard; none has run yet.
++Historical freezes remain intact. The current nine-file source freeze is
++`../../reviews/l08-native14-followup-01/draft-freeze.json`. There are now 33 declared
++synthetic controls: the original 30 unchanged test methods plus three selector
++source/mutation and failure-schema/binding controls. New controls have not run yet.
+ 
+-Only drafting/source inspection is authorized here. Synthetic control execution,
+-Objective-C/Swift compilation, actual app-container execution, and all resulting
+-cleanup receipts remain **NOT RUN** until root independently approves the frozen
+-adapter and composes it into a newly bound runner. No author-owned build outputs,
+-native processes, Gradle daemons, simulators, or servers have been started.
++Root must independently approve and execute this exact revised source before any
++new compilation or native evidence can be credited. Native14's old failure is not
++reclassified by source inspection. No author-owned build outputs, native processes,
++Gradle daemons, simulators, or servers have been started for this follow-up.
+ 
+ Reference: `../../reviews/l08-app-container-discriminator-research-01.json` and
+ unchanged `../../reviews/l08-native-foundation-control-03/` with actual native02
+--- a/remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/app_foundation_receipts.py
++++ b/remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/app_foundation_receipts.py
+@@ -25,6 +25,8 @@
+ directory-canonical directory-identity directory-owner directory-path entry-identity entry-stat file-identity
+ file-index first-readiness-context fixture-created-identity fixture-exclusive-create image-context-unavailable native-on-main
+ parent-identity root-identity root-not-pinned row-limit runtime-version simulator-identity unknown-leaf
++main-executable-unavailable main-executable-path main-image-count main-image-ambiguous
++main-image-header main-image-missing main-image-changed main-image-address
+ objc-exception'''.split())
+ 
+ 
+--- a/remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/test_app_foundation.py
++++ b/remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/test_app_foundation.py
+@@ -264,6 +264,60 @@
+ 
+ 
+ class SourceControls(unittest.TestCase):
++    def test_main_image_selects_exact_bundle_executable_with_no_index_zero_fallback(self):
++        # Executable source contracts, not native dyld/thread-safety evidence.
++        source = (HERE / 'L08AppFoundation.m.in').read_text()
++        selected = re.search(r'static NSDictionary \*mainImage\(void\) \{.*?\n\}', source, re.S).group()
++        guards = ('[NSBundle mainBundle].executablePath',
++                  'canonicalImagePath(supplied.fileSystemRepresentation)',
++                  'requireControl(executable != nil, @"main-executable-unavailable")',
++                  '[executable isEqual:[appBundlePath stringByAppendingPathComponent:@"Parlor"]]',
++                  'count > 0 && count <= 4096', 'index < count',
++                  '[canonicalImagePath(_dyld_get_image_name(index)) isEqual:executable]',
++                  'requireControl(selected == NULL, @"main-image-ambiguous")',
++                  'selected = _dyld_get_image_header(index)',
++                  'requireControl(selected != NULL, @"main-image-header")',
++                  'requireControl(selected != NULL, @"main-image-missing")',
++                  '_dyld_image_count() == count', '_dyld_get_image_header(selectedIndex) == selected',
++                  '[canonicalImagePath(_dyld_get_image_name(selectedIndex)) isEqual:executable]',
++                  'dladdr(selected, &info) != 0 && info.dli_fbase == selected',
++                  '[canonicalImagePath(info.dli_fname) isEqual:executable]',
++                  'NSDictionary *identity = imageIdentity(selected)', 'return identity;')
++        def check(value):
++            for guard in guards: self.assertIn(guard, value)
++            self.assertEqual(value.count('@"main-image-changed"'), 2)
++            self.assertLess(value.index('dladdr(selected, &info)'), value.index('imageIdentity(selected)'))
++        check(selected)
++        for guard in guards:
++            with self.subTest(guard=guard), self.assertRaises(AssertionError): check(selected.replace(guard, 'MUTATED'))
++        self.assertNotIn('_dyld_get_image_header(0)', source)
++        self.assertIn('receipt[@"main_image"] = mainImage();', source)
++        self.assertIn('strnlen(path, PATH_MAX) >= PATH_MAX', source)
++        self.assertIn('Bracketed checks are not an atomic loader reservation.', source)
++
++    def test_main_selection_failures_are_preservable_only_as_closed_control_errors(self):
++        reasons = {'main-executable-unavailable', 'main-executable-path', 'main-image-count',
++                   'main-image-ambiguous', 'main-image-header', 'main-image-missing',
++                   'main-image-changed', 'main-image-address'}
++        for reason in reasons:
++            value = fixture()
++            value.update(status='CONTROL_ERROR', reason=reason, rows=[], main_image={'status': 'unavailable'},
++                fixture_cleanup=dict(status='NOT_CREATED', created=False, root_pinned=False,
++                                     directory_pinned=False, root_removed=False, reason='none'))
++            with self.subTest(reason=reason):
++                self.assertEqual(schema.parse_record(encoded(value))['reason'], reason)
++                with self.assertRaisesRegex(RuntimeError, 'incomplete-native-control'): bind(value)
++                value['reason'] = reason + '/PRIVATE_PATH'
++                with self.assertRaises(RuntimeError): schema.parse_record(encoded(value))
++
++    def test_wrong_main_uuid_still_fails_with_correct_fixture_and_foundation(self):
++        value = fixture()
++        value['main_image']['uuid'] = '7af2e14e-10e0-3a05-a5df-9775c2c6a88e'
++        self.assertEqual(value['fixture_image'], fixture()['fixture_image'])
++        self.assertEqual(value['foundation_image'], fixture()['foundation_image'])
++        with self.assertRaisesRegex(RuntimeError, 'native-image-uuid-or-hash'): bind(value)
++        self.assertEqual(bind()['status'], 'COLLECTION_VALIDATED_NOT_L08_PASS')
++
+     def test_control03_operation_query_and_image_helpers_remain_exact(self):
+         original_path = adaptor.CAMPAIGN / 'reviews/l08-native-foundation-control-03/FoundationProtectionControl.m'
+         self.assertEqual(adaptor.digest(original_path), 'a6b025d7b77c3b1b1de57b93869d0beff6b4cc9e365eb5672ffd2be9d52013f2')
+@@ -489,8 +543,8 @@
+ 
+ def load_tests(_loader, tests, _pattern):
+     # Fixed executable discovery guard. Updating tests requires a reviewed count update.
+-    if tests.countTestCases() != 30:
+-        raise RuntimeError('App Foundation synthetic discovery count differs from reviewed 30')
++    if tests.countTestCases() != 33:
++        raise RuntimeError('App Foundation synthetic discovery count differs from reviewed 33')
+     return tests
+ 
+ 
+--- a/remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/README.md
++++ b/remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/README.md
+@@ -1,7 +1,7 @@
+ # L08 app-container Foundation composition
+ 
+-**Draft for independent review; new controls and native composition have not
+-executed.** No application source is changed. This thin driver composes the
++**Native14 remains FAIL; this minimal follow-up awaits independent review and
++execution.** No application source is changed. This thin driver composes the
+ frozen `l08-storage-functional-companion-02` runner with frozen
+ `l08-app-foundation-draft-01`, without copying either fixture tree.
+ 
+@@ -52,8 +52,10 @@
+ /usr/bin/python3 -B "$B/run_controls.py"
+ ```
+ 
+-The launcher requires exactly **48 discovered/executed, unique, unskipped
+-controls**: frozen draft 30 plus new composition 18. The new controls cover seven
++The launcher requires exactly **51 discovered/executed, unique, unskipped
++controls**: revised draft 33 plus unchanged composition 18. The three additions
++check exact launcher-selection source, closed errors and unchanged UUID rejection;
++they are not native dyld tests. The original composition controls cover seven
+ source/ordering guards, ten synthetic custody/preservation/binding scenarios,
+ and one launcher success/failure/cancellation test. They execute only parsers,
+ copy adapters, and the isolated inherited `stage` function—not the full runner,
+@@ -96,6 +98,13 @@
+ 
+ ## Evidence and limitations
+ 
++The revised draft freeze is `../../reviews/l08-native14-followup-01/draft-freeze.json`.
++Native14's main-image UUID mismatch is addressed only by exact executable selection,
++never by weakening the binder. Its boot10 continuation failure still has an unknown
++cause; companion02 now supplies closed per-check stages without changing any game
++action, assertion or timeout. Those four new companion tests require a separate
++focused root cycle. Original freezes, raw failures and cleanup evidence stay intact.
++
+ `../../reviews/l08-app-foundation-composition-driver-freeze-01.json` freezes the
+ driver/launcher separately; the final composition freeze covers this README and
+ all controls. Static AST parsing and declared test counts are not executed test
+--- a/remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/compose_runner.py
++++ b/remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/compose_runner.py
+@@ -19,8 +19,8 @@
+ DRAFT = CAMPAIGN / 'native/l08-app-foundation-draft-01'
+ DRIVER = COMPANION / 'run_ios_readiness.py'
+ DRIVER_SHA256 = '1af5e430a1589491406e5347f4d50941cc590b421a0c51694b505e82968b62e0'
+-DRAFT_FREEZE = CAMPAIGN / 'reviews/l08-app-foundation-draft-freeze-01.json'
+-DRAFT_FREEZE_SHA256 = 'd1b2ce17dea38f4ca87396eaf4ccfae071247766e657f4e94358df9e7816a862'
++DRAFT_FREEZE = CAMPAIGN / 'reviews/l08-native14-followup-01/draft-freeze.json'
++DRAFT_FREEZE_SHA256 = '1a803df85b6acab0ad4ca38fa9d43a5be0b47d95bd42bd77970f57b5c26c401c'
+ REFERENCE_PINS = {
+     'run_control.py': '58e8daf875eaf8061ed017e10cc8c8065eb49292866b6741227814282a1b8e9f',
+     'FoundationProtectionControl.m': 'a6b025d7b77c3b1b1de57b93869d0beff6b4cc9e365eb5672ffd2be9d52013f2',
+--- a/remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/run_controls.py
++++ b/remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/run_controls.py
+@@ -14,7 +14,7 @@
+ 
+ HERE = Path(__file__).resolve().parent
+ DRAFT = HERE.parent / 'l08-app-foundation-draft-01'
+-EXPECTED_TESTS = 48
++EXPECTED_TESTS = 51
+ 
+ 
+ def with_external_tmp(work):
+@@ -87,7 +87,7 @@
+         return [identifier for test in node for identifier in (identifiers(test) if isinstance(test, unittest.TestSuite) else [test.id()])]
+     discovered = identifiers(suite)
+     if len(discovered) != EXPECTED_TESTS or len(set(discovered)) != EXPECTED_TESTS:
+-        raise RuntimeError('Frozen Foundation/composition discovery differs from reviewed 48')
++        raise RuntimeError('Frozen Foundation/composition discovery differs from reviewed 51')
+     result = unittest.TextTestRunner(verbosity=2).run(suite)
+     print('PARLOR_APP_FOUNDATION_CONTROL_RESULTS ' + json.dumps(dict(
+         discovered=discovered, tests_run=result.testsRun, failures=len(result.failures), errors=len(result.errors),
+--- a/remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/L08MafiaSnapshots.kt.in
++++ b/remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/L08MafiaSnapshots.kt.in
+@@ -129,21 +129,29 @@
+ 
+     fun isAttached(): Boolean = attaches == 1 && attached != null && attachedInitial == expected
+ 
+-    suspend fun continueActualResumedController() {
++    suspend fun continueActualResumedController(onStage: (String) -> Unit = {}) {
++        onStage("continue-mafia-attached")
+         check(isAttached() && !completed)
++        onStage("continue-mafia-session")
+         val session = checkNotNull(attached)
++        onStage("continue-mafia-canonical")
+         val canonical = checkNotNull(session.canonicalState)
++        onStage("continue-mafia-initial-identity-value")
+         check(canonical.value === attachedInitial && canonical.value == expected)
+-        val driver = Driver(session)
++        val driver = Driver(session, onStage)
+         driver.night(null, null)
++        onStage("continue-mafia-night-outcome")
+         check(canonical.value.phase == MafiaPhase.NightAnnouncement(5))
+         driver.toVote()
++        onStage("continue-mafia-ballot-eligibility")
+         val mafia = canonical.value.hostOnly.fullRoleMap.entries.single { it.value == Role.Mafia }.key
+         checkNotNull(canonical.value.public.activeVote).ballot.forEach { voter ->
+             driver.submit(if (voter == mafia) MafiaAction.AbstainVote(voter) else MafiaAction.CastVote(voter, mafia))
+         }
+         driver.submit(MafiaAction.CloseVote)
++        onStage("continue-mafia-terminal-phase-winner")
+         check(canonical.value.phase == MafiaPhase.PostGame && canonical.value.public.winner == Team.Town)
++        onStage("continue-mafia-terminal-doctor-cleanup")
+         check(canonical.value.privatePerPlayer.values.all { it.previousDoctorProtect == null })
+         completed = true
+     }
+@@ -152,18 +160,25 @@
+         expected = null; expectedId = null; attached = null; attachedInitial = null
+     }
+ 
+-    private class Driver(val session: SessionController<MafiaState, MafiaAction, MafiaEvent>) {
++    private class Driver(val session: SessionController<MafiaState, MafiaAction, MafiaEvent>,
++                         val onStage: (String) -> Unit = {}) {
+         private val state: MafiaState get() = checkNotNull(session.canonicalState).value
+         suspend fun submit(action: MafiaAction) {
++            onStage("continue-mafia-action-await")
+             val receipt = session.submit(action)
++            onStage("continue-mafia-action-receipt")
+             check(receipt is Result.Success && !receipt.data.awaitingAuthority)
++            onStage("continue-mafia-action-validity")
+             check(state.isValidRecoveryState())
+         }
+         fun alive(): List<PlayerId> = state.public.roster.filter { it.alive }.map { it.playerId }
+         suspend fun night(protect: PlayerId?, kill: PlayerId?) {
++            onStage("continue-mafia-night-phase")
+             check(state.phase is MafiaPhase.Night)
+             alive().forEach { id ->
++                onStage("continue-mafia-night-unsubmitted")
+                 check(!state.privatePerPlayer.getValue(id).nightChoiceSubmitted)
++                onStage("continue-mafia-night-choice")
+                 submit(when (state.privatePerPlayer.getValue(id).role) {
+                     Role.Doctor -> MafiaAction.SubmitDoctorProtect(id, protect)
+                     Role.Mafia -> MafiaAction.SubmitMafiaKillVote(id, kill)
+--- a/remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/L08StorageFunctionalProbe.kt.in
++++ b/remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/L08StorageFunctionalProbe.kt.in
+@@ -246,14 +246,17 @@
+                     "restart_envelope_equal", "production_recovery", "exact_home_destination", "owned_metadata_and_header")
+             }
+             "continue" -> {
+-                stage = "actual-home-controller"
++                stage = "continue-home-counters"
+                 check(L08UiSeam.resumeTaps == 1 && L08UiSeam.discardTaps == 0)
+                 if (alias in setOf("wc", "we")) {
++                    stage = "continue-whodunit-attach-wait"
+                     withTimeout(10_000) { while (!L08WhodunitSnapshots.isAttached()) delay(25) }
++                    stage = "continue-whodunit-controller"
+                     L08WhodunitSnapshots.continueActualResumedController()
+                 } else {
++                    stage = "continue-mafia-attach-wait"
+                     withTimeout(10_000) { while (!L08MafiaSnapshots.isAttached()) delay(25) }
+-                    L08MafiaSnapshots.continueActualResumedController()
++                    L08MafiaSnapshots.continueActualResumedController { stage = it }
+                 }
+                 stage = "actual-terminal-writer-delete"
+                 // Never delete directly: this must be the real resumed UI's SerializedSnapshotWriter.
+--- a/remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/L08_FUNCTIONAL_README.md
++++ b/remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/L08_FUNCTIONAL_README.md
+@@ -20,12 +20,31 @@
+ 
+ This revision requires fresh tests and native evidence; native12 remains FAIL.
+ 
++### Native14 continuation diagnostics
++
++Native14's boot10 legacy load/migration/recovery passed, then `continue` failed at
++the broad `actual-home-controller` stage. The exact cause remains **unknown**.
++The copy-only probe now assigns closed stages before the existing Home counter,
++attach waits, Mafia canonical identity/value, each submission receipt/validity,
++night, ballot and terminal guards. No counter values, private roles, actions,
++targets, seeds, state payloads or exception messages are emitted. Stage callbacks
++are no-ops outside this functional continuation path. Checks, action order,
++timeouts, recovery, terminal deletion and default settings are unchanged.
++
++Four additional synthetic source/schema controls require root execution. They
++reverse only these exact diagnostic insertions and compare the complete remaining
++Mafia source and probe execution regions with the original. Failure stages remain
++failure-only and are accepted only for the planned `continue` action. They cannot
++turn an incomplete run into success. Native14 evidence remains unmodified.
++
+ ## Scope and evidence boundaries
+ 
+ This is a separate, copy-only diagnostic harness, **not a modification or
+ successful rerun of original strict L08**. The original 65 controls remain in
+-`scripts/verification/ios-readiness/`; this directory preserves 63 verbatim and
+-changes only its cloned `copied_sources.py` and `run_ios_readiness.py`. Ten new
++`scripts/verification/ios-readiness/`; this directory preserves 62 verbatim and
++changes its cloned `copied_sources.py`, `run_ios_readiness.py` and (diagnostic-only)
++`L08MafiaSnapshots.kt.in`. The last clone's original complete executable source is
++still enforced after reversing the exact stage insertions. Ten new
+ companion files are allowlisted by
+ `../reviews/l08-functional-companion-clone-manifest-01.json` (SHA-256
+ `3036231a1bcfc9d567b8381ee33d89cd381377bea2b10790ddde0f90baf682fb`).
+--- a/remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/l08_functional_receipts.py
++++ b/remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/l08_functional_receipts.py
+@@ -17,6 +17,13 @@
+     action: {('owned_metadata_and_header' if check == 'protected_metadata' else check) for check in checks}
+     for action, checks in STORAGE_CHECKS.items()
+ }
++CONTINUATION_STAGES = set('''continue-home-counters continue-whodunit-attach-wait
++continue-whodunit-controller continue-mafia-attach-wait continue-mafia-attached
++continue-mafia-session continue-mafia-canonical continue-mafia-initial-identity-value
++continue-mafia-night-outcome continue-mafia-ballot-eligibility continue-mafia-terminal-phase-winner
++continue-mafia-terminal-doctor-cleanup continue-mafia-action-await continue-mafia-action-receipt
++continue-mafia-action-validity continue-mafia-night-phase continue-mafia-night-unsubmitted
++continue-mafia-night-choice'''.split())
+ 
+ 
+ def comparison_plan(boot, action):
+@@ -81,7 +88,8 @@
+               'action', 'complete_comparisons', 'physical_or_store_evidence'}
+     if value.get('functional_status') == 'FAIL':
+         require(set(value) == fields | {'stage', 'reason'} and isinstance(value['stage'], str) and
+-                value['stage'] in STORAGE_FAILURE_STAGES and
++                (value['stage'] in STORAGE_FAILURE_STAGES or
++                 action == 'continue' and value['stage'] in CONTINUATION_STAGES) and
+                 isinstance(value['reason'], str) and value['reason'] in {'cancelled', 'fixture_or_boundary_failure'},
+                 'Unknown functional failure metadata')
+         validate_comparisons(value['complete_comparisons'], boot, action, complete=False)
+--- a/remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/test_l08_functional_copy.py
++++ b/remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/test_l08_functional_copy.py
+@@ -10,6 +10,7 @@
+ import copied_sources as copies
+ import l08_copy as strict
+ import l08_functional_copy as companion
++import l08_functional_receipts as functional_receipts
+ 
+ HERE = Path(__file__).resolve().parent
+ ROOT = HERE.parents[2]
+@@ -17,6 +18,12 @@
+ CLONE_MANIFEST = HERE.parent / 'reviews/l08-functional-companion-clone-manifest-01.json'
+ CLONE_MANIFEST_SHA256 = '3036231a1bcfc9d567b8381ee33d89cd381377bea2b10790ddde0f90baf682fb'
+ SITES = ('save', 'load', 'dual-before-legacy-seed', 'dual-after-tag-damage', 'legacy-load-dual', 'retained-dual')
++MAFIA_STAGES = (
++    'continue-mafia-attached', 'continue-mafia-session', 'continue-mafia-canonical',
++    'continue-mafia-initial-identity-value', 'continue-mafia-night-outcome', 'continue-mafia-ballot-eligibility',
++    'continue-mafia-terminal-phase-winner', 'continue-mafia-terminal-doctor-cleanup',
++    'continue-mafia-action-await', 'continue-mafia-action-receipt', 'continue-mafia-action-validity',
++    'continue-mafia-night-phase', 'continue-mafia-night-unsubmitted', 'continue-mafia-night-choice')
+ 
+ 
+ def sha(path):
+@@ -33,6 +40,31 @@
+     start = text.index(first)
+     end = len(text) if last is None else text.index(last, start)
+     return text[start:end]
++
++
++def strip_mafia_continuation_stages(candidate):
++    for stage in MAFIA_STAGES:
++        lines = re.findall(r'(?m)^ +onStage\("' + stage + r'"\)\n', candidate)
++        require(len(lines) == 1, 'Missing/duplicated closed Mafia stage')
++        candidate = strict.once(candidate, lines[0], '')
++    for before, after in (
++        ('suspend fun continueActualResumedController(onStage: (String) -> Unit = {})',
++         'suspend fun continueActualResumedController()'),
++        ('val driver = Driver(session, onStage)', 'val driver = Driver(session)'),
++        ('private class Driver(val session: SessionController<MafiaState, MafiaAction, MafiaEvent>,\n'
++         '                         val onStage: (String) -> Unit = {})',
++         'private class Driver(val session: SessionController<MafiaState, MafiaAction, MafiaEvent>)'),
++    ):
++        candidate = strict.once(candidate, before, after)
++    return candidate
++
++
++def strip_functional_continuation_stages(candidate):
++    candidate = strict.once(candidate, 'stage = "continue-home-counters"', 'stage = "actual-home-controller"')
++    for stage in ('continue-whodunit-attach-wait', 'continue-whodunit-controller', 'continue-mafia-attach-wait'):
++        candidate = strict.once(candidate, '                    stage = "' + stage + '"\n', '')
++    return strict.once(candidate, 'L08MafiaSnapshots.continueActualResumedController { stage = it }',
++                       'L08MafiaSnapshots.continueActualResumedController()')
+ 
+ 
+ def assert_public_control_contract(text):
+@@ -71,6 +103,7 @@
+ 
+ def assert_probe_contract(candidate, original):
+     """Compare complete executable regions, not just whether check names occur somewhere."""
++    candidate = strip_functional_continuation_stages(candidate)
+     for site in SITES:
+         require(len(re.findall(r'protectedMetadata\((?:alias|"dual"), "' + site + r'"\)', candidate)) == 1,
+                 'Missing or duplicate metadata checkpoint: ' + site)
+@@ -185,7 +218,10 @@
+         for row in manifest['files']:
+             with self.subTest(path=row['path']):
+                 self.assertEqual(sha(CANONICAL / row['path']), row['original_sha256'])
+-                if row['path'] not in changed:
++                if row['path'] == 'L08MafiaSnapshots.kt.in':
++                    self.assertEqual(strip_mafia_continuation_stages((HERE / row['path']).read_text()),
++                                     (CANONICAL / row['path']).read_text())
++                elif row['path'] not in changed:
+                     self.assertEqual(sha(HERE / row['path']), row['original_sha256'])
+         original = (CANONICAL / 'copied_sources.py').read_text()
+         self.assertEqual((HERE / 'copied_sources.py').read_text(), strict.once(original,
+@@ -230,6 +266,34 @@
+     def test_functional_probe_preserves_complete_nonmetadata_execution_regions(self):
+         assert_probe_contract((HERE / 'L08StorageFunctionalProbe.kt.in').read_text(),
+                               (CANONICAL / 'L08StorageProbe.kt.in').read_text())
++
++    def test_continuation_stages_are_closed_and_all_mafia_guards_actions_remain_identical(self):
++        mafia = (HERE / 'L08MafiaSnapshots.kt.in').read_text()
++        probe = (HERE / 'L08StorageFunctionalProbe.kt.in').read_text()
++        self.assertEqual(strip_mafia_continuation_stages(mafia), (CANONICAL / 'L08MafiaSnapshots.kt.in').read_text())
++        observed = set(re.findall(r'onStage\("([a-z-]+)"\)', mafia))
++        observed |= set(re.findall(r'stage = "(continue-[a-z-]+)"', probe))
++        self.assertEqual(observed, functional_receipts.CONTINUATION_STAGES)
++        self.assertEqual(observed, set(MAFIA_STAGES) | {'continue-home-counters', 'continue-whodunit-attach-wait',
++                                                     'continue-whodunit-controller', 'continue-mafia-attach-wait'})
++        self.assertIn('L08MafiaSnapshots.continueActualResumedController { stage = it }', probe)
++        for key in ('private_state', 'action_ordinal', 'role_map', 'target', 'seed', 'exception_message'):
++            self.assertNotIn('put("' + key + '"', probe)
++
++    def test_continuation_diagnostics_cannot_hide_removed_guards_or_dynamic_private_stages(self):
++        mafia = (HERE / 'L08MafiaSnapshots.kt.in').read_text()
++        original = (CANONICAL / 'L08MafiaSnapshots.kt.in').read_text()
++        for before, after in (
++            ('check(canonical.value === attachedInitial && canonical.value == expected)', 'check(true)'),
++            ('check(receipt is Result.Success && !receipt.data.awaitingAuthority)', 'check(true)'),
++            ('check(state.isValidRecoveryState())', 'check(true)'),
++            ('check(canonical.value.phase == MafiaPhase.PostGame && canonical.value.public.winner == Team.Town)', 'check(true)'),
++            ('onStage("continue-mafia-action-receipt")', 'onStage(action.toString())'),
++            ('onStage("continue-mafia-night-phase")', 'onStage("continue-mafia-night-phase"); onStage("PRIVATE")'),
++        ):
++            self.assertIn(before, mafia)
++            with self.subTest(before=before), self.assertRaises((RuntimeError, AssertionError)):
++                self.assertEqual(strip_mafia_continuation_stages(mafia.replace(before, after, 1)), original)
+ 
+     def test_each_source_boundary_mutation_is_rejected_not_just_missing_check_names(self):
+         original = (CANONICAL / 'L08StorageProbe.kt.in').read_text()
+--- a/remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/test_l08_functional_receipts.py
++++ b/remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/test_l08_functional_receipts.py
+@@ -180,6 +180,36 @@
+         records = matrix()[0]; records[0] = failed_record()
+         with self.assertRaises(RuntimeError): self.verify(records=records)
+ 
++    @mock.patch.object(receipts, 'bind_loaded_images')
++    def test_each_closed_continuation_stage_is_failure_evidence_not_recovery_success(self, _bind):
++        for stage in receipts.CONTINUATION_STAGES:
++            row = failed_record(10, 'continue', retained=0)
++            row['observation']['stage'] = stage
++            receipts.validate_preservable_functional_operation(row)
++            self.assertEqual(row['observation']['functional_status'], 'FAIL')
++            records = matrix()[0]
++            index = next(i for i, value in enumerate(records)
++                         if value['boot_ordinal'] == 10 and value['action'] == 'continue')
++            records[index] = row
++            with self.subTest(stage=stage), self.assertRaises(RuntimeError): self.verify(records=records)
++
++    def test_continuation_stages_reject_other_actions_unknown_text_and_extra_private_fields(self):
++        for stage in receipts.CONTINUATION_STAGES:
++            row = failed_record()
++            row['observation']['stage'] = stage
++            with self.subTest(stage=stage), self.assertRaises(RuntimeError):
++                receipts.validate_preservable_functional_operation(row)
++        for mutation in (
++            lambda value: value.update(stage='continue-mafia-action-receipt PRIVATE'),
++            lambda value: value.update(stage={'private': 'value'}),
++            lambda value: value.update(private_state='synthetic'),
++            lambda value: value.update(action_detail='synthetic'),
++        ):
++            row = failed_record(10, 'continue', retained=0)
++            row['observation']['stage'] = 'continue-home-counters'
++            mutation(row['observation'])
++            with self.assertRaises(RuntimeError): receipts.validate_preservable_functional_operation(row)
++
+     def test_original_strict_parser_rejects_companion_even_when_all_comparisons_match(self):
+         for value in ('complete', 'missing'):
+             rows, scenario, log = matrix(value)

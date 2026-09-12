@@ -1,0 +1,249 @@
+{
+  "schema_version": 1,
+  "kind": "BOUNDED_NORMAL_ONLY_ENGINEERING_SCOPE_ASSESSMENT",
+  "author": "/root/ci_workflow",
+  "recorded_at": "2026-09-09T07:14:22.150303+00:00",
+  "status": "ASSESSMENT_ONLY_NOT_IMPLEMENTATION_OR_DISPATCH_APPROVAL",
+  "source": {
+    "branch": "fix/local-readiness-2026-09-07",
+    "commit": "0303a76771794c52ea96a7d7f47eb689f5b236ba",
+    "tree": "4d2364b41a5a29b3c66a3ccc5307a9d84c4f5900",
+    "tracked_checkout_clean": true,
+    "selected_files": [
+      {
+        "path": ".github/workflows/production-verification.yml",
+        "bytes": 41331,
+        "sha256": "84888fae00e1add37dd8f39c5a86a9600c2a95b5e3bca794133c3fc28147b46c",
+        "matches_frozen_git": true
+      },
+      {
+        "path": "scripts/ci/native_continuation.py",
+        "bytes": 64697,
+        "sha256": "21d5f2ba437d5aaed855e2a5f1bfd2a0c8141c625772aa1409405087025ed222",
+        "matches_frozen_git": true
+      },
+      {
+        "path": "scripts/ci/NATIVE_CONTINUATION.md",
+        "bytes": 18880,
+        "sha256": "65888db5a545840fc72cacba1fe32f01eae3293e46e53ead72e8b0ef4b6f951a",
+        "matches_frozen_git": true
+      },
+      {
+        "path": "scripts/release/workflow_contract.py",
+        "bytes": 47465,
+        "sha256": "fa142d3bbfb3dd18e0f3dc9aba2f388a3ce634ee7fdd16612b2d9bbf2df1f429",
+        "matches_frozen_git": true
+      },
+      {
+        "path": "scripts/release/tests/test_native_continuation.py",
+        "bytes": 80771,
+        "sha256": "366cd58febbe2f91f7cc287af8942948dd15d5372de2cec750dcbde9f9539465",
+        "matches_frozen_git": true
+      },
+      {
+        "path": "scripts/release/tests/test_workflow_contract.py",
+        "bytes": 39774,
+        "sha256": "695a513b227d1aa3bde6adb49f886713ccdde4f684d9e8478b476cb0c6d8c4ae",
+        "matches_frozen_git": true
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
+        "bytes": 59858,
+        "sha256": "5524d839202211270ec1c97776f0d350b9802ecf0d1c5e6eb3d28cd960629302",
+        "matches_frozen_git": true
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/NormalSourceLaunchUITests.swift.in",
+        "bytes": 3399,
+        "sha256": "c3d5cd42d60371cffee6ec4e8cdc462165f953dbef352bcdbf0f3f2d2a5a4ed2",
+        "matches_frozen_git": true
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/normal_launch_receipts.py",
+        "bytes": 14098,
+        "sha256": "c1335e043f91c1a5e995fb03e9464a291cd5566e0eabfaf1f981f339c5660ae0",
+        "matches_frozen_git": true
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/normal_source_copy.py",
+        "bytes": 2579,
+        "sha256": "5920d07a43c64eb7193a1c1d03aea93948bfa21597591ee13d79073666ed54d2",
+        "matches_frozen_git": true
+      },
+      {
+        "path": "iosApp/iosAppUITests/IOSAppLaunchUITests.swift",
+        "bytes": 1097,
+        "sha256": "e903278fc8defcac9a4d03a52495c1364a361222e5f369059c5d6b6416fb6eb7",
+        "matches_frozen_git": true
+      },
+      {
+        "path": "shared/transport-p2p/build.gradle.kts",
+        "bytes": 4251,
+        "sha256": "6ce2fd726bd41031a5b26d0d30f8ee8f693b4dc942da90bdc48b40fbf040c3b7",
+        "matches_frozen_git": true
+      }
+    ]
+  },
+  "existing_dispatch": {
+    "run_id": 34321128224,
+    "run_attempt": 1,
+    "authorized_lanes": [
+      "l08",
+      "normal"
+    ],
+    "cycles": {
+      "l08": "ios-readiness-25",
+      "normal": "ios-readiness-26"
+    },
+    "records": [
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/native-evidence-dispatch-05/request.json",
+        "sha256": "a5ffb85724b96f0cc5993ae994109dcaa55696b6103c300588dc2771cde45af5"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/native-evidence-dispatch-05/admission.json",
+        "sha256": "726b4e7060f1c80c0ef9aa0fffa6431a7b26d97d3757b15f94ad85f7951bd42e"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/native-evidence-dispatch-05/dispatch-result.json",
+        "sha256": "fd2e41d808ca9bce6dd4efe1757697308b338c8083435f6b1e6329a4765475cc"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/native-evidence-dispatch-05/run-association.json",
+        "sha256": "7554d9d905d1022104dae2313f7ab061793757c19f6dae3d8517cfcb6ffbf291"
+      }
+    ],
+    "limitation": "This report does not evaluate the active run outcome or authorize another run. The reviewed request authorizes one paired execution only."
+  },
+  "conclusions": [
+    "There is no supported hosted B-only execution today. native-evidence always iterates the ordered l08 and normal RUNNERS; no existing CLI target, input, or safe workflow step-resume selects normal alone.",
+    "A reusable standalone normal runner already exists. A minimal explicit closed lane selection at the existing CI boundary could reuse run_native(normal) without rewriting that runner, but no such change is implemented or approved by this report.",
+    "If actual A25 functional-storage and retained-host evidence succeeds and a subsequent correction is B-only, assess and reuse the unaffected A scope rather than repeat expensive A work merely to obtain new B evidence. Retained strict file-protection failures must remain failures.",
+    "Full D provides separate KMP simulator runtime, Apple analysis/linkage, one normal Debug cold-launch smoke, and unsigned Release package coverage. It does not replace B repeated-launch or libproc provenance qualification; B likewise does not replace full D."
+  ],
+  "existing_paths": {
+    "hosted_scope": {
+      "references": [
+        ".github/workflows/production-verification.yml:14-44",
+        "scripts/ci/native_continuation.py:136-140,786-790,1003-1009,1092-1099"
+      ],
+      "finding": "Closed scopes are full/native-preflight/native-evidence/native-process-probe. Preflight only binds; the probe is non-app; full is the combined gate. A failed-job rerun restarts the paired native job rather than only B."
+    },
+    "standalone_normal": {
+      "references": [
+        "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py:879-933",
+        "scripts/ci/native_continuation.py:949-1001"
+      ],
+      "finding": "The normal CLI accepts a fresh source binding and reviewed control hash, validates signing/toolchain/lifecycle, holds the exclusive lane lock, and performs its existing build, eight repetitions, external observation and finalizer. On a qualified Mac this is independently executable, but it is not an exposed B-only Actions path."
+    },
+    "forbidden_shortcuts": [
+      "Do not edit RUNNERS or inject arbitrary commands at dispatch time.",
+      "Do not manufacture A PASS/receipts, suppress A failure, or reuse an obsolete binding to bypass A.",
+      "Do not substitute process-probe, compilation, cached build outputs, or full-D linkage for application-runtime provenance."
+    ]
+  },
+  "conditional_minimal_change_surface": {
+    "condition": "Only after inspecting the actual A25/B26 result and identifying a justified B-only correction; coordinator retains dispatch authority and corrections require review by a different author.",
+    "preferred_boundary": "An explicit closed selected-lanes input under the existing native-evidence scope is a smaller candidate than adding another scope, because it can preserve existing exact scope, timeout, clock, artifact and finalizer predicates. This is a direction, not a chosen interface or implementation.",
+    "files": [
+      {
+        "path": ".github/workflows/production-verification.yml",
+        "area": "Closed selection input and exact env wiring for validation/run/cleanup; retain paired default, full five-job default, scope isolation, timeouts, clock, upload and finalizers."
+      },
+      {
+        "path": "scripts/ci/native_continuation.py",
+        "area": "Validate selected lanes before native allocation; use existing run_native only for selected lanes; bind selection into state/result/custody and enforce selected cleanup footprint. Preserve the strict pristine-output refusal."
+      },
+      {
+        "path": "scripts/release/workflow_contract.py",
+        "area": "Add exact selection contract without weakening current scope/finalizer predicates (30-34,143-217). A new scope instead would also require auditing every exact scope predicate in workflow and adapter."
+      },
+      {
+        "path": "scripts/ci/NATIVE_CONTINUATION.md",
+        "area": "Only the documented closed selection and explicitly B-only result semantics."
+      }
+    ],
+    "retain_without_redesign": [
+      "Keep the cheap existing four-file preflight with both A/B manifests and reviewed hashes; dropping A manifest validation or rewriting binding formats is unnecessary.",
+      "Keep exact repository/branch/workflow/source/full-history checks, qualified Xcode/toolchain observations, current artifact producer/digest checks and live control revalidation (native_continuation.py:143-202,305-368,829-864).",
+      "Keep original raw job clock, full child wait/grace/evidence-cleanup reserve and admission checks (918-941), ownership/lifecycle barriers, evidence preservation and upload-before-deletion custody (1046-1088). Do not shrink safety budgets to make B-only easier.",
+      "Normal-only success must explicitly mean B-only success, with no A allocation, synthetic A receipt, or combined A+B PASS. The paired default and unsafe/interrupted-A admission behavior remain unchanged.",
+      "After any source/control correction, commit reviewed controls, regenerate/commit the mechanical inventory, and obtain fresh source/preflight/control bindings. Reused A evidence remains an execution at its original SHA with explicit scope-applicability reasoning, never new final-SHA runtime proof.",
+      "A shared app/fixture/toolchain/ownership/cleanup change may invalidate some A scope; determine this from the actual diff rather than blanket reuse. No shipping app source or normal runner rewrite is needed merely for lane selection."
+    ],
+    "not_needed": "No generalized runner, arbitrary-command input, new ownership mechanism, preflight rewrite, retained-build splice, or speculative provenance-only mode."
+  },
+  "focused_regression_surface_if_implemented": {
+    "not_executed": true,
+    "existing_files": [
+      {
+        "path": "scripts/release/tests/test_native_continuation.py",
+        "targets": "NativeScopeTest; NativeArtifactTest exact package/producer checks; NativePreflightTest; NativeCleanupTest paired/unsafe cleanup and preservation/custody cases; DirectLifecycleAdapterTest actual run_native; NativeJobBudgetAdmissionTest; NativeInnerFailureAdmissionTest."
+      },
+      {
+        "path": "scripts/release/tests/test_workflow_contract.py",
+        "targets": "Focused scope/default preservation, exact native timeout and first raw clock, full finalizer isolation; new exact selection wiring/invalid-combination checks."
+      }
+    ],
+    "required_selection_witnesses": [
+      "Default paired dispatch still executes A then B.",
+      "Explicit normal-only selection uses existing B path only; no A allocation or receipt; result is B-only.",
+      "Unknown selections and invalid scope/selection combinations are rejected before native allocation.",
+      "Missing/bad clock, stale source/binding/control, unsafe cleanup or incomplete preservation still refuse execution/deletion.",
+      "Cleanup cannot adopt an unselected lane directory; paired interrupted/unsafe-A behavior is unchanged."
+    ],
+    "other_triggers": [
+      "Changing production-verification.yml is an explicit repositoryContractFiles input to :shared:transport-p2p:desktopTest (shared/transport-p2p/build.gradle.kts:35-44). The prior label-only no-trigger conclusion does not apply to this workflow edit.",
+      "Only if cycles/probe scope contracts change, include the relevant test_native_process_probe.py source-contract test; non-app isolation is otherwise unchanged."
+    ],
+    "budget_policy": "Run relevant focused tests for an actual correction, not another full464 release-validator pass for this read-only assessment. Perform the full release validation once at stable final-D source, with the required final qualification."
+  },
+  "full_d_overlap": [
+    {
+      "scope": "KMP/Apple aggregate",
+      "references": [
+        ".github/workflows/production-verification.yml:635-660"
+      ],
+      "covers": "Executable iosSimulatorArm64 module runtime plus Apple analysis and target linkage.",
+      "does_not_cover": "The normal Debug app process image mapping and accepted libproc backing-file evidence."
+    },
+    {
+      "scope": "Full-D Debug XCTest",
+      "references": [
+        ".github/workflows/production-verification.yml:679-732",
+        "iosApp/iosAppUITests/IOSAppLaunchUITests.swift:8-31"
+      ],
+      "covers": "One checked-in EN cold-launch method: foreground and Compose home, two-second no-alert wait, final foreground assertion.",
+      "does_not_cover": "No eight test iterations/relaunch option, ten-second sampled windows, marker census, or external libproc query."
+    },
+    {
+      "scope": "B normal runtime/provenance",
+      "references": [
+        "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py:104-116,388-402,427-478,593-675,879-884",
+        "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/NormalSourceLaunchUITests.swift.in:14-66",
+        "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/normal_launch_receipts.py:49-100,145-248",
+        "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/normal_source_copy.py:6-50"
+      ],
+      "covers": "Copied test-only fixture and isolated build phase, zero app-source transformations; eight actual XCResult-validated relaunches, 48 sampled observations over at least ten post-home seconds each; separate ninth public launch with sample/libproc observations and source/control/process/backing-file/notices/cleanup bindings.",
+      "limitation": "This is the required runner contract, not a claim this active run passed. Periodic observations are not continuous liveness; the separate launch is not a ninth passing UI repetition."
+    },
+    {
+      "scope": "Full-D Release wrapper/package",
+      "references": [
+        ".github/workflows/production-verification.yml:740-784"
+      ],
+      "covers": "Unsigned Release simulator wrapper and package/notices/binary inspection.",
+      "does_not_cover": "Loaded Debug-image provenance; different configuration and observation type."
+    }
+  ],
+  "assessment_execution": {
+    "method": "Read-only Git/source/line, stdlib AST/JSON and byte-hash inspection; no project modules imported or project functions executed.",
+    "tests_run": [],
+    "builds_run": [],
+    "api_calls": [],
+    "dispatches": 0,
+    "canonical_edits": [],
+    "cleanup": "No build/test/simulator/worker resources allocated; no cleanup cycle required. All preexisting evidence, locks and held ledgers preserved. Only this assigned report was written."
+  },
+  "readiness": "No readiness promotion. Actual A25/B26 outcomes require their underlying evidence; strict protection, accepted B provenance, final C/D and physical-device/Store/owner/legal requirements are not waived."
+}

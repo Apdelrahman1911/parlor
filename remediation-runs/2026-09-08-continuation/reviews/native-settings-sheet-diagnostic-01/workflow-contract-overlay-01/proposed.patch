@@ -1,0 +1,102 @@
+--- a/scripts/release/workflow_contract.py
++++ b/scripts/release/workflow_contract.py
+@@ -212,8 +212,8 @@
+     if re.findall(r"(?m)^    if: (.*)$", ios) != [IOS_VERIFICATION_SCOPE]:
+         fail("verification scope may skip iOS only for the separately guarded Windows-only follow-up")
+     if re.findall(r"(?m)^    timeout-minutes: (.*)$", ios) != [
+-            "${{ inputs.verification_scope == 'native-process-probe' && 10 || inputs.verification_scope == 'native-evidence' && 240 || 120 }}"]:
+-        fail("verification scope must keep full/preflight120, probe10 and focused native-evidence240 minute bounds")
++            "${{ inputs.verification_scope == 'native-process-probe' && 10 || inputs.verification_scope == 'native-evidence' && inputs.native_selection == 'settings-sheet-only' && 40 || inputs.verification_scope == 'native-evidence' && 240 || 120 }}"]:
++        fail("verification scope must keep full/preflight120, probe10, settings-sheet evidence40 and other native-evidence240 minute bounds")
+     clock_name = "Start focused native job clock"
+     clock = validation_step(ios, clock_name)
+     clock_script = '''        run: |
+@@ -242,8 +242,8 @@
+     selections = re.findall(r"(?m)^      native_selection:\n((?:        .*\n)+)", text.split("\nconcurrency:", 1)[0])
+     if (len(selections) != 1 or
+             re.findall(r"(?m)^        (type|default|options): (.*)$", selections[0]) !=
+-            [("type", "choice"), ("default", "paired"), ("options", "[paired, l08-only]")]):
+-        fail("verification scope must retain closed paired-default or l08-only native selection")
++            [("type", "choice"), ("default", "paired"), ("options", "[paired, l08-only, settings-sheet-only]")]):
++        fail("verification scope must retain closed paired-default, l08-only or settings-sheet-only selection")
+     for name in ("Validate verification scope", "Run focused native continuation",
+                  "Verify focused native cleanup and uploaded custody"):
+         if re.findall(r"(?m)^          PARLOR_NATIVE_SELECTION: (.*)$", validation_step(ios, name)) != [
+@@ -251,6 +251,10 @@
+             fail("verification scope must bind identical explicit native selection into validation/run/cleanup")
+     if text.count("PARLOR_NATIVE_SELECTION:") != 3:
+         fail("verification scope must not override native selection outside its three reviewed boundaries")
++    diagnostic = validation_step(ios, "Run focused native continuation")
++    if (re.findall(r"(?m)^          PARLOR_APPROVED_PROBE_CONTROL_SHA256: (.*)$", diagnostic) != [
++            "${{ inputs.approved_probe_control_sha256 }}"] or text.count("PARLOR_APPROVED_PROBE_CONTROL_SHA256:") != 3):
++        fail("verification scope requires the explicit diagnostic control hash only at its three reviewed boundaries")
+     validator = validation_step(ios, "Validate verification scope")
+     if (re.findall(r"(?m)^        if: (.*)$", validator) or
+             "run: /usr/bin/python3 -B scripts/ci/native_continuation.py validate-scope\n" not in validator or
+--- a/scripts/release/tests/test_workflow_contract.py
++++ b/scripts/release/tests/test_workflow_contract.py
+@@ -72,8 +72,8 @@
+         workflow_contract.verify_verification_scopes(workflow)
+         mutations = [block.replace('type: choice', 'type: string', 1),
+                      block.replace('default: paired', 'default: l08-only', 1),
+-                     block.replace('[paired, l08-only]', '[paired, l08-only, l08]', 1),
+-                     block.replace('[paired, l08-only]', '[l08-only, paired]', 1),
++                     block.replace('[paired, l08-only, settings-sheet-only]', '[paired, l08-only, settings-sheet-only, l08]', 1),
++                     block.replace('[paired, l08-only, settings-sheet-only]', '[l08-only, paired, settings-sheet-only]', 1),
+                      block + block, '']
+         for replacement in mutations:
+             changed = workflow.replace(block, replacement, 1)
+@@ -98,6 +98,21 @@
+         with self.assertRaisesRegex(RuntimeError, 'verification scope'):
+             workflow_contract.verify_verification_scopes(changed)
+ 
++    def test_settings_sheet_diagnostic_requires_the_explicit_shared_probe_hash_binding(self) -> None:
++        workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text(encoding="utf-8")
++        block = workflow_contract.validation_step(workflow, "Run focused native continuation")
++        original = "          PARLOR_APPROVED_PROBE_CONTROL_SHA256: ${{ inputs.approved_probe_control_sha256 }}\n"
++        self.assertEqual(block.count(original), 1)
++        for replacement in ("", original.replace("inputs.approved_probe_control_sha256", "inputs.approved_normal_control_sha256"),
++                            original + original):
++            changed = workflow.replace(block, block.replace(original, replacement, 1), 1)
++            self.assertNotEqual(workflow, changed)
++            with self.subTest(replacement=replacement), self.assertRaisesRegex(RuntimeError, "verification scope"):
++                workflow_contract.verify_verification_scopes(changed)
++        changed = workflow.replace("env:\n", "env:\n" + original, 1)
++        with self.assertRaisesRegex(RuntimeError, "verification scope"):
++            workflow_contract.verify_verification_scopes(changed)
++
+     def test_focused_native_modes_do_not_weaken_full_verification(self) -> None:
+         workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text(encoding="utf-8")
+         workflow_contract.verify_verification_scopes(workflow)
+@@ -121,8 +136,14 @@
+             ("PARLOR_PROBE_ARTIFACT_DIGEST: ${{ steps.process_probe_artifact.outputs.artifact-digest }}", "PARLOR_PROBE_ARTIFACT_DIGEST: cached"),
+             ("if: " + workflow_contract.PROCESS_PROBE_SCOPE, "if: always()"),
+         ):
++            name = ("Verify process-probe cleanup and uploaded custody" if "PARLOR_PROBE_" in original else
++                    "Observe hosted native processes without an app build")
++            block = workflow_contract.validation_step(workflow, name)
++            self.assertIn(original, block)
++            changed = workflow.replace(block, block.replace(original, replacement, 1), 1)
++            self.assertNotEqual(workflow, changed)
+             with self.subTest(original=original), self.assertRaisesRegex(RuntimeError, "verification scope"):
+-                workflow_contract.verify_verification_scopes(workflow.replace(original, replacement, 1))
++                workflow_contract.verify_verification_scopes(changed)
+         step = workflow_contract.validation_step(workflow, "Observe hosted native processes without an app build")
+         changed = workflow.replace(step, step.replace("        env:\n", "        env:\n          GH_TOKEN: ${{ github.token }}\n"), 1)
+         with self.assertRaisesRegex(RuntimeError, "verification scope"):
+@@ -151,12 +172,15 @@
+     def test_native_evidence_only_job_budget_and_all_other_scope_ceilings_are_exact(self) -> None:
+         workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text(encoding="utf-8")
+         expression = ("${{ inputs.verification_scope == 'native-process-probe' && 10 || "
++                      "inputs.verification_scope == 'native-evidence' && inputs.native_selection == 'settings-sheet-only' && 40 || "
+                       "inputs.verification_scope == 'native-evidence' && 240 || 120 }}")
+         ios = workflow.split("\n  ios:\n", 1)[1]
+         self.assertEqual([expression], re.findall(r"(?m)^    timeout-minutes: (.*)$", ios))
+         workflow_contract.verify_verification_scopes(workflow)
+         for replacement in (
+             expression.replace("&& 10", "&& 30"),
++            expression.replace("&& 40", "&& 240"),
++            expression.replace("'settings-sheet-only'", "'l08-only'"),
+             expression.replace("&& 240", "&& 120"),
+             expression.replace("&& 240", "&& 241"),
+             expression.replace("|| 120", "|| 240"),

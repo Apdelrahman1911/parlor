@@ -1,0 +1,50 @@
+{
+  "at": "2026-09-07T12:29:45.139442+00:00",
+  "author": "/root/release_fix_review",
+  "status": "DRAFT ONLY \u2014 NOT APPLIED, COMPILED, TESTED OR RUN; independent review and root-coordinated verification required",
+  "baseline_head": "2250007173bbf9ca7c441f1c46802d84c1b478ba",
+  "baseline_tree": "b506da5b778a3220f81e07674dcd85d381c49cb6",
+  "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34112913001-evidence/drafts/ci-xml-output-hygiene-v3-draft.patch",
+  "sha256": "5e51a4434b81010a4589825860cc2c37ccccccec1fda3dc99660383556f54573",
+  "supersedes": "v1 and v2 drafts (preserved); v3 additionally requires a successful current prepare step so historical same-task claims cannot authorize deletion after failed prepare.",
+  "changes": [
+    {
+      "path": ".github/workflows/production-verification.yml",
+      "before_sha256": "965e47ddb4c47b19d8017c9494239d0a0309b26f465eb0f6b655bd90113a929c",
+      "proposed_sha256": "6c4b8b67e3c82757920d4431ed513adc2a13bc2aef2b927982127e4b13a66576",
+      "proposed_lines": 617
+    },
+    {
+      "path": "scripts/ci/verification_hygiene.py",
+      "before_sha256": null,
+      "proposed_sha256": "0a767d158b49c3be5b9408bb10a4ee93977196476f7f952a5db523d5a75dcc7a",
+      "proposed_lines": 215
+    },
+    {
+      "path": "scripts/release/tests/test_ci_verification_hygiene.py",
+      "before_sha256": null,
+      "proposed_sha256": "5bcc9934ac86246da3d33538a8aadfa01ec0f004b7ba1fe76ac2b02c437d9ea8",
+      "proposed_lines": 257
+    }
+  ],
+  "implemented_scope": [
+    "All five verification jobs retain actual JUnit XML alongside original required reports/artifacts.",
+    "Pre-build fresh-checkout/source/output ownership journal; refuse historical unowned roots, source overlap, redirects, changed source/task, and overwritten receipts.",
+    "Always-run Gradle stop after eight build/test cycles, and again before exact final cleanup.",
+    "Primary upload outcome plus actual artifact ID/SHA256 required before deleting the last local evidence copy. Failed/cancelled/skipped/empty uploads preserve outputs and explicitly FAIL cleanup; no claim that hosted runner disposal is durable retention.",
+    "Final output cleanup restricted to claimed root/module/build-logic/Xcode-build/Python-cache directories; no global caches, source, or Store workflow edits.",
+    "Cleanup receipt is outside outputs and uploaded separately; leftover output list and strict failure status retained.",
+    "Cleanup requires current preparation step outcome=success independently of readable historical ownership JSON; malformed top-level claims produce a failure receipt, never deletion."
+  ],
+  "limitations": [
+    "No successful local or CI execution exists for these proposed changes; root must run actionlint, focused filesystem tests, existing release validators, and actual cross-platform CI.",
+    "Exact directory cleanup and Gradle stop are not evidence that Kotlin compiler, Xcode/native workers, managed-device emulators, or CoreSimulator services stopped. Separately verify/repair those resource scopes before claiming full process hygiene.",
+    "All intermediate outputs are explicitly retained as one dependent same-job verification batch until the final artifact upload; no automatic per-cycle subset deletion is attempted.",
+    "GitHub may terminate the runner before always() cleanup during hard cancellation/timeout. Retention failure remains a failure, not a fabricated successful cleanup or durable external artifact.",
+    "No self-hosted/shared-runner guarantee or adversarial executing-PR sandbox is claimed. Current workflow uses isolated hosted runners.",
+    "Upload artifact paths span workspace and RUNNER_TEMP; resulting least-common-root archive paths may differ from older artifacts and must be inventoried rather than assumed."
+  ],
+  "proposed_test_count": 19,
+  "research_reference": "../authoritative-ci-retention-hygiene-01.json",
+  "cleanup": "Draft/evidence generation only; no Gradle/Xcode/test process started, no generated build outputs created or deleted."
+}

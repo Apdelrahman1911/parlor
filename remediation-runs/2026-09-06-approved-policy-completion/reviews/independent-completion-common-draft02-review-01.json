@@ -1,0 +1,210 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-09-06T21:53:54.635401+00:00",
+  "reviewer": "/root/factory_review",
+  "author": "/root",
+  "classification": "APPROVED_COMMON_REPORT_INPUTS_ONLY",
+  "subject": {
+    "path": "remediation-runs/2026-09-06-approved-policy-completion/root/completion-selection-common-draft-02.json",
+    "sha256": "f97a127dd40f1776628f16b3a3972bd5890dc4ddb529880050051a6399c711f6"
+  },
+  "prior_draft": {
+    "path": "remediation-runs/2026-09-06-approved-policy-completion/root/completion-selection-common-draft-01.json",
+    "sha256": "5b74a8f0ec1b210a3fe408bd96dce4f6fc03adcaa5593002a8e90cf595d0a0cd"
+  },
+  "prior_independent_review": {
+    "path": "remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-completion-common-draft01-review-01.json",
+    "sha256": "3eac433847dfe1c77e5959e68dd0ba7f85099513ab32ffd37aa15fd18dc3c8b3"
+  },
+  "scope": "Independent delta-only review of draft02 against immutable draft01 and prior full common-receipt reconciliation. All changed hunks read with context. Not final materializer/native/preservation approval.",
+  "delta_review": {
+    "changed_json_paths": [
+      "/artifacts/1/qualification",
+      "/artifacts/2/qualification",
+      "/independent_precision_review",
+      "/manual_actions [list changed]",
+      "/recorded_at",
+      "/release_report_markdown",
+      "/release_wrapper/gate_scope",
+      "/remaining_gates [list changed]",
+      "/supersedes_draft_common_inputs"
+    ],
+    "changed_line_ranges": [
+      {
+        "kind": "replace",
+        "draft01_lines": [
+          3,
+          3
+        ],
+        "draft02_lines": [
+          3,
+          3
+        ]
+      },
+      {
+        "kind": "replace",
+        "draft01_lines": [
+          22,
+          22
+        ],
+        "draft02_lines": [
+          22,
+          22
+        ]
+      },
+      {
+        "kind": "replace",
+        "draft01_lines": [
+          74,
+          74
+        ],
+        "draft02_lines": [
+          74,
+          74
+        ]
+      },
+      {
+        "kind": "replace",
+        "draft01_lines": [
+          100,
+          102
+        ],
+        "draft02_lines": [
+          100,
+          118
+        ]
+      },
+      {
+        "kind": "replace",
+        "draft01_lines": [
+          260,
+          260
+        ],
+        "draft02_lines": [
+          276,
+          276
+        ]
+      },
+      {
+        "kind": "replace",
+        "draft01_lines": [
+          275,
+          275
+        ],
+        "draft02_lines": [
+          291,
+          291
+        ]
+      },
+      {
+        "kind": "replace",
+        "draft01_lines": [
+          298,
+          298
+        ],
+        "draft02_lines": [
+          314,
+          314
+        ]
+      },
+      {
+        "kind": "replace",
+        "draft01_lines": [
+          308,
+          308
+        ],
+        "draft02_lines": [
+          324,
+          330
+        ]
+      },
+      {
+        "kind": "replace",
+        "draft01_lines": [
+          310,
+          310
+        ],
+        "draft02_lines": [
+          332,
+          332
+        ]
+      },
+      {
+        "kind": "replace",
+        "draft01_lines": [
+          384,
+          384
+        ],
+        "draft02_lines": [
+          406,
+          406
+        ]
+      },
+      {
+        "kind": "replace",
+        "draft01_lines": [
+          417,
+          417
+        ],
+        "draft02_lines": [
+          439,
+          447
+        ]
+      }
+    ],
+    "reference_occurrences": 41,
+    "unique_reference_paths": 27,
+    "all_reference_sha256s_match": true,
+    "test_count_smoke_artifact_hashes_and_bytes_unchanged": true,
+    "historical_apphost07_scope_evidence_unchanged": true,
+    "native_and_preservation_all_null": true
+  },
+  "resolved_precision_items": [
+    {
+      "id": "COMMON-PRECISION-01",
+      "conclusion": "RESOLVED",
+      "reason": "Broad no artifact signed assertion removed. Release paragraph and both native artifact qualifications explicitly distinguish code-signing-disabled configuration/no credential-driven signing or Store upload from independently unassessed signature state. Unsigned is retained as build-lane terminology only; this approval does not certify absence of every Mach-O/ad-hoc signature."
+    },
+    {
+      "id": "COMMON-PRECISION-02",
+      "conclusion": "RESOLVED",
+      "reason": "IOS-R1 has distinct locally investigable app-host gate, implementation/platform-validation ownership and no physical-only classification; separate physical backup/restore remains required. IOS-R1 stays an evidence gap outside16, not a new confirmed defect."
+    },
+    {
+      "id": "COMMON-PRECISION-03",
+      "conclusion": "RESOLVED",
+      "reason": "Both gate and action require independent alignment of historical admission/approval fixtures before genuine two/three-device verification. Do not merely un-ignore; no physical evidence inferred from in-memory tests."
+    }
+  ],
+  "gate_accounting": {
+    "blocked": 13,
+    "not_applicable": 1,
+    "manual_actions": 13,
+    "ids_and_owners_and_action_reasons_match_blocked_gates": true,
+    "increase_reason": "One previously conflated blocked gate split into local IOS-R1 investigation and physical backup/restore. No extra confirmed defect or increase to16repair denominator."
+  },
+  "preserved_decisions": [
+    "No supported migration for ambiguous old unpublished language overrides; current clean/ownership/real OS behavior still required.",
+    "Testing-content approval remains distinct from final production editorial/legal review.",
+    "WD-C4 policy remains unresolved; no timer decision invented.",
+    "No16/16,100%,Store readiness or final-preservation approval.",
+    "Immutable prior drafts/reviews and failed native receipts remain preserved."
+  ],
+  "remaining_corrections": [],
+  "requires_separate_approval": [
+    "Selected actual DS-C01 native runtime outcome and native report text.",
+    "Fresh final preservation observation and report text.",
+    "Completed materializer selection/output and final source/diff binding."
+  ],
+  "reviewer_hygiene": {
+    "build_test_native_commands": 0,
+    "application_or_background_workers_started": 0,
+    "source_test_config_control_edits": 0,
+    "git_operations": 0,
+    "network_fetches": 0,
+    "process_stops": 0,
+    "generated_build_outputs_created": 0,
+    "cleanup_required": false,
+    "evidence_write": "Exclusive additive creation of this review JSON only; existing receipts/drafts/reviews untouched."
+  }
+}

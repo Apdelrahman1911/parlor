@@ -1,0 +1,208 @@
+{
+  "kind": "LINUX_PROBE_SDK_PREREQUISITE_SOURCE_FREEZE_AND_PUSH",
+  "started_at": "2026-09-10T12:49:31.013704+00:00",
+  "commands": [
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "exit_code": 0,
+      "output": "7d9ea1eac42ebe7630a01e3dbe9aafcf4f36306b\n"
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--name-only"
+      ],
+      "exit_code": 0,
+      "output": ".github/workflows/production-verification.yml\nscripts/release/tests/test_workflow_contract.py\nscripts/release/workflow_contract.py\n"
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check",
+        "--",
+        ".github/workflows/production-verification.yml",
+        "scripts/release/tests/test_workflow_contract.py",
+        "scripts/release/workflow_contract.py"
+      ],
+      "exit_code": 0,
+      "output": ""
+    },
+    {
+      "command": [
+        "git",
+        "add",
+        "--",
+        ".github/workflows/production-verification.yml",
+        "scripts/release/tests/test_workflow_contract.py",
+        "scripts/release/workflow_contract.py",
+        "remediation-runs/2026-09-08-continuation"
+      ],
+      "exit_code": 0,
+      "output": ""
+    },
+    {
+      "command": [
+        "git",
+        "add",
+        "-f",
+        "--",
+        "remediation-runs/2026-09-08-continuation/actions/34476522188",
+        "remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-probe-prereq-controls-01"
+      ],
+      "exit_code": 0,
+      "output": ""
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--cached",
+        "--name-only"
+      ],
+      "exit_code": 0,
+      "output": ".github/workflows/production-verification.yml\nremediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-probe-prereq-controls-01/artifact-receipts.json\nremediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-probe-prereq-controls-01/control-inputs-after.json\nremediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-probe-prereq-controls-01/control-inputs-before.json\nremediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-probe-prereq-controls-01/focused-commands.json\nremediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-probe-prereq-controls-01/gradle.log\nremediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-probe-prereq-controls-01/java-toolchain.log\nremediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-probe-prereq-controls-01/javac-toolchain.log\nremediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-probe-prereq-controls-01/receipt.json\nremediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-probe-prereq-controls-01/stop.log\nremediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-probe-prereq-controls-01/test-receipts.json\nremediation-runs/2026-09-08-continuation/actions/34476522188/artifacts.json\nremediation-runs/2026-09-08-continuation/actions/34476522188/attempt.json\nremediation-runs/2026-09-08-continuation/actions/34476522188/desktop-android.log\nremediation-runs/2026-09-08-continuation/actions/34476522188/download-receipt.json\nremediation-runs/2026-09-08-continuation/actions/34476522188/jobs.json\nremediation-runs/2026-09-08-continuation/actions/34476522188/linux-process-probe-34476522188-1.zip\nremediation-runs/2026-09-08-continuation/actions/34476522188/linux-process-probe-34476522188-1/parlor-verification-34476522188-1-desktop-android-linux-probe.json\nremediation-runs/2026-09-08-continuation/actions/34476522188/linux-process-probe-34476522188-1/parlor-verification-34476522188-1-desktop-android-ownership.json\nremediation-runs/2026-09-08-continuation/actions/34476522188/linux-process-probe-34476522188-1/parlor-verification-34476522188-1-desktop-android-stop-linux-probe.json\nremediation-runs/2026-09-08-continuation/actions/34476522188/linux-process-probe-cleanup-34476522188-1.zip\nremediation-runs/2026-09-08-continuation/actions/34476522188/linux-process-probe-cleanup-34476522188-1/parlor-verification-34476522188-1-desktop-android-cleanup.json\nremediation-runs/2026-09-08-continuation/actions/34476522188/run.json\nremediation-runs/2026-09-08-continuation/actions/linux-process-probe-01/dispatch-result.json\nremediation-runs/2026-09-08-continuation/actions/linux-process-probe-01/early-failed-log.txt\nremediation-runs/2026-09-08-continuation/actions/linux-process-probe-01/immediate-admission.json\nremediation-runs/2026-09-08-continuation/actions/linux-process-probe-01/push-receipt.json\nremediation-runs/2026-09-08-continuation/actions/linux-process-probe-01/request.json\nremediation-runs/2026-09-08-continuation/actions/linux-process-probe-01/run-association.json\nremediation-runs/2026-09-08-continuation/actions/linux-process-probe-01/runs-before.json\nremediation-runs/2026-09-08-continuation/reviews/linux-probe-01-actual-independent-01.json\nremediation-runs/2026-09-08-continuation/reviews/linux-probe-collector-01.py\nremediation-runs/2026-09-08-continuation/reviews/linux-probe-collector-independent-01.json\nremediation-runs/2026-09-08-continuation/reviews/linux-probe-sdk-prerequisite-independent-01.json\nremediation-runs/2026-09-08-continuation/reviews/linux-process-probe-freeze-01.json\nremediation-runs/2026-09-08-continuation/reviews/linux-process-probe-request-independent-01.json\nscripts/release/tests/test_workflow_contract.py\nscripts/release/workflow_contract.py\n"
+    },
+    {
+      "command": [
+        "git",
+        "-c",
+        "gc.auto=0",
+        "commit",
+        "-m",
+        "fix(ci): install required SDK package for Linux process probe"
+      ],
+      "exit_code": 0,
+      "output": "[fix/local-readiness-2026-09-07 960de51e] fix(ci): install required SDK package for Linux process probe\n 38 files changed, 9678 insertions(+), 4 deletions(-)\n create mode 100644 remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-probe-prereq-controls-01/artifact-receipts.json\n create mode 100644 remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-probe-prereq-controls-01/control-inputs-after.json\n create mode 100644 remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-probe-prereq-controls-01/control-inputs-before.json\n create mode 100644 remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-probe-prereq-controls-01/focused-commands.json\n create mode 100644 remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-probe-prereq-controls-01/gradle.log\n create mode 100644 remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-probe-prereq-controls-01/java-toolchain.log\n create mode 100644 remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-probe-prereq-controls-01/javac-toolchain.log\n create mode 100644 remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-probe-prereq-controls-01/receipt.json\n create mode 100644 remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-probe-prereq-controls-01/stop.log\n create mode 100644 remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-probe-prereq-controls-01/test-receipts.json\n create mode 100644 remediation-runs/2026-09-08-continuation/actions/34476522188/artifacts.json\n create mode 100644 remediation-runs/2026-09-08-continuation/actions/34476522188/attempt.json\n create mode 100644 remediation-runs/2026-09-08-continuation/actions/34476522188/desktop-android.log\n create mode 100644 remediation-runs/2026-09-08-continuation/actions/34476522188/download-receipt.json\n create mode 100644 remediation-runs/2026-09-08-continuation/actions/34476522188/jobs.json\n create mode 100644 remediation-runs/2026-09-08-continuation/actions/34476522188/linux-process-probe-34476522188-1.zip\n create mode 100644 remediation-runs/2026-09-08-continuation/actions/34476522188/linux-process-probe-34476522188-1/parlor-verification-34476522188-1-desktop-android-linux-probe.json\n create mode 100644 remediation-runs/2026-09-08-continuation/actions/34476522188/linux-process-probe-34476522188-1/parlor-verification-34476522188-1-desktop-android-ownership.json\n create mode 100644 remediation-runs/2026-09-08-continuation/actions/34476522188/linux-process-probe-34476522188-1/parlor-verification-34476522188-1-desktop-android-stop-linux-probe.json\n create mode 100644 remediation-runs/2026-09-08-continuation/actions/34476522188/linux-process-probe-cleanup-34476522188-1.zip\n create mode 100644 remediation-runs/2026-09-08-continuation/actions/34476522188/linux-process-probe-cleanup-34476522188-1/parlor-verification-34476522188-1-desktop-android-cleanup.json\n create mode 100644 remediation-runs/2026-09-08-continuation/actions/34476522188/run.json\n create mode 100644 remediation-runs/2026-09-08-continuation/actions/linux-process-probe-01/dispatch-result.json\n create mode 100644 remediation-runs/2026-09-08-continuation/actions/linux-process-probe-01/early-failed-log.txt\n create mode 100644 remediation-runs/2026-09-08-continuation/actions/linux-process-probe-01/immediate-admission.json\n create mode 100644 remediation-runs/2026-09-08-continuation/actions/linux-process-probe-01/push-receipt.json\n create mode 100644 remediation-runs/2026-09-08-continuation/actions/linux-process-probe-01/request.json\n create mode 100644 remediation-runs/2026-09-08-continuation/actions/linux-process-probe-01/run-association.json\n create mode 100644 remediation-runs/2026-09-08-continuation/actions/linux-process-probe-01/runs-before.json\n create mode 100644 remediation-runs/2026-09-08-continuation/reviews/linux-probe-01-actual-independent-01.json\n create mode 100644 remediation-runs/2026-09-08-continuation/reviews/linux-probe-collector-01.py\n create mode 100644 remediation-runs/2026-09-08-continuation/reviews/linux-probe-collector-independent-01.json\n create mode 100644 remediation-runs/2026-09-08-continuation/reviews/linux-probe-sdk-prerequisite-independent-01.json\n create mode 100644 remediation-runs/2026-09-08-continuation/reviews/linux-process-probe-freeze-01.json\n create mode 100644 remediation-runs/2026-09-08-continuation/reviews/linux-process-probe-request-independent-01.json\n"
+    },
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "exit_code": 0,
+      "output": "960de51e36b97fa08b1503ccf28bd4ac2ce53811\n"
+    },
+    {
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "scripts/generate_review_inventory.py"
+      ],
+      "exit_code": 0,
+      "output": "Wrote 29013 inventory rows to docs/review/INDEPENDENT_REVIEW_INVENTORY.csv; source review not attested\n"
+    },
+    {
+      "command": [
+        "git",
+        "add",
+        "--",
+        "docs/review/INDEPENDENT_REVIEW_INVENTORY.csv"
+      ],
+      "exit_code": 0,
+      "output": ""
+    },
+    {
+      "command": [
+        "git",
+        "-c",
+        "gc.auto=0",
+        "commit",
+        "-m",
+        "chore(review): freeze Linux probe prerequisite inventory"
+      ],
+      "exit_code": 0,
+      "output": "[fix/local-readiness-2026-09-07 055f9fd3] chore(review): freeze Linux probe prerequisite inventory\n 1 file changed, 38 insertions(+), 3 deletions(-)\n"
+    },
+    {
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "scripts/generate_review_inventory.py",
+        "--check"
+      ],
+      "exit_code": 0,
+      "output": "Verified freshness of 29013 inventory rows in docs/review/INDEPENDENT_REVIEW_INVENTORY.csv; source review not attested\n"
+    },
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "exit_code": 0,
+      "output": "055f9fd3ac4ff714ada9ac0a582075739653199e\n"
+    },
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD^{tree}"
+      ],
+      "exit_code": 0,
+      "output": "896ccc027ed48b0c08b80d10bbbd6145bc66f0f2\n"
+    },
+    {
+      "command": [
+        "git",
+        "-c",
+        "pack.threads=2",
+        "-c",
+        "pack.windowMemory=128m",
+        "push",
+        "origin",
+        "HEAD:refs/heads/fix/local-readiness-2026-09-07"
+      ],
+      "exit_code": 0,
+      "output": "To https://github.com/Apdelrahman1911/parlor.git\n   7d9ea1ea..055f9fd3  HEAD -> fix/local-readiness-2026-09-07\n"
+    },
+    {
+      "command": [
+        "git",
+        "ls-remote",
+        "origin",
+        "refs/heads/fix/local-readiness-2026-09-07"
+      ],
+      "exit_code": 0,
+      "output": "055f9fd3ac4ff714ada9ac0a582075739653199e\trefs/heads/fix/local-readiness-2026-09-07\n"
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--name-only"
+      ],
+      "exit_code": 0,
+      "output": ""
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--cached",
+        "--name-only"
+      ],
+      "exit_code": 0,
+      "output": ""
+    }
+  ],
+  "review": "remediation-runs/2026-09-08-continuation/reviews/linux-probe-sdk-prerequisite-independent-01.json",
+  "review_sha256": "2a71f1bd26b2c2ffedc7b6a4136f66d88fcd3f0028a7b03f32608a7e2ab8cb9f",
+  "result": "PASS",
+  "source_commit": "960de51e36b97fa08b1503ccf28bd4ac2ce53811",
+  "head": "055f9fd3ac4ff714ada9ac0a582075739653199e",
+  "tree": "896ccc027ed48b0c08b80d10bbbd6145bc66f0f2",
+  "inventory_sha256": "affa75278162d502b6f52368b238d1b53fa4dfd8f95111cd74175b52ecf6e544",
+  "remote": "055f9fd3ac4ff714ada9ac0a582075739653199e\trefs/heads/fix/local-readiness-2026-09-07",
+  "stop": {
+    "exit_code": 0,
+    "output": "No Gradle daemons are running.\n"
+  },
+  "finished_at": "2026-09-10T12:49:39.443702+00:00"
+}

@@ -1,0 +1,1611 @@
+{
+  "schema_version": 1,
+  "reviewed_at": "2026-09-07T13:17:51.435633+00:00",
+  "reviewer": "/root/factory_review",
+  "status": "SCOPED SOURCE REVIEW APPROVED; CURRENT WHOLE-TREE COMBINED/DEVICE VERIFICATION NOT CLAIMED",
+  "scope": "Fresh independent bounded review of SN-C1, SN-C2, ROOT-T3, WD-C1 and approved WD-C4 timer-policy implementation/tests. Original findings, full relevant changed/new files and listed cross-file ranges reopened. Not a new exhaustive repository audit.",
+  "baseline": {
+    "repository": "/Users/abdelrahman/Projects/parlor",
+    "branch": "fix/local-readiness-2026-09-07",
+    "commit": "711dd4163f4afa97954f47eddc98fd1a4df0b4ae",
+    "tree": "e0b610b0ad32bb7f0be4a2aac822042a8bcf1f02",
+    "working_tree_status": "M .github/workflows/production-verification.yml\n M game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/night/MafiaKillVoteScreen.kt\n M game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/vote/VoteCastScreen.kt\n?? AGENTS.md\n?? audit-runs/\n?? design/\n?? docs/PARLOR_PROJECT_HANDOFF.md\n?? game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/MafiaCountAssertions.kt\n?? game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/MafiaTallyLayoutTest.kt\n?? game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaSetupReadOnlyCountLayoutTest.kt\n?? project-code-audit/\n?? remediation-runs/\n?? scripts/ci/\n?? scripts/release/tests/test_ci_verification_hygiene.py",
+    "tracked_diff_sha256": "dc4e28e563ccb042969087104e0f81d1cf8d68b788449bdc0a090720df9c8b15",
+    "qualification": "Root is still authoring unrelated UI/CI changes; this is not frozen source05. Scope bytes unchanged since cc1679788fa7dc0c5c1a106aebee6d9b50531d49 except already-read later tracked history outside scope."
+  },
+  "independence": {
+    "scoped_fix_authors": {
+      "SN-C1": "session_cont",
+      "SN-C2": "session_cont + root",
+      "ROOT-T3": "root",
+      "WD-C1": "whodunit_cont",
+      "WD-C4": "root (policy/test additions)"
+    },
+    "reviewer_authored_scoped_repairs": false,
+    "later_fixture_authorship_exception": {
+      "path": "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitRoomTransportLoopbackTest.kt",
+      "author": "/root/factory_review",
+      "separate_reviewer": "/root",
+      "independent_dossier": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/factory-test-additions-root-review-01.json",
+      "dossier_sha256": "ba0ce13d287befb095c31b394b929756602302f4f2dfc1d2900c3e914625bd31",
+      "current_file_hash_matches_root_review": true,
+      "not_self_approved": true
+    }
+  },
+  "blocking_scoped_findings": [],
+  "issue_reasoning": [
+    {
+      "id": "SN-C1",
+      "conclusion": "SCOPED FIX REMAINS CORRECT",
+      "source_and_counterevidence": [
+        "SessionStartHandshake 210-277 accepts only validated matching commit inside receive deadline; ACK278-289/360-372 is separately bounded best effort after success. Ordinary failure/timeout cannot roll back commit. Caller cancellation is rethrown.",
+        "Both game lobby callers directly use helper without another receive timeout. Host commit970-995 precedes delivery/ACK and remains irreversible. Peer coordinator attaches inbox and explicitly requests first snapshot1420-1438/1543-1570; eager snapshot loss while finishing ACK is recovered.",
+        "All9 regression bodies read:99/100ms accepted commit, slow/failing/throwing/timeout ACK, true caller cancellation, missing/wrong/invalid commit, duplicate commit and snapshot reconciliation."
+      ],
+      "compatibility": "No change by reviewer; exact protocol4.2, host-only reducers, own-private projections and existing snapshot/credential formats remain intact."
+    },
+    {
+      "id": "SN-C2",
+      "conclusion": "SCOPED FIX REMAINS CORRECT",
+      "source_and_counterevidence": [
+        "All3 platform factories call createOwnedP2pKit. Constructed kit retained before dispatcher return/ensureActive; cancellation/exception stops it NonCancellable and preserves original throwable with suppressed cleanup failure. Android init mutex precedes synchronous kit construction.",
+        "Host transfer follows lifecycle registration plus diagnostics. Unreturned room/kit cleaned on cancelled opening. Join/cold resume retain openingRoom and closeForRetry, cancelling collectors/recovery without explicit Leave or credential revocation.",
+        "Lifecycle registration rollback removes exact ID while transition mutex held. Separate state mutex permits onClosed callback without reentrant deadlock. Existing room is not removed by a new caller cancelled before obtaining transition lock.",
+        "Process owner owns only returned rooms; all affected host/peer callers retain process ownership. All29 new factory/host/peer/coordinator regression bodies and selected cancellation/fatal siblings reopened."
+      ],
+      "compatibility": "No change by reviewer; exact protocol4.2, host-only reducers, own-private projections and existing snapshot/credential formats remain intact."
+    },
+    {
+      "id": "ROOT-T3",
+      "conclusion": "SCOPED FIX REMAINS CORRECT",
+      "source_and_counterevidence": [
+        "Explicit Unit restores8 enabled +2 intentionally ignored expression-body signatures; assertions unchanged. Current guard scans actual compiled Jupiter annotations, including disabled descriptors, closes Files.walk and loads classes without initialization. It rejects nonvoid/private/static—not parameterized—methods.",
+        "Independent raw XML reparse found all8 enabled exact method names in130-case passing lifecycle suite and one passing discovery guard.3 physical loopback cases remain skipped. Older advertisement-only PASS is not current physical delivery evidence.",
+        "Later current loopback fixture changes were authored by this reviewer and independently approved by root; they are not self-approved here. Current filehash21451bf407d791ec85066227a2670ccf61d3506efaae47375c0bba557fe3be73 matches root factory-test-additions-root-review-01.json."
+      ],
+      "compatibility": "No change by reviewer; exact protocol4.2, host-only reducers, own-private projections and existing snapshot/credential formats remain intact."
+    },
+    {
+      "id": "WD-C1",
+      "conclusion": "SCOPED FIX REMAINS CORRECT",
+      "source_and_counterevidence": [
+        "Peer effect reads live complete own-player StateFlow, checks phase/generation against render, then sends only if host-recorded own acknowledgement is absent. Keys include session identity/generation; no optimistic readiness/cache and no stale-screen success inference.",
+        "Real peer coordinator waits until outcome authoritative revision is installed before clearing acknowledged command cover. Shadow installs own projection before public flow and exposes no host/canonical state. Host command protocol/actor/sequence/revision gates unchanged.",
+        "All12 actual Compose-router regression bodies read:command-cover/remount, both phases, disconnect pause, stale Compose projection, phase/replay generation change, unrelated updates, definitive rejection and replacement controller. Host/local readiness duplicate reducer guard remains a no-op; no Mafia/local rules change."
+      ],
+      "compatibility": "No change by reviewer; exact protocol4.2, host-only reducers, own-private projections and existing snapshot/credential formats remain intact."
+    },
+    {
+      "id": "WD-C4",
+      "conclusion": "APPROVED POLICY CONSISTENT; TEST/EVIDENCE GAP COVERAGE",
+      "source_and_counterevidence": [
+        "Approved policy is explicit: Leave-confirmation time is excluded, not an unresolved product choice in current task. Existing runtime behavior preserved; original audit classification was unresolved/evidence gap, not a17th repaired defect.",
+        "Local flow901-958 and host route249-366 replace presentation on confirmation, cancelling sole router ticker868-889 while retaining session/network ownership. Stay only clears confirmation, does not send Resume or wall-clock catchup. Peer never invokes authoritative ticker.",
+        "Current6local+4host tests invoke production entry, reducer, codec, save writer and retained host/start barrier under virtual Compose time. They cover both modes, repeated return/one ticker, existing pauses, save failure/retry/load, last-second expiry, lifecycle behind host modal and final Leave worker cancellation.",
+        "Tests expose deterministic UI Back-request seam and synthetic pre-admitted transport; not actual Android Back/iOS gesture/physical LAN. Legacy ticker test whose name mentions two loops actually starts only one; new repeated-presentation tests provide meaningful remount coverage, not an arbitrary two-loop claim."
+      ],
+      "compatibility": "No change by reviewer; exact protocol4.2, host-only reducers, own-private projections and existing snapshot/credential formats remain intact."
+    }
+  ],
+  "original_dossiers_reopened": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/audit-runs/2026-09-05-source-audit/candidates/SN-C1-start-ack-deadline.md",
+      "sha256": "08f1b7149ee7acc4a8b5263ef3eb23c92b3b0eb09e3328308d0812ce444472ac",
+      "read_complete": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/audit-runs/2026-09-05-source-audit/validations/SN-C1-root.md",
+      "sha256": "f4e3ef713b280f8072be33a7023265a5a01dc3d2786463a0bed9c53dd0a16c6c",
+      "read_complete": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/audit-runs/2026-09-05-source-audit/candidates/SN-C2-host-registration-cancellation.md",
+      "sha256": "6ac3313fad5c6ed698e9c9c481e4385f7bca06a4de28bbead16ecbe284f8d5f7",
+      "read_complete": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/audit-runs/2026-09-05-source-audit/validations/SN-C2-root.md",
+      "sha256": "853c0098a995d0585289adff7c6d9e419fb0cdc6376790466b4e7b527d97a5be",
+      "read_complete": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/audit-runs/2026-09-05-source-audit/candidates/ROOT-T3-nonvoid-test-registration.md",
+      "sha256": "b9404a7b0d16b8bfb42d04f9af2fa3a83c220a7e1904d8c628303e7d2fc2d630",
+      "read_complete": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/audit-runs/2026-09-05-source-audit/validations/ROOT-T3-session_cont.md",
+      "sha256": "38275715c4b099d974fe980d788f2087029716b7859a63ee97cd104fd4951c21",
+      "read_complete": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/audit-runs/2026-09-05-source-audit/candidates/WD-C1-whodunit_cont.md",
+      "sha256": "30f32df63588381c554559cc567deabe87d01e5802c3f1790238601587ac200e",
+      "read_complete": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/audit-runs/2026-09-05-source-audit/candidates/WD-C1-independent-session_cont.md",
+      "sha256": "11f8eb9bb17d71dc4324d7c61e3b6c5b12e569f8667a5b180b90bc2fa597a4ae",
+      "read_complete": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/audit-runs/2026-09-05-source-audit/candidates/WD-C4-whodunit_cont.md",
+      "sha256": "8c62e3e6c116aa7a9bf077e45d788ab2cf3a8bdc3837aac3b7a13747e314a4d0",
+      "read_complete": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/audit-runs/2026-09-05-source-audit/validations/WD-C4-root.md",
+      "sha256": "021928ce620ebbcae91af174baea9547a9df9aa82dc3c1e6b22f61da71e90cce",
+      "read_complete": true
+    }
+  ],
+  "source_coverage_ledger": [
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/build-logic/convention/src/main/kotlin/com/parlor/buildlogic/KmpLibraryConventionPlugin.kt",
+      "sha256": "9d3b07942123f5a4c2da229aa873d5d7b7d422b120d1ff42014cfe066eefbc63",
+      "line_count": 72,
+      "reviewed_line_ranges": [
+        [
+          1,
+          72
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "build",
+      "whole_file_read": true,
+      "scope_ids": [
+        "ROOT-T3"
+      ],
+      "remaining_scope": null,
+      "retained_cycle_file_binding": {
+        "combined04": "EXACT_MATCH",
+        "focused11": "EXACT_MATCH"
+      }
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/docs/WHODUNIT_DISCUSSION_TIMING.md",
+      "sha256": "877084e47d0e823278057da1f0881fbab0a52e5a8e57aa48eec5fbabc49cece1",
+      "line_count": 39,
+      "reviewed_line_ranges": [
+        [
+          1,
+          39
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "documentation",
+      "whole_file_read": true,
+      "scope_ids": [
+        "WD-C4"
+      ],
+      "remaining_scope": null,
+      "retained_cycle_file_binding": {
+        "combined04": "DIFFERENT_OR_NOT_RECORDED",
+        "focused11": "EXACT_MATCH"
+      }
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaHostLobbyFlow.kt",
+      "sha256": "86dbe5ba625445dd9f8a33d754f919c1d2515e9b16f2cff6b88924ddd14c86ff",
+      "line_count": 618,
+      "reviewed_line_ranges": [
+        [
+          113,
+          194
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "production",
+      "whole_file_read": false,
+      "scope_ids": [
+        "SN-C2"
+      ],
+      "remaining_scope": "Only listed affected paths were freshly reopened; other lines not reread in this bounded pass.",
+      "retained_cycle_file_binding": {
+        "combined04": "EXACT_MATCH",
+        "focused11": "EXACT_MATCH"
+      }
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaPeerLobbyFlow.kt",
+      "sha256": "d2c1256c40f68eff0784c31de3232d24629b5295c8bde0c4b5f63d6ee9c3d1a8",
+      "line_count": 593,
+      "reviewed_line_ranges": [
+        [
+          335,
+          435
+        ],
+        [
+          516,
+          593
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "production",
+      "whole_file_read": false,
+      "scope_ids": [
+        "SN-C1"
+      ],
+      "remaining_scope": "Only listed affected paths were freshly reopened; other lines not reread in this bounded pass.",
+      "retained_cycle_file_binding": {
+        "combined04": "EXACT_MATCH",
+        "focused11": "EXACT_MATCH"
+      }
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/projection/WhodunitProjectionPolicy.kt",
+      "sha256": "e6ea5d4a7a818ea660dc4f69e3021dd964d95549e2d649b7033db55e5f96c4d1",
+      "line_count": 87,
+      "reviewed_line_ranges": [
+        [
+          1,
+          87
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "production",
+      "whole_file_read": true,
+      "scope_ids": [
+        "WD-C1"
+      ],
+      "remaining_scope": null,
+      "retained_cycle_file_binding": {
+        "combined04": "EXACT_MATCH",
+        "focused11": "EXACT_MATCH"
+      }
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/reducer/WhodunitReducer.kt",
+      "sha256": "40db7e4fab766f77d893c7001e57e3395fd50112399937d39be44632ff6456c0",
+      "line_count": 1261,
+      "reviewed_line_ranges": [
+        [
+          1,
+          145
+        ],
+        [
+          245,
+          310
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "production",
+      "whole_file_read": false,
+      "scope_ids": [
+        "WD-C1"
+      ],
+      "remaining_scope": "Only listed affected paths were freshly reopened; other lines not reread in this bounded pass.",
+      "retained_cycle_file_binding": {
+        "combined04": "EXACT_MATCH",
+        "focused11": "EXACT_MATCH"
+      }
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitGameFlow.kt",
+      "sha256": "73f75eb87e2636e5e616c9bbade054fd0f44ed8bcd9ad158b930eba99fd8aa14",
+      "line_count": 1432,
+      "reviewed_line_ranges": [
+        [
+          208,
+          492
+        ],
+        [
+          674,
+          1432
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "production",
+      "whole_file_read": false,
+      "scope_ids": [
+        "WD-C1",
+        "WD-C4"
+      ],
+      "remaining_scope": "Only listed affected paths were freshly reopened; other lines not reread in this bounded pass.",
+      "retained_cycle_file_binding": {
+        "combined04": "DIFFERENT_OR_NOT_RECORDED",
+        "focused11": "DIFFERENT_OR_NOT_RECORDED"
+      }
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitPhaseRouter.kt",
+      "sha256": "eeb3395e84e467ef1e23cc5a8e7f6d6ae5bad76225c8931f004039db7d634dc6",
+      "line_count": 1139,
+      "reviewed_line_ranges": [
+        [
+          1,
+          1139
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "production",
+      "whole_file_read": true,
+      "scope_ids": [
+        "WD-C1",
+        "WD-C4"
+      ],
+      "remaining_scope": null,
+      "retained_cycle_file_binding": {
+        "combined04": "DIFFERENT_OR_NOT_RECORDED",
+        "focused11": "EXACT_MATCH"
+      }
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/multiplayer/WhodunitHostSessionFlow.kt",
+      "sha256": "d626c925a1329745bc81758b6d57f6751831e2ba9c7696f562868ee57dd54d05",
+      "line_count": 684,
+      "reviewed_line_ranges": [
+        [
+          116,
+          375
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "production",
+      "whole_file_read": false,
+      "scope_ids": [
+        "SN-C2",
+        "WD-C4"
+      ],
+      "remaining_scope": "Only listed affected paths were freshly reopened; other lines not reread in this bounded pass.",
+      "retained_cycle_file_binding": {
+        "combined04": "DIFFERENT_OR_NOT_RECORDED",
+        "focused11": "EXACT_MATCH"
+      }
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/multiplayer/WhodunitPeerRoomBridge.kt",
+      "sha256": "79926523e13593a0ecb4519dbd20f34fa8577af8692d3911301031b8a11d1bc7",
+      "line_count": 216,
+      "reviewed_line_ranges": [
+        [
+          1,
+          216
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "production",
+      "whole_file_read": true,
+      "scope_ids": [
+        "WD-C1",
+        "SN-C1"
+      ],
+      "remaining_scope": null,
+      "retained_cycle_file_binding": {
+        "combined04": "EXACT_MATCH",
+        "focused11": "EXACT_MATCH"
+      }
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/multiplayer/WhodunitPeerSessionFlow.kt",
+      "sha256": "ecd9d044bce61c82a5c8e85f7d12ce499cc154396c2ad11162c20fcaf82a7ff0",
+      "line_count": 728,
+      "reviewed_line_ranges": [
+        [
+          370,
+          460
+        ],
+        [
+          586,
+          728
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "production",
+      "whole_file_read": false,
+      "scope_ids": [
+        "SN-C1"
+      ],
+      "remaining_scope": "Only listed affected paths were freshly reopened; other lines not reread in this bounded pass.",
+      "retained_cycle_file_binding": {
+        "combined04": "EXACT_MATCH",
+        "focused11": "EXACT_MATCH"
+      }
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/multiplayer/WhodunitRetainedMultiplayerRuntime.kt",
+      "sha256": "4cca409cc9f8703295b0e75259f3e0dec382a012271dcd86696cfef480797148",
+      "line_count": 189,
+      "reviewed_line_ranges": [
+        [
+          1,
+          189
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "production",
+      "whole_file_read": true,
+      "scope_ids": [
+        "WD-C1",
+        "WD-C4",
+        "SN-C1"
+      ],
+      "remaining_scope": null,
+      "retained_cycle_file_binding": {
+        "combined04": "EXACT_MATCH",
+        "focused11": "EXACT_MATCH"
+      }
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/timer/DiscussionTickerLoop.kt",
+      "sha256": "dfbcc16abc38e99131e014a0656e4a31c576cca487e732e2ef36084ffc54f07a",
+      "line_count": 67,
+      "reviewed_line_ranges": [
+        [
+          1,
+          67
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "production",
+      "whole_file_read": true,
+      "scope_ids": [
+        "WD-C4"
+      ],
+      "remaining_scope": null,
+      "retained_cycle_file_binding": {
+        "combined04": "DIFFERENT_OR_NOT_RECORDED",
+        "focused11": "EXACT_MATCH"
+      }
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/flow/TickerAndRerollTest.kt",
+      "sha256": "84c99331d6d8f60ea0edce8e14fd373b49627ab213015dae9e3a8ad06824b07f",
+      "line_count": 467,
+      "reviewed_line_ranges": [
+        [
+          1,
+          467
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "test-only",
+      "whole_file_read": true,
+      "scope_ids": [
+        "WD-C4"
+      ],
+      "remaining_scope": null,
+      "retained_cycle_file_binding": {
+        "combined04": "EXACT_MATCH",
+        "focused11": "EXACT_MATCH"
+      }
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/PeerReadinessRemountTest.kt",
+      "sha256": "e443c59bc953b1e35113ce26bf3a2638839cd44723e6a36c90c014b77f5cb6d3",
+      "line_count": 370,
+      "reviewed_line_ranges": [
+        [
+          1,
+          370
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "test-only",
+      "whole_file_read": true,
+      "scope_ids": [
+        "WD-C1"
+      ],
+      "remaining_scope": null,
+      "retained_cycle_file_binding": {
+        "combined04": "EXACT_MATCH",
+        "focused11": "EXACT_MATCH"
+      }
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitDiscussionFixture.kt",
+      "sha256": "9656ee3f05824b0572019ac672334c06ef7b3ddc996ab7bee8158e41c367a1ac",
+      "line_count": 139,
+      "reviewed_line_ranges": [
+        [
+          1,
+          139
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "test-only",
+      "whole_file_read": true,
+      "scope_ids": [
+        "WD-C4"
+      ],
+      "remaining_scope": null,
+      "retained_cycle_file_binding": {
+        "combined04": "DIFFERENT_OR_NOT_RECORDED",
+        "focused11": "EXACT_MATCH"
+      }
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitLocalLeaveTimerTest.kt",
+      "sha256": "2124dafc4168ff0712e9ff93f3a8368d6cc5ab483b252d8114dc77c9a33c1c9e",
+      "line_count": 251,
+      "reviewed_line_ranges": [
+        [
+          1,
+          251
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "test-only",
+      "whole_file_read": true,
+      "scope_ids": [
+        "WD-C4"
+      ],
+      "remaining_scope": null,
+      "retained_cycle_file_binding": {
+        "combined04": "DIFFERENT_OR_NOT_RECORDED",
+        "focused11": "EXACT_MATCH"
+      }
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/multiplayer/WhodunitHostLeaveTimerTest.kt",
+      "sha256": "99d188364e681983f5fd4c31d192d80c6fde9731a57d62d5de6e0c8fe897da6a",
+      "line_count": 275,
+      "reviewed_line_ranges": [
+        [
+          1,
+          275
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "test-only",
+      "whole_file_read": true,
+      "scope_ids": [
+        "WD-C4"
+      ],
+      "remaining_scope": null,
+      "retained_cycle_file_binding": {
+        "combined04": "DIFFERENT_OR_NOT_RECORDED",
+        "focused11": "EXACT_MATCH"
+      }
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/networking-testing/src/commonMain/kotlin/com/parlor/networking/testing/ControlledStartRoom.kt",
+      "sha256": "147692e570bcc0e8c191a6373c61fd4f636c62891b604fdc1c5fee52990861f0",
+      "line_count": 188,
+      "reviewed_line_ranges": [
+        [
+          1,
+          188
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "test-only",
+      "whole_file_read": true,
+      "scope_ids": [
+        "WD-C4",
+        "SN-C1"
+      ],
+      "remaining_scope": null,
+      "retained_cycle_file_binding": {
+        "combined04": "DIFFERENT_OR_NOT_RECORDED",
+        "focused11": "EXACT_MATCH"
+      }
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/session/src/commonMain/kotlin/com/parlor/session/multidevice/AuthoritativeSessionCoordinator.kt",
+      "sha256": "968eae9b5a83bc507e173bfd82e6ec0cffa6b6191de86c73d7b401221fe09114",
+      "line_count": 1970,
+      "reviewed_line_ranges": [
+        [
+          255,
+          346
+        ],
+        [
+          568,
+          779
+        ],
+        [
+          943,
+          1195
+        ],
+        [
+          1295,
+          1710
+        ],
+        [
+          1774,
+          1855
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "production",
+      "whole_file_read": false,
+      "scope_ids": [
+        "SN-C1",
+        "WD-C1"
+      ],
+      "remaining_scope": "Only listed affected paths were freshly reopened; other lines not reread in this bounded pass.",
+      "retained_cycle_file_binding": {
+        "combined04": "EXACT_MATCH",
+        "focused11": "EXACT_MATCH"
+      }
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/session/src/commonMain/kotlin/com/parlor/session/multidevice/ProcessMultiplayerSessionOwner.kt",
+      "sha256": "daba67ff9106b54f73eff57635bd36547674df5f5b861177932687498296320c",
+      "line_count": 1048,
+      "reviewed_line_ranges": [
+        [
+          423,
+          580
+        ],
+        [
+          631,
+          745
+        ],
+        [
+          842,
+          980
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "production",
+      "whole_file_read": false,
+      "scope_ids": [
+        "SN-C2",
+        "WD-C4"
+      ],
+      "remaining_scope": "Only listed affected paths were freshly reopened; other lines not reread in this bounded pass.",
+      "retained_cycle_file_binding": {
+        "combined04": "EXACT_MATCH",
+        "focused11": "EXACT_MATCH"
+      }
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/session/src/commonMain/kotlin/com/parlor/session/multidevice/SessionStartHandshake.kt",
+      "sha256": "eab3e1743484280bbdf1731f033b9984ad0b9e1d2aea31a94e40a6c29fe17512",
+      "line_count": 397,
+      "reviewed_line_ranges": [
+        [
+          1,
+          397
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "production",
+      "whole_file_read": true,
+      "scope_ids": [
+        "SN-C1"
+      ],
+      "remaining_scope": null,
+      "retained_cycle_file_binding": {
+        "combined04": "EXACT_MATCH",
+        "focused11": "EXACT_MATCH"
+      }
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/session/src/commonMain/kotlin/com/parlor/session/multidevice/ShadowSessionController.kt",
+      "sha256": "0e87f661e12929935c35dd710d016ff0a40ef7c77314d0750c5ce74a4551de81",
+      "line_count": 97,
+      "reviewed_line_ranges": [
+        [
+          1,
+          97
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "production",
+      "whole_file_read": true,
+      "scope_ids": [
+        "WD-C1"
+      ],
+      "remaining_scope": null,
+      "retained_cycle_file_binding": {
+        "combined04": "EXACT_MATCH",
+        "focused11": "EXACT_MATCH"
+      }
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/session/src/commonMain/kotlin/com/parlor/session/party/PartyAwareSession.kt",
+      "sha256": "9eb291761264e54b509cdd8baa5cbb8d54348f616646746a44801bdcd783a483",
+      "line_count": 86,
+      "reviewed_line_ranges": [
+        [
+          1,
+          86
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "production",
+      "whole_file_read": true,
+      "scope_ids": [
+        "WD-C1",
+        "WD-C4"
+      ],
+      "remaining_scope": null,
+      "retained_cycle_file_binding": {
+        "combined04": "EXACT_MATCH",
+        "focused11": "EXACT_MATCH"
+      }
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/session/src/commonTest/kotlin/com/parlor/session/multidevice/SessionStartCommitDeadlineTest.kt",
+      "sha256": "9f0dc6cb2904dc14b24114ea0e019422e2e84e912e80e359276ab4fd38c816b2",
+      "line_count": 334,
+      "reviewed_line_ranges": [
+        [
+          1,
+          334
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "test-only",
+      "whole_file_read": true,
+      "scope_ids": [
+        "SN-C1"
+      ],
+      "remaining_scope": null,
+      "retained_cycle_file_binding": {
+        "combined04": "EXACT_MATCH",
+        "focused11": "EXACT_MATCH"
+      }
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/build.gradle.kts",
+      "sha256": "6ce2fd726bd41031a5b26d0d30f8ee8f693b4dc942da90bdc48b40fbf040c3b7",
+      "line_count": 100,
+      "reviewed_line_ranges": [
+        [
+          1,
+          100
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "build",
+      "whole_file_read": true,
+      "scope_ids": [
+        "SN-C2",
+        "ROOT-T3"
+      ],
+      "remaining_scope": null,
+      "retained_cycle_file_binding": {
+        "combined04": "DIFFERENT_OR_NOT_RECORDED",
+        "focused11": "DIFFERENT_OR_NOT_RECORDED"
+      }
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/androidMain/kotlin/com/parlor/transport/p2p/P2pTransportModule.android.kt",
+      "sha256": "280b7f13d26939972416c805a184efe8fb8041f48db219f2e41797adbe456a11",
+      "line_count": 97,
+      "reviewed_line_ranges": [
+        [
+          1,
+          97
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "production",
+      "whole_file_read": true,
+      "scope_ids": [
+        "SN-C2"
+      ],
+      "remaining_scope": null,
+      "retained_cycle_file_binding": {
+        "combined04": "EXACT_MATCH",
+        "focused11": "EXACT_MATCH"
+      }
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/commonMain/kotlin/com/parlor/transport/p2p/AppLifecycleRoomCoordinator.kt",
+      "sha256": "7761d49b0de180d34daa32f790768a541f2af8d0de98b94eeb89ab20bf2d1e68",
+      "line_count": 76,
+      "reviewed_line_ranges": [
+        [
+          1,
+          76
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "production",
+      "whole_file_read": true,
+      "scope_ids": [
+        "SN-C2"
+      ],
+      "remaining_scope": null,
+      "retained_cycle_file_binding": {
+        "combined04": "EXACT_MATCH",
+        "focused11": "EXACT_MATCH"
+      }
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/commonMain/kotlin/com/parlor/transport/p2p/P2pKitCreation.kt",
+      "sha256": "e924988dfcbde7eb1ac2eae763e5078a28bdd568ca1b05e4ece6284a3183a95e",
+      "line_count": 39,
+      "reviewed_line_ranges": [
+        [
+          1,
+          39
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "production",
+      "whole_file_read": true,
+      "scope_ids": [
+        "SN-C2"
+      ],
+      "remaining_scope": null,
+      "retained_cycle_file_binding": {
+        "combined04": "EXACT_MATCH",
+        "focused11": "EXACT_MATCH"
+      }
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/commonMain/kotlin/com/parlor/transport/p2p/P2pKitRoomTransport.kt",
+      "sha256": "a5e2536e41c81c54b58ec27da135ea9046969db9cb80084e2a0da3b15ddde7c7",
+      "line_count": 4811,
+      "reviewed_line_ranges": [
+        [
+          189,
+          862
+        ],
+        [
+          1588,
+          1868
+        ],
+        [
+          3224,
+          3398
+        ],
+        [
+          3510,
+          4110
+        ],
+        [
+          4620,
+          4811
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "production",
+      "whole_file_read": false,
+      "scope_ids": [
+        "SN-C2"
+      ],
+      "remaining_scope": "Only listed affected paths were freshly reopened; other lines not reread in this bounded pass.",
+      "retained_cycle_file_binding": {
+        "combined04": "EXACT_MATCH",
+        "focused11": "EXACT_MATCH"
+      }
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/commonTest/kotlin/com/parlor/transport/p2p/AppLifecycleRoomRegistrationTest.kt",
+      "sha256": "bfda11cf208b13b039ae74061d81fcf04a11fdfe3945c490371aa71b730f6d6b",
+      "line_count": 139,
+      "reviewed_line_ranges": [
+        [
+          1,
+          139
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "test-only",
+      "whole_file_read": true,
+      "scope_ids": [
+        "SN-C2"
+      ],
+      "remaining_scope": null,
+      "retained_cycle_file_binding": {
+        "combined04": "EXACT_MATCH",
+        "focused11": "EXACT_MATCH"
+      }
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/desktopMain/kotlin/com/parlor/transport/p2p/P2pTransportModule.desktop.kt",
+      "sha256": "7bb0e36a15dfde7e193c74f1ab2a3d10f35c01e04c0fb3ba4e08a8a8cf88d3cb",
+      "line_count": 94,
+      "reviewed_line_ranges": [
+        [
+          1,
+          94
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "production",
+      "whole_file_read": true,
+      "scope_ids": [
+        "SN-C2"
+      ],
+      "remaining_scope": null,
+      "retained_cycle_file_binding": {
+        "combined04": "EXACT_MATCH",
+        "focused11": "EXACT_MATCH"
+      }
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/HostOpeningCancellationTest.kt",
+      "sha256": "13cdebd30a42ff4ed04be36f9e2ffe3693b488badd05e19edb2a004a180c6bff",
+      "line_count": 187,
+      "reviewed_line_ranges": [
+        [
+          1,
+          187
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "test-only",
+      "whole_file_read": true,
+      "scope_ids": [
+        "SN-C2"
+      ],
+      "remaining_scope": null,
+      "retained_cycle_file_binding": {
+        "combined04": "EXACT_MATCH",
+        "focused11": "EXACT_MATCH"
+      }
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/JupiterDiscoveryContractTest.kt",
+      "sha256": "94682d196381d97a37f6c5e925b63646f102b864d76eb55252cfbd082abcb305",
+      "line_count": 40,
+      "reviewed_line_ranges": [
+        [
+          1,
+          40
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "test-only",
+      "whole_file_read": true,
+      "scope_ids": [
+        "ROOT-T3"
+      ],
+      "remaining_scope": null,
+      "retained_cycle_file_binding": {
+        "combined04": "EXACT_MATCH",
+        "focused11": "EXACT_MATCH"
+      }
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitCreationTest.kt",
+      "sha256": "aa03b4fc5e37dbd234848594641dd46eec5aef5bf78dcc478783987d6ee0dc70",
+      "line_count": 273,
+      "reviewed_line_ranges": [
+        [
+          1,
+          273
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "test-only",
+      "whole_file_read": true,
+      "scope_ids": [
+        "SN-C2"
+      ],
+      "remaining_scope": null,
+      "retained_cycle_file_binding": {
+        "combined04": "EXACT_MATCH",
+        "focused11": "EXACT_MATCH"
+      }
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitRoomTransportLifecycleTest.kt",
+      "sha256": "947a86aebdca10d7d9cfa97a5677c1a79733601dca887effc6c218280a098b1b",
+      "line_count": 5466,
+      "reviewed_line_ranges": [
+        [
+          1,
+          140
+        ],
+        [
+          420,
+          478
+        ],
+        [
+          3655,
+          3742
+        ],
+        [
+          3782,
+          3855
+        ],
+        [
+          4607,
+          4818
+        ],
+        [
+          4940,
+          5466
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "test-only",
+      "whole_file_read": false,
+      "scope_ids": [
+        "SN-C2",
+        "ROOT-T3"
+      ],
+      "remaining_scope": "Only listed affected paths were freshly reopened; other lines not reread in this bounded pass.",
+      "retained_cycle_file_binding": {
+        "combined04": "EXACT_MATCH",
+        "focused11": "EXACT_MATCH"
+      }
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitRoomTransportLoopbackTest.kt",
+      "sha256": "21451bf407d791ec85066227a2670ccf61d3506efaae47375c0bba557fe3be73",
+      "line_count": 242,
+      "reviewed_line_ranges": [
+        [
+          1,
+          242
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "test-only",
+      "whole_file_read": true,
+      "scope_ids": [
+        "ROOT-T3"
+      ],
+      "remaining_scope": null,
+      "retained_cycle_file_binding": {
+        "combined04": "DIFFERENT_OR_NOT_RECORDED",
+        "focused11": "EXACT_MATCH"
+      }
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/PeerOpeningCancellationTest.kt",
+      "sha256": "e72ab2b4e013af3a626f50677e3284518120b4320a556c7d5cb7a662fe4c0e68",
+      "line_count": 392,
+      "reviewed_line_ranges": [
+        [
+          1,
+          392
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "test-only",
+      "whole_file_read": true,
+      "scope_ids": [
+        "SN-C2"
+      ],
+      "remaining_scope": null,
+      "retained_cycle_file_binding": {
+        "combined04": "EXACT_MATCH",
+        "focused11": "EXACT_MATCH"
+      }
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/iosMain/kotlin/com/parlor/transport/p2p/P2pTransportModule.ios.kt",
+      "sha256": "bea599aa4d6dd9820477f2cbee57c213a9988da33e51eada0eb061d25fd77753",
+      "line_count": 71,
+      "reviewed_line_ranges": [
+        [
+          1,
+          71
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "production",
+      "whole_file_read": true,
+      "scope_ids": [
+        "SN-C2"
+      ],
+      "remaining_scope": null,
+      "retained_cycle_file_binding": {
+        "combined04": "EXACT_MATCH",
+        "focused11": "EXACT_MATCH"
+      }
+    }
+  ],
+  "cross_file_paths": [
+    "Both peer lobby -> SessionStartHandshake -> validated commit -> best-effort ACK -> retained peer bridge -> initial snapshot recovery",
+    "All3 factories -> createOwnedP2pKit -> host/join/cold resume -> lifecycle registration -> process owner handoff/orphan close",
+    "Whodunit command cover -> readiness effect -> PartyAware pass-through -> Shadow -> peer coordinator -> authoritative command/revision gates -> host reducer -> own projection -> installed-revision barrier",
+    "Local recovery entry -> validated content-bound state -> local controller/snapshot writer -> confirmation replacement -> ticker cancellation/Stay -> saved remainder",
+    "Host route confirmation -> retained WhodunitHostRuntime -> router ticker -> lifecycle/manual pauses -> confirmed owner finalLeave"
+  ],
+  "retained_verification_cycles": {
+    "combined04": {
+      "receipt": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/receipt.json",
+      "sha256": "ee8e31280b0f2d45b869b6b5fffa23dee89944ea52e36bd6027f33e48415a47a",
+      "cycle": "combined-production-04",
+      "started_at": "2026-09-06T12:15:50.742332+00:00",
+      "finished_at": "2026-09-06T12:21:22.403650+00:00",
+      "reported_status": "PASS",
+      "exit_code": 0,
+      "command": [
+        "./gradlew",
+        "productionCheck",
+        "--no-build-cache",
+        "--continue",
+        "--no-daemon",
+        "--no-parallel",
+        "--max-workers=1",
+        "--no-configuration-cache",
+        "--dependency-verification=strict",
+        "-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=combined-production-04",
+        "-Pkotlin.compiler.execution.strategy=in-process",
+        "-Pparlor.android.signing.storeFile=",
+        "-Pparlor.android.signing.storePassword=",
+        "-Pparlor.android.signing.keyAlias=",
+        "-Pparlor.android.signing.keyPassword="
+      ],
+      "source_commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+      "source_tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+      "source_manifest_sha256": "9ac2be536979f2216b39c10a6d148125a12380987d4efd483bbcbaeb1733318e",
+      "source_was_dirty": true,
+      "source_changed_during_cycle": false,
+      "cleanup": {
+        "stop_exit_code": 0,
+        "stopped_at": "2026-09-06T12:21:22.681195+00:00",
+        "remaining_outputs": [],
+        "retained_outputs": [],
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        },
+        "cleanup_errors": [],
+        "cleanup_completed_at": "2026-09-06T12:21:24.761643+00:00"
+      }
+    },
+    "focused11": {
+      "receipt": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/focused-readiness-regressions-11/receipt.json",
+      "sha256": "28bcb69eb0859a9ea72b45130bab43cb2fc21fdb5e6e4aeade909351ad5fdec6",
+      "cycle": "focused-readiness-regressions-11",
+      "started_at": "2026-09-07T06:25:00.437553+00:00",
+      "finished_at": "2026-09-07T06:27:14.113630+00:00",
+      "reported_status": "PASS",
+      "exit_code": 0,
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/canonical-identity-helper/run_with_identity.py",
+        "--evidence-dir",
+        "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/focused-readiness-regressions-11/identity",
+        "--",
+        ":game-modes:whodunit:desktopTest",
+        "--tests",
+        "*TestingStory*",
+        "--tests",
+        "*WhodunitRecoveryInteractionTest",
+        "--tests",
+        "*WhodunitContentIdentityTest",
+        "--tests",
+        "*Bundled*",
+        "--tests",
+        "*PeerReadiness*",
+        "--tests",
+        "*Reconstruction*",
+        "--tests",
+        "*LeaveTimerTest",
+        ":game-modes:whodunit:detekt",
+        ":game-modes:whodunit:detektDesktopTest",
+        ":game-modes:mafia:desktopTest",
+        "--tests",
+        "*MafiaDoctorRulesTest",
+        "--tests",
+        "*MafiaDoctorHistoryRecoveryTest",
+        ":game-modes:mafia:detekt",
+        ":game-modes:mafia:detektDesktopTest",
+        ":shared:engine:desktopTest",
+        "--tests",
+        "*GameRegistryTest",
+        "--tests",
+        "*GameSnapshotTest",
+        ":shared:engine:detekt",
+        ":shared:engine:detektDesktopTest",
+        ":shared:transport-p2p:desktopTest",
+        "--tests",
+        "*LoopbackFixtureContractTest",
+        "--tests",
+        "*JupiterDiscoveryContractTest",
+        ":shared:transport-p2p:detekt",
+        ":shared:transport-p2p:detektDesktopTest",
+        "--rerun-tasks",
+        "--no-build-cache"
+      ],
+      "source_commit": "0787b0fade803f3b8f2213b89f2fccb52a822279",
+      "source_tree": "0f1086c2f38c7316945ede7ceb79a80e11afafd7",
+      "source_manifest_sha256": "6de2ea63e7cfe99b885605e58a2301918d2e6aa034b1b49043a3a49bd935ae00",
+      "source_was_dirty": true,
+      "source_changed_during_cycle": false,
+      "cleanup": {
+        "stop_exit_code": 0,
+        "stopped_at": "2026-09-07T06:27:14.427451+00:00",
+        "remaining_outputs": [],
+        "retained_outputs": [],
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        },
+        "cleanup_errors": [],
+        "cleanup_completed_at": "2026-09-07T06:27:14.812007+00:00"
+      }
+    }
+  },
+  "independently_reparsed_actual_xml_suites": [
+    {
+      "cycle": "combined04",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/session/build/test-results/desktopTest/TEST-com.parlor.session.multidevice.SessionStartCommitDeadlineTest.xml",
+      "sha256": "bc9cbc67de11195ca9f059e1d79500523fe5374776e90a8b8551ff7a393539b3",
+      "suite": "com.parlor.session.multidevice.SessionStartCommitDeadlineTest",
+      "timestamp": "2026-09-06T12:19:39.645Z",
+      "counts": {
+        "tests": 9,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "actual_testcases": [
+        "coordinatorReacknowledgesDuplicateAndAcceptsFirstSnapshotAfterLateCommit()[desktop]",
+        "callerCancellationDuringAcknowledgementStillPropagates()[desktop]",
+        "lateAcceptedCommitSurvivesSlowAcknowledgement()[desktop]",
+        "acknowledgementAdapterExceptionDoesNotUndoAcceptedStart()[desktop]",
+        "matchingStartWithInvalidVersionIsRejectedWithoutAcknowledgement()[desktop]",
+        "acknowledgementFailureAfterReceiveDeadlineStillEntersCommittedStart()[desktop]",
+        "absentCommitStillTimesOutWithoutAnAcknowledgement()[desktop]",
+        "acknowledgementTimeoutOnlyBoundsDeliveryAfterAcceptedCommit()[desktop]",
+        "commitForAnotherStartCannotEscapeTheReceiveDeadline()[desktop]"
+      ]
+    },
+    {
+      "cycle": "combined04",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.AppLifecycleRoomRegistrationTest.xml",
+      "sha256": "76d7a8011ea98d81ed2d010b0a440e5fb8487dac4f483bfe83f45c9a44a02771",
+      "suite": "com.parlor.transport.p2p.AppLifecycleRoomRegistrationTest",
+      "timestamp": "2026-09-06T12:19:42.396Z",
+      "counts": {
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "actual_testcases": [
+        "cancellationBeforeRegistrationLockDoesNotDetachExistingRoom()[desktop]",
+        "cancelledRegistrationDetachesBeforeQueuedForeground()[desktop]",
+        "failedRegistrationDetachesBeforeQueuedForeground()[desktop]"
+      ]
+    },
+    {
+      "cycle": "combined04",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.HostOpeningCancellationTest.xml",
+      "sha256": "cd810b48e14d4ecc3a8f7912b3140901c81ea1418bd543a7ce4a1df3375b73a6",
+      "suite": "com.parlor.transport.p2p.HostOpeningCancellationTest",
+      "timestamp": "2026-09-06T12:19:42.458Z",
+      "counts": {
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "actual_testcases": [
+        "cancelledRegistrationClosesRoomBeforeQueuedForegroundCanReviveIt()[desktop]",
+        "returnedHostRetainsOwnershipUntilIdempotentLeave()[desktop]",
+        "registrationFailureClosesUnreturnedRoomAndDetachesLifecycle()[desktop]",
+        "cancellationDuringAdvertisingClosesArmedRoom()[desktop]",
+        "cancellationDuringKitStartStopsUnownedKit()[desktop]"
+      ]
+    },
+    {
+      "cycle": "combined04",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitCreationTest.xml",
+      "sha256": "08d1c8987e1e80ccf276024f1c284615461a1c41f7a45484f0b7adb5410abd92",
+      "suite": "com.parlor.transport.p2p.P2pKitCreationTest",
+      "timestamp": "2026-09-06T12:19:42.992Z",
+      "counts": {
+        "tests": 9,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "actual_testcases": [
+        "cancellationBeforeDispatcherEntryDoesNotConstructKit()[desktop]",
+        "cancellationDuringSameDispatcherConstructionStopsKit()[desktop]",
+        "hostAndJoinPreserveFactoryCancellationWithoutStartingOrStoppingTwice()[desktop]",
+        "cancellationDuringDifferentDispatcherConstructionStopsKit()[desktop]",
+        "cancelledReturnDispatchStopsSuccessfullyConstructedKit()[desktop]",
+        "failedConstructionPreservesOriginalFailure()[desktop]",
+        "cleanupFailureDoesNotReplaceOriginalCallerCancellation()[desktop]",
+        "cancelledOwnerAwaitsSuspendingNonCancellableStop()[desktop]",
+        "successfulCreationTransfersOwnershipWithoutStoppingKit()[desktop]"
+      ]
+    },
+    {
+      "cycle": "combined04",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitRoomTransportLifecycleTest.xml",
+      "sha256": "83e9b88af424ff40969ec588697d350af4ff9723f99832259c0f27c2fa944825",
+      "suite": "com.parlor.transport.p2p.P2pKitRoomTransportLifecycleTest",
+      "timestamp": "2026-09-06T12:19:43.007Z",
+      "counts": {
+        "tests": 130,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "actual_testcases": [
+        "host_overwrites_forged_reliable_start_ack_actors_with_authenticated_peer()[desktop]",
+        "expired_process_credential_invalidation_failure_is_explicit_and_redacted()[desktop]",
+        "final_leave_revokes_a_committed_rotation_that_has_not_been_adopted()[desktop]",
+        "process_resume_rejects_a_host_session_presenting_a_different_fingerprint()[desktop]",
+        "cancellation_during_kit_start_cleans_up_and_still_propagates()[desktop]",
+        "admission_pending_opens_a_separate_host_approval_window()[desktop]",
+        "closing_admissions_excludes_and_invalidates_disconnected_lobby_members()[desktop]",
+        "host_collector_drops_decoded_command_with_oversized_payload_and_accepts_followup()[desktop]",
+        "authoritative_session_end_disables_credential_resume_after_socket_close()[desktop]",
+        "foreground_permanent_rejection_revokes_the_entire_rotated_membership()[desktop]",
+        "failed_start_cleanup_preserves_membership_until_explicit_final_discard()[desktop]",
+        "peer_emits_host_lost_on_terminal_session_close()[desktop]",
+        "stale_permanent_rejection_cannot_erase_a_concurrently_rotated_generation()[desktop]",
+        "stale_room_leave_or_expiry_cannot_erase_a_newer_different_room_credential()[desktop]",
+        "host_application_queue_applies_bounded_backpressure_without_dropping_gameplay()[desktop]",
+        "fourth_fresh_wrong_code_attempt_from_same_identity_is_rate_limited()[desktop]",
+        "host_send_propagates_coroutine_cancellation()[desktop]",
+        "cancelling_discovery_aborts_immediately_and_stops_the_kit()[desktop]",
+        "failed_acceptance_delivery_rolls_back_the_seat_without_a_ghost_member()[desktop]",
+        "final_discard_from_abandoned_room_revokes_a_concurrently_rotated_membership()[desktop]",
+        "host_background_closes_existing_sessions_before_the_lifecycle_call_returns()[desktop]",
+        "explicit_cold_resume_discard_revokes_the_stored_membership()[desktop]",
+        "host_leave_finishes_cleanup_after_caller_is_cancelled()[desktop]",
+        "host_rejects_reliable_start_acknowledgements_before_admission()[desktop]",
+        "collectors_drop_non_binary_frames_and_accept_followup()[desktop]",
+        "disconnect_during_acceptance_rolls_back_the_seat_without_a_ghost_member()[desktop]",
+        "closing_admissions_is_an_atomic_barrier_around_in_flight_approval()[desktop]",
+        "host_emits_peer_left_and_removes_member_when_session_closes()[desktop]",
+        "host_rejects_a_session_without_an_authenticated_peer_fingerprint()[desktop]",
+        "cancellation_while_only_mismatched_admission_frames_arrive_propagates_and_cleans_up()[desktop]",
+        "peer_leave_finishes_cleanup_after_caller_is_cancelled()[desktop]",
+        "host_reports_actionable_denial_only_for_typed_permission_evidence()[desktop]",
+        "retirement_rolls_back_a_resume_offer_that_is_mid_delivery()[desktop]",
+        "host_emits_peer_left_and_removes_member_when_session_fails()[desktop]",
+        "terminal_frame_is_staged_until_the_session_layer_validates_it()[desktop]",
+        "resume_ready_failure_or_cancellation_closes_the_adopted_physical_session()[desktop]",
+        "join_surfaces_display_name_conflict_and_cleans_up()[desktop]",
+        "wrong_direction_frames_disconnect_only_the_modified_peer_after_three_strikes()[desktop]",
+        "cancellation_during_acceptance_propagates_after_rolling_back_the_seat()[desktop]",
+        "caller_timeout_cancellation_is_not_confused_with_the_join_deadline()[desktop]",
+        "repeated_background_notification_is_idempotent_and_does_not_extend_deadline()[desktop]",
+        "join_rejects_stale_peer_whose_last_seen_is_too_old()[desktop]",
+        "host_keeps_a_correct_code_request_pending_until_explicit_approval()[desktop]",
+        "host_capacity_is_atomic_across_concurrent_approvals()[desktop]",
+        "validated_terminal_commit_cancels_and_joins_resume_before_revocation()[desktop]",
+        "peer_sends_leave_notice_before_closing_session_on_leave()[desktop]",
+        "host_reports_operational_access_only_after_real_advertising_succeeds()[desktop]",
+        "host_marks_member_disconnected_on_reconnecting_then_emits_reconnected_on_recovery()[desktop]",
+        "pending_admissions_and_pre_admission_sessions_have_hard_room_limits()[desktop]",
+        "permanent_rejection_invalidation_failure_surfaces_secure_storage_error()[desktop]",
+        "peer_transport_recovery_while_backgrounded_cannot_reactivate_retired_session()[desktop]",
+        "cancellation_during_process_resume_stops_the_fresh_kit_and_propagates()[desktop]",
+        "peer_emits_host_lost_then_host_restored_on_reconnect_cycle()[desktop]",
+        "process_recreation_prefers_a_pending_different_room_that_the_host_may_have_committed()[desktop]",
+        "peer_rejects_encoded_frames_above_the_directional_host_limit()[desktop]",
+        "host_rejects_a_physical_session_that_arrives_after_background_retirement()[desktop]",
+        "simultaneous_same_name_requests_create_only_one_pending_seat()[desktop]",
+        "authenticated_permanent_resume_rejection_invalidates_matching_credential()[desktop]",
+        "host_rejects_a_session_whose_authenticated_peer_id_disagrees_with_the_peer()[desktop]",
+        "staged_terminal_from_replaced_session_cannot_revoke_rotated_membership()[desktop]",
+        "host_leave_continues_cleanup_after_a_session_close_fails()[desktop]",
+        "collectors_drop_oversized_wire_frames_and_accept_followup()[desktop]",
+        "join_rejects_a_noncanonical_host_display_identity_before_storing_membership()[desktop]",
+        "join_surfaces_wrong_code_and_cleans_up_when_visible_hosts_reject_it()[desktop]",
+        "fatal_kit_factory_and_startup_failures_are_not_mapped_to_transport_results()[desktop]",
+        "host_overwrites_forged_client_command_actor_with_authenticated_peer()[desktop]",
+        "fatal_send_and_cleanup_failures_are_never_converted_to_normal_results()[desktop]",
+        "transport_serializes_platform_lifecycle_into_the_active_host_room()[desktop]",
+        "peer_arms_its_host_message_collector_before_room_construction_returns()[desktop]",
+        "host_leave_is_idempotent_and_stops_the_kit_once()[desktop]",
+        "idle_pre_admission_sessions_expire_on_virtual_deadline_and_release_tracking_slots()[desktop]",
+        "peer_terminal_disconnect_while_foreground_starts_credential_resume()[desktop]",
+        "host_rejects_resume_when_the_presented_fingerprint_differs_from_the_stored_credential()[desktop]",
+        "host_emits_peer_reconnected_for_a_returning_player_via_new_session()[desktop]",
+        "host_foreground_does_not_reactivate_the_session_retired_on_background()[desktop]",
+        "foreground_identity_mismatch_is_transient_and_retries_without_expiring_membership()[desktop]",
+        "successful_resume_that_loses_terminal_ownership_race_closes_unadopted_session()[desktop]",
+        "credential_store_failure_is_diagnostic_and_never_exports_credential_material()[desktop]",
+        "cancellation_from_credential_invalidation_propagates_after_room_cleanup()[desktop]",
+        "invalid_room_code_or_display_name_is_rejected_before_kit_initialization()[desktop]",
+        "explicit_final_leave_reports_secure_delete_failure_and_can_retry_after_close()[desktop]",
+        "peer_send_propagates_coroutine_cancellation()[desktop]",
+        "peer_foreground_within_grace_uses_a_fresh_credential_bound_session()[desktop]",
+        "room_code_entry_is_not_claimed_as_manual_endpoint_connection()[desktop]",
+        "join_accepts_peer_with_null_last_seen_when_name_matches_room_code()[desktop]",
+        "collectors_drop_truncated_cbor_frames_and_accept_followup()[desktop]",
+        "explicit_cold_resume_discard_fails_closed_when_secure_removal_fails()[desktop]",
+        "peer_disconnects_a_modified_host_that_sends_peer_protocol_frames()[desktop]",
+        "host_emits_peer_left_when_peer_sends_leave_notice()[desktop]",
+        "transient_process_resume_failure_retains_exact_credential()[desktop]",
+        "failed_terminal_commit_does_not_disable_the_live_room()[desktop]",
+        "collectors_drop_wrong_direction_frames_and_accept_followup()[desktop]",
+        "host_keeps_generic_start_failure_unclassified_instead_of_guessing_denial()[desktop]",
+        "host_send_direct_returns_not_connected_after_session_closes()[desktop]",
+        "peer_replaces_terminal_session_with_rotated_pinned_resume_before_host_restored()[desktop]",
+        "peer_application_queue_applies_bounded_backpressure_to_host_snapshots()[desktop]",
+        "retransmitted_request_on_same_pending_session_is_idempotent_not_rate_limited()[desktop]",
+        "peer_background_retires_the_old_session_before_the_lifecycle_call_returns()[desktop]",
+        "host_arms_a_new_sessions_inbound_collector_before_accepting_another_session()[desktop]",
+        "host_background_close_preserves_cancellation()[desktop]",
+        "lifecycle_grace_expiry_is_terminal_and_stops_the_kit_once()[desktop]",
+        "wrong_room_does_not_end_search_before_a_late_correct_candidate_appears()[desktop]",
+        "host_leave_stops_advertising_before_stopping_kit()[desktop]",
+        "host_atomically_reserves_exact_display_names_across_host_pending_and_member_seats()[desktop]",
+        "terminal_policy_tracks_the_current_rotated_generation_not_the_old_collector()[desktop]",
+        "host_emits_peer_joined_and_updates_members_when_session_arrives()[desktop]",
+        "failed_final_discard_is_reported_and_remains_retryable()[desktop]",
+        "lifecycle_grace_expires_without_an_additional_platform_callback()[desktop]",
+        "expired_process_credential_is_conditionally_invalidated_before_resume_is_offered()[desktop]",
+        "host_broadcast_isolates_peer_failure_and_attempts_later_connected_peers()[desktop]",
+        "cancelling_an_in_flight_candidate_dial_propagates_and_stops_the_kit()[desktop]",
+        "retiring_a_frozen_disconnected_seat_revokes_rejoin_and_is_idempotent()[desktop]",
+        "host_leave_clears_members_and_emits_no_events_after_cancellation()[desktop]",
+        "credential_resume_replaces_retired_session_even_if_old_session_reports_connected()[desktop]",
+        "kit_factory_cancellation_is_never_mapped_to_transport_failure()[desktop]",
+        "foreground_authenticated_permanent_rejection_expires_and_invalidates_credential()[desktop]",
+        "process_recreation_resumes_from_protected_storage_with_pinned_identity_and_ready_handoff()[desktop]",
+        "peer_send_to_host_returns_not_connected_after_session_closes()[desktop]",
+        "peer_leave_and_lifecycle_expiry_conditionally_invalidate_their_matching_credential()[desktop]",
+        "join_times_out_when_no_matching_room_appears()[desktop]",
+        "authenticated_terminal_frame_invalidates_matching_credential_before_ui_cleanup()[desktop]",
+        "peer_leave_is_idempotent_and_stops_the_kit_once()[desktop]",
+        "host_advertisement_never_contains_the_room_code()[desktop]",
+        "transport_arms_the_host_session_acceptor_before_advertising()[desktop]",
+        "host_does_not_publish_peer_joined_until_peer_inbound_collector_is_ready()[desktop]",
+        "admission_waits_ignore_reordered_and_duplicate_frames_from_other_phases()[desktop]",
+        "host_rejects_a_wrong_code_without_creating_a_member_or_pending_seat()[desktop]",
+        "terminal_unadmitted_sessions_release_their_state_collectors()[desktop]",
+        "host_broadcast_returns_not_connected_when_no_peer_is_connected()[desktop]",
+        "transient_connect_failures_retry_same_candidate_with_bounded_backoff()[desktop]"
+      ]
+    },
+    {
+      "cycle": "combined04",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest.xml",
+      "sha256": "6d0d6d4083ea65d346f8895870a4b91e0a46e99932b8b4d4e9ecbeb181e8898e",
+      "suite": "com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest",
+      "timestamp": "2026-09-06T12:19:56.092Z",
+      "counts": {
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 3
+      },
+      "actual_testcases": [
+        "peer_to_host_message_round_trips_and_host_to_peer_message_arrives_back()[desktop]",
+        "peer_can_join_a_hosted_room_and_membership_appears_on_host()[desktop]",
+        "host_broadcast_reaches_every_peer()[desktop]",
+        "host_advertises_a_room_code_that_join_resolves_to()[desktop]"
+      ]
+    },
+    {
+      "cycle": "combined04",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.PeerOpeningCancellationTest.xml",
+      "sha256": "a1f1370c626eeb8eca96f6e4fc9bb282dda1ebd95f8bd42d1cb06de9001d225b",
+      "suite": "com.parlor.transport.p2p.PeerOpeningCancellationTest",
+      "timestamp": "2026-09-06T12:20:00.543Z",
+      "counts": {
+        "tests": 12,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "actual_testcases": [
+        "cancellingResumeReadyClosesUnreturnedRoomWithoutRevokingMembership()[desktop]",
+        "failedJoinRegistrationReleasesRoomAndDetachesLifecycle()[desktop]",
+        "cancellingResumeAckClosesUnreturnedRoomWithoutRevokingMembership()[desktop]",
+        "failedResumeRegistrationReleasesRoomAndDetachesLifecycle()[desktop]",
+        "cancellingAdmissionAckClosesUnreturnedRoomWithoutRevokingMembership()[desktop]",
+        "failedAdmissionReadyStopsKitOnlyOnceAndReleasesCollectors()[desktop]",
+        "failedResumeReadyStopsKitOnlyOnceAndReleasesCollectors()[desktop]",
+        "ordinaryAdmissionAckLossStillReturnsAnOwnedRoom()[desktop]",
+        "ordinaryResumeAckLossStillReturnsAnOwnedRoom()[desktop]",
+        "cancellingAdmissionReadyClosesUnreturnedRoomWithoutRevokingMembership()[desktop]",
+        "cancelledResumeRegistrationCannotResumeOrExpireAReplacementCredential()[desktop]",
+        "cancelledJoinRegistrationCannotResumeOrExpireAReplacementCredential()[desktop]"
+      ]
+    },
+    {
+      "cycle": "focused11",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/focused-readiness-regressions-11/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.PeerReadinessRemountTest.xml",
+      "sha256": "06b3640c8e4c22a5d97d0b859ffe7ddb96a2f58d25a02a186562ba4920120feb",
+      "suite": "com.parlor.games.whodunit.ui.flow.PeerReadinessRemountTest",
+      "timestamp": "2026-09-07T06:25:38.876Z",
+      "counts": {
+        "tests": 12,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "actual_testcases": [
+        "introAcknowledgementDoesNotRepeatAfterCommandCoverRemount()[desktop]",
+        "freshIntroSnapshotWinsOverAStaleComposeProjection()[desktop]",
+        "replayInTheSameRenderedPhaseAcknowledgesTheNewGeneration()[desktop]",
+        "replayBeforeEffectDoesNotAcknowledgeTheStaleAssignmentGeneration()[desktop]",
+        "freshBriefingSnapshotWinsOverAStaleComposeProjection()[desktop]",
+        "acknowledgedBriefingSurvivesUiRecreationAndDisconnectPause()[desktop]",
+        "rejectionWithoutHostAcknowledgementDoesNotCreateOptimisticReadiness()[desktop]",
+        "briefingAcknowledgementDoesNotRepeatAfterCommandCoverRemount()[desktop]",
+        "phaseChangeBeforeEffectDoesNotSendThePreviousPhaseAcknowledgement()[desktop]",
+        "aReplacementControllerRechecksReadinessInTheSamePhase()[desktop]",
+        "unrelatedBriefingUpdatesDoNotResendWhileAuthorityHasNotResponded()[desktop]",
+        "acknowledgedIntroSurvivesUiRecreationAndDisconnectPause()[desktop]"
+      ]
+    },
+    {
+      "cycle": "focused11",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/focused-readiness-regressions-11/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.WhodunitLocalLeaveTimerTest.xml",
+      "sha256": "9a06b3ce43d2cf423b49652d903c41883ece8e8331ec578db71d0654f550c110",
+      "suite": "com.parlor.games.whodunit.ui.flow.WhodunitLocalLeaveTimerTest",
+      "timestamp": "2026-09-07T06:25:39.656Z",
+      "counts": {
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "actual_testcases": [
+        "eliminationConfirmationTimeIsExcludedAndStayRestartsOnlyOneTicker()[desktop]",
+        "stayDoesNotReleaseAnExistingPerTimerPause()[desktop]",
+        "lastSecondCannotExpireBehindConfirmationButExpiresAfterStay()[desktop]",
+        "failedSaveKeepsTimeFrozenAndSuccessfulSaveResumesWithoutCatchingUp()[desktop]",
+        "stayDoesNotReleaseAnExistingSessionPause()[desktop]",
+        "classicConfirmationTimeIsExcludedAndStayRestartsOnlyOneTicker()[desktop]"
+      ]
+    },
+    {
+      "cycle": "focused11",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/focused-readiness-regressions-11/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostLeaveTimerTest.xml",
+      "sha256": "0dd81dbe9564c101048379a7c13ed3f423045ed7902343614dbbe0c33b8380da",
+      "suite": "com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostLeaveTimerTest",
+      "timestamp": "2026-09-07T06:26:00.389Z",
+      "counts": {
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "actual_testcases": [
+        "classicHostConfirmationExcludesTimeAndConfirmedLeaveStopsTicker()[desktop]",
+        "lifecycleResumeBehindConfirmationDoesNotRestartHiddenDiscussion()[desktop]",
+        "eliminationHostConfirmationExcludesTimeAndConfirmedLeaveStopsTicker()[desktop]",
+        "stayAndLifecycleResumeDoNotReleaseManualPause()[desktop]"
+      ]
+    },
+    {
+      "cycle": "focused11",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/focused-readiness-regressions-11/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.JupiterDiscoveryContractTest.xml",
+      "sha256": "3d38b52e80701f8bf0357c41f01f9c592fe95e4bdbf1d1d9cc862127ee09c57e",
+      "suite": "com.parlor.transport.p2p.JupiterDiscoveryContractTest",
+      "timestamp": "2026-09-07T06:27:06.358Z",
+      "counts": {
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "actual_testcases": [
+        "annotated_tests_including_disabled_tests_are_discoverable()[desktop]"
+      ]
+    }
+  ],
+  "restored_eight_discovery_methods_verified": [
+    "disconnect_during_acceptance_rolls_back_the_seat_without_a_ghost_member",
+    "cancellation_during_acceptance_propagates_after_rolling_back_the_seat",
+    "wrong_room_does_not_end_search_before_a_late_correct_candidate_appears",
+    "admission_pending_opens_a_separate_host_approval_window",
+    "host_send_propagates_coroutine_cancellation",
+    "peer_send_propagates_coroutine_cancellation",
+    "kit_factory_cancellation_is_never_mapped_to_transport_failure",
+    "fatal_send_and_cleanup_failures_are_never_converted_to_normal_results"
+  ],
+  "evidence_binding_qualification": {
+    "source_read_not_runtime": "No tests/builds executed by this reviewer. PASS XML and run status belong to recorded older exact source manifests. Matching file hashes support unchanged scoped fixes, not current whole-tree PASS.",
+    "newer_exact_selected": "focused11 readiness12/local6/host4/discovery1 XML all pass, no skip. Tests/router/ticker/current host route match before+after manifests.",
+    "game_flow_later_delta": "focused11 recorded GameFlow SHAcee14cd945a1ecb76bb256eff24e0629259538fd165515cfe1c89e62f0b8fcca independently equals git0787b0 version. Current diff is only PeerHostPausedBanner private->internal and2 cover colors (75cd745). Current methods/readiness/timer inspected; whole-file current runtime equivalence not asserted.",
+    "older_current_ownership": "combined04 current handshake/factory/registration/transport/new regression/lifecycle source bytes match before+after manifests. Old loopback file does not match current; retain historical3skip as history, current source preserves3Ignores.",
+    "counterevidence_register": [
+      "Eager first snapshot before peer attachment is intentionally recovered by explicit post-attach request; not an unfixedSN-C1 defect.",
+      "Host duplicate readiness is reducer-idempotent; no peer remount command loop transferred to host by fix.",
+      "Older baseline review prose claimed parameterized rejection by Jupiter guard; current code does not, and this report corrects rather than perpetuates that claim."
+    ]
+  },
+  "remaining_verification": [
+    "Parent must freeze source05 and independently bind controls before future native run. No future normal8XCTest/ninthsimctl probe reported as run.",
+    "Current combined repository checks must account for root active UI/CI changes; prior manifest hashes are not a frozen latest-tree attestation.",
+    "Physical Android/iOS LAN, real Back/predictive/interactive gestures, lock/background callback hardware behavior and Store/signing/publication gates remain outside this review."
+  ],
+  "preservation_and_cleanup": {
+    "reviewer_actions": "Read-only Git/source/evidence inspection and this new compact report only. No imports/execution of runner modules.",
+    "reviewer_started_gradle_xcode_app_native_test_simulator_server_workers": false,
+    "reviewer_generated_build_outputs": [],
+    "reviewer_cleanup_needed": false,
+    "root_resources": "No root/other-task process stopped or output deleted. Existing source/audit/design material preserved. Captured prior cycles each record stop0, no owned workers/output leftovers and no cleanup errors."
+  }
+}

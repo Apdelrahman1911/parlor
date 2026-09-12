@@ -1,0 +1,48 @@
+--- a/remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/test_l08_functional_copy.py
++++ b/remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/test_l08_functional_copy.py
+@@ -65,6 +65,19 @@
+         candidate = strict.once(candidate, '                    stage = "' + stage + '"\n', '')
+     return strict.once(candidate, 'L08MafiaSnapshots.continueActualResumedController { stage = it }',
+                        'L08MafiaSnapshots.continueActualResumedController()')
++
++
++def assert_continuation_failure_payload(probe):
++    # Metadata comparisons legitimately name the fixed directory/file target.
++    # Constrain the actual failure payload, including values, not words elsewhere.
++    failure = section(probe, '    private fun failed(', '\n}\n\ninternal fun requireContext(')
++    require(failure.strip() == '''private fun failed(token: String, boot: Int, action: String, reason: String) = buildJsonObject {
++        put("schema_version", 1); put("kind", "l08-storage-functional"); put("functional_status", "FAIL")
++        put("run_token", token); put("boot_ordinal", boot); put("command_ordinal", commandIndex + 1)
++        put("action", action); put("stage", stage); put("reason", reason)
++        put("complete_comparisons", JsonArray(completeComparisons.toList()))
++        put("physical_or_store_evidence", false)
++    }.toString()''', 'Continuation failure payload must remain exact closed metadata')
+ 
+ 
+ def assert_public_control_contract(text):
+@@ -277,8 +290,7 @@
+         self.assertEqual(observed, set(MAFIA_STAGES) | {'continue-home-counters', 'continue-whodunit-attach-wait',
+                                                      'continue-whodunit-controller', 'continue-mafia-attach-wait'})
+         self.assertIn('L08MafiaSnapshots.continueActualResumedController { stage = it }', probe)
+-        for key in ('private_state', 'action_ordinal', 'role_map', 'target', 'seed', 'exception_message'):
+-            self.assertNotIn('put("' + key + '"', probe)
++        assert_continuation_failure_payload(probe)
+ 
+     def test_continuation_diagnostics_cannot_hide_removed_guards_or_dynamic_private_stages(self):
+         mafia = (HERE / 'L08MafiaSnapshots.kt.in').read_text()
+@@ -294,6 +306,15 @@
+             self.assertIn(before, mafia)
+             with self.subTest(before=before), self.assertRaises((RuntimeError, AssertionError)):
+                 self.assertEqual(strip_mafia_continuation_stages(mafia.replace(before, after, 1)), original)
++        probe = (HERE / 'L08StorageFunctionalProbe.kt.in').read_text()
++        for replacement in (
++            *['put("stage", stage); put("' + key + '", "synthetic-private")' for key in
++              ('private_state', 'action_ordinal', 'role_map', 'target', 'seed', 'exception_message')],
++            'put("stage", privateState.toString())', 'put("stage", action.toString())',
++        ):
++            altered = strict.once(probe, 'put("stage", stage)', replacement)
++            with self.subTest(replacement=replacement), self.assertRaises(RuntimeError):
++                assert_continuation_failure_payload(altered)
+ 
+     def test_each_source_boundary_mutation_is_rejected_not_just_missing_check_names(self):
+         original = (CANONICAL / 'L08StorageProbe.kt.in').read_text()

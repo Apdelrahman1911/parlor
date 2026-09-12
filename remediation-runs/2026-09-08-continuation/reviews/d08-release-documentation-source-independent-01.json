@@ -1,0 +1,40 @@
+{
+  "schema": 1,
+  "reviewer": "/root/qualification_review",
+  "author": "/root/ci_linux",
+  "status": "APPROVED_PINNED_DOCUMENTATION_TEST_CORRECTION_SOURCE_ONLY_ROOT_EXECUTION_PENDING",
+  "recorded_at": "2026-09-11T02:24:24.199654+00:00",
+  "base_head": "59a384441f44844a79ae62ea8ee68d0c9e1e5878",
+  "scope": "Only scripts/release/tests/test_release_documentation.py correction for observed D08 stale protected-branch prose expectation; no broad workflow/source re-audit.",
+  "pins": {
+    "scripts/release/tests/test_release_documentation.py": "811fb9719189e4ca4bc17918b8d0d282141c6f56d3e0bbe58d26c5d3d7ca8a2d",
+    ".github/workflows/production-verification.yml": "d8868fdd407c0513fe4205b67b205af510c74b267e8ee83a1efac0b0f8fede94",
+    "docs/RELEASE_AUTOMATION.md": "bf9c13cf2a185413b9b6bb937f391f1ae77838ba3001335beaeff864cb3d0b9f",
+    "docs/RELEASE_GATES.md": "3c353b24cc2b1b63b57e31998612235fb456c69c3f915c67c6de2ff98f788092"
+  },
+  "test_base_sha256": "414579949e9668da6971d41dd4ef7434271fd17b8af4547b0009162ea5c83046",
+  "actual_failure": {
+    "run_id": 34553741387,
+    "job_id": 103121858165,
+    "log_path": "remediation-runs/2026-09-08-continuation/reviews/d08-pd06-ci-monitor-01/34553741387-103121858165.log",
+    "log_sha256": "b72dff274e7ca48a6466b94442bdb55167b8804edbdb8e9f217fd49197dc6bd9",
+    "lines": "2373-2387",
+    "observed": "Retained monitor log records the old require-all-current-jobs literal failing against already-correct six-mandatory-full documentation, then Ran567 / FAILED(failures=1). This is source-review failure basis, not completed artifact/cleanup custody or a final full-run review."
+  },
+  "checks": [
+    "The sole test is renamed to identify full verification jobs; original workflow presence, explicit-name count, unique-name and protected-section existence checks remain. No skip, suppression, mock or bypass added.",
+    "Exact multiset job-ID closure requires desktop-android, desktop-linux-arm64, desktop-macos-x64, desktop-windows-x64, ios, ios-release and ios-protection-probe. Adding/removing/duplicating a job forces deliberate contract review instead of silently omitting a new mandatory lane.",
+    "Workflow-derived ID/name mapping requires all six actual full check names in the protected-branch nested required-name bullet multiset. Unlike the old general substring membership loop, missing/duplicate/extra names and inserting the probe as a required bullet fail.",
+    "Current require-all-six-mandatory-full sentence is pinned. Separate exact opt-in diagnostic-is-not-mandatory sentence is required; probe exclusion is explicit rather than implicit filtering.",
+    "Current documented list exactly names Common, desktop, and Android release; Desktop strict verification (Linux arm64); Desktop and Kotlin Native strict verification (macOS x64); Desktop, Kotlin Native, and Android resources strict verification (Windows x64); iOS simulator runtime and Swift host; iOS release frameworks and Swift wrapper. iOS strict protection diagnostic remains outside that list.",
+    "Workflow and both release-contract documents remain byte-identical to frozen59a38444. Existing owner-required external branch-protection update caveat remains; this test/source review does not claim external settings changed. No full gate, job body, cleanup, signing or Store path is weakened."
+  ],
+  "findings": [],
+  "execution": "NOT_RUN_BY_REVIEWER_OR_AUTHOR; root-owned focused failure-fix batch pending. Source approval is not a passed regression.",
+  "conditions": [
+    "Root uses exact811fb971 test bytes in its focused correction batch and preserves actual logs/results plus stop/cleanup evidence.",
+    "Any additional source fix requires its own review; after the failure-fix batch, freeze/inventory and obtain a fresh exact full request admission before a new qualification attempt."
+  ],
+  "limits": "D08 remains failed; successful unaffected lanes or a future local/focused pass cannot rehabilitate that run or replace six jobs and cleanup passing together at one frozen SHA. No automatic rerun/dispatch authorized.",
+  "activity": "Read-only local Git/text/hash inspection and this additive untracked review only; no project imports, test/build/validator execution, network, source edits, Git writes or dispatch. No execution cleanup owed."
+}

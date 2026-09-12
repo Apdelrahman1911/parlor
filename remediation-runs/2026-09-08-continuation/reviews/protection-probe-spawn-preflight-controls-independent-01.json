@@ -1,0 +1,68 @@
+{
+  "schema": 1,
+  "reviewer": "/root/probe_identity",
+  "status": "APPROVED_ACTUAL_FOCUSED_SYNTHETIC_CONTROLS_NATIVE_EXECUTION_PENDING",
+  "source_head_at_review": "59a384441f44844a79ae62ea8ee68d0c9e1e5878",
+  "source_approval": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/protection-probe-spawn-preflight-source-independent-01.json",
+    "sha256": "234adc1a5d18bc370e9d571b6dfe6a7b842c8dfc9892b5f8c87a93cc50a0f700"
+  },
+  "actual_batch": {
+    "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-protection-spawn-controls-01/receipt.json",
+    "sha256": "609d7bc08f2263f784f01e62843dc8f88e698c5d171882ac85fc1f74f2da5406",
+    "recorded_result": "PASS",
+    "total_observed_ok_test_lines": 101,
+    "unittest_failures_errors_skips": 0
+  },
+  "raw_logs": [
+    {
+      "file": "paired.log",
+      "sha256": "7da34d2388caf51a71c03bf78f2c194eefbde4139c61a7596809437b75235015",
+      "matches_batch_hash": true,
+      "observed_ok_test_lines": 45,
+      "unittest_summary_lines": [48, 50],
+      "summary": "Ran 45 tests in 0.183s; OK",
+      "recorded_command_exit": 0
+    },
+    {
+      "file": "native-helper.log",
+      "sha256": "7b584131bca388aa1407bba2a8458420fcf6ca4af51463c50a3c8b3a0b879eaa",
+      "matches_batch_hash": true,
+      "observed_ok_test_lines": 56,
+      "unittest_summary_lines": [59, 61],
+      "summary": "Ran 56 tests in 0.164s; OK",
+      "recorded_command_exit": 0
+    },
+    {
+      "file": "gradle-stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+      "matches_batch_hash": true,
+      "observed_text": "No Gradle daemons are running.",
+      "recorded_command_exit": 0
+    }
+  ],
+  "pin_verification": {
+    "batch_before_after_pin_count": 8,
+    "batch_before_equals_after": true,
+    "current_bytes_match_all_eight_recorded_pins": true,
+    "all_four_independently_approved_source_pins_match_batch": true,
+    "scope_note": "ProbeMain.m hash also matches the batch; its C-marker source remains outside this review and is not compiled or natively exercised by these Python controls."
+  },
+  "focused_coverage": [
+    "paired.log lines11,14,19,20 report OK for early wrapper timeout remaining fatal before allocation, JDK/source refusal before wrapper bootstrap, exact driver admission with timeout/raw-output preservation, and UUID/resource/image/source drift refusing spawn.",
+    "native-helper.log lines15-20 report OK for one-use admission on budget refusal, sampling-failure privacy/retirement, rejection of unbound argv/flags/environment, held-direct-child-only timeout sampling without late-success rescue, no sampling on success/output limit, and durable-timeout preservation failure preventing sampling while retaining failure/retirement."
+  ],
+  "cleanup": {
+    "batch_reported_errors": [],
+    "batch_reported_scratch_removed": true,
+    "scratch_removal_independently_reobserved": false,
+    "scratch_note": "Scratch path is not recorded; removal is attributed to the runner receipt, not independently asserted.",
+    "listed_live_cache_roots": 24,
+    "directly_checked_current_absent_including_dangling_symlinks": 24,
+    "current_present_paths": []
+  },
+  "summary_field_caution": "The native-helper receipt summary is tail JSON from intentional negative fixtures, including status FAILED. It is not the unittest verdict; the raw log separately records 56 OK cases and Ran56/OK before those fixture records.",
+  "findings": [],
+  "limits": "Actual local synthetic controls only, not native runtime or a PD06 root-cause/fix demonstration. No simulator-descendant execution/exit, protection, host comparison, historical/full/Store promotion, or future host wrapper-preflight success is established. New native behavior remains NOT_RUN; frozen source/control approval is still required for dispatch.",
+  "operations": "Read-only raw-log, JSON, SHA256, Git HEAD and path-absence inspection, followed only by this requested independent receipt. No repeated source audit, project imports, tests, builds, network, dispatch, deletion or other edits."
+}

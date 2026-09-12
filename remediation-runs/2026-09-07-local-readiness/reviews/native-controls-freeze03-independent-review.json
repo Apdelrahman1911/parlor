@@ -1,0 +1,100 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/factory_review",
+  "author": "/root/native_fix_review",
+  "reviewed_at": "2026-09-07T04:45:57.274967+00:00",
+  "baseline": {
+    "branch": "fix/local-readiness-2026-09-07",
+    "head": "b4f0ece464aa44819044dd78d2f2fd137d88c91d",
+    "tree": "d5b44350bc67386ca0f040405f39178033b884a5",
+    "dirty_source": "Intentional remediation/user changes preserved; controls and scoped caller hashes bound, not bare commit."
+  },
+  "conclusion": "CONTROL SOURCE APPROVED; NATIVE EXECUTION REQUIRES CURRENT SOURCE BINDING REVIEW",
+  "execution_prerequisites": [
+    "Root should rerun59 lightweight tests on wording-only freeze03; freeze02 raw results are preserved but not relabeled as03 execution.",
+    "Create explicit current tracked+untracked source binding without overwrite/refresh. Independent reviewer must approve exact selected binding and runner control_hash before root execution.",
+    "Root owns sole build lane; clean/stop prior build cycle first. Fresh exact-name+UUID owned simulator only."
+  ],
+  "coverage": {
+    "path": "remediation-runs/2026-09-07-local-readiness/reviews/native-controls-freeze03-coverage.json",
+    "sha256": "2666487de04c3fbad41d9157f2dd139fce005a72387c9685ce38e4c0f870dff3",
+    "files": 36,
+    "lines": 7698
+  },
+  "independently_found_and_corrected_control_defect": {
+    "id": "NATIVE-CONTROL-OWNED-SIMULATOR-NAME",
+    "original": "Old DSC01OSPrerequisite parlor-audit-dsc01-apphost prefix rejected current ios-readiness owned simulator before actual OS prerequisites. Deterministically reachable fixture failure, not application defect.",
+    "fix": "Shared owned_simulator_name constructs exact unique name and renders sole token in Swift guard. Runner creates/recovers same name. UUID and Debug/simulator restrictions retained; no broadened prefix.",
+    "diff": "native/controls-review-feedback-01.diff",
+    "tests": "Two actual new controls tests check constructor/renderer/runner guard binding; reject stale/unsafe/missing/duplicate token. Root59/59 rerun independently read.",
+    "status": "CORRECTED AND SOURCE/SYNTHETIC VERIFIED"
+  },
+  "freeze03_clarification": {
+    "diff": "native/controls-review-feedback-02.diff",
+    "diff_sha256": "82c5847cf788dfd6a2168274db824b2492103db7c6c9f4639c3bb2effc790fe8",
+    "scope": "README, returned limitation, root receipt scope and provenance hashes only. Gates, tests, queries, production code and required built/installed inventories unchanged.",
+    "conclusion": "Approved: dyld is accurately described as bounded non-atomic observed app-image sample, not complete historical/concurrent execution evidence."
+  },
+  "assessment": [
+    "All36 frozen hashes/line counts and35 current/original lineage records independently match. Archived receipts supply provenance, not correctness proof; no archived runtime imports. Freeze inventory digest differs from execution control_hash.",
+    "Schema3 explicit binding covers tracked and untracked build inputs, rejects stale hashes, symlinks, unreviewed copy inputs and implicit refresh. Whitelist excludes protected material. Exclusive0600 binding creation refuses existing file/symlink traversal. App instrumentation lives only in isolated temporary copy.",
+    "Task owns one copied graph, DerivedData, isolated Gradle home and fresh simulator. Shared caches symlinked only; finalizer unlinks links rather than recursively deleting cache targets. JDK21, strict verification, unsigned Debug flags; no identity replacement, Store or physical-device operations.",
+    "Process ownership tracks actual PID/start/ancestry/live group. Detached JVM adoption requires exact java argv0 and exactly one exact task tmpdir arg. Secondary Apple FIFO cleanup requires attested worker+ibtoold ancestor, exact argv pair, UID/inode/device/type/birthtime/no symlinks/allowed external tree. Cached identity still rechecks metadata. Unknown/reused/live/held files never deleted.",
+    "Copied shell immediately stops own Gradle after build, propagates cd/build failure and normalizes only successful embedding. Outer Xcode finally also stops isolated Gradle and cleans owned simulator/workers/FIFOs/copy/DerivedData after compact evidence. Source comparisons retained. Cleanup failures remain failed receipts; no blanket deletion or success relabeling.",
+    "Probe resolves actual Koin Home and stores. Coroutine-context observer executes at exact credential SecItem return sites after dispatcher switch; unrelated calls cannot share attribution. Original query dictionaries/native arguments/retries/maps/guards/dispatchers/mutex/cancellation unchanged. Snapshot numeric statuses and first Home call remain explicitly unattributed.",
+    "Eight additional process-cold launches reuse installed image; each requires6 foreground/no-alert/native-geometry samples over10seconds. Real-backing synthetic UUID key and safe-suffix file writes, overwrite reads, deletion and absence test cold-process durability, not game envelopes. Failed prerequisite stays BLOCKED; successful write/delete followed by missing/corrupt/retained state FAILS. Errors never mapped to healthy empty results.",
+    "Full built and installed Mach-O inventories require main stub, debug dylib and Compose framework with equal bytes. Bounded observed dyld paths map to hashes; required/unknown/duplicate/missing/tampered image cases fail. UUID/architecture/codesign metadata is not Store-signing proof; unsigned config cannot explain a Keychain error.",
+    "Only exact token-attested earlier synthetic language seed is restored after initial absence/no OS actions/exact final live values/completion checks. Actual public system list English primary+Arabic secondary and per-app Arabic selection precede immutable before-App baseline. Real in-app English/System/restart must preserve observed array. ABSENT remains partial, not PRESENT success.",
+    "Both local games selected and setup via public UI. Synthetic real-store language bridge honestly labeled; no nonexistent in-game Settings flow invented. Canonical controller/flow/value/reference continuity, Compose/native direction and retained UIKit identity directly observed. Controls do not modify reducers/game rules/private projections/transport logic."
+  ],
+  "executed_test_evidence": {
+    "executor": "/root",
+    "version": "freeze02; freeze03 wording-only rerun pending",
+    "command": [
+      "/usr/bin/python3",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "scripts/verification/ios-readiness",
+      "-p",
+      "test_*.py",
+      "-v"
+    ],
+    "started_at": "2026-09-07T04:30:40.082483+00:00",
+    "finished_at": "2026-09-07T04:30:46.372482+00:00",
+    "exit_code": 0,
+    "tests": 59,
+    "failures": 0,
+    "skips": 0,
+    "raw_log": "remediation-runs/2026-09-07-local-readiness/evidence/native-controls-02/tests.log",
+    "raw_log_sha256": "02d11a67896b8d38376ec6d798dcfbef625c9d6781ecad5818cbdbde4da1a057",
+    "receipt": "remediation-runs/2026-09-07-local-readiness/evidence/native-controls-02/receipt.json",
+    "receipt_sha256": "514b4a9ffc7bad0fcd9602febca6a5ee7a33e28d48ab07bb8c49e4e34308ea1c",
+    "before_after_match_freeze02": true,
+    "reviewer_reran": false,
+    "limits": "Synthetic Python/source-transform/shell-fixture tests, not app/native/Gradle/physical execution."
+  },
+  "research": [
+    "native/research-controls-01.json",
+    "native/research-controls-02.json",
+    "reviews/native-controls-authoritative-references-01.json"
+  ],
+  "remaining_uncertainty": [
+    "Native lane not yet executed; actual Keychain outcome, OS-created PRESENT preference and selector/runtime behavior require bound evidence.",
+    "Non-atomic dyld sample is not every historical/concurrent dynamic image.",
+    "Eight launches cannot establish historical first-four-crashes cause; tool, selector, app exception and OS termination must remain distinct.",
+    "Full game/save-envelope recovery, physical LAN, real signing, Store-qualified Xcode26.3, assistive technology and content-rights owner decisions remain outside this harness.",
+    "No blanket network, Store or production-readiness claim."
+  ],
+  "reviewer_safety": {
+    "production_edits": false,
+    "control_edits": false,
+    "git_mutations": false,
+    "build_device_execution": false,
+    "background_workers_started": false,
+    "cleanup": "Short /usr/bin/python3 -B and read-only shell/research/header/version calls completed. No pycache, build outputs, servers, native workers. Root owns build cleanup; no other task files/processes altered.",
+    "receipt_write_retry": "Initial freeze02 report write aborted before creating any file because current hash guard detected root-authorized wording update. Current report honestly usesfreeze03."
+  }
+}

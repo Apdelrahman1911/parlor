@@ -3,7 +3,6 @@ package com.parlor.transport.p2p
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.isInstanceOf
-import assertk.assertions.isNotNull
 import assertk.assertions.isTrue
 import com.parlor.core.ids.GameId
 import com.parlor.core.ids.PlayerId
@@ -19,22 +18,15 @@ import com.parlor.networking.room.RoomInfo
 import com.parlor.networking.room.SendTarget
 import com.parlor.networking.transport.HostConfig
 import dev.p2pkit.core.AppId
-import dev.p2pkit.core.ExplicitSecurityRisk
-import dev.p2pkit.core.PeerAuthorizationPolicy
-import dev.p2pkit.core.P2pKit
-import dev.p2pkit.core.SecurityMode
-import dev.p2pkit.core.dsl.jvmSecureIdentityStore
-import dev.p2pkit.core.security.JvmSecureIdentityStore
-import dev.p2pkit.transport.lan.lan
 import java.util.concurrent.Executors
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.async
+import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withTimeout
 import kotlin.test.AfterTest
@@ -43,9 +35,10 @@ import kotlin.test.Test
 import kotlin.time.Duration.Companion.seconds
 
 /**
- * End-to-end loopback verification: two `P2pKitRoomTransport` instances
- * stand up in one JVM process, one hosts and one joins via LAN/loopback,
- * and the host↔peer protocol round-trips successfully.
+ * Real-kit advertising smoke test plus disabled multi-kit LAN transport fixtures.
+ * Peer fixtures give each simulated device separate identity/credential storage,
+ * explicitly approve admission, then assert membership and envelope delivery.
+ * They do not exercise game reducers or the session-start transaction.
  *
  * P2pKit is wired into the production mobile dependency graph; this JVM test
  * independently exercises the same adapter boundary with a real LAN kit.
@@ -57,10 +50,9 @@ import kotlin.time.Duration.Companion.seconds
  *  - The peer-side tests are `@Ignore`d in this single-JVM environment
  *    because JmDNS multicast on Windows loopback inside one JVM process is
  *    unreliable — two P2pKit instances need a real network interface they
- *    can both bind to. The end-to-end host↔peer round-trip is validated
- *    manually on two physical devices over real Wi-Fi (see
- *    `docs/P2P_MANUAL_TEST.md` runbook), which mirrors how friends-testing
- *    will actually happen.
+ *    can both bind to. These ignored fixtures are not physical-device evidence.
+ *    End-to-end Android/iOS checks still require fresh controlled-device
+ *    execution of `docs/P2P_MANUAL_TEST.md`; no historical success is asserted.
  *
  * P2pKit is a required production dependency. This module and test are always
  * included and resolve the pinned publication from Maven Central.
@@ -70,31 +62,22 @@ class P2pKitRoomTransportLoopbackTest {
     private val testDispatcher = Executors.newCachedThreadPool().asCoroutineDispatcher()
     private val testScope = CoroutineScope(testDispatcher + SupervisorJob())
     private val rooms: MutableList<LocalRoom> = mutableListOf()
-    private val identityStore = LoopbackIdentityStore()
-
-    @OptIn(ExplicitSecurityRisk::class)
-    private val testKitFactory = object : P2pKitFactory {
-        override suspend fun createKit(appId: AppId, deviceName: String) = P2pKit.create {
-            this.appId = appId
-            this.deviceName = deviceName
-            transports { lan() }
-            jvmSecureIdentityStore(identityStore)
-            security {
-                mode = SecurityMode.AuthenticatedV2(
-                    PeerAuthorizationPolicy.AcceptAnyAuthenticatedSameApp,
-                )
-            }
-        }
-    }
 
     @AfterTest
     fun teardown() {
-        runBlocking {
-            rooms.forEach { runCatching { it.leave() } }
+        try {
+            runBlocking {
+                val failures = rooms.asReversed().mapNotNull { runCatching { it.leave() }.exceptionOrNull() }
+                testScope.coroutineContext[Job]?.cancelAndJoin()
+                failures.firstOrNull()?.let { first ->
+                    failures.drop(1).filter { it !== first }.forEach(first::addSuppressed)
+                    throw first
+                }
+            }
+        } finally {
             rooms.clear()
-            testScope.coroutineContext[Job]?.cancel()
+            testDispatcher.close()
         }
-        testDispatcher.close()
     }
 
     @Test
@@ -103,12 +86,7 @@ class P2pKitRoomTransportLoopbackTest {
         // can't see each other's advertisements.
         val appId = AppId("com.parlor.p2p.test.${randomTag()}")
 
-        val hostTransport = P2pKitRoomTransport(
-            appId = appId,
-            deviceName = "host-device",
-            scope = testScope,
-            kitFactory = testKitFactory,
-        )
+        val hostTransport = deviceTransport(appId, "host-device")
         val hostResult = withTimeout(15.seconds) {
             hostTransport.host(HostConfig(hostDisplayName = "Test Room"))
         }
@@ -128,8 +106,8 @@ class P2pKitRoomTransportLoopbackTest {
     fun peer_can_join_a_hosted_room_and_membership_appears_on_host() = runBlocking {
         val appId = AppId("com.parlor.p2p.test.${randomTag()}")
 
-        val hostTransport = P2pKitRoomTransport(appId, "host-device", testScope, testKitFactory)
-        val peerTransport = P2pKitRoomTransport(appId, "peer-alice", testScope, testKitFactory)
+        val hostTransport = deviceTransport(appId, "host-device")
+        val peerTransport = deviceTransport(appId, "peer-alice")
 
         val hostRoom = (
             withTimeout(15.seconds) {
@@ -137,12 +115,7 @@ class P2pKitRoomTransportLoopbackTest {
             } as Result.Success
             ).data
         rooms += hostRoom
-        val code = hostRoom.info.value.code
-
-        val peerRoom = (
-            withTimeout(30.seconds) { peerTransport.join(code, "peer-alice") } as Result.Success
-            ).data
-        rooms += peerRoom
+        val peerRoom = joinApprovedLoopbackPeer(hostRoom, peerTransport, "peer-alice", rooms::add)
         assertThat(peerRoom.isHost).isEqualTo(false)
         assertThat(peerRoom.info.value.status).isEqualTo(RoomInfo.Status.Joined)
 
@@ -157,11 +130,11 @@ class P2pKitRoomTransportLoopbackTest {
     @Test
     @Ignore("Needs two physical devices on the same LAN; mDNS multicast on " +
         "single-JVM loopback is unreliable. Run docs/P2P_MANUAL_TEST.md.")
-    fun peer_to_host_message_round_trips_and_host_to_peer_message_arrives_back() = runBlocking {
+    fun peer_to_host_message_round_trips_and_host_to_peer_message_arrives_back(): Unit = runBlocking {
         val appId = AppId("com.parlor.p2p.test.${randomTag()}")
 
-        val hostTransport = P2pKitRoomTransport(appId, "host-device", testScope, testKitFactory)
-        val peerTransport = P2pKitRoomTransport(appId, "peer-alice", testScope, testKitFactory)
+        val hostTransport = deviceTransport(appId, "host-device")
+        val peerTransport = deviceTransport(appId, "peer-alice")
 
         val hostRoom = (
             withTimeout(15.seconds) {
@@ -169,12 +142,7 @@ class P2pKitRoomTransportLoopbackTest {
             } as Result.Success
             ).data
         rooms += hostRoom
-        val code = hostRoom.info.value.code
-
-        val peerRoom = (
-            withTimeout(30.seconds) { peerTransport.join(code, "peer-alice") } as Result.Success
-            ).data
-        rooms += peerRoom
+        val peerRoom = joinApprovedLoopbackPeer(hostRoom, peerTransport, "peer-alice", rooms::add)
 
         // Wait for host membership to be observed (the host's accept-loop
         // needs to have processed the inbound session before its outbound
@@ -185,21 +153,22 @@ class P2pKitRoomTransportLoopbackTest {
 
         // Peer → Host: send a current gameplay heartbeat; the host observes
         // the authenticated connection identity rather than the forged body.
-        val hostInbox = async {
+        val hostInbox = async(start = CoroutineStart.UNDISPATCHED) {
             withTimeout(10.seconds) { hostRoom.incoming.first() }
         }
         val peerHeartbeat = loopbackPeerHeartbeat(PlayerId("forged"))
-        peerRoom.sendToHost(peerHeartbeat)
+        assertThat(peerRoom.sendToHost(peerHeartbeat)).isInstanceOf(Result.Success::class)
         val received = hostInbox.await()
         assertThat(received).isInstanceOf(PeerMessage.SessionHeartbeat::class)
         assertThat((received as PeerMessage.SessionHeartbeat).actor).isEqualTo(joinedPlayerId)
         assertThat(received.header).isEqualTo(peerHeartbeat.header)
 
         // Host → Peer (direct): send the current terminal envelope.
-        val peerInbox = async {
+        val peerInbox = async(start = CoroutineStart.UNDISPATCHED) {
             withTimeout(10.seconds) { peerRoom.incoming.first() }
         }
-        hostRoom.send(SendTarget.Direct(joinedPlayerId), loopbackTerminal())
+        assertThat(hostRoom.send(SendTarget.Direct(joinedPlayerId), loopbackTerminal()))
+            .isInstanceOf(Result.Success::class)
         val hostMsg = peerInbox.await()
         assertThat(hostMsg).isInstanceOf(HostMessage.SessionEnded::class)
     }
@@ -207,12 +176,12 @@ class P2pKitRoomTransportLoopbackTest {
     @Test
     @Ignore("Needs three physical devices on the same LAN; mDNS multicast on " +
         "single-JVM loopback is unreliable. Run docs/P2P_MANUAL_TEST.md.")
-    fun host_broadcast_reaches_every_peer() = runBlocking {
+    fun host_broadcast_reaches_every_peer(): Unit = runBlocking {
         val appId = AppId("com.parlor.p2p.test.${randomTag()}")
 
-        val hostTransport = P2pKitRoomTransport(appId, "host-device", testScope, testKitFactory)
-        val peer1Transport = P2pKitRoomTransport(appId, "peer-1", testScope, testKitFactory)
-        val peer2Transport = P2pKitRoomTransport(appId, "peer-2", testScope, testKitFactory)
+        val hostTransport = deviceTransport(appId, "host-device")
+        val peer1Transport = deviceTransport(appId, "peer-1")
+        val peer2Transport = deviceTransport(appId, "peer-2")
 
         val hostRoom = (
             withTimeout(15.seconds) {
@@ -220,16 +189,10 @@ class P2pKitRoomTransportLoopbackTest {
             } as Result.Success
             ).data
         rooms += hostRoom
-        val code = hostRoom.info.value.code
-
-        val peer1Room = (
-            withTimeout(30.seconds) { peer1Transport.join(code, "peer-1") } as Result.Success
-            ).data
-        rooms += peer1Room
-        val peer2Room = (
-            withTimeout(30.seconds) { peer2Transport.join(code, "peer-2") } as Result.Success
-            ).data
-        rooms += peer2Room
+        val peer1Room = joinApprovedLoopbackPeer(hostRoom, peer1Transport, "peer-1", rooms::add)
+        val peer2Room = joinApprovedLoopbackPeer(hostRoom, peer2Transport, "peer-2", rooms::add)
+        assertThat(setOf(hostRoom.selfPlayerId, peer1Room.selfPlayerId, peer2Room.selfPlayerId).size)
+            .isEqualTo(3)
 
         // Wait until both peers are known to the host.
         withTimeout(10.seconds) {
@@ -237,19 +200,22 @@ class P2pKitRoomTransportLoopbackTest {
         }
 
         // Broadcast a current terminal frame; both peers receive it.
-        val peer1Inbox = async {
+        val peer1Inbox = async(start = CoroutineStart.UNDISPATCHED) {
             withTimeout(10.seconds) { peer1Room.incoming.first() }
         }
-        val peer2Inbox = async {
+        val peer2Inbox = async(start = CoroutineStart.UNDISPATCHED) {
             withTimeout(10.seconds) { peer2Room.incoming.first() }
         }
-        hostRoom.send(SendTarget.Broadcast, loopbackTerminal())
+        assertThat(hostRoom.send(SendTarget.Broadcast, loopbackTerminal())).isInstanceOf(Result.Success::class)
         assertThat(peer1Inbox.await()).isInstanceOf(HostMessage.SessionEnded::class)
         assertThat(peer2Inbox.await()).isInstanceOf(HostMessage.SessionEnded::class)
     }
 
     private fun randomTag(): String =
         (1..6).map { ('a'..'z').random() }.joinToString("")
+
+    private fun deviceTransport(appId: AppId, deviceName: String): P2pKitRoomTransport =
+        LoopbackDeviceFixture(testDispatcher).transport(appId, deviceName, testScope)
 }
 
 private fun loopbackHeader(sequence: Long, messageId: String): SessionEnvelopeHeader =
@@ -274,18 +240,3 @@ private fun loopbackTerminal(): HostMessage.SessionEnded = HostMessage.SessionEn
     reason = SessionEndReason.Cancelled,
     finalRevision = 0L,
 )
-
-private class LoopbackIdentityStore : JvmSecureIdentityStore {
-    private val values = mutableMapOf<String, ByteArray>()
-
-    override fun read(namespace: String): ByteArray? =
-        synchronized(values) { values[namespace]?.copyOf() }
-
-    override fun putIfAbsent(namespace: String, value: ByteArray): ByteArray =
-        synchronized(values) {
-            values.getOrPut(namespace) { value.copyOf() }.copyOf()
-        }
-
-    override fun delete(namespace: String): Boolean =
-        synchronized(values) { values.remove(namespace) != null }
-}

@@ -1,0 +1,112 @@
+{
+  "timestamp": "2026-09-05T19:38:25.363264+00:00",
+  "issue": "SN-C2 peer sibling, same independently confirmed ownership root",
+  "base_commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+  "independent_defect_validator": "/root",
+  "independent_remediation_review": "PENDING",
+  "files": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/commonMain/kotlin/com/parlor/transport/p2p/P2pKitRoomTransport.kt",
+      "sha256": "11099f74da2ba3d616179e023f06d28ca25dd0c7695d893b0c51f92939d71ead",
+      "line_count": 4811,
+      "self_review_lines": [
+        [
+          90,
+          253
+        ],
+        [
+          259,
+          839
+        ],
+        [
+          901,
+          1414
+        ],
+        [
+          1604,
+          1678
+        ],
+        [
+          3636,
+          3711
+        ],
+        [
+          3751,
+          4201
+        ],
+        [
+          4526,
+          4571
+        ],
+        [
+          4670,
+          4811
+        ]
+      ],
+      "reviewer": "/root/session_cont",
+      "review_scope": "Changed join/resume ownership and called cleanup/handshake/collector paths; not whole 4811-line file",
+      "execution": "NOT_RUN"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/PeerOpeningCancellationTest.kt",
+      "sha256": "e72ab2b4e013af3a626f50677e3284518120b4320a556c7d5cb7a662fe4c0e68",
+      "line_count": 392,
+      "self_review_lines": [
+        [
+          1,
+          392
+        ]
+      ],
+      "reviewer": "/root/session_cont",
+      "review_scope": "Complete new test/helper",
+      "execution": "NOT_RUN"
+    }
+  ],
+  "previous_other_seven_files_unchanged": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/session/src/commonMain/kotlin/com/parlor/session/multidevice/SessionStartHandshake.kt",
+      "previous_sha256": "eab3e1743484280bbdf1731f033b9984ad0b9e1d2aea31a94e40a6c29fe17512",
+      "current_sha256": "eab3e1743484280bbdf1731f033b9984ad0b9e1d2aea31a94e40a6c29fe17512",
+      "unchanged": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/session/src/commonTest/kotlin/com/parlor/session/multidevice/SessionStartCommitDeadlineTest.kt",
+      "previous_sha256": "9f0dc6cb2904dc14b24114ea0e019422e2e84e912e80e359276ab4fd38c816b2",
+      "current_sha256": "9f0dc6cb2904dc14b24114ea0e019422e2e84e912e80e359276ab4fd38c816b2",
+      "unchanged": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/commonMain/kotlin/com/parlor/transport/p2p/AppLifecycleRoomCoordinator.kt",
+      "previous_sha256": "7761d49b0de180d34daa32f790768a541f2af8d0de98b94eeb89ab20bf2d1e68",
+      "current_sha256": "7761d49b0de180d34daa32f790768a541f2af8d0de98b94eeb89ab20bf2d1e68",
+      "unchanged": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/commonTest/kotlin/com/parlor/transport/p2p/AppLifecycleRoomRegistrationTest.kt",
+      "previous_sha256": "bfda11cf208b13b039ae74061d81fcf04a11fdfe3945c490371aa71b730f6d6b",
+      "current_sha256": "bfda11cf208b13b039ae74061d81fcf04a11fdfe3945c490371aa71b730f6d6b",
+      "unchanged": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/HostOpeningCancellationTest.kt",
+      "previous_sha256": "13cdebd30a42ff4ed04be36f9e2ffe3693b488badd05e19edb2a004a180c6bff",
+      "current_sha256": "13cdebd30a42ff4ed04be36f9e2ffe3693b488badd05e19edb2a004a180c6bff",
+      "unchanged": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSnapshotFileSystem.kt",
+      "previous_sha256": "8a99e60647c3d9f137ca8783e636b37798d06f4883df3609bf6cd2a0568bdf48",
+      "current_sha256": "8a99e60647c3d9f137ca8783e636b37798d06f4883df3609bf6cd2a0568bdf48",
+      "unchanged": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/iosTest/kotlin/com/parlor/app/storage/IosLegacySnapshotBackupTest.kt",
+      "previous_sha256": "5d5cf8beedcddd77b3d99d3842f02f472da221f0bbcdc35c6212e3f5d56d0351",
+      "current_sha256": "5d5cf8beedcddd77b3d99d3842f02f472da221f0bbcdc35c6212e3f5d56d0351",
+      "unchanged": true
+    }
+  ],
+  "git_diff_check_exit_code": 0,
+  "builds_executed_by_this_agent": [],
+  "production_contract_changes": "None to protocol/reducers/projections/snapshots/credentials schema or validation"
+}

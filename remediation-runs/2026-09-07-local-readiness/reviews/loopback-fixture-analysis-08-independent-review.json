@@ -1,0 +1,34 @@
+{
+  "reviewer": "/root",
+  "author": "/root/factory_review",
+  "recorded_at": "2026-09-07T05:55:05.558815+00:00",
+  "classification": "VERIFIED_TEST_FIXTURE_CORRECTION",
+  "source": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/LoopbackFixtureContractTest.kt",
+  "source_sha256": "cafadb8c4d0581f70d148f1f0b533d3b416f39d4e4f7ef5b2a3b293d8935c01e",
+  "reviewed_ranges": [
+    [
+      1,
+      252
+    ]
+  ],
+  "diff": "factory_review/loopback-close-suspend-callback.diff",
+  "reasoning": [
+    "All five fixture tests and the helper callers inspected. cleanupFailure invokes the same actual suspend cleanup exactly once in the existing NonCancellable scope.",
+    "Room reverse order, then unstopped kit order, exception aggregation and eventual rethrow are unchanged. No assertion, rule, suppression, cancellation protection, source dependency, or physical Ignore was weakened.",
+    "Pinned type-aware Detekt rejected the nested inferred call shape in cycles06/07 but accepts the explicit suspend callback in08. Exact analyzer type-resolution mechanism remains unisolated; no compiler-wide correctness claim is made."
+  ],
+  "verification": {
+    "cycle": "evidence/focused-fixture-analysis-08",
+    "tests": 6,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "detekt": "PASS plain and DesktopTest type-aware",
+    "exit_code": 0,
+    "stop_exit_code": 0,
+    "remaining_outputs": [],
+    "remaining_owned_workers": [],
+    "source_changed": false
+  },
+  "physical_tests": "Three remain ignored; this fake-SDK suite is not LAN/device evidence."
+}

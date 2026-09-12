@@ -1,0 +1,218 @@
+{
+  "application_emitter_spotcheck": {
+    "conclusion": "No equivalent producer defect found in these four unchanged files. Host-owned boolean fields are @YES/@NO; other host boxes are numeric PID/UID/runtime versions. Swift-owned JSON boolean fields are Bool literals or Bool-valued same-inode predicates. Both embed the shared native sample without normalizing its types; fixing the sampler is therefore required. UI test emits a string marker only; bridge imports only. No APP edit requested.",
+    "files": [
+      {
+        "bytes": 5619,
+        "path": "remediation-runs/2026-09-08-continuation/protection-application-01/ProtectionApplicationRead.m.in",
+        "sha256": "ccc29f42ed0916e1bcfcaa8340fdfa400c78fe33cf345e62b1bde67db5bd12d7"
+      },
+      {
+        "bytes": 9609,
+        "path": "remediation-runs/2026-09-08-continuation/protection-application-01/ProtectionApplicationLaunch.swift.in",
+        "sha256": "71784dc4dccce5ac15823fa9d66d2f73ea992f349f5f470af8d5679d16fb73cf"
+      },
+      {
+        "bytes": 1573,
+        "path": "remediation-runs/2026-09-08-continuation/protection-application-01/ProtectionApplicationUITest.swift.in",
+        "sha256": "76145b359827fb77c2e5c47c542debe5abadcb362b7cc82d51f09c60d3ef4665"
+      },
+      {
+        "bytes": 89,
+        "path": "remediation-runs/2026-09-08-continuation/protection-application-01/ProtectionApplicationBridge.h.in",
+        "sha256": "2e2f2c62c22cfa09be084d02a1cf1fabb99dffc2f7089531ead213a0a0f4f579"
+      }
+    ]
+  },
+  "coordinator_local_control_execution": {
+    "application": {
+      "errors": 0,
+      "executed": 13,
+      "exit_code": 0,
+      "failures": 0,
+      "passed": 13,
+      "skips": 0
+    },
+    "artifacts": [
+      {
+        "bytes": 2761,
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-protection-boolean-controls-01/diagnostic.log",
+        "sha256": "9dd04a624b76486e6d819cbabc0c228e70a0d85007ac298b9b17681064607989"
+      },
+      {
+        "bytes": 2143,
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-protection-boolean-controls-01/application.log",
+        "sha256": "44620c11cbedfa27be4a7aefac83ad5b30a46aaa0bca763e24f037a56528f313"
+      },
+      {
+        "bytes": 1924,
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-protection-boolean-controls-01/receipt.json",
+        "sha256": "d85e579a4526b5f11b67d120ef5c3f47e48c6e7008f7525604277c8a635fd5ef"
+      },
+      {
+        "bytes": 24612,
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-protection-boolean-controls-01/controls-before.json",
+        "sha256": "616b5734c5544c189115c27a24c89daa39b6713e0cab73c597cd67246a5a2370"
+      },
+      {
+        "bytes": 24612,
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-protection-boolean-controls-01/controls-after.json",
+        "sha256": "616b5734c5544c189115c27a24c89daa39b6713e0cab73c597cd67246a5a2370"
+      },
+      {
+        "bytes": 31,
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-protection-boolean-controls-01/stop.log",
+        "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+      },
+      {
+        "bytes": 339,
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-protection-boolean-controls-01/resources.txt",
+        "sha256": "090a84740f1dab6ef4b98282f380849c4171c1bad780fee46860fe90427702bd"
+      }
+    ],
+    "cleanup": {
+      "gradle_clean_not_run": "Pure control tests produced no compilation/project outputs.",
+      "receipt_errors": [],
+      "remaining_build_roots": [],
+      "remaining_monitored_workers": [],
+      "scratch_absent": true,
+      "stop_exit_code": 0,
+      "stop_log": "No Gradle daemons are running."
+    },
+    "controls": {
+      "application_unbound": {
+        "control_sha256": "236d00fa8888e6895e23e3f3f6a32d615ad1dfbf4446ae963943a56e1beae5e5",
+        "file_count": 111,
+        "recomputed_files_digest": "236d00fa8888e6895e23e3f3f6a32d615ad1dfbf4446ae963943a56e1beae5e5"
+      },
+      "diagnostic": {
+        "control_sha256": "e1a88a7c3cde00c372776734d103dcbedb9405f91a68f0b6026269833c51bbe8",
+        "file_count": 15,
+        "recomputed_files_digest": "e1a88a7c3cde00c372776734d103dcbedb9405f91a68f0b6026269833c51bbe8"
+      }
+    },
+    "controls_before_after_byte_identical": true,
+    "diagnostic": {
+      "errors": 0,
+      "executed": 27,
+      "exit_code": 0,
+      "failures": 0,
+      "passed": 27,
+      "skips": 0
+    },
+    "execution_owner": "/root",
+    "limitation": "Python control tests passed, but did not execute Objective-C NSJSONSerialization. They do not prove the corrected native producer or application runtime.",
+    "review_method": "Read actual verbose logs and receipt, compared before/after manifest bytes, recomputed canonical files-list aggregate digests, and matched reviewed corrected native pins. Did not rerun tests or import project modules."
+  },
+  "finding": {
+    "boundary_review": "Exact diff contains only these six expression replacements. No ABI, selector, syscall, descriptor lifetime, same-inode guard, requested protection option, error code, class, mask, numeric identity, ownership, cleanup, or strict-protection decision changed. Remaining @(result), @(directory), and @(present) boolean sites use BOOL-typed variables on the required arm64 targets and emitted actual booleans in PD02.",
+    "cause": "Objective-C @(comparison) and @(!expression) box C int values as JSON numbers 0/1, not booleans. This actual serialization defect was not identified in the earlier source-only native-boundary review; that earlier review was not runtime proof.",
+    "correction": "Each site now selects condition ? @YES : @NO. The conditional selects already boxed boolean objects, rather than boxing an arithmetic conditional expression. Each predicate is evaluated once and its meaning is unchanged.",
+    "disposition": "Corrected in independently reviewed source; fresh native execution still required.",
+    "id": "PD02-C-INT-BOXED-AS-JSON-NUMBER",
+    "sites": [
+      "ProbeMain.m:32 errorRecord.present",
+      "ProbeMain.m:167 replacement.named_inode_changed",
+      "ProtectionSampler.m:21 errorRecord.present",
+      "ProtectionSampler.m:130 dictionary_present",
+      "ProtectionSampler.m:130 key_present",
+      "ProtectionSampler.m:239 descriptor_closed"
+    ],
+    "validator_unchanged": "run_probe.py SHA256 exactly matches the PD02 bound input. error_record requires type(present) is bool; query dictionary/key fields require bool and descriptor_closed must be True. No coercion or validation relaxation was introduced."
+  },
+  "kind": "INDEPENDENT_NATIVE_JSON_BOOLEAN_CORRECTION_REVIEW",
+  "open_material_source_findings": [],
+  "pd02_evidence": {
+    "artifacts": [
+      {
+        "bytes": 33223,
+        "path": "remediation-runs/2026-09-08-continuation/actions/34526589536/main/native.stdout.jsonl",
+        "sha256": "9542d91c549cb34761328a0b8e26eebc3dca8a46e02c529b58de0b7726ea46d6"
+      },
+      {
+        "bytes": 66409,
+        "path": "remediation-runs/2026-09-08-continuation/actions/34526589536/main/state.json",
+        "sha256": "1e2ae6b02eeaf4ebdb1ce5c0d67c46a2d4bf70f481b35fa0d42e6d0b4e76f79d"
+      },
+      {
+        "bytes": 3877,
+        "path": "remediation-runs/2026-09-08-continuation/actions/34526589536/main/request.json",
+        "sha256": "57d70fea942cd6a500926dacfa0a1b53f895c42259bfcb83cc777f0e0f67f8a2"
+      }
+    ],
+    "control_sha256": "62935ee0f2cf1fde7c015fe80054b3f6839c343c690913227135f37392d40bbc",
+    "independently_observed": "State FAIL with collection RuntimeError native-error-shape. Compilation, ad-hoc sign/verify, and native-observation command all exited 0. stdout has 15 JSON rows; native-observation stderr was empty. Native final self-reported collection PASS is NOT validator admission.",
+    "numeric_boolean_fields": {
+      "descriptor_closed": 7,
+      "dictionary_present": 14,
+      "key_present": 14,
+      "named_inode_changed": 1,
+      "native_error.present": 20
+    },
+    "raw_observations_not_admitted_qualification": {
+      "attribute_set_bytes": 20,
+      "attrlist_class": 3,
+      "attrlist_length": 28,
+      "attrlist_protection_returned": true,
+      "attrlist_return_value": 0,
+      "fcntl_errno": 0,
+      "fcntl_return_and_class": 3,
+      "filesystem_content_protection_capability": "unsupported",
+      "foundation_file_manager_protection_key": "missing in all 7 samples",
+      "native_kernel_set": "Skipped: public SDK command or class unavailable; no numeric class fallback.",
+      "regular_file_url_protection": "until-first-authentication in all 6 regular-file samples",
+      "sample_count": 7,
+      "scope_limit": "Standalone public synthetic files only; no production snapshots observed, no A37 strict gate change, no claim about internal Foundation implementation or hardware enforcement.",
+      "strict_synthetic_complete": {
+        "fail": 4,
+        "pass": 0,
+        "required_sample_ids": [
+          "directory-baseline",
+          "complete-baseline",
+          "complete-after-replace",
+          "none-after-url-set"
+        ],
+        "status": "FAIL"
+      }
+    },
+    "run_attempt": 1,
+    "run_id": 34526589536,
+    "source_sha": "5bb98fd58232d6e7f3b4392b1436b20be5fe5db1"
+  },
+  "remaining_requirements": [
+    "Commit reviewed source/control changes and mechanical inventory, then bind fresh platform execution to that frozen source.",
+    "Execute corrected native diagnostic and retain strict typed validator result; do not normalize or relabel PD02 failed evidence.",
+    "Keep strict synthetic/prod protection failures and application/hardware qualification separate."
+  ],
+  "reviewed_source": [
+    {
+      "bytes": 12286,
+      "path": "remediation-runs/2026-09-08-continuation/protection-diagnostic-01/ProbeMain.m",
+      "sha256": "e5f6f6ea35cf1eb3511d80884a50b4dc6bda1df413e4a506a14eb17e10b90699"
+    },
+    {
+      "bytes": 13411,
+      "path": "remediation-runs/2026-09-08-continuation/protection-diagnostic-01/ProtectionSampler.m",
+      "sha256": "3f4f49af81d396a07beabeed45be649314495fd286327baa931aa5eb2dcca137"
+    },
+    {
+      "bytes": 43385,
+      "path": "remediation-runs/2026-09-08-continuation/protection-diagnostic-01/run_probe.py",
+      "sha256": "725f66f42047fd17d9abe43ea820135da07c83974d2f4dc2bfce56a87247b20a"
+    }
+  ],
+  "reviewer": "/root/portability_review",
+  "reviewer_execution": {
+    "builds": 0,
+    "cleanup_owed": false,
+    "native_processes": 0,
+    "project_imports": 0,
+    "resources_allocated": false,
+    "tests": 0,
+    "workflow_dispatches": 0
+  },
+  "schema_version": 1,
+  "scope": "Six Objective-C boolean-producing expression sites in two diagnostic producers, the retained PD02 type rejection, bounded APP emitter spotcheck, and reconciliation of the coordinator's affected 40 Python control tests. Not application, hardware, or native-runtime qualification.",
+  "source_author": "/root/native_ci",
+  "status": "APPROVED_NARROW_PRODUCER_CORRECTION"
+}

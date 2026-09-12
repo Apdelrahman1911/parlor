@@ -1,0 +1,288 @@
+{
+  "schema_version": 1,
+  "kind": "INDEPENDENT_MINIMAL_FINAL_QUALIFICATION_SCOPE_GUIDANCE",
+  "reviewer": "/root/evidence_audit",
+  "recorded_at": "2026-09-10T03:11:46.142643+00:00",
+  "status": "ONE_FINAL_FULL_REQUIRED_AFTER_LAST_REVIEWED_FREEZE_NOT_EXECUTION_APPROVAL",
+  "scope": "Read-only exact-candidate contract and4cc..730a delta review; retained fullD and latest local cleanup reinspection. Speed/avoid-redundant-validation request is applied by deferring repeated full matrices, not waiving the same-source gate.",
+  "source": {
+    "branch": "fix/local-readiness-2026-09-07",
+    "historical_fullD_commit": "4ccfafcfc361231cfb730178b3798ebcb6304770",
+    "historical_fullD_tree": "8a89fab3042b8614fc4285148a8cd645f7ac2786",
+    "examined_commit": "730a91e4dade4dbc2168b5367e20c3d0f42237e1",
+    "examined_tree": "1f71dc64bc7680f461efc3e841dc051579a0d993",
+    "tracked_status_at_inspection": "",
+    "remote": "Not queried by this reviewer; root exclusively owns push/remote confirmation.",
+    "future_selector": "No anticipated selector code or future SHA is approved by this report."
+  },
+  "contract_anchors": [
+    {
+      "path": "docs/RELEASE_GATES.md",
+      "bytes": 9623,
+      "sha256": "19ee19acf35f833e3bd61b03d3113c6a3ea05b67afcbe1b956e9d4aa070a3f32",
+      "lines": "14-24,35-37,59-90",
+      "rule": "Every configured automated suite and unsigned release gate must pass at the same recorded clean Git SHA. Later code/repository-contract changes require a new run for later-source attribution. Historical receipts remain historical; external gates remain separate."
+    },
+    {
+      "path": "docs/AGENT_CONTINUATION_2026-09-08.md",
+      "bytes": 33526,
+      "sha256": "e9979e663b014f5e3289ea16544d916c60cf283a5c1e7e581c69ecf2b5017458",
+      "lines": "266-272,327-346,356-370",
+      "rule": "Reviewed source commit then inventory-only freeze; fresh bindings. D requires all five jobs at one SHA/attempt, five main/five cleanup artifacts. Avoid duplicate local heavyweight builds when same-SHA CI supplies the gate."
+    },
+    {
+      "path": "scripts/ci/NATIVE_CONTINUATION.md",
+      "bytes": 23094,
+      "sha256": "d350ee860a7b6d4d67fa6fc73ab139153c8fd4f9cd78a45c75175ed5c51bf169",
+      "lines": "3-19,227-234",
+      "rule": "Windows-only and native modes are not final five-job qualification; final D needs a separate full dispatch at the frozen source. Strict L08 partial results stay failures."
+    },
+    {
+      "path": "docs/DEPENDENCY_INVENTORY.md",
+      "bytes": 3711,
+      "sha256": "ba13764bc6e544c9cf5803c5b9fbbe8262469fd9fe4474eaa6477be7e6876fb8",
+      "lines": "66-68",
+      "rule": "Fresh export after source changes; old candidate bindings/results cannot be relabeled."
+    }
+  ],
+  "examined_delta": {
+    "commits": [
+      "a4f50023a25ac3ae6c48dbed00ac3a262ab4d439 fix(ci): isolate Windows checkout and bounded Settings diagnostics",
+      "c797bd2172489f7ac4c62a816d3ab6bf4daf89d6 chore(review): freeze targeted Windows and Settings controls inventory",
+      "23a064c35e7e54131982537629f45cdff4866df7 test(ci): initialize explicit paired timeout fixtures",
+      "730a91e4dade4dbc2168b5367e20c3d0f42237e1 chore(review): freeze corrected timeout fixture inventory"
+    ],
+    "whole_tree_records": 3710,
+    "status_counts": {
+      "modified": 9,
+      "added": 3701
+    },
+    "name_status_nul_sha256": "b5cf0a28ec1a95fe83fe15da406e471f66232935f4a8b310b758d277fd937f5e",
+    "modified_paths": [
+      ".github/workflows/production-verification.yml",
+      "docs/review/INDEPENDENT_REVIEW_INVENTORY.csv",
+      "remediation-runs/2026-09-08-continuation/CONTINUE_LATEST.md",
+      "scripts/ci/NATIVE_CONTINUATION.md",
+      "scripts/ci/native_continuation.py",
+      "scripts/release/tests/test_native_continuation.py",
+      "scripts/release/tests/test_native_process_probe.py",
+      "scripts/release/tests/test_workflow_contract.py",
+      "scripts/release/workflow_contract.py"
+    ],
+    "canonical_additions": [
+      "scripts/verification/ios-settings-sheet/SettingsSheet.xcscheme.in",
+      "scripts/verification/ios-settings-sheet/SettingsSheetUITest.swift.in",
+      "scripts/verification/ios-settings-sheet/settings_sheet_probe.py",
+      "scripts/verification/ios-settings-sheet/test_settings_sheet_probe.py"
+    ],
+    "shipping_build_dependency_input_changes": [],
+    "characterization": "Windows job-local longpaths/frozen-checkout guard and windows-only routing; separate bounded Settings diagnostic, adapter/control-domain and workflow-contract changes; explicit paired timeout test fixtures; documentation, inventory and additive evidence. No app/domain/protocol/storage/dependency/toolchain/notice input changed in this examined diff.",
+    "materiality": "Changed workflow and executable release/adapter contracts invalidate automatic final-source attribution even though shipping code is unchanged. The newly added diagnostic and native scopes are not exercised as app evidence by full mode.",
+    "boundary": "Mechanical impact inspection, not a substitute for existing independent correction reviews or approval of unseen selector changes."
+  },
+  "retained_actual_fullD": {
+    "run_id": 34420745957,
+    "attempt": 1,
+    "commit": "4ccfafcfc361231cfb730178b3798ebcb6304770",
+    "conclusion": "FAILURE",
+    "metadata": [
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34420745957/run.json",
+        "bytes": 12676,
+        "sha256": "7c1a03e1222267557438992a10ea45731372e3e78ad40385a988fb2c45973dc0"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34420745957/jobs.json",
+        "bytes": 20455,
+        "sha256": "cfb1f5a759241eb20075bbd8b48baa720c3d07adb1402dabac4a701c9eac70da"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34420745957/run-attempt-1-logs.zip",
+        "bytes": 411240,
+        "sha256": "bb2789174a5d992850d6772e6cfcf156be3d2fa24c0332533a87ee3078aed050"
+      }
+    ],
+    "jobs": [
+      {
+        "id": 102695388232,
+        "name": "Desktop strict verification (Linux arm64)",
+        "conclusion": "success"
+      },
+      {
+        "id": 102695388378,
+        "name": "iOS tests, release frameworks, and Swift wrapper",
+        "conclusion": "success"
+      },
+      {
+        "id": 102695388422,
+        "name": "Desktop and Kotlin Native strict verification (macOS x64)",
+        "conclusion": "success"
+      },
+      {
+        "id": 102695388432,
+        "name": "Desktop, Kotlin Native, and Android resources strict verification (Windows x64)",
+        "conclusion": "failure"
+      },
+      {
+        "id": 102695388477,
+        "name": "Common, desktop, and Android release",
+        "conclusion": "success"
+      }
+    ],
+    "windows": "Checkout failed before fresh ownership/build/tests; zero current tests. Cleanup failed and historical Windows XML was excluded. Any new Windows run remains separate by source and scope.",
+    "accepted_historical_scope": "Three desktop hosts each1337 PASS+3 physical SKIP; Android Debug439 and Release439 unit PASS; Apple465 simulator runtime descriptors and5 ordinary XCTest PASS;3 managed Android smoke PASS. Exact original16+timer map:320 PASS+3 SKIP. These are retained actual4cc observations, not new executions or combined success.",
+    "cleanup_limits": "Apple claimed cleanup accepted. Android accepts recorded Gradle/147 path cleanup but lacks emulator-worker-exit attestation. Windows ownership/cleanup FAIL remains preserved.",
+    "reviews": [
+      {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/full-d-original16-timer-desktop-regressions-independent-01.json",
+        "bytes": 81829,
+        "sha256": "09a813999bf311f3ff24666038689cffec18e885125db696a0782cc410813efc"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/native-fulld34420745957-apple-independent-01.json",
+        "bytes": 14097,
+        "sha256": "a41ea4c4c4ba67da3344dcf63d0226435306075841f183f22e3e10f2b4e744b1"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/full-d-android-actual-independent-01.json",
+        "bytes": 27831,
+        "sha256": "c439bd57a3ca67c36ff4130187e4b5259352d6b93aa7f828581fa31b9b67901d"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/candidate-c06-windows-applicability-c07-prep-01.json",
+        "bytes": 11491,
+        "sha256": "5f3c86d109195efa58db0bc1b2745814440a7a9727af0ae1c03094d7c835e7ff"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/windows-settings-local-actual-independent-01.json",
+        "bytes": 12698,
+        "sha256": "5f3cb4073e3a10d040a25d1a67baa8979ad253e9d7db8f37c827f93fd42b0f5a"
+      }
+    ]
+  },
+  "adjudication": {
+    "historical_applicability": "Unchanged shipping/dependency/test inputs support retaining already reviewed historical semantic/regression conclusions with exact original identities. Source/control/platform/scope differences still require bounded independent applicability review; changed release/adapter tests do not inherit old execution.",
+    "missing_exact_source_gate": "Four successful4cc jobs plus a separately bound Windows-only730a job cannot satisfy D. Even an entirely successful Windows follow-up neither changes34420745957/1 from FAILURE nor creates an all-five same-SHA/attempt result.",
+    "once_only_final_full_materially_required": true,
+    "reason": "No exact final-source combined receipt exists. RELEASE_GATES and handoff explicitly require it; avoiding redundant validation means one final full after changes settle, not replacing it with multi-SHA stitching. A later copy-only selector correction does not waive this requirement.",
+    "if_full_not_run": "Report D incomplete and NOT_READY; a time/cost decision may leave a disclosed gap but cannot be called gate completion.",
+    "native_boundary": "Full mode skips focused A/B diagnostics. Its ordinary XCTest/Gradle successes do not prove L08 recovery/retained-host/strict protection or a fresh normal Debug libproc observation."
+  },
+  "minimal_honest_route": [
+    "Finish the already scoped Windows/Settings investigation; inspect actual diagnostic labels before any copy-only selector correction. No speculative full matrix now at730a followed by another after the selector.",
+    "Different-agent review of the exact minimal selector/control delta, then only affected focused Linux guards. Reuse already executed unaffected73/9/8 controls under their stated source scopes; do not replay unchanged entire suites merely for chronology. A new affected input or regression is a concrete reason to rerun its scope.",
+    "Once actionable source/control changes settle, commit reviewed source, regenerate/commit/check mechanical inventory, push normally and confirm exact remote. Derive/review fresh source/control bindings. Future code/contract corrections reopen affected evidence; do not preapprove a future SHA.",
+    "Complete required focused native evidence under its own admitted bindings and retain every failure/cleanup limit. Reconcile any accepted unchanged historical B/runtime applicability separately; never label it a new-SHA observation. Execute one fresh C07 export/render/reviewed binding/candidate chain at the final source, reusing byte-identical semantic/license research rather than old source-bound outputs.",
+    "Root then dispatches production-verification.yml once with verification_scope=full and default paired selection on that frozen branch. Require no active same-ref run and fresh exact request/source admission; do not dispatch Store workflows. Let CI supply the configured Linux/Android and Apple gates instead of duplicating full local builds.",
+    "Collect/review the five actual jobs and five cleanup artifacts at that same SHA/attempt, distinguishing cached/non-test work and explicit skips. Reconcile A/B/C/D separately; final full does not erase strict/physical/Store/owner/legal gaps. If it fails, inspect that failure before deciding any narrower correction or rerun."
+  ],
+  "latest_local_cleanup": {
+    "cycles": [
+      {
+        "cycle": "continuation-release-validator-05",
+        "source_commit": "c797bd2172489f7ac4c62a816d3ab6bf4daf89d6",
+        "status": "FAIL",
+        "exit_code": 1,
+        "stop_exit_code": 0,
+        "receipt": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-release-validator-05/receipt.json",
+          "bytes": 307166,
+          "sha256": "48e257e902c6983be7392f9eabc30974ce8b23ce8e695b9f08d2caf67a485fb9"
+        },
+        "raw_log": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-release-validator-05/gradle.log",
+          "bytes": 94432,
+          "sha256": "d46b5d7aa95e3cf66b226d02dd57c2f0494217566277ba413e1c1c9c0f1e9bcf"
+        },
+        "stop_log": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-release-validator-05/stop.log",
+          "bytes": 31,
+          "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+        },
+        "remaining_outputs": [],
+        "cleanup_errors": [],
+        "source_runner_unchanged": true
+      },
+      {
+        "cycle": "continuation-release-remainder-01",
+        "source_commit": "730a91e4dade4dbc2168b5367e20c3d0f42237e1",
+        "status": "PASS",
+        "exit_code": 0,
+        "stop_exit_code": 0,
+        "receipt": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-release-remainder-01/receipt.json",
+          "bytes": 307452,
+          "sha256": "4047aa966c02dc8242c69c013850fb358fe878defb06b4eaf3e2c6dcec654cd3"
+        },
+        "raw_log": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-release-remainder-01/gradle.log",
+          "bytes": 17382,
+          "sha256": "4e13f010dc0aeb5bd9dafbae48b0285189f882bceedc2e05c98fd51b77129fcc"
+        },
+        "stop_log": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-release-remainder-01/stop.log",
+          "bytes": 31,
+          "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+        },
+        "remaining_outputs": [],
+        "cleanup_errors": [],
+        "source_runner_unchanged": true
+      },
+      {
+        "cycle": "continuation-windows-settings-transport-01",
+        "source_commit": "730a91e4dade4dbc2168b5367e20c3d0f42237e1",
+        "status": "PASS",
+        "exit_code": 0,
+        "stop_exit_code": 0,
+        "receipt": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-windows-settings-transport-01/receipt.json",
+          "bytes": 307985,
+          "sha256": "8fa55fdd09338ec7fa0e3979504baf4a8fd3ccd1900727971826045c773c09ec"
+        },
+        "raw_log": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-windows-settings-transport-01/gradle.log",
+          "bytes": 4691,
+          "sha256": "aadec4c5e228e0aceb07d90e890734378658c8ba6a5ae72aeaf685c86322e895"
+        },
+        "stop_log": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-windows-settings-transport-01/stop.log",
+          "bytes": 31,
+          "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+        },
+        "remaining_outputs": [],
+        "cleanup_errors": [],
+        "source_runner_unchanged": true
+      }
+    ],
+    "execution_accounting": "Validator05 remains FAIL:479 methods, two missing-selection fixture errors atc797. At730a the affected adapter rerun73 PASS plus previously unreached canonical stages and targeted transport9 PASS ran; neither is a fresh full479 result. Transport desktopTest actually executed;7 cached compile/work tasks are not test credit. The separately pinned local-actual review owns full reconciliation.",
+    "observed_at": "2026-09-10T03:11:46.142643+00:00",
+    "all_lane_output_targets_absent": [
+      "build",
+      "build-logic/build",
+      "build-logic/convention/build",
+      "composeApp/build",
+      "game-modes/mafia/build",
+      "game-modes/whodunit/build",
+      "shared/content/build",
+      "shared/core/build",
+      "shared/design-system/build",
+      "shared/engine-testing/build",
+      "shared/engine/build",
+      "shared/networking-testing/build",
+      "shared/networking/build",
+      "shared/session/build",
+      "shared/storage/build",
+      "shared/transport-p2p/build"
+    ],
+    "all_examined_cycle_scratch_absent": [
+      "remediation-runs/2026-09-07-local-readiness/evidence/continuation-release-validator-05/scratch",
+      "remediation-runs/2026-09-07-local-readiness/evidence/continuation-release-remainder-01/scratch",
+      "remediation-runs/2026-09-07-local-readiness/evidence/continuation-windows-settings-transport-01/scratch"
+    ],
+    "receipt_workers": "Both worker and artifact-worker ledgers contain no owned survivors for all three cycles. This review did not perform a new global process scan.",
+    "retention": "Raw logs/receipts and archived build reports retained. C/build-lane.lock and unrelated/global caches, source and work were not touched.",
+    "result": "NO_TASK_OWNED_LIVE_BUILD_OUTPUT_OR_EXAMINED_SCRATCH_REMAINS; recorded stops0 and cleanup error/output lists empty."
+  },
+  "readiness": "NOT_READY. This guidance closes no runtime gate. Unresolved strict protection, physical-device/mixed-LAN/signed-artifact/accessibility checks, Store identity/signing/publication/privacy operations and separate owner/legal approval remain outside this bounded review.",
+  "activity": "Only read-only Git/stdlib JSON/hash/diff/log/path inspection and this exclusive additive report write. No project imports, builds/tests, Actions/network, process signals, Git writes, canonical edits or cleanup operations; no generated workers/resources require cleanup."
+}

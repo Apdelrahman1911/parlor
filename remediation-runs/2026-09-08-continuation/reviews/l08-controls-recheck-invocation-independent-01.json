@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "kind": "INDEPENDENT_L08_FOCUSED_RECHECK_INVOCATION_REVIEW",
+  "recorded_at": "2026-09-08T09:57:46.421050+00:00",
+  "reviewer": "/root/fixture_review",
+  "author": "/root",
+  "status": "APPROVED_EXACT_INVOCATION; EXECUTION_PENDING",
+  "approved_command": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/l08-controls-recheck-command-02.json",
+    "sha256": "859b7e60c30cd5ba0726146ca2e3ce0d37ea6bd0ea04983e3aa888dec93a8a41"
+  },
+  "superseded_command": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/l08-controls-recheck-command-01.json",
+    "sha256": "2ad7b411e9de09f97cf7967a9bc3314a8389cf1b6d4ab2131f31d0d7044cd9af",
+    "preserved": true
+  },
+  "findings": [
+    {
+      "id": "RI01",
+      "status": "CORRECTED",
+      "before": "Postflight manifest/cmp earlyexit could omit computed suite exit codes.",
+      "after": "Exclusive guarded l08-command-exits.json is written before postflight. Raw logs also remain; failing postflight still exits2."
+    },
+    {
+      "id": "RI02",
+      "status": "CORRECTED",
+      "before": "Final results write failure could be masked by later succeeding status checks because shell does not use set-e.",
+      "after": "Exclusive final results write has explicit ||exit2. It cannot silently return0 if evidence writing failed."
+    }
+  ],
+  "source_conclusions": [
+    "Exact /bin/bash -c invocation fixed to only single-tap and functional-copy suites. No shell-controlled user test selection, build/native command, publication or generic runner/flag added.",
+    "Reviewed packet manifest loaded through /usr/bin/python3 -B runpy with non-main name; module import defines helpers only, does not execute packet main or child commands.",
+    "Both control manifests are exclusive files and cmp must succeed. Result explicitly labels focused controls as not application/runtime proof.",
+    "Per-suite nonzero exits are retained and final acceptance requires both0. Baseline/source-drift/evidence-write failures cannot become success.",
+    "Command runs only as the exact ordinary coordinated lane invocation. That outer lane retains complete command/source identities, JDK probes and cleanup ownership; this shell invocation is not an independent cleanup attestation.",
+    "Independent comparison of01 and02 verifies the only executable differences are the two requested guarded evidence writes. Original command01 is unchanged."
+  ],
+  "control_bindings_at_review": [
+    {
+      "path": "remediation-runs/2026-09-08-continuation/controls/run_continuation_controls.py",
+      "sha256": "1896d5a309e8802b691bfc9a37db2c0ac92dcfb6173d4cee564e5dcfcc234627"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/controls/test_single_tap_fixture_review.py",
+      "sha256": "6443de2ea249c74a945aee5513e74eedadc077a68c43089201b89e9c90695298",
+      "independently_reviewed_by": "/root/l08_fixture",
+      "declared_test_methods": 14
+    }
+  ],
+  "other_scope": "Functional-copy README-preservation correction and its12tests separately reviewed by native portability agents. This command review does not replace their source review.",
+  "execution_and_cleanup": "No tests,build,native process or workflow executed by reviewer. Only exact invocation/delta inspected and this review written. No reviewer-generated output or worker requires cleanup. Actual rerun,outerreceipt and raw manifests/results must be reconciled separately."
+}

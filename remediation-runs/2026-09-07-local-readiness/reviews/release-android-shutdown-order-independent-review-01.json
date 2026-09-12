@@ -1,0 +1,188 @@
+{
+  "at": "2026-09-07T12:44:23.247429+00:00",
+  "reviewer": "/root/release_fix_review",
+  "fix_author": "/root",
+  "classification": "APPROVED \u2014 focused source/test-evidence review; real post-fix emulator cleanup verification still required",
+  "baseline_head": "2250007173bbf9ca7c441f1c46802d84c1b478ba",
+  "baseline_tree": "b506da5b778a3220f81e07674dcd85d381c49cb6",
+  "approved_control_binding": {
+    "files": [
+      {
+        "path": "owned_arm64_smoke_sdk.py",
+        "sha256": "4d782120c55efaf0a096241c7e34304ab616da0c1b613f70fd708e625b244eb6"
+      },
+      {
+        "path": "darwin_owned_processes.py",
+        "sha256": "2f2ad2a5d68cea999709a4c3c3e384cd9e6767258ad34aed4181ee2118962378"
+      },
+      {
+        "path": "avd-sdk-root-01/owned_sdk_image.py",
+        "sha256": "82490e1769445cbb1f4e95ab41007dcc47473a243f78224c1042e2743f8b47a0"
+      }
+    ],
+    "sha256": "569a088d62d3c4b5f63b559e737f792afdabbfccb8764deb39df64884b07dacb"
+  },
+  "original_runner_sha256": "3a425d8dafac853ac3f8c189a68e4951eb1874e79c57f458825d1145d0289991",
+  "full_repair_diff": "--- red/owned_arm64_smoke_sdk.py\n+++ green/owned_arm64_smoke_sdk.py\n@@ -511,15 +511,18 @@\n         if commands is not None:\n             # No historical numeric-PGID grant, global adb kill, pkill, or\n             # existing-AVD operation. Native audit tokens bind every signal.\n+            try:\n+                report[\"cleanup\"].extend(commands.processes.shutdown())\n+            except BaseException as error:\n+                report[\"cleanup\"].append({\"workers\": \"error\", \"error\": str(error)})\n+            # Retire the emulator first: its shutdown may issue a final ADB\n+            # command that starts a detached server on our private socket.\n+            # Kill that endpoint only after the owned workers have retired.\n             if owned is not None and adb_prefix is not None:\n                 try:\n                     report[\"owned_adb_shutdown_acknowledged\"] = stop_owned_adb_socket(owned)\n                 except BaseException as error:\n                     report[\"cleanup\"].append({\"adb_shutdown\": \"error\", \"error\": str(error)})\n-            try:\n-                report[\"cleanup\"].extend(commands.processes.shutdown())\n-            except BaseException as error:\n-                report[\"cleanup\"].append({\"workers\": \"error\", \"error\": str(error)})\n             if owned is not None and adb_prefix is not None:\n                 try:\n                     deadline = time.monotonic() + 5\n",
+  "original_identity_proof": "Inverse replacement with preserved shared-runner finalizer reproduces the complete RED source SHA256 exactly; no other runner code changed.",
+  "complete_reads": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/owned_arm64_smoke_sdk.py",
+      "sha256": "4d782120c55efaf0a096241c7e34304ab616da0c1b613f70fd708e625b244eb6",
+      "ranges": [
+        [
+          1,
+          579
+        ]
+      ],
+      "relevance": "Active campaign runner; exact full finalizer, callers, endpoint and directory guards"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/darwin_owned_processes.py",
+      "sha256": "2f2ad2a5d68cea999709a4c3c3e384cd9e6767258ad34aed4181ee2118962378",
+      "ranges": [
+        [
+          1,
+          368
+        ]
+      ],
+      "relevance": "Unchanged native process ownership and reverse-order shutdown"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/avd-sdk-root-01/test_runtime_shutdown.py",
+      "sha256": "6895e16f9b4f5851a41a2444b138e9915316da6ec9eb1471052092660f7482c9",
+      "ranges": [
+        [
+          1,
+          103
+        ]
+      ],
+      "relevance": "Seven new tests execute the real finalizer AST; endpoints/processes remain synthetic"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/avd-sdk-root-01/run_integration_controls.py",
+      "sha256": "8e60afde948e7e1479621fbd15de4539539df9d0b42f4192ff7753850078185f",
+      "ranges": [
+        [
+          1,
+          67
+        ]
+      ],
+      "relevance": "Discovery completeness, import-source path and pre/post hash checks; no skips accepted"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/avd-sdk-root-01/test_root_integration.py",
+      "sha256": "e5a10152cbced1ab7ee4b2fd213702f97ba7820ae4248eb771e55f997a905b34",
+      "ranges": [
+        [
+          1,
+          166
+        ]
+      ],
+      "relevance": "Unchanged three instrumentation descriptors, finalizer reachability, SDK/source preservation contracts"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/owned_arm64_smoke.py",
+      "sha256": "38ea4c0000a2c426f8475b4616e77ee0d8bb25bb424dc7516348c2095cd08b48",
+      "ranges": [
+        [
+          405,
+          473
+        ]
+      ],
+      "relevance": "Preserved historical finalizer used only to reconstruct exact pre-fix source; NOT approved for reuse"
+    }
+  ],
+  "root_cause_and_evidence": [
+    "Original finalizer killed the private ADB server before retiring the emulator; runtime05 emulator.log explicitly records daemon-not-running, private localfilesystem server autostart and success during emulator shutdown.",
+    "Original runtime05 run.json records three passing instrumentation descriptors but FAIL cleanup: Server remains live at owned adb socket. That cycle is not a complete successful runtime gate.",
+    "Corrected finalizer retires every tracked worker first; only then sends the exact private socket host:kill request, then performs the existing bounded endpoint liveness check. No subsequent caller starts an ADB client.",
+    "Runtime05 app/source provenance remains f5ea8045bd903c255041b198f54aca67e893612f, independent from the present2250007 review of campaign controls."
+  ],
+  "guards_and_counterevidence": [
+    "No new kill/killpg/pkill, global ADB server request, user serial/AVD selection or source/cache deletion. Signals remain kernel audit-token-bound; waiting/reaping and PID/PGID grant revocation are unchanged.",
+    "Private socket operation retains root inode/owner/token attestation, AF_UNIX socket/type/uid checks, fixed host:kill protocol and 3s socket-operation timeouts. It never invokes an autostarting ADB client.",
+    "Worker retirement errors and survivor receipts append to cleanup before socket shutdown. A successful later endpoint shutdown cannot erase them; report FAIL and owned-root retention remain at579-line runner553-560.",
+    "Partial initialization is guarded by commands/owned/adb_prefix checks. Cancellation does not bypass the finalizer.",
+    "Liveness checks retain the5s monotonic retry deadline and1s connect timeout. This is a bounded operation, not a strict5s end-to-end wall-clock guarantee because individual socket calls/final probe have their own timeouts.",
+    "Socket absence returns acknowledged=false without manufacturing a server or successful shutdown; bad acknowledgment and a live endpoint remain cleanup errors.",
+    "AST tests are not a copied alternative cleanup implementation: the exact commands-guard block is extracted from current runner source and executed. They do not prove native/network behavior; runtime06 must cover that boundary.",
+    "Legacy TCP guard remains held until worker/endpoint cleanup completes; no change to fresh-profile attestation or destructive-settings protection.",
+    "Unchanged SDK adapter hash is bound into runtime invocation; its entire cloning implementation was not re-audited for this narrow shutdown-order fix."
+  ],
+  "verification_receipts": [
+    {
+      "cycle": "android-shutdown-order-red-01",
+      "log_sha256": "0d4bd3bb8140553ea102907b945c047b648b3748587f6e0f309fa0c1521d3931",
+      "receipt_sha256": "18814c2d11c5f3ea2c836917a91ad810862f3ac20c2279637c84c1cae6b3c991",
+      "status": "FAIL",
+      "exit_code": 1,
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/avd-sdk-root-01/run_integration_controls.py"
+      ],
+      "declared_descriptor_count": 46,
+      "actual_descriptor_count": 46,
+      "declaration_equals_discovery": true,
+      "result": {
+        "kind": "SYNTHETIC_CONTROLS_NOT_ANDROID_RUNTIME",
+        "source_unchanged": true,
+        "tests": 46,
+        "failures": 5,
+        "errors": 0,
+        "skips": 0
+      },
+      "stop_exit_code": 0,
+      "workers": {
+        "terminated_owned_workers": [],
+        "remaining_owned_workers": []
+      },
+      "remaining_outputs": [],
+      "retained_outputs": [],
+      "cleanup_errors": [],
+      "source_changed_during_cycle": false,
+      "runner_changed_during_cycle": false
+    },
+    {
+      "cycle": "android-shutdown-order-green-01",
+      "log_sha256": "2c579548ac2fc03abfe12236bab7046ce43d1bb3c7ede79a533da8e734872363",
+      "receipt_sha256": "06ca526d8a8edbcf268cdcd488bf254de2f80ec99bd6273240e2c56dd88ef2a8",
+      "status": "PASS",
+      "exit_code": 0,
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/avd-sdk-root-01/run_integration_controls.py"
+      ],
+      "declared_descriptor_count": 46,
+      "actual_descriptor_count": 46,
+      "declaration_equals_discovery": true,
+      "result": {
+        "kind": "SYNTHETIC_CONTROLS_NOT_ANDROID_RUNTIME",
+        "source_unchanged": true,
+        "tests": 46,
+        "failures": 0,
+        "errors": 0,
+        "skips": 0
+      },
+      "stop_exit_code": 0,
+      "workers": {
+        "terminated_owned_workers": [],
+        "remaining_owned_workers": []
+      },
+      "remaining_outputs": [],
+      "retained_outputs": [],
+      "cleanup_errors": [],
+      "source_changed_during_cycle": false,
+      "runner_changed_during_cycle": false
+    }
+  ],
+  "remaining_requirements": [
+    "Run actual runtime06 with this exact approved control-binding hash in the root build lane and preserve all three real instrumentation descriptors plus worker/endpoint/temporary-root cleanup results.",
+    "Do not relabel historical runtime05 FAIL as success; keep source/APK and tool-control provenance distinct.",
+    "Physical Android/iOS LAN, Linux/KVM GMD, Store signing and publication remain outside this emulator-control proof.",
+    "No absolute proof of absence of all arbitrary detached-worker races is claimed; actual post-fix ownership/endpoint cleanup evidence remains required."
+  ],
+  "child_activity": "Read source, bounded existing synthetic logs and receipts, and write this additive review only. No tests/builds/runtimes, source edits, imports of runner/native code, process signaling or output deletion."
+}

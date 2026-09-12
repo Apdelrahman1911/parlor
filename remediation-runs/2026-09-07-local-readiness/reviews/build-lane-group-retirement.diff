@@ -1,0 +1,15 @@
+--- before/run_gradle_cycle.py
++++ after/run_gradle_cycle.py
+@@ -67,6 +67,12 @@
+                 except subprocess.TimeoutExpired:
+                     os.killpg(p.pid, signal.SIGKILL); p.wait()
+             raise
++        finally:
++            # Only a live/unreaped invocation may attest a process group. Once
++            # Popen.wait reaps its leader, the numeric PGID can be reused by an
++            # unrelated task. Already observed descendants retain PID/start
++            # ownership and are still finalized below without this group grant.
++            OWNED_GROUPS.discard(p.pid)
+ 
+ def stop_owned_workers():
+     def survivors():

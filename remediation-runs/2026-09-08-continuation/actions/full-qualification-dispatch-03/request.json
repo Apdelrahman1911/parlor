@@ -1,0 +1,134 @@
+{
+  "schema_version": 1,
+  "kind": "ONE_FROZEN_FULL_D_QUALIFICATION_REQUEST",
+  "coordinator": "/root",
+  "created_at": "2026-09-10T10:01:21.704721+00:00",
+  "status": "PREPARED_NOT_DISPATCHED_PENDING_EXACT_REQUEST_INDEPENDENT_ADMISSION",
+  "repository": "Apdelrahman1911/parlor",
+  "branch": "fix/local-readiness-2026-09-07",
+  "frozen_source_sha": "75c104734373703570a307de9c7a53d291bc2718",
+  "tree": "4d5b660c5f508a3eb8d01cd9203f2503570dbb18",
+  "inputs": {
+    "verification_scope": "full"
+  },
+  "command": [
+    "gh",
+    "workflow",
+    "run",
+    "production-verification.yml",
+    "--repo",
+    "Apdelrahman1911/parlor",
+    "--ref",
+    "fix/local-readiness-2026-09-07",
+    "-f",
+    "verification_scope=full"
+  ],
+  "maximum_dispatches": 1,
+  "required_before_execution": [
+    "OS39 scoped success and actual custody/cleanup independently accepted; A37 and strict protection failures remain failures, not waived by OS39 or D",
+    "Fresh C08 four-receipt candidate chain independently accepted at frozen75c10473",
+    "Different-agent source/scope and exact-request review including unchanged reviewed v02 collector",
+    "Immediate actual branch/local/remote equality, active intended workflow, no active same-ref run; no overlapping focused/full run"
+  ],
+  "source_freeze": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/os39-source-freeze-01.json",
+    "bytes": 3253,
+    "sha256": "872050ef664cc81f21578ac07a628a227454faf08a1bd8f61d71410f677de1b9"
+  },
+  "collector": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/full-d-compact-collector-02.py",
+    "bytes": 17464,
+    "sha256": "3af9603aff8e20aa1380f844897ed356426ba29c4dd5172cc5c60edb2dea10de"
+  },
+  "collector_review": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/full-d-compact-collector-independent-02.json",
+    "bytes": 10163,
+    "sha256": "3e3f5be8590e2cfc808629c8787f414873c32169179d1a8b8dce737dcb372140"
+  },
+  "expected_jobs": [
+    "desktop-android",
+    "desktop-linux-arm64",
+    "desktop-macos-x64",
+    "desktop-windows-x64",
+    "ios"
+  ],
+  "expected_main_artifacts": [
+    "desktop-android-verification",
+    "desktop-verification-desktop-linux-arm64",
+    "desktop-verification-desktop-macos-x64",
+    "desktop-verification-desktop-windows-x64",
+    "ios-verification"
+  ],
+  "expected_cleanup_artifacts": [
+    "verification-cleanup-desktop-android",
+    "verification-cleanup-desktop-linux-arm64",
+    "verification-cleanup-desktop-macos-x64",
+    "verification-cleanup-desktop-windows-x64",
+    "verification-cleanup-ios"
+  ],
+  "interpretation": "Inspect exact same-attempt raw tests/tasks/cache/skips, native runtime versus linkage, unsigned packages/notices/hashes, artifact upload identities and owned cleanup. D is not A strict protection, B libproc, physical-device or Store proof. Earlier failed receipts and unexecuted scopes remain explicit.",
+  "safety": "No Store/promotion/signing/credentials/physical devices, source edits during qualification, blind retries, merge/force-push/issue mutation. Retain bounded raw artifacts and logs; do not delete unrelated work/global caches.",
+  "source_correction_reviews": [
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/os-recovery-copy-swift-independent-01.json",
+      "bytes": 4509,
+      "sha256": "17a9b45b0c7de7d157677fa07d74df83d6860ffa4b976087e5a3926ad4fe01c8"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/os-recovery-driver-receipts-independent-01.json",
+      "bytes": 15196,
+      "sha256": "2308fbeababbfbee1388267e979abcbc1df33ddfd02a6dd0515aeb3c83055703"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/os-recovery-ci-independent-01.json",
+      "bytes": 13360,
+      "sha256": "b3fee55d3dee92e57b73e90a57bd9bb9b276ea0d438b08f532f5848927015ae2"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/os-recovery-controls-linux-actual-independent-01.json",
+      "bytes": 11494,
+      "sha256": "15bbaa2374226a099aa213325c4f779aefd10e9fee716b7358ac49f7956b6cda"
+    }
+  ],
+  "workflow": {
+    "path": ".github/workflows/production-verification.yml",
+    "bytes": 44037,
+    "sha256": "9a8021ec1ba27f44d7d2ac18f0bcc7a4a254445ba1baae1a420287094c89414b"
+  },
+  "native_actual_review": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/native-os39-actual-independent-01.json",
+    "bytes": 20757,
+    "sha256": "2a46ab40e0beea54bcd197935fd1beb9105b0fcc6213b7ff619df994bc3b2318"
+  },
+  "native_actual_receipt": {
+    "path": "remediation-runs/2026-09-08-continuation/actions/34458884532/native-evidence/ios-readiness-39/receipt.json",
+    "bytes": 450483,
+    "sha256": "b8f6122659ef87408921f804aaa2f459a72059c34e8e14470a3861305a26e839"
+  },
+  "native_collection_receipt": {
+    "path": "remediation-runs/2026-09-08-continuation/actions/34458884532/download-receipt.json",
+    "bytes": 49095,
+    "sha256": "846fa35691b48c4c3d7c5e2b485580105224062f60e3e05345e33f7ac7722a1d"
+  },
+  "candidate_actual_review": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/candidate-input-c08-actual-independent-01.json",
+    "bytes": 14773,
+    "sha256": "5b533609a6366a25a22c5f4dc087adc1d0ae5eb3c738c0a3353eceb822482dd4"
+  },
+  "normal_and_original_repairs_applicability": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/final-b30-original16-timer-75c-applicability-01.json",
+    "bytes": 10296,
+    "sha256": "f2b880f03e46fe7243079c19e6dc89843ac663c774a1f1d94cb14bf0e58c548a"
+  },
+  "collector_actual_review": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/full-d-compact-collector-actual-independent-02.json",
+    "bytes": 6231,
+    "sha256": "585c499356175a982143d5ca168f24cac989c89fc8da3dcb5fc5e05584bdbb37"
+  },
+  "collector_route": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/final-full-collector-route-02.json",
+    "bytes": 2983,
+    "sha256": "37412c5fb17d06151c14cd2d375de63c770ffe581c67882ab7613d492555d57a"
+  },
+  "scope_binding_limit": "Full mode does not enforce frozen_source_sha input. Only verification_scope=full is passed; immediate request/local/remote checks plus API/checkout/ownership/log source evidence must bind the actual run. No prior Windows job is stitched into this attempt."
+}

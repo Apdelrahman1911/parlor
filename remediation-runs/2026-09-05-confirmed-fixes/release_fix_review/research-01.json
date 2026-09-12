@@ -1,0 +1,66 @@
+{
+  "reviewer": "/root/release_fix_review",
+  "scope": "Read-only exact JDK21/public Android signing research; no compilation/signing/Store operation",
+  "references": [
+    {
+      "url": "https://raw.githubusercontent.com/openjdk/jdk21u/jdk-21.0.11-ga/src/jdk.jartool/share/classes/sun/security/tools/jarsigner/Main.java",
+      "accessed_at": "2026-09-05T21:07:57.103320+00:00",
+      "claim": "Explicit truststore leaf exception, severe strict exits, usage checks and shared TSA/code-signing trust.",
+      "status": 200,
+      "final_url": "https://raw.githubusercontent.com/openjdk/jdk21u/jdk-21.0.11-ga/src/jdk.jartool/share/classes/sun/security/tools/jarsigner/Main.java",
+      "bytes": 114986,
+      "sha256": "179db252f16ca8dfc7ec2cf843afec458654c99a56318c3b5c9b86d74738e61e",
+      "matches_previously_retained_exact_source": true
+    },
+    {
+      "url": "https://raw.githubusercontent.com/openjdk/jdk21u/jdk-21.0.11-ga/src/java.base/share/classes/sun/security/provider/certpath/AlgorithmChecker.java",
+      "accessed_at": "2026-09-05T21:07:59.037730+00:00",
+      "claim": "Null constraints use active certpath policy; code-signing variant and explicit date preserve usage/date rules.",
+      "status": 200,
+      "final_url": "https://raw.githubusercontent.com/openjdk/jdk21u/jdk-21.0.11-ga/src/java.base/share/classes/sun/security/provider/certpath/AlgorithmChecker.java",
+      "bytes": 14933,
+      "sha256": "eda1ccfe9a4658df8c039cb018e8c30bc05a406048c4a693d251737f7b1e9b03",
+      "matches_previously_retained_exact_source": true
+    },
+    {
+      "url": "https://raw.githubusercontent.com/openjdk/jdk21u/jdk-21.0.11-ga/src/java.base/share/classes/sun/security/validator/Validator.java",
+      "accessed_at": "2026-09-05T21:08:01.389166+00:00",
+      "claim": "TSA usage API/PKIX path and trusted-leaf shortcut applicability.",
+      "status": 200,
+      "final_url": "https://raw.githubusercontent.com/openjdk/jdk21u/jdk-21.0.11-ga/src/java.base/share/classes/sun/security/validator/Validator.java",
+      "bytes": 11602,
+      "sha256": "1631f34f014db0ff92ace53a42361411f3a41694b87d98f7d3f5fb68cb560a84",
+      "matches_previously_retained_exact_source": true
+    },
+    {
+      "url": "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/jar/JarFile.html",
+      "accessed_at": "2026-09-05T21:08:04.020236+00:00",
+      "claim": "Signed-entry verification does not validate the certificate; consume to EOF then inspect CodeSigners.",
+      "status": 200,
+      "final_url": "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/jar/JarFile.html",
+      "bytes": 85993,
+      "sha256": "ec5a76e910622bd6c32e783e082c41bf7faa4ad4ad2c92ad495d025fbd99b358",
+      "saved_path": "remediation-runs/2026-09-05-confirmed-fixes/release_fix_review/JarFile-api.html"
+    },
+    {
+      "url": "https://docs.oracle.com/en/java/javase/21/docs/specs/jar/jar.html",
+      "accessed_at": "2026-09-05T21:08:06.239367+00:00",
+      "claim": "Signature-related filename rules and ordinary META-INF payload signing.",
+      "status": 200,
+      "final_url": "https://docs.oracle.com/en/java/javase/21/docs/specs/jar/jar.html",
+      "bytes": 46435,
+      "sha256": "1453caccdffe1605bb234f1638cf35db4396163cd82decb3f9f1229967f64c9b",
+      "saved_path": "remediation-runs/2026-09-05-confirmed-fixes/release_fix_review/Jar-spec.html"
+    },
+    {
+      "url": "https://developer.android.com/build/building-cmdline#sign_manually",
+      "accessed_at": "2026-09-05T21:08:07.633478+00:00",
+      "claim": "Android AAB jarsigner plus keytool-generated upload certificate is a supported signing path.",
+      "status": 200,
+      "final_url": "https://developer.android.com/build/building-cmdline#sign_manually",
+      "bytes": 312662,
+      "sha256": "6300490f36f6b11ad1ab275a24dc7e1b332f373ebccba85bdabd8fd8f6395035",
+      "saved_path": "remediation-runs/2026-09-05-confirmed-fixes/release_fix_review/Android-sign.html"
+    }
+  ]
+}

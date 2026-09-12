@@ -1,0 +1,142 @@
+{
+  "schema_version": 1,
+  "status": "APPROVED_PINNED_SOURCE_FOR_FOCUSED_TESTS_THEN_FROZEN_HOSTED_PROBE",
+  "author": "/root/lifecycle_controls",
+  "reviewer": "/root/portability_review",
+  "reviewed_at": "2026-09-10T13:49:06.394Z",
+  "scope": "Narrowly privileged Linux executable-identity read only; source/security review of four author-pinned files. Workflow and root probe integration are separately reviewed by /root/native_ci.",
+  "base_commit": "055f9fd3ac4ff714ada9ac0a582075739653199e",
+  "base_tree": "896ccc027ed48b0c08b80d10bbbd6145bc66f0f2",
+  "reviewed_worktree_files": [
+    {
+      "path": "scripts/ci/verification_hygiene.py",
+      "bytes": 28355,
+      "sha256": "f6a882754d8df582148e4c7e97f22eca2613041170ebfcc36cb946a63bff3ea0",
+      "ast_parse": "PASS",
+      "test_methods": 0
+    },
+    {
+      "path": "scripts/ci/linux_exe_reader.py",
+      "bytes": 5250,
+      "sha256": "f3b71da3870e8d45630b5415045eb77ede9f6eeb1ae706cc3f6332b4bd0b8ae0",
+      "ast_parse": "PASS",
+      "test_methods": 0
+    },
+    {
+      "path": "scripts/release/tests/test_ci_verification_hygiene.py",
+      "bytes": 39623,
+      "sha256": "927981c5aa745b8f430d1e4b96feab9b5f2669548364b96d089210944800cdaf",
+      "ast_parse": "PASS",
+      "test_methods": 38
+    },
+    {
+      "path": "scripts/release/tests/test_linux_exe_reader.py",
+      "bytes": 12945,
+      "sha256": "a844c29651b1d3c475c7331d614a15bde5365b0f6ed9152f81916aa2678b145a",
+      "ast_parse": "PASS",
+      "test_methods": 10
+    }
+  ],
+  "binding_limit": "These worktree hashes, not base055f9, contain the correction. Root must preserve reviewed bytes, execute focused tests, commit reviewed integration and mechanical inventory, and bind any hosted probe to that frozen source/control set.",
+  "motivating_evidence": {
+    "root": "remediation-runs/2026-09-08-continuation/actions/34479469398",
+    "run_id": 34479469398,
+    "attempt": 1,
+    "source_commit": "055f9fd3ac4ff714ada9ac0a582075739653199e",
+    "observation": {
+      "path": "linux-process-probe-34479469398-1/parlor-verification-34479469398-1-desktop-android-linux-probe.json",
+      "bytes": 6752,
+      "sha256": "34f3fe7826ecb5d0d77f1ea363071ab43f3dc0cd4e47d4505a7c19032ffd3892"
+    },
+    "cleanup": {
+      "path": "linux-process-probe-cleanup-34479469398-1/parlor-verification-34479469398-1-desktop-android-cleanup.json",
+      "bytes": 20776,
+      "sha256": "69ad7d0efa7456955ef6556611b96e8a2f7ad3dcc2418a069399809cc2c97ca2"
+    },
+    "observed": "Reopened raw LP02 receipts: actual host and cleanup scans both FAIL at selected=true/before_exe_readlink/errno13,162 enumerated and145 sampled, bound UID1001. selected_uid=0 is the completed-sample counter, not evidence that the failing PID was unselected. Dumpable1 owned control auditPASS; dumpable0 owned control auditFAIL/EACCES correctly accepted as CONTROL_PASS. Both direct children reaped and fixtures removed.",
+    "limitation": "This review is not a replacement for LP02 custody review and does not infer the exact old D03 cause. LP02 failed scans remain failed; no fresh privileged runtime has been executed by this reviewer."
+  },
+  "api": {
+    "audit": "audit_android_emulator_absence(expected, proc=Path('/proc'), *, reader='unprivileged')",
+    "cleanup": "cleanup(root, claim_path, task, upload, preparation_outcome, apple_outcomes=None, *, android_reader='unprivileged')",
+    "cli": "verification_hygiene.py cleanup [--android-reader=unprivileged|--android-reader=sudo-proc-exe-v1]",
+    "modes": [
+      "unprivileged",
+      "sudo-proc-exe-v1"
+    ],
+    "metadata": "exe_reader={mode:'unprivileged'|'sudo-proc-exe-v1'|'invalid',eacces_denials:int,privileged_reads:int}",
+    "semantics": "Default remains unprivileged. Explicit privileged mode recovers only PermissionError/EACCES on a selected, all-four-original-UID PID's FIRST exe readlink. EPERM, disappearance, identity read denial, all later exe denials, mixed UID and lifetime churn remain failures. privileged_reads counts complete validated helper responses, not completed/qualified PIDs; later outer identity/SDK failures still fail the audit.",
+    "cleanup_routing": "Non-default reader allowed only for desktop-android. Invalid/non-string/unknown/duplicate CLI modes fail after Gradle stop and before deletion. No environment auto-escalation."
+  },
+  "findings": [],
+  "checks": [
+    {
+      "area": "Minimal source delta / existing safety gates",
+      "result": "PASS_SOURCE",
+      "detail": "AST comparison at055f9 confirms16 existing functions/classes unchanged, including output_roots, checked_path, source_identity, prepare, stop_gradle, uploaded_evidence_is_retained, android_sdk_binding, android_proc_bytes, android_proc_identity, verify_apple_cleanup and context. Only audit/cleanup/main changed, plus one new client. Full diff preserves clean source/task/claim equality, successful nonempty upload, exact path preflight, source-bound Android audit, fail-retain, and exact deletion order. No application/protocol/reducer/privacy/timer change."
+    },
+    {
+      "area": "Narrow privileged command / source and environment",
+      "result": "PASS_SOURCE_WITH_TRUST_BOUNDARY",
+      "detail": "Client accepts only strictly typed/ranged original nonroot UID, PID and starttime; caller real/effective UID must match. Command is fixed /usr/bin/sudo -n -- /usr/bin/python3 -I -S -B plus canonical nonredirected sibling linux_exe_reader.py and decimal UID/PID/start arguments. No shell, caller command/path, inherited Python/import environment, or whole-cleanup sudo. cwd=/; explicit environment only PATH=/usr/bin:/bin and LC_ALL=C before sudo sets caller metadata. Standalone helper imports only stdlib and checks Linux, real/effective root and sudo SUDO_UID exactly equal the original bound UID.",
+      "boundary": "This is reviewed code in the trusted, source-bound isolated checkout—not an OS-enforced privilege sandbox or immutable-root-owned script deployment. Concurrent malicious mutation of the helper by a compromised runner is outside that trust model; source/control admission and the clean checkout must remain intact. No stronger runtime immutability claim is made."
+    },
+    {
+      "area": "Fixed read-only process identity",
+      "result": "PASS_SOURCE",
+      "detail": "Helper pins /proc and one decimal PID directory with O_RDONLY|O_DIRECTORY|O_CLOEXEC|O_NOFOLLOW. Only stat/status records and exe readlink/stat are accessed; no target argv/environment/maps/memory/file payload, process enumeration, target signal, file modification, deletion or executable launch. stat/status opens are directory-relative and no-follow, each capped8192B. Expected starttime and all four original UID values are checked before AND after two exe observations. Path/device/inode/mode must agree; nonregular, nonabsolute, oversized or deleted executable paths fail. FDs close in finally blocks. Outer before/after UID/lifetime and canonical SDK/emulator path/device/inode checks remain authoritative."
+    },
+    {
+      "area": "Bounds / response / failure behavior",
+      "result": "PASS_SOURCE",
+      "detail": "Existing4096-entry,8192B-record and5s scan ceilings remain. Parent invocation timeout=min(2s,remaining scan budget), with deadline checked again; privileged helper sets its own1s ITIMER_REAL timer and emits at most65536B. Timer is self-only, not target process control. Client rejects nonzero/timeout/unavailable, oversized/nonbytes/malformed/duplicate-key responses, wrong schema/UID/PID/start, invalid observations, bool/noninteger/out-of-range metadata, nonabsolute/NUL/oversized/deleted paths, nonregular or unequal observations. Fixed error codes/types only; no stdout/stderr/argv/path or raw exception text enters audit receipts. Producer bounds output before write; client size checking is post-capture, not an independent streaming quota."
+    },
+    {
+      "area": "No fail-open absence or cleanup",
+      "result": "PASS_SOURCE",
+      "detail": "Original UID selection is done before fallback and never substituted with root UID. Successful partial unprivileged reads are not discarded/retried. Helper failure remains FAIL; helper success does not skip outer identity, SDK binding, own-observer sampling, budget, or emulator-subtree detection. Any SDK/emulator executable observation still fails. Privilege is limited to the fixed exe reader; output traversal/removal stays unprivileged and behind existing stop/source/ownership/upload/audit guards."
+    },
+    {
+      "area": "Regression source",
+      "result": "INSPECTED_NOT_EXECUTED",
+      "detail": "All prior hygiene test methods preserved; five added hygiene methods plus ten new helper/client methods,48 methods total across the two modules. Source covers default negative/counters; opt-in first-EACCES-only success; later/EPERM/missing no escalation; outer churn/SDK executable/helper-failure retention; invalid CLI after stop; original caller/SUDO_UID and numeric bounds; pinned dirfd/no-follow records, mixed/changing identity, record/path/response limits, timer/privacy; exact command/env/remaining-timeout and malformed/duplicate/wrong-binding protocol. Helper/client new tests are Linux-scoped mocked/owned-file fixtures, not live sudo/proc proof."
+    }
+  ],
+  "static_validation": {
+    "ast_parse": "All four pinned files parsed with Python stdlib AST; no module import or function execution.",
+    "unchanged_hygiene_definitions": [
+      "timestamp",
+      "git",
+      "output_roots",
+      "checked_path",
+      "source_identity",
+      "write_new",
+      "prepare",
+      "gradle_stop_command",
+      "stop_gradle",
+      "uploaded_evidence_is_retained",
+      "AndroidAuditError",
+      "android_sdk_binding",
+      "android_proc_bytes",
+      "android_proc_identity",
+      "verify_apple_cleanup",
+      "context"
+    ],
+    "added_hygiene_tests": [
+      "test_cleanup_reader_cli_rejects_bad_flags_after_gradle_stop",
+      "test_opt_in_reader_does_not_hide_churn_or_sdk_emulator_executable",
+      "test_opt_in_reader_never_escalates_later_exe_or_identity_failure",
+      "test_opt_in_reader_only_recovers_first_selected_exe_eacces",
+      "test_reader_mode_and_reader_failure_retain_outputs_after_gradle_stop"
+    ],
+    "removed_hygiene_tests": [],
+    "reviewer_runtime_tests_executed": 0
+  },
+  "required_next": [
+    "Root executes focused regression tests in its coordinated lane and retains actual results/cleanup; source approval is not a test pass.",
+    "Separate reviewer verifies workflow/root-probe API wiring and exact helper/test inclusion in fresh control manifests.",
+    "After reviewed source/inventory freeze, run a narrowly bound hosted Linux probe to establish actual sudo/helper access, original-UID identity semantics, denial/privileged-read counters, default negative control preservation, failure cases and cleanup. Successful mocks cannot establish those platform facts.",
+    "Only then determine whether fresh combined qualification is justified. Do not rewrite LP02 or D03 failure receipts or claim completed managed-device cleanup, comprehensive/continuous absence, physical-device success or Store readiness."
+  ],
+  "activity": "Read-only source/Git/diff/JSON/stdlib AST/hash inspection; every Git command used GIT_OPTIONAL_LOCKS=0. Sole write is this report. No project imports, extracted-function execution, tests/builds, probes/process queries or signals, network/Actions calls, canonical edits or subagents. No reviewer resources allocated or cleanup owed."
+}

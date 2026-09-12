@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "kind": "NORMAL_LEGACY_LIFECYCLE_FIXTURE_FAILURE_DIAGNOSIS_AND_SOURCE_CORRECTION",
+  "author": "/root/ci_workflow",
+  "status": "AUTHOR_HELD_REQUIRES_INDEPENDENT_EXACT_DELTA_REVIEW_AND_EXECUTION",
+  "failed_evidence_preserved": {
+    "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/normal.log",
+    "sha256": "6371a4a2b780b0bd3775ec0322357cb3882bea798951f5cf4c5731e06374d6d4",
+    "inspected_lines": "191-454",
+    "executed_by": "/root",
+    "tests": 187,
+    "errors": 20,
+    "failures": 1,
+    "status": "FAIL_NOT_RECLASSIFIED"
+  },
+  "diagnosis": {
+    "root_cause": "RunnerGuards.lane constructs object.__new__(runner.Lane), intentionally bypassing the real constructor, but the legacy synthetic fixture did not initialize the newly required lifecycle state. This is fixture drift, not a CLI parse failure or observed native failure.",
+    "real_constructor": "run_normal_ios_launch.py:141-144 validates selection and initializes lifecycle_mode/lifecycle before allocation; its default is LEGACY_LIFECYCLE with lifecycle=None.",
+    "errors": "All 20 raw errors are missing Lane.lifecycle: 17 at finalize line832 and three at run_xctest line436 (failed/interrupted/timed-out Xcode guards). They occur before the intended existing oracles complete.",
+    "failure": "ImageDiagnosticOrchestrationTests.fixture reuses RunnerGuards.lane at test_image_diagnostic_orchestration.py:31. Lane.run catches the same missing-state finalizer exception at904-906 and marks cleanup FAIL; the existing required cleanup PASS assertion at test line330 then fails.",
+    "minimum_correction": "Initialize only the shared synthetic fixture's explicit legacy lifecycle state; preserve the runtime constructor/defaults, new direct-mode guards and all original assertions. No diagnostic-test edit is needed because it inherits this factory."
+  },
+  "sole_corrected_source": {
+    "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_normal_launch_controls.py",
+    "before_sha256": "af5c912dbc9655468d5d428b18f5a7c16d7b0f2fa421e14cf559ee674eaceb76",
+    "before_bytes": 42841,
+    "after_sha256": "3da543bd92beecda95bdfbd53632a3a49ca95a6054f47a17dd03dff6460d6a5c",
+    "after_bytes": 42919,
+    "added_line": 460,
+    "added_statement": "value.lifecycle_mode, value.lifecycle = runner.LEGACY_LIFECYCLE, None",
+    "placement": "Immediately after object.__new__(runner.Lane) in RunnerGuards.lane.",
+    "whole_file_delta": "Exactly one 78-byte line added; no other source-byte change.",
+    "declared_test_methods_before_and_after": 78,
+    "static_test_method_ast_changes": [],
+    "test_methods_added_or_removed": []
+  },
+  "unchanged_relevant_source": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
+      "sha256": "5524d839202211270ec1c97776f0d350b9802ecf0d1c5e6eb3d28cd960629302"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_image_diagnostic_orchestration.py",
+      "sha256": "133fbc769d331581d7ad6e1154d5d1c6bf35bf9a853e28fc56bafa25049e5a8d"
+    }
+  ],
+  "scope_limits": [
+    "No production getattr fallback, fabricated preservation acknowledgement, assertion modification, skip, test deletion, ownership bypass or application change.",
+    "The prior normal control run remains failed. Static fixture diagnosis and unchanged declarations are not a corrected test pass or application/libproc runtime proof.",
+    "This test-byte change invalidates prior exact aggregate control hashes; the coordinator must use the reviewed new bytes in subsequent execution/source-control bindings. Historical packets, holds and failed receipts remain untouched.",
+    "Independent exact-delta review belongs to /root/native_ci. Tests, cleanup cycles, commit/push and Actions remain exclusively /root owned."
+  ],
+  "author_activity": {
+    "inspection": "Read-only raw log, source, SHA256, Git diff and ast.parse comparison; no project import or test discovery.",
+    "tests": "NOT_RUN",
+    "builds": "NOT_RUN",
+    "native_tools": "NOT_RUN",
+    "actions": "NOT_DISPATCHED",
+    "cleanup": "No build/test/native cycle or temporary worker/fixture created by the investigation/edit. The coordinator retains responsibility for the already completed failed cycle's cleanup receipt and any later cycle."
+  }
+}

@@ -1,0 +1,341 @@
+{
+  "schema_version": 1,
+  "id": "L08-FUNCTIONAL-NATIVE12-INDEPENDENT-RECONCILIATION-01",
+  "created_at_utc": "2026-09-08T04:08:42.600052+00:00",
+  "reviewer": "/root/factory_review",
+  "execution_owner": "/root",
+  "status": "FAIL_RECONCILED_PARTIAL_RUNTIME_EVIDENCE_SOURCE_AND_CLEANUP_PRESERVED",
+  "scope": "Independent review of root-owned native12 actual raw JSON/logs/source/control identities and failure path. No repository-module import, native execution, tests/builds, simulator/process query/control or application change by reviewer. Only this explicitly authorized additive report.",
+  "source_identity": {
+    "commit": "484f82c3bcc273c0014a946376c1ee9fc7de8d83",
+    "tree": "548625b4a49bef5df8db723c1e59a4edd5676ddc",
+    "branch": "fix/local-readiness-2026-09-07",
+    "tracked_status": "",
+    "diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "source_manifest_sha256": "c4d3387a95ff1a4462071147afe92411f5a08ee8b10f78852a59494c8d3e4420"
+  },
+  "evidence": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-12/receipt.json",
+      "sha256": "896b5d6a1c57bebedf7c8ca070ba4bfabfe9e2e4708afd239d974303eb9e2c27"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-12/input-manifest.json",
+      "sha256": "2b9881698b5aa8614b6b35390191fb6b0d6603343038543a8c22450468bc6ed5"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-12/copied-source-manifest.json",
+      "sha256": "43d42129214ab637341747c0df2654fbd1507933344c13fcc7e4caf82a624d02"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-12/copied-source.diff",
+      "sha256": "871bc2edff9abc26d6476448482f7c439ee3ef030f9bfc4e1a542b57d66b93f4"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-12/copied-source-inputs-after-build.json",
+      "sha256": "d3edf4ba8e90c34280419d1a5abd127f8d21cdc439978a772df4185aecb28b11"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-12/xcodebuild.log",
+      "sha256": "031e66c9c118cc41bb19baddb4d48871e984a58a41bceb013a96b35adc799286"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-12/xcresult-summary.json",
+      "sha256": "c1bd09af29a88de8ea1edcba13c3039e17bfb79a742716a340b3bb97d5a19a1b"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-12/xcresult-tests.json",
+      "sha256": "7a1dd1a62255bc73a8501a34a1238e9796e003b50087928c9aab326dfab58c92"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-12/probe-settings-result.json",
+      "sha256": "90e41f889c7f8d384c33d4689c05770e7e76e782d39fe4bb6f3226b7d2edf44f"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-12/probe-readiness-result.json",
+      "sha256": "29347d8236bea9a0e617f76f9d216446efdb51f0ec30beb14ab8cc1009ab349e"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-12/probe-l08-storage-functional-result.json",
+      "sha256": "483d2b7ed8d1307d71923e157a48a54200c036b899a6d9c97137c055c957c5b8"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-12/built-app-binary-inventory.json",
+      "sha256": "85685e148c39bb9738d8fcfa7ab1ece6c2ec1d22b0b5831ec668f7ea171ed14a"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-12/installed-app-binary-inventory.json",
+      "sha256": "85685e148c39bb9738d8fcfa7ab1ece6c2ec1d22b0b5831ec668f7ea171ed14a"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-12/executed-framework-inventory.json",
+      "sha256": "1f4bf24cbb4ae75eaa8b6dd6ab3349da9b35529c40d8c0efd64a176b8fea53e3"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-12/secondary-fifo-ownership-final.json",
+      "sha256": "a2772f355aa85190973acc1bbafdc9fa16e7bc9536fd8783cba9c9d1348e2ac0"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-12/stop-xcode-immediate.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-12/stop-final.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    }
+  ],
+  "independent_identity_checks": {
+    "source_manifest_files": 800,
+    "source_manifest_sha256": "c4d3387a95ff1a4462071147afe92411f5a08ee8b10f78852a59494c8d3e4420",
+    "source_before_equals_after_equals_source11_binding": true,
+    "current_reviewed_source_hashes_match": true,
+    "bound_controls": 76,
+    "bound_controls_sha256": "f6ebf8e931bb6c8a84173bf88a920d6b154ae81f9a812d0a9901d559c6994a22",
+    "controls_recomputed_from_all75_and_binding": true,
+    "copy_original_inputs": 740,
+    "copy_inputs_after_instrumentation": 752,
+    "original_inputs_hashes_independently_match": true,
+    "new_observer_files": 12,
+    "modified_existing_copy_files": 16,
+    "full_28_file_copy_diff_reconstructed_in_memory_and_matched_each_copied_sha": true,
+    "all752_after_build_expected_observed_hashes_match_copied_manifest": true,
+    "unexpected_or_missing_build_inputs_or_source_symlinks": [],
+    "method": "Fresh Git tracked/untracked inventory with independently reopened protected exclusions and streaming/file hashes; standard-library unified-diff reconstruction. Mechanical identity verification is not a new claim to semantically review every source line."
+  },
+  "execution": {
+    "started_at": "2026-09-08T03:24:01.496128+00:00",
+    "finished_at": "2026-09-08T03:39:29.159983+00:00",
+    "runner_exit_code": 1,
+    "runner_status": "FAIL",
+    "xcodebuild_exit_code": 65,
+    "toolchain": "Xcode26.5/17F42, iphonesimulator26.5, iOS26.5/23F77, arm64 iPhone17 Pro Simulator; macOS26.2",
+    "signing": "Explicit local ad-hoc Debug, com.parlor.app.debug; no Store/private credential use.",
+    "xctest": {
+      "methods": 5,
+      "passed": 4,
+      "failed": 1,
+      "skipped": 0,
+      "expected_failures": 0,
+      "failed_method": "IOSAppLaunchUITests/testDSC01ActualSettingsLocalSessionsAndOSWithL08FunctionalObservation()",
+      "passed_methods": [
+        "ComposeContainerViewControllerTests/testChildUsesFullBoundsAcrossSizesAndOpposingSemanticDirections()",
+        "ComposeContainerViewControllerTests/testDefaultAppearanceForwardingReachesTheSameChildExactlyOnce()",
+        "ComposeContainerViewControllerTests/testOneStableChildKeepsItsExplicitSemanticsIndependentOfTheOuterView()",
+        "ComposeContainerViewControllerTests/testSystemDecorationAndOrientationPoliciesStillBelongToTheChild()"
+      ]
+    },
+    "command_receipts": 35,
+    "nonzero_commands": [
+      {
+        "executable": "xcodebuild",
+        "exit_code": 65
+      }
+    ],
+    "failure_not_a_crash_claim": "XCTest readiness assertion timed out. No application exception or operating-system termination is established by this failure."
+  },
+  "actual_failure": {
+    "copy_path": "iosApp/iosAppUITests/IOSAppLaunchUITests.swift",
+    "copy_line": 2341,
+    "original_companion_source": {
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-01/L08StorageFunctionalUITests.swift.in",
+      "sha256": "fda0dc82d447e7348f0752b99f090a038dd7955dbc6c37034c99f61755caa097",
+      "reviewed_line_ranges": [
+        [
+          1,
+          117
+        ]
+      ]
+    },
+    "mapped_line": 96,
+    "expression": "XCTAssertEqual(XCTWaiter.wait(for: [ready], timeout: 15), .completed)",
+    "predicate": "target.exists && target.isEnabled && target.isHittable",
+    "recorded_target": "l08-home-legacy",
+    "boot": 10,
+    "proven": "Exact query existence and count==1 assertions completed first; final readiness timed out. The record-load operation completed and the actual Resume tap/continue did not execute.",
+    "not_proven": "The individual false predicate, target frame, occlusion, scroll offset or overlay overlap were not retained. This is NOT evidence of a missing readiness label or failed storage migration.",
+    "raw_reference": "xcodebuild.log4196\u20134266; xcresult-tests failure node; exact generated source reconstructed from immutable copied-source.diff."
+  },
+  "partial_functional_storage_evidence": {
+    "preserved_operations": 14,
+    "planned_operations": 20,
+    "begun_boots": 10,
+    "completed_boot_log_rows": 9,
+    "planned_boots": 13,
+    "operation_files": [
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-12/parlor-l08-storage-functional-1-save.json",
+        "sha256": "626b093a980c518fa41ed42685e0435a84e0841522b3642365e322fb49dc97f9"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-12/parlor-l08-storage-functional-2-load.json",
+        "sha256": "9d3cb3e5d6884323df87bd6bf79f5211647afdced64c0f9bbce6af8c03a2c144"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-12/parlor-l08-storage-functional-2-continue.json",
+        "sha256": "f9607e591993db5dce239e3626e56867d99f00fbe5cea3124641fa8f0c86f954"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-12/parlor-l08-storage-functional-3-save.json",
+        "sha256": "9d390b35c7a1dd79ed0ea2f3169cbc4d32426c59ecf634b8e48c5571020ad3ce"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-12/parlor-l08-storage-functional-4-load.json",
+        "sha256": "d3fcaaff10ef6039970872ed3f83eea294d4c55373e553a0b23321efe1d79942"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-12/parlor-l08-storage-functional-4-continue.json",
+        "sha256": "97004ba0c732cf5a3af5afc669ece32aadc748b7e3703284778f5aa6361399f3"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-12/parlor-l08-storage-functional-5-save.json",
+        "sha256": "115f9f863aff51536dae6d64fdcc221436271d300c4580651738f07035685804"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-12/parlor-l08-storage-functional-6-load.json",
+        "sha256": "4e2e3adfa41a7f0ca074ab5f2a142becc2ca1722d1b962918561f5a747e73b7a"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-12/parlor-l08-storage-functional-6-continue.json",
+        "sha256": "e3a9455f164ed10a841d80cfc961570c23b30b505224be7444ef277e78bd7877"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-12/parlor-l08-storage-functional-7-save.json",
+        "sha256": "19faade85a8cfc733a5b2dce4abedb3b69003e5429201fce9f72c2c5af544f47"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-12/parlor-l08-storage-functional-8-load.json",
+        "sha256": "1e73b55904948754d5a2709438e74e465476438820b7084844ca416dc768af51"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-12/parlor-l08-storage-functional-8-continue.json",
+        "sha256": "d43f1a690098ba1f0da2401e8d467f7a5ccc0d1f18d57d78a918568daa0d5fd0"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-12/parlor-l08-storage-functional-9-legacy-seed.json",
+        "sha256": "a6832fc338e6f113a6439df89bc8b68d361eb05014475dd7fdfbf2ccb7a6b5d0"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-12/parlor-l08-storage-functional-10-legacy-load.json",
+        "sha256": "375fd187a843765b7388a7561c43e01e0e43262eef271c3420b2139dd78ca946"
+      }
+    ],
+    "checks": "Each of14 exact planned-prefix records has functional_status PASS, the exact expected set of check flags all true, correct boot/action/command/token, closed schemas, inner<=4096 and outer<=16384. This is per-operation evidence, not a completed matrix.",
+    "completed_variants": [
+      "Whodunit Classic save\u2192cold load\u2192actual Home resume\u2192actual-controller terminal continuation/writer deletion",
+      "Whodunit Elimination same sequence",
+      "Mafia Doctor ON same sequence, fixture reducer constructed four effective protections of the same target on consecutive nights",
+      "Mafia Doctor OFF same sequence, fixture reducer alternation and explicit skipped-night semantics"
+    ],
+    "legacy_boot10": "Legacy migration, exact envelope, production recovery routing, independent healthy/malformed/dual inventory, backup exclusion and retained damaged dual-copy checks passed in legacy-load observation. Home actual resume remains unexecuted for this legacy record.",
+    "unexecuted_operations": [
+      [
+        10,
+        "continue"
+      ],
+      [
+        11,
+        "legacy-neighbor"
+      ],
+      [
+        11,
+        "discard-observed"
+      ],
+      [
+        12,
+        "dual-preserved"
+      ],
+      [
+        12,
+        "discard-observed"
+      ],
+      [
+        13,
+        "final-absence"
+      ]
+    ],
+    "complete_metadata": {
+      "observed_comparisons": 24,
+      "planned_comparisons": 26,
+      "observed_pass": 0,
+      "observed_fail": 24,
+      "remaining_unobserved": 2,
+      "observation": "Every directory/file NSFileManager getter returned dictionary=true, key=false, value=missing, no NSError. Sites/ordinals/aliases match the precise executed comparison plan.",
+      "strict_l08": "NOT_SATISFIED_BY_COMPANION; existing required gate remains failed/unresolved. Functional observations do not waive or repair Complete protection."
+    }
+  },
+  "other_runtime_evidence": {
+    "settings": "Actual Settings/restart subsection reached its completion marker:22 observations across4 process boots. Raw preferences show AR owner survives first restart then System clears it; synthetic OS-previous [ar-EG,en] is restored after explicit EN and restart. This does not establish later actual iOS Settings-app per-app selection.",
+    "native_diagnostics": "Eight source-bound cold boots, eight actual launch rows with one probe activation each,48 stability samples (six/boot spanning at least10seconds), foreground/no-alert assertions. All30 raw store outcomes independently matched intended write/read/rewrite/delete/post-delete sequence with exact credential OSStatus -25300/0; no overflow.",
+    "attribution_limits": "Native diagnostic Home is an explicitly new invocation, not original Home numeric attribution. Snapshot native numeric attribution is false. Actual raw health comparisons are consistent with PASS, but automatic full native verifier did not run after the early overall XCTest gate failure; no completed overall gate is claimed.",
+    "not_reached": [
+      "Three ControlledStartRoom host boots/42 operations",
+      "Later active local Whodunit/Mafia language/lifecycle scenarios",
+      "Later actual OS multilingual/per-app settings scenario"
+    ],
+    "not_proven": [
+      "Physical P2pKit LAN",
+      "Physical keybag/lock and backup enforcement",
+      "Accessibility/layout matrix across real devices",
+      "Signed release or Store readiness"
+    ]
+  },
+  "artifact_reconciliation": {
+    "built_and_installed_inventory_equal": true,
+    "embedded_macho_images": 4,
+    "all_four_uuid_and_public_adhoc_signature_command_exit_codes": 0,
+    "available_observation_rows": 22,
+    "available_process_groups": 18,
+    "matrix_verified": false,
+    "binding": "Eight native boot rows plus14 functional operation rows bind to the same actual owned-copy-built Compose framework. All18 group bindings retain status PASS but are explicitly only available observations.",
+    "loaded_framework_sha256": "389f918553ff3901d5d0d4d0fc2d97c23cd44e9d4fa313c500022ec9fe0bf5d0",
+    "loaded_framework_bytes": 84027160,
+    "embedded_framework_sha256": "c60ff26b04b20d04e85b8a06965e357d060a829cd43568211eaa6d9e73dc9778",
+    "embedded_framework_bytes": 83556768,
+    "framework_uuid": "c7b41e7e-f14a-3692-8580-cc6643ff648c",
+    "important_limit": "Actual runtime origin is owned-copy-build, not installed-app-bundle; equal UUID is not equal bytes. Metadata inventories and retained observations were independently reconciled, not re-hashed from already-cleaned native binaries or mapped pages. This is not normal-launch or Store artifact proof."
+  },
+  "source_failure_classification": {
+    "classification": "TEST/EVIDENCE GAP; NO_CONFIRMED_APPLICATION_RECOVERY_DEFECT",
+    "reachable_chain": [
+      "OwnedSnapshotPaths403\u2013405 uses common token prefix; FileBackedSnapshotStore118\u2013132 sorts IDs, yielding damaged\u2192dual\u2192legacy at boot10. Previous four terminal continuations deleted their own records.",
+      "HomeRecoveryAvailability48\u201385 retains unreadable entries;120\u2013125 marks source unavailable. App120\u2013143 invokes this on Home and229\u2013241 passes entries/warning flags to HomeScreen.",
+      "HomeScreen97\u2013134 renders a real LazyColumn with top/lead, full unavailable card, continuation label, then three tiles. ResumeTile331\u2013335 is unconditionally clickable, not disabled by corruption or loading.",
+      "Copy-only overlay occupies top+72 (runner577 plus DSC01Overlay and six storage-control rows). Original tap helper only waits for readiness and never scrolls. Offscreen/overlay obstruction is plausible; precise native12 geometry is unproved."
+    ],
+    "counter_evidence": "Legacy functional load successfully verifies recovery route and independent inventory. Unreadable neighbors do not hide the healthy entry; exact UI target exists uniquely. No Resume tap reached production coordinator in this failed step.",
+    "recommended_scope": "Improve only isolated test driver: exact real list identity, bounded real scrolling, one strict Resume tap and primitive target/list/overlay diagnostics. Do not modify application storage, relax readiness, perform direct navigation or reinterpret this failed receipt."
+  },
+  "cleanup": {
+    "status": "PASS_RECONCILED",
+    "immediate_stop_started_after_xcode_exit_seconds": 0.004686,
+    "stops": [
+      {
+        "label": "stop-xcode-immediate",
+        "exit_code": 0,
+        "at": "2026-09-08T03:39:17.381502+00:00"
+      },
+      {
+        "label": "stop-final",
+        "exit_code": 0,
+        "at": "2026-09-08T03:39:21.131918+00:00"
+      }
+    ],
+    "stop_logs": "Both exact logs say No Gradle daemons are running. Embedded phase also retains its separate stop result.",
+    "finalization_all_pass": true,
+    "owned_simulator_shutdown_delete_exit_codes": [
+      0,
+      0
+    ],
+    "owned_device_absent_record": true,
+    "attested_secondary_fifos": 2,
+    "attested_removed_fifo_and_parent_paths": 4,
+    "secondary_ownership": "Each FIFO type/inode/device/uid/birth metadata agrees with its saved task worker and parent PID/start identity; no pending attestation/error, paths independently observed absent after cleanup.",
+    "remaining_workers_outputs_unknown_holders_errors_deferred_signals": [],
+    "owned_copy_deriveddata_home_temp_removed_and_independently_absent": true,
+    "cleanup_completed_at": "2026-09-08T03:39:28.881872+00:00",
+    "source_and_controls_unchanged": true,
+    "limit": "Reviewer did not query or signal native processes. Worker/device completion relies on reconciled root-owned immutable receipts; exact task path absence and source hashes were independently checked. Global caches and unrelated work were not removed."
+  },
+  "final_verdict": "Keep native12 FAIL; keep all14 operation observations and partial available-image evidence without upgrading them to a full functional, strict-L08 or readiness PASS. Continue isolated harness diagnosis and remaining local/external verification.",
+  "preservation": "All original audit/runtime receipts and code preserved. No reviewer build/app/test worker or generated build output was created. This authorized new report is the only write for this reconciliation."
+}

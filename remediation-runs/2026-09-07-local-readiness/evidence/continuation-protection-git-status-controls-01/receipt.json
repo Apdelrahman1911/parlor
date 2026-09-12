@@ -1,0 +1,85 @@
+{
+  "kind": "FOCUSED_SERIAL_GIT_STATUS_CONTROLS_NOT_APPLE_RUNTIME_OR_TIMEOUT_CAUSE",
+  "started_at": "2026-09-11T03:13:47.552128+00:00",
+  "source_head": "ad62b0122ce08302c22a78b00c78e2d8ed7dc23c",
+  "working_tree_controls_before": {
+    "remediation-runs/2026-09-08-continuation/protection-diagnostic-01/run_probe.py": "93159a6f9f31aed93b0ac2d1affab84c038cd5f8760c5b93eb21f984a82d1f85",
+    "remediation-runs/2026-09-08-continuation/protection-diagnostic-01/test_probe.py": "baa7cfc567ce7a089e46026e5459be1b8c602e20c121f48675214428b9abfd65",
+    "remediation-runs/2026-09-08-continuation/protection-diagnostic-01/README.md": "890c4ab88876b8d0873d8d1a51b727b1380125318da0bae41012741bc29d705c",
+    "scripts/ci/native_process_probe.py": "f6e31687332680e5e41af99d7bb05ce34898993186386f720a885de379fd7681",
+    "scripts/ci/native_continuation.py": "0b2c0fec310afd88810b84fcc4836ec72c0a07f0ff55f495f876dd92e2f231b3"
+  },
+  "tests": [
+    {
+      "label": "paired",
+      "command": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "remediation-runs/2026-09-08-continuation/protection-diagnostic-01",
+        "-p",
+        "test_probe.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "seconds": 0.468,
+      "log_sha256": "bca939faa39089cb4547f1845538c265af38e896469c49f570ac302a277bf76a",
+      "unittest_cases": 45,
+      "summary": "----------------------------------------------------------------------\nRan 45 tests in 0.184s\n\nOK"
+    }
+  ],
+  "cleanup": {
+    "errors": [],
+    "scratch_path": "/tmp/parlor-git-status-controls-n356_kjj",
+    "checked_live_roots": [
+      "build",
+      "build-logic/build",
+      "build-logic/convention/build",
+      "composeApp/build",
+      "iosApp/build",
+      "game-modes/mafia/build",
+      "game-modes/whodunit/build",
+      "shared/core/build",
+      "shared/design-system/build",
+      "shared/engine/build",
+      "shared/engine-testing/build",
+      "shared/session/build",
+      "shared/networking/build",
+      "shared/networking-testing/build",
+      "shared/storage/build",
+      "shared/transport-p2p/build",
+      "shared/content/build",
+      ".gradle",
+      ".kotlin",
+      "build-logic/.gradle",
+      "scripts/ci/__pycache__",
+      "scripts/release/__pycache__",
+      "scripts/release/tests/__pycache__",
+      "remediation-runs/2026-09-08-continuation/protection-diagnostic-01/__pycache__"
+    ],
+    "gradle_stop_exit": 0,
+    "stop_log_sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+    "scratch_removed": true,
+    "checked_live_outputs_remaining": [],
+    "gradle_clean": "NOT_NEEDED_NO_BUILD_OUTPUTS"
+  },
+  "git_fixture": {
+    "result": "PASS",
+    "state_comparisons": 6,
+    "receipt_sha256": "28863d544b52824ac0234cdd6d57da77c7fa55534088807e1076ecd70b536ef6",
+    "log_sha256": "57f3e0197bfb12b22d77aa6d6ab71529f3c2a6de1f85db82b0fd2a3fabb8722d"
+  },
+  "working_tree_controls_after": {
+    "remediation-runs/2026-09-08-continuation/protection-diagnostic-01/run_probe.py": "93159a6f9f31aed93b0ac2d1affab84c038cd5f8760c5b93eb21f984a82d1f85",
+    "remediation-runs/2026-09-08-continuation/protection-diagnostic-01/test_probe.py": "baa7cfc567ce7a089e46026e5459be1b8c602e20c121f48675214428b9abfd65",
+    "remediation-runs/2026-09-08-continuation/protection-diagnostic-01/README.md": "890c4ab88876b8d0873d8d1a51b727b1380125318da0bae41012741bc29d705c",
+    "scripts/ci/native_process_probe.py": "f6e31687332680e5e41af99d7bb05ce34898993186386f720a885de379fd7681",
+    "scripts/ci/native_continuation.py": "0b2c0fec310afd88810b84fcc4836ec72c0a07f0ff55f495f876dd92e2f231b3"
+  },
+  "resources": "Filesystem      Size  Used Avail Use% Mounted on\noverlay          94G   71G   18G  80% /\ntmpfs            32G   21G   12G  65% /tmp\n               total        used        free      shared  buff/cache   available\nMem:            62Gi        23Gi        14Gi        20Gi        45Gi        38Gi\nSwap:             0B          0B          0B\n",
+  "finished_at": "2026-09-11T03:13:48.817299+00:00",
+  "result": "PASS"
+}

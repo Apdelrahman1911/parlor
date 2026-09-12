@@ -1,0 +1,165 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/factory_review",
+  "author": "/root",
+  "reviewed_at": "2026-09-07T22:07:43.558539+00:00",
+  "classification": "SOURCE-APPROVED DIAGNOSTIC-ONLY CHANGE; ROOT-ONLY99SYNTHETICCONTROL CYCLE APPROVED; ACTUAL TEST EXECUTION AND NEW NATIVE BINDING STILL REQUIRED",
+  "baseline": {
+    "commit": "b6e1947c62661631d0593038db7f64dbf25f720e",
+    "tree": "f03ad1b302d951d0ca9811b1efab2751a8be6978",
+    "reviewed_diff": "Four tracked normal-runner control files plus one new testfile; no application source modified by this change"
+  },
+  "files": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/external_image_provenance.py",
+      "sha256": "f185938fdc23f8a1a945d1fa14abd0cddbba2b859b6663415c4bf1728f27eb94",
+      "reviewed_lines": [
+        [
+          1,
+          192
+        ]
+      ],
+      "review_method": "Full completefile/ranges and diff read; existing unchanged runner portions also independently read under prior exactcontrol review, key prepare/observe/finalize paths reopened"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
+      "sha256": "36276fb27423ca04c9fe41d033042c3ae25d5a512183b96b80230b4f58ad2e8d",
+      "reviewed_lines": [
+        [
+          1,
+          697
+        ]
+      ],
+      "review_method": "Full completefile/ranges and diff read; existing unchanged runner portions also independently read under prior exactcontrol review, key prepare/observe/finalize paths reopened"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_control_tests.py",
+      "sha256": "3ffc9c3836f61f86d573ad0b3dce5f3105fcd1ea4fd8ab677f9806b6eb8bf2b2",
+      "reviewed_lines": [
+        [
+          1,
+          65
+        ]
+      ],
+      "review_method": "Full completefile/ranges and diff read; existing unchanged runner portions also independently read under prior exactcontrol review, key prepare/observe/finalize paths reopened"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_header_diagnostics.py",
+      "sha256": "e317ed5704e601c72d0b78b0c885ffa22bc398301a4d221d39e667539b50093d",
+      "reviewed_lines": [
+        [
+          1,
+          102
+        ]
+      ],
+      "review_method": "Full completefile/ranges and diff read; existing unchanged runner portions also independently read under prior exactcontrol review, key prepare/observe/finalize paths reopened"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/README.md",
+      "sha256": "59b5a3947e3c160078778b66bba8e7c5b56fe51e19b4cf5ec8c32c5f451fa51e",
+      "reviewed_lines": [
+        [
+          1,
+          158
+        ]
+      ],
+      "review_method": "Full completefile/ranges and diff read; existing unchanged runner portions also independently read under prior exactcontrol review, key prepare/observe/finalize paths reopened"
+    }
+  ],
+  "original_finding": {
+    "cycle": "ios-readiness-08",
+    "review_path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/normal-ios08-actual-provenance-failure-independent-review-01.json",
+    "review_sha256": "d3fe755ae39c921b77fc215532017635e0cccea336d7172500e39c1e02c1b415",
+    "classification_unchanged": "OverallFAIL at external exactPID/pathheader guard after8scopedhome observationsPASS; exact actualheadersmissing/rootcauseunconfirmed"
+  },
+  "acceptance_protection": {
+    "ast_equal_preexisting_functions": [
+      "external_image_provenance.py:parse_launch_pid",
+      "external_image_provenance.py:attest_target",
+      "external_image_provenance.py:unchanged_target",
+      "external_image_provenance.py:validate_artifacts",
+      "external_image_provenance.py:verify_header",
+      "external_image_provenance.py:parse_sample",
+      "external_image_provenance.py:bind_vmmap",
+      "run_normal_ios_launch.py:now",
+      "run_normal_ios_launch.py:normalized_identity",
+      "run_normal_ios_launch.py:control_manifest",
+      "run_normal_ios_launch.py:control_hash",
+      "run_normal_ios_launch.py:darwin_backend",
+      "run_normal_ios_launch.py:xcode_arguments",
+      "run_normal_ios_launch.py:isolated_environment",
+      "run_normal_ios_launch.py:main",
+      "run_normal_ios_launch.py:Lane.__init__",
+      "run_normal_ios_launch.py:Lane.save",
+      "run_normal_ios_launch.py:Lane.stage",
+      "run_normal_ios_launch.py:Lane.command",
+      "run_normal_ios_launch.py:Lane.check_watched_outputs",
+      "run_normal_ios_launch.py:Lane.require",
+      "run_normal_ios_launch.py:Lane.stop_gradle",
+      "run_normal_ios_launch.py:Lane.simulator_metadata",
+      "run_normal_ios_launch.py:Lane.allocate_temporary",
+      "run_normal_ios_launch.py:Lane.prepare",
+      "run_normal_ios_launch.py:Lane.run_xctest",
+      "run_normal_ios_launch.py:Lane.verify_notice_packages",
+      "run_normal_ios_launch.py:Lane.artifact_inventory",
+      "run_normal_ios_launch.py:Lane.shutdown_device",
+      "run_normal_ios_launch.py:Lane.delete_device",
+      "run_normal_ios_launch.py:Lane.verify_workers",
+      "run_normal_ios_launch.py:Lane.verify_copy",
+      "run_normal_ios_launch.py:Lane.remove_temporary",
+      "run_normal_ios_launch.py:Lane.compact_log",
+      "run_normal_ios_launch.py:Lane.finalize",
+      "run_normal_ios_launch.py:Lane.run"
+    ],
+    "mechanical_result": "Every pre-existingexternalprovenance function AST remains identical; runner functions identical except observe_external_images now calls same parse_sample/bind_vmmap through failure-only wrapper. Newwrapper preserves original RuntimeError object/rethrows; no statuswrite toPASS.",
+    "unchanged_invariants": [
+      "ExactlyattestednumericPID/kernelUID/start/generation/token/executable",
+      "Exactheaderpredicate; noUSER/*aliasacceptance",
+      "Artifacthash/UUIDinventorybinding and samebuiltinstalledbytes",
+      "Sampleimagetable/unboundappimages/requiredthreeimagekinds",
+      "Vmmap__TEXTaddressmatching",
+      "Per-observationbudget/lifetimechecks",
+      "Top-levelcycle requiresruntime+provenance+notices+cleanup+source/control/copy success",
+      "Rawstacks/maps deleted inexistingfinally; ownership-attested cleanupunchanged"
+    ]
+  },
+  "diagnostic_review": [
+    "Headeronlyformat extraction runs after RuntimeError from original parser; successfulparser returns its exact original object without diagnostics. Unknown tool names reject before anywrite.",
+    "Input must be nonemptytext<=16MiB; Process/Pathheaders<=8each,eachvalue<=4096UTF8bytes; eachpathshape<=128components. Caller retains original samplefile regular/nonsymlink/size guards and vmmapbudgeted owned command.",
+    "Retainedfields are integers,booleans,hashes,lengths,expectedattestedpathcomponentindexes and sixfixedpublicmarkers USER,* ,...,ellipsis,~,<redacted>. Unknowncomponent/processname/plainrawpath/stack/symbol values are not serialized.",
+    "Original parse rejection is not converted to success by header equalityflags or publicmarkerrecognition. Optionaldiagnosticfailure retains only exceptionclassname and original parserRuntimeError is reraised unchanged; cancellationBaseExceptions remainuncaught by diagnostics.",
+    "Diagnosticwritten only to sample-header-failure.json or vmmap-header-failure.json in newly allocatedexclusivecycledestination through existing write_json helper,hashbound in receipt. No app injection,nativeprobe fallback,filesystemcopy outsideownedallocation or new process is added.",
+    "A parsererror after validheader can legitimately emit original_header_predicate_matchestrue/proves_provenancefalse; this does not mean the full provenance gate passed."
+  ],
+  "synthetic_test_review": {
+    "declared_tests": 99,
+    "new_tests": 8,
+    "executed_by_reviewer": 0,
+    "execution_status": "NOT RUN; root solelane must runexisting99driver via mandatoryfinalizingwrapper",
+    "new_assertions": [
+      "Exactheaders still diagnostic-only; fullpaths,processnames,stacksabsent from JSON",
+      "Publicredactions reportshape but originalverify_header rejects",
+      "Unknownprivatecomponent/processname hashed notplain",
+      "Duplicate/missing/wrongPID remainsrejected",
+      "Raw/headercount/linelength/componentboundsreject",
+      "Runner writescompactreceipt/digest yet reraises identical RuntimeError",
+      "OSError diagnosticwrite does not replace originalerror or discloseitsmessage",
+      "Successfulparse returns identicalobject and emits no diagnostic"
+    ],
+    "discovery_protection": "Driver ASTenumerates fulltestIDs/discovers actualunittests/requires exact99uniqueIDs,executes each and rejects fail/error/skip or beforeaftercontrol drift. No physicaltests enabled.",
+    "fixture_ownership": "Synthetic TemporaryDirectoryfiles are context-owned; newtestmocks exercisewrapper/parser only. No sample/vmmap/Gradle/devicecall is added to tests.",
+    "coverage_limits": [
+      "Noactualnativeheaderformat captured by these synthetic tests",
+      "Noend-to-endOS/fifo/simulatorcleanup rerun implied",
+      "Diagnostic cancellation branch not separately tested; existing RuntimeErrorhandler does not catchKeyboardInterrupt/SystemExit"
+    ]
+  },
+  "nonblocking_precision_note": "raw_observation_sha256 hashes the decoded text argument reencodedUTF8 (Path.read_text may normalizeCRLF), not guaranteed originalfilebytes. Treat it as text-observationdigest, not nativebytes/artifact attestation. Actualsuccessful external provenance still uses digest(raw_sample) separately.",
+  "conditions_before_native": [
+    "Keepnative08failedreceiptunchanged; a laterobservedformat cannot retrospectively recover its missingheaders",
+    "Runandpreserve99declared/discovered/actuallyexecutedtests with0skip/fail;rootowns solelane",
+    "Freeze newsourcebinding/controlmanifest after edits,independentlyapprove exactnewhash;oldsource07controlhash invalid for editedbytes",
+    "Noappdefect,formatrepair,Store/device readiness orfullruntime upgrade from diagnostic-onlychange"
+  ],
+  "cleanup_and_scope": "Reviewer performed only source/Gitreads andstdlibAST/hash/JSONanalysis; didnotimport executablecontrols/runbuilds/tests/probes/processcontrol. Only this newadditive reportwritten; nonecessarycleanupordiskartifacts created."
+}

@@ -1,0 +1,135 @@
+{
+  "schema": 1,
+  "kind": "INDEPENDENT_H02_HOST_ORIGIN_VOLUME_INTERPRETATION_NOT_QUALIFICATION",
+  "reviewer": "/root/protection_volume",
+  "status": "REVIEW_COMPLETE_HOST_SETTER_REJECTED_EXACT_CAUSE_UNRESOLVED",
+  "scope": "Interpret retained H02 host-origin setter metadata, compare the separately established PD08 same-inode host/Simulator exposure difference, and apply retained public API/source contracts. This is not another control, collection, cleanup or full qualification audit and does not design the separately owned syscall follow-up.",
+  "h02": {
+    "run_id": 34564001336,
+    "run_attempt": 1,
+    "source": "22ea6bebb95317e148d89b03c40cbb7efc9d36a4",
+    "control_sha256": "91e18dec83251b4e040fc9f706d652a660bdb8d46414ef08321589e8c575d5b0",
+    "runtime": "Native macOS 15.7.9/24G830 arm64; Xcode 26.3/17C529; MacOSX SDK 26.2.",
+    "fixture_origin": "One ordinary host-created file, not a PD08/PD09 Simulator inode. The frozen driver creates a private 0700 root at run_host_probe.py:330-333 and calls native.write_new; native_continuation.py:129-135 uses O_WRONLY|O_CREAT|O_EXCL, mode0600, write/flush/fsync. There is no initial Foundation protection option or NSData Complete-creation request. The before sample is therefore ordinary/default creation; the after sample follows a failed Complete request, not successful protected-file creation.",
+    "fixture_identity_before_and_after": {
+      "device": 16777229,
+      "inode": 3535393,
+      "uid": 501,
+      "mode": 33152,
+      "links": 1,
+      "size": 40,
+      "type": "regular"
+    },
+    "fixture_root": {
+      "device": 16777229,
+      "inode": 3535392
+    },
+    "identity_checks": "Both raw samples have the identical full file identity. Each contains five per-API before/after identity witnesses with descriptor_and_path_same_inode=true and a closed descriptor. The retained report's before, operation and after records match the raw records.",
+    "operation": {
+      "api": "NSFileManager setAttributes:ofItemAtPath:error:",
+      "request": "{NSFileProtectionKey: NSFileProtectionComplete}",
+      "request_count": 1,
+      "returned": false,
+      "native_error": {
+        "present": true,
+        "domain": "cocoa",
+        "code": 256
+      },
+      "error_limit": "The template normalizes NSCocoaErrorDomain to cocoa and retains only presence/domain/code. No underlying NSError chain or POSIX errno was retained; absent evidence is not evidence of an absent underlying error. Cocoa256 must not be translated into ENOTSUP or attributed to a particular syscall.",
+      "stable_setter_implementation": {
+        "receiver_class": "NSFileManager",
+        "image_basename": "Foundation",
+        "uuid": "39be75ac-350f-3b8c-9c10-8b2b5321ce8e",
+        "image_offset": 456112,
+        "platforms": [1, 6]
+      }
+    },
+    "unchanged_before_and_after": {
+      "file_manager": "Dictionary/key present, until-first-authentication, no NSError.",
+      "fresh_url": "Dictionary/key present, until-first-authentication, no NSError; volume_support=unsupported.",
+      "fcntl": {
+        "command": 63,
+        "return_value": 3,
+        "class": 3,
+        "errno": 0
+      },
+      "attrlist": {
+        "return_value": 0,
+        "class": 3,
+        "errno": 0,
+        "length": 28,
+        "returned_common_mask_hex": "0xc0000000",
+        "protection_returned": true
+      },
+      "filesystem": {
+        "type": "apfs",
+        "fsid": [16777229, 26],
+        "flags": 76582912,
+        "MNT_CPROTECT": 128,
+        "MNT_CPROTECT_set": false,
+        "content_protection_capability": "unsupported"
+      }
+    },
+    "image_context": "Stable native main UUID575678e6-131a-4043-95e6-99d6f63e4a85/platform[1]. Host FileManager getter is Foundation UUID39be75ac-350f-3b8c-9c10-8b2b5321ce8e/offset211688; URL getter is CoreFoundation UUIDbdc82415-a029-3463-ac49-1a792208ce00/offset520524. Those getter identities agree with PD08's host observations, but identity/offset alone does not reveal the installed method body or an opaque callee.",
+    "recorded_collection_and_cleanup": "Collector receipt records terminal API success, complete extraction and path/type/CRC/SHA validation. Main state is CAPTURED/errors[]; cleanup state is PASS/scratch_absent=true/errors[]. These recorded outcomes are not protection qualification; this review does not replace independent custody/cleanup acceptance."
+  },
+  "pd08_comparison": {
+    "run_id": 34558762289,
+    "source": "50a2d2d112220507faaa2a7f185d47b331423999",
+    "same_inode_pairs": 5,
+    "observation": "On each identity-validated host/Simulator pair, FileManager exposes until-first-authentication on the host but omits the key in Simulator. Both readers obtain fcntl class3/errno0 and valid-bit attrlist class3. Four regular-file fresh-URL values agree until-first-authentication; directory protection URL is unrequested/N/A. Both contexts advertise unsupported volume capability with MNT_CPROTECT clear.",
+    "filesystem_id": [16777227, 26],
+    "original_strict_synthetic_complete": {
+      "pass_count": 0,
+      "fail_count": 5,
+      "status": "FAIL"
+    },
+    "separation": "PD08 proves a same-object API/runtime-context exposure difference within its own run. H02 instead tests a native-host mutation on a separately created file in a different run with a different filesystem ID. Their matching host versions/getter images are contextual evidence, not cross-run inode or volume identity. No H02/PD08 evidence stitching is used."
+  },
+  "contract_interpretation": [
+    "Apple's Complete contract concerns encrypted-on-disk data unavailable while locked or booting. A readable class label, a successful getter, or even an affirmative setter return would not independently demonstrate device-lock/keybag enforcement. Here the actual setter return is false.",
+    "NSURLVolumeSupportsFileProtectionKey describes whether the volume supports file data protection. The retained XNU mount.h:303 defines MNT_CPROTECT as the content-protection support advertisement. Their negative observations here must not be overwritten by a readable C/class3 label.",
+    "The retained XNU kern_descrip.c:4369-4399 returns supported va_dataprotect_class through F_GETPROTECTIONCLASS without an MNT_CPROTECT prerequisite; vfs_attrlist.c:2108-2114 exposes the same attribute with returned-valid-bit handling. Readable class3 alongside a clear capability bit is therefore not an internal contradiction. The two class-read APIs are not two independent encryption/enforcement proofs.",
+    "The retained public Swift Foundation utility's getter at225-237 uses getattrlist without a returned-attribute mask. Its setter at240-244 skips an already matching class, opens O_WRONLY at246, and at265-275 suppresses F_SET ENOTSUP when fstatfs fails OR MNT_CPROTECT is clear. Its EACCES suppression at277-280 is specifically an open failure, not every setter EACCES. These public-source paths are hypotheses, not proof of the installed macOS implementation. H02's actual FALSE/Cocoa256 does not confirm the earlier predicted YES/ENOTSUP-suppression result.",
+    "The retained Swift6.2.3 FileManager+Files.swift getter at656-665 and setter at990-1000 are guarded by !targetEnvironment(simulator) && FOUNDATION_FRAMEWORK. This offers a candidate explanation for PD08's exposure difference, not exact installed-runtime branch proof. H02 itself demonstrates that the native host public setter API can be compiled and invoked; public symbol availability does not guarantee volume capability or a successful Complete transition.",
+    "The retained XNU content_protection.h places A1/C3 definitions inside PRIVATE. Numeric labels may be interpreted as reference metadata but must not become invented public SDK mutation constants. No private/numeric setter or production fallback is proposed by this review."
+  ],
+  "conclusions": {
+    "established": [
+      "One native-host public Complete request was rejected with FALSE/Cocoa256 on an ordinary host-created regular file; all retained post-read class metadata remained C/class3 and the volume advertised unsupported capability.",
+      "Simulator-origin file creation or a Simulator process is not necessary for this observed Complete-setting failure.",
+      "PD08 separately establishes the host/Simulator FileManager metadata-exposure difference on identical objects. Together these are evidence of a sampled host/runtime/filesystem-context limitation, not merely an application snapshot replacement issue."
+    ],
+    "not_established": [
+      "The underlying syscall, errno, exact installed Foundation branch, exclusive APFS/kernel cause, or whether an approved alternate mutation API could change this class.",
+      "Universal Simulator impossibility, universal macOS/APFS class-A impossibility, or the actual protection state of unobserved production snapshots.",
+      "Encryption, device-lock/keybag enforcement, a new protection PASS, or justification for changing production storage code or weakening the strict oracle."
+    ],
+    "qualification_boundary": "Retained shipping strict0/26 and APP0/6 remain unchanged; those are carried-forward gate outcomes, not recounted by this review. H02 observes no production snapshots, is host-origin only, and cannot promote any failed runtime or Store/physical-device gate.",
+    "physical_vs_diagnostic_boundary": "Actual physical-iOS evidence is required to qualify device-lock/keybag enforcement. It has not been shown necessary merely to diagnose H02's host setter rejection or PD08's metadata discrepancy. Do not declare all remaining technical investigation physical-only.",
+    "next_action_boundary": "Do not repeat the unchanged read-only matrix or broad application matrix. Preserve the actual FALSE/error result and the lack of underlying errno. Root/protection_host separately own whether a bounded underlying-error or approved SDK syscall diagnostic is justified; this interpretation neither executes nor pre-authorizes another probe."
+  },
+  "evidence_pins": {
+    "remediation-runs/2026-09-08-continuation/actions/34564001336/download-receipt.json": "8d93e0daa86bdaab17684a50b7b62f1ecd90455c7db84f05d1d7eae522375392",
+    "remediation-runs/2026-09-08-continuation/actions/34564001336/main/host-setter.stdout.json": "d6854f702329bdbc10b62bce0ea5cb7d87717640e7c3886a0f7ea0dbaa5196ac",
+    "remediation-runs/2026-09-08-continuation/actions/34564001336/main/host-setter-report.json": "59ff42a2ba9d483790e7cba177a0d4f62120fa300bd3026870148f406b1a4bed",
+    "remediation-runs/2026-09-08-continuation/actions/34564001336/main/host-setter-bindings.json": "ddbe4daf6bd3320dcceb6f46e98e450beff4e00041ff850866536ab6266b9ee6",
+    "remediation-runs/2026-09-08-continuation/actions/34564001336/main/state.json": "206a6c71a02faa2bc0e83a88e0678dc38d44066984c7249017839ee0dd592dcf",
+    "remediation-runs/2026-09-08-continuation/actions/34564001336/cleanup/state.json": "680d0c5b456dfaa4dd77c15e7865196895677ddc0893428e9e9dd787ef684125",
+    "remediation-runs/2026-09-08-continuation/actions/34558762289/main/host-report.json": "8ae063e7d7e7141fb7d5031d4e96eb2363ba4bcfdb1bc114317f849b7fb94d79",
+    "remediation-runs/2026-09-08-continuation/reviews/protection-probe-08-host-comparison-actual-independent-01.json": "03a7ecd1718ba34081a3f167900375f7234015cfcbce14678398b5ef3a492842",
+    "remediation-runs/2026-09-08-continuation/reviews/ios-protection-platform-research-01.json": "0f71f0cc408799eb3ff2ad23cc98e17f7473064db7f4f3df5bc6bcce8560de8c",
+    "remediation-runs/2026-09-07-local-readiness/evidence/l08-native09-protection-research-01/swift-tag-FileManager+Utilities.swift": "10ed21dd5fc60873916e9e5be5f7f09d43dac21da18b31de0b13de251bdd45f5",
+    "remediation-runs/2026-09-08-continuation/reviews/l08-strict-protection-investigation-02/swift-6.2.3-FileManager+Files.swift": "70a0ff4e281a35cbcc672cff7f2a6f7518fc28d2f55422a6c248825a9289e8d4"
+  },
+  "frozen_source_pins": {
+    "source": "22ea6bebb95317e148d89b03c40cbb7efc9d36a4",
+    "files": {
+      "remediation-runs/2026-09-08-continuation/protection-host-image-01/run_host_probe.py": "34f2ffb667e6957adb4f57a0166e2ef2fd6b901eecb0059ef3f66d7ac13f5ea5",
+      "scripts/ci/native_continuation.py": "0b2c0fec310afd88810b84fcc4836ec72c0a07f0ff55f495f876dd92e2f231b3",
+      "remediation-runs/2026-09-08-continuation/protection-host-image-01/HostSetterProbe.m.in": "be3f272644ea1284552f6622ed7aa02e035548802bfa5e78908e296e234c2b9b"
+    }
+  },
+  "reference_custody": "The retained ios-protection-platform-research-01.json supplies exact Apple documentation URLs/hashes and XNU references pinned to commit f6217f891ac0bb64f3d375211650a4c1ff8ca1ea. No public reference was fetched again. The three fixture/driver/template source pins refer to Git blobs at the H02 source commit, not a concurrently evolving working tree; the template SHA also matches the captured HostSetterProbe.m input binding. Public Swift/XNU source remains distinct from an installed-runtime body or kernel proof.",
+  "operations": "Local read-only JSON/source/hash and focused frozen-Git-source comparisons, plus this additive review only. JSON read-back, retained-evidence and frozen-source rehashes, and direct raw/report consistency checks use stdlib and read-only git show only. No source edits, project imports, tests, builds, native execution, network/API/CI calls, repeat matrices, new broad audits or Git writes. No temporary workers, processes or reviewer scratch remain allocated."
+}

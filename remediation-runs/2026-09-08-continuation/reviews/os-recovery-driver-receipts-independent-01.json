@@ -1,0 +1,179 @@
+{
+  "schema_version": 1,
+  "kind": "OS_RECOVERY_DRIVER_RECEIPTS_SOURCE_INDEPENDENT_REVIEW_NOT_RUNTIME_EVIDENCE",
+  "reviewer": "/root/native_ci",
+  "author": "/root/lifecycle_controls",
+  "reviewed_at": "2026-09-10T08:31:40.414Z",
+  "status": "APPROVED_THREE_FILE_SOURCE_NO_OPEN_FINDINGS_FOCUSED_TESTS_AND_PLATFORM_PENDING",
+  "readiness": "NOT_READY",
+  "baseline": {
+    "branch": "fix/local-readiness-2026-09-07",
+    "commit": "15e8982b35e39006868868a11c6f4e1864e613a7",
+    "tree": "8f3fd56f86d7934fddaff068539d69fe26d4aaad",
+    "scope": "Working-tree controls over this baseline, not new execution against a frozen source."
+  },
+  "approved_files": [
+    {
+      "path": "scripts/verification/ios-os-recovery/os_recovery_probe.py",
+      "bytes": 19615,
+      "lines": 331,
+      "sha256": "1297554fab7ae1c99d7051a63049bf1685828214e0cd208f506f65cdca7c7352"
+    },
+    {
+      "path": "scripts/verification/ios-os-recovery/os_recovery_receipts.py",
+      "bytes": 8752,
+      "lines": 127,
+      "sha256": "2f281ae42643d73d0e0591bed80ea472e766bab4ae3231a7d8e54e5d75b1a5e9"
+    },
+    {
+      "path": "scripts/verification/ios-os-recovery/test_os_recovery.py",
+      "bytes": 28119,
+      "lines": 376,
+      "sha256": "4d12c447e86dd002c7ae9117d6bbf82607a5f701a78fa351df3ad4f3ce5f4077"
+    }
+  ],
+  "scope": "Independent source review of the new private normal-Lane adapter, closed OS receipt validator and 16 declared control-test methods. Complete driver/receipts and inherited guards reopened; final two test-only additions inspected after runtime-source pins were stable. Copy/Swift and CI files have separate authors and independent approvals; this report does not replace those reviews or execute their code.",
+  "findings": [],
+  "closed_findings": [
+    {
+      "id": "OS-DRIVER-SIGTERM-FINALIZER",
+      "origin": "Reviewer and coordinator independently identified missing entrypoint handler",
+      "resolution": "The entrypoint now uses the existing normal runner pattern: SIGTERM raises KeyboardInterrupt; run catches it as failure and invokes the unchanged deferred-signal finalizer. No signal masks, expected-kill success or forced cleanup shortcut. Added AST-entrypoint and interrupted-run test source; execution pending.",
+      "source": "os_recovery_probe.py:290-309,327-331; test_os_recovery.py:358-372"
+    },
+    {
+      "id": "OS-BOOTSTRAP-ACTUAL-FAILURE-TIMEOUT",
+      "origin": "Independent reviewer",
+      "resolution": "Admission scans log, summary and full retained tests JSON for timeout evidence. Failed selected XCTest requires 1..8 bounded nonempty failures tied to exact target/method/name; exact integer summary/device counts and bounded node tree/results apply. Natural completed exit65 remains FAIL and can only precede separate diagnostics, never expected-kill PASS. Command exceptions, timeout, missing preservation, failed stop/extraction or contradictory exits cannot admit proof.",
+      "source": "os_recovery_receipts.py:27-73; test_os_recovery.py:162-199"
+    },
+    {
+      "id": "OS-STAGE-SEMANTIC-STATUS",
+      "origin": "Independent reviewer",
+      "resolution": "Attempted bootstrap starts bootstrap_status=FAIL. After ordinary command completion its row is set FAIL until exact selected XCTest validation succeeds. Proof is reset FAIL immediately after successful invocation and remains so until all unchanged OS and image validators pass. Error paths do not disguise attempted work as NOT_RUN or equate exit0 with semantic proof.",
+      "source": "os_recovery_probe.py:206-282"
+    },
+    {
+      "id": "OS-PRESERVE-RAW-BEFORE-PARSING",
+      "origin": "Independent reviewer",
+      "resolution": "Raw app-data files are retained before JSON validation using the unchanged strong owned_bytes reader; nonempty malformed/truncated JSON survives with matching digest and is rejected later by original JSON/schema validators. Exclusive destination creation, canonical owned container paths and closed image names remain. Zero-byte, oversize or redirected files still fail strong preservation; allocation retention/no proof is intentional, not a validation waiver.",
+      "source": "os_recovery_probe.py:152-179; test_os_recovery.py:232-245"
+    },
+    {
+      "id": "OS-EVIDENCE-AND-PRODUCT-BOUNDS",
+      "origin": "Independent reviewer",
+      "resolution": "Stage archives must be canonical regular current-owner single-link files, 0<size<=64MiB. Cumulative evidence stays <=224MiB/4000 files before finalization, under CI256MiB/4096 custody limits. Product inventory counts all enumerated entries up to20000, checks resolved paths under owned temporary root, hashes every file and bounds individual size. New actual tempfile test checks stable hashes, mutation and external symlink rejection.",
+      "source": "os_recovery_probe.py:120-137,180-205; test_os_recovery.py:261-273"
+    }
+  ],
+  "independent_checks": {
+    "identity": "Final three source hashes/byte counts independently matched author pins; all three parsed with stdlib ast only. Read-only git HEAD/tree and tracked-diff checks confirm inherited normal/F/support controls unchanged. No project module imported or executed by reviewer.",
+    "private_imports": "Normal graph uses pinned original runner plus canonical ios-readiness support; F graph uses the archived functional directory, whose copied_sources differs and must not be substituted. Per-module __import__ and private sys.modules names preserve transitive origins and restore sys.path without replacing shared aliases. New source tests explicitly check both top-level and transitive globals.",
+    "inherited_guards": "Original normal command, temporary allocation, Gradle stop, artifact/notices/signature inventory, worker verification, lifecycle and precise removal/finalizer methods are inherited unchanged. Only aggregate control manifest, copied-source transforms/manifest/inspection and scoped execution/observation/classification are adapted. Exact source/copy/control, ownership and cleanup failures remain failures.",
+    "control_and_cli": "Aggregate controls include full normal/support plus F and new local controls, workflow/CI and optional binding. Explicit ios-readiness-NN, approved64hex aggregate, qualified-xcode-26.3, direct-owned-v1 and adhoc-only invocation required under nonblocking owned build-lane lock. No normal libproc flag, Settings-only or alternate mode admitted.",
+    "one_build": "One build-for-testing selects both distinct new methods; bootstrap and proof each execute test-without-building with exactly one selector. Same copied project/scheme/Debug SDK, owned UUID, DerivedData and signing arguments. Distinct build/bootstrap/proof result bundles/logs; no iteration flag, copy mutation or build between stages.",
+    "budgets": {
+      "stage_command_seconds": {
+        "build": 2700,
+        "bootstrap": 600,
+        "proof": 900
+      },
+      "bootstrap_test_default_max_seconds": [
+        300,
+        420
+      ],
+      "proof_test_default_max_seconds": [
+        600,
+        720
+      ],
+      "meaning": "Bounds only, not timeout diagnoses or evidence of native completion."
+    },
+    "transitions": "Before bootstrap, before proof and after proof: stop/reap owned workers, reject live/unknown/secondary failures; exact original source and approved controls, unchanged copied inputs and product hashes; exact same Booted owned simulator. Embedded Gradle build/stop and effective app phase verified after the single build.",
+    "stage_failure_barrier": "Every attempt resets postbuild_evidence_preserved=False and command_completed=False. Only ordinary returned command assigns stage exit; exception never fabricates one. Immediate stop and preservation both attempted on success/failure/interrupt. Any exception propagates and prevents later stages; postbuild preservation is true only for all attempted stages. Finalizer retains the original cleanup/deletion barriers.",
+    "bootstrap_semantics": "Unique bounded stage marker identifies schema/stage/UUID/fresh-shaped run token. Exact one selected non-skipped bootstrap XCTest/device/result required. Ordinary exit65 may permit independent proof only after full preservation/stop/extraction and no timeout evidence; original bootstrap failure and final overall FAIL remain visible.",
+    "proof_semantics": "Exact one passed unskipped proof XCTest and unique proof marker required. Original public prerequisite must say already-satisfied, arabic_added=false and preexisting configuration verified. Original preference, public action and pane validators all mandatory, unchanged and required PASS; original common report validation and native image binding also mandatory. Proof cannot add/retry a language. ABSENT representation cannot be called PRESENT coverage.",
+    "provenance": "Original artifact_inventory executes real built/installed binary equality, source notices, framework UUIDs and strict adhoc signatures before verify_proof. Its combined built-installed inventory can be supplied twice only because that unchanged equality has already run, not as invented equality. Every actual before_main report start requires one exact-schema bounded ordinal/token/boot/UUID/signing/PID image record. Original bind_loaded_images verifies full actual app images/framework bytes+UUID+origin and loader environment; inventory without runtime rows is insufficient.",
+    "status_separation": "Original normal runtime/provenance/notices stay NOT_RUN; original notices outcome is moved to os_notice_package_status. Overall SCOPED_OS_RECOVERY_VERIFIED requires all three stage PASS plus validated OS/provenance/notices and all integrity/cleanup barriers. Failed bootstrap with independently complete proof can yield os_subgate_status=PASS only while overall remains FAIL. No original A five-test, functional20, host42, native8 or normal-B credit.",
+    "test_source": "All16 declared methods read, not executed. Final additions use actual products() tempfile hash/escape behavior and verify_proof orchestration with real old preference/common/image fixtures; mocked original prerequisite/action/pane wrappers test mandatory calls plus each failure path and forbidden add-language. Existing tests cover private imports, actual no-build copy assembly/inventory, selectors, natural65, timeout/failure/device/token rejection, per-stage stop/preservation, malformed raw retention, transition fences, image mutations, semantic classification and SIGTERM. Synthetic fixtures are not OS/runtime evidence.",
+    "compatibility": "No application/game/domain/protocol/storage/dependency changes by approved files. Host-only reducer authority, exact4.2, deterministic seed behavior, privacy boundaries, strict snapshot/content/protection validation, Doctor behavior and Leave-confirmation timing are not changed. Original F/P/B campaigns and failed receipts remain intact."
+  },
+  "unchanged_base": {
+    "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
+    "bytes": 67784,
+    "sha256": "766087ddf72b50f51b1c4072c64afb1a7dd231f047d26e534817cddf9be295bf"
+  },
+  "independently_equal_functional_and_support_helpers": [
+    {
+      "name": "os_preference_receipts.py",
+      "bytes": 11259,
+      "sha256": "9de723db33e6a074261ae6199c55da7196bdbdc257a5ecaa558bcbc19f005c52"
+    },
+    {
+      "name": "os_action_receipts.py",
+      "bytes": 13583,
+      "sha256": "54a5f6c0ceb669bae65d2be9480f691cc19bc77bcc5d77c75904cc3d4cc2e7bb"
+    },
+    {
+      "name": "os_pane_receipts.py",
+      "bytes": 4348,
+      "sha256": "4ffcba3ade80bfa334b14f5bcddec0527148983a99b2dbf1263bde091efc9229"
+    },
+    {
+      "name": "public_interaction_receipts.py",
+      "bytes": 7561,
+      "sha256": "4583b8e9545dbe16ef3ee6f59d7d34a2bfd1421402b0f532a0b84aa2b2f63040"
+    },
+    {
+      "name": "prerequisite_receipts.py",
+      "bytes": 9881,
+      "sha256": "708116f488083da11357c053c6e56f5186bbde4707f1ba487a35ca363a09fd5b"
+    },
+    {
+      "name": "probe_validation.py",
+      "bytes": 25774,
+      "sha256": "134bb3affe45711ec3f74d7091ec59b7f859ca4f5fa04df1d895ce3250fd3aa2"
+    },
+    {
+      "name": "artifact_inventory.py",
+      "bytes": 14188,
+      "sha256": "485196bd7dcebccaa5ad552896c7e2da781fbf6fa6fff6ef2ab350ecc9360124"
+    },
+    {
+      "name": "simulator_signing.py",
+      "bytes": 10652,
+      "sha256": "89524b777694f8504008a83b60299725cae01e8b642c10754283d79ce1974d1e"
+    }
+  ],
+  "separate_reviews": [
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/os-recovery-copy-swift-independent-01.json",
+      "sha256": "17a9b45b0c7de7d157677fa07d74df83d6860ffa4b976087e5a3926ad4fe01c8",
+      "scope": "Four copy/Swift controls independently approved by portability_review; reviewed integration requirements met in current driver source, not native proof."
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/os-recovery-ci-independent-01.json",
+      "sha256": "b3fee55d3dee92e57b73e90a57bd9bb9b276ea0d438b08f532f5848927015ae2",
+      "scope": "Seven CI files independently approved by ci_review. Driver stage/result/budget/status interface pins match that report; later changes require applicability recheck."
+    }
+  ],
+  "historical_boundary": "A37 actual natural65/four wrapper PASS+one long FAIL and signal-kill sender unknown remain failures; no OS postproof/timeout diagnosis. Separately actually executed retrospective functional20/13boot and host42/3boot components passed but strict0/26 remains FAIL and A37/full qualification did not pass. Earlier B30 evidence is only at its actual source/scope and admissible applicability; no fresh normal-B runtime here. Overall NOT_READY.",
+  "required_next": [
+    "Coordinator alone executes focused Linux tests, including final test-only additions, in the batched owned lane; independently reconcile actual receipts and immediate-stop/precise-cleanup evidence.",
+    "Commit reviewed source/control changes, regenerate and commit mechanical inventory, verify ordinary push/remote, create fresh source/control bindings for frozen source.",
+    "Inspect independently admitted scoped preflight producer and actual new OS recovery artifact with source/control/copy/command/XCTest/marker/image/signature/custody/cleanup joins; preserve every failure and keep bootstrap distinct from OS subgate.",
+    "Finish source-appropriate dependency chain and combined qualification/reconciliation without recycling component PASS into overall readiness.",
+    "Physical-device/actualLAN, Store identity/signing/publication/operations and separate owner/legal requirements remain outside this source approval."
+  ],
+  "verification_performed": {
+    "read_only_git_text_hash_ast": true,
+    "project_imports": false,
+    "tests": false,
+    "builds_or_gradle": false,
+    "native_or_simulator": false,
+    "process_sampling_or_signals": false,
+    "network_or_actions": false,
+    "canonical_edits": false,
+    "sole_new_output": "This additive independent review JSON."
+  },
+  "cleanup": "Reviewer started no build/test/native cycle or project worker; no build cleanup owed. Source/configuration/global caches, existing evidence and unrelated work left untouched."
+}

@@ -1,0 +1,26 @@
+{
+  "reviewer": "/root/mafia_cont",
+  "at": "2026-09-05T18:32:16.170237+00:00",
+  "file": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-05-confirmed-fixes/run_gradle_cycle.py",
+  "sha256": "606b0f619612e7923f3f6170dd9c2ec0cebc53c60a228d23ebcc544a01a5e7c1",
+  "reviewed_lines": [
+    1,
+    253
+  ],
+  "classification": "CONDITIONAL APPROVAL \u2014 controlled Gradle-only single lane",
+  "no_execution": true,
+  "revalidated": [
+    "RUNNER-MF-1 capture failures now prevent output deletion, leave explicit retained outputs and fail receipt.",
+    "RUNNER-MF-2 repeated signals deferred during finalization; independent attempts continue after stage failure.",
+    "RUNNER-MF-3 process groups and cycle marker record ownership, workers stopped and survivors block cleanup.",
+    "Pre-existing outputs/symlinks and pre-existing Gradle8.13 daemons cause refusal.",
+    "No global cache cleanup and no private signing invocation introduced."
+  ],
+  "notes": [
+    "Parent-PID propagation should additionally attest current parent identity before claiming a new descendant; avoid PID-reuse ambiguity.",
+    "Include remaining_outputs in PASS conjunction; fail on any residual output even when no other cleanup exception.",
+    "Before/after source drift is recorded but PASS is only command/cleanup status: do not treat as fixed frozen-source verification.",
+    "No arbitrary --command/physical-device/Xcode run covered by this review; re-review resource/signing/DerivedData ownership first.",
+    "No synthetic OS process test executed by reviewer; root owns the sole process/build lane."
+  ]
+}

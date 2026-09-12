@@ -1,0 +1,178 @@
+{
+  "schema": 1,
+  "kind": "INDEPENDENT_PROTECTION_DIAGNOSTIC_SOURCE_REVIEW_NOT_RUNTIME_PROOF",
+  "reviewer": "/root/fixture_review",
+  "implementation_author": "/root/native_ci",
+  "status": "SOURCE_APPROVED_FOR_FOCUSED_DIAGNOSTIC_AFTER_ROOT_TESTS_AND_FREEZE",
+  "reviewed_at": "2026-09-10T19:49:33.125137+00:00",
+  "checkout_head": "0b192d63729b884b7f45ddab14c7a67da922f457",
+  "checkout_tree": "d78587d9e2446441c03d4ca5aee5c382c7e97e39",
+  "scope": "The six additive standalone controls, actual shared sampler, receipt validation, exact job admission and owned lifecycle. No production application or historical qualification result is approved.",
+  "reviewed_files": [
+    {
+      "path": "remediation-runs/2026-09-08-continuation/protection-diagnostic-01/ProbeMain.m",
+      "bytes": 12266,
+      "sha256": "2bc27d38befad2f13e80e10985007431160479f661a775a59a7c0a67a41099c1"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/protection-diagnostic-01/ProtectionSampler.h",
+      "bytes": 498,
+      "sha256": "f606f61c7e8c2271cd23abb3876d1b6e0daff40ccdcd9d0f43b949d4d502bb13"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/protection-diagnostic-01/ProtectionSampler.m",
+      "bytes": 13371,
+      "sha256": "8b28b174dd335081b93cdbef70cb05618c0b130717414fa2683012228cd5f112"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/protection-diagnostic-01/README.md",
+      "bytes": 6358,
+      "sha256": "cc06492a8626d73d528d9d2fa1377f6675fb2ef16533b75c73c000e7bd762a85"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/protection-diagnostic-01/run_probe.py",
+      "bytes": 43147,
+      "sha256": "635dfe9e9eef7bba22e7a27a5b30ea4f0ed0ba2669a69e20ec9c9ef52850e6a2"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/protection-diagnostic-01/test_probe.py",
+      "bytes": 12718,
+      "sha256": "6f55b81b74ce7036fda480f7cf422566a2fe3fe5c5b3b0ca1f9aa874f765812c"
+    }
+  ],
+  "current_control_closure": {
+    "recipe": "Sorted {path,sha256} rows; JSON separators=(comma,colon), UTF-8, SHA256. Reconstructed using standard-library file inspection, never project imports.",
+    "control_sha256": "48d7857c10514563208e7f80568dbca781888edf6222d6f5aa0d4c751ab5e14a",
+    "files": [
+      {
+        "path": ".github/workflows/production-verification.yml",
+        "sha256": "0e5db3ed963b0a047f0730cf867a08109798036a3c041e16913fe7445f6d2a63"
+      },
+      {
+        "path": "composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSnapshotFileSystem.kt",
+        "sha256": "c2852fafb293a693be830171f4674947289fafb07f8ecdbafa5c0aaae6d1bf8b"
+      },
+      {
+        "path": "gradle/wrapper/gradle-wrapper.jar",
+        "sha256": "81a82aaea5abcc8ff68b3dfcb58b3c3c429378efd98e7433460610fecd7ae45f"
+      },
+      {
+        "path": "gradle/wrapper/gradle-wrapper.properties",
+        "sha256": "c040b6ef2fb893ff5beea5a281614f2848f1c3996a7886f650b713f8240656a2"
+      },
+      {
+        "path": "gradlew",
+        "sha256": "734b3879d3501dce471cf0522d3bcbafe76873d9fc5129345b67fb43bd15e933"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/protection-diagnostic-01/ProbeMain.m",
+        "sha256": "2bc27d38befad2f13e80e10985007431160479f661a775a59a7c0a67a41099c1"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/protection-diagnostic-01/ProtectionSampler.h",
+        "sha256": "f606f61c7e8c2271cd23abb3876d1b6e0daff40ccdcd9d0f43b949d4d502bb13"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/protection-diagnostic-01/ProtectionSampler.m",
+        "sha256": "8b28b174dd335081b93cdbef70cb05618c0b130717414fa2683012228cd5f112"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/protection-diagnostic-01/README.md",
+        "sha256": "cc06492a8626d73d528d9d2fa1377f6675fb2ef16533b75c73c000e7bd762a85"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/protection-diagnostic-01/run_probe.py",
+        "sha256": "635dfe9e9eef7bba22e7a27a5b30ea4f0ed0ba2669a69e20ec9c9ef52850e6a2"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/protection-diagnostic-01/test_probe.py",
+        "sha256": "6f55b81b74ce7036fda480f7cf422566a2fe3fe5c5b3b0ca1f9aa874f765812c"
+      },
+      {
+        "path": "scripts/ci/native_continuation.py",
+        "sha256": "0492dcb3acc225c567a266152f0d2a136e565e84c2c2dba9846a2eb11d208ca6"
+      },
+      {
+        "path": "scripts/ci/native_process_probe.py",
+        "sha256": "c87f6d1289ee50a7387988bd85953d451dac9e1b7b88a4d60f7b4848f86516da"
+      },
+      {
+        "path": "scripts/ci/owned_ci_simulator.py",
+        "sha256": "717c8c02dc06e4eac175c5dde5c7f9bdd6ebbd5e7028cc94c6ba4f84b44388af"
+      },
+      {
+        "path": "scripts/ci/verification_hygiene.py",
+        "sha256": "db1ceebf56ab3c10f9bb52dba12b8b7e77b9aedd97c6113b53c59a7267022fbc"
+      }
+    ]
+  },
+  "resolved_findings": [
+    {
+      "id": "PD-R1",
+      "finding": "Final workflow assertion lacked the main artifact upload environment required by assert_result.",
+      "resolution": "Final step now explicitly supplies main and cleanup upload outcomes, IDs and digests; assert_result requires both distinct immutable artifacts."
+    },
+    {
+      "id": "PD-R2",
+      "finding": "Persisted native observations could accept absent returned protection bits as class zero or malformed unavailable/errno/type data.",
+      "resolution": "Native parser and validator retain actual returned/data-protection masks and attribute_set_t size, enforce lengths/presence/return+errno, and reject fabricated unavailable classes and boolean class/return values. Unsupported or missing observations never pass strict Complete."
+    },
+    {
+      "id": "PD-R3",
+      "finding": "Diagnostic custody needed explicit nonroot/private-directory and immutable uploaded-journal treatment.",
+      "resolution": "Nonroot equal real/effective UID and 0700 source-custody guards are present. Cleanup copies exact creation journals into its own uploaded bundle before existing adoption/shutdown/delete logic; uncertain tools retain scratch as failure."
+    }
+  ],
+  "source_conclusions": [
+    "Only four fixed synthetic leaves beneath an exclusively created compiled device/inode-bound root are authorized. Optional setters affect only the previously observed None control. No private class header or numeric PROTECTION_CLASS_A fallback is used.",
+    "FileManager/fresh NSURL/fcntl/fgetattrlist/fstatfs reads are bracketed by the same path and open-FD identity. Each sample closes its descriptor in finally. Complete atomic replacement occurs only after observers return and uses a new post-write identity; inode replacement is observed, not assumed.",
+    "F_GETPROTECTIONCLASS is consumed as the direct integer return with immediately captured errno. Returned-attribute absence maps to null, not zero. Public installed SDK hashes, matching declaration excerpts and preprocessor macros are scheduled for capture; no selected SDK has executed in this review.",
+    "Concrete receiver+selector method IMP identities are recorded before/after, not substituted with class-image identity. Fresh built UUID and binary hash bind the standalone simulator executable. This cannot attest opaque callees, compile-time Foundation branches or mapped pages.",
+    "Exact repository/branch/workflow/job/source/control, clean tracked full history, qualified Xcode/SDK/runtime and nonroot arm64 admission precede allocation. The existing bounded direct-child/process and journaled simulator utilities are reused, not weakened.",
+    "Evidence precedes mandatory post-cycle Gradle stop. Successful upload is needed before destructive cleanup; simulator disappearance and private scratch removal are checked. No project build outputs, global caches, user simulator, arbitrary PID/PGID or historical evidence directory are cleanup targets.",
+    "CAPTURED_SYNTHETIC_METADATA_NOT_APP_QUALIFICATION and the independently recomputed four-sample strict_synthetic_complete result are separate. The latter remains FAIL for missing/non-Complete/error-bearing getter data even if collection succeeds."
+  ],
+  "validation": {
+    "reviewer_execution": "Read-only Git and standard-library AST/JSON/hash/text inspection only. No project imports, tests, compiler, simulator, workflow, signals or cleanup execution.",
+    "python_ast": "Both Python files parsed without execution.",
+    "test_source_cases": [
+      "test_collection_is_not_strict_or_application_pass",
+      "test_missing_event",
+      "test_reordered_events",
+      "test_stale_source",
+      "test_wrong_runtime",
+      "test_wrong_main_uuid",
+      "test_strict_failure_cannot_be_promoted",
+      "test_changed_fd_witness",
+      "test_unclosed_fd",
+      "test_observer_must_not_hold_fd_across_write",
+      "test_wrong_write_options",
+      "test_getter_imp_changes",
+      "test_getter_selector_not_class_image",
+      "test_attr_missing_bit_is_not_class_zero",
+      "test_attr_unrequested_bit",
+      "test_attr_positive_return_is_invalid",
+      "test_available_attr_class_zero_remains_observation",
+      "test_fcntl_errno_cannot_be_class",
+      "test_fcntl_bool_is_not_integer_class",
+      "test_unavailable_api_cannot_supply_class",
+      "test_capability_claim_must_match_flag",
+      "test_filesystem_bool_return_rejected",
+      "test_duplicate_json_key",
+      "test_upload_failure_and_missing_identity_rejected",
+      "test_controls_bind_each_owned_and_transitive_input",
+      "test_exact_job_and_source_admission",
+      "test_unknown_cli_cannot_allocate"
+    ],
+    "executed_test_count_by_reviewer": 0,
+    "root_test_results": "Not asserted by this source review; coordinator owns and must retain actual results."
+  },
+  "kept_limits": [
+    "A37 remains 0 PASS / 26 FAIL. No old production inode is sampled here; no strict application L08, normal Debug provenance, dependency chain, combined qualification, hardware enforcement or Store approval follows.",
+    "System IMP image collection currently requires one LC_BUILD_VERSION and platform7. Zippered/system images may fail that guard; no installed image proving such failure was examined. Preserve actual failure and review any future correction rather than weakening the main simulator guard speculatively.",
+    "This source approval is for the listed bytes. Commit independently reviewed controls, then regenerate/commit the mechanical inventory and create fresh source bindings before native execution. A changed control digest requires delta review.",
+    "Broader full-workflow splitting and unrelated hygiene edits are outside this review. Their inclusion in the control closure is binding, not a replacement for the separate CI review.",
+    "Physical-device, Store-operation and separate owner/legal requirements remain unexecuted and independent."
+  ],
+  "cleanup": "This reviewer allocated no build/test/simulator resources. Only this authorized additive review report was created; root remains sole build/cleanup/Git coordinator."
+}

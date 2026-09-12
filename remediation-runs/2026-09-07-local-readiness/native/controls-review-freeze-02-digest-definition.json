@@ -1,0 +1,8 @@
+{
+  "applies_to": "remediation-runs/2026-09-07-local-readiness/native/controls-review-freeze-02.json",
+  "manifest_file_sha256": "836f0f480ad87cbb855636d6f7486541b05fe322a1c1852b4b68ed7f8283700d",
+  "inventory_manifest_sha256": "d9c697f7c1be947a4534f115a80634ed4395f33aaeacc8c3698804704fcc5c45",
+  "digest_definition": "SHA256(json.dumps([[row['path'], row['sha256'], row['lines']] for row in files], separators=(',', ':')).encode('utf-8'))",
+  "ordering": "files array, sorted by source Path during freeze; absolute line counts, raw-byte file SHA256, repository-relative path",
+  "not_equivalent_to": "Runner control_hash, which includes an explicitly selected source-binding file and independently needs approval; direct JSON object-row serialization; manifest-file digest."
+}

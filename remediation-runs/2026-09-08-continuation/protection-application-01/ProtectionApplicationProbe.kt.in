@@ -1,0 +1,217 @@
+@file:OptIn(kotlinx.cinterop.ExperimentalForeignApi::class, kotlinx.cinterop.BetaInteropApi::class)
+
+package com.parlor.app.storage
+
+import com.parlor.storage.snapshot.SnapshotProtectionException
+import com.parlor.storage.snapshot.requireSafeSnapshotFileName
+import kotlinx.cinterop.ObjCObjectVar
+import kotlinx.cinterop.alloc
+import kotlinx.cinterop.memScoped
+import kotlinx.cinterop.ptr
+import kotlinx.cinterop.value
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.runBlocking
+import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
+import platform.Foundation.NSApplicationSupportDirectory
+import platform.Foundation.NSBundle
+import platform.Foundation.NSDataWritingAtomic
+import platform.Foundation.NSDataWritingFileProtectionComplete
+import platform.Foundation.NSError
+import platform.Foundation.NSFileManager
+import platform.Foundation.NSFileProtectionComplete
+import platform.Foundation.NSFileProtectionCompleteUnlessOpen
+import platform.Foundation.NSFileProtectionCompleteUntilFirstUserAuthentication
+import platform.Foundation.NSFileProtectionKey
+import platform.Foundation.NSFileProtectionNone
+import platform.Foundation.NSHomeDirectory
+import platform.Foundation.NSProcessInfo
+import platform.Foundation.NSURL
+import platform.Foundation.NSUserDomainMask
+import platform.posix.S_IFDIR
+import platform.posix.S_IFMT
+import platform.posix.S_IFREG
+import platform.posix.getuid
+import platform.posix.lstat
+import platform.posix.stat
+
+/**
+ * Added ONLY to an owned Debug copy. The production filesystem and Keychain
+ * files stay byte-identical. This is a real filesystem/crypto call with PUBLIC
+ * synthetic bytes, not GameSnapshot validation, a game scenario, or L08 PASS.
+ *
+ * The callback runs synchronously, and must close every observation descriptor
+ * before it returns: an open old-file descriptor must not perturb atomic replace.
+ */
+fun runProtectionApplication(runToken: String, observe: (String, String) -> String): String = runBlocking {
+    val files = NSFileManager.defaultManager
+    val rows = mutableListOf<JsonObject>()
+    var stage = "context"
+    var writeOrdinal = 0
+    var firstRoundtrip = false
+    var secondRoundtrip = false
+    val first = "{\"fixture\":\"public-protection-diagnostic\",\"ordinal\":1}".encodeToByteArray()
+    val second = "{\"fixture\":\"public-protection-diagnostic\",\"ordinal\":2}".encodeToByteArray()
+    fun report(status: String, failure: String = "none") = buildJsonObject {
+        put("schema_version", 1)
+        put("kind", "protection-application-kotlin")
+        put("run_token", runToken)
+        put("status", status)
+        put("stage", stage)
+        put("failure", failure)
+        put("first_roundtrip", firstRoundtrip)
+        put("overwrite_roundtrip", secondRoundtrip)
+        put("samples", JsonArray(rows.toList()))
+        put("snapshot_validation_tested", false)
+        put("hardware_protection_verified", false)
+        put("l08_requirements_waived", false)
+    }.toString()
+    try {
+        check(Regex("[a-f0-9]{8}(-[a-f0-9]{4}){3}-[a-f0-9]{12}").matches(runToken))
+        val environment = NSProcessInfo.processInfo.environment
+        check(NSBundle.mainBundle.bundleIdentifier == "com.parlor.app.debug")
+        check(environment["PARLOR_PROTECTION_TOKEN"] == runToken)
+        check(environment["PARLOR_PROTECTION_MODE"] == "actual-filesystem")
+        val device = environment["SIMULATOR_UDID"] as? String
+        check(device != null && device == environment["PARLOR_PROTECTION_EXPECTED_UDID"])
+        val home = protectionCanonical(NSHomeDirectory())
+        check(home.contains("/CoreSimulator/Devices/$device/data/Containers/Data/Application/"))
+        val support = checkNotNull(files.URLForDirectory(
+            NSApplicationSupportDirectory, NSUserDomainMask, null, false, null,
+        )?.path)
+        check(support.startsWith(NSHomeDirectory() + "/"))
+        val directory = home + support.removePrefix(NSHomeDirectory()) + "/Parlor/snapshots"
+        val name = "protection-$runToken.snapshot.json"
+        requireSafeSnapshotFileName(name)
+        val path = "$directory/$name"
+        stage = "initial-absence"
+        // Never precreate/repair the production snapshots directory ourselves.
+        check(!files.fileExistsAtPath(directory))
+        check(!files.fileExistsAtPath(path))
+
+        fun sample(observedPath: String, boundary: String) {
+            val target = when (observedPath) {
+                directory -> "directory"
+                path -> "file"
+                else -> error("unexpected-observer-path")
+            }
+            val identifier = if (target == "directory") "directory-$boundary" else "write-$writeOrdinal-$boundary"
+            stage = identifier
+            check(protectionCanonical(observedPath) == observedPath)
+            val before = protectionIdentity(observedPath, target)
+            val attributes = memScoped {
+                val error = alloc<ObjCObjectVar<NSError?>>()
+                error.value = null
+                val key = checkNotNull(NSFileProtectionKey)
+                val complete = checkNotNull(NSFileProtectionComplete)
+                val values = files.attributesOfItemAtPath(observedPath, error.ptr)
+                val value = values?.get(key)
+                buildJsonObject {
+                    put("dictionary_present", values != null)
+                    put("key_present", values?.containsKey(key) == true)
+                    put("value", when {
+                        values == null -> "unavailable"
+                        !values.containsKey(key) -> "missing"
+                        value == null -> "null"
+                        value == NSFileProtectionComplete -> "complete"
+                        value == NSFileProtectionNone -> "none"
+                        value == NSFileProtectionCompleteUnlessOpen -> "unless-open"
+                        value == NSFileProtectionCompleteUntilFirstUserAuthentication -> "until-first-authentication"
+                        value is String -> "other-string"
+                        else -> "non-string"
+                    })
+                    // Keep the original equality visible; an error-bearing or
+                    // missing dictionary must never become a new strict PASS.
+                    put("original_equality", value == complete)
+                    put("comparison", if (values != null && values.containsKey(key) &&
+                        error.value == null && value == complete) "PASS" else "FAIL")
+                    put("error_present", error.value != null)
+                    put("error_code", error.value?.code ?: 0L)
+                }
+            }
+            val after = protectionIdentity(observedPath, target)
+            check(before == after)
+            val row = buildJsonObject {
+                put("ordinal", rows.size + 1)
+                put("id", identifier)
+                put("target", target)
+                put("identity_before", before)
+                put("identity_after", after)
+                put("kotlin_fm", attributes)
+                put("kotlin_options", buildJsonObject {
+                    put("atomic", NSDataWritingAtomic.toLong())
+                    put("complete", NSDataWritingFileProtectionComplete.toLong())
+                    put("combined", (NSDataWritingAtomic or NSDataWritingFileProtectionComplete).toLong())
+                    put("protection_key", checkNotNull(NSFileProtectionKey))
+                    put("complete_value", checkNotNull(NSFileProtectionComplete))
+                })
+            }
+            check(rows.size < 6)
+            rows += row // Preserve even if the native callback rejects collection.
+            check(observe(observedPath, row.toString()) == "recorded")
+            check(protectionIdentity(observedPath, target) == after)
+        }
+
+        val filesystem = IosSnapshotFileSystem(backupExcluder = { url ->
+            val observedPath = checkNotNull(url.path)
+            sample(observedPath, "before-backup")
+            // The real production exclusion and its fresh-URL readback execute.
+            excludeSnapshotFromBackup(url)
+            sample(observedPath, "after-backup")
+        })
+        stage = "first-write"
+        writeOrdinal = 1
+        filesystem.write(name, first)
+        stage = "first-roundtrip"
+        checkNotNull(filesystem.read(name)).also { restored ->
+            try { check(restored.contentEquals(first)); firstRoundtrip = true } finally { restored.fill(0) }
+        }
+        stage = "atomic-overwrite"
+        writeOrdinal = 2
+        filesystem.write(name, second)
+        stage = "overwrite-roundtrip"
+        checkNotNull(filesystem.read(name)).also { restored ->
+            try { check(restored.contentEquals(second)); secondRoundtrip = true } finally { restored.fill(0) }
+        }
+        check(rows.size == 6)
+        stage = "complete"
+        // Leave ONLY our ciphertext for read-only host-native same-inode queries.
+        // The existing owned-simulator finalizer deletes its app and Keychain.
+        report("OBSERVATIONS_COMPLETE")
+    } catch (cancelled: CancellationException) {
+        throw cancelled
+    } catch (failure: Exception) {
+        report("CONTROL_ERROR", if (failure is SnapshotProtectionException) "snapshot-protection" else "io-or-control")
+    } finally {
+        first.fill(0)
+        second.fill(0)
+    }
+}
+
+/** Its actual exported method IMP binds this executed hook to ComposeApp. */
+class ProtectionApplicationImageMarker {
+    fun sourceBoundMarker(): Boolean = true
+}
+
+private fun protectionCanonical(path: String): String = checkNotNull(
+    NSURL.fileURLWithPath(path).URLByResolvingSymlinksInPath?.path,
+)
+
+private fun protectionIdentity(path: String, target: String): JsonObject = memScoped {
+    val value = alloc<stat>()
+    check(lstat(path, value.ptr) == 0)
+    val type = value.st_mode.toInt() and S_IFMT.toInt()
+    check(value.st_uid == getuid())
+    check(type == if (target == "directory") S_IFDIR.toInt() else S_IFREG.toInt())
+    check(target == "directory" || value.st_nlink.toLong() == 1L)
+    buildJsonObject {
+        put("device", value.st_dev.toLong())
+        put("inode", value.st_ino.toLong())
+        put("uid", value.st_uid.toLong())
+        put("file_type", type)
+        put("links", value.st_nlink.toLong())
+        put("bytes", value.st_size)
+    }
+}

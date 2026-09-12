@@ -1,0 +1,179 @@
+{
+  "accessed_at_utc": "2026-09-07T20:28:15.750320+00:00",
+  "bytes": 727564,
+  "final_url": "https://support.apple.com/guide/security/data-protection-overview-secf6276da8a/web",
+  "name": "apple-platform-data-protection",
+  "request_url": "https://support.apple.com/guide/security/data-protection-overview-secf6276da8a/web",
+  "response_sha256": "8bfcf2cbc58e3e01afdd5ba41acadf269696b2b8aed9ed1129f5eab11c0aa128",
+  "selected_visible_paragraphs": [
+    {
+      "paragraph": 1,
+      "text": "Data Protection overview - Apple Support"
+    },
+    {
+      "paragraph": 2,
+      "text": "Apple"
+    },
+    {
+      "paragraph": 3,
+      "text": "Store"
+    },
+    {
+      "paragraph": 79,
+      "text": "Apple Security Research Device"
+    },
+    {
+      "paragraph": 80,
+      "text": "Encryption and Data Protection"
+    },
+    {
+      "paragraph": 81,
+      "text": "Encryption and Data Protection overview"
+    },
+    {
+      "paragraph": 82,
+      "text": "Quantum-secure cryptography with Apple devices"
+    },
+    {
+      "paragraph": 83,
+      "text": "Passcodes and passwords"
+    },
+    {
+      "paragraph": 84,
+      "text": "Data Protection"
+    },
+    {
+      "paragraph": 85,
+      "text": "Data Protection overview"
+    },
+    {
+      "paragraph": 86,
+      "text": "Data Protection"
+    },
+    {
+      "paragraph": 87,
+      "text": "Data Protection classes"
+    },
+    {
+      "paragraph": 88,
+      "text": "Keybags for Data Protection"
+    },
+    {
+      "paragraph": 89,
+      "text": "Protecting keys in alternate boot modes"
+    },
+    {
+      "paragraph": 90,
+      "text": "Protecting user data in the face of attack"
+    },
+    {
+      "paragraph": 92,
+      "text": "Role of Apple File System"
+    },
+    {
+      "paragraph": 93,
+      "text": "Keychain data protection"
+    },
+    {
+      "paragraph": 94,
+      "text": "FileVault"
+    },
+    {
+      "paragraph": 95,
+      "text": "Volume encryption with FileVault"
+    },
+    {
+      "paragraph": 126,
+      "text": "iCloud encryption"
+    },
+    {
+      "paragraph": 127,
+      "text": "Advanced Data Protection for iCloud"
+    },
+    {
+      "paragraph": 128,
+      "text": "iCloud Backup security"
+    },
+    {
+      "paragraph": 129,
+      "text": "Search on iCloud.com security"
+    },
+    {
+      "paragraph": 236,
+      "text": "Copyright and trademarks"
+    },
+    {
+      "paragraph": 237,
+      "text": "Data Protection overview"
+    },
+    {
+      "paragraph": 238,
+      "text": "Apple uses a technology called Data Protection to protect data stored in flash storage on the devices that feature an Apple SoC\u2014such as iPad, iPhone, a Mac with Apple silicon, Apple TV, Apple Vision Pro, and Apple Watch. With Data Protection, a device can respond to common events such as incoming phone calls while at the same time providing a high level of encryption for user data. Certain system apps (such as Calendar, Contacts, Mail, Messages, Photos) and Health data values use Data Protection by default. Third-party apps receive this protection automatically."
+    },
+    {
+      "paragraph": 239,
+      "text": "Implementation"
+    },
+    {
+      "paragraph": 240,
+      "text": "Data Protection is implemented by constructing and managing a hierarchy of keys and builds on the hardware encryption technologies built into Apple devices. Data Protection is controlled on a per-file basis by assigning each file to a class; accessibility is determined according to whether the class keys have been unlocked. Apple File System (APFS) allows the file system to further subdivide the keys into a per-extent basis (where portions of a file can have different keys)."
+    },
+    {
+      "paragraph": 241,
+      "text": "Every time a file on the data volume is created, Data Protection creates a new 256-bit key (the per-file key) and gives it to the hardware AES Engine, which uses the key to encrypt the file as it\u2019s being written to flash storage."
+    },
+    {
+      "paragraph": 242,
+      "text": "On A14 through A18 and M1 or later devices, the encryption uses AES-256 in XTS mode, where the 256-bit per-file-key goes through a Key Derivation Function (NIST Special Publication 800-108) to derive a 256-bit value and a 256-bit cipher key."
+    },
+    {
+      "paragraph": 243,
+      "text": "On A9 through A13 and S5 or later devices, the encryption uses AES-128 in XTS mode, where the 256-bit per file key is split to provide a 128-bit value and a 128-bit cipher key."
+    },
+    {
+      "paragraph": 244,
+      "text": "On a Mac with Apple silicon, Data Protection defaults to Class C (see Data Protection classes) but uses a volume key rather than a per-extent or per-file key\u2014effectively re-creating the security model of FileVault for user data. On a Mac with macOS 26.4 or later, FileVault is turned on by default, which automatically provides users the full protection of entangling the encryption key hierarchy with their password. Users can opt out if desired. Developers can also opt in to a higher protection class that uses a per-file or per-extent key."
+    },
+    {
+      "paragraph": 245,
+      "text": "Published Date: August 03, 2026"
+    },
+    {
+      "paragraph": 246,
+      "text": "See alsoInternal volume encryption and FileVaultAutomatic strong passwords"
+    },
+    {
+      "paragraph": 250,
+      "text": "Next"
+    },
+    {
+      "paragraph": 251,
+      "text": "Data Protection"
+    },
+    {
+      "paragraph": 252,
+      "text": "Helpful?"
+    },
+    {
+      "paragraph": 253,
+      "text": "Yes"
+    },
+    {
+      "paragraph": 265,
+      "text": "Apple Platform Security"
+    },
+    {
+      "paragraph": 266,
+      "text": "Data Protection overview"
+    },
+    {
+      "paragraph": 267,
+      "text": "United States"
+    },
+    {
+      "paragraph": 268,
+      "text": "Copyright \u00a9 2026 Apple Inc. All rights reserved."
+    }
+  ],
+  "status": 200
+}

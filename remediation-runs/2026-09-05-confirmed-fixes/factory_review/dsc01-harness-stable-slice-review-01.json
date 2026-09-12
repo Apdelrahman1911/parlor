@@ -1,0 +1,57 @@
+{
+  "at_utc": "2026-09-06T00:35:32.972554+00:00",
+  "status": "PRELIMINARY SOURCE REVIEW ONLY; runner+executions pending, no whole-harness approval",
+  "files": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/dsc01_apphost/secondary_fifo.py",
+      "sha256": "e1546ef645e2f87dfadd41d4e7f3f1c97cef1e38fe6392fb6a778f6db6333dbd",
+      "line_ranges": [
+        [
+          1,
+          182
+        ]
+      ],
+      "reviewer": "/root/factory_review"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/dsc01_apphost/test_secondary_fifo.py",
+      "sha256": "5ad4f7f1686b9715f4d97551169cedadb8e238f6753645fb0640bd04f0976dcb",
+      "line_ranges": [
+        [
+          1,
+          141
+        ]
+      ],
+      "reviewer": "/root/factory_review"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/dsc01_apphost/DSC01Probe.swift.in",
+      "sha256": "0ff5c1fd101e4f5e689f959aef7db1ebe1c1f48dda68f489957e849c915130ac",
+      "line_ranges": [
+        [
+          1,
+          198
+        ]
+      ],
+      "reviewer": "/root/factory_review"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/dsc01_apphost/IOSAppLaunchUITests.swift.in",
+      "sha256": "1ee63e4aa9004a249c9a80035d67b6939f7f623cf51bc2a79449df2f746cabb0",
+      "line_ranges": [
+        [
+          1,
+          180
+        ]
+      ],
+      "reviewer": "/root/factory_review"
+    }
+  ],
+  "notes": [
+    "FIFO helper safe within caller contract; adoption/current ps, UID and lsof error semantics must be independently reviewed with runner.",
+    "Safety test labelled file_uid currently covers process UID; author asked to strengthen true inode UID/preexisting parent/holder-error cases.",
+    "Swift fixture reads/writes only own Debug app domain after explicit simulator/run-token guard; actual Settings source path and runner overlay/discovery integration pending.",
+    "No active game session or real iOSSettings physical-device evidence inferred.",
+    "Reviewer launched no builds/tests/native tools/processes."
+  ]
+}

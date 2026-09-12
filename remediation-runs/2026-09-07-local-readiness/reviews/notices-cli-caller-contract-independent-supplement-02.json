@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/release_fix_review",
+  "notice_author": "/root/native_fix_review",
+  "caller_author": "/root",
+  "recorded_at": "2026-09-07T16:04:56.970712+00:00",
+  "decision": "ACTUAL_NOTICE_CLI_COMPATIBLE_WITH_ROOT_CALLERS_PENDING_FOCUSED_AND_PACKAGE_EXECUTION",
+  "source": {
+    "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/third_party_notices.py",
+    "sha256": "d5a9e8e0cafd9c2d0de9ecd8dfcb040053fa52d25d798abd9998e84ab6676bdf",
+    "reviewed_line_ranges": [
+      [
+        1,
+        613
+      ]
+    ]
+  },
+  "prior_root_caller_static_review": {
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/notices-ci-coordinator-independent-static-review-01.json",
+    "sha256": "77d9c6c2f0e6dffe2046046d78b44824180d82ee8a48ca93a445f7d2ce5f8ee4"
+  },
+  "complete_reachable_path": [
+    "main586-608 acceptsroot/package/json, defaultsourceisrepositoryrootderivedfromscriptlocation; noGitdependency. Copiednormal-iOSsource root is supported.",
+    "verify567-578 alwaysverifiessourcefirst; sourceonlypackage=None; explicit.app/.aab requirescorrespondingfullpackageverifierbeforePASSobjectisreturned.",
+    "source_receipt333-370 bindsmanifest/catalog/actualresourceconfigurationandall26fullsourcebytes; exactreviewedfilesetandSHA/sizeeach. CatalogCRLFnormalizationdoesnotnormalizeupstreamresources.",
+    "verify_app402-424 no-followsdirectoryentryfds, boundsentries/depth, rejectsnonregular/symlink/aliaspaths, selectsexactplatformnamespaceandreadsallnoticebytes.",
+    "verify_aab520-555 boundsZIPdirectorybeforeZipFileallocation, enforceslocal/centralmetadataandflags/CRC/descriptors/names/ranges, boundeddeflateoutputandexactnoticebytecomparison.",
+    "finish_package558-564 returnsPASSonlywithall26distinctexpectednames; packageobjectisnevertruthyafteronlysourcevalidation.",
+    "main597-602 catchesformat/OS/ZIP failureswithnonzeroandpackage:null; noerrorpathfabricatesPASS. Reportrawmetadata/sourcepathsnotprintedinsanitizederrors."
+  ],
+  "compatibility_conclusion": "Coordinator --root ROOT --package generatedAAB --json andCI --package explicitartifact --json matchactualargs. RequestedpackagePASS entailsall26exactbytes; topPASS+truthypackageacceptanceintrustedsource-boundcallersisnotmerelytrustinganarbitraryexternalassertion. Source-onlyreportcannotpasscallers.",
+  "resource_limits": "Source<=256KiBtotal,26files,metadata/manifests/pathseparatelybounded; reportwellbelowcallers1MiBacceptancecap. FileFDsyieldandcloseonerror; no subprocesses/network/extraction/writes.",
+  "scope_limits": [
+    "Thisisactualsource-levelcontractintegrationreview,notexecution. Factoryindependentlyreviewingfullnativeinputs/resourcelegalprovenance; noadditionallegalcompletenessclaimhere.",
+    "RootsubsequentlyaddedAndroidfullartifactwiring: currentworkflow/coordinatorhashesdifferfrompriorstaticreport. Thatnewdiffrequiresseparateroot/factoryreview; thissupplementdoesnotapproveunreadnewchanges.",
+    "Rootfocusedtests/actualAAB/iOSbuilt-installedpackagesstillpending;nohistoricalexecutionborrowed."
+  ],
+  "blocking_findings": [],
+  "cleanup": "Readonlysourceinspectiononly;allread/hashprocessescompleted,nobuild/native/test/processworkersstarted.Onlynewadditivereport;nootherfilesorprocessesmodified."
+}

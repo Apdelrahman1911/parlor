@@ -1,0 +1,174 @@
+le.
+stat.
+S_ISBLK
+(
+mode
+)
+¶
+Return non-zero if the mode is from a block special device file.
+stat.
+S_ISREG
+(
+mode
+)
+¶
+Return non-zero if the mode is from a regular file.
+stat.
+S_ISFIFO
+(
+mode
+)
+¶
+Return non-zero if the mode is from a FIFO (named pipe).
+stat.
+S_ISLNK
+(
+mode
+)
+¶
+Return non-zero if the mode is from a symbolic link.
+stat.
+S_ISSOCK
+(
+mode
+)
+¶
+Return non-zero if the mode is from a socket.
+stat.
+S_ISDOOR
+(
+mode
+)
+¶
+Return non-zero if the mode is from a door.
+New in version 3.4.
+stat.
+S_ISPORT
+(
+mode
+)
+¶
+Return non-zero if the mode is from an event port.
+New in version 3.4.
+stat.
+S_ISWHT
+(
+mode
+)
+¶
+Return non-zero if the mode is from a whiteout.
+New in version 3.4.
+Two additional functions are defined for more general manipulation of the file’s
+mode:
+stat.
+S_IMODE
+(
+mode
+)
+¶
+Return the portion of the file’s mode that can be set by
+os.chmod()
+—that is, the file’s permission bits, plus the sticky
+bit, set-group-id, and set-user-id bits (on systems that support them).
+stat.
+S_IFMT
+(
+mode
+)
+¶
+Return the portion of the file’s mode that describes the file type (used by the
+S_IS*()
+functions above).
+Normally, you would use the
+os.path.is*()
+functions for testing the type
+of a file; the functions here are useful when you are doing multiple tests of
+the same file and wish to avoid the overhead of the
+stat()
+system call
+for each
+
+---
+
+is from a block special device file.
+stat.
+S_ISREG
+(
+mode
+)
+¶
+Return non-zero if the mode is from a regular file.
+stat.
+S_ISFIFO
+(
+mode
+)
+¶
+Return non-zero if the mode is from a FIFO (named pipe).
+stat.
+S_ISLNK
+(
+mode
+)
+¶
+Return non-zero if the mode is from a symbolic link.
+stat.
+S_ISSOCK
+(
+mode
+)
+¶
+Return non-zero if the mode is from a socket.
+stat.
+S_ISDOOR
+(
+mode
+)
+¶
+Return non-zero if the mode is from a door.
+New in version 3.4.
+stat.
+S_ISPORT
+(
+mode
+)
+¶
+Return non-zero if the mode is from an event port.
+New in version 3.4.
+stat.
+S_ISWHT
+(
+mode
+)
+¶
+Return non-zero if the mode is from a whiteout.
+New in version 3.4.
+Two additional functions are defined for more general manipulation of the file’s
+mode:
+stat.
+S_IMODE
+(
+mode
+)
+¶
+Return the portion of the file’s mode that can be set by
+os.chmod()
+—that is, the file’s permission bits, plus the sticky
+bit, set-group-id, and set-user-id bits (on systems that support them).
+stat.
+S_IFMT
+(
+mode
+)
+¶
+Return the portion of the file’s mode that describes the file type (used by the
+S_IS*()
+functions above).
+Normally, you would use the
+os.path.is*()
+functions for testing the type
+of a file; the functions here are useful when you are doing multiple tests of
+the same file and wish to avoid the overhead of the
+stat()
+system call
+for each test.  These are also useful when checking for informati

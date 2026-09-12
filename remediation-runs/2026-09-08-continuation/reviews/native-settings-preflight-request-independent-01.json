@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "kind": "EXACT_NONBUILDING_SETTINGS_SHEET_PREFLIGHT_REQUEST_REVIEW",
+  "reviewer": "/root/native_ci",
+  "request_author_and_dispatch_coordinator": "/root",
+  "reviewed_at": "2026-09-10T03:15:38.735999+00:00",
+  "status": "APPROVED_EXACT_REQUEST_CONDITIONAL_IMMEDIATE_PRE_DISPATCH_CHECKS",
+  "findings": [],
+  "request": {
+    "path": "remediation-runs/2026-09-08-continuation/actions/settings-sheet-preflight-01/request.json",
+    "bytes": 2904,
+    "sha256": "c98184bd5bc17b11e5f02bfde2af2367cddf4e76f9cdaafb307efa2467970f14"
+  },
+  "approved_dispatch": {
+    "repository": "Apdelrahman1911/parlor",
+    "branch": "fix/local-readiness-2026-09-07",
+    "frozen_source_sha": "730a91e4dade4dbc2168b5367e20c3d0f42237e1",
+    "tree": "1f71dc64bc7680f461efc3e841dc051579a0d993",
+    "inputs": {
+      "verification_scope": "native-preflight",
+      "native_selection": "settings-sheet-only",
+      "frozen_source_sha": "730a91e4dade4dbc2168b5367e20c3d0f42237e1"
+    },
+    "command": [
+      "gh",
+      "workflow",
+      "run",
+      "production-verification.yml",
+      "--repo",
+      "Apdelrahman1911/parlor",
+      "--ref",
+      "fix/local-readiness-2026-09-07",
+      "-f",
+      "verification_scope=native-preflight",
+      "-f",
+      "native_selection=settings-sheet-only",
+      "-f",
+      "frozen_source_sha=730a91e4dade4dbc2168b5367e20c3d0f42237e1"
+    ],
+    "maximum_dispatches": 1
+  },
+  "independently_reopened_and_hash_matched_references": {
+    "source_freeze": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/windows-settings-source-freeze-01.json",
+      "bytes": 2383,
+      "sha256": "1c2e4b7390cf1b74bd2da15209dff062bf52cc52509943b58fb0168d311ed53d"
+    },
+    "source_review": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-independent-01.json",
+      "bytes": 9413,
+      "sha256": "52cb9183a049e98ba8681ffd2077b8ee9c95606178092432516efefaf24d4295"
+    },
+    "local_checks_review": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/windows-settings-local-actual-independent-01.json",
+      "bytes": 12698,
+      "sha256": "5f3cb4073e3a10d040a25d1a67baa8979ad253e9d7db8f37c827f93fd42b0f5a"
+    },
+    "b30_applicability_review": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-b30-730a-source-applicability-01.json",
+      "bytes": 8900,
+      "sha256": "56241f2a4c709ac95d9094b227eb310d0455005c82f512e9416eb3f159232990"
+    }
+  },
+  "direct_source_inspection": {
+    "pins": [
+      {
+        "path": ".github/workflows/production-verification.yml",
+        "bytes": 43906,
+        "sha256": "5437a0da79512e8c0ae90145972b65074791e6f3ce4b4edd6c6fd2d4e697eb86"
+      },
+      {
+        "path": "scripts/ci/native_continuation.py",
+        "bytes": 68409,
+        "sha256": "971fdeca3fa27d6b8fb356bae50f11909365af30d7a6af8cd058a3487684f4d2"
+      }
+    ],
+    "workflow": "native-preflight/settings-sheet-only is accepted. All four non-ios jobs are skipped for this scope; focused ios path uses full-history checkout, scoped adapter, artifact upload, cleanup and cleanup receipt. Full Apple build/runtime/release steps are disabled for this scope. Same-ref concurrency has cancel-in-progress=true, so no-overlap condition is mandatory.",
+    "adapter": "effective_native_selection admits this exact diagnostic selection in preflight. The settings-only runners mapping yields precisely preflight.json, ios-readiness-source-ci.json and settings_sheet-controls.json. preflight() performs describe/bind/control generation and exact source-before/after comparison, with REVIEW_REQUIRED_NOT_RUNTIME_EVIDENCE. It does not invoke native evidence execution.",
+    "local_source_observation": "Read-only Git independently confirmed HEAD730a/tree1f71 and empty tracked status during this review. No remote, workflow state or active-run observation was made."
+  },
+  "freeze_and_local_evidence_scope": {
+    "freeze": "Exact730a/1f71 source and mechanical inventory freeze is prepared for normal push and targeted verification, not platform execution evidence. The freeze document records the old remote before push; it is not used as current remote proof.",
+    "local_checks": "Local review explicitly retains validator05 FAIL (477/479; two fixture errors), the independently reviewed two-fixture correction, affected73 recheck and remaining canonical gate execution, eight synthetic controls, and nine actual Linux transport-contract tests. These are not Windows/native runtime or a new full479-validator execution.",
+    "B_applicability": "Historical34362984912/1 B30 runtime keeps original360fc source identity. Scoped applicability to730a does not mean new730a execution, exact future binary identity or A/L08 approval."
+  },
+  "mandatory_conditions_for_coordinator": [
+    "Confirm Windows34431938089/1 completed and no other active same-ref production-verification run immediately before dispatch; do not cancel unrelated work.",
+    "Immediately confirm remote and local continuation branch exactly730a91e4dade4dbc2168b5367e20c3d0f42237e1, clean tracked source, and active intended production-verification.yml.",
+    "Dispatch no more than the one exact approved command; retain command/result/run-attempt/source association and actual four job skips.",
+    "Preserve resulting raw package, artifact identities/digests, logs and cleanup evidence; inspect failures before considering any change or further dispatch.",
+    "Independently review the fresh exact three-member package and bound105-row control hash before any separately approved Settings evidence execution. Old paired four-member packages, old source bindings and unbound104-row aggregate do not authorize execution."
+  ],
+  "limits": "Conditional dispatch approval only. Windows completion, remote equality, workflow state, actual dispatch and resulting package are not asserted. No build, simulator allocation, XCTest, libproc, strict file-protection, L08 scenario, C/D combined qualification, physical-device, Store/signing/publication or owner/legal acceptance. Overall NOT_READY is unchanged.",
+  "reviewer_activity": "Read-only local Git/source plus stdlib JSON/hash inspection; no project imports, tests/builds, network/Actions, process operations, source edits or Git writes. Only this additive report written. No reviewer build resources, workers or cleanup owed."
+}

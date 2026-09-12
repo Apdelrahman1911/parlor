@@ -1,0 +1,102 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/portability_review",
+  "author": "/root/dependency_chain",
+  "classification": "SOURCE_APPROVED_FOR_COORDINATOR_OWNED_CONTROLS_AND_LATER_FROZEN_CANDIDATE_EXECUTION",
+  "scope": "Complete additive Linux schema-engine bootstrap, all 26 synthetic regression methods, retained official package research, and unchanged adapter/helper/consumer integration. No tests, downloads, package imports or candidate execution by reviewer.",
+  "inputs": [
+    {
+      "path": "remediation-runs/2026-09-08-continuation/controls/run_candidate_with_schema.py",
+      "sha256": "c9d3a26fb3901b3518f7c066d91ebda906d0bb8bef67273acb4720d5c37419c9",
+      "lines": 290,
+      "reviewed_ranges": [[1, 290]]
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/controls/test_schema_base_bootstrap.py",
+      "sha256": "3923b1a3451ac7bcdb54293f93ae6dd8f55d334f69e4a4e297405ea99c6a028c",
+      "lines": 346,
+      "reviewed_ranges": [[1, 346]],
+      "statically_declared_unique_test_methods": 26
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/schema-base-prerequisites-research-01.json",
+      "sha256": "54c9f96db0ead50008cab5c8c960c0540351922f949757e03dc91b8c5328b13e",
+      "reviewed": "All six package metadata/version/dependency selections, wheel URLs/sizes/digests, roots/tags/member inventories, and native-member metadata. Every source WHEELS pin matches this record exactly."
+    }
+  ],
+  "unchanged_reused_controls": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/run_candidate_input_01.py",
+      "sha256": "2a306819fb41b1883139fb42355d493f02e1d93a687f54d06f43ffbb758afa60",
+      "reviewed": "Complete90-line adapter reopened; exact source bytes unchanged."
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/run_schema_consumer_controls_01.py",
+      "sha256": "78222a79d0d19cdce28077506ce1fd74481cc419fdf9dce9e9e5b6fd8840336f",
+      "reviewed": "Complete187-line optional-checker/synthetic-driver reopened; exact source bytes unchanged."
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/dependency-candidate-consumer-03/candidate_consumer.py",
+      "sha256": "eb6e2baaac22739b4652bc63c6b57a24374ee57fb81d4711b981b872e8ac1c7f",
+      "reviewed": "Source/cycle/schema/format-checker and CLI/receipt boundaries reopened; exact416-line source unchanged."
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/dependency-candidate-consumer-03/test_candidate_consumer.py",
+      "sha256": "92eef687dbf037b310b00c9b678a5718d95cf5e8313094861c398554755a3535",
+      "reviewed": "Exact source hash unchanged; fixture/import/format-mutation sections reopened. Existing16-control historical evidence is not relabeled as execution of this bootstrap."
+    }
+  ],
+  "source_findings": [
+    {
+      "boundary": "Fixed entry points and source integrity",
+      "locations": "bootstrap29-39,75-83,213-223,246-282",
+      "result": "Only the unchanged hash-pinned candidate adapter or explicit --controls fixed driver is selected. No arbitrary-command/import selector is exposed. All control/research paths must be canonical files; before/after maps include the bootstrap itself. Candidate binding path/digest remain delegated to the unchanged strict consumer."
+    },
+    {
+      "boundary": "Qualified prerequisite platform and dependency closure",
+      "locations": "bootstrap40-62,94-102,181-199",
+      "result": "Explicit Linux x86_64 CPython3.12 and glibc>=2.17 only; bytecode writing disabled. Fixed jsonschema4.25.1/referencing0.36.2 preserve approved validator semantics. attrs25.3.0/jsonschema-specifications2025.4.1/rpds-py0.27.1/typing-extensions4.15.0 satisfy ordinary metadata dependencies; extras are not indiscriminately installed. The native rpds wheel is the recorded CPython312 x86_64 ELF64 wheel, not a source build or unreviewed ABI substitution."
+    },
+    {
+      "boundary": "Network and extraction",
+      "locations": "bootstrap105-145",
+      "result": "Six fixed HTTPS PyPI wheel origins, no redirects, status200/exact URL/exact size/SHA256 required before extraction. Each archive is bounded by entry count, member size and aggregate expansion; member paths exclude traversal, alternate separators/drives, control characters, .pth, directories and nonregular entries. Exclusive writes reject collisions; no pip, global installation, executable entry-point invocation or cache modification."
+    },
+    {
+      "boundary": "Import origin and final package integrity",
+      "locations": "bootstrap148-171,174-205",
+      "result": "Refuses preloaded engines/parsers, temporarily prepends a newly allocated outer-scratch child, validates package metadata versions and exact owned distribution roots, and checks top-level resolution without prematurely importing jsonschema. The existing optional-parser helper therefore still initializes before the real FormatChecker. Successful consumption requires actual owned imports including rpds.rpds plus full extracted-file size/hash inventory equality afterward."
+    },
+    {
+      "boundary": "No schema or coupled-receipt waiver",
+      "locations": "bootstrap226-243,260-274; unchanged consumer183-225; unchanged adapter55-80",
+      "result": "The real validator still uses the pinned official schemas, no-fetch registry, and encountered-minus-registered format failure. Candidate success requires both original scoped receipts, consumer exit0, no error_type and ephemeral optional-parser cleanup. Synthetic mode requires all16 executed controls with no failure/error/skip. Bootstrap requires exact int exit0, unchanged controls and base cleanup; inner success cannot become overall PASS after a later failure."
+    },
+    {
+      "boundary": "Ownership, failure and cancellation",
+      "locations": "bootstrap86-91,174-211,272-290",
+      "result": "Only the existing canonical C/evidence/CYCLE/scratch/tmp shape is accepted; execution is conditioned on the outer lane, not authorized by path shape alone. Finalization restores sys.path/import caches and deletes only the newly allocated directory whose device/inode/UID still match. Replacement/deletion failures retain non-PASS. Exceptions, nonzero returns and interrupts become nonzero; outer lane retains process/Gradle/scratch cleanup responsibility."
+    }
+  ],
+  "regression_review": {
+    "statically_declared": 26,
+    "coverage": "Official-pin correspondence; platform/ABI/libc/bytecode and canonical TMPDIR rejection; exact network origin/status/size/hash and redirect refusal; traversal/symlink/FIFO/.pth/collision and all archive bounds; package mutation/extra/missing rejection; deferred import and sys.path restoration; exception/interrupt/identity-replacement/removal failures; ambient distribution and module-origin rejection; fixed entrypoint/argv restoration; coupled receipt/skips/errors/cleanup and false-vs-int exit0 guards.",
+    "validity": "Tests use offline synthetic ZIPs and stubbed network/entrypoints. The fixture package raises if imported, proving metadata/find_spec setup does not accidentally execute it. Tests exercise actual context/finally cleanup logic; replacement fixtures remain inside the enclosing test-owned TemporaryDirectory. No actual schema/native-library/app execution is claimed by these tests.",
+    "actual_discovery": "NOT_RUN",
+    "actual_execution": "NOT_RUN"
+  },
+  "execution_requirements": [
+    "Coordinator runs the26-test script under the reviewed ordinary lane with explicit before/after hashes for bootstrap/test/research and actual IDs/no failures/errors/skips; do not treat this review as execution evidence.",
+    "An actual bootstrap --controls invocation is separately justified by the newly qualified Linux native schema dependency closure. Require its prerequisite receipt, unchanged original16-control driver receipt and outer PASS/stop0/source equality/complete cleanup together.",
+    "For candidate mode, first freeze reviewed source/controls, commit mechanical inventory, export/render fresh complete four-graph inputs and independently approve the new candidate binding. Execute via the existing ordinary lane, never standalone.",
+    "Candidate acceptance is now the conjunction of original consumer scoped PASS, original optional-prerequisite scoped PASS, new base-prerequisite scoped PASS, and outer lane PASS, each with required exit/error/cleanup/source identities. Preserve all failures and raw receipts.",
+    "The bootstrap self hash must appear in coordinator execution control bindings. New runtime observations establish only schema prerequisites/resolved-input integrity, not Parlor libproc provenance, L08 protection, binaries, legal/Store or physical-device readiness."
+  ],
+  "command_shapes": {
+    "focused_controls": "/usr/bin/python3 -B C/run_gradle_cycle.py FRESH-CYCLE --command /usr/bin/python3 -B remediation-runs/2026-09-08-continuation/controls/test_schema_base_bootstrap.py",
+    "actual_schema_closure_controls": "/usr/bin/python3 -B C/run_gradle_cycle.py FRESH-CYCLE --command /usr/bin/python3 -B remediation-runs/2026-09-08-continuation/controls/run_candidate_with_schema.py --controls",
+    "later_candidate": "/usr/bin/python3 -B C/run_gradle_cycle.py FRESH-CYCLE --command /usr/bin/python3 -B remediation-runs/2026-09-08-continuation/controls/run_candidate_with_schema.py NEW-RELATIVE-BINDING REVIEWED-SHA256",
+    "note": "C=remediation-runs/2026-09-07-local-readiness; placeholders are not executable values. Only coordinator selects free lane/fresh names and supplies reviewed bindings."
+  },
+  "reviewer_hygiene": "Only source/JSON/AST/hash inspection and this additive report. No repository-control imports/execution, package downloads/extraction/imports, tests, native tools, builds, global installs, process control, CI or Git mutation."
+}

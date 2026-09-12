@@ -1,0 +1,350 @@
+{
+  "schema": 1,
+  "recorded_at": "2026-09-07T03:35:08.108761+00:00",
+  "author": "/root/factory_review",
+  "baseline": {
+    "root": "/Users/abdelrahman/Projects/parlor",
+    "branch": "fix/local-readiness-2026-09-07",
+    "head": "85ded00435b4f8327ce32d3b7f5062c4438ae174",
+    "tree": "0b0facb91b11b87f71c01454f470e21cfc2222ca",
+    "dirty": true,
+    "scope": "Four source/test files only; source-freeze identities below. Other agents own all other modifications.",
+    "tracked_scoped_diff_sha256": "246129fa1bae7f78dad89a59950e9a87c07d7e15cb70246e4e892bd320ab6e3e"
+  },
+  "classification": [
+    {
+      "id": "WD-REVIEW-RETRY-CONTENT-KEY",
+      "finding": "TEST/EVIDENCE GAP — not a confirmed shipping defect",
+      "proof": "Equal successful snapshot reads and fixed bundled content cannot repair a deterministic content-identity mismatch. Production DI binds offline remote, empty process cache and immutable bundled envelope map. Same-key retry conflation remains a future mutable-content contract consideration, not an enabled remote-source defect. Genuine snapshot I/O Failure→Success changes resumeResult and can launch the same saved session.",
+      "correction": "No production producer-key change. Added real EN/AR recovery-screen retry tests over current-content saved state and independent immutable-mismatch proof.",
+      "counter_evidence": "Null→equal Success may conflate before composition; tests intentionally do not assert every retry refetches unchanged content. Malformed/missing shipped resources throw rather than producing a recoverable transient content Result."
+    },
+    {
+      "id": "SN-T1",
+      "finding": "TEST/EVIDENCE GAP — Low; current ignored fixture omissions confirmed by reachable source proof",
+      "proof": "Original peer loopback joins had no host approval owner, used unavailable credential storage defaults, and shared one identity namespace/key across fake devices. Exact rc3 identity namespace and PeerId derivation re-opened in prior preserved official-source excerpt.",
+      "correction": "Per-device retained synthetic identity/credential stores; explicit bounded host admission helper with cancellation/room ownership cleanup; current adapter/codec/credential deterministic contract tests; distinct seat IDs, armed inboxes and send-result assertions in ignored fixture.",
+      "counter_evidence": "Real enabled advertising-only smoke unaffected; production mobile devices do not share this test store. All three physical @Ignore remain. Fake SDK contract success cannot prove discovery, LAN, cryptographic runtime, Android/iOS lifecycle, or actual peer-to-peer physical operation."
+    }
+  ],
+  "tests_to_execute": [
+    {
+      "task": ":shared:transport-p2p:desktopTest --tests '*LoopbackFixtureContractTest*' --tests '*JupiterDiscoveryContractTest*'",
+      "new_contract_tests": 5,
+      "expected_cases": [
+        "device_stores_are_isolated_retained_and_defensively_copied",
+        "join_without_an_approval_owner_remains_pending_even_with_working_fake_delivery",
+        "shared_fixture_approves_distinct_peers_and_commits_each_devices_credentials",
+        "failed_join_cancels_the_pending_approval_collector",
+        "caller_cancellation_stops_join_and_approval_without_claiming_room_ownership"
+      ],
+      "status": "PENDING root-owned focused cycle; no author-run result"
+    },
+    {
+      "task": ":game-modes:whodunit:desktopTest --tests '*WhodunitRecoveryInteractionTest*'",
+      "expected_total": 9,
+      "existing": 6,
+      "added": [
+        "englishTransientSnapshotFailureRetriesIntoTheSameSavedInvestigation",
+        "arabicTransientSnapshotFailureRetriesIntoTheSameSavedInvestigation",
+        "equalSuccessfulSnapshotReadsCannotRepairAnImmutableBundledIdentityMismatch"
+      ],
+      "assertions": "Actual failure UI → Retry → Intro; same session/seed/payload/content identity; no unrelated deletes/restarts; one content load after recovered snapshot; immutable mismatch remains incompatible across equal successful reads.",
+      "status": "PENDING root-owned focused cycle"
+    },
+    {
+      "task": "Affected Detekt and combined repository checks",
+      "status": "PENDING root coordinator"
+    },
+    {
+      "task": "Three ignored multi-kit physical peer fixtures",
+      "status": "BLOCKED — not unignored or executed; genuinely supported controlled physical LAN environment required"
+    }
+  ],
+  "verification": {
+    "git_diff_check": "PASS at source freeze, no generated outputs",
+    "independent_review": "Root assigned; approval not claimed",
+    "api_semantics": "Current rc3 source-contract guards reopened; no internet/backend behavior assumed"
+  },
+  "coverage": [
+    {
+      "path": "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/LoopbackDeviceFixture.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/LoopbackDeviceFixture.kt",
+      "sha256": "e3b2166fd5285953396b48d7a85a47246cf235a0224150e394bdf786832d370a",
+      "lines": 123,
+      "reviewed_ranges": [
+        [
+          1,
+          123
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "desktopTest only",
+      "independent_review": "PENDING /root",
+      "uncertainty": "Unexecuted at source-freeze; focused lane is root-owned."
+    },
+    {
+      "path": "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/LoopbackFixtureContractTest.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/LoopbackFixtureContractTest.kt",
+      "sha256": "bc45d9a58509c4d9c3dd63bca30a0d584ba273e1adb6618829a09d1e47b64404",
+      "lines": 247,
+      "reviewed_ranges": [
+        [
+          1,
+          247
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "desktopTest only",
+      "independent_review": "PENDING /root",
+      "uncertainty": "Unexecuted at source-freeze; focused lane is root-owned."
+    },
+    {
+      "path": "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitRoomTransportLoopbackTest.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitRoomTransportLoopbackTest.kt",
+      "sha256": "21451bf407d791ec85066227a2670ccf61d3506efaae47375c0bba557fe3be73",
+      "lines": 242,
+      "reviewed_ranges": [
+        [
+          1,
+          242
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "desktopTest only",
+      "independent_review": "PENDING /root",
+      "uncertainty": "Unexecuted at source-freeze; focused lane is root-owned."
+    },
+    {
+      "path": "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitRecoveryInteractionTest.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitRecoveryInteractionTest.kt",
+      "sha256": "1f170236ee7c36b9c605a7c6b90b20cc19a4c6e546268320cec868c43e2a2b84",
+      "lines": 419,
+      "reviewed_ranges": [
+        [
+          1,
+          419
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "desktopTest only",
+      "independent_review": "PENDING /root",
+      "uncertainty": "Unexecuted at source-freeze; focused lane is root-owned."
+    },
+    {
+      "path": "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitGameFlow.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitGameFlow.kt",
+      "sha256": "cee14cd945a1ecb76bb256eff24e0629259538fd165515cfe1c89e62f0b8fcca",
+      "lines": 1432,
+      "reviewed_ranges": [
+        [
+          224,
+          288
+        ],
+        [
+          397,
+          500
+        ],
+        [
+          759,
+          978
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "Supporting callers/guards; not a whole-project coverage claim"
+    },
+    {
+      "path": "composeApp/src/commonMain/kotlin/com/parlor/app/di/ContentModule.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/composeApp/src/commonMain/kotlin/com/parlor/app/di/ContentModule.kt",
+      "sha256": "86321739a143ff494b8ff42c19d728119b81163eb572afaeed6a89da52a62635",
+      "lines": 87,
+      "reviewed_ranges": [
+        [
+          1,
+          87
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "Supporting callers/guards; not a whole-project coverage claim"
+    },
+    {
+      "path": "shared/content/src/commonMain/kotlin/com/parlor/content/repository/DefaultCaseRepository.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/content/src/commonMain/kotlin/com/parlor/content/repository/DefaultCaseRepository.kt",
+      "sha256": "d843210ffdd8007b6cb961221f59a2b07231a6eec30a9cf2bc9c47f001383737",
+      "lines": 195,
+      "reviewed_ranges": [
+        [
+          1,
+          195
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "Supporting callers/guards; not a whole-project coverage claim"
+    },
+    {
+      "path": "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/content/BundledWhodunitCases.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/content/BundledWhodunitCases.kt",
+      "sha256": "d7ba053400675b427415419785febd6179bf791b1f9bcdaf16c342dd058dce06",
+      "lines": 81,
+      "reviewed_ranges": [
+        [
+          1,
+          81
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "Supporting callers/guards; not a whole-project coverage claim"
+    },
+    {
+      "path": "shared/transport-p2p/src/commonMain/kotlin/com/parlor/transport/p2p/P2pKitCreation.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/commonMain/kotlin/com/parlor/transport/p2p/P2pKitCreation.kt",
+      "sha256": "e924988dfcbde7eb1ac2eae763e5078a28bdd568ca1b05e4ece6284a3183a95e",
+      "lines": 39,
+      "reviewed_ranges": [
+        [
+          1,
+          39
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "Supporting callers/guards; not a whole-project coverage claim"
+    },
+    {
+      "path": "shared/transport-p2p/src/commonMain/kotlin/com/parlor/transport/p2p/P2pKitRoomTransport.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/commonMain/kotlin/com/parlor/transport/p2p/P2pKitRoomTransport.kt",
+      "sha256": "a5e2536e41c81c54b58ec27da135ea9046969db9cb80084e2a0da3b15ddde7c7",
+      "lines": 4811,
+      "reviewed_ranges": [
+        [
+          95,
+          162
+        ],
+        [
+          190,
+          530
+        ],
+        [
+          499,
+          564
+        ],
+        [
+          610,
+          658
+        ],
+        [
+          906,
+          1078
+        ],
+        [
+          1402,
+          1506
+        ],
+        [
+          3690,
+          3820
+        ],
+        [
+          4070,
+          4145
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "Supporting callers/guards; not a whole-project coverage claim"
+    },
+    {
+      "path": "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitRoomTransportLifecycleTest.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitRoomTransportLifecycleTest.kt",
+      "sha256": "947a86aebdca10d7d9cfa97a5677c1a79733601dca887effc6c218280a098b1b",
+      "lines": 5466,
+      "reviewed_ranges": [
+        [
+          5191,
+          5465
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "Supporting callers/guards; not a whole-project coverage claim"
+    },
+    {
+      "path": "shared/networking/src/commonMain/kotlin/com/parlor/networking/room/LocalRoom.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/networking/src/commonMain/kotlin/com/parlor/networking/room/LocalRoom.kt",
+      "sha256": "b6fea659d9f84457624f611d0a2f01a1c9542b4f32fd287bc31541be901d3268",
+      "lines": 247,
+      "reviewed_ranges": [
+        [
+          1,
+          135
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "Supporting callers/guards; not a whole-project coverage claim"
+    },
+    {
+      "path": "shared/storage/src/commonMain/kotlin/com/parlor/storage/snapshot/InMemorySnapshotStore.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/storage/src/commonMain/kotlin/com/parlor/storage/snapshot/InMemorySnapshotStore.kt",
+      "sha256": "4100417b69e545bfa8f8e1f77795480072ba5324f60b77c62c6403f419361239",
+      "lines": 46,
+      "reviewed_ranges": [
+        [
+          1,
+          46
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "Supporting callers/guards; not a whole-project coverage claim"
+    },
+    {
+      "path": "shared/transport-p2p/build.gradle.kts",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/build.gradle.kts",
+      "sha256": "ac439a069b3c99d1bef803bbc053580c4b99cbd7f4775a98d98a2b40482d96d7",
+      "lines": 95,
+      "reviewed_ranges": [
+        [
+          1,
+          95
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "Supporting callers/guards; not a whole-project coverage claim"
+    }
+  ],
+  "preserved_original_references": [
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/reviews/retry-case-producer-candidate-01.json",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/reviews/retry-case-producer-candidate-01.json",
+      "sha256": "e1b04483dc20cbb67ca3ef0db33f9f9bd68c02972dd0f8936c28074f6b9e191c",
+      "lines": 49
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/candidates/SN-T1-ignored-loopback-fixtures.md",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/audit-runs/2026-09-05-source-audit/candidates/SN-T1-ignored-loopback-fixtures.md",
+      "sha256": "d75ce69e88c42d88b28178efa1fe2576094e45a46b2107d8c4fa3c1dc7525586",
+      "lines": 40
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/validations/SN-T1-root.md",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/audit-runs/2026-09-05-source-audit/validations/SN-T1-root.md",
+      "sha256": "d5b8e404458dc60861d4ccd870c48efb1e299b8659d27da8cfd06655d6979d78",
+      "lines": 34
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/evidence/p2pkit-0.7.0-rc3-loopback-identity-excerpts.txt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/audit-runs/2026-09-05-source-audit/evidence/p2pkit-0.7.0-rc3-loopback-identity-excerpts.txt",
+      "sha256": "c204d95d20d3913c5b54f05b8a55c419ddf3bbcb93a4d54600b45e27f34a5a5d",
+      "lines": 318
+    }
+  ],
+  "hygiene": {
+    "builds_started_by_author": 0,
+    "servers_native_kits_simulators_started_by_author": 0,
+    "generated_build_outputs_owned_by_author": [],
+    "cleanup": "No author-owned build resources require cleanup. Root has the single shared lane; do not stop or delete its resources. Evidence JSON is required deliverable.",
+    "git_mutations": "No stage/commit/push/reset/stash/branch/integration action; application, credentials, protected material and pre-existing work preserved."
+  },
+  "continuation": [
+    "Root focused execution and result inspection",
+    "Independent root review of four file diff including fake protocol/credential handshake and UI assertions",
+    "Resolve executed test failures without claiming mock physical evidence",
+    "Retain additive verification receipts and final source hash identity; no overwriting original audit dossiers"
+  ]
+}

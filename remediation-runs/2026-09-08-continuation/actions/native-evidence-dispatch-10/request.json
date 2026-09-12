@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "kind": "ONE_EXPLICIT_L08_ONLY_NATIVE_DISPATCH_REQUEST",
+  "coordinator": "/root",
+  "created_at": "2026-09-09T21:50:36.550125+00:00",
+  "status": "PREPARED_NOT_DISPATCHED_REQUIRES_INDEPENDENT_PREFLIGHT_AND_B_APPLICABILITY_APPROVAL",
+  "repository": "Apdelrahman1911/parlor",
+  "branch": "fix/local-readiness-2026-09-07",
+  "frozen_source_sha": "4ccfafcfc361231cfb730178b3798ebcb6304770",
+  "tree": "8a89fab3042b8614fc4285148a8cd645f7ac2786",
+  "inputs": {
+    "verification_scope": "native-evidence",
+    "native_selection": "l08-only",
+    "frozen_source_sha": "4ccfafcfc361231cfb730178b3798ebcb6304770",
+    "preflight_run_id": "34408391427",
+    "preflight_run_attempt": "1",
+    "preflight_artifact_id": "10126259771",
+    "preflight_artifact_sha256": "8fe7a431b22611136188cc993e64e9b115300a2e1ff5311592544e3d6f2fa779",
+    "approved_l08_control_sha256": "c239881efea4cda5cfc948e7c227aaccb861b552dec054cfeccba6afff388cc0",
+    "approved_normal_control_sha256": "d8d246266e8f72747f6f6e56c6851e723972c7d0c75abf2a0286c783f8c22b4f"
+  },
+  "command": [
+    "gh",
+    "workflow",
+    "run",
+    "production-verification.yml",
+    "--repo",
+    "Apdelrahman1911/parlor",
+    "--ref",
+    "fix/local-readiness-2026-09-07",
+    "-f",
+    "verification_scope=native-evidence",
+    "-f",
+    "native_selection=l08-only",
+    "-f",
+    "frozen_source_sha=4ccfafcfc361231cfb730178b3798ebcb6304770",
+    "-f",
+    "preflight_run_id=34408391427",
+    "-f",
+    "preflight_run_attempt=1",
+    "-f",
+    "preflight_artifact_id=10126259771",
+    "-f",
+    "preflight_artifact_sha256=8fe7a431b22611136188cc993e64e9b115300a2e1ff5311592544e3d6f2fa779",
+    "-f",
+    "approved_l08_control_sha256=c239881efea4cda5cfc948e7c227aaccb861b552dec054cfeccba6afff388cc0",
+    "-f",
+    "approved_normal_control_sha256=d8d246266e8f72747f6f6e56c6851e723972c7d0c75abf2a0286c783f8c22b4f"
+  ],
+  "maximum_dispatches": 1,
+  "expected_lanes": {
+    "l08": "ios-readiness-33"
+  },
+  "unselected_lanes": {
+    "normal": "NOT_RUN_THIS_RUN"
+  },
+  "source_freeze": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/a33-source-freeze-03.json",
+    "sha256": "3df46b60b2bb19002c74462221de0db75df77be7e12ee272a353074da29a0a92"
+  },
+  "preflight_collection": {
+    "path": "remediation-runs/2026-09-08-continuation/actions/34408391427/download-receipt.json",
+    "sha256": "302b992b5400db73807181ecf15ed2baecb3768dc22f3b452388021fb0ff524e"
+  },
+  "historical_b30_review": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/native-b30-actual-independent-01.json",
+    "sha256": "f2426faf649d1a9b13fbdfa8ef59741c7cf38d62f5f38f54e4afadbf8a3788fd",
+    "execution_source": "360fc797a85e1e494334fd8cc11b4e739981cea8"
+  },
+  "required_b30_applicability_review": "remediation-runs/2026-09-08-continuation/reviews/native-b30-a33-source-applicability-02.json",
+  "scope": "A33 canonical composed runner only; explicit adhoc/qualified Xcode26.3/direct-owned. Both fresh manifests required. One actual affected OS fixture follow-up; no B34 child or PASS, no old-source rebinding or strict protection waiver. Final full qualification separate. No Store/physical-device/private-signing operations."
+}

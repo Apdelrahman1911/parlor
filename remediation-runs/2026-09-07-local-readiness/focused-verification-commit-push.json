@@ -1,0 +1,68 @@
+{
+  "started_at": "2026-09-07T06:05:29.810337+00:00",
+  "before": "875d849e0079452557374690b14e42c546ba2c06",
+  "branch": "fix/local-readiness-2026-09-07",
+  "verification": "evidence/focused-readiness-regressions-09",
+  "commits": [
+    {
+      "message": "test(whodunit): verify retry preserves recovered session",
+      "paths": [
+        "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitRecoveryInteractionTest.kt"
+      ],
+      "independent_reviews": [
+        "reviews/factory-test-additions-root-review-01.json"
+      ],
+      "staged_diff_sha256": "a763fdbea19af8d01a35ba3b479c745abacf08d60eb5ce3a093913da1163778d",
+      "commit_exit": 0,
+      "output": "[fix/local-readiness-2026-09-07 bc23064] test(whodunit): verify retry preserves recovered session\n 1 file changed, 134 insertions(+), 7 deletions(-)\n",
+      "sha": "bc23064969686864382565bef4b8e5571b5b36e2",
+      "tree": "3d3a0be3416b53dea81db4132dd243098c27b233"
+    },
+    {
+      "message": "test(core): exercise engine and Doctor contracts across targets",
+      "paths": [
+        "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/domain/MafiaDoctorRulesTest.kt",
+        "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/snapshot/MafiaDoctorHistoryRecoveryTest.kt",
+        "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/testing/MafiaDoctorFixture.kt",
+        "game-modes/mafia/src/commonTest/kotlin/com/parlor/games/mafia/domain/MafiaDoctorRulesTest.kt",
+        "game-modes/mafia/src/commonTest/kotlin/com/parlor/games/mafia/snapshot/MafiaDoctorHistoryRecoveryTest.kt",
+        "game-modes/mafia/src/commonTest/kotlin/com/parlor/games/mafia/testing/MafiaDoctorFixture.kt",
+        "shared/engine/src/commonTest/kotlin/com/parlor/engine/registry/GameRegistryTest.kt",
+        "shared/engine/src/commonTest/kotlin/com/parlor/engine/snapshot/GameSnapshotTest.kt"
+      ],
+      "independent_reviews": [
+        "reviews/factory-test-additions-root-review-01.json"
+      ],
+      "staged_diff_sha256": "0b649acf8086468cdbce5f2f16f77cbdf89cc781a538f975463817b0a5fab265",
+      "commit_exit": 0,
+      "output": "[fix/local-readiness-2026-09-07 de96f23] test(core): exercise engine and Doctor contracts across targets\n 5 files changed, 203 insertions(+)\n rename game-modes/mafia/src/{desktopTest => commonTest}/kotlin/com/parlor/games/mafia/domain/MafiaDoctorRulesTest.kt (100%)\n rename game-modes/mafia/src/{desktopTest => commonTest}/kotlin/com/parlor/games/mafia/snapshot/MafiaDoctorHistoryRecoveryTest.kt (100%)\n rename game-modes/mafia/src/{desktopTest => commonTest}/kotlin/com/parlor/games/mafia/testing/MafiaDoctorFixture.kt (100%)\n create mode 100644 shared/engine/src/commonTest/kotlin/com/parlor/engine/registry/GameRegistryTest.kt\n create mode 100644 shared/engine/src/commonTest/kotlin/com/parlor/engine/snapshot/GameSnapshotTest.kt\n",
+      "sha": "de96f23025781339664bf8b14f118dfce89b22e9",
+      "tree": "c8e692941d0df4f585e981313e21e47cc1d41b51"
+    },
+    {
+      "message": "test(transport): align loopback fixtures with host admission",
+      "paths": [
+        "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitRoomTransportLoopbackTest.kt",
+        "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/LoopbackDeviceFixture.kt",
+        "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/LoopbackFixtureContractTest.kt"
+      ],
+      "independent_reviews": [
+        "reviews/factory-test-additions-root-review-01.json",
+        "reviews/loopback-fixture-analysis-08-independent-review.json"
+      ],
+      "staged_diff_sha256": "29f0a01d0d5e9d33a8a38af1b3204aefc045c1452c2cb78cb974cbdae25019bb",
+      "commit_exit": 0,
+      "output": "[fix/local-readiness-2026-09-07 0787b0f] test(transport): align loopback fixtures with host admission\n 3 files changed, 420 insertions(+), 94 deletions(-)\n create mode 100644 shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/LoopbackDeviceFixture.kt\n create mode 100644 shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/LoopbackFixtureContractTest.kt\n",
+      "sha": "0787b0fade803f3b8f2213b89f2fccb52a822279",
+      "tree": "0f1086c2f38c7316945ede7ceb79a80e11afafd7"
+    }
+  ],
+  "native_tests": "Pending actual native execution; common tests pass on Desktop; no native PASS claimed",
+  "push": {
+    "exit_code": 0,
+    "output": "To https://github.com/Apdelrahman1911/parlor.git\n \tHEAD:refs/heads/fix/local-readiness-2026-09-07\t875d849..0787b0f\nDone\n"
+  },
+  "remote_verified_sha": "0787b0fade803f3b8f2213b89f2fccb52a822279",
+  "remaining_status": "M docs/WHODUNIT_TEST_CONTENT.md\n M game-modes/whodunit/src/commonMain/composeResources/files/cases/iskenderia-corniche.json\n M game-modes/whodunit/src/commonMain/composeResources/files/cases/jasmine-ring.json\n M game-modes/whodunit/src/commonMain/composeResources/files/cases/khan-el-khalili.json\n M game-modes/whodunit/src/commonMain/composeResources/files/cases/last-dinner.json\n M game-modes/whodunit/src/commonMain/composeResources/files/cases/layla-halabi.json\n M game-modes/whodunit/src/commonMain/composeResources/files/cases/saidi-inheritance.json\n M game-modes/whodunit/src/commonMain/composeResources/files/cases/zamalek-ramadan.json\n M game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/TestingStoryChronologyTest.kt\n M game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/TestingStoryCompatibilityTest.kt\n M game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/TestingStoryGameTraceTest.kt\n?? AGENTS.md\n?? audit-runs/\n?? design/\n?? docs/PARLOR_PROJECT_HANDOFF.md\n?? game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/TestingStoryFollowupChronologyTest.kt\n?? project-code-audit/\n?? remediation-runs/\n?? scripts/verification/",
+  "finished_at": "2026-09-07T06:05:42.450077+00:00"
+}

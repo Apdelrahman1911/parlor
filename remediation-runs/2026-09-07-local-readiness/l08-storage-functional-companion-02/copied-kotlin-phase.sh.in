@@ -1,0 +1,45 @@
+#!/bin/sh
+# Temporary copied-wrapper phase only. Current production phase is source-bound.
+# Preserve failed cd/build/normalization exit status; stop this isolated daemon
+# registry immediately after embedding, including interruption/error paths.
+set -u
+cd "__PARLOR_SOURCE_ROOT__" || exit 1
+stop_recorded=0
+build_status=125
+stop_status=125
+stop_and_record() {
+  ./gradlew --stop
+  stop_status=$?
+  printf 'build_exit=%s\nstop_exit=%s\n' "$build_status" "$stop_status" > "__PARLOR_STOP_RECEIPT__"
+  record_status=$?
+  stop_recorded=1
+  if [ "$record_status" -ne 0 ]; then return "$record_status"; fi
+  return "$stop_status"
+}
+finish() {
+  exit_status=$?
+  trap - EXIT INT TERM
+  if [ "$stop_recorded" -eq 0 ]; then
+    build_status=$exit_status
+    stop_and_record
+    late_stop=$?
+    if [ "$exit_status" -eq 0 ]; then exit_status=$late_stop; fi
+  fi
+  exit "$exit_status"
+}
+trap finish EXIT
+trap 'exit 130' INT
+trap 'exit 143' TERM
+/usr/bin/python3 -B "__PARLOR_SOURCE_ROOT__/scripts/verification/ios-readiness/simulator_signing.py" \
+  "__PARLOR_SIGNING_MODE__" "__PARLOR_SIMULATOR_SDK__" "__PARLOR_SOURCE_ROOT__" \
+  "__PARLOR_SIGNING_RECEIPT__" || exit $?
+./gradlew --no-daemon :composeApp:embedAndSignAppleFrameworkForXcode \
+  --dependency-verification=strict --console=plain --no-configuration-cache \
+  --no-parallel --max-workers=1 --no-build-cache
+build_status=$?
+stop_and_record
+recorded_stop_status=$?
+if [ "$build_status" -ne 0 ]; then exit "$build_status"; fi
+if [ "$recorded_stop_status" -ne 0 ]; then exit "$recorded_stop_status"; fi
+"__PARLOR_SOURCE_ROOT__/scripts/release/normalize_embedded_apple_framework.sh" \
+  "${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}" ComposeApp

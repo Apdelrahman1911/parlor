@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "kind": "COORDINATOR_SOURCE_DELIVERY_PREPARATION",
+  "at": "2026-09-10T02:30:04.945007+00:00",
+  "head_before": "4ccfafcfc361231cfb730178b3798ebcb6304770",
+  "status": "REVIEWED_SOURCE_AND_EIGHT_CONTROLS_READY_FOR_FROZEN_LINUX_CHECKS_NOT_NATIVE_APPROVAL",
+  "independent_reviews": [
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/windows-long-path-followup-independent-01.json",
+      "sha256": "976d56ec9192b7ed1f2bba396fd8219484e7ef871a387176d808e63785e7c3a7"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-independent-01.json",
+      "sha256": "52cb9183a049e98ba8681ffd2077b8ee9c95606178092432516efefaf24d4295"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/windows-targeted-collector-independent-01.json",
+      "sha256": "c0fdc9f581f7f7ac4170a3426e99e4f419286f5373948ce861ffc56db995c50f"
+    }
+  ],
+  "local_controls": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-windows-settings-controls-01/receipt.json",
+  "source_whitespace_check": "PASS: git diff --cached --check -- .github scripts",
+  "unscoped_whitespace_check": "FAILED on verbatim retained logs/XML/upstream graph descriptions and patch context; raw bytes were deliberately preserved, not repaired or recertified. This is not a test or application failure.",
+  "index_custody": {
+    "checked_files": 3699,
+    "working_file_vs_index_blob_mismatches": 0,
+    "mechanism": "Single reaped git cat-file --batch; SHA256 of every staged file and corresponding blob"
+  },
+  "delivery_hygiene": "Different-agent evidence_audit inspected bounded delivery roots and ZIP/log custody; no signing/token/temporary-file finding; no universal DLP or runtime claim.",
+  "cleanup": "Eight-control cycle immediate Gradle stop0, scratch removed, no remaining outputs/workers/errors; Git byte checker reaped. Lock excluded.",
+  "remaining": "Source commit, separate mechanical inventory commit, one release-validator and affected transport class, reviewed fresh source/platform bindings, targeted CI and later final reconciliation."
+}

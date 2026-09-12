@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/ci_workflow",
+  "author": "/root",
+  "status": "PASS",
+  "decision": "APPROVE_EXACT_LOCAL_INVOCATION_RECIPE_FOR_ROOT_OWNED_LANE",
+  "scope": "Independent source-only review of the root-authored local invocation recipe, not reapproval of this reviewer's adapter implementation or a runtime result.",
+  "recipe": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/linux-process-probe-local-01.py",
+    "sha256": "e1d6fb0694bf8b695f70433df50349ef94d1ce3e9ac63f55d55db0aecdb24702",
+    "bytes": 5176,
+    "lines": 113,
+    "literal_entry_sha256": "728a2ff60a4e3d13775272baf8a906d6cd109d2fe550729aef6754fa2c816505"
+  },
+  "observed_dependency_pins": {
+    "scripts/ci/linux_process_probe.py": "2696b0d81f1113eeaea20b431191788925053703d2ed6e12d72489041c6f76b6",
+    "scripts/ci/verification_hygiene.py": "1fc2fb6f0b3bb7a505edc63277e0fe974a67ccf972753eec0da60386438c16f4",
+    "remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py": "1b9e882514bfe5386785d5a71ae32fdc2bc3aa4cc1dd24532709899fbf4f41bc"
+  },
+  "adapter_independent_review": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/linux-process-probe-independent-01.json",
+    "reviewer": "/root/native_ci",
+    "sha256": "a9184100bb521387e85cb1d540ef8e329f368c112eb1d8f6aac28321be056458"
+  },
+  "resolved_findings": [
+    {
+      "id": "LOCAL-PACKET-CUSTODY",
+      "original_recipe_sha256": "aeb76d17c802c4d2a22da71ed02f541a88a9217b8a30c301472dabd364fbdb2c",
+      "finding": "Success cleanup checked matching contents and empty owned resources, but did not revalidate the exclusively created stage directory identity.",
+      "resolution": "Root records lstat immediately after mkdtemp and requires the same device/inode, root UID, real directory type and nonredirected canonical path before rmtree. Reopened in the final recipe."
+    },
+    {
+      "id": "LOCAL-OPTIMIZATION-GUARD",
+      "original_recipe_sha256": "aeb76d17c802c4d2a22da71ed02f541a88a9217b8a30c301472dabd364fbdb2c",
+      "finding": "Outer safety assertions could be disabled by optimized Python.",
+      "resolution": "An ordinary if/raise rejects sys.flags.optimize before assertions. The inner interpreter is already isolated with -I -B and a cleared environment. Reopened in the final recipe."
+    }
+  ],
+  "conclusions": {
+    "admission": "Requires real/effective root on Linux, unoptimized no-bytecode Python, exact checkout cwd, the exact fresh outer cycle derived from its TMPDIR, unused receipt path, and existing nobody UID/GID65534. Both canonical code files must equal the approved hashes before allocation.",
+    "staging": "Only a fresh root-owned /tmp packet is permission-adjusted: root-owned readonly source/entry files, nonroot-readable parent and synthetic SDK directories, and one UID/GID65534-owned private resource directory. Repository parents and the global Android SDK are not chmodded or modified.",
+    "invocation": "Fixed absolute runuser/env/python commands drop to actual nobody, clear inherited variables, retain only minimal PATH/LANG and explicit synthetic SDK roots, and run isolated no-bytecode Python from /. No GitHub impersonation, Store credentials, network command or emulator execution. The literal entry verifies actual UID/EUID65534 and calls the shared owned control exactly twice, stopping if prior resources remain.",
+    "bounds": "The invocation has a 45-second timeout. The shared source-bound control independently bounds readiness, proc reads, exact child retirement and 12-second child self-deadlines. Its fixed JSON output is retained and limited to less than64KiB before acceptance. This recipe does not claim arbitrary-process ownership; failed/timed-out descendants remain the existing outer lane's cleanup responsibility.",
+    "cleanup": "Success requires child invocation0, both child-reaped/fixture-removed rows, empty nonroot-owned resource directory, unchanged staged/canonical approved bytes and revalidated root stage identity before deletion. Failure retains the stage, records error type and propagates failure; it does not recursively delete an uncertain packet. Outer run_gradle_cycle remains responsible for immediate Gradle stop, worker cleanup and failed-stage inspection.",
+    "claims": "PASS_MECHANISM_ONLY is limited to actual nonroot synthetic-enumeration controls. It is not a full-host audit, emulator/app runtime, historical hosted-cause attribution, post-emulator cleanup repair or combined-D qualification."
+  },
+  "open_findings": [],
+  "checks_actually_performed": "Read recipe and exact shared-helper/lane interfaces; recomputed source hashes; parsed recipe AST and fixed entry literal AST using only Python standard library. No project module imported or executed.",
+  "execution_accounting": {
+    "tests": 0,
+    "process_experiments": 0,
+    "builds": 0,
+    "network_or_dispatches": 0,
+    "cleanup_cycles": 0
+  },
+  "next_action": "Root may execute this exact recipe once in continuation-linux-proc-controls-01 using the already reviewed outer lane, retain actual rows/exit/stop/worker/custody evidence and obtain separate execution review. Failure must retain its original label and owned packet pending inspected cleanup."
+}

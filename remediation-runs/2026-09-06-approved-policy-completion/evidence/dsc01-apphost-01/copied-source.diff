@@ -1,0 +1,1166 @@
+--- original/iosApp/iosApp/iOSApp.swift
++++ audit-copy/iosApp/iosApp/iOSApp.swift
+@@ -2,6 +2,7 @@
+ 
+ @main
+ struct iOSApp: App {
++    init() { DSC01Probe.shared.prepare() }
+     var body: some Scene {
+         WindowGroup {
+             ContentView()
+--- original/iosApp/iosApp/ContentView.swift
++++ audit-copy/iosApp/iosApp/ContentView.swift
+@@ -27,6 +27,7 @@
+         }
+         .frame(maxWidth: .infinity, maxHeight: .infinity)
+         .ignoresSafeArea(.container, edges: .all)
++        .overlay(alignment: .top) { DSC01Overlay().padding(.top, 72) }
+         .onAppear {
+             reportScenePhase(scenePhase)
+         }
+@@ -53,10 +54,285 @@
+ 
+ private struct ComposeView: UIViewControllerRepresentable {
+     func makeUIViewController(context: Context) -> UIViewController {
+-        MainViewControllerKt.MainViewController()
++        let controller = MainViewControllerKt.MainViewController()
++        DSC01Probe.shared.attach(controller)
++        return controller
+     }
+ 
+     func updateUIViewController(_ uiViewController: UIViewController, context: Context) {
+         // No-op — the Kotlin view controller owns its own state.
+     }
+ }
++
++// Appended ONLY to the source-bound temporary Debug simulator ContentView copy.
++// It neither imports a fake SettingsStore nor replaces MainViewController/App.
++#if DEBUG && targetEnvironment(simulator)
++private struct DSC01Preferences: Codable, Equatable {
++    let setting: String
++    let appLanguages: [String]
++    let hasAppOverride: Bool
++    let ownerPresent: Bool
++    let ownerInstalled: String
++    let ownerPreviousPresent: Bool
++    let ownerPrevious: [String]
++    let preferredLanguage: String
++}
++
++private struct DSC01Observation: Codable {
++    let ordinal: Int
++    let phase: String
++    let fixture: String
++    let boot: String
++    let preferences: DSC01Preferences
++    let nativeDirection: String
++    let controllerCreations: Int
++    let composition: String
++    let osDisposition: String
++}
++
++private struct DSC01Report: Codable {
++    let schemaVersion: Int
++    let runToken: String
++    let scenario: String
++    var completed: Bool
++    var observations: [DSC01Observation]
++}
++
++// Internal to copied Swift target so iOSApp.init can prepare BEFORE any Koin or
++// Compose initialization (including scenePhase callbacks). Never shipped.
++final class DSC01Probe: ObservableObject {
++    static let shared = DSC01Probe()
++    @Published private(set) var display = "{}"
++    private let boot = UUID().uuidString
++    private var report: DSC01Report?
++    private var beforeMain: DSC01Preferences?
++    private var fixture = ""
++    private var scenario = ""
++    private var osDisposition = "not-investigated"
++    var isOSScenario: Bool { scenario == "os" }
++    private var prepared = false
++    private var controllerCreations = 0
++    private weak var controller: UIViewController?
++    private let appID = "com.parlor.app.debug"
++    private let ownerKey = "com.parlor.languageOverrideOwner.v1"
++    private var resultURL: URL {
++        FileManager.default.temporaryDirectory.appendingPathComponent("parlor-dsc01-\(scenario)-result.json")
++    }
++
++    func prepare() {
++        precondition(Thread.isMainThread && !prepared, "DSC01 fixture initialization repeated/off-main")
++        let environment = ProcessInfo.processInfo.environment
++        guard Bundle.main.bundleIdentifier == appID,
++              let simulator = environment["SIMULATOR_UDID"], UUID(uuidString: simulator) != nil,
++              simulator == environment["PARLOR_DSC01_EXPECTED_UDID"],
++              let token = environment["PARLOR_DSC01_RUN_TOKEN"], UUID(uuidString: token) != nil,
++              let selected = environment["PARLOR_DSC01_FIXTURE"],
++              ["fresh", "continue", "previous-ar", "existing"].contains(selected),
++              let requestedScenario = environment["PARLOR_DSC01_SCENARIO"],
++              ["settings", "whodunit", "mafia", "os"].contains(requestedScenario),
++              !ProcessInfo.processInfo.arguments.contains("-AppleLanguages"),
++              !ProcessInfo.processInfo.arguments.contains("-AppleLocale") else {
++            fatalError("DSC01 requires explicitly owned unsigned Debug simulator context")
++        }
++        fixture = selected
++        scenario = requestedScenario
++        do {
++            if selected == "fresh" {
++                guard scenario == "settings", !FileManager.default.fileExists(atPath: resultURL.path) else { throw fixtureError() }
++                let original = try preferences()
++                guard original.setting == "system", !original.hasAppOverride, !original.ownerPresent else {
++                    throw fixtureError()
++                }
++                report = DSC01Report(schemaVersion: 3, runToken: token, scenario: scenario, completed: false, observations: [])
++            } else if selected == "existing" && !FileManager.default.fileExists(atPath: resultURL.path) {
++                guard scenario != "settings" else { throw fixtureError() }
++                // Preserve all existing preferences and local synthetic saved games.
++                // Starting this observation scenario does not reset application data.
++                report = DSC01Report(schemaVersion: 3, runToken: token, scenario: scenario, completed: false, observations: [])
++            } else {
++                let size = try FileManager.default.attributesOfItem(atPath: resultURL.path)[.size] as? NSNumber
++                guard let size, size.intValue <= 262144 else { throw fixtureError() }
++                let recovered = try JSONDecoder().decode(DSC01Report.self, from: Data(contentsOf: resultURL))
++                guard recovered.schemaVersion == 3, recovered.scenario == scenario, recovered.runToken == token,
++                      !recovered.completed, recovered.observations.count < 256 else { throw fixtureError() }
++                report = recovered
++                osDisposition = recovered.observations.last?.osDisposition ?? "not-investigated"
++                if selected == "previous-ar" {
++                    guard scenario == "settings" else { throw fixtureError() }
++                    let beforeSeed = try preferences()
++                    guard beforeSeed.setting == "system", !beforeSeed.hasAppOverride,
++                          !beforeSeed.ownerPresent else { throw fixtureError() }
++                    // Synthetic previous OS-managed preference representation ONLY,
++                    // inside this owned app sandbox. No global prefs or plist edits.
++                    UserDefaults.standard.set(["ar-EG", "en"], forKey: "AppleLanguages")
++                }
++            }
++            beforeMain = try preferences()
++            prepared = true
++            try appendObservation(phase: "before_main")
++        } catch {
++            fatalError("DSC01 synthetic fixture preparation failed; not application defect attribution")
++        }
++    }
++
++    func attach(_ actualController: UIViewController) {
++        precondition(Thread.isMainThread && prepared, "DSC01 observer was not prepared")
++        controllerCreations += 1
++        controller = actualController
++    }
++
++    func sample() {
++        precondition(Thread.isMainThread && prepared)
++        do { try appendObservation(phase: "sample") }
++        catch { display = "{\"harnessError\":\"bounded_observation_failed\"}" }
++    }
++
++    func complete() {
++        precondition(Thread.isMainThread && prepared)
++        do {
++            guard var value = report else { throw fixtureError() }
++            value.completed = true; report = value
++            try appendObservation(phase: "complete")
++            MainViewControllerKt.DSC01ReleaseSyntheticObservation()
++        } catch { display = "{\"harnessError\":\"completion_receipt_failed\"}" }
++    }
++
++    func capture() {
++        precondition(Thread.isMainThread && ["whodunit", "mafia"].contains(scenario))
++        MainViewControllerKt.DSC01CaptureActualSession()
++        sample()
++    }
++
++    func syntheticLanguage(_ language: String) {
++        precondition(Thread.isMainThread && ["en", "ar", "system"].contains(language))
++        MainViewControllerKt.DSC01SyntheticLanguage(language: language)
++    }
++
++    func openOSSettings() {
++        precondition(Thread.isMainThread && scenario == "os")
++        osDisposition = "opening"
++        guard let url = URL(string: UIApplication.openSettingsURLString) else {
++            osDisposition = "open-rejected"; sample(); return
++        }
++        UIApplication.shared.open(url, options: [:]) { accepted in
++            DispatchQueue.main.async {
++                self.osDisposition = accepted ? "opened" : "open-rejected"
++                self.sample()
++            }
++        }
++    }
++
++    func markOS(_ status: String) {
++        precondition(Thread.isMainThread && scenario == "os")
++        precondition(["language-control-unavailable", "selection-unavailable", "verified-english"].contains(status))
++        osDisposition = status
++        sample()
++    }
++
++    private func appendObservation(phase: String) throws {
++        guard var value = report, value.observations.count < 256, let beforeMain else { throw fixtureError() }
++        let now = try preferences()
++        let direction: String
++        if let root = controller?.view {
++            switch root.semanticContentAttribute {
++            case .forceLeftToRight: direction = "force_ltr"
++            case .forceRightToLeft: direction = "force_rtl"
++            case .unspecified: direction = "unspecified"
++            default: direction = "other"
++            }
++        } else { direction = "unavailable" }
++        // This direct read is deliberately unavailable before original Main/App
++        // initialization; invoking the Kotlin bridge there would invalidate the
++        // persisted-ownership startup witness.
++        let composition = phase == "before_main" ? "{}" : MainViewControllerKt.DSC01ActualCompositionObservation()
++        guard composition.utf8.count <= 4096 else { throw fixtureError() }
++        value.observations.append(DSC01Observation(
++            ordinal: value.observations.count + 1, phase: phase, fixture: fixture,
++            boot: boot, preferences: now, nativeDirection: direction, controllerCreations: controllerCreations,
++            composition: composition, osDisposition: osDisposition
++        ))
++        let encoded = try JSONEncoder().encode(value)
++        guard encoded.count <= 262144 else { throw fixtureError() }
++        try encoded.write(to: resultURL, options: .atomic)
++        report = value
++        // Fixed-schema public synthetic settings ONLY: no stores, game state,
++        // seeds, role maps, credentials, diagnostics, or accessibility secrets.
++        let payload: [String: Any] = [
++            "sequence": value.observations.count, "boot": boot, "completed": value.completed,
++            "beforeMain": try JSONSerialization.jsonObject(with: JSONEncoder().encode(beforeMain)),
++            "now": try JSONSerialization.jsonObject(with: JSONEncoder().encode(now)),
++            "nativeDirection": direction, "controllerCreations": controllerCreations,
++            "composition": try JSONSerialization.jsonObject(with: Data(composition.utf8)),
++            "scenario": scenario, "osDisposition": osDisposition,
++        ]
++        let displayData = try JSONSerialization.data(withJSONObject: payload, options: [.sortedKeys])
++        guard displayData.count <= 8192 else { throw fixtureError() }
++        display = String(decoding: displayData, as: UTF8.self)
++    }
++
++    private func preferences() throws -> DSC01Preferences {
++        let domain = UserDefaults.standard.persistentDomain(forName: appID) ?? [:]
++        let rawSetting = domain["language_override"]
++        let setting = rawSetting as? String ?? "system"
++        guard rawSetting == nil || ["en", "ar"].contains(setting) else { throw fixtureError() }
++        let languages = try safeLanguages(domain["AppleLanguages"])
++        let owner = domain[ownerKey] as? [String: Any]
++        guard domain[ownerKey] == nil || owner != nil else { throw fixtureError() }
++        var installed = "none"
++        var previous: [String] = []
++        if let owner {
++            guard Set(owner.keys).isSubset(of: ["version", "installed", "previous"]),
++                  owner["version"] as? String == "1", let tag = owner["installed"] as? String,
++                  ["en", "ar"].contains(tag) else { throw fixtureError() }
++            installed = tag; previous = try safeLanguages(owner["previous"])
++        }
++        let preferred = Locale.preferredLanguages.first?.lowercased() ?? "en"
++        let resolved = preferred == "ar" || preferred.hasPrefix("ar-") || preferred.hasPrefix("ar_") ? "ar" : "en"
++        return DSC01Preferences(setting: setting, appLanguages: languages, hasAppOverride: domain["AppleLanguages"] != nil,
++                                ownerPresent: owner != nil, ownerInstalled: installed,
++                                ownerPreviousPresent: owner?["previous"] != nil, ownerPrevious: previous,
++                                preferredLanguage: resolved)
++    }
++
++    private func safeLanguages(_ value: Any?) throws -> [String] {
++        guard let value else { return [] }
++        guard let items = value as? [String], !items.isEmpty, items.count <= 8,
++              items.allSatisfy({ $0.utf8.count <= 35 && $0.range(of: "^(en|ar)(-[A-Za-z0-9]{2,8})*$", options: .regularExpression) != nil }) else {
++            throw fixtureError()
++        }
++        return items
++    }
++
++    private func fixtureError() -> NSError { NSError(domain: "DSC01SyntheticHarness", code: 1) }
++}
++
++private struct DSC01Overlay: View {
++    @ObservedObject private var probe = DSC01Probe.shared
++    var body: some View {
++        VStack(spacing: 4) {
++            HStack(spacing: 8) {
++                Button("Observe") { probe.sample() }.accessibilityIdentifier("parlor-dsc01-observe")
++                Text("DS-C01 observer").accessibilityIdentifier("parlor-dsc01-state").accessibilityValue(probe.display)
++                Button("Capture") { probe.capture() }.accessibilityIdentifier("parlor-dsc01-capture")
++                Button("Complete") { probe.complete() }.accessibilityIdentifier("parlor-dsc01-complete")
++            }
++            HStack(spacing: 8) {
++                Button("Synthetic EN") { probe.syntheticLanguage("en") }.accessibilityIdentifier("parlor-dsc01-synthetic-en")
++                Button("Synthetic AR") { probe.syntheticLanguage("ar") }.accessibilityIdentifier("parlor-dsc01-synthetic-ar")
++                Button("Synthetic SYS") { probe.syntheticLanguage("system") }.accessibilityIdentifier("parlor-dsc01-synthetic-system")
++                Button("OS Settings") { probe.openOSSettings() }.accessibilityIdentifier("parlor-dsc01-open-os")
++            }
++            if probe.isOSScenario {
++                HStack(spacing: 8) {
++                    Button("OS row unavailable") { probe.markOS("language-control-unavailable") }.accessibilityIdentifier("parlor-dsc01-os-no-row")
++                    Button("OS selection unavailable") { probe.markOS("selection-unavailable") }.accessibilityIdentifier("parlor-dsc01-os-no-selection")
++                    Button("OS verified") { probe.markOS("verified-english") }.accessibilityIdentifier("parlor-dsc01-os-verified")
++                }
++            }
++        }
++        .font(.system(size: 9)).padding(4).background(Color.black).foregroundColor(.white)
++    }
++}
++#else
++#error("DSC01 temporary observer may compile ONLY as Debug iOS simulator")
++#endif
+--- original/iosApp/iosAppUITests/IOSAppLaunchUITests.swift
++++ audit-copy/iosApp/iosAppUITests/IOSAppLaunchUITests.swift
+@@ -1,32 +1,478 @@
+ import XCTest
+ 
+ final class IOSAppLaunchUITests: XCTestCase {
+-    override func setUpWithError() throws {
+-        continueAfterFailure = false
+-    }
++    override func setUpWithError() throws { continueAfterFailure = false }
+ 
+     @MainActor
+-    func testColdLaunchRendersComposeHomeWithoutUnexpectedAlert() throws {
++    func testDSC01ActualSettingsLocalSessionsAndOSInvestigation() throws {
+         let app = XCUIApplication()
+-        app.launchArguments += ["-AppleLanguages", "(en)", "-AppleLocale", "en_US"]
++        let token = UUID().uuidString
++        let simulator = try XCTUnwrap(ProcessInfo.processInfo.environment["SIMULATOR_UDID"])
++        app.launchArguments = [] // Never pin AppleLanguages/AppleLocale in argument domain.
++        app.launchEnvironment = ["PARLOR_DSC01_RUN_TOKEN": token, "PARLOR_DSC01_EXPECTED_UDID": simulator,
++                                 "PARLOR_DSC01_SCENARIO": "settings"]
++        defer { app.terminate() }
++
++        try launch(app, fixture: "fresh")
++        let initial = try observe(app)
++        let fallback = try string(try dictionary(initial, "now"), "preferredLanguage")
++        XCTAssertEqual(try string(try dictionary(initial, "now"), "setting"), "system")
++        XCTAssertEqual(try dictionary(initial, "now")["hasAppOverride"] as? Bool, false)
++        let currentLanguage = fallback
++
++        // Both supported explicit choices use actual Compose Settings actions.
++        // Each restart must independently show the marker BEFORE original App.
++        for explicit in ["ar"] {
++            try openSettings(app, language: currentLanguage)
++            try tap(app, label: explicit == "ar" ? "العربية" : "English")
++            try assertSettingsStrings(app, language: explicit)
++            let installed = try observeEventually(app) { snapshot in
++                let value = try self.dictionary(snapshot, "now")
++                return value["setting"] as? String == explicit && value["ownerInstalled"] as? String == explicit
++            }
++            try assertOwned(installed, explicit: explicit, previous: [])
++            let priorBoot = try string(installed, "boot")
++            app.terminate()
++            XCTAssertTrue(app.wait(for: .notRunning, timeout: 15))
++            try launch(app, fixture: "continue")
++            let resumed = try observe(app)
++            XCTAssertNotEqual(try string(resumed, "boot"), priorBoot, "Must be a new process, not remount")
++            let beforeMain = try dictionary(resumed, "beforeMain")
++            XCTAssertEqual(beforeMain["setting"] as? String, explicit)
++            XCTAssertEqual(beforeMain["ownerInstalled"] as? String, explicit,
++                           "Harness validity: persistent owner must survive termination BEFORE App initializes")
++            XCTAssertEqual(beforeMain["ownerPresent"] as? Bool, true)
++            XCTAssertEqual(beforeMain["appLanguages"] as? [String], [explicit])
++            try assertOwned(resumed, explicit: explicit, previous: [])
++            try openSettings(app, language: explicit)
++            try tap(app, label: explicit == "ar" ? "لغة النظام" : "System language")
++            try assertSettingsStrings(app, language: fallback)
++            let system = try observeEventually(app) { snapshot in
++                let value = try self.dictionary(snapshot, "now")
++                return value["setting"] as? String == "system" && value["ownerPresent"] as? Bool == false
++            }
++            try assertSystem(system, expected: fallback, previous: [])
++        }
++
++        // This represents an OS-managed previous per-app value synthetically;
++        // it is NOT execution of the actual iOS Settings application.
++        app.terminate(); XCTAssertTrue(app.wait(for: .notRunning, timeout: 15))
++        try launch(app, fixture: "previous-ar")
++        let previous = try observe(app)
++        try assertSystem(previous, expected: "ar", previous: ["ar-EG", "en"])
++        try openSettings(app, language: "ar")
++        try tap(app, label: "English")
++        try assertSettingsStrings(app, language: "en")
++        let english = try observeEventually(app) { snapshot in
++            try self.dictionary(snapshot, "now")["ownerInstalled"] as? String == "en"
++        }
++        try assertOwned(english, explicit: "en", previous: ["ar-EG", "en"])
++        let beforeRestart = try string(english, "boot")
++        app.terminate(); XCTAssertTrue(app.wait(for: .notRunning, timeout: 15))
++        try launch(app, fixture: "continue")
++        let finalRestart = try observe(app)
++        XCTAssertNotEqual(try string(finalRestart, "boot"), beforeRestart)
++        let recovered = try dictionary(finalRestart, "beforeMain")
++        XCTAssertEqual(recovered["ownerPresent"] as? Bool, true)
++        XCTAssertEqual(recovered["ownerInstalled"] as? String, "en")
++        XCTAssertEqual(recovered["ownerPrevious"] as? [String], ["ar-EG", "en"])
++        try openSettings(app, language: "en")
++        try tap(app, label: "System language")
++        try assertSettingsStrings(app, language: "ar")
++        let restored = try observeEventually(app) { snapshot in
++            let value = try self.dictionary(snapshot, "now")
++            return value["setting"] as? String == "system" && value["ownerPresent"] as? Bool == false
++        }
++        try assertSystem(restored, expected: "ar", previous: ["ar-EG", "en"])
++        app.buttons["parlor-dsc01-complete"].tap()
++        let complete = try observe(app)
++        XCTAssertEqual(complete["completed"] as? Bool, true)
++
++        // No app route exposes Settings during an active game. The following
++        // two scenarios honestly use a synthetic invocation of the actual Koin
++        // SettingsStore, while all game entry/setup interactions remain real UI.
++        try verifyActualLocalGame(app, game: "whodunit")
++        try verifyActualLocalGame(app, game: "mafia")
++        try investigateActualOSPerAppLanguage(app)
++    }
++
++    @MainActor private func startScenario(_ app: XCUIApplication, name: String) throws {
++        app.terminate()
++        XCTAssertTrue(app.wait(for: .notRunning, timeout: 15))
++        app.launchEnvironment["PARLOR_DSC01_SCENARIO"] = name
++        try launch(app, fixture: "existing")
++        let snapshot = try observe(app)
++        XCTAssertEqual(snapshot["scenario"] as? String, name)
++    }
++
++    @MainActor private func syntheticLanguage(_ app: XCUIApplication, language: String) throws -> [String: Any] {
++        let before = try observe(app)
++        let ordinal = try XCTUnwrap(try dictionary(before, "composition")["commandOrdinal"] as? Int)
++        app.buttons["parlor-dsc01-synthetic-" + language].tap()
++        return try observeEventually(app) { snapshot in
++            let composition = try self.dictionary(snapshot, "composition")
++            return composition["commandOrdinal"] as? Int == ordinal + 1 &&
++                   composition["commandLanguage"] as? String == language &&
++                   composition["commandStatus"] as? String == "applied" &&
++                   self.optionalDictionary(snapshot, "now")["setting"] as? String == language
++        }
++    }
++
++    @MainActor private func verifyActualLocalGame(_ app: XCUIApplication, game: String) throws {
++        XCTAssertTrue(["whodunit", "mafia"].contains(game))
++        try startScenario(app, name: game)
++        let originalSystem = try dictionary(try observe(app), "now")
++        XCTAssertEqual(originalSystem["setting"] as? String, "system")
++        XCTAssertEqual(originalSystem["ownerPresent"] as? Bool, false)
++        let systemLanguage = try string(originalSystem, "preferredLanguage")
++        let systemPreferences = try XCTUnwrap(originalSystem["appLanguages"] as? [String])
++        _ = try syntheticLanguage(app, language: "en")
++        try tapPublicSetupPrefix(app, prefix: game == "whodunit"
++            ? "Open Whodunit and pick how you want to play." : "Open the Mafia game.")
++        try tapPublicSetupPrefix(app, prefix: "Start a pass-and-play session on this device.")
++        if game == "whodunit" {
++            try tapPublicSetupPrefix(app, prefix: "Continue with ")
++            try tapPublicSetupPrefix(app, prefix: "Choose Classic Vote mode and proceed to player setup.")
++            try tap(app, label: "6")
++        } else {
++            try tapPublicSetupPrefix(app, prefix: "Set up a 5-player game")
++        }
++        try enterActualPlayerNames(app, count: game == "whodunit" ? 6 : 5)
++        try tapPublicSetupPrefix(app, prefix: game == "whodunit"
++            ? "Confirm player names and continue to the case intro." : "Continue to settings")
++        if game == "mafia" {
++            try tapPublicSetupPrefix(app, prefix: "Start the Mafia game with these settings")
++        }
++        let phase = game == "whodunit" ? "public-intro" : "role-assignment"
++        _ = try observeEventually(app) { snapshot in
++            let value = try self.dictionary(snapshot, "composition")
++            return value["surface"] as? String == game + "-local" &&
++                   value["publicPhase"] as? String == phase &&
++                   value["gameDirection"] as? String == "ltr"
++        }
++        // Capture the actual PartyAwareSession controller, actual canonical
++        // StateFlow and current committed object; never regenerate a config.
++        app.buttons["parlor-dsc01-capture"].tap()
++        let checkpoint = try observe(app)
++        try assertContinuity(checkpoint, game: game, phase: phase, language: "en")
++        let boot = try string(checkpoint, "boot")
++        for language in ["ar", "en", "system"] {
++            _ = try syntheticLanguage(app, language: language)
++            let expectedLanguage = language == "system" ? systemLanguage : language
++            let ready = try observeEventually(app) { snapshot in
++                let resolved = try self.string(try self.dictionary(snapshot, "now"), "preferredLanguage")
++                let composition = try self.dictionary(snapshot, "composition")
++                return resolved == expectedLanguage &&
++                    composition["gameDirection"] as? String ==
++                    (expectedLanguage == "ar" ? "rtl" : "ltr")
++            }
++            if language == "system" {
++                try assertSystem(ready, expected: systemLanguage, previous: systemPreferences)
++            } else {
++                try assertOwned(ready, explicit: language, previous: systemPreferences)
++            }
++            try assertContinuity(ready, game: game, phase: phase, language: expectedLanguage)
++            XCTAssertEqual(try string(ready, "boot"), boot)
++
++            let before = try dictionary(ready, "composition")
++            let backgrounds = try XCTUnwrap(before["backgroundSinceCapture"] as? Int)
++            let foregrounds = try XCTUnwrap(before["foregroundSinceCapture"] as? Int)
++            // Actual system Home/activate calls: original Swift scenePhase
++            // forwarding invokes original AppLifecycleCoordinator unchanged.
++            XCUIDevice.shared.press(.home)
++            XCTAssertTrue(app.wait(for: .runningBackground, timeout: 15))
++            app.activate()
++            XCTAssertTrue(app.wait(for: .runningForeground, timeout: 15))
++            let resumed = try observeEventually(app) { snapshot in
++                let value = try self.dictionary(snapshot, "composition")
++                return (value["backgroundSinceCapture"] as? Int ?? -1) > backgrounds &&
++                       (value["foregroundSinceCapture"] as? Int ?? -1) > foregrounds
++            }
++            XCTAssertEqual(try string(resumed, "boot"), boot, "Process recreation is not retained-session proof")
++            try assertContinuity(resumed, game: game, phase: phase, language: expectedLanguage)
++            if language == "system" {
++                try assertSystem(resumed, expected: systemLanguage, previous: systemPreferences)
++            } else {
++                try assertOwned(resumed, explicit: language, previous: systemPreferences)
++            }
++        }
++        app.buttons["parlor-dsc01-complete"].tap()
++        XCTAssertEqual(try observe(app)["completed"] as? Bool, true)
++    }
++
++    private func assertContinuity(_ snapshot: [String: Any], game: String, phase: String, language: String) throws {
++        let value = try dictionary(snapshot, "composition")
++        XCTAssertEqual(value["surface"] as? String, game + "-local")
++        XCTAssertEqual(value["publicPhase"] as? String, phase)
++        XCTAssertEqual(value["gameDirection"] as? String, language == "ar" ? "rtl" : "ltr")
++        XCTAssertEqual(value["disposalsSinceCapture"] as? Int, 0)
++        for property in ["checkpointCaptured", "sameController", "sameCanonicalFlow",
++                         "sameCanonicalReference", "sameCanonicalValue", "samePublicPhase"] {
++            XCTAssertEqual(value[property] as? Bool, true, "Actual retained-session invariant: " + property)
++        }
++        XCTAssertEqual(snapshot["nativeDirection"] as? String, language == "ar" ? "force_rtl" : "force_ltr")
++    }
++
++    @MainActor private func enterActualPlayerNames(_ app: XCUIApplication, count: Int) throws {
++        for index in 1...count {
++            // Only a copy-only testTag is added to the original OutlinedTextField.
++            // Its original sanitizer/IME/focus/callback/state are unchanged.
++            let query = app.descendants(matching: .any).matching(identifier: "dsc01-player-\(index)")
++            XCTAssertTrue(query.firstMatch.waitForExistence(timeout: 10))
++            XCTAssertLessThan(query.count, 8)
++            var field = query.allElementsBoundByIndex.first(where: { $0.isHittable })
++            for _ in 0..<8 where field == nil {
++                app.swipeUp(velocity: .slow)
++                field = query.allElementsBoundByIndex.first(where: { $0.isHittable })
++            }
++            let actual = try XCTUnwrap(field, "Actual synthetic-name field is not reachable")
++            actual.tap()
++            actual.typeText("Audit Player \(index)")
++            if index == count { actual.typeText("\n") }
++        }
++    }
++
++    @MainActor private func tapPublicSetupPrefix(_ app: XCUIApplication, prefix: String) throws {
++        // Prefixes are exact, source-whitelisted content descriptions from
++        // PUBLIC setup only; CMP merges descriptions with visible descendants.
++        // No broad hierarchy export, arbitrary text read, private phase, fallback
++        // target or callback invocation is used to advance the actual app.
++        let allowed = ["Open Whodunit and pick how you want to play.", "Open the Mafia game.",
++            "Start a pass-and-play session on this device.", "Continue with ",
++            "Choose Classic Vote mode and proceed to player setup.", "Set up a 5-player game",
++            "Confirm player names and continue to the case intro.", "Continue to settings",
++            "Start the Mafia game with these settings"]
++        XCTAssertTrue(allowed.contains(prefix))
++        let query = app.descendants(matching: .any).matching(NSPredicate(format: "label BEGINSWITH %@", prefix))
++        _ = query.firstMatch.waitForExistence(timeout: 15)
++        for _ in 0..<14 {
++            XCTAssertLessThan(query.count, 16)
++            if let target = query.allElementsBoundByIndex.first(where: { $0.isHittable }) {
++                target.tap(); return
++            }
++            app.swipeUp(velocity: .slow)
++        }
++        XCTFail("Source-whitelisted actual setup control not reachable: " + prefix)
++        throw NSError(domain: "DSC01PublicSetupSelector", code: 1)
++    }
++
++    @MainActor private func investigateActualOSPerAppLanguage(_ app: XCUIApplication) throws {
++        try startScenario(app, name: "os")
++        _ = try syntheticLanguage(app, language: "system")
++        app.buttons["parlor-dsc01-open-os"].tap()
++        let settings = XCUIApplication(bundleIdentifier: "com.apple.Preferences")
++        defer { settings.terminate() }
++        XCTAssertTrue(settings.wait(for: .runningForeground, timeout: 20),
++                      "Supported UIApplication.openSettingsURLString must open actual Settings")
++        // Actual shipped plist declares en/ar. A fresh OS may not expose the
++        // language row until it has multiple preferred languages configured.
++        // Do not rewrite global AppleLanguages or invent unsupported URLs.
++        let languageRow = settings.descendants(matching: .any)
++            .matching(NSPredicate(format: "label == %@", "Language"))
++        if !languageRow.firstMatch.waitForExistence(timeout: 15) {
++            recordOSSelectorDiagnostics(settings)
++            app.activate(); XCTAssertTrue(app.wait(for: .runningForeground, timeout: 20))
++            app.buttons["parlor-dsc01-os-no-row"].tap()
++            app.buttons["parlor-dsc01-complete"].tap()
++            XCTAssertEqual(try observe(app)["osDisposition"] as? String, "language-control-unavailable")
++            return // Explicit BLOCKED gate, never marked OS-language PASS by the runner.
++        }
++        XCTAssertLessThan(languageRow.count, 16)
++        try XCTUnwrap(languageRow.allElementsBoundByIndex.first(where: { $0.isHittable })).tap()
++        let english = settings.descendants(matching: .any)
++            .matching(NSPredicate(format: "label == %@", "English"))
++        if !english.firstMatch.waitForExistence(timeout: 15) {
++            recordOSSelectorDiagnostics(settings)
++            app.activate(); XCTAssertTrue(app.wait(for: .runningForeground, timeout: 20))
++            app.buttons["parlor-dsc01-os-no-selection"].tap()
++            app.buttons["parlor-dsc01-complete"].tap()
++            XCTAssertEqual(try observe(app)["osDisposition"] as? String, "selection-unavailable")
++            return
++        }
++        XCTAssertLessThan(english.count, 16)
++        try XCTUnwrap(english.allElementsBoundByIndex.first(where: { $0.isHittable })).tap()
++        XCTAssertFalse(settings.alerts.firstMatch.exists, "Do not dismiss unknown OS alerts")
++        app.launchEnvironment["PARLOR_DSC01_FIXTURE"] = "continue"
++        app.activate(); XCTAssertTrue(app.wait(for: .runningForeground, timeout: 30))
++        let afterOS = try observeEventually(app) { snapshot in
++            let preferences = try self.dictionary(snapshot, "now")
++            return preferences["setting"] as? String == "system" &&
++                   preferences["ownerPresent"] as? Bool == false &&
++                   preferences["preferredLanguage"] as? String == "en" &&
++                   preferences["hasAppOverride"] as? Bool == true
++        }
++        let actualOSPreferences = try XCTUnwrap(try dictionary(afterOS, "now")["appLanguages"] as? [String])
++        XCTAssertFalse(actualOSPreferences.isEmpty)
++        try openSettings(app, language: "en")
++        try tap(app, label: "العربية")
++        try assertSettingsStrings(app, language: "ar")
++        let explicit = try observeEventually(app) { snapshot in
++            try self.dictionary(snapshot, "now")["ownerInstalled"] as? String == "ar"
++        }
++        try assertOwned(explicit, explicit: "ar", previous: actualOSPreferences)
++        try tap(app, label: "لغة النظام")
++        try assertSettingsStrings(app, language: "en")
++        try assertSystem(try observe(app), expected: "en", previous: actualOSPreferences)
++        // An OS language selection can intentionally restart a process. Its
++        // ownership/restart proof is separate from same-process game retention.
++        let beforeBoot = try string(try observe(app), "boot")
++        app.terminate(); XCTAssertTrue(app.wait(for: .notRunning, timeout: 15))
++        try launch(app, fixture: "continue")
++        let restarted = try observe(app)
++        XCTAssertNotEqual(try string(restarted, "boot"), beforeBoot)
++        try assertSystem(restarted, expected: "en", previous: actualOSPreferences)
++        app.buttons["parlor-dsc01-os-verified"].tap()
++        app.buttons["parlor-dsc01-complete"].tap()
++        XCTAssertEqual(try observe(app)["osDisposition"] as? String, "verified-english")
++    }
++
++    @MainActor private func recordOSSelectorDiagnostics(_ settings: XCUIApplication) {
++        // Bounded known-public UI metadata only. Absence is a selector/platform
++        // evidence gap, not proof that the OS feature is inapplicable.
++        let labels = ["Parlor", "Language", "Preferred Language", "English", "Arabic", "العربية",
++                      "Apps", "Settings", "Local Network"]
++        let rows: [[String: Any]] = labels.map { label in
++            let query = settings.descendants(matching: .any).matching(NSPredicate(format: "label == %@", label))
++            let count = query.count
++            let elements = count < 32 ? Array(query.allElementsBoundByIndex.prefix(4)) : []
++            return ["knownLabel": label, "countCappedAt32": min(count, 32),
++                    "hittableAmongAtMost4": elements.filter { $0.isHittable }.count]
++        }
++        if let data = try? JSONSerialization.data(withJSONObject: ["schemaVersion": 1, "observations": rows]),
++           data.count <= 8192, let text = String(data: data, encoding: .utf8) {
++            print("DSC01_OS_SELECTOR_DIAGNOSTICS " + text)
++        }
++    }
++
++    private func optionalDictionary(_ value: [String: Any], _ key: String) -> [String: Any] {
++        value[key] as? [String: Any] ?? [:]
++    }
++
++    @MainActor private func launch(_ app: XCUIApplication, fixture: String) throws {
++        app.launchEnvironment["PARLOR_DSC01_FIXTURE"] = fixture
+         app.launch()
+-
+-        XCTAssertTrue(
+-            app.wait(for: .runningForeground, timeout: 30),
+-            "The Swift host should launch and remain in the foreground",
+-        )
+-        XCTAssertTrue(
+-            app.staticTexts["parlor-home-brand"].waitForExistence(timeout: 30),
+-            "The Kotlin Compose root should render the home screen",
+-        )
+-        XCTAssertFalse(
+-            app.alerts.firstMatch.waitForExistence(timeout: 2),
+-            "No alert should appear during the simulator cold-start observation window",
+-        )
+-        XCTAssertEqual(
+-            app.state,
+-            .runningForeground,
+-            "The Swift host should remain in the foreground after Compose renders",
+-        )
++        XCTAssertTrue(app.wait(for: .runningForeground, timeout: 30))
++        XCTAssertTrue(app.staticTexts["parlor-home-brand"].waitForExistence(timeout: 30))
++        XCTAssertTrue(app.buttons["parlor-dsc01-observe"].waitForExistence(timeout: 10))
++        XCTAssertFalse(app.alerts.firstMatch.exists, "Do not dismiss unexpected alerts or call a failed launch passing")
++    }
++
++    @MainActor private func openSettings(_ app: XCUIApplication, language: String) throws {
++        // CMP UI 1.10.3 UIKit combines this selectable parent description
++        // with its uppercase Text child, using a comma-space separator.
++        // Exact pinned-source proof is retained beside this versioned harness.
++        try tap(app, label: language == "ar" ? "افتح الإعدادات., الإعدادات" : "Open settings., SETTINGS")
++        try assertSettingsStrings(app, language: language)
++    }
++
++    @MainActor private func assertSettingsStrings(_ app: XCUIApplication, language: String) throws {
++        let text = language == "ar" ? "اللغة" : "LANGUAGE"
++        let query = app.descendants(matching: .any).matching(NSPredicate(format: "label == %@", text))
++        XCTAssertTrue(query.firstMatch.waitForExistence(timeout: 15), "Actual localized Compose language section missing")
++        XCTAssertTrue(app.descendants(matching: .any).matching(NSPredicate(format: "label == %@",
++                      language == "ar" ? "لغة النظام" : "System language")).firstMatch.exists)
++        let direct = try observeEventually(app) { snapshot in
++            let composition = try self.dictionary(snapshot, "composition")
++            return composition["settingsMounted"] as? Bool == true &&
++                   composition["settingsDirection"] as? String == (language == "ar" ? "rtl" : "ltr")
++        }
++        XCTAssertEqual(try dictionary(direct, "composition")["settingsDirection"] as? String,
++                       language == "ar" ? "rtl" : "ltr", "Read from actual Settings LocalLayoutDirection, not inferred from locale")
++    }
++
++    @MainActor private func tap(_ app: XCUIApplication, label: String) throws {
++        let query = app.descendants(matching: .any).matching(NSPredicate(format: "label == %@", label))
++        let exists = query.firstMatch.waitForExistence(timeout: 15)
++        if !exists { recordSelectorDiagnostics(app, expected: label) }
++        XCTAssertTrue(exists, "Missing exact actual-app label; this is a selector/evidence failure, not crash proof")
++        let matches = query.allElementsBoundByIndex
++        if matches.count >= 32 { recordSelectorDiagnostics(app, expected: label) }
++        XCTAssertLessThan(matches.count, 32, "Selector unexpectedly broad")
++        let hittable = matches.first(where: { $0.isHittable })
++        if hittable == nil { recordSelectorDiagnostics(app, expected: label) }
++        let element = try XCTUnwrap(hittable, "No hittable exact-label control")
++        element.tap()
++    }
++
++    @MainActor private func recordSelectorDiagnostics(_ app: XCUIApplication, expected: String) {
++        // Diagnostic queries are exact and source-whitelisted. They never pick a
++        // fallback target, export a hierarchy, or read arbitrary labels/values.
++        let labels = ["Open settings., SETTINGS", "افتح الإعدادات., الإعدادات",
++                      "Open settings.", "افتح الإعدادات.", "SETTINGS", "الإعدادات",
++                      "LANGUAGE", "اللغة", "System language", "لغة النظام", "English", "العربية"]
++        let observations: [[String: Any]] = labels.map { known in
++            let query = app.descendants(matching: .any).matching(NSPredicate(format: "label == %@", known))
++            let count = query.count
++            let inspected = count < 32 ? Array(query.allElementsBoundByIndex.prefix(4)) : []
++            return ["knownLabel": known, "countCappedAt32": min(count, 32),
++                    "inspectedAtMost4": inspected.count,
++                    "hittableAmongInspected": inspected.filter { $0.isHittable }.count]
++        }
++        let report: [String: Any] = ["schemaVersion": 1,
++            "expectedKnownLabel": labels.contains(expected) ? expected : "not-allowlisted",
++            "observations": observations]
++        if let data = try? JSONSerialization.data(withJSONObject: report, options: [.sortedKeys]),
++           data.count <= 8192, let text = String(data: data, encoding: .utf8) {
++            print("DSC01_SELECTOR_DIAGNOSTICS " + text)
++        }
++    }
++
++    @MainActor private func observe(_ app: XCUIApplication) throws -> [String: Any] {
++        let state = app.staticTexts["parlor-dsc01-state"]
++        XCTAssertTrue(state.waitForExistence(timeout: 10))
++        let previous = state.value as? String
++        app.buttons["parlor-dsc01-observe"].tap()
++        let changed = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
++            state.value as? String != previous
++        }, object: nil)
++        XCTAssertEqual(XCTWaiter.wait(for: [changed], timeout: 10), .completed)
++        let encoded = try XCTUnwrap((state.value as? String)?.data(using: .utf8))
++        XCTAssertLessThanOrEqual(encoded.count, 8192)
++        let snapshot = try XCTUnwrap(JSONSerialization.jsonObject(with: encoded) as? [String: Any])
++        XCTAssertNil(snapshot["harnessError"])
++        XCTAssertEqual(snapshot["controllerCreations"] as? Int, 1, "Original root controller must remain the only one in this process")
++        return snapshot
++    }
++
++    @MainActor private func observeEventually(_ app: XCUIApplication,
++                                              predicate: ([String: Any]) throws -> Bool) throws -> [String: Any] {
++        // Bounded read-only observation refresh, never retries an app setting mutation.
++        for _ in 0..<6 {
++            let snapshot = try observe(app)
++            if try predicate(snapshot) { return snapshot }
++        }
++        XCTFail("Actual settings/owner never reached required state after bounded observations")
++        throw NSError(domain: "DSC01ObservationTimeout", code: 1)
++    }
++
++    private func assertOwned(_ snapshot: [String: Any], explicit: String, previous: [String]) throws {
++        let value = try dictionary(snapshot, "now")
++        XCTAssertEqual(value["setting"] as? String, explicit)
++        XCTAssertEqual(value["appLanguages"] as? [String], [explicit])
++        XCTAssertEqual(value["hasAppOverride"] as? Bool, true)
++        XCTAssertEqual(value["ownerPresent"] as? Bool, true)
++        XCTAssertEqual(value["ownerInstalled"] as? String, explicit)
++        XCTAssertEqual(value["ownerPrevious"] as? [String], previous)
++        XCTAssertEqual(value["ownerPreviousPresent"] as? Bool, !previous.isEmpty)
++        XCTAssertEqual(value["preferredLanguage"] as? String, explicit)
++        XCTAssertEqual(snapshot["nativeDirection"] as? String, explicit == "ar" ? "force_rtl" : "force_ltr")
++    }
++
++    private func assertSystem(_ snapshot: [String: Any], expected: String, previous: [String]) throws {
++        let value = try dictionary(snapshot, "now")
++        XCTAssertEqual(value["setting"] as? String, "system")
++        XCTAssertEqual(value["hasAppOverride"] as? Bool, !previous.isEmpty)
++        XCTAssertEqual(value["appLanguages"] as? [String], previous)
++        XCTAssertEqual(value["ownerPresent"] as? Bool, false)
++        XCTAssertEqual(value["ownerInstalled"] as? String, "none")
++        XCTAssertEqual(value["preferredLanguage"] as? String, expected)
++        XCTAssertEqual(snapshot["nativeDirection"] as? String, expected == "ar" ? "force_rtl" : "force_ltr")
++    }
++
++    private func dictionary(_ value: [String: Any], _ key: String) throws -> [String: Any] {
++        try XCTUnwrap(value[key] as? [String: Any])
++    }
++    private func string(_ value: [String: Any], _ key: String) throws -> String {
++        try XCTUnwrap(value[key] as? String)
+     }
+ }
+--- original/iosApp/iosApp.xcodeproj/project.pbxproj
++++ audit-copy/iosApp/iosApp.xcodeproj/project.pbxproj
+@@ -243,7 +243,7 @@
+ 			);
+ 			runOnlyForDeploymentPostprocessing = 0;
+ 			shellPath = /bin/sh;
+-			shellScript = "set -e\ncd \"$SRCROOT/..\"\nif [ \"YES\" = \"$OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED\" ]; then\n  echo \"Skipping Gradle build task invocation due to OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED environment variable set to \\\"YES\\\"\"\n  exit 0\nfi\n./gradlew --no-daemon :composeApp:embedAndSignAppleFrameworkForXcode --dependency-verification=strict --console=plain\nscripts/release/normalize_embedded_apple_framework.sh \"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}\" ComposeApp\n";
++			shellScript = "#!/bin/sh\n# Temporary copied-wrapper phase only. Current production phase is source-bound.\n# Preserve failed cd/build/normalization exit status; stop this isolated daemon\n# registry immediately after embedding, including interruption/error paths.\nset -u\ncd \"/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-dsc01-apphost-01-zbq7j_1u/copy\" || exit 1\nstop_recorded=0\nbuild_status=125\nstop_status=125\nstop_and_record() {\n  ./gradlew --stop\n  stop_status=$?\n  printf 'build_exit=%s\\nstop_exit=%s\\n' \"$build_status\" \"$stop_status\" > \"/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-01/embedded-gradle-stop.txt\"\n  record_status=$?\n  stop_recorded=1\n  if [ \"$record_status\" -ne 0 ]; then return \"$record_status\"; fi\n  return \"$stop_status\"\n}\nfinish() {\n  exit_status=$?\n  trap - EXIT INT TERM\n  if [ \"$stop_recorded\" -eq 0 ]; then\n    build_status=$exit_status\n    stop_and_record\n    late_stop=$?\n    if [ \"$exit_status\" -eq 0 ]; then exit_status=$late_stop; fi\n  fi\n  exit \"$exit_status\"\n}\ntrap finish EXIT\ntrap 'exit 130' INT\ntrap 'exit 143' TERM\n./gradlew --no-daemon :composeApp:embedAndSignAppleFrameworkForXcode \\\n  --dependency-verification=strict --console=plain --no-configuration-cache \\\n  --no-parallel --max-workers=1 --no-build-cache\nbuild_status=$?\nstop_and_record\nrecorded_stop_status=$?\nif [ \"$build_status\" -ne 0 ]; then exit \"$build_status\"; fi\nif [ \"$recorded_stop_status\" -ne 0 ]; then exit \"$recorded_stop_status\"; fi\n\"/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-dsc01-apphost-01-zbq7j_1u/copy/scripts/release/normalize_embedded_apple_framework.sh\" \\\n  \"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}\" ComposeApp\n";
+ 		};
+ /* End PBXShellScriptBuildPhase section */
+ 
+--- original/composeApp/src/commonMain/kotlin/com/parlor/app/shell/settings/SettingsScreen.kt
++++ audit-copy/composeApp/src/commonMain/kotlin/com/parlor/app/shell/settings/SettingsScreen.kt
+@@ -74,6 +74,7 @@
+     mutationScope: CoroutineScope,
+     modifier: Modifier = Modifier,
+ ) {
++    com.parlor.designsystem.auditcopy.DSC01ObserveActualSettingsComposition()
+     val settings: SettingsStore = koinInject()
+     val toastState = LocalParlorToastState.current
+     val saveFailedText = stringResource(Res.string.settings_save_failed)
+--- original/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitGameFlow.kt
++++ audit-copy/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitGameFlow.kt
+@@ -817,6 +817,12 @@
+     val canonicalState = requireNotNull(session.canonicalState) {
+         "The local Whodunit flow requires an authoritative controller"
+     }
++    com.parlor.designsystem.auditcopy.DSC01ObserveActualLocalSession(
++        surface = "whodunit-local",
++        controller = session,
++        canonical = canonicalState,
++        publicPhase = { canonicalState.value.phase.id },
++    )
+     val contentIdentity = remember(case.envelope) { case.envelope.contentIdentity() }
+     val snapshotWriter = remember(
+         sessionConfig,
+--- original/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/passandplay/MafiaGameFlow.kt
++++ audit-copy/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/passandplay/MafiaGameFlow.kt
+@@ -265,6 +265,12 @@
+     val canonicalState = requireNotNull(session.canonicalState) {
+         "The local Mafia flow requires an authoritative controller"
+     }
++    com.parlor.designsystem.auditcopy.DSC01ObserveActualLocalSession(
++        surface = "mafia-local",
++        controller = session,
++        canonical = canonicalState,
++        publicPhase = { canonicalState.value.phase.id },
++    )
+     val snapshotWriter = remember(sessionConfig, definition, snapshotStore, clock) {
+         val codec = definition.snapshotCodec()
+         SerializedSnapshotWriter(
+--- original/composeApp/src/iosMain/kotlin/com/parlor/app/MainViewController.kt
++++ audit-copy/composeApp/src/iosMain/kotlin/com/parlor/app/MainViewController.kt
+@@ -1,4 +1,8 @@
++@file:OptIn(kotlinx.cinterop.ExperimentalForeignApi::class)
++
+ package com.parlor.app
++
++import kotlinx.coroutines.launch
+ 
+ import androidx.compose.ui.window.ComposeUIViewController
+ import com.parlor.app.lifecycle.AppLifecycleCoordinator
+@@ -37,12 +41,14 @@
+ fun NotifyAppBackgrounded() {
+     startKoinOnce()
+     lifecycleCoordinator().notifyBackgrounded()
++    com.parlor.designsystem.auditcopy.DSC01CopyOnlyObservation.lifecycle("background")
+ }
+ 
+ @Suppress("FunctionName", "Unused")
+ fun NotifyAppForegrounded() {
+     startKoinOnce()
+     lifecycleCoordinator().notifyActive()
++    com.parlor.designsystem.auditcopy.DSC01CopyOnlyObservation.lifecycle("foreground")
+ }
+ 
+ /** Covers private UI without suspending the still-foreground LAN session. */
+@@ -50,7 +56,60 @@
+ fun NotifyAppInactive() {
+     startKoinOnce()
+     lifecycleCoordinator().notifyInactive()
++    com.parlor.designsystem.auditcopy.DSC01CopyOnlyObservation.lifecycle("inactive")
+ }
+ 
+ private fun lifecycleCoordinator(): AppLifecycleCoordinator =
+     KoinPlatform.getKoin().get()
++
++// Appended ONLY to the copied actual MainViewController.kt, in its package.
++// This is explicitly a synthetic invocation, not an invented in-game route.
++private object DSC01SyntheticSettingsInvocation {
++    private val scope = kotlinx.coroutines.CoroutineScope(
++        kotlinx.coroutines.SupervisorJob() + kotlinx.coroutines.Dispatchers.Main.immediate,
++    )
++    private var job: kotlinx.coroutines.Job? = null
++
++    fun submit(language: String) {
++        check(platform.Foundation.NSThread.isMainThread)
++        check(job?.isActive != true)
++        val observer = com.parlor.designsystem.auditcopy.DSC01CopyOnlyObservation
++        val ordinal = observer.beginCommand(language)
++        // Exactly the production Koin singleton used by App/SettingsScreen;
++        // no mock store, fake callback, or post-start backing-defaults write.
++        val store = org.koin.mp.KoinPlatform.getKoin()
++            .get<com.parlor.storage.settings.SettingsStore>()
++        job = scope.launch {
++            try {
++                store.setLanguageOverride(if (language == "system") null else language)
++                observer.endCommand(ordinal, "applied")
++            } catch (cancelled: kotlinx.coroutines.CancellationException) {
++                observer.endCommand(ordinal, "cancelled")
++                throw cancelled
++            } catch (_: com.parlor.storage.settings.SettingsPersistenceException) {
++                observer.endCommand(ordinal, "failed")
++            }
++        }
++    }
++
++    fun close() {
++        check(job?.isActive != true)
++        job = null
++        scope.coroutineContext[kotlinx.coroutines.Job]?.cancel()
++        com.parlor.designsystem.auditcopy.DSC01CopyOnlyObservation.release()
++    }
++}
++
++fun DSC01ActualCompositionObservation(): String {
++    check(platform.Foundation.NSThread.isMainThread)
++    return com.parlor.designsystem.auditcopy.DSC01CopyOnlyObservation.snapshot()
++}
++
++fun DSC01CaptureActualSession() {
++    check(platform.Foundation.NSThread.isMainThread)
++    com.parlor.designsystem.auditcopy.DSC01CopyOnlyObservation.capture()
++}
++
++fun DSC01SyntheticLanguage(language: String) = DSC01SyntheticSettingsInvocation.submit(language)
++
++fun DSC01ReleaseSyntheticObservation() = DSC01SyntheticSettingsInvocation.close()
+--- original/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/screens/setup/PlayerEntryScreen.kt
++++ audit-copy/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/screens/setup/PlayerEntryScreen.kt
+@@ -18,6 +18,7 @@
+ import androidx.compose.runtime.remember
+ import androidx.compose.ui.Alignment
+ import androidx.compose.ui.Modifier
++import androidx.compose.ui.platform.testTag
+ import androidx.compose.ui.platform.LocalFocusManager
+ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+ import androidx.compose.ui.text.input.ImeAction
+@@ -138,6 +139,6 @@
+             focusedLabelColor = ParlorTheme.colors.accentEmber,
+             unfocusedLabelColor = ParlorTheme.colors.textSecondary,
+         ),
+-        modifier = Modifier.fillMaxWidth().bringIntoViewOnFocus(),
++        modifier = Modifier.fillMaxWidth().bringIntoViewOnFocus().testTag("dsc01-player-${index + 1}"),
+     )
+ }
+--- original/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaPlayerEntryScreen.kt
++++ audit-copy/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaPlayerEntryScreen.kt
+@@ -18,6 +18,7 @@
+ import androidx.compose.runtime.remember
+ import androidx.compose.ui.Alignment
+ import androidx.compose.ui.Modifier
++import androidx.compose.ui.platform.testTag
+ import androidx.compose.ui.platform.LocalFocusManager
+ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+ import androidx.compose.ui.text.input.ImeAction
+@@ -133,6 +134,6 @@
+             focusedLabelColor = ParlorTheme.colors.accentEmber,
+             unfocusedLabelColor = ParlorTheme.colors.textSecondary,
+         ),
+-        modifier = Modifier.fillMaxWidth().bringIntoViewOnFocus(),
++        modifier = Modifier.fillMaxWidth().bringIntoViewOnFocus().testTag("dsc01-player-${index + 1}"),
+     )
+ }
+--- /dev/null
++++ audit-copy/shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/auditcopy/DSC01ComposeObservation.kt
+@@ -0,0 +1,178 @@
++package com.parlor.designsystem.auditcopy
++
++import androidx.compose.runtime.Composable
++import androidx.compose.runtime.DisposableEffect
++import androidx.compose.runtime.SideEffect
++import androidx.compose.ui.platform.LocalLayoutDirection
++import androidx.compose.ui.unit.LayoutDirection
++import kotlinx.coroutines.flow.StateFlow
++import kotlinx.serialization.json.buildJsonObject
++import kotlinx.serialization.json.put
++
++/**
++ * Evidence-only: added exclusively to a manifest-owned temporary source copy.
++ * No app reducer, navigation, lifecycle, store, or session is replaced here.
++ * All calls originate on UIKit/Compose main. Private values remain in memory;
++ * only equality booleans, bounded counters, and allowlisted public phases leave.
++ */
++object DSC01CopyOnlyObservation {
++    private data class Binding(
++        val surface: String,
++        val controller: Any,
++        val canonical: StateFlow<Any>,
++        val publicPhase: () -> String,
++    )
++    private data class Checkpoint(
++        val binding: Binding,
++        val canonicalValue: Any,
++        val phase: String,
++        val disposals: Int,
++        val background: Int,
++        val foreground: Int,
++    )
++    private var binding: Binding? = null
++    private var checkpoint: Checkpoint? = null
++    private var settingsMounted = false
++    private var settingsDirection = "absent"
++    private var gameDirection = "absent"
++    private var disposals = 0
++    private var background = 0
++    private var foreground = 0
++    private var inactive = 0
++    private var commandOrdinal = 0
++    private var commandLanguage = "none"
++    private var commandStatus = "none"
++    private var completed = false
++
++    fun settingsMounted(direction: LayoutDirection) {
++        if (completed) return
++        settingsMounted = true
++        settingsDirection = direction.tag()
++    }
++
++    fun settingsDisposed() {
++        settingsMounted = false
++        settingsDirection = "absent"
++    }
++
++    fun attach(surface: String, controller: Any, canonical: StateFlow<Any>, phase: () -> String) {
++        check(!completed && surface in setOf("whodunit-local", "mafia-local"))
++        check(binding == null) { "Two actual local sessions attached to the synthetic observer" }
++        binding = Binding(surface, controller, canonical, phase)
++    }
++
++    fun direction(controller: Any, direction: LayoutDirection) {
++        if (completed) return
++        check(binding?.controller === controller)
++        gameDirection = direction.tag()
++    }
++
++    fun detach(controller: Any) {
++        if (binding?.controller === controller) {
++            binding = null
++            gameDirection = "absent"
++            disposals = increment(disposals)
++        }
++        // Deliberately retain the one checkpoint until explicit completion.
++        // Replacement/remount must fail comparison, never silently rebase it.
++    }
++
++    fun capture() {
++        check(!completed && checkpoint == null) { "Checkpoint must be captured exactly once" }
++        val current = checkNotNull(binding)
++        val expected = if (current.surface == "whodunit-local") "public-intro" else "role-assignment"
++        val phase = current.publicPhase()
++        check(phase == expected) { "Capture requires the actual stable, non-timed public phase" }
++        checkpoint = Checkpoint(current, current.canonical.value, phase, disposals, background, foreground)
++    }
++
++    fun lifecycle(event: String) {
++        when (event) {
++            "background" -> background = increment(background)
++            "foreground" -> foreground = increment(foreground)
++            "inactive" -> inactive = increment(inactive)
++            else -> error("Unsupported synthetic lifecycle observation")
++        }
++    }
++
++    fun beginCommand(language: String): Int {
++        check(!completed && commandStatus != "pending" && commandOrdinal < 24)
++        check(language in setOf("en", "ar", "system"))
++        commandOrdinal += 1
++        commandLanguage = language
++        commandStatus = "pending"
++        return commandOrdinal
++    }
++
++    fun endCommand(ordinal: Int, status: String) {
++        check(ordinal == commandOrdinal && commandStatus == "pending")
++        check(status in setOf("applied", "cancelled", "failed"))
++        commandStatus = status
++    }
++
++    fun release() {
++        check(commandStatus != "pending")
++        completed = true
++        checkpoint = null
++        binding = null
++        gameDirection = "absent"
++    }
++
++    fun snapshot(): String {
++        val actual = binding
++        val saved = checkpoint
++        val phase = actual?.publicPhase()?.takeIf {
++            it in setOf("setup", "public-intro", "role-assignment")
++        } ?: if (actual == null) "none" else "other"
++        // Exactly one immutable canonical value is captured in process memory.
++        // Do not add IDs, hashes, seeds, state.toString(), or serialized state.
++        val value = actual?.canonical?.value
++        return buildJsonObject {
++            put("settingsMounted", settingsMounted)
++            put("settingsDirection", settingsDirection)
++            put("surface", actual?.surface ?: "none")
++            put("gameDirection", gameDirection)
++            put("publicPhase", phase)
++            put("checkpointCaptured", saved != null)
++            put("sameController", saved != null && actual?.controller === saved.binding.controller)
++            put("sameCanonicalFlow", saved != null && actual?.canonical === saved.binding.canonical)
++            put("sameCanonicalReference", saved != null && value === saved.canonicalValue)
++            put("sameCanonicalValue", saved != null && value == saved.canonicalValue)
++            put("samePublicPhase", saved != null && phase == saved.phase)
++            put("disposalsSinceCapture", if (saved == null) 0 else disposals - saved.disposals)
++            put("backgroundSinceCapture", if (saved == null) 0 else background - saved.background)
++            put("foregroundSinceCapture", if (saved == null) 0 else foreground - saved.foreground)
++            put("backgroundCallbacks", background)
++            put("foregroundCallbacks", foreground)
++            put("inactiveCallbacks", inactive)
++            put("commandOrdinal", commandOrdinal)
++            put("commandLanguage", commandLanguage)
++            put("commandStatus", commandStatus)
++        }.toString()
++    }
++
++    private fun LayoutDirection.tag() = if (this == LayoutDirection.Rtl) "rtl" else "ltr"
++    private fun increment(value: Int): Int = (value + 1).also { check(it <= 512) }
++}
++
++@Composable
++fun DSC01ObserveActualSettingsComposition() {
++    val direction = LocalLayoutDirection.current
++    DisposableEffect(Unit) { onDispose { DSC01CopyOnlyObservation.settingsDisposed() } }
++    SideEffect { DSC01CopyOnlyObservation.settingsMounted(direction) }
++}
++
++@Composable
++fun DSC01ObserveActualLocalSession(
++    surface: String,
++    controller: Any,
++    canonical: StateFlow<Any>,
++    publicPhase: () -> String,
++) {
++    val direction = LocalLayoutDirection.current
++    DisposableEffect(controller, canonical) {
++        DSC01CopyOnlyObservation.attach(surface, controller, canonical, publicPhase)
++        onDispose { DSC01CopyOnlyObservation.detach(controller) }
++    }
++    SideEffect { DSC01CopyOnlyObservation.direction(controller, direction) }
++}

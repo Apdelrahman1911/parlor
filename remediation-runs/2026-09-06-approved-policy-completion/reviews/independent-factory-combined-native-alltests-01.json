@@ -1,0 +1,2406 @@
+{
+  "reviewer": "/root/factory_review",
+  "created_at": "2026-09-06T09:52:57.531474+00:00",
+  "classification": "PASS_EXECUTED_APPLICABLE_TASKS_WITH_EXPLICIT_PLATFORM_AND_PHYSICAL_GAPS",
+  "role_boundary": "Independent receipt/source review for DS-C01; WD-C2 author-result review only because this reviewer authored its story changes. release_fix_review separately owns independent WD-C2 approval. Not re-review of all2475test bodies.",
+  "evidence_directory": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-native-alltests-01",
+  "source_identity": {
+    "branch": "main",
+    "commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+    "tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+    "diff_sha256": "38326880d1f9332618d193f73d49cebc6de063dd26c7e87a8711be9a04a5a430",
+    "source_manifest_sha256": "de7573ed1f4e1a19969f3063e135d234cd57ec8764c4af784cf4b3eaff5ef9b4"
+  },
+  "command": [
+    "./gradlew",
+    "allTests",
+    "productionIosSimulatorRuntimeTests",
+    "--no-build-cache",
+    "--continue",
+    "--no-daemon",
+    "--no-parallel",
+    "--max-workers=1",
+    "--no-configuration-cache",
+    "--dependency-verification=strict",
+    "-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=combined-native-alltests-01",
+    "-Pkotlin.compiler.execution.strategy=in-process",
+    "-Pparlor.android.signing.storeFile=",
+    "-Pparlor.android.signing.storePassword=",
+    "-Pparlor.android.signing.keyAlias=",
+    "-Pparlor.android.signing.keyPassword=",
+    "-I",
+    "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/owned_ios_simulator.init.gradle"
+  ],
+  "started_at": "2026-09-06T08:34:26.544470+00:00",
+  "finished_at": "2026-09-06T08:41:44.983706+00:00",
+  "exit_code": 0,
+  "totals": {
+    "tests": 2475,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 3,
+    "suites": 396
+  },
+  "passed": 2472,
+  "platform_totals": {
+    "desktopTest": {
+      "tests": 1237,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 3,
+      "suites": 186
+    },
+    "iosSimulatorArm64Test": {
+      "tests": 426,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "suites": 70
+    },
+    "testDebugUnitTest": {
+      "tests": 406,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "suites": 70
+    },
+    "testReleaseUnitTest": {
+      "tests": 406,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "suites": 70
+    }
+  },
+  "module_platform_matrix": [
+    {
+      "module": "composeApp",
+      "task": "desktopTest",
+      "tests": 95,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "suites": 21
+    },
+    {
+      "module": "composeApp",
+      "task": "iosSimulatorArm64Test",
+      "tests": 85,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "suites": 16
+    },
+    {
+      "module": "composeApp",
+      "task": "testDebugUnitTest",
+      "tests": 76,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "suites": 17
+    },
+    {
+      "module": "composeApp",
+      "task": "testReleaseUnitTest",
+      "tests": 76,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "suites": 17
+    },
+    {
+      "module": "game-modes/mafia",
+      "task": "desktopTest",
+      "tests": 267,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "suites": 31
+    },
+    {
+      "module": "game-modes/whodunit",
+      "task": "desktopTest",
+      "tests": 323,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "suites": 57
+    },
+    {
+      "module": "game-modes/whodunit",
+      "task": "iosSimulatorArm64Test",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "suites": 5
+    },
+    {
+      "module": "game-modes/whodunit",
+      "task": "testDebugUnitTest",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "suites": 5
+    },
+    {
+      "module": "game-modes/whodunit",
+      "task": "testReleaseUnitTest",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "suites": 5
+    },
+    {
+      "module": "shared/content",
+      "task": "desktopTest",
+      "tests": 24,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "suites": 5
+    },
+    {
+      "module": "shared/content",
+      "task": "iosSimulatorArm64Test",
+      "tests": 24,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "suites": 5
+    },
+    {
+      "module": "shared/content",
+      "task": "testDebugUnitTest",
+      "tests": 24,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "suites": 5
+    },
+    {
+      "module": "shared/content",
+      "task": "testReleaseUnitTest",
+      "tests": 24,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "suites": 5
+    },
+    {
+      "module": "shared/core",
+      "task": "desktopTest",
+      "tests": 12,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "suites": 2
+    },
+    {
+      "module": "shared/core",
+      "task": "iosSimulatorArm64Test",
+      "tests": 12,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "suites": 2
+    },
+    {
+      "module": "shared/core",
+      "task": "testDebugUnitTest",
+      "tests": 12,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "suites": 2
+    },
+    {
+      "module": "shared/core",
+      "task": "testReleaseUnitTest",
+      "tests": 12,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "suites": 2
+    },
+    {
+      "module": "shared/design-system",
+      "task": "desktopTest",
+      "tests": 40,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "suites": 18
+    },
+    {
+      "module": "shared/design-system",
+      "task": "iosSimulatorArm64Test",
+      "tests": 26,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "suites": 9
+    },
+    {
+      "module": "shared/design-system",
+      "task": "testDebugUnitTest",
+      "tests": 15,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "suites": 8
+    },
+    {
+      "module": "shared/design-system",
+      "task": "testReleaseUnitTest",
+      "tests": 15,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "suites": 8
+    },
+    {
+      "module": "shared/engine",
+      "task": "desktopTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "suites": 3
+    },
+    {
+      "module": "shared/engine-testing",
+      "task": "desktopTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "suites": 3
+    },
+    {
+      "module": "shared/engine-testing",
+      "task": "iosSimulatorArm64Test",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "suites": 3
+    },
+    {
+      "module": "shared/engine-testing",
+      "task": "testDebugUnitTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "suites": 3
+    },
+    {
+      "module": "shared/engine-testing",
+      "task": "testReleaseUnitTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "suites": 3
+    },
+    {
+      "module": "shared/networking",
+      "task": "desktopTest",
+      "tests": 34,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "suites": 8
+    },
+    {
+      "module": "shared/networking",
+      "task": "iosSimulatorArm64Test",
+      "tests": 34,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "suites": 8
+    },
+    {
+      "module": "shared/networking",
+      "task": "testDebugUnitTest",
+      "tests": 34,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "suites": 8
+    },
+    {
+      "module": "shared/networking",
+      "task": "testReleaseUnitTest",
+      "tests": 34,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "suites": 8
+    },
+    {
+      "module": "shared/networking-testing",
+      "task": "desktopTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "suites": 1
+    },
+    {
+      "module": "shared/networking-testing",
+      "task": "iosSimulatorArm64Test",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "suites": 1
+    },
+    {
+      "module": "shared/networking-testing",
+      "task": "testDebugUnitTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "suites": 1
+    },
+    {
+      "module": "shared/networking-testing",
+      "task": "testReleaseUnitTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "suites": 1
+    },
+    {
+      "module": "shared/session",
+      "task": "desktopTest",
+      "tests": 145,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "suites": 13
+    },
+    {
+      "module": "shared/session",
+      "task": "iosSimulatorArm64Test",
+      "tests": 142,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "suites": 11
+    },
+    {
+      "module": "shared/session",
+      "task": "testDebugUnitTest",
+      "tests": 142,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "suites": 11
+    },
+    {
+      "module": "shared/session",
+      "task": "testReleaseUnitTest",
+      "tests": 142,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "suites": 11
+    },
+    {
+      "module": "shared/storage",
+      "task": "desktopTest",
+      "tests": 31,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "suites": 4
+    },
+    {
+      "module": "shared/storage",
+      "task": "iosSimulatorArm64Test",
+      "tests": 31,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "suites": 4
+    },
+    {
+      "module": "shared/storage",
+      "task": "testDebugUnitTest",
+      "tests": 31,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "suites": 4
+    },
+    {
+      "module": "shared/storage",
+      "task": "testReleaseUnitTest",
+      "tests": 31,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "suites": 4
+    },
+    {
+      "module": "shared/transport-p2p",
+      "task": "desktopTest",
+      "tests": 252,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 3,
+      "suites": 20
+    },
+    {
+      "module": "shared/transport-p2p",
+      "task": "iosSimulatorArm64Test",
+      "tests": 53,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "suites": 6
+    },
+    {
+      "module": "shared/transport-p2p",
+      "task": "testDebugUnitTest",
+      "tests": 53,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "suites": 6
+    },
+    {
+      "module": "shared/transport-p2p",
+      "task": "testReleaseUnitTest",
+      "tests": 53,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "suites": 6
+    }
+  ],
+  "runtime_task_lines": [
+    "> Task :composeApp:desktopTest",
+    "> Task :composeApp:iosSimulatorArm64Test",
+    "> Task :composeApp:iosX64Test SKIPPED",
+    "> Task :composeApp:testDebugUnitTest",
+    "> Task :composeApp:testReleaseUnitTest",
+    "> Task :composeApp:allTests",
+    "> Task :game-modes:mafia:desktopTest",
+    "> Task :game-modes:mafia:iosSimulatorArm64Test SKIPPED",
+    "> Task :game-modes:mafia:iosX64Test SKIPPED",
+    "> Task :game-modes:mafia:testDebugUnitTest NO-SOURCE",
+    "> Task :game-modes:mafia:testReleaseUnitTest NO-SOURCE",
+    "> Task :game-modes:mafia:allTests",
+    "> Task :game-modes:whodunit:desktopTest",
+    "> Task :game-modes:whodunit:iosSimulatorArm64Test",
+    "> Task :game-modes:whodunit:iosX64Test SKIPPED",
+    "> Task :game-modes:whodunit:testDebugUnitTest",
+    "> Task :game-modes:whodunit:testReleaseUnitTest",
+    "> Task :game-modes:whodunit:allTests",
+    "> Task :shared:content:desktopTest",
+    "> Task :shared:content:iosSimulatorArm64Test",
+    "> Task :shared:content:iosX64Test SKIPPED",
+    "> Task :shared:content:testDebugUnitTest",
+    "> Task :shared:content:testReleaseUnitTest",
+    "> Task :shared:content:allTests",
+    "> Task :shared:core:desktopTest",
+    "> Task :shared:core:iosSimulatorArm64Test",
+    "> Task :shared:core:iosX64Test SKIPPED",
+    "> Task :shared:core:testDebugUnitTest",
+    "> Task :shared:core:testReleaseUnitTest",
+    "> Task :shared:core:allTests",
+    "> Task :shared:design-system:desktopTest",
+    "> Task :shared:design-system:iosSimulatorArm64Test",
+    "> Task :shared:design-system:iosX64Test SKIPPED",
+    "> Task :shared:design-system:testDebugUnitTest",
+    "> Task :shared:design-system:testReleaseUnitTest",
+    "> Task :shared:design-system:allTests",
+    "> Task :shared:engine:desktopTest",
+    "> Task :shared:engine:iosSimulatorArm64Test SKIPPED",
+    "> Task :shared:engine:iosX64Test SKIPPED",
+    "> Task :shared:engine:testDebugUnitTest NO-SOURCE",
+    "> Task :shared:engine:testReleaseUnitTest NO-SOURCE",
+    "> Task :shared:engine:allTests",
+    "> Task :shared:engine-testing:desktopTest",
+    "> Task :shared:engine-testing:iosSimulatorArm64Test",
+    "> Task :shared:engine-testing:iosX64Test SKIPPED",
+    "> Task :shared:engine-testing:testDebugUnitTest",
+    "> Task :shared:engine-testing:testReleaseUnitTest",
+    "> Task :shared:engine-testing:allTests",
+    "> Task :shared:networking:desktopTest",
+    "> Task :shared:networking:iosSimulatorArm64Test",
+    "> Task :shared:networking:iosX64Test SKIPPED",
+    "> Task :shared:networking:testDebugUnitTest",
+    "> Task :shared:networking:testReleaseUnitTest",
+    "> Task :shared:networking:allTests",
+    "> Task :shared:networking-testing:desktopTest",
+    "> Task :shared:networking-testing:iosSimulatorArm64Test",
+    "> Task :shared:networking-testing:iosX64Test SKIPPED",
+    "> Task :shared:networking-testing:testDebugUnitTest",
+    "> Task :shared:networking-testing:testReleaseUnitTest",
+    "> Task :shared:networking-testing:allTests",
+    "> Task :shared:session:desktopTest",
+    "> Task :shared:session:iosSimulatorArm64Test",
+    "> Task :shared:session:iosX64Test SKIPPED",
+    "> Task :shared:session:testDebugUnitTest",
+    "> Task :shared:session:testReleaseUnitTest",
+    "> Task :shared:session:allTests",
+    "> Task :shared:storage:desktopTest",
+    "> Task :shared:storage:iosSimulatorArm64Test",
+    "> Task :shared:storage:iosX64Test SKIPPED",
+    "> Task :shared:storage:testDebugUnitTest",
+    "> Task :shared:storage:testReleaseUnitTest",
+    "> Task :shared:storage:allTests",
+    "> Task :shared:transport-p2p:desktopTest",
+    "> Task :shared:transport-p2p:iosSimulatorArm64Test",
+    "> Task :shared:transport-p2p:iosX64Test SKIPPED",
+    "> Task :shared:transport-p2p:testDebugUnitTest",
+    "> Task :shared:transport-p2p:testReleaseUnitTest",
+    "> Task :shared:transport-p2p:allTests",
+    "> Task :allTests"
+  ],
+  "raw_xml_manifest_sha256": "8820a0f60b8d5f2694c726901b31eddbc17538dff8c3a2363080447ef8b152ea",
+  "raw_xml_manifest": [
+    [
+      "composeApp/build/test-results/desktopTest/TEST-com.parlor.app.AppBackPolicyTest.xml",
+      "66d35d9ac75bd07318e82f3f6fc0d516aa26e137c9a3979ec0c5efea58176e16"
+    ],
+    [
+      "composeApp/build/test-results/desktopTest/TEST-com.parlor.app.AppNavigationTest.xml",
+      "f5853d681bbe19beb838277a9e6cf07ac6cc5ff97798eba505b104e765b7cc68"
+    ],
+    [
+      "composeApp/build/test-results/desktopTest/TEST-com.parlor.app.DesktopPlatformBackHandlerTest.xml",
+      "479df34a40505682972c15dc30977643f515ecd5ce3ed78c2c23a04920d52b18"
+    ],
+    [
+      "composeApp/build/test-results/desktopTest/TEST-com.parlor.app.DesktopProcessShutdownTest.xml",
+      "581c1bb5f9cb9c4e796a8f8d60758d83f485e1f1f7921b8c986e459391d3ccf7"
+    ],
+    [
+      "composeApp/build/test-results/desktopTest/TEST-com.parlor.app.HostLobbyOperationFeedbackContractTest.xml",
+      "b1ac2adea5a45ec09239be63ba601b27c9933402a8c9989923a4460fe8d8f3d5"
+    ],
+    [
+      "composeApp/build/test-results/desktopTest/TEST-com.parlor.app.LocalResumeRouterTest.xml",
+      "3403398fe30e618d426b4b768694ab2ffe45ece630fcb998ce004a289ae56d8d"
+    ],
+    [
+      "composeApp/build/test-results/desktopTest/TEST-com.parlor.app.LocalizationResourceContractTest.xml",
+      "5132bbf14393dfdbd77bcd4213598c73e58b5e59f57922102ec2f95d74015936"
+    ],
+    [
+      "composeApp/build/test-results/desktopTest/TEST-com.parlor.app.MultiplayerRouteRestorationTest.xml",
+      "b18ff79e6af77e519914a53ec8e7eb36f6c17069d6ee4ea0d592b9e3b8d3ba50"
+    ],
+    [
+      "composeApp/build/test-results/desktopTest/TEST-com.parlor.app.ProductionUiAccessibilityContractTest.xml",
+      "340f39358d865c1694fcc9be214556b68611d37598a8a34657cd3fbd353246fd"
+    ],
+    [
+      "composeApp/build/test-results/desktopTest/TEST-com.parlor.app.di.GameShellCompositionTest.xml",
+      "911cccedec5048dec9505a593a2eb53f19f556dd6da5a0c22d8af69270736b5a"
+    ],
+    [
+      "composeApp/build/test-results/desktopTest/TEST-com.parlor.app.di.ProductionSessionSeedSourceTest.xml",
+      "5f475ef7b763ea058fb85a6da29b5b3c86e96c12ddab58a4d22f51505e524139"
+    ],
+    [
+      "composeApp/build/test-results/desktopTest/TEST-com.parlor.app.lifecycle.AppLifecycleCoordinatorTest.xml",
+      "9db21f11206c8b92ea3ddab90bd645c8a71d43d3d279b7f53b813e78dd839e52"
+    ],
+    [
+      "composeApp/build/test-results/desktopTest/TEST-com.parlor.app.shell.game.GameShellRegistryCompositionTest.xml",
+      "170b796e5060d9f79e341e765bfb283ba7a2bd2195155d405be73b2244c2d019"
+    ],
+    [
+      "composeApp/build/test-results/desktopTest/TEST-com.parlor.app.shell.game.GameShellRegistryExtensibilityTest.xml",
+      "c65ebb64b00bb35278122aa2d73e2b460f6a92c53fb02ceb45a851a45e5d6794"
+    ],
+    [
+      "composeApp/build/test-results/desktopTest/TEST-com.parlor.app.shell.game.WhodunitShippedPlayerCountTest.xml",
+      "7029d1dd73b824c4e2837e360fb3be6f2c37504ac9a1902b613a48cd228076c1"
+    ],
+    [
+      "composeApp/build/test-results/desktopTest/TEST-com.parlor.app.shell.home.HomeRecoveryAvailabilityTest.xml",
+      "7ff2e6b54ac88b857950ae764a0a4dbb2f5c5cd0abfbc4613bf398a0c60a38ad"
+    ],
+    [
+      "composeApp/build/test-results/desktopTest/TEST-com.parlor.app.shell.multiplayer.NameInputPolicyTest.xml",
+      "055811dbed15c680ce8f3e0a0001ab3c2b09deb7ca334e5a7802771ab0079fac"
+    ],
+    [
+      "composeApp/build/test-results/desktopTest/TEST-com.parlor.app.shell.settings.SettingsMutationDispatcherTest.xml",
+      "ee2433d7de195a49ae9f2e789c6220d95d3b67d954be8af375cf50b5620730fd"
+    ],
+    [
+      "composeApp/build/test-results/desktopTest/TEST-com.parlor.app.storage.DesktopSnapshotFileSystemTest.xml",
+      "de179ccb9b0243f073ddf8bb9e488a35328e8f93f0e6ae3b833244ad04df7208"
+    ],
+    [
+      "composeApp/build/test-results/desktopTest/TEST-com.parlor.app.storage.PlatformStorageMigrationTest.xml",
+      "ffc30c937f7d28a69eaa543b9dae02b70ae602c62b51598903ffd395a9c120d8"
+    ],
+    [
+      "composeApp/build/test-results/desktopTest/TEST-com.parlor.app.storage.SnapshotProtectionPolicyTest.xml",
+      "911fcf3bef02fbb42b3ab089ef72c016c7fe0318fb6cfe89e31a167476d49322"
+    ],
+    [
+      "composeApp/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.app.AppBackPolicyTest.xml",
+      "abf84cbe34a98985b9d42637a8c174ebff75e00c040f1ab1585287dd6ff97569"
+    ],
+    [
+      "composeApp/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.app.AppNavigationTest.xml",
+      "e40bd830a348a4539ca50d6d0360bf27594aa973d808c252f8850cca80493bcf"
+    ],
+    [
+      "composeApp/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.app.LocalResumeRouterTest.xml",
+      "99523e1cef914dd2b9be842a75e73f358cc65faf12b7cee07d8746ba510d7175"
+    ],
+    [
+      "composeApp/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.app.MultiplayerRouteRestorationTest.xml",
+      "a486528de82ccf7f1c829de16d354b2c07c43970114f29e14e99eec1be28fd0d"
+    ],
+    [
+      "composeApp/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.app.di.GameShellCompositionTest.xml",
+      "899adc55c2ea3531d98d0ed6e25190fa1bee2316468088a40d3a1590ab231d2a"
+    ],
+    [
+      "composeApp/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.app.di.ProductionSessionSeedSourceTest.xml",
+      "d2be54ea8f1332afa083dda5faded2261b93ace1bfd88cdcc6ec0ec6e1a0926f"
+    ],
+    [
+      "composeApp/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.app.lifecycle.AppLifecycleCoordinatorTest.xml",
+      "e7f7c3c98748fd59fbc4b952d467709262d1a54a729a9bddb83b36799b98ccf5"
+    ],
+    [
+      "composeApp/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.app.shell.game.GameShellRegistryExtensibilityTest.xml",
+      "29ed61233eb626e823b6282469e1f3a144063521d275691dec9d1a068dfab434"
+    ],
+    [
+      "composeApp/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.app.shell.game.WhodunitShippedPlayerCountTest.xml",
+      "9a3ccc3e9c6d24fc2fa415028f5d035a9dd277ed13b8cb7e5d548edac5c9b14d"
+    ],
+    [
+      "composeApp/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.app.shell.home.HomeRecoveryAvailabilityTest.xml",
+      "97c987151e1c03e62b4f22b22050faaf141578c31c9de40e672402f9acc822c5"
+    ],
+    [
+      "composeApp/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.app.shell.multiplayer.NameInputPolicyTest.xml",
+      "edb7f66a3b82e10ad1a3cd5dfef3e83c4c6043a51ca218ffba9ee991c8fc1ed1"
+    ],
+    [
+      "composeApp/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.app.shell.settings.SettingsMutationDispatcherTest.xml",
+      "4f139d97a164162bb59aed61f170eaf8331885a5a013efd5346c6c6eb0fd4f47"
+    ],
+    [
+      "composeApp/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.app.storage.IosLegacySnapshotBackupTest.xml",
+      "81293c49efc69a89845c6a0026cfbf8af7b91f077b5a64f66c6088383403df64"
+    ],
+    [
+      "composeApp/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.app.storage.IosStorageSafetyTest.xml",
+      "694c0831c36afae5a30403003f57235c1caff35f1099ac8cf62e5d3f2c2b0d97"
+    ],
+    [
+      "composeApp/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.app.storage.PlatformStorageMigrationTest.xml",
+      "75f9bd9b692687dcd2ac342ac9b9769004dd5d9d54ad6fa1c2fd5b6b33165c75"
+    ],
+    [
+      "composeApp/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.app.storage.SnapshotProtectionPolicyTest.xml",
+      "6f56fa857051bb64a87940ffc60bd3a40e0e03762d4288bc460e57e492239d7c"
+    ],
+    [
+      "composeApp/build/test-results/testDebugUnitTest/TEST-com.parlor.app.AppBackPolicyTest.xml",
+      "e39b6fdae4f51100fbb1124a37f4063acfb4f093bed3855eff4e2c569b072ddc"
+    ],
+    [
+      "composeApp/build/test-results/testDebugUnitTest/TEST-com.parlor.app.AppNavigationTest.xml",
+      "8ab18199b5067f66692fe0d564762500c0dc1dbef819be39e8fdd8184d105f2a"
+    ],
+    [
+      "composeApp/build/test-results/testDebugUnitTest/TEST-com.parlor.app.LocalResumeRouterTest.xml",
+      "c1aa51dafc4a504f69454b8b773e997621281bea37c0484fefd53d91053b2e56"
+    ],
+    [
+      "composeApp/build/test-results/testDebugUnitTest/TEST-com.parlor.app.MainActivityStartupTest.xml",
+      "e62ecef74474bea38498512c660ee2d1889f70ed014ceca0891389a102fa47ce"
+    ],
+    [
+      "composeApp/build/test-results/testDebugUnitTest/TEST-com.parlor.app.MultiplayerRouteRestorationTest.xml",
+      "a900f3237725d8047e6ab07e8eee125ac034c9ab30ca31cecd27488d36653519"
+    ],
+    [
+      "composeApp/build/test-results/testDebugUnitTest/TEST-com.parlor.app.di.GameShellCompositionTest.xml",
+      "b25330daccc5b760f703e8cc6aa6275b01f207e93f1403f34cade6c8ccf9efcb"
+    ],
+    [
+      "composeApp/build/test-results/testDebugUnitTest/TEST-com.parlor.app.di.ProductionSessionSeedSourceTest.xml",
+      "251d5a75e7ca56d1ec7965a05b98f6950a972cdddd66f605223f7e0e87c31620"
+    ],
+    [
+      "composeApp/build/test-results/testDebugUnitTest/TEST-com.parlor.app.lifecycle.AppLifecycleCoordinatorTest.xml",
+      "f20bde9664598c65017809373d04f429bb2ddc409b69e3ec380426d3f55bbc60"
+    ],
+    [
+      "composeApp/build/test-results/testDebugUnitTest/TEST-com.parlor.app.shell.game.GameShellRegistryExtensibilityTest.xml",
+      "0252df076050799667e665b285bf4c3e1c958330ad686190f04c13c9c3b6f0e5"
+    ],
+    [
+      "composeApp/build/test-results/testDebugUnitTest/TEST-com.parlor.app.shell.game.WhodunitShippedPlayerCountTest.xml",
+      "2ec6b194a2210cc16377fcc96156b7139c267f139d8d71fb8e16d2095f3631c6"
+    ],
+    [
+      "composeApp/build/test-results/testDebugUnitTest/TEST-com.parlor.app.shell.home.HomeRecoveryAvailabilityTest.xml",
+      "51560c89ba2af266ef43cc52adf81e104a90ee9c677d125f0818d3af84b601b1"
+    ],
+    [
+      "composeApp/build/test-results/testDebugUnitTest/TEST-com.parlor.app.shell.multiplayer.NameInputPolicyTest.xml",
+      "0325abf9a2928ccc2dced430dee92f4c089afd9df84dbfeb180c9bf75cc8f3b5"
+    ],
+    [
+      "composeApp/build/test-results/testDebugUnitTest/TEST-com.parlor.app.shell.settings.SettingsMutationDispatcherTest.xml",
+      "60e201443301ce70192a0ceb58747bcdd3be83d7f38317f7288cc311d939cd63"
+    ],
+    [
+      "composeApp/build/test-results/testDebugUnitTest/TEST-com.parlor.app.storage.AndroidSettingsKeyValueBackingTest.xml",
+      "6960d3c4be4c61f20788f1c510f50a98566eff4a985ab507159a096ecc820656"
+    ],
+    [
+      "composeApp/build/test-results/testDebugUnitTest/TEST-com.parlor.app.storage.AndroidSnapshotDirectoryListingTest.xml",
+      "83d9503c187de5b6409c181832c8ab102adbb6628354a750ac2e9e95d9344b58"
+    ],
+    [
+      "composeApp/build/test-results/testDebugUnitTest/TEST-com.parlor.app.storage.PlatformStorageMigrationTest.xml",
+      "f79be99f30caf7cf3775141c8038951fb01776c82384ed15463067ef38141094"
+    ],
+    [
+      "composeApp/build/test-results/testDebugUnitTest/TEST-com.parlor.app.storage.SnapshotProtectionPolicyTest.xml",
+      "f6a6d5705221f77fe7e5d9866a07cf666799259d86661397b38543cefbe56c2d"
+    ],
+    [
+      "composeApp/build/test-results/testReleaseUnitTest/TEST-com.parlor.app.AppBackPolicyTest.xml",
+      "2618534872d6eab9bfe35a189727dcf8c1308e22d0a901bb55b777b25381e703"
+    ],
+    [
+      "composeApp/build/test-results/testReleaseUnitTest/TEST-com.parlor.app.AppNavigationTest.xml",
+      "16ed26a7332030a8aab567c41af9d1b7c1186ebbe1c2eeede45cdcc1726c5ffe"
+    ],
+    [
+      "composeApp/build/test-results/testReleaseUnitTest/TEST-com.parlor.app.LocalResumeRouterTest.xml",
+      "fcc1a805df35c033a40422842934d3e3adb62480f962830f73837b6931ee5a25"
+    ],
+    [
+      "composeApp/build/test-results/testReleaseUnitTest/TEST-com.parlor.app.MainActivityStartupTest.xml",
+      "ee6ee521574a2ec77af248cd3116a05555020401b0d493ed8a989a07e80774aa"
+    ],
+    [
+      "composeApp/build/test-results/testReleaseUnitTest/TEST-com.parlor.app.MultiplayerRouteRestorationTest.xml",
+      "db7ee58bbbc37dcbe8e2e08b338835927536e928dc588f7849e9d5e9fb924e95"
+    ],
+    [
+      "composeApp/build/test-results/testReleaseUnitTest/TEST-com.parlor.app.di.GameShellCompositionTest.xml",
+      "6f26e29a6d2f273a1dc2662b4e1583a22a1a14d3534d50977014fd43d1e1b312"
+    ],
+    [
+      "composeApp/build/test-results/testReleaseUnitTest/TEST-com.parlor.app.di.ProductionSessionSeedSourceTest.xml",
+      "82f4a20993d7303a79a59d262c750b4f3183ef1572abca430c2299e66ba695e8"
+    ],
+    [
+      "composeApp/build/test-results/testReleaseUnitTest/TEST-com.parlor.app.lifecycle.AppLifecycleCoordinatorTest.xml",
+      "8e9b180533fc238043885fb6c7bebb6f3737a6ab6c5af91fec41d8d1e95ac9a3"
+    ],
+    [
+      "composeApp/build/test-results/testReleaseUnitTest/TEST-com.parlor.app.shell.game.GameShellRegistryExtensibilityTest.xml",
+      "eeb579b819991eb3b99c42b06f555e5b36731e399bd714487560385c5ec08f9a"
+    ],
+    [
+      "composeApp/build/test-results/testReleaseUnitTest/TEST-com.parlor.app.shell.game.WhodunitShippedPlayerCountTest.xml",
+      "b48ee0b1ca5beb7f828a78d95a668605860b6c8546f277f42f5f8213800a1500"
+    ],
+    [
+      "composeApp/build/test-results/testReleaseUnitTest/TEST-com.parlor.app.shell.home.HomeRecoveryAvailabilityTest.xml",
+      "8f6151c8f2dcc3467668f774e6bedf326aac775687dd26346286f5c96111119a"
+    ],
+    [
+      "composeApp/build/test-results/testReleaseUnitTest/TEST-com.parlor.app.shell.multiplayer.NameInputPolicyTest.xml",
+      "8ccd9bef805e0ae12dcff79c3ae8537cfdadfc80c5ec868d13b1cedad9054289"
+    ],
+    [
+      "composeApp/build/test-results/testReleaseUnitTest/TEST-com.parlor.app.shell.settings.SettingsMutationDispatcherTest.xml",
+      "ed8416c2f7f204281ba63746641b29f3701b6718036db964c168528d5ba418fa"
+    ],
+    [
+      "composeApp/build/test-results/testReleaseUnitTest/TEST-com.parlor.app.storage.AndroidSettingsKeyValueBackingTest.xml",
+      "21575665b7376eec6b90f510dd725041963f7db45eb59fff63b1e4bb932d7f6c"
+    ],
+    [
+      "composeApp/build/test-results/testReleaseUnitTest/TEST-com.parlor.app.storage.AndroidSnapshotDirectoryListingTest.xml",
+      "1fdd17f999ed0c78f6868f98ec9d1cf127f0cfe71736f435db732e6c27dccbbb"
+    ],
+    [
+      "composeApp/build/test-results/testReleaseUnitTest/TEST-com.parlor.app.storage.PlatformStorageMigrationTest.xml",
+      "097eb469235efc1a0bf92a4c1a8b1b6de1503a39315b8582b34cccfe2c552c1d"
+    ],
+    [
+      "composeApp/build/test-results/testReleaseUnitTest/TEST-com.parlor.app.storage.SnapshotProtectionPolicyTest.xml",
+      "f9ae534d9e8d3b15bf1031d317edea9570155d0603c92fc675b99c2adcfc8773"
+    ],
+    [
+      "game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.MafiaDoctorRulesTest.xml",
+      "d12c58853c8efdc653a8279db2fb84c329976b858945ed20936f9e5c11b2e237"
+    ],
+    [
+      "game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.action.MafiaActionCodecTest.xml",
+      "5b8fdc2a2f629892c42291a8ec1897125a83365dfec6bde3df6bcdea9e6f5912"
+    ],
+    [
+      "game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.projection.MafiaHostOnlyRedactionSentinelTest.xml",
+      "2e0f0206cd8004493791dd599af72ce1ae8626c8104c4b979a48c54e7fadbdc6"
+    ],
+    [
+      "game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.projection.MafiaProjectionPolicyTest.xml",
+      "b1fdec682277d7aeb0e3d843040f9a5625debb04277f6084c9ee9c8df969f8a0"
+    ],
+    [
+      "game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.reducer.MafiaReducerEdgeCasesTest.xml",
+      "920e91a9b8bae1e3b03231a7f5a8a3970703800c5c28135c51d487caf22f2881"
+    ],
+    [
+      "game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.reducer.MafiaReducerTest.xml",
+      "5515091d9e26c9ecda3aa8b30d9cea25e98cacc9ee63614f2b3d6acd91429a4b"
+    ],
+    [
+      "game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.rules.MafiaSessionRulesTest.xml",
+      "67e77f89a5d942f8ba83f207a0a832db3c7c6583bd3abef92619e22c2c1d3a1c"
+    ],
+    [
+      "game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.rules.NightResolutionTest.xml",
+      "e1464690f251647b58ee08e70082153f67e020ce171d8ffcc0c6bf8b95eea226"
+    ],
+    [
+      "game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.rules.RoleAssignmentTest.xml",
+      "ddca4c8e48bf07ac001f9e9d807c801333deeb47916b94bd1e3a7adcf373fef1"
+    ],
+    [
+      "game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.rules.VoteResolutionTest.xml",
+      "cf111d24de1b88b4b9210a5ab55f4c6ef0c4d30e2178d328400204ffcc6aef99"
+    ],
+    [
+      "game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.rules.WinCheckTest.xml",
+      "1400ea3362580498d8b695b19deda1288e4f5612507a447b1209c34d6353427a"
+    ],
+    [
+      "game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.settings.MafiaSettingsValidationTest.xml",
+      "671bfa52193af2a203a8e79588bac91d43c8f0c7eed75fb0283f1cacbae12913"
+    ],
+    [
+      "game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.state.MafiaPeerSnapshotValidatorTest.xml",
+      "bfa359f3ec3fe3dd4776101640f7588498cfd60c5d86c2d3af6779e44f886b27"
+    ],
+    [
+      "game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.flow.FullGameDriveTest.xml",
+      "7cdd4f8d8d100c33ced8edf5ad0912fc9dc37efc04bf4d9c9f5a942d096efe45"
+    ],
+    [
+      "game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.flow.MafiaLocalSessionConfigTest.xml",
+      "1358c4f814639982134e27cb4b454c4010434916d037496cb0f988c16a390183"
+    ],
+    [
+      "game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.multidevice.MafiaAuthoritativeLifecycleTest.xml",
+      "532e3fc092c942276052536fba3cd14255a3b834a27e80ace65d2f20750df1d7"
+    ],
+    [
+      "game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.multidevice.MafiaDoctorLanTest.xml",
+      "6ffa7f3a23bc30ca8198d0f0b48c40bded2c1b745116e94bbbe411f014564582"
+    ],
+    [
+      "game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.multidevice.MafiaMultiDeviceProgressionTest.xml",
+      "0917b59f388c039e992c4e20022061d3b7314abbf00d88a6bd20deb96b5c481e"
+    ],
+    [
+      "game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.multidevice.MafiaPeerActionAuthorityTest.xml",
+      "44cd7343e132a91eea46a97baca78931b928434e08572641c0acd05a428a82bc"
+    ],
+    [
+      "game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.multidevice.MafiaPeerPrivateTargetGateTest.xml",
+      "96f68de0fb7fed73ba11d3fb434c0701fd28f46948ea70e904272893a28a7594"
+    ],
+    [
+      "game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.multidevice.MafiaProjectionLeakTest.xml",
+      "dcfc6368f4a4e27f7f9e431c6117a0f5090eb659af9459f9be52b5cf0fb25b6d"
+    ],
+    [
+      "game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.snapshot.MafiaDoctorHistoryRecoveryTest.xml",
+      "656f6b16284bbbeba6aa93e23cd9e737b9a5469633996e8f3621d0cbb97da32b"
+    ],
+    [
+      "game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.snapshot.MafiaSnapshotCodecTest.xml",
+      "ac5257bdba5b379f3b3130ddc5dae0f53064a55a0e994afac7d31a413a9fc46f"
+    ],
+    [
+      "game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.snapshot.MafiaSnapshotRecoveryTest.xml",
+      "8de123599f12f15452b111ff22a36eea4e6a4f4bf13ddb8e70f2acdb3b9fcdb0"
+    ],
+    [
+      "game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.flow.multidevice.MafiaNetworkErrorMessageKeyTest.xml",
+      "08f260823750cb671e545b9033121cc4b09896b75ef9adf90d99ac233acf426a"
+    ],
+    [
+      "game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.flow.passandplay.MafiaPassAndPlayNightQueueTest.xml",
+      "1ede44770cf1faf12281b53dc2eb81ffa384e6dd6dbdf180e0b5ebfb01d22bde"
+    ],
+    [
+      "game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.night.DoctorTargetEligibilityTest.xml",
+      "d9462e15c348b27753d18aefc37ec52aa9f0e453584a44c4bbdba8520bbf795d"
+    ],
+    [
+      "game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.night.TargetPickerSelectionTest.xml",
+      "09da0b9a7daffb98bbc3987ab42a3503e94fea8516b792ce0262004a717ba82d"
+    ],
+    [
+      "game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.postgame.PostGameScreenLayoutTest.xml",
+      "d66a2507bff4f4549478a0f3fd0d0c6d0a8975ab06a9f21c2177d296b8150190"
+    ],
+    [
+      "game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.setup.MafiaDoctorSettingUiTest.xml",
+      "c499afaa9f04042e2fbf1084818b26f1b860848f39d401c6e76667d6c88d3ccc"
+    ],
+    [
+      "game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.setup.MafiaSetupDraftTest.xml",
+      "3e0c87dfb970cdb6f0f8cd5f2a79cb818285f6e2854cbc221f2a43c1583f64cc"
+    ],
+    [
+      "game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.WhodunitPlayModePolicyTest.xml",
+      "ca811f10f0fb91e7c0d65457f6bfb450ef3243fa5347efe4a4f782694139f839"
+    ],
+    [
+      "game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.action.WhodunitActionCodecTest.xml",
+      "4e9cc3fb84c4261173eeeba5d9e9b0e75a4805097b37316028e7e334f0146184"
+    ],
+    [
+      "game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.authority.WhodunitActionAuthorityTest.xml",
+      "eb8be57c137b283cd2df50c4d3027b4bab0d8cfef2810da9ef8cfcba19db2ded"
+    ],
+    [
+      "game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.ArabicCaseValidationTest.xml",
+      "5a188ea5986070d854ad8fdfe55780e37133215c83dea4d338f9fce21536455b"
+    ],
+    [
+      "game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.BundledCaseLoadingTest.xml",
+      "d2282599ead2e63a0348710fa10559e2f437cd7f28973266853a6f71b98c6ef6"
+    ],
+    [
+      "game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.CasePickerDiscoveryTest.xml",
+      "fb0983c94fa40b8a10cedbee9364834ea22399f47e200551d52391a5f303251f"
+    ],
+    [
+      "game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.ResReadBytesProbeTest.xml",
+      "872e400784d965f53f13f4d7ea14323579a0d70d11574185a2d5230446e21330"
+    ],
+    [
+      "game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.TestingStoryChronologyTest.xml",
+      "893de2e3ee2240fa529ac300aa816be7eb457d32e0494856d8e3b2f022cd878c"
+    ],
+    [
+      "game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.TestingStoryCompatibilityTest.xml",
+      "8cbe7112b372d9317c5508b71f46b176da06e40b6641b394ef41361292207fa0"
+    ],
+    [
+      "game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.TestingStoryGameTraceTest.xml",
+      "d0142fb11787385bd18e2fc7b09aea0948dc61e95b165bb874df6a1c576512f1"
+    ],
+    [
+      "game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.WhodunitContentIdentityTest.xml",
+      "2b6c97751c9641555d475e0ab768d174778d6b2b4346060ff1925407d622367b"
+    ],
+    [
+      "game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.WhodunitPayloadHardeningTest.xml",
+      "53db9dc1237101704e49f8bcdc296d0d4ee93fc767bc08e77cd674156d01c287"
+    ],
+    [
+      "game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.domain.CluePolicyTest.xml",
+      "7335ce36573dfb563b3f3cbd16a4336f71573ff69c09ee301edd82a2f573719a"
+    ],
+    [
+      "game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.domain.PartyReadinessTest.xml",
+      "f447d7ee5dbdc8ab41c1699e01d062ffa3a94be0ef3b11c5ab9d66583bed126c"
+    ],
+    [
+      "game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.domain.WhodunitReducerProductionGuardsTest.xml",
+      "e34b1cc8a5e5e293f8db31f5baa0537d95ad6762acceff33d5063df542346ea9"
+    ],
+    [
+      "game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.domain.WhodunitRulesInvariantTest.xml",
+      "1367d21c37add73f084d08606eef45fb8b0009544ad8fc4537b2bb5efef4fb05"
+    ],
+    [
+      "game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.domain.WhodunitTerminalAndCluePolicyTest.xml",
+      "d61fd431056317145e18ab5f494afbd7157ab9625a2afb2a7d709e75f60015e4"
+    ],
+    [
+      "game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.domain.rules.WhodunitPolicyGoldenTest.xml",
+      "73cff8ebb3686d45b44e2bcdb67671f5293e39ce6862f31e76a62c210495221d"
+    ],
+    [
+      "game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.flow.ContinueWithoutPlayerTest.xml",
+      "1ab4785078f7d3a204768a1f1e8b91de8856a1207fabea55ea574a9e85e0d18a"
+    ],
+    [
+      "game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.flow.FullGameDriveTest.xml",
+      "28bee4902045964e2201266540ce7dc194fe12fd149ab821b30382348c4c9218"
+    ],
+    [
+      "game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.flow.IntroAndBriefingReadinessTest.xml",
+      "7d6cd8f8cfdf145ef005ddb8c48488b2b314c8c80b94ad44f69d815fb21561ba"
+    ],
+    [
+      "game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.flow.PartyFlowControllerTest.xml",
+      "69eed58ecdaa4429a916494652479f5640bd6f15e6063fb37c7b65c9262994f7"
+    ],
+    [
+      "game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.flow.PauseRefuseLeaveTest.xml",
+      "05e60a787558068f4408200d80f2b8910618385f82716aa16cb125a58a2d63ef"
+    ],
+    [
+      "game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.flow.SimultaneousCharacterRevealTest.xml",
+      "fd17b8f84e6e7f660e9d2396d46e5f54d2a755bad2207f98e2601bfa54ed3851"
+    ],
+    [
+      "game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.flow.TickerAndRerollTest.xml",
+      "1687f0e6bb92f083eec1d92130930a2a0bb1e8c35aac259b02b721eee88f2d7e"
+    ],
+    [
+      "game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.flow.TiedRevoteTest.xml",
+      "c09168b630944e818ff3cf1924710ee097a735b96610274f91d3c912c2fdd769"
+    ],
+    [
+      "game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.flow.WhodunitLocalSessionConfigTest.xml",
+      "0d2c9bf865fd37d86ffae80b33ed943be32b25dfae01b93e994bcb18ec42699a"
+    ],
+    [
+      "game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.layout.ResponsiveLayoutAuditTest.xml",
+      "3ba4f5495c93d4fcf93b1ee844e3b0b33511b3ad68684b3d9a7ce07252a0fc69"
+    ],
+    [
+      "game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.layout.TokenDisciplineTest.xml",
+      "198ce35658a47037cb780da72b6be1e67bb80bfbf454c42ecff396fb56c5f653"
+    ],
+    [
+      "game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.multidevice.HostLostTimeoutTest.xml",
+      "5aeaf5f714487f8c0b49d2c218d22074d00f0a32cee238063b9d8ed836b6691c"
+    ],
+    [
+      "game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.multidevice.MultiDevicePartyPlayContractTest.xml",
+      "482659b126331d115d1193af6dc2a33d1d07b3388e1400614815f057e703c5ed"
+    ],
+    [
+      "game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.multidevice.PartyConnectionEventsTest.xml",
+      "6cd19a1a06d33b46284c83243450f89cbbe4ce5425d336e454c176117f0c421c"
+    ],
+    [
+      "game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.multidevice.PartyPlayPassAndPlayParityTest.xml",
+      "945ee021c1434208f8299562aa22d11a983ad7ed435a928879ca06dbbd3ac05c"
+    ],
+    [
+      "game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.multidevice.QueuedActionSafetyTest.xml",
+      "e2e5b30af5182722d5e39796fa6167e701109e0b3481675c18fd5b81d581719d"
+    ],
+    [
+      "game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.multidevice.SelfOfflineTimeoutTest.xml",
+      "971eb1a6053f15310fcb34bef34575814b8fad5fbd3f08bc951cab13677a5df4"
+    ],
+    [
+      "game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.multidevice.WhodunitMultiDeviceShapeTest.xml",
+      "83e8d4f627b8caba54309c293773fe16cd818d7b15241e5cb4485a99f051cde9"
+    ],
+    [
+      "game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.multidevice.WhodunitPeerProjectionBoundaryTest.xml",
+      "635dbac0235a994e4eb3bc576cff47d89137aa6466deb557ac31b019b9bf2bd9"
+    ],
+    [
+      "game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.projection.VoteRedactionTest.xml",
+      "633f89e9e42f923efefa46602c633b5e84e8892fe3275dead2bb60506b6475e4"
+    ],
+    [
+      "game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.snapshot.WhodunitCaseBindingTest.xml",
+      "8f3723dc7e11c567640b69d186e3ad82f2df8033a39eb2acb16e1456e281d7db"
+    ],
+    [
+      "game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.snapshot.WhodunitFinalTwoRecoveryTest.xml",
+      "d1452f5ef5f99e8bad8c98a6a41197d0e227995fa194ef36f825ef142da1ec09"
+    ],
+    [
+      "game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.snapshot.WhodunitLegacySnapshotGoldenTest.xml",
+      "b628255e6809ba686cf77bc35dba15bdb8db3c0e7b70896361c23f447e7db46b"
+    ],
+    [
+      "game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.snapshot.WhodunitResumeReconstructionTest.xml",
+      "530d10a039e735845fb51b68677a397c4db4fdd767e636fa7a3d926666f9a868"
+    ],
+    [
+      "game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.snapshot.WhodunitSnapshotRoundTripTest.xml",
+      "a13b48535b998c98e062f885c7759a0f54151df0a84bd4001cbb205c73676774"
+    ],
+    [
+      "game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.snapshot.WhodunitSnapshotValidationTest.xml",
+      "27b0f49ba24d313c848553d81fef3dfc8de4260fe4fd09a7614390d31ae5e987"
+    ],
+    [
+      "game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.PrivacyConcernPolicyTest.xml",
+      "6e14121fc962fd5747f6b5ba75e610bd0caa07ea0adaef986f824bf321ddb178"
+    ],
+    [
+      "game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.RtlFormattingTest.xml",
+      "7aa6030c0558d44c7334db0d121a519760d778fbbd7154879806c3d92c5c6b1d"
+    ],
+    [
+      "game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.WhodunitAccessibilitySemanticsTest.xml",
+      "979acc10468c908be40df64a6220986985d1eaad522c3949316103a1bba88794"
+    ],
+    [
+      "game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.WhodunitCasePickerScreenTest.xml",
+      "93bf9a265ab3c5c417f0c1d73fbb09aeea7a1732c1a29732ac196c505e5bb308"
+    ],
+    [
+      "game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.WhodunitNetErrorMessageKeyTest.xml",
+      "afe307ce3a225ca662703d8ef2f3c94a1cc58228fd1e7b9526b89a65a2c07db2"
+    ],
+    [
+      "game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.components.RevealCompletionGateTest.xml",
+      "c4b064900dd0ee1e41cfaa69b5e97ad51e15a258621d76d62788d90db68e3015"
+    ],
+    [
+      "game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.EliminationVoteOwnershipIntegrationTest.xml",
+      "3c510e3e90654360a560db22b80fa7d702cf5431a693f891bc92e163890339ca"
+    ],
+    [
+      "game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.PeerReadinessRemountTest.xml",
+      "53b017d96471f0b5c1ac79869d120c76988915abd3e7b01892f21720cd45ae3c"
+    ],
+    [
+      "game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.VoteTurnPolicyTest.xml",
+      "17c19dde79cd253c1ce39deb8e4490b57ccee0534b1550e002962bb346a89c41"
+    ],
+    [
+      "game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.WhodunitRecoveryInteractionTest.xml",
+      "26add51227d3296c372f6a8eb5692fddbb9e2d5b97fadaa5561fe43de84e11fe"
+    ],
+    [
+      "game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitPeerSessionFlowPolicyTest.xml",
+      "45838f0ff218c41daa293b30ef2db699962ff8fac130c32af2f0276c915a3edb"
+    ],
+    [
+      "game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.screens.setup.WhodunitCaseLanguageLabelTest.xml",
+      "4634d1de4399e40a2f7166317c54da8fa4eedf7fd164e96ccbd76a9d03f66f01"
+    ],
+    [
+      "game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.screens.setup.WhodunitModeChoiceTest.xml",
+      "243e7c45910c4032a3c5240086853516415a7f0ded7eac27338ad844745fc149"
+    ],
+    [
+      "game-modes/whodunit/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.games.whodunit.domain.rules.WhodunitPolicyGoldenTest.xml",
+      "2de0450017a06554b5deb123a0ca0360e803b90c1bf3e2b4e7cc47bcc1423817"
+    ],
+    [
+      "game-modes/whodunit/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.games.whodunit.ui.WhodunitNetErrorMessageKeyTest.xml",
+      "2fbb454859508c2b5f1f210fc1f57b9705c942b66f446002ba0bead847303032"
+    ],
+    [
+      "game-modes/whodunit/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitPeerSessionFlowPolicyTest.xml",
+      "039148ca581604833e6d55210b7d1f3989e16ea1e40550d8d1c8af5e55d9e6a1"
+    ],
+    [
+      "game-modes/whodunit/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.games.whodunit.ui.screens.setup.WhodunitCaseLanguageLabelTest.xml",
+      "6c62350ac0014fc59bf7e8d21e9f58aa5a3e69c2a1a55ebc16851af6d98f07a8"
+    ],
+    [
+      "game-modes/whodunit/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.games.whodunit.ui.screens.setup.WhodunitModeChoiceTest.xml",
+      "45fa14541cc56c38f54d625917ddef0af8624612ff010be9ab6879b51fcd7722"
+    ],
+    [
+      "game-modes/whodunit/build/test-results/testDebugUnitTest/TEST-com.parlor.games.whodunit.domain.rules.WhodunitPolicyGoldenTest.xml",
+      "7183f42508ba1eea8dee3a9519332ee447a9d982de8087bf7f483ecc39d80b66"
+    ],
+    [
+      "game-modes/whodunit/build/test-results/testDebugUnitTest/TEST-com.parlor.games.whodunit.ui.WhodunitNetErrorMessageKeyTest.xml",
+      "25de0fd6364cd358018d420628ff9cea196f6605abe80320eae7b99e1bde39da"
+    ],
+    [
+      "game-modes/whodunit/build/test-results/testDebugUnitTest/TEST-com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitPeerSessionFlowPolicyTest.xml",
+      "941c9c726b4eb861ffd0bfe721b09e22c87474ceaa8b6738c0f7316bb624a562"
+    ],
+    [
+      "game-modes/whodunit/build/test-results/testDebugUnitTest/TEST-com.parlor.games.whodunit.ui.screens.setup.WhodunitCaseLanguageLabelTest.xml",
+      "1aca5f5a50df02b24d61870c65fd169687240733179b8bd93fbc4ce577857564"
+    ],
+    [
+      "game-modes/whodunit/build/test-results/testDebugUnitTest/TEST-com.parlor.games.whodunit.ui.screens.setup.WhodunitModeChoiceTest.xml",
+      "5d23fcfff6d5bc7c729662d921e7793d0a327a28834a0b5b358a8817b50c0a97"
+    ],
+    [
+      "game-modes/whodunit/build/test-results/testReleaseUnitTest/TEST-com.parlor.games.whodunit.domain.rules.WhodunitPolicyGoldenTest.xml",
+      "74e8c8b102389f1d3009ee21ccef4e7279a0f6341163639462d8095414327140"
+    ],
+    [
+      "game-modes/whodunit/build/test-results/testReleaseUnitTest/TEST-com.parlor.games.whodunit.ui.WhodunitNetErrorMessageKeyTest.xml",
+      "40ad7ccbc227e1ad3f5c47c06effe927a15cd49fb13123ee14dc93e3b334d5dd"
+    ],
+    [
+      "game-modes/whodunit/build/test-results/testReleaseUnitTest/TEST-com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitPeerSessionFlowPolicyTest.xml",
+      "bbbba215d5ba48088d39c33b24420526686a0b3b1eddc6e3108dcee1822820db"
+    ],
+    [
+      "game-modes/whodunit/build/test-results/testReleaseUnitTest/TEST-com.parlor.games.whodunit.ui.screens.setup.WhodunitCaseLanguageLabelTest.xml",
+      "d799b2fbff09d8c3c229819984a1f3ae1fe4a3045fa4d402d403a486739b3eb4"
+    ],
+    [
+      "game-modes/whodunit/build/test-results/testReleaseUnitTest/TEST-com.parlor.games.whodunit.ui.screens.setup.WhodunitModeChoiceTest.xml",
+      "d819395f1986561b5ed04d03a3ec35fe0ac7c2661cab73f1581337b5d1ae699b"
+    ],
+    [
+      "shared/content/build/test-results/desktopTest/TEST-com.parlor.content.datasource.OfflineRemoteCaseDataSourceTest.xml",
+      "0ae703b9ad3d3170a639595bf3827ce96fd144e5ad9fa5a99b162496ded0b12a"
+    ],
+    [
+      "shared/content/build/test-results/desktopTest/TEST-com.parlor.content.repository.DefaultCaseRepositoryTest.xml",
+      "1a6efb477ce9ec6881a9d213a73aead39edbc8f60d29f27610383bab38edf377"
+    ],
+    [
+      "shared/content/build/test-results/desktopTest/TEST-com.parlor.content.schema.IntRangePairSerializerTest.xml",
+      "9ad353ad0d501a443f7cfcf6c43750b576a40b520c0eaffad321f788847eaa73"
+    ],
+    [
+      "shared/content/build/test-results/desktopTest/TEST-com.parlor.content.validation.CaseSummaryValidatorTest.xml",
+      "c2271816c26aa501db25fbe4cecb532ac2330c934204962e1db6b36450066b86"
+    ],
+    [
+      "shared/content/build/test-results/desktopTest/TEST-com.parlor.content.validation.DefaultCaseValidatorBoundaryTest.xml",
+      "9f585fb1ef11e5905924a00c92deb9319467ccd98807c328fbebc33b2241d8f2"
+    ],
+    [
+      "shared/content/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.content.datasource.OfflineRemoteCaseDataSourceTest.xml",
+      "b99e3768add5316c9db28b0bc559b71baa6827c60a0febe885a5decfb7f021f4"
+    ],
+    [
+      "shared/content/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.content.repository.DefaultCaseRepositoryTest.xml",
+      "adaffb723753fd4ed365040243975f88c879a2560e5d9a1b1f4e8b5dc0203d76"
+    ],
+    [
+      "shared/content/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.content.schema.IntRangePairSerializerTest.xml",
+      "897799d70dac9b83f49fa97320b4071e4d8cbbc8b87a1684253f7f23641100ed"
+    ],
+    [
+      "shared/content/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.content.validation.CaseSummaryValidatorTest.xml",
+      "163530320555c8ffb4f5d9bf9a019b261f28ca6117c6852587a9e428b4be2e1f"
+    ],
+    [
+      "shared/content/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.content.validation.DefaultCaseValidatorBoundaryTest.xml",
+      "838b5be31ce1f8e95e0ca2dad0807d3a985480dbaea96972cbc2e543ddafcf68"
+    ],
+    [
+      "shared/content/build/test-results/testDebugUnitTest/TEST-com.parlor.content.datasource.OfflineRemoteCaseDataSourceTest.xml",
+      "f3df8a426edaa4a8a6980c607df36dab9693fc9b2fd3a560a1276a6de90ec341"
+    ],
+    [
+      "shared/content/build/test-results/testDebugUnitTest/TEST-com.parlor.content.repository.DefaultCaseRepositoryTest.xml",
+      "252e1c9a691de38e8f44068d20db85acc3cd06bdf59b5bec9bac9540a9aa4ed5"
+    ],
+    [
+      "shared/content/build/test-results/testDebugUnitTest/TEST-com.parlor.content.schema.IntRangePairSerializerTest.xml",
+      "ff6847f6b531902b076a1766d641ccf716c365141e4af84e6af6a313f7a106e4"
+    ],
+    [
+      "shared/content/build/test-results/testDebugUnitTest/TEST-com.parlor.content.validation.CaseSummaryValidatorTest.xml",
+      "98c72f96dfe55b85c2048a20e0cbb90e31c9f2dc09773388dccdce23f3d3ee72"
+    ],
+    [
+      "shared/content/build/test-results/testDebugUnitTest/TEST-com.parlor.content.validation.DefaultCaseValidatorBoundaryTest.xml",
+      "04c6fc4c9b477b4149cf58e366b63226e2d6430cae1a6db37a40d10adbf357dc"
+    ],
+    [
+      "shared/content/build/test-results/testReleaseUnitTest/TEST-com.parlor.content.datasource.OfflineRemoteCaseDataSourceTest.xml",
+      "4d2e446e4935547bcbd51f2850e5eb060fabf0572b29b17f8d5d52244fcaa54e"
+    ],
+    [
+      "shared/content/build/test-results/testReleaseUnitTest/TEST-com.parlor.content.repository.DefaultCaseRepositoryTest.xml",
+      "37a85befb8b369459f69e97ec907a6872d534262cd2e80ac5756ac9ad69fee19"
+    ],
+    [
+      "shared/content/build/test-results/testReleaseUnitTest/TEST-com.parlor.content.schema.IntRangePairSerializerTest.xml",
+      "0048d1916de5e3e0d7847c808af54e1b0537204f58ab4f52b669d2ef0aa31945"
+    ],
+    [
+      "shared/content/build/test-results/testReleaseUnitTest/TEST-com.parlor.content.validation.CaseSummaryValidatorTest.xml",
+      "19df0079a04eafa829d92b1758d3b2f3a0cda3e2fd36b6b49fae39f822ccde81"
+    ],
+    [
+      "shared/content/build/test-results/testReleaseUnitTest/TEST-com.parlor.content.validation.DefaultCaseValidatorBoundaryTest.xml",
+      "3e8598cadb96e6edeb12217f0e9af7fa6fae4be7b0810e1c9912bde49e92b847"
+    ],
+    [
+      "shared/core/build/test-results/desktopTest/TEST-com.parlor.core.result.ResultTest.xml",
+      "8ab38c08f3ab6d2993a31affe6642449fa5d3bfad531c39594a652294601e030"
+    ],
+    [
+      "shared/core/build/test-results/desktopTest/TEST-com.parlor.core.versioning.SemVerTest.xml",
+      "d6780d2d35e7ae775d0e72bc4f678c9631d53fcd968dcb775552763b3cf07a77"
+    ],
+    [
+      "shared/core/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.core.result.ResultTest.xml",
+      "ac04901ac8b93595b983473353d7dfb8dbf3bcf6541ad2e8abd62e2961cb7059"
+    ],
+    [
+      "shared/core/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.core.versioning.SemVerTest.xml",
+      "cec9799d6571865591288cc012280db24732aeeaaeb1ca015520f91c17557b67"
+    ],
+    [
+      "shared/core/build/test-results/testDebugUnitTest/TEST-com.parlor.core.result.ResultTest.xml",
+      "bc9628dfa7c38a10aab3df8e85d16465e8853526d96e94815f686c686cf87c80"
+    ],
+    [
+      "shared/core/build/test-results/testDebugUnitTest/TEST-com.parlor.core.versioning.SemVerTest.xml",
+      "9b9aa10257ed68d26451d9fb0e24e5dcb86755eade7cab4f3c484455884e6568"
+    ],
+    [
+      "shared/core/build/test-results/testReleaseUnitTest/TEST-com.parlor.core.result.ResultTest.xml",
+      "e3dd5b4288e729f5c422d5a94d6865a30a60049ba4a6a55a057a53c335a15e8f"
+    ],
+    [
+      "shared/core/build/test-results/testReleaseUnitTest/TEST-com.parlor.core.versioning.SemVerTest.xml",
+      "35aebc88bd655dc7f4178b17949573ca00adc5b9c9b63b464881e4e273cb7f85"
+    ],
+    [
+      "shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.ActiveTextContrastCallSiteTest.xml",
+      "c0d217b7021a230bb63d046579b2318983c0c3e0bcc5e9c64133b54a7fbc91ab"
+    ],
+    [
+      "shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.ParlorSafeAreaTest.xml",
+      "638c8cc68b414146359b07109cf85d1e2ffdda45ee7fbb49bc667319786023f6"
+    ],
+    [
+      "shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.ParlorToastConcurrencyTest.xml",
+      "9f8907f89566531dc4502758096324ebc828b43f0b45cc6eaaed505a63e8c1fd"
+    ],
+    [
+      "shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.ParlorToastHostInsetsTest.xml",
+      "a5543b9a1fc0c06528624f39af0d1910d96881486a3497c0fa642d1a67cb934b"
+    ],
+    [
+      "shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.ParlorToastLifetimeTest.xml",
+      "f0e6e5927d6362e70cd382dca6ac6dd5117b042f8ccd8d4135861b620a1bc8f6"
+    ],
+    [
+      "shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.ParlorToastStateTest.xml",
+      "e205596c776fa8a494b948c34bbe51880aeb89520c5c13128ccfdc6ec01c0906"
+    ],
+    [
+      "shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.ReconnectingOverlayFocusTest.xml",
+      "71305c32941b8f6f23de0fe8907413fb813510f899da7871465c7c3a4cdf8d67"
+    ],
+    [
+      "shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.RecoveryActionContrastTest.xml",
+      "0f9e6652edd4345862359a22abaa9d38e19d06ce1251eece0b4b160b283c1e57"
+    ],
+    [
+      "shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.SessionExitBackPolicyTest.xml",
+      "f2f1d26d0e6678e94b143dfdb425167e0cc323ce219395f0c1eb62793e510c2c"
+    ],
+    [
+      "shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.SessionExitOverlayLayoutTest.xml",
+      "82fd04365c10acca40bbc1c73fab821405576f2e9dec5e9d8951e4a1433b28bb"
+    ],
+    [
+      "shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.SessionExitOverlayTest.xml",
+      "16b37b4fb3b1fb98d2aa6be2bc17dc6af6a1410851e51aec92928d6cd4ea4aa5"
+    ],
+    [
+      "shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.StickyActionLayoutTest.xml",
+      "0e12e98d2e9f1ae3d854d62dbd95180868cb69e51525ba39abe2d9b9b48e30cf"
+    ],
+    [
+      "shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.icons.ParlorIconsTest.xml",
+      "70c55e75f8014fb1612ac9b0cbc2881539de9ce9fd71d7e7adfbc1d12687ebe7"
+    ],
+    [
+      "shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.localization.AppLanguageSelectionTest.xml",
+      "dc8d4da78b1bd0023e11f402e514817aff412b2ac2afa2806ad61a096e84d75f"
+    ],
+    [
+      "shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.localization.PlatformAppLocaleLoadingContractTest.xml",
+      "745f35959a5566708e47c67067518f4f1867c720ce4ba683d322c0b01293f8db"
+    ],
+    [
+      "shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.localization.ProvideAppLanguageDesktopTest.xml",
+      "74cc884b0092c10d6f9a49d69b63f96530feef44c39696019edf267c929ed2e9"
+    ],
+    [
+      "shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.motion.ParlorMotionTest.xml",
+      "f4ee0c1afaa9b16b71dd3c08a9b73407c764b34f1d6ebdc6125e612b89fee253"
+    ],
+    [
+      "shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.tokens.PaletteCoverageTest.xml",
+      "16cb656999cccab5d24c3d955675e25f4e248bc8d7d841660c7f30877020f662"
+    ],
+    [
+      "shared/design-system/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.designsystem.components.ParlorSafeAreaTest.xml",
+      "ad99fda66b3bf242fb06d4479ea64774fd38a32d301f5a5eb7d79b53b80e235f"
+    ],
+    [
+      "shared/design-system/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.designsystem.components.ParlorToastHostInsetsTest.xml",
+      "016013d3e4f712e05ff396a0048b49d70250adee57a4b409c6a7f70dc41d3f93"
+    ],
+    [
+      "shared/design-system/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.designsystem.components.ParlorToastStateTest.xml",
+      "83e1b6047dc16ccdd42537b48c7b8d23b7fff7d7e4bf20b2d5532f08c8006b5d"
+    ],
+    [
+      "shared/design-system/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.designsystem.components.SessionExitBackPolicyTest.xml",
+      "5bc2f3b400562e7cc6b8bf013fdb1521087455011e664055428a6579b275d55b"
+    ],
+    [
+      "shared/design-system/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.designsystem.components.SessionExitOverlayTest.xml",
+      "41435382fa8e699b2105e12c3ff68a1ad76c8cc7ab2dccff1c175303d317e28b"
+    ],
+    [
+      "shared/design-system/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.designsystem.icons.ParlorIconsTest.xml",
+      "6dbb3b4dc87dced84041934a07df881d6ca05df12651bb854cdf955260a6953c"
+    ],
+    [
+      "shared/design-system/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.designsystem.localization.AppLanguageSelectionTest.xml",
+      "8d9ce7b4a607f26197514da647b370484680229b9bde08248c9cdb5fa8b78a20"
+    ],
+    [
+      "shared/design-system/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.designsystem.localization.IosLanguageOverrideOwnerTest.xml",
+      "273b4758e4a1af1e798bb008c35f29e97ef1145d1d8f004b35d56243c561e97e"
+    ],
+    [
+      "shared/design-system/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.designsystem.motion.ParlorMotionTest.xml",
+      "285072afa0b3fb4626b8c73adefb13e54f5d1c9ce891647e50a046fc6fcd3c22"
+    ],
+    [
+      "shared/design-system/build/test-results/testDebugUnitTest/TEST-com.parlor.designsystem.components.ParlorSafeAreaTest.xml",
+      "3c2162c94290d338081ef84246b7f01ce57c142d50fb1ea4597e79d1bc749f05"
+    ],
+    [
+      "shared/design-system/build/test-results/testDebugUnitTest/TEST-com.parlor.designsystem.components.ParlorToastHostInsetsTest.xml",
+      "45a63b1d455935ec11157530bc6d950b24942a52975758840d1a059e65b6bcfe"
+    ],
+    [
+      "shared/design-system/build/test-results/testDebugUnitTest/TEST-com.parlor.designsystem.components.ParlorToastStateTest.xml",
+      "4586a23f248956dcca81d1dfada7f7a0923c2037df578defe201785dec6bebe3"
+    ],
+    [
+      "shared/design-system/build/test-results/testDebugUnitTest/TEST-com.parlor.designsystem.components.SessionExitBackPolicyTest.xml",
+      "f91e16abb4a41718d63a9fdcf59820b37a22656ea9d02245f6cc0daa8e2bba84"
+    ],
+    [
+      "shared/design-system/build/test-results/testDebugUnitTest/TEST-com.parlor.designsystem.components.SessionExitOverlayTest.xml",
+      "655119602a26108af19c4acf8afa76504685340d4efb1d6eca93affa594e53be"
+    ],
+    [
+      "shared/design-system/build/test-results/testDebugUnitTest/TEST-com.parlor.designsystem.icons.ParlorIconsTest.xml",
+      "438cb02c5bc81011c9beccc28271e70157b33dc3f7c81f3fcee632b08c389cd1"
+    ],
+    [
+      "shared/design-system/build/test-results/testDebugUnitTest/TEST-com.parlor.designsystem.localization.AppLanguageSelectionTest.xml",
+      "dc6840a042eb9a2ac33bf22943806f047aa844e7179b8d53bad511c815679846"
+    ],
+    [
+      "shared/design-system/build/test-results/testDebugUnitTest/TEST-com.parlor.designsystem.motion.ParlorMotionTest.xml",
+      "d367fe1c0eb4eac581d5409fcd72c805f87350c47d3905b0b56ec5d5dbe5915f"
+    ],
+    [
+      "shared/design-system/build/test-results/testReleaseUnitTest/TEST-com.parlor.designsystem.components.ParlorSafeAreaTest.xml",
+      "956343fd7457cafcf7e282c1a9cc936aab9554875baa739f31b38ae13f3ea3a8"
+    ],
+    [
+      "shared/design-system/build/test-results/testReleaseUnitTest/TEST-com.parlor.designsystem.components.ParlorToastHostInsetsTest.xml",
+      "261d1aca4673ff05945328a6ad87ede5b7cb6ea2fe3a9808d3bc2b2f16ed0833"
+    ],
+    [
+      "shared/design-system/build/test-results/testReleaseUnitTest/TEST-com.parlor.designsystem.components.ParlorToastStateTest.xml",
+      "42fb4369306d29446f1e1715e1a951f47f3505d0bc163ecfeb061ee312f14df5"
+    ],
+    [
+      "shared/design-system/build/test-results/testReleaseUnitTest/TEST-com.parlor.designsystem.components.SessionExitBackPolicyTest.xml",
+      "b1a4bef11dfe561e62856d9ed6955256677d8eddefb55ec1e6de40e7393b7845"
+    ],
+    [
+      "shared/design-system/build/test-results/testReleaseUnitTest/TEST-com.parlor.designsystem.components.SessionExitOverlayTest.xml",
+      "b810fbb6bb5542517c2b1986aea622fb866739b16b80c004abb55e86e3382fa7"
+    ],
+    [
+      "shared/design-system/build/test-results/testReleaseUnitTest/TEST-com.parlor.designsystem.icons.ParlorIconsTest.xml",
+      "c87792b6b80ad5bff3b4a871da640ecfb305affee3f34596161e107ed6954013"
+    ],
+    [
+      "shared/design-system/build/test-results/testReleaseUnitTest/TEST-com.parlor.designsystem.localization.AppLanguageSelectionTest.xml",
+      "ae66d2fcef3d61e4921a2bf6e1f1240e619ec931be1ec948e2553f542a07e181"
+    ],
+    [
+      "shared/design-system/build/test-results/testReleaseUnitTest/TEST-com.parlor.designsystem.motion.ParlorMotionTest.xml",
+      "f48db14727fabfeb0d041a33e329ad6040f190c56eb3e599fe6db9e1f94fd40f"
+    ],
+    [
+      "shared/engine/build/test-results/desktopTest/TEST-com.parlor.engine.architecture.NoWhodunitInEngineTest.xml",
+      "ebd11a325dc215ae430700a96a06a3157f8dab45c8ec803b5ab1d49ce9e1537b"
+    ],
+    [
+      "shared/engine/build/test-results/desktopTest/TEST-com.parlor.engine.architecture.ProjectionDocumentationContractTest.xml",
+      "7038de1e896c953c4b60910bf4989ed1b8a577f191359efa260276bca2c4491b"
+    ],
+    [
+      "shared/engine/build/test-results/desktopTest/TEST-com.parlor.engine.architecture.PurityTest.xml",
+      "f3412175bef5e427a00b1179722f395d9c01e4c1fc041cb57346580285f343d4"
+    ],
+    [
+      "shared/engine-testing/build/test-results/desktopTest/TEST-com.parlor.engine.testing.fakes.RrSnapshotCodecTest.xml",
+      "6cc0ba5ea2558a85af4393a168a82a5f9862ce22f84dadadccc29f53949e2fe3"
+    ],
+    [
+      "shared/engine-testing/build/test-results/desktopTest/TEST-com.parlor.engine.testing.reducer.ReducerSmokeTest.xml",
+      "0f2b7816a44a34c2d512574a8fe51039b3562d68c3aa968d435db26960c6eb9d"
+    ],
+    [
+      "shared/engine-testing/build/test-results/desktopTest/TEST-com.parlor.engine.testing.registry.GameRegistryExtensibilityTest.xml",
+      "6f9d8b36a3b76476025095e5c29d71c6d43f1d7f4deea24f0aa0ae18baf2a79f"
+    ],
+    [
+      "shared/engine-testing/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.engine.testing.fakes.RrSnapshotCodecTest.xml",
+      "095b762351b0dba5975bf151a5658a6e9401adf7fb513e1cd30cabfffbba3635"
+    ],
+    [
+      "shared/engine-testing/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.engine.testing.reducer.ReducerSmokeTest.xml",
+      "d07f6ea7085eeca2b428e3d9159b04f2f6ed6d777d68228339f6739f54569c14"
+    ],
+    [
+      "shared/engine-testing/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.engine.testing.registry.GameRegistryExtensibilityTest.xml",
+      "82079d50c19348b799df802e1038947e57f19456cdfa84df4e160de8b9203ef4"
+    ],
+    [
+      "shared/engine-testing/build/test-results/testDebugUnitTest/TEST-com.parlor.engine.testing.fakes.RrSnapshotCodecTest.xml",
+      "8f5eb2422c89459f768847f7c24ca04962e3d4f011aaeb90dec1de24382ec2f2"
+    ],
+    [
+      "shared/engine-testing/build/test-results/testDebugUnitTest/TEST-com.parlor.engine.testing.reducer.ReducerSmokeTest.xml",
+      "f9a3b0c1ff4965091f3918f72772d57cd5e64bf3c9482f5020c29e37228c4949"
+    ],
+    [
+      "shared/engine-testing/build/test-results/testDebugUnitTest/TEST-com.parlor.engine.testing.registry.GameRegistryExtensibilityTest.xml",
+      "7a81aa46e9ca4a9a5e10fe272a715644bedad8673414776cd44c2051d72e09be"
+    ],
+    [
+      "shared/engine-testing/build/test-results/testReleaseUnitTest/TEST-com.parlor.engine.testing.fakes.RrSnapshotCodecTest.xml",
+      "01b4e5da373d8aaa367e03c713be3b728d95379d886826ab72e8efca718e3d76"
+    ],
+    [
+      "shared/engine-testing/build/test-results/testReleaseUnitTest/TEST-com.parlor.engine.testing.reducer.ReducerSmokeTest.xml",
+      "3c3048945a8481c9a7860d201611b548ae3fcf96bc7305a416f28a741c1b86d1"
+    ],
+    [
+      "shared/engine-testing/build/test-results/testReleaseUnitTest/TEST-com.parlor.engine.testing.registry.GameRegistryExtensibilityTest.xml",
+      "4828c1ed6ff9b701e8152040ed2c41357eb9a5f9f7c8aca4bdc8dd71b175863f"
+    ],
+    [
+      "shared/networking/build/test-results/desktopTest/TEST-com.parlor.networking.protocol.ProtocolValidationTest.xml",
+      "ab054df247645466d6fcf1c7d272c33dc9501d04329217cf46cb174d4b7a5c61"
+    ],
+    [
+      "shared/networking/build/test-results/desktopTest/TEST-com.parlor.networking.protocol.RoomMessageCodecTest.xml",
+      "a4263802b8ad744f3846c5fe71eb3ce2ae6b740935a660ac9cb98eb5168513c7"
+    ],
+    [
+      "shared/networking/build/test-results/desktopTest/TEST-com.parlor.networking.room.LocalRoomRetryContractTest.xml",
+      "bab233958e6d27d5245371aaa3c2d7f7c15920d5603584e91ccd8196c657a859"
+    ],
+    [
+      "shared/networking/build/test-results/desktopTest/TEST-com.parlor.networking.room.PeerSessionRetryPolicyTest.xml",
+      "bcd3da33e92af66e44cb90e8bc60942fa150b4f44d21e0984b6e9a760b7c4197"
+    ],
+    [
+      "shared/networking/build/test-results/desktopTest/TEST-com.parlor.networking.room.RoomInputPolicyTest.xml",
+      "4888457cc9fe65a671cc7dea7973d3c455a276ea564dcc257572c43a7c8c5d7c"
+    ],
+    [
+      "shared/networking/build/test-results/desktopTest/TEST-com.parlor.networking.security.SecureHashesTest.xml",
+      "865a9f73a344e64837b07d3c469b3d710fc9f5523aebc8e8606dcfdeed6b945d"
+    ],
+    [
+      "shared/networking/build/test-results/desktopTest/TEST-com.parlor.networking.security.SecureIdsTest.xml",
+      "617d30e67c69bd3b93646da13c9948ab2bed88885331c3513bc5e3a9f307fb41"
+    ],
+    [
+      "shared/networking/build/test-results/desktopTest/TEST-com.parlor.networking.transport.LocalNetworkAccessTest.xml",
+      "2376fea012138c154df08b0e98a671c4259f1337756538db059d3de5226b2be2"
+    ],
+    [
+      "shared/networking/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.networking.protocol.ProtocolValidationTest.xml",
+      "efed698ca7a628fc9307f926282658c40a1c40b4e1021a90c95182563aa31ddb"
+    ],
+    [
+      "shared/networking/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.networking.protocol.RoomMessageCodecTest.xml",
+      "a7ef81e4c14021f3f43dc1fd1a036695596b0d4ed0eb6ac467f040326730223c"
+    ],
+    [
+      "shared/networking/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.networking.room.LocalRoomRetryContractTest.xml",
+      "4339da0b0a70cfe8d49bd3e8421f4c9ac2154a73c85bcd5dfc8ae32b1918df6b"
+    ],
+    [
+      "shared/networking/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.networking.room.PeerSessionRetryPolicyTest.xml",
+      "6c92a2148555cac7bb51ed58b7ff70a4e2cee65ba41e1be232ee8e9e6b9da1ef"
+    ],
+    [
+      "shared/networking/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.networking.room.RoomInputPolicyTest.xml",
+      "98bed79b082f86285d2e7af1b2a271c0e8f463810b8468c8bac29b68edeef1f0"
+    ],
+    [
+      "shared/networking/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.networking.security.SecureHashesTest.xml",
+      "2e3f891acbaee4c3ded724a5c8efe90b99aebbd74ff717a3500923f195773b97"
+    ],
+    [
+      "shared/networking/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.networking.security.SecureIdsTest.xml",
+      "b322039f5ec3582b985a853a54dca531468f695a09ffc2bdfc01c1ea64778551"
+    ],
+    [
+      "shared/networking/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.networking.transport.LocalNetworkAccessTest.xml",
+      "e802f5430bc4e003c4f58b9ed8bf3dcf2b11c74c13873dd2172575e62ce76056"
+    ],
+    [
+      "shared/networking/build/test-results/testDebugUnitTest/TEST-com.parlor.networking.protocol.ProtocolValidationTest.xml",
+      "ba8339006c45a8060337c49b1419bb8cd7bc4c49ba10f954f705c0046cf37a44"
+    ],
+    [
+      "shared/networking/build/test-results/testDebugUnitTest/TEST-com.parlor.networking.protocol.RoomMessageCodecTest.xml",
+      "3c4743aeb707daeccbef7774ac3395a9a40d57069951786f201895c03008846e"
+    ],
+    [
+      "shared/networking/build/test-results/testDebugUnitTest/TEST-com.parlor.networking.room.LocalRoomRetryContractTest.xml",
+      "d157e51d52312862791da61673a3255cf42eccf2de1cfe92c970f51265ce9bd1"
+    ],
+    [
+      "shared/networking/build/test-results/testDebugUnitTest/TEST-com.parlor.networking.room.PeerSessionRetryPolicyTest.xml",
+      "9e76705b56815ed3d3d1ff51bd60f341e95baf01358aef95205f916a1c71e188"
+    ],
+    [
+      "shared/networking/build/test-results/testDebugUnitTest/TEST-com.parlor.networking.room.RoomInputPolicyTest.xml",
+      "d9e4cfeb9dfa2411c563b02b774ff70a68936dce12e2391ebf0aba372e6f034e"
+    ],
+    [
+      "shared/networking/build/test-results/testDebugUnitTest/TEST-com.parlor.networking.security.SecureHashesTest.xml",
+      "dedaa831717ed60d311507966e61eda1c2e23c8ae898c379645d1dc1846ba277"
+    ],
+    [
+      "shared/networking/build/test-results/testDebugUnitTest/TEST-com.parlor.networking.security.SecureIdsTest.xml",
+      "310223d8ae1c6e7fec9c8340875e94e71a83314cc960f5a9452a547a97145949"
+    ],
+    [
+      "shared/networking/build/test-results/testDebugUnitTest/TEST-com.parlor.networking.transport.LocalNetworkAccessTest.xml",
+      "7787e3b9514f077e69025c718dcbee10920baa23f771bc3af926c7d76b7b3752"
+    ],
+    [
+      "shared/networking/build/test-results/testReleaseUnitTest/TEST-com.parlor.networking.protocol.ProtocolValidationTest.xml",
+      "93b9de10b0b10755de58abf215934fae4dd81d30961a6439a58b69d62b9ad1d9"
+    ],
+    [
+      "shared/networking/build/test-results/testReleaseUnitTest/TEST-com.parlor.networking.protocol.RoomMessageCodecTest.xml",
+      "20221972174abb2d80cfc098dee733b437536af43a4c53afba01075f35948131"
+    ],
+    [
+      "shared/networking/build/test-results/testReleaseUnitTest/TEST-com.parlor.networking.room.LocalRoomRetryContractTest.xml",
+      "30fe5b0d804fc9edefe776522678d7bd14a2fce238e8316e45693b6086392195"
+    ],
+    [
+      "shared/networking/build/test-results/testReleaseUnitTest/TEST-com.parlor.networking.room.PeerSessionRetryPolicyTest.xml",
+      "155f5b523f7889d71c05535ebb69a70c6495b30f629dd15f69bac4cc78d75084"
+    ],
+    [
+      "shared/networking/build/test-results/testReleaseUnitTest/TEST-com.parlor.networking.room.RoomInputPolicyTest.xml",
+      "b248c8c48dbc3b44b7887b5bd47e51effe62d9f1cfc8b38a392a1aa32195fddf"
+    ],
+    [
+      "shared/networking/build/test-results/testReleaseUnitTest/TEST-com.parlor.networking.security.SecureHashesTest.xml",
+      "e403dc72b80af3227f8a3ddf44208bc1862b180443d1047c2f16aa548a776ca5"
+    ],
+    [
+      "shared/networking/build/test-results/testReleaseUnitTest/TEST-com.parlor.networking.security.SecureIdsTest.xml",
+      "d5d3d9fbbb228eb3dc7c307ea2b531b3380554b549a46560469aef34603d712f"
+    ],
+    [
+      "shared/networking/build/test-results/testReleaseUnitTest/TEST-com.parlor.networking.transport.LocalNetworkAccessTest.xml",
+      "c35332de2bb96b10a86e4c7e3aea131f6e8137f4429abc1c37dbc75c4ef9370d"
+    ],
+    [
+      "shared/networking-testing/build/test-results/desktopTest/TEST-com.parlor.networking.testing.InMemoryRoomBusTest.xml",
+      "91c4c872ffa8e289f306b7b86d84c72b2de71bc251a98e4b07cc770d4a65552a"
+    ],
+    [
+      "shared/networking-testing/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.networking.testing.InMemoryRoomBusTest.xml",
+      "6f5c40c6645f7f0c8255be820cd0c331dbc21bb57677009a4c215cf289ffc1c2"
+    ],
+    [
+      "shared/networking-testing/build/test-results/testDebugUnitTest/TEST-com.parlor.networking.testing.InMemoryRoomBusTest.xml",
+      "06516493d74651c10447738a8a973615c3b4ea5e0cb3599dc485f5f19b58ad1e"
+    ],
+    [
+      "shared/networking-testing/build/test-results/testReleaseUnitTest/TEST-com.parlor.networking.testing.InMemoryRoomBusTest.xml",
+      "b80931ab365f92d4e6d45c054ee68662a26eefc00361056c8e772ad10c8809d5"
+    ],
+    [
+      "shared/session/build/test-results/desktopTest/TEST-com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest.xml",
+      "5aafa871dcae9b0f5b9fa17e1ef39fa499ef5f0af7cffd9a683ebbcceb39d65f"
+    ],
+    [
+      "shared/session/build/test-results/desktopTest/TEST-com.parlor.session.multidevice.BoundedPeerOutboxTest.xml",
+      "aaaba520b0d71585f774fdc105000c034a8a7debf665f3d7c49e8d5d72ce927e"
+    ],
+    [
+      "shared/session/build/test-results/desktopTest/TEST-com.parlor.session.multidevice.MultiDeviceShapeTest.xml",
+      "2c91f81b23a1c037b1df72ed02ed2008add66005d158e8939467c02003234398"
+    ],
+    [
+      "shared/session/build/test-results/desktopTest/TEST-com.parlor.session.multidevice.PeerConnectionTrackerTest.xml",
+      "d3d8a7f625e7b535e94421858e31c6bc49749e8279d1bd01957cfa618e0483ea"
+    ],
+    [
+      "shared/session/build/test-results/desktopTest/TEST-com.parlor.session.multidevice.ProcessMultiplayerSessionOwnerTest.xml",
+      "a589fe83d7d248b3a098e14f5857e8c4452afa4ff72887ae4dea15f1a7b5a57a"
+    ],
+    [
+      "shared/session/build/test-results/desktopTest/TEST-com.parlor.session.multidevice.RetainedSessionOperationTest.xml",
+      "28e2e2a417f414ec76584d8e486fb4371a244709e5c95c1a24a1c64b79476c2b"
+    ],
+    [
+      "shared/session/build/test-results/desktopTest/TEST-com.parlor.session.multidevice.SessionStartCommitDeadlineTest.xml",
+      "5fe1f07a34932ba4f19dd87343847f46484478fbe32145f8c37f4b0f6c660362"
+    ],
+    [
+      "shared/session/build/test-results/desktopTest/TEST-com.parlor.session.multidevice.SessionStartHandshakeTest.xml",
+      "f652ab99f49e7678e873d25c8471cbd105b39330f0b6d6e2b3552d0e3b02bac9"
+    ],
+    [
+      "shared/session/build/test-results/desktopTest/TEST-com.parlor.session.multidevice.ShadowSessionControllerTest.xml",
+      "a3a25cab395cc0c59638bacff1cffa0636696781f5c1ad64bf21f6ab9122feac"
+    ],
+    [
+      "shared/session/build/test-results/desktopTest/TEST-com.parlor.session.party.PartyAwareCanonicalStateTest.xml",
+      "27f9f6b217cd82e7887bcd099e7bb71005794ee7cc8f2c37cb0c2671cf42b015"
+    ],
+    [
+      "shared/session/build/test-results/desktopTest/TEST-com.parlor.session.passandplay.OrderedEventEmissionTurnTest.xml",
+      "8d6bd79c790e2095941c7d65ff2752d8fe3f7b1da8ba49d622c9e179b3cb38a2"
+    ],
+    [
+      "shared/session/build/test-results/desktopTest/TEST-com.parlor.session.passandplay.PassAndPlaySessionControllerCloseRaceTest.xml",
+      "4891f95753b537e17247451c86595ab1e78273b2742582944aa47e94317fc5c0"
+    ],
+    [
+      "shared/session/build/test-results/desktopTest/TEST-com.parlor.session.passandplay.RestoredStateTest.xml",
+      "5a92d37f2f823662e91dde21820f9771f071793cb9b2ef222ec20c658116c0c6"
+    ],
+    [
+      "shared/session/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest.xml",
+      "348c00f56a573ff90dc551befc1d10f46c5338d1d07e193c1676a8dd28e4b981"
+    ],
+    [
+      "shared/session/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.session.multidevice.BoundedPeerOutboxTest.xml",
+      "cb0c65da3f90e0d3e73543a4735704c30d1d1c2c6309ecc4c0583d4d33710d12"
+    ],
+    [
+      "shared/session/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.session.multidevice.MultiDeviceShapeTest.xml",
+      "822170b20403ebe35c1e7778b6b7518ce0fecb1645346a6cf18642121ca62923"
+    ],
+    [
+      "shared/session/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.session.multidevice.PeerConnectionTrackerTest.xml",
+      "56d6a880c58b1afc2cb66a953bd9ece9f7b64c431b88346d3b23d9a0e723222c"
+    ],
+    [
+      "shared/session/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.session.multidevice.ProcessMultiplayerSessionOwnerTest.xml",
+      "fb50993670dbe4513f05ce66277672658711e4ecd694e5a26d23b55f3b025fdd"
+    ],
+    [
+      "shared/session/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.session.multidevice.RetainedSessionOperationTest.xml",
+      "6ac577a88a017345a1f6615bba10417f960977c7146a32ec2c75bd414f87a2e8"
+    ],
+    [
+      "shared/session/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.session.multidevice.SessionStartCommitDeadlineTest.xml",
+      "c8aa23c5520c4302616c236451d17204aae89895340f8f3024a2bd3051d5609b"
+    ],
+    [
+      "shared/session/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.session.multidevice.SessionStartHandshakeTest.xml",
+      "1003c24fc7b41d62071a1ed5e7bbf84c271dc4a995657ba67037200e5e2cc3fd"
+    ],
+    [
+      "shared/session/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.session.multidevice.ShadowSessionControllerTest.xml",
+      "3e928bc997d38ddb950c3d23b51003509b21964bc14794df875ae9be0243b0ca"
+    ],
+    [
+      "shared/session/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.session.party.PartyAwareCanonicalStateTest.xml",
+      "0207d164668da8e22426444d2c695c03a63b60b68aa4fd70b59dfeebd9de3089"
+    ],
+    [
+      "shared/session/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.session.passandplay.RestoredStateTest.xml",
+      "9d2eb7d747b8260fad2fac6493052fdd396813ecb969b81e9d47f0906edf9310"
+    ],
+    [
+      "shared/session/build/test-results/testDebugUnitTest/TEST-com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest.xml",
+      "9d5615b763f300dce2af65946b1500d0783b0ea76b35a81cba5bc4152787f798"
+    ],
+    [
+      "shared/session/build/test-results/testDebugUnitTest/TEST-com.parlor.session.multidevice.BoundedPeerOutboxTest.xml",
+      "2444c63b0f572d1af462bc660fe4f56073bd41f7fd066b68c027414f574c7d42"
+    ],
+    [
+      "shared/session/build/test-results/testDebugUnitTest/TEST-com.parlor.session.multidevice.MultiDeviceShapeTest.xml",
+      "9df351ac854a5b38fd522f986f34819eec91a5aaf8c7cdfeee42f63c993c9a12"
+    ],
+    [
+      "shared/session/build/test-results/testDebugUnitTest/TEST-com.parlor.session.multidevice.PeerConnectionTrackerTest.xml",
+      "d3a043dfff5d6080a82c2abe2e07bfff17b6f36a79ef62ccf942be97bc438282"
+    ],
+    [
+      "shared/session/build/test-results/testDebugUnitTest/TEST-com.parlor.session.multidevice.ProcessMultiplayerSessionOwnerTest.xml",
+      "4ed93dd1ec5806ecd6c53d799be80714a3bb05453e2ad0517079963f7331d1da"
+    ],
+    [
+      "shared/session/build/test-results/testDebugUnitTest/TEST-com.parlor.session.multidevice.RetainedSessionOperationTest.xml",
+      "02c8f9c54af3adfee59904fae3b09d23d5cf864d42dee1c34dbdaf015f5e9f37"
+    ],
+    [
+      "shared/session/build/test-results/testDebugUnitTest/TEST-com.parlor.session.multidevice.SessionStartCommitDeadlineTest.xml",
+      "4c785c4b4e2f5f40e504b20b6446709af75a345ffc8465bb4ec2c340605163fe"
+    ],
+    [
+      "shared/session/build/test-results/testDebugUnitTest/TEST-com.parlor.session.multidevice.SessionStartHandshakeTest.xml",
+      "9187798ea61ee4618468512b926352a9d18552e936ba34181877c07456b33629"
+    ],
+    [
+      "shared/session/build/test-results/testDebugUnitTest/TEST-com.parlor.session.multidevice.ShadowSessionControllerTest.xml",
+      "4f6b2d82af157ae811fdd421a0c2dc7b302e0a873a76a8885c971484fde7cef4"
+    ],
+    [
+      "shared/session/build/test-results/testDebugUnitTest/TEST-com.parlor.session.party.PartyAwareCanonicalStateTest.xml",
+      "402d4f511be1a5f8f0653ccfc83b336e9089b53e3eaca06131bf590d8572b9e2"
+    ],
+    [
+      "shared/session/build/test-results/testDebugUnitTest/TEST-com.parlor.session.passandplay.RestoredStateTest.xml",
+      "db9a045b3d33dbd63ca770a58a741e121dcc33cce62b9502b657ce22ead134b7"
+    ],
+    [
+      "shared/session/build/test-results/testReleaseUnitTest/TEST-com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest.xml",
+      "439c5ba25159afed582598e5c4448143df7af288e1e86d57086238eb3f906972"
+    ],
+    [
+      "shared/session/build/test-results/testReleaseUnitTest/TEST-com.parlor.session.multidevice.BoundedPeerOutboxTest.xml",
+      "85da189a5e708619d9be08348b07dfc3842183a9837091ca4ec6f97039623d8c"
+    ],
+    [
+      "shared/session/build/test-results/testReleaseUnitTest/TEST-com.parlor.session.multidevice.MultiDeviceShapeTest.xml",
+      "bbb5e24163378134c7870add02405e6482ed8477615b80066194ace2a2634d24"
+    ],
+    [
+      "shared/session/build/test-results/testReleaseUnitTest/TEST-com.parlor.session.multidevice.PeerConnectionTrackerTest.xml",
+      "7bc14d04f15bcb7c6f16a1bb15253634baf12544a404ac6befced7db439afaae"
+    ],
+    [
+      "shared/session/build/test-results/testReleaseUnitTest/TEST-com.parlor.session.multidevice.ProcessMultiplayerSessionOwnerTest.xml",
+      "00ffb392f5d3088fd6c1389f65176ab5e34cbbf0056ab6c9df80de4a92fc8d23"
+    ],
+    [
+      "shared/session/build/test-results/testReleaseUnitTest/TEST-com.parlor.session.multidevice.RetainedSessionOperationTest.xml",
+      "24c88a72c1524155f01b77bd4d361ccef3418a2358cdbd87e811a477577bd102"
+    ],
+    [
+      "shared/session/build/test-results/testReleaseUnitTest/TEST-com.parlor.session.multidevice.SessionStartCommitDeadlineTest.xml",
+      "8800116ac382f6cb6ad073983480d60d179388a863ac0b666f3eb0035d4d50de"
+    ],
+    [
+      "shared/session/build/test-results/testReleaseUnitTest/TEST-com.parlor.session.multidevice.SessionStartHandshakeTest.xml",
+      "3bb095345373938e9c5fd704142f76d6122587061b79cf10da508866a406f128"
+    ],
+    [
+      "shared/session/build/test-results/testReleaseUnitTest/TEST-com.parlor.session.multidevice.ShadowSessionControllerTest.xml",
+      "7071fb8821c7481c8d32d44c1e95c0643561913459bc7b38204f25984f7e0a41"
+    ],
+    [
+      "shared/session/build/test-results/testReleaseUnitTest/TEST-com.parlor.session.party.PartyAwareCanonicalStateTest.xml",
+      "d68a8b3b1daf9dd2e6ceef2f0c00697e105a50861f873d18b6a80bf5d88f3ad7"
+    ],
+    [
+      "shared/session/build/test-results/testReleaseUnitTest/TEST-com.parlor.session.passandplay.RestoredStateTest.xml",
+      "158078893944d06da278251cd77576d0be3039391ca785f53d4704f4ad8338a3"
+    ],
+    [
+      "shared/storage/build/test-results/desktopTest/TEST-com.parlor.storage.secure.PlatformKeyedSecureStorageTest.xml",
+      "372c4ba05dcf10b3c1340dac08a18a779a91ee111cfe75d9aaad83f44eae753b"
+    ],
+    [
+      "shared/storage/build/test-results/desktopTest/TEST-com.parlor.storage.settings.PersistentSettingsStoreTest.xml",
+      "029ff5c4cad6f78592dab65f76b6a01371f3ad695beb0a48cf030b04c13a635d"
+    ],
+    [
+      "shared/storage/build/test-results/desktopTest/TEST-com.parlor.storage.snapshot.FileBackedSnapshotStoreTest.xml",
+      "8b5aa40e642475e4f537263d8cb67a5a216f4929387ad8036b3f24385f3f89d9"
+    ],
+    [
+      "shared/storage/build/test-results/desktopTest/TEST-com.parlor.storage.snapshot.SerializedSnapshotWriterTest.xml",
+      "a3d21d9594f87c4fdef9949eb8fc4600831787302eed395c291ab95e093ede2f"
+    ],
+    [
+      "shared/storage/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.storage.secure.PlatformKeyedSecureStorageTest.xml",
+      "6fc80d8887c9c60183bd16f995f38485b3cfd1a72f293d63497ae0dadb3934fa"
+    ],
+    [
+      "shared/storage/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.storage.settings.PersistentSettingsStoreTest.xml",
+      "34510f8c251d8421c3f917d15d893de39a25626fa8eff6f9e684feec629eef5d"
+    ],
+    [
+      "shared/storage/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.storage.snapshot.FileBackedSnapshotStoreTest.xml",
+      "a2b9b77851844b6ea36d72d560492431100d62038f67e767e6e54803ec799d66"
+    ],
+    [
+      "shared/storage/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.storage.snapshot.SerializedSnapshotWriterTest.xml",
+      "5881bc2e6aea68cc8131cf44be4c29c75a1591d24a13923fd53a4ca456a39946"
+    ],
+    [
+      "shared/storage/build/test-results/testDebugUnitTest/TEST-com.parlor.storage.secure.PlatformKeyedSecureStorageTest.xml",
+      "31dc0ba4157d28726698af48404eebddb7c0d5188419a1de16a14367b2137a2e"
+    ],
+    [
+      "shared/storage/build/test-results/testDebugUnitTest/TEST-com.parlor.storage.settings.PersistentSettingsStoreTest.xml",
+      "5de00da2c015a76c8118386b1630492a7961a782b26b9004c7e26b5781825670"
+    ],
+    [
+      "shared/storage/build/test-results/testDebugUnitTest/TEST-com.parlor.storage.snapshot.FileBackedSnapshotStoreTest.xml",
+      "6b40ebdbcba79ef485883d542087c36bc2d4a9e339f24857df91ac6c6aa9ddb8"
+    ],
+    [
+      "shared/storage/build/test-results/testDebugUnitTest/TEST-com.parlor.storage.snapshot.SerializedSnapshotWriterTest.xml",
+      "7ad9041b6301964d77ad91ae2d240087b22e664c7e737d43dcec7732e93729bc"
+    ],
+    [
+      "shared/storage/build/test-results/testReleaseUnitTest/TEST-com.parlor.storage.secure.PlatformKeyedSecureStorageTest.xml",
+      "f32b5c2d5cbcb58f0aa119290c1b0a775d1db577b7ec01c73188c689e20eaef6"
+    ],
+    [
+      "shared/storage/build/test-results/testReleaseUnitTest/TEST-com.parlor.storage.settings.PersistentSettingsStoreTest.xml",
+      "bbe41dbe07a7b22d739ca24c37940b58564df08fa741c06a8043af22c388bfb5"
+    ],
+    [
+      "shared/storage/build/test-results/testReleaseUnitTest/TEST-com.parlor.storage.snapshot.FileBackedSnapshotStoreTest.xml",
+      "28c675c23f4ec61f7fe47bcb3e3059b0f4b9a2e52398b0b8a57916536d3d7c83"
+    ],
+    [
+      "shared/storage/build/test-results/testReleaseUnitTest/TEST-com.parlor.storage.snapshot.SerializedSnapshotWriterTest.xml",
+      "53c1086efb41a15b168f1ce9de53fd369a0aa09ca0b4bb6b0ce0ee1ee84e903d"
+    ],
+    [
+      "shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.AndroidManifestLanPermissionTest.xml",
+      "9a07c8a01d1b3bfacbfecbb93c9a68d6fa0690c0fb6d66ec8288b49205235269"
+    ],
+    [
+      "shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.AndroidReleaseLintContractTest.xml",
+      "059cebba2dfe5e77c149a377b1e2a9b08c95511c066b522216d8d0504103cbd6"
+    ],
+    [
+      "shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.AppLifecycleRoomCoordinatorTest.xml",
+      "a285b5eab944e23ce3360df0d76ee432b2389d936a77738b72eecaade6fbacb8"
+    ],
+    [
+      "shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.AppLifecycleRoomRegistrationTest.xml",
+      "8e42c5aacf667ac3b23eaa220150ab1404990da1831b38046ecc1bde95d2bc0d"
+    ],
+    [
+      "shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.DesktopDependencyVerificationContractTest.xml",
+      "c796b1604f05729661d30df16f756b683978d17f02f1bac6629c60899562ff20"
+    ],
+    [
+      "shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.DiscoveryCandidateSchedulerTest.xml",
+      "54797ccd04fa96e9c020a3ad75de54749dadb71e9f426e979c624dde81df3624"
+    ],
+    [
+      "shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.HostOpeningCancellationTest.xml",
+      "37d2f471fb6fe340b892a9ab0897a46139d56cca1110633c00bdaff18388400d"
+    ],
+    [
+      "shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.IosInfoPlistBonjourTest.xml",
+      "57fa64036f1cbf248d78b4733059a30440325d117551e24ff045ddb0b5a8e03a"
+    ],
+    [
+      "shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.JupiterDiscoveryContractTest.xml",
+      "fc52b19719ee141fb16884d3d3046bc6fecb414d80fcc1f851f25e651c5761cb"
+    ],
+    [
+      "shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.MultiplayerDocumentationContractTest.xml",
+      "a3bf25c176a283e3d11490bd75869e95e3fa776b10228608a886bef78466754f"
+    ],
+    [
+      "shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pDiagnosticsTest.xml",
+      "baabc11951d34851242d43cff06ff50213cd996b230a614070c23619a6a138c5"
+    ],
+    [
+      "shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitCreationTest.xml",
+      "c465f3f8f07ef9025cdce76686ae31a97bf0cfd737eed6ea62729300091a241f"
+    ],
+    [
+      "shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitMavenProvenanceContractTest.xml",
+      "6be6d09b7fc30e9e69ec50989f11485a9082695db1912c367ee954251b50500d"
+    ],
+    [
+      "shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitRoomTransportLifecycleTest.xml",
+      "47289eef5bfd0f6ecbd22f37a81e91d64ff9574011a3f25e0696e00b5879bdfe"
+    ],
+    [
+      "shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest.xml",
+      "4f91e33be549fbfbfc884a5e3b733dbf6e8df8ead8f28a9438cf6eb4863518f4"
+    ],
+    [
+      "shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pTrafficPolicyTest.xml",
+      "3273ed9ae490456d8dd87389c47340e2421dfa091f166c354ba1284c31bf586c"
+    ],
+    [
+      "shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.PeerOpeningCancellationTest.xml",
+      "40ce767c6457f9d1ddf1bb3d24bd5bac28615248750b393872faa06ce551a792"
+    ],
+    [
+      "shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.ProductionVerificationWorkflowContractTest.xml",
+      "98f2a6e598d9838d7d5cc683c83df2874890f4f395a061e713addb82cac505a3"
+    ],
+    [
+      "shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.ResumableCredentialStoreTest.xml",
+      "a2964a2bbc3ae194e40a0e50b55236c0cad0f7956e3d9bacbe3b91202b48a792"
+    ],
+    [
+      "shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.TestTransportIsolationContractTest.xml",
+      "41bb4d2b26499e96fcd2dd93d7ee14a58f16ef50a5dc397701fb0a2a8957772e"
+    ],
+    [
+      "shared/transport-p2p/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.transport.p2p.AppLifecycleRoomCoordinatorTest.xml",
+      "4797fa493bac0a572865da5cf78bfd68e79c68a5e9e485c630f3c54f611f8d59"
+    ],
+    [
+      "shared/transport-p2p/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.transport.p2p.AppLifecycleRoomRegistrationTest.xml",
+      "67a65553375da961bf42cef4d5bac5cdceeec2240eeacbf57da94dd20d973a9d"
+    ],
+    [
+      "shared/transport-p2p/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.transport.p2p.DiscoveryCandidateSchedulerTest.xml",
+      "0096e294e40271876947d5a68dc11a7268fc06576856423836d3fc1cbcbba7e4"
+    ],
+    [
+      "shared/transport-p2p/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.transport.p2p.P2pDiagnosticsTest.xml",
+      "83055a1f5b51d775d7f408add31e947625b199f40a4ec64f567907679fbcc34c"
+    ],
+    [
+      "shared/transport-p2p/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.transport.p2p.P2pTrafficPolicyTest.xml",
+      "709e3ece8ae82784ea008d4d788a1e38cb5500b2e3d5d55bece461ab29d1b2db"
+    ],
+    [
+      "shared/transport-p2p/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.transport.p2p.ResumableCredentialStoreTest.xml",
+      "a3f9c0e4a3c80b6efc46ea2f5ed9b4c5d0e98daf4128f78f586057c29f4ff694"
+    ],
+    [
+      "shared/transport-p2p/build/test-results/testDebugUnitTest/TEST-com.parlor.transport.p2p.AppLifecycleRoomCoordinatorTest.xml",
+      "4dd060830cf55514a854c0103aa8e539114258e95821355129eaaee5e12ecf30"
+    ],
+    [
+      "shared/transport-p2p/build/test-results/testDebugUnitTest/TEST-com.parlor.transport.p2p.AppLifecycleRoomRegistrationTest.xml",
+      "7085d792ffe73c77c818bfbca6b51c72604e849a6705eb069fa492f2504c8f28"
+    ],
+    [
+      "shared/transport-p2p/build/test-results/testDebugUnitTest/TEST-com.parlor.transport.p2p.DiscoveryCandidateSchedulerTest.xml",
+      "bef06db005974e969255b88828ec5f771bdabdcb7ac816b79f0e9cee942c04da"
+    ],
+    [
+      "shared/transport-p2p/build/test-results/testDebugUnitTest/TEST-com.parlor.transport.p2p.P2pDiagnosticsTest.xml",
+      "e189ccf1c1a94a9aafacbd72625ca954424aecb681766fb870c14d7f6d124b9d"
+    ],
+    [
+      "shared/transport-p2p/build/test-results/testDebugUnitTest/TEST-com.parlor.transport.p2p.P2pTrafficPolicyTest.xml",
+      "b940563309b250936dd8b418a03220899acdbfb04b07a64a3e3de84891c62e2b"
+    ],
+    [
+      "shared/transport-p2p/build/test-results/testDebugUnitTest/TEST-com.parlor.transport.p2p.ResumableCredentialStoreTest.xml",
+      "6a26808d7ec11dbaf4997ab97ab86366e3913a6bec8cdf179f802f697d61354d"
+    ],
+    [
+      "shared/transport-p2p/build/test-results/testReleaseUnitTest/TEST-com.parlor.transport.p2p.AppLifecycleRoomCoordinatorTest.xml",
+      "044b386032989ebb5e54dc786fe55aad0d841584f6eebbbe330839d84e102304"
+    ],
+    [
+      "shared/transport-p2p/build/test-results/testReleaseUnitTest/TEST-com.parlor.transport.p2p.AppLifecycleRoomRegistrationTest.xml",
+      "d4a4a7fc941b180920091d1124c228713707ff2e087afdf44305a19bdbac0880"
+    ],
+    [
+      "shared/transport-p2p/build/test-results/testReleaseUnitTest/TEST-com.parlor.transport.p2p.DiscoveryCandidateSchedulerTest.xml",
+      "83e45e9c05f2e0a6b37a69f7276db9a17061cbd04e88b220da521fed5d85abae"
+    ],
+    [
+      "shared/transport-p2p/build/test-results/testReleaseUnitTest/TEST-com.parlor.transport.p2p.P2pDiagnosticsTest.xml",
+      "920f47fa52e11f0c280c785ff3e30a581a04db40e792dfc2567abbb11d8a3560"
+    ],
+    [
+      "shared/transport-p2p/build/test-results/testReleaseUnitTest/TEST-com.parlor.transport.p2p.P2pTrafficPolicyTest.xml",
+      "c79299cd84a55bd9d22d21f3fe2b12cecd0362395929b903b561fbb4a66db39c"
+    ],
+    [
+      "shared/transport-p2p/build/test-results/testReleaseUnitTest/TEST-com.parlor.transport.p2p.ResumableCredentialStoreTest.xml",
+      "de1cef4ccced688e7b8d1bedf6a4934f650ad9a3aa489cfd5d23b10709a17297"
+    ]
+  ],
+  "all_xml_counts_match_396_test_receipts": true,
+  "source_and_runner_unchanged_and_reviewed_files_still_match": true,
+  "fresh_execution_evidence": "outputs_before[]; --no-build-cache; relevant runtime task lines have neither FROM-CACHE nor UP-TO-DATE; timestamped raw reports contain individual executed cases.",
+  "skipped_test_cases": [
+    {
+      "file": "shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest.xml",
+      "name": "peer_to_host_message_round_trips_and_host_to_peer_message_arrives_back()[desktop]",
+      "reason_source": "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitRoomTransportLoopbackTest.kt:125-128,157-160,207-210"
+    },
+    {
+      "file": "shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest.xml",
+      "name": "peer_can_join_a_hosted_room_and_membership_appears_on_host()[desktop]",
+      "reason_source": "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitRoomTransportLoopbackTest.kt:125-128,157-160,207-210"
+    },
+    {
+      "file": "shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest.xml",
+      "name": "host_broadcast_reaches_every_peer()[desktop]",
+      "reason_source": "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitRoomTransportLoopbackTest.kt:125-128,157-160,207-210"
+    }
+  ],
+  "noncase_gaps": [
+    "13iosX64Test tasks host-disabled: Gradle emits exact architecture mismatch X64target vs macos-aarch64. No x64 runtime pass claimed.",
+    "Mafia and shared:engine iosSimulatorArm64 compile/link tests NO-SOURCE; tasks SKIPPED. Both have onlydesktopTest source files. Their Androiddebug/releaseunit tests likewiseNO-SOURCE. This is a coveragegap rather than evidence of native engine tests passing.",
+    "No actualdevice multi-peerLAN roundtrip;3physicalP2P @Ignore tests unchanged and skipped. One host-advertisement test does not provejoining.",
+    "AndroidUnitTest results are JVM tests, not Androidemulator/deviceapp execution.",
+    "Apple arm64native runtime tests are standalone Gradle/Kotlin tests, not apphostUI; SwiftUI/lifecycle continuity requires separateapphost evidence."
+  ],
+  "targeted_results": {
+    "DS_C01": {
+      "suite": "IosLanguageOverrideOwnerTest",
+      "ios_simulator_tests": 11,
+      "passed": 11,
+      "basis": "Read full142line test file and61line owner implementation; uniqueNSUUIDNSUserDefaults suites, exact restoration/unowned/malformed ownership assertions, finally removes onlyowneddomain. Newinstances emulate interruptedowner lifetime; not processrestart or actualOSSettings proof."
+    },
+    "WD_C2": {
+      "desktop_tests": 14,
+      "suite_counts": {
+        "TestingStoryChronologyTest": 5,
+        "TestingStoryCompatibilityTest": 4,
+        "TestingStoryGameTraceTest": 1,
+        "WhodunitRecoveryInteractionTest": 4
+      },
+      "coverage": "Actual bundled resources+strictvalidators; realcodec+store using syntheticfilesystem; exactmetadata/digestnegative andknownpositivecontrol;48killer/modecombos eachrepeated=96traces; everyaction assertsstatechanges+codec+case-recovery;actualrecoveryUI withEnglish/Arabic at320x640font1.3 andrealcontentrepo, syntheticstores. NotphysicalLAN/durability orfullUIgameproof."
+    }
+  },
+  "read_ranges": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/iosTest/kotlin/com/parlor/designsystem/localization/IosLanguageOverrideOwnerTest.kt",
+      "sha256": "dbf610cd2fe07dd690b994c70434c863a96833305d5fc47c0e0c9d95072acf7e",
+      "ranges": [
+        [
+          1,
+          142
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/iosMain/kotlin/com/parlor/designsystem/localization/IosLanguageOverrideOwner.kt",
+      "sha256": "959ab1a8cb955e484c806c8ce5af65ca841a20cfcd9b1f205443a1cfe768da20",
+      "ranges": [
+        [
+          1,
+          61
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/iosMain/kotlin/com/parlor/designsystem/localization/LocalAppLocale.ios.kt",
+      "sha256": "0e0783ca3e38634bd3469760f5dbfa5ade8509b976d0ec676202f4513cd8e098",
+      "ranges": [
+        [
+          1,
+          83
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/build.gradle.kts",
+      "sha256": "118d898f900e3b8ccc76db6fca658d69a0d211c5220b6985738f14428a99f78d",
+      "ranges": [
+        [
+          1,
+          25
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/build-logic/convention/src/main/kotlin/com/parlor/buildlogic/KmpLibraryConventionPlugin.kt",
+      "sha256": "9d3b07942123f5a4c2da229aa873d5d7b7d422b120d1ff42014cfe066eefbc63",
+      "ranges": [
+        [
+          1,
+          72
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/build-logic/convention/src/main/kotlin/com/parlor/buildlogic/KmpComposeLibraryConventionPlugin.kt",
+      "sha256": "d8a7cd25a7062f20ae871a068b724c061c98f3831aae4d90701c5cbbf7b4e660",
+      "ranges": [
+        [
+          1,
+          19
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/build.gradle.kts",
+      "sha256": "bd6199e1f097eb236c50c46efb91d291550110f6b4d95a8e95ff0db4d8da192b",
+      "ranges": [
+        [
+          1,
+          55
+        ],
+        [
+          177,
+          204
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/build.gradle.kts",
+      "sha256": "7aceb370331f84b2fee70bb039b7779bdd818ea78aab15da3bfcfd137a76ad2d",
+      "ranges": [
+        [
+          1,
+          43
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/engine/build.gradle.kts",
+      "sha256": "4cbe86781aa8f11d2ef91381855ab3bcb3b126ef53b6a8272b79c478f90fc38a",
+      "ranges": [
+        [
+          1,
+          24
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitRoomTransportLoopbackTest.kt",
+      "sha256": "cda4755e373172719f6fc7a4d72a38416ec061b44f356d9ef4f3529e29588737",
+      "ranges": [
+        [
+          1,
+          290
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/TestingStoryChronologyTest.kt",
+      "sha256": "9325933fab3a9547d14898319c4964e2d791af3bab8011eff68a68f768333c9b",
+      "ranges": [
+        [
+          1,
+          152
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/TestingStoryCompatibilityTest.kt",
+      "sha256": "dfdd8aed4bc9f199fadfddf644bc321d1e293cafda2d201d2ec6055bac313fa9",
+      "ranges": [
+        [
+          1,
+          248
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/TestingStoryGameTraceTest.kt",
+      "sha256": "ca31ec98fc19aaeba3675e6d56135abec745d9307a471fc81543e57bd6f6c058",
+      "ranges": [
+        [
+          1,
+          157
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitRecoveryInteractionTest.kt",
+      "sha256": "6a6adb88b4de74294e9874d8a94c2b5fe977968a12c895f677114befecf605d2",
+      "ranges": [
+        [
+          1,
+          275
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitGameFlow.kt",
+      "sha256": "b5b57dfe7675a0f85e299719f5161d9e50d75e6c0f1c25cfb72379e7b032ec36",
+      "ranges": [
+        [
+          247,
+          354
+        ],
+        [
+          421,
+          452
+        ]
+      ]
+    }
+  ],
+  "simulator": {
+    "uuid": "2FA5E110-0344-4474-9F58-C00F3A0F9366",
+    "runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-5",
+    "device_type": "com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro",
+    "ownership_commands_exit_zero": true,
+    "receipt_reports_absent": true,
+    "actual_owned_device_directory_absent": true,
+    "preexisting_count": 22,
+    "preexisting_devices_preserved": true,
+    "remaining_uuid_processes": [],
+    "raw_inventory_limitation": "Simulatorreceipt intentionally does not retain allunrelateddeviceinventory; ownershiprunner commands/status+ownedUUIDpathchecked. No unrelateddevice data inspected."
+  },
+  "cleanup": {
+    "stop_exit_code": 0,
+    "stop_log": "No Gradle daemons are running.",
+    "removed_output_checks": {
+      "shared/core/build": true,
+      "shared/networking/build": true,
+      "shared/content/build": true,
+      "shared/storage/build": true,
+      "shared/transport-p2p/build": true,
+      "shared/networking-testing/build": true,
+      "shared/engine/build": true,
+      "shared/design-system/build": true,
+      "shared/engine-testing/build": true,
+      "shared/session/build": true,
+      "game-modes/whodunit/build": true,
+      "game-modes/mafia/build": true,
+      "build": true,
+      "composeApp/build": true,
+      "build-logic/convention/build": true
+    },
+    "remaining_outputs": [],
+    "retained_outputs": [],
+    "workers": {
+      "terminated_owned_workers": [],
+      "remaining_owned_workers": []
+    },
+    "errors": [],
+    "completed_at": "2026-09-06T08:41:53.682545+00:00",
+    "reviewer_started_builds_or_processes": false
+  }
+}

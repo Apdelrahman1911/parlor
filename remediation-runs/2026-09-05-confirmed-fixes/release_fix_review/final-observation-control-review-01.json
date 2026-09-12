@@ -1,0 +1,130 @@
+{
+  "reviewer": "/root/release_fix_review",
+  "recorded_at": "2026-09-06T01:01:52.352023+00:00",
+  "scope": "Independent static review of proposed task-owned final-observation control, its preservation baseline and receipt schema integration. Not an application finding or runtime execution.",
+  "conclusion": "CHANGES REQUESTED BEFORE RECORDER EXECUTION; parent accepted corrections. Revised recorder and its negative tests remain to be independently reviewed.",
+  "reviewed_control": {
+    "path": "remediation-runs/2026-09-05-confirmed-fixes/record_final_observation.py",
+    "sha256": "d17a9578ac4ec325b78be2366cc724f4b40b13350ff93da0dd01e5d147f5607e",
+    "line_ranges": [
+      [
+        1,
+        134
+      ]
+    ]
+  },
+  "baseline": {
+    "path": "remediation-runs/2026-09-05-confirmed-fixes/baseline.json",
+    "sha256": "ea1cd2652288f36b25c6e6fbec271a7713e564e010ad854a49dbecc0004be8ae"
+  },
+  "baseline_verification": {
+    "files": 1618,
+    "tracked": 628,
+    "preexisting_untracked": 990,
+    "unchanged": 1584,
+    "authorized_tracked_modifications": 34,
+    "missing": [],
+    "preexisting_untracked_changed": [],
+    "symlink_leaves_or_ancestors": [],
+    "refs_stash_and_empty_index_unchanged": true,
+    "private_material_inspected": false
+  },
+  "control_requests": [
+    {
+      "id": "OBS-R1",
+      "lines": [
+        [
+          74,
+          100
+        ],
+        [
+          111,
+          130
+        ]
+      ],
+      "classification": "EVIDENCE-CONTROL CORRECTION REQUIRED",
+      "description": "Printed PASS currently depends only on current named outputs/scratch/preservation. Per-cycle cleanup is copied but not evaluated; a failed stop, remaining owned process, unknown file holder, unremoved temporary/DerivedData tree or failed secondary-FIFO/device cleanup can coexist with PASS. Generic fields omit actual new apphost receipt fields and three native child receipts.",
+      "proof": "Set a terminal modern record cleanup_errors nonempty or stop_exit_code nonzero with no currently named module directories; code93-99 does not inspect those copied values before129 PASS. A nested native simulator/receipt.json is outside */receipt.json discovery. No real cleanup failure is asserted for completed cycles.",
+      "remediation": "Separate observation/preservation status from explicit evaluated cleanup verdict. Verify modern stops, errors, retained/remaining outputs and owned workers. Include and validate schema-specific apphost stops, owned_processes_remaining, unknown_holders, temporary_directory_removed, owned_device_absent, secondary cleanup/attestation and exact native child receipts. Admit failed verification tasks only when their cleanup is complete. Unknown schemas/missing contemporary required fields are not success.",
+      "tests": "Negative synthetic schemas for stop errors, retained output, nonempty workers/unknown holders, failed native/device/secondary cleanup, missing required fields; failed test with valid cleanup accepted. These are evidence-control tests, not runtime proof."
+    },
+    {
+      "id": "OBS-R2",
+      "lines": [
+        [
+          20,
+          29
+        ],
+        [
+          41,
+          63
+        ],
+        [
+          86,
+          89
+        ],
+        [
+          119,
+          120
+        ]
+      ],
+      "classification": "PROTECTIVE CONTROL HARDENING REQUIRED BEFORE READ",
+      "description": "Known original baseline is not hash-pinned before its paths are opened. ref() and final is_file checks may follow symbolic links; leaf-only baseline check does not reject symbolic-link ancestry. Additional paths resolve into task but duplicate references are not deduplicated. Current inspected tree has no such symlinks or changed baseline; this is not a demonstrated data disclosure.",
+      "remediation": "Pin original baseline SHA before parsing paths, reject absolute/traversal/unexpected paths and symlink ancestry before reads, reject symlink final artifacts/control paths, deduplicate canonical task-owned receipts and keep source/parent schema relationships explicit. Do not scan private material or mutate/remove unrelated files.",
+      "tests": "Synthetic baseline hash drift, traversal/absolute path, ancestor/final symlink, additional receipt out of task and duplicate receipt references."
+    }
+  ],
+  "legacy_receipt": {
+    "receipt": {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/ios-b1-red/receipt.json",
+      "sha256": "1a1c0d0f2d68cf0f4be5b93033918fdae373c7ca1cd07c8686e680b3d77a5772"
+    },
+    "process_log": {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/ios-b1-red/processes-after.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "process_scan_exit_code": 1,
+    "process_log_bytes": 0,
+    "missing_fields": [
+      "workers",
+      "retained_outputs",
+      "deferred_signals"
+    ],
+    "note": "Do not backfill workers or infer fully attested PID cleanup. Empty log plus exit1 without the exact recorded scan command is bounded/ambiguous legacy evidence. If accepted by exact receipt hash, expose historical_cleanup_evidence_complete=false and a precise limitation; current resource observation and modern receipts are separate."
+  },
+  "native_receipts": [
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/native-storage-language-01/simulator/receipt.json",
+      "sha256": "5febcc8ee0efa402ec479e3bfa412629db9430d0680f7304d1e360ae21e7705f"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/native-storage-language-02/simulator/receipt.json",
+      "sha256": "fdb74ac1395a51b0d9b34cb9ea4aacccdf62b709dd36b518aa8fe22a0129ea91"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/native-alltests-01/simulator/receipt.json",
+      "sha256": "c3725a106b41ebed08792c296ec85c82e5439cd01910ad2ace58bf6d95310975"
+    }
+  ],
+  "native_receipt_review": "All three have owned_device_absent=true, preexisting_devices_preserved=true, remaining_owned_uuid_processes=[], cleanup_errors=[]; exact UUID/runtime/name retained without unrelated simulator inventory. Caller cleanup already propagates native errors, but final observation should index the child evidence explicitly.",
+  "completed_cycle_checkpoint": {
+    "count": 40,
+    "counts": {
+      "PASS": 24,
+      "FAIL": 16
+    },
+    "stops_nonzero": 0,
+    "cleanup_errors_nonempty": 0,
+    "remaining_outputs_nonempty": 0,
+    "modern_receipts_with_explicit_empty_owned_workers": 39,
+    "note": "Read40existingtop-level receipts before new apphost execution. Not a claim about a later cycle or current shared machine."
+  },
+  "current_ledger_status": "Previously approved four indexes remain bounded at14/16 verified; final observation and DS-C01 runtime addendum not yet approved. Post-materialization cycles must be added explicitly without rewriting original receipts.",
+  "independent_cross_file_reads": [
+    "run_gradle_cycle.py:1-150,178-283 (full file also reviewed previously)",
+    "owned_ios_simulator.py:1-137",
+    "new apphost runner receipt/cleanup integration:515-669 only; factory agent owns full harness review",
+    "all40existingcycle receipt cleanup fields and original baseline records"
+  ],
+  "cleanup_and_safety": "No builds/tests/Xcode/Gradle/app/simulator/workers or destructive operations started. Only synchronous inspection and two additive reviewer deliverables written. Parent exclusively owns recorder edits/build lane; no final current-worker absence claim while parent has active work."
+}

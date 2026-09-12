@@ -1,0 +1,729 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/release_fix_review",
+  "recorded_at": "2026-09-06T18:58:35.672958+00:00",
+  "classification": "APPROVED_FOR_ONE_ROOT_OWNED_UNSIGNED_SIMULATOR_APPHOST06_ATTEMPT",
+  "control_sha256": "c9e1dc146972a38b063962998b54aabed8f76524c92d8d2dcfbb1c0b31266ef2",
+  "native_execution_approved": true,
+  "scope": "Root may execute dsc01-apphost-06 with frozen V8controls only, newowned iPhone17Pro/iOS26.5 simulator, unsigned copy/fulloldoracles, originalrules/privacy/cleanup unchanged. No automaticretry, signing, existingdevice/profile, Store, publication, sourcechange, or wholeappreadinessclaim authorized by thisreview.",
+  "prior_review": {
+    "path": "reviews/independent-v8-controls-approval-01.json",
+    "sha256": "ff3049bae6f577f4191ac80c2b5de83ce80e5d53184788cdaef57af37868a206"
+  },
+  "executed_control_cycle": {
+    "path": "evidence/native-controls-08",
+    "receipt_sha256": "e73aeec0d78f70349eaaadd998545b0405e2f04c80657188e02b7938268c26bc",
+    "log_sha256": "4687c1a553f597a9f371528dc30efa7580861b8b624c901b46ba42164676d75b",
+    "command": [
+      "/usr/bin/python3",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v8",
+      "-p",
+      "test_*.py",
+      "-v"
+    ],
+    "started_at": "2026-09-06T18:47:21.185768+00:00",
+    "finished_at": "2026-09-06T18:47:25.608756+00:00",
+    "exit_code": 0,
+    "raw_result": "Ran 130 tests in 4.040s / OK",
+    "actual_descriptors": 130,
+    "passed": 130,
+    "skipped": 0,
+    "failed": 0,
+    "ast_descriptor_set_exact": true,
+    "duplicate_descriptors": 0,
+    "per_file": {
+      "test_catalog_contract": 12,
+      "test_copy_observation_contract": 52,
+      "test_harness_contract": 20,
+      "test_secondary_fifo": 27,
+      "test_v8_contract": 19
+    },
+    "raw_descriptor_evidence": [
+      {
+        "descriptor": "test_catalog_contract.CatalogControlTest.test_added_xctest_helper_and_contract_are_hashed_build_copy_inputs",
+        "status": "ok",
+        "raw_line": 1
+      },
+      {
+        "descriptor": "test_catalog_contract.CatalogControlTest.test_each_v6_reference_affects_control_identity_without_mutating_files",
+        "status": "ok",
+        "raw_line": 2
+      },
+      {
+        "descriptor": "test_catalog_contract.CatalogControlTest.test_every_consumed_v6_reference_is_bound_by_full_path_and_bytes",
+        "status": "ok",
+        "raw_line": 3
+      },
+      {
+        "descriptor": "test_catalog_contract.CatalogControlTest.test_incomplete_train_unknown_game_and_oversized_row_fail",
+        "status": "ok",
+        "raw_line": 4
+      },
+      {
+        "descriptor": "test_catalog_contract.CatalogControlTest.test_missing_swift_contract_or_game_cannot_pass",
+        "status": "ok",
+        "raw_line": 5
+      },
+      {
+        "descriptor": "test_catalog_contract.CatalogControlTest.test_old_native_matrix_and_cleanup_controls_remain_identical",
+        "status": "ok",
+        "raw_line": 6
+      },
+      {
+        "descriptor": "test_catalog_contract.CatalogControlTest.test_only_catalog_entry_call_changes_original_matrix_and_geometry_checks_execute",
+        "status": "ok",
+        "raw_line": 7
+      },
+      {
+        "descriptor": "test_catalog_contract.CatalogControlTest.test_os_prefix_queries_are_diagnostics_only_not_action_fallbacks",
+        "status": "ok",
+        "raw_line": 8
+      },
+      {
+        "descriptor": "test_catalog_contract.CatalogControlTest.test_physical_activation_is_outside_all_readiness_retries",
+        "status": "ok",
+        "raw_line": 9
+      },
+      {
+        "descriptor": "test_catalog_contract.CatalogControlTest.test_public_metadata_bounds_and_measured_exclusions_are_explicit",
+        "status": "ok",
+        "raw_line": 10
+      },
+      {
+        "descriptor": "test_catalog_contract.CatalogControlTest.test_repeated_activation_or_missing_successor_cannot_pass",
+        "status": "ok",
+        "raw_line": 11
+      },
+      {
+        "descriptor": "test_catalog_contract.CatalogControlTest.test_synthetic_receipt_is_only_a_parser_check",
+        "status": "ok",
+        "raw_line": 12
+      },
+      {
+        "descriptor": "test_copy_observation_contract.CopyBoundaryContractTest.test_actual_os_api_used_not_private_settings_urls_or_global_defaults",
+        "status": "ok",
+        "raw_line": 13
+      },
+      {
+        "descriptor": "test_copy_observation_contract.CopyBoundaryContractTest.test_after_build_identity_precedes_owned_copy_deletion_and_gates_pass",
+        "status": "ok",
+        "raw_line": 14
+      },
+      {
+        "descriptor": "test_copy_observation_contract.CopyBoundaryContractTest.test_all_actual_source_anchors_apply_only_to_owned_copies",
+        "status": "ok",
+        "raw_line": 15
+      },
+      {
+        "descriptor": "test_copy_observation_contract.CopyBoundaryContractTest.test_both_en_ar_geometries_use_actual_orientation_then_a_complete_passive_window",
+        "status": "ok",
+        "raw_line": 16
+      },
+      {
+        "descriptor": "test_copy_observation_contract.CopyBoundaryContractTest.test_copy_refuses_unbound_manifest_and_nonempty_destination",
+        "status": "ok",
+        "raw_line": 17
+      },
+      {
+        "descriptor": "test_copy_observation_contract.CopyBoundaryContractTest.test_exact_compose_controller_is_captured_from_local_not_a_child_type_guess",
+        "status": "ok",
+        "raw_line": 18
+      },
+      {
+        "descriptor": "test_copy_observation_contract.CopyBoundaryContractTest.test_final_copy_attestation_rejects_input_drift_but_not_owned_outputs",
+        "status": "ok",
+        "raw_line": 19
+      },
+      {
+        "descriptor": "test_copy_observation_contract.CopyBoundaryContractTest.test_final_copy_attestation_rejects_new_inputs_and_source_symlinks",
+        "status": "ok",
+        "raw_line": 20
+      },
+      {
+        "descriptor": "test_copy_observation_contract.CopyBoundaryContractTest.test_foreground_collects_both_windows_before_any_direction_assertion",
+        "status": "ok",
+        "raw_line": 21
+      },
+      {
+        "descriptor": "test_copy_observation_contract.CopyBoundaryContractTest.test_local_checkpoint_uses_real_settings_then_home_before_synthetic_language_calls",
+        "status": "ok",
+        "raw_line": 22
+      },
+      {
+        "descriptor": "test_copy_observation_contract.CopyBoundaryContractTest.test_missing_or_duplicate_anchor_is_not_a_dynamic_fallback",
+        "status": "ok",
+        "raw_line": 23
+      },
+      {
+        "descriptor": "test_copy_observation_contract.CopyBoundaryContractTest.test_name_entry_uses_real_ime_next_done_without_fling_or_backing_state_bypass",
+        "status": "ok",
+        "raw_line": 24
+      },
+      {
+        "descriptor": "test_copy_observation_contract.CopyBoundaryContractTest.test_native_source_additions_and_explicit_swift_outer_are_closed_manifest_inputs",
+        "status": "ok",
+        "raw_line": 25
+      },
+      {
+        "descriptor": "test_copy_observation_contract.CopyBoundaryContractTest.test_observation_never_loads_or_reconfigures_a_native_view",
+        "status": "ok",
+        "raw_line": 26
+      },
+      {
+        "descriptor": "test_copy_observation_contract.CopyBoundaryContractTest.test_original_build_outputs_never_enter_copy_only_cleanup_set",
+        "status": "ok",
+        "raw_line": 27
+      },
+      {
+        "descriptor": "test_copy_observation_contract.CopyBoundaryContractTest.test_original_name_fields_still_own_next_and_final_done",
+        "status": "ok",
+        "raw_line": 28
+      },
+      {
+        "descriptor": "test_copy_observation_contract.CopyBoundaryContractTest.test_passive_samples_are_durable_nonblocking_and_do_not_publish_between_samples",
+        "status": "ok",
+        "raw_line": 29
+      },
+      {
+        "descriptor": "test_copy_observation_contract.CopyBoundaryContractTest.test_protected_traversal_hidden_generated_and_nonbuild_inputs_are_excluded",
+        "status": "ok",
+        "raw_line": 30
+      },
+      {
+        "descriptor": "test_copy_observation_contract.CopyBoundaryContractTest.test_public_setup_selectors_are_source_whitelisted_and_bounded",
+        "status": "ok",
+        "raw_line": 31
+      },
+      {
+        "descriptor": "test_copy_observation_contract.DirectObservationReceiptTest.test_a_disposed_session_cannot_be_rebased_to_a_passing_checkpoint",
+        "status": "ok",
+        "raw_line": 32
+      },
+      {
+        "descriptor": "test_copy_observation_contract.DirectObservationReceiptTest.test_a_language_command_must_have_its_own_lifecycle_witness",
+        "status": "ok",
+        "raw_line": 33
+      },
+      {
+        "descriptor": "test_copy_observation_contract.DirectObservationReceiptTest.test_actual_native_child_outer_view_window_or_parent_replacement_is_rejected",
+        "status": "ok",
+        "raw_line": 34
+      },
+      {
+        "descriptor": "test_copy_observation_contract.DirectObservationReceiptTest.test_any_early_middle_or_second_window_divergence_fails_despite_good_final_sample",
+        "status": "ok",
+        "raw_line": 35
+      },
+      {
+        "descriptor": "test_copy_observation_contract.DirectObservationReceiptTest.test_both_actual_game_phase_schemas_are_exercised_without_runtime_claim",
+        "status": "ok",
+        "raw_line": 36
+      },
+      {
+        "descriptor": "test_copy_observation_contract.DirectObservationReceiptTest.test_complete_raw_geometric_receipts_fit_the_retained_file_budget",
+        "status": "ok",
+        "raw_line": 37
+      },
+      {
+        "descriptor": "test_copy_observation_contract.DirectObservationReceiptTest.test_correct_native_direction_does_not_replace_direct_compose_observation",
+        "status": "ok",
+        "raw_line": 38
+      },
+      {
+        "descriptor": "test_copy_observation_contract.DirectObservationReceiptTest.test_distinct_outer_direction_is_not_mistaken_for_compose_native_direction",
+        "status": "ok",
+        "raw_line": 39
+      },
+      {
+        "descriptor": "test_copy_observation_contract.DirectObservationReceiptTest.test_equal_value_cannot_hide_a_replaced_controller_or_flow_or_state_reference",
+        "status": "ok",
+        "raw_line": 40
+      },
+      {
+        "descriptor": "test_copy_observation_contract.DirectObservationReceiptTest.test_every_passive_sample_requires_own_lifecycle_and_canonical_reference",
+        "status": "ok",
+        "raw_line": 41
+      },
+      {
+        "descriptor": "test_copy_observation_contract.DirectObservationReceiptTest.test_every_raw_geometry_field_is_independently_checked",
+        "status": "ok",
+        "raw_line": 42
+      },
+      {
+        "descriptor": "test_copy_observation_contract.DirectObservationReceiptTest.test_explicit_language_cannot_pass_when_locale_and_direction_both_stay_stale",
+        "status": "ok",
+        "raw_line": 43
+      },
+      {
+        "descriptor": "test_copy_observation_contract.DirectObservationReceiptTest.test_failed_and_cancelled_synthetic_commands_are_not_success",
+        "status": "ok",
+        "raw_line": 44
+      },
+      {
+        "descriptor": "test_copy_observation_contract.DirectObservationReceiptTest.test_first_post_foreground_mismatch_cannot_be_erased_by_good_passive_windows",
+        "status": "ok",
+        "raw_line": 45
+      },
+      {
+        "descriptor": "test_copy_observation_contract.DirectObservationReceiptTest.test_geometry_window_must_not_add_a_background_cycle",
+        "status": "ok",
+        "raw_line": 46
+      },
+      {
+        "descriptor": "test_copy_observation_contract.DirectObservationReceiptTest.test_initial_language_must_use_actual_settings_with_zero_synthetic_commands",
+        "status": "ok",
+        "raw_line": 47
+      },
+      {
+        "descriptor": "test_copy_observation_contract.DirectObservationReceiptTest.test_kotlin_observation_cannot_run_before_original_app_initialization",
+        "status": "ok",
+        "raw_line": 48
+      },
+      {
+        "descriptor": "test_copy_observation_contract.DirectObservationReceiptTest.test_matching_but_inset_child_and_parent_do_not_prove_full_window_geometry",
+        "status": "ok",
+        "raw_line": 49
+      },
+      {
+        "descriptor": "test_copy_observation_contract.DirectObservationReceiptTest.test_missing_os_language_ui_is_blocked_never_pass_or_not_applicable",
+        "status": "ok",
+        "raw_line": 50
+      },
+      {
+        "descriptor": "test_copy_observation_contract.DirectObservationReceiptTest.test_native_observer_cannot_rebase_after_disposal_or_call_before_main",
+        "status": "ok",
+        "raw_line": 51
+      },
+      {
+        "descriptor": "test_copy_observation_contract.DirectObservationReceiptTest.test_os_gate_requires_an_accepted_public_settings_url_invocation",
+        "status": "ok",
+        "raw_line": 52
+      },
+      {
+        "descriptor": "test_copy_observation_contract.DirectObservationReceiptTest.test_os_owned_preference_requires_restoration_and_restart",
+        "status": "ok",
+        "raw_line": 53
+      },
+      {
+        "descriptor": "test_copy_observation_contract.DirectObservationReceiptTest.test_oversized_negative_nan_and_bool_geometry_is_rejected",
+        "status": "ok",
+        "raw_line": 54
+      },
+      {
+        "descriptor": "test_copy_observation_contract.DirectObservationReceiptTest.test_passive_windows_require_all_six_samples_and_original_order",
+        "status": "ok",
+        "raw_line": 55
+      },
+      {
+        "descriptor": "test_copy_observation_contract.DirectObservationReceiptTest.test_private_or_unknown_data_is_rejected",
+        "status": "ok",
+        "raw_line": 56
+      },
+      {
+        "descriptor": "test_copy_observation_contract.DirectObservationReceiptTest.test_process_recreation_is_not_same_process_continuity",
+        "status": "ok",
+        "raw_line": 57
+      },
+      {
+        "descriptor": "test_copy_observation_contract.DirectObservationReceiptTest.test_root_controller_count_and_locale_do_not_prove_session_retention",
+        "status": "ok",
+        "raw_line": 58
+      },
+      {
+        "descriptor": "test_copy_observation_contract.DirectObservationReceiptTest.test_rotations_must_cover_both_actual_directions_and_not_fake_orientation",
+        "status": "ok",
+        "raw_line": 59
+      },
+      {
+        "descriptor": "test_copy_observation_contract.DirectObservationReceiptTest.test_six_full_public_snapshot_rows_fit_the_existing_accessibility_budget",
+        "status": "ok",
+        "raw_line": 60
+      },
+      {
+        "descriptor": "test_copy_observation_contract.DirectObservationReceiptTest.test_system_cannot_accept_a_plausible_but_replaced_os_preference",
+        "status": "ok",
+        "raw_line": 61
+      },
+      {
+        "descriptor": "test_copy_observation_contract.DirectObservationReceiptTest.test_valid_synthetic_settings_direction_receipt_is_only_a_schema_check",
+        "status": "ok",
+        "raw_line": 62
+      },
+      {
+        "descriptor": "test_copy_observation_contract.DirectObservationReceiptTest.test_window_only_schema_is_not_accepted_in_settings_or_nonwindow_events",
+        "status": "ok",
+        "raw_line": 63
+      },
+      {
+        "descriptor": "test_copy_observation_contract.DirectObservationReceiptTest.test_zero_safe_areas_cannot_false_green_even_when_all_three_match",
+        "status": "ok",
+        "raw_line": 64
+      },
+      {
+        "descriptor": "test_harness_contract.CopiedPhaseContractTest.test_failed_build_with_stale_output_stops_and_never_normalizes",
+        "status": "ok",
+        "raw_line": 65
+      },
+      {
+        "descriptor": "test_harness_contract.CopiedPhaseContractTest.test_failed_directory_change_never_builds_or_normalizes",
+        "status": "ok",
+        "raw_line": 66
+      },
+      {
+        "descriptor": "test_harness_contract.CopiedPhaseContractTest.test_failed_stop_cannot_normalize_or_look_green",
+        "status": "ok",
+        "raw_line": 67
+      },
+      {
+        "descriptor": "test_harness_contract.CopiedPhaseContractTest.test_normalization_failure_propagates_after_immediate_stop",
+        "status": "ok",
+        "raw_line": 68
+      },
+      {
+        "descriptor": "test_harness_contract.CopiedPhaseContractTest.test_successful_phase_stops_before_normalizing",
+        "status": "ok",
+        "raw_line": 69
+      },
+      {
+        "descriptor": "test_harness_contract.ReceiptContractTest.test_changed_boot_identity_cannot_impersonate_restart",
+        "status": "ok",
+        "raw_line": 70
+      },
+      {
+        "descriptor": "test_harness_contract.ReceiptContractTest.test_complete_synthetic_schema_is_accepted_not_runtime_evidence",
+        "status": "ok",
+        "raw_line": 71
+      },
+      {
+        "descriptor": "test_harness_contract.ReceiptContractTest.test_exact_five_test_receipt_is_required_not_just_the_app_matrix",
+        "status": "ok",
+        "raw_line": 72
+      },
+      {
+        "descriptor": "test_harness_contract.ReceiptContractTest.test_missing_no_disposal_precondition_is_rejected",
+        "status": "ok",
+        "raw_line": 73
+      },
+      {
+        "descriptor": "test_harness_contract.ReceiptContractTest.test_missing_system_restoration_or_wrong_native_direction_fails",
+        "status": "ok",
+        "raw_line": 74
+      },
+      {
+        "descriptor": "test_harness_contract.ReceiptContractTest.test_production_container_test_names_signatures_and_actual_project_wiring_are_bound",
+        "status": "ok",
+        "raw_line": 75
+      },
+      {
+        "descriptor": "test_harness_contract.ReceiptContractTest.test_test_summary_with_skip_cannot_pass",
+        "status": "ok",
+        "raw_line": 76
+      },
+      {
+        "descriptor": "test_harness_contract.ReceiptContractTest.test_unknown_data_is_not_exported_as_trusted_observation",
+        "status": "ok",
+        "raw_line": 77
+      },
+      {
+        "descriptor": "test_harness_contract.RuntimeStatusContractTest.test_executed_failed_xctest_summary_cannot_remain_not_run",
+        "status": "ok",
+        "raw_line": 78
+      },
+      {
+        "descriptor": "test_harness_contract.RuntimeStatusContractTest.test_later_evidence_failure_cannot_leave_pass",
+        "status": "ok",
+        "raw_line": 79
+      },
+      {
+        "descriptor": "test_harness_contract.RuntimeStatusContractTest.test_preflight_failure_is_still_not_run",
+        "status": "ok",
+        "raw_line": 80
+      },
+      {
+        "descriptor": "test_harness_contract.RuntimeStatusContractTest.test_running_is_persisted_before_the_guarded_xcode_call",
+        "status": "ok",
+        "raw_line": 81
+      },
+      {
+        "descriptor": "test_harness_contract.SelectorSourceContractTest.test_diagnostics_are_exact_whitelisted_bounded_and_never_a_fallback_tap",
+        "status": "ok",
+        "raw_line": 82
+      },
+      {
+        "descriptor": "test_harness_contract.SelectorSourceContractTest.test_exact_tab_selector_matches_reviewed_pinned_merge_and_actual_resources",
+        "status": "ok",
+        "raw_line": 83
+      },
+      {
+        "descriptor": "test_harness_contract.SelectorSourceContractTest.test_games_return_uses_original_resources_and_the_same_actual_tab_bar",
+        "status": "ok",
+        "raw_line": 84
+      },
+      {
+        "descriptor": "test_secondary_fifo.SecondaryFifoSafetyTest.test_attested_pair_removed_only_after_workers_stop",
+        "status": "ok",
+        "raw_line": 85
+      },
+      {
+        "descriptor": "test_secondary_fifo.SecondaryFifoSafetyTest.test_cached_pair_still_rechecks_changed_inode",
+        "status": "ok",
+        "raw_line": 86
+      },
+      {
+        "descriptor": "test_secondary_fifo.SecondaryFifoSafetyTest.test_cached_pair_still_rechecks_inode_uid_and_symlink",
+        "status": "ok",
+        "raw_line": 87
+      },
+      {
+        "descriptor": "test_secondary_fifo.SecondaryFifoSafetyTest.test_changed_child_or_parent_start_cannot_use_attested_pair",
+        "status": "ok",
+        "raw_line": 88
+      },
+      {
+        "descriptor": "test_secondary_fifo.SecondaryFifoSafetyTest.test_current_new_pair_cannot_hide_behind_members_old_argv",
+        "status": "ok",
+        "raw_line": 89
+      },
+      {
+        "descriptor": "test_secondary_fifo.SecondaryFifoSafetyTest.test_file_holder_prevents_any_unlink",
+        "status": "ok",
+        "raw_line": 90
+      },
+      {
+        "descriptor": "test_secondary_fifo.SecondaryFifoSafetyTest.test_fully_attested_same_identity_and_pair_avoids_redundant_uid_query",
+        "status": "ok",
+        "raw_line": 91
+      },
+      {
+        "descriptor": "test_secondary_fifo.SecondaryFifoSafetyTest.test_holder_query_error_never_becomes_empty_holder_success",
+        "status": "ok",
+        "raw_line": 92
+      },
+      {
+        "descriptor": "test_secondary_fifo.SecondaryFifoSafetyTest.test_initial_uid_query_failure_never_attests_or_deletes_paths",
+        "status": "ok",
+        "raw_line": 93
+      },
+      {
+        "descriptor": "test_secondary_fifo.SecondaryFifoSafetyTest.test_inode_uid_mismatch_is_not_owned",
+        "status": "ok",
+        "raw_line": 94
+      },
+      {
+        "descriptor": "test_secondary_fifo.SecondaryFifoSafetyTest.test_missing_or_duplicate_flags_rejected",
+        "status": "ok",
+        "raw_line": 95
+      },
+      {
+        "descriptor": "test_secondary_fifo.SecondaryFifoSafetyTest.test_missing_unattested_then_late_created_fifo_blocks_cleanup",
+        "status": "ok",
+        "raw_line": 96
+      },
+      {
+        "descriptor": "test_secondary_fifo.SecondaryFifoSafetyTest.test_new_pair_argv_change_during_uid_attestation_is_rejected",
+        "status": "ok",
+        "raw_line": 97
+      },
+      {
+        "descriptor": "test_secondary_fifo.SecondaryFifoSafetyTest.test_partial_record_or_pending_claim_cannot_use_cached_uid",
+        "status": "ok",
+        "raw_line": 98
+      },
+      {
+        "descriptor": "test_secondary_fifo.SecondaryFifoSafetyTest.test_pid_reuse_during_cleanup_preserves_files",
+        "status": "ok",
+        "raw_line": 99
+      },
+      {
+        "descriptor": "test_secondary_fifo.SecondaryFifoSafetyTest.test_pid_reuse_during_observation_rejected",
+        "status": "ok",
+        "raw_line": 100
+      },
+      {
+        "descriptor": "test_secondary_fifo.SecondaryFifoSafetyTest.test_preexisting_parent_birthtime_rejects_new_fifo",
+        "status": "ok",
+        "raw_line": 101
+      },
+      {
+        "descriptor": "test_secondary_fifo.SecondaryFifoSafetyTest.test_process_uid_mismatch_is_not_owned",
+        "status": "ok",
+        "raw_line": 102
+      },
+      {
+        "descriptor": "test_secondary_fifo.SecondaryFifoSafetyTest.test_replaced_inode_rejected",
+        "status": "ok",
+        "raw_line": 103
+      },
+      {
+        "descriptor": "test_secondary_fifo.SecondaryFifoSafetyTest.test_stale_preexisting_fifo_is_not_owned",
+        "status": "ok",
+        "raw_line": 104
+      },
+      {
+        "descriptor": "test_secondary_fifo.SecondaryFifoSafetyTest.test_symlink_fifo_not_followed_or_deleted",
+        "status": "ok",
+        "raw_line": 105
+      },
+      {
+        "descriptor": "test_secondary_fifo.SecondaryFifoSafetyTest.test_symlink_parent_not_followed",
+        "status": "ok",
+        "raw_line": 106
+      },
+      {
+        "descriptor": "test_secondary_fifo.SecondaryFifoSafetyTest.test_timeout_or_cancellation_cleanup_uses_same_attestation",
+        "status": "ok",
+        "raw_line": 107
+      },
+      {
+        "descriptor": "test_secondary_fifo.SecondaryFifoSafetyTest.test_unknown_directory_contents_preserve_all",
+        "status": "ok",
+        "raw_line": 108
+      },
+      {
+        "descriptor": "test_secondary_fifo.SecondaryFifoSafetyTest.test_unknown_external_argument_is_rejected",
+        "status": "ok",
+        "raw_line": 109
+      },
+      {
+        "descriptor": "test_secondary_fifo.SecondaryFifoSafetyTest.test_unknown_root_contents_preserve_all",
+        "status": "ok",
+        "raw_line": 110
+      },
+      {
+        "descriptor": "test_secondary_fifo.SecondaryFifoSafetyTest.test_unowned_child_cannot_attest_from_name_alone",
+        "status": "ok",
+        "raw_line": 111
+      },
+      {
+        "descriptor": "test_v8_contract.V8ReceiptTest.test_arabic_picker_result_cannot_masquerade_as_exposed_preferred_list",
+        "status": "ok",
+        "raw_line": 112
+      },
+      {
+        "descriptor": "test_v8_contract.V8ReceiptTest.test_complete_synthetic_receipts_only_exercise_parsers",
+        "status": "ok",
+        "raw_line": 113
+      },
+      {
+        "descriptor": "test_v8_contract.V8ReceiptTest.test_os_precondition_never_passes_from_missing_unknown_or_blocked_step",
+        "status": "ok",
+        "raw_line": 114
+      },
+      {
+        "descriptor": "test_v8_contract.V8ReceiptTest.test_os_prerequisite_requires_owned_profile_and_english_primary_not_arabic_primary",
+        "status": "ok",
+        "raw_line": 115
+      },
+      {
+        "descriptor": "test_v8_contract.V8ReceiptTest.test_os_step_activation_cannot_repeat_or_disappear",
+        "status": "ok",
+        "raw_line": 116
+      },
+      {
+        "descriptor": "test_v8_contract.V8ReceiptTest.test_public_diagnostic_bounds_are_strict",
+        "status": "ok",
+        "raw_line": 117
+      },
+      {
+        "descriptor": "test_v8_contract.V8ReceiptTest.test_start_activation_is_not_repeatable_or_an_incomplete_window",
+        "status": "ok",
+        "raw_line": 118
+      },
+      {
+        "descriptor": "test_v8_contract.V8ReceiptTest.test_start_disabled_hidden_occluded_and_nonfinite_fail",
+        "status": "ok",
+        "raw_line": 119
+      },
+      {
+        "descriptor": "test_v8_contract.V8ReceiptTest.test_start_last_window_and_dynamic_coordinate_drift_fail",
+        "status": "ok",
+        "raw_line": 120
+      },
+      {
+        "descriptor": "test_v8_contract.V8ReceiptTest.test_start_requires_executed_geometry_contract",
+        "status": "ok",
+        "raw_line": 121
+      },
+      {
+        "descriptor": "test_v8_contract.V8ReceiptTest.test_start_setup_and_canonical_successor_are_both_mandatory",
+        "status": "ok",
+        "raw_line": 122
+      },
+      {
+        "descriptor": "test_v8_contract.V8SourceControlTest.test_complete_original_matrix_changes_only_the_authorized_calls_and_wait_diagnostics",
+        "status": "ok",
+        "raw_line": 123
+      },
+      {
+        "descriptor": "test_v8_contract.V8SourceControlTest.test_each_v7_reference_changes_identity_without_changing_any_file",
+        "status": "ok",
+        "raw_line": 124
+      },
+      {
+        "descriptor": "test_v8_contract.V8SourceControlTest.test_every_consumed_v7_reference_is_bound_by_full_path_and_bytes",
+        "status": "ok",
+        "raw_line": 125
+      },
+      {
+        "descriptor": "test_v8_contract.V8SourceControlTest.test_every_observation_predicate_is_named_without_logging_preferences_or_private_state",
+        "status": "ok",
+        "raw_line": 126
+      },
+      {
+        "descriptor": "test_v8_contract.V8SourceControlTest.test_new_controls_are_bound_and_appended_to_only_the_copied_xctest",
+        "status": "ok",
+        "raw_line": 127
+      },
+      {
+        "descriptor": "test_v8_contract.V8SourceControlTest.test_original_app_observers_catalog_cleanup_and_oracle_controls_remain_byte_identical",
+        "status": "ok",
+        "raw_line": 128
+      },
+      {
+        "descriptor": "test_v8_contract.V8SourceControlTest.test_os_prerequisite_is_supported_ui_only_fresh_owned_and_after_both_complete_games",
+        "status": "ok",
+        "raw_line": 129
+      },
+      {
+        "descriptor": "test_v8_contract.V8SourceControlTest.test_start_keeps_one_activation_outside_readiness_and_proves_canonical_successor",
+        "status": "ok",
+        "raw_line": 130
+      }
+    ]
+  },
+  "source_and_control_binding": {
+    "source_before_after_equal": true,
+    "source_manifest_sha256": "9ac2be536979f2216b39c10a6d148125a12380987d4efd483bbcbaeb1733318e",
+    "diff_sha256": "148fb4583d8fa8341b3cbc48a7fc0bc7564bf4df5c27e9d80e32c6bfdc57b784",
+    "669_source_inputs_rehashed_after": true,
+    "all54control_inputs_rehashed_after": true,
+    "all_match_independent_precycle_approval": true,
+    "binding_limit": "Genericrootcyclereceiptbindsonlygenericrunnerdirectly. Independentbeforeapprovalandpostcycleall54hashesextendthebinding;nochangefound. No executedSwiftUIclaimfromPython."
+  },
+  "cleanup": {
+    "stop_exit_code": 0,
+    "stopped_at": "2026-09-06T18:47:25.957486+00:00",
+    "stop_log": "No Gradle daemons are running.",
+    "cycle_finished_to_stop_complete_seconds": 0.34873,
+    "remaining_outputs": [],
+    "remaining_owned_workers": [],
+    "retained_outputs": [],
+    "scratch_independently_absent": true,
+    "cleanup_errors": [],
+    "reviewer_metadata_check": "NoGradle8.13daemonorV8unittestworkerfoundwithread-onlypsquery;unrelatedprocessesnotstopped."
+  },
+  "future_result_requirements": [
+    "Fullactual5XTestsummaryandexactsources,bothactualcatalogroutes,actualMafiaStartcanonicalsuccessor+Startabsence.",
+    "Settingsfourboot/twoexplicitrestartsandbothgamescanonicalcontroller/flow/value/no-disposal/lifecycle/direction/ENARgeometrypassivewindowsmustallremainmandatory.",
+    "ActualpublicOSprerequisiteandoriginalper-appSettingsAR-System-restartproofseparate;unsupported/missingUIremainBLOCKED,noinferredOSsuccess.",
+    "CorrelateprintedgeometrycontractwithactualXCTestassertionresults;rawplannedcoordinateisnotactualevent/callbackreceipt.",
+    "Bind615copiedinputs(613original+2observeradditions),reconstruct13transforms,current669source+54controlsafter;collectstructuredresultsbeforemandatoryexactcleanup.",
+    "ImmediatelystopGradleafterXcode,safelyshutdown/deleteonlynewownedprofile,attestedFIFOs/PIDs,startidentities,temp/copy/DerivedData;recordfailuresratherthanwaive."
+  ],
+  "safety": "Reviewerlaunchednobuilds,tests,app/simulatororbackgroundworker;onlyread-onlysource/AST/hash/rawreceipts/processmetadataandthisnewcompactrecord."
+}

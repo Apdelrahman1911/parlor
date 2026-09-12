@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "kind": "ONE_FRESH_PAIRED_NATIVE_A29_B30_REQUEST",
+  "coordinator": "/root",
+  "created_at": "2026-09-09T13:56:27.340115+00:00",
+  "status": "PENDING_INDEPENDENT_ACTUAL_PREFLIGHT_BINDING_REVIEW",
+  "repository": "Apdelrahman1911/parlor",
+  "branch": "fix/local-readiness-2026-09-07",
+  "frozen_source_sha": "360fc797a85e1e494334fd8cc11b4e739981cea8",
+  "tree": "8bfe56a21074ba51a4b668bad0728e42007a7593",
+  "inputs": {
+    "verification_scope": "native-evidence",
+    "frozen_source_sha": "360fc797a85e1e494334fd8cc11b4e739981cea8",
+    "preflight_run_id": "34359236354",
+    "preflight_run_attempt": "1",
+    "preflight_artifact_id": "10107169576",
+    "preflight_artifact_sha256": "15cd7dc5aaba0b594d9a21ab6e116d5e97d957ec461c4406317d5f9bb9409cfa",
+    "approved_l08_control_sha256": "04b915fc1390e909d7075ee46deede1a1eadb1e8faa24c0e5a8753b88ac71acf",
+    "approved_normal_control_sha256": "fdf7e4a73ca22cb43f3490d545d787d51dda9b3048d10fc1c31e566701f88ac0"
+  },
+  "command": [
+    "gh",
+    "workflow",
+    "run",
+    "production-verification.yml",
+    "--repo",
+    "Apdelrahman1911/parlor",
+    "--ref",
+    "fix/local-readiness-2026-09-07",
+    "-f",
+    "verification_scope=native-evidence",
+    "-f",
+    "frozen_source_sha=360fc797a85e1e494334fd8cc11b4e739981cea8",
+    "-f",
+    "preflight_run_id=34359236354",
+    "-f",
+    "preflight_run_attempt=1",
+    "-f",
+    "preflight_artifact_id=10107169576",
+    "-f",
+    "preflight_artifact_sha256=15cd7dc5aaba0b594d9a21ab6e116d5e97d957ec461c4406317d5f9bb9409cfa",
+    "-f",
+    "approved_l08_control_sha256=04b915fc1390e909d7075ee46deede1a1eadb1e8faa24c0e5a8753b88ac71acf",
+    "-f",
+    "approved_normal_control_sha256=fdf7e4a73ca22cb43f3490d545d787d51dda9b3048d10fc1c31e566701f88ac0"
+  ],
+  "maximum_dispatches": 1,
+  "cycles": {
+    "l08": "ios-readiness-29",
+    "normal": "ios-readiness-30"
+  },
+  "preflight_collection": {
+    "path": "remediation-runs/2026-09-08-continuation/actions/34359236354/download-receipt.json",
+    "sha256": "1c80bfb35da6d38fe34e81acbe2245eb585b4b68232ede44c8d1967f8a02473e"
+  },
+  "required_review": "/root/native_ci",
+  "scope": "Actual A29/B30 not run yet. One necessary fresh qualified Apple run for reviewed Ready reentrancy and exact artifact-text provenance correction. Preflight and Linux controls are not app runtime. Strict protection remains unresolved, not waived. C05/fullD pending.",
+  "immediate_conditions": [
+    "Same local and direct remote360fc797 source",
+    "No active same-ref verification run",
+    "Exact independently approved preflight IDs/digests/control hashes",
+    "Canonical cleanup and job-clock admission before B"
+  ],
+  "safety": "No Store/private signing/publication/physical device/merge/force push. Ad-hoc dedicated simulators and existing strict owned cleanup only."
+}

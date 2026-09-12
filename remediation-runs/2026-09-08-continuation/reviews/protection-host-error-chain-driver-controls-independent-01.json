@@ -1,0 +1,100 @@
+{
+  "schema": 1,
+  "reviewer": "/root/probe_identity",
+  "status": "APPROVED_SCHEMA2_ERROR_CHAIN_DRIVER_AND_ACTUAL_FOCUSED_CONTROLS_NOT_NATIVE_RUNTIME",
+  "source_base": "22ea6bebb95317e148d89b03c40cbb7efc9d36a4",
+  "scope": "Bounded H03 run_host_probe.py/test_host_probe.py/README.md delta and final root-produced focused controls; native chain implementation has its separate source approval.",
+  "pins": {
+    "remediation-runs/2026-09-08-continuation/protection-host-image-01/HostSetterProbe.m.in": "99d7f72db7fbc57d976563e97b1bd9514c9a637e801ae84847cc34c890fc7bc9",
+    "remediation-runs/2026-09-08-continuation/protection-host-image-01/README.md": "87adcf5ed181f3cf1c5690c2bf9a1f522173d287944be9bcd1942ffa858548ac",
+    "remediation-runs/2026-09-08-continuation/protection-host-image-01/run_host_probe.py": "24a650b5ff9cbc98aba4f583eb1637065aa45749968e72dc31408e0661cee3b8",
+    "remediation-runs/2026-09-08-continuation/protection-host-image-01/test_host_probe.py": "aa5892a4d2a54db68c1dddece89984643a44dfd60c4c8152b82eb6cb9a7814ae"
+  },
+  "controls_closure": {
+    "count": 30,
+    "sorted_unique": true,
+    "control_sha256": "6537d41f499b4635df3f1cfc80be3d84d07b619fa92790bb83ae0973ee9419e8",
+    "added_paths": [],
+    "removed_paths": [],
+    "changed_paths": [
+      "remediation-runs/2026-09-08-continuation/protection-host-image-01/HostSetterProbe.m.in",
+      "remediation-runs/2026-09-08-continuation/protection-host-image-01/README.md",
+      "remediation-runs/2026-09-08-continuation/protection-host-image-01/run_host_probe.py",
+      "remediation-runs/2026-09-08-continuation/protection-host-image-01/test_host_probe.py"
+    ],
+    "remaining_26_controls_byte_identical_to_base": true,
+    "method": "Read-only static AST/literal extraction and byte hashing, no project imports."
+  },
+  "driver_contract": {
+    "schema": "Only integer schema2 is accepted by the new setter validator; H02 schema1 is not silently upgraded or replayed.",
+    "shape": "error_chain has exactly nodes and termination. nodes is a list of at most four records including the outer error. Each record has only present/code/domain, typed Boolean/integer values and the existing closed cocoa/posix/other categories; every retained node must be present.",
+    "root": "Outer native_error is validated first. An absent outer error requires zero nodes and no-error; a present outer error requires nonempty nodes, exact node0 equality with the outer record and a termination other than no-error.",
+    "termination": "Only no-error, no-underlying, non-error, cycle and depth-limit are accepted. depth-limit requires exactly four nodes. The parser does not invent pointers or infer object identity from equal domain/code pairs.",
+    "preservation": "The validated operation, including error_chain, is passed through unchanged into the retained summary. Raw output preservation remains before process/report validation. No descriptions, userInfo dictionaries, arbitrary domain strings or paths are admitted in chain records.",
+    "semantics": "BOOL, outer NSError, chain and observed before/after class are observations; errors and class non-change are not rewritten as protection success. Existing runtime_implementation_causality_proven remains false.",
+    "unchanged": "All22 other driver functions are byte-identical to the H02 base. Existing original image capture/validator, exact five-field context, full fixture/input/image identity, source admission, command order, raw preservation, retirement and nonpromotion controls remain unchanged.",
+    "commands_and_budgets": "No new command, sample, retry, setter invocation or workflow input. Existing37-run/20-cleanup command maxima,96 cap,300+90 run and180+65 cleanup budgets,30s direct invocation and25s native self-alarm remain unchanged."
+  },
+  "native_source_approval": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/protection-host-error-chain-native-source-independent-01.json",
+    "sha256": "5d448aaa77548fc6bca1a4f5cbcc1ef6818758921bfa1e047437eec672eb364b",
+    "native_sha256": "99d7f72db7fbc57d976563e97b1bd9514c9a637e801ae84847cc34c890fc7bc9",
+    "status": "APPROVED_NATIVE_SOURCE_AFTER_PRESERVATION_CORRECTION",
+    "closed_finding": "Separate native reviewer found that evaluating the chain in the outer-result dictionary literal could lose BOOL/native_error on traversal exception. Root corrected native-only sequencing: retain the original returned/native_error first, then assign error_chain. Final approved pin is99d7f72d, not initial2e55538c.",
+    "scope": "Source-only approval; no native compilation, actual underlying error or runtime success attested."
+  },
+  "regression": {
+    "name": "HostProbeTests.test_host_origin_error_chain_is_bounded_redacted_and_preserves_reported_causes",
+    "positive_cases": 4,
+    "negative_cases": 7,
+    "positive": "Reported POSIX cause retained exactly; cycle, non-error and four-node depth-limit accepted without causality promotion. Existing BOOL/error combinations also exercise no-error.",
+    "negative": "Reject over-four nodes, short depth-limit, wrong outer node, absent chain for present error, extra userInfo, node description/path and absent-error node.",
+    "limits": "Synthetic parser/control evidence only, not a native NSError traversal execution."
+  },
+  "actual_final_controls": {
+    "owner": "/root",
+    "receipt": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-protection-error-chain-controls-02/receipt.json",
+    "receipt_sha256": "60b5665b15e7dacbd93422478fe1ae5e0c58f5105245650f984173eb6c26dee9",
+    "tests_log_sha256": "547726f867d7140d2bb054e45b77c7af2d21bee56c87692fd41243970a724bb4",
+    "stop_log_sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+    "command": [
+      "python3",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "remediation-runs/2026-09-08-continuation/protection-host-image-01",
+      "-p",
+      "test_host_probe.py",
+      "-v"
+    ],
+    "tests": 14,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "test_runner_seconds": 0.264,
+    "process_exit_code": 0,
+    "direct_child_reaped": true,
+    "all_four_pins_before_after_match_reviewed_final_pins": true,
+    "recorded_hygiene": {
+      "immediate_gradle_stop_exit": 0,
+      "stop_direct_child_reaped": true,
+      "stop_output": "No Gradle daemons are running.",
+      "scratch_absent": true,
+      "listed_live_roots": 20,
+      "listed_live_outputs_remaining": [],
+      "errors": []
+    },
+    "provenance": "Existing final controls02 receipt and both log hashes verified. Earlier controls01 was at the pre-correction native pin; this approval binds only final14 at the corrected native pin and does not count a second14 as additional unique coverage.",
+    "limit": "No reviewer test execution or live cleanup audit."
+  },
+  "findings": [],
+  "limits": [
+    "Native schema2 compilation and actual host-origin error-chain observation remain pending CI. No underlying cause is inferred from the synthetic POSIX test.",
+    "H02 at22ea6beb remains schema1 with only its actual outer cocoa256 error. No historical report, old strict result or source is relabeled.",
+    "A reported underlying domain/code is not proof of a particular syscall, Foundation branch, universal platform behavior, physical protection or product repair.",
+    "No simulator, application, full or Store qualification follows. Root/path guards remain bracketing observations rather than atomic locks.",
+    "Reviewer used read-only source/AST/hash/Git and retained-evidence inspection and wrote only this requested approval receipt. No project imports, tests/reruns, builds, network, dispatch, source edits or cleanup."
+  ]
+}

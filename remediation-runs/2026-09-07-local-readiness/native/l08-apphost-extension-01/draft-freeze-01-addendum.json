@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-09-07T17:39:25.744781+00:00",
+  "author": "/root/native_fix_review",
+  "status": "AUTHORING_RECORD_CLARIFICATION_NOT_EXECUTION",
+  "freeze_file": "draft-freeze-01.json",
+  "freeze_sha256": "0ee14204318a2a7fdff22ad57f29d73b91f9800758fcb1f5074ef2aba1ad4e6c",
+  "clarification": "The Python AST gate limitation in freeze-01 says imports/tests/native compilation not executed too broadly. The authoring generator and manifest script imported l08_copy (which imports pathlib). Test modules, artifact/probe parser imports, test execution, Kotlin/Swift compilation, and native runtime remain unexecuted. AST parsing is not full import resolution.",
+  "changes_to_frozen_draft_sources": false,
+  "changes_to_promotion_inputs": false,
+  "new_tests_executed": 0,
+  "cleanup_outputs_or_workers_created": false
+}

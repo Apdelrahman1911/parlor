@@ -1,0 +1,185 @@
+--- before/NativeReadinessLaunch.swift.in
++++ after/NativeReadinessLaunch.swift.in
+@@ -1,6 +1,7 @@
+ // Copy-only app-host entry. No direct SecItem query and no second DI graph.
+ import MachO
+ import CryptoKit
++import Darwin
+ 
+ private let nativeReadinessSigningMode = __PARLOR_NATIVE_SIGNING_MODE__
+ private let nativeReadinessTaskRoot = __PARLOR_NATIVE_TASK_ROOT__
+@@ -141,8 +142,49 @@
+ }
+ // END BOUNDED FAILURE ENCODER.
+ 
++// BEGIN OWNED PATH HELPERS (also executed with Foundation in host controls).
+ private func nativeReadinessImageError(_ code: Int) -> NSError {
+     NSError(domain: "NativeReadinessOwnedImage", code: code)
++}
++
++private func nativeReadinessCanonicalPath(_ path: String) throws -> String? {
++    guard path.hasPrefix("/"), path.utf8.count <= 4096,
++          !path.unicodeScalars.contains(where: { $0.value < 32 || $0.value == 127 || $0.value == 92 }) else {
++        throw nativeReadinessImageError(20)
++    }
++    // Foundation can strip /private from an existing Darwin path. Python's
++    // literal owned roots use POSIX realpath, so use that same representation.
++    // A dyld shared-cache image need not exist as a separate filesystem file.
++    var buffer = [CChar](repeating: 0, count: Int(PATH_MAX))
++    return try path.withCString { input in
++        try buffer.withUnsafeMutableBufferPointer { output in
++            guard let address = output.baseAddress, realpath(input, address) != nil else { return nil }
++            let length = strnlen(address, output.count)
++            guard length > 0, length < output.count, length <= 4096,
++                  let canonical = String(bytes: UnsafeRawBufferPointer(start: address, count: length), encoding: .utf8),
++                  canonical.hasPrefix("/"),
++                  !canonical.unicodeScalars.contains(where: { $0.value < 32 || $0.value == 127 || $0.value == 92 }) else {
++                throw nativeReadinessImageError(22)
++            }
++            return canonical
++        }
++    }
++}
++
++private func nativeReadinessCanonicalOwnedRoot(_ literal: String) throws -> String {
++    guard let canonical = try nativeReadinessCanonicalPath(literal), canonical == literal else {
++        // Do not broaden ownership by following a substituted task/product root.
++        throw nativeReadinessImageError(23)
++    }
++    return canonical
++}
++
++private func nativeReadinessCanonicalDyldPath(_ raw: String) throws -> String? {
++    let canonical = try nativeReadinessCanonicalPath(raw)
++    if canonical == nil && URL(fileURLWithPath: raw).lastPathComponent == "ComposeApp" {
++        throw nativeReadinessImageError(21)
++    }
++    return canonical
+ }
+ 
+ private func nativeReadinessRelative(_ path: String, root: String) throws -> String? {
+@@ -156,6 +198,38 @@
+     }
+     return relative
+ }
++
++private func nativeReadinessOwnedFrameworkRelative(_ path: String) -> Bool {
++    let parts = path.split(separator: "/", omittingEmptySubsequences: false).map(String.init)
++    guard parts.count == 5, parts[3].lowercased() == "composeapp.framework", parts[4] == "ComposeApp" else {
++        return false
++    }
++    if Array(parts.prefix(3)) == ["bin", "iosSimulatorArm64", "debugFramework"] { return true }
++    return parts[0] == "xcode-frameworks" && parts[1] == "Debug" &&
++        parts[2].range(of: "^iphonesimulator[0-9]+(?:\\.[0-9]+)*$", options: .regularExpression) != nil
++}
++
++private func nativeReadinessInspectFramework(
++    _ canonicalPath: String, appRoot: String, productRoot: String,
++    fingerprint: (URL) throws -> (bytes: Int, sha256: String)
++) throws -> (origin: String, path: String, bytes: Int, sha256: String) {
++    let origin: String
++    let path: String
++    if let relative = try nativeReadinessRelative(canonicalPath, root: appRoot) {
++        guard relative == "Frameworks/ComposeApp.framework/ComposeApp" else { throw nativeReadinessImageError(12) }
++        origin = "installed-app-bundle"; path = relative
++    } else if let relative = try nativeReadinessRelative(canonicalPath, root: productRoot) {
++        guard nativeReadinessOwnedFrameworkRelative(relative) else { throw nativeReadinessImageError(24) }
++        origin = "owned-copy-build"; path = relative
++    } else {
++        // Do not retain or read an unknown/unowned image, or substitute the
++        // embedded image for a different library that actually executed.
++        throw nativeReadinessImageError(13)
++    }
++    let observed = try fingerprint(URL(fileURLWithPath: canonicalPath))
++    return (origin, path, observed.bytes, observed.sha256)
++}
++// END OWNED PATH HELPERS.
+ 
+ private func nativeReadinessFrameworkUUID(_ index: UInt32) throws -> String {
+     guard let header = _dyld_get_image_header(index), header.pointee.magic == MH_MAGIC_64 else {
+@@ -186,7 +260,12 @@
+ }
+ 
+ private func nativeReadinessLoadedImages() throws -> (app: [String], framework: [String: Any]) {
+-    let appRoot = Bundle.main.bundleURL.resolvingSymlinksInPath().path
++    guard let appRoot = try nativeReadinessCanonicalPath(Bundle.main.bundleURL.path) else {
++        throw nativeReadinessImageError(21)
++    }
++    let taskRoot = try nativeReadinessCanonicalOwnedRoot(nativeReadinessTaskRoot)
++    let productRoot = try nativeReadinessCanonicalOwnedRoot(nativeReadinessProductRoot)
++    guard productRoot == taskRoot + "/copy/composeApp/build" else { throw nativeReadinessImageError(23) }
+     let count = _dyld_image_count()
+     guard count > 0, count <= 4096 else { throw nativeReadinessImageError(8) }
+     var result = [String]()
+@@ -195,8 +274,9 @@
+         guard let pointer = _dyld_get_image_name(index) else { continue }
+         let raw = String(cString: pointer)
+         guard raw.utf8.count <= 4096 else { throw nativeReadinessImageError(9) }
+-        let url = URL(fileURLWithPath: raw).resolvingSymlinksInPath()
+-        let appRelative = try nativeReadinessRelative(url.path, root: appRoot)
++        guard let canonicalPath = try nativeReadinessCanonicalDyldPath(raw) else { continue }
++        let url = URL(fileURLWithPath: canonicalPath)
++        let appRelative = try nativeReadinessRelative(canonicalPath, root: appRoot)
+         if let appRelative {
+             guard result.count < 128 else { throw nativeReadinessImageError(10) }
+             result.append(appRelative)
+@@ -205,21 +285,10 @@
+         guard framework == nil, url.deletingLastPathComponent().lastPathComponent.lowercased() == "composeapp.framework" else {
+             throw nativeReadinessImageError(11)
+         }
+-        let origin: String
+-        let path: String
+-        if let appRelative {
+-            guard appRelative == "Frameworks/ComposeApp.framework/ComposeApp" else { throw nativeReadinessImageError(12) }
+-            origin = "installed-app-bundle"; path = appRelative
+-        } else if let owned = try nativeReadinessRelative(url.path, root: nativeReadinessProductRoot) {
+-            origin = "owned-copy-build"; path = owned
+-        } else {
+-            // Do not retain unknown/unowned paths and do not substitute the
+-            // embedded image for a different library that actually executed.
+-            throw nativeReadinessImageError(13)
+-        }
+-        let fingerprint = try nativeReadinessFrameworkFingerprint(url)
+-        framework = ["origin": origin, "path": path, "image_uuid": try nativeReadinessFrameworkUUID(index),
+-                     "file_bytes": fingerprint.bytes, "file_sha256": fingerprint.sha256]
++        let observed = try nativeReadinessInspectFramework(canonicalPath, appRoot: appRoot, productRoot: productRoot,
++                                                          fingerprint: nativeReadinessFrameworkFingerprint)
++        framework = ["origin": observed.origin, "path": observed.path, "image_uuid": try nativeReadinessFrameworkUUID(index),
++                     "file_bytes": observed.bytes, "file_sha256": observed.sha256]
+     }
+     guard let executable = Bundle.main.executableURL?.lastPathComponent, result.contains(executable),
+           Set(result).count == result.count, let framework else { throw nativeReadinessImageError(14) }
+@@ -242,10 +311,14 @@
+     return (bytes, digest.finalize().map { String(format: "%02x", $0) }.joined())
+ }
+ 
+-private func nativeReadinessLoaderEnvironment() throws -> [String: Any] {
++// BEGIN OWNED LOADER ENVIRONMENT (also executed with Foundation in host controls).
++private func nativeReadinessLoaderEnvironment(
++    _ environment: [String: String] = ProcessInfo.processInfo.environment
++) throws -> [String: Any] {
++    let taskRoot = try nativeReadinessCanonicalOwnedRoot(nativeReadinessTaskRoot)
+     var result = [String: Any]()
+     for key in ["DYLD_FRAMEWORK_PATH", "DYLD_LIBRARY_PATH", "DYLD_FALLBACK_FRAMEWORK_PATH", "DYLD_FALLBACK_LIBRARY_PATH"] {
+-        let raw = ProcessInfo.processInfo.environment[key]
++        let raw = environment[key]
+         guard (raw?.utf8.count ?? 0) <= 16384 else { throw nativeReadinessImageError(15) }
+         let entries = raw?.split(separator: ":", omittingEmptySubsequences: false).map(String.init) ?? []
+         guard entries.count <= 32 else { throw nativeReadinessImageError(16) }
+@@ -253,9 +326,8 @@
+         var redacted = 0
+         for entry in entries {
+             guard entry.utf8.count <= 4096 else { throw nativeReadinessImageError(17) }
+-            if entry.hasPrefix("/") {
+-                let path = URL(fileURLWithPath: entry).resolvingSymlinksInPath().path
+-                if let relative = try nativeReadinessRelative(path, root: nativeReadinessTaskRoot) {
++            if entry.hasPrefix("/"), let path = try nativeReadinessCanonicalPath(entry) {
++                if let relative = try nativeReadinessRelative(path, root: taskRoot) {
+                     owned.append(relative); continue
+                 }
+             }
+@@ -265,3 +337,4 @@
+     }
+     return result
+ }
++// END OWNED LOADER ENVIRONMENT.

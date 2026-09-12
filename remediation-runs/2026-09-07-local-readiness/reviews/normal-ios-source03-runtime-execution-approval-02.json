@@ -1,0 +1,121 @@
+{
+  "schema_version": 1,
+  "review_id": "normal-ios-source03-runtime-execution-approval-02",
+  "reviewer": "/root/factory_review",
+  "reviewed_at": "2026-09-07T10:25:52.622737+00:00",
+  "disposition": "APPROVED FOR ONE ROOT-OWNED NORMAL-SOURCE DEBUG SIMULATOR EXECUTION AT THE EXACT BOUND SOURCE/CONTROL HASH; NO NATIVE RUNTIME PASS CLAIM",
+  "supplements": {
+    "report": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/normal-source-ios-launch-independent-review-01.json",
+    "sha256": "26bd25e4d69849559ea373251edcfb61e264cdf013eb94d14371c97b3714d4f8",
+    "scope": "Resolves previous pending pure74 and fresh source/control binding gates without rewriting earlier source-review or freezes."
+  },
+  "source": {
+    "commit": "f5ea8045bd903c255041b198f54aca67e893612f",
+    "tree": "b109c8ec6ec579b9197f449b36bda2c39105a652",
+    "branch": "fix/local-readiness-2026-09-07",
+    "tracked_status": "",
+    "diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "source_manifest_sha256": "09b1e6be496baccb185b1dbe227e12a46de20c7c408e2deccac882c6c2b26cb2"
+  },
+  "source_binding": {
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/ios-readiness-source-03.json",
+    "sha256": "e78b5f667b5f7842824f2a61e666bae2285f7b5b6cca36b97def8948c7529da7",
+    "schema_version": 3,
+    "source_entries": 727,
+    "copy_only_entries": 670,
+    "independently_recomputed_source_manifest": true,
+    "all_current_source_hashes_match": true,
+    "copy_manifest_equals_complete_allowed_inputs": true,
+    "protected_inputs_not_read": true
+  },
+  "controls": {
+    "manifest": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/normal-ios-source03-controls.json",
+    "manifest_file_sha256": "7f8b15cc866bfd63dbcb5de0734b51dbfc23bb3d9419837d68d0254a2c1045be",
+    "approved_control_sha256": "9a800e5fb95299ce00a8eaf39d0ea35c7f5f44bbc2b7bff5dbd30d87b30755e2",
+    "files": 52,
+    "base_files": 51,
+    "base_control_sha256": "75144fdb037df10d72c25f6666f61e291f1776b03ce30e673f8229ca2ace1cd6",
+    "matches_actual_current_files": true,
+    "delta_from_reviewed_freeze02": "Only new explicit source03 binding added to51 byte-identical base controls. No normal runner code changed."
+  },
+  "pure_execution": {
+    "status": "PASS",
+    "command": [
+      "/usr/bin/python3",
+      "-B",
+      "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_control_tests.py"
+    ],
+    "started_at": "2026-09-07T10:11:59.137498+00:00",
+    "finished_at": "2026-09-07T10:11:59.560095+00:00",
+    "exit_code": 0,
+    "actual_tests": 74,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "raw_unique_ok_descriptors": 74,
+    "source_AST_ids_equal_discovery_equal_all_executed_descriptors": true,
+    "before_after_control_manifests_equal_reviewed_freeze02": true,
+    "imported_helper_paths_bound": true,
+    "receipt": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/normal-ios-controls-01/receipt.json",
+    "receipt_sha256": "6ac419509a0b600a07ac6c08aa42135144f8b1867490b7a50ad034bfe43f07fe",
+    "raw_log": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/normal-ios-controls-01/gradle.log",
+    "raw_log_sha256": "04d0dcaff637dde070db5003fa9de1376f1fbd7884a1c1d4c9686cc4706a4777",
+    "scope": "Actual root execution of Python control/parser/filesystem tests only; no Swift/iOS/SDK or application execution."
+  },
+  "cycle_cleanup": {
+    "stop_exit_code": 0,
+    "stopped_at": "2026-09-07T10:11:59.820390+00:00",
+    "stop_log": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/normal-ios-controls-01/stop.log",
+    "stop_log_sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+    "stop_log_content": "No Gradle daemons are running.",
+    "completed_at": "2026-09-07T10:11:59.876431+00:00",
+    "remaining_outputs": [],
+    "remaining_workers": [],
+    "cleanup_errors": [],
+    "source_and_runner_unchanged": true,
+    "limitation": "Attests this completed pure cycle only. Parent has another current lane; reviewer does not stop or interfere with it."
+  },
+  "source_delta_since_review": {
+    "previous_commit": "0264b6bb6ae312b943d7ce8b8a026c5cd6a7e0c1",
+    "current_commit": "f5ea8045bd903c255041b198f54aca67e893612f",
+    "paths": [
+      "docs/review/INDEPENDENT_REVIEW_INVENTORY.csv",
+      "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitGameFlow.kt",
+      "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/PeerPausedCoverContrastTest.kt"
+    ],
+    "conclusion": "Previously independently reviewed paused-cover code/test bytes now committed unchanged, plus read mechanical inventory2-row delta. No unreviewed app behavior delta introduced to this launch approval.",
+    "production_sha256": "73f75eb87e2636e5e616c9bbade054fd0f44ed8bcd9ad158b930eba99fd8aa14",
+    "test_sha256": "681c049792b523c33d431b15650e3f6832d513314186525872cfe417a5ac7d9e"
+  },
+  "execution_conditions": [
+    "Use exclusive root Gradle/Xcode/native lane; do not launch normal runner while current instrumented iOS lane is active.",
+    "Pass existing source03 path and approved combined SHA9a800e5fb95299ce00a8eaf39d0ea35c7f5f44bbc2b7bff5dbd30d87b30755e2 explicitly. Preserve all previous cycles and approval files.",
+    "Eight selected XCTest cold-launch repetitions remain separate from ninth public-tool image observation. Unknown results or tool failures cannot be relabeled success.",
+    "Allow only reviewed Debug simulator disabled/adhoc signing. This is not Store-qualifiedXcode26.3, physical hardware, language/systemsetting, game/LAN or historical-crash diagnosis.",
+    "Stop isolated Gradle immediately and finalize exact owned device/workers/secondaryFIFO/output allocation even on failure; preserve source/global caches/private and unrelated task data.",
+    "Any source/control drift invalidates approval and requires a fresh reviewed freeze."
+  ],
+  "remaining_gates": [
+    {
+      "gate": "Eight unchanged-source XCTest observations",
+      "status": "BLOCKED",
+      "reason": "Not yet executed in evidence reviewed here."
+    },
+    {
+      "gate": "Separate ninth-launch mapped-image provenance",
+      "status": "BLOCKED",
+      "reason": "Not yet executed; exact public tool format/permissions and runtime image selection remain to be observed."
+    }
+  ],
+  "reviewer_actions": {
+    "builds_tests_native_probes_started": false,
+    "processes_or_daemons_stopped": false,
+    "build_artifacts_created": false,
+    "application_control_edits": false,
+    "git_writes": false,
+    "writes": [
+      "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/normal-ios-source03-runtime-execution-approval-02.json"
+    ],
+    "cleanup": "Only new compact review evidence; no reviewer-owned worker or generated build output exists."
+  }
+}

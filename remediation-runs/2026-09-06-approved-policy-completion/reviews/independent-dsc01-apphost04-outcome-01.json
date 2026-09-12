@@ -1,0 +1,712 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-09-06T15:06:07.889555+00:00",
+  "reviewer": "/root/release_fix_review",
+  "cycle": "dsc01-apphost-04",
+  "aggregate_classification": "FAIL",
+  "error_classification": "TEST/EVIDENCE GAP: actual public setup selector did not reach expected control after Mafia catalog tap; no crash or deterministic application defect established.",
+  "xcode_exit_code": 65,
+  "receipt_sha256": "0a16f241de2dc2769ec680ba6925108a6191771e2d9d10be611923eec15a4955",
+  "source": {
+    "commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+    "tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+    "source_manifest_sha256": "9ac2be536979f2216b39c10a6d148125a12380987d4efd483bbcbaeb1733318e",
+    "diff_sha256": "148fb4583d8fa8341b3cbc48a7fc0bc7564bf4df5c27e9d80e32c6bfdc57b784",
+    "input_count": 669,
+    "current_drift": []
+  },
+  "controls": {
+    "sha256": "0dbdbadda5689679e02acf5f38db184f6d0d9393ba6044ab048dcf52c1b1318e",
+    "entries": 18,
+    "current_drift": [],
+    "review": "independent-dsc01-v6-execution-approval-01.json"
+  },
+  "copy": {
+    "inputs": 615,
+    "original_inputs": 613,
+    "observer_additions": 2,
+    "changed_original_files": 11,
+    "proof": "Reconstructed all13 unified-diff file results in memory from frozen current bytes, every SHA equals copied manifest. Independently checked all615 before/after expected/observed hashes and exact inventory;0changed/missing/additions/symlinks. No copy retained."
+  },
+  "xctest": {
+    "total": 5,
+    "passed": 4,
+    "failed": 1,
+    "skipped": 0,
+    "descriptors": [
+      {
+        "method": "ComposeContainerViewControllerTests/testChildUsesFullBoundsAcrossSizesAndOpposingSemanticDirections()",
+        "result": "Passed"
+      },
+      {
+        "method": "ComposeContainerViewControllerTests/testDefaultAppearanceForwardingReachesTheSameChildExactlyOnce()",
+        "result": "Passed"
+      },
+      {
+        "method": "ComposeContainerViewControllerTests/testOneStableChildKeepsItsExplicitSemanticsIndependentOfTheOuterView()",
+        "result": "Passed"
+      },
+      {
+        "method": "ComposeContainerViewControllerTests/testSystemDecorationAndOrientationPoliciesStillBelongToTheChild()",
+        "result": "Passed"
+      },
+      {
+        "method": "IOSAppLaunchUITests/testDSC01ActualSettingsLocalSessionsAndOSInvestigation()",
+        "result": "Failed"
+      }
+    ],
+    "device": {
+      "architecture": "arm64",
+      "deviceId": "EF88E0FD-B868-416C-847D-DAFB31845A7C",
+      "deviceName": "Parlor-Audit-parlor-audit-dsc01-apphost-04-ndb4qlza",
+      "modelName": "iPhone 17 Pro",
+      "osBuildNumber": "23F77",
+      "osVersion": "26.5",
+      "platform": "iOS Simulator"
+    },
+    "failure": {
+      "failureText": "failed - Source-whitelisted actual setup control not reachable: Start a pass-and-play session on this device.",
+      "targetName": "iosAppUITests",
+      "testIdentifier": 5,
+      "testIdentifierString": "IOSAppLaunchUITests/testDSC01ActualSettingsLocalSessionsAndOSInvestigation()",
+      "testIdentifierURL": "test://com.apple.xcode/iosApp/iosAppUITests/IOSAppLaunchUITests/testDSC01ActualSettingsLocalSessionsAndOSInvestigation",
+      "testName": "testDSC01ActualSettingsLocalSessionsAndOSInvestigation()"
+    },
+    "failure_location": "Copied IOSAppLaunchUITests.swift:393 (tapPublicSetupPrefix); caller143 after catalogtap141-142",
+    "raw_log": "xcodebuild.log:3036-3062 catalog find/scroll/tap at327.37s then expected picker missing; final XCTest assertion350.42s, not launch crash"
+  },
+  "scenarios": {
+    "settings": {
+      "status": "REACHED_CHECKS_PASS_WITHIN_FAILED_AGGREGATE",
+      "observations": 22,
+      "process_boots": 4,
+      "explicit_restart_cycles": 2,
+      "synthetic_previous_os_preference": true,
+      "actual_os_settings": false,
+      "completion_ordinal": 21
+    },
+    "whodunit": {
+      "status": "REACHED_CHECKS_PASS_WITHIN_FAILED_AGGREGATE",
+      "observations": 97,
+      "canonical_scope": [
+        9,
+        96
+      ],
+      "canonical_observations": 88,
+      "public_phase": "public-intro",
+      "same_controller_flow_reference_value": true,
+      "session_disposals": 0,
+      "actual_background_foreground_cycles": 4,
+      "synthetic_store_invocations": 3,
+      "first_resumed_ordinals": [
+        11,
+        39,
+        67,
+        83
+      ],
+      "passive_windows": 12,
+      "passive_samples": 72,
+      "spacing_min_ms": 251,
+      "spacing_max_ms": 273,
+      "windows": [
+        {
+          "window": 1,
+          "command": 0,
+          "context": "foreground",
+          "event_ordinals": [
+            12,
+            13,
+            14,
+            15,
+            16,
+            17
+          ],
+          "elapsed_milliseconds": [
+            256,
+            517,
+            783,
+            1049,
+            1316,
+            1572
+          ]
+        },
+        {
+          "window": 2,
+          "command": 0,
+          "context": "foreground",
+          "event_ordinals": [
+            18,
+            19,
+            20,
+            21,
+            22,
+            23
+          ],
+          "elapsed_milliseconds": [
+            253,
+            516,
+            783,
+            1050,
+            1316,
+            1583
+          ]
+        },
+        {
+          "window": 3,
+          "command": 0,
+          "context": "landscape",
+          "event_ordinals": [
+            24,
+            25,
+            26,
+            27,
+            28,
+            29
+          ],
+          "elapsed_milliseconds": [
+            254,
+            516,
+            783,
+            1049,
+            1316,
+            1570
+          ]
+        },
+        {
+          "window": 4,
+          "command": 0,
+          "context": "portrait",
+          "event_ordinals": [
+            30,
+            31,
+            32,
+            33,
+            34,
+            35
+          ],
+          "elapsed_milliseconds": [
+            251,
+            516,
+            783,
+            1050,
+            1316,
+            1570
+          ]
+        },
+        {
+          "window": 5,
+          "command": 1,
+          "context": "foreground",
+          "event_ordinals": [
+            40,
+            41,
+            42,
+            43,
+            44,
+            45
+          ],
+          "elapsed_milliseconds": [
+            253,
+            518,
+            786,
+            1053,
+            1320,
+            1586
+          ]
+        },
+        {
+          "window": 6,
+          "command": 1,
+          "context": "foreground",
+          "event_ordinals": [
+            46,
+            47,
+            48,
+            49,
+            50,
+            51
+          ],
+          "elapsed_milliseconds": [
+            262,
+            533,
+            799,
+            1066,
+            1333,
+            1586
+          ]
+        },
+        {
+          "window": 7,
+          "command": 1,
+          "context": "landscape",
+          "event_ordinals": [
+            52,
+            53,
+            54,
+            55,
+            56,
+            57
+          ],
+          "elapsed_milliseconds": [
+            253,
+            517,
+            788,
+            1053,
+            1316,
+            1583
+          ]
+        },
+        {
+          "window": 8,
+          "command": 1,
+          "context": "portrait",
+          "event_ordinals": [
+            58,
+            59,
+            60,
+            61,
+            62,
+            63
+          ],
+          "elapsed_milliseconds": [
+            259,
+            522,
+            788,
+            1053,
+            1316,
+            1583
+          ]
+        },
+        {
+          "window": 9,
+          "command": 2,
+          "context": "foreground",
+          "event_ordinals": [
+            68,
+            69,
+            70,
+            71,
+            72,
+            73
+          ],
+          "elapsed_milliseconds": [
+            253,
+            516,
+            783,
+            1049,
+            1316,
+            1583
+          ]
+        },
+        {
+          "window": 10,
+          "command": 2,
+          "context": "foreground",
+          "event_ordinals": [
+            74,
+            75,
+            76,
+            77,
+            78,
+            79
+          ],
+          "elapsed_milliseconds": [
+            254,
+            522,
+            786,
+            1049,
+            1322,
+            1586
+          ]
+        },
+        {
+          "window": 11,
+          "command": 3,
+          "context": "foreground",
+          "event_ordinals": [
+            84,
+            85,
+            86,
+            87,
+            88,
+            89
+          ],
+          "elapsed_milliseconds": [
+            253,
+            521,
+            783,
+            1050,
+            1316,
+            1583
+          ]
+        },
+        {
+          "window": 12,
+          "command": 3,
+          "context": "foreground",
+          "event_ordinals": [
+            90,
+            91,
+            92,
+            93,
+            94,
+            95
+          ],
+          "elapsed_milliseconds": [
+            257,
+            516,
+            782,
+            1049,
+            1320,
+            1582
+          ]
+        }
+      ],
+      "after_completion_ordinal97": "surface none/checkpoint reset, explicitly outside capture..complete interval"
+    },
+    "mafia": {
+      "status": "BLOCKED_TEST_SELECTOR",
+      "observations": 7,
+      "checkpoint_captured": false,
+      "completed": false
+    },
+    "os": {
+      "status": "NOT_RUN",
+      "reason": "Combined XCTest stopped before OS method; no result file"
+    }
+  },
+  "raw_measurement_review": {
+    "native_identity_and_containment_rows": 120,
+    "independent_geometry_rows": 120,
+    "full_bounds_vs_window": true,
+    "safe_areas_match_window": true,
+    "raw_portrait": {
+      "bounds": [
+        0,
+        0,
+        402,
+        874
+      ],
+      "insets": [
+        62,
+        0,
+        34,
+        0
+      ]
+    },
+    "raw_landscape": {
+      "bounds": [
+        0,
+        0,
+        874,
+        402
+      ],
+      "insets": [
+        0,
+        62,
+        20,
+        62
+      ]
+    },
+    "method": "Independent JSON reading/numeric comparison, not invoking author verifier. Every reached event and all88 in-scope canonical rows checked; no retry-selected lucky sample."
+  },
+  "counter_evidence": [
+    "Current Mafia binding.Setup renders generic PlayModePicker with supportedPassAndPlay, exact English description is present. No intended route skip identified.",
+    "Raw XCTest shows physical tap event, not application callback or route receipt. Could be settling/occlusion/hit-test; no mechanism established from available evidence.",
+    "Outer view remains launch-languageRTL while actual Compose child correctlyLTR/RTL; child is actual LocalUIViewController from independently reviewed observer, not guessed class/index.",
+    "Earlier apphost01/02/03 failed observations remain intact. Apphost04 passing reached checks cannot relabel aggregate or earlier reds."
+  ],
+  "checks": [
+    {
+      "check": "settings complete raw event order",
+      "passed": true
+    },
+    {
+      "check": "whodunit complete raw event order",
+      "passed": true
+    },
+    {
+      "check": "mafia complete raw event order",
+      "passed": true
+    },
+    {
+      "check": "same task token across all reached scenarios",
+      "passed": true
+    },
+    {
+      "check": "four before-App distinct real process Settings boots",
+      "passed": true
+    },
+    {
+      "check": "actual persisted owner/preference captured before App on both restarts",
+      "passed": true
+    },
+    {
+      "check": "Settings actual action/restart result ordinal5",
+      "passed": true
+    },
+    {
+      "check": "Settings actual action/restart result ordinal10",
+      "passed": true
+    },
+    {
+      "check": "Settings actual action/restart result ordinal15",
+      "passed": true
+    },
+    {
+      "check": "Settings actual action/restart result ordinal22",
+      "passed": true
+    },
+    {
+      "check": "Settings completed with zero synthetic language commands",
+      "passed": true
+    },
+    {
+      "check": "Whodunit complete after checkpoint9 through96",
+      "passed": true
+    },
+    {
+      "check": "all88 checkpoint-through-completion canonical/controller/flow/reference/value/phase samples stable",
+      "passed": true
+    },
+    {
+      "check": "Whodunit entered after real SettingsEN; no synthetic command before capture",
+      "passed": true
+    },
+    {
+      "check": "synthetic command order never moves backwards",
+      "passed": true
+    },
+    {
+      "check": "exact72 passive observations in12 ordered complete windows",
+      "passed": true
+    },
+    {
+      "check": "window1 own callbacks/command/orientation/spacing",
+      "passed": true
+    },
+    {
+      "check": "window2 own callbacks/command/orientation/spacing",
+      "passed": true
+    },
+    {
+      "check": "window3 own callbacks/command/orientation/spacing",
+      "passed": true
+    },
+    {
+      "check": "window4 own callbacks/command/orientation/spacing",
+      "passed": true
+    },
+    {
+      "check": "window5 own callbacks/command/orientation/spacing",
+      "passed": true
+    },
+    {
+      "check": "window6 own callbacks/command/orientation/spacing",
+      "passed": true
+    },
+    {
+      "check": "window7 own callbacks/command/orientation/spacing",
+      "passed": true
+    },
+    {
+      "check": "window8 own callbacks/command/orientation/spacing",
+      "passed": true
+    },
+    {
+      "check": "window9 own callbacks/command/orientation/spacing",
+      "passed": true
+    },
+    {
+      "check": "window10 own callbacks/command/orientation/spacing",
+      "passed": true
+    },
+    {
+      "check": "window11 own callbacks/command/orientation/spacing",
+      "passed": true
+    },
+    {
+      "check": "window12 own callbacks/command/orientation/spacing",
+      "passed": true
+    },
+    {
+      "check": "first resumed samples retained and agree, before all passive samples",
+      "passed": true
+    },
+    {
+      "check": "row97 is explicitly post-completion out of retained-session scope; not hidden from review",
+      "passed": true
+    },
+    {
+      "check": "Mafia7 pre-session observations; no continuity completion inferred",
+      "passed": true
+    },
+    {
+      "check": "actual OS flow has no raw result and is unexecuted, never PASS",
+      "passed": true
+    },
+    {
+      "check": "five XCTest methods, four UIKit PASS one matrix FAIL; summary and detail match",
+      "passed": true
+    }
+  ],
+  "cleanup": {
+    "status": "PASS",
+    "immediate_stop_exit_code": 0,
+    "final_stop_exit_code": 0,
+    "embedded_stop_text": "build_exit=0\nstop_exit=0\n",
+    "elapsed_xcode_finish_to_stop_start_seconds": 0.008138,
+    "errors": [],
+    "remaining_outputs": [],
+    "remaining_owned_processes": [],
+    "pending_fifo_claims": [],
+    "secondary_fifo_paths_removed": 2,
+    "secondary_parent_directories_removed": 2,
+    "proof": "Read raw owneddevice Booted->Shutdown->absent receipts and exact FIFO UID/inode/birth/PID-start evidence. Independently confirmed original/canonical temporary path, owneddevice directory, two attested FIFOs and both exact emptyparents absent; all62 observed PID/start pairs now absent. No global/other-task process assumption."
+  },
+  "evidence": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-04/boot.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-04/bootstatus.log",
+      "sha256": "775b2a3adb9ee82a77b8e7c5c669b6b8607178e406ea35acd4f26e1124a72907",
+      "bytes": 5169
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-04/copied-source-inputs-after-build.json",
+      "sha256": "0ba393fbf7856a4691259b395501e32ec78aa4e4741bd4c40f327550564ec715",
+      "bytes": 202155
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-04/copied-source-manifest.json",
+      "sha256": "d223ee816bd2920922597a1e43a9a7242e5209aea13e22fbe8c3d423426316cb",
+      "bytes": 178966
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-04/copied-source.diff",
+      "sha256": "52286ca8fc805e9fdd9d37718ccd1f489c9c55802bb525e5cb6b5a4b7a92a024",
+      "bytes": 90417
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-04/create.log",
+      "sha256": "175eb2e8557c14d2d10ca4abcc4c380bd18f10e46e6acec51041524633aeb86e",
+      "bytes": 37
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-04/delete.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-04/embedded-gradle-stop.txt",
+      "sha256": "fb55a963c8d30249ea6b8be68a62b5921facefdc7823c16ad139fea885be972f",
+      "bytes": 25
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-04/input-manifest.json",
+      "sha256": "82c6ea2c3391c201e8220c2953a257f4a2838da7cd6abe169050fe0426e3dd55",
+      "bytes": 132717
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-04/owned-container.log",
+      "sha256": "7320a205b4bdfb56a01052fa2aa8c1c71da9a0b14728740a0665f2305fe48500",
+      "bytes": 166
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-04/owned-device-after-delete.json",
+      "sha256": "755d442cf44919879856407fe199e916c770d206e3f6b050d6eb286b7af73782",
+      "bytes": 20
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-04/owned-device-after-shutdown.json",
+      "sha256": "338154a777ffab553ec203bcc29b7bd18d03b8eaca110c0b629611e07500f8fe",
+      "bytes": 248
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-04/owned-device-before-delete.json",
+      "sha256": "338154a777ffab553ec203bcc29b7bd18d03b8eaca110c0b629611e07500f8fe",
+      "bytes": 248
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-04/owned-device-before-shutdown.json",
+      "sha256": "b0c36478ed8b1d52c1121a361be912928db44d6ce7e8c37632cd8b9a2fdd0a52",
+      "bytes": 246
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-04/probe-mafia-result.json",
+      "sha256": "b81964d148470c4318b08a9005741354ac558253fbddde55db8777092f88e92b",
+      "bytes": 10590
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-04/probe-settings-result.json",
+      "sha256": "cd485058cc3d1df5bab5ba1871d92d86495f3945cf940bf7647184633dc042c3",
+      "bytes": 32190
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-04/probe-whodunit-result.json",
+      "sha256": "47e3006e90baceb18df0c2fa54be0ed390fdc6e3faa164714b679e789a6e1d7f",
+      "bytes": 158092
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-04/receipt.json",
+      "sha256": "0a16f241de2dc2769ec680ba6925108a6191771e2d9d10be611923eec15a4955",
+      "bytes": 327390
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-04/sdk-version.log",
+      "sha256": "25205f2e2f02dc71036ee827e19c49b893b231a3d1af240e35a3ac55aa8cdcb6",
+      "bytes": 5
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-04/secondary-fifo-ownership-final.json",
+      "sha256": "bb3ff91ff12c76ca45fb83dd7630856f0af3383873060994ca95434b6b88ff6c",
+      "bytes": 2941
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-04/secondary-fifo-ownership.json",
+      "sha256": "bb3ff91ff12c76ca45fb83dd7630856f0af3383873060994ca95434b6b88ff6c",
+      "bytes": 2941
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-04/shutdown.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-04/stop-final.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+      "bytes": 31
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-04/stop-xcode-immediate.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+      "bytes": 31
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-04/xcodebuild.log",
+      "sha256": "d7e0016616ce90478209b6c3c80fd07fc1b4aef005757ded25c0a4af6133ea1b",
+      "bytes": 338958
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-04/xcresult-summary.json",
+      "sha256": "8cbaa1412988178b9a13fc7e930e659ffa1b10ff5c3f8551d2ce31035d07f3c6",
+      "bytes": 1551
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-04/xcresult-tests.json",
+      "sha256": "632c01aa843f9fd8379cdd6de0be932954ca2e8606ae5d2736063d75dbd8a355",
+      "bytes": 4988
+    }
+  ],
+  "limitations": [
+    "DS-C01 remains PARTIALLY VERIFIED: Mafia native retention and actual OS per-app language flow uncompleted.",
+    "Instrumented Debug26.5 simulator matrix, not unchanged release binary; overlay/publication observer may perturb SwiftUI.",
+    "No full game, persistence resume/rejoin, physical LAN, interactive gesture, comprehensive accessibility or Store/signing proof.",
+    "Four UIKit tests use actual productioncontainer with fixtureUIViewController, not real Compose for those unit cases.",
+    "Artifacts already removed by executor after hashes; binaries not independently reopened after cleanup."
+  ],
+  "reviewer_preservation": "Read-only source/hash/result/process-metadata inspection. No builds/tests/apps/workers started, no stop/delete/source operations; only this review record written."
+}

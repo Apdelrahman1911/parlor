@@ -1,0 +1,62 @@
+{
+  "at": "2026-09-08T05:40:51.366526+00:00",
+  "reviewer": "/root",
+  "author": "/root/release_fix_review",
+  "status": "APPROVED_FOR_ROOT_PURE_CONTROLS_THEN_SINGLE_HARMLESS_CHILD_ATTEMPT",
+  "reviewed": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/normal-vmmap-capability-01/README.md",
+      "sha256": "8c11d41d463c743dadae3d74f515354c4e060762e9ea91a24ef3df54f552b6c5",
+      "reviewed_line_ranges": [
+        [
+          1,
+          78
+        ]
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/normal-vmmap-capability-01/run_control_tests.py",
+      "sha256": "d4fdbfa4b57463ecb2dec96e36338294df5298cd6dddacc92eca0e4fa33e49c8",
+      "reviewed_line_ranges": [
+        [
+          1,
+          80
+        ]
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/normal-vmmap-capability-01/run_vmmap_capability.py",
+      "sha256": "b4897e36f64e5ab26efc93491fd721a5fc27b9ecf812e46bdfd3b692ee1f9380",
+      "reviewed_line_ranges": [
+        [
+          1,
+          309
+        ]
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/normal-vmmap-capability-01/test_vmmap_capability.py",
+      "sha256": "4b7194d856239f5954b21f2e6b062efe8cac6ac8c09463d31276dd4acdbe9dc1",
+      "reviewed_line_ranges": [
+        [
+          1,
+          474
+        ]
+      ]
+    }
+  ],
+  "reasoning": [
+    "Fixed sleep60 child and one25second/256KiB vmmap attempt; no application/PID selector or inherited credential environment.",
+    "Live sleep Popen retained, defaultSIGCHLD/singlethread guard, no sleep poll/reap while mapper operates. Mapper cleanup precedes child; explicit failedreap defers to coordinatedouterowner and cannotPASS.",
+    "Only exclusive outer-cycleTMPDIR file raw data; inode/uid/type/link/parentchecks before removal; failures preserve sanitized tokens and outputdigests only.",
+    "All40test bodies examined; guards,mocks,cancellation,bounds,nonzeroresults and cleanup assertions appropriate. Exact AST/discovery/start/success IDs enforced, no skippedphysicaltests modified."
+  ],
+  "limits": [
+    "Mock controls not native proof",
+    "Harmless-childexit0 cannot prove app mapper capability/provenance",
+    "NumericPIDtools subject to documented generationlimitations; sleepunreaped lease only forthisprobe",
+    "No retainedrawmapping or inferred errno cause"
+  ],
+  "execution": "NOT_RUN_AT_REVIEW",
+  "cleanup": "No reviewer-launched workers/buildoutputs or deletions; only additive review."
+}

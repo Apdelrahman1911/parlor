@@ -61,23 +61,32 @@ to a failure. Determine why the graph or bytes changed, review the new input,
 and update the explicit P2pKit checksum contract only as part of an approved
 dependency change.
 
-## Open legal gates
+## Resolved-input evidence and remaining legal gates
 
-The repository does not currently provide:
+The opt-in exporter and renderer in
+[`DEPENDENCY_INVENTORY.md`](DEPENDENCY_INVENTORY.md) now produce four resolved-input
+CycloneDX 1.6 SBOMs and an automated, source-attributed transitive-license report.
+The 2026-09-07 campaign resolved 456 Maven coordinates, researched 459 POMs
+(including three inherited parents), and validated all four SBOMs against the
+official schema. No license declaration remained unresolved in that run. This
+is evidence for its recorded source/artifact set, not a permanent pass for later
+dependency changes or a final-binary SBOM.
 
-- a final product/source distribution license decision;
-- a generated SBOM;
-- an automated transitive-license report; or
-- final third-party notices bundled into both store artifacts.
+POM declarations do not cover every embedded native component or supply legal
+approval. Skiko/Skia native archives and Kotlin/Native runtime notices therefore
+require separate exact-input inspection. Preserve publisher notices already
+inside Android artifacts rather than claiming none exist.
 
-These are release `FAIL` gates, not assumptions. Before shipping:
+Before shipping:
 
-1. choose and add the project distribution license with owner/legal approval;
-2. generate an SBOM from the resolved Android and iOS release graphs;
-3. review every transitive license and required attribution;
-4. create the authoritative third-party notices from that reviewed report;
-5. bundle notices in the app or support site as required; and
-6. archive the report, tool/version, and reviewer with the release evidence.
+1. obtain the owner's final product/source distribution-license decision;
+2. regenerate source-bound Android/iOS input inventories for the candidate;
+3. review transitive and embedded-native license terms, required attributions,
+   custom/patent terms, and product/content rights;
+4. verify the applicable exact notices in the final distributed artifacts;
+5. retain final-binary/package inspection separately from input-graph evidence;
+   and
+6. archive the reports, tool/version, and independent review with the release.
 
 Do not manually copy license names from memory into a release notice. The
 notice must be generated from the exact resolved artifact set and then

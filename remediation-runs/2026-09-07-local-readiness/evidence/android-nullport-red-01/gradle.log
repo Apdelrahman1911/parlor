@@ -1,0 +1,27 @@
+test_successful_null_port_then_valid_token_is_retried_not_denied (test_task_name_null_retry.NullTaskNamePortTest) ... ERROR
+test_null_port_then_independently_confirmed_exit_returns_absent (test_task_name_null_retry.NullTaskNamePortTest) ... ERROR
+
+======================================================================
+ERROR: test_successful_null_port_then_valid_token_is_retried_not_denied (test_task_name_null_retry.NullTaskNamePortTest)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/darwin-null-port-retry-01/test_task_name_null_retry.py", line 78, in test_successful_null_port_then_valid_token_is_retried_not_denied
+    self.assertEqual(TOKEN, self.backend._token(PID))
+  File "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/darwin_owned_processes.py", line 110, in _token
+    raise RuntimeError(f'task_name_for_pid denied for attested candidate {pid}: {code}')
+RuntimeError: task_name_for_pid denied for attested candidate 100: 0
+
+======================================================================
+ERROR: test_null_port_then_independently_confirmed_exit_returns_absent (test_task_name_null_retry.NullTaskNamePortTest)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/darwin-null-port-retry-01/test_task_name_null_retry.py", line 89, in test_null_port_then_independently_confirmed_exit_returns_absent
+    self.assertIsNone(self.backend._token(PID))
+  File "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/darwin_owned_processes.py", line 110, in _token
+    raise RuntimeError(f'task_name_for_pid denied for attested candidate {pid}: {code}')
+RuntimeError: task_name_for_pid denied for attested candidate 100: 0
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.002s
+
+FAILED (errors=2)

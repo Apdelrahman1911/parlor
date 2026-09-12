@@ -1,0 +1,222 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/portability_review",
+  "status": "APPROVED_SCOPED_HISTORICAL_B30_APPLICABILITY_TO_A31_FREEZE",
+  "findings": [],
+  "purpose": "Determine whether the reviewed A31/CI/inventory delta requires repeating successful historical B30 unchanged-application runtime observations before an A31-only attempt. This is a bounded applicability review, not whole-preflight admission or new runtime qualification.",
+  "decision": "Scoped reuse of historical B30 application-behavior/provenance evidence is justified across this exact nonshipping delta. B30 executed at 360fc797a85e1e494334fd8cc11b4e739981cea8, not at the new freeze. A31-only may avoid repeating B for this delta, subject to fresh paired preflight and independent native_ci admission; normal must be NOT_RUN_THIS_RUN.",
+  "identities": {
+    "branch": "fix/local-readiness-2026-09-07",
+    "historical_b30": {
+      "run": "34362984912/1",
+      "commit": "360fc797a85e1e494334fd8cc11b4e739981cea8",
+      "tree": "8bfe56a21074ba51a4b668bad0728e42007a7593"
+    },
+    "reviewed_source_commit": "36d4de0d42d6e47dd6101b11323e7a97bc1f1804",
+    "inventory_only_commit": "965eb79cea7dd40ced8efa0b1fcd98596f7a952b",
+    "frozen_tree": "334bf3a1fe15fc8acd55715bbc40eb78e2a0646f",
+    "history": "Exactly two linear commits: reviewed source commit directly follows B30 source; inventory-only commit directly follows reviewed source.",
+    "tracked_status_at_audit": "clean",
+    "remote_confirmation": {
+      "method": "Reopened coordinator-retained successful git ls-remote stdout in freeze receipt; no reviewer network query.",
+      "recorded_stdout": "965eb79cea7dd40ced8efa0b1fcd98596f7a952b\trefs/heads/fix/local-readiness-2026-09-07"
+    },
+    "freeze_receipt": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/a31-source-freeze-01.json",
+      "bytes": 143733,
+      "sha256": "4848e445e23f5b268b236307ba053fc4a68e274b6a6095e25c3c1dcdd7ed3b46"
+    }
+  },
+  "frozen_delta": {
+    "changed_paths": 825,
+    "modified_paths": [
+      ".github/workflows/production-verification.yml",
+      "docs/review/INDEPENDENT_REVIEW_INVENTORY.csv",
+      "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/DSC01CatalogSelection.swift.in",
+      "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/L08HostLaunch.swift.in",
+      "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/test_l08_functional_copy.py",
+      "remediation-runs/2026-09-08-continuation/CONTINUE_LATEST.md",
+      "scripts/ci/NATIVE_CONTINUATION.md",
+      "scripts/ci/native_continuation.py",
+      "scripts/release/tests/test_native_continuation.py",
+      "scripts/release/tests/test_native_process_probe.py",
+      "scripts/release/tests/test_workflow_contract.py",
+      "scripts/release/workflow_contract.py"
+    ],
+    "modifications": 12,
+    "additions": 813,
+    "deletes_or_renames": 0,
+    "additions_scope": "All 813 additions are excluded evidence under remediation-runs; they do not enter normal source selection or the normal control directories.",
+    "evidence_addition_prefixes": [
+      "remediation-runs/2026-09-07-local-readiness/evidence/",
+      "remediation-runs/2026-09-08-continuation/actions/",
+      "remediation-runs/2026-09-08-continuation/reviews/"
+    ],
+    "other_excluded_addition": [
+      "remediation-runs/2026-09-08-continuation/candidate-input-binding-05.json"
+    ],
+    "change_groups": {
+      "ci_selector_guards_docs_tests": 7,
+      "a_only_companion_fixtures_and_test": 3,
+      "additive_continuation_ledger": 1,
+      "mechanical_inventory": 1
+    },
+    "inventory_only_second_commit": true,
+    "inventory": {
+      "path": "docs/review/INDEPENDENT_REVIEW_INVENTORY.csv",
+      "sha256": "3c55a2607b632bcd620cf3543910c9dcf34e2b9a3f599d1360f62eab7654090c",
+      "bytes": 12079620,
+      "independently_counted_rows": 19440
+    },
+    "freeze_commands": "All recorded freeze commands exit 0; generator/check recorded 19440 rows and Gradle stop exit 0. Reviewer independently hashed and count-parsed the CSV, not rerun the generator."
+  },
+  "source_review_reopening": {
+    "evidence": [
+      {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/native-l08-only-selection-independent-01.json",
+        "bytes": 15709,
+        "sha256": "59cdc22e7c3ed384300818d1c641edceb4cb9151f07ba62e96780c17270fa859"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/native-a31-fixtures-independent-01.json",
+        "bytes": 9603,
+        "sha256": "a109645ebbf94d0a96156a135bb76a0377135166a61a15b36edeb8d87515b2f1"
+      }
+    ],
+    "exact_adoption": "Read actual frozen diffs and independently matched all ten reviewed adoption files to frozen Git bytes; recorded modes also matched for the seven CI files.",
+    "selector": "Explicit l08-only is confined to native-evidence; paired remains default. Both fresh manifests remain required. A budgets, lifetime, source-binding and cleanup guards remain. No B child/admission/receipt/cleanup claim may be synthesized. Results are L08_ONLY_PASS or L08_ONLY_NOT_READY, never combined PASS.",
+    "catalogue_fixture": "Public counts/state are read after activation rather than resolving disappearing old UI elements. Original one-tap activation, preactivation geometry, successor predicates and failure behavior remain.",
+    "host_fixture": "Bounded wait for actual read-only ownership acknowledgement precedes exactly one receipt sample; ownership is not fabricated and no production language changes.",
+    "ledger": "Additive ledger/header updates preserve historical failed evidence.",
+    "limitation": "Source review and adoption checks alone are neither A31 runtime proof nor authorization to dispatch."
+  },
+  "normal_control_and_application_comparison": {
+    "inner_controls": {
+      "files": 98,
+      "equality": "Closed path sets, modes and SHA-256 bytes identical between historical B30 source and new freeze; no added controls.",
+      "directories": [
+        "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01",
+        "scripts/verification/ios-readiness"
+      ],
+      "pinned_helper": "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/darwin_owned_processes.py",
+      "aggregate_excluding_source_binding": "7d598e39bd718e0f8347d0eee839b5aad2bece2bddb82e08ce7f6c1ea592c413",
+      "scope": "Includes normal UI template, copy transforms, libproc C/helper/binder, Mach-O decoders, signing/toolchain/lifecycle/ownership/notice controls."
+    },
+    "unchanged_git_subtree_objects": [
+      "composeApp",
+      "shared",
+      "game-modes",
+      "build-logic",
+      "gradle",
+      "config",
+      "iosApp"
+    ],
+    "unchanged_root_build_blob_objects_and_modes": [
+      "build.gradle.kts",
+      "settings.gradle.kts",
+      "gradle.properties",
+      "gradlew",
+      "gradlew.bat"
+    ],
+    "application_conclusion": "Production application source/resources, dependency pins and verification metadata, build configuration, identities and normal observation semantics are unchanged.",
+    "source_manifest": {
+      "historical_rows": 829,
+      "unchanged_rows": 821,
+      "changed_rows": 8,
+      "changed_paths": [
+        ".github/workflows/production-verification.yml",
+        "docs/review/INDEPENDENT_REVIEW_INVENTORY.csv",
+        "scripts/ci/NATIVE_CONTINUATION.md",
+        "scripts/ci/native_continuation.py",
+        "scripts/release/tests/test_native_continuation.py",
+        "scripts/release/tests/test_native_process_probe.py",
+        "scripts/release/tests/test_workflow_contract.py",
+        "scripts/release/workflow_contract.py"
+      ]
+    },
+    "copied_originals": {
+      "historical_rows": 754,
+      "unchanged_rows": 748,
+      "changed_rows": 6,
+      "changed_paths": [
+        "scripts/ci/NATIVE_CONTINUATION.md",
+        "scripts/ci/native_continuation.py",
+        "scripts/release/tests/test_native_continuation.py",
+        "scripts/release/tests/test_native_process_probe.py",
+        "scripts/release/tests/test_workflow_contract.py",
+        "scripts/release/workflow_contract.py"
+      ]
+    },
+    "changed_copy_analysis": "The six changed copied originals are nonshipping CI/doc/test scripts. Static normal runner imports and build/launch recipe remain unchanged; inspected .gradle.kts, .swift and .pbxproj sources contain no reference that incorporates these changed CI scripts into the normal application.",
+    "qualification": "The entire copied-input manifest and source binding are NOT unchanged. The outer workflow/adapter are real, independently reviewed CI changes, not part of the unchanged 98 inner-control assertion. Unchanged source supports scoped historical behavioral applicability, not byte-identical new build artifacts."
+  },
+  "fresh_normal_binding_comparison": {
+    "scope": "Only old-vs-fresh normal99-control comparison; whole preflight custody/admission remains native_ci scope",
+    "preflight_run": "34381199948/1",
+    "frozen_source": "965eb79cea7dd40ced8efa0b1fcd98596f7a952b",
+    "fresh_normal_manifest": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34381199948/native-preflight/normal-controls.json",
+      "bytes": 18523,
+      "sha256": "8c9d8cf791be3068ae92a494f863a53733d8f8b4bdba39eed4a43495af5e0365"
+    },
+    "aggregate_recomputation": "Independently recomputed compact-JSON aggregate matches fresh normal_control_sha256.",
+    "fresh_normal_control_sha256": "3c62deedf626c4e14eb4bca77699bcee90fc9c036a01e74180fe22e313d15a17",
+    "historical_normal_control_sha256": "fdf7e4a73ca22cb43f3490d545d787d51dda9b3048d10fc1c31e566701f88ac0",
+    "row_count": 99,
+    "unchanged_inner_rows": 98,
+    "only_changed_row": "remediation-runs/2026-09-08-continuation/ios-readiness-source-ci.json",
+    "historical_binding_sha256": "c3e7a371207d387d5e24d2b94b682004f0603624de7722b50431dc5514f5c7be",
+    "retained_fresh_binding": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34381199948/native-preflight/ios-readiness-source-ci.json",
+      "sha256": "8453265fea9d0f1bef28b7d89815f9075c113236d818bca8bb851ada5d3ced19"
+    },
+    "conclusion": "The new 99-row aggregate reflects fresh source binding, not fresh B execution. Do not substitute the historical 99-row aggregate for current native authorization.",
+    "separate_owner": "/root/native_ci owns full archive/API/source829/both-control custody and A31-only admission; this review does not replace those checks."
+  },
+  "historical_runtime_evidence": {
+    "actual_review": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-b30-actual-independent-01.json",
+      "bytes": 29223,
+      "sha256": "f2426faf649d1a9b13fbdfa8ef59741c7cf38d62f5f38f54e4afadbf8a3788fd"
+    },
+    "custody_review": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native34362984912-postrun-custody-independent-01.json",
+      "bytes": 9769,
+      "sha256": "f0606578324150da8252d897d7d7b66cb57ee87308020c24afd5217fbfe51e7c"
+    },
+    "raw_base": "remediation-runs/2026-09-08-continuation/actions/34362984912/native-evidence/ios-readiness-30/",
+    "raw_pins": [
+      {
+        "name": "receipt.json",
+        "bytes": 446052,
+        "sha256": "29cb6106fa32866da27e5b85ee676b87d4103d354125a22675c98b0bc57da982"
+      },
+      {
+        "name": "input-manifest.json",
+        "bytes": 170365,
+        "sha256": "b33b30a344b331928ad33f1fd76544c2d34669b478b4d3015a3bab75c8bc4030"
+      },
+      {
+        "name": "separate-external-image-provenance.json",
+        "bytes": 9049,
+        "sha256": "0971ee6d7c9da5fb37bbd18229e5baaf7a3ae660f5fcecb0b5f2cf7fbb7330d0"
+      }
+    ],
+    "reopening": "Reopened actual B30 receipt and independent runtime review; historical before/after source remains 360fc and scoped B PASS statuses intact. Committed actual-review bytes match its seal.",
+    "executed_scope": "Eight repetitions of one XCTest produced 48 periodic foreground/Home/no-alert samples. A separate ninth public launch produced three actual libproc queries, all PASS, structure/reply size 1272, using exact owned-text extent branch; original sample endpoints were unchanged. Artifact checks, two ad-hoc signature checks, 26 source/built/installed notice resources and recorded cleanup passed.",
+    "exclusions": "No whole-map enumeration, mapped-memory hashes or continuous-liveness assertion. Retired raw binaries/sample were not reparsed. Overall 34362984912/A29 remains FAIL/NOT_READY with four other jobs skipped; historical B28 remains provenance FAIL."
+  },
+  "admission_and_reporting_requirements": [
+    "Fresh paired preflight and independent admission must bind the exact frozen source and both current control manifests; native_ci owns full admission.",
+    "Any A31-only dispatch must use reviewed l08-only selection and report normal = NOT_RUN_THIS_RUN. Historical B30 must remain separately labeled run 34362984912/1 at 360fc.",
+    "This report makes no A31 PASS, B32 PASS, fresh B runtime, byte-identical new artifact, identical entire copy, combined qualification or Store-readiness claim.",
+    "Actual fresh A31 interaction/recovery evidence remains necessary; final frozen-source fullD and C06 are separate required chains.",
+    "A future production, build-recipe or normal-control change requires renewed applicability review; this approval covers only the exact reviewed delta."
+  ],
+  "reviewer_execution": {
+    "performed": "Read-only source/Git/evidence inspection; stdlib JSON/hash/AST/arithmetic comparisons; only this assigned report written.",
+    "git": "GIT_OPTIONAL_LOCKS=0 for Git inspections.",
+    "not_performed": "No tests, project imports, extracted-function execution, builds, compilers, native/tool-version commands, network/API/Actions, process queries/signals/cleanup, canonical/index edits or Git writes.",
+    "cleanup": "No reviewer fixtures, workers or build outputs allocated; no cleanup obligation created."
+  }
+}

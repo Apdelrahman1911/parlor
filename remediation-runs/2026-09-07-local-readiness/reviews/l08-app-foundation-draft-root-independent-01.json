@@ -1,0 +1,138 @@
+{
+  "schema_version": 1,
+  "id": "L08-APP-FOUNDATION-DRAFT-ROOT-INDEPENDENT-01",
+  "at": "2026-09-08T05:06:29.812239+00:00",
+  "reviewer": "/root",
+  "original_author": "/root/native_fix_review",
+  "freeze": {
+    "path": "remediation-runs/2026-09-07-local-readiness/reviews/l08-app-foundation-draft-freeze-01.json",
+    "sha256": "d1b2ce17dea38f4ca87396eaf4ccfae071247766e657f4e94358df9e7816a862"
+  },
+  "classification": "APPROVED_FOR_ISOLATED_SYNTHETIC_CONTROLS_AND_COMPOSITION_NOT_NATIVE_EXECUTION",
+  "reviewed_files": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/L08AppFoundation.m.in",
+      "sha256": "2fd43b9c9c6d33b9ba76f5dde9eb673c46dc5784917de403ed1781e516733c09",
+      "line_ranges": [
+        [
+          1,
+          501
+        ]
+      ],
+      "reviewer": "/root"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/L08AppFoundationBridge.h.in",
+      "sha256": "b65a86e26170b313ba00d875910da7499685736240a5cb644b6f916ec71e7d08",
+      "line_ranges": [
+        [
+          1,
+          7
+        ]
+      ],
+      "reviewer": "/root"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/L08AppFoundationLaunch.swift.in",
+      "sha256": "76e37762006d912e40b18508414dc55384aaa89be9212f7fd172b55a30edabb0",
+      "line_ranges": [
+        [
+          1,
+          74
+        ]
+      ],
+      "reviewer": "/root"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/L08AppFoundationUITests.swift.in",
+      "sha256": "5f3f136ec7c5925ed82f277c2ca60e6f22ba81e42e97cc22ef7bdc3954ef2e07",
+      "line_ranges": [
+        [
+          1,
+          49
+        ]
+      ],
+      "reviewer": "/root"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/README.md",
+      "sha256": "f8dc9e19b20cd2ff503c5c6594f8bb6ff76ec5a397fc254044f373ea05196136",
+      "line_ranges": [
+        [
+          1,
+          85
+        ]
+      ],
+      "reviewer": "/root"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/ROOT_INTEGRATION.md",
+      "sha256": "a8396d7a9c222b12191d1fd48daf2e0082af3647210c882776e5a221d5c00790",
+      "line_ranges": [
+        [
+          1,
+          102
+        ]
+      ],
+      "reviewer": "/root"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/app_foundation_copy.py",
+      "sha256": "dd164b26da5bb8af548fe0df358ba7f6e6e492df2418c7d3a26ae6db86154bb5",
+      "line_ranges": [
+        [
+          1,
+          203
+        ]
+      ],
+      "reviewer": "/root"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/app_foundation_receipts.py",
+      "sha256": "d72cd42eb71c321e864ae2c34dec0c2366b57915966d60b520b72bbcbe227655",
+      "line_ranges": [
+        [
+          1,
+          264
+        ]
+      ],
+      "reviewer": "/root"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/test_app_foundation.py",
+      "sha256": "10cb060a1ba52ad04c6449757f110ef1fd48dac5cffaf782ef0029f72a6df5cf",
+      "line_ranges": [
+        [
+          1,
+          498
+        ]
+      ],
+      "reviewer": "/root"
+    }
+  ],
+  "surrounding_paths": [
+    "l08-storage-functional-companion-02/run_ios_readiness.py:1-1006",
+    "l08-storage-functional-companion-02/copied_sources.py:1-231",
+    "l08-storage-functional-companion-02/l08_functional_copy.py:1-47",
+    "reviews/l08-native-foundation-control-03/run_control.py:1-245 (row validator/exported helpers and no import execution)"
+  ],
+  "reasoning": [
+    "Original companion inspector must precede additive transform; no existing copy/production data adopted. Exact copy inode/UID/canonical-path/hash guards and absence of hardlinked sources reviewed.",
+    "No production store/Keychain/preferences touched by direct native operation; exclusive token+boot synthetic sibling and fixed inode-bound child cleanup. No process-global umask/alarm/signals changed by native observer.",
+    "One main-thread UI activation plus atomic native entry protects remount/concurrent invocation. Work runs utility queue. Only closed metadata classes, bounded UUIDs and numeric errors retained; unknown exception bodies omitted.",
+    "Native eight operations/eight observations stay distinguishable from Complete-protection acceptance; metadata failure is deliberately observable, not passing strict L08.",
+    "Unavailable image creates preservable CONTROL_ERROR after collected rows. Separate observation/native image/XCTest/context/cleanup predicates enforce no false runtime pass.",
+    "30 authored tests read fully; actual execution/discovery is not yet evidence. Source guards are not native failure-injection proof."
+  ],
+  "integration_requirements": [
+    "Creation-time custody under deferred signals and same-inode canonicalization must be implemented in composed runner.",
+    "Preserve available new receipt before original validators; also after timeout/cancellation before exact owned-device deletion. No cleanup skip if preservation fails.",
+    "Keep original5XCTest/health8/storage13/host3 and strict L08 gates unchanged, add a distinct collection gate.",
+    "Bind full transformed source diff, inherited+new controls, source identity and generated Objective-C compilation context."
+  ],
+  "unverified": [
+    "Objective-C/Swift compilation, native execution, UI fit/hittability, inner native cleanup failure injection, actual protection metadata and hardware enforcement."
+  ],
+  "new_production_defect": false,
+  "builds_or_tests_started": false
+}

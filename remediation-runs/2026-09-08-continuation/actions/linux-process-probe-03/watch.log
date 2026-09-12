@@ -1,0 +1,65 @@
+Refreshing run status every 15 seconds. Press Ctrl+C to quit.
+
+* fix/local-readiness-2026-09-07 Production verification · 34487728583
+Triggered via workflow_dispatch less than a minute ago
+
+JOBS
+* Common, desktop, and Android release (ID 102906216906)
+  ✓ Set up job
+  ✓ Check out source
+  ✓ Set up JDK 21
+  ✓ Validate Linux process-probe source and controls
+  ✓ Install Linux process-probe emulator package
+  ✓ Claim fresh verification output ownership
+  - Install pinned Android SDK packages
+  - Record exact source and require a clean checkout
+  - Run common, desktop, Android, static-analysis, and release gates
+  - Stop Gradle after common-android
+  - Run release Android managed-device smoke tests
+  - Stop Gradle after managed-device
+  - Inspect unsigned Android release artifact and merged manifest
+  - Upload verification reports, mappings, and unsigned AAB
+  - Clean only attested verification outputs
+  - Upload verification cleanup receipt
+  X Observe Linux process access without a build
+  ✓ Upload bounded Linux process-probe evidence
+  X Finalize Linux process-probe resources and uploaded custody
+  ✓ Upload Linux process-probe cleanup receipt
+  * Post Set up JDK 21
+  * Post Check out source
+- Desktop, Kotlin Native, and Android resources strict verification (Windows x64) in 0s (ID 102906218272)
+- Desktop strict verification (Linux arm64) (ID 102906218305)
+- Desktop and Kotlin Native strict verification (macOS x64) (ID 102906218359)
+- iOS tests, release frameworks, and Swift wrapper (ID 102906265488)
+X fix/local-readiness-2026-09-07 Production verification · 34487728583
+Triggered via workflow_dispatch about 1 minute ago
+
+JOBS
+X Common, desktop, and Android release in 48s (ID 102906216906)
+  ✓ Set up job
+  ✓ Check out source
+  ✓ Set up JDK 21
+  ✓ Validate Linux process-probe source and controls
+  ✓ Install Linux process-probe emulator package
+  ✓ Claim fresh verification output ownership
+  - Install pinned Android SDK packages
+  - Record exact source and require a clean checkout
+  - Run common, desktop, Android, static-analysis, and release gates
+  - Stop Gradle after common-android
+  - Run release Android managed-device smoke tests
+  - Stop Gradle after managed-device
+  - Inspect unsigned Android release artifact and merged manifest
+  - Upload verification reports, mappings, and unsigned AAB
+  - Clean only attested verification outputs
+  - Upload verification cleanup receipt
+  X Observe Linux process access without a build
+  ✓ Upload bounded Linux process-probe evidence
+  X Finalize Linux process-probe resources and uploaded custody
+  ✓ Upload Linux process-probe cleanup receipt
+  ✓ Post Set up JDK 21
+  ✓ Post Check out source
+  ✓ Complete job
+- Desktop, Kotlin Native, and Android resources strict verification (Windows x64) in 0s (ID 102906218272)
+- Desktop strict verification (Linux arm64) (ID 102906218305)
+- Desktop and Kotlin Native strict verification (macOS x64) (ID 102906218359)
+- iOS tests, release frameworks, and Swift wrapper (ID 102906265488)

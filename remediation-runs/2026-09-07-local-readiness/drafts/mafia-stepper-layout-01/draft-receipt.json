@@ -1,0 +1,164 @@
+{
+  "schema_version": 1,
+  "author": "/root/factory_review",
+  "created_at": "2026-09-07T08:35:10.870034+00:00",
+  "classification": "UNCONFIRMED CANDIDATE - proposed executable witness not compiled or run; root independent validation required",
+  "scope": "Separate RoleCountStepperRow lead, not a ToggleRow regression. Draft test only, application and actual test source sets unchanged by this agent.",
+  "baseline_commit": "94e0c4c7f5c97fe95c3ced5b220cb0ff201523dc",
+  "source_evidence": [
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaSetupScreen.kt",
+      "sha256": "91fdd1317981899fbd2af1ede5461895d6e20571a81d286b2bd5bd9efb8fe9be",
+      "reviewed_ranges": [
+        [
+          118,
+          152
+        ],
+        [
+          199,
+          208
+        ],
+        [
+          286,
+          392
+        ]
+      ]
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/ParlorIconButton.kt",
+      "sha256": "35e5724d173936cff5d12e197b09f79ddc88e15430d47806cc1bc0edd487dcd3",
+      "reviewed_ranges": [
+        [
+          1,
+          94
+        ]
+      ]
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/ParlorCard.kt",
+      "sha256": "e764e6c7e09dc72464ad3eb14b41328a609a7d47475941054fb7af292f7a9d51",
+      "reviewed_ranges": [
+        [
+          1,
+          55
+        ]
+      ]
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/composeResources/values/strings.xml",
+      "sha256": "8f46afd35f71ad31e3d5b72cac1587e21dfc9e9a903b362e69eb79c6b33b551f",
+      "reviewed_ranges": [
+        [
+          4,
+          7
+        ],
+        [
+          85,
+          93
+        ]
+      ]
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/composeResources/values-ar/strings.xml",
+      "sha256": "a9416283c7bf130d9ca98b4ff0e08ae420bad4b935f476ed7166178c42c3bdcc",
+      "reviewed_ranges": [
+        [
+          4,
+          7
+        ],
+        [
+          85,
+          93
+        ]
+      ]
+    }
+  ],
+  "draft": {
+    "path": "remediation-runs/2026-09-07-local-readiness/drafts/mafia-stepper-layout-01/MafiaSetupStepperLayoutTest.kt",
+    "sha256": "f2232aa6b12e8e91f3639e1c0adcec4441a5a558724356a73db35cb3c9ab17e9",
+    "lines": 95,
+    "planned_test_methods": 4,
+    "executed_test_methods": 0,
+    "test_signatures": "All4 methods explicitly Unit; no ignore/disabled annotation."
+  },
+  "selectors_verified_against_current_resources": {
+    "en": {
+      "labels": [
+        "Mafia",
+        "Detective",
+        "Doctor",
+        "Maximum revotes"
+      ],
+      "descriptions": [
+        [
+          "Decrease Mafia count",
+          "Increase Mafia count"
+        ],
+        [
+          "Decrease Detective count",
+          "Increase Detective count"
+        ],
+        [
+          "Decrease Doctor count",
+          "Increase Doctor count"
+        ],
+        [
+          "Decrease Maximum revotes count",
+          "Increase Maximum revotes count"
+        ]
+      ]
+    },
+    "ar": {
+      "labels": [
+        "حرامي",
+        "محقق",
+        "دكتور",
+        "الحد الأقصى لإعادات التصويت"
+      ],
+      "descriptions": [
+        [
+          "أنقص عدد حرامي",
+          "زد عدد حرامي"
+        ],
+        [
+          "أنقص عدد محقق",
+          "زد عدد محقق"
+        ],
+        [
+          "أنقص عدد دكتور",
+          "زد عدد دكتور"
+        ],
+        [
+          "أنقص عدد الحد الأقصى لإعادات التصويت",
+          "زد عدد الحد الأقصى لإعادات التصويت"
+        ]
+      ]
+    }
+  },
+  "source_lead": [
+    "Actual common setup used by local organizer and LANhost; four Row callers are3rolecounts plusmaxrevotes.",
+    "At320dp, outer32dp padding and defaultCard32dp padding each side leave192dp row width. Unweightedlabel is measured before unweightednestedcontrols.",
+    "Nominal controls need48+8+32+8+48=144dp. Longlabel can consume neededwidth; ParlorIconButton size48 obeys reducedconstraints and clip(shape) can compress/hideicons.",
+    "This is a lead, not an observed runtimefailure. Actual test nodes must exist, eachselector/scroll succeeds, then dimension assertions mustfail to establish reproducible layout evidence."
+  ],
+  "test_design": [
+    "ActualMafiaSetupScreen at320x640/density1/fontScale1and2/EnglishArabic, same productionthemeandlocale providers as existing executedUISuite.",
+    "Scroll actualnonzero label; measure bothcontrolsemantics by exact currentlocalizedname; disabledcontrols stillrequirevisibleintendedsize.",
+    "Accumulate originalgeometry for all8controls to avoid firstfailure hiding siblingmanifestations. Check full48x48size,screencontainment and no overlap withlabel/eachother; no style-specifichorizontalarrangement/padding asserted.",
+    "No game/session construction change, role/timer rule changes, screenshots, physicaldevice claims, productiontesttags or appsource edits; testtag supplied onlythroughfixturemodifier."
+  ],
+  "recommended_root_command": "./gradlew :game-modes:mafia:desktopTest --tests *MafiaSetupStepperLayoutTest* --dependency-verification=strict via sharedownedGradlelane and mandatorycleanup after deliberateexecution",
+  "proposed_repair_if_confirmed": "Reserve48dp controls/count beforewrappinglabel, or use responsivevertical groupingwhere horizontalspace insufficient. Preservelocalizednames,currentboundsvalidation,unchangedsettings and largefontsupport. Do notmerely shrinkfont/touchtargets.",
+  "counter_evidence_to_investigate": [
+    "Defaultrootwindow and resourceenvironment couldinvalidatefixture; comparewithprecedingToggleactual320dp tests.",
+    "Semantics touchingarea expansion differsfromdrawn/layoutbounds; fullbounds measurements mustverifyrealbuttongeometry, notassume requiredSize semantics.",
+    "Disabledmaxrolecountincrements mayfunctionallybeunneeded yetvisuallymustremainvalid; notclaimcannotconfigure basedonlyondisabledcontrolgeometry.",
+    "No separately confirmedfinding untilrootreopensourceandexecutesorprovesfullreachablepath."
+  ],
+  "process_cleanup": {
+    "builds_or_native_workers_started": false,
+    "generated_build_outputs_created": false,
+    "bytecode_created": false,
+    "global_caches_or_user_work_touched": false
+  }
+}

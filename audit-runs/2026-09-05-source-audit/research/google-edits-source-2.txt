@@ -1,0 +1,379 @@
+URL: https://developers.google.com/android-publisher/api-ref/rest/v3/edits.tracks/update
+Access UTC: 2026-09-05T07:35:13.233222+00:00
+HTTP 200
+Resolved URL: https://developers.google.com/android-publisher/api-ref/rest/v3/edits.tracks/update
+
+Method: edits.tracks.update  |  Google Play Developer API  |  Google for Developers
+Skip to main content
+Google
+Play Developer API
+/
+English
+Deutsch
+Español
+Español – América Latina
+Français
+Indonesia
+Italiano
+Polski
+Português – Brasil
+Tiếng Việt
+Türkçe
+Русский
+עברית
+العربيّة
+فارسی
+हिंदी
+বাংলা
+ภาษาไทย
+中文 – 简体
+中文 – 繁體
+日本語
+한국어
+Sign in
+Guides
+Reference
+Samples
+Google
+Play Developer API
+Guides
+Reference
+Samples
+Resource Summary
+REST Resources
+applications
+Overview
+dataSafety
+applications.deviceTierConfigs
+Overview
+create
+get
+list
+applications.tracks.releases
+Overview
+list
+apprecovery
+Overview
+addTargeting
+cancel
+create
+deploy
+list
+appsigning
+Overview
+enrollApp
+rotateAppSigningKey
+appstoreappsreview
+Overview
+createappstorehostedapp
+updateappstorehostedapp
+updateappstorehostedapppublishstatus
+uploadapk
+uploadappstoreapppolicydeclarationfile
+uploadimage
+appstorecatalog.recentAppViews
+Overview
+get
+appstorecatalog.recentUpdateEvents
+Overview
+list
+edits
+Overview
+commit
+delete
+get
+insert
+validate
+edits.apks
+Overview
+addexternallyhosted
+list
+upload
+edits.bundles
+Overview
+list
+upload
+edits.countryavailability
+Overview
+get
+edits.deobfuscationfiles
+Overview
+upload
+edits.details
+Overview
+get
+patch
+update
+edits.expansionfiles
+Overview
+get
+patch
+update
+upload
+edits.images
+Overview
+delete
+deleteall
+list
+upload
+edits.listings
+Overview
+delete
+deleteall
+get
+list
+patch
+update
+edits.testers
+Overview
+get
+patch
+update
+edits.tracks
+Overview
+create
+get
+list
+patch
+update
+externaltransactions
+Overview
+createexternaltransaction
+getexternaltransaction
+refundexternaltransaction
+generatedapks
+Overview
+download
+list
+grants
+Overview
+create
+delete
+patch
+inappproducts
+Overview
+batchDelete
+batchGet
+batchUpdate
+delete
+get
+insert
+list
+patch
+update
+internalappsharingartifacts
+Overview
+uploadapk
+uploadbundle
+monetization
+Overview
+convertRegionPrices
+monetization.onetimeproducts
+Overview
+batchDelete
+batchGet
+batchUpdate
+delete
+get
+list
+patch
+monetization.onetimeproducts.purchaseOptions
+Overview
+batchDelete
+batchUpdateStates
+monetization.onetimeproducts.purchaseOptions.offers
+Overview
+activate
+batchDelete
+batchGet
+batchUpdate
+batchUpdateStates
+cancel
+deactivate
+list
+monetization.subscriptions
+Overview
+archive
+batchGet
+batchUpdate
+create
+delete
+get
+list
+patch
+monetization.subscriptions.basePlans
+Overview
+activate
+batchMigratePrices
+batchUpdateStates
+deactivate
+delete
+migratePrices
+monetization.subscriptions.basePlans.offers
+Overview
+activate
+batchGet
+batchUpdate
+batchUpdateStates
+create
+deactivate
+delete
+get
+list
+patch
+orders
+Overview
+batchget
+get
+refund
+reviewrefund
+purchases.products
+Overview
+acknowledge
+consume
+get
+purchases.productsv2
+Overview
+getproductpurchasev2
+purchases.subscriptions
+Overview
+acknowledge
+cancel
+defer
+purchases.subscriptionsv2
+Overview
+cancel
+defer
+get
+revoke
+purchases.voidedpurchases
+Overview
+list
+reviews
+Overview
+get
+list
+reply
+systemapks.variants
+Overview
+create
+download
+get
+list
+users
+Overview
+create
+delete
+list
+patch
+Types
+AllUsers
+AndroidSdks
+AppImageType
+AppRecoveryAction
+CertificateHashes
+CloudKmsKey
+CloudKmsKeyAndCert
+ExpansionFileType
+MigrateBasePlanPricesResponse
+Money
+OfferTag
+PageInfo
+Price
+ProductUpdateLatencyTolerance
+RecoveryStatus
+RegionalPriceMigrationConfig
+RegionalProductAgeRatingInfo
+RegionalTaxRateInfo
+Regions
+RegionsVersion
+RestrictedPaymentCountries
+StreamingTaxType
+SubscriptionTaxAndComplianceSettings
+Targeting
+TaxTier
+TokenPagination
+WithdrawalRightType
+Home
+Products
+Google Play Developer API
+Reference
+Method: edits.tracks.update
+Stay organized with collections
+Save and categorize content based on your preferences.
+Page Summary
+outlined_flag
+This documentation describes how to update a track using a PUT request to the specified URL.
+The request requires path parameters for the package name, edit ID, and track identifier.
+The request body should contain an instance of Track, and a successful response will also contain an instance of Track.
+Authorization requires the https://www.googleapis.com/auth/androidpublisher OAuth scope.
+HTTP request
+Path parameters
+Request body
+Response body
+Authorization scopes
+Try it!
+Updates a track.
+HTTP request
+PUT https://androidpublisher.googleapis.com/androidpublisher/v3/applications/{packageName}/edits/{editId}/tracks/{track}
+The URL uses gRPC Transcoding syntax.
+Path parameters
+Parameters
+packageName
+string
+Package name of the app.
+editId
+string
+Identifier of the edit.
+track
+string
+Identifier of the track.
+More on track name
+Request body
+The request body contains an instance of Track.
+Response body
+If successful, the response body contains an instance of Track.
+Authorization scopes
+Requires the following OAuth scope:
+https://www.googleapis.com/auth/androidpublisher
+Except as otherwise noted, the content of this page is licensed under the Creative Commons Attribution 4.0 License, and code samples are licensed under the Apache 2.0 License. For details, see the Google Developers Site Policies. Java is a registered trademark of Oracle and/or its affiliates.
+Last updated 2025-05-21 UTC.
+[[["Easy to understand","easyToUnderstand","thumb-up"],["Solved my problem","solvedMyProblem","thumb-up"],["Other","otherUp","thumb-up"]],[["Missing the information I need","missingTheInformationINeed","thumb-down"],["Too complicated / too many steps","tooComplicatedTooManySteps","thumb-down"],["Out of date","outOfDate","thumb-down"],["Samples / code issue","samplesCodeIssue","thumb-down"],["Other","otherDown","thumb-down"]],["Last updated 2025-05-21 UTC."],[],["This document outlines the process to update a track using a PUT HTTP request to the Android Publisher API. The request is made to a specific URL containing `packageName`, `editId`, and `track` as path parameters. The request body, containing a `Track` instance, is required, and a successful response also returns a `Track` instance.  Authorization requires the `https://www.googleapis.com/auth/androidpublisher` OAuth scope. A 'Try it!' section is also available.\n"]]
+Product Info
+Terms of Service
+Related Links
+Google Play Console
+Get Started with Publishing
+Related APIs
+Play Games Services
+Android
+Chrome
+Firebase
+Google Cloud Platform
+Google AI
+All products
+Terms
+Privacy
+Manage cookies
+English
+Deutsch
+Español
+Español – América Latina
+Français
+Indonesia
+Italiano
+Polski
+Português – Brasil
+Tiếng Việt
+Türkçe
+Русский
+עברית
+العربيّة
+فارسی
+हिंदी
+বাংলা
+ภาษาไทย
+中文 – 简体
+中文 – 繁體
+日本語
+한국어

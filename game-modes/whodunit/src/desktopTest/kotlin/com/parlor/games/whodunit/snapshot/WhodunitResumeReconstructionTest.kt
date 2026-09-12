@@ -331,51 +331,59 @@ class WhodunitResumeReconstructionTest {
     }
 
     @Test
-    fun resume_deletes_a_retired_solo_snapshot_before_decoding_private_state() = runTest {
+    fun resume_preserves_a_retired_solo_snapshot_without_rewriting_private_state() = runTest {
         val sessionId = SessionId("retired-solo")
-        val store: SnapshotStore = FileBackedSnapshotStore(InMemorySnapshotFileSystem(), json)
-        store.save(
-            GameSnapshot(
-                sessionId = sessionId,
-                gameId = WhodunitIds.GameId,
-                engineVersion = engineVersion,
-                createdAt = Instant.fromEpochSeconds(1_700_000_022),
-                phaseId = "legacy-solo-phase",
-                // The retired-mode migration must happen from the authenticated
-                // envelope metadata; it must not need to deserialize old private state.
-                payload = "legacy payload that is intentionally not decodable".encodeToByteArray(),
-                metadata = mapOf("playMode" to "Solo"),
-            ),
-        )
-
-        val result = loadResumedSession(store, WhodunitDefinition(json), sessionId)
-
-        assertThat(result).isInstanceOf(Result.Failure::class)
-        assertThat((result as Result.Failure).error).isEqualTo(DataError.NotFound)
-        assertThat(store.load(sessionId)).isInstanceOf(Result.Failure::class)
-        assertThat((store.listUnfinished() as Result.Success).data).isEqualTo(emptyList())
-    }
-
-    @Test
-    fun resume_propagates_cancellation_during_retired_snapshot_cleanup() = runTest {
-        val sessionId = SessionId("cancelled-retired-solo")
+        val backing = FileBackedSnapshotStore(InMemorySnapshotFileSystem(), json)
         val snapshot = GameSnapshot(
             sessionId = sessionId,
             gameId = WhodunitIds.GameId,
             engineVersion = engineVersion,
-            createdAt = Instant.fromEpochSeconds(1_700_000_024),
+            createdAt = Instant.fromEpochSeconds(1_700_000_022),
             phaseId = "legacy-solo-phase",
-            payload = "must not be decoded".encodeToByteArray(),
+            // Unsupported-mode rejection uses authenticated metadata. It must
+            // not migrate, decode into a new game, or destroy old private data.
+            payload = "legacy payload that is intentionally not decodable".encodeToByteArray(),
             metadata = mapOf("playMode" to "Solo"),
         )
+        backing.save(snapshot)
+        var deletes = 0
+        var rewrites = 0
+        val store = object : SnapshotStore by backing {
+            override suspend fun delete(sessionId: SessionId): EmptyResult<DataError> {
+                deletes++
+                return backing.delete(sessionId)
+            }
+
+            override suspend fun save(snapshot: GameSnapshot): EmptyResult<DataError> {
+                rewrites++
+                return backing.save(snapshot)
+            }
+        }
+
+        val result = loadResumedSession(store, WhodunitDefinition(json), sessionId)
+
+        assertThat(result).isInstanceOf(Result.Failure::class)
+        assertThat((result as Result.Failure).error).isEqualTo(DataError.CorruptedData)
+        assertThat(deletes).isEqualTo(0)
+        assertThat(rewrites).isEqualTo(0)
+        assertThat((store.load(sessionId) as Result.Success).data).isEqualTo(snapshot)
+        assertThat((store.listUnfinished() as Result.Success).data).containsExactly(sessionId)
+    }
+
+    @Test
+    fun resume_propagates_load_cancellation_without_deleting_a_retired_snapshot() = runTest {
+        val sessionId = SessionId("cancelled-retired-solo")
+        var deletes = 0
         val store = object : SnapshotStore {
             override suspend fun save(snapshot: GameSnapshot): EmptyResult<DataError> = Result.Success(Unit)
 
             override suspend fun load(sessionId: SessionId): Result<GameSnapshot, DataError> =
-                Result.Success(snapshot)
-
-            override suspend fun delete(sessionId: SessionId): EmptyResult<DataError> =
                 throw CancellationException("resume was cancelled")
+
+            override suspend fun delete(sessionId: SessionId): EmptyResult<DataError> {
+                deletes++
+                return Result.Success(Unit)
+            }
 
             override suspend fun listUnfinished(): Result<List<SessionId>, DataError> =
                 Result.Success(emptyList())
@@ -384,6 +392,7 @@ class WhodunitResumeReconstructionTest {
         assertFailsWith<CancellationException> {
             loadResumedSession(store, WhodunitDefinition(json), sessionId)
         }
+        assertThat(deletes).isEqualTo(0)
     }
 
     @Test
@@ -476,13 +485,14 @@ class WhodunitResumeReconstructionTest {
             Result.Failure(DataError.CorruptedData),
         )
 
-        // Compatibility path for snapshots written before content identity was
-        // persisted: structural and loaded-content validation are mandatory.
+        // Pre-release saves without an exact content binding cannot safely
+        // launch against potentially changed prose, even with valid references.
         assertThat(validateResumedSessionForCase(exact.copy(contentIdentity = null), case))
-            .isInstanceOf(Result.Success::class)
+            .isEqualTo(Result.Failure(DataError.CorruptedData))
 
         val wrongCase = exact.copy(
-            contentIdentity = null,
+            // Preserve the matching identity so this still exercises case/state
+            // consistency rather than being rejected only for absent metadata.
             state = state.copy(public = state.public.copy(caseId = CaseId("other-case"))),
         )
         assertThat(validateResumedSessionForCase(wrongCase, case)).isEqualTo(

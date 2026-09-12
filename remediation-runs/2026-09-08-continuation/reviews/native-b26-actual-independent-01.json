@@ -1,0 +1,335 @@
+{
+  "schema_version": 1,
+  "kind": "INDEPENDENT_ACTUAL_NATIVE_B26_SOURCE_RUNTIME_LIBPROC_FAILURE_AND_CLEANUP_RECONCILIATION",
+  "reviewer": "/root/portability_review",
+  "implementation_author": "/root/lifecycle_controls",
+  "execution_coordinator": "/root",
+  "recorded_at": "2026-09-09T08:30:47.071Z",
+  "status": "RECONCILED_RUNTIME_PASS_PROVENANCE_FAIL_CLEANUP_PASS",
+  "scope": "Actual ios-readiness-26 from run34321128224 attempt1. This is neither a passing overall B gate nor approval/execution of a later correction. A25, candidate-consumer, combined qualification and workflow-wide cleanup are separate reviews.",
+  "actual_statuses": {
+    "status": "FAIL",
+    "runtime_evidence_status": "PASS",
+    "provenance_status": "FAIL",
+    "notice_package_status": "PASS",
+    "cleanup_status": "PASS"
+  },
+  "evidence_root": "remediation-runs/2026-09-08-continuation/actions/34321128224/native-evidence/ios-readiness-26",
+  "source_and_copy": {
+    "source": {
+      "commit": "0303a76771794c52ea96a7d7f47eb689f5b236ba",
+      "tree": "4d2364b41a5a29b3c66a3ccc5307a9d84c4f5900",
+      "branch": "fix/local-readiness-2026-09-07",
+      "tracked_status": "",
+      "diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_manifest_sha256": "9bad44488e54241069555bd4a38ac95eed99132df76820dbccf1ba378cdb4b5b"
+    },
+    "source_rows": 828,
+    "all_source_rows_rehashed_from_frozen_git_blobs": true,
+    "control_rows": 95,
+    "control_sha256": "5660d813d41f3e1dc2a86a932b8f3fca3bcdf214ca7dbd372da7197820e5f73a",
+    "control_without_binding_sha256": "dabaa5bc9448bb080184f4a03aa734812c9e098f3b50c0c6fd2c61d1b7bae339",
+    "prior204_control_rows_identical": true,
+    "binding": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34321128224/native-evidence/reviewed-preflight/ios-readiness-source-ci.json",
+      "bytes": 300363,
+      "sha256": "ba80d3edcba9132488636068d06e37e5d6f5742e2e1ba506390f20dce12dfc93"
+    },
+    "copied_rows": 753,
+    "copy_only_changed": [
+      {
+        "path": "iosApp/iosApp.xcodeproj/project.pbxproj",
+        "original_sha256": "625103b4676a017beb4619c61b705efc84c2be47b71603bddd840c1d3856ea9d",
+        "copied_sha256": "a1514c1158004fc3c77403d187349c00c23070d7bd04ab2bd3175b421328137a"
+      },
+      {
+        "path": "iosApp/iosAppUITests/IOSAppLaunchUITests.swift",
+        "original_sha256": "e903278fc8defcac9a4d03a52495c1364a361222e5f369059c5d6b6416fb6eb7",
+        "copied_sha256": "c3d5cd42d60371cffee6ec4e8cdc462165f953dbef352bcdbf0f3f2d2a5a4ed2"
+      }
+    ],
+    "postbuild_copied_rows_unchanged": true,
+    "source_comparison": "All828 ordinary source rows independently SHA256-checked against immutable0303 Git blobs; native input/before/after and archived fresh binding source objects equal. The native binding is byte-identical to preflight34318962397. Later coordinator worktree edits are not attributed to historical B26.",
+    "transformations": {
+      "application_source": 0,
+      "ui_test": 1,
+      "owned_build_phase": 1
+    },
+    "copied_diff_review": "Retained6917B diff changes only the UI test and task-owned project phase. The UI test retains English launch arguments, disallows PARLOR_ fixture inputs and performs passive Home observations. Copied phase retains strict dependency verification/normalization with owned Gradle stop/signing guards; no production application probe.",
+    "prior_control_proof": {
+      "review": "remediation-runs/2026-09-08-continuation/reviews/native-b26-normal-controls-independent-01.json",
+      "sha256": "e49183ac4074715fff3d3a63d7695d5f141b4cb817f7340a5b2b8eb4ee1f76eb",
+      "cycle": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-b26-normal-controls-01",
+      "actual_tests": 204,
+      "reuse_basis": "The prior actual driver log's before/after94-row closure exactly equals B26 controls excluding its fresh source binding. Local canonical file SHA256s and closed control membership also reconciled. This reuses Linux synthetic-control proof; no204 tests were rerun here and it is not application-runtime proof."
+    }
+  },
+  "platform": {
+    "os": "macOS15.7.9 /24G830",
+    "darwin": "24.6.0",
+    "architecture": "arm64",
+    "xcode": "26.3 /17C529",
+    "sdk_and_runtime": "26.2 /23C54",
+    "simulator_model": "iPhone17Pro",
+    "owned_uuid": "DD00A7A9-26B0-4E0A-A3F0-C2B8DEFDE0CF",
+    "signing": "adhoc",
+    "lifecycle": "direct-owned-v1",
+    "limit": "Simulator Debug observation only; not physical-device or Store-signing evidence."
+  },
+  "runtime": {
+    "status": "PASS_WITHIN_FIXED_ENGLISH_HOME_OBSERVATION_SCOPE",
+    "method": "IOSAppLaunchUITests/testColdLaunchRendersComposeHomeWithoutUnexpectedAlert()",
+    "executed_repetitions": 8,
+    "distinct_methods": 1,
+    "raw_xcresult_reconciliation": "The eight identified Repetition1-8 leaves in xcresult-tests equal test-details.testRuns, including durations/results. Summary total1/passed1 is aggregate method count; destination passed8 is repetition count. Zero failed/skipped/expected failures; xcodebuild exit0 and TEST SUCCEEDED.",
+    "durations_seconds": [
+      31.976976990699768,
+      17.76719605922699,
+      15.577582001686096,
+      16.331326007843018,
+      16.2131849527359,
+      15.87752103805542,
+      15.699385046958923,
+      15.17133903503418
+    ],
+    "marker_reconciliation": "64 raw xcodebuild markers:8unique begin IDs,48samples,8completions. Each six-sample sequence0..5 and completion exactly matches normal-launch-observations.json; times monotonic; every final sample and completion exceeds10seconds. All48 samples foreground=true,homeExists=true,alertVisible=false.",
+    "completed_window_seconds_range": [
+      10.85981883333352,
+      12.656201458333271
+    ],
+    "xcresult_identity_limit": "Observation UUIDs are in the marker stream, not XCResult repetition leaves. Counts, method, ordered durations and successful outcomes reconcile; no nonexistent common UUID field is inferred.",
+    "uncompressed_log": {
+      "bytes": 288702,
+      "sha256": "47328be17d07f4b4d70e9145e99d034b9ae7b2a702c506267136db965800bbe2"
+    },
+    "limitation": "Periodic XCTest-side Home/foreground/alert observations, not continuous liveness, PID continuity, game/session behavior, per-repetition mapped-image provenance or Follow System behavior. The separate ninth public launch is not a ninth passing UI test."
+  },
+  "artifacts_and_notices": {
+    "installed_and_owned_derived_images": [
+      {
+        "relative_path": "Frameworks/ComposeApp.framework/ComposeApp",
+        "bytes": 82428752,
+        "sha256": "34a3c551407af17016b3e8745748bc80a4c6b8ea7564c912056f85618234100b"
+      },
+      {
+        "relative_path": "Parlor",
+        "bytes": 57792,
+        "sha256": "755485fc6a399d55eef64b4407dd2fbfd9704c3c862498970c02da908400a4b4"
+      },
+      {
+        "relative_path": "Parlor.debug.dylib",
+        "bytes": 191424,
+        "sha256": "285091edc4947acbb11aaf85c40cf011916edcecefba93fff90414a2821740cf"
+      },
+      {
+        "relative_path": "__preview.dylib",
+        "bytes": 34896,
+        "sha256": "fb79761f58f1b06713e631d6474eca1950b567b31ed64e465ccbee43d05e4dbb"
+      }
+    ],
+    "binding_reconciliation": "All10 retained dwarfdump UUID records match exact artifact-binding paths/ARM64 UUIDs. Four installed and four owned DerivedData images match inventory byte counts/hashes and counterpart UUIDs. The inventory is not the unretained selected-image table.",
+    "queried_artifact": {
+      "origin": "installed-app",
+      "relative_path": "Frameworks/ComposeApp.framework/ComposeApp",
+      "sha256": "34a3c551407af17016b3e8745748bc80a4c6b8ea7564c912056f85618234100b",
+      "bytes": 82428752,
+      "uuid": "72b87ad3-9d33-3644-b607-48c95f9b1b40",
+      "kind": "compose-framework"
+    },
+    "other_framework_not_interchangeable": {
+      "origin": "owned-copy-build",
+      "bytes": 82410600,
+      "sha256": "8d959f843bbcaab04ef2c3d70ddf51f4d0216913d0aeed1fe4660fcef1102454",
+      "uuid": "72b87ad3-9d33-3644-b607-48c95f9b1b40",
+      "limitation": "Same UUID does not make these different bytes the installed queried framework."
+    },
+    "notices": "Built/installed package reports are byte-identical; all26 listed resource byte counts/SHA256s independently match repository source. Actual notice commands exited0. This is packaging evidence, not owner/legal clearance.",
+    "signatures": "Built/installed codesign --verify --strict --verbose=2 commands exited0; retained logs say valid on disk and satisfies Designated Requirement. Adhoc simulator verification only.",
+    "binary_retention_limit": "Image bytes and helper executable were removed with owned allocation; their historical hashes are recorded by native controls, not independently rehashed from retained binaries here."
+  },
+  "libproc": {
+    "status": "FAIL",
+    "actual_execution": "Host clang -std=c11 -Wall -Wextra -Werror -arch arm64 linked-lproc helper compiled exit0 with empty log. Separate normal simctl launch and sample82598 1 10 both exited0. The first actual PROC_PIDREGIONPATHINFO helper command exited1; there was no kernel-region-02.json or final separate-external-image-provenance.json.",
+    "helper_sha256_recorded": "2b5737a3b95d5b0fa9d8b1895d092835de366b54f86ee390108f48da6e614354",
+    "external_launch_identity": {
+      "pid": 82598,
+      "uid": 501,
+      "started": [
+        1788940393,
+        601917
+      ],
+      "executable": "/Users/runner/Library/Developer/CoreSimulator/Devices/DD00A7A9-26B0-4E0A-A3F0-C2B8DEFDE0CF/data/Containers/Bundle/Application/B47EC6C7-ECF7-4FCC-A2D0-FB521E21AAC6/Parlor.app/Parlor",
+      "generation": 361618,
+      "audit_token_sha256": "9117e85e34e00b27081403d7b9d56a83594426bb0c2fbfa0cb4f6e0128cea2b4",
+      "bracketed_lifetime_unchanged": true
+    },
+    "lifetime_scope": "Native receipt records successful initial launch identity/audit-token bracket and sample-command lifetime verification. Source pre-query target/helper checks completed before issuing region01. require() raises on exit1 before its post-query target/helper checks: no completed post-query lifetime bracket is credited.",
+    "failure": {
+      "schema_version": 1,
+      "status": "FAIL",
+      "reason": "not-selected-executable-region",
+      "native_error": 0,
+      "region_diagnostic": {
+        "requested_start": 4398891008,
+        "requested_end_exclusive": 4441608992,
+        "pri_address": 4398891008,
+        "pri_size": 42729472,
+        "pri_offset": 0,
+        "pri_protection": 5,
+        "pri_max_protection": 7,
+        "pri_flags": 0,
+        "native_structure_bytes": 1272,
+        "native_return_bytes": 1272,
+        "query_errno": 0
+      }
+    },
+    "six_predicates": {
+      "address_not_start": false,
+      "zero_size": false,
+      "size_over_sample_span": true,
+      "offset_nonzero": false,
+      "submap": false,
+      "protection_not_RX": false
+    },
+    "arithmetic": {
+      "sample_start_hex": "0x10631c000",
+      "sample_end_exclusive_hex": "0x108bd9320",
+      "sample_span_bytes": 42717984,
+      "kernel_span_bytes": 42729472,
+      "kernel_end_exclusive_hex": "0x108bdc000",
+      "extra_bytes": 11488,
+      "ceiling_to_16384": 42729472,
+      "limit": "16KiB rounding is numerically consistent, not observed target page size, artifact LC_SEGMENT_64 geometry, causal proof or authorization to relax either C/Python cap. Whole file82428752B is not an executable mapping bound."
+    },
+    "actual_abi_scope": "Full returned structure1272==compiled sizeof1272 and captured errno0. Historical synthetic1328 is not substituted. This establishes actual query return behavior, not successful mapped-image corroboration.",
+    "unreached_checks": [
+      "C exact kernel path, vnode device/inode/size and final lstat identity checks follow the failed predicate and were not reached.",
+      "Caller post-query PID/audit lifetime and helper rehash, bind_regions PASS validation, final selected-artifact rehash and final provenance receipt were not reached."
+    ],
+    "source_trace": "kernel_image_region.c.in54-75; kernel_image_regions.py37-48; run_normal_ios_launch.py271-273,576-591,620-675. The source's general external_provenance_limitation string describes intended capability, not proof those later checks executed in this failed run.",
+    "conclusion": "Normal UI runtime evidence passes its narrow scope; actual Debug libproc provenance remains incomplete. The failed size guard must not be turned green by guessed rounding, dropped checks or reclassification."
+  },
+  "cleanup": {
+    "status": "PASS_FOR_OWNED_B26_NATIVE_ALLOCATION",
+    "xcode_stop_delay_seconds": 0.009586,
+    "failure_stop_delay_seconds": 0.002802,
+    "gradle_stops": "Both copied-wrapper stop commands exited0 and logs state no Gradle daemons running; embedded phase separately records build_exit0/stop_exit0.",
+    "journal_events": 58,
+    "journal_commands": 14,
+    "journal_reconciliation": "All14 intent/launched/result ordinals reconcile to receipt commands; every direct lifecycle command registered/reaped exit0. Journal command digest and source/control digests independently recomputed. Exact shutdown ordinal10/delete ordinal13 succeeded; post-delete metadata=null and directory_absent=true for owned UUID.",
+    "lifecycle_command_digest": "61817f9a33e167b64fb7a234f19e51b1ac334893eb7c0ce91e533bc0ac1924c0",
+    "postbuild_barrier": {
+      "status": "PASS",
+      "build_attempted": true,
+      "evidence_preserved": true,
+      "strict_stop": true,
+      "fresh_strict_refresh": true,
+      "direct_build_handles": 33,
+      "direct_build_handles_reaped": 33
+    },
+    "secondary_cleanup": "Final FIFO ledger reconciles exact two attested FIFO removals and their two empty parent directories; pending/remaining empty.",
+    "finalization": "All15 recorded stages PASS, including stopped-worker checks, postbuild753-input equality, retained-log compaction, exact copy/build/DerivedData/temp removal and final source/control identity. No recorded remaining owned workers, unknown holders, secondary attestation errors or cleanup errors.",
+    "temporary_directory_removed": true,
+    "finished_at": "2026-09-09T07:54:49.089911+00:00",
+    "scope_limit": "Archived reports remain retained; this is evidence reconciliation of the owned native finalizer, not a new observation of a retired runner or workflow-wide/global-cache cleanup."
+  },
+  "custody": {
+    "run_id": 34321128224,
+    "attempt": 1,
+    "workflow": ".github/workflows/production-verification.yml",
+    "terminal_conclusion": "failure",
+    "artifact_id": 10093877853,
+    "artifact_name": "native-evidence-34321128224-1",
+    "zip_bytes": 983974,
+    "zip_sha256": "12d80ca4cd335b583799dd1ec8e9f76970163b49a2403b54b9540ed5e813562d",
+    "validation": "ZIP bytes/digest match retained GitHub artifact metadata bound to0303/run34321128224. All51 B26 local files and archived reviewed-preflight binding are byte-identical to corresponding members in the148-entry uploaded ZIP. No network/API calls made by reviewer."
+  },
+  "followup_investigation_review": {
+    "author_report": "remediation-runs/2026-09-08-continuation/reviews/native-b26-region-followup-01/author-report.json",
+    "bytes": 22125,
+    "sha256": "34c115a68155f54e4d8670a0b06224a4de20a313f0d5b371a4555d8d42368c49",
+    "status": "AGREE_BOUNDED_FINDING_NOT_IMPLEMENTATION_APPROVAL",
+    "evidence": "All30 pinned source/evidence/reference files rehashed. Reopened retained XNU bsd_vm.c1131-1132, proc_info.c1155-1188 and libproc.c100-110: map-entry extent and full-return/path-vnode checks are distinct. These references are not exact B26 Darwin provenance. Independent repository search found no ComposeApp binary; archive has no retained image/layout evidence.",
+    "conclusion": "Author correctly isolates only the interval-size predicate and withholds an acceptance correction. Exact historical artifact metadata, if genuinely available, or a separately reviewed/authorized fresh owned discriminator can resolve missing geometry; fresh results cannot retroactively fill B26. No current diagnostic draft/source change/dispatch is approved by this report."
+  },
+  "evidence_manifest": {
+    "receipt.json": {
+      "bytes": 429629,
+      "sha256": "a3224c9db87e28b9099b5ffa424fe8c2667c9dcf38b80eb870b03b401a80caf9"
+    },
+    "input-manifest.json": {
+      "bytes": 169255,
+      "sha256": "891910eb9d6633ed3ea2cc0eb27b2733d4b760ccd0376338c0cfb70e2e5cd3a2"
+    },
+    "kernel-region-01.json": {
+      "bytes": 373,
+      "sha256": "e578ca5be87de438ee7ef14ee079e24b3e770ec41ac001624fbe1fc7c728811c"
+    },
+    "normal-launch-observations.json": {
+      "bytes": 14858,
+      "sha256": "33e7cdb317c27b2eaad35414e0a01708adba66ac1d842ea7d568c4289db96eae"
+    },
+    "xcodebuild.log.gz": {
+      "bytes": 27673,
+      "sha256": "12c384f51208aae0094f9be8c3f7c8cdd31cd7df2c7829135a3a8b59ed696b91"
+    },
+    "xcresult-summary.json": {
+      "bytes": 1107,
+      "sha256": "431cb1599709928cd99ca57609543226bf95aeadd6bf73549cea12edb06e8765"
+    },
+    "xcresult-tests.json": {
+      "bytes": 4464,
+      "sha256": "c319b97bf1500c3ee53a36cd774e74b7bbfa6743b8092dfee7df0905e8260c9d"
+    },
+    "xcresult-test-details.json": {
+      "bytes": 2722,
+      "sha256": "1a9c4ea3efe2dea2ca6e2b99e3847712afa30b5f6b1d82d339e3f612df8e9e19"
+    },
+    "external-image-artifact-bindings.json": {
+      "bytes": 4719,
+      "sha256": "d57d748073fe4bcfdd17628639f20f59db660f7f87d8d75b08136546c50b2161"
+    },
+    "built-installed-binary-inventory.json": {
+      "bytes": 1565,
+      "sha256": "8b9f7a3415cdf00aa516de38bde5e596221f44f042859cabb88bb33ef286e059"
+    },
+    "simulator-lifecycle.jsonl": {
+      "bytes": 27261,
+      "sha256": "811d032cf81ee33033db6e77c93c226da64b3d3fe647c451d7348a16dbf19712"
+    },
+    "secondary-fifo-final.json": {
+      "bytes": 2935,
+      "sha256": "7449fbf3839c2b669dc1b378eab1a617324d0b6f6abe8a58b0377bb7874385ad"
+    },
+    "copied-source-manifest.json": {
+      "bytes": 216169,
+      "sha256": "a8fe053774f51dd5881f79fc5e14d0c9ae6cf84e68998067813c5753154182e3"
+    },
+    "copied-source.diff": {
+      "bytes": 6917,
+      "sha256": "c3f3ad098882e09f5dff3c5dafb7a51cb447fc724b5cc94353bdf81cd9a95f37"
+    },
+    "copied-inputs-after-build.json": {
+      "bytes": 244340,
+      "sha256": "5071a364306eced5318b12f512e9b8826a8eeb65ea93e0ac22de199c0335ad92"
+    },
+    "built-notice-package.json": {
+      "bytes": 10407,
+      "sha256": "5b22822de051375fe5f2a6ab54daa4db11c0addfd86b183e39a200c09ace2db5"
+    },
+    "stop-xcode-immediate.log": {
+      "bytes": 31,
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    "stop-final.log": {
+      "bytes": 31,
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    }
+  },
+  "reviewer_actions": {
+    "performed": "Read-only source/Git/JSON/SHA/arithmetic and in-memory gzip/ZIP comparisons; no project imports, test/compiler/native commands, API/Actions calls, source/control edits or process signaling/cleanup. This report is the sole owned output.",
+    "administrative_corrections": "Initial reviewer-only artifact assertion used incorrect origin labels; corrected to actual installed-app/owned-derived-app. A later current-source rehash saw three separate coordinator CI-label edits; immutable0303 Git blobs were then used for all828 source rows. Neither was an application/control-test failure and no native work was retried.",
+    "cleanup": "No reviewer-created build, fixture or native worker; no reviewer cleanup cycle required."
+  },
+  "conclusion": "Retain B26 overall FAIL and all failed receipts. Credit eight normal-source Home XCTest repetitions, pre-query artifact/notices evidence and owned cleanup only. Actual libproc query ran and exposed a concrete interval mismatch; successful Debug-binary provenance and later combined/Store readiness remain unproved."
+}

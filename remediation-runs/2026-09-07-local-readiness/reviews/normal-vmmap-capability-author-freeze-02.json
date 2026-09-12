@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-09-08T05:46:06.579215+00:00",
+  "author": "/root/release_fix_review",
+  "status": "TINY_FIXTURE_CORRECTION_PENDING_INDEPENDENT_REVIEW_AND_RERUN",
+  "previous_freeze": {
+    "path": "remediation-runs/2026-09-07-local-readiness/reviews/normal-vmmap-capability-author-freeze-01.json",
+    "sha256": "82ee9ae94ed31ba17a89ae2d4f6d1050fa2f825bf149956acd792cb885fa41d1"
+  },
+  "original_fixture": {
+    "path": "remediation-runs/2026-09-07-local-readiness/reviews/normal-vmmap-capability-test-before-mock-name-fix-01.txt",
+    "sha256": "4b7194d856239f5954b21f2e6b062efe8cac6ac8c09463d31276dd4acdbe9dc1"
+  },
+  "diff": {
+    "path": "remediation-runs/2026-09-07-local-readiness/reviews/normal-vmmap-capability-mock-name-fix-01.diff",
+    "sha256": "e439e12c56042162bb49817c443f0a2923d3aeabec1802ae7dfacdf255cfb3d4"
+  },
+  "files": [
+    {
+      "path": "README.md",
+      "sha256": "8c11d41d463c743dadae3d74f515354c4e060762e9ea91a24ef3df54f552b6c5"
+    },
+    {
+      "path": "run_control_tests.py",
+      "sha256": "d4fdbfa4b57463ecb2dec96e36338294df5298cd6dddacc92eca0e4fa33e49c8"
+    },
+    {
+      "path": "run_vmmap_capability.py",
+      "sha256": "b4897e36f64e5ab26efc93491fd721a5fc27b9ecf812e46bdfd3b692ee1f9380"
+    },
+    {
+      "path": "test_vmmap_capability.py",
+      "sha256": "051f93d55a64c69a7c10e13124c8b9b06f35f1f9f972ec37fe12fe84eb42f81b"
+    }
+  ],
+  "combined_manifest_sha256": "5ea462242f6f9660c23365b8ec7a6348c69397d55336e3a7d3dc041ae6e67b96",
+  "static_tests": 40,
+  "all_test_methods_assertions_and_signatures_AST_unchanged": true,
+  "native_runner_driver_readme_unchanged": true,
+  "correction": "unittest.mock.Mock(name=...) labels the Mock; it does not populate output.name. Set output.name explicitly to the synthetic filepath so the real exception-cleanup branch receives the intended string. No production or assertion change.",
+  "old_cycle": {
+    "path": "remediation-runs/2026-09-07-local-readiness/evidence/vmmap-capability-controls-01/receipt.json",
+    "sha256": "dcc790b45398f51856658682c02ad3e10168d54a33e09b0603c98f4b97898b80",
+    "status": "FAIL_PRESERVED",
+    "tests": 40,
+    "successes": 39,
+    "errors": 1,
+    "failures": 0,
+    "skips": 0,
+    "failed_id": [
+      "test_vmmap_capability.ProbeTests.test_cleanup_failure_is_explicit_and_not_success"
+    ],
+    "log_sha256": "adc7e1d00344dee79656509d2a350d320ec7446018c00f534be73b3cfdfcd40e"
+  },
+  "corrected_execution": "NOT RUN BY AUTHOR",
+  "independent_review": "PENDING ROOT",
+  "cleanup": "No author execution, raw file, process, build, cache or temporary output; only required source correction + additive original/diff/freeze records retained."
+}

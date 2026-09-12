@@ -1,0 +1,471 @@
+{
+  "schema_version": 1,
+  "kind": "FULL_D10_MACOS_X64_CURRENT_EXECUTION_REVIEW",
+  "reviewer": "/root/ci_macos_x64",
+  "reviewed_at": "2026-09-11T15:54:27.705607+00:00",
+  "status": "APPROVED_CURRENT_DESKTOP_LANE_WITH_THREE_SOURCE_DECLARED_SKIPS",
+  "source": {
+    "run_id": 34610163120,
+    "run_attempt": 1,
+    "job_id": 103298347256,
+    "job": "desktop-macos-x64",
+    "commit": "25cd7f57b031bebdcfb4931615782b906610703f",
+    "tree": "1e44e982216bfc4fda32dc370a0d1b3d77fee836",
+    "checkout_root": "/Users/runner/work/parlor/parlor",
+    "run_job_artifact_binding": "Exact retained APIs, source-bound ownership and successful clean Darwin/x86_64 guard agree."
+  },
+  "evidence_binding": {
+    "packet": "actions/34610163120",
+    "collector_sha256": "d89caddb61aa452599560efeb77aefd5aefda49cddefb88f22eadbe16f083e91",
+    "collector_status": "COLLECTED_NOT_RUNTIME_REVIEW",
+    "collector_finished_at": "2026-09-11T15:44:37.175594+00:00",
+    "metadata_pin_format": [
+      "packet_relative_path",
+      "bytes",
+      "sha256"
+    ],
+    "metadata_pins": [
+      [
+        "run.json",
+        12680,
+        "32d60c60f3d79b024142b5d8e3f72260d7c12cda6f7aeae92e5020a650c67839"
+      ],
+      [
+        "attempt.json",
+        12702,
+        "f3afda3e2ec8f2f3e58332efec1eeaa53c14321940aa94589777595f78a0c19c"
+      ],
+      [
+        "jobs.json",
+        26575,
+        "e751e09e572c98248a959b9c908a7455dc2e4ccf38e110f5b018246f7a31a3ba"
+      ],
+      [
+        "artifacts.json",
+        8823,
+        "2250a3079d851dc63524442dcb2ab96a5de207647d96c556c29f6c8dffa2b729"
+      ]
+    ],
+    "artifact_id": 10268048632,
+    "recorded_main_archive": [
+      "desktop-verification-desktop-macos-x64.zip",
+      22170262,
+      "624391c4eaecf469284a6cc1dd261015865dbb6409ef434af89e1f8bad9a879c"
+    ],
+    "log_member": [
+      "2_Desktop and Kotlin Native strict verification (macOS x64).txt",
+      86104,
+      "6b1ab8bb3334ef7ba343383040a18356c675f6c52ff45a992fe0bdac03c92fc8"
+    ],
+    "owner_member": [
+      "_temp/parlor-verification-34610163120-1-desktop-macos-x64-ownership.json",
+      19624,
+      "26614faa8860d21e81762fc9e2d390c5b9af030400cf9dc4e1384ba13b9981c3"
+    ],
+    "prepared_at": "2026-09-11T14:28:19.625352+00:00",
+    "frozen_paths_sha256": "9f59ae8dc14e2ef1bd66d51f60e2d2fc8be4b631493061b01cb34dfcfb88932b",
+    "excluded_historical_tracked_members": 17279,
+    "method": "Pinned completed collector and retained run/job/artifact metadata checked. Selected log stream plus203 extracted current XML and ownership rehashed to collector member rows; current path membership/timestamps and unique testcase totals reconciled. No old review consulted. Exhaustive archive custody, cleanup and six-job aggregate remain separately owned; their checks are not repeated here."
+  },
+  "platform": {
+    "runner_label": "macos-15-intel",
+    "host_guard": "Darwin/x86_64 success",
+    "os": "macOS15.7.9",
+    "os_build": "24G830",
+    "runner_image": "macos-15 20260824.0482.1",
+    "jdk": "Temurin21.0.12+101.0 x64",
+    "gradle": "8.13"
+  },
+  "execution": {
+    "command": "./gradlew productionDesktopCheck :composeApp:downloadKotlinNativeDistribution --dependency-verification=strict --no-daemon --stacktrace --console=plain",
+    "body_interval": [
+      "2026-09-11T14:28:20Z",
+      "2026-09-11T14:39:37Z"
+    ],
+    "first_command_logged_at": "2026-09-11T14:28:20.0472680Z",
+    "result": "BUILD SUCCESSFUL in 11m 15s",
+    "result_logged_at": "2026-09-11T14:39:36.5585880Z",
+    "actionable_tasks": {
+      "total": 114,
+      "executed": 114,
+      "from_cache": 0,
+      "limit": "Task counts, not testcase counts."
+    },
+    "task_row_format": [
+      "task",
+      "logged_at",
+      "outcome"
+    ],
+    "desktop_test_tasks": [
+      [
+        ":composeApp:desktopTest",
+        "2026-09-11T14:38:24.0513650Z",
+        "EXECUTED"
+      ],
+      [
+        ":game-modes:mafia:desktopTest",
+        "2026-09-11T14:38:24.3518560Z",
+        "EXECUTED"
+      ],
+      [
+        ":game-modes:whodunit:desktopTest",
+        "2026-09-11T14:38:53.0439440Z",
+        "EXECUTED"
+      ],
+      [
+        ":shared:content:desktopTest",
+        "2026-09-11T14:36:07.0611800Z",
+        "EXECUTED"
+      ],
+      [
+        ":shared:core:desktopTest",
+        "2026-09-11T14:35:39.6077320Z",
+        "EXECUTED"
+      ],
+      [
+        ":shared:design-system:desktopTest",
+        "2026-09-11T14:36:32.4174420Z",
+        "EXECUTED"
+      ],
+      [
+        ":shared:engine:desktopTest",
+        "2026-09-11T14:36:17.9936900Z",
+        "EXECUTED"
+      ],
+      [
+        ":shared:engine-testing:desktopTest",
+        "2026-09-11T14:36:24.4144860Z",
+        "EXECUTED"
+      ],
+      [
+        ":shared:networking:desktopTest",
+        "2026-09-11T14:36:43.6807810Z",
+        "EXECUTED"
+      ],
+      [
+        ":shared:networking-testing:desktopTest",
+        "2026-09-11T14:36:43.4966290Z",
+        "EXECUTED"
+      ],
+      [
+        ":shared:session:desktopTest",
+        "2026-09-11T14:37:13.3789400Z",
+        "EXECUTED"
+      ],
+      [
+        ":shared:storage:desktopTest",
+        "2026-09-11T14:36:55.8740510Z",
+        "EXECUTED"
+      ],
+      [
+        ":shared:transport-p2p:desktopTest",
+        "2026-09-11T14:37:55.4582460Z",
+        "EXECUTED"
+      ]
+    ],
+    "desktop_main_compile_tasks": [
+      [
+        ":shared:core:compileKotlinDesktop",
+        "2026-09-11T14:35:26.0254870Z",
+        "EXECUTED"
+      ],
+      [
+        ":shared:engine:compileKotlinDesktop",
+        "2026-09-11T14:35:36.3251580Z",
+        "EXECUTED"
+      ],
+      [
+        ":shared:content:compileKotlinDesktop",
+        "2026-09-11T14:35:50.6414350Z",
+        "EXECUTED"
+      ],
+      [
+        ":shared:engine-testing:compileKotlinDesktop",
+        "2026-09-11T14:35:56.3455220Z",
+        "EXECUTED"
+      ],
+      [
+        ":shared:storage:compileKotlinDesktop",
+        "2026-09-11T14:35:57.7261020Z",
+        "EXECUTED"
+      ],
+      [
+        ":shared:networking:compileKotlinDesktop",
+        "2026-09-11T14:35:57.9902870Z",
+        "EXECUTED"
+      ],
+      [
+        ":shared:design-system:compileKotlinDesktop",
+        "2026-09-11T14:35:58.2907580Z",
+        "EXECUTED"
+      ],
+      [
+        ":shared:networking-testing:compileKotlinDesktop",
+        "2026-09-11T14:36:06.6364500Z",
+        "EXECUTED"
+      ],
+      [
+        ":shared:session:compileKotlinDesktop",
+        "2026-09-11T14:36:20.4333680Z",
+        "EXECUTED"
+      ],
+      [
+        ":shared:transport-p2p:compileKotlinDesktop",
+        "2026-09-11T14:36:30.7279810Z",
+        "EXECUTED"
+      ],
+      [
+        ":game-modes:mafia:compileKotlinDesktop",
+        "2026-09-11T14:36:50.7565810Z",
+        "EXECUTED"
+      ],
+      [
+        ":game-modes:whodunit:compileKotlinDesktop",
+        "2026-09-11T14:36:54.2267830Z",
+        "EXECUTED"
+      ],
+      [
+        ":composeApp:compileKotlinDesktop",
+        "2026-09-11T14:37:50.5126390Z",
+        "EXECUTED"
+      ]
+    ],
+    "cached_or_up_to_date_task_markers": [],
+    "scope": "All13 desktopTest tasks and13 Desktop Kotlin compilations executed, including composeApp main compile. These actual task markers plus fresh current XML support test execution; historical/cached reports are not counted. Non-test NO-SOURCE/SKIPPED markers are distinct from testcase skips."
+  },
+  "current_xml": {
+    "target_xml_counts": {
+      "desktopTest": 203
+    },
+    "totals": {
+      "xml_files": 203,
+      "descriptors": 1343,
+      "passed": 1340,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 3
+    },
+    "module_row_format": [
+      "module",
+      "xml_files",
+      "descriptors",
+      "passed",
+      "failures",
+      "errors",
+      "skipped"
+    ],
+    "modules": [
+      [
+        "composeApp",
+        21,
+        96,
+        96,
+        0,
+        0,
+        0
+      ],
+      [
+        "game-modes/mafia",
+        37,
+        297,
+        297,
+        0,
+        0,
+        0
+      ],
+      [
+        "game-modes/whodunit",
+        63,
+        360,
+        360,
+        0,
+        0,
+        0
+      ],
+      [
+        "shared/content",
+        5,
+        24,
+        24,
+        0,
+        0,
+        0
+      ],
+      [
+        "shared/core",
+        2,
+        12,
+        12,
+        0,
+        0,
+        0
+      ],
+      [
+        "shared/design-system",
+        18,
+        40,
+        40,
+        0,
+        0,
+        0
+      ],
+      [
+        "shared/engine",
+        5,
+        13,
+        13,
+        0,
+        0,
+        0
+      ],
+      [
+        "shared/engine-testing",
+        3,
+        6,
+        6,
+        0,
+        0,
+        0
+      ],
+      [
+        "shared/networking",
+        8,
+        34,
+        34,
+        0,
+        0,
+        0
+      ],
+      [
+        "shared/networking-testing",
+        2,
+        5,
+        5,
+        0,
+        0,
+        0
+      ],
+      [
+        "shared/session",
+        13,
+        145,
+        145,
+        0,
+        0,
+        0
+      ],
+      [
+        "shared/storage",
+        4,
+        31,
+        31,
+        0,
+        0,
+        0
+      ],
+      [
+        "shared/transport-p2p",
+        22,
+        280,
+        277,
+        0,
+        0,
+        3
+      ]
+    ],
+    "timestamp_range": [
+      "2026-09-11T14:35:38.540Z",
+      "2026-09-11T14:39:34.262Z"
+    ],
+    "hostnames": [
+      "iad01-dz252-1ad49659-740d-4c73-a24e-ce5d11b7a3c3-EA47144733B8.local"
+    ],
+    "xml_bytes": 315923,
+    "manifest_format": "Sorted [member path,bytes,SHA256,timestamp,hostname] rows serialized compact JSON; exact pins retained in completed collector.",
+    "manifest_sha256": "6c76252bc3a4e332389ec15a1cc0a46f0084742b6865f01bb731dfe0205dafe9",
+    "selected_suite_counts": {
+      "com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest": {
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 3,
+        "member": "parlor/parlor/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest.xml",
+        "sha256": "6fbbab1e5108c3e5f487f75e7169536070a7a8de7f627670307fee6c28d483c4"
+      },
+      "com.parlor.transport.p2p.ProductionVerificationWorkflowContractTest": {
+        "tests": 12,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "member": "parlor/parlor/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.ProductionVerificationWorkflowContractTest.xml",
+        "sha256": "2dcef1775d5a28fb88248103be227b1cb196ad3f4427533356a27da4ae8396bb"
+      }
+    }
+  },
+  "skips": {
+    "identity_row_format": [
+      "module",
+      "class",
+      "method"
+    ],
+    "identities": [
+      [
+        "shared/transport-p2p",
+        "com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest",
+        "host_broadcast_reaches_every_peer()[desktop]"
+      ],
+      [
+        "shared/transport-p2p",
+        "com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest",
+        "peer_can_join_a_hosted_room_and_membership_appears_on_host()[desktop]"
+      ],
+      [
+        "shared/transport-p2p",
+        "com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest",
+        "peer_to_host_message_round_trips_and_host_to_peer_message_arrives_back()[desktop]"
+      ]
+    ],
+    "frozen_source_pin": [
+      "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitRoomTransportLoopbackTest.kt",
+      10824,
+      "21451bf407d791ec85066227a2670ccf61d3506efaae47375c0bba557fe3be73"
+    ],
+    "source_ignore_reasons": {
+      "peer_can_join_a_hosted_room_and_membership_appears_on_host": "Needs two physical devices on the same LAN; mDNS multicast on single-JVM loopback is unreliable. Run docs/P2P_MANUAL_TEST.md.",
+      "peer_to_host_message_round_trips_and_host_to_peer_message_arrives_back": "Needs two physical devices on the same LAN; mDNS multicast on single-JVM loopback is unreliable. Run docs/P2P_MANUAL_TEST.md.",
+      "host_broadcast_reaches_every_peer": "Needs three physical devices on the same LAN; mDNS multicast on single-JVM loopback is unreliable. Run docs/P2P_MANUAL_TEST.md."
+    },
+    "limit": "Three explicit skipped fixtures are not passed. Their peer join, peer/host roundtrip and broadcast require separate physical same-LAN evidence; successful host advertising is not peer interoperability."
+  },
+  "kotlin_native_distribution": {
+    "task": ":composeApp:downloadKotlinNativeDistribution",
+    "outcome": "EXECUTED_NOT_CACHED",
+    "progress_headers": [
+      "2026-09-11T14:34:58.9970720Z",
+      "2026-09-11T14:35:30.4828590Z",
+      "2026-09-11T14:35:35.5654000Z",
+      "2026-09-11T14:35:51.9305960Z"
+    ],
+    "header_count": 4,
+    "header_scope": "Four progress headers belong to one scheduled download task, not four test/runtime runs.",
+    "observed_package_lines": [
+      "2026-09-11T14:34:58.9985660Z Kotlin/Native bundle directory /Users/runner/.konan/kotlin-native-prebuilt-macos-x86_64-2.4.10 is not empty. Native bundle files will be overwritten.",
+      "2026-09-11T14:35:30.5639900Z Downloading dependency https://download.jetbrains.com/kotlin/native/resources/llvm/21-x86_64-macos/llvm-21-x86_64-macos-essentials-83.tar.gz to /Users/runner/.konan/dependencies/cache/llvm-21-x86_64-macos-essentials-83.tar.gz",
+      "2026-09-11T14:35:35.7063940Z Extracting dependency: /Users/runner/.konan/dependencies/cache/llvm-21-x86_64-macos-essentials-83.tar.gz into /Users/runner/.konan/dependencies",
+      "2026-09-11T14:35:51.9366080Z Downloading dependency https://download.jetbrains.com/kotlin/native/libffi-3.2.1-3-darwin-macos.tar.gz to /Users/runner/.konan/dependencies/cache/libffi-3.2.1-3-darwin-macos.tar.gz",
+      "2026-09-11T14:35:52.5631820Z Extracting dependency: /Users/runner/.konan/dependencies/cache/libffi-3.2.1-3-darwin-macos.tar.gz into /Users/runner/.konan/dependencies"
+    ],
+    "bundle_version": "2.4.10 macos-x86_64",
+    "scope": "Successful distribution/dependency preparation. Existing .konan bundle was nonempty and marked for overwrite; LLVM21 essentials83 and libffi3.2.1-3 download/extraction logged. No wholly fresh global-cache/network-fetch claim for all bytes.",
+    "native_or_ios_test_runtime": "NOT_RUN; every current XML is desktopTest. Compiler/distribution preparation is not Kotlin/Native application execution or iOS runtime.",
+    "application_package": "No DMG/PKG shipping-package qualification inferred from this Desktop compile/test lane."
+  },
+  "nonblocking_warnings": [
+    "Kotlin/Native macos_x64 host deprecated for a future release; requested current distribution task succeeded.",
+    "iosSimulatorArm64Test unavailable on Intel host; not a requested or executed runtime test here."
+  ],
+  "findings": [],
+  "cleanup_custody_aggregate": "Independently assigned; this receipt does not supply their verdicts.",
+  "disposition": "Current D10 macOSx64 lane approved:1340 actual passes,0 failures/errors,3 declared skipped descriptors. This lane alone is not a six-job, protection, physical-device or Store readiness certificate.",
+  "activity": "Only current-packet/frozen-Git-object reads and this sole additive JSON receipt; no network, builds, tests, extraction, source edits or old-summary substitution."
+}

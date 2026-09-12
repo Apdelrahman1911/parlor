@@ -1,0 +1,88 @@
+{
+  "schema": 1,
+  "reviewer": "/root/qualification_review",
+  "status": "APPROVED_EXACT_D08_REQUEST_FOR_ROOT_IMMEDIATE_ADMISSION_NOT_EXECUTION",
+  "recorded_at": "2026-09-11T02:09:27.629180+00:00",
+  "scope": "Fresh D08 exact request/freeze admission with pinned narrow source-review and actual-control-evidence reuse; no repeated split-workflow or PD05 runtime audit.",
+  "packet": "actions/full-qualification-dispatch-08",
+  "packet_sha256": {
+    "request.json": "3dd1dddcbb29067f428624b5d232aa0f83651f740b77eae380be886c3f40a62f",
+    "source-association.json": "36dfef7fc99f424848462190f6c3785f6a3af8e4ab66b1d033536ad6ad3b818a",
+    "controls.json": "ce38655dc5deafcdd11143a4bcbaa2ff72ee69879aa7385e7e4ffe8c1b0f31b7"
+  },
+  "repository": "Apdelrahman1911/parlor",
+  "workflow": ".github/workflows/production-verification.yml",
+  "ref": "fix/local-readiness-2026-09-07",
+  "inputs": {
+    "verification_scope": "full",
+    "native_selection": "paired"
+  },
+  "head": "59a384441f44844a79ae62ea8ee68d0c9e1e5878",
+  "tree": "9f06627b0dd047394de6f52adbc494e334651c74",
+  "source_commit": "4952432e957cd64632de34a36dfaac75cd4b9973",
+  "tracked_clean": true,
+  "inventory_sha256": "af7ed892660aece7251789a2e40dae23650c2d58debea6f1de86c004822be70d",
+  "control_sha256": "35bfcbb67ee983b671e78b37380bce66a8d4049fe3ed396ebdc11a562f00248f",
+  "binding": "Exact two-input full+paired request and association hashes match. All13 unique named controls match current files and frozen Git blobs; canonical sorted-key compact JSON file-list digest matches. This is explicitly a named subset, NOT an exhaustive import closure: the frozen Git tree binds all source.",
+  "freeze_evidence": {
+    "receipt_sha256": "58a1704da74b07120a670591494742c75f1a028713471122a6e8f3481cb94358",
+    "log_sha256": "618a645562090bb89a0f1f8b93edbf31c95630b8b38c72e58232b287a984a3d5",
+    "verified": "Reopened hash-matching root log/receipt: source4952432e then inventory-only59a38444, same tree/inventory/remote; inventory --check reports30252 fresh rows, push/ls-remote and clean tracked status match, all recorded commands exit0 and stop0. Inventory freshness is not source review; reviewer did not repeat commands/network."
+  },
+  "review_sha256": {
+    "protection-concurrency-partition-independent-01.json": "5b2e6bc1a4af7dce4801542f5b41e091999a22dc1a475c97850e3cc8f89cd980",
+    "protection-host-sdk-sequencing-source-independent-01.json": "246b5f5babd2569d29023c53b95219734b428f192cd5217a2676539abc8bf7bd",
+    "protection-probe-pd05-artifact-custody-independent-01.json": "4c931e8d0a1f50f2980102c506da3cc23be90e05b438d860e14a99614f26be83",
+    "protection-pd05-native-identity-actual-independent-01.json": "cd891ae181a0c9a245bc0e6d86af70cebbe5259892c4e1e7a5a0d2e0c76cbe93",
+    "protection-pd05-atomic-actual-independent-01.json": "339b719fd698a9752a956a77f91240906ea4adc7f3eab0119b54737a0116341c",
+    "protection-probe-05-cleanup-actual-independent-01.json": "f03144c73443f70e4ee7d63d18d4b061b9b25e92299db7eb9af8374bf6b647ee",
+    "pd05-current-handoff-independent-01.json": "17e5396d5353c0ee87069bb88ebfce442bea7a8abf63d9784720091f6f0ff73a"
+  },
+  "narrow_source": "Both independent correction approvals match every current/frozen pin. Concurrency changes only workflow-level group; all seven job definitions remain byte-identical to1c234ff. Host-SDK sequencing keeps exact version/path queries/budgets/oracles and adds same-run source/control/nonce/path binding before simulator creation; no shipping storage or full-lane-body correction.143 changed paths comprise reviewed source/test/ledger/inventory plus retained evidence; outside remediation only workflow, one workflow test and inventory change.",
+  "focused_controls": {
+    "receipt_sha256": "c800e0c50197704a97a5b9cf1ffafa53c96e80ea73b0d54e448f90b123109007",
+    "verified": "Reopened raw paired41+workflow79=120 explicit ok rows and unittest OK; zero failures/errors/skips, all recorded command exits0 and log hashes match. Workflow validator PASS and scoped policy-pinned actionlint exit0 are retained. All7 before/after/current pins match; stop log hash/exit0, errors[]/remaining[],21 live roots and exact scratch absent. No test/validator rerun; no native/full execution inferred."
+  },
+  "prior_pd05": "34551626246/1 actual reviewed evidence remains scoped: nine simulator samples, strict0PASS/5FAIL; host SDK query30s timeout means host comparison NOT_RUN. Simulator cleanup PASS does not override retained-scratch cleanup FAIL. Prior failures preserved; new source addresses reviewed sequencing only, without declaring cause/fix or enforcement. PD05 is not a full lane.",
+  "concurrency": "D08 full uses production-verification-qualification-refs/heads/fix/local-readiness-2026-09-07. Explicit ios-protection-probe uses protection counterpart. Intentional independently admitted PD06 at this same SHA may overlap on separate hosted jobs. Every other qualification/focused scope shares D08 group and must not be dispatched while full runs; both groups still cancel-in-progress. Root must account for legacy unpartitioned active runs.",
+  "required_jobs": {
+    "desktop-android": "Common, desktop, and Android release",
+    "desktop-linux-arm64": "Desktop strict verification (Linux arm64)",
+    "desktop-macos-x64": "Desktop and Kotlin Native strict verification (macOS x64)",
+    "desktop-windows-x64": "Desktop, Kotlin Native, and Android resources strict verification (Windows x64)",
+    "ios": "iOS simulator runtime and Swift host",
+    "ios-release": "iOS release frameworks and Swift wrapper"
+  },
+  "required_skipped_jobs": {
+    "ios-protection-probe": "iOS strict protection diagnostic"
+  },
+  "expected_artifacts": [
+    "desktop-android-verification",
+    "desktop-verification-desktop-linux-arm64",
+    "desktop-verification-desktop-macos-x64",
+    "desktop-verification-desktop-windows-x64",
+    "ios-runtime-verification",
+    "ios-release-verification",
+    "verification-cleanup-desktop-android",
+    "verification-cleanup-desktop-linux-arm64",
+    "verification-cleanup-desktop-macos-x64",
+    "verification-cleanup-desktop-windows-x64",
+    "verification-cleanup-ios",
+    "verification-cleanup-ios-release"
+  ],
+  "final_acceptance": "Exactly one fresh attempt1 workflow_dispatch at this SHA; six mandatory full jobs and all their required tasks/cleanup must actually succeed together, seventh probe skipped. Bind complete API run/attempt/seven-job identity/source/checkout pages, twelve unique expected unexpired artifacts and API ID/size/digest to retained bounded ZIPs. Reconcile own run-1-job ownership/stop/cleanup receipts, source/tree/task and main-upload ID/digest with successful steps. ios owns aggregate+ui; ios-release owns aggregate+wrapper. Current execution logs/reports and unsigned package checks must establish actual required coverage. Collector success, cached/tracked XML, compile/link or upload success alone is not runtime. No D03/focused/PD06/other-attempt/SHA stitching.",
+  "collector03_sha256": "53d6a05f4a2c591f25e3bda2104b0c15e39cd472d6519d24e6fd1aff5234f7a8",
+  "conditions": [
+    "Root immediately confirms local/remote/ref/request SHA/tree equality, unchanged packet/control/inventory pins and clean tracked source; fresh source/request changes require new admission.",
+    "Root checks all active same-ref/legacy runs: only explicitly admitted same-SHA PD06 overlap is permitted. No other qualification scope may be started while D08 runs. Reviewer has not made a live network/concurrency observation.",
+    "Root dispatches this exact request once, records attempt1 request/dispatch/API association and freezes relevant source. Full ignores frozen_source_sha; actual API/job/checkout attestations must bind this freeze.",
+    "Preserve prior failures and collector bounds. PD06 completion or PASS is not a precondition for D08 admission and cannot substitute for any D08 lane or cleanup; unexpected PD06 findings requiring source correction invalidate this candidate rather than silently reusing its receipt."
+  ],
+  "run": null,
+  "eligible_for_root_immediate_admission": true,
+  "live_dispatch_checks": "ROOT_PENDING",
+  "findings": [],
+  "supersedes": "D07 and older prepared admissions remain preserved but stale/unexecuted; this report does not reauthorize their SHA.",
+  "limits": "Exact request/source admission only, not new execution, combined qualification, protection, application readiness, hardware or Store proof. Full qualification remains NOT_RUN until actual same-SHA evidence is reviewed.",
+  "activity": "Local Git/text/stdlib hash/JSON inspection plus this additive untracked report only; no project imports, tests/builds/network/dispatch/cancel/source edits/Git writes/child agents. No reviewer execution cleanup owed."
+}

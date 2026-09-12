@@ -1,0 +1,1132 @@
+{
+  "schema_version": 1,
+  "kind": "INDEPENDENT_ACTUAL_CI_ALTERNATE_HOST_COMPONENT_REVIEW",
+  "status": "APPROVED_COMPONENT_EVIDENCE_WITH_DOCUMENTED_SKIPS_NOT_OVERALL_QUALIFICATION",
+  "reviewer": "/root/portability_review",
+  "evidence_collector": "/root",
+  "reviewed_at": "2026-09-10T11:47:00.964Z",
+  "source": {
+    "repository": "Apdelrahman1911/parlor",
+    "branch": "fix/local-readiness-2026-09-07",
+    "commit": "75c104734373703570a307de9c7a53d291bc2718",
+    "tree": "4d5b660c5f508a3eb8d01cd9203f2503570dbb18",
+    "binding": "Frozen Git75c source, not the coordinator's subsequent uncommitted cleanup changes."
+  },
+  "run": {
+    "id": 34464573240,
+    "attempt": 1,
+    "url": "https://github.com/Apdelrahman1911/parlor/actions/runs/34464573240",
+    "workflow": ".github/workflows/production-verification.yml",
+    "workflow_id": 335554528,
+    "event": "workflow_dispatch",
+    "overall_conclusion": "failure",
+    "outside_assigned_scope_metadata": [
+      {
+        "id": 102830019251,
+        "name": "Common, desktop, and Android release",
+        "conclusion": "failure",
+        "non_success_steps": [
+          {
+            "name": "Clean only attested verification outputs",
+            "status": "completed",
+            "conclusion": "failure",
+            "number": 13,
+            "started_at": "2026-09-10T10:30:05Z",
+            "completed_at": "2026-09-10T10:30:07Z"
+          }
+        ]
+      }
+    ],
+    "assessment": "All three assigned alternate-host components succeeded with the documented skips. D03 remains FAILED overall: retained jobs metadata identifies the main desktop-android cleanup step as failed. Its full runtime/cleanup failure audit belongs to the coordinator's separate review."
+  },
+  "evidence_root": "remediation-runs/2026-09-08-continuation/actions/34464573240",
+  "path_convention": "Evidence paths below are relative to evidence_root; frozen control and collector/review paths are repository-relative. Log line numbers are 1-based splitlines of the named complete-job ZIP member.",
+  "collection": {
+    "path": "download-receipt.json",
+    "bytes": 35338678,
+    "sha256": "6b14142ab06c9d327ad455985517fecbcc8397de3f70a8dcdd5cc99a8e54774f",
+    "status": "COLLECTED_NOT_RUNTIME_REVIEW",
+    "collector": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/full-d-compact-collector-02.py",
+      "bytes": 17464,
+      "sha256": "3af9603aff8e20aa1380f844897ed356426ba29c4dd5172cc5c60edb2dea10de"
+    },
+    "reused_collector_source_review": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/full-d-compact-collector-independent-02.json",
+      "bytes": 10163,
+      "sha256": "3e3f5be8590e2cfc808629c8787f414873c32169179d1a8b8dce737dcb372140",
+      "status": "APPROVED_PINNED_SOURCE_FOR_ROOT_FOCUSED_TESTS_THEN_COLLECTION_SUBJECT_TO_PASS_AND_IMMEDIATE_GUARDS",
+      "findings": []
+    },
+    "missing_or_unexpected_artifacts": [],
+    "scope": "All ten artifact metadata identities are present; this reviewer independently streamed and semantically reviewed only the six assigned alternate-host ZIPs, plus integrity of all 51 raw-log members. No collector status was used as runtime proof."
+  },
+  "raw_api_metadata": {
+    "run.json": {
+      "bytes": 12676,
+      "sha256": "065ce022bdbd2ec8339833c24ed7edd01cbfc1d59af0df0334e1653bf9467bb5"
+    },
+    "attempt.json": {
+      "bytes": 12698,
+      "sha256": "b896ac5baa98cbb9ba29a9c31733a0954cdc15a96c047a7baff5aa034231ba1e"
+    },
+    "jobs.json": {
+      "bytes": 20796,
+      "sha256": "129d94a115622b7133b06198d31c0f49826ee4cc5024a75566432aaa176e980d"
+    },
+    "artifacts.json": {
+      "bytes": 7362,
+      "sha256": "6bd42a54a332328d407c0792a9096f48f86d6a60c11191aafd016ba189597f5e"
+    }
+  },
+  "frozen_scope": {
+    "path": "frozen-tree-paths.z",
+    "tracked_count": 24865,
+    "bytes": 3888653,
+    "sha256": "0992082cea4af235f0dc7150e258a21aa0555cd0750b633f0afb87e67e737440",
+    "gradle_roots": [
+      "build",
+      "build-logic/build",
+      "build-logic/convention/build",
+      "composeApp/build",
+      "game-modes/mafia/build",
+      "game-modes/whodunit/build",
+      "iosApp/build",
+      "shared/content/build",
+      "shared/core/build",
+      "shared/design-system/build",
+      "shared/engine-testing/build",
+      "shared/engine/build",
+      "shared/networking-testing/build",
+      "shared/networking/build",
+      "shared/session/build",
+      "shared/storage/build",
+      "shared/transport-p2p/build"
+    ],
+    "owned_gradle_and_python_roots": 179,
+    "python_roots": 162,
+    "derived_without_importing_or_executing_project_code": true
+  },
+  "frozen_source_controls": [
+    {
+      "path": ".github/workflows/production-verification.yml",
+      "bytes": 44037,
+      "sha256": "9a8021ec1ba27f44d7d2ac18f0bcc7a4a254445ba1baae1a420287094c89414b"
+    },
+    {
+      "path": "build.gradle.kts",
+      "bytes": 8766,
+      "sha256": "bd6199e1f097eb236c50c46efb91d291550110f6b4d95a8e95ff0db4d8da192b"
+    },
+    {
+      "path": "scripts/ci/verification_hygiene.py",
+      "bytes": 20930,
+      "sha256": "f1aa6d4c5dae8360a9ff1bfd675376d78cb800e3d297fc213cdddca32c7376f6"
+    },
+    {
+      "path": "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitRoomTransportLoopbackTest.kt",
+      "bytes": 10824,
+      "sha256": "21451bf407d791ec85066227a2670ccf61d3506efaae47375c0bba557fe3be73"
+    }
+  ],
+  "artifacts": [
+    {
+      "name": "desktop-verification-desktop-linux-arm64",
+      "artifact_id": 10147120950,
+      "bytes": 11052239,
+      "sha256": "ef54d5248b6fe4384edeaceb7aad71faf3cfdfbf46f8e10a81f030504ff9e872",
+      "api_snapshot": {
+        "path": "artifact-10147120950.json",
+        "bytes": 823,
+        "sha256": "a22ea6536ec3dde0bec5211b33d878a809dc0270e06aac4d42ccaf74c87776e9"
+      },
+      "members": 9633,
+      "expanded_bytes": 19865816,
+      "classification_counts": {
+        "FROZEN_TRACKED_FILE_ARCHIVE_ONLY": 9102,
+        "CURRENT_PATH_CANDIDATE_NOT_EXECUTION": 529,
+        "CURRENT_NAMED_RECEIPT_CONTENT_UNREVIEWED": 2
+      },
+      "selected_files_exact": 531,
+      "whole_table_paths_types_duplicates_ancestors_encryption_bounds_checked": true,
+      "all_member_bytes_crc_sha256_match_collector": true,
+      "extracted_selection_hashes_match": true
+    },
+    {
+      "name": "verification-cleanup-desktop-linux-arm64",
+      "artifact_id": 10147122557,
+      "bytes": 2620,
+      "sha256": "2560de8920b50ec5cdbaaf44eae4444fb04f10fa7d16e34f6e6a0288518d139b",
+      "api_snapshot": {
+        "path": "artifact-10147122557.json",
+        "bytes": 819,
+        "sha256": "41b6257a5247c5d3cc8bb954fa240df263bb55f17198e80df476ccfae2122850"
+      },
+      "members": 1,
+      "expanded_bytes": 19083,
+      "classification_counts": {
+        "CURRENT_NAMED_RECEIPT_CONTENT_UNREVIEWED": 1
+      },
+      "selected_files_exact": 1,
+      "whole_table_paths_types_duplicates_ancestors_encryption_bounds_checked": true,
+      "all_member_bytes_crc_sha256_match_collector": true,
+      "extracted_selection_hashes_match": true
+    },
+    {
+      "name": "desktop-verification-desktop-macos-x64",
+      "artifact_id": 10147387149,
+      "bytes": 11062649,
+      "sha256": "d284fbd127d0caea408d8cd9608f7551df0abd778aaa864ddd46121714f3e93a",
+      "api_snapshot": {
+        "path": "artifact-10147387149.json",
+        "bytes": 821,
+        "sha256": "e76c66647c2e69ac7c5d2fa465a8419d3eba545b52bcb623d5d1985b6fdabff3"
+      },
+      "members": 9633,
+      "expanded_bytes": 19877460,
+      "classification_counts": {
+        "FROZEN_TRACKED_FILE_ARCHIVE_ONLY": 9102,
+        "CURRENT_PATH_CANDIDATE_NOT_EXECUTION": 529,
+        "CURRENT_NAMED_RECEIPT_CONTENT_UNREVIEWED": 2
+      },
+      "selected_files_exact": 531,
+      "whole_table_paths_types_duplicates_ancestors_encryption_bounds_checked": true,
+      "all_member_bytes_crc_sha256_match_collector": true,
+      "extracted_selection_hashes_match": true
+    },
+    {
+      "name": "verification-cleanup-desktop-macos-x64",
+      "artifact_id": 10147391972,
+      "bytes": 2622,
+      "sha256": "b69d5c42043066c1dcc717dfe5fc4ecd13b7abe4fac8109604428ee44a1e98b1",
+      "api_snapshot": {
+        "path": "artifact-10147391972.json",
+        "bytes": 817,
+        "sha256": "d37030a599e67142f9f718a16f52275acf7f73f1cdf2cc55673b2045a59e402c"
+      },
+      "members": 1,
+      "expanded_bytes": 19081,
+      "classification_counts": {
+        "CURRENT_NAMED_RECEIPT_CONTENT_UNREVIEWED": 1
+      },
+      "selected_files_exact": 1,
+      "whole_table_paths_types_duplicates_ancestors_encryption_bounds_checked": true,
+      "all_member_bytes_crc_sha256_match_collector": true,
+      "extracted_selection_hashes_match": true
+    },
+    {
+      "name": "desktop-verification-desktop-windows-x64",
+      "artifact_id": 10147247768,
+      "bytes": 11056765,
+      "sha256": "75cc947cdc11072857279af543845fd89560f582d409828008da572a5a137763",
+      "api_snapshot": {
+        "path": "artifact-10147247768.json",
+        "bytes": 823,
+        "sha256": "5ef4acc8b67b5f49a2bba3e93eb8d9ea8c223d261f33a7e49114964b95e26d44"
+      },
+      "members": 9633,
+      "expanded_bytes": 19908759,
+      "classification_counts": {
+        "FROZEN_TRACKED_FILE_ARCHIVE_ONLY": 9102,
+        "CURRENT_PATH_CANDIDATE_NOT_EXECUTION": 529,
+        "CURRENT_NAMED_RECEIPT_CONTENT_UNREVIEWED": 2
+      },
+      "selected_files_exact": 531,
+      "whole_table_paths_types_duplicates_ancestors_encryption_bounds_checked": true,
+      "all_member_bytes_crc_sha256_match_collector": true,
+      "extracted_selection_hashes_match": true
+    },
+    {
+      "name": "verification-cleanup-desktop-windows-x64",
+      "artifact_id": 10147250451,
+      "bytes": 2664,
+      "sha256": "5d665d36cd870f6ada242bf79067021637c131b7fc4a59acaa7bd2d3406b4d38",
+      "api_snapshot": {
+        "path": "artifact-10147250451.json",
+        "bytes": 819,
+        "sha256": "c9207840c9ac68fc04b88e131dc1ad36fc0fcef1f8cab52a128e21368686d603"
+      },
+      "members": 1,
+      "expanded_bytes": 19365,
+      "classification_counts": {
+        "CURRENT_NAMED_RECEIPT_CONTENT_UNREVIEWED": 1
+      },
+      "selected_files_exact": 1,
+      "whole_table_paths_types_duplicates_ancestors_encryption_bounds_checked": true,
+      "all_member_bytes_crc_sha256_match_collector": true,
+      "extracted_selection_hashes_match": true
+    }
+  ],
+  "logs": {
+    "path": "run-attempt-1-logs.zip",
+    "bytes": 384549,
+    "sha256": "9fdcdb1796877f252032e51bdf05d4ce878d2df3d4f2af263adadbda0afae4ae",
+    "members": 51,
+    "expanded_bytes": 2368577,
+    "classification_counts": {
+      "LOG_ARCHIVE_ONLY": 51
+    },
+    "selected_files_exact": 0,
+    "whole_table_paths_types_duplicates_ancestors_encryption_bounds_checked": true,
+    "all_member_bytes_crc_sha256_match_collector": true,
+    "extracted_selection_hashes_match": "NOT_APPLICABLE_LOG_ARCHIVE_RETAINED_NOT_EXTRACTED"
+  },
+  "custody_checks": [
+    "Recomputed retained collection and API response sizes/SHA-256; compared relevant recorded GET exit0/empty-stderr/bytes/hash receipts. Run and attempt1 match repository and head repository IDs, branch, source75c, exact workflow, event, and completion. Assigned jobs have exact names/IDs/labels/source/attempt; all their individual steps completed successfully.",
+    "Re-derived the 24,865-path frozen table directly with read-only git ls-tree at75c and compared exact retained bytes. Independently derived17 live Gradle roots and162 tracked-Python cache roots; no generated root overlaps tracked files. All179 roots match each pre-build ownership claim exactly.",
+    "Independently preflighted the whole table of each assigned ZIP, including historical entries: canonical relative paths, regular types, exact and casefold duplicates, file/ancestor collisions, encryption, compression and size/count limits. Streamed every member to EOF, recomputed length, CRC32 and SHA-256, and compared every collector member row.",
+    "Compared ZIP length/digest against artifacts.json and the identical per-artifact API snapshots. Verified relevant original ZIPs are retained. Each main ZIP has9,633 files:9,102 frozen tracked historical files,529 current report candidates,2 current ownership/stop receipts. All531 selected files match member hashes; cleanup ZIP adds one exact retained receipt. No extra extracted files or redirected/symlink paths found.",
+    "Kept all9,102 frozen historical members per main archive outside current execution counts. The529 candidates per host are203 XML,287 HTML,26 CSS and13 JavaScript; non-XML report assets were integrity-checked but not counted as tests."
+  ],
+  "execution_checks": [
+    "Reopened frozen productionDesktopCheck registration and alternate-host workflow commands. All13 exact desktopTest tasks and composeApp:compileKotlinDesktop appear once without FROM-CACHE/UP-TO-DATE/NO-SOURCE/SKIPPED/FAILED suffix in each current command interval. Actual XML and fresh ownership, not task names alone, establish execution.",
+    "Parsed all203 current XML suites per host; verified declared totals against testcase children, unique module/suite/class/test keys, module-to-executed-task mapping, and every suite timestamp plus duration inside its current strict graph interval. Same1,340 unique testcase definitions across hosts:1,337 passed,3 skipped,0 failures/errors on EACH host.",
+    "Windows reports233 actionable tasks:178 executed and55 FROM-CACHE. All13 desktopTest tasks, compose desktop compile, and processDebugResources executed; the55 ancillary cached tasks are not newly executed runtime evidence. NO-SOURCE/SKIPPED/UP-TO-DATE headings elsewhere are not passes. Raw task-heading totals are not Gradle actionable counts; macOS repeats the Native distribution heading three times during interleaved output, not three executions.",
+    "Linuxarm64 and macOSx64 host assertions plus current source/clean-checkout checks succeeded; Windowsx64 architecture/source/clean-checkout and job-local core.longpaths prerequisite succeeded. All jobs use JDK21 and in-process Kotlin in the actual logs.",
+    "macOSx64 and Windowsx64 Kotlin/Native2.4.10 host-distribution tasks succeeded. They establish host-selected distribution scope, not Kotlin Native application runtime or a fresh network download. Windows Android36/build-tools36.0.0 installation and processDebugResources succeeded, not Android runtime or Store signing."
+  ],
+  "common_per_host_module_counts": {
+    "composeApp": {
+      "suites": 21,
+      "testcase_records": 96,
+      "passed": 96,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0
+    },
+    "game-modes/mafia": {
+      "suites": 37,
+      "testcase_records": 297,
+      "passed": 297,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0
+    },
+    "game-modes/whodunit": {
+      "suites": 63,
+      "testcase_records": 360,
+      "passed": 360,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0
+    },
+    "shared/content": {
+      "suites": 5,
+      "testcase_records": 24,
+      "passed": 24,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0
+    },
+    "shared/core": {
+      "suites": 2,
+      "testcase_records": 12,
+      "passed": 12,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0
+    },
+    "shared/design-system": {
+      "suites": 18,
+      "testcase_records": 40,
+      "passed": 40,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0
+    },
+    "shared/engine": {
+      "suites": 5,
+      "testcase_records": 13,
+      "passed": 13,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0
+    },
+    "shared/engine-testing": {
+      "suites": 3,
+      "testcase_records": 6,
+      "passed": 6,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0
+    },
+    "shared/networking": {
+      "suites": 8,
+      "testcase_records": 34,
+      "passed": 34,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0
+    },
+    "shared/networking-testing": {
+      "suites": 2,
+      "testcase_records": 5,
+      "passed": 5,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0
+    },
+    "shared/session": {
+      "suites": 13,
+      "testcase_records": 145,
+      "passed": 145,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0
+    },
+    "shared/storage": {
+      "suites": 4,
+      "testcase_records": 31,
+      "passed": 31,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0
+    },
+    "shared/transport-p2p": {
+      "suites": 22,
+      "testcase_records": 277,
+      "passed": 274,
+      "skipped": 3,
+      "failures": 0,
+      "errors": 0
+    }
+  },
+  "skip_policy": {
+    "source": "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitRoomTransportLoopbackTest.kt",
+    "suite": "com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest",
+    "annotations": {
+      "peer_can_join_a_hosted_room_and_membership_appears_on_host": "Needs two physical devices on the same LAN; mDNS multicast on single-JVM loopback is unreliable. Run docs/P2P_MANUAL_TEST.md.",
+      "peer_to_host_message_round_trips_and_host_to_peer_message_arrives_back": "Needs two physical devices on the same LAN; mDNS multicast on single-JVM loopback is unreliable. Run docs/P2P_MANUAL_TEST.md.",
+      "host_broadcast_reaches_every_peer": "Needs three physical devices on the same LAN; mDNS multicast on single-JVM loopback is unreliable. Run docs/P2P_MANUAL_TEST.md."
+    },
+    "xml_cases": [
+      "host_broadcast_reaches_every_peer()[desktop]",
+      "peer_can_join_a_hosted_room_and_membership_appears_on_host()[desktop]",
+      "peer_to_host_message_round_trips_and_host_to_peer_message_arrives_back()[desktop]"
+    ],
+    "evidence": "Each raw XML has three empty skipped elements. Exact reasons are explicit frozen-source @Ignore annotations: two physical devices for join/round-trip, three for broadcast; single-JVM mDNS loopback is unreliable. No physical-device action was performed or authorized by this review.",
+    "positive_boundary": "The fourth host_advertises_a_room_code_that_join_resolves_to test passed on each host. Source assertions cover hosting/advertising/room-code shape, not peer joining despite the function name."
+  },
+  "hosts": {
+    "desktop-linux-arm64": {
+      "id": 102830019156,
+      "label": "ubuntu-24.04-arm",
+      "started_at": "2026-09-10T10:09:40Z",
+      "completed_at": "2026-09-10T10:14:38Z",
+      "steps": 13,
+      "all_steps_success": true,
+      "result": "PASS_WITH_3_DOCUMENTED_TESTCASE_SKIPS",
+      "log_member": {
+        "path": "4_Desktop strict verification (Linux arm64).txt",
+        "bytes": 96119,
+        "sha256": "4f600d6ff2857fee6adda7aa29dfa33e6f30fbbb251825cf357955a1f3fd9ad1"
+      },
+      "command": "./gradlew productionDesktopCheck --dependency-verification=strict --no-daemon --stacktrace --console=plain",
+      "command_line": 228,
+      "command_started_at": "2026-09-10T10:10:06.9743555Z",
+      "build_summary": "BUILD SUCCESSFUL in 4m 15s",
+      "build_success_line": 837,
+      "build_success_at": "2026-09-10T10:14:23.0304314Z",
+      "actionable_tasks_summary": "113 actionable tasks: 113 executed",
+      "actionable_summary_line": 838,
+      "desktop_test_tasks_all_current_executed_without_cache_suffix": true,
+      "desktop_test_tasks": [
+        {
+          "task": ":shared:core:desktopTest",
+          "outcome": "NO_SUFFIX",
+          "line": 740,
+          "timestamp": "2026-09-10T10:12:44.4224681Z"
+        },
+        {
+          "task": ":shared:engine:desktopTest",
+          "outcome": "NO_SUFFIX",
+          "line": 765,
+          "timestamp": "2026-09-10T10:12:55.2219714Z"
+        },
+        {
+          "task": ":shared:content:desktopTest",
+          "outcome": "NO_SUFFIX",
+          "line": 772,
+          "timestamp": "2026-09-10T10:12:57.4233219Z"
+        },
+        {
+          "task": ":shared:engine-testing:desktopTest",
+          "outcome": "NO_SUFFIX",
+          "line": 776,
+          "timestamp": "2026-09-10T10:13:00.6219415Z"
+        },
+        {
+          "task": ":shared:networking:desktopTest",
+          "outcome": "NO_SUFFIX",
+          "line": 786,
+          "timestamp": "2026-09-10T10:13:05.6238395Z"
+        },
+        {
+          "task": ":shared:design-system:desktopTest",
+          "outcome": "NO_SUFFIX",
+          "line": 789,
+          "timestamp": "2026-09-10T10:13:07.1219275Z"
+        },
+        {
+          "task": ":shared:networking-testing:desktopTest",
+          "outcome": "NO_SUFFIX",
+          "line": 792,
+          "timestamp": "2026-09-10T10:13:09.0246961Z"
+        },
+        {
+          "task": ":shared:storage:desktopTest",
+          "outcome": "NO_SUFFIX",
+          "line": 800,
+          "timestamp": "2026-09-10T10:13:14.1284240Z"
+        },
+        {
+          "task": ":shared:session:desktopTest",
+          "outcome": "NO_SUFFIX",
+          "line": 804,
+          "timestamp": "2026-09-10T10:13:23.8259668Z"
+        },
+        {
+          "task": ":composeApp:desktopTest",
+          "outcome": "NO_SUFFIX",
+          "line": 826,
+          "timestamp": "2026-09-10T10:13:50.1219628Z"
+        },
+        {
+          "task": ":shared:transport-p2p:desktopTest",
+          "outcome": "NO_SUFFIX",
+          "line": 830,
+          "timestamp": "2026-09-10T10:13:54.7233602Z"
+        },
+        {
+          "task": ":game-modes:mafia:desktopTest",
+          "outcome": "NO_SUFFIX",
+          "line": 831,
+          "timestamp": "2026-09-10T10:13:58.2219006Z"
+        },
+        {
+          "task": ":game-modes:whodunit:desktopTest",
+          "outcome": "NO_SUFFIX",
+          "line": 832,
+          "timestamp": "2026-09-10T10:14:20.3221221Z"
+        }
+      ],
+      "compose_compile_task": {
+        "task": ":composeApp:compileKotlinDesktop",
+        "outcome": "NO_SUFFIX",
+        "line": 816,
+        "timestamp": "2026-09-10T10:13:42.0263369Z"
+      },
+      "cleanup_log_objects_match_receipts": {
+        "immediate_stop_line": 851,
+        "cleanup_line": 902
+      },
+      "artifact_upload_log_matches": [
+        {
+          "artifact_name": "desktop-verification-desktop-linux-arm64",
+          "artifact_id": 10147120950,
+          "digest_line": 882,
+          "uploaded_line": 885,
+          "uploaded_at": "2026-09-10T10:14:33.1838519Z"
+        },
+        {
+          "artifact_name": "verification-cleanup-desktop-linux-arm64",
+          "artifact_id": 10147122557,
+          "digest_line": 926,
+          "uploaded_line": 929,
+          "uploaded_at": "2026-09-10T10:14:36.0757761Z"
+        }
+      ],
+      "counts": {
+        "suites": 203,
+        "testcase_records": 1340,
+        "passed": 1337,
+        "skipped": 3,
+        "failures": 0,
+        "errors": 0
+      },
+      "xml_timestamp_range": [
+        "2026-09-10T10:12:44.092Z",
+        "2026-09-10T10:14:22.831Z"
+      ],
+      "xml_suites_all_within_current_build_interval": true,
+      "xml_manifest_digest": {
+        "algorithm": "sha256 of UTF-8 sorted-member-path lines: <member-sha256> <decimal-bytes> <member-path>\\n",
+        "sha256": "8a8efc8f9922b634f93f02751cba6580d184e7c722e468d22d2c1799c47fd0a9"
+      },
+      "loopback_suite": {
+        "path": "parlor/parlor/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest.xml",
+        "bytes": 1272,
+        "sha256": "fd2f5b16a0bfcc36575280957164a6ccebc3e6ebb655775d703ccfaaafd0ea94",
+        "timestamp": "2026-09-10T10:13:48.016Z",
+        "host_smoke_passed": true
+      },
+      "raw_task_header_counts_not_actionable_totals": {
+        "SKIPPED": 40,
+        "NO_SUFFIX": 141,
+        "NO-SOURCE": 94
+      },
+      "cleanup": {
+        "receipts": [
+          {
+            "path": "desktop-verification-desktop-linux-arm64/_temp/parlor-verification-34464573240-1-desktop-linux-arm64-ownership.json",
+            "bytes": 18677,
+            "sha256": "08f87fc1a0a735b849e58801c756f9521a29f3612572afc5909828dbe07d67b2"
+          },
+          {
+            "path": "desktop-verification-desktop-linux-arm64/_temp/parlor-verification-34464573240-1-desktop-linux-arm64-stop-linux-arm64.json",
+            "bytes": 348,
+            "sha256": "07303ff4a5214dc368f9759058fcd9f708d4f27a4e3c25f820a9585b31117df0"
+          },
+          {
+            "path": "verification-cleanup-desktop-linux-arm64/parlor-verification-34464573240-1-desktop-linux-arm64-cleanup.json",
+            "bytes": 19083,
+            "sha256": "d4b04af71c0f20ea7115f84573b3d3b1e46af83f31f88b7f254c45a509c03d18"
+          }
+        ],
+        "claim_matches_frozen_source_and_all_outputs": true,
+        "owned_output_roots": 179,
+        "removed_count": 15,
+        "not_created_count": 164,
+        "retained": [],
+        "errors": [],
+        "immediate_gradle_stop": {
+          "task": {
+            "GITHUB_RUN_ID": "34464573240",
+            "GITHUB_RUN_ATTEMPT": "1",
+            "GITHUB_JOB": "desktop-linux-arm64"
+          },
+          "command": [
+            "./gradlew",
+            "--stop"
+          ],
+          "started_at": "2026-09-10T10:14:23.345461+00:00",
+          "exit_code": 0,
+          "output": "No Gradle daemons are running.\n",
+          "finished_at": "2026-09-10T10:14:23.857984+00:00"
+        },
+        "cleanup_gradle_stop": {
+          "command": [
+            "./gradlew",
+            "--stop"
+          ],
+          "started_at": "2026-09-10T10:14:33.263724+00:00",
+          "exit_code": 0,
+          "output": "No Gradle daemons are running.\n",
+          "finished_at": "2026-09-10T10:14:33.775364+00:00"
+        },
+        "cleanup_started_at": "2026-09-10T10:14:33.263706+00:00",
+        "cleanup_finished_at": "2026-09-10T10:14:34.677682+00:00",
+        "cleanup_result": "PASS",
+        "worker_scope": "Gradle stop; workflow pins in-process Kotlin compiler execution. Other native/emulator worker termination needs separate evidence",
+        "upload": {
+          "outcome": "success",
+          "artifact_id": "10147120950",
+          "artifact_digest": "ef54d5248b6fe4384edeaceb7aad71faf3cfdfbf46f8e10a81f030504ff9e872"
+        }
+      }
+    },
+    "desktop-macos-x64": {
+      "id": 102830019108,
+      "label": "macos-15-intel",
+      "started_at": "2026-09-10T10:09:39Z",
+      "completed_at": "2026-09-10T10:22:13Z",
+      "steps": 13,
+      "all_steps_success": true,
+      "result": "PASS_WITH_3_DOCUMENTED_TESTCASE_SKIPS",
+      "log_member": {
+        "path": "1_Desktop and Kotlin Native strict verification (macOS x64).txt",
+        "bytes": 83331,
+        "sha256": "b19da7a5f7966ae86a82133c663fcd5058291b15b45e84de92f95f7688f512d9"
+      },
+      "command": "./gradlew productionDesktopCheck :composeApp:downloadKotlinNativeDistribution --dependency-verification=strict --no-daemon --stacktrace --console=plain",
+      "command_line": 317,
+      "command_started_at": "2026-09-10T10:10:23.0884350Z",
+      "build_summary": "BUILD SUCCESSFUL in 10m 55s",
+      "build_success_line": 659,
+      "build_success_at": "2026-09-10T10:21:19.6521800Z",
+      "actionable_tasks_summary": "114 actionable tasks: 114 executed",
+      "actionable_summary_line": 660,
+      "desktop_test_tasks_all_current_executed_without_cache_suffix": true,
+      "desktop_test_tasks": [
+        {
+          "task": ":shared:core:desktopTest",
+          "outcome": "NO_SUFFIX",
+          "line": 556,
+          "timestamp": "2026-09-10T10:17:04.9442130Z"
+        },
+        {
+          "task": ":shared:content:desktopTest",
+          "outcome": "NO_SUFFIX",
+          "line": 591,
+          "timestamp": "2026-09-10T10:17:35.8467750Z"
+        },
+        {
+          "task": ":shared:engine:desktopTest",
+          "outcome": "NO_SUFFIX",
+          "line": 597,
+          "timestamp": "2026-09-10T10:17:50.3643350Z"
+        },
+        {
+          "task": ":shared:engine-testing:desktopTest",
+          "outcome": "NO_SUFFIX",
+          "line": 606,
+          "timestamp": "2026-09-10T10:18:00.1400710Z"
+        },
+        {
+          "task": ":shared:design-system:desktopTest",
+          "outcome": "NO_SUFFIX",
+          "line": 607,
+          "timestamp": "2026-09-10T10:18:07.4404380Z"
+        },
+        {
+          "task": ":shared:networking-testing:desktopTest",
+          "outcome": "NO_SUFFIX",
+          "line": 617,
+          "timestamp": "2026-09-10T10:18:18.8153550Z"
+        },
+        {
+          "task": ":shared:networking:desktopTest",
+          "outcome": "NO_SUFFIX",
+          "line": 618,
+          "timestamp": "2026-09-10T10:18:19.9402280Z"
+        },
+        {
+          "task": ":shared:storage:desktopTest",
+          "outcome": "NO_SUFFIX",
+          "line": 624,
+          "timestamp": "2026-09-10T10:18:31.5001730Z"
+        },
+        {
+          "task": ":shared:session:desktopTest",
+          "outcome": "NO_SUFFIX",
+          "line": 628,
+          "timestamp": "2026-09-10T10:18:54.3385500Z"
+        },
+        {
+          "task": ":shared:transport-p2p:desktopTest",
+          "outcome": "NO_SUFFIX",
+          "line": 642,
+          "timestamp": "2026-09-10T10:19:37.3925630Z"
+        },
+        {
+          "task": ":composeApp:desktopTest",
+          "outcome": "NO_SUFFIX",
+          "line": 650,
+          "timestamp": "2026-09-10T10:20:05.3948100Z"
+        },
+        {
+          "task": ":game-modes:mafia:desktopTest",
+          "outcome": "NO_SUFFIX",
+          "line": 653,
+          "timestamp": "2026-09-10T10:20:10.9616780Z"
+        },
+        {
+          "task": ":game-modes:whodunit:desktopTest",
+          "outcome": "NO_SUFFIX",
+          "line": 654,
+          "timestamp": "2026-09-10T10:20:39.5438420Z"
+        }
+      ],
+      "compose_compile_task": {
+        "task": ":composeApp:compileKotlinDesktop",
+        "outcome": "NO_SUFFIX",
+        "line": 639,
+        "timestamp": "2026-09-10T10:19:37.0918770Z"
+      },
+      "cleanup_log_objects_match_receipts": {
+        "immediate_stop_line": 673,
+        "cleanup_line": 724
+      },
+      "artifact_upload_log_matches": [
+        {
+          "artifact_name": "desktop-verification-desktop-macos-x64",
+          "artifact_id": 10147387149,
+          "digest_line": 704,
+          "uploaded_line": 707,
+          "uploaded_at": "2026-09-10T10:21:59.9334580Z"
+        },
+        {
+          "artifact_name": "verification-cleanup-desktop-macos-x64",
+          "artifact_id": 10147391972,
+          "digest_line": 748,
+          "uploaded_line": 751,
+          "uploaded_at": "2026-09-10T10:22:08.0524490Z"
+        }
+      ],
+      "counts": {
+        "suites": 203,
+        "testcase_records": 1340,
+        "passed": 1337,
+        "skipped": 3,
+        "failures": 0,
+        "errors": 0
+      },
+      "xml_timestamp_range": [
+        "2026-09-10T10:17:04.268Z",
+        "2026-09-10T10:21:18.836Z"
+      ],
+      "xml_suites_all_within_current_build_interval": true,
+      "xml_manifest_digest": {
+        "algorithm": "sha256 of UTF-8 sorted-member-path lines: <member-sha256> <decimal-bytes> <member-path>\\n",
+        "sha256": "1c1b833ecad709317a248335acefcd5a37944a746707329322231b78e84921d5"
+      },
+      "loopback_suite": {
+        "path": "parlor/parlor/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest.xml",
+        "bytes": 1326,
+        "sha256": "529050881e933ac815b5a7688d3a614180eeaf5f1a62d1f4c074121bc18589e8",
+        "timestamp": "2026-09-10T10:19:44.631Z",
+        "host_smoke_passed": true
+      },
+      "raw_task_header_counts_not_actionable_totals": {
+        "SKIPPED": 40,
+        "NO_SUFFIX": 144,
+        "NO-SOURCE": 94
+      },
+      "cleanup": {
+        "receipts": [
+          {
+            "path": "desktop-verification-desktop-macos-x64/_temp/parlor-verification-34464573240-1-desktop-macos-x64-ownership.json",
+            "bytes": 18676,
+            "sha256": "54ed9c2e9779e92601a3990ba46c5756509f707ff0d024852962e6c9b2133a74"
+          },
+          {
+            "path": "desktop-verification-desktop-macos-x64/_temp/parlor-verification-34464573240-1-desktop-macos-x64-stop-macos-x64.json",
+            "bytes": 346,
+            "sha256": "ce28cf9608315a08fff906d4f6647911c97c3b2a5739a37d43df3d3a4c92aedf"
+          },
+          {
+            "path": "verification-cleanup-desktop-macos-x64/parlor-verification-34464573240-1-desktop-macos-x64-cleanup.json",
+            "bytes": 19081,
+            "sha256": "aec36ab030840839ba54286a94912b3729e9059b3ecdf8f570730a35d3cd7781"
+          }
+        ],
+        "claim_matches_frozen_source_and_all_outputs": true,
+        "owned_output_roots": 179,
+        "removed_count": 15,
+        "not_created_count": 164,
+        "retained": [],
+        "errors": [],
+        "immediate_gradle_stop": {
+          "task": {
+            "GITHUB_RUN_ID": "34464573240",
+            "GITHUB_RUN_ATTEMPT": "1",
+            "GITHUB_JOB": "desktop-macos-x64"
+          },
+          "command": [
+            "./gradlew",
+            "--stop"
+          ],
+          "started_at": "2026-09-10T10:21:21.013067+00:00",
+          "exit_code": 0,
+          "output": "No Gradle daemons are running.\n",
+          "finished_at": "2026-09-10T10:21:22.491968+00:00"
+        },
+        "cleanup_gradle_stop": {
+          "command": [
+            "./gradlew",
+            "--stop"
+          ],
+          "started_at": "2026-09-10T10:22:00.139454+00:00",
+          "exit_code": 0,
+          "output": "No Gradle daemons are running.\n",
+          "finished_at": "2026-09-10T10:22:03.097869+00:00"
+        },
+        "cleanup_started_at": "2026-09-10T10:22:00.139106+00:00",
+        "cleanup_finished_at": "2026-09-10T10:22:07.063255+00:00",
+        "cleanup_result": "PASS",
+        "worker_scope": "Gradle stop; workflow pins in-process Kotlin compiler execution. Other native/emulator worker termination needs separate evidence",
+        "upload": {
+          "outcome": "success",
+          "artifact_id": "10147387149",
+          "artifact_digest": "d284fbd127d0caea408d8cd9608f7551df0abd778aaa864ddd46121714f3e93a"
+        }
+      },
+      "host_selected_distribution_and_resources_log_rows": [
+        {
+          "line": 535,
+          "text": "2026-09-10T10:16:17.8086250Z > Task :composeApp:downloadKotlinNativeDistribution"
+        },
+        {
+          "line": 536,
+          "text": "2026-09-10T10:16:17.8287360Z Kotlin/Native bundle directory /Users/runner/.konan/kotlin-native-prebuilt-macos-x86_64-2.4.10 is not empty. Native bundle files will be overwritten."
+        },
+        {
+          "line": 543,
+          "text": "2026-09-10T10:16:52.8113700Z > Task :composeApp:downloadKotlinNativeDistribution"
+        },
+        {
+          "line": 562,
+          "text": "2026-09-10T10:17:16.2555520Z > Task :composeApp:downloadKotlinNativeDistribution"
+        }
+      ]
+    },
+    "desktop-windows-x64": {
+      "id": 102830019182,
+      "label": "windows-2025",
+      "started_at": "2026-09-10T10:09:38Z",
+      "completed_at": "2026-09-10T10:18:15Z",
+      "steps": 15,
+      "all_steps_success": true,
+      "result": "PASS_WITH_3_DOCUMENTED_TESTCASE_SKIPS",
+      "log_member": {
+        "path": "3_Desktop, Kotlin Native, and Android resources strict verification (Windows x64).txt",
+        "bytes": 102416,
+        "sha256": "b84fe4f8f384664b2fedd0ace9d0264b41b8471dbbebb26f9f4784e7ab21324a"
+      },
+      "command": ".\\gradlew.bat productionDesktopCheck :composeApp:downloadKotlinNativeDistribution :composeApp:processDebugResources --dependency-verification=strict --no-daemon --stacktrace --console=plain",
+      "command_line": 365,
+      "command_started_at": "2026-09-10T10:10:27.9912115Z",
+      "build_summary": "BUILD SUCCESSFUL in 7m 16s",
+      "build_success_line": 862,
+      "build_success_at": "2026-09-10T10:17:44.7848721Z",
+      "actionable_tasks_summary": "233 actionable tasks: 178 executed, 55 from cache",
+      "actionable_summary_line": 863,
+      "desktop_test_tasks_all_current_executed_without_cache_suffix": true,
+      "desktop_test_tasks": [
+        {
+          "task": ":shared:core:desktopTest",
+          "outcome": "NO_SUFFIX",
+          "line": 765,
+          "timestamp": "2026-09-10T10:14:46.1891864Z"
+        },
+        {
+          "task": ":shared:content:desktopTest",
+          "outcome": "NO_SUFFIX",
+          "line": 796,
+          "timestamp": "2026-09-10T10:15:15.3945037Z"
+        },
+        {
+          "task": ":shared:design-system:desktopTest",
+          "outcome": "NO_SUFFIX",
+          "line": 805,
+          "timestamp": "2026-09-10T10:15:26.5129966Z"
+        },
+        {
+          "task": ":shared:engine:desktopTest",
+          "outcome": "NO_SUFFIX",
+          "line": 812,
+          "timestamp": "2026-09-10T10:15:37.3060209Z"
+        },
+        {
+          "task": ":shared:engine-testing:desktopTest",
+          "outcome": "NO_SUFFIX",
+          "line": 813,
+          "timestamp": "2026-09-10T10:15:39.6809227Z"
+        },
+        {
+          "task": ":shared:networking:desktopTest",
+          "outcome": "NO_SUFFIX",
+          "line": 821,
+          "timestamp": "2026-09-10T10:15:48.9944469Z"
+        },
+        {
+          "task": ":shared:networking-testing:desktopTest",
+          "outcome": "NO_SUFFIX",
+          "line": 822,
+          "timestamp": "2026-09-10T10:15:49.3133991Z"
+        },
+        {
+          "task": ":shared:storage:desktopTest",
+          "outcome": "NO_SUFFIX",
+          "line": 833,
+          "timestamp": "2026-09-10T10:16:02.4991487Z"
+        },
+        {
+          "task": ":shared:session:desktopTest",
+          "outcome": "NO_SUFFIX",
+          "line": 837,
+          "timestamp": "2026-09-10T10:16:08.7950703Z"
+        },
+        {
+          "task": ":game-modes:mafia:desktopTest",
+          "outcome": "NO_SUFFIX",
+          "line": 854,
+          "timestamp": "2026-09-10T10:16:46.3176825Z"
+        },
+        {
+          "task": ":composeApp:desktopTest",
+          "outcome": "NO_SUFFIX",
+          "line": 855,
+          "timestamp": "2026-09-10T10:16:55.6101425Z"
+        },
+        {
+          "task": ":shared:transport-p2p:desktopTest",
+          "outcome": "NO_SUFFIX",
+          "line": 856,
+          "timestamp": "2026-09-10T10:17:10.0838069Z"
+        },
+        {
+          "task": ":game-modes:whodunit:desktopTest",
+          "outcome": "NO_SUFFIX",
+          "line": 857,
+          "timestamp": "2026-09-10T10:17:12.3948037Z"
+        }
+      ],
+      "compose_compile_task": {
+        "task": ":composeApp:compileKotlinDesktop",
+        "outcome": "NO_SUFFIX",
+        "line": 838,
+        "timestamp": "2026-09-10T10:16:12.9763454Z"
+      },
+      "cleanup_log_objects_match_receipts": {
+        "immediate_stop_line": 879,
+        "cleanup_line": 936
+      },
+      "artifact_upload_log_matches": [
+        {
+          "artifact_name": "desktop-verification-desktop-windows-x64",
+          "artifact_id": 10147247768,
+          "digest_line": 913,
+          "uploaded_line": 916,
+          "uploaded_at": "2026-09-10T10:18:07.3350750Z"
+        },
+        {
+          "artifact_name": "verification-cleanup-desktop-windows-x64",
+          "artifact_id": 10147250451,
+          "digest_line": 963,
+          "uploaded_line": 966,
+          "uploaded_at": "2026-09-10T10:18:12.0187550Z"
+        }
+      ],
+      "counts": {
+        "suites": 203,
+        "testcase_records": 1340,
+        "passed": 1337,
+        "skipped": 3,
+        "failures": 0,
+        "errors": 0
+      },
+      "xml_timestamp_range": [
+        "2026-09-10T10:14:44.903Z",
+        "2026-09-10T10:17:44.273Z"
+      ],
+      "xml_suites_all_within_current_build_interval": true,
+      "xml_manifest_digest": {
+        "algorithm": "sha256 of UTF-8 sorted-member-path lines: <member-sha256> <decimal-bytes> <member-path>\\n",
+        "sha256": "170dc0b4f0b98f0e70f7780fe225a68d3b56f7b1ffc674fc4cea3598ae568f49"
+      },
+      "loopback_suite": {
+        "path": "parlor/parlor/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest.xml",
+        "bytes": 1291,
+        "sha256": "5603aece789f34297918537959a581c1eadbcc6f76690631ce95996ca3ef5cd2",
+        "timestamp": "2026-09-10T10:17:16.293Z",
+        "host_smoke_passed": true
+      },
+      "raw_task_header_counts_not_actionable_totals": {
+        "SKIPPED": 40,
+        "NO_SUFFIX": 206,
+        "NO-SOURCE": 118,
+        "UP-TO-DATE": 22,
+        "FROM-CACHE": 55
+      },
+      "cleanup": {
+        "receipts": [
+          {
+            "path": "desktop-verification-desktop-windows-x64/_temp/parlor-verification-34464573240-1-desktop-windows-x64-ownership.json",
+            "bytes": 18860,
+            "sha256": "f530551cedbaa8e5001b4fd81e204d3f379fee98e415062780ab12ad0ce61d56"
+          },
+          {
+            "path": "desktop-verification-desktop-windows-x64/_temp/parlor-verification-34464573240-1-desktop-windows-x64-stop-windows-x64.json",
+            "bytes": 426,
+            "sha256": "639c631c10310ceeca9a6cf7c426f381a7c6d0cd937a385842c523346227f398"
+          },
+          {
+            "path": "verification-cleanup-desktop-windows-x64/parlor-verification-34464573240-1-desktop-windows-x64-cleanup.json",
+            "bytes": 19365,
+            "sha256": "3bb17d24533ffb9e737b7cb54148bc7b797b1deb9770f5f5b11be0167ca4ecf6"
+          }
+        ],
+        "claim_matches_frozen_source_and_all_outputs": true,
+        "owned_output_roots": 179,
+        "removed_count": 15,
+        "not_created_count": 164,
+        "retained": [],
+        "errors": [],
+        "immediate_gradle_stop": {
+          "task": {
+            "GITHUB_RUN_ID": "34464573240",
+            "GITHUB_RUN_ATTEMPT": "1",
+            "GITHUB_JOB": "desktop-windows-x64"
+          },
+          "command": [
+            "C:\\Windows\\system32\\cmd.exe",
+            "/d",
+            "/c",
+            "gradlew.bat",
+            "--stop"
+          ],
+          "started_at": "2026-09-10T10:17:45.314695+00:00",
+          "exit_code": 0,
+          "output": "No Gradle daemons are running.\n",
+          "finished_at": "2026-09-10T10:17:46.661470+00:00"
+        },
+        "cleanup_gradle_stop": {
+          "command": [
+            "C:\\Windows\\system32\\cmd.exe",
+            "/d",
+            "/c",
+            "gradlew.bat",
+            "--stop"
+          ],
+          "started_at": "2026-09-10T10:18:07.506906+00:00",
+          "exit_code": 0,
+          "output": "No Gradle daemons are running.\n",
+          "finished_at": "2026-09-10T10:18:08.730236+00:00"
+        },
+        "cleanup_started_at": "2026-09-10T10:18:07.506906+00:00",
+        "cleanup_finished_at": "2026-09-10T10:18:11.317061+00:00",
+        "cleanup_result": "PASS",
+        "worker_scope": "Gradle stop; workflow pins in-process Kotlin compiler execution. Other native/emulator worker termination needs separate evidence",
+        "upload": {
+          "outcome": "success",
+          "artifact_id": "10147247768",
+          "artifact_digest": "75cc947cdc11072857279af543845fd89560f582d409828008da572a5a137763"
+        }
+      },
+      "host_selected_distribution_and_resources_log_rows": [
+        {
+          "line": 628,
+          "text": "2026-09-10T10:14:08.8718406Z > Task :composeApp:downloadKotlinNativeDistribution"
+        },
+        {
+          "line": 629,
+          "text": "2026-09-10T10:14:08.8719996Z Kotlin/Native bundle directory C:\\Users\\runneradmin\\.konan\\kotlin-native-prebuilt-windows-x86_64-2.4.10 is not empty. Native bundle files will be overwritten."
+        },
+        {
+          "line": 757,
+          "text": "2026-09-10T10:14:33.9226458Z > Task :composeApp:processDebugResources"
+        }
+      ]
+    }
+  },
+  "cleanup_checks": [
+    "Each claim binds run34464573240/attempt1/exact job/root/head75c/tree4d5b660 and all179 owned paths before the command. Frozen cleanup source verifies current source/task/claim equality and clean working tree before deletion; cleanup receipts do not separately embed a head/tree, so binding is through the exact retained claim and executed frozen guard.",
+    "Immediate Gradle stop0 follows each strict graph. The corresponding main artifact upload completed before cleanup, with artifact name/ID/length/SHA matching both raw job log and retained ZIP/API identity. Cleanup performs a second stop0; exact JSON objects printed for both stop and cleanup equal the retained receipts.",
+    "Each cleanup reports15 exact live Gradle roots removed,164 not-created paths (162 Python-cache roots plus build-logic/build and iosApp/build), no duplicates/overlap/gaps against the179-root claim, no retained outputs and no errors. All three cleanup results PASS and each cleanup receipt upload is retained with matching raw ID/digest/length.",
+    "This is guarded checkout-output cleanup plus Gradle stop/in-process Kotlin evidence. Alternate-host worker_scope explicitly does not prove independent native/emulator worker termination or a comprehensive worker census; do not extend the claim."
+  ],
+  "findings": [],
+  "limits": [
+    "This review qualifies only the assigned alternate-host component scope at frozen75c. It neither approves the coordinator's newer cleanup changes nor transfers this evidence to a different source without explicit applicability review.",
+    "D03 is not overall green. Main Linux/Android cleanup remains a recorded failure; iOS and main Linux/Android semantics are outside this assigned review.",
+    "No older Windows run at730a was combined with this run. Historical committed build reports, cached ancillary tasks, compilation and Kotlin/Native distribution resolution were not counted as current application-runtime evidence.",
+    "No conclusion here closes iOS L08 OS recovery/strict file protection, normal Debug-binary provenance, dependency/candidate readiness or the final combined qualification beyond its alternate-host component. Separate root reviews remain authoritative for those workstreams.",
+    "No physical-device LAN verification, Store operations/signing/publication, or owner/legal/identity requirement is satisfied. No overall project/Store-ready claim."
+  ],
+  "reviewer_activity": {
+    "performed": "Read-only Git/source/JSON/XML/ZIP/hash reconciliation with Python stdlib; every reviewer Git command used GIT_OPTIONAL_LOCKS=0. Sole write is this assigned report.",
+    "not_performed": [
+      "project imports",
+      "extracted project-function execution",
+      "tests",
+      "builds",
+      "network/API calls",
+      "workflow dispatches",
+      "process queries/signals",
+      "canonical edits",
+      "subagent spawning"
+    ],
+    "cleanup": "No reviewer build/test/native/emulator resources allocated, no outputs deleted, no reviewer cleanup owed. Coordinator owns its separate collection/stop receipts."
+  }
+}

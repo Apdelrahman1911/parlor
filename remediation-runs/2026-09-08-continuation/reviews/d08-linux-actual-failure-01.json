@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "kind": "D08_LINUX_ACTUAL_FAILURE",
+  "recorded_date_utc": "2026-09-11",
+  "reviewer": "/root/ci_linux",
+  "result": "FAIL",
+  "scope": "Actual Linux full-job command failure only; not a replacement qualification or cleanup review.",
+  "run": {
+    "run_id": 34553741387,
+    "run_attempt": 1,
+    "source_sha": "59a384441f44844a79ae62ea8ee68d0c9e1e5878",
+    "job_id": 103121858165,
+    "job_key": "desktop-android",
+    "job_name": "Common, desktop, and Android release",
+    "conclusion": "failure"
+  },
+  "raw_evidence": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/d08-pd06-ci-monitor-01/34553741387-103121858165.log",
+    "bytes": 342916,
+    "sha256": "b72dff274e7ca48a6466b94442bdb55167b8804edbdb8e9f217fd49197dc6bd9",
+    "capture_receipt": "remediation-runs/2026-09-08-continuation/reviews/d08-pd06-ci-monitor-01/34553741387-103121858165-receipt.json",
+    "capture_observed_at": "2026-09-11T02:20:52.984427+00:00",
+    "identity_and_digest_reconfirmed": true
+  },
+  "aggregate": {
+    "command": "./gradlew productionCheck productionStaticAnalysis productionReleaseAutomationCheck allTests --dependency-verification=strict --no-daemon --stacktrace --console=plain",
+    "log_command_lines": [491, 492],
+    "result": "FAIL",
+    "failed_task": ":productionReleaseAutomationCheck",
+    "subprocess": "bash scripts/release/validate_release_system.sh",
+    "exit_code": 1,
+    "log_failure_lines": [2399, 2407, 2408, 2575, 2579],
+    "duration": "6m 22s",
+    "actionable_tasks": 701,
+    "executed_tasks": 523,
+    "from_cache_tasks": 178,
+    "task_summary_log_line": 2577,
+    "count_scope": "Gradle task outcomes, not test cases. The requested aggregates did not complete successfully."
+  },
+  "release_automation_python_tests": {
+    "tests": 567,
+    "failures": 1,
+    "duration_seconds": 118.803,
+    "summary_log_lines": [2381, 2383],
+    "failed_test": "test_release_documentation.ReleaseDocumentationTest.test_protected_branches_require_every_current_verification_job",
+    "source_path": "scripts/release/tests/test_release_documentation.py",
+    "source_line": 24,
+    "failure_log_lines": [2373, 2376, 2377, 2378],
+    "cause": "Stale literal assertion expected 'require all current **Production verification** jobs'; the documented contract correctly requires all six mandatory full jobs and explicitly excludes the opt-in protection diagnostic.",
+    "count_scope": "Python release-automation suite only; not KMP tests or Android runtime tests."
+  },
+  "downstream": {
+    "managed_device_smoke": {
+      "step": "Run release Android managed-device smoke tests",
+      "command": "scripts/android/run_release_managed_device_smoke.sh",
+      "result": "NOT_RUN"
+    },
+    "unsigned_android_package_inspection": {
+      "step": "Inspect unsigned Android release artifact and merged manifest",
+      "result": "NOT_RUN"
+    },
+    "basis": "The aggregate step failed; these downstream steps retain the workflow's implicit success guard and neither command was invoked in the completed raw job log. This does not infer whether any partial build output existed."
+  },
+  "kmp_test_case_reconciliation": {
+    "result": "PENDING_CURRENT_XML",
+    "reason": "Await the terminal collector's current-run XML; no test-case count is inferred from the 701 Gradle tasks."
+  },
+  "limits": [
+    "No new downloads, builds, tests, dispatches, or cleanup audit were performed to prepare this receipt.",
+    "Cleanup is independently owned by ci_cleanup_review and cannot change this job's failed qualification result.",
+    "The later corrected documentation test pass, PD06, historical passes, or another run cannot substitute for this failed full job."
+  ]
+}

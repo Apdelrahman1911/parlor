@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "kind": "ACTUAL_A29_B30_CONTROL_BATCH_RECONCILIATION",
+  "coordinator": "/root",
+  "recorded_at": "2026-09-09T13:18:58.812012+00:00",
+  "status": "PASS_CONTROLS_NOT_NATIVE_RUNTIME",
+  "cycle": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-a29-b30-controls-01",
+  "receipt_sha256": "2c123aab5829d92c2bed1302fd47818c4c913ffbda61ead025f9525a8c3139e2",
+  "commands": [
+    {
+      "name": "canonical_l08_copy",
+      "exit_code": 0,
+      "tests": 9,
+      "seconds": 0.049,
+      "status": "PASS",
+      "log": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-a29-b30-controls-01/canonical_l08_copy.log",
+      "sha256": "2d9d2e43ac51b7fedd0635a5a5afe6f4d3d926258e51fe0a86481c09986ad915"
+    },
+    {
+      "name": "companion_l08_copy",
+      "exit_code": 0,
+      "tests": 9,
+      "seconds": 0.046,
+      "status": "PASS",
+      "log": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-a29-b30-controls-01/companion_l08_copy.log",
+      "sha256": "1b920e1390c06298cd137f09e8f9580c56a399a23c94c559dfd71324def3c699"
+    },
+    {
+      "name": "functional_l08_copy",
+      "exit_code": 0,
+      "tests": 21,
+      "seconds": 1.355,
+      "status": "PASS",
+      "log": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-a29-b30-controls-01/functional_l08_copy.log",
+      "sha256": "3ab0dee28eeccf7b23ebccfaab81acc3a0d050cca08dbf177384128c7aec4904"
+    },
+    {
+      "name": "composition",
+      "exit_code": 0,
+      "tests": 55,
+      "seconds": 6.146,
+      "status": "PASS",
+      "log": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-a29-b30-controls-01/composition.log",
+      "sha256": "0bd4503f92fc75268cefd1dd99a67fbf9c8426a14dd67b60b03e984f3e4ab717"
+    },
+    {
+      "name": "normal",
+      "exit_code": 0,
+      "tests": 243,
+      "seconds": 3.482,
+      "status": "PASS",
+      "log": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-a29-b30-controls-01/normal.log",
+      "sha256": "3da14d3426570a3d34222be411383b40b36aee1923daf371b329f0fd295cd459"
+    },
+    {
+      "name": "native_labels",
+      "exit_code": 0,
+      "tests": 1,
+      "seconds": 0.0,
+      "status": "PASS",
+      "log": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-a29-b30-controls-01/native_labels.log",
+      "sha256": "b6c42af9add74670e9e1abdb64cdd0e27199b7cc8768d73977200e4636fca6e0"
+    }
+  ],
+  "executed_tests": 338,
+  "failures": 0,
+  "errors": 0,
+  "skips": 0,
+  "control_input_count": 217,
+  "before_after_unchanged": true,
+  "source_commit": "52f60924a89f788aab78c826096f34a32af40292",
+  "source_manifest_sha256": "1c4935790e87803c5e28de448353c0baf161b2282e7ffca7c87dbb442ad6064b",
+  "source_rows": 829,
+  "source_is_working_tree_bound": true,
+  "cleanup": {
+    "immediate_gradle_stop": 0,
+    "external_composition_allocations": [
+      {
+        "path": "/tmp/parlor-app-foundation-controls-_ut3pvgd",
+        "device": 27,
+        "inode": 1774038,
+        "uid": 0
+      },
+      {
+        "path": "/tmp/parlor-app-foundation-controls-a82mcbx6",
+        "device": 27,
+        "inode": 1774655,
+        "uid": 0
+      },
+      {
+        "path": "/tmp/parlor-app-foundation-controls-ljypn7b6",
+        "device": 27,
+        "inode": 1774658,
+        "uid": 0
+      },
+      {
+        "path": "/tmp/parlor-app-foundation-controls-gycrrtj8",
+        "device": 27,
+        "inode": 1774661,
+        "uid": 0
+      }
+    ],
+    "all_four_external_allocations_retired": true,
+    "owned_scratch_absent": true,
+    "no_owned_workers_or_outputs": true,
+    "errors": []
+  },
+  "scope": "338 executed descriptors across isolated commands; canonical/companion copy methods overlap. Normal243 are synthetic native/control tests including compilation, not a Darwin ABI/query or app-runtime PASS. No JVM tests repeated; A29/B30 fresh platform execution remains pending."
+}

@@ -1,0 +1,131 @@
+{
+  "observed_at_utc": "2026-09-07T22:50:57.013321+00:00",
+  "reviewer": "/root/native_fix_review",
+  "system": {
+    "ProductVersion": "26.2",
+    "ProductBuildVersion": "25C56",
+    "ProductName": "macOS"
+  },
+  "tools": [
+    {
+      "tool": {
+        "path": "/usr/bin/sample",
+        "bytes": 175056,
+        "sha256": "744c6bd1d85ababe41a5e8ae058ea6ed04819e960102560acac15c2a1615c5bf"
+      },
+      "manual": {
+        "path": "/usr/share/man/man1/sample.1",
+        "bytes": 3905,
+        "sha256": "fdd0929543a726027215630b471e1fe4d551e7c8cdd8d3cbba4e0c6ea8195853",
+        "reviewed_line_ranges": [
+          [
+            1,
+            94
+          ]
+        ],
+        "retained_path": "remediation-runs/2026-09-07-local-readiness/evidence/sample-path-format-research-01/sample.1"
+      },
+      "build_banner": [
+        "@(#)PROGRAM:sample  PROJECT:SamplingTools-64573.1.1"
+      ],
+      "option_literals": [
+        {
+          "line": 23,
+          "text": "options: [-wait] [-mayDie] [-fullPaths] [-e] [-file <filename>]"
+        },
+        {
+          "line": 29,
+          "text": "fullPaths"
+        },
+        {
+          "line": 30,
+          "text": "show full paths to source files if debug info is available"
+        }
+      ],
+      "imports": [
+        "(undefined) external _CSTaskIsSimulator (from CoreSymbolication)",
+        "(undefined) external _OBJC_CLASS_$_VMUProcInfo (from Symbolication)",
+        "(undefined) external _OBJC_CLASS_$_VMUSampler (from Symbolication)",
+        "(undefined) external _VMUSanitizePath (from Symbolication)"
+      ],
+      "linked_images": [
+        "/usr/bin/sample:",
+        "\t/usr/lib/libxcselect.dylib (compatibility version 1.0.0, current version 1.0.0)",
+        "\t/System/Library/PrivateFrameworks/CoreSymbolication.framework/Versions/A/CoreSymbolication (compatibility version 1.0.0, current version 64572.108.2)",
+        "\t/System/Library/PrivateFrameworks/Symbolication.framework/Versions/A/Symbolication (compatibility version 1.0.0, current version 64573.4.1)",
+        "\t/System/Library/Frameworks/Foundation.framework/Versions/C/Foundation (compatibility version 300.0.0, current version 4201.0.0)",
+        "\t/System/Library/Frameworks/Security.framework/Versions/A/Security (compatibility version 1.0.0, current version 61901.60.40)",
+        "\t/usr/lib/libobjc.A.dylib (compatibility version 1.0.0, current version 228.0.0)",
+        "\t/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1356.0.0)",
+        "\t/System/Library/Frameworks/CoreFoundation.framework/Versions/A/CoreFoundation (compatibility version 150.0.0, current version 4201.0.0)"
+      ]
+    },
+    {
+      "tool": {
+        "path": "/usr/bin/vmmap",
+        "bytes": 280240,
+        "sha256": "cd3a4ab5bbe594ca4e25110f93338cb6d126f55105cf3d15689e251e6a7fbb97"
+      },
+      "manual": {
+        "path": "/usr/share/man/man1/vmmap.1",
+        "bytes": 8048,
+        "sha256": "cdd8195c81895d2dd261717aa73056e94546969ee4f887aed37888be3baaa18a",
+        "reviewed_line_ranges": [
+          [
+            1,
+            186
+          ]
+        ],
+        "retained_path": "remediation-runs/2026-09-07-local-readiness/evidence/sample-path-format-research-01/vmmap.1"
+      },
+      "build_banner": [
+        "@(#)PROGRAM:vmmap  PROJECT:SamplingTools-64573.1.1"
+      ],
+      "option_literals": [
+        {
+          "line": 210,
+          "text": "[-sortBySize] [-wide] [-attributes] [-pages] [-interleaved] [-submap] [-allSplitLibs] [-noCoalesce] [-summary] [-stacks] [-fullStacks] [-forkCorpse] <pid | partial-process-name | memory-graph-file> [<address>]"
+        },
+        {
+          "line": 214,
+          "text": "wide"
+        },
+        {
+          "line": 215,
+          "text": "print wide output"
+        },
+        {
+          "line": 252,
+          "text": "excludePersonalInfo"
+        },
+        {
+          "line": 309,
+          "text": "    - paths shortened (e.g. /System/Library/Frameworks -> /S/L/F, /usr/lib/system -> /u/l/s)"
+        }
+      ],
+      "imports": [
+        "(undefined) external _CSTaskIsSimulator (from CoreSymbolication)",
+        "(undefined) external _OBJC_CLASS_$_VMUProcInfo (from Symbolication)",
+        "(undefined) external _OBJC_CLASS_$_VMUVMRegionIdentifier (from Symbolication)",
+        "(undefined) external _VMUSanitizePath (from Symbolication)"
+      ],
+      "linked_images": [
+        "/usr/bin/vmmap:",
+        "\t/usr/lib/libxcselect.dylib (compatibility version 1.0.0, current version 1.0.0)",
+        "\t/System/Library/PrivateFrameworks/CoreSymbolication.framework/Versions/A/CoreSymbolication (compatibility version 1.0.0, current version 64572.108.2)",
+        "\t/System/Library/PrivateFrameworks/Symbolication.framework/Versions/A/Symbolication (compatibility version 1.0.0, current version 64573.4.1)",
+        "\t/System/Library/Frameworks/Foundation.framework/Versions/C/Foundation (compatibility version 300.0.0, current version 4201.0.0)",
+        "\t/System/Library/Frameworks/Security.framework/Versions/A/Security (compatibility version 1.0.0, current version 61901.60.40)",
+        "\t/usr/lib/libobjc.A.dylib (compatibility version 1.0.0, current version 228.0.0)",
+        "\t/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1356.0.0)",
+        "\t/System/Library/Frameworks/CoreFoundation.framework/Versions/A/CoreFoundation (compatibility version 150.0.0, current version 4201.0.0)"
+      ]
+    }
+  ],
+  "method": "Read-only installed manual, strings, nm, otool inspection. sample/vmmap executable itself never invoked.",
+  "disassembly_note": "Read-only otool arm64e disassembly displayed one VMUSanitizePath stub call in each text (sample0x100002f68, vmmap0x100004fe0). Some objc/cfstring annotations were unresolved. No proof these call sites render Path or Binary Images and no formatter reconstructed.",
+  "limitations": [
+    "Static LC_LOAD_DYLIB versions do not prove actual runtime-loaded framework identity.",
+    "Symbolication package listing supplied metadata/resources, not readable formatter source. No dyld cache extraction or private API execution attempted."
+  ]
+}

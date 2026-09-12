@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "kind": "ADDITIVE_INDEPENDENT_SOURCE_REVIEW_WORDING_PRECISION_NOT_A_SOURCE_CORRECTION",
+  "reviewer": "/root/ci_review",
+  "finding_reviewer": "/root",
+  "recorded_at": "2026-09-08T22:54:25.543Z",
+  "status": "CORRECTED_REPORT_MECHANISM_ONLY_EXACT_SOURCE_APPROVAL_UNCHANGED",
+  "corrects": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/hosted-native-budget-admission-source-independent-01.json",
+    "sha256": "579614bf2bb71a8440acaa811e7b63a20d058576fe1579fb29bc940868e281a8",
+    "bytes": 28096,
+    "field": "budget_and_clock.clock.validation",
+    "imprecise_phrase": "strict duplicate/nonfinite decoding",
+    "replacement": "Duplicate keys are rejected by decode's object_pairs_hook. json.loads itself still permits nonfinite constants; the exact-key clock schema then rejects every nonfinite value through exact-int or fixed/current-context equality checks before clock arithmetic or native admission."
+  },
+  "source": {
+    "path": "scripts/ci/native_continuation.py",
+    "sha256": "e41186dc13dd94e851b449079d73b98cc4655bb6234ebcd76adc61942bb12feb",
+    "bytes": 64697,
+    "reviewed_mechanism": [
+      "decode(raw) calls json.loads(raw, object_pairs_hook=unique) without parse_constant.",
+      "admit_native requires exactly clock,start_ns,run_id,run_attempt,job,head_sha.",
+      "start_ns/run_id/run_attempt must have exact int type; NaN/Infinity/overflow-to-infinity floats cannot satisfy that.",
+      "clock/job/head_sha must equal CLOCK_MONOTONIC_RAW/ios/current source SHA respectively; nonfinite numeric values cannot satisfy those string equalities.",
+      "Thus nonfinite clock content is refused by schema validation, not by a strict nonfinite JSON decoder. No observed acceptance bypass or source change is asserted."
+    ]
+  },
+  "original_report_preserved": true,
+  "approval_boundary": "Read with the original exact four-file source report. Source-only approval and all pending regression/composition/packet/freeze/runtime/dispatch requirements are unchanged.",
+  "activity": "Reopened exact decode/admission source and rehashed original report/adapter; no project import, code execution, tests, builds, network, cleanup, source edits or historical evidence rewrites. Only this root-authorized additive wording correction was written."
+}

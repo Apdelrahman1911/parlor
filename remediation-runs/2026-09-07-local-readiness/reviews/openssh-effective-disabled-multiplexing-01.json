@@ -1,0 +1,42 @@
+{
+  "at": "2026-09-07T09:17:08.631254+00:00",
+  "command": [
+    "/usr/bin/ssh",
+    "-G",
+    "-F",
+    "/dev/null",
+    "-o",
+    "ControlMaster=no",
+    "-o",
+    "ControlPath=none",
+    "-o",
+    "ControlPersist=no",
+    "-o",
+    "IdentityAgent=none",
+    "-o",
+    "ForwardAgent=no",
+    "-o",
+    "UseKeychain=no",
+    "-o",
+    "ControlMaster=auto",
+    "-o",
+    "ControlPersist=yes",
+    "-o",
+    "ControlPath=/must-not-be-used",
+    "parlor-synthetic"
+  ],
+  "exit_code": 0,
+  "scope": "Configuration-only, no connection/authentication. -F/dev/null excludes user ssh config. No background process started.",
+  "effective_selected_fields": {
+    "hostname": "parlor-synthetic",
+    "canonicalizehostname": "false",
+    "controlmaster": "false",
+    "identityagent": "none",
+    "forwardagent": "no",
+    "controlpersist": "no"
+  },
+  "stdout_sha256": "5f1e856100f7daa771413de23b3b65533fcb6b9a88f42462249a9ce4b7bbbc66",
+  "stderr_sha256": "d0e14941dee288cc8de19e48436cdf3c2e7939d4b98136c44d954b5f8be73d8a",
+  "controlpath": "OMITTED in actual OpenSSH -G disabled effective rendering",
+  "gradle": "No Gradle task started by this read-only tool inspection. Active root owned iOS cycle intentionally not interrupted."
+}

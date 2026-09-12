@@ -1,0 +1,2018 @@
+{
+  "recorded_at": "2026-09-06T00:11:37.500923+00:00",
+  "source_manifest_sha256": "e59da533dbec2f02f6f2b460ce72e2a7337af1e44abfb0bc6d533304d4127ec7",
+  "tracked_diff_sha256": "60b555c0dd323a086e959ffbc5aa3fd7c6629ae1d0ad016021572e7ae272e4dd",
+  "complete_patch": {
+    "path": "remediation-runs/2026-09-05-confirmed-fixes/final/remediation.patch",
+    "sha256": "305b8f3db676a79ddc98faf72e08d4269596528cdc30cafbbf4c6811312f03f9"
+  },
+  "note": "One-based locations, not a new line-by-line review claim. Shared files show all modified context; causal paths, exact reviewed ranges and reviewers are in each linked independent dossier. Raw resource hashes are not canonical content-identity digests.",
+  "changed_files_attributed": 62,
+  "issues": [
+    {
+      "id": "ST-C1",
+      "status": "FIXED AND VERIFIED",
+      "files": [
+        {
+          "path": "composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSnapshotFileSystem.kt",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSnapshotFileSystem.kt",
+          "sha256": "8a99e60647c3d9f137ca8783e636b37798d06f4883df3609bf6cd2a0568bdf48",
+          "line_count": 500,
+          "relevance": "production-source",
+          "change": "modified",
+          "location_ranges": [
+            {
+              "start": 45,
+              "end": 45,
+              "kind": "changed-lines"
+            },
+            {
+              "start": 73,
+              "end": 73,
+              "kind": "changed-lines"
+            },
+            {
+              "start": 105,
+              "end": 105,
+              "kind": "changed-lines"
+            },
+            {
+              "start": 153,
+              "end": 156,
+              "kind": "changed-lines"
+            },
+            {
+              "start": 175,
+              "end": 175,
+              "kind": "changed-lines"
+            },
+            {
+              "start": 222,
+              "end": 229,
+              "kind": "changed-lines"
+            },
+            {
+              "start": 373,
+              "end": 373,
+              "kind": "changed-lines"
+            },
+            {
+              "start": 401,
+              "end": 419,
+              "kind": "changed-lines"
+            }
+          ],
+          "shared_with_issues": []
+        },
+        {
+          "path": "composeApp/src/iosTest/kotlin/com/parlor/app/storage/IosLegacySnapshotBackupTest.kt",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/composeApp/src/iosTest/kotlin/com/parlor/app/storage/IosLegacySnapshotBackupTest.kt",
+          "sha256": "5d5cf8beedcddd77b3d99d3842f02f472da221f0bbcdc35c6212e3f5d56d0351",
+          "line_count": 222,
+          "relevance": "test-only",
+          "change": "new",
+          "location_ranges": [
+            {
+              "start": 1,
+              "end": 222,
+              "kind": "new-file"
+            }
+          ],
+          "shared_with_issues": []
+        },
+        {
+          "path": "docs/PRODUCTION_ARCHITECTURE.md",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/docs/PRODUCTION_ARCHITECTURE.md",
+          "sha256": "1d795dfd86c3620f6359f9398f162470bfa441ef35127d30148b34879b3e1808",
+          "line_count": 284,
+          "relevance": "documentation",
+          "change": "modified",
+          "location_ranges": [
+            {
+              "start": 251,
+              "end": 257,
+              "kind": "changed-lines"
+            },
+            {
+              "start": 268,
+              "end": 277,
+              "kind": "changed-lines"
+            }
+          ],
+          "shared_with_issues": [
+            "ST-C1",
+            "DS-C01"
+          ]
+        }
+      ],
+      "author": "/root/session_cont",
+      "independent_reviewer": "native_fix_review",
+      "independent_evidence": [
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/independent-review.json",
+          "sha256": "f2daf4d18fc856bbe2ae45f269c6e612f7d63e4ab9253fb36c75a2809e0cd334"
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/INDEPENDENT_REVIEW.md",
+          "sha256": "3b23002f8a347aa22a8c70bd797d791cc08fcbc921ba4a6015297340608fce46"
+        }
+      ]
+    },
+    {
+      "id": "SN-C1",
+      "status": "FIXED AND VERIFIED",
+      "files": [
+        {
+          "path": "shared/session/src/commonMain/kotlin/com/parlor/session/multidevice/SessionStartHandshake.kt",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/session/src/commonMain/kotlin/com/parlor/session/multidevice/SessionStartHandshake.kt",
+          "sha256": "eab3e1743484280bbdf1731f033b9984ad0b9e1d2aea31a94e40a6c29fe17512",
+          "line_count": 397,
+          "relevance": "production-source",
+          "change": "modified",
+          "location_ranges": [
+            {
+              "start": 262,
+              "end": 262,
+              "kind": "deletion-boundary"
+            },
+            {
+              "start": 278,
+              "end": 289,
+              "kind": "changed-lines"
+            }
+          ],
+          "shared_with_issues": []
+        },
+        {
+          "path": "shared/session/src/commonTest/kotlin/com/parlor/session/multidevice/SessionStartCommitDeadlineTest.kt",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/session/src/commonTest/kotlin/com/parlor/session/multidevice/SessionStartCommitDeadlineTest.kt",
+          "sha256": "9f0dc6cb2904dc14b24114ea0e019422e2e84e912e80e359276ab4fd38c816b2",
+          "line_count": 334,
+          "relevance": "test-only",
+          "change": "new",
+          "location_ranges": [
+            {
+              "start": 1,
+              "end": 334,
+              "kind": "new-file"
+            }
+          ],
+          "shared_with_issues": []
+        }
+      ],
+      "author": "/root/session_cont",
+      "independent_reviewer": "root",
+      "independent_evidence": [
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/root/SN-C1-independent-fix-review-01.json",
+          "sha256": "a42e2f920214d4ff464b4dddf3f7baa8f6789c415c668b169754fbfe6100a4c3"
+        }
+      ]
+    },
+    {
+      "id": "SN-C2",
+      "status": "FIXED AND VERIFIED",
+      "files": [
+        {
+          "path": "shared/transport-p2p/src/androidMain/kotlin/com/parlor/transport/p2p/P2pTransportModule.android.kt",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/androidMain/kotlin/com/parlor/transport/p2p/P2pTransportModule.android.kt",
+          "sha256": "280b7f13d26939972416c805a184efe8fb8041f48db219f2e41797adbe456a11",
+          "line_count": 97,
+          "relevance": "production-source",
+          "change": "modified",
+          "location_ranges": [
+            {
+              "start": 17,
+              "end": 17,
+              "kind": "deletion-boundary"
+            },
+            {
+              "start": 43,
+              "end": 43,
+              "kind": "changed-lines"
+            }
+          ],
+          "shared_with_issues": []
+        },
+        {
+          "path": "shared/transport-p2p/src/commonMain/kotlin/com/parlor/transport/p2p/AppLifecycleRoomCoordinator.kt",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/commonMain/kotlin/com/parlor/transport/p2p/AppLifecycleRoomCoordinator.kt",
+          "sha256": "7761d49b0de180d34daa32f790768a541f2af8d0de98b94eeb89ab20bf2d1e68",
+          "line_count": 76,
+          "relevance": "production-source",
+          "change": "modified",
+          "location_ranges": [
+            {
+              "start": 3,
+              "end": 5,
+              "kind": "changed-lines"
+            },
+            {
+              "start": 8,
+              "end": 8,
+              "kind": "changed-lines"
+            },
+            {
+              "start": 53,
+              "end": 67,
+              "kind": "changed-lines"
+            },
+            {
+              "start": 68,
+              "end": 68,
+              "kind": "deletion-boundary"
+            }
+          ],
+          "shared_with_issues": []
+        },
+        {
+          "path": "shared/transport-p2p/src/commonMain/kotlin/com/parlor/transport/p2p/P2pKitCreation.kt",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/commonMain/kotlin/com/parlor/transport/p2p/P2pKitCreation.kt",
+          "sha256": "e924988dfcbde7eb1ac2eae763e5078a28bdd568ca1b05e4ece6284a3183a95e",
+          "line_count": 39,
+          "relevance": "production-source",
+          "change": "new",
+          "location_ranges": [
+            {
+              "start": 1,
+              "end": 39,
+              "kind": "new-file"
+            }
+          ],
+          "shared_with_issues": []
+        },
+        {
+          "path": "shared/transport-p2p/src/commonMain/kotlin/com/parlor/transport/p2p/P2pKitRoomTransport.kt",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/commonMain/kotlin/com/parlor/transport/p2p/P2pKitRoomTransport.kt",
+          "sha256": "a5e2536e41c81c54b58ec27da135ea9046969db9cb80084e2a0da3b15ddde7c7",
+          "line_count": 4811,
+          "relevance": "production-source",
+          "change": "modified",
+          "location_ranges": [
+            {
+              "start": 276,
+              "end": 278,
+              "kind": "changed-lines"
+            },
+            {
+              "start": 280,
+              "end": 280,
+              "kind": "changed-lines"
+            },
+            {
+              "start": 303,
+              "end": 312,
+              "kind": "changed-lines"
+            },
+            {
+              "start": 314,
+              "end": 314,
+              "kind": "changed-lines"
+            },
+            {
+              "start": 325,
+              "end": 325,
+              "kind": "deletion-boundary"
+            },
+            {
+              "start": 396,
+              "end": 396,
+              "kind": "changed-lines"
+            },
+            {
+              "start": 531,
+              "end": 531,
+              "kind": "changed-lines"
+            },
+            {
+              "start": 532,
+              "end": 532,
+              "kind": "deletion-boundary"
+            },
+            {
+              "start": 582,
+              "end": 582,
+              "kind": "deletion-boundary"
+            },
+            {
+              "start": 593,
+              "end": 593,
+              "kind": "changed-lines"
+            },
+            {
+              "start": 622,
+              "end": 622,
+              "kind": "changed-lines"
+            },
+            {
+              "start": 765,
+              "end": 765,
+              "kind": "changed-lines"
+            },
+            {
+              "start": 812,
+              "end": 812,
+              "kind": "changed-lines"
+            },
+            {
+              "start": 813,
+              "end": 813,
+              "kind": "deletion-boundary"
+            },
+            {
+              "start": 838,
+              "end": 838,
+              "kind": "changed-lines"
+            },
+            {
+              "start": 1607,
+              "end": 1630,
+              "kind": "changed-lines"
+            },
+            {
+              "start": 1842,
+              "end": 1843,
+              "kind": "changed-lines"
+            },
+            {
+              "start": 3571,
+              "end": 3572,
+              "kind": "changed-lines"
+            }
+          ],
+          "shared_with_issues": []
+        },
+        {
+          "path": "shared/transport-p2p/src/commonTest/kotlin/com/parlor/transport/p2p/AppLifecycleRoomRegistrationTest.kt",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/commonTest/kotlin/com/parlor/transport/p2p/AppLifecycleRoomRegistrationTest.kt",
+          "sha256": "bfda11cf208b13b039ae74061d81fcf04a11fdfe3945c490371aa71b730f6d6b",
+          "line_count": 139,
+          "relevance": "test-only",
+          "change": "new",
+          "location_ranges": [
+            {
+              "start": 1,
+              "end": 139,
+              "kind": "new-file"
+            }
+          ],
+          "shared_with_issues": []
+        },
+        {
+          "path": "shared/transport-p2p/src/desktopMain/kotlin/com/parlor/transport/p2p/P2pTransportModule.desktop.kt",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/desktopMain/kotlin/com/parlor/transport/p2p/P2pTransportModule.desktop.kt",
+          "sha256": "7bb0e36a15dfde7e193c74f1ab2a3d10f35c01e04c0fb3ba4e08a8a8cf88d3cb",
+          "line_count": 94,
+          "relevance": "production-source",
+          "change": "modified",
+          "location_ranges": [
+            {
+              "start": 15,
+              "end": 15,
+              "kind": "deletion-boundary"
+            },
+            {
+              "start": 36,
+              "end": 36,
+              "kind": "changed-lines"
+            }
+          ],
+          "shared_with_issues": []
+        },
+        {
+          "path": "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/HostOpeningCancellationTest.kt",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/HostOpeningCancellationTest.kt",
+          "sha256": "13cdebd30a42ff4ed04be36f9e2ffe3693b488badd05e19edb2a004a180c6bff",
+          "line_count": 187,
+          "relevance": "test-only",
+          "change": "new",
+          "location_ranges": [
+            {
+              "start": 1,
+              "end": 187,
+              "kind": "new-file"
+            }
+          ],
+          "shared_with_issues": []
+        },
+        {
+          "path": "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitCreationTest.kt",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitCreationTest.kt",
+          "sha256": "aa03b4fc5e37dbd234848594641dd46eec5aef5bf78dcc478783987d6ee0dc70",
+          "line_count": 273,
+          "relevance": "test-only",
+          "change": "new",
+          "location_ranges": [
+            {
+              "start": 1,
+              "end": 273,
+              "kind": "new-file"
+            }
+          ],
+          "shared_with_issues": []
+        },
+        {
+          "path": "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitRoomTransportLifecycleTest.kt",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitRoomTransportLifecycleTest.kt",
+          "sha256": "947a86aebdca10d7d9cfa97a5677c1a79733601dca887effc6c218280a098b1b",
+          "line_count": 5466,
+          "relevance": "test-only",
+          "change": "modified",
+          "location_ranges": [
+            {
+              "start": 428,
+              "end": 428,
+              "kind": "changed-lines"
+            },
+            {
+              "start": 453,
+              "end": 453,
+              "kind": "changed-lines"
+            },
+            {
+              "start": 3667,
+              "end": 3667,
+              "kind": "changed-lines"
+            },
+            {
+              "start": 3791,
+              "end": 3791,
+              "kind": "changed-lines"
+            },
+            {
+              "start": 4613,
+              "end": 4613,
+              "kind": "changed-lines"
+            },
+            {
+              "start": 4626,
+              "end": 4626,
+              "kind": "changed-lines"
+            },
+            {
+              "start": 4640,
+              "end": 4640,
+              "kind": "changed-lines"
+            },
+            {
+              "start": 4759,
+              "end": 4759,
+              "kind": "changed-lines"
+            },
+            {
+              "start": 5280,
+              "end": 5281,
+              "kind": "changed-lines"
+            }
+          ],
+          "shared_with_issues": [
+            "SN-C2",
+            "ROOT-T3"
+          ]
+        },
+        {
+          "path": "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/PeerOpeningCancellationTest.kt",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/PeerOpeningCancellationTest.kt",
+          "sha256": "e72ab2b4e013af3a626f50677e3284518120b4320a556c7d5cb7a662fe4c0e68",
+          "line_count": 392,
+          "relevance": "test-only",
+          "change": "new",
+          "location_ranges": [
+            {
+              "start": 1,
+              "end": 392,
+              "kind": "new-file"
+            }
+          ],
+          "shared_with_issues": []
+        },
+        {
+          "path": "shared/transport-p2p/src/iosMain/kotlin/com/parlor/transport/p2p/P2pTransportModule.ios.kt",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/iosMain/kotlin/com/parlor/transport/p2p/P2pTransportModule.ios.kt",
+          "sha256": "bea599aa4d6dd9820477f2cbee57c213a9988da33e51eada0eb061d25fd77753",
+          "line_count": 71,
+          "relevance": "production-source",
+          "change": "modified",
+          "location_ranges": [
+            {
+              "start": 13,
+              "end": 13,
+              "kind": "deletion-boundary"
+            },
+            {
+              "start": 28,
+              "end": 28,
+              "kind": "changed-lines"
+            }
+          ],
+          "shared_with_issues": []
+        }
+      ],
+      "author": "session_cont + root",
+      "independent_reviewer": "factory_review",
+      "independent_evidence": [
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/factory_review/SN-C2-independent-remediation-review-02.json",
+          "sha256": "4d5f1113d9265a0b86abc1483c609cc6029cedb1ad73895d0dbf063dc5ad001d"
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/factory_review/SN-C2-independent-remediation-review-02.md",
+          "sha256": "49718eece1cc2f8b1aafd1a6d6964148a7ef63183013733838a533ff76f7f5ee"
+        }
+      ]
+    },
+    {
+      "id": "WD-C1",
+      "status": "FIXED AND VERIFIED",
+      "files": [
+        {
+          "path": "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitPhaseRouter.kt",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitPhaseRouter.kt",
+          "sha256": "11b188ca7ecfa7a02086ab2513fe9e40230f3aab9db9a9fa25c79204b4e9b0b7",
+          "line_count": 1135,
+          "relevance": "production-source",
+          "change": "modified",
+          "location_ranges": [
+            {
+              "start": 341,
+              "end": 352,
+              "kind": "changed-lines"
+            },
+            {
+              "start": 354,
+              "end": 359,
+              "kind": "changed-lines"
+            }
+          ],
+          "shared_with_issues": []
+        },
+        {
+          "path": "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/PeerReadinessRemountTest.kt",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/PeerReadinessRemountTest.kt",
+          "sha256": "e443c59bc953b1e35113ce26bf3a2638839cd44723e6a36c90c014b77f5cb6d3",
+          "line_count": 370,
+          "relevance": "test-only",
+          "change": "new",
+          "location_ranges": [
+            {
+              "start": 1,
+              "end": 370,
+              "kind": "new-file"
+            }
+          ],
+          "shared_with_issues": []
+        }
+      ],
+      "author": "/root/whodunit_cont",
+      "independent_reviewer": "root",
+      "independent_evidence": [
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/root/WD-C1-independent-fix-review-01.json",
+          "sha256": "df7ba7e34da2d34e88ee6937c6838a0f8d061ca0bc4f1375e8b185788ddebf3f"
+        }
+      ]
+    },
+    {
+      "id": "IOS-B1",
+      "status": "FIXED AND VERIFIED",
+      "files": [
+        {
+          "path": "iosApp/iosApp.xcodeproj/project.pbxproj",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/iosApp/iosApp.xcodeproj/project.pbxproj",
+          "sha256": "dbf9c4d8f1c8e51cf78682afd5f32729566f75df6355735d3df37841e46fabfe",
+          "line_count": 529,
+          "relevance": "build-configuration",
+          "change": "modified",
+          "location_ranges": [
+            {
+              "start": 246,
+              "end": 246,
+              "kind": "changed-lines"
+            }
+          ],
+          "shared_with_issues": []
+        },
+        {
+          "path": "scripts/release/tests/test_xcode_framework_phase.py",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_xcode_framework_phase.py",
+          "sha256": "3033307b0a029d87ab9c8c14d3b3b4d3a0d4db9d183012d6da58fb1e8b5c4a73",
+          "line_count": 99,
+          "relevance": "release-tooling-test",
+          "change": "new",
+          "location_ranges": [
+            {
+              "start": 1,
+              "end": 99,
+              "kind": "new-file"
+            }
+          ],
+          "shared_with_issues": []
+        }
+      ],
+      "author": "/root",
+      "independent_reviewer": "session_cont",
+      "independent_evidence": [
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/session_cont/IOS-B1-independent-remediation-review-01.json",
+          "sha256": "3e04f4aeed79ba9f7528357fe18136386abcb90c5fe84abb86f3b76e64e236ab"
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/session_cont/IOS-B1-independent-remediation-review-01.md",
+          "sha256": "8d0f2eb8693356379329e17e134d63a991ef37d0111a6a7df472a4ee41e82b01"
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/session_cont/IOS-B1-independent-remediation-review-02-green.md",
+          "sha256": "6dd99298c8d85295227f1a3435ba1fd8f271e7fd4ec155b7110ea36fc98c52c9"
+        }
+      ]
+    },
+    {
+      "id": "ROOT-T3",
+      "status": "FIXED AND VERIFIED",
+      "files": [
+        {
+          "path": "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/JupiterDiscoveryContractTest.kt",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/JupiterDiscoveryContractTest.kt",
+          "sha256": "94682d196381d97a37f6c5e925b63646f102b864d76eb55252cfbd082abcb305",
+          "line_count": 40,
+          "relevance": "test-only",
+          "change": "new",
+          "location_ranges": [
+            {
+              "start": 1,
+              "end": 40,
+              "kind": "new-file"
+            }
+          ],
+          "shared_with_issues": []
+        },
+        {
+          "path": "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitRoomTransportLifecycleTest.kt",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitRoomTransportLifecycleTest.kt",
+          "sha256": "947a86aebdca10d7d9cfa97a5677c1a79733601dca887effc6c218280a098b1b",
+          "line_count": 5466,
+          "relevance": "test-only",
+          "change": "modified",
+          "location_ranges": [
+            {
+              "start": 428,
+              "end": 428,
+              "kind": "changed-lines"
+            },
+            {
+              "start": 453,
+              "end": 453,
+              "kind": "changed-lines"
+            },
+            {
+              "start": 3667,
+              "end": 3667,
+              "kind": "changed-lines"
+            },
+            {
+              "start": 3791,
+              "end": 3791,
+              "kind": "changed-lines"
+            },
+            {
+              "start": 4613,
+              "end": 4613,
+              "kind": "changed-lines"
+            },
+            {
+              "start": 4626,
+              "end": 4626,
+              "kind": "changed-lines"
+            },
+            {
+              "start": 4640,
+              "end": 4640,
+              "kind": "changed-lines"
+            },
+            {
+              "start": 4759,
+              "end": 4759,
+              "kind": "changed-lines"
+            },
+            {
+              "start": 5280,
+              "end": 5281,
+              "kind": "changed-lines"
+            }
+          ],
+          "shared_with_issues": [
+            "SN-C2",
+            "ROOT-T3"
+          ]
+        },
+        {
+          "path": "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitRoomTransportLoopbackTest.kt",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitRoomTransportLoopbackTest.kt",
+          "sha256": "cda4755e373172719f6fc7a4d72a38416ec061b44f356d9ef4f3529e29588737",
+          "line_count": 291,
+          "relevance": "test-only",
+          "change": "modified",
+          "location_ranges": [
+            {
+              "start": 160,
+              "end": 160,
+              "kind": "changed-lines"
+            },
+            {
+              "start": 210,
+              "end": 210,
+              "kind": "changed-lines"
+            }
+          ],
+          "shared_with_issues": []
+        }
+      ],
+      "author": "/root",
+      "independent_reviewer": "session_cont",
+      "independent_evidence": [
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/session_cont/ROOT-T3-independent-remediation-review-01.json",
+          "sha256": "875e0723d0175ff193f7fee77a38333597a8114bf943aafc0eb837b0a604c199"
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/session_cont/ROOT-T3-independent-remediation-review-01.md",
+          "sha256": "20c958f269669878dc68a58c6ab8a5eeaf5a7702b6591f3b74327771fc3aa85e"
+        }
+      ]
+    },
+    {
+      "id": "MF-C1",
+      "status": "FIXED AND VERIFIED",
+      "files": [
+        {
+          "path": "docs/MAFIA_RULES.md",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/docs/MAFIA_RULES.md",
+          "sha256": "4051a05d1c3bd769329178be3a2191be20617f792f18fd0328ab105c2ec29d95",
+          "line_count": 209,
+          "relevance": "documentation",
+          "change": "modified",
+          "location_ranges": [
+            {
+              "start": 34,
+              "end": 34,
+              "kind": "changed-lines"
+            },
+            {
+              "start": 40,
+              "end": 49,
+              "kind": "changed-lines"
+            },
+            {
+              "start": 192,
+              "end": 202,
+              "kind": "changed-lines"
+            }
+          ],
+          "shared_with_issues": []
+        },
+        {
+          "path": "game-modes/mafia/build.gradle.kts",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/build.gradle.kts",
+          "sha256": "7aceb370331f84b2fee70bb039b7779bdd818ea78aab15da3bfcfd137a76ad2d",
+          "line_count": 43,
+          "relevance": "build-configuration",
+          "change": "modified",
+          "location_ranges": [
+            {
+              "start": 33,
+              "end": 36,
+              "kind": "changed-lines"
+            }
+          ],
+          "shared_with_issues": [
+            "MF-C1",
+            "M-C03"
+          ]
+        },
+        {
+          "path": "game-modes/mafia/src/commonMain/composeResources/values-ar/strings.xml",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/composeResources/values-ar/strings.xml",
+          "sha256": "a9416283c7bf130d9ca98b4ff0e08ae420bad4b935f476ed7166178c42c3bdcc",
+          "line_count": 307,
+          "relevance": "shipping-resource",
+          "change": "modified",
+          "location_ranges": [
+            {
+              "start": 77,
+              "end": 77,
+              "kind": "changed-lines"
+            }
+          ],
+          "shared_with_issues": []
+        },
+        {
+          "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/snapshot/MafiaSnapshotRecovery.kt",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/snapshot/MafiaSnapshotRecovery.kt",
+          "sha256": "64525b0d14b07d87e99729c3707dd0af4a083f8f4a98a5a948575755482ea3fd",
+          "line_count": 535,
+          "relevance": "production-source",
+          "change": "modified",
+          "location_ranges": [
+            {
+              "start": 355,
+              "end": 365,
+              "kind": "changed-lines"
+            }
+          ],
+          "shared_with_issues": []
+        },
+        {
+          "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaMultiDevicePhaseRouter.kt",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaMultiDevicePhaseRouter.kt",
+          "sha256": "09de10c3735f1afeb7b36550dca57c4e9fd190d985faf6ff0eae8c0b8d21a784",
+          "line_count": 628,
+          "relevance": "production-source",
+          "change": "modified",
+          "location_ranges": [
+            {
+              "start": 64,
+              "end": 64,
+              "kind": "changed-lines"
+            },
+            {
+              "start": 580,
+              "end": 580,
+              "kind": "deletion-boundary"
+            },
+            {
+              "start": 582,
+              "end": 582,
+              "kind": "changed-lines"
+            }
+          ],
+          "shared_with_issues": []
+        },
+        {
+          "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/passandplay/MafiaPassAndPlayPhaseRouter.kt",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/passandplay/MafiaPassAndPlayPhaseRouter.kt",
+          "sha256": "1371eb747579362548f3962a520c2c3f3c2f6225ef551bad93e3e690e08a1fe6",
+          "line_count": 751,
+          "relevance": "production-source",
+          "change": "modified",
+          "location_ranges": [
+            {
+              "start": 44,
+              "end": 44,
+              "kind": "changed-lines"
+            },
+            {
+              "start": 391,
+              "end": 391,
+              "kind": "deletion-boundary"
+            },
+            {
+              "start": 393,
+              "end": 393,
+              "kind": "changed-lines"
+            }
+          ],
+          "shared_with_issues": []
+        },
+        {
+          "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/night/DoctorTargetEligibility.kt",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/night/DoctorTargetEligibility.kt",
+          "sha256": "e6f616148cd77a6832c08175b769c31885e7b8b16bfb272d19729dc507bcb34a",
+          "line_count": 14,
+          "relevance": "production-source",
+          "change": "new",
+          "location_ranges": [
+            {
+              "start": 1,
+              "end": 14,
+              "kind": "new-file"
+            }
+          ],
+          "shared_with_issues": []
+        },
+        {
+          "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaSetupScreen.kt",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaSetupScreen.kt",
+          "sha256": "c1dc2d1e5f4bf72ac1c2946341143f22936dd7903aab2d02b58c0d63709e87e4",
+          "line_count": 526,
+          "relevance": "production-source",
+          "change": "modified",
+          "location_ranges": [
+            {
+              "start": 99,
+              "end": 101,
+              "kind": "changed-lines"
+            }
+          ],
+          "shared_with_issues": []
+        },
+        {
+          "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/domain/MafiaDoctorRulesTest.kt",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/domain/MafiaDoctorRulesTest.kt",
+          "sha256": "5fe2144436f87162e2d29bcbef6d57ac9b9cede6ab328b406b63cceebcdd501b",
+          "line_count": 156,
+          "relevance": "test-only",
+          "change": "new",
+          "location_ranges": [
+            {
+              "start": 1,
+              "end": 156,
+              "kind": "new-file"
+            }
+          ],
+          "shared_with_issues": []
+        },
+        {
+          "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/multidevice/MafiaDoctorLanTest.kt",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/multidevice/MafiaDoctorLanTest.kt",
+          "sha256": "570e8f18c12f15c480a48c38e6a09025d5aef2ab1aa38cbac246b2f2f0b5a5a5",
+          "line_count": 248,
+          "relevance": "test-only",
+          "change": "new",
+          "location_ranges": [
+            {
+              "start": 1,
+              "end": 248,
+              "kind": "new-file"
+            }
+          ],
+          "shared_with_issues": []
+        },
+        {
+          "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/snapshot/MafiaDoctorHistoryRecoveryTest.kt",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/snapshot/MafiaDoctorHistoryRecoveryTest.kt",
+          "sha256": "d1d830e0330d5a47f2011b9f87d025a5ce1e0bc2d3cb08be742ca1ff4403f743",
+          "line_count": 383,
+          "relevance": "test-only",
+          "change": "new",
+          "location_ranges": [
+            {
+              "start": 1,
+              "end": 383,
+              "kind": "new-file"
+            }
+          ],
+          "shared_with_issues": []
+        },
+        {
+          "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/testing/MafiaDoctorFixture.kt",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/testing/MafiaDoctorFixture.kt",
+          "sha256": "fa5a85db72638033569368062722fc1e1f97fcf1c3948e912c7954324e1e2ba7",
+          "line_count": 120,
+          "relevance": "test-only",
+          "change": "new",
+          "location_ranges": [
+            {
+              "start": 1,
+              "end": 120,
+              "kind": "new-file"
+            }
+          ],
+          "shared_with_issues": []
+        },
+        {
+          "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/night/DoctorTargetEligibilityTest.kt",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/night/DoctorTargetEligibilityTest.kt",
+          "sha256": "c2d196af55bbf14d3518973e86df9da3de3954ffbab27038aca4c2ef14ed70f1",
+          "line_count": 75,
+          "relevance": "test-only",
+          "change": "new",
+          "location_ranges": [
+            {
+              "start": 1,
+              "end": 75,
+              "kind": "new-file"
+            }
+          ],
+          "shared_with_issues": []
+        },
+        {
+          "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaDoctorSettingUiTest.kt",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaDoctorSettingUiTest.kt",
+          "sha256": "47720879336a7ac14436a6cc9e186cce3afc8d00743a1339ff161c0fefb58055",
+          "line_count": 71,
+          "relevance": "test-only",
+          "change": "new",
+          "location_ranges": [
+            {
+              "start": 1,
+              "end": 71,
+              "kind": "new-file"
+            }
+          ],
+          "shared_with_issues": []
+        }
+      ],
+      "author": "/root/mafia_cont",
+      "independent_reviewer": "whodunit_cont",
+      "independent_evidence": [
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/whodunit/MF-C1-M-C03-independent-evidence.json",
+          "sha256": "08b7012c575315873f0822d3dbaa6bb46c205e1b71e71f3d7f59a3f3b172ae91"
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/whodunit/MF-C1-M-C03-independent-review.md",
+          "sha256": "ae821d8d7b8f8480b5691e9f60c3dd657c80f756512c5e43ffb46f57cd6bdff9"
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/factory_review/mafia-detekt-review-01/independent-followup-approval-01.json",
+          "sha256": "c61312b439ba1198e229d9b47ec133b77c629aa5496164e6e82c3065d9f1c32d"
+        }
+      ]
+    },
+    {
+      "id": "WD-C3",
+      "status": "FIXED AND VERIFIED",
+      "files": [
+        {
+          "path": "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/state/WhodunitStateValidator.kt",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/state/WhodunitStateValidator.kt",
+          "sha256": "c391101ba10792d4ba81eb0aa3a21771162c458e075b90bfbf06d4cb33d139c1",
+          "line_count": 1092,
+          "relevance": "production-source",
+          "change": "modified",
+          "location_ranges": [
+            {
+              "start": 626,
+              "end": 633,
+              "kind": "changed-lines"
+            }
+          ],
+          "shared_with_issues": []
+        },
+        {
+          "path": "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/domain/WhodunitRulesInvariantTest.kt",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/domain/WhodunitRulesInvariantTest.kt",
+          "sha256": "593a7e3937abc330e11ab76f4a4802e21bcde7231fb9b5220657a5bcc7d5d513",
+          "line_count": 549,
+          "relevance": "test-only",
+          "change": "modified",
+          "location_ranges": [
+            {
+              "start": 360,
+              "end": 360,
+              "kind": "changed-lines"
+            },
+            {
+              "start": 428,
+              "end": 433,
+              "kind": "changed-lines"
+            },
+            {
+              "start": 435,
+              "end": 435,
+              "kind": "changed-lines"
+            }
+          ],
+          "shared_with_issues": []
+        },
+        {
+          "path": "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/snapshot/WhodunitFinalTwoRecoveryTest.kt",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/snapshot/WhodunitFinalTwoRecoveryTest.kt",
+          "sha256": "b6f36aa2ea3615dcee2c563087d67120e321146d4ae0a2e40cb0f696e865d906",
+          "line_count": 349,
+          "relevance": "test-only",
+          "change": "new",
+          "location_ranges": [
+            {
+              "start": 1,
+              "end": 349,
+              "kind": "new-file"
+            }
+          ],
+          "shared_with_issues": []
+        }
+      ],
+      "author": "/root/whodunit_cont",
+      "independent_reviewer": "root",
+      "independent_evidence": [
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/root/WD-C3-independent-fix-review-01.json",
+          "sha256": "32b0b19e68baa5f72f2c9e169cf66206490ce97b8dc72ac5b2378549314577fe"
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/factory_review/whodunit-detekt-review-01/independent-followup-approval-01.json",
+          "sha256": "881d34fc9faf770f8a944ecbf0da774a99767075acc18dc577fe2625358e8ee4"
+        }
+      ]
+    },
+    {
+      "id": "M-C03",
+      "status": "FIXED AND VERIFIED",
+      "files": [
+        {
+          "path": "game-modes/mafia/build.gradle.kts",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/build.gradle.kts",
+          "sha256": "7aceb370331f84b2fee70bb039b7779bdd818ea78aab15da3bfcfd137a76ad2d",
+          "line_count": 43,
+          "relevance": "build-configuration",
+          "change": "modified",
+          "location_ranges": [
+            {
+              "start": 33,
+              "end": 36,
+              "kind": "changed-lines"
+            }
+          ],
+          "shared_with_issues": [
+            "MF-C1",
+            "M-C03"
+          ]
+        },
+        {
+          "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/postgame/PostGameScreen.kt",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/postgame/PostGameScreen.kt",
+          "sha256": "2ebe210da47584cd0ed1105a921b4b2884cde23227b6cfb0086f25f3aec70aa9",
+          "line_count": 102,
+          "relevance": "production-source",
+          "change": "modified",
+          "location_ranges": [
+            {
+              "start": 4,
+              "end": 4,
+              "kind": "deletion-boundary"
+            },
+            {
+              "start": 6,
+              "end": 6,
+              "kind": "deletion-boundary"
+            },
+            {
+              "start": 64,
+              "end": 66,
+              "kind": "changed-lines"
+            },
+            {
+              "start": 68,
+              "end": 68,
+              "kind": "changed-lines"
+            },
+            {
+              "start": 74,
+              "end": 74,
+              "kind": "changed-lines"
+            },
+            {
+              "start": 80,
+              "end": 80,
+              "kind": "changed-lines"
+            }
+          ],
+          "shared_with_issues": []
+        },
+        {
+          "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/postgame/PostGameScreenLayoutTest.kt",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/postgame/PostGameScreenLayoutTest.kt",
+          "sha256": "27b4894a394bf06952bc1435324ab23acb5c7f38242b65df5feb01e8df16b777",
+          "line_count": 135,
+          "relevance": "test-only",
+          "change": "new",
+          "location_ranges": [
+            {
+              "start": 1,
+              "end": 135,
+              "kind": "new-file"
+            }
+          ],
+          "shared_with_issues": []
+        }
+      ],
+      "author": "/root/mafia_cont",
+      "independent_reviewer": "whodunit_cont",
+      "independent_evidence": [
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/whodunit/MF-C1-M-C03-independent-evidence.json",
+          "sha256": "08b7012c575315873f0822d3dbaa6bb46c205e1b71e71f3d7f59a3f3b172ae91"
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/whodunit/MF-C1-M-C03-independent-review.md",
+          "sha256": "ae821d8d7b8f8480b5691e9f60c3dd657c80f756512c5e43ffb46f57cd6bdff9"
+        }
+      ]
+    },
+    {
+      "id": "DS-C01",
+      "status": "PARTIALLY VERIFIED",
+      "files": [
+        {
+          "path": "composeApp/build.gradle.kts",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/composeApp/build.gradle.kts",
+          "sha256": "c23525d6b06f9b536fb5e8ef6be68c653952fa9764e276f831772b864621fdd5",
+          "line_count": 627,
+          "relevance": "build-configuration",
+          "change": "modified",
+          "location_ranges": [
+            {
+              "start": 195,
+              "end": 206,
+              "kind": "changed-lines"
+            }
+          ],
+          "shared_with_issues": []
+        },
+        {
+          "path": "composeApp/src/desktopTest/kotlin/com/parlor/app/ProductionUiAccessibilityContractTest.kt",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/composeApp/src/desktopTest/kotlin/com/parlor/app/ProductionUiAccessibilityContractTest.kt",
+          "sha256": "00e0d9c8af2d59562ae1a68cc514382f6e017b0c63613ac43810ad407a9d4ba6",
+          "line_count": 381,
+          "relevance": "test-only",
+          "change": "modified",
+          "location_ranges": [
+            {
+              "start": 203,
+              "end": 206,
+              "kind": "changed-lines"
+            },
+            {
+              "start": 219,
+              "end": 226,
+              "kind": "changed-lines"
+            }
+          ],
+          "shared_with_issues": []
+        },
+        {
+          "path": "docs/PRODUCTION_ARCHITECTURE.md",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/docs/PRODUCTION_ARCHITECTURE.md",
+          "sha256": "1d795dfd86c3620f6359f9398f162470bfa441ef35127d30148b34879b3e1808",
+          "line_count": 284,
+          "relevance": "documentation",
+          "change": "modified",
+          "location_ranges": [
+            {
+              "start": 251,
+              "end": 257,
+              "kind": "changed-lines"
+            },
+            {
+              "start": 268,
+              "end": 277,
+              "kind": "changed-lines"
+            }
+          ],
+          "shared_with_issues": [
+            "ST-C1",
+            "DS-C01"
+          ]
+        },
+        {
+          "path": "shared/design-system/src/iosMain/kotlin/com/parlor/designsystem/localization/IosLanguageOverrideOwner.kt",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/iosMain/kotlin/com/parlor/designsystem/localization/IosLanguageOverrideOwner.kt",
+          "sha256": "959ab1a8cb955e484c806c8ce5af65ca841a20cfcd9b1f205443a1cfe768da20",
+          "line_count": 61,
+          "relevance": "production-source",
+          "change": "new",
+          "location_ranges": [
+            {
+              "start": 1,
+              "end": 61,
+              "kind": "new-file"
+            }
+          ],
+          "shared_with_issues": []
+        },
+        {
+          "path": "shared/design-system/src/iosMain/kotlin/com/parlor/designsystem/localization/LocalAppLocale.ios.kt",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/iosMain/kotlin/com/parlor/designsystem/localization/LocalAppLocale.ios.kt",
+          "sha256": "0e0783ca3e38634bd3469760f5dbfa5ade8509b976d0ec676202f4513cd8e098",
+          "line_count": 83,
+          "relevance": "production-source",
+          "change": "modified",
+          "location_ranges": [
+            {
+              "start": 12,
+              "end": 12,
+              "kind": "changed-lines"
+            },
+            {
+              "start": 23,
+              "end": 25,
+              "kind": "changed-lines"
+            },
+            {
+              "start": 34,
+              "end": 39,
+              "kind": "changed-lines"
+            },
+            {
+              "start": 42,
+              "end": 42,
+              "kind": "changed-lines"
+            },
+            {
+              "start": 48,
+              "end": 48,
+              "kind": "changed-lines"
+            },
+            {
+              "start": 83,
+              "end": 83,
+              "kind": "deletion-boundary"
+            }
+          ],
+          "shared_with_issues": []
+        },
+        {
+          "path": "shared/design-system/src/iosTest/kotlin/com/parlor/designsystem/localization/IosLanguageOverrideOwnerTest.kt",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/iosTest/kotlin/com/parlor/designsystem/localization/IosLanguageOverrideOwnerTest.kt",
+          "sha256": "dbf610cd2fe07dd690b994c70434c863a96833305d5fc47c0e0c9d95072acf7e",
+          "line_count": 142,
+          "relevance": "test-only",
+          "change": "new",
+          "location_ranges": [
+            {
+              "start": 1,
+              "end": 142,
+              "kind": "new-file"
+            }
+          ],
+          "shared_with_issues": []
+        }
+      ],
+      "author": "/root",
+      "independent_reviewer": "native_fix_review",
+      "independent_evidence": [
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/independent-review.json",
+          "sha256": "f2daf4d18fc856bbe2ae45f269c6e612f7d63e4ab9253fb36c75a2809e0cd334"
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/INDEPENDENT_REVIEW.md",
+          "sha256": "3b23002f8a347aa22a8c70bd797d791cc08fcbc921ba4a6015297340608fce46"
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/DS-C01-source-contract-review-03.json",
+          "sha256": "28b7723ede03eeb10302dbf4a6aa64649774529b6b8c719844aa31dc75d4e076"
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/DS-C01-source-contract-green-review-04.json",
+          "sha256": "fbe3a4d016e12baeeeaba20a3adf516868aa6f3b77f9fb399ef6be26e89e20ba"
+        }
+      ]
+    },
+    {
+      "id": "DS-C02",
+      "status": "FIXED AND VERIFIED",
+      "files": [
+        {
+          "path": "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/ParlorToastHost.kt",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/ParlorToastHost.kt",
+          "sha256": "ea4e554c099511942e13e07281df48419c333948be7a64d65a72b7dd49ea25b0",
+          "line_count": 230,
+          "relevance": "production-source",
+          "change": "modified",
+          "location_ranges": [
+            {
+              "start": 47,
+              "end": 47,
+              "kind": "changed-lines"
+            },
+            {
+              "start": 58,
+              "end": 59,
+              "kind": "changed-lines"
+            },
+            {
+              "start": 80,
+              "end": 80,
+              "kind": "changed-lines"
+            },
+            {
+              "start": 83,
+              "end": 89,
+              "kind": "changed-lines"
+            },
+            {
+              "start": 90,
+              "end": 90,
+              "kind": "deletion-boundary"
+            },
+            {
+              "start": 92,
+              "end": 92,
+              "kind": "changed-lines"
+            },
+            {
+              "start": 179,
+              "end": 179,
+              "kind": "changed-lines"
+            }
+          ],
+          "shared_with_issues": []
+        },
+        {
+          "path": "shared/design-system/src/commonTest/kotlin/com/parlor/designsystem/components/ParlorToastStateTest.kt",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonTest/kotlin/com/parlor/designsystem/components/ParlorToastStateTest.kt",
+          "sha256": "6fb9a4c16974a10c978a325c57deffcbeb80d36bb9afd394cea55837cbf79cd1",
+          "line_count": 59,
+          "relevance": "test-only",
+          "change": "modified",
+          "location_ranges": [
+            {
+              "start": 5,
+              "end": 5,
+              "kind": "changed-lines"
+            },
+            {
+              "start": 30,
+              "end": 58,
+              "kind": "changed-lines"
+            }
+          ],
+          "shared_with_issues": []
+        },
+        {
+          "path": "shared/design-system/src/desktopTest/kotlin/com/parlor/designsystem/components/ParlorToastConcurrencyTest.kt",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/desktopTest/kotlin/com/parlor/designsystem/components/ParlorToastConcurrencyTest.kt",
+          "sha256": "d1ce19edccb66916930b4fa27d90f7e390f851442de923b351bef1258a0f90d9",
+          "line_count": 73,
+          "relevance": "test-only",
+          "change": "new",
+          "location_ranges": [
+            {
+              "start": 1,
+              "end": 73,
+              "kind": "new-file"
+            }
+          ],
+          "shared_with_issues": []
+        },
+        {
+          "path": "shared/design-system/src/desktopTest/kotlin/com/parlor/designsystem/components/ParlorToastLifetimeTest.kt",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/desktopTest/kotlin/com/parlor/designsystem/components/ParlorToastLifetimeTest.kt",
+          "sha256": "bac61913c5d79ace76748320f0b073669ced0bd0c12f3063c90be7bbec142adc",
+          "line_count": 89,
+          "relevance": "test-only",
+          "change": "new",
+          "location_ranges": [
+            {
+              "start": 1,
+              "end": 89,
+              "kind": "new-file"
+            }
+          ],
+          "shared_with_issues": []
+        }
+      ],
+      "author": "/root",
+      "independent_reviewer": "whodunit_cont",
+      "independent_evidence": [
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/whodunit/DS-C02-C03-independent-evidence.json",
+          "sha256": "1f0b7e23936e89091983b7728bba968e0c958d5dacc7c3ecff28c80df35da21d"
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/whodunit/DS-C02-C03-independent-review.md",
+          "sha256": "18f751fa243ff134a25725cb284363f7af0990a4f374cc183a1ea3415bad55c0"
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/whodunit/DS-C02-additional-tests-execution-approval.json",
+          "sha256": "059db45339be3d0b7f7096fd296b5e2326ac069e618b71652983d5abc5404513"
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/DS-C02-dispatch-review-01/independent-followup-approval-01.json",
+          "sha256": "9022ae4cc48bbcddc45b4658044fc1a854c5c9cb25630c188197d471ece6dd2c"
+        }
+      ]
+    },
+    {
+      "id": "DS-C03",
+      "status": "FIXED AND VERIFIED",
+      "files": [
+        {
+          "path": "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/HostDisconnectedOverlay.kt",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/HostDisconnectedOverlay.kt",
+          "sha256": "a4cf551ee4846b8529b7ba1352a92a286d28831ecff086ef3a5a1ea3a30c450d",
+          "line_count": 91,
+          "relevance": "production-source",
+          "change": "modified",
+          "location_ranges": [
+            {
+              "start": 87,
+              "end": 87,
+              "kind": "changed-lines"
+            }
+          ],
+          "shared_with_issues": []
+        },
+        {
+          "path": "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/ParlorButton.kt",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/ParlorButton.kt",
+          "sha256": "06ac462915e5371344abb953d29eab22bb9b622c800c70c5ebc96cca96efac0b",
+          "line_count": 193,
+          "relevance": "production-source",
+          "change": "modified",
+          "location_ranges": [
+            {
+              "start": 41,
+              "end": 41,
+              "kind": "changed-lines"
+            },
+            {
+              "start": 44,
+              "end": 44,
+              "kind": "changed-lines"
+            },
+            {
+              "start": 73,
+              "end": 74,
+              "kind": "changed-lines"
+            },
+            {
+              "start": 77,
+              "end": 82,
+              "kind": "changed-lines"
+            },
+            {
+              "start": 96,
+              "end": 96,
+              "kind": "changed-lines"
+            },
+            {
+              "start": 181,
+              "end": 185,
+              "kind": "changed-lines"
+            }
+          ],
+          "shared_with_issues": []
+        },
+        {
+          "path": "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/ReconnectingOverlay.kt",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/ReconnectingOverlay.kt",
+          "sha256": "587a0b4c7f8af7b7d0b762035855beee02cf4d1e9b4f4b532862b5f9821a10b5",
+          "line_count": 116,
+          "relevance": "production-source",
+          "change": "modified",
+          "location_ranges": [
+            {
+              "start": 112,
+              "end": 112,
+              "kind": "changed-lines"
+            }
+          ],
+          "shared_with_issues": []
+        },
+        {
+          "path": "shared/design-system/src/desktopTest/kotlin/com/parlor/designsystem/components/RecoveryActionContrastTest.kt",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/desktopTest/kotlin/com/parlor/designsystem/components/RecoveryActionContrastTest.kt",
+          "sha256": "bf9742cdc49fa3b8765b3219774e4b6e7f6e849c4725e9049dca5fc7343d5e20",
+          "line_count": 77,
+          "relevance": "test-only",
+          "change": "new",
+          "location_ranges": [
+            {
+              "start": 1,
+              "end": 77,
+              "kind": "new-file"
+            }
+          ],
+          "shared_with_issues": []
+        }
+      ],
+      "author": "/root",
+      "independent_reviewer": "whodunit_cont",
+      "independent_evidence": [
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/whodunit/DS-C02-C03-independent-evidence.json",
+          "sha256": "1f0b7e23936e89091983b7728bba968e0c958d5dacc7c3ecff28c80df35da21d"
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/whodunit/DS-C02-C03-independent-review.md",
+          "sha256": "18f751fa243ff134a25725cb284363f7af0990a4f374cc183a1ea3415bad55c0"
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/whodunit/DS-C02-additional-tests-execution-approval.json",
+          "sha256": "059db45339be3d0b7f7096fd296b5e2326ac069e618b71652983d5abc5404513"
+        }
+      ]
+    },
+    {
+      "id": "WD-C2",
+      "status": "BLOCKED",
+      "files": [
+        {
+          "path": "game-modes/whodunit/src/commonMain/composeResources/files/cases/last-dinner.json",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/composeResources/files/cases/last-dinner.json",
+          "sha256": "c36b20ed19f94b7eea5809f7c2f1ef38be1f97ac6e2598a8a5de0233ee9e89af",
+          "line_count": 391,
+          "relevance": "shipping-resource",
+          "change": "unchanged-blocked",
+          "location_ranges": [
+            {
+              "start": 154,
+              "end": 162,
+              "kind": "confirmed-manifestation"
+            },
+            {
+              "start": 281,
+              "end": 285,
+              "kind": "confirmed-manifestation"
+            },
+            {
+              "start": 334,
+              "end": 337,
+              "kind": "confirmed-manifestation"
+            },
+            {
+              "start": 358,
+              "end": 361,
+              "kind": "confirmed-manifestation"
+            },
+            {
+              "start": 374,
+              "end": 377,
+              "kind": "confirmed-manifestation"
+            }
+          ]
+        },
+        {
+          "path": "game-modes/whodunit/src/commonMain/composeResources/files/cases/layla-halabi.json",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/composeResources/files/cases/layla-halabi.json",
+          "sha256": "954752e02c72ab8b4ac8fe7b03598857252c539ba07d1f781683be3b42c07d1d",
+          "line_count": 345,
+          "relevance": "shipping-resource",
+          "change": "unchanged-blocked",
+          "location_ranges": [
+            {
+              "start": 16,
+              "end": 19,
+              "kind": "confirmed-manifestation"
+            },
+            {
+              "start": 82,
+              "end": 87,
+              "kind": "confirmed-manifestation"
+            },
+            {
+              "start": 217,
+              "end": 221,
+              "kind": "confirmed-manifestation"
+            }
+          ]
+        },
+        {
+          "path": "game-modes/whodunit/src/commonMain/composeResources/files/cases/jasmine-ring.json",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/composeResources/files/cases/jasmine-ring.json",
+          "sha256": "d1397ac1e0dc3669d3e5ff5e147aabf88647bc6726621cb7239392eb4e4cd9ca",
+          "line_count": 342,
+          "relevance": "shipping-resource",
+          "change": "unchanged-blocked",
+          "location_ranges": [
+            {
+              "start": 75,
+              "end": 89,
+              "kind": "confirmed-manifestation"
+            },
+            {
+              "start": 324,
+              "end": 326,
+              "kind": "confirmed-manifestation"
+            }
+          ]
+        },
+        {
+          "path": "game-modes/whodunit/src/commonMain/composeResources/files/cases/khan-el-khalili.json",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/composeResources/files/cases/khan-el-khalili.json",
+          "sha256": "b1b1d73cedc751f321c51f1e1523b74e57d515d408a7760add328c73c8dcc5e4",
+          "line_count": 348,
+          "relevance": "shipping-resource",
+          "change": "unchanged-blocked",
+          "location_ranges": [
+            {
+              "start": 81,
+              "end": 85,
+              "kind": "confirmed-manifestation"
+            },
+            {
+              "start": 193,
+              "end": 197,
+              "kind": "confirmed-manifestation"
+            },
+            {
+              "start": 329,
+              "end": 332,
+              "kind": "confirmed-manifestation"
+            }
+          ]
+        }
+      ],
+      "author": "none; owner decision required",
+      "independent_reviewer": "mafia_cont",
+      "independent_evidence": [
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/whodunit/WD-C2-blocked.md",
+          "sha256": "5e70e73ec73e946b92abb10e1189ef5549b4f37ee1cccbf8b0d24cb5ea2c1bb1"
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/whodunit/wd-c2-unmodified-resources.json",
+          "sha256": "0de7e18da4500b58542daba4217a96426679d903ba456ff846093762833de232"
+        }
+      ]
+    },
+    {
+      "id": "RL-C1",
+      "status": "FIXED AND VERIFIED",
+      "files": [
+        {
+          "path": "docs/RELEASE_AUTOMATION.md",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/docs/RELEASE_AUTOMATION.md",
+          "sha256": "5598e91447aae3f111654b217118aa64cc9ea0c0c3c34d36f0440c51c0b7f206",
+          "line_count": 638,
+          "relevance": "documentation",
+          "change": "modified",
+          "location_ranges": [
+            {
+              "start": 133,
+              "end": 152,
+              "kind": "changed-lines"
+            }
+          ],
+          "shared_with_issues": [
+            "RL-C1",
+            "RL-C2",
+            "RL-C3"
+          ]
+        },
+        {
+          "path": "scripts/release/tests/test_android_artifact_size.py",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_android_artifact_size.py",
+          "sha256": "1bdf6fe45be629ed8ea6d435727e88d87644319257127732b61a529f1ce1a0b1",
+          "line_count": 117,
+          "relevance": "release-tooling-test",
+          "change": "new",
+          "location_ranges": [
+            {
+              "start": 1,
+              "end": 117,
+              "kind": "new-file"
+            }
+          ],
+          "shared_with_issues": []
+        },
+        {
+          "path": "scripts/release/validate_android_artifact.sh",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/scripts/release/validate_android_artifact.sh",
+          "sha256": "e0100ed6274e41113e18d1cdaa5310242f749d2f337fdb0c5b85920a011cece6",
+          "line_count": 295,
+          "relevance": "release-tooling",
+          "change": "modified",
+          "location_ranges": [
+            {
+              "start": 20,
+              "end": 39,
+              "kind": "changed-lines"
+            },
+            {
+              "start": 41,
+              "end": 41,
+              "kind": "changed-lines"
+            },
+            {
+              "start": 48,
+              "end": 48,
+              "kind": "changed-lines"
+            },
+            {
+              "start": 74,
+              "end": 90,
+              "kind": "changed-lines"
+            }
+          ],
+          "shared_with_issues": [
+            "RL-C1",
+            "RL-C2"
+          ]
+        }
+      ],
+      "author": "/root",
+      "independent_reviewer": "mafia_cont + release_fix_review",
+      "independent_evidence": [
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/mafia/rl-c1-independent-fix-review-01.json",
+          "sha256": "623d83ad4b20674179887f49c2e733026f0149bd831e91f3ab3ae100e94f941f"
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/release_fix_review/release-docs-interactions-01.json",
+          "sha256": "bd900c84f3e0949c0ae3dd04cc1173c171e24150e2e8f78bb36ba64d74386201"
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/release_fix_review/release-docs-approval-02.json",
+          "sha256": "e4d58a9ea4131b7399347ff38b5858630a9c8068f6ddf9683ca2f68e20ed5e30"
+        }
+      ]
+    },
+    {
+      "id": "RL-C2",
+      "status": "FIXED AND VERIFIED",
+      "files": [
+        {
+          "path": "docs/RELEASE_AUTOMATION.md",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/docs/RELEASE_AUTOMATION.md",
+          "sha256": "5598e91447aae3f111654b217118aa64cc9ea0c0c3c34d36f0440c51c0b7f206",
+          "line_count": 638,
+          "relevance": "documentation",
+          "change": "modified",
+          "location_ranges": [
+            {
+              "start": 133,
+              "end": 152,
+              "kind": "changed-lines"
+            }
+          ],
+          "shared_with_issues": [
+            "RL-C1",
+            "RL-C2",
+            "RL-C3"
+          ]
+        },
+        {
+          "path": "scripts/release/PrepareAndroidUploadTrust.java",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/scripts/release/PrepareAndroidUploadTrust.java",
+          "sha256": "a74b92902839047353aa4b5816bc226e43526960da7c4d2df117e25c9375c211",
+          "line_count": 181,
+          "relevance": "release-tooling",
+          "change": "new",
+          "location_ranges": [
+            {
+              "start": 1,
+              "end": 181,
+              "kind": "new-file"
+            }
+          ],
+          "shared_with_issues": []
+        },
+        {
+          "path": "scripts/release/tests/test_android_upload_signature.py",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_android_upload_signature.py",
+          "sha256": "fd9723397cd3ae4336371cd6fdd93164d225919d1ed615d5fd48f75055b3eade",
+          "line_count": 373,
+          "relevance": "release-tooling-test",
+          "change": "new",
+          "location_ranges": [
+            {
+              "start": 1,
+              "end": 373,
+              "kind": "new-file"
+            }
+          ],
+          "shared_with_issues": []
+        },
+        {
+          "path": "scripts/release/validate_android_artifact.sh",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/scripts/release/validate_android_artifact.sh",
+          "sha256": "e0100ed6274e41113e18d1cdaa5310242f749d2f337fdb0c5b85920a011cece6",
+          "line_count": 295,
+          "relevance": "release-tooling",
+          "change": "modified",
+          "location_ranges": [
+            {
+              "start": 20,
+              "end": 39,
+              "kind": "changed-lines"
+            },
+            {
+              "start": 41,
+              "end": 41,
+              "kind": "changed-lines"
+            },
+            {
+              "start": 48,
+              "end": 48,
+              "kind": "changed-lines"
+            },
+            {
+              "start": 74,
+              "end": 90,
+              "kind": "changed-lines"
+            }
+          ],
+          "shared_with_issues": [
+            "RL-C1",
+            "RL-C2"
+          ]
+        }
+      ],
+      "author": "/root",
+      "independent_reviewer": "release_fix_review",
+      "independent_evidence": [
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/release_fix_review/RL-C2-independent-remediation-review-01.json",
+          "sha256": "0dfb26b45804abd11dcea5d3f5fce4c5b168822f01a9598cd774935cf968bbdb"
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/release_fix_review/RL-C2-independent-remediation-review-01.md",
+          "sha256": "f2d0d7ac7f7cb40ef66e50bf6ba8b0df619dff1f4d112d711dbcf3bc3be40554"
+        }
+      ]
+    },
+    {
+      "id": "RL-C3",
+      "status": "FIXED AND VERIFIED",
+      "files": [
+        {
+          "path": "docs/RELEASE_AUTOMATION.md",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/docs/RELEASE_AUTOMATION.md",
+          "sha256": "5598e91447aae3f111654b217118aa64cc9ea0c0c3c34d36f0440c51c0b7f206",
+          "line_count": 638,
+          "relevance": "documentation",
+          "change": "modified",
+          "location_ranges": [
+            {
+              "start": 133,
+              "end": 152,
+              "kind": "changed-lines"
+            }
+          ],
+          "shared_with_issues": [
+            "RL-C1",
+            "RL-C2",
+            "RL-C3"
+          ]
+        },
+        {
+          "path": "scripts/release/store_api.py",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/scripts/release/store_api.py",
+          "sha256": "95ba5a18b5e78d85eb15c8764f011db76293d0bdcf8ee088151321ad5d6b7012",
+          "line_count": 1834,
+          "relevance": "release-tooling",
+          "change": "modified",
+          "location_ranges": [
+            {
+              "start": 658,
+              "end": 658,
+              "kind": "deletion-boundary"
+            },
+            {
+              "start": 662,
+              "end": 685,
+              "kind": "changed-lines"
+            }
+          ],
+          "shared_with_issues": []
+        },
+        {
+          "path": "scripts/release/tests/test_google_promotion_edit.py",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_google_promotion_edit.py",
+          "sha256": "b6ed5e950782ef5581f86cabd7a263937da52d3dfcf7c84cc45df5bcc2d147db",
+          "line_count": 192,
+          "relevance": "release-tooling-test",
+          "change": "new",
+          "location_ranges": [
+            {
+              "start": 1,
+              "end": 192,
+              "kind": "new-file"
+            }
+          ],
+          "shared_with_issues": []
+        },
+        {
+          "path": "scripts/release/tests/test_store_api.py",
+          "absolute_path": "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_store_api.py",
+          "sha256": "18d49c5deb8cc5383b5a9888f7f14f21884bbbfeb577348412f1930f4972a1d1",
+          "line_count": 1020,
+          "relevance": "release-tooling-test",
+          "change": "modified",
+          "location_ranges": [
+            {
+              "start": 269,
+              "end": 277,
+              "kind": "changed-lines"
+            },
+            {
+              "start": 281,
+              "end": 286,
+              "kind": "changed-lines"
+            },
+            {
+              "start": 303,
+              "end": 313,
+              "kind": "changed-lines"
+            },
+            {
+              "start": 317,
+              "end": 322,
+              "kind": "changed-lines"
+            }
+          ],
+          "shared_with_issues": []
+        }
+      ],
+      "author": "/root",
+      "independent_reviewer": "mafia_cont + release_fix_review",
+      "independent_evidence": [
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/mafia/rl-c3-independent-fix-review-01.json",
+          "sha256": "2911a5629eb8b16f34936834301a59c883b1913597a42fa2cd7ecbd49e3c322b"
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/release_fix_review/release-docs-interactions-01.json",
+          "sha256": "bd900c84f3e0949c0ae3dd04cc1173c171e24150e2e8f78bb36ba64d74386201"
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/release_fix_review/release-docs-approval-02.json",
+          "sha256": "e4d58a9ea4131b7399347ff38b5858630a9c8068f6ddf9683ca2f68e20ed5e30"
+        }
+      ]
+    }
+  ]
+}

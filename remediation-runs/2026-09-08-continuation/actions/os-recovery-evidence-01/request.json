@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "kind": "ONE_EXPLICIT_OS_ONLY_TWO_STAGE_NATIVE_DISPATCH_REQUEST",
+  "coordinator": "/root",
+  "created_at": "2026-09-10T08:56:30.380451+00:00",
+  "status": "PREPARED_NOT_DISPATCHED_REQUIRES_INDEPENDENT_FRESH_PREFLIGHT_AND_REQUEST_APPROVAL",
+  "repository": "Apdelrahman1911/parlor",
+  "branch": "fix/local-readiness-2026-09-07",
+  "frozen_source_sha": "75c104734373703570a307de9c7a53d291bc2718",
+  "tree": "4d5b660c5f508a3eb8d01cd9203f2503570dbb18",
+  "inputs": {
+    "verification_scope": "native-evidence",
+    "native_selection": "os-recovery-only",
+    "frozen_source_sha": "75c104734373703570a307de9c7a53d291bc2718",
+    "preflight_run_id": "34457604656",
+    "preflight_run_attempt": "1",
+    "preflight_artifact_id": "10144148673",
+    "preflight_artifact_sha256": "73eca993218bd594180864a8af695b42d59c9b722b647d09175d95130a222f74",
+    "approved_probe_control_sha256": "a7799abc4b865d0f7055bdf96640f6ddcc64650b954651c1285e7fa9bf3711c6"
+  },
+  "command": [
+    "gh",
+    "workflow",
+    "run",
+    "production-verification.yml",
+    "--repo",
+    "Apdelrahman1911/parlor",
+    "--ref",
+    "fix/local-readiness-2026-09-07",
+    "-f",
+    "verification_scope=native-evidence",
+    "-f",
+    "native_selection=os-recovery-only",
+    "-f",
+    "frozen_source_sha=75c104734373703570a307de9c7a53d291bc2718",
+    "-f",
+    "preflight_run_id=34457604656",
+    "-f",
+    "preflight_run_attempt=1",
+    "-f",
+    "preflight_artifact_id=10144148673",
+    "-f",
+    "preflight_artifact_sha256=73eca993218bd594180864a8af695b42d59c9b722b647d09175d95130a222f74",
+    "-f",
+    "approved_probe_control_sha256=a7799abc4b865d0f7055bdf96640f6ddcc64650b954651c1285e7fa9bf3711c6"
+  ],
+  "maximum_dispatches": 1,
+  "expected_lanes": {
+    "os_recovery": "ios-readiness-39"
+  },
+  "unselected_lanes": {
+    "l08": "ios-readiness-37 NOT_RUN_THIS_RUN",
+    "normal": "ios-readiness-38 NOT_RUN_THIS_RUN"
+  },
+  "source_freeze": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/os39-source-freeze-01.json",
+    "bytes": 3253,
+    "sha256": "872050ef664cc81f21578ac07a628a227454faf08a1bd8f61d71410f677de1b9"
+  },
+  "actual_local_review": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/os-recovery-controls-linux-actual-independent-01.json",
+    "bytes": 11494,
+    "sha256": "15bbaa2374226a099aa213325c4f779aefd10e9fee716b7358ac49f7956b6cda"
+  },
+  "preflight_collection": {
+    "path": "remediation-runs/2026-09-08-continuation/actions/34457604656/download-receipt.json",
+    "bytes": 13241,
+    "sha256": "93cf545b2a98c7422537dab16eebf989314cc2e5f9eaa5576ec635267fc1c2de"
+  },
+  "collector": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/os-recovery-native-collector-01.py",
+    "bytes": 7300,
+    "sha256": "00762fafaae6b8f6e8995910b65d7609553f8e120c84ec845f48deed7237ff10"
+  },
+  "collector_review": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/os-recovery-native-collector-independent-01.json",
+    "bytes": 3478,
+    "sha256": "504aa592f8657541fcfd1adabcab9df07e97fed80acca5279442262dd53ea58d"
+  },
+  "required_independent_admission": "remediation-runs/2026-09-08-continuation/reviews/os39-preflight34457604656-admission-independent-01.json",
+  "scope": "One fresh owned simulator, one frozen copied-source build-for-testing, one unique guarded public Settings bootstrap tap then independent proof-only invocation requiring persisted already-satisfied state; unchanged per-app Arabic/English/System/restart oracles and per-process image bindings. Bootstrap failure remains whole-run FAIL even if diagnostic proof passes. No preference injection, retries, original A/B execution, libproc rerun, strict protection waiver, Store/signing credentials or physical-device operations. Final C08 and five-job D remain separate."
+}

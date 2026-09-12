@@ -1,0 +1,167 @@
+{
+  "kind": "REVIEWED_SOURCE_INVENTORY_FREEZE_AND_NORMAL_PUSH",
+  "started_at": "2026-09-11T03:27:41.026879+00:00",
+  "commands": [
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "exit_code": 0,
+      "seconds": 0.003
+    },
+    {
+      "command": [
+        "git",
+        "branch",
+        "--show-current"
+      ],
+      "exit_code": 0,
+      "seconds": 0.004
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--name-only"
+      ],
+      "exit_code": 0,
+      "seconds": 0.076
+    },
+    {
+      "command": [
+        "git",
+        "commit",
+        "-m",
+        "fix(ci): preserve full source checks without parallel index preload"
+      ],
+      "exit_code": 0,
+      "seconds": 0.151
+    },
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "exit_code": 0,
+      "seconds": 0.005
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "scripts/generate_review_inventory.py"
+      ],
+      "exit_code": 0,
+      "seconds": 1.07
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--name-only"
+      ],
+      "exit_code": 0,
+      "seconds": 0.085
+    },
+    {
+      "command": [
+        "git",
+        "add",
+        "docs/review/INDEPENDENT_REVIEW_INVENTORY.csv"
+      ],
+      "exit_code": 0,
+      "seconds": 0.286
+    },
+    {
+      "command": [
+        "git",
+        "commit",
+        "-m",
+        "chore(review): freeze inventory for focused protection probe"
+      ],
+      "exit_code": 0,
+      "seconds": 0.319
+    },
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "exit_code": 0,
+      "seconds": 0.003
+    },
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD^{tree}"
+      ],
+      "exit_code": 0,
+      "seconds": 0.003
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "scripts/generate_review_inventory.py",
+        "--check"
+      ],
+      "exit_code": 0,
+      "seconds": 1.026
+    },
+    {
+      "command": [
+        "git",
+        "push",
+        "origin",
+        "fix/local-readiness-2026-09-07"
+      ],
+      "exit_code": 0,
+      "seconds": 4.281
+    },
+    {
+      "command": [
+        "git",
+        "ls-remote",
+        "origin",
+        "refs/heads/fix/local-readiness-2026-09-07"
+      ],
+      "exit_code": 0,
+      "seconds": 0.593
+    },
+    {
+      "command": [
+        "git",
+        "status",
+        "--porcelain=v1",
+        "--untracked-files=no"
+      ],
+      "exit_code": 0,
+      "seconds": 0.158
+    },
+    {
+      "command": [
+        "./gradlew",
+        "--stop"
+      ],
+      "exit_code": 0,
+      "seconds": 0.755
+    }
+  ],
+  "source_review": "remediation-runs/2026-09-08-continuation/reviews/protection-serial-git-status-independent-01.json",
+  "raw_evidence_diff_check": "Exit2 only raw HTTP CRLF and retained log whitespace; scoped source/handoff diff-check exit0; evidence bytes preserved.",
+  "source_commit": "193b6f70487e93fe8f299f0c76892b73c8aaf677",
+  "frozen_source": "50a2d2d112220507faaa2a7f185d47b331423999",
+  "tree": "3076d1f51de0612b4eb46757e4d5ad4ee234fe5b",
+  "inventory_sha256": "c5e7cd30ea0c18b762568f19e9983b22effba41f69931b8d699799cc15b4e2b7",
+  "inventory_rows": 30556,
+  "remote": "50a2d2d112220507faaa2a7f185d47b331423999",
+  "status": "PASS_SOURCE_FREEZE_NOT_RUNTIME",
+  "stop": "No Gradle daemons are running.",
+  "finished_at": "2026-09-11T03:27:49.917692+00:00",
+  "log_sha256": "f8e83a9a9b692951e213215aabef4b2e2aad2840f4e5b8e4931fb419728c0de1"
+}

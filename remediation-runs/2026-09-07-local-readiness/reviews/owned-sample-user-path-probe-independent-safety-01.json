@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/factory_review",
+  "reviewed_at": "2026-09-07T21:51:10.118918+00:00",
+  "classification": "APPROVED FOR ROOT-ONLY BOUNDED HOST TOOL-FORMAT OBSERVATION",
+  "source_baseline": {
+    "branch": "fix/local-readiness-2026-09-07",
+    "commit": "b6e1947c62661631d0593038db7f64dbf25f720e",
+    "tree": "f03ad1b302d951d0ca9811b1efab2751a8be6978",
+    "tracked_status": "clean; pre-existing untracked material preserved"
+  },
+  "script": {
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/probe_owned_sample_user_path_01.py",
+    "sha256": "9b40a5d341b0f1a8615ea265f6a311c418d07b1e48e614df36e73db91f86438f",
+    "reviewed_lines": [
+      1,
+      96
+    ]
+  },
+  "wrapper": {
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py",
+    "sha256": "5c0e546c819c28762cbc6b355ec2717737fc53f96712af591a27add878579d7a",
+    "reviewed_lines": [
+      1,
+      344
+    ]
+  },
+  "authorized_invocation": [
+    "/usr/bin/python3",
+    "-B",
+    "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py",
+    "normal-sample-user-path-probe-01",
+    "--command",
+    "/usr/bin/python3",
+    "-B",
+    "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/probe_owned_sample_user_path_01.py"
+  ],
+  "safety_reasoning": [
+    "Shared root wrapper exclusively owns the build-lane lock, refuses pre-existing generated outputs and unrelated Gradle8.13 daemons, and allocates this exact cycle scratch. Reviewer ran neither the wrapper nor the probe.",
+    "Probe requires exact normal-sample-user-path-probe-01/scratch/tmp below the current home and creates an exclusive private mkdtemp child. Only public /bin/sleep and /usr/bin/sample bytes are hashed; no private signing material or real app/user data is inspected.",
+    "Only exact public /bin/sleep bytes are copied using exclusive file creation, SHA256 verified, and chmod0700 in newly owned allocation. Only this direct copied-sleep60 Popen child is launched, never Parlor, an existing process or a simulator.",
+    "Both sample commands use the numeric live owned Popen PID, duration1second/10ms and subprocess15second timeout. Default and -fullPaths are observations, not assumed equivalent or assumed fixes.",
+    "Raw owned samples are limited to16MiB and checked regular/non-symlink before read. Only up to8 Process/Path headers of at most4096bytes each, regex fields, whole raw digest and command exit are printed. No raw stacks are retained in intended evidence.",
+    "Finally terminates and reaps only its direct sleep child, with5second kill fallback, verifies allocation dev/inode/uid/directory identity, rejects substituted/symlink/nonregular cleanup targets, unlinks only two exact owned sample filenames and copied executable, then rmdirs only the original empty allocation.",
+    "KeyboardInterrupt/SIGTERM triggers probe finally; subprocess.run timeout owns and reaps its sample child. Root wrapper separately tracks command descendants and finalizes owned workers before scratch cleanup, records mandatory Gradle stop and source/control identity. Abrupt uncatchable process death is not claimed safe solely by probe.",
+    "All96probe lines and344wrapper lines were read; both were stdlib AST parsed without import or execution."
+  ],
+  "precision_note": "Allocated-directory inode is attested, not a stored inode per raw sample file. Exact filenames under the private allocation provide cleanup scope. The system sample -fullPaths option is not assumed to guarantee any Process/Path header spelling; the installed manual claim concerns symbol/source paths.",
+  "conditions": [
+    "Execute unchanged bytes in the exact wrapper/cycle after owned native08 cleanup; no competing build lane.",
+    "Retain both command exits, raw-header observations and cleanup evidence. A missing/different header is a format observation, not an application defect or proof of an acceptable provenance path.",
+    "Verify target_reaped, owned_temporary_removed, wrapper workers/stop/scratch results on completion; record failed cleanup without silently upgrading the result.",
+    "Keep native05/07/08 failures unchanged. Host copied-sleep format results must not retroactively infer native08 raw headers, establish iOS support, diagnose its failure, or count as repair/runtime/Store verification.",
+    "No weakening of exact PID/path/image identity binding is authorized by this approval."
+  ],
+  "reviewer_hygiene": "No build/test/probe/process-control commands executed by reviewer; no generated build outputs, caches or background workers created; only this new additive report written."
+}

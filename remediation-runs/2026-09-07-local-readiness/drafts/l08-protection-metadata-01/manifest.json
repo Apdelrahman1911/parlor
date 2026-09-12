@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "kind": "diagnostic-only-draft-freeze",
+  "created_at_utc": "2026-09-07T21:51:08.543658+00:00",
+  "author": "/root/native_fix_review",
+  "independent_reviewer_requested": "/root/release_fix_review",
+  "independent_review_status": "PENDING",
+  "baseline": {
+    "repository": "/Users/abdelrahman/Projects/parlor",
+    "branch": "fix/local-readiness-2026-09-07",
+    "commit": "b6e1947c62661631d0593038db7f64dbf25f720e",
+    "tree": "f03ad1b302d951d0ca9811b1efab2751a8be6978",
+    "tracked_status": "",
+    "source_binding07": "remediation-runs/2026-09-07-local-readiness/ios-readiness-source-07.json",
+    "source_binding07_sha256": "7a78b016f762dc22fe27beeda9f12b1a1cdac8f8417c2c560b5b67785f350a4c",
+    "source_manifest07_sha256": "4be6d9cbd07c891b60356921be1828c4c8f44501c979e435105494d261c65ffa",
+    "note": "Canonical source remains unchanged; all pre-existing untracked work/evidence is preserved. No native08 conclusion is made."
+  },
+  "files": [
+    {
+      "path": "scripts/verification/ios-readiness/L08StorageProbe.kt.in",
+      "baseline_sha256": "28f4158cc701f1355a9320da1edd9a6d7825cf76828b2b0472ea194611750b75",
+      "baseline_bytes": 25816,
+      "baseline_lines": 499,
+      "baseline_head_blob": "eb961e7cb677ff41605a2b94d3fc66c68642085e",
+      "proposed_sha256": "a1202e47e1b41feb7e5c558e4df9515704e27762e437778b6ae79c777bfce651",
+      "proposed_bytes": 32477,
+      "proposed_lines": 630,
+      "draft_path": "remediation-runs/2026-09-07-local-readiness/drafts/l08-protection-metadata-01/files/scripts/verification/ios-readiness/L08StorageProbe.kt.in"
+    },
+    {
+      "path": "scripts/verification/ios-readiness/l08_receipts.py",
+      "baseline_sha256": "3cab6914886db081ba883629242d33a262158c0106e8658bc7b777387826f867",
+      "baseline_bytes": 29601,
+      "baseline_lines": 422,
+      "baseline_head_blob": "242ba7cb1a4a4f04d14a40c259cd52dd88215e13",
+      "proposed_sha256": "43200492a5fae3cb31f89ecafe9985eee84b9c30b4549cd2933788dac056bfbd",
+      "proposed_bytes": 33871,
+      "proposed_lines": 486,
+      "draft_path": "remediation-runs/2026-09-07-local-readiness/drafts/l08-protection-metadata-01/files/scripts/verification/ios-readiness/l08_receipts.py"
+    },
+    {
+      "path": "scripts/verification/ios-readiness/test_l08_diagnostics.py",
+      "baseline_sha256": "97d6bb76316151b850e2e85ed84aac5524743184a78c499fb9b2c7db1bf9980a",
+      "baseline_bytes": 9161,
+      "baseline_lines": 151,
+      "baseline_head_blob": "8348930b18e63a1caa6a39f2a13cd455a6977010",
+      "proposed_sha256": "925be779c7b03f148995061f1e769290ec4fa014c2e7f4dbab202fd1b84d8d9c",
+      "proposed_bytes": 23044,
+      "proposed_lines": 348,
+      "draft_path": "remediation-runs/2026-09-07-local-readiness/drafts/l08-protection-metadata-01/files/scripts/verification/ios-readiness/test_l08_diagnostics.py"
+    }
+  ],
+  "patch": {
+    "path": "remediation-runs/2026-09-07-local-readiness/drafts/l08-protection-metadata-01/patch.diff",
+    "sha256": "7b859443ec17fd4072af3d1a5a24eaaae6ebfec180da871b974ac42b9bfe73af",
+    "bytes": 32769
+  },
+  "sdk_evidence": {
+    "path": "remediation-runs/2026-09-07-local-readiness/drafts/l08-protection-metadata-01/sdk-evidence.json",
+    "sha256": "c89da4ba456646a2e42b19886a6e97c5381d1383ec351193898ac09c45bc205e",
+    "bytes": 12868
+  },
+  "notes": {
+    "path": "remediation-runs/2026-09-07-local-readiness/drafts/l08-protection-metadata-01/README.md",
+    "sha256": "67e3fc1420a60172530213dd2da3da3cab71db10f4d19e674addfc46a7fac694",
+    "bytes": 3579
+  },
+  "verification": {
+    "author_source_diff_review": "Completed for three proposed file diffs; not independent approval.",
+    "control_tests": "NOT RUN",
+    "kotlin_compilation": "NOT RUN",
+    "native_execution": "NOT RUN",
+    "production_or_store_evidence": false
+  },
+  "safety": {
+    "canonical_source_edits": false,
+    "application_storage_mutation_added": false,
+    "new_runner_added": false,
+    "pass_gate_weakened": false,
+    "build_commands_invoked": false,
+    "task_workers_started": false,
+    "generated_build_outputs_created": false,
+    "cleanup": "NOT APPLICABLE: draft-only read/write work; root exclusively owns active build/native lane."
+  }
+}

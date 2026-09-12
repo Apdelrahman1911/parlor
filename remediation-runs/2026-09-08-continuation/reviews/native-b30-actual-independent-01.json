@@ -1,0 +1,549 @@
+{
+  "schema_version": 1,
+  "kind": "independent-actual-native-runtime-and-provenance-review",
+  "reviewer": "/root/portability_review",
+  "execution_owner": "/root",
+  "recorded_at": "2026-09-09T16:28:06.286Z",
+  "status": "APPROVED_SCOPED_B30_NATIVE_PASS",
+  "findings": [],
+  "scope": "Actual B30 normal Debug copied-app source, eight XCTest repetitions and separate ninth public-launch selected-image libproc provenance, artifact/notices/signatures and recorded cleanup. No new execution, A29 acceptance, future-source applicability approval or combined/Store-readiness verdict.",
+  "run": {
+    "repository": "Apdelrahman1911/parlor",
+    "branch": "fix/local-readiness-2026-09-07",
+    "commit": "360fc797a85e1e494334fd8cc11b4e739981cea8",
+    "tree": "8bfe56a21074ba51a4b668bad0728e42007a7593",
+    "workflow": ".github/workflows/production-verification.yml",
+    "run_id": 34362984912,
+    "run_attempt": 1,
+    "ios_job_id": 102504438995,
+    "b30_started_at": "2026-09-09T15:22:16.214937+00:00",
+    "b30_finished_at": "2026-09-09T15:45:16.875521+00:00",
+    "b30_child_exit": 0,
+    "b30_receipt_status": "PASS",
+    "b30_runtime_status": "PASS",
+    "b30_provenance_status": "PASS",
+    "b30_notice_status": "PASS",
+    "b30_cleanup_status": "PASS",
+    "overall_run_conclusion": "failure",
+    "outer_continuation_status": "NOT_READY",
+    "distinction": "A29 child exit1/receipt FAIL remains. Four other workflow jobs skipped. This combined run did not pass and was not fullD."
+  },
+  "evidence": {
+    "root": "remediation-runs/2026-09-08-continuation/actions/34362984912/native-evidence/ios-readiness-30",
+    "file_paths_relative_to_root": true,
+    "files": [
+      {
+        "file": "receipt.json",
+        "bytes": 446052,
+        "sha256": "29cb6106fa32866da27e5b85ee676b87d4103d354125a22675c98b0bc57da982"
+      },
+      {
+        "file": "input-manifest.json",
+        "bytes": 170365,
+        "sha256": "b33b30a344b331928ad33f1fd76544c2d34669b478b4d3015a3bab75c8bc4030"
+      },
+      {
+        "file": "copied-source-manifest.json",
+        "bytes": 216487,
+        "sha256": "63e4aaaadf7cef26ea097a4e8686d7ace0e8d7620a1397abfc2c1225c6de53f6"
+      },
+      {
+        "file": "copied-source.diff",
+        "bytes": 6917,
+        "sha256": "3f39186b4168693e87dd988a601d7d233af10e6bab6b24a245c5a9bac4f5bf19"
+      },
+      {
+        "file": "copied-inputs-after-build.json",
+        "bytes": 244695,
+        "sha256": "bc634cd1866db8d7c032f35fad7cfa2f6649b73296588f39231c9e6d89b828d6"
+      },
+      {
+        "file": "normal-launch-observations.json",
+        "bytes": 14852,
+        "sha256": "9cc42d74fbb977a026d2ff9a026f24437e339e8c68a1e0592e7bd814b121088f"
+      },
+      {
+        "file": "xcresult-summary.json",
+        "bytes": 1107,
+        "sha256": "b82103408c5665cda702542a0db086ee02ff81aa98a9e3552b8602597ed57211"
+      },
+      {
+        "file": "xcresult-tests.json",
+        "bytes": 4467,
+        "sha256": "895b9f45f15c87acdafbb460a78366109a161efac77f8ed00cb9feff92579884"
+      },
+      {
+        "file": "xcresult-test-details.json",
+        "bytes": 2725,
+        "sha256": "54c54ea9073a58f324e64fa8b3ef88ccc6428a512550705d67d2a159bcb200d9"
+      },
+      {
+        "file": "xcodebuild.log.gz",
+        "bytes": 27908,
+        "sha256": "f3f4968c4ec2ca4ca7528b078c773f666b55676dc228a536eaa4576684f152ec"
+      },
+      {
+        "file": "separate-external-image-provenance.json",
+        "bytes": 9049,
+        "sha256": "0971ee6d7c9da5fb37bbd18229e5baaf7a3ae660f5fcecb0b5f2cf7fbb7330d0"
+      },
+      {
+        "file": "kernel-region-01.json",
+        "bytes": 664,
+        "sha256": "c6c826719721735f0cf811b4d3422d1ed372bd604faedab72d807f79df4bf237"
+      },
+      {
+        "file": "kernel-region-02.json",
+        "bytes": 661,
+        "sha256": "71a6fabb8ac0cabdf4b545430f8207d2e2999d327a552e07010d65cc77088bdf"
+      },
+      {
+        "file": "kernel-region-03.json",
+        "bytes": 653,
+        "sha256": "d46e01f4a4735d8b334c8ca3e8aa8f85011395d165ccc75aba2354a434cec416"
+      },
+      {
+        "file": "built-installed-binary-inventory.json",
+        "bytes": 1565,
+        "sha256": "5f4d88d0eb5620fd7e38865341554308658b4b3263e4c414a1a9ab71daf4698e"
+      },
+      {
+        "file": "external-image-artifact-bindings.json",
+        "bytes": 4719,
+        "sha256": "6c2986a0d1d73ed0912f22c50e0ae1ca14d61babacf421407ee2e7ea2385fb33"
+      },
+      {
+        "file": "effective-simulator-app-phase.json",
+        "bytes": 1638,
+        "sha256": "16aa11ca4a510ec13ade0a43812d9a7ecea9d87d4be20458852a4a2b64064ad3"
+      },
+      {
+        "file": "built-app-signature.log",
+        "bytes": 365,
+        "sha256": "3b14e6e4d7f91d704b2e138c618c723abc13dcacf23320b4658eef796d55fc97"
+      },
+      {
+        "file": "installed-app-signature.log",
+        "bytes": 401,
+        "sha256": "0644ae3e79ac2350b0a7970afb26f6578c6ad802d695bdad51c2a66785bc2dd3"
+      },
+      {
+        "file": "built-notice-package.json",
+        "bytes": 10407,
+        "sha256": "5b22822de051375fe5f2a6ab54daa4db11c0addfd86b183e39a200c09ace2db5"
+      },
+      {
+        "file": "installed-notice-package.json",
+        "bytes": 10407,
+        "sha256": "5b22822de051375fe5f2a6ab54daa4db11c0addfd86b183e39a200c09ace2db5"
+      },
+      {
+        "file": "simulator-lifecycle.jsonl",
+        "bytes": 27263,
+        "sha256": "c622e29d6d8eff876c8a8cc0d2379c0b9d3bd1daf8e463bf9e0191540ff0b4a0"
+      },
+      {
+        "file": "secondary-fifo-final.json",
+        "bytes": 2934,
+        "sha256": "129fee40f21482cb2c347c86da1ef2620e866487f0972c62f4eb8b121db0398d"
+      }
+    ],
+    "fresh_binding": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34362984912/native-evidence/reviewed-preflight/ios-readiness-source-ci.json",
+      "bytes": 300809,
+      "sha256": "c3e7a371207d387d5e24d2b94b682004f0603624de7722b50431dc5514f5c7be"
+    },
+    "outer_continuation": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34362984912/native-evidence/continuation.json",
+      "bytes": 46259,
+      "sha256": "7e5dd324c407c11d2d7fbe76f21e832706b28d983d688aff6636d14147b03285"
+    },
+    "outer_cleanup": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34362984912/native-cleanup/parlor-native-34362984912-1-cleanup.json",
+      "bytes": 3280,
+      "sha256": "12cc7659688a41c8e4097395e6f1b4339e9ff434cdaaa0d9dc84022496953033"
+    },
+    "supporting_reviews": [
+      {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/native-b30-text-extent-independent-01.json",
+        "bytes": 15043,
+        "sha256": "dfcfb82f20c070c66af35396aa3f973c9ae6565fad32ca42242a4fe2d85f9260"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/native-b30-text-extent-tests-independent-01.json",
+        "bytes": 5311,
+        "sha256": "4a8c3d1c98f48928259bbfe5db6d6f7b9101a780df1b8b0216655a7e6f0b7084"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/native-b30-controls-actual-independent-01.json",
+        "bytes": 12616,
+        "sha256": "6ff42680dee601dac00252aa48e9802dec6dcead89ea2a61425650ffe58ed8f8"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/native34362984912-postrun-custody-independent-01.json",
+        "bytes": 9769,
+        "sha256": "f0606578324150da8252d897d7d7b66cb57ee87308020c24afd5217fbfe51e7c"
+      }
+    ],
+    "custody_review_scope": "Reopened and hash-verified native_ci's f0606578 report: full API/archive custody,946 distinct source/control inputs,829-row source identity, reviewed-preflight equality and inner/outer lifecycle/FIFO/cleanup. Independently reopened B raw receipts, commands, lifecycle summary, FIFO ledgers and outer cleanup here, rehashing all54 B files against the outer manifest. Full ZIP/API audit not duplicated.",
+    "archives_from_independent_custody_review": [
+      {
+        "zip": "native-cleanup.zip",
+        "bytes": 1400,
+        "sha256": "65cda8db3e2d86b3f2ff75bb166bf3f03d378ccfa07e03a99281defa0f4ef568",
+        "members": 1,
+        "expanded_bytes": 3280,
+        "artifact_id": 10112404627
+      },
+      {
+        "zip": "native-evidence.zip",
+        "bytes": 1051304,
+        "sha256": "d85c972297feea2b88dccacd8918e68795548cd917da6a77c589d5c3ca8ade48",
+        "members": 193,
+        "expanded_bytes": 5221731,
+        "artifact_id": 10112403229
+      },
+      {
+        "zip": "run-attempt-1-logs.zip",
+        "bytes": 25879,
+        "sha256": "4cce6b8bf9fcb91e5653a26e35fb27967a897153cac004e691945c9c3e4a287f",
+        "members": 14,
+        "expanded_bytes": 84252
+      }
+    ]
+  },
+  "source_and_controls": {
+    "frozen_commit": "360fc797a85e1e494334fd8cc11b4e739981cea8",
+    "frozen_tree": "8bfe56a21074ba51a4b668bad0728e42007a7593",
+    "source_manifest_sha256": "f7fba4adbed9cd963c53486ee57300a940f3f3fe4e61cc6d661159a706c125f8",
+    "source_rows": 829,
+    "normal_control_rows": 99,
+    "git_control_rows_rehashed": 98,
+    "fresh_binding_sha256": "c3e7a371207d387d5e24d2b94b682004f0603624de7722b50431dc5514f5c7be",
+    "normal_control_sha256": "fdf7e4a73ca22cb43f3490d545d787d51dda9b3048d10fc1c31e566701f88ac0",
+    "source_before_after_and_binding_equal": true,
+    "source_clean": true,
+    "reviewed_ten_controls_exact": true,
+    "copied_originals_git_rehashed": 754,
+    "copy_only_paths_match_fresh_binding": true,
+    "modified_source_paths": [
+      "iosApp/iosApp.xcodeproj/project.pbxproj",
+      "iosApp/iosAppUITests/IOSAppLaunchUITests.swift"
+    ],
+    "production_app_source_changed": false,
+    "diff_hunks": [
+      {
+        "path": "iosApp/iosApp.xcodeproj/project.pbxproj",
+        "added": 1,
+        "removed": 1,
+        "context": 6
+      },
+      {
+        "path": "iosApp/iosAppUITests/IOSAppLaunchUITests.swift",
+        "added": 3,
+        "removed": 0,
+        "context": 5
+      },
+      {
+        "path": "iosApp/iosAppUITests/IOSAppLaunchUITests.swift",
+        "added": 7,
+        "removed": 0,
+        "context": 7
+      },
+      {
+        "path": "iosApp/iosAppUITests/IOSAppLaunchUITests.swift",
+        "added": 43,
+        "removed": 9,
+        "context": 5
+      }
+    ],
+    "ui_copy_equals_reviewed_template": true,
+    "postworker_input_rows_matched": 754,
+    "unexpected_or_missing_copy_inputs": 0,
+    "copied_source_manifest_sha256": "63e4aaaadf7cef26ea097a4e8686d7ace0e8d7620a1397abfc2c1225c6de53f6",
+    "copied_source_diff_sha256": "3f39186b4168693e87dd988a601d7d233af10e6bab6b24a245c5a9bac4f5bf19",
+    "copied_after_manifest_sha256": "bc634cd1866db8d7c032f35fad7cfa2f6649b73296588f39231c9e6d89b828d6",
+    "errors": [],
+    "independent_source_audit": "Source before/after, input manifest and fresh CI binding have identical clean source identity. All98 committed normal controls independently rehashed from frozen360fc Git blobs; the retained fresh binding is control99. Aggregate hash independently recomputed and all ten approved B30 files match actual controls.",
+    "independent_copy_audit": "All754 original copy-input blobs independently rehashed from frozen360fc. Retained unified diff applied in memory with exact hunk/context/count checks. Only copied UI test and one PBX shellScript assignment change. All754 expected/observed postworker hashes equal reconstructed copied bytes; no missing/unexpected inputs or unexpected source symlinks.",
+    "copied_ui_template_sha256": "c3d5cd42d60371cffee6ec4e8cdc462165f953dbef352bcdbf0f3f2d2a5a4ed2",
+    "copied_phase_scope": "One owned-copy app-target shellScript assignment for strict Gradle embed, effective-phase capture and immediate stop; no production application source transformations.",
+    "preflight_producer": {
+      "run": "34359236354/1",
+      "artifact_id": 10107169576,
+      "zip_sha256": "15cd7dc5aaba0b594d9a21ab6e116d5e97d957ec461c4406317d5f9bb9409cfa"
+    },
+    "prior_linux_control_limit": "Separately reviewed243 actual normal-driver controls plus1 label test passed with no failures/errors/skips at their recorded binding. Those remain harness evidence, not Darwin runtime proof. Native acceptance here uses actual frozen360fc execution and fresh99 controls."
+  },
+  "platform": {
+    "macos": "15.7.9",
+    "macos_build": "24G830",
+    "darwin": "24.6.0",
+    "architecture": "arm64",
+    "xcode": "26.3",
+    "xcode_build": "17C529",
+    "selected_developer": "/Applications/Xcode_26.3.app/Contents/Developer",
+    "ios_simulator_sdk": "26.2",
+    "ios_simulator_runtime": "26.2/23C54",
+    "owned_uuid": "D0BBD000-FAB0-497A-A3F3-54E7973D68BC",
+    "observation": "Retained native platform logs, XCResult device and effective app phase agree. Debug/adhoc simulator only."
+  },
+  "normal_ui_runtime": {
+    "method": "IOSAppLaunchUITests/testColdLaunchRendersComposeHomeWithoutUnexpectedAlert()",
+    "distinct_methods": 1,
+    "identified_repetitions": 8,
+    "raw_starts": 8,
+    "raw_passes": 8,
+    "failures": 0,
+    "skips": 0,
+    "expected_failures": 0,
+    "marker_count": 64,
+    "begins": 8,
+    "samples": 48,
+    "completes": 8,
+    "all_marker_windows_exactly_match_observations": true,
+    "sample_booleans_all_expected": true,
+    "post_home_completion_seconds": [
+      11.79959295833396,
+      11.523714625000139,
+      12.885011958333052,
+      15.058639083333219,
+      13.12018900000021,
+      12.159283166666683,
+      11.458878458333857,
+      11.532464666666783
+    ],
+    "min_post_home_completion_seconds": 11.458878458333857,
+    "max_post_home_completion_seconds": 15.058639083333219,
+    "raw_rounded_duration_seconds": [
+      28.93,
+      17.145,
+      18.601,
+      22.113,
+      20.843,
+      17.488,
+      16.506,
+      16.333
+    ],
+    "xcresult_actual_durations_seconds": [
+      28.929756999015808,
+      17.144689083099365,
+      18.601030945777893,
+      22.113186955451965,
+      20.842963099479675,
+      17.487920999526978,
+      16.50581991672516,
+      16.33288300037384
+    ],
+    "xcresult_mean_seconds": 19.744781374931335,
+    "device": {
+      "architecture": "arm64",
+      "deviceId": "D0BBD000-FAB0-497A-A3F3-54E7973D68BC",
+      "deviceName": "Parlor-Audit-parlor-audit-ios-readiness-30-qt4inrxg",
+      "modelName": "iPhone 17 Pro",
+      "osBuildNumber": "23C54",
+      "osVersion": "26.2",
+      "platform": "iOS Simulator"
+    },
+    "uncompressed_log_bytes": 289373,
+    "uncompressed_log_sha256": "dddb4b4541e5593359f37001606c677f6e64f93efe9167981091e2ffebfb253b",
+    "independent_reconciliation": "Every marker occurs inside one raw test start/pass window. Eight unique IDs and exact begin/complete schemas; all six ordered sample indices0..5 equal retained observations. All48 samples have foreground=true, homeExists=true, alertVisible=false, finite increasing elapsed time. Last sample and completion each exceed10 post-Home seconds. XCResult summary1 method/destination8 passes, identified Repetition1..8 leaves, test details, receipt identities and rounded raw durations agree.",
+    "xcode_command": "Actual xcodebuild test: Debug, iphonesimulator26.2, exact owned destination, only the reviewed method, fixed8 iterations, relaunch YES, parallel testing NO, jobs1. No retry-on-failure or run-until-failure.",
+    "launch_conditions": "Reviewed copied test preserves ordinary English AppleLanguages/AppleLocale conditions and asserts no custom PARLOR_ launch environment. No settings/recovery fixture is inserted into production app source.",
+    "limit": "One method repeated eight times, not eight distinct methods. Periodic observations, not continuous liveness/PID tracking, proof against intervening OS restart, Follow System qualification or provenance captured independently in all eight repetitions."
+  },
+  "separate_ninth_launch": {
+    "commands_all_exit0": 49,
+    "selected_images": 3,
+    "exact_owned_text_extent_images": 3,
+    "sample_contained_prefix_images": 0,
+    "native_structure_and_reply_bytes": [
+      1272,
+      1272,
+      1272
+    ],
+    "actual_compile_command": [
+      "xcrun",
+      "--sdk",
+      "macosx",
+      "clang",
+      "-x",
+      "c",
+      "-std=c11",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-arch",
+      "arm64",
+      "/Users/runner/work/parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/kernel_image_region.c.in",
+      "-lproc",
+      "-o",
+      "/private/var/folders/bl/vzjcvbz95c3dk19cb0fw46180000gn/T/parlor-audit-ios-readiness-30-qt4inrxg/kernel-image-region"
+    ],
+    "helper_sha256": "4f08006bcf3dcb4f182ec90596e2f26ccced8c4734dc3dfcc866152c145acd2c",
+    "native_errno_not_emitted_on_success": true,
+    "pid_lifetime": {
+      "pid": 81262,
+      "uid": 501,
+      "started": [
+        1788968597,
+        572853
+      ],
+      "executable": "/Users/runner/Library/Developer/CoreSimulator/Devices/D0BBD000-FAB0-497A-A3F3-54E7973D68BC/data/Containers/Bundle/Application/70CAFFAF-1FFF-4F8A-8E9C-9F6E15FF5A8F/Parlor.app/Parlor",
+      "generation": 553815,
+      "audit_token_sha256": "4fbf08908f365f035cfd813d3dbeeab6254b099e6b075ef247641b0d9c320fc9",
+      "bracketed_lifetime_unchanged": true
+    },
+    "raw_sample_sha256": "11b416a467532f7a84ab89ffabc60a383819a798053669a1c24fc39f960c9ad6",
+    "three_attestations_equal": true,
+    "geometry": [
+      {
+        "image": "Frameworks/ComposeApp.framework/ComposeApp",
+        "sample_start": 4427104256,
+        "sample_end_exclusive": 4469822240,
+        "sample_span": 42717984,
+        "region_size": 42729472,
+        "excess_over_original_sample_span": 11488,
+        "runtime_text_end_exclusive": 4469833728,
+        "preferred_vmaddr": 0,
+        "inode": 3671623,
+        "kernel_max_protection": 7,
+        "text_max_protection": 5,
+        "kernel_raw_sha256": "c6c826719721735f0cf811b4d3422d1ed372bd604faedab72d807f79df4bf237",
+        "bytes": 82428752,
+        "sha256": "b156c2d92870c9538b5c22f5a158eaa0011a6fbe4f26bf6f378e95b19aa3c00e",
+        "uuid": "d3ebaaa8-57e4-3b36-aa06-8e64e6eff395"
+      },
+      {
+        "image": "Parlor",
+        "sample_start": 4339597312,
+        "sample_end_exclusive": 4339611800,
+        "sample_span": 14488,
+        "region_size": 16384,
+        "excess_over_original_sample_span": 1896,
+        "runtime_text_end_exclusive": 4339613696,
+        "preferred_vmaddr": 4294967296,
+        "inode": 3671548,
+        "kernel_max_protection": 5,
+        "text_max_protection": 5,
+        "kernel_raw_sha256": "71a6fabb8ac0cabdf4b545430f8207d2e2999d327a552e07010d65cc77088bdf",
+        "bytes": 57792,
+        "sha256": "6acda53036c2ce82b46281219d6a080a57f9a4f58571ba99fa287db5b01b4c19",
+        "uuid": "97094aa6-2a0c-31b7-a7e7-cdfb7c3fecbf"
+      },
+      {
+        "image": "Parlor.debug.dylib",
+        "sample_start": 4339875840,
+        "sample_end_exclusive": 4339922516,
+        "sample_span": 46676,
+        "region_size": 49152,
+        "excess_over_original_sample_span": 2476,
+        "runtime_text_end_exclusive": 4339924992,
+        "preferred_vmaddr": 0,
+        "inode": 3671551,
+        "kernel_max_protection": 7,
+        "text_max_protection": 5,
+        "kernel_raw_sha256": "d46e01f4a4735d8b334c8ca3e8aa8f85011395d165ccc75aba2354a434cec416",
+        "bytes": 191424,
+        "sha256": "effbf472fbce98a93dace8e9abfdc28878c23ea9ba841c5cba229fb5eb085170",
+        "uuid": "7c88f56f-ac32-34f5-b06b-b93f6a96020c"
+      }
+    ],
+    "claimed_intervals_disjoint": true,
+    "sample_args_original_and_unmodified": true,
+    "status": "PASS",
+    "public_launch": "Actual simctl launch --terminate-running-process on exact owned UUID/com.parlor.app.debug with ordinary English arguments; raw output reports81262. This separate public launch is not credited as a ninth passing UI repetition.",
+    "native_compile_observation": "Retained ownership rows name actual Xcode26.3 clang PID80152 and child81030 with arm64-apple-macosx15.0.0/SDK26.2. Frozen C includes real libproc/sys-proc-info headers and calls proc_pidinfo(PROC_PIDREGIONPATHINFO). Command has -lproc, no fixture macro or stub include path; exit0 and empty compile log. No identities invented for unobserved short-lived helper processes.",
+    "sample_observation": "Actual /usr/bin/sample81262 1 10 -file exact-owned-path exits0 and command log confirms completion. Temporary raw sample SHA retained; bytes retired by cleanup.",
+    "lifetime_reconciliation": "PID start falls inside recorded public-launch command. Three retained attestations agree exactly on PID/UID/start/executable/generation/audit-token hash. Bound runner brackets sample and each native query plus its slow pre/post artifact/helper reads with lifetime checks, then checks after the image loop. Intermediate tokens are not all separately retained; this is bracketing, not atomic PID reservation.",
+    "common_native_facts": {
+      "schema_version": 2,
+      "pid": 81262,
+      "artifact_device": 16777227,
+      "artifact_uid": 501,
+      "path_exact": true,
+      "vnode_identity_matches": true,
+      "region_offset": 0,
+      "protection": 5,
+      "region_flags": 0,
+      "text_fileoff": 0,
+      "text_initprot": 5,
+      "text_flags": 0,
+      "text_filesize_equals_vmsize": true
+    },
+    "geometry_reconciliation": "Three raw kernel JSON objects exactly equal final bound rows and have closed schema2 fields. Every query's PID/start/end-exclusive/path equals the original sample-selected values. All replies match actual1272-byte structures. Original sample endpoints are unchanged; each observed size exceeds its sample span but equals exact owned __TEXT.vmsize/filesize. No intermediate tolerance or rounding. Preferred/runtime arithmetic bounded; intervals disjoint; nonzero launcher preferred vmaddr4294967296 remains valid.",
+    "file_binding_reconciliation": "Successful bound controls require independently decoded C/Python UUID/layout equality, exact pre/post artifact SHA/size, sample+dwarfdump UUID and stable descriptor device/inode/size/UID. Kernel exact pathname and vnode corroboration succeed for each installed image. Native outputs contain true path/vnode identity booleans, not a separately printed raw kernel pathname.",
+    "distinctions": [
+      "Sample header USER and image literal-star paths remain explicitly lossy presentation aliases; the exact kernel-path guard is separate.",
+      "Kernel max protection7/5/7 is distinct from all three on-disk __TEXT maxprot5 values. No equality or page-rounding explanation asserted.",
+      "The original0 < region_size <= sample_span branch remains; only exact owned text size is additionally accepted. All3 actual rows select exact-owned-text-extent.",
+      "Successful schema2 output has no query_errno. No measured errno0 inferred.",
+      "File decoders inspect owned file bytes, not mapped-memory headers/UUIDs/pages. Selected-image corroboration only: no whole-map enumeration, vmmap or memory-integrity proof.",
+      "Actual binaries/raw sample were removed by designed cleanup. Reviewer reconciled retained source/control-bound native outputs and hashes, not reparsed retired binary/sample bytes."
+    ]
+  },
+  "artifact_signature_and_notice_delivery": {
+    "inventory_images": 4,
+    "built_installed_equal_image_pairs": 4,
+    "dwarfdump_logs_exact_path_arm64_uuid": 10,
+    "preembed_framework_paths": 2,
+    "preembed_framework_sha256": "4ed2f18ecceae73b2aaf1746b4f094337fcbbca039d3b645378f952f4173a90d",
+    "preembed_framework_bytes": 82410600,
+    "signed_embedded_framework_sha256": "b156c2d92870c9538b5c22f5a158eaa0011a6fbe4f26bf6f378e95b19aa3c00e",
+    "signed_embedded_framework_bytes": 82428752,
+    "preembed_uuid_equal_but_hash_and_size_distinct": true,
+    "strict_codesign_verifications": 2,
+    "adhoc_only": true,
+    "bundle_identity": {
+      "CFBundleIdentifier": "com.parlor.app.debug",
+      "CFBundleExecutable": "Parlor",
+      "CFBundleVersion": "1",
+      "CFBundleShortVersionString": "1.0.0",
+      "MinimumOSVersion": "16.0"
+    },
+    "installed_app_root": "/Users/runner/Library/Developer/CoreSimulator/Devices/D0BBD000-FAB0-497A-A3F3-54E7973D68BC/data/Containers/Bundle/Application/70CAFFAF-1FFF-4F8A-8E9C-9F6E15FF5A8F/Parlor.app",
+    "preview_image": "__preview.dylib is the fourth packaged Mach-O, not one of three sample-selected images; its presence is not whole-map proof.",
+    "independent_reconciliation": "Four built/installed thin-Mach-O image size/hash pairs match. Ten raw dwarfdump outputs reconcile exact command path, arm64 architecture and UUID:4 installed,4 DerivedData,2 copied-build frameworks. Both exact apps pass codesign --verify --strict --verbose=2, with raw valid-on-disk and Designated-Requirement messages. Effective phase Debug/arm64/iphonesimulator26.2, CODE_SIGN_IDENTITY=- and empty team/profile/entitlements. No Store signing.",
+    "preembed_distinction": "Two preembedding Compose files have82410600B/hash4ed2f18e and equal UUID; signed embedded/installed Compose has82428752B/hashb156c2d9. Preembedding bytes are not claimed equal to embedded signed bytes.",
+    "notices": {
+      "built_installed_receipts_equal": true,
+      "frozen_resources_rehashed": 26,
+      "resources": 26,
+      "total_bytes": 99515,
+      "package_inspected_entries": 87,
+      "catalog_sha256": "87a031665605a1fb3f932be31c75afd8d2d1bc0d94cfcca36101141c50788399",
+      "manifest_sha256": "4b501223b3841017477a226515d3758bc60848fe00d579fac3152a81928d6406"
+    },
+    "notice_reconciliation": "Built/installed notice receipts byte-identical;26 package rows equal26 source rows with exact namespace/resource paths and99515B. All26 resources plus catalog and notice manifest independently rehashed from frozen360fc Git blobs. Notice delivery only, not legal completeness or separate C05 dependency/consumer qualification."
+  },
+  "cleanup": {
+    "status": "PASS_RECORDED_PLATFORM_CLEANUP",
+    "preserved_files_rehashed": 54,
+    "finalization_stages_pass": 15,
+    "owned_simulator_children_reaped": 14,
+    "postbuild_handles_reaped": 35,
+    "immediate_stop_gap_seconds": 0.02233,
+    "final_stop_gap_from_last_query_seconds": 0.135802,
+    "secondary_fifos_removed": 2,
+    "secondary_directories_removed": 2,
+    "remaining_owned_processes": 0,
+    "unknown_holders": 0,
+    "cleanup_errors": 0,
+    "owned_simulator_absent_recorded": true,
+    "owned_temporary_directory_removed_recorded": true,
+    "source_controls_and_copy_unchanged": true,
+    "gradle": "Embedded build_exit0/stop_exit0. Immediate copied-wrapper stop starts0.022330s after Xcode completion; final stop0.135802s after last helper. Both exit0 and raw logs say No Gradle daemons are running.",
+    "lifecycle": "Exact owned simulator shutdown/delete and temporary/copy/build/DerivedData removal recorded.15 finalization stages pass;14 simulator children and35 postbuild handles reaped. Two FIFOs/two directories removed with retained custody. No owned processes, unknown holders, secondary errors or cleanup errors. Global caches not deleted.",
+    "custody_limit": "Raw B receipt/lifecycle summary/FIFO/outer cleanup reopened here; native_ci separately audited58 journal events and same-attempt upload/cleanup ordering. boot/shutdown/delete logs are structured status markers, not raw stdout. Hosted resource absence is recorded Apple evidence, not inferred from Linux absence.",
+    "preservation": "All54 compact B files match outer manifest. Raw stack/sample/map outputs retired as designed. Upload precedes removal of only four outer-owned paths. Source, controls, copied inputs and originals unchanged."
+  },
+  "historical_and_remaining_scope": [
+    "B28 remains historical actual libproc FAIL at52f6092; B30 PASS does not retroactively execute B28's failed path/vnode/all-image guards.",
+    "A29 and overall34362984912 remain FAIL/NOT_READY; separate A semantic review owns its failures. Do not reduce A to strict file protection alone.",
+    "This closes B30 normal Debug launch/selected-image provenance at frozen360fc only. Later source/control changes require separate applicability review; no prospective A31/future-source approval.",
+    "C05, final frozen-source combined qualification and final evidence reconciliation are not certified here.",
+    "No physical-device multiplayer/Local Network/accessibility testing, Store publication/promotion/signing, private credentials or owner/legal approvals performed. Known Store identity collision and separate release-contract external gates remain."
+  ],
+  "reviewer_actions": "Read-only source/Git blobs and retained evidence; independent stdlib JSON/gzip/hash/arithmetic/diff reconstruction and raw-command/log reconciliation; this assigned report only. No project imports/extracted function execution, tests/builds/native/tool-version commands, network/API/Actions, process queries/signals/cleanup, canonical/index edits or Git writes. No reviewer fixtures/workers/build outputs allocated; no reviewer build-cleanup obligation.",
+  "conclusion": "Approve actual B30 simulator evidence: eight normal-source Debug Home repetitions PASS; separate ninth public-launch three-selected-image real libproc provenance PASS with fresh frozen bindings; built/installed notices, adhoc signature checks and recorded cleanup PASS. No open B30 findings. Overall NOT_READY; not combined, physical-device or Store approval."
+}

@@ -1,0 +1,151 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-09-08T14:45:59.392928+00:00",
+  "status": "PASS_DOWNLOAD_AND_INTEGRITY_NOT_DIAGNOSTIC_PASS",
+  "run_id": 34239707887,
+  "attempt": 1,
+  "head_sha": "5f35a20d3c9c846cd98b38a16881997ecf577497",
+  "commands": [
+    {
+      "command": [
+        "gh",
+        "api",
+        "repos/Apdelrahman1911/parlor/actions/runs/34239707887"
+      ],
+      "file": "run.json",
+      "exit_code": 0,
+      "bytes": 12685,
+      "sha256": "f1271cd966ce0aa371606e10a9eb8b3e24d6a80aec0363b204e7c02d90e4daf6"
+    },
+    {
+      "command": [
+        "gh",
+        "api",
+        "repos/Apdelrahman1911/parlor/actions/runs/34239707887/attempts/1"
+      ],
+      "file": "attempt.json",
+      "exit_code": 0,
+      "bytes": 12707,
+      "sha256": "9093d9f7b2bf862f2d0922320a864859027cd28bff784587e0c51e70dbf00310"
+    },
+    {
+      "command": [
+        "gh",
+        "api",
+        "repos/Apdelrahman1911/parlor/actions/runs/34239707887/attempts/1/jobs?per_page=100"
+      ],
+      "file": "jobs.json",
+      "exit_code": 0,
+      "bytes": 10561,
+      "sha256": "51443cd2e97d3d8b0321bd748dbafead696c41b5b722e3f65df39d78a7edffff"
+    },
+    {
+      "command": [
+        "gh",
+        "api",
+        "repos/Apdelrahman1911/parlor/actions/workflows/335554528"
+      ],
+      "file": "workflow.json",
+      "exit_code": 0,
+      "bytes": 533,
+      "sha256": "8345984073768616fd6aff6682c95051f186881c5fa4727b120c80e019841ece"
+    },
+    {
+      "command": [
+        "gh",
+        "api",
+        "repos/Apdelrahman1911/parlor/actions/runs/34239707887/artifacts?per_page=100"
+      ],
+      "file": "artifacts.json",
+      "exit_code": 0,
+      "bytes": 1501,
+      "sha256": "8c27b98e0a8a79efd30f6f532eb5f8921e57c468366a7295e9cfdc86ccb002fa"
+    },
+    {
+      "command": [
+        "gh",
+        "run",
+        "view",
+        "34239707887",
+        "--repo",
+        "Apdelrahman1911/parlor",
+        "--attempt",
+        "1",
+        "--log"
+      ],
+      "file": "run.log",
+      "exit_code": 0,
+      "bytes": 59236,
+      "sha256": "b5eb7eae4a7cc64d9c26b2f9338756a94433fcaba4d17161c5568ab2c3943e42"
+    },
+    {
+      "command": [
+        "gh",
+        "api",
+        "repos/Apdelrahman1911/parlor/actions/artifacts/10061560599/zip"
+      ],
+      "file": "native-process-probe-cleanup.zip",
+      "exit_code": 0,
+      "bytes": 788,
+      "sha256": "687c3e2b09c8e34f4e3c0f299c2f0b62caa249da08168d9eb12f951c7f10c3f7"
+    },
+    {
+      "command": [
+        "gh",
+        "api",
+        "repos/Apdelrahman1911/parlor/actions/artifacts/10061558867/zip"
+      ],
+      "file": "native-process-probe.zip",
+      "exit_code": 0,
+      "bytes": 12438,
+      "sha256": "e5208be6be2c9603c622dbe8c6eb09072fdea9d4accb8174b2a5f661343bcd97"
+    }
+  ],
+  "artifacts": [
+    {
+      "artifact_id": 10061560599,
+      "artifact_name": "native-process-probe-cleanup-34239707887-1",
+      "archive": "native-process-probe-cleanup.zip",
+      "sha256": "687c3e2b09c8e34f4e3c0f299c2f0b62caa249da08168d9eb12f951c7f10c3f7",
+      "api_digest_matches": true,
+      "members": [
+        {
+          "path": "native-process-probe-cleanup/parlor-process-probe-34239707887-1-cleanup.json",
+          "bytes": 913,
+          "sha256": "87666a0b900b950b7eb69aa7fafabfff6999305ff7720ed843f0fe2dd762bdb7"
+        }
+      ]
+    },
+    {
+      "artifact_id": 10061558867,
+      "artifact_name": "native-process-probe-34239707887-1",
+      "archive": "native-process-probe.zip",
+      "sha256": "e5208be6be2c9603c622dbe8c6eb09072fdea9d4accb8174b2a5f661343bcd97",
+      "api_digest_matches": true,
+      "members": [
+        {
+          "path": "native-process-probe/owned-simulator-adopted.json",
+          "bytes": 573,
+          "sha256": "91c05c1d26e13ac4e664f135fcfa4b5656b24cc708d2619e84b531dc58881675"
+        },
+        {
+          "path": "native-process-probe/owned-simulator-create.json",
+          "bytes": 504,
+          "sha256": "4759db5a4262fb6154c7b27abc5776ac4a51c020e416d18be7907456429d08ac"
+        },
+        {
+          "path": "native-process-probe/owned-simulator-plan.json",
+          "bytes": 6539,
+          "sha256": "a59c2e17a481d94bd6768291614926677b3dd77a5fe85140862fb24662d32f15"
+        },
+        {
+          "path": "native-process-probe/probe.json",
+          "bytes": 49515,
+          "sha256": "b598069f8c26e3d1851dc7e4eaade20fe72968f22403b32716fd996535990bb0"
+        }
+      ]
+    }
+  ],
+  "run_conclusion": "failure",
+  "finished_at": "2026-09-08T14:46:06.620177+00:00"
+}

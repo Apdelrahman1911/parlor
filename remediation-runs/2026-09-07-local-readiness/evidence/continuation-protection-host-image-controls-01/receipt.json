@@ -1,0 +1,126 @@
+{
+  "kind": "FOCUSED_HOST_IMAGE_AND_WORKFLOW_CONTROLS_NOT_NATIVE_RUNTIME",
+  "started_at": "2026-09-11T00:20:15.012782+00:00",
+  "source_head": "19df7e9af0c112d5137c2c6cbb65f22ad7439f72",
+  "working_tree_controls_before": {
+    ".github/workflows/production-verification.yml": "07a9ec441082f9c46b1e50627ddf34342f1776e589b50300c85a48024f06f4bd",
+    "config/release-policy.json": "316b28f75a13e0b925beb6bcd893b82e077a1a9efa850022026e830f9b1d4ad4",
+    "docs/RELEASE_GATES.md": "3c353b24cc2b1b63b57e31998612235fb456c69c3f915c67c6de2ff98f788092",
+    "gradlew": "734b3879d3501dce471cf0522d3bcbafe76873d9fc5129345b67fb43bd15e933",
+    "remediation-runs/2026-09-08-continuation/protection-diagnostic-01/ProbeMain.m": "e5f6f6ea35cf1eb3511d80884a50b4dc6bda1df413e4a506a14eb17e10b90699",
+    "remediation-runs/2026-09-08-continuation/protection-diagnostic-01/ProtectionSampler.h": "f606f61c7e8c2271cd23abb3876d1b6e0daff40ccdcd9d0f43b949d4d502bb13",
+    "remediation-runs/2026-09-08-continuation/protection-diagnostic-01/ProtectionSampler.m": "3f4f49af81d396a07beabeed45be649314495fd286327baa931aa5eb2dcca137",
+    "remediation-runs/2026-09-08-continuation/protection-diagnostic-01/README.md": "cc06492a8626d73d528d9d2fa1377f6675fb2ef16533b75c73c000e7bd762a85",
+    "remediation-runs/2026-09-08-continuation/protection-diagnostic-01/run_probe.py": "725f66f42047fd17d9abe43ea820135da07c83974d2f4dc2bfce56a87247b20a",
+    "remediation-runs/2026-09-08-continuation/protection-diagnostic-01/test_probe.py": "7e860eab7f9d6da862b9876b6612b1e7d29c00c20f0f635004e84be15d71aa67",
+    "remediation-runs/2026-09-08-continuation/protection-host-image-01/HostImageProbe.m.in": "e015aa4234346596cca8f20776bea777e7159c276ba7620b3a1557b7db3bd595",
+    "remediation-runs/2026-09-08-continuation/protection-host-image-01/README.md": "fb415aee8f6e36b6baa94de295cad82e8710ba50fec809aa2f3466163aceb39f",
+    "remediation-runs/2026-09-08-continuation/protection-host-image-01/image_hook.py": "bc130612a6a5f18841a7d156ee2f1ebb446da8d73be225d81b02ce2c1c23d6ab",
+    "remediation-runs/2026-09-08-continuation/protection-host-image-01/run_host_probe.py": "7eb2da472015df200f8697d29182484e1507f414e3825e1fe16be9ffcb359a27",
+    "remediation-runs/2026-09-08-continuation/protection-host-image-01/test_host_probe.py": "881b083da614460cf337858c26538261e16c178c32a7b8737b60efa6cf3f63eb",
+    "remediation-runs/2026-09-08-continuation/protection-host-image-01/test_image_hook.py": "6cc2a3d973891eca62d76f2a3f9e259ba92fd4c6dd598ab685fc4b34097f4a5a",
+    "scripts/ci/native_continuation.py": "0b2c0fec310afd88810b84fcc4836ec72c0a07f0ff55f495f876dd92e2f231b3",
+    "scripts/ci/native_process_probe.py": "c87f6d1289ee50a7387988bd85953d451dac9e1b7b88a4d60f7b4848f86516da",
+    "scripts/ci/owned_ci_simulator.py": "717c8c02dc06e4eac175c5dde5c7f9bdd6ebbd5e7028cc94c6ba4f84b44388af",
+    "scripts/ci/verification_hygiene.py": "db1ceebf56ab3c10f9bb52dba12b8b7e77b9aedd97c6113b53c59a7267022fbc",
+    "scripts/release/tests/test_workflow_contract.py": "e0523d2a8691c75fdf22a6d3bcd7a39588b20af5e554a8c38a3f095fec81fcfa",
+    "scripts/release/validate_release_system.sh": "ce52c9c08edecba968337d6de42c90895badec127c7029a5afc16737d3b8864a",
+    "scripts/release/workflow_contract.py": "3676f7c03efc54494f922c1a733e6f25775e2f3c49c581a37aae1aff54785d06"
+  },
+  "commands": [
+    {
+      "command": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "scripts/release/tests",
+        "-p",
+        "test_workflow_contract.py",
+        "-v"
+      ],
+      "label": "workflow-tests",
+      "exit_code": 0,
+      "elapsed_seconds": 2.02,
+      "log_sha256": "9710cea59a344359c72c8c4484ef8a9236d3239e3a542db4ec0c54efd5622f75"
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "remediation-runs/2026-09-08-continuation/protection-host-image-01",
+        "-p",
+        "test_*.py",
+        "-v"
+      ],
+      "label": "host-controls-tests",
+      "exit_code": 0,
+      "elapsed_seconds": 0.265,
+      "log_sha256": "24d6fbfdad2a9a01c8147ef3b3a001ae23a78ee843c202b55928da8a0e771e52"
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "scripts/release/workflow_contract.py"
+      ],
+      "label": "workflow-contract",
+      "exit_code": 0,
+      "elapsed_seconds": 0.115,
+      "log_sha256": "ed4d00104b82af25bedca2f5586359a98c6d2c5d0667ceb6a849ab748394c196"
+    },
+    {
+      "command": [
+        "bash",
+        "/tmp/parlor-host-image-controls-yq2pdcf0/focused-lint.sh",
+        "/tmp/parlor-host-image-controls-yq2pdcf0"
+      ],
+      "label": "focused-actionlint",
+      "exit_code": 0,
+      "elapsed_seconds": 2.151,
+      "log_sha256": "4a1a958ee043789a534d54dfa94281b4be9da4b2b87aeb7895d6f5fa6585e57c"
+    }
+  ],
+  "status": "PASS",
+  "lint_download_function_sha256": "9761a1db319c53bdb62ec04062c6d1f19dd43cf6d6ef2b8340928ba056d01ee6",
+  "lint_script_sha256": "2160f5dacef8bba8f2eef7884c7f07a883844538eeb59098ef108be50a9e2610",
+  "working_tree_controls_after": {
+    ".github/workflows/production-verification.yml": "07a9ec441082f9c46b1e50627ddf34342f1776e589b50300c85a48024f06f4bd",
+    "config/release-policy.json": "316b28f75a13e0b925beb6bcd893b82e077a1a9efa850022026e830f9b1d4ad4",
+    "docs/RELEASE_GATES.md": "3c353b24cc2b1b63b57e31998612235fb456c69c3f915c67c6de2ff98f788092",
+    "gradlew": "734b3879d3501dce471cf0522d3bcbafe76873d9fc5129345b67fb43bd15e933",
+    "remediation-runs/2026-09-08-continuation/protection-diagnostic-01/ProbeMain.m": "e5f6f6ea35cf1eb3511d80884a50b4dc6bda1df413e4a506a14eb17e10b90699",
+    "remediation-runs/2026-09-08-continuation/protection-diagnostic-01/ProtectionSampler.h": "f606f61c7e8c2271cd23abb3876d1b6e0daff40ccdcd9d0f43b949d4d502bb13",
+    "remediation-runs/2026-09-08-continuation/protection-diagnostic-01/ProtectionSampler.m": "3f4f49af81d396a07beabeed45be649314495fd286327baa931aa5eb2dcca137",
+    "remediation-runs/2026-09-08-continuation/protection-diagnostic-01/README.md": "cc06492a8626d73d528d9d2fa1377f6675fb2ef16533b75c73c000e7bd762a85",
+    "remediation-runs/2026-09-08-continuation/protection-diagnostic-01/run_probe.py": "725f66f42047fd17d9abe43ea820135da07c83974d2f4dc2bfce56a87247b20a",
+    "remediation-runs/2026-09-08-continuation/protection-diagnostic-01/test_probe.py": "7e860eab7f9d6da862b9876b6612b1e7d29c00c20f0f635004e84be15d71aa67",
+    "remediation-runs/2026-09-08-continuation/protection-host-image-01/HostImageProbe.m.in": "e015aa4234346596cca8f20776bea777e7159c276ba7620b3a1557b7db3bd595",
+    "remediation-runs/2026-09-08-continuation/protection-host-image-01/README.md": "fb415aee8f6e36b6baa94de295cad82e8710ba50fec809aa2f3466163aceb39f",
+    "remediation-runs/2026-09-08-continuation/protection-host-image-01/image_hook.py": "bc130612a6a5f18841a7d156ee2f1ebb446da8d73be225d81b02ce2c1c23d6ab",
+    "remediation-runs/2026-09-08-continuation/protection-host-image-01/run_host_probe.py": "7eb2da472015df200f8697d29182484e1507f414e3825e1fe16be9ffcb359a27",
+    "remediation-runs/2026-09-08-continuation/protection-host-image-01/test_host_probe.py": "881b083da614460cf337858c26538261e16c178c32a7b8737b60efa6cf3f63eb",
+    "remediation-runs/2026-09-08-continuation/protection-host-image-01/test_image_hook.py": "6cc2a3d973891eca62d76f2a3f9e259ba92fd4c6dd598ab685fc4b34097f4a5a",
+    "scripts/ci/native_continuation.py": "0b2c0fec310afd88810b84fcc4836ec72c0a07f0ff55f495f876dd92e2f231b3",
+    "scripts/ci/native_process_probe.py": "c87f6d1289ee50a7387988bd85953d451dac9e1b7b88a4d60f7b4848f86516da",
+    "scripts/ci/owned_ci_simulator.py": "717c8c02dc06e4eac175c5dde5c7f9bdd6ebbd5e7028cc94c6ba4f84b44388af",
+    "scripts/ci/verification_hygiene.py": "db1ceebf56ab3c10f9bb52dba12b8b7e77b9aedd97c6113b53c59a7267022fbc",
+    "scripts/release/tests/test_workflow_contract.py": "e0523d2a8691c75fdf22a6d3bcd7a39588b20af5e554a8c38a3f095fec81fcfa",
+    "scripts/release/validate_release_system.sh": "ce52c9c08edecba968337d6de42c90895badec127c7029a5afc16737d3b8864a",
+    "scripts/release/workflow_contract.py": "3676f7c03efc54494f922c1a733e6f25775e2f3c49c581a37aae1aff54785d06"
+  },
+  "cleanup": {
+    "errors": [],
+    "gradle_stop_exit": 0,
+    "scratch_removed": true,
+    "checked_live_outputs_remaining": []
+  },
+  "finished_at": "2026-09-11T00:20:20.244486+00:00",
+  "resources": "Filesystem      Size  Used Avail Use% Mounted on\noverlay          94G   72G   18G  81% /\ntmpfs            32G   21G   12G  65% /tmp\n               total        used        free      shared  buff/cache   available\nMem:            62Gi        41Gi       1.8Gi        20Gi        40Gi        20Gi\nSwap:             0B          0B          0B\n"
+}

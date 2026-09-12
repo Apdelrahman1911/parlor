@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "kind": "A37_C07_D_REVIEWED_SOURCE_AND_INVENTORY_FREEZE",
+  "at": "2026-09-10T05:18:50.442669+00:00",
+  "source": {
+    "branch": "fix/local-readiness-2026-09-07",
+    "commit": "15e8982b35e39006868868a11c6f4e1864e613a7",
+    "tree": "8f3fd56f86d7934fddaff068539d69fe26d4aaad",
+    "diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "source_manifest_sha256": "51edfdd6aea7b293afe9061a30d05054f1e0338661eedd8e225bd3ba2ebbb7fd"
+  },
+  "source_commit": "ab4d4a49c863828b0cb1ace033caf40ecf98bf17",
+  "inventory_commit": "15e8982b35e39006868868a11c6f4e1864e613a7",
+  "inventory_freshness": {
+    "command": "python3 -B scripts/generate_review_inventory.py --check",
+    "execution": "Final commit sequence tool session7284 finished exit0 at this exact HEAD; 24198 rows fresh. Mechanical evidence, not source review.",
+    "rows": 24198
+  },
+  "push": {
+    "path": "remediation-runs/2026-09-08-continuation/actions/l08-final-preflight-01/push-receipt.json",
+    "bytes": 478,
+    "sha256": "affa088ae1bc1f43355c64ff6e5d3327c53575f113ac5470c3cb0c789c5dfee1"
+  },
+  "reviews": [
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/l08-observed-english-us-selector-independent-01.json",
+      "bytes": 6048,
+      "sha256": "06df5af97e31966fb4914ea63557b2ed4b1908cbe13b696e9687dffafc25d13e"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/android-emulator-absence-audit-independent-01.json",
+      "bytes": 7160,
+      "sha256": "1b3494bf84bf8c10739b9fc21b348819bc4dd35db19a8b2d123bf01230a78d1d"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/l08-selector-hygiene-local-actual-independent-01.json",
+      "bytes": 3671,
+      "sha256": "cfd0358c7f300156e6a3928ef94666b3d60f48a2d8a402ba3de8dddf46041257"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/l08-final-prequalification-ledger-independent-01.json",
+      "bytes": 2490,
+      "sha256": "74e6454bb93fcee39ad624232793a737bb94088c493ebf73c6bcf6fd8be81388"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/settings36-34437980623-actual-independent-01.json",
+      "bytes": 6505,
+      "sha256": "3d65e1fda419276e7b76f0c08af0ef5075028a21a74149663e6332873f81ad8d"
+    }
+  ],
+  "scope": "Seven reviewed control/fixture files plus current ledger and retained evidence; no shipping/build-source delta. A37/C07/finalD not run. Normal B reuse requires final-source applicability reconciliation. No Store or physical operations."
+}

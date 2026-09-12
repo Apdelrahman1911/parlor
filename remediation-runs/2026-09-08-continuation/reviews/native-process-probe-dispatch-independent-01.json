@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "kind": "FROZEN_SOURCE_INDEPENDENT_ONE_NON_APP_DIAGNOSTIC_APPROVAL",
+  "reviewer": "/root/ci_review",
+  "recorded_at": "2026-09-08T13:28:08.513438+00:00",
+  "status": "APPROVED_ONE_FRESH_NATIVE_PROCESS_PROBE_DISPATCH_INITIAL_ATTEMPT_ONLY",
+  "repository": "https://github.com/Apdelrahman1911/parlor.git",
+  "branch": "fix/local-readiness-2026-09-07",
+  "source_control_evidence_commit": "22467846fbd48934226de5f06026b511d15c1b63",
+  "frozen_inventory_commit": "1efed50cbc7856c11867e4cb088ba3b68716c8fc",
+  "frozen_tree": "bcabd2fd29eaea276bee31ec4ff6b74b63a79366",
+  "source_freeze": "Full history; clean tracked diff; parent source/control commit followed by inventory-CSV-only commit. Exact approved9 CI source files and13 control files match frozen Git blobs and live bytes.",
+  "remote_observation": {
+    "reviewer_executed_command": "git ls-remote origin refs/heads/fix/local-readiness-2026-09-07",
+    "actual_stdout": "1efed50cbc7856c11867e4cb088ba3b68716c8fc\trefs/heads/fix/local-readiness-2026-09-07",
+    "matches_frozen_sha": true,
+    "coordinator_normal_push_log_sha256": "b92a019340612e714227f9177d5750ef010c31fb91891b68951f80a559787001"
+  },
+  "workflow": ".github/workflows/production-verification.yml",
+  "runner": "Existing ios job on macos-15; exact qualified platform guards remain authoritative.",
+  "allowed_inputs": {
+    "verification_scope": "native-process-probe",
+    "frozen_source_sha": "1efed50cbc7856c11867e4cb088ba3b68716c8fc",
+    "approved_probe_control_sha256": "0b60d4219b279c1022232d18a261a21ac7c577357cafbac2d695e58fbcf92a87"
+  },
+  "other_inputs": "Omit every native-preflight/native-evidence/A/B input; no alternate scope or extra operation approved.",
+  "control_file_count": 13,
+  "control_file_sha256": {
+    ".github/workflows/production-verification.yml": "d347a4cd3e22181b37e5aec91203d3aa37779cb7bb7976fb74ed01cc29ba328d",
+    "gradle/wrapper/gradle-wrapper.jar": "81a82aaea5abcc8ff68b3dfcb58b3c3c429378efd98e7433460610fecd7ae45f",
+    "gradle/wrapper/gradle-wrapper.properties": "c040b6ef2fb893ff5beea5a281614f2848f1c3996a7886f650b713f8240656a2",
+    "gradlew": "734b3879d3501dce471cf0522d3bcbafe76873d9fc5129345b67fb43bd15e933",
+    "scripts/ci/NATIVE_CONTINUATION.md": "1d3b4fa1f8fed36598fc423948acf9c633c24e058076418315e4b59a30b1721e",
+    "scripts/ci/darwin_worker_identity.py": "939ac6c98628046f9f45547135cbc439f217403e60c7e4033db5f541ab017ecc",
+    "scripts/ci/native_continuation.py": "d5c6faf5a33187a9bed855f8d82b17ea2c90d72c3b22df0a041975f7a6bc7b21",
+    "scripts/ci/native_process_metadata.py": "6497e55c6c4a7f0922486d58ce47bc9ad05b987e8cca9bc5c60adf2b13cd9256",
+    "scripts/ci/native_process_probe.py": "b5bfc4a18eb75ecceb1cc4807e2715bc15edd52ffd101a81f6c4d6fb4affb3e4",
+    "scripts/ci/owned_ci_simulator.py": "717c8c02dc06e4eac175c5dde5c7f9bdd6ebbd5e7028cc94c6ba4f84b44388af",
+    "scripts/ci/verification_hygiene.py": "9eab427aeb3d810c033a3827aa44f7201cbb261345a2e6667a8d085df2fbd603",
+    "scripts/verification/ios-readiness/owned_lane.py": "949091403ac669429f962120e9873a09897a87bdcae10702720ede0c68342f03",
+    "scripts/verification/ios-readiness/toolchain_profiles.py": "8adacaf4c59ed823aa088ecb70ad5c6c1e3f76e7ca3520d8abf0563341591313"
+  },
+  "fresh_control_artifact": "remediation-runs/2026-09-08-continuation/reviews/native-process-probe-frozen-controls-01.json",
+  "fresh_control_artifact_sha256": "f01e05a1cb0ed3dae54d6bbf980d806e5114e0600d4be69a4f3b2b45784be3a8",
+  "control_derivation": "Actual coordinator controls artifact independently matched against AST literal closure, sorted compact-JSON manifest hash, frozen blobs and original independent source review; no native query executed by this derivation.",
+  "review_references": {
+    "remediation-runs/2026-09-08-continuation/reviews/native-process-probe-source-independent-01.json": "7d214ea0e6b93b46670713518bd822079ee843fb1fe22ff233abbfa1571adadb",
+    "remediation-runs/2026-09-08-continuation/reviews/native-process-probe-controls-independent-01.json": "4c370a22734ec870ab1443982f999455d18322cdfdb469f1475e8bf8af268630",
+    "remediation-runs/2026-09-08-continuation/reviews/native-repair-external-postflight-independent-addendum-01.json": "941835f9a8f87b490cd87dddaa5af09401a132a4af21f5c195641ebce8385d3e",
+    "remediation-runs/2026-09-08-continuation/reviews/hosted-probe-freeze-01.json": "7b4f526bd800d9228d5caa5351cc904de4fb27780ebc82d6233c44de23387bd8"
+  },
+  "frozen_linux_validator": {
+    "command": "/bin/bash scripts/release/validate_release_system.sh",
+    "receipt": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-release-validator-02/receipt.json",
+    "receipt_sha256": "1c538a25c7fdb6da3a6b0b6a72ce5d87047f7cf18e30963f8f061c07413bff6b",
+    "raw_log_sha256": "20f6c5be38524930a00335ea8765b4c6274c41926618fcd26ab957211cc1e196",
+    "status": "PASS",
+    "actual_tests": 426,
+    "failures_errors_skips": [
+      0,
+      0,
+      0
+    ],
+    "raw_anchors": "Ran426 tests in42.413s; OK; release workflow contract PASS; inventory freshness15553; pinned shellcheck/actionlint archive checksum OK and overall script exit0.",
+    "descriptor_note": "426 raw unique descriptors match current AST declarations; two Git-fixture stdout interleavings each end in ok. These are Linux synthetic controls, not hosted observations.",
+    "source_binding": "Both source825 and runner before/after identical, correct frozen commit/tree, all825 current source hashes independently match.",
+    "inventory_sha256": "3e067a3ccf70967663c2f6ddedff1c078a993312b13c968fd8d34d524fa7cc89",
+    "inventory_scope": "15553-row mechanical freshness verified, explicitly not source-review attestation.",
+    "cleanup": "Immediate Gradle stop exit0; raw No Gradle daemons are running.; no owned workers/generated-output survivors, errors or deferred signals; exact outer scratch lstat absent.",
+    "cleanup_completed_at": "2026-09-08T13:20:39.564856+00:00"
+  },
+  "one_run_scope": "One new workflow_dispatch at the exact frozen branch/SHA, initial attempt only. Non-app ps15s comparison, bounded metadata observations before/after one owned qualified simulator boot and one nonbuilding showBuildSettings. Existing10-minute job budget and all ownership/preservation/cleanup guards unchanged.",
+  "constraints": "Coordinator alone dispatches and reconciles actual run/attempt/source/control/platform, evidence ZIP identities, raw command outcomes, simulator/worker/DerivedData retirement and post-upload custody receipt. No blind retry or application attempt follows automatically.",
+  "exclusions": "No A19/B20/preflight, app build/launch, actool/Kotlin workload equivalence, ownership fallback, strict-protection success claim, final five-job qualification, Store/signing/promotion/publication, physical device, global cache deletion or user-work mutation.",
+  "readiness": "NOT READY. Approval is for diagnostic execution only. Actual Parlor libproc provenance and remaining A/C/D verification remain incomplete; synthetic tests/control hashing are not application-runtime proof.",
+  "preserved_history": "Controls01 outer/result FAIL from marker parsing and prior native A17/B18 FAIL remain unchanged; separately verified scoped cleanup does not relabel them.",
+  "reviewer_activity": "Read/hash/AST/Git evidence and one read-only remote query only; no tests/builds/native calls/workflow dispatch/cleanup mutation/commits. This new review file is not part of the frozen source."
+}

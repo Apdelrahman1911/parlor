@@ -1,0 +1,200 @@
+FOCUSED_COMMAND python-hygiene-probe-workflow ["/usr/bin/python3", "-B", "-m", "unittest", "scripts.release.tests.test_ci_verification_hygiene", "scripts.release.tests.test_linux_process_probe", "scripts.release.tests.test_workflow_contract", "-v"]
+test_binding_and_observer_omission_fail_closed (scripts.release.tests.test_ci_verification_hygiene.AndroidEmulatorAbsenceTest.test_binding_and_observer_omission_fail_closed) ... ok
+test_coherent_sample_excludes_other_uid_without_reading_its_executable (scripts.release.tests.test_ci_verification_hygiene.AndroidEmulatorAbsenceTest.test_coherent_sample_excludes_other_uid_without_reading_its_executable) ... ok
+test_deleted_executable_path_is_ambiguous_not_absence (scripts.release.tests.test_ci_verification_hygiene.AndroidEmulatorAbsenceTest.test_deleted_executable_path_is_ambiguous_not_absence) ... ok
+test_enumeration_and_clock_limits_fail_closed (scripts.release.tests.test_ci_verification_hygiene.AndroidEmulatorAbsenceTest.test_enumeration_and_clock_limits_fail_closed) ... ok
+test_executable_read_denial_or_disappearing_pid_is_not_absence (scripts.release.tests.test_ci_verification_hygiene.AndroidEmulatorAbsenceTest.test_executable_read_denial_or_disappearing_pid_is_not_absence) ... ok
+test_malformed_missing_oversized_and_mixed_uid_records_fail_closed (scripts.release.tests.test_ci_verification_hygiene.AndroidEmulatorAbsenceTest.test_malformed_missing_oversized_and_mixed_uid_records_fail_closed) ... ok
+test_pid_lifetime_uid_and_executable_changes_during_sample_fail (scripts.release.tests.test_ci_verification_hygiene.AndroidEmulatorAbsenceTest.test_pid_lifetime_uid_and_executable_changes_during_sample_fail) ... ok
+test_same_prefix_sibling_is_outside_this_explicit_path_predicate (scripts.release.tests.test_ci_verification_hygiene.AndroidEmulatorAbsenceTest.test_same_prefix_sibling_is_outside_this_explicit_path_predicate) ... ok
+test_same_uid_sdk_qemu_fails_without_attributing_or_killing_process (scripts.release.tests.test_ci_verification_hygiene.AndroidEmulatorAbsenceTest.test_same_uid_sdk_qemu_fails_without_attributing_or_killing_process) ... ok
+test_real_clean_checkout_removes_exact_outputs_after_wrapper_stop (scripts.release.tests.test_ci_verification_hygiene.VerificationHygieneGitIntegrationTest.test_real_clean_checkout_removes_exact_outputs_after_wrapper_stop) ... ok
+test_real_modified_build_input_preserves_all_generated_evidence (scripts.release.tests.test_ci_verification_hygiene.VerificationHygieneGitIntegrationTest.test_real_modified_build_input_preserves_all_generated_evidence) ... ok
+test_android_audit_follows_upload_gate_and_failure_retains_outputs (scripts.release.tests.test_ci_verification_hygiene.VerificationHygieneTest.test_android_audit_follows_upload_gate_and_failure_retains_outputs) ... ok
+test_android_successful_sample_allows_existing_exact_output_cleanup (scripts.release.tests.test_ci_verification_hygiene.VerificationHygieneTest.test_android_successful_sample_allows_existing_exact_output_cleanup) ... ok
+test_both_hosts_use_the_repository_wrapper_for_stop (scripts.release.tests.test_ci_verification_hygiene.VerificationHygieneTest.test_both_hosts_use_the_repository_wrapper_for_stop) ... ok
+test_changed_source_or_task_cannot_authorize_cleanup (scripts.release.tests.test_ci_verification_hygiene.VerificationHygieneTest.test_changed_source_or_task_cannot_authorize_cleanup) ... ok
+test_cleanup_removes_only_claimed_outputs_and_keeps_evidence_and_source (scripts.release.tests.test_ci_verification_hygiene.VerificationHygieneTest.test_cleanup_removes_only_claimed_outputs_and_keeps_evidence_and_source) ... ok
+test_cli_rejects_local_worktrees_before_cleaning (scripts.release.tests.test_ci_verification_hygiene.VerificationHygieneTest.test_cli_rejects_local_worktrees_before_cleaning) ... ok
+test_dirty_worktree_with_unchanged_head_tree_and_paths_cannot_authorize_cleanup (scripts.release.tests.test_ci_verification_hygiene.VerificationHygieneTest.test_dirty_worktree_with_unchanged_head_tree_and_paths_cannot_authorize_cleanup) ... ok
+test_failed_prepare_cannot_reuse_a_historical_same_task_claim (scripts.release.tests.test_ci_verification_hygiene.VerificationHygieneTest.test_failed_prepare_cannot_reuse_a_historical_same_task_claim) ... ok
+test_failed_stop_preserves_generated_output_and_reports_failure (scripts.release.tests.test_ci_verification_hygiene.VerificationHygieneTest.test_failed_stop_preserves_generated_output_and_reports_failure) ... ok
+test_historical_other_task_claim_does_not_authorize_current_cleanup (scripts.release.tests.test_ci_verification_hygiene.VerificationHygieneTest.test_historical_other_task_claim_does_not_authorize_current_cleanup) ... ok
+test_missing_claim_fails_without_deleting_outputs (scripts.release.tests.test_ci_verification_hygiene.VerificationHygieneTest.test_missing_claim_fails_without_deleting_outputs) ... ok
+test_nested_output_symlink_does_not_delete_external_target (scripts.release.tests.test_ci_verification_hygiene.VerificationHygieneTest.test_nested_output_symlink_does_not_delete_external_target) ... ok
+test_new_claim_never_overwrites_a_historical_receipt (scripts.release.tests.test_ci_verification_hygiene.VerificationHygieneTest.test_new_claim_never_overwrites_a_historical_receipt) ... ok
+test_non_object_ownership_record_fails_with_a_cleanup_receipt (scripts.release.tests.test_ci_verification_hygiene.VerificationHygieneTest.test_non_object_ownership_record_fails_with_a_cleanup_receipt) ... ok
+test_preexisting_outputs_are_never_claimed (scripts.release.tests.test_ci_verification_hygiene.VerificationHygieneTest.test_preexisting_outputs_are_never_claimed) ... ok
+test_roots_include_build_logic_and_only_known_generated_directories (scripts.release.tests.test_ci_verification_hygiene.VerificationHygieneTest.test_roots_include_build_logic_and_only_known_generated_directories) ... ok
+test_success_without_actual_artifact_outputs_cannot_authorize_deletion (scripts.release.tests.test_ci_verification_hygiene.VerificationHygieneTest.test_success_without_actual_artifact_outputs_cannot_authorize_deletion) ... ok
+test_symlink_sibling_rejects_cleanup_before_any_deletion (scripts.release.tests.test_ci_verification_hygiene.VerificationHygieneTest.test_symlink_sibling_rejects_cleanup_before_any_deletion) ... ok
+test_tampered_source_path_claim_is_rejected (scripts.release.tests.test_ci_verification_hygiene.VerificationHygieneTest.test_tampered_source_path_claim_is_rejected) ... ok
+test_unsuccessful_upload_preserves_evidence_and_still_stops_gradle (scripts.release.tests.test_ci_verification_hygiene.VerificationHygieneTest.test_unsuccessful_upload_preserves_evidence_and_still_stops_gradle) ... ok
+test_every_job_retains_xml_before_always_run_cleanup (scripts.release.tests.test_ci_verification_hygiene.VerificationWorkflowHygieneTest.test_every_job_retains_xml_before_always_run_cleanup) ... ok
+test_kotlin_compiler_work_is_owned_by_the_gradle_lane (scripts.release.tests.test_ci_verification_hygiene.VerificationWorkflowHygieneTest.test_kotlin_compiler_work_is_owned_by_the_gradle_lane) ... ok
+test_controls_hash_exact_regular_bounded_bytes (scripts.release.tests.test_linux_process_probe.LinuxProcessProbeTest.test_controls_hash_exact_regular_bounded_bytes) ... ok
+test_finalizer_requires_retired_control_receipts_before_unchanged_cleanup (scripts.release.tests.test_linux_process_probe.LinuxProcessProbeTest.test_finalizer_requires_retired_control_receipts_before_unchanged_cleanup) ... ok
+test_host_failure_is_not_promoted_and_new_child_waits_for_previous_cleanup (scripts.release.tests.test_linux_process_probe.LinuxProcessProbeTest.test_host_failure_is_not_promoted_and_new_child_waits_for_previous_cleanup) ... ok
+test_negative_control_remains_failed_audit_and_uses_only_owned_isolated_child (scripts.release.tests.test_linux_process_probe.LinuxProcessProbeTest.test_negative_control_remains_failed_audit_and_uses_only_owned_isolated_child) ... ok
+test_readiness_failure_reaps_child_without_sampling_or_private_text (scripts.release.tests.test_linux_process_probe.LinuxProcessProbeTest.test_readiness_failure_reaps_child_without_sampling_or_private_text) ... ok
+test_source_scope_review_host_and_unused_inputs_are_fail_closed (scripts.release.tests.test_linux_process_probe.LinuxProcessProbeTest.test_source_scope_review_host_and_unused_inputs_are_fail_closed) ... ok
+test_timeout_and_interrupt_retire_only_the_exact_owned_child (scripts.release.tests.test_linux_process_probe.LinuxProcessProbeTest.test_timeout_and_interrupt_retire_only_the_exact_owned_child) ... ok
+test_unknown_selected_denial_is_not_the_expected_nondumpable_control (scripts.release.tests.test_linux_process_probe.LinuxProcessProbeTest.test_unknown_selected_denial_is_not_the_expected_nondumpable_control) ... ok
+test_unreaped_child_or_changed_fixture_is_not_cleaned_or_passed (scripts.release.tests.test_linux_process_probe.LinuxProcessProbeTest.test_unreaped_child_or_changed_fixture_is_not_cleaned_or_passed) ... ok
+test_actual_first_step_clock_producer_emits_exact_shared_kernel_and_run_source_token (scripts.release.tests.test_workflow_contract.WorkflowContractTest.test_actual_first_step_clock_producer_emits_exact_shared_kernel_and_run_source_token) ... ok
+test_all_release_temporary_directories_use_signal_safe_cleanup (scripts.release.tests.test_workflow_contract.WorkflowContractTest.test_all_release_temporary_directories_use_signal_safe_cleanup) ... ok
+test_android_and_ios_release_packages_must_verify_notice_bytes (scripts.release.tests.test_workflow_contract.WorkflowContractTest.test_android_and_ios_release_packages_must_verify_notice_bytes) ... ok
+test_apple_signing_and_upload_scripts_require_identity_approval (scripts.release.tests.test_workflow_contract.WorkflowContractTest.test_apple_signing_and_upload_scripts_require_identity_approval) ... ok
+test_candidate_build_number_claim_cannot_be_removed (scripts.release.tests.test_workflow_contract.WorkflowContractTest.test_candidate_build_number_claim_cannot_be_removed) ... ok
+test_candidate_bundletool_download_must_be_bounded (scripts.release.tests.test_workflow_contract.WorkflowContractTest.test_candidate_bundletool_download_must_be_bounded) ... ok
+test_candidate_claim_requires_a_secretless_protected_environment (scripts.release.tests.test_workflow_contract.WorkflowContractTest.test_candidate_claim_requires_a_secretless_protected_environment) ... ok
+test_candidate_claim_transaction_cannot_be_scoped_per_sha (scripts.release.tests.test_workflow_contract.WorkflowContractTest.test_candidate_claim_transaction_cannot_be_scoped_per_sha) ... ok
+test_candidate_dependency_and_validation_evidence_must_be_retained (scripts.release.tests.test_workflow_contract.WorkflowContractTest.test_candidate_dependency_and_validation_evidence_must_be_retained) ... ok
+test_candidate_dependency_report_must_use_release_runtime (scripts.release.tests.test_workflow_contract.WorkflowContractTest.test_candidate_dependency_report_must_use_release_runtime) ... ok
+test_candidate_preflight_requires_reviewed_managed_device_image (scripts.release.tests.test_workflow_contract.WorkflowContractTest.test_candidate_preflight_requires_reviewed_managed_device_image) ... ok
+test_complete_ios_inventory_requires_successful_build_and_cleanup (scripts.release.tests.test_workflow_contract.WorkflowContractTest.test_complete_ios_inventory_requires_successful_build_and_cleanup) ... ok
+test_every_store_workflow_job_is_repository_disabled (scripts.release.tests.test_workflow_contract.WorkflowContractTest.test_every_store_workflow_job_is_repository_disabled) ... ok
+test_external_partial_rerun_evidence_cannot_be_removed (scripts.release.tests.test_workflow_contract.WorkflowContractTest.test_external_partial_rerun_evidence_cannot_be_removed) ... ok
+test_focused_native_modes_do_not_weaken_full_verification (scripts.release.tests.test_workflow_contract.WorkflowContractTest.test_focused_native_modes_do_not_weaken_full_verification) ... ok
+test_ios_app_launch_cannot_delay_finalization_or_claim_ownership_after_launch (scripts.release.tests.test_workflow_contract.WorkflowContractTest.test_ios_app_launch_cannot_delay_finalization_or_claim_ownership_after_launch) ... ok
+test_ios_app_launch_requires_its_own_preparation_and_finalization (scripts.release.tests.test_workflow_contract.WorkflowContractTest.test_ios_app_launch_requires_its_own_preparation_and_finalization) ... ok
+test_ios_app_launch_requires_owned_simulator_and_nonparallel_execution (scripts.release.tests.test_workflow_contract.WorkflowContractTest.test_ios_app_launch_requires_owned_simulator_and_nonparallel_execution) ... ok
+test_ios_app_launch_ui_test_cannot_be_replaced_with_a_build (scripts.release.tests.test_workflow_contract.WorkflowContractTest.test_ios_app_launch_ui_test_cannot_be_replaced_with_a_build) ... ok
+test_ios_artifact_validator_enforces_pinned_store_toolchain (scripts.release.tests.test_workflow_contract.WorkflowContractTest.test_ios_artifact_validator_enforces_pinned_store_toolchain) ... ok
+test_ios_build_phases_do_not_inherit_source_signing_secrets (scripts.release.tests.test_workflow_contract.WorkflowContractTest.test_ios_build_phases_do_not_inherit_source_signing_secrets) ... ok
+test_ios_profile_refusal_cannot_delete_a_preexisting_profile (scripts.release.tests.test_workflow_contract.WorkflowContractTest.test_ios_profile_refusal_cannot_delete_a_preexisting_profile) ... ok
+test_ios_signing_cleanup_is_fail_closed (scripts.release.tests.test_workflow_contract.WorkflowContractTest.test_ios_signing_cleanup_is_fail_closed) ... ok
+test_ios_upload_uses_scoped_key_directory_and_removes_raw_response (scripts.release.tests.test_workflow_contract.WorkflowContractTest.test_ios_upload_uses_scoped_key_directory_and_removes_raw_response) ... ok
+test_linux_probe_cannot_run_full_work_or_other_hosts (scripts.release.tests.test_workflow_contract.WorkflowContractTest.test_linux_probe_cannot_run_full_work_or_other_hosts) ... ok
+test_linux_probe_requires_bound_inputs_and_exact_compact_uploads (scripts.release.tests.test_workflow_contract.WorkflowContractTest.test_linux_probe_requires_bound_inputs_and_exact_compact_uploads) ... ok
+test_managed_device_runner_cannot_use_production_signing_material (scripts.release.tests.test_workflow_contract.WorkflowContractTest.test_managed_device_runner_cannot_use_production_signing_material) ... ok
+test_missing_shared_store_lock_is_rejected (scripts.release.tests.test_workflow_contract.WorkflowContractTest.test_missing_shared_store_lock_is_rejected) ... ok
+test_mobile_release_kit_android_signing_fallbacks_remain_bounded (scripts.release.tests.test_workflow_contract.WorkflowContractTest.test_mobile_release_kit_android_signing_fallbacks_remain_bounded) ... ok
+test_mobile_release_kit_ios_signing_mapping_is_release_target_only (scripts.release.tests.test_workflow_contract.WorkflowContractTest.test_mobile_release_kit_ios_signing_mapping_is_release_target_only) ... ok
+test_mutable_action_reference_is_rejected (scripts.release.tests.test_workflow_contract.WorkflowContractTest.test_mutable_action_reference_is_rejected) ... ok
+test_native_clock_cannot_be_restarted_later_or_moved_after_checkout (scripts.release.tests.test_workflow_contract.WorkflowContractTest.test_native_clock_cannot_be_restarted_later_or_moved_after_checkout) ... ok
+test_native_clock_step_rejects_unshared_clocks_extra_code_fields_and_context_weakening (scripts.release.tests.test_workflow_contract.WorkflowContractTest.test_native_clock_step_rejects_unshared_clocks_extra_code_fields_and_context_weakening) ... ok
+test_native_evidence_only_job_budget_and_all_other_scope_ceilings_are_exact (scripts.release.tests.test_workflow_contract.WorkflowContractTest.test_native_evidence_only_job_budget_and_all_other_scope_ceilings_are_exact) ... ok
+test_native_selection_is_closed_paired_default_and_cannot_be_duplicated (scripts.release.tests.test_workflow_contract.WorkflowContractTest.test_native_selection_is_closed_paired_default_and_cannot_be_duplicated) ... ok
+test_native_selection_validation_execution_and_cleanup_use_identical_input (scripts.release.tests.test_workflow_contract.WorkflowContractTest.test_native_selection_validation_execution_and_cleanup_use_identical_input) ... ok
+test_new_store_workflow_job_cannot_omit_the_release_stop (scripts.release.tests.test_workflow_contract.WorkflowContractTest.test_new_store_workflow_job_cannot_omit_the_release_stop) ... ok
+test_non_app_probe_requires_explicit_review_no_token_and_uploaded_custody (scripts.release.tests.test_workflow_contract.WorkflowContractTest.test_non_app_probe_requires_explicit_review_no_token_and_uploaded_custody) ... ok
+test_probe_cannot_precede_scope_validation_or_upload (scripts.release.tests.test_workflow_contract.WorkflowContractTest.test_probe_cannot_precede_scope_validation_or_upload) ... ok
+test_probe_cleanup_binding_timeout_and_artifact_paths_are_exact (scripts.release.tests.test_workflow_contract.WorkflowContractTest.test_probe_cleanup_binding_timeout_and_artifact_paths_are_exact) ... ok
+test_production_build_command_is_rejected (scripts.release.tests.test_workflow_contract.WorkflowContractTest.test_production_build_command_is_rejected) ... ok
+test_production_push_trigger_is_rejected (scripts.release.tests.test_workflow_contract.WorkflowContractTest.test_production_push_trigger_is_rejected) ... ok
+test_production_without_external_receipt_attestation_is_rejected (scripts.release.tests.test_workflow_contract.WorkflowContractTest.test_production_without_external_receipt_attestation_is_rejected) ... ok
+test_production_without_its_own_receipt_attestations_is_rejected (scripts.release.tests.test_workflow_contract.WorkflowContractTest.test_production_without_its_own_receipt_attestations_is_rejected) ... ok
+test_promotion_without_candidate_attestation_is_rejected (scripts.release.tests.test_workflow_contract.WorkflowContractTest.test_promotion_without_candidate_attestation_is_rejected) ... ok
+test_release_policy_includes_the_candidate_control_environment (scripts.release.tests.test_workflow_contract.WorkflowContractTest.test_release_policy_includes_the_candidate_control_environment) ... ok
+test_release_system_enforces_review_inventory_freshness (scripts.release.tests.test_workflow_contract.WorkflowContractTest.test_release_system_enforces_review_inventory_freshness) ... ok
+test_release_tool_download_failure_cannot_false_pass (scripts.release.tests.test_workflow_contract.WorkflowContractTest.test_release_tool_download_failure_cannot_false_pass) ... ok
+test_repository_workflows_satisfy_release_contract (scripts.release.tests.test_workflow_contract.WorkflowContractTest.test_repository_workflows_satisfy_release_contract) ... ok
+test_review_inventory_gate_has_full_git_history (scripts.release.tests.test_workflow_contract.WorkflowContractTest.test_review_inventory_gate_has_full_git_history) ... ok
+test_scoped_full_finalizers_reject_every_nonexact_predicate (scripts.release.tests.test_workflow_contract.WorkflowContractTest.test_scoped_full_finalizers_reject_every_nonexact_predicate) ... ok
+test_settings_and_os_selections_require_the_explicit_shared_probe_hash_binding (scripts.release.tests.test_workflow_contract.WorkflowContractTest.test_settings_and_os_selections_require_the_explicit_shared_probe_hash_binding) ... ok
+test_store_workflow_without_identity_ownership_gate_is_rejected (scripts.release.tests.test_workflow_contract.WorkflowContractTest.test_store_workflow_without_identity_ownership_gate_is_rejected) ... ok
+test_unreviewed_workflow_file_is_rejected (scripts.release.tests.test_workflow_contract.WorkflowContractTest.test_unreviewed_workflow_file_is_rejected) ... ok
+test_unsigned_android_inventory_is_required_and_tool_cleanup_is_scoped (scripts.release.tests.test_workflow_contract.WorkflowContractTest.test_unsigned_android_inventory_is_required_and_tool_cleanup_is_scoped) ... ok
+test_validation_requires_release_managed_device_runtime_gate (scripts.release.tests.test_workflow_contract.WorkflowContractTest.test_validation_requires_release_managed_device_runtime_gate) ... ok
+test_windows_checkout_long_paths_and_exact_source_are_required_before_checkout (scripts.release.tests.test_workflow_contract.WorkflowContractTest.test_windows_checkout_long_paths_and_exact_source_are_required_before_checkout) ... ok
+test_windows_only_selection_cannot_skip_full_or_run_other_jobs (scripts.release.tests.test_workflow_contract.WorkflowContractTest.test_windows_only_selection_cannot_skip_full_or_run_other_jobs) ... ok
+test_xcode_identity_guard_matches_the_exact_build_setting (scripts.release.tests.test_workflow_contract.WorkflowContractTest.test_xcode_identity_guard_matches_the_exact_build_setting) ... ok
+
+----------------------------------------------------------------------
+Ran 101 tests in 0.562s
+
+OK
+release workflow contract: PASS
+FOCUSED_COMMAND actual-nonroot-mechanism ["/usr/bin/python3", "-B", "remediation-runs/2026-09-08-continuation/reviews/linux-process-probe-local-01.py"]
+{"kind": "LOCAL_NONROOT_CONTROL_OUTER", "result": "PASS_MECHANISM_ONLY", "controls": {"scripts/ci/linux_process_probe.py": "2696b0d81f1113eeaea20b431191788925053703d2ed6e12d72489041c6f76b6", "scripts/ci/verification_hygiene.py": "1fc2fb6f0b3bb7a505edc63277e0fe974a67ccf972753eec0da60386438c16f4"}, "stage": "/tmp/parlor-linux-proc-local-zkwispza", "stage_removed": true, "observation": {"kind": "LOCAL_NONROOT_MECHANISM_CONTROL_NOT_HOST_AUDIT", "uid": 65534, "euid": 65534, "binding": {"sdk_path_sha256": "d2db3690550ededaf753ae795509e452208eb8cee94d1b645f907136da253381", "sdk_device": 27, "sdk_inode": 1975169, "uid": 65534}, "controls": [{"kind": "LIVE_LINUX_CONTROL_SYNTHETIC_ENUMERATION", "dumpable": 1, "result": "CONTROL_PASS", "started_at": "2026-09-10T11:41:03.677974+00:00", "child_reaped": true, "fixture_removed": true, "errors": [], "scope": "Only self/direct-child enumeration with real procfs reads; not a host inventory or emulator runtime.", "fixture_basename": "parlor-linux-proc-control-_anihfog", "owned_pid": 12585, "readiness": {"pid": 12585, "uid": 65534, "dumpable": 1}, "audit": {"result": "PASS", "started_at": "2026-09-10T11:41:03.707158+00:00", "enumerated": 2, "sampled": 2, "selected_uid": 2, "matching_executables": 0, "errors": [], "scope": "Enumerated visible selected-UID executable paths beneath bound SDK/emulator only; not termination, task-process ownership, AVD retirement, other SDKs/UIDs, or continuous absence", "binding": {"sdk_path_sha256": "d2db3690550ededaf753ae795509e452208eb8cee94d1b645f907136da253381", "sdk_device": 27, "sdk_inode": 1975169, "uid": 65534}, "finished_at": "2026-09-10T11:41:03.709961+00:00"}, "child_exit_code": 0, "interrupted": false, "finished_at": "2026-09-10T11:41:03.711216+00:00"}, {"kind": "LIVE_LINUX_CONTROL_SYNTHETIC_ENUMERATION", "dumpable": 0, "result": "CONTROL_PASS", "started_at": "2026-09-10T11:41:03.711417+00:00", "child_reaped": true, "fixture_removed": true, "errors": [], "scope": "Only self/direct-child enumeration with real procfs reads; not a host inventory or emulator runtime.", "fixture_basename": "parlor-linux-proc-control-fiz2of72", "owned_pid": 12586, "readiness": {"pid": 12586, "uid": 65534, "dumpable": 0}, "audit": {"result": "FAIL", "started_at": "2026-09-10T11:41:03.740881+00:00", "enumerated": 2, "sampled": 1, "selected_uid": 1, "matching_executables": 0, "errors": [{"code": "PermissionError"}], "scope": "Enumerated visible selected-UID executable paths beneath bound SDK/emulator only; not termination, task-process ownership, AVD retirement, other SDKs/UIDs, or continuous absence", "binding": {"sdk_path_sha256": "d2db3690550ededaf753ae795509e452208eb8cee94d1b645f907136da253381", "sdk_device": 27, "sdk_inode": 1975169, "uid": 65534}, "failure_context": {"operation": "before_exe_readlink", "selection": true, "errno": 13}, "finished_at": "2026-09-10T11:41:03.742702+00:00"}, "child_exit_code": 0, "interrupted": false, "finished_at": "2026-09-10T11:41:03.743985+00:00"}]}, "command": ["/usr/sbin/runuser", "--user", "nobody", "--", "/usr/bin/env", "-i", "PATH=/usr/bin:/bin", "LANG=C.UTF-8", "ANDROID_HOME=/tmp/parlor-linux-proc-local-zkwispza/sdk", "ANDROID_SDK_ROOT=/tmp/parlor-linux-proc-local-zkwispza/sdk", "/usr/bin/python3", "-I", "-B", "/tmp/parlor-linux-proc-local-zkwispza/entry.py"], "exit_code": 0}
+FOCUSED_COMMAND focused-workflow-actionlint ["/bin/bash", "-c", "#!/usr/bin/env bash\nset -euo pipefail\n\nrepo_root=$(cd \"$(dirname \"$0\")/../..\" && pwd -P)\ncd \"$repo_root\"\n\ntemporary_dir=$(mktemp -d \"${TMPDIR:-/tmp}/parlor-release-tools.XXXXXX\")\ncleanup() {\n  local original_status=${1:-$?}\n  local cleanup_status=0\n  trap - EXIT INT TERM\n  if ! rm -rf \"$temporary_dir\"; then\n    echo \"could not remove the temporary release-tool directory\" >&2\n    cleanup_status=2\n  fi\n  if [[ $original_status -ne 0 ]]; then\n    exit \"$original_status\"\n  fi\n  exit \"$cleanup_status\"\n}\ntrap 'cleanup $?' EXIT\ntrap 'exit 130' INT\ntrap 'exit 143' TERM\n\n\nos_name=$(uname -s | tr '[:upper:]' '[:lower:]')\ncase $(uname -m) in\n  x86_64 | amd64) architecture=amd64 ;;\n  arm64 | aarch64) architecture=arm64 ;;\n  *) echo \"unsupported release-tool architecture\" >&2; exit 2 ;;\nesac\ncase \"$os_name\" in\n  linux | darwin) ;;\n  *) echo \"unsupported release-tool operating system\" >&2; exit 2 ;;\nesac\nplatform_key=\"$os_name-$architecture\"\n\ndownload_tool() {\n  local tool=$1\n  local executable_name=$2\n  local archive=\"$temporary_dir/$tool.tar.gz\"\n  local destination=\"$temporary_dir/$executable_name\"\n  local url\n  local digest\n  url=$(python3 -c 'import json,sys; print(json.load(open(\"config/release-policy.json\"))[\"tools\"][sys.argv[1]][\"artifacts\"][sys.argv[2]][\"url\"])' \"$tool\" \"$platform_key\")\n  digest=$(python3 -c 'import json,sys; print(json.load(open(\"config/release-policy.json\"))[\"tools\"][sys.argv[1]][\"artifacts\"][sys.argv[2]][\"sha256\"])' \"$tool\" \"$platform_key\")\n  if ! curl --fail --silent --show-error --location \\\n    --proto '=https' \\\n    --tlsv1.2 \\\n    --retry 3 \\\n    --retry-all-errors \\\n    --max-filesize 209715200 \\\n    --max-time 120 \\\n    \"$url\" \\\n    --output \"$archive\"; then\n    echo \"could not download pinned $tool release\" >&2\n    return 2\n  fi\n  if ! printf '%s  %s\\n' \"$digest\" \"$archive\" | shasum -a 256 -c - >&2; then\n    echo \"pinned $tool release digest mismatch\" >&2\n    return 2\n  fi\n  if ! python3 - \"$archive\" \"$executable_name\" \"$destination\" <<'PY'\nimport os\nimport sys\nimport tarfile\nfrom pathlib import PurePosixPath\n\narchive_path, expected_name, destination = sys.argv[1:]\nwith tarfile.open(archive_path, \"r:gz\") as archive:\n    members = archive.getmembers()\n    if len(members) > 100:\n        raise SystemExit(\"release-tool archive has too many entries\")\n    matches = []\n    for member in members:\n        path = PurePosixPath(member.name)\n        if path.is_absolute() or \"..\" in path.parts or member.issym() or member.islnk():\n            raise SystemExit(\"unsafe release-tool archive\")\n        if path.name == expected_name and member.isfile():\n            matches.append(member)\n    if len(matches) != 1 or matches[0].size > 100 * 1024 * 1024:\n        raise SystemExit(\"release-tool archive does not contain one bounded executable\")\n    source = archive.extractfile(matches[0])\n    if source is None:\n        raise SystemExit(\"cannot read release-tool executable\")\n    with open(destination, \"wb\") as output:\n        output.write(source.read())\n    os.chmod(destination, 0o755)\nPY\n  then\n    echo \"could not safely extract pinned $tool release\" >&2\n    return 2\n  fi\n  printf '%s\\n' \"$destination\"\n}\n\nshellcheck_command=$(download_tool shellcheck shellcheck) || exit $?\nactionlint_command=$(download_tool actionlint actionlint) || exit $?\n\"$actionlint_command\" -shellcheck \"$shellcheck_command\" .github/workflows/production-verification.yml\n", "scripts/release/validate_release_system.sh"]
+/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-proc-controls-01/scratch/tmp/parlor-release-tools.VC7xsa/shellcheck.tar.gz: OK
+/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-proc-controls-01/scratch/tmp/parlor-release-tools.VC7xsa/actionlint.tar.gz: OK
+FOCUSED_COMMAND transport-workflow ["./gradlew", ":shared:transport-p2p:desktopTest", "--tests", "*ProductionVerificationWorkflowContractTest*", "--no-daemon", "--no-parallel", "--max-workers=1", "--no-configuration-cache", "--dependency-verification=strict", "-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=continuation-linux-proc-controls-01", "-Pkotlin.compiler.execution.strategy=in-process", "-Pparlor.android.signing.storeFile=", "-Pparlor.android.signing.storePassword=", "-Pparlor.android.signing.keyAlias=", "-Pparlor.android.signing.keyPassword="]
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.13/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+Type-safe project accessors is an incubating feature.
+> Task :build-logic:convention:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :build-logic:convention:compileKotlin FROM-CACHE
+> Task :build-logic:convention:compileJava NO-SOURCE
+> Task :build-logic:convention:pluginDescriptors
+> Task :build-logic:convention:processResources
+> Task :build-logic:convention:classes
+> Task :build-logic:convention:jar
+
+> Configure project :composeApp
+WARNING: The option setting 'android.experimental.lint.version=9.1.1' is experimental.
+w: [33m[1m⚠️ Deprecated Gradle Version[0m[0m
+The used Gradle version (Gradle 8.13) is deprecated and will not be supported in future Kotlin Gradle Plugin releases.
+The minimum supported Gradle version will become Gradle 8.14.4 in Kotlin 2.5.0.
+
+This warning can be suppressed in 'gradle.properties':
+    kotlin.suppressGradlePluginWarnings=DeprecatedGradleVersionWarning
+[32m[1mSolution:[0m[0m
+[32m[3mPlease update the Gradle version to at least Gradle 8.14.4.[0m[0m
+
+w: [33m[1m⚠️ Native task 'iosX64Test' is disabled[0m[0m
+Task 'iosX64Test' for target 'ios_x64' cannot run on the current host (linux-x86_64).
+Reason: simulator tests require macOS
+[32m[1mSolution:[0m[0m
+[32m[3mTo suppress this warning, add 'kotlin.native.ignoreDisabledTargets=true' to gradle.properties.[0m[0m
+
+w: [33m[1m⚠️ Native task 'iosSimulatorArm64Test' is disabled[0m[0m
+Task 'iosSimulatorArm64Test' for target 'ios_simulator_arm64' cannot run on the current host (linux-x86_64).
+Reason: simulator tests require macOS
+[32m[1mSolution:[0m[0m
+[32m[3mTo suppress this warning, add 'kotlin.native.ignoreDisabledTargets=true' to gradle.properties.[0m[0m
+
+
+> Task :shared:core:kmpPartiallyResolvedDependenciesChecker
+> Task :shared:core:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :shared:core:compileKotlinDesktop FROM-CACHE
+> Task :shared:core:compileDesktopMainJava NO-SOURCE
+> Task :shared:core:desktopProcessResources NO-SOURCE
+> Task :shared:core:processDesktopMainResources SKIPPED
+> Task :shared:core:desktopMainClasses UP-TO-DATE
+> Task :shared:core:desktopJar
+> Task :shared:engine:kmpPartiallyResolvedDependenciesChecker
+> Task :shared:engine:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :shared:engine:compileKotlinDesktop FROM-CACHE
+> Task :shared:engine:compileDesktopMainJava NO-SOURCE
+> Task :shared:engine:desktopProcessResources NO-SOURCE
+> Task :shared:engine:processDesktopMainResources SKIPPED
+> Task :shared:engine:desktopMainClasses UP-TO-DATE
+> Task :shared:engine:desktopJar
+> Task :shared:networking:kmpPartiallyResolvedDependenciesChecker
+> Task :shared:networking:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :shared:networking:compileKotlinDesktop FROM-CACHE
+> Task :shared:networking:compileDesktopMainJava NO-SOURCE
+> Task :shared:networking:desktopProcessResources NO-SOURCE
+> Task :shared:networking:processDesktopMainResources SKIPPED
+> Task :shared:networking:desktopMainClasses UP-TO-DATE
+> Task :shared:networking:desktopJar
+> Task :shared:storage:kmpPartiallyResolvedDependenciesChecker
+> Task :shared:storage:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :shared:storage:compileKotlinDesktop FROM-CACHE
+> Task :shared:storage:compileDesktopMainJava NO-SOURCE
+> Task :shared:storage:desktopProcessResources NO-SOURCE
+> Task :shared:storage:processDesktopMainResources SKIPPED
+> Task :shared:storage:desktopMainClasses UP-TO-DATE
+> Task :shared:storage:desktopJar
+> Task :shared:transport-p2p:kmpPartiallyResolvedDependenciesChecker
+> Task :shared:transport-p2p:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :shared:transport-p2p:compileKotlinDesktop FROM-CACHE
+> Task :shared:transport-p2p:compileDesktopMainJava NO-SOURCE
+> Task :shared:transport-p2p:desktopProcessResources NO-SOURCE
+> Task :shared:transport-p2p:processDesktopMainResources SKIPPED
+> Task :shared:transport-p2p:desktopMainClasses UP-TO-DATE
+> Task :shared:transport-p2p:desktopJar
+> Task :shared:transport-p2p:compileTestKotlinDesktop FROM-CACHE
+> Task :shared:transport-p2p:compileDesktopTestJava NO-SOURCE
+> Task :shared:transport-p2p:desktopTestProcessResources NO-SOURCE
+> Task :shared:transport-p2p:processDesktopTestResources SKIPPED
+> Task :shared:transport-p2p:desktopTestClasses UP-TO-DATE
+> Task :shared:transport-p2p:desktopTest
+
+[Incubating] Problems report is available at: file:///root/projects/Parlor/parlor/build/reports/problems/problems-report.html
+
+BUILD SUCCESSFUL in 21s
+21 actionable tasks: 14 executed, 7 from cache

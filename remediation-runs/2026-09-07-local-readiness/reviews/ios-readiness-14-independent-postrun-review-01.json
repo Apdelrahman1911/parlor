@@ -1,0 +1,626 @@
+{
+  "schema_version": 1,
+  "kind": "NATIVE14_INDEPENDENT_POSTRUN_REVIEW",
+  "reviewer": "/root/factory_review",
+  "reviewed_at_utc": "2026-09-08T06:42:12.908202+00:00",
+  "scope": "Independent source/evidence review and standard-library receipt correlation only. No reviewed modules, builds or tests executed. Additive record; original failed receipts remain unchanged.",
+  "verdict": "FAIL_WITH_SCOPED_RUNTIME_OBSERVATIONS; neither native14 nor strict L08 passes.",
+  "source_identity": {
+    "commit": "8b9e3b0cdfdab82e7cff3ad8135d0eae9a0b8ca3",
+    "tree": "c1e92b5e00ab64a293c4d7f9c9b5e2b85887be88",
+    "branch": "fix/local-readiness-2026-09-07",
+    "source_manifest_sha256": "c4d3387a95ff1a4462071147afe92411f5a08ee8b10f78852a59494c8d3e4420",
+    "independently_rehashed_source_files": 800,
+    "source_manifest_before_equals_after": true,
+    "input_manifest_files": 92,
+    "approved_control_sha256": "79eab46b33ac60239de7c35966c01d370c09e3ac09be4a67455df2f187f12e45",
+    "copied_inputs": 754,
+    "copied_manifest_exactly_equals_observed_after_hash_map": true,
+    "original_full_source_gate": "FAIL; preserve source_unchanged=false",
+    "reason": "Five tracked normal-ios-launch-proposal-01 diagnostic files changed concurrently, outside the 800-source manifest and native14 copied/control inputs. This does not retroactively pass the full-source gate.",
+    "tracked_status_before": "",
+    "tracked_status_after": "M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/README.md\n M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/external_image_diagnostics.py\n M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/external_image_provenance.py\n M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_control_tests.py\n M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
+    "diff_sha256_after": "8e5e873e93e89aa6e077d78e0263018d567117b3e14e59148a9447062a336b9d",
+    "later_control_edits": "Root-authorized native14 follow-up may modify untracked draft/companion inputs after this run; all reviewed_native14 hashes below denote the frozen executed input, not any future draft."
+  },
+  "xctest": {
+    "xcodebuild_exit_code": 65,
+    "passed": 4,
+    "failed": 1,
+    "skipped": 0,
+    "failed_test": "IOSAppLaunchUITests/testDSC01ActualSettingsLocalSessionsAndOSWithL08FunctionalObservation()",
+    "failure": "Generated Swift line2321 / L08StorageFunctionalUITests.swift.in:75 expected functional_status PASS, observed FAIL at boot10continue",
+    "four_successful_tests": "UIKit full-bounds/opposing directions, appearance forwarding, stable-child semantics, decoration/orientation ownership",
+    "classification": "Observed XCTest assertion failure; not evidence of app exception or operating-system termination."
+  },
+  "foundation_collection": {
+    "status": "FAIL — MAIN IMAGE UUID BINDING MISMATCH",
+    "raw_preservation": "PRESERVED",
+    "source_proof": "L08AppFoundation.m.in:459 records imageIdentity(_dyld_get_image_header(0)) as main_image without executable-name attestation. app_foundation_receipts.py:240–244 requires that UUID to match the inventoried Parlor executable. That comparison deterministically fails.",
+    "observed_main_uuid": "7af2e14e-10e0-3a05-a5df-9775c2c6a88e",
+    "inventoried_parlor_uuid": "71706706-bc02-3337-ac3f-963551855c37",
+    "built_equals_installed": true,
+    "fixture_uuid_matches": true,
+    "first_health_process_binding_matches": true,
+    "executed_marker_count": 1,
+    "executed_marker_context_matches": true,
+    "classification": "Reachable diagnostic identity-selection defect, not a production storage defect. The validator correctly refuses the mismatched identity. Exact origin of the index-zero image remains unknown.",
+    "not_caused_by": "The later main XCTest assertion is not a bind_collection precondition; it does not explain this failure.",
+    "recommended_minimal_change": "Select the unique canonical NSBundle executable path inside the attested app bundle from a bounded dyld-name scan; cross-check matched name/header/base and reject changes, unavailable or duplicate matches. Preserve UUID/hash/compiled-context/XCTest comparisons. Never fall back to index0 or accept mismatched name/UUID. SDK documents enumeration as non-thread-safe; do not claim thread-safety."
+  },
+  "foundation_metadata": {
+    "classification": "OBSERVED_UNSUCCESSFUL_COMPLETE_METADATA; cause/enforcement unresolved",
+    "native14_record_status": "OBSERVATIONS_COMPLETE",
+    "all_16_rows_exactly_equal_standalone02": true,
+    "same_foundation_uuid": true,
+    "foundation_uuid": "2cc9fce0-08f9-3a0d-8a2f-6db229462de5",
+    "runtime_version": [
+      26,
+      5,
+      0
+    ],
+    "operations": 8,
+    "operations_return_true_without_error_or_exception": true,
+    "observations": 8,
+    "filemanager_missing_protection_key": 8,
+    "url_file_observations_until_first_authentication": 5,
+    "backup_and_cleanup": "Requested backup exclusion observed; synthetic fixture root removed.",
+    "counter_evidence": "Equivalent failure appears in standalone Objective-C and actual app-container direct Foundation calls, including create, atomic/direct Complete write and explicit setters. A Kotlin-only or app-container-only explanation is not established.",
+    "limitations": "Raw actual-app collection remains identity-binding FAIL. These metadata observations do not prove hardware class enforcement or its absence. Authoritative Complete semantics do not explain exact Simulator26.5 behavior. Do not suppress/waive strict checks or claim universally unsupported Simulator protection.",
+    "standalone_evidence": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/observations.json",
+      "sha256": "e93b1e246467764f7aa3eecd53ef5ad5fc9451f2a7925e61cec6b2768e4386e3"
+    }
+  },
+  "storage_functional": {
+    "status": "INCOMPLETE_FAILED_MATRIX",
+    "actual_process_starts": 10,
+    "completed_xctest_boot_markers": 9,
+    "planned_boots": 13,
+    "actual_operation_receipts": 15,
+    "functional_pass_receipts": 14,
+    "functional_fail_receipts": 1,
+    "planned_operations": 20,
+    "actual_complete_comparisons": 24,
+    "failed_complete_comparisons": 24,
+    "planned_complete_comparisons": 26,
+    "completed_traces": "WC, WE, Mafia Doctor ON and OFF each save/load, exact real Home selection, controller continuation and terminal writer deletion PASS at operation level. ON fixture uses four consecutive identical protections; OFF alternates, explicitly skips, reuses pre-skip target and rejects adjacent repeat.",
+    "legacy_load": "Boot10legacy-load PASS: exact migrated envelope; production recovery loader; expected Home destination; malformed neighbor isolated/addressable/excluded; recognized damaged protected dual fails closed and retains excluded valid legacy; relevant type/path/header checks. This precedes actual Home/controller failure.",
+    "missing_operations": [
+      "11:legacy-neighbor",
+      "11:discard-observed",
+      "12:dual-preserved",
+      "12:discard-observed",
+      "13:final-absence"
+    ],
+    "operations": [
+      {
+        "boot": 1,
+        "command": 1,
+        "action": "save",
+        "functional_status": "PASS",
+        "complete_comparisons": 2,
+        "failed_complete_comparisons": 2,
+        "sha256": "f3d271de1d2c21a2943747759ede65a727a43de3d1394bd8fbb0053abf9141dd"
+      },
+      {
+        "boot": 2,
+        "command": 1,
+        "action": "load",
+        "functional_status": "PASS",
+        "complete_comparisons": 2,
+        "failed_complete_comparisons": 2,
+        "sha256": "1c95c3f1905906961a049a2603c5747b6302a65c8eb9d36e3e9f060720673579"
+      },
+      {
+        "boot": 2,
+        "command": 2,
+        "action": "continue",
+        "functional_status": "PASS",
+        "complete_comparisons": 0,
+        "failed_complete_comparisons": 0,
+        "sha256": "6f281820cde650d4d2ccaa7914e62d92816a3e805e75f66e5faea2bc7a7c48d1"
+      },
+      {
+        "boot": 3,
+        "command": 1,
+        "action": "save",
+        "functional_status": "PASS",
+        "complete_comparisons": 2,
+        "failed_complete_comparisons": 2,
+        "sha256": "164f42b99594a97ee3dddb05a950c16f5216c8200d6d2674156b7eb9e00d7a9f"
+      },
+      {
+        "boot": 4,
+        "command": 1,
+        "action": "load",
+        "functional_status": "PASS",
+        "complete_comparisons": 2,
+        "failed_complete_comparisons": 2,
+        "sha256": "8e414a6dc03ef004d27afa7d145015caadd40292ae5fef5708dfa82de4cec939"
+      },
+      {
+        "boot": 4,
+        "command": 2,
+        "action": "continue",
+        "functional_status": "PASS",
+        "complete_comparisons": 0,
+        "failed_complete_comparisons": 0,
+        "sha256": "2ea754d802f394381448c915fc6fba8b41eb5a9d6cebc991e38b52fa0d8be932"
+      },
+      {
+        "boot": 5,
+        "command": 1,
+        "action": "save",
+        "functional_status": "PASS",
+        "complete_comparisons": 2,
+        "failed_complete_comparisons": 2,
+        "sha256": "f19d75399d9e071bf12fbd0f82c829d0f10b413dc90ff3794151ea3e29423e52"
+      },
+      {
+        "boot": 6,
+        "command": 1,
+        "action": "load",
+        "functional_status": "PASS",
+        "complete_comparisons": 2,
+        "failed_complete_comparisons": 2,
+        "sha256": "44ab65a0c87b769d55a42f708fc7abb03abfef628261ba0daaa0542f778db50b"
+      },
+      {
+        "boot": 6,
+        "command": 2,
+        "action": "continue",
+        "functional_status": "PASS",
+        "complete_comparisons": 0,
+        "failed_complete_comparisons": 0,
+        "sha256": "07deb89ef26cf704fa11db55ba6f3c11ab0d4a819fd46344d9500a3946d97c66"
+      },
+      {
+        "boot": 7,
+        "command": 1,
+        "action": "save",
+        "functional_status": "PASS",
+        "complete_comparisons": 2,
+        "failed_complete_comparisons": 2,
+        "sha256": "e76936aae2e06ecc6cd34985f880be7a4edc7a3e32e184cc6a6c4dcb345d11f6"
+      },
+      {
+        "boot": 8,
+        "command": 1,
+        "action": "load",
+        "functional_status": "PASS",
+        "complete_comparisons": 2,
+        "failed_complete_comparisons": 2,
+        "sha256": "508e2da41ad47dfc74eb3c6e0bc6a77d22084de7f5663a6f6af79ffe0c3fe02c"
+      },
+      {
+        "boot": 8,
+        "command": 2,
+        "action": "continue",
+        "functional_status": "PASS",
+        "complete_comparisons": 0,
+        "failed_complete_comparisons": 0,
+        "sha256": "0851442563251830c4d4746a5e1bf6e90dcee4e950f9ab6717b0c4a55cf00d9d"
+      },
+      {
+        "boot": 9,
+        "command": 1,
+        "action": "legacy-seed",
+        "functional_status": "PASS",
+        "complete_comparisons": 4,
+        "failed_complete_comparisons": 4,
+        "sha256": "0bf2124e2cbc870c3ff84b657bd3491a7a7afb963f83fd41c7d1052176c5c12f"
+      },
+      {
+        "boot": 10,
+        "command": 1,
+        "action": "legacy-load",
+        "functional_status": "PASS",
+        "complete_comparisons": 4,
+        "failed_complete_comparisons": 4,
+        "sha256": "0064853c88acdb3a63d597d1c7b7d8c325c84eeb89503bacaeb11c4b0104510c"
+      },
+      {
+        "boot": 10,
+        "command": 2,
+        "action": "continue",
+        "functional_status": "FAIL",
+        "complete_comparisons": 0,
+        "failed_complete_comparisons": 0,
+        "sha256": "63bef3b93a828337ff499f4f3bf2c9660c29f86927283ffe2cbc3c7f2fa9dfda"
+      }
+    ],
+    "host_matrix": "All3 host boots/42 operations unexecuted in native14. No LAN, rejoin or host-runtime success inferred."
+  },
+  "boot10_continue_candidate": {
+    "classification": "UNCONFIRMED — PRECISE GUARD/BORDER FAILURE BLOCKED BY INSUFFICIENT DIAGNOSTICS",
+    "observed_stage": "actual-home-controller",
+    "observed_reason": "fixture_or_boundary_failure",
+    "source_boundary": "L08StorageFunctionalProbe.kt.in:249–257: Home tap counters, attach wait, L08MafiaSnapshots.continueActualResumedController. L08MafiaSnapshots:132–148 and Driver155–180 retain many independent guards under this single stage.",
+    "tap_evidence": "xcodebuild.log:4539–4599: expected tile initially offscreen; one real bounded list swipe; exact unique enabled/hittable tile finally y290.667,height96, below overlay y134..273; one exact tap at705.32s. Continue tap707.91s; failure visible/asserted by710.50s. A tap event is not proof of callback/controller advancement.",
+    "counter_evidence": [
+      "Migration/decode already passed in boot10legacy-load.",
+      "Cancellation catch emits cancelled, unlike this observation; simple attach10s timeout is not the recorded path.",
+      "Actual Home callback seam counts matching session and calls original callback; production stable item keys prevent an obvious index-identity inference.",
+      "Same Mafia Night5 continuation passed boot6/8.",
+      "UI auto ResolveNight/CloseVote have guards and equivalent duplicate commits become no-ops; no complete reachable proof that these caused failure.",
+      "No retained post-tap UI counters or per-check guard identity distinguish Home-tap, canonical-reference, receipt, phase/winner or recovery-invariant failure. Native final composition sample precedes the tap."
+    ],
+    "minimum_next_observation": "Copy-only closed check-level stages before Home-counter check, attachment wait/check, canonical reference and equality separately, bounded night/vote receipt and recovery-validity guards, expected phase/winner/Doctor terminal cleanup. Preserve every guard/action; no private state, role, target, secret or exception text. No production change or relaxed guard justified yet."
+  },
+  "health_and_language_subtraces": {
+    "classification": "EXECUTED_SUBTRACE_OBSERVATIONS_RECONCILED; aggregate/detached verifier not executed by reviewer",
+    "health": "Eight cold boots/48 samples correlate to exact run/process and sequence; every native identity/containment/window remains stable, bounds and safe areas equal. Six samples per boot span27908–27966ms; minimum spacing5547ms. Home reruns both sources absent. Actual credential absent(-25300), add/update/read/delete(0) and snapshot exact match/absence follow expected write/update/delete history. No storage_error/mismatch observed.",
+    "settings": "Completed22-observation/four-process real Settings scenario: fresh System absence→AR owner→restart→System original absence; synthetic pre-existing [ar-EG,en]→EN owner→restart→System restores exact prior list. Root/container/Compose direction and before-main ownership observations retained. Synthetic previous-language fixture is not actual OS Settings selection.",
+    "not_executed_here": [
+      "Whodunit/Mafia in-session language-continuity scenarios",
+      "Actual OS per-app language scenario",
+      "Retained host matrix"
+    ],
+    "gate_distinction": "Main XCTest stopped before these later scenarios and before final Python aggregate verification. Do not mark complete DS-C01/health/native14 gate PASS from these partial observations or infer prior first-four-launch root cause."
+  },
+  "research": [
+    {
+      "url": "https://developer.apple.com/tutorials/data/documentation/foundation/nsdata/writingoptions/completefileprotection.json",
+      "access_date": "2026-09-08",
+      "status": 200,
+      "sha256": "69d8ce6ef9580c6951e470edb3e4f1bdaec15a7e5483f6487d85629e8d45c6b4",
+      "claim": "Complete write option encrypts file and limits read/write to unlocked device."
+    },
+    {
+      "url": "https://developer.apple.com/tutorials/data/documentation/foundation/fileprotectiontype/complete.json",
+      "access_date": "2026-09-08",
+      "status": 200,
+      "sha256": "9b1599448c0166bfa49cb959f22ed11459bc8a3f58e96c7b90f79ac81125c04a",
+      "claim": "Encrypted on disk; unavailable while locked or booting."
+    },
+    {
+      "url": "https://support.apple.com/guide/security/data-protection-classes-secb010e978a/web",
+      "access_date": "2026-09-08",
+      "status": 200,
+      "sha256": "b47d42443f8ace9834c84b0a2c33bc26b5b03a2b09042963f403764e6996374c",
+      "claim": "ClassA/Complete and ClassC/UntilFirstAuthentication differ in key retention. Does not establish Simulator26.5 implementation."
+    },
+    {
+      "url": "https://developer.apple.com/library/archive/documentation/System/Conceptual/ManPages_iPhoneOS/man3/dyld.3.html",
+      "access_date": "2026-09-08",
+      "status": 200,
+      "sha256": "ce0e9a29982829f663ad744ab84fdb79db58bd27d5b65f79adad2385527f9e74",
+      "claim": "Name/header are selected by image index; count-based iteration is not thread-safe."
+    },
+    {
+      "local_sdk_header": "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.5.sdk/usr/include/mach-o/dyld.h",
+      "sha256": "7c8583f2b4edcfcde7da60ffe02c75974ec87f885fecc4e8d40761fe0b553a80",
+      "reviewed_lines": [
+        [
+          27,
+          100
+        ]
+      ],
+      "claim": "Exact installed SDK51–63 reiterates iteration concurrency limitation and thread-safe dladdr alternative."
+    },
+    {
+      "unavailable_urls": [
+        "https://developer.apple.com/tutorials/data/documentation/xcode/testing-in-simulator-versus-testing-on-hardware.json",
+        "https://developer.apple.com/library/archive/documentation/IDEs/Conceptual/iOS_Simulator_Guide/TestingInSimulator.html"
+      ],
+      "http_status": 404,
+      "treatment": "Not used as authority."
+    }
+  ],
+  "cleanup": {
+    "native14_receipt_status": "PASS",
+    "root_gradle_stops": [
+      {
+        "label": "stop-xcode-immediate",
+        "exit_code": 0,
+        "at": "2026-09-08T06:19:10.651726+00:00"
+      },
+      {
+        "label": "stop-final",
+        "exit_code": 0,
+        "at": "2026-09-08T06:19:14.478818+00:00"
+      }
+    ],
+    "stop_logs": "Both exact logs say No Gradle daemons are running.",
+    "independently_observed_task_root_absent": true,
+    "independently_observed_owned_device_absent": true,
+    "independently_observed_four_attested_secondary_paths_absent": true,
+    "root_receipt_remaining_outputs": [],
+    "root_receipt_owned_workers": [],
+    "root_receipt_unknown_holders": [],
+    "errors": [],
+    "reviewer_activity": "No Gradle/Xcode/native/app/test/server worker launched; only bounded Python read/hash/HTTP analysis and this additive JSON. No source/build cleanup or process termination performed. Other root-owned native15 work must not be stopped."
+  },
+  "reviewed_source": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/commonMain/kotlin/com/parlor/app/shell/home/HomeScreen.kt",
+      "reviewed_native14_sha256": "ae11eb3dd97c28520205237b95c28766ccd6ce8dd0e005f82a0d63866323e152",
+      "reviewed_lines": [
+        [
+          1,
+          555
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/commonMain/kotlin/com/parlor/app/LocalResumeRouter.kt",
+      "reviewed_native14_sha256": "bb45b775fa4f8444bf6d00aa240b66ab78dd0066ba88dcf037f758cdd86ea0b1",
+      "reviewed_lines": [
+        [
+          1,
+          163
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSnapshotFileSystem.kt",
+      "reviewed_native14_sha256": "c2852fafb293a693be830171f4674947289fafb07f8ecdbafa5c0aaae6d1bf8b",
+      "reviewed_lines": [
+        [
+          1,
+          500
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSnapshotKeychain.kt",
+      "reviewed_native14_sha256": "511aff877a27eb3f42ce4891203a830ba8879781de405e2248c3873f5f381a5e",
+      "reviewed_lines": [
+        [
+          1,
+          205
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/iosMain/kotlin/com/parlor/app/storage/PlatformStorage.ios.kt",
+      "reviewed_native14_sha256": "cb69b6de029bf7d9f84dbc5bf19139150906a29d64cf29a60994259ca657a0c0",
+      "reviewed_lines": [
+        [
+          1,
+          19
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/storage/src/commonMain/kotlin/com/parlor/storage/snapshot/FileBackedSnapshotStore.kt",
+      "reviewed_native14_sha256": "e2ca0be28fd2f0eafee1a55022653190cf30a8c6da620dc3dfe56f361e0da27f",
+      "reviewed_lines": [
+        [
+          1,
+          246
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/session/src/commonMain/kotlin/com/parlor/session/passandplay/PassAndPlaySessionController.kt",
+      "reviewed_native14_sha256": "d2a6b6fbc0a78685fe192e16894907cc98a51f1a30dd48ce0095a0d2745d8008",
+      "reviewed_lines": [
+        [
+          1,
+          159
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/session/src/commonMain/kotlin/com/parlor/session/party/PartyAwareSession.kt",
+      "reviewed_native14_sha256": "9eb291761264e54b509cdd8baa5cbb8d54348f616646746a44801bdcd783a483",
+      "reviewed_lines": [
+        [
+          1,
+          86
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/iosMain/kotlin/com/parlor/designsystem/localization/IosLanguageOverrideOwner.kt",
+      "reviewed_native14_sha256": "959ab1a8cb955e484c806c8ce5af65ca841a20cfcd9b1f205443a1cfe768da20",
+      "reviewed_lines": [
+        [
+          1,
+          61
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/iosMain/kotlin/com/parlor/designsystem/localization/LocalAppLocale.ios.kt",
+      "reviewed_native14_sha256": "0e0783ca3e38634bd3469760f5dbfa5ade8509b976d0ec676202f4513cd8e098",
+      "reviewed_lines": [
+        [
+          1,
+          83
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/passandplay/MafiaGameFlow.kt",
+      "reviewed_native14_sha256": "8f250d62f8afb48e407c30e5382eb4758bc4ad53dee5168af8e3452ad3e840f6",
+      "reviewed_lines": [
+        [
+          1,
+          509
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/passandplay/MafiaPassAndPlayPhaseRouter.kt",
+      "reviewed_native14_sha256": "1371eb747579362548f3962a520c2c3f3c2f6225ef551bad93e3e690e08a1fe6",
+      "reviewed_lines": [
+        [
+          1,
+          751
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/L08MafiaSnapshots.kt.in",
+      "reviewed_native14_sha256": "7674ec0e0d5e5481e18e8e9c97c0f7299e73550f3c91c0ada60cdd743da8a5e3",
+      "reviewed_lines": [
+        [
+          1,
+          190
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/L08StorageFunctionalProbe.kt.in",
+      "reviewed_native14_sha256": "be4337e6c7c5ea60cf9c1a35a172bce4ba3ca41c4ae328814d5c0e5a3a0c2410",
+      "reviewed_lines": [
+        [
+          1,
+          586
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/L08StorageFunctionalUITests.swift.in",
+      "reviewed_native14_sha256": "30ea69c2e8537b4e8dd451972342b3a2ac16c4759b8b77fb329637f4a3407d02",
+      "reviewed_lines": [
+        [
+          1,
+          170
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/L08UiSeam.kt.in",
+      "reviewed_native14_sha256": "22d9e352ba6c4b8e161b2e69f1aae208a0c9a654ed85284ef4a34c2ea63399e4",
+      "reviewed_lines": [
+        [
+          1,
+          71
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/l08_copy.py",
+      "reviewed_native14_sha256": "c2bf28bf0efd9449d646c451d7b8e665000e8d11a3a6eea76de95e1fb4a55a5f",
+      "reviewed_lines": [
+        [
+          1,
+          166
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/l08_functional_copy.py",
+      "reviewed_native14_sha256": "417865a86daca8c09e1d650abc2d46b20920a128d95d2021ad365e38e7a207a4",
+      "reviewed_lines": [
+        [
+          1,
+          47
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/l08_functional_receipts.py",
+      "reviewed_native14_sha256": "198e661f90d8152c64a2464ecd887aaca530ca831cf1344b62acac551e7f0a2d",
+      "reviewed_lines": [
+        [
+          1,
+          193
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/native_readiness_receipts.py",
+      "reviewed_native14_sha256": "d350c850e7f2152cbbeaf369465580ecfaa80e6691269130efbcdd8c936f816f",
+      "reviewed_lines": [
+        [
+          1,
+          266
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/probe_validation.py",
+      "reviewed_native14_sha256": "134bb3affe45711ec3f74d7091ec59b7f859ca4f5fa04df1d895ce3250fd3aa2",
+      "reviewed_lines": [
+        [
+          1,
+          348
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/app_foundation_receipts.py",
+      "reviewed_native14_sha256": "d72cd42eb71c321e864ae2c34dec0c2366b57915966d60b520b72bbcbe227655",
+      "reviewed_lines": [
+        [
+          160,
+          264
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/L08AppFoundation.m.in",
+      "reviewed_native14_sha256": "2fd43b9c9c6d33b9ba76f5dde9eb673c46dc5784917de403ed1781e516733c09",
+      "reviewed_lines": [
+        [
+          1,
+          273
+        ],
+        [
+          348,
+          501
+        ]
+      ]
+    }
+  ],
+  "evidence": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-14/receipt.json",
+      "sha256": "041678e815ad1275de3e9930ef3403a0408c51ebc69e5c0504e2bad517d027c2"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-14/xcodebuild.log",
+      "sha256": "afa034e4b927b7aa589152e3d5499a26d9a379666304917f4474bc4a0439a81f"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-14/xcresult-summary.json",
+      "sha256": "ab8bca8e557e241d0c0b01d24865e913e0fb23b8154a068c9dbbbf34d9ad61ea"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-14/app-foundation-copy-binding.json",
+      "sha256": "d28f923b153ff69afca37316e736fa67995963e19a49c348188c570eaccf1910"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-14/built-app-binary-inventory.json",
+      "sha256": "0f261aedb1a2f4b9355de58bee17075ea6d283cab541f29e457874ba81243fe0"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-14/installed-app-binary-inventory.json",
+      "sha256": "0f261aedb1a2f4b9355de58bee17075ea6d283cab541f29e457874ba81243fe0"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-14/parlor-l08-app-foundation.json",
+      "sha256": "1447590db04f780d2b9a215d18a8951738612df78c5ecf90771dc8339db5e01b"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-14/probe-readiness-result.json",
+      "sha256": "adf6bf784f78433101c35dd543f0369b6938dcc93600e26b1b2211980b8d38f1"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-14/probe-settings-result.json",
+      "sha256": "6e0042a12b72c373d698f3b9e65b32050ba96a0858152b49d56b6b07c4d8341c"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-14/probe-l08-storage-functional-result.json",
+      "sha256": "30ea66b7a1b06d12e84c0531fc850242c9c01bbf6a6b8297052d6179a894074a"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-14/copied-source-manifest.json",
+      "sha256": "d4c94365e690811beb54d55cdd271b36aca635ecdab95c861453a87f02f82228"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-14/copied-source-inputs-after-build.json",
+      "sha256": "aa434e00b54d334ebf1737401e64bce3345e23660c044b7512ba2eea76b201ec"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-14/secondary-fifo-ownership-final.json",
+      "sha256": "8c471f4c98a69a7b5bab5d5b5c9eb7619cb67b1891b25b0756a05a4b8171564c"
+    }
+  ],
+  "continuation": "Root may execute only reviewed minimal identity/check-stage changes after independent review and new exact control binding. No original receipt rewrite or expanded harness required. Original strict L08 unsuccessful Complete checks, boot10 cause, later missing scenarios, hardware protection, physical LAN and Store readiness remain explicit."
+}

@@ -1,0 +1,61 @@
+{
+  "researcher": "/root/release_fix_review",
+  "scope": "Public read-only documentation only; no workflow dispatch or credentials",
+  "sources": [
+    {
+      "url": "https://cli.github.com/manual/gh_workflow_run",
+      "accessed_at": "2026-09-07T18:32:16.636340+00:00",
+      "final_url": "https://cli.github.com/manual/gh_workflow_run",
+      "http_status": 200,
+      "sha256": "a44583d8ab9f347a2ae0687e9db1a1b7954d148daf43b3fa75b5857f56711c3f",
+      "bytes": 101911,
+      "relevant_excerpts": [
+        " \"gh help api\"). --json Read workflow inputs as JSON via STDIN -f , --raw-field <key=value> Add a string parameter in key=value format -r , --ref <string> Branch or tag name which contains the version of the workflow file you'd like to run Options inherited from parent commands -R , --repo <[HOST/]OWNER/REPO> Select another repository using the [HOST/]OWNER/REPO format Examples # Have gh prompt you for what work",
+        "e remote's default branch $ gh workflow run triage.yml # Run the workflow file 'triage.yml' at a specified ref $ gh workflow run triage.yml --ref my-branch # Run the workflow file 'triage.yml' with command line inputs $ gh workflow run triage.yml -f name = scully -f greeting = hello # Run the workflow file 'triage.yml' with JSON via standard input $ echo '{\"name\":\"scully\", \"greeting\":\"hello\"}' | gh workflow run ",
+        "for what workflow you'd like to run and interactively collect inputs $ gh workflow run # Run the workflow file 'triage.yml' at the remote's default branch $ gh workflow run triage.yml # Run the workflow file 'triage.yml' at a specified ref $ gh workflow run triage.yml --ref my-branch # Run the workflow file 'triage.yml' with command line inputs $ gh workflow run triage.yml -f name = scully -f greeting = hello # Run the w",
+        "it list licenses org list pr checkout checks close comment create diff edit list lock merge ready reopen revert review status unlock update-branch view preview prompter project close copy create delete edit field-create field-delete field-list item-add item-archive item-create item-delete item-edit item-list link list mark-template unlink view release create delete-asset delete download edit list upload verify-as",
+        "it list licenses org list pr checkout checks close comment create diff edit list lock merge ready reopen revert review status unlock update-branch view preview prompter project close copy create delete edit field-create field-delete field-list item-add item-archive item-create item-delete item-edit item-list link list mark-template unlink view release create delete-asset delete download edit list upload verify-as",
+        " workflow you'd like to run and interactively collect inputs $ gh workflow run # Run the workflow file 'triage.yml' at the remote's default branch $ gh workflow run triage.yml # Run the workflow file 'triage.yml' at a specified ref $ gh workflow run triage.yml --ref my-branch # Run the workflow file 'triage.yml' with command line inputs $ gh workflow run triage.yml -f name = scully -f greeting = hello # Run the w",
+        "s default branch $ gh workflow run triage.yml # Run the workflow file 'triage.yml' at a specified ref $ gh workflow run triage.yml --ref my-branch # Run the workflow file 'triage.yml' with command line inputs $ gh workflow run triage.yml -f name = scully -f greeting = hello # Run the workflow file 'triage.yml' with JSON via standard input $ echo '{\"name\":\"scully\", \"greeting\":\"hello\"}' | gh workflow run triage.yml",
+        "elete get list set workflow disable enable list run view gh workflow run gh workflow run [<workflow-id> | <workflow-name>] [flags] Create a workflow_dispatch event for a given workflow. This command will trigger GitHub Actions to run a given workflow file. The given workflow file must support an on.workflow_dispatch trigger in order to be run in this way. If the workflow file supports inputs, they can be specified in a few ",
+        "ent for a given workflow. This command will trigger GitHub Actions to run a given workflow file. The given workflow file must support an on.workflow_dispatch trigger in order to be run in this way. If the workflow file supports inputs, they can be specified in a few ways: Interactively Via -f/--raw-field or -F/--field flags As JSON, via standard input The created workflow run URL will be returned if available. Options -F , "
+      ]
+    },
+    {
+      "url": "https://docs.github.com/en/actions/how-tos/manage-workflow-runs/manually-run-a-workflow",
+      "accessed_at": "2026-09-07T18:32:19.176893+00:00",
+      "final_url": "https://docs.github.com/en/actions/how-tos/manage-workflow-runs/manually-run-a-workflow",
+      "http_status": 200,
+      "sha256": "f4e4f9bf8e1980b163ea0d089bebaded3f742647db3302e0d6991b545364ed48",
+      "bytes": 307280,
+      "relevant_excerpts": [
+        ", \"greeting\":\"hello\"}' | gh workflow run greet.yml --json To run a workflow on a branch other than the repository's default branch, use the --ref flag. gh workflow run WORKFLOW --ref BRANCH To view the progress of the workflow run, use the run watch subcommand and select the run from the interactive list. gh run watch Running a workflow using the REST API When using the REST API, you configure the inputs and ref",
+        "run greet.yml --json To run a workflow on a branch other than the repository's default branch, use the --ref flag. gh workflow run WORKFLOW --ref BRANCH To view the progress of the workflow run, use the run watch subcommand and select the run from the interactive list. gh run watch Running a workflow using the REST API When using the REST API, you configure the inputs and ref as request body parameters. If the i",
+        "the workflow must be configured to run on the workflow_dispatch event. To trigger the workflow_dispatch event, your workflow must be in the default branch. For more information about configuring the workflow_dispatch event, see Events that trigger workflows . Write access to the repository is required to perform these steps. Running a workflow On GitHub, navigate to the main page of the repository. Under your repository ",
+        "ut. echo '{\"name\":\"mona\", \"greeting\":\"hello\"}' | gh workflow run greet.yml --json To run a workflow on a branch other than the repository's default branch, use the --ref flag. gh workflow run WORKFLOW --ref BRANCH To view the progress of the workflow run, use the run watch subcommand and select the run from the interactive list. gh run watch Running a workflow using the REST API When using the REST API, you configure the",
+        "flow must be configured to run on the workflow_dispatch event. To trigger the workflow_dispatch event, your workflow must be in the default branch. For more information about configuring the workflow_dispatch event, see Events that trigger workflows . Write access to the repository is required to perform these steps. Running a workflow On GitHub, navigate to the main page of the repository. Under your repository ",
+        " information about configuring the workflow_dispatch event, see Events that trigger workflows . Select the Branch dropdown menu and click a branch to run the workflow on. If the workflow requires input, fill in the fields. Click Run workflow . Note To learn more about GitHub CLI, see About GitHub CLI . To run a workflow, use the workflow run subcommand. Replace the workflow parameter with either the name, ID, or ",
+        "nputs as JSON by using standard input. echo '{\"name\":\"mona\", \"greeting\":\"hello\"}' | gh workflow run greet.yml --json To run a workflow on a branch other than the repository's default branch, use the --ref flag. gh workflow run WORKFLOW --ref BRANCH To view the progress of the workflow run, use the run watch subcommand and select the run from the interactive list. gh run watch Running a workflow using the REST API",
+        " '{\"name\":\"mona\", \"greeting\":\"hello\"}' | gh workflow run greet.yml --json To run a workflow on a branch other than the repository's default branch, use the --ref flag. gh workflow run WORKFLOW --ref BRANCH To view the progress of the workflow run, use the run watch subcommand and select the run from the interactive list. gh run watch Running a workflow using the REST API When using the REST API, you configure the",
+        "unner Controller Get started Troubleshoot Develop agentic workflows Manually running a workflow When a workflow is configured to run on the workflow_dispatch event, you can run the workflow using the Actions tab on GitHub, GitHub CLI, or the REST API. Tool navigation GitHub CLI Web browser Copy as Markdown In this article Configuring a workflow to run manually Running a workflow Running a workflow using the REST API Configu",
+        "orkflow using the REST API Configuring a workflow to run manually To run a workflow manually, the workflow must be configured to run on the workflow_dispatch event. To trigger the workflow_dispatch event, your workflow must be in the default branch. For more information about configuring the workflow_dispatch event, see Events that trigger workflows . Write access to the repository is required to perform these steps. Runnin",
+        " workflow to run manually To run a workflow manually, the workflow must be configured to run on the workflow_dispatch event. To trigger the workflow_dispatch event, your workflow must be in the default branch. For more information about configuring the workflow_dispatch event, see Events that trigger workflows . Write access to the repository is required to perform these steps. Running a workflow On GitHub, navigate to the ",
+        "atch event. To trigger the workflow_dispatch event, your workflow must be in the default branch. For more information about configuring the workflow_dispatch event, see Events that trigger workflows . Write access to the repository is required to perform these steps. Running a workflow On GitHub, navigate to the main page of the repository. Under your repository name, click Actions . In the left sidebar, click the name of t",
+        "o run. Above the list of workflow runs, click the Run workflow button. Note To see the Run workflow button, your workflow file must use the workflow_dispatch event trigger. Only workflow files that use the workflow_dispatch event trigger will have the option to run the workflow manually using the Run workflow button. For more information about configuring the workflow_dispatch event, see Events that trigger workflows . Sele",
+        "ton. Note To see the Run workflow button, your workflow file must use the workflow_dispatch event trigger. Only workflow files that use the workflow_dispatch event trigger will have the option to run the workflow manually using the Run workflow button. For more information about configuring the workflow_dispatch event, see Events that trigger workflows . Select the Branch dropdown menu and click a branch to run the workflow"
+      ]
+    },
+    {
+      "url": "https://docs.github.com/en/actions/how-tos/manage-workflow-runs/re-run-workflows-and-jobs",
+      "accessed_at": "2026-09-07T18:32:26.553347+00:00",
+      "final_url": "https://docs.github.com/en/actions/how-tos/manage-workflow-runs/re-run-workflows-and-jobs",
+      "http_status": 200,
+      "sha256": "63c54cd520b039a7813ad0bfcd5590ed879a9fdf5c81f717147a385a3106e0e3",
+      "bytes": 344802,
+      "relevant_excerpts": [
+        "e actor who initially triggered the workflow, not the privileges of the actor who initiated the re-run. The workflow will also use the same GITHUB_SHA (commit SHA) and GITHUB_REF (git ref) of the original event that triggered the workflow run. A workflow run can be re-run a maximum of 50 times. This limit includes both full re-runs and re-runs of a subset of jobs. Re-running all the jobs in a workflow On GitHub, navi",
+        "red the workflow, not the privileges of the actor who initiated the re-run. The workflow will also use the same GITHUB_SHA (commit SHA) and GITHUB_REF (git ref) of the original event that triggered the workflow run. A workflow run can be re-run a maximum of 50 times. This limit includes both full re-runs and re-runs of a subset of jobs. Re-running all the jobs in a workflow On GitHub, navigate to the main page of the"
+      ]
+    }
+  ]
+}

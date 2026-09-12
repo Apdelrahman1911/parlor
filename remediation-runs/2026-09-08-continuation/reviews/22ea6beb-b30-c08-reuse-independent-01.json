@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/historical_scope",
+  "reviewed_at": "2026-09-11T13:15:31.280369+00:00",
+  "status": "SCOPED_HISTORICAL_B30_C08_REUSE_RETAINED_AT_22EA6BEB_NOT_NEW_EXECUTION",
+  "source": {
+    "baseline": "d3c0df9ccba51463708728c3c618d3652e76aafa",
+    "target": "22ea6bebb95317e148d89b03c40cbb7efc9d36a4",
+    "target_tree": "e1a94305eb7af228bb2a80841f6adb3bc00162aa",
+    "HEAD_matches_target": true,
+    "remote_checked": false
+  },
+  "reused_review": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/d3c0df9c-b30-c08-reuse-independent-01.json",
+    "sha256": "ad21833e03133231b733f7bce625e9447814ef750e6ae933a3477ec6f5eff192",
+    "path_list_review": "remediation-runs/2026-09-08-continuation/reviews/1c3c33fe-b30-c08-applicability-independent-01.json",
+    "path_list_review_sha256": "42134ead29202240aa5aeb6bbfad8a3e0dae22de4eb81c3c2abfaac3f1dde223",
+    "verification": "Prior receipt, existing path-list review and historical B30 manifest match both current files and target Git blobs. Accepted historical runtime reviews are reused, not re-audited."
+  },
+  "checks": {
+    "B30": {
+      "compared": 98,
+      "unchanged": 98,
+      "accepted_baseline_frozen_current_sha256_exceptions": [],
+      "baseline_to_target_mode_content_changes": [],
+      "working_tree_mode_content_changes": [],
+      "git_projection_sha256": "a349d566f5b59fc2041bcdd545fad44f45717321378a3332242b7c289802e925"
+    },
+    "C08": {
+      "compared": 14,
+      "unchanged": 14,
+      "accepted_baseline_frozen_current_sha256_exceptions": [],
+      "baseline_to_target_mode_content_changes": [],
+      "working_tree_mode_content_changes": [],
+      "git_projection_sha256": "3ceb583f2cc45faed11db37bb5a9a0d9b33cf1d447a7677d1eb6bf6503cbdc75"
+    }
+  },
+  "B30_closure": {
+    "historical_bound_rows": 99,
+    "unbound_rows": 98,
+    "only_excluded_binding": {
+      "path": "remediation-runs/2026-09-08-continuation/ios-readiness-source-ci.json",
+      "sha256": "c3e7a371207d387d5e24d2b94b682004f0603624de7722b50431dc5514f5c7be"
+    },
+    "normal_support_directory_tree_objects_unchanged": true,
+    "current_closed_selection": 98,
+    "selection": "25 normal +72 support +1 pinned Darwin helper; no added selected control."
+  },
+  "projection_format": "SHA256 of compact JSON sorted [[path,mode,type,object],...], with the exact previous path sets.",
+  "historical_executions": {
+    "B30": {
+      "source": "360fc797a85e1e494334fd8cc11b4e739981cea8",
+      "run": "34362984912/1",
+      "scope": "Accepted normal Debug/selected-image libproc/notices/signature/recorded cleanup only; whole A29/B30 workflow failure and original limitations retained."
+    },
+    "C08": {
+      "source": "75c104734373703570a307de9c7a53d291bc2718",
+      "scope": "Accepted dependency export/render/consumer evidence retains its unchanged fourteen-input scope; no new22ea source-bound candidate or consumer execution."
+    }
+  },
+  "findings": [],
+  "conclusion": "98/98 B30 controls and14/14 C08 inputs remain unchanged. No expensive B/C rerun is justified solely by this out-of-closure diagnostic/evidence/inventory delta. Retain historical scoped applicability only.",
+  "limits": "Full-source/copied manifests differ and old bindings are not current bindings. No original execution is relocated to22ea; no whole-tree/binary equality or new runtime is claimed. This narrow reuse receipt does not substitute for the final same-SHA full qualification gate, clear strict protection, or approve device/Store/legal readiness. No broad product/source audit was repeated.",
+  "activity": {
+    "method": "Read-only local Git on the existing path sets and stdlib file hashes/JSON/closed-directory membership. No project imports, tests/builds/reruns, API/network, dispatch, source edits or broad audit.",
+    "only_write": "remediation-runs/2026-09-08-continuation/reviews/22ea6beb-b30-c08-reuse-independent-01.json",
+    "cleanup": "No execution resources allocated or cleanup owed."
+  }
+}

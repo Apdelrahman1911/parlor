@@ -1,0 +1,342 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/native_ci",
+  "review_date_utc": "2026-09-10",
+  "review_kind": "Independent actual retained native runtime, source/control custody and cleanup review",
+  "status": "PASS",
+  "decision": "ACCEPT_SCOPED_OS39_RUNTIME_CUSTODY_AND_CLEANUP",
+  "scope": {
+    "run_id": 34458884532,
+    "run_attempt": 1,
+    "cycle": "ios-readiness-39",
+    "selection": "os-recovery-only",
+    "actual_runner_status": "SCOPED_OS_RECOVERY_VERIFIED",
+    "repository": "Apdelrahman1911/parlor",
+    "branch": "fix/local-readiness-2026-09-07",
+    "source_head": "75c104734373703570a307de9c7a53d291bc2718",
+    "source_tree": "4d5b660c5f508a3eb8d01cd9203f2503570dbb18",
+    "source_manifest_sha256": "b98e5ea13b1658273146a0c96b5d45cc7806d58498966f2e446070322ad7a97a",
+    "approved_os_control_sha256": "a7799abc4b865d0f7055bdf96640f6ddcc64650b954651c1285e7fa9bf3711c6",
+    "source_before_after_unchanged": true,
+    "controls_before_after_unchanged": true,
+    "workflow": ".github/workflows/production-verification.yml",
+    "environment": "Hosted macos-15-arm64 20260829.0321.1; Xcode 26.3/17C529, iOS Simulator SDK/runtime 26.2/23C54; ad-hoc Debug simulator copy"
+  },
+  "method": {
+    "independence": "Reviewer did not implement these driver/copy/control changes, dispatch this run, execute native builds, or create the retained runtime evidence.",
+    "performed": "Read-only local Git and retained evidence inspection plus independent Python standard-library assertions. Current applicable validator source was reopened only to interpret raw schema/oracles; no project module or validator was imported/executed. No builds, tests, native/simulator commands, network requests, Git writes or source/control edits performed by this reviewer.",
+    "underlying_evidence": "Reopened actual raw xcresult summaries/test trees, build/bootstrap/proof logs, all prerequisite/action/baseline markers, raw OS observations and three image records, binary/notices/product inventories, lifecycle JSONL/FIFO/finalization receipts, API/job/artifact/download metadata, original ZIP bytes and cleanup logs. Conclusions do not substitute prior agent summaries or harness-test results for these actual observations.",
+    "retained_archive_verification": "Three outer ZIPs passed CRC and exact extracted-content checks; seven recorded GET commands, producer run/attempt/workflow/job/artifact associations and repository/full-history/source bindings joined. All 840 source rows, 765 original copied inputs and 183 bound controls independently matched current Git source; all 28 copy diffs reconstructed to 777 copied inputs (16 modified originals, 12 additions), including unchanged after-build inventory.",
+    "cleanup_of_this_review": "No build/test lane, simulator, DerivedData, worker or generated build output created. Only this additive review report is written; no separate Gradle stop is invoked by the read-only reviewer while root owns the build lane."
+  },
+  "actual_execution": {
+    "actions_conclusion": "success",
+    "one_build_for_testing": {
+      "exit_code": 0,
+      "start": "2026-09-10T09:10:12.480982+00:00",
+      "finish": "2026-09-10T09:25:13.645752+00:00"
+    },
+    "bootstrap_test_without_building": {
+      "exit_code": 0,
+      "start": "2026-09-10T09:25:22.533894+00:00",
+      "finish": "2026-09-10T09:27:25.384933+00:00"
+    },
+    "proof_test_without_building": {
+      "exit_code": 0,
+      "start": "2026-09-10T09:28:19.610290+00:00",
+      "finish": "2026-09-10T09:31:18.464314+00:00"
+    },
+    "owned_simulator_uuid": "4FCD3233-375A-4F0C-B150-472D06369290",
+    "owned_simulator_name": "Parlor-Audit-parlor-audit-ios-readiness-39-39q12mj2",
+    "owned_temporary_directory": "/private/var/folders/bl/vzjcvbz95c3dk19cb0fw46180000gn/T/parlor-audit-ios-readiness-39-39q12mj2",
+    "bootstrap_token": "3BBDF0C4-53B8-4935-A4AC-0C8A30CC5159",
+    "proof_token": "FF9E1203-4422-4104-8BA6-7761FEE5DDF5",
+    "same_one_build_products_and_owned_resources": true,
+    "bootstrap_interpretation": "Actual public Settings flow initially required Arabic: General > Language & Region > Add Language > search/select Arabic > one unique Use English (US) primary-choice tap. Raw critical trace reaches Tap at 73.18s, Preferences idle at 73.64s and Tear Down at 74.20s. Its 26 prerequisite records deliberately stop at retainEnglishPrimary/before-activation; there is no fabricated post-tap preferred-list success. This stage alone is preparation, not the OS recovery oracle.",
+    "proof_interpretation": "Separately executed proof observes persisted English-primary/Arabic-secondary ordered rows and already-satisfied prerequisite with arabicAddedByThisPrerequisite=false. Only General/LanguageRegion prerequisite activations occur, not another add-language transaction. Actual per-app public actions apps > parlor > language > arabic each occur once with stable eligible frame and known-pane evidence. Actual Arabic app Settings, explicit English selection, System restoration, app termination/relaunch and restarted Arabic Settings precede guarded durable verified/completion reporting.",
+    "preference_join": "Pre-choice sequence4 first boot is System/unowned with absent appLanguages. OS-choice before_main6 and baseline7 second boot are System/unowned with PRESENT ['ar-US','en-US']. English9/10 owns ['en'] and remembers exact present original array; System11/12/13 restores exact presence/array and clears ownership. Restart before_main14 and actual Settings16/17 retain it. Four baseline receipts bind sequence4/first boot and sequence7/second boot without rebasing. Durable marker18 and completion19 follow restart; terminal20 remains unchanged.",
+    "provenance_interpretation": "All three actual process boots load Parlor and Parlor.debug.dylib. Compose is the separately identified owned-copy xcode-frameworks Debug simulator product, 84032296 bytes/SHA256 89b13e46324f92ee3cd08b94a034c26e672493b4a97ce1b933b0b1c8610ed700, UUID e64a79c7-93f6-3a68-a7d9-987e41c1fab7. Embedded Compose is 84050448 bytes/SHA256 85fb42ac4c74b05d495233761c0df704723171b1ff7d9f8663cf50227da99fc3 with the same UUID but different bytes. same_bytes_as_embedded=false is correctly preserved. Ten actual UUID commands, four built/installed binary inventory members, two external build variants and 119 one-build products reconcile; strict built/installed ad-hoc codesign commands both exit0.",
+    "notices_interpretation": "Twenty-six exact source notice resources independently match built and installed notice-package receipts and one-build-product byte counts/hashes; this is packaging evidence, not legal completeness/approval."
+  },
+  "source_custody_stage_cleanup_audit": {
+    "status": "ACTUAL_OS39_SOURCE_CUSTODY_STAGE_CLEANUP_JOINS_PASS",
+    "source_rows": 840,
+    "copy_originals": 765,
+    "copy_rows": 777,
+    "changed_originals": 16,
+    "added_inputs": 12,
+    "reconstructed_diff_files": 28,
+    "controls": 183,
+    "native_files": 63,
+    "archives": [
+      {
+        "pin": {
+          "path": "remediation-runs/2026-09-08-continuation/actions/34458884532/native-cleanup.zip",
+          "bytes": 1311,
+          "sha256": "610c9a0a44b37b9e5d6158e3ed21850660c522d131c1f06524e5dc69ab8a6330"
+        },
+        "members": 1,
+        "expanded_bytes": 2479
+      },
+      {
+        "pin": {
+          "path": "remediation-runs/2026-09-08-continuation/actions/34458884532/native-evidence.zip",
+          "bytes": 1927898,
+          "sha256": "4037aeb366a7c62e2a8e81c84a6ed2c8d7f1fa9d8153c3205472abcaae1f08e8"
+        },
+        "members": 69,
+        "expanded_bytes": 3967933
+      },
+      {
+        "pin": {
+          "path": "remediation-runs/2026-09-08-continuation/actions/34458884532/run-attempt-1-logs.zip",
+          "bytes": 25901,
+          "sha256": "0928d169bf1c6aff37897abadf21020bd21aec6af6e2ec8ba28314dc1b371b78"
+        },
+        "members": 14,
+        "expanded_bytes": 83658
+      }
+    ],
+    "archive_members": 84,
+    "get_commands": 7,
+    "ios_job_id": 102811702410,
+    "ios_step_counts": {
+      "success": 12,
+      "skipped": 21,
+      "failure": 0
+    },
+    "commands": 55,
+    "stage_durations": {
+      "build": {
+        "command_seconds": 901.165,
+        "stop_start_delay_seconds": 0.007
+      },
+      "bootstrap": {
+        "command_seconds": 122.851,
+        "stop_start_delay_seconds": 0.418
+      },
+      "proof": {
+        "command_seconds": 178.854,
+        "stop_start_delay_seconds": 0.006
+      }
+    },
+    "simulator_commands": 17,
+    "journal_rows": 70,
+    "build_handles_reaped": 38,
+    "finalization_stages": 15,
+    "owned_fifo_paths_removed": 4,
+    "runner_image": [
+      "macos-15-arm64",
+      "20260829.0321.1"
+    ],
+    "cleanup": "PASS",
+    "pins": [
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34458884532/native-evidence/ios-readiness-39/receipt.json",
+        "bytes": 450483,
+        "sha256": "b8f6122659ef87408921f804aaa2f459a72059c34e8e14470a3861305a26e839"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34458884532/native-evidence/continuation.json",
+        "bytes": 17581,
+        "sha256": "14024cfc3d8d7f27607d358db24275330ce0738473bb21a31c5cf8423e8cd801"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34458884532/download-receipt.json",
+        "bytes": 49095,
+        "sha256": "846fa35691b48c4c3d7c5e2b485580105224062f60e3e05345e33f7ac7722a1d"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34458884532/native-cleanup/parlor-native-34458884532-1-cleanup.json",
+        "bytes": 2479,
+        "sha256": "2b2b8122a9917397446585442ed543d413a49aeecd3544bfe3cfc7c79c781616"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/os-recovery-evidence-01/watcher-collection-receipt.json",
+        "bytes": 746,
+        "sha256": "5f0c3a1e71ea8d8333f4965cafb896ae2766967f65ea232d4e78363f303404f5"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34458884532/native-evidence/ios-readiness-39/copied-source.diff",
+        "bytes": 405646,
+        "sha256": "f9a72c12cfc4f65b0b4f1e82cd30178004adbde13cbf333df81fcb4dd0b9994f"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34458884532/native-evidence/ios-readiness-39/simulator-lifecycle.jsonl",
+        "bytes": 31150,
+        "sha256": "e62f5ec35655e8b2da96086396086970fb95a5200a0c76ce536993e5f8f25dd9"
+      }
+    ]
+  },
+  "raw_runtime_image_notice_audit": {
+    "status": "ACTUAL_OS39_RAW_XCTEST_OBSERVATION_IMAGE_NOTICE_JOINS_PASS",
+    "tests": [
+      {
+        "stage": "bootstrap",
+        "method": "IOSAppLaunchUITests/testDSC01OSPublicBootstrap()",
+        "pass_count": 1,
+        "fail_count": 0,
+        "skip_count": 0,
+        "duration_seconds": 74.53744804859161
+      },
+      {
+        "stage": "proof",
+        "method": "IOSAppLaunchUITests/testDSC01OSPerAppRecovery()",
+        "pass_count": 1,
+        "fail_count": 0,
+        "skip_count": 0,
+        "duration_seconds": 165.27948808670044
+      }
+    ],
+    "observations": 20,
+    "before_main_ordinals": [
+      1,
+      6,
+      14
+    ],
+    "boots": [
+      "012556A0-6670-49CC-BB4A-6A9E766C5F37",
+      "C0AA5339-BB91-4E93-940F-1C4F16776F30",
+      "85D584BF-56F9-4599-B921-925E93ACED56"
+    ],
+    "process_ids": [
+      75941,
+      78606,
+      81650
+    ],
+    "bootstrap_prerequisite_rows": 26,
+    "proof_prerequisite_rows": 16,
+    "public_interaction_rows": 44,
+    "pane_observations": 37,
+    "known_public_panes": 22,
+    "os_preference_representation": "PRESENT",
+    "exact_preserved_array": [
+      "ar-US",
+      "en-US"
+    ],
+    "preference_baseline_joins": 4,
+    "required_loaded_app_images": 2,
+    "artifact_bindings": 10,
+    "one_build_products": 119,
+    "uuid_commands_exit0": 10,
+    "strict_signature_commands_exit0": 2,
+    "source_built_installed_notices": 26,
+    "outer_direction_limitation": "English observations 9/10 retain outerDirection=force_rtl while nativeDirection=force_ltr and actual Settings composition=ltr; no outer semantic-direction equivalence claim.",
+    "pins": [
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34458884532/native-evidence/ios-readiness-39/parlor-dsc01-os-result.json",
+        "bytes": 29802,
+        "sha256": "1beaed4bb0f625a97f9b3816e587118abcd72170150eee53502c481c40b82b12"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34458884532/native-evidence/ios-readiness-39/bootstrap-xcresult-summary.json",
+        "bytes": 1001,
+        "sha256": "4204d9374802f372d46f3a1256711cd913a44937e4cd6d8f970bd3e930c9976e"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34458884532/native-evidence/ios-readiness-39/bootstrap-xcresult-tests.json",
+        "bytes": 1654,
+        "sha256": "e3fa9867746189aa97aa57c2e208d6608e4934893f01499f311f5481da35504d"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34458884532/native-evidence/ios-readiness-39/proof-xcresult-summary.json",
+        "bytes": 1002,
+        "sha256": "6b31adcc8cce7ca2d7f6fb9f1d9bf6d17a5aa84cb871dcff58d5d6fd5569f3dc"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34458884532/native-evidence/ios-readiness-39/proof-xcresult-tests.json",
+        "bytes": 1652,
+        "sha256": "054b3b4f103b6cc3addb05ac5c654fb2a7a10434102d63f7c86c7698d429424a"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34458884532/native-evidence/ios-readiness-39/bootstrap-xcodebuild.log",
+        "bytes": 77706,
+        "sha256": "1d6fb1bcd506a12aba01772d6f6b6bcee36b424714268d044b9abfad72a338d3"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34458884532/native-evidence/ios-readiness-39/proof-xcodebuild.log",
+        "bytes": 193346,
+        "sha256": "de17830402dad68a1969e7726662304b288ce49f9f39a37dcd039fd0f842dc8b"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34458884532/native-evidence/ios-readiness-39/external-image-artifact-bindings.json",
+        "bytes": 4719,
+        "sha256": "e1ad304efe323a154e377b588b94df957d89c55e0c5780921997f776110373ef"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34458884532/native-evidence/ios-readiness-39/built-installed-binary-inventory.json",
+        "bytes": 1565,
+        "sha256": "f9cde63d98f31658a6008bc9cdd3f0b8b105b7d5c0181e9866df0a54c04aad6a"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34458884532/native-evidence/ios-readiness-39/one-build-products.json",
+        "bytes": 47246,
+        "sha256": "0ed9719a80288a9ef251187b283cb850d8fed2adae9927164371cb0b5001d31d"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34458884532/native-evidence/ios-readiness-39/parlor-os-recovery-images-1.json",
+        "bytes": 1131,
+        "sha256": "8f06925d7f5b1b624d2a9745f781599ccf0865b00d65c675884c6e824498fe34"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34458884532/native-evidence/ios-readiness-39/parlor-os-recovery-images-2.json",
+        "bytes": 1131,
+        "sha256": "d16bc0c89c9d008400ebf34779a957872a94bd3fb15385ffe3e1b3ee17405aaf"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34458884532/native-evidence/ios-readiness-39/parlor-os-recovery-images-3.json",
+        "bytes": 1131,
+        "sha256": "589c80fc53b13eb39ec7b74f2abd978f60b09c69cb7d8e7698b6247deed462df"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34458884532/native-evidence/ios-readiness-39/built-notice-package.json",
+        "bytes": 10407,
+        "sha256": "5b22822de051375fe5f2a6ab54daa4db11c0addfd86b183e39a200c09ace2db5"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34458884532/native-evidence/ios-readiness-39/installed-notice-package.json",
+        "bytes": 10407,
+        "sha256": "5b22822de051375fe5f2a6ab54daa4db11c0addfd86b183e39a200c09ace2db5"
+      }
+    ]
+  },
+  "cleanup_conclusion": {
+    "status": "PASS",
+    "scope": "Retained hosted-runner receipts and exact raw journals/logs; not a fresh inspection of a retired Mac.",
+    "commands_exit0": 55,
+    "gradle_stops_exit0": 4,
+    "finalization_stages_pass": 15,
+    "direct_lifecycle_children_started": 17,
+    "direct_lifecycle_children_reaped": 17,
+    "build_handles": 38,
+    "build_handles_reaped": 38,
+    "lifecycle_journal_rows": 70,
+    "immediate_stops": "Stop invocations start 0.007s/0.418s/0.006s after build/bootstrap/proof Xcode returns; bootstrap stop itself takes about 18.7s. Embedded build_exit=0/stop_exit=0. All four retained stop logs report no running Gradle daemons.",
+    "destructive_barrier": "Strict postbuild preservation/stop/fresh ownership refresh/handle-reaping barrier PASS precedes shutdown and deletion of the exact owned UUID; directory and simulator metadata absence attested.",
+    "task_owned_cleanup": "Two attested ibtoold FIFOs and two containing directories removed, final pending list empty, ownership/final receipts identical. Exact owned temporary directory removed, no remaining owned processes, unknown holders or cleanup errors; shared Gradle caches retained, not deleted.",
+    "outer_custody": "Exactly 63 retained native-cycle files match both preservation and directory manifests. Native artifact upload succeeds before exact live cycle-evidence/source-binding/zero-byte lock removal; outer cleanup status PASS and raw cleanup step log equals the retained cleanup receipt. Watcher collection complete/watch0/stop0 and post-collection stop reports no daemons."
+  },
+  "warnings_and_review_corrections": [
+    "Bootstrap log contains a post-PASS XPC connection interrupted warning; proof teardown checks crash reports after intentional app termination. Exact testcase summaries still show one PASS each, zero failures/skips. These warnings are retained, not relabeled as failures or erased.",
+    "English observations9/10 retain outerDirection=force_rtl while nativeDirection=force_ltr and actual Settings composition=ltr. The unchanged common oracle requires stable outer/Compose identities and valid outer direction, not equality of those distinct direction fields; no outer semantic-direction equivalence is claimed.",
+    "Inspection-only assumptions were corrected against raw evidence: the native preservation manifest has63 files, not an initially assumed64;37 pane observations comprise34 direct plus3 nested audit panes. Exploratory projections also used incorrect events/name/log/list keys before reading their actual shapes. These are reviewer read/assertion errors, not native/application test failures; no evidence or canonical validation was changed. Both final independent assertion audits exit0."
+  ],
+  "open_findings": [],
+  "limitations": [
+    "This accepts only OS39's actual split public prerequisite/per-app OS recovery, its copy-instrumented runtime image/notices binding and cleanup. It is not whole A, normal B or final combined D qualification.",
+    "runtime_evidence_status, provenance_status and notice_package_status remain NOT_RUN for normal B; original l08 and normal lanes are unselected/NOT_RUN_THIS_RUN. OS provenance must not be passed off as libproc normal-binary evidence.",
+    "Image collection is one non-atomic dyld observation per boot. Runtime file SHA256 is not hashing every mapped page/all mappings, and equal Mach-O UUIDs do not prove equal bytes. Ad-hoc simulator codesign is not Store signing evidence.",
+    "A37 remains failed: natural exit65, four PASS and one signal-kill FAIL, no skipped testcase. Its cause remains unproven; separately accepted scoped functional/host retrospective observations do not convert A37 to PASS.",
+    "Strict file-protection observations remain0/26 FAIL/unresolved. OS39 contains no strict file-protection rerun or waiver.",
+    "No physical-device, Windows, Store-operation/publication, owner/privacy/account or legal approval is supplied here. No claim that all four workstreams or release readiness are complete.",
+    "No unseen final-D request is approved by this report; root retains responsibility for fresh full-D request/admission/source bindings and independent actual-result review."
+  ],
+  "final_conclusion": {
+    "scoped_os39_runtime": "PASS",
+    "scoped_os39_custody": "PASS",
+    "scoped_os39_cleanup": "PASS",
+    "safe_cleanup_evidence_for_coordinator_next_admission": true,
+    "final_combined_qualification": "NOT_EXECUTED_BY_THIS_REVIEW",
+    "readiness": "NOT_READY"
+  }
+}

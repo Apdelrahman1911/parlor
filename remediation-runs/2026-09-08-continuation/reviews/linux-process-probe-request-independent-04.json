@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/native_ci",
+  "decision": "APPROVE_EXACT_LP04_SINGLE_COORDINATED_DISPATCH",
+  "status": "FRESH_BINDING_ADMISSION_PASS_NOT_RUNTIME",
+  "completed_at": "2026-09-10T15:21:19.856Z",
+  "source": {
+    "head": "9e40261e0dc5bd224526eda6126350ac6a6b8bcb",
+    "tree": "dfd8021abc17ebf56f796f787b46b375cade68d2",
+    "source_commit": "cafd4143b3d2f2458b2d02725a9f419c7fd03ed7",
+    "branch": "fix/local-readiness-2026-09-07",
+    "tracked_clean": true,
+    "full_history": true
+  },
+  "controls": {
+    "files": 12,
+    "sha256": "5d253ee71d35f601910a897fc211b00861360052bd554df3837bdf3acf410f41"
+  },
+  "inventory": {
+    "rows": 29091,
+    "sha256": "15606c0c879a0b7e2c36fe41b3547697626e2ac1c4a168ac180469651b80d4d5"
+  },
+  "checks": "Exact request hash/three inputs/gh command,12 frozen Git blobs/current bytes/sorted digest,9 independently approved canonical pins, reviewed-source commit followed by inventory-only child, and normal-push/direct-remote/stop0 receipt reconcile. No additional canonical change beyond those9 files; untracked work preserved.",
+  "reuse": "Sealed core v2 and integration/123-actual-control reviews reused at identical bytes. Their11 retained local evidence files and20 explicit frozen controls still match; no source rereview, test rerun or runtime relabelling. Mechanical inventory generation/check0 records and29091-row frozen CSV digest agree.",
+  "scope": "Exactly one Ubuntu24.04x64 job,10-minute LP path. Existing emulator-package-only prerequisite bounded180s+10s with4-minute step; no platform/system-image package, build, emulator, application, Apple/Windows or Store execution. Other4jobs excluded. Explicit v2 read-only host sampling and3 owned real controls only; default reader remains unprivileged.",
+  "required_actual_acceptance": {
+    "overall": "Complete successful initial/final host scans, probe and cleanup PASS, no scan errors or matching bound-SDK executables. Fresh run/source/control/platform/SDK/artifact custody and stop0 required.",
+    "controls": "Exact ordered(1,unprivileged),(0,unprivileged),(0,sudo-proc-exe-v2) CONTROL_PASS, child exits0/reaped and fixtures removed. Original nondumpable unprivileged audit remainsFAIL; privileged nondumpable audit requires exact1EACCES/1privileged read,2/2 selected samples and zero mixed counters.",
+    "mixed_coverage": "At least one successful complete host scan must have positive mixed_uid_privileged_samples. Zero coverage is not execution proof of the new mixed branch, even if workflow succeeds; no blind retry.",
+    "clarified_counter_constraints": [
+      "0 <= mixed_uid_privileged_samples <= mixed_uid_samples <= selected_uid <= sampled == enumerated",
+      "mixed_uid_privileged_samples <= privileged_reads <= eacces_denials"
+    ],
+    "clarification": "Root explicitly confirmed these two separate inequalities without editing the sealed request. They do not require all readable mixed or selected processes to be privileged. Positive counts from failed scans cannot meet acceptance."
+  },
+  "coordinator_prerequisite": "Root alone must immediately recheck exact local/remote source/tree/clean controls, intended active workflow and no live same-ref run, then dispatch once. Existing cancel-in-progress must not supersede live work. Reviewer made no network query or dispatch.",
+  "pins": [
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/linux-process-probe-04/request.json",
+      "bytes": 5827,
+      "sha256": "18d6b2d92c57983a1d6e94116f46e52e3f0448367d2998ca8f00e209925ede4c"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/linux-process-probe-04/freeze-push-receipt.json",
+      "bytes": 22021,
+      "sha256": "146177f7036c9b17329a3e02cd63c0266b0d8a60380d6f90824f0c67b71169a8"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/linux-exe-reader-v2-independent-01.json",
+      "sha256": "66e72a7a39c4187a992d7bd5a956eb325b7557a18e4944706b27ef92ccc110c5"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/linux-exe-reader-v2-adc-integration-independent-01.json",
+      "sha256": "6c0025361f1f8525a5f6a0410850d90deac968761568ac62a0cdb4f2285b607c"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/linux-probe-03-actual-independent-01.json",
+      "sha256": "3afe98a3ac8243fc10fb6c978fe41f1591055ada11756d591f52e34d3a55d4ec"
+    }
+  ],
+  "findings": [],
+  "preserved": {
+    "LP01": "FAIL",
+    "LP02": "FAIL",
+    "LP03": "FAIL",
+    "D03": "FAIL",
+    "historical_local_outer143": "PRESERVED",
+    "strict_ios_protection": "0PASS/26FAIL unresolved; not reopened by this mechanical admission",
+    "LP04_runtime": "NOT_RUN at review",
+    "verdict": "NOT_READY",
+    "limit": "No historical failed-PID/UID-tuple or D03-cause/retirement diagnosis, application/combined, physical-device, Store or owner/legal credit. Future ADC requires independent actual LP04 acceptance and a separate fresh18-control request, not this approval."
+  },
+  "reviewer_activity": "Read-only Git and standard-library JSON/CSV/hash comparisons; mechanical audit exit0, chunkbd3246. No project imports/validators/tests/builds, live process probes/signals, SDK, network/Actions, cleanup or canonical/Git edits. Only this additive JSON; no reviewer resource cleanup owed."
+}

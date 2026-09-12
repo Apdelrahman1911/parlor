@@ -1,0 +1,121 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-09-07T07:38:06.481749+00:00",
+  "reviewer": "/root/release_fix_review",
+  "status": "PASS \u2014 narrow font packaging/hash inspection only",
+  "root_authorization": "Explicit read-only release.apk font/package inspection after Android build cleanup; root retains artifact for owned runtime",
+  "apk": {
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-apk-stage-01/release.apk",
+    "sha256": "2cbcd12b525d949cc2cd03c82560946d3e9b7216ef86c7e3e08beaa9bc5a7308",
+    "matches_stage_receipt": true,
+    "identity_before": {
+      "dev": 16777232,
+      "ino": 84282073,
+      "uid": 501,
+      "size": 4818919,
+      "mtime_ns": 1788766274268024354
+    },
+    "identity_after": {
+      "dev": 16777232,
+      "ino": 84282073,
+      "uid": 501,
+      "size": 4818919,
+      "mtime_ns": 1788766274268024354
+    }
+  },
+  "stage_receipt": {
+    "path": "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-apk-stage-01/receipt.json",
+    "sha256": "9c0226c2abf47135d039ce9e6e4cea692e4d27102d1af93fe0cae5f6ce202b67",
+    "reported_status": "PASS",
+    "source_before": {
+      "commit": "1f809b87c15a4deb079809bc14718a58cf0fe451",
+      "tree": "6f6912d8612f71e07d2c338d860e906333ce8aad",
+      "diff_sha256": "ec0c1d52ea89502648e10252ee9c221f8195cefc2241ee8d23c126b61aba4ddb",
+      "source_manifest_sha256": "bfcace5afc080386688d806a1d81459cddd214cc1eeb5dbb4c41e03360c9e540"
+    },
+    "scope": "Disposable-signed APK packaging; NOT Store signing/runtime proof"
+  },
+  "outer_cycle_receipt": {
+    "path": "remediation-runs/2026-09-07-local-readiness/evidence/android-arm64-apks-01/receipt.json",
+    "sha256": "030fb449f5b9fe7f91816a08463ace500f663be48a22901bf01be73776bd8937",
+    "reported_status": "PASS",
+    "top_level_fields": [
+      "cycle",
+      "started_at",
+      "source_before",
+      "runner_before",
+      "command",
+      "env_policy",
+      "outputs_before",
+      "status",
+      "exit_code",
+      "finished_at",
+      "stop_exit_code",
+      "stopped_at",
+      "workers",
+      "removed_outputs",
+      "retained_outputs",
+      "remaining_outputs",
+      "cleanup_completed_at",
+      "source_after",
+      "source_changed_during_cycle",
+      "runner_after",
+      "runner_changed_during_cycle",
+      "cleanup_errors",
+      "deferred_signals",
+      "cleanup_method"
+    ]
+  },
+  "package_structure_observed": {
+    "entry_count": 350,
+    "font_count": 2,
+    "android_manifest_entries": 1,
+    "dex_entries": [
+      "classes.dex"
+    ],
+    "native_abis": [
+      "arm64-v8a",
+      "armeabi-v7a",
+      "x86",
+      "x86_64"
+    ]
+  },
+  "fonts": [
+    {
+      "archive_path": "assets/composeResources/parlor.shared.design_system.generated.resources/font/inter.ttf",
+      "bytes": 876576,
+      "compressed_bytes": 458971,
+      "crc32": "132e8ac8",
+      "sha256": "29160a80ff49ddcab2c97711247e08b1fab27a484a329ce8b813d820dc559031",
+      "source_path": "shared/design-system/src/commonMain/composeResources/font/inter.ttf",
+      "source_sha256": "29160a80ff49ddcab2c97711247e08b1fab27a484a329ce8b813d820dc559031",
+      "byte_identity": true
+    },
+    {
+      "archive_path": "assets/composeResources/parlor.shared.design_system.generated.resources/font/jetbrains_mono.ttf",
+      "bytes": 187208,
+      "compressed_bytes": 90815,
+      "crc32": "0d42ed31",
+      "sha256": "48715a42ec242c21e9f02692891e147d022299a52e48d5e413e1a942193ffeda",
+      "source_path": "shared/design-system/src/commonMain/composeResources/font/jetbrains_mono.ttf",
+      "source_sha256": "48715a42ec242c21e9f02692891e147d022299a52e48d5e413e1a942193ffeda",
+      "byte_identity": true
+    }
+  ],
+  "license_counter_evidence": "Both fonts byte-identical to source metadata already fully inspected in font-full-metadata-inspection-02.json. Official OFL FAQ1.10 counter-evidence still applies; no new standalone/full-license defect established. Root independent classification pending.",
+  "limits": [
+    "No Store-signing or upload authorization/evidence",
+    "No new APK signature verification by this reviewer; stage signer checks are root-owned",
+    "No manifest decoding, launch, rendering, accessibility, physical LAN or lifecycle claim",
+    "No test APK read; only explicit release.apk inspected",
+    "Broad outer runner and signed release readiness are not certified by this narrow inspection"
+  ],
+  "cleanup": {
+    "extracted_files_written": 0,
+    "downloaded_or_retained_font_binaries": 0,
+    "source_or_apk_edits": 0,
+    "build_app_or_background_workers_started": 0,
+    "apk_deleted": false,
+    "apk_retention_owner": "/root; required for immediate owned runtime"
+  }
+}

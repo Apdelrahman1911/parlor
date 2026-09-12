@@ -1,0 +1,583 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-09-06T11:43:22.230650+00:00",
+  "reviewer": "/root/factory_review",
+  "fix_author": "/root",
+  "classification": "APPROVED — RETIRED SOLO PRESERVATION FIXED AND FOCUSED DESKTOP VERIFIED",
+  "scope": "Owner-approved preservation-policy completion of WD-C2 recovery follow-up. Not a seventeenth original finding; no Solo mode reenablement or migration. This reviewer authored earlier WD-C2 chronology work and does not independently approve that earlier content patch here.",
+  "baseline": {
+    "branch": "main",
+    "commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+    "tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+    "green_source_manifest_sha256": "eae905fe193e4d6578f4616d8fdf6846b312492725b3a6a8b2b380e8f6f3553a",
+    "green_diff_sha256": "1e1cdc430bad016a46ef3c7c5ec76584b32b2a1052544a7c945a35491e109b2a"
+  },
+  "reviewed_files": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitGameFlow.kt",
+      "sha256": "726d948937f757496807bab91381abcb9d050240695fb63dbdbdc21181cb9334",
+      "reviewed_lines": "204-953",
+      "relevance": "production commonMain; root-authored Solo patch at393-394,400-401,435-440"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/snapshot/WhodunitResumeReconstructionTest.kt",
+      "sha256": "e2ef51a27dd6ba794ff5241326d7f3e1c49e88a730c872bde7cd6bdde1623b09",
+      "reviewed_lines": "1-556",
+      "relevance": "desktop tests; root-authored replacement regressions333-396"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitRecoveryInteractionTest.kt",
+      "sha256": "ce78251562131202f41648b26ef897034fd712c59f9cbb5d0af5207a3c47aa57",
+      "reviewed_lines": "1-295",
+      "relevance": "desktop actual recovery UI tests; root-authored Solo cases92-104,187-190,236-250"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/snapshot/InMemorySnapshotFileSystem.kt",
+      "sha256": "422861b927ba8c3153705db076ca9b7c6e26503d8c69c9e8d2c1f1a58f0e8dfe",
+      "reviewed_lines": "1-27",
+      "relevance": "nonshipping in-memory filesystem fixture, not encryption or native durability"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/storage/src/commonMain/kotlin/com/parlor/storage/snapshot/FileBackedSnapshotStore.kt",
+      "sha256": "e2ca0be28fd2f0eafee1a55022653190cf30a8c6da620dc3dfe56f361e0da27f",
+      "reviewed_lines": "1-246",
+      "relevance": "production envelope store and platform FS contract"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/storage/src/commonMain/kotlin/com/parlor/storage/snapshot/SnapshotStore.kt",
+      "sha256": "971db2ad642d795458a8ca2c9a6c018109ec09035c2b7c5648cd4f50209ec86b",
+      "reviewed_lines": "1-46",
+      "relevance": "production store interface"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/engine/src/commonMain/kotlin/com/parlor/engine/snapshot/SnapshotCodec.kt",
+      "sha256": "010c2df47f3803d60a80a428e459e052c715d3eb29a55444f1eeeff7c28ebad1",
+      "reviewed_lines": "1-64",
+      "relevance": "production GameSnapshot content equality and codec interface"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/commonMain/kotlin/com/parlor/app/LocalResumeRouter.kt",
+      "sha256": "bb45b775fa4f8444bf6d00aa240b66ab78dd0066ba88dcf037f758cdd86ea0b1",
+      "reviewed_lines": "1-163",
+      "relevance": "production shell lookup/generation/cancellation/explicit discard"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/commonMain/kotlin/com/parlor/app/shell/home/HomeRecoveryAvailability.kt",
+      "sha256": "4c8a962fba7ec8334cc8f4dfe0a75f221b201178481ae115d85ae391647fbb2a",
+      "reviewed_lines": "1-146",
+      "relevance": "production bounded inventory; no read-triggered deletion"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/commonMain/kotlin/com/parlor/app/shell/game/WhodunitGameShellBinding.kt",
+      "sha256": "caa754f00c9c314ac56ec9878eae8dc621ee152c9d552731f1dc071ce3ed6fdf",
+      "reviewed_lines": "1-300,350-372",
+      "relevance": "production capability/resume route"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/commonMain/kotlin/com/parlor/app/shell/game/GameShellRegistry.kt",
+      "sha256": "43c74ad2273f4d1ae72cf50ead697167e7a8d7f47b57864443937d851ecf3017",
+      "reviewed_lines": "203-245",
+      "relevance": "production generic routing"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/WhodunitPlayModePolicy.kt",
+      "sha256": "5c9b2e3d524b46ab441684bf1b0e85965d2e12f1fa0a938a4595cd84d1d7465a",
+      "reviewed_lines": "1-16",
+      "relevance": "production Solo remains unsupported"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/build.gradle.kts",
+      "sha256": "2eb4b00a53ff1eff42f2a64b3de1a1c4d28b08d419ad2828045a063320e4696c",
+      "reviewed_lines": "1-53",
+      "relevance": "shipping vs desktop-test wiring"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/docs/PRE_RELEASE_COMPATIBILITY.md",
+      "sha256": "32ae112de9fd761636191c3308faf28fa5a3a8f3fd694064bbeaf3f2ffe69060",
+      "reviewed_lines": "1-59",
+      "relevance": "policy; root-authored explicit Solo preservation52-53"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/docs/WHODUNIT_TEST_CONTENT.md",
+      "sha256": "19a2ca3a4cba3d60117f76897c7fc0d1cc55f97beb5002aead43fdc020b12756",
+      "reviewed_lines": "1-86",
+      "relevance": "current testing-content policy; Solo clarification45-46,66-68"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/run_gradle_cycle.py",
+      "sha256": "d2d18c2311d59554db88be3f92e609ec5ca46fc8af4c79702836f9e4c130240f",
+      "reviewed_lines": "1-283",
+      "relevance": "task-owned execution/cleanup harness"
+    }
+  ],
+  "red_to_green_changed_files": [
+    {
+      "path": "docs/PRE_RELEASE_COMPATIBILITY.md",
+      "red_sha256": "2f5d46b17ca70d89042b94357a413d244cbd6abc467aa570d02082bd9f883559",
+      "green_sha256": "32ae112de9fd761636191c3308faf28fa5a3a8f3fd694064bbeaf3f2ffe69060"
+    },
+    {
+      "path": "docs/WHODUNIT_TEST_CONTENT.md",
+      "red_sha256": "442715d8e015c5c433569039adf731b4e0b55e17919880ca2ea6051e7c969a53",
+      "green_sha256": "19a2ca3a4cba3d60117f76897c7fc0d1cc55f97beb5002aead43fdc020b12756"
+    },
+    {
+      "path": "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitGameFlow.kt",
+      "red_sha256": "b5b57dfe7675a0f85e299719f5161d9e50d75e6c0f1c25cfb72379e7b032ec36",
+      "green_sha256": "726d948937f757496807bab91381abcb9d050240695fb63dbdbdc21181cb9334"
+    }
+  ],
+  "proof": [
+    "Home reads bounded authenticated envelope metadata and retains addressability. LocalResumeCoordinator reads the selected envelope; GameShellRouter recognizes Whodunit PassAndPlay capability; ResumeLocal maps to actual WhodunitGameFlow independent of stale mode metadata. No generic infrastructure change or Solo mode capability is needed.",
+    "Original source branch explicitly deleted a loaded Solo record before decoding its private payload and converted successful deletion to NotFound. Original HEAD branch436-441 and unchanged red cycle loader hash b5b57dfe7675a0f85e299719f5161d9e50d75e6c0f1c25cfb72379e7b032ec36 confirm the deterministic cause.",
+    "Current source deletes only the obsolete Solo special-case and constant, then reuses the existing unsupported-mode guard before content identity construction or snapshotCodec.decode. Solo/other unsupported modes return CorruptedData with no store mutation. Game/session/engine guards still run first; valid PassAndPlay follows unchanged codec/case validation.",
+    "load cancellation propagates at snapshotStore.load outside the try; inner CancellationException catch still rethrows. No new catch converts cancellation or platform storage failures to empty success. Test now injects actual load cancellation, not a removed deletion site.",
+    "WhodunitGameFlow prioritizes resumed Failure and renders RecoveryErrorScreen, not SessionDrivenFlow or ConfiguredFlow. Retry increments generation and reloads; Back leaves without deletion. Therefore no canonical reducer, automatic AssignRoles or SerializedSnapshotWriter is instantiated for Solo recovery. Explicit Discard removes only selected id; failure leaves UI/actions available and reports failure.",
+    "Regression uses intentionally undecodable Solo payload atop the real envelope store. Exact GameSnapshot equality independently verified to compare every field plus payload.contentEquals; save/delete call counts both remain zero and listUnfinished still contains the id. This establishes logical payload/envelope preservation, not platform encryption or disk-byte durability.",
+    "English/Arabic actual recovery UI tests run at320x640dp/1.3fontscale; each checks explanatory text and record equality after initial display, Retry, Back, remount, then invokes accessible Discard. Only selected record disappears, unrelated record remains, exactly1delete and0save. Root-authored Solo fixture correctly expects loader Failure rather than earlier compatible-mode fixture Success.",
+    "All17 red cases execute:3 expected failures assert CorruptedData but see NotFound;14 pass including cancellation and prior incompatible/identityless flows. The2 EN/AR red cases fail in Fixture.prepare before Compose, so this is a loader red witness, not a claim of red UI traversal.",
+    "Green27cases across5classes all execute and pass without failures/errors/skips; includes3 former red cases, load cancellation,6 actual UI recovery cases, exact-content compatibility, and the story deterministic trace. Red→green source manifests differ only in loader and2documentation files; both test sources are identical across the witness/repair cycles, so assertions were not weakened.",
+    "Updated current docs explicitly state retired/unsupported modes are kept until explicit discard and not converted to PassAndPlay. Other game/protocol/seed/content/snapshot-schema behavior is untouched by this patch."
+  ],
+  "counter_evidence": [
+    "Old tests and comments demanded Solo auto-deletion; current owner preservation policy has no Solo exemption, so those tests encoded superseded product behavior, not a reason to retain destructive reads.",
+    "Malformed payload cannot itself establish guard ordering because generic decode errors also map to CorruptedData; ordering is proven directly by current source before451, with test ensuring no mutation/decoder-dependent success.",
+    "GameSnapshot is a data class with custom ByteArray equality, not default referential ByteArray equality; no false-green or unnecessary fixture rewrite here.",
+    "InMemorySnapshotStore returns same GameSnapshot objects; actual mutation under test would have to call save/delete or alter mutable payload. Source contains no such write before rejection. FileBackedSnapshotStore reconstruction test separately decodes envelope bytes and checks equality.",
+    "Valid legacy decode support remains separate from permission to launch a game with absent content identity. No new format migration, protocol change, role/seed exposure, room/history behavior or Mafia change is introduced.",
+    "Recovery retry case producer subtlety was separately registered previously; not silently fixed or decided in this preservation patch."
+  ],
+  "verification": [
+    {
+      "cycle": "wd-retired-save-red-01",
+      "receipt_sha256": "629f655f710519c4381a475d157e0b72b5b974e46a85811808964e80f369187a",
+      "source_manifest_sha256": "eee3392d48f040b3a91e06e9b8724aad96471627b2d95e1b564eb02ab7f0a6f0",
+      "diff_sha256": "f671b2c7c4df264d911f4e86c6c0d3ea73288a7c546e712ea918e49d5b6e908f",
+      "command": [
+        "./gradlew",
+        ":game-modes:whodunit:desktopTest",
+        "--tests",
+        "*WhodunitResumeReconstructionTest*",
+        "--tests",
+        "*WhodunitRecoveryInteractionTest*",
+        "--no-build-cache",
+        "--no-daemon",
+        "--no-parallel",
+        "--max-workers=1",
+        "--no-configuration-cache",
+        "--dependency-verification=strict",
+        "-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=wd-retired-save-red-01",
+        "-Pkotlin.compiler.execution.strategy=in-process",
+        "-Pparlor.android.signing.storeFile=",
+        "-Pparlor.android.signing.storePassword=",
+        "-Pparlor.android.signing.keyAlias=",
+        "-Pparlor.android.signing.keyPassword="
+      ],
+      "exit_code": 1,
+      "tests_failures_errors_skips": [
+        17,
+        3,
+        0,
+        0
+      ],
+      "source_unchanged_during_cycle": true,
+      "raw_xml": [
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/wd-retired-save-red-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.snapshot.WhodunitResumeReconstructionTest.xml",
+          "sha256": "df90fc8557e6ac20d3f4bc7d8b036265cc1a4e3f786618389f524e6a4e7c241b",
+          "tests_failures_errors_skips": [
+            11,
+            1,
+            0,
+            0
+          ],
+          "cases": [
+            {
+              "name": "resume_accepts_supportedBareVersionsAndCurrentVersionedPayload()[desktop]",
+              "failed": false,
+              "skipped": false
+            },
+            {
+              "name": "resume_propagates_load_cancellation_without_deleting_a_retired_snapshot()[desktop]",
+              "failed": false,
+              "skipped": false
+            },
+            {
+              "name": "resume_preserves_a_retired_solo_snapshot_without_rewriting_private_state()[desktop]",
+              "failed": true,
+              "skipped": false
+            },
+            {
+              "name": "resume_rejects_partial_or_malformed_content_identity_metadata()[desktop]",
+              "failed": false,
+              "skipped": false
+            },
+            {
+              "name": "resume_rejects_unknown_play_mode_metadata_instead_of_changing_ceremony()[desktop]",
+              "failed": false,
+              "skipped": false
+            },
+            {
+              "name": "resumed_controller_state_equals_saved_state_and_advances_correctly()[desktop]",
+              "failed": false,
+              "skipped": false
+            },
+            {
+              "name": "resume_rejects_another_game_before_decoding_its_payload()[desktop]",
+              "failed": false,
+              "skipped": false
+            },
+            {
+              "name": "deleting_snapshot_removes_it_from_listUnfinished()[desktop]",
+              "failed": false,
+              "skipped": false
+            },
+            {
+              "name": "loaded_case_boundary_requires_exact_identity_and_content_compatible_state()[desktop]",
+              "failed": false,
+              "skipped": false
+            },
+            {
+              "name": "corrupt_snapshot_payload_does_not_blow_up_decoder()[desktop]",
+              "failed": false,
+              "skipped": false
+            },
+            {
+              "name": "resume_rejects_a_future_engine_version_before_decoding_its_payload()[desktop]",
+              "failed": false,
+              "skipped": false
+            }
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/wd-retired-save-red-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.WhodunitRecoveryInteractionTest.xml",
+          "sha256": "1beb92e5ed4d7d53a3955afa999f270fa8104dbfc837c3573d667188c3de271d",
+          "tests_failures_errors_skips": [
+            6,
+            2,
+            0,
+            0
+          ],
+          "cases": [
+            {
+              "name": "englishRetiredSoloSaveIsKeptUntilExplicitDiscard()[desktop]",
+              "failed": true,
+              "skipped": false
+            },
+            {
+              "name": "arabicRetiredSoloSaveIsKeptUntilExplicitDiscard()[desktop]",
+              "failed": true,
+              "skipped": false
+            },
+            {
+              "name": "arabicIncompatibleSaveIsExplainedAndKeptUntilExplicitDiscard()[desktop]",
+              "failed": false,
+              "skipped": false
+            },
+            {
+              "name": "englishIncompatibleSaveIsExplainedAndKeptUntilExplicitDiscard()[desktop]",
+              "failed": false,
+              "skipped": false
+            },
+            {
+              "name": "englishIdentityLessSaveIsKeptUntilExplicitDiscard()[desktop]",
+              "failed": false,
+              "skipped": false
+            },
+            {
+              "name": "arabicIdentityLessSaveIsKeptUntilExplicitDiscard()[desktop]",
+              "failed": false,
+              "skipped": false
+            }
+          ]
+        }
+      ],
+      "cleanup": {
+        "stop_exit_code": 0,
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        },
+        "remaining_outputs": [],
+        "cleanup_errors": [],
+        "removed_outputs": [
+          "shared/core/build",
+          "shared/networking/build",
+          "shared/content/build",
+          "shared/storage/build",
+          "shared/networking-testing/build",
+          "shared/engine/build",
+          "shared/design-system/build",
+          "shared/session/build",
+          "game-modes/whodunit/build",
+          "build",
+          "build-logic/convention/build"
+        ],
+        "cleanup_completed_at": "2026-09-06T11:29:35.659496+00:00"
+      }
+    },
+    {
+      "cycle": "wd-retired-save-green-01",
+      "receipt_sha256": "24af7b7ae67f13f597ccdfa29eb353456bf21dcb6a57acf29aa8650a069216be",
+      "source_manifest_sha256": "eae905fe193e4d6578f4616d8fdf6846b312492725b3a6a8b2b380e8f6f3553a",
+      "diff_sha256": "1e1cdc430bad016a46ef3c7c5ec76584b32b2a1052544a7c945a35491e109b2a",
+      "command": [
+        "./gradlew",
+        ":game-modes:whodunit:desktopTest",
+        "--tests",
+        "*WhodunitResumeReconstructionTest*",
+        "--tests",
+        "*WhodunitRecoveryInteractionTest*",
+        "--tests",
+        "*TestingStory*",
+        "--no-build-cache",
+        "--no-daemon",
+        "--no-parallel",
+        "--max-workers=1",
+        "--no-configuration-cache",
+        "--dependency-verification=strict",
+        "-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=wd-retired-save-green-01",
+        "-Pkotlin.compiler.execution.strategy=in-process",
+        "-Pparlor.android.signing.storeFile=",
+        "-Pparlor.android.signing.storePassword=",
+        "-Pparlor.android.signing.keyAlias=",
+        "-Pparlor.android.signing.keyPassword="
+      ],
+      "exit_code": 0,
+      "tests_failures_errors_skips": [
+        27,
+        0,
+        0,
+        0
+      ],
+      "source_unchanged_during_cycle": true,
+      "raw_xml": [
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/wd-retired-save-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.TestingStoryChronologyTest.xml",
+          "sha256": "d21e0ad3fe342e5ef4fdc342221656919fbf0a9e8305bbcaf233ff67c29fec2e",
+          "tests_failures_errors_skips": [
+            5,
+            0,
+            0,
+            0
+          ],
+          "cases": [
+            {
+              "name": "nadimsShortCellarWaitMatchesTheFinalAccountWithoutChangingHisLie()[desktop]",
+              "failed": false,
+              "skipped": false
+            },
+            {
+              "name": "jamesLightsOneCigarAt915WhileHis910AlibiRemainsFalse()[desktop]",
+              "failed": false,
+              "skipped": false
+            },
+            {
+              "name": "correctionsBumpOnlyTheFourTestingCaseVersions()[desktop]",
+              "failed": false,
+              "skipped": false
+            },
+            {
+              "name": "laylaHasOne905OutageAcrossIntroEvidenceAndWitnesses()[desktop]",
+              "failed": false,
+              "skipped": false
+            },
+            {
+              "name": "karims940PoisoningPrecedesHisCorroborated1015RecordsAlibi()[desktop]",
+              "failed": false,
+              "skipped": false
+            }
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/wd-retired-save-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.TestingStoryCompatibilityTest.xml",
+          "sha256": "061011a04212f8077c68438ab612c5d89cecb171fc45670d9888e25903ad913c",
+          "tests_failures_errors_skips": [
+            4,
+            0,
+            0,
+            0
+          ],
+          "cases": [
+            {
+              "name": "correctedStoriesDoNotReuseAnyOriginalCanonicalContentDigest()[desktop]",
+              "failed": false,
+              "skipped": false
+            },
+            {
+              "name": "currentSaveRoundTripsButOldOrCrossedIdentityIsRetainedAndRejected()[desktop]",
+              "failed": false,
+              "skipped": false
+            },
+            {
+              "name": "identityLessPreClueSavesCannotSilentlyBindToInstalledStoryProse()[desktop]",
+              "failed": false,
+              "skipped": false
+            },
+            {
+              "name": "lanOffersMatchOnlyTheExactLoadedRevisionForAllCorrectedCasesAndModes()[desktop]",
+              "failed": false,
+              "skipped": false
+            }
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/wd-retired-save-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.TestingStoryGameTraceTest.xml",
+          "sha256": "724547efb6aed545afc0a3fe864ef98a1ea50b8f1688dd34f859a5e778defa3b",
+          "tests_failures_errors_skips": [
+            1,
+            0,
+            0,
+            0
+          ],
+          "cases": [
+            {
+              "name": "everyCorrectedCaseKillerAndModeCompletesDeterministicallyAndRoundTrips()[desktop]",
+              "failed": false,
+              "skipped": false
+            }
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/wd-retired-save-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.snapshot.WhodunitResumeReconstructionTest.xml",
+          "sha256": "d909ebe3ea166dd70d7947f43d62a5bce69b5ebb20b9eb85b46f5d307cf176f4",
+          "tests_failures_errors_skips": [
+            11,
+            0,
+            0,
+            0
+          ],
+          "cases": [
+            {
+              "name": "resume_accepts_supportedBareVersionsAndCurrentVersionedPayload()[desktop]",
+              "failed": false,
+              "skipped": false
+            },
+            {
+              "name": "resume_propagates_load_cancellation_without_deleting_a_retired_snapshot()[desktop]",
+              "failed": false,
+              "skipped": false
+            },
+            {
+              "name": "resume_preserves_a_retired_solo_snapshot_without_rewriting_private_state()[desktop]",
+              "failed": false,
+              "skipped": false
+            },
+            {
+              "name": "resume_rejects_partial_or_malformed_content_identity_metadata()[desktop]",
+              "failed": false,
+              "skipped": false
+            },
+            {
+              "name": "resume_rejects_unknown_play_mode_metadata_instead_of_changing_ceremony()[desktop]",
+              "failed": false,
+              "skipped": false
+            },
+            {
+              "name": "resumed_controller_state_equals_saved_state_and_advances_correctly()[desktop]",
+              "failed": false,
+              "skipped": false
+            },
+            {
+              "name": "resume_rejects_another_game_before_decoding_its_payload()[desktop]",
+              "failed": false,
+              "skipped": false
+            },
+            {
+              "name": "deleting_snapshot_removes_it_from_listUnfinished()[desktop]",
+              "failed": false,
+              "skipped": false
+            },
+            {
+              "name": "loaded_case_boundary_requires_exact_identity_and_content_compatible_state()[desktop]",
+              "failed": false,
+              "skipped": false
+            },
+            {
+              "name": "corrupt_snapshot_payload_does_not_blow_up_decoder()[desktop]",
+              "failed": false,
+              "skipped": false
+            },
+            {
+              "name": "resume_rejects_a_future_engine_version_before_decoding_its_payload()[desktop]",
+              "failed": false,
+              "skipped": false
+            }
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/wd-retired-save-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.WhodunitRecoveryInteractionTest.xml",
+          "sha256": "ca2c7588d99553700da11ff1e31f1fd63efe5646d3060ddd2519839559337713",
+          "tests_failures_errors_skips": [
+            6,
+            0,
+            0,
+            0
+          ],
+          "cases": [
+            {
+              "name": "englishRetiredSoloSaveIsKeptUntilExplicitDiscard()[desktop]",
+              "failed": false,
+              "skipped": false
+            },
+            {
+              "name": "arabicRetiredSoloSaveIsKeptUntilExplicitDiscard()[desktop]",
+              "failed": false,
+              "skipped": false
+            },
+            {
+              "name": "arabicIncompatibleSaveIsExplainedAndKeptUntilExplicitDiscard()[desktop]",
+              "failed": false,
+              "skipped": false
+            },
+            {
+              "name": "englishIncompatibleSaveIsExplainedAndKeptUntilExplicitDiscard()[desktop]",
+              "failed": false,
+              "skipped": false
+            },
+            {
+              "name": "englishIdentityLessSaveIsKeptUntilExplicitDiscard()[desktop]",
+              "failed": false,
+              "skipped": false
+            },
+            {
+              "name": "arabicIdentityLessSaveIsKeptUntilExplicitDiscard()[desktop]",
+              "failed": false,
+              "skipped": false
+            }
+          ]
+        }
+      ],
+      "cleanup": {
+        "stop_exit_code": 0,
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        },
+        "remaining_outputs": [],
+        "cleanup_errors": [],
+        "removed_outputs": [
+          "shared/core/build",
+          "shared/networking/build",
+          "shared/content/build",
+          "shared/storage/build",
+          "shared/networking-testing/build",
+          "shared/engine/build",
+          "shared/design-system/build",
+          "shared/session/build",
+          "game-modes/whodunit/build",
+          "build",
+          "build-logic/convention/build"
+        ],
+        "cleanup_completed_at": "2026-09-06T11:35:04.453129+00:00"
+      }
+    }
+  ],
+  "remaining_limits": [
+    "Focused Desktop execution only; native platform filesystem migration/protection/durability and Android/iOS recovery UI were not executed in these cycles.",
+    "Synthetic records only. No personal data, real devices, Store identities, release signing or physical LAN involved.",
+    "Combined repository/static analysis checks remain root-owned follow-up because current docs/source were changed after earlier allTests/native evidence.",
+    "Earlier WD-C2 chronology test result is observed as regression execution here, not independently self-approved authored content. /root/release_fix_review retains that independent content-review role."
+  ],
+  "preservation_and_cleanup": "Reviewer performed synchronous source/XML reads and wrote only this new evidence file. No build, daemon, simulator, app/server, production/test/doc edit, commit or cleanup of another task. Reviewed runner refused pre-existing outputs/unowned Gradle8.13daemon, stopped immediately on both cycles, preserved raw XML before exact-owned deletion, recorded0stopstatus/0survivors/0remainingoutputs/0cleanuperrors; no additional clean daemon was launched."
+}

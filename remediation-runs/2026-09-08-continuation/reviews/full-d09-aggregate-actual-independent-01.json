@@ -1,0 +1,261 @@
+{
+  "schema_version": 1,
+  "kind": "INDEPENDENT_FULL_D09_AGGREGATE_ACTUAL_REVIEW",
+  "reviewer": "/root/qualification_review",
+  "reviewed_at": "2026-09-11T13:47:15.224867+00:00",
+  "status": "PASS_EXACT_FROZEN_D09_CANDIDATE_NOT_CURRENT_HEAD",
+  "findings": [],
+  "decision": "All six mandatory actual lane reviews, separate12-artifact custody and six-lane scoped cleanup are accepted together for exact D09 run34561630512/attempt1. This qualifies the admitted full+paired verification scope at the executed source, not product/Store readiness or strict protection.",
+  "source": {
+    "repository": "Apdelrahman1911/parlor",
+    "workflow": ".github/workflows/production-verification.yml",
+    "ref": "fix/local-readiness-2026-09-07",
+    "inputs": {
+      "verification_scope": "full",
+      "native_selection": "paired"
+    },
+    "executed_commit": "d3c0df9ccba51463708728c3c618d3652e76aafa",
+    "executed_tree": "3169657a10279eb2bfad6c59a60a5054c6092b61",
+    "source_parent": "2c914e2340fcbee9e715bd258ff6a3ec7410196b",
+    "observed_local_head": "25cd7f57b031bebdcfb4931615782b906610703f",
+    "observed_local_head_tree": "1e44e982216bfc4fda32dc370a0d1b3d77fee836",
+    "current_head_qualified_by_d09": false,
+    "boundary": "Post-D09 diagnostic code changes, including H02, are not passive evidence-only changes. D09 qualification does not transfer to current/new HEAD or H03; preserve the executed SHA separately from delivery HEAD.",
+    "controls": "All13 named admitted controls bind exact frozen d3 Git blobs, not newer working-tree files. This is a named subset, NOT exhaustive source/import closure; the whole frozen tree binds executed source."
+  },
+  "run": {
+    "id": 34561630512,
+    "attempt": 1,
+    "event": "workflow_dispatch",
+    "terminal_run_api": "success",
+    "terminal_attempt_api": "success",
+    "required_job_ids": {
+      "desktop-android": 103145382708,
+      "desktop-linux-arm64": 103145382861,
+      "desktop-macos-x64": 103145382811,
+      "desktop-windows-x64": 103145382822,
+      "ios": 103145382813,
+      "ios-release": 103145382816
+    },
+    "required_jobs_accepted": 6,
+    "protection_diagnostic": {
+      "job_id": 103145383779,
+      "conclusion": "skipped",
+      "required_for_full_scope": false,
+      "used_as_evidence": false
+    },
+    "execution_window_utc": "2026-09-11 approximately04:17-05:20",
+    "collection_started_at": "2026-09-11T13:08:52.274344+00:00",
+    "collection_finished_at": "2026-09-11T13:12:21.019917+00:00",
+    "timing_note": "Later13:08-13:12 collection is post-run custody, not an execution discrepancy."
+  },
+  "evidence_pins_sha256": {
+    "remediation-runs/2026-09-08-continuation/reviews/final-d09-exact-request-admission-independent-01.json": "bc5798dd2ce70eff418355000f2f4f4d97934afda9cbd8182baaa9da504943f1",
+    "remediation-runs/2026-09-08-continuation/actions/full-qualification-dispatch-09/dispatch-receipt.json": "c219fe33361304e3124fc05b870f5a59ed67c5517208c158f89d66c2b708691a",
+    "remediation-runs/2026-09-08-continuation/actions/full-qualification-dispatch-09/dispatched-run.json": "7f07d7aa9a04ccb3a946415fc30f927fe401efbded9bf41438610d1bcc029727",
+    "remediation-runs/2026-09-08-continuation/actions/34561630512/download-receipt.json": "64d973465fa1a2d8b43aafa4a4c0e40d52638caaa7e7e4b9dc4bb6b13d265a2e",
+    "remediation-runs/2026-09-08-continuation/actions/34561630512/run.json": "c3e93a860ade98fa621c5943350d41bcff8e046839b057b7fcbc5528eb50f419",
+    "remediation-runs/2026-09-08-continuation/actions/34561630512/attempt.json": "ee7aa6b2aeca484751472de5d8e80a43f83cce1c947b72a685d7c6e76d998a40",
+    "remediation-runs/2026-09-08-continuation/actions/34561630512/jobs.json": "cca19bd1b268059a204442b8ce8d2a4ca6314c524abd5231ef435ce67792d9d5",
+    "remediation-runs/2026-09-08-continuation/actions/34561630512/artifacts.json": "73afa353b33eb83dbbf5b61aeee25877e0244323ca6068c26a0bbfe2f3ea3ff7",
+    "remediation-runs/2026-09-08-continuation/actions/34561630512/frozen-tree-paths.z": "830a9ab5c34598bca4b7fe58f8d1cda1d14d1d959e59405d71531144170da2e6",
+    "remediation-runs/2026-09-08-continuation/actions/34561630512/run-attempt-1-logs.zip": "25f90391edc685b735dbdccc49ca0c501641e36979087a80a138724bc2000708",
+    "remediation-runs/2026-09-08-continuation/actions/full-qualification-dispatch-09/request.json": "3dd1dddcbb29067f428624b5d232aa0f83651f740b77eae380be886c3f40a62f",
+    "remediation-runs/2026-09-08-continuation/actions/full-qualification-dispatch-09/source-association.json": "c41eea1afd4fe2ba9f7b3920f5a3913060acb42d07a701f089b2900e1edc3e3e",
+    "remediation-runs/2026-09-08-continuation/actions/full-qualification-dispatch-09/controls.json": "72e41f19f5cdf32eaddc03bcee8b77e822e30a492d2fc12063281c768828351f"
+  },
+  "collector03_sha256": "53d6a05f4a2c591f25e3bda2104b0c15e39cd472d6519d24e6fd1aff5234f7a8",
+  "independent_reviews": [
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/full-d09-linux-android-actual-independent-01.json",
+      "sha256": "0ee61f4faf775af182151206936ebcbf64c7203652eb8d0d61a363f7cf1be5ae",
+      "reviewer": "/root/ci_linux",
+      "scope": "desktop-android",
+      "result": "PASS"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/full-d09-linux-arm64-actual-independent-01.json",
+      "sha256": "4505f2c6a4a5c2f5ce021e5068918b9834dc9bab3a9373022b0e62b6281a74e0",
+      "reviewer": "/root/ci_linux_arm",
+      "scope": "desktop-linux-arm64",
+      "result": "PASS_DESKTOP_LANE_WITH_3_EXPLICITLY_IGNORED_CASES"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/full-d09-macos-x64-actual-independent-01.json",
+      "sha256": "5633efb42f2e9dc4a9f541acb82b300d6506303fcce4c7afeb6998aad5c60a11",
+      "reviewer": "/root/ci_macos_x64",
+      "scope": "desktop-macos-x64",
+      "result": "APPROVED_CURRENT_LANE_WITH_THREE_SOURCE_DECLARED_SKIPS"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/full-d09-windows-x64-actual-independent-01.json",
+      "sha256": "39aa7dac7de76961c237d90edeb22fca601e6ea50f9ba155a796fa78575378e3",
+      "reviewer": "/root/ci_windows",
+      "scope": "desktop-windows-x64",
+      "result": "ACCEPTED_D09_WINDOWS_CURRENT_DESKTOP_RUNTIME_NATIVE_DISTRIBUTION_RESOURCES_AND_SCOPED_CLEANUP"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/full-d09-ios-runtime-actual-independent-01.json",
+      "sha256": "995b9e5fd51b1521fad17ded3c2857eb1691ec7cae32b707ce4606778c9cb383",
+      "reviewer": "/root/ci_ios_runtime",
+      "scope": "ios",
+      "result": "PASS_IOS_RUNTIME_ONLY_CLEANUP_REVIEW_SEPARATE"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/full-d09-ios-release-actual-independent-01.json",
+      "sha256": "e78dfe518c9e27be785508770a2e6f45bbe1f420ddf4ad87341214494812b5fc",
+      "reviewer": "/root/ci_ios_release",
+      "scope": "ios-release",
+      "result": "SCOPED_PASS_RELEASE_BUILD_ANALYSIS_PACKAGE_CLEANUP_SEPARATE"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/full-d09-artifact-custody-independent-01.json",
+      "sha256": "16f4eaa0977d36df33b78bf445ef0a985b8605ce4c495756773471bb2dadca80",
+      "reviewer": "/root/artifact_custody",
+      "scope": "custody",
+      "result": "D09_ARTIFACT_CUSTODY_VERIFIED_API_SUCCESS_NOT_FULL_QUALIFICATION"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/full-d09-six-lane-cleanup-actual-independent-01.json",
+      "sha256": "c981ba20181f87209497bd49c77dbf2796cefbde2be5c5a0f5aa483950843867",
+      "reviewer": "/root/ci_cleanup_review",
+      "scope": "cleanup",
+      "result": "ACCEPT_D09_SIX_LANE_SCOPED_CLEANUP"
+    }
+  ],
+  "gate_coverage": {
+    "desktop-android": "Accepted actual strict productionCheck, productionStaticAnalysis, productionReleaseAutomationCheck and root/all13 module allTests; Desktop/Android unit execution, managed-emulator Release smoke, R8/lint/unsigned AAB and package/notices inspection.573 release Python controls passed.35 lint warnings match the frozen allowlist exactly, not zero warnings.26 host-inapplicable iOS task skips are not Apple runtime. Build-cache reuse is distinct from test execution.",
+    "desktop-linux-arm64": "Accepted actual strict Linux ARM64 productionDesktopCheck, all13 desktopTest tasks and app Desktop compilation. Desktop/JVM only; no Kotlin/Native runtime claim.",
+    "desktop-macos-x64": "Accepted actual strict macOS x64 productionDesktopCheck, all13 desktopTest tasks, app Desktop compilation and requested Kotlin/Native distribution task. Existing global .konan content prevents a clean-cache/all-bytes-network-download claim; distribution preparation is not Native application runtime.",
+    "desktop-windows-x64": "Accepted actual strict Windows x64 productionDesktopCheck, all13 desktopTest tasks, app Desktop compilation, Native distribution task and uncached processDebugResources. Three former D08 CRLF-failing methods plus LF/CRLF boundary regression passed on actual Windows. Existing .konan content is not clean-cache proof; no independently rehashed downloaded-binary or Native application runtime claim.",
+    "ios": "Accepted complete13-module KMP simulator runtime aggregate and all five Debug XCTest methods. Xcode26.3/17C529, SDK26.2; actual UI simulator iOS18.5/iPhone16 Pro. UI device identity is not transferred to the KMP runner. No Release runtime or strict-storage-protection claim.",
+    "ios-release": "Accepted complete productionAppleCheck/type-aware analysis, all three serial Release links, real strict Gradle resource/embed tasks, unsigned arm64 Swift Release wrapper and complete hosted package/notices/identity/version inspection. App minOS16 versus embedded KMP framework minOS15 is valid. Complete .app not retained/rehashed locally; package proof is hosted inspection/logs and retained dSYM, not Release runtime/signing."
+  },
+  "artifacts": [
+    {
+      "name": "verification-cleanup-ios-release",
+      "id": 10185861945,
+      "job_id": 103145382816,
+      "bytes": 2785,
+      "zip_sha256": "cc9e9756e201b20518317dc9239af88543c66fc35f09f1bb2669cd00a3d8e288"
+    },
+    {
+      "name": "ios-release-verification",
+      "id": 10185860790,
+      "job_id": 103145382816,
+      "bytes": 2795942,
+      "zip_sha256": "b5838f771925834adc6d2fd4ec4331cce4829662d56d597a217c60c4a53c9051"
+    },
+    {
+      "name": "verification-cleanup-ios",
+      "id": 10184986147,
+      "job_id": 103145382813,
+      "bytes": 2764,
+      "zip_sha256": "57a2ad1bfb69e56bdd25c04da560b271c75816fccfe9ec486ab71b50a06f96ff"
+    },
+    {
+      "name": "ios-runtime-verification",
+      "id": 10184984034,
+      "job_id": 103145382813,
+      "bytes": 17692922,
+      "zip_sha256": "736b11bd00458298b99176b2a0f693ee31b71f2ceedc61ff5e59da72f27ff2b7"
+    },
+    {
+      "name": "verification-cleanup-desktop-android",
+      "id": 10184939144,
+      "job_id": 103145382708,
+      "bytes": 3119,
+      "zip_sha256": "57fac05579c55819712d8653283bc87a305674642a68e200cba7c13b953182d8"
+    },
+    {
+      "name": "desktop-android-verification",
+      "id": 10184937822,
+      "job_id": 103145382708,
+      "bytes": 35458539,
+      "zip_sha256": "1a02bf5e0f0daff42e6d9f2ed573f98176e338046d08c1ae637e9b94ef53f3e9"
+    },
+    {
+      "name": "verification-cleanup-desktop-windows-x64",
+      "id": 10184744464,
+      "job_id": 103145382822,
+      "bytes": 2729,
+      "zip_sha256": "b7e9ed9aa4ba83caacd4e020f7c7c995a4dc1897477727a1e72deaa07a66d237"
+    },
+    {
+      "name": "desktop-verification-desktop-windows-x64",
+      "id": 10184742700,
+      "job_id": 103145382822,
+      "bytes": 17854825,
+      "zip_sha256": "3644e309b90d40f53d2cb78e2bd01c2551d7a45055652ba3ba558f504965a78a"
+    },
+    {
+      "name": "verification-cleanup-desktop-macos-x64",
+      "id": 10184742573,
+      "job_id": 103145382811,
+      "bytes": 2696,
+      "zip_sha256": "0e505ec1b2dd6f7399af0dca5c158e4e1321c6d708b31a31ea6045b24b712283"
+    },
+    {
+      "name": "desktop-verification-desktop-macos-x64",
+      "id": 10184740042,
+      "job_id": 103145382811,
+      "bytes": 17860194,
+      "zip_sha256": "54b1233f3bf00d41226c347ce0344dba3f12468b1ff3a416db7388f9f1e137a3"
+    },
+    {
+      "name": "verification-cleanup-desktop-linux-arm64",
+      "id": 10184604879,
+      "job_id": 103145382861,
+      "bytes": 2688,
+      "zip_sha256": "79043fc19449c4c3b5b6769fe2abb6440326f53e1692a3e22fb0abf987e0d4b1"
+    },
+    {
+      "name": "desktop-verification-desktop-linux-arm64",
+      "id": 10184603884,
+      "job_id": 103145382861,
+      "bytes": 17850140,
+      "zip_sha256": "741a0adb1a5fb31d260f853d5ceef33b9f3abc34660bc5badc8bd52beae8ad45"
+    }
+  ],
+  "custody": {
+    "accepted": true,
+    "expected_artifacts": 12,
+    "missing": [],
+    "unexpected": [],
+    "binding": "Exactly six main and six cleanup artifacts. Admission/dispatch/terminal APIs/collector and both custody reviews agree on run,attempt,source,job,ID,size and SHA256. Collector symbolic job keys resolve to the six numeric API job IDs. API expired=false is the retained collection observation, not a new network check.",
+    "collector_status_preserved": "COLLECTED_NOT_RUNTIME_REVIEW",
+    "audit_reuse": "Pinned independent custody review verifies all12 ZIPs, metadata and exact selected extractions. Aggregate performs no repeated ZIP/CRC audit.",
+    "historical_exclusion": "72,278 frozen historical entries remain archive-only, never current execution. Current-path candidates require the actual lane reviews."
+  },
+  "cleanup": {
+    "accepted": true,
+    "lanes": 6,
+    "current_errors": [],
+    "retained_owned_outputs": [],
+    "ownership": "Each lane partitions187 scoped roots:17 build plus170 Python-cache paths. Source/task/ownership/main-upload joins and upload-before-delete chronology accepted. Global/unclaimed caches not certified removed.",
+    "apple_cycles": {
+      "ios": [
+        "apple-aggregate",
+        "apple-ui"
+      ],
+      "ios-release": [
+        "apple-aggregate",
+        "apple-wrapper"
+      ],
+      "all_four": "PASS"
+    },
+    "gradle_stops": "15 recorded stops returned exit0.",
+    "simulator": "Owned UI simulator delete returned exit0; no explicit shutdown action is recorded or claimed.",
+    "workers": "Two exact newly owned ibtoold lifetimes received TERM15 then bounded quiescence; not global process absence/reaping proof.",
+    "android": "Bounded sudo-proc-exe-v2 SDK/emulator executable-path absence sample151/151,errors[],zero matches; not AVD retirement/global absence. Later runner adb orphan-termination action is not confirmed exit/wait.",
+    "basis": "Separate actual scoped cleanup review, not green job/API inference."
+  },
+  "counting_and_skips": "No cross-platform total-test sum: suites overlap between hosts/targets. All Desktop lanes preserve the same three frozen @Ignore peer-LAN fixture skips, not passes or physical-device evidence. Use each pinned review for current lane counts; cached/build/link/resource tasks are not converted into runtime passes.",
+  "historical_and_protection_boundary": {
+    "d08": "Run34553741387 remains historical failure, not amended or substituted. D09 repairs have their own actual evidence.",
+    "focused_runs": "PD08/PD09/H02/H03 are separate; none fills a D09 lane. Prior strict-protection failures are not superseded. API/collection success, setter diagnostics and cleanup are not strict-protection PASS.",
+    "strict_protection": "NOT_QUALIFIED_BY_D09; optional seventh job skipped.",
+    "readiness": "No physical-device same-LAN gameplay, Release runtime, signing/publication, legal-completeness or Store/product readiness certificate. Documented com.parlor.app Store-identity collision remains."
+  },
+  "activity": "Bounded local Git/stdlib JSON/hash pin and identity/result-scope reconciliation only; reused all eight independent actual reviews without repeating lane counts, XML or ZIP/CRC audits. No tests, builds, validators, project imports, network, dispatch, cancellation, source/raw-evidence edits, Git writes or child agents. Sole write is this additive review; prior reviews/failures unchanged."
+}

@@ -1,0 +1,142 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/native_ci",
+  "author": "/root/ci_workflow",
+  "review_date_utc": "2026-09-10",
+  "review_kind": "Independent bounded source/compatibility review; no project execution",
+  "status": "PASS",
+  "decision": "APPROVE_PROPOSED_LINUX_PROCESS_PROBE_FOR_ROOT_ADOPTION_AND_FOCUSED_CHECKS",
+  "baseline": {
+    "head": "75c104734373703570a307de9c7a53d291bc2718",
+    "tree": "4d5b660c5f508a3eb8d01cd9203f2503570dbb18",
+    "branch": "fix/local-readiness-2026-09-07",
+    "canonical_tracked_changes_during_review": false
+  },
+  "scope": {
+    "proposed_directory": "remediation-runs/2026-09-08-continuation/reviews/linux-process-probe-01/proposed",
+    "proposed_files": 5,
+    "no_build_probe_module_lines": 271,
+    "independent_helper_dependency": "The adapter requires android-proc-permission-diagnostic-01's diagnostic-only verification_hygiene.py at SHA256 1fc2fb6f0b3bb7a505edc63277e0fe974a67ccf972753eec0da60386438c16f4. Its separate implementation/review belongs to lifecycle_controls/ci_review; this review checked only the adapter's exact interface and use, not a second helper campaign.",
+    "context_reopened": [
+      "AGENTS.md",
+      "scripts/ci/verification_hygiene.py",
+      "scripts/release/validate_release_system.sh",
+      "scripts/release/workflow_contract.py",
+      "scripts/release/tests/test_ci_verification_hygiene.py",
+      ".github/workflows/production-verification.yml",
+      "remediation-runs/2026-09-08-continuation/actions/full-qualification-dispatch-03/early-desktop-android-job.log"
+    ],
+    "author_note": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/linux-process-probe-01/author-note.md",
+      "sha256": "8f41ab65249efcac5e4bac11f1d807e61ccfc2395cd7be92839a5c5cd491983e"
+    }
+  },
+  "observed_failure_context": {
+    "run_id": 34464573240,
+    "job": "desktop-android",
+    "retained_failure": "Android sampled emulator absence did not pass; retain outputs",
+    "raw_android_absence": {
+      "result": "FAIL",
+      "enumerated": 154,
+      "sampled": 118,
+      "selected_uid": 0,
+      "matching_executables": 0,
+      "errors": [
+        {
+          "code": "PermissionError"
+        }
+      ],
+      "binding_uid": 1001
+    },
+    "inference_limit": "The original receipt does not identify the denied procfs operation or that process's selected-UID classification. selected_uid is the completed selected-sample count, not a failing-process UID. The new nondumpable control must not be used to retrospectively invent either fact.",
+    "preservation": "The failed full-D receipt and retained-output decision remain failures. A later bare-host sample cannot repair that post-emulator cleanup or establish combined qualification."
+  },
+  "source_findings": {
+    "admission": "Exact workflow_dispatch/repository/continuation branch/workflow-ref/job/Linux-X64 context, numeric run/attempt, closed bounded input keys, default native selection with unused inputs empty, frozen source equal to GITHUB_SHA and GITHUB_WORKFLOW_SHA, local HEAD/branch/full history/clean checkout, Ubuntu24.04/x86_64 and approved ten-file control digest are required. Existing helper requires matching nonroot real/effective UID and exact SDK path hash/device/inode binding. Source/control/SDK proof is rechecked after observations and again before cleanup.",
+    "control_manifest": "The ten-file digest covers the existing workflow, adapter, hygiene implementation, workflow contract, three related test files, wrapper script/JAR/properties. Each file is read through a regular, nonredirected, size-bounded path with before/after metadata equality. Actual SHA rows are recomputed, not accepted from caller metadata.",
+    "genuine_host_vs_controls": "run() invokes the ordinary real /proc host audit once before fixtures. Each control is explicitly LIVE_LINUX_CONTROL_SYNTHETIC_ENUMERATION and exposes only owned symlinks to this observer and its direct child; reads still go to real procfs. Positive requires actual two-entry PASS/no errors/two sampled selected-UID records/no matches. Negative requires actual FAIL with exactly PermissionError, before_exe_readlink, selection=true and EACCES. CONTROL_PASS on that expected failure cannot produce overall PASS unless the independent host audit is PASS and both controls pass.",
+    "ownership_signals_and_cleanup": "Temporary fixture is exclusively created beneath an absolute nonredirected current-UID parent. Only a held Popen direct child is signaled; isolated fixed /usr/bin/python3 -I -B command, closed small environment, fixed ctypes PR_SET_DUMPABLE/PR_GET_DUMPABLE calls, nonroot check, bounded readiness and 12-second self alarm. No sudo/setuid/kernel-policy relaxation, emulator, process enumeration command, arbitrary PID kill or process group kill. EOF is ordinary retirement, with bounded wait/terminate/kill fallback on the same handle; timeout remains a failure. INT/TERM are recorded during cleanup and restored, never converted to successful control.",
+    "fixture_retirement": "Child wait/reaped receipt precedes fixture retirement. Exact fixture device/inode/UID/directory identity, expected child/self symlink names and exact targets are checked; unknown members or changed custody retain the fixture and fail. No recursive cleanup of /proc, shared SDK, global caches or other outputs. Next control requires previous child and fixture retirement.",
+    "evidence_and_finalization": "Observation is preserved before immediate Gradle stop; stop executes in finally even if observation preservation fails. Distinct observation/ownership/stop artifacts upload before cleanup. Finalizer requires the same source/control/task/SDK proof, successful immediate stop and both control-resource retirement receipts before calling unchanged generic hygiene.cleanup. Upload identity/digest, source and output ownership, a new unchanged real /proc absence audit and Gradle stop still gate deletion. A failed host observation remains nonzero even if a separate final cleanup sample later succeeds.",
+    "privacy": "Actual-host audit exposes bounded aggregate counts, closed error codes/diagnostic operation-selection-errno and SDK binding hashes, not arbitrary process PID/argv/environment/executable path. Only this task's synthetic child PID/readiness and fixture basename are recorded by the adapter; exception text/private paths are not serialized.",
+    "workflow_isolation": "One explicit linux-process-probe option; default full and existing five jobs remain. Only desktop-android runs in probe mode, on ubuntu-24.04 with 10-minute bound. Other desktop job bodies are byte-identical; iOS differs only by additionally excluding this probe. Existing Linux build/SDK/managed-device/artifact commands and finalizer bodies are unchanged except full-only if fences. No Store workflow changes, new matrix, private credentials, caching-as-runtime claims or publication route.",
+    "regression_scope": "Existing workflow contract gains a closed probe step/name/order/runner/timeout/input/artifact-path contract. Nine small adapter test methods cover input/source/control rejection, exact file hashes, expected-negative separation, readiness/timeout/interrupt retirement, wrong denial classification, unreaped/unknown fixtures, host failure and cleanup delegation. Two added workflow methods cover lane isolation and exact bindings/uploads. Existing hygiene controls are reused; no parallel diagnostic framework."
+  },
+  "resolved_findings": [
+    {
+      "id": "LPROC-COMPAT-01",
+      "severity": "compatibility",
+      "original_test_sha256": "9451d59f6bd1c8ab1e61f4a47fd14f0d3009a452168e6594b8759395ac969d11",
+      "issue": "New adapter fixture class used actual Unix UID/signal/symlink operations without an explicit Linux applicability gate, unlike the established procfs fixture class; direct Windows test discovery could fail for an irrelevant platform.",
+      "author_correction": "Added @unittest.skipUnless(sys.platform == 'linux', 'Linux-only procfs/UID/symlink controls') to the new fixture class; no method, adapter, workflow or production-acceptance logic changed.",
+      "corrected_test_sha256": "51e3086b6bc43712e689f3c06584cfc9659adbdf45564d16f60c8493f8891325",
+      "independent_resolution": "Decorator reopened and statically verified. The nine new fixtures explicitly skip non-Linux; this does not waive Linux execution or simulate a runtime pass."
+    }
+  ],
+  "independent_static_check": {
+    "status": "STATIC_SOURCE_PINS_AST_AND_UNCHANGED_FULL_LANES_PASS",
+    "proposed_files": [
+      {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/linux-process-probe-01/proposed/.github/workflows/production-verification.yml",
+        "bytes": 48085,
+        "sha256": "57b112d806277eeb861efc7d58cffc76878210a4c441a7229d064351ecb126f2"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/linux-process-probe-01/proposed/scripts/ci/linux_process_probe.py",
+        "bytes": 15616,
+        "sha256": "2696b0d81f1113eeaea20b431191788925053703d2ed6e12d72489041c6f76b6"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/linux-process-probe-01/proposed/scripts/release/workflow_contract.py",
+        "bytes": 58298,
+        "sha256": "d1b625c48af28eb0a53153f08b928fc818153d0c6eb4a9275bf7ed78700d7104"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/linux-process-probe-01/proposed/scripts/release/tests/test_workflow_contract.py",
+        "bytes": 51196,
+        "sha256": "c0539b7b2daeef29936aa3c4763e3ee1876ff53b60fb9d68e787388eaa363372"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/linux-process-probe-01/proposed/scripts/release/tests/test_linux_process_probe.py",
+        "bytes": 13240,
+        "sha256": "51e3086b6bc43712e689f3c06584cfc9659adbdf45564d16f60c8493f8891325"
+      }
+    ],
+    "python_files_parsed": 4,
+    "child_literal_syntax_parsed": true,
+    "new_unit_methods": 9,
+    "non_linux_fixture_tests": "EXPLICIT_SKIP_ONLY",
+    "other_desktop_jobs": "BYTE_IDENTICAL",
+    "ios_change": "EXCLUDE_ONLY_LINUX_PROBE",
+    "existing_linux_step_bodies": "IDENTICAL_EXCEPT_EXPLICIT_FULL_SCOPE_IF",
+    "dependency_helper": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/android-proc-permission-diagnostic-01/proposed/scripts/ci/verification_hygiene.py",
+      "sha256": "1fc2fb6f0b3bb7a505edc63277e0fe974a67ccf972753eec0da60386438c16f4"
+    },
+    "project_execution": false
+  },
+  "execution_accounting": {
+    "project_module_imports": 0,
+    "project_validators_executed": 0,
+    "tests_executed": 0,
+    "process_experiments_executed": 0,
+    "builds_executed": 0,
+    "network_or_actions_calls": 0,
+    "source_or_git_writes": 0,
+    "additive_output": "Only this review report.",
+    "checks_actually_performed": "Read-only Git/source/log inspection, standard-library hashing, four Python AST parses plus the literal child program's AST, static workflow/unchanged-lane comparisons. Final static assertion command exited0.",
+    "inspection_correction": "An initial reviewer-only assertion guessed12 top-level child AST statements; source inspection showed13. The counting assumption was corrected, not the program or evidence. This was not a project/native test failure.",
+    "cleanup": "No build/test cycle, child process fixture, SDK mutation, simulator, worker or bytecode output created by reviewer; no Gradle stop or cleanup command issued from this read-only review lane."
+  },
+  "open_findings": [],
+  "limits_and_next_actions": [
+    "Approval is only for these five proposed byte-pinned files, with the separately reviewed diagnostic helper at the pinned hash. Root alone may adopt after the current frozen full-D collector/final stop completes.",
+    "Held drafts retain ROOT-relative imports/contracts. Root must use a complete bound overlay or reviewed adoption, not execute a partially staged draft against stale canonical dependencies.",
+    "Root still must execute focused Linux tests and the shared real nonroot control with exact adapter/helper hashes and an actually owned SDK/resource fixture; no fake GitHub environment or repository/global-SDK permission changes are needed.",
+    "A hosted diagnostic, if still justified after local controls, needs a newly frozen/committed source and fresh ten-file digest/request binding. This report neither dispatches nor approves an unseen request.",
+    "Positive/negative control expectations are unexecuted source logic in this review. No actual /proc failure location, errno or process classification is established here.",
+    "The sampling oracle remains bounded/non-atomic, selected-UID/bound-SDK/emulator-path-only, not task ownership, process termination, AVD retirement, continuous absence, app runtime or post-build reproduction.",
+    "No original A/B/C credit, combined-D pass, strict file-protection repair, physical-device, Store or owner/legal approval is supplied."
+  ],
+  "readiness": "NOT_READY"
+}

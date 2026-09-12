@@ -1,0 +1,165 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/fixture_review",
+  "reviewed_at": "2026-09-10T09:03:41.357Z",
+  "status": "APPROVED_SCOPED_HISTORICAL_B30_AND_MAPPED_SOURCE_APPLICABILITY_TO_75C",
+  "findings": [],
+  "aliases": {
+    "C": "remediation-runs/2026-09-07-local-readiness",
+    "N": "remediation-runs/2026-09-08-continuation"
+  },
+  "source": {
+    "commit": "75c104734373703570a307de9c7a53d291bc2718",
+    "tree": "4d5b660c5f508a3eb8d01cd9203f2503570dbb18",
+    "branch": "fix/local-readiness-2026-09-07",
+    "source_commit": "966646f8eabdc79ce599c48bf37c7871fcb3cf4b",
+    "inventory_only_delta": "docs/review/INDEPENDENT_REVIEW_INVENTORY.csv",
+    "inventory_sha256": "0b3248a142bc5aec0a2ccef4733925e985748ab6e478e79fa9da4c347544a105",
+    "comparison_commits": [
+      "360fc797a85e1e494334fd8cc11b4e739981cea8",
+      "4ccfafcfc361231cfb730178b3798ebcb6304770",
+      "15e8982b35e39006868868a11c6f4e1864e613a7",
+      "75c104734373703570a307de9c7a53d291bc2718"
+    ],
+    "inspection": "Exact local final HEAD/tree/branch, full history and clean tracked state verified. Direct Git path/type/mode/object plus current SHA comparisons; no network/remote check by reviewer."
+  },
+  "unchanged_objects": {
+    "columns": [
+      "mode",
+      "type",
+      "object"
+    ],
+    "rows": {
+      "composeApp": [
+        "040000",
+        "tree",
+        "27e88880f97d3148184c80c1fa40bae958530a22"
+      ],
+      "shared": [
+        "040000",
+        "tree",
+        "03addf8feb5d9722b69539aa21857e522c8c00f2"
+      ],
+      "game-modes": [
+        "040000",
+        "tree",
+        "d56b07334d549c3a6d4d3819f2bff645c149aa50"
+      ],
+      "build-logic": [
+        "040000",
+        "tree",
+        "3fa3848246aa0204b6daf067617b0aed69c7510c"
+      ],
+      "gradle": [
+        "040000",
+        "tree",
+        "56fe4ae6668625c7cd9f357c52bb7ba9c684a8c9"
+      ],
+      "config": [
+        "040000",
+        "tree",
+        "3081d67d7c14ca8ffc7b30824dc5b1a81c0f0fd4"
+      ],
+      "iosApp": [
+        "040000",
+        "tree",
+        "da6d918bb46c4c29640b8ce5c4484ca57fc5101e"
+      ],
+      "build.gradle.kts": [
+        "100644",
+        "blob",
+        "638e4c7d0a4056168c1bc0560fbcde4cf849561f"
+      ],
+      "settings.gradle.kts": [
+        "100644",
+        "blob",
+        "4beca55a8d697ca0c840e6410a3a3015118bd15c"
+      ],
+      "gradle.properties": [
+        "100644",
+        "blob",
+        "21fe7eb8e2b4ccb19473272cb8aaa45faa2bd38b"
+      ],
+      "gradlew": [
+        "100755",
+        "blob",
+        "faf93008b77e7b52e18c44e4eef257fc2f8fd76d"
+      ],
+      "gradlew.bat": [
+        "100644",
+        "blob",
+        "9d21a21834d5195c278ba17baec3115b2aaab06e"
+      ]
+    }
+  },
+  "B30": {
+    "actual_run": "34362984912/1",
+    "actual_source": "360fc797a85e1e494334fd8cc11b4e739981cea8",
+    "actual_root": "N/actions/34362984912/native-evidence/ios-readiness-30",
+    "raw_pins": {
+      "receipt.json": "29cb6106fa32866da27e5b85ee676b87d4103d354125a22675c98b0bc57da982",
+      "input-manifest.json": "b33b30a344b331928ad33f1fd76544c2d34669b478b4d3015a3bab75c8bc4030",
+      "normal-launch-observations.json": "9cc42d74fbb977a026d2ff9a026f24437e339e8c68a1e0592e7bd814b121088f",
+      "separate-external-image-provenance.json": "0971ee6d7c9da5fb37bbd18229e5baaf7a3ae660f5fcecb0b5f2cf7fbb7330d0"
+    },
+    "actual": "Eight identified XCTest repetitions/48 periodic Home observations PASS; separate ninth public launch three-selected-image real libproc PASS; notices/recorded cleanup PASS. Whole A29/B30 workflow remainsFAIL.",
+    "normal_control_rows": 98,
+    "normal_unbound_sha256": "7d598e39bd718e0f8347d0eee839b5aad2bece2bddb82e08ce7f6c1ea592c413",
+    "normal_manifest": {
+      "path": "N/actions/34362984912/native-evidence/reviewed-preflight/normal-controls.json",
+      "sha256": "38acea4c500414b621c9d0c61e6f8a374673807b12ebc68ba5db253e012b3a5a"
+    },
+    "normal_runner_sha256": "766087ddf72b50f51b1c4072c64afb1a7dd231f047d26e534817cddf9be295bf",
+    "control_inspection": "Final closed set25 normal-folder +72 scripts/verification/ios-readiness +1 pinned Darwin helper equals actual B30 controls. Every path/blob/mode matches atB30/4cc/15e/75c; current SHA matches every retained row. Actual input-manifest controls equal reviewed-preflight99 rows. Remove ONLY historical N/ios-readiness-source-ci.json binding row (c3e7a371...), not another control.",
+    "original_functional_foundation_rows": 98,
+    "original_functional_foundation_unbound_sha256": "fd8d51f1b7be4715c2db504b7a1aae012bbd1bec7f047a77ae4aeee294c1207f",
+    "original_functional_manifest": {
+      "path": "N/actions/34440661169/native-preflight/l08-controls.json",
+      "sha256": "bc15e9e63a38de76853c0a4209c6a5baf745a716bd71df78ec70efdc7efa1b5c"
+    },
+    "functional_inspection": "Final functional75 direct files plus23 fixed composition/foundation/support/reference controls equal A37 preflight excluding only its binding row. All SHA/blob/modes unchanged15e→75c. Entire original normal/support/functional/composition/foundation directories unchanged, including path sets and selection recipes.",
+    "binding_boundary": "Historical bound99 is not a future binding. New OS-only manifest is a separate private domain, not replacement B/F controls. No fresh paired preflight or expensive unchanged B rerun is required for this bounded applicability.",
+    "copy_rows": {
+      "actual_B30": 754,
+      "baseline15e": 758,
+      "final75c": 765
+    },
+    "copy_delta": "Since15e seven new OS-only scripts and six changed CI/guide/release-test scripts; workflow/inventory also differ outside copy selection. SinceB30 eleven added/eight changed nonshipping scripts, no removals. Whole-source/copied-byte equivalence NOT claimed.",
+    "copy_policy": "Independently read unchanged BUILD_PREFIXES/BUILD_ROOTS/PROTECTED literals and Git path membership; actual B30 copied-manifest pin63e4aaaadf7cef26ea097a4e8686d7ace0e8d7620a1397abfc2c1225c6de53f6.",
+    "recipe_inspection": "All14 newly reviewed OS/CI file hashes equal final Git/current bytes.19 listed CI AST guard definitions and original runner/profile/lifecycle/budget constants remain identical15e→75c; normal CLI+libproc branch AST identical. Ordinary normal keeps adhoc/qualified-xcode-26.3/direct-owned-v1/libproc,6000s child/240min job. Non-OS cleanup retains original two-stop guard; OS flag only exact OS label.",
+    "isolation": "Reopened private prefixed import cache/sys.path restoration and explicit OS selection. New copy/manifest/receipt hooks modify private normal modules only, not ordinary B or shipping source. Full new-driver review is reused only for exact pinned bytes.",
+    "source_review_pins": {
+      "N/reviews/os-recovery-ci-independent-01.json": "b3fee55d3dee92e57b73e90a57bd9bb9b276ea0d438b08f532f5848927015ae2",
+      "N/reviews/os-recovery-copy-swift-independent-01.json": "17a9b45b0c7de7d157677fa07d74df83d6860ffa4b976087e5a3926ad4fe01c8",
+      "N/reviews/os-recovery-driver-receipts-independent-01.json": "2308fbeababbfbee1388267e979abcbc1df33ddfd02a6dd0515aeb3c83055703"
+    },
+    "disposition": "B30 historical scoped evidence is applicable to75c source/control/normal recipe, NOT newly executed75c runtime/B38/B40 or identical future binary/runner image. No mapped-page/all-map/continuous-atomic lifetime/device/Store claim."
+  },
+  "original16_timer": {
+    "original_defects": 16,
+    "counting": "MF-C1/M-C01 alias one defect; Leave-confirmation policy separate, not a17th original defect.",
+    "source_references": 101,
+    "unique_source_files": 92,
+    "source_projection_sha256": "2382a2e6ada8f9025ab8d24553467815fb1143d13c5b1e41d280d4b67de05167",
+    "historical_primary_groups": 43,
+    "historical_descriptor_counts": {
+      "PASS": 320,
+      "SKIP": 3
+    },
+    "selection_projection_sha256": "375f83bd88f69769844bc375775da4bbae5e49216b7e68a3249741afa3b120ec",
+    "inspection": "All51 mechanism references +timer source +49 descriptor source references directly match4cc/15e/75c SHA and path/mode/type/object. Both projections exactly equal pinned15e review.32 desktop groups/215 descriptors +7 Apple/66 +4 Python/42 =323 historical descriptors. Six later UI rows excluded from primary43, their source files included in92 comparison.",
+    "timer": "Six local+four host mapped methods preserve confirmation-time exclusion, other pause ownership and no peer clock authority. Virtual/synthetic evidence, not physical Back/LAN.",
+    "actual_boundary": "Historical fullD34420745957/1 remainsFAIL. Three physical peer delivery skips remainSKIP; subset counts overlap and are not additive totals. Final75c actual D subset requires separate raw task/cache/skips/XML reconciliation; no tests reexecuted here."
+  },
+  "reference_pins": {
+    "N/reviews/b30-c07-os-recovery-final-applicability-prep-01.json": "7d9da21f3270907aa8801f23aeb48e65363f7414142a6b4f9b18c2b22f8f2d2f",
+    "N/reviews/native-b30-actual-independent-01.json": "f2426faf649d1a9b13fbdfa8ef59741c7cf38d62f5f38f54e4afadbf8a3788fd",
+    "N/reviews/a37-preflight34440661169-admission-independent-01.json": "74d8b9e3f35c8ad814890359f286954fec89d2d988670b4ff3b0a9d279ee204e",
+    "N/reviews/final-original16-timer-15e-applicability-01.json": "1284d1e2fc9e7c70fbf282ed3482c4dae3e73a46af107e2db19813723fc69b59",
+    "N/reviews/full-d-original16-timer-desktop-regressions-independent-01.json": "09a813999bf311f3ff24666038689cffec18e885125db696a0782cc410813efc",
+    "C/reviews/original16-timer-commit-evidence-map-01.json": "82cc49b33044b27c1be99115847a04bfa505fa5ee28706ccfd7e30f4f0e6f0ff",
+    "C/reviews/original16-timer-regression-descriptors-01.json": "b2fee80c8d9210fb44ab8b226a97912d30f381bc3eeea7ec9d4cb1a0e8d7e7af"
+  },
+  "conclusion": "Approve only scoped historical B30 and original16/timer source applicability at75c. No strict-protection waiver, OS runtime, C08, combinedD, physical-device, Store/signing/publication or owner/legal readiness certification.",
+  "activity": "Read-only Git/stdlib AST/JSON/hash/path/string inspection; sole additive report write. No project imports/extracted function execution, tests/builds/network/dispatch/source edits or workers. One read-only list-vs-dict shape probe corrected before comparisons. No cleanup cycle owed; historical failed/archived evidence preserved."
+}

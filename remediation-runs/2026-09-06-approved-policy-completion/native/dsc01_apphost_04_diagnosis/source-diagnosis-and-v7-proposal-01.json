@@ -1,0 +1,366 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-09-06T15:06:52.208805+00:00",
+  "reviewer": "/root/native_fix_review",
+  "kind": "BOUNDED DIAGNOSIS AND V7 PROPOSAL — NOT EXECUTION OR REPAIR APPROVAL",
+  "source_identity": {
+    "commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+    "tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+    "branch": "main",
+    "source_manifest_sha256": "9ac2be536979f2216b39c10a6d148125a12380987d4efd483bbcbaeb1733318e"
+  },
+  "tracked_diff_sha256": "148fb4583d8fa8341b3cbc48a7fc0bc7564bf4df5c27e9d80e32c6bfdc57b784",
+  "v6_control_sha256": "0dbdbadda5689679e02acf5f38db184f6d0d9393ba6044ab048dcf52c1b1318e",
+  "classification": "TEST/EVIDENCE GAP: real Mafia setup successor was not found; exact preceding tap effect is unobserved",
+  "facts": [
+    "Xcode exited 65 after executing exactly five XCTest cases: four production UIKit container tests passed; one settings/local-games/OS matrix failed; skipped=0.",
+    "The matrix completed settings (22 raw rows/four boots) and Whodunit (97 raw rows); Mafia has seven pre-session rows only; actual OS Settings was not reached.",
+    "In the Mafia process, real Settings selected English; raw row7 has setting=en, preferredLanguage=en, native child=force_ltr, settings unmounted, no local game surface or canonical capture. Row7 precedes the catalog card tap.",
+    "The raw XCTest log records a Games tab tap, two upward catalog swipes, and one tap on the source-whitelisted Mafia button. Second scroll idle-return at327.32s; Mafia tap starts327.37s (0.05s later).",
+    "The following original PassAndPlay selector wait did not find the control, then the V6 helper tried14 generic app swipes and failed at copied test line393. No catalog target frame, actual hit point, callback receipt, or post-tap destination observation was retained.",
+    "The tap event log is not itself proof the Compose callback executed. These receipts do not establish an application crash, invalid game rules, lost session, wrong selector text, or an intentionally skipped topology picker."
+  ],
+  "complete_reachable_source_path": [
+    "Production ContentModule registers Whodunit then Mafia in one DefaultGameShellRegistry; Home renders those exact bindings.",
+    "Home GameHeroCard semantic description is the binding public openContentDescription, and its enabled Role.Button clickable invokes onOpen -> onGameSelected(game.definition.id). There is no nested alternative Mafia click.",
+    "App onGameSelected resolves GameShellRouter.newGame; the same registered ID yields GameShellLaunch.New. AppNavigator.openGame stores that exact launch and publishes the matching Game route.",
+    "AppNavDisplay route adapter calls App gameContent, which resolves the stored launch/binding and invokes MafiaGameShellBinding.Content.",
+    "MafiaShellContent initializes screen from launch.initialMafiaScreen(); New maps to Setup, not LocalGame. Setup renders the same generic PlayModePickerScreen as Whodunit.",
+    "Mafia advertises PassAndPlay capability; generic picker sets enabled=availability.passAndPlay and the exact current English description Start a pass-and-play session on this device. Its actual click enters Mafia LocalGame. No production source supports a different required selector or skipping this user interaction."
+  ],
+  "counter_evidence_and_uncertainty": [
+    "The Whodunit card and same PassAndPlay label successfully advanced in the preceding process. Its catalog tap had no immediately preceding swipe, but that difference is not a causal experiment.",
+    "Apple documents isHittable as availability of a current computed hit point and tap() as sending an event. Neither is an application transition receipt.",
+    "Exact pinned CMP1.10.3 scrolling source can consume a pointer down while scroll/overscroll is in progress. This makes a settling race plausible, but V6 has no runtime scroll/frame evidence to prove it occurred.",
+    "The copy-only Swift observer overlays the top at72pt. Without target/overlay frames there is no evidence its bounds actually obstructed this Mafia tap. Occlusion remains only a hypothesis.",
+    "The V6 raw sample after a new game screen would be missing even if routing advanced to Setup, because only Settings and initialized local sessions have compositional probes. Surface=none cannot be used to infer the Home route after the tap.",
+    "No further runtime or app-host test was run by this reviewer. Source review narrows the next experiment; it does not turn the failed matrix into PASS."
+  ],
+  "v7_proposal": {
+    "scope": "Catalog entry helper for the two actual source-whitelisted game cards only. Preserve V6 immutably. No production edits, callback invocations, route injection, alternative selector, session reset, extra Start taps, or weakened retained-state/direction/geometry checks.",
+    "preconditions": [
+      "Keep the actual Settings EN -> Games route; enforce exact expected catalog button prefix and unique typed Button target when it becomes visible. Ambiguous matches fail, never choose a fallback.",
+      "Use bounded real scrolls as needed (at most the existing14); after a scroll collect a fixed sequence of public metadata samples through nonblocking timed XCTest expectations before attempting a tap.",
+      "Require stable positive finite target/window/overlay/tab geometry over multiple samples, target still enabled+hittable, and an inset point inside the visible target intersection but outside measured overlay and bottom navigation. This is a readiness measurement, not an assertion that all animation physics are exposed.",
+      "Measure the copy-only observer boundary using a dedicated noninteractive accessibility container identifier, or a complete measured union of its known controls plus the source-defined padding; do not guess coordinates or inspect private UI classes.",
+      "Read only exact allowed public catalog/setup labels or copy-only observer identifiers. Do not export accessibility trees, arbitrary labels/values, roles, assignments, or canonical state."
+    ],
+    "action_and_postcondition": [
+      "Emit one attested coordinate plan tied to the current exact target frame, and physically tap the corresponding element-relative coordinate once. No second activation if the successor is absent.",
+      "Before attempting PassAndPlay, wait for the actual expected generic-picker control and disappearance of the catalog target/tab UI within a bounded deadline. Do not swipe another unknown screen after failed routing.",
+      "On failure, retain bounded before/after public-query counts, hittability, enabled state, numeric frames and requested hit point, then fail explicitly. Do not infer callback success from an API tap return."
+    ],
+    "diagnostic_bounds": {
+      "per_row_bytes_max": 4096,
+      "rows_per_catalog_attempt_max": 96,
+      "catalog_attempts": 2,
+      "payload_fields": [
+        "schema",
+        "game enum",
+        "step enum",
+        "sample/scroll ordinal",
+        "monotonic time",
+        "query enum",
+        "count capped16",
+        "exists/hittable/enabled",
+        "finite frame",
+        "window frame",
+        "observer frame",
+        "known tab frame",
+        "planned normalized point",
+        "successor presence"
+      ],
+      "never_capture": [
+        "full hierarchy",
+        "arbitrary label/value",
+        "screenshot of private phase",
+        "another player state",
+        "secret role or seed"
+      ]
+    },
+    "control_verification_requested": [
+      "Execute pure safe-hit-plan boundary checks including zero/negative/nonfinite frame, fully obscured target, partial visibility, top overlay overlap, bottom-tab overlap, moving frame, tiny sliver, and valid stable target.",
+      "Add source/control checks that catalog activation remains exactly one real tap outside retry loops, expected successor cannot be bypassed, all new diagnostics are bounded/public-only, and the four UIKit+one matrix XCTest execution contract stays exact.",
+      "Require independent review of the full V6->V7 delta and root binding to the unchanged source manifest, then root-only execution after the current smoke cycle is cleaned.",
+      "Preserve all original12 windows/72 passive samples per game, real Settings baseline, synthetic-only in-game language distinction, raw numerics, identity invariants, and exact source/copy/cleanup receipts.",
+      "If V7 passes catalog routing, report new evidence for that scoped execution; do not claim it retrospectively proves fling or overlay causality for V6."
+    ]
+  },
+  "sources": [
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/composeApp/src/commonMain/kotlin/com/parlor/app/di/ContentModule.kt",
+      "sha256": "86321739a143ff494b8ff42c19d728119b81163eb572afaeed6a89da52a62635",
+      "matches_frozen_source": true,
+      "investigated_line_ranges": [
+        [
+          39,
+          51
+        ]
+      ]
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/composeApp/src/commonMain/kotlin/com/parlor/app/shell/home/HomeScreen.kt",
+      "sha256": "ae11eb3dd97c28520205237b95c28766ccd6ce8dd0e005f82a0d63866323e152",
+      "matches_frozen_source": true,
+      "investigated_line_ranges": [
+        [
+          95,
+          173
+        ],
+        [
+          368,
+          452
+        ]
+      ]
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/composeApp/src/commonMain/kotlin/com/parlor/app/App.kt",
+      "sha256": "622b679a2ef023fab17bf6c8ed8eb38c1fbc2b76a391f5f9a8298d59da9dda59",
+      "matches_frozen_source": true,
+      "investigated_line_ranges": [
+        [
+          217,
+          227
+        ],
+        [
+          293,
+          306
+        ],
+        [
+          325,
+          333
+        ]
+      ]
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/composeApp/src/commonMain/kotlin/com/parlor/app/shell/game/GameShellRegistry.kt",
+      "sha256": "43c74ad2273f4d1ae72cf50ead697167e7a8d7f47b57864443937d851ecf3017",
+      "matches_frozen_source": true,
+      "investigated_line_ranges": [
+        [
+          28,
+          42
+        ],
+        [
+          164,
+          222
+        ],
+        [
+          253,
+          267
+        ]
+      ]
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/composeApp/src/commonMain/kotlin/com/parlor/app/AppNavigation.kt",
+      "sha256": "f489d1db51d516b6b94dce1c4bc1fae2344644749209f098a4e76919126c1a19",
+      "matches_frozen_source": true,
+      "investigated_line_ranges": [
+        [
+          71,
+          120
+        ],
+        [
+          154,
+          171
+        ]
+      ]
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/composeApp/src/commonMain/kotlin/com/parlor/app/AppNavigationHost.kt",
+      "sha256": "c53d585b74f4e93f0a4fad66bf0b353aaa76eb56e0b11f37bbdc5e09b98378a5",
+      "matches_frozen_source": true,
+      "investigated_line_ranges": [
+        [
+          24,
+          113
+        ]
+      ]
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/composeApp/src/commonMain/kotlin/com/parlor/app/shell/game/MafiaGameShellBinding.kt",
+      "sha256": "3bc7af78980e52208974c28d21bbff0d2714a6d55cbc0e64bb958a28823ea99f",
+      "matches_frozen_source": true,
+      "investigated_line_ranges": [
+        [
+          35,
+          81
+        ],
+        [
+          98,
+          183
+        ],
+        [
+          278,
+          290
+        ]
+      ]
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/composeApp/src/commonMain/kotlin/com/parlor/app/shell/playmode/PlayModePickerScreen.kt",
+      "sha256": "ad1364c967dee5c0f7c9838ae26b4fd946f8bb94b6cfdeece0e11f243f7c5ad5",
+      "matches_frozen_source": true,
+      "investigated_line_ranges": [
+        [
+          93,
+          216
+        ],
+        [
+          268,
+          310
+        ]
+      ]
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/composeApp/src/commonMain/composeResources/values/strings.xml",
+      "sha256": "076cedf11593aa46aba9bb3ee0ec5538de78512d1a8d2caaa65646f5373a5883",
+      "matches_frozen_source": true,
+      "investigated_line_ranges": [
+        [
+          5,
+          8
+        ],
+        [
+          45,
+          45
+        ],
+        [
+          119,
+          119
+        ]
+      ]
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/ParlorBottomTabBar.kt",
+      "sha256": "6e93652ad09dd7e15fc69adefd903b18d5cbabcdfe57fe1b49e3251a1a216816",
+      "matches_frozen_source": true,
+      "investigated_line_ranges": [
+        [
+          48,
+          112
+        ]
+      ]
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/iosApp/iosApp/ContentView.swift",
+      "sha256": "5881b354ccc45340100356fbf37480e94efdcc2e8fe823f0bb6b5b60f8ccaa87",
+      "matches_frozen_source": true,
+      "investigated_line_ranges": [
+        [
+          1,
+          62
+        ]
+      ]
+    }
+  ],
+  "controls": [
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v6/IOSAppLaunchUITests.swift.in",
+      "sha256": "0df2ec21abe845bbe1f6c231f91f076814d04c1de575c2164a029a578003479d",
+      "line_ranges": [
+        [
+          124,
+          205
+        ],
+        [
+          373,
+          395
+        ],
+        [
+          498,
+          513
+        ]
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v6/DSC01Probe.swift.in",
+      "sha256": "91dceffc5188ddc2c59c1ccea4968c692211f75c27528bc3be3458feaa38f14f",
+      "line_ranges": [
+        [
+          380,
+          412
+        ]
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v6/run_dsc01_apphost_cycle.py",
+      "sha256": "9facbf591d378a665e933b632d83cb50b9e41a2bf300983cd991473f41ee0d54",
+      "line_ranges": [
+        [
+          465,
+          498
+        ]
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v6/copied_sources.py",
+      "sha256": "a33fee7e8ac9cae3d80de0c9d906b252cbc0cc939ff2b670fcdd62eb349a2221",
+      "line_ranges": [
+        [
+          9,
+          21
+        ],
+        [
+          79,
+          130
+        ]
+      ]
+    }
+  ],
+  "evidence": [
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-04/xcodebuild.log",
+      "sha256": "d7e0016616ce90478209b6c3c80fd07fc1b4aef005757ded25c0a4af6133ea1b",
+      "line_ranges": [
+        [
+          2143,
+          2204
+        ],
+        [
+          2883,
+          3063
+        ],
+        [
+          3063,
+          3245
+        ]
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-04/xcresult-summary.json",
+      "sha256": "8cbaa1412988178b9a13fc7e930e659ffa1b10ff5c3f8551d2ce31035d07f3c6"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-04/xcresult-tests.json",
+      "sha256": "632c01aa843f9fd8379cdd6de0be932954ca2e8606ae5d2736063d75dbd8a355"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-04/probe-mafia-result.json",
+      "sha256": "b81964d148470c4318b08a9005741354ac558253fbddde55db8777092f88e92b"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-04/probe-settings-result.json",
+      "sha256": "cd485058cc3d1df5bab5ba1871d92d86495f3945cf940bf7647184633dc042c3"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-04/probe-whodunit-result.json",
+      "sha256": "47e3006e90baceb18df0c2fa54be0ed390fdc6e3faa164714b679e789a6e1d7f"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-04/receipt.json",
+      "sha256": "0a16f241de2dc2769ec680ba6925108a6191771e2d9d10be611923eec15a4955"
+    }
+  ],
+  "research": [
+    "research/xcui-hit-testing-references-01.json",
+    "research/cmp-swipe-tap-sources-01.json"
+  ],
+  "execution_and_cleanup": {
+    "child_started_build_test_app_or_server_processes": false,
+    "child_production_or_git_edits": false,
+    "child_writes": "Only this diagnosis and compact authoritative public-source research under assigned native/ path. No existing evidence modified.",
+    "research_command_exit": 0,
+    "temporary_archive_handling": "Dependency sources read in memory; only four relevant source files and receipts retained. No persistent downloaded archive.",
+    "root_receipt_review": "apphost04 receipt says immediate/final Gradle stops0, source/control/copy unchanged, owned simulator/temp/workers cleaned, cleanup PASS. This statement reads the receipt and does not replace root cleanup execution."
+  }
+}

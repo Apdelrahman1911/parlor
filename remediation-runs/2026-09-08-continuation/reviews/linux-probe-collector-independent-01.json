@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "kind": "ONE_OFF_LINUX_PROBE_COLLECTOR_INDEPENDENT_SOURCE_REVIEW",
+  "reviewer": "/root/ci_review",
+  "author": "/root",
+  "completed_at": "2026-09-10T12:31:55.837680+00:00",
+  "status": "APPROVED_FOR_ONE_EXACT_PROBE_COLLECTION_NOT_RUNTIME_VERDICT",
+  "findings": [],
+  "collector": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/linux-probe-collector-01.py",
+    "bytes": 5660,
+    "sha256": "fa5b841123ee2c92f62c99b48a9ea6e1735319f17f1387f28ff28e70d9db11ba"
+  },
+  "scope": {
+    "run_id": 34476522188,
+    "run_attempt": 1,
+    "source_commit": "7d9ea1eac42ebe7630a01e3dbe9aafcf4f36306b",
+    "source_tree": "6d2337b11a07f64cf677bbc9ae3d21138a245c5f",
+    "repository": "Apdelrahman1911/parlor",
+    "branch": "fix/local-readiness-2026-09-07",
+    "workflow_sha256": "57b112d806277eeb861efc7d58cffc76878210a4c441a7229d064351ecb126f2"
+  },
+  "reused_helper": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/full-d-compact-collector-02.py",
+    "bytes": 17464,
+    "sha256": "3af9603aff8e20aa1380f844897ed356426ba29c4dd5172cc5c60edb2dea10de",
+    "functions": [
+      "archive_members",
+      "extract_selected",
+      "require",
+      "now",
+      "new_json",
+      "sha_file"
+    ],
+    "unchanged": true,
+    "source_review_sha256": "3e3f5be8590e2cfc808629c8787f414873c32169179d1a8b8dce737dcb372140",
+    "prior_14_fixture_actual_review_sha256": "585c499356175a982143d5ca168f24cac989c89fc8da3dcb5fc5e05584bdbb37",
+    "reuse_limit": "Reopened the exact helper source and existing reviews; no project import, fixture execution or new framework. runpy uses non-main name, so its guarded main does not dispatch collection."
+  },
+  "reviewed_controls": [
+    "Arguments require a positive run ID and 40 lowercase hex source. Destination is a fresh exclusive directory under the nonredirected actions parent; files use exclusive creation, never overwrite or delete prior evidence.",
+    "Retains run/attempt/jobs/artifacts API metadata; both run descriptors require exact run, attempt1, source, branch, repository, workflow_dispatch, completed status and intended verification workflow.",
+    "Exactly five known job names, each bound to run/attempt/source/completed status; the four non-Linux jobs must be skipped. Main job conclusion is not converted to runtime success.",
+    "Exactly linux-process-probe-34476522188-1 and linux-process-probe-cleanup-34476522188-1. Each unexpired artifact binds run/source, declared compressed size <=4MiB and downloaded API SHA256/size equality.",
+    "Exact flat receipt basenames: parlor-verification-34476522188-1-desktop-android-{ownership,linux-probe,stop-linux-probe}.json in main; cleanup.json in cleanup artifact. These match the frozen workflow upload paths/names.",
+    "Pinned helper preflights every ZIP table before extraction: at most20 entries,4MiB expanded/archive,1MiB/file; rejects unsafe/noncanonical paths, duplicate/ancestor collisions, links/nonregular files and encryption; then streams every member for CRC/length/SHA256.",
+    "Only the exact expected current receipt files are selected. Safe directory entries may remain archive-only. Nonreceipt files fail the exact set check. Exclusive extraction rechecks path parents, length and hash against inspected bytes; original ZIPs retained.",
+    "Downloads exact main-job raw log. Success is only COLLECTED_NOT_RUNTIME_VERDICT; receipt contents, source/control bindings inside them, all step outcomes, observations and cleanup require a separate actual review.",
+    "The collection try/finally attempts ./gradlew --stop with90s timeout on success/failure and writes an exclusive download receipt. Stop failure is preserved and causes nonzero exit; failed collection remains COLLECTION_FAIL and original exception propagates. No build/clean/process signal/Store action is invoked by collector."
+  ],
+  "admission_conditions": [
+    "One coordinator-owned invocation only after run completion: /usr/bin/python3 -B remediation-runs/2026-09-08-continuation/reviews/linux-probe-collector-01.py 34476522188 7d9ea1eac42ebe7630a01e3dbe9aafcf4f36306b.",
+    "Normal non-optimized Python: no -O/-OO or nonzero PYTHONOPTIMIZE, because the helper-hash guard is a top-level assert. Recheck these reviewed collector/helper bytes and fresh destination immediately before invocation.",
+    "Keep coordinator stdout/stderr with the collection receipt, including any timeout/download exception. Download size checks are post-transfer acceptance checks with120s subprocess timeouts, not live byte throttles; the source-owned tiny probe/metadata scope and4MiB artifact precheck are the admission scope.",
+    "No blind retry/overwrite if collection is partial. Preserve partial files and investigate. Successful custody cannot repair D03 hosted cleanup or strict iOS failures."
+  ],
+  "review_execution": {
+    "method": "Read-only source/AST/hash/Git and existing-review JSON inspection only",
+    "collector_or_project_imports": 0,
+    "tests_or_builds": 0,
+    "network_or_Actions": 0,
+    "archive_extractions": 0,
+    "source_edits": 0,
+    "git_mutations": 0,
+    "output": "Only this assigned additive review JSON. No generated build/cache/workers requiring cleanup."
+  },
+  "verdict": "No blocking source finding for this one bounded collection under the explicit admission conditions. No actual probe observation, successful cleanup, D03 pass or readiness conclusion is asserted."
+}

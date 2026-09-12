@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "kind": "LEDGER_REVISION02_AUTHOR_PREWRITE_ASSEMBLY_FAILURE",
+  "author": "/root/evidence_audit",
+  "status": "PRESERVED_ADMINISTRATIVE_ASSERTION_BEFORE_ANY_WRITE",
+  "actual_exit_code": 1,
+  "actual_output": "Traceback (most recent call last):\n  File \"<stdin>\", line 39, in <module>\nAssertionError: REVIEW-1-ACTUAL-ERROR-QUOTATION\n",
+  "cause": "The initial exact-text replacement assumed three literal backslashes per quote from rendered JSON. Byte inspection instead found one U+005C before each inner quote; the replacement-count assertion failed before revision-directory creation or any write.",
+  "correction": "Derive the unique quoted line from the unchanged held bytes, verify the two actual slash codepoints, and remove them to match the decoded XCResult text. Keep exact three-edit scope.",
+  "not_application_control_or_test_failure": true,
+  "created_workers_or_outputs": false,
+  "recorded_at": "2026-09-09T05:18:20.248240+00:00"
+}

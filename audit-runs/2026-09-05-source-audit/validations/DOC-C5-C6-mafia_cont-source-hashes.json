@@ -1,0 +1,777 @@
+{
+  "commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+  "tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+  "timestamp": "2026-09-05T11:43:44.064387+00:00",
+  "records": [
+    {
+      "path": "shared/storage/src/commonMain/kotlin/com/parlor/storage/snapshot/FileBackedSnapshotStore.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/storage/src/commonMain/kotlin/com/parlor/storage/snapshot/FileBackedSnapshotStore.kt",
+      "sha256": "e2ca0be28fd2f0eafee1a55022653190cf30a8c6da620dc3dfe56f361e0da27f",
+      "reviewer": "/root/mafia_cont",
+      "timestamp": "2026-09-05T11:43:44.064387+00:00",
+      "reviewed_ranges": [
+        [
+          1,
+          246
+        ]
+      ],
+      "status": "READ_COMPLETE",
+      "relevance": "production-common-storage",
+      "cross_file_paths": [
+        "composeApp/src/commonMain/kotlin/com/parlor/app/di/StorageModule.kt",
+        "composeApp/src/commonMain/kotlin/com/parlor/app/storage/PlatformStorage.kt",
+        "composeApp/src/androidMain/kotlin/com/parlor/app/storage/PlatformStorage.android.kt",
+        "composeApp/src/iosMain/kotlin/com/parlor/app/storage/PlatformStorage.ios.kt",
+        "composeApp/src/androidMain/kotlin/com/parlor/app/storage/AndroidSnapshotFileSystem.kt",
+        "composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSnapshotFileSystem.kt",
+        "composeApp/src/commonMain/kotlin/com/parlor/app/di/AppModule.kt",
+        "composeApp/src/androidMain/kotlin/com/parlor/app/ParlorApplication.kt",
+        "composeApp/src/iosMain/kotlin/com/parlor/app/MainViewController.kt"
+      ],
+      "evidence": [
+        "validations/DOC-C5-mafia_cont.md"
+      ],
+      "findings": [
+        "DOC-C5"
+      ],
+      "uncertainty": "Narrow independent documentation-claim validation; full displayed ranges read, not a claim of full runtime/platform correctness. No build or device execution by validator."
+    },
+    {
+      "path": "composeApp/src/commonMain/kotlin/com/parlor/app/di/StorageModule.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/composeApp/src/commonMain/kotlin/com/parlor/app/di/StorageModule.kt",
+      "sha256": "9734dde8f751d0e5792577692c322051aa0adc7f45ed0fa6ac5961cf9295e87c",
+      "reviewer": "/root/mafia_cont",
+      "timestamp": "2026-09-05T11:43:44.064387+00:00",
+      "reviewed_ranges": [
+        [
+          1,
+          23
+        ]
+      ],
+      "status": "READ_COMPLETE",
+      "relevance": "production-common-composition",
+      "cross_file_paths": [
+        "shared/storage/src/commonMain/kotlin/com/parlor/storage/snapshot/FileBackedSnapshotStore.kt",
+        "composeApp/src/commonMain/kotlin/com/parlor/app/storage/PlatformStorage.kt",
+        "composeApp/src/androidMain/kotlin/com/parlor/app/storage/PlatformStorage.android.kt",
+        "composeApp/src/iosMain/kotlin/com/parlor/app/storage/PlatformStorage.ios.kt",
+        "composeApp/src/androidMain/kotlin/com/parlor/app/storage/AndroidSnapshotFileSystem.kt",
+        "composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSnapshotFileSystem.kt",
+        "composeApp/src/commonMain/kotlin/com/parlor/app/di/AppModule.kt",
+        "composeApp/src/androidMain/kotlin/com/parlor/app/ParlorApplication.kt",
+        "composeApp/src/iosMain/kotlin/com/parlor/app/MainViewController.kt"
+      ],
+      "evidence": [
+        "validations/DOC-C5-mafia_cont.md"
+      ],
+      "findings": [
+        "DOC-C5"
+      ],
+      "uncertainty": "Narrow independent documentation-claim validation; full displayed ranges read, not a claim of full runtime/platform correctness. No build or device execution by validator."
+    },
+    {
+      "path": "composeApp/src/commonMain/kotlin/com/parlor/app/storage/PlatformStorage.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/composeApp/src/commonMain/kotlin/com/parlor/app/storage/PlatformStorage.kt",
+      "sha256": "1f56d8b7adca7d5148445ec9e8f69d2f9a74f253d4c425cc2abd00a84594b690",
+      "reviewer": "/root/mafia_cont",
+      "timestamp": "2026-09-05T11:43:44.064387+00:00",
+      "reviewed_ranges": [
+        [
+          1,
+          41
+        ]
+      ],
+      "status": "READ_COMPLETE",
+      "relevance": "production-common-storage-binding",
+      "cross_file_paths": [
+        "shared/storage/src/commonMain/kotlin/com/parlor/storage/snapshot/FileBackedSnapshotStore.kt",
+        "composeApp/src/commonMain/kotlin/com/parlor/app/di/StorageModule.kt",
+        "composeApp/src/androidMain/kotlin/com/parlor/app/storage/PlatformStorage.android.kt",
+        "composeApp/src/iosMain/kotlin/com/parlor/app/storage/PlatformStorage.ios.kt",
+        "composeApp/src/androidMain/kotlin/com/parlor/app/storage/AndroidSnapshotFileSystem.kt",
+        "composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSnapshotFileSystem.kt",
+        "composeApp/src/commonMain/kotlin/com/parlor/app/di/AppModule.kt",
+        "composeApp/src/androidMain/kotlin/com/parlor/app/ParlorApplication.kt",
+        "composeApp/src/iosMain/kotlin/com/parlor/app/MainViewController.kt"
+      ],
+      "evidence": [
+        "validations/DOC-C5-mafia_cont.md"
+      ],
+      "findings": [
+        "DOC-C5"
+      ],
+      "uncertainty": "Narrow independent documentation-claim validation; full displayed ranges read, not a claim of full runtime/platform correctness. No build or device execution by validator."
+    },
+    {
+      "path": "composeApp/src/androidMain/kotlin/com/parlor/app/storage/PlatformStorage.android.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/composeApp/src/androidMain/kotlin/com/parlor/app/storage/PlatformStorage.android.kt",
+      "sha256": "7cd14c2a4e100b9c31dfec11d57df581d18c461e75a3e2eae99d46c3deddfa5b",
+      "reviewer": "/root/mafia_cont",
+      "timestamp": "2026-09-05T11:43:44.064387+00:00",
+      "reviewed_ranges": [
+        [
+          1,
+          20
+        ]
+      ],
+      "status": "READ_COMPLETE",
+      "relevance": "production-android-storage-binding",
+      "cross_file_paths": [
+        "shared/storage/src/commonMain/kotlin/com/parlor/storage/snapshot/FileBackedSnapshotStore.kt",
+        "composeApp/src/commonMain/kotlin/com/parlor/app/di/StorageModule.kt",
+        "composeApp/src/commonMain/kotlin/com/parlor/app/storage/PlatformStorage.kt",
+        "composeApp/src/iosMain/kotlin/com/parlor/app/storage/PlatformStorage.ios.kt",
+        "composeApp/src/androidMain/kotlin/com/parlor/app/storage/AndroidSnapshotFileSystem.kt",
+        "composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSnapshotFileSystem.kt",
+        "composeApp/src/commonMain/kotlin/com/parlor/app/di/AppModule.kt",
+        "composeApp/src/androidMain/kotlin/com/parlor/app/ParlorApplication.kt",
+        "composeApp/src/iosMain/kotlin/com/parlor/app/MainViewController.kt"
+      ],
+      "evidence": [
+        "validations/DOC-C5-mafia_cont.md"
+      ],
+      "findings": [
+        "DOC-C5"
+      ],
+      "uncertainty": "Narrow independent documentation-claim validation; full displayed ranges read, not a claim of full runtime/platform correctness. No build or device execution by validator."
+    },
+    {
+      "path": "composeApp/src/iosMain/kotlin/com/parlor/app/storage/PlatformStorage.ios.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/composeApp/src/iosMain/kotlin/com/parlor/app/storage/PlatformStorage.ios.kt",
+      "sha256": "cb69b6de029bf7d9f84dbc5bf19139150906a29d64cf29a60994259ca657a0c0",
+      "reviewer": "/root/mafia_cont",
+      "timestamp": "2026-09-05T11:43:44.064387+00:00",
+      "reviewed_ranges": [
+        [
+          1,
+          19
+        ]
+      ],
+      "status": "READ_COMPLETE",
+      "relevance": "production-ios-storage-binding",
+      "cross_file_paths": [
+        "shared/storage/src/commonMain/kotlin/com/parlor/storage/snapshot/FileBackedSnapshotStore.kt",
+        "composeApp/src/commonMain/kotlin/com/parlor/app/di/StorageModule.kt",
+        "composeApp/src/commonMain/kotlin/com/parlor/app/storage/PlatformStorage.kt",
+        "composeApp/src/androidMain/kotlin/com/parlor/app/storage/PlatformStorage.android.kt",
+        "composeApp/src/androidMain/kotlin/com/parlor/app/storage/AndroidSnapshotFileSystem.kt",
+        "composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSnapshotFileSystem.kt",
+        "composeApp/src/commonMain/kotlin/com/parlor/app/di/AppModule.kt",
+        "composeApp/src/androidMain/kotlin/com/parlor/app/ParlorApplication.kt",
+        "composeApp/src/iosMain/kotlin/com/parlor/app/MainViewController.kt"
+      ],
+      "evidence": [
+        "validations/DOC-C5-mafia_cont.md"
+      ],
+      "findings": [
+        "DOC-C5"
+      ],
+      "uncertainty": "Narrow independent documentation-claim validation; full displayed ranges read, not a claim of full runtime/platform correctness. No build or device execution by validator."
+    },
+    {
+      "path": "composeApp/src/androidMain/kotlin/com/parlor/app/storage/AndroidSnapshotFileSystem.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/composeApp/src/androidMain/kotlin/com/parlor/app/storage/AndroidSnapshotFileSystem.kt",
+      "sha256": "452de69acd5642c28780d4c44cf37db6145694867da11598958120e23f5b164a",
+      "reviewer": "/root/mafia_cont",
+      "timestamp": "2026-09-05T11:43:44.064387+00:00",
+      "reviewed_ranges": [
+        [
+          1,
+          298
+        ]
+      ],
+      "status": "READ_COMPLETE",
+      "relevance": "production-android-storage",
+      "cross_file_paths": [
+        "shared/storage/src/commonMain/kotlin/com/parlor/storage/snapshot/FileBackedSnapshotStore.kt",
+        "composeApp/src/commonMain/kotlin/com/parlor/app/di/StorageModule.kt",
+        "composeApp/src/commonMain/kotlin/com/parlor/app/storage/PlatformStorage.kt",
+        "composeApp/src/androidMain/kotlin/com/parlor/app/storage/PlatformStorage.android.kt",
+        "composeApp/src/iosMain/kotlin/com/parlor/app/storage/PlatformStorage.ios.kt",
+        "composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSnapshotFileSystem.kt",
+        "composeApp/src/commonMain/kotlin/com/parlor/app/di/AppModule.kt",
+        "composeApp/src/androidMain/kotlin/com/parlor/app/ParlorApplication.kt",
+        "composeApp/src/iosMain/kotlin/com/parlor/app/MainViewController.kt"
+      ],
+      "evidence": [
+        "validations/DOC-C5-mafia_cont.md"
+      ],
+      "findings": [
+        "DOC-C5"
+      ],
+      "uncertainty": "Narrow independent documentation-claim validation; full displayed ranges read, not a claim of full runtime/platform correctness. No build or device execution by validator."
+    },
+    {
+      "path": "composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSnapshotFileSystem.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSnapshotFileSystem.kt",
+      "sha256": "340c62d93104e015bc9dc80f92b04e46e92c77d52947b2623f0fd5c472900216",
+      "reviewer": "/root/mafia_cont",
+      "timestamp": "2026-09-05T11:43:44.064387+00:00",
+      "reviewed_ranges": [
+        [
+          1,
+          478
+        ]
+      ],
+      "status": "READ_COMPLETE",
+      "relevance": "production-ios-storage",
+      "cross_file_paths": [
+        "shared/storage/src/commonMain/kotlin/com/parlor/storage/snapshot/FileBackedSnapshotStore.kt",
+        "composeApp/src/commonMain/kotlin/com/parlor/app/di/StorageModule.kt",
+        "composeApp/src/commonMain/kotlin/com/parlor/app/storage/PlatformStorage.kt",
+        "composeApp/src/androidMain/kotlin/com/parlor/app/storage/PlatformStorage.android.kt",
+        "composeApp/src/iosMain/kotlin/com/parlor/app/storage/PlatformStorage.ios.kt",
+        "composeApp/src/androidMain/kotlin/com/parlor/app/storage/AndroidSnapshotFileSystem.kt",
+        "composeApp/src/commonMain/kotlin/com/parlor/app/di/AppModule.kt",
+        "composeApp/src/androidMain/kotlin/com/parlor/app/ParlorApplication.kt",
+        "composeApp/src/iosMain/kotlin/com/parlor/app/MainViewController.kt"
+      ],
+      "evidence": [
+        "validations/DOC-C5-mafia_cont.md"
+      ],
+      "findings": [
+        "DOC-C5"
+      ],
+      "uncertainty": "Narrow independent documentation-claim validation; full displayed ranges read, not a claim of full runtime/platform correctness. No build or device execution by validator."
+    },
+    {
+      "path": "composeApp/src/commonMain/kotlin/com/parlor/app/di/AppModule.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/composeApp/src/commonMain/kotlin/com/parlor/app/di/AppModule.kt",
+      "sha256": "b449781eb52418300504344c1af978ef7cb41e4e1f35f8d50faa4b8662bbdb76",
+      "reviewer": "/root/mafia_cont",
+      "timestamp": "2026-09-05T11:43:44.064387+00:00",
+      "reviewed_ranges": [
+        [
+          1,
+          74
+        ]
+      ],
+      "status": "READ_COMPLETE",
+      "relevance": "production-common-composition",
+      "cross_file_paths": [
+        "shared/storage/src/commonMain/kotlin/com/parlor/storage/snapshot/FileBackedSnapshotStore.kt",
+        "composeApp/src/commonMain/kotlin/com/parlor/app/di/StorageModule.kt",
+        "composeApp/src/commonMain/kotlin/com/parlor/app/storage/PlatformStorage.kt",
+        "composeApp/src/androidMain/kotlin/com/parlor/app/storage/PlatformStorage.android.kt",
+        "composeApp/src/iosMain/kotlin/com/parlor/app/storage/PlatformStorage.ios.kt",
+        "composeApp/src/androidMain/kotlin/com/parlor/app/storage/AndroidSnapshotFileSystem.kt",
+        "composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSnapshotFileSystem.kt",
+        "composeApp/src/androidMain/kotlin/com/parlor/app/ParlorApplication.kt",
+        "composeApp/src/iosMain/kotlin/com/parlor/app/MainViewController.kt"
+      ],
+      "evidence": [
+        "validations/DOC-C5-mafia_cont.md"
+      ],
+      "findings": [
+        "DOC-C5"
+      ],
+      "uncertainty": "Narrow independent documentation-claim validation; full displayed ranges read, not a claim of full runtime/platform correctness. No build or device execution by validator."
+    },
+    {
+      "path": "composeApp/src/androidMain/kotlin/com/parlor/app/ParlorApplication.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/composeApp/src/androidMain/kotlin/com/parlor/app/ParlorApplication.kt",
+      "sha256": "82070ae7caa7971b9e0bcf869950407edf5e839bfc7786ba57dd934629a2daaa",
+      "reviewer": "/root/mafia_cont",
+      "timestamp": "2026-09-05T11:43:44.064387+00:00",
+      "reviewed_ranges": [
+        [
+          1,
+          25
+        ]
+      ],
+      "status": "READ_COMPLETE",
+      "relevance": "production-android-entry",
+      "cross_file_paths": [
+        "shared/storage/src/commonMain/kotlin/com/parlor/storage/snapshot/FileBackedSnapshotStore.kt",
+        "composeApp/src/commonMain/kotlin/com/parlor/app/di/StorageModule.kt",
+        "composeApp/src/commonMain/kotlin/com/parlor/app/storage/PlatformStorage.kt",
+        "composeApp/src/androidMain/kotlin/com/parlor/app/storage/PlatformStorage.android.kt",
+        "composeApp/src/iosMain/kotlin/com/parlor/app/storage/PlatformStorage.ios.kt",
+        "composeApp/src/androidMain/kotlin/com/parlor/app/storage/AndroidSnapshotFileSystem.kt",
+        "composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSnapshotFileSystem.kt",
+        "composeApp/src/commonMain/kotlin/com/parlor/app/di/AppModule.kt",
+        "composeApp/src/iosMain/kotlin/com/parlor/app/MainViewController.kt"
+      ],
+      "evidence": [
+        "validations/DOC-C5-mafia_cont.md"
+      ],
+      "findings": [
+        "DOC-C5"
+      ],
+      "uncertainty": "Narrow independent documentation-claim validation; full displayed ranges read, not a claim of full runtime/platform correctness. No build or device execution by validator."
+    },
+    {
+      "path": "composeApp/src/iosMain/kotlin/com/parlor/app/MainViewController.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/composeApp/src/iosMain/kotlin/com/parlor/app/MainViewController.kt",
+      "sha256": "c77abd03ddcae230b4752d888b16c3d74231d89c967624c31129d176a5ed20ce",
+      "reviewer": "/root/mafia_cont",
+      "timestamp": "2026-09-05T11:43:44.064387+00:00",
+      "reviewed_ranges": [
+        [
+          1,
+          56
+        ]
+      ],
+      "status": "READ_COMPLETE",
+      "relevance": "production-ios-entry",
+      "cross_file_paths": [
+        "shared/storage/src/commonMain/kotlin/com/parlor/storage/snapshot/FileBackedSnapshotStore.kt",
+        "composeApp/src/commonMain/kotlin/com/parlor/app/di/StorageModule.kt",
+        "composeApp/src/commonMain/kotlin/com/parlor/app/storage/PlatformStorage.kt",
+        "composeApp/src/androidMain/kotlin/com/parlor/app/storage/PlatformStorage.android.kt",
+        "composeApp/src/iosMain/kotlin/com/parlor/app/storage/PlatformStorage.ios.kt",
+        "composeApp/src/androidMain/kotlin/com/parlor/app/storage/AndroidSnapshotFileSystem.kt",
+        "composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSnapshotFileSystem.kt",
+        "composeApp/src/commonMain/kotlin/com/parlor/app/di/AppModule.kt",
+        "composeApp/src/androidMain/kotlin/com/parlor/app/ParlorApplication.kt"
+      ],
+      "evidence": [
+        "validations/DOC-C5-mafia_cont.md"
+      ],
+      "findings": [
+        "DOC-C5"
+      ],
+      "uncertainty": "Narrow independent documentation-claim validation; full displayed ranges read, not a claim of full runtime/platform correctness. No build or device execution by validator."
+    },
+    {
+      "path": "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitPhaseRouter.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitPhaseRouter.kt",
+      "sha256": "b1b7d38583bf32ee04cb3d58eecce7d312944b7b8497e3914d81cb27a03c86fb",
+      "reviewer": "/root/mafia_cont",
+      "timestamp": "2026-09-05T11:43:44.064387+00:00",
+      "reviewed_ranges": [
+        [
+          1,
+          435
+        ],
+        [
+          790,
+          940
+        ]
+      ],
+      "status": "PARTIAL",
+      "relevance": "production-common-game-ui",
+      "cross_file_paths": [
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/screens/peer/PeerWaitingForHostScreen.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/screens/round/RoundScreens.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/timer/DiscussionTickerLoop.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/state/WhodunitState.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/projection/WhodunitProjectionPolicy.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitGameFlow.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/authority/WhodunitActionAuthority.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/multiplayer/WhodunitHostRoomBridge.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/reducer/WhodunitReducer.kt",
+        "game-modes/whodunit/src/commonMain/composeResources/values/strings.xml",
+        "game-modes/whodunit/src/commonMain/composeResources/values-ar/strings.xml"
+      ],
+      "evidence": [
+        "validations/DOC-C6-mafia_cont.md"
+      ],
+      "findings": [
+        "DOC-C6"
+      ],
+      "uncertainty": "Narrow independent documentation-claim validation; full displayed ranges read, not a claim of full runtime/platform correctness. No build or device execution by validator."
+    },
+    {
+      "path": "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/screens/peer/PeerWaitingForHostScreen.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/screens/peer/PeerWaitingForHostScreen.kt",
+      "sha256": "ede729529e469db9e4e74f6f07f1e456c21308fc1564e142e546daacf73683ad",
+      "reviewer": "/root/mafia_cont",
+      "timestamp": "2026-09-05T11:43:44.064387+00:00",
+      "reviewed_ranges": [
+        [
+          1,
+          70
+        ]
+      ],
+      "status": "READ_COMPLETE",
+      "relevance": "production-common-game-ui",
+      "cross_file_paths": [
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitPhaseRouter.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/screens/round/RoundScreens.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/timer/DiscussionTickerLoop.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/state/WhodunitState.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/projection/WhodunitProjectionPolicy.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitGameFlow.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/authority/WhodunitActionAuthority.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/multiplayer/WhodunitHostRoomBridge.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/reducer/WhodunitReducer.kt",
+        "game-modes/whodunit/src/commonMain/composeResources/values/strings.xml",
+        "game-modes/whodunit/src/commonMain/composeResources/values-ar/strings.xml"
+      ],
+      "evidence": [
+        "validations/DOC-C6-mafia_cont.md"
+      ],
+      "findings": [
+        "DOC-C6"
+      ],
+      "uncertainty": "Narrow independent documentation-claim validation; full displayed ranges read, not a claim of full runtime/platform correctness. No build or device execution by validator."
+    },
+    {
+      "path": "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/screens/round/RoundScreens.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/screens/round/RoundScreens.kt",
+      "sha256": "41ed404b38a50384c23cdde6c1136a1297034569ea1e968c7f383cf62c110354",
+      "reviewer": "/root/mafia_cont",
+      "timestamp": "2026-09-05T11:43:44.064387+00:00",
+      "reviewed_ranges": [
+        [
+          1,
+          188
+        ]
+      ],
+      "status": "READ_COMPLETE",
+      "relevance": "production-common-game-ui",
+      "cross_file_paths": [
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitPhaseRouter.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/screens/peer/PeerWaitingForHostScreen.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/timer/DiscussionTickerLoop.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/state/WhodunitState.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/projection/WhodunitProjectionPolicy.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitGameFlow.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/authority/WhodunitActionAuthority.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/multiplayer/WhodunitHostRoomBridge.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/reducer/WhodunitReducer.kt",
+        "game-modes/whodunit/src/commonMain/composeResources/values/strings.xml",
+        "game-modes/whodunit/src/commonMain/composeResources/values-ar/strings.xml"
+      ],
+      "evidence": [
+        "validations/DOC-C6-mafia_cont.md"
+      ],
+      "findings": [
+        "DOC-C6"
+      ],
+      "uncertainty": "Narrow independent documentation-claim validation; full displayed ranges read, not a claim of full runtime/platform correctness. No build or device execution by validator."
+    },
+    {
+      "path": "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/timer/DiscussionTickerLoop.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/timer/DiscussionTickerLoop.kt",
+      "sha256": "b0c63eed249fdaa152ad46377270d57899ec9061495e21f921b2dc06988100b2",
+      "reviewer": "/root/mafia_cont",
+      "timestamp": "2026-09-05T11:43:44.064387+00:00",
+      "reviewed_ranges": [
+        [
+          1,
+          62
+        ]
+      ],
+      "status": "READ_COMPLETE",
+      "relevance": "production-common-game-ui",
+      "cross_file_paths": [
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitPhaseRouter.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/screens/peer/PeerWaitingForHostScreen.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/screens/round/RoundScreens.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/state/WhodunitState.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/projection/WhodunitProjectionPolicy.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitGameFlow.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/authority/WhodunitActionAuthority.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/multiplayer/WhodunitHostRoomBridge.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/reducer/WhodunitReducer.kt",
+        "game-modes/whodunit/src/commonMain/composeResources/values/strings.xml",
+        "game-modes/whodunit/src/commonMain/composeResources/values-ar/strings.xml"
+      ],
+      "evidence": [
+        "validations/DOC-C6-mafia_cont.md"
+      ],
+      "findings": [
+        "DOC-C6"
+      ],
+      "uncertainty": "Narrow independent documentation-claim validation; full displayed ranges read, not a claim of full runtime/platform correctness. No build or device execution by validator."
+    },
+    {
+      "path": "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/state/WhodunitState.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/state/WhodunitState.kt",
+      "sha256": "34677072d8e58b82d8c4f3dee193fe01eac39dd9a85b0d0a142abce3098157ab",
+      "reviewer": "/root/mafia_cont",
+      "timestamp": "2026-09-05T11:43:44.064387+00:00",
+      "reviewed_ranges": [
+        [
+          1,
+          140
+        ]
+      ],
+      "status": "READ_COMPLETE",
+      "relevance": "production-common-game-domain",
+      "cross_file_paths": [
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitPhaseRouter.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/screens/peer/PeerWaitingForHostScreen.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/screens/round/RoundScreens.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/timer/DiscussionTickerLoop.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/projection/WhodunitProjectionPolicy.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitGameFlow.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/authority/WhodunitActionAuthority.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/multiplayer/WhodunitHostRoomBridge.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/reducer/WhodunitReducer.kt",
+        "game-modes/whodunit/src/commonMain/composeResources/values/strings.xml",
+        "game-modes/whodunit/src/commonMain/composeResources/values-ar/strings.xml"
+      ],
+      "evidence": [
+        "validations/DOC-C6-mafia_cont.md"
+      ],
+      "findings": [
+        "DOC-C6"
+      ],
+      "uncertainty": "Narrow independent documentation-claim validation; full displayed ranges read, not a claim of full runtime/platform correctness. No build or device execution by validator."
+    },
+    {
+      "path": "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/projection/WhodunitProjectionPolicy.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/projection/WhodunitProjectionPolicy.kt",
+      "sha256": "e6ea5d4a7a818ea660dc4f69e3021dd964d95549e2d649b7033db55e5f96c4d1",
+      "reviewer": "/root/mafia_cont",
+      "timestamp": "2026-09-05T11:43:44.064387+00:00",
+      "reviewed_ranges": [
+        [
+          1,
+          87
+        ]
+      ],
+      "status": "READ_COMPLETE",
+      "relevance": "production-common-game-domain",
+      "cross_file_paths": [
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitPhaseRouter.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/screens/peer/PeerWaitingForHostScreen.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/screens/round/RoundScreens.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/timer/DiscussionTickerLoop.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/state/WhodunitState.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitGameFlow.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/authority/WhodunitActionAuthority.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/multiplayer/WhodunitHostRoomBridge.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/reducer/WhodunitReducer.kt",
+        "game-modes/whodunit/src/commonMain/composeResources/values/strings.xml",
+        "game-modes/whodunit/src/commonMain/composeResources/values-ar/strings.xml"
+      ],
+      "evidence": [
+        "validations/DOC-C6-mafia_cont.md"
+      ],
+      "findings": [
+        "DOC-C6"
+      ],
+      "uncertainty": "Narrow independent documentation-claim validation; full displayed ranges read, not a claim of full runtime/platform correctness. No build or device execution by validator."
+    },
+    {
+      "path": "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitGameFlow.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitGameFlow.kt",
+      "sha256": "4d58eb3bebd3777c88ca9f8ab21d97441f6d2cd1a70e28b07a0334fdc0c8ee17",
+      "reviewer": "/root/mafia_cont",
+      "timestamp": "2026-09-05T11:43:44.064387+00:00",
+      "reviewed_ranges": [
+        [
+          897,
+          950
+        ],
+        [
+          1119,
+          1172
+        ],
+        [
+          1180,
+          1406
+        ]
+      ],
+      "status": "PARTIAL",
+      "relevance": "production-common-game-ui",
+      "cross_file_paths": [
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitPhaseRouter.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/screens/peer/PeerWaitingForHostScreen.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/screens/round/RoundScreens.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/timer/DiscussionTickerLoop.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/state/WhodunitState.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/projection/WhodunitProjectionPolicy.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/authority/WhodunitActionAuthority.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/multiplayer/WhodunitHostRoomBridge.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/reducer/WhodunitReducer.kt",
+        "game-modes/whodunit/src/commonMain/composeResources/values/strings.xml",
+        "game-modes/whodunit/src/commonMain/composeResources/values-ar/strings.xml"
+      ],
+      "evidence": [
+        "validations/DOC-C6-mafia_cont.md"
+      ],
+      "findings": [
+        "DOC-C6"
+      ],
+      "uncertainty": "Narrow independent documentation-claim validation; full displayed ranges read, not a claim of full runtime/platform correctness. No build or device execution by validator."
+    },
+    {
+      "path": "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/authority/WhodunitActionAuthority.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/authority/WhodunitActionAuthority.kt",
+      "sha256": "b2d5eef9598694564e96130466cb958bdb51df1c39002474d2504a38a2cb0dc8",
+      "reviewer": "/root/mafia_cont",
+      "timestamp": "2026-09-05T11:43:44.064387+00:00",
+      "reviewed_ranges": [
+        [
+          1,
+          97
+        ]
+      ],
+      "status": "READ_COMPLETE",
+      "relevance": "production-common-game-domain",
+      "cross_file_paths": [
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitPhaseRouter.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/screens/peer/PeerWaitingForHostScreen.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/screens/round/RoundScreens.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/timer/DiscussionTickerLoop.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/state/WhodunitState.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/projection/WhodunitProjectionPolicy.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitGameFlow.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/multiplayer/WhodunitHostRoomBridge.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/reducer/WhodunitReducer.kt",
+        "game-modes/whodunit/src/commonMain/composeResources/values/strings.xml",
+        "game-modes/whodunit/src/commonMain/composeResources/values-ar/strings.xml"
+      ],
+      "evidence": [
+        "validations/DOC-C6-mafia_cont.md"
+      ],
+      "findings": [
+        "DOC-C6"
+      ],
+      "uncertainty": "Narrow independent documentation-claim validation; full displayed ranges read, not a claim of full runtime/platform correctness. No build or device execution by validator."
+    },
+    {
+      "path": "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/multiplayer/WhodunitHostRoomBridge.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/multiplayer/WhodunitHostRoomBridge.kt",
+      "sha256": "f7cd9b5941749e7e29f694ef84e221529ea80ee7f883419a32fc4b82c243438e",
+      "reviewer": "/root/mafia_cont",
+      "timestamp": "2026-09-05T11:43:44.064387+00:00",
+      "reviewed_ranges": [
+        [
+          223,
+          276
+        ]
+      ],
+      "status": "PARTIAL",
+      "relevance": "production-common-game-multiplayer",
+      "cross_file_paths": [
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitPhaseRouter.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/screens/peer/PeerWaitingForHostScreen.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/screens/round/RoundScreens.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/timer/DiscussionTickerLoop.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/state/WhodunitState.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/projection/WhodunitProjectionPolicy.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitGameFlow.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/authority/WhodunitActionAuthority.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/reducer/WhodunitReducer.kt",
+        "game-modes/whodunit/src/commonMain/composeResources/values/strings.xml",
+        "game-modes/whodunit/src/commonMain/composeResources/values-ar/strings.xml"
+      ],
+      "evidence": [
+        "validations/DOC-C6-mafia_cont.md"
+      ],
+      "findings": [
+        "DOC-C6"
+      ],
+      "uncertainty": "Narrow independent documentation-claim validation; full displayed ranges read, not a claim of full runtime/platform correctness. No build or device execution by validator."
+    },
+    {
+      "path": "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/reducer/WhodunitReducer.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/reducer/WhodunitReducer.kt",
+      "sha256": "40db7e4fab766f77d893c7001e57e3395fd50112399937d39be44632ff6456c0",
+      "reviewer": "/root/mafia_cont",
+      "timestamp": "2026-09-05T11:43:44.064387+00:00",
+      "reviewed_ranges": [
+        [
+          506,
+          611
+        ]
+      ],
+      "status": "PARTIAL",
+      "relevance": "production-common-game-domain",
+      "cross_file_paths": [
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitPhaseRouter.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/screens/peer/PeerWaitingForHostScreen.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/screens/round/RoundScreens.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/timer/DiscussionTickerLoop.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/state/WhodunitState.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/projection/WhodunitProjectionPolicy.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitGameFlow.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/authority/WhodunitActionAuthority.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/multiplayer/WhodunitHostRoomBridge.kt",
+        "game-modes/whodunit/src/commonMain/composeResources/values/strings.xml",
+        "game-modes/whodunit/src/commonMain/composeResources/values-ar/strings.xml"
+      ],
+      "evidence": [
+        "validations/DOC-C6-mafia_cont.md"
+      ],
+      "findings": [
+        "DOC-C6"
+      ],
+      "uncertainty": "Narrow independent documentation-claim validation; full displayed ranges read, not a claim of full runtime/platform correctness. No build or device execution by validator."
+    },
+    {
+      "path": "game-modes/whodunit/src/commonMain/composeResources/values/strings.xml",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/composeResources/values/strings.xml",
+      "sha256": "d3dda6f96c9ca4a5aac8ef104736894b3d672b147cc0596a57fecfbb8a89a53e",
+      "reviewer": "/root/mafia_cont",
+      "timestamp": "2026-09-05T11:43:44.064387+00:00",
+      "reviewed_ranges": [
+        [
+          151,
+          151
+        ],
+        [
+          156,
+          157
+        ]
+      ],
+      "status": "PARTIAL",
+      "relevance": "production-common-game-resources",
+      "cross_file_paths": [
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitPhaseRouter.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/screens/peer/PeerWaitingForHostScreen.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/screens/round/RoundScreens.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/timer/DiscussionTickerLoop.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/state/WhodunitState.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/projection/WhodunitProjectionPolicy.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitGameFlow.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/authority/WhodunitActionAuthority.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/multiplayer/WhodunitHostRoomBridge.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/reducer/WhodunitReducer.kt",
+        "game-modes/whodunit/src/commonMain/composeResources/values-ar/strings.xml"
+      ],
+      "evidence": [
+        "validations/DOC-C6-mafia_cont.md"
+      ],
+      "findings": [
+        "DOC-C6"
+      ],
+      "uncertainty": "Narrow independent documentation-claim validation; full displayed ranges read, not a claim of full runtime/platform correctness. No build or device execution by validator."
+    },
+    {
+      "path": "game-modes/whodunit/src/commonMain/composeResources/values-ar/strings.xml",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/composeResources/values-ar/strings.xml",
+      "sha256": "b18d147fe4954978569288eb41517448c4b0697c4e0f1cfc1fdb079c955e5d20",
+      "reviewer": "/root/mafia_cont",
+      "timestamp": "2026-09-05T11:43:44.064387+00:00",
+      "reviewed_ranges": [
+        [
+          151,
+          151
+        ],
+        [
+          156,
+          157
+        ]
+      ],
+      "status": "PARTIAL",
+      "relevance": "production-common-game-resources",
+      "cross_file_paths": [
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitPhaseRouter.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/screens/peer/PeerWaitingForHostScreen.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/screens/round/RoundScreens.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/timer/DiscussionTickerLoop.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/state/WhodunitState.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/projection/WhodunitProjectionPolicy.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitGameFlow.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/authority/WhodunitActionAuthority.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/multiplayer/WhodunitHostRoomBridge.kt",
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/reducer/WhodunitReducer.kt",
+        "game-modes/whodunit/src/commonMain/composeResources/values/strings.xml"
+      ],
+      "evidence": [
+        "validations/DOC-C6-mafia_cont.md"
+      ],
+      "findings": [
+        "DOC-C6"
+      ],
+      "uncertainty": "Narrow independent documentation-claim validation; full displayed ranges read, not a claim of full runtime/platform correctness. No build or device execution by validator."
+    }
+  ]
+}

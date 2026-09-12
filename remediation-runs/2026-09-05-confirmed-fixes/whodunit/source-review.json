@@ -1,0 +1,130 @@
+{
+  "recorded_at": "2026-09-05T18:53:44.127718+00:00",
+  "head": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+  "tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+  "scope": "Author C1/C3 remediation; complete changed regions and new tests; not a renewed whole-repository audit ledger",
+  "files": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitPhaseRouter.kt",
+      "type": "production",
+      "sha256": "11b188ca7ecfa7a02086ab2513fe9e40230f3aab9db9a9fa25c79204b4e9b0b7",
+      "baseline_sha256": "b1b7d38583bf32ee04cb3d58eecce7d312944b7b8497e3914d81cb27a03c86fb",
+      "bytes": 47857,
+      "lines": 1135,
+      "author": "/root/whodunit_cont",
+      "author_reopened_ranges": {
+        "WD-C1": [
+          [
+            132,
+            159
+          ],
+          [
+            329,
+            474
+          ]
+        ]
+      },
+      "modified_regions_reviewed": true,
+      "automated_test_status": "NOT RUN by author; root owns build lane",
+      "independent_patch_review": "PENDING"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/state/WhodunitStateValidator.kt",
+      "type": "production",
+      "sha256": "c391101ba10792d4ba81eb0aa3a21771162c458e075b90bfbf06d4cb33d139c1",
+      "baseline_sha256": "e356c459d1b6ec64d20e6dcb7cf0aacb583f67fa1b35e8674a42d6d6ffca702e",
+      "bytes": 51812,
+      "lines": 1092,
+      "author": "/root/whodunit_cont",
+      "author_reopened_ranges": {
+        "WD-C3": [
+          [
+            1,
+            255
+          ],
+          [
+            366,
+            815
+          ]
+        ]
+      },
+      "modified_regions_reviewed": true,
+      "automated_test_status": "NOT RUN by author; root owns build lane",
+      "independent_patch_review": "PENDING"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/domain/WhodunitRulesInvariantTest.kt",
+      "type": "test",
+      "sha256": "593a7e3937abc330e11ab76f4a4802e21bcde7231fb9b5220657a5bcc7d5d513",
+      "baseline_sha256": "504a4c7205c86f995dae4819fae52a72cd5807e49fcf0cb8bd4d01624c83df39",
+      "bytes": 24100,
+      "lines": 549,
+      "author": "/root/whodunit_cont",
+      "author_reopened_ranges": {
+        "WD-C3": [
+          [
+            350,
+            478
+          ]
+        ]
+      },
+      "modified_regions_reviewed": true,
+      "automated_test_status": "NOT RUN by author; root owns build lane",
+      "independent_patch_review": "PENDING"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/PeerReadinessRemountTest.kt",
+      "type": "new test",
+      "sha256": "90452edb0a44f3f9cca60e05eb7d313788d094fd1c011dc20b983fae0e79c7b9",
+      "baseline_sha256": null,
+      "bytes": 15990,
+      "lines": 370,
+      "author": "/root/whodunit_cont",
+      "author_reopened_ranges": {
+        "WD-C1": [
+          [
+            1,
+            370
+          ]
+        ]
+      },
+      "modified_regions_reviewed": true,
+      "automated_test_status": "NOT RUN by author; root owns build lane",
+      "independent_patch_review": "PENDING"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/snapshot/WhodunitFinalTwoRecoveryTest.kt",
+      "type": "new test",
+      "sha256": "58e56cfae03d3f13fa7d62b866ae4d671dc8289b8766d04f6cbed2bcb3e6b9c0",
+      "baseline_sha256": null,
+      "bytes": 15238,
+      "lines": 345,
+      "author": "/root/whodunit_cont",
+      "author_reopened_ranges": {
+        "WD-C3": [
+          [
+            1,
+            345
+          ]
+        ]
+      },
+      "modified_regions_reviewed": true,
+      "automated_test_status": "NOT RUN by author; root owns build lane",
+      "independent_patch_review": "PENDING"
+    }
+  ],
+  "source_validation": [
+    {
+      "command": "git diff --check -- game-modes/whodunit",
+      "exit_code": 0,
+      "meaning": "tracked Whodunit patch whitespace only; not compiler or runtime evidence"
+    }
+  ],
+  "evidence_preparation_note": "First inline Python manifest generator failed at parse time (mismatched closing bracket), creating no files or build outputs. Corrected generator rerun; this was not an application test failure.",
+  "cleanup": {
+    "child_builds": 0,
+    "child_task_processes": 0,
+    "generated_build_outputs_created": false,
+    "daemon_mutation": "none: parent owns shared build lane; do not stop other task builds"
+  }
+}

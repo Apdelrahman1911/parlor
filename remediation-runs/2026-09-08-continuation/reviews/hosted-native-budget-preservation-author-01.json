@@ -1,0 +1,207 @@
+{
+  "schema_version": 1,
+  "kind": "AUTHOR_HELD_NATIVE_BUDGET_AND_EXCEPTIONAL_RETENTION_SOURCE_NOT_EXECUTION",
+  "recorded_at": "2026-09-08T22:42:15.008468+00:00",
+  "author": "/root/ci_workflow",
+  "status": "HELD_FOR_INDEPENDENT_SOURCE_AND_REGRESSION_REVIEW_NOT_EXECUTION_AUTHORIZATION",
+  "branch": "fix/local-readiness-2026-09-07",
+  "base_commit": "e5111ea49113c3f12cb577058c3f926dfebdc325",
+  "base_tree": "a88872673bd4cfc366236362f287c1db0a04a5cd",
+  "held_files": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/run_ios_readiness.py",
+      "sha256": "9580071ecec4abc8ba375ca01e722eee4245f36132e6a5b8790f5d8bb8456687",
+      "bytes": 87139,
+      "lines": 1315,
+      "before_sha256": "b0f3794fe89537d5108a2c24c22c33ed94d9330ee220e7fa257bfb2c4a7b1e29",
+      "before_bytes": 76990
+    },
+    {
+      "path": "scripts/ci/native_continuation.py",
+      "sha256": "e41186dc13dd94e851b449079d73b98cc4655bb6234ebcd76adc61942bb12feb",
+      "bytes": 64697,
+      "lines": 1106,
+      "before_sha256": "3c974b93e202359c12aa2647984b624024986676eb058ace9ecdf4e7663200bb",
+      "before_bytes": 57512
+    },
+    {
+      "path": ".github/workflows/production-verification.yml",
+      "sha256": "84888fae00e1add37dd8f39c5a86a9600c2a95b5e3bca794133c3fc28147b46c",
+      "bytes": 41331,
+      "lines": 830,
+      "before_sha256": "d347a4cd3e22181b37e5aec91203d3aa37779cb7bb7976fb74ed01cc29ba328d",
+      "before_bytes": 40414
+    },
+    {
+      "path": "scripts/release/workflow_contract.py",
+      "sha256": "fa142d3bbfb3dd18e0f3dc9aba2f388a3ce634ee7fdd16612b2d9bbf2df1f429",
+      "bytes": 47465,
+      "lines": 872,
+      "before_sha256": "30357f2ac67567f65a5e3af316b44497a6a08b6faf370f56161f642f6e5788a9",
+      "before_bytes": 46085
+    },
+    {
+      "path": "scripts/ci/NATIVE_CONTINUATION.md",
+      "sha256": "70dfb3286a5a005f79bdfbfb116c179ef81a7e7054e337758de9dafb0539dbb8",
+      "bytes": 18880,
+      "lines": 300,
+      "before_sha256": "b5ae13ab4f6158d3d5d067445286098f1aab72b177591bdb0e5252a1e2d06709",
+      "before_bytes": 14826
+    }
+  ],
+  "actual_A21_basis": {
+    "run_id": 34275491965,
+    "cycle": "ios-readiness-21",
+    "status": "FAIL",
+    "runtime_evidence_status": "FAIL",
+    "cleanup_status": "FAIL",
+    "primary_error_type": "TimeoutExpired",
+    "xcode_command_primary_error_type": "TimeoutExpired",
+    "xcode_exit_code": -15,
+    "xcode_started_at": "2026-09-08T20:37:55.663079+00:00",
+    "xcode_finished_at": "2026-09-08T21:23:19.811275+00:00",
+    "prior_whole_command_limit_seconds": 2700,
+    "prior_test_allowances_seconds": [
+      1200,
+      1500
+    ],
+    "build_attempted": true,
+    "postbuild_evidence_preserved": false,
+    "app_foundation_preservation": {
+      "status": "PRESERVED",
+      "files": [
+        "parlor-l08-app-foundation.json"
+      ]
+    },
+    "app_foundation_collection": {
+      "status": "NOT_RUN"
+    },
+    "gradle_stops": [
+      {
+        "label": "stop-xcode-immediate",
+        "exit_code": 0,
+        "at": "2026-09-08T21:23:22.921138+00:00"
+      },
+      {
+        "label": "stop-final",
+        "exit_code": 0,
+        "at": "2026-09-08T21:23:24.247265+00:00"
+      }
+    ],
+    "owned_processes_remaining": [],
+    "unknown_holders": [
+      {
+        "pid": 22519,
+        "start": "Tue Sep 8 21:22:13 2026",
+        "scope": "Actual installed task-simulator Parlor executable; NOT adopted process ownership"
+      }
+    ],
+    "device_absence_proven": false,
+    "owned_temporary_directory_removed": false,
+    "copied_sources_unchanged": false,
+    "copied_source_limit": "False because unsafe holders skipped final copied-input verification; not proof inputs changed.",
+    "preserved_raw": [
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34275491965/native-evidence/ios-readiness-21/receipt.json",
+        "sha256": "2d8168608c71fbc4bbed03cc23f595eafc95473e7e4fa3ec1277f61961ed18a3",
+        "bytes": 425426
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34275491965/native-evidence/ios-readiness-21/xcodebuild.log",
+        "sha256": "dd68f0f5ee696408953e9b3dcdc11bf6a9c9a70d2593ea4c57c13333b48ac468",
+        "bytes": 408545
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34275491965/native-evidence/ios-readiness-21/simulator-lifecycle.jsonl",
+        "sha256": "e0eb8557f09729282db2df60ae8ede6e8ad82ecd33abf7d5d82a6636724a3739",
+        "bytes": 17105
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34275491965/native-evidence/ios-readiness-21/parlor-l08-app-foundation.json",
+        "sha256": "c21e69e3ea4e5cce3bc005d25d35dd3b499c9885758bf24095ad13a410c4ec2b",
+        "bytes": 7839
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34275491965/native-evidence/ios-readiness-21/probe-readiness-result.json",
+        "sha256": "b5f51e1025e6fe7c84b7e1a1e9b224cf16ebadd9b73495fe2d4d5d1d9f8e1ca3",
+        "bytes": 112431
+      }
+    ],
+    "xcresult_summary_present": false,
+    "xcresult_tests_present": false,
+    "interpretation": "Intentional fail-closed acknowledgement and ownership policy. The exceptional path exposed an evidence availability gap, not false PASS. Foundation retention is not collection/runtime validation; B22 was NOT_RUN. No change repairs this historical receipt."
+  },
+  "implementation": [
+    "Explicit closed xcode_time_budget selector: qualified A cumulative xcodebuild test5400s / per-test default3000s maximum3300s; original local2700/1200/1500 unchanged. Unknown profile refuses before allocation. Selected budget recorded in receipt and actual argv/command timeout_seconds; no split/filter/retry.",
+    "Main Xcode attempt captures the original BaseException, then finish_xcode_attempt always calls immediate isolated Gradle stop before one-shot raw preservation, and reraises the same primary after recording bounded secondary diagnostics. A generic-command final receipt-save failure no longer masks an existing command primary; failure-only command_persistence_error records its closed secondary type/reason.",
+    "preserve_postbuild_raw has one-shot NOT_RUN/RUNNING/COMPLETE/FAIL state, independent structured summary/tests and owned-container attempts, plus independent exact allowlisted file attempts. Available safe observations survive another failed stage; missing actions stay missing and partial exclusive writes are never repeated/overwritten.",
+    "Regular JSON reads require exact canonical owned parent, UID, regular file, single link, nonempty per-file bound, O_NOFOLLOW and stable device/inode/size/mtime/ctime/mode/uid/link/path checks. Writes are exclusive0600 with fsync and exact bounded readback. Duplicate/nonobject/nonfinite JSON is refused. Storage/host/functional operations and native failures retain the existing closed validators and exact filename binding.",
+    "Only existing structured XCResult summary/tests views and existing allowlisted bounded probe/operation/native JSON are preserved. No screenshots, automatic/private XCTest attachments, whole XCResult bundle, whole container or DerivedData dump is introduced. Structured views are checked as bounded stable JSON objects; full XCTest/runtime validation remains later and unchanged.",
+    "Raw preservation420s ceiling checks the full original120s AppHost command allowance plus10s admission reserve before a new extraction/query; no smaller command timeout. Budget/error/absence diagnostics never fabricate a completed action. Exhaustion remains failure and cannot produce acknowledgement.",
+    "Exact prior acknowledgement is retained: both extraction results exactly0, complete safe available-container retention path, no preservation error and successful acknowledgement save. Failure resets false. Composed extra_container callback is explicit and retained under deferred parent signals plus save after probes/before operation copying; final Foundation conjunction/persistence and lifecycle/unknown/FIFO/direct-handle/final-census guards remain required and unchanged.",
+    "Adapter separate inner_execution_completed checks canonical top and command error{type,message} or direct-lifecycle error{type,code}, timeout/cancellation classes and semantic command-timeout/cancelled codes, negative/malformed child exits, deferred/cancellation markers and malformed shapes, including new staged/raw preservation diagnostics. Ordinary RuntimeError/AssertionError or positive XCTest65 is not automatically interruption; cleanup_is_safe remains a separate unchanged authority.",
+    "Next canonical cycles become A23/B24 only. A first evidence-only workflow step uses the identical explicit CLOCK_MONOTONIC_RAW clock_gettime_ns kernel API in producer and adapter, bound to current source SHA/job/run/attempt. Missing/unavailable/malformed/future/cross-context clocks deny before new native work.",
+    "Only native-evidence receives240m; full/preflight120 and probe10 unchanged. admit_native records admission or DENIED_NOT_RUN before setting a lane RUNNING/cleanup unsafe, requiring full6000s child wait +600s finalizer grace +600s evidence/upload/cleanup reserve. A denied B cannot invent a child/receipt or invalidate safe A cleanup. Existing child waits and480s lifecycle ceiling are unchanged.",
+    "Workflow contract pins the exact conditional timeout and complete evidence-only first clock step (if/shell/run body), not script substring inclusion; only surrounding newline normalization. Current source/doc identify actual failed A21 rather than relabel it successful."
+  ],
+  "pre_hold_review_findings_addressed": [
+    {
+      "reviewer": "/root/ci_review",
+      "finding": "Clock script inclusion could accept added script/key content.",
+      "correction": "Exact complete clock step equality; added script/key mutations belong independently authored controls."
+    },
+    {
+      "reviewer": "/root/ci_review",
+      "finding": "Negative command exit can signal interruption without primary_error.",
+      "correction": "Separate inner admission rejects negative or malformed exits; positive ordinary XCTest65 remains eligible if otherwise safe."
+    },
+    {
+      "reviewer": "/root/portability_review",
+      "finding": "Budget docstring implied independent cold-build/test budgets.",
+      "correction": "Wording-only final change explicitly says cumulative build-plus-test command and per-test allowances. Previous draftceae3fb00d1439bdfde78a077dd34777dc4140073586fcfabaf6400d8b895f39 replaced by held9580071ecec4abc8ba375ca01e722eee4245f36132e6a5b8790f5d8bb8456687; implementation unchanged."
+    }
+  ],
+  "clock_research": [
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/a23-clock-research-01/receipt.json",
+      "sha256": "53a3cab728d63bfcca54d8065e5d8b9941816bffaaf46042da71f2817fd4a5cf",
+      "bytes": 1938
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/a23-clock-research-01/python-time.html",
+      "sha256": "0b6df7794ee5eca796ad97b55f12d1e73f1145a6e1861b1cf3c44deaf2f1c904",
+      "bytes": 128613
+    }
+  ],
+  "assumptions_and_limits": [
+    "No Apple clock or corrected native path was executed by this author. Official documentation supports explicit shared RAW clock availability, not proof this hosted interpreter currently implements it; runtime absence fails closed.",
+    "Clock token begins at first workflow step, not before job/runner startup. Reserve is nominal;240m is not a guarantee all setup, ps/lsof scans, preservation, artifact upload and finalizers fit.6000+600 and480s ceilings were not extended or bypassed.",
+    "Stable record read is a bounded point-in-time observation, not app quiescence or whole-scenario completion. The original AppHost unknown-holder rule remains. A21 PID22519 cannot be adopted/cleared/signaled by simulator path heuristic; successful retention alone cannot authorize cleanup.",
+    "Missing/corrupt/incomplete XCResult or raw-retention/save failure remains acknowledgementfalse and resources are retained. These corrections cannot ensure every exceptional failure has exportable completed results or safe cleanup.",
+    "Existing per-file bounds and closed sanitization are not successful application-runtime, file-protection enforcement, normal Debug libproc, physical-device, Store operation or owner/legal evidence.",
+    "Composed callback/pins and new additive draft freeze are separately owned by l08_fixture and require independent review. Regression source is separately owned by lifecycle_controls and validity review by fixture_review. No old frozen evidence or companion README is edited.",
+    "All executable/control changes still require independent approvals, root-owned focused checks/cleanup, frozen source/control plus mechanical inventory commits, fresh platform preflight/source/control bindings and root-coordinated actual native/final qualification."
+  ],
+  "independent_review_ownership": {
+    "companion": "/root/portability_review; final source report pending at author record creation",
+    "adapter_workflow_contract_doc": "/root/ci_review; final source report pending at author record creation",
+    "controls_author": "/root/lifecycle_controls",
+    "controls_validity": "/root/fixture_review",
+    "composition_pin_author": "/root/l08_fixture"
+  },
+  "author_activity": {
+    "read_only_source_git_raw_receipt_inspection": true,
+    "stdlib_AST_parse_only_files": 3,
+    "git_diff_whitespace_check": "No diagnostics for five owned files",
+    "project_imports": 0,
+    "tests_executed": 0,
+    "builds": 0,
+    "native_tools_or_simulators": 0,
+    "API_network_or_Actions": 0,
+    "worker_signals_or_cleanup": 0,
+    "staging_commits_pushes": 0,
+    "writes": "Five explicitly authorized held source/control/doc files and this unique additive author report only."
+  },
+  "cleanup": "No build/test/native lane or task-owned worker/simulator/temp fixture allocated by this author; no cleanup cycle required. Existing build-lane lock, historical failed evidence, untracked receipts and other agents/user files preserved.",
+  "readiness": "NOT_READY. This is source authorship and inspection only. A23/B24 are NOT_RUN; original outstanding L08 strict/functional/host, actual Parlor libproc and final combined qualification must not be inferred passed."
+}

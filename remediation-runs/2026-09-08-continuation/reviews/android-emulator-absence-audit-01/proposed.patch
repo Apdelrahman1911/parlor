@@ -1,0 +1,362 @@
+--- a/scripts/ci/verification_hygiene.py
++++ b/scripts/ci/verification_hygiene.py
+@@ -11,8 +11,10 @@
+ import os
+ import re
+ import shutil
++import stat
+ import subprocess
+ import sys
++import time
+ from datetime import datetime, timezone
+ from pathlib import Path, PurePosixPath
+ 
+@@ -83,6 +85,8 @@
+         path = checked_path(root, relative)
+         if path.exists():
+             raise RuntimeError(f"Pre-existing output is not task-owned: {relative}")
++    if task.get("GITHUB_JOB") == "desktop-android":
++        claim["android_sdk"] = android_sdk_binding()[1]
+     claim.update(task=task, prepared_at=timestamp(), retention_reason=(
+         "Same-job follow-up builds/linkage and artifact inspection consume these outputs; "
+         "the final upload must succeed with an artifact ID and SHA-256 before exact cleanup. "
+@@ -117,6 +121,128 @@
+     return (upload.get("outcome") == "success" and isinstance(artifact_id, str) and
+             re.fullmatch(r"[1-9][0-9]*", artifact_id) is not None and isinstance(digest, str) and
+             re.fullmatch(r"[0-9a-fA-F]{64}", digest) is not None)
++
++
++class AndroidAuditError(RuntimeError):
++    """A fixed diagnostic code, never a process argument or filesystem path."""
++
++
++ANDROID_PROC_MAX_ENTRIES = 4096
++ANDROID_PROC_MAX_BYTES = 8192
++ANDROID_PROC_SECONDS = 5.0
++
++
++def android_sdk_binding() -> tuple[Path, dict]:
++    if sys.platform != "linux":
++        raise AndroidAuditError("LINUX_REQUIRED")
++    uid = os.getuid()
++    if uid <= 0 or uid != os.geteuid():
++        raise AndroidAuditError("NONROOT_MATCHING_UID_REQUIRED")
++    home = os.environ.get("ANDROID_HOME", "")
++    if not home or len(os.fsencode(home)) > 4096 or not Path(home).is_absolute():
++        raise AndroidAuditError("ABSOLUTE_ANDROID_HOME_REQUIRED")
++    sdk = Path(home).resolve(strict=True)
++    alternate = os.environ.get("ANDROID_SDK_ROOT", "")
++    if (sdk == Path("/") or not sdk.is_dir() or alternate and
++            (not Path(alternate).is_absolute() or Path(alternate).resolve(strict=True) != sdk)):
++        raise AndroidAuditError("SDK_ROOT_AMBIGUOUS")
++    identity = sdk.stat()
++    return sdk, {"sdk_path_sha256": hashlib.sha256(os.fsencode(sdk)).hexdigest(),
++                 "sdk_device": identity.st_dev, "sdk_inode": identity.st_ino, "uid": uid}
++
++
++def android_proc_bytes(path: Path) -> bytes:
++    with path.open("rb") as stream:
++        value = stream.read(ANDROID_PROC_MAX_BYTES + 1)
++    if len(value) > ANDROID_PROC_MAX_BYTES:
++        raise AndroidAuditError("PROC_RECORD_LIMIT")
++    return value
++
++
++def android_proc_identity(process: Path, pid: int) -> tuple[int, tuple[int, ...]]:
++    prefix, separator, tail = android_proc_bytes(process / "stat").rpartition(b") ")
++    fields = tail.split()
++    if (not separator or not prefix.startswith(str(pid).encode("ascii") + b" (") or
++            len(fields) < 20 or re.fullmatch(rb"[RSDZTWtXxKPI]", fields[0]) is None or
++            not fields[19].isdigit() or not 0 <= int(fields[19]) < 2**64):
++        raise AndroidAuditError("PROC_STAT_INVALID")
++    lines = [line for line in android_proc_bytes(process / "status").splitlines() if line.startswith(b"Uid:")]
++    match = re.fullmatch(rb"Uid:\s+([0-9]+)\s+([0-9]+)\s+([0-9]+)\s+([0-9]+)\s*", lines[0]) if len(lines) == 1 else None
++    if not match or any(int(value) >= 2**32 for value in match.groups()):
++        raise AndroidAuditError("PROC_UID_INVALID")
++    return int(fields[19]), tuple(int(value) for value in match.groups())
++
++
++def audit_android_emulator_absence(expected: dict | None, proc: Path = Path("/proc")) -> dict:
++    """Read-only, non-atomic sample; does not establish process ownership or exit."""
++    receipt = {"result": "FAIL", "started_at": timestamp(), "enumerated": 0, "sampled": 0,
++               "selected_uid": 0, "matching_executables": 0, "errors": [],
++               "scope": "Enumerated visible selected-UID executable paths beneath bound SDK/emulator only; "
++                        "not termination, task-process ownership, AVD retirement, other SDKs/UIDs, or continuous absence"}
++    deadline = time.monotonic() + ANDROID_PROC_SECONDS
++
++    def budget() -> None:
++        if time.monotonic() > deadline:
++            raise AndroidAuditError("PROC_SCAN_DEADLINE")
++
++    try:
++        sdk, binding = android_sdk_binding()
++        if binding != expected:
++            raise AndroidAuditError("SDK_UID_BINDING_CHANGED")
++        receipt["binding"] = binding
++        emulator = sdk / "emulator"
++        if emulator.resolve(strict=True) != emulator or not emulator.is_dir():
++            raise AndroidAuditError("EMULATOR_DIRECTORY_REDIRECTED")
++        directory = emulator.stat()
++        pids, saw_self = [], False
++        with os.scandir(proc) as entries:
++            for index, entry in enumerate(entries):
++                budget()
++                if index >= ANDROID_PROC_MAX_ENTRIES:
++                    raise AndroidAuditError("PROC_ENTRY_LIMIT")
++                if re.fullmatch(r"[1-9][0-9]*", entry.name):
++                    if len(entry.name) > 10 or int(entry.name) >= 2**31:
++                        raise AndroidAuditError("PROC_PID_INVALID")
++                    pids.append(int(entry.name))
++        receipt["enumerated"] = len(pids)
++        for pid in sorted(pids):
++            budget()
++            process = proc / str(pid)
++            before = android_proc_identity(process, pid)
++            selected = binding["uid"] in before[1]
++            matches = False
++            if selected:
++                if before[1] != (binding["uid"],) * 4:
++                    raise AndroidAuditError("PROC_UID_AMBIGUOUS")
++                executable = os.readlink(process / "exe")
++                first = (process / "exe").stat()
++                after = os.readlink(process / "exe")
++                last = (process / "exe").stat()
++                if (executable != after or (first.st_dev, first.st_ino) != (last.st_dev, last.st_ino) or
++                        not stat.S_ISREG(first.st_mode) or not Path(executable).is_absolute() or
++                        len(os.fsencode(executable)) > 4096 or executable.endswith(" (deleted)")):
++                    raise AndroidAuditError("PROC_EXECUTABLE_AMBIGUOUS")
++                matches = emulator in Path(executable).parents
++            if before != android_proc_identity(process, pid):
++                raise AndroidAuditError("PROC_LIFETIME_OR_UID_CHANGED")
++            receipt["sampled"] += 1
++            receipt["selected_uid"] += int(selected)
++            saw_self = saw_self or (pid == os.getpid() and selected)
++            if matches:
++                receipt["matching_executables"] += 1
++                raise AndroidAuditError("SDK_EMULATOR_EXECUTABLE_OBSERVED")
++        final_directory = emulator.stat()
++        if (android_sdk_binding()[1] != binding or emulator.resolve(strict=True) != emulator or
++                (directory.st_dev, directory.st_ino) != (final_directory.st_dev, final_directory.st_ino)):
++            raise AndroidAuditError("SDK_UID_BINDING_CHANGED")
++        budget()
++        if not saw_self:
++            raise AndroidAuditError("OBSERVER_PID_NOT_SAMPLED")
++        receipt["result"] = "PASS"
++    except (OSError, RuntimeError, ValueError, TypeError) as error:
++        receipt["errors"].append({"code": str(error) if isinstance(error, AndroidAuditError) else type(error).__name__})
++    receipt["finished_at"] = timestamp()
++    return receipt
+ 
+ 
+ def verify_apple_cleanup(root: Path, claim_path: Path, task: dict, outcomes: dict | None) -> dict:
+@@ -200,6 +326,11 @@
+             receipt["apple_cleanup"] = verify_apple_cleanup(root, claim_path, task, apple_outcomes)
+         if not uploaded_evidence_is_retained(upload):
+             raise RuntimeError("No successful nonempty verification upload; preserve required evidence outputs")
++        if task.get("GITHUB_JOB") == "desktop-android":
++            receipt["android_emulator_absence"] = audit_android_emulator_absence(claim.get("android_sdk"))
++            receipt["android_emulator_absence"]["source"] = {key: current[key] for key in ("head", "tree")}
++            if receipt["android_emulator_absence"]["result"] != "PASS":
++                raise RuntimeError("Android sampled emulator absence did not pass; retain outputs")
+         for relative, path in paths:
+             if not path.exists():
+                 continue
+@@ -217,6 +348,9 @@
+                    scope="Only attested checkout build/Python-cache directories; no global caches or source",
+                    worker_scope=("Gradle plus source-bound Apple native/device cleanup receipts" if
+                                  task.get("GITHUB_JOB") == "ios" else
++                                 "Gradle stop; Android receipt, when present, covers only sampled selected-UID "
++                                 "SDK/emulator executable-path absence, not termination or AVD retirement" if
++                                 task.get("GITHUB_JOB") == "desktop-android" else
+                                  "Gradle stop; workflow pins in-process Kotlin compiler execution. "
+                                  "Other native/emulator worker termination needs separate evidence"))
+     return receipt
+--- a/scripts/release/tests/test_ci_verification_hygiene.py
++++ b/scripts/release/tests/test_ci_verification_hygiene.py
+@@ -223,6 +223,186 @@
+         with patch.dict(os.environ, {"GITHUB_ACTIONS": "false"}):
+             with self.assertRaisesRegex(RuntimeError, "restricted"):
+                 hygiene.context()
++
++
++    def test_android_audit_follows_upload_gate_and_failure_retains_outputs(self) -> None:
++        self.task["GITHUB_JOB"] = "desktop-android"
++        binding = {"sdk_path_sha256": "e" * 64, "sdk_device": 1, "sdk_inode": 2, "uid": 1001}
++        with patch.object(hygiene, "android_sdk_binding", return_value=(self.base, binding)):
++            self.prepare()
++        self.assertEqual(json.loads(self.claim.read_text())["android_sdk"], binding)
++        (self.root / "build").mkdir()
++        evidence = self.root / "build/evidence.xml"
++        evidence.write_text("preserve")
++        failure = {"result": "FAIL", "errors": [{"code": "SDK_EMULATOR_EXECUTABLE_OBSERVED"}]}
++        with patch.object(hygiene, "audit_android_emulator_absence", return_value=failure) as audit:
++            receipt = hygiene.cleanup(self.root, self.claim, self.task,
++                                      {**self.upload, "outcome": "failure"}, "success")
++            self.assertEqual(receipt["result"], "FAIL")
++            audit.assert_not_called()
++            receipt = hygiene.cleanup(self.root, self.claim, self.task, self.upload, "success")
++            audit.assert_called_once_with(binding)
++        self.assertEqual(receipt["result"], "FAIL")
++        self.assertEqual(receipt["removed"], [])
++        self.assertEqual(receipt["retained"], ["build"])
++        self.assertEqual(evidence.read_text(), "preserve")
++        self.assertEqual(receipt["android_emulator_absence"]["source"],
++                         {key: self.identity[key] for key in ("head", "tree")})
++
++    def test_android_successful_sample_allows_existing_exact_output_cleanup(self) -> None:
++        self.task["GITHUB_JOB"] = "desktop-android"
++        binding = {"sdk_path_sha256": "e" * 64, "sdk_device": 1, "sdk_inode": 2, "uid": 1001}
++        with patch.object(hygiene, "android_sdk_binding", return_value=(self.base, binding)):
++            self.prepare()
++        (self.root / "build").mkdir()
++        with patch.object(hygiene, "audit_android_emulator_absence", return_value={"result": "PASS"}):
++            receipt = hygiene.cleanup(self.root, self.claim, self.task, self.upload, "success")
++        self.assertEqual(receipt["result"], "PASS")
++        self.assertEqual(receipt["removed"], ["build"])
++        self.assertEqual(receipt["retained"], [])
++        self.assertTrue(self.claim.is_file())
++        self.stop.assert_called_once_with(self.root)
++
++
++@unittest.skipUnless(sys.platform == "linux", "Linux-only procfs symlink fixture")
++class AndroidEmulatorAbsenceTest(unittest.TestCase):
++    """Owned metadata files/symlinks; never observes or signals real processes."""
++
++    def setUp(self) -> None:
++        temporary = TemporaryDirectory(prefix="parlor-android-absence-")
++        self.addCleanup(temporary.cleanup)
++        self.base = Path(temporary.name).resolve()
++        self.sdk = self.base / "sdk"
++        (self.sdk / "emulator/qemu/linux-x86_64").mkdir(parents=True)
++        self.emulator = self.sdk / "emulator/qemu/linux-x86_64/qemu-system-x86_64"
++        self.emulator.write_bytes(b"owned fake executable")
++        self.observer = self.base / "observer"
++        self.observer.write_bytes(b"owned non-SDK executable")
++        self.proc = self.base / "proc"
++        self.proc.mkdir()
++        for mock in (patch.dict(os.environ, {"ANDROID_HOME": str(self.sdk), "ANDROID_SDK_ROOT": str(self.sdk)}),
++                     patch.object(hygiene.os, "getuid", return_value=1001),
++                     patch.object(hygiene.os, "geteuid", return_value=1001),
++                     patch.object(hygiene.os, "getpid", return_value=101)):
++            mock.start()
++            self.addCleanup(mock.stop)
++        self.binding = hygiene.android_sdk_binding()[1]
++        self.process(101, self.observer)
++
++    def process(self, pid: int, executable: Path | None, uid: int = 1001, start: int = 123) -> Path:
++        path = self.proc / str(pid)
++        path.mkdir(exist_ok=True)
++        # stat comm can contain spaces, parentheses and newlines; starttime is field22.
++        tail = ["S"] + ["0"] * 49
++        tail[19] = str(start)
++        (path / "stat").write_text(f"{pid} (worker ) with\nparen) " + " ".join(tail) + "\n")
++        (path / "status").write_text(f"Name:\tworker\nPid:\t{pid}\nUid:\t{uid}\t{uid}\t{uid}\t{uid}\n")
++        link = path / "exe"
++        if link.is_symlink():
++            link.unlink()
++        if executable is not None:
++            link.symlink_to(executable)
++        return path
++
++    def audit(self) -> dict:
++        return hygiene.audit_android_emulator_absence(self.binding, proc=self.proc)
++
++    def test_coherent_sample_excludes_other_uid_without_reading_its_executable(self) -> None:
++        self.process(202, None, uid=0)
++        receipt = self.audit()
++        self.assertEqual(receipt["result"], "PASS", receipt)
++        self.assertEqual((receipt["enumerated"], receipt["sampled"], receipt["selected_uid"]), (2, 2, 1))
++        self.assertEqual(receipt["matching_executables"], 0)
++        self.assertNotIn(str(self.base), json.dumps(receipt))
++
++    def test_same_uid_sdk_qemu_fails_without_attributing_or_killing_process(self) -> None:
++        self.process(202, self.emulator)
++        receipt = self.audit()
++        self.assertEqual(receipt["result"], "FAIL")
++        self.assertEqual(receipt["matching_executables"], 1)
++        self.assertEqual(receipt["errors"], [{"code": "SDK_EMULATOR_EXECUTABLE_OBSERVED"}])
++        self.assertTrue((self.proc / "202/exe").is_symlink())
++        self.assertNotIn(str(self.base), json.dumps(receipt))
++
++    def test_same_prefix_sibling_is_outside_this_explicit_path_predicate(self) -> None:
++        sibling = self.sdk / "emulator-other"
++        sibling.mkdir()
++        binary = sibling / "qemu-system-x86_64"
++        binary.write_bytes(b"not covered by the configured SDK/emulator subtree")
++        self.process(202, binary)
++        self.assertEqual(self.audit()["result"], "PASS")
++
++    def test_malformed_missing_oversized_and_mixed_uid_records_fail_closed(self) -> None:
++        cases = (("stat", b"101 (truncated)", "PROC_STAT_INVALID"),
++                 ("status", b"Name: worker\n", "PROC_UID_INVALID"),
++                 ("status", b"Uid:\t1001\t0\t1001\t1001\n", "PROC_UID_AMBIGUOUS"),
++                 ("status", b"x" * (hygiene.ANDROID_PROC_MAX_BYTES + 1), "PROC_RECORD_LIMIT"),
++                 ("exe", None, "FileNotFoundError"))
++        for name, data, code in cases:
++            with self.subTest(name=name, code=code):
++                process = self.process(101, self.observer)
++                if data is None:
++                    (process / name).unlink()
++                else:
++                    (process / name).write_bytes(data)
++                receipt = self.audit()
++                self.assertEqual(receipt["result"], "FAIL")
++                self.assertEqual(receipt["errors"], [{"code": code}])
++
++    def test_executable_read_denial_or_disappearing_pid_is_not_absence(self) -> None:
++        original = os.readlink
++        for error in (PermissionError, FileNotFoundError):
++            with self.subTest(error=error.__name__):
++                def denied(path, *args, **kwargs):
++                    if Path(path) == self.proc / "101/exe":
++                        raise error("private path must not be reported")
++                    return original(path, *args, **kwargs)
++                with patch.object(hygiene.os, "readlink", side_effect=denied):
++                    receipt = self.audit()
++                self.assertEqual(receipt["result"], "FAIL")
++                self.assertEqual(receipt["errors"], [{"code": error.__name__}])
++
++    def test_deleted_executable_path_is_ambiguous_not_absence(self) -> None:
++        deleted = self.base / "observer (deleted)"
++        deleted.write_bytes(b"models a deleted executable still reachable through procfs")
++        self.process(101, deleted)
++        self.assertEqual(self.audit()["errors"], [{"code": "PROC_EXECUTABLE_AMBIGUOUS"}])
++
++    def test_pid_lifetime_uid_and_executable_changes_during_sample_fail(self) -> None:
++        original = os.readlink
++        for change in ("lifetime", "uid", "executable"):
++            with self.subTest(change=change):
++                self.process(101, self.observer)
++                changed = False
++                def changing(path, *args, **kwargs):
++                    nonlocal changed
++                    value = original(path, *args, **kwargs)
++                    if Path(path) == self.proc / "101/exe" and not changed:
++                        changed = True
++                        self.process(101, self.emulator if change == "executable" else self.observer,
++                                     uid=1002 if change == "uid" else 1001,
++                                     start=124 if change == "lifetime" else 123)
++                    return value
++                with patch.object(hygiene.os, "readlink", side_effect=changing):
++                    receipt = self.audit()
++                self.assertEqual(receipt["result"], "FAIL")
++                code = "PROC_EXECUTABLE_AMBIGUOUS" if change == "executable" else "PROC_LIFETIME_OR_UID_CHANGED"
++                self.assertEqual(receipt["errors"], [{"code": code}])
++
++    def test_binding_and_observer_omission_fail_closed(self) -> None:
++        receipt = hygiene.audit_android_emulator_absence({**self.binding, "uid": 1002}, proc=self.proc)
++        self.assertEqual(receipt["errors"], [{"code": "SDK_UID_BINDING_CHANGED"}])
++        with patch.object(hygiene.os, "getpid", return_value=303):
++            self.assertEqual(self.audit()["errors"], [{"code": "OBSERVER_PID_NOT_SAMPLED"}])
++        with patch.dict(os.environ, {"ANDROID_SDK_ROOT": str(self.base)}):
++            self.assertEqual(self.audit()["errors"], [{"code": "SDK_ROOT_AMBIGUOUS"}])
++
++    def test_enumeration_and_clock_limits_fail_closed(self) -> None:
++        self.process(202, None, uid=0)
++        with patch.object(hygiene, "ANDROID_PROC_MAX_ENTRIES", 1):
++            self.assertEqual(self.audit()["errors"], [{"code": "PROC_ENTRY_LIMIT"}])
++        with patch.object(hygiene.time, "monotonic", side_effect=[0.0, 6.0]):
++            self.assertEqual(self.audit()["errors"], [{"code": "PROC_SCAN_DEADLINE"}])
+ 
+ 
+ class VerificationHygieneGitIntegrationTest(unittest.TestCase):

@@ -1,0 +1,100 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/release_fix_review",
+  "recorded_at": "2026-09-06T17:41:24.871091+00:00",
+  "classification": "SOURCE_COUNTEREVIDENCE_AND_PUBLIC_RESEARCH_ONLY",
+  "source": {
+    "branch": "main",
+    "head": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+    "tree": "db7f3d2afe73a13628296daee2cce71165eebc8d"
+  },
+  "reopened_ranges": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaSetupScreen.kt",
+      "sha256": "c1dc2d1e5f4bf72ac1c2946341143f22936dd7903aab2d02b58c0d63709e87e4",
+      "reviewed_ranges": [
+        [
+          1,
+          280
+        ]
+      ],
+      "relevance": "Actualvalidationsettings114-116;publicStart218-223delegatestosetupcallback"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/passandplay/MafiaPassAndPlayPhaseRouter.kt",
+      "sha256": "1371eb747579362548f3962a520c2c3f3c2f6225ef551bad93e3e690e08a1fe6",
+      "reviewed_ranges": [
+        [
+          1,
+          230
+        ]
+      ],
+      "relevance": "SetupSegment139-155submitsactualConfigureAndStart;RoleAssignment160-215ispoststartstate"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/passandplay/MafiaGameFlow.kt",
+      "sha256": "8f250d62f8afb48e407c30e5382eb4758bc4ad53dee5168af8e3452ad3e840f6",
+      "reviewed_ranges": [
+        [
+          200,
+          450
+        ]
+      ],
+      "relevance": "Localsession245-267canonicalowner;actualrenderer323-350"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/settings/MafiaSettings.kt",
+      "sha256": "beaa58c17c44a8ff552e52e838171deedf17f8dadd76258caaef8dd2b5a336f5",
+      "reviewed_ranges": [
+        [
+          1,
+          133
+        ]
+      ],
+      "relevance": "ValidationanddefaultOFFDoctorflagunchanged"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/reducer/MafiaReducer.kt",
+      "sha256": "2ff9754d497b8258613badb057ab915a6d457786c56b0d5e725f2ba0053e56e2",
+      "reviewed_ranges": [
+        [
+          1,
+          220
+        ]
+      ],
+      "relevance": "Atomicconfigure126-169Setup+emptydrops+validsettingsguard,seededroleassignment,RoleAssignmentcanonicalcommit"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/session/src/commonMain/kotlin/com/parlor/session/passandplay/PassAndPlaySessionController.kt",
+      "sha256": "d2a6b6fbc0a78685fe192e16894907cc98a51f1a30dd48ce0095a0d2745d8008",
+      "reviewed_ranges": [
+        [
+          65,
+          159
+        ]
+      ],
+      "relevance": "Mutexcanonicalcommit112-129precedesreceipt;eventsoutsidecommit"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/session/src/commonMain/kotlin/com/parlor/session/party/PartyAwareSession.kt",
+      "sha256": "9eb291761264e54b509cdd8baa5cbb8d54348f616646746a44801bdcd783a483",
+      "reviewed_ranges": [
+        [
+          1,
+          86
+        ]
+      ],
+      "relevance": "Decorator53-80actualdelegatesubmit;noalternativeStartpath"
+    }
+  ],
+  "source_conclusion": "CurrentvisibleStartmustbeenabledonlyforvaliddraftandtransitionsactualcanonicalSetuptoRoleAssignmentwhenitscallbackexecutesinanopencontroller. apphost05hasnotpreservedcallbackorcommandreceipts,anditsactualcanonicalphasecontinuedSetup. Noapplicationrootcausecanbeinferredfromoldtaplogalone;geometry/stabilityisatest-inputhypothesis,notconfirmeddefect. Newcontrolmustexercisepublicactiononceandobserveactualcanonicalsuccessorwitholdidentityoracles.",
+  "public_image": {
+    "path": "native/dsc01_apphost_05_diagnosis/research/apple-ios26-language-region.png",
+    "sha256": "57a786daaea0b494b6eef5a4f2ab32bbf38ab4c03259d2eb46869197304d18fb",
+    "inspection_method": "Personallyrenderedusingview_image",
+    "observed": "OfficialiOS26imageLanguage&RegionshowsPreferredLanguages,EnglishwithiPhoneLanguageannotation,AddLanguage\u2026row.",
+    "limitations": "ImagenotcurrentownedSimulatorruntime;cannotestablishXCUIelementtypesoractualperappLanguagerowavailability."
+  },
+  "research_reference": "reviews/independent-os-prerequisite-research-01.json",
+  "safety": "Onlyreadsource/publicimageandwrotecompactreviewevidence.Nobuilds,tests,app/simulatoractions,sourceedits,workersstarted,orcleanupneeded."
+}

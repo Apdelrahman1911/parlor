@@ -1,0 +1,53 @@
+{
+  "kind": "FOCUSED_DIAGNOSTIC_BINDING_TIMEOUT_CONTROLS_NOT_PLATFORM_EXECUTION",
+  "started_at": "2026-09-10T20:22:17.818884+00:00",
+  "source_head": "b9883232c5208c9c3a1203347124cd36fb17dd24",
+  "source_scope": "working tree: reviewed two-file status-only budget/test correction atop recorded HEAD",
+  "commands": [
+    {
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "/root/projects/Parlor/parlor/remediation-runs/2026-09-08-continuation/protection-diagnostic-01",
+        "-p",
+        "test_probe.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.25
+    },
+    {
+      "command": [
+        "./gradlew",
+        "--stop"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "cleanup": {
+    "errors": [],
+    "removed": [
+      "/tmp/parlor-pd02-controls-n6lfm47a"
+    ],
+    "remaining_build_roots": [],
+    "scratch_absent": true,
+    "gradle_clean_not_run": "No build or project outputs; pure27 tests and mandatory stop only.",
+    "remaining_monitored_workers": []
+  },
+  "test_result": {
+    "exit_code": 0,
+    "summary": [
+      "----------------------------------------------------------------------",
+      "Ran 27 tests in 0.054s",
+      "",
+      "OK"
+    ]
+  },
+  "controls_unchanged": true,
+  "finished_at": "2026-09-10T20:22:19.256574+00:00",
+  "status": "PASS"
+}

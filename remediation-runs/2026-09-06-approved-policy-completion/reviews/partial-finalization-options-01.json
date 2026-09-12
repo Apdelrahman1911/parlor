@@ -1,0 +1,125 @@
+{
+  "schema_version": 1,
+  "prepared_at": "2026-09-06T21:20:41.905203+00:00",
+  "reviewer": "/root/factory_review",
+  "purpose": "Root-requested contingency options only. Not a final report, not a new defect classification, and not approval to stop practical verification. Continue independently reviewed V10 investigation while preserving honest status.",
+  "current_source": {
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/source-freeze-02.json",
+    "sha256": "7b471f8561a728f4e429d957460f368ecb432aa83833c0f97d26c9ba819e70a4"
+  },
+  "current_scoped_status": {
+    "basis": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/reviews/final-matrix-support-01.json",
+      "sha256": "c968be5fbcb7bff58288039b6d8ae4dc6e0c1f91a6a4344a42746ed04b9ab391"
+    },
+    "authorized_defects": 16,
+    "fixed_and_verified": 15,
+    "partially_verified": 1,
+    "percentage_fixed_and_verified": 93.75,
+    "partial_id": "DS-C01",
+    "denominator_meaning": "The16 authorized repairs with the explicit local verification required by this task. Not percentage of whole-source audit, overall code completeness, absence of bugs or Store readiness."
+  },
+  "newly_completed_separate_gate": {
+    "id": "unsigned-swift-release-wrapper",
+    "status": "PASS",
+    "independent_outcome": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-ios-release-wrapper-result-review-01.json",
+      "sha256": "ba0afe497cbb6d7348102d1a746debba6d1ebf64bf3cb226be4679b5c8442885"
+    },
+    "scope": "Current-source unsigned arm64 iOS Simulator Release compilation and full owned-app artifact inventory only. Does not change15/16 DS-C01 repair-verification count."
+  },
+  "last_completed_language_attempt": {
+    "cycle": "dsc01-apphost-07",
+    "receipt": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-07/receipt.json",
+      "sha256": "cca0bc617f0e542a69fc2253ee18c4f243d0584c5b9c58399406a9d96f78ca48"
+    },
+    "summary": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-07/xcresult-summary.json",
+      "sha256": "c1c3fb2f046097356ba3385cb826ab38fef41752b3cf78f8a51c68df4d134ad1"
+    },
+    "tests": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-07/xcresult-tests.json",
+      "sha256": "1df7fc4e73871483e3dec40622e0ae6f7f9ba0e7f04e2e6c810119e3d3cff10c"
+    },
+    "status": "FAIL",
+    "runtime_evidence_status": "FAIL",
+    "xcode_exit_code": 65,
+    "xctest_tests": 5,
+    "xctest_passed": 4,
+    "xctest_failed": 1,
+    "xctest_skipped": 0,
+    "narrow_pass_scope": "The4 successful methods are production-container UIKit fixtures, not4 completed language/OS/session runs.",
+    "failed_method": "IOSAppLaunchUITests/testDSC01ActualSettingsLocalSessionsAndOSInvestigation()",
+    "failure_text": "XCTAssertEqual failed: (Optional(opened)) is not equal to (Optional(language-control-unavailable))",
+    "os_settings_gate_in_receipt": null,
+    "dsc01_matrix_in_receipt": null,
+    "cleanup_status": "PASS",
+    "scope_limit": "This reviewer inspected actual summary/tests and finalized receipt for status accounting only; separate release reviewer owns detailed07 root-cause/counter-evidence investigation. Do not derive an application crash or new production defect from this assertion.",
+    "new_V10_outcome": "NOT_RUN_AT_THIS_RECORD; source authoring/independent review still in progress."
+  },
+  "recommended_option": {
+    "name": "Publish a separate honest continuation checkpoint; keep full-completion guard strict",
+    "changes_required": "Add task-only report/JSON evidence under a fresh checkpoint name. No application or current materializer changes needed.",
+    "contents": [
+      "Exact frozen dirty source/full patch and branch/commit identities, with current and historical review chains distinguished.",
+      "All16 issue rows retained. DS-C01 remains PARTIALLY VERIFIED with source fix/primitive tests/narrow native positives and exact remaining OS/runtime scenarios; other15 statuses unchanged from approved support.",
+      "93.75%=15/16 fully verified; no100% wording. Compilation/control parser tests/Debugsmoke must not substitute for actual language/OS matrix.",
+      "Latest failed native attempt remains FAIL with its actual0skip/1fail and cleanupPASS; later scenario status NOT RUN or BLOCKED only with precise cause and owner.",
+      "Unsigned Release gatePASS recorded separately using approved actual outcome; warnings,20SKIPPED/91NO-SOURCE build-task dispositions and host-incompatibleiosX64 runtime retained.",
+      "Final bounded worktree/process/path preservation observation and current cycle-history evidence after the last attempt; no stale observation claimed current.",
+      "Exact continuation paths: new V10 author controls/freeze, independent control review, focused controls execution, one owned fresh simulator matrix under rootlane, post-run independent outcome review.",
+      "Known product decision WD-C4, IOS-R1 storage evidence gap, WD-REVIEW-RETRY-CONTENT-KEY test/evidencegap and externalLAN/accessibility/signing/identity/Store/legal requirements remain explicit."
+    ],
+    "status_wording": "NOT READY.15of16 authorized repairs independently verified; DS-C01 correction is implemented/source-reviewed but full actual-OS/native end-to-end verification remains incomplete. Continuing that local verification; this is not merely external Store/device work."
+  },
+  "optional_alternative": {
+    "name": "Separate explicit partial-report materializer if machine-readable partial output is needed",
+    "author": "Root, followed by a different independent reviewer",
+    "rules": [
+      "Prefer new narrowly-scoped additive checkpoint materializer or explicit typed mode; do not silently broaden existing complete-mode validators.",
+      "Accept genuine failed/blocked attempted-language evidence only for a PARTIALLY VERIFIED row and FAIL/BLOCKED gate, never convert receipt toPASS. Require exact source/copy/control binding and completed cleanup even for failed attempts.",
+      "Derive numerator from actual independently approved row statuses, not hardcoded16; preserve support current partial conditions and old attempt history.",
+      "Keep Release native slotstrict and hashed inventory binding. Require final preservation and safe evidence references as before.",
+      "Add tests rejecting false100%, smoke/compile substitution, skip or missingmatrix promotion, cleanup failure, and stale or mixedsource receipts; root-only execution and separate independent review."
+    ],
+    "cost": "Additional task-only control code/review/tests; unnecessary if a manually authored checkpoint already conveys the truthful partial result."
+  },
+  "existing_full_materializer_guard": {
+    "source": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/root/materialize_completion.py",
+      "sha256": "5306dff4e31015f6d4148be9ec1607eb5ffb6d769e5bd151ad5e7a5880f174f4"
+    },
+    "locations": {
+      "native_language_requires_actual_complete_matrix": [
+        64,
+        88
+      ],
+      "DS_status_upgrade_requires_pass": [
+        118,
+        151
+      ],
+      "hardcoded_complete_percentage_and_report": [
+        157,
+        160,
+        225,
+        236
+      ]
+    },
+    "required_preservation": "Leave strict full-completion behavior intact. Do not execute with fabricated selection/changed07 status or bypass its mandatory OS/localgame gates. Preserve already passed11control tests and all prior receipts."
+  },
+  "if_V10_still_cannot_complete": {
+    "required_classification": "Distinguish a reproducible application regression from a task fixture/OScontrol limitation with separate agent evidence. A failed selector is not automatically an app defect.",
+    "practical_next_actions": [
+      "Use documented actual OS settings UI on a fresh exclusively owned simulator, with bounded selectors/scrolling and verified destination/results; no guessed private URL, global defaults write or direct locale invocation may masquerade as OS-owned preference evidence.",
+      "If automation remains unavailable, document the exact OS control/transition and last reached observation, and what independently reviewed manual verification would be required on an owned disposable environment. Do not use the user phone/existing profile for destructive fixtures.",
+      "Keep both games local/hostcontinuity/native directions/restart and actualSystem ownership semantics separate from generic app-launch/build proof. Do not invent a product decision to declare the remaining matrix unnecessary."
+    ]
+  },
+  "preservation": {
+    "production_or_control_edits": false,
+    "existing_receipts_overwritten": false,
+    "builds_tests_processes_started_by_reviewer": false,
+    "only_new_output": "This exclusive additive task-only contingency evidence."
+  }
+}

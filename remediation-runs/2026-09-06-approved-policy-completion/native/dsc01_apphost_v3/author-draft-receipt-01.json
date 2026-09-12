@@ -1,0 +1,83 @@
+{
+  "status": "AUTHOR_DRAFT_REQUIRES_INDEPENDENT_REVIEW",
+  "created_at": "2026-09-06T07:05:29.543650+00:00",
+  "reviewer": "/root/native_fix_review (author, cannot approve)",
+  "source_binding": "UNBOUND; must use root-supplied later frozen source+diff, not old v2 identity",
+  "control_records": [
+    {
+      "path": "run_dsc01_apphost_cycle.py",
+      "sha256": "8f27140757237e91653d6fb9e84f2098064c76317844112229315cdd991a68af"
+    },
+    {
+      "path": "secondary_fifo.py",
+      "sha256": "e1546ef645e2f87dfadd41d4e7f3f1c97cef1e38fe6392fb6a778f6db6333dbd"
+    },
+    {
+      "path": "test_secondary_fifo.py",
+      "sha256": "81ba5e75fbb5c7a6fb4acd7e728880f8e7a63a38defdc2715ff2d78395cb5155"
+    },
+    {
+      "path": "test_harness_contract.py",
+      "sha256": "db20274bc3e33241539544e35afa2a56910d8f105130f264af8195968236c40e"
+    },
+    {
+      "path": "copied-kotlin-phase.sh.in",
+      "sha256": "1a8a5ee2c87fb4a4d8294ac3d5e2f057baaf9bd1c5a74b04564586b5f1b4baf8"
+    },
+    {
+      "path": "DSC01Probe.swift.in",
+      "sha256": "de9548e828ad7730e1e0a0a2e8104a2258941b237770b5baec7b7083eac058ac"
+    },
+    {
+      "path": "IOSAppLaunchUITests.swift.in",
+      "sha256": "4a16537122be9c86d486c6020378d60438045e15fb67a63d05916e04ed590e67"
+    },
+    {
+      "path": "DSC01ComposeObservation.kt.in",
+      "sha256": "e54503b0d39a1c1055a5334dd835ccad30a96a887ff62560f22202b7231c266c"
+    },
+    {
+      "path": "DSC01InvocationBridge.kt.in",
+      "sha256": "48276d08fbac7734838ac4c63cf6520cca63c8fe3abd22464d18e1b2178a81fa"
+    },
+    {
+      "path": "copied_sources.py",
+      "sha256": "60e3453703324566b4e8375106c9436956458c11c76aac2d6fabe9e711233f14"
+    },
+    {
+      "path": "bind_source.py",
+      "sha256": "13d987a7d3e3f93bf885cd26a09614dc72cfd2bef735953d7ed7f5118c58ad7d"
+    },
+    {
+      "path": "probe_validation.py",
+      "sha256": "44596e00a822ff93ff5f956b38278e183fd49a2f41e6cde4af365e1192d8c1e8"
+    },
+    {
+      "path": "test_copy_observation_contract.py",
+      "sha256": "1c9b7d7ccd538e56701ab4af9f5186d8d6610a84622badb69ccf5d4d62071686"
+    },
+    {
+      "path": "README.md",
+      "sha256": "03b86fe5348e263ccc8675aff37f504b4a60e53b867201299cc35a890aa67acb"
+    }
+  ],
+  "draft_manifest_sha256": "672d75f4a216f7a74f796211142874f2ae178ba1e619ef534af5b9944c026949",
+  "unchanged_v2_controls": {
+    "secondary_fifo.py": true,
+    "test_secondary_fifo.py": true,
+    "copied-kotlin-phase.sh.in": true
+  },
+  "tests_executed_by_author": 0,
+  "builds_or_apps_started_by_author": 0,
+  "production_files_modified_by_author": [],
+  "output_ownership": "Only native/dsc01_apphost_v3 evidence/control deliverables",
+  "independent_finding_corrected": "release_fix_review explicit language stale-locale false-green; requested language and System baseline now checked; negative contracts authored, not executed",
+  "known_gaps": [
+    "source binding and final control approval",
+    "root execution of Python contract suites",
+    "root iOS compile/link and actual XCTest execution",
+    "OS language control availability/runtime selector applicability",
+    "supplemental retained in-memory host not part of this iteration",
+    "physical LAN/device and Store evidence not claimed"
+  ]
+}

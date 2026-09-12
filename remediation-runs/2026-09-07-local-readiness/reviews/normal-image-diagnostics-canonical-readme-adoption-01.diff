@@ -1,0 +1,72 @@
+--- remediation-runs/2026-09-07-local-readiness/native/normal-image-diagnostics-draft-01/README.md
++++ remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/README.md
+@@ -1,17 +1,17 @@
+-# Normal-source iOS launch — isolated image-diagnostics draft 01
+-
+-This sibling draft is **not adopted, executed, or approved for native execution**.
+-It leaves the canonical normal controls and shared support bytes untouched.
+-Independent source review and root-owned pure-control execution are required
+-before adoption, followed by a fresh source/control binding for any native cycle.
++# Normal-source iOS launch observation — campaign controls
++
++The failure-only image diagnostics were adopted from the independently reviewed
++`normal-image-diagnostics-draft-01/` after its **163 passing controls** in
++`evidence/normal-image-diagnostics-draft-controls-01/`. Canonical control execution
++and a fresh independently reviewed source/control binding are still required
++before a new native cycle. This tooling adoption is not app-runtime evidence.
+ 
+ The original controls had independent source review and **78 passing synthetic
+ tests** in `evidence/package-controls-01/` (2026-09-07). The subsequent **99** controls
+-passed in `evidence/normal-after-native10-controls-01/`. The canonical suite declares
+-**120 tests**. This isolated draft declares **163 tests** (43 added failure-only
+-diagnostic, negative, orchestration and mutation controls). None of these new
+-controls has been executed by its author; test-control success is not app-runtime
+-evidence. Existing assertions and test signatures are preserved.
++passed in `evidence/normal-after-native10-controls-01/`. The current suite declares
++**163 tests** (43 added failure-only diagnostic, negative, orchestration and
++mutation controls beyond the previous 120). Existing assertions and test
++signatures are preserved. Test-control success is not app-runtime evidence.
+ 
+ `ios-readiness-06` executed eight successful XCTest repetitions but then failed
+ report parsing, before the separate ninth-launch provenance observation. Its
+@@ -53,7 +53,7 @@
+ and cleanup. Its separate image observation failed with **“Runtime contains an
+ unbound application/framework image.”** The offending Binary Images row was not
+ retained, so neither its path format nor an explanation is established. That
+-original FAIL is unchanged. This draft grants **no additional path aliases**.
++original FAIL is unchanged. These diagnostics grant **no additional path aliases**.
+ 
+ `external_image_diagnostics.py` examines bounded already-acquired text only after
+ a parser rejection. Its closed `FAILURE_ONLY_EXTERNAL_IMAGE_FORMAT` result always
+@@ -74,9 +74,10 @@
+ budget-checked. Missing or ambiguous Binary Images tables are explicitly unscanned,
+ not normalized. Bound failures remain diagnostic insufficiency, not provenance.
+ 
+-Root separately approved **drafting**, not executing, a single guarded sibling
++The reviewed control design allows a single guarded sibling
+ `vmmap -w` attempt after a successful `sample` command, unchanged post-sample
+-lifetime, and a `RuntimeError` parser rejection. A fresh same-target preflight
++lifetime, and a `RuntimeError` parser rejection. Native execution still requires
++the separate fresh binding and approval below. A fresh same-target preflight
+ must succeed, command time/output limits are unchanged, and postflight is attempted
+ even if the command fails. Diagnostic interruption prevents further optional
+ native work. A sample failure provides **no selected-image reference**; this path
+@@ -189,7 +190,7 @@
+ control tests (not Swift compilation or app runtime):
+ 
+ ```sh
+-/usr/bin/python3 -B remediation-runs/2026-09-07-local-readiness/native/normal-image-diagnostics-draft-01/run_control_tests.py
++/usr/bin/python3 -B remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_control_tests.py
+ ```
+ 
+ Use the root's outer receipt/finalization wrapper even for this pure cycle. The
+@@ -217,8 +218,7 @@
+ preflight; this is not Store signing or publication authorization. No app-source
+ freeze or native success is implied by this draft's control freeze.
+ 
+-Research receipts/gzipped public sources remain in the unchanged canonical
+-`normal-ios-launch-proposal-01/` sibling. Apple current launch docs,
++Research receipts/gzipped public sources are adjacent. Apple current launch docs,
+ the installed Xcode repetition manpage and xcresult0.1.0 schemas, installed
+ `sample(1)`/`vmmap(1)`, Apple vmmap documentation, installed LLDB help, and current
+ LLVM command mapping were considered. LLDB was researched but is **not** used as

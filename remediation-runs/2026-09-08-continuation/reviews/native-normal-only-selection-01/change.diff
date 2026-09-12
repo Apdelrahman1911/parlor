@@ -1,0 +1,566 @@
+--- a/.github/workflows/production-verification.yml
++++ b/.github/workflows/production-verification.yml
+@@ -18,6 +18,11 @@
+         type: choice
+         default: full
+         options: [full, native-preflight, native-evidence, native-process-probe]
++      native_selection:
++        description: Native evidence lanes (normal-only requires explicit scoped approval)
++        type: choice
++        default: paired
++        options: [paired, normal-only]
+       frozen_source_sha:
+         description: Exact reviewed source/inventory SHA (required for every focused mode)
+         type: string
+@@ -517,6 +522,7 @@
+         shell: bash
+         env:
+           PARLOR_DISPATCH_SCOPE: ${{ inputs.verification_scope }}
++          PARLOR_NATIVE_SELECTION: ${{ inputs.native_selection }}
+         run: /usr/bin/python3 -B scripts/ci/native_continuation.py validate-scope
+ 
+       - name: Set up JDK 21
+@@ -535,6 +541,7 @@
+         shell: bash
+         env:
+           PARLOR_DISPATCH_SCOPE: ${{ inputs.verification_scope }}
++          PARLOR_NATIVE_SELECTION: ${{ inputs.native_selection }}
+           PARLOR_FROZEN_SOURCE_SHA: ${{ inputs.frozen_source_sha }}
+           PARLOR_PREFLIGHT_RUN_ID: ${{ inputs.preflight_run_id }}
+           PARLOR_PREFLIGHT_RUN_ATTEMPT: ${{ inputs.preflight_run_attempt }}
+@@ -560,6 +567,7 @@
+         shell: bash
+         env:
+           PARLOR_DISPATCH_SCOPE: ${{ inputs.verification_scope }}
++          PARLOR_NATIVE_SELECTION: ${{ inputs.native_selection }}
+           PARLOR_FROZEN_SOURCE_SHA: ${{ inputs.frozen_source_sha }}
+           PARLOR_NATIVE_UPLOAD_OUTCOME: ${{ steps.native_artifact.outcome }}
+           PARLOR_NATIVE_ARTIFACT_ID: ${{ steps.native_artifact.outputs.artifact-id }}
+--- a/scripts/ci/native_continuation.py
++++ b/scripts/ci/native_continuation.py
+@@ -41,6 +41,7 @@
+     "normal": OLD_CAMPAIGN + "/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
+ }
+ CYCLES = {"l08": "ios-readiness-27", "normal": "ios-readiness-28"}
++NATIVE_SELECTIONS = {"paired": ("l08", "normal"), "normal-only": ("normal",)}
+ LIFECYCLE_MODE = "direct-owned-v1"
+ NATIVE_JOB_SECONDS = 240 * 60
+ NATIVE_WAIT_SECONDS = 6000
+@@ -138,6 +139,13 @@
+         return "full"
+     require(requested in {"full", "native-preflight", "native-evidence", "native-process-probe"}, "unknown-verification-scope")
+     return requested
++
++
++def effective_native_selection(scope, requested):
++    selection = "paired" if requested in (None, "") else requested
++    require(isinstance(selection, str) and selection in NATIVE_SELECTIONS, "unknown-native-selection")
++    require(selection == "paired" or scope == "native-evidence", "normal-only-requires-native-evidence")
++    return selection
+ 
+ 
+ def context(env, root=ROOT, execute=None):
+@@ -787,6 +795,7 @@
+     def __init__(self, env, root=ROOT):
+         self.env, self.root = env, root
+         self.scope = effective_scope(env.get("GITHUB_EVENT_NAME"), env.get("PARLOR_DISPATCH_SCOPE"))
++        self.selection = effective_native_selection(self.scope, env.get("PARLOR_NATIVE_SELECTION"))
+         require(self.scope in {"native-preflight", "native-evidence"}, "scope-is-not-an-app-native-continuation")
+         self.context = context(env, root)
+         temporary = Path(env["RUNNER_TEMP"]).resolve(strict=True)
+@@ -795,6 +804,10 @@
+         self.bundle, self.binding = self.base / "bundle", root / CAMPAIGN / BINDING_NAME
+         self.cleanup_path = self.base.with_name(self.base.name + "-cleanup.json")
+         self.state = None
++
++    @property
++    def selected_lanes(self):
++        return NATIVE_SELECTIONS[self.selection]
+ 
+     def save(self):
+         path = self.base / "state.json"
+@@ -917,6 +930,7 @@
+ 
+     def admit_native(self, label):
+         """Do not start a child unless its full unchanged wait/grace can fit."""
++        require(label in self.selected_lanes, "native-lane-not-selected")
+         required = NATIVE_WAIT_SECONDS + NATIVE_GRACE_SECONDS + NATIVE_FINISH_RESERVE_SECONDS
+         admission = dict(cycle=CYCLES[label], status="DENIED_NOT_RUN", job_budget_seconds=NATIVE_JOB_SECONDS,
+                          child_wait_seconds=NATIVE_WAIT_SECONDS, finalizer_grace_seconds=NATIVE_GRACE_SECONDS,
+@@ -948,6 +962,7 @@
+         self.save()
+ 
+     def run_native(self, label, approved, source):
++        require(label in self.selected_lanes, "native-lane-not-selected")
+         cycle = CYCLES[label]
+         destination = self.root / CAMPAIGN / "evidence" / cycle
+         require(not destination.exists() and not destination.is_symlink(), "never-reuse-a-native-cycle")
+@@ -1003,11 +1018,16 @@
+     def evidence(self):
+         expected, source = self.fetch_preflight()
+         self.bootstrap_cache_directories()
+-        # A partial/strict failure is retained; it does not prevent the independent
++        # Paired A partial/strict failure is retained; it does not prevent the independent
+         # normal-source B observation if (and only if) A's actual cleanup is safe.
+-        results = [self.run_native(label, expected[label + "_sha256"], source) for label in RUNNERS]
+-        self.state["status"] = "PASS" if all(code == 0 and status == "PASS" for code, status in results) else "NOT_READY"
+-        return 0 if self.state["status"] == "PASS" else 2
++        results = [self.run_native(label, expected[label + "_sha256"], source) for label in self.selected_lanes]
++        passed = all(code == 0 and status == "PASS" for code, status in results)
++        if self.selection == "paired":
++            self.state["status"] = "PASS" if passed else "NOT_READY"
++        else:
++            # No A execution, receipt or qualification is synthesized here.
++            self.state["status"] = "NORMAL_ONLY_PASS" if passed else "NORMAL_ONLY_NOT_READY"
++        return 0 if passed else 2
+ 
+     def run(self):
+         require(command(["git", "status", "--porcelain=v1", "--untracked-files=all"], self.root).strip() == b"",
+@@ -1019,7 +1039,8 @@
+             require(not path.exists() and not path.is_symlink(), "pre-existing-continuation-output")
+         self.base.mkdir(mode=0o700)
+         self.bundle.mkdir(mode=0o700)
+-        self.state = dict(schema_version=1, context=self.context, scope=self.scope, base_custody=custody(self.base),
++        self.state = dict(schema_version=1, context=self.context, scope=self.scope, selection=self.selection,
++            base_custody=custody(self.base),
+             status="RUNNING", started_at=now(), files={}, directories={}, runs={}, cleanup_safe=True)
+         self.save()
+         code = 1
+@@ -1040,15 +1061,22 @@
+                 write_new(self.bundle / "continuation.json", json_bytes(self.state))
+             self.state["bundle_manifest"] = tree_manifest(self.bundle)
+             self.save()
+-            print(json.dumps({key: self.state.get(key) for key in ("scope", "status", "cleanup_safe", "error")}, indent=2))
++            print(json.dumps({key: self.state.get(key) for key in ("scope", "selection", "status", "cleanup_safe", "error")}, indent=2))
+         return code
+ 
+     def cleanup(self):
+-        receipt = dict(schema_version=1, context=self.context, started_at=now(), status="FAIL", removed=[], errors=[])
++        receipt = dict(schema_version=1, context=self.context, scope=self.scope, selection=self.selection,
++                       started_at=now(), status="FAIL", removed=[], errors=[])
+         try:
+             state = decode(file_bytes(self.base / "state.json", 8 * 1024 * 1024))
+             require(state.get("context") == self.context and state.get("base_custody") == custody(self.base),
+                     "cleanup-custody-or-source-mismatch")
++            require(state.get("scope") == self.scope and state.get("selection") == self.selection,
++                    "cleanup-scope-or-selection-mismatch")
++            for key in ("runs", "native_admissions", "preservation"):
++                claims = state.get(key, {})
++                require(isinstance(claims, dict) and set(claims) <= set(self.selected_lanes),
++                        "cleanup-unselected-native-lane")
+             require(self.env.get("PARLOR_NATIVE_UPLOAD_OUTCOME") == "success" and
+                     POSITIVE.fullmatch(self.env.get("PARLOR_NATIVE_ARTIFACT_ID", "")) and
+                     HEX64.fullmatch(self.env.get("PARLOR_NATIVE_ARTIFACT_DIGEST", "")),
+@@ -1058,7 +1086,8 @@
+             require(state.get("cleanup_safe") is True, "native-cleanup-unsafe-retain-owned-evidence")
+             require(tree_manifest(self.bundle) == state.get("bundle_manifest"), "uploaded-evidence-changed")
+             for relative, claim in state["directories"].items():
+-                require(relative in {CAMPAIGN + "/evidence/" + name for name in CYCLES.values()}, "unexpected-cleanup-directory")
++                require(relative in {CAMPAIGN + "/evidence/" + CYCLES[label] for label in self.selected_lanes},
++                        "unexpected-cleanup-directory")
+                 path = self.root / relative
+                 require(custody(path) == claim["custody"] and tree_manifest(path) == claim["manifest"],
+                         "native-evidence-custody-changed")
+@@ -1093,7 +1122,9 @@
+     arguments = sys.argv[1:] if arguments is None else arguments
+     require(len(arguments) == 1 and arguments[0] in {"validate-scope", "run", "cleanup"}, "invalid-continuation-command")
+     if arguments[0] == "validate-scope":
+-        print(effective_scope(os.environ.get("GITHUB_EVENT_NAME"), os.environ.get("PARLOR_DISPATCH_SCOPE")))
++        scope = effective_scope(os.environ.get("GITHUB_EVENT_NAME"), os.environ.get("PARLOR_DISPATCH_SCOPE"))
++        effective_native_selection(scope, os.environ.get("PARLOR_NATIVE_SELECTION"))
++        print(scope)
+         return 0
+     lane = Continuation(os.environ)
+     return lane.run() if arguments[0] == "run" else lane.cleanup()
+--- a/scripts/ci/NATIVE_CONTINUATION.md
++++ b/scripts/ci/NATIVE_CONTINUATION.md
+@@ -43,13 +43,31 @@
+ - `approved_l08_control_sha256`, `approved_normal_control_sha256` (independently
+   reviewed `control_sha256` values, not the JSON-file hashes).
+ 
++`native_selection` is a closed choice: **`paired` (default)** or `normal-only`.
++Omitting the input preserves the paired A-then-B chain. `normal-only` is accepted
++only with `verification_scope=native-evidence`; other combinations and unknown
++values fail before native allocation. Preflight remains nonbuilding and always
++binds **both** manifests; normal-only still requires both reviewed control hashes.
++
++The coordinator may select `normal-only` only after independent review of actual
++A evidence establishes the precise reusable scope and a B-only continuation is
++justified. It still needs reviewed source/control commits, regenerated committed
++inventory and a fresh same-source preflight. Earlier A results remain at their
++original SHA: this input neither certifies reuse nor upgrades strict failures.
++Normal-only uses the unchanged B runner/budgets/lifecycle, allocates or claims no
++A lane, and cannot delete an unselected A evidence directory. Selection is bound
++into continuation state and cleanup receipts. Success is `NORMAL_ONLY_PASS`,
++never combined `PASS`; an ordinary failing result is `NORMAL_ONLY_NOT_READY`.
++Exceptions remain `FAIL`. No A receipt is synthesized, and final full qualification
++is still separate. Never use selection to bypass an unsafe paired A finalizer.
++
+ The adapter uses only read-only Actions API requests. It verifies the exact
+ producer repository, branch, source, workflow, attempt, successful result,
+ artifact identity/digest and four bounded nonsymlink ZIP members before writing
+ anything from the archive. It installs the binding byte-for-byte at the same
+ absolute checkout path and recomputes both control manifests before native work.
+ 
+-The canonical runners execute serially on independently owned fresh simulators:
++By default the canonical runners execute serially on independently owned fresh simulators:
+ 
+ 1. A: composed L08, next cycle `ios-readiness-27`;
+ 2. B: normal-source eight launches plus separate image observation, cycle
+--- a/scripts/release/workflow_contract.py
++++ b/scripts/release/workflow_contract.py
+@@ -182,6 +182,18 @@
+     for token in ("        default: full\n", "        options: [full, native-preflight, native-evidence, native-process-probe]\n"):
+         if token not in text.split("\nconcurrency:", 1)[0]:
+             fail("verification scope must default to full with only the three reviewed focused modes")
++    selections = re.findall(r"(?m)^      native_selection:\n((?:        .*\n)+)", text.split("\nconcurrency:", 1)[0])
++    if (len(selections) != 1 or
++            re.findall(r"(?m)^        (type|default|options): (.*)$", selections[0]) !=
++            [("type", "choice"), ("default", "paired"), ("options", "[paired, normal-only]")]):
++        fail("verification scope must retain closed paired-default or normal-only native selection")
++    for name in ("Validate verification scope", "Run focused native continuation",
++                 "Verify focused native cleanup and uploaded custody"):
++        if re.findall(r"(?m)^          PARLOR_NATIVE_SELECTION: (.*)$", validation_step(ios, name)) != [
++                "${{ inputs.native_selection }}"]:
++            fail("verification scope must bind identical explicit native selection into validation/run/cleanup")
++    if text.count("PARLOR_NATIVE_SELECTION:") != 3:
++        fail("verification scope must not override native selection outside its three reviewed boundaries")
+     validator = validation_step(ios, "Validate verification scope")
+     if (re.findall(r"(?m)^        if: (.*)$", validator) or
+             "run: /usr/bin/python3 -B scripts/ci/native_continuation.py validate-scope\n" not in validator or
+--- a/scripts/release/tests/test_native_continuation.py
++++ b/scripts/release/tests/test_native_continuation.py
+@@ -44,9 +44,10 @@
+ SYNTHETIC_JOB_START_NS = 1_000_000_000_000
+ 
+ 
+-def native_clock_fixture(lane):
++def native_clock_fixture(lane, *, selection='paired'):
+     """A source/run-bound inert kernel-clock token, never the host's real clock."""
+     lane.scope = 'native-evidence'
++    lane.selection = selection
+     lane.context = dict(run_id=200, run_attempt=1, head_sha='a' * 40)
+     token = dict(clock='CLOCK_MONOTONIC_RAW', start_ns=SYNTHETIC_JOB_START_NS,
+                  job='ios', **lane.context)
+@@ -100,6 +101,60 @@
+ 
+ 
+ class NativeScopeTest(unittest.TestCase):
++    def test_native_selection_defaults_to_paired_and_is_closed(self):
++        self.assertEqual(native.NATIVE_SELECTIONS, {'paired': ('l08', 'normal'), 'normal-only': ('normal',)})
++        for scope in ('full', 'native-preflight', 'native-evidence', 'native-process-probe'):
++            for value in (None, '', 'paired'):
++                with self.subTest(scope=scope, value=value):
++                    self.assertEqual(native.effective_native_selection(scope, value), 'paired')
++        self.assertEqual(native.effective_native_selection('native-evidence', 'normal-only'), 'normal-only')
++        for value in ('normal', 'l08', 'all', 'PAIRED', 'paired ', '../normal', False, 1, [], {}):
++            with self.subTest(value=value), self.assertRaisesRegex(RuntimeError, 'unknown-native-selection'):
++                native.effective_native_selection('native-evidence', value)
++
++    def test_invalid_selection_is_rejected_by_cli_and_constructor_before_native_resources(self):
++        cases = [('workflow_dispatch', scope, 'normal-only') for scope in
++                 ('full', 'native-preflight', 'native-process-probe')]
++        cases += [('push', 'native-evidence', 'normal-only'), ('pull_request', 'full', 'normal-only'),
++                  ('workflow_dispatch', 'native-evidence', 'l08')]
++        for event, scope, selection in cases:
++            env = dict(GITHUB_EVENT_NAME=event, PARLOR_DISPATCH_SCOPE=scope, PARLOR_NATIVE_SELECTION=selection)
++            with self.subTest(event=event, scope=scope, selection=selection), \
++                    patch.dict(native.os.environ, env, clear=True), patch.object(native, 'context') as context, \
++                    patch.object(native.Path, 'mkdir') as allocate, patch.object(native, 'command') as command:
++                with self.assertRaisesRegex(RuntimeError, 'native-selection|normal-only-requires-native-evidence'):
++                    native.main(['validate-scope'])
++                with self.assertRaisesRegex(RuntimeError, 'native-selection|normal-only-requires-native-evidence'):
++                    native.Continuation(env)
++                context.assert_not_called()
++                allocate.assert_not_called()
++                command.assert_not_called()
++
++    def test_normal_only_selection_is_bound_in_initial_state_and_emitted_result(self):
++        with TemporaryDirectory() as raw:
++            temporary = Path(raw).resolve()
++            root, runner_temp = temporary / 'checkout', temporary / 'runner-temp'
++            (root / native.CAMPAIGN).mkdir(parents=True)
++            runner_temp.mkdir()
++            _, _, current = package_fixture(root)
++            env = dict(GITHUB_EVENT_NAME='workflow_dispatch', PARLOR_DISPATCH_SCOPE='native-evidence',
++                       PARLOR_NATIVE_SELECTION='normal-only', RUNNER_TEMP=str(runner_temp))
++            with patch.object(native, 'context', return_value=current):
++                lane = native.Continuation(env, root)
++            self.assertEqual(lane.selected_lanes, ('normal',))
++            def synthetic_evidence():
++                lane.state['status'] = 'NORMAL_ONLY_PASS'
++                return 0
++            with patch.object(native, 'command', return_value=b''), \
++                    patch.object(native, 'qualified_platform', return_value={}), \
++                    patch.object(lane, 'evidence', side_effect=synthetic_evidence), patch('builtins.print'):
++                self.assertEqual(lane.run(), 0)
++            for path in (lane.base / 'state.json', lane.bundle / 'continuation.json'):
++                state = json.loads(path.read_bytes())
++                self.assertEqual((state['scope'], state['selection']), ('native-evidence', 'normal-only'))
++                self.assertEqual((state['runs'], state['directories'], state['files']), ({}, {}, {}))
++            self.assertFalse((root / native.CAMPAIGN / 'evidence' / native.CYCLES['l08']).exists())
++
+     def test_push_and_pr_always_select_full_even_if_input_is_present(self):
+         for event in ("push", "pull_request"):
+             for value in (None, "full", "native-evidence", "bad"):
+@@ -420,6 +475,7 @@
+ 
+     def test_native_a_partial_runs_b_but_unsafe_cleanup_does_not(self):
+         lane = native.Continuation.__new__(native.Continuation)
++        lane.selection = 'paired'
+         lane.state = {}
+         lane.fetch_preflight = Mock(return_value=({"l08_sha256": "d" * 64, "normal_sha256": "e" * 64}, source_fixture()))
+         lane.bootstrap_cache_directories = Mock()
+@@ -431,6 +487,25 @@
+         with self.assertRaisesRegex(RuntimeError, "unsafe-cleanup"):
+             lane.evidence()
+         self.assertEqual(lane.run_native.call_count, 1)
++
++    def test_normal_only_status_never_synthesizes_combined_pass_or_invokes_a(self):
++        for exit_code, status, expected in ((0, 'PASS', 'NORMAL_ONLY_PASS'),
++                (2, 'PASS', 'NORMAL_ONLY_NOT_READY'), (0, 'PARTIALLY_VERIFIED', 'NORMAL_ONLY_NOT_READY')):
++            lane = native.Continuation.__new__(native.Continuation)
++            lane.selection, lane.state = 'normal-only', {}
++            lane.fetch_preflight = Mock(return_value=({'l08_sha256': 'd' * 64, 'normal_sha256': 'e' * 64}, source_fixture()))
++            lane.bootstrap_cache_directories = Mock()
++            lane.run_native = Mock(return_value=(exit_code, status))
++            with self.subTest(exit_code=exit_code, status=status):
++                self.assertEqual(lane.evidence(), 0 if expected == 'NORMAL_ONLY_PASS' else 2)
++                self.assertEqual(lane.state['status'], expected)
++                lane.fetch_preflight.assert_called_once_with()
++                lane.run_native.assert_called_once_with('normal', 'e' * 64, source_fixture())
++        lane.selection, lane.state = 'paired', {}
++        lane.run_native = Mock(return_value=(0, 'PASS'))
++        self.assertEqual(lane.evidence(), 0)
++        self.assertEqual(lane.state['status'], 'PASS')
++        self.assertEqual([call.args[0] for call in lane.run_native.call_args_list], ['l08', 'normal'])
+ 
+     def test_native_timeout_sends_term_and_waits_for_finalizer_without_kill(self):
+         with TemporaryDirectory() as raw:
+@@ -484,7 +559,7 @@
+             child.kill.assert_not_called()
+             self.assertEqual(callbacks, {native.signal.SIGINT: None, native.signal.SIGTERM: None})
+ 
+-    def prepare_cleanup_lane(self, temporary):
++    def prepare_cleanup_lane(self, temporary, *, selection='paired'):
+         root = temporary / "checkout"
+         root.mkdir()
+         lane = native.Continuation.__new__(native.Continuation)
+@@ -497,9 +572,11 @@
+         lane.binding.write_bytes(b"owned source binding")
+         (lane.bundle / "retained-evidence.json").write_bytes(b"{}")
+         lane.context = {"head_sha": "a" * 40, "root": str(root)}
++        lane.scope, lane.selection = 'native-evidence', selection
+         lane.env = dict(PARLOR_NATIVE_UPLOAD_OUTCOME="success", PARLOR_NATIVE_ARTIFACT_ID="300",
+                         PARLOR_NATIVE_ARTIFACT_DIGEST="e" * 64)
+-        lane.state = dict(context=lane.context, base_custody=native.custody(lane.base), cleanup_safe=True,
++        lane.state = dict(context=lane.context, scope=lane.scope, selection=selection,
++                         base_custody=native.custody(lane.base), cleanup_safe=True,
+                          directories={}, runs={}, files={}, bundle_manifest=native.tree_manifest(lane.bundle))
+         lane.claim_file(lane.binding)
+         return lane
+@@ -516,6 +593,48 @@
+             self.assertFalse(lane.binding.exists())
+             self.assertEqual(sentinel.read_bytes(), b"preserve")
+             self.assertEqual(json.loads(lane.cleanup_path.read_bytes())["status"], "PASS")
++
++    def test_normal_only_cleanup_binds_selection_and_removes_only_its_exact_b_directory(self):
++        with TemporaryDirectory() as raw:
++            lane = self.prepare_cleanup_lane(Path(raw).resolve(), selection='normal-only')
++            relative = native.CAMPAIGN + '/evidence/' + native.CYCLES['normal']
++            owned = lane.root / relative
++            owned.mkdir(parents=True)
++            (owned / 'receipt.json').write_bytes(b'{"synthetic":true}')
++            lane.state['directories'][relative] = dict(custody=native.custody(owned), manifest=native.tree_manifest(owned))
++            lane.save()
++            with patch.object(native, 'command', return_value=b''), patch('builtins.print'):
++                self.assertEqual(lane.cleanup(), 0)
++            receipt = json.loads(lane.cleanup_path.read_bytes())
++            self.assertEqual(receipt['selection'], 'normal-only')
++            self.assertEqual(receipt['scope'], 'native-evidence')
++            self.assertEqual(receipt['removed'], [relative, native.CAMPAIGN + '/' + native.BINDING_NAME])
++            self.assertFalse(owned.exists())
++
++    def test_unselected_a_claims_or_scope_selection_drift_refuse_all_cleanup_deletion(self):
++        for mutation in ('directories', 'runs', 'native_admissions', 'preservation', 'scope', 'selection'):
++            with self.subTest(mutation=mutation), TemporaryDirectory() as raw:
++                lane = self.prepare_cleanup_lane(Path(raw).resolve(), selection='normal-only')
++                relative = native.CAMPAIGN + '/evidence/' + native.CYCLES['l08']
++                unselected = lane.root / relative
++                unselected.mkdir(parents=True)
++                sentinel = unselected / 'unselected-evidence.json'
++                sentinel.write_bytes(b'preserve unselected A')
++                if mutation == 'directories':
++                    lane.state['directories'][relative] = dict(custody=native.custody(unselected),
++                                                              manifest=native.tree_manifest(unselected))
++                elif mutation in ('scope', 'selection'):
++                    lane.state[mutation] = 'native-preflight' if mutation == 'scope' else 'paired'
++                else:
++                    lane.state.setdefault(mutation, {})['l08'] = {'synthetic': True}
++                lane.save()
++                with patch.object(native, 'command', return_value=b''), \
++                        patch.object(native.shutil, 'rmtree') as remove, patch('builtins.print'):
++                    self.assertEqual(lane.cleanup(), 1)
++                remove.assert_not_called()
++                self.assertEqual(json.loads(lane.cleanup_path.read_bytes())['removed'], [])
++                self.assertEqual(sentinel.read_bytes(), b'preserve unselected A')
++                self.assertTrue(lane.binding.is_file())
+ 
+     def test_failed_missing_upload_or_unsafe_cleanup_preserves_last_local_custody(self):
+         for mutation in ("failed-upload", "missing-id", "unsafe-native"):
+@@ -599,9 +718,11 @@
+             lane.bootstrap_cache_directories.assert_not_called()
+ 
+     def test_fetch_rejects_zip_digest_before_install_and_live_control_drift_before_build(self):
+-        for mutation in ("zip-digest", "live-control"):
+-            with self.subTest(mutation=mutation), TemporaryDirectory() as raw:
++        for selection, mutation in ((selection, mutation) for selection in ('paired', 'normal-only')
++                                    for mutation in ('zip-digest', 'l08-control', 'normal-control')):
++            with self.subTest(selection=selection, mutation=mutation), TemporaryDirectory() as raw:
+                 lane = self.prepare_lane(Path(raw).resolve())
++                lane.selection = selection
+                 files, expected, lane.context = package_fixture(lane.root)
+                 zip_bytes = zipped(files)
+                 digest = "0" * 64 if mutation == "zip-digest" else native.sha(zip_bytes)
+@@ -611,11 +732,12 @@
+                 run, workflow, artifact, _ = producer_fixture()
+                 artifact["digest"] = "sha256:" + digest
+                 observation = json.loads(files["preflight.json"])["source_observation"]
+-                manifests = {label: (files[label + "-controls.json"] + b" ", json.loads(files[label + "-controls.json"])) for label in native.RUNNERS}
++                manifests = {label: (files[label + "-controls.json"] + (b' ' if mutation == label + '-control' else b''),
++                                    json.loads(files[label + "-controls.json"])) for label in native.RUNNERS}
+                 with patch.object(native, "api_json", side_effect=[run, workflow, artifact]), patch.object(native, "download_zip", return_value=zip_bytes), patch.object(native, "describe", return_value=observation), patch.object(native, "controls", return_value=manifests):
+                     with self.assertRaisesRegex(RuntimeError, "zip-digest-mismatch" if mutation == "zip-digest" else "live-control-manifest"):
+                         lane.fetch_preflight()
+-                self.assertEqual(lane.binding.exists(), mutation == "live-control")
++                self.assertEqual(lane.binding.exists(), mutation != "zip-digest")
+                 lane.invoke_native.assert_not_called()
+                 lane.bootstrap_cache_directories.assert_not_called()
+ 
+@@ -733,6 +855,51 @@
+ 
+ 
+ class DirectLifecycleAdapterTest(unittest.TestCase):
++    def test_normal_only_uses_actual_b_adapter_guards_without_a_claim_or_directory(self):
++        for mutation in (None, 'unsafe-cleanup', 'inner-timeout', 'wrong-observer'):
++            with self.subTest(mutation=mutation), TemporaryDirectory() as raw:
++                root = Path(raw).resolve()
++                lane = object.__new__(native.Continuation)
++                lane.root, lane.binding = root, root / native.CAMPAIGN / native.BINDING_NAME
++                lane.bundle = root / 'bundle'; lane.bundle.mkdir()
++                lane.state = dict(runs={}, files={}, directories={})
++                lane.save = Mock()
++                native_clock_fixture(lane, selection='normal-only')
++                invoked = []
++                def invoke(arguments, log, entry):
++                    invoked.append(arguments)
++                    self.assertEqual(entry['cycle'], native.CYCLES['normal'])
++                    value, _, _, destination = direct_fixture(root, cycle=entry['cycle'])
++                    if mutation == 'unsafe-cleanup':
++                        value['owned_processes_remaining'] = [123]
++                    elif mutation == 'inner-timeout':
++                        value['error'] = dict(type='TimeoutExpired', message='synthetic timeout')
++                    elif mutation == 'wrong-observer':
++                        value['image_observer'] = 'vmmap'
++                    native.write_new(destination / 'receipt.json', native.json_bytes(value))
++                    entry['exit_code'] = 2
++                lane.invoke_native = invoke
++                lane.fetch_preflight = Mock(return_value=({'l08_sha256': 'd' * 64, 'normal_sha256': 'd' * 64}, source_fixture()))
++                lane.bootstrap_cache_directories = Mock()
++                with patch.object(native, 'native_job_clock_ns', return_value=SYNTHETIC_JOB_START_NS), \
++                        patch.object(native.subprocess, 'Popen', side_effect=AssertionError('No native process permitted')):
++                    if mutation is None:
++                        self.assertEqual(lane.evidence(), 2)
++                        self.assertEqual(lane.state['status'], 'NORMAL_ONLY_NOT_READY')
++                    else:
++                        with self.assertRaises(RuntimeError):
++                            lane.evidence()
++                self.assertEqual(len(invoked), 1)
++                for argument in ('--image-observer=libproc', '--simulator-lifecycle=direct-owned-v1',
++                                 '--simulator-signing=adhoc', '--toolchain=' + native.PROFILE):
++                    self.assertEqual(invoked[0].count(argument), 1)
++                self.assertEqual(invoked[0][2], str(root / native.RUNNERS['normal']))
++                for key in ('runs', 'native_admissions', 'preservation'):
++                    self.assertEqual(set(lane.state[key]), {'normal'})
++                self.assertEqual(set(lane.state['directories']), {native.CAMPAIGN + '/evidence/' + native.CYCLES['normal']})
++                self.assertFalse((root / native.CAMPAIGN / 'evidence' / native.CYCLES['l08']).exists())
++                self.assertFalse((lane.bundle / native.CYCLES['l08']).exists())
++
+     def test_complete_synthetic_cleanup_is_not_runtime_pass_and_legacy_is_not_new_authority(self):
+         with TemporaryDirectory() as raw:
+             root = Path(raw).resolve()
+@@ -922,6 +1089,33 @@
+             lane.save.assert_called_once_with()
+             return admission
+ 
++    def test_normal_only_never_admits_unselected_a_or_bypasses_b_budget(self):
++        for mutation in ('unselected-run', 'unselected-admission', 'missing-clock', 'insufficient-budget'):
++            with self.subTest(mutation=mutation), TemporaryDirectory() as raw:
++                lane = self.lane(Path(raw).resolve())
++                lane.selection = 'normal-only'
++                before = copy.deepcopy(lane.state)
++                if mutation == 'missing-clock':
++                    lane.env.pop(native.JOB_CLOCK_ENV)
++                current = SYNTHETIC_JOB_START_NS + (7200 * 10**9 + 1 if mutation == 'insufficient-budget' else 0)
++                with patch.object(native, 'native_job_clock_ns', return_value=current), self.assertRaises(RuntimeError):
++                    if mutation == 'unselected-admission':
++                        lane.admit_native('l08')
++                    else:
++                        lane.run_native('l08' if mutation == 'unselected-run' else 'normal', 'd' * 64, source_fixture())
++                lane.invoke_native.assert_not_called()
++                self.assertEqual(before['runs'], lane.state['runs'])
++                self.assertEqual(before['files'], lane.state['files'])
++                self.assertEqual(before['directories'], lane.state['directories'])
++                self.assertNotIn('preservation', lane.state)
++                if mutation.startswith('unselected'):
++                    self.assertEqual(lane.state, before)
++                    lane.save.assert_not_called()
++                else:
++                    self.assertEqual(set(lane.state['native_admissions']), {'normal'})
++                    self.assertEqual(lane.state['native_admissions']['normal']['status'], 'DENIED_NOT_RUN')
++                self.assertEqual(list(lane.bundle.iterdir()), [])
++
+     def test_actual_consumer_uses_shared_raw_kernel_clock_not_python_process_or_wall_clock(self):
+         raw_clock = object()
+         clock = SimpleNamespace(CLOCK_MONOTONIC_RAW=raw_clock,
+--- a/scripts/release/tests/test_workflow_contract.py
++++ b/scripts/release/tests/test_workflow_contract.py
+@@ -17,6 +17,38 @@
+ 
+ 
+ class WorkflowContractTest(unittest.TestCase):
++    def test_native_selection_is_closed_paired_default_and_cannot_be_duplicated(self) -> None:
++        workflow = (workflow_contract.ROOT / '.github/workflows/production-verification.yml').read_text(encoding='utf-8')
++        block = '      native_selection:\n' + workflow.split('      native_selection:\n', 1)[1].split('      frozen_source_sha:\n', 1)[0]
++        workflow_contract.verify_verification_scopes(workflow)
++        mutations = [block.replace('type: choice', 'type: string', 1),
++                     block.replace('default: paired', 'default: normal-only', 1),
++                     block.replace('[paired, normal-only]', '[paired, normal-only, l08]', 1),
++                     block.replace('[paired, normal-only]', '[normal-only, paired]', 1),
++                     block + block, '']
++        for replacement in mutations:
++            changed = workflow.replace(block, replacement, 1)
++            self.assertNotEqual(changed, workflow)
++            with self.subTest(replacement=replacement), self.assertRaisesRegex(RuntimeError, 'verification scope'):
++                workflow_contract.verify_verification_scopes(changed)
++
++    def test_native_selection_validation_execution_and_cleanup_use_identical_input(self) -> None:
++        workflow = (workflow_contract.ROOT / '.github/workflows/production-verification.yml').read_text(encoding='utf-8')
++        original = '          PARLOR_NATIVE_SELECTION: ${{ inputs.native_selection }}\n'
++        for name in ('Validate verification scope', 'Run focused native continuation',
++                     'Verify focused native cleanup and uploaded custody'):
++            block = workflow_contract.validation_step(workflow, name)
++            self.assertEqual(block.count(original), 1)
++            for replacement in ('', original.replace('inputs.native_selection', 'inputs.verification_scope'),
++                                original.replace('${{ inputs.native_selection }}', 'paired'), original + original):
++                changed = workflow.replace(block, block.replace(original, replacement, 1), 1)
++                self.assertNotEqual(changed, workflow)
++                with self.subTest(name=name, replacement=replacement), self.assertRaisesRegex(RuntimeError, 'verification scope'):
++                    workflow_contract.verify_verification_scopes(changed)
++        changed = workflow.replace('env:\n', 'env:\n' + original, 1)
++        with self.assertRaisesRegex(RuntimeError, 'verification scope'):
++            workflow_contract.verify_verification_scopes(changed)
++
+     def test_focused_native_modes_do_not_weaken_full_verification(self) -> None:
+         workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text(encoding="utf-8")
+         workflow_contract.verify_verification_scopes(workflow)

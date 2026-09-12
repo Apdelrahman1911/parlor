@@ -1,0 +1,261 @@
+--- freeze01/run_normal_ios_launch.py
++++ freeze02/run_normal_ios_launch.py
+@@ -17,6 +17,7 @@
+ import shlex
+ import shutil
+ import signal
++import stat
+ import subprocess
+ import sys
+ import tempfile
+@@ -229,6 +230,28 @@
+             if raw.is_file() and not raw.is_symlink():
+                 raw.unlink()
+ 
++    def allocate_temporary(self):
++        if self.temporary is not None or self.owner is not None or self.allocation_identity is not None:
++            raise RuntimeError('Cannot replace an existing task allocation')
++        # Canonicalize the parent before allocation: macOS may return a /var
++        # alias. From mkdtemp through in-memory cleanup ownership, defer signals.
++        # A receipt write or owner-constructor error must not strand an otherwise
++        # verified allocation. No subprocess is started by this transaction.
++        parent = Path(tempfile.gettempdir()).resolve(strict=True)
++        with defer_parent_signals():
++            self.temporary = Path(tempfile.mkdtemp(prefix='parlor-audit-' + self.name + '-', dir=parent))
++            self.receipt['allocated_temporary_path'] = str(self.temporary)
++            state = self.temporary.lstat()
++            if (self.temporary.parent != parent or self.temporary.resolve(strict=True) != self.temporary or
++                    not stat.S_ISDIR(state.st_mode) or state.st_uid != os.getuid()):
++                raise RuntimeError('New task allocation is not a canonical owned directory')
++            self.allocation_identity = (state.st_dev, state.st_ino, state.st_uid)
++            self.receipt.update(owned_temporary_directory=str(self.temporary),
++                                temporary_allocation_identity=list(self.allocation_identity))
++            self.receipt['owned_device_name'] = owned_simulator_name(self.temporary)
++            self.owner = AppHostOwnership(self.baseline, self.temporary, [], self.destination)
++            self.save()
++
+     def prepare(self):
+         self.save()
+         self.receipt['source_before'] = normalized_identity()
+@@ -242,17 +265,7 @@
+         if any('org.gradle.launcher.daemon.bootstrap.GradleDaemon' in row['command'] or
+                row['command'].split()[0].endswith('/xcodebuild') for row in self.baseline.values()):
+             raise RuntimeError('Pre-existing Gradle/Xcode lane is active; never stop another task')
+-        with defer_parent_signals():
+-            self.temporary = Path(tempfile.mkdtemp(prefix='parlor-audit-' + self.name + '-'))
+-            self.receipt['allocated_temporary_path'] = str(self.temporary)
+-            self.save()
+-        self.temporary = self.temporary.resolve(strict=True)
+-        state = self.temporary.stat()
+-        self.allocation_identity = (state.st_dev, state.st_ino)
+-        self.receipt.update(owned_temporary_directory=str(self.temporary),
+-                            owned_device_name=owned_simulator_name(self.temporary),
+-                            temporary_allocation_identity=list(self.allocation_identity))
+-        self.owner = AppHostOwnership(self.baseline, self.temporary, [], self.destination)
++        self.allocate_temporary()
+         for name in ('copy', 'tmp', 'gradle-home'):
+             (self.temporary / name).mkdir(mode=0o700)
+         cache = Path(os.environ.get('GRADLE_USER_HOME', str(Path.home() / '.gradle'))).resolve(strict=True)
+@@ -523,8 +536,9 @@
+     def remove_temporary(self):
+         if self.temporary.is_symlink() or self.temporary.resolve(strict=True) != self.temporary:
+             raise RuntimeError('Refuse removal of a redirected task allocation')
+-        state = self.temporary.stat()
+-        if (state.st_dev, state.st_ino) != self.allocation_identity:
++        state = self.temporary.lstat()
++        if (not stat.S_ISDIR(state.st_mode) or state.st_uid != os.getuid() or
++                (state.st_dev, state.st_ino, state.st_uid) != self.allocation_identity):
+             raise RuntimeError('Task temporary allocation identity changed')
+         for row in self.links:
+             link = Path(row['link'])
+--- freeze01/test_normal_launch_controls.py
++++ freeze02/test_normal_launch_controls.py
+@@ -10,6 +10,7 @@
+ import os
+ from pathlib import Path
+ import shlex
++import signal
+ import subprocess
+ import tempfile
+ import unittest
+@@ -459,7 +460,7 @@
+         value.temporary = self.root / 'owned'
+         value.temporary.mkdir()
+         state = value.temporary.stat()
+-        value.allocation_identity = (state.st_dev, state.st_ino)
++        value.allocation_identity = (state.st_dev, state.st_ino, state.st_uid)
+         value.destination = self.root / 'evidence'
+         value.destination.mkdir()
+         value.links, value.errors, value.original_outputs, value.watched_outputs = [], [], [], []
+@@ -481,10 +482,131 @@
+         value.signing = runner.signing_overrides('disabled')
+         return value
+ 
++    def unallocated_lane(self):
++        lane = self.lane()
++        lane.temporary.rmdir()  # This test's empty synthetic allocation only.
++        owner = lane.owner
++        lane.temporary = lane.owner = lane.allocation_identity = lane.uuid = None
++        lane.name, lane.baseline, lane.gradle_attempted = 'ios-readiness-99', {}, False
++        lane.receipt.update(runtime_evidence_status='NOT_RUN', provenance_status='NOT_RUN')
++        lane.save = Mock()
++        return lane, owner
++
+     def finish(self, lane):
+         with patch.object(runner, 'normalized_identity', return_value={'frozen': True}), \
+                 patch.object(runner, 'control_hash', return_value=lane.approved):
+             lane.finalize()
++
++    def test_allocation_canonicalizes_parent_before_mkdtemp_and_retains_exact_identity(self):
++        lane, owner = self.unallocated_lane()
++        alias = self.root / 'temp-alias'
++        alias.symlink_to(self.root, target_is_directory=True)
++        with patch.object(runner.tempfile, 'gettempdir', return_value=str(alias)), \
++                patch.object(runner, 'AppHostOwnership', return_value=owner) as construct:
++            lane.allocate_temporary()
++        self.assertEqual(self.root, lane.temporary.parent)
++        self.assertEqual(lane.temporary, lane.temporary.resolve(strict=True))
++        state = lane.temporary.lstat()
++        self.assertEqual((state.st_dev, state.st_ino, state.st_uid), lane.allocation_identity)
++        self.assertEqual(list(lane.allocation_identity), lane.receipt['temporary_allocation_identity'])
++        construct.assert_called_once_with({}, lane.temporary, [], lane.destination)
++        lane.save.assert_called_once()
++        self.finish(lane)
++        self.assertFalse(lane.temporary.exists())
++        self.assertTrue(alias.is_symlink())  # Unrelated parent alias is not ours to remove.
++        self.assertEqual('PASS', lane.receipt['cleanup_status'])
++        self.assertEqual('FAIL', lane.receipt['status'])  # No native run occurred.
++
++    def test_deferred_interrupt_after_mkdtemp_keeps_finalizer_ownership(self):
++        lane, owner = self.unallocated_lane()
++        mkdtemp = runner.tempfile.mkdtemp
++        old_handler = signal.getsignal(signal.SIGINT)
++        def allocated_then_interrupt(*args, **kwargs):
++            path = mkdtemp(*args, **kwargs)
++            handler = signal.getsignal(signal.SIGINT)
++            self.assertIsNot(handler, signal.default_int_handler)
++            handler(signal.SIGINT, None)  # Invoke the installed deferrer; never signal a process.
++            return path
++        try:
++            signal.signal(signal.SIGINT, signal.default_int_handler)
++            with patch.object(runner.tempfile, 'gettempdir', return_value=str(self.root)), \
++                    patch.object(runner.tempfile, 'mkdtemp', side_effect=allocated_then_interrupt), \
++                    patch.object(runner, 'AppHostOwnership', return_value=owner), \
++                    self.assertRaises(KeyboardInterrupt):
++                lane.allocate_temporary()
++            self.assertIs(signal.getsignal(signal.SIGINT), signal.default_int_handler)
++        finally:
++            signal.signal(signal.SIGINT, old_handler)
++        self.assertIs(owner, lane.owner)
++        self.assertIsNotNone(lane.allocation_identity)
++        self.assertEqual(lane.temporary, lane.temporary.resolve(strict=True))
++        self.finish(lane)
++        self.assertFalse(lane.temporary.exists())
++        self.assertEqual('PASS', lane.receipt['cleanup_status'])
++        lane.stop_gradle.assert_not_called()
++        lane.shutdown_device.assert_not_called()
++
++    def test_allocation_receipt_failure_does_not_strand_owned_directory(self):
++        lane, owner = self.unallocated_lane()
++        lane.save.side_effect = OSError('synthetic receipt write failure')
++        with patch.object(runner.tempfile, 'gettempdir', return_value=str(self.root)), \
++                patch.object(runner, 'AppHostOwnership', return_value=owner), self.assertRaises(OSError):
++            lane.allocate_temporary()
++        self.assertIs(owner, lane.owner)
++        self.assertIsNotNone(lane.allocation_identity)
++        self.finish(lane)
++        self.assertFalse(lane.temporary.exists())
++        self.assertEqual('PASS', lane.receipt['cleanup_status'])
++
++    def test_owner_constructor_failure_retains_preworker_cleanup_identity(self):
++        lane, _ = self.unallocated_lane()
++        with patch.object(runner.tempfile, 'gettempdir', return_value=str(self.root)), \
++                patch.object(runner, 'AppHostOwnership', side_effect=RuntimeError('synthetic owner failure')), \
++                self.assertRaises(RuntimeError):
++            lane.allocate_temporary()
++        self.assertIsNone(lane.owner)
++        self.assertIsNotNone(lane.allocation_identity)
++        lane.save.assert_not_called()
++        self.finish(lane)
++        self.assertFalse(lane.temporary.exists())
++        self.assertEqual('PASS', lane.receipt['cleanup_status'])
++
++    def test_owned_name_failure_retains_preowner_cleanup_identity(self):
++        lane, _ = self.unallocated_lane()
++        with patch.object(runner.tempfile, 'gettempdir', return_value=str(self.root)), \
++                patch.object(runner, 'owned_simulator_name', side_effect=RuntimeError('synthetic name failure')), \
++                patch.object(runner, 'AppHostOwnership') as construct, self.assertRaises(RuntimeError):
++            lane.allocate_temporary()
++        construct.assert_not_called()
++        self.assertIsNone(lane.owner)
++        self.assertEqual(list(lane.allocation_identity), lane.receipt['temporary_allocation_identity'])
++        self.finish(lane)
++        self.assertFalse(lane.temporary.exists())
++        self.assertEqual('PASS', lane.receipt['cleanup_status'])
++
++    def test_mkdtemp_failure_has_no_allocation_or_cleanup_target(self):
++        lane, _ = self.unallocated_lane()
++        with patch.object(runner.tempfile, 'gettempdir', return_value=str(self.root)), \
++                patch.object(runner.tempfile, 'mkdtemp', side_effect=OSError('synthetic allocation failure')), \
++                patch.object(runner, 'AppHostOwnership') as construct, self.assertRaises(OSError):
++            lane.allocate_temporary()
++        construct.assert_not_called()
++        self.assertIsNone(lane.temporary)
++        self.assertIsNone(lane.allocation_identity)
++        self.finish(lane)
++        self.assertEqual('PASS', lane.receipt['cleanup_status'])
++        self.assertTrue(lane.receipt['temporary_directory_removed'])
++
++    def test_existing_allocation_cannot_be_replaced(self):
++        lane = self.lane()
++        original, identity = lane.temporary, lane.allocation_identity
++        with patch.object(runner.tempfile, 'mkdtemp') as allocate, self.assertRaises(RuntimeError):
++            lane.allocate_temporary()
++        allocate.assert_not_called()
++        self.assertEqual(original, lane.temporary)
++        self.assertEqual(identity, lane.allocation_identity)
++        self.finish(lane)
++        self.assertFalse(original.exists())
+ 
+     def test_fixed_test_arguments_have_no_retry_or_parallel_escape(self):
+         args = runner.xcode_arguments(self.root / source_copy.PROJECT, 'iphonesimulator26.5', DEVICE,
+@@ -605,7 +727,7 @@
+ 
+     def test_replaced_allocation_inode_refuses_removal(self):
+         lane = self.lane()
+-        lane.allocation_identity = (-1, -1)
++        lane.allocation_identity = (-1, -1, -1)
+         with self.assertRaises(RuntimeError):
+             lane.remove_temporary()
+         self.assertTrue(lane.temporary.exists())
+--- freeze01/run_control_tests.py
++++ freeze02/run_control_tests.py
+@@ -10,7 +10,7 @@
+ sys.path.insert(0, str(HERE))
+ import run_normal_ios_launch as control
+ 
+-EXPECTED_COUNT = 67
++EXPECTED_COUNT = 74
+ 
+ 
+ def declared_tests():
+--- freeze01/README.md
++++ freeze02/README.md
+@@ -87,10 +87,16 @@
+ deleted rather than copied into reports. Xcode logs are bounded and compressed;
+ only structured results, the two-file diff and compact metadata are retained.
+ 
++Allocation canonicalizes its parent before `mkdtemp`, then defers parent signals
++through exact directory/device/inode/UID capture and cleanup-owner registration.
++Receipt persistence and owner-construction failures retain this in-memory identity
++before any subprocess can start. A changed/unattestable allocation is not removed
++by guesswork; cleanup fails with evidence for targeted follow-up.
++
+ ## Root review and execution
+ 
+ Do not execute while another lane is active. Independent review must examine all
+-new source and the referenced approved helper hashes, then run the **67** synthetic
++new source and the referenced approved helper hashes, then run the **74** synthetic
+ control tests (not Swift compilation or app runtime):
+ 
+ ```sh

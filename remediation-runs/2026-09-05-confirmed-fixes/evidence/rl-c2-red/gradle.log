@@ -1,0 +1,37 @@
+test_additional_unapproved_signer_is_rejected (test_android_upload_signature.AndroidUploadSignatureTest) ... ok
+test_certificate_usage_must_allow_code_signing (test_android_upload_signature.AndroidUploadSignatureTest) ... ok
+test_disabled_certificate_algorithm_is_rejected_with_modern_jar_signature (test_android_upload_signature.AndroidUploadSignatureTest) ... ok
+test_disabled_jar_algorithm_is_rejected_with_modern_certificate (test_android_upload_signature.AndroidUploadSignatureTest) ... ok
+test_disabled_rsa_key_size_is_rejected (test_android_upload_signature.AndroidUploadSignatureTest) ... ok
+test_entirely_unsigned_bundle_is_rejected (test_android_upload_signature.AndroidUploadSignatureTest) ... ok
+test_expired_self_signed_certificate_is_rejected (test_android_upload_signature.AndroidUploadSignatureTest) ... ok
+test_extended_usage_must_allow_code_signing (test_android_upload_signature.AndroidUploadSignatureTest) ... ok
+test_failed_java_preparation_cannot_be_masked_by_later_verification (test_android_upload_signature.AndroidUploadSignatureTest) ... FAIL
+test_not_yet_valid_self_signed_certificate_is_rejected (test_android_upload_signature.AndroidUploadSignatureTest) ... ok
+test_registered_self_signed_upload_certificate_passes_strict_verification (test_android_upload_signature.AndroidUploadSignatureTest) ... FAIL
+test_signedjar_specific_certificate_policy_cannot_be_bypassed_by_trusting_leaf (test_android_upload_signature.AndroidUploadSignatureTest) ... ok
+test_tampered_signed_payload_is_rejected (test_android_upload_signature.AndroidUploadSignatureTest) ... ok
+test_unknown_critical_certificate_extension_is_rejected (test_android_upload_signature.AndroidUploadSignatureTest) ... ok
+test_unsigned_extra_payload_including_meta_inf_is_rejected (test_android_upload_signature.AndroidUploadSignatureTest) ... ok
+test_wrong_approved_fingerprint_is_rejected (test_android_upload_signature.AndroidUploadSignatureTest) ... ok
+
+======================================================================
+FAIL: test_failed_java_preparation_cannot_be_masked_by_later_verification (test_android_upload_signature.AndroidUploadSignatureTest)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_android_upload_signature.py", line 206, in test_failed_java_preparation_cannot_be_masked_by_later_verification
+    self.assertEqual(self.verify(environment=environment).returncode, 77)
+AssertionError: 4 != 77
+
+======================================================================
+FAIL: test_registered_self_signed_upload_certificate_passes_strict_verification (test_android_upload_signature.AndroidUploadSignatureTest)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_android_upload_signature.py", line 110, in test_registered_self_signed_upload_certificate_passes_strict_verification
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+AssertionError: 4 != 0 : 
+
+----------------------------------------------------------------------
+Ran 16 tests in 7.092s
+
+FAILED (failures=2)

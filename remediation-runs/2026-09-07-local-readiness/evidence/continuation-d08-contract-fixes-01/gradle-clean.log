@@ -1,0 +1,102 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.13/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+Type-safe project accessors is an incubating feature.
+> Task :build-logic:convention:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :build-logic:convention:compileKotlin UP-TO-DATE
+> Task :build-logic:convention:compileJava NO-SOURCE
+> Task :build-logic:convention:pluginDescriptors UP-TO-DATE
+> Task :build-logic:convention:processResources UP-TO-DATE
+> Task :build-logic:convention:classes UP-TO-DATE
+> Task :build-logic:convention:jar UP-TO-DATE
+
+> Configure project :composeApp
+WARNING: The option setting 'android.experimental.lint.version=9.1.1' is experimental.
+w: ⚠️ Deprecated Gradle Version
+The used Gradle version (Gradle 8.13) is deprecated and will not be supported in future Kotlin Gradle Plugin releases.
+The minimum supported Gradle version will become Gradle 8.14.4 in Kotlin 2.5.0.
+
+This warning can be suppressed in 'gradle.properties':
+    kotlin.suppressGradlePluginWarnings=DeprecatedGradleVersionWarning
+Solution: Please update the Gradle version to at least Gradle 8.14.4.
+
+w: ⚠️ Native task 'iosX64Test' is disabled
+Task 'iosX64Test' for target 'ios_x64' cannot run on the current host (linux-x86_64).
+Reason: simulator tests require macOS
+Solution: To suppress this warning, add 'kotlin.native.ignoreDisabledTargets=true' to gradle.properties.
+
+w: ⚠️ Native task 'iosSimulatorArm64Test' is disabled
+Task 'iosSimulatorArm64Test' for target 'ios_simulator_arm64' cannot run on the current host (linux-x86_64).
+Reason: simulator tests require macOS
+Solution: To suppress this warning, add 'kotlin.native.ignoreDisabledTargets=true' to gradle.properties.
+
+
+> Task :game-modes:mafia:cleanDesktopTest UP-TO-DATE
+> Task :composeApp:cleanDesktopTest UP-TO-DATE
+> Task :composeApp:cleanIosSimulatorArm64Test UP-TO-DATE
+> Task :game-modes:mafia:cleanIosSimulatorArm64Test UP-TO-DATE
+> Task :composeApp:cleanIosX64Test UP-TO-DATE
+> Task :composeApp:cleanAllTests UP-TO-DATE
+> Task :game-modes:mafia:cleanIosX64Test UP-TO-DATE
+> Task :composeApp:clean UP-TO-DATE
+> Task :game-modes:mafia:cleanAllTests UP-TO-DATE
+> Task :game-modes:mafia:clean UP-TO-DATE
+> Task :game-modes:whodunit:cleanDesktopTest UP-TO-DATE
+> Task :shared:content:cleanDesktopTest UP-TO-DATE
+> Task :game-modes:whodunit:cleanIosSimulatorArm64Test UP-TO-DATE
+> Task :shared:content:cleanIosSimulatorArm64Test UP-TO-DATE
+> Task :game-modes:whodunit:cleanIosX64Test UP-TO-DATE
+> Task :game-modes:whodunit:cleanAllTests UP-TO-DATE
+> Task :shared:content:cleanIosX64Test UP-TO-DATE
+> Task :game-modes:whodunit:clean UP-TO-DATE
+> Task :shared:content:cleanAllTests UP-TO-DATE
+> Task :shared:content:clean UP-TO-DATE
+> Task :shared:core:cleanDesktopTest UP-TO-DATE
+> Task :shared:core:cleanIosSimulatorArm64Test UP-TO-DATE
+> Task :shared:design-system:cleanDesktopTest UP-TO-DATE
+> Task :shared:core:cleanIosX64Test UP-TO-DATE
+> Task :shared:core:cleanAllTests UP-TO-DATE
+> Task :shared:design-system:cleanIosSimulatorArm64Test UP-TO-DATE
+> Task :shared:design-system:cleanIosX64Test UP-TO-DATE
+> Task :shared:design-system:cleanAllTests UP-TO-DATE
+> Task :shared:design-system:clean UP-TO-DATE
+> Task :shared:engine:cleanDesktopTest UP-TO-DATE
+> Task :shared:engine:cleanIosSimulatorArm64Test UP-TO-DATE
+> Task :shared:core:clean
+> Task :shared:engine:cleanIosX64Test UP-TO-DATE
+> Task :shared:engine:cleanAllTests UP-TO-DATE
+> Task :shared:engine-testing:cleanDesktopTest UP-TO-DATE
+> Task :shared:engine-testing:cleanIosSimulatorArm64Test UP-TO-DATE
+> Task :shared:engine-testing:cleanIosX64Test UP-TO-DATE
+> Task :shared:engine-testing:cleanAllTests UP-TO-DATE
+> Task :shared:engine-testing:clean UP-TO-DATE
+> Task :shared:networking:cleanDesktopTest UP-TO-DATE
+> Task :shared:engine:clean
+> Task :shared:networking:cleanIosSimulatorArm64Test UP-TO-DATE
+> Task :shared:networking:cleanIosX64Test UP-TO-DATE
+> Task :shared:networking:cleanAllTests UP-TO-DATE
+> Task :shared:networking-testing:cleanDesktopTest UP-TO-DATE
+> Task :shared:networking-testing:cleanIosSimulatorArm64Test UP-TO-DATE
+> Task :shared:networking-testing:cleanIosX64Test UP-TO-DATE
+> Task :shared:networking-testing:cleanAllTests UP-TO-DATE
+> Task :shared:networking-testing:clean UP-TO-DATE
+> Task :shared:session:cleanDesktopTest UP-TO-DATE
+> Task :shared:session:cleanIosSimulatorArm64Test UP-TO-DATE
+> Task :shared:networking:clean
+> Task :shared:session:cleanIosX64Test UP-TO-DATE
+> Task :shared:session:cleanAllTests UP-TO-DATE
+> Task :shared:storage:cleanDesktopTest UP-TO-DATE
+> Task :shared:session:clean UP-TO-DATE
+> Task :shared:storage:cleanIosSimulatorArm64Test UP-TO-DATE
+> Task :shared:storage:cleanIosX64Test UP-TO-DATE
+> Task :shared:storage:cleanAllTests UP-TO-DATE
+> Task :shared:transport-p2p:cleanDesktopTest
+> Task :shared:transport-p2p:cleanIosSimulatorArm64Test UP-TO-DATE
+> Task :shared:transport-p2p:cleanIosX64Test UP-TO-DATE
+> Task :shared:transport-p2p:cleanAllTests
+> Task :shared:storage:clean
+> Task :shared:transport-p2p:clean
+
+[Incubating] Problems report is available at: file:///root/projects/Parlor/parlor/build/reports/problems/problems-report.html
+
+BUILD SUCCESSFUL in 19s
+56 actionable tasks: 6 executed, 50 up-to-date

@@ -1,0 +1,567 @@
+{
+  "schema": 1,
+  "reviewer": "/root/probe_identity",
+  "status": "VERIFIED_H02_HOST_ONLY_BINDINGS_CUSTODY_NOT_PROTECTION_PASS",
+  "evidence_root": "remediation-runs/2026-09-08-continuation/actions/34564001336",
+  "run_id": 34564001336,
+  "attempt": 1,
+  "job_id": 103152270683,
+  "source": "22ea6bebb95317e148d89b03c40cbb7efc9d36a4",
+  "tree": "e1a94305eb7af228bb2a80841f6adb3bc00162aa",
+  "control_sha256": "91e18dec83251b4e040fc9f706d652a660bdb8d46414ef08321589e8c575d5b0",
+  "repository": "Apdelrahman1911/parlor",
+  "branch": "fix/local-readiness-2026-09-07",
+  "workflow": ".github/workflows/production-verification.yml",
+  "event": "workflow_dispatch",
+  "api_conclusions": {
+    "run": "success",
+    "attempt": "success",
+    "job": "success",
+    "other_jobs_skipped": 6
+  },
+  "historical_schema": {
+    "host_image": 1,
+    "host_origin_setter": 1,
+    "scope": "Only frozen22ea6bebb95317e148d89b03c40cbb7efc9d36a4 and this run; subsequent schema2/source edits do not relabel H02."
+  },
+  "hashes": {
+    "artifacts.json": "8964eab752f47c91137efa87f9479870d255f6f5214f4317db39779eaf407c21",
+    "attempt.json": "a8356e7b9f75238f9c92d4738574246870904453fcf6700946a794cadd32e87f",
+    "cleanup.zip": "1fe8ed50cac65e98f8d62f27c04edcf0a2fdae15c4061c3196eb85f9cac0ff80",
+    "cleanup/state.json": "680d0c5b456dfaa4dd77c15e7865196895677ddc0893428e9e9dd787ef684125",
+    "download-receipt.json": "8d93e0daa86bdaab17684a50b7b62f1ecd90455c7db84f05d1d7eae522375392",
+    "job.json": "d04f1f92e8f10befa6c20dda1cf3b7ded1cd5b3e98f419309ac07385f2dc0893",
+    "job.log": "fc935cf6899ae93def0a4fbab36a210777b80710edee18e2856eea5116caaf95",
+    "jobs.json": "38080448e31401574d4e2e72254bdd4bb35db292772190ab819033475d1c2c5f",
+    "main.zip": "c9ad0b988ce9ef151f790a0028aa9867d986b9756f67c4cd894355fe5ad5cf88",
+    "main/24-host-built-uuid.stdout": "d4b9d9336aa28a0c32f2110ec84f558977361422a61a504804939a0caa75d9d4",
+    "main/29-host-setter-built-uuid.stdout": "38c5fa21a658dfca5b6dddf6a4095da7767f322e45b21ea174327aa1e290551c",
+    "main/OwnedHostSetterContext.h": "88197e4a7f02529083d3973972989caad55e635d178327a06d5457e010eeaed7",
+    "main/host-copy.patch": "6ca636d61d19fa3fbd93995b2da92593515f3c4f6e0dd411c9549b6a21c1e76c",
+    "main/host-image-summary.json": "fd1f8cbf337b4baf9e145c753bca18ab5ca3511fddb37cb91c6b90a272cb419c",
+    "main/host-image.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "main/host-image.stdout.json": "8a392ed464d9ba9f336e90c38962ae41c227986ec81563bb75b01db0e431bec8",
+    "main/host-setter-bindings.json": "ddbe4daf6bd3320dcceb6f46e98e450beff4e00041ff850866536ab6266b9ee6",
+    "main/host-setter-report.json": "59ff42a2ba9d483790e7cba177a0d4f62120fa300bd3026870148f406b1a4bed",
+    "main/host-setter.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "main/host-setter.stdout.json": "d6854f702329bdbc10b62bce0ea5cb7d87717640e7c3886a0f7ea0dbaa5196ac",
+    "main/request.json": "2cc0cfb3a284fb9f2a5206d0973c9a1ea8eabd0a597a93702fb4a8570fafad70",
+    "main/state.json": "206a6c71a02faa2bc0e83a88e0678dc38d44066984c7249017839ee0dd592dcf",
+    "run.json": "d6fd07834c3b5229676c5582098d44200d22fc467ea5d4bbacd74e6a5e5b7583"
+  },
+  "archives": [
+    {
+      "artifact_id": 10185338654,
+      "bytes": 25137,
+      "expanded_bytes": 80819,
+      "label": "main",
+      "members": 69,
+      "sha256": "c9ad0b988ce9ef151f790a0028aa9867d986b9756f67c4cd894355fe5ad5cf88"
+    },
+    {
+      "artifact_id": 10185339705,
+      "bytes": 6687,
+      "expanded_bytes": 19767,
+      "label": "cleanup",
+      "members": 29,
+      "sha256": "1fe8ed50cac65e98f8d62f27c04edcf0a2fdae15c4061c3196eb85f9cac0ff80"
+    }
+  ],
+  "custody": {
+    "collector_receipt_sha256": "8d93e0daa86bdaab17684a50b7b62f1ecd90455c7db84f05d1d7eae522375392",
+    "collector_command_streams_verified": 14,
+    "packet_hashes_verified": 5,
+    "zip_verification": "98 unique regular members total; complete pre/final inventories agree except extraction state. Both archive digests match API records; CRCs, member metadata, sizes/hashes and every extracted byte agree. Retained job record equals jobs API entry; source/run/attempt/job/artifact identities agree.",
+    "source_controls": "30 sorted unique files match frozen Git bytes; compact-JSON digest reconstructs approved91e18dec. Prepared request, freeze, dispatched-run/receipt and actual host-only request bind the same exact source/tree/control/selection.",
+    "retained_logs_verified": {
+      "cleanup": 28,
+      "main": 67
+    },
+    "all_recorded_commands_exited0_reaped": {
+      "cleanup": 20,
+      "main": 37
+    },
+    "state_errors": {
+      "main": [],
+      "cleanup": []
+    },
+    "signals": {
+      "main": [],
+      "cleanup": []
+    },
+    "preservation": {
+      "main": {
+        "failures": 0,
+        "errors": []
+      },
+      "cleanup": {
+        "failures": 0,
+        "errors": []
+      }
+    }
+  },
+  "binding": {
+    "control_sha256": "91e18dec83251b4e040fc9f706d652a660bdb8d46414ef08321589e8c575d5b0",
+    "run_attempt": "1",
+    "run_id": "34564001336",
+    "run_token": "b00c1219c8ac48509649fcf121af7ca6",
+    "source_sha": "22ea6bebb95317e148d89b03c40cbb7efc9d36a4"
+  },
+  "request_custody": {
+    "uid": 501,
+    "device": 16777229,
+    "base_inode": 3535221,
+    "evidence_inode": 3535222,
+    "resources_inode": 3535223,
+    "temporary_inode": 3535224
+  },
+  "platform": {
+    "architecture": "arm64",
+    "macos_build": "24G830",
+    "macos_version": "15.7.9",
+    "profile": "host-macos15-arm64-xcode26.3-sdk26.2-attribution-and-host-origin-setter",
+    "runtime_version": [
+      15,
+      7,
+      9
+    ],
+    "sdk": "26.2",
+    "sdk_path": "/Applications/Xcode_26.3.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk",
+    "xcode": "26.3",
+    "xcode_build": "17C529"
+  },
+  "fixture": {
+    "identity": {
+      "device": 16777229,
+      "inode": 3535393,
+      "links": 1,
+      "mode": 33152,
+      "size": 40,
+      "type": "regular",
+      "uid": 501
+    },
+    "root": {
+      "device": 16777229,
+      "inode": 3535392,
+      "uid": 501
+    }
+  },
+  "compiled_context": {
+    "header_sha256": "88197e4a7f02529083d3973972989caad55e635d178327a06d5457e010eeaed7",
+    "header_bytes": 621,
+    "verified": "Retained OwnedHostSetterContext.h exactly reconstructs owned host-fixtures path/device/inode, frozen full seven-field probe.bin identity and exact five current-run binding keys/values. Request, image raw/summary, setter raw/bindings and header agree.",
+    "public_payload_bytes": 40,
+    "public_payload_sha256": "71f55cf66e1fbe9a0e9bbaf150257594f21deabd2415d0bda22d5537eef336b6",
+    "baseline": "Fresh exclusively created host-origin0600 single-link regular fixture under0700 root; observed default is until-first-authentication, not assumed None."
+  },
+  "source_reconstruction": {
+    "method": "Read-only Git bytes plus static AST literal extraction and independent byte substitutions, without importing/running project helpers.",
+    "original_copied_sources": {
+      "HostImageProbe.m": "15111a9fadb5ee426804b7b41fe2cfb296366b41ab2d4405b9f2373eddc02bc6",
+      "ProtectionSampler.h": "f606f61c7e8c2271cd23abb3876d1b6e0daff40ccdcd9d0f43b949d4d502bb13",
+      "ProtectionSampler.m": "79e8c9b3bb4e75d52801cde84c38986781bba8797b2908e91efd81674df503dc"
+    },
+    "original_patch_sha256": "6ca636d61d19fa3fbd93995b2da92593515f3c4f6e0dd411c9549b6a21c1e76c",
+    "verified": "Original bound HostImageProbe.m and additive image-hook sampler copy/patch reconstruct exactly, preserving original guard. Separate reviewed host-sampler transform, native setter template, shared header and compiled context reconstruct all four setter input sizes/hashes.",
+    "inputs": [
+      {
+        "bytes": 13927,
+        "changed_ns": 1789102559245063200,
+        "device": 16777229,
+        "inode": 3535396,
+        "links": 1,
+        "mode": 33152,
+        "modified_ns": 1789102559245063200,
+        "name": "HostProtectionSampler.m",
+        "sha256": "7656cc25a7e2d9ab3a6715713acf177f5c3f02855ac24fc2757df663ecc77d50",
+        "uid": 501
+      },
+      {
+        "bytes": 7759,
+        "changed_ns": 1789102559244408800,
+        "device": 16777229,
+        "inode": 3535395,
+        "links": 1,
+        "mode": 33152,
+        "modified_ns": 1789102559244408800,
+        "name": "HostSetterProbe.m",
+        "sha256": "be3f272644ea1284552f6622ed7aa02e035548802bfa5e78908e296e234c2b9b",
+        "uid": 501
+      },
+      {
+        "bytes": 621,
+        "changed_ns": 1789102559244090400,
+        "device": 16777229,
+        "inode": 3535394,
+        "links": 1,
+        "mode": 33152,
+        "modified_ns": 1789102559244090400,
+        "name": "OwnedHostSetterContext.h",
+        "sha256": "88197e4a7f02529083d3973972989caad55e635d178327a06d5457e010eeaed7",
+        "uid": 501
+      },
+      {
+        "bytes": 498,
+        "changed_ns": 1789102556693671200,
+        "device": 16777229,
+        "inode": 3535318,
+        "links": 1,
+        "mode": 33152,
+        "modified_ns": 1789102556693671200,
+        "name": "ProtectionSampler.h",
+        "sha256": "f606f61c7e8c2271cd23abb3876d1b6e0daff40ccdcd9d0f43b949d4d502bb13",
+        "uid": 501
+      }
+    ],
+    "custody": "All four full input bindings agree before compile, after setter capture and at recorded retirement. Source/global controls remain those frozen for H02."
+  },
+  "native_images": {
+    "original": {
+      "built": {
+        "custody": {
+          "device": 16777229,
+          "inode": 3535357,
+          "uid": 501
+        },
+        "image_basename": "HostImageProbe",
+        "profile": "host-macos15-arm64-xcode26.3-sdk26.2-attribution-and-host-origin-setter",
+        "sha256": "2e0f0e4e542c0da3dc1e8568d7845e21c2f2b25ec76bb1a14a81735483640d6c",
+        "uuid": "7104ce1a-14be-47a1-be33-e010b4ae13dd"
+      },
+      "retired_entry": {
+        "bytes": 93456,
+        "device": 16777229,
+        "inode": 3535357,
+        "mode": 33216,
+        "path": "HostImageProbe",
+        "uid": 501
+      },
+      "capture": {
+        "command": [
+          "/Users/runner/work/_temp/parlor-protection-probe-34564001336-1/resources/HostImageProbe"
+        ],
+        "direct_child_reaped": true,
+        "elapsed_seconds": 0.014,
+        "exit_code": 0,
+        "finished_at": "2026-09-11T04:55:59.235952+00:00",
+        "label": "host-image-observation",
+        "owned_pid": 2728,
+        "ownership": "direct-unreaped-Popen",
+        "started_at": "2026-09-11T04:55:59.219031+00:00",
+        "status": "EXITED",
+        "stderr_bytes": 0,
+        "stdout_bytes": 2246,
+        "timeout_seconds": 30
+      },
+      "raw_main": {
+        "image_basename": "HostImageProbe",
+        "platforms": [
+          1
+        ],
+        "relative_offset": 2548,
+        "uuid": "7104ce1a-14be-47a1-be33-e010b4ae13dd"
+      }
+    },
+    "setter": {
+      "built": {
+        "file": {
+          "bytes": 93856,
+          "changed_ns": 1789102559743377200,
+          "device": 16777229,
+          "inode": 3535414,
+          "links": 1,
+          "mode": 33216,
+          "modified_ns": 1789102559743321000,
+          "sha256": "2b26416612a4b040fb902d15ac9a8f324a0d6a3fa62c01e34ef39f7d249496b9",
+          "uid": 501
+        },
+        "image_basename": "HostSetterProbe",
+        "scope": "HOST_ORIGIN_ONLY",
+        "uuid": "575678e6-131a-4043-95e6-99d6f63e4a85"
+      },
+      "capture": {
+        "command": [
+          "/Users/runner/work/_temp/parlor-protection-probe-34564001336-1/resources/HostSetterProbe"
+        ],
+        "direct_child_reaped": true,
+        "elapsed_seconds": 0.009,
+        "exit_code": 0,
+        "finished_at": "2026-09-11T04:55:59.787689+00:00",
+        "label": "host-setter-observation",
+        "owned_pid": 2738,
+        "ownership": "direct-unreaped-Popen",
+        "started_at": "2026-09-11T04:55:59.775434+00:00",
+        "status": "EXITED",
+        "stderr_bytes": 0,
+        "stdout_bytes": 9502,
+        "timeout_seconds": 30
+      },
+      "runtime_uuid": "575678e6-131a-4043-95e6-99d6f63e4a85",
+      "runtime_platforms": [
+        1
+      ],
+      "runtime_before_after_equal": true
+    },
+    "compile_order": "Exactly original compile/sign/verify/dwarfdump/observation followed by setter compile/sign/verify/dwarfdump/observation. arm64-apple-macosx15.0/O0 with the qualified recorded SDK; compile90s and remaining phase commands30s. Both native children are direct, no-argument, exited0/reaped.",
+    "limit": "No retained native binary bytes for independent rehash. Recorded binary stat/hash custody, dwarfdump UUID output and actual raw runtime UUIDs are joined; these are not an independent binary-content measurement."
+  },
+  "preceding_image": {
+    "command_index": 24,
+    "host-image-summary.json": "fd1f8cbf337b4baf9e145c753bca18ab5ca3511fddb37cb91c6b90a272cb419c",
+    "host-image.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "host-image.stdout.json": "8a392ed464d9ba9f336e90c38962ae41c227986ec81563bb75b01db0e431bec8"
+  },
+  "original_image_results": [
+    {
+      "failed_predicates": [],
+      "failure": "none",
+      "original_result": "PASS",
+      "platforms": [
+        1
+      ],
+      "target": "main"
+    },
+    {
+      "failed_predicates": [
+        "single_platform"
+      ],
+      "failure": "image-executable-address",
+      "original_result": "REJECTED",
+      "platforms": [
+        1,
+        6
+      ],
+      "target": "filemanager"
+    },
+    {
+      "failed_predicates": [
+        "single_platform"
+      ],
+      "failure": "image-executable-address",
+      "original_result": "REJECTED",
+      "platforms": [
+        1,
+        6
+      ],
+      "target": "url"
+    }
+  ],
+  "host_origin_observation": {
+    "scope": "HOST_ORIGIN_ONLY",
+    "strict_result": "NOT_COLLECTED_OR_RECLASSIFIED",
+    "status": "CAPTURED_HOST_ORIGIN_SETTER_NOT_PROTECTION_PASS",
+    "full_seven_field_witnesses_joined": 10,
+    "descriptors_closed": true,
+    "full_before_after_native_records_equal": true,
+    "operation": {
+      "id": "host-origin-fm-set",
+      "requested_protection": "complete",
+      "returned": false,
+      "native_error": {
+        "code": 256,
+        "domain": "cocoa",
+        "present": true
+      },
+      "implementation": {
+        "implementation": {
+          "cpusubtype": -2147483646,
+          "cputype": 16777228,
+          "dylib": {
+            "compatibility_version": 19660800,
+            "current_version": 236126719
+          },
+          "image_basename": "Foundation",
+          "image_offset": 456112,
+          "platforms": [
+            1,
+            6
+          ],
+          "uuid": "39be75ac-350f-3b8c-9c10-8b2b5321ce8e"
+        },
+        "receiver_class": "NSFileManager",
+        "selector": "setAttributes:ofItemAtPath:error:"
+      },
+      "implementation_before_after_equal": true
+    },
+    "before_and_after": {
+      "attrlist": {
+        "attribute_set_bytes": 20,
+        "class": 3,
+        "data_protection_mask": 1073741824,
+        "errno": 0,
+        "length": 28,
+        "protection_returned": true,
+        "requested_common_mask": 3221225472,
+        "return_value": 0,
+        "returned_attributes_mask": 2147483648,
+        "returned_common_mask": 3221225472,
+        "sdk_available": true
+      },
+      "fcntl": {
+        "class": 3,
+        "command": 63,
+        "errno": 0,
+        "return_value": 3,
+        "sdk_available": true
+      },
+      "filesystem": {
+        "content_protection_capability": "unsupported",
+        "content_protection_flag": 128,
+        "errno": 0,
+        "flags": 76582912,
+        "fsid": [
+          16777229,
+          26
+        ],
+        "return_value": 0,
+        "type": "apfs"
+      },
+      "fm": {
+        "dictionary_present": true,
+        "key_present": true,
+        "native_error": {
+          "code": 0,
+          "domain": "none",
+          "present": false
+        },
+        "protection": "until-first-authentication"
+      },
+      "url": {
+        "dictionary_present": true,
+        "fresh_url": true,
+        "is_directory": false,
+        "key_present": true,
+        "native_error": {
+          "code": 0,
+          "domain": "none",
+          "present": false
+        },
+        "protection": "until-first-authentication",
+        "volume_support": "unsupported"
+      }
+    },
+    "interpretation": "The single public Complete setter returned false with outer cocoa256; both getters retain present until-first-authentication, both kernel-class observations remain3, and APFS capability/URL volume support report unsupported. The outer error does not identify an underlying cause. No class was synthesized and no prior simulator baseline was reused."
+  },
+  "retirement_bindings": {
+    "cleanup_state_sha256": "680d0c5b456dfaa4dd77c15e7865196895677ddc0893428e9e9dd787ef684125",
+    "recorded_scope": "exact-owned-host-native-scratch-only",
+    "recorded_status": "PASS",
+    "recorded_scratch_absent": true,
+    "removed_entries": 11,
+    "verified": "New image/full four input bindings and full fixture/root identity join main state/bindings to cleanup retirement. Exact removed entries join image, all inputs and fixture; original image custody and fixture-root custody also match their removed entries. Cleanup evidence_upload and retained final job assertion join both distinct API artifact IDs/digests.",
+    "scope_limit": "Retained-artifact retirement binding review, not a new live cleanup/global-absence audit."
+  },
+  "source_guards": {
+    "queries": 36,
+    "groups": [
+      {
+        "artifact": "main",
+        "first_command": 1,
+        "full_status_bound_seconds": 60,
+        "full_status_seconds": 0.212
+      },
+      {
+        "artifact": "main",
+        "first_command": 14,
+        "full_status_bound_seconds": 60,
+        "full_status_seconds": 0.158
+      },
+      {
+        "artifact": "main",
+        "first_command": 31,
+        "full_status_bound_seconds": 60,
+        "full_status_seconds": 0.158
+      },
+      {
+        "artifact": "cleanup",
+        "first_command": 1,
+        "full_status_bound_seconds": 60,
+        "full_status_seconds": 0.169
+      },
+      {
+        "artifact": "cleanup",
+        "first_command": 8,
+        "full_status_bound_seconds": 60,
+        "full_status_seconds": 0.156
+      },
+      {
+        "artifact": "cleanup",
+        "first_command": 14,
+        "full_status_bound_seconds": 60,
+        "full_status_seconds": 0.161
+      }
+    ],
+    "retained_git_stream_pairs": 24,
+    "initial_query_rows_without_raw_streams": 12,
+    "verified": "Six original six-query groups; exact root/HEAD/branch/non-shallow/tree and empty tracked/staged status. Other queries20s; full status60s using only invocation-local core.preloadIndex=false."
+  },
+  "final_job_assertion": {
+    "application_protection_qualification": "NOT_ESTABLISHED",
+    "cleanup": "PASS",
+    "cleanup_upload": {
+      "artifact_digest": "1fe8ed50cac65e98f8d62f27c04edcf0a2fdae15c4061c3196eb85f9cac0ff80",
+      "artifact_id": 10185339705,
+      "outcome": "success"
+    },
+    "collection": "CAPTURED_HOST_IMAGE_PREDICATES_NOT_APP_QUALIFICATION",
+    "evidence_upload": {
+      "artifact_digest": "c9ad0b988ce9ef151f790a0028aa9867d986b9756f67c4cd894355fe5ad5cf88",
+      "artifact_id": 10185338654,
+      "outcome": "success"
+    },
+    "host_origin_setter": "CAPTURED_HOST_ORIGIN_SETTER_NOT_PROTECTION_PASS",
+    "results": [
+      {
+        "failed_predicates": [],
+        "failure": "none",
+        "original_result": "PASS",
+        "platforms": [
+          1
+        ],
+        "target": "main"
+      },
+      {
+        "failed_predicates": [
+          "single_platform"
+        ],
+        "failure": "image-executable-address",
+        "original_result": "REJECTED",
+        "platforms": [
+          1,
+          6
+        ],
+        "target": "filemanager"
+      },
+      {
+        "failed_predicates": [
+          "single_platform"
+        ],
+        "failure": "image-executable-address",
+        "original_result": "REJECTED",
+        "platforms": [
+          1,
+          6
+        ],
+        "target": "url"
+      }
+    ]
+  },
+  "related_reviews": {
+    "driver": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/protection-host-origin-setter-driver-controls-independent-01.json",
+      "sha256": "3b41c7ee57b2c10e86cb27de3277161ca9afd67f647ade85f1f81b186a2a884d"
+    },
+    "native_actual": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/protection-host-origin-h02-native-actual-independent-01.json",
+      "sha256": "3775727c3ed10f9b747d3e95a8e2424b01f53f6097a8cd35bab4bbafbb0b86ad"
+    }
+  },
+  "findings": [],
+  "limits": [
+    "API/job success and collection/cleanup labels are not protection, application, full or Store qualification.",
+    "No simulator invocation, simulator fixture identity or new historical strict result is introduced. H02 does not fill PD09's missing observations or promote PD08/A37 results.",
+    "H02 schema1 retains only the outer NSError domain/code/presence, not an underlying chain or localized cause. No simulator-only, universal-host or runtime-implementation causality claim follows.",
+    "Root/path/file checks are bracketing observations, not atomic locks. Public bytes are bound at exclusive creation, not later payload-content verification.",
+    "Independent read-only evidence/frozen-source/AST/hash/ZIP/Git review; only this requested receipt was written. No project imports, tests/reruns, builds, network, dispatch, source edits or cleanup."
+  ]
+}

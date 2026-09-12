@@ -1,0 +1,610 @@
+{
+  "observed_at_utc": "2026-09-07T22:50:57.013321+00:00",
+  "reviewer": "/root/native_fix_review",
+  "documents": [
+    {
+      "source": {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/sample-path-format-research-01/apple-activity-process-info.html",
+        "bytes": 571562,
+        "sha256": "22df9edf666ab23d98d0549933ae566f0451d312394867b5744d7cb098a3e4f1"
+      },
+      "method": "Whitespace-normalized HTML text nodes excluding scripts/styles; selected contextual nodes only.",
+      "text_node_count": 128,
+      "selected_nodes": [],
+      "limitations": "Activity Monitor docs do not specify sample CLI Path/Binary Images format. Archive vmmap examples are not exact current wide/privacy behavior."
+    },
+    {
+      "source": {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/sample-path-format-research-01/apple-activity-diagnostics.html",
+        "bytes": 568848,
+        "sha256": "a4342cd57b7daadc7564ff5c5a5a95526dd999c3f0980562552b48093faf42a5"
+      },
+      "method": "Whitespace-normalized HTML text nodes excluding scripts/styles; selected contextual nodes only.",
+      "text_node_count": 93,
+      "selected_nodes": [
+        {
+          "index": 60,
+          "text": "then choose one of the following:"
+        },
+        {
+          "index": 61,
+          "text": "Sample Process:"
+        },
+        {
+          "index": 62,
+          "text": "Creates a report on a selected process over a period of 3 seconds."
+        },
+        {
+          "index": 63,
+          "text": "Spindump:"
+        },
+        {
+          "index": 64,
+          "text": "Creates a report for unresponsive apps that were terminated using force quit."
+        },
+        {
+          "index": 65,
+          "text": "System Diagnostics:"
+        }
+      ],
+      "limitations": "Activity Monitor docs do not specify sample CLI Path/Binary Images format. Archive vmmap examples are not exact current wide/privacy behavior."
+    },
+    {
+      "source": {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/sample-path-format-research-01/apple-vm-pages.html",
+        "bytes": 33857,
+        "sha256": "07db2a21a2d3a78b9125dab29fe1935c8df2a3fe6c3712baba7d264ec9aacf73"
+      },
+      "method": "Whitespace-normalized HTML text nodes excluding scripts/styles; selected contextual nodes only.",
+      "text_node_count": 321,
+      "selected_nodes": [
+        {
+          "index": 134,
+          "text": "Listing 3"
+        },
+        {
+          "index": 135,
+          "text": "Typical output of vmmap"
+        },
+        {
+          "index": 136,
+          "text": "==== Non-writable regions for process 313"
+        },
+        {
+          "index": 137,
+          "text": "__PAGEZERO 0 [ 4K] ---/--- SM=NUL ...ts/MacOS/Clock"
+        },
+        {
+          "index": 138,
+          "text": "__TEXT 1000 [ 40K] r-x/rwx SM=COW ...ts/MacOS/Clock"
+        },
+        {
+          "index": 139,
+          "text": "__LINKEDIT e000 [ 4K] r--/rwx SM=COW ...ts/w/Clock"
+        },
+        {
+          "index": 140,
+          "text": "90000 [ 4K] r--/r-- SM=SHM"
+        },
+        {
+          "index": 242,
+          "text": "7"
+        },
+        {
+          "index": 243,
+          "text": "...ts/MacOS/Clock"
+        },
+        {
+          "index": 244,
+          "text": "The end of the pathname identifying the executable mapped into this region of virtual memory. If the region is stack or heap memory, nothing is displayed in this column."
+        },
+        {
+          "index": 245,
+          "text": "Column 1 identifies the purpose of the memory. A"
+        }
+      ],
+      "limitations": "Activity Monitor docs do not specify sample CLI Path/Binary Images format. Archive vmmap examples are not exact current wide/privacy behavior."
+    },
+    {
+      "source": {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/sample-path-format-research-01/apple-crash-fields.json",
+        "bytes": 49948,
+        "sha256": "f6afc0c61e56a8f1420ea961da52341caccb1d55d4a94b3e3075b50e79a365af"
+      },
+      "url": "https://developer.apple.com/documentation/xcode/examining-the-fields-in-a-crash-report",
+      "data_url": "https://developer.apple.com/tutorials/data/documentation/xcode/examining-the-fields-in-a-crash-report.json",
+      "selected_json_sections": {
+        "primaryContentSections[0].content[7].items[5]": {
+          "content": [
+            {
+              "inlineContent": [
+                {
+                  "code": "Path",
+                  "type": "codeVoice"
+                },
+                {
+                  "text": ": The location of the executable on disk. macOS replaces user-identifable",
+                  "type": "text"
+                },
+                {
+                  "text": " ",
+                  "type": "text"
+                },
+                {
+                  "text": "path components with placeholder values to protect privacy.",
+                  "type": "text"
+                }
+              ],
+              "type": "paragraph"
+            }
+          ]
+        },
+        "primaryContentSections[0].content[41:50]": [
+          {
+            "anchor": "Binary-images",
+            "level": 3,
+            "text": "Binary images",
+            "type": "heading"
+          },
+          {
+            "inlineContent": [
+              {
+                "text": "The binary images section of a crash report lists all code loaded in the process",
+                "type": "text"
+              },
+              {
+                "text": " ",
+                "type": "text"
+              },
+              {
+                "text": "at the time that it crashes, such as the app executable and system frameworks. Each",
+                "type": "text"
+              },
+              {
+                "text": " ",
+                "type": "text"
+              },
+              {
+                "text": "line in the Binary Images section represents a single binary image. iOS, iPadOS, tvOS, visionOS, and watchOS use the following format:",
+                "type": "text"
+              }
+            ],
+            "type": "paragraph"
+          },
+          {
+            "code": [
+              "Binary Images:",
+              "0x102aec000 - 0x102b03fff TouchCanvas arm64  <fe7745ae12db30fa886c8baa1980437a> /var/containers/Bundle/Application/51346174-37EF-4F60-B72D-8DE5F01035F5/TouchCanvas.app/TouchCanvas",
+              "..."
+            ],
+            "syntax": "other",
+            "type": "codeListing"
+          },
+          {
+            "inlineContent": [
+              {
+                "text": "This list contains the components from the preceding example:",
+                "type": "text"
+              }
+            ],
+            "type": "paragraph"
+          },
+          {
+            "items": [
+              {
+                "content": [
+                  {
+                    "inlineContent": [
+                      {
+                        "code": "0x102aec000 - 0x102b03fff",
+                        "type": "codeVoice"
+                      },
+                      {
+                        "text": ". The binary image’s address range within the process.",
+                        "type": "text"
+                      },
+                      {
+                        "text": " ",
+                        "type": "text"
+                      },
+                      {
+                        "text": "The first address is the binary’s load address. See ",
+                        "type": "text"
+                      },
+                      {
+                        "identifier": "doc://com.apple.Xcode/documentation/Xcode/adding-identifiable-symbol-names-to-a-crash-report#Symbolicate-the-crash-report-using-a-command-line-tool",
+                        "isActive": true,
+                        "type": "reference"
+                      },
+                      {
+                        "text": " ",
+                        "type": "text"
+                      },
+                      {
+                        "text": "for how to use this value.",
+                        "type": "text"
+                      }
+                    ],
+                    "type": "paragraph"
+                  }
+                ]
+              },
+              {
+                "content": [
+                  {
+                    "inlineContent": [
+                      {
+                        "code": "TouchCanvas",
+                        "type": "codeVoice"
+                      },
+                      {
+                        "text": ". The binary name.",
+                        "type": "text"
+                      }
+                    ],
+                    "type": "paragraph"
+                  }
+                ]
+              },
+              {
+                "content": [
+                  {
+                    "inlineContent": [
+                      {
+                        "code": "arm64",
+                        "type": "codeVoice"
+                      },
+                      {
+                        "text": ". The CPU architecture from the binary image that the operating system loaded",
+                        "type": "text"
+                      },
+                      {
+                        "text": " ",
+                        "type": "text"
+                      },
+                      {
+                        "text": "into the process.",
+                        "type": "text"
+                      }
+                    ],
+                    "type": "paragraph"
+                  }
+                ]
+              },
+              {
+                "content": [
+                  {
+                    "inlineContent": [
+                      {
+                        "code": "fe7745ae12db30fa886c8baa1980437a",
+                        "type": "codeVoice"
+                      },
+                      {
+                        "text": ". A build UUID that uniquely identifies the binary",
+                        "type": "text"
+                      },
+                      {
+                        "text": " ",
+                        "type": "text"
+                      },
+                      {
+                        "text": "image. Use this value to locate the corresponding ",
+                        "type": "text"
+                      },
+                      {
+                        "code": "dSYM",
+                        "type": "codeVoice"
+                      },
+                      {
+                        "text": " file when symbolicating",
+                        "type": "text"
+                      },
+                      {
+                        "text": " ",
+                        "type": "text"
+                      },
+                      {
+                        "text": "the crash report. See ",
+                        "type": "text"
+                      },
+                      {
+                        "identifier": "doc://com.apple.Xcode/documentation/Xcode/building-your-app-to-include-debugging-information",
+                        "isActive": true,
+                        "type": "reference"
+                      },
+                      {
+                        "text": " for",
+                        "type": "text"
+                      },
+                      {
+                        "text": " ",
+                        "type": "text"
+                      },
+                      {
+                        "text": "more information on build UUIDs.",
+                        "type": "text"
+                      }
+                    ],
+                    "type": "paragraph"
+                  }
+                ]
+              },
+              {
+                "content": [
+                  {
+                    "inlineContent": [
+                      {
+                        "code": "/var/containers/.../TouchCanvas.app/TouchCanvas",
+                        "type": "codeVoice"
+                      },
+                      {
+                        "text": ". The path to the binary on disk.",
+                        "type": "text"
+                      },
+                      {
+                        "text": " ",
+                        "type": "text"
+                      },
+                      {
+                        "text": "macOS replaces user-identifable path components with placeholder values to protect",
+                        "type": "text"
+                      },
+                      {
+                        "text": " ",
+                        "type": "text"
+                      },
+                      {
+                        "text": "privacy.",
+                        "type": "text"
+                      }
+                    ],
+                    "type": "paragraph"
+                  }
+                ]
+              }
+            ],
+            "type": "unorderedList"
+          },
+          {
+            "inlineContent": [
+              {
+                "text": "macOS uses the following format for this section:",
+                "type": "text"
+              }
+            ],
+            "type": "paragraph"
+          },
+          {
+            "code": [
+              "Binary Images:",
+              "       0x1025e5000 -        0x1025e6ffb +com.example.apple-samplecode.TouchCanvas (1.0 - 1) <5ED9BD63-2A55-3DDD-B3FF-EFCF61382F6F> /Users/USER/*/TouchCanvas.app/Contents/MacOS/TouchCanvas"
+            ],
+            "syntax": "other",
+            "type": "codeListing"
+          },
+          {
+            "inlineContent": [
+              {
+                "text": "This list contains the components from the preceding example:",
+                "type": "text"
+              }
+            ],
+            "type": "paragraph"
+          },
+          {
+            "items": [
+              {
+                "content": [
+                  {
+                    "inlineContent": [
+                      {
+                        "code": "0x105f97000 - 0x105f98ffb",
+                        "type": "codeVoice"
+                      },
+                      {
+                        "text": ". The binary image’s address range within the process.",
+                        "type": "text"
+                      },
+                      {
+                        "text": " ",
+                        "type": "text"
+                      },
+                      {
+                        "text": "The first address is the binary’s load address. See ",
+                        "type": "text"
+                      },
+                      {
+                        "identifier": "doc://com.apple.Xcode/documentation/Xcode/adding-identifiable-symbol-names-to-a-crash-report#Symbolicate-the-crash-report-using-a-command-line-tool",
+                        "isActive": true,
+                        "type": "reference"
+                      },
+                      {
+                        "text": " ",
+                        "type": "text"
+                      },
+                      {
+                        "text": "for how to use this value.",
+                        "type": "text"
+                      }
+                    ],
+                    "type": "paragraph"
+                  }
+                ]
+              },
+              {
+                "content": [
+                  {
+                    "inlineContent": [
+                      {
+                        "code": "+com.example.apple-samplecode.TouchCanvas",
+                        "type": "codeVoice"
+                      },
+                      {
+                        "text": ". The ",
+                        "type": "text"
+                      },
+                      {
+                        "identifier": "doc://com.apple.documentation/documentation/BundleResources/Information-Property-List/CFBundleIdentifier",
+                        "isActive": true,
+                        "type": "reference"
+                      },
+                      {
+                        "text": " ",
+                        "type": "text"
+                      },
+                      {
+                        "text": "of the binary. The ",
+                        "type": "text"
+                      },
+                      {
+                        "code": "+",
+                        "type": "codeVoice"
+                      },
+                      {
+                        "text": " prefix indicates the binary is not part of macOS.",
+                        "type": "text"
+                      }
+                    ],
+                    "type": "paragraph"
+                  }
+                ]
+              },
+              {
+                "content": [
+                  {
+                    "inlineContent": [
+                      {
+                        "code": "1.0 - 1",
+                        "type": "codeVoice"
+                      },
+                      {
+                        "text": ". The binary’s ",
+                        "type": "text"
+                      },
+                      {
+                        "identifier": "doc://com.apple.documentation/documentation/BundleResources/Information-Property-List/CFBundleShortVersionString",
+                        "isActive": true,
+                        "type": "reference"
+                      },
+                      {
+                        "text": " ",
+                        "type": "text"
+                      },
+                      {
+                        "text": "and ",
+                        "type": "text"
+                      },
+                      {
+                        "identifier": "doc://com.apple.documentation/documentation/BundleResources/Information-Property-List/CFBundleVersion",
+                        "isActive": true,
+                        "type": "reference"
+                      },
+                      {
+                        "text": ".",
+                        "type": "text"
+                      }
+                    ],
+                    "type": "paragraph"
+                  }
+                ]
+              },
+              {
+                "content": [
+                  {
+                    "inlineContent": [
+                      {
+                        "code": "5ED9BD63-2A55-3DDD-B3FF-EFCF61382F6F",
+                        "type": "codeVoice"
+                      },
+                      {
+                        "text": ". A build UUID that uniquely identifies the",
+                        "type": "text"
+                      },
+                      {
+                        "text": " ",
+                        "type": "text"
+                      },
+                      {
+                        "text": "binary image. Use this value to locate the corresponding ",
+                        "type": "text"
+                      },
+                      {
+                        "code": "dSYM",
+                        "type": "codeVoice"
+                      },
+                      {
+                        "text": " file when symbolicating",
+                        "type": "text"
+                      },
+                      {
+                        "text": " ",
+                        "type": "text"
+                      },
+                      {
+                        "text": "the crash report. See ",
+                        "type": "text"
+                      },
+                      {
+                        "identifier": "doc://com.apple.Xcode/documentation/Xcode/building-your-app-to-include-debugging-information",
+                        "isActive": true,
+                        "type": "reference"
+                      },
+                      {
+                        "text": " for",
+                        "type": "text"
+                      },
+                      {
+                        "text": " ",
+                        "type": "text"
+                      },
+                      {
+                        "text": "more information on build UUIDs.",
+                        "type": "text"
+                      }
+                    ],
+                    "type": "paragraph"
+                  }
+                ]
+              },
+              {
+                "content": [
+                  {
+                    "inlineContent": [
+                      {
+                        "code": "/Users/USER/*/TouchCanvas.app/Contents/MacOS/TouchCanvas",
+                        "type": "codeVoice"
+                      },
+                      {
+                        "text": ". The path to the binary",
+                        "type": "text"
+                      },
+                      {
+                        "text": " ",
+                        "type": "text"
+                      },
+                      {
+                        "text": "on disk. macOS replaces user-identifable path components with placeholder values",
+                        "type": "text"
+                      },
+                      {
+                        "text": " ",
+                        "type": "text"
+                      },
+                      {
+                        "text": "to protect privacy.",
+                        "type": "text"
+                      }
+                    ],
+                    "type": "paragraph"
+                  }
+                ]
+              }
+            ],
+            "type": "unorderedList"
+          }
+        ]
+      },
+      "applicability": "Crash reports only; do not transfer their privacy placeholder policy to sample/vmmap or native08 without actual evidence."
+    }
+  ]
+}

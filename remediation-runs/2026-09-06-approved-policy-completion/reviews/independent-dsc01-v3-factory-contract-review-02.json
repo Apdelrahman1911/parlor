@@ -1,0 +1,131 @@
+{
+  "schema": 1,
+  "recorded_at": "2026-09-06T08:17:55.818414+00:00",
+  "reviewer": "/root/factory_review",
+  "author": "/root/native_fix_review",
+  "scope": "Independent narrow corrected-contract diff review and actual root-owned native-controls-02 result review; extends immutable factory-source-review-01.",
+  "conclusion": "ACCEPTED corrected source and focused 62-contract execution for root-owned v3 native cycle. Current v3 app-host runtime NOT YET VERIFIED.",
+  "approved_controls_sha256": "521b0e4cac65fe89ab4913e153dc4b544a589eae497c67e465d18f01437790e4",
+  "source_manifest_sha256": "de7573ed1f4e1a19969f3063e135d234cd57ec8764c4af784cf4b3eaff5ef9b4",
+  "tracked_diff_sha256": "38326880d1f9332618d193f73d49cebc6de063dd26c7e87a8711be9a04a5a430",
+  "baseline_matches_frozen": true,
+  "control_delta": {
+    "modified": [
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v3/test_copy_observation_contract.py",
+        "sha256": "92aa8ee0182fdd2a50d8449cd8e55bd8090be1dadf837304446afda3677a2d01"
+      }
+    ],
+    "unchanged_control_count": 15,
+    "reviewed_path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v3/test_copy_observation_contract.py",
+    "reopened_line_ranges": [
+      [
+        211,
+        260
+      ]
+    ],
+    "reopened_callee": {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v3/copied_sources.py",
+      "lines": [
+        28,
+        44
+      ]
+    },
+    "reverse_narrow_delta_reconstructs_prior_review_hash": true,
+    "prior_file_sha256": "d477365769c134c0a5ec32a3a342b9968633a98258aded543068d721bfb8a9b2",
+    "reconstructed_prior_sha256": "d477365769c134c0a5ec32a3a342b9968633a98258aded543068d721bfb8a9b2"
+  },
+  "original_failure": {
+    "cycle": "native-controls-01",
+    "classification": "TEST FIXTURE DEFECT; not an app defect nor replacement helper defect",
+    "proof": "The alleged missing-anchor fixture 'no-anchor' includes one exact 'anchor' substring. replace_once correctly accepted it; failing assertRaises had an invalid precondition.",
+    "preserved": true
+  },
+  "correction_review": {
+    "proof": "Only zero-anchor fixture now 'missing', with explicit count!=1 assertion; duplicate-anchor fixture and assertRaises are unchanged. replace_once still rejects counts0/2 and requires exactly1 before replacement. Reverse exact delta reproduces previous full file hash.",
+    "weakened_assertions": false,
+    "production_or_runner_change": false
+  },
+  "actual_contract_result": {
+    "cycle": "native-controls-02",
+    "command": [
+      "/bin/zsh",
+      "-c",
+      "cd remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v3 && /usr/bin/python3 -B -m unittest -v test_secondary_fifo test_harness_contract test_copy_observation_contract"
+    ],
+    "started_at": "2026-09-06T08:10:34.824080+00:00",
+    "finished_at": "2026-09-06T08:10:37.195052+00:00",
+    "exit_code": 0,
+    "individual_ok_lines": 62,
+    "class_counts": {
+      "test_secondary_fifo.SecondaryFifoSafetyTest": 19,
+      "test_harness_contract.CopiedPhaseContractTest": 5,
+      "test_harness_contract.ReceiptContractTest": 6,
+      "test_harness_contract.RuntimeStatusContractTest": 4,
+      "test_harness_contract.SelectorSourceContractTest": 2,
+      "test_copy_observation_contract.CopyBoundaryContractTest": 10,
+      "test_copy_observation_contract.DirectObservationReceiptTest": 16
+    },
+    "summary": "Ran 62 tests in 1.935s / OK",
+    "failures": 0,
+    "skips": 0,
+    "all_requested_classes_executed": true,
+    "counts_are_contracts_not_iOS_tests": true
+  },
+  "critical_new_negative_tests_observed": [
+    "test_stale_preexisting_fifo_is_not_owned",
+    "test_timeout_or_cancellation_cleanup_uses_same_attestation",
+    "test_failed_build_with_stale_output_stops_and_never_normalizes",
+    "test_after_build_identity_precedes_owned_copy_deletion_and_gates_pass",
+    "test_all_actual_source_anchors_apply_only_to_owned_copies",
+    "test_final_copy_attestation_rejects_input_drift_but_not_owned_outputs",
+    "test_final_copy_attestation_rejects_new_inputs_and_source_symlinks",
+    "test_missing_or_duplicate_anchor_is_not_a_dynamic_fallback",
+    "test_explicit_language_cannot_pass_when_locale_and_direction_both_stay_stale",
+    "test_system_cannot_accept_a_plausible_but_replaced_os_preference"
+  ],
+  "cleanup_review": {
+    "stop_exit_code": 0,
+    "stopped_at": "2026-09-06T08:10:37.559026+00:00",
+    "workers": {
+      "terminated_owned_workers": [],
+      "remaining_owned_workers": []
+    },
+    "removed_outputs": [],
+    "remaining_outputs": [],
+    "cleanup_completed_at": "2026-09-06T08:10:37.634410+00:00",
+    "cleanup_errors": [],
+    "source_changed_during_cycle": false,
+    "runner_changed_during_cycle": false
+  },
+  "stop_log": "No Gradle daemons are running.",
+  "evidence": [
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/native-controls-02/receipt.json",
+      "sha256": "816dc2a81c93c9a1dc94fa4f8eb4fc8c2caef86288f061a19a3ad5c0db6413b0"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/native-controls-02/gradle.log",
+      "sha256": "f034fb599f6fef52c2591baf5341da7b7d27495e24373b4f5b9838db79ebb290"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/native-controls-02/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v3/author-bound-control-manifest-02.json",
+      "sha256": "20c65c1d702e9554e55b3d4392dcfbec638f81e58964a84672bb797dd75e8b0e"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v3/author-correction-receipt-03.json",
+      "sha256": "2097eb84b237bee57e709fa733f7262d94a70662fca0a3ed1aa6a5fe9405bd34"
+    }
+  ],
+  "binding_caveat": "The generic contract-cycle receipt binds run_gradle_cycle.py before/after, not all16 native controls. Exact reviewed16-file manifest is independently rehashed here and corroborates author-bound-control-manifest-02; native runtime must additionally capture full control before/after binding.",
+  "pending": [
+    "Run bound native v3 cycle in root-owned lane.",
+    "Independently inspect actual exact-XCTest/probes/OS evidence and copy-before-after/source/control/cleanup receipts.",
+    "Physical device/LAN/Store/editorial/accessibility/release proof remain outside these synthetic contracts."
+  ],
+  "reviewer_hygiene": "No builds/tests/apps/simulators/workers started; only source/evidence reads and this append-only review evidence write."
+}

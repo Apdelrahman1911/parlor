@@ -1,0 +1,119 @@
+{
+  "url": "https://developer.apple.com/videos/play/wwdc2019/403/",
+  "accessed_at": "2026-09-06T06:23:45.280675+00:00",
+  "body_sha256": "712f9f0cff476099e45c16b8d7ab2c572b91de650e603b017dbace8f7d08f275",
+  "segments": [
+    {
+      "key": "multilingual",
+      "text": "re deeply about creating a great experience for all of our users around the world. This year, we have a host of new features and improvements for our Multilingual and International Users. To name a few, in iOS 13 we have keyboards for 38 new languages. I'm sure if your language is up there you're really excited. We also have a new setup flow that guides multilingual users to the right language settings. Now one of these features I'm particularly excited about, and I want to dive a bit deeper with you. In iOS 13 there's a new setting that appears from Multilingual Users in your app settings page. I'm happy to say that users c"
+    },
+    {
+      "key": "multilingual",
+      "text": "iOS 13 we have keyboards for 38 new languages. I'm sure if your language is up there you're really excited. We also have a new setup flow that guides multilingual users to the right language settings. Now one of these features I'm particularly excited about, and I want to dive a bit deeper with you. In iOS 13 there's a new setting that appears from Multilingual Users in your app settings page. I'm happy to say that users can now set the language of your app independent of the system language. If a user has a connected watch, the setting will also sync to the accompanying watch application. And similarly, on macOS, users can "
+    },
+    {
+      "key": "multilingual",
+      "text": "Now one of these features I'm particularly excited about, and I want to dive a bit deeper with you. In iOS 13 there's a new setting that appears from Multilingual Users in your app settings page. I'm happy to say that users can now set the language of your app independent of the system language. If a user has a connected watch, the setting will also sync to the accompanying watch application. And similarly, on macOS, users can set the language of an app via Language and Region preferences. This is important because in multilingual regions, users may prefer to use different languages in different context. In a region like Hon"
+    },
+    {
+      "key": "multilingual",
+      "text": "ng watch application. And similarly, on macOS, users can set the language of an app via Language and Region preferences. This is important because in multilingual regions, users may prefer to use different languages in different context. In a region like Hong Kong, someone might read their news in Chinese even though they do their banking in English. In India, a student will go to school and learn in English even though they come home and speak Hindi with their family. Apps are windows into these interactions we have everyday. And this new setting allows users to choose a language that reflects their preference for your app."
+    },
+    {
+      "key": "multilingual",
+      "text": "s returns a list of languages in order of user preference. Now, this list might be useful to you if maybe you're building an app that needs to handle multilingual content, and you need to fetch resources such as font for all of the user's languages. And one thing to know is that locale, that preferred languages will return the language list, that user's preferred languages, regardless of the languages your application bundle supports. So it's not useful for getting the current running application language. To get the current running application language, we can use Bundle APIs. And Bundle APIs are useful for language matchin"
+    },
+    {
+      "key": "multilingual",
+      "text": "d the localized of our attribute to the content so adjacent to that asset, you're ready to export an Xcode Localization Catalog. But, say that you're multilingual and doing some of the localization work yourself or maybe you're moving already localized images into the Asset Catalog, well, when you click that button, it's going to reveal check boxes with all of the localizations already in your project. Check any of those, and it will create the wells in the Asset Catalog Editor, so you can drag in the localized images like you would any other asset. Now, what about those new symbols? Well, SF system symbols are localized for"
+    },
+    {
+      "key": "relaunch",
+      "text": "h into Settings where users can go in and switch the language of your app. Next, when the user does change the language of your app, your app will be relaunched in the target language. Now, to make this language change a seamless experience for the user, we recommend you adapt state restoration APIs. In iOS 13, there are some new state restoration APIs with NSUserActivity. To learn more about how you can use them, you can check out this talk on Friday. And, finally, it's important that all of your content is shown consistently in one language throughout your app. If you're doing some custom or server-side resource loadin"
+    },
+    {
+      "key": "relaunch",
+      "text": "and change this to French. And when I go back, you can see that the System UI is still in English but when I go back to Vacation Planet, the app will relaunch and it'll be in French. Now, one thing you'll notice is that it actually brought me right back to where I left it and that's because I've adapted those state restoration APIs. And you can see now all of our strings and all of our date formatters are in French which is great. But when I go to that server side loaded content, I can see that that is still in English. Now that seems problematic because we want to be consistent in our app and we want their app to be in "
+    },
+    {
+      "key": "relaunch",
+      "text": " of this will be the best language to request that content and from the server. So I went ahead and I rebuilt. And wait a couple of seconds for it to relaunch. And you can see now that image and all of that content is in French. Isn't that great ? Cool, so, I'm ready to book and I can't wait to see you guys all at this Interstellar Bash. All right. So, to summarize, App Language Setting allows users to choose a language for your app. Launching to Settings is the best way to allow your users to switch the language of your app. Use state restoration to make that language switch a seamless experience for the user. And, fina"
+    },
+    {
+      "key": "settings",
+      "text": "nt = '.color-scheme-toggle { display: none !important; }'; document.head.appendChild(style); return; } // Otherwise, set theme normally based on user settings or system preference if (window.Settings && window.Settings.preferredColorScheme) { const colorTheme = (window.Settings.preferredColorScheme === 'auto') && !prefersDark ? 'light' : (window.Settings.preferredColorScheme === 'light') ? 'light' : 'dark'; body.setAttribute('data-color-scheme', colorTheme); colorTheme === \"dark\" ? body.classList.add(\"theme-dark\") : body.classList.add(\"theme-light\"); } else { const colorTheme = prefersDark ? 'dark' : 'light'; body.setAtt"
+    },
+    {
+      "key": "settings",
+      "text": "e !important; }'; document.head.appendChild(style); return; } // Otherwise, set theme normally based on user settings or system preference if (window.Settings && window.Settings.preferredColorScheme) { const colorTheme = (window.Settings.preferredColorScheme === 'auto') && !prefersDark ? 'light' : (window.Settings.preferredColorScheme === 'light') ? 'light' : 'dark'; body.setAttribute('data-color-scheme', colorTheme); colorTheme === \"dark\" ? body.classList.add(\"theme-dark\") : body.classList.add(\"theme-light\"); } else { const colorTheme = prefersDark ? 'dark' : 'light'; body.setAttribute('data-color-scheme', colorTheme); "
+    },
+    {
+      "key": "settings",
+      "text": "ocument.head.appendChild(style); return; } // Otherwise, set theme normally based on user settings or system preference if (window.Settings && window.Settings.preferredColorScheme) { const colorTheme = (window.Settings.preferredColorScheme === 'auto') && !prefersDark ? 'light' : (window.Settings.preferredColorScheme === 'light') ? 'light' : 'dark'; body.setAttribute('data-color-scheme', colorTheme); colorTheme === \"dark\" ? body.classList.add(\"theme-dark\") : body.classList.add(\"theme-light\"); } else { const colorTheme = prefersDark ? 'dark' : 'light'; body.setAttribute('data-color-scheme', colorTheme); prefersDark ? body."
+    },
+    {
+      "key": "settings",
+      "text": " theme normally based on user settings or system preference if (window.Settings && window.Settings.preferredColorScheme) { const colorTheme = (window.Settings.preferredColorScheme === 'auto') && !prefersDark ? 'light' : (window.Settings.preferredColorScheme === 'light') ? 'light' : 'dark'; body.setAttribute('data-color-scheme', colorTheme); colorTheme === \"dark\" ? body.classList.add(\"theme-dark\") : body.classList.add(\"theme-light\"); } else { const colorTheme = prefersDark ? 'dark' : 'light'; body.setAttribute('data-color-scheme', colorTheme); prefersDark ? body.classList.add(\"theme-dark\") : body.classList.add(\"theme-ligh"
+    },
+    {
+      "key": "settings",
+      "text": "s && window.Settings.preferredColorScheme) { const colorTheme = (window.Settings.preferredColorScheme === 'auto') && !prefersDark ? 'light' : (window.Settings.preferredColorScheme === 'light') ? 'light' : 'dark'; body.setAttribute('data-color-scheme', colorTheme); colorTheme === \"dark\" ? body.classList.add(\"theme-dark\") : body.classList.add(\"theme-light\"); } else { const colorTheme = prefersDark ? 'dark' : 'light'; body.setAttribute('data-color-scheme', colorTheme); prefersDark ? body.classList.add(\"theme-dark\") : body.classList.add(\"theme-light\"); } })(); View in English Apple Developer Get Started Explore Get Started O"
+    },
+    {
+      "key": "settings",
+      "text": "ions All Videos About More Videos About Transcript Creating Great Localized Experiences with Xcode 11 Learn how your app can support per-app language settings in iOS 13. Get the details on localizing assets with asset catalogs and simplifying your localization workflow with Xcode 11. Understand how to generate screenshots in multiple languages for localization and testing. Resources Xcode Help: What is localization? HD Video SD Video Presentation Slides (PDF) Related Videos WWDC21 Streamline your localized strings WWDC20 Build location-aware enterprise apps Swift packages: Resources and localization WWDC19 Font Managemen"
+    },
+    {
+      "key": "settings",
+      "text": "ages. I'm sure if your language is up there you're really excited. We also have a new setup flow that guides multilingual users to the right language settings. Now one of these features I'm particularly excited about, and I want to dive a bit deeper with you. In iOS 13 there's a new setting that appears from Multilingual Users in your app settings page. I'm happy to say that users can now set the language of your app independent of the system language. If a user has a connected watch, the setting will also sync to the accompanying watch application. And similarly, on macOS, users can set the language of an app via Langua"
+    },
+    {
+      "key": "settings",
+      "text": "articularly excited about, and I want to dive a bit deeper with you. In iOS 13 there's a new setting that appears from Multilingual Users in your app settings page. I'm happy to say that users can now set the language of your app independent of the system language. If a user has a connected watch, the setting will also sync to the accompanying watch application. And similarly, on macOS, users can set the language of an app via Language and Region preferences. This is important because in multilingual regions, users may prefer to use different languages in different context. In a region like Hong Kong, someone might read "
+    },
+    {
+      "key": "settings",
+      "text": " users get the right language and font fall backs. If you do need to add the option within your app to switch languages, we recommend you Launch into Settings where users can go in and switch the language of your app. Next, when the user does change the language of your app, your app will be relaunched in the target language. Now, to make this language change a seamless experience for the user, we recommend you adapt state restoration APIs. In iOS 13, there are some new state restoration APIs with NSUserActivity. To learn more about how you can use them, you can check out this talk on Friday. And, finally, it's important"
+    },
+    {
+      "key": "settings",
+      "text": "le tab where we have a table view cell that shows the current running application language. And when I click on that, it's going to pop me right into Settings where I can click in to see a list of all the languages my application supports. I'm going to go ahead and change this to French. And when I go back, you can see that the System UI is still in English but when I go back to Vacation Planet, the app will relaunch and it'll be in French. Now, one thing you'll notice is that it actually brought me right back to where I left it and that's because I've adapted those state restoration APIs. And you can see now all of our "
+    },
+    {
+      "key": "settings",
+      "text": "ou guys all at this Interstellar Bash. All right. So, to summarize, App Language Setting allows users to choose a language for your app. Launching to Settings is the best way to allow your users to switch the language of your app. Use state restoration to make that language switch a seamless experience for the user. And, finally, if you're doing some custom or server-side resource loading, be sure you're using the right bundle or locale API for your use case. I'm incredibly excited for all of the great features and enhancements we've worked on this year and can't wait to see how you're going to bring your apps to an inte"
+    },
+    {
+      "key": "settings",
+      "text": "thing it says, tap here but the user would now be using a mouse with a cursor, maybe clicking, or here in news, you can control Siri's suggestions in Settings, if you're on the iPad, but that would be the apps preferences on a Mac. And, of course, you want to have that one NSLocalizedString called it's already in code. So, to help with this, we're introducing a new stringsdict rule for device-specific strings. And this rule can be combined with the plural and variable width rules. So, you can use this for any of your existing strings even if they're already in a stringsdict file. So, the new rule is NSStringDeviceSpecifi"
+    },
+    {
+      "key": "settings",
+      "text": " strings index by those device keys. For more on iPad apps for Mac, please check out the session Taking iPad Apps For Mac to the Next Level. Next up. Settings bundle. Settings Bundles are now included in your Xcode Localization Catalogs. So these are as easy to localize as anything else in your project. And one of the more significant improvements we made to the localization tooling in Xcode is in how you localize Assets. So until now, in order to localize an image it needed to be an independent file in your project and this may have meant you had some files in your Asset Catalog and the localized ones floating around lo"
+    },
+    {
+      "key": "settings",
+      "text": " those device keys. For more on iPad apps for Mac, please check out the session Taking iPad Apps For Mac to the Next Level. Next up. Settings bundle. Settings Bundles are now included in your Xcode Localization Catalogs. So these are as easy to localize as anything else in your project. And one of the more significant improvements we made to the localization tooling in Xcode is in how you localize Assets. So until now, in order to localize an image it needed to be an independent file in your project and this may have meant you had some files in your Asset Catalog and the localized ones floating around lose. So I'm very e"
+    },
+    {
+      "key": "settings",
+      "text": "ation tooling in Xcode. Export and import of interface Builder files is now a lot faster. There's a new stringsdict rule for device-specific strings. Settings Bundle is now easy to localize. And symbols and images are localizable in Asset Catalogs. Now, of course, once you've localize your app you're going to want to test all of those localizations. And we've made that easier too. And I'd like to call up Arthur to tell you all about it. Thanks, Vivian. Now, let's take a look at how you can take advantage of UI testing for localization. Testing is a significant part of any development cycle. It takes time and resources bu"
+    },
+    {
+      "key": "settings",
+      "text": " tests and another that's just going to capture that marketing image. I also have some configuration setup. The important thing here is in the shared Settings. Localization Screenshots is turned on. So, I've got one configuration for English, United States and another for Swedish, Sweden. So, since I've just got those images in French, I'm going to add one for French. Just click Plus. Let's call this one French, France. OK. And we will set the application language to French and the application region to France. OK. It's now-- I think, I'll rerun just the test to get that marketing image. So, I can get a picture of those "
+    },
+    {
+      "key": "settings",
+      "text": "nts to the localization tooling in Xcode, including faster export of interface Builder files, a new stringsdict rule, how easy it is to localize your settings bundle, and of course how you can now localize images right in your Asset Catalog. We also saw how you can generate Localized screenshots with your Tests and some of the uses for those screenshots. For more information, please visit our page on developer.apple.com. And if you have any questions, come see us later in the labs. Thank you. Enjoy the rest of the conference. [ Applause ] Developer Footer Videos WWDC19 Creating Great Localized Experiences with Xcode 11 P"
+    },
+    {
+      "key": "per app",
+      "text": "Support Open Menu Close Menu Help Guides & Articles Contact Us Forums Feedback & Bug Reporting System Status Account Open Menu Close Menu Apple Developer App Store Connect Certificates, IDs, &amp; Profiles Feedback Assistant Programs Open Menu Close Menu Apple Developer Program Apple Developer Enterprise Program App Store Small Business Program MFi Program Mini Apps Partner Program News Partner Program Video Partner Program Security Bounty Program Security Research Device Program Events Open Menu Close Menu Meet with Apple Apple Developer Centers App Store Awards Apple Design Awards Apple Developer Academies WWDC Read t"
+    },
+    {
+      "key": "per app",
+      "text": "eet with Apple Apple Developer Centers App Store Awards Apple Design Awards Apple Developer Academies WWDC Read the latest news . Get the Apple Developer app . Follow us on bilibili , LinkedIn , WeChat , and YouTube . Light Dark Auto Copyright © 2026 Apple Inc. All rights reserved. Terms of Use Privacy Policy Agreements and Guidelines "
+    }
+  ]
+}

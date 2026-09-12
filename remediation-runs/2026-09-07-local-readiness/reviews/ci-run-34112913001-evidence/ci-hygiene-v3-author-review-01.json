@@ -1,0 +1,43 @@
+{
+  "at": "2026-09-07T12:31:30.124669+00:00",
+  "author": "/root/release_fix_review",
+  "review_type": "Author self-review of unapplied draft; NOT independent approval and NOT runtime validation",
+  "head": "2250007173bbf9ca7c441f1c46802d84c1b478ba",
+  "tree": "b506da5b778a3220f81e07674dcd85d381c49cb6",
+  "working_tree": [
+    "?? AGENTS.md",
+    "?? audit-runs/",
+    "?? design/",
+    "?? docs/PARLOR_PROJECT_HANDOFF.md",
+    "?? project-code-audit/",
+    "?? remediation-runs/",
+    "?? scripts/verification/"
+  ],
+  "draft": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34112913001-evidence/drafts/ci-xml-output-hygiene-v3-draft.patch",
+  "draft_sha256": "5e51a4434b81010a4589825860cc2c37ccccccec1fda3dc99660383556f54573",
+  "complete_read": [
+    ".github/workflows/production-verification.yml:1-347 (all five current jobs)",
+    "ci-xml-output-hygiene-v3-draft.patch:complete; workflow changes,215-line helper,257-line tests",
+    "scripts/android/run_release_managed_device_smoke.sh:complete (existing synthetic-keystore cleanup and Gradle stop)",
+    "scripts/release/validate_release_system.sh:complete (Python fixtures, generated caches, inventory, actionlint)",
+    ".gitignore:complete (build/.gradle/.kotlin/Python generated-path rules)",
+    "Pinned upload-artifact action manifest and upload/no-files success implementation, recorded separately"
+  ],
+  "failure_paths_traced": [
+    "Build success/failure/cancellation -> always-run stop; original build failure cannot be converted to success by stop.",
+    "Preparation failure -> no deletion, even with a readable historical same-task claim and successful artifact upload.",
+    "Upload failure/cancellation/skip or success-without-actual-artifact outputs -> stop then explicit cleanup failure, outputs retained.",
+    "Source/task/output claim mismatch, dirty source, symlinked output/root, tracked source in output directory -> refusal before deletion.",
+    "Success -> exact claimed generated roots only, after required reports/artifacts upload; receipts remain in RUNNER_TEMP.",
+    "Existing receipt -> never overwritten; cleanup result emitted to log before a new cleanup-receipt collision can fail."
+  ],
+  "not_claimed": [
+    "No helper/tests/actionlint executed by child.",
+    "No independent approval; root must assign another reviewer.",
+    "No CI worker/native/emulator shutdown proof; only Gradle stop and generated-directory scope in this draft.",
+    "No durable retention from merely leaving files on an ephemeral failed runner; upload failure remains a failed gate.",
+    "No Store operations, app source/game/protocol/persistence behavior changes, toolchain upgrades or signing changes."
+  ],
+  "workspace_actions": "Only new task evidence and unapplied draft files; no tracked source writes, Git mutations, builds, test runs, publishing or credential use.",
+  "cleanup": "Every child-started shell/Python source-read/draft-generation process returned. No Gradle/Xcode/app/test/server worker or generated build directory was started/created; none belonging to root was stopped or removed."
+}

@@ -1,0 +1,323 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-09-07T19:19:45.685486+00:00",
+  "reviewer": "/root/factory_review",
+  "executor": "/root",
+  "classification": "FAILED_NATIVE_L08_MATRIX; ROOT_CAUSE_UNCONFIRMED; NOT_AN_ESTABLISHED_APPLICATION_DEFECT",
+  "cycle": "ios-readiness-05",
+  "source": {
+    "commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+    "tree": "c65463bdf1f3656f90dfe6e6dbe1d94b3c588dac",
+    "binding_sha256": "1d7165a7029165a5450919c2771e09d51f206d124e41b082b52eec22f76b73fa",
+    "control_sha256": "365da18f1d3916dcf012f4ebaf390f37f8bfdc487532e8baec3ac5c44aed8ea3",
+    "source_manifest_sha256": "ca2b99d237a921513a4c8d922666b9d8df838b8c2ac04064f7563e474204e711",
+    "source_rows": 798,
+    "copy_originals": 738,
+    "copy_additions": 12,
+    "copy_modified_originals": 16,
+    "complete_before_after_source_and_control_equality": true,
+    "all_750_copied_inputs_unchanged": true,
+    "copy_diff_sha256": "e1184b3ea4c915ec8924d2e6d8d3770f7caf59adce5fe8f2077e111f8a116ea8"
+  },
+  "evidence": {
+    "receipt.json": "a1136cb30db23ceb6a937ccf39d5f00a1258a599edc06eb3dcb4a46ad0899c94",
+    "xcresult-summary.json": "5e9dd05d75c145968369470ced5281143913d165261ff4c8f3f0f05a56f2492d",
+    "xcresult-tests.json": "77eeeed1a8663320f0bb0d8c62c98804102994212890fe43da8ec1265abb8080",
+    "xcodebuild.log": "8932e093cb0de08544e3e29d9322fada090113dac4daa277788da9a5be4a96b3",
+    "input-manifest.json": "3bbdef4f27147ff1f26bc60c9c30e7e1743d5770c1c7def4edd63c3f19d155d6",
+    "copied-source-manifest.json": "e8488b3852308f9ac14934320f4073dd8d4bfb5cf234d67867672b46001c3b7e",
+    "copied-source-inputs-after-build.json": "2c9f88b41bb7f1e5fe380adce83dbcdaf63ce18e0f0e0e45e4de142e237cbe11",
+    "parlor-l08-storage-1-save.json": "38220611dc288e18c35a95715d7a81d41f851f35916e6771aa6cb67e24b85863",
+    "probe-l08-storage-result.json": "8236ded779e39b9c3190497c0836ab0ab56602964302890edb9bca944e40dbd9",
+    "probe-settings-result.json": "076c4818a6b4a3e4fee6c634c074eaa444147f879e1f853359e24bd216faacad",
+    "probe-readiness-result.json": "c9b2d1cfb7783e78ba5a52eecaeacef9db781312054cf7dfb003178884b03325",
+    "built-app-binary-inventory.json": "ee0a09a3a14bdadce16f3ed2499f817236ec995882aca7d1b0051496ee4b4557",
+    "installed-app-binary-inventory.json": "ee0a09a3a14bdadce16f3ed2499f817236ec995882aca7d1b0051496ee4b4557",
+    "secondary-fifo-ownership-final.json": "d1fb59b9433a1317e6eb0513c2b25860f0505ae19950c801ae656913b587c8c3"
+  },
+  "executed_tests": {
+    "total_methods": 5,
+    "passed_methods": 4,
+    "failed_methods": 1,
+    "skipped": 0,
+    "expected_failures": 0,
+    "cases": [
+      {
+        "id": "ComposeContainerViewControllerTests/testChildUsesFullBoundsAcrossSizesAndOpposingSemanticDirections()",
+        "result": "Passed",
+        "seconds": 0.27893292903900146
+      },
+      {
+        "id": "ComposeContainerViewControllerTests/testDefaultAppearanceForwardingReachesTheSameChildExactlyOnce()",
+        "result": "Passed",
+        "seconds": 0.042950987815856934
+      },
+      {
+        "id": "ComposeContainerViewControllerTests/testOneStableChildKeepsItsExplicitSemanticsIndependentOfTheOuterView()",
+        "result": "Passed",
+        "seconds": 0.03925597667694092
+      },
+      {
+        "id": "ComposeContainerViewControllerTests/testSystemDecorationAndOrientationPoliciesStillBelongToTheChild()",
+        "result": "Passed",
+        "seconds": 0.048254966735839844
+      },
+      {
+        "id": "IOSAppLaunchUITests/testDSC01ActualSettingsLocalSessionsAndOSInvestigation()",
+        "result": "Failed",
+        "seconds": 508.33766400814056
+      }
+    ],
+    "xcodebuild_exit_code": 65,
+    "compiled_instrumented_ios_graph": true,
+    "continuation_after_assertion_disabled": "IOSAppLaunchUITests.swift.in:5; false-green completion blocked"
+  },
+  "failure": {
+    "operation": {
+      "action": "save",
+      "boot_ordinal": 1,
+      "reason": "fixture_or_boundary_failure",
+      "run_token": "047C7A9B-C100-4836-9F30-30DAE0CE8983",
+      "schema_version": 1,
+      "stage": "real-store-save",
+      "status": "FAIL"
+    },
+    "source_ranges": [
+      "scripts/verification/ios-readiness/L08StorageProbe.kt.in:149-158,290-294,444-455",
+      "scripts/verification/ios-readiness/L08StorageUITests.swift.in:54-78"
+    ],
+    "reachable_path": "Actual L08 Save button -> Koin actual FileBackedSnapshotStore/IosSnapshotFileSystem type checks -> synthetic Whodunit six-player reducer checkpoint successfully constructed -> save, immediate load/equality and protected metadata/header checks under one stage -> caught bounded failure -> XCTest PASS assertion fails -> whole matrix rejected.",
+    "runtime_location": "Copied IOSAppLaunchUITests.swift:2319; retained xcodebuild.log:3483",
+    "not_identified": "The stage does not reveal whether save, load, equality, backup exclusion, directory/file protection, or ciphertext header failed.",
+    "counter_evidence": [
+      "GameSnapshot.equals explicitly uses payload.contentEquals (shared/engine/.../SnapshotCodec.kt:32-42): ByteArray reference-equality suspicion rejected.",
+      "Fixture expected payload zeroization occurs only after check completion/failure; separately decoded load bytes are cleared after equality, not before.",
+      "Same-cycle native boots1-3 actual IosSnapshotFileSystem 64-byte create/load/update/load/delete succeeded, so universal Keychain/encryption/backup-exclusion failure is not established. Those probes bypass the full envelope codec and explicit metadata protection observation.",
+      "Metadata observer checks exact native values; simulator semantics are not guessed and no assertion is authorized to be dropped."
+    ],
+    "next": "Add independently reviewed closed diagnostic stage labels in isolated draft only; preserve assertions and privacy. Rerun with newly approved controls to establish root cause; do not change application without evidence."
+  },
+  "partial_observations": {
+    "settings": {
+      "observations": 22,
+      "distinct_before_main_boots": 4,
+      "completed": true,
+      "scope": "Actual English/Arabic/System settings actions and restart ownership, including synthetic prior OS-managed preference fixture. Not actual iOS Settings-app gate."
+    },
+    "native_readiness": {
+      "probe_boots": 8,
+      "cold_launch_marker_sequences": 8,
+      "samples": 48,
+      "scope": "Actual Koin credential SecItem OSStatus and synthetic64-byte filesystem observation. Not8 independent XCTest methods or full GameSnapshot recovery.",
+      "credential_observed": "-25300 absent/read/update-before-add;0 successful add/read/update/delete; absent after deletion. No storage error observed in these synthetic invocations.",
+      "complete_host_verifier_reached": false
+    },
+    "l08": {
+      "storage_operations_attempted": 1,
+      "storage_operations_succeeded": 0,
+      "planned_storage_operations": 20,
+      "storage_boots_attempted": 1,
+      "planned_storage_boots": 13,
+      "host_operations_executed": 0,
+      "planned_host_operations": 42,
+      "planned_host_boots": 3,
+      "actual_home_resume_recovery_rejoin_and_terminal_cleanup": "NOT REACHED"
+    },
+    "later_scenarios": "Local Whodunit/Mafia language/lifecycle/landscape and actual OS per-app language scenarios were NOT REACHED."
+  },
+  "artifact_and_provenance": {
+    "built_installed_macho_images_equal": 4,
+    "public_adhoc_signature_commands_succeeded": true,
+    "built_installed_linker_entitlements_equal": true,
+    "loaded_framework_observation": {
+      "file_bytes": 83987720,
+      "file_sha256": "b393b2b8433473cb9143d6c6a605f49c1926a5433f187ddf2f6a02995b778b38",
+      "image_uuid": "3b73c6cf-9db6-3777-a8bd-9de7ed76ed15",
+      "origin": "owned-copy-build",
+      "path": "xcode-frameworks/Debug/iphonesimulator26.5/ComposeApp.framework/ComposeApp"
+    },
+    "embedded_framework": {
+      "path": "Frameworks/ComposeApp.framework/ComposeApp",
+      "resolved_path": "Frameworks/ComposeApp.framework/ComposeApp",
+      "bytes": 83517584,
+      "sha256": "70fe03e7f33d7aee5d16706e25fbba3f208753b71dd5eca887995069a0767c6e",
+      "symbolic_link": false,
+      "magic": "cffaedfe"
+    },
+    "strict_executed_framework_binding": "NOT REACHED: run_ios_readiness.py783 verify_xctest fails before824-848 observed external-framework artifact capture/binding. Embedded and owned-copy-build bytes differ while UUID agrees; strip/sign can explain but cannot substitute for missing artifact comparison. Owned copy was correctly cleaned, so do not retrofit aggregate runtime PASS.",
+    "resource_package_gate": "Mach-O inventory is not complete shipped-resource inspection.",
+    "toolchain": "Local Xcode26.5/17F42, iOS26.5 ARM64 simulator, Debug/ad-hoc; not Store-qualified26.3/17C529 or physical-device proof."
+  },
+  "cleanup": {
+    "status": "PASS",
+    "embedded_gradle_stop": "build_exit0/stop_exit0",
+    "outer_gradle_stops": [
+      {
+        "label": "stop-xcode-immediate",
+        "exit_code": 0,
+        "at": "2026-09-07T19:00:03.207726+00:00"
+      },
+      {
+        "label": "stop-final",
+        "exit_code": 0,
+        "at": "2026-09-07T19:00:06.653280+00:00"
+      }
+    ],
+    "finalization_stages": [
+      {
+        "stage": "final-isolated-gradle-stop",
+        "status": "PASS",
+        "at": "2026-09-07T19:00:06.653287+00:00"
+      },
+      {
+        "stage": "shutdown-owned-simulator-and-app",
+        "status": "PASS",
+        "at": "2026-09-07T19:00:10.159643+00:00"
+      },
+      {
+        "stage": "delete-owned-simulator",
+        "status": "PASS",
+        "at": "2026-09-07T19:00:10.673039+00:00"
+      },
+      {
+        "stage": "stop-owned-command-workers",
+        "status": "PASS",
+        "at": "2026-09-07T19:00:11.022346+00:00"
+      },
+      {
+        "stage": "cleanup-attested-secondary-fifos",
+        "status": "PASS",
+        "at": "2026-09-07T19:00:11.244078+00:00"
+      },
+      {
+        "stage": "verify-workers-before-file-removal",
+        "status": "PASS",
+        "at": "2026-09-07T19:00:11.395341+00:00"
+      },
+      {
+        "stage": "verify-copied-input-identity-after-workers-stop",
+        "status": "PASS",
+        "at": "2026-09-07T19:00:11.551036+00:00"
+      },
+      {
+        "stage": "remove-owned-copy-derived-data-home-temp",
+        "status": "PASS",
+        "at": "2026-09-07T19:00:13.365917+00:00"
+      },
+      {
+        "stage": "read-final-source-identity",
+        "status": "PASS",
+        "at": "2026-09-07T19:00:13.619049+00:00"
+      }
+    ],
+    "owned_simulator_absent": true,
+    "owned_temporary_path_absent": true,
+    "secondary_attested_paths_absent": 4,
+    "remaining_owned_workers": [],
+    "unknown_holders": [],
+    "remaining_outputs": [],
+    "errors": [],
+    "method": "Independently checked raw stop/device/worker/path evidence and current absence of exact recorded owned paths. No unrelated process inspection/termination.",
+    "reviewer_builds_or_background_workers": 0
+  },
+  "normal06_approval_clarification": {
+    "reviewed_before_execution": true,
+    "reason": "Normal source copy changes only XCTest and build phase; no L08 observer injection.05 failed L08-only check and completed cleanup; source/control unchanged. Root allowed unchanged normal06 under source06 approval; does not accept05."
+  },
+  "new_source_reopen_ranges": {
+    "scripts/verification/ios-readiness/L08StorageProbe.kt.in": [
+      [
+        1,
+        218
+      ],
+      [
+        265,
+        466
+      ]
+    ],
+    "scripts/verification/ios-readiness/L08WhodunitSnapshots.kt.in": [
+      [
+        1,
+        190
+      ]
+    ],
+    "scripts/verification/ios-readiness/L08StorageUITests.swift.in": [
+      [
+        1,
+        111
+      ]
+    ],
+    "scripts/verification/ios-readiness/NativeReadinessProbe.kt.in": [
+      [
+        95,
+        245
+      ]
+    ],
+    "scripts/verification/ios-readiness/NativeReadinessUITests.swift.in": [
+      [
+        1,
+        72
+      ]
+    ],
+    "scripts/verification/ios-readiness/instrument_storage.py": [
+      [
+        1,
+        42
+      ]
+    ],
+    "shared/engine/src/commonMain/kotlin/com/parlor/engine/snapshot/SnapshotCodec.kt": [
+      [
+        1,
+        64
+      ]
+    ],
+    "shared/storage/src/commonMain/kotlin/com/parlor/storage/snapshot/FileBackedSnapshotStore.kt": [
+      [
+        32,
+        188
+      ]
+    ],
+    "composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSnapshotFileSystem.kt": [
+      [
+        75,
+        150
+      ],
+      [
+        358,
+        417
+      ]
+    ],
+    "shared/design-system/src/iosMain/kotlin/com/parlor/designsystem/localization/LocalAppLocale.ios.kt": [
+      [
+        1,
+        83
+      ]
+    ],
+    "shared/design-system/src/iosMain/kotlin/com/parlor/designsystem/localization/IosLanguageOverrideOwner.kt": [
+      [
+        1,
+        61
+      ]
+    ],
+    "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/localization/ProvideAppLanguage.kt": [
+      [
+        1,
+        62
+      ]
+    ],
+    "composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSettingsKeyValueBacking.kt": [
+      [
+        1,
+        40
+      ]
+    ],
+    "composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSecureKeyValueBacking.kt": [
+      [
+        1,
+        225
+      ]
+    ]
+  },
+  "prior_full_control_review": "reviews/ios-readiness-source06-independent-approval-01.json and its immutable prior self-review references; unchanged hashes verified. This focused reread is not a new whole-repository audit.",
+  "preservation": "New additive report only; original receipts, frozen drafts, production and test source, Git state and Store state unchanged by reviewer."
+}

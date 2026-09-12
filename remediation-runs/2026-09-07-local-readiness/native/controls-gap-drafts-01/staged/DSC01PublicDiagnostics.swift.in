@@ -1,0 +1,35 @@
+// Appended to the copied XCTest source only. These names identify the unchanged
+// observation predicates; no preference values or private game state are logged.
+private enum DSC01ObservationPredicate: String {
+    case settingsExplicitOwner, settingsSystemRelease
+    case previousEnglishOwner, previousSystemRestore, syntheticStoreApplied
+    case localInitialPublicPhase, localLanguageDirection, foregroundCounters
+    case afterOSSystemArabic, afterOSExplicitEnglish
+    case gamesSettingsUnmounted, actualSettingsDirection
+    case mafiaSetupPublic, mafiaStartSuccessor
+}
+
+private func dsc01PublicContext(_ snapshot: [String: Any]) -> [String: Any] {
+    let composition = snapshot["composition"] as? [String: Any] ?? [:]
+    func known(_ value: Any?, _ allowed: [String]) -> String {
+        guard let text = value as? String, allowed.contains(text) else { return "not-allowlisted" }
+        return text
+    }
+    return ["scenario": known(snapshot["scenario"], ["settings", "whodunit", "mafia", "os"]),
+            "surface": known(composition["surface"], ["none", "whodunit-local", "mafia-local"]),
+            "publicPhase": known(composition["publicPhase"], ["none", "setup", "public-intro", "role-assignment"])]
+}
+
+extension IOSAppLaunchUITests {
+    private func recordObservationFailure(_ predicate: DSC01ObservationPredicate,
+        reason: String, contexts: [[String: Any]]) {
+        guard ["observer-or-predicate-error", "six-observations-without-match"].contains(reason),
+              contexts.count <= 6 else { return }
+        let row: [String: Any] = ["schemaVersion": 1, "predicate": predicate.rawValue,
+            "reason": reason, "observations": contexts]
+        if let encoded = try? JSONSerialization.data(withJSONObject: row, options: [.sortedKeys]),
+           encoded.count <= 4096, let text = String(data: encoded, encoding: .utf8) {
+            print("DSC01_PUBLIC_OBSERVATION_FAILURE " + text)
+        }
+    }
+}

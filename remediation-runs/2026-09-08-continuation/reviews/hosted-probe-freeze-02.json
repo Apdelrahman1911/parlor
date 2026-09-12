@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "coordinator": "/root",
+  "recorded_at": "2026-09-08T14:27:32.022495+00:00",
+  "source_control_evidence_commit": "0607ced90fbd817ecff6994bf68ad51a9f30ebca",
+  "source_control_tree": "28ed2a46e5ea0f126f42655c16c38bca898fd9bb",
+  "frozen_inventory_commit": "5f35a20d3c9c846cd98b38a16881997ecf577497",
+  "tree": "e0e7abfff89975682a96a884cb745bcbc12e7238",
+  "branch": "fix/local-readiness-2026-09-07",
+  "reviewed_delivery_paths": 79,
+  "all_staged_raw_hashes_verified_before_commit": true,
+  "remote_before": "1efed50cbc7856c11867e4cb088ba3b68716c8fc\trefs/heads/fix/local-readiness-2026-09-07",
+  "push_exit_code": 0,
+  "remote_after": "5f35a20d3c9c846cd98b38a16881997ecf577497\trefs/heads/fix/local-readiness-2026-09-07",
+  "remote_exact": true,
+  "tracked_diff_empty": true,
+  "inventory": {
+    "path": "docs/review/INDEPENDENT_REVIEW_INVENTORY.csv",
+    "rows": 15628,
+    "sha256": "0f99bb5bb32977587c51ce61e46b240778b98d85ae0e0cc466b1efa921c45dac"
+  },
+  "frozen_validator": {
+    "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-release-validator-03/receipt.json",
+    "sha256": "e39cba487668d9dcd3a0f294078422cee63dcbe18d08a8ddcdb8f8bfe4c89eef",
+    "log_sha256": "e49d299aa5b3196f305ded575091c512ef3032ab3dd17ba90f6e8d4264ace2a7",
+    "status": "PASS",
+    "source": {
+      "commit": "5f35a20d3c9c846cd98b38a16881997ecf577497",
+      "tree": "e0e7abfff89975682a96a884cb745bcbc12e7238",
+      "branch": "fix/local-readiness-2026-09-07",
+      "tracked_status": "",
+      "diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_manifest_sha256": "eb18e3a2d498ef43432d5ad97c7a885db9b648ae7981cfdadafb10e039c23413"
+    },
+    "source_manifest_entries": 825,
+    "actual_unittest_count": 432,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "stop_exit_code": 0,
+    "cleanup_errors": []
+  },
+  "probe_controls": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/native-process-probe-frozen-controls-02.json",
+    "sha256": "0e08bbbe67b428059320be1c85053d52a8d594de9eea1cfcc8d8bc8cee91497f",
+    "control_sha256": "eaf596f24601bfe908cae23039dc99e383ac3f2b29fd775e303bbe395485153b"
+  },
+  "push_log": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/hosted-probe-freeze-02-push.log",
+    "sha256": "5847926c5cd2fb121d4d33fb943b1e248fda96f759a09883bd907d6a52c2f659"
+  },
+  "retained_preparation_failure": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/hosted-probe-freeze-02-binding-preparation-failure.json",
+    "sha256": "94ceca439aa570aa712acaf4d7bf2af666d4fe2978f8771a2cbccae9c5e12307",
+    "reconciliation": "Reviewer independently identified preliminary hash as incorrect dictionary serialization. The actual controls command and independent sorted-list rederivation agree on eaf596; all13 source hashes agree. No source/control modification, test rerun or dispatch occurred during this correction.",
+    "reproduced_wrong_dictionary_sha256": "f8b4ba0e0b9fea8a9a3a8f3190f16511900afdd0b286a93010112be8b04b4f3c"
+  },
+  "scope": "Actual reviewed correction/source/inventory freeze, frozen release validator and normal push. No corrected diagnostic/native runtime or dispatch approval implied; all prior failures retain their statuses."
+}

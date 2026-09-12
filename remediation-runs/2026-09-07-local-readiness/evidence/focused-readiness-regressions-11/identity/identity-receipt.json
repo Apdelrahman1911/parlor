@@ -1,0 +1,328 @@
+{
+  "started_at": "2026-09-07T06:25:00.736779+00:00",
+  "status": "PASS",
+  "controls_before": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/canonical-identity-helper/run_with_identity.py",
+      "sha256": "e8396c59ab871ee7b8222875d24f22fd28456f4105b745963f57774053888e3e"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/canonical-identity-helper/capture-runtime-classpath.init.gradle",
+      "sha256": "6fc59f266231486563a10dac6613d1da3862f9f3f869f4dce5a7835604a464a9"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/canonical-identity-helper/VerifyContentIdentity.java",
+      "sha256": "82b022878c56fe180f056f937a9d4e51b2a19e53e8bb22df75c433c1e18358c5"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/canonical-identity-helper/classpath_validation.py",
+      "sha256": "2f8a730d1f3a7259bc76e43f5d5de142dd4739f374cfcea6c34f4c73ab8bcfb7"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/canonical-identity-helper/test_classpath_validation.py",
+      "sha256": "4be8910b306e7c6545afe49ed18b7d5808229b4abd18d015cb9e87a3e8324eae"
+    }
+  ],
+  "gradle_arguments": [
+    ":game-modes:whodunit:desktopTest",
+    "--tests",
+    "*TestingStory*",
+    "--tests",
+    "*WhodunitRecoveryInteractionTest",
+    "--tests",
+    "*WhodunitContentIdentityTest",
+    "--tests",
+    "*Bundled*",
+    "--tests",
+    "*PeerReadiness*",
+    "--tests",
+    "*Reconstruction*",
+    "--tests",
+    "*LeaveTimerTest",
+    ":game-modes:whodunit:detekt",
+    ":game-modes:whodunit:detektDesktopTest",
+    ":game-modes:mafia:desktopTest",
+    "--tests",
+    "*MafiaDoctorRulesTest",
+    "--tests",
+    "*MafiaDoctorHistoryRecoveryTest",
+    ":game-modes:mafia:detekt",
+    ":game-modes:mafia:detektDesktopTest",
+    ":shared:engine:desktopTest",
+    "--tests",
+    "*GameRegistryTest",
+    "--tests",
+    "*GameSnapshotTest",
+    ":shared:engine:detekt",
+    ":shared:engine:detektDesktopTest",
+    ":shared:transport-p2p:desktopTest",
+    "--tests",
+    "*LoopbackFixtureContractTest",
+    "--tests",
+    "*JupiterDiscoveryContractTest",
+    ":shared:transport-p2p:detekt",
+    ":shared:transport-p2p:detektDesktopTest",
+    "--rerun-tasks",
+    "--no-build-cache"
+  ],
+  "production_mutations": false,
+  "outer_lane_required": "run_gradle_cycle.py exclusive --command ownership and cleanup",
+  "java_home": "/opt/homebrew/Cellar/openjdk@21/21.0.11/libexec/openjdk.jdk/Contents/Home",
+  "inputs": [
+    {
+      "revision": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+      "resource": "game-modes/whodunit/src/commonMain/composeResources/files/cases/jasmine-ring.json",
+      "case_id": "jasmine-ring",
+      "byte_sha256": "d1397ac1e0dc3669d3e5ff5e147aabf88647bc6726621cb7239392eb4e4cd9ca",
+      "expected_version": "1.0.0",
+      "expected_canonical_digest": "5cd26321aecef56a82afb56ec61f8ebad77329de39f413cb59b26de766d0d714"
+    },
+    {
+      "revision": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+      "resource": "game-modes/whodunit/src/commonMain/composeResources/files/cases/khan-el-khalili.json",
+      "case_id": "khan-el-khalili",
+      "byte_sha256": "b1b1d73cedc751f321c51f1e1523b74e57d515d408a7760add328c73c8dcc5e4",
+      "expected_version": "1.0.0",
+      "expected_canonical_digest": "0e690e0129c9b76fb772952b4e888e59e81610597b9294c52e8f656144393b9c"
+    },
+    {
+      "revision": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+      "resource": "game-modes/whodunit/src/commonMain/composeResources/files/cases/last-dinner.json",
+      "case_id": "last-dinner",
+      "byte_sha256": "c36b20ed19f94b7eea5809f7c2f1ef38be1f97ac6e2598a8a5de0233ee9e89af",
+      "expected_version": "1.0.0",
+      "expected_canonical_digest": "a8593bdab776bb5dc1723b6fb562f37009aa2e02ddd11fc7e848284916452f26"
+    },
+    {
+      "revision": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+      "resource": "game-modes/whodunit/src/commonMain/composeResources/files/cases/layla-halabi.json",
+      "case_id": "layla-halabi",
+      "byte_sha256": "954752e02c72ab8b4ac8fe7b03598857252c539ba07d1f781683be3b42c07d1d",
+      "expected_version": "1.0.0",
+      "expected_canonical_digest": "b98ca82b8cc2334e4f241f6bcefad96c7846f15096f3a043c4126911404345a5"
+    },
+    {
+      "revision": "85ded00435b4f8327ce32d3b7f5062c4438ae174",
+      "resource": "game-modes/whodunit/src/commonMain/composeResources/files/cases/iskenderia-corniche.json",
+      "case_id": "iskenderia-corniche",
+      "byte_sha256": "3d9c96255b2097cc8b9417030cc8cff70e95571c66e64b031c4f247779eafaa2",
+      "expected_version": "1.0.0",
+      "expected_canonical_digest": "b492eddff0ccfdc3142a60ff2ee6da22566cbb39ab8717c2219e8875ac66733d"
+    },
+    {
+      "revision": "85ded00435b4f8327ce32d3b7f5062c4438ae174",
+      "resource": "game-modes/whodunit/src/commonMain/composeResources/files/cases/jasmine-ring.json",
+      "case_id": "jasmine-ring",
+      "byte_sha256": "a33966e792ce1727991150659e03e79b5ae418cef457252a8b4f71009832af7b",
+      "expected_version": "1.0.1",
+      "expected_canonical_digest": "d0aab1123c08f7fb919f00f7ecc8eeb9e1ed2d5daf03df169ea90489c63199c7"
+    },
+    {
+      "revision": "85ded00435b4f8327ce32d3b7f5062c4438ae174",
+      "resource": "game-modes/whodunit/src/commonMain/composeResources/files/cases/khan-el-khalili.json",
+      "case_id": "khan-el-khalili",
+      "byte_sha256": "12167f59be005d880c3a4861e58cb9ec2f5ff94dbbda8ddfc02a2846e5df6fef",
+      "expected_version": "1.0.1",
+      "expected_canonical_digest": "c9979500738d7b15812b286300714db1943824aa44c29656dc6bebea72e979a0"
+    },
+    {
+      "revision": "85ded00435b4f8327ce32d3b7f5062c4438ae174",
+      "resource": "game-modes/whodunit/src/commonMain/composeResources/files/cases/last-dinner.json",
+      "case_id": "last-dinner",
+      "byte_sha256": "f4c5ff253a82220f937328de09161d09110b05a98eb6bb012934a80f60a5b96d",
+      "expected_version": "1.0.1",
+      "expected_canonical_digest": "f3b71cc74aaee28dcf7845b750ca773229047388a391ba9294be89efab173a05"
+    },
+    {
+      "revision": "85ded00435b4f8327ce32d3b7f5062c4438ae174",
+      "resource": "game-modes/whodunit/src/commonMain/composeResources/files/cases/layla-halabi.json",
+      "case_id": "layla-halabi",
+      "byte_sha256": "a0db6acb459d69bf75a4c15a809b64d1b7cd5c21714dceaedc5973ba2d951826",
+      "expected_version": "1.0.1",
+      "expected_canonical_digest": "953d5b1dae0aa26b9901e0e044f279b94fd64d4a6d8a66371a9c6577672a3cfc"
+    },
+    {
+      "revision": "85ded00435b4f8327ce32d3b7f5062c4438ae174",
+      "resource": "game-modes/whodunit/src/commonMain/composeResources/files/cases/saidi-inheritance.json",
+      "case_id": "saidi-inheritance",
+      "byte_sha256": "eef41fcf78cd6c066d40ef1d0abaab0dbef7d06f9227f6b1012684b4b0c2ed56",
+      "expected_version": "1.0.0",
+      "expected_canonical_digest": "5d333bfb59ebf49586f5ca15a26ba55206b6d8aa9de505ca8c3e4738ffebf8b6"
+    },
+    {
+      "revision": "85ded00435b4f8327ce32d3b7f5062c4438ae174",
+      "resource": "game-modes/whodunit/src/commonMain/composeResources/files/cases/zamalek-ramadan.json",
+      "case_id": "zamalek-ramadan",
+      "byte_sha256": "6b28832bcf860fae8e30c0207bf8a30060ae075d111d0e6a5c9f18a54162f1b7",
+      "expected_version": "1.0.0",
+      "expected_canonical_digest": "b3fa57ea89c675bc3c5185a64adcbf0a99b4d640d6dff6fa206b58ed2c070d91"
+    },
+    {
+      "revision": "current",
+      "resource": "game-modes/whodunit/src/commonMain/composeResources/files/cases/iskenderia-corniche.json",
+      "case_id": "iskenderia-corniche",
+      "byte_sha256": "529cabfad2c076d23f1fb3ca3585cbc5f2aac3ec86f2b16550ffd730b923db1a",
+      "expected_version": "1.0.1",
+      "expected_canonical_digest": "-"
+    },
+    {
+      "revision": "current",
+      "resource": "game-modes/whodunit/src/commonMain/composeResources/files/cases/jasmine-ring.json",
+      "case_id": "jasmine-ring",
+      "byte_sha256": "ec3fda631a22dc34a1ecb756d13d81b0e2fc25ada67c0eeba72e002b9adc4559",
+      "expected_version": "1.0.2",
+      "expected_canonical_digest": "-"
+    },
+    {
+      "revision": "current",
+      "resource": "game-modes/whodunit/src/commonMain/composeResources/files/cases/khan-el-khalili.json",
+      "case_id": "khan-el-khalili",
+      "byte_sha256": "c940dd9fe230f996999ec359e688550c974f93e733e7d8ee64d93894c9271f6b",
+      "expected_version": "1.0.2",
+      "expected_canonical_digest": "-"
+    },
+    {
+      "revision": "current",
+      "resource": "game-modes/whodunit/src/commonMain/composeResources/files/cases/last-dinner.json",
+      "case_id": "last-dinner",
+      "byte_sha256": "28f5695ad9188fcba9177147fa898cb827f1a8472aa554bb495310a7fa01d9eb",
+      "expected_version": "1.0.2",
+      "expected_canonical_digest": "-"
+    },
+    {
+      "revision": "current",
+      "resource": "game-modes/whodunit/src/commonMain/composeResources/files/cases/layla-halabi.json",
+      "case_id": "layla-halabi",
+      "byte_sha256": "83cf702d60d6dfb285c158c2032eaf9bbf4c57a84bd0e619bd42ae565bf1544e",
+      "expected_version": "1.0.2",
+      "expected_canonical_digest": "-"
+    },
+    {
+      "revision": "current",
+      "resource": "game-modes/whodunit/src/commonMain/composeResources/files/cases/saidi-inheritance.json",
+      "case_id": "saidi-inheritance",
+      "byte_sha256": "89c547e21d1eece8b4ae75ce7a36279d62747250cc1d53b6fcbc439f4b27d6da",
+      "expected_version": "1.0.1",
+      "expected_canonical_digest": "-"
+    },
+    {
+      "revision": "current",
+      "resource": "game-modes/whodunit/src/commonMain/composeResources/files/cases/zamalek-ramadan.json",
+      "case_id": "zamalek-ramadan",
+      "byte_sha256": "098a19c4bef18e643e2fcbdc06bd9c498adc57c8594d45a5602bf61291d75158",
+      "expected_version": "1.0.1",
+      "expected_canonical_digest": "-"
+    }
+  ],
+  "gradle_command": [
+    "./gradlew",
+    ":game-modes:whodunit:desktopTest",
+    "--tests",
+    "*TestingStory*",
+    "--tests",
+    "*WhodunitRecoveryInteractionTest",
+    "--tests",
+    "*WhodunitContentIdentityTest",
+    "--tests",
+    "*Bundled*",
+    "--tests",
+    "*PeerReadiness*",
+    "--tests",
+    "*Reconstruction*",
+    "--tests",
+    "*LeaveTimerTest",
+    ":game-modes:whodunit:detekt",
+    ":game-modes:whodunit:detektDesktopTest",
+    ":game-modes:mafia:desktopTest",
+    "--tests",
+    "*MafiaDoctorRulesTest",
+    "--tests",
+    "*MafiaDoctorHistoryRecoveryTest",
+    ":game-modes:mafia:detekt",
+    ":game-modes:mafia:detektDesktopTest",
+    ":shared:engine:desktopTest",
+    "--tests",
+    "*GameRegistryTest",
+    "--tests",
+    "*GameSnapshotTest",
+    ":shared:engine:detekt",
+    ":shared:engine:detektDesktopTest",
+    ":shared:transport-p2p:desktopTest",
+    "--tests",
+    "*LoopbackFixtureContractTest",
+    "--tests",
+    "*JupiterDiscoveryContractTest",
+    ":shared:transport-p2p:detekt",
+    ":shared:transport-p2p:detektDesktopTest",
+    "--rerun-tasks",
+    "--no-build-cache",
+    "--no-daemon",
+    "--no-parallel",
+    "--max-workers=1",
+    "--no-configuration-cache",
+    "--dependency-verification=strict",
+    "-Pkotlin.compiler.execution.strategy=in-process",
+    "-Pparlor.android.signing.storeFile=",
+    "-Pparlor.android.signing.storePassword=",
+    "-Pparlor.android.signing.keyAlias=",
+    "-Pparlor.android.signing.keyPassword=",
+    "-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=focused-readiness-regressions-11",
+    "-I",
+    "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/canonical-identity-helper/capture-runtime-classpath.init.gradle",
+    "-Dparlor.audit.whodunit.classpath=/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/focused-readiness-regressions-11/identity/desktop-test-classpath.txt"
+  ],
+  "gradle_exit_code": 0,
+  "gradle_finished_at": "2026-09-07T06:27:13.261393+00:00",
+  "immediate_stop_exit_code": 0,
+  "gradle_stopped_at": "2026-09-07T06:27:13.551516+00:00",
+  "classpath_validation": {
+    "entries": 115,
+    "existing_jar_inputs": 109,
+    "required_kotlin_and_resource_directories": [
+      "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/build/classes/kotlin/desktop/main",
+      "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/build/classes/kotlin/desktop/test",
+      "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/build/processedResources/desktop/main",
+      "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/build/processedResources/desktop/test"
+    ],
+    "allowed_missing_no_source_java_outputs": [
+      "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/build/classes/java/desktopTest",
+      "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/build/classes/java/desktopMain"
+    ],
+    "classpath_preserved_unchanged": true
+  },
+  "classpath_sha256": "f1d9e3679e4b849347d548bb773edb7d80e5404e385568e6ecd91ff9d8cff88d",
+  "classpath_state_sha256": "bc455b7fcb552033a213e283c7fd9aeeca5963960b0f39c86f259694720818e8",
+  "java_command": [
+    "/opt/homebrew/Cellar/openjdk@21/21.0.11/libexec/openjdk.jdk/Contents/Home/bin/java",
+    "--class-path",
+    "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/build/classes/kotlin/desktop/test:/Users/abdelrahman/Projects/parlor/game-modes/whodunit/build/classes/java/desktopTest:/Users/abdelrahman/Projects/parlor/game-modes/whodunit/build/processedResources/desktop/test:/Users/abdelrahman/Projects/parlor/game-modes/whodunit/build/classes/kotlin/desktop/main:/Users/abdelrahman/Projects/parlor/game-modes/whodunit/build/classes/java/desktopMain:/Users/abdelrahman/Projects/parlor/game-modes/whodunit/build/processedResources/desktop/main:/Users/abdelrahman/Projects/parlor/shared/session/build/libs/session-desktop.jar:/Users/abdelrahman/Projects/parlor/shared/content/build/libs/content-desktop.jar:/Users/abdelrahman/Projects/parlor/shared/storage/build/libs/storage-desktop.jar:/Users/abdelrahman/Projects/parlor/shared/networking-testing/build/libs/networking-testing-desktop.jar:/Users/abdelrahman/Projects/parlor/shared/networking/build/libs/networking-desktop.jar:/Users/abdelrahman/Projects/parlor/shared/engine/build/libs/engine-desktop.jar:/Users/abdelrahman/Projects/parlor/shared/design-system/build/libs/design-system-desktop.jar:/Users/abdelrahman/Projects/parlor/shared/core/build/libs/core-desktop.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/io.insert-koin/koin-test-jvm/4.0.0/d7482560a73ab527deb73a2a18e363a374ba7dcd/koin-test-jvm-4.0.0.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-test-junit5/2.4.10/d322fbdce3f19e104599f3a4f914a35cd618d513/kotlin-test-junit5-2.4.10.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-test/2.4.10/833ceeccc1f8669e9566039125139191526f9ea8/kotlin-test-2.4.10.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/org.jetbrains.compose.material3/material3-desktop/1.9.0-beta03/42ce899727462a9e9ecf023da794fe1f755f9cce/material3-desktop-1.9.0-beta03.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/org.jetbrains.compose.components/components-resources-desktop/1.10.3/c6115b607f77e9d033de360f989850d3824bf112/library-desktop-1.10.3.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/org.jetbrains.compose.desktop/desktop-jvm/1.10.3/42facd9840309ac4eb841a986c5d1b97d2780471/desktop-jvm-1.10.3.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/org.jetbrains.compose.material/material-desktop/1.10.3/63e1c3c6705d111bf84e41110e7729df5b85163e/material-desktop-1.10.3.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/org.jetbrains.compose.material/material-ripple-desktop/1.10.3/74a14824f086339703264689c5a7cf4ceb39ed40/material-ripple-desktop-1.10.3.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/org.jetbrains.compose.foundation/foundation-desktop/1.10.3/d9ba57abee3527886ea640d3b390a70ba9e28af/foundation-desktop-1.10.3.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/org.jetbrains.compose.ui/ui-test-desktop/1.10.3/92c98445f4ab3671e4f255cf35bd21d018b15b2/ui-test-desktop-1.10.3.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/org.jetbrains.compose.animation/animation-desktop/1.10.3/52a17b8bd5f608cdb60f01c64eee2830b8484ca7/animation-desktop-1.10.3.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/org.jetbrains.compose.foundation/foundation-layout-desktop/1.10.3/149192cb271d4c11905104b9180d5d648b3591f2/foundation-layout-desktop-1.10.3.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/org.jetbrains.compose.animation/animation-core-desktop/1.10.3/5dd98c5745e548644b7657901bbcc4c2c8f9ec59/animation-core-desktop-1.10.3.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/org.jetbrains.compose.ui/ui-desktop/1.10.3/73a6b1e10434fb11bae82daa68c205c71af03c55/ui-desktop-1.10.3.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/app.cash.turbine/turbine-jvm/1.2.0/300d55d23fe50bb39273aaebcfe79c5d442e7c48/Turbine-jvm.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/io.ktor/ktor-client-content-negotiation-jvm/3.0.3/77a0639c7c5021beaf7595cd717e7b3a30bd1489/ktor-client-content-negotiation-jvm-3.0.3.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/io.ktor/ktor-client-mock-jvm/3.0.3/a024ac66e623febe6493fdcd0df28c7b695afffa/ktor-client-mock-jvm-3.0.3.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/io.ktor/ktor-client-core-jvm/3.0.3/c6e73737e970a3520f60885d966f97b5ec473257/ktor-client-core-jvm-3.0.3.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-coroutines-slf4j/1.11.0/556153d93573d016dd4e5df37e3d03d07d8d303/kotlinx-coroutines-slf4j-1.11.0.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-coroutines-test-jvm/1.11.0/1dfe8ce2b805d913922f283b386895bd0979dfcb/kotlinx-coroutines-test-jvm-1.11.0.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/io.ktor/ktor-serialization-kotlinx-json-jvm/3.0.3/c9fd0410e1dc8a66c93c6ffc06bffc4dee16e434/ktor-serialization-kotlinx-json-jvm-3.0.3.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/org.jetbrains.skiko/skiko-awt-runtime-macos-arm64/0.9.37.4/a21a251e5695f2b8da63842e9e8a5ecb2f219dce/skiko-awt-runtime-macos-arm64-0.9.37.4.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/org.jetbrains.compose.ui/ui-text-desktop/1.10.3/7babd6e2dea601e74bed24b4017350e1acf4569c/ui-text-desktop-1.10.3.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/org.jetbrains.compose.ui/ui-graphics-desktop/1.10.3/1fd5d0189d75eca10163a1f07842627519399337/ui-graphics-desktop-1.10.3.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/org.jetbrains.skiko/skiko-awt/0.9.37.4/fc7470cca1041a52b182a921205c5c224e7709ad/skiko-awt-0.9.37.4.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/io.insert-koin/koin-compose-jvm/4.0.0/cf45eee3ae6e58e04a6771a8c04a8937395f8ea0/koin-compose-jvm-4.0.0.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/org.jetbrains.compose.ui/ui-backhandler-desktop/1.10.3/ed725f86a0fdff73fb37561ffb606166725e4b6f/ui-backhandler-desktop-1.10.3.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/androidx.navigationevent/navigationevent-desktop/1.0.2/ddb1e7fe97ed51c3d35bba493f97fcf12398719/navigationevent-desktop-1.0.2.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/androidx.compose.runtime/runtime-annotation-jvm/1.10.5/ea491da34ba40ae9bd340c393566753ddfd95a76/runtime-annotation-jvm-1.10.5.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/androidx.compose.runtime/runtime-retain-desktop/1.10.5/879812e3cd2c6151f5d91f515a35952b1be07a76/runtime-retain-desktop-1.10.5.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/androidx.compose.runtime/runtime-saveable-desktop/1.10.5/f6903c683c07ba479659ba4eb55bc7c80a7c433e/runtime-saveable-desktop-1.10.5.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/org.jetbrains.compose.runtime/runtime-saveable-desktop/1.10.3/9b0e2a8ce3ae7d2b1a40307bc9271933b238cfd4/runtime-saveable-desktop-1.10.3.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/org.jetbrains.androidx.lifecycle/lifecycle-runtime-compose-desktop/2.9.6/7b6b6793f3c4c5996b20d1d99cf728e5fac00364/lifecycle-runtime-compose-desktop-2.9.6.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/org.jetbrains.compose.ui/ui-unit-desktop/1.10.3/aeeb2f31358ab5abf0bafa0828de2faba7189db5/ui-unit-desktop-1.10.3.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/org.jetbrains.compose.ui/ui-geometry-desktop/1.10.3/779ddaadbc03720f7bb2507f6ed6dc4ffc9e7f3e/ui-geometry-desktop-1.10.3.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/org.jetbrains.compose.ui/ui-tooling-preview-desktop/1.10.3/6d464d6c6d654d45aecdfaff7a08d64af62217e2/ui-tooling-preview-desktop-1.10.3.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/org.jetbrains.androidx.savedstate/savedstate-compose-desktop/1.3.6/63692375ffe667f12cb3ea8aa1e605d659ed2add/savedstate-compose-desktop-1.3.6.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/org.jetbrains.compose.runtime/runtime-desktop/1.10.3/edbd39fc9691f4ba1e29c6690341148db4272752/runtime-desktop-1.10.3.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/androidx.lifecycle/lifecycle-viewmodel-savedstate-desktop/2.9.4/72a1919b08c5a4da224d8a65ce1589aa69934e8a/lifecycle-viewmodel-savedstate-desktop-2.9.4.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/androidx.lifecycle/lifecycle-viewmodel-desktop/2.9.4/93fee6d78f0df0e38f36e0fa2eff74f8da6d5481/lifecycle-viewmodel-desktop-2.9.4.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/androidx.lifecycle/lifecycle-runtime-desktop/2.9.4/1cc820319ec0139e76b8a2fe4be0b356b4e624c4/lifecycle-runtime-desktop-2.9.4.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/androidx.savedstate/savedstate-compose-desktop/1.3.3/cd60b543d5722a8b5e6cea1e4ccdec8b4375a22b/savedstate-compose-desktop-1.3.3.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/androidx.savedstate/savedstate-desktop/1.3.3/1c5bfc3fb56614538528060a06f2c03e34fa5188/savedstate-desktop-1.3.3.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/androidx.lifecycle/lifecycle-common-jvm/2.9.4/ab739bccdb3541983385af169565c7c035d897e7/lifecycle-common-jvm-2.9.4.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/androidx.lifecycle/lifecycle-runtime-compose-desktop/2.9.4/86a4ffec845d4e488078118a0b5095bd1fabcafe/lifecycle-runtime-compose-desktop-2.9.4.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/androidx.compose.runtime/runtime-desktop/1.10.5/b1705e2087f06395622b784aa88e2e738043459/runtime-desktop-1.10.5.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/io.ktor/ktor-events-jvm/3.0.3/160a5976b0ba1a2e2bd62609aa13f2bb472fec88/ktor-events-jvm-3.0.3.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/io.ktor/ktor-websocket-serialization-jvm/3.0.3/cc1d1421c2960ab246a2b3cbbb98511c77eec7bb/ktor-websocket-serialization-jvm-3.0.3.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/io.ktor/ktor-sse-jvm/3.0.3/4991046925768cb57b819d15007f80ab67728b2f/ktor-sse-jvm-3.0.3.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/io.ktor/ktor-serialization-kotlinx-jvm/3.0.3/66deb39c2ac145b8b936e6b09236270521f360f/ktor-serialization-kotlinx-jvm-3.0.3.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/io.ktor/ktor-serialization-jvm/3.0.3/e9b6b6fb4d3a3ab57a002af75b72299effb2535f/ktor-serialization-jvm-3.0.3.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/io.ktor/ktor-websockets-jvm/3.0.3/4ef069eb6f7933e8ff45859cc2b013914f5c511e/ktor-websockets-jvm-3.0.3.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/io.ktor/ktor-http-jvm/3.0.3/2f066c327a7424ed4a6d25aa7549981edddc6022/ktor-http-jvm-3.0.3.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/io.ktor/ktor-utils-jvm/3.0.3/8938221fdf8253200824443515b7a2bef4d09d3/ktor-utils-jvm-3.0.3.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/io.ktor/ktor-io-jvm/3.0.3/916639189295c184f0e0766fe0c4bcbb4227cc0c/ktor-io-jvm-3.0.3.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-coroutines-core-jvm/1.11.0/3d57dc678bd8d72a60e7adf0eca5c54e3f4f4b79/kotlinx-coroutines-core-jvm-1.11.0.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-serialization-cbor-jvm/1.11.0/9f80a700f704b16e873ce1723e838e3062cf99a/kotlinx-serialization-cbor-jvm-1.11.0.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-serialization-json-io-jvm/1.11.0/645ed54ca9128fc217b30b3686a083141ebe635c/kotlinx-serialization-json-io-jvm-1.11.0.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-serialization-core-jvm/1.11.0/c1905c9bf7452b045d5af9248835abe64ddad6bf/kotlinx-serialization-core-jvm-1.11.0.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-serialization-json-jvm/1.11.0/e7e045e99e56f07599bb9ccb708c2190e2af0606/kotlinx-serialization-json-jvm-1.11.0.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/io.insert-koin/koin-core-jvm/4.0.0/6a66dcf3885c4783432e98845b10f0b5e48ef5b1/koin-core-jvm-4.0.0.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/com.willowtreeapps.assertk/assertk-jvm/0.28.1/63bbadf60ec71d38eecbdb7ec882e00e35a80ec1/assertk-jvm-0.28.1.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-datetime-jvm/0.7.1/81c2e0246bd28cc2dcbdf0ab53628322e66a9de9/kotlinx-datetime-jvm-0.7.1.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-jdk8/2.2.20/57c4d839a6e5ad105d61ffc5cc0bf4de649c1714/kotlin-stdlib-jdk8-2.2.20.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-reflect/2.0.20/580c610641d75b6448825cbe455a1ded220e148b/kotlin-reflect-2.0.20.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/org.jetbrains.compose.ui/ui-util-desktop/1.10.3/fe41825dccacb792ded7df579736a0ed919ee270/ui-util-desktop-1.10.3.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlinx/atomicfu-jvm/0.23.2/a4601dc42dceb031a586058e8356ff778a57dea0/atomicfu-jvm-0.23.2.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-jdk7/2.2.20/bdbe3b5d872fa3b74d8fcd4e7ca3193f4abc9cc8/kotlin-stdlib-jdk7-2.2.20.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/co.touchlab/stately-concurrent-collections-jvm/2.1.0/5c03b644537d7926a8f77e5735a8bebb55dafdcd/stately-concurrent-collections-jvm-2.1.0.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/co.touchlab/stately-concurrency-jvm/2.1.0/6285428408c4d7e4a6d9a09511de877103effd81/stately-concurrency-jvm-2.1.0.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/com.willowtreeapps.opentest4k/opentest4k-jvm/1.3.0/f108751f9bdb089df663a782c870f1f6b3de617c/opentest4k-jvm-1.3.0.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/androidx.collection/collection-jvm/1.5.0/7ba2c69414d46ebc2dd76598bdd0a75c54281a57/collection-jvm-1.5.0.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/androidx.arch.core/core-common/2.2.0/5e1b8b81dfd5f52c56a8d53b18ca759c19a301f3/core-common-2.2.0.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/androidx.annotation/annotation-jvm/1.9.1/b17951747e38bf3986a24431b9ba0d039958aa5f/annotation-jvm-1.9.1.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/co.touchlab/stately-strict-jvm/2.1.0/3ae8369209065455f4630793bf6aca0fb88c8b6b/stately-strict-jvm-2.1.0.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-io-core-jvm/0.6.0/f1d1e496fe0c6937fdb7509442b7f3e613d345d4/kotlinx-io-core-jvm-0.6.0.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-io-bytestring-jvm/0.6.0/bb3104eef13622362179216566db2ea6a4e7ed64/kotlinx-io-bytestring-jvm-0.6.0.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.4.10/8943c84ddc6d5cc00a10dbc3736c397066eeaab5/kotlin-stdlib-2.4.10.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/org.jetbrains/annotations/23.0.0/8cc20c07506ec18e0834947b84a864bfc094484e/annotations-23.0.0.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-api/2.0.16/172931663a09a1fa515567af5fbef00897d3c04/slf4j-api-2.0.16.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/org.junit.platform/junit-platform-launcher/1.10.1/ce85bf5e38bee0989ded9bd468dd4ff78dc0cfa8/junit-platform-launcher-1.10.1.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/org.junit.platform/junit-platform-engine/1.10.1/f32ae4af74fde68414b8a3d2b7cf1fb43824a83a/junit-platform-engine-1.10.1.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/org.junit.jupiter/junit-jupiter-api/5.10.1/eb90c7d8bfaae8fdc97b225733fcb595ddd72843/junit-jupiter-api-5.10.1.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/org.junit.platform/junit-platform-commons/1.10.1/2bfcd4a4e38b10c671b6916d7e543c20afe25579/junit-platform-commons-1.10.1.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/org.junit.jupiter/junit-jupiter-engine/5.10.1/6c9ff773f9aa842b91d1f2fe4658973252ce2428/junit-jupiter-engine-5.10.1.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/com.google.truth/truth/1.0.1/361459309085bd9441cb97b62f160e8b353a93c0/truth-1.0.1.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/junit/junit/4.13.2/8ac9e16d933b6fb43bc7f576336b8f4d7eb5ba12/junit-4.13.2.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/org.jetbrains.runtime/jbr-api/1.5.0/4158e485a7a4ecfd521e03095d81e0225529e8d2/jbr-api-1.5.0.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/com.google.guava/guava/28.1-android/c2526f8fad32a65a6d7032dd8e9524eb276b108b/guava-28.1-android.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/org.checkerframework/checker-compat-qual/2.5.5/435dc33e3019c9f019e15f01aa111de9d6b2b79c/checker-compat-qual-2.5.5.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/com.googlecode.java-diff-utils/diffutils/1.3.0/7e060dd5b19431e6d198e91ff670644372f60fbd/diffutils-1.3.0.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/com.google.auto.value/auto-value-annotations/1.6.3/b88c1bb7f149f6d2cc03898359283e57b08f39cc/auto-value-annotations-1.6.3.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/com.google.errorprone/error_prone_annotations/2.3.3/42aa5155a54a87d70af32d4b0d06bf43779de0e2/error_prone_annotations-2.3.3.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/org.hamcrest/hamcrest-core/1.3/42a25dc3219429f0e5d060061f71acb49bf010a0/hamcrest-core-1.3.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/org.opentest4j/opentest4j/1.3.0/152ea56b3a72f655d4fd677fc0ef2596c3dd5e6e/opentest4j-1.3.0.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/com.google.guava/failureaccess/1.0.1/1dcf1de382a0bf95a3d8b0849546c88bac1292c9/failureaccess-1.0.1.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/com.google.guava/listenablefuture/9999.0-empty-to-avoid-conflict-with-guava/b421526c5f297295adef1c886e5246c39d4ac629/listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/com.google.code.findbugs/jsr305/3.0.2/25ea2e8b0c338a877313bd4672d3fe056ea78f0d/jsr305-3.0.2.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/com.google.j2objc/j2objc-annotations/1.3/ba035118bc8bac37d7eff77700720999acd9986d/j2objc-annotations-1.3.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/org.codehaus.mojo/animal-sniffer-annotations/1.18/f7aa683ea79dc6681ee9fb95756c999acbb62f5d/animal-sniffer-annotations-1.18.jar:/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/org.jspecify/jspecify/1.0.0/7425a601c1c7ec76645a78d22b8c6a627edee507/jspecify-1.0.0.jar",
+    "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/canonical-identity-helper/VerifyContentIdentity.java",
+    "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/focused-readiness-regressions-11/identity/input-manifest.tsv"
+  ],
+  "java_exit_code": 0,
+  "verified_records": 18,
+  "controls_after": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/canonical-identity-helper/run_with_identity.py",
+      "sha256": "e8396c59ab871ee7b8222875d24f22fd28456f4105b745963f57774053888e3e"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/canonical-identity-helper/capture-runtime-classpath.init.gradle",
+      "sha256": "6fc59f266231486563a10dac6613d1da3862f9f3f869f4dce5a7835604a464a9"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/canonical-identity-helper/VerifyContentIdentity.java",
+      "sha256": "82b022878c56fe180f056f937a9d4e51b2a19e53e8bb22df75c433c1e18358c5"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/canonical-identity-helper/classpath_validation.py",
+      "sha256": "2f8a730d1f3a7259bc76e43f5d5de142dd4739f374cfcea6c34f4c73ab8bcfb7"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/canonical-identity-helper/test_classpath_validation.py",
+      "sha256": "4be8910b306e7c6545afe49ed18b7d5808229b4abd18d015cb9e87a3e8324eae"
+    }
+  ],
+  "scratch_removed": true,
+  "finished_at": "2026-09-07T06:27:14.071617+00:00"
+}

@@ -1,0 +1,263 @@
+--- a/.github/workflows/production-verification.yml
++++ b/.github/workflows/production-verification.yml
+@@ -14,10 +14,10 @@
+   workflow_dispatch:
+     inputs:
+       verification_scope:
+-        description: Full qualification (default), focused native continuation, or non-app process probe
++        description: Full qualification (default), native continuation, non-app probe, or Windows-only follow-up
+         type: choice
+         default: full
+-        options: [full, native-preflight, native-evidence, native-process-probe]
++        options: [full, native-preflight, native-evidence, native-process-probe, windows-only]
+       native_selection:
+         description: Native evidence lanes (l08-only requires explicit scoped approval)
+         type: choice
+@@ -385,12 +385,36 @@
+           path: ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-cleanup.json
+ 
+   desktop-windows-x64:
+-    if: github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full'
++    if: github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full' || inputs.verification_scope == 'windows-only'
+     name: Desktop, Kotlin Native, and Android resources strict verification (Windows x64)
+     runs-on: windows-2025
+     timeout-minutes: 60
++    env:
++      # Git inherits this job-local config before checkout; do not change autocrlf
++      # or omit the hash-bound archived evidence to work around long paths.
++      GIT_CONFIG_COUNT: "1"
++      GIT_CONFIG_KEY_0: core.longpaths
++      GIT_CONFIG_VALUE_0: "true"
+ 
+     steps:
++      - name: Validate Windows checkout prerequisites
++        shell: pwsh
++        env:
++          PARLOR_WINDOWS_ONLY: ${{ github.event_name == 'workflow_dispatch' && inputs.verification_scope == 'windows-only' }}
++          PARLOR_WINDOWS_FROZEN_SOURCE_SHA: ${{ inputs.frozen_source_sha }}
++          PARLOR_WINDOWS_NATIVE_SELECTION: ${{ inputs.native_selection }}
++        run: |
++          $longPaths = git config --bool --get core.longpaths
++          if ($LASTEXITCODE -ne 0 -or $longPaths -cne "true") { throw "Expected job-local Git long paths" }
++          Write-Output "core.longpaths=$longPaths (job-local)"
++          if ($env:PARLOR_WINDOWS_ONLY -eq "true") {
++            $source = $env:PARLOR_WINDOWS_FROZEN_SOURCE_SHA
++            if ($source -cnotmatch '^[0-9a-f]{40}$' -or $source -cne $env:GITHUB_SHA -or $source -cne $env:GITHUB_WORKFLOW_SHA) {
++              throw "Windows-only dispatch requires the reviewed frozen source"
++            }
++            if ($env:PARLOR_WINDOWS_NATIVE_SELECTION -cnotin @("", "paired")) { throw "Windows-only dispatch cannot select native evidence" }
++          }
++
+       - name: Check out source
+         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+         with:
+@@ -419,8 +443,11 @@
+           if ([System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture -ne [System.Runtime.InteropServices.Architecture]::X64) {
+             throw "Expected an x64 runner"
+           }
+-          git rev-parse HEAD
+-          if (git status --porcelain) { throw "Checkout is not clean" }
++          $head = git rev-parse HEAD
++          if ($LASTEXITCODE -ne 0 -or $head -cne $env:GITHUB_SHA) { throw "Checkout differs from the triggering source" }
++          Write-Output $head
++          $status = git status --porcelain
++          if ($LASTEXITCODE -ne 0 -or $status) { throw "Checkout is not clean" }
+ 
+       - name: Install pinned Android SDK packages
+         shell: pwsh
+@@ -481,6 +508,7 @@
+           path: ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-cleanup.json
+ 
+   ios:
++    if: github.event_name != 'workflow_dispatch' || inputs.verification_scope != 'windows-only'
+     name: iOS tests, release frameworks, and Swift wrapper
+     runs-on: macos-15
+     timeout-minutes: ${{ inputs.verification_scope == 'native-process-probe' && 10 || inputs.verification_scope == 'native-evidence' && 240 || 120 }}
+--- a/scripts/release/workflow_contract.py
++++ b/scripts/release/workflow_contract.py
+@@ -29,6 +29,8 @@
+ DISABLED_STORE_JOB_CONDITION = "if: ${{ always() && false }}"
+ FULL_VERIFICATION_SCOPE = "github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full'"
+ FULL_VERIFICATION_FINALIZER = "always() && (" + FULL_VERIFICATION_SCOPE + ")"
++WINDOWS_VERIFICATION_SCOPE = FULL_VERIFICATION_SCOPE + " || inputs.verification_scope == 'windows-only'"
++IOS_VERIFICATION_SCOPE = "github.event_name != 'workflow_dispatch' || inputs.verification_scope != 'windows-only'"
+ NATIVE_VERIFICATION_SCOPE = ("github.event_name == 'workflow_dispatch' && "
+                              "(inputs.verification_scope == 'native-preflight' || inputs.verification_scope == 'native-evidence')")
+ PROCESS_PROBE_SCOPE = "github.event_name == 'workflow_dispatch' && inputs.verification_scope == 'native-process-probe'"
+@@ -140,8 +142,58 @@
+         fail("validation workflow must finalize owned iOS resources immediately after app-launch")
+ 
+ 
++def verify_windows_checkout(text: str) -> None:
++    """Preserve complete evidence and fail closed before a scoped Windows checkout."""
++    header = text.split("\n    steps:\n", 1)[0]
++    if (re.findall(r"(?m)^      (GIT_CONFIG_[A-Z0-9_]+): (.*)$", header) != [
++            ("GIT_CONFIG_COUNT", '"1"'), ("GIT_CONFIG_KEY_0", "core.longpaths"),
++            ("GIT_CONFIG_VALUE_0", '"true"')] or text.count("GIT_CONFIG_") != 3):
++        fail("Windows checkout requires only job-local long-path configuration")
++    name = "Validate Windows checkout prerequisites"
++    gate = validation_step(text, name)
++    expected_gate = '''        shell: pwsh
++        env:
++          PARLOR_WINDOWS_ONLY: ${{ github.event_name == 'workflow_dispatch' && inputs.verification_scope == 'windows-only' }}
++          PARLOR_WINDOWS_FROZEN_SOURCE_SHA: ${{ inputs.frozen_source_sha }}
++          PARLOR_WINDOWS_NATIVE_SELECTION: ${{ inputs.native_selection }}
++        run: |
++          $longPaths = git config --bool --get core.longpaths
++          if ($LASTEXITCODE -ne 0 -or $longPaths -cne "true") { throw "Expected job-local Git long paths" }
++          Write-Output "core.longpaths=$longPaths (job-local)"
++          if ($env:PARLOR_WINDOWS_ONLY -eq "true") {
++            $source = $env:PARLOR_WINDOWS_FROZEN_SOURCE_SHA
++            if ($source -cnotmatch '^[0-9a-f]{40}$' -or $source -cne $env:GITHUB_SHA -or $source -cne $env:GITHUB_WORKFLOW_SHA) {
++              throw "Windows-only dispatch requires the reviewed frozen source"
++            }
++            if ($env:PARLOR_WINDOWS_NATIVE_SELECTION -cnotin @("", "paired")) { throw "Windows-only dispatch cannot select native evidence" }
++          }
++'''
++    if (gate.strip("\n") != expected_gate.strip("\n") or
++            re.findall(r"(?m)^      - name: (.*)$", text)[:2] != [name, "Check out source"]):
++        fail("Windows checkout requires exact long-path and frozen-source validation before checkout")
++    checkout = validation_step(text, "Check out source")
++    if re.findall(r"(?m)^          ([a-z-]+): (.*)$", checkout) != [
++            ("fetch-depth", "1"), ("persist-credentials", "false")]:
++        fail("Windows checkout must retain its complete, non-sparse, credential-free source checkout")
++    source = validation_step(text, "Require the Windows x64 host")
++    expected_source = '''        shell: pwsh
++        run: |
++          if (-not $IsWindows) { throw "Expected a Windows runner" }
++          if ([System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture -ne [System.Runtime.InteropServices.Architecture]::X64) {
++            throw "Expected an x64 runner"
++          }
++          $head = git rev-parse HEAD
++          if ($LASTEXITCODE -ne 0 -or $head -cne $env:GITHUB_SHA) { throw "Checkout differs from the triggering source" }
++          Write-Output $head
++          $status = git status --porcelain
++          if ($LASTEXITCODE -ne 0 -or $status) { throw "Checkout is not clean" }
++'''
++    if source.strip("\n") != expected_source.strip("\n"):
++        fail("Windows checkout requires checked Git success, exact triggering HEAD, clean source and x64 host")
++
++
+ def verify_verification_scopes(text: str) -> None:
+-    """Only three explicit dispatch modes may bypass the unchanged five-job gate."""
++    """Only the three native modes and Windows-only follow-up bypass the full gate."""
+     jobs_text = text.split("\njobs:\n", 1)[-1]
+     jobs = re.findall(r"(?m)^  ([a-z][a-z0-9-]+):$", jobs_text)
+     expected = ["desktop-android", "desktop-linux-arm64", "desktop-macos-x64", "desktop-windows-x64", "ios"]
+@@ -149,11 +201,14 @@
+         fail("verification scope contract requires exactly the five reviewed jobs")
+     for name in expected[:-1]:
+         block = jobs_text.split("  " + name + ":\n", 1)[1].split("\n  " + expected[expected.index(name) + 1] + ":\n", 1)[0]
+-        if re.findall(r"(?m)^    if: (.*)$", block) != [FULL_VERIFICATION_SCOPE]:
+-            fail("verification scope must retain every non-Apple job for default/push/PR/full")
++        required = WINDOWS_VERIFICATION_SCOPE if name == "desktop-windows-x64" else FULL_VERIFICATION_SCOPE
++        if re.findall(r"(?m)^    if: (.*)$", block) != [required]:
++            fail("verification scope must retain full jobs and isolate the Windows-only follow-up")
++        if name == "desktop-windows-x64":
++            verify_windows_checkout(block)
+     ios = jobs_text.split("\n  ios:\n", 1)[1]
+-    if re.findall(r"(?m)^    if: (.*)$", ios):
+-        fail("verification scope validation must not be skipped by an iOS job condition")
++    if re.findall(r"(?m)^    if: (.*)$", ios) != [IOS_VERIFICATION_SCOPE]:
++        fail("verification scope may skip iOS only for the separately guarded Windows-only follow-up")
+     if re.findall(r"(?m)^    timeout-minutes: (.*)$", ios) != [
+             "${{ inputs.verification_scope == 'native-process-probe' && 10 || inputs.verification_scope == 'native-evidence' && 240 || 120 }}"]:
+         fail("verification scope must keep full/preflight120, probe10 and focused native-evidence240 minute bounds")
+@@ -179,9 +234,9 @@
+             re.findall(r"(?m)^      - name: (.*)$", ios)[0] != clock_name or
+             ios.count("PARLOR_NATIVE_JOB_CLOCK=") != 1):
+         fail("focused native job clock must be fresh, source/run-bound, RAW kernel time before checkout and evidence-only")
+-    for token in ("        default: full\n", "        options: [full, native-preflight, native-evidence, native-process-probe]\n"):
++    for token in ("        default: full\n", "        options: [full, native-preflight, native-evidence, native-process-probe, windows-only]\n"):
+         if token not in text.split("\nconcurrency:", 1)[0]:
+-            fail("verification scope must default to full with only the three reviewed focused modes")
++            fail("verification scope must default to full with only the reviewed native and Windows-only modes")
+     selections = re.findall(r"(?m)^      native_selection:\n((?:        .*\n)+)", text.split("\nconcurrency:", 1)[0])
+     if (len(selections) != 1 or
+             re.findall(r"(?m)^        (type|default|options): (.*)$", selections[0]) !=
+--- a/scripts/release/tests/test_workflow_contract.py
++++ b/scripts/release/tests/test_workflow_contract.py
+@@ -17,6 +17,54 @@
+ 
+ 
+ class WorkflowContractTest(unittest.TestCase):
++    def test_windows_only_selection_cannot_skip_full_or_run_other_jobs(self) -> None:
++        workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text(encoding="utf-8")
++        workflow_contract.verify_verification_scopes(workflow)
++        for original, replacement in (
++            ("default: full", "default: windows-only"),
++            ("[full, native-preflight, native-evidence, native-process-probe, windows-only]",
++             "[full, native-preflight, native-evidence, native-process-probe]"),
++            ("if: " + workflow_contract.WINDOWS_VERIFICATION_SCOPE, "if: " + workflow_contract.FULL_VERIFICATION_SCOPE),
++            ("if: " + workflow_contract.IOS_VERIFICATION_SCOPE, "if: true"),
++            ("    if: " + workflow_contract.FULL_VERIFICATION_SCOPE + "\n",
++             "    if: " + workflow_contract.WINDOWS_VERIFICATION_SCOPE + "\n"),
++        ):
++            changed = workflow.replace(original, replacement, 1)
++            self.assertNotEqual(changed, workflow)
++            with self.subTest(original=original), self.assertRaisesRegex(RuntimeError, "verification scope"):
++                workflow_contract.verify_verification_scopes(changed)
++
++    def test_windows_checkout_long_paths_and_exact_source_are_required_before_checkout(self) -> None:
++        workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text(encoding="utf-8")
++        windows = workflow.split("\n  desktop-windows-x64:\n", 1)[1].split("\n  ios:\n", 1)[0]
++        workflow_contract.verify_windows_checkout(windows)
++        for original, replacement in (
++            ('GIT_CONFIG_COUNT: "1"', 'GIT_CONFIG_COUNT: "0"'),
++            ('GIT_CONFIG_KEY_0: core.longpaths', 'GIT_CONFIG_KEY_0: core.autocrlf'),
++            ('GIT_CONFIG_VALUE_0: "true"', 'GIT_CONFIG_VALUE_0: "false"'),
++            ('git config --bool --get core.longpaths', 'git config --global core.longpaths true'),
++            ('$LASTEXITCODE -ne 0 -or $longPaths', '$false -or $longPaths'),
++            ('${{ inputs.frozen_source_sha }}', '${{ github.sha }}'),
++            ("'^[0-9a-f]{40}$'", "'.*'"),
++            ('$source -cne $env:GITHUB_WORKFLOW_SHA', '$false'),
++            ('$source -cne $env:GITHUB_SHA', '$false'),
++            ('$env:PARLOR_WINDOWS_NATIVE_SELECTION -cnotin', '$env:PARLOR_WINDOWS_NATIVE_SELECTION -cin'),
++            ('$LASTEXITCODE -ne 0 -or $head -cne $env:GITHUB_SHA', '$false'),
++            ('$LASTEXITCODE -ne 0 -or $status', '$false'),
++            ('fetch-depth: 1', 'fetch-depth: 1\n          sparse-checkout: scripts'),
++        ):
++            changed = windows.replace(original, replacement, 1)
++            self.assertNotEqual(changed, windows)
++            with self.subTest(original=original), self.assertRaisesRegex(RuntimeError, "Windows checkout"):
++                workflow_contract.verify_windows_checkout(changed)
++        gate = "\n      - name: Validate Windows checkout prerequisites\n" + workflow_contract.validation_step(
++            windows, "Validate Windows checkout prerequisites")
++        checkout = "\n      - name: Check out source\n" + workflow_contract.validation_step(windows, "Check out source")
++        moved = windows.replace(gate, "", 1).replace(checkout, checkout + gate, 1)
++        self.assertNotEqual(moved, windows)
++        with self.assertRaisesRegex(RuntimeError, "before checkout"):
++            workflow_contract.verify_windows_checkout(moved)
++
+     def test_native_selection_is_closed_paired_default_and_cannot_be_duplicated(self) -> None:
+         workflow = (workflow_contract.ROOT / '.github/workflows/production-verification.yml').read_text(encoding='utf-8')
+         block = '      native_selection:\n' + workflow.split('      native_selection:\n', 1)[1].split('      frozen_source_sha:\n', 1)[0]
+@@ -54,7 +102,7 @@
+         workflow_contract.verify_verification_scopes(workflow)
+         for original, replacement in (
+             ("default: full", "default: native-preflight"),
+-            ("options: [full, native-preflight, native-evidence, native-process-probe]", "options: [full, skip]"),
++            ("options: [full, native-preflight, native-evidence, native-process-probe, windows-only]", "options: [full, skip]"),
+             ("  desktop-linux-arm64:\n", "  unreviewed-sixth-job:\n    runs-on: ubuntu-latest\n  desktop-linux-arm64:\n"),
+             ("    if: " + workflow_contract.FULL_VERIFICATION_SCOPE, "    if: false"),
+             ("scripts/ci/native_continuation.py validate-scope", "true"),
+--- a/scripts/ci/NATIVE_CONTINUATION.md
++++ b/scripts/ci/NATIVE_CONTINUATION.md
+@@ -2,8 +2,16 @@
+ 
+ The existing `production-verification.yml` still defaults to its **five-job full
+ qualification** on dispatch, push and pull request. The three explicit focused
+-dispatch modes run only the existing qualified Apple job; they are not substitutes
++native dispatch modes run only the existing qualified Apple job; they are not substitutes
+ for final five-job qualification. Unknown dispatch scope fails validation.
++
++The separate `verification_scope=windows-only` follow-up runs just the unchanged
++Windows verification graph, not native evidence or a new five-job result. It
++requires `frozen_source_sha` to match the reviewed checkout/workflow SHA and
++`native_selection` to remain `paired`. Git long paths are enabled only for that
++job before checkout; archived evidence, line endings, and cleanup guards remain.
++Results from other SHAs retain those identities and need independent applicability
++review, never relabeling as fresh same-source execution.
+ 
+ The coordinator dispatches only after reviewed source/control commits, followed
+ by the mechanical-inventory-only commit and its freshness check. The A/B preflight

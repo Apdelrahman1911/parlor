@@ -1,0 +1,33 @@
+{
+  "recorded_at": "2026-09-07T17:39:45.671086+00:00",
+  "scope": "ST-C1 recognized-current failure retains last excluded legacy copy",
+  "pre_commit": "b26a3947b763e262b488d52761f050df5d57cfc1",
+  "paths": [
+    "composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSnapshotFileSystem.kt",
+    "composeApp/src/iosTest/kotlin/com/parlor/app/storage/IosLegacySnapshotBackupTest.kt",
+    "composeApp/src/iosTest/kotlin/com/parlor/app/storage/IosStorageSafetyTest.kt",
+    "docs/PRODUCTION_ARCHITECTURE.md"
+  ],
+  "reviewed_diff_sha256": "d7aa2fed33c5db7b78eaca5af44b9eab33e1ca299873b976f7b47fef60c9c86f",
+  "independent_review": "reviews/stc1-recognized-current-retention-fix-independent-01.json",
+  "tests": "evidence/ios-legacy-current-retention-green-01/receipt.json",
+  "red_witness": "evidence/ios-legacy-current-retention-red-01/receipt.json",
+  "commit_output": "[fix/local-readiness-2026-09-07 c91cf94] fix(storage): retain excluded legacy saves on protected-read failure\n 4 files changed, 195 insertions(+), 16 deletions(-)\n",
+  "commit": "c91cf94802c1c0e34d98b9958fb14e941127b65c",
+  "tree": "30fdbc2e3ca5e2a63cc97e7ad0b47f69ea538e8f",
+  "push_exit": 0,
+  "push_output": "To https://github.com/Apdelrahman1911/parlor.git\n   b26a394..c91cf94  HEAD -> fix/local-readiness-2026-09-07\n",
+  "remote_readback": "c91cf94802c1c0e34d98b9958fb14e941127b65c\trefs/heads/fix/local-readiness-2026-09-07",
+  "task_paths_uncommitted": [],
+  "preserved_other_tracked_modifications": [
+    "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitLocalLeaveTimerTest.kt",
+    "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/multiplayer/WhodunitHostLeaveTimerTest.kt",
+    "scripts/ci/darwin_worker_identity.py",
+    "scripts/release/tests/test_apple_ci_hygiene.py",
+    "shared/design-system/src/desktopTest/kotlin/com/parlor/designsystem/localization/ProvideAppLanguageDesktopTest.kt"
+  ],
+  "agents_sha256": "1e8cbc4f414819f47908e1a3be9f717792a0401fb4fb35b7272c053c00e2f609",
+  "stashes": [
+    "stash@{0}: On main: codex-preserve-pre-ui-user-changes-2026-09-03"
+  ]
+}

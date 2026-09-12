@@ -1,0 +1,106 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-09-08T05:31:15.296062+00:00",
+  "author": "/root/release_fix_review",
+  "status": "DRAFT_FROZEN_AWAITING_INDEPENDENT_ROOT_REVIEW_AND_EXECUTION",
+  "authorization": "Parent expressly authorized isolated harmless-child vmmap source/tests only; no author execution.",
+  "directory": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-vmmap-capability-01",
+  "baseline_report": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/continuation-baseline-20260908-09.json",
+  "files": [
+    {
+      "path": "README.md",
+      "sha256": "8c11d41d463c743dadae3d74f515354c4e060762e9ea91a24ef3df54f552b6c5"
+    },
+    {
+      "path": "run_control_tests.py",
+      "sha256": "d4fdbfa4b57463ecb2dec96e36338294df5298cd6dddacc92eca0e4fa33e49c8"
+    },
+    {
+      "path": "run_vmmap_capability.py",
+      "sha256": "b4897e36f64e5ab26efc93491fd721a5fc27b9ecf812e46bdfd3b692ee1f9380"
+    },
+    {
+      "path": "test_vmmap_capability.py",
+      "sha256": "4b7194d856239f5954b21f2e6b062efe8cac6ac8c09463d31276dd4acdbe9dc1"
+    }
+  ],
+  "combined_manifest_sha256": "bc85dd0c0abe5387dcee421bd0b11af5f0b32103b03ffe6780a4b9e6d9ac7a7f",
+  "static_test_count": 40,
+  "static_test_ids": [
+    "test_vmmap_capability.CaptureTests.test_complete_output_is_captured_then_mapper_waited",
+    "test_vmmap_capability.CaptureTests.test_deadline_is_a_failure_not_retry",
+    "test_vmmap_capability.CaptureTests.test_exact_output_limit_accepts_eof",
+    "test_vmmap_capability.CaptureTests.test_interrupted_capture_stops_before_read",
+    "test_vmmap_capability.CaptureTests.test_nonblocking_race_does_not_lose_following_bytes",
+    "test_vmmap_capability.CaptureTests.test_output_overflow_rejected_without_writing_extra_byte",
+    "test_vmmap_capability.CaptureTests.test_wait_after_pipe_eof_remains_deadline_bounded",
+    "test_vmmap_capability.DiagnosticTests.test_invalid_utf8_and_controls_do_not_escape",
+    "test_vmmap_capability.DiagnosticTests.test_known_error_vocabulary_and_owned_pid_retained",
+    "test_vmmap_capability.DiagnosticTests.test_line_token_and_byte_bounds",
+    "test_vmmap_capability.DiagnosticTests.test_unknown_exit_cause_never_becomes_permission_denial",
+    "test_vmmap_capability.DiagnosticTests.test_unknown_paths_addresses_names_and_codes_are_not_retained",
+    "test_vmmap_capability.DiagnosticTests.test_whole_raw_digest_and_length_bound_even_hidden_tail",
+    "test_vmmap_capability.GuardTests.test_control_drift_or_manifest_failure_preserves_receipt_but_fails",
+    "test_vmmap_capability.GuardTests.test_control_manifest_binds_exact_four_files",
+    "test_vmmap_capability.GuardTests.test_native_entry_requires_reviewed_hash_before_any_work",
+    "test_vmmap_capability.GuardTests.test_nondefault_sigchld_and_extra_threads_refuse_allocation",
+    "test_vmmap_capability.GuardTests.test_signal_deferral_is_bounded_and_cancellation_remains_visible",
+    "test_vmmap_capability.OwnershipTests.test_changed_file_parent_and_hardlink_are_preserved",
+    "test_vmmap_capability.OwnershipTests.test_cleanup_unlinks_only_attested_file_and_closes_descriptor",
+    "test_vmmap_capability.OwnershipTests.test_only_canonical_outer_tmp_shape_is_accepted",
+    "test_vmmap_capability.OwnershipTests.test_partial_descriptor_acquisition_can_be_cleaned",
+    "test_vmmap_capability.OwnershipTests.test_partial_raw_write_and_zero_write",
+    "test_vmmap_capability.OwnershipTests.test_raw_read_is_bounded",
+    "test_vmmap_capability.OwnershipTests.test_tmp_symlink_resolution_is_rejected",
+    "test_vmmap_capability.OwnershipTests.test_tmp_wrong_uid_or_writable_permissions_rejected",
+    "test_vmmap_capability.ProbeTests.test_already_exited_process_is_reaped_without_signalling",
+    "test_vmmap_capability.ProbeTests.test_capture_exception_retires_mapper_before_child",
+    "test_vmmap_capability.ProbeTests.test_child_death_during_capture_is_failure_after_mapper_reap",
+    "test_vmmap_capability.ProbeTests.test_child_never_polled_or_reaped_during_mapper_lifetime",
+    "test_vmmap_capability.ProbeTests.test_cleanup_failure_is_explicit_and_not_success",
+    "test_vmmap_capability.ProbeTests.test_dead_child_prevents_mapper_launch",
+    "test_vmmap_capability.ProbeTests.test_exit255_is_failure_and_diagnostic_not_inferred_provenance",
+    "test_vmmap_capability.ProbeTests.test_failed_mapper_reap_defers_child_cleanup_to_outer_owner",
+    "test_vmmap_capability.ProbeTests.test_first_spawn_failure_still_cleans_raw_file",
+    "test_vmmap_capability.ProbeTests.test_fixed_child_and_numeric_target_with_minimal_environment_only",
+    "test_vmmap_capability.ProbeTests.test_non_probe_exception_text_is_sanitized_but_still_fails",
+    "test_vmmap_capability.ProbeTests.test_pending_cancellation_never_becomes_success",
+    "test_vmmap_capability.ProbeTests.test_sigkill_fallback_is_limited_to_retained_process",
+    "test_vmmap_capability.ProbeTests.test_spawn_exception_retires_existing_child_and_hides_exception_text"
+  ],
+  "author_actions": [
+    "Read source/evidence and mandatory instructions.",
+    "Authored only four new isolated probe .py/.md files and this additive report.",
+    "Used stdlib AST parsing, source hashing and read-only Git; did not import or execute authored/repository modules."
+  ],
+  "native_execution": "NOT RUN",
+  "pure_test_execution": "NOT RUN; AST declarations are not executed tests.",
+  "independent_review": "PENDING: parent /root will review complete source and controls before execution.",
+  "safety_scope": [
+    "Only /bin/sleep 60 as created child; only /usr/bin/vmmap -w <that child pid>.",
+    "No sample, arbitrary PID input, app target, account probe, sudo, entitlements or environment-secret inheritance.",
+    "25 second mapper deadline, 256 KiB drained raw output, sole O_EXCL temporary file inside validated outer-cycle TMPDIR.",
+    "SIGINT/SIGTERM deferral, single-thread/default-SIGCHLD guard, unreaped target during mapper lifetime, mapper-first bounded Popen cleanup.",
+    "Changed output ownership fails closed; mapper-reap failure requires outer-owner process cleanup and cannot pass.",
+    "Only closed tokens plus lengths/hashes retained; no mapping or native image provenance is established."
+  ],
+  "evidence_limits": [
+    "Success means fixed-child command exit zero only; it does not imply app-target privilege or explain the prior vmmap255 by itself.",
+    "All pure guards use mocks; they cannot establish native semantics or OS capability.",
+    "Official documentation URLs are identified in README only, not freshly fetched by this author.",
+    "No branch/commit/push/production/canonical parser change by this author."
+  ],
+  "author_cleanup": {
+    "started_builds": 0,
+    "started_native_children": 0,
+    "started_background_workers": 0,
+    "generated_build_outputs": 0,
+    "retained_files": "Four required source/test/doc deliverables and this freeze only."
+  },
+  "root_next_steps": [
+    "Reopen all four files and independently review safety, source guards, test validity and cleanup.",
+    "Run strict pure driver through one fresh outer-wrapper cycle, collect result/stop/cleanup.",
+    "Only after independent approval, run fixed-child native probe through another fresh outer cycle with this exact combined control hash.",
+    "Preserve any command failure as failure; do not turn probe success into app provenance."
+  ]
+}

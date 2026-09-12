@@ -1,0 +1,41 @@
+{
+  "author": "/root/factory_review",
+  "independent_reviewer_required": "/root",
+  "created_at": "2026-09-07T05:38:12.186847+00:00",
+  "scope": "Only author-owned synthetic fixture Network.close; root limited edit-window authorization after focused06cleanup. No production, test assertions, config, rules, dependency or ignore changes.",
+  "path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/LoopbackFixtureContractTest.kt",
+  "head": "875d849e0079452557374690b14e42c546ba2c06",
+  "before_sha256": "bc45d9a58509c4d9c3dd63bca30a0d584ba273e1adb6618829a09d1e47b64404",
+  "after_sha256": "3865be6b115e3a5c23401fda3f614e87d62803803f9f4194274bc3a748624334",
+  "before_lines": 247,
+  "after_lines": 249,
+  "changed_range": [
+    203,
+    213
+  ],
+  "diff_sha256": "d9e71b8567f795b9185d04366caf190d18ee4700f54e1f12669585b39f163f60",
+  "observed_failure": {
+    "cycle": "evidence/focused-readiness-regressions-06",
+    "gate": ":shared:transport-p2p:detektDesktopTest",
+    "message": "LoopbackFixtureContractTest.kt203:9 RedundantSuspendModifier",
+    "actual_tests": "Rootreported110/110 actual tests passed before static gate failed; this author has read relevant rawfailurelog, not independently recounted everyXML here. Overall06 remainsFAIL."
+  },
+  "actual_semantics": [
+    "Allfour network-using test methods invokeclose in finally. Close protects its whole cleanup batch with NonCancellable and still must suspend: public withContext in pinned coroutines1.11.0 Builders.common.kt472\u2013489 is declared suspend and invokes suspendCoroutineUninterceptedOrReturn.",
+    "LocalRoom.leave declared suspend at shared/networking\u2026/LocalRoom.kt181; actual host.leave performs mutex, delay(BONJOUR_GOODBYE_FLUSH_MS), cancelAndJoin; peer.leave also waits and performs protected teardown. FakeP2pKit.stop invokes an optional suspending stopHandler. Removing suspend would be invalid Kotlin or require weakening semantics.",
+    "Old expression body had explicitUnit expectedreturntype forwithContext. New blockbody has sameUnit functionreturn and explicitwithContext<Unit> preserves original generic expectedUnit rather than inferring nullableNothing from the trailingthrowinglet. Entirelambda unchanged exceptindent; same roomreverseorder, all-kit cleanup, same failurecollection/suppression/throw.",
+    "All5JUnit methods, assertions, syntheticdelivery guarantees, privatecredential checks and physicalIgnore policy remain byteidentical."
+  ],
+  "detekt_counterevidence": [
+    "Officialv1.23.7 rule68\u201378 scans all descendant expressions; it has no expressionbody exclusion. It reports only after absence of a resolvedsuspend descriptor at95\u2013129. Therefore do not claim an intentional expressionbody rule or a proven specific analyzerparserbug.",
+    "Officialv1.23.7 catalog pins compiler2.0.10, coroutines1.7.1 for its own suite; repository Kotlin2.4.10/coroutines1.11.0 are newer. This is context for unresolved typeanalysis, not a independently isolated exactrootcause. Block+Unit shape is a minimal semanticallyequivalent trial pending same pinned analyzer rerun.",
+    "No suppression, blanket baseline, dependencyupgrade or fake extra suspension is added. If07 stillflags it, this patch is not verified and further isolated analyzer investigation is required."
+  ],
+  "research": [
+    "factory_review/loopback-close-detekt-research-01.json",
+    "factory_review/loopback-close-detekt-research-03.json"
+  ],
+  "research_limit": "research02 retained: initialTOMLexcerptrangebug and unrelatedcoroutineexcerpt are notproof; research03 correctsexcerpts andcorroboratesversions/signature.",
+  "status": "PATCHED; INDEPENDENTROOTDIFFREVIEW ANDFOCUSED07 TEST/STATIC VERIFICATION PENDING",
+  "cleanup": "No tests/build/nativeworkers launched by author; finite source/officialreference reads and requiredisolatedevidence only. Parent06outputs/workers alreadycleaned; no unrelatedcleanup."
+}

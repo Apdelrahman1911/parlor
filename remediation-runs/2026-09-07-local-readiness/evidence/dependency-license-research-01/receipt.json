@@ -1,0 +1,25 @@
+{
+  "started_at": "2026-09-07T14:04:48.436936+00:00",
+  "command": [
+    "/usr/bin/python3",
+    "-B",
+    "scripts/verification/dependency_inventory.py",
+    "remediation-runs/2026-09-07-local-readiness/evidence/dependency-graph-export-01/raw-graphs",
+    "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/dependency-license-research-01/report"
+  ],
+  "control_before": {
+    "scripts/verification/dependency_inventory.py": "f82c3365ff59b602d3ad03ad19fa085f6831e79fff5753898785a06c478045ce",
+    "scripts/verification/resolved_dependencies.init.gradle": "422cf94df25cb2e89982e1bfbc4a3ffb2de055e4ae45c5024774f386ab8b5a20",
+    "scripts/release/tests/test_dependency_inventory.py": "d64f617bfe5cf55be71305e764288bd0dd1ecf60bc69b42349dc8d97b6c8c211"
+  },
+  "scope": "Public POM licensing research only; input source binding is completed strict graph export01. Concurrent unrelated CI draft edits are not graph inputs. No Gradle/Xcode/native/app processes started.",
+  "status": "FAIL",
+  "exit_code": 1,
+  "control_after": {
+    "scripts/verification/dependency_inventory.py": "f82c3365ff59b602d3ad03ad19fa085f6831e79fff5753898785a06c478045ce",
+    "scripts/verification/resolved_dependencies.init.gradle": "422cf94df25cb2e89982e1bfbc4a3ffb2de055e4ae45c5024774f386ab8b5a20",
+    "scripts/release/tests/test_dependency_inventory.py": "d64f617bfe5cf55be71305e764288bd0dd1ecf60bc69b42349dc8d97b6c8c211"
+  },
+  "finished_at": "2026-09-07T14:04:48.484597+00:00",
+  "cleanup": "Metadata only; script process waited/reaped, no build outputs or workers created. Required compact public metadata and reports retained."
+}

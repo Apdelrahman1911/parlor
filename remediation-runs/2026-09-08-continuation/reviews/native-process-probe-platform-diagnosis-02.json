@@ -1,0 +1,1168 @@
+{
+  "schema_version": 1,
+  "kind": "READ_ONLY_NATIVE_PROCESS_PROBE_PLATFORM_OBSERVATION_DIAGNOSIS",
+  "author": "/root/native_ci",
+  "recorded_at": "2026-09-08T14:55:56.405866+00:00",
+  "ownership": "Only this new diagnosis report; no source/control edit, project import, test, build, native command, dispatch or cleanup operation by author.",
+  "status": "DIAGNOSED_PARTIAL_OBSERVATIONS_ORIGINAL_PS_TIMEOUT_NOT_REPRODUCED",
+  "run": {
+    "repository": "Apdelrahman1911/parlor",
+    "branch": "fix/local-readiness-2026-09-07",
+    "head_sha": "5f35a20d3c9c846cd98b38a16881997ecf577497",
+    "tree": "e0e7abfff89975682a96a884cb745bcbc12e7238",
+    "workflow": ".github/workflows/production-verification.yml",
+    "root": "/Users/runner/work/parlor/parlor",
+    "run_id": 34239707887,
+    "run_attempt": 1,
+    "conclusion": "failure",
+    "job_id": 102106444528,
+    "job_started_at": "2026-09-08T14:40:00Z",
+    "job_completed_at": "2026-09-08T14:43:39Z",
+    "focused_step_exit_code": 2,
+    "non_apple_jobs_skipped": 4,
+    "actual_runner": {
+      "image": "macos-15-arm64",
+      "image_version": "20260829.0321.1",
+      "os_version": "15.7.9",
+      "os_build": "24G830",
+      "architecture": "arm64"
+    }
+  },
+  "download_integrity": {
+    "receipt": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34239707887/download-receipt.json",
+      "sha256": "c292cf291a606c322fb701b1a5402a58844126fc780267481fd2a9a76f2e3214",
+      "bytes": 4506
+    },
+    "status": "PASS_DOWNLOAD_AND_INTEGRITY_NOT_DIAGNOSTIC_PASS",
+    "command_files_rehashed": 8,
+    "archives": [
+      {
+        "artifact_id": 10061560599,
+        "artifact_name": "native-process-probe-cleanup-34239707887-1",
+        "archive": "native-process-probe-cleanup.zip",
+        "sha256": "687c3e2b09c8e34f4e3c0f299c2f0b62caa249da08168d9eb12f951c7f10c3f7",
+        "api_digest_matches": true,
+        "members": [
+          {
+            "path": "native-process-probe-cleanup/parlor-process-probe-34239707887-1-cleanup.json",
+            "bytes": 913,
+            "sha256": "87666a0b900b950b7eb69aa7fafabfff6999305ff7720ed843f0fe2dd762bdb7"
+          }
+        ],
+        "archived_and_extracted_bytes_equal": true
+      },
+      {
+        "artifact_id": 10061558867,
+        "artifact_name": "native-process-probe-34239707887-1",
+        "archive": "native-process-probe.zip",
+        "sha256": "e5208be6be2c9603c622dbe8c6eb09072fdea9d4accb8174b2a5f661343bcd97",
+        "api_digest_matches": true,
+        "members": [
+          {
+            "path": "native-process-probe/owned-simulator-adopted.json",
+            "bytes": 573,
+            "sha256": "91c05c1d26e13ac4e664f135fcfa4b5656b24cc708d2619e84b531dc58881675"
+          },
+          {
+            "path": "native-process-probe/owned-simulator-create.json",
+            "bytes": 504,
+            "sha256": "4759db5a4262fb6154c7b27abc5776ac4a51c020e416d18be7907456429d08ac"
+          },
+          {
+            "path": "native-process-probe/owned-simulator-plan.json",
+            "bytes": 6539,
+            "sha256": "a59c2e17a481d94bd6768291614926677b3dd77a5fe85140862fb24662d32f15"
+          },
+          {
+            "path": "native-process-probe/probe.json",
+            "bytes": 49515,
+            "sha256": "b598069f8c26e3d1851dc7e4eaade20fe72968f22403b32716fd996535990bb0"
+          }
+        ],
+        "archived_and_extracted_bytes_equal": true
+      }
+    ],
+    "scope": "ZIP/API digest and original-member/extracted-byte equality, not diagnostic/application success."
+  },
+  "source_binding": {
+    "control_sha256": "eaf596f24601bfe908cae23039dc99e383ac3f2b29fd775e303bbe395485153b",
+    "aggregate_sorted_list_hash_recomputed": true,
+    "all13_frozen_git_blobs_and_current_files_match": true,
+    "control_files": [
+      {
+        "path": ".github/workflows/production-verification.yml",
+        "sha256": "d347a4cd3e22181b37e5aec91203d3aa37779cb7bb7976fb74ed01cc29ba328d",
+        "bytes": 40414,
+        "matches_executed_commit_and_current_bytes": true
+      },
+      {
+        "path": "gradle/wrapper/gradle-wrapper.jar",
+        "sha256": "81a82aaea5abcc8ff68b3dfcb58b3c3c429378efd98e7433460610fecd7ae45f",
+        "bytes": 43705,
+        "matches_executed_commit_and_current_bytes": true
+      },
+      {
+        "path": "gradle/wrapper/gradle-wrapper.properties",
+        "sha256": "c040b6ef2fb893ff5beea5a281614f2848f1c3996a7886f650b713f8240656a2",
+        "bytes": 338,
+        "matches_executed_commit_and_current_bytes": true
+      },
+      {
+        "path": "gradlew",
+        "sha256": "734b3879d3501dce471cf0522d3bcbafe76873d9fc5129345b67fb43bd15e933",
+        "bytes": 8752,
+        "matches_executed_commit_and_current_bytes": true
+      },
+      {
+        "path": "scripts/ci/NATIVE_CONTINUATION.md",
+        "sha256": "e2e5f62f4a8d876585120e32ff73e91f7c3d992963c80346e94e54f906eec846",
+        "bytes": 10879,
+        "matches_executed_commit_and_current_bytes": true
+      },
+      {
+        "path": "scripts/ci/darwin_worker_identity.py",
+        "sha256": "939ac6c98628046f9f45547135cbc439f217403e60c7e4033db5f541ab017ecc",
+        "bytes": 12894,
+        "matches_executed_commit_and_current_bytes": true
+      },
+      {
+        "path": "scripts/ci/native_continuation.py",
+        "sha256": "d5c6faf5a33187a9bed855f8d82b17ea2c90d72c3b22df0a041975f7a6bc7b21",
+        "bytes": 42095,
+        "matches_executed_commit_and_current_bytes": true
+      },
+      {
+        "path": "scripts/ci/native_process_metadata.py",
+        "sha256": "6497e55c6c4a7f0922486d58ce47bc9ad05b987e8cca9bc5c60adf2b13cd9256",
+        "bytes": 4131,
+        "matches_executed_commit_and_current_bytes": true
+      },
+      {
+        "path": "scripts/ci/native_process_probe.py",
+        "sha256": "c87f6d1289ee50a7387988bd85953d451dac9e1b7b88a4d60f7b4848f86516da",
+        "bytes": 44789,
+        "matches_executed_commit_and_current_bytes": true
+      },
+      {
+        "path": "scripts/ci/owned_ci_simulator.py",
+        "sha256": "717c8c02dc06e4eac175c5dde5c7f9bdd6ebbd5e7028cc94c6ba4f84b44388af",
+        "bytes": 11229,
+        "matches_executed_commit_and_current_bytes": true
+      },
+      {
+        "path": "scripts/ci/verification_hygiene.py",
+        "sha256": "9eab427aeb3d810c033a3827aa44f7201cbb261345a2e6667a8d085df2fbd603",
+        "bytes": 13802,
+        "matches_executed_commit_and_current_bytes": true
+      },
+      {
+        "path": "scripts/verification/ios-readiness/owned_lane.py",
+        "sha256": "949091403ac669429f962120e9873a09897a87bdcae10702720ede0c68342f03",
+        "bytes": 10446,
+        "matches_executed_commit_and_current_bytes": true
+      },
+      {
+        "path": "scripts/verification/ios-readiness/toolchain_profiles.py",
+        "sha256": "8adacaf4c59ed823aa088ecb70ad5c6c1e3f76e7ca3520d8abf0563341591313",
+        "bytes": 3358,
+        "matches_executed_commit_and_current_bytes": true
+      }
+    ],
+    "independent_dispatch_approval": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-process-probe-dispatch-independent-02.json",
+      "sha256": "9b80b40470010592ee9edf3b7fbb9ee18982241fbf890b566e541c4e184b1b1f",
+      "bytes": 8633
+    },
+    "fresh_control_artifact": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-process-probe-frozen-controls-02.json",
+      "sha256": "0e08bbbe67b428059320be1c85053d52a8d594de9eea1cfcc8d8bc8cee91497f",
+      "bytes": 2058
+    },
+    "approval_inputs_match_actual_run": true,
+    "original_ownership_seam": {
+      "path": "scripts/verification/ios-readiness/owned_lane.py",
+      "sha256": "949091403ac669429f962120e9873a09897a87bdcae10702720ede0c68342f03",
+      "command": [
+        "ps",
+        "-axo",
+        "pid=,ppid=,pgid=,lstart=,command="
+      ],
+      "timeout_seconds": 15,
+      "source_imported_or_modified": false
+    }
+  },
+  "qualified_platform": {
+    "result": {
+      "name": "qualified-xcode-26.3",
+      "xcode": "26.3",
+      "build": "17C529",
+      "sdk": "26.2",
+      "runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-2",
+      "runtime_version": [
+        26,
+        2,
+        0
+      ],
+      "developer_dir": "/Applications/Xcode_26.3.app/Contents/Developer",
+      "scope": "Xcode26.3/17C529 qualified compiler; Debug iOS26.2 simulator observation only, not Store-signing or physical-device evidence",
+      "selected_developer_dir": "/Applications/Xcode_26.3.app/Contents/Developer",
+      "architecture": "arm64",
+      "sdk_name": "iphonesimulator26.2",
+      "runtime_build": "23C54",
+      "device_type": "com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro",
+      "simulator_sdk_path": "/Applications/Xcode_26.3.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.2.sdk",
+      "android_sdk": "/Users/runner/Library/Android/sdk",
+      "java_home": "/Users/runner/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-101.0/arm64/Contents/Home",
+      "runtime_scope": "Toolchain observation only; no application/ABI/protection/runtime claim"
+    },
+    "stage_status": "COMPLETE",
+    "runtime_enumeration": {
+      "label": "binding-or-platform",
+      "command": [
+        "/usr/bin/xcrun",
+        "simctl",
+        "list",
+        "runtimes",
+        "--json"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 120,
+      "started_at": "2026-09-08T14:40:16.887221+00:00",
+      "owned_pid": 2772,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 6.115,
+      "finished_at": "2026-09-08T14:40:23.007067+00:00",
+      "stdout_bytes": 133117,
+      "stderr_bytes": 0
+    },
+    "device_type_enumeration": {
+      "label": "binding-or-platform",
+      "command": [
+        "/usr/bin/xcrun",
+        "simctl",
+        "list",
+        "devicetypes",
+        "--json"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 120,
+      "started_at": "2026-09-08T14:40:23.014309+00:00",
+      "owned_pid": 2905,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.175,
+      "finished_at": "2026-09-08T14:40:23.193726+00:00",
+      "stdout_bytes": 60485,
+      "stderr_bytes": 0
+    },
+    "limits": "This fresh runtime enumeration completed in6.115s, less than even the prior20s cap. The corrected120s allowance was configured but not exercised beyond20s; this run does not prove the cause of the prior20.003s timeout or that increasing the cap alone caused success."
+  },
+  "installed_ps_identity": {
+    "result": {
+      "resolved_path": "/bin/ps",
+      "sha256": "b4dc60d3bfb3b5e4653b08741f5da6494efe9603f2dc359b7218850d46b9f2e0",
+      "device": 16777229,
+      "inode": 1152921500312522857,
+      "uid": 0,
+      "mode": 35309,
+      "links": 1,
+      "bytes": 170816,
+      "modified_ns": 1785601887000000000,
+      "located_path": "/bin/ps",
+      "path_search_sha256": "12a10d9386a904a4cdcb8d682a4084fa7d3faee1eb92b0ec59eed30afed2d4f2",
+      "signature": {
+        "command_label": "signature",
+        "status": "EXITED",
+        "exit_code": 0,
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "678ccf2d2281e97fa93c4a9348e8122402c0f833e7a16d279947d89344c81596",
+        "fields": [
+          "Executable=/bin/ps",
+          "Identifier=com.apple.ps",
+          "Format=Mach-O universal (x86_64 arm64e)",
+          "CodeDirectory v=20400 size=869 flags=0x0(none) hashes=17+7 location=embedded",
+          "Platform identifier=16",
+          "Hash type=sha256 size=32",
+          "CDHash=baf9cef360db633496b19d903d24b05c646426da",
+          "Signature size=4442",
+          "Authority=Software Signing",
+          "Authority=Apple Code Signing Certification Authority",
+          "Authority=Apple Root CA",
+          "TeamIdentifier=not set"
+        ]
+      },
+      "entitlements": {
+        "command_label": "entitlements",
+        "status": "EXITED",
+        "exit_code": 0,
+        "stdout_sha256": "38a06a9c93356657efd6c72f757ed5e53573f9e23c4482b983b375f87b2a8e3d",
+        "stderr_sha256": "51c1c81e448c67a26e6d399220e20eefa584af85ee9a3ee2a45b50ef8ad8dbe5",
+        "entitlements": {
+          "com.apple.private.persona-mgmt": true,
+          "com.apple.system-task-ports.read": true
+        },
+        "meaning": "Observed codesign output; null is not an asserted empty entitlement set."
+      },
+      "signature_verify": {
+        "command_label": "signature_verify",
+        "status": "EXITED",
+        "exit_code": 0,
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "permissions_octal": "0o104755",
+    "root_owned_setuid_bit_present": true,
+    "after_reconciliation": "The source-control-reconciliation COMPLETE callback also required executable_identity(self.ps)==self.ps_file. No separate second identity object is retained; source-bound equality check is the evidence.",
+    "limits": "Actual byte/signature/entitlement binding is available for this run. It does not prove which exact pinned Apple source build configuration produced the binary or which syscall dominated prior failures."
+  },
+  "phase_observations": [
+    {
+      "phase": "before-boot",
+      "original_ps": {
+        "label": "before-boot-original-ps",
+        "command": [
+          "ps",
+          "-axo",
+          "pid=,ppid=,pgid=,lstart=,command="
+        ],
+        "status": "EXITED",
+        "timeout_seconds": 15,
+        "started_at": "2026-09-08T14:40:23.361653+00:00",
+        "owned_pid": 2916,
+        "ownership": "direct-unreaped-Popen",
+        "exit_code": 0,
+        "direct_child_reaped": true,
+        "elapsed_seconds": 0.04,
+        "finished_at": "2026-09-08T14:40:23.405076+00:00",
+        "stdout_bytes": 60534,
+        "stderr_bytes": 0,
+        "observation": {
+          "rows": 484,
+          "malformed_rows": 0,
+          "coordinator_seen": true,
+          "observer_seen": true,
+          "complete": true,
+          "scope": "Counts only; no global PID/argv rows retained, no ownership or atomic-snapshot claim."
+        }
+      },
+      "metadata_ps": {
+        "label": "before-boot-metadata-ps",
+        "command": [
+          "ps",
+          "-axo",
+          "pid=,ppid=,pgid=,lstart=,ucomm="
+        ],
+        "status": "EXITED",
+        "timeout_seconds": 15,
+        "started_at": "2026-09-08T14:40:23.407412+00:00",
+        "owned_pid": 2917,
+        "ownership": "direct-unreaped-Popen",
+        "exit_code": 0,
+        "direct_child_reaped": true,
+        "elapsed_seconds": 0.012,
+        "finished_at": "2026-09-08T14:40:23.421504+00:00",
+        "stdout_bytes": 30976,
+        "stderr_bytes": 0,
+        "observation": {
+          "rows": 484,
+          "malformed_rows": 0,
+          "coordinator_seen": true,
+          "observer_seen": true,
+          "complete": true,
+          "scope": "Counts only; no global PID/argv rows retained, no ownership or atomic-snapshot claim."
+        }
+      },
+      "libproc_metadata": {
+        "label": "before-boot-libproc-metadata",
+        "command": [
+          "/usr/bin/python3",
+          "-B",
+          "/Users/runner/work/parlor/parlor/scripts/ci/native_process_metadata.py",
+          "observe"
+        ],
+        "status": "EXITED",
+        "timeout_seconds": 15,
+        "started_at": "2026-09-08T14:40:23.424154+00:00",
+        "owned_pid": 2918,
+        "ownership": "direct-unreaped-Popen",
+        "exit_code": 0,
+        "direct_child_reaped": true,
+        "elapsed_seconds": 0.174,
+        "finished_at": "2026-09-08T14:40:23.600649+00:00",
+        "stdout_bytes": 648,
+        "stderr_bytes": 0,
+        "observation": {
+          "complete": false,
+          "enumerated": 485,
+          "error_counts": {
+            "denied:1": 248
+          },
+          "field_offsets": {
+            "pgid": 100,
+            "pid": 12,
+            "ppid": 16,
+            "start_sec": 120,
+            "start_usec": 128,
+            "uid": 20
+          },
+          "kind": "LIBPROC_METADATA_OBSERVATION_ONLY",
+          "metadata_sha256": "68ece8212d89bed099ebe3013060ad84ecb8f6a460b6942ff9532b9ae65dfa4c",
+          "observed": 236,
+          "own_process": {
+            "pgid": 2918,
+            "pid": 2918,
+            "ppid": 2645,
+            "start_sec": 1788878423,
+            "start_usec": 425206,
+            "status": 2,
+            "uid": 501
+          },
+          "schema_version": 1,
+          "scope": "Metadata only; denied/disappeared rows are not missing-worker proof. No argv, task ports, adoption or signal.",
+          "selector": "PROC_ALL_PIDS",
+          "struct_size": 136
+        }
+      }
+    },
+    {
+      "phase": "after-boot",
+      "original_ps": {
+        "label": "after-boot-original-ps",
+        "command": [
+          "ps",
+          "-axo",
+          "pid=,ppid=,pgid=,lstart=,command="
+        ],
+        "status": "EXITED",
+        "timeout_seconds": 15,
+        "started_at": "2026-09-08T14:41:46.584073+00:00",
+        "owned_pid": 4178,
+        "ownership": "direct-unreaped-Popen",
+        "exit_code": 0,
+        "direct_child_reaped": true,
+        "elapsed_seconds": 4.128,
+        "finished_at": "2026-09-08T14:41:50.872838+00:00",
+        "stdout_bytes": 104573,
+        "stderr_bytes": 0,
+        "observation": {
+          "rows": 670,
+          "malformed_rows": 0,
+          "coordinator_seen": true,
+          "observer_seen": true,
+          "complete": true,
+          "scope": "Counts only; no global PID/argv rows retained, no ownership or atomic-snapshot claim."
+        }
+      },
+      "metadata_ps": {
+        "label": "after-boot-metadata-ps",
+        "command": [
+          "ps",
+          "-axo",
+          "pid=,ppid=,pgid=,lstart=,ucomm="
+        ],
+        "status": "EXITED",
+        "timeout_seconds": 15,
+        "started_at": "2026-09-08T14:41:51.299086+00:00",
+        "owned_pid": 4238,
+        "ownership": "direct-unreaped-Popen",
+        "exit_code": 0,
+        "direct_child_reaped": true,
+        "elapsed_seconds": 1.027,
+        "finished_at": "2026-09-08T14:41:53.019537+00:00",
+        "stdout_bytes": 43456,
+        "stderr_bytes": 0,
+        "observation": {
+          "rows": 679,
+          "malformed_rows": 0,
+          "coordinator_seen": true,
+          "observer_seen": true,
+          "complete": true,
+          "scope": "Counts only; no global PID/argv rows retained, no ownership or atomic-snapshot claim."
+        }
+      },
+      "libproc_metadata": {
+        "label": "after-boot-libproc-metadata",
+        "command": [
+          "/usr/bin/python3",
+          "-B",
+          "/Users/runner/work/parlor/parlor/scripts/ci/native_process_metadata.py",
+          "observe"
+        ],
+        "status": "EXITED",
+        "timeout_seconds": 15,
+        "started_at": "2026-09-08T14:41:53.035232+00:00",
+        "owned_pid": 4256,
+        "ownership": "direct-unreaped-Popen",
+        "exit_code": 0,
+        "direct_child_reaped": true,
+        "elapsed_seconds": 8.749,
+        "finished_at": "2026-09-08T14:42:02.003652+00:00",
+        "stdout_bytes": 667,
+        "stderr_bytes": 0,
+        "observation": {
+          "complete": false,
+          "enumerated": 698,
+          "error_counts": {
+            "denied:1": 255,
+            "disappeared:3": 6
+          },
+          "field_offsets": {
+            "pgid": 100,
+            "pid": 12,
+            "ppid": 16,
+            "start_sec": 120,
+            "start_usec": 128,
+            "uid": 20
+          },
+          "kind": "LIBPROC_METADATA_OBSERVATION_ONLY",
+          "metadata_sha256": "5dac7423865bd71c0cc6cd6ff0f4ea575f5ab65fdd4741cb8b1749756ee0818b",
+          "observed": 436,
+          "own_process": {
+            "pgid": 4256,
+            "pid": 4256,
+            "ppid": 2645,
+            "start_sec": 1788878513,
+            "start_usec": 38814,
+            "status": 2,
+            "uid": 501
+          },
+          "schema_version": 1,
+          "scope": "Metadata only; denied/disappeared rows are not missing-worker proof. No argv, task ports, adoption or signal.",
+          "selector": "PROC_ALL_PIDS",
+          "struct_size": 136
+        }
+      }
+    },
+    {
+      "phase": "nonbuilding-xcode",
+      "original_ps": {
+        "label": "nonbuilding-xcode-original-ps",
+        "command": [
+          "ps",
+          "-axo",
+          "pid=,ppid=,pgid=,lstart=,command="
+        ],
+        "status": "EXITED",
+        "timeout_seconds": 15,
+        "started_at": "2026-09-08T14:42:02.071330+00:00",
+        "owned_pid": 4445,
+        "ownership": "direct-unreaped-Popen",
+        "exit_code": 0,
+        "direct_child_reaped": true,
+        "elapsed_seconds": 10.207,
+        "finished_at": "2026-09-08T14:42:12.298971+00:00",
+        "stdout_bytes": 117336,
+        "stderr_bytes": 0,
+        "nonbuilding_xcode_overlap": {
+          "live_before": true,
+          "live_after": true
+        },
+        "observation": {
+          "rows": 701,
+          "malformed_rows": 0,
+          "coordinator_seen": true,
+          "observer_seen": true,
+          "complete": true,
+          "scope": "Counts only; no global PID/argv rows retained, no ownership or atomic-snapshot claim."
+        }
+      },
+      "metadata_ps": {
+        "label": "nonbuilding-xcode-metadata-ps",
+        "command": [
+          "ps",
+          "-axo",
+          "pid=,ppid=,pgid=,lstart=,ucomm="
+        ],
+        "status": "EXITED",
+        "timeout_seconds": 15,
+        "started_at": "2026-09-08T14:42:13.082098+00:00",
+        "owned_pid": 4520,
+        "ownership": "direct-unreaped-Popen",
+        "exit_code": 0,
+        "direct_child_reaped": true,
+        "elapsed_seconds": 0.543,
+        "finished_at": "2026-09-08T14:42:13.645971+00:00",
+        "stdout_bytes": 45760,
+        "stderr_bytes": 0,
+        "nonbuilding_xcode_overlap": {
+          "live_before": true,
+          "live_after": true
+        },
+        "observation": {
+          "rows": 715,
+          "malformed_rows": 0,
+          "coordinator_seen": true,
+          "observer_seen": true,
+          "complete": true,
+          "scope": "Counts only; no global PID/argv rows retained, no ownership or atomic-snapshot claim."
+        }
+      },
+      "libproc_metadata": {
+        "label": "nonbuilding-xcode-libproc-metadata",
+        "command": [
+          "/usr/bin/python3",
+          "-B",
+          "/Users/runner/work/parlor/parlor/scripts/ci/native_process_metadata.py",
+          "observe"
+        ],
+        "status": "EXITED",
+        "timeout_seconds": 15,
+        "started_at": "2026-09-08T14:42:13.652602+00:00",
+        "owned_pid": 4534,
+        "ownership": "direct-unreaped-Popen",
+        "exit_code": 0,
+        "direct_child_reaped": true,
+        "elapsed_seconds": 4.028,
+        "finished_at": "2026-09-08T14:42:17.695334+00:00",
+        "stdout_bytes": 648,
+        "stderr_bytes": 0,
+        "nonbuilding_xcode_overlap": {
+          "live_before": true,
+          "live_after": true
+        },
+        "observation": {
+          "complete": false,
+          "enumerated": 716,
+          "error_counts": {
+            "denied:1": 255
+          },
+          "field_offsets": {
+            "pgid": 100,
+            "pid": 12,
+            "ppid": 16,
+            "start_sec": 120,
+            "start_usec": 128,
+            "uid": 20
+          },
+          "kind": "LIBPROC_METADATA_OBSERVATION_ONLY",
+          "metadata_sha256": "dc023d0928638d377f40a4547462efde9a6bf9c760f7488e024804018c741b03",
+          "observed": 460,
+          "own_process": {
+            "pgid": 4534,
+            "pid": 4534,
+            "ppid": 2645,
+            "start_sec": 1788878533,
+            "start_usec": 657262,
+            "status": 2,
+            "uid": 501
+          },
+          "schema_version": 1,
+          "scope": "Metadata only; denied/disappeared rows are not missing-worker proof. No argv, task ports, adoption or signal.",
+          "selector": "PROC_ALL_PIDS",
+          "struct_size": 136
+        }
+      }
+    }
+  ],
+  "failed_nonbuilding_workload": {
+    "label": "nonbuilding-xcode-settings",
+    "command": [
+      "/usr/bin/xcodebuild",
+      "-project",
+      "/Users/runner/work/parlor/parlor/iosApp/iosApp.xcodeproj",
+      "-scheme",
+      "iosApp",
+      "-configuration",
+      "Debug",
+      "-sdk",
+      "iphonesimulator",
+      "-destination",
+      "generic/platform=iOS Simulator",
+      "-derivedDataPath",
+      "/Users/runner/work/_temp/parlor-process-probe-34239707887-1/resources/DerivedData",
+      "-disableAutomaticPackageResolution",
+      "-skipPackageUpdates",
+      "-showBuildSettings"
+    ],
+    "status": "TIMEOUT",
+    "timeout_seconds": 60,
+    "started_at": "2026-09-08T14:42:02.053726+00:00",
+    "output_policy": "DEVNULL; no build settings retained",
+    "owned_pid": 4442,
+    "ownership": "direct-unreaped-Popen",
+    "exit_code": -15,
+    "direct_child_reaped": true,
+    "elapsed_seconds": 60.639
+  },
+  "observation_reconciliation": {
+    "canonical_status": "OBSERVATIONS_WITH_FAILURES_NOT_RUNTIME_EVIDENCE",
+    "stages_complete": 8,
+    "command_rows": 54,
+    "original_ps_complete": 3,
+    "metadata_ps_complete": 3,
+    "libproc_metadata_partial": 3,
+    "libproc_metadata_process_exits_zero": 3,
+    "command_timeout_count": 1,
+    "probe_command_budget_skips": 0,
+    "ps_timeouts": 0,
+    "owned_stack_samples_executed": 0,
+    "outer_primary_error_type": null,
+    "failure_causes": [
+      "All three libproc observations have complete=false due retained syscall-denial/disappearance counts; helper exit0 is not complete global metadata.",
+      "nonbuilding-xcode-settings TIMEOUT60s, exit-15, reported60.639s including retirement; showBuildSettings did not complete."
+    ],
+    "stage_meaning": "All eight stage callbacks returned; Probe.failed still rejects the partial metadata and Xcode timeout. Stage COMPLETE, uploaded artifacts and cleanup_safe do not override those failures."
+  },
+  "simulator": {
+    "uuid": "61CFBA14-3FA7-4210-BCB4-F4D3E8B1C776",
+    "name": "Parlor-ci-120b4a26f8d747b4b3432f4634a243c8",
+    "runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-2",
+    "device_type": "com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro",
+    "fresh_baseline_count": 132,
+    "absent_from_baseline": true,
+    "plan_create_adoption_context_and_nonce_match": true,
+    "boot": {
+      "label": "simctl-boot",
+      "command": [
+        "/usr/bin/xcrun",
+        "simctl",
+        "boot",
+        "61CFBA14-3FA7-4210-BCB4-F4D3E8B1C776"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 20,
+      "started_at": "2026-09-08T14:40:24.214389+00:00",
+      "owned_pid": 2999,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 2.215,
+      "finished_at": "2026-09-08T14:40:26.431578+00:00",
+      "stdout_bytes": 0,
+      "stderr_bytes": 0
+    },
+    "bootstatus": {
+      "label": "simctl-bootstatus",
+      "command": [
+        "/usr/bin/xcrun",
+        "simctl",
+        "bootstatus",
+        "61CFBA14-3FA7-4210-BCB4-F4D3E8B1C776",
+        "-b"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 120,
+      "started_at": "2026-09-08T14:40:26.436040+00:00",
+      "owned_pid": 3089,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 77.355,
+      "finished_at": "2026-09-08T14:41:43.958282+00:00",
+      "stdout_bytes": 7894,
+      "stderr_bytes": 0
+    },
+    "boot_stage": {
+      "label": "one-owned-simulator-boot",
+      "status": "COMPLETE",
+      "started_at": "2026-09-08T14:40:23.605054+00:00",
+      "result": {
+        "uuid": "61CFBA14-3FA7-4210-BCB4-F4D3E8B1C776",
+        "name": "Parlor-ci-120b4a26f8d747b4b3432f4634a243c8",
+        "runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-2",
+        "boot_completed": true
+      },
+      "finished_at": "2026-09-08T14:41:45.119751+00:00"
+    },
+    "before_boot_scope": "Before the newly owned simulator boot only. Qualified platform discovery had already invoked simctl; this is not a measurement before all CoreSimulator initialization."
+  },
+  "host_metrics": {
+    "before": {
+      "cpu": {
+        "ncpu": 3,
+        "memory_bytes": 7516192768,
+        "physical_cpu": 3,
+        "logical_cpu": 3
+      },
+      "vm_page_bytes": 16384,
+      "vm": {
+        "Pages free": 3772,
+        "Pages active": 156639,
+        "Pages inactive": 141732,
+        "Pages speculative": 14589,
+        "Pages throttled": 0,
+        "Pages wired down": 101451,
+        "Pages purgeable": 99,
+        "Pages stored in compressor": 110783,
+        "Pages occupied by compressor": 39678,
+        "Pageins": 395816,
+        "Pageouts": 1223,
+        "Swapins": 0,
+        "Swapouts": 0
+      }
+    },
+    "after": {
+      "cpu": {
+        "ncpu": 3,
+        "memory_bytes": 7516192768,
+        "physical_cpu": 3,
+        "logical_cpu": 3
+      },
+      "vm_page_bytes": 16384,
+      "vm": {
+        "Pages free": 3673,
+        "Pages active": 112696,
+        "Pages inactive": 103619,
+        "Pages speculative": 8896,
+        "Pages throttled": 0,
+        "Pages wired down": 128165,
+        "Pages purgeable": 2149,
+        "Pages stored in compressor": 267219,
+        "Pages occupied by compressor": 100394,
+        "Pageins": 575879,
+        "Pageouts": 4962,
+        "Swapins": 0,
+        "Swapouts": 0
+      }
+    },
+    "memory_gib": 7,
+    "logical_cpus": 3,
+    "interpretation": "Reported full-command ps latency rose .040->4.128->10.207s across sequential phases; metadata-only ps .012->1.027->.543s and metadata helper .174->8.749->4.028s. Two vm_stat snapshots show higher compressor occupancy and cumulative Pageouts after boot, with Swapins/Swapouts both0. These are not controlled/atomic paired samples, CPU-time, peak-memory, OOM, paging-attribution or causation evidence."
+  },
+  "platform_diagnosis": [
+    "The exact canonical full ps command with unchanged15s limit completed with exit0, empty stderr, no malformed rows and both coordinator/observer seen in each of three no-app phases. The historical A17/B18 ps15 failure was not reproduced here and is not proved fixed.",
+    "The original/ucomm observations are sequential and see different live process counts (except the initial pair). Original command acquisition is slower in these samples, but there is no timed-out ps, no sampled stack and no controlled same-table comparison. Cannot select KERN_PROCARGS2, task_read_for_pid/task_info, VM blocking, CoreSimulator, Xcode or memory pressure as the root cause.",
+    "All three libproc helpers actually executed the bounded PROC_ALL_PIDS/PROC_PIDTBSDINFO metadata collector and validated their own UID501/PPID2645/PGID/self row under the136-byte layout. Global observations remain partial:248 EPERM;255 EPERM+6 ESRCH;255 EPERM. Enumerated/observed/error totals reconcile with source skipping PID0. No denied target rows/UIDs were retained, so reasons beyond observed errno are not established.",
+    "The observed /bin/ps is root-owned with setuid mode0104755 and Apple persona-mgmt/system-task-ports.read entitlements. Its authority is not shown equivalent to the unprivileged Python helper. Metadata-only helper exit0 and successful own row are not complete-worker census, an ownership fallback, Parlor image selection, or normal Debug-binary libproc runtime provenance.",
+    "All three nonbuilding observations have live_before=true/live_after=true for the same owned xcodebuild handle: actual showBuildSettings-process overlap was observed. That Xcode command later timed out60s and was terminated/reaped. Its stdout/stderr were DEVNULL by design, so settings output, diagnostics and cause of timeout are unavailable. It did not execute app build/test or establish actool/Kotlin workload equivalence.",
+    "No new source defect is established by these failures. Do not suppress expected-looking global denials, mark incomplete observations complete, increase ps/Xcode budgets, replace argv with ucomm, cache stale argv, grant privileges or alter strict ownership merely to make this diagnostic green."
+  ],
+  "cleanup": {
+    "canonical_safe": true,
+    "stages": [
+      {
+        "label": "stop-immediate",
+        "status": "COMPLETE",
+        "started_at": "2026-09-08T14:43:03.136309+00:00",
+        "result": {
+          "exit_code": 0,
+          "isolated_registry": true,
+          "no_build_or_test_task": true
+        },
+        "finished_at": "2026-09-08T14:43:21.841247+00:00"
+      },
+      {
+        "label": "owned-simulator-retirement",
+        "status": "COMPLETE",
+        "started_at": "2026-09-08T14:43:21.843373+00:00",
+        "result": {
+          "result": "PASS",
+          "udid": "61CFBA14-3FA7-4210-BCB4-F4D3E8B1C776",
+          "actions": [
+            {
+              "command": "shutdown",
+              "exit_code": 0
+            },
+            {
+              "command": "delete",
+              "exit_code": 0
+            }
+          ],
+          "recovered_from_intent": false
+        },
+        "finished_at": "2026-09-08T14:43:28.524078+00:00"
+      },
+      {
+        "label": "stop-final",
+        "status": "COMPLETE",
+        "started_at": "2026-09-08T14:43:28.525855+00:00",
+        "result": {
+          "exit_code": 0,
+          "isolated_registry": true,
+          "no_build_or_test_task": true
+        },
+        "finished_at": "2026-09-08T14:43:29.355040+00:00"
+      },
+      {
+        "label": "exact-owned-resource-cleanup",
+        "status": "COMPLETE",
+        "started_at": "2026-09-08T14:43:29.357608+00:00",
+        "result": {
+          "resources_removed": true,
+          "global_cache_deleted": false
+        },
+        "finished_at": "2026-09-08T14:43:29.717446+00:00"
+      },
+      {
+        "label": "source-control-reconciliation",
+        "status": "COMPLETE",
+        "started_at": "2026-09-08T14:43:29.719501+00:00",
+        "result": {
+          "source_unchanged": true,
+          "controls_unchanged": true
+        },
+        "finished_at": "2026-09-08T14:43:30.257846+00:00"
+      }
+    ],
+    "all54_direct_commands_reaped": true,
+    "direct_child_pipe_selector_cleanup_errors": [],
+    "stop_immediate": {
+      "label": "stop-immediate",
+      "command": [
+        "/Users/runner/work/parlor/parlor/gradlew",
+        "--stop"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 65,
+      "started_at": "2026-09-08T14:43:03.137955+00:00",
+      "owned_pid": 4829,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 18.499,
+      "finished_at": "2026-09-08T14:43:21.823626+00:00",
+      "stdout_bytes": 544,
+      "stderr_bytes": 0
+    },
+    "stop_final": {
+      "label": "stop-final",
+      "command": [
+        "/Users/runner/work/parlor/parlor/gradlew",
+        "--stop"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 30,
+      "started_at": "2026-09-08T14:43:28.527764+00:00",
+      "owned_pid": 5733,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.818,
+      "finished_at": "2026-09-08T14:43:29.353327+00:00",
+      "stdout_bytes": 31,
+      "stderr_bytes": 0
+    },
+    "resource_holders": {
+      "label": "resource-holders",
+      "command": [
+        "/usr/sbin/lsof",
+        "-nP",
+        "-t",
+        "+w",
+        "+D",
+        "/Users/runner/work/_temp/parlor-process-probe-34239707887-1/resources"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 10,
+      "started_at": "2026-09-08T14:43:29.359608+00:00",
+      "owned_pid": 5853,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 1,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.339,
+      "finished_at": "2026-09-08T14:43:29.708986+00:00",
+      "stdout_bytes": 0,
+      "stderr_bytes": 0
+    },
+    "simulator": "Journal-bound exact UUID shutdown0/delete0; final inventory and owned device-directory absence checks required by COMPLETE finalizer; no global service/cache cleanup.",
+    "owned_resources": "Custody-checked resources/DerivedData removed only after all direct children reaped and lsof exited1 with empty stdout/stderr. Public wrapper distribution cache intentionally retained.",
+    "preservation": {
+      "failures": 0,
+      "errors": []
+    },
+    "signals": [],
+    "outer_uploaded_custody": {
+      "schema_version": 1,
+      "context": {
+        "repository": "Apdelrahman1911/parlor",
+        "branch": "fix/local-readiness-2026-09-07",
+        "head_sha": "5f35a20d3c9c846cd98b38a16881997ecf577497",
+        "tree": "e0e7abfff89975682a96a884cb745bcbc12e7238",
+        "workflow": ".github/workflows/production-verification.yml",
+        "root": "/Users/runner/work/parlor/parlor",
+        "run_id": 34239707887,
+        "run_attempt": 1
+      },
+      "kind": "PROCESS_PROBE_CUSTODY_CLEANUP",
+      "status": "COMPLETE",
+      "started_at": "2026-09-08T14:43:32.889856+00:00",
+      "upload": {
+        "artifact_id": "10061558867",
+        "sha256": "e5208be6be2c9603c622dbe8c6eb09072fdea9d4accb8174b2a5f661343bcd97"
+      },
+      "removed_owned_staging": true,
+      "probe_status": "OBSERVATIONS_WITH_FAILURES_NOT_RUNTIME_EVIDENCE",
+      "scope": "Custody cleanup only; probe status is preserved, not an application result.",
+      "finished_at": "2026-09-08T14:43:32.892187+00:00"
+    },
+    "limits": "These safe-retirement/custody checks do not convert diagnostic or prior application failures to PASS. Author performed no build/native cycle or cleanup."
+  },
+  "source_citations": [
+    {
+      "path": "scripts/ci/native_process_probe.py",
+      "sha256": "c87f6d1289ee50a7387988bd85953d451dac9e1b7b88a4d60f7b4848f86516da",
+      "bytes": 44789,
+      "lines": "33-69,283-301",
+      "meaning": "Only exact qualification runtime/devicetype enumeration receives120s; original seam verifies unchanged full argv/15s without importing ownership source."
+    },
+    {
+      "path": "scripts/ci/native_process_probe.py",
+      "sha256": "c87f6d1289ee50a7387988bd85953d451dac9e1b7b88a4d60f7b4848f86516da",
+      "bytes": 44789,
+      "lines": "104-119,187-281,405-428",
+      "meaning": "Complete ps output/count checks;15s observations; timeout is latched before optional exact-unreaped-child sample; three observations run sequentially; actual installed binary passed explicitly."
+    },
+    {
+      "path": "scripts/ci/native_process_probe.py",
+      "sha256": "c87f6d1289ee50a7387988bd85953d451dac9e1b7b88a4d60f7b4848f86516da",
+      "bytes": 44789,
+      "lines": "453-497,615-629",
+      "meaning": "One showBuildSettings overlap only,60s timeout; callback COMPLETE is not command PASS; any timeout or incomplete metadata keeps the diagnostic failed."
+    },
+    {
+      "path": "scripts/ci/native_process_probe.py",
+      "sha256": "c87f6d1289ee50a7387988bd85953d451dac9e1b7b88a4d60f7b4848f86516da",
+      "bytes": 44789,
+      "lines": "511-524,577-608,649-673",
+      "meaning": "Independent finalizers, direct child reaping, strict lsof holder check, owned simulator/directory absence, source/control/ps identity equality and confirmed-upload custody cleanup."
+    },
+    {
+      "path": "scripts/ci/native_process_metadata.py",
+      "sha256": "6497e55c6c4a7f0922486d58ce47bc9ad05b987e8cca9bc5c60adf2b13cd9256",
+      "bytes": 4131,
+      "lines": "26-66",
+      "meaning": "PROC_ALL_PIDS list; bounded136-byte PROC_PIDTBSDINFO rows; EPERM/EACCES and ESRCH/ENOENT classified; own UID/PPID/PGID validated; PID0 excluded; incomplete if any errors."
+    },
+    {
+      "path": "scripts/verification/ios-readiness/owned_lane.py",
+      "sha256": "949091403ac669429f962120e9873a09897a87bdcae10702720ede0c68342f03",
+      "bytes": 10446,
+      "lines": "42-58,82-90,94-188",
+      "meaning": "Original full ps15; baseline PID/start exclusion; exact detached-Java argv predicate; current ancestor/group/FIFO-related observations and fresh pre-signal identity remain authoritative."
+    },
+    {
+      "path": "scripts/ci/native_continuation.py",
+      "sha256": "d5c6faf5a33187a9bed855f8d82b17ea2c90d72c3b22df0a041975f7a6bc7b21",
+      "bytes": 42095,
+      "lines": "161-195,494-512,652-684,686-729",
+      "meaning": "Fresh native-preflight qualifies toolchain and binds source/control manifests only; no application/simulator allocation/ABI query; source/custody cleanup remains upload-gated."
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
+      "sha256": "98334625a01adbe3c8b2fb1573895a5056c95e430cb9d857142809d8ef4db454",
+      "bytes": 56767,
+      "lines": "189-225",
+      "meaning": "Current normal runner records primary before fallible stop/poll, bounded secondary cleanup error and finished_at, then rethrows original."
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/run_ios_readiness.py",
+      "sha256": "a56f47787c5abbda301cdfcafa5c8ac4ad7eb505d21d560e86063f93453a36f7",
+      "bytes": 72609,
+      "lines": "393-425",
+      "meaning": "Current mutable L08 companion has the same independently reviewed primary/secondary receipt repair; diagnostic did not execute it."
+    }
+  ],
+  "historical_references": [
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-process-probe-platform-diagnosis-01.json",
+      "sha256": "7437cee01eb25eb854890fad9a19052a25b73d632900109a693fe0aa007c6998",
+      "bytes": 18787
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-process-probe-34232325670-independent-01.json",
+      "sha256": "adec30935b187f7a6acd5aab5b889e674f4f045cc9796a9c12f4f8a414d438d9",
+      "bytes": 9694
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/hosted-ps-source-research-01/FINDINGS.md",
+      "sha256": "b93b245653d7d70339191198ffc624eded19899ab8fb29888f54d48ecee29d1c",
+      "bytes": 12757
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-command-and-runtime-repair-independent-correction-02.json",
+      "sha256": "2129a189055e44478484515e1a24fd2cc228f7dfdebc97dc277bf49c41383bce",
+      "bytes": 10455
+    }
+  ],
+  "next_justified_action": {
+    "recommendation": "After independent review of this source-bound diagnosis and exact evidence, perform one fresh current-frozen-source native-preflight, then separately review its actual A/B bindings before any serial A19/B20 native-evidence dispatch.",
+    "why": "The approved discriminating no-app phases have now actually executed and safe cleanup is established. A third unchanged probe would not answer the unobserved application workload. Current source/control-bound A/B manifests still must be generated; the already reviewed primary/secondary error and qualified Foundation-profile corrections have not yet received actual A/B execution. Fresh preflight is a distinct binding operation, not runtime proof or a retry of the failed no-app diagnostic.",
+    "source_correction_now": "None justified by this run. Preserve full ps15, current strict ownership/cleanup/ABI/source/toolchain/protection guards and every failed receipt.",
+    "preflight_scope": "Existing native_continuation.preflight qualifies the exact platform, describes/binds source, composes A/B control manifests, uploads them and removes only upload-confirmed exact owned binding/staging. It performs no app build, simulator allocation, XCTest or libproc ABI/query.",
+    "authorization_boundary": "This author diagnosis does not authorize dispatch. Coordinator manages one lane; independent reviewer must approve exact new preflight/source/controls/artifact identities before A19/B20. If source changes first, commit reviewed changes and mechanical inventory and use new bindings.",
+    "application_result_policy": "A19/B20 must be assessed from actual app/XCTest/functional-storage/retained-host/strict-protection and Parlor libproc evidence. On a recurring ownership failure preserve the new primary/secondary receipt fields, exact commands, logs and cleanup; stop and inspect, with no blind retry, fallback or readiness promotion. This diagnostic does not install timeout stack instrumentation in A/B."
+  },
+  "excluded_scope": [
+    "No app build or executed XCTest in this run.",
+    "No L08 functional-storage/retained-host completion or strict file-protection comparison.",
+    "No normal Parlor Debug-image/libproc provenance; only diagnostic metadata helper.",
+    "No fresh final dependency export/render/candidate-consumer chain.",
+    "No final combined Apple/Windows/Linux qualification.",
+    "No physical devices, Store identity/signing/publication/promotion, credentials or owner/legal acceptance."
+  ],
+  "evidence": [
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34239707887/run.json",
+      "sha256": "f1271cd966ce0aa371606e10a9eb8b3e24d6a80aec0363b204e7c02d90e4daf6",
+      "bytes": 12685
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34239707887/attempt.json",
+      "sha256": "9093d9f7b2bf862f2d0922320a864859027cd28bff784587e0c51e70dbf00310",
+      "bytes": 12707
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34239707887/jobs.json",
+      "sha256": "51443cd2e97d3d8b0321bd748dbafead696c41b5b722e3f65df39d78a7edffff",
+      "bytes": 10561
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34239707887/workflow.json",
+      "sha256": "8345984073768616fd6aff6682c95051f186881c5fa4727b120c80e019841ece",
+      "bytes": 533
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34239707887/artifacts.json",
+      "sha256": "8c27b98e0a8a79efd30f6f532eb5f8921e57c468366a7295e9cfdc86ccb002fa",
+      "bytes": 1501
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34239707887/run.log",
+      "sha256": "b5eb7eae4a7cc64d9c26b2f9338756a94433fcaba4d17161c5568ab2c3943e42",
+      "bytes": 59236
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34239707887/native-process-probe/probe.json",
+      "sha256": "b598069f8c26e3d1851dc7e4eaade20fe72968f22403b32716fd996535990bb0",
+      "bytes": 49515
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34239707887/native-process-probe/owned-simulator-plan.json",
+      "sha256": "a59c2e17a481d94bd6768291614926677b3dd77a5fe85140862fb24662d32f15",
+      "bytes": 6539
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34239707887/native-process-probe/owned-simulator-create.json",
+      "sha256": "4759db5a4262fb6154c7b27abc5776ac4a51c020e416d18be7907456429d08ac",
+      "bytes": 504
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34239707887/native-process-probe/owned-simulator-adopted.json",
+      "sha256": "91c05c1d26e13ac4e664f135fcfa4b5656b24cc708d2619e84b531dc58881675",
+      "bytes": 573
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34239707887/native-process-probe-cleanup/parlor-process-probe-34239707887-1-cleanup.json",
+      "sha256": "87666a0b900b950b7eb69aa7fafabfff6999305ff7720ed843f0fe2dd762bdb7",
+      "bytes": 913
+    }
+  ],
+  "activity": {
+    "project_imports": 0,
+    "unit_tests": 0,
+    "builds": 0,
+    "native_commands": 0,
+    "signals": 0,
+    "workflow_dispatches": 0,
+    "remote_queries": 0,
+    "source_edits": 0,
+    "review_owned_resources_created": 0,
+    "performed": "Read retained JSON/log/ZIP/current source and approval records; stdlib hash/JSON/ZIP inspection and read-only Git frozen-blob comparisons; write only this new append-only diagnosis report."
+  },
+  "readiness": "NOT_READY. Source-bound no-app observations are now available with honest failures and safe cleanup. Original A/B ownership timeout mechanism remains unknown; A functional/retained-host/strict protection, B actual application libproc provenance, C fresh final dependency chain and D combined qualification remain incomplete."
+}

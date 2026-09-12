@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest" tests="42" skipped="0" failures="0" errors="0" timestamp="2026-09-05T19:41:39.928Z" hostname="192.168.1.11" time="0.162">
+  <properties/>
+  <testcase name="retained peer rejects a mutated start replay under the accepted start id()[desktop]" classname="com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest" time="0.05"/>
+  <testcase name="caller cancellation during command write propagates and starts query-only recovery()[desktop]" classname="com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest" time="0.008"/>
+  <testcase name="outcome lookup cannot overtake the original command write()[desktop]" classname="com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest" time="0.004"/>
+  <testcase name="applied result remains in flight until its authoritative snapshot is installed()[desktop]" classname="com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest" time="0.005"/>
+  <testcase name="host routes each private snapshot only to its recipient()[desktop]" classname="com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest" time="0.009"/>
+  <testcase name="peer retains every authoritative command outcome until UI acknowledgement()[desktop]" classname="com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest" time="0.004"/>
+  <testcase name="authenticated host traffic restarts timed out outcome lookup without replay()[desktop]" classname="com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest" time="0.002"/>
+  <testcase name="one peer cannot evict another peer command outcome()[desktop]" classname="com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest" time="0.021"/>
+  <testcase name="acknowledged unknown outcome releases command and reuses host sequence()[desktop]" classname="com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest" time="0.002"/>
+  <testcase name="peer never replays sequence gap command and requests a fresh snapshot()[desktop]" classname="com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest" time="0.001"/>
+  <testcase name="host rejects commands while suspended without consuming id or sequence()[desktop]" classname="com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest" time="0.001"/>
+  <testcase name="parent scope cancellation completes executing and queued mutation callers()[desktop]" classname="com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest" time="0.003"/>
+  <testcase name="close rejects stale submissions and wipes retained command payload()[desktop]" classname="com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest" time="0.001"/>
+  <testcase name="host gameplay mutation is suspended while lifecycle mutation remains ordered()[desktop]" classname="com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest" time="0.002"/>
+  <testcase name="in-memory peer room stamps command actor like production transport()[desktop]" classname="com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest" time="0.002"/>
+  <testcase name="malformed command id is dropped without killing host command processing()[desktop]" classname="com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest" time="0.002"/>
+  <testcase name="peer automatically reconciles a lost result without replaying the action()[desktop]" classname="com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest" time="0.001"/>
+  <testcase name="peer allows only one mutating command in flight()[desktop]" classname="com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest" time="0.001"/>
+  <testcase name="host mutation and peer command share one authoritative order()[desktop]" classname="com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest" time="0.002"/>
+  <testcase name="peer marks failed send ambiguous without replaying or releasing command()[desktop]" classname="com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest" time="0.001"/>
+  <testcase name="host end is delivered before end returns and remains delivered after close()[desktop]" classname="com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest" time="0.003"/>
+  <testcase name="outcome reconciliation has a deadline and reports recovery timeout()[desktop]" classname="com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest" time="0.001"/>
+  <testcase name="peer installs only valid monotonic atomic snapshots()[desktop]" classname="com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest" time="0.001"/>
+  <testcase name="failed publication does not kill mailbox or strand later host mutation()[desktop]" classname="com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest" time="0.002"/>
+  <testcase name="heartbeat snapshots and terminal envelopes share one monotonic host sequence()[desktop]" classname="com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest" time="0.002"/>
+  <testcase name="peer cannot enqueue a command while room is suspended()[desktop]" classname="com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest" time="0.001"/>
+  <testcase name="closing host coordinator completes executing and queued mutation callers()[desktop]" classname="com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest" time="0.001"/>
+  <testcase name="peer validates terminal envelope before asking transport to commit()[desktop]" classname="com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest" time="0.0"/>
+  <testcase name="caller cancellation removes a queued host mutation before it can execute()[desktop]" classname="com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest" time="0.001"/>
+  <testcase name="peer does not accept terminal end when durable transport commit fails()[desktop]" classname="com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest" time="0.001"/>
+  <testcase name="fresh peer runtime resumes the host command sequence from its authoritative snapshot()[desktop]" classname="com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest" time="0.003"/>
+  <testcase name="failed terminal transport is bounded and mailbox remains closable()[desktop]" classname="com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest" time="0.001"/>
+  <testcase name="peer accepts a command result that arrives after a newer-sequence snapshot()[desktop]" classname="com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest" time="0.002"/>
+  <testcase name="retained peer acknowledges the stable start offer replay after reconnect()[desktop]" classname="com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest" time="0.001"/>
+  <testcase name="slow compatibility result observer cannot block authoritative inbound frames()[desktop]" classname="com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest" time="0.002"/>
+  <testcase name="host outcome query returns recorded result without applying command again()[desktop]" classname="com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest" time="0.001"/>
+  <testcase name="host close waits for inbound collector cancellation cleanup()[desktop]" classname="com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest" time="0.002"/>
+  <testcase name="peer ignores validated terminal frame no longer owned by transport()[desktop]" classname="com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest" time="0.001"/>
+  <testcase name="unchanged host mutation does not advance revision or publish snapshot()[desktop]" classname="com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest" time="0.001"/>
+  <testcase name="failed snapshot installation does not consume its revision()[desktop]" classname="com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest" time="0.001"/>
+  <testcase name="peer queries ambiguous send outcome on restore without replaying command()[desktop]" classname="com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest" time="0.001"/>
+  <testcase name="host applies once then rejects duplicate gap and stale revision deterministically()[desktop]" classname="com.parlor.session.multidevice.AuthoritativeSessionCoordinatorTest" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,1095 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/factory_review",
+  "inventory_digest_definition": "sha256(json.dumps([[path,sha256,lines] for each file in frozen order], separators=(',',':')).encode())",
+  "production_callers": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSecureKeyValueBacking.kt",
+      "sha256": "4bce714c161a892ecd66fff662561d925db7e045af8cacf28e5b698c887015c7",
+      "lines": 262,
+      "reviewed_ranges": [
+        [
+          1,
+          262
+        ]
+      ],
+      "relevance": "Complete query builders, native SecItem calls, dispatchers, mutex, retries, destruction and error maps; instrumentation only copy-local primitive status observer."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSnapshotFileSystem.kt",
+      "sha256": "8a99e60647c3d9f137ca8783e636b37798d06f4883df3609bf6cd2a0568bdf48",
+      "lines": 500,
+      "reviewed_ranges": [
+        [
+          1,
+          500
+        ]
+      ],
+      "relevance": "Complete protected platform atomic filesystem. Snapshot numeric status not attributed; synthetic safe-suffix file is not game-envelope recovery."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/commonMain/kotlin/com/parlor/app/shell/home/HomeRecoveryAvailability.kt",
+      "sha256": "4c8a962fba7ec8334cc8f4dfe0a75f221b201178481ae115d85ae391647fbb2a",
+      "lines": 146,
+      "reviewed_ranges": [
+        [
+          1,
+          146
+        ]
+      ],
+      "relevance": "Actual Home recovery orchestration re-invoked; initial Home invocation not claimed as attributed."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/iosMain/kotlin/com/parlor/app/storage/PlatformStorage.ios.kt",
+      "sha256": "cb69b6de029bf7d9f84dbc5bf19139150906a29d64cf29a60994259ca657a0c0",
+      "lines": 19,
+      "reviewed_ranges": [
+        [
+          1,
+          19
+        ]
+      ],
+      "relevance": "Koin real secure backing/storage and snapshot filesystem."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/commonMain/kotlin/com/parlor/app/di/StorageModule.kt",
+      "sha256": "9734dde8f751d0e5792577692c322051aa0adc7f45ed0fa6ac5961cf9295e87c",
+      "lines": 23,
+      "reviewed_ranges": [
+        [
+          1,
+          23
+        ]
+      ],
+      "relevance": "Actual SnapshotStore resolves platform filesystem and strict Json."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/commonMain/kotlin/com/parlor/app/di/AppModule.kt",
+      "sha256": "b449781eb52418300504344c1af978ef7cb41e4e1f35f8d50faa4b8662bbdb76",
+      "lines": 74,
+      "reviewed_ranges": [
+        [
+          1,
+          74
+        ]
+      ],
+      "relevance": "Single production Koin graph includes storage/platform/P2P modules."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/commonMain/kotlin/com/parlor/app/p2p/P2pBootstrap.kt",
+      "sha256": "b2a8fb0db69c617ca45b5491a9fbf4485dff9b2ffa651715670f6e3e74299da0",
+      "lines": 13,
+      "reviewed_ranges": [
+        [
+          1,
+          13
+        ]
+      ],
+      "relevance": "Required platform P2P binding."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/iosMain/kotlin/com/parlor/transport/p2p/P2pTransportModule.ios.kt",
+      "sha256": "bea599aa4d6dd9820477f2cbee57c213a9988da33e51eada0eb061d25fd77753",
+      "lines": 71,
+      "reviewed_ranges": [
+        [
+          1,
+          71
+        ]
+      ],
+      "relevance": "Actual RoomTransport secureStorage=get from same Koin graph; credential-only query does not invoke kit factory."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/commonMain/kotlin/com/parlor/transport/p2p/P2pKitRoomTransport.kt",
+      "sha256": "a5e2536e41c81c54b58ec27da135ea9046969db9cb80084e2a0da3b15ddde7c7",
+      "lines": 4811,
+      "reviewed_ranges": [
+        [
+          103,
+          238
+        ],
+        [
+          615,
+          654
+        ]
+      ],
+      "relevance": "Targeted constructor/credentialStore/resumableSession path, not full transport-file coverage."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/commonMain/kotlin/com/parlor/transport/p2p/ResumableCredentialStore.kt",
+      "sha256": "f89db2c37f98ca92911bd90092c703b437803c310f86805a287fb45f5a8f8cb6",
+      "lines": 408,
+      "reviewed_ranges": [
+        [
+          1,
+          154
+        ],
+        [
+          304,
+          375
+        ]
+      ],
+      "relevance": "Targeted secure-load failure handling, actual resumable key, strict decoding and buffer erasure. Distinct synthetic UUID key."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/storage/src/commonMain/kotlin/com/parlor/storage/secure/PlatformKeyedSecureStorage.kt",
+      "sha256": "5be752e2b849fcd708916e625a0faf06daa1c4497a2ce430f7700f935788e768",
+      "lines": 83,
+      "reviewed_ranges": [
+        [
+          1,
+          83
+        ]
+      ],
+      "relevance": "Exact wrapper errors and cancellation preserved."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/storage/src/commonMain/kotlin/com/parlor/storage/snapshot/FileBackedSnapshotStore.kt",
+      "sha256": "e2ca0be28fd2f0eafee1a55022653190cf30a8c6da620dc3dfe56f361e0da27f",
+      "lines": 246,
+      "reviewed_ranges": [
+        [
+          98,
+          246
+        ]
+      ],
+      "relevance": "Targeted list/restore filters .snapshot.json, excluding synthetic .native-readiness filename."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/iosMain/kotlin/com/parlor/designsystem/localization/LocalAppLocale.ios.kt",
+      "sha256": "0e0783ca3e38634bd3469760f5dbfa5ade8509b976d0ec676202f4513cd8e098",
+      "lines": 83,
+      "reviewed_ranges": [
+        [
+          1,
+          83
+        ]
+      ],
+      "relevance": "Production locale/native direction bridge; DS-C01 patch approval separately owned by native reviewer/root."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/iosMain/kotlin/com/parlor/app/MainViewController.kt",
+      "sha256": "c77abd03ddcae230b4752d888b16c3d74231d89c967624c31129d176a5ed20ce",
+      "lines": 56,
+      "reviewed_ranges": [
+        [
+          1,
+          56
+        ]
+      ],
+      "relevance": "Actual Kotlin/Compose native entry; probe only in temporary copy."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/iosApp/iosApp/ContentView.swift",
+      "sha256": "5881b354ccc45340100356fbf37480e94efdcc2e8fe823f0bb6b5b60f8ccaa87",
+      "lines": 62,
+      "reviewed_ranges": [
+        [
+          1,
+          62
+        ]
+      ],
+      "relevance": "Actual native wrapper/lifecycle/geometry."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/iosApp/iosApp/iOSApp.swift",
+      "sha256": "01d47afe5d13eb9ec48d9e8987c7920e72f2fefa5b06ec525087025caa809386",
+      "lines": 10,
+      "reviewed_ranges": [
+        [
+          1,
+          10
+        ]
+      ],
+      "relevance": "Native application root."
+    }
+  ],
+  "exclusions": [
+    "No private signing material, player data, personal devices, real Store credentials, or unrelated files inspected.",
+    "No entire-repository coverage claim: bounded native-control review and reachable production boundaries only.",
+    "Native binary/image runtime inspection remains a root-lane step, not source-reading evidence."
+  ],
+  "reviewed_at": "2026-09-07T05:24:44.040758+00:00",
+  "freeze_file": "remediation-runs/2026-09-07-local-readiness/native/controls-review-freeze-04.json",
+  "freeze_file_sha256": "e483933975c5ec1873f69a297a1058c9477705e351d0909857f72781a933a136",
+  "inventory_digest": "792c1dacf2e466b49735335da3a6e85edcdeb3b779e773e0cd77017ab88b7dcb",
+  "file_count": 38,
+  "line_count": 8209,
+  "control_coverage": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/DSC01CatalogSelection.swift.in",
+      "sha256": "2649fb97fe27e74539dfd9867f6677c6a390e722129f8e2434231f44b1d91465",
+      "line_count": 280,
+      "reviewed_ranges": [
+        [
+          1,
+          280
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "copy-only native/test template",
+      "method": "Previous complete same-reviewer freeze03 reading; exact current hash still matches. No delegated-summary coverage claim.",
+      "disposition": "SOURCE REVIEW COMPLETE;70 synthetic control tests independently verified; exact bound app/native execution pending",
+      "evidence": [
+        "reviews/native-controls-freeze03-coverage.json",
+        "reviews/native-entitlement-final-draft-supplement.json",
+        "native/controls-review-feedback-03.diff",
+        "native/controls-review-freeze-04.json",
+        "evidence/native-controls-04/tests.log",
+        "evidence/native-controls-04/receipt.json"
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/DSC01ComposeObservation.kt.in",
+      "sha256": "e54503b0d39a1c1055a5334dd835ccad30a96a887ff62560f22202b7231c266c",
+      "line_count": 178,
+      "reviewed_ranges": [
+        [
+          1,
+          178
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "copy-only native/test template",
+      "method": "Previous complete same-reviewer freeze03 reading; exact current hash still matches. No delegated-summary coverage claim.",
+      "disposition": "SOURCE REVIEW COMPLETE;70 synthetic control tests independently verified; exact bound app/native execution pending",
+      "evidence": [
+        "reviews/native-controls-freeze03-coverage.json",
+        "reviews/native-entitlement-final-draft-supplement.json",
+        "native/controls-review-feedback-03.diff",
+        "native/controls-review-freeze-04.json",
+        "evidence/native-controls-04/tests.log",
+        "evidence/native-controls-04/receipt.json"
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/DSC01InvocationBridge.kt.in",
+      "sha256": "fc27547c977ed48d55c2254ed6779dc22fcd64f6cc214c8f4121b9f3e110a330",
+      "line_count": 63,
+      "reviewed_ranges": [
+        [
+          1,
+          63
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "copy-only native/test template",
+      "method": "Previous complete same-reviewer freeze03 reading; exact current hash still matches. No delegated-summary coverage claim.",
+      "disposition": "SOURCE REVIEW COMPLETE;70 synthetic control tests independently verified; exact bound app/native execution pending",
+      "evidence": [
+        "reviews/native-controls-freeze03-coverage.json",
+        "reviews/native-entitlement-final-draft-supplement.json",
+        "native/controls-review-feedback-03.diff",
+        "native/controls-review-freeze-04.json",
+        "evidence/native-controls-04/tests.log",
+        "evidence/native-controls-04/receipt.json"
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/DSC01MafiaStartSelection.swift.in",
+      "sha256": "50aad088497c862ff962dc5b1a569a6285f99ce761bf710d4fe8f38e3b698753",
+      "line_count": 236,
+      "reviewed_ranges": [
+        [
+          1,
+          236
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "copy-only native/test template",
+      "method": "Previous complete same-reviewer freeze03 reading; exact current hash still matches. No delegated-summary coverage claim.",
+      "disposition": "SOURCE REVIEW COMPLETE;70 synthetic control tests independently verified; exact bound app/native execution pending",
+      "evidence": [
+        "reviews/native-controls-freeze03-coverage.json",
+        "reviews/native-entitlement-final-draft-supplement.json",
+        "native/controls-review-feedback-03.diff",
+        "native/controls-review-freeze-04.json",
+        "evidence/native-controls-04/tests.log",
+        "evidence/native-controls-04/receipt.json"
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/DSC01NativeObservation.swift.in",
+      "sha256": "f806c5fa6533f9114ad9bf33fdc6fc4647086b1fb2daf4fe09ba93cf6029ee94",
+      "line_count": 97,
+      "reviewed_ranges": [
+        [
+          1,
+          97
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "copy-only native/test template",
+      "method": "Previous complete same-reviewer freeze03 reading; exact current hash still matches. No delegated-summary coverage claim.",
+      "disposition": "SOURCE REVIEW COMPLETE;70 synthetic control tests independently verified; exact bound app/native execution pending",
+      "evidence": [
+        "reviews/native-controls-freeze03-coverage.json",
+        "reviews/native-entitlement-final-draft-supplement.json",
+        "native/controls-review-feedback-03.diff",
+        "native/controls-review-freeze-04.json",
+        "evidence/native-controls-04/tests.log",
+        "evidence/native-controls-04/receipt.json"
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/DSC01OSAppSettings.swift.in",
+      "sha256": "52e9bcfe9217998b13ca75c2cc9c097753e312afac4b0ad269a06953d1c83e38",
+      "line_count": 400,
+      "reviewed_ranges": [
+        [
+          1,
+          400
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "copy-only native/test template",
+      "method": "Previous complete same-reviewer freeze03 reading; exact current hash still matches. No delegated-summary coverage claim.",
+      "disposition": "SOURCE REVIEW COMPLETE;70 synthetic control tests independently verified; exact bound app/native execution pending",
+      "evidence": [
+        "reviews/native-controls-freeze03-coverage.json",
+        "reviews/native-entitlement-final-draft-supplement.json",
+        "native/controls-review-feedback-03.diff",
+        "native/controls-review-freeze-04.json",
+        "evidence/native-controls-04/tests.log",
+        "evidence/native-controls-04/receipt.json"
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/DSC01OSPreferenceBaseline.swift.in",
+      "sha256": "c657f9ca83d9053d56d6debfc509d95fe07486f21e76c8b0a62ba2604978879c",
+      "line_count": 149,
+      "reviewed_ranges": [
+        [
+          1,
+          149
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "copy-only native/test template",
+      "method": "Previous complete same-reviewer freeze03 reading; exact current hash still matches. No delegated-summary coverage claim.",
+      "disposition": "SOURCE REVIEW COMPLETE;70 synthetic control tests independently verified; exact bound app/native execution pending",
+      "evidence": [
+        "reviews/native-controls-freeze03-coverage.json",
+        "reviews/native-entitlement-final-draft-supplement.json",
+        "native/controls-review-feedback-03.diff",
+        "native/controls-review-freeze-04.json",
+        "evidence/native-controls-04/tests.log",
+        "evidence/native-controls-04/receipt.json"
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/DSC01OSPrerequisite.swift.in",
+      "sha256": "f266cc919734bd840a6a6e9288088e9e437a67b2ed41d16c8a02337ad19627d8",
+      "line_count": 398,
+      "reviewed_ranges": [
+        [
+          1,
+          398
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "copy-only native/test template",
+      "method": "Previous complete same-reviewer freeze03 reading; exact current hash still matches. No delegated-summary coverage claim.",
+      "disposition": "SOURCE REVIEW COMPLETE;70 synthetic control tests independently verified; exact bound app/native execution pending",
+      "evidence": [
+        "reviews/native-controls-freeze03-coverage.json",
+        "reviews/native-entitlement-final-draft-supplement.json",
+        "native/controls-review-feedback-03.diff",
+        "native/controls-review-freeze-04.json",
+        "evidence/native-controls-04/tests.log",
+        "evidence/native-controls-04/receipt.json"
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/DSC01Probe.swift.in",
+      "sha256": "9c22d147c4b848db6f131f1ab0e406d1aea81bf4000af2c1fc392e75acf1db6b",
+      "line_count": 451,
+      "reviewed_ranges": [
+        [
+          1,
+          451
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "copy-only native/test template",
+      "method": "Previous complete same-reviewer freeze03 reading; exact current hash still matches. No delegated-summary coverage claim.",
+      "disposition": "SOURCE REVIEW COMPLETE;70 synthetic control tests independently verified; exact bound app/native execution pending",
+      "evidence": [
+        "reviews/native-controls-freeze03-coverage.json",
+        "reviews/native-entitlement-final-draft-supplement.json",
+        "native/controls-review-feedback-03.diff",
+        "native/controls-review-freeze-04.json",
+        "evidence/native-controls-04/tests.log",
+        "evidence/native-controls-04/receipt.json"
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/DSC01PublicDiagnostics.swift.in",
+      "sha256": "6dce9ea0f597ddce7fb95f41d3d94570f41762ca806cb0c6303e032a1375dd88",
+      "line_count": 35,
+      "reviewed_ranges": [
+        [
+          1,
+          35
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "copy-only native/test template",
+      "method": "Previous complete same-reviewer freeze03 reading; exact current hash still matches. No delegated-summary coverage claim.",
+      "disposition": "SOURCE REVIEW COMPLETE;70 synthetic control tests independently verified; exact bound app/native execution pending",
+      "evidence": [
+        "reviews/native-controls-freeze03-coverage.json",
+        "reviews/native-entitlement-final-draft-supplement.json",
+        "native/controls-review-feedback-03.diff",
+        "native/controls-review-freeze-04.json",
+        "evidence/native-controls-04/tests.log",
+        "evidence/native-controls-04/receipt.json"
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/DSC01UIKitObservation.kt.in",
+      "sha256": "83b35d069e738f59b79c44d11569c3a9a3a64b4427a9cb7e7d46c12b60f81e80",
+      "line_count": 51,
+      "reviewed_ranges": [
+        [
+          1,
+          51
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "copy-only native/test template",
+      "method": "Previous complete same-reviewer freeze03 reading; exact current hash still matches. No delegated-summary coverage claim.",
+      "disposition": "SOURCE REVIEW COMPLETE;70 synthetic control tests independently verified; exact bound app/native execution pending",
+      "evidence": [
+        "reviews/native-controls-freeze03-coverage.json",
+        "reviews/native-entitlement-final-draft-supplement.json",
+        "native/controls-review-feedback-03.diff",
+        "native/controls-review-freeze-04.json",
+        "evidence/native-controls-04/tests.log",
+        "evidence/native-controls-04/receipt.json"
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/IOSAppLaunchUITests.swift.in",
+      "sha256": "9bdfa70f43074569a8699dda01864496188562b117289c994ea4f4e8c844bf60",
+      "line_count": 665,
+      "reviewed_ranges": [
+        [
+          1,
+          665
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "copy-only native/test template",
+      "method": "Previous complete same-reviewer freeze03 reading; exact current hash still matches. No delegated-summary coverage claim.",
+      "disposition": "SOURCE REVIEW COMPLETE;70 synthetic control tests independently verified; exact bound app/native execution pending",
+      "evidence": [
+        "reviews/native-controls-freeze03-coverage.json",
+        "reviews/native-entitlement-final-draft-supplement.json",
+        "native/controls-review-feedback-03.diff",
+        "native/controls-review-freeze-04.json",
+        "evidence/native-controls-04/tests.log",
+        "evidence/native-controls-04/receipt.json"
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/NativeReadinessLaunch.swift.in",
+      "sha256": "984561f6e3dc5b9634d03c6a3de36ba58eba7dd10b984cba68d955d7dd2b3f42",
+      "line_count": 104,
+      "reviewed_ranges": [
+        [
+          1,
+          104
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "copy-only native/test template",
+      "method": "Previous complete same-reviewer freeze03 reading; exact current hash still matches. No delegated-summary coverage claim.",
+      "disposition": "SOURCE REVIEW COMPLETE;70 synthetic control tests independently verified; exact bound app/native execution pending",
+      "evidence": [
+        "reviews/native-controls-freeze03-coverage.json",
+        "reviews/native-entitlement-final-draft-supplement.json",
+        "native/controls-review-feedback-03.diff",
+        "native/controls-review-freeze-04.json",
+        "evidence/native-controls-04/tests.log",
+        "evidence/native-controls-04/receipt.json"
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/NativeReadinessProbe.kt.in",
+      "sha256": "b533be8c842c2fe9e5e4f983dfd8ac3a5890ac9b513c5b6e29401b3f007b916b",
+      "line_count": 281,
+      "reviewed_ranges": [
+        [
+          1,
+          281
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "copy-only native/test template",
+      "method": "Previous complete same-reviewer freeze03 reading; exact current hash still matches. No delegated-summary coverage claim.",
+      "disposition": "SOURCE REVIEW COMPLETE;70 synthetic control tests independently verified; exact bound app/native execution pending",
+      "evidence": [
+        "reviews/native-controls-freeze03-coverage.json",
+        "reviews/native-entitlement-final-draft-supplement.json",
+        "native/controls-review-feedback-03.diff",
+        "native/controls-review-freeze-04.json",
+        "evidence/native-controls-04/tests.log",
+        "evidence/native-controls-04/receipt.json"
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/NativeReadinessUITests.swift.in",
+      "sha256": "ea70eb8e4606eacf3a81f73d3e53706bbec3ba33b58ff2ff51fc1c8935e4796d",
+      "line_count": 64,
+      "reviewed_ranges": [
+        [
+          1,
+          64
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "copy-only native/test template",
+      "method": "Previous complete same-reviewer freeze03 reading; exact current hash still matches. No delegated-summary coverage claim.",
+      "disposition": "SOURCE REVIEW COMPLETE;70 synthetic control tests independently verified; exact bound app/native execution pending",
+      "evidence": [
+        "reviews/native-controls-freeze03-coverage.json",
+        "reviews/native-entitlement-final-draft-supplement.json",
+        "native/controls-review-feedback-03.diff",
+        "native/controls-review-freeze-04.json",
+        "evidence/native-controls-04/tests.log",
+        "evidence/native-controls-04/receipt.json"
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/README.md",
+      "sha256": "073dfc3e309374e4e45dec27e3332eb06260573d3bf5309a007eda843b6efdbc",
+      "line_count": 141,
+      "reviewed_ranges": [
+        [
+          1,
+          141
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "verification documentation/provenance",
+      "method": "Final frozen261/212/full898/full141-line draft source previously reread by same reviewer; published byte identity independently verified against final-draft-supplement. Earlier mixed-version draft receipt is explicitly superseded.",
+      "disposition": "SOURCE REVIEW COMPLETE;70 synthetic control tests independently verified; exact bound app/native execution pending",
+      "evidence": [
+        "reviews/native-controls-freeze03-coverage.json",
+        "reviews/native-entitlement-final-draft-supplement.json",
+        "native/controls-review-feedback-03.diff",
+        "native/controls-review-freeze-04.json",
+        "evidence/native-controls-04/tests.log",
+        "evidence/native-controls-04/receipt.json"
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/artifact_inventory.py",
+      "sha256": "8573fde3df191027d867a91fcdf9e4d544be319f6dc6e474ddeb83a6e84d9066",
+      "line_count": 116,
+      "reviewed_ranges": [
+        [
+          1,
+          116
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "non-shipping verification Python",
+      "method": "Previous complete same-reviewer freeze03 reading; exact current hash still matches. No delegated-summary coverage claim.",
+      "disposition": "SOURCE REVIEW COMPLETE;70 synthetic control tests independently verified; exact bound app/native execution pending",
+      "evidence": [
+        "reviews/native-controls-freeze03-coverage.json",
+        "reviews/native-entitlement-final-draft-supplement.json",
+        "native/controls-review-feedback-03.diff",
+        "native/controls-review-freeze-04.json",
+        "evidence/native-controls-04/tests.log",
+        "evidence/native-controls-04/receipt.json"
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/bind_source.py",
+      "sha256": "0954f5c24eb61c4f09c365efe6b3ab1fdb9f8342f86bad3e7654795464b53347",
+      "line_count": 59,
+      "reviewed_ranges": [
+        [
+          1,
+          59
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "non-shipping verification Python",
+      "method": "Previous complete same-reviewer freeze03 reading; exact current hash still matches. No delegated-summary coverage claim.",
+      "disposition": "SOURCE REVIEW COMPLETE;70 synthetic control tests independently verified; exact bound app/native execution pending",
+      "evidence": [
+        "reviews/native-controls-freeze03-coverage.json",
+        "reviews/native-entitlement-final-draft-supplement.json",
+        "native/controls-review-feedback-03.diff",
+        "native/controls-review-freeze-04.json",
+        "evidence/native-controls-04/tests.log",
+        "evidence/native-controls-04/receipt.json"
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/copied-kotlin-phase.sh.in",
+      "sha256": "1a8a5ee2c87fb4a4d8294ac3d5e2f057baaf9bd1c5a74b04564586b5f1b4baf8",
+      "line_count": 42,
+      "reviewed_ranges": [
+        [
+          1,
+          42
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "copy-only native/test template",
+      "method": "Previous complete same-reviewer freeze03 reading; exact current hash still matches. No delegated-summary coverage claim.",
+      "disposition": "SOURCE REVIEW COMPLETE;70 synthetic control tests independently verified; exact bound app/native execution pending",
+      "evidence": [
+        "reviews/native-controls-freeze03-coverage.json",
+        "reviews/native-entitlement-final-draft-supplement.json",
+        "native/controls-review-feedback-03.diff",
+        "native/controls-review-freeze-04.json",
+        "evidence/native-controls-04/tests.log",
+        "evidence/native-controls-04/receipt.json"
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/copied_sources.py",
+      "sha256": "69548443720fde323a069dfba1d038234cdb501208f6910ef428dc2cbcc99b6a",
+      "line_count": 228,
+      "reviewed_ranges": [
+        [
+          1,
+          228
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "non-shipping verification Python",
+      "method": "Previous complete same-reviewer freeze03 reading; exact current hash still matches. No delegated-summary coverage claim.",
+      "disposition": "SOURCE REVIEW COMPLETE;70 synthetic control tests independently verified; exact bound app/native execution pending",
+      "evidence": [
+        "reviews/native-controls-freeze03-coverage.json",
+        "reviews/native-entitlement-final-draft-supplement.json",
+        "native/controls-review-feedback-03.diff",
+        "native/controls-review-freeze-04.json",
+        "evidence/native-controls-04/tests.log",
+        "evidence/native-controls-04/receipt.json"
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/inherited-controls.json",
+      "sha256": "a2e2e1d09fc1228add7a8fc71c8c81e30c6b140890cec2b749b0010bcea65dd5",
+      "line_count": 239,
+      "reviewed_ranges": [
+        [
+          1,
+          239
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "verification documentation/provenance",
+      "method": "Previously complete lineage file read plus complete metadata-only freeze03\u219204 diff reopened; every original/current raw hash independently matched.",
+      "disposition": "SOURCE REVIEW COMPLETE;70 synthetic control tests independently verified; exact bound app/native execution pending",
+      "evidence": [
+        "reviews/native-controls-freeze03-coverage.json",
+        "reviews/native-entitlement-final-draft-supplement.json",
+        "native/controls-review-feedback-03.diff",
+        "native/controls-review-freeze-04.json",
+        "evidence/native-controls-04/tests.log",
+        "evidence/native-controls-04/receipt.json"
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/instrument_storage.py",
+      "sha256": "51348e3985e6872283182a728d8a91808714d69ad0197c978298678366cb4d88",
+      "line_count": 42,
+      "reviewed_ranges": [
+        [
+          1,
+          42
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "non-shipping verification Python",
+      "method": "Previous complete same-reviewer freeze03 reading; exact current hash still matches. No delegated-summary coverage claim.",
+      "disposition": "SOURCE REVIEW COMPLETE;70 synthetic control tests independently verified; exact bound app/native execution pending",
+      "evidence": [
+        "reviews/native-controls-freeze03-coverage.json",
+        "reviews/native-entitlement-final-draft-supplement.json",
+        "native/controls-review-feedback-03.diff",
+        "native/controls-review-freeze-04.json",
+        "evidence/native-controls-04/tests.log",
+        "evidence/native-controls-04/receipt.json"
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/native_readiness_receipts.py",
+      "sha256": "0a41d4d77e5a27570099150b4e05af5f73cbb66658c3b1d8667154bc56dbedff",
+      "line_count": 207,
+      "reviewed_ranges": [
+        [
+          1,
+          207
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "non-shipping verification Python",
+      "method": "Previous complete same-reviewer freeze03 reading; exact current hash still matches. No delegated-summary coverage claim.",
+      "disposition": "SOURCE REVIEW COMPLETE;70 synthetic control tests independently verified; exact bound app/native execution pending",
+      "evidence": [
+        "reviews/native-controls-freeze03-coverage.json",
+        "reviews/native-entitlement-final-draft-supplement.json",
+        "native/controls-review-feedback-03.diff",
+        "native/controls-review-freeze-04.json",
+        "evidence/native-controls-04/tests.log",
+        "evidence/native-controls-04/receipt.json"
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/os_action_receipts.py",
+      "sha256": "54a5f6c0ceb669bae65d2be9480f691cc19bc77bcc5d77c75904cc3d4cc2e7bb",
+      "line_count": 179,
+      "reviewed_ranges": [
+        [
+          1,
+          179
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "non-shipping verification Python",
+      "method": "Previous complete same-reviewer freeze03 reading; exact current hash still matches. No delegated-summary coverage claim.",
+      "disposition": "SOURCE REVIEW COMPLETE;70 synthetic control tests independently verified; exact bound app/native execution pending",
+      "evidence": [
+        "reviews/native-controls-freeze03-coverage.json",
+        "reviews/native-entitlement-final-draft-supplement.json",
+        "native/controls-review-feedback-03.diff",
+        "native/controls-review-freeze-04.json",
+        "evidence/native-controls-04/tests.log",
+        "evidence/native-controls-04/receipt.json"
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/os_pane_receipts.py",
+      "sha256": "4ffcba3ade80bfa334b14f5bcddec0527148983a99b2dbf1263bde091efc9229",
+      "line_count": 66,
+      "reviewed_ranges": [
+        [
+          1,
+          66
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "non-shipping verification Python",
+      "method": "Previous complete same-reviewer freeze03 reading; exact current hash still matches. No delegated-summary coverage claim.",
+      "disposition": "SOURCE REVIEW COMPLETE;70 synthetic control tests independently verified; exact bound app/native execution pending",
+      "evidence": [
+        "reviews/native-controls-freeze03-coverage.json",
+        "reviews/native-entitlement-final-draft-supplement.json",
+        "native/controls-review-feedback-03.diff",
+        "native/controls-review-freeze-04.json",
+        "evidence/native-controls-04/tests.log",
+        "evidence/native-controls-04/receipt.json"
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/os_preference_receipts.py",
+      "sha256": "9de723db33e6a074261ae6199c55da7196bdbdc257a5ecaa558bcbc19f005c52",
+      "line_count": 141,
+      "reviewed_ranges": [
+        [
+          1,
+          141
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "non-shipping verification Python",
+      "method": "Previous complete same-reviewer freeze03 reading; exact current hash still matches. No delegated-summary coverage claim.",
+      "disposition": "SOURCE REVIEW COMPLETE;70 synthetic control tests independently verified; exact bound app/native execution pending",
+      "evidence": [
+        "reviews/native-controls-freeze03-coverage.json",
+        "reviews/native-entitlement-final-draft-supplement.json",
+        "native/controls-review-feedback-03.diff",
+        "native/controls-review-freeze-04.json",
+        "evidence/native-controls-04/tests.log",
+        "evidence/native-controls-04/receipt.json"
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/owned_lane.py",
+      "sha256": "4bf3bbb4abfa22cd1604e6b4381bf481c95662ab15bf3fbdc86355a083102742",
+      "line_count": 221,
+      "reviewed_ranges": [
+        [
+          1,
+          221
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "non-shipping verification Python",
+      "method": "Previous complete same-reviewer freeze03 reading; exact current hash still matches. No delegated-summary coverage claim.",
+      "disposition": "SOURCE REVIEW COMPLETE;70 synthetic control tests independently verified; exact bound app/native execution pending",
+      "evidence": [
+        "reviews/native-controls-freeze03-coverage.json",
+        "reviews/native-entitlement-final-draft-supplement.json",
+        "native/controls-review-feedback-03.diff",
+        "native/controls-review-freeze-04.json",
+        "evidence/native-controls-04/tests.log",
+        "evidence/native-controls-04/receipt.json"
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/prerequisite_receipts.py",
+      "sha256": "708116f488083da11357c053c6e56f5186bbde4707f1ba487a35ca363a09fd5b",
+      "line_count": 153,
+      "reviewed_ranges": [
+        [
+          1,
+          153
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "non-shipping verification Python",
+      "method": "Previous complete same-reviewer freeze03 reading; exact current hash still matches. No delegated-summary coverage claim.",
+      "disposition": "SOURCE REVIEW COMPLETE;70 synthetic control tests independently verified; exact bound app/native execution pending",
+      "evidence": [
+        "reviews/native-controls-freeze03-coverage.json",
+        "reviews/native-entitlement-final-draft-supplement.json",
+        "native/controls-review-feedback-03.diff",
+        "native/controls-review-freeze-04.json",
+        "evidence/native-controls-04/tests.log",
+        "evidence/native-controls-04/receipt.json"
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/probe_validation.py",
+      "sha256": "134bb3affe45711ec3f74d7091ec59b7f859ca4f5fa04df1d895ce3250fd3aa2",
+      "line_count": 348,
+      "reviewed_ranges": [
+        [
+          1,
+          348
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "non-shipping verification Python",
+      "method": "Previous complete same-reviewer freeze03 reading; exact current hash still matches. No delegated-summary coverage claim.",
+      "disposition": "SOURCE REVIEW COMPLETE;70 synthetic control tests independently verified; exact bound app/native execution pending",
+      "evidence": [
+        "reviews/native-controls-freeze03-coverage.json",
+        "reviews/native-entitlement-final-draft-supplement.json",
+        "native/controls-review-feedback-03.diff",
+        "native/controls-review-freeze-04.json",
+        "evidence/native-controls-04/tests.log",
+        "evidence/native-controls-04/receipt.json"
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/public_interaction_receipts.py",
+      "sha256": "4583b8e9545dbe16ef3ee6f59d7d34a2bfd1421402b0f532a0b84aa2b2f63040",
+      "line_count": 124,
+      "reviewed_ranges": [
+        [
+          1,
+          124
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "non-shipping verification Python",
+      "method": "Previous complete same-reviewer freeze03 reading; exact current hash still matches. No delegated-summary coverage claim.",
+      "disposition": "SOURCE REVIEW COMPLETE;70 synthetic control tests independently verified; exact bound app/native execution pending",
+      "evidence": [
+        "reviews/native-controls-freeze03-coverage.json",
+        "reviews/native-entitlement-final-draft-supplement.json",
+        "native/controls-review-feedback-03.diff",
+        "native/controls-review-freeze-04.json",
+        "evidence/native-controls-04/tests.log",
+        "evidence/native-controls-04/receipt.json"
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/run_ios_readiness.py",
+      "sha256": "464719dd100ca8d941126a2113611650e8febde8889abd2a97e9dbdb22dffb20",
+      "line_count": 898,
+      "reviewed_ranges": [
+        [
+          1,
+          898
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "non-shipping verification Python",
+      "method": "Final frozen261/212/full898/full141-line draft source previously reread by same reviewer; published byte identity independently verified against final-draft-supplement. Earlier mixed-version draft receipt is explicitly superseded.",
+      "disposition": "SOURCE REVIEW COMPLETE;70 synthetic control tests independently verified; exact bound app/native execution pending",
+      "evidence": [
+        "reviews/native-controls-freeze03-coverage.json",
+        "reviews/native-entitlement-final-draft-supplement.json",
+        "native/controls-review-feedback-03.diff",
+        "native/controls-review-freeze-04.json",
+        "evidence/native-controls-04/tests.log",
+        "evidence/native-controls-04/receipt.json"
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/secondary_fifo.py",
+      "sha256": "080622194e19ef5d3ffb561e134ab8cf91e3e3ccef1e29197f59781154a7ffcc",
+      "line_count": 205,
+      "reviewed_ranges": [
+        [
+          1,
+          205
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "non-shipping verification Python",
+      "method": "Previous complete same-reviewer freeze03 reading; exact current hash still matches. No delegated-summary coverage claim.",
+      "disposition": "SOURCE REVIEW COMPLETE;70 synthetic control tests independently verified; exact bound app/native execution pending",
+      "evidence": [
+        "reviews/native-controls-freeze03-coverage.json",
+        "reviews/native-entitlement-final-draft-supplement.json",
+        "native/controls-review-feedback-03.diff",
+        "native/controls-review-freeze-04.json",
+        "evidence/native-controls-04/tests.log",
+        "evidence/native-controls-04/receipt.json"
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/simulator_entitlements.py",
+      "sha256": "57bee1eeb1fdd58bb6fef10545a37e1b0afae09be7107c2c6710f788905450f3",
+      "line_count": 261,
+      "reviewed_ranges": [
+        [
+          1,
+          261
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "method": "Final frozen261/212/full898/full141-line draft source previously reread by same reviewer; published byte identity independently verified against final-draft-supplement. Earlier mixed-version draft receipt is explicitly superseded.",
+      "disposition": "SOURCE REVIEW COMPLETE;70 synthetic control tests independently verified; exact bound app/native execution pending",
+      "evidence": [
+        "reviews/native-controls-freeze03-coverage.json",
+        "reviews/native-entitlement-final-draft-supplement.json",
+        "native/controls-review-feedback-03.diff",
+        "native/controls-review-freeze-04.json",
+        "evidence/native-controls-04/tests.log",
+        "evidence/native-controls-04/receipt.json"
+      ],
+      "relevance": "Verification-control source/test; non-shipping"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/test_controls.py",
+      "sha256": "64b3f92b4d88d7022d966b47fd1b3dcba7064ec0dd5997e1b2c1bcbcd9260820",
+      "line_count": 221,
+      "reviewed_ranges": [
+        [
+          1,
+          221
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "non-shipping verification Python",
+      "method": "Previous complete same-reviewer freeze03 reading; exact current hash still matches. No delegated-summary coverage claim.",
+      "disposition": "SOURCE REVIEW COMPLETE;70 synthetic control tests independently verified; exact bound app/native execution pending",
+      "evidence": [
+        "reviews/native-controls-freeze03-coverage.json",
+        "reviews/native-entitlement-final-draft-supplement.json",
+        "native/controls-review-feedback-03.diff",
+        "native/controls-review-freeze-04.json",
+        "evidence/native-controls-04/tests.log",
+        "evidence/native-controls-04/receipt.json"
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/test_native_readiness.py",
+      "sha256": "a4999e118b53d31c202fd276d9aed42e65b17986f7566d5c7c297a568c551272",
+      "line_count": 307,
+      "reviewed_ranges": [
+        [
+          1,
+          307
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "non-shipping verification Python",
+      "method": "Previous complete same-reviewer freeze03 reading; exact current hash still matches. No delegated-summary coverage claim.",
+      "disposition": "SOURCE REVIEW COMPLETE;70 synthetic control tests independently verified; exact bound app/native execution pending",
+      "evidence": [
+        "reviews/native-controls-freeze03-coverage.json",
+        "reviews/native-entitlement-final-draft-supplement.json",
+        "native/controls-review-feedback-03.diff",
+        "native/controls-review-freeze-04.json",
+        "evidence/native-controls-04/tests.log",
+        "evidence/native-controls-04/receipt.json"
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/test_os_preference_receipts.py",
+      "sha256": "74d74d25358a1dfe557ca1a57cc7145780d95ad422cc0e29cb6d09157912a4ec",
+      "line_count": 98,
+      "reviewed_ranges": [
+        [
+          1,
+          98
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "non-shipping verification Python",
+      "method": "Previous complete same-reviewer freeze03 reading; exact current hash still matches. No delegated-summary coverage claim.",
+      "disposition": "SOURCE REVIEW COMPLETE;70 synthetic control tests independently verified; exact bound app/native execution pending",
+      "evidence": [
+        "reviews/native-controls-freeze03-coverage.json",
+        "reviews/native-entitlement-final-draft-supplement.json",
+        "native/controls-review-feedback-03.diff",
+        "native/controls-review-freeze-04.json",
+        "evidence/native-controls-04/tests.log",
+        "evidence/native-controls-04/receipt.json"
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/test_secondary_fifo.py",
+      "sha256": "2d685ebcbef9930f43f1f644c5ed6fc3b5a5c5d07d975cc218a9165273bfb826",
+      "line_count": 249,
+      "reviewed_ranges": [
+        [
+          1,
+          249
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "relevance": "non-shipping verification Python",
+      "method": "Previous complete same-reviewer freeze03 reading; exact current hash still matches. No delegated-summary coverage claim.",
+      "disposition": "SOURCE REVIEW COMPLETE;70 synthetic control tests independently verified; exact bound app/native execution pending",
+      "evidence": [
+        "reviews/native-controls-freeze03-coverage.json",
+        "reviews/native-entitlement-final-draft-supplement.json",
+        "native/controls-review-feedback-03.diff",
+        "native/controls-review-freeze-04.json",
+        "evidence/native-controls-04/tests.log",
+        "evidence/native-controls-04/receipt.json"
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/test_simulator_entitlements.py",
+      "sha256": "0beea984b56aab3bec2c8e14558edf875f01ce341142708121b9d6d2c5f1e4b2",
+      "line_count": 212,
+      "reviewed_ranges": [
+        [
+          1,
+          212
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "method": "Final frozen261/212/full898/full141-line draft source previously reread by same reviewer; published byte identity independently verified against final-draft-supplement. Earlier mixed-version draft receipt is explicitly superseded.",
+      "disposition": "SOURCE REVIEW COMPLETE;70 synthetic control tests independently verified; exact bound app/native execution pending",
+      "evidence": [
+        "reviews/native-controls-freeze03-coverage.json",
+        "reviews/native-entitlement-final-draft-supplement.json",
+        "native/controls-review-feedback-03.diff",
+        "native/controls-review-freeze-04.json",
+        "evidence/native-controls-04/tests.log",
+        "evidence/native-controls-04/receipt.json"
+      ],
+      "relevance": "Verification-control source/test; non-shipping"
+    }
+  ],
+  "continuation_note": "Cross-file investigations/exclusions retained from same-reviewer freeze03 coverage; final diagnostic supplements add read-only SDK/Mach-O entitlement inspection. This ledger does not claim new application-source exhaustive review."
+}

@@ -1,0 +1,382 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/release_fix_review",
+  "reviewed_at": "2026-09-08T00:22:09.418877+00:00",
+  "decision": "INDEPENDENT RECONCILIATION PASS \u2014 genuine partial-pair red witness, draft39 green and canonical172 green. Exact reviewed FIFO draft adopted; canonical holder controls included. Ready for separately coordinated normal-runner controls; no native/app/Store approval.",
+  "scope": "Verification-tooling repair and executed-control reconciliation only; not a new disposition of the16 application defects or original native09 failures.",
+  "authors": {
+    "partial_fifo": "/root/factory_review",
+    "canonical_holder_query": "/root"
+  },
+  "prior_complete_source_reviews": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/partial-fifo-attestation-draft01-independent-review-01.json",
+      "sha256": "84308f1d14ee8a731c246daba6d8bde7da37c81b67a9fefd10f27b8a1570fa92"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/canonical-native-holder-warning-independent-review-01.json",
+      "sha256": "ef8f27e87fa0ef973e95825e7572ee079d7062b70933de7377507b7c0ed17438"
+    }
+  ],
+  "canonical_source_and_test_identity": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/secondary_fifo.py",
+      "sha256": "170586ec941b02866acfa4b8e54aa3dd0842dbc7bc9c4b50410bca4b1149440a"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/test_secondary_fifo.py",
+      "sha256": "02b82b6662b735316fe303f6ba7d7affb203090374cacadd8c67909a174ff99e"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/owned_lane.py",
+      "sha256": "949091403ac669429f962120e9873a09897a87bdcae10702720ede0c68342f03"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/test_owned_lane_lsof.py",
+      "sha256": "72a1f9bd5f23d7124e6d8679333e4071c07f67b812ff861e5ac727f7e875ede8"
+    }
+  ],
+  "focused_red_green": {
+    "red": {
+      "tests": 1,
+      "errors": 1,
+      "failures": 0,
+      "skips": 0,
+      "classification": "EXPECTED ORIGINAL-DEFECT WITNESS, not repair success",
+      "proof": "Actual command asserted canonical secondary_fifo.__file__ and SHA080622... before loading the new test at SHA02b82b.... First observation proves child and parent UID and records one FIFO plus pending sibling. Missing FIFO is created, UID callback deliberately fails, and the second observation errors at unchanged canonical observe line116. Trace is before test line268 private-cache assertion, so this is not an AttributeError caused by testing a new property.",
+      "locations": [
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/secondary_fifo.py",
+          "reviewed_baseline_sha256": "080622194e19ef5d3ffb561e134ab8cf91e3e3ccef1e29197f59781154a7ffcc",
+          "lines": [
+            [
+              107,
+              124
+            ]
+          ]
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/partial-fifo-attestation-draft-01/test_secondary_fifo.py",
+          "lines": [
+            [
+              249,
+              271
+            ]
+          ]
+        }
+      ],
+      "trace": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/partial-fifo-attestation-red-01/gradle.log"
+    },
+    "green": {
+      "tests": 39,
+      "passes": 39,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "actual_ids_match_AST_once": true,
+      "composition": "27 original methods +12 additions; original assertions retained as established in full independent source review.",
+      "import_binding": "Direct /usr/bin/python3 -B script invocation places the draft directory first. Complete test imports secondary_fifo without sys.path mutation. The preserved creation manifest and reviewed/current draft hashes match.",
+      "receipt_limitation": "Generic cycle source_manifest excludes remediation evidence/drafts, so draft-green does not itself supply before/after hash attestation for those2 isolated files. Do not claim it does. Subsequent canonical172 cycle binds and executes those exact adopted bytes in both source manifests; that closes the repair-source verification requirement."
+    },
+    "red_and_draft_green_canonical_source_identity_equal": true,
+    "synthetic_scope": "Darwin TemporaryDirectory FIFO fixtures and dictionary process identities; no actual Apple worker UID queries/signals. Tests enforce cleanup on owned synthetic fixtures. Not proof that every short-lived worker lifetime will be observed."
+  },
+  "combined_canonical_reconciliation": {
+    "tests": 172,
+    "passes": 172,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "missing_AST_descriptors": [],
+    "extra_descriptors": [],
+    "duplicate_descriptors": [],
+    "per_file": [
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/test_controls.py",
+        "sha256": "9c1948c6f5ce8ace176df6a9324d851004162e5296d1157a3648d50344e3ea8f",
+        "declared_tests": 14,
+        "matches_combined_manifest": true
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/test_l08_copy.py",
+        "sha256": "22092b2b03dd004c12d77c9c092b5e322a75e73d1a2a2da47da717de1f5a78ea",
+        "declared_tests": 9,
+        "matches_combined_manifest": true
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/test_l08_diagnostics.py",
+        "sha256": "925be779c7b03f148995061f1e769290ec4fa014c2e7f4dbab202fd1b84d8d9c",
+        "declared_tests": 21,
+        "matches_combined_manifest": true
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/test_l08_host_receipts.py",
+        "sha256": "a3a6f6c0a6363fbfaa5fff887652cbab9cf17513d03c0bf7eba5029b3babfd4d",
+        "declared_tests": 12,
+        "matches_combined_manifest": true
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/test_l08_receipts.py",
+        "sha256": "eb0fa17a95550b4b266afe9cae34e318004c7fa1ce32b097fc66a4107456dedc",
+        "declared_tests": 13,
+        "matches_combined_manifest": true
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/test_native_failure_receipts.py",
+        "sha256": "9d015aa4ce2cac5ac6e6aa770fcb0c0df00dd40435002529d807b744baa7c19b",
+        "declared_tests": 7,
+        "matches_combined_manifest": true
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/test_native_paths.py",
+        "sha256": "11c0bcbba09de36d5e2eb5a276c8f8d3c52024c3b395558e6aebd2f12875007a",
+        "declared_tests": 3,
+        "matches_combined_manifest": true
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/test_native_readiness.py",
+        "sha256": "45e486ad5dde50250cd244e8ffd8ae5ebbf17f4154eb1f98e7cbd84242a14ba0",
+        "declared_tests": 25,
+        "matches_combined_manifest": true
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/test_os_preference_receipts.py",
+        "sha256": "74d74d25358a1dfe557ca1a57cc7145780d95ad422cc0e29cb6d09157912a4ec",
+        "declared_tests": 5,
+        "matches_combined_manifest": true
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/test_owned_lane_lsof.py",
+        "sha256": "72a1f9bd5f23d7124e6d8679333e4071c07f67b812ff861e5ac727f7e875ede8",
+        "declared_tests": 7,
+        "matches_combined_manifest": true
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/test_secondary_fifo.py",
+        "sha256": "02b82b6662b735316fe303f6ba7d7affb203090374cacadd8c67909a174ff99e",
+        "declared_tests": 39,
+        "matches_combined_manifest": true
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/test_simulator_entitlements.py",
+        "sha256": "22049b900643c5345bc4cb440b9c2002ae105e4566b3cdeb3837e765a4527d80",
+        "declared_tests": 11,
+        "matches_combined_manifest": true
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/test_simulator_signing.py",
+        "sha256": "af6327b4e1f62f6326a062faa70cc5132df0cde6657c15fc38a47ec2b112b54a",
+        "declared_tests": 6,
+        "matches_combined_manifest": true
+      }
+    ],
+    "fifo39_and_holder7_execute_in_same_suite": true,
+    "all_current_test_hashes_match_bound_before_after_manifest": true,
+    "canonical_fifo_files_equal_independently_reviewed_draft_bytes": true,
+    "source_manifest_delta_after_draft_green": [
+      "scripts/verification/ios-readiness/secondary_fifo.py",
+      "scripts/verification/ios-readiness/test_secondary_fifo.py"
+    ],
+    "additional_native_control_output": {
+      "test": "test_native_paths.NativePathControlTests.test_actual_host_foundation_alias_and_owned_origin_controls",
+      "subcases": 18,
+      "actual_boundary": "Compiles and executes selected copied helpers with host macOS Foundation; output explicitly host_foundation_only=true and physical_or_app_runtime_evidence=false. Its descriptor emits JSON then a separate terminal ok; count as1 test, not19.",
+      "fixture_cleanup_assertion": "test_native_paths.py:127-169 owns TemporaryDirectory, compiles/executes synchronously, then asserts exact allocated path absent and source hashes unchanged. Whole cycle stop/worker checks are also clean.",
+      "read_source": {
+        "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/test_native_paths.py",
+        "sha256": "11c0bcbba09de36d5e2eb5a276c8f8d3c52024c3b395558e6aebd2f12875007a",
+        "lines": [
+          [
+            1,
+            173
+          ]
+        ]
+      }
+    },
+    "count_method": "Python AST syntax parse only (no repository import) against actual172 verbose unittest descriptors; parse terminal status separately from in-test output. Raw logs read in full, including lines111-178 reread after a display truncation.",
+    "other_tests_scope": "Descriptor/result/source-identity reconciliation, not a fresh claim to have reread every pre-existing unrelated test assertion in this continuation."
+  },
+  "cycles": [
+    {
+      "cycle": "partial-fifo-attestation-red-01",
+      "receipt": {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/partial-fifo-attestation-red-01/receipt.json",
+        "sha256": "9483caf7c5471348c16b3b7c99b68fedc047fc32081503e4b1a2a3ebd91f9caa"
+      },
+      "raw_log": {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/partial-fifo-attestation-red-01/gradle.log",
+        "sha256": "943f58110e48876ea191fad1cf4712025d3e540bae9bdbca2c2de1089abeea2d"
+      },
+      "stop_log": {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/partial-fifo-attestation-red-01/stop.log",
+        "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+      },
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "-c",
+        "import sys,importlib.util,hashlib,unittest; from pathlib import Path; base=Path.cwd(); canonical=base/\"scripts/verification/ios-readiness\"; sys.path.insert(0,str(canonical)); import secondary_fifo; assert Path(secondary_fifo.__file__).resolve()==canonical/\"secondary_fifo.py\"; assert hashlib.sha256(Path(secondary_fifo.__file__).read_bytes()).hexdigest()==\"080622194e19ef5d3ffb561e134ab8cf91e3e3ccef1e29197f59781154a7ffcc\"; path=base/\"remediation-runs/2026-09-07-local-readiness/reviews/partial-fifo-attestation-draft-01/test_secondary_fifo.py\"; assert hashlib.sha256(path.read_bytes()).hexdigest()==\"02b82b6662b735316fe303f6ba7d7affb203090374cacadd8c67909a174ff99e\"; spec=importlib.util.spec_from_file_location(\"partial_fifo_regression\",path); mod=importlib.util.module_from_spec(spec); spec.loader.exec_module(mod); print(\"Bound canonical source:\",secondary_fifo.__file__,flush=True); suite=unittest.TestSuite([mod.SecondaryFifoSafetyTest(\"test_partial_pair_reuses_its_completed_live_identity_without_requerying_uid\")]); result=unittest.TextTestRunner(verbosity=2).run(suite); sys.exit(0 if result.wasSuccessful() else 1)"
+      ],
+      "started_at": "2026-09-08T00:07:04.314911+00:00",
+      "finished_at": "2026-09-08T00:07:04.912646+00:00",
+      "status": "FAIL",
+      "exit_code": 1,
+      "source": {
+        "commit": "b6e1947c62661631d0593038db7f64dbf25f720e",
+        "tree": "f03ad1b302d951d0ca9811b1efab2751a8be6978",
+        "branch": "fix/local-readiness-2026-09-07",
+        "diff_sha256": "f376c8cdd1aaa6127fedc00199dcf51c6319f28da507a1a5f32b615e109afd17",
+        "source_manifest_sha256": "478a42fd5493f35f482f6def17b0defb5fe0b9d56ad1c1c1217077f173f453e2"
+      },
+      "manifest_rows": 800,
+      "source_before_after_exact": true,
+      "manifest_digests_independently_recomputed": true,
+      "runner_before_after_exact": true,
+      "runner_sha256": "5c0e546c819c28762cbc6b355ec2717737fc53f96712af591a27add878579d7a",
+      "stop_exit_code": 0,
+      "stopped_at": "2026-09-08T00:07:05.392201+00:00",
+      "stop_text": "No Gradle daemons are running.",
+      "cleanup_completed_at": "2026-09-08T00:07:05.522624+00:00",
+      "cleanup_errors": [],
+      "remaining_outputs": [],
+      "retained_outputs": [],
+      "remaining_owned_workers": [],
+      "remaining_artifact_workers": [],
+      "deferred_signals": [],
+      "cleanup_method": "Exact task-owned generated dirs; no Gradle clean daemon or global cache deletion. Unrelated processes excluded by PID/start identity and cycle ownership.",
+      "actual_descriptor_count": 1,
+      "actual_terminal_counts": {
+        "ERROR: test_partial_pair_reuses_its_completed_live_identity_without_requerying_uid (partial_fifo_regression.SecondaryFifoSafetyTest)": 1
+      }
+    },
+    {
+      "cycle": "partial-fifo-attestation-draft-green-01",
+      "receipt": {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/partial-fifo-attestation-draft-green-01/receipt.json",
+        "sha256": "15874b140012a9a838e8dc2c1a47cb245d61ab096c772dc425e1370b07358749"
+      },
+      "raw_log": {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/partial-fifo-attestation-draft-green-01/gradle.log",
+        "sha256": "6a55c7131a15b21c7f95865675e5cf95f5f79c6af9423877ce64662285c67e77"
+      },
+      "stop_log": {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/partial-fifo-attestation-draft-green-01/stop.log",
+        "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+      },
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "remediation-runs/2026-09-07-local-readiness/reviews/partial-fifo-attestation-draft-01/test_secondary_fifo.py",
+        "-v"
+      ],
+      "started_at": "2026-09-08T00:09:52.132229+00:00",
+      "finished_at": "2026-09-08T00:09:52.825257+00:00",
+      "status": "PASS",
+      "exit_code": 0,
+      "source": {
+        "commit": "b6e1947c62661631d0593038db7f64dbf25f720e",
+        "tree": "f03ad1b302d951d0ca9811b1efab2751a8be6978",
+        "branch": "fix/local-readiness-2026-09-07",
+        "diff_sha256": "f376c8cdd1aaa6127fedc00199dcf51c6319f28da507a1a5f32b615e109afd17",
+        "source_manifest_sha256": "478a42fd5493f35f482f6def17b0defb5fe0b9d56ad1c1c1217077f173f453e2"
+      },
+      "manifest_rows": 800,
+      "source_before_after_exact": true,
+      "manifest_digests_independently_recomputed": true,
+      "runner_before_after_exact": true,
+      "runner_sha256": "5c0e546c819c28762cbc6b355ec2717737fc53f96712af591a27add878579d7a",
+      "stop_exit_code": 0,
+      "stopped_at": "2026-09-08T00:09:53.292910+00:00",
+      "stop_text": "No Gradle daemons are running.",
+      "cleanup_completed_at": "2026-09-08T00:09:53.417884+00:00",
+      "cleanup_errors": [],
+      "remaining_outputs": [],
+      "retained_outputs": [],
+      "remaining_owned_workers": [],
+      "remaining_artifact_workers": [],
+      "deferred_signals": [],
+      "cleanup_method": "Exact task-owned generated dirs; no Gradle clean daemon or global cache deletion. Unrelated processes excluded by PID/start identity and cycle ownership.",
+      "actual_descriptor_count": 39,
+      "actual_terminal_counts": {
+        "ok": 39
+      }
+    },
+    {
+      "cycle": "native-ownership-canonical-controls-01",
+      "receipt": {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/native-ownership-canonical-controls-01/receipt.json",
+        "sha256": "3b89c91d02128a8b82ca4ca8f765f1fbc3065104721ef6264d8d59d9bcf0716f"
+      },
+      "raw_log": {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/native-ownership-canonical-controls-01/gradle.log",
+        "sha256": "cf14e8906da4ccc09b9d6705116ce31356046e9d4909bc122e01d7536c7bf88d"
+      },
+      "stop_log": {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/native-ownership-canonical-controls-01/stop.log",
+        "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+      },
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "scripts/verification/ios-readiness",
+        "-p",
+        "test_*.py",
+        "-v"
+      ],
+      "started_at": "2026-09-08T00:12:37.743140+00:00",
+      "finished_at": "2026-09-08T00:13:08.290295+00:00",
+      "status": "PASS",
+      "exit_code": 0,
+      "source": {
+        "commit": "b6e1947c62661631d0593038db7f64dbf25f720e",
+        "tree": "f03ad1b302d951d0ca9811b1efab2751a8be6978",
+        "branch": "fix/local-readiness-2026-09-07",
+        "diff_sha256": "fb48004c2f54689cdbb9837f102e89dd0d6ee1db85781ba85aa3291ec6860039",
+        "source_manifest_sha256": "b3acf683ae72cf446c9f02f0fbce9b6ed12d28bc4afe173123870b75fd8d4929"
+      },
+      "manifest_rows": 800,
+      "source_before_after_exact": true,
+      "manifest_digests_independently_recomputed": true,
+      "runner_before_after_exact": true,
+      "runner_sha256": "5c0e546c819c28762cbc6b355ec2717737fc53f96712af591a27add878579d7a",
+      "stop_exit_code": 0,
+      "stopped_at": "2026-09-08T00:13:08.775485+00:00",
+      "stop_text": "No Gradle daemons are running.",
+      "cleanup_completed_at": "2026-09-08T00:13:08.904736+00:00",
+      "cleanup_errors": [],
+      "remaining_outputs": [],
+      "retained_outputs": [],
+      "remaining_owned_workers": [],
+      "remaining_artifact_workers": [],
+      "deferred_signals": [],
+      "cleanup_method": "Exact task-owned generated dirs; no Gradle clean daemon or global cache deletion. Unrelated processes excluded by PID/start identity and cycle ownership.",
+      "actual_descriptor_count": 172,
+      "actual_terminal_counts": {
+        "ok": 172
+      }
+    }
+  ],
+  "cleanup_and_preservation": {
+    "all_finalized_cycles_stop0_and_no_reported_remaining_outputs_or_workers": true,
+    "all_finalized_cycles_source_and_runner_exact_before_after_equal": true,
+    "cycle_scratch_cleanup_source": "run_gradle_cycle.py:252-255,318-330 creates exact cycle scratch/TMPDIR, removes it on safe cleanup, and only returns PASS when stop, ownership, source, remaining-output and cleanup conditions hold.",
+    "verification_limit": "Independent reconciliation of root receipts and executable cleanup assertions; reviewer did not rerun native process enumeration, signal workers or delete filesystem paths.",
+    "original_red_and_native09_FAIL_receipts_not_modified": true,
+    "reviewer_started_builds_tests_native_processes_or_background_workers": false,
+    "reviewer_generated_build_outputs": false,
+    "reviewer_modification": "This additive JSON review only; Python standard-library -B read/hash/AST work creates no bytecode outputs."
+  },
+  "remaining_gates_and_counter_evidence": [
+    "Canonical holder limits remain post-capture acceptance limits, not hard streaming RAM bounds. Native warnings remain failures, never filtered into success.",
+    "Partial cache is runtime-only128 bounded and state+identity bound; new inode requires post-metadata live proof. Pending name or durable JSON alone grants no ownership. Cleanup and canonical path validation are unchanged.",
+    "Do not assert guaranteed cleanup for missed short-lived workers or hostile same-UID races. First observation after worker exit remains blocked.",
+    "Normal-runner controls after both fixes still require root-owned execution and separate result reconciliation.",
+    "Fresh source/control binding is required before any later native cycle; old source08 approval cannot cover changed canonical modules.",
+    "Native09 original runtimeFAIL/cleanupFAIL remains immutable. Supplementary cleanup03 does not turn native09 runtime into PASS.",
+    "No finding about production NSFileProtection Complete readback, app crash cause, physical devices, LAN interoperability, iOS16, real signing or Store readiness established by these controls."
+  ]
+}

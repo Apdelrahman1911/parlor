@@ -1,0 +1,44 @@
+{
+  "activity": "Only read-only Git/stdlib source/hash/diff/AST checks and this exclusive report. No canonical edits, project imports/functions, tests/builds/network/CI or cleanup resources.",
+  "author": "/root/ci_workflow",
+  "author_report_sha256": "8bd024972ba1ac315c0044e448931bb1ce4717ea4a0289fe27ae1b2c472727bf",
+  "base_commit": "52f60924a89f788aab78c826096f34a32af40292",
+  "checks": [
+    "All3 held/current/Git52f hashes, sizes and held regular-owned-singlelink modes exact; complete1970-byte diff independently reconstructed.",
+    "Exactly one ios-readiness-27->29 and one28->30 substitution per file; replacing these in original reproduces every held byte. Both Python files AST-parse; no other code/control, test-case, workflow or documentation change.",
+    "Paired l08 then normal behavior, unsafe-A stop/admission, preflight manifests, libproc mode, budgets/ownership/cleanup and scope guards remain byte-identical outside labels. Normal-only implementation is absent and stays held.",
+    "Both proposed native evidence paths absent at inspection; not reserved or execution-authorized."
+  ],
+  "diff_sha256": "5c2f0b9f68eebd6587a18f51fb97249bfdffb163d1c64dc4b87fb0da43b033fa",
+  "draft_root": "remediation-runs/2026-09-08-continuation/reviews/native-a29-b30-label-01/draft",
+  "files": [
+    {
+      "bytes": 64697,
+      "git_mode": "100644",
+      "held_sha256": "d6d70592d10b4cb71c42c6b5dab07de1ea58fc8b2fb044eb9dc89e6a4b2b799e",
+      "path": "scripts/ci/native_continuation.py",
+      "source_sha256": "23569ba9a718bcbbd3b6d7aa08bb73ef9f0882019779d1b7f7c53e24b979e35e"
+    },
+    {
+      "bytes": 18880,
+      "git_mode": "100644",
+      "held_sha256": "02d9dc8b547f9c8b367e05cf1bead6a4f51d47a4bb4849af01fa34c579b38570",
+      "path": "scripts/ci/NATIVE_CONTINUATION.md",
+      "source_sha256": "153c23a2e8fd314923b2fb57a973e2edb7ae4eff3e386241b0fdab4ed212b6cf"
+    },
+    {
+      "bytes": 43371,
+      "git_mode": "100644",
+      "held_sha256": "460c04643aca548e528a8b2fc7fd7037b99e82959aaf9f5c48c50e8027e6f64c",
+      "path": "scripts/release/tests/test_native_process_probe.py",
+      "source_sha256": "669d6448c9d19506e4779bf1566bb0f8e4936ce0d1665d274fdec8b94f31923b"
+    }
+  ],
+  "findings": [],
+  "limits": "No control execution/native runtime/source-freeze or dispatch approval. Keep A27/B28 failures at their actual SHA. Later native use requires reviewed complete changes, source+inventory commits and fresh independent bindings. Normal-only remains unadopted because A27 failed, per coordinator; no native-result audit performed here.",
+  "recorded_at": "2026-09-09T11:57:52.180490+00:00",
+  "reviewer": "/root/ci_review",
+  "root_next": "May adopt only these exact3 reviewed replacements when coordinated with other reviewed corrections. Batch existing scripts.release.tests.test_native_process_probe.ProbeSourceContractTest.test_full_non_app_scope_is_explicit_and_cycles_do_not_reuse_failed_labels into next focused control lane. No new test case or standalone build needed for labels.",
+  "schema_version": 1,
+  "status": "APPROVED_EXACT_HELD_MECHANICAL_LABELS_NOT_ADOPTED_OR_EXECUTED"
+}

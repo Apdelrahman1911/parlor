@@ -1,0 +1,151 @@
+{
+  "author": "/root/ci_workflow",
+  "baseline": {
+    "commit": "15e8982b35e39006868868a11c6f4e1864e613a7",
+    "tree": "8f3fd56f86d7934fddaff068539d69fe26d4aaad"
+  },
+  "changes": [
+    "Add one closed selection within existing native-preflight/native-evidence; no workflow, job, input, matrix, permissions, publication or normal B scope expansion.",
+    "Reuse exact source/control/toolchain/API/member admission and direct-owned-v1 lifecycle; original A/B/Settings runner sources and labels untouched by this author.",
+    "Dedicated stage-prefix stop/selector/bundle/log/actual-command-exit checks explicitly selected only for OS lane; old two-stop path unchanged.",
+    "Root/reviewer no-build finding corrected: exact false/NOT_RUN stages + build_attempted false + no actual Xcode action have zero claimed stops, not an invented final stop. Nonempty prefixes require every immediate and final strict-zero stop.",
+    "Independent reviewer command/summary finding corrected: completed stage carries strict integer returned exit equal actual Xcode row exit; PASS only zero. Explicit incomplete stage is FAIL with no returned exit and actual primary-error/interrupt marker; cleanup may retain an actual reap exit without inventing success.",
+    "Separate bootstrap_status/os_subgate_status remain sticky; whole scoped success needs all stages completed/zero and both status PASS. Bootstrap failure plus independently passing OS subgate is NOT_READY, never A/B/full PASS.",
+    "Normal runtime/provenance/notice credit stays NOT_RUN; A/B unselected_lanes remain NOT_RUN_THIS_RUN.",
+    "Synthetic regressions cover domain/hash/selection denial, exact prefixes and no-build, command mismatch/exception failures, actual adapter and journal gates, timeout/grace/admission, shared-input and closed workflow expression mutations."
+  ],
+  "created_at": "2026-09-10T08:19:18.733871+00:00",
+  "cross_owner_interface": {
+    "attempted_stage_command_completed": "Explicit false at attempt, true only on command return; exit_code only on returned command.",
+    "copy_owner": "/root/l08_fixture",
+    "driver": "scripts/verification/ios-os-recovery/os_recovery_probe.py",
+    "driver_owner": "/root/lifecycle_controls",
+    "driver_tests_and_native": "Not run by this author; driver/copy source separately owned and reviewed.",
+    "stage_keys": [
+      "build",
+      "bootstrap",
+      "proof"
+    ]
+  },
+  "historical_conclusion": "A37 remains FAIL; SIGKILL near primary-language tap does not establish sender/timeout or authorize longer A37 retry. Functional/host retrospective scoped results do not repair A37 or strict0/26.",
+  "kind": "OS_RECOVERY_CI_SOURCE_AUTHOR_REPORT_NOT_INDEPENDENT_APPROVAL",
+  "next_required": [
+    "Different-agent source review of these exact seven-file pins and live producer interface.",
+    "Coordinator single batched Linux control cycle and actual result review.",
+    "Reviewed source/control commit, mechanical inventory commit/freshness, new same-source native bindings/preflight approval before any native dispatch.",
+    "Actual scoped platform evidence plus independent review; no ready/Store-ready conclusion from this packet."
+  ],
+  "packet_members": [
+    {
+      "bytes": 52224,
+      "path": "remediation-runs/2026-09-08-continuation/reviews/os-recovery-ci-source-01/source.diff",
+      "sha256": "cc61f5c29139ebb268112c1d780bbb256a30b3e555a4d9f4de0ff48f0425c1b4"
+    },
+    {
+      "bytes": 1501,
+      "path": "remediation-runs/2026-09-08-continuation/reviews/os-recovery-ci-source-01/pins.json",
+      "sha256": "60ddebd53b53e80dfe064af77e3577b0faf2640d3e5206b8b94c38a45013aeaf"
+    }
+  ],
+  "reopened_prior_evidence": [
+    {
+      "bytes": 18301,
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-a37-actual-independent-01.json",
+      "sha256": "47ba04e2e6cb18d4d17da8f01f97c326c43b1bafd0713dcfa2b500b5783318f6"
+    },
+    {
+      "bytes": 11754,
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-a37-retrospective-actual-independent-01.json",
+      "sha256": "d6f7f58582b8c3f602876c59549cac3586b259eaced02aad1bb9f76717721318"
+    },
+    {
+      "bytes": 6411,
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-a37-functional-host-retrospective-recipe-01.md",
+      "sha256": "ec8da4bc545e77bb7cf5b74a8d4ee31916663bd25825b05d1dbd597c0fc52f1b"
+    }
+  ],
+  "schema_version": 1,
+  "scope": {
+    "approved_input": "approved_probe_control_sha256",
+    "budget_truth": "Bounded interruption deadlines, not a guarantee all inherited maxima fit. Exhaustion remains failure/retention.",
+    "child_wait_seconds": 5400,
+    "cycle": "ios-readiness-39",
+    "evidence_custody_reserve_seconds": 600,
+    "execution_kind": "owned-simulator-os-only-two-invocation-recovery",
+    "existing_labels": {
+      "l08": "ios-readiness-37",
+      "normal": "ios-readiness-38",
+      "settings_sheet": "ios-readiness-36"
+    },
+    "failure": "OS_RECOVERY_NOT_READY or FAIL",
+    "finalizer_grace_seconds": 600,
+    "job_seconds": 7200,
+    "preflight_members": [
+      "preflight.json",
+      "ios-readiness-source-ci.json",
+      "os_recovery-controls.json"
+    ],
+    "scoped_success": "SCOPED_OS_RECOVERY_VERIFIED",
+    "selection": "os-recovery-only"
+  },
+  "source_files": [
+    {
+      "bytes": 76146,
+      "path": "scripts/ci/native_continuation.py",
+      "sha256": "8ce34c26e05a858577d98988415e99e1d3fd72881be325544974841ad820563f"
+    },
+    {
+      "bytes": 44037,
+      "path": ".github/workflows/production-verification.yml",
+      "sha256": "9a8021ec1ba27f44d7d2ac18f0bcc7a4a254445ba1baae1a420287094c89414b"
+    },
+    {
+      "bytes": 116901,
+      "path": "scripts/release/tests/test_native_continuation.py",
+      "sha256": "0af0ce58d3b1b9ad43819d0f301d2340c0c2c8746c238ea53cda0f52c94938d7"
+    },
+    {
+      "bytes": 26369,
+      "path": "scripts/ci/NATIVE_CONTINUATION.md",
+      "sha256": "6305a9158a45523619b068702966efff31561e86c629bbd91292eb38ea1bfc6c"
+    },
+    {
+      "bytes": 52993,
+      "path": "scripts/release/workflow_contract.py",
+      "sha256": "40bc1dc521676043be6c70a8d6e7e775e4b902350e0177acd19500ee69576e0d"
+    },
+    {
+      "bytes": 48211,
+      "path": "scripts/release/tests/test_workflow_contract.py",
+      "sha256": "5c3b0af5ee60f024e417750b10cee69ba8fb75170d80127e3e835b3929c354b3"
+    },
+    {
+      "bytes": 43485,
+      "path": "scripts/release/tests/test_native_process_probe.py",
+      "sha256": "7efadf720ca16081ce9955f33610062b25ec2b661b845962c7d59ac151a793bf"
+    }
+  ],
+  "status": "SEALED_FOR_INDEPENDENT_SOURCE_REVIEW_TESTS_NOT_RUN",
+  "verification": {
+    "apple_builds_or_runtime": "NOT_RUN",
+    "ast_parse_only": {
+      "files": [
+        "scripts/ci/native_continuation.py",
+        "scripts/release/tests/test_native_continuation.py",
+        "scripts/release/workflow_contract.py",
+        "scripts/release/tests/test_workflow_contract.py",
+        "scripts/release/tests/test_native_process_probe.py"
+      ],
+      "status": "PASS"
+    },
+    "cleanup": "No build/test cycle or native allocation by this author. Only owned source and additive source-review packet written.",
+    "gradle": "NOT_RUN",
+    "project_imports": "NOT_RUN",
+    "python_test_suites": "NOT_RUN",
+    "scoped_git_diff_whitespace": {
+      "output": "empty",
+      "status": "PASS"
+    },
+    "workflows_or_network": "NOT_RUN"
+  }
+}

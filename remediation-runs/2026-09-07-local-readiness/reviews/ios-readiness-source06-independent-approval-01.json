@@ -1,0 +1,249 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-09-07T18:44:03.411344+00:00",
+  "reviewer": "/root/factory_review",
+  "original_normal_and_l08_author": "/root/native_fix_review",
+  "classification": "APPROVED_FOR_ROOT_SINGLE_LANE_SIMULATOR_EXECUTION_ONLY",
+  "scope": "Exact source06 binding and unchanged independently reviewed controls; not app/runtime or release PASS.",
+  "source_binding": {
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/ios-readiness-source-06.json",
+    "sha256": "1d7165a7029165a5450919c2771e09d51f206d124e41b082b52eec22f76b73fa",
+    "metadata": {
+      "commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+      "tree": "c65463bdf1f3656f90dfe6e6dbe1d94b3c588dac",
+      "branch": "fix/local-readiness-2026-09-07",
+      "tracked_status": "",
+      "diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_manifest_sha256": "ca2b99d237a921513a4c8d922666b9d8df838b8c2ac04064f7563e474204e711"
+    },
+    "source_manifest_entries": 798,
+    "copy_only_entries": 738,
+    "independent_complete_source_identity_equal": true,
+    "independent_ordered_copy_subset_equal": true,
+    "copy_sources_are_unredirected": true,
+    "policy_sources": [
+      "scripts/verification/ios-readiness/owned_lane.py:196-221",
+      "scripts/verification/ios-readiness/copied_sources.py:26-46,69-97"
+    ],
+    "reconstruction_method": "Independent stdlib-only implementation from source policy; no executable repository module imports. Git read-only commands, streaming file hashes, complete ordered-list equality."
+  },
+  "controls": {
+    "l08": {
+      "manifest": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/l08-source06-control-manifest-01.json",
+      "manifest_sha256": "08a5e783a46e6b60e142cd73ed07edc96aac650c3235086b1d661f145a2a331a",
+      "control_sha256": "365da18f1d3916dcf012f4ebaf390f37f8bfdc487532e8baec3ac5c44aed8ea3",
+      "files": 64,
+      "complete_ordered_rows_equal": true,
+      "all_file_bytes_match": true
+    },
+    "normal": {
+      "manifest": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/normal-source06-control-manifest-01.json",
+      "manifest_sha256": "fcf20db10df24c9a20eb13e6dde90cdc32fb64dfbdb964090ceb74c1f6b3d640",
+      "control_sha256": "b5c2301a14478cae584fffad7dcead94e7ba03d0f434b86f05d6a5e9b2bdc422",
+      "files": 73,
+      "complete_ordered_rows_equal": true,
+      "all_file_bytes_match": true
+    }
+  },
+  "prior_self_review_bindings": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/l08-apphost-extension-independent-review-01.json",
+      "sha256": "66d21ae79f5851779957f2f29fd98dd3e7500460321d8492925cf18db97be4da"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/l08-adopted-controls-independent-review-02.json",
+      "sha256": "62e6e13b8625be019984583e341f0637380f17cc3f2118786a13faf860ae2c04"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/normal-ios-after-l08-source-controls-independent-review-06.json",
+      "sha256": "07d9eddffa623bd9c28ccd117ab0c51393bc36daacbbcba807b858f3ca8ee682"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/stc1-recognized-current-retention-fix-independent-01.json",
+      "sha256": "65ca8ecec1f58eddf5412f8281d0bd6f40ec5c22c9f9df6433f449d88b832fa8"
+    }
+  ],
+  "source_delta_review": {
+    "prior_baseline": "d453f80586ae76d37fba953731758e20f5c4bd67",
+    "changed_paths": [
+      "docs/review/INDEPENDENT_REVIEW_INVENTORY.csv",
+      "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/RtlFormattingTest.kt",
+      "scripts/verification/ios-readiness/ControlledStartRoom.kt.in",
+      "scripts/verification/ios-readiness/InMemoryRoomBus.kt.in",
+      "scripts/verification/ios-readiness/L08HostLaunch.swift.in",
+      "scripts/verification/ios-readiness/L08HostProbe.kt.in",
+      "scripts/verification/ios-readiness/L08HostUITests.swift.in",
+      "scripts/verification/ios-readiness/L08MafiaHost.kt.in",
+      "scripts/verification/ios-readiness/L08MafiaSnapshots.kt.in",
+      "scripts/verification/ios-readiness/L08StorageLaunch.swift.in",
+      "scripts/verification/ios-readiness/L08StorageProbe.kt.in",
+      "scripts/verification/ios-readiness/L08StorageUITests.swift.in",
+      "scripts/verification/ios-readiness/L08UiSeam.kt.in",
+      "scripts/verification/ios-readiness/L08WhodunitHost.kt.in",
+      "scripts/verification/ios-readiness/L08WhodunitSnapshots.kt.in",
+      "scripts/verification/ios-readiness/L08_README.md",
+      "scripts/verification/ios-readiness/README.md",
+      "scripts/verification/ios-readiness/copied_sources.py",
+      "scripts/verification/ios-readiness/l08_copy.py",
+      "scripts/verification/ios-readiness/l08_receipts.py",
+      "scripts/verification/ios-readiness/run_ios_readiness.py",
+      "scripts/verification/ios-readiness/test_l08_copy.py",
+      "scripts/verification/ios-readiness/test_l08_host_receipts.py",
+      "scripts/verification/ios-readiness/test_l08_receipts.py",
+      "shared/design-system/src/desktopTest/kotlin/com/parlor/designsystem/localization/ProvideAppLanguageDesktopTest.kt"
+    ],
+    "adopted_control_paths": 22,
+    "control_adoption_hashes_exact": true,
+    "normal_files_unchanged": 8,
+    "unchanged_previously_reviewed_live_callers": [
+      "AGENTS.md",
+      "scripts/verification/ios-readiness/DSC01Probe.swift.in",
+      "scripts/verification/ios-readiness/probe_validation.py",
+      "scripts/verification/ios-readiness/artifact_inventory.py",
+      "scripts/verification/ios-readiness/DSC01NativeObservation.swift.in",
+      "scripts/verification/ios-readiness/NativeReadinessLaunch.swift.in",
+      "composeApp/src/iosMain/kotlin/com/parlor/app/MainViewController.kt",
+      "composeApp/src/commonMain/kotlin/com/parlor/app/di/AppModule.kt",
+      "composeApp/src/commonMain/kotlin/com/parlor/app/lifecycle/AppLifecycleCoordinator.kt",
+      "iosApp/iosApp/iOSApp.swift",
+      "iosApp/iosApp/ContentView.swift",
+      "composeApp/src/commonMain/kotlin/com/parlor/app/App.kt",
+      "composeApp/src/commonMain/kotlin/com/parlor/app/shell/home/HomeScreen.kt",
+      "composeApp/src/commonMain/kotlin/com/parlor/app/shell/home/HomeRecoveryAvailability.kt",
+      "composeApp/src/commonMain/kotlin/com/parlor/app/shell/home/LocalResumeFailureScreen.kt",
+      "composeApp/src/commonMain/kotlin/com/parlor/app/LocalResumeRouter.kt",
+      "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaSetupScreen.kt",
+      "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaRetainedMultiplayerRuntime.kt",
+      "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/multiplayer/WhodunitRetainedMultiplayerRuntime.kt",
+      "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaMultiDeviceHostFlow.kt",
+      "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaHostProgression.kt",
+      "shared/storage/src/commonMain/kotlin/com/parlor/storage/snapshot/SerializedSnapshotWriter.kt",
+      "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitGameFlow.kt",
+      "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/passandplay/MafiaGameFlow.kt",
+      "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaMultiDevicePhaseRouter.kt",
+      "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitPhaseRouter.kt",
+      "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/passandplay/MafiaPassAndPlayPhaseRouter.kt",
+      "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/multiplayer/WhodunitHostRoomBridge.kt",
+      "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/reducer/WhodunitReducer.kt",
+      "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaHostRoomBridge.kt",
+      "shared/session/src/commonMain/kotlin/com/parlor/session/multidevice/AuthoritativeSessionCoordinator.kt",
+      "shared/session/src/commonMain/kotlin/com/parlor/session/multidevice/ProcessMultiplayerSessionOwner.kt",
+      "scripts/verification/ios-readiness/IOSAppLaunchUITests.swift.in"
+    ],
+    "callers_changed_by_already_independently_reviewed_adoption": [
+      "scripts/verification/ios-readiness/copied_sources.py",
+      "scripts/verification/ios-readiness/run_ios_readiness.py"
+    ],
+    "unchanged_storage_review_paths": [
+      "composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSnapshotFileSystem.kt",
+      "composeApp/src/iosTest/kotlin/com/parlor/app/storage/IosLegacySnapshotBackupTest.kt",
+      "composeApp/src/iosTest/kotlin/com/parlor/app/storage/IosStorageSafetyTest.kt",
+      "docs/PRODUCTION_ARCHITECTURE.md",
+      "composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSnapshotKeychain.kt",
+      "composeApp/src/commonMain/kotlin/com/parlor/app/storage/PlatformStorage.kt",
+      "composeApp/src/iosMain/kotlin/com/parlor/app/storage/PlatformStorage.ios.kt",
+      "composeApp/src/commonMain/kotlin/com/parlor/app/di/StorageModule.kt",
+      "shared/storage/src/commonMain/kotlin/com/parlor/storage/snapshot/FileBackedSnapshotStore.kt",
+      "composeApp/src/commonMain/kotlin/com/parlor/app/shell/home/HomeRecoveryAvailability.kt",
+      "composeApp/src/commonMain/kotlin/com/parlor/app/LocalResumeRouter.kt",
+      "composeApp/src/commonMain/kotlin/com/parlor/app/App.kt",
+      "shared/engine/src/commonMain/kotlin/com/parlor/engine/snapshot/SnapshotCodec.kt",
+      "composeApp/build.gradle.kts",
+      "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitRoomTransportLoopbackTest.kt"
+    ],
+    "desktop_test_changes": {
+      "paths": [
+        "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/RtlFormattingTest.kt",
+        "shared/design-system/src/desktopTest/kotlin/com/parlor/designsystem/localization/ProvideAppLanguageDesktopTest.kt"
+      ],
+      "reviewed": "Complete diffs re-read. Public runSkikoComposeUiTest idle synchronization replaces ad-hoc immediate recomposer; locale/rendered text/retained-state/disposal assertions preserved or strengthened. Both source sets Desktop test-only; no iOS runtime mutation.",
+      "runtime_limit": "Separate JVM verification belongs to root lane and is not adopted here as firsthand execution."
+    },
+    "inventory_delta": {
+      "path": "docs/review/INDEPENDENT_REVIEW_INVENTORY.csv",
+      "before_rows": 792,
+      "after_rows": 811,
+      "added_rows": 19,
+      "removed_rows": 0,
+      "changed_existing_rows": 16,
+      "only_existing_field_changed": "historical_change_or_finding_reference",
+      "all_rows_explicitly_not_independent_review_attestations": true,
+      "review_method": "Complete structured field delta inspected with repeated common fields deduplicated."
+    },
+    "production_source_changes_since_prior_baseline": 0
+  },
+  "fresh_control_evidence": {
+    "l08": {
+      "receipt": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-adopted-controls-01/receipt.json",
+      "receipt_sha256": "82183662bb29f18a7171acf7ceb69170087126b14539bbff0ff40c8489cd1e25",
+      "log_sha256": "067576625bc46dcb6899ed0e5f4183a135faca9f35d1bf3110512c23a96211cf",
+      "executor": "/root single lane",
+      "tests_executed": 132,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "control_bytes_match_current": true,
+      "source_unchanged_during_control_cycle": true,
+      "exit_code": 0,
+      "stop_exit_code": 0,
+      "remaining_outputs": [],
+      "remaining_owned_workers": [],
+      "cleanup_errors": [],
+      "limitation": "Python controls/host helper evidence, not iOS app-host execution"
+    },
+    "normal": {
+      "receipt": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/normal-ios-after-l08-controls-01/receipt.json",
+      "receipt_sha256": "52acaae28ffc3418160b603c08116e56d580cb5dbfb724023089a3feec17f2fa",
+      "log_sha256": "6149d31b157f559268a6527c1947f0d788db49e8991dad51d9c0ddf45cdce98c",
+      "executor": "/root single lane",
+      "tests_executed": 78,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "control_bytes_match_current": true,
+      "source_unchanged_during_control_cycle": true,
+      "exit_code": 0,
+      "stop_exit_code": 0,
+      "remaining_outputs": [],
+      "remaining_owned_workers": [],
+      "cleanup_errors": [],
+      "limitation": "Python controls/host helper evidence, not iOS app-host execution"
+    }
+  },
+  "execution_review_approval": {
+    "executor": "/root only, coordinated shared lane",
+    "binding_must_remain_exact": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/ios-readiness-source-06.json",
+    "first": {
+      "cycle": "ios-readiness-05",
+      "runner": "scripts/verification/ios-readiness/run_ios_readiness.py",
+      "approved_control_sha256": "365da18f1d3916dcf012f4ebaf390f37f8bfdc487532e8baec3ac5c44aed8ea3",
+      "required_argument": "--simulator-signing=adhoc"
+    },
+    "second": {
+      "cycle": "ios-readiness-06",
+      "runner": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
+      "approved_control_sha256": "b5c2301a14478cae584fffad7dcead94e7ba03d0f434b86f05d6a5e9b2bdc422",
+      "required_argument": "--simulator-signing=adhoc"
+    },
+    "conditions": [
+      "Wait until root current productionCheck lane and its cleanup complete; no competing local Gradle/Xcode/simulator worker lane.",
+      "No source, binding, or control mutations during either cycle. Any drift invalidates approval and requires re-review/new binding.",
+      "Use fresh manifest-owned source copy, fresh owned simulator, Debug identity and ad-hoc simulator signing only; never personal device or real signing material.",
+      "Capture failures and raw bounded evidence. Successful Python controls or a defect witness is not a passing native matrix.",
+      "After EACH cycle, stop isolated Gradle immediately, dispose only ownership-attested workers/secondary FIFO paths/outputs/DerivedData/simulator, and verify cleanup before next cycle.",
+      "If first cycle fails or needs source/control edits, stop and investigate rather than borrowing this approval for edited controls."
+    ]
+  },
+  "limits": [
+    "No native L08 compile/runtime result yet; actual Kotlin/Swift signatures, selectors, waits, matrix budgets and game/recovery sequences must execute.",
+    "L08 host ControlledStartRoom peers are synthetic: no physical P2pKit LAN/admission/rejoin, full UI-only game journey, physical backup restore, Store signing/submission or release-readiness proof.",
+    "Normal runner changes exactly XCTest file/Xcode project in owned copy; app/Kotlin sources byte-identical, eight XCTest repetitions plus distinct ninth provenance launch. English launch probe does not explain historical device crashes.",
+    "Approval attests bounded changed inputs and runner controls, not a new complete repository line-by-line audit."
+  ],
+  "reviewer_cleanup": {
+    "builds_tests_runners_native_probes_started": 0,
+    "background_workers_started": 0,
+    "generated_build_outputs_created": 0,
+    "edits": "This new additive report only; no source, frozen drafts, historic evidence, Git or Store modifications."
+  }
+}

@@ -1,0 +1,225 @@
+{
+  "schema_version": 1,
+  "kind": "INDEPENDENT_A29_NONSHIPPING_HOST_CORRECTION_AND_ACTUAL_LOCAL_EVIDENCE_REVIEW",
+  "reviewer": "/root/fixture_review",
+  "author": "/root/l08_fixture",
+  "executor_and_adopter": "/root",
+  "reviewed_at": "2026-09-09T13:27:07.771965+00:00",
+  "status": "APPROVED_SOURCE_AND_ACTUAL_LOCAL_EVIDENCE_NATIVE_STILL_PENDING",
+  "findings": [],
+  "readiness": "NOT_READY",
+  "scope": "Final bounded reconciliation of previously independently approved Ready bookkeeping correction and raw red/green JVM plus new A copy/composition control evidence. No repeated execution or new source-review campaign. B normal observer and CI label semantic approvals belong to their separate reviewers.",
+  "source_correction": {
+    "old_fixture_sha256": "147692e570bcc0e8c191a6373c61fd4f636c62891b604fdc1c5fee52990861f0",
+    "approved_fixture_sha256": "1de4cad503f42fc3e9cb198a8df04b7613eab303a3cafd6b31cfabd14e142ab9",
+    "identical_destinations": [
+      "shared/networking-testing/src/commonMain/kotlin/com/parlor/networking/testing/ControlledStartRoom.kt",
+      "scripts/verification/ios-readiness/ControlledStartRoom.kt.in",
+      "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/ControlledStartRoom.kt.in"
+    ],
+    "test": {
+      "path": "shared/networking-testing/src/commonTest/kotlin/com/parlor/networking/testing/ControlledStartRoomReentrancyTest.kt",
+      "sha256": "e65dacf6fd0c2d25f6abdaf1dd51d98dfd0f7c198ca5be6f7faae0554a573f01"
+    },
+    "clone_guard": {
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/test_l08_functional_copy.py",
+      "sha256": "3ae0b2315586afd5b2d891347f4c277cf087d6304add9be73b98c09c0ee952ed"
+    },
+    "review": "All original offer/protocol/roster/game validation precedes a new readyPeers reservation, now before the synchronous bus send. Original Ready message/result check retained. Finally removes only a newly added reservation unless the send reported Success; prior Ready survives failed duplicate delivery. Cancellation/exception propagation, dispatcher, timeout, ACK/snapshot rules and drop checks unchanged.",
+    "exact_scope": "Earlier independent text review found one ready-send block only; complete old/new fixture bytes pinned. Clone guard adds exactly10lines, reversible to prior source: the original ControlledStartRoom row must still equal old147692\u2026, then all3 full replacement copies equal new1de4cad\u2026. Immutable65row/75name closed manifest retained; other64rows and20other test methods unchanged (21methods total).",
+    "architecture": "Only nonshipping networking-testing fixture, two owned-copy templates, regression and clone guard. No production reducer ownership, protocol4.2, seeds, privacy, snapshot/content validation, Doctor setting, Leave timing, navigation, application identity or dependency-policy change.",
+    "author_packet": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-a29-host-followup-01/implementation-01/author-report.json",
+      "sha256": "d28fb02eb5d55fe03687452fd1512ce1e84da1cf3e68b34a2dad2d60b66eec84"
+    },
+    "adoption": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/a29-source-label-adoption-01.json",
+      "sha256": "9d11bdef12d98796b6e1f83da5053c524ab657ad4c2d7b1be8903c668c94a7d4"
+    }
+  },
+  "actual_jvm_red": {
+    "receipt": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-host-reentrancy-red-01/receipt.json",
+      "sha256": "d9acdb5ee72929fb73b4c74fb13014bb3c63ae37735dd1e2c84dac7d5cb31b68"
+    },
+    "source_manifest_sha256": "0af2096f158295243a328623a31a121e1675676feac5c7230e98a477a023e297",
+    "fixture_sha256": "147692e570bcc0e8c191a6373c61fd4f636c62891b604fdc1c5fee52990861f0",
+    "test_sha256": "e65dacf6fd0c2d25f6abdaf1dd51d98dfd0f7c198ca5be6f7faae0554a573f01",
+    "tests": 1,
+    "passed": 0,
+    "failed": 1,
+    "errors": 0,
+    "skipped": 0,
+    "failure": "Synchronous fixture worker failed ==> expected: <[]> but was: <[Commit preceded this peer's Ready]>",
+    "xml": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-host-reentrancy-red-01/reports/shared/networking-testing/build/test-results/desktopTest/TEST-com.parlor.networking.testing.ControlledStartRoomReentrancyTest.xml",
+      "sha256": "85c10f97a0352cc421f61cae93c83dcf8dc464fbbe6e17be2df6b1707145012b"
+    },
+    "seconds": 0.147,
+    "review": "Previously independently read raw XML, wrapper/log and source bindings. The unchanged regression uses actual ControlledStartRoom/InMemory bus with a synchronous scripted validated host, six fixed players and UnconfinedTestDispatcher collectors. Not a production-host/iOS runtime test."
+  },
+  "actual_jvm_green": {
+    "receipt": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-host-reentrancy-contracts-green-01/receipt.json",
+      "sha256": "49d2ba4027cbe0575fbefb5d9deb08223d1c761e55beeb2666c368c7db8adb02"
+    },
+    "source_manifest_sha256": "1c4935790e87803c5e28de448353c0baf161b2282e7ffca7c87dbb442ad6064b",
+    "tests": 286,
+    "passed": 283,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 3,
+    "suites": 26,
+    "breakdown": "networking-testing5PASS (new regression+4bus); WhodunitHostLanguageContinuity2PASS; MafiaHostLanguageContinuity2PASS; transport274PASS/3SKIP.",
+    "new_regression_xml": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-host-reentrancy-contracts-green-01/reports/shared/networking-testing/build/test-results/desktopTest/TEST-com.parlor.networking.testing.ControlledStartRoomReentrancyTest.xml",
+      "sha256": "bf66488988ca2466cb9649096c7447e660b4321a7dda0e4adbf25c1ce16896c1"
+    },
+    "new_regression_seconds": 0.186,
+    "descriptors": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-host-reentrancy-contracts-green-01/test-receipts.json",
+      "sha256": "12a5f0c1e35cb0c524ff64c0aac5c5acd275725d8f25fef17d849f195a06351b"
+    },
+    "review": "Previously independently reconciled all26raw XML suites and286 descriptors to test-receipts. Four desktopTest task lines executed, not cached/up-to-date. Eight compile tasks were FROM-CACHE and are not newly executed runtime proof.",
+    "skips": "Existing @Ignore single-JVM peer membership, peer/host round-trip and broadcast loopback tests. No physical-device evidence."
+  },
+  "actual_python_A_controls": {
+    "receipt": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-a29-b30-controls-01/receipt.json",
+      "sha256": "2c123aab5829d92c2bed1302fd47818c4c913ffbda61ead025f9525a8c3139e2"
+    },
+    "evidence_root": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-a29-b30-controls-01",
+    "commands": [
+      {
+        "name": "canonical_l08_copy",
+        "tests_executed": 9,
+        "passed": 9,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "log_sha256": "2d9d2e43ac51b7fedd0635a5a5afe6f4d3d926258e51fe0a86481c09986ad915"
+      },
+      {
+        "name": "companion_l08_copy",
+        "tests_executed": 9,
+        "passed": 9,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "log_sha256": "1b920e1390c06298cd137f09e8f9580c56a399a23c94c559dfd71324def3c699"
+      },
+      {
+        "name": "functional_l08_copy",
+        "tests_executed": 21,
+        "passed": 21,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "log_sha256": "3ab0dee28eeccf7b23ebccfaab81acc3a0d050cca08dbf177384128c7aec4904"
+      },
+      {
+        "name": "composition",
+        "tests_executed": 55,
+        "passed": 55,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "log_sha256": "0bd4503f92fc75268cefd1dd99a67fbf9c8426a14dd67b60b03e984f3e4ab717"
+      }
+    ],
+    "A_executed_descriptors": 94,
+    "review": "Each copy/functional log has the exact9/9/21 ok descriptors, successful unittest footer and command exit0. Composition has55exact ordered discovered/test-start names, tests_run55/failure0/error0/skipped[]/native_executionfalse and OK; one test status is interleaved with allocation output, not missing. Composition input test hashes match bound controls.",
+    "count_limit": "Canonical/companion9-method lists overlap but executed separately against their respective copy roots.94 is executed descriptors across4commands, not94unique behaviors.",
+    "same_batch_not_A_semantic_approval": "Normal243 and label1 ran separately in the same338-test batch; recorded six command exits0. Their runtime/control semantics are outside this A approval; no normal app-runtime evidence inferred.",
+    "command_exit_receipt": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-a29-b30-controls-01/command-exits.tsv",
+      "sha256": "eb7106f5179b8536b530c348ce0265ea797c17cb8d9ab054e669849a4a79c8ec"
+    },
+    "root_reconciliation": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/a29-b30-controls-01-result.json",
+      "sha256": "c4f75f04c227a16af9d839fe36195ef00596be849fe56262d6c7ad7292ca398e"
+    }
+  },
+  "bindings": {
+    "base_commit": "52f60924a89f788aab78c826096f34a32af40292",
+    "base_tree": "02afb528b429eecb9c1afe58217490b07f4eb190",
+    "branch": "fix/local-readiness-2026-09-07",
+    "working_tree_bound_not_pristine_base": true,
+    "source_rows": 829,
+    "source_manifest_sha256": "1c4935790e87803c5e28de448353c0baf161b2282e7ffca7c87dbb442ad6064b",
+    "control_rows": 217,
+    "before_after_control_file_sha256": "112d5622a9561cd5f54d56755973de35989c57f188797db5ff63e51b735e8aa2",
+    "review": "Recomputed source-manifest aggregate; before/after source and runner identical. All217unique control rows identical before/after, matching raw BOUND_CONTROL_INPUTS lines. Source829 rows equal green-cycle source manifest, with new regressione65 and fixture/template1de; bound control rows carry companion1de and guard3ae. These are working-tree bindings over base52f609, not fresh native admission."
+  },
+  "cleanup": {
+    "cycles": [
+      {
+        "cycle": "red",
+        "stop_exit_code": 0,
+        "stop_log_sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+        "scratch_absent": true,
+        "remaining_outputs": 0,
+        "remaining_owned_workers": 0,
+        "cleanup_errors": 0,
+        "source_runner_unchanged": true
+      },
+      {
+        "cycle": "green",
+        "stop_exit_code": 0,
+        "stop_log_sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+        "scratch_absent": true,
+        "remaining_outputs": 0,
+        "remaining_owned_workers": 0,
+        "cleanup_errors": 0,
+        "source_runner_unchanged": true
+      },
+      {
+        "cycle": "python_controls",
+        "stop_exit_code": 0,
+        "stop_log_sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+        "scratch_absent": true,
+        "remaining_outputs": 0,
+        "remaining_owned_workers": 0,
+        "cleanup_errors": 0,
+        "source_runner_unchanged": true
+      }
+    ],
+    "composition_allocations": [
+      {
+        "path": "/tmp/parlor-app-foundation-controls-_ut3pvgd",
+        "device": 27,
+        "inode": 1774038,
+        "uid": 0
+      },
+      {
+        "path": "/tmp/parlor-app-foundation-controls-a82mcbx6",
+        "device": 27,
+        "inode": 1774655,
+        "uid": 0
+      },
+      {
+        "path": "/tmp/parlor-app-foundation-controls-ljypn7b6",
+        "device": 27,
+        "inode": 1774658,
+        "uid": 0
+      },
+      {
+        "path": "/tmp/parlor-app-foundation-controls-gycrrtj8",
+        "device": 27,
+        "inode": 1774661,
+        "uid": 0
+      }
+    ],
+    "composition_result": "Four exact allocation/cleanup custody pairs, PASS/zero workers/parent removed, independently confirmed all four paths and owned cycle scratch absent. No cleanup performed by reviewer.",
+    "limits": "Worker absence comes from coordinated cycle receipts; no unrelated/global worker shutdown or cache deletion. Raw stop logs retained. No Apple resources created by these Linux control cycles."
+  },
+  "native_limits": {
+    "a27_actual_review": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-a27-actual-independent-01.json",
+      "sha256": "97a182967ec55767453e13e9ff2bc0c45f0537cfd46c3cd71ef6d135f3203784"
+    },
+    "causality": "Old fixture has an actual reproduced JVM Commit-before-Ready defect and the unchanged test now passes with the reviewed repair. A27 generic prepare-await-started receipt did not capture that exception or identify an await conjunct; matching native cause remains unproven.",
+    "qualification": "A29 native execution has not run in this evidence. Host42-action matrix, fresh functional/strict-protection and later local/OS qualification are not certified. Historical A27/A25 failures preserved. Source/control commit plus mechanical inventory and fresh reviewed bindings remain required before native/final qualification. Physical-device, Store and owner/legal requirements unchanged."
+  },
+  "reviewer_activity": "Only stdlib JSON/hash/text/filesystem inspection and this assigned report write during completion review. Earlier red/green/source reviews reused at exact evidence identities; no tests/builds/project imports/native/network or Git writes."
+}

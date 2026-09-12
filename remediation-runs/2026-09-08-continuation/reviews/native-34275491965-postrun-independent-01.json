@@ -1,0 +1,783 @@
+{
+  "schema_version": 1,
+  "kind": "INDEPENDENT_ACTUAL_NATIVE_POSTRUN_EVIDENCE_REVIEW",
+  "reviewer": "/root/native_ci",
+  "execution_and_collection_owner": "/root",
+  "recorded_at": "2026-09-08T21:44:16.218667+00:00",
+  "decision": "CONFIRMED_A21_FAIL_WITH_PARTIAL_APPLICATION_OBSERVATIONS_B22_NOT_RUN_AND_CLEANUP_FAIL",
+  "readiness": "NOT READY",
+  "scope": "Actual run34275491965 attempt1 runtime and cleanup, read from original retained artifacts/logs and current frozen source; not preflight/dispatch approval, correction approval, a new execution, or final D qualification.",
+  "run": {
+    "id": 34275491965,
+    "attempt": 1,
+    "event": "workflow_dispatch",
+    "workflow": ".github/workflows/production-verification.yml",
+    "workflow_id": 335554528,
+    "repository": "Apdelrahman1911/parlor",
+    "branch": "fix/local-readiness-2026-09-07",
+    "commit": "e5111ea49113c3f12cb577058c3f926dfebdc325",
+    "tree": "a88872673bd4cfc366236362f287c1db0a04a5cd",
+    "created_at": "2026-09-08T20:33:28Z",
+    "updated_at": "2026-09-08T21:24:11Z",
+    "status": "completed",
+    "conclusion": "failure",
+    "job_id": 102227367061,
+    "job_name": "iOS tests, release frameworks, and Swift wrapper",
+    "job_started_at": "2026-09-08T20:33:38Z",
+    "job_completed_at": "2026-09-08T21:24:10Z",
+    "native_step": {
+      "number": 5,
+      "conclusion": "failure",
+      "started_at": "2026-09-08T20:33:58Z",
+      "completed_at": "2026-09-08T21:23:46Z"
+    },
+    "cleanup_step": {
+      "number": 7,
+      "conclusion": "failure"
+    },
+    "both_artifact_upload_steps": "success",
+    "other_four_jobs": "SKIPPED by focused native scope, not full cross-platform qualification",
+    "api_identity_inspection": "run.json and attempt.json agree on id/attempt/source/branch/event/path/status/conclusion; both artifact workflow_run identities match this source/run, and ZIP digests/sizes match artifact API records."
+  },
+  "artifact_custody": {
+    "evidence": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34275491965/native-evidence.zip",
+      "bytes": 546033,
+      "sha256": "ea22338008d089a93ab7baa2c3a86dfb4cc090e6bb885306597f797a8fec442c",
+      "artifact_id": 10077343585,
+      "name": "native-evidence-34275491965-1",
+      "members": 36,
+      "uncompressed_bytes": 2587815,
+      "extracted_byte_mismatches": []
+    },
+    "cleanup": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34275491965/native-cleanup.zip",
+      "bytes": 683,
+      "sha256": "440f1a2d744d691e5566f38921279f1bfc1a985c2a80f41223d8f58155b8dee9",
+      "artifact_id": 10077346157,
+      "name": "native-cleanup-34275491965-1",
+      "members": 1,
+      "uncompressed_bytes": 814,
+      "extracted_byte_mismatches": []
+    },
+    "logs": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34275491965/run-logs.zip",
+      "bytes": 21715,
+      "sha256": "68b6641b77939459c034771e23c8ef2d8c54eac475563323c2859adf17f96a03",
+      "members": 13,
+      "uncompressed_bytes": 70189,
+      "extracted_byte_mismatches": []
+    },
+    "native_directory_manifest": {
+      "listed_files": 28,
+      "all28_actual_hashes_match_outer_preservation_and_custody_manifests": true,
+      "preservation_status": "COMPLETE",
+      "qualification_limit": "Complete transfer of files present in the native evidence directory is not complete required application evidence or safe native cleanup."
+    }
+  },
+  "fresh_input_bindings": {
+    "preflight_review": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-preflight-34273018746-independent-01.json",
+      "bytes": 21480,
+      "sha256": "fce841a029d8874d88d6aec24d772cd7ca2f34b0dc1495eb002285ac87e4875f"
+    },
+    "preflight_run": 34273018746,
+    "preflight_attempt": 1,
+    "preflight_artifact": 10074652767,
+    "preflight_artifact_sha256": "ef09855f3ac458341a810eb4bc6353d07996c2c8883d2f0a9bd0902ec6b1175d",
+    "source_binding": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34275491965/native-evidence/reviewed-preflight/ios-readiness-source-ci.json",
+      "bytes": 300363,
+      "sha256": "833e389a3b8b5cfe426e4788684c1919a4c5ce4d8faa3295b9da8c5440b52a07"
+    },
+    "source_manifest_sha256": "6e313ce760d840aa08b617229c03263ce90eda715cb6c442cbe9738045a63e8e",
+    "source_manifest_entries": 828,
+    "source_before_after_and_input_manifest_and_preflight_source_equal": true,
+    "source_tracked_status_before_and_after": "",
+    "source_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "all828_current_source_bytes_rehashed_and_match": true,
+    "l08_control_sha256": "840467f0656642c46bdef61c9c48e6355d2b78ac7dee1d00b302a61d4c798c3a",
+    "l08_control_files": 99,
+    "all99_input_rows_equal_preflight_and_current_bytes": true,
+    "control_relocation": "Only campaign ios-readiness-source-ci.json is read from retained reviewed-preflight copy; its exact833e389a hash matches the native input row. No control module was imported or executed.",
+    "normal_control_sha256": "427b30f1ec821438cf6ecc8a2fbe0e01e5509220a0adde26ecd3b5da6e662983",
+    "source_context_sha256": "b760733a73907537c341ee1b234a05ae95df51e12ef7051c522e3e70e3b1a598",
+    "canonical_hashes_independently_recomputed": [
+      "source-manifest6e313ce7",
+      "source-contextb760733a",
+      "l08-control840467f0"
+    ],
+    "copy_manifest": {
+      "total": 767,
+      "original_files": 753,
+      "modified_original_files": 16,
+      "added_files": 14,
+      "all_original_current_hashes_match": true,
+      "retained_diff_files_independently_reconstructed_in_memory": 30,
+      "all30_initial_copied_hashes_match": true,
+      "generated_runner_diff_reconstructed_sha256": "23c29b8a5eedbfc345ab34d4c90c7bd82cdd3c7c917b3f5eb87af1be883463bc"
+    },
+    "postbuild_copy_identity": "NOT VERIFIED: copied_sources_unchanged=False is initialized when final holder guard fails, not observed proof of a changed input. No copied-source-inputs-after-build.json was produced."
+  },
+  "actual_platform": {
+    "host_macos": "15.7.9",
+    "host_build": "24G830",
+    "darwin": "24.6.0",
+    "architecture": "arm64",
+    "xcode": "26.3",
+    "xcode_build": "17C529",
+    "sdk": "26.2",
+    "runtime": [
+      26,
+      2,
+      0
+    ],
+    "runtime_build": "23C54",
+    "toolchain_profile": "qualified-xcode-26.3",
+    "signing_mode": "adhoc",
+    "simulator_lifecycle_mode": "direct-owned-v1",
+    "app_id": "com.parlor.app.debug",
+    "owned_uuid": "86A86790-96CE-4E95-8132-3EEAE7731A2E",
+    "source_bound_effective_phase": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34275491965/native-evidence/ios-readiness-21/effective-simulator-app-phase.json",
+      "bytes": 1638,
+      "sha256": "219dbce9618bd650cddf42e0f7f2b0fe1e7eccbd849405d90be583f41e07932b"
+    },
+    "phase_observation_limit": "Actual copied Debug arm64 simulator app-target phase selected exact dash signing identity with empty team/profile. This is not retained signature, entitlement, Store-signing or final installed-artifact validation."
+  },
+  "execution_chronology": {
+    "native_runner_started": "2026-09-08T20:34:15.005753+00:00",
+    "native_runner_finished": "2026-09-08T21:23:46.379608+00:00",
+    "native_runner_exit": 1,
+    "xcode_command_started": "2026-09-08T20:37:55.663079+00:00",
+    "xcode_command_finished": "2026-09-08T21:23:19.811275+00:00",
+    "xcode_terminal_exit": -15,
+    "cumulative_xcode_budget_seconds": 2700,
+    "xctest_default_allowance_seconds": 1200,
+    "xctest_maximum_allowance_seconds": 1500,
+    "embedded_gradle": {
+      "log_lines": [
+        1152,
+        1153
+      ],
+      "result": "BUILD SUCCESSFUL",
+      "reported_duration": "30m 47s",
+      "actionable_tasks": 138,
+      "executed_tasks": 138
+    },
+    "first_xctest_at": "2026-09-08T21:12:17.384+00:00",
+    "command_start_to_first_xctest_seconds": 2061.720921,
+    "nominal_2700s_budget_remaining_at_first_xctest_seconds": 638.279079,
+    "four_container_tests": [
+      {
+        "method": "testChildUsesFullBoundsAcrossSizesAndOpposingSemanticDirections",
+        "result": "passed",
+        "seconds": 1.91,
+        "log_lines": [
+          1778,
+          1782
+        ]
+      },
+      {
+        "method": "testDefaultAppearanceForwardingReachesTheSameChildExactlyOnce",
+        "result": "passed",
+        "seconds": 0.275,
+        "log_lines": [
+          1783,
+          1787
+        ]
+      },
+      {
+        "method": "testOneStableChildKeepsItsExplicitSemanticsIndependentOfTheOuterView",
+        "result": "passed",
+        "seconds": 0.118,
+        "log_lines": [
+          1788,
+          1792
+        ]
+      },
+      {
+        "method": "testSystemDecorationAndOrientationPoliciesStillBelongToTheChild",
+        "result": "passed",
+        "seconds": 0.15,
+        "log_lines": [
+          1793,
+          1797
+        ]
+      }
+    ],
+    "container_suite": "Raw log1799: Executed4 tests,0failures; suite finished21:12:19.841.",
+    "fifth_test": {
+      "method": "testDSC01ActualSettingsLocalSessionsAndOSWithL08FunctionalObservation",
+      "started_at": "2026-09-08T21:12:19.843+00:00",
+      "result": "INTERRUPTED_NO_COMPLETION",
+      "last_activity_seconds": 639.75,
+      "last_log_lines": [
+        3785,
+        3791
+      ]
+    },
+    "primary_error": {
+      "type": "TimeoutExpired",
+      "command": "xcodebuild test",
+      "source": "companion run_ios_readiness.py731-738 and actual command receipt",
+      "raw_error_message_capped_bytes": 800,
+      "meaning": "Whole command deadline expired after cold compilation and partial active XCTest. Not a per-test allowance expiry, assertion result, repeated ps/lsof timeout, diagnosed app crash, or demonstrated storage/recovery defect."
+    },
+    "limitations": "No xcresult summary/tests extraction took place. Four raw-log passes do not establish all five tests, complete skip/failure counts, full suite PASS or native qualification. Build success is not runtime success."
+  },
+  "partial_application_observations": {
+    "initial_settings": "Raw combined-test log advanced through initial Settings/restart interactions to readiness, consistent with exact copied test order; structured settings probe was not preserved. This is not independently qualified Settings/OS/local-session matrix PASS.",
+    "copy_instrumented_cold_launches": {
+      "raw_markers": 8,
+      "unique_process_boots": 8,
+      "samples": 48,
+      "ordinals": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "sixth_sample_ms_by_boot": [
+        33633,
+        33323,
+        33985,
+        33676,
+        33016,
+        33768,
+        33997,
+        33824
+      ],
+      "each_marker_foreground_true_alert_false_single_probe_activation": true,
+      "marker_lines": [
+        2419,
+        2576,
+        2733,
+        2890,
+        3047,
+        3204,
+        3361,
+        3518
+      ],
+      "readiness_probe": {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34275491965/native-evidence/ios-readiness-21/probe-readiness-result.json",
+        "bytes": 112431,
+        "sha256": "b5f51e1025e6fe7c84b7e1a1e9b224cf16ebadd9b73495fe2d4d5d1d9f8e1ca3"
+      },
+      "readiness_observations": 74,
+      "readiness_completed": true,
+      "observed_framework": {
+        "file_bytes": 84030776,
+        "file_sha256": "81f3fcebbc3c770e2a2d928c949325ab1e2b6a7c99313d06dc423b807188857c",
+        "image_uuid": "5f9b57c0-600d-3095-9af9-2ba4dce36d7b",
+        "origin": "owned-copy-build",
+        "path": "xcode-frameworks/Debug/iphonesimulator26.2/ComposeApp.framework/ComposeApp"
+      },
+      "qualification_limit": "Actual partial copy-instrumented A observations only. Native boot health JSON, built/installed inventories, UUID/signature/entitlement reports and final matrix bindings were not retained. These are NOT eight normal-source B XCTest repetitions or libproc queries."
+    },
+    "functional_storage": {
+      "completed_boot_markers": [
+        1
+      ],
+      "boot1_actions": [
+        "save"
+      ],
+      "boot1_marker_line": 3604,
+      "boot2": "Actual new launch and load action/read happened at log3605-3670; no completed boot2 marker. Interruption occurred during its first Whodunit Home activation preparation.",
+      "home_activations": [
+        {
+          "line": 3733,
+          "attempt": 0,
+          "counters": {},
+          "counters_valid": false,
+          "frames": [],
+          "geometry_valid": false,
+          "identifier": "l08-home-wc",
+          "phase": "before-observer",
+          "proves_recovery": false,
+          "schema_version": 1,
+          "stable_samples": 0
+        },
+        {
+          "line": 3751,
+          "attempt": 0,
+          "counters": {
+            "discard_taps": 0,
+            "recovery_shows": 0,
+            "resume_taps": 0,
+            "retry_taps": 0
+          },
+          "counters_valid": true,
+          "frames": [],
+          "geometry_valid": false,
+          "identifier": "l08-home-wc",
+          "phase": "before-zero",
+          "proves_recovery": false,
+          "schema_version": 1,
+          "stable_samples": 0
+        },
+        {
+          "line": 3768,
+          "attempt": 0,
+          "counters": {},
+          "counters_valid": false,
+          "frames": [
+            [
+              24,
+              376,
+              354,
+              96
+            ],
+            [
+              0,
+              0,
+              402,
+              769.6666870117188
+            ],
+            [
+              0,
+              0,
+              402,
+              874
+            ],
+            [
+              68.66666666666666,
+              134,
+              265,
+              139
+            ]
+          ],
+          "geometry_valid": true,
+          "identifier": "l08-home-wc",
+          "phase": "geometry",
+          "proves_recovery": false,
+          "schema_version": 1,
+          "stable_samples": 1
+        },
+        {
+          "line": 3785,
+          "attempt": 1,
+          "counters": {},
+          "counters_valid": false,
+          "frames": [
+            [
+              24,
+              376,
+              354,
+              96
+            ],
+            [
+              0,
+              0,
+              402,
+              769.6666870117188
+            ],
+            [
+              0,
+              0,
+              402,
+              874
+            ],
+            [
+              68.66666666666666,
+              134,
+              265,
+              139
+            ]
+          ],
+          "geometry_valid": true,
+          "identifier": "l08-home-wc",
+          "phase": "geometry",
+          "proves_recovery": false,
+          "schema_version": 1,
+          "stable_samples": 2
+        }
+      ],
+      "target_taps_observed": 0,
+      "after_callback_observations": 0,
+      "last_observed_geometry": "Target[24,376,354,96], list[0,0,402,769.66668701171875], app[0,0,402,874], overlay[68.666666666666657,134,265,139]; two stable valid geometry samples after fresh all-zero counters, before final geometry/current check and the single tap.",
+      "operation_receipts_retained": 0,
+      "strict_application_complete_comparisons_retained": 0,
+      "required_boots": 13,
+      "required_operations": 20,
+      "required_complete_comparisons": 26,
+      "matrix_status": "INCOMPLETE_NOT_VALIDATED",
+      "legacy_boot10_correction": "NOT REACHED; no fresh callback failure and no verification of corrected boot10 interaction."
+    },
+    "retained_hosts": {
+      "fixtures_observed": 0,
+      "operations_observed": 0,
+      "required_fixtures": 3,
+      "required_operations": 42,
+      "status": "NOT_RUN"
+    },
+    "subsequent_local_game_and_actual_OS_paths": "NOT REACHED: these follow incomplete functional and retained-host stages in the copied combined test."
+  },
+  "strict_protection_new_observation": {
+    "raw": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34275491965/native-evidence/ios-readiness-21/parlor-l08-app-foundation.json",
+      "bytes": 7839,
+      "sha256": "c21e69e3ea4e5cce3bc005d25d35dd3b499c9885758bf24095ad13a410c4ec2b"
+    },
+    "raw_status": "OBSERVATIONS_COMPLETE",
+    "preservation_status": "PRESERVED",
+    "final_collection_status": "NOT_RUN",
+    "runtime_version": [
+      26,
+      2,
+      0
+    ],
+    "foundation_image": {
+      "platform": 7,
+      "status": "observed",
+      "uuid": "c153116f-dd31-3fa9-89bb-04b47c1fa83d"
+    },
+    "main_image": {
+      "platform": 7,
+      "status": "observed",
+      "uuid": "97094aa6-2a0c-31b7-a7e7-cdfb7c3fecbf"
+    },
+    "fixture_image": {
+      "app_relative": "Parlor.debug.dylib",
+      "platform": 7,
+      "status": "observed",
+      "uuid": "10edc896-864c-31b5-8320-8d5ccaecb6d6"
+    },
+    "process_id": 322,
+    "run_token": "D7F61042-12ED-426D-83E9-6DE64BACCFDD",
+    "process_boot": "AEB11E31-8FF4-482C-B928-E47C3EC77490",
+    "context_cross_checks": "Exact raw source/context/control/template/signing/device/first-readiness boot binds to copy record and retained readiness context; exact executed XCTest marker at2306 matches all required public fields. Final container query identifies raw container UUID. Initial native copy hash matches reconstructed copied diff. Missing built/installed UUID/hash inventories prevent complete collection binding.",
+    "operations": 8,
+    "all_operations_returned_true_result_true_no_exception_or_NSError": true,
+    "FileManager_queries": {
+      "count": 8,
+      "dictionary_present": true,
+      "key_present": false,
+      "value": "missing",
+      "returned": true,
+      "exception": "none",
+      "NSError_present": false
+    },
+    "regular_file_URL_queries": {
+      "count": 5,
+      "dictionary_present": true,
+      "key_present": true,
+      "value": "until-first-authentication",
+      "returned": true,
+      "exception": "none",
+      "NSError_present": false
+    },
+    "volume_queries": {
+      "count": 8,
+      "dictionary_present": true,
+      "key_present": true,
+      "value": "unsupported",
+      "returned": true,
+      "exception": "none",
+      "NSError_present": false
+    },
+    "backup_exclusion": "Five included / three excluded observation rows; directory and atomic-file backup operations visibly change included to excluded.",
+    "fixture_cleanup": {
+      "created": true,
+      "directory_pinned": true,
+      "reason": "none",
+      "root_pinned": true,
+      "root_removed": true,
+      "status": "REMOVED"
+    },
+    "hardware_protection_verified": false,
+    "l08_requirements_waived": false,
+    "comparison_to_native16": "Native16 runtime26.5/Foundation2cc9fce0-08f9-3a0d-8a2f-6db229462de5 had eight FMmissing, five URLuntil-first-authentication, eight volumeSUPPORTED. A21 runtime26.2/Foundationc153116f-dd31-3fa9-89bb-04b47c1fa83d has same FM/URL result but volumeUNSUPPORTED. This is a new retained native observation in a different environment, not complete collection qualification or 26 new application comparisons.",
+    "conclusion": "Strict L08 remains unsatisfied and not physical-only. No metadata waiver, speculative application-path patch, universal Simulator-incapability claim, loaded public-source provenance claim or physical enforcement claim is justified."
+  },
+  "normal_debug_B22": {
+    "status": "NOT_RUN",
+    "entry_or_evidence_directory_present": false,
+    "actual_normal_XCTest_repetitions": 0,
+    "actual_normal_samples": 0,
+    "actual_separate_ninth_launch": 0,
+    "actual_Parlor_libproc_queries": 0,
+    "native_structure_or_return_size_observations": 0,
+    "reason": "A21 cleanup_safe=False correctly stopped adapter before normal lane. Historical187 controls and A21 copied-launch observations do not fill B."
+  },
+  "cleanup": {
+    "status": "FAIL",
+    "outer_status": "FAIL",
+    "outer_cleanup_safe": false,
+    "immediate_and_final_gradle_stops": [
+      {
+        "label": "stop-xcode-immediate",
+        "exit_code": 0,
+        "at": "2026-09-08T21:23:22.921138+00:00"
+      },
+      {
+        "label": "stop-final",
+        "exit_code": 0,
+        "at": "2026-09-08T21:23:24.247265+00:00"
+      }
+    ],
+    "both_actual_log_results": "No Gradle daemons are running.; exit0",
+    "journal": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34275491965/native-evidence/ios-readiness-21/simulator-lifecycle.jsonl",
+      "bytes": 17105,
+      "sha256": "e0eb8557f09729282db2df60ae8ede6e8ad82ecd33abf7d5d82a6636724a3739",
+      "rows": 24,
+      "commands": 6,
+      "all_command_results_equal_summary": true,
+      "all_commands_exit0_reaped": true,
+      "baseline_uuid_count": 132,
+      "created_uuid_hash_excluded_from_baseline": true,
+      "original_identity": [
+        16777229,
+        3516691,
+        501
+      ]
+    },
+    "journal_binding": "Raw SHA/byte count and allocation source/control/temp/evidence custody match summary/outer records. Original native inode is retained attestation, not a live inode stat recreated on Linux. No destructive-cleanup-barrier event exists.",
+    "direct_lifecycle_result": "Creation/boot/bootstatus now actually complete with retained direct handles; three inventory calls also complete. Six started/six reaped/zero unreaped does not prove build-handle final barrier or resource retirement.",
+    "latest_device_state": "Booted in exact owned-device-recovery metadata; no shutdown or delete command dispatched, owned_device_absent=False.",
+    "postbuild_evidence_preserved": false,
+    "postbuild_barrier": {
+      "status": "FAIL",
+      "build_attempted": true
+    },
+    "lifecycle_evidence_failed": false,
+    "lifecycle_errors": [
+      {
+        "stage": "postbuild-quiescence-barrier",
+        "type": "RuntimeError",
+        "code": "postbuild-evidence-not-preserved"
+      },
+      {
+        "stage": "lifecycle-finalization",
+        "type": "RuntimeError",
+        "code": "resource-retirement-not-proven"
+      }
+    ],
+    "ack_explanation": "Timeout jumped past all ordinary xcresult/app-result preservation and its acknowledgement. Composer finalizer preserves Foundation/readiness but ANDs the old False acknowledgement. persist-postbuild-evidence-ack stage PASS means it saved False successfully, NOT acknowledged all required evidence. This is not the separately reviewed late-summary-save failure policy.",
+    "destructive_guard": "Missing required acknowledgement correctly denied both simulator destruction and temporary-copy/results removal. Strict stop/fresh census/direct build-handle wait0 barrier was not reached; never infer it from the six lifecycle handles.",
+    "final_worker_census": {
+      "owned_processes_observed": 101,
+      "owned_processes_remaining": 0,
+      "unknown_holders": [
+        {
+          "pid": 22519,
+          "ppid": 3204,
+          "pgid": 22519,
+          "start": "Tue Sep 8 21:22:13 2026",
+          "command": "/Users/runner/Library/Developer/CoreSimulator/Devices/86A86790-96CE-4E95-8132-3EEAE7731A2E/data/Containers/Bundle/Application/D3C91D59-ACE3-490D-B12B-47FF56BC357E/Parlor.app/Parlor"
+        }
+      ]
+    },
+    "unknown_holder_limit": "Actual installed Parlor app holds a copied output after timeout. An app-looking path is not PID/start cleanup authority. Even successful future raw retention alone would not prove the unchanged no-unknown-holder barrier; no adoption/kill workaround is approved.",
+    "secondary_fifo_cleanup": {
+      "status": "PASS",
+      "removed": [
+        "/private/var/folders/bl/vzjcvbz95c3dk19cb0fw46180000gn/T/ibtoold-88718/IB/78DDF151-BFC5-46B4-A742-486504779B95.RemoteToHost",
+        "/private/var/folders/bl/vzjcvbz95c3dk19cb0fw46180000gn/T/ibtoold-88718/IB/78DDF151-BFC5-46B4-A742-486504779B95.HostToRemote",
+        "/private/var/folders/bl/vzjcvbz95c3dk19cb0fw46180000gn/T/ibtoold-88718/IB",
+        "/private/var/folders/bl/vzjcvbz95c3dk19cb0fw46180000gn/T/ibtoold-88718"
+      ],
+      "remaining": []
+    },
+    "secondary_attestation_errors": [],
+    "copied_sources_unchanged": false,
+    "copied_identity_interpretation": "Unverified because holder guard prevented inspection, not evidence of source mutation.",
+    "source_unchanged": true,
+    "controls_unchanged": true,
+    "original_remaining_outputs": [],
+    "temporary_directory_removed": false,
+    "owned_temporary_directory": "/private/var/folders/bl/vzjcvbz95c3dk19cb0fw46180000gn/T/parlor-audit-ios-readiness-21-l7gm2t3h",
+    "cleanup_errors": [
+      {
+        "stage": "authorize-journaled-device-cleanup",
+        "error_type": "RuntimeError",
+        "message": "direct-simulator-postbuild-evidence-not-preserved"
+      },
+      {
+        "stage": "finalize-direct-simulator-lifecycle",
+        "error_type": "RuntimeError",
+        "message": "direct-simulator-resource-retirement-not-proven"
+      },
+      {
+        "stage": "verify-workers-before-file-removal",
+        "error_type": "RuntimeError",
+        "message": "Owned/unknown file holders remain; retain outputs for targeted cleanup"
+      }
+    ],
+    "outer_cleanup_receipt": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34275491965/native-cleanup/parlor-native-34275491965-1-cleanup.json",
+      "bytes": 814,
+      "sha256": "841a2ef0c1cb4d3ccb9fa930625e230c6bb85df1234f36339aad0f9b18c26bed"
+    },
+    "outer_removed": [],
+    "outer_error": "native-cleanup-unsafe-retain-owned-evidence",
+    "limits": "Foundation fixture removal and FIFO/worker/Gradle successes do not erase simulator/copy/DerivedData/results cleanup failure. Host/job termination is not a cleanup receipt; retained resource state cannot be rechecked from this Linux artifact review."
+  },
+  "blocking_observations_for_followup": [
+    {
+      "id": "A21-CUMULATIVE-BUDGET",
+      "scope": "Hosted control portability and A completion",
+      "evidence": "2700s build+test command;2061.721s before XCTest; fifthtest interruptedt639.75",
+      "required_followup": "Independently investigate bounded build/test/outer-job budgets before another expensive run. Do not simply retry unchanged controls, reduce scenario coverage, weaken assertions, or relabel timeout PASS."
+    },
+    {
+      "id": "A21-EXCEPTIONAL-EVIDENCE-PRESERVATION",
+      "scope": "Required retention and cleanup/B admission",
+      "evidence": "run_ios_readiness.py742-805 normal retention follows throwing xcode call; actual Timeout left acknowledgementFalse and no general raw app/xcresult/artifact reports",
+      "required_followup": "Investigate minimal exception-safe bounded preservation with exact custody/source/output guards and retained primary/secondary failures. No acknowledgement may be fabricated and no unpreserved evidence may be destroyed."
+    },
+    {
+      "id": "A21-UNKNOWN-HOLDER",
+      "scope": "Postbuild quiescence and resource retirement",
+      "evidence": "Final unknown holderPID22519/startTue Sep8 21:22:13 2026; exact owned-simulator Parlor path; no successful barrier",
+      "required_followup": "Any future correction must establish real authority/quiescence without path-based adoption, bypassing ps/lsof, relaxing unknown-holder validation, or changing app/runtime semantics."
+    }
+  ],
+  "reopened_source_and_review_pins": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/run_ios_readiness.py",
+      "bytes": 76990,
+      "sha256": "b0f3794fe89537d5108a2c24c22c33ed94d9330ee220e7fa257bfb2c4a7b1e29"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/L08StorageFunctionalUITests.swift.in",
+      "bytes": 19846,
+      "sha256": "5d81dfb0b5accc127a4f5510a23d610ba73efd2fc8b19a0ff12395912e2d0c59"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/NativeReadinessUITests.swift.in",
+      "bytes": 4754,
+      "sha256": "fa2dc7dbc97c576262ad14cd85b22f65aa908b1629ab1a205b22aa4873f5c0dc"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/compose_runner.py",
+      "bytes": 21878,
+      "sha256": "cf41c413d321d87689b97b86e4fe7981052dab6b629c8ffcd57b15a00be6555c"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/app_foundation_receipts.py",
+      "bytes": 18855,
+      "sha256": "db69c16b7d8abfb5998f92db886a8b8c77bcbb3e72fdd1d806f0ea3dd05f1fb6"
+    },
+    {
+      "path": "scripts/verification/ios-readiness/simulator_lifecycle.py",
+      "bytes": 37085,
+      "sha256": "8d799475f1e92fc7943ca05b2d1e59655cbb8b0973031029440662059e65f248"
+    },
+    {
+      "path": "scripts/ci/native_continuation.py",
+      "bytes": 57512,
+      "sha256": "3c974b93e202359c12aa2647984b624024986676eb058ace9ecdf4e7663200bb"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/l08-strict-protection-investigation-02.md",
+      "bytes": 11293,
+      "sha256": "e44de5a5c5a8eb7a439a0ef18ead7bb176d85c890ef77641e25db18dc23fe708"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/direct-owned-simulator-lifecycle-implementation-independent-01.json",
+      "bytes": 28603,
+      "sha256": "44239859c10b762b6447234eddbc993ac1e9e65982a0e149250e943941194bdf"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/direct-owned-simulator-lifecycle-persistence-policy-independent-01.json",
+      "bytes": 5567,
+      "sha256": "756a549e40145cb659c7ac2829974413f179bdd588c5a9f5a41d599531a02f0e"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/direct-lifecycle-author-review-closure-independent-01.json",
+      "bytes": 7916,
+      "sha256": "fc3ee3477673f0b3734913cda1159f085198236a3babac44636cb9fd604ebbdd"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-16/parlor-l08-app-foundation.json",
+      "bytes": 7826,
+      "sha256": "e656f929fd9c96a58ecf7430bd3f74b5d33be2cf3c8dcb4f15d446aeb6b42d35"
+    }
+  ],
+  "key_raw_evidence": [
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34275491965/run.json",
+      "bytes": 12686,
+      "sha256": "552b66e23e1271eaca241d79e798835f3a6d9d00b21b2319c22feafc020379aa"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34275491965/attempt.json",
+      "bytes": 12708,
+      "sha256": "31b6fed2305759b06f3fd31c191c49409b606b00809c12f36074426388831157"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34275491965/jobs.json",
+      "bytes": 10561,
+      "sha256": "55d0a35c97a798eeb73851783caa06d29208a17fa35860ad0f63af93944cded9"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34275491965/artifacts.json",
+      "bytes": 1483,
+      "sha256": "a8dde86166f0314ae5604c2660f288ec280e0baffd26c3c860ed14b51a656f5d"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34275491965/native-evidence/continuation.json",
+      "bytes": 9741,
+      "sha256": "92d0128851378a445ab8ecccc779539adfa4b58a8c6a93172b00c990c5cbe07d"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34275491965/native-evidence/failure.json",
+      "bytes": 137,
+      "sha256": "9905a886e7445860f66bc0f94406deb5177e4b79e742f69afd7389ca799510a4"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34275491965/native-evidence/ios-readiness-21/receipt.json",
+      "bytes": 425426,
+      "sha256": "2d8168608c71fbc4bbed03cc23f595eafc95473e7e4fa3ec1277f61961ed18a3"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34275491965/native-evidence/ios-readiness-21/xcodebuild.log",
+      "bytes": 408545,
+      "sha256": "dd68f0f5ee696408953e9b3dcdc11bf6a9c9a70d2593ea4c57c13333b48ac468"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34275491965/native-evidence/ios-readiness-21/input-manifest.json",
+      "bytes": 172938,
+      "sha256": "903d24366712e59e56bbe7a6ad72dd058483f8ae73aa9bbe01d9b5db7ae31b7b"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34275491965/native-evidence/ios-readiness-21/copied-source-manifest.json",
+      "bytes": 219265,
+      "sha256": "08237d96d85a1bf1701e86dc44985a0445c2a50b5a1c54c24748955a3e502fd0"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34275491965/native-evidence/ios-readiness-21/copied-source.diff",
+      "bytes": 425637,
+      "sha256": "daa9b3ea43632d116868b6d298558b50090eef93ded1e6d2ab4e55018ea873a1"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34275491965/native-evidence/ios-readiness-21/composed-runner.diff",
+      "bytes": 8835,
+      "sha256": "6d36fa8d937db14968bbcdeabb13e69809eb029730fc33722155d63a24b0ed56"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34275491965/native-evidence/ios-readiness-21/secondary-fifo-ownership-final.json",
+      "bytes": 2937,
+      "sha256": "096baa7fc164bc44611df42973b9664e3dfe52a23564988f808b5f6e8d69c982"
+    }
+  ],
+  "activity_and_cleanup": {
+    "project_imports": 0,
+    "test_discovery_or_test_execution": 0,
+    "builds": 0,
+    "native_tools": 0,
+    "network_or_Actions_calls": 0,
+    "source_or_existing_evidence_edits": 0,
+    "staging_commits_pushes": 0,
+    "only_created_file": "remediation-runs/2026-09-08-continuation/reviews/native-34275491965-postrun-independent-01.json",
+    "inspection": "Read-only stdlib JSON/SHA/ZIP/diff-in-memory plus source/Git inspection; no project controls imported/executed. Root independently owns run dispatch/collection and all build/cleanup resources.",
+    "reviewer_cleanup": "No build workers, outputs, simulator fixtures or temporary files allocated. No Gradle stop/clean or another lane cleanup attempted; preserved lock/untracked work/historical failures."
+  },
+  "remaining_limits": "A functional/retained-host/full Settings/OS/local-session and strict L08 remain incomplete; B actual normal libproc is unexecuted. This report does not qualify C or D or authorize retry/full dispatch. Future reviewed source/control changes require affected checks, frozen-source/inventory commits and fresh bindings. Physical LAN/device lifecycle/accessibility/keybag/backup/restore/power-loss, private signing/Store operations and com.parlor.app identity collision, and separate owner/legal/content/editorial/privacy requirements remain outside verified scope. No Store publication/promotion or physical testing authorized."
+}

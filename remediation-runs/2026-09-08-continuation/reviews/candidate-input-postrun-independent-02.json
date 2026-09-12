@@ -1,0 +1,650 @@
+{
+  "schema_version": 1,
+  "kind": "INDEPENDENT_ACTUAL_CANDIDATE_INPUT_EXECUTION_EVIDENCE_RECONCILIATION",
+  "reviewer": "/root/fixture_review",
+  "executor": "/root",
+  "binding_author": "/root/dependency_chain",
+  "recorded_at": "2026-09-08T15:36:09.325149+00:00",
+  "status": "PASS_SCOPED_FRESH_C02_CHAIN_AT_5F35A20D_ONLY",
+  "blocking_findings": [],
+  "conclusion": "The fresh export02 -> render02 -> approved binding02 -> actual candidate02 chain is supported at clean5f35 by unchanged source/control/input bytes and four coupled PASS receipts. This is resolved-input/source-notice and official-schema consumption evidence only, not application runtime or final qualification.",
+  "source": {
+    "commit": "5f35a20d3c9c846cd98b38a16881997ecf577497",
+    "tree": "e0e7abfff89975682a96a884cb745bcbc12e7238",
+    "branch": "fix/local-readiness-2026-09-07",
+    "tracked_status": "",
+    "diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "source_manifest_sha256": "eb18e3a2d498ef43432d5ad97c7a885db9b648ae7981cfdadafb10e039c23413"
+  },
+  "source_manifest_entries": 825,
+  "source_reconciliation": {
+    "all_six_export_render_candidate_source_before_after_objects_equal_current_full825": true,
+    "all_six_runner_before_after_objects_equal_current_runner": true,
+    "method": "Read-only Git plus independent stdlib reconstruction of the reopened lane's ordinary source manifest. No import of the lane, exporter, renderer, notices verifier, bootstrap, adapter, helper, consumer or schema engines by this reviewer.",
+    "source_rechecked_before_report_creation": true,
+    "tracked_worktree_clean": true,
+    "no_historical_source_relabeling": true
+  },
+  "binding": {
+    "path": "remediation-runs/2026-09-08-continuation/candidate-input-binding-02.json",
+    "bytes": 1517,
+    "sha256": "f6a469a0df64b1f9c294c5ecdbd6f7b2f36642153928c7470d0827126e26c5af"
+  },
+  "prior_independent_preexecution_approval": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/candidate-input-binding-independent-02.json",
+    "bytes": 27884,
+    "sha256": "fc03d69f55d09e6ff6b4f7a05a12eba933fccae6c55dfd8b03204995af762462"
+  },
+  "preapproval_recorded_at": "2026-09-08T15:09:10.506134+00:00",
+  "approval_precedes_actual_execution": true,
+  "exact_approved_actual_inner_command": [
+    "/usr/bin/python3",
+    "-B",
+    "remediation-runs/2026-09-08-continuation/controls/run_candidate_with_schema.py",
+    "remediation-runs/2026-09-08-continuation/candidate-input-binding-02.json",
+    "f6a469a0df64b1f9c294c5ecdbd6f7b2f36642153928c7470d0827126e26c5af"
+  ],
+  "four_coupled_receipts": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-02/receipt.json",
+      "bytes": 304562,
+      "sha256": "dff3d1ff4369f338ede10946892b67ad0157c92b2305dd97b07223721dbbf64f",
+      "status": "PASS",
+      "exit_code": 0,
+      "started_at": "2026-09-08T15:09:58.227678+00:00",
+      "finished_at": "2026-09-08T15:10:14.762959+00:00",
+      "stop_exit_code": 0,
+      "stopped_at": "2026-09-08T15:10:15.457525+00:00",
+      "cleanup_completed_at": "2026-09-08T15:10:15.550640+00:00"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-02/candidate-input-verification.json",
+      "bytes": 8078,
+      "sha256": "5a26d77544073cc5050ec0684eb42abf59cbc6ab07ff2479916efc36cde4afb0",
+      "status": "PASS_SCOPED_CANDIDATE_INPUTS",
+      "checked_at": "2026-09-08T15:10:14.624271+00:00"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-02/candidate-prerequisites.json",
+      "bytes": 9943,
+      "sha256": "19b71c5964dea1719c720fd21f9b8ed3757b549d35ae322fb24e88ffdd4272f5",
+      "status": "PASS_SCOPED_CANDIDATE_INPUT_EXECUTION",
+      "consumer_exit_code": 0,
+      "ephemeral_parser_cleanup": true,
+      "started_at": "2026-09-08T15:10:00.744634+00:00",
+      "finished_at": "2026-09-08T15:10:14.626406+00:00"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-02/schema-base-prerequisites.json",
+      "bytes": 28590,
+      "sha256": "5ff79d79c9047ab42add1d95473735e72f8a39992cebb2e58c7b2be6b016648e",
+      "status": "PASS_OWNED_SCHEMA_PREREQUISITES",
+      "mode": "candidate",
+      "inner_exit_code": 0,
+      "base_package_cleanup": true,
+      "started_at": "2026-09-08T15:09:59.254823+00:00",
+      "finished_at": "2026-09-08T15:10:14.647841+00:00"
+    }
+  ],
+  "original_candidate_logs_and_empty_unit_artifact_receipts": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-02/gradle.log",
+      "bytes": 289,
+      "sha256": "1366576e7c5a743d9620e0d1849edc379e1dcc369335c2c0176c80d87d0a20b8"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-02/stop.log",
+      "bytes": 31,
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-02/java-toolchain.log",
+      "bytes": 2026,
+      "sha256": "a7a86ea7b20362e2c856e5e71a8b6fc51764d5aeaa9f5a8c82b386ff156f8a7c"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-02/javac-toolchain.log",
+      "bytes": 14,
+      "sha256": "157f601a5854ca28a7dc364c13a5ca2879084186be49e3462d37acd028f35755"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-02/test-receipts.json",
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-02/artifact-receipts.json",
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    }
+  ],
+  "actual_inner_log_records": [
+    {
+      "status": "PASS_SCOPED_CANDIDATE_INPUTS",
+      "exit_code": 0
+    },
+    {
+      "status": "PASS_SCOPED_CANDIDATE_INPUT_EXECUTION",
+      "consumer_exit_code": 0,
+      "ephemeral_parser_cleanup": true
+    },
+    {
+      "status": "PASS_OWNED_SCHEMA_PREREQUISITES",
+      "mode": "candidate",
+      "inner_exit_code": 0,
+      "base_package_cleanup": true
+    }
+  ],
+  "execution_scope": {
+    "actual_coordinator_consumer_executed": true,
+    "mode": "candidate, not --controls",
+    "actual_official_cyclonedx_schema_validations": 4,
+    "unit_tests_requested_or_executed_in_candidate02": 0,
+    "synthetic_control_results_substituted": false,
+    "application_build_or_runtime_requested": false,
+    "native_or_debug_libproc_runtime_proven": false,
+    "linux_gate": "The hash-bound bootstrap requires Linux x86_64 CPython3.12 with glibc>=2.17 and -B. The retained imported-module map binds rpds.rpds to the extracted CPython3.12/Linux x86_64 native member.",
+    "consumer_limit": "The consumer does not recapture Git or rebuild; coordinator source/runner snapshots and this independent current-byte reconciliation supply that separate attestation."
+  },
+  "chronology": {
+    "serial_export_then_render_then_preapproval_then_candidate": true,
+    "nested_outer_base_adapter_consumer_and_cleanup_times_match": true,
+    "outer_started_at": "2026-09-08T15:09:58.227678+00:00",
+    "actual_consumer_checked_at": "2026-09-08T15:10:14.624271+00:00",
+    "outer_finished_at": "2026-09-08T15:10:14.762959+00:00",
+    "stop_at": "2026-09-08T15:10:15.457525+00:00",
+    "cleanup_at": "2026-09-08T15:10:15.550640+00:00"
+  },
+  "producer_evidence": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-export-linux-02/receipt.json",
+      "bytes": 305140,
+      "sha256": "ef7d3881f77ad0ff4177f7247f6865f9a1996a2fa904b441898af82c11c400ae"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-render-linux-02/receipt.json",
+      "bytes": 304611,
+      "sha256": "30b10b62d293ad35d0b7c32b6a15719b532278cbd5580d1ce06f09522aa91971"
+    }
+  ],
+  "current_producer_reconciliation": {
+    "preapproval_file_identity_objects_rehashed": 30,
+    "graph_completion_sbom_draft_license_evidence_schema_pins_and_source_controls_unchanged": true,
+    "publisher_poms_read_hashed_and_xml_parsed": 459,
+    "metadata_bytes": 1507794,
+    "metadata_ledger_sha256": "277a7bc455577573bd80d1617f9fd379a81f333735b0e68edab3034e56ffef46",
+    "metadata_ledger_encoding": "Sorted compact JSON [repository-relative-path,sha256,bytes]",
+    "exact_directory_sets": true,
+    "all_pom_hashes_match_declarations_and_preapproval_aggregate": true,
+    "current_semantics_reuse": "The same reviewer independently reconstructed graph reachability, strict artifact pins, publisher-coordinate/license/parent closure, four SBOM objects/serialized bytes and the draft before binding approval. Those producer bytes and all459 current POMs were reopened and are unchanged after candidate02. The actual bound consumer then executed the strict current checks.",
+    "prior_raw_reconstruction": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/candidate-input-binding-independent-02.json",
+      "bytes": 27884,
+      "sha256": "fc03d69f55d09e6ff6b4f7a05a12eba933fccae6c55dfd8b03204995af762462"
+    },
+    "actual_export_scope": "writeResolvedDependencyInventory executed with strict dependency verification; 5 actionable tasks:4 executed,1 build-logic convention compileKotlin cache hit. This is graph resolution, not an application build.",
+    "p2pkit": "Current production graphs retain Maven-coordinate core/LAN variants 0.7.0-rc3; no mavenLocal or sibling substitution."
+  },
+  "actual_candidate_results": {
+    "graphs": [
+      {
+        "graph": "androidRelease",
+        "graph_sha256": "a6255684525b2afd917576867ea926f7149881b6c1f1077f37bec6e226aa4eb0",
+        "sbom_sha256": "8dcec190cff5b84cbc589efd3a61521484457d006621d3b0faed72d43d492861",
+        "components": 239,
+        "artifacts": 129,
+        "status": "PASS"
+      },
+      {
+        "graph": "iosArm64",
+        "graph_sha256": "75d2f6f23219fea398106a22bf23d69da2a2f4f325c99afbc77d27f9c8e082a0",
+        "sbom_sha256": "dc7015006b9819b15eb5e655485013e719d27b0be0c6ac91f99c76c6b42a0653",
+        "components": 167,
+        "artifacts": 81,
+        "status": "PASS"
+      },
+      {
+        "graph": "iosSimulatorArm64",
+        "graph_sha256": "1954e3bde1c2bd2c42f0fb7c3171380409b304ac9a45e57e66c399c117c53525",
+        "sbom_sha256": "677f4d41fcb225a4d796db9ff11c947e5c6140de47b76e3edd1c31ae5fddd405",
+        "components": 167,
+        "artifacts": 81,
+        "status": "PASS"
+      },
+      {
+        "graph": "iosX64",
+        "graph_sha256": "a957285ea47d896146dd9555e46d26837bf83fbfa9fe7acb3fa3435bbb69a2ad",
+        "sbom_sha256": "c90cd5e825d9f6f0275cbb3b94bcf15f6eb7a619f3c969d1931a2267851b19a2",
+        "components": 167,
+        "artifacts": 81,
+        "status": "PASS"
+      }
+    ],
+    "maven_components": 456,
+    "publisher_poms": 459,
+    "metadata_bytes": 1507794,
+    "unresolved": [],
+    "source_notices": {
+      "resources": 26,
+      "bytes": 99515,
+      "ledger_sha256": "1b4c55c314f00c0401366f9675b1d657e2be07e5404adeb96f22ce26df0c05e0",
+      "ledger_encoding": "sorted compact JSON [repository-relative-path,sha256,bytes]",
+      "preapproval_identity_object_ledger_sha256": "3d91509b76520b9febe41ed6f7f152601e1dcd13e0e3236445be0b44a6a0d253",
+      "preapproval_ledger_encoding": "sorted compact JSON objects with ordered keys path,bytes,sha256",
+      "all_current_files_match_actual_consumer_and_preapproval": true
+    },
+    "consumed_file_count": 511,
+    "consumed_total_bytes": 5565830,
+    "consumed_manifest_sha256": "5abe9120172a3e91961eec3a78868dd5a362935fbb251125d3b9538a54e6fe96",
+    "consumed_manifest_encoding": "Sorted compact JSON [repository-relative-path,sha256,bytes]",
+    "exact_consumed_closure_independently_reconstructed_without_project_import": true,
+    "consumed_category_counts": {
+      "binding": 1,
+      "consumer": 1,
+      "producer_receipts": 2,
+      "lane": 1,
+      "exporter_and_renderer": 2,
+      "graphs_and_completion": 5,
+      "license_evidence": 1,
+      "publisher_poms": 459,
+      "strict_verification_metadata": 1,
+      "official_schemas": 3,
+      "sboms": 4,
+      "declaration_draft": 1,
+      "notices_verifier": 1,
+      "notices_manifest_catalog_build": 3,
+      "notice_resources": 26
+    }
+  },
+  "actual_schema_result": {
+    "schemas": {
+      "bom-1.6.schema.json": "3e92dddbc30cf7f6a02b80f0942b1a4cfd4fb1c26f1dfc4310afa9d613cafb93",
+      "spdx.schema.json": "baa9d3bd1ed57b6751b0887edead6b5063ff53ff7429cf85d476c6c94af0166e",
+      "jsf-0.82.schema.json": "8bae002c25e723db7ee1f26afde680ae1a2b1a8f6b4b4b0fd65dc3becb090aae"
+    },
+    "jsonschema_version": "4.25.1",
+    "referencing_version": "0.36.2",
+    "formats": {
+      "registered": [
+        "date",
+        "email",
+        "idn-email",
+        "ipv4",
+        "ipv6",
+        "iri",
+        "iri-reference",
+        "regex",
+        "time",
+        "uuid"
+      ],
+      "encountered": [
+        "iri-reference"
+      ],
+      "missing": []
+    },
+    "four_actual_boms_passed": true,
+    "missing_encountered_formats": [],
+    "reviewer_ran_schema_engine": false,
+    "format_scope": "The actual receipt records iri-reference encountered with none missing. Registered formats are not a claim that every registered format or every optional extra was exercised."
+  },
+  "controls": {
+    "runner": {
+      "manifest": [
+        [
+          "remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py",
+          "1b9e882514bfe5386785d5a71ae32fdc2bc3aa4cc1dd24532709899fbf4f41bc"
+        ]
+      ],
+      "manifest_sha256": "942e138764146313a59cbe1278c1357284a5701d0c125809c34ddbbe876ce912"
+    },
+    "all11_preapproval_control_hashes_current": true,
+    "six_explicit_before_after_runtime_hashes_current": {
+      "remediation-runs/2026-09-07-local-readiness/reviews/run_candidate_input_01.py": "2a306819fb41b1883139fb42355d493f02e1d93a687f54d06f43ffbb758afa60",
+      "remediation-runs/2026-09-07-local-readiness/reviews/run_schema_consumer_controls_01.py": "78222a79d0d19cdce28077506ce1fd74481cc419fdf9dce9e9e5b6fd8840336f",
+      "remediation-runs/2026-09-07-local-readiness/reviews/dependency-candidate-consumer-03/candidate_consumer.py": "eb6e2baaac22739b4652bc63c6b57a24374ee57fb81d4711b981b872e8ac1c7f",
+      "remediation-runs/2026-09-07-local-readiness/reviews/dependency-candidate-consumer-03/test_candidate_consumer.py": "92eef687dbf037b310b00c9b678a5718d95cf5e8313094861c398554755a3535",
+      "remediation-runs/2026-09-08-continuation/reviews/schema-base-prerequisites-research-01.json": "54c9f96db0ead50008cab5c8c960c0540351922f949757e03dc91b8c5328b13e",
+      "remediation-runs/2026-09-08-continuation/controls/run_candidate_with_schema.py": "c9d3a26fb3901b3518f7c066d91ebda906d0bb8bef67273acb4720d5c37419c9"
+    },
+    "current_control_identities": [
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/run_candidate_input_01.py",
+        "bytes": 4319,
+        "sha256": "2a306819fb41b1883139fb42355d493f02e1d93a687f54d06f43ffbb758afa60"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/run_schema_consumer_controls_01.py",
+        "bytes": 8956,
+        "sha256": "78222a79d0d19cdce28077506ce1fd74481cc419fdf9dce9e9e5b6fd8840336f"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/dependency-candidate-consumer-03/candidate_consumer.py",
+        "bytes": 23404,
+        "sha256": "eb6e2baaac22739b4652bc63c6b57a24374ee57fb81d4711b981b872e8ac1c7f"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/dependency-candidate-consumer-03/test_candidate_consumer.py",
+        "bytes": 22210,
+        "sha256": "92eef687dbf037b310b00c9b678a5718d95cf5e8313094861c398554755a3535"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/schema-base-prerequisites-research-01.json",
+        "bytes": 55180,
+        "sha256": "54c9f96db0ead50008cab5c8c960c0540351922f949757e03dc91b8c5328b13e"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/controls/run_candidate_with_schema.py",
+        "bytes": 14663,
+        "sha256": "c9d3a26fb3901b3518f7c066d91ebda906d0bb8bef67273acb4720d5c37419c9"
+      }
+    ],
+    "before_after_equal": true
+  },
+  "base_prerequisites": {
+    "packages": [
+      {
+        "distribution": "jsonschema",
+        "version": "4.25.1",
+        "url": "https://files.pythonhosted.org/packages/bf/9c/8c95d856233c1f82500c2450b8c68576b4cf1c871db3afac5c34ff84e6fd/jsonschema-4.25.1-py3-none-any.whl",
+        "bytes": 90040,
+        "sha256": "3fba0169e345c7175110351d456342c364814cfcf3b964ba4587f22915230a63",
+        "expanded_bytes": 475270,
+        "member_count": 42,
+        "member_manifest_sha256": "dd1266e10b6535be4d63a9e86c084977fead488355726a47295240205477be7b",
+        "all_members_match_research": true
+      },
+      {
+        "distribution": "referencing",
+        "version": "0.36.2",
+        "url": "https://files.pythonhosted.org/packages/c1/b1/3baf80dc6d2b7bc27a95a67752d0208e410351e3feb4eb78de5f77454d8d/referencing-0.36.2-py3-none-any.whl",
+        "bytes": 26775,
+        "sha256": "e8699adbbf8b5c7de96d8ffa0eb5c158b3beafce084968e2ea8bb08c6794dcd0",
+        "expanded_bytes": 115431,
+        "member_count": 19,
+        "member_manifest_sha256": "e7b36da69b3b643fa83388e9017e816adda8f4a32c4b934595724a3250b0e4df",
+        "all_members_match_research": true
+      },
+      {
+        "distribution": "attrs",
+        "version": "25.3.0",
+        "url": "https://files.pythonhosted.org/packages/77/06/bb80f5f86020c4551da315d78b3ab75e8228f89f0162f2c3a819e407941a/attrs-25.3.0-py3-none-any.whl",
+        "bytes": 63815,
+        "sha256": "427318ce031701fea540783410126f03899a97ffc6f61596ad581ac2e40e3bc3",
+        "expanded_bytes": 219126,
+        "member_count": 35,
+        "member_manifest_sha256": "8be2c5e364e65aeb1f21931bee4f192b1f6960c690e5051979f0c0ea1d306aad",
+        "all_members_match_research": true
+      },
+      {
+        "distribution": "jsonschema-specifications",
+        "version": "2025.4.1",
+        "url": "https://files.pythonhosted.org/packages/01/0e/b27cdbaccf30b890c40ed1da9fd4a3593a5cf94dae54fb34f8a4b74fcd3f/jsonschema_specifications-2025.4.1-py3-none-any.whl",
+        "bytes": 18437,
+        "sha256": "4653bffbd6584f7de83a67e0d620ef16900b390ddc7939d56684d6c81e33f1af",
+        "expanded_bytes": 47261,
+        "member_count": 28,
+        "member_manifest_sha256": "bf9b8193bfdcd0e3e8a3e65e74116e87c75df3f573f81c98b04e767e4daad36f",
+        "all_members_match_research": true
+      },
+      {
+        "distribution": "rpds-py",
+        "version": "0.27.1",
+        "url": "https://files.pythonhosted.org/packages/ed/7b/8f4fee9ba1fb5ec856eb22d725a4efa3deb47f769597c809e03578b0f9d9/rpds_py-0.27.1-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
+        "bytes": 386883,
+        "sha256": "466bfe65bd932da36ff279ddd92de56b042f2266d752719beb97b08526268ec5",
+        "expanded_bytes": 1046710,
+        "member_count": 8,
+        "member_manifest_sha256": "697c5ff8394a644831ac96871591b4459dbc439d57d0c36a8eb37007e08cd55a",
+        "all_members_match_research": true
+      },
+      {
+        "distribution": "typing-extensions",
+        "version": "4.15.0",
+        "url": "https://files.pythonhosted.org/packages/18/67/36e9267722cc04a6b9f15c7f3441c2363321a3ea07da7ae0c0707beb2a9c/typing_extensions-4.15.0-py3-none-any.whl",
+        "bytes": 44614,
+        "sha256": "f0fa19c6845758ab08074a0cfa8b7aecb71c999ca73d62883bc25cc018c4e548",
+        "expanded_bytes": 178133,
+        "member_count": 5,
+        "member_manifest_sha256": "904902592e917247263bca8d345c3f320d266568f655d8707a0210f68c925b76",
+        "all_members_match_research": true
+      }
+    ],
+    "total_downloaded_bytes": 630564,
+    "total_expanded_bytes": 2081931,
+    "members": 137,
+    "all137_recorded_member_rows_equal_pinned_public_research": true,
+    "imported_modules": {
+      "jsonschema": {
+        "path": "jsonschema/__init__.py",
+        "sha256": "a7e470e134bfd0e3c76482722260d6b1d5a099de823d61cc5cbabb06e4314c67"
+      },
+      "referencing": {
+        "path": "referencing/__init__.py",
+        "sha256": "e4864a5da007fc55b20894646939f55dca6d2df83d72f78b6fdbb99d853124ab"
+      },
+      "attr": {
+        "path": "attr/__init__.py",
+        "sha256": "7ce608bedd5e192a90adee2e092dec256299d26c00b82f140faa9b6b9392f7f5"
+      },
+      "attrs": {
+        "path": "attrs/__init__.py",
+        "sha256": "a9e4096783b4f327334a7f38d2ff5b60e699c9113cd56b158be402ad8de4ac25"
+      },
+      "jsonschema_specifications": {
+        "path": "jsonschema_specifications/__init__.py",
+        "sha256": "aa84c1d83298eeabcdac684c3c7ea0b6600944b8a599543e7c56704faaf2ab0d"
+      },
+      "rpds": {
+        "path": "rpds/__init__.py",
+        "sha256": "c373205d6ee5a530880b0d0a5dbc36d105f9ef7fe46ec12758878cb0202e82f3"
+      },
+      "typing_extensions": {
+        "path": "typing_extensions.py",
+        "sha256": "433d11d170d3a24d2eb065ebc1bfe848cea7e3d7ce68567ab52bea2d4c2f7ed8"
+      },
+      "rpds.rpds": {
+        "path": "rpds/rpds.cpython-312-x86_64-linux-gnu.so",
+        "sha256": "1a5acf297faad922c1335dc00cc2ae6e24dd907f77576bef0e200bd07e0f0e5c"
+      }
+    },
+    "all8_imported_module_hashes_match_recorded_members_and_research": true,
+    "native_rpds_hash": "1a5acf297faad922c1335dc00cc2ae6e24dd907f77576bef0e200bd07e0f0e5c",
+    "base_package_cleanup": true
+  },
+  "optional_prerequisites": {
+    "packages": [
+      {
+        "distribution": "rfc3987-syntax",
+        "version": "1.1.0",
+        "url": "https://files.pythonhosted.org/packages/7e/71/44ce230e1b7fadd372515a97e32a83011f906ddded8d03e3c6aafbdedbb7/rfc3987_syntax-1.1.0-py3-none-any.whl",
+        "bytes": 8046,
+        "sha256": "6c3d97604e4c5ce9f714898e05401a0445a641cfa276432b0a648c80856f6a3f",
+        "uncompressed_bytes": 18424,
+        "member_count": 9,
+        "member_manifest_sha256": "d755408c62289047d31750fb7e2d0e765709937f3e13b0acb1094d3d2729cacf",
+        "rows_match_prior_raw_same_pinned_tool_ledger": true
+      },
+      {
+        "distribution": "lark",
+        "version": "1.2.2",
+        "url": "https://files.pythonhosted.org/packages/2d/00/d90b10b962b4277f5e64a78b6609968859ff86889f5b898c1a778c06ec00/lark-1.2.2-py3-none-any.whl",
+        "bytes": 111036,
+        "sha256": "c2276486b02f0f1b90be155f2c8ba4a8e194d42775786db622faccd652d8e80c",
+        "uncompressed_bytes": 350066,
+        "member_count": 46,
+        "member_manifest_sha256": "22aac0857831066f6242f0f41ea47e766352d1d8d68cdda8971a493a36e1201a",
+        "rows_match_prior_raw_same_pinned_tool_ledger": true
+      }
+    ],
+    "total_downloaded_bytes": 119082,
+    "total_expanded_bytes": 368490,
+    "members": 55,
+    "current_url_size_hash_pins_match_fixed_source_and_official_metadata": true,
+    "research": [
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/schema-optional-checker-research-01.json",
+        "bytes": 3471,
+        "sha256": "c86d42085a732ec94ba0397852abbe245fb5de0d1a154c6f960e4135a6e233db"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/schema-optional-lark-research-01.json",
+        "bytes": 1626,
+        "sha256": "7522e4d9aeffd11eeb9ff862334bd40a99936442bd620e82c7371db71ea2af4f"
+      }
+    ],
+    "same_pinned_tool_member_ledger_comparison": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-01/candidate-prerequisites.json",
+      "bytes": 9943,
+      "sha256": "51a4957dfd9c851a451e0a7ab92bdf21f72f4ea71f24fa1353e2090e6117c929"
+    },
+    "comparison_scope": "All55 current recorded member rows equal the prior raw ledger for these exact same pinned wheels. This is tool-byte corroboration, not reused application/candidate execution.",
+    "explicit_optional_import_hash_map_present": false,
+    "owned_module_origin_enforced_by_bound_helper": true,
+    "ephemeral_parser_cleanup": true,
+    "no_claim_of_full_optional_member_research_inspection": true
+  },
+  "package_evidence_boundary": "Package extraction trees were deleted by the original cycle. Review reconciles retained wheel/member/import receipts against fixed controls and research, not a retrospective rehash of deleted files or a new download. Base-module hashes are explicit; optional-module origins are guarded by the bound helper but no separate optional imported-module hash map is persisted.",
+  "cleanup": {
+    "original_cycles": [
+      {
+        "cycle": "final-dependency-export-linux-02",
+        "stop_exit_code": 0,
+        "stopped_at": "2026-09-08T14:50:22.457612+00:00",
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        },
+        "artifact_workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        },
+        "outputs_before": [],
+        "removed_outputs": [
+          "build",
+          "build-logic/convention/build"
+        ],
+        "retained_outputs": [],
+        "remaining_outputs": [],
+        "cleanup_errors": [],
+        "deferred_signals": [],
+        "cleanup_completed_at": "2026-09-08T14:50:22.552970+00:00"
+      },
+      {
+        "cycle": "final-dependency-render-linux-02",
+        "stop_exit_code": 0,
+        "stopped_at": "2026-09-08T14:54:01.539010+00:00",
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        },
+        "artifact_workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        },
+        "outputs_before": [],
+        "removed_outputs": [],
+        "retained_outputs": [],
+        "remaining_outputs": [],
+        "cleanup_errors": [],
+        "deferred_signals": [],
+        "cleanup_completed_at": "2026-09-08T14:54:01.612109+00:00"
+      },
+      {
+        "cycle": "final-candidate-input-linux-02",
+        "stop_exit_code": 0,
+        "stopped_at": "2026-09-08T15:10:15.457525+00:00",
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        },
+        "artifact_workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        },
+        "outputs_before": [],
+        "removed_outputs": [],
+        "retained_outputs": [],
+        "remaining_outputs": [],
+        "cleanup_errors": [],
+        "deferred_signals": [],
+        "cleanup_completed_at": "2026-09-08T15:10:15.550640+00:00"
+      }
+    ],
+    "exact_current_absence": [
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-export-linux-02/scratch",
+        "lstat": "ENOENT"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-render-linux-02/scratch",
+        "lstat": "ENOENT"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-02/scratch",
+        "lstat": "ENOENT"
+      },
+      {
+        "path": "build",
+        "lstat": "ENOENT"
+      },
+      {
+        "path": "build-logic/convention/build",
+        "lstat": "ENOENT"
+      }
+    ],
+    "current_candidate_directory_contains_only_ten_retained_evidence_files": true,
+    "stop_log": "No Gradle daemons are running.",
+    "original_statuses_and_receipts_preserved": true,
+    "reviewer_cleanup_actions": 0,
+    "no_global_caches_or_other_outputs_touched": true,
+    "no_process_killing_by_reviewer": true
+  },
+  "author_report": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/candidate-input-postrun-author-02.json",
+    "bytes": 20201,
+    "sha256": "d22679559d86f8481659296623dc4f0773d148b68ea4070fb01570c64beb0599"
+  },
+  "author_report_crosscheck": {
+    "status": "AUTHOR_REPORT_MATCHES_INDEPENDENT_RAW_RECONCILIATION",
+    "all_graphs_counts_511_manifest_schema_packages_modules_cleanup_and_nested_file_identities_match": true,
+    "author_report_not_substituted_for_raw_evidence": true,
+    "author_pending_independent_label_resolved_only_by_this_separate_review": true,
+    "historical_C01_separation_and_scope_limits_accepted": true,
+    "findings": []
+  },
+  "reviewer_calculation_note": {
+    "initial_read_only_assertion": "A local review calculation first compared notice ledgers with different JSON encodings and exited1; no project tool, build, test or schema engine executed.",
+    "resolved": "Preapproval used ordered identity objects {path,bytes,sha256}; postrun tuple form is [path,sha256,bytes]. Both digests now explicitly recorded and independently match the identical26 source files. No original receipt, source, control, preapproval or author report was changed.",
+    "remaining_discrepancy": false
+  },
+  "historical_boundary": "Original C01 remains25b1-only. Current C02 has distinct fresh export/render/binding/actual-consumer receipts at5f35. Its raw three-line status log happens to have the same bytes as C01 because the status rows contain no identity, so freshness is established by the bound new receipts/commands/source/times, not the log digest alone.",
+  "readiness": {
+    "scoped_C02_input_chain": "PASS_AT_5F35_ONLY",
+    "project_readiness": "NOT_READY_FROM_THIS_EVIDENCE",
+    "no_A_B_or_D_closure_claim": true,
+    "not_proven_by_this_review": [
+      "iOS L08 functional-storage and retained-host/recovery behavior",
+      "Strict file-protection observations and physical keybag/backup/restore behavior",
+      "Actual Parlor normal Debug-binary libproc runtime provenance",
+      "Final frozen-source combined qualification and final package completeness",
+      "Physical-device/LAN/accessibility execution",
+      "Store signing, credentials, publication or promotion",
+      "Separate owner, legal, privacy and editorial decisions"
+    ]
+  },
+  "reviewer_activity": {
+    "build_commands": 0,
+    "test_commands": 0,
+    "native_commands": 0,
+    "project_module_imports": 0,
+    "schema_engine_runs": 0,
+    "candidate_reruns": 0,
+    "package_downloads": 0,
+    "CI_dispatches": 0,
+    "cleanup_actions": 0,
+    "tracked_file_edits": 0,
+    "commits": 0,
+    "pushes": 0,
+    "new_report_only": "remediation-runs/2026-09-08-continuation/reviews/candidate-input-postrun-independent-02.json"
+  }
+}
