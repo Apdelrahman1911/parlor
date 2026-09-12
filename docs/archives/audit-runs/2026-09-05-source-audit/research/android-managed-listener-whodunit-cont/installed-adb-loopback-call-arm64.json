@@ -1,0 +1,23 @@
+{
+  "recorded_at": "2026-09-05T13:10:57.386721+00:00",
+  "command": [
+    "xcrun",
+    "llvm-objdump",
+    "--macho",
+    "--arch=arm64",
+    "--disassemble",
+    "--dis-symname",
+    "__Z18socket_spec_listenNSt3__117basic_string_viewIcNS_11char_traitsIcEEEEPNS_12basic_stringIcS2_NS_9allocatorIcEEEEPi",
+    "/Users/abdelrahman/Library/Android/sdk/platform-tools/adb"
+  ],
+  "exit_code": 0,
+  "stderr": "",
+  "binary_execution": false,
+  "address_ranges": [
+    [
+      "0x1000a3374",
+      "0x1000a33a4"
+    ]
+  ],
+  "selected_disassembly": "1000a3374:\t5a a1 15 94\tbl\t0x10060b8dc ; symbol stub for: ___error\n1000a3378:\t00 00 40 b9\tldr\tw0, [x0]\n1000a337c:\t67 a1 15 94\tbl\t0x10060b918 ; symbol stub for: _strerror\n1000a3380:\tf4 03 00 a9\tstp\tx20, x0, [sp]\n1000a3384:\ta0 2b 00 90\tadrp\tx0, 1396 ; 0x100617000\n1000a3388:\t00 58 23 91\tadd\tx0, x0, #0x8d6 ; literal pool for: \"could not dup inherited fd %d: '%s'\"\n1000a338c:\t46 ff ff 17\tb\t0x1000a30a4\n1000a3390:\t03 00 80 52\tmov\tw3, #0x0\n1000a3394:\te0 2f 40 b9\tldr\tw0, [sp, #0x2c]\n1000a3398:\t21 00 80 52\tmov\tw1, #0x1\n1000a339c:\te2 03 13 aa\tmov\tx2, x19\n1000a33a0:\tbb c9 00 94\tbl\t__Z23network_loopback_serveriiPNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEEb\n1000a33a4:\tf7 f6 ff b4\tcbz\tx23, 0x1000a3280"
+}

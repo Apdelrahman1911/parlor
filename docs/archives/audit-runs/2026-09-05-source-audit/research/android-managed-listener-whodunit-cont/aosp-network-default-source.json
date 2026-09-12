@@ -1,0 +1,36 @@
+[
+  {
+    "url": "https://android.googlesource.com/platform/packages/modules/adb/+/1cf2f017d312f73b3dc53bda85ef2610e35a80e9/network.cpp?format=TEXT",
+    "accessed_at": "2026-09-05T13:13:30.234964+00:00",
+    "error": "HTTP Error 404: Not Found"
+  },
+  {
+    "url": "https://android.googlesource.com/platform/packages/modules/adb/+/1cf2f017d312f73b3dc53bda85ef2610e35a80e9/sysdeps_unix.cpp?format=TEXT",
+    "accessed_at": "2026-09-05T13:13:30.518920+00:00",
+    "sha256": "3021c9c17a01959c2ebc8dab550c3310cade0fb2dadb30083a8a603b3084a620",
+    "line_count": 128,
+    "excerpts": []
+  },
+  {
+    "url": "https://android.googlesource.com/platform/packages/modules/adb/+/1cf2f017d312f73b3dc53bda85ef2610e35a80e9/adb.cpp?format=TEXT",
+    "accessed_at": "2026-09-05T13:13:32.615396+00:00",
+    "sha256": "1274bc59800964c3ff83c29a31133df121a809b62b8122caa91856396f3eeeb9",
+    "line_count": 1661,
+    "excerpts": [
+      {
+        "range": [
+          909,
+          956
+        ],
+        "numbered_source": " 909         fprintf(stderr, \"adb: cannot get executable path: %s\\n\",\n 910                 android::base::SystemErrorCodeToString(GetLastError()).c_str());\n 911         return -1;\n 912     }\n 913 \n 914     std::vector<std::string> child_argv = {\"adb\", \"-L\", socket_spec};\n 915     if (gListenAll) {\n 916         child_argv.push_back(\"-a\");\n 917     }\n 918     child_argv.push_back(\"fork-server\");\n 919     child_argv.push_back(\"server\");\n 920     child_argv.push_back(\"--reply-fd\");\n 921     child_argv.push_back(std::to_string(ack_write_as_int));\n 922     if (one_device) {\n 923         child_argv.push_back(\"--one-device\");\n 924         child_argv.push_back(one_device);\n 925     }\n 926     // Ideally we'd do CommandLineToArgvW-like quoting, but this is probably\n 927     // sufficient for the arguments we have.\n 928     std::string cmdline = android::base::Join(child_argv, ' ');\n 929     std::wstring cmdline_wide;\n 930     if (!android::base::UTF8ToWide(cmdline, &cmdline_wide)) {\n 931         fprintf(stderr, \"adb: could not convert cmdline from UTF-8 to UTF-16: %s\\n\",\n 932                 cmdline.c_str());\n 933         return -1;\n 934     }\n 935 \n 936     PROCESS_INFORMATION   pinfo;\n 937     ZeroMemory(&pinfo, sizeof(pinfo));\n 938 \n 939     if (!CreateProcessW(\n 940             program_path,                              /* program path  */\n 941             cmdline_wide.data(),\n 942                                     /* the fork-server argument will set the\n 943                                        debug = 2 in the child           */\n 944             NULL,                   /* process handle is not inheritable */\n 945             NULL,                    /* thread handle is not inheritable */\n 946             TRUE,                          /* yes, inherit some handles */\n 947             DETACHED_PROCESS, /* the new process doesn't have a console */\n 948             NULL,                     /* use parent's environment block */\n 949             NULL,                    /* use parent's starting directory */\n 950             &startup,                 /* startup info, i.e. std handles */\n 951             &pinfo )) {\n 952         fprintf(stderr, \"adb: CreateProcessW failed: %s\\n\",\n 953                 android::base::SystemErrorCodeToString(GetLastError()).c_str());\n 954         return -1;\n 955     }\n 956 "
+      },
+      {
+        "range": [
+          1066,
+          1113
+        ],
+        "numbered_source": "1066 \n1067     std::string path = android::base::GetExecutablePath();\n1068 \n1069     std::string reply_fd = std::to_string(pipe_write.get());\n1070     // child process arguments\n1071     std::vector<const char*> child_argv = {\"adb\", \"-L\", socket_spec.c_str()};\n1072     if (gListenAll) {\n1073         child_argv.push_back(\"-a\");\n1074     }\n1075     child_argv.push_back(\"fork-server\");\n1076     child_argv.push_back(\"server\");\n1077     child_argv.push_back(\"--reply-fd\");\n1078     child_argv.push_back(reply_fd.c_str());\n1079     if (one_device) {\n1080         child_argv.push_back(\"--one-device\");\n1081         child_argv.push_back(one_device);\n1082     } else if (is_one_device_mandatory()) {\n1083         fprintf(stderr,\n1084                 \"adb: cannot start server: --one-device option is required for this system in \"\n1085                 \"order to start adb.\\n\");\n1086         return -1;\n1087     }\n1088     child_argv.push_back(nullptr);\n1089 \n1090     pid_t pid = fork();\n1091     if (pid < 0) return -1;\n1092 \n1093     if (pid == 0) {\n1094         // child side of the fork\n1095         pipe_read.reset();\n1096 \n1097         // android::base::Pipe unconditionally opens the pipe with O_CLOEXEC.\n1098         // Undo this manually.\n1099         fcntl(pipe_write.get(), F_SETFD, 0);\n1100 \n1101         int result = execv(path.c_str(), const_cast<char* const*>(child_argv.data()));\n1102         // this should not return\n1103         fprintf(stderr, \"adb: execl returned %d: %s\\n\", result, strerror(errno));\n1104         _exit(127);\n1105     } else {\n1106         // parent side of the fork\n1107         char temp[3] = {};\n1108         // wait for the \"OK\\n\" message\n1109         pipe_write.reset();\n1110         int ret = adb_read(pipe_read.get(), temp, 3);\n1111         int saved_errno = errno;\n1112         pipe_read.reset();\n1113         if (ret < 0) {"
+      }
+    ]
+  }
+]

@@ -1,0 +1,230 @@
+{
+  "started_at": "2026-09-05T10:55:08.472524+00:00",
+  "source_before": {
+    "commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+    "tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+    "branch": "main",
+    "tracked_status": ""
+  },
+  "cycle": "iosr1-native-02",
+  "status": "PASS",
+  "commands": [
+    {
+      "command": [
+        "xcrun",
+        "--sdk",
+        "iphonesimulator",
+        "clang",
+        "-arch",
+        "arm64",
+        "-isysroot",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.5.sdk",
+        "-mios-simulator-version-min=16.0",
+        "-fobjc-arc",
+        "-framework",
+        "UIKit",
+        "-framework",
+        "Foundation",
+        "-framework",
+        "Security",
+        "/Users/abdelrahman/Projects/parlor/audit-runs/2026-09-05-source-audit/reproducers/IOSR1NativeProbe.m",
+        "-o",
+        "/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-iosr1-native-02-1psfh7rv/Probe.app/Probe"
+      ],
+      "started_at": "2026-09-05T10:55:08.562471+00:00",
+      "log": "compile.log",
+      "exit_code": 0,
+      "finished_at": "2026-09-05T10:55:09.222748+00:00"
+    },
+    {
+      "command": [
+        "./gradlew",
+        "--stop"
+      ],
+      "started_at": "2026-09-05T10:55:09.223500+00:00",
+      "log": "stop-immediate.log",
+      "exit_code": 0,
+      "finished_at": "2026-09-05T10:55:09.756186+00:00"
+    },
+    {
+      "command": [
+        "codesign",
+        "-d",
+        "--entitlements",
+        ":-",
+        "/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-iosr1-native-02-1psfh7rv/Probe.app"
+      ],
+      "started_at": "2026-09-05T10:55:09.761941+00:00",
+      "log": "signature-inspection.log",
+      "exit_code": 0,
+      "finished_at": "2026-09-05T10:55:09.774384+00:00"
+    },
+    {
+      "command": [
+        "xcrun",
+        "simctl",
+        "create",
+        "Parlor-Audit-iosr1-native-02",
+        "com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro",
+        "com.apple.CoreSimulator.SimRuntime.iOS-26-5"
+      ],
+      "started_at": "2026-09-05T10:55:09.774942+00:00",
+      "log": "create.log",
+      "exit_code": 0,
+      "finished_at": "2026-09-05T10:55:10.092719+00:00"
+    },
+    {
+      "command": [
+        "xcrun",
+        "simctl",
+        "boot",
+        "59877864-F699-40C5-9E16-8E0CBB325774"
+      ],
+      "started_at": "2026-09-05T10:55:10.093768+00:00",
+      "log": "boot.log",
+      "exit_code": 0,
+      "finished_at": "2026-09-05T10:55:10.580654+00:00"
+    },
+    {
+      "command": [
+        "xcrun",
+        "simctl",
+        "bootstatus",
+        "59877864-F699-40C5-9E16-8E0CBB325774",
+        "-b"
+      ],
+      "started_at": "2026-09-05T10:55:10.581471+00:00",
+      "log": "bootstatus.log",
+      "exit_code": 0,
+      "finished_at": "2026-09-05T10:55:47.604159+00:00"
+    },
+    {
+      "command": [
+        "xcrun",
+        "simctl",
+        "install",
+        "59877864-F699-40C5-9E16-8E0CBB325774",
+        "/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-iosr1-native-02-1psfh7rv/Probe.app"
+      ],
+      "started_at": "2026-09-05T10:55:47.608413+00:00",
+      "log": "install.log",
+      "exit_code": 0,
+      "finished_at": "2026-09-05T10:55:56.472846+00:00"
+    },
+    {
+      "command": [
+        "xcrun",
+        "simctl",
+        "launch",
+        "59877864-F699-40C5-9E16-8E0CBB325774",
+        "audit.parlor.iosr1-native"
+      ],
+      "started_at": "2026-09-05T10:55:56.474031+00:00",
+      "log": "launch.log",
+      "exit_code": 0,
+      "finished_at": "2026-09-05T10:56:00.653585+00:00"
+    },
+    {
+      "command": [
+        "xcrun",
+        "simctl",
+        "get_app_container",
+        "59877864-F699-40C5-9E16-8E0CBB325774",
+        "audit.parlor.iosr1-native",
+        "data"
+      ],
+      "started_at": "2026-09-05T10:56:00.655661+00:00",
+      "log": "owned-container.log",
+      "exit_code": 0,
+      "finished_at": "2026-09-05T10:56:01.269241+00:00"
+    },
+    {
+      "command": [
+        "./gradlew",
+        "--stop"
+      ],
+      "started_at": "2026-09-05T10:56:01.276244+00:00",
+      "log": "stop-final.log",
+      "exit_code": 0,
+      "finished_at": "2026-09-05T10:56:02.490737+00:00"
+    },
+    {
+      "command": [
+        "xcrun",
+        "simctl",
+        "terminate",
+        "59877864-F699-40C5-9E16-8E0CBB325774",
+        "audit.parlor.iosr1-native"
+      ],
+      "started_at": "2026-09-05T10:56:02.491738+00:00",
+      "log": "terminate.log",
+      "exit_code": 0,
+      "finished_at": "2026-09-05T10:56:02.851222+00:00"
+    },
+    {
+      "command": [
+        "xcrun",
+        "simctl",
+        "shutdown",
+        "59877864-F699-40C5-9E16-8E0CBB325774"
+      ],
+      "started_at": "2026-09-05T10:56:02.853215+00:00",
+      "log": "shutdown.log",
+      "exit_code": 0,
+      "finished_at": "2026-09-05T10:56:06.172220+00:00"
+    },
+    {
+      "command": [
+        "xcrun",
+        "simctl",
+        "delete",
+        "59877864-F699-40C5-9E16-8E0CBB325774"
+      ],
+      "started_at": "2026-09-05T10:56:06.174665+00:00",
+      "log": "delete.log",
+      "exit_code": 0,
+      "finished_at": "2026-09-05T10:56:06.329663+00:00"
+    }
+  ],
+  "owned_temp": "/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-iosr1-native-02-1psfh7rv",
+  "reproducer": "reproducers/IOSR1NativeProbe.m",
+  "reproducer_sha256": "34e699306f7e7d151321bfe1d6b5586336ca05442cf1a810746e6c76e0b9d50b",
+  "scope": "Native equivalent APIs, not actual KMP/Home error attribution. Unsigned isolated simulator only.",
+  "signing": "Default simulator linker ad-hoc code-directory only, like CODE_SIGNING_ALLOWED=NO Xcode link. No codesign signing operation, identities, certificates, private keys, entitlements or Store artifact.",
+  "compile_exit_code": 0,
+  "immediate_stop_exit_code": 0,
+  "binary_sha256": "ffa78ee7d6b00f73747b17ccab892b1735dc16ffdb30b537c8d6147f92a4083c",
+  "owned_uuid": "59877864-F699-40C5-9E16-8E0CBB325774",
+  "probe_result": {
+    "protected_directory_created": true,
+    "documents_url_available": 1,
+    "constant_errSecItemNotFound": -25300,
+    "list_succeeded": 1,
+    "create_error": {},
+    "list_count": 0,
+    "keychain_result_was_null": 1,
+    "list_error": {},
+    "backup_exclusion_error": {},
+    "documents_error": {},
+    "support_error": {},
+    "backup_exclusion_set": true,
+    "keychain_status": -34018,
+    "support_url_available": 1,
+    "legacy_directory_exists": false,
+    "constant_errSecMissingEntitlement": -34018
+  },
+  "final_stop_exit_code": 0,
+  "shutdown_exit_code": 0,
+  "delete_exit_code": 0,
+  "owned_device_absent": true,
+  "owned_uuid_processes_remaining": [],
+  "owned_temporary_outputs_removed": true,
+  "remaining_build_outputs": [],
+  "source_after": {
+    "commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+    "tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+    "branch": "main",
+    "tracked_status": ""
+  },
+  "finished_at": "2026-09-05T10:56:06.491909+00:00"
+}

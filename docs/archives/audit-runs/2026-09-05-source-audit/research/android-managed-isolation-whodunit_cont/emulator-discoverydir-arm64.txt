@@ -1,0 +1,320 @@
+/Users/abdelrahman/Library/Android/sdk/emulator/lib64/libandroid-emu-metrics.dylib:
+(__TEXT,__text) section
+__ZN7android10ConfigDirs21getDiscoveryDirectoryEv:
+  1d0140:	ff c3 03 d1	sub	sp, sp, #0xf0
+  1d0144:	f8 5f 0b a9	stp	x24, x23, [sp, #0xb0]
+  1d0148:	f6 57 0c a9	stp	x22, x21, [sp, #0xc0]
+  1d014c:	f4 4f 0d a9	stp	x20, x19, [sp, #0xd0]
+  1d0150:	fd 7b 0e a9	stp	x29, x30, [sp, #0xe0]
+  1d0154:	fd 83 03 91	add	x29, sp, #0xe0
+  1d0158:	f3 03 08 aa	mov	x19, x8
+  1d015c:	1f 20 03 d5	nop
+  1d0160:	48 f5 5f 58	ldr	x8, #0xbfea8 ; literal pool symbol address: ___stack_chk_guard
+  1d0164:	08 01 40 f9	ldr	x8, [x8]
+  1d0168:	a8 83 1c f8	stur	x8, [x29, #-0x38]
+  1d016c:	15 91 ff 97	bl	__ZN7android4base6System3getEv
+  1d0170:	88 08 00 d0	adrp	x8, 274 ; 0x2e2000
+  1d0174:	14 41 41 f9	ldr	x20, [x8, #0x280]
+  1d0178:	e0 03 14 aa	mov	x0, x20
+  1d017c:	02 29 01 94	bl	0x21a584 ; symbol stub for: _strlen
+  1d0180:	e1 03 00 aa	mov	x1, x0
+  1d0184:	e8 c3 00 91	add	x8, sp, #0x30
+  1d0188:	e0 03 14 aa	mov	x0, x20
+  1d018c:	d1 99 ff 97	bl	__ZN7android4base6System22getEnvironmentVariableENSt3__117basic_string_viewIcNS2_11char_traitsIcEEEE
+  1d0190:	e8 1f 41 39	ldrb	w8, [sp, #0x47]
+  1d0194:	e9 1f 40 f9	ldr	x9, [sp, #0x38]
+  1d0198:	1f 01 19 72	tst	w8, #0x80
+  1d019c:	28 11 88 9a	csel	x8, x9, x8, ne
+  1d01a0:	e8 01 00 b4	cbz	x8, 0x1d01dc
+  1d01a4:	88 08 00 d0	adrp	x8, 274 ; 0x2e2000
+  1d01a8:	15 45 41 f9	ldr	x21, [x8, #0x288]
+  1d01ac:	e0 03 15 aa	mov	x0, x21
+  1d01b0:	f5 28 01 94	bl	0x21a584 ; symbol stub for: _strlen
+  1d01b4:	e8 eb 7c b2	mov	x8, #0x7ffffffffffffff0
+  1d01b8:	1f 00 08 eb	cmp	x0, x8
+  1d01bc:	a2 23 00 54	b.hs	0x1d0630
+  1d01c0:	f4 03 00 aa	mov	x20, x0
+  1d01c4:	1f 5c 00 f1	cmp	x0, #0x17
+  1d01c8:	82 04 00 54	b.hs	0x1d0258
+  1d01cc:	f4 7f 01 39	strb	w20, [sp, #0x5f]
+  1d01d0:	f6 23 01 91	add	x22, sp, #0x48
+  1d01d4:	34 05 00 b5	cbnz	x20, 0x1d0278
+  1d01d8:	2c 00 00 14	b	0x1d0288
+  1d01dc:	b1 28 01 94	bl	0x21a4a0 ; symbol stub for: _getMinLogLevel
+  1d01e0:	1f 04 00 71	cmp	w0, #0x1
+  1d01e4:	0c 02 00 54	b.gt	0x1d0224
+  1d01e8:	e0 5f 27 50	adr	x0, #322558 ; literal pool for: "Using fallback path for the emulator registration directory."
+  1d01ec:	1f 20 03 d5	nop
+  1d01f0:	e8 83 01 91	add	x8, sp, #0x60
+  1d01f4:	81 07 80 52	mov	w1, #0x3c
+  1d01f8:	02 00 80 d2	mov	x2, #0x0
+  1d01fc:	03 00 80 d2	mov	x3, #0x0
+  1d0200:	a5 28 01 94	bl	0x21a494 ; symbol stub for: __ZN4absl12lts_2024011619str_format_internal10FormatPackENS1_21UntypedFormatSpecImplENS0_4SpanIKNS1_13FormatArgImplEEE
+  1d0204:	01 4c 27 50	adr	x1, #321922 ; literal pool for: "/Volumes/Android/buildbot/src/googleplex-android/emu-36-6-release/external/qemu/android/emu/files/src/android/emulation/ConfigDirs.cpp"
+  1d0208:	1f 20 03 d5	nop
+  1d020c:	e3 83 01 91	add	x3, sp, #0x60
+  1d0210:	20 00 80 52	mov	w0, #0x1
+  1d0214:	22 28 80 52	mov	w2, #0x141
+  1d0218:	9c 28 01 94	bl	0x21a488 ; symbol stub for: __Z19__emu_log_print_str11LogSeverityPKciRKNSt3__112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEE
+  1d021c:	e8 df c1 39	ldrsb	w8, [sp, #0x77]
+  1d0220:	68 1f f8 37	tbnz	w8, #0x1f, 0x1d060c
+  1d0224:	e8 83 01 91	add	x8, sp, #0x60
+  1d0228:	6a f9 ff 97	bl	__ZN7android10ConfigDirs16getUserDirectoryEv
+  1d022c:	e8 1f c1 39	ldrsb	w8, [sp, #0x47]
+  1d0230:	a8 00 f8 36	tbz	w8, #0x1f, 0x1d0244
+  1d0234:	e0 1b 40 f9	ldr	x0, [sp, #0x30]
+  1d0238:	e8 23 40 f9	ldr	x8, [sp, #0x40]
+  1d023c:	01 f9 40 92	and	x1, x8, #0x7fffffffffffffff
+  1d0240:	8f 28 01 94	bl	0x21a47c ; symbol stub for: __ZdlPvm
+  1d0244:	e0 1b c0 3d	ldr	q0, [sp, #0x60]
+  1d0248:	e0 0f 80 3d	str	q0, [sp, #0x30]
+  1d024c:	e8 3b 40 f9	ldr	x8, [sp, #0x70]
+  1d0250:	e8 23 00 f9	str	x8, [sp, #0x40]
+  1d0254:	24 00 00 14	b	0x1d02e4
+  1d0258:	97 0e 40 b2	orr	x23, x20, #0xf
+  1d025c:	e0 06 00 91	add	x0, x23, #0x1
+  1d0260:	7e 28 01 94	bl	0x21a458 ; symbol stub for: __Znwm
+  1d0264:	f6 03 00 aa	mov	x22, x0
+  1d0268:	e8 07 41 b2	mov	x8, #-0x7fffffffffffffff
+  1d026c:	e8 02 08 8b	add	x8, x23, x8
+  1d0270:	f4 23 05 a9	stp	x20, x8, [sp, #0x50]
+  1d0274:	e0 27 00 f9	str	x0, [sp, #0x48]
+  1d0278:	e0 03 16 aa	mov	x0, x22
+  1d027c:	e1 03 15 aa	mov	x1, x21
+  1d0280:	e2 03 14 aa	mov	x2, x20
+  1d0284:	b1 28 01 94	bl	0x21a548 ; symbol stub for: _memmove
+  1d0288:	df 6a 34 38	strb	wzr, [x22, x20]
+  1d028c:	e8 83 01 91	add	x8, sp, #0x60
+  1d0290:	e0 c3 00 91	add	x0, sp, #0x30
+  1d0294:	e1 23 01 91	add	x1, sp, #0x48
+  1d0298:	33 8a ff 97	bl	__ZN7android4base2pjERKNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEES9_
+  1d029c:	e8 1f c1 39	ldrsb	w8, [sp, #0x47]
+  1d02a0:	a8 00 f8 36	tbz	w8, #0x1f, 0x1d02b4
+  1d02a4:	e0 1b 40 f9	ldr	x0, [sp, #0x30]
+  1d02a8:	e8 23 40 f9	ldr	x8, [sp, #0x40]
+  1d02ac:	01 f9 40 92	and	x1, x8, #0x7fffffffffffffff
+  1d02b0:	73 28 01 94	bl	0x21a47c ; symbol stub for: __ZdlPvm
+  1d02b4:	e0 1b c0 3d	ldr	q0, [sp, #0x60]
+  1d02b8:	e0 0f 80 3d	str	q0, [sp, #0x30]
+  1d02bc:	e8 3b 40 f9	ldr	x8, [sp, #0x70]
+  1d02c0:	e8 23 00 f9	str	x8, [sp, #0x40]
+  1d02c4:	ff df 01 39	strb	wzr, [sp, #0x77]
+  1d02c8:	ff 83 01 39	strb	wzr, [sp, #0x60]
+  1d02cc:	e8 7f c1 39	ldrsb	w8, [sp, #0x5f]
+  1d02d0:	a8 00 f8 36	tbz	w8, #0x1f, 0x1d02e4
+  1d02d4:	e0 27 40 f9	ldr	x0, [sp, #0x48]
+  1d02d8:	e8 2f 40 f9	ldr	x8, [sp, #0x58]
+  1d02dc:	01 f9 40 92	and	x1, x8, #0x7fffffffffffffff
+  1d02e0:	67 28 01 94	bl	0x21a47c ; symbol stub for: __ZdlPvm
+  1d02e4:	f5 83 01 91	add	x21, sp, #0x60
+  1d02e8:	e0 83 01 91	add	x0, sp, #0x60
+  1d02ec:	e1 c3 00 91	add	x1, sp, #0x30
+  1d02f0:	90 28 01 94	bl	0x21a530 ; symbol stub for: __ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEC1ERKS5_
+  1d02f4:	68 00 80 52	mov	w8, #0x3
+  1d02f8:	e8 3f 02 39	strb	w8, [sp, #0x8f]
+  1d02fc:	28 cc 8e 52	mov	w8, #0x7661
+  1d0300:	88 0c a0 72	movk	w8, #0x64, lsl #16
+  1d0304:	e8 7b 00 b9	str	w8, [sp, #0x78]
+  1d0308:	e8 00 80 52	mov	w8, #0x7
+  1d030c:	e8 9f 02 39	strb	w8, [sp, #0xa7]
+  1d0310:	48 ae 8e 52	mov	w8, #0x7572
+  1d0314:	c8 cd ad 72	movk	w8, #0x6e6e, lsl #16
+  1d0318:	e8 93 00 b9	str	w8, [sp, #0x90]
+  1d031c:	c8 2d 8d 52	mov	w8, #0x696e
+  1d0320:	c8 ed ac 72	movk	w8, #0x676e, lsl #16
+  1d0324:	e8 33 09 b8	stur	w8, [sp, #0x93]
+  1d0328:	ff 5f 02 39	strb	wzr, [sp, #0x97]
+  1d032c:	00 09 80 52	mov	w0, #0x48
+  1d0330:	4a 28 01 94	bl	0x21a458 ; symbol stub for: __Znwm
+  1d0334:	f4 03 00 aa	mov	x20, x0
+  1d0338:	16 20 01 91	add	x22, x0, #0x48
+  1d033c:	e0 27 00 f9	str	x0, [sp, #0x48]
+  1d0340:	f6 2f 00 f9	str	x22, [sp, #0x58]
+  1d0344:	e1 83 01 91	add	x1, sp, #0x60
+  1d0348:	7a 28 01 94	bl	0x21a530 ; symbol stub for: __ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEC1ERKS5_
+  1d034c:	00 60 00 91	add	x0, x0, #0x18
+  1d0350:	a1 62 00 91	add	x1, x21, #0x18
+  1d0354:	77 28 01 94	bl	0x21a530 ; symbol stub for: __ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEC1ERKS5_
+  1d0358:	80 c2 00 91	add	x0, x20, #0x30
+  1d035c:	a1 c2 00 91	add	x1, x21, #0x30
+  1d0360:	74 28 01 94	bl	0x21a530 ; symbol stub for: __ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEC1ERKS5_
+  1d0364:	f6 2b 00 f9	str	x22, [sp, #0x50]
+  1d0368:	e8 63 00 91	add	x8, sp, #0x18
+  1d036c:	e0 23 01 91	add	x0, sp, #0x48
+  1d0370:	ff 89 ff 97	bl	__ZN7android4base2pjERKNSt3__16vectorINS1_12basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEENS6_IS8_EEEE
+  1d0374:	f4 27 40 f9	ldr	x20, [sp, #0x48]
+  1d0378:	b4 02 00 b4	cbz	x20, 0x1d03cc
+  1d037c:	f5 2b 40 f9	ldr	x21, [sp, #0x50]
+  1d0380:	e0 03 14 aa	mov	x0, x20
+  1d0384:	9f 02 15 eb	cmp	x20, x21
+  1d0388:	a1 00 00 54	b.ne	0x1d039c
+  1d038c:	0c 00 00 14	b	0x1d03bc
+  1d0390:	b5 62 00 d1	sub	x21, x21, #0x18
+  1d0394:	bf 02 14 eb	cmp	x21, x20
+  1d0398:	00 01 00 54	b.eq	0x1d03b8
+  1d039c:	a8 f2 df 38	ldursb	w8, [x21, #-0x1]
+  1d03a0:	88 ff ff 36	tbz	w8, #0x1f, 0x1d0390
+  1d03a4:	a0 82 5e f8	ldur	x0, [x21, #-0x18]
+  1d03a8:	a8 82 5f f8	ldur	x8, [x21, #-0x8]
+  1d03ac:	01 f9 40 92	and	x1, x8, #0x7fffffffffffffff
+  1d03b0:	33 28 01 94	bl	0x21a47c ; symbol stub for: __ZdlPvm
+  1d03b4:	f7 ff ff 17	b	0x1d0390
+  1d03b8:	e0 27 40 f9	ldr	x0, [sp, #0x48]
+  1d03bc:	f4 2b 00 f9	str	x20, [sp, #0x50]
+  1d03c0:	e8 2f 40 f9	ldr	x8, [sp, #0x58]
+  1d03c4:	01 01 00 cb	sub	x1, x8, x0
+  1d03c8:	2d 28 01 94	bl	0x21a47c ; symbol stub for: __ZdlPvm
+  1d03cc:	e8 9f c2 39	ldrsb	w8, [sp, #0xa7]
+  1d03d0:	a8 0d f8 37	tbnz	w8, #0x1f, 0x1d0584
+  1d03d4:	e8 3f c2 39	ldrsb	w8, [sp, #0x8f]
+  1d03d8:	28 0e f8 37	tbnz	w8, #0x1f, 0x1d059c
+  1d03dc:	e8 df c1 39	ldrsb	w8, [sp, #0x77]
+  1d03e0:	a8 0e f8 37	tbnz	w8, #0x1f, 0x1d05b4
+  1d03e4:	e8 03 00 91	mov	x8, sp
+  1d03e8:	e0 63 00 91	add	x0, sp, #0x18
+  1d03ec:	01 00 80 52	mov	w1, #0x0
+  1d03f0:	c9 82 ff 97	bl	__ZN7android4base9PathUtils9decomposeERKNSt3__112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEENS1_8HostTypeE
+  1d03f4:	e0 03 00 91	mov	x0, sp
+  1d03f8:	4d 84 ff 97	bl	__ZN7android4base9PathUtils18simplifyComponentsEPNSt3__16vectorINS2_12basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEENS7_IS9_EEEE
+  1d03fc:	e0 03 00 91	mov	x0, sp
+  1d0400:	e8 03 13 aa	mov	x8, x19
+  1d0404:	01 00 80 52	mov	w1, #0x0
+  1d0408:	c7 82 ff 97	bl	__ZN7android4base9PathUtils9recomposeERKNSt3__16vectorINS2_12basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEENS7_IS9_EEEENS1_8HostTypeE
+  1d040c:	6d 90 ff 97	bl	__ZN7android4base6System3getEv
+  1d0410:	68 5e 80 39	ldrsb	x8, [x19, #0x17]
+  1d0414:	69 2a 40 a9	ldp	x9, x10, [x19]
+  1d0418:	1f 01 00 f1	cmp	x8, #0x0
+  1d041c:	21 41 93 9a	csel	x1, x9, x19, mi
+  1d0420:	1f 01 00 71	cmp	w8, #0x0
+  1d0424:	42 41 88 9a	csel	x2, x10, x8, mi
+  1d0428:	08 00 40 f9	ldr	x8, [x0]
+  1d042c:	08 45 40 f9	ldr	x8, [x8, #0x88]
+  1d0430:	00 01 3f d6	blr	x8
+  1d0434:	c0 05 00 37	tbnz	w0, #0x0, 0x1d04ec
+  1d0438:	68 5e c0 39	ldrsb	w8, [x19, #0x17]
+  1d043c:	69 02 40 f9	ldr	x9, [x19]
+  1d0440:	1f 01 00 71	cmp	w8, #0x0
+  1d0444:	20 41 93 9a	csel	x0, x9, x19, mi
+  1d0448:	01 38 80 52	mov	w1, #0x1c0
+  1d044c:	7f d7 ff 97	bl	_path_mkdir_if_needed
+  1d0450:	1f 04 00 31	cmn	w0, #0x1
+  1d0454:	c1 04 00 54	b.ne	0x1d04ec
+  1d0458:	12 28 01 94	bl	0x21a4a0 ; symbol stub for: _getMinLogLevel
+  1d045c:	1f 00 00 71	cmp	w0, #0x0
+  1d0460:	6c 04 00 54	b.gt	0x1d04ec
+  1d0464:	3c 28 01 94	bl	0x21a554 ; symbol stub for: ___error
+  1d0468:	f4 03 00 aa	mov	x20, x0
+  1d046c:	3a 28 01 94	bl	0x21a554 ; symbol stub for: ___error
+  1d0470:	00 00 40 b9	ldr	w0, [x0]
+  1d0474:	d2 2a 01 94	bl	0x21afbc ; symbol stub for: _strerror
+  1d0478:	1f 20 03 d5	nop
+  1d047c:	a8 de 5f 58	ldr	x8, #0xbfbd4 ; literal pool symbol address: __ZN4absl12lts_2024011619str_format_internal13FormatArgImpl8DispatchINSt3__112basic_stringIcNS4_11char_traitsIcEENS4_9allocatorIcEEEEEEbNS2_4DataENS1_24FormatConversionSpecImplEPv
+  1d0480:	f3 23 06 a9	stp	x19, x8, [sp, #0x60]
+  1d0484:	88 02 40 b9	ldr	w8, [x20]
+  1d0488:	1f 20 03 d5	nop
+  1d048c:	29 fb 5f 58	ldr	x9, #0xbff64 ; literal pool symbol address: __ZN4absl12lts_2024011619str_format_internal13FormatArgImpl8DispatchIiEEbNS2_4DataENS1_24FormatConversionSpecImplEPv
+  1d0490:	e8 27 07 a9	stp	x8, x9, [sp, #0x70]
+  1d0494:	1f 20 03 d5	nop
+  1d0498:	c8 db 5f 58	ldr	x8, #0xbfb78 ; literal pool symbol address: __ZN4absl12lts_2024011619str_format_internal13FormatArgImpl8DispatchIPKcEEbNS2_4DataENS1_24FormatConversionSpecImplEPv
+  1d049c:	e0 23 08 a9	stp	x0, x8, [sp, #0x80]
+  1d04a0:	40 4c 27 70	adr	x0, #321931 ; literal pool for: "Unable to create %s due to %d: %s"
+  1d04a4:	1f 20 03 d5	nop
+  1d04a8:	e8 23 01 91	add	x8, sp, #0x48
+  1d04ac:	e2 83 01 91	add	x2, sp, #0x60
+  1d04b0:	21 04 80 52	mov	w1, #0x21
+  1d04b4:	63 00 80 52	mov	w3, #0x3
+  1d04b8:	f7 27 01 94	bl	0x21a494 ; symbol stub for: __ZN4absl12lts_2024011619str_format_internal10FormatPackENS1_21UntypedFormatSpecImplENS0_4SpanIKNS1_13FormatArgImplEEE
+  1d04bc:	41 36 27 50	adr	x1, #321226 ; literal pool for: "/Volumes/Android/buildbot/src/googleplex-android/emu-36-6-release/external/qemu/android/emu/files/src/android/emulation/ConfigDirs.cpp"
+  1d04c0:	1f 20 03 d5	nop
+  1d04c4:	e3 23 01 91	add	x3, sp, #0x48
+  1d04c8:	00 00 80 52	mov	w0, #0x0
+  1d04cc:	c2 29 80 52	mov	w2, #0x14e
+  1d04d0:	ee 27 01 94	bl	0x21a488 ; symbol stub for: __Z19__emu_log_print_str11LogSeverityPKciRKNSt3__112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEE
+  1d04d4:	e8 7f c1 39	ldrsb	w8, [sp, #0x5f]
+  1d04d8:	a8 00 f8 36	tbz	w8, #0x1f, 0x1d04ec
+  1d04dc:	e0 27 40 f9	ldr	x0, [sp, #0x48]
+  1d04e0:	e8 2f 40 f9	ldr	x8, [sp, #0x58]
+  1d04e4:	01 f9 40 92	and	x1, x8, #0x7fffffffffffffff
+  1d04e8:	e5 27 01 94	bl	0x21a47c ; symbol stub for: __ZdlPvm
+  1d04ec:	f3 03 40 f9	ldr	x19, [sp]
+  1d04f0:	b3 02 00 b4	cbz	x19, 0x1d0544
+  1d04f4:	f4 07 40 f9	ldr	x20, [sp, #0x8]
+  1d04f8:	e0 03 13 aa	mov	x0, x19
+  1d04fc:	7f 02 14 eb	cmp	x19, x20
+  1d0500:	a1 00 00 54	b.ne	0x1d0514
+  1d0504:	0c 00 00 14	b	0x1d0534
+  1d0508:	94 62 00 d1	sub	x20, x20, #0x18
+  1d050c:	9f 02 13 eb	cmp	x20, x19
+  1d0510:	00 01 00 54	b.eq	0x1d0530
+  1d0514:	88 f2 df 38	ldursb	w8, [x20, #-0x1]
+  1d0518:	88 ff ff 36	tbz	w8, #0x1f, 0x1d0508
+  1d051c:	80 82 5e f8	ldur	x0, [x20, #-0x18]
+  1d0520:	88 82 5f f8	ldur	x8, [x20, #-0x8]
+  1d0524:	01 f9 40 92	and	x1, x8, #0x7fffffffffffffff
+  1d0528:	d5 27 01 94	bl	0x21a47c ; symbol stub for: __ZdlPvm
+  1d052c:	f7 ff ff 17	b	0x1d0508
+  1d0530:	e0 03 40 f9	ldr	x0, [sp]
+  1d0534:	f3 07 00 f9	str	x19, [sp, #0x8]
+  1d0538:	e8 0b 40 f9	ldr	x8, [sp, #0x10]
+  1d053c:	01 01 00 cb	sub	x1, x8, x0
+  1d0540:	cf 27 01 94	bl	0x21a47c ; symbol stub for: __ZdlPvm
+  1d0544:	e8 bf c0 39	ldrsb	w8, [sp, #0x2f]
+  1d0548:	08 04 f8 37	tbnz	w8, #0x1f, 0x1d05c8
+  1d054c:	e8 1f c1 39	ldrsb	w8, [sp, #0x47]
+  1d0550:	88 04 f8 37	tbnz	w8, #0x1f, 0x1d05e0
+  1d0554:	a8 83 5c f8	ldur	x8, [x29, #-0x38]
+  1d0558:	1f 20 03 d5	nop
+  1d055c:	69 d5 5f 58	ldr	x9, #0xbfaac ; literal pool symbol address: ___stack_chk_guard
+  1d0560:	29 01 40 f9	ldr	x9, [x9]
+  1d0564:	3f 01 08 eb	cmp	x9, x8
+  1d0568:	01 05 00 54	b.ne	0x1d0608
+  1d056c:	fd 7b 4e a9	ldp	x29, x30, [sp, #0xe0]
+  1d0570:	f4 4f 4d a9	ldp	x20, x19, [sp, #0xd0]
+  1d0574:	f6 57 4c a9	ldp	x22, x21, [sp, #0xc0]
+  1d0578:	f8 5f 4b a9	ldp	x24, x23, [sp, #0xb0]
+  1d057c:	ff c3 03 91	add	sp, sp, #0xf0
+  1d0580:	c0 03 5f d6	ret
+  1d0584:	e0 4b 40 f9	ldr	x0, [sp, #0x90]
+  1d0588:	e8 53 40 f9	ldr	x8, [sp, #0xa0]
+  1d058c:	01 f9 40 92	and	x1, x8, #0x7fffffffffffffff
+  1d0590:	bb 27 01 94	bl	0x21a47c ; symbol stub for: __ZdlPvm
+  1d0594:	e8 3f c2 39	ldrsb	w8, [sp, #0x8f]
+  1d0598:	28 f2 ff 36	tbz	w8, #0x1f, 0x1d03dc
+  1d059c:	e0 3f 40 f9	ldr	x0, [sp, #0x78]
+  1d05a0:	e8 47 40 f9	ldr	x8, [sp, #0x88]
+  1d05a4:	01 f9 40 92	and	x1, x8, #0x7fffffffffffffff
+  1d05a8:	b5 27 01 94	bl	0x21a47c ; symbol stub for: __ZdlPvm
+  1d05ac:	e8 df c1 39	ldrsb	w8, [sp, #0x77]
+  1d05b0:	a8 f1 ff 36	tbz	w8, #0x1f, 0x1d03e4
+  1d05b4:	e0 33 40 f9	ldr	x0, [sp, #0x60]
+  1d05b8:	e8 3b 40 f9	ldr	x8, [sp, #0x70]
+  1d05bc:	01 f9 40 92	and	x1, x8, #0x7fffffffffffffff
+  1d05c0:	af 27 01 94	bl	0x21a47c ; symbol stub for: __ZdlPvm
+  1d05c4:	88 ff ff 17	b	0x1d03e4
+  1d05c8:	e0 0f 40 f9	ldr	x0, [sp, #0x18]
+  1d05cc:	e8 17 40 f9	ldr	x8, [sp, #0x28]
+  1d05d0:	01 f9 40 92	and	x1, x8, #0x7fffffffffffffff
+  1d05d4:	aa 27 01 94	bl	0x21a47c ; symbol stub for: __ZdlPvm
+  1d05d8:	e8 1f c1 39	ldrsb	w8, [sp, #0x47]
+  1d05dc:	c8 fb ff 36	tbz	w8, #0x1f, 0x1d0554
+  1d05e0:	e0 1b 40 f9	ldr	x0, [sp, #0x30]
+  1d05e4:	e8 23 40 f9	ldr	x8, [sp, #0x40]
+  1d05e8:	01 f9 40 92	and	x1, x8, #0x7fffffffffffffff
+  1d05ec:	a4 27 01 94	bl	0x21a47c ; symbol stub for: __ZdlPvm
+  1d05f0:	a8 83 5c f8	ldur	x8, [x29, #-0x38]
+  1d05f4:	1f 20 03 d5	nop
+  1d05f8:	89 d0 5f 58	ldr	x9, #0xbfa10 ; literal pool symbol address: ___stack_chk_guard
+  1d05fc:	29 01 40 f9	ldr	x9, [x9]
+  1d0600:	3f 01 08 eb	cmp	x9, x8
+  1d0604:	40 fb ff 54	b.eq	0x1d056c
+  1d0608:	9a 27 01 94	bl	0x21a470 ; symbol stub for: ___stack_chk_fail
+  1d060c:	e0 33 40 f9	ldr	x0, [sp, #0x60]
+  1d0610:	e8 3b 40 f9	ldr	x8, [sp, #0x70]
+  1d0614:	01 f9 40 92	and	x1, x8, #0x7fffffffffffffff
+  1d0618:	99 27 01 94	bl	0x21a47c ; symbol stub for: __ZdlPvm
+  1d061c:	e8 83 01 91	add	x8, sp, #0x60
+  1d0620:	6c f8 ff 97	bl	__ZN7android10ConfigDirs16getUserDirectoryEv
+  1d0624:	e8 1f c1 39	ldrsb	w8, [sp, #0x47]
+  1d0628:	e8 e0 ff 36	tbz	w8, #0x1f, 0x1d0244
+  1d062c:	02 ff ff 17	b	0x1d0234
+  1d0630:	ab 27 01 94	bl	0x21a4dc ; symbol stub for: _abort

@@ -1,0 +1,196 @@
+{
+  "schema_version": 1,
+  "at": "2026-09-08T08:26:26.167399+00:00",
+  "reviewer": "/root/release_fix_review",
+  "status": "APPROVED_FOR_NORMAL_CURRENT_BRANCH_TRANSFER_WITH_EXPLICIT_LIMITS",
+  "scope": "Independent handoff/payload/preservation review, not native/runtime, release, final inventory or remote-push proof",
+  "author_root_control_commit": "e65102c82a42ecb6fca306ace2396398d7273f0a",
+  "manifest": {
+    "path": "handoffs/2026-09-08-agent-transfer/DELIVERY_MANIFEST.json",
+    "sha256": "4507179267c0ea7efc9d4eecb20a3415fa3d8488ffbf6217ff2803e966cb1aa5",
+    "bytes": 5382177
+  },
+  "handoff": {
+    "path": "docs/AGENT_CONTINUATION_2026-09-08.md",
+    "sha256": "e9979e663b014f5e3289ea16544d916c60cf283a5c1e7e581c69ecf2b5017458",
+    "bytes": 33526
+  },
+  "entry": {
+    "path": "CONTINUE_HERE.md",
+    "sha256": "f3f6beb0e6b1d0c889e3ffe05cd8cdbc40f396197c10636b247942286a2a65d5",
+    "bytes": 875
+  },
+  "prior_handoff_review": {
+    "path": "handoffs/2026-09-08-agent-transfer/handoff-independent-review-01.json",
+    "sha256": "92f13a619e841bc71e4418d8707a1f4ca1ec538018acc5981e39b213746d5887",
+    "bytes": 10468
+  },
+  "post_review_entry_delta": {
+    "change": "Exactly two terminal Markdown spaces removed from branch line12; reconstructed original bytes match prior approved entry hash. No instruction or executable control changed.",
+    "previous_sha256": "be73368dcb1a77dc8c77d4f4093525723865e6ea8318fc94603e71410eafb43b",
+    "main_handoff_unchanged": true
+  },
+  "independent_payload_checks": {
+    "files": 14710,
+    "bytes": 251055182,
+    "duplicates": 0,
+    "sha_size_mode_mismatches": [],
+    "nonregular_or_redirected_files": [],
+    "ignored_evidence_files": 7837,
+    "ignored_xml_files": 6218,
+    "baseline_removed": [
+      "audit-runs/2026-09-05-source-audit/build-lane.lock",
+      "docs/review/INDEPENDENT_REVIEW_INVENTORY.csv",
+      "remediation-runs/2026-09-05-confirmed-fixes/build-lane.lock",
+      "remediation-runs/2026-09-06-approved-policy-completion/build-lane.lock",
+      "remediation-runs/2026-09-07-local-readiness/build-lane.lock",
+      "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-apk-stage-02/release-androidTest.apk",
+      "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-apk-stage-02/release.apk"
+    ],
+    "baseline_additions": [
+      "CONTINUE_HERE.md",
+      "docs/AGENT_CONTINUATION_2026-09-08.md",
+      "remediation-runs/2026-09-07-local-readiness/reviews/normal-libproc-control-reconciliation-01.json",
+      "remediation-runs/2026-09-07-local-readiness/reviews/normal-libproc-control-reconciliation-02.json",
+      "remediation-runs/2026-09-07-local-readiness/reviews/synthetic-apk-delivery-review-01.json"
+    ],
+    "unexpected_baseline_payload_changes": [],
+    "essential_handoff_native_control_raw_log_and_review_paths_present": true,
+    "agents_md_preserved": true,
+    "git_attributes": "Only additive four audit/handoff -text patterns; existing six lines byte-identical; all235 archived CRLF text files covered. No application/test/security rule waiver."
+  },
+  "exclusions": {
+    "explicit": [
+      {
+        "path": "audit-runs/2026-09-05-source-audit/build-lane.lock",
+        "reason": "Empty task synchronization lock; recreate on demand, preserve locally",
+        "preserve_locally": true
+      },
+      {
+        "path": "design/.DS_Store",
+        "reason": "OS/cache/nonregular; preserve locally",
+        "preserve_locally": true
+      },
+      {
+        "path": "docs/.DS_Store",
+        "reason": "OS/cache/nonregular; preserve locally",
+        "preserve_locally": true
+      },
+      {
+        "path": "remediation-runs/.DS_Store",
+        "reason": "OS/cache/nonregular; preserve locally",
+        "preserve_locally": true
+      },
+      {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/build-lane.lock",
+        "reason": "Empty task synchronization lock; recreate on demand, preserve locally",
+        "preserve_locally": true
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/build-lane.lock",
+        "reason": "Empty task synchronization lock; recreate on demand, preserve locally",
+        "preserve_locally": true
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/build-lane.lock",
+        "reason": "Empty task synchronization lock; recreate on demand, preserve locally",
+        "preserve_locally": true
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-apk-stage-02/release-androidTest.apk",
+        "reason": "Old-source generated APK signed using disposed synthetic key; preserve locally. Producer hashes/receipts included; signed bytes not reproducible.",
+        "preserve_locally": true
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-apk-stage-02/release.apk",
+        "reason": "Old-source generated APK signed using disposed synthetic key; preserve locally. Producer hashes/receipts included; signed bytes not reproducible.",
+        "preserve_locally": true
+      }
+    ],
+    "intersect_payload": [],
+    "still_locally_present": true,
+    "locks_empty": true,
+    "old_inventory_backup": {
+      "path": "handoffs/2026-09-08-agent-transfer/before/INDEPENDENT_REVIEW_INVENTORY.csv",
+      "sha256": "be54597cd4a075121e22042d8afabc7e4f196a3e81fb65bf64dcc20cbad740e8",
+      "bytes": 496753
+    },
+    "metadata_scope": "Manifest intentionally excludes this transfer-metadata prefix and deferred inventory to avoid self-hash cycles. These must be included in final Git delivery and root final equality proof."
+  },
+  "root_index_proof": {
+    "receipt": {
+      "path": "handoffs/2026-09-08-agent-transfer/PRECOMMIT_INDEX_VERIFICATION.json",
+      "sha256": "1caa4000e42b68f20f89cb02d6e5818ce0ccd03bd94bf74b0c0fee3b5eb2c884",
+      "bytes": 170532
+    },
+    "reported_index": {
+      "files": 14718,
+      "bytes": 262116791,
+      "unique_blob_objects": 11618,
+      "exact_path_set_match": true,
+      "staged_blob_vs_payload_or_metadata_sha256_mismatches": [],
+      "worktree_vs_staged_sha256_mismatches": [],
+      "git_modes_match": true,
+      "scope": "At this precommit checkpoint. This receipt and later independent/cleanup records are additional metadata staged and checked separately; regenerated inventory is a subsequent commit."
+    },
+    "independently_reconstructed_expected_count": 14718,
+    "independently_reconstructed_expected_bytes": 262116791,
+    "scope": "Reviewed root-produced execution receipt and independently verified payload/current bytes plus index checkpoint expected-set/count/size arithmetic. Reviewer did not invoke Git or directly reread Git index/blobs; actual Git operations and final staging proof remain root-owned."
+  },
+  "whitespace": {
+    "full_archive_addition": "FAIL/exit2; not relabeled PASS",
+    "diagnostics": 28355,
+    "files": 932,
+    "types": {
+      "new blank line at EOF.": 102,
+      "trailing whitespace.": 27985,
+      "space before tab in indent.": 268
+    },
+    "raw": {
+      "path": "handoffs/2026-09-08-agent-transfer/archive-whitespace-check.txt.gz",
+      "sha256": "34d78446b0289fba1ab4163902933c444bb28e789a93cb26835838bd08c84e90",
+      "bytes": 275604
+    },
+    "raw_uncompressed_sha256": "9b8f522110a68eba46559c1537fe29d8c102c04cb57a7165df2c6c0f5cc12d89",
+    "independent_classification": "All true header paths exactly match932 recorded files and current bytes equal pre-transfer baseline. Added diff content ignored by parser, avoiding the previously recorded two false filename hits. Preserve original archived bytes; newly authored handoff/control checks separately reported PASS.",
+    "previous_auxiliary_parser_failure": {
+      "exit_code": 1,
+      "why": "Auxiliary diagnostic parser misread two added XML/log content lines beginning + as filename headers. Full index/file byte verification had succeeded. Corrected parser explicitly excludes diff content and requires actual indexed paths; no application source/test change or generated build outputs."
+    }
+  },
+  "cleanup": {
+    "receipt": {
+      "path": "handoffs/2026-09-08-agent-transfer/TRANSFER_PRESERVATION_CLEANUP.json",
+      "sha256": "24f23c3046edd0243170525d27eeff962798b9efadb2ed75eb3d18293f6d63bf",
+      "bytes": 3384
+    },
+    "gradle_stop_log": {
+      "path": "handoffs/2026-09-08-agent-transfer/transfer-gradle-stop.txt",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+      "bytes": 31
+    },
+    "root_stop_exit_code": 0,
+    "exact_live_output_paths_independently_absent": 17,
+    "exact_native15_native16_temp_paths_independently_absent": true,
+    "root_worker_check": {
+      "command": [
+        "ps",
+        "-A",
+        "-o",
+        "pid=,ppid=,comm="
+      ],
+      "matching_build_workers": [],
+      "task_owned_background_processes_started_during_transfer": [],
+      "unrelated_processes_terminated": false,
+      "limitation": "No active native execution; prior simulator/secondary-worker deletion is separately attested in retained native receipts. No new simulator probe is claimed."
+    },
+    "scope": "No new process probe by reviewer; checked exact task-owned path absence and root retained stop/ownership receipt. No deletion required for this read-only review."
+  },
+  "conditions_before_final_completion": [
+    "Root stage this/additional metadata, preserve baseline/unrelated stash and explicit local exclusions, and recheck actual Git-byte equality.",
+    "Commit transfer, regenerate/review mechanical inventory after source/control commits, inventory-only commit, then run freshness check at exact final SHA. Original inventory bytes remain preserved.",
+    "Normal push only to fix/local-readiness-2026-09-07 and verify exact remote/branch/HEAD/tree equality. No force push, merge, issue-state change, Store/signing/publication, physical-device operation or identity change.",
+    "This transfer is not project readiness. Native L08 interaction/strict protection, actual libproc normal-source provenance, final dependency candidate chain and exact-SHA combined qualification remain as documented. No new runtime checks were executed for transfer."
+  ],
+  "reviewer_cleanup": "Only short-lived stdlib JSON/hash/gzip/AST/source reads and existing-image viewing; additive evidence. No builders/tests/native APIs/Gradle/Xcode/Git/Store operations, repository imports, background workers or generated build outputs created; no user source, credentials, caches, process or artifact removed."
+}

@@ -1,0 +1,146 @@
+
+commonMain/dev/p2pkit/core/P2pKit.kt
+   20  * val p2p = P2pKit.create {
+   21  *     appId = AppId("com.example.transfer")
+   22  *     deviceName = "My Phone"
+   23  *     transports { lan() }
+   24  * }
+   25  *
+   26  * val scope = CoroutineScope(Dispatchers.Default + SupervisorJob())
+   27  *
+   28  * scope.launch { p2p.startAdvertising(); p2p.startDiscovery() }
+   29  *
+   30  * p2p.peers
+   31  *     .onEach { peers -> println("Current peers: $peers") }
+   32  *     .launchIn(scope)
+   33  *
+   34  * p2p.incomingSessions
+   35  *     .onEach { session ->
+   36  *         session.incoming
+   37  *             .onEach { msg -> println(msg) }
+   38  *             .launchIn(scope)
+   39  *     }
+   40  *     .launchIn(scope)
+   41  * ```
+   42  *
+   43  * Never use nested `collect { collect { ... } }` — always use `launchIn(scope)`.
+
+commonMain/dev/p2pkit/core/P2pKit.kt
+  257          * construction is a recorded backlog item in
+  258          * `docs/production-readiness.md`).
+  259          *
+  260          * The implementation is provided by `dev.p2pkit.core.internal.P2pKitImpl`.
+  261          */
+  262         @Throws(Exception::class)
+  263         public fun create(block: P2pKitBuilder.() -> Unit): P2pKit {
+  264             val builder = P2pKitBuilder().apply(block)
+  265             return builder.build()
+  266         }
+  267     }
+  268 }
+  269 
+  270 private val idleFeatureState: StateFlow<FeatureState> = MutableStateFlow(FeatureState.Idle)
+
+commonMain/dev/p2pkit/core/internal/P2pKitImpl.kt
+   67 /**
+   68  * Production [P2pKit] implementation. Wired up by
+   69  * [dev.p2pkit.core.dsl.P2pKitBuilder].
+   70  */
+   71 @OptIn(dev.p2pkit.core.ExperimentalP2pApi::class)
+   72 @Suppress("DEPRECATION")
+   73 internal class P2pKitImpl(
+   74     override val appId: AppId,
+   75     private val deviceName: String,
+   76     private val localPlatform: Platform,
+   77     override val localPeerId: PeerId,
+   78     private val localSecureIdentity: LocalSecureIdentity?,
+   79     private val secureIdentityService: SecureIdentityService?,
+   80     private val secureIdentityUsage: SecureIdentityUsage?,
+   81     private val securityCryptography: PlatformSecurityCryptography?,
+   82     private val transportFactories: List<RegisteredTransportFactory>,
+   83     private val keepAlive: KeepAliveConfig,
+   84     private val reconnectPolicy: ReconnectPolicy,
+   85     private val backgroundPolicy: BackgroundPolicy,
+   86     @Suppress("unused") private val appKilledPolicy: AppKilledPolicy,
+   87     private val securityMode: SecurityMode,
+   88     private val provisioningConfig: NetworkProvisioningConfig,
+   89     private val provisioningFactory: NetworkProvisioningFactory?,
+   90     private val fileTransferConfig: FileTransferConfig,
+
+commonMain/dev/p2pkit/core/internal/P2pKitImpl.kt
+  106     private val sessionSetupTimeoutMillis: Long = DEFAULT_HANDSHAKE_TIMEOUT_MS,
+  107     private val beforeSessionCommitForTest: (suspend () -> Unit)? = null,
+  108     private val afterOutgoingConnectForTest: (suspend () -> Unit)? = null,
+  109     private val beforeTerminalWatcherRemovalForTest: (suspend () -> Unit)? = null
+  110 ) : P2pKit {
+  111 
+  112     private val internalJob = SupervisorJob(parent = parentJob)
+  113 
+  114     // AUDIT-2026-07 (CON-3 rider, ARCH-4): kit-scope CoroutineExceptionHandler.
+  115     // The SupervisorJob already keeps sibling coroutines alive, but an uncaught
+  116     // failure in any internal collector previously escalated to the platform's
+  117     // default handler — which terminates the host process on Android. Route it
+  118     // to the injectable logger instead: crash prevention / defense-in-depth
+  119     // behind the per-collector handling (e.g. startAcceptingIncoming's catch).
+  120     // CancellationException never reaches a CoroutineExceptionHandler, so
+  121     // cancellation semantics are untouched.
+  122     private val uncaughtHandler = CoroutineExceptionHandler { _, e ->
+  123         logger.error("P2pKit internal coroutine failed uncaught", e)
+  124     }
+  125     private val scope = CoroutineScope(Dispatchers.Default + internalJob + uncaughtHandler)
+  126 
+  127     override val networkProvisioning: NetworkProvisioningManager
+  128 
+  129     override val localDeviceName: String get() = deviceName
+
+commonMain/dev/p2pkit/core/internal/P2pKitImpl.kt
+  119     // behind the per-collector handling (e.g. startAcceptingIncoming's catch).
+  120     // CancellationException never reaches a CoroutineExceptionHandler, so
+  121     // cancellation semantics are untouched.
+  122     private val uncaughtHandler = CoroutineExceptionHandler { _, e ->
+  123         logger.error("P2pKit internal coroutine failed uncaught", e)
+  124     }
+  125     private val scope = CoroutineScope(Dispatchers.Default + internalJob + uncaughtHandler)
+  126 
+  127     override val networkProvisioning: NetworkProvisioningManager
+  128 
+  129     override val localDeviceName: String get() = deviceName
+  130 
+  131     override val localFingerprint: PeerFingerprint? get() = localSecureIdentity?.fingerprint
+  132 
+  133     override val localPairingQr: String? = localSecureIdentity?.let { identity ->
+  134         checkNotNull(secureIdentityService).pairingQr(appId, identity.fingerprint)
+  135     }
+  136 
+  137     override fun parsePeerPairingQr(value: String): PeerFingerprint? =
+  138         secureIdentityService?.parsePairingQr(appId, value)
+  139 
+  140     override val networkPathStatus: StateFlow<NetworkPathStatus>
+  141         get() = pathObserver.status
+  142 
+
+commonMain/dev/p2pkit/core/internal/P2pKitImpl.kt
+ 1455             localPeerId = peerIdStorage.loadOrGenerate()
+ 1456         }
+ 1457     }
+ 1458     return try {
+ 1459         val pathObserver = networkPathObserverOverride ?: defaultNetworkPathObserver(logger)
+ 1460         val permissionManager = permissionManagerOverride ?: defaultPlatformPermissionManager(logger)
+ 1461         P2pKitImpl(
+ 1462             appId = appId,
+ 1463             deviceName = deviceName,
+ 1464             localPlatform = currentPlatform(),
+ 1465             localPeerId = localPeerId,
+ 1466             localSecureIdentity = secureIdentity,
+ 1467             secureIdentityService = secureIdentityService,
+ 1468             secureIdentityUsage = secureIdentityUsage,
+ 1469             securityCryptography = cryptography,
+ 1470             transportFactories = transportFactories,
+ 1471             keepAlive = keepAlive,
+ 1472             reconnectPolicy = reconnectPolicy,
+ 1473             backgroundPolicy = backgroundPolicy,
+ 1474             appKilledPolicy = appKilledPolicy,
+ 1475             securityMode = frozenSecurityMode,
+ 1476             provisioningConfig = provisioningConfig,
+ 1477             provisioningFactory = provisioningFactory,
+ 1478             fileTransferConfig = fileTransferConfig,

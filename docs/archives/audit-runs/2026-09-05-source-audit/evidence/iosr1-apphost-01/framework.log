@@ -1,0 +1,211 @@
+
+Welcome to Gradle 8.13!
+
+Here are the highlights of this release:
+ - Daemon JVM auto-provisioning
+ - Enhancements for Scala plugin and JUnit testing
+ - Improvements for build authors and plugin developers
+
+For more details see https://docs.gradle.org/8.13/release-notes.html
+
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.13/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+Type-safe project accessors is an incubating feature.
+> Task :build-logic:convention:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :build-logic:convention:compileKotlin
+> Task :build-logic:convention:compileJava NO-SOURCE
+> Task :build-logic:convention:pluginDescriptors
+> Task :build-logic:convention:processResources
+> Task :build-logic:convention:classes
+> Task :build-logic:convention:jar
+
+> Configure project :composeApp
+AUDIT_IOSR1_SOURCE_BINDING 0bd3659ecb7c9403a8372b4cb3724c666013380b061ddb45afcc7b74bf1cb90d additiveFiles=2
+WARNING: The option setting 'android.experimental.lint.version=9.1.1' is experimental.
+w: ⚠️ Deprecated Gradle Version
+The used Gradle version (Gradle 8.13) is deprecated and will not be supported in future Kotlin Gradle Plugin releases.
+The minimum supported Gradle version will become Gradle 8.14.4 in Kotlin 2.5.0.
+
+This warning can be suppressed in 'gradle.properties':
+    kotlin.suppressGradlePluginWarnings=DeprecatedGradleVersionWarning
+Solution: Please update the Gradle version to at least Gradle 8.14.4.
+
+w: ⚠️ Native task 'iosX64Test' is disabled
+Task 'iosX64Test' for target 'ios_x64' cannot run on the current host (macos-aarch64).
+Reason: architecture mismatch - target requires X64, current host is ARM64
+Solution: To suppress this warning, add 'kotlin.native.ignoreDisabledTargets=true' to gradle.properties.
+
+
+> Task :composeApp:kmpPartiallyResolvedDependenciesChecker
+> Task :composeApp:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :composeApp:downloadKotlinNativeDistribution
+> Task :composeApp:convertXmlValueResourcesForAppleMain NO-SOURCE
+> Task :composeApp:copyNonXmlValueResourcesForAppleMain NO-SOURCE
+> Task :composeApp:prepareComposeResourcesTaskForAppleMain NO-SOURCE
+> Task :composeApp:generateResourceAccessorsForAppleMain NO-SOURCE
+> Task :composeApp:convertXmlValueResourcesForCommonMain
+> Task :composeApp:copyNonXmlValueResourcesForCommonMain NO-SOURCE
+> Task :composeApp:prepareComposeResourcesTaskForCommonMain UP-TO-DATE
+> Task :composeApp:generateResourceAccessorsForCommonMain
+> Task :composeApp:convertXmlValueResourcesForIosMain NO-SOURCE
+> Task :composeApp:copyNonXmlValueResourcesForIosMain NO-SOURCE
+> Task :composeApp:prepareComposeResourcesTaskForIosMain NO-SOURCE
+> Task :composeApp:generateResourceAccessorsForIosMain NO-SOURCE
+> Task :composeApp:convertXmlValueResourcesForIosSimulatorArm64Main NO-SOURCE
+> Task :composeApp:copyNonXmlValueResourcesForIosSimulatorArm64Main NO-SOURCE
+> Task :composeApp:prepareComposeResourcesTaskForIosSimulatorArm64Main NO-SOURCE
+> Task :composeApp:generateResourceAccessorsForIosSimulatorArm64Main NO-SOURCE
+> Task :composeApp:convertXmlValueResourcesForNativeMain NO-SOURCE
+> Task :composeApp:copyNonXmlValueResourcesForNativeMain NO-SOURCE
+> Task :composeApp:prepareComposeResourcesTaskForNativeMain NO-SOURCE
+> Task :composeApp:generateResourceAccessorsForNativeMain NO-SOURCE
+> Task :composeApp:generateActualResourceCollectorsForIosSimulatorArm64Main
+> Task :composeApp:generateComposeResClass
+> Task :composeApp:generateExpectResourceCollectorsForCommonMain
+> Task :composeApp:generateParlorVersion
+> Task :game-modes:mafia:kmpPartiallyResolvedDependenciesChecker
+> Task :game-modes:mafia:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :game-modes:mafia:downloadKotlinNativeDistribution
+> Task :game-modes:mafia:convertXmlValueResourcesForAppleMain NO-SOURCE
+> Task :game-modes:mafia:copyNonXmlValueResourcesForAppleMain NO-SOURCE
+> Task :game-modes:mafia:prepareComposeResourcesTaskForAppleMain NO-SOURCE
+> Task :game-modes:mafia:generateResourceAccessorsForAppleMain NO-SOURCE
+> Task :game-modes:mafia:convertXmlValueResourcesForCommonMain
+> Task :game-modes:mafia:copyNonXmlValueResourcesForCommonMain NO-SOURCE
+> Task :game-modes:mafia:prepareComposeResourcesTaskForCommonMain UP-TO-DATE
+> Task :game-modes:mafia:generateResourceAccessorsForCommonMain
+> Task :game-modes:mafia:convertXmlValueResourcesForIosMain NO-SOURCE
+> Task :game-modes:mafia:copyNonXmlValueResourcesForIosMain NO-SOURCE
+> Task :game-modes:mafia:prepareComposeResourcesTaskForIosMain NO-SOURCE
+> Task :game-modes:mafia:generateResourceAccessorsForIosMain NO-SOURCE
+> Task :game-modes:mafia:convertXmlValueResourcesForIosSimulatorArm64Main NO-SOURCE
+> Task :game-modes:mafia:copyNonXmlValueResourcesForIosSimulatorArm64Main NO-SOURCE
+> Task :game-modes:mafia:prepareComposeResourcesTaskForIosSimulatorArm64Main NO-SOURCE
+> Task :game-modes:mafia:generateResourceAccessorsForIosSimulatorArm64Main NO-SOURCE
+> Task :game-modes:mafia:convertXmlValueResourcesForNativeMain NO-SOURCE
+> Task :game-modes:mafia:copyNonXmlValueResourcesForNativeMain NO-SOURCE
+> Task :game-modes:mafia:prepareComposeResourcesTaskForNativeMain NO-SOURCE
+> Task :game-modes:mafia:generateResourceAccessorsForNativeMain NO-SOURCE
+> Task :game-modes:mafia:generateActualResourceCollectorsForIosSimulatorArm64Main
+> Task :game-modes:mafia:generateComposeResClass
+> Task :game-modes:mafia:generateExpectResourceCollectorsForCommonMain
+> Task :shared:content:kmpPartiallyResolvedDependenciesChecker
+> Task :shared:content:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :shared:content:downloadKotlinNativeDistribution
+> Task :shared:core:kmpPartiallyResolvedDependenciesChecker
+> Task :shared:core:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :shared:core:downloadKotlinNativeDistribution
+> Task :shared:core:compileKotlinIosSimulatorArm64
+> Task :shared:core:exportCrossCompilationMetadataForIosSimulatorArm64ApiElements
+> Task :shared:engine:kmpPartiallyResolvedDependenciesChecker
+> Task :shared:engine:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :shared:engine:downloadKotlinNativeDistribution
+> Task :shared:engine:compileKotlinIosSimulatorArm64
+> Task :shared:engine:exportCrossCompilationMetadataForIosSimulatorArm64ApiElements
+> Task :shared:content:compileKotlinIosSimulatorArm64
+> Task :shared:content:exportCrossCompilationMetadataForIosSimulatorArm64ApiElements
+> Task :shared:design-system:kmpPartiallyResolvedDependenciesChecker
+> Task :shared:design-system:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :shared:design-system:downloadKotlinNativeDistribution
+> Task :shared:design-system:convertXmlValueResourcesForAppleMain NO-SOURCE
+> Task :shared:design-system:copyNonXmlValueResourcesForAppleMain NO-SOURCE
+> Task :shared:design-system:prepareComposeResourcesTaskForAppleMain NO-SOURCE
+> Task :shared:design-system:generateResourceAccessorsForAppleMain NO-SOURCE
+> Task :shared:design-system:convertXmlValueResourcesForCommonMain
+> Task :shared:design-system:copyNonXmlValueResourcesForCommonMain
+> Task :shared:design-system:prepareComposeResourcesTaskForCommonMain UP-TO-DATE
+> Task :shared:design-system:generateResourceAccessorsForCommonMain
+> Task :shared:design-system:convertXmlValueResourcesForIosMain NO-SOURCE
+> Task :shared:design-system:copyNonXmlValueResourcesForIosMain NO-SOURCE
+> Task :shared:design-system:prepareComposeResourcesTaskForIosMain NO-SOURCE
+> Task :shared:design-system:generateResourceAccessorsForIosMain NO-SOURCE
+> Task :shared:design-system:convertXmlValueResourcesForIosSimulatorArm64Main NO-SOURCE
+> Task :shared:design-system:copyNonXmlValueResourcesForIosSimulatorArm64Main NO-SOURCE
+> Task :shared:design-system:prepareComposeResourcesTaskForIosSimulatorArm64Main NO-SOURCE
+> Task :shared:design-system:generateResourceAccessorsForIosSimulatorArm64Main NO-SOURCE
+> Task :shared:design-system:convertXmlValueResourcesForNativeMain NO-SOURCE
+> Task :shared:design-system:copyNonXmlValueResourcesForNativeMain NO-SOURCE
+> Task :shared:design-system:prepareComposeResourcesTaskForNativeMain NO-SOURCE
+> Task :shared:design-system:generateResourceAccessorsForNativeMain NO-SOURCE
+> Task :shared:design-system:generateActualResourceCollectorsForIosSimulatorArm64Main
+> Task :shared:design-system:generateComposeResClass
+> Task :shared:design-system:generateExpectResourceCollectorsForCommonMain
+> Task :shared:design-system:compileKotlinIosSimulatorArm64
+> Task :shared:design-system:exportCrossCompilationMetadataForIosSimulatorArm64ApiElements
+> Task :shared:networking:kmpPartiallyResolvedDependenciesChecker
+> Task :shared:networking:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :shared:networking:downloadKotlinNativeDistribution
+> Task :shared:networking:compileKotlinIosSimulatorArm64
+> Task :shared:networking:exportCrossCompilationMetadataForIosSimulatorArm64ApiElements
+> Task :shared:session:kmpPartiallyResolvedDependenciesChecker
+> Task :shared:session:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :shared:session:downloadKotlinNativeDistribution
+> Task :shared:session:compileKotlinIosSimulatorArm64
+> Task :shared:session:exportCrossCompilationMetadataForIosSimulatorArm64ApiElements
+> Task :shared:storage:kmpPartiallyResolvedDependenciesChecker
+> Task :shared:storage:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :shared:storage:downloadKotlinNativeDistribution
+> Task :shared:storage:compileKotlinIosSimulatorArm64
+> Task :shared:storage:exportCrossCompilationMetadataForIosSimulatorArm64ApiElements
+> Task :game-modes:mafia:compileKotlinIosSimulatorArm64
+> Task :game-modes:mafia:exportCrossCompilationMetadataForIosSimulatorArm64ApiElements
+> Task :game-modes:whodunit:kmpPartiallyResolvedDependenciesChecker
+> Task :game-modes:whodunit:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :game-modes:whodunit:downloadKotlinNativeDistribution
+> Task :game-modes:whodunit:convertXmlValueResourcesForAppleMain NO-SOURCE
+> Task :game-modes:whodunit:copyNonXmlValueResourcesForAppleMain NO-SOURCE
+> Task :game-modes:whodunit:prepareComposeResourcesTaskForAppleMain NO-SOURCE
+> Task :game-modes:whodunit:generateResourceAccessorsForAppleMain NO-SOURCE
+> Task :game-modes:whodunit:convertXmlValueResourcesForCommonMain
+> Task :game-modes:whodunit:copyNonXmlValueResourcesForCommonMain
+> Task :game-modes:whodunit:prepareComposeResourcesTaskForCommonMain UP-TO-DATE
+> Task :game-modes:whodunit:generateResourceAccessorsForCommonMain
+> Task :game-modes:whodunit:convertXmlValueResourcesForIosMain NO-SOURCE
+> Task :game-modes:whodunit:copyNonXmlValueResourcesForIosMain NO-SOURCE
+> Task :game-modes:whodunit:prepareComposeResourcesTaskForIosMain NO-SOURCE
+> Task :game-modes:whodunit:generateResourceAccessorsForIosMain NO-SOURCE
+> Task :game-modes:whodunit:convertXmlValueResourcesForIosSimulatorArm64Main NO-SOURCE
+> Task :game-modes:whodunit:copyNonXmlValueResourcesForIosSimulatorArm64Main NO-SOURCE
+> Task :game-modes:whodunit:prepareComposeResourcesTaskForIosSimulatorArm64Main NO-SOURCE
+> Task :game-modes:whodunit:generateResourceAccessorsForIosSimulatorArm64Main NO-SOURCE
+> Task :game-modes:whodunit:convertXmlValueResourcesForNativeMain NO-SOURCE
+> Task :game-modes:whodunit:copyNonXmlValueResourcesForNativeMain NO-SOURCE
+> Task :game-modes:whodunit:prepareComposeResourcesTaskForNativeMain NO-SOURCE
+> Task :game-modes:whodunit:generateResourceAccessorsForNativeMain NO-SOURCE
+> Task :game-modes:whodunit:generateActualResourceCollectorsForIosSimulatorArm64Main
+> Task :game-modes:whodunit:generateComposeResClass
+> Task :game-modes:whodunit:generateExpectResourceCollectorsForCommonMain
+> Task :game-modes:whodunit:compileKotlinIosSimulatorArm64
+> Task :game-modes:whodunit:exportCrossCompilationMetadataForIosSimulatorArm64ApiElements
+> Task :shared:transport-p2p:kmpPartiallyResolvedDependenciesChecker
+> Task :shared:transport-p2p:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :shared:transport-p2p:downloadKotlinNativeDistribution
+> Task :shared:transport-p2p:compileKotlinIosSimulatorArm64
+> Task :shared:transport-p2p:exportCrossCompilationMetadataForIosSimulatorArm64ApiElements
+> Task :composeApp:compileKotlinIosSimulatorArm64
+> Task :composeApp:computeLocalPackageDependencyInputFiles
+> Task :composeApp:generateSyntheticLinkageSwiftPMImportProjectForCinteropsAndLdDump SKIPPED
+> Task :composeApp:serializeSwiftPMDependenciesMetadataForLockFiles
+> Task :game-modes:mafia:serializeSwiftPMDependenciesMetadataForLockFiles
+> Task :game-modes:whodunit:serializeSwiftPMDependenciesMetadataForLockFiles
+> Task :shared:content:serializeSwiftPMDependenciesMetadataForLockFiles
+> Task :shared:core:serializeSwiftPMDependenciesMetadataForLockFiles
+> Task :shared:design-system:serializeSwiftPMDependenciesMetadataForLockFiles
+> Task :shared:engine:serializeSwiftPMDependenciesMetadataForLockFiles
+> Task :shared:engine-testing:serializeSwiftPMDependenciesMetadataForLockFiles
+> Task :shared:networking:serializeSwiftPMDependenciesMetadataForLockFiles
+> Task :shared:networking-testing:serializeSwiftPMDependenciesMetadataForLockFiles
+> Task :shared:session:serializeSwiftPMDependenciesMetadataForLockFiles
+> Task :shared:storage:serializeSwiftPMDependenciesMetadataForLockFiles
+> Task :shared:transport-p2p:serializeSwiftPMDependenciesMetadataForLockFiles
+> Task :composeApp:generateUmbrellaPackageIdentifierBasedResolutionForDefault SKIPPED
+> Task :composeApp:fetchUmbrellaPackageIdentifierForDefault SKIPPED
+> Task :composeApp:syncPersistedPackageResolvedToSynthetic SKIPPED
+> Task :composeApp:fetchSyntheticImportProjectPackages SKIPPED
+> Task :composeApp:convertSyntheticImportProjectIntoDefFileIphonesimulator
+> Task :composeApp:linkDebugFrameworkIosSimulatorArm64
+
+[Incubating] Problems report is available at: file:///Users/abdelrahman/Projects/parlor/build/reports/problems/problems-report.html
+
+BUILD SUCCESSFUL in 1m 19s
+90 actionable tasks: 86 executed, 4 up-to-date

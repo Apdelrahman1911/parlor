@@ -1,0 +1,210 @@
+{
+  "recorded_at": "2026-09-05T14:42:43.517083+00:00",
+  "reviewer": "/root/mafia_cont",
+  "source_sha256": "93d85c028fbb0050f2c53b2fdebe3b653aec4151356cbf5077b569ab95fd89dc",
+  "rejected_source_sha256": "41faf6dc4ef4cb1e0ee12880a5062aa78e9ddd044359afc7445a3a135274edf5",
+  "secondary_receipt_sha256": "86f62321ef1c39952b6f9a9aeeae54b7d273e810335622655540f2991ba8359d",
+  "assertions": 46,
+  "results": [
+    {
+      "name": "both exact aliases retained when supplied /var/folders/aa/bb/T/ibtoold-67921",
+      "status": "PASS"
+    },
+    {
+      "name": "both exact aliases retained when supplied /private/var/folders/aa/bb/T/ibtoold-67921",
+      "status": "PASS"
+    },
+    {
+      "name": "nested ownership receipt aliases deduplicate",
+      "status": "PASS"
+    },
+    {
+      "name": "unlabelled ibtoold strings do not expand ownership inventory",
+      "status": "PASS"
+    },
+    {
+      "name": "prior task-primary prefix extraction retained",
+      "status": "PASS"
+    },
+    {
+      "name": "invalid secondary path rejected: None",
+      "status": "PASS"
+    },
+    {
+      "name": "invalid secondary path rejected: 42",
+      "status": "PASS"
+    },
+    {
+      "name": "invalid secondary path rejected: True",
+      "status": "PASS"
+    },
+    {
+      "name": "invalid secondary path rejected: ''",
+      "status": "PASS"
+    },
+    {
+      "name": "invalid secondary path rejected: '/tmp/ibtoold-67921'",
+      "status": "PASS"
+    },
+    {
+      "name": "invalid secondary path rejected: '/var/folders/aa/bb/T/ibtoold-67921/IB'",
+      "status": "PASS"
+    },
+    {
+      "name": "invalid secondary path rejected: '/var/folders/aa/bb/T/ibtoold-67921/'",
+      "status": "PASS"
+    },
+    {
+      "name": "invalid secondary path rejected: '/var/folders/aa/bb/T/ibtoold-not-a-pid'",
+      "status": "PASS"
+    },
+    {
+      "name": "invalid secondary path rejected: '/var/folders/aa/bb/T/ibtoold-67921\\n'",
+      "status": "PASS"
+    },
+    {
+      "name": "invalid secondary path rejected: '/private/private/var/folders/aa/bb/T/ibtoold-67921'",
+      "status": "PASS"
+    },
+    {
+      "name": "old41faf6 counterexample misses late PID raw alias",
+      "status": "PASS"
+    },
+    {
+      "name": "old alias miss could yield false green when paths gone",
+      "status": "PASS"
+    },
+    {
+      "name": "late or previously unlisted PID detected for /var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-67921",
+      "status": "PASS"
+    },
+    {
+      "name": "live alias marker blocks cleanup for /var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-67921",
+      "status": "PASS"
+    },
+    {
+      "name": "late or previously unlisted PID detected for /private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-67921",
+      "status": "PASS"
+    },
+    {
+      "name": "live alias marker blocks cleanup for /private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-67921",
+      "status": "PASS"
+    },
+    {
+      "name": "counter-evidence: old checker still detects exact known PID/start",
+      "status": "PASS"
+    },
+    {
+      "name": "new checker retains exact known PID/start detection",
+      "status": "PASS"
+    },
+    {
+      "name": "unrelated different root/PID not adopted",
+      "status": "PASS"
+    },
+    {
+      "name": "both missing aliases leave no secondary residue",
+      "status": "PASS"
+    },
+    {
+      "name": "either existing alias blocks: /var/folders/aa/bb/T/ibtoold-67921",
+      "status": "PASS"
+    },
+    {
+      "name": "either dangling alias blocks: /var/folders/aa/bb/T/ibtoold-67921",
+      "status": "PASS"
+    },
+    {
+      "name": "either existing alias blocks: /private/var/folders/aa/bb/T/ibtoold-67921",
+      "status": "PASS"
+    },
+    {
+      "name": "either dangling alias blocks: /private/var/folders/aa/bb/T/ibtoold-67921",
+      "status": "PASS"
+    },
+    {
+      "name": "only explicit two owned aliases get metadata calls",
+      "status": "PASS"
+    },
+    {
+      "name": "failed secondary existence query invalidates earlier PASS",
+      "status": "PASS"
+    },
+    {
+      "name": "failed metadata receipt retains type but not private exception text",
+      "status": "PASS"
+    },
+    {
+      "name": "partially collected then invalid secondary list fails closed",
+      "status": "PASS"
+    },
+    {
+      "name": "unchanged approved expression: outputs",
+      "status": "PASS"
+    },
+    {
+      "name": "unchanged approved expression: remaining_outputs",
+      "status": "PASS"
+    },
+    {
+      "name": "unchanged approved expression: remaining_temp",
+      "status": "PASS"
+    },
+    {
+      "name": "unchanged approved expression: device_records",
+      "status": "PASS"
+    },
+    {
+      "name": "unchanged approved expression: source_ok",
+      "status": "PASS"
+    },
+    {
+      "name": "unchanged approved expression: cleanup_ok",
+      "status": "PASS"
+    },
+    {
+      "name": "no destructive/launch API introduced: unlink",
+      "status": "PASS"
+    },
+    {
+      "name": "no destructive/launch API introduced: rmdir",
+      "status": "PASS"
+    },
+    {
+      "name": "no destructive/launch API introduced: rmtree",
+      "status": "PASS"
+    },
+    {
+      "name": "no destructive/launch API introduced: kill",
+      "status": "PASS"
+    },
+    {
+      "name": "no destructive/launch API introduced: killpg",
+      "status": "PASS"
+    },
+    {
+      "name": "no destructive/launch API introduced: terminate",
+      "status": "PASS"
+    },
+    {
+      "name": "no destructive/launch API introduced: Popen",
+      "status": "PASS"
+    }
+  ],
+  "old_false_green": {
+    "stored_aliases": [
+      "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-67921"
+    ],
+    "marker_used": "/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-67921",
+    "owned_matches": [],
+    "observed_only_in_synthetic_process_listing": true
+  },
+  "decision": "SAFE TO EXECUTE AFTER ROOT BUILD LANE IDLE for these ownership-attested receipt inputs; not an executed final cleanup PASS.",
+  "limits": [
+    "The path shape regex is not an ownership attestation or general untrusted-input parser; exact supplied receipt ownership reviewed separately.",
+    "No actual filesystem metadata, FIFO content, process, simulator, Gradle, Xcode or device operation was performed by these tests.",
+    "The helper regenerates audit reports and writes its own receipt; it never deletes files or stops processes.",
+    "Point-in-time observations cannot guarantee future process state or absence of unrecorded temporary roots."
+  ],
+  "cleanup": "No build outputs or persistent processes created; only required compact audit evidence retained."
+}

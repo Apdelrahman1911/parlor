@@ -1,0 +1,487 @@
+/Users/abdelrahman/Library/Android/sdk/platform-tools/adb:
+(__TEXT,__text) section
+__Z15adb_server_mainiRKNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEEPKci:
+10001cc6c:	ff 03 03 d1	sub	sp, sp, #0xc0
+10001cc70:	fc 6f 06 a9	stp	x28, x27, [sp, #0x60]
+10001cc74:	fa 67 07 a9	stp	x26, x25, [sp, #0x70]
+10001cc78:	f8 5f 08 a9	stp	x24, x23, [sp, #0x80]
+10001cc7c:	f6 57 09 a9	stp	x22, x21, [sp, #0x90]
+10001cc80:	f4 4f 0a a9	stp	x20, x19, [sp, #0xa0]
+10001cc84:	fd 7b 0b a9	stp	x29, x30, [sp, #0xb0]
+10001cc88:	fd c3 02 91	add	x29, sp, #0xb0
+10001cc8c:	f3 03 03 aa	mov	x19, x3
+10001cc90:	f6 03 02 aa	mov	x22, x2
+10001cc94:	f5 03 01 aa	mov	x21, x1
+10001cc98:	f4 03 00 aa	mov	x20, x0
+10001cc9c:	a8 38 00 90	adrp	x8, 1812 ; 0x100730000
+10001cca0:	08 01 40 f9	ldr	x8, [x8] ; literal pool symbol address: ___stack_chk_guard
+10001cca4:	08 01 40 f9	ldr	x8, [x8]
+10001cca8:	e8 2f 00 f9	str	x8, [sp, #0x58]
+10001ccac:	81 3c 00 10	adr	x1, #1936
+10001ccb0:	1f 20 03 d5	nop
+10001ccb4:	40 00 80 52	mov	w0, #0x2
+10001ccb8:	87 bb 17 94	bl	0x10060bad4 ; symbol stub for: _signal
+10001ccbc:	76 00 00 b4	cbz	x22, 0x10001ccc8
+10001ccc0:	e0 03 16 aa	mov	x0, x22
+10001ccc4:	24 2e 02 94	bl	__Z24transport_set_one_devicePKc
+10001ccc8:	a0 2f 00 f0	adrp	x0, 1527 ; 0x100613000
+10001cccc:	00 94 0c 91	add	x0, x0, #0x325 ; literal pool for: "ADB_REJECT_KILL_SERVER"
+10001ccd0:	57 bb 17 94	bl	0x10060ba2c ; symbol stub for: _getenv
+10001ccd4:	00 01 00 b4	cbz	x0, 0x10001ccf4
+10001ccd8:	08 00 40 39	ldrb	w8, [x0]
+10001ccdc:	1f c5 00 71	cmp	w8, #0x31
+10001cce0:	a1 00 00 54	b.ne	0x10001ccf4
+10001cce4:	08 04 40 39	ldrb	w8, [x0, #0x1]
+10001cce8:	68 00 00 35	cbnz	w8, 0x10001ccf4
+10001ccec:	20 00 80 52	mov	w0, #0x1
+10001ccf0:	f8 ca 01 94	bl	__Z26adb_set_reject_kill_serverb
+10001ccf4:	a0 2f 00 f0	adrp	x0, 1527 ; 0x100613000
+10001ccf8:	00 f0 0c 91	add	x0, x0, #0x33c ; literal pool for: "ADB_LEAK"
+10001ccfc:	4c bb 17 94	bl	0x10060ba2c ; symbol stub for: _getenv
+10001cd00:	a0 01 00 b4	cbz	x0, 0x10001cd34
+10001cd04:	08 00 40 39	ldrb	w8, [x0]
+10001cd08:	1f c5 00 71	cmp	w8, #0x31
+10001cd0c:	41 01 00 54	b.ne	0x10001cd34
+10001cd10:	08 04 40 39	ldrb	w8, [x0, #0x1]
+10001cd14:	08 01 00 35	cbnz	w8, 0x10001cd34
+10001cd18:	20 00 80 52	mov	w0, #0x1
+10001cd1c:	e4 ba 17 94	bl	0x10060b8ac ; symbol stub for: __Znwm
+10001cd20:	f6 03 00 aa	mov	x22, x0
+10001cd24:	40 00 80 52	mov	w0, #0x2
+10001cd28:	01 00 80 d2	mov	x1, #0x0
+10001cd2c:	0c a1 11 94	bl	__ZN7android4base9ShouldLogENS0_11LogSeverityEPKc
+10001cd30:	20 30 00 35	cbnz	w0, 0x10001d334
+10001cd34:	d4 07 00 34	cbz	w20, 0x10001ce2c
+10001cd38:	c1 e2 01 94	bl	__Z11close_stdinv
+10001cd3c:	ff 7f 04 a9	stp	xzr, xzr, [sp, #0x40]
+10001cd40:	ff 2b 00 f9	str	xzr, [sp, #0x50]
+10001cd44:	f6 03 01 91	add	x22, sp, #0x40
+10001cd48:	e8 03 01 91	add	x8, sp, #0x40
+10001cd4c:	a9 e8 01 94	bl	__Z14GetLogFilePathv
+10001cd50:	e8 5f 81 39	ldrsb	x8, [sp, #0x57]
+10001cd54:	e9 2b 44 a9	ldp	x9, x10, [sp, #0x40]
+10001cd58:	1f 01 00 f1	cmp	x8, #0x0
+10001cd5c:	20 b1 96 9a	csel	x0, x9, x22, lt
+10001cd60:	1f 01 00 71	cmp	w8, #0x0
+10001cd64:	41 b1 88 9a	csel	x1, x10, x8, lt
+10001cd68:	08 34 80 52	mov	w8, #0x1a0
+10001cd6c:	e8 03 00 f9	str	x8, [sp]
+10001cd70:	e8 01 00 94	bl	0x10001d510
+10001cd74:	f6 03 00 aa	mov	x22, x0
+10001cd78:	1f 04 00 31	cmn	w0, #0x1
+10001cd7c:	a1 00 00 54	b.ne	0x10001cd90
+10001cd80:	c0 00 80 52	mov	w0, #0x6
+10001cd84:	01 00 80 d2	mov	x1, #0x0
+10001cd88:	f5 a0 11 94	bl	__ZN7android4base9ShouldLogENS0_11LogSeverityEPKc
+10001cd8c:	00 24 00 35	cbnz	w0, 0x10001d20c
+10001cd90:	e0 03 16 aa	mov	x0, x22
+10001cd94:	21 00 80 52	mov	w1, #0x1
+10001cd98:	67 bb 17 94	bl	0x10060bb34 ; symbol stub for: _dup2
+10001cd9c:	1f 04 00 31	cmn	w0, #0x1
+10001cda0:	a1 00 00 54	b.ne	0x10001cdb4
+10001cda4:	c0 00 80 52	mov	w0, #0x6
+10001cda8:	01 00 80 d2	mov	x1, #0x0
+10001cdac:	ec a0 11 94	bl	__ZN7android4base9ShouldLogENS0_11LogSeverityEPKc
+10001cdb0:	a0 26 00 35	cbnz	w0, 0x10001d284
+10001cdb4:	e0 03 16 aa	mov	x0, x22
+10001cdb8:	41 00 80 52	mov	w1, #0x2
+10001cdbc:	5e bb 17 94	bl	0x10060bb34 ; symbol stub for: _dup2
+10001cdc0:	1f 04 00 31	cmn	w0, #0x1
+10001cdc4:	a1 00 00 54	b.ne	0x10001cdd8
+10001cdc8:	c0 00 80 52	mov	w0, #0x6
+10001cdcc:	01 00 80 d2	mov	x1, #0x0
+10001cdd0:	e3 a0 11 94	bl	__ZN7android4base9ShouldLogENS0_11LogSeverityEPKc
+10001cdd4:	40 28 00 35	cbnz	w0, 0x10001d2dc
+10001cdd8:	e0 03 16 aa	mov	x0, x22
+10001cddc:	c6 ba 17 94	bl	0x10060b8f4 ; symbol stub for: _close
+10001cde0:	a8 38 00 90	adrp	x8, 1812 ; 0x100730000
+10001cde4:	08 05 40 f9	ldr	x8, [x8, #0x8] ; literal pool symbol address: ___stderrp
+10001cde8:	16 01 40 f9	ldr	x22, [x8]
+10001cdec:	be bb 17 94	bl	0x10060bce4 ; symbol stub for: _getpid
+10001cdf0:	e0 03 00 f9	str	x0, [sp]
+10001cdf4:	a1 2f 00 f0	adrp	x1, 1527 ; 0x100613000
+10001cdf8:	21 6c 10 91	add	x1, x1, #0x41b ; literal pool for: "--- adb starting (pid %d) ---\n"
+10001cdfc:	e0 03 16 aa	mov	x0, x22
+10001ce00:	c3 ba 17 94	bl	0x10060b90c ; symbol stub for: _fprintf
+10001ce04:	40 00 80 52	mov	w0, #0x2
+10001ce08:	01 00 80 d2	mov	x1, #0x0
+10001ce0c:	d4 a0 11 94	bl	__ZN7android4base9ShouldLogENS0_11LogSeverityEPKc
+10001ce10:	40 1b 00 35	cbnz	w0, 0x10001d178
+10001ce14:	e8 5f c1 39	ldrsb	w8, [sp, #0x57]
+10001ce18:	a8 00 f8 36	tbz	w8, #0x1f, 0x10001ce2c
+10001ce1c:	e0 23 40 f9	ldr	x0, [sp, #0x40]
+10001ce20:	e8 2b 40 f9	ldr	x8, [sp, #0x50]
+10001ce24:	01 f9 40 92	and	x1, x8, #0x7fffffffffffffff
+10001ce28:	b0 ba 17 94	bl	0x10060b8e8 ; symbol stub for: __ZdlPvm
+10001ce2c:	40 f1 ff 10	adr	x0, #-472
+10001ce30:	1f 20 03 d5	nop
+10001ce34:	a9 bb 17 94	bl	0x10060bcd8 ; symbol stub for: _atexit
+10001ce38:	58 2c 02 94	bl	__Z22init_reconnect_handlerv
+10001ce3c:	e5 a9 02 94	bl	__ZN4mdns10is_enabledEv
+10001ce40:	40 00 00 34	cbz	w0, 0x10001ce48
+10001ce44:	75 c4 02 94	bl	__Z29init_mdns_transport_discoveryv
+10001ce48:	a5 ca 01 94	bl	__Z14is_usb_enabledv
+10001ce4c:	a0 00 00 34	cbz	w0, 0x10001ce60
+10001ce50:	e6 cb 02 94	bl	__Z17is_libusb_enabledv
+10001ce54:	a0 00 00 34	cbz	w0, 0x10001ce68
+10001ce58:	0d 94 02 94	bl	__ZN6libusb8usb_initEv
+10001ce5c:	04 00 00 14	b	0x10001ce6c
+10001ce60:	8f d3 01 94	bl	__Z31adb_notify_device_scan_completev
+10001ce64:	02 00 00 14	b	0x10001ce6c
+10001ce68:	8d ce 02 94	bl	__Z8usb_initv
+10001ce6c:	a0 2f 00 f0	adrp	x0, 1527 ; 0x100613000
+10001ce70:	00 14 0d 91	add	x0, x0, #0x345 ; literal pool for: "ADB_EMU"
+10001ce74:	ee ba 17 94	bl	0x10060ba2c ; symbol stub for: _getenv
+10001ce78:	c0 00 00 b4	cbz	x0, 0x10001ce90
+10001ce7c:	08 00 40 39	ldrb	w8, [x0]
+10001ce80:	1f c1 00 71	cmp	w8, #0x30
+10001ce84:	61 00 00 54	b.ne	0x10001ce90
+10001ce88:	08 04 40 39	ldrb	w8, [x0, #0x1]
+10001ce8c:	e8 01 00 34	cbz	w8, 0x10001cec8
+10001ce90:	68 b6 82 52	mov	w8, #0x15b3
+10001ce94:	e8 03 00 f9	str	x8, [sp]
+10001ce98:	80 2f 00 d0	adrp	x0, 1522 ; 0x10060e000
+10001ce9c:	00 94 3e 91	add	x0, x0, #0xfa5 ; literal pool for: "tcp:%d"
+10001cea0:	e8 03 01 91	add	x8, sp, #0x40
+10001cea4:	3d af 11 94	bl	__ZN7android4base12StringPrintfEPKcz
+10001cea8:	e0 03 01 91	add	x0, sp, #0x40
+10001ceac:	5f a0 02 94	bl	__Z21init_emulator_scannerRKNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEE
+10001ceb0:	e8 5f c1 39	ldrsb	w8, [sp, #0x57]
+10001ceb4:	a8 00 f8 36	tbz	w8, #0x1f, 0x10001cec8
+10001ceb8:	e0 23 40 f9	ldr	x0, [sp, #0x40]
+10001cebc:	e8 2b 40 f9	ldr	x8, [sp, #0x50]
+10001cec0:	01 f9 40 92	and	x1, x8, #0x7fffffffffffffff
+10001cec4:	89 ba 17 94	bl	0x10060b8e8 ; symbol stub for: __ZdlPvm
+10001cec8:	ff 7f 04 a9	stp	xzr, xzr, [sp, #0x40]
+10001cecc:	ff 2b 00 f9	str	xzr, [sp, #0x50]
+10001ced0:	ef 6b 14 94	bl	__ZNSt3__16chrono12steady_clock3nowEv
+10001ced4:	f6 03 00 aa	mov	x22, x0
+10001ced8:	a1 2f 00 f0	adrp	x1, 1527 ; 0x100613000
+10001cedc:	21 34 0d 91	add	x1, x1, #0x34d ; literal pool for: "*smartsocket*"
+10001cee0:	fa 03 01 91	add	x26, sp, #0x40
+10001cee4:	e5 03 01 91	add	x5, sp, #0x40
+10001cee8:	e0 03 15 aa	mov	x0, x21
+10001ceec:	02 00 80 d2	mov	x2, #0x0
+10001cef0:	43 00 80 52	mov	w3, #0x2
+10001cef4:	04 00 80 d2	mov	x4, #0x0
+10001cef8:	13 dc 01 94	bl	__Z16install_listenerRKNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEEPKcP10atransportiPiPS5_
+10001cefc:	60 07 00 34	cbz	w0, 0x10001cfe8
+10001cf00:	b7 2f 00 f0	adrp	x23, 1527 ; 0x100613000
+10001cf04:	f7 6e 0d 91	add	x23, x23, #0x35b ; literal pool for: "packages/modules/adb/client/main.cpp"
+10001cf08:	3b a0 8c 52	mov	w27, #0x6501
+10001cf0c:	bb b9 a3 72	movk	w27, #0x1dcd, lsl #16
+10001cf10:	b8 2f 00 f0	adrp	x24, 1527 ; 0x100613000
+10001cf14:	18 03 0e 91	add	x24, x24, #0x380 ; literal pool for: "could not install *smartsocket* listener: "
+10001cf18:	1c 20 9c 52	mov	w28, #0xe100
+10001cf1c:	bc be a0 72	movk	w28, #0x5f5, lsl #16
+10001cf20:	b9 2f 00 f0	adrp	x25, 1527 ; 0x100613000
+10001cf24:	39 37 0d 91	add	x25, x25, #0x34d ; literal pool for: "*smartsocket*"
+10001cf28:	0c 00 00 14	b	0x10001cf58
+10001cf2c:	fc 13 00 f9	str	x28, [sp, #0x20]
+10001cf30:	e0 83 00 91	add	x0, sp, #0x20
+10001cf34:	f4 a6 14 94	bl	__ZNSt3__111this_thread9sleep_forERKNS_6chrono8durationIxNS_5ratioILl1ELl1000000000EEEEE
+10001cf38:	e5 03 01 91	add	x5, sp, #0x40
+10001cf3c:	e0 03 15 aa	mov	x0, x21
+10001cf40:	e1 03 19 aa	mov	x1, x25
+10001cf44:	02 00 80 d2	mov	x2, #0x0
+10001cf48:	43 00 80 52	mov	w3, #0x2
+10001cf4c:	04 00 80 d2	mov	x4, #0x0
+10001cf50:	fd db 01 94	bl	__Z16install_listenerRKNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEEPKcP10atransportiPiPS5_
+10001cf54:	a0 04 00 34	cbz	w0, 0x10001cfe8
+10001cf58:	cd 6b 14 94	bl	__ZNSt3__16chrono12steady_clock3nowEv
+10001cf5c:	08 00 16 cb	sub	x8, x0, x22
+10001cf60:	1f 01 1b eb	cmp	x8, x27
+10001cf64:	4b fe ff 54	b.lt	0x10001cf2c
+10001cf68:	c0 00 80 52	mov	w0, #0x6
+10001cf6c:	01 00 80 d2	mov	x1, #0x0
+10001cf70:	7b a0 11 94	bl	__ZN7android4base9ShouldLogENS0_11LogSeverityEPKc
+10001cf74:	c0 fd ff 34	cbz	w0, 0x10001cf2c
+10001cf78:	59 ba 17 94	bl	0x10060b8dc ; symbol stub for: ___error
+10001cf7c:	08 00 40 b9	ldr	w8, [x0]
+10001cf80:	e8 17 00 b9	str	w8, [sp, #0x14]
+10001cf84:	e0 83 00 91	add	x0, sp, #0x20
+10001cf88:	e1 03 17 aa	mov	x1, x23
+10001cf8c:	a2 14 80 52	mov	w2, #0xa5
+10001cf90:	c3 00 80 52	mov	w3, #0x6
+10001cf94:	04 00 80 d2	mov	x4, #0x0
+10001cf98:	05 00 80 12	mov	w5, #-0x1
+10001cf9c:	7c a0 11 94	bl	__ZN7android4base10LogMessageC2EPKcjNS0_11LogSeverityES3_i
+10001cfa0:	e0 83 00 91	add	x0, sp, #0x20
+10001cfa4:	40 2c 0e 94	bl	_HUF_readCTableHeader
+10001cfa8:	e1 03 18 aa	mov	x1, x24
+10001cfac:	42 05 80 52	mov	w2, #0x2a
+10001cfb0:	e2 9b ff 97	bl	0x100003f38
+10001cfb4:	e8 5f 81 39	ldrsb	x8, [sp, #0x57]
+10001cfb8:	e9 2b 44 a9	ldp	x9, x10, [sp, #0x40]
+10001cfbc:	1f 01 00 f1	cmp	x8, #0x0
+10001cfc0:	21 b1 9a 9a	csel	x1, x9, x26, lt
+10001cfc4:	1f 01 00 71	cmp	w8, #0x0
+10001cfc8:	42 b1 88 9a	csel	x2, x10, x8, lt
+10001cfcc:	db 9b ff 97	bl	0x100003f38
+10001cfd0:	e0 83 00 91	add	x0, sp, #0x20
+10001cfd4:	b6 a0 11 94	bl	__ZN7android4base10LogMessageD1Ev
+10001cfd8:	41 ba 17 94	bl	0x10060b8dc ; symbol stub for: ___error
+10001cfdc:	e8 17 40 b9	ldr	w8, [sp, #0x14]
+10001cfe0:	08 00 00 b9	str	w8, [x0]
+10001cfe4:	d2 ff ff 17	b	0x10001cf2c
+10001cfe8:	10 5a 02 94	bl	__Z13adb_auth_initv
+10001cfec:	94 01 00 34	cbz	w20, 0x10001d01c
+10001cff0:	37 bb 17 94	bl	0x10060bccc ; symbol stub for: _setsid
+10001cff4:	1f 04 00 31	cmn	w0, #0x1
+10001cff8:	21 01 00 54	b.ne	0x10001d01c
+10001cffc:	38 ba 17 94	bl	0x10060b8dc ; symbol stub for: ___error
+10001d000:	08 00 40 b9	ldr	w8, [x0]
+10001d004:	1f 05 00 71	cmp	w8, #0x1
+10001d008:	a0 00 00 54	b.eq	0x10001d01c
+10001d00c:	c0 00 80 52	mov	w0, #0x6
+10001d010:	01 00 80 d2	mov	x1, #0x0
+10001d014:	52 a0 11 94	bl	__ZN7android4base9ShouldLogENS0_11LogSeverityEPKc
+10001d018:	e0 1b 00 35	cbnz	w0, 0x10001d394
+10001d01c:	ff 1f 00 f9	str	xzr, [sp, #0x38]
+10001d020:	00 01 80 52	mov	w0, #0x8
+10001d024:	22 ba 17 94	bl	0x10060b8ac ; symbol stub for: __Znwm
+10001d028:	f4 03 00 aa	mov	x20, x0
+10001d02c:	a2 a7 14 94	bl	__ZNSt3__115__thread_structC2Ev
+10001d030:	00 02 80 52	mov	w0, #0x10
+10001d034:	1e ba 17 94	bl	0x10060b8ac ; symbol stub for: __Znwm
+10001d038:	e3 03 00 aa	mov	x3, x0
+10001d03c:	14 00 00 f9	str	x20, [x0]
+10001d040:	13 08 00 b9	str	w19, [x0, #0x8]
+10001d044:	e2 2f 00 10	adr	x2, #1532
+10001d048:	1f 20 03 d5	nop
+10001d04c:	e0 e3 00 91	add	x0, sp, #0x38
+10001d050:	01 00 80 d2	mov	x1, #0x0
+10001d054:	79 ba 17 94	bl	0x10060ba38 ; symbol stub for: _pthread_create
+10001d058:	a0 1c 00 35	cbnz	w0, 0x10001d3ec
+10001d05c:	e0 e3 00 91	add	x0, sp, #0x38
+10001d060:	90 a6 14 94	bl	__ZNSt3__16thread6detachEv
+10001d064:	28 3c 00 90	adrp	x8, 1924 ; 0x1007a1000
+10001d068:	08 01 08 91	add	x8, x8, #0x200
+10001d06c:	08 01 40 39	ldrb	w8, [x8]
+10001d070:	28 03 00 37	tbnz	w8, #0x0, 0x10001d0d4
+10001d074:	42 ee 01 94	bl	__Z12fdevent_loopv
+10001d078:	e0 e3 00 91	add	x0, sp, #0x38
+10001d07c:	72 a6 14 94	bl	__ZNSt3__16threadD2Ev
+10001d080:	e8 5f c1 39	ldrsb	w8, [sp, #0x57]
+10001d084:	a8 00 f8 36	tbz	w8, #0x1f, 0x10001d098
+10001d088:	e0 23 40 f9	ldr	x0, [sp, #0x40]
+10001d08c:	e8 2b 40 f9	ldr	x8, [sp, #0x50]
+10001d090:	01 f9 40 92	and	x1, x8, #0x7fffffffffffffff
+10001d094:	15 ba 17 94	bl	0x10060b8e8 ; symbol stub for: __ZdlPvm
+10001d098:	e8 2f 40 f9	ldr	x8, [sp, #0x58]
+10001d09c:	89 38 00 f0	adrp	x9, 1811 ; 0x100730000
+10001d0a0:	29 01 40 f9	ldr	x9, [x9] ; literal pool symbol address: ___stack_chk_guard
+10001d0a4:	29 01 40 f9	ldr	x9, [x9]
+10001d0a8:	3f 01 08 eb	cmp	x9, x8
+10001d0ac:	61 1a 00 54	b.ne	0x10001d3f8
+10001d0b0:	00 00 80 52	mov	w0, #0x0
+10001d0b4:	fd 7b 4b a9	ldp	x29, x30, [sp, #0xb0]
+10001d0b8:	f4 4f 4a a9	ldp	x20, x19, [sp, #0xa0]
+10001d0bc:	f6 57 49 a9	ldp	x22, x21, [sp, #0x90]
+10001d0c0:	f8 5f 48 a9	ldp	x24, x23, [sp, #0x80]
+10001d0c4:	fa 67 47 a9	ldp	x26, x25, [sp, #0x70]
+10001d0c8:	fc 6f 46 a9	ldp	x28, x27, [sp, #0x60]
+10001d0cc:	ff 03 03 91	add	sp, sp, #0xc0
+10001d0d0:	c0 03 5f d6	ret
+10001d0d4:	20 00 80 52	mov	w0, #0x1
+10001d0d8:	01 00 80 d2	mov	x1, #0x0
+10001d0dc:	20 a0 11 94	bl	__ZN7android4base9ShouldLogENS0_11LogSeverityEPKc
+10001d0e0:	a0 fc ff 34	cbz	w0, 0x10001d074
+10001d0e4:	fe b9 17 94	bl	0x10060b8dc ; symbol stub for: ___error
+10001d0e8:	14 00 40 b9	ldr	w20, [x0]
+10001d0ec:	a1 2f 00 d0	adrp	x1, 1526 ; 0x100613000
+10001d0f0:	21 6c 0d 91	add	x1, x1, #0x35b ; literal pool for: "packages/modules/adb/client/main.cpp"
+10001d0f4:	e0 63 00 91	add	x0, sp, #0x18
+10001d0f8:	02 1e 80 52	mov	w2, #0xf0
+10001d0fc:	23 00 80 52	mov	w3, #0x1
+10001d100:	04 00 80 d2	mov	x4, #0x0
+10001d104:	05 00 80 12	mov	w5, #-0x1
+10001d108:	21 a0 11 94	bl	__ZN7android4base10LogMessageC2EPKcjNS0_11LogSeverityES3_i
+10001d10c:	e0 63 00 91	add	x0, sp, #0x18
+10001d110:	e5 2b 0e 94	bl	_HUF_readCTableHeader
+10001d114:	f3 03 00 aa	mov	x19, x0
+10001d118:	a0 2f 00 d0	adrp	x0, 1526 ; 0x100613000
+10001d11c:	00 ec 0e 91	add	x0, x0, #0x3bb ; literal pool for: "Event loop starting"
+10001d120:	f5 83 00 91	add	x21, sp, #0x20
+10001d124:	e8 83 00 91	add	x8, sp, #0x20
+10001d128:	9c ae 11 94	bl	__ZN7android4base12StringPrintfEPKcz
+10001d12c:	e8 df 80 39	ldrsb	x8, [sp, #0x37]
+10001d130:	e9 2b 42 a9	ldp	x9, x10, [sp, #0x20]
+10001d134:	1f 01 00 f1	cmp	x8, #0x0
+10001d138:	21 b1 95 9a	csel	x1, x9, x21, lt
+10001d13c:	1f 01 00 71	cmp	w8, #0x0
+10001d140:	42 b1 88 9a	csel	x2, x10, x8, lt
+10001d144:	e0 03 13 aa	mov	x0, x19
+10001d148:	7c 9b ff 97	bl	0x100003f38
+10001d14c:	e8 df c0 39	ldrsb	w8, [sp, #0x37]
+10001d150:	a8 00 f8 36	tbz	w8, #0x1f, 0x10001d164
+10001d154:	e0 13 40 f9	ldr	x0, [sp, #0x20]
+10001d158:	e8 1b 40 f9	ldr	x8, [sp, #0x30]
+10001d15c:	01 f9 40 92	and	x1, x8, #0x7fffffffffffffff
+10001d160:	e2 b9 17 94	bl	0x10060b8e8 ; symbol stub for: __ZdlPvm
+10001d164:	e0 63 00 91	add	x0, sp, #0x18
+10001d168:	51 a0 11 94	bl	__ZN7android4base10LogMessageD1Ev
+10001d16c:	dc b9 17 94	bl	0x10060b8dc ; symbol stub for: ___error
+10001d170:	14 00 00 b9	str	w20, [x0]
+10001d174:	c0 ff ff 17	b	0x10001d074
+10001d178:	d9 b9 17 94	bl	0x10060b8dc ; symbol stub for: ___error
+10001d17c:	17 00 40 b9	ldr	w23, [x0]
+10001d180:	a1 2f 00 d0	adrp	x1, 1526 ; 0x100613000
+10001d184:	21 6c 0d 91	add	x1, x1, #0x35b ; literal pool for: "packages/modules/adb/client/main.cpp"
+10001d188:	e0 e3 00 91	add	x0, sp, #0x38
+10001d18c:	42 08 80 52	mov	w2, #0x42
+10001d190:	43 00 80 52	mov	w3, #0x2
+10001d194:	04 00 80 d2	mov	x4, #0x0
+10001d198:	05 00 80 12	mov	w5, #-0x1
+10001d19c:	fc 9f 11 94	bl	__ZN7android4base10LogMessageC2EPKcjNS0_11LogSeverityES3_i
+10001d1a0:	e0 e3 00 91	add	x0, sp, #0x38
+10001d1a4:	c0 2b 0e 94	bl	_HUF_readCTableHeader
+10001d1a8:	f6 03 00 aa	mov	x22, x0
+10001d1ac:	f8 83 00 91	add	x24, sp, #0x20
+10001d1b0:	e8 83 00 91	add	x8, sp, #0x20
+10001d1b4:	91 ba 01 94	bl	__Z11adb_versionv
+10001d1b8:	e8 df 80 39	ldrsb	x8, [sp, #0x37]
+10001d1bc:	e9 2b 42 a9	ldp	x9, x10, [sp, #0x20]
+10001d1c0:	1f 01 00 f1	cmp	x8, #0x0
+10001d1c4:	21 b1 98 9a	csel	x1, x9, x24, lt
+10001d1c8:	1f 01 00 71	cmp	w8, #0x0
+10001d1cc:	42 b1 88 9a	csel	x2, x10, x8, lt
+10001d1d0:	e0 03 16 aa	mov	x0, x22
+10001d1d4:	59 9b ff 97	bl	0x100003f38
+10001d1d8:	e8 df c0 39	ldrsb	w8, [sp, #0x37]
+10001d1dc:	a8 00 f8 36	tbz	w8, #0x1f, 0x10001d1f0
+10001d1e0:	e0 13 40 f9	ldr	x0, [sp, #0x20]
+10001d1e4:	e8 1b 40 f9	ldr	x8, [sp, #0x30]
+10001d1e8:	01 f9 40 92	and	x1, x8, #0x7fffffffffffffff
+10001d1ec:	bf b9 17 94	bl	0x10060b8e8 ; symbol stub for: __ZdlPvm
+10001d1f0:	e0 e3 00 91	add	x0, sp, #0x38
+10001d1f4:	2e a0 11 94	bl	__ZN7android4base10LogMessageD1Ev
+10001d1f8:	b9 b9 17 94	bl	0x10060b8dc ; symbol stub for: ___error
+10001d1fc:	17 00 00 b9	str	w23, [x0]
+10001d200:	e8 5f c1 39	ldrsb	w8, [sp, #0x57]
+10001d204:	48 e1 ff 36	tbz	w8, #0x1f, 0x10001ce2c
+10001d208:	05 ff ff 17	b	0x10001ce1c
+10001d20c:	b4 b9 17 94	bl	0x10060b8dc ; symbol stub for: ___error
+10001d210:	17 00 40 b9	ldr	w23, [x0]
+10001d214:	b2 b9 17 94	bl	0x10060b8dc ; symbol stub for: ___error
+10001d218:	05 00 40 b9	ldr	w5, [x0]
+10001d21c:	a1 2f 00 d0	adrp	x1, 1526 ; 0x100613000
+10001d220:	21 6c 0d 91	add	x1, x1, #0x35b ; literal pool for: "packages/modules/adb/client/main.cpp"
+10001d224:	e0 83 00 91	add	x0, sp, #0x20
+10001d228:	e2 06 80 52	mov	w2, #0x37
+10001d22c:	c3 00 80 52	mov	w3, #0x6
+10001d230:	04 00 80 d2	mov	x4, #0x0
+10001d234:	d6 9f 11 94	bl	__ZN7android4base10LogMessageC2EPKcjNS0_11LogSeverityES3_i
+10001d238:	e0 83 00 91	add	x0, sp, #0x20
+10001d23c:	9a 2b 0e 94	bl	_HUF_readCTableHeader
+10001d240:	a1 2f 00 d0	adrp	x1, 1526 ; 0x100613000
+10001d244:	21 80 0f 91	add	x1, x1, #0x3e0 ; literal pool for: "cannot open "
+10001d248:	82 01 80 52	mov	w2, #0xc
+10001d24c:	3b 9b ff 97	bl	0x100003f38
+10001d250:	e8 5f 81 39	ldrsb	x8, [sp, #0x57]
+10001d254:	e9 03 01 91	add	x9, sp, #0x40
+10001d258:	ea 2f 44 a9	ldp	x10, x11, [sp, #0x40]
+10001d25c:	1f 01 00 f1	cmp	x8, #0x0
+10001d260:	41 b1 89 9a	csel	x1, x10, x9, lt
+10001d264:	1f 01 00 71	cmp	w8, #0x0
+10001d268:	62 b1 88 9a	csel	x2, x11, x8, lt
+10001d26c:	33 9b ff 97	bl	0x100003f38
+10001d270:	e0 83 00 91	add	x0, sp, #0x20
+10001d274:	0e a0 11 94	bl	__ZN7android4base10LogMessageD1Ev
+10001d278:	99 b9 17 94	bl	0x10060b8dc ; symbol stub for: ___error
+10001d27c:	17 00 00 b9	str	w23, [x0]
+10001d280:	c4 fe ff 17	b	0x10001cd90
+10001d284:	96 b9 17 94	bl	0x10060b8dc ; symbol stub for: ___error
+10001d288:	17 00 40 b9	ldr	w23, [x0]
+10001d28c:	94 b9 17 94	bl	0x10060b8dc ; symbol stub for: ___error
+10001d290:	05 00 40 b9	ldr	w5, [x0]
+10001d294:	a1 2f 00 d0	adrp	x1, 1526 ; 0x100613000
+10001d298:	21 6c 0d 91	add	x1, x1, #0x35b ; literal pool for: "packages/modules/adb/client/main.cpp"
+10001d29c:	e0 83 00 91	add	x0, sp, #0x20
+10001d2a0:	42 07 80 52	mov	w2, #0x3a
+10001d2a4:	c3 00 80 52	mov	w3, #0x6
+10001d2a8:	04 00 80 d2	mov	x4, #0x0
+10001d2ac:	b8 9f 11 94	bl	__ZN7android4base10LogMessageC2EPKcjNS0_11LogSeverityES3_i
+10001d2b0:	e0 83 00 91	add	x0, sp, #0x20
+10001d2b4:	7c 2b 0e 94	bl	_HUF_readCTableHeader
+10001d2b8:	a1 2f 00 d0	adrp	x1, 1526 ; 0x100613000
+10001d2bc:	21 b4 0f 91	add	x1, x1, #0x3ed ; literal pool for: "cannot redirect stdout"
+10001d2c0:	c2 02 80 52	mov	w2, #0x16
+10001d2c4:	1d 9b ff 97	bl	0x100003f38
+10001d2c8:	e0 83 00 91	add	x0, sp, #0x20
+10001d2cc:	f8 9f 11 94	bl	__ZN7android4base10LogMessageD1Ev
+10001d2d0:	83 b9 17 94	bl	0x10060b8dc ; symbol stub for: ___error
+10001d2d4:	17 00 00 b9	str	w23, [x0]
+10001d2d8:	b7 fe ff 17	b	0x10001cdb4
+10001d2dc:	80 b9 17 94	bl	0x10060b8dc ; symbol stub for: ___error
+10001d2e0:	17 00 40 b9	ldr	w23, [x0]
+10001d2e4:	7e b9 17 94	bl	0x10060b8dc ; symbol stub for: ___error
+10001d2e8:	05 00 40 b9	ldr	w5, [x0]
+10001d2ec:	a1 2f 00 d0	adrp	x1, 1526 ; 0x100613000
+10001d2f0:	21 6c 0d 91	add	x1, x1, #0x35b ; literal pool for: "packages/modules/adb/client/main.cpp"
+10001d2f4:	e0 83 00 91	add	x0, sp, #0x20
+10001d2f8:	a2 07 80 52	mov	w2, #0x3d
+10001d2fc:	c3 00 80 52	mov	w3, #0x6
+10001d300:	04 00 80 d2	mov	x4, #0x0
+10001d304:	a2 9f 11 94	bl	__ZN7android4base10LogMessageC2EPKcjNS0_11LogSeverityES3_i
+10001d308:	e0 83 00 91	add	x0, sp, #0x20
+10001d30c:	66 2b 0e 94	bl	_HUF_readCTableHeader
+10001d310:	a1 2f 00 d0	adrp	x1, 1526 ; 0x100613000
+10001d314:	21 10 10 91	add	x1, x1, #0x404 ; literal pool for: "cannot redirect stderr"
+10001d318:	c2 02 80 52	mov	w2, #0x16
+10001d31c:	07 9b ff 97	bl	0x100003f38
+10001d320:	e0 83 00 91	add	x0, sp, #0x20
+10001d324:	e2 9f 11 94	bl	__ZN7android4base10LogMessageD1Ev
+10001d328:	6d b9 17 94	bl	0x10060b8dc ; symbol stub for: ___error
+10001d32c:	17 00 00 b9	str	w23, [x0]
+10001d330:	aa fe ff 17	b	0x10001cdd8
+10001d334:	6a b9 17 94	bl	0x10060b8dc ; symbol stub for: ___error
+10001d338:	17 00 40 b9	ldr	w23, [x0]
+10001d33c:	a1 2f 00 d0	adrp	x1, 1526 ; 0x100613000
+10001d340:	21 6c 0d 91	add	x1, x1, #0x35b ; literal pool for: "packages/modules/adb/client/main.cpp"
+10001d344:	e0 03 01 91	add	x0, sp, #0x40
+10001d348:	42 0a 80 52	mov	w2, #0x52
+10001d34c:	43 00 80 52	mov	w3, #0x2
+10001d350:	04 00 80 d2	mov	x4, #0x0
+10001d354:	05 00 80 12	mov	w5, #-0x1
+10001d358:	8d 9f 11 94	bl	__ZN7android4base10LogMessageC2EPKcjNS0_11LogSeverityES3_i
+10001d35c:	e0 03 01 91	add	x0, sp, #0x40
+10001d360:	51 2b 0e 94	bl	_HUF_readCTableHeader
+10001d364:	a1 2f 00 d0	adrp	x1, 1526 ; 0x100613000
+10001d368:	21 3c 0f 91	add	x1, x1, #0x3cf ; literal pool for: "leaking pointer "
+10001d36c:	02 02 80 52	mov	w2, #0x10
+10001d370:	f2 9a ff 97	bl	0x100003f38
+10001d374:	e1 03 16 aa	mov	x1, x22
+10001d378:	52 ba 17 94	bl	0x10060bcc0 ; symbol stub for: __ZNSt3__113basic_ostreamIcNS_11char_traitsIcEEElsEPKv
+10001d37c:	e0 03 01 91	add	x0, sp, #0x40
+10001d380:	cb 9f 11 94	bl	__ZN7android4base10LogMessageD1Ev
+10001d384:	56 b9 17 94	bl	0x10060b8dc ; symbol stub for: ___error
+10001d388:	17 00 00 b9	str	w23, [x0]
+10001d38c:	74 cd ff 35	cbnz	w20, 0x10001cd38
+10001d390:	a7 fe ff 17	b	0x10001ce2c
+10001d394:	52 b9 17 94	bl	0x10060b8dc ; symbol stub for: ___error
+10001d398:	14 00 40 b9	ldr	w20, [x0]
+10001d39c:	50 b9 17 94	bl	0x10060b8dc ; symbol stub for: ___error
+10001d3a0:	05 00 40 b9	ldr	w5, [x0]
+10001d3a4:	a1 2f 00 d0	adrp	x1, 1526 ; 0x100613000
+10001d3a8:	21 6c 0d 91	add	x1, x1, #0x35b ; literal pool for: "packages/modules/adb/client/main.cpp"
+10001d3ac:	e0 83 00 91	add	x0, sp, #0x20
+10001d3b0:	a2 16 80 52	mov	w2, #0xb5
+10001d3b4:	c3 00 80 52	mov	w3, #0x6
+10001d3b8:	04 00 80 d2	mov	x4, #0x0
+10001d3bc:	74 9f 11 94	bl	__ZN7android4base10LogMessageC2EPKcjNS0_11LogSeverityES3_i
+10001d3c0:	e0 83 00 91	add	x0, sp, #0x20
+10001d3c4:	38 2b 0e 94	bl	_HUF_readCTableHeader
+10001d3c8:	a1 2f 00 d0	adrp	x1, 1526 ; 0x100613000
+10001d3cc:	21 ac 0e 91	add	x1, x1, #0x3ab ; literal pool for: "setsid() failed"
+10001d3d0:	e2 01 80 52	mov	w2, #0xf
+10001d3d4:	d9 9a ff 97	bl	0x100003f38
+10001d3d8:	e0 83 00 91	add	x0, sp, #0x20
+10001d3dc:	b4 9f 11 94	bl	__ZN7android4base10LogMessageD1Ev
+10001d3e0:	3f b9 17 94	bl	0x10060b8dc ; symbol stub for: ___error
+10001d3e4:	14 00 00 b9	str	w20, [x0]
+10001d3e8:	0d ff ff 17	b	0x10001d01c
+10001d3ec:	81 2f 00 d0	adrp	x1, 1522 ; 0x10060f000
+10001d3f0:	21 68 31 91	add	x1, x1, #0xc5a ; literal pool for: "thread constructor failed"
+10001d3f4:	e6 9f 14 94	bl	__ZNSt3__120__throw_system_errorEiPKc
+10001d3f8:	36 b9 17 94	bl	0x10060b8d0 ; symbol stub for: ___stack_chk_fail

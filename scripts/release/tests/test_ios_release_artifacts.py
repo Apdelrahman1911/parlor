@@ -365,6 +365,31 @@ class GitSourceIdentityTest(unittest.TestCase):
         self.assertEqual([self.source.relative_to(self.root).as_posix()], [row["path"] for row in result["files"]])
         self.assertEqual(4, result["excluded_paths"])
 
+    def test_relocated_evidence_exclusions_preserve_documentation_and_directory_boundaries(self):
+        retained = ("docs/PRODUCTION_ARCHITECTURE.md", "docs/archives/history/ARCHITECTURE.md",
+                    "docs/archives/handoffs/delivery.json", "docs/archives/README.md",
+                    "docs/archives/design-extra/current.md")
+        archived = ("docs/archives/audit-runs/before/composeApp/src/iosMain/Fixture.kt",
+                    "docs/archives/project-code-audit/finding.json", "docs/archives/design/web-ui-rework/app.js")
+        for relative in (*retained, *archived):
+            path = self.root / relative
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_bytes(b"synthetic documented source or archived evidence\n")
+        self.git("add", "--", "docs")
+        before = artifacts.source_identity(self.root)
+        self.assertEqual(
+            sorted((self.source.relative_to(self.root).as_posix(), *retained)),
+            [row["path"] for row in before["files"]],
+        )
+        self.assertEqual(len(archived), before["excluded_paths"])
+        for relative in archived:
+            (self.root / relative).write_bytes(b"synthetic archived evidence changed\n")
+        self.assertEqual(before, artifacts.source_identity(self.root))
+        (self.root / retained[0]).write_bytes(b"synthetic current contract changed\n")
+        after = artifacts.source_identity(self.root)
+        self.assertNotEqual(before["source_manifest_sha256"], after["source_manifest_sha256"])
+        self.assertNotEqual(before["diff_sha256"], after["diff_sha256"])
+
     def test_untracked_symlinked_build_input_is_rejected(self):
         self.source.with_name("Link.kt").symlink_to(self.source)
         with self.assertRaisesRegex(RuntimeError, "redirected"):

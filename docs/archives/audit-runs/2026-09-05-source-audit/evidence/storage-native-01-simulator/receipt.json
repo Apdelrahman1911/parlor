@@ -1,0 +1,82 @@
+{
+  "started_at": "2026-09-05T11:38:26.927060+00:00",
+  "cycle": "storage-native-01",
+  "commands": [
+    {
+      "command": [
+        "xcrun",
+        "simctl",
+        "create",
+        "Parlor-Audit-storage-native-01",
+        "com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro",
+        "com.apple.CoreSimulator.SimRuntime.iOS-26-5"
+      ],
+      "exit_code": 0,
+      "at": "2026-09-05T11:38:27.135754+00:00",
+      "log": "create.log"
+    },
+    {
+      "command": [
+        "xcrun",
+        "simctl",
+        "boot",
+        "7EB15DA9-B8EC-4CC1-8D70-01FD06BC25F7"
+      ],
+      "exit_code": 0,
+      "at": "2026-09-05T11:38:27.501487+00:00",
+      "log": "boot.log"
+    },
+    {
+      "command": [
+        "xcrun",
+        "simctl",
+        "bootstatus",
+        "7EB15DA9-B8EC-4CC1-8D70-01FD06BC25F7",
+        "-b"
+      ],
+      "exit_code": 0,
+      "at": "2026-09-05T11:38:46.547005+00:00",
+      "log": "bootstatus.log"
+    },
+    {
+      "command": [
+        "./gradlew",
+        "--stop"
+      ],
+      "exit_code": 0,
+      "at": "2026-09-05T11:39:57.476547+00:00",
+      "log": "stop.log"
+    },
+    {
+      "command": [
+        "xcrun",
+        "simctl",
+        "shutdown",
+        "7EB15DA9-B8EC-4CC1-8D70-01FD06BC25F7"
+      ],
+      "exit_code": 0,
+      "at": "2026-09-05T11:40:00.685445+00:00",
+      "log": "shutdown.log"
+    },
+    {
+      "command": [
+        "xcrun",
+        "simctl",
+        "delete",
+        "7EB15DA9-B8EC-4CC1-8D70-01FD06BC25F7"
+      ],
+      "exit_code": 0,
+      "at": "2026-09-05T11:40:00.837546+00:00",
+      "log": "delete.log"
+    }
+  ],
+  "status": "FAIL",
+  "owned_uuid": "7EB15DA9-B8EC-4CC1-8D70-01FD06BC25F7",
+  "gradle_runner_exit_code": 1,
+  "stop_exit_code": 0,
+  "shutdown_exit_code": 0,
+  "delete_exit_code": 0,
+  "owned_device_absent": true,
+  "owned_uuid_processes_remaining": [],
+  "finished_at": "2026-09-05T11:40:00.958030+00:00"
+}

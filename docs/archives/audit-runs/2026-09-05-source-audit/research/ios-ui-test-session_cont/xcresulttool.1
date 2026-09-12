@@ -1,0 +1,174 @@
+.\" man page for xcresulttool
+.\" Copyright (c) 2019-2025 Apple Inc.  All rights reserved.
+.TH xcresulttool 1 2025 "Apple Inc."
+
+.SH NAME
+.B xcresulttool
+\- view Xcode result bundle data in a human-readable or machine-parseable format.
+
+.SH SYNOPSIS
+\fBxcresulttool get build-results [\fB\-\-schema\fR] [\fB\-\-schema\-version\fR \fI0.0.0\fR] \-\-path\fR \fIExample.xcresult\fR [\fB\-\-compact\fR]
+.LP
+\fBxcresulttool get test-results summary [\fB\-\-schema\fR] [\fB\-\-schema\-version\fR \fI0.0.0\fR] \-\-path\fR \fIExample.xcresult\fR [\fB\-\-compact\fR]
+.LP
+\fBxcresulttool get test-results tests [\fB\-\-schema\fR] [\fB\-\-schema\-version\fR \fI0.0.0\fR] \-\-path\fR \fIExample.xcresult\fR [\fB\-\-compact\fR]
+.LP
+\fBxcresulttool get test-results insights [\fB\-\-schema\fR] [\fB\-\-schema\-version\fR \fI0.0.0\fR] \-\-path\fR \fIExample.xcresult\fR [\fB\-\-compact\fR]
+.LP
+\fBxcresulttool get test-results test-details [\fB\-\-schema\fR] [\fB\-\-schema\-version\fR \fI0.0.0\fR] \-\-path\fR \fIExample.xcresult\fR \-\-test\-id\fR \fIexampleTest()\fR [\fB\-\-compact\fR]
+.LP
+\fBxcresulttool get test-results activities [\fB\-\-schema\fR] [\fB\-\-schema\-version\fR \fI0.0.0\fR] \-\-path\fR \fIExample.xcresult\fR \-\-test\-id\fR \fIexampleTest()\fR [\fB\-\-compact\fR]
+.LP
+\fBxcresulttool get test-results metrics [\fB\-\-schema\fR] [\fB\-\-schema\-version\fR \fI0.0.0\fR] \-\-path\fR \fIExample.xcresult\fR [\fB\-\-test\-id\fR \fIexampleTest()\fR] [\fB\-\-compact\fR]
+.LP
+\fBxcresulttool get log [\fB\-\-schema\fR] [\fB\-\-schema\-version\fR \fI0.0.0\fR] \-\-path\fR \fIExample.xcresult\fR [\fB\-\-type\fR \fIbuild\fR | \fIaction\fR | \fIconsole\fR] [\fB\-\-compact\fR]
+.LP
+\fBxcresulttool get content-availability [\fB\-\-schema\fR] [\fB\-\-schema\-version\fR \fI0.0.0\fR] \-\-path\fR \fIExample.xcresult\fR [\fB\-\-compact\fR]
+.LP
+\fBxcresulttool get\fR [\fBobject\fR] \fB\-\-path\fR \fIExample.xcresult\fR [\fB\-\-format\fR \fIjson\fR | \fIraw\fR] [\fB\-\-id \fIID\fR]
+.LP
+\fBxcresulttool export diagnostics \-\-path\fR \fIExample.xcresult\fR \fB\-\-output-path\fR \fI./Out\fR
+.LP
+\fBxcresulttool export attachments [\fB\-\-schema\fR] [\fB\-\-schema\-version\fR \fI0.0.0\fR] \-\-path\fR \fIExample.xcresult\fR \fB\-\-output-path\fR \fI./Out\fR [\fB\-\-test\-id\fR \fIexampleTest()\fR] [\fB\-\-only-failures\fR]
+.LP
+\fBxcresulttool export metrics [\fB\-\-schema\fR] [\fB\-\-schema\-version\fR \fI0.0.0\fR] \-\-path\fR \fIExample.xcresult\fR \fB\-\-output-path\fR \fI./Out\fR [\fB\-\-test\-id\fR \fIexampleTest()\fR]
+.LP
+\fBxcresulttool export\fR [\fBobject\fR] \fB\-\-type\fR [\fBfile | directory\fR] \fB\-\-path\fR \fIExample.xcresult\fR \fB\-\-output-path \fI./Out\fR \fB\-\-id \fIID\fR
+.LP
+\fBxcresulttool formatDescription\fR [\fBget\fR] [\fB\-\-format\fR \fIjson\fR | \fItext\fR | \fImarkdown\fR | \fItypeHierarchy\fR] [\fB\-\-hash\fR] [\fB\-\-include\-event\-stream\-types\fR]
+.LP
+\fBxcresulttool formatDescription diff\fR [\fB\-\-format\fR \fItext\fR | \fImarkdown\fR] \fIversion1.json\fR \fIversion2.json\fR
+.LP
+\fBxcresulttool merge \fIInput1.xcresult\fR \fIInput2.xcresult\fR [...] \fB\-\-output\-path\fR \fIMerged.xcresult\fR
+.LP
+\fBxcresulttool metadata get \-\-path\fR \fIExample.xcresult\fR
+.LP
+\fBxcresulttool metadata addExternalLocation \-\-path\fR \fIExample.xcresult\fR \fB\-\-identifier\fR \fIidentifier\fR \fB\-\-link\fR \fIlink\fR [\fB\-\-description\fR \fIdescription\fR]
+.LP
+\fBxcresulttool version
+.LP
+\fBxcresulttool graph \-\-path\fR \fIExample.xcresult\fR
+.LP
+\fBxcresulttool compare [\fB\-\-schema\fR] [\fB\-\-schema\-version\fR \fI0.0.0\fR] \fIExample2.xcresult\fR \-\-baseline-path\fR \fIExample1.xcresult\fR [\fB\-\-summary\fR \fB\-\-test\-failures\fR \fB\-\-tests\fR \fB\-\-warnings\fR \fB\-\-analyzer\-issues\fR]
+.SH DESCRIPTION
+xcresulttool is a tool for reading result bundles.
+.PP
+To produce a result bundle, run xcodebuild with the flag
+
+.RS
+\fB-resultBundlePath\fR \fIPATH\fR
+.RE
+
+\fI\fR where \fIPATH\fR is the desired path ending with \fI.xcresult\fR.
+.SH COMMANDS
+.TP
+\fBget build-results\fR
+Print the build action details.
+.TP
+\fBget test-results summary\fR
+Print the test results summary.
+.TP
+\fBget test-results tests\fR
+Print the tests structure.
+.TP
+\fBget test-results insights\fR
+Print the test insights.
+.TP
+\fBget test-results test-details\fR
+Print the detailed information about the specified test.
+.TP
+\fBget test-results activities\fR
+Print the activity trees for the specified test. If the test has more than one run, the activity trees for each run will be included.
+.TP
+\fBget test-results metrics\fR
+Print the performance metrics associated with the specified test identifier. All the available metrics will be included if no test identifier is provided.
+.TP
+\fBget log\fR
+Print build, action, or console log.
+.TP
+\fBget content-availability\fR
+Print details about the different types of content contained by the bundle, such as code coverage, build logs, or test results.
+.TP
+\fBget object\fR
+Print the contents of an object given its ID, result bundle path and output format (\fIjson\fR for structured objects or \fIraw\fR for attachments).
+.TP
+\fBexport diagnostics\fR
+Export the diagnostics directory from a result bundle.
+.TP
+\fBexport attachments\fR
+Export attachments for a given test from a result bundle. If no test identifier is specified, all the attachments will be exported.
+.TP
+\fBexport metrics\fR
+Export CSV file with performance measurements for a given test. If no test identifier is specified, CSV files for all the available tests will be exported.
+.TP
+\fBexport object\fR
+Export a file or directory represented by the given ID from a result bundle. Exports to the given path.
+.TP
+\fBformatDescription get\fR
+Print a description of the types making up the result bundle structure.
+The root object of each result bundle is \fIActionsInvocationRecord\fR.
+.TP
+\fBformatDescription diff\fR
+Compute a list of changes between the two provided format descriptions.
+.TP
+\fBmerge\fR
+Merge result bundles.
+.TP
+\fBmetadata get\fR
+Print the metadata of the result bundle.
+.TP
+\fBmetadata addExternalLocation\fR
+Record an external location associated with the result bundle.
+.TP
+\fBversion\fR
+Print the version of the included XCResultKit package.
+.TP
+\fBgraph\fR
+Print the object graph of the given result bundle.
+.TP
+\fBcompare\fR
+Compare the results of two different result bundles.
+.SH OPTIONS
+.TP
+\fB\-\-schema\fR
+Prints output format as JSON Schema.
+\fB\-\-schema\-version\fR
+Specifies schema version in major.minor.patch format.
+\fB\-\-path\ [path]\fR
+Path to the result bundle.
+.TP
+\fB\-\-output\-path\ [output_path]\fR
+Output path for the exported file or directory.
+.TP
+\fB\-\-test\-id [test_identifier]\fR
+Provides the test identifier URL (or identifier string) that references a test.
+.TP
+\fB\-\-compact\fR
+Provides the command output in a compact format.
+.TP
+\fB\-\-format\fR [format_name]\fR
+Controls output format.
+.TP
+\fB\-\-id\fR [ID]\fR
+Provides the desired object's ID (hash).
+.TP
+\fB\-\-type\fR
+Used by \fBexport\fR to identify whether to export the given data as a file or directory.
+.TP
+\fB\-\-only-failures\fR
+Export only those attachments that are associated with test failures.
+.TP
+\fB\-\-summary\fR
+Include the differential summary info in the output.
+.TP
+\fB\-\-test-failures\fR
+Include the differential test failures info in the output.
+.TP
+\fB\-\-tests\fR
+Include the differential tests info in the output.
+.TP
+\fB\-\-build-warnings\fR
+Include the differential build warnings info in the output.
+.TP
+\fB\-\-analyzer-issues\fR
+Include the differential analyzer issues info in the output.

@@ -34,7 +34,10 @@ RAW_ROOTS = {
     "game-modes/whodunit/src/commonMain/composeResources/": "com.parlor.games.whodunit.resources",
     "shared/design-system/src/commonMain/composeResources/": "parlor.shared.design_system.generated.resources",
 }
-EXCLUDED_ROOTS = ("audit-runs/", "remediation-runs/", "project-code-audit/", "design/")
+# Only relocated evidence/design roots are excluded; archived prose, handoffs and
+# the archive index remain bound documentation inputs, as before relocation.
+EXCLUDED_ROOTS = ("audit-runs/", "remediation-runs/", "project-code-audit/", "design/",
+                  "docs/archives/audit-runs/", "docs/archives/project-code-audit/", "docs/archives/design/")
 BUILD_ROOTS = ("composeApp/", "shared/", "game-modes/", "build-logic/", "gradle/", "config/",
                "iosApp/", "scripts/", ".github/", ".run/")
 LIMITATION = (

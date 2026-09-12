@@ -1,0 +1,74 @@
+{
+  "execution_kind": "audit-evidence-generation-no-build",
+  "started_at": "2026-09-05T15:07:22.827241+00:00",
+  "status": "PASS",
+  "commands": [
+    {
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/Users/abdelrahman/Projects/parlor/audit-runs/2026-09-05-source-audit/assemble_coverage.py"
+      ],
+      "script_sha256": "09b2a9003e9c0c3cf0e78bd79ca495fcea7a7778b636d8f3a4d4257881619c29",
+      "started_at": "2026-09-05T15:07:22.827415+00:00",
+      "finished_at": "2026-09-05T15:07:23.209954+00:00",
+      "exit_code": 0,
+      "log": "evidence/final-report-generation-01/assemble_coverage.log",
+      "log_sha256": "cb07cd9653f68fb1e39bc970b96216df3dd5ee794e073cd7bf49de0346c284d3"
+    },
+    {
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/Users/abdelrahman/Projects/parlor/audit-runs/2026-09-05-source-audit/assemble_findings.py"
+      ],
+      "script_sha256": "a57078ef6b9512a376f8851221d69a2dc74a0b97204fbf405efac116aacec763",
+      "started_at": "2026-09-05T15:07:23.210073+00:00",
+      "finished_at": "2026-09-05T15:07:23.231713+00:00",
+      "exit_code": 0,
+      "log": "evidence/final-report-generation-01/assemble_findings.log",
+      "log_sha256": "8a2d32d07eaa69dd7c66ac1a87524cca52e6acbb90dd98557fa402e3f5e4a138"
+    },
+    {
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/Users/abdelrahman/Projects/parlor/audit-runs/2026-09-05-source-audit/assemble_indexes.py"
+      ],
+      "script_sha256": "058d976286fefc8a704c95f67d7d9abb727397ea5cdd38b3e9068579ee0dd5dc",
+      "started_at": "2026-09-05T15:07:23.231808+00:00",
+      "finished_at": "2026-09-05T15:07:23.337128+00:00",
+      "exit_code": 0,
+      "log": "evidence/final-report-generation-01/assemble_indexes.log",
+      "log_sha256": "034e0b741b116e08ac2c3053425d34adcf1383e324cc47ccb99ea71ebeb0f32e"
+    },
+    {
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/Users/abdelrahman/Projects/parlor/audit-runs/2026-09-05-source-audit/final_preservation_check.py"
+      ],
+      "script_sha256": "93d85c028fbb0050f2c53b2fdebe3b653aec4151356cbf5077b569ab95fd89dc",
+      "started_at": "2026-09-05T15:07:23.337217+00:00",
+      "finished_at": "2026-09-05T15:07:23.753162+00:00",
+      "exit_code": 0,
+      "log": "evidence/final-report-generation-01/final_preservation_check.log",
+      "log_sha256": "c506d59c1d2490dffb4a9b1a67986ece79e675ecb4316c8e5175e284d5c359b4"
+    },
+    {
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/Users/abdelrahman/Projects/parlor/audit-runs/2026-09-05-source-audit/assemble_verification.py"
+      ],
+      "script_sha256": "358ff97c62ca1a380e12437036f22747cbdb8747c504ca4b5b3ae966999bd366",
+      "started_at": "2026-09-05T15:07:23.753272+00:00",
+      "finished_at": "2026-09-05T15:07:23.785362+00:00",
+      "exit_code": 0,
+      "log": "evidence/final-report-generation-01/assemble_verification.log",
+      "log_sha256": "916c08bbe631cf975f258d3aa7acf6684ad428a13722889d8e807c88ac95606e"
+    }
+  ],
+  "finished_at": "2026-09-05T15:07:23.785411+00:00",
+  "cleanup": "Only required audit logs/reports generated; synchronous Python subprocesses exited. -B prevents bytecode; no Gradle/native build, server, simulator or background worker started."
+}

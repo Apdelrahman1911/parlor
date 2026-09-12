@@ -1,1 +1,0 @@
-Gradle wrapper 8.13 stop succeeded. Post-cycle process scan contained Gradle 9.4.1 (and later 9.7.0), neither started by this task, which only invokes wrapper8.13. These unrelated processes were preserved, not terminated. No audit-owned8.13 daemon or worker was present.

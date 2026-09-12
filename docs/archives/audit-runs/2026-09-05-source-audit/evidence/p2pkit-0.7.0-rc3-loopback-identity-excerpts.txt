@@ -1,0 +1,318 @@
+Official Central source https://repo.maven.apache.org/maven2/io/github/apdelrahman1911/p2p-core-jvm/0.7.0-rc3/p2p-core-jvm-0.7.0-rc3-sources.jar
+Accessed 2026-09-05T07:28:23.607179+00:00
+
+
+FILE jvmMain/dev/p2pkit/core/dsl/JvmSecurityDsl.kt
+1: package dev.p2pkit.core.dsl
+2: 
+3: import dev.p2pkit.core.internal.JvmSecureIdentityStoreAdapter
+4: import dev.p2pkit.core.security.JvmSecureIdentityStore
+5: 
+6: /**
+7:  * Supply the JVM host's protected, durable storage for secure-v2 identity.
+8:  *
+9:  * Core intentionally has no passwordless/plain-file default. The same [store]
+10:  * instance must be retained for explicit identity reset so live-kit exclusion
+11:  * can be enforced in this process.
+12:  */
+13: public fun P2pKitBuilder.jvmSecureIdentityStore(store: JvmSecureIdentityStore) {
+14:     secureIdentityStorage = JvmSecureIdentityStoreAdapter(store)
+15: }
+
+FILE jvmMain/dev/p2pkit/core/internal/JvmSecureIdentityStoreAdapter.kt
+1: package dev.p2pkit.core.internal
+2: 
+3: import dev.p2pkit.core.LocalIdentityFailureKind
+4: import dev.p2pkit.core.LocalIdentityRecovery
+5: import dev.p2pkit.core.P2pError
+6: import dev.p2pkit.core.security.EncodedIdentityKeyPair
+7: import dev.p2pkit.core.security.IdentityKeyRecordCodec
+8: import dev.p2pkit.core.security.IdentityNamespace
+9: import dev.p2pkit.core.security.IdentityRecordCorruptException
+10: import dev.p2pkit.core.security.IdentityStateMarkerCodec
+11: import dev.p2pkit.core.security.JvmSecureIdentityStore
+12: import dev.p2pkit.core.security.constantTimeEquals
+13: import dev.p2pkit.core.security.localIdentityError
+14: import kotlinx.coroutines.CancellationException
+15: import java.util.concurrent.atomic.AtomicBoolean
+16: 
+17: internal class JvmSecureIdentityStoreAdapter(
+18:     private val store: JvmSecureIdentityStore
+19: ) : SecureIdentityStorage {
+20: 
+21:     override fun acquireUsage(namespace: IdentityNamespace): SecureIdentityUsage =
+22:         JvmSecureIdentityLiveGuard.acquire(store, namespace.storageKey)
+23: 
+24:     override fun loadOrCreate(
+25:         namespace: IdentityNamespace,
+26:         fingerprintDigest: (EncodedIdentityKeyPair) -> ByteArray,
+27:         generate: () -> EncodedIdentityKeyPair
+28:     ): EncodedIdentityKeyPair {
+29:         rejectPendingReset(namespace)
+30:         val identityKey = identityKey(namespace)
+31:         val existing = read(identityKey)
+32:         if (existing != null) {
+33:             return validateAndReturn(decodeAndClear(namespace, existing), fingerprintDigest)
+34:         }
+35: 
+36:         val candidate = generate()
+37:         val candidateRecord = IdentityKeyRecordCodec.encode(namespace, candidate)
+38:         val storeInput = candidateRecord.copyOf()
+39:         var winner: ByteArray? = null
+40:         var reread: ByteArray? = null
+41:         try {
+42:             val durableWinner = callStore("atomically persist secure identity") {
+43:                 store.putIfAbsent(identityKey, storeInput)
+44:             }
+45:             winner = durableWinner
+46:             if (durableWinner.size != IdentityKeyRecordCodec.RECORD_SIZE) {
+47:                 throw corrupt("JVM secure store returned a non-P2KI winner")
+48:             }
+49:             val durableReread = read(identityKey)
+50:                 ?: contractViolation("durable winner was absent on immediate reread")
+51:             reread = durableReread
+52:             if (!constantTimeEquals(durableWinner, durableReread)) {
+53:                 contractViolation("putIfAbsent winner differed from immediate reread")
+54:             }
+55:             return validateAndReturn(
+56:                 IdentityKeyRecordCodec.decode(namespace, durableReread),
+57:                 fingerprintDigest
+58:             )
+59:         } catch (e: IdentityRecordCorruptException) {
+60:             throw corrupt(e.message ?: "JVM secure identity record is corrupt", e)
+61:         } finally {
+62:             candidate.clearPrivate()
+63:             candidateRecord.fill(0)
+64:             storeInput.fill(0)
+65:             winner?.fill(0)
+66:             reread?.fill(0)
+67:         }
+68:     }
+69: 
+206:     private fun identityKey(namespace: IdentityNamespace): String =
+207:         "dev.p2pkit.identity.v2.${namespace.storageKey}"
+208: 
+209:     private fun resetKey(namespace: IdentityNamespace): String =
+210:         "${identityKey(namespace)}.reset.pending"
+211: 
+212:     private fun corrupt(reason: String, cause: Throwable? = null): P2pError.LocalIdentityUnavailable =
+213:         localIdentityError(
+214:             kind = LocalIdentityFailureKind.CORRUPT_RECORD,
+215:             recovery = LocalIdentityRecovery.EXPLICIT_RESET_REQUIRED,
+216:             reason = reason,
+217:             cause = cause
+218:         )
+219: 
+220:     private fun contractViolation(reason: String): Nothing = throw localIdentityError(
+221:         kind = LocalIdentityFailureKind.STORE_CONTRACT_VIOLATION,
+222:         recovery = LocalIdentityRecovery.FIX_PLATFORM_CONFIGURATION,
+223:         reason = reason
+224:     )
+225: }
+226: 
+227: /**
+228:  * Process-local reset/kit exclusion for one exact host-store instance.
+229:  * Cross-process exclusion remains part of [JvmSecureIdentityStore]'s host
+230:  * contract and cannot be inferred by core.
+231:  */
+232: private object JvmSecureIdentityLiveGuard {
+233:     private val lock = Any()
+234:     private val states = mutableMapOf<StoreNamespace, State>()
+235: 
+236:     fun acquire(store: JvmSecureIdentityStore, namespace: String): SecureIdentityUsage {
+237:         val key = StoreNamespace(store, namespace)
+238:         synchronized(lock) {
+239:             val state = states.getOrPut(key) { State() }
+240:             if (state.resetInProgress) {
+241:                 throw localIdentityError(
+242:                     kind = LocalIdentityFailureKind.TEMPORARILY_UNAVAILABLE,
+243:                     recovery = LocalIdentityRecovery.RETRY,
+244:                     reason = "JVM secure identity reset is already in progress"
+245:                 )
+246:             }
+247:             state.liveUsages++
+248:         }
+249: 
+250:         val released = AtomicBoolean(false)
+251:         return SecureIdentityUsage {
+252:             if (!released.compareAndSet(false, true)) return@SecureIdentityUsage
+253:             synchronized(lock) {
+254:                 val state = checkNotNull(states[key]) {
+255:                     "JVM secure identity usage state disappeared before release"
+256:                 }
+257:                 check(state.liveUsages > 0) { "JVM secure identity usage count underflow" }
+258:                 state.liveUsages--
+259:                 if (state.liveUsages == 0 && !state.resetInProgress) states.remove(key)
+260:             }
+261:         }
+262:     }
+300:     }
+301: 
+302:     private class State(
+303:         var liveUsages: Int = 0,
+304:         var resetInProgress: Boolean = false
+305:     )
+306: 
+307:     private class StoreNamespace(
+308:         private val store: JvmSecureIdentityStore,
+309:         private val namespace: String
+310:     ) {
+311:         override fun equals(other: Any?): Boolean =
+312:             other is StoreNamespace && store === other.store && namespace == other.namespace
+313: 
+314:         override fun hashCode(): Int = 31 * System.identityHashCode(store) + namespace.hashCode()
+315:     }
+316: }
+
+FILE commonMain/dev/p2pkit/core/security/IdentityDerivation.kt
+1: package dev.p2pkit.core.security
+2: 
+3: import dev.p2pkit.core.AppId
+4: import dev.p2pkit.core.LocalIdentityFailureKind
+5: import dev.p2pkit.core.LocalIdentityRecovery
+6: import dev.p2pkit.core.P2pError
+7: import dev.p2pkit.core.PeerFingerprint
+8: import dev.p2pkit.core.PeerId
+9: import dev.p2pkit.core.PeerPairingQr
+10: import kotlinx.coroutines.CancellationException
+11: 
+12: internal object IdentityDerivation {
+13:     private val namespaceLabel = "dev.p2pkit.identity-namespace.v2\u0000".encodeToByteArray()
+14:     private val fingerprintLabel = "dev.p2pkit.x25519-fingerprint.v1\u0000".encodeToByteArray()
+15:     private val peerIdLabel = "dev.p2pkit.peer-id.v2\u0000".encodeToByteArray()
+16:     private val appBindingLabel = "dev.p2pkit.app-binding.v1\u0000".encodeToByteArray()
+17: 
+18:     fun namespace(appId: AppId, cryptography: IdentityCryptography): IdentityNamespace {
+19:         if (!appId.value.isWellFormedUtf16()) {
+20:             throw P2pError.SecurityConfigurationInvalid(
+21:                 "Secure v2 AppId must contain well-formed Unicode"
+22:             )
+23:         }
+24:         val appIdBytes = appId.value.encodeToByteArray()
+25:         if (appIdBytes.size > UShort.MAX_VALUE.toInt()) {
+26:             throw P2pError.SecurityConfigurationInvalid(
+27:                 "Secure v2 AppId UTF-8 encoding must fit an unsigned 16-bit length"
+28:             )
+29:         }
+30:         val hash = sha256(
+31:             cryptography,
+32:             concatenate(namespaceLabel, u16be(appIdBytes.size), appIdBytes)
+33:         )
+34:         return IdentityNamespace(appId, appIdBytes, hash)
+35:     }
+36: 
+37:     fun fingerprintDigest(
+38:         publicKey: ByteArray,
+39:         cryptography: IdentityCryptography
+40:     ): ByteArray {
+41:         require(publicKey.size == X25519_KEY_SIZE_BYTES) { "X25519 public key must be 32 bytes" }
+42:         return sha256(cryptography, concatenate(fingerprintLabel, publicKey))
+43:     }
+44: 
+45:     fun fingerprint(
+46:         publicKey: ByteArray,
+47:         cryptography: IdentityCryptography
+48:     ): PeerFingerprint = PeerFingerprint.fromDigest(fingerprintDigest(publicKey, cryptography))
+49: 
+50:     fun peerId(
+51:         namespace: IdentityNamespace,
+52:         fingerprintDigest: ByteArray,
+53:         cryptography: IdentityCryptography
+54:     ): PeerId {
+55:         require(fingerprintDigest.size == SHA256_SIZE_BYTES) {
+56:             "fingerprint digest must be 32 bytes"
+57:         }
+58:         val appIdBytes = namespace.appIdBytes()
+59:         val digest = sha256(
+60:             cryptography,
+61:             concatenate(peerIdLabel, u16be(appIdBytes.size), appIdBytes, fingerprintDigest)
+62:         )
+63:         return PeerId(CanonicalIdentityText.peerIdFromDigest(digest))
+64:     }
+65: 
+66:     fun appBinding(
+67:         namespace: IdentityNamespace,
+68:         cryptography: IdentityCryptography
+69:     ): String {
+70:         val appIdBytes = namespace.appIdBytes()
+71:         val digest = sha256(
+72:             cryptography,
+73:             concatenate(appBindingLabel, u16be(appIdBytes.size), appIdBytes)
+74:         )
+75:         return CanonicalIdentityText.appBindingFromDigest(digest)
+
+FILE commonMain/dev/p2pkit/core/security/SecureIdentityService.kt
+1: package dev.p2pkit.core.security
+2: 
+3: import dev.p2pkit.core.AppId
+4: import dev.p2pkit.core.LocalIdentityFailureKind
+5: import dev.p2pkit.core.LocalIdentityRecovery
+6: import dev.p2pkit.core.P2pError
+7: import dev.p2pkit.core.PeerFingerprint
+8: import dev.p2pkit.core.PeerId
+9: import dev.p2pkit.core.internal.SecureIdentityUsage
+10: import dev.p2pkit.core.internal.SecureIdentityStorage
+11: import kotlinx.coroutines.CancellationException
+12: 
+13: /** Loads, verifies, and derives the public values of one local secure identity. */
+14: internal class SecureIdentityService(
+15:     private val cryptography: IdentityCryptography,
+16:     private val storage: SecureIdentityStorage
+17: ) {
+18:     /**
+19:      * Reserve this AppId against explicit reset before identity loading.
+20:      * The kit owns the returned token until terminal teardown.
+21:      */
+22:     fun acquireUsage(appId: AppId): SecureIdentityUsage =
+23:         storage.acquireUsage(IdentityDerivation.namespace(appId, cryptography))
+24: 
+25:     fun loadOrCreate(appId: AppId): LocalSecureIdentity {
+26:         val namespace = IdentityDerivation.namespace(appId, cryptography)
+27:         val keyPair = try {
+28:             storage.loadOrCreate(
+29:                 namespace = namespace,
+30:                 fingerprintDigest = ::fingerprintDigest,
+31:                 generate = ::generateValidatedKeyPair
+32:             )
+33:         } catch (e: P2pError.LocalIdentityUnavailable) {
+34:             throw e
+35:         } catch (e: IdentityRecordCorruptException) {
+36:             throw localIdentityError(
+37:                 kind = LocalIdentityFailureKind.CORRUPT_RECORD,
+38:                 recovery = LocalIdentityRecovery.EXPLICIT_RESET_REQUIRED,
+39:                 reason = e.message ?: "secure identity record is corrupt",
+40:                 cause = e
+41:             )
+42:         } catch (e: CancellationException) {
+43:             throw e
+44:         } catch (e: Exception) {
+45:             throw localIdentityError(
+46:                 kind = LocalIdentityFailureKind.TEMPORARILY_UNAVAILABLE,
+47:                 recovery = LocalIdentityRecovery.RETRY,
+48:                 reason = "secure identity store failed",
+49:                 cause = e
+50:             )
+51:         }
+52: 
+53:         var success = false
+54:         try {
+55:             validateKeyPair(keyPair, LocalIdentityFailureKind.CORRUPT_RECORD)
+56:             val publicKey = keyPair.publicKeyBytes()
+57:             try {
+58:                 val fingerprintDigest = IdentityDerivation.fingerprintDigest(publicKey, cryptography)
+59:                 try {
+60:                     val fingerprint = PeerFingerprint.fromDigest(fingerprintDigest)
+61:                     val peerId = IdentityDerivation.peerId(namespace, fingerprintDigest, cryptography)
+62:                     success = true
+63:                     return LocalSecureIdentity(peerId, fingerprint, keyPair)
+64:                 } finally {
+65:                     fingerprintDigest.fill(0)
+66:                 }
+67:             } finally {
+68:                 publicKey.fill(0)
+69:             }
+70:         } finally {
+71:             if (!success) keyPair.clearPrivate()
+72:         }
+73:     }
+74: 

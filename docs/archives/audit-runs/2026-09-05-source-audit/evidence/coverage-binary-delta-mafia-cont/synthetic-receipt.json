@@ -1,0 +1,199 @@
+{
+  "recorded_at": "2026-09-05T15:05:54.028608+00:00",
+  "reviewer": "/root/mafia_cont",
+  "approved_source_sha256": "09b2a9003e9c0c3cf0e78bd79ca495fcea7a7778b636d8f3a4d4257881619c29",
+  "rejected_intermediate_sha256": "11d6236f6bb1f93f7917d01775f6b71d8186cd90b25a133f847a3f377e61b8ba",
+  "original_source_sha256": "e8d37238b066bf2a1c30bdae3a2a2e366a3f59123077c0b13e277ef7034a28ae",
+  "assertions": 36,
+  "results": [
+    {
+      "name": "actual PNG signature, dimensions, complete chunk CRC envelope",
+      "status": "PASS"
+    },
+    {
+      "name": "actual PNG accepted as explicit audit-only binary without errors",
+      "status": "PASS"
+    },
+    {
+      "name": "actual PNG never decoded as UTF8 text",
+      "status": "PASS"
+    },
+    {
+      "name": "baseline source output byte-structurally unchanged after PNG evidence",
+      "status": "PASS"
+    },
+    {
+      "name": "PNG not inserted into source receipt map",
+      "status": "PASS"
+    },
+    {
+      "name": "alternate explicit BINARY_INSPECTED status accepted",
+      "status": "PASS"
+    },
+    {
+      "name": "null count fields without fictitious ranges accepted",
+      "status": "PASS"
+    },
+    {
+      "name": "malformed binary receipt blocked: reviewed_ranges=[[1, 1]]",
+      "status": "PASS"
+    },
+    {
+      "name": "malformed binary receipt blocked: total_lines=0",
+      "status": "PASS"
+    },
+    {
+      "name": "malformed binary receipt blocked: total_lines=1",
+      "status": "PASS"
+    },
+    {
+      "name": "malformed binary receipt blocked: reviewed_line_count=1",
+      "status": "PASS"
+    },
+    {
+      "name": "malformed binary receipt blocked: reviewed_line_count=-1",
+      "status": "PASS"
+    },
+    {
+      "name": "malformed binary receipt blocked: read_method=''",
+      "status": "PASS"
+    },
+    {
+      "name": "malformed binary receipt blocked: read_method=None",
+      "status": "PASS"
+    },
+    {
+      "name": "malformed binary receipt blocked: read_method='  \\n\\t'",
+      "status": "PASS"
+    },
+    {
+      "name": "malformed binary receipt blocked: read_method=True",
+      "status": "PASS"
+    },
+    {
+      "name": "malformed binary receipt blocked: read_method=['method']",
+      "status": "PASS"
+    },
+    {
+      "name": "malformed binary receipt blocked: read_method=42",
+      "status": "PASS"
+    },
+    {
+      "name": "preserved11d623 malformed-method counterexample: '   '",
+      "status": "PASS"
+    },
+    {
+      "name": "preserved11d623 malformed-method counterexample: True",
+      "status": "PASS"
+    },
+    {
+      "name": "preserved11d623 malformed-method counterexample: ['claimed-method']",
+      "status": "PASS"
+    },
+    {
+      "name": "old271-line assembler cannot UTF8-decode actual PNG",
+      "status": "PASS"
+    },
+    {
+      "name": "ordinary audit text still reads complete claimed ranges",
+      "status": "PASS"
+    },
+    {
+      "name": "ordinary text invalid range remains error",
+      "status": "PASS"
+    },
+    {
+      "name": "mislabelled binary-as-text remains failed decoding, not automatic binary exemption",
+      "status": "PASS"
+    },
+    {
+      "name": "historical PNG hash matched without textual lines",
+      "status": "PASS"
+    },
+    {
+      "name": "historical inspection does not attest current bytes",
+      "status": "PASS"
+    },
+    {
+      "name": "changed bytes without version snapshot blocked",
+      "status": "PASS"
+    },
+    {
+      "name": "wrong historical hash blocked",
+      "status": "PASS"
+    },
+    {
+      "name": "historical path outside audit blocked",
+      "status": "PASS"
+    },
+    {
+      "name": "historical symlink escaping audit blocked",
+      "status": "PASS"
+    },
+    {
+      "name": "missing current audit path cannot borrow historical proof",
+      "status": "PASS"
+    },
+    {
+      "name": "current symlink escaping audit blocked before content read",
+      "status": "PASS"
+    },
+    {
+      "name": "historical text handling unchanged",
+      "status": "PASS"
+    },
+    {
+      "name": "binary metadata classification is not image-validity certification and adds no source lines",
+      "status": "PASS"
+    },
+    {
+      "name": "all baseline accounting, source preservation, summary and return AST unchanged",
+      "status": "PASS"
+    }
+  ],
+  "actual_png": {
+    "path": "/Users/abdelrahman/Projects/parlor/audit-runs/2026-09-05-source-audit/evidence/iosr1-apphost-02/attachments/37C51B0A-CC33-456F-A23D-7CCB68CDFBBC.png",
+    "sha256": "1898984f1f4c2c56176577271b5e871f8ea607807833215db818d5b9d3f50371",
+    "bytes": 352499,
+    "width": 1206,
+    "height": 2622,
+    "chunk_crc_validation": true,
+    "chunks": [
+      "IHDR",
+      "sRGB",
+      "eXIf",
+      "iTXt",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IDAT",
+      "IEND"
+    ],
+    "decoded_or_visually_inspected_by_this_reviewer": false
+  },
+  "scope": "Only receipt-loop and source-accounting AST fragments with in-memory paths; actual PNG bytes read for hashing/format envelope. No helper main, report aggregation, Git, runpy, process/device or build command.",
+  "limits": [
+    "No additional screenshot visual/semantic or runtime claim.",
+    "Ledger parser does not certify arbitrary binary format validity or truth of a claimed inspection; independent reviewers/format evidence do.",
+    "Malformed text decoding still raises; outer final checker must retain its existing fail-closed handling."
+  ],
+  "cleanup": "No build outputs/persistent processes; only compact audit test/JSON/source snapshots retained."
+}

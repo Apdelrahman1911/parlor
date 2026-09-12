@@ -1,0 +1,74 @@
+/Users/abdelrahman/Library/Android/sdk/emulator/qemu/darwin-aarch64/qemu-system-aarch64:
+(__TEXT,__text) section
+__ZN7android9emulation13AdbHostServer6notifyEii:
+100c0013c:	ff c3 01 d1	sub	sp, sp, #0x70
+100c00140:	f6 57 04 a9	stp	x22, x21, [sp, #0x40]
+100c00144:	f4 4f 05 a9	stp	x20, x19, [sp, #0x50]
+100c00148:	fd 7b 06 a9	stp	x29, x30, [sp, #0x60]
+100c0014c:	fd 83 01 91	add	x29, sp, #0x60
+100c00150:	f5 03 01 aa	mov	x21, x1
+100c00154:	f4 03 00 aa	mov	x20, x0
+100c00158:	e0 03 01 aa	mov	x0, x1
+100c0015c:	c2 e6 2c 94	bl	0x101739c64 ; symbol stub for: __ZN7android4base24socketTcp4LoopbackClientEi
+100c00160:	80 00 f8 36	tbz	w0, #0x1f, 0x100c00170
+100c00164:	e0 03 15 aa	mov	x0, x21
+100c00168:	bc e6 2c 94	bl	0x101739c58 ; symbol stub for: __ZN7android4base24socketTcp6LoopbackClientEi
+100c0016c:	80 06 f8 37	tbnz	w0, #0x1f, 0x100c0023c
+100c00170:	f3 03 00 aa	mov	x19, x0
+100c00174:	f4 03 00 f9	str	x20, [sp]
+100c00178:	00 63 00 f0	adrp	x0, 3171 ; 0x101863000
+100c0017c:	00 5c 27 91	add	x0, x0, #0x9d7 ; literal pool for: "host:emulator:%d"
+100c00180:	f4 43 00 91	add	x20, sp, #0x10
+100c00184:	e8 43 00 91	add	x8, sp, #0x10
+100c00188:	3f dd 2c 94	bl	0x101737684 ; symbol stub for: __ZN7android4base15StringFormatRawEPKcz
+100c0018c:	e8 9f 40 39	ldrb	w8, [sp, #0x27]
+100c00190:	09 1d 00 13	sxtb	w9, w8
+100c00194:	3f 01 00 71	cmp	w9, #0x0
+100c00198:	ea 27 41 a9	ldp	x10, x9, [sp, #0x10]
+100c0019c:	28 41 88 9a	csel	x8, x9, x8, mi
+100c001a0:	49 41 94 9a	csel	x9, x10, x20, mi
+100c001a4:	e8 27 00 a9	stp	x8, x9, [sp]
+100c001a8:	a0 5f 00 b0	adrp	x0, 3061 ; 0x1017f5000
+100c001ac:	00 d4 25 91	add	x0, x0, #0x975 ; literal pool for: "%04x%s"
+100c001b0:	f4 a3 00 91	add	x20, sp, #0x28
+100c001b4:	e8 a3 00 91	add	x8, sp, #0x28
+100c001b8:	33 dd 2c 94	bl	0x101737684 ; symbol stub for: __ZN7android4base15StringFormatRawEPKcz
+100c001bc:	e8 ff 80 39	ldrsb	x8, [sp, #0x3f]
+100c001c0:	e9 ab 42 a9	ldp	x9, x10, [sp, #0x28]
+100c001c4:	1f 01 00 f1	cmp	x8, #0x0
+100c001c8:	21 41 94 9a	csel	x1, x9, x20, mi
+100c001cc:	1f 01 00 71	cmp	w8, #0x0
+100c001d0:	42 41 88 9a	csel	x2, x10, x8, mi
+100c001d4:	e0 03 13 aa	mov	x0, x19
+100c001d8:	97 e6 2c 94	bl	0x101739c34 ; symbol stub for: __ZN7android4base13socketSendAllEiPKvm
+100c001dc:	f4 03 00 aa	mov	x20, x0
+100c001e0:	e8 ff c0 39	ldrsb	w8, [sp, #0x3f]
+100c001e4:	68 01 f8 37	tbnz	w8, #0x1f, 0x100c00210
+100c001e8:	e8 9f c0 39	ldrsb	w8, [sp, #0x27]
+100c001ec:	e8 01 f8 37	tbnz	w8, #0x1f, 0x100c00228
+100c001f0:	e0 03 13 aa	mov	x0, x19
+100c001f4:	4a e1 2c 94	bl	0x10173871c ; symbol stub for: __ZN7android4base11socketCloseEi
+100c001f8:	e0 03 14 aa	mov	x0, x20
+100c001fc:	fd 7b 46 a9	ldp	x29, x30, [sp, #0x60]
+100c00200:	f4 4f 45 a9	ldp	x20, x19, [sp, #0x50]
+100c00204:	f6 57 44 a9	ldp	x22, x21, [sp, #0x40]
+100c00208:	ff c3 01 91	add	sp, sp, #0x70
+100c0020c:	c0 03 5f d6	ret
+100c00210:	e0 17 40 f9	ldr	x0, [sp, #0x28]
+100c00214:	e8 1f 40 f9	ldr	x8, [sp, #0x38]
+100c00218:	01 f9 40 92	and	x1, x8, #0x7fffffffffffffff
+100c0021c:	cf dc 2c 94	bl	0x101737558 ; symbol stub for: __ZdlPvm
+100c00220:	e8 9f c0 39	ldrsb	w8, [sp, #0x27]
+100c00224:	68 fe ff 36	tbz	w8, #0x1f, 0x100c001f0
+100c00228:	e0 0b 40 f9	ldr	x0, [sp, #0x10]
+100c0022c:	e8 13 40 f9	ldr	x8, [sp, #0x20]
+100c00230:	01 f9 40 92	and	x1, x8, #0x7fffffffffffffff
+100c00234:	c9 dc 2c 94	bl	0x101737558 ; symbol stub for: __ZdlPvm
+100c00238:	ee ff ff 17	b	0x100c001f0
+100c0023c:	14 00 80 52	mov	w20, #0x0
+100c00240:	e0 03 14 aa	mov	x0, x20
+100c00244:	fd 7b 46 a9	ldp	x29, x30, [sp, #0x60]
+100c00248:	f4 4f 45 a9	ldp	x20, x19, [sp, #0x50]
+100c0024c:	f6 57 44 a9	ldp	x22, x21, [sp, #0x40]
+100c00250:	ff c3 01 91	add	sp, sp, #0x70
+100c00254:	c0 03 5f d6	ret

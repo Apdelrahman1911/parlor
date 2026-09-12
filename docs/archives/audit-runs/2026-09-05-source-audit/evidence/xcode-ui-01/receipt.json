@@ -1,0 +1,385 @@
+{
+  "cycle": "xcode-ui-01",
+  "started_at": "2026-09-05T10:24:13.339167+00:00",
+  "source_before": {
+    "commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+    "tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+    "branch": "main",
+    "tracked_status": ""
+  },
+  "commands": [
+    {
+      "command": [
+        "xcrun",
+        "simctl",
+        "create",
+        "Parlor-Audit-xcode-ui-01",
+        "com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro",
+        "com.apple.CoreSimulator.SimRuntime.iOS-26-5"
+      ],
+      "started_at": "2026-09-05T10:24:13.367531+00:00",
+      "log": "create.log",
+      "exit_code": 0,
+      "finished_at": "2026-09-05T10:24:13.635381+00:00"
+    },
+    {
+      "command": [
+        "xcrun",
+        "simctl",
+        "boot",
+        "65D69AA5-9B5A-4419-AD11-566E34758A7A"
+      ],
+      "started_at": "2026-09-05T10:24:13.637288+00:00",
+      "log": "boot.log",
+      "exit_code": 0,
+      "finished_at": "2026-09-05T10:24:14.018313+00:00"
+    },
+    {
+      "command": [
+        "xcrun",
+        "simctl",
+        "bootstatus",
+        "65D69AA5-9B5A-4419-AD11-566E34758A7A",
+        "-b"
+      ],
+      "started_at": "2026-09-05T10:24:14.018644+00:00",
+      "log": "bootstatus.log",
+      "exit_code": 0,
+      "finished_at": "2026-09-05T10:24:35.082370+00:00"
+    },
+    {
+      "command": [
+        "xcodebuild",
+        "-project",
+        "iosApp/iosApp.xcodeproj",
+        "-scheme",
+        "iosApp",
+        "-configuration",
+        "Debug",
+        "-sdk",
+        "iphonesimulator",
+        "-destination",
+        "id=65D69AA5-9B5A-4419-AD11-566E34758A7A",
+        "-derivedDataPath",
+        "/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-xcode-ui-01-jg2b13yz/DerivedData",
+        "-resultBundlePath",
+        "/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-xcode-ui-01-jg2b13yz/Results.xcresult",
+        "-parallel-testing-enabled",
+        "NO",
+        "-maximum-concurrent-test-simulator-destinations",
+        "1",
+        "-disable-concurrent-destination-testing",
+        "-jobs",
+        "1",
+        "-test-timeouts-enabled",
+        "YES",
+        "-default-test-execution-time-allowance",
+        "90",
+        "-maximum-test-execution-time-allowance",
+        "180",
+        "CODE_SIGNING_ALLOWED=NO",
+        "CODE_SIGNING_REQUIRED=NO",
+        "CODE_SIGN_IDENTITY=",
+        "DEVELOPMENT_TEAM=",
+        "ONLY_ACTIVE_ARCH=YES",
+        "COMPILER_INDEX_STORE_ENABLE=NO",
+        "test"
+      ],
+      "started_at": "2026-09-05T10:24:35.083199+00:00",
+      "log": "xcodebuild.log",
+      "exit_code": 0,
+      "finished_at": "2026-09-05T10:26:13.789427+00:00"
+    },
+    {
+      "command": [
+        "./gradlew",
+        "--stop"
+      ],
+      "started_at": "2026-09-05T10:26:13.790382+00:00",
+      "log": "stop-immediate.log",
+      "exit_code": 0,
+      "finished_at": "2026-09-05T10:26:14.170084+00:00"
+    },
+    {
+      "command": [
+        "xcrun",
+        "xcresulttool",
+        "get",
+        "test-results",
+        "summary",
+        "--path",
+        "/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-xcode-ui-01-jg2b13yz/Results.xcresult"
+      ],
+      "started_at": "2026-09-05T10:26:14.170477+00:00",
+      "log": "xcresult-summary.json",
+      "exit_code": 0,
+      "finished_at": "2026-09-05T10:26:14.260361+00:00"
+    },
+    {
+      "command": [
+        "xcrun",
+        "xcresulttool",
+        "get",
+        "test-results",
+        "tests",
+        "--path",
+        "/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-xcode-ui-01-jg2b13yz/Results.xcresult"
+      ],
+      "started_at": "2026-09-05T10:26:14.260817+00:00",
+      "log": "xcresult-tests.json",
+      "exit_code": 0,
+      "finished_at": "2026-09-05T10:26:14.306695+00:00"
+    },
+    {
+      "command": [
+        "otool",
+        "-L",
+        "/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-xcode-ui-01-jg2b13yz/DerivedData/Build/Products/Debug-iphonesimulator/Parlor.app/Parlor"
+      ],
+      "started_at": "2026-09-05T10:26:14.342721+00:00",
+      "log": "app-linkage.txt",
+      "exit_code": 0,
+      "finished_at": "2026-09-05T10:26:14.875650+00:00"
+    },
+    {
+      "command": [
+        "xcrun",
+        "simctl",
+        "terminate",
+        "65D69AA5-9B5A-4419-AD11-566E34758A7A",
+        "com.parlor.app.debug"
+      ],
+      "started_at": "2026-09-05T10:26:14.878047+00:00",
+      "log": "terminate-before-en.log",
+      "exit_code": 3,
+      "finished_at": "2026-09-05T10:26:15.019389+00:00"
+    },
+    {
+      "command": [
+        "xcrun",
+        "simctl",
+        "launch",
+        "65D69AA5-9B5A-4419-AD11-566E34758A7A",
+        "com.parlor.app.debug",
+        "-AppleLanguages",
+        "(en)",
+        "-AppleLocale",
+        "en_US"
+      ],
+      "started_at": "2026-09-05T10:26:15.019797+00:00",
+      "log": "launch-en.log",
+      "exit_code": 0,
+      "finished_at": "2026-09-05T10:26:15.221841+00:00"
+    },
+    {
+      "command": [
+        "xcrun",
+        "simctl",
+        "io",
+        "65D69AA5-9B5A-4419-AD11-566E34758A7A",
+        "screenshot",
+        "/Users/abdelrahman/Projects/parlor/audit-runs/2026-09-05-source-audit/evidence/xcode-ui-01/home-en.png"
+      ],
+      "started_at": "2026-09-05T10:26:20.224283+00:00",
+      "log": "screenshot-en.log",
+      "exit_code": 0,
+      "finished_at": "2026-09-05T10:26:20.419459+00:00"
+    },
+    {
+      "command": [
+        "xcrun",
+        "simctl",
+        "terminate",
+        "65D69AA5-9B5A-4419-AD11-566E34758A7A",
+        "com.parlor.app.debug"
+      ],
+      "started_at": "2026-09-05T10:26:20.420019+00:00",
+      "log": "terminate-after-en.log",
+      "exit_code": 0,
+      "finished_at": "2026-09-05T10:26:20.558039+00:00"
+    },
+    {
+      "command": [
+        "xcrun",
+        "simctl",
+        "terminate",
+        "65D69AA5-9B5A-4419-AD11-566E34758A7A",
+        "com.parlor.app.debug"
+      ],
+      "started_at": "2026-09-05T10:26:20.558557+00:00",
+      "log": "terminate-before-ar.log",
+      "exit_code": 3,
+      "finished_at": "2026-09-05T10:26:20.694822+00:00"
+    },
+    {
+      "command": [
+        "xcrun",
+        "simctl",
+        "launch",
+        "65D69AA5-9B5A-4419-AD11-566E34758A7A",
+        "com.parlor.app.debug",
+        "-AppleLanguages",
+        "(ar)",
+        "-AppleLocale",
+        "ar_EG"
+      ],
+      "started_at": "2026-09-05T10:26:20.695606+00:00",
+      "log": "launch-ar.log",
+      "exit_code": 0,
+      "finished_at": "2026-09-05T10:26:20.894128+00:00"
+    },
+    {
+      "command": [
+        "xcrun",
+        "simctl",
+        "io",
+        "65D69AA5-9B5A-4419-AD11-566E34758A7A",
+        "screenshot",
+        "/Users/abdelrahman/Projects/parlor/audit-runs/2026-09-05-source-audit/evidence/xcode-ui-01/home-ar.png"
+      ],
+      "started_at": "2026-09-05T10:26:25.905157+00:00",
+      "log": "screenshot-ar.log",
+      "exit_code": 0,
+      "finished_at": "2026-09-05T10:26:26.109762+00:00"
+    },
+    {
+      "command": [
+        "xcrun",
+        "simctl",
+        "terminate",
+        "65D69AA5-9B5A-4419-AD11-566E34758A7A",
+        "com.parlor.app.debug"
+      ],
+      "started_at": "2026-09-05T10:26:26.110300+00:00",
+      "log": "terminate-after-ar.log",
+      "exit_code": 0,
+      "finished_at": "2026-09-05T10:26:26.237759+00:00"
+    },
+    {
+      "command": [
+        "./gradlew",
+        "--stop"
+      ],
+      "started_at": "2026-09-05T10:26:26.238310+00:00",
+      "log": "stop-final.log",
+      "exit_code": 0,
+      "finished_at": "2026-09-05T10:26:26.553413+00:00"
+    },
+    {
+      "command": [
+        "xcrun",
+        "simctl",
+        "shutdown",
+        "65D69AA5-9B5A-4419-AD11-566E34758A7A"
+      ],
+      "started_at": "2026-09-05T10:26:26.553978+00:00",
+      "log": "shutdown.log",
+      "exit_code": 0,
+      "finished_at": "2026-09-05T10:26:29.752856+00:00"
+    },
+    {
+      "command": [
+        "xcrun",
+        "simctl",
+        "delete",
+        "65D69AA5-9B5A-4419-AD11-566E34758A7A"
+      ],
+      "started_at": "2026-09-05T10:26:29.753933+00:00",
+      "log": "delete.log",
+      "exit_code": 0,
+      "finished_at": "2026-09-05T10:26:29.899459+00:00"
+    }
+  ],
+  "status": "PASS",
+  "private_signing_inputs": "not supplied; code signing disabled",
+  "env_policy": "safe whitelist, repository6g heap, one Gradle worker, no parallel, no cache",
+  "outputs_before": [],
+  "owned_temporary_directory": "/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-xcode-ui-01-jg2b13yz",
+  "owned_uuid": "65D69AA5-9B5A-4419-AD11-566E34758A7A",
+  "xcodebuild_exit_code": 0,
+  "immediate_stop_exit_code": 0,
+  "app_identity": {
+    "CFBundleIdentifier": "com.parlor.app.debug",
+    "CFBundleVersion": "1",
+    "CFBundleShortVersionString": "1.0.0",
+    "MinimumOSVersion": "16.0",
+    "CFBundleExecutable": "Parlor"
+  },
+  "binaries": [
+    {
+      "path": "Parlor",
+      "bytes": 40344,
+      "sha256": "b3e604caacfde2add2c5c5782485c3574a8b8180b12e12a9cbd375c4a25aafa4"
+    },
+    {
+      "path": "Frameworks/ComposeApp.framework/ComposeApp",
+      "bytes": 83312760,
+      "sha256": "8b89df61ddfc9f7b9b1b12a1851ebdcf0e677b54e62a8bce3358420bbdc8774a"
+    }
+  ],
+  "packaged_resources": [
+    "AppIcon60x60@2x.png",
+    "AppIcon76x76@2x~ipad.png",
+    "Assets.car",
+    "Frameworks/ComposeApp.framework/ComposeApp",
+    "Frameworks/ComposeApp.framework/Headers/ComposeApp.h",
+    "Frameworks/ComposeApp.framework/Info.plist",
+    "Frameworks/ComposeApp.framework/Modules/module.modulemap",
+    "Info.plist",
+    "Parlor",
+    "Parlor.debug.dylib",
+    "PkgInfo",
+    "PrivacyInfo.xcprivacy",
+    "__preview.dylib",
+    "ar.lproj/InfoPlist.strings",
+    "compose-resources/composeResources/com.parlor.app.resources/values-ar/strings.commonMain.cvr",
+    "compose-resources/composeResources/com.parlor.app.resources/values/strings.commonMain.cvr",
+    "compose-resources/composeResources/com.parlor.games.mafia.resources/values-ar/strings.commonMain.cvr",
+    "compose-resources/composeResources/com.parlor.games.mafia.resources/values/strings.commonMain.cvr",
+    "compose-resources/composeResources/com.parlor.games.whodunit.resources/files/cases/iskenderia-corniche.json",
+    "compose-resources/composeResources/com.parlor.games.whodunit.resources/files/cases/jasmine-ring.json",
+    "compose-resources/composeResources/com.parlor.games.whodunit.resources/files/cases/khan-el-khalili.json",
+    "compose-resources/composeResources/com.parlor.games.whodunit.resources/files/cases/last-dinner.json",
+    "compose-resources/composeResources/com.parlor.games.whodunit.resources/files/cases/layla-halabi.json",
+    "compose-resources/composeResources/com.parlor.games.whodunit.resources/files/cases/saidi-inheritance.json",
+    "compose-resources/composeResources/com.parlor.games.whodunit.resources/files/cases/zamalek-ramadan.json",
+    "compose-resources/composeResources/com.parlor.games.whodunit.resources/values-ar/strings.commonMain.cvr",
+    "compose-resources/composeResources/com.parlor.games.whodunit.resources/values/strings.commonMain.cvr",
+    "compose-resources/composeResources/parlor.shared.design_system.generated.resources/font/inter.ttf",
+    "compose-resources/composeResources/parlor.shared.design_system.generated.resources/font/jetbrains_mono.ttf",
+    "compose-resources/composeResources/parlor.shared.design_system.generated.resources/values-ar/strings.commonMain.cvr",
+    "compose-resources/composeResources/parlor.shared.design_system.generated.resources/values/strings.commonMain.cvr",
+    "en.lproj/InfoPlist.strings"
+  ],
+  "stop_exit_code": 0,
+  "shutdown_exit_code": 0,
+  "delete_exit_code": 0,
+  "owned_device_absent": true,
+  "removed_outputs": [
+    "shared/core/build",
+    "shared/networking/build",
+    "shared/content/build",
+    "shared/storage/build",
+    "shared/transport-p2p/build",
+    "shared/networking-testing/build",
+    "shared/engine/build",
+    "shared/design-system/build",
+    "shared/engine-testing/build",
+    "shared/session/build",
+    "game-modes/whodunit/build",
+    "game-modes/mafia/build",
+    "build",
+    "composeApp/build",
+    "build-logic/convention/build"
+  ],
+  "cleanup_errors": [],
+  "temporary_directory_removed": true,
+  "remaining_outputs": [],
+  "source_after": {
+    "commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+    "tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+    "branch": "main",
+    "tracked_status": ""
+  },
+  "finished_at": "2026-09-05T10:26:30.260881+00:00"
+}

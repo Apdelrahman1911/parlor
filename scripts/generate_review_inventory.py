@@ -20,21 +20,7 @@ BASELINE = "9cd4040a81c4f2f8fe6f5f161dabcd5351682c02"
 DEFAULT_OUTPUT = "docs/review/INDEPENDENT_REVIEW_INVENTORY.csv"
 FINDING_OVERRIDES = "docs/review/INDEPENDENT_REVIEW_FINDING_OVERRIDES.csv"
 
-HISTORICAL_DOCUMENTS = {
-    "ARCHITECTURE.md",
-    "PROBLEMS_PARLOR.md",
-    "whodunit-game-design.md",
-    "docs/APP_PLAN.md",
-    "docs/DESIGN_TOKENS.md",
-    "docs/FR_REMEDIATION_FINDINGS.md",
-    "docs/MOCK_BACKEND.md",
-    "docs/MOTION_DOWNGRADE.md",
-    "docs/P2P_REMEDIATION_PLAN.md",
-    "docs/PARLOR_P2P_SMOKE_TEST.md",
-    "docs/PHASE_0_VALIDATION.md",
-    "docs/PHASE_8_VALIDATION.md",
-    "docs/PROGRESS.md",
-}
+ARCHIVE_PREFIX = "docs/archives/"
 
 REVIEW_INFRASTRUCTURE = {
     "scripts/generate_review_inventory.py",
@@ -103,6 +89,8 @@ def module_for(path: str) -> str:
 
 
 def source_set_for(path: str) -> str:
+    if path.startswith(ARCHIVE_PREFIX):
+        return "documentation"
     match = re.search(r"/src/([^/]+)/", path)
     if match:
         return match.group(1)
@@ -123,8 +111,9 @@ def classification_for(path: str, source_set: str) -> str:
     suffix = Path(path).suffix.lower()
     if path in REVIEW_INFRASTRUCTURE or path.startswith("docs/review/"):
         return "review-evidence"
-    if path in HISTORICAL_DOCUMENTS:
-        return "historical-document"
+    # Archived source/resource paths describe evidence, not a shipping source set.
+    if path.startswith(ARCHIVE_PREFIX):
+        return "historical-document" if suffix == ".md" else "historical-artifact"
     if path.startswith(".github/workflows/"):
         return "ci-workflow"
     if path == ".github/dependabot.yml":
@@ -206,7 +195,7 @@ def reachability_for(path: str, source_set: str, classification: str, module: st
         return "NON-RUNTIME: executed or loaded only by automated test tasks"
     if classification == "source-artwork":
         return "NON-RUNTIME MASTER: source for derived app/store artwork"
-    if classification in {"historical-document", "operational-document", "review-evidence"}:
+    if classification in {"historical-document", "historical-artifact", "operational-document", "review-evidence"}:
         return "NON-RUNTIME: review/release/contributor evidence"
     if classification == "developer-run-config":
         return "DEVELOPMENT-ONLY: IDE convenience configuration"
@@ -224,7 +213,7 @@ def consumers_for(path: str, classification: str, module: str) -> str:
         return "Xcode bundle assembly, iOS runtime declarations, and App Store review"
     if classification == "ci-workflow":
         return "GitHub Actions protected-branch production verification"
-    if classification in {"historical-document", "operational-document", "review-evidence"}:
+    if classification in {"historical-document", "historical-artifact", "operational-document", "review-evidence"}:
         return "reviewers, contributors, release operators, and contract tests"
     if classification in {"test-source", "test-resource"}:
         return f"{module} test tasks and aggregate production checks"
@@ -238,6 +227,8 @@ def consumers_for(path: str, classification: str, module: str) -> str:
 def disposition_for(classification: str, source_set: str) -> str:
     if classification == "historical-document":
         return "RETAIN AS HISTORICAL; authority banner requires separate inspection"
+    if classification == "historical-artifact":
+        return "RETAIN AS HISTORICAL; preserve original bytes and provenance"
     if classification == "review-evidence":
         return "RETAIN human evidence; regenerate only the mechanical inventory"
     if classification in {"test-source", "test-resource"}:

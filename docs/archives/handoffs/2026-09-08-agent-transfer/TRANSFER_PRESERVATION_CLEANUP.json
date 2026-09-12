@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "at": "2026-09-08T08:22:42.897055+00:00",
+  "reviewer": "/root",
+  "status": "PASS_FOR_PRECOMMIT_PRESERVATION_AND_CLEANUP",
+  "gradle_stop": {
+    "command": [
+      "./gradlew",
+      "--stop"
+    ],
+    "java_home": "/opt/homebrew/Cellar/openjdk@21/21.0.11/libexec/openjdk.jdk/Contents/Home",
+    "started_at": "2026-09-08T08:22:39.748789+00:00",
+    "finished_at": "2026-09-08T08:22:40.240113+00:00",
+    "exit_code": 0,
+    "log": "handoffs/2026-09-08-agent-transfer/transfer-gradle-stop.txt",
+    "log_sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+  },
+  "build_output_check": {
+    "checked": [
+      "build",
+      "composeApp/build",
+      "build-logic/build",
+      "build-logic/convention/build",
+      "shared/core/build",
+      "shared/networking/build",
+      "shared/navigation/build",
+      "shared/content/build",
+      "shared/storage/build",
+      "shared/transport-p2p/build",
+      "shared/networking-testing/build",
+      "shared/engine/build",
+      "shared/design-system/build",
+      "shared/engine-testing/build",
+      "shared/session/build",
+      "game-modes/whodunit/build",
+      "game-modes/mafia/build"
+    ],
+    "remaining": [],
+    "cleanup_action": "No Gradle/Xcode build/test run or generated module output in transfer task; no deletion required. Archived report paths containing build/ are required evidence, preserved.",
+    "extra_gradle_clean": "NOT NEEDED; would start new work without any live generated outputs to remove"
+  },
+  "native_prior_owned_paths": [
+    {
+      "cycle": "ios-readiness-15",
+      "exact_recorded_temporary_path": "/private/tmp/parlor-audit-ios-readiness-15-8le2t_vg",
+      "path_absent": true,
+      "prior_cleanup_status": "PASS",
+      "prior_owned_device_absent": true
+    },
+    {
+      "cycle": "ios-readiness-16",
+      "exact_recorded_temporary_path": "/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-ios-readiness-16-558d2x5y",
+      "path_absent": true,
+      "prior_cleanup_status": "PASS",
+      "prior_owned_device_absent": true
+    }
+  ],
+  "process_check": {
+    "command": [
+      "ps",
+      "-A",
+      "-o",
+      "pid=,ppid=,comm="
+    ],
+    "matching_build_workers": [],
+    "task_owned_background_processes_started_during_transfer": [],
+    "unrelated_processes_terminated": false,
+    "limitation": "No active native execution; prior simulator/secondary-worker deletion is separately attested in retained native receipts. No new simulator probe is claimed."
+  },
+  "preservation": {
+    "baseline_files_rehashed": 14712,
+    "unexpected_changes": [],
+    "authorized_changes": [
+      {
+        "path": ".gitattributes",
+        "before_sha256": "9eee3771dab6fab5d1a5021d098f1971badaeb46eb0da9678af699821096818b",
+        "current_sha256": "e9c0ea26582b13ba1d7be1d859d2cb21b64bf04d328bd3a26b6834a38ec6355d"
+      }
+    ],
+    "mechanical_inventory": "Still unchanged at this checkpoint. Will regenerate after transfer commit; original saved under before/.",
+    "agents_md_unchanged": true,
+    "stash_list_unchanged": true,
+    "excluded_locks_and_apks_preserved": true,
+    "source_or_credentials_or_global_cache_deletions": []
+  },
+  "git_delivery": "Controls committed; archive/handoff staged. Final normal push and exact remote comparison are required subsequent actions, not claimed in this precommit receipt."
+}

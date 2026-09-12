@@ -1,0 +1,58 @@
+# Exact KGP 2.4.10 simulator selection — /root/session_cont
+
+Date: 2026-09-05. Audit baseline main `3625d0663ba6eb51338cbd5f9dc45f859ec18846`, tree `db7f3d2afe73a13628296daee2cce71165eebc8d`, `/Users/abdelrahman/Projects/parlor`. No tracked edits. This is bounded API/runner research, **not a simulator test execution or a new confirmed defect**.
+
+## Source binding and methods
+
+`gradle/libs.versions.toml:8,87,99` pins KGP2.4.10; wrapper/Gradle8.13 selects the gradle813 artifact. Read public cached `kotlin-gradle-plugin-2.4.10-gradle813-sources.jar` (SHA256`70e277a44fbcf4d58444bb8b1459cb80686380537aa7414b80745a71607b36bb`). Exact source paths/hashes are in `research/kgp-simulator-session_cont/cached-source-extraction.json`. Six key files were independently fetched from official `JetBrains/kotlin/v2.4.10` URLs on2026-09-05; all HTTP200 and byte-identical to cached sources (`official-fetches.json`). No assumption that latest upstream code equals the pinned plugin.
+
+Cached binary SHA256`13e22c869df3972db9496b47bf2815fbcfb61e0439f96cbd8d6aeb912b481375` matches the exact artifact-owned checksum at `gradle/verification-metadata.xml:9619–9620`. JDK21 `javap` on that existing binary confirms the public `Property<String> getDevice()` and `Property<Boolean> getStandalone()` methods (`cached-binary-javap.txt`). No compile/Gradle/simctl/Xcode/device-creation command ran on this reviewer's lane.
+
+## Supported API and default behavior
+
+- Exact `KotlinNativeTest.kt:245–267`: `KotlinNativeSimulatorTest.device` is `org.gradle.api.provider.Property<String>`, annotated task input and CLI `--device` option. Set with `task.device.set(uuid)` or `task.getDevice().set(uuid)`, **not assigning `deviceId`** (task accessor deprecated at ERROR level257–263).
+- The test-run DSL `KotlinNativeSimulatorTestRun.deviceId` is separate and still delegates to `executionTask.configure { it.device.set(value) }` (`KotlinNativeBinaryTestRun.kt:36–42,73–81`). A typed build script can use that, but an audit init script should use the task's public Property API without adding new KGP dependencies/classpath or editing the build.
+- `KotlinNativeTestRunFactories.kt:92–105`: enabled tasks attach a default provider and `finalizeValueOnRead()`. `XcodeDefaultTestDevicesValueSource.kt:23–61` runs `/usr/bin/xcrun simctl list devices available`, selects the first UUID following each recognized OS header, and overwrites the family entry when a later header of that family is encountered. It is **not owned-device selection**. An explicit set before first read avoids evaluating that provider; never call `.get()` to discover the current device first.
+- `standalone` is `Property<Boolean>` (`KotlinNativeTest.kt:272–273`), with convention`true` and finalize-on-read (`KotlinNativeTestRunFactories.kt:66–69`). `debugMode` defaultsfalse. The real command is `/usr/bin/xcrun simctl spawn [--wait-for-debugger] [--standalone] DEVICE EXECUTABLE -- ...` (`KotlinNativeTest.kt:275–296`). The device string is passed as its own ProcessBuilder argument, not shell-concatenated.
+- Setting `standalone=false` omits`--standalone`; a prebooted owned simulator is then required. The plugin does not itself call boot/shutdown in that path. Exit149 produces an explicit possibly-unbooted-device diagnostic (`NativeAppleSimulatorTCServiceMessagesClient.kt:44–50`). This report does not assert complete Xcode-internal standalone cleanup behavior from a comment alone.
+- `--device` on a selected **leaf** simulator task is supported by the annotation. It does not automatically configure child tasks of Parlor's plain root aggregate. Use init binding for the aggregate rather than assuming `productionIosSimulatorRuntimeTests --device UUID` propagates it.
+
+## Proposed isolated init/command (not executed here)
+
+Source-reviewed68-line script: `reproducers/OwnedIosSimulator-session_cont.init.gradle`. It only applies configuration to the exact Parlor root (not included build-logic), requires a syntactically exact UUID, binds every `iosSimulatorArm64Test` through public Properties, sets`standalone=false`, and at the task graph checks all enabled native simulator tasks. It rejects any enabled unbound simulator target, unexpected task implementation/API, a changed UUID/standalone setting, debug-wait mode, or a graph with no enabled simulator tests. It then disallows device/standalone changes. Disabled simulator tasks are logged without reading their default device providers. It does not override host enablement, test filters/assertions, ignore flags, dependencies, or strict verification.
+
+The root build lane must first create a **new task-owned** simulator of an installed supported iPhone runtime, record its newly returned UUID and successful boot, and own its eventual cleanup. The UUID environment variable alone does not prove ownership; the separate creation receipt does. No user simulator or `booted` shorthand is permitted.
+
+```bash
+# Run from /Users/abdelrahman/Projects/parlor, after root-owned create+boot.
+export PARLOR_AUDIT_SIMULATOR_UDID="$NEW_OWNED_SIMULATOR_UUID"
+./gradlew productionIosSimulatorRuntimeTests \
+  -I audit-runs/2026-09-05-source-audit/reproducers/OwnedIosSimulator-session_cont.init.gradle \
+  --dependency-verification=strict --no-configuration-cache \
+  --no-parallel --max-workers=1 --no-daemon --console=plain --stacktrace
+```
+
+For a later applicable broader`allTests` run, use the same init binding; do not infer every configured target executed. Configuration cache is explicitly off because the audit's projectsEvaluated/taskGraph guards are not a cache-compatible production integration. Use this init script **only with native test selection**, never with clean/stop; its no-tests guard intentionally rejects unrelated task graphs. Root must review the script and own first execution validation; no claim that Groovy/Gradle execution already succeeded is made here.
+
+## Exact aggregate and host applicability
+
+- Parlor root `build.gradle.kts:20–23,188–193` aggregates existing per-module`allTests`;32–35,194–199 separately aggregate every registered`iosSimulatorArm64Test`. No custom simulator overrides were found in actual module/convention wiring. `KmpLibraryConventionPlugin.kt:38–43` and `composeApp/build.gradle.kts:114–119` configure all3Apple targets.
+- Exact KGP`KotlinMultiplatformTargetPresetSetupAction.kt:28–43` gives IOS_X64 and IOS_SIMULATOR_ARM64 simulator-test targets; IOS_ARM64 is a plain native target. `KotlinNativeTarget.kt:192–209`, generated preset DSL160–206/557–588, and `KotlinNativeTargetPreset.kt:82–111` corroborate this distinction.
+- Factory`KotlinNativeTestRunFactories.kt:52–68,85` enables simulator execution only when host is macOS **and host architecture equals target architecture**. On a native Apple Silicon Gradle/JDK process, arm64 simulator tasks are enabled and iosX64Test is host-disabled. On Intel/Rosetta the inverse may hold; verify the actual process architecture, do not infer it solely from hardware. This init script refuses executing any enabled non-arm64 simulator task rather than silently choosing a user simulator.
+- **iosArm64 has no KGP physical-device test run registered by this setup**, not a successfully executed physical-device test. All native targets still get DEBUG test binaries (`KotlinNativeConfigureBinariesSideEffect.kt:78–84`), which is different from execution registration. Do not mark iOS physical tests PASS merely because`allTests` succeeds.
+- Disabled test tasks retain dependency wiring: test run54 links executable via a TaskProvider; native link creation107–128 wires compilation and uses a separate host-capability gate. Consequently a disabled iosX64 execution task can still have build/link prerequisites in a graph. Inspect actual task receipts, not only the aggregate label, and clean their outputs too.
+- `KotlinNativeTest.kt:51–62` skips missing/empty executable input; `KotlinTest.kt:35–37` sets fail-on-no-matching-testsfalse. A selected/bound task is not proof that tests ran. Capture per-suite tests/failures/skips and specific expected test names, especially when using selectors.
+- Per-module`allTests` is a KGP`KotlinTestReport`; its source199–232 may make child tasks defer failures to the aggregate. Its aggregate144–195 checks both test failures and recorded execution failures. Preserve overall exit and leaf reports rather than treating an individual child task's status as sufficient.
+
+## Runner and cleanup evidence/limits
+
+- `KotlinNativeTest.kt:40–43,82–129` begins with inherited environment; factory86 sets working directory to the module project directory. `TCServiceMessagesTestExecutor.kt:93–104,116–165` launches the xcrun command through ProcessBuilder, merges stdout/stderr, closes stdin, drains/parses output on daemon threads, waits for both and process exit. Native TeamCity test messages carry individual failures even with`--ktest_no_exit_code`; nonzero process exit is separately checked167–169.
+- The executor finally184–206 calls destroyForcibly on the direct Java Process handle; stopNow216–220 does too. It does **not** enumerate/kill all descendants or delete simulators. Root must not infer that killing Gradle/xcrun guarantees CoreSimulator/test descendant termination. In particular, manual-boot standalonefalse leaves the device lifecycle to the root lane.
+- Avoid`--debug`: the exact runner's debug log108–114 includes the entire ProcessBuilder environment. Do not collect that log level in a session that may inherit private variables. Sanitize required failures/reports; do not inspect private user data.
+- Task reports are module-local: `build/test-results/<task>/` (XML and binary), `build/reports/tests/<task>/`; aggregate HTML under`build/reports/tests/allTests` (`conventions.kt:17–35`, `KotlinTestsRegistry.kt:86–95`). `TestReportService.kt:74–75,101–120` writes prior-failure state to **that module's**`build/test-results/kotlin-test-tasks-state.bin`, not a global user store. There is no evidence these runner files need retaining after compact receipts.
+- Root finalizer after success/failure/timeout: collect status/reports; immediately `./gradlew --stop`; shutdown/delete **only the newly recorded UUID** and verify absent; precisely clean task-created module/root/build-logic outputs or safe`./gradlew clean --no-daemon`; stop Gradle again if cleanup started it; verify task-owned test/app/xcrun processes gone. Do not delete pre-existing devices, user DerivedData, caches or native toolchains. Native test runner itself does not create an Xcode DerivedData directory; any separately executed Xcode phase must use root-owned DerivedData and clean it independently.
+- Global Gradle/Kotlin-Native dependencies/toolchain caches are outside this runner-cleanup claim and must not be broadly deleted. Test bodies/platform services can have their own outputs; a new owned simulator protects user device data, but root still must inspect applicable tests and receipt cleanup rather than treating runner review as a full storage proof.
+
+## Verdict and remaining limits
+
+**API selection research complete; simulator/runtime execution NOT RUN on this lane.** Exact source confirms a safe public Property binding path and explains why the default must not be trusted to select an owned device. Root's first init-script/configuration/runtime execution, actual installed-runtime compatibility, simulator boot/termination receipts, suite counts and normal/failure cleanup are still required. Installed Xcode26.5 evidence is not Store-qualified Xcode26.3/17C529 proof. No physical-device, app UI, real LAN, signing, or Store evidence is established by native unit-test execution.

@@ -1,0 +1,72 @@
+{
+  "reviewer": "/root/session_cont",
+  "recorded_utc": "2026-09-05T12:02:58.148920+00:00",
+  "question": "Can MutableSharedFlow(extraBufferCapacity = 64) suspend/backpressure with no subscribers at Parlor pinned coroutines 1.11.0?",
+  "pin_source": {
+    "path": "/Users/abdelrahman/Projects/parlor/gradle/libs.versions.toml",
+    "lines": [
+      8,
+      9
+    ],
+    "sha256": "87a031665605a1fb3f932be31c75afd8d2d1bc0d94cfcca36101141c50788399"
+  },
+  "references": [
+    {
+      "url": "https://raw.githubusercontent.com/Kotlin/kotlinx.coroutines/1.11.0/kotlinx-coroutines-core/common/src/flow/SharedFlow.kt",
+      "http_status": 200,
+      "accessed_utc": "2026-09-05T11:56:28.963352+00:00",
+      "uncompressed_sha256": "bbbdd7a01129676b9e07e45f2ec47ee273ba250331469ec7078e7617e9c5807d",
+      "uncompressed_bytes": 36289,
+      "line_count": 740,
+      "file": "kotlinx-coroutines-1.11.0-SharedFlow.kt.gz",
+      "reviewed_ranges": [
+        [
+          1,
+          142
+        ],
+        [
+          173,
+          215
+        ],
+        [
+          253,
+          290
+        ],
+        [
+          380,
+          461
+        ]
+      ],
+      "publisher": "Kotlin/kotlinx.coroutines official source repository, exact 1.11.0 tag",
+      "claim": "With no collectors, emit takes successful tryEmit fast path; replay defaults to zero so values are immediately discarded. extraBufferCapacity and SUSPEND overflow do not create backpressure without collectors.",
+      "implementation_lines": [
+        [
+          418,
+          426
+        ],
+        [
+          447,
+          455
+        ]
+      ],
+      "documentation_lines": [
+        [
+          66,
+          71
+        ],
+        [
+          179,
+          207
+        ],
+        [
+          266,
+          280
+        ]
+      ],
+      "applicability": "PassAndPlaySessionController.kt:69 constructs this exact SharedFlow shape; no shipping GameEvent collectors found in source and positive state-consumer paths reopened.",
+      "limitations": "Dependency source inspection only, selected line ranges, not an executed runtime probe or full dependency audit; future subscribers change applicability."
+    }
+  ],
+  "counter_evidence": "The helper test can intentionally suspend its custom emitter; subscribed SharedFlow can suspend on overflow. The transitive cancellation-order schedule is not denied. What is absent is a current shipping GameEvent consumer/consequence.",
+  "privacy": "Only public upstream dependency source retrieved. No private data, credentials, or repository excerpts transmitted."
+}

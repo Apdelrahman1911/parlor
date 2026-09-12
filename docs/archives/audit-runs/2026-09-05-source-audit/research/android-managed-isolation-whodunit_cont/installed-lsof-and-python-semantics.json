@@ -1,0 +1,40 @@
+{
+  "recorded_at": "2026-09-05T13:06:54.479656+00:00",
+  "authority": "Installed OS lsof manual; applies to this host query syntax",
+  "path": "/usr/share/man/man8/lsof.8",
+  "source_sha256": "b3e81bbde414e488160ead258804afbb09438c49b3aaba2e59f185314cc8ac1e",
+  "source_lines": 4539,
+  "excerpts": [
+    {
+      "reviewed_range": [
+        433,
+        464
+      ],
+      "numbered_source": "  433 .B OUTPUT\n  434 section for more information on file descriptor names.\n  435 .TP \\w'names'u+4\n  436 .BI +D \" D\"\n  437 causes\n  438 .I lsof\n  439 to search for all open instances of directory\n  440 .I D\n  441 and all the files and directories it contains to its complete depth.\n  442 .IP\n  443 Processing of the\n  444 .B +D\n  445 option does not follow symbolic links within\n  446 .I D\n  447 unless the\n  448 .B \\-x\n  449 or\n  450 .B \\-x \" l\"\n  451 option is also specified.\n  452 Nor does it\n  453 search for open files on file system mount points on subdirectories of\n  454 .I D\n  455 unless the\n  456 .B \\-x\n  457 or\n  458 .B \\-x \" f\"\n  459 option is also specified.\n  460 .IP\n  461 Note: the authority of the user of this option limits it to searching for\n  462 files that the user has permission to examine with the system\n  463 .IR stat (2)\n  464 function."
+    },
+    {
+      "reviewed_range": [
+        2470,
+        2486
+      ],
+      "numbered_source": " 2470 .IP\n 2471 FD is followed by one of these characters, describing the mode under which\n 2472 the file is open:\n 2473 .IP\n 2474 \t\\fBr\\fP for read access;\n 2475 .br\n 2476 \t\\fBw\\fP for write access;\n 2477 .br\n 2478 \t\\fBu\\fP for read and write access;\n 2479 .br\n 2480 \tspace if mode unknown and no lock\n 2481 .br\n 2482 \t\tcharacter follows;\n 2483 .br\n 2484 \t`\\-' if mode unknown and lock\n 2485 .br\n 2486 \t\tcharacter follows."
+    },
+    {
+      "reviewed_range": [
+        3175,
+        3220
+      ],
+      "numbered_source": " 3175 .SH \"OUTPUT FOR OTHER PROGRAMS\"\n 3176 When the\n 3177 .B \\-F\n 3178 option is specified,\n 3179 .I lsof\n 3180 produces output that is suitable for processing by another program \\- e.g, an\n 3181 .I awk\n 3182 or\n 3183 .I Perl\n 3184 script, or a C program.\n 3185 .PP\n 3186 Each unit of information is output in a field that is identified\n 3187 with a leading character and terminated by a NL (012) (or a NUL\n 3188 (000) if the 0 (zero) field identifier character is specified.)\n 3189 The data of the field follows immediately after the field identification\n 3190 character and extends to the field terminator.\n 3191 .PP\n 3192 It is possible to think of field output as process and file sets.\n 3193 A process set begins with a field whose identifier is `p' (for\n 3194 process IDentifier (PID)).\n 3195 It extends to the beginning of the next PID field or the beginning\n 3196 of the first file set of the process, whichever comes first.\n 3197 Included in the process set are fields that identify the command,\n 3198 the process group IDentification (PGID) number, the task (thread)\n 3199 ID (TID), and the user ID (UID) number or login name.\n 3200 .PP\n 3201 A file set begins with a field whose identifier is `f' (for\n 3202 file descriptor).\n 3203 It is followed by lines that describe the file's access mode,\n 3204 lock state, type, device, size, offset, inode, protocol, name\n 3205 and stream module names.\n 3206 It extends to the beginning of the next file or process set,\n 3207 whichever comes first.\n 3208 .PP\n 3209 When the NUL (000) field terminator has been selected with the\n 3210 0 (zero) field identifier character,\n 3211 .I lsof\n 3212 ends each process and file set with a NL (012) character.\n 3213 .PP\n 3214 .I Lsof\n 3215 always produces one field, the PID (`p') field.\n 3216 All other fields may be declared optionally in the field identifier\n 3217 character list that follows the\n 3218 .B \\-F\n 3219 option.\n 3220 When a field selection character identifies an item"
+    },
+    {
+      "reviewed_range": [
+        3244,
+        3274
+      ],
+      "numbered_source": " 3244 These are the fields that\n 3245 .I lsof\n 3246 will produce.\n 3247 The single character listed first is the field identifier.\n 3248 .PP\n 3249 .nf\n 3250 \ta\tfile access mode\n 3251 \tc\tprocess command name (all characters from proc or\n 3252 \t\tuser structure)\n 3253 \tC\tfile structure share count\n 3254 \td\tfile's device character code\n 3255 \tD\tfile's major/minor device number (0x<hexadecimal>)\n 3256 \tf\tfile descriptor (always selected)\n 3257 \tF\tfile structure address (0x<hexadecimal>)\n 3258 \tG\tfile flaGs (0x<hexadecimal>; names if \\fB+fg\\fP follows)\n 3259 \tg\tprocess group ID\n 3260 \ti\tfile's inode number\n 3261 \tK\ttasK ID\n 3262 \tk\tlink count\n 3263 \tl\tfile's lock status\n 3264 \tL\tprocess login name\n 3265 \tm\tmarker between repeated output\n 3266 \tM\tthe task comMand name\n 3267 \tn\tfile name, comment, Internet address\n 3268 \tN\tnode identifier (ox<hexadecimal>\n 3269 \to\tfile's offset (decimal)\n 3270 \tp\tprocess ID (always selected)\n 3271 \tP\tprotocol name\n 3272 \tr\traw device number (0x<hexadecimal>)\n 3273 \tR\tparent process ID\n 3274 \ts\tfile's size (decimal)"
+    }
+  ],
+  "python_version": "3.9.6 (default, Apr 17 2026, 18:15:52) \n[Clang 21.0.0 (clang-2100.1.1.101)]",
+  "rmtree_avoids_symlink_attacks": true,
+  "native_command_execution": false
+}

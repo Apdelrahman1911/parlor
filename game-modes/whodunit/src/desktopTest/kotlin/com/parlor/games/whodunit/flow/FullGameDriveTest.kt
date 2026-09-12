@@ -60,7 +60,7 @@ import kotlin.test.Test
  * exact action sequence the UI would, and assert the reducer reaches Reveal +
  * PostGame.
  *
- * This is the Phase 5 acceptance bar from `docs/APP_PLAN.md` §5: a full Classic
+ * This is the Phase 5 acceptance bar from `docs/archives/history/APP_PLAN.md` §5: a full Classic
  * Vote game plays from setup to reveal. Elimination is exercised as a separate
  * test below to confirm the per-round vote → eliminate → continue loop and the
  * killer-voted-out-immediately ends-game path.

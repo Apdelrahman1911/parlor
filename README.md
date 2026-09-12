@@ -14,19 +14,22 @@ public-internet rendezvous/NAT traversal, relay, spectators, and host migration
 are not supported in the first release. Hotspot behavior remains a
 device/OS/topology-specific physical release gate, not a universal promise.
 
-The current architecture and release contracts are documented in:
+Start with the [documentation index](docs/README.md) and
+[current project status](docs/PROJECT_STATUS.md). The current architecture and
+release contracts are documented in:
 
 - [`docs/PRODUCTION_ARCHITECTURE.md`](docs/PRODUCTION_ARCHITECTURE.md)
-- [`ARCHITECTURE.md`](ARCHITECTURE.md) — original design history
 - [`docs/adr/0001-game-module-registration.md`](docs/adr/0001-game-module-registration.md)
 - [`docs/adr/0002-manual-endpoint-connection.md`](docs/adr/0002-manual-endpoint-connection.md)
 - [`docs/HOW_TO_ADD_A_GAME.md`](docs/HOW_TO_ADD_A_GAME.md)
 - [`docs/P2P_MANUAL_TEST.md`](docs/P2P_MANUAL_TEST.md)
-- [`docs/P2P_REMEDIATION_STATUS.md`](docs/P2P_REMEDIATION_STATUS.md)
 - [`docs/P2PKIT_MAVEN_PROVENANCE.md`](docs/P2PKIT_MAVEN_PROVENANCE.md)
 - [`docs/RELEASE_GATES.md`](docs/RELEASE_GATES.md)
 - [`docs/RELEASE_AUTOMATION.md`](docs/RELEASE_AUTOMATION.md)
 - [`docs/PRIVACY_AND_COMPLIANCE.md`](docs/PRIVACY_AND_COMPLIANCE.md)
+
+Historical plans, audits, and handoff checkpoints are indexed under
+[`docs/archives/`](docs/archives/README.md); they are not current contracts.
 
 ## Requirements
 

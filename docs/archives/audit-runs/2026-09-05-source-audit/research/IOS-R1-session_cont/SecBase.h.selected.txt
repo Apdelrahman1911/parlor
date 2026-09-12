@@ -1,0 +1,41 @@
+325: {
+326:     errSecSuccess                            = 0,       /* No error. */
+327:     errSecUnimplemented                      = -4,      /* Function or operation not implemented. */
+328:     errSecDiskFull                           = -34,     /* The disk is full. */
+329:     errSecDskFull __attribute__((deprecated("use errSecDiskFull"))) = errSecDiskFull,
+330:     errSecIO                                 = -36,     /* I/O error. */
+331:     errSecOpWr                               = -49,     /* File already open with write permission. */
+332:     errSecParam                              = -50,     /* One or more parameters passed to a function were not valid. */
+333:     errSecWrPerm                             = -61,     /* Write permissions error. */
+334:     errSecAllocate                           = -108,    /* Failed to allocate memory. */
+335:     errSecUserCanceled                       = -128,    /* User canceled the operation. */
+336:     errSecBadReq                             = -909,    /* Bad parameter or invalid state for operation. */
+337: 
+338:     errSecInternalComponent                  = -2070,
+339:     errSecCoreFoundationUnknown              = -4960,
+340: 
+341:     errSecMissingEntitlement                 = -34018,    /* A required entitlement isn't present. */
+342:     errSecRestrictedAPI                      = -34020,    /* Client is restricted and is not permitted to perform this operation. */
+343: 
+344:     errSecNotAvailable                       = -25291,    /* No keychain is available. You may need to restart your computer. */
+345:     errSecReadOnly                           = -25292,    /* This keychain cannot be modified. */
+346:     errSecAuthFailed                         = -25293,    /* The user name or passphrase you entered is not correct. */
+347:     errSecNoSuchKeychain                     = -25294,    /* The specified keychain could not be found. */
+348:     errSecInvalidKeychain                    = -25295,    /* The specified keychain is not a valid keychain file. */
+349:     errSecDuplicateKeychain                  = -25296,    /* A keychain with the same name already exists. */
+350:     errSecDuplicateCallback                  = -25297,    /* The specified callback function is already installed. */
+351:     errSecInvalidCallback                    = -25298,    /* The specified callback function is not valid. */
+352:     errSecDuplicateItem                      = -25299,    /* The specified item already exists in the keychain. */
+353:     errSecItemNotFound                       = -25300,    /* The specified item could not be found in the keychain. */
+354:     errSecBufferTooSmall                     = -25301,    /* There is not enough memory available to use the specified item. */
+355:     errSecDataTooLarge                       = -25302,    /* This item contains information which is too large or in a format that cannot be displayed. */
+356:     errSecNoSuchAttr                         = -25303,    /* The specified attribute does not exist. */
+357:     errSecInvalidItemRef                     = -25304,    /* The specified item is no longer valid. It may have been deleted from the keychain. */
+358:     errSecInvalidSearchRef                   = -25305,    /* Unable to search the current keychain. */
+359:     errSecNoSuchClass                        = -25306,    /* The specified item does not appear to be a valid keychain item. */
+360:     errSecNoDefaultKeychain                  = -25307,    /* A default keychain could not be found. */
+361:     errSecInteractionNotAllowed              = -25308,    /* User interaction is not allowed. */
+362:     errSecReadOnlyAttr                       = -25309,    /* The specified attribute could not be modified. */
+363:     errSecWrongSecVersion                    = -25310,    /* This keychain was created by a different version of the system software and cannot be opened. */
+364:     errSecKeySizeNotAllowed                  = -25311,    /* This item specifies a key size which is too large or too small. */
+365:     errSecNoStorageModule                    = -25312,    /* A required component (data storage module) could not be loaded. You may need to restart your computer. */

@@ -1,0 +1,42 @@
+{
+  "at": "2026-09-05T15:27:44.195564+00:00",
+  "reviewer": "/root/mafia_cont",
+  "description": "Additive correction of checker assumptions; original unsuccessful receipts preserved.",
+  "versions": [
+    {
+      "path": "audit-runs/2026-09-05-source-audit/evidence/final-frozen-reconciliation-mafia-cont/reconcile.py",
+      "sha256": "f6fdb3f6b0ee0da3937a91ccca7e8344f1e990a81e11a65eb104dea967297a96"
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/evidence/final-frozen-reconciliation-mafia-cont/reconcile-v2.py",
+      "sha256": "04034d7ce118c4aac394348ce1acf8dce5bb192a08c28c71640cfb17f456f8f6"
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/evidence/final-frozen-reconciliation-mafia-cont/reconcile-v3.py",
+      "sha256": "129dc61f3b8fbc1d095cc339b5ff0f145ef0ce09137f1a9ca7797caaf551f0ed"
+    }
+  ],
+  "changes": [
+    "Exclude null baseline hashes from source-hash equality: historical DS_Store format/hash receipts are not baseline byte-preservation claims; no contents re-read.",
+    "32 root checker inputs include one list-shaped public-research receipt. Cleanup projection intentionally includes only31 object-shaped receipts. Retain the list in overall checker binding.",
+    "README has9 additional local links, for247 total across all8 final Markdown deliverables.",
+    "Permit an explicitly named additive freeze manifest after authorized metadata correction; no snapshot overwritten."
+  ],
+  "outcomes": [
+    {
+      "receipt": "reconciliation-01.json",
+      "exit_code": 1,
+      "passed": 115,
+      "failed": 4,
+      "qualification": "Three failed assertions were checker assumptions above; one genuine audit-material projection mismatch."
+    },
+    {
+      "receipt": "reconciliation-02.json",
+      "exit_code": 1,
+      "passed": 118,
+      "failed": 1,
+      "qualification": "Only genuine historical audit-material projection mismatch remains. Root notified; metadata-only fix pending."
+    }
+  ],
+  "cleanup": "Read-only comparison/synchronous Python -B; no daemon/build/process/device operation. Required evidence retained only."
+}

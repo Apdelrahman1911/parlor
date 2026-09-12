@@ -1,0 +1,1002 @@
+{
+  "timestamp": "2026-09-05T11:45:20.077108+00:00",
+  "reviewer": "/root/session_cont",
+  "current_first_party_files": [
+    {
+      "path": "composeApp/src/androidMain/kotlin/com/parlor/app/storage/AndroidSnapshotFileSystem.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/composeApp/src/androidMain/kotlin/com/parlor/app/storage/AndroidSnapshotFileSystem.kt",
+      "sha256": "452de69acd5642c28780d4c44cf37db6145694867da11598958120e23f5b164a",
+      "line_count": 298,
+      "reviewed_ranges": [
+        [
+          1,
+          298
+        ]
+      ],
+      "reviewer": "/root/session_cont",
+      "timestamp": "2026-09-05T11:45:20.077108+00:00",
+      "status": "REOPENED_STORAGE_RESIDUAL_SOURCE_REVIEW",
+      "file_type": "text",
+      "relevance": "production/platform",
+      "cross_file_paths": [
+        "Canonical local snapshot writer/codec -> FileBackedSnapshotStore -> platform migration/protection/list -> Home recovery -> explicit Retry/Discard",
+        "Android manifest and cloud/device-transfer rules vs iOS protected/legacy directories",
+        "FileHandle synchronous owner -> Kotlin/ObjC error boundary -> lifecycle and production caller guards"
+      ],
+      "evidence": [
+        "reviews/storage-residual-session_cont.md",
+        "candidates/ST-C1-ios-legacy-backup-eligibility.md",
+        "research/storage-residual-session_cont/research-ledger.json"
+      ],
+      "uncertainty": "ST-C1 pending independent root/native adjudication; Android legacy retained bytes do not prove backup bypass; iOS post-open crash requires reachable runtime/error-injection proof. No real data or backup tested."
+    },
+    {
+      "path": "composeApp/src/androidMain/AndroidManifest.xml",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/composeApp/src/androidMain/AndroidManifest.xml",
+      "sha256": "daddfd606b67536858d5e7d3272aacabeb4210db5c2a2fab0bc9e172c9d903ca",
+      "line_count": 33,
+      "reviewed_ranges": [
+        [
+          1,
+          33
+        ]
+      ],
+      "reviewer": "/root/session_cont",
+      "timestamp": "2026-09-05T11:45:20.077108+00:00",
+      "status": "REOPENED_STORAGE_RESIDUAL_SOURCE_REVIEW",
+      "file_type": "text",
+      "relevance": "build/platform",
+      "cross_file_paths": [
+        "Canonical local snapshot writer/codec -> FileBackedSnapshotStore -> platform migration/protection/list -> Home recovery -> explicit Retry/Discard",
+        "Android manifest and cloud/device-transfer rules vs iOS protected/legacy directories",
+        "FileHandle synchronous owner -> Kotlin/ObjC error boundary -> lifecycle and production caller guards"
+      ],
+      "evidence": [
+        "reviews/storage-residual-session_cont.md",
+        "candidates/ST-C1-ios-legacy-backup-eligibility.md",
+        "research/storage-residual-session_cont/research-ledger.json"
+      ],
+      "uncertainty": "ST-C1 pending independent root/native adjudication; Android legacy retained bytes do not prove backup bypass; iOS post-open crash requires reachable runtime/error-injection proof. No real data or backup tested."
+    },
+    {
+      "path": "composeApp/src/androidMain/res/xml/backup_rules.xml",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/composeApp/src/androidMain/res/xml/backup_rules.xml",
+      "sha256": "17d3558c5ad2bd3fcc21b366d8acac73fc8a0e31c8c515eab3d16211f62e3dc8",
+      "line_count": 17,
+      "reviewed_ranges": [
+        [
+          1,
+          17
+        ]
+      ],
+      "reviewer": "/root/session_cont",
+      "timestamp": "2026-09-05T11:45:20.077108+00:00",
+      "status": "REOPENED_STORAGE_RESIDUAL_SOURCE_REVIEW",
+      "file_type": "text",
+      "relevance": "production/configuration",
+      "cross_file_paths": [
+        "Canonical local snapshot writer/codec -> FileBackedSnapshotStore -> platform migration/protection/list -> Home recovery -> explicit Retry/Discard",
+        "Android manifest and cloud/device-transfer rules vs iOS protected/legacy directories",
+        "FileHandle synchronous owner -> Kotlin/ObjC error boundary -> lifecycle and production caller guards"
+      ],
+      "evidence": [
+        "reviews/storage-residual-session_cont.md",
+        "candidates/ST-C1-ios-legacy-backup-eligibility.md",
+        "research/storage-residual-session_cont/research-ledger.json"
+      ],
+      "uncertainty": "ST-C1 pending independent root/native adjudication; Android legacy retained bytes do not prove backup bypass; iOS post-open crash requires reachable runtime/error-injection proof. No real data or backup tested."
+    },
+    {
+      "path": "composeApp/src/androidMain/res/xml/data_extraction_rules.xml",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/composeApp/src/androidMain/res/xml/data_extraction_rules.xml",
+      "sha256": "6e0b78698ea071f47ad49d21dd7f6d7518b1100f6d768b0b3f4f1e46fdc3b45d",
+      "line_count": 29,
+      "reviewed_ranges": [
+        [
+          1,
+          29
+        ]
+      ],
+      "reviewer": "/root/session_cont",
+      "timestamp": "2026-09-05T11:45:20.077108+00:00",
+      "status": "REOPENED_STORAGE_RESIDUAL_SOURCE_REVIEW",
+      "file_type": "text",
+      "relevance": "production/configuration",
+      "cross_file_paths": [
+        "Canonical local snapshot writer/codec -> FileBackedSnapshotStore -> platform migration/protection/list -> Home recovery -> explicit Retry/Discard",
+        "Android manifest and cloud/device-transfer rules vs iOS protected/legacy directories",
+        "FileHandle synchronous owner -> Kotlin/ObjC error boundary -> lifecycle and production caller guards"
+      ],
+      "evidence": [
+        "reviews/storage-residual-session_cont.md",
+        "candidates/ST-C1-ios-legacy-backup-eligibility.md",
+        "research/storage-residual-session_cont/research-ledger.json"
+      ],
+      "uncertainty": "ST-C1 pending independent root/native adjudication; Android legacy retained bytes do not prove backup bypass; iOS post-open crash requires reachable runtime/error-injection proof. No real data or backup tested."
+    },
+    {
+      "path": "composeApp/src/androidMain/kotlin/com/parlor/app/storage/PlatformStorage.android.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/composeApp/src/androidMain/kotlin/com/parlor/app/storage/PlatformStorage.android.kt",
+      "sha256": "7cd14c2a4e100b9c31dfec11d57df581d18c461e75a3e2eae99d46c3deddfa5b",
+      "line_count": 20,
+      "reviewed_ranges": [
+        [
+          1,
+          20
+        ]
+      ],
+      "reviewer": "/root/session_cont",
+      "timestamp": "2026-09-05T11:45:20.077108+00:00",
+      "status": "REOPENED_STORAGE_RESIDUAL_SOURCE_REVIEW",
+      "file_type": "text",
+      "relevance": "production/di",
+      "cross_file_paths": [
+        "Canonical local snapshot writer/codec -> FileBackedSnapshotStore -> platform migration/protection/list -> Home recovery -> explicit Retry/Discard",
+        "Android manifest and cloud/device-transfer rules vs iOS protected/legacy directories",
+        "FileHandle synchronous owner -> Kotlin/ObjC error boundary -> lifecycle and production caller guards"
+      ],
+      "evidence": [
+        "reviews/storage-residual-session_cont.md",
+        "candidates/ST-C1-ios-legacy-backup-eligibility.md",
+        "research/storage-residual-session_cont/research-ledger.json"
+      ],
+      "uncertainty": "ST-C1 pending independent root/native adjudication; Android legacy retained bytes do not prove backup bypass; iOS post-open crash requires reachable runtime/error-injection proof. No real data or backup tested."
+    },
+    {
+      "path": "composeApp/src/iosMain/kotlin/com/parlor/app/storage/PlatformStorage.ios.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/composeApp/src/iosMain/kotlin/com/parlor/app/storage/PlatformStorage.ios.kt",
+      "sha256": "cb69b6de029bf7d9f84dbc5bf19139150906a29d64cf29a60994259ca657a0c0",
+      "line_count": 19,
+      "reviewed_ranges": [
+        [
+          1,
+          19
+        ]
+      ],
+      "reviewer": "/root/session_cont",
+      "timestamp": "2026-09-05T11:45:20.077108+00:00",
+      "status": "REOPENED_STORAGE_RESIDUAL_SOURCE_REVIEW",
+      "file_type": "text",
+      "relevance": "production/di",
+      "cross_file_paths": [
+        "Canonical local snapshot writer/codec -> FileBackedSnapshotStore -> platform migration/protection/list -> Home recovery -> explicit Retry/Discard",
+        "Android manifest and cloud/device-transfer rules vs iOS protected/legacy directories",
+        "FileHandle synchronous owner -> Kotlin/ObjC error boundary -> lifecycle and production caller guards"
+      ],
+      "evidence": [
+        "reviews/storage-residual-session_cont.md",
+        "candidates/ST-C1-ios-legacy-backup-eligibility.md",
+        "research/storage-residual-session_cont/research-ledger.json"
+      ],
+      "uncertainty": "ST-C1 pending independent root/native adjudication; Android legacy retained bytes do not prove backup bypass; iOS post-open crash requires reachable runtime/error-injection proof. No real data or backup tested."
+    },
+    {
+      "path": "composeApp/src/commonMain/kotlin/com/parlor/app/storage/PlatformStorage.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/composeApp/src/commonMain/kotlin/com/parlor/app/storage/PlatformStorage.kt",
+      "sha256": "1f56d8b7adca7d5148445ec9e8f69d2f9a74f253d4c425cc2abd00a84594b690",
+      "line_count": 41,
+      "reviewed_ranges": [
+        [
+          1,
+          41
+        ]
+      ],
+      "reviewer": "/root/session_cont",
+      "timestamp": "2026-09-05T11:45:20.077108+00:00",
+      "status": "REOPENED_STORAGE_RESIDUAL_SOURCE_REVIEW",
+      "file_type": "text",
+      "relevance": "production/migration",
+      "cross_file_paths": [
+        "Canonical local snapshot writer/codec -> FileBackedSnapshotStore -> platform migration/protection/list -> Home recovery -> explicit Retry/Discard",
+        "Android manifest and cloud/device-transfer rules vs iOS protected/legacy directories",
+        "FileHandle synchronous owner -> Kotlin/ObjC error boundary -> lifecycle and production caller guards"
+      ],
+      "evidence": [
+        "reviews/storage-residual-session_cont.md",
+        "candidates/ST-C1-ios-legacy-backup-eligibility.md",
+        "research/storage-residual-session_cont/research-ledger.json"
+      ],
+      "uncertainty": "ST-C1 pending independent root/native adjudication; Android legacy retained bytes do not prove backup bypass; iOS post-open crash requires reachable runtime/error-injection proof. No real data or backup tested."
+    },
+    {
+      "path": "composeApp/src/commonMain/kotlin/com/parlor/app/storage/SnapshotProtectionPolicy.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/composeApp/src/commonMain/kotlin/com/parlor/app/storage/SnapshotProtectionPolicy.kt",
+      "sha256": "e234a34809bfe8dc4dd3345b33dce10c98f311fa02cc5c6a963b613bffb11d2d",
+      "line_count": 35,
+      "reviewed_ranges": [
+        [
+          1,
+          35
+        ]
+      ],
+      "reviewer": "/root/session_cont",
+      "timestamp": "2026-09-05T11:45:20.077108+00:00",
+      "status": "REOPENED_STORAGE_RESIDUAL_SOURCE_REVIEW",
+      "file_type": "text",
+      "relevance": "production/storage",
+      "cross_file_paths": [
+        "Canonical local snapshot writer/codec -> FileBackedSnapshotStore -> platform migration/protection/list -> Home recovery -> explicit Retry/Discard",
+        "Android manifest and cloud/device-transfer rules vs iOS protected/legacy directories",
+        "FileHandle synchronous owner -> Kotlin/ObjC error boundary -> lifecycle and production caller guards"
+      ],
+      "evidence": [
+        "reviews/storage-residual-session_cont.md",
+        "candidates/ST-C1-ios-legacy-backup-eligibility.md",
+        "research/storage-residual-session_cont/research-ledger.json"
+      ],
+      "uncertainty": "ST-C1 pending independent root/native adjudication; Android legacy retained bytes do not prove backup bypass; iOS post-open crash requires reachable runtime/error-injection proof. No real data or backup tested."
+    },
+    {
+      "path": "composeApp/src/commonTest/kotlin/com/parlor/app/storage/PlatformStorageMigrationTest.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/composeApp/src/commonTest/kotlin/com/parlor/app/storage/PlatformStorageMigrationTest.kt",
+      "sha256": "5a613acec44291488afd128d5a08b5328a675f88dacc3751ca604e742617ca54",
+      "line_count": 31,
+      "reviewed_ranges": [
+        [
+          1,
+          31
+        ]
+      ],
+      "reviewer": "/root/session_cont",
+      "timestamp": "2026-09-05T11:45:20.077108+00:00",
+      "status": "REOPENED_STORAGE_RESIDUAL_SOURCE_REVIEW",
+      "file_type": "text",
+      "relevance": "test",
+      "cross_file_paths": [
+        "Canonical local snapshot writer/codec -> FileBackedSnapshotStore -> platform migration/protection/list -> Home recovery -> explicit Retry/Discard",
+        "Android manifest and cloud/device-transfer rules vs iOS protected/legacy directories",
+        "FileHandle synchronous owner -> Kotlin/ObjC error boundary -> lifecycle and production caller guards"
+      ],
+      "evidence": [
+        "reviews/storage-residual-session_cont.md",
+        "candidates/ST-C1-ios-legacy-backup-eligibility.md",
+        "research/storage-residual-session_cont/research-ledger.json"
+      ],
+      "uncertainty": "ST-C1 pending independent root/native adjudication; Android legacy retained bytes do not prove backup bypass; iOS post-open crash requires reachable runtime/error-injection proof. No real data or backup tested."
+    },
+    {
+      "path": "composeApp/src/androidUnitTest/kotlin/com/parlor/app/storage/AndroidSnapshotDirectoryListingTest.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/composeApp/src/androidUnitTest/kotlin/com/parlor/app/storage/AndroidSnapshotDirectoryListingTest.kt",
+      "sha256": "52c1f38b0510e9ba13187676f228c65056441f0c3f75f20586af39a7d3964028",
+      "line_count": 23,
+      "reviewed_ranges": [
+        [
+          1,
+          23
+        ]
+      ],
+      "reviewer": "/root/session_cont",
+      "timestamp": "2026-09-05T11:45:20.077108+00:00",
+      "status": "REOPENED_STORAGE_RESIDUAL_SOURCE_REVIEW",
+      "file_type": "text",
+      "relevance": "test",
+      "cross_file_paths": [
+        "Canonical local snapshot writer/codec -> FileBackedSnapshotStore -> platform migration/protection/list -> Home recovery -> explicit Retry/Discard",
+        "Android manifest and cloud/device-transfer rules vs iOS protected/legacy directories",
+        "FileHandle synchronous owner -> Kotlin/ObjC error boundary -> lifecycle and production caller guards"
+      ],
+      "evidence": [
+        "reviews/storage-residual-session_cont.md",
+        "candidates/ST-C1-ios-legacy-backup-eligibility.md",
+        "research/storage-residual-session_cont/research-ledger.json"
+      ],
+      "uncertainty": "ST-C1 pending independent root/native adjudication; Android legacy retained bytes do not prove backup bypass; iOS post-open crash requires reachable runtime/error-injection proof. No real data or backup tested."
+    },
+    {
+      "path": "composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSnapshotFileSystem.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSnapshotFileSystem.kt",
+      "sha256": "340c62d93104e015bc9dc80f92b04e46e92c77d52947b2623f0fd5c472900216",
+      "line_count": 478,
+      "reviewed_ranges": [
+        [
+          1,
+          478
+        ]
+      ],
+      "reviewer": "/root/session_cont",
+      "timestamp": "2026-09-05T11:45:20.077108+00:00",
+      "status": "REOPENED_STORAGE_RESIDUAL_SOURCE_REVIEW",
+      "file_type": "text",
+      "relevance": "production/platform",
+      "cross_file_paths": [
+        "Canonical local snapshot writer/codec -> FileBackedSnapshotStore -> platform migration/protection/list -> Home recovery -> explicit Retry/Discard",
+        "Android manifest and cloud/device-transfer rules vs iOS protected/legacy directories",
+        "FileHandle synchronous owner -> Kotlin/ObjC error boundary -> lifecycle and production caller guards"
+      ],
+      "evidence": [
+        "reviews/storage-residual-session_cont.md",
+        "candidates/ST-C1-ios-legacy-backup-eligibility.md",
+        "research/storage-residual-session_cont/research-ledger.json"
+      ],
+      "uncertainty": "ST-C1 pending independent root/native adjudication; Android legacy retained bytes do not prove backup bypass; iOS post-open crash requires reachable runtime/error-injection proof. No real data or backup tested."
+    },
+    {
+      "path": "composeApp/src/iosTest/kotlin/com/parlor/app/storage/IosStorageSafetyTest.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/composeApp/src/iosTest/kotlin/com/parlor/app/storage/IosStorageSafetyTest.kt",
+      "sha256": "2ecae719e0cbbdaefa412ede46656f59b63777087c8b653e215053359b42218b",
+      "line_count": 195,
+      "reviewed_ranges": [
+        [
+          1,
+          195
+        ]
+      ],
+      "reviewer": "/root/session_cont",
+      "timestamp": "2026-09-05T11:45:20.077108+00:00",
+      "status": "REOPENED_STORAGE_RESIDUAL_SOURCE_REVIEW",
+      "file_type": "text",
+      "relevance": "test",
+      "cross_file_paths": [
+        "Canonical local snapshot writer/codec -> FileBackedSnapshotStore -> platform migration/protection/list -> Home recovery -> explicit Retry/Discard",
+        "Android manifest and cloud/device-transfer rules vs iOS protected/legacy directories",
+        "FileHandle synchronous owner -> Kotlin/ObjC error boundary -> lifecycle and production caller guards"
+      ],
+      "evidence": [
+        "reviews/storage-residual-session_cont.md",
+        "candidates/ST-C1-ios-legacy-backup-eligibility.md",
+        "research/storage-residual-session_cont/research-ledger.json"
+      ],
+      "uncertainty": "ST-C1 pending independent root/native adjudication; Android legacy retained bytes do not prove backup bypass; iOS post-open crash requires reachable runtime/error-injection proof. No real data or backup tested."
+    },
+    {
+      "path": "shared/storage/src/commonMain/kotlin/com/parlor/storage/snapshot/FileBackedSnapshotStore.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/storage/src/commonMain/kotlin/com/parlor/storage/snapshot/FileBackedSnapshotStore.kt",
+      "sha256": "e2ca0be28fd2f0eafee1a55022653190cf30a8c6da620dc3dfe56f361e0da27f",
+      "line_count": 246,
+      "reviewed_ranges": [
+        [
+          1,
+          246
+        ]
+      ],
+      "reviewer": "/root/session_cont",
+      "timestamp": "2026-09-05T11:45:20.077108+00:00",
+      "status": "REOPENED_STORAGE_RESIDUAL_SOURCE_REVIEW",
+      "file_type": "text",
+      "relevance": "production/storage",
+      "cross_file_paths": [
+        "Canonical local snapshot writer/codec -> FileBackedSnapshotStore -> platform migration/protection/list -> Home recovery -> explicit Retry/Discard",
+        "Android manifest and cloud/device-transfer rules vs iOS protected/legacy directories",
+        "FileHandle synchronous owner -> Kotlin/ObjC error boundary -> lifecycle and production caller guards"
+      ],
+      "evidence": [
+        "reviews/storage-residual-session_cont.md",
+        "candidates/ST-C1-ios-legacy-backup-eligibility.md",
+        "research/storage-residual-session_cont/research-ledger.json"
+      ],
+      "uncertainty": "ST-C1 pending independent root/native adjudication; Android legacy retained bytes do not prove backup bypass; iOS post-open crash requires reachable runtime/error-injection proof. No real data or backup tested."
+    },
+    {
+      "path": "shared/storage/src/commonMain/kotlin/com/parlor/storage/snapshot/SnapshotStore.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/storage/src/commonMain/kotlin/com/parlor/storage/snapshot/SnapshotStore.kt",
+      "sha256": "971db2ad642d795458a8ca2c9a6c018109ec09035c2b7c5648cd4f50209ec86b",
+      "line_count": 46,
+      "reviewed_ranges": [
+        [
+          1,
+          46
+        ]
+      ],
+      "reviewer": "/root/session_cont",
+      "timestamp": "2026-09-05T11:45:20.077108+00:00",
+      "status": "REOPENED_STORAGE_RESIDUAL_SOURCE_REVIEW",
+      "file_type": "text",
+      "relevance": "production/contract",
+      "cross_file_paths": [
+        "Canonical local snapshot writer/codec -> FileBackedSnapshotStore -> platform migration/protection/list -> Home recovery -> explicit Retry/Discard",
+        "Android manifest and cloud/device-transfer rules vs iOS protected/legacy directories",
+        "FileHandle synchronous owner -> Kotlin/ObjC error boundary -> lifecycle and production caller guards"
+      ],
+      "evidence": [
+        "reviews/storage-residual-session_cont.md",
+        "candidates/ST-C1-ios-legacy-backup-eligibility.md",
+        "research/storage-residual-session_cont/research-ledger.json"
+      ],
+      "uncertainty": "ST-C1 pending independent root/native adjudication; Android legacy retained bytes do not prove backup bypass; iOS post-open crash requires reachable runtime/error-injection proof. No real data or backup tested."
+    },
+    {
+      "path": "shared/engine/src/commonMain/kotlin/com/parlor/engine/snapshot/SnapshotCodec.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/engine/src/commonMain/kotlin/com/parlor/engine/snapshot/SnapshotCodec.kt",
+      "sha256": "010c2df47f3803d60a80a428e459e052c715d3eb29a55444f1eeeff7c28ebad1",
+      "line_count": 64,
+      "reviewed_ranges": [
+        [
+          1,
+          64
+        ]
+      ],
+      "reviewer": "/root/session_cont",
+      "timestamp": "2026-09-05T11:45:20.077108+00:00",
+      "status": "REOPENED_STORAGE_RESIDUAL_SOURCE_REVIEW",
+      "file_type": "text",
+      "relevance": "production/contract",
+      "cross_file_paths": [
+        "Canonical local snapshot writer/codec -> FileBackedSnapshotStore -> platform migration/protection/list -> Home recovery -> explicit Retry/Discard",
+        "Android manifest and cloud/device-transfer rules vs iOS protected/legacy directories",
+        "FileHandle synchronous owner -> Kotlin/ObjC error boundary -> lifecycle and production caller guards"
+      ],
+      "evidence": [
+        "reviews/storage-residual-session_cont.md",
+        "candidates/ST-C1-ios-legacy-backup-eligibility.md",
+        "research/storage-residual-session_cont/research-ledger.json"
+      ],
+      "uncertainty": "ST-C1 pending independent root/native adjudication; Android legacy retained bytes do not prove backup bypass; iOS post-open crash requires reachable runtime/error-injection proof. No real data or backup tested."
+    },
+    {
+      "path": "composeApp/src/commonMain/kotlin/com/parlor/app/LocalResumeRouter.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/composeApp/src/commonMain/kotlin/com/parlor/app/LocalResumeRouter.kt",
+      "sha256": "bb45b775fa4f8444bf6d00aa240b66ab78dd0066ba88dcf037f758cdd86ea0b1",
+      "line_count": 163,
+      "reviewed_ranges": [
+        [
+          1,
+          163
+        ]
+      ],
+      "reviewer": "/root/session_cont",
+      "timestamp": "2026-09-05T11:45:20.077108+00:00",
+      "status": "REOPENED_STORAGE_RESIDUAL_SOURCE_REVIEW",
+      "file_type": "text",
+      "relevance": "production/navigation",
+      "cross_file_paths": [
+        "Canonical local snapshot writer/codec -> FileBackedSnapshotStore -> platform migration/protection/list -> Home recovery -> explicit Retry/Discard",
+        "Android manifest and cloud/device-transfer rules vs iOS protected/legacy directories",
+        "FileHandle synchronous owner -> Kotlin/ObjC error boundary -> lifecycle and production caller guards"
+      ],
+      "evidence": [
+        "reviews/storage-residual-session_cont.md",
+        "candidates/ST-C1-ios-legacy-backup-eligibility.md",
+        "research/storage-residual-session_cont/research-ledger.json"
+      ],
+      "uncertainty": "ST-C1 pending independent root/native adjudication; Android legacy retained bytes do not prove backup bypass; iOS post-open crash requires reachable runtime/error-injection proof. No real data or backup tested."
+    },
+    {
+      "path": "composeApp/src/commonMain/kotlin/com/parlor/app/shell/home/LocalResumeFailureScreen.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/composeApp/src/commonMain/kotlin/com/parlor/app/shell/home/LocalResumeFailureScreen.kt",
+      "sha256": "0e76227cfb46ad37e17892fa4bd698e21c9f45e0e00021dc257d38891a2b3447",
+      "line_count": 103,
+      "reviewed_ranges": [
+        [
+          1,
+          103
+        ]
+      ],
+      "reviewer": "/root/session_cont",
+      "timestamp": "2026-09-05T11:45:20.077108+00:00",
+      "status": "REOPENED_STORAGE_RESIDUAL_SOURCE_REVIEW",
+      "file_type": "text",
+      "relevance": "production/ui",
+      "cross_file_paths": [
+        "Canonical local snapshot writer/codec -> FileBackedSnapshotStore -> platform migration/protection/list -> Home recovery -> explicit Retry/Discard",
+        "Android manifest and cloud/device-transfer rules vs iOS protected/legacy directories",
+        "FileHandle synchronous owner -> Kotlin/ObjC error boundary -> lifecycle and production caller guards"
+      ],
+      "evidence": [
+        "reviews/storage-residual-session_cont.md",
+        "candidates/ST-C1-ios-legacy-backup-eligibility.md",
+        "research/storage-residual-session_cont/research-ledger.json"
+      ],
+      "uncertainty": "ST-C1 pending independent root/native adjudication; Android legacy retained bytes do not prove backup bypass; iOS post-open crash requires reachable runtime/error-injection proof. No real data or backup tested."
+    },
+    {
+      "path": "composeApp/src/commonMain/kotlin/com/parlor/app/shell/home/HomeRecoveryAvailability.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/composeApp/src/commonMain/kotlin/com/parlor/app/shell/home/HomeRecoveryAvailability.kt",
+      "sha256": "4c8a962fba7ec8334cc8f4dfe0a75f221b201178481ae115d85ae391647fbb2a",
+      "line_count": 146,
+      "reviewed_ranges": [
+        [
+          1,
+          146
+        ]
+      ],
+      "reviewer": "/root/session_cont",
+      "timestamp": "2026-09-05T11:45:20.077108+00:00",
+      "status": "REOPENED_STORAGE_RESIDUAL_SOURCE_REVIEW",
+      "file_type": "text",
+      "relevance": "production/ui-state",
+      "cross_file_paths": [
+        "Canonical local snapshot writer/codec -> FileBackedSnapshotStore -> platform migration/protection/list -> Home recovery -> explicit Retry/Discard",
+        "Android manifest and cloud/device-transfer rules vs iOS protected/legacy directories",
+        "FileHandle synchronous owner -> Kotlin/ObjC error boundary -> lifecycle and production caller guards"
+      ],
+      "evidence": [
+        "reviews/storage-residual-session_cont.md",
+        "candidates/ST-C1-ios-legacy-backup-eligibility.md",
+        "research/storage-residual-session_cont/research-ledger.json"
+      ],
+      "uncertainty": "ST-C1 pending independent root/native adjudication; Android legacy retained bytes do not prove backup bypass; iOS post-open crash requires reachable runtime/error-injection proof. No real data or backup tested."
+    },
+    {
+      "path": "composeApp/src/commonMain/kotlin/com/parlor/app/di/StorageModule.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/composeApp/src/commonMain/kotlin/com/parlor/app/di/StorageModule.kt",
+      "sha256": "9734dde8f751d0e5792577692c322051aa0adc7f45ed0fa6ac5961cf9295e87c",
+      "line_count": 23,
+      "reviewed_ranges": [
+        [
+          1,
+          23
+        ]
+      ],
+      "reviewer": "/root/session_cont",
+      "timestamp": "2026-09-05T11:45:20.077108+00:00",
+      "status": "REOPENED_STORAGE_RESIDUAL_SOURCE_REVIEW",
+      "file_type": "text",
+      "relevance": "production/di",
+      "cross_file_paths": [
+        "Canonical local snapshot writer/codec -> FileBackedSnapshotStore -> platform migration/protection/list -> Home recovery -> explicit Retry/Discard",
+        "Android manifest and cloud/device-transfer rules vs iOS protected/legacy directories",
+        "FileHandle synchronous owner -> Kotlin/ObjC error boundary -> lifecycle and production caller guards"
+      ],
+      "evidence": [
+        "reviews/storage-residual-session_cont.md",
+        "candidates/ST-C1-ios-legacy-backup-eligibility.md",
+        "research/storage-residual-session_cont/research-ledger.json"
+      ],
+      "uncertainty": "ST-C1 pending independent root/native adjudication; Android legacy retained bytes do not prove backup bypass; iOS post-open crash requires reachable runtime/error-injection proof. No real data or backup tested."
+    },
+    {
+      "path": "iosApp/iosApp/ContentView.swift",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/iosApp/iosApp/ContentView.swift",
+      "sha256": "2e9bf560447c78c84462daccafc67cee961428dbd592adb6e12ddf085ab67a55",
+      "line_count": 62,
+      "reviewed_ranges": [
+        [
+          1,
+          62
+        ]
+      ],
+      "reviewer": "/root/session_cont",
+      "timestamp": "2026-09-05T11:45:20.077108+00:00",
+      "status": "REOPENED_STORAGE_RESIDUAL_SOURCE_REVIEW",
+      "file_type": "text",
+      "relevance": "production/platform",
+      "cross_file_paths": [
+        "Canonical local snapshot writer/codec -> FileBackedSnapshotStore -> platform migration/protection/list -> Home recovery -> explicit Retry/Discard",
+        "Android manifest and cloud/device-transfer rules vs iOS protected/legacy directories",
+        "FileHandle synchronous owner -> Kotlin/ObjC error boundary -> lifecycle and production caller guards"
+      ],
+      "evidence": [
+        "reviews/storage-residual-session_cont.md",
+        "candidates/ST-C1-ios-legacy-backup-eligibility.md",
+        "research/storage-residual-session_cont/research-ledger.json"
+      ],
+      "uncertainty": "ST-C1 pending independent root/native adjudication; Android legacy retained bytes do not prove backup bypass; iOS post-open crash requires reachable runtime/error-injection proof. No real data or backup tested."
+    },
+    {
+      "path": "composeApp/src/iosMain/kotlin/com/parlor/app/MainViewController.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/composeApp/src/iosMain/kotlin/com/parlor/app/MainViewController.kt",
+      "sha256": "c77abd03ddcae230b4752d888b16c3d74231d89c967624c31129d176a5ed20ce",
+      "line_count": 56,
+      "reviewed_ranges": [
+        [
+          1,
+          56
+        ]
+      ],
+      "reviewer": "/root/session_cont",
+      "timestamp": "2026-09-05T11:45:20.077108+00:00",
+      "status": "REOPENED_STORAGE_RESIDUAL_SOURCE_REVIEW",
+      "file_type": "text",
+      "relevance": "production/platform",
+      "cross_file_paths": [
+        "Canonical local snapshot writer/codec -> FileBackedSnapshotStore -> platform migration/protection/list -> Home recovery -> explicit Retry/Discard",
+        "Android manifest and cloud/device-transfer rules vs iOS protected/legacy directories",
+        "FileHandle synchronous owner -> Kotlin/ObjC error boundary -> lifecycle and production caller guards"
+      ],
+      "evidence": [
+        "reviews/storage-residual-session_cont.md",
+        "candidates/ST-C1-ios-legacy-backup-eligibility.md",
+        "research/storage-residual-session_cont/research-ledger.json"
+      ],
+      "uncertainty": "ST-C1 pending independent root/native adjudication; Android legacy retained bytes do not prove backup bypass; iOS post-open crash requires reachable runtime/error-injection proof. No real data or backup tested."
+    },
+    {
+      "path": "composeApp/src/commonMain/kotlin/com/parlor/app/lifecycle/AppLifecycleCoordinator.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/composeApp/src/commonMain/kotlin/com/parlor/app/lifecycle/AppLifecycleCoordinator.kt",
+      "sha256": "9872f507bc2d719516249b40e50ba46262366ea7afae5e8b8b28448cce620932",
+      "line_count": 144,
+      "reviewed_ranges": [
+        [
+          1,
+          144
+        ]
+      ],
+      "reviewer": "/root/session_cont",
+      "timestamp": "2026-09-05T11:45:20.077108+00:00",
+      "status": "REOPENED_STORAGE_RESIDUAL_SOURCE_REVIEW",
+      "file_type": "text",
+      "relevance": "production/lifecycle",
+      "cross_file_paths": [
+        "Canonical local snapshot writer/codec -> FileBackedSnapshotStore -> platform migration/protection/list -> Home recovery -> explicit Retry/Discard",
+        "Android manifest and cloud/device-transfer rules vs iOS protected/legacy directories",
+        "FileHandle synchronous owner -> Kotlin/ObjC error boundary -> lifecycle and production caller guards"
+      ],
+      "evidence": [
+        "reviews/storage-residual-session_cont.md",
+        "candidates/ST-C1-ios-legacy-backup-eligibility.md",
+        "research/storage-residual-session_cont/research-ledger.json"
+      ],
+      "uncertainty": "ST-C1 pending independent root/native adjudication; Android legacy retained bytes do not prove backup bypass; iOS post-open crash requires reachable runtime/error-injection proof. No real data or backup tested."
+    },
+    {
+      "path": "iosApp/iosApp/Info.plist",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/iosApp/iosApp/Info.plist",
+      "sha256": "db09f2c4a3cc378f4bb24b6de29653283c90227795a27f64370c9da87ef0d0a5",
+      "line_count": 61,
+      "reviewed_ranges": [
+        [
+          1,
+          61
+        ]
+      ],
+      "reviewer": "/root/session_cont",
+      "timestamp": "2026-09-05T11:45:20.077108+00:00",
+      "status": "REOPENED_STORAGE_RESIDUAL_SOURCE_REVIEW",
+      "file_type": "text",
+      "relevance": "production/configuration",
+      "cross_file_paths": [
+        "Canonical local snapshot writer/codec -> FileBackedSnapshotStore -> platform migration/protection/list -> Home recovery -> explicit Retry/Discard",
+        "Android manifest and cloud/device-transfer rules vs iOS protected/legacy directories",
+        "FileHandle synchronous owner -> Kotlin/ObjC error boundary -> lifecycle and production caller guards"
+      ],
+      "evidence": [
+        "reviews/storage-residual-session_cont.md",
+        "candidates/ST-C1-ios-legacy-backup-eligibility.md",
+        "research/storage-residual-session_cont/research-ledger.json"
+      ],
+      "uncertainty": "ST-C1 pending independent root/native adjudication; Android legacy retained bytes do not prove backup bypass; iOS post-open crash requires reachable runtime/error-injection proof. No real data or backup tested."
+    },
+    {
+      "path": "docs/PRIVACY_AND_COMPLIANCE.md",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/docs/PRIVACY_AND_COMPLIANCE.md",
+      "sha256": "299d248dea1938a445624842ab6b741b54221c06516689ec712eafcfe7b2bea9",
+      "line_count": 80,
+      "reviewed_ranges": [
+        [
+          1,
+          80
+        ]
+      ],
+      "reviewer": "/root/session_cont",
+      "timestamp": "2026-09-05T11:45:20.077108+00:00",
+      "status": "REOPENED_STORAGE_RESIDUAL_SOURCE_REVIEW",
+      "file_type": "text",
+      "relevance": "documentation",
+      "cross_file_paths": [
+        "Canonical local snapshot writer/codec -> FileBackedSnapshotStore -> platform migration/protection/list -> Home recovery -> explicit Retry/Discard",
+        "Android manifest and cloud/device-transfer rules vs iOS protected/legacy directories",
+        "FileHandle synchronous owner -> Kotlin/ObjC error boundary -> lifecycle and production caller guards"
+      ],
+      "evidence": [
+        "reviews/storage-residual-session_cont.md",
+        "candidates/ST-C1-ios-legacy-backup-eligibility.md",
+        "research/storage-residual-session_cont/research-ledger.json"
+      ],
+      "uncertainty": "ST-C1 pending independent root/native adjudication; Android legacy retained bytes do not prove backup bypass; iOS post-open crash requires reachable runtime/error-injection proof. No real data or backup tested."
+    },
+    {
+      "path": "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/snapshot/WhodunitSnapshotFormat.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/snapshot/WhodunitSnapshotFormat.kt",
+      "sha256": "ad7fc803baf9c4eb426534f973804fa47ab8b45f443923e157022a25252fe35a",
+      "line_count": 28,
+      "reviewed_ranges": [
+        [
+          1,
+          28
+        ]
+      ],
+      "reviewer": "/root/session_cont",
+      "timestamp": "2026-09-05T11:45:20.077108+00:00",
+      "status": "REOPENED_STORAGE_RESIDUAL_SOURCE_REVIEW",
+      "file_type": "text",
+      "relevance": "production/persistence",
+      "cross_file_paths": [
+        "Canonical local snapshot writer/codec -> FileBackedSnapshotStore -> platform migration/protection/list -> Home recovery -> explicit Retry/Discard",
+        "Android manifest and cloud/device-transfer rules vs iOS protected/legacy directories",
+        "FileHandle synchronous owner -> Kotlin/ObjC error boundary -> lifecycle and production caller guards"
+      ],
+      "evidence": [
+        "reviews/storage-residual-session_cont.md",
+        "candidates/ST-C1-ios-legacy-backup-eligibility.md",
+        "research/storage-residual-session_cont/research-ledger.json"
+      ],
+      "uncertainty": "ST-C1 pending independent root/native adjudication; Android legacy retained bytes do not prove backup bypass; iOS post-open crash requires reachable runtime/error-injection proof. No real data or backup tested."
+    },
+    {
+      "path": "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/state/WhodunitState.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/state/WhodunitState.kt",
+      "sha256": "34677072d8e58b82d8c4f3dee193fe01eac39dd9a85b0d0a142abce3098157ab",
+      "line_count": 140,
+      "reviewed_ranges": [
+        [
+          1,
+          140
+        ]
+      ],
+      "reviewer": "/root/session_cont",
+      "timestamp": "2026-09-05T11:45:20.077108+00:00",
+      "status": "REOPENED_STORAGE_RESIDUAL_SOURCE_REVIEW",
+      "file_type": "text",
+      "relevance": "production/domain",
+      "cross_file_paths": [
+        "Canonical local snapshot writer/codec -> FileBackedSnapshotStore -> platform migration/protection/list -> Home recovery -> explicit Retry/Discard",
+        "Android manifest and cloud/device-transfer rules vs iOS protected/legacy directories",
+        "FileHandle synchronous owner -> Kotlin/ObjC error boundary -> lifecycle and production caller guards"
+      ],
+      "evidence": [
+        "reviews/storage-residual-session_cont.md",
+        "candidates/ST-C1-ios-legacy-backup-eligibility.md",
+        "research/storage-residual-session_cont/research-ledger.json"
+      ],
+      "uncertainty": "ST-C1 pending independent root/native adjudication; Android legacy retained bytes do not prove backup bypass; iOS post-open crash requires reachable runtime/error-injection proof. No real data or backup tested."
+    },
+    {
+      "path": "composeApp/src/commonMain/kotlin/com/parlor/app/App.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/composeApp/src/commonMain/kotlin/com/parlor/app/App.kt",
+      "sha256": "622b679a2ef023fab17bf6c8ed8eb38c1fbc2b76a391f5f9a8298d59da9dda59",
+      "line_count": 338,
+      "reviewed_ranges": [
+        [
+          110,
+          150
+        ],
+        [
+          250,
+          300
+        ]
+      ],
+      "reviewer": "/root/session_cont",
+      "timestamp": "2026-09-05T11:45:20.077108+00:00",
+      "status": "REOPENED_STORAGE_RESIDUAL_SOURCE_REVIEW",
+      "file_type": "text",
+      "relevance": "production/ui",
+      "cross_file_paths": [
+        "Canonical local snapshot writer/codec -> FileBackedSnapshotStore -> platform migration/protection/list -> Home recovery -> explicit Retry/Discard",
+        "Android manifest and cloud/device-transfer rules vs iOS protected/legacy directories",
+        "FileHandle synchronous owner -> Kotlin/ObjC error boundary -> lifecycle and production caller guards"
+      ],
+      "evidence": [
+        "reviews/storage-residual-session_cont.md",
+        "candidates/ST-C1-ios-legacy-backup-eligibility.md",
+        "research/storage-residual-session_cont/research-ledger.json"
+      ],
+      "uncertainty": "ST-C1 pending independent root/native adjudication; Android legacy retained bytes do not prove backup bypass; iOS post-open crash requires reachable runtime/error-injection proof. No real data or backup tested."
+    },
+    {
+      "path": "composeApp/build.gradle.kts",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/composeApp/build.gradle.kts",
+      "sha256": "ae5e49b02e3480e2ca7f678778f4620178a790847f613675ce6d84e159b6ad87",
+      "line_count": 615,
+      "reviewed_ranges": [
+        [
+          188,
+          252
+        ]
+      ],
+      "reviewer": "/root/session_cont",
+      "timestamp": "2026-09-05T11:45:20.077108+00:00",
+      "status": "REOPENED_STORAGE_RESIDUAL_SOURCE_REVIEW",
+      "file_type": "text",
+      "relevance": "build",
+      "cross_file_paths": [
+        "Canonical local snapshot writer/codec -> FileBackedSnapshotStore -> platform migration/protection/list -> Home recovery -> explicit Retry/Discard",
+        "Android manifest and cloud/device-transfer rules vs iOS protected/legacy directories",
+        "FileHandle synchronous owner -> Kotlin/ObjC error boundary -> lifecycle and production caller guards"
+      ],
+      "evidence": [
+        "reviews/storage-residual-session_cont.md",
+        "candidates/ST-C1-ios-legacy-backup-eligibility.md",
+        "research/storage-residual-session_cont/research-ledger.json"
+      ],
+      "uncertainty": "ST-C1 pending independent root/native adjudication; Android legacy retained bytes do not prove backup bypass; iOS post-open crash requires reachable runtime/error-injection proof. No real data or backup tested."
+    },
+    {
+      "path": "gradle/libs.versions.toml",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/gradle/libs.versions.toml",
+      "sha256": "87a031665605a1fb3f932be31c75afd8d2d1bc0d94cfcca36101141c50788399",
+      "line_count": 106,
+      "reviewed_ranges": [
+        [
+          1,
+          50
+        ]
+      ],
+      "reviewer": "/root/session_cont",
+      "timestamp": "2026-09-05T11:45:20.077108+00:00",
+      "status": "REOPENED_STORAGE_RESIDUAL_SOURCE_REVIEW",
+      "file_type": "text",
+      "relevance": "build/dependencies",
+      "cross_file_paths": [
+        "Canonical local snapshot writer/codec -> FileBackedSnapshotStore -> platform migration/protection/list -> Home recovery -> explicit Retry/Discard",
+        "Android manifest and cloud/device-transfer rules vs iOS protected/legacy directories",
+        "FileHandle synchronous owner -> Kotlin/ObjC error boundary -> lifecycle and production caller guards"
+      ],
+      "evidence": [
+        "reviews/storage-residual-session_cont.md",
+        "candidates/ST-C1-ios-legacy-backup-eligibility.md",
+        "research/storage-residual-session_cont/research-ledger.json"
+      ],
+      "uncertainty": "ST-C1 pending independent root/native adjudication; Android legacy retained bytes do not prove backup bypass; iOS post-open crash requires reachable runtime/error-injection proof. No real data or backup tested."
+    },
+    {
+      "path": "docs/PRODUCTION_ARCHITECTURE.md",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/docs/PRODUCTION_ARCHITECTURE.md",
+      "sha256": "0662f57345e04990baa76f45328779c525d780544585b4bd2b2b4b2dbc1536b3",
+      "line_count": 267,
+      "reviewed_ranges": [
+        [
+          230,
+          267
+        ]
+      ],
+      "reviewer": "/root/session_cont",
+      "timestamp": "2026-09-05T11:45:20.077108+00:00",
+      "status": "REOPENED_STORAGE_RESIDUAL_SOURCE_REVIEW",
+      "file_type": "text",
+      "relevance": "documentation",
+      "cross_file_paths": [
+        "Canonical local snapshot writer/codec -> FileBackedSnapshotStore -> platform migration/protection/list -> Home recovery -> explicit Retry/Discard",
+        "Android manifest and cloud/device-transfer rules vs iOS protected/legacy directories",
+        "FileHandle synchronous owner -> Kotlin/ObjC error boundary -> lifecycle and production caller guards"
+      ],
+      "evidence": [
+        "reviews/storage-residual-session_cont.md",
+        "candidates/ST-C1-ios-legacy-backup-eligibility.md",
+        "research/storage-residual-session_cont/research-ledger.json"
+      ],
+      "uncertainty": "ST-C1 pending independent root/native adjudication; Android legacy retained bytes do not prove backup bypass; iOS post-open crash requires reachable runtime/error-injection proof. No real data or backup tested."
+    },
+    {
+      "path": "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/snapshot/WhodunitSnapshotCodec.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/snapshot/WhodunitSnapshotCodec.kt",
+      "sha256": "9025274980744440fd12342afd2ecc128a943c8fa3f3e7ed9aadb73d504a3bef",
+      "line_count": 190,
+      "reviewed_ranges": [
+        [
+          1,
+          80
+        ]
+      ],
+      "reviewer": "/root/session_cont",
+      "timestamp": "2026-09-05T11:45:20.077108+00:00",
+      "status": "REOPENED_STORAGE_RESIDUAL_SOURCE_REVIEW",
+      "file_type": "text",
+      "relevance": "production/persistence",
+      "cross_file_paths": [
+        "Canonical local snapshot writer/codec -> FileBackedSnapshotStore -> platform migration/protection/list -> Home recovery -> explicit Retry/Discard",
+        "Android manifest and cloud/device-transfer rules vs iOS protected/legacy directories",
+        "FileHandle synchronous owner -> Kotlin/ObjC error boundary -> lifecycle and production caller guards"
+      ],
+      "evidence": [
+        "reviews/storage-residual-session_cont.md",
+        "candidates/ST-C1-ios-legacy-backup-eligibility.md",
+        "research/storage-residual-session_cont/research-ledger.json"
+      ],
+      "uncertainty": "ST-C1 pending independent root/native adjudication; Android legacy retained bytes do not prove backup bypass; iOS post-open crash requires reachable runtime/error-injection proof. No real data or backup tested."
+    },
+    {
+      "path": "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitGameFlow.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitGameFlow.kt",
+      "sha256": "4d58eb3bebd3777c88ca9f8ab21d97441f6d2cd1a70e28b07a0334fdc0c8ee17",
+      "line_count": 1425,
+      "reviewed_ranges": [
+        [
+          795,
+          850
+        ]
+      ],
+      "reviewer": "/root/session_cont",
+      "timestamp": "2026-09-05T11:45:20.077108+00:00",
+      "status": "REOPENED_STORAGE_RESIDUAL_SOURCE_REVIEW",
+      "file_type": "text",
+      "relevance": "production/ui-state",
+      "cross_file_paths": [
+        "Canonical local snapshot writer/codec -> FileBackedSnapshotStore -> platform migration/protection/list -> Home recovery -> explicit Retry/Discard",
+        "Android manifest and cloud/device-transfer rules vs iOS protected/legacy directories",
+        "FileHandle synchronous owner -> Kotlin/ObjC error boundary -> lifecycle and production caller guards"
+      ],
+      "evidence": [
+        "reviews/storage-residual-session_cont.md",
+        "candidates/ST-C1-ios-legacy-backup-eligibility.md",
+        "research/storage-residual-session_cont/research-ledger.json"
+      ],
+      "uncertainty": "ST-C1 pending independent root/native adjudication; Android legacy retained bytes do not prove backup bypass; iOS post-open crash requires reachable runtime/error-injection proof. No real data or backup tested."
+    }
+  ],
+  "historical_source": [
+    {
+      "commit": "9d06e0c1c5168351c5d49966d07fd714de19a6b6",
+      "path": "composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSnapshotFileSystem.kt",
+      "sha256": "776e33916e4902dae59c50650dacaa195b283eac4e514334cc6aa9f8de24504d",
+      "line_count": 96,
+      "reviewed_ranges": [
+        [
+          1,
+          96
+        ]
+      ],
+      "reviewer": "/root/session_cont",
+      "relevance": "historical implementation only; NOT current coverage",
+      "note": "9d06 is plaintext Documents implementation; 8186 was already protected and must not be described as plaintext."
+    },
+    {
+      "commit": "8186f7d70786057b791bd5c1aa80ca868835ec37",
+      "path": "composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSnapshotFileSystem.kt",
+      "sha256": "45dd2f50037f1282b760ee455697461c4569ea7fdf7768a0604b590059a1edad",
+      "line_count": 442,
+      "reviewed_ranges": [
+        [
+          1,
+          195
+        ]
+      ],
+      "reviewer": "/root/session_cont",
+      "relevance": "historical implementation only; NOT current coverage",
+      "note": "9d06 is plaintext Documents implementation; 8186 was already protected and must not be described as plaintext."
+    }
+  ],
+  "external_sdk": [
+    {
+      "path": "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk/System/Library/Frameworks/Foundation.framework/Headers/NSFileHandle.h",
+      "sha256": "f53cda9476ea6ee3f8a88650079cdb253b7e83bcf558262119f777adbac438c3",
+      "line_count": 176,
+      "reviewed_ranges": [
+        [
+          1,
+          176
+        ]
+      ],
+      "reviewer": "/root/session_cont",
+      "relevance": "external installed SDK source; NOT current first-party coverage",
+      "note": "read/close legacy potentially throwing; NSError alternatives iOS13+"
+    }
+  ],
+  "audit_evidence_reopened": [
+    {
+      "path": "reproducers/filehandle_directory.m",
+      "sha256": "092f71c15bc25c1e329cf76e6240d4f808d66a9c571951ff808c2359bbb6f639",
+      "line_count": 30,
+      "reviewed_ranges": [
+        [
+          1,
+          30
+        ]
+      ],
+      "reviewer": "/root/session_cont",
+      "relevance": "previous task-owned audit evidence inspected; not a new executed test"
+    },
+    {
+      "path": "evidence/filehandle-api-01/receipt.json",
+      "sha256": "280c08661741c2741a491bbc750ff6fafb7afb555ed2b970115b7eec888a937c",
+      "line_count": 31,
+      "reviewed_ranges": [
+        [
+          1,
+          31
+        ]
+      ],
+      "reviewer": "/root/session_cont",
+      "relevance": "previous task-owned audit evidence inspected; not a new executed test"
+    }
+  ],
+  "git_diff_review": {
+    "commit": "d54ab0cec246ed7ed23647b7e084e748c49534cd",
+    "paths": [
+      "composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSnapshotFileSystem.kt",
+      "composeApp/src/iosTest/kotlin/com/parlor/app/storage/IosStorageSafetyTest.kt"
+    ],
+    "scope": "full displayed diff; recognized-magic finally and regression test changes; not whole historical files"
+  },
+  "current_reviewed_lines_in_this_followup": 2962,
+  "working_tree_closeout": {
+    "branch": "main",
+    "commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+    "tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+    "tracked_diff_empty": true,
+    "index_diff_empty": true,
+    "status_short": "?? AGENTS.md\n?? audit-runs/\n?? design/\n?? docs/PARLOR_PROJECT_HANDOFF.md\n?? project-code-audit/\n",
+    "build_commands_run_by_reviewer": [],
+    "task_owned_build_outputs_created": [],
+    "cleanup": "No source lane build/app/test processes or outputs created; parent owns sole active build lane. Do not stop/clean parent processes."
+  }
+}

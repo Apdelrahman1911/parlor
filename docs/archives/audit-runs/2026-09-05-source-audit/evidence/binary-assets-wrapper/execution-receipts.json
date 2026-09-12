@@ -1,0 +1,40 @@
+{
+  "recorded_utc": "2026-09-05T10:43:47.954179+00:00",
+  "reviewer": "/root/mafia_cont",
+  "source_commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+  "commands": [
+    {
+      "command": "python3 -B reproducers/inspect_binary_assets_mafia_cont.py; status=$? ...",
+      "exit_code": 1,
+      "classification": "AUDIT HARNESS FAILURE",
+      "reason": "Python inspection printed PASS; zsh rejected read-only status assignment; tool chunk03779f. Exact start not retained."
+    },
+    {
+      "command": "python3 -B reproducers/inspect_binary_assets_mafia_cont.py; audit_rc=$? ...",
+      "exit_code": 0,
+      "classification": "PASS",
+      "reason": "Corrected shell harness; tool chunk1c14b1."
+    },
+    {
+      "command": "python3 inline ancillary XML metadata parse",
+      "exit_code": 1,
+      "classification": "HOST TOOL FAILURE",
+      "reason": "Known Homebrew3.14.6 pyexpat unresolved _XML_SetAllocTrackerActivationThreshold; no application execution."
+    },
+    {
+      "command": "/usr/bin/python3 -B inline ancillary XML metadata parse",
+      "exit_code": 0,
+      "classification": "PASS",
+      "reason": "Compatible existing Python3.9.6; tool chunk5a095c; evidence ancillary-metadata.json."
+    },
+    {
+      "command": "/usr/bin/python3 -B audit-runs/2026-09-05-source-audit/reproducers/inspect_binary_assets_mafia_cont.py",
+      "exit_code": 0,
+      "classification": "PASS",
+      "started_utc": "2026-09-05T10:40:54.988335+00:00",
+      "finished_utc": "2026-09-05T10:40:57.125775+00:00",
+      "reason": "Final required interpreter; tool chunks9de255/1d1161; evidence inspection.json."
+    }
+  ],
+  "build_lane": "No Gradle/Xcode/app commands; no competing execution or daemon termination."
+}

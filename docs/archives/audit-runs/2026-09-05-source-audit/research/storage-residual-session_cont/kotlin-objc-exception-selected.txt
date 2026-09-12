@@ -1,0 +1,5 @@
+Handle Objective-C exceptions
+
+By default, the program crashes if Objective-C exceptions reach the Objective-C to Kotlin interop boundary and get to the Kotlin code.
+
+To propagate Objective-C exceptions to Kotlin, enable wrapping with the foreignExceptionMode = objc-wrap property. In this case, Objective-C exceptions are translated into Kotlin exceptions that get the ForeignException type.

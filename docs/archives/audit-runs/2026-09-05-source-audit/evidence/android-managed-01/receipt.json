@@ -1,0 +1,105 @@
+{
+  "cycle": "android-managed-01",
+  "started_at": "2026-09-05T13:06:47.775471+00:00",
+  "status": "FAIL",
+  "execution_kind": "gradle-via-checked-in-disposable-signing-harness",
+  "signing": "Synthetic two-day test key only; no real signing/Store operations.",
+  "source_before": {
+    "commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+    "tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+    "branch": "main",
+    "tracked_status": ""
+  },
+  "outputs_before": [],
+  "owned_temporary_directory": "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-android-managed-01-peey9vra",
+  "shared_gradle_cache_links": [
+    {
+      "link": "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-android-managed-01-peey9vra/gradle-home/caches",
+      "target": "/Users/abdelrahman/.gradle/caches"
+    },
+    {
+      "link": "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-android-managed-01-peey9vra/gradle-home/wrapper",
+      "target": "/Users/abdelrahman/.gradle/wrapper"
+    }
+  ],
+  "command": [
+    "bash",
+    "scripts/android/run_release_managed_device_smoke.sh"
+  ],
+  "baseline_process_count": 516,
+  "script_sha256": "5b6dc8fcdd7b11c9cefd39da3adb8783321b647cd9a8459ff761ef7fa031262d",
+  "environment_policy": "Task HOME/Android/AVD/TMP/Gradle registry; only existing caches+wrapper symlinked; USB/mDNS/emulator discovery off; owned foreground ADB; JDK21;3g;strict wrapper;no implicit SDK downloads;real signing blank.",
+  "platform_qualification": "Darwin/ARM64 API35 existing image; not Linux/x86_64 CI or real device.",
+  "input_manifest_sha256": "20e24c4c6014bdf017cea5ea1d628e65426cc3a1ec9ffc71bde338a9b0365b2e",
+  "adb_port": 52894,
+  "adb_owned_pid": 36540,
+  "error": {
+    "type": "RuntimeError",
+    "message": "Owned foreground ADB server exited before readiness"
+  },
+  "finished_at": "2026-09-05T13:06:48.479243+00:00",
+  "stop_not_required": "No Gradle process was launched in this attempt",
+  "finalization_stages": [
+    {
+      "stage": "stop-task-workers-before-output-removal",
+      "status": "PASS",
+      "at": "2026-09-05T13:06:48.708474+00:00"
+    },
+    {
+      "stage": "stop-owned-adb-before-temp-removal",
+      "status": "PASS",
+      "at": "2026-09-05T13:06:48.805290+00:00"
+    },
+    {
+      "stage": "verify-no-live-workers-or-unattributed-holders",
+      "status": "PASS",
+      "at": "2026-09-05T13:06:48.902973+00:00"
+    },
+    {
+      "stage": "remove-owned-android-home-avd-temp-and-test-keys",
+      "status": "PASS",
+      "at": "2026-09-05T13:06:48.903582+00:00"
+    },
+    {
+      "stage": "record-final-source-identity",
+      "status": "PASS",
+      "at": "2026-09-05T13:06:48.933708+00:00"
+    },
+    {
+      "stage": "sanitize-test-password-log",
+      "status": "PASS",
+      "at": "2026-09-05T13:06:48.933789+00:00"
+    }
+  ],
+  "adb_stop_method": "TERM then bounded KILL of identity-checked owned PIDs; never kill a port/AVD name",
+  "adb_process_exit_code": -6,
+  "ownership_observed": [
+    {
+      "pid": 36540,
+      "ppid": 36533,
+      "pgid": 36540,
+      "start": "Sat Sep 5 16:06:47 2026",
+      "command": "/Users/abdelrahman/Library/Android/sdk/platform-tools/adb -L tcp:127.0.0.1:52894 server nodaemon",
+      "role": "adb-server",
+      "proof": "Popen PID observed immediately after owned launch"
+    }
+  ],
+  "owned_processes_remaining": [],
+  "unattributed_open_file_holders": [],
+  "shared_gradle_cache_links_unlinked": 2,
+  "removed_outputs": [],
+  "remaining_outputs": [],
+  "temporary_directory_removed": true,
+  "cleanup_method": "Identity-checked worker termination; exact task-created build/AVD/home/tmp removal; global caches and pre-existing user state preserved.",
+  "cleanup_completed_at": "2026-09-05T13:06:48.903642+00:00",
+  "cleanup_interrupts_deferred": [],
+  "source_after": {
+    "commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+    "tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+    "branch": "main",
+    "tracked_status": ""
+  },
+  "cleanup_errors": [],
+  "cleanup_status": "PASS",
+  "runtime_evidence_status": "FAIL"
+}

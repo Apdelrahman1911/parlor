@@ -1,0 +1,192 @@
+URL: https://developers.google.com/android-publisher/edits
+Access UTC: 2026-09-05T07:35:11.511622+00:00
+HTTP 200
+Resolved URL: https://developers.google.com/android-publisher/edits
+
+Edits  |  Google Play Developer API  |  Google for Developers
+Skip to main content
+Google
+Play Developer API
+/
+English
+Deutsch
+Español
+Español – América Latina
+Français
+Indonesia
+Italiano
+Polski
+Português – Brasil
+Tiếng Việt
+Türkçe
+Русский
+עברית
+العربيّة
+فارسی
+हिंदी
+বাংলা
+ภาษาไทย
+中文 – 简体
+中文 – 繁體
+日本語
+한국어
+Sign in
+Guides
+Reference
+Samples
+Google
+Play Developer API
+Guides
+Reference
+Samples
+Overview
+Getting Started
+Quotas
+Edits
+APKs and Tracks
+Download generated APKs
+Reply to Reviews API
+Voided Purchases API
+API Usage Instructions
+Uploading Files
+Concurrency Considerations
+Deprecated APIs
+Home
+Products
+Google Play Developer API
+Edits
+Stay organized with collections
+Save and categorize content based on your preferences.
+Page Summary
+outlined_flag
+The Google Play Developer Publishing API Edits methods allow you to group multiple changes to your app and deploy them all at once using an "edit".
+An edit can contain information about associated APKs and their tracks (alpha, beta, staged rollout), and language and locale-specific versions of the store listing.
+Changes made within an edit are not live until the edit is committed.
+Using the Play Console to make changes while an edit is in progress will discard your current edit.
+The Google Play Developer Publishing API Edits methods
+allow you to prepare a number of
+changes to your Google Play app, then deploy them all at once. You do
+this by creating an edit, which holds all the changes you want to
+make to the app. The edit holds such information as:
+Which APKs are associated with the app, and a "track" for each APK.
+Each is associated with a "track", determining which users see
+it. This allows you to provide alpha and beta versions of the app
+for your testers. In addition, you can provide a limited-release
+"staged rollout" version of the app; this app is automatically
+served to a limited number of the app's users (determined by the
+rollout percentage you set), allowing you to deploy a new
+production version of the app gradually.
+Language and locale-specific versions of the app's Google Play
+Store listing
+Each locale-specific version of the store listing can contain
+screenshots and other promotional graphics, localized descriptive
+text, and so on.
+Note: Not all the methods
+provided by the Google Play Developer API use the new, transactional "edits"
+functionality. Methods for the
+inappproducts,
+products, and
+subscriptions resources take
+effect immediately, whether or not there is an open edit for the
+app. Each resource's API reference page notes specifically whether
+the methods for that resource use the "edits" model.
+When you first create an edit, the edit is a copy of the current
+deployed state of the app. You can then modify the edit by calling the
+Edits methods. When the edit is ready to go, you commit it,
+making the changes live. You can also abandon the edit at any time,
+discarding the changes and leaving your app as it was.
+You can only use this API to make changes to an existing app (that
+has at least one APK uploaded); thus, you will have to upload at least
+one APK through the Play Console before you can use this
+API. Furthermore, you cannot use this API to change an app's state
+from "published" to "unpublished", or to fill out the legal consents
+required for publishing. To publish the app, you have to use the
+Play Console.
+Caution: If anyone makes any changes to the app through
+the Google Play Console while you have an edit in progress,
+your edit is discarded and the Play Console changes take effect.
+Workflow
+This section shows the typical way you would use the Google Play Developer Publishing API
+Edits methods to make modifications to an app.
+Create a new edit, by calling Edits:
+Insert and specifying the app you want
+to modify.
+This creates a new edit of the specified app. The app's initial
+settings--the APKs, store listings, expansion files, and so on--are all
+copied from the deployed version of the app.
+Modify the edit as desired.
+You can make most of the changes which could be made through the
+Google Play Console. You do this by calling the
+appropriate Google Play Developer API method, and passing the IDs of the app
+and edit you want to modify. Specifically:
+You can upload new APKs by calling Edits.apks:
+upload. This puts the APK in a storage
+area, so it can be assigned to a track in this or a subsequent edit.
+You can assign APKs to tracks by calling Edits.tracks:
+update. You can also change the track
+assignments for existing APKs by calling Edits.tracks:
+patch.
+You can create a new localized store listing by calling Edits.listings:
+update. You can modify an existing
+store listing by calling
+Edits.listings: patch.
+You can add or modify expansion files by calling the
+Edits.expansionfiles resource
+methods.
+These methods make changes to the edit you have in progress, but
+they do not modify the live version of the app. You can make
+further changes or discard the edit in progress without affecting
+the user experience.
+Note: Each user may have only a single edit open at a time. If you create a
+new edit, any existing edit you may have open is invalidated. In addition,
+if anyone commits an edit or makes changes to an app through the Play
+Console, all other edits for the app (owned by any user) are invalidated.
+If you try to commit an invalid edit, the operation will throw an exception
+and have no effect.
+Commit the edit.
+When you call Edits: commit, if there
+are no validation errors, then all the changes specified in the
+edits resource go "live", replacing the current state of the
+app. These changes can take several hours to take effect, just as
+when you make changes through the Play Console.
+Except as otherwise noted, the content of this page is licensed under the Creative Commons Attribution 4.0 License, and code samples are licensed under the Apache 2.0 License. For details, see the Google Developers Site Policies. Java is a registered trademark of Oracle and/or its affiliates.
+Last updated 2025-12-18 UTC.
+[[["Easy to understand","easyToUnderstand","thumb-up"],["Solved my problem","solvedMyProblem","thumb-up"],["Other","otherUp","thumb-up"]],[["Missing the information I need","missingTheInformationINeed","thumb-down"],["Too complicated / too many steps","tooComplicatedTooManySteps","thumb-down"],["Out of date","outOfDate","thumb-down"],["Samples / code issue","samplesCodeIssue","thumb-down"],["Other","otherDown","thumb-down"]],["Last updated 2025-12-18 UTC."],[],["The Google Play Developer Publishing API uses \"edits\" to manage app changes. You create an edit, which initially mirrors the live app, and then modify it by uploading APKs, assigning them to tracks (alpha, beta, staged rollout), and updating localized store listings. These changes are made to the edit, not the live app.  Finally, you commit the edit to make the changes live or abandon the edit to discard them. Only one edit per app can be active and changes through the Play Console discard any existing edits.\n"]]
+Product Info
+Terms of Service
+Related Links
+Google Play Console
+Get Started with Publishing
+Related APIs
+Play Games Services
+Android
+Chrome
+Firebase
+Google Cloud Platform
+Google AI
+All products
+Terms
+Privacy
+Manage cookies
+English
+Deutsch
+Español
+Español – América Latina
+Français
+Indonesia
+Italiano
+Polski
+Português – Brasil
+Tiếng Việt
+Türkçe
+Русский
+עברית
+العربيّة
+فارسی
+हिंदी
+বাংলা
+ภาษาไทย
+中文 – 简体
+中文 – 繁體
+日本語
+한국어
