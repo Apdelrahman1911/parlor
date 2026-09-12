@@ -36,13 +36,13 @@ tasks.named("desktopTest") {
     inputs.files(
         rootProject.file("README.md"),
         rootProject.file("CLAUDE.md"),
-        rootProject.file("ARCHITECTURE.md"),
+        rootProject.file("docs/archives/history/ARCHITECTURE.md"),
         rootProject.file("build.gradle.kts"),
         rootProject.file(".github/workflows/production-verification.yml"),
         rootProject.file("iosApp/iosApp.xcodeproj/project.pbxproj"),
         rootProject.file("iosApp/iosApp.xcodeproj/xcshareddata/xcschemes/iosApp.xcscheme"),
         rootProject.file("iosApp/iosAppUITests/IOSAppLaunchUITests.swift"),
-        rootProject.file("whodunit-game-design.md"),
+        rootProject.file("docs/archives/history/whodunit-game-design.md"),
         rootProject.file("settings.gradle.kts"),
         rootProject.file("build-logic/settings.gradle.kts"),
         rootProject.fileTree("build-logic/convention/src/main/kotlin") {

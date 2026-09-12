@@ -27,8 +27,11 @@ Use these current documents before non-trivial changes:
 - `docs/HOW_TO_ADD_A_GAME.md`
 - accepted decisions under `docs/adr/`
 
-`ARCHITECTURE.md`, `whodunit-game-design.md`, `docs/APP_PLAN.md`, and phase
-reports are explicitly historical and are not current behavior contracts.
+Use `docs/PROJECT_STATUS.md` for the current execution checkpoint and remaining
+gates. Original architecture/game-design plans and phase reports are preserved
+under `docs/archives/history/`; superseded handoffs are under
+`docs/archives/handoffs/`. They are not current behavior contracts; the
+`docs/archives/README.md` index explains original-path references.
 
 ## Toolchain
 

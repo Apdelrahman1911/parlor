@@ -6,9 +6,11 @@ no public-internet play, raw-IP/manual join, spectators, or host migration.
 
 Executable source and Gradle tasks win over prose. Current contracts:
 `docs/PRODUCTION_ARCHITECTURE.md`, `docs/RELEASE_GATES.md`,
-`docs/HOW_TO_ADD_A_GAME.md`, accepted `docs/adr/`. Historical only:
-`ARCHITECTURE.md`, `whodunit-game-design.md`, `docs/APP_PLAN.md`,
-`PROBLEMS_PARLOR.md`, phase reports.
+`docs/HOW_TO_ADD_A_GAME.md`, accepted `docs/adr/`. Current execution status and
+remaining gates: `docs/PROJECT_STATUS.md`. Historical plans, design baselines,
+audits, and phase reports live in `docs/archives/history/`; superseded handoffs
+live in `docs/archives/handoffs/`. Use `docs/archives/README.md` to resolve their
+original paths; historical results do not certify a newer checkout.
 
 ## Toolchain
 

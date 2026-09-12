@@ -38,7 +38,7 @@ class MultiplayerDocumentationContractTest {
         val runtimeVersion = "$PARLOR_PROTOCOL_MAJOR.$PARLOR_PROTOCOL_MINOR"
         val currentDocuments = listOf(
             "docs/P2P_MANUAL_TEST.md",
-            "docs/P2P_REMEDIATION_STATUS.md",
+            "docs/archives/history/P2P_REMEDIATION_STATUS.md",
             "docs/PRODUCTION_ARCHITECTURE.md",
         )
         val marker = "Runtime protocol: `$runtimeVersion`."
@@ -90,7 +90,7 @@ class MultiplayerDocumentationContractTest {
             }
         }
 
-        val historicalBanner = read("ARCHITECTURE.md")
+        val historicalBanner = read("docs/archives/history/ARCHITECTURE.md")
             .take(1_000)
             .replace(">", "")
             .replace(Regex("\\s+"), " ")
@@ -187,7 +187,7 @@ class MultiplayerDocumentationContractTest {
             "docs/IOS_SETUP.md",
             "docs/MULTIPLAYER_PLAYTEST.md",
             "docs/P2P_MANUAL_TEST.md",
-            "docs/P2P_REMEDIATION_STATUS.md",
+            "docs/archives/history/P2P_REMEDIATION_STATUS.md",
             "docs/PRIVACY_AND_COMPLIANCE.md",
             "docs/PRODUCTION_ARCHITECTURE.md",
             "docs/RELEASE_GATES.md",
@@ -224,18 +224,18 @@ class MultiplayerDocumentationContractTest {
     @Test
     fun historical_documents_warn_before_preserving_old_behavior() {
         val historicalDocuments = listOf(
-            "ARCHITECTURE.md",
-            "docs/DESIGN_TOKENS.md",
-            "docs/FR_REMEDIATION_FINDINGS.md",
-            "docs/MOCK_BACKEND.md",
-            "docs/MOTION_DOWNGRADE.md",
-            "docs/APP_PLAN.md",
-            "docs/P2P_REMEDIATION_PLAN.md",
-            "docs/PARLOR_P2P_SMOKE_TEST.md",
-            "docs/PHASE_0_VALIDATION.md",
-            "docs/PHASE_8_VALIDATION.md",
-            "docs/PROGRESS.md",
-            "whodunit-game-design.md",
+            "docs/archives/history/ARCHITECTURE.md",
+            "docs/archives/history/DESIGN_TOKENS.md",
+            "docs/archives/history/FR_REMEDIATION_FINDINGS.md",
+            "docs/archives/history/MOCK_BACKEND.md",
+            "docs/archives/history/MOTION_DOWNGRADE.md",
+            "docs/archives/history/APP_PLAN.md",
+            "docs/archives/history/P2P_REMEDIATION_PLAN.md",
+            "docs/archives/history/PARLOR_P2P_SMOKE_TEST.md",
+            "docs/archives/history/PHASE_0_VALIDATION.md",
+            "docs/archives/history/PHASE_8_VALIDATION.md",
+            "docs/archives/history/PROGRESS.md",
+            "docs/archives/history/whodunit-game-design.md",
         )
 
         historicalDocuments.forEach { path ->
@@ -274,12 +274,12 @@ class MultiplayerDocumentationContractTest {
         }
         assertFalse("content/last-dinner.draft.json" in review)
 
-        val mock = read("docs/MOCK_BACKEND.md")
+        val mock = read("docs/archives/history/MOCK_BACKEND.md")
         assertTrue("historical filename retained" in mock)
         assertTrue("OfflineRemoteCaseDataSource" in mock)
         assertTrue("`MockEngine` appears only in" in mock)
 
-        val motion = read("docs/MOTION_DOWNGRADE.md")
+        val motion = read("docs/archives/history/MOTION_DOWNGRADE.md")
         assertTrue("historical filename retained" in motion)
         assertTrue("no `MotionCapabilityProbe`" in motion)
         assertTrue("rememberSystemReducedMotion()" in motion)

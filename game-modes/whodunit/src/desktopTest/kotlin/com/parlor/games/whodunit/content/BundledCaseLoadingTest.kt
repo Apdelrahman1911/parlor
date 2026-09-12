@@ -41,7 +41,7 @@ import kotlin.test.Test
  * [WhodunitPayloadValidator]. The end result is a `ValidatedCase` that the
  * UI / session controller can consume.
  *
- * This is the Phase 3 acceptance check from `docs/APP_PLAN.md` §5: *"App
+ * This is the Phase 3 acceptance check from `docs/archives/history/APP_PLAN.md` §5: *"App
  * fetches, validates, caches, and loads The Last Dinner through the production
  * code path."* Run on Desktop (JVM); resource access is identical on Android
  * and iOS.

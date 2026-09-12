@@ -1,12 +1,15 @@
 # Parlor UI Rework Concept
 
+Archived on 2026-09-12 for design reference. This is not a shipping
+implementation or a current product/release contract.
+
 This folder is an isolated, dependency-free web prototype for a possible
 Parlor UI refresh. It does **not** replace the Compose UI or implement game or
 network behavior.
 
 ## Product model used
 
-The concept follows the current source and production architecture:
+The concept used the following product model when it was created:
 
 - The home screen is a game-first library with local-save and multiplayer
   recovery entry points.
@@ -46,11 +49,11 @@ remain separate actions.
 From the repository root:
 
 ```bash
-python3 -m http.server 4173
+python3 -m http.server 4173 --bind 127.0.0.1
 ```
 
-Open <http://localhost:4173/design/web-ui-rework/>. No install or network
-dependency is required. Use the left scenario rail or buttons inside the phone
+Open <http://127.0.0.1:4173/docs/archives/design/web-ui-rework/>.
+No install or network dependency is required. Use the left scenario rail or buttons inside the phone
 to navigate. The appearance, RTL, and reduced-motion controls are functional.
 Individual screens can be linked directly, for example
 `?screen=mafia` or `?screen=host&game=mafia`.
