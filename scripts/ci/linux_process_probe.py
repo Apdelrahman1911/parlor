@@ -38,7 +38,8 @@ CONTROL_PATHS = (WORKFLOW, "scripts/ci/linux_process_probe.py", "scripts/ci/veri
     "scripts/release/tests/test_ci_verification_hygiene.py", "scripts/release/tests/test_workflow_contract.py",
     "gradlew", "gradle/wrapper/gradle-wrapper.jar", "gradle/wrapper/gradle-wrapper.properties")
 ANDROID_CLEANUP_EXTRA_CONTROLS = (
-    "scripts/android/run_release_managed_device_smoke.sh", "build.gradle.kts", "composeApp/build.gradle.kts",
+    "scripts/android/run_release_managed_device_smoke.sh", "scripts/android/supervise_managed_device.py",
+    "scripts/release/tests/test_android_managed_device_supervision.py", "build.gradle.kts", "composeApp/build.gradle.kts",
     "config/release-policy.json", "gradle.properties", "gradle/libs.versions.toml",
 )
 CHILD = '''import ctypes, json, os, signal, sys

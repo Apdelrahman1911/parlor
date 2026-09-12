@@ -46,7 +46,7 @@ keytool -genkeypair \
   -noprompt
 
 cd "$repo_root"
-./gradlew productionAndroidRuntimeCheck \
+gradle_command=(./gradlew productionAndroidRuntimeCheck \
   --dependency-verification=strict \
   --no-daemon \
   --max-workers=2 \
@@ -55,4 +55,15 @@ cd "$repo_root"
   "-Pandroid.injected.signing.store.file=$keystore" \
   "-Pandroid.injected.signing.store.password=$keystore_password" \
   "-Pandroid.injected.signing.key.alias=$key_alias" \
-  "-Pandroid.injected.signing.key.password=$keystore_password"
+  "-Pandroid.injected.signing.key.password=$keystore_password")
+
+if [[ "$(uname -s)" == Linux ]]; then
+  # AGP's emulator exit request is not an exit guarantee. Retire only this
+  # build's kernel-owned descendants, including helpers detached with setsid.
+  python3 -B scripts/android/supervise_managed_device.py \
+    --receipt build/ci-evidence/android-managed-device-supervision.json \
+    -- "${gradle_command[@]}"
+else
+  # Preserve the existing non-Linux invocation; it makes no subreaper claim.
+  "${gradle_command[@]}"
+fi
