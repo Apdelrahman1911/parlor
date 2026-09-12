@@ -21,7 +21,12 @@ still **FAILED: A37 0 PASS / 26 FAIL**, with no defensible strict-fix ETA.
 Physical-device, Store/signing/publication, account/identity and owner/legal
 requirements remain separate/out of scope.
 
-Branch: `fix/local-readiness-2026-09-07`
+Development branch after the reviewed integration is merged: `main`.
+Retained diagnostic branch: `fix/local-readiness-2026-09-07`; focused native/Linux
+verification controls still require that exact branch. Do not remove or retarget
+those ownership guards merely to simplify branch cleanup.
+See [the branch consolidation decision](docs/BRANCH_CONSOLIDATION_2026-09-12.md)
+for which historical refs can be deleted and which operational branches remain.
 Remote: `https://github.com/Apdelrahman1911/parlor.git`
 
 Read `AGENTS.md` before executing anything. Source/build contracts take
