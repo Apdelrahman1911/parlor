@@ -40,7 +40,7 @@ PY
 [[ -f "$aab" && ! -L "$aab" ]] || { echo "AAB is not a regular file" >&2; exit 2; }
 require_size_limit "$aab" 536870912 "AAB exceeds the reviewed 512 MiB bound"
 [[ -f "$bundletool" && ! -L "$bundletool" ]] || { echo "bundletool is not a regular file" >&2; exit 2; }
-[[ "$expected_application_id" == "com.parlor.app" ]] || { echo "non-Store Android identity rejected" >&2; exit 2; }
+[[ "$expected_application_id" == "me.parlor.android" ]] || { echo "non-Store Android identity rejected" >&2; exit 2; }
 [[ "$expected_application_id" != *.debug ]] || { echo "Debug Android identity rejected" >&2; exit 2; }
 [[ "$expected_version_code" =~ ^[1-9][0-9]*$ ]] || { echo "invalid Android version code" >&2; exit 2; }
 [[ "$expected_certificate" =~ ^[0-9a-f]{64}$ ]] || { echo "invalid certificate fingerprint" >&2; exit 2; }
@@ -206,7 +206,7 @@ expected_permissions = {
     "android.permission.ACCESS_NETWORK_STATE",
     "android.permission.ACCESS_WIFI_STATE",
     "android.permission.CHANGE_WIFI_MULTICAST_STATE",
-    "com.parlor.app.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION",
+    "me.parlor.android.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION",
 }
 if permissions != expected_permissions:
     raise SystemExit("AAB permissions differ from the reviewed allowlist")
@@ -232,7 +232,8 @@ for item in native_entries:
 if any("debug" in part.lower() for item in entries for part in PurePosixPath(item).parts if item.startswith("base/")):
     # Resource names can contain the ordinary word debug; only reject known
     # build-identity namespaces/metadata rather than arbitrary user content.
-    forbidden = [item for item in entries if "com.parlor.app.debug" in item.lower() or "/debug/" in item.lower()]
+    forbidden = [item for item in entries if "me.parlor.android.debug" in item.lower() or
+                 "com.parlor.app.debug" in item.lower() or "/debug/" in item.lower()]
     if forbidden:
         raise SystemExit("AAB contains Debug-identity content")
 

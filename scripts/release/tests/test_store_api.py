@@ -87,7 +87,7 @@ class PromotionReceiptTest(unittest.TestCase):
             "operation": "external_promotion",
             "candidate_commit_sha": candidate["source"]["commit_sha"],
             "artifact_sha256": candidate["artifacts"]["android"]["sha256"],
-            "package_name": "com.parlor.app",
+            "package_name": "me.parlor.android",
             "version_code": 1,
             "source_track": "internal",
             "destination_track": "closed-testing",
@@ -110,7 +110,7 @@ class PromotionReceiptTest(unittest.TestCase):
             "operation": "external_promotion",
             "candidate_commit_sha": candidate["source"]["commit_sha"],
             "artifact_sha256": candidate["artifacts"]["ios"]["sha256"],
-            "bundle_id": "com.parlor.app",
+            "bundle_id": "me.parlor.ios",
             "build_number": "1",
             "build_id": "apple-build-1",
             "external_group_id": "external-group-1",
@@ -130,7 +130,7 @@ class PromotionReceiptTest(unittest.TestCase):
             "operation": "external_promotion",
             "candidate_commit_sha": candidate["source"]["commit_sha"],
             "artifact_sha256": "9" * 64,
-            "package_name": "com.parlor.app",
+            "package_name": "me.parlor.android",
             "version_code": 1,
             "source_track": "internal",
             "destination_track": "closed-testing",
@@ -223,7 +223,7 @@ class ExternalEvidenceTest(unittest.TestCase):
             "operation": "external_promotion",
             "candidate_commit_sha": candidate["source"]["commit_sha"],
             "artifact_sha256": candidate["artifacts"]["android"]["sha256"],
-            "package_name": "com.parlor.app",
+            "package_name": "me.parlor.android",
             "version_code": 1,
             "source_track": "internal",
             "destination_track": "closed-testing",
@@ -259,7 +259,7 @@ class GoogleTrackTest(unittest.TestCase):
             manifest_path.write_text(json.dumps(candidate), encoding="utf-8")
             args = SimpleNamespace(
                 manifest=str(manifest_path),
-                package="com.parlor.app",
+                package="me.parlor.android",
                 source_track="internal",
                 destination_track="closed-testing",
                 operation="external",
@@ -278,10 +278,10 @@ class GoogleTrackTest(unittest.TestCase):
             with mock.patch.object(store_api, "GoogleClient", return_value=client):
                 with self.assertRaisesRegex(store_api.ReleaseError, "immutable AAB digest"):
                     store_api.google_promote_execute(args)
-            client.insert_edit.assert_called_once_with("com.parlor.app")
-            client.list_tracks.assert_called_once_with("com.parlor.app", "checked-edit")
-            client.list_bundles.assert_called_once_with("com.parlor.app", "checked-edit")
-            client.delete_edit.assert_called_once_with("com.parlor.app", "checked-edit")
+            client.insert_edit.assert_called_once_with("me.parlor.android")
+            client.list_tracks.assert_called_once_with("me.parlor.android", "checked-edit")
+            client.list_bundles.assert_called_once_with("me.parlor.android", "checked-edit")
+            client.delete_edit.assert_called_once_with("me.parlor.android", "checked-edit")
             client.set_track.assert_not_called()
             client.commit_edit.assert_not_called()
 
@@ -292,7 +292,7 @@ class GoogleTrackTest(unittest.TestCase):
             manifest_path.write_text(json.dumps(candidate), encoding="utf-8")
             args = SimpleNamespace(
                 manifest=str(manifest_path),
-                package="com.parlor.app",
+                package="me.parlor.android",
                 source_track="internal",
                 destination_track="closed-testing",
                 operation="external",
@@ -314,10 +314,10 @@ class GoogleTrackTest(unittest.TestCase):
             with mock.patch.object(store_api, "GoogleClient", return_value=client):
                 result = store_api.google_promote_execute(args)
             self.assertEqual(result["result"], "already_present")
-            client.insert_edit.assert_called_once_with("com.parlor.app")
-            client.list_tracks.assert_called_once_with("com.parlor.app", "checked-edit")
-            client.list_bundles.assert_called_once_with("com.parlor.app", "checked-edit")
-            client.delete_edit.assert_called_once_with("com.parlor.app", "checked-edit")
+            client.insert_edit.assert_called_once_with("me.parlor.android")
+            client.list_tracks.assert_called_once_with("me.parlor.android", "checked-edit")
+            client.list_bundles.assert_called_once_with("me.parlor.android", "checked-edit")
+            client.delete_edit.assert_called_once_with("me.parlor.android", "checked-edit")
             client.set_track.assert_not_called()
             client.commit_edit.assert_not_called()
 
@@ -328,7 +328,7 @@ class GoogleTrackTest(unittest.TestCase):
             [{"versionCode": 1, "sha256": "1" * 64}],
         )
         args = SimpleNamespace(
-            package="com.parlor.app",
+            package="me.parlor.android",
             version_code="1",
             credentials="credentials.json",
         )
@@ -343,7 +343,7 @@ class GoogleTrackTest(unittest.TestCase):
             [{"versionCode": 2, "sha256": "2" * 64}],
         )
         args = SimpleNamespace(
-            package="com.parlor.app",
+            package="me.parlor.android",
             version_code="1",
             credentials="credentials.json",
         )
@@ -436,7 +436,7 @@ class GoogleInternalRecoveryTest(unittest.TestCase):
         args = SimpleNamespace(
             source=str(source_path),
             artifact=str(artifact_path),
-            package="com.parlor.app",
+            package="me.parlor.android",
             artifact_sha256=descriptor["sha256"],
             bundle=str(bundle),
             credentials=str(directory / "credentials.json"),
@@ -513,7 +513,7 @@ class GoogleInternalRecoveryTest(unittest.TestCase):
                 with self.assertRaisesRegex(store_api.ReleaseError, "SHA-256"):
                     store_api.google_internal_execute(args)
             client.commit_edit.assert_not_called()
-            client.delete_edit.assert_called_once_with("com.parlor.app", "edit-1")
+            client.delete_edit.assert_called_once_with("me.parlor.android", "edit-1")
 
     def test_recovered_upload_intent_never_sends_a_second_bundle(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
@@ -617,7 +617,7 @@ class AppleStoreReadbackTest(unittest.TestCase):
 
         class Client:
             def app(self, _app_id: str) -> dict:
-                return {"data": {"id": "app-1", "attributes": {"bundleId": "com.parlor.app"}}}
+                return {"data": {"id": "app-1", "attributes": {"bundleId": "me.parlor.ios"}}}
 
             def group(self, _group_id: str) -> dict:
                 return {
@@ -645,7 +645,7 @@ class AppleStoreReadbackTest(unittest.TestCase):
         args = mock.Mock(
             manifest=str(self.write(candidate)),
             app_id="app-1",
-            bundle_id="com.parlor.app",
+            bundle_id="me.parlor.ios",
             external_group_id="external-group-1",
         )
         with mock.patch.object(store_api, "apple_client", return_value=Client()):
@@ -681,7 +681,7 @@ class AppleStoreReadbackTest(unittest.TestCase):
 
     def test_candidate_rejects_a_different_app_store_connect_app_id(self) -> None:
         candidate = manifest()
-        args = mock.Mock(app_id="other-app", bundle_id="com.parlor.app")
+        args = mock.Mock(app_id="other-app", bundle_id="me.parlor.ios")
         with self.assertRaises(store_api.ReleaseError):
             store_api.validate_apple_manifest_args(candidate, args)
 
@@ -691,7 +691,7 @@ class AppleStoreReadbackTest(unittest.TestCase):
 
         class Client:
             def app(self, _app_id: str) -> dict:
-                return {"data": {"id": "app-1", "attributes": {"bundleId": "com.parlor.app"}}}
+                return {"data": {"id": "app-1", "attributes": {"bundleId": "me.parlor.ios"}}}
 
             def build(self, _build_id: str) -> dict:
                 return {"data": eligible_apple_build()}
@@ -703,7 +703,7 @@ class AppleStoreReadbackTest(unittest.TestCase):
             manifest=str(self.write(candidate)),
             external_receipt=str(self.write(external)),
             app_id="app-1",
-            bundle_id="com.parlor.app",
+            bundle_id="me.parlor.ios",
             app_store_version_id="version-1",
             submit=False,
         )
@@ -812,7 +812,7 @@ class ValidationOnlyTest(unittest.TestCase):
             [
                 "store_api.py",
                 "google-check-unique",
-                "--package", "com.parlor.app",
+                "--package", "me.parlor.android",
                 "--version-code", "1",
                 "--credentials", "/private/credential.json",
                 "--execute",
@@ -821,7 +821,7 @@ class ValidationOnlyTest(unittest.TestCase):
                 "store_api.py",
                 "apple-check-unique",
                 "--app-id", "app-1",
-                "--bundle-id", "com.parlor.app",
+                "--bundle-id", "me.parlor.ios",
                 "--build-number", "1",
                 "--issuer-id", "issuer-1",
                 "--key-id", "KEY1234567",
@@ -831,7 +831,7 @@ class ValidationOnlyTest(unittest.TestCase):
         ]
         for argv in commands:
             with self.subTest(command=argv[1]), mock.patch.object(sys, "argv", argv):
-                with self.assertRaisesRegex(store_api.ReleaseError, "known public Store collision"):
+                with self.assertRaisesRegex(store_api.ReleaseError, "Store identity ownership is not verified"):
                     store_api.main()
 
     @staticmethod
@@ -847,7 +847,7 @@ class ValidationOnlyTest(unittest.TestCase):
         if platform == "android":
             return {
                 **common,
-                "package_name": "com.parlor.app",
+                "package_name": "me.parlor.android",
                 "version_code": 1,
                 "source_track": "internal",
                 "destination_track": "closed-testing",
@@ -858,7 +858,7 @@ class ValidationOnlyTest(unittest.TestCase):
             }
         return {
             **common,
-            "bundle_id": "com.parlor.app",
+            "bundle_id": "me.parlor.ios",
             "build_number": "1",
             "build_id": "apple-build-1",
             "external_group_id": "external-group-1",
@@ -892,7 +892,7 @@ class ValidationOnlyTest(unittest.TestCase):
                 "--artifact-sha256",
                 descriptor["sha256"],
                 "--package",
-                "com.parlor.app",
+                "me.parlor.android",
                 "--output",
                 str(output),
             ]
@@ -911,7 +911,7 @@ class ValidationOnlyTest(unittest.TestCase):
                 "store_api.py",
                 "google-check-unique",
                 "--package",
-                "com.parlor.app",
+                "me.parlor.android",
                 "--version-code",
                 "1",
             ]
@@ -940,7 +940,7 @@ class ValidationOnlyTest(unittest.TestCase):
                     "--operation", "external",
                     "--source-track", "internal",
                     "--destination-track", "closed-testing",
-                    "--package", "com.parlor.app",
+                    "--package", "me.parlor.android",
                     "--output", str(directory / "google-external-plan.json"),
                 ],
                 [
@@ -950,7 +950,7 @@ class ValidationOnlyTest(unittest.TestCase):
                     "--operation", "production",
                     "--source-track", "closed-testing",
                     "--destination-track", "production",
-                    "--package", "com.parlor.app",
+                    "--package", "me.parlor.android",
                     "--external-receipt", str(android_external),
                     "--output", str(directory / "google-production-plan.json"),
                 ],
@@ -959,7 +959,7 @@ class ValidationOnlyTest(unittest.TestCase):
                     "apple-external",
                     "--manifest", str(candidate_path),
                     "--app-id", "app-1",
-                    "--bundle-id", "com.parlor.app",
+                    "--bundle-id", "me.parlor.ios",
                     "--external-group-id", "external-group-1",
                     "--output", str(directory / "apple-external-plan.json"),
                 ],
@@ -969,7 +969,7 @@ class ValidationOnlyTest(unittest.TestCase):
                     "--manifest", str(candidate_path),
                     "--external-receipt", str(ios_external),
                     "--app-id", "app-1",
-                    "--bundle-id", "com.parlor.app",
+                    "--bundle-id", "me.parlor.ios",
                     "--app-store-version-id", "version-1",
                     "--submit",
                     "--output", str(directory / "apple-production-plan.json"),
@@ -1010,7 +1010,7 @@ class ValidationOnlyTest(unittest.TestCase):
                 "store_api.py",
                 "apple-check-unique",
                 "--app-id", "app-1",
-                "--bundle-id", "com.parlor.app",
+                "--bundle-id", "me.parlor.ios",
                 "--build-number", "1",
             ]
         )

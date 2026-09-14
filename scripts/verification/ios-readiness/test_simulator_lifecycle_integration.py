@@ -315,7 +315,7 @@ class LifecycleRouteIntegration(unittest.TestCase):
                     self.assertIn(target, ('command', 'require', 'raw_command'))
                     generic = Mock(return_value=0)
                     lifecycle = SimpleNamespace(command=Mock(side_effect=AssertionError('Nonlifecycle direct route')))
-                    namespace = dict(command=generic, uuid=DEVICE, APP_ID='com.parlor.app.debug',
+                    namespace = dict(command=generic, uuid=DEVICE, APP_ID='me.parlor.ios.debug',
                         stdout=Path('/synthetic-owned/app.stdout'), stderr=Path('/synthetic-owned/app.stderr'),
                         self=SimpleNamespace(uuid=DEVICE, require=generic, command=generic, lifecycle=lifecycle))
                     if target == 'raw_command':
@@ -561,7 +561,7 @@ class XcodeBudgetIntegration(unittest.TestCase):
 def raw_preservation_namespace(source):
     """Only real pure record plans/validators and the actual collector are compiled."""
     namespace = dict(Path=Path, PurePosixPath=PurePosixPath, os=os, stat=stat, json=json, re=re,
-                     APP_ID='com.parlor.app.debug', defer_parent_signals=nullcontext, now=lambda: 'synthetic-time')
+                     APP_ID='me.parlor.ios.debug', defer_parent_signals=nullcontext, now=lambda: 'synthetic-time')
     function((COMPANION.parent / 'probe_validation.py').read_text(), 'require', namespace)
     artifact = dict(Path=Path, PurePosixPath=PurePosixPath, re=re)
     artifact_file = COMPANION.parent / 'artifact_inventory.py'
@@ -665,7 +665,7 @@ class RawPostbuildPreservationIntegration(unittest.TestCase):
                      error_code=1, error_code_redacted=False))
 
         def command(arguments, label, timeout):
-            expected = (['xcrun', 'simctl', 'get_app_container', DEVICE, 'com.parlor.app.debug', 'data']
+            expected = (['xcrun', 'simctl', 'get_app_container', DEVICE, 'me.parlor.ios.debug', 'data']
                 if label == 'owned-container.log' else ['xcrun', 'xcresulttool', 'get', 'test-results',
                     label.removeprefix('xcresult-').removesuffix('.json'), '--path', temp / 'Results.xcresult'])
             self.assertEqual(expected, arguments)

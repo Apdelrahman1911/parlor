@@ -53,7 +53,7 @@ OUT = None
 BINDING = None
 
 FIXTURE = HERE
-APP_ID = 'com.parlor.app.debug'
+APP_ID = 'me.parlor.ios.debug'
 EXPECTED_TEST = 'IOSAppLaunchUITests/testDSC01ActualSettingsLocalSessionsAndOSInvestigation()'
 EXPECTED_TESTS = {EXPECTED_TEST} | {'ComposeContainerViewControllerTests/' + name + '()' for name in (
     'testOneStableChildKeepsItsExplicitSemanticsIndependentOfTheOuterView',

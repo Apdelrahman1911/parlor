@@ -54,7 +54,7 @@ class ExplicitSimulatorSigningTests(unittest.TestCase):
             for mode in subject.MODES:
                 source, environment = fixture(Path(raw).resolve(), mode)
                 changes = [('CONFIGURATION', 'Release'), ('PLATFORM_NAME', 'iphoneos'), ('ACTION', 'install'),
-                    ('ARCHS', 'x86_64'), ('PRODUCT_BUNDLE_IDENTIFIER', 'com.parlor.app'), ('TARGET_NAME', 'unrelated'),
+                    ('ARCHS', 'x86_64'), ('PRODUCT_BUNDLE_IDENTIFIER', 'me.parlor.ios'), ('TARGET_NAME', 'unrelated'),
                     ('SDK_NAME', 'iphonesimulator26.3'), ('CODE_SIGNING_ALLOWED', 'NO' if mode == 'adhoc' else 'YES'),
                     ('SRCROOT', str(source)), ('PROJECT_DIR', str(source)), ('TARGET_BUILD_DIR', str(source)),
                     ('CODE_SIGN_IDENTITY', 'not-authorized-synthetic-identity'),

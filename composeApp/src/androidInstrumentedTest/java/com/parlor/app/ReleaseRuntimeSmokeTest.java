@@ -11,7 +11,7 @@ import android.test.InstrumentationTestCase;
 /** Release runtime checks kept on platform APIs so the test APK needs no Maven dependencies. */
 @SuppressWarnings("deprecation")
 public final class ReleaseRuntimeSmokeTest extends InstrumentationTestCase {
-    private static final String STORE_APPLICATION_ID = "com.parlor.app";
+    private static final String STORE_APPLICATION_ID = "me.parlor.android";
     private static final String CHANGE_WIFI_MULTICAST_STATE =
             "android.permission.CHANGE_WIFI_MULTICAST_STATE";
 
@@ -23,7 +23,7 @@ public final class ReleaseRuntimeSmokeTest extends InstrumentationTestCase {
         assertEquals(0, applicationInfo.flags & ApplicationInfo.FLAG_DEBUGGABLE);
 
         Intent intent = new Intent(Intent.ACTION_MAIN)
-                .setClassName(STORE_APPLICATION_ID, STORE_APPLICATION_ID + ".MainActivity")
+                .setClassName(STORE_APPLICATION_ID, "com.parlor.app.MainActivity")
                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         Activity activity = getInstrumentation().startActivitySync(intent);
         try {

@@ -10,9 +10,9 @@ platforms deliberately remain blocked from candidate creation.
   `PARLOR_VERSION_NAME` and `PARLOR_BUILD_NUMBER`. CI must consume those committed values and must
   not allocate substitutes.
 - Android uses application module `:composeApp`, variant `release`, Store package
-  `com.parlor.app`, and isolated Debug package `com.parlor.app.debug`.
+  `me.parlor.android`, and isolated Debug package `me.parlor.android.debug`.
 - iOS archives shared scheme `iosApp` with configuration `Release`, Store bundle
-  `com.parlor.app`, and isolated Debug bundle `com.parlor.app.debug`. Distribution symbols are
+  `me.parlor.ios`, and isolated Debug bundle `me.parlor.ios.debug`. Distribution symbols are
   retained.
 - Firebase is not part of either mobile release path. The migration does not introduce an
   identifier-bound service or copy a service credential into the shared repository.
@@ -30,8 +30,8 @@ targets; local defaults still come from `Config.xcconfig`.
 
 ## Exact blockers before candidate mode
 
-1. The canonical Android package and iOS bundle currently collide with public Store identities that
-   have not been established as publisher-owned Parlor records. Keep both `identityStatus` values
+1. The owner-selected Android package and iOS bundle replace the known-colliding `com.parlor.app`,
+   but have not been established as publisher-owned Store records. Keep both `identityStatus` values
    `blocked`; do not treat identifier syntax, a successful local build, or possession of signing
    material as ownership proof.
 2. Verify the intended Google Play application and Apple App Store Connect application through

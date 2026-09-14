@@ -59,8 +59,8 @@
       "additionalProperties": false,
       "required": ["android_application_id", "ios_bundle_id"],
       "properties": {
-        "android_application_id": { "const": "com.parlor.app" },
-        "ios_bundle_id": { "const": "com.parlor.app" }
+        "android_application_id": { "const": "me.parlor.android" },
+        "ios_bundle_id": { "const": "me.parlor.ios" }
       }
     },
     "artifacts": {
@@ -153,7 +153,7 @@
             "operation": { "const": "internal_upload" },
             "candidate_commit_sha": { "$ref": "#/$defs/gitSha" },
             "artifact_sha256": { "$ref": "#/$defs/sha256" },
-            "package_name": { "const": "com.parlor.app" },
+            "package_name": { "const": "me.parlor.android" },
             "version_code": { "type": "integer", "minimum": 1 },
             "track": { "const": "internal" },
             "release_name": { "type": "string" },
@@ -186,7 +186,7 @@
             "operation": { "const": "internal_upload" },
             "candidate_commit_sha": { "$ref": "#/$defs/gitSha" },
             "artifact_sha256": { "$ref": "#/$defs/sha256" },
-            "bundle_id": { "const": "com.parlor.app" },
+            "bundle_id": { "const": "me.parlor.ios" },
             "marketing_version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
             "build_number": { "type": "string", "pattern": "^[1-9][0-9]*$" },
             "app_id": { "type": "string", "minLength": 1 },

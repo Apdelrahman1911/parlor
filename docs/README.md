@@ -19,6 +19,7 @@ precedence over prose; archived plans are not current requirements.
 
 - [Release gates](RELEASE_GATES.md), [runbook](RELEASE_RUNBOOK.md) and
   [automation](RELEASE_AUTOMATION.md)
+- [Store identifiers and GitHub credential setup](STORE_GITHUB_SETUP.md)
 - [Physical multiplayer matrix](P2P_MANUAL_TEST.md),
   [experience playtest](MULTIPLAYER_PLAYTEST.md) and
   [accessibility checklist](ACCESSIBILITY_AUDIT.md)
