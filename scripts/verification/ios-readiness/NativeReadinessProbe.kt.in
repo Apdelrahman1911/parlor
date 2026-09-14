@@ -112,7 +112,7 @@ object NativeReadinessProbe {
         val environment = NSProcessInfo.processInfo.environment
         val token = environment["PARLOR_DSC01_RUN_TOKEN"] as? String
         check(boot in 1..8 && environment["PARLOR_READINESS_BOOT"] == boot.toString())
-        check(NSBundle.mainBundle.bundleIdentifier == "com.parlor.app.debug")
+        check(NSBundle.mainBundle.bundleIdentifier == "me.parlor.ios.debug")
         check(environment["SIMULATOR_UDID"] == environment["PARLOR_DSC01_EXPECTED_UDID"])
         check(token != null && Regex("[A-Fa-f0-9]{8}(-[A-Fa-f0-9]{4}){3}-[A-Fa-f0-9]{12}").matches(token))
         val koin = KoinPlatform.getKoin()

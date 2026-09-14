@@ -19,8 +19,8 @@ def manifest():
     permissions = "".join('<uses-permission android:name="' + name + '"/>' for name in (
         "android.permission.INTERNET", "android.permission.ACCESS_NETWORK_STATE",
         "android.permission.ACCESS_WIFI_STATE", "android.permission.CHANGE_WIFI_MULTICAST_STATE",
-        "com.parlor.app.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"))
-    return ('<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.parlor.app" '
+        "me.parlor.android.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"))
+    return ('<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="me.parlor.android" '
             'android:versionName="1.2.3" android:versionCode="42">' + permissions +
             '<uses-sdk android:minSdkVersion="26" android:targetSdkVersion="36"/>'
             '<application android:name="com.parlor.app.ParlorApplication" android:allowBackup="false" '
@@ -41,11 +41,13 @@ def elf(abi):
 class AndroidReleaseArtifactsTest(unittest.TestCase):
     def test_manifest_validates_actual_required_policy(self):
         value = artifacts.inspect_manifest(manifest(), "1.2.3", 42)
-        self.assertEqual("com.parlor.app", value["application_id"])
+        self.assertEqual("me.parlor.android", value["application_id"])
         self.assertEqual(5, len(value["permissions"]))
 
     def test_manifest_rejects_identity_version_sdk_and_privacy_drift(self):
-        for before, after in ((b'package="com.parlor.app"', b'package="com.parlor.app.debug"'),
+        for before, after in ((b'package="me.parlor.android"', b'package="me.parlor.android.debug"'),
+                              (b'package="me.parlor.android"', b'package="com.parlor.app"'),
+                              (b'package="me.parlor.android"', b'package="me.parlor.ios"'),
                               (b'versionCode="42"', b'versionCode="43"'),
                               (b'versionName="1.2.3"', b'versionName="1.2.4"'),
                               (b'minSdkVersion="26"', b'minSdkVersion="25"'),

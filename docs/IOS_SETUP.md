@@ -99,11 +99,12 @@ and exact-candidate evidence tracked by [issue #6](https://github.com/Apdelrahma
   pick a team in Xcode's *Signing & Capabilities* tab. The latter writes to
   per-user data (`xcuserdata/`) and is gitignored, so it stays out of commits.
 
-The checked-in provisional Bundle ID is `com.parlor.app`, but it is already
-registered by another developer and is blocked from Store signing/upload by the
-release policy. Simulator development may continue with the Debug identity.
-Before a real-device or Store build, use the reviewed owner-controlled identity
-recorded by the release migration; do not submit the provisional identifier.
+The checked-in Bundle ID is `me.parlor.ios`; Debug uses `me.parlor.ios.debug`.
+This replaces the known-colliding `com.parlor.app`. Store ownership of the new
+identifier remains unverified, so signing/upload workflows remain blocked.
+Simulator development may continue with the Debug identity. Register the new
+identifier in the intended Apple team and verify its app record before Store
+signing. See [Store and GitHub setup](STORE_GITHUB_SETUP.md).
 
 ---
 

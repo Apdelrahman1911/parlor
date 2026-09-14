@@ -329,7 +329,7 @@ jobs:
           SERVICE_ACCOUNT_B64: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON_B64 }}
         run: |
           set -euo pipefail
-          [[ "$PACKAGE_NAME" == com.parlor.app && -n "$SERVICE_ACCOUNT_B64" ]]
+          [[ "$PACKAGE_NAME" == me.parlor.android && -n "$SERVICE_ACCOUNT_B64" ]]
           printf '%s' "$SERVICE_ACCOUNT_B64" | openssl base64 -d -A >"$RUNNER_TEMP/google-play-service-account.json"
           chmod 600 "$RUNNER_TEMP/google-play-service-account.json"
           python3 scripts/release/store_api.py google-check-unique \
@@ -420,7 +420,7 @@ jobs:
           CERTIFICATE_SHA256: ${{ vars.PARLOR_ANDROID_UPLOAD_CERT_SHA256 }}
         run: |
           set -euo pipefail
-          [[ "$APPLICATION_ID" == com.parlor.app ]]
+          [[ "$APPLICATION_ID" == me.parlor.android ]]
           scripts/release/validate_android_artifact.sh \
             "$AAB" \
             "$RUNNER_TEMP/bundletool.jar" \
@@ -795,7 +795,7 @@ jobs:
           API_KEY_B64: ${{ secrets.APP_STORE_CONNECT_API_KEY_P8_B64 }}
         run: |
           set -euo pipefail
-          [[ "$BUNDLE_ID" == com.parlor.app ]]
+          [[ "$BUNDLE_ID" == me.parlor.ios ]]
           [[ -n "$APP_ID" && -n "$API_KEY_ID" && -n "$API_ISSUER_ID" && -n "$API_KEY_B64" ]]
           printf '%s' "$API_KEY_B64" | openssl base64 -d -A >"$RUNNER_TEMP/AuthKey_$API_KEY_ID.p8"
           chmod 600 "$RUNNER_TEMP/AuthKey_$API_KEY_ID.p8"
@@ -861,7 +861,7 @@ jobs:
           PARLOR_APPLE_DISTRIBUTION_CERT_SHA256: ${{ vars.PARLOR_APPLE_DISTRIBUTION_CERT_SHA256 }}
         run: |
           set -euo pipefail
-          [[ "$PARLOR_APPLE_BUNDLE_ID" == com.parlor.app ]]
+          [[ "$PARLOR_APPLE_BUNDLE_ID" == me.parlor.ios ]]
           scripts/release/build_ios_candidate.sh \
             "$RUNNER_TEMP/Parlor.xcarchive" \
             "$RUNNER_TEMP/parlor-export" \

@@ -337,7 +337,7 @@ class NativeReceiptTests(unittest.TestCase):
 class NativeArtifactTests(unittest.TestCase):
     def make_app(self, root, name='Built.app'):
         app = root / name; app.mkdir()
-        info = dict(CFBundleIdentifier='com.parlor.app.debug', CFBundleExecutable='Parlor',
+        info = dict(CFBundleIdentifier='me.parlor.ios.debug', CFBundleExecutable='Parlor',
                     CFBundleVersion='1', CFBundleShortVersionString='1.0', MinimumOSVersion='16.0')
         (app / 'Info.plist').write_bytes(plistlib.dumps(info))
         for image in IMAGES:

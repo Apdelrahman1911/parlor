@@ -44,7 +44,7 @@ the linked run and PR identify the durable remote checkpoint.
 |---|---|
 | iOS Strict Complete Protection | **A37: 0 PASS / 26 FAIL, unresolved.** No shipping storage fix or waiver was made. Identify the rejecting condition or obtain an explicit, evidence-backed security-policy decision; do not infer Simulator-only causality or physical-device success. |
 | Physical-device qualification | Real Android/iOS and mixed-platform LAN, lifecycle, permissions, hotspot and accessibility evidence remains separate from automated/simulator coverage. |
-| Store/account/signing | Application identity ownership/collision, signed artifacts and Store operations remain unresolved external work. All three Store workflows remain disabled; do not dispatch older operational-branch copies. |
+| Store/account/signing | Android now selects `me.parlor.android` and iOS `me.parlor.ios`, replacing the known-colliding identifier. Ownership of both replacements, signed artifacts and Store operations remain unverified. All three Store workflows remain disabled; do not dispatch older operational-branch copies. See [setup instructions](STORE_GITHUB_SETUP.md). |
 | Owner/legal/privacy/content | Distribution and content rights, privacy declarations, final metadata/editorial approvals and other owner decisions remain required. |
 
 The [A37 independent evidence review](../remediation-runs/2026-09-08-continuation/reviews/native-a37-retrospective-actual-independent-01.json)

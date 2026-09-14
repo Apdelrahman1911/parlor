@@ -68,7 +68,7 @@ final class DSC01Probe: ObservableObject {
     private var samplingStarted: TimeInterval = 0
     private var samplingRows: [DSC01Observation] = []
     private var samplingContext = "none"
-    private let appID = "com.parlor.app.debug"
+    private let appID = "me.parlor.ios.debug"
     private let ownerKey = "com.parlor.languageOverrideOwner.v1"
     private var resultURL: URL {
         FileManager.default.temporaryDirectory.appendingPathComponent("parlor-dsc01-\(scenario)-result.json")

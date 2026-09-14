@@ -56,10 +56,10 @@ class SimulatorEntitlementTests(unittest.TestCase):
         read.assert_called_once_with(65)
 
     def test_public_plist_allowlist_preserves_only_expected_public_fields(self):
-        values = {'application-identifier': 'SYNTHETIC.com.parlor.app.debug',
-                  'com.apple.application-identifier': 'SYNTHETIC.com.parlor.app.debug',
+        values = {'application-identifier': 'SYNTHETIC.me.parlor.ios.debug',
+                  'com.apple.application-identifier': 'SYNTHETIC.me.parlor.ios.debug',
                   'com.apple.developer.team-identifier': 'SYNTHETIC', 'get-task-allow': True,
-                  'keychain-access-groups': ['SYNTHETIC.com.parlor.app.debug', 'com.apple.token'],
+                  'keychain-access-groups': ['SYNTHETIC.me.parlor.ios.debug', 'com.apple.token'],
                   'unknown-private-fixture': 'must-not-enter-receipt'}
         for fmt in (plistlib.FMT_XML, plistlib.FMT_BINARY):
             observed = subject.public_entitlements(plistlib.dumps(values, fmt=fmt))
@@ -164,7 +164,7 @@ class SimulatorEntitlementTests(unittest.TestCase):
             empty = subject.inspect_generated_app_entitlements(derived, owner)
             self.assertEqual([row['present'] for row in empty['files']], [False, False])
             exact = derived / empty['files'][1]['path']; exact.parent.mkdir(parents=True)
-            exact.write_bytes(plistlib.dumps({'application-identifier': 'SYNTHETIC.com.parlor.app.debug'}))
+            exact.write_bytes(plistlib.dumps({'application-identifier': 'SYNTHETIC.me.parlor.ios.debug'}))
             (exact.parent / 'not-allowlisted.xcent').write_bytes(b'private synthetic fixture must never be opened')
             rows = subject.inspect_generated_app_entitlements(derived, owner)['files']
             self.assertEqual(len(rows), 2)

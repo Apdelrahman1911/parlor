@@ -803,8 +803,8 @@ jobs:
             -showBuildSettings >"$release_settings"
           debug_bundle=$(awk -F' = ' '{key=$1; gsub(/^[[:space:]]+|[[:space:]]+$/, "", key); if (key == "PRODUCT_BUNDLE_IDENTIFIER") {print $2; exit}}' "$debug_settings")
           release_bundle=$(awk -F' = ' '{key=$1; gsub(/^[[:space:]]+|[[:space:]]+$/, "", key); if (key == "PRODUCT_BUNDLE_IDENTIFIER") {print $2; exit}}' "$release_settings")
-          [[ "$debug_bundle" == com.parlor.app.debug ]]
-          [[ "$release_bundle" == com.parlor.app ]]
+          [[ "$debug_bundle" == me.parlor.ios.debug ]]
+          [[ "$release_bundle" == me.parlor.ios ]]
 
       - name: Launch Swift host and Compose root on iOS Simulator
         if: github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full'
@@ -989,7 +989,7 @@ jobs:
           app="build/xcode-derived-data/Build/Products/Release-iphonesimulator/Parlor.app"
           test -x "$app/Parlor"
           plutil -lint "$app/Info.plist"
-          test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$app/Info.plist")" = "com.parlor.app"
+          test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$app/Info.plist")" = "me.parlor.ios"
           test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$app/Info.plist")" = "$(sed -n 's/^PARLOR_VERSION_NAME = //p' config/parlor-version.xcconfig)"
           test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleVersion' "$app/Info.plist")" = "$(sed -n 's/^PARLOR_BUILD_NUMBER = //p' config/parlor-version.xcconfig)"
           file "$app/Parlor" | tee build/ci-evidence/xcode-binary.txt

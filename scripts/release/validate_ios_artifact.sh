@@ -25,7 +25,7 @@ expected_deployment_target=$(python3 -c 'import json,sys; print(json.load(open(s
 [[ -d "$archive" && ! -L "$archive" ]] || { echo "xcarchive is not a directory" >&2; exit 2; }
 [[ -f "$ipa" && ! -L "$ipa" ]] || { echo "IPA is not a regular file" >&2; exit 2; }
 [[ $(stat -f %z "$ipa" 2>/dev/null || stat -c %s "$ipa") -le 2147483648 ]] || { echo "IPA exceeds the reviewed 2 GiB bound" >&2; exit 2; }
-[[ "$expected_bundle_id" == "com.parlor.app" && "$expected_bundle_id" != *.debug ]] || { echo "non-Store iOS identity rejected" >&2; exit 2; }
+[[ "$expected_bundle_id" == "me.parlor.ios" && "$expected_bundle_id" != *.debug ]] || { echo "non-Store iOS identity rejected" >&2; exit 2; }
 [[ "$expected_build_number" =~ ^[1-9][0-9]*$ ]] || { echo "invalid iOS build number" >&2; exit 2; }
 [[ "$expected_team_id" =~ ^[A-Z0-9]{10}$ ]] || { echo "invalid Apple Team ID" >&2; exit 2; }
 [[ "$expected_certificate" =~ ^[0-9a-f]{64}$ ]] || { echo "invalid certificate fingerprint" >&2; exit 2; }

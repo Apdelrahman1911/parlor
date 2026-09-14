@@ -177,7 +177,7 @@ class MainActivityColdStartTest : InstrumentationTestCase() {
     )
 
     private companion object {
-        const val STORE_APPLICATION_ID = "com.parlor.app"
+        const val STORE_APPLICATION_ID = "me.parlor.android"
         const val SETTINGS_FILE_NAME = "parlor_settings_v1"
         const val TIMEOUT_SECONDS = 30L
         val EMPTY_SETTINGS_XML = (

@@ -30,7 +30,7 @@ def source_record(commit: str = CANDIDATE, tree: str = TREE) -> dict:
         "repository": {"full_name": "Apdelrahman1911/parlor", "id": "123"},
         "source": {"commit_sha": commit, "tree_sha": tree},
         "version": {"marketing_version": "1.0.0", "android_version_code": 1, "ios_build_number": "1"},
-        "applications": {"android_application_id": "com.parlor.app", "ios_bundle_id": "com.parlor.app"},
+        "applications": {"android_application_id": "me.parlor.android", "ios_bundle_id": "me.parlor.ios"},
     }
 
 
@@ -40,7 +40,7 @@ def artifact(platform: str, commit: str = CANDIDATE) -> dict:
         "schema_version": 1,
         "platform": platform,
         "candidate_commit_sha": commit,
-        "identity": "com.parlor.app",
+        "identity": "me.parlor.android" if platform == "android" else "me.parlor.ios",
         "marketing_version": "1.0.0",
         "build_number": 1 if platform == "android" else "1",
         "filename": "parlor.aab" if platform == "android" else "Parlor.ipa",
@@ -74,7 +74,7 @@ def receipt(platform: str, commit: str = CANDIDATE) -> dict:
         return {
             **common,
             "state": "internal_track_committed",
-            "package_name": "com.parlor.app",
+            "package_name": "me.parlor.android",
             "version_code": 1,
             "track": "internal",
             "release_name": "Parlor 1.0.0 (1)",
@@ -87,7 +87,7 @@ def receipt(platform: str, commit: str = CANDIDATE) -> dict:
     return {
         **common,
         "state": "available_to_internal_testers",
-        "bundle_id": "com.parlor.app",
+        "bundle_id": "me.parlor.ios",
         "marketing_version": "1.0.0",
         "build_number": "1",
         "app_id": "app-1",
@@ -116,11 +116,21 @@ def manifest(commit: str = CANDIDATE, tree: str = TREE) -> dict:
 
 
 class StoreIdentityApprovalTest(unittest.TestCase):
-    def test_public_store_collision_blocks_every_candidate_platform(self) -> None:
+    def test_selected_store_identities_remain_blocked_without_ownership_evidence(self) -> None:
         for platform in ("android", "ios", "both"):
             with self.subTest(platform=platform):
-                with self.assertRaisesRegex(release_tool.ReleaseError, "known public Store collision"):
+                with self.assertRaisesRegex(release_tool.ReleaseError, "Store identity ownership is not verified"):
                     release_tool.assert_store_identity_approved(platform)
+
+    def test_public_store_collision_blocks_every_candidate_platform(self) -> None:
+        configured = json.loads(json.dumps(release_tool.policy()))
+        configured["applications"]["android"]["store_application_id"] = "com.parlor.app"
+        configured["applications"]["ios"]["store_bundle_id"] = "com.parlor.app"
+        with mock.patch.object(release_tool, "policy", return_value=configured):
+            for platform in ("android", "ios", "both"):
+                with self.subTest(platform=platform):
+                    with self.assertRaisesRegex(release_tool.ReleaseError, "known public Store collision"):
+                        release_tool.assert_store_identity_approved(platform)
 
     def test_api_verified_identity_approval_is_accepted(self) -> None:
         configured = json.loads(json.dumps(release_tool.policy()))
@@ -151,6 +161,7 @@ class StoreIdentityApprovalTest(unittest.TestCase):
 
     def test_known_collision_cannot_be_approved_by_changing_only_the_flag(self) -> None:
         configured = json.loads(json.dumps(release_tool.policy()))
+        configured["applications"]["android"]["store_application_id"] = "com.parlor.app"
         configured["applications"]["android"]["store_identity_ownership"] = {
             "status": "verified",
             "reason": None,
@@ -231,7 +242,7 @@ class CandidateManifestTest(unittest.TestCase):
 
     def test_debug_identity_is_rejected(self) -> None:
         value = artifact("android")
-        value["identity"] = "com.parlor.app.debug"
+        value["identity"] = "me.parlor.android.debug"
         with self.assertRaises(release_tool.ReleaseError):
             release_tool.validate_artifact_descriptor(value, "android")
 
