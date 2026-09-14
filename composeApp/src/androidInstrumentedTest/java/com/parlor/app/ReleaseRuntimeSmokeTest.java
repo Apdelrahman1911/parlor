@@ -23,7 +23,7 @@ public final class ReleaseRuntimeSmokeTest extends InstrumentationTestCase {
         assertEquals(0, applicationInfo.flags & ApplicationInfo.FLAG_DEBUGGABLE);
 
         Intent intent = new Intent(Intent.ACTION_MAIN)
-                .setClassName(STORE_APPLICATION_ID, STORE_APPLICATION_ID + ".MainActivity")
+                .setClassName(STORE_APPLICATION_ID, "com.parlor.app.MainActivity")
                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         Activity activity = getInstrumentation().startActivitySync(intent);
         try {

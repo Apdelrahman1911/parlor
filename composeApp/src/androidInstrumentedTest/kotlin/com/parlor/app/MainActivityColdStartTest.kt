@@ -67,7 +67,7 @@ class MainActivityColdStartTest : InstrumentationTestCase() {
         var cleanupReaderDescriptor: java.io.FileDescriptor? = null
         try {
             val intent = Intent(Intent.ACTION_MAIN)
-                .setClassName(STORE_APPLICATION_ID, "$STORE_APPLICATION_ID.MainActivity")
+                .setClassName(STORE_APPLICATION_ID, "com.parlor.app.MainActivity")
                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
             val launchedActivity = instrumentation.startActivitySync(intent)
             activity = launchedActivity
