@@ -194,7 +194,7 @@ jobs:
           SERVICE_ACCOUNT_B64: ${{ inputs.publish && secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON_B64 || '' }}
         run: |
           set -euo pipefail
-          [[ "$PACKAGE_NAME" == com.parlor.app ]]
+          [[ "$PACKAGE_NAME" == me.parlor.android ]]
           [[ -n "$EXTERNAL_TRACK" && "$EXTERNAL_TRACK" != internal && "$EXTERNAL_TRACK" != production ]]
           [[ "$EXTERNAL_TRACK_TYPE" == closed || "$EXTERNAL_TRACK_TYPE" == open ]]
           command=(
@@ -285,7 +285,7 @@ jobs:
           API_KEY_B64: ${{ inputs.publish && secrets.APP_STORE_CONNECT_API_KEY_P8_B64 || '' }}
         run: |
           set -euo pipefail
-          [[ "$BUNDLE_ID" == com.parlor.app ]]
+          [[ "$BUNDLE_ID" == me.parlor.ios ]]
           [[ -n "$APP_ID" && -n "$EXTERNAL_GROUP_ID" ]]
           command=(
             python3 scripts/release/store_api.py apple-external

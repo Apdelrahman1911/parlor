@@ -16,7 +16,7 @@ from simulator_signing import signing_overrides
 
 MAX_PLIST_BYTES = 65536
 MAX_COMMAND_BYTES = 4 * 1024 * 1024
-APP_ID = 'com.parlor.app.debug'
+APP_ID = 'me.parlor.ios.debug'
 PUBLIC_ENTITLEMENTS = {'application-identifier', 'com.apple.application-identifier',
                        'com.apple.developer.team-identifier', 'get-task-allow', 'keychain-access-groups'}
 SIGNING_FLAGS = ('AD_HOC_CODE_SIGNING_ALLOWED', 'CODE_SIGN_IDENTITY', 'CODE_SIGNING_ALLOWED',

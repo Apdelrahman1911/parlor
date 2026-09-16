@@ -50,7 +50,7 @@ class AndroidArtifactSizeTest(unittest.TestCase):
         return subprocess.run(
             [
                 "bash", str(VALIDATOR), str(self.aab), str(self.bundletool),
-                "com.parlor.app", "1.0.0", "1", "a" * 64,
+                "me.parlor.android", "1.0.0", "1", "a" * 64,
                 str(self.report), str(self.directory / "must-not-exist.json"),
             ],
             env=self.environment, text=True, capture_output=True, timeout=20,

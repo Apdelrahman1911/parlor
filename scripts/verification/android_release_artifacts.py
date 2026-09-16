@@ -87,7 +87,7 @@ def inspect_manifest(raw, version_name, version_code):
     require(len(raw) <= 1024 * 1024 and b"<!DOCTYPE" not in raw and b"<!ENTITY" not in raw,
             "Invalid manifest size or declarations")
     root = ET.fromstring(raw)
-    require(root.tag == "manifest" and root.get("package") == "com.parlor.app", "Wrong release identity")
+    require(root.tag == "manifest" and root.get("package") == "me.parlor.android", "Wrong release identity")
     require(root.get(ANDROID + "versionName") == version_name
             and root.get(ANDROID + "versionCode") == str(version_code), "Wrong packaged version")
     require(root.get(ANDROID + "sharedUserId") is None, "Unexpected shared user")
@@ -105,7 +105,7 @@ def inspect_manifest(raw, version_name, version_code):
     permissions = [item.get(ANDROID + "name") for item in root.findall("uses-permission")]
     expected_permissions = {"android.permission.INTERNET", "android.permission.ACCESS_NETWORK_STATE",
                             "android.permission.ACCESS_WIFI_STATE", "android.permission.CHANGE_WIFI_MULTICAST_STATE",
-                            "com.parlor.app.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"}
+                            "me.parlor.android.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"}
     require(len(permissions) == len(expected_permissions) and set(permissions) == expected_permissions,
             "Unexpected packaged permissions")
     require(not root.findall("uses-permission-sdk-23"), "Alternate permissions require review")
@@ -124,7 +124,7 @@ def inspect_manifest(raw, version_name, version_code):
             ("receiver", "androidx.profileinstaller.ProfileInstallReceiver", "android.permission.DUMP")]),
             "Unexpected exported surface")
     require(launchers == [("activity", "com.parlor.app.MainActivity", "true")], "Unexpected launcher")
-    return {"application_id": "com.parlor.app", "version_name": version_name, "version_code": version_code,
+    return {"application_id": "me.parlor.android", "version_name": version_name, "version_code": version_code,
             "min_sdk": 26, "target_sdk": 36, "permissions": sorted(permissions), "exported": exported}
 
 

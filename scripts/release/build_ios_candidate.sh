@@ -27,7 +27,7 @@ evidence_path=$4
 [[ -f "$PARLOR_APPLE_CERTIFICATE_P12_PATH" && ! -L "$PARLOR_APPLE_CERTIFICATE_P12_PATH" ]] || { echo "invalid certificate file" >&2; exit 2; }
 [[ -f "$PARLOR_APPLE_PROFILE_PATH" && ! -L "$PARLOR_APPLE_PROFILE_PATH" ]] || { echo "invalid provisioning profile file" >&2; exit 2; }
 [[ "$PARLOR_APPLE_TEAM_ID" =~ ^[A-Z0-9]{10}$ ]] || { echo "invalid Apple Team ID" >&2; exit 2; }
-[[ "$PARLOR_APPLE_BUNDLE_ID" == "com.parlor.app" ]] || { echo "non-Store iOS Bundle ID rejected" >&2; exit 2; }
+[[ "$PARLOR_APPLE_BUNDLE_ID" == "me.parlor.ios" ]] || { echo "non-Store iOS Bundle ID rejected" >&2; exit 2; }
 
 temporary_dir=$(mktemp -d "${RUNNER_TEMP:-${TMPDIR:-/tmp}}/parlor-ios-signing.XXXXXX")
 keychain="$temporary_dir/parlor.keychain-db"

@@ -225,7 +225,7 @@ android {
     compileSdk = libs.versions.android.compile.sdk.get().toInt()
 
     defaultConfig {
-        applicationId = "com.parlor.app"
+        applicationId = "me.parlor.android"
         minSdk = libs.versions.android.min.sdk.get().toInt()
         targetSdk = libs.versions.android.target.sdk.get().toInt()
         versionCode = parlorBuildNumber
@@ -331,11 +331,11 @@ val verifyApplicationIdentities by tasks.registering {
     inputs.property("debugApplicationIdSuffix", configuredDebugApplicationIdSuffix)
     inputs.property("releaseApplicationIdSuffix", configuredReleaseApplicationIdSuffix)
     doLast {
-        check(inputs.properties.getValue("storeApplicationId") == "com.parlor.app") {
-            "Android Store application ID changed from com.parlor.app."
+        check(inputs.properties.getValue("storeApplicationId") == "me.parlor.android") {
+            "Android Store application ID changed from me.parlor.android."
         }
         check(inputs.properties.getValue("debugApplicationIdSuffix") == ".debug") {
-            "Android Debug must use the isolated com.parlor.app.debug identity."
+            "Android Debug must use the isolated me.parlor.android.debug identity."
         }
         check(inputs.properties.getValue("releaseApplicationIdSuffix") == "") {
             "Android Release must not add a non-Store application-ID suffix."
@@ -461,7 +461,7 @@ val verifyMergedReleaseManifest by tasks.registering {
         val document = factory.newDocumentBuilder().parse(manifest)
         val manifestElement = document.documentElement
         check(manifestElement.tagName == "manifest") { "Release artifact has no <manifest> root" }
-        check(manifestElement.getAttribute("package") == "com.parlor.app") {
+        check(manifestElement.getAttribute("package") == "me.parlor.android") {
             "Unexpected release application ID: ${manifestElement.getAttribute("package")}"
         }
 
@@ -470,7 +470,7 @@ val verifyMergedReleaseManifest by tasks.registering {
             "android.permission.ACCESS_NETWORK_STATE",
             "android.permission.ACCESS_WIFI_STATE",
             "android.permission.CHANGE_WIFI_MULTICAST_STATE",
-            "com.parlor.app.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION",
+            "me.parlor.android.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION",
         )
         val permissionNodes = document.getElementsByTagName("uses-permission")
         val actualPermissions = buildSet {

@@ -5,14 +5,14 @@ workflow, artifact, and Store evidence must agree; a successful upload is not a
 release. Android and iOS are shipping targets. Desktop remains a development
 and deterministic-test target and has no publishing workflow.
 
-## Repository facts discovered before implementation
+## Current repository configuration
 
 | Item | Repository truth | External confirmation still required |
 |---|---|---|
-| Android release build identity | `com.parlor.app` | **Blocked:** Google Play publicly assigns this package to an unrelated beauty-salon app. It is not an approved Parlor Store identity. |
-| Android Debug identity | `com.parlor.app.debug` | Provisional; derive the final Debug identity from the owner-controlled Store identity during the identity migration. |
-| iOS release build identity | `com.parlor.app` | **Blocked:** Apple publicly assigns this Bundle ID to “The Parlor Kuwait,” seller Moiz Bohra. It is not an approved Parlor Store identity. |
-| iOS Debug identity | `com.parlor.app.debug` | Provisional; derive the final Debug identity from the owner-controlled Store identity during the identity migration. |
+| Android release build identity | `me.parlor.android` | **Blocked:** owner-selected replacement; authenticated Play ownership remains unverified. |
+| Android Debug identity | `me.parlor.android.debug` | Isolated from the selected release identity. |
+| iOS release build identity | `me.parlor.ios` | **Blocked:** owner-selected replacement; authenticated Apple ownership remains unverified. |
+| iOS Debug identity | `me.parlor.ios.debug` | Isolated from the selected release identity. |
 | Version source | `config/parlor-version.xcconfig` | Version code/build number must be unused in both Stores. |
 | Current version | marketing `1.0.0`, Android code `1`, iOS build `1` | These initial numeric values must be deliberately approved as unused, or reviewed and bumped, before the first candidate. |
 | Android signing | External keystore supported; no key is committed | Play App Signing enrollment and the upload-key fingerprint must be confirmed. |
@@ -27,7 +27,7 @@ group, URL-scheme, or deep-link production configuration was found. The iOS
 signed-artifact validator therefore rejects unreviewed entitlements. Adding any
 of those services reopens identity, signing, privacy, and release review.
 
-### Blocking Store-identity collision
+### Store identity migration and remaining ownership block
 
 On 2026-08-16, repository-independent public Store readback proved that the
 provisional `com.parlor.app` identifier is already used by another developer on
@@ -35,6 +35,15 @@ both platforms:
 
 - Google Play: `https://play.google.com/store/apps/details?id=com.parlor.app`
 - Apple public lookup: `https://itunes.apple.com/lookup?bundleId=com.parlor.app&country=us`
+
+The owner selected `me.parlor.android` and `me.parlor.ios` on 2026-09-14.
+Build configuration, schema, artifact validation, workflow assertions, and
+Debug identities now use those replacements. Public US lookups found no listing,
+but registration and authenticated ownership remain unverified. The release
+policy therefore retains `status: blocked`, reason `store_ownership_unverified`,
+and no verification timestamp or evidence. The old identifier remains expressly
+rejected. The [setup guide](STORE_GITHUB_SETUP.md) explains account registration,
+signing inputs, GitHub environments, and the new-app Play bootstrap requirement.
 
 The affected GitHub environment variables were removed immediately. Every
 candidate or promotion workflow, and every direct Store API execution command,
@@ -49,12 +58,10 @@ those workflows only in a reviewed change after the identity migration,
 authenticated Store readback, protected-variable setup, environment approval
 support, and branch-rule activation are all complete.
 
-Before any signed candidate can exist, authenticated Store readback must either
-locate existing Parlor app records controlled by the owner or the owner must
-approve and register new canonical identifiers. The resulting reviewed identity
-migration must update Gradle/Xcode configuration, Debug derivations, release
-policy, manifest schema, validators, workflow guards, signing/services, and
-tests together. Only then may API readback evidence set the policy status to
+Before any signed candidate can exist, register the selected identifiers and
+verify the intended app records through authenticated Store readback. Signing
+profiles, registered upload certificates, and protected configuration must
+match the selected identities. Only then may API readback evidence set the policy status to
 `verified` and repopulate protected GitHub variables. Never upload under
 `com.parlor.app`, and never guess a replacement reverse-DNS identifier.
 

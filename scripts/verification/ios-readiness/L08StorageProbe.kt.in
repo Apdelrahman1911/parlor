@@ -371,7 +371,7 @@ object L08StorageProbe {
 
 internal fun requireContext(token: String, scenario: String) {
     val environment = NSProcessInfo.processInfo.environment
-    check(NSBundle.mainBundle.bundleIdentifier == "com.parlor.app.debug")
+    check(NSBundle.mainBundle.bundleIdentifier == "me.parlor.ios.debug")
     check(Regex("[A-Fa-f0-9]{8}(-[A-Fa-f0-9]{4}){3}-[A-Fa-f0-9]{12}").matches(token))
     check(environment["PARLOR_DSC01_SCENARIO"] == scenario)
     check(environment["SIMULATOR_UDID"] == environment["PARLOR_DSC01_EXPECTED_UDID"])

@@ -16,8 +16,8 @@ from scripts.verification import ios_release_artifacts as artifacts
 
 CASE = "game-modes/whodunit/src/commonMain/composeResources/files/cases/synthetic.json"
 FONT = "shared/design-system/src/commonMain/composeResources/font/synthetic.ttf"
-IDENTITIES = {"store_bundle_id": "com.parlor.app", "debug_bundle_id": "com.parlor.app.debug",
-              "store_identity_ownership": {"status": "blocked", "reason": "public_store_collision",
+IDENTITIES = {"store_bundle_id": "me.parlor.ios", "debug_bundle_id": "me.parlor.ios.debug",
+              "store_identity_ownership": {"status": "blocked", "reason": "store_ownership_unverified",
                                            "verified_at": None, "verification_reference": None}}
 SYNTHETIC_UUID = "01234567-89ab-cdef-0123-456789abcdef"
 
@@ -33,7 +33,7 @@ class ReleaseArtifactTest(unittest.TestCase):
         self.source.mkdir()
         self.source_paths = [CASE, FONT]
         self.probed = []
-        self.info = {"CFBundleIdentifier": "com.parlor.app", "CFBundleExecutable": "Parlor",
+        self.info = {"CFBundleIdentifier": "me.parlor.ios", "CFBundleExecutable": "Parlor",
                      "CFBundleShortVersionString": "1.2.3", "CFBundleVersion": "7", "MinimumOSVersion": "16.0",
                      "CFBundleSupportedPlatforms": ["iPhoneSimulator"], "DTPlatformName": "iphonesimulator",
                      "CFBundleLocalizations": ["en", "ar"], "NSBonjourServices": ["_p2pkit2._tcp"],
@@ -136,7 +136,8 @@ class ReleaseArtifactTest(unittest.TestCase):
             self.inspect()
 
     def test_release_identity_version_platform_deployment_and_language_are_checked(self):
-        for key, value in (("CFBundleIdentifier", "com.parlor.app.debug"), ("CFBundleVersion", "8"),
+        for key, value in (("CFBundleIdentifier", "me.parlor.ios.debug"), ("CFBundleVersion", "8"),
+                           ("CFBundleIdentifier", "com.parlor.app"), ("CFBundleIdentifier", "me.parlor.android"),
                            ("CFBundleShortVersionString", "1.2.4"), ("MinimumOSVersion", "15.0"),
                            ("CFBundleExecutable", "Other"), ("CFBundleSupportedPlatforms", ["iPhoneOS"]),
                            ("DTPlatformName", "iphoneos"), ("CFBundleLocalizations", ["en"]),
@@ -147,7 +148,7 @@ class ReleaseArtifactTest(unittest.TestCase):
                     self.inspect()
         self.write(self.app, "Info.plist", plistlib.dumps(self.info))
 
-    def test_known_identity_collision_cannot_be_promoted_by_package_inspector(self):
+    def test_unverified_identity_cannot_be_promoted_by_package_inspector(self):
         changed = dict(IDENTITIES, store_identity_ownership={"status": "verified"})
         self.write(self.source, "config/release-policy.json", json.dumps({"applications": {"ios": changed}}).encode())
         with self.assertRaisesRegex(RuntimeError, "ownership policy"):

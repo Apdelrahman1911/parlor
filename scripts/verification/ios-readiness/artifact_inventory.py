@@ -39,7 +39,7 @@ def inventory_bundle(bundle):
     if (info_path.is_symlink() or not info_path.is_file() or info_path.stat().st_size > 1024 * 1024):
         raise RuntimeError('Missing, symlinked or oversized bundle metadata')
     info = plistlib.loads(info_path.read_bytes())
-    if info.get('CFBundleIdentifier') != 'com.parlor.app.debug':
+    if info.get('CFBundleIdentifier') != 'me.parlor.ios.debug':
         raise RuntimeError('Debug identity differs from source-bound expectation')
     executable = info.get('CFBundleExecutable')
     if not safe_relative(executable) or '/' in executable:

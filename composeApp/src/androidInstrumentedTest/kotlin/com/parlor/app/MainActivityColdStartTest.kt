@@ -67,7 +67,7 @@ class MainActivityColdStartTest : InstrumentationTestCase() {
         var cleanupReaderDescriptor: java.io.FileDescriptor? = null
         try {
             val intent = Intent(Intent.ACTION_MAIN)
-                .setClassName(STORE_APPLICATION_ID, "$STORE_APPLICATION_ID.MainActivity")
+                .setClassName(STORE_APPLICATION_ID, "com.parlor.app.MainActivity")
                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
             val launchedActivity = instrumentation.startActivitySync(intent)
             activity = launchedActivity
@@ -177,7 +177,7 @@ class MainActivityColdStartTest : InstrumentationTestCase() {
     )
 
     private companion object {
-        const val STORE_APPLICATION_ID = "com.parlor.app"
+        const val STORE_APPLICATION_ID = "me.parlor.android"
         const val SETTINGS_FILE_NAME = "parlor_settings_v1"
         const val TIMEOUT_SECONDS = 30L
         val EMPTY_SETTINGS_XML = (

@@ -174,9 +174,9 @@ def source_versions(source: Path) -> dict:
 def source_identity_policy(source: Path) -> dict:
     policy = json.loads(bounded_file(source / "config/release-policy.json"))
     ios = policy["applications"]["ios"]
-    # This tool is validation-only. It cannot approve the known Store collision.
-    if (ios["store_bundle_id"] != "com.parlor.app" or ios["debug_bundle_id"] != "com.parlor.app.debug" or
-            ios["store_identity_ownership"] != {"status": "blocked", "reason": "public_store_collision",
+    # This tool is validation-only. It cannot approve unverified Store ownership.
+    if (ios["store_bundle_id"] != "me.parlor.ios" or ios["debug_bundle_id"] != "me.parlor.ios.debug" or
+            ios["store_identity_ownership"] != {"status": "blocked", "reason": "store_ownership_unverified",
                                                "verified_at": None, "verification_reference": None}):
         raise RuntimeError("Unreviewed application identity or Store-ownership policy change")
     return ios
