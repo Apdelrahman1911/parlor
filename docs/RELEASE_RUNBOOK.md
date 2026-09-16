@@ -93,8 +93,8 @@ At minimum it requires:
    hotspot-owner participation and connected-client-to-connected-client host;
 3. discovery, multiple rooms, wrong code, authenticated connection, explicit
    host approval, decline, atomic capacity, timeout, and closed admission;
-4. both games through completion/rematch, simultaneous actions, and protocol
-   fault-injection results;
+4. all registered games through completion/rematch, simultaneous actions, and
+   protocol fault-injection results;
 5. short/long background and screen lock, network switch, transient peer loss,
    process-death Resume, final Leave, host disappearance, and grace expiry;
 6. ten repeated room lifecycles plus a sustained session; and

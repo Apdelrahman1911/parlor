@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.produceState
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.Lifecycle
+import com.parlor.app.lifecycle.AppLifecycleCoordinator
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.storage.settings.SettingsStore
 import kotlinx.coroutines.CoroutineDispatcher
@@ -24,6 +26,14 @@ import org.koin.android.ext.android.getKoin
  * edge-to-edge so the cozy-noir backdrop runs from frame to frame.
  */
 class MainActivity : ComponentActivity() {
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        getKoin().get<AppLifecycleCoordinator>().notifyWindowFocus(
+            focused = hasFocus,
+            resumed = lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED),
+        )
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // Roles and private actions are visible in the app. Android 13 added a

@@ -13,6 +13,7 @@ import com.parlor.content.validation.DefaultCaseValidator
 import com.parlor.app.shell.game.DefaultGameShellRegistry
 import com.parlor.app.shell.game.GameShellRegistry
 import com.parlor.app.shell.game.MafiaGameShellBinding
+import com.parlor.app.shell.game.LastLightGameShellBinding
 import com.parlor.app.shell.game.WhodunitGameShellBinding
 import com.parlor.core.versioning.SemVer
 import com.parlor.engine.registry.DefaultGameRegistry
@@ -40,12 +41,14 @@ val contentModule: Module = module {
 
     single { WhodunitGameShellBinding(get()) }
     single { MafiaGameShellBinding(get()) }
+    single { LastLightGameShellBinding(get()) }
 
     single<GameShellRegistry> {
         DefaultGameShellRegistry(
             listOf(
                 get<WhodunitGameShellBinding>(),
                 get<MafiaGameShellBinding>(),
+                get<LastLightGameShellBinding>(),
             ),
         )
     }

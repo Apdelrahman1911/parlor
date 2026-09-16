@@ -8,6 +8,74 @@ import kotlin.test.assertTrue
 
 class AppLifecycleCoordinatorTest {
     @Test
+    fun androidForegroundAndResumeWithoutFocusKeepPrivateContentCovered() {
+        val effects = mutableListOf<TransportLifecycleEffect>()
+        val coordinator = coordinatorRecording(effects)
+        coordinator.notifyForegrounded()
+        assertTrue(coordinator.visibility.value.privateContentCovered)
+        coordinator.notifyWindowFocus(focused = false, resumed = true)
+        assertTrue(coordinator.visibility.value.privateContentCovered)
+        coordinator.notifyWindowFocus(focused = true, resumed = true)
+        assertFalse(coordinator.visibility.value.privateContentCovered)
+
+        coordinator.notifyWindowFocus(focused = false, resumed = true)
+        val interruptedEpoch = coordinator.visibility.value.privacyEpoch
+        coordinator.notifyForegrounded()
+        coordinator.notifyWindowFocus(focused = false, resumed = true)
+        assertTrue(coordinator.visibility.value.privateContentCovered)
+        assertEquals(interruptedEpoch, coordinator.visibility.value.privacyEpoch)
+        assertEquals(listOf(TransportLifecycleEffect.Foregrounded), effects)
+    }
+
+    @Test
+    fun focusCannotRevealAnActivityBeforeItResumesOrResumeBackgroundTransport() {
+        val effects = mutableListOf<TransportLifecycleEffect>()
+        val coordinator = coordinatorRecording(effects)
+        coordinator.notifyForegrounded()
+        coordinator.notifyBackgrounded()
+        coordinator.notifyWindowFocus(focused = true, resumed = false)
+
+        assertTrue(coordinator.visibility.value.privateContentCovered)
+        assertEquals(TransportVisibility.Background, coordinator.visibility.value.transportVisibility)
+        assertEquals(
+            listOf(TransportLifecycleEffect.Foregrounded, TransportLifecycleEffect.Backgrounded),
+            effects,
+        )
+    }
+
+    @Test
+    fun foregroundSnapshotRetainsConcealmentAfterBriefInterruption() {
+        val effects = mutableListOf<TransportLifecycleEffect>()
+        val coordinator = coordinatorRecording(effects)
+        assertTrue(coordinator.visibility.value.privateContentCovered)
+        coordinator.notifyActive()
+        val before = coordinator.visibility.value.privacyEpoch
+        coordinator.notifyInactive()
+        coordinator.notifyActive()
+
+        assertFalse(coordinator.visibility.value.privateContentCovered)
+        assertEquals(before + 1L, coordinator.visibility.value.privacyEpoch)
+        assertEquals(listOf(TransportLifecycleEffect.Foregrounded), effects)
+    }
+
+    @Test
+    fun duplicateVisibilityCallbacksDoNotAdvancePrivacyEpoch() {
+        val coordinator = coordinatorRecording(mutableListOf())
+        coordinator.notifyActive()
+        coordinator.notifyInactive()
+        val interrupted = coordinator.visibility.value
+        coordinator.notifyInactive()
+        assertEquals(interrupted, coordinator.visibility.value)
+        coordinator.notifyBackgrounded()
+        val background = coordinator.visibility.value
+        coordinator.notifyBackgrounded()
+        coordinator.notifyActive()
+
+        assertEquals(interrupted.privacyEpoch + 1L, background.privacyEpoch)
+        assertEquals(background.privacyEpoch, coordinator.visibility.value.privacyEpoch)
+    }
+
+    @Test
     fun inactiveCoversPrivateContentWithoutChangingTransportState() {
         val foreground = reduceAppLifecycle(
             previous = AppLifecyclePolicyState(),

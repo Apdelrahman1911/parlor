@@ -223,7 +223,9 @@ restarting devices. A single success is evidence for that run, not a claim of
    battery restrictions, and all relevant permissions/settings.
 4. Start with cleanly closed Parlor rooms, but do not reboot between repeated-
    session rows.
-5. Play both Whodunit and Mafia where the row says "both games".
+5. Play every registered game (Whodunit, Mafia, and Last Light) where the row
+   says "all registered games". For gameplay steps, add devices as needed to
+   satisfy each game's supported roster size.
 
 ## Required physical matrix
 
@@ -231,11 +233,11 @@ restarting devices. A single success is evidence for that run, not a claim of
 
 | ID | Prerequisites and exact steps | Expected result and PASS criterion | Evidence |
 |---|---|---|---|
-| PHY-01 Android -> Android | Two Android phones on normal Wi-Fi. A hosts; B enters code; A approves. Complete one game. Swap host and repeat. | Both directions reach secure admission, commands receive explicit results, snapshots stay synchronized, and both games can finish. | Models/API builds, both role directions, lobby/game screenshots, diagnostic logs. |
+| PHY-01 Android -> Android | Two Android phones on normal Wi-Fi. A hosts; B enters code; A approves. Complete all registered games. Swap host and repeat. | Both directions reach secure admission, commands receive explicit results, snapshots stay synchronized, and all registered games can finish. | Models/API builds, both role directions, lobby/game screenshots, diagnostic logs. |
 | PHY-02 iOS -> iOS | Two physical iPhones on normal Wi-Fi. Repeat PHY-01 in both host directions. | Same as PHY-01; Bonjour prompt and recovery copy are truthful. | Models/iOS builds, permission state, both role directions, logs. |
-| PHY-03 Android host -> iOS peer | Android hosts on normal Wi-Fi; iPhone joins, is approved, and completes both games. | Discovery, authenticated connection, commands/snapshots, terminal state, and cleanup all pass. | Artifact checksums, roles, screenshots, both logs. |
+| PHY-03 Android host -> iOS peer | Android hosts on normal Wi-Fi; iPhone joins, is approved, and completes all registered games. | Discovery, authenticated connection, commands/snapshots, terminal state, and cleanup all pass. | Artifact checksums, roles, screenshots, both logs. |
 | PHY-04 iOS host -> Android peer | Reverse PHY-03. | Same binary criteria as PHY-03. | Same evidence with reversed roles. |
-| PHY-05 Three-device mixed room | One host plus at least two peers, with both OS families represented. Complete both games. | Host admits exactly the approved peers; all players stay on one revision/outcome; private roles are visible only to their owners. | Three device records, synchronized phase/video, logs. |
+| PHY-05 Three-device mixed room | One host plus at least two peers, with both OS families represented. Complete all registered games. | Host admits exactly the approved peers; all players stay on one revision/outcome; private roles are visible only to their owners. | Records for every participating device, synchronized phase/video, logs. |
 | PHY-06 Multiple rooms and late candidate | Two hosts advertise different rooms. Peer enters host B's code while host A appears first; restart B advertisement once. | Wrong-room rejection for A does not finish the join; B is retried/selected before the 30-second deadline. No cross-game state. | Timeline/video and candidate/result diagnostics. |
 | PHY-07 Wrong code and cancellation | Enter a valid-format nonexistent code, then repeat and cancel during discovery. | First attempt gives localized failure by 30 seconds; cancelled attempt exits promptly and leaves no discovering ghost. | Screen recording, cleanup diagnostics, new room succeeds afterward. |
 | PHY-08 Admission decisions and capacity | Exercise approve, decline, no response for 60 seconds, closed game, and concurrent last-seat requests. | Only approved capacity-reserved peers commit; decline/timeout/full/started are distinct; no ghost member survives failure. | Roster before/after, error screens, admission diagnostics. |
@@ -264,7 +266,7 @@ copy and support notes. A manual endpoint is not an allowed workaround.
 
 | ID | Prerequisites and exact steps | Expected result and PASS criterion | Evidence |
 |---|---|---|---|
-| PHY-09 Peer transient loss/rejoin | Mid-game, disable peer Wi-Fi for 5-15 seconds without tapping Leave; restore it. Repeat in both games. | Host marks seat disconnected and blocks progression; peer resumes same seat inside 120 seconds; snapshot restores current revision; no action doubles. | Before/after phase, lifecycle and snapshot diagnostics. |
+| PHY-09 Peer transient loss/rejoin | Mid-game, disable peer Wi-Fi for 5-15 seconds without tapping Leave; restore it. Repeat in all registered games. | Host marks seat disconnected and blocks progression; peer resumes same seat inside 120 seconds; snapshot restores current revision; no action doubles. | Before/after phase, lifecycle and snapshot diagnostics. |
 | PHY-10 Peer background/foreground | Background and screen-lock a peer for 10 seconds, then restore. Repeat near 120 seconds and once beyond it. | Short interruption resumes; the original deadline is not extended by repeated background events; beyond 120 seconds expires cleanly. | Timestamps, UI overlays, lifecycle diagnostics. |
 | PHY-11 Host background/foreground | Background/lock host for 10 seconds and return; then test beyond 120 seconds. | Short interruption freezes room and restores it. Long interruption ends room; peers do not migrate host or continue stale play. | Host and peer timelines/logs. |
 | PHY-12 Peer process death/relaunch | Force-stop/terminate a peer without Leave; relaunch within 120 seconds and choose multiplayer Resume. | Protected credential restores same host/seat, rotates, and receives current snapshot. No room code/token is shown in logs. | Relaunch video, secure resume/lifecycle diagnostics. |
@@ -276,7 +278,7 @@ copy and support notes. A manual endpoint is not an allowed workaround.
 
 | ID | Prerequisites and exact steps | Expected result and PASS criterion | Evidence |
 |---|---|---|---|
-| PHY-16 Simultaneous legitimate actions | In both games, coordinate multiple players to act against one revision. | Host serializes effects; one command may be stale/rejected with visible retry guidance, but no action executes twice and final state is valid. | Video, final tally/state, command result diagnostics. |
+| PHY-16 Simultaneous legitimate actions | In all registered games, coordinate multiple players to act against one revision. | Host serializes effects; one command may be stale/rejected with visible retry guidance, but no action executes twice and final state is valid. | Video, final tally/state, command result diagnostics. |
 | PHY-17 Duplicate/delayed/malformed/version faults | Use the deterministic adapter/fault harness for crafted frames; use physical debug fault controls only if present. | Duplicate is idempotent; stale/order/version/payload failures are closed and bounded; unaffected peer remains usable. | Automated report plus any device fault evidence; never hand-edit a release binary. |
 | PHY-18 Repeated lifecycle | Without restarting devices, create, join, play/exit, and destroy at least ten rooms, alternating host and game. | Every cycle works; no ghost room, duplicate member, stale resume tile, growing delay, crash, or resource exhaustion. | Ten-cycle sheet, memory/battery observation, first/last logs. |
 | PHY-19 Sustained session | Play continuously for at least 60 minutes with periodic actions, backgrounding, and one transient loss. | Stable state, bounded diagnostics/queues, acceptable battery/heat, no leaked room after exit. | Duration, device thermal/battery notes, final cleanup. |

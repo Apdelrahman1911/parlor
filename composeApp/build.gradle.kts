@@ -135,6 +135,7 @@ kotlin {
                 // Game modules
                 implementation(project(":game-modes:whodunit"))
                 implementation(project(":game-modes:mafia"))
+                implementation(project(":game-modes:last-light"))
 
                 // Compose
                 implementation(libs.compose.runtime)
@@ -593,7 +594,7 @@ val verifyGameShellDispatch by tasks.registering {
     }
     inputs.files(neutralShellSources, multiplayerShellSources, gameShellSupportSources)
     doLast {
-        val forbidden = listOf("whodunit", "mafia", "com.parlor.games.")
+        val forbidden = listOf("whodunit", "mafia", "lastlight", "last-light", "com.parlor.games.")
         inputs.files.files.filter { file -> file.isFile }.forEach { source ->
             val text = source.readText().lowercase()
             val found = forbidden.filter { token -> token in text }

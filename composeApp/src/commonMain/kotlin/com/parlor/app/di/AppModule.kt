@@ -7,6 +7,7 @@ import com.parlor.core.random.SessionSeedSource
 import com.parlor.core.time.Clock
 import com.parlor.core.time.SystemClock
 import com.parlor.games.mafia.di.mafiaModule
+import com.parlor.games.lastlight.di.lastLightModule
 import com.parlor.games.whodunit.di.whodunitModule
 import com.parlor.networking.security.SecureIds
 import com.parlor.networking.transport.RoomTransport
@@ -68,6 +69,7 @@ val allModules: List<Module> = listOf(
     coreModule,
     whodunitModule,
     mafiaModule,
+    lastLightModule,
     contentModule,
     storageModule,
     platformStorageModule(),

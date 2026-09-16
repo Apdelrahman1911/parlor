@@ -53,3 +53,4 @@ include(":shared:transport-p2p")
 // Game modules
 include(":game-modes:whodunit")
 include(":game-modes:mafia")
+include(":game-modes:last-light")

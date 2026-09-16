@@ -1,5 +1,14 @@
 # Third-party notice supplement
 
+## Last Light fonts
+
+The Last Light game separately packages Fraunces SemiBold and Manrope Regular,
+Medium and SemiBold, adapted from PartyDeck's Standard table. Their verbatim
+SIL Open Font License notices and source provenance live in
+`game-modes/last-light/src/commonMain/composeResources/files/licenses/`.
+These game resources are additional to the dependency supplement below; they
+do not replace or alter its exact 26-file verification contract.
+
 ## Scope and shipped materials
 
 `composeApp/src/commonMain/composeResources/files/legal/` contains 25 verbatim

@@ -1,6 +1,9 @@
 package com.parlor.app.lifecycle
 
 import com.parlor.networking.transport.RoomTransport
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 /**
  * App-level visibility as reported by the platform shell.
@@ -31,6 +34,7 @@ internal enum class TransportLifecycleEffect {
 internal data class AppLifecyclePolicyState(
     val appVisibility: AppVisibility = AppVisibility.Inactive,
     val transportVisibility: TransportVisibility = TransportVisibility.Unknown,
+    val privacyEpoch: Long = 0L,
 ) {
     val privateContentCovered: Boolean
         get() = appVisibility != AppVisibility.Active
@@ -63,6 +67,9 @@ internal fun reduceAppLifecycle(
         state = AppLifecyclePolicyState(
             appVisibility = visibility,
             transportVisibility = nextTransportVisibility,
+            privacyEpoch = previous.privacyEpoch + if (
+                visibility != AppVisibility.Active && visibility != previous.appVisibility
+            ) 1L else 0L,
         ),
         transportEffect = effect,
     )
@@ -123,6 +130,26 @@ internal class AppLifecycleCoordinator(
     )
 
     private var policyState = AppLifecyclePolicyState()
+    private val mutableVisibility = MutableStateFlow(policyState)
+
+    /** Latest visibility plus a durable concealment signal for collectors that conflate transitions. */
+    val visibility: StateFlow<AppLifecyclePolicyState> = mutableVisibility.asStateFlow()
+
+    /** Android process residency may resume before an Activity regains private-content focus. */
+    fun notifyForegrounded() {
+        if (policyState.transportVisibility == TransportVisibility.Foreground) return
+        val inactive = reduceAppLifecycle(policyState, AppVisibility.Inactive).state
+        commit(
+            AppLifecycleTransition(
+                inactive.copy(transportVisibility = TransportVisibility.Foreground),
+                TransportLifecycleEffect.Foregrounded,
+            ),
+        )
+    }
+
+    fun notifyWindowFocus(focused: Boolean, resumed: Boolean) = transitionTo(
+        if (focused && resumed) AppVisibility.Active else AppVisibility.Inactive,
+    )
 
     fun notifyActive() = transitionTo(AppVisibility.Active)
 
@@ -131,10 +158,14 @@ internal class AppLifecycleCoordinator(
     fun notifyBackgrounded() = transitionTo(AppVisibility.Background)
 
     private fun transitionTo(visibility: AppVisibility) {
-        val transition = reduceAppLifecycle(policyState, visibility)
+        commit(reduceAppLifecycle(policyState, visibility))
+    }
+
+    private fun commit(transition: AppLifecycleTransition) {
         // Commit before invoking the transport. A re-entrant duplicate callback
         // therefore cannot emit a second event.
         policyState = transition.state
+        mutableVisibility.value = policyState
         when (transition.transportEffect) {
             TransportLifecycleEffect.Foregrounded -> onTransportForegrounded()
             TransportLifecycleEffect.Backgrounded -> onTransportBackgrounded()

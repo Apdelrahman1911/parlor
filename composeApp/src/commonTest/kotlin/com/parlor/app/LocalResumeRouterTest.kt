@@ -10,6 +10,9 @@ import com.parlor.app.shell.game.DefaultGameShellRegistry
 import com.parlor.app.shell.game.GameShellLaunch
 import com.parlor.app.shell.game.GameShellRouter
 import com.parlor.app.shell.game.MafiaGameShellBinding
+import com.parlor.app.shell.game.LastLightGameShellBinding
+import com.parlor.games.lastlight.LastLightDefinition
+import com.parlor.games.lastlight.LastLightIds
 import com.parlor.app.shell.game.WhodunitGameShellBinding
 import com.parlor.games.mafia.MafiaDefinition
 import com.parlor.games.mafia.MafiaIds
@@ -39,6 +42,7 @@ class LocalResumeRouterTest {
             listOf(
                 WhodunitGameShellBinding(WhodunitDefinition(json)),
                 MafiaGameShellBinding(MafiaDefinition(json)),
+                LastLightGameShellBinding(LastLightDefinition(json)),
             ),
         ),
     )
@@ -48,8 +52,10 @@ class LocalResumeRouterTest {
         val store = InMemorySnapshotStore()
         val whodunit = SessionId("whodunit-session")
         val mafia = SessionId("mafia-session")
+        val lastLight = SessionId("last-light-session")
         store.save(snapshot(whodunit, WhodunitIds.GameId))
         store.save(snapshot(mafia, MafiaIds.GameId))
+        store.save(snapshot(lastLight, LastLightIds.GameId))
 
         assertEquals(
             Result.Success(GameShellLaunch.ResumeLocal(WhodunitIds.GameId, whodunit)),
@@ -58,6 +64,10 @@ class LocalResumeRouterTest {
         assertEquals(
             Result.Success(GameShellLaunch.ResumeLocal(MafiaIds.GameId, mafia)),
             resolveLocalResumeDestination(store, router, mafia),
+        )
+        assertEquals(
+            Result.Success(GameShellLaunch.ResumeLocal(LastLightIds.GameId, lastLight)),
+            resolveLocalResumeDestination(store, router, lastLight),
         )
     }
 

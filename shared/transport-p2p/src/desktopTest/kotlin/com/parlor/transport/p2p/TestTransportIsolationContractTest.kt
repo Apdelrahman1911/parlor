@@ -63,6 +63,7 @@ class TestTransportIsolationContractTest {
 
         assertEquals(
             setOf(
+                "game-modes/last-light/build.gradle.kts",
                 "game-modes/mafia/build.gradle.kts",
                 "game-modes/whodunit/build.gradle.kts",
                 "shared/session/build.gradle.kts",
