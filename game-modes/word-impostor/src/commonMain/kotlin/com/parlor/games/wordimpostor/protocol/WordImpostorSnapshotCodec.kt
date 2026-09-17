@@ -4,6 +4,7 @@ import com.parlor.engine.snapshot.SnapshotCodec
 import com.parlor.games.wordimpostor.domain.WordImpostorReducer
 import com.parlor.games.wordimpostor.domain.WordImpostorState
 import com.parlor.games.wordimpostor.domain.WordImpostorValidation
+import com.parlor.games.wordimpostor.protocol.WordImpostorWireFormat.Companion.SCHEMA_VERSION
 import kotlinx.serialization.Serializable
 
 /** Authority-only persistence. A complete deterministic replay refuses reducer-impossible states. */
@@ -15,7 +16,7 @@ class WordImpostorSnapshotCodec : SnapshotCodec<WordImpostorState> {
     }
     override fun decode(payload: ByteArray): WordImpostorState {
         val decoded = wire.decode(Envelope.serializer(), payload, MAX_BYTES)
-        require(decoded.version == 1)
+        require(decoded.version == SCHEMA_VERSION)
         requireCanonical(decoded.state)
         return decoded.state
     }
@@ -31,6 +32,6 @@ class WordImpostorSnapshotCodec : SnapshotCodec<WordImpostorState> {
         }
         require(replay == state) { "Authority state does not match its replay proof" }
     }
-    @Serializable private data class Envelope(val version: Int = 1, val state: WordImpostorState)
+    @Serializable private data class Envelope(val version: Int = SCHEMA_VERSION, val state: WordImpostorState)
     companion object { private const val MAX_BYTES = 1_048_576 }
 }

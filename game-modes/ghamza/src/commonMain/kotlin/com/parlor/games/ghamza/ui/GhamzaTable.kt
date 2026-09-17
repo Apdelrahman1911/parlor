@@ -29,12 +29,12 @@ import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.games.ghamza.domain.GhamzaAction
 import com.parlor.games.ghamza.domain.GhamzaPhase
 import com.parlor.games.ghamza.domain.GhamzaRole
+import com.parlor.games.ghamza.domain.GhamzaRules
 import com.parlor.games.ghamza.domain.GhamzaState
 import com.parlor.games.ghamza.resources.Res
 import com.parlor.games.ghamza.resources.gh_active
 import com.parlor.games.ghamza.resources.gh_attempts_left
 import com.parlor.games.ghamza.resources.gh_cancel
-import com.parlor.games.ghamza.resources.gh_champions
 import com.parlor.games.ghamza.resources.gh_circle
 import com.parlor.games.ghamza.resources.gh_close_help
 import com.parlor.games.ghamza.resources.gh_confirm
@@ -52,6 +52,9 @@ import com.parlor.games.ghamza.resources.gh_guest_hint
 import com.parlor.games.ghamza.resources.gh_help
 import com.parlor.games.ghamza.resources.gh_hide
 import com.parlor.games.ghamza.resources.gh_leave
+import com.parlor.games.ghamza.resources.gh_loser
+import com.parlor.games.ghamza.resources.gh_match_complete
+import com.parlor.games.ghamza.resources.gh_next_lives
 import com.parlor.games.ghamza.resources.gh_next
 import com.parlor.games.ghamza.resources.gh_out
 import com.parlor.games.ghamza.resources.gh_ready
@@ -64,8 +67,6 @@ import com.parlor.games.ghamza.resources.gh_reveal_title
 import com.parlor.games.ghamza.resources.gh_revealed
 import com.parlor.games.ghamza.resources.gh_round
 import com.parlor.games.ghamza.resources.gh_rules
-import com.parlor.games.ghamza.resources.gh_score
-import com.parlor.games.ghamza.resources.gh_scoreboard
 import com.parlor.games.ghamza.resources.gh_social
 import com.parlor.games.ghamza.resources.gh_social_hint
 import com.parlor.games.ghamza.resources.gh_status
@@ -163,7 +164,7 @@ private fun GhamzaSocial(state: GhamzaState, self: PlayerId, enabled: Boolean, p
     GhamzaReportFeed(state)
     GhamzaTitle(stringResource(Res.string.gh_circle))
     state.players.forEach { player ->
-        val remaining = state.public.settings.attempts - state.public.reports.getValue(player.id)
+        val remaining = GhamzaRules.livesRemaining(state, player.id)
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
             Column(Modifier.weight(1f)) {
                 GhamzaBody(stringResource(Res.string.gh_status, player.displayName.asBidiArgument(), remaining))
@@ -208,18 +209,12 @@ private fun GhamzaResults(state: GhamzaState, host: Boolean, enabled: Boolean, o
     GhamzaTitle(stringResource(Res.string.gh_result))
     GhamzaEye(true, Modifier.fillMaxWidth())
     GhamzaTitle(stringResource(Res.string.gh_winner, state.name(result.winner)))
+    GhamzaBody(stringResource(Res.string.gh_loser, state.name(result.loser)))
     GhamzaBody(stringResource(Res.string.gh_revealed, state.name(result.winker)))
     GhamzaBody(stringResource(Res.string.gh_guess_result, state.name(result.guesser), state.name(result.guessed)))
-    if (state.phase == GhamzaPhase.MatchResult) {
-        val high = state.public.scores.values.max()
-        GhamzaTitle(stringResource(Res.string.gh_champions,
-            state.players.filter { state.public.scores.getValue(it.id) == high }.joinToString(" · ") { it.displayName.asBidiArgument() }))
-    }
-    GhamzaBody(stringResource(Res.string.gh_scoreboard))
-    state.players.sortedByDescending { state.public.scores.getValue(it.id) }.forEach {
-        GhamzaBody(stringResource(Res.string.gh_score, it.displayName.asBidiArgument(), state.public.scores.getValue(it.id)))
-    }
     val matchFinished = state.phase == GhamzaPhase.MatchResult
+    if (matchFinished) GhamzaTitle(stringResource(Res.string.gh_match_complete))
+    GhamzaBody(stringResource(Res.string.gh_next_lives))
     if (host) GhamzaButton(stringResource(if (matchFinished) Res.string.gh_rematch else Res.string.gh_next), enabled) {
         onAction(if (matchFinished) GhamzaAction.Rematch(state.public.token) else GhamzaAction.NextRound(state.public.token))
     } else GhamzaBody(stringResource(Res.string.gh_wait_host))

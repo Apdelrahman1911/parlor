@@ -13,11 +13,12 @@ ROOT = Path(__file__).resolve().parents[2]
 WORKFLOWS = ROOT / ".github" / "workflows"
 EXPECTED = {
     "production-verification.yml",
+    "github-distribution.yml",
     "testing-candidate.yml",
     "testing-external-promotion.yml",
     "production-promotion.yml",
 }
-STORE_WORKFLOWS = EXPECTED - {"production-verification.yml"}
+STORE_WORKFLOWS = {"testing-candidate.yml", "testing-external-promotion.yml", "production-promotion.yml"}
 PROMOTION_WORKFLOWS = {"testing-external-promotion.yml", "production-promotion.yml"}
 FULL_SHA = re.compile(r"^[0-9a-f]{40}$")
 ALLOWED_ACTIONS = {
@@ -1270,6 +1271,95 @@ def verify_android_runtime_script() -> None:
             fail("Android managed-device runner must not consume production signing material")
 
 
+def verify_github_distribution(text: str) -> None:
+    """Separate protected GitHub channel; never a back door into Store delivery."""
+    jobs = re.findall(r"(?m)^  ([a-z][a-z-]*):\n    name:", text)
+    if jobs != ["preflight", "build", "seal", "publish"]:
+        fail("GitHub distribution requires exactly its four reviewed jobs")
+    for token in (
+        "branches: [feat/last-light]", "tags: ['github-v*-b*']",
+        "default: rehearsal", "options: [rehearsal, candidate, publish]",
+        "  group: github-distribution\n  cancel-in-progress: false",
+    ):
+        if text.count(token) != 1:
+            fail(f"GitHub distribution trigger/serialization policy differs: {token}")
+    if text.count("contents: write") != 1 or "secrets: inherit" in text or "actions: write" in text:
+        fail("GitHub distribution permissions are excessive")
+    if "overwrite: true" in text or "continue-on-error" in text or "workflow_run:" in text or "pull_request:" in text:
+        fail("GitHub distribution cannot overwrite custody or trust pull-request/run triggers")
+    for name in jobs:
+        job = validation_job(text, name)
+        if "timeout-minutes:" not in job or "persist-credentials: false" not in job or "fetch-depth: 0" not in job:
+            fail("GitHub distribution jobs need bounded clean-source checkouts")
+        if name != "publish" and "contents: write" in job:
+            fail("GitHub distribution allows publication authority only in the publish job")
+    preflight = validation_job(text, "preflight")
+    if "scripts/release/workflow_contract.py" not in preflight or "scripts.release.tests.test_github_distribution" not in preflight:
+        fail("GitHub distribution must test release tools before any native build")
+    build = validation_job(text, "build")
+    required = (
+        "    needs: preflight\n", "    if: needs.preflight.outputs.mode != 'publish'\n",
+        "      fail-fast: false\n", "      PYTHONPATH: ${{ github.workspace }}\n",
+        "    environment: ${{ needs.preflight.outputs.mode == 'candidate' && matrix.environment || 'github-rehearsal' }}\n",
+        "GH_DIST_APPROVED_SHA: ${{ vars.GH_DIST_APPROVED_SHA }}", "GH_DIST_ACCEPTANCE_SHA: ${{ vars.GH_DIST_ACCEPTANCE_SHA }}",
+        "GH_DIST_ACCEPTANCE_REFERENCE: ${{ vars.GH_DIST_ACCEPTANCE_REFERENCE }}",
+        "distribution: temurin", "java-version: '21'", "check-latest: false",
+        "assert_new(os.environ['GH_DIST_PLATFORM'])", "build(os.environ['GH_DIST_PLATFORM'])",
+        "freeze(os.environ['GH_DIST_PLATFORM'], False)", "subject-path: build/github-distribution/frozen/*",
+        "          path: build/github-distribution/frozen/*\n", "overwrite: false", "if-no-files-found: error",
+        "if: always() && needs.preflight.outputs.mode == 'candidate'",
+        "cleanup_candidate(os.environ['GH_DIST_PLATFORM'])",
+    )
+    for token in required:
+        if token not in build:
+            fail(f"GitHub distribution build/sign/freeze policy lacks {token!r}")
+    variants = re.findall(r"(?m)^          - platform: (.+)\n            runner: (.+)\n            environment: (.+)$", build)
+    if variants != [("android", "ubuntu-24.04", "github-sign-android"), ("macos-arm64", "macos-15", "github-sign-macos"),
+                    ("macos-x64", "macos-15-intel", "github-sign-macos"), ("windows-x64", "windows-2025", "github-sign-windows"),
+                    ("linux-x64", "ubuntu-24.04", "github-sign-linux")]:
+        fail("GitHub distribution native matrix or signing scope differs")
+    signing = (
+        ("Sign Android candidate without Store upload", "matrix.platform == 'android'", "ANDROID"),
+        ("Sign notarize and validate macOS candidate", "startsWith(matrix.platform, 'macos-')", "MACOS"),
+        ("Sign timestamp and validate Windows candidate", "matrix.platform == 'windows-x64'", "WINDOWS"),
+    )
+    signing_blocks = []
+    for name, condition, family in signing:
+        block = validation_step(build, name)
+        if re.findall(r"(?m)^        if: (.*)$", block) != ["needs.preflight.outputs.mode == 'candidate' && " + condition]:
+            fail("GitHub distribution must scope signing credentials to the protected candidate and platform")
+        if f"secrets.GH_DIST_{family}_" not in block or "from scripts.release.sign_distribution import sign" not in block:
+            fail("GitHub distribution signing step is incomplete")
+        signing_blocks.append(block)
+    remainder = text
+    for block in signing_blocks:
+        remainder = remainder.replace(block, "")
+    if "secrets." in remainder:
+        fail("GitHub distribution secrets cannot reach build, rehearsal, seal, or publication")
+    sequence = ["Refuse rebuilding an already frozen platform", "Build test and inspect unsigned release packages",
+                *[item[0] for item in signing], "Validate Linux candidate provenance", "Freeze exact inspected platform bytes",
+                "Attest platform artifact and descriptor", "Upload immutable platform candidate", "Retire scoped signing and unsigned outputs"]
+    positions = [build.index(f"- name: {name}\n") for name in sequence]
+    if positions != sorted(positions):
+        fail("GitHub distribution signing/freeze/custody order differs")
+    seal = validation_job(text, "seal")
+    for token in ("needs: [preflight, build]", "if: needs.preflight.outputs.mode != 'publish'",
+                  "python3 -m scripts.release.github_distribution seal", "subject-path: build/github-distribution/bundle/*",
+                  "path: build/github-distribution/bundle/*", "overwrite: false", "if-no-files-found: error"):
+        if token not in seal:
+            fail("GitHub distribution must seal and attest all successfully built platforms")
+    publication = validation_job(text, "publish")
+    for token in ("needs: preflight", "if: needs.preflight.outputs.mode == 'publish'", "environment: github-publish",
+                  "contents: write", "attestations: read", "GH_DIST_APPROVED_SHA: ${{ vars.GH_DIST_APPROVED_SHA }}",
+                  "GH_DIST_ACCEPTANCE_SHA: ${{ vars.GH_DIST_ACCEPTANCE_SHA }}", "GH_DIST_ANDROID_CERT_SHA256:",
+                  "GH_DIST_MACOS_CERT_SHA256:", "GH_DIST_MACOS_TEAM_ID:", "GH_DIST_WINDOWS_CERT_SHA256:",
+                  'python3 -m scripts.release.github_distribution publish --candidate "$GH_DIST_CANDIDATE_RUN"'):
+        if token not in publication:
+            fail("GitHub distribution publication must consume an approved frozen signed candidate")
+    if any(word in publication for word in ("gradlew", "setup-java", "notarytool", "signtool", "desktop_package", "sign_distribution")):
+        fail("GitHub distribution publication cannot rebuild or re-sign")
+
+
 def main() -> int:
     files = load_files()
     verify_policy()
@@ -1286,6 +1376,7 @@ def main() -> int:
     verify_candidate(files["testing-candidate.yml"])
     verify_external_receipt_attestations(files["testing-external-promotion.yml"])
     verify_production(files["production-promotion.yml"])
+    verify_github_distribution(files["github-distribution.yml"])
     print("release workflow contract: PASS")
     return 0
 

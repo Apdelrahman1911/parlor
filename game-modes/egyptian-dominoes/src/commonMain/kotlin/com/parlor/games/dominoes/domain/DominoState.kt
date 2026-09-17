@@ -24,17 +24,33 @@ data class DominoTile(val low: Int, val high: Int) {
 }
 
 @Serializable
-enum class DominoVariant { Draw, Block }
+enum class DominoVariant { Default, Draw, Block }
 
 @Serializable
-data class DominoSettings(val variant: DominoVariant = DominoVariant.Draw, val target: Int = 100) {
-    init { require(target in TARGETS) { "Unsupported domino target" } }
-    val caseId: CaseId get() = CaseId("${variant.name.lowercase()}-$target")
+enum class DominoCompetition { Individual, Teams }
+
+@Serializable
+data class DominoSettings(
+    val variant: DominoVariant = DominoVariant.Default,
+    val target: Int = 101,
+    val competition: DominoCompetition = DominoCompetition.Individual,
+) {
+    init {
+        require(target in TARGETS) { "Unsupported domino target" }
+        require(competition != DominoCompetition.Teams || variant == DominoVariant.Default) { "Teams require Default mode" }
+    }
+    val caseId: CaseId get() = CaseId("${variant.name.lowercase()}-$target-${competition.name.lowercase()}")
+    fun supports(players: Int): Boolean = players in DominoRoster.MIN_PLAYERS..DominoRoster.MAX_PLAYERS &&
+        (competition != DominoCompetition.Teams || players == DominoRoster.MAX_PLAYERS)
 
     companion object {
-        val TARGETS = listOf(50, 100, 150)
+        val TARGETS = listOf(51, 101, 151)
         fun fromCaseId(value: String): DominoSettings? = DominoVariant.entries.firstNotNullOfOrNull { variant ->
-            TARGETS.firstOrNull { value == "${variant.name.lowercase()}-$it" }?.let { DominoSettings(variant, it) }
+            DominoCompetition.entries.firstNotNullOfOrNull { competition ->
+                if (competition == DominoCompetition.Teams && variant != DominoVariant.Default) null else
+                    TARGETS.firstOrNull { value == "${variant.name.lowercase()}-$it-${competition.name.lowercase()}" }
+                        ?.let { DominoSettings(variant, it, competition) }
+            }
         }
     }
 }
@@ -69,6 +85,7 @@ data class DominoPublic(
     val handCounts: Map<PlayerId, Int>,
     val stockCount: Int,
     val consecutivePasses: Int,
+    /** One value per scoring side: each player, or the first seat of each opposite-seat partnership. */
     val scores: Map<PlayerId, Int>,
     val result: DominoRoundResult? = null,
     val matchWinners: Set<PlayerId> = emptySet(),

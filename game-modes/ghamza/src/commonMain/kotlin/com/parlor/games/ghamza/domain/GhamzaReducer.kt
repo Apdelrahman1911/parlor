@@ -18,7 +18,7 @@ class GhamzaReducer : GameReducer<GhamzaState, GhamzaAction, GhamzaChanged> {
 
     fun initial(players: List<Player>, settings: GhamzaSettings, seed: Long, token: Long = 1L): GhamzaState {
         require(GhamzaRoster.isValidRoster(players) && token in 1..MAX_TOKEN)
-        return deal(players.toList(), settings, seed, token, 1, players.associate { it.id to 0 })
+        return deal(players.toList(), settings, seed, token, 1)
     }
 
     override fun reduce(state: GhamzaState, action: GhamzaAction, ctx: ReducerContext): Reduction<GhamzaState, GhamzaChanged> {
@@ -57,7 +57,7 @@ class GhamzaReducer : GameReducer<GhamzaState, GhamzaAction, GhamzaChanged> {
             state.phase == GhamzaPhase.RoundResult && state.public.token == action.token && action.token < MAX_TOKEN
         ) {
             deal(state.players, state.public.settings, checkNotNull(state.hostOnly.seed), action.token + 1,
-                state.public.round + 1, state.public.scores).let {
+                state.public.round + 1).let {
                 it.copy(hostOnly = it.hostOnly.copy(firstToken = state.hostOnly.firstToken))
             }
         } else state
@@ -106,7 +106,6 @@ class GhamzaReducer : GameReducer<GhamzaState, GhamzaAction, GhamzaChanged> {
             phase = if (state.public.round == state.public.settings.rounds) GhamzaPhase.MatchResult else GhamzaPhase.RoundResult,
             public = state.public.copy(
                 result = GhamzaResult(winker, action.by, action.target, winner),
-                scores = state.public.scores + (winner to state.public.scores.getValue(winner) + 1),
             ),
         )
     }
@@ -118,11 +117,11 @@ class GhamzaReducer : GameReducer<GhamzaState, GhamzaAction, GhamzaChanged> {
     }
 
     private fun deal(
-        players: List<Player>, settings: GhamzaSettings, seed: Long, token: Long, round: Int, scores: Map<PlayerId, Int>,
+        players: List<Player>, settings: GhamzaSettings, seed: Long, token: Long, round: Int,
     ): GhamzaState {
         val winker = RandomSource.seeded(seed xor token).pick(players).id
         return GhamzaState(
-            public = GhamzaPublic(settings, round, token, emptySet(), players.associate { it.id to 0 }, emptyList(), null, scores),
+            public = GhamzaPublic(settings, round, token, emptySet(), players.associate { it.id to 0 }, emptyList(), null),
             privatePerPlayer = players.associate { it.id to GhamzaPrivate(if (it.id == winker) GhamzaRole.Winker else GhamzaRole.Guest) },
             hostOnly = GhamzaHostOnly(seed, token, winker), phase = GhamzaPhase.Reveal, players = players,
         )

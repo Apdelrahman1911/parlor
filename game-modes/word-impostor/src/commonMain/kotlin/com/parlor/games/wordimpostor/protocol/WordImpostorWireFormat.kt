@@ -1,5 +1,6 @@
 package com.parlor.games.wordimpostor.protocol
 
+import com.parlor.games.wordimpostor.WordImpostorIds
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.json.Json
 
@@ -30,6 +31,6 @@ internal class WordImpostorWireFormat(json: Json = Json) {
     }
 
     companion object {
-        const val SCHEMA_VERSION = 1
+        const val SCHEMA_VERSION = WordImpostorIds.VERSION
     }
 }

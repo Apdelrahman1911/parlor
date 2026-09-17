@@ -87,7 +87,7 @@ class MultiplayerAuthorityTest {
             assertEquals(CommandStatus.Unauthorized, fixture.send(sender, fixture.command(hostOnly(before), sender)).status)
             fixture.requestSnapshot(sender)
             val lifecycle = fixture.command(legitimate, sender).copy(
-                payload = """{"version":1,"action":{"type":"abort"}}""".encodeToByteArray(),
+                payload = """{"version":${spec.version},"action":{"type":"abort"}}""".encodeToByteArray(),
             )
             assertEquals(CommandStatus.InvalidAction, fixture.send(sender, lifecycle).status)
             assertEquals(before, fixture.session.currentState())

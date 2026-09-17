@@ -33,7 +33,7 @@ class GhamzaIntegrityTest {
         assertEquals(GhamzaPhase.Aborted, state.phase)
         assertEquals(GhamzaReducer.MAX_HISTORY, state.hostOnly.history.size)
         assertEquals(GhamzaAction.Abort, state.hostOnly.history.last())
-        assertTrue(state.public.scores.values.all { it == 0 })
+        assertTrue(state.public.reports.values.all { it == 0 })
         val codec = GhamzaSnapshotCodec()
         assertEquals(state, codec.decode(codec.encode(state)))
         assertEquals(state, reducer.apply(state, GhamzaAction.Abort))
@@ -46,7 +46,7 @@ class GhamzaIntegrityTest {
     }
 
     @Test
-    fun fabricated_attempt_ledgers_and_early_scores_are_not_valid_public_snapshots() {
+    fun fabricated_attempt_ledgers_and_legacy_scores_are_not_valid_public_snapshots() {
         var state = reducer.initial(players, GhamzaSettings(attempts = 3), 11)
         for (player in players) state = reducer.apply(state, GhamzaAction.Ready(player.id, state.public.token))
         val guest = players.first { it.id != state.hostOnly.winker }.id
@@ -56,12 +56,14 @@ class GhamzaIntegrityTest {
             state.copy(public = state.public.copy(recentReports = listOf(report.copy(attempt = 2)))),
             state.copy(public = state.public.copy(recentReports = listOf(report.copy(number = 2)))),
             state.copy(public = state.public.copy(recentReports = emptyList())),
-            state.copy(public = state.public.copy(scores = state.public.scores + (guest to 1))),
         )
         invalid.forEach { corrupt ->
             assertFalse(GhamzaValidation.publicState(corrupt))
             assertFailsWith<IllegalArgumentException> { GhamzaCodec.encodePublic(corrupt) }
         }
+        val bytes = GhamzaCodec.encodePublic(state).decodeToString()
+        val legacyScores = bytes.replace("\"reports\":", "\"scores\":{},\"reports\":").encodeToByteArray()
+        assertFailsWith<IllegalArgumentException> { GhamzaCodec.decodePublic(legacyScores) }
         assertEquals(state, GhamzaSnapshotCodec().decode(GhamzaSnapshotCodec().encode(state)))
     }
 }

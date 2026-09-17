@@ -8,7 +8,6 @@ object GhamzaValidation {
         val p = state.public
         val ids = state.players.map { it.id }.toSet()
         if (!validBounds(p, ids) || !validReports(state)) return false
-        if (p.result == null && state.phase != GhamzaPhase.Aborted && p.scores.values.sum() != p.round - 1) return false
         val active = p.reports.filterValues { it < p.settings.attempts }.keys
         if (state.phase != GhamzaPhase.Reveal && state.phase != GhamzaPhase.Aborted && p.ready != ids) return false
         return when (state.phase) {
@@ -23,9 +22,8 @@ object GhamzaValidation {
 
     private fun validBounds(p: GhamzaPublic, ids: Set<PlayerId>): Boolean {
         if (p.token !in 1..GhamzaReducer.MAX_TOKEN || p.round !in 1..p.settings.rounds) return false
-        if (!ids.containsAll(p.ready) || !ids.containsAll(p.disconnected) || p.reports.keys != ids || p.scores.keys != ids) return false
-        if (p.reports.values.any { it !in 0..p.settings.attempts } || p.scores.values.any { it !in 0..p.round }) return false
-        return p.reports.values.any { it == 0 } && p.scores.values.sum() in (p.round - 1)..p.round
+        if (!ids.containsAll(p.ready) || !ids.containsAll(p.disconnected) || p.reports.keys != ids) return false
+        return p.reports.values.all { it in 0..p.settings.attempts } && p.reports.values.any { it == 0 }
     }
 
     fun playerState(state: GhamzaState, id: PlayerId): Boolean {
@@ -58,7 +56,7 @@ object GhamzaValidation {
         if (p.finalGuesser != result.guesser) return false
         if (result.guessed !in p.reports || result.guessed == result.guesser || p.reports[result.winker] != 0) return false
         val winner = if (result.guessed == result.winker) result.guesser else result.winker
-        return result.winner == winner && p.scores.getValue(winner) > 0 && p.scores.values.sum() == p.round
+        return result.winner == winner
     }
 
     private const val MIN_SOCIAL_ACTIVE = 3

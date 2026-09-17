@@ -49,7 +49,7 @@ class DominoTableTest {
         onAllNodes(hasContentDescription("Tile ", substring = true), true).assertCountEquals(0)
         runOnIdle { enabled = true }
         onNodeWithText("Show my tiles").reachable().performClick()
-        onAllNodes(hasContentDescription("Tile ", substring = true), true).assertCountEquals(7)
+        onAllNodes(hasContentDescription("Tile ", substring = true), true).assertCountEquals(9)
         onNodeWithContentDescription("Tile ${opening.low} – ${opening.high}").performScrollTo().performClick()
         assertNull(sent) // Selection is local; it does not optimistically mutate authority.
         runOnIdle { assertTrue(back.handleBack()) }

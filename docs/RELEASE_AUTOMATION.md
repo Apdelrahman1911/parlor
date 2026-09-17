@@ -2,8 +2,9 @@
 
 This document is the operational contract for Parlor mobile releases. Source,
 workflow, artifact, and Store evidence must agree; a successful upload is not a
-release. Android and iOS are shipping targets. Desktop remains a development
-and deterministic-test target and has no publishing workflow.
+release. Android and iOS are the mobile Store targets. The separately gated
+[Android/Desktop GitHub distribution workflow](GITHUB_DISTRIBUTION.md) does not
+enable these disabled Store workflows or qualify mobile Store delivery.
 
 ## Current repository configuration
 

@@ -1,7 +1,9 @@
 # Production release gates
 
-Android and iOS are shipping targets. Desktop is a development and deterministic
-test target; desktop packaging, signing, and notarization are not release gates.
+Android and iOS are the mobile targets. Desktop supports development/tests and
+the separately gated [GitHub distribution channel](GITHUB_DISTRIBUTION.md).
+Desktop signing/notarization are mandatory for that channel, not for mobile
+Store validation or an ordinary `productionDesktopCheck`.
 
 No single Gradle task proves store readiness. Automated gates prove source and
 unsigned artifact quality. Signing, devices, privacy forms, and store review
@@ -23,6 +25,7 @@ remain separate evidence.
 | Release automation security | `./gradlew productionReleaseAutomationCheck` | Candidate/provenance tampering tests, exact-tree/history tests, no-publication tests, workflow contracts, immutable Action pins, pinned ShellCheck/actionlint, and shell/YAML checks pass. |
 | Desktop host compatibility | `./gradlew productionDesktopCheck` on Linux x64, Linux arm64, macOS arm64, macOS x64, and Windows x64; the x64 macOS/Windows jobs also run `:composeApp:downloadKotlinNativeDistribution`, and Windows runs `:composeApp:processDebugResources` | Each supported host resolves and executes its real host-selected dependency graph under strict verification. Linux arm64 support is Desktop-only because Kotlin Native does not publish a Linux arm64 host distribution. |
 | Exact-candidate aggregate | Full verification: Linux runs `./gradlew productionCheck allTests`; independent macOS jobs run `./gradlew productionIosSimulatorRuntimeTests` and `./gradlew productionAppleCheck`, all with strict dependency verification | All six mandatory full jobs, including the Debug XCTest launch and unsigned Release wrapper/package inspection, pass in one full dispatch at the same recorded clean Git SHA. The focused protection diagnostic is skipped. No cross-run/SHA evidence stitching or duplicate common/desktop/Android aggregate on Apple. |
+| GitHub distribution packaging | `.github/workflows/github-distribution.yml`, rehearsal | Android Release APK, macOS arm64/x64 DMGs, Windows x64 MSI and Linux x64 DEB; installed-image/native-graphics/crypto probes, notices, checksums and source-bound attestations. Unsigned rehearsal output is not publishable. |
 
 The root tasks discover KMP modules through the multiplatform plugin. A newly
 included game module therefore joins the desktop gate automatically.
@@ -54,6 +57,7 @@ receipt:
 | Store/privacy | Final privacy policy/support URLs, Google Data safety, Apple privacy answers/manifest, age-rating questionnaires, export-compliance answer, and reviewer notes approved. |
 | Legal | Product distribution license, third-party notices, content rights, trademarks, and dependency licenses approved. |
 | Operations | Signed-artifact dependency/network inspection confirms no analytics or crash-upload provider; local `ParlorP2p` diagnostics remain bounded and redacted. Any future provider reopens privacy, consent, retention, and payload testing. |
+| GitHub signing/publication | Protected exact-SHA acceptance; real Android key, Developer ID and Accepted/stapled notarization, timestamped Windows Code Signing identity; all five immutable platform variants and exact-source six-job qualification. Publication verifies independent certificate pins and downloads every final Release asset. No rebuild, Store upload or unsigned fallback. |
 
 Device or store evidence must never be inferred from a simulator, compiler, or
 unit test.

@@ -27,7 +27,7 @@ object GhamzaProjection : ProjectionPolicy<GhamzaState> {
 
     private fun detachedPublic(state: GhamzaState) = state.public.copy(
         ready = state.public.ready.toSet(), reports = state.public.reports.toMap(),
-        recentReports = state.public.recentReports.toList(), scores = state.public.scores.toMap(),
+        recentReports = state.public.recentReports.toList(),
         disconnected = state.public.disconnected.toSet(),
     )
 }

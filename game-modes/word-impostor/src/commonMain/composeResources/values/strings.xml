@@ -471,7 +471,7 @@
     <string name="wi_tagline">One word. A room full of suspicion.</string>
     <string name="wi_subtitle">3–12 players · Questions, votes, secrets</string>
     <string name="wi_open">Join the conversation</string>
-    <string name="wi_rules">Ordinary players share a secret word. Impostors know their teammates, never the word. Everyone asks once and answers once, then talks freely. The host opens voting. Each player secretly votes for someone else; totals appear only after all vote. The top K suspects must identify all K impostors, without a tie at the cutoff, for every ordinary player to earn a point. Each impostor then guesses individually from five same-topic choices and earns one point for a correct answer. Both teams can score. Keep word screens private.</string>
+    <string name="wi_rules">Ordinary players share a secret word. Impostors know their teammates, never the word. Everyone asks once and answers once, then talks freely. The host opens voting. Each player privately votes for someone else; totals appear only after all vote. Each ordinary player whose own vote identifies any impostor earns one point, regardless of the majority or ties. Each impostor then guesses individually from five same-topic choices and earns one point for a correct answer. Correct word guesses never cancel correct-voter points. Awards and the secret are revealed after every impostor has guessed. Keep word screens private.</string>
     <string name="wi_settings">Set the conversation</string>
     <string name="wi_topic">Topic</string>
     <string name="wi_impostors">Impostors</string>
@@ -519,8 +519,6 @@
     <string name="wi_result">Behind the words</string>
     <string name="wi_word_was">The word was</string>
     <string name="wi_impostors_were">Impostors: %1$s</string>
-    <string name="wi_ordinary_point">All impostors identified · ordinary players +1</string>
-    <string name="wi_ordinary_no_point">Not all impostors identified · no ordinary-team point</string>
     <string name="wi_guess_result">%1$s guessed %2$s · +%3$d</string>
     <string name="wi_score">%1$s · Points: %2$d (+%3$d)</string>
     <string name="wi_next">Next round · new word</string>
@@ -542,4 +540,6 @@
         <item quantity="one">%1$d round</item>
         <item quantity="other">%1$d rounds</item>
     </plurals>
+    <string name="wi_correct_voters">Correct voters · +1 each: %1$s</string>
+    <string name="wi_no_correct_voters">No ordinary player voted for an impostor this round.</string>
 </resources>

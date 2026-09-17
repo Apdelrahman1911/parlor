@@ -36,8 +36,8 @@ import com.parlor.games.wordimpostor.resources.wi_impostors_were
 import com.parlor.games.wordimpostor.resources.wi_lock_guess
 import com.parlor.games.wordimpostor.resources.wi_lock_vote
 import com.parlor.games.wordimpostor.resources.wi_next
-import com.parlor.games.wordimpostor.resources.wi_ordinary_no_point
-import com.parlor.games.wordimpostor.resources.wi_ordinary_point
+import com.parlor.games.wordimpostor.resources.wi_no_correct_voters
+import com.parlor.games.wordimpostor.resources.wi_correct_voters
 import com.parlor.games.wordimpostor.resources.wi_rematch
 import com.parlor.games.wordimpostor.resources.wi_result
 import com.parlor.games.wordimpostor.resources.wi_reveal
@@ -152,7 +152,8 @@ internal fun WordResults(state: WordImpostorState, host: Boolean, enabled: Boole
             WordTitle(stringResource(WordContentResources.word(result.wordId)))
         }
         WordBody(stringResource(Res.string.wi_impostors_were, state.names(result.impostors)))
-        WordBody(stringResource(if (result.ordinaryTeamScored) Res.string.wi_ordinary_point else Res.string.wi_ordinary_no_point))
+        WordBody(if (result.correctVoters.isEmpty()) stringResource(Res.string.wi_no_correct_voters) else
+            stringResource(Res.string.wi_correct_voters, state.names(result.correctVoters)))
         state.players.filter { it.id in result.impostors }.forEach { player ->
             WordBody(stringResource(Res.string.wi_guess_result, player.displayName.asBidiArgument(),
                 stringResource(WordContentResources.word(result.guesses.getValue(player.id))), result.awarded.getValue(player.id)))

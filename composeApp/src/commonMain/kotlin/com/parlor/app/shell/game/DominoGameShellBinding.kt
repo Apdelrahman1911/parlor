@@ -35,7 +35,7 @@ internal class DominoGameShellBinding(override val definition: DominoDefinition)
     override val abortAction = DominoAction.Abort
 
     override fun acceptsSettings(caseId: String, players: Int): Boolean =
-        players in definition.supportedPlayerCounts && DominoSettings.fromCaseId(caseId) != null
+        players in definition.supportedPlayerCounts && DominoSettings.fromCaseId(caseId)?.supports(players) == true
     override fun validRoster(players: List<Player>) = DominoRoster.isValidRoster(players)
     override fun isPlayerAction(action: DominoAction) = DominoAuthority.isPlayerAction(action)
     override fun isAllowed(action: DominoAction, actor: PlayerId, host: PlayerId, state: DominoState) =
@@ -61,7 +61,7 @@ internal class DominoGameShellBinding(override val definition: DominoDefinition)
 
     @Composable
     override fun Settings(caseId: CaseId, playerCount: Int, enabled: Boolean, onChange: (CaseId) -> Unit) {
-        DominoSettingsContent(caseId, enabled, onChange)
+        DominoSettingsContent(caseId, playerCount, enabled, onChange)
     }
 
     @Composable

@@ -52,7 +52,8 @@ object WordImpostorValidation {
         val result = state.public.result ?: return true
         val impostor = id in result.impostors
         return (own.role == WordRole.Impostor) == impostor &&
-            (if (impostor) own.teammates == result.impostors - id && own.guess == result.guesses[id] else own.wordId == result.wordId)
+            (if (impostor) own.teammates == result.impostors - id && own.guess == result.guesses[id] else
+                own.wordId == result.wordId && (id in result.correctVoters) == (own.vote in result.impostors))
     }
 
     private fun validRole(
@@ -111,11 +112,23 @@ object WordImpostorValidation {
         if (!ids.containsAll(r.impostors)) return false
         if (r.wordId !in wordIds || r.guesses.keys != r.impostors || !wordIds.containsAll(r.guesses.values)) return false
         if (r.identified != WordImpostorReducer.identifiedByVotes(checkNotNull(p.voteCounts), p.settings.impostors)) return false
-        if (r.ordinaryTeamScored != (r.identified == r.impostors) || r.awarded.keys != ids) return false
+        if (!validCorrectVoters(state) || r.awarded.keys != ids) return false
         return r.awarded.all { (id, points) ->
-            val earned = if (id in r.impostors) r.guesses[id] == r.wordId else r.ordinaryTeamScored
-            points == (if (earned) 1 else 0) && p.scores.getValue(id) >= points
+            val earned = if (id in r.impostors) r.guesses[id] == r.wordId else id in r.correctVoters
+            points == (if (earned) 1 else 0) && p.scores.getValue(id) in points until p.round + points
         }
+    }
+
+    private fun validCorrectVoters(state: WordImpostorState): Boolean {
+        val result = state.public.result ?: return false
+        val ordinary = state.players.map { it.id }.toSet() - result.impostors
+        if (!ordinary.containsAll(result.correctVoters)) return false
+        val votesForImpostors = checkNotNull(state.public.voteCounts).filterKeys { it in result.impostors }.values.sum()
+        // Public tallies constrain the possible awards without publishing anybody's private ballot.
+        // A lone impostor cannot vote for itself; with partners, their votes can target each other.
+        val impostorVotes = if (result.impostors.size == 1) 0 else result.impostors.size
+        val minimum = (votesForImpostors - impostorVotes).coerceAtLeast(0)
+        return result.correctVoters.size in minimum..minOf(votesForImpostors, ordinary.size)
     }
 
     private val BEFORE_VOTES = setOf(

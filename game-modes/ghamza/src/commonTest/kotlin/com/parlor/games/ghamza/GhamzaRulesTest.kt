@@ -1,6 +1,7 @@
 package com.parlor.games.ghamza
 
 import com.parlor.core.ids.PlayerId
+import com.parlor.core.random.RandomSource
 import com.parlor.engine.state.Player
 import com.parlor.games.ghamza.domain.GhamzaAction
 import com.parlor.games.ghamza.domain.GhamzaAuthority
@@ -9,6 +10,7 @@ import com.parlor.games.ghamza.domain.GhamzaPhase
 import com.parlor.games.ghamza.domain.GhamzaProjection
 import com.parlor.games.ghamza.domain.GhamzaReducer
 import com.parlor.games.ghamza.domain.GhamzaRole
+import com.parlor.games.ghamza.domain.GhamzaRules
 import com.parlor.games.ghamza.domain.GhamzaSettings
 import com.parlor.games.ghamza.domain.GhamzaState
 import com.parlor.games.ghamza.domain.GhamzaValidation
@@ -46,12 +48,17 @@ class GhamzaRulesTest {
             state = reducer.apply(state, GhamzaAction.Guess(guesser, state.public.token, target))
             assertEquals(GhamzaPhase.MatchResult, state.phase)
             assertEquals(if (correct) guesser else state.hostOnly.winker, state.public.result!!.winner)
-            assertEquals(1, state.public.scores.values.sum())
+            val result = state.public.result!!
+            assertEquals(if (correct) result.winker else guesser, result.loser)
+            assertTrue(GhamzaRules.isEliminated(state, result.loser))
+            assertFalse(GhamzaRules.isEliminated(state, result.winner))
+            assertEquals(state, reducer.apply(state, GhamzaAction.Guess(guesser, state.public.token, target)))
             verify(state)
             assertEquals(state, GhamzaSnapshotCodec().decode(GhamzaSnapshotCodec().encode(state)))
             val again = reducer.apply(state, GhamzaAction.Rematch(state.public.token))
             assertEquals(state.public.token + 1, again.public.token)
-            assertEquals(0, again.public.scores.values.sum())
+            assertTrue(again.players.all { GhamzaRules.livesRemaining(again, it.id) == attempts })
+            assertNull(again.public.result)
             assertEquals(again, reducer.apply(again, GhamzaAction.Ready(guesser, state.public.token)))
             assertEquals(again, GhamzaSnapshotCodec().decode(GhamzaSnapshotCodec().encode(again)))
         }
@@ -76,11 +83,11 @@ class GhamzaRulesTest {
         val aborted = reducer.apply(paused, GhamzaAction.Abort)
         verify(aborted)
         assertNull(aborted.public.result)
-        assertEquals(0, aborted.public.scores.values.sum())
+        assertEquals(state.public.reports, aborted.public.reports)
         assertEquals(aborted, GhamzaSnapshotCodec().decode(GhamzaSnapshotCodec().encode(aborted)))
     }
 
-    @Test fun multipleRoundsKeepScoresAndStrictCodecsRejectImpossibleStates() {
+    @Test fun strictCodecsRejectImpossibleResultsAndLegacyVersions() {
         var state = reducer.initial(players(3), GhamzaSettings(rounds = 3), 47)
         repeat(3) { round ->
             for (p in state.players) state = reducer.apply(state, GhamzaAction.Ready(p.id, state.public.token))
@@ -88,22 +95,62 @@ class GhamzaRulesTest {
             state = reducer.apply(state, GhamzaAction.Winked(guest, state.public.token, 1))
             state = reducer.apply(state, GhamzaAction.Guess(state.public.finalGuesser!!, state.public.token, state.hostOnly.winker!!))
             verify(state)
-            assertEquals(round + 1, state.public.scores.values.sum())
+            assertEquals(round + 1, state.public.round)
             if (round < 2) state = reducer.apply(state, GhamzaAction.NextRound(state.public.token))
         }
         assertEquals(GhamzaPhase.MatchResult, state.phase)
-        assertFails { GhamzaSnapshotCodec().encode(state.copy(public = state.public.copy(scores = state.public.scores.mapValues { 0 }))) }
+        val result = state.public.result!!
+        val forged = state.copy(public = state.public.copy(result = result.copy(winner = result.loser)))
+        assertFails { GhamzaSnapshotCodec().encode(forged) }
+        assertFails { GhamzaCodec.encodePublic(forged) }
         val public = GhamzaCodec.encodePublic(state)
-        assertFails { GhamzaCodec.decodePublic(public.decodeToString().replace("\"version\":1", "\"version\":2").encodeToByteArray()) }
-        assertFails { GhamzaCodec.decodePublic(public.decodeToString().replace("\"version\":1", "\"version\":1,\"secret\":1").encodeToByteArray()) }
+        assertFails { GhamzaCodec.decodePublic(public.decodeToString().replace("\"version\":2", "\"version\":1").encodeToByteArray()) }
+        assertFails { GhamzaCodec.decodePublic(public.decodeToString().replace("\"version\":2", "\"version\":2,\"secret\":1").encodeToByteArray()) }
         assertFails { GhamzaCodec.decodePublic(ByteArray(32769)) }
         assertFails { reducer.initial(players(2), GhamzaSettings(), 1) }
         assertFails { GhamzaSettings(4) }
     }
 
+    @Test fun allRoundAndLifeSettingsResetEliminationsWithoutCumulativeStateOrRoleExclusions() {
+        var repeatedWinker = false
+        for (rounds in GhamzaSettings.ROUND_COUNTS) for (attempts in 1..3) {
+            var state = reducer.initial(players(5), GhamzaSettings(attempts, rounds), 47)
+            var previousWinker: PlayerId? = null
+            repeat(rounds) { index ->
+                assertEquals(index + 1, state.public.round)
+                assertEquals(GhamzaPhase.Reveal, state.phase)
+                assertTrue(state.players.all { GhamzaRules.livesRemaining(state, it.id) == attempts })
+                assertTrue(state.public.ready.isEmpty() && state.public.recentReports.isEmpty())
+                assertNull(state.public.result)
+                val winker = state.hostOnly.winker!!
+                assertEquals(RandomSource.seeded(47L xor state.public.token).pick(state.players).id, winker)
+                repeatedWinker = repeatedWinker || previousWinker == winker
+                previousWinker = winker
+                for (p in state.players) state = reducer.apply(state, GhamzaAction.Ready(p.id, state.public.token))
+                val guests = state.players.filter { it.id != winker }
+                for (guest in guests.dropLast(1)) for (attempt in 1..attempts) {
+                    state = reducer.apply(state, GhamzaAction.Winked(guest.id, state.public.token, attempt))
+                }
+                val target = if (index % 2 == 0) winker else guests.first().id
+                state = reducer.apply(state, GhamzaAction.Guess(guests.last().id, state.public.token, target))
+                verify(state)
+                assertEquals(state, GhamzaSnapshotCodec().decode(GhamzaSnapshotCodec().encode(state)))
+                val oldToken = state.public.token
+                if (index < rounds - 1) {
+                    state = reducer.apply(state, GhamzaAction.NextRound(oldToken))
+                    assertEquals(state, reducer.apply(state, GhamzaAction.NextRound(oldToken)))
+                    assertEquals(state, reducer.apply(state, GhamzaAction.Winked(guests.first().id, oldToken, 1)))
+                } else assertEquals(state, reducer.apply(state, GhamzaAction.NextRound(oldToken)))
+            }
+        }
+        assertTrue(repeatedWinker, "Random role assignment must permit consecutive Winker rounds")
+    }
+
     private fun verify(state: GhamzaState) {
         assertTrue(GhamzaValidation.publicState(state))
         val bytes = GhamzaCodec.encodePublic(state)
+        assertFalse(bytes.decodeToString().contains("score", ignoreCase = true))
+        assertFalse(GhamzaSnapshotCodec().encode(state).decodeToString().contains("score", ignoreCase = true))
         val public = GhamzaCodec.decodePublic(bytes)
         assertEquals(GhamzaHostOnly(), public.hostOnly)
         if (state.public.result == null) assertFalse(bytes.decodeToString().contains("winker", ignoreCase = true))

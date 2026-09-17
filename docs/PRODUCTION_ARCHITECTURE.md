@@ -1,8 +1,10 @@
 # Production architecture
 
 This document describes the implemented architecture as of 2026-09-17.
-Android and iOS are shipping targets. Desktop exists for development and
-deterministic tests.
+Android and iOS are the mobile targets. Desktop also supports development and
+deterministic tests; the requested [GitHub distribution](GITHUB_DISTRIBUTION.md)
+channel now builds self-contained macOS/Windows/Linux installers. Signing,
+physical acceptance and publication are separate gates, not implied by packaging.
 
 ## System map
 

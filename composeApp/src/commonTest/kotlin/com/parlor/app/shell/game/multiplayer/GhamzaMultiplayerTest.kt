@@ -4,6 +4,7 @@ import com.parlor.app.shell.game.GhamzaGameShellBinding
 import com.parlor.games.ghamza.GhamzaDefinition
 import com.parlor.games.ghamza.domain.GhamzaAction
 import com.parlor.games.ghamza.domain.GhamzaPhase
+import com.parlor.games.ghamza.domain.GhamzaRules
 import com.parlor.games.ghamza.domain.GhamzaRole
 import com.parlor.games.ghamza.domain.GhamzaSettings
 import kotlinx.coroutines.test.runTest
@@ -51,12 +52,14 @@ class GhamzaMultiplayerTest {
                 val finished = fixture.session.currentState()
                 assertEquals(GhamzaPhase.MatchResult, finished.phase)
                 assertEquals(if (target == winker) guests.last() else winker, finished.public.result?.winner)
-                assertEquals(1, finished.public.scores.values.sum())
+                val loser = if (target == winker) winker else guests.last()
+                assertEquals(loser, finished.public.result?.loser)
+                assertTrue(GhamzaRules.isEliminated(finished, loser))
                 fixture.perform(GhamzaAction.Rematch(token))
                 val rematch = fixture.session.currentState()
                 assertEquals(GhamzaPhase.Reveal, rematch.phase)
                 assertEquals(token + 1, rematch.public.token)
-                assertTrue(rematch.public.scores.values.all { it == 0 })
+                assertTrue(rematch.public.reports.values.all { it == 0 })
                 assertTrue(rematch.public.ready.isEmpty())
                 assertTrue(rematch.public.recentReports.isEmpty())
             } finally {

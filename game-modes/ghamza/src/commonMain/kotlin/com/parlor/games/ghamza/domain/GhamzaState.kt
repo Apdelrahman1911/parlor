@@ -32,7 +32,10 @@ enum class GhamzaPhase(override val id: String) : GamePhase {
 data class WinkReport(val player: PlayerId, val attempt: Int, val number: Int)
 
 @Serializable
-data class GhamzaResult(val winker: PlayerId, val guesser: PlayerId, val guessed: PlayerId, val winner: PlayerId)
+data class GhamzaResult(val winker: PlayerId, val guesser: PlayerId, val guessed: PlayerId, val winner: PlayerId) {
+    /** Final-guess elimination is distinct from a reported wink; no artificial report is recorded. */
+    val loser: PlayerId get() = if (winner == winker) guesser else winker
+}
 
 @Serializable
 data class GhamzaPublic(
@@ -43,7 +46,6 @@ data class GhamzaPublic(
     val reports: Map<PlayerId, Int>,
     val recentReports: List<WinkReport>,
     val finalGuesser: PlayerId?,
-    val scores: Map<PlayerId, Int>,
     val result: GhamzaResult? = null,
     val disconnected: Set<PlayerId> = emptySet(),
 )

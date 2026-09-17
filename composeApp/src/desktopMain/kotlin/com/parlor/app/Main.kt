@@ -22,7 +22,11 @@ import java.awt.event.WindowEvent
 /**
  * Desktop (JVM) entry. Single Compose window, cozy-noir from frame to frame.
  */
-fun main() {
+fun main(args: Array<String>) {
+    if (args.contentEquals(arrayOf("--verify-distribution"))) {
+        verifyDesktopDistribution()
+        return
+    }
     val koinApplication = startKoin { modules(allModules) }
     val sessionOwner = koinApplication.koin.get<ProcessMultiplayerSessionOwner>()
     val sessionScope = koinApplication.koin.get<CoroutineScope>(named("multiplayerSession"))
@@ -67,7 +71,7 @@ fun main() {
 }
 
 /**
- * Desktop is a non-shipping development target, but it still owns real LAN
+ * Desktop owns real LAN
  * resources. Give the logical Leave transaction a bounded opportunity to
  * notify peers/revoke credentials, then always cancel the process scope so a
  * stalled transport cannot block the window-exit path or launch new work.

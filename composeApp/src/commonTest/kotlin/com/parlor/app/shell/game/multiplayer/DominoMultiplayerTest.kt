@@ -2,6 +2,7 @@ package com.parlor.app.shell.game.multiplayer
 
 import com.parlor.app.shell.game.DominoGameShellBinding
 import com.parlor.games.dominoes.DominoDefinition
+import com.parlor.games.dominoes.domain.DominoCompetition
 import com.parlor.games.dominoes.domain.DominoAction
 import com.parlor.games.dominoes.domain.DominoPhase
 import com.parlor.games.dominoes.domain.DominoRules
@@ -14,11 +15,13 @@ import kotlin.test.assertTrue
 
 class DominoMultiplayerTest {
     @Test
-    fun complete_draw_and_block_matches_sync_every_placement_draw_pass_score_and_rematch_for_two_to_four_seats() = runTest {
-        for (count in 2..4) for (variant in DominoVariant.entries) {
+    fun complete_default_draw_block_and_team_matches_sync_every_move_score_and_rematch() = runTest {
+        val configurations = DominoVariant.entries.map { DominoSettings(it, 51) } +
+            DominoSettings(target = 151, competition = DominoCompetition.Teams)
+        for (count in 2..4) for (settings in configurations.filter { it.supports(count) }) {
             val fixture = MultiplayerGameFixture(
                 this, DominoGameShellBinding(DominoDefinition()), gamePlayers(count), seed = count.toLong(),
-                caseId = DominoSettings(variant, 50).caseId,
+                caseId = settings.caseId,
             )
             try {
                 fixture.attachPeers()
@@ -47,13 +50,18 @@ class DominoMultiplayerTest {
                 }
                 val finished = fixture.session.currentState()
                 assertTrue(finished.public.matchWinners.isNotEmpty())
+                if (settings.competition == DominoCompetition.Teams) {
+                    assertEquals(2, finished.public.scores.size)
+                    assertEquals(2, finished.public.matchWinners.size)
+                }
                 fixture.perform(DominoAction.Rematch(finished.public.token))
                 val rematch = fixture.session.currentState()
                 assertEquals(DominoPhase.Playing, rematch.phase)
                 assertTrue(rematch.public.scores.values.all { it == 0 })
                 assertEquals(finished.public.token + 1, rematch.public.token)
                 assertTrue(rematch.public.chain.isEmpty())
-                assertEquals(28, rematch.public.stockCount + rematch.public.handCounts.values.sum())
+                assertEquals(DominoRules.tiles(rematch.public.settings, count).size,
+                    rematch.public.stockCount + rematch.public.handCounts.values.sum())
             } finally {
                 fixture.close()
             }

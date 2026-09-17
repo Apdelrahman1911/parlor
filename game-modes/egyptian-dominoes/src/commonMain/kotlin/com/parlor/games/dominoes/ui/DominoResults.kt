@@ -29,6 +29,7 @@ import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.games.dominoes.domain.DominoAction
 import com.parlor.games.dominoes.domain.DominoPhase
 import com.parlor.games.dominoes.domain.DominoState
+import com.parlor.games.dominoes.domain.DominoScoring
 import com.parlor.games.dominoes.resources.Res
 import com.parlor.games.dominoes.resources.dom_award
 import com.parlor.games.dominoes.resources.dom_blocked
@@ -38,6 +39,7 @@ import com.parlor.games.dominoes.resources.dom_remaining
 import com.parlor.games.dominoes.resources.dom_rematch
 import com.parlor.games.dominoes.resources.dom_round_winner
 import com.parlor.games.dominoes.resources.dom_score
+import com.parlor.games.dominoes.resources.dom_shutout
 import com.parlor.games.dominoes.resources.dom_tie
 import com.parlor.games.dominoes.resources.dom_wait_host
 import org.jetbrains.compose.resources.stringResource
@@ -69,19 +71,25 @@ internal fun DominoResults(state: DominoState, host: Boolean, enabled: Boolean, 
             DominoTitle(stringResource(Res.string.dom_match_result))
             DominoTitle(state.players.filter { it.id in state.public.matchWinners }.joinToString(" · ") { it.displayName.asBidiArgument() })
         } else {
-            DominoTitle(result.winner?.let { stringResource(Res.string.dom_round_winner, state.name(it)) }
+            DominoTitle(result.winner?.let { stringResource(Res.string.dom_round_winner, dominoSideName(state, it)) }
                 ?: stringResource(Res.string.dom_tie))
         }
         if (result.blocked) DominoBody(stringResource(Res.string.dom_blocked))
-        state.players.sortedByDescending { state.public.scores.getValue(it.id) }.forEach { player ->
-            val score = state.public.scores.getValue(player.id)
+        if (match && DominoScoring.isShutout(state.public.settings, state.public.scores)) {
+            DominoBody(stringResource(Res.string.dom_shutout))
+        }
+        DominoScoring.sides(state.players, state.public.settings).entries.sortedByDescending {
+            state.public.scores.getValue(it.key)
+        }.forEach { (side, members) ->
+            val score = state.public.scores.getValue(side)
             Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                    DominoBody(player.displayName, Modifier.weight(1f))
+                    DominoBody(dominoSideName(state, side), Modifier.weight(1f))
                     Text(stringResource(Res.string.dom_score, score), color = DominoGold, style = ParlorTheme.typography.labelLarge)
                 }
-                DominoBody(stringResource(Res.string.dom_remaining, player.displayName.asBidiArgument(),
-                    result.remainingPips.getValue(player.id)))
+                members.forEach { id ->
+                    DominoBody(stringResource(Res.string.dom_remaining, state.name(id), result.remainingPips.getValue(id)))
+                }
                 Box(Modifier.fillMaxWidth().height(4.dp).background(DominoFelt, RoundedCornerShape(2.dp))) {
                     Box(Modifier.fillMaxWidth((score.toFloat() / state.public.settings.target).coerceIn(0f, 1f))
                         .height(4.dp).background(DominoGold, RoundedCornerShape(2.dp)))

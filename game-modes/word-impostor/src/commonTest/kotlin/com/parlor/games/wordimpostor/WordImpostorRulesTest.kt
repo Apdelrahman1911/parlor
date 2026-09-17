@@ -147,8 +147,8 @@ class WordImpostorRulesTest {
         assertEquals(aborted, WordImpostorSnapshotCodec().decode(WordImpostorSnapshotCodec().encode(aborted)))
         assertFails { WordImpostorSnapshotCodec().encode(state.copy(hostOnly = state.hostOnly.copy(wordId = "food_foul"))) }
         val bytes = WordImpostorCodec.encodePublic(state)
-        assertFails { WordImpostorCodec.decodePublic(bytes.decodeToString().replace("\"version\":1", "\"version\":2").encodeToByteArray()) }
-        assertFails { WordImpostorCodec.decodePublic(bytes.decodeToString().replace("\"version\":1", "\"version\":1,\"wordId\":\"food_foul\"").encodeToByteArray()) }
+        assertFails { WordImpostorCodec.decodePublic(bytes.decodeToString().replace("\"version\":2", "\"version\":1").encodeToByteArray()) }
+        assertFails { WordImpostorCodec.decodePublic(bytes.decodeToString().replace("\"version\":2", "\"version\":2,\"wordId\":\"food_foul\"").encodeToByteArray()) }
         assertFails { WordImpostorCodec.decodePublic(ByteArray(32769)) }
     }
 

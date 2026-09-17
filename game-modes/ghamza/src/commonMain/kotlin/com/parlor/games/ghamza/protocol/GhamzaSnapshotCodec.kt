@@ -4,6 +4,7 @@ import com.parlor.engine.snapshot.SnapshotCodec
 import com.parlor.games.ghamza.domain.GhamzaReducer
 import com.parlor.games.ghamza.domain.GhamzaState
 import com.parlor.games.ghamza.domain.GhamzaValidation
+import com.parlor.games.ghamza.protocol.GhamzaWireFormat.Companion.SCHEMA_VERSION
 import kotlinx.serialization.Serializable
 
 /** Authority-only persistence. A complete deterministic replay refuses reducer-impossible states. */
@@ -15,7 +16,7 @@ class GhamzaSnapshotCodec : SnapshotCodec<GhamzaState> {
     }
     override fun decode(payload: ByteArray): GhamzaState {
         val decoded = wire.decode(Envelope.serializer(), payload, MAX_BYTES)
-        require(decoded.version == 1)
+        require(decoded.version == SCHEMA_VERSION)
         requireCanonical(decoded.state)
         return decoded.state
     }
@@ -31,6 +32,6 @@ class GhamzaSnapshotCodec : SnapshotCodec<GhamzaState> {
         }
         require(replay == state) { "Authority state does not match its replay proof" }
     }
-    @Serializable private data class Envelope(val version: Int = 1, val state: GhamzaState)
+    @Serializable private data class Envelope(val version: Int = SCHEMA_VERSION, val state: GhamzaState)
     companion object { private const val MAX_BYTES = 1_048_576 }
 }

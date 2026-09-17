@@ -99,9 +99,12 @@ class GhamzaTableTest {
         onNodeWithText("Lock my guess").reachable().performClick()
         assertEquals(GhamzaPhase.MatchResult, state.phase)
         assertEquals(self, state.public.result?.winner)
-        onNodeWithText("Play again · reset scores").reachable().performClick()
+        onNodeWithText("All rounds complete").assertExists()
+        onNodeWithText("SCORES").assertDoesNotExist()
+        onNodeWithText("${winker.displayName.asBidiArgument()} is eliminated this round").assertExists()
+        onNodeWithText("Play again · new roles").reachable().performClick()
         assertEquals(GhamzaPhase.Reveal, state.phase)
-        assertEquals(0, state.public.scores.values.sum())
+        assertTrue(state.public.reports.values.all { it == 0 })
         onNodeWithText("Reveal my role").reachable().assertIsEnabled()
     }
 }

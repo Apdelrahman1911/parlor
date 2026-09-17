@@ -1,6 +1,6 @@
 # Resolved dependency and license evidence
 
-Parlor ships Android and iOS; Desktop is a development/test target. Dependency
+Parlor targets Android/iOS and separately gated Desktop GitHub distribution. Dependency
 catalog entries are requested versions, not a complete resolved dependency list.
 Use the opt-in exporter to record the actual Android release runtime graph and
 the `main` Kotlin/Native compilation graphs for all three Apple targets:
@@ -45,6 +45,12 @@ evidence and `THIRD_PARTY_DECLARATIONS_DRAFT.md`. Validate SBOMs against the
 [official 1.6 schemas](https://github.com/CycloneDX/specification/tree/1.6/schema).
 POM research is **not** Gradle dependency-verification metadata and never changes
 resolution or substitutes for an approved artifact digest.
+
+This existing exporter covers mobile graphs, not a Desktop distribution SBOM.
+The [GitHub packaging pipeline](GITHUB_DISTRIBUTION.md) separately inspects the
+complete native image, Maven-pinned JNI payload, packaged notices and bundled
+JDK `legal/` files. Desktop redistribution/legal approval remains an explicit
+owner gate; mobile graph receipts must not be mislabeled as Desktop coverage.
 
 ## Required interpretation
 

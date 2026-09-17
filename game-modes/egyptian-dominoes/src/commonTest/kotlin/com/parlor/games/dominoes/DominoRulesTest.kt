@@ -37,7 +37,7 @@ class DominoRulesTest {
         for (count in 2..4) for (variant in DominoVariant.entries) for (seed in 0L..30L) {
             val state = reducer.initial(players(count), DominoSettings(variant), seed)
             assertEquals(state, reducer.initial(players(count), DominoSettings(variant), seed))
-            assertEquals(List(count) { 7 }, state.public.handCounts.values.toList())
+            assertEquals(List(count) { DominoRules.handSize(state.public.settings, count) }, state.public.handCounts.values.toList())
             val hands = state.privatePerPlayer.values.flatMap { it.hand }
             val highest = hands.filter { it.isDouble }.maxByOrNull { it.high }
                 ?: hands.maxWith(compareBy<DominoTile> { it.pips }.thenBy { it.high })
@@ -48,7 +48,7 @@ class DominoRulesTest {
 
     @Test fun allPlayerCountsAndVariantsFinishLegalHandsWithConservedTiles() {
         for (count in 2..4) for (variant in DominoVariant.entries) for (seed in 0L..30L) {
-            var state = reducer.initial(players(count), DominoSettings(variant, 50), seed)
+            var state = reducer.initial(players(count), DominoSettings(variant, 51), seed)
             var moves = 0
             while (state.phase == DominoPhase.Playing) {
                 assertTrue(moves++ < DominoRules.MAX_MOVE)
@@ -104,7 +104,7 @@ class DominoRulesTest {
     }
 
     @Test fun matchAndRematchAdvanceTokensAndRefuseForgedSnapshots() {
-        var state = reducer.initial(players(2), DominoSettings(target = 50), 4)
+        var state = reducer.initial(players(2), DominoSettings(target = 51), 4)
         while (state.phase != DominoPhase.MatchResult) {
             state = reducer.apply(state, if (state.phase == DominoPhase.Playing) legal(state) else DominoAction.NextRound(state.public.token))
         }
@@ -115,8 +115,8 @@ class DominoRulesTest {
         assertEquals(next, DominoSnapshotCodec().decode(DominoSnapshotCodec().encode(next)))
         assertFails { DominoSnapshotCodec().encode(next.copy(hostOnly = next.hostOnly.copy(seed = 99))) }
         val bytes = DominoCodec.encodePublic(next)
-        assertFails { DominoCodec.decodePublic(bytes.decodeToString().replace("\"version\":1", "\"version\":2").encodeToByteArray()) }
-        assertFails { DominoCodec.decodePublic(bytes.decodeToString().replace("\"version\":1", "\"version\":1,\"version\":1").encodeToByteArray()) }
+        assertFails { DominoCodec.decodePublic(bytes.decodeToString().replace("\"version\":2", "\"version\":1").encodeToByteArray()) }
+        assertFails { DominoCodec.decodePublic(bytes.decodeToString().replace("\"version\":2", "\"version\":2,\"version\":2").encodeToByteArray()) }
         assertFails { DominoCodec.decodePublic(ByteArray(32769)) }
     }
 
@@ -133,8 +133,8 @@ class DominoRulesTest {
     private fun verify(state: DominoState) {
         assertTrue(DominoValidation.publicState(state), "Invalid ${state.phase} / ${state.public.move}")
         val all = state.privatePerPlayer.values.flatMap { it.hand } + state.hostOnly.stock + state.public.chain.map { it.tile }
-        assertEquals(DominoTile.Set.toSet(), all.toSet())
-        assertEquals(28, all.size)
+        assertEquals(DominoRules.tiles(state.public.settings, state.players.size).toSet(), all.toSet())
+        assertEquals(DominoRules.tiles(state.public.settings, state.players.size).size, all.size)
         val public = DominoCodec.decodePublic(DominoCodec.encodePublic(state))
         assertTrue(public.privatePerPlayer.isEmpty())
         assertEquals(DominoHostOnly(), public.hostOnly)

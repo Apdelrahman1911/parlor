@@ -12,6 +12,7 @@ import com.parlor.games.wordimpostor.domain.WordImpostorProjection
 import com.parlor.games.wordimpostor.domain.WordImpostorPublic
 import com.parlor.games.wordimpostor.domain.WordImpostorState
 import com.parlor.games.wordimpostor.domain.WordImpostorValidation
+import com.parlor.games.wordimpostor.protocol.WordImpostorWireFormat.Companion.SCHEMA_VERSION
 import kotlinx.serialization.Serializable
 
 /** Separate DTOs cannot accidentally serialize host buckets. Every payload is bounded and canonical. */
@@ -27,7 +28,7 @@ object WordImpostorCodec {
 
     fun decodeAction(bytes: ByteArray): WordImpostorAction {
         val envelope = wire.decode(ActionEnvelope.serializer(), bytes, MAX_COMMAND_BYTES)
-        require(envelope.version == 1 && WordImpostorAuthority.isPlayerAction(envelope.action) &&
+        require(envelope.version == SCHEMA_VERSION && WordImpostorAuthority.isPlayerAction(envelope.action) &&
             WordImpostorActionValidation.valid(envelope.action))
         return envelope.action
     }
@@ -41,7 +42,7 @@ object WordImpostorCodec {
 
     fun decodePublic(bytes: ByteArray): WordImpostorState {
         val envelope = wire.decode(PublicEnvelope.serializer(), bytes, MAX_PROJECTION_BYTES)
-        require(envelope.version == 1)
+        require(envelope.version == SCHEMA_VERSION)
         val state = WordImpostorState(envelope.public, emptyMap(), WordImpostorHostOnly(), envelope.phase, envelope.players)
         require(WordImpostorValidation.publicState(state)) { "Invalid public game state" }
         return state
@@ -57,15 +58,17 @@ object WordImpostorCodec {
     fun decodePlayer(public: WordImpostorState, bytes: ByteArray, id: PlayerId): WordImpostorState {
         require(public == WordImpostorProjection.toPublic(public).state) { "Public projection required" }
         val envelope = wire.decode(PrivateEnvelope.serializer(), bytes, MAX_PROJECTION_BYTES)
-        require(envelope.version == 1 && envelope.playerId == id) { "Private snapshot recipient mismatch" }
+        require(envelope.version == SCHEMA_VERSION && envelope.playerId == id) { "Private snapshot recipient mismatch" }
         val state = public.copy(privatePerPlayer = mapOf(id to envelope.private))
         require(WordImpostorValidation.playerState(state, id)) { "Invalid private game state" }
         return state
     }
 
-    @Serializable private data class ActionEnvelope(val version: Int = 1, val action: WordImpostorAction)
+    @Serializable private data class ActionEnvelope(val version: Int = SCHEMA_VERSION, val action: WordImpostorAction)
     @Serializable private data class PublicEnvelope(
-        val version: Int = 1, val public: WordImpostorPublic, val phase: WordImpostorPhase, val players: List<Player>,
+        val version: Int = SCHEMA_VERSION, val public: WordImpostorPublic, val phase: WordImpostorPhase, val players: List<Player>,
     )
-    @Serializable private data class PrivateEnvelope(val version: Int = 1, val playerId: PlayerId, val private: WordImpostorPrivate)
+    @Serializable private data class PrivateEnvelope(
+        val version: Int = SCHEMA_VERSION, val playerId: PlayerId, val private: WordImpostorPrivate,
+    )
 }

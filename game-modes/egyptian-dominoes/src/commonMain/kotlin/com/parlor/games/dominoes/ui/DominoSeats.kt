@@ -3,6 +3,7 @@ package com.parlor.games.dominoes.ui
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -31,6 +32,7 @@ import com.parlor.designsystem.localization.asBidiArgument
 import com.parlor.core.ids.PlayerId
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.games.dominoes.domain.DominoState
+import com.parlor.games.dominoes.domain.DominoScoring
 import com.parlor.games.dominoes.resources.Res
 import com.parlor.games.dominoes.resources.dom_score
 import com.parlor.games.dominoes.resources.dom_seat
@@ -43,12 +45,16 @@ internal fun DominoOpponents(state: DominoState, self: PlayerId, motion: DominoM
         state.players.filter { it.id != self }.forEach { player ->
             val count = state.public.handCounts.getValue(player.id)
             val selected = state.public.turn == player.id
+            val team = DominoScoring.teamNumber(state, player.id)
             val color by animateColorAsState(if (selected) DominoGold.copy(alpha = .18f) else DominoInk.copy(alpha = .5f),
                 tween(if (ParlorTheme.reducedMotion) 0 else 250))
             val label = stringResource(Res.string.dom_seat, player.displayName.asBidiArgument(),
-                count, state.public.scores.getValue(player.id))
+                count, DominoScoring.scoreFor(state, player.id)) +
+                if (team == null) "" else " · " + dominoSideName(state, player.id)
             Column(
-                Modifier.weight(1f).background(color, RoundedCornerShape(20.dp)).padding(horizontal = 4.dp, vertical = 12.dp)
+                Modifier.weight(1f).background(color, RoundedCornerShape(20.dp))
+                    .border(1.dp, dominoSideColor(team).copy(alpha = if (team == null) 0f else .65f), RoundedCornerShape(20.dp))
+                    .padding(horizontal = 4.dp, vertical = 12.dp)
                     .semantics(mergeDescendants = true) { contentDescription = label }
                     .onGloballyPositioned { motion.seats[player.id] = DominoFlightPose(
                         it.localToRoot(Offset(it.size.width / 2f, it.size.height * .3f)), it.size.height * .3f, 90f) },
@@ -58,7 +64,9 @@ internal fun DominoOpponents(state: DominoState, self: PlayerId, motion: DominoM
                 Text(player.displayName, color = if (selected) DominoGold else DominoText,
                     style = ParlorTheme.typography.labelLarge, textAlign = TextAlign.Center,
                     modifier = Modifier.clearAndSetSemantics {})
-                Text(stringResource(Res.string.dom_score, state.public.scores.getValue(player.id)),
+                if (team != null) Text(dominoSideName(state, player.id), color = dominoSideColor(team),
+                    style = ParlorTheme.typography.bodySmall, modifier = Modifier.clearAndSetSemantics {})
+                Text(stringResource(Res.string.dom_score, DominoScoring.scoreFor(state, player.id)),
                     color = DominoText.copy(alpha = .75f), style = ParlorTheme.typography.bodySmall,
                     modifier = Modifier.clearAndSetSemantics {})
             }

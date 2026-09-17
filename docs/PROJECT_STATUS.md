@@ -6,6 +6,28 @@ approval.** Source and executable contracts remain authoritative. Start with
 
 ## Completed checkpoint and evidence
 
+### Rules revision and GitHub distribution qualification
+
+The September 17 revision on `feat/last-light` changes all three new games to
+contract version 2: Dominoes Default/Draw/Block, 51/101/151 targets, 101–0 shutout
+and opposite-seat teams; scoreless Ghamza; personal correct-vote and independent
+word-guess points in Word Impostor. See [current rules](THREE_GAMES_INTEGRATION.md).
+Earlier version-1 game receipts below do not qualify this revision.
+
+The separate [GitHub distribution pipeline](GITHUB_DISTRIBUTION.md) adds Android
+APK, macOS arm64/x64 DMG, Windows x64 MSI and Linux x64 DEB preparation, native
+runtime/installed-payload verification, protected signing and immutable Release
+publication. Store workflows remain disabled. Unsigned rehearsals are **not**
+publishable; no public Release is claimed by this documentation.
+
+Focused game/app tests, host authority/recovery cases and a local macOS native
+packaging rehearsal passed during implementation. Those were working-tree
+checks, not an immutable release qualification. Use exact-SHA workflow runs and
+the final execution report for later verification. Real Android/Developer ID/
+Windows signing credentials, new protected environment configuration and current
+physical/owner acceptance were unavailable at implementation time. A37 and the
+physical-device matrix remain open; new packaging does not waive either.
+
 ### Last Light integration
 
 - [PR #254](https://github.com/Apdelrahman1911/parlor/pull/254) merged the prior

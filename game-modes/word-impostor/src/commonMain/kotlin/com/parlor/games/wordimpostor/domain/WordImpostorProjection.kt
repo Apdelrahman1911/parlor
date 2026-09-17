@@ -30,7 +30,7 @@ object WordImpostorProjection : ProjectionPolicy<WordImpostorState> {
         voted = state.public.voted.toSet(), voteCounts = state.public.voteCounts?.toMap(),
         scores = state.public.scores.toMap(), disconnected = state.public.disconnected.toSet(),
         result = state.public.result?.let {
-            it.copy(impostors = it.impostors.toSet(), identified = it.identified.toSet(),
+            it.copy(impostors = it.impostors.toSet(), identified = it.identified.toSet(), correctVoters = it.correctVoters.toSet(),
                 guesses = it.guesses.toMap(), awarded = it.awarded.toMap())
         },
     )

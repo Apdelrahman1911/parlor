@@ -3,12 +3,15 @@ package com.parlor.app.shell.game.multiplayer
 import com.parlor.app.shell.game.DominoGameShellBinding
 import com.parlor.app.shell.game.GhamzaGameShellBinding
 import com.parlor.app.shell.game.WordImpostorGameShellBinding
+import com.parlor.core.ids.CaseId
 import com.parlor.core.result.Result
 import com.parlor.engine.action.GameAction
 import com.parlor.engine.event.GameEvent
 import com.parlor.engine.session.SubmitError
 import com.parlor.engine.state.GameState
 import com.parlor.games.dominoes.DominoDefinition
+import com.parlor.games.dominoes.domain.DominoCompetition
+import com.parlor.games.dominoes.domain.DominoSettings
 import com.parlor.games.ghamza.GhamzaDefinition
 import com.parlor.games.wordimpostor.WordImpostorDefinition
 import com.parlor.networking.protocol.HostMessage
@@ -34,6 +37,8 @@ class MultiplayerRecoveryTest {
     @Test
     fun dominoes_preserves_hands_and_board_through_secure_start_rejoin_recreation_and_terminal_expiry() = runTest {
         verifyRecovery(DominoGameShellBinding(DominoDefinition()))
+        verifyRecovery(DominoGameShellBinding(DominoDefinition()), 4,
+            DominoSettings(competition = DominoCompetition.Teams).caseId)
     }
 
     @Test
@@ -47,9 +52,9 @@ class MultiplayerRecoveryTest {
     }
 
     private suspend fun <S : GameState, A : GameAction, E : GameEvent> TestScope.verifyRecovery(
-        spec: MultiplayerGameSpec<S, A, E>,
+        spec: MultiplayerGameSpec<S, A, E>, count: Int = 3, caseId: CaseId = spec.defaultCaseId,
     ) {
-        val fixture = MultiplayerGameFixture(this, spec)
+        val fixture = MultiplayerGameFixture(this, spec, gamePlayers(count), caseId = caseId)
         val alice = fixture.players[1].id
         val bob = fixture.players[2].id
         val gate = CompletableDeferred<Unit>()
@@ -130,7 +135,7 @@ class MultiplayerRecoveryTest {
             fixture.close()
         }
 
-        val leaving = MultiplayerGameFixture(this, spec)
+        val leaving = MultiplayerGameFixture(this, spec, gamePlayers(count), caseId = caseId)
         try {
             leaving.attachPeers()
             val before = leaving.session.currentState()

@@ -112,17 +112,20 @@ class WordImpostorReducer : GameReducer<WordImpostorState, WordImpostorAction, W
 
     private fun finish(state: WordImpostorState): WordImpostorState {
         val identified = identifiedByVotes(checkNotNull(state.public.voteCounts), state.public.settings.impostors)
-        val ordinaryScored = identified == state.hostOnly.impostors
+        val correctVoters = state.hostOnly.votes.filter { (voter, target) ->
+            voter !in state.hostOnly.impostors && target in state.hostOnly.impostors
+        }.keys
         val wordId = checkNotNull(state.hostOnly.wordId)
         val awarded = state.players.associate { player ->
-            val point = if (player.id in state.hostOnly.impostors) state.hostOnly.guesses[player.id] == wordId else ordinaryScored
+            val point = if (player.id in state.hostOnly.impostors) state.hostOnly.guesses[player.id] == wordId
+                else player.id in correctVoters
             player.id to if (point) 1 else 0
         }
         return state.copy(
             phase = if (state.public.round == state.public.settings.rounds) WordImpostorPhase.MatchResult
                 else WordImpostorPhase.RoundResult,
             public = state.public.copy(
-                result = WordRoundResult(wordId, state.hostOnly.impostors, identified, ordinaryScored, state.hostOnly.guesses, awarded),
+                result = WordRoundResult(wordId, state.hostOnly.impostors, identified, correctVoters, state.hostOnly.guesses, awarded),
                 scores = state.public.scores.mapValues { (id, score) -> score + awarded.getValue(id) },
             ),
         )
@@ -186,7 +189,7 @@ class WordImpostorReducer : GameReducer<WordImpostorState, WordImpostorAction, W
         const val MAX_HISTORY = 4096
         const val CHOICE_COUNT = 5
 
-        /** A tie crossing the Kth place is not a successful team identification. */
+        /** Informational poll result only. Ties never remove a correct voter's personal point. */
         fun identifiedByVotes(counts: Map<PlayerId, Int>, count: Int): Set<PlayerId> {
             if (count <= 0 || count >= counts.size) return emptySet()
             val ranked = counts.entries.sortedByDescending { it.value }

@@ -41,7 +41,8 @@ data class WordRoundResult(
     val wordId: String,
     val impostors: Set<PlayerId>,
     val identified: Set<PlayerId>,
-    val ordinaryTeamScored: Boolean,
+    /** Ordinary players whose own sealed vote identified any impostor; only revealed at the final result. */
+    val correctVoters: Set<PlayerId>,
     val guesses: Map<PlayerId, String>,
     val awarded: Map<PlayerId, Int>,
 )

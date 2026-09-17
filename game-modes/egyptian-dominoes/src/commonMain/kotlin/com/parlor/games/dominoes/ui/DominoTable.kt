@@ -27,6 +27,7 @@ import com.parlor.core.ids.PlayerId
 import com.parlor.designsystem.components.InPlaceBackHandler
 import com.parlor.games.dominoes.domain.DominoAction
 import com.parlor.games.dominoes.domain.DominoPhase
+import com.parlor.games.dominoes.domain.DominoRules
 import com.parlor.games.dominoes.domain.DominoState
 import com.parlor.games.dominoes.resources.Res
 import com.parlor.games.dominoes.resources.dom_close_help
@@ -65,6 +66,7 @@ fun DominoTable(
                 DominoBody(stringResource(Res.string.dom_rules))
             } else {
                 DominoBody(stringResource(Res.string.dom_round, state.public.round))
+                DominoTeams(state, self)
                 DominoOpponents(state, self, motion)
                 if (state.phase == DominoPhase.Playing) {
                     DominoBody(if (state.public.turn == self) stringResource(Res.string.dom_turn_you) else
@@ -73,7 +75,7 @@ fun DominoTable(
                 }
                 DominoBoard(state, motion)
                 if (state.phase == DominoPhase.Playing) {
-                    DominoStock(state.public.stockCount, motion)
+                    if (DominoRules.usesDraw(state.public.settings, state.players.size)) DominoStock(state.public.stockCount, motion)
                     DominoHand(state, self, canAct, visible, motion, { visible = it }, onAction)
                 } else if (state.phase == DominoPhase.RoundResult || state.phase == DominoPhase.MatchResult) {
                     DominoResults(state, isHost, enabled, onAction)

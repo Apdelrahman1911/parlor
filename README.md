@@ -15,7 +15,9 @@ All six support same-LAN multi-device play through P2pKit. Whodunit, Mafia
 and Last Light also support local play; the three additions offer Host/Join
 with a private device for each player. See the
 [three-game rules and integration guide](docs/THREE_GAMES_INTEGRATION.md).
-Desktop is a development and deterministic-test target, not a shipping target.
+Desktop supports development/tests and a separately gated
+[Android/macOS/Windows/Linux GitHub distribution pipeline](docs/GITHUB_DISTRIBUTION.md).
+Unsigned package rehearsal is not signed-release or physical-device approval.
 Room-code entry uses LAN discovery; raw-IP/manual endpoint connection,
 public-internet rendezvous/NAT traversal, relay, spectators, and host migration
 are not supported in the first release. Hotspot behavior remains a

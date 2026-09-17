@@ -67,7 +67,7 @@ class DominoMotionTest {
                 assertEquals(motion.board[action.tileId], flight.to)
                 assertEquals(action.tileId, motion.hiddenBoardTile)
                 assertTrue(motion.progress.value > 0f && motion.progress.value < 1f)
-                assertEquals(6, shown.public.handCounts[actor])
+                assertEquals(initial.public.handCounts.getValue(actor) - 1, shown.public.handCounts[actor])
                 assertEquals(1, shown.public.chain.size)
             }
             mainClock.advanceTimeBy(800)

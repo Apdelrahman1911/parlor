@@ -2,8 +2,9 @@
 
 These three games use Parlor's existing same-LAN, host-authoritative multiplayer
 system. They do not introduce a transport, server, permission, dependency version,
-or protocol change. Android and iOS are the delivery targets; Desktop supports
-development and deterministic tests.
+or protocol change. Android and iOS remain the mobile targets. The separate
+[GitHub distribution pipeline](GITHUB_DISTRIBUTION.md) adds native Desktop
+packaging without claiming Store or physical-device qualification.
 
 ## Architecture and implementation sequence
 
@@ -21,11 +22,14 @@ privacy and the existing Back policy. Work then followed this order:
 
 | Game/module | Stable game ID | Players | Settings |
 |---|---|---|---|
-| `game-modes/egyptian-dominoes` | `egyptian-dominoes` | 2–4 | Draw/Block; target 50/100/150 |
+| `game-modes/egyptian-dominoes` | `egyptian-dominoes` | 2–4 | Default/Draw/Block; target 51/101/151; four-player Default partnerships |
 | `game-modes/ghamza` | `ghamza` | 3–12 | 1/2/3 attempts; 1/3/5 rounds |
 | `game-modes/word-impostor` | `word-impostor` | 3–12 | Topic; 1/2/3 impostors; 1/3/5 rounds |
 
-All use mode `standard`, game codec version `1`, and session protocol **4.2**.
+All use mode `standard`, game/codec/snapshot version **2**, and session protocol **4.2**.
+Version 1 contracts are deliberately rejected, not silently reinterpreted:
+Dominoes settings/scoring, Ghamza's removed score field, and Word Impostor's
+personal awards are incompatible with the previous rules. All peers must update.
 Actual admitted roster size determines player count; Start validates the range
 and settings. Only Host/Join are offered: secret-role games are not presented as
 solo or shared-device games. Existing games' local-play modes are unchanged.
@@ -52,22 +56,38 @@ Egyptian tables differ on drawing, opening, scoring targets, partnerships and
 double-out bonuses. This implementation is an explicit Egyptian **house-rule
 baseline**, not a claim that one exclusive national ruleset exists:
 
-- Double-six set: 28 unique tiles; seven per player. Individual scoring, no
-  partnerships. The host privately shuffles/deals from a fresh seeded sequence.
+- Double-six set: 28 unique tiles. The host privately shuffles/deals from a
+  fresh seeded sequence. **Default** is selected initially; target **101** and
+  **Individual** are the other defaults.
+- **Default, two players:** seven each; exactly the Draw behavior below.
+  **Default, three players:** remove only double-blank/double-zero **0–0** before
+  dealing; nine each, 27 total, no stock or drawing. Other zero-containing tiles
+  remain. **Default, four players:** seven each, no stock; choose Individual or
+  Teams. These are owner-selected table rules, not a claim of a universal variant.
+- **Teams:** opposite seats 1+3 versus 2+4. One canonical score is stored per
+  side, not copied into two independently mutable player scores. A teammate's
+  hand stays private. Setup validates exactly four actual players and Default
+  mode; changing variants clears an incompatible team selection.
 - Highest dealt double opens; if no double is dealt, highest pip sum, then
   highest end. Thereafter the previous hand's winner leads with any tile. A
   tied blocked hand rotates the leader.
 - Match either open end. Doubles lie perpendicular but are not branching
   spinners. Every peer sees the same physical chain orientation, including RTL.
-- **Draw** (default): with no legal play, draw from the fixed stock end one at
+- **Draw**: with no legal play, draw from the fixed stock end one at
   a time until playable. No voluntary drawing. Pass only with no play or draw.
   **Block**: the undealt stock is unused; pass when no tile fits. With four
   players all 28 tiles are dealt, so neither variant has a draw stock.
-- Going out scores all opponents' remaining pips. A fully blocked hand awards
-  the unique lowest-pip player the opponents' sum minus their own pips. A tied
-  lowest hand scores nobody. No double-out bonus is assumed.
-- Targets are 50, 100 (default), or 150. A defensive 64-hand cap finishes by
-  highest score, allowing shared winners. Draw/pass/placement have exact
+- Going out scores all opposing sides' remaining pips; a partner's pips do not
+  count against their team. A blocked hand compares combined side pip totals;
+  the unique lowest side scores opponents' total minus its own. A tied lowest
+  side scores nobody. The winning side's lowest-pip member leads next; seat
+  order breaks a teammate tie. No double-out bonus is assumed.
+- Targets are **51, 101, or 151**. In **151** mode, a side reaching **at least
+  101** while every opposing side remains at zero wins immediately. This also
+  applies to teams, and both teammates are match winners. The reducer ends the
+  match automatically after awarding that hand; UI does not decide winners.
+  A defensive 64-hand cap still finishes by highest score, allowing shared
+  winners. Draw/pass/placement have exact
   round-token and move-number validation; scoring happens once per hand.
 
 The wood/felt table, ivory pip tiles, opponent tile-back fans and connected
@@ -75,7 +95,9 @@ serpentine chain are code-native artwork. Accepted placements fly from measured
 hand/seat positions, rotate and settle at the actual chain position. Draws
 travel face-down from the stock. No optimistic tile removal occurs. Initial,
 skipped or recovered snapshots never replay historical flights; reduced motion
-settles immediately. The results screen retains the table's visual treatment.
+settles immediately. Team labels list both partners and shared points on the
+table/results, so color is not the only indication. The results screen retains
+the table's visual treatment.
 
 ## Ghamza — غمزة
 
@@ -93,10 +115,14 @@ drinking mechanic is included.
   are out. An eliminated player remains a seated participant, not a spectator
   or a newly reusable room slot. The Winker cannot self-report a wink.
 - When only one ordinary player remains, that player guesses any other
-  original participant. Correct: guesser gains one point. Incorrect: Winker
-  gains one point. The normal result reveals the role and guess; abort does not.
+  original participant. Correct: the Winker loses/is eliminated; the guesser
+  wins. Incorrect: the guesser loses/is eliminated; the Winker wins. Final
+  elimination is derived from the result, not recorded as a fictitious wink.
+  The normal result reveals the role and guess; abort does not.
 - Matches have 1/3/5 rounds. The host advances results and may start a fresh
-  same-roster rematch. Highest cumulative score wins; ties are shared.
+  same-roster rematch. **There is no scoring**, score field, scoreboard, cumulative
+  champion, or score persistence. Everyone returns with full lives each round.
+  The Winker is drawn again independently; the same player may be picked again.
 
 The teal/mint social table uses a concealed eye motif, private reveal, a
 confirmed report action, public report feed, attempt status and final guessing.
@@ -125,16 +151,19 @@ or endorsements; distribution/editorial review remains an owner gate.
    voting when discussion is finished. There is no cosmetic or unenforced timer.
 4. **Private voting:** everyone selects one other player, confirms once and
    cannot replace the vote. Only participation is public until all votes arrive.
-   Then counts are revealed. The top K must identify exactly all K impostors;
-   a tie crossing the Kth-place cutoff fails the ordinary team's point.
+   Then counts are revealed. Each ordinary player's own single vote targeting
+   **any** impostor earns that voter **one point**. Incorrect votes earn zero;
+   the top-K poll and ties are informational, not scoring conditions.
 5. **Impostor guessing:** each impostor guesses independently from five shuffled
    options in the same topic and plausible family, including the answer. The
    full topic list is never displayed. Unfinished guesses and correctness are
    private; only the number submitted is public.
 6. **Results:** reveal word, impostors, vote totals, guesses, awarded points and
-   updated scores. Every ordinary player earns one point if the whole team was
-   identified; each correct impostor independently earns one point. Both sides
-   may score. Round counts are 1/3/5; tied match scores share the win.
+   updated scores. Each correct impostor independently earns **one point** for
+   their word guess, without canceling anyone's correct-vote point. Personal
+   awards/correct-voter membership publish only after all guesses, avoiding a
+   premature role or answer-confirmation leak. Round counts are 1/3/5; tied
+   match scores share the win.
 
 The ink/indigo/peach UI separates secret cards, pair-guided questions, discussion,
 private voting, five-choice guessing and scored results. Reveals/selections
@@ -165,7 +194,8 @@ reset on phase/round changes, concealment and recovery, never in saved UI state.
   awarding new points. Host exit ends the session; host process death is not
   recoverable authority migration. Peer cold-start resume uses existing protected
   rejoin credentials while the original host remains alive.
-- Rematches reset scores and hidden setup but advance a monotonic round token,
+- Rematches reset applicable scores (Dominoes/Word Impostor), lives and hidden
+  setup but advance a monotonic round token,
   so old-round commands cannot affect the fresh match. Changing players/settings
   requires a new room. Existing local saves are not read, migrated or deleted.
 - Private UI is non-saveable and removed from accessibility semantics while
@@ -198,7 +228,8 @@ Use JDK 21 and the wrapper. See [project status](PROJECT_STATUS.md) for executed
 evidence, not this command list. Unattended tests do not certify physical
 Android↔iOS LAN play, social play, touch/gesture quality or Store readiness.
 The existing [release gates](RELEASE_GATES.md), unresolved strict-protection
-finding and disabled publishing workflows remain unchanged.
+finding and disabled **Store** publishing workflows remain unchanged. GitHub
+publication has its own protected signing, acceptance and provenance gates.
 
 ## Physical-device acceptance matrix
 

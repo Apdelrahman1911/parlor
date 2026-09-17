@@ -1,5 +1,6 @@
 package com.parlor.games.dominoes.protocol
 
+import com.parlor.games.dominoes.DominoIds
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.json.Json
 
@@ -30,6 +31,6 @@ internal class DominoWireFormat(json: Json = Json) {
     }
 
     companion object {
-        const val SCHEMA_VERSION = 1
+        const val SCHEMA_VERSION = DominoIds.VERSION
     }
 }

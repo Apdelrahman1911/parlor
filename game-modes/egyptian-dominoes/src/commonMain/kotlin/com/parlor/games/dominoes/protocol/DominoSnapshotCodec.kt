@@ -5,6 +5,7 @@ import com.parlor.games.dominoes.domain.DominoRules
 import com.parlor.games.dominoes.domain.DominoReducer
 import com.parlor.games.dominoes.domain.DominoState
 import com.parlor.games.dominoes.domain.DominoValidation
+import com.parlor.games.dominoes.protocol.DominoWireFormat.Companion.SCHEMA_VERSION
 import kotlinx.serialization.Serializable
 
 /** Authority-only persistence. A complete deterministic replay refuses reducer-impossible states. */
@@ -16,7 +17,7 @@ class DominoSnapshotCodec : SnapshotCodec<DominoState> {
     }
     override fun decode(payload: ByteArray): DominoState {
         val decoded = wire.decode(Envelope.serializer(), payload, MAX_BYTES)
-        require(decoded.version == 1)
+        require(decoded.version == SCHEMA_VERSION)
         requireCanonical(decoded.state)
         return decoded.state
     }
@@ -32,7 +33,7 @@ class DominoSnapshotCodec : SnapshotCodec<DominoState> {
         }
         require(replay == state) { "Authority state does not match its replay proof" }
     }
-    @Serializable private data class Envelope(val version: Int = 1, val state: DominoState)
+    @Serializable private data class Envelope(val version: Int = SCHEMA_VERSION, val state: DominoState)
     companion object {
         // 8,192 bounded replay entries may contain 64-character multibyte IDs.
         // This authority-only ceiling is separate from the 32 KiB peer projection limit.

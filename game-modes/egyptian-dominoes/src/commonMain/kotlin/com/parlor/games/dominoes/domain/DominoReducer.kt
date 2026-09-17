@@ -9,7 +9,7 @@ import com.parlor.engine.session.SessionConfig
 import com.parlor.engine.state.Player
 import com.parlor.games.dominoes.DominoIds
 
-/** Egyptian ordered-stock draw baseline. Doubles are not spinners; scoring occurs once per hand. */
+/** Egyptian default/draw/block rules. Doubles are not spinners; side scoring occurs once per hand. */
 class DominoReducer : GameReducer<DominoState, DominoAction, DominoChanged> {
     fun initial(config: SessionConfig): DominoState {
         require(config.modeId == DominoIds.Standard && DominoRoster.isValidPlayerId(config.sessionId.raw))
@@ -17,8 +17,8 @@ class DominoReducer : GameReducer<DominoState, DominoAction, DominoChanged> {
     }
 
     fun initial(players: List<Player>, settings: DominoSettings, seed: Long, token: Long = 1L): DominoState {
-        require(DominoRoster.isValidRoster(players) && token in 1..DominoRules.MAX_TOKEN)
-        return deal(players.toList(), settings, seed, token, 1, players.associate { it.id to 0 }, null)
+        require(DominoRoster.isValidRoster(players) && settings.supports(players.size) && token in 1..DominoRules.MAX_TOKEN)
+        return deal(players.toList(), settings, seed, token, 1, DominoScoring.sides(players, settings).mapValues { 0 }, null)
     }
 
     override fun reduce(state: DominoState, action: DominoAction, ctx: ReducerContext): Reduction<DominoState, DominoChanged> {
@@ -120,19 +120,17 @@ class DominoReducer : GameReducer<DominoState, DominoAction, DominoChanged> {
         ))
         if (next.public.consecutivePasses < next.players.size) return next
         val pipCounts = next.privatePerPlayer.mapValues { (_, private) -> private.hand.sumOf { it.pips } }
-        val lowest = pipCounts.values.min()
-        val winners = pipCounts.filterValues { it == lowest }.keys
-        return finishHand(next, winners.singleOrNull(), blocked = true)
+        return finishHand(next, DominoScoring.blockedWinner(next, pipCounts), blocked = true)
     }
 
     private fun finishHand(state: DominoState, winner: PlayerId?, blocked: Boolean): DominoState {
         val pips = state.privatePerPlayer.mapValues { (_, private) -> private.hand.sumOf { it.pips } }
-        val points = if (winner == null) 0 else pips.filterKeys { it != winner }.values.sum() -
-            if (blocked) pips.getValue(winner) else 0
-        val scores = if (winner == null) state.public.scores else
-            state.public.scores + (winner to state.public.scores.getValue(winner) + points)
-        val finished = scores.values.any { it >= state.public.settings.target } || state.public.round == DominoRules.MAX_HANDS
-        val winners = if (finished) scores.filterValues { it == scores.values.max() }.keys else emptySet()
+        val points = DominoScoring.points(state, pips, winner, blocked)
+        val side = winner?.let { DominoScoring.sideOf(state, it) }
+        val scores = if (side == null) state.public.scores else
+            state.public.scores + (side to state.public.scores.getValue(side) + points)
+        val finished = DominoScoring.reachedTarget(state.public.settings, scores) || state.public.round == DominoRules.MAX_HANDS
+        val winners = if (finished) DominoScoring.matchWinners(state, scores) else emptySet()
         return state.copy(
             phase = if (finished) DominoPhase.MatchResult else DominoPhase.RoundResult,
             public = state.public.copy(
@@ -163,13 +161,14 @@ class DominoReducer : GameReducer<DominoState, DominoAction, DominoChanged> {
         players: List<Player>, settings: DominoSettings, seed: Long, token: Long, round: Int,
         scores: Map<PlayerId, Int>, previousWinner: PlayerId?,
     ): DominoState {
-        val tiles = RandomSource.seeded(seed xor token).shuffled(DominoTile.Set)
-        val hands = players.associate { player -> player.id to tiles.drop(player.seat * DominoRules.HAND_SIZE).take(DominoRules.HAND_SIZE) }
+        val tiles = RandomSource.seeded(seed xor token).shuffled(DominoRules.tiles(settings, players.size))
+        val handSize = DominoRules.handSize(settings, players.size)
+        val hands = players.associate { player -> player.id to tiles.drop(player.seat * handSize).take(handSize) }
         val dealt = hands.values.flatten()
         val opening = if (previousWinner != null) null else
             dealt.filter { it.isDouble }.maxByOrNull { it.high } ?: dealt.maxWith(compareBy<DominoTile> { it.pips }.thenBy { it.high })
         val leader = previousWinner ?: hands.entries.first { opening in it.value }.key
-        val stock = tiles.drop(players.size * DominoRules.HAND_SIZE)
+        val stock = tiles.drop(players.size * handSize)
         return DominoState(
             public = DominoPublic(settings, round, token, 0, leader, emptyList(), hands.mapValues { it.value.size }, stock.size, 0, scores),
             privatePerPlayer = hands.mapValues { (id, hand) -> DominoPrivate(hand, opening.takeIf { id == leader }) },

@@ -89,9 +89,13 @@ class WordImpostorMultiplayerTest {
                 assertEquals(WordImpostorPhase.MatchResult, result.phase)
                 assertEquals(word, result.public.result?.wordId)
                 assertEquals(team, result.public.result?.impostors)
-                // A cycle gives everybody one vote: the cutoff ties, so no ordinary-player point.
-                assertEquals(false, result.public.result?.ordinaryTeamScored)
-                assertEquals((impostors + 1) / 2, result.public.scores.values.sum())
+                // A tied poll does not cancel personal correct-vote points.
+                val correctVoters = ids.filterIndexed { index, id -> id !in team && ids[(index + 1) % count] in team }.toSet()
+                assertEquals(correctVoters, result.public.result?.correctVoters)
+                assertEquals(correctVoters.size + (impostors + 1) / 2, result.public.scores.values.sum())
+                ids.filter { it !in team }.forEach { id ->
+                    assertEquals(if (id in correctVoters) 1 else 0, result.public.result?.awarded?.get(id))
+                }
                 fixture.perform(WordImpostorAction.Rematch(token))
                 val rematch = fixture.session.currentState()
                 assertEquals(WordImpostorPhase.Reveal, rematch.phase)

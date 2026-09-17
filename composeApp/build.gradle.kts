@@ -677,6 +677,34 @@ compose.desktop {
             )
             packageName = "Parlor"
             packageVersion = parlorVersionName
+            // Keep security providers and reflection-loaded modules in the self-contained JDK 21 image.
+            // Desktop packages do not use Android's R8 configuration or a system Java installation.
+            includeAllModules = true
+            macOS {
+                bundleID = "me.parlor.desktop"
+                packageBuildVersion = parlorBuildNumber.toString()
+                // Both the JDK 21 image and Skiko arm64 require macOS 11 or newer.
+                minimumSystemVersion = "11.0"
+                appCategory = "public.app-category.games"
+                infoPlist {
+                    extraKeysRawXml = """
+                        <key>NSLocalNetworkUsageDescription</key>
+                        <string>Parlor uses your local network to host or join nearby game rooms over Wi-Fi.</string>
+                        <key>NSBonjourServices</key><array><string>_p2pkit2._tcp</string></array>
+                        <key>CFBundleLocalizations</key><array><string>en</string><string>ar</string></array>
+                    """.trimIndent()
+                }
+            }
+            windows {
+                perUserInstall = true
+                menuGroup = "Parlor"
+                shortcut = true
+                upgradeUuid = "fd36ca1f-9707-486a-8104-22b16cb475a6"
+            }
+            linux {
+                packageName = "parlor"
+                menuGroup = "Game"
+            }
         }
     }
 }
