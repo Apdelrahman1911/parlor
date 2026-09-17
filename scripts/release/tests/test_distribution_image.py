@@ -229,6 +229,56 @@ class NativeEquivalenceTest(unittest.TestCase):
 
 
 class DistributionMetadataTest(unittest.TestCase):
+    def test_installer_generated_metadata_is_bound_before_packaging_not_ignored_afterward(self):
+        for platform, relative, expected in (
+                ("windows-x64", "app/.package", b"Parlor"),
+                ("linux-x64", "share/doc/copyright", (packages.LINUX_RESOURCES / "copyright").read_bytes())):
+            with self.subTest(platform=platform), tempfile.TemporaryDirectory() as temporary:
+                root = Path(temporary)
+                app = root / "app-image"
+                app.mkdir()
+                records = packages.prepare_installer_metadata(app, platform)
+                self.assertEqual(records, [{"path": relative, "sha256": hashlib.sha256(expected).hexdigest()}])
+                self.assertEqual((app / relative).read_bytes(), expected)
+                shutil.copytree(app, root / "installed")
+                image.require_same_image(app, root / "installed")
+                (root / "installed" / relative).write_bytes(b"changed installer metadata")
+                with self.assertRaisesRegex(RuntimeError, "Installed payload"):
+                    image.require_same_image(app, root / "installed")
+                (app / relative).write_bytes(b"must not overwrite a conflicting input")
+                with self.assertRaisesRegex(RuntimeError, "Pre-existing installer metadata"):
+                    packages.prepare_installer_metadata(app, platform)
+                (app / relative).unlink()
+                (app / relative).symlink_to(root / "outside")
+                with self.assertRaisesRegex(RuntimeError, "Redirected installer metadata"):
+                    packages.prepare_installer_metadata(app, platform)
+                (app / relative).unlink()
+                parent = (app / relative).parent
+                parent.rmdir()
+                parent.symlink_to(root / "outside-directory")
+                with self.assertRaisesRegex(RuntimeError, "Redirected installer metadata directory"):
+                    packages.prepare_installer_metadata(app, platform)
+
+    def test_linux_packager_uses_the_same_reviewed_copyright_resource(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            app, work = root / "app", root / "work"
+            app.mkdir()
+            work.mkdir()
+            commands = []
+
+            def native(command, **kwargs):
+                commands.append(command)
+                output = Path(command[command.index("--dest") + 1])
+                (output / "fixture.deb").write_bytes(b"synthetic package")
+
+            with patch.object(packages, "image_path", return_value=app), patch.object(packages, "WORK", work), \
+                    patch.object(packages, "OUT", root), patch.object(packages, "java_tool", return_value="jpackage"), \
+                    patch.object(packages, "run", side_effect=native):
+                packages.package("linux-x64")
+            self.assertEqual(len(commands), 1)
+            self.assertEqual(commands[0][commands[0].index("--resource-dir") + 1], str(packages.LINUX_RESOURCES))
+
     def test_mac_only_fresh_unsigned_intel_or_valid_adhoc_image_can_be_prepared(self):
         with tempfile.TemporaryDirectory() as temporary:
             app = Path(temporary) / "Parlor.app"

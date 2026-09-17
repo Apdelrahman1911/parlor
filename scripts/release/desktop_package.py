@@ -26,6 +26,7 @@ from scripts.verification.android_release_artifacts import inspect_manifest
 
 WORK = OUT / "work"
 WINDOWS_UPGRADE_UUID = "fd36ca1f-9707-486a-8104-22b16cb475a6"
+LINUX_RESOURCES = ROOT / "config/github-distribution/linux"
 
 
 def check_host(platform: str) -> None:
@@ -80,13 +81,48 @@ def prepare_image(image: Path, platform: str) -> None:
         localize_mac(image)
     native = prepare_skiko(image, platform)
     notices = materialize_linux_runtime_notices(image, platform)
+    metadata = prepare_installer_metadata(image, platform)
     if platform.startswith("macos-"):
         run(["codesign", "--force", "--sign", "-", str(image)])
         run(["codesign", "--verify", "--strict", str(image)])
     verify_no_embedded_native(image)
     (OUT / "prepared-image.json").write_bytes(canonical({
-        "platform": platform, "native": native, "runtime_notices": notices, "image_sha256": inventory_digest(image),
+        "platform": platform, "native": native, "runtime_notices": notices, "installer_metadata": metadata,
+        "image_sha256": inventory_digest(image),
     }))
+
+
+def prepare_installer_metadata(image: Path, platform: str) -> list[dict]:
+    """Bind jpackage's installed-only metadata BEFORE comparing/hashing images.
+
+    Windows PackageFile writes the UTF-8 application name without a newline.
+    Debian's copyright resource is overridden with the same reviewed bytes in
+    the source image. Neither file is excluded from installed-image equality.
+    """
+    if platform == "windows-x64":
+        relative, content = "app/.package", b"Parlor"
+    elif platform == "linux-x64":
+        source = LINUX_RESOURCES / "copyright"
+        require(source.is_file() and not source.is_symlink() and 0 < source.stat().st_size <= 64 * 1024,
+                "Missing or invalid reviewed Debian copyright metadata")
+        relative, content = "share/doc/copyright", source.read_bytes()
+    else:
+        return []
+    require(image.is_dir() and not image.is_symlink(), "Invalid installer metadata image")
+    path = image / relative
+    for part in (path.parent, *path.parent.parents):
+        if part == image:
+            break
+        require(not part.is_symlink(), "Redirected installer metadata directory")
+    path.parent.mkdir(parents=True, exist_ok=True)
+    require(not path.is_symlink(), "Redirected installer metadata")
+    if path.exists():
+        require(path.is_file() and path.stat().st_size == len(content) and path.read_bytes() == content,
+                "Pre-existing installer metadata differs from reviewed bytes")
+    else:
+        with path.open("xb") as output:
+            output.write(content)
+    return [{"path": relative, "sha256": digest(path)}]
 
 
 def require_mac_rehearsal_image(image: Path, platform: str) -> None:
@@ -188,7 +224,8 @@ def package(platform: str) -> Path:
         if platform.startswith("windows-"):
             command += ["--win-per-user-install", "--win-menu", "--win-shortcut", "--win-upgrade-uuid", WINDOWS_UPGRADE_UUID]
         else:
-            command += ["--linux-package-name", "parlor", "--linux-app-category", "Game", "--linux-app-release", str(version()["build"])]
+            command += ["--linux-package-name", "parlor", "--linux-app-category", "Game", "--linux-app-release", str(version()["build"]),
+                        "--resource-dir", str(LINUX_RESOURCES)]
         run(command, timeout=600)
         files = list(output.glob(f"*.{PLATFORMS[platform]}"))
         require(len(files) == 1, "Expected one native installer")

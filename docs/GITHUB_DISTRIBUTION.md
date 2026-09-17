@@ -38,6 +38,12 @@ their exact bytes before hashing. The installed-image comparison still requires
 every file to match; it never ignores native code or silently accepts a mismatch.
 Temporary DMG staging (including the `/Applications` link) is retired on success
 and failure, so later repository scans cannot traverse installed applications.
+Installer-only metadata is also staged **before** image verification: Windows'
+`app/.package` contains exactly `Parlor`, and Debian's `share/doc/copyright`
+uses the same reviewed `config/github-distribution/linux/copyright` resource
+passed to `jpackage`. Both remain in the full installed-image comparison.
+The copyright metadata points to original notices; it grants no new application
+licence and does not replace the owner's redistribution/legal acceptance gate.
 
 `desktop_package.py` probes the **packaged** launcher with
 `--verify-distribution`: JDK version, AES-GCM, the EC provider and native Skia.
