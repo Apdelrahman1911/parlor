@@ -185,14 +185,15 @@ cannot revive a room or extend the host's 120-second disconnected-seat grace.
 Explicit Leave permanently deletes it; transient disconnect, backgrounding,
 and peer process death preserve it. Host process death destroys the room.
 
-While a required seat is offline, gameplay is blocked and the host gets an
-explicit, confirmation-gated "continue without" action; the same lifecycle
-action fires when the grace period expires. Its pending timer is cancelled
-atomically when the host decides or the peer returns. Whodunit and Mafia end
-an active game and reveal its result rather than silently removing a secret
-role. Egyptian Dominoes, Ghamza and Word Impostor abort an incomplete round
-without revealing unfinished secrets or awarding points. Each binding owns
-its game-specific terminal policy. There is no host migration,
+While a required seat is offline, gameplay is blocked. Terminal controls are
+binding-specific: existing game bindings may offer a confirmation-gated
+"continue without" action; the additional multiplayer-only bindings offer
+Host Leave or the automatic 120-second expiry, not a continue-without button.
+Pending expiry is cancelled atomically when the peer returns or the room ends.
+Whodunit and Mafia end an active game and reveal its result rather than silently
+removing a secret role. Egyptian Dominoes, Ghamza and Word Impostor abort an
+incomplete round without revealing unfinished secrets or awarding points.
+Each binding owns its game-specific terminal policy. There is no host migration,
 spectator role, public-internet rendezvous, NAT traversal, relay, or backend
 identity. Host loss after the grace period is terminal.
 

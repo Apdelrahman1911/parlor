@@ -133,47 +133,8 @@ internal fun PlayModePickerScreen(
                 backContentDescription = stringResource(Res.string.setup_back_description),
             )
 
-            TopologyHeading(stringResource(Res.string.setup_one_device_label))
-            if (availability.solo) {
-                SoloOptionCard(
-                    availability = availability,
-                    playerCounts = model.supportedPlayerCounts,
-                    onClick = { onModeSelected(PlayMode.Solo) },
-                )
-            }
-            SetupOptionCard(
-                icon = SetupIcon.PassAndPlay,
-                title = stringResource(Res.string.playmode_passandplay_title),
-                body = stringResource(Res.string.playmode_passandplay_body),
-                meta = if (
-                    model.supportedPlayerCounts.first == model.supportedPlayerCounts.last
-                ) {
-                    stringResource(
-                        Res.string.playmode_passandplay_meta_exact,
-                        model.supportedPlayerCounts.first,
-                    )
-                } else {
-                    stringResource(
-                        Res.string.playmode_passandplay_meta,
-                        model.supportedPlayerCounts.first,
-                        model.supportedPlayerCounts.last,
-                    )
-                },
-                contentDescription = stringResource(
-                    Res.string.playmode_passandplay_choose_description,
-                ),
-                onClick = { onModeSelected(PlayMode.PassAndPlay) },
-                modifier = Modifier.fillMaxWidth(),
-                enabled = availability.passAndPlay,
-                disabledHint = stringResource(Res.string.setup_mode_unavailable),
-                emphasized = true,
-            )
-            if (!availability.solo) {
-                SoloOptionCard(
-                    availability = availability,
-                    playerCounts = model.supportedPlayerCounts,
-                    onClick = { onModeSelected(PlayMode.Solo) },
-                )
+            if (availability.solo || availability.passAndPlay) {
+                LocalPlayOptions(model, onModeSelected)
             }
 
             TopologyHeading(stringResource(Res.string.setup_each_device_label))
@@ -212,6 +173,46 @@ internal fun PlayModePickerScreen(
                 color = ParlorTheme.colors.textTertiary,
             )
         }
+    }
+}
+
+@Composable
+private fun LocalPlayOptions(model: PlayModePickerModel, onModeSelected: (PlayMode) -> Unit) {
+    val availability = model.availability
+    TopologyHeading(stringResource(Res.string.setup_one_device_label))
+    if (availability.solo) {
+        SoloOptionCard(
+            availability = availability,
+            playerCounts = model.supportedPlayerCounts,
+            onClick = { onModeSelected(PlayMode.Solo) },
+        )
+    }
+    SetupOptionCard(
+        icon = SetupIcon.PassAndPlay,
+        title = stringResource(Res.string.playmode_passandplay_title),
+        body = stringResource(Res.string.playmode_passandplay_body),
+        meta = if (model.supportedPlayerCounts.first == model.supportedPlayerCounts.last) {
+            stringResource(Res.string.playmode_passandplay_meta_exact, model.supportedPlayerCounts.first)
+        } else {
+            stringResource(
+                Res.string.playmode_passandplay_meta,
+                model.supportedPlayerCounts.first,
+                model.supportedPlayerCounts.last,
+            )
+        },
+        contentDescription = stringResource(Res.string.playmode_passandplay_choose_description),
+        onClick = { onModeSelected(PlayMode.PassAndPlay) },
+        modifier = Modifier.fillMaxWidth(),
+        enabled = availability.passAndPlay,
+        disabledHint = stringResource(Res.string.setup_mode_unavailable),
+        emphasized = true,
+    )
+    if (!availability.solo) {
+        SoloOptionCard(
+            availability = availability,
+            playerCounts = model.supportedPlayerCounts,
+            onClick = { onModeSelected(PlayMode.Solo) },
+        )
     }
 }
 
