@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import copy
 import hashlib
+import io
 import json
 import os
 from pathlib import Path
@@ -298,6 +299,38 @@ class DistributionAuthorityTest(unittest.TestCase):
         api.download.side_effect = lambda path, dest, maximum: dest.write_bytes(b"wrong archive")
         with tempfile.TemporaryDirectory() as temporary, self.assertRaisesRegex(RuntimeError, "archive digest"):
             dist.fetch_artifact(api, 42, "wanted", Path(temporary) / "out", {"a"})
+
+
+class DistributionDownloadTest(unittest.TestCase):
+    def test_actions_redirect_and_release_binary_routes_negotiate_the_correct_media_types(self):
+        routes = {"/actions/artifacts/123/zip": "application/vnd.github+json",
+                  "/releases/assets/456": "application/octet-stream"}
+        for route, accept in routes.items():
+            with self.subTest(route=route), tempfile.TemporaryDirectory() as temporary:
+                output = Path(temporary) / "binary"
+                opener = Mock()
+                opener.open.return_value = io.BytesIO(b"synthetic bounded binary")
+                with patch.dict(os.environ, {"GH_TOKEN": "synthetic-test-token"}, clear=True), \
+                        patch.object(dist.release_tool, "github_opener", return_value=opener):
+                    dist.GitHub().download(route, output, 64)
+                request = opener.open.call_args.args[0]
+                self.assertEqual(request.get_header("Accept"), accept)
+                self.assertEqual(request.full_url, f"https://api.github.com/repos/{dist.REPOSITORY}{route}")
+                self.assertEqual(request.get_header("X-github-api-version"), "2022-11-28")
+                self.assertEqual(output.read_bytes(), b"synthetic bounded binary")
+
+    def test_unknown_download_routes_fail_before_network_access_and_streams_remain_bounded(self):
+        with tempfile.TemporaryDirectory() as temporary, patch.dict(os.environ, {"GH_TOKEN": "synthetic-test-token"}, clear=True):
+            output = Path(temporary) / "binary"
+            api = dist.GitHub()
+            with patch.object(dist.release_tool, "github_opener") as factory:
+                for route in ("/actions/artifacts/0/zip", "/releases", "/releases/assets/1?token=fixture", "https://elsewhere.invalid"):
+                    with self.assertRaisesRegex(RuntimeError, "Invalid download API path"):
+                        api.download(route, output)
+                factory.assert_not_called()
+                factory.return_value.open.return_value = io.BytesIO(b"overlarge synthetic binary")
+                with self.assertRaisesRegex(RuntimeError, "Download exceeds its bound"):
+                    api.download("/actions/artifacts/1/zip", output, 4)
 
 
 class DistributionPublicationTest(unittest.TestCase):

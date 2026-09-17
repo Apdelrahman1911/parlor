@@ -193,10 +193,19 @@ class GitHub:
         return page["artifacts"]
 
     def download(self, path: str, destination: Path, maximum: int = MAX_FILE) -> None:
-        require(path.startswith("/") and ".." not in path, "Invalid download API path")
+        # Actions' ZIP endpoint negotiates JSON before its signed redirect;
+        # Release assets require octet-stream instead of their JSON descriptor.
+        # Keep a closed route list so a generic header cannot break either hop.
+        if re.fullmatch(r"/actions/artifacts/[1-9][0-9]*/zip", path):
+            accept = "application/vnd.github+json"
+        elif re.fullmatch(r"/releases/assets/[1-9][0-9]*", path):
+            accept = "application/octet-stream"
+        else:
+            raise RuntimeError("Invalid download API path")
         require(not destination.exists(), "Refusing to overwrite download")
         url = f"https://api.github.com/repos/{REPOSITORY}{path}"
-        request = urllib.request.Request(url, headers={"Authorization": f"Bearer {self.token}", "Accept": "application/octet-stream"})
+        request = urllib.request.Request(url, headers={"Authorization": f"Bearer {self.token}", "Accept": accept,
+                                                      "X-GitHub-Api-Version": "2022-11-28"})
         try:
             with release_tool.github_opener().open(request, timeout=180) as response, destination.open("xb") as output:
                 total = 0
@@ -207,7 +216,11 @@ class GitHub:
                     total += len(block)
                     require(total <= maximum, "Download exceeds its bound")
                     output.write(block)
-        except (urllib.error.HTTPError, urllib.error.URLError):
+        except urllib.error.HTTPError as error:
+            code = error.code
+            error.close()
+            raise RuntimeError(f"GitHub download failed (HTTP {code}); private redirect details withheld") from None
+        except urllib.error.URLError:
             raise RuntimeError("GitHub download failed") from None
 
     def upload(self, release_id: int, path: Path) -> None:
