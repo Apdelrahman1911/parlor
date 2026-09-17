@@ -52,7 +52,10 @@ class MainActivityColdStartTest : InstrumentationTestCase() {
                     } finally {
                         output.close()
                     }
-                } catch (failure: Throwable) {
+                } catch (@Suppress("TooGenericExceptionCaught") failure: Throwable) {
+                    // This is a plain test worker, not a coroutine boundary.
+                    // Relay every worker failure (including assertions) to the
+                    // instrumentation thread below; never turn it into success.
                     settingsWriterFailure.set(failure)
                 } finally {
                     settingsWriterFinished.countDown()
