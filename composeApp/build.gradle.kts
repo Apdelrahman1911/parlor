@@ -100,6 +100,15 @@ check(!releaseSigningRequired || releaseSigningConfigured) {
     "MOBILE_RELEASE_REQUIRE_SIGNING=true, but Android release signing is not fully configured."
 }
 
+// White-box navigation tests need the unoptimized internal API. Keep them in
+// a separate mandatory runtime lane instead of retaining test-only entry
+// points (or disabling R8 optimization) in the actual Store artifact.
+val androidRuntimeTestVariant = providers.gradleProperty("parlor.androidRuntimeTestVariant")
+    .getOrElse("release")
+require(androidRuntimeTestVariant in setOf("debug", "release")) {
+    "parlor.androidRuntimeTestVariant must be debug or release"
+}
+
 kotlin {
     androidTarget {
         compilerOptions {
@@ -160,6 +169,15 @@ kotlin {
         androidMain.dependencies {
             implementation(libs.koin.android)
             implementation(libs.androidx.activity.compose)
+        }
+        androidInstrumentedTest {
+            kotlin.srcDir(
+                if (androidRuntimeTestVariant == "debug") {
+                    "src/androidNavigationRuntimeTest/kotlin"
+                } else {
+                    "src/androidReleaseRuntimeTest/kotlin"
+                },
+            )
         }
         androidInstrumentedTest.dependencies {
             // InstrumentationTestCase is supplied by the platform's
@@ -312,7 +330,9 @@ android {
         // KMP owns the androidInstrumentedTest hierarchy, while AGP's Java
         // compiler reads androidTest. Point it at the shared KMP layout so the
         // platform-only smoke test is packaged in the test APK.
-        getByName("androidTest").java.srcDir("src/androidInstrumentedTest/java")
+        if (androidRuntimeTestVariant == "release") {
+            getByName("androidTest").java.srcDir("src/androidInstrumentedTest/java")
+        }
     }
 
     lint {
@@ -323,13 +343,19 @@ android {
     // Exercise the same R8-shrunk variant that is submitted to the Store. CI
     // supplies an ephemeral, non-production signing key only for installation
     // on this disposable managed device; normal release builds remain unsigned.
-    testBuildType = "release"
+    testBuildType = androidRuntimeTestVariant
     testOptions {
         managedDevices {
             localDevices {
                 create("pixel2Api35") {
                     device = "Pixel 2"
                     apiLevel = 35
+                    systemImageSource = "google"
+                    require64Bit = true
+                }
+                create("pixel2Api34") {
+                    device = "Pixel 2"
+                    apiLevel = 34
                     systemImageSource = "google"
                     require64Bit = true
                 }

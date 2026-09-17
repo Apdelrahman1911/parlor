@@ -1240,6 +1240,11 @@ def verify_android_runtime_script() -> None:
     )
     required = (
         "productionAndroidRuntimeCheck",
+        "-Pparlor.androidRuntimeTestVariant=release",
+        "productionAndroidNavigationRuntimeCheck",
+        "-Pparlor.androidRuntimeTestVariant=debug",
+        '"${navigation_command[@]}"',
+        "android-navigation-device-supervision.json",
         "--dependency-verification=strict",
         "--no-daemon",
         "--max-workers=2",

@@ -8,6 +8,8 @@ import com.parlor.core.ids.SessionId
 /**
  * Run on Android below API 35: JDK 21 unit tests cannot detect calls to the
  * newer java.util.List.removeLast member emitted for NavBackStack on Android.
+ * CI runs these internal-API assertions against Debug on API 34, alongside
+ * (not instead of) the black-box smoke tests of the fully optimized Release.
  * All routes and launches are synthetic; this test never reads or resets saves.
  */
 @Suppress("DEPRECATION")

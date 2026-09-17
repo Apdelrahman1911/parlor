@@ -216,11 +216,13 @@ final class IOSAppLaunchUITests: XCTestCase {
         // XCUI's Keyboard frame excludes the native prediction row. Include
         // its full-width sibling touching the keys, using geometry rather than
         // reading prediction text or relying on an English accessibility label.
-        let adjacentRows = app.otherElements.allElementsBoundByIndex.map(\.frame).filter { frame in
-            abs(frame.minX - keys.minX) <= 1 && abs(frame.width - keys.width) <= 1
-                && abs(frame.maxY - keys.minY) <= 1
-                && frame.height > 0 && frame.height < keys.height / 2
+        let frames: [CGRect] = app.otherElements.allElementsBoundByIndex.map { $0.frame }
+        let adjacentRows: [CGRect] = frames.filter { frame in
+            let aligned = abs(frame.minX - keys.minX) <= 1 && abs(frame.width - keys.width) <= 1
+            let touching = abs(frame.maxY - keys.minY) <= 1
+            let accessoryHeight = frame.height > 0 && frame.height < keys.height / 2
+            return aligned && touching && accessoryHeight
         }
-        return adjacentRows.map(\.minY).min() ?? keys.minY
+        return adjacentRows.map { $0.minY }.min() ?? keys.minY
     }
 }
