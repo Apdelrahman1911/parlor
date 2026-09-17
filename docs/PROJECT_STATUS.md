@@ -26,9 +26,44 @@ Egyptian Dominoes, Ghamza and Word Impostor are implemented on `feat/last-light`
 not merged into `main`. Their rules, research, code/module map, privacy and
 recovery contracts are in [the integration guide](THREE_GAMES_INTEGRATION.md).
 They reuse protocol 4.2 and the existing P2pKit/start/rejoin infrastructure.
-Focused domain, coordinator, UI, localization and static checks have passed
-locally; full platform qualification is recorded separately when completed.
-The earlier Last Light run does **not** qualify these additional games.
+
+Local verification checkpoint: **`f8af3236862825874204510c91d2b07ffe12bbbc`**,
+tree `ff5d001a5939612aa4f5f62a824671a89157d1c4`. Tracked files were unchanged
+through verification; unrelated untracked user evidence was preserved. JDK 21,
+the wrapper and strict dependency verification were used throughout.
+
+| Local gate | Result at that checkpoint |
+|---|---|
+| Focused games/app/design-system/transport tests; application identities; shell dispatch | PASS |
+| `productionCheck allTests` | PASS; Detekt/type-aware analysis, lint, R8, Android/desktop tests and release-system validation included |
+| `productionAppleCheck` | PASS; all three iOS Release framework architectures and Apple static analysis |
+| `productionIosSimulatorRuntimeTests` | PASS; executable ARM64 KMP Simulator tests, not x64 runtime on this ARM Mac |
+| Swift host/native Debug tests | **10 PASS / 0 FAIL / 0 SKIP**; all new-game setup paths in EN/AR plus existing keyboard/host regressions |
+| Android unsigned Release AAB/package/notices | PASS |
+| Unsigned iOS Simulator Release Swift wrapper/package/notices | PASS; linkage/package evidence, not physical or signed Release runtime |
+
+JUnit receipts contain 1,653 Desktop tests (three existing skips), 618 iOS
+Simulator tests, and 592 Android unit tests per Debug/Release variant, with
+zero failures/errors. These are platform-repeated receipts, not unique behavior
+counts; unchanged inputs may reuse Gradle's up-to-date test results. Local Apple
+checks used **Xcode 26.5 / 17F42**, not the qualified CI **26.3 / 17C529**.
+
+The earlier [three-game CI run](https://github.com/Apdelrahman1911/parlor/actions/runs/35207811517)
+exposed unsupported local-mode UI and native text-observation failures. Local
+native failures also exposed an incorrect test assumption that Home resets its
+catalog scroll after Back. The corrected tests require the full typed value and
+the restored catalog; they do not reset navigation or relax the expected text.
+Failed runs and rejected package-inspector invocations remain preserved beside
+their corrected receipts. Inspector argument corrections changed no release gate.
+
+Detailed local evidence is retained at
+`.git/agent-custody/three-games-2026-09-17/checkpoint-f8af3236/`, which is not part
+of a fresh clone. For later source, consult the
+[validation-only workflow runs](https://github.com/Apdelrahman1911/parlor/actions/workflows/production-verification.yml?query=branch%3Afeat%2Flast-light)
+and match the run's exact source SHA; this checkpoint and the earlier Last Light
+run do **not** automatically qualify newer commits. The
+[physical-device matrix](THREE_GAMES_INTEGRATION.md#physical-device-acceptance-matrix)
+remains unexecuted, not waived.
 
 ### Earlier readiness checkpoint
 
@@ -85,7 +120,7 @@ do not override this checkpoint.
 
 ## Continuing work safely
 
-Continue the three-game implementation on `feat/last-light`; do not merge it
+Keep the three-game implementation and qualification on `feat/last-light`; do not merge it
 without a separate reviewed qualification and authorization. For unrelated work,
 branch from `main`. Retain `fix/local-readiness-2026-09-07`: focused diagnostic
 ownership guards still require that exact branch. Create fresh source/control

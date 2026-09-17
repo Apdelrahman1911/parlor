@@ -199,3 +199,28 @@ evidence, not this command list. Unattended tests do not certify physical
 Android↔iOS LAN play, social play, touch/gesture quality or Store readiness.
 The existing [release gates](RELEASE_GATES.md), unresolved strict-protection
 finding and disabled publishing workflows remain unchanged.
+
+## Physical-device acceptance matrix
+
+**Not executed for this implementation.** Automated coordinator tests and owned
+Simulator UI tests do not replace these checks. At the local verification
+checkpoint, `adb devices -l` reported no attached Android. The release owner
+needs consenting testers and a same-LAN Android/iOS device group. Use synthetic
+names and never capture hidden roles, words, votes, credentials or real saves
+in shared diagnostics. Record source SHA, build identity, devices/OS versions,
+locale, expected/actual result and non-private evidence for every row.
+
+| Check | Required device exercise | Status |
+|---|---|---|
+| Bidirectional LAN | Android host → iOS peers, then iOS host → Android peers; each game at minimum and maximum seats. Wrong-game room codes and joins after Start must be rejected. | NOT TESTED |
+| Dominoes table | 2/3/4 seats; Draw and Block; both chain ends, doubles, ordered draws, exhausted stock, blocked hands, scoring, rematch and synchronized placement flights. | NOT TESTED |
+| Ghamza social play | 3–12 seats; 1/2/3 attempts; reveal/hide/readiness; cancel/confirm physical-wink reports, rapid simultaneous reports, elimination, correct/incorrect final guess and multi-round scores. | NOT TESTED |
+| Word Impostor | 3/5/7/12 seats and supported 1/2/3-impostor settings; every topic; private word/team, unique question cycle, free discussion, sealed votes/ties, five-choice individual guesses, scoring/rematch. | NOT TESTED |
+| Interruption/rejoin | Background or lock host/peer for 1/10/15/30 seconds; interrupt Wi-Fi, return before the 120-second deadline and verify unchanged state plus re-covered secrets. The 15-second retention window is best-effort, not an OS guarantee. | NOT TESTED |
+| Terminal loss | Explicit Leave, expired required seat (including an eliminated participant), host exit and host process death. No unfinished secret reveal, new points, late seat replacement or authority migration. | NOT TESTED |
+| Native permissions | Deny/re-enable local-network permission and return from App Settings on both platforms; retry the real room operation without bypassing permission or admission checks. | NOT TESTED |
+| UI/accessibility | English/LTR and Arabic/RTL, mixed-direction names, compact/tablet layouts, large text, VoiceOver/TalkBack, haptics and reduced motion. Check iPhone/iPad edge gestures, Android predictive Back and guarded Leave without exposing covered private content. | NOT TESTED |
+
+Resume-list deletion remains [issue #253](https://github.com/Apdelrahman1911/parlor/issues/253),
+not a data-deletion change in these games. This matrix does not waive the
+existing Strict Complete Protection, signing, editorial or Store-release gates.
