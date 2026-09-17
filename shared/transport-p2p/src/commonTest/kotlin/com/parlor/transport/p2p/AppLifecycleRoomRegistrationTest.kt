@@ -20,7 +20,7 @@ import kotlin.test.assertTrue
 class AppLifecycleRoomRegistrationTest {
     @Test
     fun cancelledRegistrationDetachesBeforeQueuedForeground() = runTest {
-        val coordinator = AppLifecycleRoomCoordinator()
+        val coordinator = AppLifecycleRoomCoordinator(backgroundScope, nowMillis = { testScheduler.currentTime })
         val entered = CompletableDeferred<Unit>()
         val release = CompletableDeferred<Unit>()
         val abandoned = RegistrationRoom {
@@ -58,7 +58,7 @@ class AppLifecycleRoomRegistrationTest {
     @Test
     fun failedRegistrationDetachesBeforeQueuedForeground() = runTest {
         supervisorScope {
-            val coordinator = AppLifecycleRoomCoordinator()
+            val coordinator = AppLifecycleRoomCoordinator(backgroundScope, nowMillis = { testScheduler.currentTime })
             val entered = CompletableDeferred<Unit>()
             val release = CompletableDeferred<Unit>()
             val abandoned = RegistrationRoom {
@@ -89,7 +89,7 @@ class AppLifecycleRoomRegistrationTest {
 
     @Test
     fun cancellationBeforeRegistrationLockDoesNotDetachExistingRoom() = runTest {
-        val coordinator = AppLifecycleRoomCoordinator()
+        val coordinator = AppLifecycleRoomCoordinator(backgroundScope, nowMillis = { testScheduler.currentTime })
         val entered = CompletableDeferred<Unit>()
         val release = CompletableDeferred<Unit>()
         val existing = RegistrationRoom {

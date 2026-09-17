@@ -2824,10 +2824,8 @@ class P2pKitRoomTransportLifecycleTest {
      *
      * The test sets `lastSeen` an hour into the past and asserts the
      * join attempt times out, never invokes `connect`, and tears the
-     * kit back down. (`connectHandler` is left null; if the freshness
-     * gate fails and connect() is reached, the default `error("not
-     * exercised")` would surface as a `TransportFailure`, which the
-     * Timeout assertion below would catch.)
+     * kit back down. Count dials explicitly: a swallowed dial exception
+     * would also eventually produce Timeout and must not hide a bypass.
      */
     @Test
     fun join_rejects_stale_peer_whose_last_seen_is_too_old() = runBlocking {
@@ -2852,11 +2850,17 @@ class P2pKitRoomTransportLifecycleTest {
         val nowMs = kotlin.time.Clock.System.now().toEpochMilliseconds()
         kit.lastSeenByPeer[staleHost.id] = nowMs - 3_600_000L
         kit.peersFlow.value = listOf(staleHost)
+        var attempts = 0
+        kit.connectHandler = {
+            attempts += 1
+            error("stale observation must not be dialed")
+        }
 
         val result = transport.join("ABCDEF", "Alice")
 
         assertThat(result).isInstanceOf(Result.Failure::class)
         assertThat((result as Result.Failure).error).isEqualTo(NetError.Timeout)
+        assertThat(attempts).isEqualTo(0)
         assertThat(kit.stopCalls).isEqualTo(1)
     }
 
@@ -3313,9 +3317,22 @@ class P2pKitRoomTransportLifecycleTest {
                 }
             }
         }
+        var attempts = 0
         val kit = FakeP2pKit(P2pPeerId(credential.playerId)).apply {
-            peersFlow.value = listOf(hostPeer)
-            connectHandler = { session }
+            startDiscoveryHandler = {
+                lastSeenByPeer[hostPeer.id] = kotlin.time.Clock.System.now().toEpochMilliseconds()
+                peersFlow.value = listOf(hostPeer)
+            }
+            connectHandler = {
+                attempts += 1
+                if (attempts == 1) {
+                    // Resume must retain the same native observation too,
+                    // without losing its stored authenticated-host pin.
+                    kotlinx.coroutines.delay(600L)
+                    error("injected transient resume dial failure")
+                }
+                session
+            }
         }
         val transport = P2pKitRoomTransport(
             appId = AppId("com.parlor.test"),
@@ -3325,10 +3342,13 @@ class P2pKitRoomTransportLifecycleTest {
                 override suspend fun createKit(appId: AppId, deviceName: String): P2pKit = kit
             },
             secureStorage = secureStorage,
+            peerFreshnessWindowMs = 500L,
         )
 
-        assertThat(transport.resumeLastSession())
+        assertThat(withTimeout(3_000L) { transport.resumeLastSession() })
             .isEqualTo(Result.Failure(NetError.RejoinExpired))
+        assertThat(attempts).isEqualTo(2)
+        assertThat(kit.lastExpectedFingerprint).isEqualTo(PeerFingerprint(credential.hostFingerprint))
         assertThat(store.loadResumeCandidate()).isEqualTo(Result.Success(null))
         assertThat(kit.stopCalls).isEqualTo(1)
     }
@@ -3785,6 +3805,97 @@ class P2pKitRoomTransportLifecycleTest {
 
         assertThat(transport.join("ABCDEF", "Alice")).isInstanceOf(Result.Success::class)
         assertThat(attempts).isEqualTo(3)
+    }
+
+    @Test
+    fun join_retries_a_current_bonjour_observation_without_timestamp_heartbeats() = runBlocking {
+        val kit = FakeP2pKit(P2pPeerId("self-pid"))
+        val hostPeer = peer("live-host", "${P2pKitRoomTransport.P2P_ROOM_PREFIX}Host")
+        val session = FakeP2pSession(hostPeer)
+        val offer = testCredentialOffer(PlayerId("self-pid"), hostPeer.id.value)
+        session.sendHandler = { message ->
+            when ((message as? P2pMessage.Binary)?.let { codec.decode(it.bytes) }) {
+                is PeerMessage.AdmissionRequest -> session.incomingFlow.emit(
+                    P2pMessage.Binary(codec.encode(HostMessage.AdmissionOffered(offer, "Host"))),
+                )
+                is PeerMessage.AdmissionConfirmed -> session.incomingFlow.emit(
+                    P2pMessage.Binary(
+                        codec.encode(
+                            HostMessage.AdmissionCommitted(
+                                offer.playerId,
+                                offer.offerId,
+                                offer.generation,
+                            ),
+                        ),
+                    ),
+                )
+                else -> Unit
+            }
+        }
+        kit.startDiscoveryHandler = {
+            kit.lastSeenByPeer[hostPeer.id] = kotlin.time.Clock.System.now().toEpochMilliseconds()
+            kit.peersFlow.value = listOf(hostPeer)
+        }
+        var attempts = 0
+        kit.connectHandler = {
+            attempts += 1
+            if (attempts == 1) {
+                // rc3 native Bonjour keeps this observation until Lost; it
+                // does not refresh lastSeen on a heartbeat. Model a dial
+                // that outlasts the initial-observation freshness window.
+                kotlinx.coroutines.delay(600L)
+                error("injected transient dial failure")
+            }
+            session
+        }
+        val transport = P2pKitRoomTransport(
+            appId = AppId("com.parlor.test"),
+            deviceName = "self-device",
+            scope = testScope,
+            kitFactory = object : P2pKitFactory {
+                override suspend fun createKit(appId: AppId, deviceName: String): P2pKit = kit
+            },
+            secureStorage = testSecureStorage(),
+            joinTimeoutMs = 3_000L,
+            peerFreshnessWindowMs = 500L,
+        )
+
+        val result = transport.join("ABCDEF", "Alice")
+
+        assertThat(result).isInstanceOf(Result.Success::class)
+        assertThat(attempts).isEqualTo(2)
+        assertThat(kit.callLog.count { it == "startDiscovery" }).isEqualTo(1)
+        (result as Result.Success).data.leave()
+        assertThat(kit.stopCalls).isEqualTo(1)
+    }
+
+    @Test
+    fun join_does_not_retry_a_bonjour_observation_removed_during_a_dial() = runBlocking {
+        val kit = FakeP2pKit(P2pPeerId("self-pid"))
+        val hostPeer = peer("live-host", "${P2pKitRoomTransport.P2P_ROOM_PREFIX}Host")
+        kit.startDiscoveryHandler = {
+            kit.lastSeenByPeer[hostPeer.id] = kotlin.time.Clock.System.now().toEpochMilliseconds()
+            kit.peersFlow.value = listOf(hostPeer)
+        }
+        var attempts = 0
+        kit.connectHandler = {
+            attempts += 1
+            kit.peersFlow.value = emptyList()
+            error("injected host disappearance during dial")
+        }
+        val transport = P2pKitRoomTransport(
+            appId = AppId("com.parlor.test"),
+            deviceName = "self-device",
+            scope = testScope,
+            kitFactory = object : P2pKitFactory {
+                override suspend fun createKit(appId: AppId, deviceName: String): P2pKit = kit
+            },
+            joinTimeoutMs = 1_000L,
+        )
+
+        assertThat(transport.join("ABCDEF", "Alice")).isEqualTo(Result.Failure(NetError.Timeout))
+        assertThat(attempts).isEqualTo(1)
+        assertThat(kit.stopCalls).isEqualTo(1)
     }
 
     @Test

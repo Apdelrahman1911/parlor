@@ -4,6 +4,9 @@ import com.parlor.app.shell.game.DefaultGameShellRegistry
 import com.parlor.app.shell.game.GameShellLaunch
 import com.parlor.app.shell.game.GameShellRouter
 import com.parlor.app.shell.game.MafiaGameShellBinding
+import com.parlor.app.shell.game.LastLightGameShellBinding
+import com.parlor.games.lastlight.LastLightDefinition
+import com.parlor.games.lastlight.LastLightIds
 import com.parlor.app.shell.game.WhodunitGameShellBinding
 import com.parlor.core.ids.GameId
 import com.parlor.games.mafia.MafiaDefinition
@@ -22,6 +25,7 @@ class MultiplayerRouteRestorationTest {
             listOf(
                 WhodunitGameShellBinding(WhodunitDefinition(json)),
                 MafiaGameShellBinding(MafiaDefinition(json)),
+                LastLightGameShellBinding(LastLightDefinition(json)),
             ),
         ),
     )
@@ -58,6 +62,26 @@ class MultiplayerRouteRestorationTest {
 
         assertEquals("Villager", launch.route.displayName)
         assertEquals(GameId("mafia"), router.bindingFor(launch)?.definition?.id)
+    }
+
+    @Test
+    fun lastLightRestoresHostAndResumedPeerWithoutCentralGameDispatch() {
+        val routes = listOf(
+            MultiplayerSessionRoute.host(LastLightIds.GameId, "Host"),
+            MultiplayerSessionRoute.peer(
+                gameId = LastLightIds.GameId,
+                displayName = "Peer",
+                roomCode = "",
+                resumeExistingSession = true,
+            ),
+        )
+        routes.forEach { route ->
+            val launch = assertIs<GameShellLaunch.RestoreOwnedMultiplayer>(router.restoreOwned(route))
+            assertEquals(route, launch.route)
+            assertEquals(LastLightIds.GameId, router.bindingFor(launch)?.definition?.id)
+        }
+        assertIs<GameShellLaunch.ResumeMultiplayer>(router.resumeMultiplayer(LastLightIds.GameId, 1, "Peer"))
+        assertNull(router.resumeMultiplayer(LastLightIds.GameId, 2, "Peer"))
     }
 
     @Test

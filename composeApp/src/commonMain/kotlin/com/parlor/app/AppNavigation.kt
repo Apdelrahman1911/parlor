@@ -141,7 +141,8 @@ internal class AppNavigator(initialGameLaunch: GameShellLaunch? = null) {
         if (currentRoute is AppRoute.Game) return AppNavigationMutation.RejectedActiveFlow
         val active = mutableBackStack(selectedState)
         if (active.size > 1) {
-            active.removeLast()
+            // removeLast can bind to the API 35 java.util.List member on Android.
+            active.removeAt(active.lastIndex)
             return AppNavigationMutation.Applied
         }
         if (selectedState == AppTopLevelDestination.Settings) {
@@ -155,7 +156,8 @@ internal class AppNavigator(initialGameLaunch: GameShellLaunch? = null) {
         activeGameLaunch?.takeIf { (activeRoute, _) -> activeRoute == route }?.second
 
     private fun resetGamesStack() {
-        while (gamesBackStack.size > 1) gamesBackStack.removeLast()
+        // Keep indexed removal here too: NavBackStack must work below Android API 35.
+        while (gamesBackStack.size > 1) gamesBackStack.removeAt(gamesBackStack.lastIndex)
         activeGameLaunch = null
     }
 

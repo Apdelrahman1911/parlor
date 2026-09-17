@@ -192,6 +192,28 @@ class ReleaseArtifactTest(unittest.TestCase):
         with self.assertRaisesRegex(RuntimeError, "unreviewed Compose"):
             artifacts.raw_resource_path("new-game/src/commonMain/composeResources/font/new.ttf")
 
+    def test_last_light_fonts_and_licenses_are_exact_namespace_and_byte_bound(self):
+        for suffix in sorted(artifacts.LAST_LIGHT_RAW):
+            relative = artifacts.LAST_LIGHT_ROOT + suffix
+            self.source_paths.append(relative)
+            packaged = artifacts.raw_resource_path(relative)
+            self.assertEqual("compose-resources/composeResources/com.parlor.games.lastlight.resources/" + suffix, packaged)
+            self.write(self.source, relative, b"synthetic reviewed resource")
+            path = self.write(self.app, packaged, b"synthetic reviewed resource")
+            self.assertEqual("PASS", self.inspect()["status"])
+            path.write_bytes(b"changed resource")
+            with self.assertRaisesRegex(RuntimeError, "Exact raw case/font bytes"):
+                self.inspect()
+            path.unlink()
+            with self.assertRaisesRegex(RuntimeError, "shipping Compose namespace"):
+                self.inspect()
+            path.write_bytes(b"synthetic reviewed resource")
+        self.assertEqual(8, len(self.inspect()["raw_resource_matches"]))
+
+    def test_unreviewed_last_light_font_is_not_silently_accepted(self):
+        with self.assertRaisesRegex(RuntimeError, "unreviewed resource name"):
+            artifacts.raw_resource_path(artifacts.LAST_LIGHT_ROOT + "font/unreviewed.ttf")
+
     def test_symlinked_package_or_resource_is_rejected(self):
         alias = self.root / "alias.app"
         alias.symlink_to(self.app, target_is_directory=True)

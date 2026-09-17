@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
@@ -38,6 +37,7 @@ import com.parlor.designsystem.components.ParlorCard
 import com.parlor.designsystem.components.ParlorIconButton
 import com.parlor.designsystem.components.ParlorIconButtonVariant
 import com.parlor.designsystem.icons.ParlorIcons
+import com.parlor.designsystem.components.parlorImePadding
 import com.parlor.designsystem.components.parlorSafeContentPadding
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.games.mafia.domain.settings.MafiaKillTie
@@ -120,7 +120,7 @@ fun MafiaSetupScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .imePadding()
+                .parlorImePadding()
                 .verticalScroll(rememberScrollState())
                 .parlorSafeContentPadding(ParlorTheme.spacing.xl),
             verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.l),

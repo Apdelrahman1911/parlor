@@ -11,7 +11,6 @@
 		7555FF82242A565B00829871 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7555FF81242A565B00829871 /* Assets.xcassets */; };
 		AB1D03C72B0E0FA8002A1234 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB1D03C62B0E0FA8002A1234 /* ContentView.swift */; };
 		A11C00012C00000100000004 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = A11C00012C00000100000001 /* PrivacyInfo.xcprivacy */; };
-		A11C00012C00000100000005 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = A11C00012C00000100000003 /* InfoPlist.strings */; };
 		B14500012C00000100000003 /* IOSAppLaunchUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B14500012C00000100000001 /* IOSAppLaunchUITests.swift */; };
 		D5C010012C00000100000002 /* ComposeContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5C010012C00000100000001 /* ComposeContainerViewController.swift */; };
 		D5C010012C00000100000003 /* ComposeContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5C010012C00000100000001 /* ComposeContainerViewController.swift */; };
@@ -144,6 +143,7 @@
 				F7AC9D762B0E10F7008B8A48 /* Compile Kotlin Framework */,
 				7555FF73242A565900829871 /* Sources */,
 				7555FF75242A565900829871 /* Resources */,
+				D15000012C00000100000001 /* Copy Localized App Metadata */,
 				7555FF74242A565900829871 /* Frameworks */,
 			);
 			buildRules = (
@@ -219,7 +219,6 @@
 			files = (
 				7555FF82242A565B00829871 /* Assets.xcassets in Resources */,
 				A11C00012C00000100000004 /* PrivacyInfo.xcprivacy in Resources */,
-				A11C00012C00000100000005 /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -233,6 +232,26 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		D15000012C00000100000001 /* Copy Localized App Metadata */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/scripts/copy_localized_metadata.sh",
+				"$(SRCROOT)/iosApp/en.lproj/InfoPlist.strings",
+				"$(SRCROOT)/iosApp/ar.lproj/InfoPlist.strings",
+			);
+			name = "Copy Localized App Metadata";
+			outputPaths = (
+				"$(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/en.lproj/InfoPlist.strings",
+				"$(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/ar.lproj/InfoPlist.strings",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/bin/sh \"$SRCROOT/scripts/copy_localized_metadata.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		F7AC9D762B0E10F7008B8A48 /* Compile Kotlin Framework */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
@@ -409,6 +428,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 058557BA273AAA24004C7B11 /* Config.xcconfig */;
 			buildSettings = {
+				APP_DISPLAY_NAME = "Parlor Debug";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;

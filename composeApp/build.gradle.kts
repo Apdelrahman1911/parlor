@@ -100,6 +100,15 @@ check(!releaseSigningRequired || releaseSigningConfigured) {
     "MOBILE_RELEASE_REQUIRE_SIGNING=true, but Android release signing is not fully configured."
 }
 
+// White-box navigation tests need the unoptimized internal API. Keep them in
+// a separate mandatory runtime lane instead of retaining test-only entry
+// points (or disabling R8 optimization) in the actual Store artifact.
+val androidRuntimeTestVariant = providers.gradleProperty("parlor.androidRuntimeTestVariant")
+    .getOrElse("release")
+require(androidRuntimeTestVariant in setOf("debug", "release")) {
+    "parlor.androidRuntimeTestVariant must be debug or release"
+}
+
 kotlin {
     androidTarget {
         compilerOptions {
@@ -135,6 +144,7 @@ kotlin {
                 // Game modules
                 implementation(project(":game-modes:whodunit"))
                 implementation(project(":game-modes:mafia"))
+                implementation(project(":game-modes:last-light"))
 
                 // Compose
                 implementation(libs.compose.runtime)
@@ -159,6 +169,15 @@ kotlin {
         androidMain.dependencies {
             implementation(libs.koin.android)
             implementation(libs.androidx.activity.compose)
+        }
+        androidInstrumentedTest {
+            kotlin.srcDir(
+                if (androidRuntimeTestVariant == "debug") {
+                    "src/androidNavigationRuntimeTest/kotlin"
+                } else {
+                    "src/androidReleaseRuntimeTest/kotlin"
+                },
+            )
         }
         androidInstrumentedTest.dependencies {
             // InstrumentationTestCase is supplied by the platform's
@@ -201,6 +220,25 @@ tasks.named("desktopTest") {
         },
     )
         .withPropertyName("platformLocaleContractSources")
+        .withPathSensitivity(org.gradle.api.tasks.PathSensitivity.RELATIVE)
+    inputs.files(
+        rootProject.file("iosApp/iosApp/ContentView.swift"),
+        layout.projectDirectory.file("src/iosMain/kotlin/com/parlor/app/MainViewController.kt"),
+    )
+        .withPropertyName("iosKeyboardInsetContractSources")
+        .withPathSensitivity(org.gradle.api.tasks.PathSensitivity.RELATIVE)
+    inputs.files(
+        layout.projectDirectory.file("build.gradle.kts"),
+        layout.projectDirectory.file("src/androidMain/AndroidManifest.xml"),
+        fileTree("src/androidMain/res") { include("**/strings.xml") },
+        fileTree("src/androidDebug/res") { include("**/strings.xml") },
+        rootProject.file("iosApp/Configuration/Config.xcconfig"),
+        rootProject.file("iosApp/iosApp.xcodeproj/project.pbxproj"),
+        rootProject.file("iosApp/iosApp/Info.plist"),
+        rootProject.fileTree("iosApp/iosApp") { include("*.lproj/InfoPlist.strings") },
+        rootProject.fileTree("iosApp/scripts") { include("copy_localized_metadata.sh") },
+    )
+        .withPropertyName("nativeApplicationNameContractSources")
         .withPathSensitivity(org.gradle.api.tasks.PathSensitivity.RELATIVE)
 }
 
@@ -287,10 +325,14 @@ android {
         }
     }
     sourceSets {
+        // Launcher branding only; Store resources and application IDs are unchanged.
+        getByName("debug").res.srcDir("src/androidDebug/res")
         // KMP owns the androidInstrumentedTest hierarchy, while AGP's Java
         // compiler reads androidTest. Point it at the shared KMP layout so the
         // platform-only smoke test is packaged in the test APK.
-        getByName("androidTest").java.srcDir("src/androidInstrumentedTest/java")
+        if (androidRuntimeTestVariant == "release") {
+            getByName("androidTest").java.srcDir("src/androidInstrumentedTest/java")
+        }
     }
 
     lint {
@@ -301,13 +343,19 @@ android {
     // Exercise the same R8-shrunk variant that is submitted to the Store. CI
     // supplies an ephemeral, non-production signing key only for installation
     // on this disposable managed device; normal release builds remain unsigned.
-    testBuildType = "release"
+    testBuildType = androidRuntimeTestVariant
     testOptions {
         managedDevices {
             localDevices {
                 create("pixel2Api35") {
                     device = "Pixel 2"
                     apiLevel = 35
+                    systemImageSource = "google"
+                    require64Bit = true
+                }
+                create("pixel2Api34") {
+                    device = "Pixel 2"
+                    apiLevel = 34
                     systemImageSource = "google"
                     require64Bit = true
                 }
@@ -593,7 +641,7 @@ val verifyGameShellDispatch by tasks.registering {
     }
     inputs.files(neutralShellSources, multiplayerShellSources, gameShellSupportSources)
     doLast {
-        val forbidden = listOf("whodunit", "mafia", "com.parlor.games.")
+        val forbidden = listOf("whodunit", "mafia", "lastlight", "last-light", "com.parlor.games.")
         inputs.files.files.filter { file -> file.isFile }.forEach { source ->
             val text = source.readText().lowercase()
             val found = forbidden.filter { token -> token in text }

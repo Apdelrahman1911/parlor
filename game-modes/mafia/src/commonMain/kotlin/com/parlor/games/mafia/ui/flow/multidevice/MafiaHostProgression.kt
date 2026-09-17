@@ -6,6 +6,9 @@ import com.parlor.games.mafia.domain.state.MafiaState
 import com.parlor.networking.room.RoomLifecycleState
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flowOf
 
 /**
  * Drives automatic host-only transitions from the retained multiplayer runtime.
@@ -14,16 +17,19 @@ import kotlinx.coroutines.flow.collectLatest
  * the UI root is recreated, and a transition rejected during app suspension
  * must be offered again when the same room generation becomes active. The
  * outer [collectLatest] cancels an in-flight offer as soon as the room leaves
- * [RoomLifecycleState.Active]; entering Active starts a fresh state collection,
- * whose replayed current value deterministically re-evaluates the gate.
+ * [RoomLifecycleState.Active] or foreground readiness. A validated short return
+ * must also re-evaluate the gate even when the physical room stayed Active.
  */
 internal suspend fun driveMafiaHostProgression(
     states: StateFlow<MafiaState>,
     lifecycle: StateFlow<RoomLifecycleState>,
+    foregroundReady: StateFlow<Boolean>? = null,
     submit: suspend (MafiaAction) -> Unit,
 ) {
-    lifecycle.collectLatest { lifecycleState ->
-        if (lifecycleState == RoomLifecycleState.Active) {
+    combine(lifecycle, foregroundReady ?: flowOf(true)) { lifecycleState, ready ->
+        lifecycleState == RoomLifecycleState.Active && ready
+    }.distinctUntilChanged().collectLatest { ready ->
+        if (ready) {
             states.collect { state ->
                 nextHostAdvance(state)?.let { submit(it) }
             }

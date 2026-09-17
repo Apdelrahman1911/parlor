@@ -33,7 +33,13 @@ UUID = r"[0-9A-Fa-f]{8}(?:-[0-9A-Fa-f]{4}){3}-[0-9A-Fa-f]{12}"
 RAW_ROOTS = {
     "game-modes/whodunit/src/commonMain/composeResources/": "com.parlor.games.whodunit.resources",
     "shared/design-system/src/commonMain/composeResources/": "parlor.shared.design_system.generated.resources",
+    "game-modes/last-light/src/commonMain/composeResources/": "com.parlor.games.lastlight.resources",
 }
+LAST_LIGHT_ROOT = "game-modes/last-light/src/commonMain/composeResources/"
+# The reviewed port's four OFL fonts and both redistributed license texts.
+# New font names/namespaces still fail closed and require a source review.
+LAST_LIGHT_RAW = {"font/fraunces_semibold.ttf", "font/manrope_regular.ttf", "font/manrope_medium.ttf",
+                  "font/manrope_semibold.ttf", "files/licenses/fraunces_ofl.txt", "files/licenses/manrope_ofl.txt"}
 # Only relocated evidence/design roots are excluded; archived prose, handoffs and
 # the archive index remain bound documentation inputs, as before relocation.
 EXCLUDED_ROOTS = ("audit-runs/", "remediation-runs/", "project-code-audit/", "design/",
@@ -203,7 +209,10 @@ def artifact_paths(app: Path) -> list[Path]:
 def raw_resource_path(relative: str) -> str | None:
     is_case = relative.startswith("game-modes/whodunit/src/commonMain/composeResources/files/cases/") and relative.endswith(".json")
     is_font = "/src/commonMain/composeResources/" in relative and Path(relative).suffix in {".ttf", ".otf"}
-    if not (is_case or is_font):
+    is_last_light = relative.startswith(LAST_LIGHT_ROOT) and relative[len(LAST_LIGHT_ROOT):] in LAST_LIGHT_RAW
+    if is_font and relative.startswith(LAST_LIGHT_ROOT) and not is_last_light:
+        raise RuntimeError("Last Light font has an unreviewed resource name")
+    if not (is_case or is_font or is_last_light):
         return None
     for prefix, namespace in RAW_ROOTS.items():
         if relative.startswith(prefix):

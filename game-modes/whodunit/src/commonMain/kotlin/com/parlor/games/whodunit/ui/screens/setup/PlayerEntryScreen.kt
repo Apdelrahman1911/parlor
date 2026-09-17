@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
@@ -26,6 +25,7 @@ import com.parlor.designsystem.components.EyebrowLabel
 import com.parlor.designsystem.components.ParlorButton
 import com.parlor.designsystem.components.ParlorButtonVariant
 import com.parlor.designsystem.components.bringIntoViewOnFocus
+import com.parlor.designsystem.components.parlorImePadding
 import com.parlor.designsystem.components.parlorSafeContentPadding
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.games.whodunit.resources.Res
@@ -55,7 +55,7 @@ fun PlayerEntryScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .imePadding()
+                .parlorImePadding()
                 .verticalScroll(rememberScrollState())
                 .parlorSafeContentPadding(ParlorTheme.spacing.xl),
             verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.l),

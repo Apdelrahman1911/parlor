@@ -2,7 +2,9 @@ package com.parlor.app
 
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
+import androidx.compose.runtime.DisposableEffect
 import com.parlor.app.di.allModules
+import com.parlor.app.lifecycle.AppLifecycleCoordinator
 import com.parlor.core.result.Result
 import com.parlor.networking.protocol.SessionEndReason
 import com.parlor.networking.room.NetError
@@ -14,6 +16,8 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withTimeoutOrNull
 import org.koin.core.context.startKoin
 import org.koin.core.qualifier.named
+import java.awt.event.WindowAdapter
+import java.awt.event.WindowEvent
 
 /**
  * Desktop (JVM) entry. Single Compose window, cozy-noir from frame to frame.
@@ -23,6 +27,7 @@ fun main() {
     val sessionOwner = koinApplication.koin.get<ProcessMultiplayerSessionOwner>()
     val sessionScope = koinApplication.koin.get<CoroutineScope>(named("multiplayerSession"))
     val transportScope = koinApplication.koin.get<CoroutineScope>(named("p2pTransport"))
+    val lifecycle = koinApplication.koin.get<AppLifecycleCoordinator>()
     application {
         Window(
             onCloseRequest = {
@@ -41,6 +46,21 @@ fun main() {
             },
             title = "Parlor",
         ) {
+            DisposableEffect(window, lifecycle) {
+                val listener = object : WindowAdapter() {
+                    override fun windowGainedFocus(event: WindowEvent) = lifecycle.notifyActive()
+                    override fun windowLostFocus(event: WindowEvent) = lifecycle.notifyInactive()
+                    override fun windowIconified(event: WindowEvent) = lifecycle.notifyBackgrounded()
+                }
+                window.addWindowFocusListener(listener)
+                window.addWindowListener(listener)
+                if (window.isFocused) lifecycle.notifyActive()
+                onDispose {
+                    window.removeWindowFocusListener(listener)
+                    window.removeWindowListener(listener)
+                    lifecycle.notifyBackgrounded()
+                }
+            }
             App()
         }
     }

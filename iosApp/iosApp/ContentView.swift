@@ -26,7 +26,9 @@ struct ContentView: View {
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .ignoresSafeArea(.container, edges: .all)
+        // Compose owns both system and IME insets, including focused-field
+        // scrolling. SwiftUI must not resize its host for the keyboard too.
+        .ignoresSafeArea(.all, edges: .all)
         .onAppear {
             reportScenePhase(scenePhase)
         }

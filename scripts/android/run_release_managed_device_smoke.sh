@@ -47,6 +47,7 @@ keytool -genkeypair \
 
 cd "$repo_root"
 gradle_command=(./gradlew productionAndroidRuntimeCheck \
+  -Pparlor.androidRuntimeTestVariant=release \
   --dependency-verification=strict \
   --no-daemon \
   --max-workers=2 \
@@ -66,4 +67,23 @@ if [[ "$(uname -s)" == Linux ]]; then
 else
   # Preserve the existing non-Linux invocation; it makes no subreaper claim.
   "${gradle_command[@]}"
+fi
+
+# R8 may remove/internalize APIs that are called only by white-box tests.
+# Exercise all navigator assertions on API 34 in a separate Debug runtime,
+# without changing the optimized Release app or dropping its smoke tests.
+navigation_command=(./gradlew productionAndroidNavigationRuntimeCheck \
+  -Pparlor.androidRuntimeTestVariant=debug \
+  --dependency-verification=strict \
+  --no-daemon \
+  --max-workers=2 \
+  --stacktrace \
+  --console=plain)
+
+if [[ "$(uname -s)" == Linux ]]; then
+  python3 -B scripts/android/supervise_managed_device.py \
+    --receipt build/ci-evidence/android-navigation-device-supervision.json \
+    -- "${navigation_command[@]}"
+else
+  "${navigation_command[@]}"
 fi

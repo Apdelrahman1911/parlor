@@ -278,6 +278,43 @@ class MafiaMultiDeviceProgressionTest {
     }
 
     @Test
+    @OptIn(ExperimentalCoroutinesApi::class)
+    fun retained_host_driver_reoffers_ready_advance_after_short_background_validation() = runTest {
+        val seed = 97531L
+        val c = ctx(seed)
+        var readyState = step(initialState(5, seed), MafiaAction.StartGame, c)
+        for (player in readyState.players) {
+            readyState = step(readyState, MafiaAction.AcknowledgeRoleViewed(player.id), c)
+        }
+        val states = MutableStateFlow(readyState)
+        val lifecycle = MutableStateFlow<RoomLifecycleState>(RoomLifecycleState.Active)
+        val foregroundReady = MutableStateFlow(false)
+        val offered = mutableListOf<MafiaAction>()
+
+        backgroundScope.launch {
+            driveMafiaHostProgression(states, lifecycle, foregroundReady) { offered += it }
+        }
+        runCurrent()
+        assertThat(offered).isEqualTo(emptyList())
+
+        foregroundReady.value = true
+        runCurrent()
+        assertThat(offered).isEqualTo(listOf(MafiaAction.AdvanceFromRoleAssignment))
+
+        // The physical room and canonical game state stay unchanged during
+        // retention. Validation must restart progression without a new revision.
+        foregroundReady.value = false
+        runCurrent()
+        assertThat(offered).isEqualTo(listOf(MafiaAction.AdvanceFromRoleAssignment))
+        foregroundReady.value = true
+        runCurrent()
+        assertThat(offered).isEqualTo(
+            listOf(MafiaAction.AdvanceFromRoleAssignment, MafiaAction.AdvanceFromRoleAssignment),
+        )
+        assertThat(lifecycle.value).isEqualTo(RoomLifecycleState.Active)
+    }
+
+    @Test
     fun an_eliminated_host_can_still_resolve_the_night() {
         // Regression for the dead-host deadlock: the manual Resolve button lives
         // only in the alive-host branch, so night resolution must come from the

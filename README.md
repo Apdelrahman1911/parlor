@@ -1,13 +1,14 @@
 # Parlor
 
 Parlor is a Kotlin Multiplatform party-game container for Android and iOS.
-It currently ships two game modules:
+It contains three game modules:
 
 - **Whodunit** — bundled English/Arabic cases, with Classic Vote and
   Elimination modes.
 - **Mafia** — a host-authoritative social-deduction game.
+- **Last Light** — PartyDeck's Standard card-bluffing table for 2–6 players.
 
-Both games support local play and same-LAN multi-device play through P2pKit.
+The games support local play and same-LAN multi-device play through P2pKit.
 Desktop is a development and deterministic-test target, not a shipping target.
 Room-code entry uses LAN discovery; raw-IP/manual endpoint connection,
 public-internet rendezvous/NAT traversal, relay, spectators, and host migration
@@ -92,7 +93,8 @@ parlor/
 ├── iosApp/                       # Thin Xcode wrapper
 ├── game-modes/
 │   ├── whodunit/                 # Rules, protocol adapter, UI, assets, tests
-│   └── mafia/                    # Rules, protocol adapter, UI, assets, tests
+│   ├── mafia/                    # Rules, protocol adapter, UI, assets, tests
+│   └── last-light/               # Standard card table, rules, adapters, recovery
 ├── shared/
 │   ├── core/                     # IDs, results, time, randomness, and versioning
 │   ├── design-system/            # Tokens, components, localization, motion

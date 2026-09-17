@@ -37,6 +37,10 @@ METADATA = {"BUNDLE-METADATA/com.android.tools.build.libraries/dependencies.pb",
             "BUNDLE-METADATA/com.android.tools.build.obfuscation/proguard.map",
             "BUNDLE-METADATA/com.android.tools/r8.json", "base/manifest/AndroidManifest.xml",
             "base/dex/classes.dex", "BundleConfig.pb"}
+LAST_LIGHT_RESOURCES = "game-modes/last-light/src/commonMain/composeResources"
+LAST_LIGHT_PREFIX = "base/assets/composeResources/com.parlor.games.lastlight.resources"
+LAST_LIGHT_FONTS = {"fraunces_semibold.ttf", "manrope_regular.ttf", "manrope_medium.ttf", "manrope_semibold.ttf"}
+LAST_LIGHT_LICENSES = {"fraunces_ofl.txt", "manrope_ofl.txt"}
 
 
 def require(condition, message):
@@ -194,6 +198,23 @@ def expected_resources(root):
             path = regular(path, MAX_ENTRY)
             result[prefix + "/" + path.name] = {"bytes": path.stat().st_size, "sha256": sha256(path)}
     require(len(result) == 9, "Bundled story/font catalog changed; artifact review required")
+    # The port's four OFL fonts have a closed, byte-bound provenance catalog.
+    # Do not accept arbitrary new /font/ entries merely because they are in source.
+    resource_root = root / LAST_LIGHT_RESOURCES
+    require({path.name for path in (resource_root / "font").iterdir()} == LAST_LIGHT_FONTS,
+            "Last Light font catalog changed; artifact review required")
+    provenance = json.loads(regular(resource_root / "files/licenses/asset_provenance.json", 65536).read_text())
+    reviewed = {entry["file"]: entry for entry in provenance["assets"]}
+    for relative in sorted({"font/" + name for name in LAST_LIGHT_FONTS}
+                           | {"files/licenses/" + name for name in LAST_LIGHT_LICENSES}):
+        path = regular(resource_root / relative, MAX_ENTRY)
+        actual = {"bytes": path.stat().st_size, "sha256": sha256(path)}
+        entry = reviewed.get(relative, {})
+        require(entry.get("license") == "SIL Open Font License 1.1"
+                and all(entry.get(key) == value for key, value in actual.items()),
+                "Last Light font/license provenance mismatch")
+        result[LAST_LIGHT_PREFIX + "/" + relative] = actual
+    require(len(result) == 15, "Bundled story/font/license catalog changed; artifact review required")
     return result
 
 

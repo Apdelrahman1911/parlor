@@ -1053,6 +1053,23 @@ class WorkflowContractTest(unittest.TestCase):
             with self.assertRaisesRegex(RuntimeError, "production signing material"):
                 workflow_contract.verify_android_runtime_script()
 
+    def test_managed_device_runner_requires_both_release_and_navigation_lanes(self) -> None:
+        script_path = workflow_contract.ROOT / "scripts/android/run_release_managed_device_smoke.sh"
+        original = script_path.read_text(encoding="utf-8")
+        for token in (
+            "productionAndroidRuntimeCheck",
+            "-Pparlor.androidRuntimeTestVariant=release",
+            "productionAndroidNavigationRuntimeCheck",
+            "-Pparlor.androidRuntimeTestVariant=debug",
+            '"${navigation_command[@]}"',
+            "android-navigation-device-supervision.json",
+        ):
+            with self.subTest(token=token), patch.object(
+                Path, "read_text", return_value=original.replace(token, "removed")
+            ):
+                with self.assertRaisesRegex(RuntimeError, "managed-device runner is missing"):
+                    workflow_contract.verify_android_runtime_script()
+
     def test_candidate_build_number_claim_cannot_be_removed(self) -> None:
         workflow = (workflow_contract.ROOT / ".github/workflows/testing-candidate.yml").read_text(
             encoding="utf-8"

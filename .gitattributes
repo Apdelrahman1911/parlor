@@ -4,6 +4,11 @@ composeApp/src/commonMain/composeResources/files/legal/* -text
 # Their byte digests remain pinned; ordinary trailing whitespace is still an error.
 composeApp/src/commonMain/composeResources/files/legal/SLF4J-2.0.16-LICENSE.txt whitespace=cr-at-eol,-blank-at-eof
 composeApp/src/commonMain/composeResources/files/legal/WebP-COPYING.txt whitespace=-blank-at-eof
+# Last Light's copied vectors and font notices are byte-bound by asset_provenance.json.
+# Windows checkout conversion must not change their recorded sizes or SHA-256 digests.
+game-modes/last-light/src/commonMain/composeResources/drawable/card_back.xml -text
+game-modes/last-light/src/commonMain/composeResources/drawable/rank_*.xml -text
+game-modes/last-light/src/commonMain/composeResources/files/licenses/*_ofl.txt -text
 # Audit receipts, upstream references, and frozen reproducers are hash-bound.
 # Preserve their exact bytes on every host; they are not shipping source sets.
 remediation-runs/** -text

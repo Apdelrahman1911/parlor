@@ -9,6 +9,7 @@ precedence over prose; archived plans are not current requirements.
 - [Production architecture](PRODUCTION_ARCHITECTURE.md)
 - [Accepted architecture decisions](adr/)
 - [Adding a game](HOW_TO_ADD_A_GAME.md)
+- [Last Light rules and integration map](LAST_LIGHT_INTEGRATION.md)
 - [iOS setup](IOS_SETUP.md)
 - [Pre-release compatibility](PRE_RELEASE_COMPATIBILITY.md)
 - [Mafia rules](MAFIA_RULES.md) and [Whodunit discussion timing](WHODUNIT_DISCUSSION_TIMING.md)

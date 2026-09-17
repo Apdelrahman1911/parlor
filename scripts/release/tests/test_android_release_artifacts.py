@@ -169,7 +169,7 @@ class AndroidReleaseArtifactsTest(unittest.TestCase):
         self._integrated()
 
     def test_integrated_fixture_rejects_changed_story_and_unsigned_policy(self):
-        for mutation in ("story", "signature", "mapping", "native"):
+        for mutation in ("story", "signature", "mapping", "native", "font", "missing_font", "extra_font", "font_license"):
             with self.subTest(mutation=mutation), self.assertRaises(ValueError):
                 self._integrated(mutation)
 
@@ -182,7 +182,9 @@ class AndroidReleaseArtifactsTest(unittest.TestCase):
                 shutil.copyfile(ROOT / relative, target)
             for relative in (artifacts.notices.RESOURCE_DIRECTORY,
                              "game-modes/whodunit/src/commonMain/composeResources/files/cases",
-                             "shared/design-system/src/commonMain/composeResources/font"):
+                             "shared/design-system/src/commonMain/composeResources/font",
+                             artifacts.LAST_LIGHT_RESOURCES + "/font",
+                             artifacts.LAST_LIGHT_RESOURCES + "/files/licenses"):
                 shutil.copytree(ROOT / relative, root / relative)
             bundletool = root / "bundletool.jar"
             bundletool.write_bytes(b"synthetic tool; never executed")
@@ -210,11 +212,23 @@ class AndroidReleaseArtifactsTest(unittest.TestCase):
                                        "base/assets/composeResources/com.parlor.games.whodunit.resources/files/cases"),
                                       ("shared/design-system/src/commonMain/composeResources/font",
                                        "base/assets/composeResources/parlor.shared.design_system.generated.resources/font"),
+                                      (artifacts.LAST_LIGHT_RESOURCES + "/font", artifacts.LAST_LIGHT_PREFIX + "/font"),
+                                      (artifacts.LAST_LIGHT_RESOURCES + "/files/licenses",
+                                       artifacts.LAST_LIGHT_PREFIX + "/files/licenses"),
                                       (artifacts.notices.RESOURCE_DIRECTORY, artifacts.notices.AAB_PREFIX)):
                 for source in (root / source_dir).iterdir():
                     entries[prefix + "/" + source.name] = source.read_bytes()
             if mutation == "story":
                 entries[next(name for name in entries if "/files/cases/" in name)] = b"changed"
+            font = artifacts.LAST_LIGHT_PREFIX + "/font/fraunces_semibold.ttf"
+            if mutation == "font":
+                entries[font] = b"changed"
+            if mutation == "missing_font":
+                del entries[font]
+            if mutation == "extra_font":
+                entries[artifacts.LAST_LIGHT_PREFIX + "/font/extra.ttf"] = b"not reviewed"
+            if mutation == "font_license":
+                entries[artifacts.LAST_LIGHT_PREFIX + "/files/licenses/manrope_ofl.txt"] = b"changed"
             if mutation == "signature":
                 entries["META-INF/FIXTURE.RSA"] = b"not a real signature"
             aab = root / "fixture.aab"
@@ -237,7 +251,7 @@ class AndroidReleaseArtifactsTest(unittest.TestCase):
             self.assertEqual("PASS", value["status"])
             self.assertEqual(26, value["notices"]["package"]["resource_count"])
             self.assertEqual(4, len(value["native_images"]))
-            self.assertEqual(9, len(value["raw_resources"]))
+            self.assertEqual(15, len(value["raw_resources"]))
             self.assertEqual(3, len(calls))
             self.assertNotIn("-i", calls[-1])  # Never ignore a DEX checksum failure.
             self.assertNotIn("-j", calls[-1])  # Never disable DEX verification.

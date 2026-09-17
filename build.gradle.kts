@@ -56,6 +56,12 @@ val productionAndroidRuntimeCheck = tasks.register("productionAndroidRuntimeChec
     dependsOn(":composeApp:pixel2Api35ReleaseAndroidTest")
 }
 
+tasks.register("productionAndroidNavigationRuntimeCheck") {
+    group = "verification"
+    description = "Exercises navigator Back on API 34; requires -Pparlor.androidRuntimeTestVariant=debug."
+    dependsOn(":composeApp:pixel2Api34DebugAndroidTest")
+}
+
 val productionAndroidSigningCheck = tasks.register("productionAndroidSigningCheck") {
     group = "verification"
     description = "Verifies protected Android signing material and builds the store bundle."

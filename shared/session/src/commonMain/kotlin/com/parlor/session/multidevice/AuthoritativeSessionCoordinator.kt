@@ -11,6 +11,7 @@ import com.parlor.networking.protocol.SessionEndReason
 import com.parlor.networking.protocol.SessionProtocol
 import com.parlor.networking.protocol.validateFor
 import com.parlor.networking.room.LocalRoom
+import com.parlor.networking.room.ForegroundConnectionValidator
 import com.parlor.networking.room.NetError
 import com.parlor.networking.room.RoomLifecycleState
 import com.parlor.networking.room.SessionEndCommitStatus
@@ -135,6 +136,7 @@ class HostAuthoritativeSessionCoordinator(
             val completion: CompletableDeferred<Result<Unit, NetError>>,
         ) : Work
         data object Heartbeat : Work
+        data class ForegroundProbe(val id: String) : Work
     }
 
     private enum class StartPhase { AwaitingReady, AwaitingCommitAck }
@@ -202,11 +204,27 @@ class HostAuthoritativeSessionCoordinator(
     private val jobs = mutableListOf<Job>()
     private val closeMutex = Mutex()
     private var closed = false
+    private val foregroundProbe = ForegroundConnectionProbe(idGenerator)
+    private val detachForegroundValidator = room.registerForegroundValidator(object : ForegroundConnectionValidator {
+        override val ready: Boolean get() = coordinatorJob.isActive && !closed && canProcessGameTraffic()
+
+        override suspend fun validate(): Boolean {
+            if (!ready) return false
+            val players = room.members.value.filter { it.connected && it.playerId in remotePlayers }
+                .map { it.playerId }.toSet()
+            val replies = foregroundProbe.check(players) { id ->
+                mailbox.send(Work.ForegroundProbe(id))
+                true
+            }
+            return replies != null && ready
+        }
+    })
 
     init {
         require(startSendTimeoutMs > 0L) { "startSendTimeoutMs must be positive" }
         require(outboundSendTimeoutMs > 0L) { "outboundSendTimeoutMs must be positive" }
         coordinatorJob.invokeOnCompletion {
+            detachForegroundValidator()
             mailbox.close()
             drainPendingWork(CancellationException("Host coordinator parent scope closed"))
         }
@@ -235,6 +253,9 @@ class HostAuthoritativeSessionCoordinator(
                         is Work.AbortResendStart -> processResendStartAbort(work)
                         Work.Heartbeat -> {
                             if (canProcessGameTraffic()) sendHeartbeat()
+                        }
+                        is Work.ForegroundProbe -> {
+                            if (canProcessGameTraffic()) sendHeartbeat(work.id)
                         }
                     }
                 } catch (cancelled: CancellationException) {
@@ -440,6 +461,8 @@ class HostAuthoritativeSessionCoordinator(
     suspend fun close() = closeMutex.withLock {
         if (closed) return@withLock
         closed = true
+        detachForegroundValidator()
+        foregroundProbe.close()
         // Seal producers first and resolve every queued waiter before joining
         // children. Returning only after all outboxes/collectors have stopped
         // prevents a retired session from publishing into its replacement.
@@ -488,10 +511,10 @@ class HostAuthoritativeSessionCoordinator(
                 if (
                     canProcessGameTraffic() &&
                     message.actor in remotePlayers &&
-                    message.validateFor(protocol) == ProtocolValidation.Valid &&
-                    message.lastAppliedRevision < _revision.value
+                    message.validateFor(protocol) == ProtocolValidation.Valid
                 ) {
-                    sendSnapshot(message.actor)
+                    foregroundProbe.accept(message.actor, message.header.messageId, message.lastAppliedRevision)
+                    if (message.lastAppliedRevision < _revision.value) sendSnapshot(message.actor)
                 }
             }
             is PeerMessage.CommandOutcomeRequest -> {
@@ -510,7 +533,7 @@ class HostAuthoritativeSessionCoordinator(
             }
             if (
                 work.requiresActiveRoom &&
-                room.lifecycle.value != RoomLifecycleState.Active
+                !room.acceptsLocalGameCommands
             ) {
                 work.completion.complete(HostMutationResult.Suspended)
                 return
@@ -572,6 +595,7 @@ class HostAuthoritativeSessionCoordinator(
             is Work.RetryResendStart,
             is Work.ResendStartDeadline,
             is Work.AbortResendStart,
+            is Work.ForegroundProbe,
             Work.Heartbeat -> Unit
         }
     }
@@ -590,6 +614,7 @@ class HostAuthoritativeSessionCoordinator(
             is Work.RetryResendStart,
             is Work.ResendStartDeadline,
             is Work.AbortResendStart,
+            is Work.ForegroundProbe,
             Work.Heartbeat -> Unit
         }
     }
@@ -599,7 +624,7 @@ class HostAuthoritativeSessionCoordinator(
             _startState.value = HostSessionStartState.Failed
             return
         }
-        if (ended || room.lifecycle.value != RoomLifecycleState.Active) {
+        if (ended || !room.acceptsLocalGameCommands) {
             _startState.value = HostSessionStartState.Failed
             work.completion.complete(Result.Failure(NetError.SessionSuspended))
             return
@@ -1098,7 +1123,7 @@ class HostAuthoritativeSessionCoordinator(
 
     private suspend fun processCommand(command: PeerMessage.ClientCommand) {
         val actor = command.actor
-        if (room.lifecycle.value != RoomLifecycleState.Active) {
+        if (!room.acceptsRemoteGameCommands) {
             sendResult(actor, command.commandId, CommandStatus.SessionSuspended, remember = false)
             return
         }
@@ -1224,9 +1249,9 @@ class HostAuthoritativeSessionCoordinator(
         }
     }
 
-    private suspend fun sendHeartbeat() {
+    private suspend fun sendHeartbeat(messageId: String = idGenerator()) {
         val message = HostMessage.Heartbeat(
-            header = nextHeader(),
+            header = nextHeader(messageId),
             authoritativeRevision = _revision.value,
         )
         check(message.validateFor(protocol) == ProtocolValidation.Valid)
@@ -1245,12 +1270,12 @@ class HostAuthoritativeSessionCoordinator(
             .awaitAll()
     }
 
-    private fun nextHeader(): SessionEnvelopeHeader = SessionEnvelopeHeader(
+    private fun nextHeader(messageId: String = idGenerator()): SessionEnvelopeHeader = SessionEnvelopeHeader(
         protocol = protocol.protocol,
         sessionId = protocol.sessionId,
         gameId = protocol.gameId,
         gameVersion = protocol.gameVersion,
-        messageId = idGenerator(),
+        messageId = messageId,
         sequence = ++hostSequence,
         connectionEpoch = protocol.connectionEpoch,
     )
@@ -1391,9 +1416,30 @@ class PeerAuthoritativeSessionCoordinator(
     private var pendingOutcomeJob: Job? = null
     private val peerJob = SupervisorJob(scope.coroutineContext[Job])
     private val peerScope = CoroutineScope(scope.coroutineContext + peerJob)
+    private val foregroundProbe = ForegroundConnectionProbe(idGenerator)
+    private val detachForegroundValidator = room.registerForegroundValidator(object : ForegroundConnectionValidator {
+        override val ready: Boolean
+            get() = peerJob.isActive && !closed && !terminalAccepted && _hasAuthoritativeSnapshot.value
+
+        override suspend fun validate(): Boolean {
+            if (!ready) return false
+            val hostId = room.info.value.hostPlayerId
+            val replies = foregroundProbe.check(setOf(hostId)) { id ->
+                requestCommandOutcome(id) is Result.Success
+            } ?: return false
+            val authoritativeRevision = replies.getValue(hostId)
+            if (_revision.value < authoritativeRevision) {
+                requestSnapshot()
+                _revision.first { it >= authoritativeRevision }
+            }
+            if (!ready) return false
+            return requestPendingOutcomes() is Result.Success && ready
+        }
+    })
 
     init {
         require(initialSnapshotRetryMs > 0L) { "initialSnapshotRetryMs must be positive" }
+        peerJob.invokeOnCompletion { detachForegroundValidator() }
         require(maxInitialSnapshotRetryMs >= initialSnapshotRetryMs) {
             "maxInitialSnapshotRetryMs must be at least initialSnapshotRetryMs"
         }
@@ -1449,7 +1495,7 @@ class PeerAuthoritativeSessionCoordinator(
     suspend fun submit(payload: ByteArray): Result<PeerCommandReceipt, NetError> =
         submitMutex.withLock submit@{
             if (isClosed()) return@submit Result.Failure(NetError.NotConnected)
-            if (room.lifecycle.value != RoomLifecycleState.Active) {
+            if (!room.acceptsLocalGameCommands) {
                 return@submit Result.Failure(NetError.SessionSuspended)
             }
             if (!_hasAuthoritativeSnapshot.value) {
@@ -1571,6 +1617,8 @@ class PeerAuthoritativeSessionCoordinator(
     }
 
     suspend fun close() {
+        detachForegroundValidator()
+        foregroundProbe.close()
         submitMutex.withLock {
             stateMutex.withLock {
                 closed = true
@@ -1652,11 +1700,18 @@ class PeerAuthoritativeSessionCoordinator(
             if (
                 closed ||
                 terminalAccepted ||
-                !rememberHostMessage(result.header.messageId) ||
-                result.commandId !in pending
+                !rememberHostMessage(result.header.messageId)
+            ) return@withLock false
+            // A fresh query for a never-submitted id proves a round trip without
+            // mutating the game or replaying an ambiguous player action. Apply
+            // the same terminal/replay checks as every other host response.
+            if (
+                result.status == CommandStatus.UnknownCommand &&
+                foregroundProbe.accept(room.info.value.hostPlayerId, result.commandId, result.authoritativeRevision)
             ) {
-                false
-            } else {
+                return
+            }
+            if (result.commandId !in pending) false else {
                 nextClientSequence = result.nextExpectedClientSequence
                 pending.remove(result.commandId)?.payload?.fill(0)
                 acknowledgedResolvedCommandId = null
@@ -1703,6 +1758,15 @@ class PeerAuthoritativeSessionCoordinator(
             }
         }
         if (heartbeatAccepted == null) return
+        // Echo this authenticated, unique heartbeat id. Older peers may omit
+        // the echo; the host then conservatively uses full secure recovery.
+        sendPeerFrame(
+            PeerMessage.SessionHeartbeat(
+                header = peerHeader(heartbeat.header.messageId),
+                actor = selfPlayerId,
+                lastAppliedRevision = _revision.value.coerceAtLeast(0L),
+            ),
+        )
         restartTimedOutOutcomeReconciliationIfNeeded()
         if (heartbeatAccepted) requestSnapshot()
     }

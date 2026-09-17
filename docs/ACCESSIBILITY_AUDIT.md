@@ -11,8 +11,8 @@ physical-device receipts may complete this checklist.
   contracts.
 - `LocalizationResourceContractTest`: exact English/Arabic key parity and no
   missing production strings.
-- Whodunit and Mafia responsive-layout suites: supported compact layouts do not
-  use known unbounded structures.
+- Responsive-layout suites for all registered games: supported compact layouts
+  do not use known unbounded structures.
 - content and projection tests: one player's hidden role/private action never
   enters another player's UI model or accessibility tree.
 - `productionCheck`: Android lint, resource packaging, release compilation,
@@ -94,9 +94,13 @@ that historical proposal as a shipping feature.
 - [ ] TalkBack and VoiceOver users complete Mafia setup, role reveal, every
   role-specific night action, discussion, voting, result, replay, Leave, and
   recovery.
-- [ ] A low-vision user completes both games at large text/display scale.
-- [ ] A motor-accessibility tester completes both games using the reduced-motion
-  and tap-fallback paths.
+- [ ] TalkBack and VoiceOver users complete Last Light local and multiplayer
+  setup, private hand conceal/reveal and handoff, card selection, forced
+  challenge, round/winner results, rematch, Leave, and recovery.
+- [ ] A low-vision user completes all registered games at large text/display
+  scale.
+- [ ] A motor-accessibility tester completes all registered games using the
+  reduced-motion and tap-fallback paths.
 
 Each failed row is a release finding with reproduction steps and evidence. An
 unchecked row remains an external gate; it must not be converted to PASS from a

@@ -30,18 +30,19 @@ REVIEW_INFRASTRUCTURE = {
 }
 
 MODULE_CONSUMERS = {
-    ":shared:core": "all shared modules, both game modules, and app composition",
-    ":shared:engine": "session/content layers, both games, and app registries",
-    ":shared:session": "both game runtimes and app-owned multiplayer composition",
+    ":shared:core": "all shared modules, game modules, and app composition",
+    ":shared:engine": "session/content layers, games, and app registries",
+    ":shared:session": "game runtimes and app-owned multiplayer composition",
     ":shared:networking": "session coordinators, P2pKit adapter, games, and app UI",
     ":shared:storage": "session/game recovery and platform app storage bindings",
     ":shared:transport-p2p": "app composition and transport contract tests only",
-    ":shared:design-system": "both game UIs and the app shell",
+    ":shared:design-system": "game UIs and the app shell",
     ":shared:content": "Whodunit content pipeline, start protocol, and app composition",
     ":shared:engine-testing": "test source sets only",
     ":shared:networking-testing": "test source sets only",
     ":game-modes:whodunit": "registered app-shell binding and Whodunit runtime",
     ":game-modes:mafia": "registered app-shell binding and Mafia runtime",
+    ":game-modes:last-light": "registered app-shell binding and Last Light runtime",
     ":composeApp": "Android/iOS launchers and Desktop development runtime",
     "included-build:convention": "all Gradle subprojects applying Parlor conventions",
     "iosApp": "Xcode build, Swift wrapper, and iOS packaging",

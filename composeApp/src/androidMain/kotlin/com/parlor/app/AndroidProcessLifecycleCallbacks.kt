@@ -18,7 +18,7 @@ internal class AndroidProcessLifecycleCallbacks(
     private val coordinator: AppLifecycleCoordinator,
 ) : Application.ActivityLifecycleCallbacks {
     private val processVisibility = ProcessVisibilityTracker<Activity>(
-        onProcessForegrounded = coordinator::notifyActive,
+        onProcessForegrounded = coordinator::notifyForegrounded,
         onProcessBackgrounded = coordinator::notifyBackgrounded,
     )
 
@@ -32,9 +32,15 @@ internal class AndroidProcessLifecycleCallbacks(
 
     override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) = Unit
 
-    override fun onActivityResumed(activity: Activity) = Unit
+    override fun onActivityResumed(activity: Activity) {
+        coordinator.notifyWindowFocus(focused = activity.hasWindowFocus(), resumed = true)
+    }
 
-    override fun onActivityPaused(activity: Activity) = Unit
+    override fun onActivityPaused(activity: Activity) {
+        // System sheets and other brief interruptions conceal private content
+        // without treating an inactive foreground app as a lost LAN session.
+        coordinator.notifyInactive()
+    }
 
     override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) = Unit
 
