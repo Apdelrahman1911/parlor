@@ -2,12 +2,17 @@ package com.parlor.games.lastlight.ui.flow.passandplay
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.semantics.SemanticsActions
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.runComposeUiTest
@@ -42,6 +47,7 @@ import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.atomic.AtomicReference
 import kotlinx.coroutines.CompletableDeferred
 import kotlin.test.Test
+import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
@@ -54,6 +60,50 @@ import org.koin.dsl.module
 /** Exercises the real public route: failed recovery must never fall through into a fresh match. */
 @OptIn(ExperimentalTestApi::class)
 class LastLightRecoveryFlowTest {
+    @Test
+    fun restored_table_leave_and_back_use_the_same_private_save_confirmation() {
+        val fixture = RecoveryRouteFixture()
+        val oldLocale = Locale.getDefault()
+        fixture.store.recoverable.set(fixture.validSnapshot())
+        val releaseSave = CompletableDeferred<Unit>()
+        fixture.store.saveGate.set(releaseSave)
+        try {
+            runComposeUiTest {
+                setContent { fixture.Content() }
+                waitUntil { fixture.store.loads.get() == 1 }
+                onNodeWithText("Retry").performScrollTo().performClick()
+                waitUntil(timeoutMillis = 5_000) { fixture.store.saves.get() > 0 }
+                onNodeWithText("I am Ali").performScrollTo().performClick()
+                onNodeWithTag("game-reveal-hand").performClick()
+                onNodeWithTag("game-card-0").assertExists()
+                onNodeWithTag("game-leave").performClick()
+                onNodeWithTag("game-table").assertDoesNotExist()
+                onNodeWithTag("game-card-0").assertDoesNotExist()
+                onNodeWithText("Return home?").assertIsDisplayed()
+                assertEquals(0, fixture.exits.get())
+                onNodeWithTag("game-stay").performScrollTo().performClick()
+                onNodeWithText("I am Ali").assertExists()
+                onNodeWithTag("game-card-0").assertDoesNotExist()
+                runOnIdle { fixture.backRequestId++ }
+                onNodeWithTag("game-exit-confirmation").assertIsDisplayed()
+                onNodeWithTag("game-confirm-leave").performScrollTo().performClick().assertIsNotEnabled()
+                onNodeWithTag("game-stay").assertIsNotEnabled()
+                assertEquals(0, fixture.exits.get(), "Leaving must wait for the in-flight snapshot write")
+                assertEquals(null, fixture.store.lastSaved.get())
+                releaseSave.complete(Unit)
+                waitUntil(timeoutMillis = 5_000) { fixture.exits.get() == 1 }
+                assertEquals(1, fixture.store.saves.get(), "The exit flush may reuse the identical successful snapshot")
+                assertContentEquals(fixture.validSnapshot().payload, fixture.store.lastSaved.get()?.payload)
+                assertEquals(0, fixture.store.deletes.get())
+                assertTrue(fixture.store.retained.get())
+            }
+        } finally {
+            releaseSave.complete(Unit)
+            fixture.application.close()
+            Locale.setDefault(oldLocale)
+        }
+    }
+
     @Test
     fun retry_and_back_preserve_an_unreadable_save_without_starting_another_match() {
         val fixture = RecoveryRouteFixture()
@@ -147,6 +197,7 @@ private class RecoveryRouteFixture {
     val store = UnreadableLocalStore()
     val seedCalls = AtomicInteger()
     val exits = AtomicInteger()
+    var backRequestId by mutableLongStateOf(0L)
     private val feedback = SilentLocalFeedback()
     val application: KoinApplication = koinApplication {
         modules(module {
@@ -170,6 +221,7 @@ private class RecoveryRouteFixture {
                         LastLightGameFlow(
                             onBackToHome = { exits.incrementAndGet() },
                             resumeSessionId = SessionId("unreadable-local-match"),
+                            backRequestId = backRequestId,
                             modifier = Modifier.size(360.dp, 740.dp),
                         )
                     }
@@ -206,6 +258,8 @@ private class UnreadableLocalStore : SnapshotStore {
     val failDelete = AtomicBoolean(false)
     val retryGate = AtomicReference<CompletableDeferred<Unit>?>(null)
     val recoverable = AtomicReference<GameSnapshot?>(null)
+    val saveGate = AtomicReference<CompletableDeferred<Unit>?>(null)
+    val lastSaved = AtomicReference<GameSnapshot?>(null)
 
     override suspend fun load(sessionId: SessionId): Result<GameSnapshot, DataError> {
         if (loads.incrementAndGet() > 1) {
@@ -217,6 +271,8 @@ private class UnreadableLocalStore : SnapshotStore {
 
     override suspend fun save(snapshot: GameSnapshot): EmptyResult<DataError> {
         saves.incrementAndGet()
+        saveGate.get()?.await()
+        lastSaved.set(snapshot)
         return EmptyOk
     }
 

@@ -140,7 +140,10 @@ stateDiagram-v2
     AdmissionPending --> Lobby: room code valid and host approves
     AdmissionPending --> Ended: rejected, invalid, timeout, or incompatible
     Lobby --> Playing: host closes admission and starts
-    Playing --> Suspended: app background or transport loss
+    Playing --> Retained: eligible brief background (best effort, <15 s)
+    Retained --> Playing: foreground and fresh authenticated validation
+    Retained --> Suspended: connection loss, failed validation, or 15 s elapsed
+    Playing --> Suspended: ineligible background or transport loss
     Suspended --> Resuming: foreground or network recovery within 120 s
     Resuming --> Playing: pinned identity and rotated credential committed
     Resuming --> Ended: invalid credential, host gone, or deadline expires
@@ -182,12 +185,51 @@ spectator role, public-internet rendezvous, NAT traversal, relay, or backend
 identity. Host loss after the grace period is terminal.
 
 App lifecycle is an ordered logical-room transition, not only a P2pKit hint.
-Backgrounding moves the room to Suspended and rejects mutation commands.
-Foregrounding inside the original 120-second deadline moves through Resuming;
-Active is restored only after the transport/session handoff is ready. Repeated
-background events do not extend the deadline. Host expiry performs terminal
-room cleanup; peer expiry removes its local room and invalidates unusable
-resume state according to the failure.
+Private-content concealment remains immediate for background and inactive
+interruptions. Local player commands are blocked while backgrounded and during
+foreground validation. An established, healthy match may retain its existing
+authenticated connections for **15 seconds, best effort**. The host stops
+advertising and admitting connections immediately; only existing authenticated
+peers may continue commands while the host process can execute. Lobby, pending
+admission/resume transactions, unhealthy connections, or a missing session
+validation owner instead suspend immediately.
+
+Retention is not a new wire state: `RoomLifecycleState` stays Active, while
+`foregroundReady` and execution-time command gates control local interaction.
+A short return requires a fresh authenticated round trip within **2 seconds**
+and within the original 15-second window. The host challenges every current
+seat using a heartbeat echo; a peer queries a never-submitted command ID and
+installs any missing authoritative revision. Pending actions are reconciled
+by ID, never replayed. This uses existing protocol-4.2 messages and only
+never-retired sockets; older peers without heartbeat echoes fall back safely.
+
+Known loss, elapsed grace, or failed validation uses the existing hard
+suspension/secure-rejoin path. Foregrounding inside the original **120 seconds
+from first background** moves through Resuming; Active returns only after the
+transport/session handoff. Repeated background events and delayed OS timers
+do not extend the deadline. Host expiry performs terminal room cleanup; peer
+expiry removes its local room and invalidates unusable resume state according
+to the failure. This does not guarantee iOS background execution or 15 seconds
+of connectivity: the OS may suspend or close networking sooner. There is no
+background entitlement, foreground service, or keep-alive permission change.
+
+Foreground peers in **every game** allow at most **1 second** for a soft native
+reconnect before retiring that socket and starting pinned, credential-based
+resume. They do not wait for P2pKit's entire native retry loop. A fast native
+recovery keeps its socket; a retired socket cannot restore readiness. Closure
+precedes replacement, the original loss/recovery deadline is retained, and no
+game command is replayed. This bounds the handoff to secure recovery, not total
+reconnection time; discovery and an unavailable/suspended host can still delay it.
+
+Last Light replaces the private table with a calm, public-only recovery
+surface until ready; the heading names the reconnecting host or known missing
+player, and distinguishes local synchronization. It never guesses why someone
+is unavailable. Leave still requires confirmation. Its per-match **Keep
+screen awake** option defaults off and only prevents automatic timeout during
+foreground, connected play. It releases on background/inactivity, results,
+recovery, and disposal; a new match defaults off. Manual lock and app switching
+remain possible. Android uses the visible view flag; iOS uses the application
+idle timer, not a wake lock or background-execution mechanism.
 
 The current authorization mode accepts an authenticated same-app P2pKit
 identity and relies on room code plus host approval for admission. It encrypts

@@ -1,6 +1,7 @@
 package com.parlor.games.lastlight.ui.flow.multidevice
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -33,9 +34,8 @@ import com.parlor.designsystem.components.ParlorCard
 import com.parlor.designsystem.components.ParlorContextTone
 import com.parlor.designsystem.components.ParlorToastSeverity
 import com.parlor.designsystem.components.SessionExitBackAction
-import com.parlor.designsystem.components.SessionExitConfirmation
+import com.parlor.games.lastlight.ui.flow.common.LastLightExitConfirmation
 import com.parlor.designsystem.components.SessionExitKind
-import com.parlor.designsystem.components.SessionExitOverlay
 import com.parlor.designsystem.components.StickyActionLayout
 import com.parlor.designsystem.components.sessionExitBackAction
 import com.parlor.designsystem.components.parlorSafeContentPadding
@@ -204,20 +204,15 @@ fun LastLightHostLobbyFlow(
         }
     }
     if (leaveConfirmationOpen) {
-        SessionExitConfirmation(
+        LastLightExitConfirmation(
             kind = SessionExitKind.Host,
             onStay = { leaveConfirmationOpen = false },
             onExit = { leaveToHome(SessionEndReason.HostLeft) },
             exitInFlight = leaveInFlight,
-            destructive = true,
             modifier = modifier,
         )
     } else {
-        SessionExitOverlay(
-            visible = gameIsActive,
-            onClick = { if (hostLobbyActionsEnabled(leaveInFlight, retryInFlight)) leaveConfirmationOpen = true },
-            modifier = modifier,
-        ) {
+        Box(modifier = modifier.fillMaxSize()) {
             when {
                 renderedHostError != null -> LastLightLobbyErrorState(
                     title = stringResource(Res.string.md_host_error_title),
@@ -314,7 +309,9 @@ fun LastLightHostLobbyFlow(
                             }
                         },
                         operationInFlight = leaveInFlight || retryInFlight,
-                        onRequestLeave = { leaveConfirmationOpen = true },
+                        onRequestLeave = {
+                            if (hostLobbyActionsEnabled(leaveInFlight, retryInFlight)) leaveConfirmationOpen = true
+                        },
                         modifier = Modifier.fillMaxSize(),
                     )
                 }

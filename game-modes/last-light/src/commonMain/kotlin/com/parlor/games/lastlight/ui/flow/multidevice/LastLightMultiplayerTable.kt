@@ -36,6 +36,7 @@ internal fun LastLightMultiplayerTable(
     actions: LastLightActionSubmission,
     connected: Boolean,
     onReturnToLobby: () -> Unit,
+    onRequestLeave: () -> Unit,
     modifier: Modifier = Modifier,
     commandsAllowed: Boolean = true,
     recoveryEpoch: Long = 0L,
@@ -110,6 +111,7 @@ internal fun LastLightMultiplayerTable(
         onReturnToLobby = {
             if (enabled && submissionStillAllowed() && isHost && state.phase == GamePhase.FINISHED) onReturnToLobby()
         },
+        onRequestLeave = onRequestLeave,
         modifier = modifier,
     )
 }

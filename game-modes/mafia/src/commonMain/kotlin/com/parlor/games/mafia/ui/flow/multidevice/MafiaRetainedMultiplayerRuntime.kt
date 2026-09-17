@@ -88,6 +88,7 @@ internal class MafiaHostRuntime(
             driveMafiaHostProgression(
                 states = checkNotNull(session.canonicalState),
                 lifecycle = room.lifecycle,
+                foregroundReady = room.foregroundReady,
                 submit = { action -> session.submit(action) },
             )
         }

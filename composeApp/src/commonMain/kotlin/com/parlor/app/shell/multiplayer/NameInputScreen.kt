@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.text.KeyboardActions
@@ -34,6 +33,7 @@ import com.parlor.designsystem.components.ParlorButton
 import com.parlor.designsystem.components.ParlorTextField
 import com.parlor.designsystem.components.ScreenHeader
 import com.parlor.designsystem.components.StickyActionLayout
+import com.parlor.designsystem.components.parlorImePadding
 import com.parlor.designsystem.components.parlorSafeContentPadding
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.networking.room.RoomInputPolicy
@@ -67,7 +67,7 @@ fun NameInputScreen(
 
     HeroBackdrop(modifier = modifier.fillMaxSize()) {
         StickyActionLayout(
-            modifier = Modifier.fillMaxSize().imePadding(),
+            modifier = Modifier.fillMaxSize().parlorImePadding(),
             content = {
                 Column(
                     modifier = Modifier

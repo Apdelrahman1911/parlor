@@ -1,6 +1,7 @@
 package com.parlor.app
 
 import androidx.compose.ui.window.ComposeUIViewController
+import androidx.compose.ui.uikit.OnFocusBehavior
 import com.parlor.app.lifecycle.AppLifecycleCoordinator
 import com.parlor.app.di.allModules
 import kotlin.concurrent.Volatile
@@ -17,6 +18,9 @@ import org.koin.mp.KoinPlatform
 @Suppress("FunctionName", "Unused")
 fun MainViewController() = ComposeUIViewController(
     configure = {
+        // Input screens own IME padding and focused-field scrolling. Moving the
+        // whole scene as well can push chrome offscreen and leave a second gap.
+        onFocusBehavior = OnFocusBehavior.DoNothing
         startKoinOnce()
     },
 ) {

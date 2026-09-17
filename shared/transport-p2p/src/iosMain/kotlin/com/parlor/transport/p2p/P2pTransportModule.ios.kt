@@ -52,10 +52,11 @@ actual val p2pTransportModule: Module = module {
         createP2pTransportScope()
     }
     single<P2pDiagnostics> {
+        val scope = get<CoroutineScope>(qualifier = named("p2pTransport"))
         BoundedP2pDiagnostics(
-            scope = get(qualifier = named("p2pTransport")),
+            scope = scope,
             writer = platformP2pDiagnosticWriter(),
-        )
+        ).also { diagnostics -> observeNativeLanStates(scope, diagnostics) }
     }
     single<P2pKitFactory> { IosP2pKitFactory() }
     single<RoomTransport> {

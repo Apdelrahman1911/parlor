@@ -81,6 +81,7 @@ internal fun PrivateHand(
     canReveal: Boolean,
     canSelect: Boolean,
     largeText: Boolean,
+    compact: Boolean,
     selectionLimitReached: Boolean,
     onToggle: (CardId) -> Unit,
     onHide: () -> Unit,
@@ -138,6 +139,7 @@ internal fun PrivateHand(
                 canReveal = canReveal,
                 onShow = onShow,
                 largeText = largeText,
+                compact = compact,
                 modifier = Modifier.padding(horizontal = 20.dp, vertical = 12.dp),
             )
         } else if (largeText) {
@@ -220,8 +222,23 @@ private fun ConcealedHand(
     canReveal: Boolean,
     onShow: () -> Unit,
     largeText: Boolean,
+    compact: Boolean,
     modifier: Modifier = Modifier,
 ) {
+    val revealControl: @Composable (Modifier) -> Unit = { buttonModifier ->
+        DeckButton(
+            text = stringResource(Res.string.game_show_hand),
+            onClick = onShow,
+            enabled = canReveal,
+            secondary = true,
+            modifier = buttonModifier.fillMaxWidth().testTag("game-reveal-hand"),
+        )
+    }
+    // Reserve phone space for everyone's public counts; private cards still require an explicit reveal.
+    if (compact) {
+        revealControl(modifier)
+        return
+    }
     Surface(
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(18.dp),
@@ -229,16 +246,7 @@ private fun ConcealedHand(
         border = BorderStroke(1.dp, LastLightColors.Divider),
     ) {
         Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
-            val revealControl: @Composable () -> Unit = {
-                DeckButton(
-                    text = stringResource(Res.string.game_show_hand),
-                    onClick = onShow,
-                    enabled = canReveal,
-                    secondary = true,
-                    modifier = Modifier.fillMaxWidth().testTag("game-reveal-hand"),
-                )
-            }
-            if (largeText) revealControl()
+            if (largeText) revealControl(Modifier)
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(14.dp)) {
                 Box(Modifier.size(width = 46.dp, height = 62.dp), contentAlignment = Alignment.Center) {
                     CardBack(Modifier.size(width = 36.dp, height = 54.dp).rotate(-9f))
@@ -256,7 +264,7 @@ private fun ConcealedHand(
                     )
                 }
             }
-            if (!largeText) revealControl()
+            if (!largeText) revealControl(Modifier)
         }
     }
 }

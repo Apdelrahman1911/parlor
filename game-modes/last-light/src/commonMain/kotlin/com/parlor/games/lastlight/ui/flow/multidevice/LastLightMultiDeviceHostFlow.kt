@@ -11,18 +11,14 @@ import com.parlor.core.time.Clock
 import com.parlor.engine.state.Player
 import com.parlor.games.lastlight.LastLightDefinition
 import com.parlor.games.lastlight.resources.Res
-import com.parlor.games.lastlight.resources.md_host_peer_away_body_format
-import com.parlor.games.lastlight.resources.md_host_peer_away_title
 import com.parlor.games.lastlight.resources.md_host_start_failed_body
 import com.parlor.games.lastlight.resources.md_host_start_failed_timeout
 import com.parlor.games.lastlight.resources.md_host_start_failed_title
 import com.parlor.games.lastlight.resources.md_host_starting
 import com.parlor.games.lastlight.resources.md_session_ended
 import com.parlor.games.lastlight.resources.md_session_ended_body
-import com.parlor.games.lastlight.resources.md_session_paused
 import com.parlor.networking.protocol.SessionEndReason
 import com.parlor.networking.room.NetError
-import com.parlor.networking.room.RoomLifecycleState
 import com.parlor.session.multidevice.HostStartGateState
 import com.parlor.session.multidevice.ProcessMultiplayerSession
 import com.parlor.session.multidevice.RetainedValueResult
@@ -67,9 +63,11 @@ internal fun LastLightMultiDeviceHostFlow(
     val terminalReason by runtime.bridge.terminalReason.collectAsState()
     val recoveryEpoch by runtime.bridge.recoveryEpoch.collectAsState()
     val lifecycle by runtime.room.lifecycle.collectAsState()
+    val foregroundReady by runtime.room.foregroundReady.collectAsState()
     val playerProjection by runtime.session.privateStateFor(runtime.room.selfPlayerId).collectAsState()
     val state = playerProjection.state
     val disconnectedPlayer = state.players.firstOrNull { it.id in state.public.disconnectedPlayers }
+    val recovery = lastLightHostRecoveryState(lifecycle, foregroundReady, disconnectedPlayer?.displayName)
 
     when {
         terminalReason != null || state.public.endedEarly -> LastLightNetworkStatus(
@@ -104,17 +102,9 @@ internal fun LastLightMultiDeviceHostFlow(
             actionsEnabled = !operationInFlight,
             modifier = modifier,
         )
-        disconnectedPlayer != null -> LastLightNetworkStatus(
-            title = stringResource(Res.string.md_host_peer_away_title),
-            body = stringResource(Res.string.md_host_peer_away_body_format, disconnectedPlayer.displayName),
-            onLeave = onRequestLeave,
-            actionsEnabled = !operationInFlight,
-            modifier = modifier,
-        )
-        lifecycle != RoomLifecycleState.Active -> LastLightNetworkStatus(
-            title = stringResource(Res.string.md_session_paused),
-            body = null,
-            onLeave = onRequestLeave,
+        recovery != null -> LastLightConnectionRecovery(
+            state = recovery,
+            onRequestLeave = onRequestLeave,
             actionsEnabled = !operationInFlight,
             modifier = modifier,
         )
@@ -130,6 +120,7 @@ internal fun LastLightMultiDeviceHostFlow(
                 recoveryEpoch = recoveryEpoch,
                 recoveryEpochReader = { runtime.bridge.recoveryEpoch.value },
                 onReturnToLobby = { onNewRoom(SessionEndReason.Completed) },
+                onRequestLeave = onRequestLeave,
                 modifier = modifier.fillMaxSize(),
             )
         }

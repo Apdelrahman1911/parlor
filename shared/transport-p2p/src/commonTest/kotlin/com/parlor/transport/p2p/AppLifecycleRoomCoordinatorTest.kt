@@ -9,11 +9,12 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class AppLifecycleRoomCoordinatorTest {
     @Test
     @OptIn(ExperimentalCoroutinesApi::class)
     fun foreground_cannot_be_overtaken_by_background_captured_during_room_registration() = runTest {
-        val coordinator = AppLifecycleRoomCoordinator()
+        val coordinator = AppLifecycleRoomCoordinator(backgroundScope, nowMillis = { testScheduler.currentTime })
         val room = BlockingLifecycleRoom()
         coordinator.backgrounded(atEpochMillis = 100L)
 
@@ -39,7 +40,7 @@ class AppLifecycleRoomCoordinatorTest {
 
     @Test
     fun close_from_an_old_generation_cannot_detach_the_replacement_room() = runTest {
-        val coordinator = AppLifecycleRoomCoordinator()
+        val coordinator = AppLifecycleRoomCoordinator(backgroundScope, nowMillis = { testScheduler.currentTime })
         val oldRoom = RecordingLifecycleRoom()
         val replacement = RecordingLifecycleRoom()
         coordinator.register("old", oldRoom)

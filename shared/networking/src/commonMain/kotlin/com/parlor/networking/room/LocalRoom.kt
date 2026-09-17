@@ -32,6 +32,25 @@ interface LocalRoom {
     val lifecycle: StateFlow<RoomLifecycleState>
         get() = activeRoomLifecycle
 
+    /** False while backgrounded or validating a briefly retained connection. */
+    val foregroundReady: StateFlow<Boolean>
+        get() = alwaysForegroundReady
+
+    /** Checked at execution, not just when UI input is queued. */
+    val acceptsLocalGameCommands: Boolean
+        get() = foregroundReady.value && lifecycle.value == RoomLifecycleState.Active
+
+    /** Transport implementations also check an elapsed background deadline here. */
+    val acceptsRemoteGameCommands: Boolean
+        get() = lifecycle.value == RoomLifecycleState.Active
+
+    /**
+     * Registers the current session's validation owner. The returned disposer
+     * must detach only this registration, never a replacement session owner.
+     * Transports without brief-background retention safely ignore this hook.
+     */
+    fun registerForegroundValidator(validator: ForegroundConnectionValidator): () -> Unit = {}
+
     /**
      * The local device's player id. On the host this equals
      * [RoomInfo.hostPlayerId]; on a peer this is the peer's own id, distinct
@@ -195,6 +214,8 @@ internal val emptyPendingAdmissions: StateFlow<List<PendingAdmission>> =
 
 internal val activeRoomLifecycle: StateFlow<RoomLifecycleState> =
     MutableStateFlow<RoomLifecycleState>(RoomLifecycleState.Active)
+
+internal val alwaysForegroundReady: StateFlow<Boolean> = MutableStateFlow(true)
 
 sealed interface SendTarget {
     data object Broadcast : SendTarget

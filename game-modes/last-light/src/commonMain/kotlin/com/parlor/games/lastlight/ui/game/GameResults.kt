@@ -10,13 +10,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -28,7 +24,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -38,6 +33,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.graphicsLayer
@@ -68,12 +65,13 @@ import com.parlor.games.lastlight.resources.game_challenged_sentence
 import com.parlor.games.lastlight.resources.game_claimed_sentence
 import com.parlor.games.lastlight.resources.game_dealing
 import com.parlor.games.lastlight.resources.game_final_reveal
-import com.parlor.games.lastlight.resources.game_fuse_hidden_point
 import com.parlor.games.lastlight.resources.game_fuse_label
 import com.parlor.games.lastlight.resources.game_fuse_out
 import com.parlor.games.lastlight.resources.game_fuse_out_detail
 import com.parlor.games.lastlight.resources.game_fuse_safe
 import com.parlor.games.lastlight.resources.game_fuse_tests
+import com.parlor.games.lastlight.resources.game_fuse_burnout
+import com.parlor.games.lastlight.resources.game_fuse_safe_test
 import com.parlor.games.lastlight.resources.game_hide_final_reveal
 import com.parlor.games.lastlight.resources.game_next_round
 import com.parlor.games.lastlight.resources.game_result_unavailable
@@ -84,6 +82,7 @@ import com.parlor.games.lastlight.resources.game_returning
 import com.parlor.games.lastlight.resources.game_revealed_card_description
 import com.parlor.games.lastlight.resources.game_revealed_cards
 import com.parlor.games.lastlight.resources.game_round_label
+import com.parlor.games.lastlight.resources.game_rank_table
 import com.parlor.games.lastlight.resources.game_truth_detail
 import com.parlor.games.lastlight.resources.game_truth_title
 import com.parlor.games.lastlight.resources.game_waiting_host
@@ -146,62 +145,75 @@ internal fun ChallengeResult(
     val challenger = playerName(view, outcome.challengerId)
     val penalized = playerName(view, outcome.penalizedPlayerId)
     val verdict = stringResource(if (outcome.truthful) Res.string.game_truth_title else Res.string.game_bluff_title)
-    Column(modifier, verticalArrangement = Arrangement.spacedBy(20.dp)) {
-        Column(verticalArrangement = Arrangement.spacedBy(7.dp)) {
+    val accent = if (outcome.truthful) LastLightColors.Citron else LastLightColors.Copper
+    Column(modifier, verticalArrangement = Arrangement.spacedBy(16.dp)) {
+        TablePanel(Modifier.fillMaxWidth(), accent = accent.copy(alpha = 0.5f)) {
             SectionLabel(stringResource(Res.string.game_round_label, outcome.roundNumber))
             Text(
                 verdict,
                 // Keep long translated words intact without clamping the user's font scale.
                 style = if (largeText) MaterialTheme.typography.headlineSmall else MaterialTheme.typography.headlineLarge,
-                color = if (outcome.truthful) LastLightColors.Citron else LastLightColors.Copper,
+                color = accent,
                 modifier = Modifier.semantics {
                     heading()
                     if (announceVerdict) liveRegion = LiveRegionMode.Polite
                 },
             )
-            Text(
-                text = stringResource(
-                    if (outcome.burnedOut) Res.string.game_result_out_summary else Res.string.game_result_safe_summary,
-                    penalized,
-                    outcome.penaltyAttempt,
-                ),
-                style = MaterialTheme.typography.titleSmall,
-                color = LastLightColors.Paper,
-            )
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                if (!largeText) {
+                    Box(Modifier.size(58.dp).clearAndSetSemantics { }) {
+                        FuseCylinder(outcome.penaltyAttempt, outcome.burnedOut, Modifier.fillMaxSize())
+                    }
+                }
+                Text(
+                    text = stringResource(
+                        if (outcome.burnedOut) Res.string.game_result_out_summary else Res.string.game_result_safe_summary,
+                        penalized,
+                        outcome.penaltyAttempt,
+                    ),
+                    style = MaterialTheme.typography.titleSmall,
+                    color = LastLightColors.Paper,
+                    modifier = Modifier.weight(1f),
+                )
+            }
+        }
+
+        TablePanel(Modifier.fillMaxWidth()) {
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                if (!largeText) TableRankSeal(outcome.tableRank, Modifier.size(40.dp))
+                Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                    SectionLabel(stringResource(Res.string.game_revealed_cards))
+                    Text(
+                        stringResource(Res.string.game_rank_table, rankName(outcome.tableRank)),
+                        style = MaterialTheme.typography.titleSmall,
+                        color = LastLightColors.Paper,
+                    )
+                }
+            }
             Text(
                 stringResource(Res.string.game_challenged_sentence, challenger, claimant),
                 style = MaterialTheme.typography.bodyMedium,
                 color = LastLightColors.Paper,
             )
             Text(
-                stringResource(
-                    Res.string.game_claimed_sentence,
-                    claimant,
-                    rankClaim(outcome.tableRank, outcome.revealedCards.size),
-                ),
-                style = MaterialTheme.typography.bodyMedium,
+                stringResource(Res.string.game_claimed_sentence, claimant, rankClaim(outcome.tableRank, outcome.revealedCards.size)),
+                style = MaterialTheme.typography.bodySmall,
                 color = LastLightColors.Muted,
             )
+            RevealedCards(outcome, largeText)
+            Text(
+                stringResource(if (outcome.truthful) Res.string.game_truth_detail else Res.string.game_bluff_detail, penalized),
+                style = MaterialTheme.typography.bodyMedium,
+                color = LastLightColors.Paper,
+            )
         }
-
-        RevealedCards(outcome, largeText)
-
-        Text(
-            stringResource(
-                if (outcome.truthful) Res.string.game_truth_detail else Res.string.game_bluff_detail,
-                penalized,
-            ),
-            style = MaterialTheme.typography.bodyMedium,
-            color = LastLightColors.Paper,
-        )
-        FuseResult(outcome, penalized)
+        FuseResult(outcome, penalized, largeText)
     }
 }
 
 @Composable
 private fun RevealedCards(outcome: RoundOutcome, largeText: Boolean) {
     Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
-        SectionLabel(stringResource(Res.string.game_revealed_cards))
         if (largeText) {
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 outcome.revealedCards.forEach { card ->
@@ -229,26 +241,34 @@ private fun RevealedCards(outcome: RoundOutcome, largeText: Boolean) {
                 }
             }
         } else {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterHorizontally),
-            ) {
-                outcome.revealedCards.forEach { card ->
-                    val matches = card.rank == outcome.tableRank || card.rank == CardRank.WILD
-                    val status = revealStatus(card.rank, matches)
-                    val description = stringResource(Res.string.game_revealed_card_description, rankName(card.rank), status)
-                    Column(
-                        modifier = Modifier.width(80.dp).clearAndSetSemantics { contentDescription = description },
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.spacedBy(8.dp),
-                    ) {
-                        CardFace(card.rank, Modifier.size(width = 80.dp, height = 120.dp))
-                        Text(
-                            status,
-                            style = MaterialTheme.typography.labelMedium,
-                            color = if (matches) LastLightColors.Citron else LastLightColors.Copper,
-                            textAlign = TextAlign.Center,
-                        )
+            BoxWithConstraints(Modifier.fillMaxWidth()) {
+                val cardWidth = minOf(80.dp, (maxWidth - 12.dp * (outcome.revealedCards.size - 1)) / outcome.revealedCards.size)
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterHorizontally),
+                ) {
+                    outcome.revealedCards.forEachIndexed { index, card ->
+                        val matches = card.rank == outcome.tableRank || card.rank == CardRank.WILD
+                        val status = revealStatus(card.rank, matches)
+                        val description = stringResource(Res.string.game_revealed_card_description, rankName(card.rank), status)
+                        Column(
+                            modifier = Modifier.width(cardWidth).clearAndSetSemantics { contentDescription = description },
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.spacedBy(8.dp),
+                        ) {
+                            CardFace(
+                                card.rank,
+                                Modifier.size(width = cardWidth, height = cardWidth * 1.5f)
+                                    .rotate((index - (outcome.revealedCards.size - 1) / 2f) * 5f)
+                                    .shadow(5.dp, RoundedCornerShape(8.dp)),
+                            )
+                            Text(
+                                status,
+                                style = MaterialTheme.typography.labelMedium,
+                                color = if (matches) LastLightColors.Citron else LastLightColors.Copper,
+                                textAlign = TextAlign.Center,
+                            )
+                        }
                     }
                 }
             }
@@ -266,23 +286,23 @@ private fun revealStatus(rank: CardRank, matches: Boolean): String = stringResou
 )
 
 @Composable
-private fun FuseResult(outcome: RoundOutcome, penalized: String) {
-    Surface(
-        shape = RoundedCornerShape(20.dp),
-        color = LastLightColors.Surface,
-        border = BorderStroke(1.dp, LastLightColors.Divider),
-    ) {
-        Column(Modifier.fillMaxWidth().padding(18.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
-            SectionLabel(stringResource(Res.string.game_fuse_label))
-            FuseLights(outcome.penaltyAttempt, outcome.burnedOut, compact = false)
+private fun FuseResult(outcome: RoundOutcome, penalized: String, largeText: Boolean) {
+    val accent = if (outcome.burnedOut) LastLightColors.Copper else LastLightColors.Citron
+    TablePanel(Modifier.fillMaxWidth().testTag("game-fuse-result"), accent = accent.copy(alpha = 0.5f)) {
+        SectionLabel(stringResource(Res.string.game_fuse_label), color = accent)
+        val result: @Composable () -> Unit = {
             Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                SectionLabel(
+                    stringResource(if (outcome.burnedOut) Res.string.game_fuse_burnout else Res.string.game_fuse_safe_test),
+                    color = accent,
+                )
                 Text(
                     text = stringResource(
                         if (outcome.burnedOut) Res.string.game_fuse_out else Res.string.game_fuse_safe,
                         penalized,
                     ),
-                    style = MaterialTheme.typography.headlineSmall,
-                    color = if (outcome.burnedOut) LastLightColors.Copper else LastLightColors.Citron,
+                    style = MaterialTheme.typography.titleLarge,
+                    color = LastLightColors.Paper,
                 )
                 Text(
                     text = stringResource(Res.string.game_fuse_tests, outcome.penaltyAttempt),
@@ -296,13 +316,19 @@ private fun FuseResult(outcome: RoundOutcome, penalized: String) {
                         color = LastLightColors.Muted,
                     )
                 }
-                Text(
-                    stringResource(Res.string.game_fuse_hidden_point),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = LastLightColors.Muted,
-                )
             }
         }
+        if (largeText) {
+            FuseCylinder(outcome.penaltyAttempt, outcome.burnedOut, Modifier.size(88.dp).align(Alignment.CenterHorizontally))
+            result()
+        } else {
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                FuseCylinder(outcome.penaltyAttempt, outcome.burnedOut, Modifier.size(94.dp))
+                Box(Modifier.weight(1f)) { result() }
+            }
+        }
+        FuseLegend()
+        FuseExplanation()
     }
 }
 
@@ -333,13 +359,12 @@ internal fun MatchResultScreen(
             WaitingForHost()
         }
         view.roundOutcome?.let { outcome ->
-            TextButton(
+            DeckButton(
+                text = stringResource(if (showReveal) Res.string.game_hide_final_reveal else Res.string.game_final_reveal),
                 onClick = { showReveal = !showReveal },
-                modifier = Modifier.heightIn(min = 48.dp).testTag("game-final-reveal"),
-                contentPadding = PaddingValues(horizontal = 12.dp, vertical = 12.dp),
-            ) {
-                Text(stringResource(if (showReveal) Res.string.game_hide_final_reveal else Res.string.game_final_reveal))
-            }
+                modifier = Modifier.fillMaxWidth().testTag("game-final-reveal"),
+                secondary = true,
+            )
             if (showReveal) ChallengeResult(view, outcome, largeText, Modifier.fillMaxWidth(), announceVerdict = false)
         }
     }
@@ -354,13 +379,9 @@ internal fun MatchResultScreen(
                 horizontalArrangement = Arrangement.spacedBy(24.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Column(
-                    modifier = Modifier.width(176.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(12.dp),
-                ) {
+                TablePanel(modifier = Modifier.width(188.dp), accent = LastLightColors.Citron.copy(alpha = 0.4f)) {
                     SectionLabel(stringResource(Res.string.game_winner_eyebrow), color = LastLightColors.Citron)
-                    WinnerEmblem(view.winnerId, diameter = 112.dp)
+                    WinnerEmblem(view.winnerId, diameter = 132.dp)
                 }
                 Column(
                     modifier = Modifier.weight(1f).verticalScroll(rememberScrollState()),
@@ -377,10 +398,17 @@ internal fun MatchResultScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(if (largeText) 16.dp else 20.dp),
             ) {
-                SectionLabel(stringResource(Res.string.game_winner_eyebrow), color = LastLightColors.Citron)
-                if (!largeText) WinnerEmblem(view.winnerId)
-                WinnerSummary(view, largeText, shortLandscape = false)
-                if (!largeText) Spacer(Modifier.height(2.dp))
+                TablePanel(Modifier.fillMaxWidth(), accent = LastLightColors.Citron.copy(alpha = 0.4f), padding = 20.dp) {
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(16.dp),
+                    ) {
+                        SectionLabel(stringResource(Res.string.game_winner_eyebrow), color = LastLightColors.Citron)
+                        if (!largeText) WinnerEmblem(view.winnerId)
+                        WinnerSummary(view, largeText, shortLandscape = false)
+                    }
+                }
                 continuation()
             }
         }
@@ -421,13 +449,19 @@ private fun WinnerSummary(view: GameView, largeText: Boolean, shortLandscape: Bo
 
 @Composable
 private fun WaitingForHost() {
-    Text(
-        stringResource(Res.string.game_waiting_host),
-        style = MaterialTheme.typography.bodyMedium,
-        color = LastLightColors.Muted,
-        textAlign = TextAlign.Center,
-        modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp),
-    )
+    Surface(
+        color = LastLightColors.Surface.copy(alpha = 0.7f),
+        shape = RoundedCornerShape(24.dp),
+        border = BorderStroke(1.dp, LastLightColors.Divider),
+    ) {
+        Text(
+            stringResource(Res.string.game_waiting_host),
+            style = MaterialTheme.typography.bodyMedium,
+            color = LastLightColors.Muted,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.fillMaxWidth().padding(16.dp),
+        )
+    }
 }
 
 @Composable
@@ -447,6 +481,11 @@ private fun WinnerEmblem(winnerId: String?, diameter: Dp = 152.dp) {
     ) {
         Canvas(Modifier.fillMaxSize()) {
             val center = Offset(size.width / 2f, size.height / 2f)
+            drawCircle(LastLightColors.Citron.copy(alpha = 0.07f), size.minDimension * 0.5f)
+            drawCircle(
+                LastLightColors.Citron.copy(alpha = 0.35f), size.minDimension * 0.4f,
+                style = androidx.compose.ui.graphics.drawscope.Stroke(1.dp.toPx()),
+            )
             repeat(12) { index ->
                 val angle = index * kotlin.math.PI / 6
                 val inner = size.minDimension * 0.43f
@@ -464,7 +503,7 @@ private fun WinnerEmblem(winnerId: String?, diameter: Dp = 152.dp) {
             Modifier.size(diameter * (112f / 152f)).background(LastLightColors.Citron, CircleShape),
             contentAlignment = Alignment.Center,
         ) {
-            RankSymbol(CardRank.STAR, Modifier.size(diameter * 0.5f))
+            RankSymbol(CardRank.CROWN, Modifier.size(diameter * 0.5f))
         }
     }
 }

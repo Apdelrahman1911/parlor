@@ -203,6 +203,25 @@ tasks.named("desktopTest") {
     )
         .withPropertyName("platformLocaleContractSources")
         .withPathSensitivity(org.gradle.api.tasks.PathSensitivity.RELATIVE)
+    inputs.files(
+        rootProject.file("iosApp/iosApp/ContentView.swift"),
+        layout.projectDirectory.file("src/iosMain/kotlin/com/parlor/app/MainViewController.kt"),
+    )
+        .withPropertyName("iosKeyboardInsetContractSources")
+        .withPathSensitivity(org.gradle.api.tasks.PathSensitivity.RELATIVE)
+    inputs.files(
+        layout.projectDirectory.file("build.gradle.kts"),
+        layout.projectDirectory.file("src/androidMain/AndroidManifest.xml"),
+        fileTree("src/androidMain/res") { include("**/strings.xml") },
+        fileTree("src/androidDebug/res") { include("**/strings.xml") },
+        rootProject.file("iosApp/Configuration/Config.xcconfig"),
+        rootProject.file("iosApp/iosApp.xcodeproj/project.pbxproj"),
+        rootProject.file("iosApp/iosApp/Info.plist"),
+        rootProject.fileTree("iosApp/iosApp") { include("*.lproj/InfoPlist.strings") },
+        rootProject.fileTree("iosApp/scripts") { include("copy_localized_metadata.sh") },
+    )
+        .withPropertyName("nativeApplicationNameContractSources")
+        .withPathSensitivity(org.gradle.api.tasks.PathSensitivity.RELATIVE)
 }
 
 // Release Kotlin/Native LTO is memory intensive. With Gradle parallelism
@@ -288,6 +307,8 @@ android {
         }
     }
     sourceSets {
+        // Launcher branding only; Store resources and application IDs are unchanged.
+        getByName("debug").res.srcDir("src/androidDebug/res")
         // KMP owns the androidInstrumentedTest hierarchy, while AGP's Java
         // compiler reads androidTest. Point it at the shared KMP layout so the
         // platform-only smoke test is packaged in the test APK.

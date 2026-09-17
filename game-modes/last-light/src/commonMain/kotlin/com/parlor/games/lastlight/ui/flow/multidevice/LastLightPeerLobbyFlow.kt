@@ -27,16 +27,12 @@ import com.parlor.core.result.Result
 import com.parlor.designsystem.backdrop.HeroBackdrop
 import com.parlor.designsystem.components.CandleFlame
 import com.parlor.designsystem.components.EyebrowLabel
-import com.parlor.designsystem.components.OfflineBanner
 import com.parlor.designsystem.components.ParlorButton
 import com.parlor.designsystem.components.ParlorButtonVariant
 import com.parlor.designsystem.components.ParlorCard
-import com.parlor.designsystem.components.ReconnectingOverlay
 import com.parlor.designsystem.components.SessionExitBackAction
-import com.parlor.designsystem.components.SessionExitConfirmation
+import com.parlor.games.lastlight.ui.flow.common.LastLightExitConfirmation
 import com.parlor.designsystem.components.SessionExitKind
-import com.parlor.designsystem.components.SessionExitOverlay
-import com.parlor.designsystem.components.coveredByReconnectingOverlay
 import com.parlor.designsystem.components.sessionExitBackAction
 import com.parlor.designsystem.components.parlorSafeContentPadding
 import com.parlor.designsystem.theme.ParlorTheme
@@ -49,10 +45,7 @@ import com.parlor.games.lastlight.resources.md_peer_error_title
 import com.parlor.games.lastlight.resources.md_peer_eyebrow
 import com.parlor.games.lastlight.resources.md_peer_leave
 import com.parlor.games.lastlight.resources.md_peer_leave_description
-import com.parlor.games.lastlight.resources.md_peer_offline_banner
 import com.parlor.games.lastlight.resources.md_peer_reconnecting
-import com.parlor.games.lastlight.resources.md_peer_reconnecting_leave
-import com.parlor.games.lastlight.resources.md_peer_reconnecting_leave_description
 import com.parlor.games.lastlight.resources.md_peer_room_code_format
 import com.parlor.games.lastlight.resources.md_peer_room_format
 import com.parlor.games.lastlight.resources.md_peer_waiting_for_start
@@ -125,9 +118,6 @@ fun LastLightPeerLobbyFlow(
     var leaveConfirmationOpen by remember(route) { mutableStateOf(false) }
     val flowScope = rememberCoroutineScope()
     val presentationState = rememberSaveableStateHolder()
-
-    var hostLost by remember { mutableStateOf(false) }
-    var selfOffline by remember { mutableStateOf(false) }
 
     val checkpoint by produceState<RetainedMultiplayerCheckpoint?>(
         initialValue = ownedSession?.checkpoint?.value,
@@ -267,83 +257,55 @@ fun LastLightPeerLobbyFlow(
     }
 
     if (leaveConfirmationOpen) {
-        SessionExitConfirmation(
+        LastLightExitConfirmation(
             kind = SessionExitKind.Peer,
             onStay = { leaveConfirmationOpen = false },
             onExit = finalBackToHome,
             exitInFlight = finalLeaveInFlight,
-            destructive = true,
             modifier = modifier,
         )
     } else {
         Box(modifier = modifier.fillMaxSize()) {
-            SessionExitOverlay(
-                visible = gameIsActive && !hostLost,
-                onClick = { leaveConfirmationOpen = true },
-                modifier = Modifier
-                    .fillMaxSize()
-                    .coveredByReconnectingOverlay(hostLost),
-            ) {
-                Column(modifier = Modifier.fillMaxSize()) {
-                    if (selfOffline) {
-                        OfflineBanner(label = stringResource(Res.string.md_peer_offline_banner))
-                    }
-                    Box(modifier = Modifier.fillMaxSize()) {
-                        when {
-                            renderedPeerError != null -> LastLightPeerErrorState(
-                                title = stringResource(Res.string.md_peer_error_title),
-                                detail = lastlightNetworkErrorMessage(renderedPeerError),
-                                showNetworkRecovery = localNetworkAccess.needsRecoveryGuidance,
-                                onRetry = retryConnection.takeIf { joinError == null },
-                                onOpenNetworkSettings = onOpenNetworkSettings.takeIf {
-                                    localNetworkAccess.needsRecoveryGuidance
-                                },
-                                onBack = finalBackToHome,
-                                actionsEnabled = !finalLeaveInFlight && !retryInFlight,
-                                backInFlight = finalLeaveInFlight,
-                                retryInFlight = retryInFlight,
-                                modifier = Modifier.fillMaxSize(),
-                            )
-                            current == null -> LastLightPeerConnectingState(
-                                code = code,
-                                resuming = resumeExistingSession,
-                                onLeave = finalBackToHome,
-                                leaveEnabled = !finalLeaveInFlight,
-                                leaveInFlight = finalLeaveInFlight,
-                                modifier = Modifier.fillMaxSize(),
-                            )
-                            start == null -> LastLightPeerWaitingForStart(
-                                room = current,
-                                peerName = peerName,
-                                onLeave = finalBackToHome,
-                                modifier = Modifier.fillMaxSize(),
-                            )
-                            else -> LastLightMultiDevicePeerFlow(
-                                players = start.players,
-                                selfPlayerId = current.selfPlayerId,
-                                protocol = start.protocol,
-                                acceptedStartOffer = start.offer,
-                                ownedSession = checkNotNull(ownedSession),
-                                presentationState = presentationState,
-                                onBackToHome = finalBackToHome,
-                                onRequestLeave = { leaveConfirmationOpen = true },
-                                modifier = Modifier.fillMaxSize(),
-                                onHostLostChanged = { hostLost = it },
-                                onSelfOfflineChanged = { selfOffline = it },
-                            )
-                        }
-                    }
-                }
-            }
-            if (hostLost) {
-                ReconnectingOverlay(
-                    title = stringResource(Res.string.md_peer_reconnecting),
-                    leaveLabel = stringResource(Res.string.md_peer_reconnecting_leave),
-                    leaveContentDescription = stringResource(
-                        Res.string.md_peer_reconnecting_leave_description,
-                    ),
-                    onLeave = { leaveConfirmationOpen = true },
+            when {
+                renderedPeerError != null -> LastLightPeerErrorState(
+                    title = stringResource(Res.string.md_peer_error_title),
+                    detail = lastlightNetworkErrorMessage(renderedPeerError),
+                    showNetworkRecovery = localNetworkAccess.needsRecoveryGuidance,
+                    onRetry = retryConnection.takeIf { joinError == null },
+                    onOpenNetworkSettings = onOpenNetworkSettings.takeIf {
+                        localNetworkAccess.needsRecoveryGuidance
+                    },
+                    onBack = finalBackToHome,
+                    actionsEnabled = !finalLeaveInFlight && !retryInFlight,
+                    backInFlight = finalLeaveInFlight,
+                    retryInFlight = retryInFlight,
                     modifier = Modifier.fillMaxSize(),
+                )
+                current == null -> LastLightPeerConnectingState(
+                    code = code,
+                    resuming = resumeExistingSession,
+                    onLeave = finalBackToHome,
+                    leaveEnabled = !finalLeaveInFlight,
+                    leaveInFlight = finalLeaveInFlight,
+                    modifier = Modifier.fillMaxSize(),
+                )
+                start == null -> LastLightPeerWaitingForStart(
+                    room = current,
+                    peerName = peerName,
+                    onLeave = finalBackToHome,
+                    modifier = Modifier.fillMaxSize(),
+                )
+                else -> LastLightMultiDevicePeerFlow(
+                    players = start.players,
+                    selfPlayerId = current.selfPlayerId,
+                    protocol = start.protocol,
+                    acceptedStartOffer = start.offer,
+                    ownedSession = checkNotNull(ownedSession),
+                    presentationState = presentationState,
+                    onBackToHome = finalBackToHome,
+                    onRequestLeave = { if (!finalLeaveInFlight) leaveConfirmationOpen = true },
+                    modifier = Modifier.fillMaxSize(),
+                    operationInFlight = finalLeaveInFlight || retryInFlight,
                 )
             }
         }

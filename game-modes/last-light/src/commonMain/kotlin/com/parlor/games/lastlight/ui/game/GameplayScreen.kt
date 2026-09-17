@@ -115,88 +115,91 @@ fun GameplayScreen(
         limitReached = false
     }
 
-    BoxWithConstraints(
-        modifier = modifier.fillMaxSize().testTag("game-table").semantics { isTraversalGroup = true },
-        contentAlignment = Alignment.TopCenter,
-    ) {
-        val compactHeight = maxHeight < 660.dp && !largeText
-        when (view.phase) {
-            GamePhase.ROUND_ENDED -> RoundResultScreen(
-                view = view,
-                isHost = isHost,
-                canSendAction = actionEnabled,
-                canAdvanceRound = canAdvanceRound,
-                pendingAction = pendingAction,
-                largeText = largeText,
-                onNextRound = onNextRound,
-                modifier = Modifier.widthIn(max = 620.dp),
-            )
-            GamePhase.FINISHED -> MatchResultScreen(
-                view = view,
-                isHost = isHost,
-                canSendAction = actionEnabled,
-                canReturnToLobby = canReturnToLobby,
-                pendingAction = pendingAction,
-                largeText = largeText,
-                onReturnToLobby = onReturnToLobby,
-            )
-            GamePhase.PLAYING -> PlayingLayout(
-                view = view,
-                largeText = largeText,
-                hand = {
-                    val viewer = view.players.firstOrNull { it.id == view.viewerId }
-                    when {
-                        viewer == null || viewer.eliminated -> SpectatorMessage(viewer == null)
-                        view.yourHand.isEmpty() -> EmptyHandMessage(view.latestClaim?.playerId == view.viewerId)
-                        view.forcedChallenge && view.availableActions.canChallenge -> Unit
-                        else -> PrivateHand(
-                            cards = view.yourHand,
-                            selectedIds = if (handShown) safeSelection else emptySet(),
-                            selectionLimit = selectionLimit,
-                            shown = handShown,
-                            canReveal = privateContentVisible && !privacyChanged,
-                            canSelect = canSelect,
-                            largeText = largeText,
-                            selectionLimitReached = handShown && limitReached,
-                            onToggle = { id ->
-                                if (canSelect && id in availableIds) {
-                                    when {
-                                        id in safeSelection -> {
-                                            selectedIds = safeSelection - id
-                                            limitReached = false
+    TableBackdrop(modifier.fillMaxSize()) {
+        BoxWithConstraints(
+            modifier = Modifier.fillMaxSize().testTag("game-table").semantics { isTraversalGroup = true },
+            contentAlignment = Alignment.TopCenter,
+        ) {
+            val compactHeight = maxHeight < 660.dp && !largeText
+            when (view.phase) {
+                GamePhase.ROUND_ENDED -> RoundResultScreen(
+                    view = view,
+                    isHost = isHost,
+                    canSendAction = actionEnabled,
+                    canAdvanceRound = canAdvanceRound,
+                    pendingAction = pendingAction,
+                    largeText = largeText,
+                    onNextRound = onNextRound,
+                    modifier = Modifier.widthIn(max = 620.dp),
+                )
+                GamePhase.FINISHED -> MatchResultScreen(
+                    view = view,
+                    isHost = isHost,
+                    canSendAction = actionEnabled,
+                    canReturnToLobby = canReturnToLobby,
+                    pendingAction = pendingAction,
+                    largeText = largeText,
+                    onReturnToLobby = onReturnToLobby,
+                )
+                GamePhase.PLAYING -> PlayingLayout(
+                    view = view,
+                    largeText = largeText,
+                    hand = {
+                        val viewer = view.players.firstOrNull { it.id == view.viewerId }
+                        when {
+                            viewer == null || viewer.eliminated -> SpectatorMessage(viewer == null)
+                            view.yourHand.isEmpty() -> EmptyHandMessage(view.latestClaim?.playerId == view.viewerId)
+                            view.forcedChallenge && view.availableActions.canChallenge -> Unit
+                            else -> PrivateHand(
+                                cards = view.yourHand,
+                                selectedIds = if (handShown) safeSelection else emptySet(),
+                                selectionLimit = selectionLimit,
+                                shown = handShown,
+                                canReveal = privateContentVisible && !privacyChanged,
+                                canSelect = canSelect,
+                                largeText = largeText,
+                                compact = compactHeight,
+                                selectionLimitReached = handShown && limitReached,
+                                onToggle = { id ->
+                                    if (canSelect && id in availableIds) {
+                                        when {
+                                            id in safeSelection -> {
+                                                selectedIds = safeSelection - id
+                                                limitReached = false
+                                            }
+                                            safeSelection.size < selectionLimit -> {
+                                                selectedIds = safeSelection + id
+                                                limitReached = false
+                                            }
+                                            else -> limitReached = true
                                         }
-                                        safeSelection.size < selectionLimit -> {
-                                            selectedIds = safeSelection + id
-                                            limitReached = false
-                                        }
-                                        else -> limitReached = true
                                     }
-                                }
-                            },
-                            onHide = {
-                                handConcealed = true
-                                selectedIds = emptySet()
-                                limitReached = false
-                            },
-                            onShow = {
-                                if (privateContentVisible && !privacyChanged) handConcealed = false
-                            },
+                                },
+                                onHide = {
+                                    handConcealed = true
+                                    selectedIds = emptySet()
+                                    limitReached = false
+                                },
+                                onShow = {
+                                    if (privateContentVisible && !privacyChanged) handConcealed = false
+                                },
+                            )
+                        }
+                    },
+                    actions = {
+                        GameActions(
+                            view = view,
+                            selectedIds = if (handShown) safeSelection else emptySet(),
+                            canSendAction = actionEnabled,
+                            pendingAction = pendingAction,
+                            largeText = largeText,
+                            compact = compactHeight,
+                            onPlay = { onPlay(view.yourHand.filter { it.id in safeSelection }.map { it.id }) },
+                            onChallenge = onChallenge,
                         )
-                    }
-                },
-                actions = {
-                    GameActions(
-                        view = view,
-                        selectedIds = if (handShown) safeSelection else emptySet(),
-                        canSendAction = actionEnabled,
-                        pendingAction = pendingAction,
-                        largeText = largeText,
-                        compact = compactHeight,
-                        onPlay = { onPlay(view.yourHand.filter { it.id in safeSelection }.map { it.id }) },
-                        onChallenge = onChallenge,
-                    )
-                },
-            )
+                    },
+                )
+            }
         }
     }
 }
@@ -221,6 +224,7 @@ private fun PlayingLayout(
                     view,
                     largeText = false,
                     modifier = Modifier.weight(1f).verticalScroll(rememberScrollState()),
+                    compact = compact,
                 )
                 Column(Modifier.weight(1f).verticalScroll(rememberScrollState())) {
                     hand()
@@ -251,10 +255,8 @@ private fun PlayingLayout(
                     PublicGameTable(
                         view,
                         largeText = false,
-                        modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(vertical = 12.dp),
-                        compact = compact,
-                        showCompactRoster = publicHeight >= 280.dp,
-                        decorateClaim = compact && publicHeight >= 360.dp && view.forcedChallenge,
+                        modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(vertical = 8.dp),
+                        compact = compact || publicHeight < 480.dp,
                     )
                 }
                 HorizontalDivider(

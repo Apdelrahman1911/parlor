@@ -1,5 +1,6 @@
 package com.parlor.games.lastlight.ui.flow.passandplay
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
@@ -33,9 +34,7 @@ import com.parlor.core.result.DataError
 import com.parlor.core.result.EmptyResult
 import com.parlor.core.result.Result
 import com.parlor.core.time.Clock
-import com.parlor.designsystem.components.SessionExitConfirmation
 import com.parlor.designsystem.components.SessionExitKind
-import com.parlor.designsystem.components.SessionExitOverlay
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.engine.reducer.DefaultReducerContext
 import com.parlor.engine.session.SessionConfig
@@ -50,6 +49,7 @@ import com.parlor.games.lastlight.ui.LastLightProcessVisibility
 import com.parlor.games.lastlight.ui.LocalLastLightProcessVisibility
 import com.parlor.games.lastlight.ui.LocalLastLightVisibilityReader
 import com.parlor.games.lastlight.ui.flow.common.LastLightSessionTable
+import com.parlor.games.lastlight.ui.flow.common.LastLightExitConfirmation
 import com.parlor.networking.room.RoomInputPolicy
 import com.parlor.session.passandplay.PassAndPlaySessionController
 import com.parlor.storage.snapshot.SnapshotStore
@@ -220,20 +220,15 @@ private fun LocalSessionFlow(
             SnapshotFailureBanner(onRetry = runtime::retrySave)
         }
         if (presentation.exitConfirmationOpen) {
-            SessionExitConfirmation(
+            LastLightExitConfirmation(
                 kind = SessionExitKind.Local,
                 onStay = runtime::stay,
                 onExit = { runtime.setVisibility(visibility); runtime.saveAndExit(onBackToHome) },
                 exitInFlight = presentation.exitInFlight,
-                destructive = false,
                 modifier = Modifier.fillMaxWidth().weight(1f),
             )
         } else {
-            SessionExitOverlay(
-                visible = true,
-                onClick = runtime::requestExit,
-                modifier = Modifier.fillMaxWidth().weight(1f),
-            ) {
+            Box(modifier = Modifier.fillMaxWidth().weight(1f)) {
                 tableState.SaveableStateProvider(match.config.sessionId.raw) {
                     LocalSessionTable(runtime, presentation, visibility, onReturnToSetup)
                 }
@@ -263,6 +258,7 @@ private fun LocalSessionTable(
         onChallenge = { runtime.setVisibility(visibility); runtime.challenge() },
         onNextRound = { runtime.setVisibility(visibility); runtime.nextRound() },
         onReturnToLobby = { runtime.setVisibility(visibility); runtime.returnToSetup(onReturnToSetup) },
+        onRequestLeave = runtime::requestExit,
         privacyEpoch = visibility.concealmentEpoch,
         celebrateAnyWinner = true,
         cover = if (handoffName == null) null else {

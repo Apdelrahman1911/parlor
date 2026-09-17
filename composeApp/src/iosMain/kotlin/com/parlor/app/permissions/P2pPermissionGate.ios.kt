@@ -40,7 +40,12 @@ private class IosLocalNetworkGate(initialStatus: PermissionStatus) : P2pPermissi
 
     override fun openAppSettings() {
         val settingsUrl = NSURL.URLWithString(UIApplicationOpenSettingsURLString) ?: return
-        UIApplication.sharedApplication.openURL(settingsUrl)
+        // Modern iOS rejects deprecated openURL:. Opening Settings is not a permission grant.
+        UIApplication.sharedApplication.openURL(
+            settingsUrl,
+            options = emptyMap<Any?, Any>(),
+            completionHandler = null,
+        )
     }
 }
 

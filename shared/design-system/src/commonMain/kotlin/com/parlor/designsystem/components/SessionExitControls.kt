@@ -213,6 +213,29 @@ private data class SessionExitResources(
     val confirmDescription: StringResource,
 )
 
+/** Game-owned presentation can reuse the same save/revocation warnings as the shared exit screen. */
+data class SessionExitCopy(
+    val title: String,
+    val body: String,
+    val confirm: String,
+    val confirmDescription: String,
+    val stay: String,
+    val stayDescription: String,
+)
+
+@Composable
+fun sessionExitCopy(kind: SessionExitKind): SessionExitCopy {
+    val copy = kind.resources()
+    return SessionExitCopy(
+        title = stringResource(copy.title),
+        body = stringResource(copy.body),
+        confirm = stringResource(copy.confirm),
+        confirmDescription = stringResource(copy.confirmDescription),
+        stay = stringResource(Res.string.session_exit_stay),
+        stayDescription = stringResource(Res.string.session_exit_stay_description),
+    )
+}
+
 private fun SessionExitKind.resources(): SessionExitResources = when (this) {
     SessionExitKind.Local -> SessionExitResources(
         title = Res.string.session_exit_local_title,

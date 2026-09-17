@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.add
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.displayCutout
+import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
@@ -14,6 +15,16 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+
+/**
+ * Shares inset consumption with [parlorSafeContentPadding] and [StickyActionBar].
+ * CMP 1.10.3's `imePadding()` still uses a separate legacy consumption path on
+ * iOS/Desktop; mixing it with `windowInsetsPadding` adds the bottom safe area
+ * again above the keyboard. Keep all our insets on the node-based path.
+ */
+@Composable
+fun Modifier.parlorImePadding(imeInsets: WindowInsets = WindowInsets.ime): Modifier =
+    windowInsetsPadding(imeInsets)
 
 /**
  * Insets screen content by its visual spacing in addition to the device's

@@ -20,7 +20,6 @@ import com.parlor.games.lastlight.resources.md_peer_initial_snapshot_loading
 import com.parlor.games.lastlight.resources.md_session_ended
 import com.parlor.games.lastlight.resources.md_session_ended_body
 import com.parlor.games.lastlight.resources.md_session_new_room_body
-import com.parlor.games.lastlight.resources.md_session_paused
 import com.parlor.games.lastlight.resources.peer_command_duplicate
 import com.parlor.games.lastlight.resources.peer_command_invalid
 import com.parlor.games.lastlight.resources.peer_command_session_error
@@ -49,8 +48,7 @@ internal fun LastLightMultiDevicePeerFlow(
     onBackToHome: () -> Unit,
     onRequestLeave: () -> Unit,
     modifier: Modifier = Modifier,
-    onHostLostChanged: (Boolean) -> Unit = {},
-    onSelfOfflineChanged: (Boolean) -> Unit = {},
+    operationInFlight: Boolean = false,
 ) {
     val definition: LastLightDefinition = koinInject()
     val runtimeLookup by produceState<RetainedValueResult<*>?>(null, ownedSession) {
@@ -72,6 +70,7 @@ internal fun LastLightMultiDevicePeerFlow(
             ),
             body = null,
             onLeave = onRequestLeave,
+            actionsEnabled = !operationInFlight,
             modifier = modifier,
         )
         return
@@ -80,25 +79,28 @@ internal fun LastLightMultiDevicePeerFlow(
     LastLightCommandOutcomeEffect(bridge)
     val connection by bridge.connectionState.collectAsState()
     val lifecycle by ownedSession.room.lifecycle.collectAsState()
+    val foregroundReady by ownedSession.room.foregroundReady.collectAsState()
+    val roomInfo by ownedSession.room.info.collectAsState()
     val terminalReason by bridge.terminalReason.collectAsState()
     val terminalError by bridge.terminalError.collectAsState()
     val recoveryEpoch by bridge.recoveryEpoch.collectAsState()
-    LaunchedEffect(connection, terminalReason, terminalError) {
-        onHostLostChanged(connection.hostLost && terminalReason == null && terminalError == null)
-        onSelfOfflineChanged(connection.selfOffline && terminalReason == null && terminalError == null)
-    }
     val projection by runtime.session.privateStateFor(selfPlayerId).collectAsState()
     val hasSnapshot by bridge.hasAuthoritativeSnapshot.collectAsState()
     val snapshotError by bridge.initialSnapshotError.collectAsState()
     val commandProgress by bridge.commandProgress.collectAsState()
     val state = projection.state
     val connected = !connection.hostLost && !connection.selfOffline && lifecycle == RoomLifecycleState.Active
+    val disconnectedPlayer = state.players.firstOrNull { it.id in state.public.disconnectedPlayers }
+    val recovery = lastLightPeerRecoveryState(
+        connection, lifecycle, foregroundReady, roomInfo.hostDisplayName, disconnectedPlayer?.displayName,
+    )
 
     when {
         terminalError != null -> LastLightNetworkStatus(
             title = stringResource(Res.string.md_session_ended),
             body = lastlightNetworkErrorMessage(checkNotNull(terminalError)),
             onLeave = onBackToHome,
+            actionsEnabled = !operationInFlight,
             modifier = modifier,
         )
         terminalReason != null || state.public.endedEarly -> LastLightNetworkStatus(
@@ -111,6 +113,7 @@ internal fun LastLightMultiDevicePeerFlow(
                 },
             ),
             onLeave = onBackToHome,
+            actionsEnabled = !operationInFlight,
             modifier = modifier,
         )
         !hasSnapshot -> LastLightNetworkStatus(
@@ -123,12 +126,13 @@ internal fun LastLightMultiDevicePeerFlow(
             ),
             body = null,
             onLeave = onRequestLeave,
+            actionsEnabled = !operationInFlight,
             modifier = modifier,
         )
-        state.public.disconnectedPlayers.isNotEmpty() -> LastLightNetworkStatus(
-            title = stringResource(Res.string.md_session_paused),
-            body = null,
-            onLeave = onRequestLeave,
+        recovery != null -> LastLightConnectionRecovery(
+            state = recovery,
+            onRequestLeave = onRequestLeave,
+            actionsEnabled = !operationInFlight,
             modifier = modifier,
         )
         else -> presentationState.SaveableStateProvider(protocol.sessionId.raw) {
@@ -139,10 +143,11 @@ internal fun LastLightMultiDevicePeerFlow(
                 isHost = false,
                 actions = runtime.actions,
                 connected = connected,
-                commandsAllowed = commandProgress is PeerCommandProgress.Idle,
+                commandsAllowed = !operationInFlight && commandProgress is PeerCommandProgress.Idle,
                 recoveryEpoch = recoveryEpoch,
                 recoveryEpochReader = { bridge.recoveryEpoch.value },
                 onReturnToLobby = onBackToHome,
+                onRequestLeave = onRequestLeave,
                 modifier = modifier.fillMaxSize(),
             )
         }

@@ -17,6 +17,23 @@ class ProductionUiAccessibilityContractTest {
     private val root: File by lazy(::findProjectRoot)
 
     @Test
+    fun ios_app_settings_uses_the_supported_async_uikit_api() {
+        val source = read(
+            "composeApp/src/iosMain/kotlin/com/parlor/app/permissions/P2pPermissionGate.ios.kt",
+        )
+
+        assertContains(source, "NSURL.URLWithString(UIApplicationOpenSettingsURLString)")
+        assertTrue(
+            Regex(
+                "UIApplication\\.sharedApplication\\.openURL\\(\\s*settingsUrl,\\s*" +
+                    "options = emptyMap<Any\\?, Any>\\(\\),\\s*completionHandler = null,?\\s*\\)",
+            ).containsMatchIn(source),
+            "Settings must use openURL:options:completionHandler:, not deprecated openURL:",
+        )
+        assertFalse(Regex("\\.openURL\\(\\s*settingsUrl\\s*\\)").containsMatchIn(source))
+    }
+
+    @Test
     fun wax_seal_exposes_a_one_shot_button_action_beside_pointer_hold() {
         val source = read(
             "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/" +
@@ -122,6 +139,27 @@ class ProductionUiAccessibilityContractTest {
         assertContains(app, "shouldReduceMotion(")
         assertContains(settings, "settings.setLanguageOverride(null)")
         assertContains(settings, ".selectableGroup()")
+    }
+
+    @Test
+    fun ios_host_leaves_keyboard_insets_to_compose_without_removing_the_privacy_cover() {
+        val host = read("iosApp/iosApp/ContentView.swift")
+        assertContains(host, ".ignoresSafeArea(.all, edges: .all)")
+        assertContains(host, ".accessibilityHidden(scenePhase != .active)")
+        assertContains(host, "if scenePhase != .active {")
+        assertContains(host, "Color.black")
+        assertContains(host, "MainViewControllerKt.NotifyAppInactive()")
+        assertContains(host, "MainViewControllerKt.NotifyAppBackgrounded()")
+        assertContains(
+            read("composeApp/src/iosMain/kotlin/com/parlor/app/MainViewController.kt"),
+            "onFocusBehavior = OnFocusBehavior.DoNothing",
+        )
+
+        listOf("NameInputScreen.kt", "JoinPromptScreen.kt").forEach { file ->
+            val source = read("composeApp/src/commonMain/kotlin/com/parlor/app/shell/multiplayer/$file")
+            assertContains(source, ".parlorImePadding()")
+            assertContains(source, ".verticalScroll(rememberScrollState())")
+        }
     }
 
     @Test

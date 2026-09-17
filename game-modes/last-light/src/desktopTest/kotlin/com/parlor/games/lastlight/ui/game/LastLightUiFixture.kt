@@ -177,6 +177,7 @@ internal fun TestSessionTable(
     onPlay: (List<CardId>) -> Unit = {},
     onNextRound: () -> Unit = {},
     onReturnToLobby: () -> Unit = {},
+    onRequestLeave: () -> Unit = {},
 ) {
     val output = remember { SilentTestFeedbackOutput() }
     CompositionLocalProvider(
@@ -196,6 +197,7 @@ internal fun TestSessionTable(
             onChallenge = {},
             onNextRound = onNextRound,
             onReturnToLobby = onReturnToLobby,
+            onRequestLeave = onRequestLeave,
         )
     }
 }
