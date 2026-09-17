@@ -122,7 +122,14 @@ final class IOSAppLaunchUITests: XCTestCase {
             XCTAssertTrue(app.textViews.firstMatch.waitForExistence(timeout: 10))
             XCTAssertTrue(setupButton(app, prefix: copy.hostContinue).waitForExistence(timeout: 10))
             try tapSetupButton(app, prefix: copy.back)
-            XCTAssertTrue(app.staticTexts["parlor-home-brand"].waitForExistence(timeout: 10))
+            // Home restores its LazyColumn position, so the brand header can
+            // correctly be offscreen. Prove Back restored the selected catalog
+            // entry and removed the name screen, without resetting that scroll.
+            XCTAssertTrue(setupButton(app, prefix: game).waitForExistence(timeout: 10),
+                          "Back must restore the selected game in the Home catalog")
+            XCTAssertFalse(app.textViews.firstMatch.exists,
+                           "Back must remove the host-name input")
+            XCTAssertFalse(setupButton(app, prefix: copy.hostContinue).exists)
 
             try tapSetupButton(app, prefix: game)
             try tapSetupButton(app, prefix: copy.join)
