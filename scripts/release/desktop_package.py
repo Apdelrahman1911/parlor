@@ -17,7 +17,9 @@ import zipfile
 from pathlib import Path
 
 from scripts.release.github_distribution import OUT, ROOT, PLATFORMS, canonical, digest, filename, require, run, version
-from scripts.release.distribution_image import inventory_digest, prepare_skiko, require_same_image, verify_no_embedded_native
+from scripts.release.distribution_image import (
+    inventory_digest, materialize_linux_runtime_notices, prepare_skiko, require_same_image, verify_no_embedded_native,
+)
 # Reuse the existing standalone artifact inspector without duplicating its privacy/manifest allowlists.
 sys.path.insert(0, str(ROOT / "scripts/verification"))
 from scripts.verification.android_release_artifacts import inspect_manifest
@@ -74,21 +76,36 @@ def probe(image: Path, platform: str) -> None:
 
 def prepare_image(image: Path, platform: str) -> None:
     if platform.startswith("macos-"):
-        # Prove the disposable JDK/Compose-produced ad-hoc app is valid BEFORE our
-        # documented resource transformation. Never repair an unknown signature.
-        run(["codesign", "--verify", "--strict", str(image)])
-        metadata = run(["codesign", "--display", "--verbose=4", str(image)])
-        flags = re.search(r"flags=0x([0-9a-f]+)", metadata)
-        require(flags is not None and int(flags[1], 16) & 2 != 0, "Expected a fresh ad-hoc rehearsal app, not a signed release")
+        require_mac_rehearsal_image(image, platform)
         localize_mac(image)
     native = prepare_skiko(image, platform)
+    notices = materialize_linux_runtime_notices(image, platform)
     if platform.startswith("macos-"):
         run(["codesign", "--force", "--sign", "-", str(image)])
         run(["codesign", "--verify", "--strict", str(image)])
     verify_no_embedded_native(image)
     (OUT / "prepared-image.json").write_bytes(canonical({
-        "platform": platform, "native": native, "image_sha256": inventory_digest(image),
+        "platform": platform, "native": native, "runtime_notices": notices, "image_sha256": inventory_digest(image),
     }))
+
+
+def require_mac_rehearsal_image(image: Path, platform: str) -> None:
+    # Compose's NoCertificateSigner removes signatures on Intel; only arm64
+    # gets an ad-hoc signature. Accept that documented fresh unsigned x64 input,
+    # never an invalid existing seal or a foreign production signature. Both
+    # outputs are ad-hoc sealed and strictly verified after preparation.
+    metadata = run(["codesign", "--display", "--verbose=4", str(image)], success_codes=(0, 1))
+    if metadata.strip().endswith(": code object is not signed at all"):
+        seal = image / "Contents/_CodeSignature"
+        # codesign --remove-signature may leave an empty directory. That is not
+        # a seal; any contents, non-directory or redirected path are rejected.
+        empty_seal = not seal.is_symlink() and (not seal.exists() or (seal.is_dir() and not any(seal.iterdir())))
+        require(platform == "macos-x64" and empty_seal,
+                "Only a fresh unsigned Intel app can bootstrap a rehearsal seal")
+        return
+    run(["codesign", "--verify", "--strict", str(image)])
+    flags = re.search(r"flags=0x([0-9a-fA-F]+)", metadata)
+    require(flags is not None and int(flags[1], 16) & 2 != 0, "Expected a fresh ad-hoc rehearsal app, not a signed release")
 
 
 def inspect_notices(archives: list[Path], apk: bool = False) -> None:
@@ -151,14 +168,15 @@ def package(platform: str) -> Path:
     require(image.is_dir() and not image.is_symlink(), "Missing app image")
     require(not (OUT / "frozen").exists(), "Cannot repackage frozen bytes")
     if platform.startswith("macos-"):
-        stage = WORK / "dmg-root"
-        if stage.exists():
-            shutil.rmtree(stage)  # Owned, reproducible package stage only, never an installed app.
-        stage.mkdir()
-        shutil.copytree(image, stage / image.name, symlinks=True)
-        (stage / "Applications").symlink_to("/Applications")
-        run(["hdiutil", "create", "-quiet", "-ov", "-volname", "Parlor", "-srcfolder", str(stage), "-format", "UDZO", str(final)], timeout=600)
-        run(["hdiutil", "verify", str(final)], timeout=180)
+        # Never leave an Applications alias in the checkout: later source walks
+        # must not follow it into unrelated installed apps. Cleanup also covers
+        # copy/hdiutil failure and removes only this invocation's owned stage.
+        with tempfile.TemporaryDirectory(prefix="dmg-stage-", dir=WORK) as temporary:
+            stage = Path(temporary)
+            shutil.copytree(image, stage / image.name, symlinks=True)
+            (stage / "Applications").symlink_to("/Applications")
+            run(["hdiutil", "create", "-quiet", "-ov", "-volname", "Parlor", "-srcfolder", str(stage), "-format", "UDZO", str(final)], timeout=600)
+            run(["hdiutil", "verify", str(final)], timeout=180)
     else:
         output = WORK / "installer"
         output.mkdir(exist_ok=True)

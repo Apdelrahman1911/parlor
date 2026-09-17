@@ -244,8 +244,8 @@ locale, expected/actual result and non-private evidence for every row.
 | Check | Required device exercise | Status |
 |---|---|---|
 | Bidirectional LAN | Android host → iOS peers, then iOS host → Android peers; each game at minimum and maximum seats. Wrong-game room codes and joins after Start must be rejected. | NOT TESTED |
-| Dominoes table | 2/3/4 seats; Draw and Block; both chain ends, doubles, ordered draws, exhausted stock, blocked hands, scoring, rematch and synchronized placement flights. | NOT TESTED |
-| Ghamza social play | 3–12 seats; 1/2/3 attempts; reveal/hide/readiness; cancel/confirm physical-wink reports, rapid simultaneous reports, elimination, correct/incorrect final guess and multi-round scores. | NOT TESTED |
+| Dominoes table | 2/3/4 seats; Default, Draw and Block; three-player double-blank removal, opposite-seat teams, both chain ends, ordered draws/passes, blocked hands, all targets/shutout, shared scores, rematch and synchronized placement flights. | NOT TESTED |
+| Ghamza social play | 3–12 seats; 1/2/3 lives and 1/3/5 rounds; reveal/hide/readiness; cancel/confirm physical-wink reports, rapid simultaneous reports, per-round elimination, correct/incorrect final guess, full life resets and no scores. | NOT TESTED |
 | Word Impostor | 3/5/7/12 seats and supported 1/2/3-impostor settings; every topic; private word/team, unique question cycle, free discussion, sealed votes/ties, five-choice individual guesses, scoring/rematch. | NOT TESTED |
 | Interruption/rejoin | Background or lock host/peer for 1/10/15/30 seconds; interrupt Wi-Fi, return before the 120-second deadline and verify unchanged state plus re-covered secrets. The 15-second retention window is best-effort, not an OS guarantee. | NOT TESTED |
 | Terminal loss | Explicit Leave, expired required seat (including an eliminated participant), host exit and host process death. No unfinished secret reveal, new points, late seat replacement or authority migration. | NOT TESTED |

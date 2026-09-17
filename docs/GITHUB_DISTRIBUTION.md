@@ -32,6 +32,13 @@ Desktop builds use Temurin **JDK 21**, `./gradlew productionDesktopCheck
 runtime modules. Homebrew's JDK is suitable for tests but is not accepted by
 Compose's native packaging vendor check. Do not bypass that check.
 
+Linux `jpackage` dereferences JDK legal-file aliases while copying an app image.
+Preparation materializes only bounded aliases within `runtime/legal`, preserving
+their exact bytes before hashing. The installed-image comparison still requires
+every file to match; it never ignores native code or silently accepts a mismatch.
+Temporary DMG staging (including the `/Applications` link) is retired on success
+and failure, so later repository scans cannot traverse installed applications.
+
 `desktop_package.py` probes the **packaged** launcher with
 `--verify-distribution`: JDK version, AES-GCM, the EC provider and native Skia.
 It returns before profile/storage/DI/LAN initialization and uses an isolated
@@ -39,13 +46,27 @@ home. Installers are mounted/extracted; the entire installed image, not merely
 the launcher, must match. Bundled notices remain byte-bound. Runtime `legal/`
 notices are retained. macOS includes EN/AR native LAN permission rationale.
 
-Compose ad-hoc signing changes extracted Skiko bytes without updating the
-upstream sibling checksum. `distribution_image.py` does **not** bless those
-changed bytes: it recovers original JNI bytes from the exact Maven JAR pinned
-in verification metadata, verifies original checksums, preserves non-native
-vendor resources, and omits unused embedded native architectures. The candidate
-signer updates the sibling hash only after independently verifying the new
-signature. Gradle's cache and verification metadata are never regenerated.
+Compose/JDK signing changes extracted Skiko bytes without updating the upstream
+sibling checksum. `distribution_image.py` does **not** simply rehash those bytes.
+It verifies the exact Maven-pinned original and the generated signature, then
+compares the **complete bytes** of disposable copies after the same ad-hoc signing
+roundtrip. This canonicalizes signature data and its `__LINKEDIT` allocation;
+no executable section or other payload is excluded from comparison. Only a
+proven generated ad-hoc/Intel-unsigned copy is retained with a refreshed hash.
+An exact vendor-signed original is preserved, not stripped or replaced; a foreign
+signature still fails the candidate's same-team/library-validation policy.
+Non-native vendor resources are preserved; unused embedded architectures are
+omitted. The candidate signer updates the hash only after independently verifying
+the new signature. Gradle's cache and original vendor signatures remain untouched.
+
+Compose 1.10.3 also extracts Windows `icudtl.dat` beside Skiko; its bytes are
+checked against that same pinned JAR and retained in the verified image. All
+other non-native JAR resources must remain identical. On Intel macOS,
+Compose's `NoCertificateSigner` deliberately leaves a fresh app unsigned (only
+arm64 is automatically ad-hoc signed). Preparation accepts that specific fresh
+unsigned Intel input, seals the prepared rehearsal app ad-hoc and verifies it.
+Invalid existing seals and production signatures are never repaired/replaced.
+Candidate signing still requires the complete real Developer ID policy.
 
 ### Reviewed build-only helper
 
