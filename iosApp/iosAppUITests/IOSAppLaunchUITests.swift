@@ -133,8 +133,9 @@ final class IOSAppLaunchUITests: XCTestCase {
             let keyboard = app.keyboards.firstMatch
             XCTAssertTrue(keyboard.waitForExistence(timeout: 10))
             dismissKeyboardIntroduction(app, keyboard: keyboard)
-            name.typeText("Table Test\n")
-            XCTAssertEqual(name.value as? String, "Table Test")
+            name.typeText("Table Test")
+            assertTextValue(name, equals: "Table Test")
+            name.typeText("\n")
             try tapSetupButton(app, prefix: copy.peerContinue)
             XCTAssertTrue(app.textViews.firstMatch.waitForExistence(timeout: 10))
             XCTAssertEqual(app.textViews.count, 1)
@@ -162,11 +163,12 @@ final class IOSAppLaunchUITests: XCTestCase {
         XCTAssertTrue(first.isHittable)
         tapSettledControl(first)
         XCTAssertTrue(app.keyboards.firstMatch.waitForExistence(timeout: 10))
+        dismissKeyboardIntroduction(app, keyboard: app.keyboards.firstMatch)
         for index in 1...6 {
             let field = app.textViews["Player \(index)"]
             XCTAssertTrue(field.waitForExistence(timeout: 10))
             field.typeText("Keyboard Player \(index)")
-            XCTAssertEqual(field.value as? String, "Keyboard Player \(index)")
+            assertTextValue(field, equals: "Keyboard Player \(index)")
             let keyboard = app.keyboards.firstMatch
             XCTAssertTrue(keyboard.exists)
             let top = fullKeyboardTop(app, keyboard: keyboard)
@@ -181,6 +183,9 @@ final class IOSAppLaunchUITests: XCTestCase {
             !app.keyboards.firstMatch.exists
         }, object: nil)
         XCTAssertEqual(XCTWaiter.wait(for: [dismissed], timeout: 10), .completed)
+        for index in 1...6 {
+            assertTextValue(app.textViews["Player \(index)"], equals: "Keyboard Player \(index)")
+        }
         // Stop at public setup; do not create a saved game or reveal private state.
     }
 
@@ -255,7 +260,7 @@ final class IOSAppLaunchUITests: XCTestCase {
             XCTAssertTrue(keyboard.waitForExistence(timeout: 10))
             dismissKeyboardIntroduction(app, keyboard: keyboard)
             if cycle == 0 { field.typeText(input) }
-            XCTAssertEqual(field.value as? String, input)
+            assertTextValue(field, equals: input)
             let keyboardTop = fullKeyboardTop(app, keyboard: keyboard)
             let settled = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
                 let gap = keyboardTop - action.frame.maxY
@@ -285,6 +290,24 @@ final class IOSAppLaunchUITests: XCTestCase {
             XCTAssertEqual(XCTWaiter.wait(for: [restored], timeout: 10), .completed,
                            "Done must hide the keyboard and restore the un-inset layout")
         }
+    }
+
+    @MainActor
+    private func assertTextValue(
+        _ field: XCUIElement,
+        equals expected: String,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        // UIKit's idle notification can precede Compose's accessibility
+        // snapshot update. Wait for the exact value, never retype, shorten the
+        // input, or advance Next while characters are still unobserved.
+        let committed = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            field.exists && (field.value as? String) == expected
+        }, object: nil)
+        XCTAssertEqual(XCTWaiter.wait(for: [committed], timeout: 10), .completed,
+                       "The full typed value must reach the actual Compose field", file: file, line: line)
+        XCTAssertEqual(field.value as? String, expected, file: file, line: line)
     }
 
     @MainActor

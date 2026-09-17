@@ -45,6 +45,7 @@ import com.parlor.engine.state.GameState
 import com.parlor.networking.room.LocalRoom
 import com.parlor.networking.room.RoomMember
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -73,7 +74,8 @@ internal fun <S : GameState, A : GameAction, E : GameEvent> HostRoomControls(
                 Column(verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.s)) {
                     Text(stringResource(Res.string.room_game_code), color = ParlorTheme.colors.textSecondary)
                     Text(info.code, color = ParlorTheme.colors.accentEmber, style = ParlorTheme.typography.displayHero)
-                    Text(stringResource(Res.string.room_game_host, info.hostDisplayName), color = ParlorTheme.colors.textPrimary)
+                    Text(stringResource(Res.string.room_game_host, info.hostDisplayName.asBidiArgument()),
+                        color = ParlorTheme.colors.textPrimary)
                 }
             }
             Text(stringResource(Res.string.room_game_players, count), color = ParlorTheme.colors.textPrimary,
@@ -108,7 +110,7 @@ internal fun <S : GameState, A : GameAction, E : GameEvent> HostRoomControls(
             spec.Settings(state.caseId, count, enabled, setup::select)
             if (!canStart) Text(stringResource(Res.string.room_game_cannot_start), color = ParlorTheme.colors.textSecondary)
             state.error?.let { Text(roomGameError(it), color = ParlorTheme.colors.textSecondary) }
-            RoomButton(stringResource(Res.string.room_game_start, count), {
+            RoomButton(pluralStringResource(Res.plurals.room_game_start, count, count), {
                 val currentCount = room.members.value.count(RoomMember::connected) + 1
                 if (room.pendingAdmissions.value.isEmpty() && spec.acceptsSettings(setup.state.value.caseId.raw, currentCount)) onStart()
             }, canStart)
