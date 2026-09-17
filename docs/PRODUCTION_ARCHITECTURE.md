@@ -188,9 +188,11 @@ and peer process death preserve it. Host process death destroys the room.
 While a required seat is offline, gameplay is blocked and the host gets an
 explicit, confirmation-gated "continue without" action; the same lifecycle
 action fires when the grace period expires. Its pending timer is cancelled
-atomically when the host decides or the peer returns. For both shipping
-hidden-role games, an active-game decision ends the game and reveals the
-result rather than silently removing a secret role. There is no host migration,
+atomically when the host decides or the peer returns. Whodunit and Mafia end
+an active game and reveal its result rather than silently removing a secret
+role. Egyptian Dominoes, Ghamza and Word Impostor abort an incomplete round
+without revealing unfinished secrets or awarding points. Each binding owns
+its game-specific terminal policy. There is no host migration,
 spectator role, public-internet rendezvous, NAT traversal, relay, or backend
 identity. Host loss after the grace period is terminal.
 
@@ -304,9 +306,12 @@ resume snapshots for local-capable games are encrypted/authenticated below
 Android Keystore plus no-backup storage, iOS Keychain plus protected
 Application Support files, and an owner-only desktop development key/file. Each
 game supplies a versioned snapshot codec and validates its `engineVersion`
-during recovery (`MafiaSnapshotRecovery.kt` and `WhodunitGameFlow.kt`).
-Multiplayer resume is a separate transport credential and is available for both
-shipping games while the original host/seat remains valid.
+during recovery (`MafiaSnapshotRecovery.kt`, `WhodunitGameFlow.kt` and
+`LastLightSnapshotRecovery.kt`). Whodunit, Mafia and Last Light support local
+resume. Egyptian Dominoes, Ghamza and Word Impostor are Host/Join-only and do
+not write local pass-and-play saves. Multiplayer resume is a separate
+transport credential, available through every supported game binding while
+the original host/seat remains valid.
 
 Whodunit local recovery requires the exact persisted story version and canonical
 content digest before starting its reducer. Missing identity metadata cannot
@@ -331,9 +336,10 @@ theme, and reduced motion; each has a validated default. Mutations are
 serialized and published to UI state only after the platform backing accepts
 them. Android and Desktop surface write failures reported by their APIs; iOS
 UserDefaults persists asynchronously and exposes no per-write durability
-result. Parlor currently ships no sound implementation, analytics SDK,
+result. Last Light additionally has optional, locally played game audio;
+it does not record or transmit audio. Parlor ships no analytics SDK,
 crash-reporting SDK, upload provider, or placeholder consent control. Adding
-any of those is a product/privacy change that requires an implementation,
+any of those services is a product/privacy change that requires an implementation,
 truthful UI, store disclosures, and release evidence together.
 
 On iOS, explicit in-app language overrides carry Parlor-owned provenance in the

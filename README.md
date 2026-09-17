@@ -1,14 +1,20 @@
 # Parlor
 
 Parlor is a Kotlin Multiplatform party-game container for Android and iOS.
-It contains three game modules:
+It contains six game modules:
 
 - **Whodunit** — bundled English/Arabic cases, with Classic Vote and
   Elimination modes.
 - **Mafia** — a host-authoritative social-deduction game.
 - **Last Light** — PartyDeck's Standard card-bluffing table for 2–6 players.
+- **Egyptian Dominoes** — a physical-style double-six table for 2–4 players.
+- **Ghamza** — private roles and in-person wink play for 3–12 players.
+- **Word Impostor** — secret words, questions, voting and guesses for 3–12 players.
 
-The games support local play and same-LAN multi-device play through P2pKit.
+All six support same-LAN multi-device play through P2pKit. Whodunit, Mafia
+and Last Light also support local play; the three additions offer Host/Join
+with a private device for each player. See the
+[three-game rules and integration guide](docs/THREE_GAMES_INTEGRATION.md).
 Desktop is a development and deterministic-test target, not a shipping target.
 Room-code entry uses LAN discovery; raw-IP/manual endpoint connection,
 public-internet rendezvous/NAT traversal, relay, spectators, and host migration
@@ -94,7 +100,10 @@ parlor/
 ├── game-modes/
 │   ├── whodunit/                 # Rules, protocol adapter, UI, assets, tests
 │   ├── mafia/                    # Rules, protocol adapter, UI, assets, tests
-│   └── last-light/               # Standard card table, rules, adapters, recovery
+│   ├── last-light/               # Standard card table, rules, adapters, recovery
+│   ├── egyptian-dominoes/        # Double-six rules, animated table, codecs, tests
+│   ├── ghamza/                   # Private roles, wink reports, final guess
+│   └── word-impostor/            # Bilingual topics, questions, votes, word guesses
 ├── shared/
 │   ├── core/                     # IDs, results, time, randomness, and versioning
 │   ├── design-system/            # Tokens, components, localization, motion

@@ -8,13 +8,20 @@ audit ledgers are evidence only.
 
 Parlor is a Kotlin Multiplatform + Compose Multiplatform party-game container.
 Android and iOS are shipping targets; Desktop is a development and deterministic
-test target. The release contains two game modules:
+test target. The application contains six game modules:
 
 - Whodunit, with bundled English/Arabic cases and Classic Vote / Elimination modes;
-- Mafia, with local and same-LAN multi-device play.
+- Mafia, with local and same-LAN multi-device play;
+- Last Light, a 2–6-player bluffing card table;
+- Egyptian Dominoes, a 2–4-player double-six table;
+- Ghamza, a 3–12-player physical-wink secret-role game;
+- Word Impostor, a 3–12-player secret-word question and voting game.
 
-Both games support local play and host-authoritative same-LAN multiplayer over
-P2pKit. Public-internet play, raw-IP/manual connection, spectators, and host
+All six use host-authoritative same-LAN multiplayer over P2pKit. Whodunit,
+Mafia and Last Light additionally support local play; the three newer games
+offer Host/Join only. Their rules and privacy decisions are documented in
+`docs/THREE_GAMES_INTEGRATION.md`.
+Public-internet play, raw-IP/manual connection, spectators, and host
 migration are intentionally unsupported. Physical-device, signed-store,
 accessibility, privacy, legal, and operational evidence remain external release
 gates even when the automated build is green.
@@ -84,8 +91,11 @@ The dependency graph points inward toward pure shared contracts:
 - `:shared:transport-p2p` is the only module allowed to import P2pKit;
 - `:shared:storage` owns settings and protected snapshot storage;
 - `:shared:content` owns case envelopes, repository contracts, and validation;
-- `:game-modes:whodunit` and `:game-modes:mafia` own their rules, projections,
-  codecs, UI, and multiplayer bridges;
+- `:game-modes:whodunit`, `:game-modes:mafia`, `:game-modes:last-light`,
+  `:game-modes:egyptian-dominoes`, `:game-modes:ghamza` and
+  `:game-modes:word-impostor` own their rules, projections, codecs and UI;
+- game bindings at the composition root adapt those contracts to the existing
+  multiplayer coordinators, without changing shared transport/session code;
 - `:composeApp` owns catalog/shell/navigation composition, DI, and platform
   entry points.
 

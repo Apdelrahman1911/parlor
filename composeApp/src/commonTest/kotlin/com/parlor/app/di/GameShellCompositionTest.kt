@@ -1,6 +1,7 @@
 package com.parlor.app.di
 
 import com.parlor.app.shell.game.GameShellRegistry
+import com.parlor.app.shell.game.GameEntryMode
 import com.parlor.engine.registry.GameRegistry
 import com.parlor.games.dominoes.DominoIds
 import com.parlor.games.dominoes.di.dominoModule
@@ -50,6 +51,15 @@ class GameShellCompositionTest {
                 assertNotNull(shellRegistry.byId(gameId))
                 assertNotNull(domainRegistry.byId(gameId))
             }
+            mapOf(DominoIds.Game to 2..4, GhamzaIds.Game to 3..12, WordImpostorIds.Game to 3..12)
+                .forEach { (gameId, counts) ->
+                    val binding = assertNotNull(shellRegistry.byId(gameId))
+                    assertEquals(setOf(GameEntryMode.Host, GameEntryMode.Join), binding.capabilities.entryModes)
+                    assertEquals(counts, binding.definition.supportedPlayerCounts)
+                    val multiplayer = assertNotNull(binding.multiplayerContract)
+                    assertEquals(gameId, multiplayer.gameId)
+                    assertEquals(counts, multiplayer.supportedPlayerCounts)
+                }
         } finally {
             application.close()
         }
