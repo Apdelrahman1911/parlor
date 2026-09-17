@@ -345,7 +345,7 @@ def verify_split_apple_scopes(text: str) -> None:
             fail("verification scope Apple jobs require independent pinned macOS runners, not a dependency or matrix")
         if job_id == "ios-release" and (
                 re.findall(r"(?m)^    if: (.*)$", header) != [FULL_VERIFICATION_SCOPE] or
-                re.findall(r"(?m)^    timeout-minutes: (.*)$", header) != ["120"] or "permissions:" in header):
+                re.findall(r"(?m)^    timeout-minutes: (.*)$", header) != ["180"] or "permissions:" in header):
             fail("verification scope Apple release job must be full-only, bounded and inherit read-only contents permission")
         verify_verification_jdk(job)
         checkout = validation_step(job, "Check out source")
