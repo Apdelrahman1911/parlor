@@ -145,6 +145,9 @@ kotlin {
                 implementation(project(":game-modes:whodunit"))
                 implementation(project(":game-modes:mafia"))
                 implementation(project(":game-modes:last-light"))
+                implementation(project(":game-modes:egyptian-dominoes"))
+                implementation(project(":game-modes:ghamza"))
+                implementation(project(":game-modes:word-impostor"))
 
                 // Compose
                 implementation(libs.compose.runtime)
@@ -197,6 +200,7 @@ kotlin {
             implementation(kotlin("test"))
             implementation(libs.kotlinx.coroutines.test)
             implementation(project(":shared:engine-testing"))
+            implementation(project(":shared:networking-testing"))
         }
         val desktopMain by getting {
             dependencies {
@@ -641,7 +645,10 @@ val verifyGameShellDispatch by tasks.registering {
     }
     inputs.files(neutralShellSources, multiplayerShellSources, gameShellSupportSources)
     doLast {
-        val forbidden = listOf("whodunit", "mafia", "lastlight", "last-light", "com.parlor.games.")
+        val forbidden = listOf(
+            "whodunit", "mafia", "lastlight", "last-light", "com.parlor.games.",
+            "domino", "egyptian-dominoes", "ghamza", "wordimpostor", "word-impostor",
+        )
         inputs.files.files.filter { file -> file.isFile }.forEach { source ->
             val text = source.readText().lowercase()
             val found = forbidden.filter { token -> token in text }

@@ -71,6 +71,21 @@ A game supplies only its payload codec, action-authority policy, state
 projection, and snapshot codec. Adding a game must not change room admission,
 ordering/deduplication, heartbeat, reconnect, or transport framing.
 
+For a Host/Join-only game with the same room lifecycle, implement
+`MultiplayerOnlyGameShellBinding`/`MultiplayerGameSpec` at the composition root.
+The typed adapter in `composeApp/shell/game/multiplayer/` reuses the existing
+host/peer coordinators, start barrier, process-owned checkpoints, protected peer
+resume, pending-action reservation and privacy epochs. Supply a detached
+recipient projection to `Table`, never a canonical host state. The three
+bindings documented in `THREE_GAMES_INTEGRATION.md` are concrete examples.
+Do not add Local entry or local resume capability without a real local adapter.
+
+When a game has local transient UI (private reveal, selection or help), use
+`InPlaceBackHandler` under the route's owner. It dismisses that state before the
+shared Leave confirmation; it does not install another platform Back handler
+or mutate navigation. Private reveals and callbacks must be invalidated by the
+provided privacy epoch, not restored through `rememberSaveable`.
+
 ## Minimum acceptance suite
 
 Before registering a shipping game, add tests for:

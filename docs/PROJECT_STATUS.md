@@ -1,10 +1,36 @@
-# Project status — 2026-09-12
+# Project status — 2026-09-17
 
 **The readiness continuation is integrated into `main`; this is not Store-release
 approval.** Source and executable contracts remain authoritative. Start with
 [the documentation index](README.md), not an archived handoff's old task list.
 
 ## Completed checkpoint and evidence
+
+### Last Light integration
+
+- [PR #254](https://github.com/Apdelrahman1911/parlor/pull/254) merged the prior
+  Last Light/UI/lifecycle work into `main` as
+  `8e439075ff2d47e2b848d83625c91fe6349b2e92` on 2026-09-17.
+- [Full qualification 35199246020](https://github.com/Apdelrahman1911/parlor/actions/runs/35199246020)
+  passed all six mandatory lanes at source
+  `4e60afa866b2799c531d0d169179a2e0d71deb2a`. The merge has the same source tree;
+  this is not a run executed at the merge SHA or at the subsequent game work.
+  This merge used normal required checks, without a protection exception.
+- [Issue #253](https://github.com/Apdelrahman1911/parlor/issues/253) tracks resume
+  sessions that cannot be deleted. Filing the issue did not delete user saves
+  or implement a deletion policy.
+
+### Three additional multiplayer games
+
+Egyptian Dominoes, Ghamza and Word Impostor are implemented on `feat/last-light`,
+not merged into `main`. Their rules, research, code/module map, privacy and
+recovery contracts are in [the integration guide](THREE_GAMES_INTEGRATION.md).
+They reuse protocol 4.2 and the existing P2pKit/start/rejoin infrastructure.
+Focused domain, coordinator, UI, localization and static checks have passed
+locally; full platform qualification is recorded separately when completed.
+The earlier Last Light run does **not** qualify these additional games.
+
+### Earlier readiness checkpoint
 
 - The original **16 repairs** and Whodunit Leave-confirmation timer policy are
   committed. Do not restart that remediation campaign.
@@ -59,7 +85,9 @@ do not override this checkpoint.
 
 ## Continuing work safely
 
-Develop from `main`. Retain `fix/local-readiness-2026-09-07`: focused diagnostic
+Continue the three-game implementation on `feat/last-light`; do not merge it
+without a separate reviewed qualification and authorization. For unrelated work,
+branch from `main`. Retain `fix/local-readiness-2026-09-07`: focused diagnostic
 ownership guards still require that exact branch. Create fresh source/control
 bindings before a new diagnostic execution; never retarget guards just to remove
 a branch. Preserve failures, user work and archived evidence `build/` folders.

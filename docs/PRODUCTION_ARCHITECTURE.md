@@ -1,6 +1,6 @@
 # Production architecture
 
-This document describes the implemented production target as of 2026-08-11.
+This document describes the implemented architecture as of 2026-09-17.
 Android and iOS are shipping targets. Desktop exists for development and
 deterministic tests.
 
@@ -17,15 +17,25 @@ flowchart TD
     Kit[P2pKit 0.7.0-rc3 LAN discovery and authenticated encrypted TCP]
     W[Whodunit module]
     M[Mafia module]
+    L[Last Light module]
+    Games[Dominoes / Ghamza / Word Impostor modules]
+    GameShell[Typed multiplayer game-shell adapter]
 
     App --> Registry
     App --> Lobby
     Registry --> W
     Registry --> M
+    Registry --> L
+    Registry --> Games
     Lobby --> W
     Lobby --> M
+    Lobby --> L
+    Lobby --> GameShell
+    GameShell --> Games
+    GameShell --> Session
     W --> Session
     M --> Session
+    L --> Session
     Session --> Protocol
     Protocol --> Adapter
     Adapter --> Kit
@@ -277,11 +287,19 @@ registers and completes a second minimal definition, while networking-testing
 supplies the in-memory transport fixture, without either entering production
 catalogs. See `HOW_TO_ADD_A_GAME.md`.
 
+The installed games are Whodunit, Mafia, Last Light, Egyptian Dominoes, Ghamza
+and Word Impostor. The latter three expose Host/Join through the typed adapter in
+`composeApp/shell/game/multiplayer/`; bindings supply rules/codecs/settings/UI,
+while the existing coordinators remain the sole protocol and recovery owners.
+The adapter's retained start/setup/action state survives route recreation.
+There are no new shared-core game switches or additional transports. See
+`THREE_GAMES_INTEGRATION.md` for rules, projection contracts and acceptance tests.
+
 ## Persistence, content, and diagnostics
 
 Shipping game content is bundled and validated offline; release behavior does
 not depend on a mock HTTP engine or network service. Canonical pass-and-play
-resume snapshots for both shipping games are encrypted/authenticated below
+resume snapshots for local-capable games are encrypted/authenticated below
 `SnapshotStore` and use platform protection:
 Android Keystore plus no-backup storage, iOS Keychain plus protected
 Application Support files, and an owner-only desktop development key/file. Each

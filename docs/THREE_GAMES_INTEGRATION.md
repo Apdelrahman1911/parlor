@@ -1,0 +1,201 @@
+# Egyptian Dominoes, Ghamza and Word Impostor
+
+These three games use Parlor's existing same-LAN, host-authoritative multiplayer
+system. They do not introduce a transport, server, permission, dependency version,
+or protocol change. Android and iOS are the delivery targets; Desktop supports
+development and deterministic tests.
+
+## Architecture and implementation sequence
+
+The implementation first inspected `GameDefinition`, reducers/projections,
+`SessionController`, host/peer coordinators, the acknowledged start barrier,
+process-owned room retention, recovery credentials, catalog bindings, lifecycle
+privacy and the existing Back policy. Work then followed this order:
+
+1. Research rules and choose explicit house rules below.
+2. Add independent pure-domain game modules, strict codecs and tests.
+3. Adapt the existing coordinators through a typed composition-root binding.
+4. Register each game and build its own settings, gameplay and results UI.
+5. Exercise complete games, malformed/duplicate commands, privacy, recovery,
+   localization, layouts and animation; run repository/platform gates.
+
+| Game/module | Stable game ID | Players | Settings |
+|---|---|---|---|
+| `game-modes/egyptian-dominoes` | `egyptian-dominoes` | 2–4 | Draw/Block; target 50/100/150 |
+| `game-modes/ghamza` | `ghamza` | 3–12 | 1/2/3 attempts; 1/3/5 rounds |
+| `game-modes/word-impostor` | `word-impostor` | 3–12 | Topic; 1/2/3 impostors; 1/3/5 rounds |
+
+All use mode `standard`, game codec version `1`, and session protocol **4.2**.
+Actual admitted roster size determines player count; Start validates the range
+and settings. Only Host/Join are offered: secret-role games are not presented as
+solo or shared-device games. Existing games' local-play modes are unchanged.
+
+Each module owns `domain/`, `protocol/`, `ui/`, `di/`, EN/AR resources and tests.
+`composeApp/shell/game/*GameShellBinding.kt` supplies the definition, codec,
+authority policy, settings and UI. The typed adapter under
+`composeApp/shell/game/multiplayer/` handles identical room/start/recovery glue.
+There are no new game branches in shared engine/session/networking/transport
+production source. The root registry and shell-dispatch gate enforce this seam.
+
+## Egyptian Dominoes — الدومنة المصرية
+
+### Research and chosen rules
+
+Research retrieved **2026-09-17**:
+
+- [Pagat: Draw Dominoes](https://www.pagat.com/domino/line/draw.html), including
+  its Egyptian/Iraqi variant with an ordered boneyard drawn from one end.
+- [Pagat: Block Dominoes](https://www.pagat.com/domino/line/block.html), covering
+  open-end play, blocked hands and scoring variations.
+
+Egyptian tables differ on drawing, opening, scoring targets, partnerships and
+double-out bonuses. This implementation is an explicit Egyptian **house-rule
+baseline**, not a claim that one exclusive national ruleset exists:
+
+- Double-six set: 28 unique tiles; seven per player. Individual scoring, no
+  partnerships. The host privately shuffles/deals from a fresh seeded sequence.
+- Highest dealt double opens; if no double is dealt, highest pip sum, then
+  highest end. Thereafter the previous hand's winner leads with any tile. A
+  tied blocked hand rotates the leader.
+- Match either open end. Doubles lie perpendicular but are not branching
+  spinners. Every peer sees the same physical chain orientation, including RTL.
+- **Draw** (default): with no legal play, draw from the fixed stock end one at
+  a time until playable. No voluntary drawing. Pass only with no play or draw.
+  **Block**: the undealt stock is unused; pass when no tile fits. With four
+  players all 28 tiles are dealt, so neither variant has a draw stock.
+- Going out scores all opponents' remaining pips. A fully blocked hand awards
+  the unique lowest-pip player the opponents' sum minus their own pips. A tied
+  lowest hand scores nobody. No double-out bonus is assumed.
+- Targets are 50, 100 (default), or 150. A defensive 64-hand cap finishes by
+  highest score, allowing shared winners. Draw/pass/placement have exact
+  round-token and move-number validation; scoring happens once per hand.
+
+The wood/felt table, ivory pip tiles, opponent tile-back fans and connected
+serpentine chain are code-native artwork. Accepted placements fly from measured
+hand/seat positions, rotate and settle at the actual chain position. Draws
+travel face-down from the stock. No optimistic tile removal occurs. Initial,
+skipped or recovered snapshots never replay historical flights; reduced motion
+settles immediately. The results screen retains the table's visual treatment.
+
+## Ghamza — غمزة
+
+[Wink murder](https://en.wikipedia.org/wiki/Wink_murder) was consulted on
+2026-09-17 for physical-wink/private-role and accusation variants. The requested
+Ghamza mechanics take precedence: no detective, camera, automated wink or
+drinking mechanic is included.
+
+- Exactly **one Winker**, randomly reassigned privately each round. Everyone
+  reveals only their own role and confirms readiness before social play starts.
+- The wink happens in person. An ordinary player confirms **“I Was Winked At” /
+  “اتغمزلي”**; the app records the next numbered attempt, announces only the
+  recipient and updates remaining attempts. It cannot authenticate honesty.
+- Settings grant each ordinary player one, two or three reports before they
+  are out. An eliminated player remains a seated participant, not a spectator
+  or a newly reusable room slot. The Winker cannot self-report a wink.
+- When only one ordinary player remains, that player guesses any other
+  original participant. Correct: guesser gains one point. Incorrect: Winker
+  gains one point. The normal result reveals the role and guess; abort does not.
+- Matches have 1/3/5 rounds. The host advances results and may start a fresh
+  same-roster rematch. Highest cumulative score wins; ties are shared.
+
+The teal/mint social table uses a concealed eye motif, private reveal, a
+confirmed report action, public report feed, attempt status and final guessing.
+Public eliminations can naturally support deductions; that does not authorize
+publishing the secret role map.
+
+## Word Impostor — لعبة الإمبوستر
+
+The offline bilingual bank contains **12 topics, 240 words and 216 questions**:
+Food, TV Series, Movies, Football, Sports, Anime, Animals, Countries, Cities,
+Games, Technology and Famous People. `WordTopicBank` owns stable word/question
+IDs and plausible-choice families; `WordContentResources` maps them to EN/AR
+resources. Add content in both places and extend bank/parity tests. Display copy
+is not a wire identifier. Titles/names are text references, not licensed artwork
+or endorsements; distribution/editorial review remains an owner gate.
+
+1. **Private reveal:** ordinary players receive the word; impostors receive
+   only their role and teammates. A strict ordinary majority is required:
+   `2 × impostors < players` (two need at least five; three need at least seven).
+2. **Automatic questions:** a freshly shuffled Hamiltonian cycle gives everyone
+   exactly one asking and one answering turn, with no self-pair or duplicate
+   directed pair. Every turn uses a distinct topic question, privately shown
+   to the current asker. The asker confirms the spoken interaction. Questions
+   do not include the selected word; a later round may reuse a bank question.
+3. **Free discussion:** the screen clearly changes phase. The host opens
+   voting when discussion is finished. There is no cosmetic or unenforced timer.
+4. **Private voting:** everyone selects one other player, confirms once and
+   cannot replace the vote. Only participation is public until all votes arrive.
+   Then counts are revealed. The top K must identify exactly all K impostors;
+   a tie crossing the Kth-place cutoff fails the ordinary team's point.
+5. **Impostor guessing:** each impostor guesses independently from five shuffled
+   options in the same topic and plausible family, including the answer. The
+   full topic list is never displayed. Unfinished guesses and correctness are
+   private; only the number submitted is public.
+6. **Results:** reveal word, impostors, vote totals, guesses, awarded points and
+   updated scores. Every ordinary player earns one point if the whole team was
+   identified; each correct impostor independently earns one point. Both sides
+   may score. Round counts are 1/3/5; tied match scores share the win.
+
+The ink/indigo/peach UI separates secret cards, pair-guided questions, discussion,
+private voting, five-choice guessing and scored results. Reveals/selections
+reset on phase/round changes, concealment and recovery, never in saved UI state.
+
+## Authority, privacy and interruption
+
+- Only the host reduces. Transport-bound actors, expected revisions, client
+  sequences and the existing bounded duplicate ledger validate commands.
+  Lifecycle actions cannot be decoded as player actions. UI reserves one
+  pending submission synchronously; stale/rejected actions require an explicit
+  fresh tap rather than an automatic non-idempotent retry.
+- Each peer receives **public state plus its own recipient-bound private slice**.
+  Seeds, stocks, full hands, role maps, unfinished votes and other private data
+  stay host-only. Intentional public result reveals occur only at the documented
+  result boundary. The host's screen also receives only its seated projection.
+  This is a trusted-host model, not protection against a modified host binary.
+- Strict bounded canonical JSON rejects extra/duplicate fields, wrong versions,
+  recipient transplantation and impossible projections. Authority snapshots
+  require full deterministic replay equality; peer snapshots do not contain
+  replay history. Extreme history exhaustion ends safely instead of freezing.
+- Admission freezes before the existing acknowledged start barrier. No late
+  join, raw-IP join, spectator or host migration is added.
+- Existing best-effort brief background retention and 120-second rejoin policy
+  apply to every game. Inactivity covers private content immediately. A missing
+  required seat pauses play; completed authenticated rejoin restores its state.
+  Expiry/required-seat loss aborts without revealing unfinished secrets or
+  awarding new points. Host exit ends the session; host process death is not
+  recoverable authority migration. Peer cold-start resume uses existing protected
+  rejoin credentials while the original host remains alive.
+- Rematches reset scores and hidden setup but advance a monotonic round token,
+  so old-round commands cannot affect the fresh match. Changing players/settings
+  requires a new room. Existing local saves are not read, migrated or deleted.
+- Private UI is non-saveable and removed from accessibility semantics while
+  concealed. Back dismisses a selection/reveal/help before shared Leave
+  confirmation; repeated Back never confirms exit. EN/AR plural/placeholder
+  parity, mixed-direction name isolation, 48dp controls and reduced motion are
+  tested. Physical VoiceOver/TalkBack and tactile quality still need device runs.
+
+## Verification
+
+Focused tests include complete seeded matches/settings matrices, invalid and
+duplicate actions, scoring/ties, rematches, full replay-budget exhaustion,
+malformed wire/snapshots, recipient privacy, real coordinator start/recovery,
+simultaneous commands, 100,000 rapid submissions and non-replayed outcomes.
+Compose tests exercise EN/AR compact large-text layouts, concealment, choices,
+results and measured Dominoes flights. Geometry tests cover chain connectivity,
+overlap and bounds through all 28 tiles.
+
+```bash
+./gradlew :game-modes:egyptian-dominoes:desktopTest \
+  :game-modes:ghamza:desktopTest :game-modes:word-impostor:desktopTest \
+  :composeApp:desktopTest :shared:design-system:desktopTest \
+  :composeApp:verifyGameShellDispatch --dependency-verification=strict
+./gradlew productionCheck allTests --dependency-verification=strict
+./gradlew productionAppleCheck --dependency-verification=strict
+./gradlew productionIosSimulatorRuntimeTests --dependency-verification=strict
+```
+
+Use JDK 21 and the wrapper. See [project status](PROJECT_STATUS.md) for executed
+evidence, not this command list. Unattended tests do not certify physical
+Android↔iOS LAN play, social play, touch/gesture quality or Store readiness.
+The existing [release gates](RELEASE_GATES.md), unresolved strict-protection
+finding and disabled publishing workflows remain unchanged.

@@ -80,22 +80,12 @@ class LocalizationResourceContractTest {
 
     @Test
     fun every_shipping_string_bundle_has_arabic_key_and_format_parity() {
-        val englishBundles = root.walkTopDown()
-            .onEnter { directory -> directory.name !in IGNORED_DIRECTORIES }
-            .filter { file ->
-                file.isFile &&
-                    file.invariantSeparatorsPath.endsWith(
-                        "/src/commonMain/composeResources/values/strings.xml",
-                    )
-            }
-            .sortedBy { it.relativeTo(root).invariantSeparatorsPath }
-            .toList()
-
+        val englishBundles = shippingBundles()
         assertTrue(englishBundles.isNotEmpty(), "No shipping Compose string bundles were discovered")
 
         englishBundles.forEach { englishFile ->
             val resourceRoot = englishFile.parentFile.parentFile
-            val arabicFile = File(resourceRoot, "values-ar/strings.xml")
+            val arabicFile = File(resourceRoot, "values-ar/${englishFile.name}")
             val bundle = englishFile.relativeTo(root).invariantSeparatorsPath
             assertTrue(arabicFile.isFile, "$bundle has no values-ar/strings.xml counterpart")
 
@@ -122,7 +112,74 @@ class LocalizationResourceContractTest {
         }
     }
 
+    @Test
+    fun every_shipping_plural_has_all_arabic_quantities_and_compatible_indexed_arguments() {
+        var checked = 0
+        shippingBundles().forEach { file ->
+            val translatedFile = File(file.parentFile.parentFile, "values-ar/${file.name}")
+            assertTrue(translatedFile.isFile, "Missing Arabic bundle for $file")
+            val english = parsePlurals(file)
+            val arabic = parsePlurals(translatedFile)
+            assertEquals(english.keys, arabic.keys, "Plural key/type drift in $file")
+            english.forEach { (name, quantities) ->
+                checked++
+                assertTrue("other" in quantities, "$file:$name needs a fallback")
+                assertTrue(ARABIC_QUANTITIES.containsAll(quantities.keys), "$file:$name has an invalid quantity")
+                val translated = arabic.getValue(name)
+                assertEquals(ARABIC_QUANTITIES, translated.keys, "$file:$name lacks Arabic plural forms")
+                translated.forEach { (quantity, value) ->
+                    assertEquals(
+                        formatSignature(quantities[quantity] ?: quantities.getValue("other"), file.path, name),
+                        formatSignature(value, translatedFile.path, name),
+                        "$file:$name:$quantity has incompatible placeholders",
+                    )
+                    assertTrue(value.any { it in '\u0600'..'\u06ff' }, "$file:$name:$quantity is not translated")
+                }
+            }
+            assertTrue(parseStrings(file).keys.intersect(english.keys).isEmpty(), "String/plural name collision in $file")
+            assertTrue(parseStrings(translatedFile).keys.intersect(arabic.keys).isEmpty(),
+                "String/plural name collision in $translatedFile")
+        }
+        assertTrue(checked > 0, "No shipping plural resources were checked")
+    }
+
+    private fun shippingBundles(): List<File> = root.walkTopDown()
+        .onEnter { it.name !in IGNORED_DIRECTORIES }
+        .filter { it.isFile && it.extension == "xml" &&
+            it.parentFile.invariantSeparatorsPath.endsWith("/src/commonMain/composeResources/values") }
+        .sortedBy { it.relativeTo(root).invariantSeparatorsPath }
+        .toList()
+
     private fun parseStrings(file: File): Map<String, String> {
+        val result = linkedMapOf<String, String>()
+        resourceElements(file).filter { it.tagName == "string" }.forEach { element ->
+            val name = element.getAttribute("name")
+            assertTrue(name.isNotBlank(), "Unnamed string resource in ${file.relativeTo(root)}")
+            assertFalse(result.containsKey(name), "Duplicate string '$name' in ${file.relativeTo(root)}")
+            assertTrue(element.textContent.isNotBlank(), "Empty string '$name' in ${file.relativeTo(root)}")
+            result[name] = element.textContent
+        }
+        return result
+    }
+
+    private fun parsePlurals(file: File): Map<String, Map<String, String>> = linkedMapOf<String, Map<String, String>>().apply {
+        resourceElements(file).filter { it.tagName == "plurals" }.forEach { element ->
+            val name = element.getAttribute("name")
+            assertTrue(name.isNotBlank() && name !in this, "Unnamed/duplicate plural in $file")
+            val variants = linkedMapOf<String, String>()
+            val items = element.getElementsByTagName("item")
+            repeat(items.length) { index ->
+                val item = items.item(index) as Element
+                val quantity = item.getAttribute("quantity")
+                assertTrue(quantity !in variants, "Duplicate plural quantity $file:$name:$quantity")
+                assertTrue(item.textContent.isNotBlank(), "Empty plural $file:$name:$quantity")
+                variants[quantity] = item.textContent
+            }
+            put(name, variants)
+        }
+    }
+
+    private fun resourceElements(file: File): List<Element> {
         val factory = DocumentBuilderFactory.newInstance().apply {
             setFeature("http://apache.org/xml/features/disallow-doctype-decl", true)
             setFeature("http://xml.org/sax/features/external-general-entities", false)
@@ -132,19 +189,8 @@ class LocalizationResourceContractTest {
             isExpandEntityReferences = false
             isXIncludeAware = false
         }
-        val nodes = factory.newDocumentBuilder().parse(file).getElementsByTagName("string")
-        val result = linkedMapOf<String, String>()
-        repeat(nodes.length) { index ->
-            val element = nodes.item(index) as Element
-            val name = element.getAttribute("name")
-            assertTrue(name.isNotBlank(), "Unnamed string resource in ${file.relativeTo(root)}")
-            assertFalse(
-                result.containsKey(name),
-                "Duplicate string resource '$name' in ${file.relativeTo(root)}",
-            )
-            result[name] = element.textContent
-        }
-        return result
+        val nodes = factory.newDocumentBuilder().parse(file).documentElement.childNodes
+        return (0 until nodes.length).mapNotNull { nodes.item(it) as? Element }
     }
 
     private fun read(path: String): String = File(root, path).readText().replace("\r\n", "\n")
@@ -174,5 +220,6 @@ class LocalizationResourceContractTest {
         val IGNORED_DIRECTORIES: Set<String> = setOf(".git", ".gradle", "build")
         val FORMAT_TOKEN: Regex = Regex("%(\\d+)\\\$([a-zA-Z])")
         val ESCAPED_PERCENT: Regex = Regex("%%")
+        val ARABIC_QUANTITIES = setOf("zero", "one", "two", "few", "many", "other")
     }
 }
