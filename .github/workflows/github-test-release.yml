@@ -97,6 +97,7 @@ jobs:
       id-token: write
       attestations: write
     env:
+      PYTHONPATH: ${{ github.workspace }}
       GH_TEST_PLATFORM: ${{ matrix.platform }}
       GIT_CONFIG_COUNT: '1'
       GIT_CONFIG_KEY_0: core.longpaths

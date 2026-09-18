@@ -1420,6 +1420,7 @@ def verify_public_testing(text: str) -> None:
         fail("Public testing needs every native platform on its reviewed host")
     for token in ("needs: preflight", "if: needs.preflight.outputs.mode == 'build'", "fail-fast: false",
                   "distribution: temurin", "java-version: '21'", "check-latest: false",
+                  "      PYTHONPATH: ${{ github.workspace }}\n",
                   "assert_new(os.environ['GH_TEST_PLATFORM'])", "build(os.environ['GH_TEST_PLATFORM'])",
                   "subject-path: build/github-test-release/frozen/*", "path: build/github-test-release/frozen/*",
                   "if-no-files-found: error", "overwrite: false", "test -c /dev/kvm",

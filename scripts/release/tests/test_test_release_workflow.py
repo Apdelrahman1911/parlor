@@ -1,5 +1,10 @@
 from __future__ import annotations
 
+import os
+from pathlib import Path
+import subprocess
+import sys
+import tempfile
 import unittest
 
 from scripts.release import workflow_contract as contract
@@ -33,6 +38,7 @@ class PublicTestingWorkflowTest(unittest.TestCase):
             ("      contents: read", "      contents: write"),
             ("      contents: write", "      contents: write\n      actions: write"),
             ("platform: macos-x64", "platform: macos-arm64"),
+            ("      PYTHONPATH: ${{ github.workspace }}\n", ""),
             ("needs: [preflight, build]", "needs: preflight"),
             ("if: needs.preflight.outputs.mode == 'publish'", "if: always()"),
             ("assert_new(os.environ['GH_TEST_PLATFORM'])", "pass"),
@@ -47,6 +53,32 @@ class PublicTestingWorkflowTest(unittest.TestCase):
             self.assertNotEqual(changed, self.workflow)
             with self.subTest(before=before), self.assertRaises(RuntimeError):
                 contract.verify_public_testing(changed)
+
+    def test_actions_temporary_python_script_imports_only_with_the_checkout_path(self):
+        # Actions executes `shell: python` from a temporary .py file outside
+        # the checkout. Its directory, not cwd, is sys.path[0]. Import the real
+        # build helpers without invoking builds, GitHub mutations or secrets.
+        job = contract.validation_job(self.workflow, "build")
+        self.assertIn("      PYTHONPATH: ${{ github.workspace }}\n", job)
+        environment = {key: value for key, value in os.environ.items()
+                       if key not in {"PYTHONPATH", "GH_TOKEN", "GITHUB_TOKEN"}}
+        with tempfile.TemporaryDirectory(prefix="parlor-actions-python-") as temporary:
+            script = Path(temporary) / "actions-step.py"
+            script.write_text(
+                "from scripts.release.github_test_release import assert_new, build, filename\n"
+                "assert callable(assert_new) and callable(build)\n"
+                "assert filename('android').endswith('-android.apk')\n"
+                "print('CHECKOUT_IMPORT_OK')\n", encoding="utf-8")
+            command = [sys.executable, "-S", str(script)]
+            missing = subprocess.run(command, cwd=contract.ROOT, env=environment,
+                                     capture_output=True, text=True, timeout=30, check=False)
+            self.assertNotEqual(missing.returncode, 0)
+            self.assertIn("No module named 'scripts'", missing.stderr)
+            environment["PYTHONPATH"] = str(contract.ROOT)
+            result = subprocess.run(command, cwd=contract.ROOT, env=environment,
+                                    capture_output=True, text=True, timeout=30, check=False)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertEqual(result.stdout.strip(), "CHECKOUT_IMPORT_OK")
 
 
 if __name__ == "__main__":
