@@ -1,10 +1,22 @@
-# Project status — 2026-09-17
+# Project status — 2026-09-18
 
 **The readiness continuation is integrated into `main`; this is not Store-release
 approval.** Source and executable contracts remain authoritative. Start with
 [the documentation index](README.md), not an archived handoff's old task list.
 
 ## Completed checkpoint and evidence
+
+### Public testing channel
+
+On September 18 the owner explicitly requested public **unsigned test downloads**.
+The separate [public testing workflow](GITHUB_TEST_RELEASES.md) builds an isolated
+Android `Parlor Test` APK with a disposable installation signature and existing
+verified macOS/Windows/Linux test installers. Publication requires exact-source
+full CI, frozen hashes/attestations and explicit maintainer acknowledgement;
+releases are marked prerelease and never Latest. This does not enable Store
+publishing, waive physical/security findings or relax signed-production gates.
+Use exact-source execution receipts and live GitHub Release readback for status;
+this source document does not pre-certify a build or claim publication.
 
 ### Rules revision and GitHub distribution qualification
 
@@ -17,8 +29,9 @@ Earlier version-1 game receipts below do not qualify this revision.
 The separate [GitHub distribution pipeline](GITHUB_DISTRIBUTION.md) adds Android
 APK, macOS arm64/x64 DMG, Windows x64 MSI and Linux x64 DEB preparation, native
 runtime/installed-payload verification, protected signing and immutable Release
-publication. Store workflows remain disabled. Unsigned rehearsals are **not**
-publishable; no public Release is claimed by this documentation.
+publication. Store workflows remain disabled. Its unsigned rehearsals are **not**
+directly publishable; public testing uses its own separately validated channel
+above. No signed production Release is claimed by this documentation.
 
 Focused game/app tests, host authority/recovery cases and a local macOS native
 packaging rehearsal passed during implementation. Those were working-tree

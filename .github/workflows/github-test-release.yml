@@ -1,0 +1,209 @@
+name: GitHub public testing
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: Build frozen test installers, or publish a previously verified bundle as a prerelease
+        type: choice
+        default: build
+        options: [build, publish]
+      test_run:
+        description: Successful build run ID from this workflow and exact source (publish only)
+        type: string
+      acknowledge_test_limits:
+        description: Publish experimental unsigned/test-signed apps with security warnings, not a production release
+        type: boolean
+        default: false
+
+# Serialize all GitHub distribution mutations, including the signed channel.
+concurrency:
+  group: github-distribution
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+env:
+  GRADLE_OPTS: -Dorg.gradle.project.kotlin.compiler.execution.strategy=in-process
+  GH_TEST_INPUT_MODE: ${{ inputs.mode }}
+  GH_TEST_INPUT_RUN: ${{ inputs.test_run }}
+  GH_TEST_PUBLISH_ACK: ${{ inputs.acknowledge_test_limits }}
+
+jobs:
+  preflight:
+    name: Validate public test operation
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      actions: read
+    outputs:
+      mode: ${{ steps.preflight.outputs.mode }}
+      version_tag: ${{ steps.preflight.outputs.version_tag }}
+    steps:
+      - name: Check out exact source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Test the public testing and signed-release separation
+        run: |
+          python3 -m unittest scripts.release.tests.test_github_test_release scripts.release.tests.test_android_test_package scripts.release.tests.test_test_release_workflow -v
+          python3 scripts/release/workflow_contract.py
+      - name: Validate exact source and explicit publication selection
+        id: preflight
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 -m scripts.release.github_test_release preflight
+
+  build:
+    name: Build public test ${{ matrix.platform }}
+    needs: preflight
+    if: needs.preflight.outputs.mode == 'build'
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: android
+            runner: ubuntu-24.04
+          - platform: macos-arm64
+            runner: macos-15
+          - platform: macos-x64
+            runner: macos-15-intel
+          - platform: windows-x64
+            runner: windows-2025
+          - platform: linux-x64
+            runner: ubuntu-24.04
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 120
+    permissions:
+      contents: read
+      actions: read
+      id-token: write
+      attestations: write
+    env:
+      GH_TEST_PLATFORM: ${{ matrix.platform }}
+      GIT_CONFIG_COUNT: '1'
+      GIT_CONFIG_KEY_0: core.longpaths
+      GIT_CONFIG_VALUE_0: 'true'
+    steps:
+      - name: Check out exact source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Set up JDK 21
+        uses: actions/setup-java@03ad4de0992f5dab5e18fcb136590ce7c4a0ac95 # v5.6.0
+        with:
+          distribution: temurin
+          java-version: '21'
+          check-latest: false
+      - name: Refuse rebuilding frozen test artifacts
+        shell: python
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          import os
+          from scripts.release.github_test_release import assert_new
+          assert_new(os.environ['GH_TEST_PLATFORM'])
+      - name: Install Android SDK and disposable-emulator prerequisites
+        if: matrix.platform == 'android'
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -c /dev/kvm
+          sudo chmod 0666 /dev/kvm
+          "${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager" 'platforms;android-36' 'build-tools;36.0.0' 'platform-tools' 'emulator' 'system-images;android-35;google_apis;x86_64'
+      - name: Install Linux packaging dependencies
+        if: matrix.platform == 'linux-x64'
+        run: |
+          sudo apt-get update
+          sudo apt-get install --no-install-recommends -y fakeroot libasound2t64 libgl1 libxi6 libxrender1 libxtst6
+      - name: Locate runner-provided WiX 3
+        if: matrix.platform == 'windows-x64'
+        shell: python
+        run: |
+          import os, pathlib, shutil
+          if not shutil.which('candle.exe'):
+              base = pathlib.Path(os.environ.get('WIX', r'C:\Program Files (x86)\WiX Toolset v3.14'))
+              matches = [p for p in (base / 'bin', base) if (p / 'candle.exe').is_file() and (p / 'light.exe').is_file()]
+              if not matches:
+                  raise SystemExit('Runner must provide reviewed WiX 3 candle/light tools')
+              with open(os.environ['GITHUB_PATH'], 'a', encoding='utf-8') as output:
+                  output.write(str(matches[0]) + '\n')
+      - name: Build inspect and freeze test installers
+        shell: python
+        run: |
+          import os
+          from scripts.release.github_test_release import build
+          build(os.environ['GH_TEST_PLATFORM'])
+      - name: Attest test artifact and descriptor
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
+        with:
+          subject-path: build/github-test-release/frozen/*
+      - name: Upload frozen test artifact
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: gh-test-${{ needs.preflight.outputs.version_tag }}-${{ matrix.platform }}
+          path: build/github-test-release/frozen/*
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 90
+          overwrite: false
+
+  seal:
+    name: Seal public test bundle
+    needs: [preflight, build]
+    if: needs.preflight.outputs.mode == 'build'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      actions: read
+      id-token: write
+      attestations: write
+    steps:
+      - name: Check out exact source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Verify every platform and test-build attestation
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 -m scripts.release.github_test_release seal
+      - name: Attest complete test bundle
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
+        with:
+          subject-path: build/github-test-release/bundle/*
+      - name: Upload immutable test bundle
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: gh-test-${{ needs.preflight.outputs.version_tag }}-bundle
+          path: build/github-test-release/bundle/*
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 90
+          overwrite: false
+
+  publish:
+    name: Publish explicitly selected testing prerelease
+    needs: preflight
+    if: needs.preflight.outputs.mode == 'publish'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    permissions:
+      contents: write
+      actions: read
+      attestations: read
+    steps:
+      - name: Check out verified source without rebuilding
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Publish testing prerelease and verify every public download
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 -m scripts.release.github_test_release publish --run "$GH_TEST_INPUT_RUN"

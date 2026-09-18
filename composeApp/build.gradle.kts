@@ -314,6 +314,17 @@ android {
                 signingConfig = signingConfigs.getByName("release")
             }
         }
+        create("githubTest") {
+            // Public GitHub prereleases are not Store candidates or local Debug.
+            // Keep release code/shrinking/privacy, but isolate their application
+            // and data. CI applies a disposable test signature AFTER building;
+            // never inherit a real publisher key from initWith(release).
+            initWith(getByName("release"))
+            applicationIdSuffix = ".test"
+            versionNameSuffix = "-test"
+            signingConfig = null
+            matchingFallbacks += "release"
+        }
     }
 
     compileOptions {
@@ -331,6 +342,7 @@ android {
     sourceSets {
         // Launcher branding only; Store resources and application IDs are unchanged.
         getByName("debug").res.srcDir("src/androidDebug/res")
+        getByName("githubTest").res.srcDir("src/androidGithubTest/res")
         // KMP owns the androidInstrumentedTest hierarchy, while AGP's Java
         // compiler reads androidTest. Point it at the shared KMP layout so the
         // platform-only smoke test is packaged in the test APK.
@@ -374,6 +386,7 @@ android {
 val configuredStoreApplicationId = requireNotNull(android.defaultConfig.applicationId)
 val configuredDebugApplicationIdSuffix = android.buildTypes.getByName("debug").applicationIdSuffix.orEmpty()
 val configuredReleaseApplicationIdSuffix = android.buildTypes.getByName("release").applicationIdSuffix.orEmpty()
+val configuredGithubTestBuildType = android.buildTypes.getByName("githubTest")
 
 val verifyApplicationIdentities by tasks.registering {
     group = "verification"
@@ -381,6 +394,13 @@ val verifyApplicationIdentities by tasks.registering {
     inputs.property("storeApplicationId", configuredStoreApplicationId)
     inputs.property("debugApplicationIdSuffix", configuredDebugApplicationIdSuffix)
     inputs.property("releaseApplicationIdSuffix", configuredReleaseApplicationIdSuffix)
+    inputs.property("githubTestApplicationIdSuffix", configuredGithubTestBuildType.applicationIdSuffix.orEmpty())
+    inputs.property("githubTestVersionNameSuffix", configuredGithubTestBuildType.versionNameSuffix.orEmpty())
+    inputs.property("githubTestDebuggable", configuredGithubTestBuildType.isDebuggable)
+    inputs.property("githubTestJniDebuggable", configuredGithubTestBuildType.isJniDebuggable)
+    inputs.property("githubTestMinified", configuredGithubTestBuildType.isMinifyEnabled)
+    inputs.property("githubTestShrinkResources", configuredGithubTestBuildType.isShrinkResources)
+    inputs.property("githubTestHasSigningConfig", configuredGithubTestBuildType.signingConfig != null)
     doLast {
         check(inputs.properties.getValue("storeApplicationId") == "me.parlor.android") {
             "Android Store application ID changed from me.parlor.android."
@@ -390,6 +410,19 @@ val verifyApplicationIdentities by tasks.registering {
         }
         check(inputs.properties.getValue("releaseApplicationIdSuffix") == "") {
             "Android Release must not add a non-Store application-ID suffix."
+        }
+        check(inputs.properties.getValue("githubTestApplicationIdSuffix") == ".test" &&
+            inputs.properties.getValue("githubTestVersionNameSuffix") == "-test"
+        ) {
+            "GitHub testing must use the isolated me.parlor.android.test identity and test version label."
+        }
+        check(inputs.properties.getValue("githubTestDebuggable") == false &&
+            inputs.properties.getValue("githubTestJniDebuggable") == false &&
+            inputs.properties.getValue("githubTestMinified") == true &&
+            inputs.properties.getValue("githubTestShrinkResources") == true &&
+            inputs.properties.getValue("githubTestHasSigningConfig") == false
+        ) {
+            "GitHub testing must retain release hardening and never inherit publisher/Debug signing."
         }
     }
 }

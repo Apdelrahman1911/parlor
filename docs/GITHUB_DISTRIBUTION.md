@@ -4,6 +4,11 @@ This channel targets <https://github.com/Apdelrahman1911/parlor/releases>.
 It is separate from Play/App Store delivery. **All three Store workflows stay
 disabled.** A successful unsigned rehearsal is not a production release.
 
+The owner's separately authorized [public testing prereleases](GITHUB_TEST_RELEASES.md)
+use their own workflow, isolated Android test identity/signature, explicit test
+manifest/tag and prerelease-only publisher. They do not relax this document's
+signed-production requirements or promote its unsigned rehearsal bundles.
+
 ## Artifacts and native verification
 
 Version name/build number remain in `config/parlor-version.xcconfig`. No

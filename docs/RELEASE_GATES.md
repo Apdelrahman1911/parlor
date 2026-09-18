@@ -2,8 +2,11 @@
 
 Android and iOS are the mobile targets. Desktop supports development/tests and
 the separately gated [GitHub distribution channel](GITHUB_DISTRIBUTION.md).
-Desktop signing/notarization are mandatory for that channel, not for mobile
-Store validation or an ordinary `productionDesktopCheck`.
+Desktop signing/notarization are mandatory for that production channel, not for
+mobile Store validation or an ordinary `productionDesktopCheck`. The separate,
+explicitly authorized [public testing prerelease channel](GITHUB_TEST_RELEASES.md)
+uses unsigned/ad-hoc Desktop packages and an isolated test-signed Android APK;
+it never qualifies those artifacts as signed production releases.
 
 No single Gradle task proves store readiness. Automated gates prove source and
 unsigned artifact quality. Signing, devices, privacy forms, and store review
@@ -26,6 +29,7 @@ remain separate evidence.
 | Desktop host compatibility | `./gradlew productionDesktopCheck` on Linux x64, Linux arm64, macOS arm64, macOS x64, and Windows x64; the x64 macOS/Windows jobs also run `:composeApp:downloadKotlinNativeDistribution`, and Windows runs `:composeApp:processDebugResources` | Each supported host resolves and executes its real host-selected dependency graph under strict verification. Linux arm64 support is Desktop-only because Kotlin Native does not publish a Linux arm64 host distribution. |
 | Exact-candidate aggregate | Full verification: Linux runs `./gradlew productionCheck allTests`; independent macOS jobs run `./gradlew productionIosSimulatorRuntimeTests` and `./gradlew productionAppleCheck`, all with strict dependency verification | All six mandatory full jobs, including the Debug XCTest launch and unsigned Release wrapper/package inspection, pass in one full dispatch at the same recorded clean Git SHA. The focused protection diagnostic is skipped. No cross-run/SHA evidence stitching or duplicate common/desktop/Android aggregate on Apple. |
 | GitHub distribution packaging | `.github/workflows/github-distribution.yml`, rehearsal | Android Release APK, macOS arm64/x64 DMGs, Windows x64 MSI and Linux x64 DEB; installed-image/native-graphics/crypto probes, notices, checksums and source-bound attestations. Unsigned rehearsal output is not publishable. |
+| Public GitHub testing | `.github/workflows/github-test-release.yml` | Explicit build/publish dispatches; five native packages, isolated non-debuggable Android `.test` APK with disposable key and normal-install emulator smoke, exact-source six-job verification, closed test manifest and attestations. Public prereleases only, never Latest or signed-production acceptance. |
 
 The root tasks discover KMP modules through the multiplatform plugin. A newly
 included game module therefore joins the desktop gate automatically.

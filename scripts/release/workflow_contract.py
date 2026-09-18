@@ -14,6 +14,7 @@ WORKFLOWS = ROOT / ".github" / "workflows"
 EXPECTED = {
     "production-verification.yml",
     "github-distribution.yml",
+    "github-test-release.yml",
     "testing-candidate.yml",
     "testing-external-promotion.yml",
     "production-promotion.yml",
@@ -1360,6 +1361,77 @@ def verify_github_distribution(text: str) -> None:
         fail("GitHub distribution publication cannot rebuild or re-sign")
 
 
+def verify_public_testing(text: str) -> None:
+    """The owner's opt-in testing channel must never become a signed-release fallback."""
+    verify_common("github-test-release.yml", text)
+    required = (
+        "name: GitHub public testing", "on:\n  workflow_dispatch:", "default: build", "options: [build, publish]",
+        "acknowledge_test_limits:", "default: false", "group: github-distribution", "cancel-in-progress: false",
+        "permissions:\n  contents: read\n", "GH_TEST_INPUT_MODE: ${{ inputs.mode }}",
+        "GH_TEST_INPUT_RUN: ${{ inputs.test_run }}", "GH_TEST_PUBLISH_ACK: ${{ inputs.acknowledge_test_limits }}",
+    )
+    for token in required:
+        if token not in text:
+            fail(f"Public testing workflow lacks {token!r}")
+    if (re.search(r"(?m)^  (push|pull_request|pull_request_target|workflow_run|schedule):", text)
+            or re.search(r"\bsecrets\b", text) or "write-all" in text or "overwrite: true" in text):
+        fail("Public testing must be explicit, credential-free and immutable")
+    jobs = set(re.findall(r"(?m)^  ([a-z][a-z-]+):\n", text.split("\njobs:\n", 1)[1]))
+    if jobs != {"preflight", "build", "seal", "publish"}:
+        fail("Unexpected public testing jobs")
+    expected_permissions = {
+        "preflight": {"contents": "read", "actions": "read"},
+        "build": {"contents": "read", "actions": "read", "id-token": "write", "attestations": "write"},
+        "seal": {"contents": "read", "actions": "read", "id-token": "write", "attestations": "write"},
+        "publish": {"contents": "write", "actions": "read", "attestations": "read"},
+    }
+    for name, expected in expected_permissions.items():
+        job = validation_job(text, name)
+        permissions = re.findall(r"(?m)^    permissions:\n((?:      [a-z-]+: [^\n]+\n)+)", job)
+        actual = re.findall(r"(?m)^      ([a-z-]+): (.*)$", permissions[0]) if len(permissions) == 1 else []
+        if len(actual) != len(expected) or dict(actual) != expected:
+            fail("Public testing may grant release writes only to its dedicated publisher")
+        if "timeout-minutes:" not in job or "fetch-depth: 0" not in job or "persist-credentials: false" not in job:
+            fail("Public testing requires bounded exact-source, credential-free checkouts")
+    preflight = validation_job(text, "preflight")
+    for token in ("scripts.release.tests.test_github_test_release", "scripts.release.tests.test_android_test_package",
+                  "scripts.release.tests.test_test_release_workflow", "python3 scripts/release/workflow_contract.py",
+                  "python3 -m scripts.release.github_test_release preflight"):
+        if token not in preflight:
+            fail("Public testing must validate its source/operation and adversarial contracts before builds")
+    build = validation_job(text, "build")
+    matrix = re.findall(r"- platform: ([a-z0-9-]+)\n            runner: ([a-z0-9.-]+)", build)
+    if matrix != [("android", "ubuntu-24.04"), ("macos-arm64", "macos-15"), ("macos-x64", "macos-15-intel"),
+                  ("windows-x64", "windows-2025"), ("linux-x64", "ubuntu-24.04")]:
+        fail("Public testing needs every native platform on its reviewed host")
+    for token in ("needs: preflight", "if: needs.preflight.outputs.mode == 'build'", "fail-fast: false",
+                  "distribution: temurin", "java-version: '21'", "check-latest: false",
+                  "assert_new(os.environ['GH_TEST_PLATFORM'])", "build(os.environ['GH_TEST_PLATFORM'])",
+                  "subject-path: build/github-test-release/frozen/*", "path: build/github-test-release/frozen/*",
+                  "if-no-files-found: error", "overwrite: false", "test -c /dev/kvm",
+                  "system-images;android-35;google_apis;x86_64", "core.longpaths"):
+        if token not in build:
+            fail(f"Public testing build policy lacks {token!r}")
+    ordered = ("Refuse rebuilding frozen test artifacts", "Build inspect and freeze test installers",
+               "Attest test artifact and descriptor", "Upload frozen test artifact")
+    positions = [build.find("- name: " + name) for name in ordered]
+    if min(positions) < 0 or positions != sorted(positions):
+        fail("Public testing must build once, inspect, freeze, attest, then upload")
+    seal = validation_job(text, "seal")
+    for token in ("name: Seal public test bundle", "needs: [preflight, build]", "if: needs.preflight.outputs.mode == 'build'",
+                  "python3 -m scripts.release.github_test_release seal", "subject-path: build/github-test-release/bundle/*",
+                  "path: build/github-test-release/bundle/*", "if-no-files-found: error", "overwrite: false"):
+        if token not in seal:
+            fail("Public testing must seal and attest every platform before publication")
+    publication = validation_job(text, "publish")
+    for token in ("needs: preflight", "if: needs.preflight.outputs.mode == 'publish'",
+                  'python3 -m scripts.release.github_test_release publish --run "$GH_TEST_INPUT_RUN"'):
+        if token not in publication:
+            fail("Public testing publication must consume the explicitly selected frozen bundle")
+    if any(word in publication for word in ("gradlew", "setup-java", "notarytool", "signtool", "desktop_package", "sign_distribution")):
+        fail("Public testing publication cannot rebuild, re-sign or call a production signer")
+
+
 def main() -> int:
     files = load_files()
     verify_policy()
@@ -1377,6 +1449,7 @@ def main() -> int:
     verify_external_receipt_attestations(files["testing-external-promotion.yml"])
     verify_production(files["production-promotion.yml"])
     verify_github_distribution(files["github-distribution.yml"])
+    verify_public_testing(files["github-test-release.yml"])
     print("release workflow contract: PASS")
     return 0
 
