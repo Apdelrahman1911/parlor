@@ -56,6 +56,10 @@ iOS **A37: 0 PASS / 26 FAIL** remains unresolved and is not waived by this chann
 `.github/workflows/github-test-release.yml` accepts maintainer dispatches on
 `feat/last-light` or `main` only. It does not publish on pushes, PRs, untrusted
 workflow events or automatically after a signed-candidate failure.
+Changes to this workflow on `feat/last-light` run a registration-only job so
+GitHub can discover the workflow before it exists on the default branch. That
+job has no repository permissions or checkout and cannot build or publish;
+the entire operational pipeline is skipped on pushes.
 
 1. Dispatch `mode=build`. All five native jobs build/test/inspect, freeze and
    attest their outputs. Android uses `githubTest`, inheriting Release shrinking

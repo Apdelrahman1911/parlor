@@ -1373,12 +1373,25 @@ def verify_public_testing(text: str) -> None:
     for token in required:
         if token not in text:
             fail(f"Public testing workflow lacks {token!r}")
-    if (re.search(r"(?m)^  (push|pull_request|pull_request_target|workflow_run|schedule):", text)
+    if (re.search(r"(?m)^  (pull_request|pull_request_target|workflow_run|schedule):", text)
             or re.search(r"\bsecrets\b", text) or "write-all" in text or "overwrite: true" in text):
         fail("Public testing must be explicit, credential-free and immutable")
+    pushes = re.findall(r"(?m)^  push:\n(?:    .*\n)*", text)
+    if pushes != ["  push:\n    branches: [feat/last-light]\n    paths: [.github/workflows/github-test-release.yml]\n"]:
+        fail("Only the narrow read-only feature-branch registration push is allowed")
     jobs = set(re.findall(r"(?m)^  ([a-z][a-z-]+):\n", text.split("\njobs:\n", 1)[1]))
-    if jobs != {"preflight", "build", "seal", "publish"}:
+    if jobs != {"register", "preflight", "build", "seal", "publish"}:
         fail("Unexpected public testing jobs")
+    registration = """    name: Register testing workflow without builds or publication
+    if: github.event_name == 'push'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 2
+    permissions: {}
+    steps:
+      - name: Register without repository access
+        run: echo 'Registration only; use an explicit workflow dispatch.'"""
+    if validation_job(text, "register").strip() != registration.strip():
+        fail("Workflow registration must not check out code, build, publish or grant repository permissions")
     expected_permissions = {
         "preflight": {"contents": "read", "actions": "read"},
         "build": {"contents": "read", "actions": "read", "id-token": "write", "attestations": "write"},
@@ -1394,7 +1407,8 @@ def verify_public_testing(text: str) -> None:
         if "timeout-minutes:" not in job or "fetch-depth: 0" not in job or "persist-credentials: false" not in job:
             fail("Public testing requires bounded exact-source, credential-free checkouts")
     preflight = validation_job(text, "preflight")
-    for token in ("scripts.release.tests.test_github_test_release", "scripts.release.tests.test_android_test_package",
+    for token in ("if: github.event_name == 'workflow_dispatch'",
+                  "scripts.release.tests.test_github_test_release", "scripts.release.tests.test_android_test_package",
                   "scripts.release.tests.test_test_release_workflow", "python3 scripts/release/workflow_contract.py",
                   "python3 -m scripts.release.github_test_release preflight"):
         if token not in preflight:

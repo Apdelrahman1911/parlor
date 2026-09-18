@@ -15,6 +15,9 @@ on:
         description: Publish experimental unsigned/test-signed apps with security warnings, not a production release
         type: boolean
         default: false
+  push:
+    branches: [feat/last-light]
+    paths: [.github/workflows/github-test-release.yml]
 
 # Serialize all GitHub distribution mutations, including the signed channel.
 concurrency:
@@ -31,8 +34,19 @@ env:
   GH_TEST_PUBLISH_ACK: ${{ inputs.acknowledge_test_limits }}
 
 jobs:
+  register:
+    name: Register testing workflow without builds or publication
+    if: github.event_name == 'push'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 2
+    permissions: {}
+    steps:
+      - name: Register without repository access
+        run: echo 'Registration only; use an explicit workflow dispatch.'
+
   preflight:
     name: Validate public test operation
+    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     permissions:
