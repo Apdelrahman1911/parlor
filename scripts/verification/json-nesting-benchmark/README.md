@@ -10,17 +10,19 @@ Run after the nesting guard is present in the chosen checkout:
 
 ```sh
 python3 scripts/verification/json-nesting-benchmark/run.py \
-  --repository "$PWD" --kotlin-version 2.4.0 \
+  --repository "$PWD" \
   --output /tmp/parlor-json-nesting-benchmark.json
 ```
 
-The explicit diagnostic compiler/stdlib 2.4.0 is **not** Parlor's catalog compiler
-2.4.10. It permits an isolated source probe with already-cached tools while the
-full Gradle toolchain is unavailable. Missing artifacts fail closed; this script
-never installs them. Other compiler versions require reviewing the driver's
-compiler dependency list rather than silent fallback. Runtime serialization
-version is read from the selected checkout's catalog. Every jar and the guard,
-Java harness and Python driver are SHA-256 recorded in the result.
+Compiler/stdlib and runtime serialization versions are read from the selected
+checkout's catalog (currently Kotlin 2.4.10 / serialization 1.11.0). All artifacts
+must already be cached; missing artifacts fail closed and are never installed by
+this script. Compiler dependency lists are explicitly reviewed for 2.4.0 and
+2.4.10; a new compiler line requires reviewing that list, not silent fallback.
+`--kotlin-version 2.4.0` is an explicit diagnostic override only, recorded in the
+receipt; it is not equivalent to the catalog-pinned run. Every jar and the guard,
+compiled guard, Java harness and Python driver are SHA-256 recorded. This direct
+compiler invocation is not a complete Gradle production build/verification gate.
 
 Each case/mode runs in a new JVM with `-Xms64m -Xmx256m -Xss1m`, a 25-second
 subprocess deadline and synthetic, non-private fixtures. Accepted cases run

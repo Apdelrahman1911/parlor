@@ -18,7 +18,7 @@ def sha256(path):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--repository", type=Path, default=Path(__file__).resolve().parents[3])
-    parser.add_argument("--kotlin-version", required=True, help="Explicit cached diagnostic compiler/stdlib version")
+    parser.add_argument("--kotlin-version", help="Explicit diagnostic override; defaults to catalog compiler/stdlib")
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
     repository = args.repository.resolve()
@@ -35,16 +35,16 @@ def main():
         artifacts.append({"coordinate": f"{group}:{name}:{version}", "sha256": sha256(path)})
         return str(path)
 
-    kotlin = args.kotlin_version
+    kotlin = args.kotlin_version or catalog["versions"]["kotlin"]
     stdlib = jar("org.jetbrains.kotlin", "kotlin-stdlib", kotlin)
     runtime = [stdlib, jar("org.jetbrains.kotlinx", "kotlinx-serialization-core-jvm", serialization),
                jar("org.jetbrains.kotlinx", "kotlinx-serialization-json-jvm", serialization)]
     compiler = [jar("org.jetbrains.kotlin", name, kotlin) for name in (
         "kotlin-compiler-embeddable", "kotlin-build-tools-api", "kotlin-script-runtime", "kotlin-daemon-embeddable")]
-    # Compiler transitive dependencies below match the cached Kotlin 2.4.0 compiler POM.
+    # Compiler dependencies below match the reviewed Kotlin 2.4.0 and 2.4.10 POMs.
     # Different compiler lines must review/update this diagnostic driver explicitly.
-    if kotlin != "2.4.0":
-        raise RuntimeError("Only reviewed diagnostic compiler 2.4.0 is supported; no implicit fallback")
+    if kotlin not in ("2.4.0", "2.4.10"):
+        raise RuntimeError("Only reviewed compilers 2.4.0/2.4.10 are supported; no implicit fallback")
     compiler += [stdlib, jar("org.jetbrains.kotlin", "kotlin-reflect", "1.6.10"),
                  jar("org.jetbrains.kotlinx", "kotlinx-coroutines-core-jvm", "1.8.0"),
                  jar("org.jetbrains", "annotations", "13.0")]
@@ -74,12 +74,13 @@ def main():
                         "Parser-only synthetic shapes, no schema decoder, encryption, network or UI",
                         "Thread allocated bytes exclude allocations by other JVM threads; RSS is endpoint-only",
                         "Native thread endpoints are not lifetime peaks; no battery/thermal or mobile inference",
-                        "Diagnostic compiler differs from repository compiler pin; not a production build gate"]}
+                        "Isolated compiler invocation is not a Gradle production build or release gate"]}
     with tempfile.TemporaryDirectory(prefix="parlor-json-benchmark-") as directory:
         classes = Path(directory) / "classes"
         classes.mkdir()
         run(["java", "-Xmx384m", "-cp", os.pathsep.join(compiler), "org.jetbrains.kotlin.cli.jvm.K2JVMCompiler",
              "-no-stdlib", "-no-reflect", "-classpath", stdlib, "-jvm-target", "17", "-d", str(classes), str(guard)])
+        evidence["compiled_guard_sha256"] = sha256(classes / "com/parlor/core/serialization/JsonNestingLimitKt.class")
         cp = os.pathsep.join([str(classes), *runtime])
         run(["javac", "-cp", cp, "-d", str(classes), str(harness)])
         for fixture in ("command", "snapshot1k", "snapshot8k", "snapshot32k", "depth64", "depth65", "depth4096"):
