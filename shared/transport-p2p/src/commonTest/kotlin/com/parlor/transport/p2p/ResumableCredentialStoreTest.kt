@@ -27,6 +27,48 @@ class ResumableCredentialStoreTest {
     private val storage = PlatformKeyedSecureStorage(InMemorySecureKeyValueBacking())
     private val store = ResumableCredentialStore(storage)
 
+    private suspend fun selectedHandle(): CredentialDeletionSelection =
+        (store.loadSelectedResumeCandidate() as Result.Success).data!!.selection
+
+    @Test
+    fun home_selection_cannot_delete_replaced_or_rotated_membership() = runTest {
+        val original = credential(offerId = "selected", generation = 1)
+        store.stage(original)
+        store.commit(original.offerId, original.generation)
+        val selected = selectedHandle()
+        val rotated = original.copy(offerId = "rotated", generation = 2)
+        store.stage(rotated)
+        assertThat(store.invalidateSelection(selected))
+            .isEqualTo(Result.Success(CredentialInvalidationResult.NotOwned))
+        // Pending N+1 must survive even before it replaces committed N.
+        assertThat(store.commit(rotated.offerId, rotated.generation)).isEqualTo(Result.Success(Unit))
+        val rotatedSelection = selectedHandle()
+        assertThat(store.invalidateSelection(selected))
+            .isEqualTo(Result.Success(CredentialInvalidationResult.NotOwned))
+        assertThat(store.loadResumeCandidate()).isEqualTo(Result.Success(rotated))
+        val replacement = credential(offerId = "replacement", generation = 1, roomCode = "XYZ789")
+        store.stage(replacement)
+        assertThat(store.invalidateSelection(rotatedSelection))
+            .isEqualTo(Result.Success(CredentialInvalidationResult.NotOwned))
+        assertThat(store.loadResumeCandidate()).isEqualTo(Result.Success(replacement))
+        assertThat(selected.toString()).isEqualTo("ResumableSessionSelection(redacted)")
+    }
+
+    @Test
+    fun selected_membership_deletion_preserves_unrelated_active_record_across_store_recreation() = runTest {
+        val old = credential(offerId = "unrelated", generation = 1)
+        val selected = credential(offerId = "selected", generation = 1, roomCode = "XYZ789")
+        store.stage(old)
+        store.commit(old.offerId, old.generation)
+        store.stage(selected)
+        val selection = selectedHandle()
+        assertThat(store.invalidateSelection(selection))
+            .isEqualTo(Result.Success(CredentialInvalidationResult.Invalidated))
+        assertThat(store.invalidateSelection(selection))
+            .isEqualTo(Result.Success(CredentialInvalidationResult.NotOwned))
+        assertThat(ResumableCredentialStore(storage).loadResumeCandidate()).isEqualTo(Result.Success(old))
+    }
+
     @Test
     fun excessiveJsonNestingIsCorruptedInputAndDoesNotPoisonLaterStorageAccess() = runTest {
         val payload = ("[".repeat(2_048) + "0" + "]".repeat(2_048)).encodeToByteArray()

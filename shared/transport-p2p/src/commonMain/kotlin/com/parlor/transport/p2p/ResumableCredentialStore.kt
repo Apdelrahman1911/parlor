@@ -3,6 +3,7 @@ package com.parlor.transport.p2p
 import com.parlor.core.serialization.requireBoundedJsonNesting
 import com.parlor.core.result.Result
 import com.parlor.networking.room.RoomInputPolicy
+import com.parlor.networking.transport.ResumableSessionSelection
 import com.parlor.storage.secure.SecureStorage
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.sync.Mutex
@@ -152,6 +153,22 @@ internal class ResumableCredentialStore(
             }
         }
 
+    /** Reads metadata and the complete non-secret deletion ownership shape under one lock. */
+    suspend fun loadSelectedResumeCandidate(): Result<SelectedResumeCredential?, CredentialStoreError> =
+        mutex.withLock {
+            when (val loaded = loadRecord()) {
+                is Result.Failure -> loaded
+                is Result.Success -> {
+                    val record = loaded.data ?: return Result.Success(null)
+                    val candidate = record.resumeCandidate() ?: return Result.Success(null)
+                    Result.Success(SelectedResumeCredential(
+                        candidate,
+                        CredentialDeletionSelection(candidate, record.active, record.pending),
+                    ))
+                }
+            }
+        }
+
     suspend fun stage(
         credential: ResumableSessionCredential,
     ): Result<Unit, CredentialStoreError> = mutex.withLock {
@@ -282,10 +299,31 @@ internal class ResumableCredentialStore(
         val current = when (val loaded = loadRecord()) {
             is Result.Failure -> return loaded
             is Result.Success -> loaded.data
-        } ?: return Result.Success(CredentialInvalidationResult.NotOwned)
+        }
+        invalidateMembership(CredentialDeletionSelection(valid, current?.active, current?.pending), current)
+    }
 
-        val activeMatches = current.active?.ownsSameMembershipAs(valid) == true
-        val pendingMatches = current.pending?.ownsSameMembershipAs(valid) == true
+    /** Home must still own the exact candidate it displayed, not a later replacement/rotation. */
+    suspend fun invalidateSelection(
+        selection: CredentialDeletionSelection,
+    ): Result<CredentialInvalidationResult, CredentialStoreError> = mutex.withLock {
+        val current = when (val loaded = loadRecord()) {
+            is Result.Failure -> return loaded
+            is Result.Success -> loaded.data
+        } ?: return Result.Success(CredentialInvalidationResult.NotOwned)
+        if (!selection.matchesRecord(current.active, current.pending)) {
+            return Result.Success(CredentialInvalidationResult.NotOwned)
+        }
+        invalidateMembership(selection, current)
+    }
+
+    private suspend fun invalidateMembership(
+        selection: CredentialDeletionSelection,
+        current: StoredCredentialRecord?,
+    ): Result<CredentialInvalidationResult, CredentialStoreError> {
+        current ?: return Result.Success(CredentialInvalidationResult.NotOwned)
+        val activeMatches = current.active?.let(selection::matchesMembership) == true
+        val pendingMatches = current.pending?.let(selection::matchesMembership) == true
         if (!activeMatches && !pendingMatches) {
             return Result.Success(CredentialInvalidationResult.NotOwned)
         }
@@ -408,3 +446,53 @@ private fun String.isSafeIdentifier(): Boolean =
     length in 1..128 && all { it.isLetterOrDigit() || it == '-' || it == '_' || it == '.' }
 
 private fun isLowerHex(character: Char): Boolean = character in '0'..'9' || character in 'a'..'f'
+
+/** Adapter-only observation: only its non-secret selection crosses the UI boundary. */
+internal class SelectedResumeCredential(
+    val credential: ResumableSessionCredential,
+    val selection: CredentialDeletionSelection,
+) {
+    override fun toString(): String = "SelectedResumeCredential(redacted)"
+}
+
+/** Contains no secret and deliberately redacts even non-secret membership identifiers. */
+internal class CredentialDeletionSelection(
+    credential: ResumableSessionCredential,
+    active: ResumableSessionCredential?,
+    pending: ResumableSessionCredential?,
+) : ResumableSessionSelection {
+    private val membership = CredentialOwnership(credential)
+    private val activeOwnership = active?.let(::CredentialOwnership)
+    private val pendingOwnership = pending?.let(::CredentialOwnership)
+
+    fun matchesMembership(other: ResumableSessionCredential): Boolean = membership.matchesMembership(other)
+
+    fun matchesRecord(active: ResumableSessionCredential?, pending: ResumableSessionCredential?): Boolean =
+        activeOwnership.matchesNullable(active) && pendingOwnership.matchesNullable(pending)
+
+    override fun toString(): String = "ResumableSessionSelection(redacted)"
+}
+
+private class CredentialOwnership(credential: ResumableSessionCredential) {
+    private val membershipId = credential.membershipId
+    private val roomCode = credential.roomCode
+    private val playerId = credential.playerId
+    private val hostPeerId = credential.hostPeerId
+    private val hostFingerprint = credential.hostFingerprint
+    private val offerId = credential.offerId
+    private val generation = credential.generation
+
+    fun matchesMembership(other: ResumableSessionCredential): Boolean =
+        membershipId == other.membershipId && roomCode == other.roomCode &&
+            playerId == other.playerId && hostPeerId == other.hostPeerId &&
+            hostFingerprint == other.hostFingerprint
+
+    fun matchesGeneration(other: ResumableSessionCredential): Boolean =
+        matchesMembership(other) && offerId == other.offerId && generation == other.generation
+}
+
+private fun CredentialOwnership?.matchesNullable(other: ResumableSessionCredential?): Boolean = when {
+    this == null -> other == null
+    other == null -> false
+    else -> matchesGeneration(other)
+}

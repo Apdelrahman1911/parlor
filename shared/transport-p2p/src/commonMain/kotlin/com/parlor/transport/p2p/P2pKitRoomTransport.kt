@@ -31,6 +31,7 @@ import com.parlor.networking.transport.JoinConfig
 import com.parlor.networking.transport.LocalNetworkAccess
 import com.parlor.networking.transport.RoomTransport
 import com.parlor.networking.transport.ResumableSessionInfo
+import com.parlor.networking.transport.ResumableSessionSelection
 import com.parlor.networking.transport.TransportCapability
 import com.parlor.networking.security.SecureHashes
 import com.parlor.networking.security.SecureIds
@@ -631,10 +632,11 @@ class P2pKitRoomTransport @Suppress("LongParameterList") private constructor(
     }
 
     override suspend fun resumableSession(): Result<ResumableSessionInfo?, NetError> =
-        when (val loaded = credentialStore.loadResumeCandidate()) {
+        when (val loaded = credentialStore.loadSelectedResumeCandidate()) {
             is Result.Failure -> Result.Failure(NetError.SecureStorageUnavailable)
             is Result.Success -> {
-                val credential = loaded.data ?: return Result.Success(null)
+                val observed = loaded.data ?: return Result.Success(null)
+                val credential = observed.credential
                 if (credential.expiresAtEpochMillis <= nowMillis()) {
                     when (
                         invalidateStoredCredential(
@@ -656,11 +658,33 @@ class P2pKitRoomTransport @Suppress("LongParameterList") private constructor(
                             gameVersion = gameVersion,
                             displayName = credential.displayName,
                             expiresAtEpochMillis = credential.expiresAtEpochMillis,
+                            deletionSelection = observed.selection,
                         ),
                     )
                 }
             }
         }
+
+    override suspend fun discardResumableSession(
+        selection: ResumableSessionSelection,
+    ): Result<Unit, NetError> {
+        if (selection !is CredentialDeletionSelection) {
+            return Result.Failure(NetError.SecureStorageUnavailable)
+        }
+        val invalidated = try {
+            credentialStore.invalidateSelection(selection)
+        } catch (@Suppress("TooGenericExceptionCaught") failure: Exception) {
+            failure.rethrowIfCancellation()
+            return Result.Failure(NetError.SecureStorageUnavailable)
+        }
+        return when (val result = invalidated) {
+            is Result.Failure -> Result.Failure(NetError.SecureStorageUnavailable)
+            is Result.Success -> when (result.data) {
+                CredentialInvalidationResult.Invalidated -> Result.Success(Unit)
+                CredentialInvalidationResult.NotOwned -> Result.Failure(NetError.SecureStorageUnavailable)
+            }
+        }
+    }
 
     override suspend fun discardResumableSession(): Result<Unit, NetError> {
         val credential = when (val loaded = credentialStore.loadResumeCandidate()) {

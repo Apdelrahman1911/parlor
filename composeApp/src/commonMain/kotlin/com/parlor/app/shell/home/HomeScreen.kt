@@ -35,6 +35,8 @@ import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
+import com.parlor.app.resources.resume_delete_action
+import com.parlor.app.resources.resume_delete_description
 import com.parlor.app.resources.Res
 import com.parlor.app.resources.app_name
 import com.parlor.app.resources.home_continue_label
@@ -96,6 +98,9 @@ internal fun HomeScreen(
     recoveryLoading: Boolean = false,
     recoveryUnavailable: Boolean = false,
     onRetryRecovery: () -> Unit = {},
+    onDiscardLocal: (SessionId, String) -> Unit = { _, _ -> },
+    onDiscardMultiplayer: (String) -> Unit = {},
+    recoveryActionsEnabled: Boolean = true,
 ) {
     var selectedFilter by rememberSaveable { mutableStateOf(HomeCatalogFilter.All) }
     HeroBackdrop(modifier = modifier.fillMaxSize()) {
@@ -135,6 +140,8 @@ internal fun HomeScreen(
                         total = unfinishedSessions.size,
                         games = games,
                         onResume = onResume,
+                        onDiscard = onDiscardLocal,
+                        enabled = recoveryActionsEnabled,
                     )
                 }
                 if (hasResumableMultiplayer) {
@@ -146,6 +153,8 @@ internal fun HomeScreen(
                                 Res.string.home_resume_multiplayer_description,
                             ),
                             onTap = onResumeMultiplayer,
+                            onDiscard = onDiscardMultiplayer,
+                            enabled = recoveryActionsEnabled,
                         )
                     }
                 }
@@ -303,6 +312,8 @@ private fun LocalResumeTile(
     total: Int,
     games: List<GameShellBinding>,
     onResume: (SessionId) -> Unit,
+    onDiscard: (SessionId, String) -> Unit,
+    enabled: Boolean,
 ) {
     val binding = entry.gameId?.let { gameId ->
         games.firstOrNull { game -> game.definition.id == gameId }
@@ -336,6 +347,8 @@ private fun LocalResumeTile(
         },
         contentDescription = contentDescription,
         onTap = { onResume(entry.sessionId) },
+        onDiscard = { onDiscard(entry.sessionId, it) },
+        enabled = enabled,
     )
 }
 
@@ -345,40 +358,52 @@ private fun ResumeTile(
     subtitle: String,
     contentDescription: String,
     onTap: () -> Unit,
+    onDiscard: (String) -> Unit,
+    enabled: Boolean,
 ) {
     ParlorCard(
-        modifier = Modifier
-            .fillMaxWidth()
-            .semantics { this.contentDescription = contentDescription }
-            .clickable(role = Role.Button, onClick = onTap),
+        modifier = Modifier.fillMaxWidth(),
         contentPadding = ParlorTheme.spacing.l,
     ) {
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.m),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Box(
-                modifier = Modifier
-                    .size(ParlorTheme.spacing.xs, ParlorTheme.spacing.xxl)
-                    .clip(RoundedCornerShape(ParlorTheme.radii.pill))
-                    .background(ParlorTheme.colors.accentEmber),
-            )
-            Column(
-                modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.xs),
+        Column {
+            Row(
+                modifier = Modifier.fillMaxWidth()
+                    .semantics { this.contentDescription = contentDescription }
+                    .clickable(enabled = enabled, role = Role.Button, onClick = onTap),
+                horizontalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.m),
+                verticalAlignment = Alignment.CenterVertically,
             ) {
-                Text(
-                    text = title,
-                    style = ParlorTheme.typography.headingMedium,
-                    color = ParlorTheme.colors.textPrimary,
+                Box(
+                    modifier = Modifier
+                        .size(ParlorTheme.spacing.xs, ParlorTheme.spacing.xxl)
+                        .clip(RoundedCornerShape(ParlorTheme.radii.pill))
+                        .background(ParlorTheme.colors.accentEmber),
                 )
-                Text(
-                    text = subtitle,
-                    style = ParlorTheme.typography.bodySmall,
-                    color = ParlorTheme.colors.textSecondary,
-                )
+                Column(
+                    modifier = Modifier.weight(1f),
+                    verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.xs),
+                ) {
+                    Text(
+                        text = title,
+                        style = ParlorTheme.typography.headingMedium,
+                        color = ParlorTheme.colors.textPrimary,
+                    )
+                    Text(
+                        text = subtitle,
+                        style = ParlorTheme.typography.bodySmall,
+                        color = ParlorTheme.colors.textSecondary,
+                    )
+                }
+                DirectionalArrow()
             }
-            DirectionalArrow()
+            ParlorButton(
+                label = stringResource(Res.string.resume_delete_action),
+                contentDescription = stringResource(Res.string.resume_delete_description, contentDescription),
+                onClick = { onDiscard("$title — $subtitle") },
+                enabled = enabled,
+                variant = com.parlor.designsystem.components.ParlorButtonVariant.Ghost,
+                modifier = Modifier.fillMaxWidth(),
+            )
         }
     }
 }

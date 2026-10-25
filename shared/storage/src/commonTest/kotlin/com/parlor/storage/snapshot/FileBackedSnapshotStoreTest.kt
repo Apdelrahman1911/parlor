@@ -52,6 +52,21 @@ class FileBackedSnapshotStoreTest {
     }
 
     @Test
+    fun deleting_one_save_persists_after_store_recreation_and_preserves_other_saves() = runTest {
+        val files = MemoryFileSystem()
+        val original = FileBackedSnapshotStore(files, json)
+        val selected = validSnapshot()
+        val other = selected.copy(sessionId = SessionId("keep-me"))
+        original.save(selected)
+        original.save(other)
+        assertIs<Result.Success<Unit>>(original.delete(selected.sessionId))
+        val relaunched = FileBackedSnapshotStore(files, json)
+        assertEquals(Result.Failure(DataError.NotFound), relaunched.load(selected.sessionId))
+        assertEquals(Result.Success(other), relaunched.load(other.sessionId))
+        assertEquals(Result.Success(listOf(other.sessionId)), relaunched.listUnfinished())
+    }
+
+    @Test
     fun protection_failure_is_reported_as_corrupted_without_crypto_detail() = runTest {
         val store = FileBackedSnapshotStore(
             fileSystem = FailingFileSystem(SnapshotProtectionException("secret key alias")),
