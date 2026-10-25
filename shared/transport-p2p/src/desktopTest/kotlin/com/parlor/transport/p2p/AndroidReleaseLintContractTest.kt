@@ -93,6 +93,7 @@ class AndroidReleaseLintContractTest {
             },
         )
         listOf(
+            "org.jetbrains.kotlin:compose-compiler-gradle-plugin",
             "org.jetbrains.kotlin.multiplatform",
             "org.jetbrains.kotlin.plugin.compose",
             "org.jetbrains.kotlin.plugin.serialization",
@@ -116,7 +117,8 @@ class AndroidReleaseLintContractTest {
         assertContains(catalog, "androidx-activity-compose")
         assertContains(appBuild, "implementation(libs.androidx.activity.compose)")
         assertContains(triage, "reported 59 warnings")
-        assertContains(triage, "contains 37")
+        assertContains(triage, "contains 38")
+        assertContains(triage, "## 2026-10-25 Compose compiler coordinate advisory review")
     }
 
     @Test

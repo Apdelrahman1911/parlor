@@ -32,7 +32,7 @@ reported 59 warnings:
 
 The remediation removes all 20 correctness, packaging, resource, and catalog
 warnings. Removing eleven unconsumed dependency declarations then removed the
-corresponding update advisories. The current accepted inventory contains 37
+corresponding update advisories. The current accepted inventory contains 38
 warnings, all in the four
 explicitly reviewed advisory classes below:
 
@@ -41,7 +41,7 @@ explicitly reviewed advisory classes below:
 | `OldTargetApi` | 1 | Target/compile SDK 36 is deliberately pinned for the current compatibility baseline. Store target-level compliance must be rechecked at release and can require a reviewed SDK migration. |
 | `AndroidGradlePluginVersion` | 4 | Gradle 8.13 and AGP 8.13.2 are a verified pair. Moving to Gradle 8.14.5 or AGP 9.3.1 is a separate compatibility migration, not a lint-only edit. |
 | `GradleDependency` | 1 | Lint 9.1.1 is the reviewed stable analyzer compatible with Kotlin 2.4 metadata; lint reports a moving, unrelated alpha preview whose latest version is normalized by the gate. |
-| `DependencyUpdate` | 31 | These are update notifications for pinned Activity Compose, datetime, Kotlin, Compose, Navigation 3, Koin, Ktor, Konsist, Detekt, Turbine, and Serialization coordinates. AndroidX Navigation 3 runtime 1.0.0 stays aligned with the reviewed Compose Multiplatform UI port; that UI port stays at alpha06 because newer publications omit the project's `iosX64` target. They do not report a demonstrated correctness defect. Kotlin 2.4.10 remains the compatibility pin; the three Kotlin plugin updates are reviewed below. The Serialization 1.11.0 updates are reviewed below; P2pKit 0.7.0-rc3 did not produce an update advisory in this reviewed run, not a claim it will always be latest. |
+| `DependencyUpdate` | 32 | These are update notifications for pinned Activity Compose, datetime, Kotlin, Compose, Navigation 3, Koin, Ktor, Konsist, Detekt, Turbine, and Serialization coordinates. AndroidX Navigation 3 runtime 1.0.0 stays aligned with the reviewed Compose Multiplatform UI port; that UI port stays at alpha06 because newer publications omit the project's `iosX64` target. They do not report a demonstrated correctness defect. Kotlin 2.4.10 remains the compatibility pin; the three Kotlin plugin updates are reviewed below. The Serialization 1.11.0 updates are reviewed below; P2pKit 0.7.0-rc3 did not produce an update advisory in this reviewed run, not a claim it will always be latest. |
 
 The remaining advisories are not permanent waivers. Dependency/security review
 and store policy can make a specific upgrade mandatory. Such an upgrade must
@@ -108,6 +108,27 @@ not proof of safety: upstream's depth/allocation hardening still warrants
 malformed-input review. Reopen this triage for a relevant security advisory or
 a reproduced decoder defect. No dependency, verification checksum, lint
 severity, detector, or release gate is changed by this acceptance.
+
+## 2026-10-25 Compose compiler coordinate advisory review
+
+The fresh local `productionCheck allTests` report at `57be2cc6` contains 38
+warnings: one additional `GradleDependency` row for
+`org.jetbrains.kotlin:compose-compiler-gradle-plugin` 2.4.10, suggesting 2.4.21,
+and no missing accepted rows. This is the concrete artifact behind the already
+reviewed Compose plugin alias, not a new production dependency. Accept only
+that exact coordinate/current-version row; leave the exact-multiset verifier,
+Kotlin pin and strict artifact verification unchanged.
+
+Upstream [2.4.21 release notes](https://github.com/JetBrains/kotlin/releases/tag/v2.4.21)
+(published October 8) describe Wasm, reflection, JavaScript, serialization,
+Native build and scripting fixes. Kotlin/Compose compiler plugins must move
+with the coordinated Kotlin toolchain, not as an isolated lint repair. The
+public Maven advisory query for this artifact at 2.4.10 returned no matches
+on October 25; that scoped lookup is not proof of general safety. The KAPT
+advisory and no-KAPT gate above remain applicable and must not be removed.
+Reopen the decision for relevant security evidence or a qualified toolchain
+upgrade. Earlier 37-warning CI receipts remain historical, not substitutes
+for this report's 38-row qualification.
 
 ## Fixed warning classes
 
