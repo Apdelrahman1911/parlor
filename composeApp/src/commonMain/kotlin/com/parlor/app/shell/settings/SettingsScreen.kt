@@ -287,7 +287,29 @@ private fun OptionRow(
             .clip(RoundedCornerShape(ParlorTheme.radii.card))
             .background(colors.surfaceHigher)
             .background(
-                RadioButton(selected = selected, onClick = null)
+                if (selected) colors.accentEmber.copy(alpha = SELECTED_SURFACE_ALPHA)
+                else colors.transparent,
+            )
+            .border(
+                ParlorTheme.borders.hairline,
+                if (selected) colors.accentEmber else colors.borderElevated,
+                RoundedCornerShape(ParlorTheme.radii.card),
+            )
+            .selectable(
+                selected = selected,
+                role = Role.RadioButton,
+                onClick = onSelected,
+            )
+            .padding(horizontal = ParlorTheme.spacing.l, vertical = ParlorTheme.spacing.m),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Text(
+            text = label,
+            style = ParlorTheme.typography.bodyLarge,
+            color = colors.textPrimary,
+            modifier = Modifier.weight(1f),
+        )
+        RadioButton(selected = selected, onClick = null)
     }
 }
 
