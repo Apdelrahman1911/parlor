@@ -80,10 +80,11 @@ class HomeCatalogVisualEvidenceTest {
             }
         }
         onNodeWithTag("shell-preview").assertIsDisplayed()
-        // Tests run without writing assets unless explicitly requested. The environment
-        // variable is inherited by Gradle's test worker without changing build configuration.
+        // Public fixtures only. Default reports are collected by the existing CI artifact
+        // glob; the environment override is inherited by Gradle's test worker.
         val directory = System.getProperty("parlor.ux.screenshotDir")
             ?: System.getenv("PARLOR_UI_SCREENSHOT_DIR")
+            ?: "build/reports/ux"
         if (!directory.isNullOrBlank()) {
             val screen = if (catalog) "home" else "setup"
             val output = File(directory, "$screen-${language.tag}-${theme.tag}-$fontScale.png")

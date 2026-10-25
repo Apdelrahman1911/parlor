@@ -5,15 +5,20 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.asSkiaBitmap
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.test.ExperimentalTestApi
+import androidx.compose.ui.test.captureToImage
+import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.runComposeUiTest
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.parlor.designsystem.theme.ParlorTheme
+import org.jetbrains.skia.Image
+import java.io.File
 import kotlin.test.Test
 import kotlin.test.assertTrue
 
@@ -42,5 +47,10 @@ class ContextRibbonLayoutTest {
         val detailBounds = onNodeWithText(detail, useUnmergedTree = true).fetchSemanticsNode().boundsInRoot
         assertTrue(labelBounds.width >= 200f, "Status must not be squeezed into half a phone-width column")
         assertTrue(detailBounds.top >= labelBounds.bottom, "Instruction should follow, not compete for label width")
+        val output = File("build/reports/ux/context-ribbon-$direction-2x.png")
+        check(output.parentFile.mkdirs() || output.parentFile.isDirectory)
+        Image.makeFromBitmap(onRoot().captureToImage().asSkiaBitmap()).use { image ->
+            checkNotNull(image.encodeToData()).use { data -> output.writeBytes(data.bytes) }
+        }
     }
 }
