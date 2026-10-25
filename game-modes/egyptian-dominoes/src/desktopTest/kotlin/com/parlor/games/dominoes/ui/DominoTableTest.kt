@@ -30,6 +30,23 @@ import kotlin.test.assertTrue
 @OptIn(ExperimentalTestApi::class)
 class DominoTableTest {
     @Test
+    fun tiles_can_be_hidden_while_a_host_acknowledgement_is_pending() = runComposeUiTest {
+        val state = DominoReducer().initial(uiPlayers(3), DominoSettings(), 42)
+        val self = checkNotNull(state.public.turn)
+        var enabled by mutableStateOf(true)
+        var sent: DominoAction? = null
+        setContent {
+            GameUiFrame { DominoTable(DominoProjection.toPlayer(state, self).state, self, true, enabled, 0, { sent = it }, {}) }
+        }
+        onNodeWithText("Show my tiles").reachable().performClick()
+        onAllNodes(hasContentDescription("Tile ", substring = true), true).assertCountEquals(9)
+        runOnIdle { enabled = false }
+        onNodeWithText("Hide tiles").reachable().assertIsEnabled().performClick()
+        onAllNodes(hasContentDescription("Tile ", substring = true), true).assertCountEquals(0)
+        assertNull(sent)
+    }
+
+    @Test
     fun covered_tiles_have_no_private_semantics_and_epoch_change_clears_the_selection() = runComposeUiTest {
         val canonical = DominoReducer().initial(uiPlayers(3), DominoSettings(), 42)
         val self = checkNotNull(canonical.public.turn)

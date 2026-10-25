@@ -118,7 +118,7 @@ private fun GhamzaRoleCard(
     InPlaceBackHandler(revealed) { revealed = false }
     Column(Modifier.fillMaxWidth().background(GhamzaInk.copy(alpha = .7f), RoundedCornerShape(28.dp)).padding(24.dp),
         verticalArrangement = Arrangement.spacedBy(18.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-        GhamzaEye(revealed)
+        if (readiness) GhamzaEye(revealed)
         if (!revealed) {
             GhamzaTitle(stringResource(Res.string.gh_reveal_title))
             GhamzaBody(stringResource(Res.string.gh_reveal_hint))
@@ -132,7 +132,9 @@ private fun GhamzaRoleCard(
                     revealed = false
                     onAction(GhamzaAction.Ready(self, state.public.token))
                 }
-            } else GhamzaButton(stringResource(Res.string.gh_hide), enabled) { revealed = false }
+            }
+            // Concealing local private content never waits for a host acknowledgement.
+            GhamzaButton(stringResource(Res.string.gh_hide), secondary = true) { revealed = false }
         }
         if (readiness) GhamzaBody(stringResource(Res.string.gh_ready_count, state.public.ready.size, state.players.size))
     }
@@ -150,7 +152,7 @@ private fun GhamzaSocial(state: GhamzaState, self: PlayerId, enabled: Boolean, p
             confirming = false
             onAction(GhamzaAction.Winked(self, state.public.token, used + 1))
         }
-        GhamzaButton(stringResource(Res.string.gh_cancel), enabled, true) { confirming = false }
+        GhamzaButton(stringResource(Res.string.gh_cancel), secondary = true) { confirming = false }
         return
     }
     GhamzaTitle(stringResource(Res.string.gh_social))
@@ -198,7 +200,7 @@ private fun GhamzaFinalGuess(state: GhamzaState, self: PlayerId, enabled: Boolea
             GhamzaButton(stringResource(Res.string.gh_guess_submit), enabled) {
                 onAction(GhamzaAction.Guess(self, state.public.token, target))
             }
-            GhamzaButton(stringResource(Res.string.gh_cancel), enabled, true) { selected = null }
+            GhamzaButton(stringResource(Res.string.gh_cancel), secondary = true) { selected = null }
         }
     }
 }

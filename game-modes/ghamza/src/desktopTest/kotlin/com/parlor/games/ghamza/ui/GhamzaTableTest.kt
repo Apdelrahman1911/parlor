@@ -23,6 +23,25 @@ import kotlin.test.assertTrue
 @OptIn(ExperimentalTestApi::class)
 class GhamzaTableTest {
     @Test
+    fun covering_a_revealed_role_never_requires_a_network_action() = runComposeUiTest {
+        val state = GhamzaReducer().initial(uiPlayers(3), GhamzaSettings(), 42)
+        val self = checkNotNull(state.hostOnly.winker)
+        var enabled by mutableStateOf(true)
+        var sent: GhamzaAction? = null
+        setContent {
+            GameUiFrame {
+                GhamzaTable(GhamzaProjection.toPlayer(state, self).state, self, false, enabled, 0, { sent = it }, {})
+            }
+        }
+        onNodeWithText("Reveal my role").reachable().performClick()
+        onNodeWithText("You are the Winker").assertExists()
+        runOnIdle { enabled = false }
+        onNodeWithText("Cover my role").reachable().assertIsEnabled().performClick()
+        onNodeWithText("You are the Winker").assertDoesNotExist()
+        assertEquals(null, sent)
+    }
+
+    @Test
     fun private_reveal_and_readiness_work_in_english_and_arabic_at_large_text() {
         verifyReveal(AppLanguage.English)
         verifyReveal(AppLanguage.Arabic)

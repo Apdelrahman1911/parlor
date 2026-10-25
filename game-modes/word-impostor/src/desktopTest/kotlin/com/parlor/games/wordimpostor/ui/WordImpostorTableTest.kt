@@ -26,6 +26,24 @@ import kotlin.test.assertTrue
 @OptIn(ExperimentalTestApi::class)
 class WordImpostorTableTest {
     @Test
+    fun hiding_a_revealed_secret_does_not_submit_readiness_or_wait_for_network() = runComposeUiTest {
+        val state = WordImpostorReducer().initial(uiPlayers(3), WordImpostorSettings(), 42)
+        val self = state.hostOnly.impostors.first()
+        var enabled by mutableStateOf(true)
+        var sent: WordImpostorAction? = null
+        setContent {
+            GameUiFrame {
+                WordImpostorTable(WordImpostorProjection.toPlayer(state, self).state, self, false, enabled, 0, { sent = it }, {})
+            }
+        }
+        onNodeWithText("Reveal my secret").reachable().performClick()
+        runOnIdle { enabled = false }
+        onNodeWithText("Hide my secret").reachable().assertIsEnabled().performClick()
+        onNodeWithText("Hide my secret").assertDoesNotExist()
+        assertNull(sent)
+    }
+
+    @Test
     fun ordinary_and_impostor_secrets_are_covered_on_entry_and_interruption_in_both_languages() {
         for (language in listOf(AppLanguage.English, AppLanguage.Arabic)) for (role in WordRole.entries) {
             verifyReveal(language, role)

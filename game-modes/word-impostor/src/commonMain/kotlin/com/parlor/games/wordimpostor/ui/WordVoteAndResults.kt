@@ -80,7 +80,7 @@ internal fun WordVoting(
                 WordButton(stringResource(Res.string.wi_lock_vote), enabled) {
                     onAction(WordImpostorAction.Vote(self, state.public.token, target))
                 }
-                WordButton(stringResource(Res.string.wi_cancel), enabled, true) { selected = null }
+                WordButton(stringResource(Res.string.wi_cancel), secondary = true) { selected = null }
             }
         }
     }
@@ -98,7 +98,6 @@ internal fun WordGuessing(
         if (selected != null) selected = null else revealed = false
     }
     WordTitle(stringResource(Res.string.wi_guessing))
-    WordVoteCounts(state)
     WordBody(stringResource(Res.string.wi_guess_count, state.public.guessCount, state.public.settings.impostors))
     WordPanel {
         when {
@@ -122,12 +121,14 @@ internal fun WordGuessing(
                         revealed = false
                         selected = null
                     }
-                    WordButton(stringResource(Res.string.wi_cancel), enabled, true) { selected = null }
+                    WordButton(stringResource(Res.string.wi_cancel), secondary = true) { selected = null }
                 }
             }
         }
-        if (revealed) WordButton(stringResource(Res.string.wi_hide), enabled, true) { revealed = false; selected = null }
+        if (revealed) WordButton(stringResource(Res.string.wi_hide), secondary = true) { revealed = false; selected = null }
     }
+    // Keep the next action ahead of a potentially twelve-seat poll recap.
+    WordVoteCounts(state)
 }
 
 @Composable

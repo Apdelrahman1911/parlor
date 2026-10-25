@@ -66,13 +66,13 @@ fun DominoTable(
                 DominoBody(stringResource(Res.string.dom_rules))
             } else {
                 DominoBody(stringResource(Res.string.dom_round, state.public.round))
-                DominoTeams(state, self)
-                DominoOpponents(state, self, motion)
                 if (state.phase == DominoPhase.Playing) {
                     DominoBody(if (state.public.turn == self) stringResource(Res.string.dom_turn_you) else
                         stringResource(Res.string.dom_turn_other, state.name(checkNotNull(state.public.turn))),
                         Modifier.semantics { liveRegion = LiveRegionMode.Polite })
                 }
+                DominoTeams(state, self)
+                DominoOpponents(state, self, motion)
                 DominoBoard(state, motion)
                 if (state.phase == DominoPhase.Playing) {
                     if (DominoRules.usesDraw(state.public.settings, state.players.size)) DominoStock(state.public.stockCount, motion)

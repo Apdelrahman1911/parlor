@@ -26,6 +26,11 @@ import com.parlor.games.wordimpostor.domain.WordImpostorPhase
 import com.parlor.games.wordimpostor.domain.WordImpostorState
 import com.parlor.games.wordimpostor.domain.WordRole
 import com.parlor.games.wordimpostor.resources.Res
+import com.parlor.games.wordimpostor.resources.wi_phase_progress
+import com.parlor.games.wordimpostor.resources.wi_phase_reveal
+import com.parlor.games.wordimpostor.resources.wi_phase_results
+import com.parlor.games.wordimpostor.resources.wi_voting
+import com.parlor.games.wordimpostor.resources.wi_guessing
 import com.parlor.games.wordimpostor.resources.wi_answer_hint
 import com.parlor.games.wordimpostor.resources.wi_answered
 import com.parlor.games.wordimpostor.resources.wi_close_help
@@ -74,7 +79,16 @@ fun WordImpostorTable(
             }
         }
         WordBody(stringResource(Res.string.wi_round, state.public.round, state.public.settings.rounds))
-        WordPhaseTrack(state.phase.ordinal.coerceAtMost(5))
+        val step = state.phase.ordinal.coerceAtMost(5)
+        val label = when (state.phase) {
+            WordImpostorPhase.Reveal -> Res.string.wi_phase_reveal
+            WordImpostorPhase.Questions -> Res.string.wi_questions
+            WordImpostorPhase.Discussion -> Res.string.wi_discussion
+            WordImpostorPhase.Voting -> Res.string.wi_voting
+            WordImpostorPhase.Guessing -> Res.string.wi_guessing
+            else -> Res.string.wi_phase_results
+        }
+        WordPhaseTrack(step, stringResource(Res.string.wi_phase_progress, step + 1, stringResource(label)))
         if (help) {
             WordTitle(stringResource(Res.string.wi_title))
             WordBody(stringResource(Res.string.wi_rules))
@@ -107,7 +121,7 @@ private fun WordSecretCard(
     WordPanel {
         Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(16.dp)) {
-            WordEmblem(revealed)
+            if (readiness) WordEmblem(revealed)
             if (!revealed) {
                 WordTitle(stringResource(Res.string.wi_reveal_title))
                 WordBody(stringResource(Res.string.wi_reveal_hint))
@@ -127,7 +141,9 @@ private fun WordSecretCard(
                         revealed = false
                         onAction(WordImpostorAction.Ready(self, state.public.token))
                     }
-                } else WordButton(stringResource(Res.string.wi_hide), enabled) { revealed = false }
+                }
+                // Concealment is local: pending/paused network actions must not disable it.
+                WordButton(stringResource(Res.string.wi_hide), secondary = true) { revealed = false }
             }
             if (readiness) WordBody(stringResource(Res.string.wi_ready_count, state.public.ready.size, state.players.size))
         }

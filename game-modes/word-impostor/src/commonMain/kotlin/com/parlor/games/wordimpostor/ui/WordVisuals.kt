@@ -36,6 +36,8 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.semantics.ProgressBarRangeInfo
+import androidx.compose.ui.semantics.progressBarRangeInfo
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
@@ -107,12 +109,16 @@ internal fun WordButton(text: String, enabled: Boolean = true, secondary: Boolea
 
 /** A public phase indicator: never keeps an outgoing secret screen in an animation. */
 @Composable
-internal fun WordPhaseTrack(step: Int) {
+internal fun WordPhaseTrack(step: Int, label: String) {
     val duration = if (ParlorTheme.reducedMotion) 0 else 240
-    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-        repeat(6) { index ->
-            val color by animateColorAsState(if (index <= step) WordPeach else WordPanelColor, tween(duration))
-            Box(Modifier.weight(1f).height(4.dp).background(color, RoundedCornerShape(2.dp)))
+    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        Text(label, color = WordPeach, style = ParlorTheme.typography.labelLarge,
+            modifier = Modifier.semantics { progressBarRangeInfo = ProgressBarRangeInfo((step + 1).toFloat(), 1f..6f) })
+        Row(Modifier.fillMaxWidth().clearAndSetSemantics {}, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+            repeat(6) { index ->
+                val color by animateColorAsState(if (index <= step) WordPeach else WordPanelColor, tween(duration))
+                Box(Modifier.weight(1f).height(4.dp).background(color, RoundedCornerShape(2.dp)))
+            }
         }
     }
 }
