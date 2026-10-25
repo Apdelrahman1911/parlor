@@ -71,7 +71,8 @@ class HomeCatalogVisualEvidenceTest {
                                 PlayModePickerScreen(
                                     onModeSelected = {}, onHost = {}, onJoin = {}, onBack = {},
                                     capabilities = games.first().capabilities,
-                                    supportedPlayerCounts = games.first().definition.supportedPlayerCounts,
+                                    supportedPlayerCounts = games.first().multiplayerContract
+                                        ?.supportedPlayerCounts ?: games.first().definition.supportedPlayerCounts,
                                 )
                             }
                         }

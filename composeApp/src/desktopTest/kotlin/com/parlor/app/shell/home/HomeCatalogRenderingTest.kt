@@ -8,6 +8,9 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsSelected
+import androidx.compose.ui.test.hasScrollToIndexAction
+import androidx.compose.ui.test.hasText
+import androidx.compose.ui.test.performScrollToNode
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -88,7 +91,8 @@ class HomeCatalogRenderingTest {
         onNodeWithText(if (arabic) "كل الألعاب" else "All games")
             .performScrollTo().performClick().assertIsSelected()
         onNodeWithText(if (arabic) "لعبتان (2)" else "2 games").assertExists()
-        onNodeWithText(if (arabic) "نفس الواي فاي · جهاز لكل لاعب" else "Same Wi-Fi · own devices")
-            .performScrollTo().assertExists()
+        val nearbyLabel = if (arabic) "نفس الواي فاي · جهاز لكل لاعب" else "Same Wi-Fi · own devices"
+        onNode(hasScrollToIndexAction()).performScrollToNode(hasText(nearbyLabel))
+        onNodeWithText(nearbyLabel).assertExists()
     }
 }

@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -42,6 +43,18 @@ internal fun CatalogFilters(selected: HomeCatalogFilter, onSelected: (HomeCatalo
                 selected = filter == selected,
                 onClick = { onSelected(filter) },
                 modifier = Modifier.heightIn(min = ParlorTheme.spacing.xxl),
+                colors = FilterChipDefaults.filterChipColors(
+                    containerColor = ParlorTheme.colors.surfaceElevated,
+                    labelColor = ParlorTheme.colors.textSecondary,
+                    selectedContainerColor = ParlorTheme.colors.surfaceHero,
+                    selectedLabelColor = ParlorTheme.colors.textPrimary,
+                ),
+                border = FilterChipDefaults.filterChipBorder(
+                    enabled = true,
+                    selected = filter == selected,
+                    borderColor = ParlorTheme.colors.borderSubtle,
+                    selectedBorderColor = ParlorTheme.colors.accentEmber,
+                ),
                 label = {
                     Text(stringResource(when (filter) {
                         HomeCatalogFilter.All -> Res.string.catalog_filter_all
