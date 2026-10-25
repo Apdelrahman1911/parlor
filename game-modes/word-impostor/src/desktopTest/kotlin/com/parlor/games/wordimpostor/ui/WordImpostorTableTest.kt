@@ -112,7 +112,11 @@ class WordImpostorTableTest {
     }
 
     @Test
-    fun guided_question_is_private_to_asker_and_advances_with_its_exact_index() = runComposeUiTest {
+    fun guided_question_is_private_to_asker_and_advances_with_its_exact_index() {
+        for (language in listOf(AppLanguage.English, AppLanguage.Arabic)) verifyQuestionJourney(language)
+    }
+
+    private fun verifyQuestionJourney(language: AppLanguage) = runComposeUiTest {
         val reducer = WordImpostorReducer()
         val initial = reducer.initial(uiPlayers(5), WordImpostorSettings(), 8)
         var state by mutableStateOf(initial.players.fold(initial) { current, player ->
@@ -121,7 +125,7 @@ class WordImpostorTableTest {
         val self = state.public.interactions.first().asker
         var prompt = ""
         setContent {
-            GameUiFrame {
+            GameUiFrame(language, 320, 740, 2f) {
                 prompt = stringResource(WordContentResources.question(state.hostOnly.questions.first()))
                 WordImpostorTable(WordImpostorProjection.toPlayer(state, self).state, self, false, true, 0,
                     { state = reducer.apply(state, it) }, {})
@@ -129,10 +133,18 @@ class WordImpostorTableTest {
         }
         waitForIdle()
         onNodeWithText(prompt).assertExists()
-        onNodeWithText("Question answered · next").reachable().performClick()
+        val answered = if (language == AppLanguage.Arabic) "السؤال اتجاوب · التالي" else "Question answered · next"
+        onNodeWithText(answered).reachable().assertIsEnabled()
+        onNodeWithText(answered, useUnmergedTree = true).assertFullText()
+        onNodeWithText(answered).performClick()
         assertEquals(1, state.public.questionIndex)
         onNodeWithText(prompt).assertDoesNotExist()
-        onNodeWithText("Question answered · next").assertDoesNotExist()
+        onNodeWithText(answered).assertDoesNotExist()
+        val pair = state.public.interactions[1]
+        val pairing = if (language == AppLanguage.Arabic) "${state.name(pair.asker)} بيسأل ${state.name(pair.answerer)}"
+            else "${state.name(pair.asker)} asks ${state.name(pair.answerer)}"
+        onNodeWithText(pairing).assertIsDisplayed()
+        capturePublicGameFrame("next-question-public-${language.tag}-2.0")
     }
 
     @Test

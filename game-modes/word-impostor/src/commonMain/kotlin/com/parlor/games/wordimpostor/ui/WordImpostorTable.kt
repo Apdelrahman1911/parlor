@@ -77,7 +77,7 @@ fun WordImpostorTable(
     var help by remember(state.public.token, privacyEpoch) { mutableStateOf(false) }
     var fullRules by remember(state.public.token, privacyEpoch, help) { mutableStateOf(false) }
     InPlaceBackHandler(help) { help = false }
-    WordFrame(modifier, Triple(state.phase, state.public.token, help)) {
+    WordFrame(modifier, Triple(state.phase, state.public.token, help) to state.public.questionIndex) {
         FlowRow(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween,
             verticalArrangement = Arrangement.spacedBy(4.dp), itemVerticalAlignment = Alignment.CenterVertically) {
             TextButton(onClick = onLeave, modifier = Modifier.heightIn(min = 48.dp)) {
