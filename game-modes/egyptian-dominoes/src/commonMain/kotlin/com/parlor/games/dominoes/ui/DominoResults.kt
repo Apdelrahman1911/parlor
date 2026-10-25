@@ -23,6 +23,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.parlor.designsystem.localization.asBidiArgument
 import com.parlor.designsystem.theme.ParlorTheme
@@ -65,7 +66,8 @@ internal fun DominoResults(state: DominoState, host: Boolean, enabled: Boolean, 
                     }
                 }
             }
-            Text(stringResource(Res.string.dom_award, result.points), color = DominoGold, style = ParlorTheme.typography.headingLarge)
+            Text(stringResource(Res.string.dom_award, result.points), color = DominoGold,
+                style = ParlorTheme.typography.headingMedium, textAlign = TextAlign.Center)
         }
         if (match) {
             DominoTitle(stringResource(Res.string.dom_match_result))

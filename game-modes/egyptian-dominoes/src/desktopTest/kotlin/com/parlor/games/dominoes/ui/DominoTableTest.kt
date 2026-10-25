@@ -56,6 +56,8 @@ class DominoTableTest {
         onNodeWithText(if (arabic) "ورّيني قطعي" else "Show my tiles").reachable()
         runOnIdle { state = completed }
         onNodeWithText(if (arabic) "أبطال الترابيزة" else "Table champions").assertIsDisplayed()
+        onNodeWithText(if (arabic) "أبطال الترابيزة" else "Table champions", useUnmergedTree = true)
+            .assertWordOnSingleLine(if (arabic) "الترابيزة" else "champions")
         capturePublicGameFrame("results-${language.tag}-2.0")
         val rematch = if (arabic) "العبوا تاني · صفّر النقط" else "Play again · reset scores"
         onNodeWithText(rematch).reachable().assertIsEnabled()

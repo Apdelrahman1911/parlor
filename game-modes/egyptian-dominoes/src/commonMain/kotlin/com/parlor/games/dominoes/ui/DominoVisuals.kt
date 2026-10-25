@@ -4,6 +4,7 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxSize
@@ -26,6 +27,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.heading
@@ -62,7 +64,13 @@ internal fun DominoFrame(modifier: Modifier, resetKey: String, content: @Composa
 
 @Composable
 internal fun DominoTitle(text: String) {
-    Text(text, color = DominoText, style = ParlorTheme.typography.displayMedium, modifier = Modifier.semantics { heading() })
+    val fontScale = LocalDensity.current.fontScale
+    BoxWithConstraints(Modifier.fillMaxWidth()) {
+        // Use a semantic heading tier on compact enlarged-text layouts; never cap the user's font scale.
+        val style = if (maxWidth / fontScale < 180.dp) ParlorTheme.typography.headingLarge
+            else ParlorTheme.typography.displayMedium
+        Text(text, style = style, color = DominoText, modifier = Modifier.semantics { heading() })
+    }
 }
 
 @Composable

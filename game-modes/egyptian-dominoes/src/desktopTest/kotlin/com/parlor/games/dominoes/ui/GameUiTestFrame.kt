@@ -90,3 +90,14 @@ internal fun ComposeUiTest.capturePublicGameFrame(name: String) {
         checkNotNull(image.encodeToData()).use { data -> output.writeBytes(data.bytes) }
     }
 }
+
+@OptIn(ExperimentalTestApi::class)
+internal fun SemanticsNodeInteraction.assertWordOnSingleLine(word: String) {
+    val layouts = mutableListOf<TextLayoutResult>()
+    performSemanticsAction(SemanticsActions.GetTextLayoutResult) { it(layouts) }
+    val layout = layouts.single()
+    val start = layout.layoutInput.text.text.indexOf(word)
+    assertTrue(start >= 0, "Expected a complete visible word")
+    assertEquals(layout.getLineForOffset(start), layout.getLineForOffset(start + word.length - 1),
+        "Compact heading must not break a common word across lines")
+}

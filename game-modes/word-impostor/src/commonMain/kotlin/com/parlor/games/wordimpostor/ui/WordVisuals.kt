@@ -7,6 +7,7 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
@@ -36,6 +37,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.semantics.ProgressBarRangeInfo
 import androidx.compose.ui.semantics.progressBarRangeInfo
@@ -83,7 +85,13 @@ internal fun WordPanel(content: @Composable ColumnScope.() -> Unit) {
 
 @Composable
 internal fun WordTitle(text: String) {
-    Text(text, style = ParlorTheme.typography.displayMedium, color = WordText, modifier = Modifier.semantics { heading() })
+    val fontScale = LocalDensity.current.fontScale
+    BoxWithConstraints(Modifier.fillMaxWidth()) {
+        // Use a semantic heading tier on compact enlarged-text layouts; never cap the user's font scale.
+        val style = if (maxWidth / fontScale < 180.dp) ParlorTheme.typography.headingLarge
+            else ParlorTheme.typography.displayMedium
+        Text(text, style = style, color = WordText, modifier = Modifier.semantics { heading() })
+    }
 }
 
 @Composable
@@ -130,7 +138,8 @@ internal fun WordPhaseTrack(step: Int, label: String) {
 @Composable
 internal fun WordEmblem(open: Boolean, modifier: Modifier = Modifier) {
     val angle by animateFloatAsState(if (open) 9f else -9f, tween(if (ParlorTheme.reducedMotion) 0 else 280))
-    Canvas(modifier.size(128.dp).clearAndSetSemantics {}) {
+    val artworkSize = if (LocalDensity.current.fontScale >= 1.5f) 64.dp else 128.dp
+    Canvas(modifier.size(artworkSize).clearAndSetSemantics {}) {
         val card = Size(size.width * .54f, size.height * .72f)
         val origin = center - Offset(card.width / 2, card.height / 2)
         rotate(-angle) {
