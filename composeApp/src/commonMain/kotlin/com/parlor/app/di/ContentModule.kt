@@ -14,6 +14,9 @@ import com.parlor.app.shell.game.DefaultGameShellRegistry
 import com.parlor.app.shell.game.GameShellRegistry
 import com.parlor.app.shell.game.MafiaGameShellBinding
 import com.parlor.app.shell.game.LastLightGameShellBinding
+import com.parlor.app.shell.game.DominoGameShellBinding
+import com.parlor.app.shell.game.GhamzaGameShellBinding
+import com.parlor.app.shell.game.WordImpostorGameShellBinding
 import com.parlor.app.shell.game.WhodunitGameShellBinding
 import com.parlor.core.versioning.SemVer
 import com.parlor.engine.registry.DefaultGameRegistry
@@ -42,6 +45,9 @@ val contentModule: Module = module {
     single { WhodunitGameShellBinding(get()) }
     single { MafiaGameShellBinding(get()) }
     single { LastLightGameShellBinding(get()) }
+    single { DominoGameShellBinding(get()) }
+    single { GhamzaGameShellBinding(get()) }
+    single { WordImpostorGameShellBinding(get()) }
 
     single<GameShellRegistry> {
         DefaultGameShellRegistry(
@@ -49,6 +55,9 @@ val contentModule: Module = module {
                 get<WhodunitGameShellBinding>(),
                 get<MafiaGameShellBinding>(),
                 get<LastLightGameShellBinding>(),
+                get<DominoGameShellBinding>(),
+                get<GhamzaGameShellBinding>(),
+                get<WordImpostorGameShellBinding>(),
             ),
         )
     }

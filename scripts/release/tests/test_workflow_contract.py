@@ -497,6 +497,19 @@ class WorkflowContractTest(unittest.TestCase):
             with self.subTest(original=original), self.assertRaisesRegex(RuntimeError, "verification scope"):
                 workflow_contract.verify_verification_scopes(changed)
 
+    def test_apple_release_has_exact_bounded_budget_for_serial_six_game_linkage(self) -> None:
+        workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text()
+        job = workflow_contract.validation_job(workflow, "ios-release")
+        header = job.split("\n    steps:\n", 1)[0]
+        self.assertEqual(re.findall(r"(?m)^    timeout-minutes: (.*)$", header), ["180"])
+        workflow_contract.verify_validation(workflow)
+        for minutes in ("0", "120", "181", "360", "${{ inputs.unreviewed_timeout }}"):
+            changed_job = job.replace("timeout-minutes: 180", "timeout-minutes: " + minutes, 1)
+            changed = workflow.replace(job, changed_job, 1)
+            self.assertNotEqual(changed, workflow)
+            with self.subTest(minutes=minutes), self.assertRaisesRegex(RuntimeError, "verification scope"):
+                workflow_contract.verify_validation(changed)
+
     def test_split_apple_aggregates_cannot_drop_static_analysis_or_duplicate_runtime(self) -> None:
         workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text()
         for job_id, task, wrong_task in (

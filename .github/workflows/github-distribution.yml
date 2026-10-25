@@ -1,0 +1,294 @@
+name: GitHub distribution
+
+on:
+  push:
+    # Branch pushes exercise unsigned packaging without enabling Store delivery.
+    branches: [feat/last-light]
+    tags: ['github-v*-b*']
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: Rehearse unsigned packages, freeze a protected signed candidate, or publish frozen bytes from its tag
+        type: choice
+        default: rehearsal
+        options: [rehearsal, candidate, publish]
+      candidate_run:
+        description: Successful signed candidate run ID (publication only; otherwise discover one exact-source candidate)
+        type: string
+
+concurrency:
+  group: github-distribution
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+env:
+  GRADLE_OPTS: -Dorg.gradle.project.kotlin.compiler.execution.strategy=in-process
+
+jobs:
+  preflight:
+    name: Validate distribution source and operation
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      actions: read
+      deployments: read
+    outputs:
+      mode: ${{ steps.preflight.outputs.mode }}
+      candidate_run: ${{ steps.preflight.outputs.candidate_run }}
+      version_tag: ${{ steps.preflight.outputs.version_tag }}
+    steps:
+      - name: Check out exact source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Validate workflow tools before building
+        run: |
+          python3 -m unittest scripts.release.tests.test_github_distribution scripts.release.tests.test_distribution_image scripts.release.tests.test_distribution_signing scripts.release.tests.test_distribution_workflow -v
+          python3 scripts/release/workflow_contract.py
+      - name: Require exact source and qualified signing/publication
+        id: preflight
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_DIST_INPUT_MODE: ${{ inputs.mode }}
+          GH_DIST_CANDIDATE_RUN: ${{ inputs.candidate_run }}
+        run: python3 -m scripts.release.github_distribution preflight
+
+  build:
+    name: Package ${{ matrix.platform }} (${{ needs.preflight.outputs.mode }})
+    needs: preflight
+    if: needs.preflight.outputs.mode != 'publish'
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: android
+            runner: ubuntu-24.04
+            environment: github-sign-android
+          - platform: macos-arm64
+            runner: macos-15
+            environment: github-sign-macos
+          - platform: macos-x64
+            runner: macos-15-intel
+            environment: github-sign-macos
+          - platform: windows-x64
+            runner: windows-2025
+            environment: github-sign-windows
+          - platform: linux-x64
+            runner: ubuntu-24.04
+            environment: github-sign-linux
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 120
+    environment: ${{ needs.preflight.outputs.mode == 'candidate' && matrix.environment || 'github-rehearsal' }}
+    permissions:
+      contents: read
+      actions: read
+      deployments: read
+      id-token: write
+      attestations: write
+    env:
+      PYTHONPATH: ${{ github.workspace }}
+      GH_DIST_MODE: ${{ needs.preflight.outputs.mode }}
+      GH_DIST_PLATFORM: ${{ matrix.platform }}
+      GH_DIST_ENVIRONMENT: ${{ needs.preflight.outputs.mode == 'candidate' && matrix.environment || 'github-rehearsal' }}
+      GH_DIST_APPROVED_SHA: ${{ vars.GH_DIST_APPROVED_SHA }}
+      GH_DIST_ACCEPTANCE_SHA: ${{ vars.GH_DIST_ACCEPTANCE_SHA }}
+      GH_DIST_ACCEPTANCE_REFERENCE: ${{ vars.GH_DIST_ACCEPTANCE_REFERENCE }}
+      GH_DIST_CERT_SHA256: ${{ vars.GH_DIST_CERT_SHA256 }}
+      GH_DIST_MACOS_TEAM_ID: ${{ vars.GH_DIST_MACOS_TEAM_ID }}
+      # Process-local checkout settings only; never mutate a machine Git policy.
+      GIT_CONFIG_COUNT: '1'
+      GIT_CONFIG_KEY_0: core.longpaths
+      GIT_CONFIG_VALUE_0: 'true'
+    steps:
+      - name: Check out exact source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Set up JDK 21
+        uses: actions/setup-java@03ad4de0992f5dab5e18fcb136590ce7c4a0ac95 # v5.6.0
+        with:
+          distribution: temurin
+          java-version: '21'
+          check-latest: false
+      - name: Refuse rebuilding an already frozen platform
+        shell: python
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          import os
+          from scripts.release.github_distribution import assert_new
+          assert_new(os.environ['GH_DIST_PLATFORM'])
+      - name: Install Android SDK packages
+        if: matrix.platform == 'android'
+        shell: bash
+        run: |
+          set -euo pipefail
+          "${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager" 'platforms;android-36' 'build-tools;36.0.0' 'platform-tools'
+      - name: Install Linux packaging dependencies
+        if: matrix.platform == 'linux-x64'
+        run: |
+          sudo apt-get update
+          sudo apt-get install --no-install-recommends -y fakeroot libasound2t64 libgl1 libxi6 libxrender1 libxtst6
+      - name: Locate runner-provided WiX 3
+        if: matrix.platform == 'windows-x64'
+        shell: python
+        run: |
+          import os, pathlib, shutil
+          if not shutil.which('candle.exe'):
+              base = pathlib.Path(os.environ.get('WIX', r'C:\Program Files (x86)\WiX Toolset v3.14'))
+              paths = [base / 'bin', base]
+              matches = [p for p in paths if (p / 'candle.exe').is_file() and (p / 'light.exe').is_file()]
+              if not matches:
+                  raise SystemExit('Runner must provide reviewed WiX 3 candle/light tools')
+              with open(os.environ['GITHUB_PATH'], 'a', encoding='utf-8') as output:
+                  output.write(str(matches[0]) + '\n')
+      - name: Build test and inspect unsigned release packages
+        shell: python
+        run: |
+          import os
+          from scripts.release.desktop_package import build
+          build(os.environ['GH_DIST_PLATFORM'])
+      - name: Sign Android candidate without Store upload
+        if: needs.preflight.outputs.mode == 'candidate' && matrix.platform == 'android'
+        shell: python
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_DIST_ANDROID_KEYSTORE_BASE64: ${{ secrets.GH_DIST_ANDROID_KEYSTORE_BASE64 }}
+          GH_DIST_ANDROID_KEYSTORE_PASSWORD: ${{ secrets.GH_DIST_ANDROID_KEYSTORE_PASSWORD }}
+          GH_DIST_ANDROID_KEY_ALIAS: ${{ secrets.GH_DIST_ANDROID_KEY_ALIAS }}
+          GH_DIST_ANDROID_KEY_PASSWORD: ${{ secrets.GH_DIST_ANDROID_KEY_PASSWORD }}
+        run: |
+          from scripts.release.sign_distribution import sign
+          sign('android')
+      - name: Sign notarize and validate macOS candidate
+        if: needs.preflight.outputs.mode == 'candidate' && startsWith(matrix.platform, 'macos-')
+        shell: python
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_DIST_MACOS_CERTIFICATE_BASE64: ${{ secrets.GH_DIST_MACOS_CERTIFICATE_BASE64 }}
+          GH_DIST_MACOS_CERTIFICATE_PASSWORD: ${{ secrets.GH_DIST_MACOS_CERTIFICATE_PASSWORD }}
+          GH_DIST_APPLE_API_KEY_BASE64: ${{ secrets.GH_DIST_APPLE_API_KEY_BASE64 }}
+          GH_DIST_APPLE_API_KEY_ID: ${{ secrets.GH_DIST_APPLE_API_KEY_ID }}
+          GH_DIST_APPLE_API_ISSUER_ID: ${{ secrets.GH_DIST_APPLE_API_ISSUER_ID }}
+        run: |
+          import os
+          from scripts.release.sign_distribution import sign
+          sign(os.environ['GH_DIST_PLATFORM'])
+      - name: Sign timestamp and validate Windows candidate
+        if: needs.preflight.outputs.mode == 'candidate' && matrix.platform == 'windows-x64'
+        shell: python
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_DIST_WINDOWS_PFX_BASE64: ${{ secrets.GH_DIST_WINDOWS_PFX_BASE64 }}
+          GH_DIST_WINDOWS_PFX_PASSWORD: ${{ secrets.GH_DIST_WINDOWS_PFX_PASSWORD }}
+          GH_DIST_WINDOWS_PFX_APPROVED_SHA: ${{ vars.GH_DIST_WINDOWS_PFX_APPROVED_SHA }}
+        run: |
+          from scripts.release.sign_distribution import sign
+          sign('windows-x64')
+      - name: Validate Linux candidate provenance
+        if: needs.preflight.outputs.mode == 'candidate' && matrix.platform == 'linux-x64'
+        shell: python
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          from scripts.release.sign_distribution import sign
+          sign('linux-x64')
+      - name: Freeze exact inspected platform bytes
+        shell: python
+        run: |
+          import os
+          from scripts.release.github_distribution import freeze
+          freeze(os.environ['GH_DIST_PLATFORM'], False)
+      - name: Attest platform artifact and descriptor
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
+        with:
+          subject-path: build/github-distribution/frozen/*
+      - name: Upload immutable platform candidate
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: ghdist-${{ needs.preflight.outputs.mode }}-${{ needs.preflight.outputs.version_tag }}-${{ matrix.platform }}
+          path: build/github-distribution/frozen/*
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 90
+          overwrite: false
+      - name: Retire scoped signing and unsigned outputs
+        if: always() && needs.preflight.outputs.mode == 'candidate'
+        shell: python
+        run: |
+          import os
+          from scripts.release.sign_distribution import cleanup_candidate
+          cleanup_candidate(os.environ['GH_DIST_PLATFORM'])
+
+  seal:
+    name: Verify and seal complete distribution bundle
+    needs: [preflight, build]
+    if: needs.preflight.outputs.mode != 'publish'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      actions: read
+      id-token: write
+      attestations: write
+    steps:
+      - name: Check out exact source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Validate every native artifact and its attestation
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_DIST_MODE: ${{ needs.preflight.outputs.mode }}
+        run: python3 -m scripts.release.github_distribution seal
+      - name: Attest sealed distribution
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
+        with:
+          subject-path: build/github-distribution/bundle/*
+      - name: Upload immutable complete bundle
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: ghdist-${{ needs.preflight.outputs.mode }}-${{ needs.preflight.outputs.version_tag }}-bundle
+          path: build/github-distribution/bundle/*
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 90
+          overwrite: false
+
+  publish:
+    name: Publish the frozen signed GitHub Release
+    needs: preflight
+    if: needs.preflight.outputs.mode == 'publish'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    environment: github-publish
+    permissions:
+      contents: write
+      actions: read
+      deployments: read
+      attestations: read
+    steps:
+      - name: Check out tagged source without rebuilding
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Publish only verified frozen bytes and read them back
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_DIST_ENVIRONMENT: github-publish
+          GH_DIST_APPROVED_SHA: ${{ vars.GH_DIST_APPROVED_SHA }}
+          GH_DIST_ACCEPTANCE_SHA: ${{ vars.GH_DIST_ACCEPTANCE_SHA }}
+          GH_DIST_ACCEPTANCE_REFERENCE: ${{ vars.GH_DIST_ACCEPTANCE_REFERENCE }}
+          GH_DIST_ANDROID_CERT_SHA256: ${{ vars.GH_DIST_ANDROID_CERT_SHA256 }}
+          GH_DIST_MACOS_CERT_SHA256: ${{ vars.GH_DIST_MACOS_CERT_SHA256 }}
+          GH_DIST_MACOS_TEAM_ID: ${{ vars.GH_DIST_MACOS_TEAM_ID }}
+          GH_DIST_WINDOWS_CERT_SHA256: ${{ vars.GH_DIST_WINDOWS_CERT_SHA256 }}
+          GH_DIST_CANDIDATE_RUN: ${{ needs.preflight.outputs.candidate_run }}
+        run: python3 -m scripts.release.github_distribution publish --candidate "$GH_DIST_CANDIDATE_RUN"

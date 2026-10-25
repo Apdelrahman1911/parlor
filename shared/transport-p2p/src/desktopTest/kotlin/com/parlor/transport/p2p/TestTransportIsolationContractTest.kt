@@ -63,6 +63,7 @@ class TestTransportIsolationContractTest {
 
         assertEquals(
             setOf(
+                "composeApp/build.gradle.kts",
                 "game-modes/last-light/build.gradle.kts",
                 "game-modes/mafia/build.gradle.kts",
                 "game-modes/whodunit/build.gradle.kts",
@@ -71,14 +72,38 @@ class TestTransportIsolationContractTest {
             consumers.map { it.relativeTo(repositoryRoot).invariantSeparatorsPath }.toSet(),
         )
         consumers.forEach { buildFile ->
-            val text = buildFile.readText()
-            val dependency = text.indexOf(coordinate)
-            assertTrue(dependency >= 0)
             assertTrue(
-                text.lastIndexOf("commonTest.dependencies", dependency) >
-                    text.lastIndexOf("commonMain.dependencies", dependency),
+                networkingFixtureDependenciesAreTestOnly(buildFile.readText()),
                 "${buildFile.relativeTo(repositoryRoot)} must keep the fake test-only",
             )
+        }
+    }
+
+    @Test
+    fun `fixture dependency guard rejects shipping declarations after a test block`() {
+        val coordinate = "project(\":shared:networking-testing\")"
+        val testBlock = "commonTest.dependencies { implementation($coordinate) }"
+        assertTrue(networkingFixtureDependenciesAreTestOnly(testBlock))
+        listOf("commonMain", "androidMain", "iosMain", "desktopMain").forEach { sourceSet ->
+            val shippingBlock = "$sourceSet.dependencies { implementation($coordinate) }"
+            assertFalse(networkingFixtureDependenciesAreTestOnly(shippingBlock))
+            assertFalse(networkingFixtureDependenciesAreTestOnly("$testBlock\n$shippingBlock"))
+            assertFalse(networkingFixtureDependenciesAreTestOnly("$shippingBlock\n$testBlock"))
+        }
+        assertFalse(networkingFixtureDependenciesAreTestOnly("$testBlock\nimplementation($coordinate)"))
+        assertFalse(networkingFixtureDependenciesAreTestOnly("commonTest.dependencies {}"))
+    }
+
+    private fun networkingFixtureDependenciesAreTestOnly(text: String): Boolean {
+        // The reviewed declarations use flat dependency blocks. Refuse a new
+        // shape instead of accidentally accepting dependencies after a closing
+        // brace, and inspect every occurrence rather than only the first one.
+        val blocks = Regex("""\bcommonTest\.dependencies\s*\{[^{}]*}""")
+            .findAll(text).map { it.range }.toList()
+        val dependencies = Regex(Regex.escape("project(\":shared:networking-testing\")"))
+            .findAll(text).map { it.range }.toList()
+        return dependencies.isNotEmpty() && dependencies.all { dependency ->
+            blocks.any { block -> dependency.first > block.first && dependency.last < block.last }
         }
     }
 

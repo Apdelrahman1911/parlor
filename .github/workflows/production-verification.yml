@@ -884,7 +884,10 @@ jobs:
     if: github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full'
     name: iOS release frameworks and Swift wrapper
     runs-on: macos-15
-    timeout-minutes: 120
+    # Six-game analysis/linkage took 97 minutes in run 35215702180, leaving
+    # insufficient time for the Swift wrapper. Keep all links serial and allow
+    # bounded headroom for complete packaging, inspection, upload and cleanup.
+    timeout-minutes: 180
     env:
       # Independent checkout/lifecycle; never parallelize the three LTO links.
       DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer

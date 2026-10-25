@@ -145,6 +145,9 @@ kotlin {
                 implementation(project(":game-modes:whodunit"))
                 implementation(project(":game-modes:mafia"))
                 implementation(project(":game-modes:last-light"))
+                implementation(project(":game-modes:egyptian-dominoes"))
+                implementation(project(":game-modes:ghamza"))
+                implementation(project(":game-modes:word-impostor"))
 
                 // Compose
                 implementation(libs.compose.runtime)
@@ -197,6 +200,7 @@ kotlin {
             implementation(kotlin("test"))
             implementation(libs.kotlinx.coroutines.test)
             implementation(project(":shared:engine-testing"))
+            implementation(project(":shared:networking-testing"))
         }
         val desktopMain by getting {
             dependencies {
@@ -310,6 +314,17 @@ android {
                 signingConfig = signingConfigs.getByName("release")
             }
         }
+        create("githubTest") {
+            // Public GitHub prereleases are not Store candidates or local Debug.
+            // Keep release code/shrinking/privacy, but isolate their application
+            // and data. CI applies a disposable test signature AFTER building;
+            // never inherit a real publisher key from initWith(release).
+            initWith(getByName("release"))
+            applicationIdSuffix = ".test"
+            versionNameSuffix = "-test"
+            signingConfig = null
+            matchingFallbacks += "release"
+        }
     }
 
     compileOptions {
@@ -327,6 +342,7 @@ android {
     sourceSets {
         // Launcher branding only; Store resources and application IDs are unchanged.
         getByName("debug").res.srcDir("src/androidDebug/res")
+        getByName("githubTest").res.srcDir("src/androidGithubTest/res")
         // KMP owns the androidInstrumentedTest hierarchy, while AGP's Java
         // compiler reads androidTest. Point it at the shared KMP layout so the
         // platform-only smoke test is packaged in the test APK.
@@ -370,6 +386,7 @@ android {
 val configuredStoreApplicationId = requireNotNull(android.defaultConfig.applicationId)
 val configuredDebugApplicationIdSuffix = android.buildTypes.getByName("debug").applicationIdSuffix.orEmpty()
 val configuredReleaseApplicationIdSuffix = android.buildTypes.getByName("release").applicationIdSuffix.orEmpty()
+val configuredGithubTestBuildType = android.buildTypes.getByName("githubTest")
 
 val verifyApplicationIdentities by tasks.registering {
     group = "verification"
@@ -377,6 +394,13 @@ val verifyApplicationIdentities by tasks.registering {
     inputs.property("storeApplicationId", configuredStoreApplicationId)
     inputs.property("debugApplicationIdSuffix", configuredDebugApplicationIdSuffix)
     inputs.property("releaseApplicationIdSuffix", configuredReleaseApplicationIdSuffix)
+    inputs.property("githubTestApplicationIdSuffix", configuredGithubTestBuildType.applicationIdSuffix.orEmpty())
+    inputs.property("githubTestVersionNameSuffix", configuredGithubTestBuildType.versionNameSuffix.orEmpty())
+    inputs.property("githubTestDebuggable", configuredGithubTestBuildType.isDebuggable)
+    inputs.property("githubTestJniDebuggable", configuredGithubTestBuildType.isJniDebuggable)
+    inputs.property("githubTestMinified", configuredGithubTestBuildType.isMinifyEnabled)
+    inputs.property("githubTestShrinkResources", configuredGithubTestBuildType.isShrinkResources)
+    inputs.property("githubTestHasSigningConfig", configuredGithubTestBuildType.signingConfig != null)
     doLast {
         check(inputs.properties.getValue("storeApplicationId") == "me.parlor.android") {
             "Android Store application ID changed from me.parlor.android."
@@ -386,6 +410,19 @@ val verifyApplicationIdentities by tasks.registering {
         }
         check(inputs.properties.getValue("releaseApplicationIdSuffix") == "") {
             "Android Release must not add a non-Store application-ID suffix."
+        }
+        check(inputs.properties.getValue("githubTestApplicationIdSuffix") == ".test" &&
+            inputs.properties.getValue("githubTestVersionNameSuffix") == "-test"
+        ) {
+            "GitHub testing must use the isolated me.parlor.android.test identity and test version label."
+        }
+        check(inputs.properties.getValue("githubTestDebuggable") == false &&
+            inputs.properties.getValue("githubTestJniDebuggable") == false &&
+            inputs.properties.getValue("githubTestMinified") == true &&
+            inputs.properties.getValue("githubTestShrinkResources") == true &&
+            inputs.properties.getValue("githubTestHasSigningConfig") == false
+        ) {
+            "GitHub testing must retain release hardening and never inherit publisher/Debug signing."
         }
     }
 }
@@ -641,7 +678,10 @@ val verifyGameShellDispatch by tasks.registering {
     }
     inputs.files(neutralShellSources, multiplayerShellSources, gameShellSupportSources)
     doLast {
-        val forbidden = listOf("whodunit", "mafia", "lastlight", "last-light", "com.parlor.games.")
+        val forbidden = listOf(
+            "whodunit", "mafia", "lastlight", "last-light", "com.parlor.games.",
+            "domino", "egyptian-dominoes", "ghamza", "wordimpostor", "word-impostor",
+        )
         inputs.files.files.filter { file -> file.isFile }.forEach { source ->
             val text = source.readText().lowercase()
             val found = forbidden.filter { token -> token in text }
@@ -670,6 +710,34 @@ compose.desktop {
             )
             packageName = "Parlor"
             packageVersion = parlorVersionName
+            // Keep security providers and reflection-loaded modules in the self-contained JDK 21 image.
+            // Desktop packages do not use Android's R8 configuration or a system Java installation.
+            includeAllModules = true
+            macOS {
+                bundleID = "me.parlor.desktop"
+                packageBuildVersion = parlorBuildNumber.toString()
+                // Both the JDK 21 image and Skiko arm64 require macOS 11 or newer.
+                minimumSystemVersion = "11.0"
+                appCategory = "public.app-category.games"
+                infoPlist {
+                    extraKeysRawXml = """
+                        <key>NSLocalNetworkUsageDescription</key>
+                        <string>Parlor uses your local network to host or join nearby game rooms over Wi-Fi.</string>
+                        <key>NSBonjourServices</key><array><string>_p2pkit2._tcp</string></array>
+                        <key>CFBundleLocalizations</key><array><string>en</string><string>ar</string></array>
+                    """.trimIndent()
+                }
+            }
+            windows {
+                perUserInstall = true
+                menuGroup = "Parlor"
+                shortcut = true
+                upgradeUuid = "fd36ca1f-9707-486a-8104-22b16cb475a6"
+            }
+            linux {
+                packageName = "parlor"
+                menuGroup = "Game"
+            }
         }
     }
 }

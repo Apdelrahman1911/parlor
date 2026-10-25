@@ -61,6 +61,98 @@ final class IOSAppLaunchUITests: XCTestCase {
     }
 
     @MainActor
+    func testAdditionalGamesExposeOnlyMultiplayerSetupInEnglish() throws {
+        try verifyAdditionalGamesSetup(language: "en", locale: "en_US", copy: MultiplayerSetupCopy(
+            games: ["Open Egyptian Dominoes", "Open Ghamza", "Open Word Impostor"],
+            host: "Open a room and show a code your friends can join.",
+            join: "Enter the host's room code to join their table.",
+            local: "Start a pass-and-play session on this device.",
+            permission: "Continue and retry the real local-network operation.",
+            hostContinue: "Save your name and continue to set up your table.",
+            peerContinue: "Save your name and continue to enter a room code.",
+            back: "Return to the home screen.",
+            findRoom: "Connect to the host using the entered room code."
+        ))
+    }
+
+    @MainActor
+    func testAdditionalGamesExposeOnlyMultiplayerSetupInArabic() throws {
+        try verifyAdditionalGamesSetup(language: "ar", locale: "ar_EG", copy: MultiplayerSetupCopy(
+            games: ["افتح الدومنة المصرية", "افتح غمزة", "افتح لعبة الإمبوستر"],
+            host: "افتح غرفة وأظهر الرمز لأصدقائك للانضمام.",
+            join: "أدخل رمز المضيف للدخول إلى طاولته.",
+            local: "ابدأ جلسة تمرير ولعب على هذا الجهاز.",
+            permission: "تابع وأعد تنفيذ عملية الشبكة المحلية الفعلية.",
+            hostContinue: "احفظ اسمك وتابع لإعداد طاولتك.",
+            peerContinue: "احفظ اسمك وتابع لإدخال رمز الغرفة.",
+            back: "العودة إلى الشاشة الرئيسية.",
+            findRoom: "الاتصال بالمضيف باستخدام الرمز المُدخل."
+        ))
+    }
+
+    private struct MultiplayerSetupCopy {
+        let games: [String]
+        let host: String
+        let join: String
+        let local: String
+        let permission: String
+        let hostContinue: String
+        let peerContinue: String
+        let back: String
+        let findRoom: String
+    }
+
+    @MainActor
+    private func verifyAdditionalGamesSetup(language: String, locale: String, copy: MultiplayerSetupCopy) throws {
+        // Public navigation only, on an owned clean simulator. Never confirm a
+        // host name, submit a room code, start networking, or inspect game data.
+        for game in copy.games {
+            let app = XCUIApplication()
+            app.launchArguments += ["-AppleLanguages", "(\(language))", "-AppleLocale", locale]
+            app.launch()
+            defer { app.terminate() }
+            XCTAssertTrue(app.staticTexts["parlor-home-brand"].waitForExistence(timeout: 30))
+            try tapSetupButton(app, prefix: game)
+            XCTAssertTrue(setupButton(app, prefix: copy.host).waitForExistence(timeout: 10))
+            XCTAssertTrue(setupButton(app, prefix: copy.join).exists)
+            XCTAssertFalse(setupButton(app, prefix: copy.local).exists)
+
+            try tapSetupButton(app, prefix: copy.host)
+            try tapSetupButton(app, prefix: copy.permission)
+            XCTAssertTrue(app.textViews.firstMatch.waitForExistence(timeout: 10))
+            XCTAssertTrue(setupButton(app, prefix: copy.hostContinue).waitForExistence(timeout: 10))
+            try tapSetupButton(app, prefix: copy.back)
+            // Home restores its LazyColumn position, so the brand header can
+            // correctly be offscreen. Prove Back restored the selected catalog
+            // entry and removed the name screen, without resetting that scroll.
+            XCTAssertTrue(setupButton(app, prefix: game).waitForExistence(timeout: 10),
+                          "Back must restore the selected game in the Home catalog")
+            XCTAssertFalse(app.textViews.firstMatch.exists,
+                           "Back must remove the host-name input")
+            XCTAssertFalse(setupButton(app, prefix: copy.hostContinue).exists)
+
+            try tapSetupButton(app, prefix: game)
+            try tapSetupButton(app, prefix: copy.join)
+            try tapSetupButton(app, prefix: copy.permission)
+            let name = app.textViews.firstMatch
+            XCTAssertTrue(name.waitForExistence(timeout: 10))
+            tapSettledControl(name)
+            let keyboard = app.keyboards.firstMatch
+            XCTAssertTrue(keyboard.waitForExistence(timeout: 10))
+            dismissKeyboardIntroduction(app, keyboard: keyboard)
+            name.typeText("Table Test")
+            assertTextValue(name, equals: "Table Test")
+            name.typeText("\n")
+            try tapSetupButton(app, prefix: copy.peerContinue)
+            XCTAssertTrue(app.textViews.firstMatch.waitForExistence(timeout: 10))
+            XCTAssertEqual(app.textViews.count, 1)
+            XCTAssertTrue(setupButton(app, prefix: copy.findRoom).waitForExistence(timeout: 10))
+            XCTAssertFalse(setupButton(app, prefix: copy.findRoom).isEnabled)
+            XCTAssertFalse(app.alerts.firstMatch.exists, "Public setup must not request network access")
+        }
+    }
+
+    @MainActor
     func testLastLightLocalPlayerFieldsScrollWithNextAndDismissWithDone() throws {
         let app = XCUIApplication()
         app.launchArguments += ["-AppleLanguages", "(en)", "-AppleLocale", "en_US"]
@@ -78,11 +170,12 @@ final class IOSAppLaunchUITests: XCTestCase {
         XCTAssertTrue(first.isHittable)
         tapSettledControl(first)
         XCTAssertTrue(app.keyboards.firstMatch.waitForExistence(timeout: 10))
+        dismissKeyboardIntroduction(app, keyboard: app.keyboards.firstMatch)
         for index in 1...6 {
             let field = app.textViews["Player \(index)"]
             XCTAssertTrue(field.waitForExistence(timeout: 10))
             field.typeText("Keyboard Player \(index)")
-            XCTAssertEqual(field.value as? String, "Keyboard Player \(index)")
+            assertTextValue(field, equals: "Keyboard Player \(index)")
             let keyboard = app.keyboards.firstMatch
             XCTAssertTrue(keyboard.exists)
             let top = fullKeyboardTop(app, keyboard: keyboard)
@@ -97,6 +190,9 @@ final class IOSAppLaunchUITests: XCTestCase {
             !app.keyboards.firstMatch.exists
         }, object: nil)
         XCTAssertEqual(XCTWaiter.wait(for: [dismissed], timeout: 10), .completed)
+        for index in 1...6 {
+            assertTextValue(app.textViews["Player \(index)"], equals: "Keyboard Player \(index)")
+        }
         // Stop at public setup; do not create a saved game or reveal private state.
     }
 
@@ -169,16 +265,9 @@ final class IOSAppLaunchUITests: XCTestCase {
             field.tap()
             let keyboard = app.keyboards.firstMatch
             XCTAssertTrue(keyboard.waitForExistence(timeout: 10))
-            // A fresh simulator may show Apple's QuickPath introduction over
-            // the keys. Dismiss only its native, below-keyboard Continue button.
-            for label in ["Continue", "متابعة"] {
-                let introduction = app.buttons[label]
-                if introduction.exists, introduction.frame.minY >= keyboard.frame.minY {
-                    introduction.tap()
-                }
-            }
+            dismissKeyboardIntroduction(app, keyboard: keyboard)
             if cycle == 0 { field.typeText(input) }
-            XCTAssertEqual(field.value as? String, input)
+            assertTextValue(field, equals: input)
             let keyboardTop = fullKeyboardTop(app, keyboard: keyboard)
             let settled = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
                 let gap = keyboardTop - action.frame.maxY
@@ -207,6 +296,36 @@ final class IOSAppLaunchUITests: XCTestCase {
             }, object: nil)
             XCTAssertEqual(XCTWaiter.wait(for: [restored], timeout: 10), .completed,
                            "Done must hide the keyboard and restore the un-inset layout")
+        }
+    }
+
+    @MainActor
+    private func assertTextValue(
+        _ field: XCUIElement,
+        equals expected: String,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        // UIKit's idle notification can precede Compose's accessibility
+        // snapshot update. Wait for the exact value, never retype, shorten the
+        // input, or advance Next while characters are still unobserved.
+        let committed = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            field.exists && (field.value as? String) == expected
+        }, object: nil)
+        XCTAssertEqual(XCTWaiter.wait(for: [committed], timeout: 10), .completed,
+                       "The full typed value must reach the actual Compose field", file: file, line: line)
+        XCTAssertEqual(field.value as? String, expected, file: file, line: line)
+    }
+
+    @MainActor
+    private func dismissKeyboardIntroduction(_ app: XCUIApplication, keyboard: XCUIElement) {
+        // A fresh simulator may show Apple's QuickPath introduction over
+        // the keys. Dismiss only its native, below-keyboard Continue button.
+        for label in ["Continue", "متابعة"] {
+            let introduction = app.buttons[label]
+            if introduction.exists, introduction.frame.minY >= keyboard.frame.minY {
+                introduction.tap()
+            }
         }
     }
 

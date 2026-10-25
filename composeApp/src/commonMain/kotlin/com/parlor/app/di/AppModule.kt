@@ -8,6 +8,9 @@ import com.parlor.core.time.Clock
 import com.parlor.core.time.SystemClock
 import com.parlor.games.mafia.di.mafiaModule
 import com.parlor.games.lastlight.di.lastLightModule
+import com.parlor.games.dominoes.di.dominoModule
+import com.parlor.games.ghamza.di.ghamzaModule
+import com.parlor.games.wordimpostor.di.wordImpostorModule
 import com.parlor.games.whodunit.di.whodunitModule
 import com.parlor.networking.security.SecureIds
 import com.parlor.networking.transport.RoomTransport
@@ -70,6 +73,9 @@ val allModules: List<Module> = listOf(
     whodunitModule,
     mafiaModule,
     lastLightModule,
+    dominoModule,
+    ghamzaModule,
+    wordImpostorModule,
     contentModule,
     storageModule,
     platformStorageModule(),

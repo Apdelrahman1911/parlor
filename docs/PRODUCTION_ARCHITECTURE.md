@@ -1,8 +1,10 @@
 # Production architecture
 
-This document describes the implemented production target as of 2026-08-11.
-Android and iOS are shipping targets. Desktop exists for development and
-deterministic tests.
+This document describes the implemented architecture as of 2026-09-17.
+Android and iOS are the mobile targets. Desktop also supports development and
+deterministic tests; the requested [GitHub distribution](GITHUB_DISTRIBUTION.md)
+channel now builds self-contained macOS/Windows/Linux installers. Signing,
+physical acceptance and publication are separate gates, not implied by packaging.
 
 ## System map
 
@@ -17,15 +19,25 @@ flowchart TD
     Kit[P2pKit 0.7.0-rc3 LAN discovery and authenticated encrypted TCP]
     W[Whodunit module]
     M[Mafia module]
+    L[Last Light module]
+    Games[Dominoes / Ghamza / Word Impostor modules]
+    GameShell[Typed multiplayer game-shell adapter]
 
     App --> Registry
     App --> Lobby
     Registry --> W
     Registry --> M
+    Registry --> L
+    Registry --> Games
     Lobby --> W
     Lobby --> M
+    Lobby --> L
+    Lobby --> GameShell
+    GameShell --> Games
+    GameShell --> Session
     W --> Session
     M --> Session
+    L --> Session
     Session --> Protocol
     Protocol --> Adapter
     Adapter --> Kit
@@ -175,12 +187,15 @@ cannot revive a room or extend the host's 120-second disconnected-seat grace.
 Explicit Leave permanently deletes it; transient disconnect, backgrounding,
 and peer process death preserve it. Host process death destroys the room.
 
-While a required seat is offline, gameplay is blocked and the host gets an
-explicit, confirmation-gated "continue without" action; the same lifecycle
-action fires when the grace period expires. Its pending timer is cancelled
-atomically when the host decides or the peer returns. For both shipping
-hidden-role games, an active-game decision ends the game and reveals the
-result rather than silently removing a secret role. There is no host migration,
+While a required seat is offline, gameplay is blocked. Terminal controls are
+binding-specific: existing game bindings may offer a confirmation-gated
+"continue without" action; the additional multiplayer-only bindings offer
+Host Leave or the automatic 120-second expiry, not a continue-without button.
+Pending expiry is cancelled atomically when the peer returns or the room ends.
+Whodunit and Mafia end an active game and reveal its result rather than silently
+removing a secret role. Egyptian Dominoes, Ghamza and Word Impostor abort an
+incomplete round without revealing unfinished secrets or awarding points.
+Each binding owns its game-specific terminal policy. There is no host migration,
 spectator role, public-internet rendezvous, NAT traversal, relay, or backend
 identity. Host loss after the grace period is terminal.
 
@@ -277,18 +292,29 @@ registers and completes a second minimal definition, while networking-testing
 supplies the in-memory transport fixture, without either entering production
 catalogs. See `HOW_TO_ADD_A_GAME.md`.
 
+The installed games are Whodunit, Mafia, Last Light, Egyptian Dominoes, Ghamza
+and Word Impostor. The latter three expose Host/Join through the typed adapter in
+`composeApp/shell/game/multiplayer/`; bindings supply rules/codecs/settings/UI,
+while the existing coordinators remain the sole protocol and recovery owners.
+The adapter's retained start/setup/action state survives route recreation.
+There are no new shared-core game switches or additional transports. See
+`THREE_GAMES_INTEGRATION.md` for rules, projection contracts and acceptance tests.
+
 ## Persistence, content, and diagnostics
 
 Shipping game content is bundled and validated offline; release behavior does
 not depend on a mock HTTP engine or network service. Canonical pass-and-play
-resume snapshots for both shipping games are encrypted/authenticated below
+resume snapshots for local-capable games are encrypted/authenticated below
 `SnapshotStore` and use platform protection:
 Android Keystore plus no-backup storage, iOS Keychain plus protected
 Application Support files, and an owner-only desktop development key/file. Each
 game supplies a versioned snapshot codec and validates its `engineVersion`
-during recovery (`MafiaSnapshotRecovery.kt` and `WhodunitGameFlow.kt`).
-Multiplayer resume is a separate transport credential and is available for both
-shipping games while the original host/seat remains valid.
+during recovery (`MafiaSnapshotRecovery.kt`, `WhodunitGameFlow.kt` and
+`LastLightSnapshotRecovery.kt`). Whodunit, Mafia and Last Light support local
+resume. Egyptian Dominoes, Ghamza and Word Impostor are Host/Join-only and do
+not write local pass-and-play saves. Multiplayer resume is a separate
+transport credential, available through every supported game binding while
+the original host/seat remains valid.
 
 Whodunit local recovery requires the exact persisted story version and canonical
 content digest before starting its reducer. Missing identity metadata cannot
@@ -313,9 +339,10 @@ theme, and reduced motion; each has a validated default. Mutations are
 serialized and published to UI state only after the platform backing accepts
 them. Android and Desktop surface write failures reported by their APIs; iOS
 UserDefaults persists asynchronously and exposes no per-write durability
-result. Parlor currently ships no sound implementation, analytics SDK,
+result. Last Light additionally has optional, locally played game audio;
+it does not record or transmit audio. Parlor ships no analytics SDK,
 crash-reporting SDK, upload provider, or placeholder consent control. Adding
-any of those is a product/privacy change that requires an implementation,
+any of those services is a product/privacy change that requires an implementation,
 truthful UI, store disclosures, and release evidence together.
 
 On iOS, explicit in-app language overrides carry Parlor-owned provenance in the

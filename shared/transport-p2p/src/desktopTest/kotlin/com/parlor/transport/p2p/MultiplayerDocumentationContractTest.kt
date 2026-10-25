@@ -155,25 +155,32 @@ class MultiplayerDocumentationContractTest {
             assertFalse("future local-multiplayer" in currentGuide)
             assertFalse("Gradle 8.11.1" in currentGuide)
             assertFalse("compileSdk = 35" in currentGuide)
+            listOf("Whodunit", "Mafia", "Last Light", "Egyptian Dominoes", "Ghamza", "Word Impostor")
+                .forEach { game -> assertTrue(game in currentGuide, "Contributor guidance must inventory $game") }
         }
         assertTrue("Android and iOS are shipping targets" in guidance)
         assertTrue("Desktop is a development and deterministic" in guidance)
     }
 
     @Test
-    fun local_snapshot_inventory_matches_both_shipping_games() {
-        val architecture = read("docs/PRODUCTION_ARCHITECTURE.md")
+    fun local_snapshot_inventory_matches_the_local_capable_games() {
+        val architecture = read("docs/PRODUCTION_ARCHITECTURE.md").replace(Regex("\\s+"), " ")
         val privacy = read("docs/PRIVACY_AND_COMPLIANCE.md")
 
         assertTrue(
-            "Canonical pass-and-play\nresume snapshots for both shipping games" in architecture,
-            "Architecture documentation must inventory both shipping games' protected snapshots",
+            "Canonical pass-and-play resume snapshots for local-capable games" in architecture,
+            "Architecture documentation must inventory protected local snapshots separately from multiplayer rejoin",
         )
-        listOf("MafiaSnapshotRecovery.kt", "WhodunitGameFlow.kt").forEach { recoveryGate ->
+        assertTrue("Whodunit, Mafia and Last Light support local resume" in architecture)
+        assertTrue("Egyptian Dominoes, Ghamza and Word Impostor are Host/Join-only" in architecture)
+        listOf("MafiaSnapshotRecovery.kt", "WhodunitGameFlow.kt", "LastLightSnapshotRecovery.kt").forEach { recoveryGate ->
             assertTrue(
                 recoveryGate in architecture,
                 "Architecture documentation must name $recoveryGate as a snapshot recovery gate",
             )
+        }
+        listOf("encrypted/authenticated", "Android Keystore", "iOS Keychain", "`engineVersion`").forEach { protection ->
+            assertTrue(protection in architecture, "Local snapshot protection must retain $protection")
         }
         assertFalse("Mafia currently does not write a pass-and-play cold-start snapshot" in architecture)
         assertTrue("Enables play and optional local resume when a game supplies a snapshot adapter" in privacy)

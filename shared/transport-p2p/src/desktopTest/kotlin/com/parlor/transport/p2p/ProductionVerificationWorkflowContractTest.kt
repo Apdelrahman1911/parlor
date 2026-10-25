@@ -300,6 +300,11 @@ class ProductionVerificationWorkflowContractTest {
         val workflow = read(".github/workflows/production-verification.yml")
         val runtimeJob = workflow.substringAfter("\n  ios:\n").substringBefore("\n  ios-release:\n")
         val releaseJob = workflow.substringAfter("\n  ios-release:\n").substringBefore("\n  ios-protection-probe:\n")
+        assertContains(
+            releaseJob.substringBefore("\n    steps:\n"),
+            "timeout-minutes: 180",
+            message = "Serial six-game release links need bounded time for the complete Swift package gate",
+        )
         val rootBuild = read("build.gradle.kts")
         val composeBuild = read("composeApp/build.gradle.kts")
         val xcodeProject = read("iosApp/iosApp.xcodeproj/project.pbxproj")
