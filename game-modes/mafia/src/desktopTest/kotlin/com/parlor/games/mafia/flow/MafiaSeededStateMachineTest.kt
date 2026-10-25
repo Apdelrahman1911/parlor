@@ -15,8 +15,11 @@ import com.parlor.games.mafia.domain.phase.MafiaPhase
 import com.parlor.games.mafia.domain.projection.MafiaProjectionPolicy
 import com.parlor.games.mafia.domain.reducer.MafiaReducer
 import com.parlor.games.mafia.domain.settings.MafiaKillTie
+import com.parlor.games.mafia.domain.settings.MafiaSettings
 import com.parlor.games.mafia.domain.settings.MafiaSettingsPresets
 import com.parlor.games.mafia.domain.settings.TieBehavior
+import com.parlor.games.mafia.domain.state.ActiveVote
+import com.parlor.games.mafia.domain.state.MafiaPrivate
 import com.parlor.games.mafia.domain.state.MafiaObservableStateValidator
 import com.parlor.games.mafia.domain.state.MafiaPeerSnapshotValidator
 import com.parlor.games.mafia.domain.state.MafiaState
@@ -128,17 +131,17 @@ class MafiaSeededStateMachineTest {
     }
 
     private fun nightAction(state: MafiaState, random: Random): MafiaAction {
-        val alive = living(state)
-        val inspector = alive.firstOrNull {
-            val private = state.privatePerPlayer.getValue(it)
+        val alive: List<PlayerId> = living(state)
+        val inspector: PlayerId? = alive.firstOrNull {
+            val private: MafiaPrivate = state.privatePerPlayer.getValue(it)
             private.pendingDetectiveResult != null && !private.detectiveResultAcknowledged
         }
         if (inspector != null) return MafiaAction.AcknowledgeDetectiveResult(inspector)
-        val actor = alive.shuffled(random).firstOrNull { !state.privatePerPlayer.getValue(it).nightChoiceSubmitted }
+        val actor: PlayerId = alive.shuffled(random).firstOrNull { !state.privatePerPlayer.getValue(it).nightChoiceSubmitted }
             ?: return MafiaAction.ResolveNight
-        val private = state.privatePerPlayer.getValue(actor)
-        val settings = state.public.settings
-        val targets = alive.filter { target ->
+        val private: MafiaPrivate = state.privatePerPlayer.getValue(actor)
+        val settings: MafiaSettings = state.public.settings
+        val targets: List<PlayerId> = alive.filter { target ->
             when (private.role) {
                 Role.Mafia -> target != actor &&
                     (settings.mafiaCanTargetMafia || state.hostOnly.fullRoleMap[target] != Role.Mafia)
@@ -148,7 +151,7 @@ class MafiaSeededStateMachineTest {
                 Role.Civilian -> target != actor
             }
         }
-        val target = (targets + listOf(null)).random(random)
+        val target: PlayerId? = (targets + listOf(null)).random(random)
         return when (private.role) {
             Role.Mafia -> MafiaAction.SubmitMafiaKillVote(actor, target)
             Role.Doctor -> MafiaAction.SubmitDoctorProtect(actor, target)
@@ -158,11 +161,11 @@ class MafiaSeededStateMachineTest {
     }
 
     private fun voteAction(state: MafiaState, random: Random): MafiaAction {
-        val vote = requireNotNull(state.public.activeVote)
-        val actor = vote.ballot.shuffled(random).firstOrNull { it !in vote.castSoFar && it !in vote.abstained }
+        val vote: ActiveVote = requireNotNull(state.public.activeVote)
+        val actor: PlayerId = vote.ballot.shuffled(random).firstOrNull { it !in vote.castSoFar && it !in vote.abstained }
             ?: return MafiaAction.CloseVote
-        val candidates = vote.candidates.filter { it != actor || state.public.settings.allowSelfVote }
-        val target = (candidates + listOf(null)).random(random)
+        val candidates: List<PlayerId> = vote.candidates.filter { it != actor || state.public.settings.allowSelfVote }
+        val target: PlayerId? = (candidates + listOf(null)).random(random)
         return if (target == null) MafiaAction.AbstainVote(actor) else MafiaAction.CastVote(actor, target)
     }
 
