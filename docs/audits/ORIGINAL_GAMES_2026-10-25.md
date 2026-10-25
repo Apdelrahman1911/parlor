@@ -42,8 +42,10 @@ mechanics, role information and authority boundaries remain unchanged.
 `MafiaSeededStateMachineTest` drives 144 deterministic seed/table combinations
 across all supported table sizes, mixed rule settings, night targets/skips,
 random submission order, voting/revotes, and transient reconnects. Every command
-checks canonical recovery, every recipient projection, private-bucket isolation
-and duplicate-command idempotence. Natural completion must produce a winner
+checks observable canonical shape, every recipient projection, private-bucket
+isolation and duplicate-command idempotence. Connected states must pass local
+recovery; disconnected LAN states must be rejected by the local-only restore
+validator (which intentionally cannot recover network seats). Natural completion must produce a winner
 within a bounded command budget. This is reducer/state-machine execution, **not**
 real socket concurrency or device recovery.
 
@@ -52,7 +54,12 @@ exercise target selection/submission with long names
 at 2× text in English/Arabic, and the optional challenge guide at 320dp/2× text
 without revealing cards. Existing Whodunit timer semantics tests remain required.
 
-Execution receipts will be appended after the coordinated focused Gradle run.
+The first coordinated run compiled the changes and exposed two test-contract
+mismatches: the new model incorrectly treated the local-only restore validator
+as a LAN recovery validator, and an existing Whodunit static formatting test
+still required bullets after evidence became attributed cards. Both assertions
+were updated to check the actual intended contracts, not removed; rerun pending.
+Execution receipts will be appended after the coordinated focused Gradle rerun.
 XML parsing and unique, matching EN/AR resource-key checks passed locally;
 `git diff --check` passed. These are not compilation/runtime evidence.
 

@@ -33,7 +33,7 @@ class RtlFormattingTest {
     fun affected_rendering_uses_resources_instead_of_raw_punctuation() {
         val root = projectRoot()
         val expectations = mapOf(
-            "ui/screens/round/RoundScreens.kt" to listOf("round_clue_bullet_format"),
+            "ui/screens/round/RoundScreens.kt" to listOf("round_clue_eyebrow_format"),
             "ui/screens/setup/PublicIntroScreen.kt" to listOf("round_clue_bullet_format"),
             "ui/screens/vote/VoteScreens.kt" to listOf("whodunit_list_separator"),
             "ui/components/DossierCard.kt" to listOf("whodunit_list_separator"),

@@ -17,6 +17,7 @@ import com.parlor.games.mafia.domain.reducer.MafiaReducer
 import com.parlor.games.mafia.domain.settings.MafiaKillTie
 import com.parlor.games.mafia.domain.settings.MafiaSettingsPresets
 import com.parlor.games.mafia.domain.settings.TieBehavior
+import com.parlor.games.mafia.domain.state.MafiaObservableStateValidator
 import com.parlor.games.mafia.domain.state.MafiaPeerSnapshotValidator
 import com.parlor.games.mafia.domain.state.MafiaState
 import com.parlor.games.mafia.domain.state.Role
@@ -25,6 +26,7 @@ import kotlinx.serialization.json.Json
 import kotlin.random.Random
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 import kotlin.time.Instant
 
@@ -85,7 +87,14 @@ class MafiaSeededStateMachineTest {
     private fun checked(state: MafiaState, action: MafiaAction, count: Int, seed: Int): MafiaState {
         val result = MafiaReducer.reduce(state, action, context).newState
         val trace = "count=$count seed=$seed phase=${state.phase} action=$action"
-        assertTrue(result.isValidRecoveryState(), "Unrecoverable canonical state: $trace")
+        assertTrue(MafiaObservableStateValidator.isValid(result), "Invalid canonical shape: $trace")
+        if (result.public.disconnectedPlayers.isEmpty()) {
+            assertTrue(result.isValidRecoveryState(), "Unrecoverable connected game state: $trace")
+        } else {
+            // Local restore deliberately rejects LAN connection markers: loading
+            // them in pass-and-play would strand the user behind a rejoin overlay.
+            assertFalse(result.isValidRecoveryState(), "LAN state must not restore as local play: $trace")
+        }
         val public = MafiaProjectionPolicy.toPublic(result).state
         assertTrue(public.privatePerPlayer.isEmpty(), trace)
         assertTrue(public.hostOnly.fullRoleMap.isEmpty(), trace)

@@ -41,6 +41,7 @@ class WhodunitDiscussionLayoutTest {
     private fun verifyDiscussion(language: AppLanguage) = runComposeUiTest {
         var advances = 0
         val arabic = language == AppLanguage.Arabic
+        val clue = if (arabic) "كانت النافذة مفتوحة قبل وصول الضيوف." else "The window was open before the guests arrived."
         setContent {
             CompositionLocalProvider(LocalDensity provides Density(1f, 2f)) {
                 ProvideAppLanguage(language) {
@@ -50,7 +51,7 @@ class WhodunitDiscussionLayoutTest {
                                 timer = PublicTimerState("discussion-1", 60, 42, false),
                                 revealedClues = listOf(RevealedClue(
                                     ClueId("example-clue"),
-                                    if (arabic) "كانت النافذة مفتوحة قبل وصول الضيوف." else "The window was open before the guests arrived.",
+                                    clue,
                                     roundIndex = 1,
                                 )),
                                 authorityLabel = if (arabic) "المضيف يتحكم بالتقدم" else "Host leads the discussion",
@@ -66,6 +67,8 @@ class WhodunitDiscussionLayoutTest {
         val output = File("build/reports/ux/whodunit-discussion-${language.tag}-2x.png")
         output.parentFile.mkdirs()
         ImageIO.write(onNodeWithTag("discussion-evidence").captureToImage().toAwtImage(), "png", output)
+        onNodeWithText(if (arabic) "الجولة 1  ·  دليل" else "ROUND 1  ·  CLUE").performScrollTo().assertIsDisplayed()
+        onNodeWithText(clue).performScrollTo().assertIsDisplayed()
         onNodeWithText(if (arabic) "تابع" else "Move On").performScrollTo().performClick()
         runOnIdle { assertEquals(1, advances) }
     }
