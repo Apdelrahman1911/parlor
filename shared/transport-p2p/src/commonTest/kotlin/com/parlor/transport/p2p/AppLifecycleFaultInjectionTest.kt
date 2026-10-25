@@ -7,6 +7,7 @@ import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertSame
 
 /** Faults here are synthetic; passing does not establish mobile background execution time. */
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -22,7 +23,7 @@ class AppLifecycleFaultInjectionTest {
         repeat(100) { coordinator.backgrounded(0L) }
         runCurrent()
 
-        assertEquals(listOf(failure), observed)
+        assertSame(failure, observed.single())
         assertEquals(listOf(0L to 0L), room.suspensions)
         assertEquals(1, room.retentions)
         coordinator.foregrounded(1L)
@@ -43,7 +44,7 @@ class AppLifecycleFaultInjectionTest {
         advanceTimeBy(20_000L)
         runCurrent()
 
-        assertEquals(listOf(failure), observed)
+        assertSame(failure, observed.single())
         assertEquals(listOf(0L to 1_000L), room.suspensions)
         assertEquals(listOf(1_000L), room.foregrounds)
         assertEquals(1, room.validations)
