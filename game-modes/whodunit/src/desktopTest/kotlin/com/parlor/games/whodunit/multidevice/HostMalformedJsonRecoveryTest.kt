@@ -36,6 +36,8 @@ class HostMalformedJsonRecoveryTest {
             bus.peerMessagesIn(peer).collect { if (it is HostMessage.CommandResult) outcomes += it.status }
         }
         var applied = 0
+        var decoderInvocations = 0
+        val decodingFailures = mutableListOf<kotlin.reflect.KClass<out Throwable>>()
         val coordinator = HostAuthoritativeSessionCoordinator(
             room = InMemoryHostRoom(bus, PlayerId("host"), "Host"),
             protocol = protocol,
@@ -43,10 +45,12 @@ class HostMalformedJsonRecoveryTest {
             scope = backgroundScope,
             applyCommand = { _, payload ->
                 try {
+                    decoderInvocations++
                     WhodunitActionCodec.decode(payload)
                     applied++
                     CommandApplication.Applied
-                } catch (_: IllegalArgumentException) {
+                } catch (failure: IllegalArgumentException) {
+                    decodingFailures += failure::class
                     CommandApplication.InvalidAction
                 }
             },
@@ -61,6 +65,8 @@ class HostMalformedJsonRecoveryTest {
             bus.fromPeer(command(protocol, peer, 2, WhodunitActionCodec.encode(WhodunitAction.Pause)))
             runCurrent()
             assertEquals(listOf(CommandStatus.InvalidAction, CommandStatus.Applied), outcomes)
+            assertEquals(2, decoderInvocations)
+            assertEquals(listOf(IllegalArgumentException::class), decodingFailures)
             assertEquals(1, applied)
             assertEquals(1L, coordinator.revision.value)
         } finally {
@@ -69,7 +75,7 @@ class HostMalformedJsonRecoveryTest {
     }
 
     private fun command(protocol: SessionProtocol, peer: PlayerId, sequence: Long, payload: ByteArray): PeerMessage {
-        val id = "json-command-$sequence"
+        val id = "json-command-${sequence.toString().padStart(8, '0')}"
         return PeerMessage.ClientCommand(
             header = SessionEnvelopeHeader(
                 protocol = ProtocolVersion(), sessionId = protocol.sessionId,
