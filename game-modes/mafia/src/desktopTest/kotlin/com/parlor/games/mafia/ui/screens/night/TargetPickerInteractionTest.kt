@@ -3,8 +3,12 @@ package com.parlor.games.mafia.ui.screens.night
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.toAwtImage
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.test.ExperimentalTestApi
+import androidx.compose.ui.test.captureToImage
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.assertIsSelected
 import androidx.compose.ui.test.onNodeWithContentDescription
@@ -19,6 +23,8 @@ import com.parlor.designsystem.localization.AppLanguage
 import com.parlor.designsystem.localization.ProvideAppLanguage
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.games.mafia.ui.screens.vote.VoteCastScreen
+import java.io.File
+import javax.imageio.ImageIO
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -59,7 +65,7 @@ class TargetPickerInteractionTest {
                             eyebrow = "Night", headline = "Choose", instructions = "Choose one player",
                             targets = listOf(PickableTarget(id, name)), submitLabel = "Confirm",
                             onSubmit = { submitted = it }, skipLabel = "Skip", allowSkip = true,
-                            modifier = Modifier.size(320.dp, 640.dp),
+                            modifier = Modifier.size(320.dp, 640.dp).testTag("mafia-target-evidence"),
                         )
                     }
                 }
@@ -67,6 +73,9 @@ class TargetPickerInteractionTest {
         }
         onNodeWithContentDescription("Confirm").assertIsNotEnabled()
         onNodeWithText(name).performScrollTo().performClick().assertIsSelected()
+        val output = File("build/reports/ux/mafia-target-${language.tag}-2x.png")
+        output.parentFile.mkdirs()
+        ImageIO.write(onNodeWithTag("mafia-target-evidence").captureToImage().toAwtImage(), "png", output)
         onNodeWithContentDescription("Confirm").performScrollTo().performClick()
         assertEquals(id, submitted)
     }
