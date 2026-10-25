@@ -154,13 +154,16 @@ def _run_with_output(command: list[str], output, *, timeout: int, env: dict | No
             require(time.monotonic() - started < timeout, "Distribution tool exceeded its time bound")
             require(os.fstat(output.fileno()).st_size <= output_limit, "Tool output exceeds its bound")
             time.sleep(0.05)
-        require(os.fstat(output.fileno()).st_size <= output_limit, "Tool output exceeds its bound")
-        return process.returncode
+        code = process.returncode
     except (OSError, subprocess.SubprocessError):
         raise RuntimeError("Distribution tool could not execute; private arguments/output withheld") from None
     finally:
         if process is not None:
             _stop_owned_command(process)
+    # Descendants can still write after the root exits. Check again only after
+    # retiring ownership, before any caller consumes the captured output.
+    require(os.fstat(output.fileno()).st_size <= output_limit, "Tool output exceeds its bound")
+    return code
 
 
 def run(command: list[str], *, timeout: int = 120, env: dict | None = None, success_codes: tuple[int, ...] = (0,)) -> str:
@@ -169,7 +172,9 @@ def run(command: list[str], *, timeout: int = 120, env: dict | None = None, succ
         code = _run_with_output(command, output, timeout=timeout, env=env, output_limit=16 * MAX_JSON)
         require(code in success_codes, f"Distribution tool failed: {Path(command[0]).name} (exit {code})")
         output.seek(0)
-        return output.read().decode("utf-8", errors="replace")
+        captured = output.read(16 * MAX_JSON + 1)
+        require(len(captured) <= 16 * MAX_JSON, "Tool output exceeds its bound")
+        return captured.decode("utf-8", errors="replace")
 
 
 def run_logged(command: list[str], log: Path, *, timeout: int, output_limit: int, env: dict | None = None) -> int:

@@ -181,6 +181,23 @@ class DistributionBuildLogTest(unittest.TestCase):
                 with self.subTest(invalid=invalid), self.assertRaises(RuntimeError):
                     dist.read_log_tail(path, invalid)
 
+    def test_output_budget_is_rechecked_after_descendant_finalization(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            path = Path(temporary) / 'build.log'
+            original = dist._stop_owned_command
+
+            def trailing_output(process):
+                original(process)
+                # Deterministic stand-in for descendant output racing the
+                # direct process exit, before finalizer returns to its caller.
+                with path.open('ab') as output:
+                    output.write(b'x' * 1025)
+
+            with patch.object(dist, '_stop_owned_command', side_effect=trailing_output):
+                with self.assertRaisesRegex(RuntimeError, 'output exceeds'):
+                    dist.run_logged([sys.executable, '-c', 'pass'], path, timeout=10, output_limit=1024)
+            self.assertEqual(path.stat().st_size, 1025)
+
     def test_logged_command_returns_nonzero_and_retains_output(self):
         with tempfile.TemporaryDirectory() as temporary:
             path = Path(temporary) / 'build.log'
