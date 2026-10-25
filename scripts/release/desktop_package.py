@@ -16,7 +16,7 @@ import tempfile
 import zipfile
 from pathlib import Path
 
-from scripts.release.github_distribution import OUT, ROOT, PLATFORMS, canonical, digest, filename, require, run, version
+from scripts.release.github_distribution import OUT, ROOT, PLATFORMS, canonical, digest, filename, read_log_tail, require, run, run_logged, version
 from scripts.release.distribution_image import (
     inventory_digest, materialize_linux_runtime_notices, prepare_skiko, require_same_image, verify_no_embedded_native,
 )
@@ -27,6 +27,9 @@ from scripts.verification.android_release_artifacts import inspect_manifest
 WORK = OUT / "work"
 WINDOWS_UPGRADE_UUID = "fd36ca1f-9707-486a-8104-22b16cb475a6"
 LINUX_RESOURCES = ROOT / "config/github-distribution/linux"
+BUILD_LOG_LIMIT = 256 * 1024 * 1024
+BUILD_LOG_TAIL_BYTES = 18_000
+BUILD_TIMEOUT_SECONDS = 5400
 
 
 def check_host(platform: str) -> None:
@@ -48,11 +51,16 @@ def gradle(tasks: list[str]) -> None:
     # This step never receives signing credentials. Build logs are not in the frozen/public bundle.
     command = [str(ROOT / ("gradlew.bat" if host.system() == "Windows" else "gradlew")), *tasks,
                "--dependency-verification=strict", "--no-daemon", "--console=plain", "--stacktrace"]
-    with (OUT / "build.log").open("w", encoding="utf-8") as output:
-        result = subprocess.run(command, cwd=ROOT, stdout=output, stderr=subprocess.STDOUT, timeout=5400, check=False)
-    if result.returncode:
-        print((OUT / "build.log").read_text(encoding="utf-8")[-18000:])
-    require(result.returncode == 0, "Wrapper build failed; see build/github-distribution/build.log")
+    log = OUT / "build.log"
+    try:
+        code = run_logged(command, log, timeout=BUILD_TIMEOUT_SECONDS, output_limit=BUILD_LOG_LIMIT)
+    except RuntimeError:
+        if log.is_file():
+            print(read_log_tail(log, BUILD_LOG_TAIL_BYTES))
+        raise
+    if code:
+        print(read_log_tail(log, BUILD_LOG_TAIL_BYTES))
+    require(code == 0, "Wrapper build failed; see build/github-distribution/build.log")
 
 
 def image_path(platform: str) -> Path:
