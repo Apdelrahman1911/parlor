@@ -12,7 +12,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.test.ExperimentalTestApi
-import androidx.compose.ui.test.StateRestorationTester
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.onNodeWithTag
@@ -57,21 +56,34 @@ class WordFrameRestorationTest {
 
     @Test
     fun same_phase_recreation_restores_scroll_but_new_phase_starts_at_the_header() = runComposeUiTest {
+        var registry by mutableStateOf(SaveableStateRegistry(restoredValues = null) { true })
+        var showing by mutableStateOf(true)
         var phase by mutableStateOf("first-phase")
-        val restoration = StateRestorationTester(this)
-        restoration.setContent {
-            GameUiFrame {
-                WordFrame(Modifier, phase) {
-                    Text("Public phase header", Modifier.testTag("phase-header"))
-                    Box(Modifier.height(1200.dp))
-                    Text("Last public action", Modifier.testTag("last-action"))
+        setContent {
+            if (showing) {
+                CompositionLocalProvider(LocalSaveableStateRegistry provides registry) {
+                    GameUiFrame {
+                        WordFrame(Modifier, phase) {
+                            Text("Public phase header", Modifier.testTag("phase-header"))
+                            Box(Modifier.height(1200.dp))
+                            Text("Last public action", Modifier.testTag("last-action"))
+                        }
+                    }
                 }
             }
         }
         onNodeWithTag("last-action").performScrollTo().assertIsDisplayed()
         onNodeWithTag("phase-header").assertIsNotDisplayed()
-        restoration.emulateSaveAndRestore()
+        var saved: Map<String, List<Any?>> = emptyMap()
+        runOnIdle { saved = registry.performSave(); showing = false }
+        waitForIdle()
+        // Exercise actual saveable providers without Desktop's unimplemented platformEncodeDecode stub.
+        runOnIdle {
+            registry = SaveableStateRegistry(restoredValues = saved) { true }
+            showing = true
+        }
         onNodeWithTag("last-action").assertIsDisplayed()
+        onNodeWithTag("phase-header").assertIsNotDisplayed()
         runOnIdle { phase = "second-phase" }
         onNodeWithTag("phase-header").assertIsDisplayed()
         onNodeWithTag("last-action").assertIsNotDisplayed()
