@@ -522,7 +522,8 @@ jobs:
         timeout-minutes: 2
         shell: python
         run: |
-          import unittest
+          import os, sys, unittest
+          sys.path.insert(0, os.getcwd())
           unittest.main(module="scripts.release.tests.test_distribution_process_ownership", argv=["ownership-tests"], verbosity=2)
 
       - name: Install pinned Android SDK packages

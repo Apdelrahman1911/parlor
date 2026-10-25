@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import ast
 import json
+import os
+import subprocess
 import re
 import textwrap
 from types import SimpleNamespace
@@ -89,6 +91,7 @@ class WorkflowContractTest(unittest.TestCase):
             ("        shell: python", "        continue-on-error: true\n        shell: python"),
             ("test_distribution_process_ownership", "test_github_distribution"),
             ("verbosity=2", "verbosity=2, exit=False"),
+            ("          sys.path.insert(0, os.getcwd())\n", ""),
         ):
             changed = windows.replace(block, block.replace(original, replacement, 1), 1)
             self.assertNotEqual(changed, windows)
@@ -97,6 +100,27 @@ class WorkflowContractTest(unittest.TestCase):
         removed = windows.replace("\n      - name: " + name + "\n" + block, "", 1)
         with self.assertRaisesRegex(RuntimeError, "ownership"):
             workflow_contract.verify_windows_distribution_ownership(removed)
+
+    def test_windows_distribution_ownership_runs_from_external_actions_script(self) -> None:
+        # Actions' Python shell puts its script in RUNNER_TEMP, not the checkout.
+        # Execute the exact workflow payload without PYTHONPATH to catch import
+        # failures before any of the real subprocess-ownership tests can run.
+        workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text(encoding="utf-8")
+        windows = workflow_contract.validation_job(workflow, "desktop-windows-x64")
+        step = workflow_contract.validation_step(windows, "Verify Windows distribution process ownership")
+        payload = textwrap.dedent(step.split("        run: |\n", 1)[1])
+        environment = dict(os.environ)
+        environment.pop("PYTHONPATH", None)
+        with TemporaryDirectory() as temporary:
+            script = Path(temporary) / "actions-python-shell.py"
+            script.write_text(payload, encoding="utf-8")
+            result = subprocess.run(
+                [sys.executable, str(script)], cwd=workflow_contract.ROOT,
+                env=environment, capture_output=True, text=True, timeout=110,
+            )
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertIn("test_timeout_retires_term_resistant_descendant_inheriting_output", result.stderr)
+        self.assertIn("OK", result.stderr)
 
     def test_native_selection_is_closed_paired_default_and_cannot_be_duplicated(self) -> None:
         workflow = (workflow_contract.ROOT / '.github/workflows/production-verification.yml').read_text(encoding='utf-8')

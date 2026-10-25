@@ -86,6 +86,20 @@ Independent review checked source/test ownership scope and corrected a Windows
 inspection ambiguity: access denied is an inspection failure, not proof of exit.
 No raw PID signaling is authorized by these observations.
 
+## First Windows CI invocation correction
+
+PR #261 run [40151647009](https://github.com/Apdelrahman1911/parlor/actions/runs/40151647009)
+at `a5a68a3e` failed before native tests: Actions' `shell: python` executes a
+script in the runner temporary directory, so `unittest` could not import the
+checkout's `scripts` package. No Job Object behavior was verified by that run.
+The step now explicitly places its verified checkout working directory on the
+Python import path. The exact workflow contract pins this setup. A regression
+executes the actual workflow payload as an external temporary script without
+`PYTHONPATH`; the original invocation reproduces the same import failure locally.
+No test, required job or failure propagation was removed. The same seven-module
+command above then passed **167 tests in66.478s** on Linux, including the new
+external-script regression; native Windows remains pending corrected CI.
+
 ## Remaining acceptance
 
 - Run the new mandatory Windows native Job Object suite at the release-only PR's
