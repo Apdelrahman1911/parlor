@@ -201,3 +201,58 @@ qualification are **unexecuted**. Existing #252 (background/reconnect), #6 (real
 LAN) should retain these acceptance gates; do not close them because
 deterministic tests pass. #230 separately tracks Store identity/ownership. Strict iOS protection finding A37
 also remains unresolved and must not be weakened for background availability.
+
+## Follow-up native/cold-start audit
+
+Additional source paths inspected: Android `MainActivity`,
+`AndroidProcessLifecycleCallbacks`, `ParlorApplication`; iOS `ContentView`,
+`ComposeContainerViewController`, `MainViewController`; `App`,
+`ProcessMultiplayerSessionOwner`, `PeerConnectionTracker`,
+`ResumableCredentialStore` and transport resume/expiry handlers.
+
+**Concrete cleanup-contract defect:** `PeerConnectionTracker.close()` sealed
+`closed` before joining its tracker job, but a second caller returned immediately
+while the first still waited for an in-progress expiry callback. If the first
+waiting caller was cancelled, a retry also incorrectly returned without awaiting
+that callback. This contradicts the method's completion contract. The fix seals
+once but calls the idempotent `cancelAndJoin()` for **every** caller, preserving
+caller cancellation. Two deterministic regressions cover concurrent close and
+retry-after-cancel with a suspended `NonCancellable` callback. They await the
+integrated test run; this is a source-level cleanup race, **not** an observed
+phone crash or proof that existing game-bridge close mutexes allow the race.
+
+Cold-start behavior is intentionally asymmetric, not transparent host recovery:
+
+- In-process Activity/Compose recreation restores the retained multiplayer route
+  from the process owner. That route is explicitly **non-persistent**.
+- After peer process death, Home exposes multiplayer **Resume**, which reloads
+  protected credentials, binds the same host fingerprint/seat and rotates the
+  capability before fresh state. Cold launch does **not automatically navigate
+  into that game**. Automatic cold-start restoration is a remaining product
+  requirement, not verified completed behavior.
+- Host capability digests, roster/transport and authority live in memory. Host
+  process death destroys the room, as `PRODUCTION_ARCHITECTURE.md` explicitly
+  documents. Saving a local game snapshot does not recreate authenticated room
+  membership. Persistent host restoration requires a separately designed
+  crash-consistent authority/membership protocol; do not invent insecure
+  migration or treat a local snapshot as a resumable multiplayer host.
+- The credential's 24-hour cryptographic maximum does not override the host's
+  120-second disconnected-seat deadline. Explicit Leave invalidates ownership;
+  active/pending credential generations preserve the previous committed winner
+  across an interrupted rotation.
+
+Native caller constraints are appropriate in inspected source: iOS disables
+multiple scenes and calls the Koin/lifecycle bridge from the UI lifecycle;
+Android covers inactive content and separately tracks process residency. Neither
+shell relies on a final OS termination callback for peer credential saving.
+This does not prove frame-perfect snapshot concealment, interruption ordering,
+Keystore/Keychain availability or secure-store durability on real devices.
+
+Still unverified: force-stop/relaunch against a live host, kill during each
+credential offer/commit boundary, host kill with simultaneous peer retries,
+120-second boundary after actual OS sleep, timer-versus-native reconnect ordering,
+rapid platform callback bursts while cleanup is blocked, caller cancellation
+inside native close, memory pressure without lifecycle callbacks, settings-load
+failure on cold start, and process recreation with denied/revoked LAN permission.
+These require the documented device/fault matrix; no new background entitlement
+or relaxed expiry/identity rule was introduced to hide them.

@@ -149,17 +149,17 @@ class PeerConnectionTracker(
      * stopped allowed an old peer session to race teardown and affect its owner.
      */
     suspend fun close() {
-        val shouldJoin = mutex.withLock {
-            if (closed) {
-                false
-            } else {
+        mutex.withLock {
+            if (!closed) {
                 closed = true
                 hostLossGeneration++
                 hostLossJob = null
-                true
             }
         }
-        if (shouldJoin) trackerJob.cancelAndJoin()
+        // Sealing is idempotent, but completion belongs to every caller. A
+        // concurrent close or a retry after caller cancellation must still
+        // await a callback already unwinding in NonCancellable cleanup.
+        trackerJob.cancelAndJoin()
     }
 
     private companion object {
