@@ -32,7 +32,7 @@ reported 59 warnings:
 
 The remediation removes all 20 correctness, packaging, resource, and catalog
 warnings. Removing eleven unconsumed dependency declarations then removed the
-corresponding update advisories. The current accepted inventory contains 35
+corresponding update advisories. The current accepted inventory contains 37
 warnings, all in the four
 explicitly reviewed advisory classes below:
 
@@ -41,7 +41,7 @@ explicitly reviewed advisory classes below:
 | `OldTargetApi` | 1 | Target/compile SDK 36 is deliberately pinned for the current compatibility baseline. Store target-level compliance must be rechecked at release and can require a reviewed SDK migration. |
 | `AndroidGradlePluginVersion` | 4 | Gradle 8.13 and AGP 8.13.2 are a verified pair. Moving to Gradle 8.14.5 or AGP 9.3.1 is a separate compatibility migration, not a lint-only edit. |
 | `GradleDependency` | 1 | Lint 9.1.1 is the reviewed stable analyzer compatible with Kotlin 2.4 metadata; lint reports a moving, unrelated alpha preview whose latest version is normalized by the gate. |
-| `DependencyUpdate` | 29 | These are update notifications for pinned Activity Compose, datetime, Kotlin, Compose, Navigation 3, Koin, Ktor, Konsist, Detekt, and Turbine coordinates. AndroidX Navigation 3 runtime 1.0.0 stays aligned with the reviewed Compose Multiplatform UI port; that UI port stays at alpha06 because newer publications omit the project's `iosX64` target. They do not report a demonstrated correctness defect. Kotlin 2.4.10 remains the compatibility pin; the three Kotlin plugin updates are reviewed below. Serialization 1.11.0 and P2pKit 0.7.0-rc3 did not produce update advisories in this reviewed run; that is not a claim they will always be latest. |
+| `DependencyUpdate` | 31 | These are update notifications for pinned Activity Compose, datetime, Kotlin, Compose, Navigation 3, Koin, Ktor, Konsist, Detekt, Turbine, and Serialization coordinates. AndroidX Navigation 3 runtime 1.0.0 stays aligned with the reviewed Compose Multiplatform UI port; that UI port stays at alpha06 because newer publications omit the project's `iosX64` target. They do not report a demonstrated correctness defect. Kotlin 2.4.10 remains the compatibility pin; the three Kotlin plugin updates are reviewed below. The Serialization 1.11.0 updates are reviewed below; P2pKit 0.7.0-rc3 did not produce an update advisory in this reviewed run, not a claim it will always be latest. |
 
 The remaining advisories are not permanent waivers. Dependency/security review
 and store policy can make a specific upgrade mandatory. Such an upgrade must
@@ -81,6 +81,33 @@ A future Kotlin update must preserve the existing toolchain, dependency
 verification, and Android/iOS/Desktop compatibility checks. These three lint
 rows are not a permanent security waiver, and passing lint is not a security
 assessment of all dependencies.
+
+## 2026-10-25 Serialization advisory review
+
+[PR #256 verification run 40145248452](https://github.com/Apdelrahman1911/parlor/actions/runs/40145248452)
+failed `verifyReleaseLintWarnings` with exactly two new
+`NewerVersionAvailable` warnings: `kotlinx-serialization-json` and
+`kotlinx-serialization-cbor`, both pinned at 1.11.0. The uploaded release XML
+contains 37 warnings and no missing previously accepted rows. Accept only
+these two exact coordinate/current-version rows; the verifier is unchanged.
+
+Upstream [1.12.0](https://github.com/Kotlin/kotlinx.serialization/releases/tag/v1.12.0)
+was published on October 19 and uses Kotlin 2.4.10. Its release notes describe
+JSON exception wrapping and nesting-depth limits, parsing performance changes,
+CBOR definite-collection memory optimization, and unsigned-integer encoding
+changes. Compiler compatibility alone does not qualify these changes against
+Parlor's persisted snapshots, exact multiplayer protocol, or Apple binaries.
+Retain 1.11.0 for this integration; evaluate the upgrade separately with strict
+artifact provenance, old/new codec fixtures, malformed/deep input tests, and
+Android/iOS/Desktop execution. P2pKit's reviewed dependency alignment is
+recorded in `P2PKIT_MAVEN_PROVENANCE.md`.
+
+GitHub's public Maven advisory queries for the JSON and CBOR coordinates at
+1.11.0 returned no matching advisories on October 25. This is a scoped lookup,
+not proof of safety: upstream's depth/allocation hardening still warrants
+malformed-input review. Reopen this triage for a relevant security advisory or
+a reproduced decoder defect. No dependency, verification checksum, lint
+severity, detector, or release gate is changed by this acceptance.
 
 ## Fixed warning classes
 

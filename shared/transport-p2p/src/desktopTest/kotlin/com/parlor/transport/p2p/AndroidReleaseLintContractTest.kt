@@ -65,11 +65,11 @@ class AndroidReleaseLintContractTest {
             .map(String::trim)
             .filter { line -> line.isNotEmpty() && !line.startsWith('#') }
             .toList()
-        assertEquals(35, accepted.size)
+        assertEquals(37, accepted.size)
         assertEquals(
             mapOf(
                 "AndroidGradlePluginVersion" to 4,
-                "DependencyUpdate" to 29,
+                "DependencyUpdate" to 31,
                 "GradleDependency" to 1,
                 "OldTargetApi" to 1,
             ),
@@ -102,12 +102,21 @@ class AndroidReleaseLintContractTest {
                 "DependencyUpdate|gradle/libs.versions.toml|A newer version of $pluginId than 2.4.10",
             )
         }
+        listOf("json", "cbor").forEach { format ->
+            assertContains(
+                accepted,
+                "DependencyUpdate|gradle/libs.versions.toml|A newer version of " +
+                    "org.jetbrains.kotlinx:kotlinx-serialization-$format than 1.11.0",
+            )
+        }
+        assertContains(catalog, "kotlinx-serialization = \"1.11.0\"")
+        assertContains(triage, "## 2026-10-25 Serialization advisory review")
         assertContains(workflow, "productionCheck")
         assertContains(workflow, "lint-results-*")
         assertContains(catalog, "androidx-activity-compose")
         assertContains(appBuild, "implementation(libs.androidx.activity.compose)")
         assertContains(triage, "reported 59 warnings")
-        assertContains(triage, "contains 35")
+        assertContains(triage, "contains 37")
     }
 
     @Test
