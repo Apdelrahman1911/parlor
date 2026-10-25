@@ -133,9 +133,18 @@ user Stop or OEM battery policy. Never request blanket battery exemption just
 to mask recovery defects. Persist essential state incrementally, not only at
 `onStop`; Android may kill a process without a final cleanup callback.
 
-Target 36 is pinned currently. Recheck newer-target local-network permission
-requirements before raising target SDK; do not inherit upstream future-platform
-statements without matching the target/runtime and current official guidance.
+[Android 16 job changes](https://developer.android.com/about/versions/16/behavior-changes-all)
+apply runtime quotas even to jobs concurrent with a foreground service; moving
+network maintenance into WorkManager does not escape scheduling limits.
+
+Target 36 is pinned currently. Official
+[local-network permission guidance](https://developer.android.com/privacy-and-security/local-network-permission)
+describes Android 16 opt-in protection using `NEARBY_WIFI_DEVICES` and Android 17
+mandatory protection for target 37+ using `ACCESS_LOCAL_NETWORK`. Incoming and
+outgoing TCP, multicast and discovery are affected. A future target bump needs
+explicit grant/denial/revocation tests, no permission prompt loops and recovery
+when access is revoked; do not silently raise target SDK or assume INTERNET
+alone remains sufficient.
 
 ### iOS
 
@@ -151,7 +160,7 @@ best effort; it does not guarantee the app runs for that interval.
 make BGTaskScheduler system-scheduled maintenance, not immediate multiplayer
 execution. Background URLSession is file transfer, not arbitrary LAN sockets.
 Do not declare audio, location, VoIP or unrelated background modes to keep games
-alive. Bonjour/Network.framework do not grant indefinite execution.
+alive ([App Review 2.5.4](https://developer.apple.com/app-store/review/guidelines/#software-requirements)). Bonjour/Network.framework do not grant indefinite execution.
 
 [`BGContinuedProcessingTask`](https://developer.apple.com/documentation/backgroundtasks/bgcontinuedprocessingtask)
 is for user-started foreground work continued with visible progress/cancellation;
