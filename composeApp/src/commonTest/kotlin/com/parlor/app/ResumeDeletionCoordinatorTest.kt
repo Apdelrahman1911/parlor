@@ -56,7 +56,7 @@ class ResumeDeletionCoordinatorTest {
     fun multiplayer_deletion_uses_the_selected_opaque_handle_and_never_the_local_store() = runTest {
         val store = RecordingStore()
         val transport = RecordingTransport()
-        val selection = object : ResumableSessionSelection {}
+        val selection: ResumableSessionSelection = object : ResumableSessionSelection {}
         val coordinator = ResumeDeletionCoordinator(this, store, transport, { true }, {})
         coordinator.request(ResumeDeletionTarget.Multiplayer(selection), "Multiplayer")
         coordinator.confirm(coordinator.state.value.request!!)
