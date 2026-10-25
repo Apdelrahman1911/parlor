@@ -6,6 +6,7 @@ import com.parlor.core.result.DataError
 import com.parlor.core.result.EmptyOk
 import com.parlor.core.result.EmptyResult
 import com.parlor.core.result.Result
+import com.parlor.core.serialization.requireBoundedJsonNesting
 import com.parlor.engine.snapshot.GameSnapshot
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
@@ -196,9 +197,12 @@ private fun kotlinx.serialization.json.JsonObject.requiredString(name: String): 
         ?: throw SerializationException("snapshot envelope is missing $name")
 
 private fun ByteArray.decodeUtf8StrictForSnapshot(): String = try {
+    // Both complete recovery and Home's metadata scan reach this boundary.
+    // A byte limit alone cannot bound recursive parser stack consumption.
+    requireBoundedJsonNesting(this)
     decodeToString(throwOnInvalidSequence = true)
 } catch (@Suppress("TooGenericExceptionCaught") failure: Exception) {
-    throw SerializationException("snapshot is not valid UTF-8", failure)
+    throw SerializationException("snapshot is not valid bounded UTF-8 JSON", failure)
 }
 
 /**
