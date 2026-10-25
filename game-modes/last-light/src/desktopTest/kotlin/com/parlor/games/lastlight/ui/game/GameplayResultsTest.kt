@@ -17,6 +17,7 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.runComposeUiTest
+import com.parlor.designsystem.localization.asBidiArgument
 import com.parlor.games.lastlight.ui.PendingAction
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -93,7 +94,8 @@ class GameplayResultsTest {
                 )
             }
         }
-        onNodeWithText("Guest · seat 2 wins.").assertExists()
+        val winnerName = "${"Guest".asBidiArgument()} · seat 2".asBidiArgument()
+        onNodeWithText("$winnerName wins.").assertExists()
         onNodeWithTag("game-rematch").bringIntoView().assertIsNotEnabled()
         runOnIdle { permission = true }
         onNodeWithTag("game-rematch").assertIsEnabled().performClick()

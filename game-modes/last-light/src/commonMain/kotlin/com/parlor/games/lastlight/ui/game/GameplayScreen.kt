@@ -41,6 +41,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.parlor.designsystem.localization.asBidiArgument
 import com.parlor.games.lastlight.ui.PendingAction
 import com.parlor.games.lastlight.ui.theme.DeckButton
 import com.parlor.games.lastlight.ui.theme.LastLightColors
@@ -284,7 +285,7 @@ private fun GameActions(
     val canPlay = view.availableActions.canPlay
     val canChallenge = view.availableActions.canChallenge && view.latestClaim != null
     val forced = view.forcedChallenge && canChallenge
-    val claimantName = playerName(view, view.latestClaim?.playerId)
+    val claimantName = playerName(view, view.latestClaim?.playerId).asBidiArgument()
     Column(
         modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp, vertical = if (compact) 8.dp else 14.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -370,7 +371,7 @@ private fun GameActions(
                 val ownTurn = view.viewerId != null && view.turnPlayerId == view.viewerId
                 Text(
                     text = if (!canSendAction || ownTurn) stringResource(Res.string.game_waiting_connection)
-                    else stringResource(Res.string.game_waiting_player, playerName(view, view.turnPlayerId)),
+                    else stringResource(Res.string.game_waiting_player, playerName(view, view.turnPlayerId).asBidiArgument()),
                     style = MaterialTheme.typography.bodyMedium,
                     color = LastLightColors.Muted,
                 )

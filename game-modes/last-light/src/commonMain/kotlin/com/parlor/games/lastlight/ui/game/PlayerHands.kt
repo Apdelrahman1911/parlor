@@ -41,6 +41,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import com.parlor.designsystem.localization.asBidiArgument
 import com.parlor.games.lastlight.domain.model.GameView
 import com.parlor.games.lastlight.domain.model.PlayerView
 import com.parlor.games.lastlight.resources.Res
@@ -126,20 +127,20 @@ private fun PublicSeat(
         else -> null
     }
     val uniqueName = playerName(view, player.id)
-    val spokenName = if (self) stringResource(Res.string.game_player_you, uniqueName) else uniqueName
+    val spokenName = if (self) stringResource(Res.string.game_player_you, uniqueName.asBidiArgument()) else uniqueName
     val visibleName = when {
         self -> stringResource(Res.string.game_you)
         view.players.count { it.displayName.equals(player.displayName, ignoreCase = true) } > 1 -> stringResource(
             Res.string.game_seat_numbered_name,
             view.players.indexOfFirst { it.id == player.id } + 1,
-            player.displayName,
+            player.displayName.asBidiArgument(),
         )
         else -> player.displayName
     }
     val count = pluralStringResource(Res.plurals.game_card_count, player.handCount, player.handCount)
     val handStatus = if (status == null) count else stringResource(Res.string.game_seat_hand_status, count, status)
     val fuse = stringResource(Res.string.game_fuse_tests, player.penaltyAttempts)
-    val description = stringResource(Res.string.game_seat_summary, spokenName, handStatus, fuse)
+    val description = stringResource(Res.string.game_seat_summary, spokenName.asBidiArgument(), handStatus, fuse)
     Column(
         modifier = modifier.testTag("game-player-${player.id}")
             .clearAndSetSemantics { contentDescription = description }

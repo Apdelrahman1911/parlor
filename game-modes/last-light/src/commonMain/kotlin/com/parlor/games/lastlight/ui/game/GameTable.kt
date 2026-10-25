@@ -32,6 +32,7 @@ import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
+import com.parlor.designsystem.localization.asBidiArgument
 import com.parlor.games.lastlight.ui.theme.LastLightColors
 import com.parlor.games.lastlight.ui.theme.SectionLabel
 import com.parlor.games.lastlight.domain.model.GameView
@@ -63,7 +64,7 @@ internal fun playerName(view: GameView, playerId: PlayerId?): String {
     if (seat < 0) return stringResource(Res.string.game_player_fallback)
     val name = view.players[seat].displayName
     return if (view.players.count { it.displayName.equals(name, ignoreCase = true) } > 1) {
-        stringResource(Res.string.game_player_numbered, name, seat + 1)
+        stringResource(Res.string.game_player_numbered, name.asBidiArgument(), seat + 1)
     } else name
 }
 
@@ -153,7 +154,10 @@ private fun TurnHeading(view: GameView, modifier: Modifier = Modifier, compact: 
     val ownTurn = view.viewerId != null && view.turnPlayerId == view.viewerId
     val turn = when {
         ownTurn -> stringResource(Res.string.game_your_turn)
-        view.turnPlayerId != null -> stringResource(Res.string.game_players_turn, playerName(view, view.turnPlayerId))
+        view.turnPlayerId != null -> stringResource(
+            Res.string.game_players_turn,
+            playerName(view, view.turnPlayerId).asBidiArgument(),
+        )
         else -> stringResource(Res.string.game_watching_table)
     }
     Row(
@@ -226,7 +230,7 @@ private fun LatestClaim(
                 Text(
                     text = stringResource(
                         Res.string.game_claim_sentence,
-                        playerName(view, claim.playerId),
+                        playerName(view, claim.playerId).asBidiArgument(),
                         rankClaim(view.tableRank, claim.cardCount),
                     ),
                     style = MaterialTheme.typography.titleSmall,
