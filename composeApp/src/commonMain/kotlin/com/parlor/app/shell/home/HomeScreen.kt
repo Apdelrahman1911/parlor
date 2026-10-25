@@ -225,7 +225,7 @@ private fun HomeTopBar() {
 @Composable
 private fun HomeLead() {
     // Keep game discovery ahead of decorative copy without shrinking accessible text.
-    val showIntroduction = LocalDensity.current.fontScale < 1.5f
+    val showIntroduction = LocalDensity.current.fontScale < HOME_COMPACT_INTRODUCTION_FONT_SCALE
     Column(verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.s)) {
         if (showIntroduction) {
             EyebrowLabel(text = stringResource(Res.string.home_eyebrow))
@@ -596,6 +596,7 @@ private fun GameCardArt(accent: ParlorAccent) {
     }
 }
 
+private const val HOME_COMPACT_INTRODUCTION_FONT_SCALE = 1.5f
 private const val CARD_ACCENT_ALPHA = 0.14f
 private const val CARD_ART_HALO_ALPHA = 0.10f
 private const val CARD_ART_STROKE_RATIO = 0.035f
