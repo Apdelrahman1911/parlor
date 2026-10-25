@@ -28,6 +28,17 @@ class ResumableCredentialStoreTest {
     private val store = ResumableCredentialStore(storage)
 
     @Test
+    fun excessiveJsonNestingIsCorruptedInputAndDoesNotPoisonLaterStorageAccess() = runTest {
+        val payload = ("[".repeat(2_048) + "0" + "]".repeat(2_048)).encodeToByteArray()
+        storage.put(ResumableCredentialStore.STORAGE_KEY, payload)
+        assertThat(store.loadResumeCandidate()).isEqualTo(Result.Failure(CredentialStoreError.Corrupted))
+        store.clear()
+        val offered = credential(offerId = "offer-after-malformed", generation = 1)
+        assertThat(store.stage(offered)).isEqualTo(Result.Success(Unit))
+        assertThat(store.loadResumeCandidate()).isEqualTo(Result.Success(offered))
+    }
+
+    @Test
     fun initial_offer_is_resumable_before_commit_and_becomes_active_on_commit() = runTest {
         val offered = credential(offerId = "offer-1", generation = 1)
 

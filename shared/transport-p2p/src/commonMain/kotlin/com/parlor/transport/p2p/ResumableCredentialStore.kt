@@ -1,5 +1,6 @@
 package com.parlor.transport.p2p
 
+import com.parlor.core.serialization.requireBoundedJsonNesting
 import com.parlor.core.result.Result
 import com.parlor.networking.room.RoomInputPolicy
 import com.parlor.storage.secure.SecureStorage
@@ -324,6 +325,7 @@ internal class ResumableCredentialStore(
             if (bytes.size !in 1..MAX_RECORD_BYTES) {
                 Result.Failure(CredentialStoreError.Corrupted)
             } else {
+                requireBoundedJsonNesting(bytes)
                 val decoded = json.decodeFromString<StoredCredentialRecord>(
                     bytes.decodeToString(throwOnInvalidSequence = true),
                 )

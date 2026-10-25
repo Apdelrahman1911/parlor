@@ -1,5 +1,6 @@
 package com.parlor.games.whodunit.snapshot
 
+import com.parlor.core.serialization.requireBoundedJsonNesting
 import com.parlor.engine.snapshot.SnapshotCodec
 import com.parlor.games.whodunit.domain.state.VoteState
 import com.parlor.games.whodunit.domain.state.WhodunitState
@@ -54,6 +55,7 @@ class WhodunitSnapshotCodec(
 
     override fun decode(payload: ByteArray): WhodunitState {
         requireValidPayloadSize(payload)
+        requireBoundedJsonNesting(payload)
         val root = strictJson
             .parseToJsonElement(payload.decodeToString(throwOnInvalidSequence = true))
             .jsonObject

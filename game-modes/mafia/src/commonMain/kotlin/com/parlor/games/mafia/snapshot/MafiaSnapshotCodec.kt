@@ -1,5 +1,6 @@
 package com.parlor.games.mafia.snapshot
 
+import com.parlor.core.serialization.requireBoundedJsonNesting
 import com.parlor.engine.snapshot.SnapshotCodec
 import com.parlor.games.mafia.domain.state.MafiaObservableStateValidator
 import com.parlor.games.mafia.domain.state.MafiaState
@@ -36,6 +37,7 @@ class MafiaSnapshotCodec(
 
     override fun decode(payload: ByteArray): MafiaState {
         requireValidPayloadSize(payload)
+        requireBoundedJsonNesting(payload)
         val decoded = strictJson
             .decodeFromString(MafiaState.serializer(), payload.decodeToString(throwOnInvalidSequence = true))
         val canonical = strictJson
