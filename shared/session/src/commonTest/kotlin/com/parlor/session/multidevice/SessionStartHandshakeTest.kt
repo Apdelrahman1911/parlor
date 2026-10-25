@@ -801,6 +801,26 @@ class SessionStartHandshakeTest {
     }
 
     @Test
+    fun `cross game offer cannot prepare or acknowledge start even after admission`() = runTest {
+        val room = StartRoom(isHost = false, selfPlayerId = peerId)
+        var prepared = false
+        val waiting = async {
+            awaitAuthoritativeSessionStart(room, protocol.gameId, protocol.gameVersion) { _, _ ->
+                prepared = true
+                true
+            }
+        }
+        runCurrent()
+        val wrongGame = offer().let { it.copy(header = it.header.copy(gameId = GameId("other-game"))) }
+        room.receive(wrongGame)
+        runCurrent()
+        val error = assertIs<Result.Failure<SessionStartFailure>>(waiting.await()).error
+        assertEquals(SessionStartFailure.Protocol(ProtocolValidation.WrongGame), error)
+        assertFalse(prepared)
+        assertTrue(room.sentToHost.isEmpty())
+    }
+
+    @Test
     fun `peer validates wire version against local protocol major and minor`() = runTest {
         suspend fun rejected(version: ProtocolVersion): SessionStartFailure.Protocol {
             val room = StartRoom(isHost = false, selfPlayerId = peerId)
