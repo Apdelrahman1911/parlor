@@ -4,10 +4,14 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.graphics.asSkiaBitmap
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.SemanticsActions
+import androidx.compose.ui.test.ComposeUiTest
+import androidx.compose.ui.test.captureToImage
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.SemanticsNodeInteraction
 import androidx.compose.ui.test.getUnclippedBoundsInRoot
@@ -24,6 +28,8 @@ import com.parlor.designsystem.localization.ProvideAppLanguage
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.designsystem.theme.ThemeMode
 import com.parlor.engine.state.Player
+import java.io.File
+import org.jetbrains.skia.Image
 import kotlin.math.ceil
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -71,4 +77,16 @@ internal fun SemanticsNodeInteraction.assertFullText() {
     assertTrue(bounds.height >= ceil(layout.multiParagraph.height), "Text crosses its layout height")
     assertFalse((0 until layout.lineCount).any(layout::isLineEllipsized))
     assertEquals(layout.layoutInput.text.length, layout.getLineEnd(layout.lineCount - 1))
+}
+
+/** Opt-in rendered evidence: call only for covered/public screens with synthetic players. */
+@OptIn(ExperimentalTestApi::class)
+internal fun ComposeUiTest.capturePublicGameFrame(name: String) {
+    val directory = System.getenv("PARLOR_UI_SCREENSHOT_DIR") ?: return
+    if (directory.isBlank()) return
+    val output = File(directory, "word-impostor-$name.png")
+    check(output.parentFile.mkdirs() || output.parentFile.isDirectory)
+    Image.makeFromBitmap(onNodeWithTag("game-viewport").captureToImage().asSkiaBitmap()).use { image ->
+        checkNotNull(image.encodeToData()).use { data -> output.writeBytes(data.bytes) }
+    }
 }

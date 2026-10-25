@@ -14,12 +14,13 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -43,14 +44,16 @@ internal val GhamzaMint = Color(0xFFAAF4C6)
 internal val GhamzaText = Color(0xFFF0F7EF)
 
 @Composable
-internal fun GhamzaFrame(modifier: Modifier, content: @Composable ColumnScope.() -> Unit) {
+internal fun GhamzaFrame(modifier: Modifier, resetKey: Any, content: @Composable ColumnScope.() -> Unit) {
+    // A new phase, round or help surface starts at its next-action header, not the previous ballot's scroll position.
+    val scroll = remember(resetKey) { ScrollState(0) }
     Box(modifier.fillMaxSize().background(Brush.verticalGradient(listOf(GhamzaInk, Color(0xFF133B3C), GhamzaInk))),
         contentAlignment = Alignment.TopCenter) {
         Canvas(Modifier.fillMaxSize().clearAndSetSemantics {}) {
             drawCircle(GhamzaMint.copy(alpha = .045f), size.width * .72f, Offset(size.width, size.height * .24f))
             drawCircle(GhamzaMint.copy(alpha = .07f), size.width * .72f, Offset(size.width, size.height * .24f), style = Stroke(2f))
         }
-        Column(Modifier.widthIn(max = 680.dp).fillMaxSize().verticalScroll(rememberScrollState())
+        Column(Modifier.widthIn(max = 680.dp).fillMaxSize().verticalScroll(scroll)
             .parlorSafeContentPadding(20.dp), verticalArrangement = Arrangement.spacedBy(18.dp), content = content)
     }
 }

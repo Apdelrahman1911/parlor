@@ -4,6 +4,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.test.ExperimentalTestApi
+import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -135,12 +136,18 @@ class WordImpostorTableTest {
     }
 
     @Test
-    fun private_vote_confirmation_then_five_choice_guess_and_public_result_work_end_to_end() = runComposeUiTest {
+    fun private_vote_confirmation_then_five_choice_guess_and_public_result_work_end_to_end() {
+        for (language in listOf(AppLanguage.English, AppLanguage.Arabic)) verifyVotingJourney(language)
+    }
+
+    private fun verifyVotingJourney(language: AppLanguage) = runComposeUiTest {
+        fun localized(en: String, ar: String) = if (language == AppLanguage.Arabic) ar else en
         val reducer = WordImpostorReducer()
         val initial = reducer.initial(uiPlayers(7), WordImpostorSettings(impostors = 2, rounds = 1), 12)
         val voting = toVoting(reducer, initial)
         var state by mutableStateOf(voting)
         val self = state.hostOnly.impostors.first()
+        var host by mutableStateOf(false)
         val target = state.players.first { it.id != self }
         val wordId = checkNotNull(state.hostOnly.wordId)
         val choiceIds = state.hostOnly.choices.getValue(self)
@@ -149,25 +156,26 @@ class WordImpostorTableTest {
         var epoch by mutableStateOf(0L)
         val back = InPlaceBackOwner()
         setContent {
-            GameUiFrame(width = 360, height = 740, backOwner = back) {
+            GameUiFrame(language, 320, 740, 2f, backOwner = back) {
                 choices = choiceIds.map { stringResource(WordContentResources.word(it)) }
                 word = stringResource(WordContentResources.word(wordId))
-                WordImpostorTable(WordImpostorProjection.toPlayer(state, self).state, self, false, true, epoch,
+                WordImpostorTable(WordImpostorProjection.toPlayer(state, self).state, self, host, true, epoch,
                     { state = reducer.apply(state, it) }, {})
             }
         }
+        capturePublicGameFrame("voting-${language.tag}-2.0")
         onNodeWithText(target.displayName).reachable().performClick()
         assertTrue(state.public.voted.isEmpty())
         runOnIdle { assertTrue(back.handleBack()) }
-        onNodeWithText("Lock my vote").assertDoesNotExist()
+        onNodeWithText(localized("Lock my vote", "ثبّت صوتي")).assertDoesNotExist()
         onNodeWithText(target.displayName).reachable().performClick()
         runOnIdle { epoch++ }
-        onNodeWithText("Lock my vote").assertDoesNotExist()
+        onNodeWithText(localized("Lock my vote", "ثبّت صوتي")).assertDoesNotExist()
         onNodeWithText(target.displayName).reachable().performClick()
-        onNodeWithText("Lock my vote").reachable().performClick()
+        onNodeWithText(localized("Lock my vote", "ثبّت صوتي")).reachable().performClick()
         assertEquals(setOf(self), state.public.voted)
         assertNull(state.public.voteCounts)
-        onNodeWithText("Vote locked. Waiting for the circle.").assertExists()
+        onNodeWithText(localized("Vote locked. Waiting for the circle.", "صوتك اتثبت. مستنيين الباقيين.")).assertExists()
         runOnIdle {
             state.players.filter { it.id != self }.forEach { player ->
                 val vote = state.players.first { it.id != player.id }.id
@@ -175,12 +183,14 @@ class WordImpostorTableTest {
             }
         }
         assertEquals(WordImpostorPhase.Guessing, state.phase)
+        onNodeWithText(localized("The final bluff", "آخر تخمين")).assertIsDisplayed()
+        capturePublicGameFrame("guessing-covered-${language.tag}-2.0")
         choices.forEach { onNodeWithText(it).assertDoesNotExist() }
-        onNodeWithText("Reveal my secret").reachable().performClick()
+        onNodeWithText(localized("Reveal my secret", "اكشف سري")).reachable().performClick()
         choices.forEach { onNodeWithText(it).reachable().assertIsEnabled() }
         onNodeWithText(word).reachable().performClick()
         assertNull(state.privatePerPlayer.getValue(self).guess)
-        onNodeWithText("Lock my guess").reachable().performClick()
+        onNodeWithText(localized("Lock my guess", "ثبّت تخميني")).reachable().performClick()
         assertEquals(wordId, state.privatePerPlayer.getValue(self).guess)
         assertNull(state.public.result)
         choices.forEach { onNodeWithText(it).assertDoesNotExist() }
@@ -190,8 +200,19 @@ class WordImpostorTableTest {
             }
         }
         assertEquals(WordImpostorPhase.MatchResult, state.phase)
+        onNodeWithText(localized("Behind the words", "ورا الكلام")).assertIsDisplayed()
+        capturePublicGameFrame("results-${language.tag}-2.0")
         onNodeWithText(word).assertExists()
-        onNodeWithText("Play again · reset scores").assertDoesNotExist() // Only the real host owns rematches.
+        val rematch = localized("Play again · reset scores", "العبوا تاني · صفّر النقط")
+        onNodeWithText(rematch).assertDoesNotExist() // Only the real host owns rematches.
+        runOnIdle { host = true }
+        onNodeWithText(rematch).reachable().assertIsEnabled()
+        onNodeWithText(rematch, useUnmergedTree = true).assertFullText()
+        onNodeWithText(rematch).performClick()
+        assertEquals(WordImpostorPhase.Reveal, state.phase)
+        assertTrue(state.public.scores.values.all { it == 0 })
+        onNodeWithText(word).assertDoesNotExist()
+        capturePublicGameFrame("rematch-covered-${language.tag}-2.0")
     }
 
     private fun toVoting(reducer: WordImpostorReducer, initial: WordImpostorState): WordImpostorState {

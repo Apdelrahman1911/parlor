@@ -4,6 +4,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.test.ExperimentalTestApi
+import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -99,7 +100,12 @@ class GhamzaTableTest {
     }
 
     @Test
-    fun physical_winks_require_confirmation_and_elimination_leads_to_guess_and_result() = runComposeUiTest {
+    fun physical_winks_require_confirmation_and_elimination_leads_to_guess_and_result() {
+        for (language in listOf(AppLanguage.English, AppLanguage.Arabic)) verifySocialJourney(language)
+    }
+
+    private fun verifySocialJourney(language: AppLanguage) = runComposeUiTest {
+        fun localized(en: String, ar: String) = if (language == AppLanguage.Arabic) ar else en
         val reducer = GhamzaReducer()
         val initial = reducer.initial(uiPlayers(4), GhamzaSettings(2, 1), 2)
         val self = initial.players.first { it.id != initial.hostOnly.winker }.id
@@ -108,21 +114,22 @@ class GhamzaTableTest {
         })
         val back = InPlaceBackOwner()
         setContent {
-            GameUiFrame(backOwner = back) {
+            GameUiFrame(language, 320, 740, 2f, backOwner = back) {
                 GhamzaTable(GhamzaProjection.toPlayer(state, self).state, self, true, true, 0,
                     { state = reducer.apply(state, it) }, {})
             }
         }
-        onNodeWithText("I was winked at").reachable().performClick()
+        capturePublicGameFrame("social-${language.tag}-2.0")
+        onNodeWithText(localized("I was winked at", "اتغمزلي")).reachable().performClick()
         runOnIdle { assertTrue(back.handleBack()) }
-        onNodeWithText("Yes · record the wink").assertDoesNotExist()
+        onNodeWithText(localized("Yes · record the wink", "أيوه · سجّل الغمزة")).assertDoesNotExist()
         assertEquals(0, state.public.reports[self])
-        onNodeWithText("I was winked at").reachable().performClick()
+        onNodeWithText(localized("I was winked at", "اتغمزلي")).reachable().performClick()
         assertEquals(0, state.public.reports[self])
-        onNodeWithText("Not yet").reachable().performClick()
+        onNodeWithText(localized("Not yet", "لسه")).reachable().performClick()
         assertEquals(0, state.public.reports[self])
-        onNodeWithText("I was winked at").reachable().performClick()
-        onNodeWithText("Yes · record the wink").reachable().performClick()
+        onNodeWithText(localized("I was winked at", "اتغمزلي")).reachable().performClick()
+        onNodeWithText(localized("Yes · record the wink", "أيوه · سجّل الغمزة")).reachable().performClick()
         assertEquals(1, state.public.reports[self])
         runOnIdle {
             state.players.filter { it.id != self && it.id != state.hostOnly.winker }.forEach { player ->
@@ -132,18 +139,21 @@ class GhamzaTableTest {
         assertEquals(GhamzaPhase.FinalGuess, state.phase)
         val lastReport = state.public.recentReports.last()
         val reportedName = state.players.first { it.id == lastReport.player }.displayName.asBidiArgument()
-        onNodeWithText("$reportedName was winked at · attempt ${lastReport.attempt}").assertExists()
+        onNodeWithText(localized("$reportedName was winked at · attempt ${lastReport.attempt}", "$reportedName اتغمزله · محاولة ${lastReport.attempt}")).assertExists()
         val winker = state.players.first { it.id == state.hostOnly.winker }
         onNodeWithText(winker.displayName).reachable().performClick()
-        onNodeWithText("Lock my guess").reachable().performClick()
+        onNodeWithText(localized("Lock my guess", "ثبّت تخميني")).reachable().performClick()
         assertEquals(GhamzaPhase.MatchResult, state.phase)
+        onNodeWithText(localized("The secret is out", "السر اتكشف")).assertIsDisplayed()
+        capturePublicGameFrame("results-${language.tag}-2.0")
         assertEquals(self, state.public.result?.winner)
-        onNodeWithText("All rounds complete").assertExists()
+        onNodeWithText(localized("All rounds complete", "كل الجولات خلصت")).assertExists()
         onNodeWithText("SCORES").assertDoesNotExist()
-        onNodeWithText("${winker.displayName.asBidiArgument()} is eliminated this round").assertExists()
-        onNodeWithText("Play again · new roles").reachable().performClick()
+        onNodeWithText(localized("${winker.displayName.asBidiArgument()} is eliminated this round", "${winker.displayName.asBidiArgument()} خرج من الجولة دي")).assertExists()
+        onNodeWithText(localized("Play again · new roles", "العبوا تاني · أدوار جديدة")).reachable().performClick()
         assertEquals(GhamzaPhase.Reveal, state.phase)
         assertTrue(state.public.reports.values.all { it == 0 })
-        onNodeWithText("Reveal my role").reachable().assertIsEnabled()
+        capturePublicGameFrame("rematch-covered-${language.tag}-2.0")
+        onNodeWithText(localized("Reveal my role", "اكشف دوري")).reachable().assertIsEnabled()
     }
 }

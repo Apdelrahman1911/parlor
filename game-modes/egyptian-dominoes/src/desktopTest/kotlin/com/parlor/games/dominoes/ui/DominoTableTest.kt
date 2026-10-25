@@ -19,6 +19,9 @@ import androidx.compose.ui.test.runComposeUiTest
 import com.parlor.designsystem.theme.ThemeMode
 import com.parlor.designsystem.localization.AppLanguage
 import com.parlor.designsystem.components.InPlaceBackOwner
+import com.parlor.games.dominoes.domain.DominoPhase
+import com.parlor.games.dominoes.domain.DominoRules
+import com.parlor.games.dominoes.domain.DominoState
 import com.parlor.games.dominoes.domain.DominoAction
 import com.parlor.games.dominoes.domain.DominoProjection
 import com.parlor.games.dominoes.domain.DominoReducer
@@ -30,6 +33,60 @@ import kotlin.test.assertTrue
 
 @OptIn(ExperimentalTestApi::class)
 class DominoTableTest {
+    @Test
+    fun completed_matches_and_rematches_are_reachable_in_both_languages_at_large_text() {
+        for (language in listOf(AppLanguage.English, AppLanguage.Arabic)) verifyResultsJourney(language)
+    }
+
+    private fun verifyResultsJourney(language: AppLanguage) = runComposeUiTest {
+        val reducer = DominoReducer()
+        val initial = reducer.initial(uiPlayers(4), DominoSettings(target = 51), 18)
+        val completed = completeMatch(reducer, initial)
+        var state by mutableStateOf(initial)
+        val self = initial.players.first().id
+        val arabic = language == AppLanguage.Arabic
+        setContent {
+            GameUiFrame(language, 320, 740, 2f) {
+                DominoTable(DominoProjection.toPlayer(state, self).state, self, true, true, 0,
+                    { state = reducer.apply(state, it) }, {})
+            }
+        }
+        capturePublicGameFrame("table-covered-${language.tag}-2.0")
+        // Deliberately leave the old screen scrolled far below the header.
+        onNodeWithText(if (arabic) "ورّيني قطعي" else "Show my tiles").reachable()
+        runOnIdle { state = completed }
+        onNodeWithText(if (arabic) "أبطال الترابيزة" else "Table champions").assertIsDisplayed()
+        capturePublicGameFrame("results-${language.tag}-2.0")
+        val rematch = if (arabic) "العبوا تاني · صفّر النقط" else "Play again · reset scores"
+        onNodeWithText(rematch).reachable().assertIsEnabled()
+        onNodeWithText(rematch, useUnmergedTree = true).assertFullText()
+        onNodeWithText(rematch).performClick()
+        assertEquals(DominoPhase.Playing, state.phase)
+        assertEquals(completed.public.token + 1, state.public.token)
+        assertTrue(state.public.scores.values.all { it == 0 })
+        onAllNodes(hasContentDescription("${if (arabic) "قطعة" else "Tile"} ", substring = true), true).assertCountEquals(0)
+        capturePublicGameFrame("rematch-covered-${language.tag}-2.0")
+    }
+
+    private fun completeMatch(reducer: DominoReducer, initial: DominoState): DominoState {
+        var state = initial
+        repeat(DominoRules.MAX_HANDS * DominoRules.MAX_MOVE) {
+            if (state.phase == DominoPhase.MatchResult) return state
+            val action = if (state.phase == DominoPhase.RoundResult) DominoAction.NextRound(state.public.token) else {
+                val by = checkNotNull(state.public.turn)
+                val tile = state.privatePerPlayer.getValue(by).hand.firstOrNull { DominoRules.playableEnds(state, by, it).isNotEmpty() }
+                when {
+                    tile != null -> DominoAction.Place(by, state.public.token, state.public.move, tile.id,
+                        DominoRules.playableEnds(state, by, tile).first())
+                    DominoRules.canDraw(state, by) -> DominoAction.Draw(by, state.public.token, state.public.move)
+                    else -> DominoAction.Pass(by, state.public.token, state.public.move)
+                }
+            }
+            state = reducer.apply(state, action)
+        }
+        error("Deterministic match did not terminate within its rules bound")
+    }
+
     @Test
     fun light_theme_rules_start_with_a_compact_guide_and_expand_details_on_request() = runComposeUiTest {
         val state = DominoReducer().initial(uiPlayers(3), DominoSettings(), 42)

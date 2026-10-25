@@ -60,7 +60,7 @@ fun DominoTable(
     val motion = rememberDominoMotion(state, self, privacyEpoch, visible && !help)
     val canAct = enabled && motion.flight == null
     Box(modifier.fillMaxSize().onGloballyPositioned { motion.rootOrigin = it.positionInRoot() }) {
-        DominoFrame(Modifier.fillMaxSize()) {
+        DominoFrame(Modifier.fillMaxSize(), Triple(state.phase, state.public.token, help)) {
             FlowRow(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween,
                 verticalArrangement = Arrangement.spacedBy(4.dp), itemVerticalAlignment = Alignment.CenterVertically) {
                 TextButton(onClick = onLeave, modifier = Modifier.heightIn(min = 48.dp)) {
@@ -91,14 +91,15 @@ fun DominoTable(
                         stringResource(Res.string.dom_turn_other, state.name(checkNotNull(state.public.turn))),
                         Modifier.semantics { liveRegion = LiveRegionMode.Polite })
                 }
+                if (state.phase == DominoPhase.RoundResult || state.phase == DominoPhase.MatchResult) {
+                    DominoResults(state, isHost, enabled, onAction)
+                }
                 DominoTeams(state, self)
                 DominoOpponents(state, self, motion)
                 DominoBoard(state, motion)
                 if (state.phase == DominoPhase.Playing) {
                     if (DominoRules.usesDraw(state.public.settings, state.players.size)) DominoStock(state.public.stockCount, motion)
                     DominoHand(state, self, canAct, visible, motion, { visible = it }, onAction)
-                } else if (state.phase == DominoPhase.RoundResult || state.phase == DominoPhase.MatchResult) {
-                    DominoResults(state, isHost, enabled, onAction)
                 }
             }
         }
