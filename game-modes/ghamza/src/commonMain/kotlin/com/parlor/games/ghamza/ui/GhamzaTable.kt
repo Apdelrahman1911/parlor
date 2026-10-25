@@ -24,6 +24,8 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import com.parlor.designsystem.localization.asBidiArgument
 import com.parlor.core.ids.PlayerId
+import com.parlor.designsystem.components.ParlorCard
+import com.parlor.designsystem.components.QuickStartSteps
 import com.parlor.designsystem.components.InPlaceBackHandler
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.games.ghamza.domain.GhamzaAction
@@ -32,6 +34,12 @@ import com.parlor.games.ghamza.domain.GhamzaRole
 import com.parlor.games.ghamza.domain.GhamzaRules
 import com.parlor.games.ghamza.domain.GhamzaState
 import com.parlor.games.ghamza.resources.Res
+import com.parlor.games.ghamza.resources.gh_full_rules
+import com.parlor.games.ghamza.resources.gh_hide_details
+import com.parlor.games.ghamza.resources.gh_quick_start
+import com.parlor.games.ghamza.resources.gh_step_one
+import com.parlor.games.ghamza.resources.gh_step_two
+import com.parlor.games.ghamza.resources.gh_step_three
 import com.parlor.games.ghamza.resources.gh_active
 import com.parlor.games.ghamza.resources.gh_attempts_left
 import com.parlor.games.ghamza.resources.gh_cancel
@@ -84,6 +92,7 @@ fun GhamzaTable(
     onAction: (GhamzaAction) -> Unit, onLeave: () -> Unit, modifier: Modifier = Modifier,
 ) {
     var help by remember(state.public.token, privacyEpoch) { mutableStateOf(false) }
+    var fullRules by remember(state.public.token, privacyEpoch, help) { mutableStateOf(false) }
     InPlaceBackHandler(help) { help = false }
     GhamzaFrame(modifier) {
         FlowRow(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween,
@@ -98,7 +107,18 @@ fun GhamzaTable(
         GhamzaBody(stringResource(Res.string.gh_round, state.public.round, state.public.settings.rounds))
         if (help) {
             GhamzaTitle(stringResource(Res.string.gh_title))
-            GhamzaBody(stringResource(Res.string.gh_rules))
+            ParlorCard(Modifier.fillMaxWidth(), contentPadding = 16.dp) {
+                QuickStartSteps(stringResource(Res.string.gh_quick_start), listOf(
+                    stringResource(Res.string.gh_step_one),
+                    stringResource(Res.string.gh_step_two),
+                    stringResource(Res.string.gh_step_three),
+                ))
+            }
+            TextButton(onClick = { fullRules = !fullRules }, modifier = Modifier.heightIn(min = 48.dp)) {
+                Text(stringResource(if (fullRules) Res.string.gh_hide_details else Res.string.gh_full_rules),
+                    color = GhamzaMint)
+            }
+            if (fullRules) GhamzaBody(stringResource(Res.string.gh_rules))
         } else when (state.phase) {
             GhamzaPhase.Reveal -> GhamzaRoleCard(state, self, enabled, privacyEpoch, true, onAction)
             GhamzaPhase.Social -> GhamzaSocial(state, self, enabled, privacyEpoch, onAction)

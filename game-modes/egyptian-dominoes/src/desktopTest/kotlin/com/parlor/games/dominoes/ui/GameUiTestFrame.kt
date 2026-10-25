@@ -22,6 +22,7 @@ import com.parlor.designsystem.components.ProvideInPlaceBackOwner
 import com.parlor.designsystem.localization.AppLanguage
 import com.parlor.designsystem.localization.ProvideAppLanguage
 import com.parlor.designsystem.theme.ParlorTheme
+import com.parlor.designsystem.theme.ThemeMode
 import com.parlor.engine.state.Player
 import kotlin.math.ceil
 import kotlin.test.assertEquals
@@ -37,12 +38,13 @@ internal fun GameUiFrame(
     height: Int = 740,
     fontScale: Float = 1f,
     reducedMotion: Boolean = true,
+    themeMode: ThemeMode = ThemeMode.Default,
     backOwner: InPlaceBackOwner? = null,
     content: @Composable () -> Unit,
 ) {
     CompositionLocalProvider(LocalDensity provides Density(1f, fontScale)) {
         ProvideAppLanguage(language) {
-            ParlorTheme(reducedMotion = reducedMotion) {
+            ParlorTheme(themeMode = themeMode, reducedMotion = reducedMotion) {
                 Box(Modifier.size(width.dp, height.dp).testTag("game-viewport")) {
                     if (backOwner == null) content() else ProvideInPlaceBackOwner(backOwner, content)
                 }

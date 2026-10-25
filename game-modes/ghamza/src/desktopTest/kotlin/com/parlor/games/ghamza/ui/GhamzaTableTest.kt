@@ -8,6 +8,7 @@ import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
+import com.parlor.designsystem.theme.ThemeMode
 import com.parlor.designsystem.localization.AppLanguage
 import com.parlor.designsystem.localization.asBidiArgument
 import com.parlor.designsystem.components.InPlaceBackOwner
@@ -22,6 +23,25 @@ import kotlin.test.assertTrue
 
 @OptIn(ExperimentalTestApi::class)
 class GhamzaTableTest {
+    @Test
+    fun light_theme_rules_start_with_a_compact_guide_and_expand_details_on_request() = runComposeUiTest {
+        val state = GhamzaReducer().initial(uiPlayers(3), GhamzaSettings(), 42)
+        val self = state.players.first().id
+        setContent {
+            GameUiFrame(width = 320, fontScale = 2f, themeMode = ThemeMode.Light) {
+                GhamzaTable(GhamzaProjection.toPlayer(state, self).state, self, false, true, 0, {}, {})
+            }
+        }
+        onNodeWithText("How to play").reachable().performClick()
+        onNodeWithText("Start in three steps").assertExists()
+        onNodeWithText("Start in three steps", useUnmergedTree = true).assertFullText()
+        onNodeWithText("Each round, one random player", substring = true).assertDoesNotExist()
+        onNodeWithText("Full rules").reachable().performClick()
+        onNodeWithText("Each round, one random player", substring = true).assertExists()
+        onNodeWithText("Hide details").reachable().performClick()
+        onNodeWithText("Each round, one random player", substring = true).assertDoesNotExist()
+    }
+
     @Test
     fun covering_a_revealed_role_never_requires_a_network_action() = runComposeUiTest {
         val state = GhamzaReducer().initial(uiPlayers(3), GhamzaSettings(), 42)

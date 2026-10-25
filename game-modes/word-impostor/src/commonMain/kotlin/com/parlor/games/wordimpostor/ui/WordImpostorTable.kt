@@ -20,12 +20,20 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import com.parlor.designsystem.localization.asBidiArgument
 import com.parlor.core.ids.PlayerId
+import com.parlor.designsystem.components.ParlorCard
+import com.parlor.designsystem.components.QuickStartSteps
 import com.parlor.designsystem.components.InPlaceBackHandler
 import com.parlor.games.wordimpostor.domain.WordImpostorAction
 import com.parlor.games.wordimpostor.domain.WordImpostorPhase
 import com.parlor.games.wordimpostor.domain.WordImpostorState
 import com.parlor.games.wordimpostor.domain.WordRole
 import com.parlor.games.wordimpostor.resources.Res
+import com.parlor.games.wordimpostor.resources.wi_full_rules
+import com.parlor.games.wordimpostor.resources.wi_hide_details
+import com.parlor.games.wordimpostor.resources.wi_quick_start
+import com.parlor.games.wordimpostor.resources.wi_step_one
+import com.parlor.games.wordimpostor.resources.wi_step_two
+import com.parlor.games.wordimpostor.resources.wi_step_three
 import com.parlor.games.wordimpostor.resources.wi_phase_progress
 import com.parlor.games.wordimpostor.resources.wi_phase_reveal
 import com.parlor.games.wordimpostor.resources.wi_phase_results
@@ -67,6 +75,7 @@ fun WordImpostorTable(
     onAction: (WordImpostorAction) -> Unit, onLeave: () -> Unit, modifier: Modifier = Modifier,
 ) {
     var help by remember(state.public.token, privacyEpoch) { mutableStateOf(false) }
+    var fullRules by remember(state.public.token, privacyEpoch, help) { mutableStateOf(false) }
     InPlaceBackHandler(help) { help = false }
     WordFrame(modifier) {
         FlowRow(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween,
@@ -91,7 +100,18 @@ fun WordImpostorTable(
         WordPhaseTrack(step, stringResource(Res.string.wi_phase_progress, step + 1, stringResource(label)))
         if (help) {
             WordTitle(stringResource(Res.string.wi_title))
-            WordBody(stringResource(Res.string.wi_rules))
+            ParlorCard(Modifier.fillMaxWidth(), contentPadding = 16.dp) {
+                QuickStartSteps(stringResource(Res.string.wi_quick_start), listOf(
+                    stringResource(Res.string.wi_step_one),
+                    stringResource(Res.string.wi_step_two),
+                    stringResource(Res.string.wi_step_three),
+                ))
+            }
+            TextButton(onClick = { fullRules = !fullRules }, modifier = Modifier.heightIn(min = 48.dp)) {
+                Text(stringResource(if (fullRules) Res.string.wi_hide_details else Res.string.wi_full_rules),
+                    color = WordPeach)
+            }
+            if (fullRules) WordBody(stringResource(Res.string.wi_rules))
         } else {
             when (state.phase) {
                 WordImpostorPhase.Reveal -> WordSecretCard(state, self, enabled, privacyEpoch, true, onAction)

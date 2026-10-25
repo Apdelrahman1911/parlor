@@ -8,6 +8,7 @@ import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
+import com.parlor.designsystem.theme.ThemeMode
 import com.parlor.designsystem.localization.AppLanguage
 import com.parlor.designsystem.components.InPlaceBackOwner
 import com.parlor.games.wordimpostor.domain.WordImpostorAction
@@ -25,6 +26,25 @@ import kotlin.test.assertTrue
 
 @OptIn(ExperimentalTestApi::class)
 class WordImpostorTableTest {
+    @Test
+    fun light_theme_rules_start_with_a_compact_guide_and_expand_details_on_request() = runComposeUiTest {
+        val state = WordImpostorReducer().initial(uiPlayers(3), WordImpostorSettings(), 42)
+        val self = state.players.first().id
+        setContent {
+            GameUiFrame(width = 320, fontScale = 2f, themeMode = ThemeMode.Light) {
+                WordImpostorTable(WordImpostorProjection.toPlayer(state, self).state, self, false, true, 0, {}, {})
+            }
+        }
+        onNodeWithText("How to play").reachable().performClick()
+        onNodeWithText("Start in three steps").assertExists()
+        onNodeWithText("Start in three steps", useUnmergedTree = true).assertFullText()
+        onNodeWithText("Ordinary players share a secret word.", substring = true).assertDoesNotExist()
+        onNodeWithText("Full rules").reachable().performClick()
+        onNodeWithText("Ordinary players share a secret word.", substring = true).assertExists()
+        onNodeWithText("Hide details").reachable().performClick()
+        onNodeWithText("Ordinary players share a secret word.", substring = true).assertDoesNotExist()
+    }
+
     @Test
     fun hiding_a_revealed_secret_does_not_submit_readiness_or_wait_for_network() = runComposeUiTest {
         val state = WordImpostorReducer().initial(uiPlayers(3), WordImpostorSettings(), 42)

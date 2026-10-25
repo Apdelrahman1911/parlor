@@ -24,12 +24,20 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import com.parlor.designsystem.localization.asBidiArgument
 import com.parlor.core.ids.PlayerId
+import com.parlor.designsystem.components.ParlorCard
+import com.parlor.designsystem.components.QuickStartSteps
 import com.parlor.designsystem.components.InPlaceBackHandler
 import com.parlor.games.dominoes.domain.DominoAction
 import com.parlor.games.dominoes.domain.DominoPhase
 import com.parlor.games.dominoes.domain.DominoRules
 import com.parlor.games.dominoes.domain.DominoState
 import com.parlor.games.dominoes.resources.Res
+import com.parlor.games.dominoes.resources.dom_full_rules
+import com.parlor.games.dominoes.resources.dom_hide_details
+import com.parlor.games.dominoes.resources.dom_quick_start
+import com.parlor.games.dominoes.resources.dom_step_one
+import com.parlor.games.dominoes.resources.dom_step_two
+import com.parlor.games.dominoes.resources.dom_step_three
 import com.parlor.games.dominoes.resources.dom_close_help
 import com.parlor.games.dominoes.resources.dom_help
 import com.parlor.games.dominoes.resources.dom_leave
@@ -47,6 +55,7 @@ fun DominoTable(
 ) {
     var help by remember(state.public.token, privacyEpoch) { mutableStateOf(false) }
     var visible by remember(state.public.token, privacyEpoch) { mutableStateOf(false) }
+    var fullRules by remember(state.public.token, privacyEpoch, help) { mutableStateOf(false) }
     InPlaceBackHandler(help || visible) { if (help) help = false else visible = false }
     val motion = rememberDominoMotion(state, self, privacyEpoch, visible && !help)
     val canAct = enabled && motion.flight == null
@@ -63,7 +72,18 @@ fun DominoTable(
             }
             if (help) {
                 DominoTitle(stringResource(Res.string.dom_title))
-                DominoBody(stringResource(Res.string.dom_rules))
+                ParlorCard(Modifier.fillMaxWidth(), contentPadding = 16.dp) {
+                    QuickStartSteps(stringResource(Res.string.dom_quick_start), listOf(
+                        stringResource(Res.string.dom_step_one),
+                        stringResource(Res.string.dom_step_two),
+                        stringResource(Res.string.dom_step_three),
+                    ))
+                }
+                TextButton(onClick = { fullRules = !fullRules }, modifier = Modifier.heightIn(min = 48.dp)) {
+                    Text(stringResource(if (fullRules) Res.string.dom_hide_details else Res.string.dom_full_rules),
+                        color = DominoGold)
+                }
+                if (fullRules) DominoBody(stringResource(Res.string.dom_rules))
             } else {
                 DominoBody(stringResource(Res.string.dom_round, state.public.round))
                 if (state.phase == DominoPhase.Playing) {
