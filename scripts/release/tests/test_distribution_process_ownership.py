@@ -210,8 +210,18 @@ class DistributionBuildLogTest(unittest.TestCase):
             def failed(command, log, **kwargs):
                 expected_wrapper = 'gradlew.bat' if packages.host.system() == 'Windows' else 'gradlew'
                 self.assertEqual(command[0], str(packages.ROOT / expected_wrapper))
-                self.assertEqual(command[1:], ['fixture-task', '--dependency-verification=strict', '--no-daemon',
-                                                '--console=plain', '--stacktrace'])
+                if '--stop' in command:
+                    self.assertEqual(command[1:], ['--stop', self.registry_option, '--console=plain'])
+                    self.assertEqual(kwargs, {'timeout': 90, 'output_limit': 1024 * 1024})
+                    log.write_bytes(b'No Gradle daemons are running.\n')
+                    return 0
+                self.registry_option = command[-1]
+                self.assertTrue(self.registry_option.startswith('-Dorg.gradle.daemon.registry.base='))
+                registry = Path(self.registry_option.split('=', 1)[1])
+                self.assertEqual(registry.parent, Path(temporary))
+                self.assertTrue(registry.is_dir())
+                self.assertEqual(command[1:-1], ['fixture-task', '--dependency-verification=strict', '--no-daemon',
+                                                '--console=plain', '--stacktrace', '-Pkotlin.compiler.execution.strategy=in-process'])
                 self.assertEqual(kwargs, {'timeout': 5400, 'output_limit': 256 * 1024 * 1024})
                 log.write_bytes(b'not in tail' + b'x' * 18_000)
                 return 7
@@ -226,6 +236,9 @@ class DistributionBuildLogTest(unittest.TestCase):
     def test_gradle_timeout_retains_and_reads_only_the_tail(self):
         with tempfile.TemporaryDirectory() as temporary, patch.object(packages, 'OUT', Path(temporary)):
             def timeout(command, log, **kwargs):
+                if '--stop' in command:
+                    log.write_bytes(b'No Gradle daemons are running.\n')
+                    return 0
                 log.write_bytes(b'failed build evidence')
                 raise RuntimeError('Distribution tool exceeded its time bound')
 
@@ -233,6 +246,29 @@ class DistributionBuildLogTest(unittest.TestCase):
                 with self.assertRaisesRegex(RuntimeError, 'time bound'):
                     packages.gradle(['fixture-task'])
             self.assertEqual((Path(temporary) / 'build.log').read_bytes(), b'failed build evidence')
+
+    def test_gradle_cleanup_failure_is_not_suppressed_and_registry_is_retained(self):
+        for stop_failure in (7, RuntimeError('fixture stop timeout')):
+            with tempfile.TemporaryDirectory() as temporary, patch.object(packages, 'OUT', Path(temporary)):
+                registries = []
+
+                def command(args, log, **kwargs):
+                    registry = Path(next(arg.split('=', 1)[1] for arg in args if arg.startswith('-Dorg.gradle.daemon.registry.base=')))
+                    registries.append(registry)
+                    log.write_bytes(b'retained fixture evidence')
+                    if '--stop' in args:
+                        if isinstance(stop_failure, Exception):
+                            raise stop_failure
+                        return stop_failure
+                    return 0
+
+                with patch.object(packages, 'run_logged', side_effect=command):
+                    with self.subTest(failure=stop_failure), self.assertRaisesRegex(RuntimeError, 'cleanup failed'):
+                        packages.gradle(['fixture-task'])
+                self.assertEqual(len(registries), 2)
+                self.assertEqual(registries[0], registries[1])
+                self.assertTrue((registries[0] / 'stop.log').is_file())
+                self.assertTrue((Path(temporary) / 'build.log').is_file())
 
 
 class WindowsJobContractTest(unittest.TestCase):
