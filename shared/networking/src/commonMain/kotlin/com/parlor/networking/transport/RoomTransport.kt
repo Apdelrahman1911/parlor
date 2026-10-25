@@ -143,6 +143,12 @@ data class JoinConfig(
     val code: String,
     val displayName: String,
     val rejoinToken: String? = null,
+    /**
+     * Selected game binding, checked against authenticated admission metadata
+     * before confirming membership. Null is reserved for game-agnostic callers;
+     * shipping game join flows must supply this. This is not a wire field.
+     */
+    val expectedGameProtocol: HostedGameProtocol? = null,
 )
 
 data class ResumableSessionInfo(

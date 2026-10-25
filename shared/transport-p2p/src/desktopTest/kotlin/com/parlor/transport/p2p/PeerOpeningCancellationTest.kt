@@ -1,5 +1,6 @@
 package com.parlor.transport.p2p
 
+import com.parlor.core.ids.GameId
 import com.parlor.core.ids.PlayerId
 import com.parlor.core.result.Result
 import com.parlor.networking.protocol.HostMessage
@@ -8,6 +9,8 @@ import com.parlor.networking.protocol.ResumableCredentialOffer
 import com.parlor.networking.protocol.RoomMessageCodec
 import com.parlor.networking.room.LocalRoom
 import com.parlor.networking.room.NetError
+import com.parlor.networking.transport.HostedGameProtocol
+import com.parlor.networking.transport.JoinConfig
 import com.parlor.storage.secure.InMemorySecureKeyValueBacking
 import com.parlor.storage.secure.PlatformKeyedSecureStorage
 import dev.p2pkit.core.AppId
@@ -40,6 +43,61 @@ import kotlin.test.assertTrue
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class PeerOpeningCancellationTest {
+    @Test
+    fun crossGameAdmissionRejectsBeforeCredentialStageOrConfirmation() = runTest {
+        verifyGameAdmissionRejected(HostedGameProtocol(GameId("different-game"), 1))
+    }
+
+    @Test
+    fun mismatchedGameVersionRejectsBeforeCredentialStageOrConfirmation() = runTest {
+        verifyGameAdmissionRejected(HostedGameProtocol(GameId("fixture-game"), 2))
+    }
+
+    @Test
+    fun missingAuthoritativeGameRejectsASelectedGameBinding() = runTest {
+        verifyGameAdmissionRejected(HostedGameProtocol(GameId("fixture-game"), 1), missingGame = true)
+    }
+
+    @Test
+    fun matchingGameAdmissionConfirmsAndRetainsTheSelectedBinding() = runTest {
+        val fixture = OpeningFixture(backgroundScope, resume = false)
+        fixture.prepare()
+        val joined = fixture.transport.join(JoinConfig(
+            code = "ABCDEF", displayName = "Alice",
+            expectedGameProtocol = HostedGameProtocol(GameId("fixture-game"), 1),
+        ))
+        val room = assertIs<Result.Success<LocalRoom>>(joined).data
+        try {
+            assertEquals("fixture-game", fixture.committedCredential().gameId)
+            assertEquals(1, fixture.committedCredential().gameVersion)
+            assertTrue(fixture.session.sent.filterIsInstance<P2pMessage.Binary>().any {
+                RoomMessageCodec().decode(it.bytes) is PeerMessage.AdmissionConfirmed
+            })
+        } finally {
+            room.closeForRetry()
+        }
+    }
+
+    private suspend fun TestScope.verifyGameAdmissionRejected(
+        expected: HostedGameProtocol,
+        missingGame: Boolean = false,
+    ) {
+        val fixture = OpeningFixture(backgroundScope, resume = false, missingGame = missingGame)
+        fixture.prepare()
+        try {
+            assertEquals(Result.Failure(NetError.IncompatibleProtocol), fixture.transport.join(JoinConfig(
+                code = "ABCDEF", displayName = "Alice", expectedGameProtocol = expected,
+            )))
+            assertEquals(Result.Success(null), fixture.store.loadResumeCandidate())
+            assertFalse(fixture.session.sent.filterIsInstance<P2pMessage.Binary>().any {
+                RoomMessageCodec().decode(it.bytes) is PeerMessage.AdmissionConfirmed
+            })
+            fixture.assertReleased()
+        } finally {
+            fixture.stopFakeIfNeeded()
+        }
+    }
+
     @Test
     fun cancellingAdmissionReadyClosesUnreturnedRoomWithoutRevokingMembership() = runTest {
         verifyCancelledHandoff(resume = false, duringAck = false)
@@ -262,7 +320,11 @@ class PeerOpeningCancellationTest {
 }
 
 /** Drives the production adapter and codec, not a replacement room/session owner. */
-private class OpeningFixture(scope: CoroutineScope, private val resume: Boolean) {
+private class OpeningFixture(
+    scope: CoroutineScope,
+    private val resume: Boolean,
+    missingGame: Boolean = false,
+) {
     val fake = FakeP2pKit(PeerId("opening-peer"))
     private val host = Peer(
         id = PeerId("opening-host"),
@@ -311,8 +373,8 @@ private class OpeningFixture(scope: CoroutineScope, private val resume: Boolean)
         generation = 1L,
         issuedAtEpochMillis = kotlin.time.Clock.System.now().toEpochMilliseconds(),
         expiresAtEpochMillis = kotlin.time.Clock.System.now().toEpochMilliseconds() + 86_400_000L,
-        gameId = "fixture-game",
-        gameVersion = 1,
+        gameId = if (missingGame) null else "fixture-game",
+        gameVersion = if (missingGame) null else 1,
     )
     val offer = ResumableCredentialOffer(
         offerId = if (resume) "opening-offer-2" else initial.offerId,

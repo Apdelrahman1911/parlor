@@ -67,6 +67,8 @@ import com.parlor.networking.protocol.HostMessage
 import com.parlor.networking.protocol.SessionProtocol
 import com.parlor.networking.room.LocalRoom
 import com.parlor.networking.room.NetError
+import com.parlor.networking.transport.HostedGameProtocol
+import com.parlor.networking.transport.JoinConfig
 import com.parlor.networking.transport.RoomTransport
 import com.parlor.networking.transport.needsRecoveryGuidance
 import com.parlor.session.multidevice.awaitAuthoritativeSessionStart
@@ -164,7 +166,11 @@ fun MafiaPeerLobbyFlow(
         val result = sessionOwner.acquire(route) { mode ->
             when (mode) {
                 MultiplayerOpenMode.Resume -> transport.resumeLastSession()
-                MultiplayerOpenMode.Join -> transport.join(code, peerName)
+                MultiplayerOpenMode.Join -> transport.join(JoinConfig(
+                    code = code,
+                    displayName = peerName,
+                    expectedGameProtocol = HostedGameProtocol(MafiaIds.GameId, MafiaHostRoomBridge.GAME_VERSION),
+                ))
                 MultiplayerOpenMode.Host -> error("Peer route requested host acquisition")
             }
         }

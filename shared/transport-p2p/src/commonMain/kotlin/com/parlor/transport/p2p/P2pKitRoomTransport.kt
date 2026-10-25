@@ -509,6 +509,7 @@ class P2pKitRoomTransport @Suppress("LongParameterList") private constructor(
                         code = effectiveConfig.code,
                         displayName = effectiveConfig.displayName,
                         selfPlayerId = PlayerId(kit.localPeerId.value),
+                        expectedGameProtocol = effectiveConfig.expectedGameProtocol,
                         firstResponseTimeoutMs = minOf(
                             FIRST_ADMISSION_RESPONSE_TIMEOUT_MS,
                             remainingFirstResponseBudgetMs,
@@ -911,6 +912,7 @@ class P2pKitRoomTransport @Suppress("LongParameterList") private constructor(
         displayName: String,
         selfPlayerId: PlayerId,
         firstResponseTimeoutMs: Long,
+        expectedGameProtocol: HostedGameProtocol?,
     ): AdmissionOutcome = coroutineScope {
         val responses = Channel<HostMessage>(capacity = 8)
         val collector = launch(start = CoroutineStart.UNDISPATCHED) {
@@ -1004,6 +1006,16 @@ class P2pKitRoomTransport @Suppress("LongParameterList") private constructor(
                     ) ?: return@coroutineScope AdmissionOutcome.Rejected(
                         AdmissionRejection.InvalidCredential,
                     )
+                    // The encrypted offer identifies the authoritative game. Reject
+                    // before staging secrets or confirming membership: discovery text
+                    // is not authority and waiting for SessionStarting is too late.
+                    if (expectedGameProtocol != null && (
+                        credential.gameId != expectedGameProtocol.gameId.raw ||
+                            credential.gameVersion != expectedGameProtocol.gameVersion
+                        )
+                    ) {
+                        return@coroutineScope AdmissionOutcome.Failed(NetError.IncompatibleProtocol)
+                    }
                     when (credentialStore.stage(credential)) {
                         is Result.Failure ->
                             return@coroutineScope AdmissionOutcome.Failed(

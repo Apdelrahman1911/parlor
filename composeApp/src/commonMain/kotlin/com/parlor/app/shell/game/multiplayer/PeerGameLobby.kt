@@ -27,6 +27,8 @@ import com.parlor.engine.event.GameEvent
 import com.parlor.engine.state.GameState
 import com.parlor.networking.protocol.SessionEndReason
 import com.parlor.networking.room.NetError
+import com.parlor.networking.transport.HostedGameProtocol
+import com.parlor.networking.transport.JoinConfig
 import com.parlor.networking.transport.RoomTransport
 import com.parlor.networking.transport.needsRecoveryGuidance
 import com.parlor.session.multidevice.MultiplayerOpenMode
@@ -60,7 +62,10 @@ internal fun <S : GameState, A : GameAction, E : GameEvent> PeerGameLobby(
         error = null
         when (val result = owner.acquire(route) { mode ->
             when (mode) {
-                MultiplayerOpenMode.Join -> transport.join(code, name)
+                MultiplayerOpenMode.Join -> transport.join(JoinConfig(
+                    code = code, displayName = name,
+                    expectedGameProtocol = HostedGameProtocol(spec.definition.id, spec.version),
+                ))
                 MultiplayerOpenMode.Resume -> transport.resumeLastSession()
                 MultiplayerOpenMode.Host -> error("Peer route cannot host")
             }
