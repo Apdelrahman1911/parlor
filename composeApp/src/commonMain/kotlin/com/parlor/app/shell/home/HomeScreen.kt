@@ -83,6 +83,7 @@ import com.parlor.designsystem.icons.ParlorIcons
 import com.parlor.designsystem.theme.ParlorAccent
 import com.parlor.designsystem.theme.ParlorAccentScope
 import com.parlor.designsystem.theme.ParlorTheme
+import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
 
 /** Game-first library. Recovery stays secondary and exposes metadata only. */
@@ -164,10 +165,7 @@ internal fun HomeScreen(
                 Column(verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.s)) {
                     SectionHeading(
                         label = stringResource(Res.string.home_games_label),
-                        detail = stringResource(
-                            Res.string.home_games_count,
-                            games.count { selectedFilter.accepts(it.capabilities) },
-                        ),
+                        detail = catalogGameCount(games.count { selectedFilter.accepts(it.capabilities) }),
                     )
                     CatalogFilters(selectedFilter) { selectedFilter = it }
                 }
@@ -198,6 +196,9 @@ internal fun HomeScreen(
         }
     }
 }
+
+@Composable
+private fun catalogGameCount(count: Int): String = pluralStringResource(Res.plurals.home_games_count, count, count)
 
 @Composable
 private fun HomeTopBar() {

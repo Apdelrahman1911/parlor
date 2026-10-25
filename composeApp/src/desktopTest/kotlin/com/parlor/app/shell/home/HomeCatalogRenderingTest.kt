@@ -7,6 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertIsSelected
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -34,6 +35,27 @@ class HomeCatalogRenderingTest {
         verifyCatalog(AppLanguage.Arabic, 2f)
     }
 
+    @Test
+    fun empty_local_filter_offers_a_route_back_to_the_catalog_without_starting_a_game() = runComposeUiTest {
+        var starts = 0
+        setContent {
+            ProvideAppLanguage(AppLanguage.English) {
+                ParlorTheme(reducedMotion = true) {
+                    HomeScreen(
+                        games = listOf(DominoGameShellBinding(DominoDefinition())),
+                        onGameSelected = { starts++ },
+                    )
+                }
+            }
+        }
+        onNodeWithText("One device").performScrollTo().performClick().assertIsSelected()
+        onNodeWithText("No games for this setup").performScrollTo().assertExists()
+        onNodeWithText("All games").performScrollTo().performClick().assertIsSelected()
+        onNodeWithText("No games for this setup").assertDoesNotExist()
+        onNodeWithText("1 game").assertExists()
+        runOnIdle { assertEquals(0, starts) }
+    }
+
     private fun verifyCatalog(language: AppLanguage, fontScale: Float) = runComposeUiTest {
         val local = MafiaGameShellBinding(MafiaDefinition(Json.Default))
         val nearby = DominoGameShellBinding(DominoDefinition())
@@ -51,15 +73,21 @@ class HomeCatalogRenderingTest {
             }
         }
         onNodeWithText(if (arabic) "جهاز واحد" else "One device")
-            .performScrollTo().performClick()
-        onNodeWithText(if (arabic) "عدد الألعاب: 1" else "1 games").assertExists()
+            .performScrollTo().performClick().assertIsSelected()
+        runOnIdle { assertEquals(emptyList(), selections) }
+        onNodeWithText(if (arabic) "لعبة واحدة (1)" else "1 game").assertExists()
         onNodeWithText(if (arabic) "نفس الواي فاي · جهاز لكل لاعب" else "Same Wi-Fi · own devices")
             .assertDoesNotExist()
         onNodeWithContentDescription(if (arabic) "افتح لعبة حرامية وظباط." else "Open the Mafia game.")
             .performScrollTo().assertIsDisplayed().performClick()
         runOnIdle { assertEquals(listOf(local.definition.id), selections) }
-        onNodeWithText(if (arabic) "كل الألعاب" else "All games").performScrollTo().performClick()
-        onNodeWithText(if (arabic) "عدد الألعاب: 2" else "2 games").assertExists()
+        onNodeWithText(if (arabic) "اللعب مع القريبين" else "Nearby play")
+            .performScrollTo().performClick().assertIsSelected()
+        onNodeWithText(if (arabic) "لعبتان (2)" else "2 games").assertExists()
+        runOnIdle { assertEquals(listOf(local.definition.id), selections) }
+        onNodeWithText(if (arabic) "كل الألعاب" else "All games")
+            .performScrollTo().performClick().assertIsSelected()
+        onNodeWithText(if (arabic) "لعبتان (2)" else "2 games").assertExists()
         onNodeWithText(if (arabic) "نفس الواي فاي · جهاز لكل لاعب" else "Same Wi-Fi · own devices")
             .performScrollTo().assertExists()
     }
