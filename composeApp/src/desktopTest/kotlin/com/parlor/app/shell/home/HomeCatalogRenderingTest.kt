@@ -4,15 +4,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.asSkiaBitmap
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.captureToImage
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
-import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.runComposeUiTest
@@ -27,8 +23,6 @@ import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.games.dominoes.DominoDefinition
 import com.parlor.games.mafia.MafiaDefinition
 import kotlinx.serialization.json.Json
-import org.jetbrains.skia.Image
-import java.io.File
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -49,7 +43,7 @@ class HomeCatalogRenderingTest {
             CompositionLocalProvider(LocalDensity provides Density(1f, fontScale)) {
                 ProvideAppLanguage(language) {
                     ParlorTheme(reducedMotion = true) {
-                        Box(Modifier.size(390.dp, 740.dp).testTag("catalog-preview")) {
+                        Box(Modifier.size(390.dp, 740.dp)) {
                             HomeScreen(games = listOf(local, nearby), onGameSelected = selections::add)
                         }
                     }
@@ -66,9 +60,7 @@ class HomeCatalogRenderingTest {
         runOnIdle { assertEquals(listOf(local.definition.id), selections) }
         onNodeWithText(if (arabic) "كل الألعاب" else "All games").performScrollTo().performClick()
         onNodeWithText(if (arabic) "عدد الألعاب: 2" else "2 games").assertExists()
-        val output = File("build/reports/ux/catalog-${language.tag}-$fontScale.png")
-        output.parentFile.mkdirs()
-        val encoded = Image.makeFromBitmap(onNodeWithTag("catalog-preview").captureToImage().asSkiaBitmap()).encodeToData()
-        checkNotNull(encoded).use { output.writeBytes(it.bytes) }
+        onNodeWithText(if (arabic) "نفس الواي فاي · جهاز لكل لاعب" else "Same Wi-Fi · own devices")
+            .performScrollTo().assertExists()
     }
 }
