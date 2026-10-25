@@ -20,7 +20,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -46,7 +46,7 @@ internal val GhamzaText = Color(0xFFF0F7EF)
 @Composable
 internal fun GhamzaFrame(modifier: Modifier, resetKey: Any, content: @Composable ColumnScope.() -> Unit) {
     // A new phase, round or help surface starts at its next-action header, not the previous ballot's scroll position.
-    val scroll = remember(resetKey) { ScrollState(0) }
+    val scroll = rememberSaveable(resetKey, saver = ScrollState.Saver) { ScrollState(0) }
     Box(modifier.fillMaxSize().background(Brush.verticalGradient(listOf(GhamzaInk, Color(0xFF133B3C), GhamzaInk))),
         contentAlignment = Alignment.TopCenter) {
         Canvas(Modifier.fillMaxSize().clearAndSetSemantics {}) {

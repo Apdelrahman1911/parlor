@@ -79,11 +79,11 @@ internal fun SemanticsNodeInteraction.assertFullText() {
     assertEquals(layout.layoutInput.text.length, layout.getLineEnd(layout.lineCount - 1))
 }
 
-/** Opt-in rendered evidence: call only for covered/public screens with synthetic players. */
+/** Rendered evidence: call only for covered/public screens with synthetic players. */
 @OptIn(ExperimentalTestApi::class)
 internal fun ComposeUiTest.capturePublicGameFrame(name: String) {
-    val directory = System.getenv("PARLOR_UI_SCREENSHOT_DIR") ?: return
-    if (directory.isBlank()) return
+    val directory = System.getenv("PARLOR_UI_SCREENSHOT_DIR")?.takeIf { it.isNotBlank() }
+        ?: "build/reports/ux"
     val output = File(directory, "ghamza-$name.png")
     check(output.parentFile.mkdirs() || output.parentFile.isDirectory)
     Image.makeFromBitmap(onNodeWithTag("game-viewport").captureToImage().asSkiaBitmap()).use { image ->

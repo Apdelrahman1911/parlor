@@ -17,7 +17,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -42,7 +42,7 @@ internal val DominoText = Color(0xFFF8EFDA)
 @Composable
 internal fun DominoFrame(modifier: Modifier, resetKey: Any, content: @Composable ColumnScope.() -> Unit) {
     // A new phase, round or help surface starts at its next-action header, not the previous ballot's scroll position.
-    val scroll = remember(resetKey) { ScrollState(0) }
+    val scroll = rememberSaveable(resetKey, saver = ScrollState.Saver) { ScrollState(0) }
     Box(modifier.fillMaxSize().background(Brush.verticalGradient(listOf(DominoInk, DominoFelt, DominoInk))),
         contentAlignment = Alignment.TopCenter) {
         Canvas(Modifier.fillMaxSize().clearAndSetSemantics {}) {
