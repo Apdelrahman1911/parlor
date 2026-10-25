@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -18,19 +17,20 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextAlign
+import com.parlor.app.resources.join_steps_title
+import com.parlor.app.resources.join_steps_network
+import com.parlor.app.resources.join_steps_code
+import com.parlor.app.resources.join_steps_approval
 import com.parlor.app.resources.Res
-import com.parlor.app.resources.join_cancel
 import com.parlor.app.resources.join_cancel_description
 import com.parlor.app.resources.join_code_field
 import com.parlor.app.resources.join_code_help
 import com.parlor.app.resources.join_confirm
 import com.parlor.app.resources.join_confirm_description
 import com.parlor.app.resources.join_eyebrow
-import com.parlor.app.resources.join_local_body
-import com.parlor.app.resources.join_local_label
 import com.parlor.app.resources.join_title
 import com.parlor.designsystem.backdrop.HeroBackdrop
-import com.parlor.designsystem.components.EyebrowLabel
+import com.parlor.designsystem.components.QuickStartSteps
 import com.parlor.designsystem.components.ParlorButton
 import com.parlor.designsystem.components.ParlorCard
 import com.parlor.designsystem.components.ParlorTextField
@@ -101,17 +101,14 @@ fun JoinPromptScreen(
                         contentPadding = ParlorTheme.spacing.m,
                         bordered = false,
                     ) {
-                        Column(verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.xs)) {
-                            EyebrowLabel(
-                                text = stringResource(Res.string.join_local_label),
-                                accent = false,
-                            )
-                            Text(
-                                text = stringResource(Res.string.join_local_body),
-                                style = ParlorTheme.typography.bodySmall,
-                                color = ParlorTheme.colors.textSecondary,
-                            )
-                        }
+                        QuickStartSteps(
+                            title = stringResource(Res.string.join_steps_title),
+                            steps = listOf(
+                                stringResource(Res.string.join_steps_network),
+                                stringResource(Res.string.join_steps_code),
+                                stringResource(Res.string.join_steps_approval),
+                            ),
+                        )
                     }
                 }
             },

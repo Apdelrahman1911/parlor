@@ -18,19 +18,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import com.parlor.designsystem.localization.asBidiArgument
+import com.parlor.app.resources.lobby_setup_heading
 import com.parlor.app.resources.Res
 import com.parlor.app.resources.room_game_action_failed
 import com.parlor.app.resources.room_game_approve
 import com.parlor.app.resources.room_game_cannot_start
-import com.parlor.app.resources.room_game_code
 import com.parlor.app.resources.room_game_decline
-import com.parlor.app.resources.room_game_host
 import com.parlor.app.resources.room_game_leave
 import com.parlor.app.resources.room_game_local
-import com.parlor.app.resources.room_game_players
 import com.parlor.app.resources.room_game_request
 import com.parlor.app.resources.room_game_start
-import com.parlor.app.resources.room_game_wait
 import com.parlor.core.ids.PlayerId
 import com.parlor.core.result.Result
 import com.parlor.designsystem.backdrop.HeroBackdrop
@@ -70,19 +67,8 @@ internal fun <S : GameState, A : GameAction, E : GameEvent> HostRoomControls(
         Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).parlorSafeContentPadding(ParlorTheme.spacing.l),
             verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.m)) {
             Text(stringResource(Res.string.room_game_local), color = ParlorTheme.colors.textSecondary)
-            ParlorCard(modifier = Modifier.fillMaxWidth(), contentPadding = ParlorTheme.spacing.l, hero = true) {
-                Column(verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.s)) {
-                    Text(stringResource(Res.string.room_game_code), color = ParlorTheme.colors.textSecondary)
-                    Text(info.code, color = ParlorTheme.colors.accentEmber, style = ParlorTheme.typography.displayHero)
-                    Text(stringResource(Res.string.room_game_host, info.hostDisplayName.asBidiArgument()),
-                        color = ParlorTheme.colors.textPrimary)
-                }
-            }
-            Text(stringResource(Res.string.room_game_players, count), color = ParlorTheme.colors.textPrimary,
-                style = ParlorTheme.typography.headingMedium, modifier = Modifier.semantics { heading() })
-            Text(info.hostDisplayName, color = ParlorTheme.colors.textSecondary)
-            connected.forEach { Text(it.displayName, color = ParlorTheme.colors.textPrimary) }
-            if (connected.isEmpty()) Text(stringResource(Res.string.room_game_wait), color = ParlorTheme.colors.textSecondary)
+            LobbyInvitation(info.code, info.hostDisplayName)
+            LobbyRoster(info.hostDisplayName, connected)
             pending.forEach { request ->
                 ParlorCard(modifier = Modifier.fillMaxWidth(), contentPadding = ParlorTheme.spacing.m) {
                     Column(verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.s)) {
@@ -107,6 +93,8 @@ internal fun <S : GameState, A : GameAction, E : GameEvent> HostRoomControls(
                     }
                 }
             }
+            Text(stringResource(Res.string.lobby_setup_heading), color = ParlorTheme.colors.textPrimary,
+                style = ParlorTheme.typography.headingMedium, modifier = Modifier.semantics { heading() })
             spec.Settings(state.caseId, count, enabled, setup::select)
             if (!canStart) Text(stringResource(Res.string.room_game_cannot_start), color = ParlorTheme.colors.textSecondary)
             state.error?.let { Text(roomGameError(it), color = ParlorTheme.colors.textSecondary) }

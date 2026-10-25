@@ -3,19 +3,18 @@ package com.parlor.app.shell.settings
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,6 +27,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
+import com.parlor.app.resources.settings_language_help
+import com.parlor.app.resources.settings_appearance_help
+import com.parlor.app.resources.settings_accessibility_help
 import com.parlor.app.resources.Res
 import com.parlor.app.resources.settings_appearance_dark
 import com.parlor.app.resources.settings_appearance_label
@@ -106,6 +108,7 @@ fun SettingsScreen(
 
             SettingsSection(
                 label = stringResource(Res.string.settings_language_label),
+                description = stringResource(Res.string.settings_language_help),
                 selectableGroup = true,
             ) {
                 LanguageOption(
@@ -133,6 +136,7 @@ fun SettingsScreen(
 
             SettingsSection(
                 label = stringResource(Res.string.settings_appearance_label),
+                description = stringResource(Res.string.settings_appearance_help),
                 selectableGroup = true,
             ) {
                 AppearanceOption(
@@ -158,7 +162,10 @@ fun SettingsScreen(
                 )
             }
 
-            SettingsSection(label = stringResource(Res.string.settings_experience_label)) {
+            SettingsSection(
+                label = stringResource(Res.string.settings_experience_label),
+                description = stringResource(Res.string.settings_accessibility_help),
+            ) {
                 ToggleOption(
                     title = stringResource(Res.string.settings_reduced_motion_title),
                     description = stringResource(Res.string.settings_reduced_motion_description),
@@ -176,6 +183,7 @@ fun SettingsScreen(
 @Composable
 private fun SettingsSection(
     label: String,
+    description: String,
     selectableGroup: Boolean = false,
     content: @Composable () -> Unit,
 ) {
@@ -192,6 +200,11 @@ private fun SettingsSection(
                 text = label,
                 accent = false,
                 modifier = Modifier.semantics { heading() },
+            )
+            Text(
+                text = description,
+                style = ParlorTheme.typography.bodyMedium,
+                color = ParlorTheme.colors.textSecondary,
             )
             content()
         }
@@ -274,51 +287,7 @@ private fun OptionRow(
             .clip(RoundedCornerShape(ParlorTheme.radii.card))
             .background(colors.surfaceHigher)
             .background(
-                if (selected) {
-                    colors.accentEmber.copy(alpha = SELECTED_SURFACE_ALPHA)
-                } else {
-                    colors.transparent
-                },
-            )
-            .border(
-                ParlorTheme.borders.hairline,
-                if (selected) colors.accentEmber else colors.borderElevated,
-                RoundedCornerShape(ParlorTheme.radii.card),
-            )
-            .selectable(
-                selected = selected,
-                role = Role.RadioButton,
-                onClick = onSelected,
-            )
-            .padding(horizontal = ParlorTheme.spacing.l, vertical = ParlorTheme.spacing.m),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Text(
-            text = label,
-            style = ParlorTheme.typography.bodyLarge,
-            color = colors.textPrimary,
-            modifier = Modifier.weight(1f),
-        )
-        if (selected) {
-            Box(
-                modifier = Modifier
-                    .size(ParlorTheme.iconSize.m)
-                    .clip(RoundedCornerShape(ParlorTheme.radii.pill))
-                    .border(
-                        ParlorTheme.borders.strong,
-                        colors.accentEmber,
-                        RoundedCornerShape(ParlorTheme.radii.pill),
-                    ),
-                contentAlignment = Alignment.Center,
-            ) {
-                Box(
-                    modifier = Modifier
-                        .size(ParlorTheme.iconSize.xxs)
-                        .clip(RoundedCornerShape(ParlorTheme.radii.pill))
-                        .background(colors.accentEmber),
-                )
-            }
-        }
+                RadioButton(selected = selected, onClick = null)
     }
 }
 

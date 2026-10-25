@@ -7,10 +7,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -20,6 +18,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -37,11 +39,13 @@ import com.parlor.app.resources.Res
 import com.parlor.app.resources.app_name
 import com.parlor.app.resources.home_continue_label
 import com.parlor.app.resources.home_eyebrow
-import com.parlor.app.resources.home_game_kicker_format
 import com.parlor.app.resources.home_games_count
 import com.parlor.app.resources.home_games_label
 import com.parlor.app.resources.home_local_lan_meta
 import com.parlor.app.resources.home_local_meta
+import com.parlor.app.resources.catalog_nearby_only_meta
+import com.parlor.app.resources.catalog_empty_title
+import com.parlor.app.resources.catalog_empty_body
 import com.parlor.app.resources.home_players_exact_format
 import com.parlor.app.resources.home_players_range_format
 import com.parlor.app.resources.home_recovery_checking
@@ -63,12 +67,12 @@ import com.parlor.app.resources.home_saved_on_device
 import com.parlor.app.resources.home_subtitle
 import com.parlor.app.resources.home_title
 import com.parlor.app.shell.game.GameCatalogPresentation
-import com.parlor.app.shell.game.GameEntryMode
 import com.parlor.app.shell.game.GameShellBinding
 import com.parlor.core.ids.GameId
 import com.parlor.core.ids.SessionId
 import com.parlor.designsystem.backdrop.HeroBackdrop
 import com.parlor.designsystem.components.EyebrowLabel
+import com.parlor.designsystem.components.EmptyState
 import com.parlor.designsystem.components.ParlorButton
 import com.parlor.designsystem.components.ParlorCard
 import com.parlor.designsystem.components.ParlorMark
@@ -93,6 +97,7 @@ internal fun HomeScreen(
     recoveryUnavailable: Boolean = false,
     onRetryRecovery: () -> Unit = {},
 ) {
+    var selectedFilter by rememberSaveable { mutableStateOf(HomeCatalogFilter.All) }
     HeroBackdrop(modifier = modifier.fillMaxSize()) {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
@@ -147,13 +152,27 @@ internal fun HomeScreen(
             }
 
             item(key = "games-label") {
-                SectionHeading(
-                    label = stringResource(Res.string.home_games_label),
-                    detail = stringResource(Res.string.home_games_count, games.size),
-                )
+                Column(verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.s)) {
+                    SectionHeading(
+                        label = stringResource(Res.string.home_games_label),
+                        detail = stringResource(
+                            Res.string.home_games_count,
+                            games.count { selectedFilter.accepts(it.capabilities) },
+                        ),
+                    )
+                    CatalogFilters(selectedFilter) { selectedFilter = it }
+                }
+            }
+            if (games.none { selectedFilter.accepts(it.capabilities) }) {
+                item(key = "catalog-empty") {
+                    EmptyState(
+                        title = stringResource(Res.string.catalog_empty_title),
+                        body = stringResource(Res.string.catalog_empty_body),
+                    )
+                }
             }
             items(
-                items = games,
+                items = games.filter { selectedFilter.accepts(it.capabilities) },
                 key = { game -> "game:${game.definition.id.raw}" },
             ) { game ->
                 val presentation = game.catalogPresentation()
@@ -162,9 +181,8 @@ internal fun HomeScreen(
                     supportedPlayerCounts = game.multiplayerContract
                         ?.supportedPlayerCounts
                         ?: game.definition.supportedPlayerCounts,
-                    supportsLan = game.capabilities.supports(GameEntryMode.Host) ||
-                        game.capabilities.supports(GameEntryMode.Join),
-                    position = games.indexOf(game) + 1,
+                    supportsLan = game.capabilities.supportsNearbyPlay(),
+                    supportsLocal = game.capabilities.supportsLocalPlay(),
                     onOpen = { onGameSelected(game.definition.id) },
                 )
             }
@@ -199,7 +217,7 @@ private fun HomeLead() {
         EyebrowLabel(text = stringResource(Res.string.home_eyebrow))
         Text(
             text = stringResource(Res.string.home_title),
-            style = ParlorTheme.typography.displayLarge,
+            style = ParlorTheme.typography.displayMedium,
             color = ParlorTheme.colors.textPrimary,
             modifier = Modifier.semantics { heading() },
         )
@@ -370,7 +388,7 @@ private fun GameHeroCard(
     presentation: GameCatalogPresentation,
     supportedPlayerCounts: IntRange,
     supportsLan: Boolean,
-    position: Int,
+    supportsLocal: Boolean,
     onOpen: () -> Unit,
 ) {
     ParlorAccentScope(presentation.accent) {
@@ -386,30 +404,23 @@ private fun GameHeroCard(
             Column(verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.m)) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.Top,
+                    horizontalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.m),
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    EyebrowLabel(
-                        text = stringResource(
-                            Res.string.home_game_kicker_format,
-                            presentation.kicker,
-                            position,
-                        ),
-                        modifier = Modifier.weight(1f),
-                    )
                     GameCardArt(presentation.accent)
+                    Column(
+                        modifier = Modifier.weight(1f),
+                        verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.xs),
+                    ) {
+                        EyebrowLabel(text = presentation.kicker)
+                        Text(
+                            text = presentation.title,
+                            style = ParlorTheme.typography.headingLarge,
+                            color = ParlorTheme.colors.textPrimary,
+                            modifier = Modifier.semantics { heading() },
+                        )
+                    }
                 }
-                Text(
-                    text = presentation.title,
-                    style = ParlorTheme.typography.displayLarge,
-                    color = ParlorTheme.colors.textPrimary,
-                    modifier = Modifier.semantics { heading() },
-                )
-                Text(
-                    text = presentation.subtitle,
-                    style = ParlorTheme.typography.headingMedium,
-                    color = ParlorTheme.colors.accentEmber,
-                )
                 Text(
                     text = presentation.tagline,
                     style = ParlorTheme.typography.bodyMedium,
@@ -425,10 +436,10 @@ private fun GameHeroCard(
                     )
                     MetaPill(
                         text = stringResource(
-                            if (supportsLan) {
-                                Res.string.home_local_lan_meta
-                            } else {
-                                Res.string.home_local_meta
+                            when {
+                                supportsLan && supportsLocal -> Res.string.home_local_lan_meta
+                                supportsLan -> Res.string.catalog_nearby_only_meta
+                                else -> Res.string.home_local_meta
                             },
                         ),
                         modifier = Modifier.weight(1f),
@@ -441,6 +452,7 @@ private fun GameHeroCard(
                 ) {
                     Text(
                         text = presentation.openLabel,
+                        modifier = Modifier.weight(1f),
                         style = ParlorTheme.typography.labelLarge,
                         color = ParlorTheme.colors.accentEmber,
                     )
