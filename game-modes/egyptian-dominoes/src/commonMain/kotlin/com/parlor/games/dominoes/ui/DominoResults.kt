@@ -7,7 +7,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -85,8 +85,9 @@ internal fun DominoResults(state: DominoState, host: Boolean, enabled: Boolean, 
         }.forEach { (side, members) ->
             val score = state.public.scores.getValue(side)
             Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                    DominoBody(dominoSideName(state, side), Modifier.weight(1f))
+                FlowRow(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                    DominoBody(dominoSideName(state, side))
                     Text(stringResource(Res.string.dom_score, score), color = DominoGold, style = ParlorTheme.typography.labelLarge)
                 }
                 members.forEach { id ->

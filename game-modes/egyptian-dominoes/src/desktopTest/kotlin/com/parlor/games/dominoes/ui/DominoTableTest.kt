@@ -12,6 +12,7 @@ import androidx.compose.ui.test.assertIsSelected
 import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.onNodeWithContentDescription
+import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
@@ -58,6 +59,11 @@ class DominoTableTest {
         onNodeWithText(if (arabic) "أبطال الترابيزة" else "Table champions").assertIsDisplayed()
         onNodeWithText(if (arabic) "أبطال الترابيزة" else "Table champions", useUnmergedTree = true)
             .assertWordOnSingleLine(if (arabic) "الترابيزة" else "champions")
+        state.players.forEach { player ->
+            val names = onAllNodesWithText(state.name(player.id), useUnmergedTree = true)
+            assertTrue(names.fetchSemanticsNodes().isNotEmpty())
+            names.fetchSemanticsNodes().indices.forEach { index -> names[index].assertWordOnSingleLine("Player") }
+        }
         capturePublicGameFrame("results-${language.tag}-2.0")
         val rematch = if (arabic) "العبوا تاني · صفّر النقط" else "Play again · reset scores"
         onNodeWithText(rematch).reachable().assertIsEnabled()
