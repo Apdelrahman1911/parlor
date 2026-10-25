@@ -100,6 +100,22 @@ No test, required job or failure propagation was removed. The same seven-module
 command above then passed **167 tests in66.478s** on Linux, including the new
 external-script regression; native Windows remains pending corrected CI.
 
+## Windows path-alias and lint inventory contract corrections
+
+Corrected run [40151899752](https://github.com/Apdelrahman1911/parlor/actions/runs/40151899752)
+at `bb4769d7` executed all18 ownership tests natively:17 passed, including every
+real timeout, cancellation, overflow, successful-exit and unrelated-survivor
+scenario. The remaining mocked packaging assertion compared a canonical registry
+path with Windows' `RUNNER~1` temporary-directory alias. The assertion now
+canonicalizes its expected parent too, preserving the exact ownership boundary.
+Ownership + workflow contracts after the correction: **101 tests PASS in22.459s**
+on Linux. A complete corrected native suite and full required CI remain pending.
+
+The separately accepted exact Kotlin Compose compiler update-advisory row also
+requires updating the pinned Kotlin contract counts from37/31 to38/32 total/
+`DependencyUpdate`. Both count assertions remain enforced; no broader warning
+acceptance, analyzer pin change or suppression was introduced.
+
 ## Remaining acceptance
 
 - Run the new mandatory Windows native Job Object suite at the release-only PR's

@@ -218,7 +218,8 @@ class DistributionBuildLogTest(unittest.TestCase):
                 self.registry_option = command[-1]
                 self.assertTrue(self.registry_option.startswith('-Dorg.gradle.daemon.registry.base='))
                 registry = Path(self.registry_option.split('=', 1)[1])
-                self.assertEqual(registry.parent, Path(temporary))
+                # Windows TEMP may use a short (RUNNER~1) alias; production canonicalizes it.
+                self.assertEqual(registry.parent, Path(temporary).resolve())
                 self.assertTrue(registry.is_dir())
                 self.assertEqual(command[1:-1], ['fixture-task', '--dependency-verification=strict', '--no-daemon',
                                                 '--console=plain', '--stacktrace', '-Pkotlin.compiler.execution.strategy=in-process'])
