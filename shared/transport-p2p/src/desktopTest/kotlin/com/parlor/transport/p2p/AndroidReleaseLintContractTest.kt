@@ -65,11 +65,11 @@ class AndroidReleaseLintContractTest {
             .map(String::trim)
             .filter { line -> line.isNotEmpty() && !line.startsWith('#') }
             .toList()
-        assertEquals(37, accepted.size)
+        assertEquals(38, accepted.size)
         assertEquals(
             mapOf(
                 "AndroidGradlePluginVersion" to 4,
-                "DependencyUpdate" to 31,
+                "DependencyUpdate" to 32,
                 "GradleDependency" to 1,
                 "OldTargetApi" to 1,
             ),
