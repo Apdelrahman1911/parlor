@@ -135,30 +135,60 @@ def validate_source(value: dict) -> None:
                                            for key in ("commit", "tree")), "Source is not an immutable clean commit/tree")
 
 
+def _run_with_output(command: list[str], output, *, timeout: int, env: dict | None, output_limit: int) -> int:
+    """Supervise a tool without materializing its output in memory.
+
+    The file is caller-owned and remains available after a failed invocation.
+    Check the output budget during execution as well as after a fast exit;
+    teardown retires the invocation before the caller reads or closes the file.
+    """
+    require(timeout > 0 and output_limit > 0, "Tool time and output budgets must be positive")
+    process = None
+    try:
+        owned_command = ([sys.executable, str(ROOT / "scripts/release/_windows_job_supervisor.py"), *command]
+                         if os.name == "nt" else command)
+        process = subprocess.Popen(owned_command, cwd=ROOT, stdout=output, stderr=subprocess.STDOUT, env=env,
+                                   start_new_session=os.name != "nt")
+        started = time.monotonic()
+        while process.poll() is None:
+            require(time.monotonic() - started < timeout, "Distribution tool exceeded its time bound")
+            require(os.fstat(output.fileno()).st_size <= output_limit, "Tool output exceeds its bound")
+            time.sleep(0.05)
+        require(os.fstat(output.fileno()).st_size <= output_limit, "Tool output exceeds its bound")
+        return process.returncode
+    except (OSError, subprocess.SubprocessError):
+        raise RuntimeError("Distribution tool could not execute; private arguments/output withheld") from None
+    finally:
+        if process is not None:
+            _stop_owned_command(process)
+
+
 def run(command: list[str], *, timeout: int = 120, env: dict | None = None, success_codes: tuple[int, ...] = (0,)) -> str:
     # Never echo a signing command, its environment, or raw failure output.
     with tempfile.TemporaryFile() as output:
-        process = None
-        try:
-            owned_command = ([sys.executable, str(ROOT / "scripts/release/_windows_job_supervisor.py"), *command]
-                             if os.name == "nt" else command)
-            process = subprocess.Popen(owned_command, cwd=ROOT, stdout=output, stderr=subprocess.STDOUT, env=env,
-                                       start_new_session=os.name != "nt")
-            started = time.monotonic()
-            while process.poll() is None:
-                require(time.monotonic() - started < timeout, "Distribution tool exceeded its time bound")
-                require(os.fstat(output.fileno()).st_size <= 16 * MAX_JSON, "Tool output exceeds its bound")
-                time.sleep(0.05)
-            require(os.fstat(output.fileno()).st_size <= 16 * MAX_JSON, "Tool output exceeds its bound")
-            require(process.returncode in success_codes, f"Distribution tool failed: {Path(command[0]).name} (exit {process.returncode})")
-            output.seek(0)
-            text = output.read().decode("utf-8", errors="replace")
-        except (OSError, subprocess.SubprocessError):
-            raise RuntimeError("Distribution tool could not execute; private arguments/output withheld") from None
-        finally:
-            if process is not None:
-                _stop_owned_command(process)
-    return text
+        code = _run_with_output(command, output, timeout=timeout, env=env, output_limit=16 * MAX_JSON)
+        require(code in success_codes, f"Distribution tool failed: {Path(command[0]).name} (exit {code})")
+        output.seek(0)
+        return output.read().decode("utf-8", errors="replace")
+
+
+def run_logged(command: list[str], log: Path, *, timeout: int, output_limit: int, env: dict | None = None) -> int:
+    """Retain unsigned build diagnostics on disk, never as a giant return string.
+
+    Uses the same ownership boundary as signing/probe calls. A nonzero exit is
+    returned to the build caller; time/output/launch failures still raise.
+    """
+    with log.open("wb") as output:
+        return _run_with_output(command, output, timeout=timeout, env=env, output_limit=output_limit)
+
+
+def read_log_tail(path: Path, maximum_bytes: int) -> str:
+    """Bound both file I/O and allocations even for a very large failed build log."""
+    require(0 < maximum_bytes <= MAX_JSON, "Invalid diagnostic tail budget")
+    with path.open("rb") as stream:
+        stream.seek(0, os.SEEK_END)
+        stream.seek(max(0, stream.tell() - maximum_bytes))
+        return stream.read(maximum_bytes).decode("utf-8", errors="replace")
 
 
 def _stop_owned_command(process: subprocess.Popen) -> None:

@@ -1,7 +1,9 @@
 """Real local processes only; no network, signing, package build, or publication."""
 from __future__ import annotations
 
+import contextlib
 import ctypes
+import io
 import os
 from pathlib import Path
 import signal
@@ -12,6 +14,7 @@ import time
 import unittest
 from unittest.mock import Mock, patch
 
+from scripts.release import desktop_package as packages
 from scripts.release import github_distribution as dist
 from scripts.release import _windows_job_supervisor as windows
 
@@ -46,12 +49,19 @@ if sys.argv[3] != 'normal':
 
 
 class DistributionOwnedProcessTest(unittest.TestCase):
-    def exercise(self, mode, *, cancel=False):
+    def exercise(self, mode, *, cancel=False, logged=False):
         with tempfile.TemporaryDirectory(prefix='parlor-distribution-process-') as temporary:
             marker = Path(temporary) / 'owned'
             unrelated = subprocess.Popen([sys.executable, '-B', '-c', 'import time;time.sleep(30)'])
             try:
                 command = [sys.executable, '-B', '-c', PARENT, CHILD, str(marker), mode]
+                log = Path(temporary) / 'retained-build.log'
+
+                def execute(timeout):
+                    if logged:
+                        return dist.run_logged(command, log, timeout=timeout, output_limit=16 * dist.MAX_JSON)
+                    return dist.run(command, timeout=timeout)
+
                 if cancel:
                     original_sleep = time.sleep
                     interrupted = False
@@ -65,16 +75,18 @@ class DistributionOwnedProcessTest(unittest.TestCase):
 
                     with patch.object(dist.time, 'sleep', side_effect=interrupt_after_child_starts):
                         with self.assertRaises(KeyboardInterrupt):
-                            dist.run(command, timeout=10)
+                            execute(timeout=10)
                 elif mode == 'normal':
-                    self.assertEqual(dist.run(command, timeout=10), '')
+                    self.assertEqual(execute(timeout=10), 0 if logged else '')
                 elif mode == 'output':
                     with patch.object(dist, 'MAX_JSON', 1024):
                         with self.assertRaisesRegex(RuntimeError, 'output exceeds'):
-                            dist.run(command, timeout=10)
+                            execute(timeout=10)
                 else:
                     with self.assertRaisesRegex(RuntimeError, 'time bound'):
-                        dist.run(command, timeout=3)
+                        execute(timeout=3)
+                if logged:
+                    self.assertTrue(log.is_file(), 'Retain build log even on timeout, overflow or cancellation')
                 self.assertTrue(marker.exists(), 'Owned descendant must actually execute')
                 # Job termination can finish just after its supervisor is reaped.
                 time.sleep(.2)
@@ -111,9 +123,99 @@ class DistributionOwnedProcessTest(unittest.TestCase):
     def test_python_cancellation_retires_descendant(self):
         self.exercise('timeout', cancel=True)
 
+    def test_logged_timeout_retires_descendant_and_keeps_log(self):
+        self.exercise('timeout', logged=True)
+
+    def test_logged_success_retires_descendant_and_keeps_log(self):
+        self.exercise('normal', logged=True)
+
+    def test_logged_overflow_retires_descendant_and_keeps_log(self):
+        self.exercise('output', logged=True)
+
+    def test_logged_cancellation_retires_descendant_and_keeps_log(self):
+        self.exercise('timeout', cancel=True, logged=True)
+
     def test_success_output_and_nonzero_allowed_exit_are_preserved(self):
         self.assertEqual(dist.run([sys.executable, '-c', "print('verified');raise SystemExit(7)"],
                                   success_codes=(7,)), 'verified' + os.linesep)
+
+
+class DistributionBuildLogTest(unittest.TestCase):
+    def test_log_budget_is_large_but_finite_and_read_tail_is_bounded(self):
+        self.assertEqual(packages.BUILD_LOG_LIMIT, 256 * 1024 * 1024)
+        self.assertEqual(packages.BUILD_LOG_TAIL_BYTES, 18_000)
+        with tempfile.TemporaryDirectory() as temporary:
+            path = Path(temporary) / 'large.log'
+            # Sparse fixture: logical size far larger than the tail, without
+            # allocating/printing a giant log in this test or the implementation.
+            with path.open('wb') as stream:
+                stream.seek(64 * 1024 * 1024)
+                stream.write(bytes((0xe2, 0x82, 0xac)) + b'TAIL')
+            original_open = Path.open
+            reads = []
+
+            class BoundedReader:
+                def __enter__(self):
+                    self.stream = original_open(path, 'rb')
+                    return self
+
+                def __exit__(self, *args):
+                    self.stream.close()
+
+                def seek(self, *args):
+                    return self.stream.seek(*args)
+
+                def tell(self):
+                    return self.stream.tell()
+
+                def read(self, size=-1):
+                    reads.append(size)
+                    if size < 0 or size > 6:
+                        raise AssertionError('Unbounded log read')
+                    return self.stream.read(size)
+
+            with patch.object(Path, 'open', return_value=BoundedReader()):
+                self.assertEqual(dist.read_log_tail(path, 6), '��TAIL')
+            self.assertEqual(reads, [6])
+            for invalid in (0, -1, dist.MAX_JSON + 1):
+                with self.subTest(invalid=invalid), self.assertRaises(RuntimeError):
+                    dist.read_log_tail(path, invalid)
+
+    def test_logged_command_returns_nonzero_and_retains_output(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            path = Path(temporary) / 'build.log'
+            command = [sys.executable, '-c', "print('retained build evidence');raise SystemExit(7)"]
+            self.assertEqual(dist.run_logged(command, path, timeout=10, output_limit=1024), 7)
+            self.assertEqual(path.read_bytes(), ('retained build evidence' + os.linesep).encode())
+
+    def test_gradle_keeps_wrapper_strict_graph_no_daemon_and_retained_failure_tail(self):
+        with tempfile.TemporaryDirectory() as temporary, patch.object(packages, 'OUT', Path(temporary)):
+            def failed(command, log, **kwargs):
+                expected_wrapper = 'gradlew.bat' if packages.host.system() == 'Windows' else 'gradlew'
+                self.assertEqual(command[0], str(packages.ROOT / expected_wrapper))
+                self.assertEqual(command[1:], ['fixture-task', '--dependency-verification=strict', '--no-daemon',
+                                                '--console=plain', '--stacktrace'])
+                self.assertEqual(kwargs, {'timeout': 5400, 'output_limit': 256 * 1024 * 1024})
+                log.write_bytes(b'not in tail' + b'x' * 18_000)
+                return 7
+
+            output = io.StringIO()
+            with patch.object(packages, 'run_logged', side_effect=failed), contextlib.redirect_stdout(output):
+                with self.assertRaisesRegex(RuntimeError, 'Wrapper build failed'):
+                    packages.gradle(['fixture-task'])
+            self.assertEqual(output.getvalue(), 'x' * 18_000 + '\n')
+            self.assertTrue((Path(temporary) / 'build.log').is_file())
+
+    def test_gradle_timeout_retains_and_reads_only_the_tail(self):
+        with tempfile.TemporaryDirectory() as temporary, patch.object(packages, 'OUT', Path(temporary)):
+            def timeout(command, log, **kwargs):
+                log.write_bytes(b'failed build evidence')
+                raise RuntimeError('Distribution tool exceeded its time bound')
+
+            with patch.object(packages, 'run_logged', side_effect=timeout), contextlib.redirect_stdout(io.StringIO()):
+                with self.assertRaisesRegex(RuntimeError, 'time bound'):
+                    packages.gradle(['fixture-task'])
+            self.assertEqual((Path(temporary) / 'build.log').read_bytes(), b'failed build evidence')
 
 
 class WindowsJobContractTest(unittest.TestCase):
