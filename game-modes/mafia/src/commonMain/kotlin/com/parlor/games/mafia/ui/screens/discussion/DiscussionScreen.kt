@@ -13,6 +13,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import com.parlor.designsystem.backdrop.HeroBackdrop
+import com.parlor.designsystem.components.ContextRibbon
+import com.parlor.designsystem.components.ParlorContextTone
 import com.parlor.designsystem.components.EyebrowLabel
 import com.parlor.designsystem.components.ParlorButton
 import com.parlor.designsystem.components.ParlorCard
@@ -20,6 +22,10 @@ import com.parlor.designsystem.components.parlorSafeContentPadding
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.games.mafia.resources.Res
 import com.parlor.games.mafia.resources.discussion_alive_card
+import com.parlor.games.mafia.resources.discussion_how_to
+import com.parlor.games.mafia.resources.discussion_host_next
+import com.parlor.games.mafia.resources.discussion_peer_next
+import com.parlor.games.mafia.resources.discussion_public_table
 import com.parlor.games.mafia.resources.discussion_dead_card
 import com.parlor.games.mafia.resources.discussion_eyebrow_format
 import com.parlor.games.mafia.resources.discussion_headline
@@ -59,6 +65,19 @@ fun DiscussionScreen(
                 text = stringResource(Res.string.discussion_headline),
                 style = ParlorTheme.typography.displayMedium,
                 color = ParlorTheme.colors.textPrimary,
+                textAlign = TextAlign.Center,
+            )
+            ContextRibbon(
+                label = stringResource(Res.string.discussion_public_table),
+                detail = stringResource(
+                    if (isHost) Res.string.discussion_host_next else Res.string.discussion_peer_next,
+                ),
+                tone = ParlorContextTone.Public,
+            )
+            Text(
+                text = stringResource(Res.string.discussion_how_to),
+                style = ParlorTheme.typography.bodyLarge,
+                color = ParlorTheme.colors.textSecondary,
                 textAlign = TextAlign.Center,
             )
             if (timerLabel != null) {

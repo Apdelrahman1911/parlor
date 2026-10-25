@@ -2,10 +2,12 @@ package com.parlor.games.whodunit.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -58,9 +60,8 @@ fun TimerRibbon(
         remainingTime,
         totalTime,
     )
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.s),
+    Column(
+        verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.s),
         modifier = modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(ParlorTheme.radii.subtle))
@@ -82,15 +83,28 @@ fun TimerRibbon(
             style = ParlorTheme.typography.labelSmall,
             color = if (urgent) colors.textOnAccent else colors.textSecondary,
         )
-        Text(
-            text = remainingTime,
-            style = ParlorTheme.typography.timerMedium,
-            color = if (urgent) colors.textOnAccent else colors.textPrimary,
-        )
-        Text(
-            text = visualTotalTime,
-            style = ParlorTheme.typography.bodyMedium,
-            color = if (urgent) colors.textOnAccent else colors.textTertiary,
+        FlowRow(
+            horizontalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.s),
+            verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.xs),
+        ) {
+            Text(
+                modifier = Modifier.align(Alignment.CenterVertically),
+                text = remainingTime,
+                style = ParlorTheme.typography.timerMedium,
+                color = if (urgent) colors.textOnAccent else colors.textPrimary,
+            )
+            Text(
+                modifier = Modifier.align(Alignment.CenterVertically),
+                text = visualTotalTime,
+                style = ParlorTheme.typography.bodyMedium,
+                color = if (urgent) colors.textOnAccent else colors.textTertiary,
+            )
+        }
+        LinearProgressIndicator(
+            progress = { (remainingSeconds.toFloat() / totalSeconds.coerceAtLeast(1)).coerceIn(0f, 1f) },
+            modifier = Modifier.fillMaxWidth().clearAndSetSemantics { },
+            color = if (urgent) colors.textOnAccent else colors.accentEmber,
+            trackColor = if (urgent) colors.accentEmber else colors.borderSubtle,
         )
     }
 }

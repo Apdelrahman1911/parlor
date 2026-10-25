@@ -37,6 +37,9 @@ import com.parlor.games.lastlight.ui.theme.SectionLabel
 import com.parlor.games.lastlight.domain.model.GameView
 import com.parlor.games.lastlight.domain.model.PlayerId
 import com.parlor.games.lastlight.resources.Res
+import com.parlor.games.lastlight.resources.game_challenge_help
+import com.parlor.games.lastlight.resources.game_challenge_help_hide
+import com.parlor.games.lastlight.resources.game_challenge_help_body
 import com.parlor.games.lastlight.resources.game_claim_facedown
 import com.parlor.games.lastlight.resources.game_claim_sentence
 import com.parlor.games.lastlight.resources.game_hide_previous_reveal
@@ -88,6 +91,7 @@ internal fun PublicGameTable(
             Spacer(Modifier.height(if (compact) 4.dp else 20.dp))
             LatestClaim(view, largeText, Modifier.padding(horizontal = 20.dp), compact)
         }
+        ChallengeHelp(Modifier.padding(horizontal = 20.dp))
         view.roundOutcome?.takeIf { it.roundNumber < view.roundNumber }?.let { outcome ->
             var showHistory by rememberSaveable(outcome.roundNumber) { mutableStateOf(false) }
             TextButton(
@@ -112,6 +116,34 @@ internal fun PublicGameTable(
                     announceVerdict = false,
                 )
             }
+        }
+    }
+}
+
+/** Public rules only: safe to open while a hand is concealed or on another player's turn. */
+@Composable
+private fun ChallengeHelp(modifier: Modifier = Modifier) {
+    var expanded by rememberSaveable { mutableStateOf(false) }
+    Column(modifier.fillMaxWidth()) {
+        TextButton(
+            onClick = { expanded = !expanded },
+            modifier = Modifier.heightIn(min = 48.dp).testTag("game-challenge-help"),
+            contentPadding = PaddingValues(horizontal = 0.dp, vertical = 12.dp),
+        ) {
+            Text(
+                text = stringResource(
+                    if (expanded) Res.string.game_challenge_help_hide else Res.string.game_challenge_help,
+                ),
+                color = LastLightColors.Copper,
+            )
+        }
+        if (expanded) {
+            Text(
+                text = stringResource(Res.string.game_challenge_help_body),
+                style = MaterialTheme.typography.bodyMedium,
+                color = LastLightColors.Paper,
+                modifier = Modifier.padding(bottom = 12.dp),
+            )
         }
     }
 }

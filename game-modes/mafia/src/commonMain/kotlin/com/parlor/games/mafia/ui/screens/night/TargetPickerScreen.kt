@@ -13,6 +13,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.RadioButton
+import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -29,12 +31,15 @@ import com.parlor.designsystem.backdrop.HeroBackdrop
 import com.parlor.designsystem.components.EyebrowLabel
 import com.parlor.designsystem.components.ContextRibbon
 import com.parlor.designsystem.components.ParlorButton
+import com.parlor.designsystem.components.ParlorButtonVariant
 import com.parlor.designsystem.components.ParlorContextTone
 import com.parlor.designsystem.components.parlorSafeContentPadding
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.games.mafia.resources.Res
 import com.parlor.games.mafia.resources.private_do_not_pass
 import com.parlor.games.mafia.resources.private_screen_label
+import com.parlor.games.mafia.resources.vote_public_label
+import com.parlor.games.mafia.resources.vote_public_detail
 import org.jetbrains.compose.resources.stringResource
 
 data class PickableTarget(
@@ -61,6 +66,7 @@ fun TargetPickerScreen(
     allowSkip: Boolean = false,
     skipLabel: String,
     footer: @Composable (() -> Unit)? = null,
+    privateSelection: Boolean = true,
 ) {
     val selectableTargetIds = targets.filter(PickableTarget::enabled).map(PickableTarget::id)
     var selected: PlayerId? by remember(selectableTargetIds) { mutableStateOf(null) }
@@ -76,9 +82,13 @@ fun TargetPickerScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             ContextRibbon(
-                label = stringResource(Res.string.private_screen_label),
-                detail = stringResource(Res.string.private_do_not_pass),
-                tone = ParlorContextTone.Private,
+                label = stringResource(
+                    if (privateSelection) Res.string.private_screen_label else Res.string.vote_public_label,
+                ),
+                detail = stringResource(
+                    if (privateSelection) Res.string.private_do_not_pass else Res.string.vote_public_detail,
+                ),
+                tone = if (privateSelection) ParlorContextTone.Private else ParlorContextTone.Public,
             )
             EyebrowLabel(text = eyebrow, textAlign = TextAlign.Center)
             Text(
@@ -123,6 +133,7 @@ fun TargetPickerScreen(
                     label = skipLabel,
                     contentDescription = skipLabel,
                     onClick = { onSubmit(null) },
+                    variant = ParlorButtonVariant.Secondary,
                     modifier = Modifier.fillMaxWidth(),
                 )
             }
@@ -162,7 +173,10 @@ private fun TargetRow(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Column(verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.xs)) {
+        Column(
+            modifier = Modifier.weight(1f),
+            verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.xs),
+        ) {
             Text(
                 text = target.name,
                 style = ParlorTheme.typography.bodyLarge,
@@ -176,5 +190,14 @@ private fun TargetRow(
                 )
             }
         }
+        RadioButton(
+            selected = selected,
+            onClick = null,
+            enabled = target.enabled,
+            colors = RadioButtonDefaults.colors(
+                selectedColor = ParlorTheme.colors.accentEmber,
+                unselectedColor = ParlorTheme.colors.textSecondary,
+            ),
+        )
     }
 }
