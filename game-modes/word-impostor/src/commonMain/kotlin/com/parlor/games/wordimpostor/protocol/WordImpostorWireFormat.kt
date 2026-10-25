@@ -1,5 +1,6 @@
 package com.parlor.games.wordimpostor.protocol
 
+import com.parlor.core.serialization.requireBoundedJsonNesting
 import com.parlor.games.wordimpostor.WordImpostorIds
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.json.Json
@@ -20,6 +21,7 @@ internal class WordImpostorWireFormat(json: Json = Json) {
 
     fun <T> decode(serializer: KSerializer<T>, payload: ByteArray, maximumBytes: Int): T {
         requireBounded(payload, maximumBytes)
+        requireBoundedJsonNesting(payload)
         val decoded = json.decodeFromString(serializer, payload.decodeToString(throwOnInvalidSequence = true))
         val canonical = json.encodeToString(serializer, decoded).encodeToByteArray()
         require(payload.contentEquals(canonical)) { "WordImpostor payload is not canonical" }

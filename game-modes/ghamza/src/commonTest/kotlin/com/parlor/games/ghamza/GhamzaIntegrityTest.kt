@@ -5,6 +5,8 @@ import com.parlor.engine.state.Player
 import com.parlor.games.ghamza.domain.GhamzaAction
 import com.parlor.games.ghamza.domain.GhamzaPhase
 import com.parlor.games.ghamza.domain.GhamzaPrivate
+import com.parlor.games.ghamza.domain.GhamzaProjection
+import com.parlor.games.ghamza.domain.GhamzaRole
 import com.parlor.games.ghamza.domain.GhamzaReducer
 import com.parlor.games.ghamza.domain.GhamzaSettings
 import com.parlor.games.ghamza.domain.GhamzaValidation
@@ -19,6 +21,33 @@ import kotlin.test.assertTrue
 class GhamzaIntegrityTest {
     private val reducer = GhamzaReducer()
     private val players = List(12) { Player(PlayerId("界".repeat(63) + it.toString(16)), "Player $it", it) }
+
+    @Test
+    fun deeply_nested_input_is_rejected_before_recursive_decoding() {
+        val payload = ("[".repeat(400) + "0" + "]".repeat(400)).encodeToByteArray()
+        val failure = assertFailsWith<IllegalArgumentException> { GhamzaCodec.decodeAction(payload) }
+        assertEquals("JSON nesting exceeds the supported limit", failure.message)
+        assertFailsWith<IllegalArgumentException> { GhamzaCodec.decodePublic(payload) }
+        assertFailsWith<IllegalArgumentException> { GhamzaSnapshotCodec().decode(payload) }
+    }
+
+    @Test
+    fun final_guess_cannot_assign_the_remaining_non_guesser_an_ordinary_role() {
+        var state = reducer.initial(players.take(3), GhamzaSettings(), 91)
+        state.players.forEach { state = reducer.apply(state, GhamzaAction.Ready(it.id, state.public.token)) }
+        val guest = state.players.first { it.id != state.hostOnly.winker }.id
+        state = reducer.apply(state, GhamzaAction.Winked(guest, state.public.token, 1))
+        val winker = checkNotNull(state.hostOnly.winker)
+        val own = GhamzaProjection.toPlayer(state, winker).state
+        assertTrue(GhamzaValidation.playerState(own, winker))
+        val forged = own.copy(privatePerPlayer = mapOf(winker to GhamzaPrivate(GhamzaRole.Guest)))
+        assertFalse(GhamzaValidation.playerState(forged, winker))
+        // A valid private payload from Reveal must not be accepted with contradictory final progress.
+        val public = GhamzaProjection.toPublic(state).state
+        val guestPayload = GhamzaCodec.encodePrivate(reducer.initial(players.take(3), GhamzaSettings(),
+            (1L..100L).first { reducer.initial(players.take(3), GhamzaSettings(), it).hostOnly.winker != winker }), winker)
+        assertFailsWith<IllegalArgumentException> { GhamzaCodec.decodePlayer(public, guestPayload, winker) }
+    }
 
     @Test
     fun bounded_history_has_an_explicit_replayable_abort_instead_of_a_frozen_game() {

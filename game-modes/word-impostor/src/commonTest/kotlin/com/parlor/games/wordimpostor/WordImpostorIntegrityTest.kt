@@ -5,6 +5,7 @@ import com.parlor.engine.state.Player
 import com.parlor.games.wordimpostor.domain.WordImpostorAction
 import com.parlor.games.wordimpostor.domain.WordImpostorPhase
 import com.parlor.games.wordimpostor.domain.WordImpostorPrivate
+import com.parlor.games.wordimpostor.domain.WordImpostorProjection
 import com.parlor.games.wordimpostor.domain.WordImpostorReducer
 import com.parlor.games.wordimpostor.domain.WordImpostorSettings
 import com.parlor.games.wordimpostor.domain.WordImpostorValidation
@@ -19,6 +20,38 @@ import kotlin.test.assertTrue
 class WordImpostorIntegrityTest {
     private val reducer = WordImpostorReducer()
     private val players = List(12) { Player(PlayerId("界".repeat(63) + it.toString(16)), "Player $it", it) }
+
+    @Test
+    fun deeply_nested_input_is_rejected_before_recursive_decoding() {
+        val payload = ("[".repeat(400) + "0" + "]".repeat(400)).encodeToByteArray()
+        val failure = assertFailsWith<IllegalArgumentException> { WordImpostorCodec.decodeAction(payload) }
+        assertEquals("JSON nesting exceeds the supported limit", failure.message)
+        assertFailsWith<IllegalArgumentException> { WordImpostorCodec.decodePublic(payload) }
+        assertFailsWith<IllegalArgumentException> { WordImpostorSnapshotCodec().decode(payload) }
+    }
+
+    @Test
+    fun private_guess_cannot_arrive_before_its_public_submission_count() {
+        var state = reducer.initial(players.take(5), WordImpostorSettings(impostors = 2), 91)
+        state.players.forEach { state = reducer.apply(state, WordImpostorAction.Ready(it.id, state.public.token)) }
+        state.public.interactions.forEachIndexed { index, pair ->
+            state = reducer.apply(state, WordImpostorAction.Answered(pair.asker, state.public.token, index))
+        }
+        state = reducer.apply(state, WordImpostorAction.OpenVoting(state.public.token))
+        state.players.forEachIndexed { index, player ->
+            state = reducer.apply(state, WordImpostorAction.Vote(player.id, state.public.token,
+                state.players[(index + 1) % state.players.size].id))
+        }
+        val before = WordImpostorProjection.toPublic(state).state
+        val impostor = state.hostOnly.impostors.first()
+        state = reducer.apply(state, WordImpostorAction.Guess(impostor, state.public.token,
+            state.hostOnly.choices.getValue(impostor).first()))
+        val payload = WordImpostorCodec.encodePrivate(state, impostor)
+        val current = WordImpostorProjection.toPublic(state).state
+        assertEquals(1, current.public.guessCount)
+        assertTrue(WordImpostorValidation.playerState(WordImpostorCodec.decodePlayer(current, payload, impostor), impostor))
+        assertFailsWith<IllegalArgumentException> { WordImpostorCodec.decodePlayer(before, payload, impostor) }
+    }
 
     @Test
     fun bounded_history_aborts_without_revealing_the_word_votes_or_roles_and_still_restores() {

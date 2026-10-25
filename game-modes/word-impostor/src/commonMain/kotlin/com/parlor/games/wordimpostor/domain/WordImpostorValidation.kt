@@ -83,7 +83,7 @@ object WordImpostorValidation {
             val groups = WordTopicBank.words(state.public.settings.topic).filter { it.id in own.choices }.map { it.group }
             if (groups.distinct().size != 1) return false
         } else if (own.choices.isNotEmpty()) return false
-        if (own.guess != null && own.guess !in wordIds) return false
+        if (own.guess != null && (own.guess !in wordIds || state.public.guessCount == 0)) return false
         if (state.phase in BEFORE_VOTES && own.guess != null) return false
         return true
     }
