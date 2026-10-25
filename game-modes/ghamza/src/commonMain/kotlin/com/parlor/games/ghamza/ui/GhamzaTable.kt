@@ -94,7 +94,7 @@ fun GhamzaTable(
     var help by remember(state.public.token, privacyEpoch) { mutableStateOf(false) }
     var fullRules by remember(state.public.token, privacyEpoch, help) { mutableStateOf(false) }
     InPlaceBackHandler(help) { help = false }
-    GhamzaFrame(modifier, Triple(state.phase, state.public.token, help)) {
+    GhamzaFrame(modifier, "${state.phase.id}:${state.public.token}:$help") {
         FlowRow(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween,
             verticalArrangement = Arrangement.spacedBy(4.dp), itemVerticalAlignment = Alignment.CenterVertically) {
             TextButton(onClick = onLeave, modifier = Modifier.heightIn(min = 48.dp)) {

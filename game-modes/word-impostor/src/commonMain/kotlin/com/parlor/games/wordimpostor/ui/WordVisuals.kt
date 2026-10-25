@@ -17,13 +17,13 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.key
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -53,9 +53,9 @@ internal val WordLilac = Color(0xFFD3C2FF)
 internal val WordText = Color(0xFFF9F2F0)
 
 @Composable
-internal fun WordFrame(modifier: Modifier, resetKey: Any, content: @Composable ColumnScope.() -> Unit) {
+internal fun WordFrame(modifier: Modifier, resetKey: String, content: @Composable ColumnScope.() -> Unit) {
     // A new phase, round or help surface starts at its next-action header, not the previous ballot's scroll position.
-    val scroll = rememberSaveable(resetKey, saver = ScrollState.Saver) { ScrollState(0) }
+    val scroll = key(resetKey) { rememberScrollState() }
     Box(
         modifier.fillMaxSize().background(Brush.verticalGradient(listOf(WordInk, Color(0xFF3B244F), WordInk))),
         contentAlignment = Alignment.TopCenter,
