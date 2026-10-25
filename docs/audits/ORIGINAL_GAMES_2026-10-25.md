@@ -59,7 +59,7 @@ mismatches: the new model incorrectly treated the local-only restore validator
 as a LAN recovery validator, and an existing Whodunit static formatting test
 still required bullets after evidence became attributed cards. Both assertions
 were updated to check the actual intended contracts, not removed; rerun pending.
-Execution receipts will be appended after the coordinated focused Gradle rerun.
+The coordinated rerun receipts below supersede those two failed assertions.
 XML parsing and unique, matching EN/AR resource-key checks passed locally;
 `git diff --check` passed. These are not compilation/runtime evidence.
 
@@ -73,3 +73,31 @@ XML parsing and unique, matching EN/AR resource-key checks passed locally;
   hardware. Static/non-animated UI changes are not a measured battery claim.
 - Longer property exploration beyond the seeded sample; bounded replay validation
   cost should be profiled on slower hosts before considering optimization.
+
+## Executed evidence (integrated checkout)
+
+The lead ran the second integrated Desktop/static-analysis cycle against
+`8cdc328f3a24b99f3d061e6dd637ef2ef040ba34`:
+
+- Mafia: **304 tests, zero failures**, fresh XML timestamps
+  `2026-10-25T01:17:10Z`–`01:17:36Z`. The 144-scenario model test passed in
+  5.259 seconds. This wall time is not a mobile performance benchmark.
+- Whodunit: **365 tests, zero failures**, fresh timestamps
+  `2026-10-25T01:17:41Z`–`01:19:37Z`. The two new large-text discussion rendering
+  tests passed, including reachable attributed clues and advance callbacks.
+- Last Light's subsequent Bidi test compilation exposed a missing Compose
+  assertion import, corrected separately. The earlier 194 passing tests do
+  **not** qualify the newer name-isolation changes; fresh execution is required.
+
+Actual generated 320dp/200%-text screenshots were inspected under
+`game-modes/{mafia,whodunit}/build/reports/ux/`. The timer and target selection
+fit in both directions. Inspection also exposed a **confirmed shared
+ContextRibbon defect**: the equal-width status/detail columns split English
+and Arabic words at this size. The shared UX workstream owns the responsive
+stacking fix and its focused tests. Rerender these game scenes after integration;
+passing click/visibility tests alone did not establish visual quality.
+
+The Mafia screenshot fixture was subsequently changed to the actual localized
+Doctor screen instead of placeholder English chooser copy. That follow-up,
+Last Light RTL assertions and guide screenshots remain pending the next
+integrated run. All screenshots use synthetic names and no real player data.
