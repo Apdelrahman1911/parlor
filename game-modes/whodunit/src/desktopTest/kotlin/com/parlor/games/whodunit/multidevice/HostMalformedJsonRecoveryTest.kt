@@ -66,7 +66,10 @@ class HostMalformedJsonRecoveryTest {
             runCurrent()
             assertEquals(listOf(CommandStatus.InvalidAction, CommandStatus.Applied), outcomes)
             assertEquals(2, decoderInvocations)
-            assertEquals(listOf(IllegalArgumentException::class), decodingFailures)
+            assertEquals<kotlin.reflect.KClass<out Throwable>>(
+                IllegalArgumentException::class,
+                decodingFailures.single(),
+            )
             assertEquals(1, applied)
             assertEquals(1L, coordinator.revision.value)
         } finally {
