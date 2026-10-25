@@ -113,7 +113,7 @@ class DistributionOwnedProcessTest(unittest.TestCase):
 
     def test_success_output_and_nonzero_allowed_exit_are_preserved(self):
         self.assertEqual(dist.run([sys.executable, '-c', "print('verified');raise SystemExit(7)"],
-                                  success_codes=(7,)), 'verified\n')
+                                  success_codes=(7,)), 'verified' + os.linesep)
 
 
 class WindowsJobContractTest(unittest.TestCase):
