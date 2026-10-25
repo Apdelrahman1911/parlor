@@ -280,7 +280,7 @@ class AndroidReleaseLintContractTest {
             "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/ScreenHeader.kt",
         )
         assertContains(header, "ParlorIconButton(")
-        assertContains(header, "Modifier.semantics { heading() }")
+        assertContains(header, "Modifier.fillMaxWidth().semantics { heading() }")
 
         val tabs = read(
             "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/ParlorBottomTabBar.kt",
