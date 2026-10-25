@@ -438,7 +438,9 @@ private fun GameHeroCard(
                         modifier = Modifier.weight(1f),
                         verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.xs),
                     ) {
-                        EyebrowLabel(text = presentation.kicker)
+                        if (presentation.kicker != presentation.title) {
+                            EyebrowLabel(text = presentation.kicker)
+                        }
                         Text(
                             text = presentation.title,
                             style = ParlorTheme.typography.headingLarge,
