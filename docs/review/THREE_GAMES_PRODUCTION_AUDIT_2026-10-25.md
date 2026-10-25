@@ -70,7 +70,27 @@ remains necessary and is not replaced by game validation.
 
 ## Verification status
 
-Implemented tests, not yet claimed as executed at this documentation checkpoint:
+Executed in the lead integration worktree at **`15f127d9`**, JDK 21, Linux/Xvfb,
+strict dependency verification. The lead ran:
+
+```bash
+PARLOR_UI_SCREENSHOT_DIR=<local-evidence-directory> xvfb-run -a ./gradlew \
+  productionDesktopCheck --continue --dependency-verification=strict \
+  --no-daemon --max-workers=2 \
+  -Dorg.gradle.jvmargs='-Xmx3g -XX:MaxMetaspaceSize=1g' \
+  -Pkotlin.compiler.execution.strategy=in-process
+```
+
+Read back the actual JUnit XML under each module's
+`build/test-results/desktopTest/` (not an earlier CI run):
+
+| Module | Tests | Failures/errors/skips |
+|---|---:|---:|
+| Egyptian Dominoes | 30 | 0 / 0 / 0 |
+| Ghamza | 13 | 0 / 0 / 0 |
+| Word Impostor | 17 | 0 / 0 / 0 |
+
+**All 60 scoped tests passed**, including these new cases:
 
 - `DominoIntegrityTest`: highest own-hand opener; nesting resource guard.
 - `GhamzaIntegrityTest`: impossible role/progress combination; nesting guard.
@@ -80,8 +100,19 @@ Implemented tests, not yet claimed as executed at this documentation checkpoint:
 - Three game UI suites: local touch concealment while host actions are disabled,
   alongside existing English/Arabic large-text and complete interaction journeys.
 
-The final audit must append exact executed commands/results before treating these
-changes as qualified. `git diff --check` passed during implementation.
+This is scoped evidence only: the aggregate run also reported failures outside
+these modules (shell compilation and a Mafia state-machine assertion). It does
+not certify the entire application, later source changes or mobile runtime.
+`git diff --check` and EN/AR XML name/indexed-placeholder parity also passed
+(63 Dominoes, 60 Ghamza, 546 Word Impostor resource entries).
+
+All three Rules surfaces now offer numbered quick-start guidance plus optional
+full details, rather than leading with a large rules paragraph. The shared
+`QuickStartSteps` is placed on a theme-matched `ParlorCard` because game tables
+have deliberate dark backgrounds; otherwise Light preference would create dark
+text on a dark table. Three new 320px/font-scale-2 Light-theme interaction tests
+verified the compact guide and detail toggles. This is not pixel-level contrast
+or screen-reader qualification.
 
 ## Remaining limitations and unverified risks
 
