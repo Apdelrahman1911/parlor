@@ -10,6 +10,7 @@ import json
 import os
 import re
 import shutil
+import signal
 import stat
 import subprocess
 import sys
@@ -139,7 +140,10 @@ def run(command: list[str], *, timeout: int = 120, env: dict | None = None, succ
     with tempfile.TemporaryFile() as output:
         process = None
         try:
-            process = subprocess.Popen(command, cwd=ROOT, stdout=output, stderr=subprocess.STDOUT, env=env)
+            owned_command = ([sys.executable, str(ROOT / "scripts/release/_windows_job_supervisor.py"), *command]
+                             if os.name == "nt" else command)
+            process = subprocess.Popen(owned_command, cwd=ROOT, stdout=output, stderr=subprocess.STDOUT, env=env,
+                                       start_new_session=os.name != "nt")
             started = time.monotonic()
             while process.poll() is None:
                 require(time.monotonic() - started < timeout, "Distribution tool exceeded its time bound")
@@ -152,14 +156,44 @@ def run(command: list[str], *, timeout: int = 120, env: dict | None = None, succ
         except (OSError, subprocess.SubprocessError):
             raise RuntimeError("Distribution tool could not execute; private arguments/output withheld") from None
         finally:
-            if process is not None and process.poll() is None:
-                process.terminate()
-                try:
-                    process.wait(timeout=5)
-                except subprocess.TimeoutExpired:
-                    process.kill()
-                    process.wait(timeout=5)
+            if process is not None:
+                _stop_owned_command(process)
     return text
+
+
+def _stop_owned_command(process: subprocess.Popen) -> None:
+    """Retire only this invocation, also when its root exits before a descendant.
+
+    POSIX ordinary descendants inherit the isolated process group. Deliberately
+    daemonized/session-escaping programs need their existing tool-specific
+    finalizers; never discover and kill unrelated global process names.
+    Windows children belong to the supervisor's kernel-enforced Job Object.
+    """
+    if os.name == "nt":
+        if process.poll() is None:
+            process.terminate()  # Closing the supervisor also closes its Job Object.
+            try:
+                process.wait(timeout=5)
+            except subprocess.TimeoutExpired:
+                process.kill()
+                process.wait(timeout=5)
+        return
+    try:
+        os.killpg(process.pid, signal.SIGTERM)
+    except ProcessLookupError:
+        pass
+    try:
+        process.wait(timeout=5)
+    except subprocess.TimeoutExpired:
+        pass
+    finally:
+        # Reaping the root does not prove redirected/TERM-resistant children
+        # exited. Always retire the remaining owned group, even on success.
+        try:
+            os.killpg(process.pid, signal.SIGKILL)
+        except ProcessLookupError:
+            pass
+        process.wait(timeout=5)
 
 
 class GitHub:

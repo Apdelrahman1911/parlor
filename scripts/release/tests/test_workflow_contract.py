@@ -77,6 +77,27 @@ class WorkflowContractTest(unittest.TestCase):
         with self.assertRaisesRegex(RuntimeError, "before checkout"):
             workflow_contract.verify_windows_checkout(moved)
 
+    def test_windows_distribution_ownership_cannot_be_skipped_or_mocked(self) -> None:
+        workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text(encoding="utf-8")
+        windows = workflow_contract.validation_job(workflow, "desktop-windows-x64")
+        name = "Verify Windows distribution process ownership"
+        block = workflow_contract.validation_step(windows, name)
+        workflow_contract.verify_windows_distribution_ownership(windows)
+        for original, replacement in (
+            ("        timeout-minutes: 2", "        timeout-minutes: 20"),
+            ("        shell: python", "        if: false\n        shell: python"),
+            ("        shell: python", "        continue-on-error: true\n        shell: python"),
+            ("test_distribution_process_ownership", "test_github_distribution"),
+            ("verbosity=2", "verbosity=2, exit=False"),
+        ):
+            changed = windows.replace(block, block.replace(original, replacement, 1), 1)
+            self.assertNotEqual(changed, windows)
+            with self.subTest(original=original), self.assertRaisesRegex(RuntimeError, "ownership"):
+                workflow_contract.verify_windows_distribution_ownership(changed)
+        removed = windows.replace("\n      - name: " + name + "\n" + block, "", 1)
+        with self.assertRaisesRegex(RuntimeError, "ownership"):
+            workflow_contract.verify_windows_distribution_ownership(removed)
+
     def test_native_selection_is_closed_paired_default_and_cannot_be_duplicated(self) -> None:
         workflow = (workflow_contract.ROOT / '.github/workflows/production-verification.yml').read_text(encoding='utf-8')
         block = '      native_selection:\n' + workflow.split('      native_selection:\n', 1)[1].split('      frozen_source_sha:\n', 1)[0]
