@@ -56,27 +56,28 @@ class TargetPickerInteractionTest {
     private fun verifySelection(language: AppLanguage) = runComposeUiTest {
         val id = PlayerId("player")
         val name = if (language == AppLanguage.Arabic) "لاعب باسم طويل يحتاج إلى مساحة كافية" else "Player with a long readable name"
+        val submitLabel = if (language == AppLanguage.Arabic) "أرسل الحماية" else "Submit protection"
         var submitted: PlayerId? = null
         setContent {
             CompositionLocalProvider(LocalDensity provides Density(1f, 2f)) {
                 ProvideAppLanguage(language) {
                     ParlorTheme(reducedMotion = true) {
-                        TargetPickerScreen(
-                            eyebrow = "Night", headline = "Choose", instructions = "Choose one player",
-                            targets = listOf(PickableTarget(id, name)), submitLabel = "Confirm",
-                            onSubmit = { submitted = it }, skipLabel = "Skip", allowSkip = true,
+                        DoctorProtectScreen(
+                            doctorName = if (language == AppLanguage.Arabic) "نور" else "Noor",
+                            targets = listOf(PickableTarget(id, name)),
+                            onSubmit = { submitted = it },
                             modifier = Modifier.size(320.dp, 640.dp).testTag("mafia-target-evidence"),
                         )
                     }
                 }
             }
         }
-        onNodeWithContentDescription("Confirm").assertIsNotEnabled()
+        onNodeWithContentDescription(submitLabel).assertIsNotEnabled()
         onNodeWithText(name).performScrollTo().performClick().assertIsSelected()
         val output = File("build/reports/ux/mafia-target-${language.tag}-2x.png")
         output.parentFile.mkdirs()
         ImageIO.write(onNodeWithTag("mafia-target-evidence").captureToImage().toAwtImage(), "png", output)
-        onNodeWithContentDescription("Confirm").performScrollTo().performClick()
+        onNodeWithContentDescription(submitLabel).performScrollTo().performClick()
         assertEquals(id, submitted)
     }
 }
