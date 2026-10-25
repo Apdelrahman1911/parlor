@@ -26,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.Role
@@ -223,19 +224,25 @@ private fun HomeTopBar() {
 
 @Composable
 private fun HomeLead() {
+    // Keep game discovery ahead of decorative copy without shrinking accessible text.
+    val showIntroduction = LocalDensity.current.fontScale < 1.5f
     Column(verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.s)) {
-        EyebrowLabel(text = stringResource(Res.string.home_eyebrow))
+        if (showIntroduction) {
+            EyebrowLabel(text = stringResource(Res.string.home_eyebrow))
+        }
         Text(
             text = stringResource(Res.string.home_title),
             style = ParlorTheme.typography.displayMedium,
             color = ParlorTheme.colors.textPrimary,
             modifier = Modifier.semantics { heading() },
         )
-        Text(
-            text = stringResource(Res.string.home_subtitle),
-            style = ParlorTheme.typography.bodyMedium,
-            color = ParlorTheme.colors.textSecondary,
-        )
+        if (showIntroduction) {
+            Text(
+                text = stringResource(Res.string.home_subtitle),
+                style = ParlorTheme.typography.bodyMedium,
+                color = ParlorTheme.colors.textSecondary,
+            )
+        }
     }
 }
 

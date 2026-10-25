@@ -37,6 +37,7 @@ internal fun CatalogFilters(selected: HomeCatalogFilter, onSelected: (HomeCatalo
     FlowRow(
         modifier = Modifier.selectableGroup(),
         horizontalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.s),
+        verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.s),
     ) {
         HomeCatalogFilter.entries.forEach { filter ->
             FilterChip(

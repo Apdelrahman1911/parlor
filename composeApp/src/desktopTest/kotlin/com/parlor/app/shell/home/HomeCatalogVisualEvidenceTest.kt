@@ -10,6 +10,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.captureToImage
+import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.runComposeUiTest
 import androidx.compose.ui.unit.Density
@@ -81,6 +82,16 @@ class HomeCatalogVisualEvidenceTest {
             }
         }
         onNodeWithTag("shell-preview").assertIsDisplayed()
+        if (catalog && fontScale == 2f) {
+            // A real game action must be visible without scrolling past marketing copy.
+            onNodeWithContentDescription(
+                if (language == AppLanguage.Arabic) {
+                    "افتح من القاتل واختر طريقة اللعب."
+                } else {
+                    "Open Whodunit and pick how you want to play."
+                },
+            ).assertIsDisplayed()
+        }
         // Public fixtures only. Default reports are collected by the existing CI artifact
         // glob; the environment override is inherited by Gradle's test worker.
         val directory = System.getProperty("parlor.ux.screenshotDir")
