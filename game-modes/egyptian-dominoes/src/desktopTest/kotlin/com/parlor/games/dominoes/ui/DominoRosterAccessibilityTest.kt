@@ -3,6 +3,8 @@ package com.parlor.games.dominoes.ui
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.getUnclippedBoundsInRoot
 import androidx.compose.ui.test.onNodeWithContentDescription
+import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.runComposeUiTest
 import androidx.compose.ui.text.rememberTextMeasurer
 import com.parlor.designsystem.localization.AppLanguage
@@ -63,6 +65,12 @@ class DominoRosterAccessibilityTest {
             assertTrue(cardWidth >= wordWidth,
                 "Opponent card ${cardWidth}px is narrower than its name word ${wordWidth}px: $label")
         }
+        val firstCard = onNodeWithContentDescription(labelsAndWidths.first().first)
+        val reveal = if (language == AppLanguage.Arabic) "ورّيني قطعي" else "Show my tiles"
+        val actionBounds = onNodeWithText(reveal).getUnclippedBoundsInRoot()
+        assertTrue(actionBounds.bottom <= firstCard.getUnclippedBoundsInRoot().top,
+            "The current action must precede an expanded opponent roster")
+        firstCard.performScrollTo()
         capturePublicGameFrame("roster-${language.tag}-${themeMode.tag}-2.0")
     }
 }
