@@ -96,6 +96,26 @@ Failures return nonzero, `status: FAIL`, and a bounded non-secret diagnostic.
 
 ## Updating the supplement
 
+### October 26, 2026 catalog-only applicability review
+
+Commit `54cb96dc` removed the unused `compose-compiler-gradle-plugin` library
+alias and its convention-only `compileOnly` declaration. Review of the old/new
+TOML confirms all `[versions]` pins, every plugin alias, all bundles and all other
+library coordinates are identical. The root still supplies Compose compiler
+2.4.10 by plugin ID; no shipping library, native input, notice, upstream revision
+or applicability changed. Existing 26 notice resources and their exact byte/hash
+bindings remain unchanged. Fresh convention and six-game Android release
+compilation passed after this removal; full platform qualification is separate.
+
+The first complete release-automation run correctly rejected the changed catalog
+because its review fingerprint had not been updated. After this applicability
+review, update only the manifest's LF-canonicalized catalog SHA-256 from
+`87a031665605a1fb3f932be31c75afd8d2d1bc0d94cfcca36101141c50788399` to
+`621697e9eab1a741b97719f6fce31fd04e2a27fc4f56c18496a124c01f6834df`.
+No verifier, notice text, pin, filename set or package requirement is relaxed.
+
+### Dependency or notice changes
+
 1. Resolve the real release input graphs with strict dependency verification. Review
    changed platform/native inputs, not just Maven POM license declarations.
 2. Inspect authoritative upstream sources at the actual revision and retain public,
