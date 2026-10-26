@@ -59,8 +59,9 @@ class DominoRosterAccessibilityTest {
         // against the same font's longest word, rather than adding hidden test-only accessibility text.
         labelsAndWidths.forEach { (label, wordWidth) ->
             val bounds = onNodeWithContentDescription(label).getUnclippedBoundsInRoot()
-            assertTrue(bounds.width.value >= wordWidth,
-                "Opponent card ${bounds.width.value}px is narrower than its name word ${wordWidth}px: $label")
+            val cardWidth = (bounds.right - bounds.left).value
+            assertTrue(cardWidth >= wordWidth,
+                "Opponent card ${cardWidth}px is narrower than its name word ${wordWidth}px: $label")
         }
         capturePublicGameFrame("roster-${language.tag}-${themeMode.tag}-2.0")
     }
