@@ -95,12 +95,13 @@ fun DominoTable(
                     DominoResults(state, isHost, enabled, onAction)
                 }
                 DominoTeams(state, self)
-                DominoOpponents(state, self, motion)
                 DominoBoard(state, motion)
                 if (state.phase == DominoPhase.Playing) {
                     if (DominoRules.usesDraw(state.public.settings, state.players.size)) DominoStock(state.public.stockCount, motion)
                     DominoHand(state, self, canAct, visible, motion, { visible = it }, onAction)
                 }
+                // Expanded accessible seat cards must not push the board and current action away.
+                DominoOpponents(state, self, motion)
             }
         }
         if (!help) DominoFlightOverlay(motion, Modifier.align(AbsoluteAlignment.TopLeft))

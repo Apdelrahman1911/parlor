@@ -25,6 +25,27 @@ import kotlin.test.assertTrue
 @OptIn(ExperimentalTestApi::class)
 class GhamzaTableTest {
     @Test
+    fun english_light_compact_large_text_journey() =
+        verifyThemedJourney(AppLanguage.English, ThemeMode.Light)
+
+    @Test
+    fun english_dark_compact_large_text_journey() =
+        verifyThemedJourney(AppLanguage.English, ThemeMode.Dark)
+
+    @Test
+    fun arabic_light_compact_large_text_journey() =
+        verifyThemedJourney(AppLanguage.Arabic, ThemeMode.Light)
+
+    @Test
+    fun arabic_dark_compact_large_text_journey() =
+        verifyThemedJourney(AppLanguage.Arabic, ThemeMode.Dark)
+
+    private fun verifyThemedJourney(language: AppLanguage, themeMode: ThemeMode) {
+        verifyReveal(language, themeMode)
+        verifySocialJourney(language, themeMode)
+    }
+
+    @Test
     fun light_theme_rules_start_with_a_compact_guide_and_expand_details_on_request() = runComposeUiTest {
         val state = GhamzaReducer().initial(uiPlayers(3), GhamzaSettings(), 42)
         val self = state.players.first().id
@@ -68,14 +89,14 @@ class GhamzaTableTest {
         verifyReveal(AppLanguage.Arabic)
     }
 
-    private fun verifyReveal(language: AppLanguage) = runComposeUiTest {
+    private fun verifyReveal(language: AppLanguage, themeMode: ThemeMode = ThemeMode.Default) = runComposeUiTest {
         val state = GhamzaReducer().initial(uiPlayers(12), GhamzaSettings(), 42)
         val self = checkNotNull(state.hostOnly.winker)
         var epoch by mutableStateOf(0L)
         var sent: GhamzaAction? = null
         val back = InPlaceBackOwner()
         setContent {
-            GameUiFrame(language, 320, 740, 2f, backOwner = back) {
+            GameUiFrame(language, 320, 740, 2f, themeMode = themeMode, backOwner = back) {
                 GhamzaTable(GhamzaProjection.toPlayer(state, self).state, self, false, true, epoch, { sent = it }, {})
             }
         }
@@ -104,7 +125,7 @@ class GhamzaTableTest {
         for (language in listOf(AppLanguage.English, AppLanguage.Arabic)) verifySocialJourney(language)
     }
 
-    private fun verifySocialJourney(language: AppLanguage) = runComposeUiTest {
+    private fun verifySocialJourney(language: AppLanguage, themeMode: ThemeMode = ThemeMode.Default) = runComposeUiTest {
         fun localized(en: String, ar: String) = if (language == AppLanguage.Arabic) ar else en
         val reducer = GhamzaReducer()
         val initial = reducer.initial(uiPlayers(4), GhamzaSettings(2, 1), 2)
@@ -114,12 +135,12 @@ class GhamzaTableTest {
         })
         val back = InPlaceBackOwner()
         setContent {
-            GameUiFrame(language, 320, 740, 2f, backOwner = back) {
+            GameUiFrame(language, 320, 740, 2f, themeMode = themeMode, backOwner = back) {
                 GhamzaTable(GhamzaProjection.toPlayer(state, self).state, self, true, true, 0,
                     { state = reducer.apply(state, it) }, {})
             }
         }
-        capturePublicGameFrame("social-${language.tag}-2.0")
+        capturePublicGameFrame("social-${language.tag}-${themeMode.name.lowercase()}-2.0")
         onNodeWithText(localized("I was winked at", "اتغمزلي")).reachable().performClick()
         runOnIdle { assertTrue(back.handleBack()) }
         onNodeWithText(localized("Yes · record the wink", "أيوه · سجّل الغمزة")).assertDoesNotExist()
@@ -145,7 +166,7 @@ class GhamzaTableTest {
         onNodeWithText(localized("Lock my guess", "ثبّت تخميني")).reachable().performClick()
         assertEquals(GhamzaPhase.MatchResult, state.phase)
         onNodeWithText(localized("The secret is out", "السر اتكشف")).assertIsDisplayed()
-        capturePublicGameFrame("results-${language.tag}-2.0")
+        capturePublicGameFrame("results-${language.tag}-${themeMode.name.lowercase()}-2.0")
         assertEquals(self, state.public.result?.winner)
         onNodeWithText(localized("All rounds complete", "كل الجولات خلصت")).assertExists()
         onNodeWithText("SCORES").assertDoesNotExist()
@@ -153,7 +174,7 @@ class GhamzaTableTest {
         onNodeWithText(localized("Play again · new roles", "العبوا تاني · أدوار جديدة")).reachable().performClick()
         assertEquals(GhamzaPhase.Reveal, state.phase)
         assertTrue(state.public.reports.values.all { it == 0 })
-        capturePublicGameFrame("rematch-covered-${language.tag}-2.0")
+        capturePublicGameFrame("rematch-covered-${language.tag}-${themeMode.name.lowercase()}-2.0")
         onNodeWithText(localized("Reveal my role", "اكشف دوري")).reachable().assertIsEnabled()
     }
 }

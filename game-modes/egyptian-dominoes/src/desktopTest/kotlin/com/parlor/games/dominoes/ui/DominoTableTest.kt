@@ -35,11 +35,32 @@ import kotlin.test.assertTrue
 @OptIn(ExperimentalTestApi::class)
 class DominoTableTest {
     @Test
+    fun english_light_compact_large_text_journey() =
+        verifyThemedJourney(AppLanguage.English, ThemeMode.Light)
+
+    @Test
+    fun english_dark_compact_large_text_journey() =
+        verifyThemedJourney(AppLanguage.English, ThemeMode.Dark)
+
+    @Test
+    fun arabic_light_compact_large_text_journey() =
+        verifyThemedJourney(AppLanguage.Arabic, ThemeMode.Light)
+
+    @Test
+    fun arabic_dark_compact_large_text_journey() =
+        verifyThemedJourney(AppLanguage.Arabic, ThemeMode.Dark)
+
+    private fun verifyThemedJourney(language: AppLanguage, themeMode: ThemeMode) {
+        verifyLayout(language, 320, 740, 2f, themeMode)
+        verifyResultsJourney(language, themeMode)
+    }
+
+    @Test
     fun completed_matches_and_rematches_are_reachable_in_both_languages_at_large_text() {
         for (language in listOf(AppLanguage.English, AppLanguage.Arabic)) verifyResultsJourney(language)
     }
 
-    private fun verifyResultsJourney(language: AppLanguage) = runComposeUiTest {
+    private fun verifyResultsJourney(language: AppLanguage, themeMode: ThemeMode = ThemeMode.Default) = runComposeUiTest {
         val reducer = DominoReducer()
         val initial = reducer.initial(uiPlayers(4), DominoSettings(target = 51), 18)
         val completed = completeMatch(reducer, initial)
@@ -47,12 +68,12 @@ class DominoTableTest {
         val self = initial.players.first().id
         val arabic = language == AppLanguage.Arabic
         setContent {
-            GameUiFrame(language, 320, 740, 2f) {
+            GameUiFrame(language, 320, 740, 2f, themeMode = themeMode) {
                 DominoTable(DominoProjection.toPlayer(state, self).state, self, true, true, 0,
                     { state = reducer.apply(state, it) }, {})
             }
         }
-        capturePublicGameFrame("table-covered-${language.tag}-2.0")
+        capturePublicGameFrame("table-covered-${language.tag}-${themeMode.name.lowercase()}-2.0")
         // Deliberately leave the old screen scrolled far below the header.
         onNodeWithText(if (arabic) "ورّيني قطعي" else "Show my tiles").reachable()
         runOnIdle { state = completed }
@@ -64,7 +85,7 @@ class DominoTableTest {
             assertTrue(names.fetchSemanticsNodes().isNotEmpty())
             names.fetchSemanticsNodes().indices.forEach { index -> names[index].assertWordOnSingleLine("Player") }
         }
-        capturePublicGameFrame("results-${language.tag}-2.0")
+        capturePublicGameFrame("results-${language.tag}-${themeMode.name.lowercase()}-2.0")
         val rematch = if (arabic) "العبوا تاني · صفّر النقط" else "Play again · reset scores"
         onNodeWithText(rematch).reachable().assertIsEnabled()
         onNodeWithText(rematch, useUnmergedTree = true).assertFullText()
@@ -73,7 +94,7 @@ class DominoTableTest {
         assertEquals(completed.public.token + 1, state.public.token)
         assertTrue(state.public.scores.values.all { it == 0 })
         onAllNodes(hasContentDescription("${if (arabic) "قطعة" else "Tile"} ", substring = true), true).assertCountEquals(0)
-        capturePublicGameFrame("rematch-covered-${language.tag}-2.0")
+        capturePublicGameFrame("rematch-covered-${language.tag}-${themeMode.name.lowercase()}-2.0")
     }
 
     private fun completeMatch(reducer: DominoReducer, initial: DominoState): DominoState {
@@ -178,12 +199,14 @@ class DominoTableTest {
         verifyLayout(AppLanguage.English, 844, 390, 1f)
     }
 
-    private fun verifyLayout(language: AppLanguage, width: Int, height: Int, fontScale: Float) = runComposeUiTest {
+    private fun verifyLayout(
+        language: AppLanguage, width: Int, height: Int, fontScale: Float, themeMode: ThemeMode = ThemeMode.Default,
+    ) = runComposeUiTest {
         val canonical = DominoReducer().initial(uiPlayers(4), DominoSettings(), 18)
         val self = checkNotNull(canonical.public.turn)
         val own = DominoProjection.toPlayer(canonical, self).state
         val opening = checkNotNull(own.privatePerPlayer.getValue(self).requiredOpening)
-        setContent { GameUiFrame(language, width, height, fontScale) { DominoTable(own, self, true, true, 0, {}, {}) } }
+        setContent { GameUiFrame(language, width, height, fontScale, themeMode = themeMode) { DominoTable(own, self, true, true, 0, {}, {}) } }
         val arabic = language == AppLanguage.Arabic
         val reveal = if (arabic) "ورّيني قطعي" else "Show my tiles"
         onNodeWithText(reveal).reachable().performClick()

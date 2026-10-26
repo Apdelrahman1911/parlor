@@ -28,6 +28,28 @@ import kotlin.test.assertTrue
 @OptIn(ExperimentalTestApi::class)
 class WordImpostorTableTest {
     @Test
+    fun english_light_compact_large_text_journey() =
+        verifyThemedJourney(AppLanguage.English, ThemeMode.Light)
+
+    @Test
+    fun english_dark_compact_large_text_journey() =
+        verifyThemedJourney(AppLanguage.English, ThemeMode.Dark)
+
+    @Test
+    fun arabic_light_compact_large_text_journey() =
+        verifyThemedJourney(AppLanguage.Arabic, ThemeMode.Light)
+
+    @Test
+    fun arabic_dark_compact_large_text_journey() =
+        verifyThemedJourney(AppLanguage.Arabic, ThemeMode.Dark)
+
+    private fun verifyThemedJourney(language: AppLanguage, themeMode: ThemeMode) {
+        WordRole.entries.forEach { verifyReveal(language, it, themeMode) }
+        verifyQuestionJourney(language, themeMode)
+        verifyVotingJourney(language, themeMode)
+    }
+
+    @Test
     fun light_theme_rules_start_with_a_compact_guide_and_expand_details_on_request() = runComposeUiTest {
         val state = WordImpostorReducer().initial(uiPlayers(3), WordImpostorSettings(), 42)
         val self = state.players.first().id
@@ -71,7 +93,9 @@ class WordImpostorTableTest {
         }
     }
 
-    private fun verifyReveal(language: AppLanguage, role: WordRole) = runComposeUiTest {
+    private fun verifyReveal(
+        language: AppLanguage, role: WordRole, themeMode: ThemeMode = ThemeMode.Default,
+    ) = runComposeUiTest {
         val canonical = WordImpostorReducer().initial(uiPlayers(7), WordImpostorSettings(impostors = 2), 42)
         val self = canonical.privatePerPlayer.entries.first { it.value.role == role }.key
         var epoch by mutableStateOf(0L)
@@ -79,7 +103,7 @@ class WordImpostorTableTest {
         var word = ""
         var sent: WordImpostorAction? = null
         setContent {
-            GameUiFrame(language, 320, 740, 2f, backOwner = back) {
+            GameUiFrame(language, 320, 740, 2f, themeMode = themeMode, backOwner = back) {
                 word = stringResource(WordContentResources.word(checkNotNull(canonical.hostOnly.wordId)))
                 WordImpostorTable(WordImpostorProjection.toPlayer(canonical, self).state, self, false, true, epoch, { sent = it }, {})
             }
@@ -116,7 +140,7 @@ class WordImpostorTableTest {
         for (language in listOf(AppLanguage.English, AppLanguage.Arabic)) verifyQuestionJourney(language)
     }
 
-    private fun verifyQuestionJourney(language: AppLanguage) = runComposeUiTest {
+    private fun verifyQuestionJourney(language: AppLanguage, themeMode: ThemeMode = ThemeMode.Default) = runComposeUiTest {
         val reducer = WordImpostorReducer()
         val initial = reducer.initial(uiPlayers(5), WordImpostorSettings(), 8)
         var state by mutableStateOf(initial.players.fold(initial) { current, player ->
@@ -125,7 +149,7 @@ class WordImpostorTableTest {
         val self = state.public.interactions.first().asker
         var prompt = ""
         setContent {
-            GameUiFrame(language, 320, 740, 2f) {
+            GameUiFrame(language, 320, 740, 2f, themeMode = themeMode) {
                 prompt = stringResource(WordContentResources.question(state.hostOnly.questions.first()))
                 WordImpostorTable(WordImpostorProjection.toPlayer(state, self).state, self, false, true, 0,
                     { state = reducer.apply(state, it) }, {})
@@ -144,7 +168,7 @@ class WordImpostorTableTest {
         val pairing = if (language == AppLanguage.Arabic) "${state.name(pair.asker)} بيسأل ${state.name(pair.answerer)}"
             else "${state.name(pair.asker)} asks ${state.name(pair.answerer)}"
         onNodeWithText(pairing).assertIsDisplayed()
-        capturePublicGameFrame("next-question-public-${language.tag}-2.0")
+        capturePublicGameFrame("next-question-public-${language.tag}-${themeMode.name.lowercase()}-2.0")
     }
 
     @Test
@@ -152,7 +176,7 @@ class WordImpostorTableTest {
         for (language in listOf(AppLanguage.English, AppLanguage.Arabic)) verifyVotingJourney(language)
     }
 
-    private fun verifyVotingJourney(language: AppLanguage) = runComposeUiTest {
+    private fun verifyVotingJourney(language: AppLanguage, themeMode: ThemeMode = ThemeMode.Default) = runComposeUiTest {
         fun localized(en: String, ar: String) = if (language == AppLanguage.Arabic) ar else en
         val reducer = WordImpostorReducer()
         val initial = reducer.initial(uiPlayers(7), WordImpostorSettings(impostors = 2, rounds = 1), 12)
@@ -168,14 +192,14 @@ class WordImpostorTableTest {
         var epoch by mutableStateOf(0L)
         val back = InPlaceBackOwner()
         setContent {
-            GameUiFrame(language, 320, 740, 2f, backOwner = back) {
+            GameUiFrame(language, 320, 740, 2f, themeMode = themeMode, backOwner = back) {
                 choices = choiceIds.map { stringResource(WordContentResources.word(it)) }
                 word = stringResource(WordContentResources.word(wordId))
                 WordImpostorTable(WordImpostorProjection.toPlayer(state, self).state, self, host, true, epoch,
                     { state = reducer.apply(state, it) }, {})
             }
         }
-        capturePublicGameFrame("voting-${language.tag}-2.0")
+        capturePublicGameFrame("voting-${language.tag}-${themeMode.name.lowercase()}-2.0")
         onNodeWithText(target.displayName).reachable().performClick()
         assertTrue(state.public.voted.isEmpty())
         runOnIdle { assertTrue(back.handleBack()) }
@@ -196,7 +220,7 @@ class WordImpostorTableTest {
         }
         assertEquals(WordImpostorPhase.Guessing, state.phase)
         onNodeWithText(localized("The final bluff", "آخر تخمين")).assertIsDisplayed()
-        capturePublicGameFrame("guessing-covered-${language.tag}-2.0")
+        capturePublicGameFrame("guessing-covered-${language.tag}-${themeMode.name.lowercase()}-2.0")
         choices.forEach { onNodeWithText(it).assertDoesNotExist() }
         onNodeWithText(localized("Reveal my secret", "اكشف سري")).reachable().performClick()
         choices.forEach { onNodeWithText(it).reachable().assertIsEnabled() }
@@ -213,7 +237,7 @@ class WordImpostorTableTest {
         }
         assertEquals(WordImpostorPhase.MatchResult, state.phase)
         onNodeWithText(localized("Behind the words", "ورا الكلام")).assertIsDisplayed()
-        capturePublicGameFrame("results-${language.tag}-2.0")
+        capturePublicGameFrame("results-${language.tag}-${themeMode.name.lowercase()}-2.0")
         onNodeWithText(word).assertExists()
         val rematch = localized("Play again · reset scores", "العبوا تاني · صفّر النقط")
         onNodeWithText(rematch).assertDoesNotExist() // Only the real host owns rematches.
@@ -224,7 +248,7 @@ class WordImpostorTableTest {
         assertEquals(WordImpostorPhase.Reveal, state.phase)
         assertTrue(state.public.scores.values.all { it == 0 })
         onNodeWithText(word).assertDoesNotExist()
-        capturePublicGameFrame("rematch-covered-${language.tag}-2.0")
+        capturePublicGameFrame("rematch-covered-${language.tag}-${themeMode.name.lowercase()}-2.0")
     }
 
     private fun toVoting(reducer: WordImpostorReducer, initial: WordImpostorState): WordImpostorState {

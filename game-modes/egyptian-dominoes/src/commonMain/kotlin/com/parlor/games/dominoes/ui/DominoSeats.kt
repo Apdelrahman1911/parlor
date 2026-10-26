@@ -7,6 +7,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -41,7 +42,10 @@ import org.jetbrains.compose.resources.stringResource
 
 @Composable
 internal fun DominoOpponents(state: DominoState, self: PlayerId, motion: DominoMotion) {
-    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+    // Weighted FlowRow items wrap using their intrinsic word width before sharing each line.
+    // A fixed three-way Row can split even ordinary names at the user's enlarged font size.
+    FlowRow(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)) {
         state.players.filter { it.id != self }.forEach { player ->
             val count = state.public.handCounts.getValue(player.id)
             val selected = state.public.turn == player.id
