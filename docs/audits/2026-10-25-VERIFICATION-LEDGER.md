@@ -2,15 +2,19 @@
 
 ## Qualification boundary
 
-Checkpoint: **2026-10-26, 15:48 UTC**. Implemented source is on
-[PR #262](https://github.com/Apdelrahman1911/parlor/pull/262), stacked on
-[PR #261](https://github.com/Apdelrahman1911/parlor/pull/261) and
-[PR #256](https://github.com/Apdelrahman1911/parlor/pull/256).
-The application branch incorporates the release branch's actual ancestry, not
-only equivalent patches. Both overhaul PRs remain drafts at this checkpoint.
+Checkpoint: **2026-10-26, 16:55 UTC**. The aggregate integration tip is
+[PR #263](https://github.com/Apdelrahman1911/parlor/pull/263), containing the actual
+ancestry of [#261](https://github.com/Apdelrahman1911/parlor/pull/261) and
+[#262](https://github.com/Apdelrahman1911/parlor/pull/262), not just equivalent patches.
+All remain drafts at this checkpoint. The plan is one normal protected #263 merge
+after all six latest-head jobs and source-bound cleanup receipts for **each** PR
+qualify, review threads are resolved, and the current base/heads/merge tree are
+rechecked. This avoids invalidating downstream strict up-to-date checks through
+intermediate main merges; it waives no check, protection or approval.
+
 **Implementation and focused passes are not final merge or Store approval.**
-The linked PRs retain exact-head workflow runs, corrections, merge commits and
-subsequent verification receipts; check those live records before qualification.
+PR records retain subsequent exact-head runs, corrections, integration and fresh
+main CI. This committed checkpoint cannot pre-certify those future outcomes.
 
 PR #256 is merged as `81ee9b7b5e1b3fad3c86b9d0cdb2e692d43276c7`.
 [Feature run 40148791277](https://github.com/Apdelrahman1911/parlor/actions/runs/40148791277)
@@ -22,7 +26,46 @@ Merge parents are the previous `main` and the exact qualified feature head;
 its tree equals the qualified feature tree. The separately scoped historical
 strict-protection diagnostic is not part of these six passes and remains unqualified.
 
-### Latest overhaul results and open CI failures
+### Current integration evidence
+
+- **Strict local aggregate PASS at `baab5f1d`**, 15:52:54 UTC: `productionCheck
+  allTests --continue --dependency-verification=strict`, exit 0, 2m21s. Current
+  module XML: 1,748 desktop cases (three existing skips), 644 Android debug and
+  644 release unit cases, zero failures. Release Python: 688 cases, one local
+  environment skip. Valid unchanged-source up-to-date outputs were reused;
+  this is not a claim every case reran at that commit.
+- Hosted #261 `da13ff2f` / run40352669569 and #262 `baab5f1d` / run40353098825
+  now pass their Linux/Android and desktop lanes, including exact notices/lint
+  gates; Apple qualification remains in progress. #261's previously timed-out
+  Swift assertion passed unchanged in the new 10-case native host/UI run.
+- **#263's `6151fb4b` run40353447607 is being superseded by real layout fixes**,
+  not counted as qualifying the changed source. Five completed mandatory lanes
+  and their cleanup receipts passed; Apple release linkage was still running.
+  The new head requires all six fresh checks and source-bound cleanup receipts.
+- Expanded acceptance exposed Settings labels squeezed beside a fixed switch
+  (two real English failures) and Domino opponent names split by fixed-width
+  cards (four real EN/AR failures). Adaptive layouts preserve full font scaling,
+  single-action semantics and concealed hands; Domino's optional roster follows
+  the board and active controls. Settings/app source `ad113dc1`: full app
+  **149 tests passed**, zero failures/skips. New-game source `0107522c`:
+  **85 freshly executed tests passed**, relevant plain/type-aware analysis passed,
+  and 48 explicit EN/AR light/dark frames inspected. Ghamza/Word's 132 differential
+  scenarios cover reducer lifecycle/codec restoration, not network/session recovery.
+- The lead separately reproduced original-three host code wrapping even at 100%
+  with a valid wide-glyph identifier. Four baseline failures at `6704ed9c`; shared
+  scalable/LTR code display passes four methods/eight configurations plus metadata
+  and desktop-test Detekt at `d9b44f5b`. See
+  `2026-10-26-ROOM-CODE-ACCESSIBILITY.md` and `2026-10-26-GAME-ACCEPTANCE.md`.
+- The tracked opt-in real-kit Linux runner executed **10/10 adapter invocations**
+  at `1b468e9f`; 19 harness regressions passed. Real sockets/distinct identities in
+  each single-JVM case do not establish independent-process or physical LAN
+  acceptance. See `2026-10-26-REAL-KIT-LINUX.md`; #6 remains open.
+
+The integrated layout/source changes require a new strict aggregate and full CI.
+Only #257 is potentially closable after qualified integration/post-merge evidence;
+#251/#253/#252/#6/#258 and remaining native/accessibility acceptance stay open.
+
+### Historical checkpoints and resolved/superseded CI failures
 
 - **Subsequent integration `7592c518` did not qualify.** Its full local strict
   aggregate completed in 11m42s: all 1,748 desktop cases (three existing skips)

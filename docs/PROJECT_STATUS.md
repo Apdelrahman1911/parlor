@@ -12,11 +12,20 @@ All twelve corresponding cleanup receipts passed. The six games are now on
 [PR #261](https://github.com/Apdelrahman1911/parlor/pull/261) contains release
 process supervision, and [PR #262](https://github.com/Apdelrahman1911/parlor/pull/262)
 contains the application, game, admission, recovery and accessibility improvements.
-Both remain unmerged while their remaining CI failures are investigated.
-Full strict local `productionCheck allTests --continue` passed at `53a72779`:
-1,747 desktop cases (three pre-existing real-LAN skips), 644 Android debug and
-644 Android release unit cases; 688 release Python cases (one environment skip).
-These are not physical-device results or qualification of subsequent revisions.
+[PR #263](https://github.com/Apdelrahman1911/parlor/pull/263) incorporates their
+ancestry plus reproducible real-kit verification and additional confirmed layout
+fixes. The qualified integration plan is one protected aggregate merge after all
+six latest-head checks and source-bound cleanup receipts for each PR pass. No
+intermediate merge, waived check or protection bypass is used.
+
+At the October 26 16:55 checkpoint these PRs remain unmerged: desktop/Android lanes
+pass, Apple qualification continues, and the changed #263 tip requires fresh full
+verification. Strict local `productionCheck allTests --continue` passed at
+`baab5f1d`: 1,748 desktop cases (three existing skips), 644 Android unit cases per
+variant and 688 Python cases (one local environment skip), with valid up-to-date
+outputs reused. Subsequent focused tests reproduced and fixed enlarged Settings,
+Domino roster and original host room-code layouts. These results do not pre-certify
+the later aggregate or establish native physical-device acceptance.
 
 The [overhaul verification ledger](audits/2026-10-25-VERIFICATION-LEDGER.md)
 maps implementation, failures, fresh evidence and remaining acceptance gates.
