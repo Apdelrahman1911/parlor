@@ -32,7 +32,7 @@ reported 59 warnings:
 
 The remediation removes all 20 correctness, packaging, resource, and catalog
 warnings. Removing eleven unconsumed dependency declarations then removed the
-corresponding update advisories. The current accepted inventory contains 38
+corresponding update advisories. The current accepted inventory contains 37
 warnings, all in the four
 explicitly reviewed advisory classes below:
 
@@ -41,7 +41,7 @@ explicitly reviewed advisory classes below:
 | `OldTargetApi` | 1 | Target/compile SDK 36 is deliberately pinned for the current compatibility baseline. Store target-level compliance must be rechecked at release and can require a reviewed SDK migration. |
 | `AndroidGradlePluginVersion` | 4 | Gradle 8.13 and AGP 8.13.2 are a verified pair. Moving to Gradle 8.14.5 or AGP 9.3.1 is a separate compatibility migration, not a lint-only edit. |
 | `GradleDependency` | 1 | Lint 9.1.1 is the reviewed stable analyzer compatible with Kotlin 2.4 metadata; lint reports a moving, unrelated alpha preview whose latest version is normalized by the gate. |
-| `DependencyUpdate` | 32 | These are update notifications for pinned Activity Compose, datetime, Kotlin, Compose, Navigation 3, Koin, Ktor, Konsist, Detekt, Turbine, and Serialization coordinates. AndroidX Navigation 3 runtime 1.0.0 stays aligned with the reviewed Compose Multiplatform UI port; that UI port stays at alpha06 because newer publications omit the project's `iosX64` target. They do not report a demonstrated correctness defect. Kotlin 2.4.10 remains the compatibility pin; the three Kotlin plugin updates are reviewed below. The Serialization 1.11.0 updates are reviewed below; P2pKit 0.7.0-rc3 did not produce an update advisory in this reviewed run, not a claim it will always be latest. |
+| `DependencyUpdate` | 31 | These are update notifications for pinned Activity Compose, datetime, Kotlin, Compose, Navigation 3, Koin, Ktor, Konsist, Detekt, Turbine, and Serialization coordinates. AndroidX Navigation 3 runtime 1.0.0 stays aligned with the reviewed Compose Multiplatform UI port; that UI port stays at alpha06 because newer publications omit the project's `iosX64` target. They do not report a demonstrated correctness defect. Kotlin 2.4.10 remains the compatibility pin; the three Kotlin plugin updates are reviewed below. The Serialization 1.11.0 updates are reviewed below; P2pKit 0.7.0-rc3 did not produce an update advisory in this reviewed run, not a claim it will always be latest. |
 
 The remaining advisories are not permanent waivers. Dependency/security review
 and store policy can make a specific upgrade mandatory. Such an upgrade must
@@ -129,6 +129,37 @@ advisory and no-KAPT gate above remain applicable and must not be removed.
 Reopen the decision for relevant security evidence or a qualified toolchain
 upgrade. Earlier 37-warning CI receipts remain historical, not substitutes
 for this report's 38-row qualification.
+
+## 2026-10-26 Redundant compiler classpath declaration removed
+
+[PR #261 run 40152548602](https://github.com/Apdelrahman1911/parlor/actions/runs/40152548602)
+and PR #262's matching run reported only 37 warnings: the additional concrete
+compiler artifact advisory was absent, with no unexpected warnings. The
+artifact and plugin-marker advisories use separate metadata lookups; their
+appearance is not a reliable proxy for whether a dependency is resolved.
+The reviewed [Lint 9.1.1 source archive](https://dl.google.com/dl/android/maven2/com/android/tools/lint/lint-checks/32.1.1/lint-checks-32.1.1-sources.jar)
+has SHA-256 `864943a1c096806b77b1719d2016866b1f5baea8bdac405cd43d5f6ba76f71fa`.
+`GradleDetector.checkDependency` takes the maximum of remote metadata and
+`findCachedNewerVersion`; `getMavenMetadata` queries the plugin portal for
+plugin markers and Central for concrete artifacts. This workstation already
+has compiler artifacts 2.4.20/2.4.21 in its shared cache; hosted source did not
+produce their library-alias warning. No shared cache was deleted or seeded to
+alter verification.
+
+Source review found the concrete catalog library was used only by a redundant
+`compileOnly` declaration. The convention plugin applies Compose compiler by
+ID and imports none of its implementation classes. Remove that unused
+declaration and library alias, not the compiler: the root retains
+`alias(libs.plugins.compose.compiler) apply false`, the same Kotlin 2.4.10
+version reference, module plugin application, and artifact verification.
+The plugin-ID advisory remains mandatory. Its removed library-alias advisory
+is no longer an applicable source finding, so the exact inventory returns to
+37 rows. The verifier, warning severities, and strict checks are unchanged;
+there is no optional-warning list or allowance for missing findings.
+
+Regression contracts enforce this classpath arrangement. Fresh convention
+compilation and release lint plus the full cross-platform matrix are required
+to qualify it; the preceding 37/38-warning receipts remain historical.
 
 ## Fixed warning classes
 
