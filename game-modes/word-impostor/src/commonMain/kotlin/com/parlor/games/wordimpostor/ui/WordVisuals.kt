@@ -7,6 +7,7 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
@@ -23,6 +24,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
+import androidx.compose.runtime.key
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -35,7 +37,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.semantics.ProgressBarRangeInfo
+import androidx.compose.ui.semantics.progressBarRangeInfo
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
@@ -50,7 +55,9 @@ internal val WordLilac = Color(0xFFD3C2FF)
 internal val WordText = Color(0xFFF9F2F0)
 
 @Composable
-internal fun WordFrame(modifier: Modifier, content: @Composable ColumnScope.() -> Unit) {
+internal fun WordFrame(modifier: Modifier, resetKey: String, content: @Composable ColumnScope.() -> Unit) {
+    // A new phase, round or help surface starts at its next-action header, not the previous ballot's scroll position.
+    val scroll = key(resetKey) { rememberScrollState() }
     Box(
         modifier.fillMaxSize().background(Brush.verticalGradient(listOf(WordInk, Color(0xFF3B244F), WordInk))),
         contentAlignment = Alignment.TopCenter,
@@ -60,7 +67,7 @@ internal fun WordFrame(modifier: Modifier, content: @Composable ColumnScope.() -
             drawCircle(WordLilac.copy(alpha = .08f), size.width * .65f, Offset(0f, size.height * .8f), style = Stroke(2f))
         }
         Column(
-            Modifier.widthIn(max = 760.dp).fillMaxSize().verticalScroll(rememberScrollState()).parlorSafeContentPadding(20.dp),
+            Modifier.widthIn(max = 760.dp).fillMaxSize().verticalScroll(scroll).parlorSafeContentPadding(20.dp),
             verticalArrangement = Arrangement.spacedBy(20.dp),
             content = content,
         )
@@ -78,7 +85,13 @@ internal fun WordPanel(content: @Composable ColumnScope.() -> Unit) {
 
 @Composable
 internal fun WordTitle(text: String) {
-    Text(text, style = ParlorTheme.typography.displayMedium, color = WordText, modifier = Modifier.semantics { heading() })
+    val fontScale = LocalDensity.current.fontScale
+    BoxWithConstraints(Modifier.fillMaxWidth()) {
+        // Use a semantic heading tier on compact enlarged-text layouts; never cap the user's font scale.
+        val style = if (maxWidth / fontScale < 180.dp) ParlorTheme.typography.headingLarge
+            else ParlorTheme.typography.displayMedium
+        Text(text, style = style, color = WordText, modifier = Modifier.semantics { heading() })
+    }
 }
 
 @Composable
@@ -107,12 +120,16 @@ internal fun WordButton(text: String, enabled: Boolean = true, secondary: Boolea
 
 /** A public phase indicator: never keeps an outgoing secret screen in an animation. */
 @Composable
-internal fun WordPhaseTrack(step: Int) {
+internal fun WordPhaseTrack(step: Int, label: String) {
     val duration = if (ParlorTheme.reducedMotion) 0 else 240
-    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-        repeat(6) { index ->
-            val color by animateColorAsState(if (index <= step) WordPeach else WordPanelColor, tween(duration))
-            Box(Modifier.weight(1f).height(4.dp).background(color, RoundedCornerShape(2.dp)))
+    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        Text(label, color = WordPeach, style = ParlorTheme.typography.labelLarge,
+            modifier = Modifier.semantics { progressBarRangeInfo = ProgressBarRangeInfo((step + 1).toFloat(), 1f..6f) })
+        Row(Modifier.fillMaxWidth().clearAndSetSemantics {}, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+            repeat(6) { index ->
+                val color by animateColorAsState(if (index <= step) WordPeach else WordPanelColor, tween(duration))
+                Box(Modifier.weight(1f).height(4.dp).background(color, RoundedCornerShape(2.dp)))
+            }
         }
     }
 }
@@ -121,7 +138,8 @@ internal fun WordPhaseTrack(step: Int) {
 @Composable
 internal fun WordEmblem(open: Boolean, modifier: Modifier = Modifier) {
     val angle by animateFloatAsState(if (open) 9f else -9f, tween(if (ParlorTheme.reducedMotion) 0 else 280))
-    Canvas(modifier.size(128.dp).clearAndSetSemantics {}) {
+    val artworkSize = if (LocalDensity.current.fontScale >= 1.5f) 64.dp else 128.dp
+    Canvas(modifier.size(artworkSize).clearAndSetSemantics {}) {
         val card = Size(size.width * .54f, size.height * .72f)
         val origin = center - Offset(card.width / 2, card.height / 2)
         rotate(-angle) {

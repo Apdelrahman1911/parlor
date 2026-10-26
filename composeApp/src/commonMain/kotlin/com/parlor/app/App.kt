@@ -24,6 +24,7 @@ import com.parlor.app.shell.game.GameShellLaunch
 import com.parlor.app.shell.game.GameShellBackRequest
 import com.parlor.app.shell.game.GameShellRegistry
 import com.parlor.app.shell.game.GameShellRouter
+import com.parlor.app.shell.home.ResumeDeletionDialog
 import com.parlor.app.shell.home.HomeScreen
 import com.parlor.app.shell.home.HomeRecoveryAvailability
 import com.parlor.app.shell.home.LocalResumeFailureScreen
@@ -109,6 +110,19 @@ internal fun App(settings: SettingsStore) {
                 }
                 val localResumeBusy by localResumeCoordinator.busy.collectAsState()
                 var unfinishedRefreshKey by remember { mutableStateOf(0) }
+                val resumeDeletion = remember(appScope, snapshotStore, roomTransport, navigator) {
+                    ResumeDeletionCoordinator(
+                        scope = appScope,
+                        store = snapshotStore,
+                        transport = roomTransport,
+                        isHome = { navigator.currentRoute == AppRoute.Home },
+                        onDeleted = { unfinishedRefreshKey++ },
+                    )
+                }
+                val deletionState by resumeDeletion.state.collectAsState()
+                LaunchedEffect(currentRoute) {
+                    if (currentRoute != AppRoute.Home) resumeDeletion.invalidate()
+                }
                 var hadOwnedMultiplayerRoute by remember {
                     mutableStateOf(ownedMultiplayerRoute != null)
                 }
@@ -220,6 +234,7 @@ internal fun App(settings: SettingsStore) {
                                 HomeScreen(
                                     games = gameShellRegistry.all,
                                     onGameSelected = { gameId ->
+                                        resumeDeletion.invalidate()
                                         localResumeCoordinator.invalidate()
                                         gameShellRouter.newGame(gameId)?.let { launch ->
                                             navigator.openGame(launch)
@@ -229,7 +244,22 @@ internal fun App(settings: SettingsStore) {
                                     unfinishedSessions =
                                         (homeRecovery as? HomeRecoveryAvailability.Ready)
                                             ?.unfinishedSessions.orEmpty(),
-                                    onResume = requestLocalResume,
+                                    onResume = { sessionId ->
+                                        if (deletionState.request == null) requestLocalResume(sessionId)
+                                    },
+                                    recoveryActionsEnabled = !localResumeBusy && deletionState.request == null,
+                                    onDiscardLocal = { sessionId, label ->
+                                        if (!localResumeBusy) {
+                                            resumeDeletion.request(ResumeDeletionTarget.Local(sessionId), label)
+                                        }
+                                    },
+                                    onDiscardMultiplayer = { label ->
+                                        val selection = (homeRecovery as? HomeRecoveryAvailability.Ready)
+                                            ?.resumableMultiplayer?.deletionSelection
+                                        if (!localResumeBusy) {
+                                            resumeDeletion.request(ResumeDeletionTarget.Multiplayer(selection), label)
+                                        }
+                                    },
                                     hasResumableMultiplayer =
                                         (homeRecovery as? HomeRecoveryAvailability.Ready)
                                             ?.resumableMultiplayer != null,
@@ -317,6 +347,14 @@ internal fun App(settings: SettingsStore) {
                             },
                             modifier = Modifier.fillMaxSize(),
                         )
+                        if (currentRoute == AppRoute.Home) {
+                            val request = deletionState.request
+                            ResumeDeletionDialog(
+                                state = deletionState,
+                                onConfirm = { request?.let(resumeDeletion::confirm) },
+                                onCancel = { request?.let(resumeDeletion::cancel) },
+                            )
+                        }
                         ParlorToastHost(
                             state = toastState,
                             modifier = Modifier.align(Alignment.BottomCenter),

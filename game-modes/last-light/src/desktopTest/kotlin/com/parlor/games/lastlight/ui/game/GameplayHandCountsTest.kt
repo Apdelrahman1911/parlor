@@ -29,6 +29,7 @@ import androidx.compose.ui.test.runComposeUiTest
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.parlor.designsystem.localization.asBidiArgument
 import com.parlor.core.ids.PlayerId
 import com.parlor.designsystem.localization.AppLanguage
 import com.parlor.games.lastlight.LastLightTestFixture
@@ -290,8 +291,8 @@ class GameplayHandCountsTest {
                 } else assertTrue(next.top >= first.bottom, "Seat rows overlap or changed table order")
             }
             val suffix = if (language == AppLanguage.Arabic) "المقعد" else "seat"
-            onNodeWithTag("game-player-a").assert(hasContentDescription("Guest · $suffix 1", substring = true))
-            onNodeWithTag("game-player-b").assert(hasContentDescription("Guest · $suffix 2", substring = true))
+            onNodeWithTag("game-player-a").assert(hasContentDescription("${"Guest".asBidiArgument()} · $suffix 1", substring = true))
+            onNodeWithTag("game-player-b").assert(hasContentDescription("${"Guest".asBidiArgument()} · $suffix 2", substring = true))
         }
         capture("hand-counts-${language.tag}-zero-to-five")
     }

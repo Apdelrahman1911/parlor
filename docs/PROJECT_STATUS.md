@@ -1,4 +1,41 @@
-# Project status — 2026-09-18
+# Project status — 2026-10-26
+
+## October production overhaul checkpoint
+
+[PR #256](https://github.com/Apdelrahman1911/parlor/pull/256) is merged as
+`81ee9b7b5e1b3fad3c86b9d0cdb2e692d43276c7`. All six mandatory jobs passed
+both the exact feature head and the fresh
+[post-merge run 40156824703](https://github.com/Apdelrahman1911/parlor/actions/runs/40156824703).
+All twelve corresponding cleanup receipts passed. The six games are now on
+`main`; this does not establish physical multiplayer or Store readiness.
+
+[PR #261](https://github.com/Apdelrahman1911/parlor/pull/261) contains release
+process supervision, and [PR #262](https://github.com/Apdelrahman1911/parlor/pull/262)
+contains the application, game, admission, recovery and accessibility improvements.
+[PR #263](https://github.com/Apdelrahman1911/parlor/pull/263) incorporates their
+ancestry plus reproducible real-kit verification and additional confirmed layout
+fixes. The qualified integration plan is one protected aggregate merge after all
+six latest-head checks and source-bound cleanup receipts for each PR pass. No
+intermediate merge, waived check or protection bypass is used.
+
+At the October 26 16:55 checkpoint these PRs remain unmerged: desktop/Android lanes
+pass, Apple qualification continues, and the changed #263 tip requires fresh full
+verification. Strict local `productionCheck allTests --continue` passed at
+`baab5f1d`: 1,748 desktop cases (three existing skips), 644 Android unit cases per
+variant and 688 Python cases (one local environment skip), with valid up-to-date
+outputs reused. Subsequent focused tests reproduced and fixed enlarged Settings,
+Domino roster and original host room-code layouts. These results do not pre-certify
+the later aggregate or establish native physical-device acceptance.
+
+The [overhaul verification ledger](audits/2026-10-25-VERIFICATION-LEDGER.md)
+maps implementation, failures, fresh evidence and remaining acceptance gates.
+RPC was evaluated and the existing published P2pKit `0.7.0-rc3` messaging retained;
+no measured mobile-host benefit justified a migration. Physical Android/iOS
+host/client interruption testing, power/thermal measurements, assistive-technology
+journeys, strict iOS protection, signing/account ownership and release approval
+remain outstanding. No Store release was performed.
+
+## September checkpoint (historical)
 
 **The readiness continuation is integrated into `main`; this is not Store-release
 approval.** Source and executable contracts remain authoritative. Start with

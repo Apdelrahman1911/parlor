@@ -1,5 +1,6 @@
 package com.parlor.games.whodunit.domain.action
 
+import com.parlor.core.serialization.requireBoundedJsonNesting
 import com.parlor.networking.protocol.MAX_COMMAND_PAYLOAD_BYTES
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
@@ -37,6 +38,7 @@ object WhodunitActionCodec {
     /** Decode a `PeerMessage.ClientCommand.payload` back to a typed action. */
     fun decode(bytes: ByteArray): WhodunitAction {
         requireBounded(bytes)
+        requireBoundedJsonNesting(bytes)
         val encoded = bytes.decodeToString(throwOnInvalidSequence = true)
         rejectRetiredAction(encoded)
         return json.decodeFromString(WhodunitAction.serializer(), encoded)

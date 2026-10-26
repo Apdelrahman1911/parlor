@@ -15,7 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.semantics.semantics
 import com.parlor.designsystem.theme.ParlorTheme
 
 /** Visibility/authority status shown above sensitive or host-led moments. */
@@ -44,31 +44,38 @@ fun ContextRibbon(
     } else {
         colors.borderSubtle
     }
-    Row(
+    AdaptiveOptions(
         modifier = modifier
             .fillMaxWidth()
             .clip(shape)
             .background(background)
             .border(ParlorTheme.borders.hairline, border, shape)
-            .padding(horizontal = ParlorTheme.spacing.m, vertical = ParlorTheme.spacing.s),
-        horizontalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.s),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        ContextMarker(marker)
-        Text(
-            text = label,
-            style = ParlorTheme.typography.labelSmall,
-            color = primaryText,
-            modifier = Modifier.weight(1f),
-        )
-        Text(
-            text = detail,
-            style = ParlorTheme.typography.labelSmall,
-            color = secondaryText,
-            textAlign = TextAlign.End,
-            modifier = Modifier.weight(1f),
-        )
-    }
+            .padding(horizontal = ParlorTheme.spacing.m, vertical = ParlorTheme.spacing.s)
+            .semantics(mergeDescendants = true) {},
+        first = {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.s),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                ContextMarker(marker)
+                Text(
+                    text = label,
+                    style = ParlorTheme.typography.labelSmall,
+                    color = primaryText,
+                    modifier = Modifier.weight(1f),
+                )
+            }
+        },
+        second = {
+            Text(
+                text = detail,
+                style = ParlorTheme.typography.bodySmall,
+                color = secondaryText,
+                modifier = Modifier.fillMaxWidth(),
+            )
+        },
+    )
 }
 
 private const val INVERTED_BORDER_ALPHA = 0.55f

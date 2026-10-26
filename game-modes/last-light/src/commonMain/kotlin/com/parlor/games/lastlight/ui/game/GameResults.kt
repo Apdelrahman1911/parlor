@@ -48,6 +48,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.parlor.designsystem.localization.asBidiArgument
 import com.parlor.games.lastlight.ui.PendingAction
 import com.parlor.games.lastlight.ui.theme.DeckButton
 import com.parlor.games.lastlight.ui.theme.LocalReduceMotion
@@ -141,9 +142,9 @@ internal fun ChallengeResult(
     modifier: Modifier = Modifier,
     announceVerdict: Boolean = true,
 ) {
-    val claimant = playerName(view, outcome.claimantId)
-    val challenger = playerName(view, outcome.challengerId)
-    val penalized = playerName(view, outcome.penalizedPlayerId)
+    val claimant = playerName(view, outcome.claimantId).asBidiArgument()
+    val challenger = playerName(view, outcome.challengerId).asBidiArgument()
+    val penalized = playerName(view, outcome.penalizedPlayerId).asBidiArgument()
     val verdict = stringResource(if (outcome.truthful) Res.string.game_truth_title else Res.string.game_bluff_title)
     val accent = if (outcome.truthful) LastLightColors.Citron else LastLightColors.Copper
     Column(modifier, verticalArrangement = Arrangement.spacedBy(16.dp)) {
@@ -423,7 +424,7 @@ private fun WinnerSummary(view: GameView, largeText: Boolean, shortLandscape: Bo
         verticalArrangement = Arrangement.spacedBy(if (shortLandscape) 8.dp else 12.dp),
     ) {
         Text(
-            stringResource(Res.string.game_winner_name, playerName(view, view.winnerId)),
+            stringResource(Res.string.game_winner_name, playerName(view, view.winnerId).asBidiArgument()),
             // Use a readable base style while preserving the user's complete system font scale.
             style = if (largeText) MaterialTheme.typography.titleLarge else MaterialTheme.typography.displaySmall,
             color = LastLightColors.Paper,

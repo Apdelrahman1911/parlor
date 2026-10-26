@@ -58,6 +58,10 @@ interface RoomTransport {
      */
     suspend fun discardResumableSession(): Result<Unit, NetError> = Result.Success(Unit)
 
+    /** Deletes only the observed selection; implementations without ownership support fail closed. */
+    suspend fun discardResumableSession(selection: ResumableSessionSelection): Result<Unit, NetError> =
+        Result.Failure(NetError.SecureStorageUnavailable)
+
     /**
      * Stream of rooms currently visible to this transport. Transports that
      * don't support discovery emit an empty list once and complete. A UI may
@@ -143,6 +147,12 @@ data class JoinConfig(
     val code: String,
     val displayName: String,
     val rejoinToken: String? = null,
+    /**
+     * Selected game binding, checked against authenticated admission metadata
+     * before confirming membership. Null is reserved for game-agnostic callers;
+     * shipping game join flows must supply this. This is not a wire field.
+     */
+    val expectedGameProtocol: HostedGameProtocol? = null,
 )
 
 data class ResumableSessionInfo(
@@ -150,4 +160,9 @@ data class ResumableSessionInfo(
     val gameVersion: Int,
     val displayName: String,
     val expiresAtEpochMillis: Long,
+    /** Opaque, non-secret ownership capability; never reconstructed from presentation fields. */
+    val deletionSelection: ResumableSessionSelection? = null,
 )
+
+/** An implementation-owned handle, not a room credential or a serialized player identity. */
+interface ResumableSessionSelection

@@ -36,7 +36,7 @@ object DominoValidation {
         if (own.hand.any { tile -> state.public.chain.any { it.tile == tile } }) return false
         if (state.public.result?.remainingPips?.get(id)?.let { it != own.hand.sumOf(DominoTile::pips) } == true) return false
         val requiresOpening = state.public.chain.isEmpty() && state.public.round == 1 && state.public.turn == id
-        return if (requiresOpening) own.requiredOpening != null && own.requiredOpening in own.hand else own.requiredOpening == null
+        return if (requiresOpening) own.requiredOpening == DominoRules.highestOpening(own.hand) else own.requiredOpening == null
     }
 
     private fun validBounds(state: DominoState, ids: Set<PlayerId>): Boolean {

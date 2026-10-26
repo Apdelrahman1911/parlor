@@ -16,7 +16,7 @@ import tempfile
 import zipfile
 from pathlib import Path
 
-from scripts.release.github_distribution import OUT, ROOT, PLATFORMS, canonical, digest, filename, require, run, version
+from scripts.release.github_distribution import OUT, ROOT, PLATFORMS, canonical, digest, filename, read_log_tail, require, run, run_logged, version
 from scripts.release.distribution_image import (
     inventory_digest, materialize_linux_runtime_notices, prepare_skiko, require_same_image, verify_no_embedded_native,
 )
@@ -27,6 +27,9 @@ from scripts.verification.android_release_artifacts import inspect_manifest
 WORK = OUT / "work"
 WINDOWS_UPGRADE_UUID = "fd36ca1f-9707-486a-8104-22b16cb475a6"
 LINUX_RESOURCES = ROOT / "config/github-distribution/linux"
+BUILD_LOG_LIMIT = 256 * 1024 * 1024
+BUILD_LOG_TAIL_BYTES = 18_000
+BUILD_TIMEOUT_SECONDS = 5400
 
 
 def check_host(platform: str) -> None:
@@ -45,14 +48,37 @@ def java_tool(name: str) -> str:
 
 def gradle(tasks: list[str]) -> None:
     OUT.mkdir(parents=True, exist_ok=True)
-    # This step never receives signing credentials. Build logs are not in the frozen/public bundle.
-    command = [str(ROOT / ("gradlew.bat" if host.system() == "Windows" else "gradlew")), *tasks,
-               "--dependency-verification=strict", "--no-daemon", "--console=plain", "--stacktrace"]
-    with (OUT / "build.log").open("w", encoding="utf-8") as output:
-        result = subprocess.run(command, cwd=ROOT, stdout=output, stderr=subprocess.STDOUT, timeout=5400, check=False)
-    if result.returncode:
-        print((OUT / "build.log").read_text(encoding="utf-8")[-18000:])
-    require(result.returncode == 0, "Wrapper build failed; see build/github-distribution/build.log")
+    # --no-daemon may still launch Gradle's single-use daemon, which detaches
+    # from the wrapper's POSIX session. Isolate ONLY its registry; artifact and
+    # wrapper caches remain shared. Cleanup never searches/stops global daemons.
+    registry = Path(tempfile.mkdtemp(prefix="owned-gradle-daemons-", dir=OUT)).resolve()
+    registry_option = "-Dorg.gradle.daemon.registry.base=" + str(registry)
+    wrapper = str(ROOT / ("gradlew.bat" if host.system() == "Windows" else "gradlew"))
+    # This step never receives signing credentials. Build/daemon logs are not
+    # included in frozen/public bundles; retain them on failure for diagnosis.
+    command = [wrapper, *tasks, "--dependency-verification=strict", "--no-daemon",
+               "--console=plain", "--stacktrace", "-Pkotlin.compiler.execution.strategy=in-process", registry_option]
+    log = OUT / "build.log"
+    try:
+        try:
+            code = run_logged(command, log, timeout=BUILD_TIMEOUT_SECONDS, output_limit=BUILD_LOG_LIMIT)
+        except RuntimeError:
+            if log.is_file():
+                print(read_log_tail(log, BUILD_LOG_TAIL_BYTES))
+            raise
+        if code:
+            print(read_log_tail(log, BUILD_LOG_TAIL_BYTES))
+        require(code == 0, "Wrapper build failed; see build/github-distribution/build.log")
+    finally:
+        # BaseDirOption is verified against the pinned Gradle 8.13 implementation.
+        # A daemon can exit on client loss first; an empty owned registry is fine.
+        # Do not remove registry/logs or infer successful cleanup when stop fails.
+        stop = [wrapper, "--stop", registry_option, "--console=plain"]
+        try:
+            stopped = run_logged(stop, registry / "stop.log", timeout=90, output_limit=1024 * 1024)
+        except (RuntimeError, OSError):
+            raise RuntimeError("Invocation-owned Gradle cleanup failed; private registry and logs retained") from None
+        require(stopped == 0, "Invocation-owned Gradle cleanup failed; private registry and logs retained")
 
 
 def image_path(platform: str) -> Path:

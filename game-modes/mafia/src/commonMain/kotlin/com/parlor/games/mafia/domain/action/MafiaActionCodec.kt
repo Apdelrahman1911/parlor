@@ -1,5 +1,6 @@
 package com.parlor.games.mafia.domain.action
 
+import com.parlor.core.serialization.requireBoundedJsonNesting
 import com.parlor.networking.protocol.MAX_COMMAND_PAYLOAD_BYTES
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
@@ -30,6 +31,7 @@ object MafiaActionCodec {
 
     fun decode(bytes: ByteArray): MafiaAction {
         requireBounded(bytes)
+        requireBoundedJsonNesting(bytes)
         val encoded = bytes.decodeToString(throwOnInvalidSequence = true)
         rejectRetiredAction(encoded)
         return json.decodeFromString(MafiaAction.serializer(), encoded)

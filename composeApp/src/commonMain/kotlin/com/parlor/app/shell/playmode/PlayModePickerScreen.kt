@@ -64,6 +64,7 @@ import com.parlor.app.resources.setup_title
 import com.parlor.app.shell.game.GameEntryMode
 import com.parlor.app.shell.game.GameShellCapabilities
 import com.parlor.designsystem.backdrop.HeroBackdrop
+import com.parlor.designsystem.components.AdaptiveOptions
 import com.parlor.designsystem.components.EyebrowLabel
 import com.parlor.designsystem.components.ParlorCard
 import com.parlor.designsystem.components.ScreenHeader
@@ -133,38 +134,39 @@ internal fun PlayModePickerScreen(
                 backContentDescription = stringResource(Res.string.setup_back_description),
             )
 
+            TopologyHeading(stringResource(Res.string.setup_each_device_label))
+            AdaptiveOptions(
+                first = {
+                    SetupOptionCard(
+                        icon = SetupIcon.Host,
+                        title = stringResource(Res.string.setup_host_title),
+                        body = stringResource(Res.string.setup_host_body),
+                        meta = stringResource(Res.string.setup_host_meta),
+                        contentDescription = stringResource(Res.string.setup_host_choose_description),
+                        onClick = onHost,
+                        modifier = Modifier.fillMaxWidth(),
+                        enabled = availability.host,
+                        disabledHint = stringResource(Res.string.setup_multiplayer_disabled),
+                        emphasized = true,
+                    )
+                },
+                second = {
+                    SetupOptionCard(
+                        icon = SetupIcon.Join,
+                        title = stringResource(Res.string.setup_join_title),
+                        body = stringResource(Res.string.setup_join_body),
+                        meta = stringResource(Res.string.setup_join_meta),
+                        contentDescription = stringResource(Res.string.setup_join_choose_description),
+                        onClick = onJoin,
+                        modifier = Modifier.fillMaxWidth(),
+                        enabled = availability.join,
+                        disabledHint = stringResource(Res.string.setup_multiplayer_disabled),
+                    )
+                },
+            )
+
             if (availability.solo || availability.passAndPlay) {
                 LocalPlayOptions(model, onModeSelected)
-            }
-
-            TopologyHeading(stringResource(Res.string.setup_each_device_label))
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.s),
-                verticalAlignment = Alignment.Top,
-            ) {
-                SetupOptionCard(
-                    icon = SetupIcon.Host,
-                    title = stringResource(Res.string.setup_host_title),
-                    body = stringResource(Res.string.setup_host_body),
-                    meta = stringResource(Res.string.setup_host_meta),
-                    contentDescription = stringResource(Res.string.setup_host_choose_description),
-                    onClick = onHost,
-                    modifier = Modifier.weight(1f),
-                    enabled = availability.host,
-                    disabledHint = stringResource(Res.string.setup_multiplayer_disabled),
-                )
-                SetupOptionCard(
-                    icon = SetupIcon.Join,
-                    title = stringResource(Res.string.setup_join_title),
-                    body = stringResource(Res.string.setup_join_body),
-                    meta = stringResource(Res.string.setup_join_meta),
-                    contentDescription = stringResource(Res.string.setup_join_choose_description),
-                    onClick = onJoin,
-                    modifier = Modifier.weight(1f),
-                    enabled = availability.join,
-                    disabledHint = stringResource(Res.string.setup_multiplayer_disabled),
-                )
             }
 
             Text(
@@ -319,19 +321,24 @@ private fun StandardOptionContent(
     meta: String,
     enabled: Boolean,
 ) {
-    Column(verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.s)) {
+    Row(horizontalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.m)) {
         ModeGlyph(icon = icon, enabled = enabled)
-        OptionTitle(title = title, enabled = enabled)
-        OptionBody(body = body, enabled = enabled)
-        Text(
-            text = meta,
-            style = ParlorTheme.typography.labelMedium,
-            color = if (enabled) {
-                ParlorTheme.colors.accentEmber
-            } else {
-                ParlorTheme.colors.textTertiary
-            },
-        )
+        Column(
+            modifier = Modifier.weight(1f),
+            verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.s),
+        ) {
+            OptionTitle(title = title, enabled = enabled)
+            OptionBody(body = body, enabled = enabled)
+            Text(
+                text = meta,
+                style = ParlorTheme.typography.labelMedium,
+                color = if (enabled) {
+                    ParlorTheme.colors.accentEmber
+                } else {
+                    ParlorTheme.colors.textTertiary
+                },
+            )
+        }
     }
 }
 

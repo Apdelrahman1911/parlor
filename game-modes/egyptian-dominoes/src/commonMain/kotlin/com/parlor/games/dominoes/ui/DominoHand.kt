@@ -98,7 +98,7 @@ internal fun DominoHand(
         FlowRow(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween,
             verticalArrangement = Arrangement.spacedBy(4.dp), itemVerticalAlignment = Alignment.CenterVertically) {
             Text(stringResource(Res.string.dom_hand), color = DominoGold, style = ParlorTheme.typography.labelLarge)
-            TextButton(onClick = { onVisibility(!visible) }, enabled = enabled, modifier = Modifier.heightIn(min = 48.dp)) {
+            TextButton(onClick = { onVisibility(!visible) }, enabled = enabled || visible, modifier = Modifier.heightIn(min = 48.dp)) {
                 Text(stringResource(if (visible) Res.string.dom_hide else Res.string.dom_reveal), color = DominoGold)
             }
         }

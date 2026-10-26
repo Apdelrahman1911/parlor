@@ -1,5 +1,6 @@
 package com.parlor.games.mafia.ui.flow.multidevice
 
+import com.parlor.core.serialization.requireBoundedJsonNesting
 import com.parlor.core.ids.PlayerId
 import com.parlor.core.result.Result
 import com.parlor.engine.projection.PrivateProjection
@@ -116,6 +117,8 @@ class MafiaPeerRoomBridge(
         @Suppress("UNUSED_PARAMETER") revision: Long,
     ): Boolean {
         val decoded = try {
+            requireBoundedJsonNesting(payload.publicPayload)
+            requireBoundedJsonNesting(payload.privatePayload)
             val publicState = json.decodeFromString(
                 publicSerializer,
                 payload.publicPayload.decodeToString(throwOnInvalidSequence = true),

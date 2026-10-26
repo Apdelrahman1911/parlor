@@ -24,6 +24,10 @@ object DominoRules {
 
     fun initialStock(settings: DominoSettings, players: Int): Int = tiles(settings, players).size - players * handSize(settings, players)
 
+    /** Highest double opens; without doubles, pip total then highest end breaks ties. */
+    fun highestOpening(tiles: List<DominoTile>): DominoTile? = tiles.filter { it.isDouble }.maxByOrNull { it.high }
+        ?: tiles.maxWithOrNull(compareBy<DominoTile> { it.pips }.thenBy { it.high })
+
     /** Works on an own-player projection; no opponent hand is needed by UI. */
     fun playableEnds(state: DominoState, playerId: PlayerId, tile: DominoTile): Set<DominoEnd> {
         val own = state.privatePerPlayer[playerId] ?: return emptySet()

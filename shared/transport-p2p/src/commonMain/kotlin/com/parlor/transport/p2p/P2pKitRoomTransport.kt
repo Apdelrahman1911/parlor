@@ -31,6 +31,7 @@ import com.parlor.networking.transport.JoinConfig
 import com.parlor.networking.transport.LocalNetworkAccess
 import com.parlor.networking.transport.RoomTransport
 import com.parlor.networking.transport.ResumableSessionInfo
+import com.parlor.networking.transport.ResumableSessionSelection
 import com.parlor.networking.transport.TransportCapability
 import com.parlor.networking.security.SecureHashes
 import com.parlor.networking.security.SecureIds
@@ -509,6 +510,7 @@ class P2pKitRoomTransport @Suppress("LongParameterList") private constructor(
                         code = effectiveConfig.code,
                         displayName = effectiveConfig.displayName,
                         selfPlayerId = PlayerId(kit.localPeerId.value),
+                        expectedGameProtocol = effectiveConfig.expectedGameProtocol,
                         firstResponseTimeoutMs = minOf(
                             FIRST_ADMISSION_RESPONSE_TIMEOUT_MS,
                             remainingFirstResponseBudgetMs,
@@ -630,10 +632,11 @@ class P2pKitRoomTransport @Suppress("LongParameterList") private constructor(
     }
 
     override suspend fun resumableSession(): Result<ResumableSessionInfo?, NetError> =
-        when (val loaded = credentialStore.loadResumeCandidate()) {
+        when (val loaded = credentialStore.loadSelectedResumeCandidate()) {
             is Result.Failure -> Result.Failure(NetError.SecureStorageUnavailable)
             is Result.Success -> {
-                val credential = loaded.data ?: return Result.Success(null)
+                val observed = loaded.data ?: return Result.Success(null)
+                val credential = observed.credential
                 if (credential.expiresAtEpochMillis <= nowMillis()) {
                     when (
                         invalidateStoredCredential(
@@ -655,11 +658,33 @@ class P2pKitRoomTransport @Suppress("LongParameterList") private constructor(
                             gameVersion = gameVersion,
                             displayName = credential.displayName,
                             expiresAtEpochMillis = credential.expiresAtEpochMillis,
+                            deletionSelection = observed.selection,
                         ),
                     )
                 }
             }
         }
+
+    override suspend fun discardResumableSession(
+        selection: ResumableSessionSelection,
+    ): Result<Unit, NetError> {
+        if (selection !is CredentialDeletionSelection) {
+            return Result.Failure(NetError.SecureStorageUnavailable)
+        }
+        val invalidated = try {
+            credentialStore.invalidateSelection(selection)
+        } catch (@Suppress("TooGenericExceptionCaught") failure: Exception) {
+            failure.rethrowIfCancellation()
+            return Result.Failure(NetError.SecureStorageUnavailable)
+        }
+        return when (val result = invalidated) {
+            is Result.Failure -> Result.Failure(NetError.SecureStorageUnavailable)
+            is Result.Success -> when (result.data) {
+                CredentialInvalidationResult.Invalidated -> Result.Success(Unit)
+                CredentialInvalidationResult.NotOwned -> Result.Failure(NetError.SecureStorageUnavailable)
+            }
+        }
+    }
 
     override suspend fun discardResumableSession(): Result<Unit, NetError> {
         val credential = when (val loaded = credentialStore.loadResumeCandidate()) {
@@ -911,6 +936,7 @@ class P2pKitRoomTransport @Suppress("LongParameterList") private constructor(
         displayName: String,
         selfPlayerId: PlayerId,
         firstResponseTimeoutMs: Long,
+        expectedGameProtocol: HostedGameProtocol?,
     ): AdmissionOutcome = coroutineScope {
         val responses = Channel<HostMessage>(capacity = 8)
         val collector = launch(start = CoroutineStart.UNDISPATCHED) {
@@ -1004,6 +1030,16 @@ class P2pKitRoomTransport @Suppress("LongParameterList") private constructor(
                     ) ?: return@coroutineScope AdmissionOutcome.Rejected(
                         AdmissionRejection.InvalidCredential,
                     )
+                    // The encrypted offer identifies the authoritative game. Reject
+                    // before staging secrets or confirming membership: discovery text
+                    // is not authority and waiting for SessionStarting is too late.
+                    if (expectedGameProtocol != null && (
+                        credential.gameId != expectedGameProtocol.gameId.raw ||
+                            credential.gameVersion != expectedGameProtocol.gameVersion
+                        )
+                    ) {
+                        return@coroutineScope AdmissionOutcome.Failed(NetError.IncompatibleProtocol)
+                    }
                     when (credentialStore.stage(credential)) {
                         is Result.Failure ->
                             return@coroutineScope AdmissionOutcome.Failed(

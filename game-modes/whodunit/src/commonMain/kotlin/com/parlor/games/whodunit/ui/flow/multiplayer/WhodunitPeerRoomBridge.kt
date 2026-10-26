@@ -1,5 +1,6 @@
 package com.parlor.games.whodunit.ui.flow.multiplayer
 
+import com.parlor.core.serialization.requireBoundedJsonNesting
 import com.parlor.content.validation.ValidatedCase
 import com.parlor.core.ids.PlayerId
 import com.parlor.core.result.Result
@@ -128,6 +129,8 @@ class WhodunitPeerRoomBridge(
         @Suppress("UNUSED_PARAMETER") revision: Long,
     ): Boolean {
         val decoded = try {
+            requireBoundedJsonNesting(payload.publicPayload)
+            requireBoundedJsonNesting(payload.privatePayload)
             val publicState = json.decodeFromString(
                 publicSerializer,
                 payload.publicPayload.decodeToString(throwOnInvalidSequence = true),

@@ -18,6 +18,7 @@ import com.parlor.designsystem.backdrop.HeroBackdrop
 import com.parlor.designsystem.components.EyebrowLabel
 import com.parlor.designsystem.components.ContextRibbon
 import com.parlor.designsystem.components.ParlorContextTone
+import com.parlor.designsystem.components.ParlorCard
 import com.parlor.designsystem.components.ParlorButton
 import com.parlor.designsystem.components.parlorSafeContentPadding
 import com.parlor.designsystem.theme.ParlorTheme
@@ -27,7 +28,6 @@ import com.parlor.games.whodunit.resources.Res
 import com.parlor.games.whodunit.resources.round_begin_discussion
 import com.parlor.games.whodunit.resources.round_begin_discussion_description
 import com.parlor.games.whodunit.resources.round_context_public
-import com.parlor.games.whodunit.resources.round_clue_bullet_format
 import com.parlor.games.whodunit.resources.round_clue_eyebrow_format
 import com.parlor.games.whodunit.resources.round_discussion_eyebrow
 import com.parlor.games.whodunit.resources.round_eyebrow_format
@@ -170,11 +170,19 @@ fun DiscussionScreen(
                 color = ParlorTheme.colors.textPrimary,
             )
             revealedClues.forEach { c ->
-                Text(
-                    text = stringResource(Res.string.round_clue_bullet_format, c.text),
-                    style = ParlorTheme.typography.bodyLarge,
-                    color = ParlorTheme.colors.textPrimary,
-                )
+                ParlorCard(modifier = Modifier.fillMaxWidth()) {
+                    Column(verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.s)) {
+                        EyebrowLabel(
+                            text = stringResource(Res.string.round_clue_eyebrow_format, c.roundIndex),
+                            accent = false,
+                        )
+                        Text(
+                            text = c.text,
+                            style = ParlorTheme.typography.bodyLarge,
+                            color = ParlorTheme.colors.textPrimary,
+                        )
+                    }
+                }
             }
             Spacer(modifier = Modifier.height(ParlorTheme.spacing.l))
             ParlorButton(

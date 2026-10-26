@@ -32,7 +32,11 @@ object GhamzaValidation {
         val own = state.privatePerPlayer.getValue(id)
         if (state.phase == GhamzaPhase.Aborted) return own == GhamzaPrivate()
         if (own.role == null) return false
-        if (own.role == GhamzaRole.Winker && (state.public.reports[id] != 0 || state.public.finalGuesser == id)) return false
+        // The Winker never self-reports and can never be the final guesser.
+        // A Guest projection must still leave a possible Winker in another seat.
+        val candidates = state.public.reports.filterValues { it == 0 }.keys - setOfNotNull(state.public.finalGuesser)
+        if (own.role == GhamzaRole.Winker && id !in candidates) return false
+        if (own.role == GhamzaRole.Guest && (candidates - id).isEmpty()) return false
         val result = state.public.result
         return result == null || (own.role == GhamzaRole.Winker) == (result.winker == id)
     }

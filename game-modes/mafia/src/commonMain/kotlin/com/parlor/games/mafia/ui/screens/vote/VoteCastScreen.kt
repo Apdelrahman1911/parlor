@@ -68,6 +68,7 @@ fun VoteCastScreen(
         },
         allowSkip = true,
         skipLabel = stringResource(Res.string.vote_abstain),
+        privateSelection = false,
         modifier = modifier,
     )
 }

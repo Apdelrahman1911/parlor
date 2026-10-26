@@ -1,5 +1,6 @@
 package com.parlor.games.lastlight.protocol
 
+import com.parlor.core.serialization.requireBoundedJsonNesting
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.json.Json
 
@@ -19,6 +20,7 @@ internal class LastLightWireFormat(json: Json = Json) {
 
     fun <T> decode(serializer: KSerializer<T>, payload: ByteArray, maximumBytes: Int): T {
         requireBounded(payload, maximumBytes)
+        requireBoundedJsonNesting(payload)
         val decoded = json.decodeFromString(serializer, payload.decodeToString(throwOnInvalidSequence = true))
         val canonical = json.encodeToString(serializer, decoded).encodeToByteArray()
         require(payload.contentEquals(canonical)) { "Last Light payload is not canonical" }

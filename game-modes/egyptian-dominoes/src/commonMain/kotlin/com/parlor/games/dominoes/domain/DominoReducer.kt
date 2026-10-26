@@ -165,8 +165,7 @@ class DominoReducer : GameReducer<DominoState, DominoAction, DominoChanged> {
         val handSize = DominoRules.handSize(settings, players.size)
         val hands = players.associate { player -> player.id to tiles.drop(player.seat * handSize).take(handSize) }
         val dealt = hands.values.flatten()
-        val opening = if (previousWinner != null) null else
-            dealt.filter { it.isDouble }.maxByOrNull { it.high } ?: dealt.maxWith(compareBy<DominoTile> { it.pips }.thenBy { it.high })
+        val opening = if (previousWinner != null) null else checkNotNull(DominoRules.highestOpening(dealt))
         val leader = previousWinner ?: hands.entries.first { opening in it.value }.key
         val stock = tiles.drop(players.size * handSize)
         return DominoState(

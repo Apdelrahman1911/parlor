@@ -173,6 +173,17 @@ def verify_owned_ios_app_launch(text: str) -> None:
         fail("validation workflow must finalize owned iOS resources immediately after app-launch")
 
 
+def verify_windows_distribution_ownership(text: str) -> None:
+    name = "Verify Windows distribution process ownership"
+    step = validation_step(text, name)
+    expected = '        timeout-minutes: 2\n        shell: python\n        run: |\n          import os, sys, unittest\n          sys.path.insert(0, os.getcwd())\n          unittest.main(module="scripts.release.tests.test_distribution_process_ownership", argv=["ownership-tests"], verbosity=2)\n'
+    if step.strip("\n") != expected.strip("\n"):
+        fail("Windows distribution process ownership must run its exact mandatory native tests")
+    if not (text.index("- name: Require the Windows x64 host\n") < text.index(f"- name: {name}\n") <
+            text.index("- name: Resolve and test the Windows x64 host-selected graphs\n")):
+        fail("Windows distribution process ownership must execute on the verified host before build tools")
+
+
 def verify_windows_checkout(text: str) -> None:
     """Preserve complete evidence and fail closed before a scoped Windows checkout."""
     header = text.split("\n    steps:\n", 1)[0]
@@ -557,6 +568,7 @@ def verify_verification_scopes(text: str) -> None:
             fail("verification scope must retain full jobs and isolate the Windows-only follow-up")
         if name == "desktop-windows-x64":
             verify_windows_checkout(block)
+            verify_windows_distribution_ownership(block)
         elif name == "desktop-android":
             verify_linux_process_probe(block)
     ios = validation_job(text, "ios")

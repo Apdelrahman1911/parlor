@@ -32,11 +32,15 @@ import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
+import com.parlor.designsystem.localization.asBidiArgument
 import com.parlor.games.lastlight.ui.theme.LastLightColors
 import com.parlor.games.lastlight.ui.theme.SectionLabel
 import com.parlor.games.lastlight.domain.model.GameView
 import com.parlor.games.lastlight.domain.model.PlayerId
 import com.parlor.games.lastlight.resources.Res
+import com.parlor.games.lastlight.resources.game_challenge_help
+import com.parlor.games.lastlight.resources.game_challenge_help_hide
+import com.parlor.games.lastlight.resources.game_challenge_help_body
 import com.parlor.games.lastlight.resources.game_claim_facedown
 import com.parlor.games.lastlight.resources.game_claim_sentence
 import com.parlor.games.lastlight.resources.game_hide_previous_reveal
@@ -60,7 +64,7 @@ internal fun playerName(view: GameView, playerId: PlayerId?): String {
     if (seat < 0) return stringResource(Res.string.game_player_fallback)
     val name = view.players[seat].displayName
     return if (view.players.count { it.displayName.equals(name, ignoreCase = true) } > 1) {
-        stringResource(Res.string.game_player_numbered, name, seat + 1)
+        stringResource(Res.string.game_player_numbered, name.asBidiArgument(), seat + 1)
     } else name
 }
 
@@ -88,6 +92,7 @@ internal fun PublicGameTable(
             Spacer(Modifier.height(if (compact) 4.dp else 20.dp))
             LatestClaim(view, largeText, Modifier.padding(horizontal = 20.dp), compact)
         }
+        ChallengeHelp(Modifier.padding(horizontal = 20.dp))
         view.roundOutcome?.takeIf { it.roundNumber < view.roundNumber }?.let { outcome ->
             var showHistory by rememberSaveable(outcome.roundNumber) { mutableStateOf(false) }
             TextButton(
@@ -116,12 +121,43 @@ internal fun PublicGameTable(
     }
 }
 
+/** Public rules only: safe to open while a hand is concealed or on another player's turn. */
+@Composable
+private fun ChallengeHelp(modifier: Modifier = Modifier) {
+    var expanded by rememberSaveable { mutableStateOf(false) }
+    Column(modifier.fillMaxWidth()) {
+        TextButton(
+            onClick = { expanded = !expanded },
+            modifier = Modifier.heightIn(min = 48.dp).testTag("game-challenge-help"),
+            contentPadding = PaddingValues(horizontal = 0.dp, vertical = 12.dp),
+        ) {
+            Text(
+                text = stringResource(
+                    if (expanded) Res.string.game_challenge_help_hide else Res.string.game_challenge_help,
+                ),
+                color = LastLightColors.Copper,
+            )
+        }
+        if (expanded) {
+            Text(
+                text = stringResource(Res.string.game_challenge_help_body),
+                style = MaterialTheme.typography.bodyMedium,
+                color = LastLightColors.Paper,
+                modifier = Modifier.padding(bottom = 12.dp),
+            )
+        }
+    }
+}
+
 @Composable
 private fun TurnHeading(view: GameView, modifier: Modifier = Modifier, compact: Boolean = false) {
     val ownTurn = view.viewerId != null && view.turnPlayerId == view.viewerId
     val turn = when {
         ownTurn -> stringResource(Res.string.game_your_turn)
-        view.turnPlayerId != null -> stringResource(Res.string.game_players_turn, playerName(view, view.turnPlayerId))
+        view.turnPlayerId != null -> stringResource(
+            Res.string.game_players_turn,
+            playerName(view, view.turnPlayerId).asBidiArgument(),
+        )
         else -> stringResource(Res.string.game_watching_table)
     }
     Row(
@@ -194,7 +230,7 @@ private fun LatestClaim(
                 Text(
                     text = stringResource(
                         Res.string.game_claim_sentence,
-                        playerName(view, claim.playerId),
+                        playerName(view, claim.playerId).asBidiArgument(),
                         rankClaim(view.tableRank, claim.cardCount),
                     ),
                     style = MaterialTheme.typography.titleSmall,

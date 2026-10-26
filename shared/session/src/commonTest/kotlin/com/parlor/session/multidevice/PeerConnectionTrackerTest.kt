@@ -160,6 +160,64 @@ class PeerConnectionTrackerTest {
     }
 
     @Test
+    fun `every concurrent close waits for an already running expiry callback`() = runTest {
+        val callbackEntered = CompletableDeferred<Unit>()
+        val releaseCallback = CompletableDeferred<Unit>()
+        val tracker = PeerConnectionTracker(this, 100L) {
+            callbackEntered.complete(Unit)
+            withContext(NonCancellable) { releaseCallback.await() }
+        }
+        tracker.handle(PeerEvent.HostLost)
+        advanceTimeBy(100L)
+        runCurrent()
+        assertTrue(callbackEntered.isCompleted)
+
+        val firstClose = launch { tracker.close() }
+        runCurrent()
+        val secondClose = launch { tracker.close() }
+        runCurrent()
+        try {
+            assertFalse(firstClose.isCompleted)
+            assertFalse(secondClose.isCompleted, "idempotent close still owes callback completion")
+        } finally {
+            releaseCallback.complete(Unit)
+            firstClose.join()
+            secondClose.join()
+        }
+        assertTrue(firstClose.isCompleted)
+        assertTrue(secondClose.isCompleted)
+    }
+
+    @Test
+    fun `close after cancelled caller still waits for callback cleanup`() = runTest {
+        val callbackEntered = CompletableDeferred<Unit>()
+        val releaseCallback = CompletableDeferred<Unit>()
+        val tracker = PeerConnectionTracker(this, 100L) {
+            callbackEntered.complete(Unit)
+            withContext(NonCancellable) { releaseCallback.await() }
+        }
+        tracker.handle(PeerEvent.HostLost)
+        advanceTimeBy(100L)
+        runCurrent()
+        assertTrue(callbackEntered.isCompleted)
+
+        val firstClose = launch { tracker.close() }
+        runCurrent()
+        firstClose.cancel()
+        firstClose.join()
+        val retryClose = launch { tracker.close() }
+        runCurrent()
+        try {
+            assertTrue(firstClose.isCancelled)
+            assertFalse(retryClose.isCompleted, "a cancelled waiter cannot acknowledge completed cleanup")
+        } finally {
+            releaseCallback.complete(Unit)
+            retryClose.join()
+        }
+        assertTrue(retryClose.isCompleted)
+    }
+
+    @Test
     fun `host restoration cannot reverse a host-loss expiry that already committed`() = runTest {
         val callbackEntered = CompletableDeferred<Unit>()
         val releaseCallback = CompletableDeferred<Unit>()

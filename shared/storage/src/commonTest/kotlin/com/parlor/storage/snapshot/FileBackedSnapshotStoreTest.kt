@@ -30,6 +30,43 @@ class FileBackedSnapshotStoreTest {
     private val sessionId = SessionId("snapshot-test")
 
     @Test
+    fun deeply_nested_snapshot_is_corrupt_without_crashing_either_recovery_path() = runTest {
+        val depth = 4_096
+        val bytes = ("[".repeat(depth) + "0" + "]".repeat(depth)).encodeToByteArray()
+        val fileSystem = MemoryFileSystem().apply {
+            put("${sessionId.raw}${FileBackedSnapshotStore.SUFFIX}", bytes)
+        }
+        val store = FileBackedSnapshotStore(fileSystem, json)
+
+        assertEquals(Result.Failure(DataError.CorruptedData), store.loadMetadata(sessionId))
+        assertEquals(Result.Failure(DataError.CorruptedData), store.load(sessionId))
+        // A rejected record stays addressable for explicit recovery/discard.
+        assertEquals(Result.Success(listOf(sessionId)), store.listUnfinished())
+        assertEquals(bytes.toList(), fileSystem.read("${sessionId.raw}${FileBackedSnapshotStore.SUFFIX}")?.toList())
+
+        // Rejection releases the mutex and does not poison later valid loads.
+        val snapshot = validSnapshot()
+        assertIs<Result.Success<Unit>>(store.save(snapshot))
+        assertEquals(Result.Success(SnapshotMetadata(sessionId, snapshot.gameId)), store.loadMetadata(sessionId))
+        assertEquals(snapshot, assertIs<Result.Success<GameSnapshot>>(store.load(sessionId)).data)
+    }
+
+    @Test
+    fun deleting_one_save_persists_after_store_recreation_and_preserves_other_saves() = runTest {
+        val files = MemoryFileSystem()
+        val original = FileBackedSnapshotStore(files, json)
+        val selected = validSnapshot()
+        val other = selected.copy(sessionId = SessionId("keep-me"))
+        original.save(selected)
+        original.save(other)
+        assertIs<Result.Success<Unit>>(original.delete(selected.sessionId))
+        val relaunched = FileBackedSnapshotStore(files, json)
+        assertEquals(Result.Failure(DataError.NotFound), relaunched.load(selected.sessionId))
+        assertEquals(Result.Success(other), relaunched.load(other.sessionId))
+        assertEquals(Result.Success(listOf(other.sessionId)), relaunched.listUnfinished())
+    }
+
+    @Test
     fun protection_failure_is_reported_as_corrupted_without_crypto_detail() = runTest {
         val store = FileBackedSnapshotStore(
             fileSystem = FailingFileSystem(SnapshotProtectionException("secret key alias")),

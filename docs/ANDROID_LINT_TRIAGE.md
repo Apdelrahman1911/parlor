@@ -109,6 +109,58 @@ malformed-input review. Reopen this triage for a relevant security advisory or
 a reproduced decoder defect. No dependency, verification checksum, lint
 severity, detector, or release gate is changed by this acceptance.
 
+## 2026-10-25 Compose compiler coordinate advisory review
+
+The fresh local `productionCheck allTests` report at `57be2cc6` contains 38
+warnings: one additional `GradleDependency` row for
+`org.jetbrains.kotlin:compose-compiler-gradle-plugin` 2.4.10, suggesting 2.4.21,
+and no missing accepted rows. This is the concrete artifact behind the already
+reviewed Compose plugin alias, not a new production dependency. Accept only
+that exact coordinate/current-version row; leave the exact-multiset verifier,
+Kotlin pin and strict artifact verification unchanged.
+
+Upstream [2.4.21 release notes](https://github.com/JetBrains/kotlin/releases/tag/v2.4.21)
+(published October 8) describe Wasm, reflection, JavaScript, serialization,
+Native build and scripting fixes. Kotlin/Compose compiler plugins must move
+with the coordinated Kotlin toolchain, not as an isolated lint repair. The
+public Maven advisory query for this artifact at 2.4.10 returned no matches
+on October 25; that scoped lookup is not proof of general safety. The KAPT
+advisory and no-KAPT gate above remain applicable and must not be removed.
+Reopen the decision for relevant security evidence or a qualified toolchain
+upgrade. Earlier 37-warning CI receipts remain historical, not substitutes
+for this report's 38-row qualification.
+
+## 2026-10-26 Redundant compiler classpath declaration removed
+
+[PR #261 run 40152548602](https://github.com/Apdelrahman1911/parlor/actions/runs/40152548602)
+and PR #262's matching run reported only 37 warnings: the additional concrete
+compiler artifact advisory was absent, with no unexpected warnings. The
+artifact and plugin-marker advisories use separate metadata lookups; their
+appearance is not a reliable proxy for whether a dependency is resolved.
+The reviewed [Lint 9.1.1 source archive](https://dl.google.com/dl/android/maven2/com/android/tools/lint/lint-checks/32.1.1/lint-checks-32.1.1-sources.jar)
+has SHA-256 `864943a1c096806b77b1719d2016866b1f5baea8bdac405cd43d5f6ba76f71fa`.
+`GradleDetector.checkDependency` takes the maximum of remote metadata and
+`findCachedNewerVersion`; `getMavenMetadata` queries the plugin portal for
+plugin markers and Central for concrete artifacts. This workstation already
+has compiler artifacts 2.4.20/2.4.21 in its shared cache; hosted source did not
+produce their library-alias warning. No shared cache was deleted or seeded to
+alter verification.
+
+Source review found the concrete catalog library was used only by a redundant
+`compileOnly` declaration. The convention plugin applies Compose compiler by
+ID and imports none of its implementation classes. Remove that unused
+declaration and library alias, not the compiler: the root retains
+`alias(libs.plugins.compose.compiler) apply false`, the same Kotlin 2.4.10
+version reference, module plugin application, and artifact verification.
+The plugin-ID advisory remains mandatory. Its removed library-alias advisory
+is no longer an applicable source finding, so the exact inventory returns to
+37 rows. The verifier, warning severities, and strict checks are unchanged;
+there is no optional-warning list or allowance for missing findings.
+
+Regression contracts enforce this classpath arrangement. Fresh convention
+compilation and release lint plus the full cross-platform matrix are required
+to qualify it; the preceding 37/38-warning receipts remain historical.
+
 ## Fixed warning classes
 
 - `UnusedAttribute`: removed `android:hasFragileUserData`, which has no effect

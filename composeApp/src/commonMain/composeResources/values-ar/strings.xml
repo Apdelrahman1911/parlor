@@ -9,7 +9,7 @@
 
     <!-- الشاشة الرئيسية. -->
     <string name="home_eyebrow">الليلة حول مائدتكم</string>
-    <string name="home_title">اختاروا حكاية واجمعوا كل من في الغرفة.</string>
+    <string name="home_title">لنجتمع على لعبة.</string>
     <string name="home_whodunit_title">من القاتل</string>
     <string name="home_whodunit_subtitle">سبعة ألغاز ومذنب واحد بين الضيوف.</string>
     <string name="home_whodunit_tagline">تبادلوا الأسرار واكشفوا الأدلة واتهموا بحذر.</string>
@@ -63,8 +63,6 @@
     <string name="join_title">أدخل رمز الغرفة.</string>
     <string name="join_code_help">ستة حروف وأرقام يعرضها المضيف.</string>
     <string name="join_code_field">رمز الغرفة</string>
-    <string name="join_local_label">غرفة محلية</string>
-    <string name="join_local_body">يعثر جهازك على المضيف عبر شبكة Wi-Fi نفسها، ويجب أن يوافق المضيف عليك قبل بدء اللعب.</string>
     <string name="join_confirm">العثور على الغرفة</string>
     <string name="join_confirm_description">الاتصال بالمضيف باستخدام الرمز المُدخل.</string>
     <string name="join_cancel">إلغاء</string>
@@ -103,11 +101,17 @@
     <string name="permission_back_description">العودة إلى الشاشة الرئيسية دون بدء الاتصال بالشبكة.</string>
 
     <!-- Home: game-first redesign. -->
-    <string name="home_subtitle">بلا حسابات ولا غرباء؛ فقط الأشخاص الموجودون معكم.</string>
+    <string name="home_subtitle">اختر لعبة واجمع أصدقاءك وابدؤوا وقتًا ممتعًا.</string>
     <string name="home_games_label">اختر لعبة</string>
-    <string name="home_games_count">عدد الألعاب: %1$d</string>
+    <plurals name="home_games_count">
+        <item quantity="zero">لا ألعاب (%1$d)</item>
+        <item quantity="one">لعبة واحدة (%1$d)</item>
+        <item quantity="two">لعبتان (%1$d)</item>
+        <item quantity="few">%1$d ألعاب</item>
+        <item quantity="many">%1$d لعبة</item>
+        <item quantity="other">%1$d لعبة</item>
+    </plurals>
     <string name="home_saved_on_device">محفوظة على هذا الجهاز</string>
-    <string name="home_game_kicker_format">%1$s · %2$d</string>
     <string name="home_players_exact_format">%1$d لاعبين</string>
     <string name="home_players_range_format">%1$d–%2$d لاعبين</string>
     <string name="home_local_lan_meta">محلي + شبكة Wi-Fi نفسها</string>
@@ -120,8 +124,8 @@
 
     <!-- Game setup screen: 4 cards (Solo / Pass and Play / Host / Join). -->
     <string name="setup_eyebrow">إعداد اللعبة</string>
-    <string name="setup_title">كيف ستلعبون حول المائدة؟</string>
-    <string name="setup_subtitle">اختاروا حسب عدد الأجهزة. يبقى الجميع في الغرفة نفسها.</string>
+    <string name="setup_title">كيف ستلعبون؟</string>
+    <string name="setup_subtitle">اختر الإعداد المناسب لمجموعتك.</string>
     <string name="setup_one_device_label">جهاز واحد</string>
     <string name="setup_each_device_label">جهاز لكل لاعب · شبكة WI-FI نفسها</string>
     <string name="setup_solo_unavailable_title">اللعب المنفرد غير متاح.</string>
@@ -204,4 +208,33 @@
     <string name="room_game_settings">افتح إعدادات التطبيق</string>
     <string name="room_game_action_failed">الخطوة دي ماتقبلتش. راجع الترابيزة بعد التحديث قبل ما تجرب تاني.</string>
     <string name="room_game_action_recovery">مستنيين قرار المضيف. خطوتك مش هتتكرر تلقائيًا.</string>
+
+    <!-- Capability-based catalog and contextual onboarding. -->
+    <string name="catalog_filter_all">كل الألعاب</string>
+    <string name="catalog_filter_local">جهاز واحد</string>
+    <string name="catalog_filter_nearby">اللعب مع القريبين</string>
+    <string name="catalog_nearby_only_meta">نفس الواي فاي · جهاز لكل لاعب</string>
+    <string name="catalog_empty_title">لا توجد ألعاب بهذا الإعداد</string>
+    <string name="catalog_empty_body">اختر كل الألعاب لتجد طريقة أخرى للعب.</string>
+    <string name="join_steps_title">انضم في ثلاث خطوات</string>
+    <string name="join_steps_network">وصّل كل الأجهزة بشبكة الواي فاي نفسها.</string>
+    <string name="join_steps_code">اطلب رمز الغرفة من المضيف.</string>
+    <string name="join_steps_approval">ابحث عن الغرفة ثم انتظر موافقة المضيف.</string>
+    <string name="lobby_welcome_title">غرفتك مفتوحة</string>
+    <string name="lobby_welcome_body">شارك الرمز مع أصدقائك. وافق على طلباتهم ثم ابدأ عندما يكتمل الجميع.</string>
+    <string name="lobby_player_ready">متصل</string>
+    <string name="lobby_player_host">المضيف · أنت</string>
+    <string name="lobby_setup_heading">إعداد لعبتك</string>
+    <string name="settings_language_help">اختر لغة جميع الألعاب والشاشات.</string>
+    <string name="settings_appearance_help">اتبع إعداد الجهاز أو اختر المظهر الذي تفضّله.</string>
+    <string name="settings_accessibility_help">اجعل اللعب أكثر راحة لك.</string>
+    <string name="resume_delete_action">حذف الجلسة المحفوظة</string>
+    <string name="resume_delete_description">حذف: %1$s</string>
+    <string name="resume_delete_title">حذف الجلسة المحفوظة؟</string>
+    <string name="resume_delete_local_body">سيُحذف هذا اللعب المحفوظ من هذا الجهاز فقط. لن تتأثر الألعاب المحفوظة الأخرى أو الإعدادات. لا يمكن التراجع عن الحذف.</string>
+    <string name="resume_delete_multiplayer_body">سيُحذف إذن عودتك المحفوظ على هذا الجهاز. لن تنتهي الغرفة للاعبين الآخرين، وقد لا تتمكن من استعادة مقعدك. لا يمكن التراجع عن الحذف.</string>
+    <string name="resume_delete_confirm">حذف</string>
+    <string name="resume_delete_cancel">الاحتفاظ بالجلسة</string>
+    <string name="resume_delete_failed">تعذّر حذف الجلسة. ربما تغيّرت أو تعذّر الوصول إلى التخزين. احتفظ بها وحدّث القائمة قبل المحاولة مجددًا.</string>
+    <string name="resume_delete_busy">جارٍ حذف الجلسة المحفوظة…</string>
 </resources>

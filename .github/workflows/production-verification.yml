@@ -518,6 +518,14 @@ jobs:
           $status = git status --porcelain
           if ($LASTEXITCODE -ne 0 -or $status) { throw "Checkout is not clean" }
 
+      - name: Verify Windows distribution process ownership
+        timeout-minutes: 2
+        shell: python
+        run: |
+          import os, sys, unittest
+          sys.path.insert(0, os.getcwd())
+          unittest.main(module="scripts.release.tests.test_distribution_process_ownership", argv=["ownership-tests"], verbosity=2)
+
       - name: Install pinned Android SDK packages
         shell: pwsh
         run: |

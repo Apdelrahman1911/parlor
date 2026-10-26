@@ -7,7 +7,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -23,6 +23,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.parlor.designsystem.localization.asBidiArgument
 import com.parlor.designsystem.theme.ParlorTheme
@@ -65,7 +66,8 @@ internal fun DominoResults(state: DominoState, host: Boolean, enabled: Boolean, 
                     }
                 }
             }
-            Text(stringResource(Res.string.dom_award, result.points), color = DominoGold, style = ParlorTheme.typography.headingLarge)
+            Text(stringResource(Res.string.dom_award, result.points), color = DominoGold,
+                style = ParlorTheme.typography.headingMedium, textAlign = TextAlign.Center)
         }
         if (match) {
             DominoTitle(stringResource(Res.string.dom_match_result))
@@ -83,8 +85,9 @@ internal fun DominoResults(state: DominoState, host: Boolean, enabled: Boolean, 
         }.forEach { (side, members) ->
             val score = state.public.scores.getValue(side)
             Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                    DominoBody(dominoSideName(state, side), Modifier.weight(1f))
+                FlowRow(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                    DominoBody(dominoSideName(state, side))
                     Text(stringResource(Res.string.dom_score, score), color = DominoGold, style = ParlorTheme.typography.labelLarge)
                 }
                 members.forEach { id ->

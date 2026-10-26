@@ -4,6 +4,7 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,6 +18,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
+import androidx.compose.runtime.key
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,6 +27,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.heading
@@ -39,7 +42,9 @@ internal val DominoGold = Color(0xFFF1CF8A)
 internal val DominoText = Color(0xFFF8EFDA)
 
 @Composable
-internal fun DominoFrame(modifier: Modifier, content: @Composable ColumnScope.() -> Unit) {
+internal fun DominoFrame(modifier: Modifier, resetKey: String, content: @Composable ColumnScope.() -> Unit) {
+    // A new phase, round or help surface starts at its next-action header, not the previous ballot's scroll position.
+    val scroll = key(resetKey) { rememberScrollState() }
     Box(modifier.fillMaxSize().background(Brush.verticalGradient(listOf(DominoInk, DominoFelt, DominoInk))),
         contentAlignment = Alignment.TopCenter) {
         Canvas(Modifier.fillMaxSize().clearAndSetSemantics {}) {
@@ -52,14 +57,20 @@ internal fun DominoFrame(modifier: Modifier, content: @Composable ColumnScope.()
             drawRoundRect(Color(0xFF674B2C), style = Stroke(12.dp.toPx()))
             drawRoundRect(DominoGold.copy(alpha = .25f), style = Stroke(2.dp.toPx()))
         }
-        Column(Modifier.widthIn(max = 900.dp).fillMaxSize().verticalScroll(rememberScrollState()).parlorSafeContentPadding(18.dp),
+        Column(Modifier.widthIn(max = 900.dp).fillMaxSize().verticalScroll(scroll).parlorSafeContentPadding(18.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp), content = content)
     }
 }
 
 @Composable
 internal fun DominoTitle(text: String) {
-    Text(text, color = DominoText, style = ParlorTheme.typography.displayMedium, modifier = Modifier.semantics { heading() })
+    val fontScale = LocalDensity.current.fontScale
+    BoxWithConstraints(Modifier.fillMaxWidth()) {
+        // Use a semantic heading tier on compact enlarged-text layouts; never cap the user's font scale.
+        val style = if (maxWidth / fontScale < 180.dp) ParlorTheme.typography.headingLarge
+            else ParlorTheme.typography.displayMedium
+        Text(text, style = style, color = DominoText, modifier = Modifier.semantics { heading() })
+    }
 }
 
 @Composable
