@@ -65,11 +65,11 @@ class AndroidReleaseLintContractTest {
             .map(String::trim)
             .filter { line -> line.isNotEmpty() && !line.startsWith('#') }
             .toList()
-        assertEquals(38, accepted.size)
+        assertEquals(37, accepted.size)
         assertEquals(
             mapOf(
                 "AndroidGradlePluginVersion" to 4,
-                "DependencyUpdate" to 32,
+                "DependencyUpdate" to 31,
                 "GradleDependency" to 1,
                 "OldTargetApi" to 1,
             ),
@@ -93,7 +93,6 @@ class AndroidReleaseLintContractTest {
             },
         )
         listOf(
-            "org.jetbrains.kotlin:compose-compiler-gradle-plugin",
             "org.jetbrains.kotlin.multiplatform",
             "org.jetbrains.kotlin.plugin.compose",
             "org.jetbrains.kotlin.plugin.serialization",
@@ -117,8 +116,28 @@ class AndroidReleaseLintContractTest {
         assertContains(catalog, "androidx-activity-compose")
         assertContains(appBuild, "implementation(libs.androidx.activity.compose)")
         assertContains(triage, "reported 59 warnings")
-        assertContains(triage, "contains 38")
+        assertContains(triage, "contains 37")
         assertContains(triage, "## 2026-10-25 Compose compiler coordinate advisory review")
+    }
+
+    @Test
+    fun compose_compiler_is_supplied_by_the_root_plugin_not_a_redundant_compile_only_alias() {
+        val catalog = read("gradle/libs.versions.toml")
+        val conventions = read("build-logic/convention/build.gradle.kts")
+        assertContains(catalog, "compose-compiler = { id = \"org.jetbrains.kotlin.plugin.compose\", version.ref = \"kotlin\" }")
+        assertContains(read("build.gradle.kts"), "alias(libs.plugins.compose.compiler) apply false")
+        assertContains(read("composeApp/build.gradle.kts"), "alias(libs.plugins.compose.compiler)")
+        assertContains(
+            read("build-logic/convention/src/main/kotlin/com/parlor/buildlogic/KmpComposeLibraryConventionPlugin.kt"),
+            "pluginManager.apply(\"org.jetbrains.kotlin.plugin.compose\")",
+        )
+        assertFalse(catalog.contains("compose-compiler-gradle-plugin ="))
+        assertFalse(conventions.contains("compileOnly(libs.compose.compiler.gradle.plugin)"))
+        assertFalse(
+            conventionKotlinSources(repositoryRoot.resolve("build-logic/convention/src/main/kotlin"))
+                .any { source -> source.readText().contains("import org.jetbrains.kotlin.compose.compiler.gradle") },
+            "A compiler implementation import invalidates removing its redundant compile-only dependency",
+        )
     }
 
     @Test

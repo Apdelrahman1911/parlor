@@ -40,7 +40,8 @@ dependencies {
     compileOnly(libs.android.gradle.plugin)
     compileOnly(libs.kotlin.gradle.plugin)
     compileOnly(libs.compose.gradle.plugin)
-    compileOnly(libs.compose.compiler.gradle.plugin)
+    // Compose compiler is applied by ID only. The root plugins block supplies
+    // its runtime classpath; no convention source imports its implementation.
     compileOnly(libs.detekt.gradle.plugin)
 }
 
