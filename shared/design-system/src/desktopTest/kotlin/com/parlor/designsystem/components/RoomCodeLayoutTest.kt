@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Text
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asSkiaBitmap
@@ -18,7 +17,6 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performSemanticsAction
 import androidx.compose.ui.test.runComposeUiTest
 import androidx.compose.ui.text.TextLayoutResult
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import com.parlor.designsystem.localization.AppLanguage
@@ -53,14 +51,7 @@ class RoomCodeLayoutTest {
                                             contentPadding = ParlorTheme.spacing.l,
                                             hero = true,
                                         ) {
-                                            // Same typography and available width as the three original host lobbies.
-                                            Text(
-                                                CODE,
-                                                style = ParlorTheme.typography.displayHero,
-                                                color = ParlorTheme.colors.accentEmber,
-                                                textAlign = TextAlign.Center,
-                                                modifier = Modifier.fillMaxWidth(),
-                                            )
+                                            RoomCodeText(code = CODE)
                                         }
                                     }
                                 }

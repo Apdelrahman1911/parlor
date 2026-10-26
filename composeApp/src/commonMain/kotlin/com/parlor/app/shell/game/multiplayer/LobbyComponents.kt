@@ -11,7 +11,6 @@ import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.style.TextDirection
 import com.parlor.app.resources.Res
 import com.parlor.app.resources.lobby_player_host
 import com.parlor.app.resources.lobby_player_ready
@@ -22,6 +21,7 @@ import com.parlor.app.resources.room_game_host
 import com.parlor.app.resources.room_game_players
 import com.parlor.app.resources.room_game_wait
 import com.parlor.designsystem.components.ParlorCard
+import com.parlor.designsystem.components.RoomCodeText
 import com.parlor.designsystem.localization.asBidiArgument
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.networking.room.RoomMember
@@ -38,10 +38,7 @@ internal fun LobbyInvitation(code: String, hostName: String) {
                 modifier = Modifier.semantics { heading() },
             )
             Text(stringResource(Res.string.room_game_code), color = ParlorTheme.colors.textSecondary)
-            // Codes are Latin identifiers, including in Arabic UI. Monospaced, scalable and
-            // substantially smaller than the old displayHero so all six characters fit at 200%.
-            Text(code, color = ParlorTheme.colors.accentEmber,
-                style = ParlorTheme.typography.timerMedium.copy(textDirection = TextDirection.Ltr))
+            RoomCodeText(code = code)
             Text(stringResource(Res.string.room_game_host, hostName.asBidiArgument()),
                 color = ParlorTheme.colors.textPrimary)
             Text(stringResource(Res.string.lobby_welcome_body), color = ParlorTheme.colors.textSecondary,
