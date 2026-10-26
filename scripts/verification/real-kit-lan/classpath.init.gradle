@@ -1,0 +1,15 @@
+// Opt-in helper only: no changes to Test selection, Ignore, dependencies or CI.
+gradle.projectsEvaluated {
+    def project = gradle.rootProject.findProject(':shared:transport-p2p')
+    if (project == null) return // Included build-logic is not the shipping root.
+    def desktopTest = project.tasks.named('desktopTest').get()
+    project.tasks.register('realKitLanClasspath') {
+        dependsOn desktopTest.classpath
+        dependsOn desktopTest.testClassesDirs
+        doLast {
+            def output = System.getProperty('parlor.realKitClasspath')
+            if (output == null) throw new GradleException('Explicit real-kit classpath output required')
+            new File(output).text = desktopTest.classpath.asPath
+        }
+    }
+}
