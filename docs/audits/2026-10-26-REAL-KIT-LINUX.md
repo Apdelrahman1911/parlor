@@ -74,8 +74,9 @@ receipt verifies the committed runner itself.
 
 At clean commit `1b468e9ff55f77fa2ce61344cfb838faa448f183` (tree
 `ce069ff35fddc5f816cb3f225fecd1fde2c5a4da`), the documented default command
-completed **10/10 cases**: one advertisement and three repetitions of each peer
-scenario. Execution was 2026-10-26 15:33:41–15:36:15 UTC (about 153.5 seconds,
+completed **10/10 invocations of four distinct fixture methods**: one
+advertisement and three repetitions of each peer scenario. These are not ten
+different protocols. Execution was 2026-10-26 15:33:41–15:36:15 UTC (about 153.5 seconds,
 including preparation). Strict Gradle preparation passed in 29 seconds; its
 invocation-private registry stop also passed. All ten fixture assertions,
 teardowns, natural JVM exits (code 0), and owned cleanup checks passed.
