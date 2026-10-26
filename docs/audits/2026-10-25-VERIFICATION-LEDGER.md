@@ -2,7 +2,7 @@
 
 ## Qualification boundary
 
-Checkpoint: **2026-10-26, 15:20 UTC**. Implemented source is on
+Checkpoint: **2026-10-26, 15:48 UTC**. Implemented source is on
 [PR #262](https://github.com/Apdelrahman1911/parlor/pull/262), stacked on
 [PR #261](https://github.com/Apdelrahman1911/parlor/pull/261) and
 [PR #256](https://github.com/Apdelrahman1911/parlor/pull/256).
@@ -24,6 +24,24 @@ strict-protection diagnostic is not part of these six passes and remains unquali
 
 ### Latest overhaul results and open CI failures
 
+- **Subsequent integration `7592c518` did not qualify.** Its full local strict
+  aggregate completed in 11m42s: all 1,748 desktop cases (three existing skips)
+  and 644 cases per Android unit variant had zero failures, but release automation
+  failed. Removing the unused compiler library alias changed the catalog fingerprint
+  without updating the notice review binding: 688 Python cases produced 15 failures
+  and eight errors at that prerequisite. Hosted runs40348730480/#261 and
+  40349132004/#262 reproduced the same failure and were cancelled, not qualified.
+  #261 also observed an independent Google Maven HTTP502 in Windows; no dependency
+  or repository override was introduced. #262's Windows lane passed.
+- **Notice applicability reviewed and corrected in `94aa1a1c` / `da13ff2f`.**
+  Independent old/new TOML comparison confirmed unchanged version pins, plugin
+  aliases, bundles and every remaining library; only the unused compile-only
+  alias was removed. All 26 notice texts, their byte hashes and the strict verifier
+  remain unchanged. Updated only the reviewed catalog hash. Source notice
+  verification, 32 adversarial notice cases and the complete release script passed:
+  688 Python cases, one environment skip, plus real scoped Gradle cleanup,
+  workflow/inventory and pinned tools. This correction is integrated; fresh combined
+  local and all six hosted checks are required at the new head before merging.
 - **Local strict aggregate PASS at `53a72779`**, October 25 02:06 UTC,
   `productionCheck allTests --continue --dependency-verification=strict` under Xvfb;
   exit0, 4m2s, 1,655 actionable tasks (72 executed, 1,583 valid up-to-date results).
