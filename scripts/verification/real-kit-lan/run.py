@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+from contextlib import contextmanager
 from datetime import datetime, timezone
 import hashlib
 import json
@@ -35,6 +36,22 @@ LOG_LIMIT = 1024 * 1024
 def require(condition, message):
     if not condition:
         raise RuntimeError(message)
+
+
+@contextmanager
+def total_budget(seconds=TOTAL_TIMEOUT):
+    """A one-shot deadline also bounds custody/preparation, not just test polling."""
+    require(0 < seconds <= TOTAL_TIMEOUT, "Invalid total execution budget")
+    def expired(*_):
+        raise RuntimeError("Total probe time bound exceeded")
+    require(signal.getitimer(signal.ITIMER_REAL) == (0, 0), 'An existing execution timer is active')
+    previous_handler = signal.signal(signal.SIGALRM, expired)
+    signal.setitimer(signal.ITIMER_REAL, seconds)
+    try:
+        yield
+    finally:
+        signal.setitimer(signal.ITIMER_REAL, 0)
+        signal.signal(signal.SIGALRM, previous_handler)
 
 
 def source():
@@ -243,7 +260,9 @@ if __name__ == '__main__':
     # TERM follows the same finally-based owned cleanup as Ctrl-C.
     signal.signal(signal.SIGTERM, lambda *_: (_ for _ in ()).throw(KeyboardInterrupt()))
     try:
-        raise SystemExit(main())
+        require(platform.system() == 'Linux', 'This opt-in probe supports Linux only; nothing was verified')
+        with total_budget():
+            raise SystemExit(main())
     except (RuntimeError, OSError) as error:
         print(f'FAIL: {error}', file=sys.stderr)
         raise SystemExit(1)

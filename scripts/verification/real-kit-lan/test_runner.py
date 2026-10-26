@@ -179,6 +179,16 @@ if sys.argv[3]!='normal': time.sleep(30)
     def test_cancellation_retires_owned_descendant_only(self):
         self.exercise('cancel')
 
+    def test_total_deadline_interrupts_non_process_preparation(self):
+        started = time.monotonic()
+        original = signal.getsignal(signal.SIGALRM)
+        with self.assertRaisesRegex(RuntimeError, 'Total probe time bound'):
+            with probe.total_budget(.05):
+                time.sleep(5)
+        self.assertLess(time.monotonic() - started, 1)
+        self.assertEqual(signal.getsignal(signal.SIGALRM), original)
+        self.assertEqual(signal.getitimer(signal.ITIMER_REAL), (0, 0))
+
     def test_post_cleanup_output_bound_is_enforced(self):
         with tempfile.TemporaryDirectory() as temporary:
             path = Path(temporary) / 'case.log'
