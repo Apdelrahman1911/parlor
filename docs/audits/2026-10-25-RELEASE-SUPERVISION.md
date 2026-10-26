@@ -156,6 +156,24 @@ It compiled release Compose code across all six games without the redundant
 classpath declaration. The full platform matrix remains required; local
 compilation is not Apple/Windows runtime evidence.
 
+The complete follow-up run
+[40348730480](https://github.com/Apdelrahman1911/parlor/actions/runs/40348730480)
+at `025481aa` exposed a missed integration requirement: the legal notice manifest
+binds the entire catalog, not only its version pins. Its release automation
+correctly failed with `Catalog changed; notice review required` (15 downstream
+assertion failures and eight errors). Review confirms only the redundant
+build-only alias was removed, with every shipping coordinate, version, plugin,
+upstream input and notice byte retained. The manifest's reviewed catalog digest
+is updated accordingly; see `../THIRD_PARTY_NOTICES.md`. The verifier is unchanged.
+That same run's Windows job passed 18 native ownership tests, then failed on a
+Google Maven HTTP 502 before app compilation. Neither failed run qualifies the
+replacement source; full fresh CI is required after the manifest correction.
+After review, source notice verification and all 32 adversarial notice tests
+passed. The complete `bash scripts/release/validate_release_system.sh` then
+passed **688 Python tests (one environment skip)**, workflow contracts, inventory
+freshness and checksum-pinned ShellCheck/Actionlint. This includes the actual
+invocation-private Gradle registry cleanup test; it is not a mocked substitute.
+
 ## Remaining acceptance
 
 - Rerun the mandatory Windows native Job Object suite at the final release-only
