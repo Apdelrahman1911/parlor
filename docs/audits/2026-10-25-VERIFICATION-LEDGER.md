@@ -2,7 +2,7 @@
 
 ## Qualification boundary
 
-Checkpoint: **2026-10-25, 01:54 UTC**. Implemented source is on
+Checkpoint: **2026-10-26, 15:20 UTC**. Implemented source is on
 [PR #262](https://github.com/Apdelrahman1911/parlor/pull/262), stacked on
 [PR #261](https://github.com/Apdelrahman1911/parlor/pull/261) and
 [PR #256](https://github.com/Apdelrahman1911/parlor/pull/256).
@@ -12,13 +12,41 @@ only equivalent patches. Both overhaul PRs remain drafts at this checkpoint.
 The linked PRs retain exact-head workflow runs, corrections, merge commits and
 subsequent verification receipts; check those live records before qualification.
 
-PR #256's fresh run
-[40148791277](https://github.com/Apdelrahman1911/parlor/actions/runs/40148791277)
-at `afe783838461afae1029f0369280a1bafadc395f` has five of six mandatory lanes
-successful, including Android managed-device tests and iOS simulator/Swift
-host runtime. All five completed cleanup receipts passed. The remaining iOS
-release-linkage lane is still running; the documented historical six-game
-linkage duration was 97 minutes. No merge or post-merge success is inferred.
+PR #256 is merged as `81ee9b7b5e1b3fad3c86b9d0cdb2e692d43276c7`.
+[Feature run 40148791277](https://github.com/Apdelrahman1911/parlor/actions/runs/40148791277)
+at `afe783838461afae1029f0369280a1bafadc395f` and
+[post-merge run 40156824703](https://github.com/Apdelrahman1911/parlor/actions/runs/40156824703)
+at the merge SHA both passed all six mandatory lanes. All twelve cleanup receipts
+were independently inspected: PASS, no errors, successful upload and Gradle stop.
+Merge parents are the previous `main` and the exact qualified feature head;
+its tree equals the qualified feature tree. The separately scoped historical
+strict-protection diagnostic is not part of these six passes and remains unqualified.
+
+### Latest overhaul results and open CI failures
+
+- **Local strict aggregate PASS at `53a72779`**, October 25 02:06 UTC,
+  `productionCheck allTests --continue --dependency-verification=strict` under Xvfb;
+  exit0, 4m2s, 1,655 actionable tasks (72 executed, 1,583 valid up-to-date results).
+  Current module XML: 1,747 desktop cases, zero failures, three pre-existing
+  real-LAN skips; 644 Android debug and 644 release unit cases, zero failures/skips.
+  Release tooling: 688 Python cases, one environment skip; workflow, inventory,
+  strict dependency, lint, static analysis, unsigned packaging and pinned tools passed.
+  Do not count archived/remediation XML or aggregate duplicates as new test cases.
+- **#262 hosted run [40152904168](https://github.com/Apdelrahman1911/parlor/actions/runs/40152904168)**
+  at the same head passed Windows, Linux ARM64, macOS x64, iOS release linkage and
+  iOS simulator/Swift runtime. Linux/Android failed because the exact lint inventory
+  expected a concrete Compose compiler advisory absent from this environment.
+  No unexpected lint row was reported. Managed-device steps did not run after that
+  failure. This run is not full qualification despite the local success.
+- **#261 hosted run [40152548602](https://github.com/Apdelrahman1911/parlor/actions/runs/40152548602)**
+  at `b5b01ec2` passed Windows (including actual native process ownership), Linux
+  ARM64, macOS x64 and iOS release linkage. Linux/Android has the same missing-row
+  failure; iOS runtime failed an English setup field assertion. Both are under
+  investigation, not suppressed or declared harmless based on another branch.
+- Exact `53a72779` original-game visual rerun passed; six EN/AR 200% synthetic
+  screenshots inspected. Context labels no longer split mid-word and Mafia target
+  selection remains visible. These are desktop rendering evidence, not phone or
+  assistive-technology acceptance.
 
 ## Executed receipts and preserved failures
 
@@ -33,10 +61,11 @@ linkage duration was 97 minutes. No merge or post-merge success is inferred.
 | Original-games workstream `b53946f9` | Strict Mafia type-aware Detekt plus 144 seeded mixed-setting scenarios passed. Explicit model types resolve analysis without deleting branches or assertions. |
 | UX workstream `92adc202` and preceding shared layout source | 31 app rendering/interaction tests plus four adaptive/header/context-ribbon tests passed. Sixteen EN/AR/light/dark/100–200% Home/setup images inspected; enlarged-text Home images rechecked after adaptive introduction changes. |
 | New-games workstream `cfe1a99e` / `00be73a2` | Ghamza15/Word19 and final Domino33 tests passed: 67 total, zero failures/skips. Executable registry recreation replaces the desktop stub, preserving same-phase scroll and rejecting old-phase restoration. Twenty-two public/covered synthetic images captured; EN/AR 320px/200% results inspected. |
-| Release workstream and #261 first corrected Windows lane | Real Gradle timeout/busy-stop/unrelated-registry controls passed locally. Windows initially failed before tests due to temporary-script import paths; fixed and rerun. Then all nine real process-ownership cases passed; one expected-path assertion exposed Windows short-name canonicalization. Its exact-parent assertion is corrected, with fresh CI still required. |
+| Release workstream and #261 earlier Windows corrections | Real Gradle timeout/busy-stop/unrelated-registry controls passed locally. Windows initially failed before tests due to temporary-script import paths; fixed and rerun. Then all nine real process-ownership cases passed; one expected-path assertion exposed Windows short-name canonicalization. Its exact-parent assertion is corrected; the later native Windows lane above passed. |
 
-The release source/count corrections and final game fixes are integrated through
-`03cd61d3`; the next full combined run must qualify them. No physical-device
+The local pass above qualifies the integrated source through `53a72779` within
+its executed scope; the hosted lint inconsistency still blocks merging. A missing
+remote update advisory is not evidence that its accepted dependency changed. No physical-device
 execution, battery/thermal measurement or native assistive-technology acceptance
 is represented by desktop screenshots, emulators, simulators or JVM benchmarks.
 
@@ -44,7 +73,7 @@ is represented by desktop screenshots, emulators, simulators or JVM benchmarks.
 
 | Phase | Implemented or reviewed | Still required |
 |---|---|---|
-| 1. #256 | Failed-job root cause fixed; fresh six-lane verification underway | Final lane, normal protected merge, verified merged tree and fresh post-merge CI. |
+| 1. #256 | Fixed, merged, verified tree and fresh six-lane post-merge CI; all cleanup receipts passed | Complete within mandatory CI scope; no physical/Store qualification inferred. |
 | 2. Architecture/behavior | All17-module inventory; targeted authority, admission, persistence, decoding, lifecycle, game, UI and release investigations | Not an exhaustive proof of every behavior; native extended multiplayer and uncovered scenarios remain explicit gaps. |
 | 3. RPC | Actual published API/platform/provenance review; keep current single-connection messaging and P2pKit0.7.0-rc3 | No measured mobile-host advantage. No end-to-end RPC/mobile/battery comparison performed; no unsupported dependency migration. |
 | 4. Lifecycle | Official Android/Apple policy research; retention/clock/fault tests; every tracker close caller awaits cleanup | Existing15-second best-effort retention is not indefinite hosting. Cold peer startup still uses manual Resume; host process death ends the room. Physical host/client matrices and any policy-qualified foreground-service experiment remain outstanding. |
@@ -60,7 +89,7 @@ is represented by desktop screenshots, emulators, simulators or JVM benchmarks.
 - [#253](https://github.com/Apdelrahman1911/parlor/issues/253): confirmation-gated Resume removal, opaque atomic ownership selection, stale/cancelled callback guards; implemented in #262.
 - [#259](https://github.com/Apdelrahman1911/parlor/issues/259): capability-correct catalog, adaptive interactions and public/private ballot guidance; #262 and `2026-10-25-UX-SHELL.md`.
 - [#260](https://github.com/Apdelrahman1911/parlor/issues/260): three-game recipient consistency, local concealment and action hierarchy; #262 and `../review/THREE_GAMES_PRODUCTION_AUDIT_2026-10-25.md`.
-- [#257](https://github.com/Apdelrahman1911/parlor/issues/257): owned subprocesses, bounded logs and private Gradle registries; #261 and `2026-10-25-RELEASE-SUPERVISION.md`. Windows assertion correction still needs fresh qualification.
+- [#257](https://github.com/Apdelrahman1911/parlor/issues/257): owned subprocesses, bounded logs and private Gradle registries; #261 and `2026-10-25-RELEASE-SUPERVISION.md`. Fresh Windows native ownership and complete Windows lane passed; remaining Linux/iOS failures still block the PR.
 - [#252](https://github.com/Apdelrahman1911/parlor/issues/252): lifecycle recovery; `RPC_AND_LIFECYCLE_2026-10-25.md`. Physical acceptance remains open.
 - [#6](https://github.com/Apdelrahman1911/parlor/issues/6): three pre-existing ignored independent-participant transport fixtures remain; advertising/fake buses do not qualify real multi-device LAN.
 - [#258](https://github.com/Apdelrahman1911/parlor/issues/258): historical A37 strict iOS protection0/26 failure; not a current reproduction or proof of a simulator-only limitation.

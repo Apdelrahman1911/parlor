@@ -1,4 +1,32 @@
-# Project status — 2026-09-18
+# Project status — 2026-10-26
+
+## October production overhaul checkpoint
+
+[PR #256](https://github.com/Apdelrahman1911/parlor/pull/256) is merged as
+`81ee9b7b5e1b3fad3c86b9d0cdb2e692d43276c7`. All six mandatory jobs passed
+both the exact feature head and the fresh
+[post-merge run 40156824703](https://github.com/Apdelrahman1911/parlor/actions/runs/40156824703).
+All twelve corresponding cleanup receipts passed. The six games are now on
+`main`; this does not establish physical multiplayer or Store readiness.
+
+[PR #261](https://github.com/Apdelrahman1911/parlor/pull/261) contains release
+process supervision, and [PR #262](https://github.com/Apdelrahman1911/parlor/pull/262)
+contains the application, game, admission, recovery and accessibility improvements.
+Both remain unmerged while their remaining CI failures are investigated.
+Full strict local `productionCheck allTests --continue` passed at `53a72779`:
+1,747 desktop cases (three pre-existing real-LAN skips), 644 Android debug and
+644 Android release unit cases; 688 release Python cases (one environment skip).
+These are not physical-device results or qualification of subsequent revisions.
+
+The [overhaul verification ledger](audits/2026-10-25-VERIFICATION-LEDGER.md)
+maps implementation, failures, fresh evidence and remaining acceptance gates.
+RPC was evaluated and the existing published P2pKit `0.7.0-rc3` messaging retained;
+no measured mobile-host benefit justified a migration. Physical Android/iOS
+host/client interruption testing, power/thermal measurements, assistive-technology
+journeys, strict iOS protection, signing/account ownership and release approval
+remain outstanding. No Store release was performed.
+
+## September checkpoint (historical)
 
 **The readiness continuation is integrated into `main`; this is not Store-release
 approval.** Source and executable contracts remain authoritative. Start with

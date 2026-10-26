@@ -116,10 +116,50 @@ requires updating the pinned Kotlin contract counts from37/31 to38/32 total/
 `DependencyUpdate`. Both count assertions remain enforced; no broader warning
 acceptance, analyzer pin change or suppression was introduced.
 
+## October 26 exact-head CI investigation
+
+Run [40152548602](https://github.com/Apdelrahman1911/parlor/actions/runs/40152548602)
+at `b5b01ec2` completed four of six required jobs successfully, including native
+Windows ownership execution: **18 tests passed**, including all nine real
+process-ownership cases. Linux ARM64, macOS x64, and complete Apple release
+framework/Swift-wrapper verification also passed. These historical passes do
+not qualify the following changed source or the aggregate failed run.
+
+- **Linux:** the exact lint gate failed with no unexpected warnings and only
+  the concrete Compose compiler advisory missing. Local and hosted warning
+  inventories differed because Lint combines independently fetched artifact
+  metadata with newer versions in the host Gradle cache. Source review found
+  its library alias and convention `compileOnly` declaration redundant: the
+  convention uses only a plugin-ID string and the root plugins block supplies
+  the implementation. Remove those unused declarations, retaining the compiler
+  plugin alias, pinned version, plugin application and strict artifact metadata.
+  The exact verifier is unchanged; the remaining plugin-ID advisory is mandatory.
+  See `../ANDROID_LINT_TRIAGE.md` for source provenance and regression contracts.
+- **iOS runtime:** all KMP simulator tests passed. One of six Swift launch tests,
+  the English additional-games journey, timed out while observing the Ghamza
+  name field after typing. The uploaded XCTest diagnostic shows its remote
+  accessibility query never returned before the existing 10-second waiter;
+  the error is `XCTFuture` code 1001, interrupted by waiter. It did not observe
+  an incorrect or truncated text value. The other five UI tests passed. No app
+  crash or confirmed gameplay defect is established by that timeout. Keep the
+  test and bound unchanged; fresh mandatory CI must execute the complete journey
+  and any recurrence needs investigation, not automatic retries or a claimed fix.
+
+Fresh standalone convention compilation after the classpath removal passed:
+`./gradlew -p build-logic :convention:compileKotlin --rerun-tasks --no-build-cache
+--dependency-verification=strict --no-daemon` (**29s, one executed task**).
+The subsequent strict `:composeApp:verifyReleaseLintWarnings
+:shared:transport-p2p:desktopTest --tests '*AndroidReleaseLintContractTest*'`
+run passed in **3m27s**: 670 tasks (557 executed), nine contract tests, and a
+fresh release lint report with exactly 37 accepted warnings and no errors.
+It compiled release Compose code across all six games without the redundant
+classpath declaration. The full platform matrix remains required; local
+compilation is not Apple/Windows runtime evidence.
+
 ## Remaining acceptance
 
-- Run the new mandatory Windows native Job Object suite at the release-only PR's
-  exact source; local mocked Win32 contracts do not count as native execution.
+- Rerun the mandatory Windows native Job Object suite at the final release-only
+  PR source; its `b5b01ec2` run passed natively, not merely with Win32 mocks.
 - Run existing required full CI/platform gates and review their actual outcomes.
 - A synthetic standalone wrapper test is not a complete packaging/signing runtime
   rehearsal, macOS device result, or production distribution authorization.

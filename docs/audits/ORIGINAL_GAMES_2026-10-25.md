@@ -4,6 +4,22 @@ Scope: Whodunit, Mafia, and Last Light on the `feat/last-light` integration base
 `39aacd31`. This report distinguishes source review from executed verification.
 It does not certify Android/iOS devices, networking or the entire application.
 
+## Final integrated visual checkpoint — October 26 readback
+
+The exact `53a72779` worktree reran the three original-game screenshot classes
+on October 25, 02:03:48–02:04:22 UTC: **7 tests, zero failures/errors/skips**,
+`BUILD SUCCESSFUL` in 33 seconds. Six 320dp/200%-text English/Arabic synthetic
+screenshots were inspected independently: the stacked ContextRibbon no longer
+splits words, the actual Doctor target selection remains visible, Whodunit's
+clues/advance controls are reachable and Last Light's hand remains concealed
+while its public guide is open. Deliberately scrolled viewport edges are not
+horizontal clipping. These executed results supersede the pending screenshot
+paragraphs below; they are not native screen-reader or physical-device evidence.
+
+The full strict local aggregate also passed at `53a72779`; consult the
+[integrated ledger](2026-10-25-VERIFICATION-LEDGER.md) for exact outcomes and the
+remaining hosted CI qualification, rather than treating older receipts as final.
+
 ## Architecture and rules reviewed
 
 - **Whodunit:** pure authoritative reducer; readiness-gated dossier reveal;
