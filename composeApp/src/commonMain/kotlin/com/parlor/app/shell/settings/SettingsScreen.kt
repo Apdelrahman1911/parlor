@@ -3,6 +3,7 @@ package com.parlor.app.shell.settings
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,6 +25,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
@@ -233,7 +236,8 @@ private fun ToggleOption(
     onCheckedChange: (Boolean) -> Unit,
 ) {
     val colors = ParlorTheme.colors
-    Row(
+    val fontScale = LocalDensity.current.fontScale
+    BoxWithConstraints(
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(ParlorTheme.radii.card))
@@ -249,28 +253,31 @@ private fun ToggleOption(
                 onValueChange = onCheckedChange,
             )
             .padding(horizontal = ParlorTheme.spacing.l, vertical = ParlorTheme.spacing.m),
-        horizontalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.m),
-        verticalAlignment = Alignment.CenterVertically,
     ) {
-        Column(
-            modifier = Modifier.weight(1f),
-            verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.xs),
-        ) {
-            Text(
-                text = title,
-                style = ParlorTheme.typography.bodyLarge,
-                color = colors.textPrimary,
-            )
-            Text(
-                text = description,
-                style = ParlorTheme.typography.bodySmall,
-                color = colors.textSecondary,
-            )
+        // A fixed switch must not squeeze enlarged text into a narrow column.
+        // Keep one whole-card toggle action; the visual switch is not a second target.
+        if (maxWidth / fontScale < ToggleRowMinimumWidth) {
+            Column(verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.m)) {
+                ToggleText(title, description, Modifier.fillMaxWidth())
+                Switch(checked = checked, onCheckedChange = null, modifier = Modifier.align(Alignment.End))
+            }
+        } else {
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.m),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                ToggleText(title, description, Modifier.weight(1f))
+                Switch(checked = checked, onCheckedChange = null)
+            }
         }
-        Switch(
-            checked = checked,
-            onCheckedChange = null,
-        )
+    }
+}
+
+@Composable
+private fun ToggleText(title: String, description: String, modifier: Modifier) {
+    Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.xs)) {
+        Text(text = title, style = ParlorTheme.typography.bodyLarge, color = ParlorTheme.colors.textPrimary)
+        Text(text = description, style = ParlorTheme.typography.bodySmall, color = ParlorTheme.colors.textSecondary)
     }
 }
 
@@ -314,3 +321,5 @@ private fun OptionRow(
 }
 
 private const val SELECTED_SURFACE_ALPHA = 0.12f
+
+private val ToggleRowMinimumWidth = 240.dp
