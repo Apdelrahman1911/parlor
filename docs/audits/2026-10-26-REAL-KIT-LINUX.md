@@ -67,4 +67,33 @@ background recovery, force-quit recovery, long-session stability or gameplay
 correctness. Issue [#6](https://github.com/Apdelrahman1911/parlor/issues/6) and the
 physical-device acceptance plan remain open. The automated runner must itself
 be executed at a clean committed source before its output is claimed verified;
-the 13 experiments above precede that implementation.
+the 13 experiments above precede that implementation. The following separate
+receipt verifies the committed runner itself.
+
+## Committed-runner verification
+
+At clean commit `1b468e9ff55f77fa2ce61344cfb838faa448f183` (tree
+`ce069ff35fddc5f816cb3f225fecd1fde2c5a4da`), the documented default command
+completed **10/10 cases**: one advertisement and three repetitions of each peer
+scenario. Execution was 2026-10-26 15:33:41–15:36:15 UTC (about 153.5 seconds,
+including preparation). Strict Gradle preparation passed in 29 seconds; its
+invocation-private registry stop also passed. All ten fixture assertions,
+teardowns, natural JVM exits (code 0), and owned cleanup checks passed.
+
+The runner hashed 1,054 executed runtime files before and after execution,
+rechecked its separately compiled Java helper bytes, and verified that the
+source commit/tree stayed clean and unchanged. The final receipt status is
+`passed`. Its SHA-256 is
+`4cdd7a5c98023cc8772f5378a9be17f5f8f8ef9fddec6c9e7782abe1d8f683e5`;
+local path in the isolated worktree:
+`build/real-kit-lan/20261026T153341Z-1995123c/receipt.json`.
+
+At that same commit, **19/19 Python regression tests passed**. They include
+actual owned TERM-resistant descendants, timeout/overflow/cancellation cleanup,
+unrelated-process survival, cleanup after work-budget expiry, real Git source
+mutation, incremental traversal bounds/deadlines, and helper-hash mutation.
+Missing LAN consent was separately checked to fail rather than start a probe.
+
+The code was reviewed before publication; subsequent report/inventory-only
+commits do not become independently executed sources merely by carrying these
+receipts. Full required PR CI and physical-device acceptance remain separate.
