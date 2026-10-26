@@ -78,12 +78,58 @@ class PreconditionsTest(unittest.TestCase):
             root = Path(temporary)
             jar = root / 'test.jar'
             jar.write_bytes(b'first')
-            first = probe.classpath_manifest(str(jar) + os.pathsep + str(root / 'absent-classes'))
+            first = probe.classpath_manifest(str(jar) + os.pathsep + str(root / 'absent-classes'), deadline=time.monotonic() + 10)
             jar.write_bytes(b'second')
-            second = probe.classpath_manifest(str(jar))
+            second = probe.classpath_manifest(str(jar), deadline=time.monotonic() + 10)
             self.assertNotEqual(first[0]['sha256'], second[0]['sha256'])
             with self.assertRaisesRegex(RuntimeError, 'absolute'):
-                probe.classpath_manifest('relative.jar')
+                probe.classpath_manifest('relative.jar', deadline=time.monotonic() + 10)
+
+    def test_incremental_traversal_stops_before_materializing_whole_tree(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            for index in range(20):
+                (root / str(index)).write_text('fixture')
+            original = os.scandir
+            observed = []
+            class TrackedIterator:
+                def __enter__(self):
+                    self.iterator = original(root)
+                    return self
+                def __exit__(self, *args):
+                    self.iterator.close()
+                def __iter__(self):
+                    for entry in self.iterator:
+                        observed.append(entry.name)
+                        yield entry
+            with patch.object(probe, 'MAX_MANIFEST_ENTRIES', 3), patch.object(probe.os, 'scandir', return_value=TrackedIterator()):
+                with self.assertRaisesRegex(RuntimeError, 'traversal exceeds'):
+                    probe.classpath_manifest(str(root), deadline=time.monotonic() + 10)
+            self.assertEqual(len(observed), 3, 'Must stop before enumerating the remaining directory entries')
+
+    def test_hashing_and_walking_obey_absolute_deadline(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            path = Path(temporary) / 'runtime.jar'
+            path.write_bytes(b'fixture')
+            with self.assertRaisesRegex(RuntimeError, 'Total probe time bound'):
+                probe.classpath_manifest(str(path), deadline=time.monotonic() - 1)
+            with self.assertRaisesRegex(RuntimeError, 'Total probe time bound'):
+                probe.sha256(path, time.monotonic() - 1)
+
+    def test_mutated_helper_is_rejected_separately_from_runtime_jars(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            jar = root / 'runtime.jar'
+            helper = root / 'RealAdapterProbe.class'
+            jar.write_bytes(b'runtime')
+            helper.write_bytes(b'original helper')
+            deadline = time.monotonic() + 10
+            artifacts = probe.classpath_manifest(str(jar), deadline=deadline)
+            before = probe.sha256(helper, deadline)
+            probe.require_same_runtime(str(jar), artifacts, helper, before, deadline)
+            helper.write_bytes(b'replaced helper')
+            with self.assertRaisesRegex(RuntimeError, 'Java helper changed'):
+                probe.require_same_runtime(str(jar), artifacts, helper, before, deadline)
 
     def test_helper_allowlist_matches_python_and_preserves_ignore(self):
         java = Path(__file__).with_name('RealAdapterProbe.java').read_text()
@@ -179,15 +225,22 @@ if sys.argv[3]!='normal': time.sleep(30)
     def test_cancellation_retires_owned_descendant_only(self):
         self.exercise('cancel')
 
-    def test_total_deadline_interrupts_non_process_preparation(self):
-        started = time.monotonic()
-        original = signal.getsignal(signal.SIGALRM)
-        with self.assertRaisesRegex(RuntimeError, 'Total probe time bound'):
-            with probe.total_budget(.05):
-                time.sleep(5)
-        self.assertLess(time.monotonic() - started, 1)
-        self.assertEqual(signal.getsignal(signal.SIGALRM), original)
-        self.assertEqual(signal.getitimer(signal.ITIMER_REAL), (0, 0))
+    def test_expired_work_budget_does_not_interrupt_owned_cleanup(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            path = Path(temporary) / 'timeout.log'
+            row = {}
+            original = probe.owned._stop_owned_command
+            completed = []
+            def slow_cleanup(process):
+                time.sleep(.1)  # Cleanup crosses the already-expired work deadline.
+                original(process)
+                completed.append(True)
+            with patch.object(probe.owned, '_stop_owned_command', side_effect=slow_cleanup):
+                with self.assertRaisesRegex(RuntimeError, 'time bound'):
+                    probe.run_case([sys.executable, '-c', 'import time;time.sleep(5)'], path,
+                                   timeout=.01, row=row)
+            self.assertEqual(completed, [True])
+            self.assertTrue(row['cleanup_completed'])
 
     def test_post_cleanup_output_bound_is_enforced(self):
         with tempfile.TemporaryDirectory() as temporary:

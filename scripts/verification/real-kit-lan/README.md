@@ -32,7 +32,9 @@ binding, and broadcast to two distinct peers (10 cases).
 ## Containment and evidence
 
 - Each JVM has a 512 MiB heap limit and 120-second deadline; total execution is
-  bounded to 15 minutes plus bounded cleanup. Iterations are restricted to 1–3.
+  governed by a 900-second work budget, including compilation and custody hashes.
+  Bounded owned cleanup may extend completion (up to 90 seconds for the private
+  Gradle stop, plus process finalization waits). Iterations are restricted to 1–3.
 - Strict Gradle preparation uses two workers, a 3 GiB heap and a fresh private
   daemon registry. Cleanup stops only that registry; caches remain shared.
 - Child process groups use the repository's existing scoped finalizer, including
