@@ -79,7 +79,7 @@ jobs:
           persist-credentials: false
 
       - name: Set up JDK 21
-        uses: actions/setup-java@03ad4de0992f5dab5e18fcb136590ce7c4a0ac95 # v5.6.0
+        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
         with:
           distribution: temurin
           java-version: "21"
@@ -198,7 +198,7 @@ jobs:
       - name: Upload verification reports, mappings, and unsigned AAB
         id: verification_artifact
         if: always() && (github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full' || inputs.verification_scope == 'android-cleanup-only')
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: desktop-android-verification
           if-no-files-found: warn
@@ -232,7 +232,7 @@ jobs:
 
       - name: Upload verification cleanup receipt
         if: always() && (github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full' || inputs.verification_scope == 'android-cleanup-only')
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: verification-cleanup-${{ github.job }}
           if-no-files-found: warn
@@ -250,7 +250,7 @@ jobs:
       - name: Upload bounded Linux process-probe evidence
         id: linux_process_probe_artifact
         if: always() && (github.event_name == 'workflow_dispatch' && inputs.verification_scope == 'linux-process-probe')
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: linux-process-probe-${{ github.run_id }}-${{ github.run_attempt }}
           if-no-files-found: error
@@ -272,7 +272,7 @@ jobs:
 
       - name: Upload Linux process-probe cleanup receipt
         if: always() && (github.event_name == 'workflow_dispatch' && inputs.verification_scope == 'linux-process-probe')
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: linux-process-probe-cleanup-${{ github.run_id }}-${{ github.run_attempt }}
           if-no-files-found: error
@@ -293,7 +293,7 @@ jobs:
           persist-credentials: false
 
       - name: Set up JDK 21
-        uses: actions/setup-java@03ad4de0992f5dab5e18fcb136590ce7c4a0ac95 # v5.6.0
+        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
         with:
           distribution: temurin
           java-version: "21"
@@ -331,7 +331,7 @@ jobs:
       - name: Upload Desktop verification descriptors
         id: verification_artifact
         if: always()
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: desktop-verification-${{ github.job }}
           if-no-files-found: warn
@@ -358,7 +358,7 @@ jobs:
 
       - name: Upload verification cleanup receipt
         if: always()
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: verification-cleanup-${{ github.job }}
           if-no-files-found: warn
@@ -379,7 +379,7 @@ jobs:
           persist-credentials: false
 
       - name: Set up JDK 21
-        uses: actions/setup-java@03ad4de0992f5dab5e18fcb136590ce7c4a0ac95 # v5.6.0
+        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
         with:
           distribution: temurin
           java-version: "21"
@@ -417,7 +417,7 @@ jobs:
       - name: Upload Desktop verification descriptors
         id: verification_artifact
         if: always()
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: desktop-verification-${{ github.job }}
           if-no-files-found: warn
@@ -444,7 +444,7 @@ jobs:
 
       - name: Upload verification cleanup receipt
         if: always()
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: verification-cleanup-${{ github.job }}
           if-no-files-found: warn
@@ -491,7 +491,7 @@ jobs:
           persist-credentials: false
 
       - name: Set up JDK 21
-        uses: actions/setup-java@03ad4de0992f5dab5e18fcb136590ce7c4a0ac95 # v5.6.0
+        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
         with:
           distribution: temurin
           java-version: "21"
@@ -550,7 +550,7 @@ jobs:
       - name: Upload Desktop verification descriptors
         id: verification_artifact
         if: always()
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: desktop-verification-${{ github.job }}
           if-no-files-found: warn
@@ -577,7 +577,7 @@ jobs:
 
       - name: Upload verification cleanup receipt
         if: always()
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: verification-cleanup-${{ github.job }}
           if-no-files-found: warn
@@ -631,7 +631,7 @@ jobs:
         run: /usr/bin/python3 -B scripts/ci/native_continuation.py validate-scope
 
       - name: Set up JDK 21
-        uses: actions/setup-java@03ad4de0992f5dab5e18fcb136590ce7c4a0ac95 # v5.6.0
+        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
         with:
           distribution: temurin
           java-version: "21"
@@ -661,7 +661,7 @@ jobs:
       - name: Upload focused native evidence
         id: native_artifact
         if: always() && (github.event_name == 'workflow_dispatch' && (inputs.verification_scope == 'native-preflight' || inputs.verification_scope == 'native-evidence'))
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: ${{ inputs.verification_scope }}-${{ github.run_id }}-${{ github.run_attempt }}
           if-no-files-found: error
@@ -682,7 +682,7 @@ jobs:
 
       - name: Upload native continuation cleanup receipt
         if: always() && (github.event_name == 'workflow_dispatch' && (inputs.verification_scope == 'native-preflight' || inputs.verification_scope == 'native-evidence'))
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: native-cleanup-${{ github.run_id }}-${{ github.run_attempt }}
           if-no-files-found: error
@@ -703,7 +703,7 @@ jobs:
       - name: Upload bounded process-probe evidence
         id: process_probe_artifact
         if: always() && (github.event_name == 'workflow_dispatch' && inputs.verification_scope == 'native-process-probe')
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: native-process-probe-${{ github.run_id }}-${{ github.run_attempt }}
           if-no-files-found: error
@@ -724,7 +724,7 @@ jobs:
 
       - name: Upload process-probe cleanup receipt
         if: always() && (github.event_name == 'workflow_dispatch' && inputs.verification_scope == 'native-process-probe')
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: native-process-probe-cleanup-${{ github.run_id }}-${{ github.run_attempt }}
           if-no-files-found: error
@@ -848,7 +848,7 @@ jobs:
       - name: Upload Apple runtime verification evidence
         id: verification_artifact
         if: always() && (github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full')
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: ios-runtime-verification
           if-no-files-found: warn
@@ -881,7 +881,7 @@ jobs:
 
       - name: Upload verification cleanup receipt
         if: always() && (github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full')
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: verification-cleanup-${{ github.job }}
           if-no-files-found: warn
@@ -908,7 +908,7 @@ jobs:
           persist-credentials: false
 
       - name: Set up JDK 21
-        uses: actions/setup-java@03ad4de0992f5dab5e18fcb136590ce7c4a0ac95 # v5.6.0
+        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
         with:
           distribution: temurin
           java-version: "21"
@@ -1028,7 +1028,7 @@ jobs:
       - name: Upload Apple release verification evidence
         id: verification_artifact
         if: always() && (github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full')
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: ios-release-verification
           if-no-files-found: warn
@@ -1060,7 +1060,7 @@ jobs:
 
       - name: Upload verification cleanup receipt
         if: always() && (github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full')
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: verification-cleanup-${{ github.job }}
           if-no-files-found: warn
@@ -1090,7 +1090,7 @@ jobs:
           persist-credentials: false
 
       - name: Set up JDK 21
-        uses: actions/setup-java@03ad4de0992f5dab5e18fcb136590ce7c4a0ac95 # v5.6.0
+        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
         with:
           distribution: temurin
           java-version: "21"
@@ -1117,7 +1117,7 @@ jobs:
       - name: Upload strict protection diagnostic evidence
         id: protection_probe_artifact
         if: always()
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: ios-protection-probe-${{ github.run_id }}-${{ github.run_attempt }}
           if-no-files-found: error
@@ -1150,7 +1150,7 @@ jobs:
       - name: Upload strict protection diagnostic cleanup
         id: protection_probe_cleanup_artifact
         if: always()
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: ios-protection-probe-cleanup-${{ github.run_id }}-${{ github.run_attempt }}
           if-no-files-found: error

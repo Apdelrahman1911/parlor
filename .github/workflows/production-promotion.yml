@@ -334,7 +334,7 @@ jobs:
           subject-path: build/release-promotion/production-android-receipt.json
 
       - name: Upload immutable Android production receipt
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: parlor-production-${{ needs.preflight.outputs.candidate_sha }}-android-run-${{ github.run_id }}-attempt-${{ github.run_attempt }}
           if-no-files-found: error
@@ -451,7 +451,7 @@ jobs:
           subject-path: build/release-promotion/production-ios-receipt.json
 
       - name: Upload immutable iOS production receipt
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: parlor-production-${{ needs.preflight.outputs.candidate_sha }}-ios-run-${{ github.run_id }}-attempt-${{ github.run_attempt }}
           if-no-files-found: error
