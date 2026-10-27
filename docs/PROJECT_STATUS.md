@@ -104,6 +104,77 @@ application controls pass locally afterward. These revised templates still need
 committed-source checks, all six current-head hosted lanes, fresh reviewed
 preflight and native execution. #265/#258/#267 remain open; no Store publication.
 
+## October 27 verification continuation (candidate, not integrated)
+
+The frozen [PR #266](https://github.com/Apdelrahman1911/parlor/pull/266) head
+`3806921f4902f5d841da7239c70c6c358b374adf` is still a draft candidate at this
+checkpoint. [Full run 40482354118](https://github.com/Apdelrahman1911/parlor/actions/runs/40482354118)
+has five mandatory lanes passing; the iOS Release wrapper is still running.
+This is not six-lane qualification or permission to merge. Follow the PR's
+latest read-back status and source/artifact/cleanup verification, not this
+historical observation, for completion.
+
+Reviewed [actual copied-app diagnostic 40482816605](https://github.com/Apdelrahman1911/parlor/actions/runs/40482816605)
+at the same head completed its capture: filesystem/Keychain roundtrips and
+atomic replacement pass; final Kotlin/native/host directory size96/links3 agree.
+All 63 native-leaf hashes and inner/outer cleanup were verified. Original strict
+comparisons remain **0 PASS / 6 FAIL**. Evidence ZIP SHA256
+`a7865e4ea265e9a47f69346803106623644f871327caf9d715c9478c668c2c08`;
+cleanup ZIP `fc8b4c008b5435f5cd272096e11fecdc48f8a698bd5f48c7a3997aa0913e2a9c`.
+This is diagnostic capture, not strict protection, physical lock/keybag
+verification or a shipping security pass. #258/#267 remain open; #265 needs
+qualified integration and post-merge verification before closure.
+
+Three independently exercised verification improvements are now implemented:
+
+| Finding | Committed local evidence | Integration status |
+|---|---|---|
+| [#268](https://github.com/Apdelrahman1911/parlor/issues/268): current artifact selection includes historical reports | `90635ea4`: strict transport333 cases / release Python699; exact upload envelopes preserved | Pending |
+| [#269](https://github.com/Apdelrahman1911/parlor/issues/269): isolation scans classify ignored copies as shipping inputs | `c5259efa`: strict transport341 / release Python690; eight fault exercises retain real leak rejection | Pending |
+| [#6](https://github.com/Apdelrahman1911/parlor/issues/6): independent-participant real-transport boundary | `66c578b6`: 3/3 distinct host/peer JVM pairs; normal transport333 / release Python705; documentation checked at `04a62bb8` | Pending |
+
+Each transport receipt has three existing real-LAN JUnit skips; each local
+release Python receipt has one environment skip. They are repeated receipts,
+not unique behavior counts or physical-device evidence. Reports:
+[artifact scope](audits/2026-10-27-CI-ARTIFACT-SCOPE.md),
+[declared source scope](audits/2026-10-27-DECLARED-SOURCE-SCOPE.md), and
+[separate-process LAN](audits/2026-10-27-SEPARATE-PROCESS-LAN.md).
+
+A focused verification-boundaries integration preserves all three component
+histories, regenerates their combined inventory and reruns affected checks.
+It must join qualified `main` and pass fresh exact-head hosted checks before
+normal protected merge. No duplicated premature Apple runs are needed. Issues
+stay open pending their actual acceptance criteria; no Store publication,
+physical multiplayer/background, battery/thermal, RPC benefit or assistive-
+technology acceptance is claimed.
+
+### Independent progress while free-runner benchmarks execute
+
+The combined candidate's first full aggregate at `40720c4a` failed only because
+cached lint partial analysis retained another checkout's root-level source paths.
+[#271](https://github.com/Apdelrahman1911/parlor/issues/271) now tracks the
+producer-key fix, not a weakening of the correct outside-root rejection.
+At clean source `141408e0`, strict `productionCheck allTests --continue` passed
+in 3m4s: 714 Python cases (one environment skip), 3,185 current Desktop/Android
+report cases with zero failures/errors and three existing real-LAN skips.
+Unchanged-input outputs were reused; these are repeated platform/report counts,
+not wholly fresh execution or physical-device verification.
+
+Actual two-worktree lint exercises verify 31 different cross-root cache keys,
+all 37 exact current-root warnings, 222 unaffected cache restorations and
+same-root analysis reuse. Two injected outside-root report paths still fail;
+the original report and clean source were restored. The
+[cache-ownership report](audits/2026-10-27-LINT-CACHE-OWNERSHIP.md) records
+exact-source evidence. Documentation added afterward does not certify a newer
+head; affected checks must run again before publishing the candidate.
+
+The independently frozen free-hosted CI candidate for
+[#270](https://github.com/Apdelrahman1911/parlor/issues/270) is benchmarking at
+`b9d6f780` in [run 40510904388](https://github.com/Apdelrahman1911/parlor/actions/runs/40510904388).
+No speedup, winning runner, integration or post-merge qualification is claimed
+while it runs. Only standard free runner labels are permitted; no paid resources,
+billing/protection changes, extra agents or competing macOS runs are used.
+
 ## September checkpoint (historical)
 
 **The readiness continuation is integrated into `main`; this is not Store-release

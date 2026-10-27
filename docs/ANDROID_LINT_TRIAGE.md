@@ -178,6 +178,22 @@ to qualify it; the preceding 37/38-warning receipts remain historical.
 
 ## Enforcement and evidence
 
+### Checkout-owned partial-analysis cache
+
+AGP 8.13.2 marks `AndroidLintAnalysisTask` cacheable and omits its project
+directory from analysis inputs. With pinned lint 9.1.1, root-level Gradle
+findings can be serialized as `$HOME/.../gradle/libs.versions.toml` rather
+than relocatable project variables. Restoring that analysis in another
+worktree keeps the old root paths; `verifyReleaseLintWarnings` correctly
+rejects them even when the final report was freshly produced.
+
+The root build adds canonical `parlor.lintRepositoryRoot` to every Android
+partial-analysis task's inputs (including test and vital variants). Same-root
+cache reuse remains enabled; cross-root partial results are invalidated.
+Compilation and other task caches are unaffected. This uses a pinned AGP
+internal task type: re-review it on an AGP/lint upgrade. Do not rewrite stale
+report paths, accept outside-root sources, or disable lint to restore a pass.
+
 Run:
 
 ```text

@@ -22,14 +22,48 @@ python3 scripts/verification/real-kit-lan/run.py --allow-local-lan --iterations 
 python3 -m unittest discover -s scripts/verification/real-kit-lan -p 'test_*.py' -v
 ```
 
-The explicit flag is required before any preparation. The helper never changes
+## Separate host and peer processes
+
+```bash
+python3 scripts/verification/real-kit-lan/processes.py --allow-local-lan
+python3 scripts/verification/real-kit-lan/processes.py --allow-local-lan --iterations 1
+```
+
+This alternative launches two distinct JVMs per pair (1–3 pairs, default3).
+The host advertises through real mDNS, explicitly approves the synthetic peer,
+checks authenticated actor replacement, sends a direct terminal envelope and
+observes graceful peer disconnection. The peer checks the response and closes
+its room. Every endpoint must pass assertions/teardown and exit naturally0;
+failed, missing or ambiguous output never becomes a pass.
+
+`MultiProcessEndpoint.kt` lives in `:shared:transport-p2p`'s `desktopTest`
+source set, so normal CI compiles and analyzes it without starting a LAN probe.
+Strict preparation reuses the existing classpath-export init script and
+in-memory device fixture. No shipping source, dependency, workflow or existing
+ignored-fixture selection changes. Only the nonnetworking Python ownership
+guards execute inside ordinary release-tool checks; the native fixture runs
+only through this explicit consent-bearing command.
+
+Each JVM is limited to512MiB, each pair to110seconds and the whole invocation
+to900seconds including preparation/hashing. Logs are bounded1MiB per endpoint;
+cleanup retires both owned process groups before fallible evidence hashing.
+Its private Gradle registry stop is separately bounded60seconds. Receipts under
+`build/real-kit-processes/` bind the clean source, four helper sources and executed
+runtime bytes before/after. Role-specific socket/CPU/RSS/thread samples describe
+whole synthetic JVMs, not action latency or per-phone cost. This adds process
+separation, **not physical LAN, mobile background/process-death recovery,
+gameplay, long-session, battery/thermal or RPC-comparison qualification**.
+
+## Single-process fixture runner (`run.py`)
+
+The explicit flag is required before any preparation. This older runner never changes
 `@Ignore`, normal test selection, CI, shipping source or dependency versions. It
 calls four allowlisted existing fixture methods directly, always runs teardown,
 and creates a new JVM for every case. Defaults: one advertisement plus three
 iterations each of approved join, authenticated bidirectional delivery/actor
 binding, and broadcast to two distinct peers (10 cases).
 
-## Containment and evidence
+## Single-process containment and evidence
 
 - Each JVM has a 512 MiB heap limit and 120-second deadline; total execution is
   governed by a 900-second work budget, including compilation and custody hashes.
