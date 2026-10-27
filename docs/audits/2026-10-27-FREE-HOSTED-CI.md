@@ -204,3 +204,47 @@ its source-bound native/ABI/reaping and downloaded artifact receipts were
 independently verified. It qualifies host capability, **not** Release compilation,
 runtime, final architecture selection or a merge. The later Kotlin job-registry
 test integration fix leaves these workflow/native-control bytes unchanged.
+
+
+### Qualified fresh-source ARM64 sample40553214698
+
+[Run40553214698](https://github.com/Apdelrahman1911/parlor/actions/runs/40553214698)
+passed at frozen source `711cc1abe4aad7d32911fe7357043cda8f54e74b`, tree
+`96b8b189041a2431bea600a59c43e075703047c3`. Read-only qualification
+independently verified all eight producer lanes, the original required Apple
+join, exact source/tree, uploaded artifact digests and native/output cleanup.
+All672 current KMP Simulator cases and16 Swift/container/UI methods passed.
+Optional protection and native-capability diagnostics were correctly skipped;
+the separate unchanged-byte native control retains its own559793e6 custody.
+
+| Measurement | Minutes |
+| --- | ---: |
+| Complete workflow, including queueing | 55.50 |
+| Simulator x64 Release lane / optimized link | 54.67 / 53.48 |
+| Simulator arm64 Release/Swift lane | 54.32 |
+| Complete Apple static analysis | 3.12 |
+| Normal optimized Kotlin/Swift Release wrapper | 49.63 |
+| Device arm64 Release lane / optimized link | 50.32 / 49.13 |
+| Runtime lane / queue offset | 42.67 / 8.13 |
+| macOS desktop lane / queue offset | 16.27 / 35.37 |
+
+The longest Release **job** is approximately68% shorter than the171.48-minute
+baseline Release job. The55.50-minute whole workflow includes queueing; it is
+not a comparable68% whole-workflow improvement, a distribution, a warm-cache
+result or a mobile CPU/memory/battery measurement.
+
+The first external qualifier stopped after four lanes because its copied
+script pointed at an obsolete local checkout. This was **not a CI failure**.
+Its failed observer record and partial evidence remain retained. The repaired
+read-only qualifier requires an explicit checkout and checks clean HEAD/tree
+against the run before and after all original artifact/runtime assertions.
+Existing successful ARM64 execution was requalified without rerunning CI or
+changing its source. Intel was dispatched exactly once only after qualification:
+[40563194924](https://github.com/Apdelrahman1911/parlor/actions/runs/40563194924),
+at the identical frozen head/tree. At this documentation checkpoint Intel is
+pending; ARM64 remains the default and no fastest-profile or merge claim is made.
+
+The separate final-integration branch adds the already tested #272 inventory
+CLI correction and this evidence ledger while leaving the benchmark source
+frozen. Those edits need their own affected local and fresh protected PR checks;
+the711cc1ab workflow does not qualify a newer integration head.

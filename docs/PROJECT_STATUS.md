@@ -1,5 +1,30 @@
 # Project status — 2026-10-27
 
+## Latest free-hosted CI checkpoint (18:47 UTC; not merged)
+
+The ARM64 [full run40553214698](https://github.com/Apdelrahman1911/parlor/actions/runs/40553214698)
+at `711cc1ab` is independently qualified: all eight producer lanes and the
+original required Apple join pass, with exact source/upload/native/output
+custody. Current runtime evidence has672 KMP Simulator cases and16 Swift
+methods passing. Total elapsed time including queues is55.50minutes; the
+longest Release job is54.67minutes versus the old171.48-minute Release job.
+This is one sample, not a statistical or mobile performance result.
+
+The external evidence qualifier's obsolete local-checkout assertion was repaired
+without changing frozen CI or weakening its checks; the original failure was
+retained and the existing successful run requalified. The identical-source
+[Intel comparison40563194924](https://github.com/Apdelrahman1911/parlor/actions/runs/40563194924)
+is pending. ARM64 remains the default; no paid runner, billing/cache-cap change,
+protection bypass or new agent is used. See the
+[full benchmark ledger](audits/2026-10-27-FREE-HOSTED-CI.md).
+
+Independent work has integrated the focused [#272 inventory CLI safety fix](audits/2026-10-27-REVIEW-INVENTORY-CLI.md)
+into a separate final-integration checkout: ten regression tests and actual
+help/error commands outside Git pass. Its newer source still needs fresh local
+and protected hosted checks. PR#266 is still draft/unmerged; all unresolved
+physical-device, strict protection, signing/legal and Store-release gates below
+remain unchanged. Later source cannot reuse an older run as merge evidence.
+
 ## October production overhaul checkpoint
 
 [PR #256](https://github.com/Apdelrahman1911/parlor/pull/256) is merged as
