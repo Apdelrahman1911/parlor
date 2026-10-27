@@ -38,6 +38,8 @@ precedence over prose; archived plans are not current requirements.
 
 ## Evidence and archives
 
+- [October production overhaul qualification](audits/2026-10-26-OVERHAUL-QUALIFICATION.md)
+  — merged changes, exact-source checks, execution boundaries and remaining gates.
 - [Mechanical inventory and independent-review evidence](review/README.md)
   — inventory freshness is not a source-review or runtime attestation.
 - [Historical plans, handoffs, audits and WebUI concept](archives/README.md)

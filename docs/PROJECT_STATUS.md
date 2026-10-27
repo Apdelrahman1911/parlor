@@ -1,4 +1,4 @@
-# Project status — 2026-10-26
+# Project status — 2026-10-27
 
 ## October production overhaul checkpoint
 
@@ -9,31 +9,56 @@ both the exact feature head and the fresh
 All twelve corresponding cleanup receipts passed. The six games are now on
 `main`; this does not establish physical multiplayer or Store readiness.
 
-[PR #261](https://github.com/Apdelrahman1911/parlor/pull/261) contains release
-process supervision, and [PR #262](https://github.com/Apdelrahman1911/parlor/pull/262)
-contains the application, game, admission, recovery and accessibility improvements.
-[PR #263](https://github.com/Apdelrahman1911/parlor/pull/263) incorporates their
-ancestry plus reproducible real-kit verification and additional confirmed layout
-fixes. The qualified integration plan is one protected aggregate merge after all
-six latest-head checks and source-bound cleanup receipts for each PR pass. No
-intermediate merge, waived check or protection bypass is used.
+[PR #261](https://github.com/Apdelrahman1911/parlor/pull/261) (release supervision),
+[#262](https://github.com/Apdelrahman1911/parlor/pull/262) (application/game overhaul)
+and [#263](https://github.com/Apdelrahman1911/parlor/pull/263) (aggregate integration,
+real-kit runner and reproduced layout fixes) are **MERGED**. GitHub records the
+same merge `d72a0d839cf0232e8c4fbf0940ccd1d614acbac4`, at October 26 23:19:28 UTC.
+Its parents are previous `main` (`81ee9b7b`) and aggregate `ba0c1e43`; its tree is
+`832f2f779800ce6f1d5fb8a973969dd27bc92766`. Normal protected merge was used; no
+required check, approval or protection was bypassed.
 
-At the October 26 16:55 checkpoint these PRs remain unmerged: desktop/Android lanes
-pass, Apple qualification continues, and the changed #263 tip requires fresh full
-verification. Strict local `productionCheck allTests --continue` passed at
-`baab5f1d`: 1,748 desktop cases (three existing skips), 644 Android unit cases per
-variant and 688 Python cases (one local environment skip), with valid up-to-date
-outputs reused. Subsequent focused tests reproduced and fixed enlarged Settings,
-Domino roster and original host room-code layouts. These results do not pre-certify
-the later aggregate or establish native physical-device acceptance.
+All six mandatory CI jobs passed at each frozen PR head, and all eighteen
+source/artifact/cleanup records have been verified. #262's iOS Release lane
+passed unchanged on attempt 2 after its first 180-minute job timeout; the other
+five lanes carry their successful attempt-1 results. A final-helper sequencing
+error means #261's complete six-lane source/Apple-cycle recheck finished **after**
+merge (23:21:29 UTC), not before; the detailed report preserves that ordering.
 
-The [overhaul verification ledger](audits/2026-10-25-VERIFICATION-LEDGER.md)
-maps implementation, failures, fresh evidence and remaining acceptance gates.
+Fresh [main run 40418964553](https://github.com/Apdelrahman1911/parlor/actions/runs/40418964553)
+**passed all six mandatory lanes** at `d72a0d83`. All six source/artifact/cleanup
+bindings and four Apple resource-retirement records were independently verified
+at October 27 01:51:44 UTC. This qualifies that merge, not subsequent source edits
+or physical-device/Store acceptance. Issue #257 is closed after this verification.
+At `ba0c1e43`, strict local
+`productionCheck allTests --continue` passed: 1,776 Desktop cases (three existing
+real-LAN skips), 646 Android unit cases per variant and 688 release Python cases
+(one local environment skip); valid unchanged-input up-to-date outputs were reused.
+Hosted aggregate evidence additionally covers six managed Android device cases,
+672 KMP iOS Simulator cases, ten Swift host/UI cases and 18 Windows ownership cases.
+These counts are repeated platform receipts, not unique behaviors or physical
+device acceptance.
+
+The [overhaul qualification report](audits/2026-10-26-OVERHAUL-QUALIFICATION.md) and
+[verification ledger](audits/2026-10-25-VERIFICATION-LEDGER.md)
+map implementation, failures, fresh evidence and remaining acceptance gates.
 RPC was evaluated and the existing published P2pKit `0.7.0-rc3` messaging retained;
 no measured mobile-host benefit justified a migration. Physical Android/iOS
 host/client interruption testing, power/thermal measurements, assistive-technology
 journeys, strict iOS protection, signing/account ownership and release approval
 remain outstanding. No Store release was performed.
+
+A guarded standalone paired iOS storage diagnostic at the merged source,
+[run 40419513891](https://github.com/Apdelrahman1911/parlor/actions/runs/40419513891),
+passed source/control/artifact/collection/cleanup verification but strict synthetic
+Complete remained **0 PASS / 5 FAIL**. This is not Parlor application execution,
+physical lock/keybag verification or a replacement for A37's unresolved strict gate.
+The actual-app preflight built no app; subsequent confirmed diagnostic identity,
+copy-seam and fixture drift is tracked in [#265](https://github.com/Apdelrahman1911/parlor/issues/265).
+[The repair report](audits/2026-10-27-IOS-DIAGNOSTIC-CONTROLS.md) records fixes,
+local regression results and new fail-closed macOS control-suite enforcement.
+Revised controls require fresh exact-head CI and reviewed native preflight before
+application diagnostic execution. These repairs do not resolve #258.
 
 ## September checkpoint (historical)
 
@@ -192,9 +217,9 @@ do not override this checkpoint.
 
 ## Continuing work safely
 
-Keep the three-game implementation and qualification on `feat/last-light`; do not merge it
-without a separate reviewed qualification and authorization. For unrelated work,
-branch from `main`. Retain `fix/local-readiness-2026-09-07`: focused diagnostic
+The September checkpoints above are historical; all six games and the October
+overhaul are now integrated. Branch new work from `main`, and qualify changed
+source through existing protected checks. Retain `fix/local-readiness-2026-09-07`: focused diagnostic
 ownership guards still require that exact branch. Create fresh source/control
 bindings before a new diagnostic execution; never retarget guards just to remove
 a branch. Preserve failures, user work and archived evidence `build/` folders.
