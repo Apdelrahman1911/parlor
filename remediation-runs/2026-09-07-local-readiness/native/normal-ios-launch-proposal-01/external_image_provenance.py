@@ -11,7 +11,7 @@ import os
 from pathlib import Path
 import re
 
-APP_ID = 'com.parlor.app.debug'
+APP_ID = 'me.parlor.ios.debug'
 UUID = r'[A-Fa-f0-9]{8}(?:-[A-Fa-f0-9]{4}){3}-[A-Fa-f0-9]{12}'
 SAMPLE_ROW = re.compile(r'^\s*(0x[0-9a-fA-F]+)\s*-\s*(0x[0-9a-fA-F]+)\s+.+?\s+<(' +
                         UUID + r')>\s+(/[^\r\n]+?)\s*$')

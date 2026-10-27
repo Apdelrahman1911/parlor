@@ -76,16 +76,24 @@ fun L08UiObservation(): String = kotlinx.serialization.json.buildJsonObject {
         text = once(text, '        onTap = { onResume(entry.sessionId) },',
                     '        onTap = {\n            com.parlor.app.readiness.L08UiSeam.homeTapped(entry.sessionId)\n'
                     '            onResume(entry.sessionId)\n        },\n'
-                    '        modifier = com.parlor.app.readiness.L08UiSeam.homeModifier(entry.sessionId),')
+                    '        resumeModifier = com.parlor.app.readiness.L08UiSeam.homeModifier(entry.sessionId),')
         text = once(text, '''    onTap: () -> Unit,
-) {
-    ParlorCard(
-        modifier = Modifier''', '''    onTap: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    ParlorCard(
-        modifier = modifier''')
-        return text
+    onDiscard: (String) -> Unit,
+    enabled: Boolean,
+) {''', '''    onTap: () -> Unit,
+    onDiscard: (String) -> Unit,
+    enabled: Boolean,
+    resumeModifier: Modifier = Modifier,
+) {''')
+        # The Resume Row owns the click/semantics; the card also contains a
+        # separate discard action. Tag only the real Resume target.
+        return once(text, '''            Row(
+                modifier = Modifier.fillMaxWidth()
+                    .semantics { this.contentDescription = contentDescription }
+                    .clickable(enabled = enabled, role = Role.Button, onClick = onTap),''', '''            Row(
+                modifier = resumeModifier.fillMaxWidth()
+                    .semantics { this.contentDescription = contentDescription }
+                    .clickable(enabled = enabled, role = Role.Button, onClick = onTap),''')
     if path == RECOVERY:
         text = once(text, 'import androidx.compose.ui.Modifier\n',
                     'import androidx.compose.ui.Modifier\nimport androidx.compose.ui.platform.testTag\n')

@@ -11,7 +11,7 @@ final class IOSAppLaunchUITests: XCTestCase {
         let token: String = __PROTECTION_TOKEN__
         XCTAssertEqual(environment["SIMULATOR_UDID"], expectedDevice)
         XCTAssertEqual(environment["SIMULATOR_DEVICE_NAME"], expectedName)
-        let app = XCUIApplication(bundleIdentifier: "com.parlor.app.debug")
+        let app = XCUIApplication(bundleIdentifier: "me.parlor.ios.debug")
         app.launchEnvironment = ["PARLOR_PROTECTION_MODE": "actual-filesystem",
             "PARLOR_PROTECTION_TOKEN": token, "PARLOR_PROTECTION_EXPECTED_UDID": expectedDevice]
         app.launchArguments = []

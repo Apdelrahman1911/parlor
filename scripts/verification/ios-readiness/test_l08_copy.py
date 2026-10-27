@@ -87,6 +87,35 @@ class L08CopyContractTests(unittest.TestCase):
         self.assertEqual(changed.count('.testTag("l08-mafia-repeat")'), 1)
         self.assertEqual(changed.count('.testTag("l08-mafia-start")'), 1)
 
+    def test_home_observer_tags_only_resume_row_and_preserves_separate_discard(self):
+        source = (ROOT / extension.HOME).read_text()
+        changed = extension.transform(extension.HOME, source)
+        self.assertEqual(changed.count('resumeModifier = com.parlor.app.readiness.L08UiSeam.homeModifier(entry.sessionId)'), 1)
+        self.assertEqual(changed.count('resumeModifier: Modifier = Modifier,'), 1)
+        self.assertEqual(changed.count('modifier = resumeModifier.fillMaxWidth()'), 1)
+        self.assertIn('ParlorCard(\n        modifier = Modifier.fillMaxWidth(),', changed)
+        row = ('            Row(\n                modifier = resumeModifier.fillMaxWidth()\n'
+               '                    .semantics { this.contentDescription = contentDescription }\n'
+               '                    .clickable(enabled = enabled, role = Role.Button, onClick = onTap),')
+        self.assertIn(row, changed)
+        for callback in ('onDiscard = { onDiscard(entry.sessionId, it) },',
+                         'onClick = { onDiscard("$title — $subtitle") },'):
+            self.assertEqual(changed.count(callback), source.count(callback))
+            self.assertEqual(changed.count(callback), 1)
+        self.assertEqual(changed.count('enabled = enabled,'), source.count('enabled = enabled,'))
+
+    def test_home_observer_refuses_missing_ambiguous_or_changed_resume_target(self):
+        source = (ROOT / extension.HOME).read_text()
+        anchor = ('            Row(\n                modifier = Modifier.fillMaxWidth()\n'
+                  '                    .semantics { this.contentDescription = contentDescription }\n'
+                  '                    .clickable(enabled = enabled, role = Role.Button, onClick = onTap),')
+        self.assertEqual(source.count(anchor), 1)
+        for changed in (source.replace(anchor, ''), source + '\n' + anchor,
+                        source.replace('onClick = onTap)', 'onClick = onDiscard)'),
+                        source.replace('    onDiscard: (String) -> Unit,\n', '')):
+            with self.subTest(mutation=changed[-80:]), self.assertRaises(RuntimeError):
+                extension.transform(extension.HOME, changed)
+
     def test_old_and_l08_transforms_compose_in_only_an_owned_temporary_copy(self):
         paths = sorted(set(original.MODIFIED_KOTLIN) | set(extension.L08_MODIFIED))
         before = {path: sha(ROOT / path) for path in paths}

@@ -280,7 +280,11 @@ class XCTestTests(unittest.TestCase):
 
 class ExternalProvenanceTests(unittest.TestCase):
     def test_exact_public_launch_pid_is_required(self):
+        self.assertEqual(provenance.APP_ID, 'me.parlor.ios.debug')
         self.assertEqual(PID, provenance.parse_launch_pid(f'{provenance.APP_ID}: {PID}\n'))
+        for identifier in ('com.parlor.app.debug', 'me.parlor.ios', 'me.parlor.android.debug'):
+            with self.subTest(bundle_id=identifier), self.assertRaises(RuntimeError):
+                provenance.parse_launch_pid(f'{identifier}: {PID}\n')
         for text in (f'other: {PID}\n', f'{provenance.APP_ID}: 0\n', f'{provenance.APP_ID}: {PID}\nextra',
                      f'{provenance.APP_ID}: 1\n', f' {provenance.APP_ID}: {PID}\n'):
             with self.subTest(text=text), self.assertRaises(RuntimeError):

@@ -10,7 +10,7 @@ import unittest
 
 import application_receipts as receipts
 from application_probe import (ApplicationLane, HOST_SDK_MACRO_NAMES, inspect_host_sampler_copy,
-                               parse_host_sdk_macros, write_host_sampler_copy)
+                               normal, parse_host_sdk_macros, write_host_sampler_copy)
 
 
 TOKEN = 'application-control-fixture'
@@ -51,7 +51,7 @@ def application():
     final = dict(schema_version=1, kind='protection-application', collection_status=receipts.COLLECTED,
                  recorded_samples=6, run_token=TOKEN, simulator_udid=DEVICE,
                  source_manifest_sha256=SOURCE, controls_sha256=CONTROLS,
-                 bundle_id='com.parlor.app.debug', runtime_version=[26, 2, 0],
+                 bundle_id='me.parlor.ios.debug', runtime_version=[26, 2, 0],
                  process_boot=DEVICE, container_id=DEVICE, process_id=123, uid=501,
                  hardware_protection_verified=False, l08_requirements_waived=False,
                  snapshot_validation_tested=False)
@@ -215,6 +215,25 @@ class ApplicationHostCopyTests(unittest.TestCase):
 
 
 class ApplicationReceiptTests(unittest.TestCase):
+    def test_application_identity_matches_normal_lane_and_all_native_controls(self):
+        expected = 'me.parlor.ios.debug'
+        self.assertEqual(normal.APP_ID, expected)
+        controls = Path(__file__).resolve().parent
+        for name, count in {'application_probe.py': 1, 'application_receipts.py': 1,
+                            'ProtectionApplicationLaunch.swift.in': 2,
+                            'ProtectionApplicationUITest.swift.in': 1,
+                            'ProtectionApplicationProbe.kt.in': 1}.items():
+            with self.subTest(control=name):
+                source = (controls / name).read_text()
+                self.assertEqual(source.count(expected), count)
+                self.assertNotIn('com.parlor.app.debug', source)
+
+    def test_application_receipt_rejects_old_release_and_other_platform_identities(self):
+        final, samples = application()
+        for identifier in ('com.parlor.app.debug', 'me.parlor.ios', 'me.parlor.android.debug', ''):
+            with self.subTest(bundle_id=identifier), self.assertRaises(RuntimeError):
+                receipts.validate_application(dict(final, bundle_id=identifier), samples, **BINDINGS)
+
     def test_missing_is_collection_not_protection_pass(self):
         result = receipts.validate_application(*application(), **BINDINGS)
         self.assertEqual((result['collection_status'], result['strict_status'], result['strict_passed']),

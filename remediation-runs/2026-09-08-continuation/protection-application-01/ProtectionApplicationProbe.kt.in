@@ -71,7 +71,7 @@ fun runProtectionApplication(runToken: String, observe: (String, String) -> Stri
     try {
         check(Regex("[a-f0-9]{8}(-[a-f0-9]{4}){3}-[a-f0-9]{12}").matches(runToken))
         val environment = NSProcessInfo.processInfo.environment
-        check(NSBundle.mainBundle.bundleIdentifier == "com.parlor.app.debug")
+        check(NSBundle.mainBundle.bundleIdentifier == "me.parlor.ios.debug")
         check(environment["PARLOR_PROTECTION_TOKEN"] == runToken)
         check(environment["PARLOR_PROTECTION_MODE"] == "actual-filesystem")
         val device = environment["SIMULATOR_UDID"] as? String

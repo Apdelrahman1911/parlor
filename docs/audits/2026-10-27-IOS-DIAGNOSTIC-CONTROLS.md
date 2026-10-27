@@ -1,0 +1,82 @@
+# iOS diagnostic-control repair — 2026-10-27
+
+## Scope and issue mapping
+
+[Issue #265](https://github.com/Apdelrahman1911/parlor/issues/265) tracks confirmed
+verification-tooling drift found after the October overhaul merge
+`d72a0d839cf0232e8c4fbf0940ccd1d614acbac4`. Changes are to copy-only observations,
+diagnostic identities, test fixtures and CI enforcement. No shipping Kotlin/Swift,
+protection constants, authentication, dependency pins or Store gates are changed.
+`AGENTS.md`, the original normal-launch driver, and production FIFO ownership
+logic remain byte-identical.
+
+This repair does **not** resolve [#258](https://github.com/Apdelrahman1911/parlor/issues/258),
+prove A37's root cause or establish physical-device protection/recovery.
+
+## Reproduced defects and corrections
+
+| Finding | Root cause / impact | Correction and regression |
+|---|---|---|
+| L08 Home copy fails | Obsolete Resume card signature; actual UI now separates Resume and discard | Inject an optional copy-only modifier into the real clickable Resume Row; preserve enabled/semantics, callback and independent discard. Reject missing/ambiguous/changed targets and repeated instrumentation. |
+| Raw-retention fixtures fail | Extracted real validator namespace omits `HOST_PREPARE_FAILURE_STAGES`; downstream finalizer assertions also fail | Include the actual constant, leaving collection/validation code unchanged; complete raw-retention and finalizer integration cases pass. |
+| Strict-runner pin stale | Reviewed Debug bundle-ID migration predates the test pin | Pin current exact bytes **and** prove reversing only that migrated line reconstructs the original SHA-256. No blanket pin refresh. |
+| Application/normal diagnostic targets obsolete ID | Seven active controls/provenance paths still use `com.parlor.app.debug`; synthetic receipts agree with each other but not the built app | Align Kotlin/Swift/XCTest, receipt validation, container lookup and normal provenance parser with `me.parlor.ios.debug`. Cross-control tests reject old, Release and other-platform identities. |
+| FIFO tests fail on Linux | Claimed synthetic fixtures accidentally require native filesystem birthtime | Supply explicitly synthetic creation-time observations to the unchanged real metadata validator; real inode/type/UID/symlink checks remain. Separate tests prove missing birthtime never falls back to ctime and exercise real macOS metadata in Apple CI. |
+| Native tests absent from routine macOS verification | Apple Foundation encoder assumes xcrun on every platform; complete control suites were not enforced | Execute full readiness and application-control suites in the existing owned Apple aggregate before KMP runtime tests; retain logs, require pipefail, and reject omitted/narrowed/commented/bypassed/reordered commands. Apple-only tests are platform-attributed on Linux and must execute on macOS. |
+
+The application's storage lane calls unchanged `normal.Lane.prepare`, not the
+L08 Kotlin instrumentation path. Thus the Home seam defect is an independent L08
+blocker, not evidence of APP04 storage causality. The obsolete application identity
+is a separate directly established execution blocker.
+
+## Local verification (Linux / JDK 21)
+
+The initial broad readiness run contained **338 cases, 8 failures, 44 errors,
+1 existing skip**. The original failures are retained; they are not reclassified
+as passing evidence.
+
+After repair:
+
+- Complete readiness suite: **345 unittest cases; zero failures/errors; three
+  platform skips**. Two skips require actual Apple Foundation/macOS birthtime;
+  one is the existing unavailable native-platform test. These are not native
+  execution claims.
+- Actual-app diagnostic synthetic suite: **27 cases, zero failures/errors/skips**.
+- Normal-launch diagnostic suite: **243 cases, zero failures/errors/skips** with
+  an explicit private, task-owned `TMPDIR`. Its C observer uses synthetic ABI and
+  identity inputs; this does not establish real Darwin ABI/process-map behavior.
+  An earlier invocation without the required `TMPDIR` correctly failed before
+  that class executed; the supported invocation did not relax the guard.
+- Workflow-contract suite: **84 cases, zero failures/errors**.
+
+Commands:
+
+```bash
+python3 -B -m unittest discover -s scripts/verification/ios-readiness -p 'test_*.py' -v
+python3 -B -m unittest discover -s remediation-runs/2026-09-08-continuation/protection-application-01 -p 'test_*.py' -v
+# Use an explicitly allocated private TMPDIR for the complete normal-launch suite.
+python3 -B -m unittest scripts.release.tests.test_workflow_contract -q
+```
+
+Exact committed-source Gradle checks and the full current-head six-lane hosted
+run are required before merge. This report does not pre-certify pending checks.
+
+## Fresh protection observations and outstanding gates
+
+[Standalone probe 40419513891](https://github.com/Apdelrahman1911/parlor/actions/runs/40419513891)
+at the merged baseline completed source/control/ZIP/raw-report/cleanup validation.
+Strict synthetic Complete remained **0 PASS / 5 FAIL**. Simulator FileManager had
+no protection key; same-inode host FileManager and file NSURL reported
+until-first-authentication. Raw class was 3; APFS capability was unsupported.
+One-call host Complete setter returned false / Cocoa256 and retained class3.
+Underlying POSIX22 belongs to historical H03, **not** this fresh setter record.
+Scratch observations outside the app sandbox do not identify production causality.
+
+[Application preflight 40419989333](https://github.com/Apdelrahman1911/parlor/actions/runs/40419989333)
+verified 2,343 source files and 114 controls, but built no app. The subsequent
+identity finding invalidates its suitability for new application execution.
+Revised controls require a fresh committed-source preflight, immutable-delta
+review and exact hashes before the existing guarded evidence dispatch.
+Historical failures are preserved. Physical devices, real-LAN interruption,
+lock/unlock, battery/thermal, native accessibility, signing/account acceptance and
+release approval remain independent outstanding gates. No Store publication.

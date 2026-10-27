@@ -572,7 +572,7 @@ def raw_preservation_namespace(source):
     namespace.update(FRAMEWORK_PATH=artifact['FRAMEWORK_PATH'], LOADER_KEYS=artifact['LOADER_KEYS'])
     storage = COMPANION.parent / 'l08_receipts.py'
     constants(storage, {'STORAGE_PLAN', 'STORAGE_CHECKS', 'STORAGE_FAILURE_STAGES', 'HOST_PLAN', 'HOST_CHECKS',
-                        'HOST_VARIANTS', 'HOST_COUNTERS', 'UUID', 'PROTECTION_ATTRIBUTE_VALUES',
+                        'HOST_VARIANTS', 'HOST_COUNTERS', 'HOST_PREPARE_FAILURE_STAGES', 'UUID', 'PROTECTION_ATTRIBUTE_VALUES',
                         'PROTECTION_VOLUME_VALUES'}, namespace)
     for name in ('_context', 'storage_result_names', 'host_result_names', 'host_checks', '_validate_protection_read',
                  'validate_protection_metadata', 'validate_preservable_operation'):
@@ -1517,7 +1517,7 @@ class LifecycleFinalizerIntegration(unittest.TestCase):
 class LifecycleCompositionClosureIntegration(unittest.TestCase):
     def test_original_strict_runner_and_ownership_fifo_controls_are_immutable(self):
         expected = {
-            SUPPORT / 'run_ios_readiness.py': '85283be9681be14c18b76ef1657b596e837b4f97f978917f25ac693ae72d0ca8',
+            SUPPORT / 'run_ios_readiness.py': '05145b3dff1081b9a9fb7d8814ef8eca632e665537fe339f48670511c875045d',
             SUPPORT / 'owned_lane.py': '949091403ac669429f962120e9873a09897a87bdcae10702720ede0c68342f03',
             COMPANION.parent / 'owned_lane.py': '949091403ac669429f962120e9873a09897a87bdcae10702720ede0c68342f03',
             SUPPORT / 'secondary_fifo.py': '170586ec941b02866acfa4b8e54aa3dd0842dbc7bc9c4b50410bca4b1149440a',
@@ -1527,6 +1527,14 @@ class LifecycleCompositionClosureIntegration(unittest.TestCase):
             with self.subTest(path=str(path.relative_to(ROOT))):
                 self.assertFalse(path.is_symlink())
                 self.assertEqual(hashlib.sha256(path.read_bytes()).hexdigest(), pinned)
+
+    def test_strict_runner_pin_changes_only_for_reviewed_debug_application_identity(self):
+        source = (SUPPORT / 'run_ios_readiness.py').read_bytes()
+        reviewed = b"APP_ID = 'me.parlor.ios.debug'"
+        self.assertEqual(source.count(reviewed), 1)
+        original = source.replace(reviewed, b"APP_ID = 'com.parlor.app.debug'", 1)
+        self.assertEqual(hashlib.sha256(original).hexdigest(),
+                         '85283be9681be14c18b76ef1657b596e837b4f97f978917f25ac693ae72d0ca8')
 
     def test_companion_composed_and_normal_manifests_bind_helper_and_both_test_files(self):
         binding = ROOT / 'AGENTS.md'  # Existing bytes for manifest shape only; never an execution binding.

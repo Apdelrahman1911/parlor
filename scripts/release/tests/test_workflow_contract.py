@@ -575,6 +575,24 @@ class WorkflowContractTest(unittest.TestCase):
                 with self.subTest(job=job_id, replacement=replacement), self.assertRaisesRegex(RuntimeError, "split Apple aggregate"):
                     workflow_contract.verify_validation(changed)
 
+    def test_macos_diagnostic_control_suites_are_complete_fail_closed_and_before_runtime(self) -> None:
+        workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text()
+        job = workflow_contract.validation_job(workflow, "ios")
+        original = workflow_contract.validation_step(job, "Run all KMP iOS simulator runtime tests")
+        workflow_contract.verify_validation(workflow)
+        commands = [line.strip() for line in original.splitlines() if line.strip().startswith('/usr/bin/python3 -B -m unittest')]
+        self.assertEqual(len(commands), 2)
+        for command in commands:
+            for replacement in ('# ' + command, command + ' || true', command.replace("'test_*.py'", "'test_l08_copy.py'"),
+                                command.replace('/usr/bin/python3 -B', 'python3'), ''):
+                changed = workflow.replace(original, original.replace(command, replacement, 1), 1)
+                with self.subTest(replacement=replacement), self.assertRaisesRegex(RuntimeError, 'macOS diagnostic controls'):
+                    workflow_contract.verify_validation(changed)
+        for changed_step in (original.replace('set -euo pipefail', 'set -eu'),
+                             original.replace('          ' + commands[0] + '\n', '') + '\n          ' + commands[0]):
+            with self.subTest(step=changed_step), self.assertRaisesRegex(RuntimeError, 'macOS diagnostic controls'):
+                workflow_contract.verify_validation(workflow.replace(original, changed_step, 1))
+
     def test_each_apple_job_requires_its_own_exact_source_and_toolchain_guard_body(self) -> None:
         workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text()
         for job_id in ("ios", "ios-release"):

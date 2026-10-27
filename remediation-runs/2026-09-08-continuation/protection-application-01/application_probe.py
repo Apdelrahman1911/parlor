@@ -259,7 +259,7 @@ class ApplicationLane(normal.Lane):
                 except BaseException as error:
                     state['errors'].append(dict(stage='xcresult-' + view, type=type(error).__name__))
         try:
-            code = self.command(['xcrun', 'simctl', 'get_app_container', self.uuid, 'com.parlor.app.debug', 'data'], 'app-data-container.log')
+            code = self.command(['xcrun', 'simctl', 'get_app_container', self.uuid, 'me.parlor.ios.debug', 'data'], 'app-data-container.log')
             state['container_query_exit'] = code
             if code == 0:
                 raw = (self.destination / 'app-data-container.log').read_text().strip()

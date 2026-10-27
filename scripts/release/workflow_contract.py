@@ -698,6 +698,18 @@ def verify_validation(text: str) -> None:
         fail("validation workflow review-inventory gate requires full Git history")
     runtime = validation_job(text, "ios")
     release = validation_job(text, "ios-release")
+    native_controls = validation_step(runtime, "Run all KMP iOS simulator runtime tests")
+    for directory, report in (
+        ("scripts/verification/ios-readiness", "ios-readiness-control-tests.log"),
+        ("remediation-runs/2026-09-08-continuation/protection-application-01", "ios-protection-application-control-tests.log"),
+    ):
+        command = ("/usr/bin/python3 -B -m unittest discover -s " + directory +
+                   " -p 'test_*.py' -v 2>&1 | tee build/ci-evidence/" + report)
+        if (native_controls.count(command) != 1 or
+                re.findall(r"(?m)^          (.*" + re.escape(directory) + r".*)$", native_controls) != [command] or
+                native_controls.index(command) > native_controls.index("./gradlew ") or
+                "          set -euo pipefail\n" not in native_controls):
+            fail("validation workflow must run complete macOS diagnostic controls fail-closed before the Apple runtime aggregate")
     for job, name, task in (
         (runtime, "Run all KMP iOS simulator runtime tests", "productionIosSimulatorRuntimeTests"),
         (release, "Run complete Apple static analysis and release linkage gates", "productionAppleCheck"),

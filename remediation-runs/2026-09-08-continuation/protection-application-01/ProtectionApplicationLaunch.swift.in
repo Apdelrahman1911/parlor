@@ -64,13 +64,13 @@ private func protectionApplicationOutput(_ name: String, _ value: [String: Any])
               environment["SIMULATOR_UDID"] == expectedDevice,
               environment["PARLOR_PROTECTION_EXPECTED_UDID"] == expectedDevice,
               environment["PARLOR_PROTECTION_MODE"] == "actual-filesystem",
-              Bundle.main.bundleIdentifier == "com.parlor.app.debug" else { status = "failed"; return }
+              Bundle.main.bundleIdentifier == "me.parlor.ios.debug" else { status = "failed"; return }
         DispatchQueue.global(qos: .utility).async { [weak self] in
             let processBoot = UUID().uuidString.lowercased()
             let version = ProcessInfo.processInfo.operatingSystemVersion
             var receipt: [String: Any] = ["schema_version": 1, "kind": "protection-application",
                 "run_token": expectedToken, "simulator_udid": expectedDevice, "process_boot": processBoot,
-                "process_id": Int(getpid()), "uid": Int(getuid()), "bundle_id": "com.parlor.app.debug",
+                "process_id": Int(getpid()), "uid": Int(getuid()), "bundle_id": "me.parlor.ios.debug",
                 "controls_sha256": expectedControl, "source_manifest_sha256": expectedSource,
                 "runtime_version": [version.majorVersion, version.minorVersion, version.patchVersion],
                 "collection_status": "FAIL", "recorded_samples": 0, "hardware_protection_verified": false,

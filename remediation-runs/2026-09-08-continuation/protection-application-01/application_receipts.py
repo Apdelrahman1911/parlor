@@ -167,7 +167,7 @@ def validate_application(final, samples, *, token, device, source, controls):
             final.get('collection_status') == COLLECTED and final.get('recorded_samples') == 6 and
             final.get('run_token') == token and final.get('simulator_udid') == device and
             final.get('source_manifest_sha256') == source and final.get('controls_sha256') == controls and
-            final.get('bundle_id') == 'com.parlor.app.debug' and final.get('runtime_version') == [26, 2, 0] and
+            final.get('bundle_id') == 'me.parlor.ios.debug' and final.get('runtime_version') == [26, 2, 0] and
             all(final.get(key) is False for key in ('hardware_protection_verified', 'l08_requirements_waived', 'snapshot_validation_tested')),
             'application-context')
     require(isinstance(final.get('process_boot'), str) and UUID.fullmatch(final['process_boot']) and

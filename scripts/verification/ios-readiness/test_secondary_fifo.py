@@ -2,12 +2,18 @@
 
 No simctl, Gradle, Xcode, preference access or process termination is invoked.
 Every FIFO/file is under unittest TemporaryDirectory; symlink target is synthetic.
+Ledger fixtures supply an explicit synthetic birthtime to the real metadata
+validator; they do not certify native creation-time support. Separate tests
+exercise its unsupported-filesystem rejection and actual macOS metadata.
 """
 from copy import deepcopy
 import os
 from pathlib import Path
+import stat
+import sys
 import tempfile
 import time
+from types import SimpleNamespace
 import unittest
 from unittest.mock import patch
 import secondary_fifo
@@ -21,6 +27,22 @@ class SecondaryFifoSafetyTest(unittest.TestCase):
         self.addCleanup(self.temp.cleanup)
         self.prefix = Path(self.temp.name).resolve()
         self.started = time.time() - 1
+        native_metadata = secondary_fifo.metadata
+        synthetic_birth = self.started + 0.5
+
+        def synthetic_metadata(path):
+            self.assertIn(self.prefix, path.parents, 'Synthetic metadata must stay in this owned test fixture')
+            actual = path.lstat()
+            # Supply only the platform capability, never ctime as birthtime.
+            # Inode/type/UID and symlink checks still use real lstat.
+            value = SimpleNamespace(st_dev=actual.st_dev, st_ino=actual.st_ino,
+                                    st_uid=actual.st_uid, st_mode=actual.st_mode,
+                                    st_birthtime=synthetic_birth)
+            return native_metadata(SimpleNamespace(lstat=lambda: value))
+
+        self.metadata_patch = patch('secondary_fifo.metadata', side_effect=synthetic_metadata)
+        self.metadata_patch.start()
+        self.addCleanup(self.metadata_patch.stop)
         self.directory = self.prefix / 'ab/cdef/T/ibtoold-1234/IB'
         self.directory.mkdir(parents=True)
         self.paths = [self.directory / ('613ED9B4-D4E6-4CDA-ACB8-AA81DFFB0280.' + suffix)
@@ -395,6 +417,38 @@ class SecondaryFifoSafetyTest(unittest.TestCase):
         self.assertFalse(self.ledger.records)
         self.assertEqual(set(map(str, self.paths)), set(self.ledger.pending))
         self.assertEqual(128, len(self.ledger._partial_pair_proofs))
+
+
+class SecondaryMetadataGuardTest(unittest.TestCase):
+    def test_missing_birthtime_never_falls_back_to_ctime(self):
+        value = SimpleNamespace(st_dev=1, st_ino=2, st_uid=os.getuid(),
+                                st_mode=stat.S_IFIFO | 0o600, st_ctime=time.time())
+        with self.assertRaisesRegex(UnsafeSecondaryPath, 'cannot attest creation time'):
+            secondary_fifo.metadata(SimpleNamespace(lstat=lambda: value))
+        value.st_birthtime = None
+        with self.assertRaisesRegex(UnsafeSecondaryPath, 'cannot attest creation time'):
+            secondary_fifo.metadata(SimpleNamespace(lstat=lambda: value))
+
+    def test_real_validator_preserves_exact_supplied_birthtime_and_inode(self):
+        value = SimpleNamespace(st_dev=7, st_ino=8, st_uid=os.getuid(),
+                                st_mode=stat.S_IFIFO | 0o600, st_birthtime=12.25)
+        self.assertEqual(secondary_fifo.metadata(SimpleNamespace(lstat=lambda: value)),
+                         dict(device=7, inode=8, uid=os.getuid(), mode=value.st_mode, birth_at=12.25))
+
+    def test_real_validator_rejects_symlink_even_with_a_birthtime(self):
+        value = SimpleNamespace(st_mode=stat.S_IFLNK | 0o777, st_birthtime=time.time())
+        with self.assertRaisesRegex(UnsafeSecondaryPath, 'is a symlink'):
+            secondary_fifo.metadata(SimpleNamespace(lstat=lambda: value))
+
+    @unittest.skipUnless(sys.platform == 'darwin', 'Requires real macOS filesystem birthtime; run in macOS CI')
+    def test_actual_macos_fifo_metadata_matches_lstat_without_synthetic_fields(self):
+        with tempfile.TemporaryDirectory(prefix='parlor-native-fifo-metadata-') as raw:
+            path = Path(raw) / 'owned-fifo'
+            os.mkfifo(path)
+            for item in (path.parent, path):
+                actual = item.lstat()
+                self.assertEqual(secondary_fifo.metadata(item), dict(device=actual.st_dev,
+                    inode=actual.st_ino, uid=actual.st_uid, mode=actual.st_mode, birth_at=actual.st_birthtime))
 
 
 if __name__ == '__main__':
