@@ -49,6 +49,38 @@ After repair:
   that class executed; the supported invocation did not relax the guard.
 - Workflow-contract suite: **84 cases, zero failures/errors**.
 
+### First hosted execution exposed a canonical-temporary setup defect
+
+The new complete macOS gate in
+[run 40464938770](https://github.com/Apdelrahman1911/parlor/actions/runs/40464938770)
+at `70fadca7` ran all 345 readiness cases. The actual Apple Foundation encoder
+and native FIFO metadata cases passed, but **32 fixture assertions failed**:
+the default macOS temporary path `/var/folders/...` resolves to
+`/private/var/folders/...`, violating existing exact-path ownership assertions.
+Application controls and KMP runtime tests were correctly not executed after
+that failure. Native resource retirement and final checkout cleanup passed;
+those cleanup results do not convert the test failure to a pass.
+
+The correction supplies a freshly allocated private `TMPDIR` under the exact,
+non-symlink, canonical `RUNNER_TEMP`, scoped to both control-suite subprocesses.
+An EXIT finalizer uses only `rmdir`: nonempty contents are preserved and fail;
+the original test failure is retained. The scope ends before Gradle starts.
+No ownership assertion is relaxed, no failed test is skipped, and no arbitrary
+temporary directory is deleted. Workflow mutation tests reject alias checks,
+global/default paths, dropped finalization, force removal and cleanup masking.
+The revised source requires new full CI and native preflight/control hashes;
+the first hosted execution does not qualify it.
+
+The actual revised shell scope was executed locally against canonical and
+symlinked parents, an injected test failure, and a synthetic unexpected child.
+It preserved failures/unknown contents and retired only empty owned directories.
+Both complete Linux suites then passed under that scope: 345 readiness cases
+(three platform skips) and 27 application cases; the parent was empty afterward.
+The execution parent was outside the checkout, as the existing copy guards
+require. An earlier local proof inside the checkout correctly failed those
+guards and is retained as rejection evidence. All 85 revised workflow-contract
+cases passed. Hosted verification at the corrected head is still required.
+
 Commands:
 
 ```bash

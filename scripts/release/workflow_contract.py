@@ -699,6 +699,26 @@ def verify_validation(text: str) -> None:
     runtime = validation_job(text, "ios")
     release = validation_job(text, "ios-release")
     native_controls = validation_step(runtime, "Run all KMP iOS simulator runtime tests")
+    temporary_scope = '''          (
+          test -d "$RUNNER_TEMP" && test ! -L "$RUNNER_TEMP"
+          test "$(cd -- "$RUNNER_TEMP" && pwd -P)" = "$RUNNER_TEMP"
+          native_control_tmp="$(mktemp -d "$RUNNER_TEMP/parlor-native-controls.XXXXXX")"
+          retire_native_control_tmp() {
+            native_control_status=$?
+            trap - EXIT
+            if ! rmdir -- "$native_control_tmp"; then
+              echo "Native control temporary directory is not empty; preserve it and fail." >&2
+              native_control_status=1
+            fi
+            exit "$native_control_status"
+          }
+          trap retire_native_control_tmp EXIT
+          export TMPDIR="$native_control_tmp"
+'''
+    if (native_controls.count(temporary_scope) != 1 or
+            native_controls.count('          )\n') != 1 or
+            native_controls.count('export TMPDIR=') != 1):
+        fail("macOS diagnostic controls require scoped canonical private temporary ownership and fail-closed retirement")
     for directory, report in (
         ("scripts/verification/ios-readiness", "ios-readiness-control-tests.log"),
         ("remediation-runs/2026-09-08-continuation/protection-application-01", "ios-protection-application-control-tests.log"),
@@ -708,6 +728,8 @@ def verify_validation(text: str) -> None:
         if (native_controls.count(command) != 1 or
                 re.findall(r"(?m)^          (.*" + re.escape(directory) + r".*)$", native_controls) != [command] or
                 native_controls.index(command) > native_controls.index("./gradlew ") or
+                native_controls.index(command) > native_controls.index('          )\n') or
+                native_controls.index(command) < native_controls.index('export TMPDIR=') or
                 "          set -euo pipefail\n" not in native_controls):
             fail("validation workflow must run complete macOS diagnostic controls fail-closed before the Apple runtime aggregate")
     for job, name, task in (

@@ -593,6 +593,24 @@ class WorkflowContractTest(unittest.TestCase):
             with self.subTest(step=changed_step), self.assertRaisesRegex(RuntimeError, 'macOS diagnostic controls'):
                 workflow_contract.verify_validation(workflow.replace(original, changed_step, 1))
 
+    def test_macos_diagnostic_temporary_scope_cannot_alias_escape_or_force_remove(self) -> None:
+        workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text()
+        job = workflow_contract.validation_job(workflow, "ios")
+        original = workflow_contract.validation_step(job, "Run all KMP iOS simulator runtime tests")
+        for old, new in (
+            ('test ! -L "$RUNNER_TEMP"', 'true'),
+            ('test "$(cd -- "$RUNNER_TEMP" && pwd -P)" = "$RUNNER_TEMP"', 'true'),
+            ('mktemp -d "$RUNNER_TEMP/parlor-native-controls.XXXXXX"', 'mktemp -d'),
+            ('export TMPDIR="$native_control_tmp"', 'export TMPDIR=/tmp'),
+            ('trap retire_native_control_tmp EXIT', 'trap true EXIT'),
+            ('rmdir -- "$native_control_tmp"', 'rm -rf -- "$native_control_tmp"'),
+            ('native_control_status=1', 'native_control_status=0'),
+            ('          )\n          ./gradlew ', '          ./gradlew '),
+        ):
+            self.assertEqual(original.count(old), 1)
+            with self.subTest(mutation=new), self.assertRaisesRegex(RuntimeError, 'canonical private temporary'):
+                workflow_contract.verify_validation(workflow.replace(original, original.replace(old, new, 1), 1))
+
     def test_each_apple_job_requires_its_own_exact_source_and_toolchain_guard_body(self) -> None:
         workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text()
         for job_id in ("ios", "ios-release"):
