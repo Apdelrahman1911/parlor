@@ -690,14 +690,25 @@ class VerificationWorkflowHygieneTest(unittest.TestCase):
         import re
         workflow = (ROOT / ".github/workflows/production-verification.yml").read_text()
         jobs = re.split(r"(?m)^  (?=[a-z][a-z0-9-]*:\n)", workflow.split("jobs:\n", 1)[1])[1:]
-        self.assertEqual(len(jobs), 10)
+        self.assertEqual(len(jobs), 11)
         # The focused protection diagnostic has its own closed native cleanup.
         aggregate = next(job for job in jobs if job.startswith("ios-release:\n"))
         self.assertIn("needs: [ios-release-simulator, ios-release-device, ios-release-x64]", aggregate)
         self.assertIn("scripts.ci.apple_release_gate aggregate", aggregate)
         self.assertIn("if-no-files-found: error", aggregate)
         self.assertNotIn("./gradlew", aggregate)
-        jobs = [job for job in jobs if not job.startswith(("ios-protection-probe:\n", "ios-release:\n"))]
+        # Supplemental capability owns only a bounded direct child and public
+        # external receipt, not Gradle/build trees. Its own native control and
+        # always-upload custody are mandatory; no full-build job is exempted.
+        capability = next(job for job in jobs if job.startswith("darwin-host-capability:\n"))
+        self.assertIn("if: github.event_name == 'workflow_dispatch' && inputs.verification_scope == 'darwin-host-capability'", capability)
+        self.assertIn("timeout-minutes: 2\n        run: /usr/bin/python3 -B -m scripts.ci.darwin_host_capability", capability)
+        self.assertIn("- name: Preserve native capability receipt\n        if: always()", capability)
+        self.assertIn("if-no-files-found: error", capability)
+        self.assertIn("${{ runner.temp }}/parlor-darwin-capability-", capability)
+        self.assertNotIn("./gradlew", capability)
+        self.assertNotIn("verification_hygiene.py", capability)
+        jobs = [job for job in jobs if not job.startswith(("ios-protection-probe:\n", "ios-release:\n", "darwin-host-capability:\n"))]
         expected_stops = {"desktop-android": 2, "desktop-linux-arm64": 1, "desktop-macos-x64": 1,
                           "desktop-windows-x64": 1, "ios": 2, "ios-release-simulator": 2,
                           "ios-release-device": 1, "ios-release-x64": 1}
