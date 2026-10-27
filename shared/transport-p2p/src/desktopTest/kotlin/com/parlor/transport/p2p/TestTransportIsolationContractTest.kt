@@ -8,6 +8,12 @@ import kotlin.test.assertTrue
 
 class TestTransportIsolationContractTest {
     private val repositoryRoot: File = findRepositoryRoot()
+    private val declaredInputs: List<DeclaredContractInput> by lazy {
+        val index = requireNotNull(System.getProperty("parlor.contract.sourceIndex")) {
+            "Run source architecture contracts through the repository Gradle wrapper"
+        }
+        readDeclaredContractInputs(repositoryRoot, File(index))
+    }
 
     @Test
     fun `transport adapter does not depend on the session implementation`() {
@@ -29,21 +35,9 @@ class TestTransportIsolationContractTest {
         assertFalse(oldProductionFake.exists())
         assertTrue(isolatedFake.isFile)
 
-        val shippingHits = repositoryRoot.walkTopDown()
-            .filter(File::isFile)
-            .filter { it.extension == "kt" }
-            .filter { file ->
-                val path = file.relativeTo(repositoryRoot).invariantSeparatorsPath
-                path.contains("/src/commonMain/") ||
-                    path.contains("/src/androidMain/") ||
-                    path.contains("/src/iosMain/") ||
-                    path.contains("/src/desktopMain/")
-            }
-            .filterNot {
-                it.toPath().startsWith(
-                    repositoryRoot.resolve("shared/networking-testing").toPath(),
-                )
-            }
+        val shippingHits = declaredInputs.asSequence()
+            .filter { it.kind == 'S' && it.module != ":shared:networking-testing" }
+            .map { it.file }
             .filter { file ->
                 val text = file.readText()
                 "com.parlor.networking.testing" in text || "InMemoryRoomBus" in text
@@ -56,8 +50,9 @@ class TestTransportIsolationContractTest {
     @Test
     fun `only test source sets depend on networking test support`() {
         val coordinate = "project(\":shared:networking-testing\")"
-        val consumers = repositoryRoot.walkTopDown()
-            .filter { it.isFile && it.name == "build.gradle.kts" }
+        val consumers = declaredInputs.asSequence()
+            .filter { it.kind == 'B' }
+            .map { it.file }
             .filter { coordinate in it.readText() }
             .toList()
 
