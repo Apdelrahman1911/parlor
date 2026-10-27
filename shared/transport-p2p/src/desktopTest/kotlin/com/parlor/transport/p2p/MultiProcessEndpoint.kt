@@ -14,12 +14,13 @@ import com.parlor.networking.room.SendTarget
 import com.parlor.networking.transport.HostConfig
 import dev.p2pkit.core.AppId
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.async
 import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.coroutineScope
@@ -27,6 +28,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
+import java.util.concurrent.Executors
 import kotlin.system.exitProcess
 
 /** Opt-in synthetic process harness; not shipping or normal test-discovery source. */
@@ -42,39 +44,8 @@ object MultiProcessEndpoint {
         try {
             check(args.size == 2 && args[0] in setOf("host", "peer"))
             check(args[1].matches(Regex("[a-f0-9]{32}")))
-            runBlocking {
-                val scope = CoroutineScope(Dispatchers.Default + SupervisorJob())
-                var room: LocalRoom? = null
-                try {
-                    withTimeout(90_000) {
-                        val transport = LoopbackDeviceFixture(Dispatchers.IO).transport(
-                            AppId("com.parlor.p2p.process.${args[1]}"), args[0] + "-fixture", scope,
-                        )
-                        if (args[0] == "host") {
-                            val result = transport.host(HostConfig(hostDisplayName = "Process Fixture"))
-                            check(result is Result.Success)
-                            room = result.data
-                            verifyHost(result.data)
-                        } else {
-                            val code = readln()
-                            check(code.matches(Regex("[A-Z0-9]{6}")))
-                            val result = transport.join(code, "process-peer")
-                            check(result is Result.Success)
-                            room = result.data
-                            verifyPeer(result.data)
-                        }
-                    }
-                    println("ENDPOINT_PASS")
-                } finally {
-                    withContext(NonCancellable) {
-                        try {
-                            room?.leave()
-                        } finally {
-                            scope.coroutineContext[Job]?.cancelAndJoin()
-                        }
-                    }
-                    println("TEARDOWN_PASS")
-                }
+            Executors.newFixedThreadPool(4).asCoroutineDispatcher().use { dispatcher ->
+                executeEndpoint(args, dispatcher)
             }
         } catch (cancelled: CancellationException) {
             throw cancelled
@@ -84,6 +55,41 @@ object MultiProcessEndpoint {
             println("ENDPOINT_FAIL type=${failure.javaClass.name}")
             exitProcess(1)
         }
+    }
+
+    private fun executeEndpoint(args: Array<String>, dispatcher: CoroutineDispatcher) = runBlocking {
+    val scope = CoroutineScope(dispatcher + SupervisorJob())
+    var room: LocalRoom? = null
+    try {
+        withTimeout(90_000) {
+            val transport = LoopbackDeviceFixture(dispatcher).transport(
+                AppId("com.parlor.p2p.process.${args[1]}"), args[0] + "-fixture", scope,
+            )
+            if (args[0] == "host") {
+                val result = transport.host(HostConfig(hostDisplayName = "Process Fixture"))
+                check(result is Result.Success)
+                room = result.data
+                verifyHost(result.data)
+            } else {
+                val code = readln()
+                check(code.matches(Regex("[A-Z0-9]{6}")))
+                val result = transport.join(code, "process-peer")
+                check(result is Result.Success)
+                room = result.data
+                verifyPeer(result.data)
+            }
+        }
+        println("ENDPOINT_PASS")
+    } finally {
+        withContext(NonCancellable) {
+            try {
+                room?.leave()
+            } finally {
+                scope.coroutineContext[Job]?.cancelAndJoin()
+            }
+        }
+        println("TEARDOWN_PASS")
+    }
     }
 
     private suspend fun verifyHost(room: LocalRoom) = coroutineScope {
