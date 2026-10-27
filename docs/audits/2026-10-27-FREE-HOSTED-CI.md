@@ -47,8 +47,11 @@ Log SHA-256: `2395ba691510131e6b74ab0cf3bccc69d01fabd728531c47898858ac39c1b8a0`.
 3. **Five Mac slots maximum.** Three Release jobs plus the existing simulator
    runtime and desktop-x64 Mac jobs fit the documented Free limit. Native links
    never share a JVM; the local aggregate's memory safeguards remain unchanged.
-4. **Dependency-only persistence.** SHA-pinned `gradle/actions/setup-gradle`
-   caches only `caches/modules-2` and `wrapper/dists`. PRs and dispatches are
+4. **Dependency-only persistence.** SHA-pinned GitHub-owned
+   `actions/cache/restore` and `actions/cache/save` cache only Gradle
+   `caches/modules-2` and `wrapper/dists`. Keys isolate OS, architecture, JDK,
+   Gradle, Kotlin, Xcode and the reviewed dependency/verification graph; there
+   are no broad fallback keys. PRs and dispatches are
    read-only; only protected `main` pushes write. It does not persist workspace
    build outputs, reports, signing material, configuration-cache state, Konan
    binaries or optimized frameworks. Strict dependency verification remains
@@ -74,7 +77,13 @@ artifact/cleanup results and cache hit/miss. Keep unsuccessful runs in the
 ledger. Prefer the faster configuration only after all affected checks pass;
 one run does not establish a statistical distribution or device performance.
 
-**Hosted candidate measurements pending. No speedup is certified yet.** Local
+**Hosted candidate measurements pending.** The first dispatch
+[40510032203](https://github.com/Apdelrahman1911/parlor/actions/runs/40510032203)
+was rejected at startup with zero jobs: the repository allows only GitHub-owned
+or owner-owned actions, so the Gradle caching action was denied. The candidate
+now uses GitHub-owned cache actions; no action policy was loosened.
+
+**No speedup is certified yet.** Local
 regression checks and fresh source-inventory checks are being performed before
 dispatch. This report will be updated with run URLs and measured results.
 

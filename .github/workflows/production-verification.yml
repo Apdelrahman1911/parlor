@@ -92,14 +92,13 @@ jobs:
 
       - name: Restore reviewed Gradle dependencies
         if: github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full'
-        uses: gradle/actions/setup-gradle@0723195856401067f7a2779048b490ace7a47d7c # v5
+        id: dependency_cache
+        uses: actions/cache/restore@caa296126883cff596d87d8935842f9db880ef25 # v5
         with:
-          cache-read-only: ${{ github.event_name != 'push' || github.ref != 'refs/heads/main' }}
-          cache-cleanup: never
-          gradle-home-cache-includes: |
-            caches/modules-2
-            wrapper/dists
-
+          path: |
+            ~/.gradle/caches/modules-2
+            ~/.gradle/wrapper/dists
+          key: parlor-deps-v1-${{ runner.os }}-${{ runner.arch }}-jdk21-gradle8.13-kotlin2.4.10-xcode26.3-${{ hashFiles('**/*.gradle.kts', 'gradle/libs.versions.toml', 'gradle/verification-metadata.xml', 'gradle/wrapper/gradle-wrapper.properties') }}
       - name: Validate Linux process-probe source and controls
         if: github.event_name == 'workflow_dispatch' && inputs.verification_scope == 'linux-process-probe'
         env:
@@ -296,6 +295,15 @@ jobs:
           retention-days: 14
           path: ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-cleanup.json
 
+
+      - name: Save dependencies from trusted main only
+        if: success() && github.event_name == 'push' && github.ref == 'refs/heads/main' && steps.dependency_cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@caa296126883cff596d87d8935842f9db880ef25 # v5
+        with:
+          path: |
+            ~/.gradle/caches/modules-2
+            ~/.gradle/wrapper/dists
+          key: ${{ steps.dependency_cache.outputs.cache-primary-key }}
   desktop-linux-arm64:
     if: github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full'
     name: Desktop strict verification (Linux arm64)
@@ -318,14 +326,13 @@ jobs:
 
       - name: Restore reviewed Gradle dependencies
         if: github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full'
-        uses: gradle/actions/setup-gradle@0723195856401067f7a2779048b490ace7a47d7c # v5
+        id: dependency_cache
+        uses: actions/cache/restore@caa296126883cff596d87d8935842f9db880ef25 # v5
         with:
-          cache-read-only: ${{ github.event_name != 'push' || github.ref != 'refs/heads/main' }}
-          cache-cleanup: never
-          gradle-home-cache-includes: |
-            caches/modules-2
-            wrapper/dists
-
+          path: |
+            ~/.gradle/caches/modules-2
+            ~/.gradle/wrapper/dists
+          key: parlor-deps-v1-${{ runner.os }}-${{ runner.arch }}-jdk21-gradle8.13-kotlin2.4.10-xcode26.3-${{ hashFiles('**/*.gradle.kts', 'gradle/libs.versions.toml', 'gradle/verification-metadata.xml', 'gradle/wrapper/gradle-wrapper.properties') }}
       - name: Claim fresh verification output ownership
         id: verification_ownership
         shell: python
@@ -394,6 +401,15 @@ jobs:
           retention-days: 14
           path: ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-cleanup.json
 
+
+      - name: Save dependencies from trusted main only
+        if: success() && github.event_name == 'push' && github.ref == 'refs/heads/main' && steps.dependency_cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@caa296126883cff596d87d8935842f9db880ef25 # v5
+        with:
+          path: |
+            ~/.gradle/caches/modules-2
+            ~/.gradle/wrapper/dists
+          key: ${{ steps.dependency_cache.outputs.cache-primary-key }}
   desktop-macos-x64:
     if: github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full'
     name: Desktop and Kotlin Native strict verification (macOS x64)
@@ -416,14 +432,13 @@ jobs:
 
       - name: Restore reviewed Gradle dependencies
         if: github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full'
-        uses: gradle/actions/setup-gradle@0723195856401067f7a2779048b490ace7a47d7c # v5
+        id: dependency_cache
+        uses: actions/cache/restore@caa296126883cff596d87d8935842f9db880ef25 # v5
         with:
-          cache-read-only: ${{ github.event_name != 'push' || github.ref != 'refs/heads/main' }}
-          cache-cleanup: never
-          gradle-home-cache-includes: |
-            caches/modules-2
-            wrapper/dists
-
+          path: |
+            ~/.gradle/caches/modules-2
+            ~/.gradle/wrapper/dists
+          key: parlor-deps-v1-${{ runner.os }}-${{ runner.arch }}-jdk21-gradle8.13-kotlin2.4.10-xcode26.3-${{ hashFiles('**/*.gradle.kts', 'gradle/libs.versions.toml', 'gradle/verification-metadata.xml', 'gradle/wrapper/gradle-wrapper.properties') }}
       - name: Claim fresh verification output ownership
         id: verification_ownership
         shell: python
@@ -492,6 +507,15 @@ jobs:
           retention-days: 14
           path: ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-cleanup.json
 
+
+      - name: Save dependencies from trusted main only
+        if: success() && github.event_name == 'push' && github.ref == 'refs/heads/main' && steps.dependency_cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@caa296126883cff596d87d8935842f9db880ef25 # v5
+        with:
+          path: |
+            ~/.gradle/caches/modules-2
+            ~/.gradle/wrapper/dists
+          key: ${{ steps.dependency_cache.outputs.cache-primary-key }}
   desktop-windows-x64:
     if: github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full' || inputs.verification_scope == 'windows-only'
     name: Desktop, Kotlin Native, and Android resources strict verification (Windows x64)
@@ -540,14 +564,13 @@ jobs:
 
       - name: Restore reviewed Gradle dependencies
         if: github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full'
-        uses: gradle/actions/setup-gradle@0723195856401067f7a2779048b490ace7a47d7c # v5
+        id: dependency_cache
+        uses: actions/cache/restore@caa296126883cff596d87d8935842f9db880ef25 # v5
         with:
-          cache-read-only: ${{ github.event_name != 'push' || github.ref != 'refs/heads/main' }}
-          cache-cleanup: never
-          gradle-home-cache-includes: |
-            caches/modules-2
-            wrapper/dists
-
+          path: |
+            ~/.gradle/caches/modules-2
+            ~/.gradle/wrapper/dists
+          key: parlor-deps-v1-${{ runner.os }}-${{ runner.arch }}-jdk21-gradle8.13-kotlin2.4.10-xcode26.3-${{ hashFiles('**/*.gradle.kts', 'gradle/libs.versions.toml', 'gradle/verification-metadata.xml', 'gradle/wrapper/gradle-wrapper.properties') }}
       - name: Claim fresh verification output ownership
         id: verification_ownership
         shell: python
@@ -637,6 +660,15 @@ jobs:
           retention-days: 14
           path: ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-cleanup.json
 
+
+      - name: Save dependencies from trusted main only
+        if: success() && github.event_name == 'push' && github.ref == 'refs/heads/main' && steps.dependency_cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@caa296126883cff596d87d8935842f9db880ef25 # v5
+        with:
+          path: |
+            ~/.gradle/caches/modules-2
+            ~/.gradle/wrapper/dists
+          key: ${{ steps.dependency_cache.outputs.cache-primary-key }}
   ios:
     if: github.event_name != 'workflow_dispatch' || (inputs.verification_scope != 'windows-only' && inputs.verification_scope != 'linux-process-probe' && inputs.verification_scope != 'android-cleanup-only' && inputs.verification_scope != 'ios-protection-probe')
     name: iOS simulator runtime and Swift host
@@ -695,14 +727,13 @@ jobs:
       # approve the exact source-bound A/B control hashes before any application build.
       - name: Restore reviewed Gradle dependencies
         if: github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full'
-        uses: gradle/actions/setup-gradle@0723195856401067f7a2779048b490ace7a47d7c # v5
+        id: dependency_cache
+        uses: actions/cache/restore@caa296126883cff596d87d8935842f9db880ef25 # v5
         with:
-          cache-read-only: ${{ github.event_name != 'push' || github.ref != 'refs/heads/main' }}
-          cache-cleanup: never
-          gradle-home-cache-includes: |
-            caches/modules-2
-            wrapper/dists
-
+          path: |
+            ~/.gradle/caches/modules-2
+            ~/.gradle/wrapper/dists
+          key: parlor-deps-v1-${{ runner.os }}-${{ runner.arch }}-jdk21-gradle8.13-kotlin2.4.10-xcode26.3-${{ hashFiles('**/*.gradle.kts', 'gradle/libs.versions.toml', 'gradle/verification-metadata.xml', 'gradle/wrapper/gradle-wrapper.properties') }}
       - name: Run focused native continuation
         id: native_continuation
         if: github.event_name == 'workflow_dispatch' && (inputs.verification_scope == 'native-preflight' || inputs.verification_scope == 'native-evidence')
@@ -972,6 +1003,15 @@ jobs:
           retention-days: 14
           path: ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-cleanup.json
 
+
+      - name: Save dependencies from trusted main only
+        if: success() && github.event_name == 'push' && github.ref == 'refs/heads/main' && steps.dependency_cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@caa296126883cff596d87d8935842f9db880ef25 # v5
+        with:
+          path: |
+            ~/.gradle/caches/modules-2
+            ~/.gradle/wrapper/dists
+          key: ${{ steps.dependency_cache.outputs.cache-primary-key }}
   ios-release-simulator:
     if: github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full'
     name: iOS Release simulator and Swift wrapper
@@ -1005,14 +1045,13 @@ jobs:
 
       - name: Restore reviewed Gradle dependencies
         if: github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full'
-        uses: gradle/actions/setup-gradle@0723195856401067f7a2779048b490ace7a47d7c # v5
+        id: dependency_cache
+        uses: actions/cache/restore@caa296126883cff596d87d8935842f9db880ef25 # v5
         with:
-          cache-read-only: ${{ github.event_name != 'push' || github.ref != 'refs/heads/main' }}
-          cache-cleanup: never
-          gradle-home-cache-includes: |
-            caches/modules-2
-            wrapper/dists
-
+          path: |
+            ~/.gradle/caches/modules-2
+            ~/.gradle/wrapper/dists
+          key: parlor-deps-v1-${{ runner.os }}-${{ runner.arch }}-jdk21-gradle8.13-kotlin2.4.10-xcode26.3-${{ hashFiles('**/*.gradle.kts', 'gradle/libs.versions.toml', 'gradle/verification-metadata.xml', 'gradle/wrapper/gradle-wrapper.properties') }}
       - name: Claim fresh verification output ownership
         if: github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full'
         id: verification_ownership
@@ -1174,6 +1213,15 @@ jobs:
         shell: bash
         run: /usr/bin/python3 -B -m scripts.ci.apple_release_gate lane
 
+
+      - name: Save dependencies from trusted main only
+        if: success() && github.event_name == 'push' && github.ref == 'refs/heads/main' && steps.dependency_cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@caa296126883cff596d87d8935842f9db880ef25 # v5
+        with:
+          path: |
+            ~/.gradle/caches/modules-2
+            ~/.gradle/wrapper/dists
+          key: ${{ steps.dependency_cache.outputs.cache-primary-key }}
   ios-release-device:
     if: github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full'
     name: iOS Release device arm64
@@ -1208,14 +1256,13 @@ jobs:
 
       - name: Restore reviewed Gradle dependencies
         if: github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full'
-        uses: gradle/actions/setup-gradle@0723195856401067f7a2779048b490ace7a47d7c # v5
+        id: dependency_cache
+        uses: actions/cache/restore@caa296126883cff596d87d8935842f9db880ef25 # v5
         with:
-          cache-read-only: ${{ github.event_name != 'push' || github.ref != 'refs/heads/main' }}
-          cache-cleanup: never
-          gradle-home-cache-includes: |
-            caches/modules-2
-            wrapper/dists
-
+          path: |
+            ~/.gradle/caches/modules-2
+            ~/.gradle/wrapper/dists
+          key: parlor-deps-v1-${{ runner.os }}-${{ runner.arch }}-jdk21-gradle8.13-kotlin2.4.10-xcode26.3-${{ hashFiles('**/*.gradle.kts', 'gradle/libs.versions.toml', 'gradle/verification-metadata.xml', 'gradle/wrapper/gradle-wrapper.properties') }}
       - name: Claim fresh verification output ownership
         if: github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full'
         id: verification_ownership
@@ -1328,6 +1375,15 @@ jobs:
         shell: bash
         run: /usr/bin/python3 -B -m scripts.ci.apple_release_gate lane
 
+
+      - name: Save dependencies from trusted main only
+        if: success() && github.event_name == 'push' && github.ref == 'refs/heads/main' && steps.dependency_cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@caa296126883cff596d87d8935842f9db880ef25 # v5
+        with:
+          path: |
+            ~/.gradle/caches/modules-2
+            ~/.gradle/wrapper/dists
+          key: ${{ steps.dependency_cache.outputs.cache-primary-key }}
   ios-release-x64:
     if: github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full'
     name: iOS Release simulator x64
@@ -1362,14 +1418,13 @@ jobs:
 
       - name: Restore reviewed Gradle dependencies
         if: github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full'
-        uses: gradle/actions/setup-gradle@0723195856401067f7a2779048b490ace7a47d7c # v5
+        id: dependency_cache
+        uses: actions/cache/restore@caa296126883cff596d87d8935842f9db880ef25 # v5
         with:
-          cache-read-only: ${{ github.event_name != 'push' || github.ref != 'refs/heads/main' }}
-          cache-cleanup: never
-          gradle-home-cache-includes: |
-            caches/modules-2
-            wrapper/dists
-
+          path: |
+            ~/.gradle/caches/modules-2
+            ~/.gradle/wrapper/dists
+          key: parlor-deps-v1-${{ runner.os }}-${{ runner.arch }}-jdk21-gradle8.13-kotlin2.4.10-xcode26.3-${{ hashFiles('**/*.gradle.kts', 'gradle/libs.versions.toml', 'gradle/verification-metadata.xml', 'gradle/wrapper/gradle-wrapper.properties') }}
       - name: Claim fresh verification output ownership
         if: github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full'
         id: verification_ownership
@@ -1482,6 +1537,15 @@ jobs:
         shell: bash
         run: /usr/bin/python3 -B -m scripts.ci.apple_release_gate lane
 
+
+      - name: Save dependencies from trusted main only
+        if: success() && github.event_name == 'push' && github.ref == 'refs/heads/main' && steps.dependency_cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@caa296126883cff596d87d8935842f9db880ef25 # v5
+        with:
+          path: |
+            ~/.gradle/caches/modules-2
+            ~/.gradle/wrapper/dists
+          key: ${{ steps.dependency_cache.outputs.cache-primary-key }}
   ios-release:
     if: always() && (github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full')
     name: iOS release frameworks and Swift wrapper

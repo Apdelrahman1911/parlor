@@ -140,9 +140,9 @@ class FreeHostedCIContractTest(unittest.TestCase):
                 contract.verify_validation(changed)
 
     def test_caches_cannot_write_on_prs_or_restore_reports_builds_or_secrets(self):
-        for old, new in (("cache-read-only: ${{ github.event_name != 'push' || github.ref != 'refs/heads/main' }}", "cache-read-only: false"),
-                         ("caches/modules-2", "caches"), ("wrapper/dists", "../.konan"),
-                         ("wrapper/dists", "../parlor/composeApp/build"), ("cache-cleanup: never", "cache-cleanup: always")):
+        for old, new in (("if: success() && github.event_name == 'push' && github.ref == 'refs/heads/main'", "if: always()"),
+                         ("~/.gradle/caches/modules-2", "~/.gradle/caches"), ("~/.gradle/wrapper/dists", "~/.konan"),
+                         ("~/.gradle/wrapper/dists", "composeApp/build"), ("actions/cache/restore", "gradle/actions/setup-gradle")):
             changed = self.workflow.replace(old, new, 1)
             with self.subTest(old=old, new=new), self.assertRaises(RuntimeError):
                 contract.verify_validation(changed)

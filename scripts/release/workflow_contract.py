@@ -28,7 +28,8 @@ ALLOWED_ACTIONS = {
     "actions/setup-java",
     "actions/upload-artifact",
     "actions/attest-build-provenance",
-    "gradle/actions/setup-gradle",
+    "actions/cache/restore",
+    "actions/cache/save",
 }
 DISABLED_STORE_JOB_CONDITION = "if: ${{ always() && false }}"
 FULL_VERIFICATION_SCOPE = "github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full'"
@@ -310,7 +311,7 @@ def verify_linux_process_probe(job: str) -> None:
     prerequisite = "Install Linux process-probe emulator package"
     expected = ["Check out source", "Set up JDK 21", "Restore reviewed Gradle dependencies", probe[0], admission, prerequisite, "Claim fresh verification output ownership",
                 full[0], full[1], full[2], final[0], full[3], final[1], full[4], *final[2:], *probe[1:]]
-    if (re.findall(r"(?m)^      - name: (.*)$", job) != expected or
+    if (re.findall(r"(?m)^      - name: (.*)$", job) != expected + ["Save dependencies from trusted main only"] or
             re.findall(r"(?m)^    runs-on: (.*)$", job) != ["ubuntu-24.04"] or
             re.findall(r"(?m)^    timeout-minutes: (.*)$", job) != [
                 "${{ inputs.verification_scope == 'linux-process-probe' && 10 || inputs.verification_scope == 'android-cleanup-only' && 45 || 90 }}"]):
@@ -443,6 +444,7 @@ def verify_split_apple_scopes(text: str) -> None:
             full_steps += ["Publish qualified Apple lane identity"]
         expected_steps = (native_steps if job_id == "ios" else ["Check out source", "Set up JDK 21"]) + full_steps
         expected_steps.insert(expected_steps.index("Set up JDK 21") + 1, "Restore reviewed Gradle dependencies")
+        expected_steps += ["Save dependencies from trusted main only"]
         if re.findall(r"(?m)^      - name: (.*)$", job) != expected_steps:
             fail("verification scope split Apple jobs require all full gates and immediate finalizers in reviewed order")
         for name in full_steps:
@@ -636,7 +638,7 @@ def verify_apple_release_fanout(text: str) -> None:
         run = "Link optimized " + target + " Release framework"
         upload = "Upload " + target + " release verification evidence"
         end = [upload, "Clean only attested verification outputs", "Upload verification cleanup receipt",
-               "Publish qualified Apple lane identity"]
+               "Publish qualified Apple lane identity", "Save dependencies from trusted main only"]
         if re.findall(r"(?m)^      - name: (.*)$", job) != shared_names + [run] + common_finish + end:
             fail("verification scope Release architecture must retain exact ownership/run/retirement/upload order")
         for name in shared_names + common_finish + [end[2], end[3]]:
@@ -685,26 +687,34 @@ def verify_apple_release_fanout(text: str) -> None:
 
 
 def verify_free_ci_dependency_cache(text: str) -> None:
-    """No paid labels, untrusted writes, generated outputs or secret-bearing caches."""
+    """GitHub-owned dependency cache; only protected main pushes can write."""
     lanes = ("desktop-android", "desktop-linux-arm64", "desktop-macos-x64", "desktop-windows-x64",
              "ios", "ios-release-simulator", "ios-release-device", "ios-release-x64")
+    key = "parlor-deps-v1-${{ runner.os }}-${{ runner.arch }}-jdk21-gradle8.13-kotlin2.4.10-xcode26.3-${{ hashFiles('**/*.gradle.kts', 'gradle/libs.versions.toml', 'gradle/verification-metadata.xml', 'gradle/wrapper/gradle-wrapper.properties') }}"
     expected = ('        if: ' + FULL_VERIFICATION_SCOPE + '\n'
-                '        uses: gradle/actions/setup-gradle@0723195856401067f7a2779048b490ace7a47d7c # v5\n'
+                '        id: dependency_cache\n'
+                '        uses: actions/cache/restore@caa296126883cff596d87d8935842f9db880ef25 # v5\n'
                 '        with:\n'
-                "          cache-read-only: ${{ github.event_name != 'push' || github.ref != 'refs/heads/main' }}\n"
-                '          cache-cleanup: never\n'
-                '          gradle-home-cache-includes: |\n'
-                '            caches/modules-2\n'
-                '            wrapper/dists')
-    if text.count('uses: gradle/actions/setup-gradle@') != len(lanes):
+                '          path: |\n'
+                '            ~/.gradle/caches/modules-2\n'
+                '            ~/.gradle/wrapper/dists\n'
+                '          key: ' + key)
+    save = ("        if: success() && github.event_name == 'push' && github.ref == 'refs/heads/main' && steps.dependency_cache.outputs.cache-hit != 'true'\n"
+            '        uses: actions/cache/save@caa296126883cff596d87d8935842f9db880ef25 # v5\n'
+            '        with:\n'
+            '          path: |\n'
+            '            ~/.gradle/caches/modules-2\n'
+            '            ~/.gradle/wrapper/dists\n'
+            '          key: ${{ steps.dependency_cache.outputs.cache-primary-key }}')
+    if text.count('uses: actions/cache/restore@') != len(lanes) or text.count('uses: actions/cache/save@') != len(lanes):
         fail("verification scope requires only reviewed dependency caches in ordinary build lanes")
     for lane in lanes:
         body = validation_job(text, lane)
         cache = validation_step(body, "Restore reviewed Gradle dependencies")
-        if cache.strip("\n") != expected:
+        if cache.strip("\n") != expected or validation_step(body, "Save dependencies from trusted main only").strip("\n") != save:
             fail("verification scope dependency-only cache must be read-only except protected main pushes")
         if not (body.index('- name: Set up JDK 21\n') < body.index('- name: Restore reviewed Gradle dependencies\n') <
-                body.index('- name: Claim fresh verification output ownership\n')):
+                body.index('- name: Claim fresh verification output ownership\n') < body.index('- name: Save dependencies from trusted main only\n')):
             fail("verification scope dependency cache must not restore owned build outputs")
     selections = re.findall(r"(?m)^      apple_release_runner:\n((?:        .*\n)+)", text.split("\nconcurrency:", 1)[0])
     if (len(selections) != 1 or
