@@ -23,6 +23,7 @@ prove A37's root cause or establish physical-device protection/recovery.
 | Application/normal diagnostic targets obsolete ID | Seven active controls/provenance paths still use `com.parlor.app.debug`; synthetic receipts agree with each other but not the built app | Align Kotlin/Swift/XCTest, receipt validation, container lookup and normal provenance parser with `me.parlor.ios.debug`. Cross-control tests reject old, Release and other-platform identities. |
 | FIFO tests fail on Linux | Claimed synthetic fixtures accidentally require native filesystem birthtime | Supply explicitly synthetic creation-time observations to the unchanged real metadata validator; real inode/type/UID/symlink checks remain. Separate tests prove missing birthtime never falls back to ctime and exercise real macOS metadata in Apple CI. |
 | Native tests absent from routine macOS verification | Apple Foundation encoder assumes xcrun on every platform; complete control suites were not enforced | Execute full readiness and application-control suites in the existing owned Apple aggregate before KMP runtime tests; retain logs, require pipefail, and reject omitted/narrowed/commented/bypassed/reordered commands. Apple-only tests are platform-attributed on Linux and must execute on macOS. |
+| Actual-app copy preparation rejects current Xcode project | Normal copy helper assumes exactly one shell script; the real project also has a legitimate localized-metadata phase. Synthetic one-line PBX fixture hides this drift. | Select the unique known Compile Kotlin object and validate both production scripts, names, shell paths, target ownership, references and framework-search counts before writing. Preserve metadata and every other project byte; reject unknown/duplicate/moved/changed phases and repeated transformation. Regression uses the actual repository PBX project. |
 
 The application's storage lane calls unchanged `normal.Lane.prepare`, not the
 L08 Kotlin instrumentation path. Thus the Home seam defect is an independent L08
@@ -106,6 +107,57 @@ python3 -B -m unittest scripts.release.tests.test_workflow_contract -q
 
 Exact committed-source Gradle checks and the full current-head six-lane hosted
 run are required before merge. This report does not pre-certify pending checks.
+
+### Current-source actual-app preparation failure
+
+[Preflight 40468591858](https://github.com/Apdelrahman1911/parlor/actions/runs/40468591858)
+at `116ed82656a96e0617b293dc8dea49a88e047f54` independently verified 2,345
+source files, 2,384 immutable source/control blobs, 114 controls, producer/tree,
+ZIP and cleanup bindings. It built no application. The reviewed subsequent
+[application diagnostic 40468931134](https://github.com/Apdelrahman1911/parlor/actions/runs/40468931134)
+failed **before any build, XCTest, storage invocation or Simulator allocation**:
+`Unexpected actual framework-search or build-phase wiring`. The project has
+two legitimate shell scripts, not the obsolete synthetic fixture's one.
+This establishes copy-tooling causality only; it produces no protection observations.
+
+The inner finalizer reported source/control unchanged, temporary allocation
+removed and cleanup PASS. The outer verifier correctly retained canonical
+custody with cleanup FAIL and `removed: []`: no direct Simulator lifecycle/journal
+exists because preparation stopped before constructing it. An inner PASS does
+not satisfy that outer schema. This fail-closed distinction remains unchanged;
+no fabricated lifecycle, cleanup exception or legacy fallback was introduced.
+
+The two-phase repair executes **14 focused copy regression cases** (including
+adversarial subcases), **251 complete normal-launch controls**, **345 readiness
+controls** (three Linux platform skips), and **27 application controls** with
+no failures. Rejected projects leave both copied inputs unchanged. These are
+local tooling tests, not native runtime results. Fresh source inventory,
+committed-source strict checks, hosted CI, control-delta review and a new
+preflight must precede another actual-app diagnostic; the old approval is not reused.
+
+### Fresh main public-navigation failure — not qualified
+
+[Run 40466265136](https://github.com/Apdelrahman1911/parlor/actions/runs/40466265136)
+at main `9d4f369d2b1581f5c157b67cce3ff0fada49effa` failed
+`testAdditionalGamesExposeOnlyMultiplayerSetupInEnglish` at the Ghamza
+Host-to-permission transition. All four native container cases and the other
+five application cases passed; the failed case prevents iOS UI qualification.
+Linux/Android and three desktop jobs passed; pending/failed Apple work is not
+converted to a full-main qualification.
+
+Artifact `12718053090` was downloaded and its ZIP SHA-256 independently matched
+`371327dbe077fcf076c555c34c19c541421db56614834d79acdc8bdb4fbb5e2f`
+and the producer commit. Retained XCTest activity/attachment references,
+binary-plist synthesized event, public accessibility hierarchies and screen
+recording show the Host tap at `(201, 329.8333)` inside the visible Host frame
+`(24, 279.3, 354, 101)`. The app still displays the same enabled Host/Join setup
+at 07:49:43.904 through 07:49:56.798; no permission screen or alert appears.
+Thus repeated permission searches/swipes cannot repair the missed transition.
+The video also confirms the catalog-to-setup transition completed before this
+tap. Why the native tap did not advance remains **unverified**; do not attribute
+it to permission evidence, increase a timeout, auto-repeat the action, or claim
+a shipping fix without further instrumentation/runtime evidence. Failed
+artifacts remain preserved outside shipping source.
 
 ## Fresh protection observations and outstanding gates
 
