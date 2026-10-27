@@ -173,6 +173,13 @@ screen, lengthen the tap, or replay an action. On failure only, it retains a
 public setup screenshot and non-sensitive existence/frame/app-state metrics.
 A source-contract regression guards those requirements; it is **not** native
 touch verification or a root-cause fix. Fresh hosted XCTest remains required.
+Strict committed-source transport/release checks also passed at `c66debaf`
+(333 transport receipts including the added contract case, three real-LAN
+skips; 690 release Python cases, one local environment skip; pinned analyzers;
+exit0/private stop0/source unchanged). Failure metrics now avoid reading
+attributes of a missing source element, preserving the original transition
+failure rather than raising a diagnostic query failure; affected checks must
+run again at the resulting committed inventory head.
 
 ## Fresh protection observations and outstanding gates
 

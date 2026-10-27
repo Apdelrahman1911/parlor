@@ -250,8 +250,11 @@ final class IOSAppLaunchUITests: XCTestCase {
             screenshot.name = "Failed public setup transition"
             screenshot.lifetime = .keepAlways
             add(screenshot)
-            print("Public setup transition: sourceExists=\(source.exists), " +
-                  "sourceEnabled=\(source.isEnabled), sourceFrame=\(source.frame), " +
+            let sourceExists = source.exists
+            let sourceEnabled = sourceExists ? source.isEnabled : false
+            let sourceFrame = sourceExists ? source.frame : .zero
+            print("Public setup transition: sourceExists=\(sourceExists), " +
+                  "sourceEnabled=\(sourceEnabled), sourceFrame=\(sourceFrame), " +
                   "destinationExists=\(destination.exists), appState=\(app.state.rawValue)")
         }
         XCTAssertEqual(result, .completed,

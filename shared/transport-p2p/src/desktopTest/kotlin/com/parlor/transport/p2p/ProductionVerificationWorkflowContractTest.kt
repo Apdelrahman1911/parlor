@@ -35,6 +35,8 @@ class ProductionVerificationWorkflowContractTest {
             "if result != .completed",
             "XCTAttachment(screenshot: app.screenshot())",
             "screenshot.lifetime = .keepAlways",
+            "sourceExists ? source.isEnabled : false",
+            "sourceExists ? source.frame : .zero",
             "XCTAssertEqual(result, .completed",
         ).forEach { assertContains(observer, it) }
         listOf(".tap()", "swipe", "for _", "while ", "app.debugDescription").forEach {

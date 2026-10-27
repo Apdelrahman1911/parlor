@@ -60,6 +60,27 @@ local regression results and new fail-closed macOS control-suite enforcement.
 Revised controls require fresh exact-head CI and reviewed native preflight before
 application diagnostic execution. These repairs do not resolve #258.
 
+Fresh documentation-main [run 40466265136](https://github.com/Apdelrahman1911/parlor/actions/runs/40466265136)
+at `9d4f369d` is **not qualified**: the English additional-game XCTest failed
+when one native Ghamza Host tap did not advance the visible setup screen.
+Video, accessibility hierarchies and synthesized-event coordinates confirm the
+missed transition; its input-boundary cause remains unverified in
+[#267](https://github.com/Apdelrahman1911/parlor/issues/267).
+Other passing lanes do not replace the failed current-source UI check.
+
+The reviewed [actual-app diagnostic 40468931134](https://github.com/Apdelrahman1911/parlor/actions/runs/40468931134)
+at `116ed826` failed before any build, Simulator allocation, XCTest or storage
+observation: a copy helper assumed one Xcode shell script instead of the actual
+two. Its inner cleanup passed but the outer direct-lifecycle guard correctly
+retained custody; no protection result was produced. Draft
+[PR #266](https://github.com/Apdelrahman1911/parlor/pull/266) repairs the actual
+PBX wiring guard and obsolete fixtures, and adds single-tap public-transition
+failure evidence without replay or slower taps. Local normal251/readiness345
+(three Linux platform skips)/application27 controls pass. Strict checks at
+`9f172dc3` and `c66debaf` pass; newer edits still require affected checks,
+fresh hosted CI, independently reviewed source/control preflight and native
+execution. #258, #265 and #267 remain open; no Store publication.
+
 ## September checkpoint (historical)
 
 **The readiness continuation is integrated into `main`; this is not Store-release
