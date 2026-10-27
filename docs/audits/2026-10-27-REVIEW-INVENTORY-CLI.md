@@ -37,3 +37,12 @@ This is CLI behavior evidence, not application/runtime or protected merge
 qualification. The frozen ARM64/Intel benchmark checkout and AGENTS.md are
 unchanged. Fresh integration-head inventory, strict local gates and protected
 PR/post-merge verification remain required; #272 stays open until integrated.
+
+
+The separate integration at `08a87d6a` subsequently passes the complete strict
+local `productionCheck allTests`:3,187 current module report cases, zero
+failures/errors (three existing real-LAN skips),749 release Python controls
+(one known local-environment skip), Detekt/lint/R8/unsigned AAB and pinned shell
+analysis. Its clean source and Gradle stop were verified; valid task-cache
+outputs were reused. This later documentation does not attest a newer tree or
+replace fresh protected PR/post-merge checks.

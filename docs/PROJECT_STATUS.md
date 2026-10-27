@@ -20,8 +20,11 @@ protection bypass or new agent is used. See the
 
 Independent work has integrated the focused [#272 inventory CLI safety fix](audits/2026-10-27-REVIEW-INVENTORY-CLI.md)
 into a separate final-integration checkout: ten regression tests and actual
-help/error commands outside Git pass. Its newer source still needs fresh local
-and protected hosted checks. PR#266 is still draft/unmerged; all unresolved
+help/error commands outside Git pass. At08a87d6a full strict local checks also
+pass:3,187 current module report cases (three existing real-LAN skips),749
+release controls (one local-environment skip), lint/R8/unsigned AAB and pinned
+shell analysis.988 tasks executed;680 valid cache outputs were reused. Later
+documentation still requires affected checks and fresh protected hosted CI. PR#266 is still draft/unmerged; all unresolved
 physical-device, strict protection, signing/legal and Store-release gates below
 remain unchanged. Later source cannot reuse an older run as merge evidence.
 

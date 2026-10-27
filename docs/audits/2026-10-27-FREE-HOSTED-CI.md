@@ -229,9 +229,13 @@ the separate unchanged-byte native control retains its own559793e6 custody.
 | macOS desktop lane / queue offset | 16.27 / 35.37 |
 
 The longest Release **job** is approximately68% shorter than the171.48-minute
-baseline Release job. The55.50-minute whole workflow includes queueing; it is
-not a comparable68% whole-workflow improvement, a distribution, a warm-cache
-result or a mobile CPU/memory/battery measurement.
+baseline Release job. A separate read of all six successful baseline jobs also
+establishes **173.33minutes complete elapsed time**, including queues, versus
+**55.50minutes** for this candidate (about68% shorter). This whole-workflow
+observation compares older3806921f CI with711cc1ab, not identical-source
+profiles or a statistical distribution. The three candidate Release logs each
+show a dependency-cache miss; no warm-cache benefit or mobile CPU/memory/battery
+result is claimed. Cache writes remain disabled for these dispatch samples.
 
 The first external qualifier stopped after four lanes because its copied
 script pointed at an obsolete local checkout. This was **not a CI failure**.
@@ -248,3 +252,21 @@ The separate final-integration branch adds the already tested #272 inventory
 CLI correction and this evidence ledger while leaving the benchmark source
 frozen. Those edits need their own affected local and fresh protected PR checks;
 the711cc1ab workflow does not qualify a newer integration head.
+
+
+### Independent integration-head strict local verification
+
+At `08a87d6aca2b4b3688ac3fe605ab3cf7c93422ee`, tree
+`70c393884fdfb26490e9f36dc7b0176f2152519f`, the separate final-integration
+checkout passes strict `productionCheck allTests --continue --no-daemon` in
+3m11s; Gradle stop0 and source unchanged. It has3,187 current module report
+cases (Desktop1,788, Android646 per variant, GitHub-test107), zero failures/errors
+and three existing real-LAN skips. Release Python749 controls pass with one
+known local-environment skip; Detekt/lint/R8/unsigned AAB, current inventory and
+pinned ShellCheck/Actionlint pass. Of1,668 actionable tasks,988 executed and680
+restored valid cache outputs. This is not wholly fresh test execution or Apple,
+physical-device, signing, protection or protected-merge qualification.
+
+Log SHA256 `97a254d0fbe2e1d8a315db1fcbc54f42eadfadc7a72f6f7f2819ea1a3a8a493f`.
+Documentation recorded afterward requires affected source-contract checks again;
+no older receipt certifies a newer tree. The benchmark remains frozen at711cc1ab.
