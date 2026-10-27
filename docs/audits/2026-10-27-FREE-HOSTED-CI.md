@@ -270,3 +270,34 @@ physical-device, signing, protection or protected-merge qualification.
 Log SHA256 `97a254d0fbe2e1d8a315db1fcbc54f42eadfadc7a72f6f7f2819ea1a3a8a493f`.
 Documentation recorded afterward requires affected source-contract checks again;
 no older receipt certifies a newer tree. The benchmark remains frozen at711cc1ab.
+
+### Completed Intel sample 40563194924 — failed runtime, no qualified winner
+
+The same frozen `711cc1ab` run completes **FAILURE**. All three standard Intel
+Release jobs and the original required join pass; source-bound join artifact
+12764082773 is independently downloaded and hash verified. Seven of eight
+producer lanes pass. The separate ARM64 Simulator runtime executes 16 Swift
+methods with 15 passes/one failure before a tap on Ghamza after Back. The source-
+bound failed screenshot/recording and timing ledger are retained; see
+[the catalog/query investigation](2026-10-27-CATALOG-RESTORATION.md).
+
+| Measurement | Minutes |
+| --- | ---: |
+| Failed complete workflow, including queues (not qualified) | 47.12 |
+| Intel simulator arm64 Release/Swift job | 43.63 |
+| Intel simulator x64 Release job | 35.53 |
+| Intel device arm64 Release job | 34.22 |
+
+These demonstrate successful optimized Intel compilation, not complete profile
+reliability or an Intel winner. The observer stops nonzero and retains
+`qualified=false`; it produces no successful comparison and dispatches nothing
+further. ARM64 remains the default. No blind rerun, timeout/gesture relaxation,
+verification exclusion, main merge or payment is performed.
+
+The independent integration adds confirmed catalog-anchor fix `5891de5b` (#273)
+and numeric-only public snapshot errors while preserving all native contracts.
+Both English and Arabic/200%-text Desktop position regressions pass twice per
+journey. This does not establish the separate native query/Host-event root cause
+(#267), and the earlier ARM64 pass does not qualify this later source. Final
+strict local checks and fresh full standard-hosted verification are required;
+retain the original frozen branch and every failed attempt unchanged.

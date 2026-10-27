@@ -1,32 +1,41 @@
 # Project status — 2026-10-27
 
-## Latest free-hosted CI checkpoint (18:47 UTC; not merged)
+## Latest free-hosted CI checkpoint (22:26 UTC; not merged)
 
-The ARM64 [full run40553214698](https://github.com/Apdelrahman1911/parlor/actions/runs/40553214698)
-at `711cc1ab` is independently qualified: all eight producer lanes and the
-original required Apple join pass, with exact source/upload/native/output
-custody. Current runtime evidence has672 KMP Simulator cases and16 Swift
-methods passing. Total elapsed time including queues is55.50minutes; the
-longest Release job is54.67minutes versus the old171.48-minute Release job.
-This is one sample, not a statistical or mobile performance result.
+The ARM64 [full run 40553214698](https://github.com/Apdelrahman1911/parlor/actions/runs/40553214698)
+at frozen `711cc1ab` remains independently qualified: all eight producer lanes
+and the original required Apple join pass, with exact source/upload/native/output
+custody, 672 KMP Simulator cases and 16 Swift methods. Whole elapsed time including
+queues is 55.50 minutes versus the older successful 173.33-minute baseline
+(about 68% shorter in this observation, not a statistical/mobile benchmark).
 
-The external evidence qualifier's obsolete local-checkout assertion was repaired
-without changing frozen CI or weakening its checks; the original failure was
-retained and the existing successful run requalified. The identical-source
-[Intel comparison40563194924](https://github.com/Apdelrahman1911/parlor/actions/runs/40563194924)
-is pending. ARM64 remains the default; no paid runner, billing/cache-cap change,
-protection bypass or new agent is used. See the
-[full benchmark ledger](audits/2026-10-27-FREE-HOSTED-CI.md).
+The identical-source [Intel run 40563194924](https://github.com/Apdelrahman1911/parlor/actions/runs/40563194924)
+**failed**: all three Intel Release jobs and the join pass, but the independent
+ARM64 Simulator runtime fails before tapping the reopened Ghamza catalog card.
+Seven of eight producer lanes pass. Failed elapsed time (47.12 minutes) does not
+qualify Intel as a winner. The stopped observer and failed artifacts are retained;
+no automatic rerun, paid runner, billing/cache-cap change or protection bypass.
+ARM64 remains the default; the older pass cannot qualify revised source.
 
-Independent work has integrated the focused [#272 inventory CLI safety fix](audits/2026-10-27-REVIEW-INVENTORY-CLI.md)
-into a separate final-integration checkout: ten regression tests and actual
-help/error commands outside Git pass. At08a87d6a full strict local checks also
-pass:3,187 current module report cases (three existing real-LAN skips),749
-release controls (one local-environment skip), lint/R8/unsigned AAB and pinned
-shell analysis.988 tasks executed;680 valid cache outputs were reused. Later
-documentation still requires affected checks and fresh protected hosted CI. PR#266 is still draft/unmerged; all unresolved
-physical-device, strict protection, signing/legal and Store-release gates below
-remain unchanged. Later source cannot reuse an older run as merge evidence.
+A related shared scroll-restoration bug is now independently reproduced and
+fixed in `5891de5b`: transient recovery loading makes an index-only restored Home
+anchor the preceding catalog card. Root-owned live list state preserves its key
+anchor. English and Arabic/200%-text Desktop regressions pass repeated return
+journeys with exact unchanged bounds. Numeric-only XCTest snapshot-error
+instrumentation preserves the original deadline, one-tap and privacy contracts.
+This is **not a confirmed fix for the native nil query or original Host-event loss**.
+See [#273 and the evidence report](audits/2026-10-27-CATALOG-RESTORATION.md),
+[the benchmark ledger](audits/2026-10-27-FREE-HOSTED-CI.md), and still-open #267.
+
+The separate final-integration branch also includes the [#272 inventory CLI fix](audits/2026-10-27-REVIEW-INVENTORY-CLI.md).
+Its older `97500656` strict local check passes with 3,187 current module report
+cases (three existing LAN skips), 749 release controls (one environment skip),
+lint/R8/unsigned AAB and pinned shell analysis; valid up-to-date outputs were reused.
+Those results do not certify the new scroll/diagnostic source: final strict
+local and fresh full hosted qualification remain required. PR #266 is still
+draft/unmerged. Cold process recreation, physical-device/native accessibility,
+strict protection, signing/legal and Store-release gates remain separate below.
+No new agent is used and no production release is authorized by CI results.
 
 ## October production overhaul checkpoint
 
