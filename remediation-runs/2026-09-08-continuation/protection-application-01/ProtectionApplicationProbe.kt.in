@@ -52,6 +52,7 @@ fun runProtectionApplication(runToken: String, observe: (String, String) -> Stri
     var writeOrdinal = 0
     var firstRoundtrip = false
     var secondRoundtrip = false
+    var finalDirectoryIdentity = buildJsonObject {}
     val first = "{\"fixture\":\"public-protection-diagnostic\",\"ordinal\":1}".encodeToByteArray()
     val second = "{\"fixture\":\"public-protection-diagnostic\",\"ordinal\":2}".encodeToByteArray()
     fun report(status: String, failure: String = "none") = buildJsonObject {
@@ -63,6 +64,7 @@ fun runProtectionApplication(runToken: String, observe: (String, String) -> Stri
         put("failure", failure)
         put("first_roundtrip", firstRoundtrip)
         put("overwrite_roundtrip", secondRoundtrip)
+        put("final_directory_identity", finalDirectoryIdentity)
         put("samples", JsonArray(rows.toList()))
         put("snapshot_validation_tested", false)
         put("hardware_protection_verified", false)
@@ -176,6 +178,11 @@ fun runProtectionApplication(runToken: String, observe: (String, String) -> Stri
             try { check(restored.contentEquals(second)); secondRoundtrip = true } finally { restored.fill(0) }
         }
         check(rows.size == 6)
+        // The original six backup-boundary observations stay unchanged.
+        // Directory entry count/size can change when the ciphertext is created;
+        // capture its final identity before the native/host read-only samples.
+        stage = "final-directory-identity"
+        finalDirectoryIdentity = protectionIdentity(directory, "directory")
         stage = "complete"
         // Leave ONLY our ciphertext for read-only host-native same-inode queries.
         // The existing owned-simulator finalizer deletes its app and Keychain.

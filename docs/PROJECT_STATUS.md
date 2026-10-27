@@ -82,8 +82,27 @@ fresh hosted CI, independently reviewed source/control preflight and native
 execution. #258, #265 and #267 remain open; no Store publication.
 The same 14 actual-PBX copy guards now run inside the routine readiness suite:
 local **359 cases pass** (three Linux platform skips), including those reused
-normal-copy cases. The earlier strict transport/release check also passed at
-`aeea5df9`; the routine-discovery addition is not yet hosted-qualified.
+normal-copy cases. At `034de158`, the complete359 readiness and27 application
+controls executed on macOS without skips; the independently verified iOS lane
+also passed 672 KMP Simulator and ten Swift host/UI cases. Local strict
+`productionCheck allTests` passed at the same source, reusing valid unchanged
+outputs. Neither this lane nor the pending full run qualifies newer edits.
+
+Fresh reviewed [application run40474753238](https://github.com/Apdelrahman1911/parlor/actions/runs/40474753238)
+at `034de158` reached the actual copied Debug app's unchanged filesystem/Keychain,
+passed its one diagnostic XCTest and both synthetic decrypt roundtrips, but
+**failed overall** at the subsequent host-directory identity comparison.
+Original six raw comparisons independently revalidate **0 PASS / 6 FAIL**;
+strict protection and causality remain unresolved in #258. Source/artifact/62
+native-leaf hashes and inner/outer cleanup passed, not complete diagnostic capture.
+The host comparison incorrectly compares links2 before file creation with links3
+afterward at the same directory inode. #265's repair adds a final post-overwrite
+Kotlin/native directory observation while retaining all full host size/link-count
+and per-API/descriptor checks; it does not normalize old evidence or loosen the
+six original equalities. Two baseline regressions fail before repair; all36
+application controls pass locally afterward. These revised templates still need
+committed-source checks, all six current-head hosted lanes, fresh reviewed
+preflight and native execution. #265/#258/#267 remain open; no Store publication.
 
 ## September checkpoint (historical)
 

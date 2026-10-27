@@ -159,6 +159,21 @@ def kotlin_matches(kotlin, native):
             kotlin['bytes'] == native['size'] and kotlin['file_type'] == native['mode'] & 0xf000)
 
 
+def final_directory(final, samples):
+    """Require a new post-write observation, never normalize an earlier stat."""
+    require(isinstance(samples, list) and len(samples) == 6, 'final-directory-samples')
+    initial = validate_native(samples[1].get('native'), 'directory')
+    observed = final.get('final_directory_native')
+    selected = validate_native(observed, 'directory')
+    # Only directory contents can change across these two observation epochs.
+    # Each epoch still validates every full before/after/descriptor identity.
+    require(all(initial[key] == selected[key] for key in ('device', 'inode', 'uid', 'mode', 'type')),
+            'final-directory-anchor')
+    require(kotlin_matches(final.get('kotlin', {}).get('final_directory_identity'), selected),
+            'final-directory-kotlin-native')
+    return observed
+
+
 def validate_application(final, samples, *, token, device, source, controls):
     metadata_only(final)
     for sample in samples:
@@ -211,6 +226,7 @@ def validate_application(final, samples, *, token, device, source, controls):
         comparisons.append(dict(id=expected_id, target=target, comparison=expected, value=fm['value']))
         identities.append(native)
     require(identities[0] == identities[1] and identities[2] == identities[3] and identities[4] == identities[5], 'backup-same-inode')
+    final_directory(final, samples)
     return dict(schema_version=1, collection_status=COLLECTED, strict_status='PASS' if all(row['comparison'] == 'PASS' for row in comparisons) else 'FAIL',
         strict_comparisons=comparisons, strict_passed=sum(row['comparison'] == 'PASS' for row in comparisons), strict_total=6,
         first_roundtrip=True, overwrite_roundtrip=True,
@@ -238,10 +254,10 @@ def validate_host(host, final, samples):
         require(observed.get('target') == target, 'host-target')
         native = validate_native(observed.get('native'), target, platform=1)
         require(native['uid'] == host['uid'], 'host-file-uid')
-        app = samples[1 if index == 0 else 5]['native']
-        keys = ('device', 'inode', 'uid', 'mode', 'links', 'type') + (('size',) if index == 1 else ())
-        # Directory size legitimately changes when the first file is created;
-        # inode identity does not. Each individual sample still pins full stat.
+        app = final_directory(final, samples) if index == 0 else samples[5]['native']
+        keys = ('device', 'inode', 'uid', 'mode', 'links', 'type', 'size')
+        # Both observations now describe the final post-overwrite directory.
+        # Do not drop link-count/size equality to accept a stale observation.
         require(all(native[key] == app['identity'][key] for key in keys), 'host-app-same-inode')
         rows.append(dict(target=target, same_inode=True,
             app_fm=app['fm']['protection'], host_fm=observed['native']['fm']['protection'],

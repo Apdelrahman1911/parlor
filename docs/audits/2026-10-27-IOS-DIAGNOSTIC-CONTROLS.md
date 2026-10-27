@@ -195,6 +195,77 @@ run again at the resulting committed inventory head.
 
 ## Fresh protection observations and outstanding gates
 
+### Exact-head execution reached real storage, then failed host comparison
+
+[Preflight 40473777088](https://github.com/Apdelrahman1911/parlor/actions/runs/40473777088)
+at `034de15851cbde4f7e18555c4afaf08e0ebb0664` verified 2,346 source files,
+2,385 immutable source/control blobs and 115 controls, source/tree/ZIP and cleanup
+bindings. Its control SHA-256 is
+`f48be0de7b71893ebc9dd7f2c51b96a7632ba8ba2f0c8adce58c28a6356324b8`.
+The reviewed delta and exact-head approval were recorded before dispatch;
+the earlier approval was not reused. This preflight built no application.
+
+[Actual-app run 40474753238](https://github.com/Apdelrahman1911/parlor/actions/runs/40474753238)
+at that same source built and installed the copied Debug app, allocated an owned
+iOS 26.2 Simulator and passed its one diagnostic XCTest. The unchanged real
+filesystem/Keychain path completed both public-fixture decrypt roundtrips and
+atomic inode replacement. **The overall run failed**, not a qualified capture:
+the later host validator rejected `protection-application-host-app-same-inode`.
+Both inner cleanup and outer uploaded-custody cleanup passed; successful cleanup
+does not change the execution failure.
+
+Evidence artifact `12721838858` has independently matching ZIP SHA-256
+`31463d5507f9f4f18dfc1894290ffc8221e12f2a18ea16b1a0459e758ca9570f`;
+all 62 retained native leaves matched their immutable manifest. The original
+application validator was reexecuted over all six raw samples and matched
+**0 PASS / 6 FAIL**, all missing Kotlin FileManager protection keys. Native
+descriptor/attribute queries returned class3; APFS capability was unsupported.
+These are current copied-app observations, not physical protection, normal
+startup, GameSnapshot, gameplay or runtime-implementation causality proof.
+
+The original host validator's failure was independently reproduced: directory
+device/inode/UID/mode/type match, but the pre-file app sample has links2/size64
+and the later host sample links3/size96. The final file's complete identity matches.
+The validator already excluded mutable directory size but incorrectly retained
+cross-time link-count equality against the empty-directory epoch. This is a
+confirmed tooling comparison defect in #265, distinct from #258's unresolved
+protection root cause. Raw reports and the failed host comparison remain failures.
+The live lifecycle-journal helper also requires the actual remote evidence path
+and UID501; its Linux/root replay rejection is retained. Offline journal checks
+bind hashes, stamped context and events, not nonexistent remote filesystem custody.
+
+The repair **adds evidence rather than dropping identity checks**: after both
+real roundtrips, Kotlin records the final directory identity and Swift takes an
+additional read-only native directory sample. The original six samples/equalities
+are unchanged. Final evidence must match Kotlin/native full identity and the
+original directory device/inode/owner/mode/type. The later host comparison now
+requires full final size **and** link-count equality. Missing final observations,
+stale pre-write epochs, changed owner/inode/mode, per-API drift and open descriptors
+are rejected without fallback or normalization.
+
+Before repair, two regressions produced one failure/one error: legitimate final
+directory growth was rejected, while changed host directory size was ignored.
+After repair, **36 complete application-control cases pass locally**; nine are
+new cases with additional adversarial subcases. Complete local readiness359
+(three Linux platform skips) and normal-launch251 controls also pass under a
+private external TMPDIR, retired empty after execution. This is working-tree synthetic
+verification, not native execution of the revised templates. New committed-source
+checks, all six latest-head CI lanes, inventory, reviewed preflight/control delta
+and fresh native execution are required. The source034 results cannot qualify
+these newer controls. No shipping storage/protection policy or release gate changed.
+
+At source034, local strict `productionCheck allTests --continue` passed with
+32 executed tasks and 1,623 valid unchanged-input tasks reused. Current XML:
+1,777 Desktop cases (three existing real-LAN skips), 646 Android cases per
+Debug/Release variant and 107 GitHub-test variant cases; zero failures/errors.
+Release Python690 has one local environment skip; pinned analyzers and inventory
+40482 passed, exit0/private Gradle stop0/source unchanged. The hosted iOS lane
+independently passed source/artifact/cleanup checks, all359 readiness and27
+application controls on macOS without skips, 672 KMP Simulator cases and ten
+Swift host/UI cases. Its passing single-tap Ghamza journey does **not** resolve
+#267 or qualify a shipping fix. The then-pending full six-lane source034 run is
+supporting evidence only for subsequent revisions, not latest-head qualification.
+
 [Standalone probe 40419513891](https://github.com/Apdelrahman1911/parlor/actions/runs/40419513891)
 at the merged baseline completed source/control/ZIP/raw-report/cleanup validation.
 Strict synthetic Complete remained **0 PASS / 5 FAIL**. Simulator FileManager had

@@ -127,6 +127,17 @@ private func protectionApplicationOutput(_ name: String, _ value: [String: Any])
                       NSDictionary(dictionary: try protectionApplicationImages()).isEqual(to: images) else {
                     throw ProtectionApplicationFailure.boundary
                 }
+                // Compare the later host reader with a post-overwrite app
+                // observation, retaining full link-count and size checks.
+                let finalDirectoryNative = ParlorProtectionSample(directory)
+                receipt["final_directory_native"] = finalDirectoryNative
+                guard let finalDirectoryIdentity = kotlin["final_directory_identity"] as? [String: Any],
+                      let nativeIdentity = finalDirectoryNative["identity"] as? [String: Any],
+                      finalDirectoryNative["collection_status"] as? String == "PASS",
+                      finalDirectoryNative["descriptor_closed"] as? Bool == true,
+                      protectionApplicationSameIdentity(finalDirectoryIdentity, nativeIdentity) else {
+                    throw ProtectionApplicationFailure.boundary
+                }
                 receipt["collection_status"] = "CAPTURED_NOT_PROTECTION_PASS"
                 collectionSucceeded = true
             } catch {
