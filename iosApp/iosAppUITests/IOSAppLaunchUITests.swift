@@ -272,7 +272,16 @@ final class IOSAppLaunchUITests: XCTestCase {
         let started = ProcessInfo.processInfo.systemUptime
         let settled = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
             let sampleStarted = ProcessInfo.processInfo.systemUptime
-            let snapshot = try? control.snapshot()
+            let snapshot: (any XCUIElementSnapshot)?
+            var snapshotErrorCode: Int? = nil
+            do {
+                snapshot = try control.snapshot()
+            } catch {
+                snapshot = nil
+                // NSError descriptions/userInfo can include arbitrary UI data.
+                // Retain only the numeric code; never stringify the error.
+                snapshotErrorCode = (error as NSError).code
+            }
             let frame = snapshot?.frame
             let enabled = snapshot?.isEnabled == true
             let stable = frames.observe(frame: frame, enabled: enabled)
@@ -284,7 +293,8 @@ final class IOSAppLaunchUITests: XCTestCase {
                 samples.append("at=\(sampleStarted - started), " +
                     "querySeconds=\(ProcessInfo.processInfo.systemUptime - sampleStarted), " +
                     "frame=\(String(describing: frame)), enabled=\(enabled), " +
-                    "stable=\(stable), hittable=\(String(describing: hittable))")
+                    "stable=\(stable), hittable=\(String(describing: hittable)), " +
+                    "snapshotErrorCode=\(String(describing: snapshotErrorCode))")
             }
             return stable && hittable == true
         }, object: nil)

@@ -57,6 +57,10 @@ class ProductionVerificationWorkflowContractTest {
         assertEquals(1, Regex(Regex.escape("control.isHittable")).findAll(code).count())
         assertEquals(1, Regex(Regex.escape("control.tap()")).findAll(code).count())
         listOf(
+            "snapshot = try control.snapshot()",
+            "snapshot = nil",
+            "snapshotErrorCode = (error as NSError).code",
+            "snapshotErrorCode=",
             "let frame = snapshot?.frame",
             "let enabled = snapshot?.isEnabled == true",
             "let hittable = stable ? control.isHittable : nil",
@@ -69,7 +73,8 @@ class ProductionVerificationWorkflowContractTest {
             "screenshot.lifetime = .keepAlways",
         ).forEach { assertContains(code, it) }
         assertTrue(code.indexOf("guard result == .completed else") < code.indexOf("control.tap()"))
-        listOf("control.exists", "control.frame", ".label", ".value", ".debugDescription", "sleep(",
+        listOf("try? control.snapshot()", "control.exists", "control.frame", ".label", ".value",
+            ".localizedDescription", ".userInfo", ".domain", ".debugDescription", "sleep(",
             "press(forDuration", "swipe").forEach { assertFalse(it in code) }
         val frameState = swift.substringAfter("private struct PublicControlFrames {")
             .substringBefore("final class PublicControlFramesTests")
@@ -86,6 +91,24 @@ class ProductionVerificationWorkflowContractTest {
             "testInvalidOrEmptyGeometryCannotSettleAndBreaksAdjacency",
             "testHittabilityInterruptionRequiresTwoFreshFrames",
         ).forEach { assertContains(swift, "func $it()") }
+    }
+
+    @Test
+    fun catalog_scroll_anchor_is_owned_above_navigation_entry_restoration() {
+        val app = read("composeApp/src/commonMain/kotlin/com/parlor/app/App.kt")
+        assertContains(app, "val homeScrollState = rememberLazyListState()")
+        assertTrue(app.indexOf("val homeScrollState = rememberLazyListState()") < app.indexOf("AppNavDisplay("))
+        assertContains(app.substringAfter("homeContent = {"), "scrollState = homeScrollState")
+        val home = read("composeApp/src/commonMain/kotlin/com/parlor/app/shell/home/HomeScreen.kt")
+        assertContains(home, "scrollState: LazyListState = rememberLazyListState()")
+        assertContains(home.substringAfter("LazyColumn("), "state = scrollState")
+        val regression = read(
+            "composeApp/src/desktopTest/kotlin/com/parlor/app/shell/home/HomeCatalogRestorationTest.kt",
+        )
+        listOf("rememberSaveableStateHolder()", "scrollState = catalogScrollState", "loading.value = true",
+            "loading.value = false", "repeat(2)", "assertEquals(before, after",
+            "verifyRestoration(AppLanguage.Arabic, 2f)",
+        ).forEach { assertContains(regression, it) }
     }
 
     @Test

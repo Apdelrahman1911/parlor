@@ -12,8 +12,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -103,10 +105,12 @@ internal fun HomeScreen(
     onDiscardLocal: (SessionId, String) -> Unit = { _, _ -> },
     onDiscardMultiplayer: (String) -> Unit = {},
     recoveryActionsEnabled: Boolean = true,
+    scrollState: LazyListState = rememberLazyListState(),
 ) {
     var selectedFilter by rememberSaveable { mutableStateOf(HomeCatalogFilter.All) }
     HeroBackdrop(modifier = modifier.fillMaxSize()) {
         LazyColumn(
+            state = scrollState,
             modifier = Modifier.fillMaxSize(),
             contentPadding = parlorSafeContentPaddingValues(
                 horizontal = ParlorTheme.spacing.l,
