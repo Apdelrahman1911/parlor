@@ -1,6 +1,33 @@
 # Production overhaul verification ledger
 
-## Qualification boundary
+## Integrated October 26 checkpoint
+
+PRs #261, #262 and #263 are merged through `d72a0d83` (23:19:28 UTC),
+tree `832f2f779800ce6f1d5fb8a973969dd27bc92766`. All six jobs passed at each
+frozen PR head; eighteen source/artifact/cleanup records are now verified.
+#262's iOS Release success is attempt 2 after the first job's 180-minute timeout;
+the remaining five successful jobs are carried over from attempt 1.
+
+The [qualification report](2026-10-26-OVERHAUL-QUALIFICATION.md) preserves exact
+heads/runs, counts, merge ancestry and the final-helper sequencing error:
+#261's complete six-lane source/Apple-cycle recheck finished **after merge**.
+Required checks and protections remained enforced; this ordering is not hidden.
+
+Strict local aggregate passed at `ba0c1e43` (17:05 UTC): 1,776 Desktop cases,
+646 Android unit cases per variant, 688 release Python cases; three real-LAN
+Desktop skips and one local Python environment skip remain. Valid up-to-date
+outputs were reused. Hosted aggregate run40363906241 also passed all six lanes,
+including six current managed Android device cases, 672 iOS KMP Simulator cases,
+ten Swift host/UI cases and 18 Windows process-ownership cases. These are
+platform-repeated receipts, not unique behavior or physical-device counts.
+
+Fresh [main run40418964553](https://github.com/Apdelrahman1911/parlor/actions/runs/40418964553)
+is **pending**, not post-merge qualification. Separately dispatched standalone
+paired [protection run40419513891](https://github.com/Apdelrahman1911/parlor/actions/runs/40419513891)
+also has pending collection/cleanup; it cannot establish Parlor application or
+physical protection. No release publication or historical strict-gate waiver occurred.
+
+## Prior qualification boundary (historical)
 
 Checkpoint: **2026-10-26, 16:55 UTC**. The aggregate integration tip is
 [PR #263](https://github.com/Apdelrahman1911/parlor/pull/263), containing the actual

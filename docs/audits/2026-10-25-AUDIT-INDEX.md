@@ -1,5 +1,25 @@
 # Production overhaul: inventory, issue disposition, and release-tool audit
 
+## Integrated follow-up — October 26
+
+This workstream's baseline and counts below remain historical. PR #256 and the
+follow-up PRs #261–#263 are now merged; the latter share merge `d72a0d83`.
+See the [qualification report](2026-10-26-OVERHAUL-QUALIFICATION.md) for frozen
+heads/runs, all-six-lane PR source/cleanup checks, the documented premerge-helper
+sequencing error and fresh-main verification status. That report supersedes the
+pending-implementation dispositions below; it does not certify missing hardware,
+strict iOS protection, signing or owner approval.
+
+The release-process defect is implemented and native Windows tests passed;
+#257 still awaits fresh-main qualification before closure. Admission/deletion
+fixes and application/six-game UX improvements are implemented and merged, while
+#251/#253/#259/#260 retain native full-journey acceptance. Linux real-kit probes
+exercise real sockets with multiple identities in each single JVM, not independent
+processes or physical devices; #6 stays open. #252 retains cold-start/manual Resume
+and physical lifecycle gaps. #258 remains an unresolved strict-storage blocker;
+a fresh standalone paired diagnostic is pending, not an application pass. No
+duplicate issues or new release authorization follow from integration.
+
 ## Evidence boundary
 
 Review date: 2026-10-25. Baseline reviewed: `39aacd310acc92deb91f4e1742c827972dba3e35` (`origin/feat/last-light` at review). This report is one workstream's evidence, **not an exhaustive behavioral qualification, production approval, or a replacement for the other agents' runtime results**. Source and live API state override historical prose. No store workflow, package publication, signing operation, or protection change was performed.
