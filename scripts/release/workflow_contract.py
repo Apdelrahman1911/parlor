@@ -717,6 +717,7 @@ def verify_validation(text: str) -> None:
 '''
     if (native_controls.count(temporary_scope) != 1 or
             native_controls.count('          )\n') != 1 or
+            native_controls.count('          retire_native_control_tmp\n          )\n') != 1 or
             native_controls.count('export TMPDIR=') != 1):
         fail("macOS diagnostic controls require scoped canonical private temporary ownership and fail-closed retirement")
     for directory, report in (

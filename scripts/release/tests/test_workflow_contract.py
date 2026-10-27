@@ -605,6 +605,7 @@ class WorkflowContractTest(unittest.TestCase):
             ("trap 'retire_native_control_tmp' EXIT", 'trap true EXIT'),
             ('rmdir -- "$native_control_tmp"', 'rm -rf -- "$native_control_tmp"'),
             ('native_control_status=1', 'native_control_status=0'),
+            ('          retire_native_control_tmp\n', ''),
             ('          )\n          ./gradlew ', '          ./gradlew '),
         ):
             self.assertEqual(original.count(old), 1)

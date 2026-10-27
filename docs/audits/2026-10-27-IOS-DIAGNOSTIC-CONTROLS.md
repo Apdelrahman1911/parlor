@@ -85,10 +85,15 @@ The committed-source strict Gradle check at `ccb27eb8` subsequently failed in
 release automation: pinned Actionlint/ShellCheck reported SC2329 because the
 EXIT trap's unquoted function name was not recognized as a function invocation.
 All preceding release Python tests and inventory validation passed; this is
-not a successful aggregate check. The trap command is now a literal quoted
-string recognized by ShellCheck, with the exact workflow guard and mutation
-test updated together. Cleanup behavior is unchanged; no warning suppression
-or analyzer downgrade was added. Fresh committed-source checks remain required.
+not a successful aggregate check. Quoting the trap command alone at `e070fae1`
+did **not** fix SC2329; its fresh check failed with the same finding after 690
+release Python cases passed (one environment skip). The finalizer now also has
+an explicit invocation after both successful suites, with the EXIT trap retained
+for failures. It disables that trap before retiring the empty directory and
+exits with the original status, so cleanup runs once on either path. Exact
+workflow guards and mutation tests require both paths. No warning suppression,
+analyzer downgrade or force deletion was added. Fresh committed-source checks
+remain required; the two failed attempts are preserved.
 
 Commands:
 

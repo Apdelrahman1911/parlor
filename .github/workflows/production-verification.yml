@@ -788,6 +788,7 @@ jobs:
           export TMPDIR="$native_control_tmp"
           /usr/bin/python3 -B -m unittest discover -s scripts/verification/ios-readiness -p 'test_*.py' -v 2>&1 | tee build/ci-evidence/ios-readiness-control-tests.log
           /usr/bin/python3 -B -m unittest discover -s remediation-runs/2026-09-08-continuation/protection-application-01 -p 'test_*.py' -v 2>&1 | tee build/ci-evidence/ios-protection-application-control-tests.log
+          retire_native_control_tmp
           )
           ./gradlew productionIosSimulatorRuntimeTests --dependency-verification=strict --no-daemon --stacktrace --console=plain
 
