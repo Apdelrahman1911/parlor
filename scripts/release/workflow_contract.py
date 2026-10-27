@@ -136,6 +136,49 @@ def validation_job(text: str, name: str) -> str:
     return re.split(r"(?m)^  [A-Za-z_][A-Za-z0-9_-]*:\n", text.split(marker, 1)[1], maxsplit=1)[0]
 
 
+def current_verification_artifact_paths(job: str) -> list[str]:
+    """Keep all current/dynamically added module reports and external custody."""
+    prefix = "${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}"
+    reports = ["**/build/reports/tests/", "**/build/test-results/**/*.xml"]
+    custody = [prefix + "-ownership.json", prefix + "-stop-*.json"]
+    if job == "desktop-android":
+        paths = ["build/ci-evidence/", "**/build/reports/detekt/"] + reports + custody + [
+            "**/build/reports/androidTests/managedDevice/",
+            "**/build/outputs/androidTest-results/managedDevice/",
+            "**/build/reports/lint-results-*",
+            "composeApp/build/outputs/mapping/release/",
+            "composeApp/build/outputs/bundle/release/*.aab",
+        ]
+    elif job in {"desktop-linux-arm64", "desktop-macos-x64", "desktop-windows-x64"}:
+        paths = reports + custody
+    elif job == "ios":
+        paths = ["build/ci-evidence/"] + reports + custody + [
+            prefix + "-apple-*-ownership.json", prefix + "-apple-ui-simulator-*.json"]
+    elif job == "ios-release":
+        paths = ["build/ci-evidence/",
+                 "build/xcode-derived-data/Build/Products/Release-iphonesimulator/Parlor.app.dSYM/",
+                 "**/build/reports/detekt/"] + custody + [prefix + "-apple-*-ownership.json"]
+    else:
+        fail("Unknown current verification artifact job")
+    # These trees remain immutable Git evidence, not outputs of this invocation.
+    return paths + ["!remediation-runs/**", "!docs/archives/**"]
+
+
+def verify_current_verification_artifacts(text: str) -> None:
+    uploads = {
+        "desktop-android": "Upload verification reports, mappings, and unsigned AAB",
+        "desktop-linux-arm64": "Upload Desktop verification descriptors",
+        "desktop-macos-x64": "Upload Desktop verification descriptors",
+        "desktop-windows-x64": "Upload Desktop verification descriptors",
+        "ios": "Upload Apple runtime verification evidence",
+        "ios-release": "Upload Apple release verification evidence",
+    }
+    for job, name in uploads.items():
+        block = validation_step(validation_job(text, job), name)
+        if re.findall(r"(?m)^            (\S.*)$", block) != current_verification_artifact_paths(job):
+            fail("current verification artifact must retain exact current reports/custody and only historical exclusions")
+
+
 def verify_owned_ios_app_launch(text: str) -> None:
     prepare_name = "Claim apple-ui native resource ownership"
     launch_name = "Launch Swift host and Compose root on iOS Simulator"
@@ -444,13 +487,7 @@ def verify_split_apple_scopes(text: str) -> None:
                 ("PARLOR_VERIFICATION_ARTIFACT_DIGEST", "${{ steps.verification_artifact.outputs.artifact-digest }}")]:
             fail("verification scope Apple cleanup requires only its own two cycles and uploaded custody")
         evidence = validation_step(job, upload)
-        report_paths = (["**/build/reports/tests/", "**/build/test-results/**/*.xml"] if job_id == "ios" else
-                        ["build/xcode-derived-data/Build/Products/Release-iphonesimulator/Parlor.app.dSYM/",
-                         "**/build/reports/detekt/"])
-        paths = ["build/ci-evidence/"] + report_paths + [prefix + suffix for suffix in (
-            "-ownership.json", "-stop-*.json", "-apple-*-ownership.json")]
-        if job_id == "ios":
-            paths.append(prefix + "-apple-ui-simulator-*.json")
+        paths = current_verification_artifact_paths(job_id)
         if (re.findall(r"(?m)^        id: (.*)$", evidence) != ["verification_artifact"] or
                 re.findall(r"(?m)^          (name|if-no-files-found|retention-days|path): (.*)$", evidence) != [
                     ("name", artifact_name), ("if-no-files-found", "warn"), ("retention-days", "14"), ("path", "|")] or
@@ -628,6 +665,7 @@ def verify_verification_scopes(text: str) -> None:
                 for name in ("Run focused native continuation", "Observe hosted native processes without an app build"))):
         fail("verification scope must reject unknown values before any native execution")
     verify_split_apple_scopes(text)
+    verify_current_verification_artifacts(text)
     verify_protection_probe(validation_job(text, "ios-protection-probe"))
     focused_steps = ("Run focused native continuation", "Upload focused native evidence",
                      "Verify focused native cleanup and uploaded custody", "Upload native continuation cleanup receipt")

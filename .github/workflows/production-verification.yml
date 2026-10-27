@@ -215,6 +215,8 @@ jobs:
             **/build/reports/lint-results-*
             composeApp/build/outputs/mapping/release/
             composeApp/build/outputs/bundle/release/*.aab
+            !remediation-runs/**
+            !docs/archives/**
 
       # A successful nonempty upload must precede deletion of the last local evidence copy.
       - name: Clean only attested verification outputs
@@ -341,6 +343,8 @@ jobs:
             **/build/test-results/**/*.xml
             ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-ownership.json
             ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-stop-*.json
+            !remediation-runs/**
+            !docs/archives/**
 
       # A successful nonempty upload must precede deletion of the last local evidence copy.
       - name: Clean only attested verification outputs
@@ -427,6 +431,8 @@ jobs:
             **/build/test-results/**/*.xml
             ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-ownership.json
             ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-stop-*.json
+            !remediation-runs/**
+            !docs/archives/**
 
       # A successful nonempty upload must precede deletion of the last local evidence copy.
       - name: Clean only attested verification outputs
@@ -560,6 +566,8 @@ jobs:
             **/build/test-results/**/*.xml
             ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-ownership.json
             ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-stop-*.json
+            !remediation-runs/**
+            !docs/archives/**
 
       # A successful nonempty upload must precede deletion of the last local evidence copy.
       - name: Clean only attested verification outputs
@@ -880,6 +888,8 @@ jobs:
             ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-stop-*.json
             ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-apple-*-ownership.json
             ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-apple-ui-simulator-*.json
+            !remediation-runs/**
+            !docs/archives/**
 
       # A successful nonempty upload must precede deletion of the last local evidence copy.
       - name: Clean only attested verification outputs
@@ -1059,6 +1069,8 @@ jobs:
             ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-ownership.json
             ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-stop-*.json
             ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-apple-*-ownership.json
+            !remediation-runs/**
+            !docs/archives/**
 
       # A successful nonempty upload must precede deletion of the last local evidence copy.
       - name: Clean only attested verification outputs
