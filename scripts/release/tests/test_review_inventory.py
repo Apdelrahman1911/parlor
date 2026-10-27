@@ -7,12 +7,75 @@ import sys
 import unittest
 from pathlib import Path
 from tempfile import TemporaryDirectory
+from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 import generate_review_inventory as review_inventory  # noqa: E402
 
 
 class ReviewInventoryTest(unittest.TestCase):
+    def test_help_never_resolves_the_repository_or_writes_an_inventory(self) -> None:
+        for flag in ("-h", "--help"):
+            with self.subTest(flag=flag), patch.object(sys, "argv", ["inventory", flag]), \
+                    patch.object(review_inventory, "repository_root") as root, \
+                    patch("sys.stdout", new_callable=io.StringIO) as output:
+                with self.assertRaises(SystemExit) as result:
+                    review_inventory.main()
+                self.assertEqual(0, result.exception.code)
+                self.assertIn("usage:", output.getvalue())
+                root.assert_not_called()
+
+    def test_invalid_options_and_extra_outputs_fail_before_repository_access(self) -> None:
+        for arguments in (["--chekc"], ["--chec"], ["--check", "--unknown"], ["one.csv", "two.csv"]):
+            with self.subTest(arguments=arguments), patch.object(sys, "argv", ["inventory", *arguments]), \
+                    patch.object(review_inventory, "repository_root") as root, \
+                    patch("sys.stderr", new_callable=io.StringIO):
+                with self.assertRaises(SystemExit) as result:
+                    review_inventory.main()
+                self.assertEqual(2, result.exception.code)
+                root.assert_not_called()
+
+    def test_output_and_check_arguments_preserve_existing_forms(self) -> None:
+        with TemporaryDirectory() as directory:
+            root = Path(directory)
+            for output_arg in (review_inventory.DEFAULT_OUTPUT, "custom.csv", "nested/custom.csv"):
+                with self.subTest(output=output_arg), \
+                        patch.object(review_inventory, "repository_root", return_value=root), \
+                        patch.object(review_inventory, "inventory_content", return_value=([], "mechanical\n")) as content, \
+                        patch("sys.stdout", new_callable=io.StringIO):
+                    arguments = [] if output_arg == review_inventory.DEFAULT_OUTPUT else [output_arg]
+                    with patch.object(sys, "argv", ["inventory", *arguments]):
+                        self.assertEqual(0, review_inventory.main())
+                    output = root / output_arg
+                    self.assertEqual("mechanical\n", output.read_text(encoding="utf-8"))
+                    for check_args in (["--check", *arguments], [*arguments, "--check"]):
+                        with patch.object(sys, "argv", ["inventory", *check_args]):
+                            self.assertEqual(0, review_inventory.main())
+                    content.assert_called_with(root, output_arg)
+
+    def test_stale_check_does_not_rewrite_the_output(self) -> None:
+        with TemporaryDirectory() as directory:
+            root = Path(directory)
+            output = root / "custom.csv"
+            output.write_text("stale\n", encoding="utf-8")
+            with patch.object(sys, "argv", ["inventory", "--check", "custom.csv"]), \
+                    patch.object(review_inventory, "repository_root", return_value=root), \
+                    patch.object(review_inventory, "inventory_content", return_value=([], "new\n")), \
+                    patch("sys.stderr", new_callable=io.StringIO):
+                self.assertEqual(1, review_inventory.main())
+            self.assertEqual("stale\n", output.read_text(encoding="utf-8"))
+            self.assertFalse(output.with_suffix(".csv.tmp").exists())
+
+    def test_explicit_separator_allows_a_literal_option_like_output(self) -> None:
+        with TemporaryDirectory() as directory:
+            root = Path(directory)
+            with patch.object(sys, "argv", ["inventory", "--", "--literal.csv"]), \
+                    patch.object(review_inventory, "repository_root", return_value=root), \
+                    patch.object(review_inventory, "inventory_content", return_value=([], "mechanical\n")), \
+                    patch("sys.stdout", new_callable=io.StringIO):
+                self.assertEqual(0, review_inventory.main())
+            self.assertEqual("mechanical\n", (root / "--literal.csv").read_text(encoding="utf-8"))
+
     def test_mechanical_rows_never_attest_independent_review(self) -> None:
         commit = "a" * 40
         paths = [
