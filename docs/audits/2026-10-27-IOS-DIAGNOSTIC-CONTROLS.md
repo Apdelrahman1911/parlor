@@ -140,6 +140,18 @@ source unchanged. Transport332 receipts (three real-LAN skips), release690
 Python cases (one local environment skip), inventory and checksum-pinned
 ShellCheck/Actionlint passed. Later observer edits require new affected checks.
 
+The **same 14 actual-project copy guards** now join routine readiness discovery
+via `test_current_xcode_copy.py`, so Linux and the existing complete macOS CI
+gate enforce the real PBX fixture instead of leaving these regressions in an
+optional diagnostic suite. No fixture or assertion is duplicated or narrowed.
+Complete local readiness now passes **359 cases, three Linux platform skips**;
+14 of these are reused normal-copy cases, not additional unique behaviors.
+At `aeea5df9`, the preceding committed-source transport/release checks also
+passed (333 transport receipts / three real-LAN skips, 690 release Python cases
+/ one environment skip, pinned analyzers, exit0/private stop0/source unchanged).
+The routine-discovery addition and current report/inventory need new affected
+committed-source and hosted verification, plus fresh native control review.
+
 ### Fresh main public-navigation failure — not qualified
 
 [Run 40466265136](https://github.com/Apdelrahman1911/parlor/actions/runs/40466265136)

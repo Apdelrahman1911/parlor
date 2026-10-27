@@ -80,6 +80,10 @@ failure evidence without replay or slower taps. Local normal251/readiness345
 `9f172dc3` and `c66debaf` pass; newer edits still require affected checks,
 fresh hosted CI, independently reviewed source/control preflight and native
 execution. #258, #265 and #267 remain open; no Store publication.
+The same 14 actual-PBX copy guards now run inside the routine readiness suite:
+local **359 cases pass** (three Linux platform skips), including those reused
+normal-copy cases. The earlier strict transport/release check also passed at
+`aeea5df9`; the routine-discovery addition is not yet hosted-qualified.
 
 ## September checkpoint (historical)
 
