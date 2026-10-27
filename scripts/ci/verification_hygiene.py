@@ -22,7 +22,9 @@ from pathlib import Path, PurePosixPath
 
 APPLE_JOB_CYCLES = {
     "ios": ("apple-aggregate", "apple-ui"),
-    "ios-release": ("apple-aggregate", "apple-wrapper"),
+    "ios-release-simulator": ("apple-aggregate", "apple-wrapper"),
+    "ios-release-device": ("apple-aggregate",),
+    "ios-release-x64": ("apple-aggregate",),
 }
 APPLE_CYCLES = tuple(dict.fromkeys(cycle for cycles in APPLE_JOB_CYCLES.values() for cycle in cycles))
 

@@ -361,6 +361,11 @@ Configure `main`, `testing`, and `release` independently:
   - `iOS simulator runtime and Swift host`; and
   - `iOS release frameworks and Swift wrapper`.
   The opt-in `iOS strict protection diagnostic` is not a mandatory full check.
+  The unchanged Release check is a fail-closed join of three isolated Release lanes
+  (`ios-release-simulator`, `ios-release-device`, `ios-release-x64`); each must
+  succeed at the same source with retained evidence and successful cleanup.
+  These standard free macOS workers preserve every Release architecture without
+  changing the required check name or requiring new protection settings.
   An authorized owner must update external branch-protection settings for these
   two Apple check names; this source contract does not prove those settings were
   changed. Include newly added mandatory full jobs when updating protection;

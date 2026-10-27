@@ -271,7 +271,7 @@ class WorkflowContractTest(unittest.TestCase):
             self.assertNotEqual(changed, workflow)
             with self.subTest(original=original, replacement=replacement), self.assertRaisesRegex(RuntimeError, "verification scope"):
                 workflow_contract.verify_verification_scopes(changed)
-        for name in ("desktop-linux-arm64", "desktop-macos-x64", "desktop-windows-x64", "ios", "ios-release"):
+        for name in ("desktop-linux-arm64", "desktop-macos-x64", "desktop-windows-x64", "ios", "ios-release-simulator"):
             before, after = workflow.split("\n  " + name + ":\n", 1)
             changed = before + "\n  " + name + ":\n" + after.replace(
                 '["verification_hygiene.py", "cleanup"]', '["verification_hygiene.py", "cleanup"' + flag + ']', 1)
@@ -508,7 +508,7 @@ class WorkflowContractTest(unittest.TestCase):
         workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text(encoding="utf-8")
         original = "if: " + workflow_contract.FULL_VERIFICATION_FINALIZER
         for job_id, cycles in (("ios", ("apple-aggregate", "apple-ui")),
-                               ("ios-release", ("apple-aggregate", "apple-wrapper"))):
+                               ("ios-release-simulator", ("apple-aggregate", "apple-wrapper"))):
             job = workflow_contract.validation_job(workflow, job_id)
             for cycle in cycles:
                 name = f"Stop Gradle after {cycle} and retire owned Apple resources"
@@ -525,16 +525,16 @@ class WorkflowContractTest(unittest.TestCase):
         workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text()
         self.assertEqual(re.findall(r"(?m)^  ([a-z][a-z0-9-]+):$", workflow.split("\njobs:\n", 1)[1]), [
             "desktop-android", "desktop-linux-arm64", "desktop-macos-x64", "desktop-windows-x64",
-            "ios", "ios-release", "ios-protection-probe"])
+            "ios", "ios-release-simulator", "ios-release-device", "ios-release-x64", "ios-release", "ios-protection-probe"])
         workflow_contract.verify_validation(workflow)
         for original, replacement in (
-            ("\n  ios-release:\n", "\n  unreviewed-release:\n"),
-            ("\n  ios-release:\n", "\n  Unreviewed_Job:\n    runs-on: ubuntu-24.04\n  ios-release:\n"),
+            ("\n  ios-release-simulator:\n", "\n  unreviewed-release:\n"),
+            ("\n  ios-release-simulator:\n", "\n  Unreviewed_Job:\n    runs-on: ubuntu-24.04\n  ios-release-simulator:\n"),
             ("name: iOS simulator runtime and Swift host", "name: iOS tests, release frameworks, and Swift wrapper"),
             ("name: iOS release frameworks and Swift wrapper", "name: Optional release linkage"),
-            ("\n  ios-release:\n    if: " + workflow_contract.FULL_VERIFICATION_SCOPE,
-             "\n  ios-release:\n    if: " + workflow_contract.PROTECTION_PROBE_SCOPE),
-            ("\n  ios-release:\n", "\n  ios-release:\n    needs: ios\n"),
+            ("\n  ios-release-simulator:\n    if: " + workflow_contract.FULL_VERIFICATION_SCOPE,
+             "\n  ios-release-simulator:\n    if: " + workflow_contract.PROTECTION_PROBE_SCOPE),
+            ("\n  ios-release-simulator:\n", "\n  ios-release-simulator:\n    needs: ios\n"),
             ("\n  ios:\n", "\n  ios:\n    strategy:\n      matrix:\n        arch: [arm64, x64]\n"),
         ):
             changed = workflow.replace(original, replacement, 1)
@@ -544,7 +544,7 @@ class WorkflowContractTest(unittest.TestCase):
 
     def test_apple_release_has_exact_bounded_budget_for_serial_six_game_linkage(self) -> None:
         workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text()
-        job = workflow_contract.validation_job(workflow, "ios-release")
+        job = workflow_contract.validation_job(workflow, "ios-release-simulator")
         header = job.split("\n    steps:\n", 1)[0]
         self.assertEqual(re.findall(r"(?m)^    timeout-minutes: (.*)$", header), ["180"])
         workflow_contract.verify_validation(workflow)
@@ -559,7 +559,7 @@ class WorkflowContractTest(unittest.TestCase):
         workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text()
         for job_id, task, wrong_task in (
             ("ios", "productionIosSimulatorRuntimeTests", "productionAppleCheck"),
-            ("ios-release", "productionAppleCheck", ":composeApp:linkReleaseFrameworkIosArm64"),
+            ("ios-release-simulator", "productionAppleStaticAnalysis", ":composeApp:linkReleaseFrameworkIosArm64"),
         ):
             job = workflow_contract.validation_job(workflow, job_id)
             original = "./gradlew " + task + " --dependency-verification=strict --no-daemon --stacktrace --console=plain"
@@ -614,7 +614,7 @@ class WorkflowContractTest(unittest.TestCase):
 
     def test_each_apple_job_requires_its_own_exact_source_and_toolchain_guard_body(self) -> None:
         workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text()
-        for job_id in ("ios", "ios-release"):
+        for job_id in ("ios", "ios-release-simulator"):
             job = workflow_contract.validation_job(workflow, job_id)
             block = workflow_contract.validation_step(job, "Record Xcode toolchain and exact source")
             for original, replacement in (
@@ -636,7 +636,7 @@ class WorkflowContractTest(unittest.TestCase):
 
     def test_each_apple_job_requires_its_own_checkout_jdk_and_common_cleanup_commands(self) -> None:
         workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text()
-        for job_id in ("ios", "ios-release"):
+        for job_id in ("ios", "ios-release-simulator"):
             job = workflow_contract.validation_job(workflow, job_id)
             for name, original, replacement in (
                 ("Check out source", "persist-credentials: false", "persist-credentials: true"),
@@ -656,7 +656,7 @@ class WorkflowContractTest(unittest.TestCase):
 
     def test_each_apple_cleanup_binds_only_its_two_actual_cycles(self) -> None:
         workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text()
-        for job_id, cycle, other in (("ios", "apple-ui", "apple-wrapper"), ("ios-release", "apple-wrapper", "apple-ui")):
+        for job_id, cycle, other in (("ios", "apple-ui", "apple-wrapper"), ("ios-release-simulator", "apple-wrapper", "apple-ui")):
             job = workflow_contract.validation_job(workflow, job_id)
             block = workflow_contract.validation_step(job, "Clean only attested verification outputs")
             for original, replacement in (
@@ -677,7 +677,7 @@ class WorkflowContractTest(unittest.TestCase):
 
     def test_split_apple_evidence_names_reports_and_cleanup_paths_are_job_bound(self) -> None:
         workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text()
-        for job_id, kind in (("ios", "runtime"), ("ios-release", "release")):
+        for job_id, kind in (("ios", "runtime"), ("ios-release-simulator", "release")):
             job = workflow_contract.validation_job(workflow, job_id)
             for name, original, replacement in (
                 (f"Upload Apple {kind} verification evidence", f"name: ios-{kind}-verification", "name: ios-verification"),
@@ -705,7 +705,7 @@ class WorkflowContractTest(unittest.TestCase):
             self.assertNotEqual(changed, workflow)
             with self.subTest(original=original), self.assertRaisesRegex(RuntimeError, "verification scope"):
                 workflow_contract.verify_verification_scopes(changed)
-        for job_id in ("desktop-android", "desktop-linux-arm64", "desktop-macos-x64", "desktop-windows-x64", "ios", "ios-release"):
+        for job_id in ("desktop-android", "desktop-linux-arm64", "desktop-macos-x64", "desktop-windows-x64", "ios", "ios-release-simulator"):
             job = workflow_contract.validation_job(workflow, job_id)
             changed_job = re.sub(r"(?m)^    if: (.*)$", r"    if: \1 || inputs.verification_scope == 'ios-protection-probe'", job)
             changed = workflow.replace(job, changed_job, 1)
@@ -839,7 +839,7 @@ class WorkflowContractTest(unittest.TestCase):
         self.assertEqual(workflow.count("protection-host-only"), 4)  # one choice, three closed arms
         self.assertEqual(workflow.count("PARLOR_PROTECTION_SELECTION:"), 1)
         self.assertEqual(workflow.count("PARLOR_NATIVE_SELECTION:"), 3)
-        for job_id in ("desktop-android", "desktop-linux-arm64", "desktop-macos-x64", "desktop-windows-x64", "ios", "ios-release"):
+        for job_id in ("desktop-android", "desktop-linux-arm64", "desktop-macos-x64", "desktop-windows-x64", "ios", "ios-release-simulator"):
             with self.subTest(job=job_id):
                 block = workflow_contract.validation_job(workflow, job_id)
                 self.assertNotIn("protection-host-only", block)

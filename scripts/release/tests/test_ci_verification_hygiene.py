@@ -690,11 +690,17 @@ class VerificationWorkflowHygieneTest(unittest.TestCase):
         import re
         workflow = (ROOT / ".github/workflows/production-verification.yml").read_text()
         jobs = re.split(r"(?m)^  (?=[a-z][a-z0-9-]*:\n)", workflow.split("jobs:\n", 1)[1])[1:]
-        self.assertEqual(len(jobs), 7)
+        self.assertEqual(len(jobs), 10)
         # The focused protection diagnostic has its own closed native cleanup.
-        jobs = [job for job in jobs if not job.startswith("ios-protection-probe:\n")]
+        aggregate = next(job for job in jobs if job.startswith("ios-release:\n"))
+        self.assertIn("needs: [ios-release-simulator, ios-release-device, ios-release-x64]", aggregate)
+        self.assertIn("scripts.ci.apple_release_gate aggregate", aggregate)
+        self.assertIn("if-no-files-found: error", aggregate)
+        self.assertNotIn("./gradlew", aggregate)
+        jobs = [job for job in jobs if not job.startswith(("ios-protection-probe:\n", "ios-release:\n"))]
         expected_stops = {"desktop-android": 2, "desktop-linux-arm64": 1, "desktop-macos-x64": 1,
-                          "desktop-windows-x64": 1, "ios": 2, "ios-release": 2}
+                          "desktop-windows-x64": 1, "ios": 2, "ios-release-simulator": 2,
+                          "ios-release-device": 1, "ios-release-x64": 1}
         self.assertEqual({job.split(":\n", 1)[0] for job in jobs}, set(expected_stops))
         for job in jobs:
             name = job.split(":\n", 1)[0]
@@ -703,7 +709,7 @@ class VerificationWorkflowHygieneTest(unittest.TestCase):
                 stop_command = ('scripts.ci.apple_verification_hygiene finish ' if name in hygiene.APPLE_JOB_CYCLES else
                                 '"verification_hygiene.py", "stop",')
                 self.assertEqual(job.count(stop_command), expected_stops[name])
-                report = "**/build/reports/detekt/" if name == "ios-release" else "**/build/test-results/**/*.xml"
+                report = "**/build/reports/detekt/" if name.startswith("ios-release-") else "**/build/test-results/**/*.xml"
                 self.assertIn(report, job)
                 self.assertEqual(job.count("id: verification_artifact"), 1)
                 self.assertEqual(job.count("id: verification_ownership"), 1)

@@ -96,14 +96,15 @@ def admit(*, scope=SCOPE):
     inputs = json.loads(raw)
     allowed = {"verification_scope", "native_selection", "frozen_source_sha", "approved_probe_control_sha256",
                "preflight_run_id", "preflight_run_attempt", "preflight_artifact_id", "preflight_artifact_sha256",
-               "approved_l08_control_sha256", "approved_normal_control_sha256"}
+               "approved_l08_control_sha256", "approved_normal_control_sha256", "apple_release_runner"}
     require(isinstance(inputs, dict) and set(inputs) <= allowed and all(type(v) is str for v in inputs.values()),
             "invalid-probe-inputs")
     commit = inputs.get("frozen_source_sha", "")
     require(inputs.get("verification_scope") == scope and re.fullmatch(r"[0-9a-f]{40}", commit) and
             commit == env.get("GITHUB_SHA") == env.get("GITHUB_WORKFLOW_SHA"), "unbound-probe-source")
-    require(inputs.get("native_selection", "") in ("", "paired") and not any(inputs.get(key) for key in
-            allowed - {"verification_scope", "native_selection", "frozen_source_sha", "approved_probe_control_sha256"}),
+    require(inputs.get("native_selection", "") in ("", "paired") and
+            inputs.get("apple_release_runner", "") in ("", "arm64") and not any(inputs.get(key) for key in
+            allowed - {"verification_scope", "native_selection", "frozen_source_sha", "approved_probe_control_sha256", "apple_release_runner"}),
             "unrelated-probe-input")
     source = hygiene.source_identity(root)
     require(source["head"] == commit and hygiene.git(root, "branch", "--show-current").strip() == BRANCH and

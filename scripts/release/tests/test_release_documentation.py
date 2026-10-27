@@ -23,7 +23,7 @@ class ReleaseDocumentationTest(unittest.TestCase):
             "ios",
             "ios-release",
         )
-        self.assertCountEqual(job_ids, (*full_job_ids, "ios-protection-probe"))
+        self.assertCountEqual(job_ids, (*full_job_ids, "ios-release-simulator", "ios-release-device", "ios-release-x64", "ios-protection-probe"))
         names_by_id = dict(zip(job_ids, job_names))
 
         documentation = (root / "docs/RELEASE_AUTOMATION.md").read_text(encoding="utf-8")
@@ -34,6 +34,9 @@ class ReleaseDocumentationTest(unittest.TestCase):
         self.assertIn("require all six mandatory full **Production verification** jobs", instructions)
         required_names = re.findall(r"(?m)^  - `([^`]+)`", instructions)
         self.assertCountEqual(required_names, [names_by_id[job_id] for job_id in full_job_ids])
+        self.assertIn("three isolated Release lanes", instructions)
+        aggregate = jobs.split("  ios-release:\n", 1)[1].split("  ios-protection-probe:\n", 1)[0]
+        self.assertIn("needs: [ios-release-simulator, ios-release-device, ios-release-x64]", aggregate)
         self.assertIn(
             f"The opt-in `{names_by_id['ios-protection-probe']}` is not a mandatory full check.",
             instructions,
