@@ -1,4 +1,4 @@
-"""Read/stop attested Xcode workers on the isolated macOS ARM64 CI host.
+"""Read/stop attested Xcode workers on reviewed 64-bit macOS CI hosts.
 
 The process identity/audit-token ABI is the reviewed campaign implementation,
 reduced to the operations needed here. No PID/PGID kill fallback, process launch,
@@ -44,6 +44,36 @@ class ProcBsdInfo(ctypes.Structure):
     ] + [("nice", ctypes.c_int32), ("start_sec", ctypes.c_uint64), ("start_usec", ctypes.c_uint64)]
 
 
+def validate_host_abi() -> dict:
+    """Validate XNU's fixed-width BSD/audit ABI before loading native libraries.
+
+    Neither architecture admission nor layout checks establish permissions:
+    construction still requires an actual self-identity/audit-token capability.
+    """
+    architecture = platform.machine()
+    if platform.system() != "Darwin" or architecture not in {"arm64", "x86_64"}:
+        raise RuntimeError("Native cleanup requires a reviewed ARM64 or x86_64 macOS host")
+    scalars = {"pointer": (ctypes.c_void_p, 8), "long": (ctypes.c_long, 8),
+               "size_t": (ctypes.c_size_t, 8), "int": (ctypes.c_int, 4),
+               "uint32": (ctypes.c_uint32, 4), "uint64": (ctypes.c_uint64, 8)}
+    sizes = {name: ctypes.sizeof(kind) for name, (kind, _) in scalars.items()}
+    if any(sizes[name] != expected for name, (_, expected) in scalars.items()):
+        raise RuntimeError("Unexpected Darwin scalar or pointer ABI")
+    offsets = {name: index * 4 for index, name in enumerate((
+        "flags", "status", "xstatus", "pid", "ppid", "uid", "gid", "ruid",
+        "rgid", "svuid", "svgid", "reserved",
+    ))}
+    offsets.update(comm=48, name=64, nfiles=96, pgid=100, pjobc=104, tdev=108,
+                   tpgid=112, nice=116, start_sec=120, start_usec=128)
+    if (ctypes.sizeof(ProcBsdInfo) != 136 or ctypes.alignment(ProcBsdInfo) != 8 or
+            any(getattr(ProcBsdInfo, name).offset != offset for name, offset in offsets.items()) or
+            ARGC_BYTES != 4 or ctypes.sizeof(ctypes.c_uint32 * 8) != 32):
+        raise RuntimeError("Unexpected public Darwin BSD or audit-token ABI")
+    return {"system": "Darwin", "architecture": architecture, "scalar_bytes": sizes,
+            "bsd_info_bytes": 136, "bsd_field_offsets": offsets,
+            "audit_token_bytes": 32, "audit_token_count": 8}
+
+
 def argument_record_capacity(argument_bytes: int) -> int:
     if not ARGC_BYTES <= argument_bytes <= MAX_ARGUMENT_BYTES:
         raise RuntimeError("Unsupported bounded process-argument capacity")
@@ -79,10 +109,7 @@ def parse_tracking_id(data: bytes) -> str | None:
 
 class DarwinWorkerBackend:
     def __init__(self) -> None:
-        if platform.system() != "Darwin" or platform.machine() != "arm64":
-            raise RuntimeError("Native cleanup requires the reviewed macOS ARM64 CI host")
-        if ctypes.sizeof(ProcBsdInfo) != 136:
-            raise RuntimeError("Unexpected public Darwin process ABI")
+        self.host_abi = validate_host_abi()
         self.lib = ctypes.CDLL("/usr/lib/libSystem.B.dylib", use_errno=True)
         self.proc = ctypes.CDLL("/usr/lib/libproc.dylib", use_errno=True)
         self.self_port = ctypes.c_uint32.in_dll(self.lib, "mach_task_self_").value

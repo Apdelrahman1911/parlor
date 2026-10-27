@@ -19,6 +19,53 @@ import workflow_contract  # noqa: E402
 
 
 class WorkflowContractTest(unittest.TestCase):
+    def test_darwin_capability_requires_both_exact_free_hosts_and_native_receipt_control(self) -> None:
+        workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text()
+        job = workflow_contract.validation_job(workflow, "darwin-host-capability")
+        workflow_contract.verify_verification_scopes(workflow)
+        for original, replacement in (
+            ("runs-on: ${{ matrix.runner }}", "runs-on: macos-latest"),
+            ("runner: macos-15-intel", "runner: macos-15-large"),
+            ("runner: macos-15\n", "runner: self-hosted\n"),
+            ("architecture: x86_64", "architecture: arm64"),
+            ("fail-fast: false", "fail-fast: true"),
+            ("timeout-minutes: 5", "timeout-minutes: 180"),
+            ("timeout-minutes: 2", "timeout-minutes: 1"),
+            ("${{ inputs.frozen_source_sha }}", "${{ github.sha }}"),
+            ("${{ inputs.verification_scope }}", "darwin-host-capability"),
+            ("-m scripts.ci.darwin_host_capability", "-c 'print(1)'"),
+            ("-m scripts.ci.darwin_host_capability", "-m scripts.ci.darwin_host_capability || true"),
+            ("if: always()", "if: success()"),
+            ("if-no-files-found: error", "if-no-files-found: warn"),
+            ("${{ runner.temp }}/parlor-darwin-capability-", "build/parlor-darwin-capability-"),
+            ("persist-credentials: false", "persist-credentials: true"),
+        ):
+            changed = workflow.replace(job, job.replace(original, replacement, 1), 1)
+            self.assertNotEqual(changed, workflow)
+            with self.subTest(original=original), self.assertRaisesRegex(RuntimeError, "verification scope"):
+                workflow_contract.verify_verification_scopes(changed)
+
+    def test_darwin_capability_cannot_run_in_full_or_disable_any_required_lane(self) -> None:
+        workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text()
+        for original, replacement in (
+            ("default: full", "default: darwin-host-capability"),
+            (", darwin-host-capability]", "]"),
+            ("inputs.verification_scope == 'darwin-host-capability'", "inputs.verification_scope == 'full'"),
+            (" && inputs.verification_scope != 'darwin-host-capability'", ""),
+        ):
+            changed = workflow.replace(original, replacement, 1)
+            self.assertNotEqual(changed, workflow)
+            with self.subTest(original=original), self.assertRaisesRegex(RuntimeError, "verification scope"):
+                workflow_contract.verify_verification_scopes(changed)
+        for name in ("desktop-android", "desktop-linux-arm64", "desktop-macos-x64", "desktop-windows-x64",
+                     "ios", "ios-release-simulator", "ios-release-device", "ios-release-x64", "ios-release"):
+            job = workflow_contract.validation_job(workflow, name)
+            changed_job = re.sub(r"(?m)^    if: (.*)$", r"    if: \1 || inputs.verification_scope == 'darwin-host-capability'", job)
+            changed = workflow.replace(job, changed_job, 1)
+            self.assertNotEqual(changed, workflow)
+            with self.subTest(job=name), self.assertRaisesRegex(RuntimeError, "verification scope"):
+                workflow_contract.verify_verification_scopes(changed)
+
     def test_only_explicit_protection_dispatch_has_separate_concurrency(self) -> None:
         workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text(encoding="utf-8")
         self.assertEqual(re.findall(r"(?m)^[ \t]*concurrency:", workflow), ["concurrency:"])
@@ -35,8 +82,8 @@ class WorkflowContractTest(unittest.TestCase):
         workflow_contract.verify_verification_scopes(workflow)
         for original, replacement in (
             ("default: full", "default: windows-only"),
-            ("[full, native-preflight, native-evidence, native-process-probe, windows-only, linux-process-probe, android-cleanup-only, ios-protection-probe]",
-             "[full, native-preflight, native-evidence, native-process-probe, linux-process-probe, android-cleanup-only, ios-protection-probe]"),
+            ("[full, native-preflight, native-evidence, native-process-probe, windows-only, linux-process-probe, android-cleanup-only, ios-protection-probe, darwin-host-capability]",
+             "[full, native-preflight, native-evidence, native-process-probe, linux-process-probe, android-cleanup-only, ios-protection-probe, darwin-host-capability]"),
             ("if: " + workflow_contract.WINDOWS_VERIFICATION_SCOPE, "if: " + workflow_contract.FULL_VERIFICATION_SCOPE),
             ("if: " + workflow_contract.IOS_VERIFICATION_SCOPE, "if: true"),
             ("    if: " + workflow_contract.FULL_VERIFICATION_SCOPE + "\n",
@@ -178,7 +225,7 @@ class WorkflowContractTest(unittest.TestCase):
         workflow_contract.verify_verification_scopes(workflow)
         for original, replacement in (
             ("default: full", "default: native-preflight"),
-            ("options: [full, native-preflight, native-evidence, native-process-probe, windows-only, linux-process-probe, android-cleanup-only, ios-protection-probe]", "options: [full, skip]"),
+            ("options: [full, native-preflight, native-evidence, native-process-probe, windows-only, linux-process-probe, android-cleanup-only, ios-protection-probe, darwin-host-capability]", "options: [full, skip]"),
             ("  desktop-linux-arm64:\n", "  unreviewed-eighth-job:\n    runs-on: ubuntu-latest\n  desktop-linux-arm64:\n"),
             ("    if: " + workflow_contract.FULL_VERIFICATION_SCOPE, "    if: false"),
             ("scripts/ci/native_continuation.py validate-scope", "true"),
@@ -521,11 +568,12 @@ class WorkflowContractTest(unittest.TestCase):
                     with self.subTest(job=job_id, name=name, replacement=replacement), self.assertRaises(RuntimeError):
                         workflow_contract.verify_validation(broken)
 
-    def test_split_apple_jobs_are_six_full_jobs_plus_one_opt_in_probe(self) -> None:
+    def test_split_apple_jobs_preserve_full_lanes_and_only_two_opt_in_probes(self) -> None:
         workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text()
         self.assertEqual(re.findall(r"(?m)^  ([a-z][a-z0-9-]+):$", workflow.split("\njobs:\n", 1)[1]), [
             "desktop-android", "desktop-linux-arm64", "desktop-macos-x64", "desktop-windows-x64",
-            "ios", "ios-release-simulator", "ios-release-device", "ios-release-x64", "ios-release", "ios-protection-probe"])
+            "ios", "ios-release-simulator", "ios-release-device", "ios-release-x64", "ios-release", "ios-protection-probe",
+            "darwin-host-capability"])
         workflow_contract.verify_validation(workflow)
         for original, replacement in (
             ("\n  ios-release-simulator:\n", "\n  unreviewed-release:\n"),
@@ -697,7 +745,7 @@ class WorkflowContractTest(unittest.TestCase):
         workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text()
         for original, replacement in (
             ("default: full", "default: ios-protection-probe"),
-            (", ios-protection-probe]", "]"),
+            (", ios-protection-probe,", ","),
             ("    if: " + workflow_contract.PROTECTION_PROBE_SCOPE, "    if: " + workflow_contract.FULL_VERIFICATION_SCOPE),
             (" && inputs.verification_scope != 'ios-protection-probe'", ""),
         ):

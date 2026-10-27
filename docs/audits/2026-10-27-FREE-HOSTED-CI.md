@@ -145,3 +145,51 @@ evidence/cleanup gates rather than masking uploads or replaying application acti
 
 These are compilation/CI benchmarks, not physical iOS gameplay, memory, battery,
 thermal, data-protection or Store signing/release qualification.
+
+### Qualified ARM64 sample40532378656
+
+[Run40532378656](https://github.com/Apdelrahman1911/parlor/actions/runs/40532378656)
+passed at source `0cd9a9dc1c57e76cafe0d109659888cdd53f9095`, tree
+`862062c8cdb868f43b9a40ac235a2ebf5dd9bb5d`. Independent read-only qualification
+at16:52:25UTC checked all eight producer lanes, the original required Release
+join, exact checkout/tree, retained uploads and actual native/output retirement.
+All672 current KMP Simulator cases and all16 current Swift/container/UI methods
+passed. This includes the invalid-geometry regression and English/Arabic game
+journeys; it does not establish the original intermittent shipping-input cause
+in #267. The opt-in strict protection diagnostic was skipped, not certified.
+
+| Measurement | Minutes |
+| --- | ---: |
+| Complete workflow, including queueing | 75.88 |
+| Simulator Release/Swift lane | 54.82 |
+| Its queue offset from dispatch | 20.57 |
+| Complete Apple static analysis | 2.87 |
+| Normal optimized Kotlin/Swift Release wrapper | 50.28 |
+| Device Release lane / optimized link | 54.32 / 53.20 |
+| Simulator x64 Release lane / optimized link | 48.82 / 47.87 |
+
+Relative to the171.48-minute baseline **Release job**, the54.82-minute
+simulator Release job is approximately68% shorter. This is one qualified
+sample, not a whole-workflow68% speedup, statistical/warm-cache distribution,
+or mobile-runtime measurement. No Intel winner or merge is implied.
+
+### Intel sample40545185630 — rejected before Release compilation
+
+[Run40545185630](https://github.com/Apdelrahman1911/parlor/actions/runs/40545185630)
+uses the identical source/tree. All three Intel Release jobs reject the native
+ownership preparation because `DarwinWorkerBackend` explicitly allows only
+ARM64 hosts. They do not execute the optimized links. The cleanup and required
+join correctly retain/reject the failures: these short jobs are **not** Intel
+speed measurements or evidence that standard Intel runners are unavailable.
+
+The independent ARM64 runtime lane also fails before tests because the Gradle
+wrapper cannot resolve `services.gradle.org` (`UnknownHostException`); its stop
+attempt encounters the same bootstrap failure. No application runtime was
+executed in that lane. This is separate from Intel admission; neither failure
+is masked by blind retries, an alternative distribution or weaker cleanup.
+
+[The guarded host-ABI port and supplemental native capability control](2026-10-27-DARWIN-HOST-ABI.md)
+must qualify on both standard hosts before another full comparison. Keep ARM64
+as the default meanwhile; rerun all affected full checks at the new frozen
+source before selecting/merging. Retain failed samples, including missing
+artifacts and unresolved DNS evidence, rather than relabeling them successful.

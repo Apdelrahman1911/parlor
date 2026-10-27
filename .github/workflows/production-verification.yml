@@ -17,7 +17,7 @@ on:
         description: Full qualification (default), native continuation, probes, or focused Windows/Android follow-up
         type: choice
         default: full
-        options: [full, native-preflight, native-evidence, native-process-probe, windows-only, linux-process-probe, android-cleanup-only, ios-protection-probe]
+        options: [full, native-preflight, native-evidence, native-process-probe, windows-only, linux-process-probe, android-cleanup-only, ios-protection-probe, darwin-host-capability]
       apple_release_runner:
         description: Free standard Apple Release runner for repeatable benchmarks (never a larger runner)
         type: choice
@@ -670,7 +670,7 @@ jobs:
             ~/.gradle/wrapper/dists
           key: ${{ steps.dependency_cache.outputs.cache-primary-key }}
   ios:
-    if: github.event_name != 'workflow_dispatch' || (inputs.verification_scope != 'windows-only' && inputs.verification_scope != 'linux-process-probe' && inputs.verification_scope != 'android-cleanup-only' && inputs.verification_scope != 'ios-protection-probe')
+    if: github.event_name != 'workflow_dispatch' || (inputs.verification_scope != 'windows-only' && inputs.verification_scope != 'linux-process-probe' && inputs.verification_scope != 'android-cleanup-only' && inputs.verification_scope != 'ios-protection-probe' && inputs.verification_scope != 'darwin-host-capability')
     name: iOS simulator runtime and Swift host
     runs-on: macos-15
     timeout-minutes: ${{ inputs.verification_scope == 'native-process-probe' && 10 || inputs.verification_scope == 'native-evidence' && inputs.native_selection == 'settings-sheet-only' && 40 || inputs.verification_scope == 'native-evidence' && inputs.native_selection == 'os-recovery-only' && 120 || inputs.verification_scope == 'native-evidence' && inputs.native_selection == 'protection-application-only' && 90 || inputs.verification_scope == 'native-evidence' && 240 || 120 }}
@@ -1689,3 +1689,38 @@ jobs:
               exit 64
               ;;
           esac
+
+  darwin-host-capability:
+    if: github.event_name == 'workflow_dispatch' && inputs.verification_scope == 'darwin-host-capability'
+    name: Darwin native host capability (${{ matrix.architecture }})
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 5
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: macos-15
+            architecture: arm64
+          - runner: macos-15-intel
+            architecture: x86_64
+    env:
+      PARLOR_DISPATCH_SCOPE: ${{ inputs.verification_scope }}
+      PARLOR_FROZEN_SOURCE_SHA: ${{ inputs.frozen_source_sha }}
+      PARLOR_EXPECTED_ARCHITECTURE: ${{ matrix.architecture }}
+    steps:
+      - name: Check out exact capability source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+      - name: Verify real Darwin identity tracking and audit-token signal
+        timeout-minutes: 2
+        run: /usr/bin/python3 -B -m scripts.ci.darwin_host_capability
+      - name: Preserve native capability receipt
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: darwin-host-capability-${{ github.run_id }}-${{ github.run_attempt }}-${{ matrix.architecture }}
+          if-no-files-found: error
+          retention-days: 14
+          path: ${{ runner.temp }}/parlor-darwin-capability-${{ github.run_id }}-${{ github.run_attempt }}-${{ matrix.architecture }}.json

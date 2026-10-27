@@ -46,7 +46,8 @@ LINUX_PREREQUISITE_SCOPE = ("github.event_name == 'workflow_dispatch' && "
 IOS_VERIFICATION_SCOPE = ("github.event_name != 'workflow_dispatch' || "
                           "(inputs.verification_scope != 'windows-only' && inputs.verification_scope != 'linux-process-probe'"
                           " && inputs.verification_scope != 'android-cleanup-only'"
-                          " && inputs.verification_scope != 'ios-protection-probe')")
+                          " && inputs.verification_scope != 'ios-protection-probe'"
+                          " && inputs.verification_scope != 'darwin-host-capability')")
 NATIVE_VERIFICATION_SCOPE = ("github.event_name == 'workflow_dispatch' && "
                              "(inputs.verification_scope == 'native-preflight' || inputs.verification_scope == 'native-evidence')")
 PROCESS_PROBE_SCOPE = "github.event_name == 'workflow_dispatch' && inputs.verification_scope == 'native-process-probe'"
@@ -62,6 +63,7 @@ VERIFICATION_JOBS = {
     "ios-release-x64": "iOS Release simulator x64",
     "ios-release": "iOS release frameworks and Swift wrapper",
     "ios-protection-probe": "iOS strict protection diagnostic",
+    "darwin-host-capability": "Darwin native host capability (${{ matrix.architecture }})",
 }
 
 
@@ -737,6 +739,47 @@ def verify_free_ci_dependency_cache(text: str) -> None:
         fail("verification scope Apple benchmarking permits only two standard free runner families")
 
 
+DARWIN_CAPABILITY_JOB = """    if: github.event_name == 'workflow_dispatch' && inputs.verification_scope == 'darwin-host-capability'
+    name: Darwin native host capability (${{ matrix.architecture }})
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 5
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: macos-15
+            architecture: arm64
+          - runner: macos-15-intel
+            architecture: x86_64
+    env:
+      PARLOR_DISPATCH_SCOPE: ${{ inputs.verification_scope }}
+      PARLOR_FROZEN_SOURCE_SHA: ${{ inputs.frozen_source_sha }}
+      PARLOR_EXPECTED_ARCHITECTURE: ${{ matrix.architecture }}
+    steps:
+      - name: Check out exact capability source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+      - name: Verify real Darwin identity tracking and audit-token signal
+        timeout-minutes: 2
+        run: /usr/bin/python3 -B -m scripts.ci.darwin_host_capability
+      - name: Preserve native capability receipt
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: darwin-host-capability-${{ github.run_id }}-${{ github.run_attempt }}-${{ matrix.architecture }}
+          if-no-files-found: error
+          retention-days: 14
+          path: ${{ runner.temp }}/parlor-darwin-capability-${{ github.run_id }}-${{ github.run_attempt }}-${{ matrix.architecture }}.json
+"""
+
+
+def verify_darwin_host_capability(text: str) -> None:
+    if validation_job(text, "darwin-host-capability").strip() != DARWIN_CAPABILITY_JOB.strip():
+        fail("verification scope Darwin capability requires its exact free hosted matrix, explicit source/run context and bounded native receipt control")
+
+
 def verify_verification_scopes(text: str) -> None:
     """Only closed reviewed diagnostic/follow-up scopes bypass six mandatory full jobs."""
     jobs_text = text.split("\njobs:\n", 1)[-1]
@@ -788,7 +831,7 @@ def verify_verification_scopes(text: str) -> None:
             re.findall(r"(?m)^      - name: (.*)$", ios)[0] != clock_name or
             ios.count("PARLOR_NATIVE_JOB_CLOCK=") != 1):
         fail("focused native job clock must be fresh, source/run-bound, RAW kernel time before checkout and evidence-only")
-    for token in ("        default: full\n", "        options: [full, native-preflight, native-evidence, native-process-probe, windows-only, linux-process-probe, android-cleanup-only, ios-protection-probe]\n"):
+    for token in ("        default: full\n", "        options: [full, native-preflight, native-evidence, native-process-probe, windows-only, linux-process-probe, android-cleanup-only, ios-protection-probe, darwin-host-capability]\n"):
         if token not in text.split("\nconcurrency:", 1)[0]:
             fail("verification scope must default to full with only the reviewed native, Windows and Linux modes")
     selections = re.findall(r"(?m)^      native_selection:\n((?:        .*\n)+)", text.split("\nconcurrency:", 1)[0])
@@ -821,6 +864,7 @@ def verify_verification_scopes(text: str) -> None:
     verify_free_ci_dependency_cache(text)
     verify_current_verification_artifacts(text)
     verify_protection_probe(validation_job(text, "ios-protection-probe"))
+    verify_darwin_host_capability(text)
     focused_steps = ("Run focused native continuation", "Upload focused native evidence",
                      "Verify focused native cleanup and uploaded custody", "Upload native continuation cleanup receipt")
     for name in focused_steps:
