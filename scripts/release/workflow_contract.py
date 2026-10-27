@@ -166,16 +166,23 @@ def current_verification_artifact_paths(job: str) -> list[str]:
 
 def verify_current_verification_artifacts(text: str) -> None:
     uploads = {
-        "desktop-android": "Upload verification reports, mappings, and unsigned AAB",
-        "desktop-linux-arm64": "Upload Desktop verification descriptors",
-        "desktop-macos-x64": "Upload Desktop verification descriptors",
-        "desktop-windows-x64": "Upload Desktop verification descriptors",
-        "ios": "Upload Apple runtime verification evidence",
-        "ios-release": "Upload Apple release verification evidence",
+        "desktop-android": ("Upload verification reports, mappings, and unsigned AAB", "desktop-android-verification"),
+        "desktop-linux-arm64": ("Upload Desktop verification descriptors", "desktop-verification-${{ github.job }}"),
+        "desktop-macos-x64": ("Upload Desktop verification descriptors", "desktop-verification-${{ github.job }}"),
+        "desktop-windows-x64": ("Upload Desktop verification descriptors", "desktop-verification-${{ github.job }}"),
+        "ios": ("Upload Apple runtime verification evidence", "ios-runtime-verification"),
+        "ios-release": ("Upload Apple release verification evidence", "ios-release-verification"),
     }
-    for job, name in uploads.items():
+    for job, (name, artifact_name) in uploads.items():
         block = validation_step(validation_job(text, job), name)
-        if re.findall(r"(?m)^            (\S.*)$", block) != current_verification_artifact_paths(job):
+        condition = (ANDROID_RUNTIME_FINALIZER if job == "desktop-android" else
+                     FULL_VERIFICATION_FINALIZER if job.startswith("ios") else "always()")
+        if (re.findall(r"(?m)^        ([^\s:#][^\s:]*):(?: (.*))?$", block) != [
+                ("id", "verification_artifact"), ("if", condition),
+                ("uses", "actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1"), ("with", "")] or
+                re.findall(r"(?m)^          ([^\s:#][^\s:]*):(?: (.*))?$", block) != [
+                    ("name", artifact_name), ("if-no-files-found", "warn"), ("retention-days", "14"), ("path", "|")] or
+                re.findall(r"(?m)^            (\S.*)$", block) != current_verification_artifact_paths(job)):
             fail("current verification artifact must retain exact current reports/custody and only historical exclusions")
 
 

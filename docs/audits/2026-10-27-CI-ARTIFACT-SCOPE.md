@@ -35,8 +35,13 @@ redirected, duplicated, narrowed or additional paths/exclusions.
 
 ## Executed evidence and qualification boundary
 
-The baseline regression fails in all six lane subcases. After correction, seven
+The baseline regression fails in all six lane subcases. After correction, nine
 focused cases pass, including mutation loops and filesystem selection fixtures.
+The exact upload envelope also requires the original action/step identity,
+condition, artifact name, retention and options. Thirty duplicate/extra-option
+subcases expose a gap in the first path-only helper; they now reject. Existing
+Actionlint/Apple guards already reject duplicate YAML, so this is contract
+strengthening, not a demonstrated end-to-end CI bypass.
 The immutable upload Action's locked `@actions/glob`0.6.1 executed separately
 with its exact default options on public current/archive/future-module/external
 fixtures: all six selections passed, only historical members disappeared, and
@@ -51,3 +56,24 @@ current-head hosted source/artifact/cleanup records remain required before
 protected integration. Fresh hosted composition must confirm the reduction.
 #258 strict protection, #267 native input causality and physical/Store gates
 remain independent; no production release.
+
+## Local discovery measurements
+
+At clean source `92c7fe92`, four fresh Node processes per policy executed the
+exact Action glob options and asynchronous per-file `stat`, in alternating
+order on the same warmed Linux filesystem. Every new selection equals the
+baseline minus historical reports; search roots and external fixtures agree.
+
+| Median | Original | Exclusions |
+|---|---:|---:|
+| Selected files | 20,515 | 65 |
+| Discovery wall time | 9.483s | 7.203s |
+| User + system CPU | 8.440s | 7.063s |
+| Peak process RSS | 192,746 KiB | 178,280 KiB |
+
+The glob still traverses broad source trees: member reduction is not an equal
+CPU/time reduction. Thread observations stay7 before/11 after, not a measured
+peak. Heap-used deltas are not total allocations. These source/generated-output
+fixtures differ from the earlier hosted archive:65 is not a prediction of
+future native artifact size. This measures local discovery only, not ZIP
+compression/upload, hosted CI wall time, RPC, mobile hosts, battery or thermals.

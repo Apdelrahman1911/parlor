@@ -81,6 +81,39 @@ class CurrentVerificationArtifactTest(unittest.TestCase):
                 with self.subTest(job=job, token=token), self.assertRaisesRegex(RuntimeError, "current verification artifact"):
                     workflow_contract.verify_current_verification_artifacts(text.replace(block, changed, 1))
 
+    def test_duplicate_path_or_unreviewed_upload_options_are_rejected(self) -> None:
+        text = workflow()
+        for job in UPLOADS:
+            block = upload(text, job)
+            for token in ('          path: "**/build/**"',
+                          '          "path": "**/build/**"',
+                          '          <<: *unreviewed_options',
+                          '          include-hidden-files: true',
+                          '          compression-level: 0',
+                          '          retention-days: 1',
+                          '          if-no-files-found: ignore'):
+                changed = block.replace("          path: |\n", token + "\n          path: |\n", 1)
+                with self.subTest(job=job, token=token), self.assertRaisesRegex(RuntimeError, "current verification artifact"):
+                    workflow_contract.verify_current_verification_artifacts(text.replace(block, changed, 1))
+
+    def test_upload_identity_conditions_and_retention_cannot_change(self) -> None:
+        text = workflow()
+        for job in UPLOADS:
+            block = upload(text, job)
+            for original, replacement in (
+                ('        id: verification_artifact', '        id: unrelated_artifact'),
+                ('        if: ', '        if: false && '),
+                ('        uses: actions/upload-artifact@', '        uses: actions/checkout@'),
+                ('          retention-days: 14', '          retention-days: 1'),
+                ('          name: ', '          name: unbound-'),
+                ('          if-no-files-found: warn', '          if-no-files-found: ignore'),
+                ('        with:', '        env:\n          GH_TOKEN: ${{ github.token }}\n        with:'),
+            ):
+                changed = block.replace(original, replacement, 1)
+                self.assertNotEqual(changed, block)
+                with self.subTest(job=job, token=original), self.assertRaisesRegex(RuntimeError, "current verification artifact"):
+                    workflow_contract.verify_current_verification_artifacts(text.replace(block, changed, 1))
+
     def test_selection_keeps_current_and_future_modules_but_not_archived_reports(self) -> None:
         # Execute filesystem glob selection as a deterministic structural fixture.
         # Hosted @actions/glob execution is a separate platform receipt, not this model.
