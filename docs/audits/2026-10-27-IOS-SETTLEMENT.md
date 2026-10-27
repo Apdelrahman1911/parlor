@@ -86,3 +86,37 @@ Swift cases and complete English/Arabic public journeys **await hosted execution
 No native speedup, shipping touch fix, closed issue or merged qualification is
 claimed. Retain the failed CI sample; compare free runner profiles at the same
 new frozen source only after all affected gates pass (#270).
+
+## Corrected-source run40521388558: separate regression failure
+
+[Runtime job122249136475](https://github.com/Apdelrahman1911/parlor/actions/runs/40521388558/job/122249136475)
+executed `c02ad9e2fe1e5552dfb790fbb49e257cf8c4a6b9`, tree
+`b1546728321774bf6d1acc77e8cf252050ca7765`. All672 KMP cases, all six
+application journeys (including both additional-game languages), all four
+container cases and five frame-state methods passed. The remaining method,
+`testInvalidOrEmptyGeometryCannotSettleAndBreaksAdjacency`, failed at line462:
+the second observation of invalid geometry was incorrectly accepted.
+
+The guard only checked `isEmpty` and numeric finiteness. CoreGraphics'
+`CGRect.infinite` is a semantic sentinel with finite scalar coordinates and
+dimensions; it requires explicit [`isInfinite`](https://developer.apple.com/documentation/corefoundation/cgrect/isinfinite)
+rejection. The corrected guard rejects null/infinite/empty rectangles, checks
+raw origin/dimensions and maximum extents for finiteness, and requires strictly
+positive raw sizes. Accessors must not normalize negative dimensions into a
+valid control. The existing regression is retained and expanded with named
+NaN/negative/overflow boundaries; the native test must confirm these semantics.
+The10s waiter, exact adjacent equality, native hittability and single ordinary
+tap are unchanged. This is a **test-helper defect**, not a shipping navigation fix.
+
+Runtime artifact12745506440 SHA256
+`79690718b7b7fe148814be5c4bb48ac7e6e1e6155c217007c5c901ea4711b92b`
+and cleanup artifact12745995145 SHA256
+`dde7b4117c32280139100eebab7c76287646e6c52c19e6333d2b65bdce42042d`
+were independently downloaded and verified against API producer metadata.
+All16 source methods match their retained outcomes. Ownership, both native
+retirement cycles and output cleanup match this source while preserving
+`apple-ui.run_outcome=failure`. Job-log SHA256:
+`7bb791b416ec6ad7f881cb2de76923133c8f2476202c168f197d97143154bfb5`.
+One passing public-navigation sample does not resolve the original #267 lost
+tap or establish deterministic reliability. Fresh full native verification of
+the geometry correction remains required; neither failed run is qualified.

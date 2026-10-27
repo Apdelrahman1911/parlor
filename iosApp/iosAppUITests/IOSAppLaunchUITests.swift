@@ -407,8 +407,12 @@ private struct PublicControlFrames {
     private var previous: CGRect?
 
     mutating func observe(frame: CGRect?, enabled: Bool) -> Bool {
-        guard enabled, let frame, !frame.isEmpty,
-              [frame.minX, frame.minY, frame.width, frame.height].allSatisfy({ $0.isFinite }) else {
+        // CGRect.infinite is a semantic sentinel with finite scalar values.
+        // Also inspect raw dimensions: CGRect accessors standardize negative sizes.
+        guard enabled, let frame, !frame.isNull, !frame.isInfinite, !frame.isEmpty,
+              [frame.origin.x, frame.origin.y, frame.size.width, frame.size.height,
+               frame.maxX, frame.maxY].allSatisfy({ $0.isFinite }),
+              frame.size.width > 0, frame.size.height > 0 else {
             reset()
             return false
         }
@@ -453,15 +457,28 @@ final class PublicControlFramesTests: XCTestCase {
     }
 
     func testInvalidOrEmptyGeometryCannotSettleAndBreaksAdjacency() {
-        for invalid in [CGRect.zero, CGRect.null, CGRect.infinite,
-                        CGRect(x: CGFloat.nan, y: 279, width: 354, height: 101),
-                        CGRect(x: 24, y: 279, width: CGFloat.infinity, height: 101)] {
+        // Numeric finiteness is not enough to reject CoreGraphics' infinite sentinel.
+        XCTAssertTrue(CGRect.infinite.isInfinite)
+        XCTAssertTrue([CGRect.infinite.origin.x, CGRect.infinite.origin.y,
+                       CGRect.infinite.size.width, CGRect.infinite.size.height].allSatisfy({ $0.isFinite }))
+        let invalidFrames: [(String, CGRect)] = [
+            ("zero", .zero), ("null", .null), ("infinite sentinel", .infinite),
+            ("NaN x", CGRect(x: CGFloat.nan, y: 279, width: 354, height: 101)),
+            ("NaN y", CGRect(x: 24, y: CGFloat.nan, width: 354, height: 101)),
+            ("infinite width", CGRect(x: 24, y: 279, width: CGFloat.infinity, height: 101)),
+            ("infinite height", CGRect(x: 24, y: 279, width: 354, height: CGFloat.infinity)),
+            ("negative width", CGRect(x: 24, y: 279, width: -354, height: 101)),
+            ("negative height", CGRect(x: 24, y: 279, width: 354, height: -101)),
+            ("overflowing extent", CGRect(x: CGFloat.greatestFiniteMagnitude, y: 279,
+                                          width: CGFloat.greatestFiniteMagnitude, height: 101)),
+        ]
+        for (kind, invalid) in invalidFrames {
             var frames = PublicControlFrames()
             XCTAssertFalse(frames.observe(frame: resting, enabled: true))
-            XCTAssertFalse(frames.observe(frame: invalid, enabled: true))
-            XCTAssertFalse(frames.observe(frame: invalid, enabled: true))
-            XCTAssertFalse(frames.observe(frame: resting, enabled: true))
-            XCTAssertTrue(frames.observe(frame: resting, enabled: true))
+            XCTAssertFalse(frames.observe(frame: invalid, enabled: true), kind)
+            XCTAssertFalse(frames.observe(frame: invalid, enabled: true), kind)
+            XCTAssertFalse(frames.observe(frame: resting, enabled: true), "Adjacency after \(kind)")
+            XCTAssertTrue(frames.observe(frame: resting, enabled: true), "Recovery after \(kind)")
         }
     }
 

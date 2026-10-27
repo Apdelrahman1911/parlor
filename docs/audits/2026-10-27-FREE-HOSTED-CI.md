@@ -116,5 +116,32 @@ Swift helper compilation/execution awaits macOS; local source-contract tests do
 not substitute for it. All10 existing native/UI cases and six new frame-state
 cases remain required. **No speedup or fixed native-input root cause is certified.**
 
+### Corrected-source ARM64 sample40521388558 — not qualified
+
+[Run40521388558](https://github.com/Apdelrahman1911/parlor/actions/runs/40521388558)
+executed frozen `c02ad9e2` and failed. Device arm64 and simulator x64 optimized
+Release links **and their corrected architecture checks passed**. Common/Android,
+all three desktop lanes and all672 KMP Simulator cases passed. All10 original
+Swift/container/UI cases passed; one new invalid-geometry method failed because
+the sampler admitted the finite-valued `CGRect.infinite` sentinel. Its guard is
+corrected without removing the test; see the settlement report above.
+
+The simulator Release lane passed complete static analysis, optimized Kotlin
+framework/Swift compilation, binary and package inspection, and both native
+resource retirements. Its evidence upload and later cleanup-receipt upload
+failed separately with **`Failed to CreateArtifact ... ENOTFOUND`**. Only32
+current files were selected for upload. This is a runner-side DNS/request failure,
+not a compiler failure or evidence of a storage/billing quota. Endpoint identity
+and underlying DNS cause were not exposed. Output cleanup correctly refused to
+delete required evidence after the failed upload; the required join rejected
+the failed lane. No uploaded simulator Release custody exists for this attempt.
+
+The complete run is retained as a failed timing sample. No Intel comparison
+was dispatched: the observer stopped nonzero during transient log retrieval,
+and subsequent bounded read-only retrieval preserved the logs/runtime artifact.
+No benchmark winner, merge qualification or paid infrastructure is claimed.
+Rerun full verification at the corrected frozen source, preserving the missing
+evidence/cleanup gates rather than masking uploads or replaying application actions.
+
 These are compilation/CI benchmarks, not physical iOS gameplay, memory, battery,
 thermal, data-protection or Store signing/release qualification.

@@ -74,7 +74,10 @@ class ProductionVerificationWorkflowContractTest {
         val frameState = swift.substringAfter("private struct PublicControlFrames {")
             .substringBefore("final class PublicControlFramesTests")
         listOf("reset()", "return false", "previous = frame", "return previous == frame",
-            "!frame.isEmpty", "allSatisfy({ $0.isFinite })").forEach { assertContains(frameState, it) }
+            "!frame.isNull", "!frame.isInfinite", "!frame.isEmpty", "frame.origin.x", "frame.origin.y",
+            "frame.size.width", "frame.size.height", "frame.maxX", "frame.maxY",
+            "frame.size.width > 0", "frame.size.height > 0", "allSatisfy({ $0.isFinite })",
+        ).forEach { assertContains(frameState, it) }
         listOf(
             "testFirstFrameNeverSettlesButTheExactAdjacentFrameDoes",
             "testMotionIsNotRoundedIntoASettledFrame",
