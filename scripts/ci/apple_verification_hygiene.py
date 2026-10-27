@@ -1,6 +1,6 @@
 """Per-cycle Apple CI ownership: stop Gradle, owned simulator, and Xcode workers.
 
-Restricted to the closed isolated GitHub `ios` / `ios-release` job-cycle map.
+Restricted to the closed isolated GitHub Apple runtime/Release lane-cycle map.
 Never changes RUNNER_TRACKING_ID,
 signals a numeric PID/PGID, reuses a device profile, or removes build evidence.
 The final output cleaner separately requires these receipts and retained uploads.

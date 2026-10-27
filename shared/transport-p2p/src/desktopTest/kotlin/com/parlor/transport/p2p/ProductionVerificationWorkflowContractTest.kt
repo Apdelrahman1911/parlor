@@ -365,8 +365,8 @@ class ProductionVerificationWorkflowContractTest {
     @Test
     fun apple_jobs_run_kotlin_and_app_launch_tests_all_link_targets_and_unsigned_swift_release() {
         val workflow = read(".github/workflows/production-verification.yml")
-        val runtimeJob = workflow.substringAfter("\n  ios:\n").substringBefore("\n  ios-release:\n")
-        val releaseJob = workflow.substringAfter("\n  ios-release:\n").substringBefore("\n  ios-protection-probe:\n")
+        val runtimeJob = workflow.substringAfter("\n  ios:\n").substringBefore("\n  ios-release-simulator:\n")
+        val releaseJob = workflow.substringAfter("\n  ios-release-simulator:\n").substringBefore("\n  ios-release-device:\n")
         assertContains(
             releaseJob.substringBefore("\n    steps:\n"),
             "timeout-minutes: 180",
@@ -420,12 +420,12 @@ class ProductionVerificationWorkflowContractTest {
             message = "The runtime job must run every executable KMP simulator test",
         )
         val appleReleaseStep = releaseJob
-            .substringAfter("- name: Run complete Apple static analysis and release linkage gates")
+            .substringAfter("- name: Run complete Apple static analysis")
             .substringBefore("\n      - name:")
         assertContains(
             appleReleaseStep,
-            "./gradlew productionAppleCheck --dependency-verification=strict --no-daemon",
-            message = "The release job must run complete Apple analysis and all three serial release links",
+            "./gradlew productionAppleStaticAnalysis --dependency-verification=strict --no-daemon",
+            message = "The simulator lane retains complete Apple analysis; the required join retains all Release architectures",
         )
         assertFalse(
             "./gradlew allTests" in runtimeJob || "./gradlew allTests" in releaseJob,
@@ -596,12 +596,12 @@ class ProductionVerificationWorkflowContractTest {
     @Test
     fun split_apple_jobs_keep_independent_source_toolchain_cycles_and_evidence() {
         val workflow = read(".github/workflows/production-verification.yml")
-        val runtime = workflow.substringAfter("\n  ios:\n").substringBefore("\n  ios-release:\n")
-        val release = workflow.substringAfter("\n  ios-release:\n").substringBefore("\n  ios-protection-probe:\n")
+        val runtime = workflow.substringAfter("\n  ios:\n").substringBefore("\n  ios-release-simulator:\n")
+        val release = workflow.substringAfter("\n  ios-release-simulator:\n").substringBefore("\n  ios-release-device:\n")
         listOf(runtime to listOf("apple-aggregate", "apple-ui"), release to listOf("apple-aggregate", "apple-wrapper"))
             .forEach { (job, cycles) ->
                 val header = job.substringBefore("\n    steps:")
-                assertContains(header, "runs-on: macos-15")
+                assertContains(header, if (job == runtime) "runs-on: macos-15" else "runs-on: \${{ inputs.apple_release_runner == 'intel' && 'macos-15-intel' || 'macos-15' }}")
                 assertContains(header, "DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer")
                 assertFalse("needs:" in header || "strategy:" in header)
                 listOf(
@@ -639,7 +639,7 @@ class ProductionVerificationWorkflowContractTest {
         val workflow = read(".github/workflows/production-verification.yml")
         assertEquals(
             listOf("desktop-android", "desktop-linux-arm64", "desktop-macos-x64", "desktop-windows-x64",
-                "ios", "ios-release", "ios-protection-probe"),
+                "ios", "ios-release-simulator", "ios-release-device", "ios-release-x64", "ios-release", "ios-protection-probe"),
             Regex("(?m)^  ([a-z][a-z0-9-]+):$").findAll(workflow.substringAfter("\njobs:\n"))
                 .map { it.groupValues[1] }.toList(),
         )
@@ -657,7 +657,7 @@ class ProductionVerificationWorkflowContractTest {
     fun workflow_job_boundaries_are_preserved_for_lf_and_windows_crlf_checkouts() {
         val jobs = listOf(
             "desktop-android", "desktop-linux-arm64", "desktop-macos-x64", "desktop-windows-x64",
-            "ios", "ios-release", "ios-protection-probe",
+            "ios", "ios-release-simulator", "ios-release-device", "ios-release-x64", "ios-release", "ios-protection-probe",
         )
         val lf = "on:\n  push:\njobs:\n" + jobs.joinToString("") { job -> "  $job:\n    name: $job\n" }
         fun assertJobBoundaries(checkoutText: String) {
@@ -669,11 +669,11 @@ class ProductionVerificationWorkflowContractTest {
             )
             assertEquals(
                 "    name: ios",
-                workflow.substringAfter("\n  ios:\n").substringBefore("\n  ios-release:\n"),
+                workflow.substringAfter("\n  ios:\n").substringBefore("\n  ios-release-simulator:\n"),
             )
             assertEquals(
-                "    name: ios-release",
-                workflow.substringAfter("\n  ios-release:\n").substringBefore("\n  ios-protection-probe:\n"),
+                "    name: ios-release-simulator",
+                workflow.substringAfter("\n  ios-release-simulator:\n").substringBefore("\n  ios-release-device:\n"),
             )
             assertEquals(
                 "    name: ios-protection-probe\n",
@@ -684,7 +684,7 @@ class ProductionVerificationWorkflowContractTest {
             val checkoutText = lf.replace("\n", lineEnding)
             assertEquals(lf, normalizeContractText(checkoutText))
             assertJobBoundaries(checkoutText)
-            listOf("\njobs:\n", "\n  ios:\n", "\n  ios-release:\n", "\n  ios-protection-probe:\n")
+            listOf("\njobs:\n", "\n  ios:\n", "\n  ios-release-simulator:\n", "\n  ios-protection-probe:\n")
                 .forEach { marker ->
                     val missingBoundary = lf.replace(marker, "\n").replace("\n", lineEnding)
                     assertFailsWith<AssertionError> { assertJobBoundaries(missingBoundary) }

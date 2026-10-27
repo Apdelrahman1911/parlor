@@ -44,7 +44,7 @@ class LinuxProcessProbeTest(unittest.TestCase):
                 patch.object(probe.platform, "freedesktop_os_release", return_value=dict(ID="ubuntu", VERSION_ID="24.04")):
             for scope in (probe.SCOPE, probe.ANDROID_CLEANUP_SCOPE):
                 inputs = dict(verification_scope=scope, frozen_source_sha="a" * 40,
-                              approved_probe_control_sha256="d" * 64, native_selection="paired")
+                              approved_probe_control_sha256="d" * 64, native_selection="paired", apple_release_runner="arm64")
                 with patch.dict(os.environ, {**env, "PARLOR_LINUX_PROBE_INPUTS": json.dumps(inputs)}, clear=True):
                     proof = probe.admit(scope=scope)[4]
                     self.assertEqual((proof["verification_scope"], proof["android_sdk"]), (scope, self.sdk))
@@ -54,7 +54,7 @@ class LinuxProcessProbeTest(unittest.TestCase):
                         ({"RUNNER_ARCH": "ARM64"}, {}), ({}, {"verification_scope": "full"}),
                         ({}, {"verification_scope": other_scope}),
                         ({}, {"approved_probe_control_sha256": "e" * 64}), ({}, {"preflight_run_id": "123"}),
-                        ({}, {"native_selection": "l08-only"}), ({}, {"unreviewed": "input"})):
+                        ({}, {"apple_release_runner": "intel"}), ({}, {"apple_release_runner": "macos-large"}), ({}, {"native_selection": "l08-only"}), ({}, {"unreviewed": "input"})):
                     with self.subTest(scope=scope, change=change, input_change=input_change), \
                             patch.dict(os.environ, {**env, **change, "PARLOR_LINUX_PROBE_INPUTS": json.dumps({**inputs, **input_change})}, clear=True), \
                             self.assertRaises(RuntimeError):

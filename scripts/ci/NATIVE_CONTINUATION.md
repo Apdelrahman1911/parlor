@@ -6,7 +6,7 @@ include the separate opt-in protection diagnostic, skipped in full runs. The
 three existing focused native dispatch modes still run only the qualified `ios`
 job; they are not substitutes for final six-job qualification. Unknown dispatch
 scope fails validation. Full Apple runtime and Release qualification use
-independent `ios`/`ios-release` jobs, source bindings and two-cycle cleanup receipts;
+independent `ios`/`ios-release-simulator` jobs and the required three-lane Release join, source bindings and two-cycle cleanup receipts;
 see [the current release gates](../../docs/RELEASE_GATES.md).
 
 The separate `verification_scope=windows-only` follow-up runs just the unchanged

@@ -723,7 +723,7 @@ class AppleCycleAndOutputGateTest(unittest.TestCase):
         for change in ({"workers": {"result": "FAIL"}}, {"source": {**self.source, "head": "d" * 40}},
                        {"claim_sha256": "e" * 64}, {"simulator": {"result": "NOT_CREATED"}},
                        {"gradle_stop": {"exit_code": 1}}, {"result": "NOT_RUN"},
-                       {"task": {**self.task, "GITHUB_JOB": "ios-release" if self.JOB == "ios" else "ios"}}):
+                       {"task": {**self.task, "GITHUB_JOB": "ios-release-simulator" if self.JOB == "ios" else "ios"}}):
             path.write_text(json.dumps({**original, **change}))
             receipt = self.cleanup_outputs(outcomes)
             self.assertEqual(receipt["result"], "FAIL", change)
@@ -731,7 +731,7 @@ class AppleCycleAndOutputGateTest(unittest.TestCase):
             self.assertEqual((self.root / "build/test.xml").read_text(), "preserve required evidence")
 
     def test_wrong_jobs_cycles_and_simulator_commands_never_admit_native_resources(self):
-        cases = (("ios", "apple-wrapper"), ("ios-release", "apple-ui"), (self.JOB, "unknown-cycle"),
+        cases = (("ios", "apple-wrapper"), ("ios-release-simulator", "apple-ui"), (self.JOB, "unknown-cycle"),
                  ("ios-other", "apple-aggregate"), ("ios-protection-probe", "apple-aggregate"), ("desktop-macos-x64", "apple-aggregate"))
         for job, cycle in cases:
             task = {**TASK, "GITHUB_JOB": job}
@@ -758,7 +758,7 @@ class AppleCycleAndOutputGateTest(unittest.TestCase):
                     self.assertIn("Unknown Apple verification job", result["errors"][0]["error"])
                     self.assertEqual(result["removed"], [])
         for job, cycle in (("ios", "apple-aggregate"), ("ios", "apple-wrapper"),
-                           ("ios-release", "apple-aggregate"), ("ios-release", "apple-wrapper"), ("ios-release", "apple-ui")):
+                           ("ios-release-simulator", "apple-aggregate"), ("ios-release-simulator", "apple-wrapper"), ("ios-release-simulator", "apple-ui")):
             with self.subTest(create_job=job, cycle=cycle), \
                     patch.object(hygiene, "context", return_value=(self.root, self.prefix, {**TASK, "GITHUB_JOB": job})), \
                     patch.object(sys, "argv", ["apple_verification_hygiene.py", "create-simulator", cycle]), \
@@ -791,7 +791,7 @@ class AppleCycleAndOutputGateTest(unittest.TestCase):
             self.assertEqual(receipt["removed"], [])
             self.assertEqual(path.read_text(), "unassigned cycle evidence")
             path.unlink()
-        other_task = {**self.task, "GITHUB_JOB": "ios-release" if self.JOB == "ios" else "ios"}
+        other_task = {**self.task, "GITHUB_JOB": "ios-release-simulator" if self.JOB == "ios" else "ios"}
         with self.assertRaisesRegex(RuntimeError, "ownership changed"):
             apple.validate_claim(self.root, apple.cycle_prefix(self.prefix, "apple-aggregate"), other_task, "apple-aggregate", self.config)
         result = hygiene.cleanup(self.root, self.claim_path, self.task, {**self.upload, "outcome": "failure"}, "success", outcomes)
@@ -802,7 +802,7 @@ class AppleCycleAndOutputGateTest(unittest.TestCase):
 
 class AppleReleaseCycleAndOutputGateTest(AppleCycleAndOutputGateTest):
     """Run the same destructive-cleanup and native-ownership controls for the new job."""
-    JOB = "ios-release"
+    JOB = "ios-release-simulator"
 
 
 class AppleWorkflowOwnershipTest(unittest.TestCase):
@@ -811,7 +811,9 @@ class AppleWorkflowOwnershipTest(unittest.TestCase):
         jobs = {block.split(":\n", 1)[0]: block for block in
                 re.split(r"(?m)^  (?=[a-z][a-z0-9-]*:\n)", workflow.split("jobs:\n", 1)[1])[1:]}
         self.assertEqual(hygiene.APPLE_JOB_CYCLES, {"ios": ("apple-aggregate", "apple-ui"),
-                                                   "ios-release": ("apple-aggregate", "apple-wrapper")})
+                                                   "ios-release-simulator": ("apple-aggregate", "apple-wrapper"),
+                                                   "ios-release-device": ("apple-aggregate",),
+                                                   "ios-release-x64": ("apple-aggregate",)})
         for job, cycles in hygiene.APPLE_JOB_CYCLES.items():
             body = jobs[job]
             for cycle in apple.CYCLES:
@@ -830,7 +832,7 @@ class AppleWorkflowOwnershipTest(unittest.TestCase):
         self.assertIn("-parallel-testing-enabled NO", jobs["ios"])
         self.assertNotIn("rm -rf build/ci-evidence/ios-ui-tests.xcresult", jobs["ios"])
         self.assertNotIn("xcrun simctl list devices available", jobs["ios"])
-        self.assertNotIn("create-simulator", jobs["ios-release"])
+        self.assertNotIn("create-simulator", jobs["ios-release-simulator"])
 
 
 if __name__ == "__main__":

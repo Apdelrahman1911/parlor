@@ -27,7 +27,7 @@ remain separate evidence.
 | Host-independent aggregate | `./gradlew productionCheck` | Desktop/common, Android unit, repository-wide Detekt/static-analysis, shell-dispatch validation, and unsigned Android release gates (including lint warning verification) pass. Apple remains separate macOS jobs. |
 | Release automation security | `./gradlew productionReleaseAutomationCheck` | Candidate/provenance tampering tests, exact-tree/history tests, no-publication tests, workflow contracts, immutable Action pins, pinned ShellCheck/actionlint, and shell/YAML checks pass. |
 | Desktop host compatibility | `./gradlew productionDesktopCheck` on Linux x64, Linux arm64, macOS arm64, macOS x64, and Windows x64; the x64 macOS/Windows jobs also run `:composeApp:downloadKotlinNativeDistribution`, and Windows runs `:composeApp:processDebugResources` | Each supported host resolves and executes its real host-selected dependency graph under strict verification. Linux arm64 support is Desktop-only because Kotlin Native does not publish a Linux arm64 host distribution. |
-| Exact-candidate aggregate | Full verification: Linux runs `./gradlew productionCheck allTests`; independent macOS jobs run `./gradlew productionIosSimulatorRuntimeTests` and `./gradlew productionAppleCheck`, all with strict dependency verification | All six mandatory full jobs, including the Debug XCTest launch and unsigned Release wrapper/package inspection, pass in one full dispatch at the same recorded clean Git SHA. The focused protection diagnostic is skipped. No cross-run/SHA evidence stitching or duplicate common/desktop/Android aggregate on Apple. |
+| Exact-candidate aggregate | Full verification: Linux runs `./gradlew productionCheck allTests`; independent macOS jobs run `./gradlew productionIosSimulatorRuntimeTests` and the complete Apple analysis/three-architecture Release fan-out, all with strict dependency verification | All six mandatory full jobs, including the Debug XCTest launch and unsigned Release wrapper/package inspection, pass in one full dispatch at the same recorded clean Git SHA. The focused protection diagnostic is skipped. No cross-run/SHA evidence stitching or duplicate common/desktop/Android aggregate on Apple. |
 | GitHub distribution packaging | `.github/workflows/github-distribution.yml`, rehearsal | Android Release APK, macOS arm64/x64 DMGs, Windows x64 MSI and Linux x64 DEB; installed-image/native-graphics/crypto probes, notices, checksums and source-bound attestations. Unsigned rehearsal output is not publishable. |
 | Public GitHub testing | `.github/workflows/github-test-release.yml` | Explicit build/publish dispatches; five native packages, isolated non-debuggable Android `.test` APK with disposable key and normal-install emulator smoke, exact-source six-job verification, closed test manifest and attestations. Public prereleases only, never Latest or signed-production acceptance. |
 
@@ -68,8 +68,9 @@ unit test.
 
 ## CI policy
 
-`.github/workflows/production-verification.yml` configures seven jobs: six
-mandatory jobs in every full qualification and one opt-in protection diagnostic.
+`.github/workflows/production-verification.yml` configures ten jobs: six
+mandatory check identities (including a fail-closed Release join), three Release
+workers, and one opt-in protection diagnostic.
 The six full jobs are:
 
 - Linux x64: strict dependency verification, the root `productionCheck` and
@@ -89,22 +90,30 @@ The six full jobs are:
   `productionIosSimulatorRuntimeTests` aggregate, plist/privacy-manifest and
   effective Debug/Release identity validation, and an XCTest launch of the
   Debug SwiftUI/Compose app on its own fresh iOS Simulator.
-- macOS arm64 release (`ios-release`): an independent checkout with the same
-  pinned Xcode/SDK-floor guards, the **complete** `productionAppleCheck`
-  aggregate (Apple type-aware static analysis and all three serial Release
-  framework links), plist/privacy validation, an unsigned Swift Release wrapper
-  build, and complete package/notices/identity/version inspection. The wrapper
-  invokes the real Gradle resource/embed task with strict dependency verification.
+- Apple Release: three independent standard free macOS checkouts with identical
+  pinned Xcode/SDK-floor guards. `ios-release-simulator` runs complete
+  `productionAppleStaticAnalysis`, plist/privacy validation and the unsigned
+  Swift Release wrapper/package/notices/identity/version inspection. Its normal
+  strict Gradle resource/embed task links `iosSimulatorArm64` Release once.
+  `ios-release-device` links optimized `iosArm64`; `ios-release-x64` links
+  optimized `iosX64`. The Linux `ios-release` join retains the original required
+  check name and rejects any unsuccessful, skipped, cancelled, missing-custody
+  or differing-source lane. The local `productionAppleCheck` stays unchanged.
 
-The Apple jobs have no dependency on each other and no per-architecture matrix;
-Release LTO links remain serialized. Runtime evidence is
-`ios-runtime-verification`, Release evidence is `ios-release-verification`, with
-separate run/job-bound ownership and cleanup receipts. Each full Apple job owns
-exactly two cycles: `ios` owns `apple-aggregate`/`apple-ui`, while `ios-release`
-owns `apple-aggregate`/`apple-wrapper`. Every cycle stops Gradle and retires its
-owned resources immediately; upload custody is required before output deletion.
+The runtime job is independent of all Release workers. Five concurrent macOS
+jobs (three Release, runtime and desktop x64) fit GitHub Free's documented limit;
+other account workflows can still cause queueing. No parallel LTO links share
+one JVM. Runtime evidence is `ios-runtime-verification`; simulator Release
+package evidence is `ios-release-verification`, with additional distinct device,
+Intel-simulator and join records. Every build lane retains its own source/run/job
+ownership and cleanup receipts. `ios` owns `apple-aggregate`/`apple-ui`;
+`ios-release-simulator` owns `apple-aggregate`/`apple-wrapper`; each link-only lane
+owns `apple-aggregate`. Every cycle immediately stops Gradle and retires owned
+resources. Successful upload custody precedes output deletion; only then can
+Release lane identity be published to the required join. Dependency-only caches
+never restore workspace outputs or verification reports.
 
-`verification_scope=ios-protection-probe` selects only the seventh job. It runs
+`verification_scope=ios-protection-probe` selects only the standalone diagnostic job. It runs
 an independently reviewed, source/control-bound standalone diagnostic with
 collection and cleanup receipts. Default `native_selection=paired` retains the
 same-inode protection diagnostic on its own simulator. Only the explicit
@@ -118,7 +127,7 @@ relabeled as a passed strict protection observation or application readiness.
 The workflow deliberately labels framework linkage separately from executable
 simulator runtime tests. A successful link is not reported as a runtime test.
 Every full job prints the checked-out SHA and fails if the checkout is dirty.
-All six jobs and their cleanup must succeed against one frozen source in the
+All six mandatory checks, their three Release workers and build-lane cleanup must succeed against one frozen source in the
 same full dispatch; focused or historical passes cannot fill a missing full job.
 
 The workflow has read-only repository permission and receives no signing or
