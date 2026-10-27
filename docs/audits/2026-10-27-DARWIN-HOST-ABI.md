@@ -70,7 +70,30 @@ Windows host layout is never accepted as native evidence. Before-fix evidence
 retains8 failures/28 errors across five new/expanded methods. After-fix local
 controls pass; macOS execution remains pending at implementation time.
 
-Required next steps: inspect both real-host receipts, then freeze and run full
+[Native control40551462094](https://github.com/Apdelrahman1911/parlor/actions/runs/40551462094)
+subsequently passed on **both** standard hosts at exact source
+`559793e647790ea582e135958891fe0d15255357`, tree
+`0302b091f332a42713faf2a63f8f53c66514d61a`. Independent read-only qualification
+verified the actual two executed jobs/runner labels, all other build jobs skipped,
+complete ABI/offsets, native identity/tracking/token signal, reaping with no fallback,
+run/source binding, exact artifact IDs and downloaded ZIP digests:
+
+| Host | Artifact | ZIP SHA256 |
+| --- | --- | --- |
+| ARM64 | `12754887365` | `bbf8af7a0ba27b96d6022978e5bec6f9247679255c79a5dd90828e538ef95c8d` |
+| Intel x86_64 | `12755087598` | `a086c499e7b1ed64ff24228e05b10799da28ff9cf6a63609fda2780ef7c26bf6` |
+
+The744 Python/release controls, pinned ShellCheck/Actionlint and inventory pass.
+The first strict local aggregate retained one Kotlin source-contract failure:
+its old exact job registry omitted the new supplemental job. The updated
+registry preserves all full lanes and adds a dedicated native matrix/custody
+regression; the focused `ProductionVerificationWorkflowContractTest` now passes.
+This integration correction does not change the hosted workflow or either native
+driver. Rerun the strict local aggregate at the new frozen source; reuse the
+native receipt only with explicit unchanged-control-byte evidence, never as a
+full-build or later-source attestation.
+
+Required next steps: freeze and run full
 ARM64 and Intel comparisons at identical new source. Preserve all optimized
 architectures, signing restrictions, strict dependency verification, runtime,
 artifact/native/output cleanup and original aggregate check. Retain ARM64 if

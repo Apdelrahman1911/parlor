@@ -188,8 +188,19 @@ attempt encounters the same bootstrap failure. No application runtime was
 executed in that lane. This is separate from Intel admission; neither failure
 is masked by blind retries, an alternative distribution or weaker cleanup.
 
+The failed workflow completed in29.63minutes; all four Common/Android and
+desktop lanes passed. Its2.25–2.62-minute rejected Release jobs contain no
+optimized compilation and cannot be compared with the qualified ARM64 links.
+
 [The guarded host-ABI port and supplemental native capability control](2026-10-27-DARWIN-HOST-ABI.md)
 must qualify on both standard hosts before another full comparison. Keep ARM64
 as the default meanwhile; rerun all affected full checks at the new frozen
 source before selecting/merging. Retain failed samples, including missing
 artifacts and unresolved DNS evidence, rather than relabeling them successful.
+
+The supplemental control subsequently passed on both hosts at `559793e6`
+([40551462094](https://github.com/Apdelrahman1911/parlor/actions/runs/40551462094));
+its source-bound native/ABI/reaping and downloaded artifact receipts were
+independently verified. It qualifies host capability, **not** Release compilation,
+runtime, final architecture selection or a merge. The later Kotlin job-registry
+test integration fix leaves these workflow/native-control bytes unchanged.

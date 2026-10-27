@@ -638,15 +638,16 @@ class ProductionVerificationWorkflowContractTest {
     }
 
     @Test
-    fun protection_diagnostic_is_the_seventh_opt_in_job_not_a_full_gate() {
+    fun supplemental_native_diagnostics_do_not_replace_any_full_gate() {
         val workflow = read(".github/workflows/production-verification.yml")
         assertEquals(
             listOf("desktop-android", "desktop-linux-arm64", "desktop-macos-x64", "desktop-windows-x64",
-                "ios", "ios-release-simulator", "ios-release-device", "ios-release-x64", "ios-release", "ios-protection-probe"),
+                "ios", "ios-release-simulator", "ios-release-device", "ios-release-x64", "ios-release", "ios-protection-probe",
+                "darwin-host-capability"),
             Regex("(?m)^  ([a-z][a-z0-9-]+):$").findAll(workflow.substringAfter("\njobs:\n"))
                 .map { it.groupValues[1] }.toList(),
         )
-        val probe = workflow.substringAfter("\n  ios-protection-probe:\n")
+        val probe = workflow.substringAfter("\n  ios-protection-probe:\n").substringBefore("\n  darwin-host-capability:\n")
         assertContains(probe, "if: github.event_name == 'workflow_dispatch' && inputs.verification_scope == 'ios-protection-probe'")
         assertContains(probe, "timeout-minutes: 20")
         assertContains(probe, "PARLOR_FROZEN_SOURCE_SHA: \${{ inputs.frozen_source_sha }}")
@@ -654,6 +655,32 @@ class ProductionVerificationWorkflowContractTest {
         assertContains(probe, "run_probe.py assert-result")
         assertContains(probe, "PARLOR_PROTECTION_CLEANUP_ARTIFACT_DIGEST:")
         assertFalse("./gradlew" in probe || "github.token" in probe || "secrets." in probe)
+    }
+
+    @Test
+    fun darwin_capability_keeps_both_free_hosts_and_bounded_native_custody() {
+        val workflow = read(".github/workflows/production-verification.yml")
+        val capability = workflow.substringAfter("\n  darwin-host-capability:\n")
+        listOf(
+            "if: github.event_name == 'workflow_dispatch' && inputs.verification_scope == 'darwin-host-capability'",
+            "runs-on: \${{ matrix.runner }}",
+            "timeout-minutes: 5",
+            "fail-fast: false",
+            "- runner: macos-15\n            architecture: arm64",
+            "- runner: macos-15-intel\n            architecture: x86_64",
+            "PARLOR_FROZEN_SOURCE_SHA: \${{ inputs.frozen_source_sha }}",
+            "PARLOR_EXPECTED_ARCHITECTURE: \${{ matrix.architecture }}",
+            "timeout-minutes: 2\n        run: /usr/bin/python3 -B -m scripts.ci.darwin_host_capability",
+            "- name: Preserve native capability receipt\n        if: always()",
+            "if-no-files-found: error",
+            "path: \${{ runner.temp }}/parlor-darwin-capability-",
+            "persist-credentials: false",
+        ).forEach { assertContains(capability, it) }
+        assertEquals(3, Regex("(?m)^      - name:").findAll(capability).count())
+        listOf("./gradlew", "build/", "RUNNER_TRACKING_ID:", "self-hosted", "macos-latest", "|| true",
+            "continue-on-error", "github.token", "secrets.").forEach { assertFalse(it in capability) }
+        val runtime = workflow.substringAfter("\n  ios:\n").substringBefore("\n  ios-release-simulator:\n")
+        assertContains(runtime.substringBefore("\n    steps:"), "inputs.verification_scope != 'darwin-host-capability'")
     }
 
     @Test
