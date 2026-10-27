@@ -36,13 +36,13 @@ observes graceful peer disconnection. The peer checks the response and closes
 its room. Every endpoint must pass assertions/teardown and exit naturally0;
 failed, missing or ambiguous output never becomes a pass.
 
-Strict preparation explicitly compiles `MultiProcessEndpoint.kt` into isolated
-test outputs through `process-helper.init.gradle`. It reuses the existing
-in-memory device fixture; no shipping source, dependency or existing ignored-fixture
-selection is changed. Run in a clean isolated checkout: subsequent ordinary
-test compilation owns its normal source inputs again. Neither helper starts
-automatically in CI. Only the nonnetworking Python ownership guards join normal
-release-tool checks.
+`MultiProcessEndpoint.kt` lives in `:shared:transport-p2p`'s `desktopTest`
+source set, so normal CI compiles and analyzes it without starting a LAN probe.
+Strict preparation reuses the existing classpath-export init script and
+in-memory device fixture. No shipping source, dependency, workflow or existing
+ignored-fixture selection changes. Only the nonnetworking Python ownership
+guards execute inside ordinary release-tool checks; the native fixture runs
+only through this explicit consent-bearing command.
 
 Each JVM is limited to512MiB, each pair to110seconds and the whole invocation
 to900seconds including preparation/hashing. Logs are bounded1MiB per endpoint;

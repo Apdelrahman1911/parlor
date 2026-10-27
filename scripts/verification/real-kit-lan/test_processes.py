@@ -68,7 +68,7 @@ class ProcessPreconditionTest(unittest.TestCase):
             root = Path(temporary)
             (root / 'real').write_text('public fixture')
             (root / 'helper').symlink_to(root / 'real')
-            with patch.object(probe, 'HERE', root), patch.object(probe, 'HELPERS', ('helper',)):
+            with patch.object(probe, 'ROOT', root), patch.object(probe, 'HELPERS', ('helper',)):
                 with self.assertRaisesRegex(RuntimeError, 'Redirected'):
                     probe.helper_hashes(time.monotonic() + 10)
 

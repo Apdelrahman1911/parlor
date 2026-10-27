@@ -13,6 +13,7 @@ import com.parlor.networking.room.LocalRoom
 import com.parlor.networking.room.SendTarget
 import com.parlor.networking.transport.HostConfig
 import dev.p2pkit.core.AppId
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
@@ -75,7 +76,10 @@ object MultiProcessEndpoint {
                     println("TEARDOWN_PASS")
                 }
             }
-        } catch (failure: Throwable) {
+        } catch (cancelled: CancellationException) {
+            throw cancelled
+        } catch (@Suppress("TooGenericExceptionCaught") failure: Throwable) {
+            // Terminal CLI-only failure boundary: fail the owned JVM, never normalize/retry gameplay.
             // Never echo assertion values, credentials, endpoints or exception messages.
             println("ENDPOINT_FAIL type=${failure.javaClass.name}")
             exitProcess(1)

@@ -21,13 +21,18 @@ ROOT = probe.ROOT
 LOG_LIMIT = probe.LOG_LIMIT
 PAIR_TIMEOUT = 110
 TOTAL_TIMEOUT = 900
-HELPERS = ('processes.py', 'run.py', 'MultiProcessEndpoint.kt', 'process-helper.init.gradle')
+HELPERS = (
+    'scripts/verification/real-kit-lan/processes.py',
+    'scripts/verification/real-kit-lan/run.py',
+    'scripts/verification/real-kit-lan/classpath.init.gradle',
+    'shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/MultiProcessEndpoint.kt',
+)
 
 
 def helper_hashes(deadline):
     result = {}
     for name in HELPERS:
-        path = HERE / name
+        path = ROOT / name
         probe.require(path.is_file() and not path.is_symlink() and 0 < path.stat().st_size <= LOG_LIMIT,
                       'Redirected or unbounded process helper')
         result[name] = probe.sha256(path, deadline)
@@ -40,8 +45,8 @@ def prepare(out, deadline):
     option = '-Dorg.gradle.daemon.registry.base=' + str(registry)
     wrapper = str(ROOT / 'gradlew')
     cp = out / 'classpath.txt'
-    command = [wrapper, ':shared:transport-p2p:realKitProcessClasspath', '--init-script', str(HERE / 'process-helper.init.gradle'),
-               '-Dparlor.processHelper=' + str(HERE / 'MultiProcessEndpoint.kt'), '-Dparlor.processClasspath=' + str(cp),
+    command = [wrapper, ':shared:transport-p2p:realKitLanClasspath', '--init-script', str(HERE / 'classpath.init.gradle'),
+               '-Dparlor.realKitClasspath=' + str(cp),
                '--dependency-verification=strict', '--no-daemon', '--no-configuration-cache', '--max-workers=2',
                '-Dorg.gradle.jvmargs=-Xmx3g -XX:MaxMetaspaceSize=1g', '-Pkotlin.compiler.execution.strategy=in-process',
                '--console=plain', option]
