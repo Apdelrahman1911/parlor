@@ -8,6 +8,7 @@ Inventory-infrastructure rows omit their own commit SHA to remain deterministic.
 
 from __future__ import annotations
 
+import argparse
 import csv
 import io
 import re
@@ -366,13 +367,18 @@ def inventory_content(
 
 
 def main() -> int:
+    parser = argparse.ArgumentParser(
+        description="Generate or check the mechanical review inventory; this does not attest source review.",
+        allow_abbrev=False,
+    )
+    parser.add_argument("--check", action="store_true", help="Check freshness without rewriting the inventory.")
+    parser.add_argument("output", nargs="?", default=DEFAULT_OUTPUT, help="Repository-relative CSV output path.")
+    arguments = parser.parse_args()
+
+    # Parse help/errors before repository discovery or any inventory file I/O.
     root = repository_root()
-    arguments = sys.argv[1:]
-    check_only = "--check" in arguments
-    positional = [argument for argument in arguments if argument != "--check"]
-    if len(positional) > 1:
-        raise SystemExit("Usage: generate_review_inventory.py [--check] [output.csv]")
-    output_arg = positional[0] if positional else DEFAULT_OUTPUT
+    check_only = arguments.check
+    output_arg = arguments.output
     output = (root / output_arg).resolve()
     try:
         output_relative = output.relative_to(root).as_posix()
