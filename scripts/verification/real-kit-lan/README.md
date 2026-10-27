@@ -54,14 +54,16 @@ whole synthetic JVMs, not action latency or per-phone cost. This adds process
 separation, **not physical LAN, mobile background/process-death recovery,
 gameplay, long-session, battery/thermal or RPC-comparison qualification**.
 
-The explicit flag is required before any preparation. The helper never changes
+## Single-process fixture runner (`run.py`)
+
+The explicit flag is required before any preparation. This older runner never changes
 `@Ignore`, normal test selection, CI, shipping source or dependency versions. It
 calls four allowlisted existing fixture methods directly, always runs teardown,
 and creates a new JVM for every case. Defaults: one advertisement plus three
 iterations each of approved join, authenticated bidirectional delivery/actor
 binding, and broadcast to two distinct peers (10 cases).
 
-## Containment and evidence
+## Single-process containment and evidence
 
 - Each JVM has a 512 MiB heap limit and 120-second deadline; total execution is
   governed by a 900-second work budget, including compilation and custody hashes.
