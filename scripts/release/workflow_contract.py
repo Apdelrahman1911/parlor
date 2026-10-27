@@ -646,11 +646,25 @@ def verify_apple_release_fanout(text: str) -> None:
                 fail("verification scope Release architecture changed shared source/toolchain/resource controls")
         run_step = validation_step(job, run)
         command = "./gradlew :composeApp:linkReleaseFramework" + target + " --dependency-verification=strict --no-daemon --stacktrace --console=plain"
+        architecture = "arm64" if target == "IosArm64" else "x86_64"
+        binary_target = target[0].lower() + target[1:]
+        # -verify_arch consumes the remaining arguments as architecture names.
+        # The input binary must precede it; an incorrect order fails only after
+        # the expensive optimized link and is not an architecture verification.
+        expected_script = [
+            "set -euo pipefail",
+            'echo "Optimized ' + target + ' Release link; full Apple analysis and Swift packaging run in ios-release-simulator."',
+            command,
+            'binary="composeApp/build/bin/' + binary_target + '/releaseFramework/ComposeApp.framework/ComposeApp"',
+            'test -s "$binary"',
+            'xcrun lipo "$binary" -verify_arch ' + architecture,
+            'file "$binary" | tee build/ci-evidence/release-framework-binary.txt',
+            'shasum -a 256 "$binary" | tee build/ci-evidence/release-framework-binary.sha256',
+        ]
         if (re.findall(r"(?m)^        (if|id|shell|run): (.*)$", run_step) != [
                 ("if", FULL_VERIFICATION_SCOPE), ("id", "apple_aggregate_run"), ("shell", "bash"), ("run", "|")] or
-                re.findall(r"(?m)^          (\./gradlew .*)$", run_step) != [command] or
-                run_step.count("          set -euo pipefail\n") != 1):
-            fail("verification scope Release architecture must execute its real optimized link strictly")
+                re.findall(r"(?m)^          (.*)$", run_step) != expected_script):
+            fail("verification scope Release architecture must execute its real optimized link and exact binary inspection strictly")
         expected_upload = validation_step(simulator, "Upload Apple release verification evidence").replace(
             "name: ios-release-verification", "name: " + job_id + "-verification").replace(
             "            build/xcode-derived-data/Build/Products/Release-iphonesimulator/Parlor.app.dSYM/\n", "")

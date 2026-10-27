@@ -133,6 +133,28 @@ class FreeHostedCIContractTest(unittest.TestCase):
             with self.assertRaises(RuntimeError):
                 contract.verify_validation(changed)
 
+    def test_release_binary_checks_require_valid_lipo_order_correct_target_and_custody(self):
+        for job_id, target, architecture in (("ios-release-device", "iosArm64", "arm64"),
+                                             ("ios-release-x64", "iosX64", "x86_64")):
+            job = contract.validation_job(self.workflow, job_id)
+            run = contract.validation_step(job, "Link optimized " + target[0].upper() + target[1:] + " Release framework")
+            lipo = 'xcrun lipo "$binary" -verify_arch ' + architecture
+            self.assertIn(lipo, run)
+            for old, new in (
+                (lipo, 'xcrun lipo -verify_arch ' + architecture + ' "$binary"'),
+                (lipo, 'xcrun lipo "$binary" -verify_arch ' + ("x86_64" if architecture == "arm64" else "arm64")),
+                (lipo, lipo + " || true"),
+                (lipo, "true"),
+                ('test -s "$binary"', 'test -e "$binary"'),
+                ('build/bin/' + target, 'build/bin/' + ("iosX64" if target == "iosArm64" else "iosArm64")),
+                ('file "$binary" | tee build/ci-evidence/release-framework-binary.txt', "true"),
+                ('shasum -a 256 "$binary" | tee build/ci-evidence/release-framework-binary.sha256', "true"),
+            ):
+                changed = self.workflow.replace(run, run.replace(old, new, 1), 1)
+                self.assertNotEqual(changed, self.workflow)
+                with self.subTest(job=job_id, mutation=new), self.assertRaisesRegex(RuntimeError, "exact binary inspection"):
+                    contract.verify_validation(changed)
+
     def test_release_runners_cannot_use_paid_or_arbitrary_labels(self):
         for label in ("macos-15-large", "macos-15-xlarge", "self-hosted", "${{ inputs.apple_release_runner }}"):
             changed = self.workflow.replace(contract.FREE_APPLE_RELEASE_RUNNER, label, 1)

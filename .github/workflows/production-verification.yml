@@ -1306,7 +1306,7 @@ jobs:
           ./gradlew :composeApp:linkReleaseFrameworkIosArm64 --dependency-verification=strict --no-daemon --stacktrace --console=plain
           binary="composeApp/build/bin/iosArm64/releaseFramework/ComposeApp.framework/ComposeApp"
           test -s "$binary"
-          xcrun lipo -verify_arch arm64 "$binary"
+          xcrun lipo "$binary" -verify_arch arm64
           file "$binary" | tee build/ci-evidence/release-framework-binary.txt
           shasum -a 256 "$binary" | tee build/ci-evidence/release-framework-binary.sha256
 
@@ -1468,7 +1468,7 @@ jobs:
           ./gradlew :composeApp:linkReleaseFrameworkIosX64 --dependency-verification=strict --no-daemon --stacktrace --console=plain
           binary="composeApp/build/bin/iosX64/releaseFramework/ComposeApp.framework/ComposeApp"
           test -s "$binary"
-          xcrun lipo -verify_arch x86_64 "$binary"
+          xcrun lipo "$binary" -verify_arch x86_64
           file "$binary" | tee build/ci-evidence/release-framework-binary.txt
           shasum -a 256 "$binary" | tee build/ci-evidence/release-framework-binary.sha256
 

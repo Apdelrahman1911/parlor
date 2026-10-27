@@ -60,7 +60,7 @@ Log SHA-256: `2395ba691510131e6b74ab0cf3bccc69d01fabd728531c47898858ac39c1b8a0`.
    historical `remediation-runs/**` and `docs/archives/**` from ordinary uploads,
    never current/new-module reports or external lifecycle custody.
 
-No Kotlin/Gradle/AGP/analyzer version, Release optimization, application code,
+No Kotlin/Gradle/AGP/analyzer version, Release optimization, shipping application code,
 Store workflow or repository protection is changed. Experimental Release binary
 caching documented since Kotlin 2.4.20 is not enabled on the pinned 2.4.10.
 
@@ -77,15 +77,44 @@ artifact/cleanup results and cache hit/miss. Keep unsuccessful runs in the
 ledger. Prefer the faster configuration only after all affected checks pass;
 one run does not establish a statistical distribution or device performance.
 
-**Hosted candidate measurements pending.** The first dispatch
-[40510032203](https://github.com/Apdelrahman1911/parlor/actions/runs/40510032203)
-was rejected at startup with zero jobs: the repository allows only GitHub-owned
-or owner-owned actions, so the Gradle caching action was denied. The candidate
-now uses GitHub-owned cache actions; no action policy was loosened.
+### Retained failed attempts and integration corrections
 
-**No speedup is certified yet.** Local
-regression checks and fresh source-inventory checks are being performed before
-dispatch. This report will be updated with run URLs and measured results.
+1. [40510032203](https://github.com/Apdelrahman1911/parlor/actions/runs/40510032203)
+   was rejected at startup with zero jobs: repository policy denied the
+   Gradle-owned caching action. GitHub-owned cache actions replace it; no policy
+   was loosened. This is not a runner-speed measurement.
+2. [40510904388](https://github.com/Apdelrahman1911/parlor/actions/runs/40510904388)
+   runs frozen `b9d6f780` on standard ARM64 Release workers. Common/Android and
+   the three desktop host lanes pass. KMP Simulator672 passes; Swift/native is
+   9passes/1failure at Arabic Egyptian Dominoes pre-tap settlement (#267).
+   See [the source-bound investigation](2026-10-27-IOS-SETTLEMENT.md): no Host
+   gesture was synthesized and no application touch root cause is established.
+   Runtime cleanup independently passes **with the failed run outcome retained**.
+3. The same sample's device optimized Release link **builds successfully in
+   45m17s**, then fails at the new architecture check. `lipo -verify_arch`
+   consumes the remaining arguments as architecture names, so placing the
+   binary after `arm64` is invalid. The x64 lane has the same argument-order
+   defect. Device log SHA256:
+   `cb5d3bbac009987a49c9a953c96c9ce2efa16f80617e2a0400bec6ca7042dea0`.
+   Both commands now put the binary **before** `-verify_arch`. The executable
+   workflow contract requires the exact target, optimized strict Gradle link,
+   nonempty binary, architecture check, `file` metadata and SHA256 output.
+   Regression mutations reject the original order, wrong target/architecture,
+   removed evidence and `|| true`; architecture verification is not dropped.
+
+Simulator Release starts16.82min after dispatch; include this queue offset in
+reported elapsed time, without inferring a different account limit. Remaining
+Release-worker timing/evidence is retained as a **failed-workflow sample**, not
+a qualified speedup or winner. The observer cannot dispatch Intel after failure.
+
+The integration candidate also includes previously independent, locally verified
+artifact/source scope and relocated-lint-cache fixes (#268/#269/#271), and the
+bounded single-snapshot public XCTest sampler. It does not mutate the already
+frozen `b9d6f780` branch or relabel its evidence. Fresh full checks and identical
+new-head ARM64/Intel samples are required before selecting/merging a configuration.
+Swift helper compilation/execution awaits macOS; local source-contract tests do
+not substitute for it. All10 existing native/UI cases and six new frame-state
+cases remain required. **No speedup or fixed native-input root cause is certified.**
 
 These are compilation/CI benchmarks, not physical iOS gameplay, memory, battery,
 thermal, data-protection or Store signing/release qualification.
