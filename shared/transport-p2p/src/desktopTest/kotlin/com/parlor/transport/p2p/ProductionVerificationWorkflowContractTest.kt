@@ -48,6 +48,44 @@ class ProductionVerificationWorkflowContractTest {
     }
 
     @Test
+    fun public_ios_settlement_uses_coherent_adjacent_frames_and_never_taps_after_failure() {
+        val swift = read("iosApp/iosAppUITests/IOSAppLaunchUITests.swift")
+        val helper = swift.substringAfter("private func tapSettledControl(")
+            .substringBefore("private func verifyKeyboardCycle(")
+        val code = helper.lineSequence().map { it.substringBefore("//") }.joinToString("\n")
+        assertEquals(1, Regex(Regex.escape("control.snapshot()")).findAll(code).count())
+        assertEquals(1, Regex(Regex.escape("control.isHittable")).findAll(code).count())
+        assertEquals(1, Regex(Regex.escape("control.tap()")).findAll(code).count())
+        listOf(
+            "let frame = snapshot?.frame",
+            "let enabled = snapshot?.isEnabled == true",
+            "let hittable = stable ? control.isHittable : nil",
+            "if stable && hittable != true { frames.reset() }",
+            "XCTWaiter.wait(for: [settled], timeout: 10)",
+            "if samples.count < 12",
+            "if result != .completed",
+            "guard result == .completed else",
+            """throw NSError(domain: "PublicControlSettlement", code: 1)""",
+            "screenshot.lifetime = .keepAlways",
+        ).forEach { assertContains(code, it) }
+        assertTrue(code.indexOf("guard result == .completed else") < code.indexOf("control.tap()"))
+        listOf("control.exists", "control.frame", ".label", ".value", ".debugDescription", "sleep(",
+            "press(forDuration", "swipe").forEach { assertFalse(it in code) }
+        val frameState = swift.substringAfter("private struct PublicControlFrames {")
+            .substringBefore("final class PublicControlFramesTests")
+        listOf("reset()", "return false", "previous = frame", "return previous == frame",
+            "!frame.isEmpty", "allSatisfy({ $0.isFinite })").forEach { assertContains(frameState, it) }
+        listOf(
+            "testFirstFrameNeverSettlesButTheExactAdjacentFrameDoes",
+            "testMotionIsNotRoundedIntoASettledFrame",
+            "testMissingSnapshotBreaksFrameAdjacency",
+            "testDisabledSnapshotBreaksFrameAdjacency",
+            "testInvalidOrEmptyGeometryCannotSettleAndBreaksAdjacency",
+            "testHittabilityInterruptionRequiresTwoFreshFrames",
+        ).forEach { assertContains(swift, "func $it()") }
+    }
+
+    @Test
     fun linux_job_enforces_tests_analysis_android_release_and_artifact_inspection() {
         val workflow = read(".github/workflows/production-verification.yml")
         val rootBuild = read("build.gradle.kts")

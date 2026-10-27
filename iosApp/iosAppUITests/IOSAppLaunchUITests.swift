@@ -136,7 +136,7 @@ final class IOSAppLaunchUITests: XCTestCase {
             try tapSetupButton(app, prefix: copy.permission)
             let name = app.textViews.firstMatch
             XCTAssertTrue(name.waitForExistence(timeout: 10))
-            tapSettledControl(name)
+            try tapSettledControl(name)
             let keyboard = app.keyboards.firstMatch
             XCTAssertTrue(keyboard.waitForExistence(timeout: 10))
             dismissKeyboardIntroduction(app, keyboard: keyboard)
@@ -168,7 +168,7 @@ final class IOSAppLaunchUITests: XCTestCase {
             app.swipeDown(velocity: .slow)
         }
         XCTAssertTrue(first.isHittable)
-        tapSettledControl(first)
+        try tapSettledControl(first)
         XCTAssertTrue(app.keyboards.firstMatch.waitForExistence(timeout: 10))
         dismissKeyboardIntroduction(app, keyboard: app.keyboards.firstMatch)
         for index in 1...6 {
@@ -223,7 +223,7 @@ final class IOSAppLaunchUITests: XCTestCase {
         let button = setupButton(app, prefix: prefix)
         for _ in 0..<8 {
             if button.waitForExistence(timeout: 1), button.isHittable {
-                tapSettledControl(button)
+                try tapSettledControl(button)
                 return
             }
             app.swipeUp(velocity: .slow)
@@ -262,19 +262,45 @@ final class IOSAppLaunchUITests: XCTestCase {
     }
 
     @MainActor
-    private func tapSettledControl(_ control: XCUIElement) {
-        // XCTest does not track Compose's scroll animation as UIKit activity.
-        // Wait for a stable target so a tap opens/focuses the control rather
-        // than merely stopping the preceding scroll gesture.
-        var previousFrame: CGRect?
+    private func tapSettledControl(_ control: XCUIElement) throws {
+        // Public setup only. One coherent snapshot per frame sample avoids
+        // separate exists/hittable/frame queries exhausting the same deadline.
+        // Preserve exact adjacent-frame equality and the native hittability
+        // check; do not lengthen, replay, or replace the actual tap.
+        var frames = PublicControlFrames()
+        var samples: [String] = []
+        let started = ProcessInfo.processInfo.systemUptime
         let settled = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
-            guard control.exists, control.isHittable else { return false }
-            let frame = control.frame
-            defer { previousFrame = frame }
-            return previousFrame == frame
+            let sampleStarted = ProcessInfo.processInfo.systemUptime
+            let snapshot = try? control.snapshot()
+            let frame = snapshot?.frame
+            let enabled = snapshot?.isEnabled == true
+            let stable = frames.observe(frame: frame, enabled: enabled)
+            let hittable = stable ? control.isHittable : nil
+            if stable && hittable != true { frames.reset() }
+            if samples.count < 12 {
+                // Geometry/status/timing only: never retain labels, typed
+                // values, arbitrary hierarchies or private player information.
+                samples.append("at=\(sampleStarted - started), " +
+                    "querySeconds=\(ProcessInfo.processInfo.systemUptime - sampleStarted), " +
+                    "frame=\(String(describing: frame)), enabled=\(enabled), " +
+                    "stable=\(stable), hittable=\(String(describing: hittable))")
+            }
+            return stable && hittable == true
         }, object: nil)
-        XCTAssertEqual(XCTWaiter.wait(for: [settled], timeout: 10), .completed,
+        let result = XCTWaiter.wait(for: [settled], timeout: 10)
+        if result != .completed {
+            print("Public control settlement: " + samples.joined(separator: "; "))
+            let screenshot = XCTAttachment(screenshot: XCUIApplication().screenshot())
+            screenshot.name = "Failed public control settlement before tap"
+            screenshot.lifetime = .keepAlways
+            add(screenshot)
+        }
+        XCTAssertEqual(result, .completed,
                        "Public setup control must stop scrolling before it is tapped")
+        guard result == .completed else {
+            throw NSError(domain: "PublicControlSettlement", code: 1)
+        }
         control.tap()
     }
 
@@ -372,5 +398,79 @@ final class IOSAppLaunchUITests: XCTestCase {
             return aligned && touching && accessoryHeight
         }
         return adjacentRows.map { $0.minY }.min() ?? keys.minY
+    }
+}
+
+// Test-only frame state. Losing a snapshot, enabled state or hittability must
+// break adjacency; a matching frame before an interruption cannot admit a tap.
+private struct PublicControlFrames {
+    private var previous: CGRect?
+
+    mutating func observe(frame: CGRect?, enabled: Bool) -> Bool {
+        guard enabled, let frame, !frame.isEmpty,
+              [frame.minX, frame.minY, frame.width, frame.height].allSatisfy({ $0.isFinite }) else {
+            reset()
+            return false
+        }
+        defer { previous = frame }
+        return previous == frame
+    }
+
+    mutating func reset() { previous = nil }
+}
+
+final class PublicControlFramesTests: XCTestCase {
+    private let resting = CGRect(x: 24, y: 279, width: 354, height: 101)
+
+    func testFirstFrameNeverSettlesButTheExactAdjacentFrameDoes() {
+        var frames = PublicControlFrames()
+        XCTAssertFalse(frames.observe(frame: resting, enabled: true))
+        XCTAssertTrue(frames.observe(frame: resting, enabled: true))
+    }
+
+    func testMotionIsNotRoundedIntoASettledFrame() {
+        var frames = PublicControlFrames()
+        let moved = resting.offsetBy(dx: 0, dy: 0.001)
+        XCTAssertFalse(frames.observe(frame: resting, enabled: true))
+        XCTAssertFalse(frames.observe(frame: moved, enabled: true))
+        XCTAssertTrue(frames.observe(frame: moved, enabled: true))
+    }
+
+    func testMissingSnapshotBreaksFrameAdjacency() {
+        var frames = PublicControlFrames()
+        XCTAssertFalse(frames.observe(frame: resting, enabled: true))
+        XCTAssertFalse(frames.observe(frame: nil, enabled: true))
+        XCTAssertFalse(frames.observe(frame: resting, enabled: true))
+        XCTAssertTrue(frames.observe(frame: resting, enabled: true))
+    }
+
+    func testDisabledSnapshotBreaksFrameAdjacency() {
+        var frames = PublicControlFrames()
+        XCTAssertFalse(frames.observe(frame: resting, enabled: true))
+        XCTAssertFalse(frames.observe(frame: resting, enabled: false))
+        XCTAssertFalse(frames.observe(frame: resting, enabled: true))
+        XCTAssertTrue(frames.observe(frame: resting, enabled: true))
+    }
+
+    func testInvalidOrEmptyGeometryCannotSettleAndBreaksAdjacency() {
+        for invalid in [CGRect.zero, CGRect.null, CGRect.infinite,
+                        CGRect(x: CGFloat.nan, y: 279, width: 354, height: 101),
+                        CGRect(x: 24, y: 279, width: CGFloat.infinity, height: 101)] {
+            var frames = PublicControlFrames()
+            XCTAssertFalse(frames.observe(frame: resting, enabled: true))
+            XCTAssertFalse(frames.observe(frame: invalid, enabled: true))
+            XCTAssertFalse(frames.observe(frame: invalid, enabled: true))
+            XCTAssertFalse(frames.observe(frame: resting, enabled: true))
+            XCTAssertTrue(frames.observe(frame: resting, enabled: true))
+        }
+    }
+
+    func testHittabilityInterruptionRequiresTwoFreshFrames() {
+        var frames = PublicControlFrames()
+        XCTAssertFalse(frames.observe(frame: resting, enabled: true))
+        XCTAssertTrue(frames.observe(frame: resting, enabled: true))
+        frames.reset()
+        XCTAssertFalse(frames.observe(frame: resting, enabled: true))
+        XCTAssertTrue(frames.observe(frame: resting, enabled: true))
     }
 }
