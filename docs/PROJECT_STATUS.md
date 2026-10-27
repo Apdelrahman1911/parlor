@@ -148,6 +148,33 @@ stay open pending their actual acceptance criteria; no Store publication,
 physical multiplayer/background, battery/thermal, RPC benefit or assistive-
 technology acceptance is claimed.
 
+### Independent progress while free-runner benchmarks execute
+
+The combined candidate's first full aggregate at `40720c4a` failed only because
+cached lint partial analysis retained another checkout's root-level source paths.
+[#271](https://github.com/Apdelrahman1911/parlor/issues/271) now tracks the
+producer-key fix, not a weakening of the correct outside-root rejection.
+At clean source `141408e0`, strict `productionCheck allTests --continue` passed
+in 3m4s: 714 Python cases (one environment skip), 3,185 current Desktop/Android
+report cases with zero failures/errors and three existing real-LAN skips.
+Unchanged-input outputs were reused; these are repeated platform/report counts,
+not wholly fresh execution or physical-device verification.
+
+Actual two-worktree lint exercises verify 31 different cross-root cache keys,
+all 37 exact current-root warnings, 222 unaffected cache restorations and
+same-root analysis reuse. Two injected outside-root report paths still fail;
+the original report and clean source were restored. The
+[cache-ownership report](audits/2026-10-27-LINT-CACHE-OWNERSHIP.md) records
+exact-source evidence. Documentation added afterward does not certify a newer
+head; affected checks must run again before publishing the candidate.
+
+The independently frozen free-hosted CI candidate for
+[#270](https://github.com/Apdelrahman1911/parlor/issues/270) is benchmarking at
+`b9d6f780` in [run 40510904388](https://github.com/Apdelrahman1911/parlor/actions/runs/40510904388).
+No speedup, winning runner, integration or post-merge qualification is claimed
+while it runs. Only standard free runner labels are permitted; no paid resources,
+billing/protection changes, extra agents or competing macOS runs are used.
+
 ## September checkpoint (historical)
 
 **The readiness continuation is integrated into `main`; this is not Store-release
