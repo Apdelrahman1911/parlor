@@ -712,7 +712,7 @@ def verify_validation(text: str) -> None:
             fi
             exit "$native_control_status"
           }
-          trap retire_native_control_tmp EXIT
+          trap 'retire_native_control_tmp' EXIT
           export TMPDIR="$native_control_tmp"
 '''
     if (native_controls.count(temporary_scope) != 1 or

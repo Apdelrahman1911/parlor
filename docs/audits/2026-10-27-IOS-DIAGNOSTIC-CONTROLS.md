@@ -81,6 +81,15 @@ require. An earlier local proof inside the checkout correctly failed those
 guards and is retained as rejection evidence. All 85 revised workflow-contract
 cases passed. Hosted verification at the corrected head is still required.
 
+The committed-source strict Gradle check at `ccb27eb8` subsequently failed in
+release automation: pinned Actionlint/ShellCheck reported SC2329 because the
+EXIT trap's unquoted function name was not recognized as a function invocation.
+All preceding release Python tests and inventory validation passed; this is
+not a successful aggregate check. The trap command is now a literal quoted
+string recognized by ShellCheck, with the exact workflow guard and mutation
+test updated together. Cleanup behavior is unchanged; no warning suppression
+or analyzer downgrade was added. Fresh committed-source checks remain required.
+
 Commands:
 
 ```bash

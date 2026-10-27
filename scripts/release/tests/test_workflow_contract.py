@@ -602,7 +602,7 @@ class WorkflowContractTest(unittest.TestCase):
             ('test "$(cd -- "$RUNNER_TEMP" && pwd -P)" = "$RUNNER_TEMP"', 'true'),
             ('mktemp -d "$RUNNER_TEMP/parlor-native-controls.XXXXXX"', 'mktemp -d'),
             ('export TMPDIR="$native_control_tmp"', 'export TMPDIR=/tmp'),
-            ('trap retire_native_control_tmp EXIT', 'trap true EXIT'),
+            ("trap 'retire_native_control_tmp' EXIT", 'trap true EXIT'),
             ('rmdir -- "$native_control_tmp"', 'rm -rf -- "$native_control_tmp"'),
             ('native_control_status=1', 'native_control_status=0'),
             ('          )\n          ./gradlew ', '          ./gradlew '),
