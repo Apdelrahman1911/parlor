@@ -104,6 +104,50 @@ application controls pass locally afterward. These revised templates still need
 committed-source checks, all six current-head hosted lanes, fresh reviewed
 preflight and native execution. #265/#258/#267 remain open; no Store publication.
 
+## October 27 verification continuation (candidate, not integrated)
+
+The frozen [PR #266](https://github.com/Apdelrahman1911/parlor/pull/266) head
+`3806921f4902f5d841da7239c70c6c358b374adf` is still a draft candidate at this
+checkpoint. [Full run 40482354118](https://github.com/Apdelrahman1911/parlor/actions/runs/40482354118)
+has five mandatory lanes passing; the iOS Release wrapper is still running.
+This is not six-lane qualification or permission to merge. Follow the PR's
+latest read-back status and source/artifact/cleanup verification, not this
+historical observation, for completion.
+
+Reviewed [actual copied-app diagnostic 40482816605](https://github.com/Apdelrahman1911/parlor/actions/runs/40482816605)
+at the same head completed its capture: filesystem/Keychain roundtrips and
+atomic replacement pass; final Kotlin/native/host directory size96/links3 agree.
+All 63 native-leaf hashes and inner/outer cleanup were verified. Original strict
+comparisons remain **0 PASS / 6 FAIL**. Evidence ZIP SHA256
+`a7865e4ea265e9a47f69346803106623644f871327caf9d715c9478c668c2c08`;
+cleanup ZIP `fc8b4c008b5435f5cd272096e11fecdc48f8a698bd5f48c7a3997aa0913e2a9c`.
+This is diagnostic capture, not strict protection, physical lock/keybag
+verification or a shipping security pass. #258/#267 remain open; #265 needs
+qualified integration and post-merge verification before closure.
+
+Three independently exercised verification improvements are now implemented:
+
+| Finding | Committed local evidence | Integration status |
+|---|---|---|
+| [#268](https://github.com/Apdelrahman1911/parlor/issues/268): current artifact selection includes historical reports | `90635ea4`: strict transport333 cases / release Python699; exact upload envelopes preserved | Pending |
+| [#269](https://github.com/Apdelrahman1911/parlor/issues/269): isolation scans classify ignored copies as shipping inputs | `c5259efa`: strict transport341 / release Python690; eight fault exercises retain real leak rejection | Pending |
+| [#6](https://github.com/Apdelrahman1911/parlor/issues/6): independent-participant real-transport boundary | `66c578b6`: 3/3 distinct host/peer JVM pairs; normal transport333 / release Python705; documentation checked at `04a62bb8` | Pending |
+
+Each transport receipt has three existing real-LAN JUnit skips; each local
+release Python receipt has one environment skip. They are repeated receipts,
+not unique behavior counts or physical-device evidence. Reports:
+[artifact scope](audits/2026-10-27-CI-ARTIFACT-SCOPE.md),
+[declared source scope](audits/2026-10-27-DECLARED-SOURCE-SCOPE.md), and
+[separate-process LAN](audits/2026-10-27-SEPARATE-PROCESS-LAN.md).
+
+A focused verification-boundaries integration preserves all three component
+histories, regenerates their combined inventory and reruns affected checks.
+It must join qualified `main` and pass fresh exact-head hosted checks before
+normal protected merge. No duplicated premature Apple runs are needed. Issues
+stay open pending their actual acceptance criteria; no Store publication,
+physical multiplayer/background, battery/thermal, RPC benefit or assistive-
+technology acceptance is claimed.
+
 ## September checkpoint (historical)
 
 **The readiness continuation is integrated into `main`; this is not Store-release

@@ -58,10 +58,22 @@ original checkout; its unchanged baseline correctly failed before source/setting
 mutation. That administrative failure is preserved, not relabeled successful.
 The corrected helper asserts its dedicated worktree before making owned changes.
 
+## Later committed-source checks
+
+At clean `c5259efac0644e88f732c7ef8b48912bf89f862a`, tree
+`380f9b505c6486776a16c3c7f0779a73ad5e2b18`, strict transport desktop tests,
+plain/type-aware Detekt and release automation passed: **341 transport cases**
+(zero failures/errors, three existing LAN skips) and **690 Python cases** (one
+environment skip). Inventory40,485 and pinned ShellCheck/Actionlint passed.
+Source stayed unchanged, build exited0 and private Gradle stop exited0.
+Checks-log SHA256:
+`08ac8197646807b94653a58c433e7b05ad400e264f2131b3fe99ef787182aab1`.
+This update records that later source, not a test executed at this newer report.
+
 ## Remaining gates
 
-Committed-source strict transport tests, plain/type-aware Detekt, release
-controls/inventory and exact-head hosted qualification remain required before
+The combined candidate must rerun affected strict controls/inventory, join
+qualified main and pass exact-head hosted qualification before
 protected integration. Keep #269 open until verified integration. This repairs
 the two reproduced isolation scans, not every other repository text scan.
 Generated-source execution is not Apple compilation/runtime. No physical device,
