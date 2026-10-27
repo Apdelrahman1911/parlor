@@ -155,6 +155,16 @@ tasks.register("productionCheck") {
 }
 
 subprojects {
+    // AGP 8.13.2 treats partial lint analysis as relocatable, but lint 9.1.1
+    // stores root-level Gradle findings as $HOME paths, not project variables.
+    // A shared cache can therefore restore another checkout's source paths.
+    // Keep caching within this checkout; only lint analysis needs root ownership.
+    // Re-review this pinned internal task API when upgrading AGP/lint.
+    val lintRepositoryRoot = rootProject.projectDir.canonicalPath
+    tasks.withType<com.android.build.gradle.internal.lint.AndroidLintAnalysisTask>().configureEach {
+        inputs.property("parlor.lintRepositoryRoot", lintRepositoryRoot)
+    }
+
     // Every included application/library module is production-relevant. Apply
     // static analysis here instead of relying on each module to opt in; a new
     // module therefore receives the gate automatically.
