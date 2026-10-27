@@ -19,6 +19,33 @@ class ProductionVerificationWorkflowContractTest {
     private val repositoryRoot: File by lazy(::locateRepositoryRoot)
 
     @Test
+    fun public_ios_host_join_taps_require_an_observed_transition_without_replay() {
+        val swift = read("iosApp/iosAppUITests/IOSAppLaunchUITests.swift")
+        val journey = swift.substringAfter("private func verifyAdditionalGamesSetup(")
+            .substringBefore("func testLastLightLocalPlayerFields")
+        listOf("host", "join").forEach { action ->
+            assertContains(journey, "try tapPublicSetupTransition(app, from: copy.$action, to: copy.permission)")
+        }
+        val observer = swift.substringAfter("private func tapPublicSetupTransition(")
+            .substringBefore("private func tapSettledControl(")
+        assertEquals(1, Regex("try tapSetupButton\\(app, prefix: from\\)").findAll(observer).count())
+        listOf(
+            "destination.exists && !source.exists",
+            "XCTWaiter.wait(for: [transitioned], timeout: 10)",
+            "if result != .completed",
+            "XCTAttachment(screenshot: app.screenshot())",
+            "screenshot.lifetime = .keepAlways",
+            "XCTAssertEqual(result, .completed",
+        ).forEach { assertContains(observer, it) }
+        listOf(".tap()", "swipe", "for _", "while ", "app.debugDescription").forEach {
+            // Comments may explain why swiping/replay is disallowed; inspect
+            // executable lines, not documentation, for prohibited actions.
+            val code = observer.lineSequence().map { line -> line.substringBefore("//") }.joinToString("\n")
+            assertFalse(it in code, "Public transition observer must not replay or inspect arbitrary screens: $it")
+        }
+    }
+
+    @Test
     fun linux_job_enforces_tests_analysis_android_release_and_artifact_inspection() {
         val workflow = read(".github/workflows/production-verification.yml")
         val rootBuild = read("build.gradle.kts")

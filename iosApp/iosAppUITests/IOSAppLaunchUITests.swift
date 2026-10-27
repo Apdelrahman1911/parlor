@@ -117,7 +117,7 @@ final class IOSAppLaunchUITests: XCTestCase {
             XCTAssertTrue(setupButton(app, prefix: copy.join).exists)
             XCTAssertFalse(setupButton(app, prefix: copy.local).exists)
 
-            try tapSetupButton(app, prefix: copy.host)
+            try tapPublicSetupTransition(app, from: copy.host, to: copy.permission)
             try tapSetupButton(app, prefix: copy.permission)
             XCTAssertTrue(app.textViews.firstMatch.waitForExistence(timeout: 10))
             XCTAssertTrue(setupButton(app, prefix: copy.hostContinue).waitForExistence(timeout: 10))
@@ -132,7 +132,7 @@ final class IOSAppLaunchUITests: XCTestCase {
             XCTAssertFalse(setupButton(app, prefix: copy.hostContinue).exists)
 
             try tapSetupButton(app, prefix: game)
-            try tapSetupButton(app, prefix: copy.join)
+            try tapPublicSetupTransition(app, from: copy.join, to: copy.permission)
             try tapSetupButton(app, prefix: copy.permission)
             let name = app.textViews.firstMatch
             XCTAssertTrue(name.waitForExistence(timeout: 10))
@@ -230,6 +230,32 @@ final class IOSAppLaunchUITests: XCTestCase {
         }
         XCTFail("Public setup control is not reachable: " + prefix)
         throw NSError(domain: "KeyboardLayoutSetup", code: 1)
+    }
+
+    @MainActor
+    private func tapPublicSetupTransition(_ app: XCUIApplication, from: String, to: String) throws {
+        // Only the public Host/Join choices use this observer. Do not replay a
+        // missed tap or swipe a different screen while searching its destination.
+        try tapSetupButton(app, prefix: from)
+        let source = setupButton(app, prefix: from)
+        let destination = setupButton(app, prefix: to)
+        let transitioned = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            destination.exists && !source.exists
+        }, object: nil)
+        let result = XCTWaiter.wait(for: [transitioned], timeout: 10)
+        if result != .completed {
+            // Capture after the single tap, not before: evidence collection
+            // must not lengthen the gesture or mask the failing input sequence.
+            let screenshot = XCTAttachment(screenshot: app.screenshot())
+            screenshot.name = "Failed public setup transition"
+            screenshot.lifetime = .keepAlways
+            add(screenshot)
+            print("Public setup transition: sourceExists=\(source.exists), " +
+                  "sourceEnabled=\(source.isEnabled), sourceFrame=\(source.frame), " +
+                  "destinationExists=\(destination.exists), appState=\(app.state.rawValue)")
+        }
+        XCTAssertEqual(result, .completed,
+                       "One public setup tap must remove the source and expose its destination")
     }
 
     @MainActor

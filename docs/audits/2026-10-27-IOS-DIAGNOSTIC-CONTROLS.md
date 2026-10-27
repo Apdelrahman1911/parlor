@@ -134,6 +134,11 @@ no failures. Rejected projects leave both copied inputs unchanged. These are
 local tooling tests, not native runtime results. Fresh source inventory,
 committed-source strict checks, hosted CI, control-delta review and a new
 preflight must precede another actual-app diagnostic; the old approval is not reused.
+At committed inventory head `9f172dc3`, strict `:shared:transport-p2p:desktopTest
+productionReleaseAutomationCheck` passed with exit0, private Gradle stop0 and
+source unchanged. Transport332 receipts (three real-LAN skips), release690
+Python cases (one local environment skip), inventory and checksum-pinned
+ShellCheck/Actionlint passed. Later observer edits require new affected checks.
 
 ### Fresh main public-navigation failure — not qualified
 
@@ -158,6 +163,16 @@ tap. Why the native tap did not advance remains **unverified**; do not attribute
 it to permission evidence, increase a timeout, auto-repeat the action, or claim
 a shipping fix without further instrumentation/runtime evidence. Failed
 artifacts remain preserved outside shipping source.
+
+[Issue #267](https://github.com/Apdelrahman1911/parlor/issues/267) tracks the
+distinct native-input investigation after open/closed issue and related-PR
+deduplication. The XCTest journey now observes the actual Host/Join transition
+immediately after one unchanged native tap: the source must disappear and the
+permission destination must exist. It does not search by swiping another
+screen, lengthen the tap, or replay an action. On failure only, it retains a
+public setup screenshot and non-sensitive existence/frame/app-state metrics.
+A source-contract regression guards those requirements; it is **not** native
+touch verification or a root-cause fix. Fresh hosted XCTest remains required.
 
 ## Fresh protection observations and outstanding gates
 
