@@ -1,6 +1,26 @@
-# Project status — 2026-10-27
+# Project status — 2026-10-28
 
-## Latest free-hosted CI checkpoint (22:26 UTC; not merged)
+## Latest CI recovery checkpoint (October 28; not merged)
+
+[Fresh PR run 40595428550](https://github.com/Apdelrahman1911/parlor/actions/runs/40595428550)
+at `1761ad2d` **failed**. The original macOS Desktop build/tests pass but evidence
+creation times out. One guarded specific-job retry restores upload/cleanup, then
+fails the exhaustive Whodunit trace's shared 60-second coroutine deadline.
+Seven other producers and the original join pass; independent partial checking
+verifies their source/artifact/native/output custody, 672 KMP Simulator cases and
+16 Swift methods, explicitly **not** the full failed run. Successful Release
+executions are carried over, not rebuilt. No additional blind retry or merge.
+
+[#274 and the regression report](audits/2026-10-28-WHODUNIT-TRACE-TIMEOUT.md)
+document the fix: 14 independently timed case/mode tests plus a coverage guard,
+retaining all 84 combinations, both full repetitions and every recovery assertion.
+Focused local execution passes 15 tests. Identical paced-workload control makes
+the old aggregate fail and the revised 15 tests pass with similar total duration.
+No timeout increase, narrower scenario set or new dependency. Complete strict
+local and fresh hosted qualification of committed source remain required.
+PR #266 stays draft; physical-device, strict protection and Store gates remain.
+
+## Preceding free-hosted CI checkpoint (October 27, 22:26 UTC; not merged)
 
 The ARM64 [full run 40553214698](https://github.com/Apdelrahman1911/parlor/actions/runs/40553214698)
 at frozen `711cc1ab` remains independently qualified: all eight producer lanes

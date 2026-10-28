@@ -16,6 +16,8 @@ import com.parlor.games.whodunit.ui.flow.ResumedSession
 import com.parlor.games.whodunit.ui.flow.validateResumedSessionForCase
 import com.parlor.session.PlayMode
 import kotlinx.coroutines.test.runTest
+import org.junit.jupiter.api.DynamicTest
+import org.junit.jupiter.api.TestFactory
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
@@ -26,23 +28,44 @@ import kotlin.test.assertTrue
 class TestingStoryGameTraceTest {
     private val fixture = TestingStoryFixtures()
 
-    @Test
-    fun everyBundledCaseKillerAndModeCompletesDeterministicallyAndRoundTrips() = runTest {
-        var combinations = 0
-        bundledWhodunitCaseIds.forEach { caseId ->
-            val case = fixture.loadCase(caseId)
-            fixture.modes.forEach { mode ->
-                val seeds = seedsForEveryKiller(case, mode)
-                assertEquals(case.payload.characters.map { it.id }.toSet(), seeds.keys)
-                seeds.forEach { (killer, seed) ->
-                    val first = completeGame(case, mode, seed, killer)
-                    val repeated = completeGame(case, mode, seed, killer)
-                    assertEquals(first, repeated, "$caseId/${mode.raw}/$killer/$seed")
-                    combinations += 1
-                }
-            }
+    /** Bound each independent case/mode, not the wall time of the entire 84-scenario matrix. */
+    @TestFactory
+    fun everyBundledCaseKillerAndModeCompletesDeterministicallyAndRoundTrips(): List<DynamicTest> =
+        traceScenarios().map { (caseId, mode) ->
+            DynamicTest.dynamicTest("$caseId/${mode.raw}") { traceCaseAndMode(caseId, mode) }
         }
-        assertEquals(84, combinations)
+
+    private fun traceCaseAndMode(caseId: String, mode: ModeId) = runTest {
+        val case = fixture.loadCase(caseId)
+        val seeds = seedsForEveryKiller(case, mode)
+        assertEquals(case.payload.characters.map { it.id }.toSet(), seeds.keys)
+        assertEquals(fixture.players.size, seeds.size)
+        var combinations = 0
+        seeds.forEach { (killer, seed) ->
+            val first = completeGame(case, mode, seed, killer)
+            val repeated = completeGame(case, mode, seed, killer)
+            assertEquals(first, repeated, "$caseId/${mode.raw}/$killer/$seed")
+            combinations += 1
+        }
+        assertEquals(fixture.players.size, combinations)
+    }
+
+    @Test
+    fun traceMatrixPreservesEveryBundledCaseAndBothModes() {
+        val scenarios = traceScenarios()
+        val expectedModes = setOf(WhodunitIds.ClassicVoteModeId, WhodunitIds.EliminationModeId)
+        assertEquals(7, bundledWhodunitCaseIds.size)
+        assertEquals(expectedModes, fixture.modes.toSet())
+        assertEquals(14, scenarios.size)
+        assertEquals(14, scenarios.toSet().size)
+        bundledWhodunitCaseIds.forEach { caseId ->
+            assertEquals(expectedModes, scenarios.filter { it.first == caseId }.map { it.second }.toSet())
+        }
+        assertEquals(84, scenarios.size * fixture.players.size)
+    }
+
+    private fun traceScenarios(): List<Pair<String, ModeId>> = bundledWhodunitCaseIds.flatMap { caseId ->
+        fixture.modes.map { mode -> caseId to mode }
     }
 
     private fun seedsForEveryKiller(case: ValidatedCase<WhodunitCase>, mode: ModeId): Map<String, Long> {

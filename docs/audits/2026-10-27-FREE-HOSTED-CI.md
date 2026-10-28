@@ -301,3 +301,24 @@ journey. This does not establish the separate native query/Host-event root cause
 (#267), and the earlier ARM64 pass does not qualify this later source. Final
 strict local checks and fresh full standard-hosted verification are required;
 retain the original frozen branch and every failed attempt unchanged.
+
+
+### Fresh PR40595428550 — failed Desktop retry, not a qualified benchmark
+
+The integrated1761ad2d PR run retains two distinct macOS failures: original
+strict compilation/tests pass but evidence CreateArtifact times out; its sole
+justified infrastructure-job retry successfully uploads/cleans evidence but
+fails the exhaustive Whodunit trace's aggregate coroutine deadline. Other
+seven producers plus original join pass and their source/upload/native/output
+custody is independently checked, including672 KMP Simulator and16 Swift cases.
+Those partial results never qualify the full failed run. Successful executions
+were carried over; GitHub's rematerialized API job IDs/attempt fields do not
+prove a rebuild. Actual uploaded ownership receipts bind their executed attempt1.
+
+[The dedicated regression report](2026-10-28-WHODUNIT-TRACE-TIMEOUT.md) documents
+14 independent case/mode deadlines with unchanged84-combination coverage and
+identical paced fault-injection evidence. This is a Desktop test harness repair,
+not a production gameplay/native-input fix or measured throughput improvement.
+Revised committed source needs fresh complete checks. DefaultARM remains;
+all architectures/optimizedRelease/checks/evidence and free standard runners
+are preserved. No further blind test retry, paid runner or merge qualification.
