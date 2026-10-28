@@ -1,6 +1,53 @@
 # Project status — 2026-10-28
 
-## Current integration and fresh-main verification (October 28, 02:44 UTC)
+## Current verified integration (October 28, 05:57 UTC)
+
+[PR #277](https://github.com/Apdelrahman1911/parlor/pull/277) is **MERGED** as
+`aea0e47f610d30cce0adbb3294c9428ac3015648`, at04:51:17UTC, by normal protected
+merge. Its tree exactly matches qualified PR source16488317. Fresh
+[PR40624827444](https://github.com/Apdelrahman1911/parlor/actions/runs/40624827444)
+and [actual-main40634650927](https://github.com/Apdelrahman1911/parlor/actions/runs/40634650927)
+independently qualify **all eight producers plus the original required Apple
+join**, exact source/upload/native/output custody, **20 actual Swift methods,
+677 current KMP Simulator cases**, and all15 Whodunit story-matrix cases in
+every Desktop lane. Native cases have zero failures/errors/skips.
+
+The confirmed cold-root public catalog-anchor defect and evidenced delayed
+Apple QuickPath test interruption are fixed. Accepted tooling/shared defects
+**#265/#268/#269/#271/#272/#273/#274/#276 and #6 are closed** against scoped
+criteria. #267 was automatically closed on merge and is **reopened**: newer
+passing journeys do not establish the original lost native Host-event cause.
+See the [fresh-main acceptance report](audits/2026-10-28-FRESH-MAIN-ACCEPTANCE.md).
+
+The fresh ARM64 default run takes **52.55 minutes including queues**, versus
+the older173.33-minute successful baseline (about70% shorter in this observation,
+not a statistical/device benchmark). The **same-source Intel comparison40639850885
+is pending**; ARM64 remains default. Only standard free public-repository
+runners are used, within the documented five-macOS limit. No billing/cache-cap
+change or overlapping benchmark is introduced. [PR #275's reviewed action-pin
+repair](audits/2026-10-28-CI-ACTION-PINS.md) includes this qualified baseline
+locally; publishing and fresh full hosted/protected/post-merge acceptance remain
+pending until the benchmark finishes.
+
+At this exact merged main, the opt-in real-P2pKit verifier passes3/3 distinct
+Linux host/peer JVM pairs, all six naturally exit0 and owned cleanup passes.
+The native archive independently contains zero historical members and retains
+all677 current Simulator cases. Neither observation certifies physical/mobile
+LAN, native process restoration or mobile CPU/RAM/battery/thermal performance.
+
+**Still open:** #258 strict protection remains0PASS/6FAIL; #267 input causality;
+#251/#252/#253/#259/#260 physical/native gameplay, recovery, persistence and
+accessibility acceptance; #270 final runner comparison; #230 Store ownership,
+signing and external release approvals. Linux has no Xcode, physical devices or
+KVM. RPC #524 source changes remain unpublished in the reviewed rc7; retain
+published Parlor0.7.0-rc3 messaging, with no claimed mobile RPC benefit.
+Current executable Store IDs are `me.parlor.android` / `me.parlor.ios`, with
+ownership still blocked; the older AGENTS identity prose is historical.
+No Store workflow is enabled and no production release is published.
+
+**All checkpoints below are historical, not today's integration status.**
+
+## Historical integration checkpoint (October 28, 02:44 UTC)
 
 [PR #266](https://github.com/Apdelrahman1911/parlor/pull/266) is **MERGED** as
 `f4a91ef3b46a0775caaada9af32aa7b05e639683`, at01:52:43UTC, using normal protected

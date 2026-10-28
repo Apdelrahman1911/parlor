@@ -44,7 +44,9 @@ candidate/promotion gates remain disabled and no release is authorized.
 PR #277 is now normally merged as `aea0e47f610d30cce0adbb3294c9428ac3015648`.
 Its fresh PR run40624827444 independently qualifies all eight producers, final
 join,20 Swift methods,677 KMP Simulator cases and source/artifact/native/output
-custody. Fresh main40634650927 is still pending; the passing PR is not its result.
+custody. Fresh main40634650927 now independently qualifies the same complete
+engineering gates and native case counts; its separate qualification receipt
+SHA256 is`7720f919e013d81489a775267e428596fa5c404f3a7d5ab9c4814b63245911c9`.
 The action-update candidate incorporates this actual qualified merge locally.
 
 At previous clean action candidate `7d27d1e2`, complete strict
@@ -56,7 +58,15 @@ unsigned AAB and pinned shell tools pass. Valid reviewed caches are reused.
 Log SHA256 `1937e33deb99710d144c6f02e5ea2413b8ef80bf1a20894689caa76924c8d57d`.
 This is local engineering evidence, not Apple/device execution.
 
-The new merge/documentation source still requires affected strict/full checks,
+At clean candidate `a22efd93`, the same complete strict aggregate passes in
+139.2s with the same1,817/651/651/112 platform counts,749 release controls and
+disclosed skips. Source is unchanged and owned Gradle stop exits0. Log SHA256
+`6f66d50ba3033a87e67dafe471d5295a08b9f36748c820bd5c8e8148c6273476`.
+Valid caches are reused; this remains Linux engineering evidence, not Apple.
+
+The same-source Intel comparison40639850885 runs at frozen qualified main;
+ARM64 remains default, and this PR is not published while its Mac work competes.
+The newly updated acceptance/report source still requires affected strict/full checks,
 new exact-source hosted qualification and protected integration before275 is
 accepted. No action-update hosted pass, security-policy approval, mobile-device
 result, benchmark winner or Store release is claimed by this checkpoint.
