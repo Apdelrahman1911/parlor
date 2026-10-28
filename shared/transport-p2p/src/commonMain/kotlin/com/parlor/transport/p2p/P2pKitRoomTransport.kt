@@ -686,6 +686,22 @@ class P2pKitRoomTransport @Suppress("LongParameterList") private constructor(
         }
     }
 
+    override suspend fun discardResumableMembership(
+        selection: ResumableSessionSelection,
+    ): Result<Unit, NetError> {
+        if (selection !is CredentialDeletionSelection) return Result.Failure(NetError.SecureStorageUnavailable)
+        val invalidated = try {
+            credentialStore.invalidateSelectedMembership(selection)
+        } catch (@Suppress("TooGenericExceptionCaught") failure: Exception) {
+            failure.rethrowIfCancellation()
+            return Result.Failure(NetError.SecureStorageUnavailable)
+        }
+        return when (invalidated) {
+            is Result.Success -> Result.Success(Unit)
+            is Result.Failure -> Result.Failure(NetError.SecureStorageUnavailable)
+        }
+    }
+
     override suspend fun discardResumableSession(): Result<Unit, NetError> {
         val credential = when (val loaded = credentialStore.loadResumeCandidate()) {
             is Result.Failure -> return Result.Failure(NetError.SecureStorageUnavailable)
@@ -735,10 +751,24 @@ class P2pKitRoomTransport @Suppress("LongParameterList") private constructor(
         expectedGameProtocol: HostedGameProtocol,
     ): Result<LocalRoom, NetError> = resumeMembership(expectedGameProtocol)
 
+    override suspend fun resumeLastSession(
+        expectedGameProtocol: HostedGameProtocol,
+        selection: ResumableSessionSelection,
+    ): Result<LocalRoom, NetError> {
+        if (selection !is CredentialDeletionSelection) return Result.Failure(NetError.NotConnected)
+        return resumeMembership(expectedGameProtocol, selection)
+    }
+
+    private fun CredentialStoreError.resumeLoadError(): NetError =
+        if (this == CredentialStoreError.TransactionMismatch) NetError.NotConnected else NetError.SecureStorageUnavailable
+
     @Suppress("LongMethod") // One transactional resume path owns kit cleanup on every exit.
-    private suspend fun resumeMembership(expectedGameProtocol: HostedGameProtocol?): Result<LocalRoom, NetError> {
-        val credential = when (val loaded = credentialStore.loadResumeCandidate()) {
-            is Result.Failure -> return Result.Failure(NetError.SecureStorageUnavailable)
+    private suspend fun resumeMembership(
+        expectedGameProtocol: HostedGameProtocol?,
+        selection: CredentialDeletionSelection? = null,
+    ): Result<LocalRoom, NetError> {
+        val credential = when (val loaded = credentialStore.loadResumeCandidate(selection)) {
+            is Result.Failure -> return Result.Failure(loaded.error.resumeLoadError())
             is Result.Success -> loaded.data ?: return Result.Failure(NetError.NotConnected)
         }
         if (expectedGameProtocol != null && (

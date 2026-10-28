@@ -9,6 +9,7 @@ import com.parlor.engine.definition.GameMetadata
 import com.parlor.designsystem.icons.ParlorArtwork
 import com.parlor.designsystem.theme.ParlorAccent
 import com.parlor.session.PlayMode
+import com.parlor.networking.transport.ResumableSessionSelection
 import com.parlor.session.multidevice.MultiplayerSessionRole
 import com.parlor.session.multidevice.MultiplayerSessionRoute
 import kotlin.jvm.JvmInline
@@ -130,7 +131,10 @@ internal sealed interface GameShellLaunch {
     data class ResumeMultiplayer(
         override val gameId: GameId,
         val displayName: String,
-    ) : GameShellLaunch
+        val selection: ResumableSessionSelection,
+    ) : GameShellLaunch {
+        override fun toString(): String = "ResumeMultiplayer(gameId=${gameId.raw})"
+    }
 
     data class RestoreOwnedMultiplayer(
         val route: MultiplayerSessionRoute,
@@ -235,12 +239,13 @@ internal class GameShellRouter(
         gameId: GameId,
         gameVersion: Int,
         displayName: String,
+        selection: ResumableSessionSelection? = null,
     ): GameShellLaunch.ResumeMultiplayer? = registry.byId(gameId)
         ?.takeIf { binding ->
-            binding.capabilities.supports(GameEntryMode.Join) &&
+            selection != null && binding.capabilities.supports(GameEntryMode.Join) &&
                 binding.multiplayerContract?.gameVersion == gameVersion
         }
-        ?.let { GameShellLaunch.ResumeMultiplayer(gameId, displayName) }
+        ?.let { GameShellLaunch.ResumeMultiplayer(gameId, displayName, requireNotNull(selection)) }
 
     fun restoreOwned(route: MultiplayerSessionRoute): GameShellLaunch.RestoreOwnedMultiplayer? {
         val requiredMode = when (route.role) {

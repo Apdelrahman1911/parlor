@@ -10,6 +10,25 @@ import kotlin.test.assertEquals
 
 class BoundResumeDefaultTest {
     @Test
+    fun unsupported_membership_resume_and_leave_never_fall_back_to_other_memberships() = runTest {
+        val transport = object : RoomTransport {
+            override val capability = TransportCapability(false, 1, 1024)
+            override suspend fun host(config: HostConfig): Result<LocalRoom, NetError> = error("Unexpected host")
+            override suspend fun join(code: String, displayName: String): Result<LocalRoom, NetError> = error("Unexpected join")
+            override suspend fun resumableSession(): Result<ResumableSessionInfo?, NetError> = error("Unsafe metadata preflight")
+            override suspend fun resumeLastSession(): Result<LocalRoom, NetError> = error("Unbound resume loses selection")
+            override suspend fun resumeLastSession(expectedGameProtocol: HostedGameProtocol): Result<LocalRoom, NetError> =
+                error("Game-only resume loses membership")
+            override suspend fun discardResumableSession(): Result<Unit, NetError> = error("Unselected deletion")
+        }
+        val selection = object : ResumableSessionSelection {}
+        assertEquals(Result.Failure(NetError.NotConnected), transport.resumeLastSession(
+            HostedGameProtocol(GameId("fixture-game"), 1), selection,
+        ))
+        assertEquals(Result.Failure(NetError.SecureStorageUnavailable), transport.discardResumableMembership(selection))
+    }
+
+    @Test
     fun unsupported_selected_resume_never_falls_back_to_unbound_resume_or_metadata_preflight() = runTest {
         val transport = object : RoomTransport {
             override val capability = TransportCapability(false, 1, 1024)

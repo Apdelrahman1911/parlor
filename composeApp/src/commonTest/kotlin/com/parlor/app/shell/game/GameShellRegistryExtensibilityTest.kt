@@ -8,6 +8,7 @@ import com.parlor.app.shell.playmode.toPlayModePickerAvailability
 import com.parlor.app.shell.playmode.toPlayModePickerModel
 import com.parlor.core.ids.CaseId
 import com.parlor.core.ids.GameId
+import com.parlor.networking.transport.ResumableSessionSelection
 import com.parlor.core.ids.ModeId
 import com.parlor.core.ids.PlayerId
 import com.parlor.core.ids.SessionId
@@ -136,6 +137,7 @@ class GameShellRegistryExtensibilityTest {
                 gameId = fixtureDefinition.id,
                 gameVersion = 1,
                 displayName = "Peer",
+                selection = object : ResumableSessionSelection {},
             ),
         )
         assertEquals(
@@ -144,8 +146,14 @@ class GameShellRegistryExtensibilityTest {
                 gameId = fixtureDefinition.id,
                 gameVersion = 99,
                 displayName = "Peer",
+                selection = object : ResumableSessionSelection {},
             ),
         )
+    }
+
+    @Test
+    fun multiplayer_resume_without_observed_membership_fails_closed() {
+        assertEquals(null, router.resumeMultiplayer(fixtureDefinition.id, 1, "Peer"))
     }
 
     @Test

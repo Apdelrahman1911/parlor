@@ -8,6 +8,7 @@ import assertk.assertions.isNotSameInstanceAs
 import assertk.assertions.isSameInstanceAs
 import assertk.assertions.isTrue
 import com.parlor.core.ids.GameId
+import com.parlor.networking.transport.ResumableSessionSelection
 import com.parlor.core.ids.PlayerId
 import com.parlor.core.result.Result
 import com.parlor.networking.protocol.HostMessage
@@ -565,6 +566,46 @@ class ProcessMultiplayerSessionOwnerTest {
         val replacement = FakeRoom(isHost = false)
         val reopened = owner.acquire(route) { Result.Success(replacement) }
         assertThat((reopened as Result.Success).data.room).isSameInstanceAs(replacement)
+    }
+
+    @Test
+    fun cold_selected_resume_leave_passes_its_ownership_and_never_uses_global_discard() = runTest {
+        val selection = object : ResumableSessionSelection {}
+        val observed = mutableListOf<ResumableSessionSelection>()
+        val owner = ProcessMultiplayerSessionOwner(
+            backgroundScope,
+            discardSelectedMembership = { observed += it; Result.Success(Unit) },
+            discardResumableSession = { error("Unselected discard would revoke a replacement") },
+        )
+        val route = MultiplayerSessionRoute.peer(GameId("fixture-game"), "Peer", "", true, selection)
+        owner.acquire(route) { Result.Failure(NetError.NotConnected) }
+        assertThat(owner.leaveRoute(route, SessionEndReason.Cancelled)).isEqualTo(Result.Success(Unit))
+        assertThat(observed).isEqualTo(listOf(selection))
+        assertThat(owner.state.value).isEqualTo(ProcessMultiplayerState.Idle)
+    }
+
+    @Test
+    fun unsupported_selected_discard_retains_route_without_unselected_fallback() = runTest {
+        val selection = object : ResumableSessionSelection {}
+        val owner = ProcessMultiplayerSessionOwner(backgroundScope) { error("Unselected fallback") }
+        val route = MultiplayerSessionRoute.peer(GameId("fixture-game"), "Peer", "", true, selection)
+        owner.acquire(route) { Result.Failure(NetError.Timeout) }
+        assertThat(owner.leaveRoute(route, SessionEndReason.Cancelled))
+            .isEqualTo(Result.Failure(NetError.SecureStorageUnavailable))
+        assertThat((owner.state.value as ProcessMultiplayerState.Failed).route).isEqualTo(route)
+    }
+
+    @Test
+    fun different_resume_memberships_are_distinct_owner_routes_without_logging_their_handles() {
+        val selected = object : ResumableSessionSelection { override fun toString() = "DO-NOT-LOG" }
+        val other = object : ResumableSessionSelection {}
+        val route = MultiplayerSessionRoute.peer(GameId("fixture-game"), "Peer", "", true, selected)
+        val same = MultiplayerSessionRoute.peer(GameId("fixture-game"), "Peer", "", true, selected)
+        val replacement = MultiplayerSessionRoute.peer(GameId("fixture-game"), "Peer", "", true, other)
+        assertThat(route).isEqualTo(same)
+        assertThat(route.hashCode()).isEqualTo(same.hashCode())
+        kotlin.test.assertNotEquals(route, replacement)
+        kotlin.test.assertFalse(route.toString().contains("DO-NOT-LOG"))
     }
 
     @Test

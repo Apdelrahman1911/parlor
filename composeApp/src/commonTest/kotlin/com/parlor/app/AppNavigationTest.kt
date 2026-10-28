@@ -5,6 +5,7 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.navigationevent.NavigationEvent
 import com.parlor.app.shell.game.GameShellLaunch
 import com.parlor.core.ids.GameId
+import com.parlor.networking.transport.ResumableSessionSelection
 import com.parlor.core.ids.SessionId
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -65,7 +66,7 @@ class AppNavigationTest {
 
     @Test
     fun a_game_launch_is_process_local_and_cannot_be_bypassed_by_tab_selection() {
-        val launch = GameShellLaunch.ResumeMultiplayer(gameId, displayName = "Private player")
+        val launch = GameShellLaunch.ResumeMultiplayer(gameId, displayName = "Private player", selection = object : ResumableSessionSelection {})
         val navigator = AppNavigator()
 
         val route = navigator.openGame(launch)

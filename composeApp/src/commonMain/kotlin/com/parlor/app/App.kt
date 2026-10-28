@@ -155,6 +155,7 @@ internal fun App(settings: SettingsStore) {
                                 gameId = info.gameId,
                                 gameVersion = info.gameVersion,
                                 displayName = info.displayName,
+                                selection = info.deletionSelection,
                             ) != null
                         },
                     )
@@ -284,6 +285,7 @@ internal fun App(settings: SettingsStore) {
                                                 gameId = it.gameId,
                                                 gameVersion = it.gameVersion,
                                                 displayName = it.displayName,
+                                                selection = it.deletionSelection,
                                             )
                                         }
                                         if (launch == null) {

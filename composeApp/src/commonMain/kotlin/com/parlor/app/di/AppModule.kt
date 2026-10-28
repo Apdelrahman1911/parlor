@@ -46,6 +46,7 @@ val coreModule: Module = module {
         ProcessMultiplayerSessionOwner(
             processScope = get(qualifier = named("multiplayerSession")),
             discardResumableSession = roomTransport::discardResumableSession,
+            discardSelectedMembership = roomTransport::discardResumableMembership,
         )
     }
     // Strict JSON for content validation: unknown fields in case payloads fail
