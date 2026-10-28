@@ -8,7 +8,8 @@ qualified all eight producers and the original Apple join at `0a6c5fb1`.
 Merge tree exactly equals that qualified PR tree.
 
 Fresh main [40617633026](https://github.com/Apdelrahman1911/parlor/actions/runs/40617633026)
-has a failed iOS runtime/UI lane. At `IOSAppLaunchUITests.swift:144`, Arabic
+has a failed iOS runtime/UI lane. All seven other producers and the original
+Apple join pass, but the **whole run remains failed**. At `IOSAppLaunchUITests.swift:144`, Arabic
 Egyptian Dominoes Join fails the10s exact `Table Test` value observer. Its
 referenced recording shows **all characters correctly entered** and the enabled
 Parlor continue action. Apple's QuickPath tutorial appears late, remains over
@@ -61,7 +62,11 @@ independent cold-catalog change grows shared Simulator cases672→677.
 
 [#276](https://github.com/Apdelrahman1911/parlor/issues/276) tracks this confirmed
 harness race; #267 retains its separate unresolved input-boundary cause.
-Focused shared/source-contract tests pass. Full committed-source strict checks,
+Focused shared/source-contract tests pass. The first committed-source local
+aggregate fails before task execution on a Maven Central `.klib` TLS handshake,
+with source unchanged and Gradle stop0; it does not establish a code/test failure.
+Default JDK HTTPS controls are retained; no certificate/source override is used.
+Full committed-source strict checks,
 actual hosted Swift/native execution, protected integration and fresh main
 acceptance remain pending. Linux has no Xcode/UIKit or physical mobile devices.
 No release, security/protection acceptance or mobile performance claim.

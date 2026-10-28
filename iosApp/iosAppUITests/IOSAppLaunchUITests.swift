@@ -380,7 +380,7 @@ final class IOSAppLaunchUITests: XCTestCase {
         // public interruption within this SAME deadline, never replay input.
         let committed = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
             if let introduction {
-                dismissKeyboardIntroduction(app, dismissal: introduction)
+                self.dismissKeyboardIntroduction(app, dismissal: introduction)
             }
             return field.exists && (field.value as? String) == expected
         }, object: nil)

@@ -48,7 +48,8 @@ class HomeCatalogScrollStateTest {
 
     @Test
     fun platform_saved_state_contains_no_recovery_identifier_or_arbitrary_ui_key() {
-        for (key in listOf("local:synthetic-save", "multiplayer-resume", "recovery-loading", "game:Invalid")) {
+        for (key in listOf("local:synthetic-save", "multiplayer-resume", "recovery-loading", "game:Invalid",
+            "game:" + "a".repeat(128))) {
             val state = assertNotNull(HomeCatalogScrollState.saver.restore(listOf(key, 23)))
             assertEquals(listOf("games-label", 0), save(state))
         }
@@ -57,7 +58,7 @@ class HomeCatalogScrollStateTest {
 
     @Test
     fun malformed_platform_values_restore_a_safe_public_origin_without_throwing() {
-        for (values in listOf(emptyList(), listOf(8), listOf("game:ghamza", "23"),
+        for (values in listOf(emptyList(), listOf(8), listOf(8, 23), listOf("game:ghamza", "23"),
             listOf("game:ghamza", 23, "extra"))) {
             val state = assertNotNull(HomeCatalogScrollState.saver.restore(values))
             assertEquals(listOf("home-top-bar", 0), save(state))

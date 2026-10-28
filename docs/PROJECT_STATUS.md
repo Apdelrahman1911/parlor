@@ -1,6 +1,6 @@
 # Project status — 2026-10-28
 
-## Current integration and fresh-main verification (October 28, 02:45 UTC)
+## Current integration and fresh-main verification (October 28, 02:44 UTC)
 
 [PR #266](https://github.com/Apdelrahman1911/parlor/pull/266) is **MERGED** as
 `f4a91ef3b46a0775caaada9af32aa7b05e639683`, at01:52:43UTC, using normal protected
@@ -12,8 +12,8 @@ upload/native/output custody,672 KMP Simulator cases,16 Swift methods and the
 **Fresh main40617633026 is not qualified**: the Arabic additional-game exact-name
 observer fails. Its referenced recording confirms full typed input; a delayed
 Apple QuickPath tutorial blocks native lookup. See [#276 and the narrow harness
-correction](audits/2026-10-28-IOS-KEYBOARD-INTRODUCTION.md). Other Release lanes
-are still monitored; no failed evidence is relabeled or blindly rerun.
+correction](audits/2026-10-28-IOS-KEYBOARD-INTRODUCTION.md). All seven other producers and the original Apple join pass; the whole run
+remains failed. No failed evidence is relabeled or blindly rerun.
 
 The [confirmed cold-root catalog defect](audits/2026-10-28-COLD-CATALOG-RESTORATION.md)
 extends #273 beyond live navigation. Root registry recreation reproduces the
