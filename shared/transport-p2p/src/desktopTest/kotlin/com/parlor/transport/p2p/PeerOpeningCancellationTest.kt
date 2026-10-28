@@ -565,9 +565,13 @@ private class OpeningFixture(
         }
     }
 
-    suspend fun open(): Result<LocalRoom, NetError> =
-        if (resume) transport.resumeLastSession(HostedGameProtocol(GameId("fixture-game"), 1))
-        else transport.join("ABCDEF", "Alice")
+    suspend fun open(): Result<LocalRoom, NetError> {
+        if (!resume) return transport.join("ABCDEF", "Alice")
+        val selected = assertNotNull(assertIs<Result.Success<ResumableSessionInfo?>>(
+            transport.resumableSession(),
+        ).data?.deletionSelection)
+        return transport.resumeLastSession(HostedGameProtocol(GameId("fixture-game"), 1), selected)
+    }
 
     suspend fun committedCredential(): ResumableSessionCredential = assertNotNull(
         assertIs<Result.Success<ResumableSessionCredential?>>(store.loadResumeCandidate()).data,
