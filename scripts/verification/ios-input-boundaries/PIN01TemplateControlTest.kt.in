@@ -1,0 +1,110 @@
+package com.parlor.app.inputcopy
+
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.size
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.test.ExperimentalTestApi
+import androidx.compose.ui.test.onNodeWithContentDescription
+import androidx.compose.ui.test.performScrollTo
+import androidx.compose.ui.test.performTouchInput
+import androidx.compose.ui.test.runComposeUiTest
+import androidx.compose.ui.unit.dp
+import com.parlor.app.shell.game.GameEntryMode
+import com.parlor.app.shell.game.GameShellCapabilities
+import com.parlor.app.shell.playmode.PlayModePickerScreen
+import com.parlor.designsystem.localization.AppLanguage
+import com.parlor.designsystem.localization.ProvideAppLanguage
+import com.parlor.designsystem.theme.ParlorTheme
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.double
+import kotlinx.serialization.json.jsonArray
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
+import kotlinx.serialization.json.int
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
+
+@OptIn(ExperimentalTestApi::class)
+class PIN01TemplateControlTest {
+    @Test
+    fun actual_public_card_delivers_one_callback_with_initial_and_final_samples() = runComposeUiTest {
+        var callbacks = 0
+        setContent {
+            PIN01PublicStage(0)
+            ProvideAppLanguage(AppLanguage.English) {
+                ParlorTheme(reducedMotion = true) {
+                    Box(Modifier.size(320.dp, 740.dp)) {
+                        PlayModePickerScreen(onModeSelected = {}, onHost = { callbacks++ }, onJoin = {},
+                            onBack = {}, capabilities = GameShellCapabilities(setOf(GameEntryMode.Host, GameEntryMode.Join)),
+                            supportedPlayerCounts = 3..10)
+                    }
+                }
+            }
+        }
+        onNodeWithContentDescription("Open a room and show a code your friends can join.")
+            .performScrollTo().performTouchInput { down(center); advanceEventTime(50); up() }
+        runOnIdle {
+            assertEquals(1, callbacks)
+            val rows = Json.parseToJsonElement(PIN01Observation.snapshot()).jsonObject.getValue("rows").jsonArray
+            val pointer = rows.map { it.jsonArray }.filter {
+                it[1].jsonPrimitive.double == 2.0 && it[2].jsonPrimitive.double == 1.0
+            }
+            assertTrue(pointer.any { it[3].jsonPrimitive.double == 0.0 })
+            assertTrue(pointer.any { it[3].jsonPrimitive.double == 1.0 })
+        }
+    }
+    @Test
+    fun closed_scope_records_nothing_and_never_serializes_game_data() {
+        val recorder = PIN01Recorder()
+        recorder.clock = { 1.0 }
+        recorder.callback(1)
+        recorder.record(1, 0, 1, 1, 1, 0, 1.0, 2.0)
+        assertFalse(recorder.armed)
+        assertEquals(0, Json.parseToJsonElement(recorder.snapshot()).jsonObject.getValue("rows").jsonArray.size)
+    }
+    @Test
+    fun every_public_stage_and_callback_is_numeric_and_final_stage_closes_capture() {
+        val recorder = PIN01Recorder()
+        recorder.clock = { 1.0 }
+        recorder.publicStage(0)
+        recorder.callback(1)
+        recorder.publicStage(1)
+        assertFalse(recorder.armed)
+        recorder.record(1, 0, 1, 1, 1, 0, 99.0, 99.0)
+        recorder.publicStage(3)
+        assertFalse(recorder.armed)
+        recorder.record(1, 0, 1, 1, 1, 0, 88.0, 88.0)
+        recorder.publicStage(5)
+        recorder.callback(2)
+        assertFalse(recorder.armed)
+        val rows = Json.parseToJsonElement(recorder.snapshot()).jsonObject.getValue("rows").jsonArray
+        assertEquals(4, rows.size)
+        assertTrue(rows.all { it.jsonArray.size == 10 })
+        assertEquals("3.0", rows[1].jsonArray[1].jsonPrimitive.content)
+    }
+    @Test
+    fun capacity_saturates_without_erasing_original_rows() {
+        val recorder = PIN01Recorder()
+        var time = 0.0
+        recorder.clock = { time++ }
+        recorder.publicStage(0)
+        repeat(2000) { recorder.callback(1) }
+        val report = Json.parseToJsonElement(recorder.snapshot()).jsonObject
+        assertEquals(512, report.getValue("rows").jsonArray.size)
+        assertEquals(512, report.getValue("overflow").jsonPrimitive.int)
+        assertEquals("0.0", report.getValue("rows").jsonArray[0].jsonArray[0].jsonPrimitive.content)
+    }
+    @Test
+    fun invalid_geometry_is_counted_not_serialized_or_thrown_into_the_original_callback() {
+        val recorder = PIN01Recorder()
+        recorder.clock = { 1.0 }
+        recorder.publicStage(0)
+        recorder.record(1, 0, 1, 1, 1, 0, Double.NaN, 0.0)
+        recorder.callback(1)
+        val report = Json.parseToJsonElement(recorder.snapshot()).jsonObject
+        assertEquals(1, report.getValue("invalid").jsonPrimitive.int)
+        assertEquals(2, report.getValue("rows").jsonArray.size)
+    }
+}

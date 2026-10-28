@@ -1,0 +1,48 @@
+#if DEBUG && targetEnvironment(simulator)
+import UIKit.UIGestureRecognizerSubclass
+/// COPY ONLY. An extra recognizer can affect arbitration despite these policies.
+/// Native neutrality is UNVERIFIED until the three-arm original-gesture control.
+final class PIN01TouchObserver: UIGestureRecognizer, UIGestureRecognizerDelegate {
+    var isArmed: () -> Bool = { false }
+    var record: (Int32, Int32, Int32, Double, Double, Double) -> Void = { _, _, _, _, _, _ in }
+
+    override init(target: Any?, action: Selector?) {
+        super.init(target: nil, action: nil)
+        cancelsTouchesInView = false
+        delaysTouchesBegan = false
+        delaysTouchesEnded = false
+        delegate = self
+    }
+
+    @available(*, unavailable)
+    required init?(coder: NSCoder) { fatalError("Copy-only observer has no archive initializer") }
+
+    override func canPrevent(_ preventedGestureRecognizer: UIGestureRecognizer) -> Bool { false }
+    override func canBePrevented(by preventingGestureRecognizer: UIGestureRecognizer) -> Bool { false }
+
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer,
+        shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool { true }
+
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent) { observe(touches, phase: 1) }
+    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent) { observe(touches, phase: 2) }
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent) {
+        observe(touches, phase: 3)
+        state = .failed // Never enter began/changed/recognized/ended.
+    }
+    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent) {
+        observe(touches, phase: 4)
+        state = .failed
+    }
+
+    private func observe(_ touches: Set<UITouch>, phase: Int32) {
+        guard Thread.isMainThread, isArmed(), let window = view?.window else { return }
+        // Native coordinates are WINDOW points, not Compose-local coordinates.
+        // Multi-touch locations/identities are not enumerated or serialized.
+        let single = touches.count == 1 ? touches.first : nil
+        let point = single?.location(in: window) ?? .zero
+        let eventMs = (single?.timestamp ?? 0) * 1000
+        record(phase, Int32(min(touches.count, 17)), phase <= 2 ? Int32(min(touches.count, 17)) : 0,
+               Double(point.x), Double(point.y), eventMs)
+    }
+}
+#endif
