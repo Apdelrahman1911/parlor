@@ -67,7 +67,7 @@ The updated guard verifies the exact capability-filter derivation **and**
 `items = filteredGames`; original ID/placeholder/localization exclusions remain.
 No rendering/privacy assertion or runtime test is removed.
 
-Local full execution otherwise has1,816/1,817 Desktop passes (three existing
+Local full execution has1,817 Desktop cases (one failure, three existing
 LAN skips),651 Android unit cases per Debug/Release variant and112 GitHub-test
 variant cases, zero errors. Lint/R8/unsigned AAB and749 release controls run;
 the full command is failed, not qualified. Original failing XML SHA256:
