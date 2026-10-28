@@ -55,3 +55,22 @@ Committed-source full strict checks, fresh hosted native/architecture checks,
 protected integration and fresh main acceptance are still required. Actual
 Android process death/iOS native restoration and physical-device journeys remain
 unverified; Desktop registry recreation does not certify them.
+
+## Full-gate regression correction
+
+At frozen4294876f the complete local aggregate and fresh hosted Linux ARM64
+run40623162752 both fail exactly one Desktop source-contract assertion:
+`ProductionUiAccessibilityContractTest:121` still requires `items = games`.
+The refactor now shares `filteredGames` between restoration keys, count and
+rendering; it remains derived solely from the registered `games` argument.
+The updated guard verifies the exact capability-filter derivation **and**
+`items = filteredGames`; original ID/placeholder/localization exclusions remain.
+No rendering/privacy assertion or runtime test is removed.
+
+Local full execution otherwise has1,816/1,817 Desktop passes (three existing
+LAN skips),651 Android unit cases per Debug/Release variant and112 GitHub-test
+variant cases, zero errors. Lint/R8/unsigned AAB and749 release controls run;
+the full command is failed, not qualified. Original failing XML SHA256:
+`0eba566966bdc9212ba8f51bb390282132bf2cf98ea891e13ea3aa4761352e3f`.
+The429 checkout/observer remains frozen. Final guard correction needs new
+committed-source complete checks and fresh hosted qualification.

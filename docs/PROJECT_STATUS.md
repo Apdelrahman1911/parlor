@@ -21,7 +21,10 @@ index/key mismatch in EN/AR200%; keyed restoration passes18 focused tests and
 Detekt. All six negative-control journeys fail with original wiring, then all18
 pass again after verified removal. A candidate also corrects the keyboard-test
 race with four native policy regressions. Neither candidate is merged/qualified;
-full strict checks and fresh hosted execution remain required.
+full strict checks and fresh hosted execution remain required. The4294876f
+full local/hosted ARM64 check exposes one stale registered-catalog source guard,
+now corrected to verify exact registered-list filtering and consumption; failed
+results remain preserved, and a new-source complete rerun is required.
 
 At frozen merged main,749 release Python controls pass (one known Linux
 platform skip), and three real P2pKit separate-process host/peer pairs pass,
