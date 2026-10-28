@@ -1,6 +1,6 @@
 # Project status — 2026-10-28
 
-## Latest protected integration and catalog follow-up (14:13 UTC)
+## Latest protected integration and catalog follow-up (14:27 UTC)
 
 [PR #278](https://github.com/Apdelrahman1911/parlor/pull/278) is merged as
 `66702a77532a5e3a0c5f370d4ce8c903742569c3`. Its fresh
@@ -20,7 +20,16 @@ Four focused methods and three independently restored mutation controls pass;
 full checks, fresh hosted qualification and protected integration are still
 required. This extends #259, not completion of the whole UI/game overhaul.
 
+The candidate's first full strict check at3944c0a0 **failed** in the unchanged
+real-Gradle fixture: file existence preceded PID content publication. Application
+tests and Release build gates passed, but the aggregate did not qualify.
+[#279's atomic publication correction](audits/2026-10-28-GRADLE-MARKER-PUBLICATION.md)
+and real-Gradle write/publish barrier test pass locally, including a restored
+premature-publication negative control. Original timeout, scoped stop and
+unrelated-registry checks are unchanged; new committed-source full checks remain.
+
 Eight acceptance Issues remain open: #230/#251/#252/#253/#258/#259/#260/#267.
+New confirmed CI-fixture Issue#279 remains open pending integration acceptance.
 No physical-device, strict protection, signing, RPC migration or Store-readiness
 claim is added. No Store workflow, paid runner or additional agent is used.
 

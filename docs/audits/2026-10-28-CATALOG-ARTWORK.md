@@ -61,3 +61,7 @@ This is an implemented, independently testable catalog improvement, **not**
 completion of the whole application/game redesign. #259's native/physical
 journeys, #267's original iOS26.2 input cause, strict protection and Store
 acceptance remain separate outstanding gates.
+
+The first full check exposed the unchanged real-Gradle fixture's partial PID
+publication race. Its [#279 correction and sensitivity test](2026-10-28-GRADLE-MARKER-PUBLICATION.md)
+are a separate non-shipping prerequisite; the failed aggregate is retained.
