@@ -139,9 +139,9 @@ final class IOSAppLaunchUITests: XCTestCase {
             try tapSettledControl(name)
             let keyboard = app.keyboards.firstMatch
             XCTAssertTrue(keyboard.waitForExistence(timeout: 10))
-            dismissKeyboardIntroduction(app, keyboard: keyboard)
+            let introduction = dismissKeyboardIntroduction(app)
             name.typeText("Table Test")
-            assertTextValue(name, equals: "Table Test")
+            assertTextValue(name, in: app, equals: "Table Test", introduction: introduction)
             name.typeText("\n")
             try tapSetupButton(app, prefix: copy.peerContinue)
             XCTAssertTrue(app.textViews.firstMatch.waitForExistence(timeout: 10))
@@ -170,12 +170,12 @@ final class IOSAppLaunchUITests: XCTestCase {
         XCTAssertTrue(first.isHittable)
         try tapSettledControl(first)
         XCTAssertTrue(app.keyboards.firstMatch.waitForExistence(timeout: 10))
-        dismissKeyboardIntroduction(app, keyboard: app.keyboards.firstMatch)
+        let introduction = dismissKeyboardIntroduction(app)
         for index in 1...6 {
             let field = app.textViews["Player \(index)"]
             XCTAssertTrue(field.waitForExistence(timeout: 10))
             field.typeText("Keyboard Player \(index)")
-            assertTextValue(field, equals: "Keyboard Player \(index)")
+            assertTextValue(field, in: app, equals: "Keyboard Player \(index)", introduction: introduction)
             let keyboard = app.keyboards.firstMatch
             XCTAssertTrue(keyboard.exists)
             let top = fullKeyboardTop(app, keyboard: keyboard)
@@ -191,7 +191,7 @@ final class IOSAppLaunchUITests: XCTestCase {
         }, object: nil)
         XCTAssertEqual(XCTWaiter.wait(for: [dismissed], timeout: 10), .completed)
         for index in 1...6 {
-            assertTextValue(app.textViews["Player \(index)"], equals: "Keyboard Player \(index)")
+            assertTextValue(app.textViews["Player \(index)"], in: app, equals: "Keyboard Player \(index)")
         }
         // Stop at public setup; do not create a saved game or reveal private state.
     }
@@ -330,9 +330,9 @@ final class IOSAppLaunchUITests: XCTestCase {
             field.tap()
             let keyboard = app.keyboards.firstMatch
             XCTAssertTrue(keyboard.waitForExistence(timeout: 10))
-            dismissKeyboardIntroduction(app, keyboard: keyboard)
+            let introduction = dismissKeyboardIntroduction(app)
             if cycle == 0 { field.typeText(input) }
-            assertTextValue(field, equals: input)
+            assertTextValue(field, in: app, equals: input, introduction: introduction)
             let keyboardTop = fullKeyboardTop(app, keyboard: keyboard)
             let settled = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
                 let gap = keyboardTop - action.frame.maxY
@@ -367,15 +367,22 @@ final class IOSAppLaunchUITests: XCTestCase {
     @MainActor
     private func assertTextValue(
         _ field: XCUIElement,
+        in app: XCUIApplication,
         equals expected: String,
+        introduction: KeyboardIntroductionDismissal? = nil,
         file: StaticString = #filePath,
         line: UInt = #line
     ) {
         // UIKit's idle notification can precede Compose's accessibility
         // snapshot update. Wait for the exact value, never retype, shorten the
-        // input, or advance Next while characters are still unobserved.
+        // input, or advance Next while characters are still unobserved. Apple
+        // may present its own tutorial after typing begins; handle that exact
+        // public interruption within this SAME deadline, never replay input.
         let committed = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
-            field.exists && (field.value as? String) == expected
+            if let introduction {
+                dismissKeyboardIntroduction(app, dismissal: introduction)
+            }
+            return field.exists && (field.value as? String) == expected
         }, object: nil)
         XCTAssertEqual(XCTWaiter.wait(for: [committed], timeout: 10), .completed,
                        "The full typed value must reach the actual Compose field", file: file, line: line)
@@ -383,15 +390,25 @@ final class IOSAppLaunchUITests: XCTestCase {
     }
 
     @MainActor
-    private func dismissKeyboardIntroduction(_ app: XCUIApplication, keyboard: XCUIElement) {
-        // A fresh simulator may show Apple's QuickPath introduction over
-        // the keys. Dismiss only its native, below-keyboard Continue button.
-        for label in ["Continue", "متابعة"] {
-            let introduction = app.buttons[label]
-            if introduction.exists, introduction.frame.minY >= keyboard.frame.minY {
-                introduction.tap()
-            }
+    @discardableResult
+    private func dismissKeyboardIntroduction(
+        _ app: XCUIApplication,
+        dismissal: KeyboardIntroductionDismissal = KeyboardIntroductionDismissal()
+    ) -> KeyboardIntroductionDismissal {
+        guard !dismissal.hasDismissed else { return dismissal }
+        // The retained failing Arabic recording exposes this exact English
+        // Apple tutorial. Never tap a generic Continue or a Parlor action.
+        let tutorial = app.staticTexts[
+            "Speed up your typing by sliding your finger across the letters to compose a word."
+        ]
+        guard tutorial.exists else { return dismissal }
+        let button = app.buttons["Continue"]
+        guard button.exists else { return dismissal }
+        if dismissal.observe(tutorialExists: true, buttonFrame: button.frame,
+                             applicationFrame: app.frame, hittable: button.isHittable) {
+            button.tap()
         }
+        return dismissal
     }
 
     @MainActor
@@ -499,5 +516,75 @@ final class PublicControlFramesTests: XCTestCase {
         frames.reset()
         XCTAssertFalse(frames.observe(frame: resting, enabled: true))
         XCTAssertTrue(frames.observe(frame: resting, enabled: true))
+    }
+}
+
+// Test-only, per-keyboard-cycle budget for the identified Apple introduction.
+// Absence during the first check must not consume the later dismissal; once
+// admitted, no second tap is allowed even if UIKit briefly retains the modal.
+private final class KeyboardIntroductionDismissal {
+    private(set) var hasDismissed = false
+
+    func observe(tutorialExists: Bool, buttonFrame: CGRect?, applicationFrame: CGRect,
+                 hittable: Bool) -> Bool {
+        guard !hasDismissed, tutorialExists, hittable, let buttonFrame,
+              !applicationFrame.isNull, !applicationFrame.isInfinite, !applicationFrame.isEmpty,
+              !buttonFrame.isNull, !buttonFrame.isInfinite, !buttonFrame.isEmpty,
+              [applicationFrame.minX, applicationFrame.minY, applicationFrame.maxX, applicationFrame.maxY,
+               buttonFrame.minX, buttonFrame.minY, buttonFrame.maxX, buttonFrame.maxY]
+                .allSatisfy({ $0.isFinite }),
+              applicationFrame.size.width > 0, applicationFrame.size.height > 0,
+              buttonFrame.size.width > 0, buttonFrame.size.height > 0,
+              applicationFrame.contains(buttonFrame), buttonFrame.minY >= applicationFrame.midY else {
+            return false
+        }
+        hasDismissed = true
+        return true
+    }
+}
+
+final class KeyboardIntroductionDismissalTests: XCTestCase {
+    private let application = CGRect(x: 0, y: 0, width: 402, height: 874)
+    private let introductionButton = CGRect(x: 140, y: 800, width: 122, height: 44)
+
+    func testLateIntroductionAfterInitialAbsenceCanBeDismissedExactlyOnce() {
+        let dismissal = KeyboardIntroductionDismissal()
+        XCTAssertFalse(dismissal.observe(tutorialExists: false, buttonFrame: nil,
+                                         applicationFrame: application, hittable: false))
+        XCTAssertFalse(dismissal.hasDismissed)
+        XCTAssertTrue(dismissal.observe(tutorialExists: true, buttonFrame: introductionButton,
+                                        applicationFrame: application, hittable: true))
+        XCTAssertTrue(dismissal.hasDismissed)
+        XCTAssertFalse(dismissal.observe(tutorialExists: true, buttonFrame: introductionButton,
+                                         applicationFrame: application, hittable: true))
+    }
+
+    func testGenericContinueWithoutIdentifiedTutorialNeverAdmitsATap() {
+        let dismissal = KeyboardIntroductionDismissal()
+        XCTAssertFalse(dismissal.observe(tutorialExists: false, buttonFrame: introductionButton,
+                                         applicationFrame: application, hittable: true))
+        XCTAssertFalse(dismissal.hasDismissed)
+    }
+
+    func testNonhittableIntroductionDoesNotConsumeTheSingleDismissal() {
+        let dismissal = KeyboardIntroductionDismissal()
+        XCTAssertFalse(dismissal.observe(tutorialExists: true, buttonFrame: introductionButton,
+                                         applicationFrame: application, hittable: false))
+        XCTAssertTrue(dismissal.observe(tutorialExists: true, buttonFrame: introductionButton,
+                                        applicationFrame: application, hittable: true))
+    }
+
+    func testMissingInvalidOffscreenOrUpperScreenButtonCannotBeDismissed() {
+        let frames: [CGRect?] = [nil, .zero, .null, .infinite,
+            CGRect(x: CGFloat.nan, y: 800, width: 122, height: 44),
+            CGRect(x: 140, y: 800, width: -122, height: 44),
+            CGRect(x: 140, y: 850, width: 122, height: 44),
+            CGRect(x: 140, y: 200, width: 122, height: 44)]
+        for frame in frames {
+            let dismissal = KeyboardIntroductionDismissal()
+            XCTAssertFalse(dismissal.observe(tutorialExists: true, buttonFrame: frame,
+                                             applicationFrame: application, hittable: true))
+            XCTAssertFalse(dismissal.hasDismissed)
+        }
     }
 }

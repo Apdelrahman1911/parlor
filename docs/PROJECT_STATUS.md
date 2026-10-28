@@ -1,5 +1,37 @@
 # Project status — 2026-10-28
 
+## Current integration and fresh-main verification (October 28, 02:45 UTC)
+
+[PR #266](https://github.com/Apdelrahman1911/parlor/pull/266) is **MERGED** as
+`f4a91ef3b46a0775caaada9af32aa7b05e639683`, at01:52:43UTC, using normal protected
+merge with unchanged rules. [Fresh PR40609628968](https://github.com/Apdelrahman1911/parlor/actions/runs/40609628968)
+qualified all eight producers plus the original Apple join, exact source/tree,
+upload/native/output custody,672 KMP Simulator cases,16 Swift methods and the
+15-case story matrix in all four Desktop lanes. The merge tree equals that PR.
+
+**Fresh main40617633026 is not qualified**: the Arabic additional-game exact-name
+observer fails. Its referenced recording confirms full typed input; a delayed
+Apple QuickPath tutorial blocks native lookup. See [#276 and the narrow harness
+correction](audits/2026-10-28-IOS-KEYBOARD-INTRODUCTION.md). Other Release lanes
+are still monitored; no failed evidence is relabeled or blindly rerun.
+
+The [confirmed cold-root catalog defect](audits/2026-10-28-COLD-CATALOG-RESTORATION.md)
+extends #273 beyond live navigation. Root registry recreation reproduces the
+index/key mismatch in EN/AR200%; keyed restoration passes18 focused tests and
+Detekt. All six negative-control journeys fail with original wiring, then all18
+pass again after verified removal. A candidate also corrects the keyboard-test
+race with four native policy regressions. Neither candidate is merged/qualified;
+full strict checks and fresh hosted execution remain required.
+
+At frozen merged main,749 release Python controls pass (one known Linux
+platform skip), and three real P2pKit separate-process host/peer pairs pass,
+with all six JVMs naturally exiting0 and owned cleanup. This is Linux execution,
+not mobile LAN, battery/thermal, process death or protection qualification.
+#265/#268–#274 remain open pending acceptance; #258/#267 and the physical,
+signing/legal/Store identity/release gates remain separate. No Store publication.
+
+The following checkpoints are historical observations, not current PR status.
+
 ## Latest CI recovery checkpoint (October 28; not merged)
 
 [Fresh PR run 40595428550](https://github.com/Apdelrahman1911/parlor/actions/runs/40595428550)
