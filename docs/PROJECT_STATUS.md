@@ -1,5 +1,46 @@
 # Project status — 2026-10-28
 
+## Verified main and selected-resume follow-up (15:21 UTC)
+
+Automatic [main40701195587](https://github.com/Apdelrahman1911/parlor/actions/runs/40701195587)
+at `66702a77532a5e3a0c5f370d4ce8c903742569c3` now independently qualifies
+all eight producers plus the original Apple join,20 Swift methods,677current
+KMP Simulator cases, all15Whodunit matrix cases and six setup-pointer methods
+in every Desktop lane. Exact source/artifact/native/output custody qualifies;
+receipt SHA256 `4339e68e33345d023d747ae97f6e1cc5db835ca3dc94d7ebc40d8a75c12d882a`.
+Actual UIKit runtime remains iOS18.5/iPhone16Pro on Xcode26.3, not #267's original
+iOS26.2 or a physical device. #267's original input cause remains unresolved.
+
+Draft [catalog PR#280](https://github.com/Apdelrahman1911/parlor/pull/280),
+frozenaf088df5, is locally qualified; fresh PR40711481611 is running, not yet
+fully qualified or merged at this checkpoint. Three producers have passed;
+remaining native/Release producers are running/queued, with no observed failure.
+Normal protected integration is allowed only after full independent qualification;
+no paid runner, check relaxation or automatic blind retry.
+
+A separate [selected-game Resume correction](audits/2026-10-28-RESUME-GAME-BINDING.md)
+executes all six shipping bindings and prevents protected credentials for another
+game/version from starting a selected Resume connection. This is a confirmed
+caller-binding gap/defense-in-depth correction, **not an observed unauthorized
+join or private-data exploit**. Matching identity rotation and all existing
+opening/cancellation assertions remain. Restored negative controls fail exactly
+four adapter guard methods and six unbound shipping-route methods.
+
+Stacked local candidate479e4ac5 (on PR#280's frozen source, not accepted main)
+passes full strict `productionCheck allTests`:1,840Desktop cases (3existing LAN
+skips),653Android cases perDebug/Release variant,112GitHub-test,750release controls
+(1known Linux skip),Detekt/lint/R8/unsigned AAB and inventory/shell gates. Source
+unchanged; owned registry stop0. Full log SHA256:
+`15e14910154244c8344ea685019c0537d542f5f92e622ebd01ad0efaf28a88eb`.
+Documentation follow-up, accepted-base integration, fresh hosted and actual-main
+qualification remain; no shipping/mobile acceptance is inferred from this pass.
+
+#251 remains open for mobile admission/recovery acceptance; particular same-game
+credential-generation binding and automatic cold peer recovery (#252) remain
+separate. #258 strict protection is still0PASS/6FAIL; physical gameplay,
+accessibility/energy/persistence and Store identity/signing/external approvals
+remain unverified or blocked. No additional agent or Store release is used.
+
 ## Latest protected integration and catalog follow-up (14:52 UTC)
 
 [PR #278](https://github.com/Apdelrahman1911/parlor/pull/278) is merged as

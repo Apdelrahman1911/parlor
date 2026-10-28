@@ -68,11 +68,24 @@ use the corrected actual test fixture, not that earlier failed harness.
 
 ## Required acceptance and remaining work
 
-Final restored focused/full committed-source checks, all existing hosted
-architectures/optimized Release lanes, protected integration and fresh actual
-main must qualify this candidate separately. Older main or catalog passes do
-not certify it. AGENTS remains byte-identical; no release gate, signing bypass,
-Store publication or paid runner is introduced.
+The restored complete strict `productionCheck allTests` at
+`479e4ac5ec084d0ccc76f307e2ddb4086db4f967` (tree
+`153feaa8c3a223ded67e12f30fd0c6f9cdff5956`) passes **1,840 Desktop**,
+**653 Android Debug +653 Release**,112GitHub-test and750release controls.
+Only three existing LAN skips and one known Linux release-control skip remain.
+All28 focused methods are contained in those passing current module reports.
+Detekt/lint/R8/unsigned AAB, inventory and shell gates pass. Source is unchanged;
+private registry stop0. Full log SHA256:
+`15e14910154244c8344ea685019c0537d542f5f92e622ebd01ad0efaf28a88eb`.
+981tasks execute,553 valid cached outputs and134up-to-date outputs are exposed
+in the full log. Linux Native klibrary compilation is not Apple linkage/runtime.
+
+This local candidate is stacked on draft catalog PR#280's frozenaf088df5, not
+accepted main. Documentation follow-up, accepted-base integration, all existing
+hosted architectures/optimized Release lanes, protected integration and fresh
+actual main remain mandatory. Older main or catalog passes do not certify it.
+AGENTS remains byte-identical; no release gate, signing bypass, Store publication
+or paid runner is introduced.
 
 #251's actual mobile cross-game/recovery matrix remains open. This does not bind
 a particular same-game room/credential generation to the public Home selection,
