@@ -63,6 +63,7 @@ import com.parlor.networking.room.NetError
 import com.parlor.networking.transport.HostedGameProtocol
 import com.parlor.networking.transport.JoinConfig
 import com.parlor.networking.transport.RoomTransport
+import com.parlor.networking.transport.ResumableSessionSelection
 import com.parlor.networking.transport.needsRecoveryGuidance
 import com.parlor.session.multidevice.awaitAuthoritativeSessionStart
 import com.parlor.session.multidevice.asNetError
@@ -89,18 +90,20 @@ fun LastLightPeerLobbyFlow(
     code: String,
     peerName: String,
     resumeExistingSession: Boolean = false,
+    resumeSelection: ResumableSessionSelection? = null,
     onBackToHome: () -> Unit,
     onOpenNetworkSettings: (() -> Unit)? = null,
     backRequestId: Long = 0L,
     modifier: Modifier = Modifier,
 ) {
     val sessionOwner: ProcessMultiplayerSessionOwner = koinInject()
-    val route = remember(code, peerName, resumeExistingSession) {
+    val route = remember(code, peerName, resumeExistingSession, resumeSelection) {
         MultiplayerSessionRoute.peer(
             gameId = LastLightIds.GameId,
             displayName = peerName,
             roomCode = code,
             resumeExistingSession = resumeExistingSession,
+            resumeSelection = resumeSelection,
         )
     }
     val ownerState by sessionOwner.state.collectAsState()
@@ -151,7 +154,12 @@ fun LastLightPeerLobbyFlow(
         joinError = null
         val result = sessionOwner.acquire(route) { mode ->
             when (mode) {
-                MultiplayerOpenMode.Resume -> transport.resumeLastSession(
+                MultiplayerOpenMode.Resume -> route.resumeSelection?.let { selection ->
+                    transport.resumeLastSession(
+                    HostedGameProtocol(LastLightIds.GameId, LastLightHostRoomBridge.GAME_VERSION),
+                        selection,
+                    )
+                } ?: transport.resumeLastSession(
                     HostedGameProtocol(LastLightIds.GameId, LastLightHostRoomBridge.GAME_VERSION),
                 )
                 MultiplayerOpenMode.Join -> transport.join(JoinConfig(

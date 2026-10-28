@@ -81,6 +81,7 @@ import com.parlor.networking.room.NetError
 import com.parlor.networking.transport.HostedGameProtocol
 import com.parlor.networking.transport.JoinConfig
 import com.parlor.networking.transport.RoomTransport
+import com.parlor.networking.transport.ResumableSessionSelection
 import com.parlor.networking.transport.needsRecoveryGuidance
 import com.parlor.session.multidevice.awaitAuthoritativeSessionStart
 import com.parlor.session.multidevice.asNetError
@@ -127,6 +128,7 @@ fun WhodunitPeerSessionFlow(
     code: String,
     peerName: String,
     resumeExistingSession: Boolean = false,
+    resumeSelection: ResumableSessionSelection? = null,
     onBackToLibrary: () -> Unit,
     onOpenNetworkSettings: (() -> Unit)? = null,
     backRequestId: Long = 0L,
@@ -136,12 +138,13 @@ fun WhodunitPeerSessionFlow(
     val payloadValidator: PayloadValidator<WhodunitCase> =
         koinInject(qualifier = named("whodunit"))
     val sessionOwner: ProcessMultiplayerSessionOwner = koinInject()
-    val route = remember(code, peerName, resumeExistingSession) {
+    val route = remember(code, peerName, resumeExistingSession, resumeSelection) {
         MultiplayerSessionRoute.peer(
             gameId = WhodunitIds.GameId,
             displayName = peerName,
             roomCode = code,
             resumeExistingSession = resumeExistingSession,
+            resumeSelection = resumeSelection,
         )
     }
     val ownerState by sessionOwner.state.collectAsState()
@@ -196,7 +199,12 @@ fun WhodunitPeerSessionFlow(
         leaveError = null
         val result = sessionOwner.acquire(route) { mode ->
             when (mode) {
-                MultiplayerOpenMode.Resume -> transport.resumeLastSession(
+                MultiplayerOpenMode.Resume -> route.resumeSelection?.let { selection ->
+                    transport.resumeLastSession(
+                    HostedGameProtocol(WhodunitIds.GameId, WhodunitHostRoomBridge.GAME_VERSION),
+                        selection,
+                    )
+                } ?: transport.resumeLastSession(
                     HostedGameProtocol(WhodunitIds.GameId, WhodunitHostRoomBridge.GAME_VERSION),
                 )
                 MultiplayerOpenMode.Join -> transport.join(JoinConfig(
