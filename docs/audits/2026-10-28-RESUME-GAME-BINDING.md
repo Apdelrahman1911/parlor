@@ -92,3 +92,8 @@ a particular same-game room/credential generation to the public Home selection,
 implement automatic cold-start recovery (#252), diagnose the original UIKit
 input event (#267), qualify strict protection (#258), or execute physical
 phone/lock/call/Wi-Fi/accessibility/battery/thermal acceptance.
+
+The additional [real-LAN selected Resume experiment](2026-10-28-REAL-LAN-SELECTED-RESUME.md)
+now passes three distinct synthetic Linux host/peer pairs, including same-seat
+rotation/revocation and wrong-game/version rejection. It is not native/mobile
+or process-death qualification; full current-source integration remains pending.
