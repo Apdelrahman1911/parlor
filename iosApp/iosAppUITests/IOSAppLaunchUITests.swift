@@ -378,13 +378,45 @@ final class IOSAppLaunchUITests: XCTestCase {
         // input, or advance Next while characters are still unobserved. Apple
         // may present its own tutorial after typing begins; handle that exact
         // public interruption within this SAME deadline, never replay input.
+        var samples: [String] = []
+        let started = ProcessInfo.processInfo.systemUptime
         let committed = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            let sampleStarted = ProcessInfo.processInfo.systemUptime
             if let introduction {
                 self.dismissKeyboardIntroduction(app, dismissal: introduction)
             }
-            return field.exists && (field.value as? String) == expected
+            // Resolve existence and value together. Separate remote queries
+            // can observe different generations and consume the same deadline.
+            let snapshot: (any XCUIElementSnapshot)?
+            var snapshotErrorCode: Int? = nil
+            do {
+                snapshot = try field.snapshot()
+            } catch {
+                snapshot = nil
+                snapshotErrorCode = (error as NSError).code
+            }
+            let value = snapshot?.value as? String
+            let exact = matchesPublicTextValue(value, expected: expected)
+            if samples.count < 12 {
+                // Status/timing only; never print the input, expected string,
+                // arbitrary hierarchy, error description or player information.
+                samples.append("at=\(sampleStarted - started), " +
+                    "querySeconds=\(ProcessInfo.processInfo.systemUptime - sampleStarted), " +
+                    "snapshotPresent=\(snapshot != nil), stringValue=\(value != nil), " +
+                    "empty=\(value?.isEmpty == true), exact=\(exact), " +
+                    "snapshotErrorCode=\(String(describing: snapshotErrorCode))")
+            }
+            return exact
         }, object: nil)
-        XCTAssertEqual(XCTWaiter.wait(for: [committed], timeout: 10), .completed,
+        let result = XCTWaiter.wait(for: [committed], timeout: 10)
+        if result != .completed {
+            print("Public text commit: " + samples.joined(separator: "; "))
+            let screenshot = XCTAttachment(screenshot: app.screenshot())
+            screenshot.name = "Failed public text commit"
+            screenshot.lifetime = .keepAlways
+            add(screenshot)
+        }
+        XCTAssertEqual(result, .completed,
                        "The full typed value must reach the actual Compose field", file: file, line: line)
         XCTAssertEqual(field.value as? String, expected, file: file, line: line)
     }
@@ -425,6 +457,40 @@ final class IOSAppLaunchUITests: XCTestCase {
             return aligned && touching && accessoryHeight
         }
         return adjacentRows.map { $0.minY }.min() ?? keys.minY
+    }
+}
+
+// Test-only exact comparison. Missing/non-string snapshots are not empty text,
+// and partial/normalized input must never admit a subsequent action.
+private func matchesPublicTextValue(_ value: Any?, expected: String) -> Bool {
+    guard let value = value as? String else { return false }
+    return value == expected
+}
+
+final class PublicTextValueTests: XCTestCase {
+    func testOnlyTheCompleteExpectedStringMatches() {
+        XCTAssertTrue(matchesPublicTextValue("Table Test", expected: "Table Test"))
+        for value in ["", "Table", "Table Tes", "Table Test extra"] {
+            XCTAssertFalse(matchesPublicTextValue(value, expected: "Table Test"))
+        }
+    }
+
+    func testMissingOrNonStringValueNeverMatchesEvenAnEmptyExpectation() {
+        let values: [Any?] = [nil, 0, false, ["Table Test"], NSNull()]
+        for value in values {
+            XCTAssertFalse(matchesPublicTextValue(value, expected: "Table Test"))
+            XCTAssertFalse(matchesPublicTextValue(value, expected: ""))
+        }
+        XCTAssertTrue(matchesPublicTextValue("", expected: ""))
+    }
+
+    func testWhitespaceCaseAndArabicCharactersAreNotRewritten() {
+        for value in [" Table Test", "Table Test ", "table test", "Table\nTest"] {
+            XCTAssertFalse(matchesPublicTextValue(value, expected: "Table Test"))
+        }
+        XCTAssertTrue(matchesPublicTextValue("أحمد", expected: "أحمد"))
+        XCTAssertFalse(matchesPublicTextValue("احمد", expected: "أحمد"))
+        XCTAssertFalse(matchesPublicTextValue("أحمد ", expected: "أحمد"))
     }
 }
 

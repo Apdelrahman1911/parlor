@@ -1,5 +1,31 @@
 # Project status — 2026-10-28
 
+## Resume merged; actual-main failed — input investigation remains open
+
+[PR#281](https://github.com/Apdelrahman1911/parlor/pull/281) merged normally as
+`7c87a8726bab4da85cbd3824b30d2fcc709ad894` after fresh independent PR qualification.
+Its automatic [main40759303257](https://github.com/Apdelrahman1911/parlor/actions/runs/40759303257)
+finishes **failed**: seven producers/original optimized Apple join pass, but
+the iOS runtime has19PASS/1FAIL Swift methods, alongside679passing KMP cases.
+PR success does not qualify this main; stacked recovery/tooling work cannot
+advance on a manufactured acceptance receipt.
+
+The [full recording investigation](audits/2026-10-28-IOS-COHERENT-TEXT-OBSERVATION.md)
+shows empty input beyond the original exact-value deadline, then the complete
+name and Apple QuickPath introduction near the end. This corrects an incomplete
+early-frame interpretation of permanent input loss, not the failed test outcome.
+#276 is reopened with this distinct delayed-commit evidence; #267 remains separate.
+Root cause is unresolved. A one-snapshot exact-text observer, bounded public
+failure diagnostics and three native comparator controls are being implemented,
+not claimed as a verified causal fix. New-source local/full hosted qualification,
+protected integration and automatic actual-main acceptance remain mandatory.
+
+#251/#252 physical/native recovery, #258 strict0PASS/6FAIL, six-game mobile
+accessibility/energy and Store ownership/signing/approval remain open. Only free
+standard hosted runners; no extra agents, replay, longer deadline or Store release.
+
+**All checkpoints below describe their recorded source, not current acceptance.**
+
 ## Catalog accepted; Resume safeguard awaiting fresh integration qualification
 
 Catalog [PR#280](https://github.com/Apdelrahman1911/parlor/pull/280) is merged as
